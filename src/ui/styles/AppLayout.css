@@ -1,0 +1,163 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — APP LAYOUT STYLES OPTIMISÉS
+ *   Design responsive avec mobile overlay et accessibilité
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+@import '../../styles/variables.css';
+
+.app-layout {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+/* Skip to main content - Accessibilité */
+.skip-to-main {
+  position: absolute;
+  top: -100px;
+  left: var(--spacing-md);
+  z-index: var(--z-notification);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--accent-blue);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-semibold);
+  transition: top var(--transition-fast);
+}
+
+.skip-to-main:focus {
+  top: var(--spacing-md);
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+.app-container {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ═════════════════════════════════════════════════════════
+ * 📐 SIDEBAR NAVIGATION
+ * ═════════════════════════════════════════════════════════ */
+
+.app-sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-secondary);
+  backdrop-filter: var(--backdrop-blur-md);
+  -webkit-backdrop-filter: var(--backdrop-blur-md);
+  border-right: 1px solid var(--border-primary);
+  transition: width var(--transition-slow);
+  overflow: hidden;
+  z-index: var(--z-sidebar);
+  flex-shrink: 0;
+}
+
+.app-sidebar.collapsed {
+  width: 72px;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📄 MAIN CONTENT AREA
+ * ═══════════════════════════════════════════════════════ */
+
+.app-main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-xl);
+  background: var(--bg-primary);
+}
+
+/* Custom scrollbar */
+.app-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.app-main::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+.app-main::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: var(--radius-full);
+  transition: var(--transition-fast);
+}
+
+.app-main::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📱 RESPONSIVE
+ * ═══════════════════════════════════════════════════════ */
+
+/* Mobile backdrop overlay */
+.app-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: var(--backdrop-blur-sm);
+  z-index: calc(var(--z-sidebar) - 1);
+  animation: fadeIn var(--transition-fast);
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Tablet et mobile */
+@media (max-width: 768px) {
+  .app-sidebar {
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    bottom: 0;
+    width: var(--sidebar-width);
+    z-index: var(--z-sidebar);
+    box-shadow: var(--shadow-xl);
+    transform: translateX(-100%);
+    transition: transform var(--transition-slow);
+  }
+
+  .app-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .app-sidebar.mobile-closed {
+    transform: translateX(-100%);
+  }
+
+  /* Le contenu principal prend toute la largeur */
+  .app-main {
+    padding: var(--spacing-md);
+    width: 100%;
+  }
+
+  /* Skip link responsive */
+  .skip-to-main:focus {
+    left: var(--spacing-sm);
+    font-size: var(--text-sm);
+  }
+}
+
+/* Mobile petit */
+@media (max-width: 480px) {
+  .app-sidebar {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .app-main {
+    padding: var(--spacing-sm);
+  }
+}

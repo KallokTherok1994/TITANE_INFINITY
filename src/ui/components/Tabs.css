@@ -1,0 +1,39 @@
+/* TITANE∞ v12 - Tabs Styles */
+
+.tabs {
+  width: 100%;
+}
+
+.tabs__list {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tabs__tab {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  position: relative;
+  bottom: -1px;
+}
+
+.tabs__tab:hover {
+  color: var(--text-primary);
+  background: var(--state-hover-overlay);
+}
+
+.tabs__tab--active {
+  color: var(--color-primary-500);
+  border-bottom-color: var(--color-primary-500);
+}
+
+.tabs__panel {
+  padding: var(--space-6) 0;
+}

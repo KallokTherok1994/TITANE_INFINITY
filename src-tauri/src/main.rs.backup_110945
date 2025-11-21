@@ -1,0 +1,1119 @@
+// TITANE∞ v9.0.0 - Main Backend Entry Point
+// Cognitive Platform - Rust Backend
+// Optimized, Modular, Secure Architecture
+
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+use std::sync::{Arc, Mutex};
+use std::thread;
+use std::time::Duration;
+use tauri::State;
+mod system;
+mod shared;
+use system::{
+    helios::HeliosState, nexus::NexusState, harmonia::HarmoniaState,
+    sentinel::SentinelState, watchdog::WatchdogState, self_heal::SelfHealState,
+    adaptive_engine::AdaptiveEngineState, memory::MemoryModule, memory_v2::MemoryModuleV2,
+    resonance::ResonanceState, cortex::CortexState,
+    senses::{timesense::TimeSenseState, innersense::InnerSenseState},
+    ans::ANSState, swarm::SwarmState, field::FieldState,
+    continuum::ContinuumState, cortex_sync::CortexSyncState, kernel::KernelState,
+    secureflow::SecureFlowState, lowflow::LowFlowState, stability::StabilityState,
+    integrity::IntegrityState, balance::BalanceState,
+    pulse::PulseState, flowsync::FlowSyncState, harmonic::HarmonicState,
+    deepsense::DeepSenseState, deepalignment::DeepAlignmentState,
+    vitalcore::VitalCoreState, neurofield::NeuroFieldState,
+    neuromesh::NeuroMeshState, coremesh::CoreMeshState,
+    metacortex::MetaCortexState, governor::GovernorState,
+    conscience::ConscienceState, adaptive::AdaptiveIntelligenceState,
+    evolution::EvolutionState,
+    sentient::{SentientState, SentientLoopMemory},
+    harmonic_brain::{HarmonicBrainState, ResonanceMemory},
+    meta_integration::{MetaIntegrationState, AlignmentMemory},
+    architecture::{ArchitectureState, GeometryMemory},
+    central_governor::{CentralGovernorState, RegulationProfileMemory},
+    executive_flow::{ExecutiveFlowState, AlertMemory},
+    strategic_intelligence::{StrategicIntelligenceState, TrendMemory},
+    intention::{IntentionState, DriveMemory},
+    action_potential::{ActionPotentialState, ThresholdMemory},
+    dashboard::DashboardState,
+    self_healing_v2::SelfHealingState,
+    energetic::EnergeticState,
+    resonance_v2::ResonanceV2State,
+    meaning::MeaningState,
+    identity::IdentityState,
+    self_alignment::SelfAlignmentState,
+    taskflow::TaskflowState,
+    mission::MissionState,
+    adaptive_intelligence::AdaptiveIntelligenceState,
+    autonomic_evolution::AutonomicEvolutionState,
+};
+use shared::types::{TitaneResult, SystemStatus, ModuleHealth};
+/// Global system state with all modules
+pub struct TitaneCore {
+    helios: Arc<Mutex<HeliosState>>,
+    nexus: Arc<Mutex<NexusState>>,
+    harmonia: Arc<Mutex<HarmoniaState>>,
+    sentinel: Arc<Mutex<SentinelState>>,
+    watchdog: Arc<Mutex<WatchdogState>>,
+    self_heal: Arc<Mutex<SelfHealState>>,
+    adaptive_engine: Arc<Mutex<AdaptiveEngineState>>,
+    memory: Arc<Mutex<MemoryModule>>,
+    memory_v2: Arc<Mutex<MemoryModuleV2>>,
+    resonance: Arc<Mutex<ResonanceState>>,
+    coherence_map: Arc<Mutex<system::resonance::CoherenceMap>>,
+    cortex: Arc<Mutex<CortexState>>,
+    timesense: Arc<Mutex<TimeSenseState>>,
+    innersense: Arc<Mutex<InnerSenseState>>,
+    ans: Arc<Mutex<ANSState>>,
+    swarm: Arc<Mutex<SwarmState>>,
+    field: Arc<Mutex<FieldState>>,
+    continuum: Arc<Mutex<ContinuumState>>,
+    continuum_history: Arc<Mutex<Vec<system::continuum::Snapshot>>>,
+    cortex_sync: Arc<Mutex<CortexSyncState>>,
+    kernel: Arc<Mutex<KernelState>>,
+    secureflow: Arc<Mutex<SecureFlowState>>,
+    lowflow: Arc<Mutex<LowFlowState>>,
+    stability: Arc<Mutex<StabilityState>>,
+    integrity: Arc<Mutex<IntegrityState>>,
+    balance: Arc<Mutex<BalanceState>>,
+    pulse: Arc<Mutex<PulseState>>,
+    flowsync: Arc<Mutex<FlowSyncState>>,
+    harmonic: Arc<Mutex<HarmonicState>>,
+    deepsense: Arc<Mutex<DeepSenseState>>,
+    deepalignment: Arc<Mutex<DeepAlignmentState>>,
+    vitalcore: Arc<Mutex<VitalCoreState>>,
+    neurofield: Arc<Mutex<NeuroFieldState>>,
+    neuromesh: Arc<Mutex<NeuroMeshState>>,
+    coremesh: Arc<Mutex<CoreMeshState>>,
+    metacortex: Arc<Mutex<MetaCortexState>>,
+    governor: Arc<Mutex<GovernorState>>,
+    conscience: Arc<Mutex<ConscienceState>>,
+    adaptive: Arc<Mutex<AdaptiveIntelligenceState>>,
+    evolution: Arc<Mutex<EvolutionState>>,
+    evolution_history: Arc<Mutex<system::evolution::EvolutionHistory>>,
+    sentient: Arc<Mutex<SentientState>>,
+    sentient_loop: Arc<Mutex<SentientLoopMemory>>,
+    harmonic_brain: Arc<Mutex<HarmonicBrainState>>,
+    harmonic_resonance: Arc<Mutex<ResonanceMemory>>,
+    meta_integration: Arc<Mutex<MetaIntegrationState>>,
+    alignment_memory: Arc<Mutex<AlignmentMemory>>,
+    architecture: Arc<Mutex<ArchitectureState>>,
+    geometry_memory: Arc<Mutex<GeometryMemory>>,
+    central_governor: Arc<Mutex<CentralGovernorState>>,
+    regulation_profile: Arc<Mutex<RegulationProfileMemory>>,
+    executive_flow: Arc<Mutex<ExecutiveFlowState>>,
+    alert_memory: Arc<Mutex<AlertMemory>>,
+    strategic_intelligence: Arc<Mutex<StrategicIntelligenceState>>,
+    trend_memory: Arc<Mutex<TrendMemory>>,
+    intention: Arc<Mutex<IntentionState>>,
+    drive_memory: Arc<Mutex<DriveMemory>>,
+    action_potential: Arc<Mutex<ActionPotentialState>>,
+    threshold_memory: Arc<Mutex<ThresholdMemory>>,
+    dashboard: Arc<Mutex<DashboardState>>,
+    self_healing: Arc<Mutex<SelfHealingState>>,
+    energetic: Arc<Mutex<EnergeticState>>,
+    resonance_v2: Arc<Mutex<ResonanceV2State>>,
+    meaning: Arc<Mutex<MeaningState>>,
+    identity: Arc<Mutex<IdentityState>>,
+    self_alignment: Arc<Mutex<SelfAlignmentState>>,
+    taskflow: Arc<Mutex<TaskflowState>>,
+    mission: Arc<Mutex<MissionState>>,
+    adaptive_intelligence: Arc<Mutex<AdaptiveIntelligenceState>>,
+    autonomic_evolution: Arc<Mutex<AutonomicEvolutionState>>,
+    running: Arc<Mutex<bool>>,
+}
+impl TitaneCore {
+    /// Initialize all system modules
+    pub fn new() -> TitaneResult<Self> {
+        log::info!("🚀 TITANE∞ v10.4 - Initializing Core System");
+        // Initialize all modules safely
+        let helios = Arc::new(Mutex::new(system::helios::init()?));
+        let nexus = Arc::new(Mutex::new(system::nexus::init()?));
+        let harmonia = Arc::new(Mutex::new(system::harmonia::init()?));
+        let sentinel = Arc::new(Mutex::new(system::sentinel::init()?));
+        let watchdog = Arc::new(Mutex::new(system::watchdog::init()?));
+        let self_heal = Arc::new(Mutex::new(system::self_heal::init()?));
+        let adaptive_engine = Arc::new(Mutex::new(system::adaptive_engine::init()?));
+        let memory = Arc::new(Mutex::new(system::memory::init()?));
+        
+        // Initialize MemoryCore v2 with AES-256-GCM encryption
+        system::memory_v2::init_global()
+            .map_err(|e| format!("Failed to initialize MemoryCore v2: {}", e))?;
+        let memory_v2 = Arc::new(Mutex::new(system::memory_v2::init()?));
+        let resonance = Arc::new(Mutex::new(system::resonance::init()?));
+        let coherence_map = Arc::new(Mutex::new(system::resonance::CoherenceMap::new()));
+        let cortex = Arc::new(Mutex::new(system::cortex::init()?));
+        let timesense = Arc::new(Mutex::new(system::senses::timesense::init()?));
+        let innersense = Arc::new(Mutex::new(system::senses::innersense::init()?));
+        let ans = system::ans::init();
+        let swarm = Arc::new(Mutex::new(system::swarm::init()?));
+        let field = Arc::new(Mutex::new(system::field::init()?));
+        let continuum = Arc::new(Mutex::new(system::continuum::init()?));
+        let continuum_history = Arc::new(Mutex::new(Vec::new()));
+        let cortex_sync = Arc::new(Mutex::new(system::cortex_sync::init()?));
+        let kernel = Arc::new(Mutex::new(system::kernel::init()?));
+        let secureflow = Arc::new(Mutex::new(system::secureflow::init()?));
+        let lowflow = Arc::new(Mutex::new(system::lowflow::init()?));
+        let stability = Arc::new(Mutex::new(system::stability::init()?));
+        let integrity = Arc::new(Mutex::new(system::integrity::init()?));
+        let balance = Arc::new(Mutex::new(system::balance::init()?));
+        let pulse = Arc::new(Mutex::new(system::pulse::init()?));
+        let flowsync = Arc::new(Mutex::new(system::flowsync::init()?));
+        let harmonic = Arc::new(Mutex::new(system::harmonic::init()?));
+        let deepsense = Arc::new(Mutex::new(system::deepsense::init()?));
+        let deepalignment = Arc::new(Mutex::new(system::deepalignment::init()?));
+        let vitalcore = Arc::new(Mutex::new(system::vitalcore::init()?));
+        let neurofield = Arc::new(Mutex::new(system::neurofield::init()?));
+        let neuromesh = Arc::new(Mutex::new(system::neuromesh::init()?));
+        let coremesh = Arc::new(Mutex::new(system::coremesh::init()?));
+        let metacortex = Arc::new(Mutex::new(system::metacortex::init()?));
+        let governor = Arc::new(Mutex::new(system::governor::init()?));
+        let conscience = Arc::new(Mutex::new(system::conscience::init()?));
+        let adaptive = Arc::new(Mutex::new(system::adaptive::init()?));
+        let evolution = Arc::new(Mutex::new(system::evolution::init()?));
+        let evolution_history = Arc::new(Mutex::new(system::evolution::EvolutionHistory::new()));
+        let sentient = Arc::new(Mutex::new(system::sentient::init()?));
+        let sentient_loop = Arc::new(Mutex::new(SentientLoopMemory::new()));
+        let harmonic_brain = Arc::new(Mutex::new(system::harmonic_brain::init()?));
+        let harmonic_resonance = Arc::new(Mutex::new(ResonanceMemory::new()));
+        let meta_integration = Arc::new(Mutex::new(system::meta_integration::init()?));
+        let alignment_memory = Arc::new(Mutex::new(AlignmentMemory::new()));
+        let architecture = Arc::new(Mutex::new(system::architecture::init()?));
+        let geometry_memory = Arc::new(Mutex::new(GeometryMemory::new()));
+        let central_governor = Arc::new(Mutex::new(system::central_governor::init()?));
+        let regulation_profile = Arc::new(Mutex::new(RegulationProfileMemory::new()));
+        let executive_flow = Arc::new(Mutex::new(system::executive_flow::init()?));
+        let alert_memory = Arc::new(Mutex::new(AlertMemory::new()));
+        let strategic_intelligence = Arc::new(Mutex::new(system::strategic_intelligence::init()?));
+        let trend_memory = Arc::new(Mutex::new(TrendMemory::new()));
+        let intention = Arc::new(Mutex::new(system::intention::init()?));
+        let drive_memory = Arc::new(Mutex::new(DriveMemory::new()));
+        let action_potential = Arc::new(Mutex::new(system::action_potential::init()?));
+        let threshold_memory = Arc::new(Mutex::new(system::action_potential::ThresholdMemory::new()));
+        let dashboard = Arc::new(Mutex::new(system::dashboard::init()?));
+        let self_healing = Arc::new(Mutex::new(system::self_healing_v2::init()?));
+        let energetic = Arc::new(Mutex::new(system::energetic::init()?));
+        let resonance_v2 = Arc::new(Mutex::new(system::resonance_v2::init()?));
+        let meaning = Arc::new(Mutex::new(system::meaning::init()?));
+        let identity = Arc::new(Mutex::new(system::identity::init()?));
+        let self_alignment = Arc::new(Mutex::new(system::self_alignment::init()?));
+        let taskflow = Arc::new(Mutex::new(system::taskflow::init()?));
+        let mission = Arc::new(Mutex::new(system::mission::init()?));
+        let adaptive_intelligence = Arc::new(Mutex::new(system::adaptive_intelligence::init()?));
+        let autonomic_evolution = Arc::new(Mutex::new(system::autonomic_evolution::init()?));
+        log::info!("✅ All modules initialized successfully");
+        Ok(Self {
+            helios,
+            nexus,
+            harmonia,
+            sentinel,
+            watchdog,
+            self_heal,
+            adaptive_engine,
+            memory,
+            memory_v2,
+            resonance,
+            coherence_map,
+            cortex,
+            timesense,
+            innersense,
+            ans,
+            swarm,
+            field,
+            continuum,
+            continuum_history,
+            cortex_sync,
+            kernel,
+            secureflow,
+            lowflow,
+            stability,
+            integrity,
+            balance,
+            pulse,
+            flowsync,
+            harmonic,
+            deepsense,
+            deepalignment,
+            vitalcore,
+            neurofield,
+            neuromesh,
+            coremesh,
+            metacortex,
+            governor,
+            conscience,
+            adaptive,
+            evolution,
+            evolution_history,
+            sentient,
+            sentient_loop,
+            harmonic_brain,
+            harmonic_resonance,
+            meta_integration,
+            alignment_memory,
+            architecture,
+            geometry_memory,
+            central_governor,
+            regulation_profile,
+            executive_flow,
+            alert_memory,
+            strategic_intelligence,
+            trend_memory,
+            intention,
+            drive_memory,
+            action_potential,
+            threshold_memory,
+            dashboard,
+            self_healing,
+            energetic,
+            resonance_v2,
+            meaning,
+            identity,
+            self_alignment,
+            taskflow,
+            mission,
+            adaptive_intelligence,
+            autonomic_evolution,
+            running: Arc::new(Mutex::new(false)),
+        })
+    }
+    /// Start the global scheduler (non-blocking background thread)
+    pub fn start_scheduler(&self) {
+        log::info!("▶️  Starting Global Scheduler");
+        // Set running flag
+        if let Ok(mut running) = self.running.lock() {
+            *running = true;
+        }
+        // Clone Arc references for the scheduler thread
+        let helios = Arc::clone(&self.helios);
+        let nexus = Arc::clone(&self.nexus);
+        let harmonia = Arc::clone(&self.harmonia);
+        let sentinel = Arc::clone(&self.sentinel);
+        let watchdog = Arc::clone(&self.watchdog);
+        let self_heal = Arc::clone(&self.self_heal);
+        let adaptive_engine = Arc::clone(&self.adaptive_engine);
+        let memory = Arc::clone(&self.memory);
+        let memory_v2 = Arc::clone(&self.memory_v2);
+        let resonance = Arc::clone(&self.resonance);
+        let coherence_map = Arc::clone(&self.coherence_map);
+        let cortex = Arc::clone(&self.cortex);
+        let timesense = Arc::clone(&self.timesense);
+        let innersense = Arc::clone(&self.innersense);
+        let ans = Arc::clone(&self.ans);
+        let swarm = Arc::clone(&self.swarm);
+        let field = Arc::clone(&self.field);
+        let continuum = Arc::clone(&self.continuum);
+        let continuum_history = Arc::clone(&self.continuum_history);
+        let cortex_sync = Arc::clone(&self.cortex_sync);
+        let kernel = Arc::clone(&self.kernel);
+        let secureflow = Arc::clone(&self.secureflow);
+        let lowflow = Arc::clone(&self.lowflow);
+        let stability = Arc::clone(&self.stability);
+        let integrity = Arc::clone(&self.integrity);
+        let balance = Arc::clone(&self.balance);
+        let pulse = Arc::clone(&self.pulse);
+        let flowsync = Arc::clone(&self.flowsync);
+        let harmonic = Arc::clone(&self.harmonic);
+        let deepsense = Arc::clone(&self.deepsense);
+        let deepalignment = Arc::clone(&self.deepalignment);
+        let vitalcore = Arc::clone(&self.vitalcore);
+        let neurofield = Arc::clone(&self.neurofield);
+        let neuromesh = Arc::clone(&self.neuromesh);
+        let coremesh = Arc::clone(&self.coremesh);
+        let metacortex = Arc::clone(&self.metacortex);
+        let governor = Arc::clone(&self.governor);
+        let conscience = Arc::clone(&self.conscience);
+        let adaptive = Arc::clone(&self.adaptive);
+        let evolution = Arc::clone(&self.evolution);
+        let evolution_history = Arc::clone(&self.evolution_history);
+        let sentient = Arc::clone(&self.sentient);
+        let sentient_loop = Arc::clone(&self.sentient_loop);
+        let harmonic_brain = Arc::clone(&self.harmonic_brain);
+        let harmonic_resonance = Arc::clone(&self.harmonic_resonance);
+        let meta_integration = Arc::clone(&self.meta_integration);
+        let alignment_memory = Arc::clone(&self.alignment_memory);
+        let architecture = Arc::clone(&self.architecture);
+        let geometry_memory = Arc::clone(&self.geometry_memory);
+        let central_governor = Arc::clone(&self.central_governor);
+        let regulation_profile = Arc::clone(&self.regulation_profile);
+        let executive_flow = Arc::clone(&self.executive_flow);
+        let alert_memory = Arc::clone(&self.alert_memory);
+        let strategic_intelligence = Arc::clone(&self.strategic_intelligence);
+        let trend_memory = Arc::clone(&self.trend_memory);
+        let intention = Arc::clone(&self.intention);
+        let drive_memory = Arc::clone(&self.drive_memory);
+        let action_potential = Arc::clone(&self.action_potential);
+        let threshold_memory = Arc::clone(&self.threshold_memory);
+        let dashboard = Arc::clone(&self.dashboard);
+        let self_healing = Arc::clone(&self.self_healing);
+        let energetic = Arc::clone(&self.energetic);
+        let resonance_v2 = Arc::clone(&self.resonance_v2);
+        let meaning = Arc::clone(&self.meaning);
+        let identity = Arc::clone(&self.identity);
+        let self_alignment = Arc::clone(&self.self_alignment);
+        let taskflow = Arc::clone(&self.taskflow);
+        let mission = Arc::clone(&self.mission);
+        let adaptive_intelligence = Arc::clone(&self.adaptive_intelligence);
+        let autonomic_evolution = Arc::clone(&self.autonomic_evolution);
+        let running = Arc::clone(&self.running);
+        // Spawn background scheduler thread
+        thread::spawn(move || {
+            log::info!("🔄 Scheduler thread started");
+            let mut tick_count: u64 = 0;
+            loop {
+                // Check if we should stop
+                let should_run = running.lock().map(|r| *r).unwrap_or(false);
+                if !should_run {
+                    log::info!("⏹️  Scheduler stopped");
+                    break;
+                }
+                tick_count += 1;
+                
+                // Tick all modules in sequence (error-safe)
+                Self::safe_tick(&helios, "Helios");
+                Self::safe_tick(&nexus, "Nexus");
+                Self::safe_tick(&harmonia, "Harmonia");
+                Self::safe_tick(&sentinel, "Sentinel");
+                Self::safe_tick(&watchdog, "Watchdog");
+                Self::safe_tick(&self_heal, "SelfHeal");
+                // AdaptiveEngine needs access to all other modules for analysis
+                if let Ok(mut ad) = adaptive_engine.lock() {
+                    if let Err(e) = ad.tick_with_modules(
+                        &helios, &nexus, &harmonia, &sentinel, &watchdog, &memory
+                    ) {
+                        log::error!("🔴 AdaptiveEngine tick failed: {}", e);
+                    }
+                } else {
+                    log::error!("🔴 Failed to lock AdaptiveEngine");
+                Self::safe_tick(&memory, "Memory");
+                Self::safe_tick(&memory_v2, "MemoryV2");
+                // Resonance Engine - Analyze signals and update coherence map
+                if let Ok(mut res) = resonance.lock() {
+                    if let Err(e) = system::resonance::tick(&mut *res, &coherence_map) {
+                        log::error!("🔴 Resonance tick failed: {}", e);
+                    }
+                } else {
+                    log::error!("🔴 Failed to lock Resonance");
+                // Cortex Synchronique - Synthesize global system state
+                if let Ok(mut ctx) = cortex.lock() {
+                    if let (Ok(ad), Ok(res), Ok(map), Ok(mem)) = (
+                        adaptive_engine.lock(),
+                        resonance.lock(),
+                        coherence_map.lock(),
+                        memory.lock()
+                    ) {
+                        if let Err(e) = system::cortex::tick(&mut *ctx, &*ad, &*res, &*map, &*mem) {
+                            log::error!("🔴 Cortex tick failed: {}", e);
+                        }
+                    } else {
+                        log::error!("🔴 Failed to lock dependencies for Cortex");
+                    }
+                } else {
+                    log::error!("🔴 Failed to lock Cortex");
+                }
+                // TimeSense Engine - Temporal perception
+                if let Ok(mut ts) = timesense.lock() {
+                    if let (Ok(ctx), Ok(ad), Ok(res)) = (
+                        cortex.lock(),
+                        resonance.lock()
+                        if let Err(e) = system::senses::timesense::tick(&mut *ts, &*ctx, &*ad, &*res) {
+                            log::error!("🔴 TimeSense tick failed: {}", e);
+                        log::error!("🔴 Failed to lock dependencies for TimeSense");
+                    log::error!("🔴 Failed to lock TimeSense");
+                // InnerSense Engine - Internal qualitative perception
+                if let Ok(mut isense) = innersense.lock() {
+                    if let (Ok(ad), Ok(res), Ok(map)) = (
+                        coherence_map.lock()
+                        if let Err(e) = system::senses::innersense::tick(&mut *isense, &*ad, &*res, &*map) {
+                            log::error!("🔴 InnerSense tick failed: {}", e);
+                        log::error!("🔴 Failed to lock dependencies for InnerSense");
+                    log::error!("🔴 Failed to lock InnerSense");
+                // ANS (Autonomic Nervous System) - Autonomous regulation & homeostasis
+                if let (Ok(ctx), Ok(ad), Ok(ts), Ok(hel)) = (
+                    cortex.lock(),
+                    adaptive_engine.lock(),
+                    timesense.lock(),
+                    helios.lock()
+                ) {
+                    if let Err(e) = system::ans::tick(
+                        &ans,
+                        ctx.clarity,
+                        ctx.tension,
+                        ctx.alignment,
+                        ad.stability,
+                        hel.cpu_usage / 100.0,
+                        ts.momentum
+                        log::error!("🔴 ANS tick failed: {}", e);
+                    log::error!("🔴 Failed to lock dependencies for ANS");
+                // Swarm Mode - Distributed intelligence with 6 micro-signals
+                if let Ok(mut swarm_state) = swarm.lock() {
+                    if let (Ok(ad), Ok(ctx), Ok(res), Ok(isense), Ok(ts), Ok(ans_state)) = (
+                        innersense.lock(),
+                        timesense.lock(),
+                        ans.lock()
+                        if let Err(e) = system::swarm::tick(
+                            &mut *swarm_state,
+                            &*ad,
+                            &*ctx,
+                            &*res,
+                            &*isense,
+                            &*ts,
+                            &*ans_state
+                        ) {
+                            log::error!("🔴 Swarm Mode tick failed: {}", e);
+                        log::error!("🔴 Failed to lock dependencies for Swarm Mode");
+                    log::error!("🔴 Failed to lock Swarm Mode");
+                // Field Engine - Champ cognitif interne (météo mentale)
+                if let Ok(mut field_state) = field.lock() {
+                    if let (Ok(swarm_st), Ok(ans_st), Ok(res), Ok(isense), Ok(ts)) = (
+                        swarm.lock(),
+                        ans.lock(),
+                        timesense.lock()
+                        if let Err(e) = system::field::tick(
+                            &mut *field_state,
+                            &*swarm_st,
+                            &*ans_st,
+                            &*ts
+                            log::error!("🔴 Field Engine tick failed: {}", e);
+                        log::error!("🔴 Failed to lock dependencies for Field Engine");
+                    log::error!("🔴 Failed to lock Field Engine");
+                // Meta-Continuum - Dynamique temporelle (enregistrement + tendances)
+                if let (Ok(field_st), Ok(swarm_st), Ok(ans_st), Ok(res), Ok(ts)) = (
+                    field.lock(),
+                    swarm.lock(),
+                    ans.lock(),
+                    resonance.lock(),
+                    timesense.lock()
+                    // Enregistrer snapshot dans l'historique
+                    if let Ok(mut history) = continuum_history.lock() {
+                        if let Err(e) = system::continuum::record_snapshot(
+                            &*field_st,
+                            &mut *history,
+                            20
+                        ) {
+                            log::error!("🔴 Continuum snapshot failed: {}", e);
+                        } else {
+                            // Calculer tendances depuis l'historique
+                            if let Ok(report) = system::continuum::compute_trend(&*history) {
+                                // Mettre à jour l'état Continuum
+                                if let Ok(mut cont_state) = continuum.lock() {
+                                    system::continuum::update_from_report(&mut *cont_state, &report);
+                                }
+                            }
+                }
+                } else {
+                    
+                    log::error!("🔴 Failed to lock dependencies for Continuum");
+                // Cortex Synchronique - Vision globale unifiée
+                if let Ok(mut cortex_state) = cortex_sync.lock() {
+                    if let (Ok(field_st), Ok(swarm_st), Ok(cont), Ok(ans_st), Ok(res), Ok(isense)) = (
+                        field.lock(),
+                        continuum.lock(),
+                        innersense.lock()
+                        if let Err(e) = system::cortex_sync::tick(
+                            &mut *cortex_state,
+                            &*cont,
+                            &*isense
+                            log::error!("🔴 Cortex Sync tick failed: {}", e);
+                        log::error!("🔴 Failed to lock dependencies for Cortex Sync");
+                    log::error!("🔴 Failed to lock Cortex Sync");
+                // Kernel Profond - Invariants et garde-fou global
+                if let Ok(mut kernel_state) = kernel.lock() {
+                    if let (Ok(ctx), Ok(cont), Ok(ans_st), Ok(field_st), Ok(swarm_st), Ok(isense)) = (
+                        cortex_sync.lock(),
+                        if let Err(e) = system::kernel::tick(
+                            &mut *kernel_state,
+                            log::error!("🔴 Kernel tick failed: {}", e);
+                        log::error!("🔴 Failed to lock dependencies for Kernel");
+                    log::error!("🔴 Failed to lock Kernel");
+                // SecureFlow Engine - Sécurité passive et auto-stabilisation
+                if let Ok(mut secure_state) = secureflow.lock() {
+                    if let (Ok(kern), Ok(ctx), Ok(ans_st), Ok(field_st)) = (
+                        kernel.lock(),
+                        field.lock()
+                        if let Err(e) = system::secureflow::tick(
+                            &mut *secure_state,
+                            &*kern,
+                            &*field_st
+                            log::error!("🔴 Échec tick SecureFlow: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances SecureFlow");
+                    log::error!("🔴 Échec verrouillage SecureFlow");
+                // LowFlow Engine - Mode basse charge et dégradation contrôlée
+                if let Ok(mut lowflow_state) = lowflow.lock() {
+                    if let (Ok(secure), Ok(kern), Ok(ctx)) = (
+                        secureflow.lock(),
+                        cortex_sync.lock()
+                        if let Err(e) = system::lowflow::tick(
+                            &mut *lowflow_state,
+                            &*secure,
+                            &*ctx
+                            log::error!("🔴 Échec tick LowFlow: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances LowFlow");
+                    log::error!("🔴 Échec verrouillage LowFlow");
+                // Stability Monitor - Surveillance globale de la stabilité
+                if let Ok(mut stability_state) = stability.lock() {
+                    if let (Ok(kern), Ok(ctx), Ok(field_st), Ok(secure), Ok(lowfl)) = (
+                        lowflow.lock()
+                        if let Err(e) = system::stability::tick(
+                            &mut *stability_state,
+                            &*lowfl
+                            log::error!("🔴 Échec tick Stability Monitor: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Stability Monitor");
+                    log::error!("🔴 Échec verrouillage Stability Monitor");
+                // Integrity Engine - Validation interne et cohérence
+                if let Ok(mut integrity_state) = integrity.lock() {
+                    if let (Ok(kern), Ok(ctx), Ok(stab)) = (
+                        stability.lock()
+                        if let Err(e) = system::integrity::tick(
+                            &mut *integrity_state,
+                            &*stab
+                            log::error!("🔴 Échec tick Integrity Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Integrity Engine");
+                    log::error!("🔴 Échec verrouillage Integrity Engine");
+                // Balance Engine - Équilibre interne global
+                if let Ok(mut balance_state) = balance.lock() {
+                    if let (Ok(kern), Ok(ctx), Ok(stab), Ok(integ), Ok(field_st), Ok(secure), Ok(lowfl)) = (
+                        stability.lock(),
+                        integrity.lock(),
+                        if let Err(e) = system::balance::tick(
+                            &mut *balance_state,
+                            &*stab,
+                            &*integ,
+                            log::error!("🔴 Échec tick Balance Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Balance Engine");
+                    log::error!("🔴 Échec verrouillage Balance Engine");
+                // === PERCEPTION STACK (Modules #20-24) ===
+                // Pulse Engine - Rythme interne, cadence & respiration
+                if let Ok(mut pulse_state) = pulse.lock() {
+                    if let (Ok(stab), Ok(bal), Ok(secure), Ok(lowfl), Ok(field_st)) = (
+                        balance.lock(),
+                        lowflow.lock(),
+                        if let Err(e) = system::pulse::tick(
+                            &mut *pulse_state,
+                            &*bal,
+                            &*lowfl,
+                            log::error!("🔴 Échec tick Pulse Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Pulse Engine");
+                    log::error!("🔴 Échec verrouillage Pulse Engine");
+                // FlowSync Engine - Coordination & Unification des flux
+                if let Ok(mut flowsync_state) = flowsync.lock() {
+                    if let (Ok(pulse_st), Ok(bal), Ok(field_st), Ok(stab), Ok(integ)) = (
+                        pulse.lock(),
+                        integrity.lock()
+                        if let Err(e) = system::flowsync::tick(
+                            &mut *flowsync_state,
+                            &*pulse_st,
+                            &*integ
+                            log::error!("🔴 Échec tick FlowSync Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances FlowSync Engine");
+                    log::error!("🔴 Échec verrouillage FlowSync Engine");
+                // Harmonic Engine - Harmonie interne & cohérence vibratoire
+                if let Ok(mut harmonic_state) = harmonic.lock() {
+                    if let (Ok(flow), Ok(pulse_st), Ok(bal), Ok(field_st)) = (
+                        flowsync.lock(),
+                        if let Err(e) = system::harmonic::tick(
+                            &mut *harmonic_state,
+                            &*flow,
+                            log::error!("🔴 Échec tick Harmonic Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Harmonic Engine");
+                    log::error!("🔴 Échec verrouillage Harmonic Engine");
+                // DeepSense Engine - Perception interne avancée (note: utilise ancien Resonance)
+                if let Ok(mut deepsense_state) = deepsense.lock() {
+                    if let (Ok(res), Ok(harm), Ok(stab), Ok(bal)) = (
+                        harmonic.lock(),
+                        balance.lock()
+                        if let Err(e) = system::deepsense::tick(
+                            &mut *deepsense_state,
+                            &*harm,
+                            &*bal
+                            log::error!("🔴 Échec tick DeepSense Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances DeepSense Engine");
+                    log::error!("🔴 Échec verrouillage DeepSense Engine");
+                // === ADVANCED STACK (Modules #25-28) ===
+                // DeepAlignment Engine - Alignement profond & cohérence avancée
+                if let Ok(mut deepalign_state) = deepalignment.lock() {
+                    if let (Ok(deep), Ok(res), Ok(harm), Ok(flow)) = (
+                        deepsense.lock(),
+                        flowsync.lock()
+                        if let Err(e) = system::deepalignment::tick(
+                            &mut *deepalign_state,
+                            &*deep,
+                            &*flow
+                            log::error!("🔴 Échec tick DeepAlignment Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances DeepAlignment Engine");
+                    log::error!("🔴 Échec verrouillage DeepAlignment Engine");
+                // VitalCore Engine - Vitalité interne & énergie
+                if let Ok(mut vital_state) = vitalcore.lock() {
+                    if let (Ok(cont), Ok(align), Ok(res), Ok(flow), Ok(stab)) = (
+                        deepalignment.lock(),
+                        if let Err(e) = system::vitalcore::tick(
+                            &mut *vital_state,
+                            &*align,
+                            log::error!("🔴 Échec tick VitalCore Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances VitalCore Engine");
+                    log::error!("🔴 Échec verrouillage VitalCore Engine");
+                // NeuroField Engine - Champ neuronal interne
+                if let Ok(mut neuro_state) = neurofield.lock() {
+                    if let (Ok(vital), Ok(cont), Ok(align), Ok(res)) = (
+                        vitalcore.lock(),
+                        if let Err(e) = system::neurofield::tick(
+                            &mut *neuro_state,
+                            &*vital,
+                            &*res
+                            log::error!("🔴 Échec tick NeuroField Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances NeuroField Engine");
+                    log::error!("🔴 Échec verrouillage NeuroField Engine");
+                // NeuroMesh Engine - Réseau neuronal complet
+                if let Ok(mut mesh_state) = neuromesh.lock() {
+                    if let (Ok(neuro), Ok(vital), Ok(cont), Ok(align)) = (
+                        neurofield.lock(),
+                        deepalignment.lock()
+                        if let Err(e) = system::neuromesh::tick(
+                            &mut *mesh_state,
+                            &*neuro,
+                            &*align
+                            log::error!("🔴 Échec tick NeuroMesh Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances NeuroMesh Engine");
+                    log::error!("🔴 Échec verrouillage NeuroMesh Engine");
+                // CoreMesh Engine - Structure profonde du cortex
+                if let Ok(mut core_state) = coremesh.lock() {
+                    if let (Ok(mesh), Ok(neuro), Ok(cont), Ok(align)) = (
+                        neuromesh.lock(),
+                        if let Err(e) = system::coremesh::tick(
+                            &mut *core_state,
+                            &*mesh,
+                            log::error!("🔴 Échec tick CoreMesh Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances CoreMesh Engine");
+                    log::error!("🔴 Échec verrouillage CoreMesh Engine");
+                // MetaCortex Engine - Cortex supérieur
+                if let Ok(mut meta_state) = metacortex.lock() {
+                    if let (Ok(core), Ok(mesh), Ok(neuro), Ok(cont), Ok(align), Ok(res)) = (
+                        coremesh.lock(),
+                        if let Err(e) = system::metacortex::tick(
+                            &mut *meta_state,
+                            &*core,
+                            log::error!("🔴 Échec tick MetaCortex Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances MetaCortex Engine");
+                    log::error!("🔴 Échec verrouillage MetaCortex Engine");
+                // Governor Engine - Régulation cognitive
+                if let Ok(mut gov_state) = governor.lock() {
+                    if let (Ok(meta), Ok(core), Ok(mesh), Ok(neuro), Ok(cont), Ok(stab), Ok(align)) = (
+                        metacortex.lock(),
+                        if let Err(e) = system::governor::tick(
+                            &mut *gov_state,
+                            &*meta,
+                            log::error!("🔴 Échec tick Governor Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Governor Engine");
+                    log::error!("🔴 Échec verrouillage Governor Engine");
+                // Conscience Engine - Auto-évaluation cognitive
+                if let Ok(mut cons_state) = conscience.lock() {
+                    if let (Ok(meta), Ok(gov), Ok(core), Ok(mesh), Ok(cont), Ok(align), Ok(res)) = (
+                        governor.lock(),
+                        if let Err(e) = system::conscience::tick(
+                            &mut *cons_state,
+                            &*gov,
+                            log::error!("🔴 Échec tick Conscience Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Conscience Engine");
+                    log::error!("🔴 Échec verrouillage Conscience Engine");
+                // Adaptive Intelligence Engine - Intelligence adaptative
+                if let Ok(mut adapt_state) = adaptive.lock() {
+                    if let (Ok(cons), Ok(gov), Ok(meta), Ok(core), Ok(mesh), Ok(neuro), Ok(cont), Ok(align)) = (
+                        conscience.lock(),
+                        if let Err(e) = system::adaptive::tick(
+                            &mut *adapt_state,
+                            &*cons,
+                            log::error!("🔴 Échec tick Adaptive Intelligence Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Adaptive Intelligence Engine");
+                    log::error!("🔴 Échec verrouillage Adaptive Intelligence Engine");
+                // Evolution Engine - Évolution long terme
+                if let Ok(mut evol_state) = evolution.lock() {
+                    if let (Ok(adapt), Ok(cons), Ok(meta), Ok(cont), Ok(neuro), Ok(mesh), Ok(mut hist)) = (
+                        adaptive.lock(),
+                        evolution_history.lock()
+                        if let Err(e) = system::evolution::tick(
+                            &mut *evol_state,
+                            &*adapt,
+                            &mut *hist
+                            log::error!("🔴 Échec tick Evolution Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Evolution Engine");
+                    log::error!("🔴 Échec verrouillage Evolution Engine");
+                // Sentient Loop Engine - Boucle sentiente + auto-réflexion continue
+                if let Ok(mut sent_state) = sentient.lock() {
+                    if let (Ok(evol), Ok(adapt), Ok(cons), Ok(meta), Ok(cont), Ok(mut loop_mem)) = (
+                        evolution.lock(),
+                        sentient_loop.lock()
+                        if let Err(e) = system::sentient::tick(
+                            &mut *sent_state,
+                            &*evol,
+                            &mut *loop_mem
+                            log::error!("🔴 Échec tick Sentient Loop Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Sentient Loop Engine");
+                    log::error!("🔴 Échec verrouillage Sentient Loop Engine");
+                // Harmonic Brain Engine - Orchestrateur neuro-harmonique
+                if let Ok(mut hb_state) = harmonic_brain.lock() {
+                    if let (Ok(sent), Ok(evol), Ok(adapt), Ok(cons), Ok(meta), Ok(cont), Ok(mut res_mem)) = (
+                        sentient.lock(),
+                        harmonic_resonance.lock()
+                        if let Err(e) = system::harmonic_brain::tick(
+                            &mut *hb_state,
+                            &*sent,
+                            &mut *res_mem
+                            log::error!("🔴 Échec tick Harmonic Brain Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Harmonic Brain Engine");
+                    log::error!("🔴 Échec verrouillage Harmonic Brain Engine");
+                // Meta-Integration Engine - Unification trans-systémique
+                if let Ok(mut mi_state) = meta_integration.lock() {
+                    if let (Ok(hb), Ok(sent), Ok(evol), Ok(adapt), Ok(cons), Ok(meta), Ok(cont), Ok(mut align_mem)) = (
+                        harmonic_brain.lock(),
+                        alignment_memory.lock()
+                        if let Err(e) = system::meta_integration::tick(
+                            &mut *mi_state,
+                            &*hb,
+                            &mut *align_mem
+                            log::error!("🔴 Échec tick Meta-Integration Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Meta-Integration Engine");
+                    log::error!("🔴 Échec verrouillage Meta-Integration Engine");
+                // Architecture Engine - Géométrie cognitive + structure interne
+                if let Ok(mut arch_state) = architecture.lock() {
+                    if let (Ok(mi), Ok(hb), Ok(sent), Ok(evol), Ok(adapt), Ok(cons), Ok(cont), Ok(mut geo_mem)) = (
+                        meta_integration.lock(),
+                        geometry_memory.lock()
+                        if let Err(e) = system::architecture::tick(
+                            &mut *arch_state,
+                            &*mi,
+                            &mut *geo_mem
+                            log::error!("🔴 Échec tick Architecture Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Architecture Engine");
+                    log::error!("🔴 Échec verrouillage Architecture Engine");
+                // === EXECUTIVE/STRATEGIC LAYER (Modules #40-43) ===
+                // Central Governor - Régulation + profil exécutif
+                if let Ok(mut cg_state) = central_governor.lock() {
+                    if let (Ok(arch), Ok(mi), Ok(hb), Ok(sent), Ok(evol), Ok(adapt), Ok(cons), Ok(mut reg_mem)) = (
+                        architecture.lock(),
+                        regulation_profile.lock()
+                        if let Err(e) = system::central_governor::tick(
+                            &mut *cg_state,
+                            &*arch,
+                            &mut *reg_mem
+                            log::error!("🔴 Échec tick Central Governor: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Central Governor");
+                    log::error!("🔴 Échec verrouillage Central Governor");
+                // Executive Flow - Flux exécutif + alertes
+                if let Ok(mut ef_state) = executive_flow.lock() {
+                    if let (Ok(cg), Ok(arch), Ok(mi), Ok(hb), Ok(sent), Ok(evol), Ok(adapt), Ok(mut alert_mem)) = (
+                        central_governor.lock(),
+                        alert_memory.lock()
+                        if let Err(e) = system::executive_flow::tick(
+                            &mut *ef_state,
+                            &*cg,
+                            &mut *alert_mem
+                            log::error!("🔴 Échec tick Executive Flow: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Executive Flow");
+                    log::error!("🔴 Échec verrouillage Executive Flow");
+                // Strategic Intelligence - Intelligence stratégique + tendances
+                if let Ok(mut si_state) = strategic_intelligence.lock() {
+                    if let (Ok(ef), Ok(cg), Ok(arch), Ok(mi), Ok(hb), Ok(evol), Ok(adapt), Ok(cons), Ok(mut trend_mem)) = (
+                        executive_flow.lock(),
+                        trend_memory.lock()
+                        if let Err(e) = system::strategic_intelligence::tick(
+                            &mut *si_state,
+                            &*ef,
+                            &mut *trend_mem
+                            log::error!("🔴 Échec tick Strategic Intelligence: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Strategic Intelligence");
+                    log::error!("🔴 Échec verrouillage Strategic Intelligence");
+                // Intention Engine - Moteur intentionnel + drive directionnel
+                if let Ok(mut int_state) = intention.lock() {
+                    if let (Ok(si), Ok(ef), Ok(cg), Ok(arch), Ok(mi), Ok(hb), Ok(evol), Ok(adapt), Ok(cons), Ok(mut drive_mem)) = (
+                        strategic_intelligence.lock(),
+                        drive_memory.lock()
+                        if let Err(e) = system::intention::tick(
+                            &mut *int_state,
+                            &*si,
+                            &mut *drive_mem
+                            log::error!("🔴 Échec tick Intention Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Intention Engine");
+                    log::error!("🔴 Échec verrouillage Intention Engine");
+                // Action Potential Engine - Évaluation de la préparation à l'action
+                if let Ok(mut ap_state) = action_potential.lock() {
+                    if let (Ok(int), Ok(ef), Ok(cg), Ok(si), Ok(arch), Ok(mi), Ok(sent), Ok(mut thresh_mem)) = (
+                        intention.lock(),
+                        threshold_memory.lock()
+                        if let Err(e) = system::action_potential::tick(
+                            &mut *ap_state,
+                            &*int,
+                            &mut *thresh_mem
+                            log::error!("🔴 Échec tick Action Potential Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Action Potential Engine");
+                    log::error!("🔴 Échec verrouillage Action Potential Engine");
+                // Dashboard Engine - Tableau de bord unifié
+                if let Ok(mut dash_state) = dashboard.lock() {
+                    if let (Ok(si), Ok(int), Ok(ap), Ok(ef), Ok(cg), Ok(arch), Ok(mi), Ok(hb), Ok(sent), Ok(evol)) = (
+                        action_potential.lock(),
+                        evolution.lock()
+                        if let Err(e) = system::dashboard::tick(
+                            &mut *dash_state,
+                            &*ap,
+                            &*evol
+                            log::error!("🔴 Échec tick Dashboard Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Dashboard Engine");
+                    log::error!("🔴 Échec verrouillage Dashboard Engine");
+                // Self-Healing Engine - Auto-réparation + Guardian
+                if let Ok(mut heal_state) = self_healing.lock() {
+                    if let (Ok(mut sent), Ok(mut hb), Ok(mut mi), Ok(mut arch), Ok(mut si), Ok(mut int), Ok(mut ap), Ok(mut ef), Ok(mut cg), Ok(mut evol)) = (
+                        if let Err(e) = system::self_healing_v2::tick(
+                            &mut *heal_state,
+                            &mut *sent,
+                            &mut *hb,
+                            &mut *mi,
+                            &mut *arch,
+                            &mut *si,
+                            &mut *int,
+                            &mut *ap,
+                            &mut *ef,
+                            &mut *cg,
+                            &mut *evol
+                            log::error!("🔴 Échec tick Self-Healing Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Self-Healing Engine");
+                    log::error!("🔴 Échec verrouillage Self-Healing Engine");
+                // Energetic Flow Engine - Flux énergétique + pulse + rythme
+                if let Ok(mut energ_state) = energetic.lock() {
+                    if let (Ok(sent), Ok(hb), Ok(mi), Ok(arch), Ok(si), Ok(int), Ok(ap), Ok(ef), Ok(cg), Ok(evol), Ok(cont), Ok(heal)) = (
+                        self_healing.lock()
+                        if let Err(e) = system::energetic::tick(
+                            &mut *energ_state,
+                            &*heal
+                            log::error!("🔴 Échec tick Energetic Flow Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Energetic Flow Engine");
+                    log::error!("🔴 Échec verrouillage Energetic Flow Engine");
+                // Resonance Engine v2 - Oscillations + cohésion vibratoire
+                if let Ok(mut res_state) = resonance_v2.lock() {
+                    if let (Ok(sent), Ok(hb), Ok(mi), Ok(arch), Ok(si), Ok(int), Ok(ap), Ok(ef), Ok(cg), Ok(evol), Ok(cont), Ok(energ)) = (
+                        energetic.lock()
+                        if let Err(e) = system::resonance_v2::tick(
+                            &mut *res_state,
+                            &*energ
+                            log::error!("🔴 Échec tick Resonance Engine v2: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Resonance Engine v2");
+                    log::error!("🔴 Échec verrouillage Resonance Engine v2");
+                // Meaning Engine - Moteur du sens + orientation + narration
+                if let Ok(mut mean_state) = meaning.lock() {
+                    if let (Ok(res), Ok(arch), Ok(mi), Ok(si), Ok(evol), Ok(cont), Ok(energ)) = (
+                        resonance_v2.lock(),
+                        if let Err(e) = system::meaning::tick(
+                            &mut *mean_state,
+                            log::error!("🔴 Échec tick Meaning Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Meaning Engine");
+                    log::error!("🔴 Échec verrouillage Meaning Engine");
+                // Identity Engine - Identité fonctionnelle + axe interne
+                if let Ok(mut id_state) = identity.lock() {
+                    if let (Ok(mean), Ok(res), Ok(arch), Ok(mi), Ok(si), Ok(evol), Ok(cont), Ok(energ)) = (
+                        meaning.lock(),
+                        if let Err(e) = system::identity::tick(
+                            &mut *id_state,
+                            &*mean,
+                            log::error!("🔴 Échec tick Identity Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Identity Engine");
+                    log::error!("🔴 Échec verrouillage Identity Engine");
+                // Self-Alignment Engine - Auto-ajustement + écart/cible
+                if let Ok(mut align_state) = self_alignment.lock() {
+                    if let (Ok(id), Ok(mean), Ok(res), Ok(evol), Ok(si)) = (
+                        identity.lock(),
+                        strategic_intelligence.lock()
+                        if let Err(e) = system::self_alignment::tick(
+                            &mut *align_state,
+                            &*id,
+                            &*si
+                            log::error!("🔴 Échec tick Self-Alignment Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Self-Alignment");
+                    log::error!("🔴 Échec verrouillage Self-Alignment");
+                // Taskflow Engine - Séquences opérationnelles + clarté
+                if let Ok(mut task_state) = taskflow.lock() {
+                    if let (Ok(id), Ok(mean), Ok(align), Ok(res), Ok(evol), Ok(arch), Ok(si)) = (
+                        self_alignment.lock(),
+                        if let Err(e) = system::taskflow::tick(
+                            &mut *task_state,
+                            log::error!("🔴 Échec tick Taskflow Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Taskflow");
+                    log::error!("🔴 Échec verrouillage Taskflow");
+                // Mission Engine - Axe stratégique + vecteur + cohérence
+                if let Ok(mut mission_state) = mission.lock() {
+                    if let (Ok(id), Ok(mean), Ok(align), Ok(res), Ok(evol), Ok(si)) = (
+                        if let Err(e) = system::mission::tick(
+                            &mut *mission_state,
+                            log::error!("🔴 Échec tick Mission Engine: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Mission");
+                    log::error!("🔴 Échec verrouillage Mission");
+                // Adaptive Intelligence Engine - Plasticité cognitive
+                if let Ok(mut ai_state) = adaptive_intelligence.lock() {
+                    if let (Ok(id), Ok(mean), Ok(consc), Ok(res), Ok(align), Ok(gov), Ok(mis), Ok(evol)) = (
+                        mission.lock(),
+                        if let Err(e) = system::adaptive_intelligence::tick(
+                            &mut *ai_state,
+                            &*consc,
+                            &*mis,
+                            log::error!("🔴 Échec tick Adaptive Intelligence: {}", e);
+                        log::error!("🔴 Échec verrouillage dépendances Adaptive Intelligence");
+                    log::error!("🔴 Échec verrouillage Adaptive Intelligence");
+                // Autonomic Evolution Supervisor - Supervision évolutive
+                if let Ok(mut aes_state) = autonomic_evolution.lock() {
+                    if let (Ok(evol), Ok(ai), Ok(align), Ok(res), Ok(id)) = (
+                        evolution.lock(),
+                        adaptive_intelligence.lock(),
+                        self_alignment.lock(),
+                        resonance_v2.lock(),
+                        identity.lock()
+                    ) {
+                        if let Err(e) = system::autonomic_evolution::tick(
+                            &mut *aes_state,
+                            &*evol,
+                            &*ai,
+                            &*align,
+                            &*res,
+                            &*id
+                        ) {
+                            log::error!("🔴 Échec tick Autonomic Evolution: {}", e);
+                        }
+                    } else {
+                        log::error!("🔴 Échec verrouillage dépendances Autonomic Evolution");
+                    }
+                } else {
+                    log::error!("🔴 Échec verrouillage Autonomic Evolution");
+                }
+                if tick_count % 60 == 0 {
+                    log::info!("💓 System heartbeat: {} ticks completed", tick_count);
+                // Sleep for 1 second between ticks
+                thread::sleep(Duration::from_millis(1000));
+            }
+        });
+        log::info!("✅ Scheduler started successfully");
+    /// Safe tick wrapper with error handling
+    fn safe_tick<T>(module: &Arc<Mutex<T>>, name: &str) 
+    where
+        T: system::ModuleTrait,
+    {
+        match module.lock() {
+            Ok(mut state) => {
+                if let Err(e) = state.tick() {
+                    log::warn!("⚠️  {} tick error: {}", name, e);
+            Err(e) => {
+                log::error!("❌ {} lock failed: {}", name, e);
+    /// Stop the scheduler
+    pub fn stop_scheduler(&self) {
+        log::info!("⏹️  Stopping scheduler...");
+            *running = false;
+    /// Get overall system status
+    pub fn get_status(&self) -> TitaneResult<SystemStatus> {
+        let mut modules = Vec::new();
+        // Collect health from all modules safely
+        if let Ok(state) = self.helios.lock() {
+            modules.push(state.health());
+        if let Ok(state) = self.nexus.lock() {
+        if let Ok(state) = self.harmonia.lock() {
+        if let Ok(state) = self.sentinel.lock() {
+        if let Ok(state) = self.watchdog.lock() {
+        if let Ok(state) = self.self_heal.lock() {
+        if let Ok(state) = self.adaptive_engine.lock() {
+            modules.push(state.health());
+        }
+        if let Ok(state) = self.memory.lock() {
+            modules.push(state.health());
+        }
+                    
+        Ok(SystemStatus { modules })
+    /// Get specific module metrics
+    pub fn get_helios_metrics(&self) -> TitaneResult<String> {
+        match self.helios.lock() {
+            Ok(state) => {
+                let metrics = serde_json::json!({
+                    "bpm": state.bpm,
+                    "vitality_score": state.vitality_score,
+                    "system_load": state.system_load,
+                    "last_update": state.last_update,
+                });
+                Ok(metrics.to_string())
+            Err(e) => Err(format!("Failed to lock Helios: {}", e)),
+    pub fn get_nexus_graph(&self) -> TitaneResult<String> {
+        match self.nexus.lock() {
+                let graph = serde_json::json!({
+                    "cognitive_pressure": state.cognitive_pressure,
+                    "global_score": state.global_score,
+                    "nodes": 1, // Placeholder
+                    "connections": 0,
+                Ok(graph.to_string())
+            Err(e) => Err(format!("Failed to lock Nexus: {}", e)),
+    pub fn get_watchdog_logs(&self) -> TitaneResult<Vec<String>> {
+        match self.watchdog.lock() {
+                Ok(vec![
+                    format!("Tick misses: {}", state.tick_misses),
+                    format!("Last check: {}", state.last_check),
+                    format!("Module health: {:.1}%", state.module_health),
+                ])
+            Err(e) => Err(format!("Failed to lock Watchdog: {}", e)),
+// ==================== TAURI COMMANDS ====================
+#[tauri::command]
+fn get_system_status(state: State<Arc<Mutex<TitaneCore>>>) -> Result<SystemStatus, String> {
+    let core = state.lock().map_err(|e| format!("Lock error: {}", e))?;
+    core.get_status().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn helios_get_metrics(state: State<Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
+    let core = state.lock().map_err(|e| format!("Lock error: {}", e))?;
+    core.get_helios_metrics().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn nexus_get_graph(state: State<Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
+    let core = state.lock().map_err(|e| format!("Lock error: {}", e))?;
+    core.get_nexus_graph().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn watchdog_get_logs(state: State<Arc<Mutex<TitaneCore>>>) -> Result<Vec<String>, String> {
+    let core = state.lock().map_err(|e| format!("Lock error: {}", e))?;
+    core.get_watchdog_logs().map_err(|e| e.to_string())
+}
+
+// ==================== MAIN ====================
+fn main() {
+    // Initialize logger
+    env_logger::Builder::from_default_env()
+        .filter_level(log::LevelFilter::Info)
+        .init();
+    log::info!("╔═══════════════════════════════════════════╗");
+    log::info!("║   🌌 TITANE∞ v10.4                       ║");
+    log::info!("║   Cognitive Platform - Production Ready  ║");
+    log::info!("║   Rust 1.91.1 | Tauri v2 | React 18.3    ║");
+    log::info!("╚═══════════════════════════════════════════╝");
+    // Initialize core system
+    let core = match TitaneCore::new() {
+        Ok(c) => {
+            log::info!("✅ Core initialized successfully");
+            Arc::new(Mutex::new(c))
+        Err(e) => {
+            log::error!("❌ Failed to initialize core: {}", e);
+            panic!("Core initialization failed");
+    };
+    // Start the global scheduler
+        let core_locked = core.lock().expect("Failed to lock core for scheduler start");
+        core_locked.start_scheduler();
+    // Build and run Tauri application
+    tauri::Builder::default()
+        .manage(core)
+        .invoke_handler(tauri::generate_handler![
+            get_system_status,
+            helios_get_metrics,
+            nexus_get_graph,
+            watchdog_get_logs,
+            system::memory::save_entry,
+            system::memory::load_entries,
+            system::memory::clear_memory,
+            system::memory::get_memory_state,
+            system::memory_v2::save_entry,
+            system::memory_v2::load_entries,
+            system::memory_v2::clear_memory,
+            system::memory_v2::get_memory_state,
+        ])
+        .run(tauri::generate_context!())
+        .expect("Error while running tauri application");
+    log::info!("👋 TITANE∞ shutting down gracefully");

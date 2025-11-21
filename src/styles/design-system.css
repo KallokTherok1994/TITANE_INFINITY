@@ -1,0 +1,402 @@
+/**
+ * 🎨 TITANE∞ DESIGN SYSTEM v12 — VOICE MODE LUXE
+ * Design system premium pour interface vocale immersive
+ * GPU-optimized • Audio-reactive • Glassmorphism haute définition
+ */
+
+/* ============================================
+   🌈 PALETTE COULEURS TITANE∞ PREMIUM
+   ============================================ */
+
+:root {
+  /* Couleurs principales */
+  --titane-deep: #0a0e27;
+  --titane-midnight: #131a3a;
+  --titane-space: #1a2447;
+  --titane-ocean: #1e3a8a;
+  --titane-blue: #2563eb;
+  --titane-sky: #3b82f6;
+  --titane-cyan: #06b6d4;
+  --titane-teal: #14b8a6;
+  --titane-turquoise: #2dd4bf;
+
+  /* Accents énergétiques */
+  --titane-accent-primary: #3b82f6;
+  --titane-accent-secondary: #06b6d4;
+  --titane-accent-glow: #60a5fa;
+  --titane-accent-hot: #f59e0b;
+  --titane-accent-warm: #fbbf24;
+
+  /* Audio-reactive spectrum */
+  --titane-wave-low: #06b6d4;      /* Graves - Cyan */
+  --titane-wave-mid: #3b82f6;      /* Médiums - Blue */
+  --titane-wave-high: #8b5cf6;     /* Aigus - Purple */
+  --titane-wave-ultra: #ec4899;    /* Ultra - Pink */
+
+  /* Surfaces glassmorphism */
+  --titane-bg: linear-gradient(135deg, #0a0e27 0%, #131a3a 50%, #1a2447 100%);
+  --titane-bg-dark: #080b1f;
+  --titane-bg-darker: #050714;
+  
+  --titane-surface: rgba(26, 36, 71, 0.6);
+  --titane-surface-glass: rgba(26, 36, 71, 0.4);
+  --titane-surface-light: rgba(59, 130, 246, 0.08);
+  --titane-surface-glow: rgba(59, 130, 246, 0.15);
+
+  /* Bordures & séparateurs */
+  --titane-border: rgba(59, 130, 246, 0.2);
+  --titane-border-light: rgba(59, 130, 246, 0.1);
+  --titane-border-glow: rgba(59, 130, 246, 0.4);
+
+  /* Texte */
+  --titane-text-primary: #f0f9ff;
+  --titane-text-secondary: #bfdbfe;
+  --titane-text-muted: #7dd3fc;
+  --titane-text-dim: #475569;
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  --radius-soft: 20px;
+
+  /* Blur effects */
+  --blur-subtle: blur(8px);
+  --blur-medium: blur(16px);
+  --blur-strong: blur(24px);
+  --blur-ultra: blur(40px);
+
+  /* Shadows premium */
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.12);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.18);
+  --shadow-strong: 0 12px 48px rgba(0, 0, 0, 0.25);
+  --shadow-glow: 0 0 32px rgba(59, 130, 246, 0.3);
+  --shadow-glow-strong: 0 0 48px rgba(59, 130, 246, 0.5);
+
+  /* Transitions premium */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-soft: 350ms cubic-bezier(0.4, 0, 0.6, 1);
+  --transition-smooth: 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Spacing harmonieux */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Z-index layers */
+  --z-background: -1;
+  --z-base: 0;
+  --z-content: 10;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  --z-toast: 10000;
+}
+
+/* ============================================
+   🌙 THÈME CLAIR (SOFT LUXE)
+   ============================================ */
+
+[data-theme="light"] {
+  --titane-deep: #f8fafc;
+  --titane-midnight: #f1f5f9;
+  --titane-space: #e2e8f0;
+  --titane-ocean: #cbd5e1;
+  --titane-blue: #3b82f6;
+  --titane-sky: #2563eb;
+
+  --titane-bg: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  --titane-bg-dark: #ffffff;
+  --titane-bg-darker: #f8fafc;
+
+  --titane-surface: rgba(255, 255, 255, 0.8);
+  --titane-surface-glass: rgba(255, 255, 255, 0.6);
+  --titane-surface-light: rgba(59, 130, 246, 0.05);
+  --titane-surface-glow: rgba(59, 130, 246, 0.12);
+
+  --titane-border: rgba(59, 130, 246, 0.2);
+  --titane-border-light: rgba(59, 130, 246, 0.1);
+
+  --titane-text-primary: #0f172a;
+  --titane-text-secondary: #334155;
+  --titane-text-muted: #64748b;
+  --titane-text-dim: #94a3b8;
+
+  --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --shadow-strong: 0 12px 48px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 0 32px rgba(59, 130, 246, 0.2);
+}
+
+/* ============================================
+   🌑 THÈME SOMBRE INTENSE (FOCUS MODE)
+   ============================================ */
+
+[data-theme="dark-intense"] {
+  --titane-deep: #000000;
+  --titane-midnight: #0a0a0a;
+  --titane-space: #141414;
+  --titane-ocean: #1a1a1a;
+
+  --titane-bg: linear-gradient(135deg, #000000 0%, #0a0a0a 50%, #141414 100%);
+  --titane-bg-dark: #000000;
+  --titane-bg-darker: #000000;
+
+  --titane-surface: rgba(20, 20, 20, 0.8);
+  --titane-surface-glass: rgba(20, 20, 20, 0.6);
+
+  --shadow-glow: 0 0 32px rgba(59, 130, 246, 0.4);
+  --shadow-glow-strong: 0 0 64px rgba(59, 130, 246, 0.6);
+}
+
+/* ============================================
+   ✨ GLASSMORPHISM PREMIUM
+   ============================================ */
+
+.glass {
+  background: var(--titane-surface-glass);
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--titane-border-light);
+  box-shadow: var(--shadow-soft);
+}
+
+.glass-strong {
+  background: var(--titane-surface);
+  backdrop-filter: var(--blur-strong);
+  -webkit-backdrop-filter: var(--blur-strong);
+  border: 1px solid var(--titane-border);
+  box-shadow: var(--shadow-medium);
+}
+
+.glass-glow {
+  background: var(--titane-surface-glow);
+  backdrop-filter: var(--blur-medium);
+  -webkit-backdrop-filter: var(--blur-medium);
+  border: 1px solid var(--titane-border-glow);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ============================================
+   🌊 GRADIENTS PREMIUM
+   ============================================ */
+
+.gradient-titane {
+  background: linear-gradient(135deg, var(--titane-blue) 0%, var(--titane-cyan) 100%);
+}
+
+.gradient-ocean {
+  background: linear-gradient(180deg, var(--titane-ocean) 0%, var(--titane-midnight) 100%);
+}
+
+.gradient-glow {
+  background: radial-gradient(circle at center, var(--titane-accent-glow) 0%, transparent 70%);
+}
+
+.gradient-spectrum {
+  background: linear-gradient(90deg, 
+    var(--titane-wave-low) 0%, 
+    var(--titane-wave-mid) 50%, 
+    var(--titane-wave-high) 100%
+  );
+}
+
+/* ============================================
+   💫 ANIMATIONS GPU-OPTIMIZED
+   ============================================ */
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: var(--shadow-glow); }
+  50% { box-shadow: var(--shadow-glow-strong); }
+}
+
+@keyframes rotate-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+
+@keyframes fade-in-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+@keyframes fade-in-scale {
+  from { 
+    opacity: 0; 
+    transform: scale(0.9); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* ============================================
+   🎯 CLASSES UTILITAIRES ANIMATION
+   ============================================ */
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-rotate-slow {
+  animation: rotate-slow 20s linear infinite;
+}
+
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up var(--transition-base) ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fade-in-scale var(--transition-soft) ease-out;
+}
+
+/* ============================================
+   🚀 PERFORMANCE OPTIMIZATION
+   ============================================ */
+
+/* Force GPU acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Smooth scrolling */
+.smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* High quality rendering */
+.hq-render {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   📱 RESPONSIVE UTILITIES
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================
+   🎨 VOICE MODE SPECIFIC STYLES
+   ============================================ */
+
+.voice-active {
+  --glow-intensity: 1;
+  box-shadow: 0 0 calc(32px * var(--glow-intensity)) rgba(59, 130, 246, 0.5);
+}
+
+.voice-listening {
+  --pulse-scale: 1.05;
+  animation: pulse-soft 1.5s ease-in-out infinite;
+}
+
+.voice-thinking {
+  --rotate-speed: 3s;
+  animation: rotate-slow var(--rotate-speed) linear infinite;
+}
+
+.voice-speaking {
+  --glow-intensity: 1.2;
+  animation: pulse-glow 0.8s ease-in-out infinite;
+}
+
+/* ============================================
+   🔊 AUDIO-REACTIVE CLASSES
+   ============================================ */
+
+.audio-reactive {
+  --audio-volume: 0;
+  --audio-frequency: 0;
+  --audio-energy: 0;
+  
+  transform: scale(calc(1 + var(--audio-volume) * 0.3));
+  filter: hue-rotate(calc(var(--audio-frequency) * 60deg));
+  opacity: calc(0.7 + var(--audio-energy) * 0.3);
+  transition: transform var(--transition-fast), 
+              filter var(--transition-base),
+              opacity var(--transition-fast);
+}
+
+.waveform-bar {
+  --bar-height: 0;
+  height: calc(20px + var(--bar-height) * 100px);
+  transition: height var(--transition-fast);
+}
+
+/* ============================================
+   ✨ FINAL POLISH
+   ============================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--titane-bg);
+  color: var(--titane-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--titane-accent-primary);
+  color: white;
+}

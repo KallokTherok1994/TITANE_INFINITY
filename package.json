@@ -1,0 +1,60 @@
+{
+  "name": "titane-infinity",
+  "version": "17.0.0",
+  "description": "TITANE∞ v17.0 - WebKit Fix Total, 100% Tauri/Rust/Cargo, Local-First, Gemini+Ollama Auto-Connect, Production-Ready",
+  "type": "module",
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "vite build",
+    "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",
+    "tauri": "tauri",
+    "start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build",
+    "vite:dev": "echo '🔒 TAURI-ONLY: Direct Vite disabled. Use: npm run dev' && exit 1",
+    "tauri:build:debug": "tauri build --debug",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "type-check": "tsc --noEmit",
+    "clean": "rm -rf node_modules dist .vite src-tauri/target",
+    "clean:dist": "rm -rf dist",
+    "clean:cache": "rm -rf .vite node_modules/.vite",
+    "reinstall": "npm run clean && npm install",
+    "verify": "sh ./verify_global_system.sh",
+    "verify:cognitive": "sh ./verify_cognitive_synthesis.sh && sh ./verify_strategic_direction.sh && sh ./verify_advanced_cognitive.sh",
+    "verify:stacks": "sh ./verify_cognitive_stack.sh && sh ./verify_neural_mesh.sh && sh ./verify_perception_stack.sh",
+    "verify:tauri": "sh ./verify_tauri_v2_api.sh",
+    "test:build": "npm run type-check && npm run build",
+    "prebuild": "npm run type-check"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "^2.9.0",
+    "@tauri-apps/plugin-shell": "^2.0.0",
+    "@types/react-router-dom": "^5.3.3",
+    "framer-motion": "^12.23.24",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.9.6",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "@typescript-eslint/eslint-plugin": "^7.13.1",
+    "@typescript-eslint/parser": "^7.13.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.7",
+    "terser": "^5.44.1",
+    "typescript": "^5.5.3",
+    "vite": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

@@ -1,0 +1,72 @@
+/**
+ * 👂 ListeningIndicator Styles
+ */
+
+.listening-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(0);
+}
+
+.listening-idle {
+  border-radius: 50%;
+}
+
+.listening-halo {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid;
+  transform-origin: center;
+}
+
+.listening-orb {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.listening-core {
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  border-radius: 50%;
+  transform: translateZ(0);
+}
+
+.listening-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid;
+  pointer-events: none;
+}
+
+.listening-particles {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thinking-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.listening-label {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}

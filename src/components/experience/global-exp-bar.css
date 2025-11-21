@@ -1,0 +1,179 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — GLOBAL EXP BAR STYLES
+ *   Barre toujours visible, minimaliste, animée
+ * ═══════════════════════════════════════════════════════════
+ */
+
+.global-exp-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  padding: 10px 20px;
+  background: var(--color-surface, rgba(20, 20, 20, 0.95));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.global-exp-bar:hover {
+  background: var(--color-surface-light, rgba(30, 30, 30, 0.95));
+  border-bottom-color: var(--color-primary, #dc2626);
+  box-shadow: 0 4px 20px var(--color-primary-glow, rgba(220, 38, 38, 0.3));
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📊 CONTENT LAYOUT
+ * ═══════════════════════════════════════════════════════ */
+
+.global-exp-bar-content {
+  max-width: 1920px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.global-exp-bar-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * ⚡ LEVEL INFO
+ * ═══════════════════════════════════════════════════════ */
+
+.global-exp-bar-level {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.global-exp-bar-level-icon {
+  font-size: 20px;
+  line-height: 1;
+  animation: shimmer 2s ease-in-out infinite;
+}
+
+.global-exp-bar-level-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text, #f3f4f6);
+  letter-spacing: 0.5px;
+}
+
+.global-exp-bar-level-value {
+  padding: 4px 12px;
+  background: linear-gradient(135deg, var(--color-primary, #dc2626) 0%, var(--color-primary-dark, #991b1b) 100%);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--color-primary-glow, rgba(220, 38, 38, 0.4));
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📈 XP INFO
+ * ═══════════════════════════════════════════════════════ */
+
+.global-exp-bar-xp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary, #d1d5db);
+}
+
+.global-exp-bar-percent {
+  color: var(--color-primary, #dc2626);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📊 PROGRESS BAR
+ * ═══════════════════════════════════════════════════════ */
+
+.global-exp-bar-track {
+  height: 6px;
+  background: var(--color-bg-secondary, #111111);
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.global-exp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary, #dc2626) 0%, var(--color-primary-light, #ef4444) 100%);
+  border-radius: 9999px;
+  transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 10px var(--color-primary-glow, rgba(220, 38, 38, 0.6));
+  position: relative;
+  overflow: hidden;
+}
+
+.global-exp-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer-slide 2s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * ✨ ANIMATIONS
+ * ═══════════════════════════════════════════════════════ */
+
+@keyframes shimmer {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes shimmer-slide {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 200%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📱 RESPONSIVE
+ * ═══════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .global-exp-bar {
+    padding: 8px 12px;
+  }
+
+  .global-exp-bar-level-text {
+    display: none;
+  }
+
+  .global-exp-bar-xp {
+    font-size: 11px;
+  }
+
+  .global-exp-bar-percent {
+    display: none;
+  }
+}

@@ -1,0 +1,125 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — HUD FRAME STYLES
+ * ═══════════════════════════════════════════════════════════
+ */
+
+.hud-frame {
+  background: linear-gradient(135deg, rgba(18, 18, 22, 0.85) 0%, rgba(15, 15, 18, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.hud-frame:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
+              0 0 20px rgba(99, 102, 241, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📋 HEADER
+ * ═══════════════════════════════════════════════════════ */
+
+.hud-frame-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(25, 25, 30, 0.95) 0%, rgba(20, 20, 25, 0.98) 100%);
+  position: relative;
+}
+
+.hud-frame-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary, #dc2626) 50%, transparent);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.hud-frame:hover .hud-frame-header::after {
+  opacity: 0.6;
+}
+
+.hud-frame-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text, #f3f4f6);
+}
+
+.hud-frame-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.hud-frame-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 15, 18, 0.5);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--color-text, #f3f4f6);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hud-frame-toggle:hover {
+  background: rgba(25, 25, 30, 0.8);
+  border-color: var(--color-primary, #dc2626);
+  box-shadow: 0 0 16px var(--color-primary-glow, rgba(220, 38, 38, 0.4));
+  transform: scale(1.1) rotate(180deg);
+}
+
+.hud-frame-toggle:active {
+  transform: scale(0.95) rotate(180deg);
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📄 CONTENT
+ * ═══════════════════════════════════════════════════════ */
+
+.hud-frame-content {
+  padding: 20px;
+  max-height: 1000px;
+  opacity: 1;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hud-frame.collapsed .hud-frame-content {
+  max-height: 0;
+  opacity: 0;
+  padding: 0 20px;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * ✨ VARIANTS
+ * ═══════════════════════════════════════════════════════ */
+
+.hud-frame.glass-light {
+  background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.hud-frame.no-padding .hud-frame-content {
+  padding: 0;
+}

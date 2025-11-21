@@ -1,0 +1,517 @@
+/* 🎨 TITANE∞ v17.0 — EXP FUSION ENGINE DESIGN SYSTEM
+ * Architecture CSS professionnelle, technologique et cohérente
+ * Style : AAA premium, HUD spatial, glassmorphism subtil
+ * Inspirations : Destiny 2, Mass Effect (UI technique, pas gaming)
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   VARIABLES CSS — Couleurs, espacements, animations
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Palette principale */
+  --rubis: #e11d48;
+  --saphir: #3b82f6;
+  --emeraude: #10b981;
+  --amethyste: #8b5cf6;
+  --diamant: #f3f4f6;
+  --ambre: #f59e0b;
+  --cyan: #06b6d4;
+  --rose: #ec4899;
+  --indigo: #6366f1;
+
+  /* Tons sombres (fonds) */
+  --bg-dark-1: #0a0a0f;
+  --bg-dark-2: #12121a;
+  --bg-dark-3: #1a1a28;
+  --bg-dark-4: #22223a;
+
+  /* Glassmorphism */
+  --glass-bg: rgba(20, 20, 32, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.5);
+
+  /* Neon subtil (HUD) */
+  --neon-blue: rgba(59, 130, 246, 0.3);
+  --neon-emerald: rgba(16, 185, 129, 0.3);
+  --neon-ruby: rgba(225, 29, 72, 0.3);
+
+  /* Espacements */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Polices numériques */
+  --font-mono: 'Roboto Mono', 'Fira Code', 'Courier New', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Bordures */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-full: 9999px;
+
+  /* Ombres */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+  --shadow-neon: 0 0 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATIONS PROFESSIONNELLES
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px var(--saphir), 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--saphir), 0 0 40px rgba(59, 130, 246, 0.5);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-down {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes hud-blip {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes level-up-flash {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+    box-shadow: 0 0 30px var(--emeraude);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BARRE XP GLOBALE (toujours visible)
+   ═══════════════════════════════════════════════════════════════ */
+
+.exp-global-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-lg);
+  z-index: 9999;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.exp-global-bar:hover {
+  background: rgba(20, 20, 32, 0.85);
+  border-bottom-color: var(--saphir);
+}
+
+.exp-level-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) var(--space-md);
+  background: linear-gradient(135deg, var(--saphir), var(--amethyste));
+  border-radius: var(--border-radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.exp-progress-container {
+  flex: 1;
+  margin: 0 var(--space-lg);
+  height: 8px;
+  background: var(--bg-dark-3);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.exp-progress-fill {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--saphir),
+    var(--amethyste),
+    var(--saphir)
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: var(--border-radius-full);
+  transition: width var(--transition-slow);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+.exp-progress-text {
+  margin-left: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--diamant);
+  opacity: 0.8;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PANNEAU PRINCIPAL EXP
+   ═══════════════════════════════════════════════════════════════ */
+
+.exp-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fade-in var(--transition-normal);
+}
+
+.exp-panel {
+  width: 95%;
+  max-width: 1400px;
+  height: 90%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg), 0 0 40px var(--neon-blue);
+  display: flex;
+  flex-direction: column;
+  animation: scale-in var(--transition-slow);
+  overflow: hidden;
+}
+
+.exp-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.exp-panel-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background: linear-gradient(135deg, var(--saphir), var(--amethyste));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.exp-panel-close {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-mono);
+}
+
+.exp-panel-close:hover {
+  background: rgba(239, 68, 68, 0.3);
+  transform: scale(1.05);
+}
+
+.exp-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xl);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xl);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARTES (catégories, projets, talents)
+   ═══════════════════════════════════════════════════════════════ */
+
+.exp-card {
+  background: var(--bg-dark-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-lg);
+  transition: all var(--transition-normal);
+}
+
+.exp-card:hover {
+  border-color: var(--saphir);
+  box-shadow: 0 0 20px var(--neon-blue);
+  transform: translateY(-2px);
+}
+
+.exp-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.exp-card-icon {
+  font-size: 2rem;
+}
+
+.exp-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  color: var(--diamant);
+}
+
+.exp-card-level {
+  margin-left: auto;
+  padding: var(--space-xs) var(--space-md);
+  background: linear-gradient(135deg, var(--emeraude), var(--cyan));
+  border-radius: var(--border-radius-full);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.exp-mini-progress {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-dark-3);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  margin: var(--space-sm) 0;
+}
+
+.exp-mini-progress-fill {
+  height: 100%;
+  border-radius: var(--border-radius-full);
+  transition: width var(--transition-slow);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ARBRE DE TALENTS (HexaTree)
+   ═══════════════════════════════════════════════════════════════ */
+
+.talent-tree {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  padding: var(--space-xl);
+}
+
+.talent-branch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.talent-branch-header {
+  text-align: center;
+  margin-bottom: var(--space-lg);
+}
+
+.talent-branch-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-sm);
+}
+
+.talent-branch-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--diamant);
+  font-family: var(--font-sans);
+}
+
+.talent-node {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-dark-2);
+  border: 2px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-md);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.talent-node.unlocked {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2));
+  border-color: var(--saphir);
+  box-shadow: 0 0 20px var(--neon-blue);
+}
+
+.talent-node.locked {
+  opacity: 0.5;
+  filter: grayscale(1);
+}
+
+.talent-node:hover:not(.locked) {
+  transform: translateY(-4px);
+  box-shadow: 0 0 30px var(--neon-blue);
+}
+
+.talent-tier {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--ambre);
+}
+
+.talent-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin-top: var(--space-xs);
+  color: var(--diamant);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   GRAPHIQUES TIMELINE
+   ═══════════════════════════════════════════════════════════════ */
+
+.timeline-chart {
+  background: var(--bg-dark-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-xl);
+}
+
+.chart-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--diamant);
+  margin-bottom: var(--space-lg);
+  font-family: var(--font-sans);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .exp-panel-content {
+    grid-template-columns: 1fr;
+  }
+
+  .talent-tree {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .exp-global-bar {
+    padding: 0 var(--space-md);
+  }
+
+  .exp-panel {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .talent-tree {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SCROLLBAR CUSTOM (HUD style)
+   ═══════════════════════════════════════════════════════════════ */
+
+.exp-panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.exp-panel-content::-webkit-scrollbar-track {
+  background: var(--bg-dark-3);
+}
+
+.exp-panel-content::-webkit-scrollbar-thumb {
+  background: var(--saphir);
+  border-radius: var(--border-radius-full);
+}
+
+.exp-panel-content::-webkit-scrollbar-thumb:hover {
+  background: var(--amethyste);
+}

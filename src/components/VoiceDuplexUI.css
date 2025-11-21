@@ -1,0 +1,218 @@
+/**
+ * 🎙️ VoiceDuplexUI Styles
+ */
+
+.voice-duplex-ui {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  min-height: 100vh;
+  background: var(--titane-bg);
+}
+
+/* Header */
+.duplex-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+}
+
+.duplex-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.title-icon {
+  font-size: 2rem;
+}
+
+.duplex-title h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, var(--titane-accent-primary), var(--titane-accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.duplex-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.status-badge {
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--titane-surface);
+  border: 1px solid var(--titane-border);
+}
+
+.status-badge[data-state="waiting-wakeword"] {
+  color: var(--titane-text-muted);
+}
+
+.status-badge[data-state="listening"] {
+  background: #06b6d4;
+  color: white;
+  border-color: #06b6d4;
+}
+
+.status-badge[data-state="thinking"] {
+  background: #8b5cf6;
+  color: white;
+  border-color: #8b5cf6;
+}
+
+.status-badge[data-state="speaking"] {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.latency-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.latency-value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--titane-accent-primary);
+}
+
+.latency-label {
+  font-size: 0.75rem;
+  color: var(--titane-text-muted);
+}
+
+/* Content */
+.duplex-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.duplex-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2xl);
+  width: 100%;
+  max-width: 800px;
+}
+
+.duplex-visualization {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.duplex-waveform {
+  width: 100%;
+}
+
+/* Controls */
+.duplex-controls {
+  display: flex;
+  gap: var(--space-md);
+}
+
+.control-btn {
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-lg);
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  color: var(--titane-text-primary);
+}
+
+.manual-activate-btn {
+  background: var(--titane-accent-primary);
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+
+.control-btn.deactivate {
+  background: var(--titane-surface);
+  border: 1px solid var(--titane-border);
+}
+
+.control-btn.deactivate:hover {
+  background: var(--titane-surface-glow);
+}
+
+/* Footer */
+.duplex-footer {
+  padding: var(--space-lg);
+  border-top: 1px solid var(--titane-border-light);
+}
+
+.duplex-indicators {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2xl);
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.875rem;
+  color: var(--titane-text-muted);
+  opacity: 0.5;
+  transition: opacity var(--transition-base);
+}
+
+.indicator.active {
+  opacity: 1;
+  color: var(--titane-text-primary);
+}
+
+.indicator-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--titane-text-muted);
+  transition: all var(--transition-base);
+}
+
+.indicator.active .indicator-dot {
+  background: var(--titane-accent-primary);
+  box-shadow: 0 0 12px var(--titane-accent-glow);
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .voice-duplex-ui {
+    padding: var(--space-lg);
+  }
+
+  .duplex-header {
+    flex-direction: column;
+    gap: var(--space-md);
+    text-align: center;
+  }
+
+  .duplex-status {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .duplex-title h2 {
+    font-size: 1.25rem;
+  }
+}

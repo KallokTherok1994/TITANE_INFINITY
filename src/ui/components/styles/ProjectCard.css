@@ -1,0 +1,230 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — PROJECT CARD STYLES
+ * ═══════════════════════════════════════════════════════════
+ */
+
+.project-card {
+  background: linear-gradient(135deg, rgba(25, 25, 30, 0.9) 0%, rgba(20, 20, 25, 0.95) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+  transition: left 600ms ease;
+}
+
+.project-card:hover {
+  border-color: var(--color-primary, #dc2626);
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+              0 0 32px var(--color-primary-glow, rgba(220, 38, 38, 0.5));
+}
+
+.project-card:hover::before {
+  left: 100%;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📋 HEADER
+ * ═══════════════════════════════════════════════════════ */
+
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.project-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.project-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text, #f3f4f6);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-card-description {
+  font-size: 13px;
+  color: var(--color-text-muted, #9ca3af);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.project-card-level {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--color-primary, #dc2626) 0%, var(--color-primary-dark, #991b1b) 100%);
+  border-radius: 10px;
+  box-shadow: 0 0 20px var(--color-primary-glow, rgba(220, 38, 38, 0.5));
+  position: relative;
+  animation: pulseLevelGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseLevelGlow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--color-primary-glow, rgba(220, 38, 38, 0.5));
+  }
+  50% {
+    box-shadow: 0 0 32px var(--color-primary-glow, rgba(220, 38, 38, 0.8));
+  }
+}
+
+.project-card-level-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+}
+
+.project-card-level-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📊 XP BAR
+ * ═══════════════════════════════════════════════════════ */
+
+.project-card-xp {
+  margin-bottom: 16px;
+}
+
+.project-card-xp-bar {
+  height: 10px;
+  background: rgba(10, 10, 10, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.project-card-xp-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary, #dc2626) 0%, var(--color-primary-light, #ef4444) 100%);
+  border-radius: 9999px;
+  transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 12px var(--color-primary-glow, rgba(220, 38, 38, 0.6)),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card-xp-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: xpShimmer 2s linear infinite;
+}
+
+@keyframes xpShimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.project-card-xp-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-card-xp-text {
+  font-size: 12px;
+  color: var(--color-text-secondary, #d1d5db);
+  font-weight: 500;
+}
+
+.project-card-xp-percent {
+  font-size: 12px;
+  color: var(--color-primary, #dc2626);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 🏷️ FOOTER
+ * ═══════════════════════════════════════════════════════ */
+
+.project-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.project-card-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.project-card-category {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: var(--color-surface, rgba(20, 20, 20, 0.8));
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--color-text-secondary, #d1d5db);
+  white-space: nowrap;
+}
+
+.project-card-category-more {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.project-card-date {
+  font-size: 11px;
+  color: var(--color-text-muted, #9ca3af);
+  white-space: nowrap;
+}

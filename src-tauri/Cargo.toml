@@ -1,0 +1,57 @@
+[package]
+name = "titane-infinity"
+version = "17.0.0"
+description = "TITANE∞ v17.0 - WebKit Fix Total, 100% Tauri/Rust/Cargo, Local-First, Production-Ready"
+authors = ["Kevin Thibault"]
+license = "MIT"
+repository = "https://github.com/titane/infinity"
+edition = "2021"
+rust-version = "1.70"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0", features = ["tray-icon", "protocol-asset"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+log = "0.4"
+env_logger = "0.11"
+rand = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.6", features = ["v4", "serde"] }
+base64 = "0.22"
+aes-gcm = "0.10"
+sha2 = "0.10"
+hex = "0.4"
+once_cell = "1.19"
+
+# AI Chat & Voice Mode dependencies
+reqwest = { version = "0.11", features = ["json"] }
+tokio = { version = "1.35", features = ["full"] }
+async-recursion = "1.0"
+regex = "1.10"
+dirs = "5.0"
+dotenv = "0.15"
+urlencoding = "2.1"
+
+# TITANE∞ v13 - Advanced Modules dependencies
+argon2 = "0.5"
+scraper = "0.17"
+html2text = "0.6"
+url = "2.4"
+instant-distance = "0.6.1"
+base58 = "0.2.0"
+bincode = "1.3.3"
+bytes = "1.11.0"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "z"
+strip = "none"  # Required for Tauri bundler to inject __TAURI_BUNDLE_TYPE

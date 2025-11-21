@@ -1,0 +1,58 @@
+/* TITANE∞ v12 - Collapse Styles */
+
+.collapse {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-panel);
+}
+
+.collapse__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-out);
+  color: var(--text-primary);
+}
+
+.collapse__trigger:hover {
+  background: var(--state-hover-overlay);
+}
+
+.collapse__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+}
+
+.collapse__icon {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.collapse__icon--open {
+  transform: rotate(180deg);
+}
+
+.collapse__content {
+  padding: 0 var(--space-5) var(--space-4);
+  animation: slideDown var(--duration-base) var(--ease-out);
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

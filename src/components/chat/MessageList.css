@@ -1,0 +1,261 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — MESSAGE LIST CSS OPTIMISÉ
+ *   Design System avec variables CSS et animations améliorées
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+@import '../../styles/variables.css';
+
+.message-list-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  scroll-behavior: smooth;
+  padding: var(--spacing-md);
+}
+
+.message-list-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.message-list-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+}
+
+.message-list-container::-webkit-scrollbar-thumb {
+  background: var(--accent-blue);
+  border-radius: var(--radius-sm);
+  opacity: 0.3;
+  transition: var(--transition-fast);
+}
+
+.message-list-container::-webkit-scrollbar-thumb:hover {
+  opacity: 0.5;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: 0;
+  margin: 0;
+}
+
+/* Empty state */
+.message-list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  text-align: center;
+  min-height: 400px;
+}
+
+.message-list-empty-icon {
+  font-size: 64px;
+  margin-bottom: var(--spacing-xl);
+  opacity: 0.6;
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.message-list-empty-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  background: var(--gradient-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.message-list-empty-text {
+  font-size: 15px;
+  color: var(--text-secondary, #a0a0a0);
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 0 24px 0;
+}
+
+.message-list-empty-providers {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #00d4ff;
+  transition: all 0.2s ease;
+}
+
+.provider-badge:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: rgba(0, 212, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Loading state */
+.message-loading {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.message-loading-avatar {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+}
+
+.message-loading-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.message-loading-dots {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px;
+  background: rgba(0, 212, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+.message-loading-dots .dot {
+  width: 8px;
+  height: 8px;
+  background: #00d4ff;
+  border-radius: 50%;
+  animation: dotPulse 1.4s ease-in-out infinite;
+}
+
+.message-loading-dots .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.message-loading-dots .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dotPulse {
+  0%, 80%, 100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.message-loading-text {
+  font-size: 12px;
+  color: var(--text-tertiary, #888);
+  padding-left: 4px;
+}
+
+/* Error state */
+.message-error {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.2);
+  border-radius: 12px;
+  margin: 8px 16px;
+  animation: shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+.message-error-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.message-error-content {
+  flex: 1;
+}
+
+.message-error-content strong {
+  display: block;
+  color: #ff4444;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.message-error-content p {
+  margin: 0;
+  color: var(--text-secondary, #c0c0c0);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .message-list-container {
+    padding: 8px;
+  }
+
+  .message-list-empty {
+    padding: 48px 16px;
+    min-height: 300px;
+  }
+
+  .message-list-empty-icon {
+    font-size: 48px;
+  }
+
+  .message-list-empty-title {
+    font-size: 20px;
+  }
+
+  .message-list-empty-text {
+    font-size: 14px;
+  }
+}

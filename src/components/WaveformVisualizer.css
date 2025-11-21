@@ -1,0 +1,30 @@
+/**
+ * 🌊 WaveformVisualizer Styles
+ */
+
+.waveform-visualizer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--titane-bg-darker);
+}
+
+.waveform-canvas {
+  display: block;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.waveform-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    var(--titane-bg-darker) 0%,
+    transparent 20%,
+    transparent 80%,
+    var(--titane-bg-darker) 100%
+  );
+}

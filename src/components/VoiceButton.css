@@ -1,0 +1,97 @@
+/**
+ * 🎤 VoiceButton Styles
+ */
+
+.voice-button-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.voice-button-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--titane-accent-primary);
+  pointer-events: none;
+}
+
+.voice-button {
+  position: relative;
+  border-radius: 50%;
+  border: none;
+  background: var(--titane-surface);
+  backdrop-filter: var(--blur-medium);
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--titane-text-primary);
+}
+
+.voice-button:hover:not(.disabled) {
+  background: var(--titane-surface-glow);
+}
+
+.voice-button.active {
+  background: var(--titane-accent-primary);
+  color: white;
+}
+
+.voice-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.voice-button-gradient {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+.voice-button-shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.voice-button-icon {
+  width: 40%;
+  height: 40%;
+  position: relative;
+  z-index: 1;
+}
+
+.voice-button-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--titane-accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.voice-button-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--titane-text-secondary);
+  text-align: center;
+}
+
+.voice-button-mode {
+  position: absolute;
+  top: -30px;
+  font-size: 0.75rem;
+  color: var(--titane-text-muted);
+  opacity: 0.7;
+}

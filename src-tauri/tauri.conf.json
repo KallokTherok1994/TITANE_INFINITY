@@ -1,0 +1,66 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0",
+  "productName": "TITANE∞ v17.0",
+  "version": "17.0.0",
+  "identifier": "com.titane.infinity",
+  "build": {
+    "beforeDevCommand": "npm run build",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": [],
+    "copyright": "Copyright © 2025 TITANE",
+    "category": "DeveloperTool",
+    "shortDescription": "Advanced Intelligent Modules - Adaptive Platform",
+    "longDescription": "TITANE∞ v17.0.0 - WebKit Fix Total, Clean-Up Engine (1,6G libéré), 100% Tauri/Rust/Cargo, Local-First with Gemini+Ollama Auto-Connect, Auto-Evolution, EXP System, Meta-Mode, Design System - Production Ready"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "TITANE∞ v17.0",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 1200,
+        "minHeight": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false,
+        "center": true,
+        "devtools": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ipc: http://ipc.localhost ws://localhost:*",
+      "dangerousDisableAssetCspModification": false,
+      "assetProtocol": {
+        "enable": true,
+        "scope": ["$APPDATA/**", "$RESOURCE/**"]
+      }
+    },
+    "trayIcon": {
+      "id": "main",
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false,
+      "title": "TITANE∞"
+    }
+  },
+  "plugins": {
+    "shell": {
+      "open": false,
+      "scope": []
+    }
+  }
+}

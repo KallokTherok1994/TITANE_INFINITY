@@ -1,0 +1,31 @@
+[package]
+name = "titane-infinity"
+version = "8.0.0"
+description = "TITANE∞ v8.0 - Cognitive Platform"
+authors = ["TITANE Team"]
+license = "MIT"
+repository = "https://github.com/titane/infinity"
+edition = "2021"
+rust-version = "1.70"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+tauri = { version = "2.0", features = ["protocol-asset"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+log = "0.4"
+env_logger = "0.11"
+rand = "0.8"
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "z"
+strip = true

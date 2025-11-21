@@ -1,0 +1,62 @@
+# Dependencies
+node_modules/
+.npm
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+*.lcov
+.nyc_output
+
+# Production
+dist/
+build/
+out/
+
+# Rust
+target/
+Cargo.lock
+**/*.rs.bk
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Tauri
+/src-tauri/target
+/src-tauri/WixTools
+
+# Deploy artifacts
+deploy/
+*.tar.gz
+*.sha256
+
+# Misc
+*.pem
+.cache/
+temp/
+tmp/

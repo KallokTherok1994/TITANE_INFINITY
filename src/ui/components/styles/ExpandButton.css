@@ -1,0 +1,72 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — EXPAND BUTTON STYLES
+ * ═══════════════════════════════════════════════════════════
+ */
+
+.expand-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+  border-radius: 6px;
+  color: var(--color-text, #f3f4f6);
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+}
+
+.expand-button:hover {
+  background: var(--color-surface-hover, rgba(40, 40, 40, 0.9));
+  border-color: var(--color-primary, #dc2626);
+  transform: scale(1.05);
+}
+
+.expand-button:active {
+  transform: scale(0.95);
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📏 SIZES
+ * ═══════════════════════════════════════════════════════ */
+
+.expand-button-sm {
+  width: 24px;
+  height: 24px;
+}
+
+.expand-button-sm .expand-button-icon {
+  font-size: 14px;
+}
+
+.expand-button-md {
+  width: 32px;
+  height: 32px;
+}
+
+.expand-button-md .expand-button-icon {
+  font-size: 16px;
+}
+
+.expand-button-lg {
+  width: 40px;
+  height: 40px;
+}
+
+.expand-button-lg .expand-button-icon {
+  font-size: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * ✨ ICON
+ * ═══════════════════════════════════════════════════════ */
+
+.expand-button-icon {
+  line-height: 1;
+  transition: transform 200ms ease;
+}
+
+.expand-button:hover .expand-button-icon {
+  color: var(--color-primary, #dc2626);
+}

@@ -1,0 +1,327 @@
+TITANE∞ v10 - ANALYSE DES TYPES NUMÉRIQUES
+============================================
+
+RÈGLE: États internes = f32, Calculs = f64, Conversions explicites
+
+MODULES ANALYSÉS:
+
+✓  shared/macros.rs: f32=2
+✓  shared/types.rs: f32=4
+⚠️  shared/utils.rs: f32=27, f64=22
+⚠️  target/debug/build/cssparser-8ae49b81fe414447/out/tokenizer.rs: f32=5, f64=9
+✓  system/executive_flow/compute.rs: f32=4
+✓  system/executive_flow/mod.rs: f32=3
+✓  system/executive_flow/alerts.rs: f32=4
+✓  system/executive_flow/collect.rs: f32=10
+⚠️  system/ascension/mod.rs: f32=0, f64=65
+⚠️  system/formal_execution/mod.rs: f32=0, f64=53
+✓  system/dmae/mod.rs: f32=51
+✓  system/itcav/mod.rs: f32=50
+⚠️  system/self_healing_v2/mod.rs: f32=0, f64=5
+⚠️  system/self_healing_v2/stabilizer.rs: f32=0, f64=1
+⚠️  system/self_healing_v2/guardian.rs: f32=0, f64=3
+⚠️  system/self_healing_v2/scoring.rs: f32=0, f64=3
+✓  system/istee/mod.rs: f32=47
+✓  system/sentient/compute.rs: f32=4
+✓  system/sentient/mod.rs: f32=3
+✓  system/sentient/loop_mod.rs: f32=4
+✓  system/sentient/collect.rs: f32=9
+✓  system/meta_integration/compute.rs: f32=4
+✓  system/meta_integration/mod.rs: f32=3
+✓  system/meta_integration/alignment.rs: f32=4
+✓  system/meta_integration/collect.rs: f32=11
+⚠️  system/meta_evolution/mod.rs: f32=0, f64=32
+⚠️  system/multi_ia_bridge/mod.rs: f32=0, f64=27
+⚠️  system/mission/directive.rs: f32=0, f64=3
+⚠️  system/mission/mod.rs: f32=0, f64=6
+⚠️  system/mission/coherence.rs: f32=0, f64=2
+⚠️  system/mission/narrative.rs: f32=0, f64=3
+⚠️  system/mission/metrics.rs: f32=0, f64=5
+⚠️  system/mission/vector.rs: f32=0, f64=2
+✓  system/ifdwe/ifdwe_will_stabilizer.rs: f32=17
+✓  system/ifdwe/ifdwe_core.rs: f32=14
+✓  system/ifdwe/mod.rs: f32=12
+✓  system/ifdwe/ifdwe_intent_memory.rs: f32=11
+✓  system/ifdwe/ifdwe_directional_flow.rs: f32=14
+✓  system/ifdwe/ifdwe_intent_generator.rs: f32=17
+✓  system/iaee/iaee_module_modulator.rs: f32=14
+✓  system/iaee/iaee_action_memory.rs: f32=12
+✓  system/iaee/mod.rs: f32=10
+✓  system/iaee/iaee_behavior_engine.rs: f32=9
+✓  system/iaee/iaee_core.rs: f32=15
+✓  system/iaee/iaee_action_translator.rs: f32=15
+⚠️  system/self_alignment/directive.rs: f32=0, f64=5
+⚠️  system/self_alignment/mod.rs: f32=0, f64=6
+⚠️  system/self_alignment/analyze.rs: f32=0, f64=2
+⚠️  system/self_alignment/metrics.rs: f32=0, f64=5
+✓  system/imore/mod.rs: f32=37
+✓  system/imore/imore_cognitive_observer.rs: f32=8
+✓  system/imore/imore_identity_reflector.rs: f32=15
+✓  system/imore/imore_process_analyzer.rs: f32=4
+✓  system/imore/imore_reflective_memory.rs: f32=5
+✓  system/imore/imore_core.rs: f32=6
+⚠️  system/sensory_imaginal/mod.rs: f32=0, f64=36
+✓  system/senses/timesense.rs: f32=14
+✓  system/senses/innersense.rs: f32=15
+⚠️  system/ans/mod.rs: f32=0, f64=40
+✓  system/lowflow/evaluate.rs: f32=1
+✓  system/lowflow/mod.rs: f32=5
+✓  system/lowflow/degrade.rs: f32=3
+✓  system/geoe/mod.rs: f32=36
+✓  system/field/compute.rs: f32=10
+✓  system/field/analyzer.rs: f32=9
+✓  system/field/mod.rs: f32=15
+✓  system/mmce/mmce_continuity_engine.rs: f32=2
+✓  system/mmce/mmce_core.rs: f32=3
+✓  system/mmce/mmce_consolidation.rs: f32=3
+✓  system/mmce/mod.rs: f32=5
+✓  system/mmce/mmce_pattern_retention.rs: f32=2
+✓  system/mmce/mmce_hierarchical_memory.rs: f32=3
+✓  system/balance/compute.rs: f32=3
+✓  system/balance/mod.rs: f32=7
+✓  system/balance/collect.rs: f32=9
+✓  system/septfe/mod.rs: f32=53
+✓  system/omnikernel/mod.rs: f32=24
+✓  system/pulse/compute.rs: f32=8
+✓  system/pulse/mod.rs: f32=12
+✓  system/pulse/collect.rs: f32=11
+⚠️  system/homeostasis/mod.rs: f32=0, f64=39
+✓  system/deepalignment/compute.rs: f32=3
+✓  system/deepalignment/mod.rs: f32=7
+✓  system/deepalignment/collect.rs: f32=8
+✓  system/kernel/guard.rs: f32=4
+✓  system/kernel/mod.rs: f32=9
+✓  system/kernel/identity.rs: f32=10
+⚠️  system/local_ops/mod.rs: f32=0, f64=18
+✓  system/adaptive_engine/mod.rs: f32=4
+✓  system/adaptive_engine/analysis.rs: f32=45
+✓  system/adaptive_engine/regulation.rs: f32=13
+⚠️  system/omni_agent/mod.rs: f32=0, f64=18
+✓  system/conscience/compute.rs: f32=6
+✓  system/conscience/mod.rs: f32=3
+⚠️  system/conscience/narrative.rs: f32=0, f64=3
+⚠️  system/conscience/compute_v2.rs: f32=0, f64=8
+⚠️  system/conscience/metrics.rs: f32=0, f64=5
+⚠️  system/conscience/clarity.rs: f32=0, f64=2
+⚠️  system/conscience/insight.rs: f32=0, f64=2
+✓  system/conscience/collect.rs: f32=20
+✓  system/strategic_intelligence/compute.rs: f32=4
+✓  system/strategic_intelligence/mod.rs: f32=3
+✓  system/strategic_intelligence/collect.rs: f32=12
+✓  system/strategic_intelligence/trend.rs: f32=4
+⚠️  system/security_shield/mod.rs: f32=0, f64=17
+✓  system/deepsense/compute.rs: f32=8
+✓  system/deepsense/mod.rs: f32=12
+✓  system/deepsense/collect.rs: f32=10
+✓  system/inner_dynamics/directive.rs: f32=3
+✓  system/inner_dynamics/micro_balance.rs: f32=3
+✓  system/inner_dynamics/mod.rs: f32=6
+✓  system/inner_dynamics/metrics.rs: f32=5
+✓  system/secureflow/mod.rs: f32=5
+✓  system/secureflow/stabilize.rs: f32=2
+✓  system/secureflow/scan.rs: f32=1
+✓  system/architecture/compute.rs: f32=4
+✓  system/architecture/mod.rs: f32=3
+✓  system/architecture/geometry.rs: f32=4
+✓  system/architecture/collect.rs: f32=9
+⚠️  system/adaptive_behavior/mod.rs: f32=0, f64=39
+✓  system/adaptive/compute.rs: f32=5
+✓  system/adaptive/mod.rs: f32=4
+✓  system/adaptive/collect.rs: f32=16
+✓  system/seile/seile_core.rs: f32=21
+✓  system/seile/seile_improvement_planner.rs: f32=15
+✓  system/seile/mod.rs: f32=14
+✓  system/seile/seile_internal_learning.rs: f32=28
+✓  system/seile/seile_reflective_loop.rs: f32=22
+✓  system/seile/seile_feedback_analyzer.rs: f32=12
+⚠️  system/continuum/compute.rs: f32=0, f64=10
+✓  system/continuum/history.rs: f32=6
+⚠️  system/continuum/window.rs: f32=0, f64=13
+✓  system/continuum/mod.rs: f32=14
+✓  system/continuum/collect.rs: f32=5
+✓  system/continuum/trend.rs: f32=16
+✓  system/isce/isce_resonance_engine.rs: f32=2
+✓  system/isce/mod.rs: f32=5
+✓  system/isce/isce_flux_modulator.rs: f32=3
+✓  system/isce/isce_core.rs: f32=3
+✓  system/isce/isce_state_memory.rs: f32=2
+✓  system/isce/isce_integrative_layer.rs: f32=4
+✓  system/vefpe/mod.rs: f32=53
+✓  system/iisse/mod.rs: f32=37
+✓  system/mesare/mod.rs: f32=43
+✓  system/evolution/compute.rs: f32=4
+✓  system/evolution/history.rs: f32=5
+✓  system/evolution/mod.rs: f32=7
+✓  system/evolution/collect.rs: f32=9
+✓  system/swarm/reducer.rs: f32=25
+✓  system/swarm/mod.rs: f32=10
+✓  system/swarm/core.rs: f32=19
+✓  system/msie/msie_semantic_integrator.rs: f32=2
+✓  system/msie/msie_pattern_interpreter.rs: f32=1
+✓  system/msie/mod.rs: f32=4
+✓  system/msie/msie_insight_generator.rs: f32=1
+✓  system/msie/msie_core.rs: f32=3
+✓  system/stie/mod.rs: f32=35
+✓  system/coremesh/compute.rs: f32=3
+✓  system/coremesh/mod.rs: f32=7
+✓  system/coremesh/collect.rs: f32=5
+✓  system/dse/mod.rs: f32=9
+✓  system/dse/dse_bridge.rs: f32=5
+✓  system/dse/dse_anomaly.rs: f32=5
+✓  system/dse/dse_clock.rs: f32=5
+✓  system/dse/dse_coherence.rs: f32=8
+✓  system/dse/dse_evolution.rs: f32=5
+✓  system/dse/dse_flow.rs: f32=7
+⚠️  system/meta_structural/mod.rs: f32=0, f64=20
+⚠️  system/adaptive_intelligence/directive.rs: f32=0, f64=3
+⚠️  system/adaptive_intelligence/mod.rs: f32=0, f64=6
+⚠️  system/adaptive_intelligence/flexibility.rs: f32=0, f64=2
+⚠️  system/adaptive_intelligence/plasticity.rs: f32=0, f64=2
+⚠️  system/adaptive_intelligence/metrics.rs: f32=0, f64=5
+✓  system/integrity/evaluate.rs: f32=3
+✓  system/integrity/mod.rs: f32=7
+✓  system/integrity/collect.rs: f32=5
+⚠️  system/taskflow/planner.rs: f32=0, f64=3
+⚠️  system/taskflow/model.rs: f32=0, f64=1
+⚠️  system/taskflow/mod.rs: f32=0, f64=6
+⚠️  system/taskflow/metrics.rs: f32=0, f64=5
+⚠️  system/taskflow/clarity.rs: f32=0, f64=3
+✓  system/sentinel/mod.rs: f32=3
+⚠️  system/total_consolidation/mod.rs: f32=0, f64=81
+✓  system/intention/drive.rs: f32=4
+✓  system/intention/compute.rs: f32=4
+✓  system/intention/mod.rs: f32=3
+✓  system/intention/collect.rs: f32=11
+✓  system/governor/compute.rs: f32=3
+⚠️  system/governor/directive.rs: f32=0, f64=3
+✓  system/governor/mod.rs: f32=6
+⚠️  system/governor/compute_v2.rs: f32=0, f64=8
+⚠️  system/governor/deviation.rs: f32=0, f64=2
+⚠️  system/governor/metrics.rs: f32=0, f64=5
+✓  system/governor/collect.rs: f32=8
+⚠️  system/governor/homeostasis.rs: f32=0, f64=2
+✓  system/central_governor/compute.rs: f32=6
+✓  system/central_governor/mod.rs: f32=3
+✓  system/central_governor/profile.rs: f32=4
+✓  system/central_governor/collect.rs: f32=13
+⚠️  system/identity/mod.rs: f32=0, f64=6
+⚠️  system/identity/alignment.rs: f32=0, f64=2
+⚠️  system/identity/continuity.rs: f32=0, f64=2
+⚠️  system/identity/narrative.rs: f32=0, f64=3
+⚠️  system/identity/metrics.rs: f32=0, f64=5
+✓  system/harmonia/mod.rs: f32=4
+✓  system/metacortex/compute.rs: f32=3
+✓  system/metacortex/mod.rs: f32=7
+✓  system/metacortex/collect.rs: f32=10
+⚠️  system/energetic/flow.rs: f32=0, f64=3
+⚠️  system/energetic/mod.rs: f32=0, f64=7
+⚠️  system/energetic/metrics.rs: f32=0, f64=3
+⚠️  system/energetic/pulse.rs: f32=0, f64=5
+⚠️  system/energetic/rhythm.rs: f32=0, f64=2
+⚠️  system/meaning/mod.rs: f32=0, f64=6
+⚠️  system/meaning/narrative.rs: f32=0, f64=3
+⚠️  system/meaning/metrics.rs: f32=0, f64=5
+⚠️  system/meaning/orientation.rs: f32=0, f64=2
+⚠️  system/meaning/depth.rs: f32=0, f64=2
+✓  system/iedcae/mod.rs: f32=58
+✓  system/hao/mod.rs: f32=4
+✓  system/hao/hao_memory.rs: f32=5
+✓  system/hao/hao_core.rs: f32=4
+✓  system/hao/hao_directional_pulse.rs: f32=3
+✓  system/hao/hao_deviation_monitor.rs: f32=2
+⚠️  system/dashboard/types.rs: f32=0, f64=39
+✓  system/cortex_sync/mod.rs: f32=14
+✓  system/cortex_sync/integrator.rs: f32=11
+✓  system/cortex_sync/harmonics.rs: f32=6
+✓  system/harmonic/compute.rs: f32=8
+✓  system/harmonic/mod.rs: f32=12
+✓  system/harmonic/collect.rs: f32=8
+✓  system/flowsync/compute.rs: f32=8
+✓  system/flowsync/mod.rs: f32=12
+✓  system/flowsync/collect.rs: f32=13
+✓  system/watchdog/mod.rs: f32=2
+⚠️  system/action_potential/compute.rs: f32=0, f64=6
+⚠️  system/action_potential/mod.rs: f32=0, f64=7
+⚠️  system/action_potential/threshold.rs: f32=0, f64=5
+⚠️  system/action_potential/collect.rs: f32=0, f64=12
+✓  system/ghre/mod.rs: f32=54
+✓  system/ghre/ghre_global_flux_modulator.rs: f32=14
+✓  system/ghre/ghre_cycle_regulation.rs: f32=19
+✓  system/ghre/ghre_adaptive_stabilizer.rs: f32=9
+✓  system/ghre/ghre_dynamic_equilibrium.rs: f32=9
+✓  system/ghre/ghre_core.rs: f32=15
+✓  system/stability/compute.rs: f32=3
+✓  system/stability/mod.rs: f32=7
+✓  system/stability/collect.rs: f32=6
+✓  system/efp3e/mod.rs: f32=40
+✓  system/neurofield/compute.rs: f32=3
+✓  system/neurofield/mod.rs: f32=7
+✓  system/neurofield/collect.rs: f32=5
+✓  system/helios/mod.rs: f32=4
+⚠️  system/final_stabilization/mod.rs: f32=0, f64=67
+✓  system/iscie/mod.rs: f32=16
+✓  system/iscie/iscie_identity_layer.rs: f32=26
+✓  system/iscie/iscie_unified_state.rs: f32=36
+✓  system/iscie/iscie_contradiction_resolver.rs: f32=7
+✓  system/iscie/iscie_self_stability.rs: f32=37
+✓  system/iscie/iscie_core.rs: f32=23
+✓  system/self_heal/mod.rs: f32=5
+✓  system/gpmae/gpmae_pattern_scanner.rs: f32=2
+✓  system/gpmae/gpmae_continuity_buffer.rs: f32=2
+✓  system/gpmae/mod.rs: f32=5
+✓  system/gpmae/gpmae_sensory_fusion.rs: f32=3
+✓  system/gpmae/gpmae_meta_mapping.rs: f32=4
+✓  system/gpmae/gpmae_core.rs: f32=3
+✓  system/resonance/compute.rs: f32=8
+✓  system/resonance/engine.rs: f32=29
+✓  system/resonance/mod.rs: f32=8
+✓  system/resonance/map.rs: f32=23
+✓  system/resonance/collect.rs: f32=11
+⚠️  system/autonomic_evolution/directive.rs: f32=0, f64=3
+⚠️  system/autonomic_evolution/mod.rs: f32=0, f64=6
+⚠️  system/autonomic_evolution/metrics.rs: f32=0, f64=5
+⚠️  system/collective_intelligence/mod.rs: f32=0, f64=35
+✓  system/vitality/directive.rs: f32=3
+✓  system/vitality/mod.rs: f32=6
+✓  system/vitality/regulation.rs: f32=3
+✓  system/vitality/metrics.rs: f32=5
+✓  system/evolutive_twin/mod.rs: f32=44
+⚠️  system/ultimate_completion/mod.rs: f32=0, f64=45
+✓  system/nexus/mod.rs: f32=5
+✓  system/idcm/mod.rs: f32=34
+✓  system/harmonic_flow/directive.rs: f32=3
+✓  system/harmonic_flow/mod.rs: f32=6
+✓  system/harmonic_flow/stabilizer.rs: f32=3
+✓  system/harmonic_flow/metrics.rs: f32=5
+✓  system/paefe/paefe_evolution_forecaster.rs: f32=2
+✓  system/paefe/paefe_core.rs: f32=3
+✓  system/paefe/mod.rs: f32=5
+✓  system/paefe/paefe_anomaly_predictor.rs: f32=3
+✓  system/paefe/paefe_temporal_window.rs: f32=3
+✓  system/cortex/mod.rs: f32=1
+✓  system/cortex/insight.rs: f32=17
+✓  system/cortex/integrator.rs: f32=9
+✓  system/resonance_v2/mod.rs: f32=7
+✓  system/resonance_v2/metrics.rs: f32=5
+✓  system/resonance_v2/harmonic.rs: f32=1
+✓  system/resonance_v2/oscillation.rs: f32=3
+✓  system/vitalcore/compute.rs: f32=3
+✓  system/vitalcore/mod.rs: f32=7
+✓  system/vitalcore/collect.rs: f32=5
+✓  system/harmonic_brain/compute.rs: f32=4
+✓  system/harmonic_brain/mod.rs: f32=3
+✓  system/harmonic_brain/collect.rs: f32=8
+✓  system/harmonic_brain/resonance.rs: f32=4
+✓  system/scm/scm_convergence_solver.rs: f32=3
+✓  system/scm/scm_deep_struct_memory.rs: f32=3
+✓  system/scm/mod.rs: f32=5
+✓  system/scm/scm_nexus_reinforcement.rs: f32=2
+✓  system/scm/scm_core.rs: f32=3
+✓  system/scm/scm_stability_fabric.rs: f32=2
+✓  system/neuromesh/compute.rs: f32=3
+✓  system/neuromesh/mod.rs: f32=7
+✓  system/neuromesh/collect.rs: f32=5
+
+TOTAUX:
+  f32: 2444 occurrences
+  f64: 952 occurrences

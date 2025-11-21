@@ -1,0 +1,59 @@
+/* TITANE∞ v12 - Dashboard Styles */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.dashboard__loading,
+.dashboard__error {
+  padding: var(--space-8);
+  text-align: center;
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+}
+
+.dashboard__error {
+  color: var(--color-danger-500);
+}
+
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+.dashboard__stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dashboard__stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+.dashboard__stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.dashboard__modules {
+  margin-top: var(--space-4);
+}
+
+.dashboard__modules-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-4);
+}
+
+.dashboard__module-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}

@@ -1,0 +1,222 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ *   TITANE∞ v17.0 — MENU NAVIGATION STYLES
+ * ═══════════════════════════════════════════════════════════
+ */
+
+.menu-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 🎯 MENU HEADER
+ * ═══════════════════════════════════════════════════════ */
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+}
+
+.menu-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-brand-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.menu-brand-text {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary, #dc2626) 0%, var(--color-primary-light, #ef4444) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.menu-brand-version {
+  font-size: 12px;
+  color: var(--color-text-muted, #9ca3af);
+  font-weight: 500;
+}
+
+.menu-toggle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+  border-radius: 6px;
+  color: var(--color-text, #f3f4f6);
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.menu-toggle:hover {
+  background: var(--color-surface-hover, rgba(40, 40, 40, 0.9));
+  border-color: var(--color-border-light, rgba(255, 255, 255, 0.12));
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📋 MENU SECTIONS
+ * ═══════════════════════════════════════════════════════ */
+
+.menu-sections {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.menu-sections::-webkit-scrollbar {
+  width: 4px;
+}
+
+.menu-sections::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.menu-sections::-webkit-scrollbar-thumb {
+  background: var(--color-border, rgba(255, 255, 255, 0.08));
+  border-radius: 9999px;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 🎯 MENU ITEMS
+ * ═══════════════════════════════════════════════════════ */
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--color-text, #f3f4f6);
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  width: 100%;
+}
+
+.menu-item:hover {
+  background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
+  border-color: var(--color-border, rgba(255, 255, 255, 0.08));
+  transform: translateX(2px);
+}
+
+.menu-item.active {
+  background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
+  border-color: var(--color-primary, #dc2626);
+  box-shadow: 0 0 16px var(--color-primary-glow, rgba(220, 38, 38, 0.4));
+}
+
+.menu-item-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.menu-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.menu-item-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text, #f3f4f6);
+}
+
+.menu-item-desc {
+  font-size: 11px;
+  color: var(--color-text-muted, #9ca3af);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu-item.active .menu-item-label {
+  color: var(--color-primary, #dc2626);
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📊 MENU FOOTER STATUS
+ * ═══════════════════════════════════════════════════════ */
+
+.menu-footer {
+  padding-top: 16px;
+  border-top: 1px solid var(--color-border, rgba(255, 255, 255, 0.08));
+}
+
+.menu-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
+  border-radius: 6px;
+}
+
+.menu-status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.menu-status-indicator.online {
+  background: var(--color-success, #10b981);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.menu-status-indicator.offline {
+  background: var(--color-error, #ef4444);
+}
+
+.menu-status-text {
+  font-size: 12px;
+  color: var(--color-text-muted, #9ca3af);
+}
+
+/* ═══════════════════════════════════════════════════════
+ * 📱 COLLAPSED STATE
+ * ═══════════════════════════════════════════════════════ */
+
+.menu-container:has(.menu-toggle:only-child) .menu-item {
+  justify-content: center;
+  padding: 12px;
+}
+
+.menu-container:has(.menu-toggle:only-child) .menu-item-icon {
+  font-size: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════
+ * ✨ ANIMATIONS
+ * ═══════════════════════════════════════════════════════ */
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
