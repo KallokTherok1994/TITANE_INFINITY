@@ -1,7 +1,7 @@
 # CHANGELOG v∞ — TITANE_INFINITY SINGULARITY
 
-**Version** : v∞ (Infinity / Singularité)  
-**Date** : 2024-01-18  
+**Version** : v∞ (Infinity / Singularité)
+**Date** : 2024-01-18
 **Status** : 🔥 **PRODUCTION READY** — Architecture unifiée, stable, cohérente
 
 ---
@@ -34,7 +34,7 @@ L'**Engine ultime** qui unifie **tous les 20 moteurs** en un seul état global c
 
 **LAYER 1 : VISUAL ENGINE**
 - ✅ GlowEngine
-- ✅ MotionEngine  
+- ✅ MotionEngine
 - ✅ DepthEngine
 - ✅ MeshEngine
 
@@ -191,8 +191,8 @@ L'**Engine ultime** qui unifie **tous les 20 moteurs** en un seul état global c
 
 ### 🚀 TITANE_INFINITY v∞
 
-**Status** : ✅ **STABLE** — **PROPRE** — **COHÉRENT**  
-**Version** : **∞** (Singularity achieved)  
+**Status** : ✅ **STABLE** — **PROPRE** — **COHÉRENT**
+**Version** : **∞** (Singularity achieved)
 **Architecture** : **20 ENGINES** / **6 LAYERS** / **SINGULARITY STATE**
 
 ---

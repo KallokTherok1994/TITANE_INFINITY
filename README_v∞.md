@@ -120,7 +120,7 @@ npm run tauri:build
 import { useSingularity } from '@hooks';
 
 function MyComponent() {
-  const { 
+  const {
     consciousness,      // 0-4
     autoCoherence,      // 0-1
     formStability,      // 0-1
@@ -145,7 +145,7 @@ import { useSingularityMetrics } from '@hooks';
 
 function MetricsPanel() {
   const metrics = useSingularityMetrics();
-  
+
   return (
     <div>
       {Object.entries(metrics).map(([key, value]) => (
@@ -164,7 +164,7 @@ import { useSingularityField } from '@hooks';
 function FieldVisualization() {
   const field = useSingularityField();
   // field = { energy, motion, symbolism, depth, presence }
-  
+
   return (
     <svg>
       {/* Visualisation du champ unifié */}
@@ -362,7 +362,7 @@ MIT License - Voir [LICENSE](./LICENSE)
 
 ## 👤 Auteur
 
-**Kevin Thibault**  
+**Kevin Thibault**
 TITANE∞ Team
 
 ---

@@ -33,11 +33,11 @@ export interface SingularityConfig extends EngineConfig {
 export class SingularityEngine implements Engine<SingularityState, SingularityConfig> {
   name = 'SingularityEngine';
   version = 'v∞';
-  
+
   state: SingularityState;
   config: SingularityConfig;
   metrics: EngineMetrics;
-  
+
   private syncTimer: number | null = null;
   private subscribers: Set<(state: SingularityState) => void> = new Set();
 
@@ -79,13 +79,13 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       convergence: this.createEmptyConvergenceState(),
       overmind: this.createEmptyOvermindState(),
       omnipresence: this.createEmptyOmnipresenceState(),
-      
+
       consciousness: 0,
       selfReference: false,
       autoCoherence: 0,
       autoStabilization: false,
       expressionQuality: 0,
-      
+
       singularityField: {
         energy: 0,
         motion: 0,
@@ -93,7 +93,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
         depth: 0,
         presence: 0,
       },
-      
+
       formStability: 0,
       evolutionCapacity: 1.0,
       signature: this.generateSignature(),
@@ -299,7 +299,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
 
     this.state.selfReference = true;
     this.state.consciousness = 1.0;
-    
+
     if (this.config.debug) {
       console.log('[SingularityEngine] Initialized successfully');
     }
@@ -313,7 +313,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
 
     try {
       // Mise à jour consciousness basée sur la cohérence globale
-      this.state.consciousness = Math.min(4, 
+      this.state.consciousness = Math.min(4,
         this.state.unity.globalHarmony * 4
       );
 
@@ -339,8 +339,8 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       // Métriques performance
       const updateTime = performance.now() - startTime;
       this.metrics.updateCount++;
-      this.metrics.avgUpdateTime = 
-        (this.metrics.avgUpdateTime * (this.metrics.updateCount - 1) + updateTime) / 
+      this.metrics.avgUpdateTime =
+        (this.metrics.avgUpdateTime * (this.metrics.updateCount - 1) + updateTime) /
         this.metrics.updateCount;
       this.metrics.peakUpdateTime = Math.max(this.metrics.peakUpdateTime, updateTime);
       this.metrics.lastUpdate = Date.now();
@@ -368,7 +368,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
    */
   private updateSingularityField(): void {
     const { unity } = this.state;
-    
+
     this.state.singularityField = {
       energy: unity.globalHarmony || 0.7,
       motion: unity.globalEntropy < 0.5 ? 0.7 : 0.4,
@@ -384,15 +384,15 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
   private stabilize(): void {
     // Réduire l'entropie
     this.state.unity.globalEntropy *= 0.9;
-    
+
     // Augmenter la cohérence quantique
     this.state.quantum.coherence = Math.min(1, this.state.quantum.coherence + 0.1);
-    
+
     // Augmenter la convergence
-    this.state.convergence.convergenceLevel = Math.min(1, 
+    this.state.convergence.convergenceLevel = Math.min(1,
       this.state.convergence.convergenceLevel + 0.05
     );
-    
+
     this.state.autoStabilization = true;
   }
 

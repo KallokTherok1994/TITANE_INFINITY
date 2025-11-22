@@ -89,16 +89,16 @@ class ErrorBoundary extends React.Component<
         }}>
           <h1>⚠️ TITANE∞ Error</h1>
           <p>Une erreur s'est produite lors du chargement de l'application.</p>
-          <pre style={{ 
-            backgroundColor: '#1a1f2e', 
-            padding: '20px', 
+          <pre style={{
+            backgroundColor: '#1a1f2e',
+            padding: '20px',
             borderRadius: '8px',
             maxWidth: '80%',
             overflow: 'auto'
           }}>
             {this.state.error?.toString()}
           </pre>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             style={{
               marginTop: '20px',
