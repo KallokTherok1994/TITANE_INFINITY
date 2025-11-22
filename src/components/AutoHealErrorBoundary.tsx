@@ -42,7 +42,7 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
     });
 
     // Déclencher auto-heal
-    this.performAutoHeal(error, errorInfo);
+    void this.performAutoHeal(error, errorInfo);
   }
 
   private async performAutoHeal(error: Error, errorInfo: ErrorInfo): Promise<void> {

@@ -8,47 +8,47 @@ use crate::exp_fusion_v15::{
     projects::{ProjectState, ProjectStats},
     talents::TalentTreeState,
 };
-use std::sync::Mutex;
+use tokio::sync::RwLock;
 use tauri::State;
 
 /// État global partagé
 pub struct ExpFusionState {
-    pub engine: Mutex<ExpFusionEngine>,
+    pub engine: RwLock<ExpFusionEngine>,
 }
 
 impl ExpFusionState {
     pub fn new() -> Self {
         Self {
-            engine: Mutex::new(ExpFusionEngine::new()),
+            engine: RwLock::new(ExpFusionEngine::new()),
         }
     }
 }
 
 /// Obtenir état global XP
 #[tauri::command]
-pub fn exp_get_global_state(state: State<ExpFusionState>) -> Result<GlobalExpState, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_global_state(state: State<'_, ExpFusionState>) -> Result<GlobalExpState, String> {
+    let engine = state.engine.read().await;
     Ok(engine.get_global_state())
 }
 
 /// Obtenir toutes les catégories
 #[tauri::command]
-pub fn exp_get_categories(state: State<ExpFusionState>) -> Result<Vec<CategoryState>, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_categories(state: State<'_, ExpFusionState>) -> Result<Vec<CategoryState>, String> {
+    let engine = state.engine.read().await;
     Ok(engine.get_categories())
 }
 
 /// Obtenir tous les projets
 #[tauri::command]
-pub fn exp_get_projects(state: State<ExpFusionState>) -> Result<Vec<ProjectState>, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_projects(state: State<'_, ExpFusionState>) -> Result<Vec<ProjectState>, String> {
+    let engine = state.engine.read().await;
     Ok(engine.get_projects())
 }
 
 /// Obtenir statistiques projets
 #[tauri::command]
-pub fn exp_get_project_stats(state: State<ExpFusionState>) -> Result<ProjectStats, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_project_stats(state: State<'_, ExpFusionState>) -> Result<ProjectStats, String> {
+    let engine = state.engine.read().await;
     Ok(engine.get_projects().iter().fold(
         ProjectStats {
             total_projects: 0,
@@ -66,22 +66,22 @@ pub fn exp_get_project_stats(state: State<ExpFusionState>) -> Result<ProjectStat
 
 /// Obtenir arbre de talents
 #[tauri::command]
-pub fn exp_get_talents(state: State<ExpFusionState>) -> Result<TalentTreeState, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_talents(state: State<'_, ExpFusionState>) -> Result<TalentTreeState, String> {
+    let engine = state.engine.read().await;
     Ok(engine.get_talents())
 }
 
 /// Obtenir timeline (N derniers jours)
 #[tauri::command]
-pub fn exp_get_timeline(state: State<ExpFusionState>, days: u32) -> Result<Vec<TimelineEntry>, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_timeline(state: State<'_, ExpFusionState>, days: u32) -> Result<Vec<TimelineEntry>, String> {
+    let engine = state.engine.read().await;
     Ok(engine.get_timeline(days))
 }
 
 /// Obtenir statistiques timeline
 #[tauri::command]
-pub fn exp_get_timeline_stats(state: State<ExpFusionState>, days: u32) -> Result<TimelineStats, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_get_timeline_stats(state: State<'_, ExpFusionState>, days: u32) -> Result<TimelineStats, String> {
+    let engine = state.engine.read().await;
     let timeline = engine.get_timeline(days);
     
     let total_exp: u64 = timeline.iter().map(|e| e.exp_gained).sum();
@@ -99,14 +99,14 @@ pub fn exp_get_timeline_stats(state: State<ExpFusionState>, days: u32) -> Result
 
 /// Ajouter connaissance (déclenche XP)
 #[tauri::command]
-pub fn exp_add_knowledge(
-    state: State<ExpFusionState>,
+pub async fn exp_add_knowledge(
+    state: State<'_, ExpFusionState>,
     data: String,
     category: String,
     project: Option<String>,
     description: String,
 ) -> Result<ExpEvent, String> {
-    let mut engine = state.engine.lock().map_err(|e| e.to_string())?;
+    let mut engine = state.engine.write().await;
 
     // Calculer XP basé sur la taille/complexité
     let base_exp = (data.len() / 100).clamp(1, 100) as u64;
@@ -124,15 +124,15 @@ pub fn exp_add_knowledge(
 
 /// Ajouter XP manuel (pour testing/admin)
 #[tauri::command]
-pub fn exp_gain_manual(
-    state: State<ExpFusionState>,
+pub async fn exp_gain_manual(
+    state: State<'_, ExpFusionState>,
     amount: u64,
     source: String,
     category: String,
     project: Option<String>,
     description: String,
 ) -> Result<ExpEvent, String> {
-    let mut engine = state.engine.lock().map_err(|e| e.to_string())?;
+    let mut engine = state.engine.write().await;
 
     let exp_source = match source.as_str() {
         "Interaction" => ExpSource::Interaction,
@@ -157,24 +157,24 @@ pub fn exp_gain_manual(
 
 /// Synchroniser mémoire (forcer sauvegarde)
 #[tauri::command]
-pub fn exp_sync_memory(state: State<ExpFusionState>) -> Result<(), String> {
-    let _engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_sync_memory(state: State<'_, ExpFusionState>) -> Result<(), String> {
+    let _engine = state.engine.read().await;
     // La sauvegarde est automatique dans gain_exp, mais on peut forcer
     Ok(())
 }
 
 /// Réinitialiser (DANGER)
 #[tauri::command]
-pub fn exp_reset(state: State<ExpFusionState>) -> Result<(), String> {
-    let mut engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_reset(state: State<'_, ExpFusionState>) -> Result<(), String> {
+    let mut engine = state.engine.write().await;
     engine.reset();
     Ok(())
 }
 
 /// Exporter toutes les données EXP
 #[tauri::command]
-pub fn exp_export_all(state: State<ExpFusionState>) -> Result<String, String> {
-    let engine = state.engine.lock().map_err(|e| e.to_string())?;
+pub async fn exp_export_all(state: State<'_, ExpFusionState>) -> Result<String, String> {
+    let engine = state.engine.read().await;
     
     let data = serde_json::json!({
         "global_state": engine.get_global_state(),

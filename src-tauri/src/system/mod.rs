@@ -1,4 +1,4 @@
-// TITANE∞ v8.0 - System Modules
+// TITANE∞ v24 - System Modules
 // Exports all system modules
 
 // ✅ MODULES ESSENTIELS FONCTIONNELS
@@ -10,6 +10,9 @@ pub mod nexus;
 pub mod self_heal;
 pub mod sentinel;
 pub mod watchdog;
+
+// ✅ PERSONA ENGINE v24 (NEW)
+pub mod persona_engine;
 
 // ⚠️ MODULES TEMPORAIREMENT DÉSACTIVÉS - Correction en cours v11.0
 // pub mod memory_v2;

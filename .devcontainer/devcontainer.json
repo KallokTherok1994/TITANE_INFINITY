@@ -1,0 +1,19 @@
+{
+  "name": "TITANE∞ v17 Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "tauri-apps.tauri-vscode",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [1420, 3000],
+  "postCreateCommand": "pnpm install",
+  "remoteUser": "root"
+}

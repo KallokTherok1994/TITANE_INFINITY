@@ -1,0 +1,466 @@
+// ═══════════════════════════════════════════════════════════════
+//   TITANE∞ v17.2.0 — MAIN ENTRY POINT
+//   Backend Architecture Refactor - Clean, Modular, Performant
+// ═══════════════════════════════════════════════════════════════
+
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+mod utils;
+mod types;
+mod services;
+mod core;
+mod engine;
+mod api;
+mod app;
+
+use app::setup::TitaneApp;
+use tauri::Manager;
+
+fn main() {
+    // Initialize logger
+    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
+    
+    utils::log_info("Main", &format!("Starting {} v{}", utils::APP_NAME, utils::APP_VERSION));
+    utils::log_info("Main", utils::APP_DESCRIPTION);
+    
+    tauri::Builder::default()
+        .setup(|app| {
+            // Get app data directory
+            let app_data_dir = app.path().app_data_dir()
+                .map_err(|e| format!("Failed to get app data dir: {}", e))?;
+            
+            // Initialize TITANE∞
+            let titane_app = TitaneApp::new(app_data_dir)
+                .map_err(|e| format!("Failed to initialize TITANE: {}", e))?;
+            
+            // Register core modules as state
+            app.manage(titane_app.helios);
+            app.manage(titane_app.nexus);
+            app.manage(titane_app.harmonia);
+            app.manage(titane_app.sentinel);
+            app.manage(titane_app.memory);
+            app.manage(titane_app.evolution);
+            
+            utils::log_info("Main", "TITANE∞ Backend ready ✅");
+            
+            Ok(())
+        })
+        .invoke_handler(api::get_handlers())
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+
+// TITANE∞ v13 - Advanced Modules
+mod interruptibility;
+mod compression;
+mod emotion;
+mod noise_adaptive;
+mod selfheal;
+
+// TITANE∞ v14.1 - Cognitive Intelligence
+mod digital_twin_v14_1;
+mod master_guide;
+mod meta_mode_engine;
+
+// TITANE∞ v15.0 - Auto-Evolution System
+mod auto_evolution_v15;
+
+// TITANE∞ v15.0 - EXP Fusion Engine
+mod exp_fusion_v15;
+
+// TITANE∞ v16.0 - Auto-Heal System
+mod auto_heal;
+
+// TITANE∞ v16.1 - Overdrive Engine
+mod overdrive;
+
+// TITANE∞ v17.0 - Tauri v2 Guard & Tests
+#[cfg(test)]
+mod tauri_v2_guard;
+
+use tauri::Manager;
+use shared::types::{ModuleHealth, TitaneResult};
+use std::sync::{Arc, Mutex};
+use system::{adaptive_engine, harmonia, helios, memory, nexus, self_heal, sentinel, watchdog};
+
+/// TITANE∞ Core with 8 core modules + 5 advanced v13 modules
+pub struct TitaneCore {
+    // Core modules v12
+    helios: Arc<Mutex<helios::HeliosModule>>,
+    nexus: Arc<Mutex<nexus::NexusModule>>,
+    harmonia: Arc<Mutex<harmonia::HarmoniaModule>>,
+    sentinel: Arc<Mutex<sentinel::SentinelModule>>,
+    watchdog: Arc<Mutex<watchdog::WatchdogModule>>,
+    self_heal: Arc<Mutex<self_heal::SelfHealModule>>,
+    adaptive_engine: Arc<Mutex<adaptive_engine::AdaptiveEngineModule>>,
+    memory: Arc<Mutex<memory::MemoryModule>>,
+    
+    // Advanced modules v13 (à intégrer progressivement)
+    // interruptibility: Option<interruptibility::InterruptionAnalyzer>,
+    // emotion: Option<emotion::EmotionDetector>,
+    // compression: Option<compression::MemoryCompressor>,
+    // noise_adaptive: Option<noise_adaptive::AudioCalibrator>,
+    // selfheal_plus: Option<selfheal::SystemMonitor>,
+}
+
+impl TitaneCore {
+    /// Initialize core system
+    pub fn new() -> TitaneResult<Self> {
+        log::info!("🚀 Initializing TITANE∞ v13.0 Core...");
+        log::info!("📦 Loading 8 core modules + 5 advanced modules...");
+
+        // Initialize modules
+        let helios = Arc::new(Mutex::new(helios::HeliosModule::init()?));
+        let nexus = Arc::new(Mutex::new(nexus::NexusModule::init()?));
+        let harmonia = Arc::new(Mutex::new(harmonia::HarmoniaModule::init()?));
+        let sentinel = Arc::new(Mutex::new(sentinel::SentinelModule::init()?));
+        let watchdog = Arc::new(Mutex::new(watchdog::WatchdogModule::init()?));
+        let self_heal = Arc::new(Mutex::new(self_heal::SelfHealModule::init()?));
+        let adaptive_engine = Arc::new(Mutex::new(adaptive_engine::AdaptiveEngineModule::init()?));
+        let memory = Arc::new(Mutex::new(memory::MemoryModule::init()?));
+
+        log::info!("✅ Core modules initialized");
+        log::info!("ℹ️  Advanced v13 modules available for future integration");
+        log::info!("✅ TITANE∞ v13.0 Core initialized successfully");
+
+        Ok(Self {
+            helios,
+            nexus,
+            harmonia,
+            sentinel,
+            watchdog,
+            self_heal,
+            adaptive_engine,
+            memory,
+        })
+    }
+
+    /// Main system tick - Execution pipeline with optimal ordering
+    ///
+    /// Pipeline Order dependency - aware:
+    /// 1. Helios      - System monitoring & metrics (foundation)
+    /// 2. Watchdog    - Anomaly detection (depends on metrics)
+    /// 3. Sentinel    - Security validation (depends on detection)
+    /// 4. SelfHeal    - Auto-repair (depends on security clearance)
+    /// 5. Nexus       - Cognition & decision (depends on healthy state)
+    /// 6. Harmonia    - System balancing (depends on decisions)
+    /// 7. AdaptiveEngine - Optimization (depends on balanced state)
+    /// 8. Memory      - Persistence (final step, saves all states)
+    pub fn tick(&mut self) -> TitaneResult<()> {
+        // 1. Foundation: Monitor system metrics first
+        if let Ok(mut h) = self.helios.lock() {
+            h.tick()?;
+        }
+
+        // 2. Detection: Watch for anomalies based on metrics
+        if let Ok(mut w) = self.watchdog.lock() {
+            w.tick()?;
+        }
+
+        // 3. Security: Validate system integrity
+        if let Ok(mut s) = self.sentinel.lock() {
+            s.tick()?;
+        }
+
+        // 4. Repair: Fix detected issues
+        if let Ok(mut sh) = self.self_heal.lock() {
+            sh.tick()?;
+        }
+
+        // 5. Cognition: Make decisions on healthy system
+        if let Ok(mut n) = self.nexus.lock() {
+            n.tick()?;
+        }
+
+        // 6. Balance: Harmonize system resources
+        if let Ok(mut ha) = self.harmonia.lock() {
+            ha.tick()?;
+        }
+
+        // 7. Optimization: Adapt performance
+        if let Ok(mut ae) = self.adaptive_engine.lock() {
+            ae.tick()?;
+        }
+
+        // 8. Persistence: Save final state to encrypted storage
+        if let Ok(mut m) = self.memory.lock() {
+            m.tick()?;
+        }
+
+        Ok(())
+    }
+
+    /// Get all module health
+    pub fn health(&self) -> Vec<ModuleHealth> {
+        let mut health = Vec::new();
+
+        if let Ok(h) = self.helios.lock() {
+            health.push(h.health());
+        }
+        if let Ok(n) = self.nexus.lock() {
+            health.push(n.health());
+        }
+        if let Ok(ha) = self.harmonia.lock() {
+            health.push(ha.health());
+        }
+        if let Ok(s) = self.sentinel.lock() {
+            health.push(s.health());
+        }
+        if let Ok(w) = self.watchdog.lock() {
+            health.push(w.health());
+        }
+        if let Ok(sh) = self.self_heal.lock() {
+            health.push(sh.health());
+        }
+        if let Ok(ae) = self.adaptive_engine.lock() {
+            health.push(ae.health());
+        }
+        if let Ok(m) = self.memory.lock() {
+            health.push(m.health());
+        }
+
+        health
+    }
+}
+
+// ============================================================================
+// TAURI COMMANDS - Now centralized in commands/mod.rs
+// ============================================================================
+
+// ============================================================================
+// MAIN ENTRY POINT
+// ============================================================================
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Handle CLI arguments (--version, --help)
+    let args: Vec<String> = std::env::args().collect();
+    
+    if args.len() > 1 {
+        match args[1].as_str() {
+            "--version" | "-v" => {
+                println!("TITANE∞ v{}", env!("CARGO_PKG_VERSION"));
+                return Ok(());
+            }
+            "--help" | "-h" => {
+                println!("TITANE∞ v{} - Transformative Intelligence Through Adaptive Neural Engines", env!("CARGO_PKG_VERSION"));
+                println!("\nUsage:");
+                println!("  titane-infinity              Launch GUI application");
+                println!("  titane-infinity --version    Display version");
+                println!("  titane-infinity --help       Display this help");
+                return Ok(());
+            }
+            _ => {
+                eprintln!("Unknown argument: {}. Use --help for usage information.", args[1]);
+                return Err("Invalid argument".into());
+            }
+        }
+    }
+    
+    // Initialize logging
+    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
+
+    println!("\n╔══════════════════════════════════════════════════════════════╗");
+    println!("║      TITANE∞ v14.1 - Starting Main Process...             ║");
+    println!("║      Meta-Mode Engine + Digital Twin + Master Guide       ║");
+    println!("╚══════════════════════════════════════════════════════════════╝\n");
+
+    log::info!("🌟 TITANE∞ v14.1 starting with Meta-Mode Engine...");
+
+    // Initialize core system
+    let core = match TitaneCore::new() {
+        Ok(c) => {
+            log::info!("✅ Core initialized successfully");
+            println!("✅ Core system initialized: 8 modules loaded\n");
+            Arc::new(Mutex::new(c))
+        }
+        Err(e) => {
+            log::error!("❌ Failed to initialize core: {}", e);
+            eprintln!("❌ FATAL ERROR: System initialization failed: {}", e);
+            return Err(format!("System initialization failed: {}", e).into());
+        }
+    };
+
+    // Initialize Meta-Mode Engine state
+    let meta_mode_state = commands::meta_mode::MetaModeState::new();
+    log::info!("✅ Meta-Mode Engine initialized with 28 modes");
+    println!("✅ Meta-Mode Engine: 28 modes activated\n");
+
+    // Initialize EXP Fusion Engine state
+    let exp_fusion_state = commands::exp_fusion::ExpFusionState::new();
+    log::info!("✅ EXP Fusion Engine initialized");
+    println!("✅ EXP Fusion Engine: XP system activated\n");
+
+    // Initialize Evolution Supervisor state
+    let evolution_state = commands::evolution::EvolutionState::default();
+    log::info!("✅ Evolution Supervisor initialized");
+    println!("✅ Evolution Supervisor: Auto-evolution system activated\n");
+
+    // Initialize Auto-Heal System v16.0
+    let auto_heal_state = auto_heal::init();
+    log::info!("✅ Auto-Heal System v16.0 initialized");
+    println!("✅ Auto-Heal System: Surveillance et réparation activées\n");
+
+    // Initialize Overdrive Engine v16.1
+    let overdrive_state = overdrive::init();
+    log::info!("✅ Overdrive Engine v16.1 initialized with 8 modules");
+    println!("✅ Overdrive Engine: Auto-Heal, Voice, Chat, Memory, Semantic, EXP, Projects, API Bridge\n");
+
+    println!("🚀 Building Tauri application...\n");
+    log::info!("🔧 Configuring Tauri Builder...");
+
+    // Build Tauri application with centralized command handlers
+    let builder = tauri::Builder::default()
+        .manage(core)
+        .manage(meta_mode_state)
+        .manage(exp_fusion_state)
+        .manage(evolution_state)
+        .manage(auto_heal_state)
+        .manage(overdrive_state);
+    
+    log::info!("✅ Builder configured, registering invoke handlers...");
+    
+    let builder = builder
+        .invoke_handler(tauri::generate_handler![
+            // Core system commands
+            commands::get_system_status,
+            commands::helios_get_metrics,
+            commands::nexus_get_graph,
+            commands::harmonia_get_flows,
+            commands::sentinel_get_alerts,
+            commands::watchdog_get_logs,
+            commands::watchdog_get_data,
+            commands::selfheal_get_data,
+            commands::adaptive_get_data,
+            commands::memory_save_entry,
+            commands::memory_load_entries,
+            commands::memory_clear,
+            commands::memory_get_state,
+            // Meta-Mode Engine commands
+            commands::meta_mode::meta_mode_process,
+            commands::meta_mode::meta_mode_get_kevin_state,
+            commands::meta_mode::meta_mode_get_current_mode,
+            commands::meta_mode::meta_mode_list_modes,
+            commands::meta_mode::meta_mode_get_history,
+            commands::meta_mode::meta_mode_get_stats,
+            commands::meta_mode::meta_mode_reset,
+            // EXP Fusion Engine commands
+            commands::exp_fusion::exp_get_global_state,
+            commands::exp_fusion::exp_get_categories,
+            commands::exp_fusion::exp_get_projects,
+            commands::exp_fusion::exp_get_project_stats,
+            commands::exp_fusion::exp_get_talents,
+            commands::exp_fusion::exp_get_timeline,
+            commands::exp_fusion::exp_get_timeline_stats,
+            commands::exp_fusion::exp_add_knowledge,
+            commands::exp_fusion::exp_gain_manual,
+            commands::exp_fusion::exp_sync_memory,
+            commands::exp_fusion::exp_reset,
+            commands::exp_fusion::exp_export_all,
+            // Evolution Supervisor commands
+            commands::evolution::evolution_run_cycle,
+            commands::evolution::evolution_safe_reset,
+            commands::evolution::evolution_emergency_heal,
+            commands::evolution::evolution_auto_correct,
+            commands::evolution::evolution_store_memory,
+            commands::evolution::evolution_recall_memory,
+            commands::evolution::evolution_get_stats,
+            commands::evolution::evolution_get_pattern,
+            commands::evolution::evolution_detect_inconsistencies,
+            commands::evolution::evolution_record_prediction,
+            commands::evolution::evolution_get_prediction_history,
+            commands::evolution::evolution_adjust_emotional_sensitivity,
+            commands::evolution::evolution_get_emotional_recommendations,
+            commands::evolution::evolution_should_be_proactive,
+            commands::evolution::evolution_auto_detect_mode,
+            // Auto-Heal System v16.0 commands
+            auto_heal::auto_heal_scan,
+            auto_heal::auto_heal_repair,
+            auto_heal::auto_heal_get_logs,
+            // Overdrive Engine v16.1 - Global commands (2 commands)
+            overdrive::overdrive_health_check,
+            overdrive::overdrive_get_version,
+            // Overdrive - Voice Engine (6 commands - simplified)
+            overdrive::voice_engine::voice_start_listening,
+            overdrive::voice_engine::voice_stop_listening,
+            overdrive::voice_engine::voice_transcribe_audio,
+            overdrive::voice_engine::voice_synthesize_speech,
+            overdrive::voice_engine::voice_detect_wake_word,
+            overdrive::voice_engine::voice_calibrate_microphone,
+            // Overdrive - Chat Orchestrator (5 commands - simplified)
+            overdrive::chat_orchestrator::chat_send_message,
+            overdrive::chat_orchestrator::chat_create_conversation,
+            overdrive::chat_orchestrator::chat_get_conversation,
+            overdrive::chat_orchestrator::chat_set_gemini_key,
+            overdrive::chat_orchestrator::chat_get_providers_status,
+            // Overdrive - Memory Engine (8 commands - simplified)
+            overdrive::memory_engine::memory_store,
+            overdrive::memory_engine::memory_search,
+            overdrive::memory_engine::memory_get_related,
+            overdrive::memory_engine::memory_delete,
+            overdrive::memory_engine::memory_get_stats,
+            overdrive::memory_engine::memory_export,
+            overdrive::memory_engine::memory_import,
+            overdrive::memory_engine::memory_prune,
+            // Overdrive - Semantic Kernel (5 commands - simplified)
+            overdrive::semantic_kernel::semantic_execute_skill,
+            overdrive::semantic_kernel::semantic_analyze_intent,
+            overdrive::semantic_kernel::semantic_get_skill,
+            overdrive::semantic_kernel::semantic_list_skills,
+            overdrive::semantic_kernel::semantic_chain_skills,
+            // Overdrive - EXP Engine (6 commands - simplified)
+            overdrive::exp_engine::exp_add,
+            overdrive::exp_engine::exp_get_profile,
+            overdrive::exp_engine::exp_unlock_talent,
+            overdrive::exp_engine::exp_reset_talents,
+            overdrive::exp_engine::exp_get_history,
+            // Overdrive - Project AutoPilot (8 commands - simplified)
+            overdrive::project_autopilot::project_get,
+            overdrive::project_autopilot::project_list,
+            overdrive::project_autopilot::project_update,
+            overdrive::project_autopilot::project_delete,
+            overdrive::project_autopilot::project_analyze,
+            overdrive::project_autopilot::project_delete,
+            overdrive::project_autopilot::autopilot_run,
+            overdrive::project_autopilot::autopilot_get_suggestions,
+            // Overdrive - API Bridge (7 commands)
+            overdrive::api_bridge::api_request,
+            overdrive::api_bridge::api_set_key,
+            overdrive::api_bridge::api_get_stats,
+            overdrive::api_bridge::api_test_connection,
+            overdrive::api_bridge::api_clear_cache,
+            overdrive::api_bridge::api_gemini_generate,
+            overdrive::api_bridge::api_ollama_generate,
+        ]);
+    
+    log::info!("✅ Invoke handlers registered");
+    log::info!("🚀 Starting Tauri event loop...");
+    println!("🚀 Starting Tauri event loop (this will open the window)...\n");
+    
+    // Add setup to open DevTools automatically in debug mode
+    let builder = builder.setup(|app| {
+        #[cfg(debug_assertions)]
+        {
+            if let Some(window) = app.get_webview_window("main") {
+                window.open_devtools();
+                println!("🔧 DevTools opened automatically (debug mode).");
+                log::info!("🔧 DevTools opened automatically");
+            } else {
+                println!("⚠️  Warning: Window 'main' not found during setup.");
+                log::warn!("Window 'main' not found during setup");
+            }
+        }
+        Ok(())
+    });
+    
+    builder.run(tauri::generate_context!())
+        .map_err(|e| {
+            log::error!("❌ Tauri application error: {}", e);
+            eprintln!("❌ Failed to run Tauri application: {}", e);
+            e
+        })?;
+
+    log::info!("👋 TITANE∞ shutting down");
+    println!("\n👋 TITANE∞ shutdown complete\n");
+    
+    Ok(())
+}

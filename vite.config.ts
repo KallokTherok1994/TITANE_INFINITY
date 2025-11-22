@@ -1,23 +1,53 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
+import tsconfigPaths from 'vite-tsconfig-paths';
 
-// TITANE∞ v17.0.0 - Vite Configuration (WebKit Fix + Tauri-Only 100%)
+// TITANE∞ v24 - Vite Configuration OPTIMIZED (CPU < 50%)
 // https://vitejs.dev/config/
 export default defineConfig({
   root: '.',
   publicDir: 'public',
   base: './',
-  plugins: [react()],
-  
+  plugins: [
+    react({
+      // Optimisation React Fast Refresh
+      babel: {
+        compact: true,
+        plugins: []
+      }
+    }),
+    tsconfigPaths(), // Auto-sync avec tsconfig.json paths
+  ],
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🚀 OPTIMISATIONS CPU & WATCHERS
+  // ═══════════════════════════════════════════════════════════════════════════
+  optimizeDeps: {
+    // En mode dev browser, on peut inclure @tauri-apps/api
+    // En mode Tauri, il sera automatiquement géré
+    include: ['react', 'react-dom', 'react/jsx-runtime'],
+    esbuildOptions: {
+      target: 'esnext',
+    }
+  },
+
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
-      '@ui': resolve(__dirname, './src/ui'),
-      '@layout': resolve(__dirname, './src/layout'),
+      '@app': resolve(__dirname, './src/app'),
       '@pages': resolve(__dirname, './src/pages'),
+      '@features': resolve(__dirname, './src/features'),
+      '@components': resolve(__dirname, './src/components'),
+      '@ui': resolve(__dirname, './src/ui'),
       '@hooks': resolve(__dirname, './src/hooks'),
-      '@design-system': resolve(__dirname, './src/design-system'),
+      '@services': resolve(__dirname, './src/services'),
+      '@stores': resolve(__dirname, './src/stores'),
+      '@themes': resolve(__dirname, './src/themes'),
+      '@utils': resolve(__dirname, './src/utils'),
+      '@types': resolve(__dirname, './src/types'),
+      '@assets': resolve(__dirname, './src/assets'),
+      '@styles': resolve(__dirname, './src/styles'),
     },
   },
 
@@ -31,7 +61,6 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html')
       },
-      external: ['@tauri-apps/api/core', '@tauri-apps/api/tauri'],
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
@@ -41,15 +70,37 @@ export default defineConfig({
   },
 
   server: {
-    port: 5173, // Absorbed by Tauri WebView, never directly exposed
+    port: 5173,
     strictPort: true,
-    hmr: false, // Disabled for Tauri-only mode
+    hmr: {
+      protocol: 'ws',
+      host: 'localhost',
+      port: 5173,
+      overlay: false, // Désactive l'overlay d'erreur (CPU)
+    },
     host: 'localhost',
+    watch: {
+      // Watchers optimisés — exclusions agressives
+      ignored: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/target/**',
+        '**/.tauri/**',
+        '**/backups/**',
+        '**/.git/**',
+        '**/*.log',
+      ],
+      usePolling: false, // Évite le polling (CPU)
+    },
     fs: {
+      strict: true,
+      allow: ['.'],
       deny: [
         '/home/titane_os/Bureau/RECUP/**',
         '/home/titane_os/Documents/TITANE-DOC/OLD/**',
         '/home/titane_os/Documents/TITANE_NEWGEN_V20nov/**',
+        '**/node_modules/**',
+        '**/target/**',
       ],
     },
   },

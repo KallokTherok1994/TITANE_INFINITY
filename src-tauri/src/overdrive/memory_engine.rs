@@ -347,7 +347,7 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
 }
 
 fn calculate_importance(content: &str, metadata: &MemoryMetadata) -> f32 {
-    let mut importance = 0.5; // Base
+    let mut importance: f32 = 0.5; // Base
 
     // Type de contenu
     match metadata.entry_type.as_str() {

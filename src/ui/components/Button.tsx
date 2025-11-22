@@ -1,13 +1,13 @@
-// TITANE∞ v12 - Button Component
+// TITANE∞ v17.1 - Button Component with Design System
 import { ReactNode, ButtonHTMLAttributes } from 'react';
 import './Button.css';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'glass' | 'subtle';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
-  icon?: ReactNode;
-  iconPosition?: 'left' | 'right';
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
   loading?: boolean;
   children: ReactNode;
 }
@@ -16,8 +16,8 @@ export const Button = ({
   variant = 'primary',
   size = 'md',
   fullWidth = false,
-  icon,
-  iconPosition = 'left',
+  leftIcon,
+  rightIcon,
   loading = false,
   disabled,
   className = '',
@@ -43,12 +43,12 @@ export const Button = ({
       {loading && (
         <span className="button__spinner" />
       )}
-      {!loading && icon && iconPosition === 'left' && (
-        <span className="button__icon button__icon--left">{icon}</span>
+      {!loading && leftIcon && (
+        <span className="button__icon button__icon--left">{leftIcon}</span>
       )}
       <span className="button__content">{children}</span>
-      {!loading && icon && iconPosition === 'right' && (
-        <span className="button__icon button__icon--right">{icon}</span>
+      {!loading && rightIcon && (
+        <span className="button__icon button__icon--right">{rightIcon}</span>
       )}
     </button>
   );

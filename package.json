@@ -1,10 +1,11 @@
 {
   "name": "titane-infinity",
-  "version": "17.0.0",
-  "description": "TITANE∞ v17.0 - WebKit Fix Total, 100% Tauri/Rust/Cargo, Local-First, Gemini+Ollama Auto-Connect, Production-Ready",
+  "version": "17.2.1",
+  "description": "TITANE∞ v17.2.1 - Architecture Refactor Complete + Legacy Commands Bridge + Black Screen Fix, 100% Tauri v2, Rust Backend, Production-Ready",
   "type": "module",
   "scripts": {
-    "dev": "tauri dev",
+    "dev": "vite",
+    "dev:tauri": "tauri dev",
     "build": "vite build",
     "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",
     "tauri": "tauri",
@@ -15,6 +16,8 @@
     "tauri:build:debug": "tauri build --debug",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,css}\"",
     "type-check": "tsc --noEmit",
     "clean": "rm -rf node_modules dist .vite src-tauri/target",
     "clean:dist": "rm -rf dist",
@@ -31,12 +34,15 @@
     "@tauri-apps/api": "^2.9.0",
     "@tauri-apps/plugin-shell": "^2.0.0",
     "@types/react-router-dom": "^5.3.3",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.6",
-    "remark-gfm": "^4.0.1"
+    "remark-gfm": "^4.0.1",
+    "zod": "^4.1.12",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0",
@@ -47,11 +53,14 @@
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "prettier": "^3.6.2",
     "terser": "^5.44.1",
     "typescript": "^5.5.3",
-    "vite": "^6.0.0"
+    "vite": "^6.0.0",
+    "vite-tsconfig-paths": "^5.1.4"
   },
   "engines": {
     "node": ">=20.0.0",

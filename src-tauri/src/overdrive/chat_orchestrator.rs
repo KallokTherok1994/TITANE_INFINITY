@@ -5,9 +5,9 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::RwLock;
 use tauri::State;
-use async_recursion::async_recursion;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -63,10 +63,10 @@ pub struct ConversationMemory {
 }
 
 pub struct ChatOrchestratorState {
-    conversations: Arc<Mutex<Vec<ConversationMemory>>>,
-    provider_status: Arc<Mutex<Vec<ProviderStatus>>>,
-    gemini_api_key: Arc<Mutex<Option<String>>>,
-    default_provider: Arc<Mutex<String>>,
+    conversations: Arc<RwLock<Vec<ConversationMemory>>>,
+    provider_status: Arc<RwLock<Vec<ProviderStatus>>>,
+    gemini_api_key: Arc<RwLock<Option<String>>>,
+    default_provider: Arc<RwLock<String>>,
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -75,20 +75,23 @@ pub struct ChatOrchestratorState {
 
 pub fn init() -> ChatOrchestratorState {
     let state = ChatOrchestratorState {
-        conversations: Arc::new(Mutex::new(Vec::new())),
-        provider_status: Arc::new(Mutex::new(Vec::new())),
-        gemini_api_key: Arc::new(Mutex::new(None)),
-        default_provider: Arc::new(Mutex::new("auto".to_string())),
+        conversations: Arc::new(RwLock::new(Vec::new())),
+        provider_status: Arc::new(RwLock::new(Vec::new())),
+        gemini_api_key: Arc::new(RwLock::new(None)),
+        default_provider: Arc::new(RwLock::new("auto".to_string())),
     };
 
-    // Initialiser statuts providers
-    initialize_providers(&state);
+    // Initialiser statuts providers (bloquer pour init synchrone)
+    let rt = tokio::runtime::Runtime::new().unwrap();
+    rt.block_on(async {
+        initialize_providers(&state).await;
+    });
 
     state
 }
 
-fn initialize_providers(state: &ChatOrchestratorState) {
-    let mut status_list = state.provider_status.lock().unwrap();
+async fn initialize_providers(state: &ChatOrchestratorState) {
+    let mut status_list = state.provider_status.write().await;
 
     // Gemini
     status_list.push(ProviderStatus {
@@ -123,67 +126,73 @@ fn initialize_providers(state: &ChatOrchestratorState) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-#[async_recursion]
 pub async fn chat_send_message(
-    request: ChatRequest,
+    mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
     let start = std::time::Instant::now();
 
-    // Déterminer le provider optimal
-    let provider = if request.provider == "auto" {
-        select_best_provider(&state).await
+    // Liste des providers à essayer (ordre de priorité)
+    let providers_to_try: Vec<String> = if request.provider == "auto" {
+        vec!["gemini".to_string(), "ollama".to_string(), "local".to_string()]
     } else {
-        request.provider.clone()
-    };
-
-    println!("[CHAT] Requête vers {} : '{}'", provider, request.message);
-
-    // Router vers le bon provider
-    let result = match provider.as_str() {
-        "gemini" => send_to_gemini(&request, &state).await,
-        "ollama" => send_to_ollama(&request, &state).await,
-        "local" => send_to_local(&request, &state).await,
-        _ => Err("Provider inconnu".to_string()),
-    };
-
-    let latency_ms = start.elapsed().as_millis() as u64;
-
-    match result {
-        Ok(message) => {
-            // Stocker dans la conversation
-            if let Some(conv_id) = &request.conversation_id {
-                store_message(&state, conv_id, &message);
-            }
-
-            Ok(ChatResponse {
-                message,
-                success: true,
-                error: None,
-                latency_ms,
-            })
+        let mut providers = vec![request.provider.clone()];
+        if request.provider != "local" {
+            providers.push("local".to_string()); // Toujours fallback sur local
         }
-        Err(e) => {
-            // Fallback automatique si échec
-            if provider != "local" {
-                println!("[CHAT] Échec {} - Fallback vers local", provider);
-                return chat_send_message(
-                    ChatRequest {
-                        provider: "local".to_string(),
-                        ..request
-                    },
-                    state,
-                )
-                .await;
-            }
+        providers
+    };
 
-            Err(format!("Tous les providers ont échoué: {}", e))
+    let mut last_error = String::new();
+
+    // Boucle de fallback (au lieu de récursion)
+    for provider in providers_to_try {
+        println!("[CHAT] Tentative avec provider: {}", provider);
+        
+        // Cloner request pour chaque tentative
+        request.provider = provider.clone();
+
+        // Router vers le bon provider
+        let result = match provider.as_str() {
+            "gemini" => send_to_gemini(&request, &state).await,
+            "ollama" => send_to_ollama(&request, &state).await,
+            "local" => send_to_local(&request, &state).await,
+            _ => {
+                last_error = format!("Provider inconnu: {}", provider);
+                continue;
+            }
+        };
+
+        match result {
+            Ok(message) => {
+                let latency_ms = start.elapsed().as_millis() as u64;
+
+                // Stocker dans la conversation
+                if let Some(conv_id) = &request.conversation_id {
+                    store_message(&state, conv_id, &message).await;
+                }
+
+                return Ok(ChatResponse {
+                    message,
+                    success: true,
+                    error: None,
+                    latency_ms,
+                });
+            }
+            Err(e) => {
+                last_error = e;
+                println!("[CHAT] Échec {} - {}", provider, last_error);
+                // Continue vers le prochain provider
+            }
         }
     }
+
+    // Tous les providers ont échoué
+    Err(format!("Tous les providers ont échoué. Dernière erreur: {}", last_error))
 }
 
 async fn select_best_provider(state: &ChatOrchestratorState) -> String {
-    let status_list = state.provider_status.lock().unwrap();
+    let status_list = state.provider_status.read().await;
 
     // Cascade: Gemini → Ollama → Local
     for status in status_list.iter() {
@@ -203,7 +212,7 @@ async fn send_to_gemini(
     request: &ChatRequest,
     state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, String> {
-    let api_key = state.gemini_api_key.lock().unwrap();
+    let api_key = state.gemini_api_key.read().await;
     if api_key.is_none() {
         return Err("Gemini API key non configurée".to_string());
     }
@@ -273,7 +282,7 @@ async fn send_to_local(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn chat_create_conversation(state: State<ChatOrchestratorState>) -> Result<String, String> {
+pub async fn chat_create_conversation(state: State<'_, ChatOrchestratorState>) -> Result<String, String> {
     let conversation_id = uuid::Uuid::new_v4().to_string();
 
     let conversation = ConversationMemory {
@@ -284,7 +293,7 @@ pub fn chat_create_conversation(state: State<ChatOrchestratorState>) -> Result<S
         last_updated: get_timestamp(),
     };
 
-    let mut conversations = state.conversations.lock().unwrap();
+    let mut conversations = state.conversations.write().await;
     conversations.push(conversation);
 
     println!("[CHAT] Conversation créée: {}", conversation_id);
@@ -292,11 +301,11 @@ pub fn chat_create_conversation(state: State<ChatOrchestratorState>) -> Result<S
 }
 
 #[tauri::command]
-pub fn chat_get_conversation(
+pub async fn chat_get_conversation(
     conversation_id: String,
-    state: State<ChatOrchestratorState>,
+    state: State<'_, ChatOrchestratorState>,
 ) -> Result<ConversationMemory, String> {
-    let conversations = state.conversations.lock().unwrap();
+    let conversations = state.conversations.read().await;
     conversations
         .iter()
         .find(|c| c.conversation_id == conversation_id)
@@ -305,17 +314,17 @@ pub fn chat_get_conversation(
 }
 
 #[tauri::command]
-pub fn chat_delete_conversation(
+pub async fn chat_delete_conversation(
     conversation_id: String,
-    state: State<ChatOrchestratorState>,
+    state: State<'_, ChatOrchestratorState>,
 ) -> Result<String, String> {
-    let mut conversations = state.conversations.lock().unwrap();
+    let mut conversations = state.conversations.write().await;
     conversations.retain(|c| c.conversation_id != conversation_id);
     Ok("Conversation supprimée".to_string())
 }
 
-fn store_message(state: &ChatOrchestratorState, conversation_id: &str, message: &ChatMessage) {
-    let mut conversations = state.conversations.lock().unwrap();
+async fn store_message(state: &ChatOrchestratorState, conversation_id: &str, message: &ChatMessage) {
+    let mut conversations = state.conversations.write().await;
     if let Some(conv) = conversations
         .iter_mut()
         .find(|c| c.conversation_id == conversation_id)
@@ -331,46 +340,46 @@ fn store_message(state: &ChatOrchestratorState, conversation_id: &str, message: 
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn chat_set_gemini_key(
+pub async fn chat_set_gemini_key(
     api_key: String,
-    state: State<ChatOrchestratorState>,
+    state: State<'_, ChatOrchestratorState>,
 ) -> Result<String, String> {
-    let mut key = state.gemini_api_key.lock().unwrap();
+    let mut key = state.gemini_api_key.write().await;
     *key = Some(api_key);
 
     // Vérifier disponibilité
-    update_provider_status(&state, "gemini", true, 0, None);
+    update_provider_status(&state, "gemini", true, 0, None).await;
 
     Ok("API key configurée".to_string())
 }
 
 #[tauri::command]
-pub fn chat_get_providers_status(
-    state: State<ChatOrchestratorState>,
+pub async fn chat_get_providers_status(
+    state: State<'_, ChatOrchestratorState>,
 ) -> Result<Vec<ProviderStatus>, String> {
-    let status_list = state.provider_status.lock().unwrap();
+    let status_list = state.provider_status.read().await;
     Ok(status_list.clone())
 }
 
 #[tauri::command]
-pub fn chat_check_providers(state: State<ChatOrchestratorState>) -> Result<Vec<ProviderStatus>, String> {
+pub async fn chat_check_providers(state: State<'_, ChatOrchestratorState>) -> Result<Vec<ProviderStatus>, String> {
     // TODO: Ping tous les providers
     // - Gemini: HEAD request avec API key
     // - Ollama: GET http://localhost:11434/api/tags
     // - Local: toujours disponible
 
-    let status_list = state.provider_status.lock().unwrap();
+    let status_list = state.provider_status.read().await;
     Ok(status_list.clone())
 }
 
-fn update_provider_status(
+async fn update_provider_status(
     state: &ChatOrchestratorState,
     provider: &str,
     available: bool,
     latency_ms: u64,
     error: Option<String>,
 ) {
-    let mut status_list = state.provider_status.lock().unwrap();
+    let mut status_list = state.provider_status.write().await;
     if let Some(status) = status_list.iter_mut().find(|s| s.provider == provider) {
         status.available = available;
         status.latency_ms = latency_ms;

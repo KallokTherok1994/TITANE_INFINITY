@@ -3,6 +3,8 @@
 // ║ Système d'analyse et régulation adaptative multi-dimensionnelle             ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+#![allow(dead_code)] // Module architecture - scheduler integration pending
+
 mod regulation;
 use crate::shared::types::{HealthStatus, ModuleHealth, TitaneResult};
 use crate::shared::utils::current_timestamp;

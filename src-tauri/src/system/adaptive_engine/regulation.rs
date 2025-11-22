@@ -3,6 +3,8 @@
 // ║ Régulation douce et progressive des états adaptatifs                        ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+#![allow(dead_code)] // Regulation state - used by AdaptiveEngine
+
 // analysis module removed - AdaptiveReport not used in v11
 /// État du moteur adaptatif
 #[derive(Debug, Clone)]

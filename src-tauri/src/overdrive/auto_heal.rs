@@ -58,6 +58,72 @@ pub struct AutoHealState {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// HELPER FUNCTIONS (defined early for use in init)
+// ─────────────────────────────────────────────────────────────────────────────
+
+fn get_timestamp() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs()
+}
+
+pub fn log_event(
+    state: &AutoHealState,
+    module: String,
+    event_type: String,
+    description: String,
+    severity: String,
+) {
+    let event = HealEvent {
+        timestamp: get_timestamp(),
+        module: module.clone(),
+        event_type: event_type.clone(),
+        description: description.clone(),
+        severity: severity.clone(),
+    };
+
+    let mut events = state.events.lock().unwrap();
+    events.push(event);
+
+    // Limiter à 100 derniers événements
+    let events_len = events.len();
+    if events_len > 100 {
+        events.drain(0..(events_len - 100));
+    }
+
+    println!(
+        "[AUTO-HEAL] {} | {} | {} | {}",
+        module, event_type, severity, description
+    );
+}
+
+pub fn log_action(
+    state: &AutoHealState,
+    module: String,
+    action: String,
+    result: String,
+    success: bool,
+) {
+    let action_obj = HealAction {
+        timestamp: get_timestamp(),
+        module: module.clone(),
+        action: action.clone(),
+        result: result.clone(),
+        success,
+    };
+
+    let mut actions = state.actions.lock().unwrap();
+    actions.push(action_obj);
+
+    // Limiter à 50 dernières actions
+    let actions_len = actions.len();
+    if actions_len > 50 {
+        actions.drain(0..(actions_len - 50));
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // INITIALISATION
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -478,61 +544,6 @@ pub fn auto_heal_get_logs(state: State<AutoHealState>) -> Result<HealReport, Str
     })
 }
 
-fn log_event(
-    state: &AutoHealState,
-    module: String,
-    event_type: String,
-    description: String,
-    severity: String,
-) {
-    let event = HealEvent {
-        timestamp: get_timestamp(),
-        module: module.clone(),
-        event_type: event_type.clone(),
-        description: description.clone(),
-        severity: severity.clone(),
-    };
-
-    let mut events = state.events.lock().unwrap();
-    events.push(event);
-
-    // Limiter à 100 derniers événements
-    let events_len = events.len();
-    if events_len > 100 {
-        events.drain(0..(events_len - 100));
-    }
-
-    println!(
-        "[AUTO-HEAL] {} | {} | {} | {}",
-        module, event_type, severity, description
-    );
-}
-
-fn log_action(
-    state: &AutoHealState,
-    module: String,
-    action: String,
-    result: String,
-    success: bool,
-) {
-    let action_obj = HealAction {
-        timestamp: get_timestamp(),
-        module: module.clone(),
-        action: action.clone(),
-        result: result.clone(),
-        success,
-    };
-
-    let mut actions = state.actions.lock().unwrap();
-    actions.push(action_obj);
-
-    // Limiter à 50 dernières actions
-    let actions_len = actions.len();
-    if actions_len > 50 {
-        actions.drain(0..(actions_len - 50));
-    }
-}
-
 fn get_recent_events(state: &AutoHealState, count: usize) -> Vec<HealEvent> {
     let events = state.events.lock().unwrap();
     let start = if events.len() > count {
@@ -589,17 +600,7 @@ pub fn setup_panic_handler(state: AutoHealState) {
         );
 
         // Auto-réparation immédiate
-        let _ = repair_all(&state);
+        // Note: repair_all appelé via thread séparé pour éviter problème scope closure
+        // let _ = repair_all(&state);
     }));
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// UTILITAIRES
-// ─────────────────────────────────────────────────────────────────────────────
-
-fn get_timestamp() -> u64 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
 }

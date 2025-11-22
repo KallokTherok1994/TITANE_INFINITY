@@ -24,17 +24,35 @@
     "noUncheckedIndexedAccess": true,
     "forceConsistentCasingInFileNames": true,
 
-    /* Path aliases */
+    /* Path aliases - TITANE∞ v24 */
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./core/frontend/*"],
-      "@core/*": ["./core/frontend/core/*"],
-      "@hooks/*": ["./core/frontend/hooks/*"],
-      "@contexts/*": ["./core/frontend/contexts/*"],
-      "@services/*": ["./core/frontend/services/*"],
-      "@ui/*": ["./core/frontend/ui/*"],
-      "@devtools/*": ["./core/frontend/devtools/*"]
+      "@/*": ["./src/*"],
+      "@app/*": ["./src/app/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@features/*": ["./src/features/*"],
+      "@components/*": ["./src/components/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@services/*": ["./src/services/*"],
+      "@stores/*": ["./src/stores/*"],
+      "@themes/*": ["./src/themes/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@types/*": ["./src/types/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@styles/*": ["./src/styles/*"]
     }
   },
-  "include": ["src", "core/frontend"],
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "target",
+    ".tauri",
+    "backups",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

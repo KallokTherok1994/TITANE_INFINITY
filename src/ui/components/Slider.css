@@ -1,0 +1,199 @@
+/* TITANE∞ v17.1 - Slider Component - Design System Optimisé */
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+/* ═══════════════════════════════════
+   HEADER - Label & Value
+   ═══════════════════════════════════ */
+
+.slider__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.slider__label {
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  color: var(--neutral-70);
+}
+
+.slider__value {
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  color: var(--primary-main);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════
+   TRACK WRAPPER
+   ═══════════════════════════════════ */
+
+.slider__track-wrapper {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.slider--disabled .slider__track-wrapper {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════
+   TRACK - Rail & Fill
+   ═══════════════════════════════════ */
+
+.slider__track {
+  position: relative;
+  width: 100%;
+  background: var(--neutral-20);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.slider__fill {
+  height: 100%;
+  background: var(--primary-main);
+  border-radius: var(--radius-full);
+  transition: width 50ms ease-out;
+}
+
+.slider--dragging .slider__fill {
+  transition: none;
+}
+
+/* ═══════════════════════════════════
+   THUMB - Curseur
+   ═══════════════════════════════════ */
+
+.slider__thumb {
+  position: absolute;
+  top: 50%;
+  background: white;
+  border: 2px solid var(--primary-main);
+  border-radius: var(--radius-full);
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.slider__thumb:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.slider__thumb:focus-visible {
+  outline: 2px solid var(--primary-main);
+  outline-offset: 2px;
+}
+
+.slider--dragging .slider__thumb {
+  cursor: grabbing;
+  transform: translate(-50%, -50%) scale(1.15);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transition: none;
+}
+
+.slider--disabled .slider__thumb {
+  cursor: not-allowed;
+  border-color: var(--neutral-40);
+}
+
+/* ═══════════════════════════════════
+   SIZES
+   ═══════════════════════════════════ */
+
+.slider--sm .slider__track {
+  height: 4px;
+}
+
+.slider--sm .slider__thumb {
+  width: 16px;
+  height: 16px;
+}
+
+.slider--sm .slider__track-wrapper {
+  padding: 8px 0;
+}
+
+.slider--md .slider__track {
+  height: 6px;
+}
+
+.slider--md .slider__thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.slider--md .slider__track-wrapper {
+  padding: 10px 0;
+}
+
+.slider--lg .slider__track {
+  height: 8px;
+}
+
+.slider--lg .slider__thumb {
+  width: 24px;
+  height: 24px;
+}
+
+.slider--lg .slider__track-wrapper {
+  padding: 12px 0;
+}
+
+/* ═══════════════════════════════════
+   MARKS
+   ═══════════════════════════════════ */
+
+.slider__marks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  pointer-events: none;
+}
+
+.slider__mark {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.slider__mark-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--neutral-40);
+  border-radius: var(--radius-full);
+}
+
+.slider__mark-label {
+  position: absolute;
+  top: calc(100% + var(--space-3));
+  font-size: var(--font-size-tiny);
+  color: var(--neutral-60);
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY - Reduced Motion
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .slider__fill,
+  .slider__thumb {
+    transition: none;
+  }
+}

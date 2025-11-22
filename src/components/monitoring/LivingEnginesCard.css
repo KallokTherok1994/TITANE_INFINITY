@@ -1,0 +1,203 @@
+/**
+ * TITANE∞ v24 - Living Engines Card Styles
+ */
+
+.living-engines-card {
+  background: linear-gradient(135deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 30, 0.95));
+  border: 1px solid rgba(100, 200, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  animation: living-glow 3s ease-in-out infinite;
+}
+
+@keyframes living-glow {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(100, 200, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 40px rgba(100, 200, 255, 0.2);
+  }
+}
+
+.living-engines-card:hover {
+  border-color: rgba(100, 200, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.living-engines-card--loading {
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Header */
+.living-engines-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.living-engines-card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.living-engines-card__badge {
+  padding: 0.25rem 0.75rem;
+  background: rgba(100, 200, 255, 0.2);
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64c8ff;
+  letter-spacing: 0.5px;
+}
+
+/* Loading */
+.living-engines-card__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.living-engines-card__spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(100, 200, 255, 0.2);
+  border-top-color: #64c8ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Sections */
+.living-engines-section {
+  margin-bottom: 1.5rem;
+}
+
+.living-engines-section:last-child {
+  margin-bottom: 0;
+}
+
+.living-engines-section__title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Metrics */
+.living-engines-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.living-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.living-metric__label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.living-metric__value {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.living-metric__value--highlight {
+  color: #64c8ff;
+  text-transform: capitalize;
+}
+
+.living-metric__value--active {
+  color: #4ade80;
+}
+
+/* Bars */
+.living-metric__bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.living-metric__bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  position: relative;
+  animation: pulse-bar 2s ease-in-out infinite;
+}
+
+@keyframes pulse-bar {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.living-metric__bar-fill--glow {
+  background: linear-gradient(90deg, #64c8ff, #4ade80);
+}
+
+.living-metric__bar-fill--motion {
+  background: linear-gradient(90deg, #a78bfa, #64c8ff);
+}
+
+.living-metric__bar-fill--depth {
+  background: linear-gradient(90deg, #fb923c, #fbbf24);
+}
+
+.living-metric__bar-fill--sound {
+  background: linear-gradient(90deg, #ec4899, #a78bfa);
+}
+
+.living-metric__bar-fill--cognitive {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.living-metric__bar-fill--rhythm {
+  background: linear-gradient(90deg, #10b981, #14b8a6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .living-engines-metrics {
+    grid-template-columns: 1fr;
+  }
+  
+  .living-engines-card {
+    padding: 1rem;
+  }
+}

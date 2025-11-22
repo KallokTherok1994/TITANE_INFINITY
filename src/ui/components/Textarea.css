@@ -1,0 +1,144 @@
+/* TITANE∞ v17.1 - Textarea Component - Design System Optimisé */
+
+.textarea {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+/* ═══════════════════════════════════
+   LABEL
+   ═══════════════════════════════════ */
+
+.textarea__label {
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  color: var(--neutral-70);
+}
+
+/* ═══════════════════════════════════
+   WRAPPER
+   ═══════════════════════════════════ */
+
+.textarea__wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* ═══════════════════════════════════
+   INPUT
+   ═══════════════════════════════════ */
+
+.textarea__input {
+  width: 100%;
+  font-family: inherit;
+  color: var(--neutral-90);
+  background: var(--neutral-5);
+  border: 2px solid var(--neutral-30);
+  border-radius: var(--radius-md);
+  outline: none;
+  resize: vertical;
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.textarea__input::placeholder {
+  color: var(--neutral-50);
+}
+
+.textarea__input:hover:not(:disabled) {
+  border-color: var(--neutral-40);
+  background: var(--neutral-10);
+}
+
+.textarea__input:focus {
+  border-color: var(--primary-main);
+  background: var(--neutral-0);
+  box-shadow: 0 0 0 3px rgba(var(--primary-main-rgb), 0.1);
+}
+
+.textarea__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--neutral-10);
+  color: var(--neutral-50);
+}
+
+/* État error */
+.textarea--error .textarea__input {
+  border-color: #ef4444;
+}
+
+.textarea--error .textarea__input:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* ═══════════════════════════════════
+   SIZES
+   ═══════════════════════════════════ */
+
+.textarea--sm .textarea__input {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-small);
+  line-height: 1.4;
+}
+
+.textarea--md .textarea__input {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-body);
+  line-height: 1.5;
+}
+
+.textarea--lg .textarea__input {
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--font-size-h5);
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════
+   FOOTER - Helper text & Character count
+   ═══════════════════════════════════ */
+
+.textarea__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-height: 20px;
+}
+
+.textarea__footer-left {
+  flex: 1;
+}
+
+.textarea__helper {
+  font-size: var(--font-size-small);
+  color: var(--neutral-60);
+}
+
+.textarea__error {
+  font-size: var(--font-size-small);
+  color: #ef4444;
+}
+
+.textarea__count {
+  font-size: var(--font-size-small);
+  color: var(--neutral-60);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.textarea--error .textarea__count {
+  color: #ef4444;
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY - Reduced Motion
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .textarea__input {
+    transition: none;
+  }
+}

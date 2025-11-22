@@ -1,5 +1,12 @@
-// TITANE∞ v16.0 - Pages Index
-// Note: Chat v16 est dans ./ui/pages/Chat.tsx (ne pas importer d'ici)
+// TITANE∞ v17.1 - Pages Index
+
+// New v17.1 Pages (Refactored Design System)
+export { DashboardPage } from './DashboardPage';
+export { ChatPage } from './ChatPage';
+export { CognitivePage } from './CognitivePage';
+export { ProgressionPage } from './ProgressionPage';
+
+// Legacy Pages (v16.0 - kept for compatibility)
 export { Dashboard } from './Dashboard';
 export { Helios } from './Helios';
 export { Nexus } from './Nexus';

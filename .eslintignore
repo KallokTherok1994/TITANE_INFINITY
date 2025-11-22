@@ -1,0 +1,21 @@
+# Backup files
+backups/
+*.backup.*
+*.old.*
+*.new.*
+
+# Build outputs
+dist/
+build/
+out/
+target/
+src-tauri/target/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Generated files
+.vite/
+*.log
+.DS_Store

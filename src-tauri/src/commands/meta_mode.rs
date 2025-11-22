@@ -3,20 +3,20 @@
 
 use crate::meta_mode_engine::{MetaModeEngine, MetaModeConfig, MetaModeResponse, KevinState};
 use crate::auto_evolution_v15::{AutoEvolutionEngine, KevinMetrics};
-use std::sync::Mutex;
+use tokio::sync::RwLock;
 use tauri::State;
 
 /// État global du Meta-Mode Engine partagé entre les commandes
 pub struct MetaModeState {
-    engine: Mutex<MetaModeEngine>,
-    evolution_engine: Mutex<AutoEvolutionEngine>,
+    engine: RwLock<MetaModeEngine>,
+    evolution_engine: RwLock<AutoEvolutionEngine>,
 }
 
 impl MetaModeState {
     pub fn new() -> Self {
         Self {
-            engine: Mutex::new(MetaModeEngine::new(MetaModeConfig::default())),
-            evolution_engine: Mutex::new(AutoEvolutionEngine::new()),
+            engine: RwLock::new(MetaModeEngine::new(MetaModeConfig::default())),
+            evolution_engine: RwLock::new(AutoEvolutionEngine::new()),
         }
     }
 }
@@ -109,20 +109,21 @@ pub async fn meta_mode_process(
     request: InteractionRequest,
     state: State<'_, MetaModeState>,
 ) -> Result<InteractionResponse, String> {
-    let mut engine = state.engine.lock()
-        .map_err(|e| format!("Failed to lock Meta-Mode Engine: {}", e))?;
-    
-    // Traiter l'interaction
-    let response = engine.process_interaction(&request.input, &request.context);
+    let response = {
+        let mut engine = state.engine.write().await;
+        engine.process_interaction(&request.input, &request.context)
+    };
     
     // Déclencher cycle d'évolution (apprentissage continu)
-    let kevin_metrics = kevin_state_to_metrics(&engine.kevin_state);
-    drop(engine); // Libérer le lock avant d'acquérir evolution_engine
+    let kevin_metrics = {
+        let engine = state.engine.read().await;
+        kevin_state_to_metrics(&engine.kevin_state)
+    };
     
-    let mut evolution_engine = state.evolution_engine.lock()
-        .map_err(|e| format!("Failed to lock Evolution Engine: {}", e))?;
-    
-    let _evolution_result = evolution_engine.evolution_cycle(&kevin_metrics);
+    {
+        let mut evolution_engine = state.evolution_engine.write().await;
+        let _evolution_result = evolution_engine.evolution_cycle(&kevin_metrics);
+    }
     
     Ok(InteractionResponse::from(response))
 }
@@ -148,9 +149,7 @@ fn kevin_state_to_metrics(state: &KevinState) -> KevinMetrics {
 pub async fn meta_mode_get_kevin_state(
     state: State<'_, MetaModeState>,
 ) -> Result<KevinStateResponse, String> {
-    let engine = state.engine.lock()
-        .map_err(|e| format!("Failed to lock Meta-Mode Engine: {}", e))?;
-    
+    let engine = state.engine.read().await;
     Ok(KevinStateResponse::from(&engine.kevin_state))
 }
 
@@ -159,9 +158,7 @@ pub async fn meta_mode_get_kevin_state(
 pub async fn meta_mode_get_current_mode(
     state: State<'_, MetaModeState>,
 ) -> Result<String, String> {
-    let engine = state.engine.lock()
-        .map_err(|e| format!("Failed to lock Meta-Mode Engine: {}", e))?;
-    
+    let engine = state.engine.read().await;
     Ok(engine.current_mode.name().to_string())
 }
 
@@ -212,8 +209,7 @@ pub async fn meta_mode_list_modes() -> Result<Vec<String>, String> {
 pub async fn meta_mode_get_history(
     state: State<'_, MetaModeState>,
 ) -> Result<Vec<(String, String)>, String> {
-    let engine = state.engine.lock()
-        .map_err(|e| format!("Failed to lock Meta-Mode Engine: {}", e))?;
+    let engine = state.engine.read().await;
     
     let history: Vec<(String, String)> = engine.mode_history
         .iter()
@@ -240,8 +236,7 @@ pub struct MetaModeStats {
 pub async fn meta_mode_get_stats(
     state: State<'_, MetaModeState>,
 ) -> Result<MetaModeStats, String> {
-    let engine = state.engine.lock()
-        .map_err(|e| format!("Failed to lock Meta-Mode Engine: {}", e))?;
+    let engine = state.engine.read().await;
     
     let avg_stress = if engine.emotional_sync.stress_history.is_empty() {
         0.0
@@ -264,11 +259,8 @@ pub async fn meta_mode_get_stats(
 pub async fn meta_mode_reset(
     state: State<'_, MetaModeState>,
 ) -> Result<String, String> {
-    let mut engine = state.engine.lock()
-        .map_err(|e| format!("Failed to lock Meta-Mode Engine: {}", e))?;
-    
+    let mut engine = state.engine.write().await;
     *engine = MetaModeEngine::new(MetaModeConfig::default());
-    
     Ok("Meta-Mode Engine réinitialisé avec succès".to_string())
 }
 
@@ -276,10 +268,10 @@ pub async fn meta_mode_reset(
 mod tests {
     use super::*;
     
-    #[test]
-    fn test_meta_mode_state_creation() {
+    #[tokio::test]
+    async fn test_meta_mode_state_creation() {
         let state = MetaModeState::new();
-        let engine = state.engine.lock().unwrap();
+        let engine = state.engine.read().await;
         assert_eq!(engine.current_mode.name(), "Digital Twin (Kevin+)");
     }
 }

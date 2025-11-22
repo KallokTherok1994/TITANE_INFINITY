@@ -1,0 +1,159 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * LOGS CARD STYLES — Clean & Modern v20
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+.logs-card {
+  position: relative;
+  padding: var(--space-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  transition: all var(--duration-base) var(--ease-out);
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+.logs-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Header */
+.logs-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.logs-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: var(--text-xl);
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.logs-card__header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.logs-card__title {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+}
+
+.logs-card__subtitle {
+  margin: var(--space-1) 0 0 0;
+  font-size: var(--text-sm);
+  font-weight: var(--font-regular);
+  color: var(--text-tertiary);
+}
+
+/* Count Display */
+.logs-card__count {
+  margin-bottom: var(--space-6);
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Preview */
+.logs-card__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.logs-card__log-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  overflow: hidden;
+}
+
+.logs-card__log-dot {
+  flex-shrink: 0;
+  width: 4px;
+  height: 4px;
+  background: var(--titane-saphir-500);
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 6px var(--titane-saphir-glow);
+}
+
+.logs-card__log-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-mono);
+}
+
+/* Action Button */
+.logs-card__action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+}
+
+.logs-card__action:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.logs-card__action:active {
+  transform: scale(0.98);
+}
+
+.logs-card__action-arrow {
+  font-size: var(--text-lg);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.logs-card__action:hover .logs-card__action-arrow {
+  transform: translateX(4px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logs-card {
+    padding: var(--space-5);
+  }
+
+  .logs-card__count {
+    font-size: var(--text-3xl);
+  }
+}

@@ -1,0 +1,320 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * COGNITIVE MODULE CARD STYLES — Glow Intelligent & Animations Vivantes v20
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+.cognitive-module-card {
+  position: relative;
+  padding: var(--space-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--duration-base) var(--ease-out);
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+/* Glow Background — Data-Driven Intensity */
+.cognitive-module-card__glow {
+  position: absolute;
+  inset: -60%;
+  background: radial-gradient(
+    circle at center,
+    var(--module-glow) 0%,
+    transparent 60%
+  );
+  opacity: calc(0.15 + var(--module-intensity, 0) * 0.2);
+  filter: blur(50px);
+  pointer-events: none;
+  animation: pulse-organic 4s ease-in-out infinite;
+}
+
+.cognitive-module-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-strong);
+  box-shadow: 
+    var(--shadow-xl),
+    0 0 32px var(--module-glow);
+}
+
+.cognitive-module-card:hover .cognitive-module-card__glow {
+  opacity: calc(0.25 + var(--module-intensity, 0) * 0.3);
+}
+
+/* Icon */
+.cognitive-module-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-bottom: var(--space-4);
+  font-size: var(--text-3xl);
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-inner);
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.cognitive-module-card:hover .cognitive-module-card__icon {
+  transform: scale(1.05);
+  box-shadow: 
+    var(--shadow-inner),
+    0 0 20px var(--module-glow);
+}
+
+/* Content */
+.cognitive-module-card__content {
+  margin-bottom: var(--space-6);
+}
+
+.cognitive-module-card__title {
+  margin: 0 0 var(--space-2) 0;
+  font-size: var(--text-xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+}
+
+.cognitive-module-card__description {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--font-regular);
+  color: var(--text-tertiary);
+  line-height: var(--leading-normal);
+}
+
+/* Value Display */
+.cognitive-module-card__value {
+  margin-bottom: var(--space-3);
+  font-size: var(--text-5xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  font-variant-numeric: tabular-nums;
+  transition: all var(--duration-base) var(--ease-out);
+}
+
+.cognitive-module-card__unit {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+  margin-left: var(--space-1);
+}
+
+/* Label */
+.cognitive-module-card__label {
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.cognitive-module-card__subtitle {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: var(--font-regular);
+  color: var(--text-tertiary);
+}
+
+/* Progress Bar */
+.cognitive-module-card__progress {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  margin-top: var(--space-6);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.cognitive-module-card__progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--module-glow) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 12px var(--module-glow);
+  transition: width var(--duration-slow) var(--ease-out);
+  animation: shimmer 3s linear infinite;
+}
+
+/* Animation Layer */
+.cognitive-module-card__animation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.3;
+  mix-blend-mode: screen;
+}
+
+/* Helios — Pulse Animation */
+.cognitive-module-card--helios .cognitive-module-card__animation {
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--helios-primary) 0%,
+    transparent 40%
+  );
+  animation: pulse-helios 3s ease-in-out infinite;
+}
+
+@keyframes pulse-helios {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(calc(1 + var(--module-intensity, 0) * 0.1));
+  }
+}
+
+/* Nexus — Flow Lines Animation */
+.cognitive-module-card--nexus .cognitive-module-card__animation {
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    var(--nexus-primary) 2px,
+    transparent 4px,
+    transparent 20px
+  );
+  animation: flow-nexus 2s linear infinite;
+}
+
+@keyframes flow-nexus {
+  0% {
+    transform: translateX(-20px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Harmonia — Sway Animation */
+.cognitive-module-card--harmonia .cognitive-module-card__animation {
+  background: linear-gradient(
+    90deg,
+    transparent 40%,
+    var(--harmonia-primary) 50%,
+    transparent 60%
+  );
+  animation: sway-harmonia 4s ease-in-out infinite;
+}
+
+@keyframes sway-harmonia {
+  0%, 100% {
+    transform: translateX(-2px);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateX(2px);
+    opacity: 0.4;
+  }
+}
+
+/* Memory — Scanline Animation */
+.cognitive-module-card--memory .cognitive-module-card__animation {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--memory-primary) 50%,
+    transparent 100%
+  );
+  background-size: 100% 50%;
+  animation: scan-memory 4s linear infinite;
+}
+
+@keyframes scan-memory {
+  0% {
+    background-position: 0 -100%;
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    background-position: 0 200%;
+    opacity: 0.2;
+  }
+}
+
+/* Module Variants — Border Enhancement */
+.cognitive-module-card--helios {
+  border-color: rgba(255, 107, 53, 0.2);
+}
+
+.cognitive-module-card--helios:hover {
+  border-color: rgba(255, 107, 53, 0.4);
+}
+
+.cognitive-module-card--nexus {
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.cognitive-module-card--nexus:hover {
+  border-color: rgba(102, 126, 234, 0.4);
+}
+
+.cognitive-module-card--harmonia {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.cognitive-module-card--harmonia:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.cognitive-module-card--memory {
+  border-color: rgba(168, 85, 247, 0.2);
+}
+
+.cognitive-module-card--memory:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+}
+
+/* Status Variants */
+.cognitive-module-card--warning .cognitive-module-card__value {
+  color: #ff8c42;
+}
+
+.cognitive-module-card--critical .cognitive-module-card__value {
+  color: var(--titane-rubis-400);
+  animation: glow-pulse 1.5s ease-in-out infinite;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cognitive-module-card {
+    padding: var(--space-5);
+  }
+
+  .cognitive-module-card__value {
+    font-size: var(--text-4xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .cognitive-module-card__value {
+    font-size: var(--text-3xl);
+  }
+
+  .cognitive-module-card__icon {
+    width: 48px;
+    height: 48px;
+    font-size: var(--text-2xl);
+  }
+}

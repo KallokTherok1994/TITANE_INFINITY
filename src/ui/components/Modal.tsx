@@ -42,7 +42,9 @@ export const Modal = ({
     };
   }, [isOpen]);
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+    return null;
+  }
 
   const classes = [
     'modal__content',

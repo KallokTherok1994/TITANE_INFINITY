@@ -1,6 +1,8 @@
 // TITANE∞ v8.0 - HARMONIA Module (Optimized)
 // Internal balance & equilibrium detection - No unwrap
 
+#![allow(dead_code)] // Module architecture - scheduler integration pending
+
 use crate::shared::types::{HealthStatus, ModuleHealth, TitaneResult};
 use crate::shared::utils::{clamp, current_timestamp};
 const MODULE_NAME: &str = "Harmonia";

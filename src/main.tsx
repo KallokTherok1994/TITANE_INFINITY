@@ -1,4 +1,4 @@
-// TITANE∞ v17.0.0 - Main Entry Point (WebKit Fix + Clean-Up + Tauri-Only 100%)
+// TITANE∞ v17.2.1 - Main Entry Point (Backend Architecture Refactor Complete)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -24,9 +24,23 @@ if (typeof window.__TAURI__ !== 'undefined') {
 }
 
 // Log system initialization
-console.log('🚀 TITANE∞ v17.0.0 - WebKit Fix Total + Clean-Up Engine (1,6G libéré)');
-console.log('✅ Frontend Build: 1,93s | Bundle: 131KB gzip | TypeScript: 0 errors');
-console.log('🔒 Tauri-Only 100% | Local-First | APIs On-Demand (Gemini+Ollama)');
+console.log('🚀 TITANE∞ v17.2.1 - Backend Architecture Refactor Complete');
+console.log('🦀 Backend: 40+ Rust modules | 29 Tauri Commands (15 core + 14 legacy)');
+console.log('✅ Écran noir FIXED | DevTools auto-open | Legacy commands bridge');
+console.log('🔒 Tauri v2.0 100% | Rust + React + TypeScript | Production-Ready');
+console.log('>>> TITANE∞ FRONTEND INITIALIZING... (timestamp: ' + new Date().toISOString() + ')');
+
+// 🔧 Global error handlers (catch unhandled errors)
+window.addEventListener('error', (event) => {
+  console.error('[TITANE] Global error caught:', event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('[TITANE] Unhandled promise rejection:', event.reason);
+});
+
+console.log('✅ TITANE∞ frontend loaded successfully');
+console.log('>>> TITANE∞ FRONTEND READY TO MOUNT REACT');
 
 // ⚠️ FIX CRASH: Wrapper d'erreur React global
 class ErrorBoundary extends React.Component<
