@@ -69,42 +69,13 @@ export default defineConfig({
     },
   },
 
-  server: {
-    port: 5173,
-    strictPort: true,
-    hmr: {
-      protocol: 'ws',
-      host: 'localhost',
-      port: 5173,
-      overlay: false, // Désactive l'overlay d'erreur (CPU)
-    },
-    host: 'localhost',
-    watch: {
-      // Watchers optimisés — exclusions agressives
-      ignored: [
-        '**/node_modules/**',
-        '**/dist/**',
-        '**/target/**',
-        '**/.tauri/**',
-        '**/backups/**',
-        '**/.git/**',
-        '**/*.log',
-      ],
-      usePolling: false, // Évite le polling (CPU)
-    },
-    fs: {
-      strict: true,
-      allow: ['.'],
-      deny: [
-        '/home/titane_os/Bureau/RECUP/**',
-        '/home/titane_os/Documents/TITANE-DOC/OLD/**',
-        '/home/titane_os/Documents/TITANE_NEWGEN_V20nov/**',
-        '**/node_modules/**',
-        '**/target/**',
-      ],
-    },
-  },
-
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🔒 TAURI NATIVE ONLY - NO HTTP SERVER
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Server configuration REMOVED - Tauri loads from file:// protocol only
+  // All assets served via Tauri's asset protocol, no localhost ports
+  // To run: pnpm run build && tauri dev (builds static files first)
+  
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
 });

@@ -4,8 +4,8 @@
   "description": "TITANE∞ v17.2.1 - Architecture Refactor Complete + Legacy Commands Bridge + Black Screen Fix, 100% Tauri v2, Rust Backend, Production-Ready",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "dev:tauri": "tauri dev",
+    "dev": "vite build --watch & tauri dev",
+    "dev:tauri": "vite build && tauri dev",
     "build": "vite build",
     "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",
     "tauri": "tauri",
@@ -27,8 +27,7 @@
     "verify:cognitive": "sh ./verify_cognitive_synthesis.sh && sh ./verify_strategic_direction.sh && sh ./verify_advanced_cognitive.sh",
     "verify:stacks": "sh ./verify_cognitive_stack.sh && sh ./verify_neural_mesh.sh && sh ./verify_perception_stack.sh",
     "verify:tauri": "sh ./verify_tauri_v2_api.sh",
-    "test:build": "npm run type-check && npm run build",
-    "prebuild": "npm run type-check"
+    "test:build": "npm run type-check && npm run build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.9.0",

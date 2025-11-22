@@ -1,7 +1,8 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Dashboard Page
+ * TITANE∞ v24.3 - Dashboard Page
  * Vue d'ensemble du système avec métriques et statistiques
+ * + INTÉGRATION: PersonaMoodIndicator + Visual Engines
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -9,8 +10,13 @@ import { Container, Grid, Stack } from '@components/layout';
 import { Card, Badge } from '../ui';
 import { XPProgressBar } from '@features/progression';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
+import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
+import { useVisualEngines } from '@hooks/useVisualEngines';
 
 export const DashboardPage = (): JSX.Element => {
+  // 🌟 Activer visual engines pour cette page
+  useVisualEngines('stable', 'helios');
+
   return (
     <Container size="xl">
       <Stack direction="vertical" gap={6}>
@@ -34,9 +40,12 @@ export const DashboardPage = (): JSX.Element => {
               color: colors.neutral[400],
             }}
           >
-            Système d'intelligence cognitive v17.1
+            Système d'intelligence cognitive v24.3
           </p>
         </div>
+
+        {/* 🎭 NEW: Persona Mood Indicator */}
+        <PersonaMoodIndicator />
 
         {/* XP Progress */}
         <XPProgressBar

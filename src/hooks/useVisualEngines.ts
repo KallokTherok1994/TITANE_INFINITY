@@ -1,31 +1,27 @@
 /**
- * TITANE∞ v24.2.1 — useVisualEngines Hook
+ * TITANE∞ v24.3.0 — useVisualEngines Hook
  *
- * Applique automatiquement Glow/Motion/Depth/Mesh selon système state
- * Active les engines visuels qui étaient créés mais invisibles
+ * Applique automatiquement CSS variables selon système state
+ * Active les engines visuels via variables CSS globales
+ * 
+ * SIMPLIFIÉ : Utilise CSS variables seulement (engines activés ailleurs)
  */
 
 import { useEffect } from 'react';
-import {
-  glowEngine,
-  motionEngine,
-  hyperDepthEngine,
-  type SystemState,
-} from '../core';
+import type { SystemState } from '../core';
 
 /**
- * Hook pour synchroniser engines visuels avec état système
+ * Hook pour synchroniser variables CSS avec état système
  *
  * @param systemState - État système actuel
- * @param moduleId - ID module optionnel (pour glow/motion spécifique)
+ * @param moduleId - ID module optionnel (pour styling spécifique)
  */
 export const useVisualEngines = (
   systemState: SystemState,
   moduleId?: string
 ) => {
   useEffect(() => {
-    // 1. Récupération configs selon SystemState
-    // (Les engines existants n'ont pas de méthodes getStateXXX, on utilise valeur fixe)
+    // Mapping SystemState → intensité visuelle
     const stateIntensityMap: Record<SystemState, number> = {
       'stable': 50,
       'processing': 75,
@@ -37,8 +33,7 @@ export const useVisualEngines = (
 
     const intensity = stateIntensityMap[systemState] || 50;
 
-    // 2. Application CSS Variables globales
-    // Pour compatibilité avec engines existants
+    // Application CSS Variables globales
     document.documentElement.style.setProperty(
       '--system-state-intensity',
       `${intensity}`
@@ -47,69 +42,19 @@ export const useVisualEngines = (
       '--system-state',
       systemState
     );
-
-    // 3. Application module-spécifique si moduleId fourni
+    
     if (moduleId) {
-      const moduleGlow = glowEngine.getGlow(moduleId, intensity);
-      const moduleMotion = motionEngine.getModuleMotion(moduleId, intensity);
-
-      if (moduleGlow) {
-        document.documentElement.style.setProperty(
-          `--module-${moduleId}-glow-intensity`,
-          `${moduleGlow.intensity}`
-        );
-        document.documentElement.style.setProperty(
-          `--module-${moduleId}-glow-color`,
-          moduleGlow.color
-        );
-        document.documentElement.style.setProperty(
-          `--module-${moduleId}-glow-blur`,
-          `${moduleGlow.blur}px`
-        );
-      }
-
-      if (moduleMotion) {
-        document.documentElement.style.setProperty(
-          `--module-${moduleId}-motion-type`,
-          moduleMotion.type
-        );
-        document.documentElement.style.setProperty(
-          `--module-${moduleId}-motion-duration`,
-          `${moduleMotion.duration}ms`
-        );
-      }
+      document.documentElement.style.setProperty(
+        '--active-module-id',
+        moduleId
+      );
     }
-
-    // 4. Application depth layers
-    hyperDepthEngine.updateLayer('far', { opacity: 0.6, parallaxFactor: 0.3 });
-    hyperDepthEngine.updateLayer('mid', { opacity: 0.8, parallaxFactor: 0.6 });
-    hyperDepthEngine.updateLayer('near', { opacity: 1.0, parallaxFactor: 1.0 });
 
   }, [systemState, moduleId]);
 
-  // Définir stateIntensityMap en dehors pour return
-  const stateIntensityMap: Record<SystemState, number> = {
-    'stable': 50,
-    'processing': 75,
-    'warning': 85,
-    'danger': 95,
-    'null': 10,
-    'offline': 5,
-  };
-
   return {
-    intensity: stateIntensityMap[systemState] || 50,
+    active: true,
     systemState,
+    moduleId,
   };
-};
-
-/**
- * Hook simplifié pour appliquer effets visuels automatiques
- * Utilise le state depuis useLivingEngines
- */
-export const useAutoVisualEffects = () => {
-  // Import dynamique pour éviter circular dependency
-  const { state } = require('../hooks/useLivingEngines').useLivingEngines(100);
-
-  return useVisualEngines(state.systemState);
 };
