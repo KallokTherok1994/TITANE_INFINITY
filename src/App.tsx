@@ -42,9 +42,8 @@ import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { DesignSystemPage } from './pages/DesignSystemPage';
 
-// Legacy pages (kept for compatibility)
+// Engine & System pages
 import {
-  Dashboard,
   Helios,
   Nexus,
   Harmonia,
@@ -128,15 +127,14 @@ const AppRouter: React.FC = () => {
       sidebarCollapsed={sidebarCollapsed}
     >
       <Routes>
-        {/* New v17.1 Routes */}
+        {/* Main Routes v17.2+ */}
         <Route path="/" element={<DashboardPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/cognitive" element={<CognitivePage />} />
         <Route path="/progression" element={<ProgressionPage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
 
-        {/* Legacy routes (kept for compatibility) */}
-        <Route path="/dashboard-legacy" element={<Dashboard />} />
+        {/* Engine Routes */}
         <Route path="/helios" element={<Helios />} />
         <Route path="/nexus" element={<Nexus />} />
         <Route path="/harmonia" element={<Harmonia />} />
@@ -145,6 +143,8 @@ const AppRouter: React.FC = () => {
         <Route path="/selfheal" element={<SelfHeal />} />
         <Route path="/adaptive" element={<AdaptiveEngine />} />
         <Route path="/memory" element={<Memory />} />
+
+        {/* System Routes */}
         <Route path="/settings" element={<Settings />} />
         <Route path="/devtools" element={<DevTools />} />
         <Route path="/performance" element={<PerformanceTest />} />

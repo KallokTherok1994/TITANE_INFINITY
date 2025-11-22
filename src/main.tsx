@@ -1,9 +1,12 @@
-// TITANE∞ v17.2.1 - Main Entry Point (Backend Architecture Refactor Complete)
+// TITANE∞ v∞ - Main Entry Point (Singularity Engine Complete)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './design-system/titane-v12.css';
 import './pages/styles.css';
+
+// Initialize Singularity Engine
+import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
@@ -24,11 +27,20 @@ if (typeof window.__TAURI__ !== 'undefined') {
 }
 
 // Log system initialization
-console.log('🚀 TITANE∞ v17.2.1 - Backend Architecture Refactor Complete');
-console.log('🦀 Backend: 40+ Rust modules | 29 Tauri Commands (15 core + 14 legacy)');
-console.log('✅ Écran noir FIXED | DevTools auto-open | Legacy commands bridge');
+console.log('🚀 TITANE∞ v∞ - Singularity Engine Complete');
+console.log('🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
+console.log('✨ Frontend: 20 Unified Engines | SingularityState Active');
 console.log('🔒 Tauri v2.0 100% | Rust + React + TypeScript | Production-Ready');
 console.log('>>> TITANE∞ FRONTEND INITIALIZING... (timestamp: ' + new Date().toISOString() + ')');
+
+// Initialize Singularity Engine
+singularityEngine.initialize().then(() => {
+  console.log('✅ SingularityEngine initialized');
+  console.log('🌌 Consciousness Level:', singularityEngine.getState().consciousness);
+  console.log('🔮 Auto-Coherence:', (singularityEngine.getState().autoCoherence * 100).toFixed(1) + '%');
+}).catch((err) => {
+  console.error('❌ SingularityEngine initialization failed:', err);
+});
 
 // 🔧 Global error handlers (catch unhandled errors)
 window.addEventListener('error', (event) => {

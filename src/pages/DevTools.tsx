@@ -15,15 +15,14 @@ import { LivingEnginesCard } from '../components/monitoring/LivingEnginesCard';
 import { useTitaneCore } from '../hooks';
 import { useLivingEngines } from '../hooks';
 import { extractString } from '../utils/dataUtils';
-import './DevTools.v20.css';
 import '../design-system/titane-v20.css';
 
 export const DevTools = () => {
   const { systemStatus, error } = useTitaneCore();
-  
+
   // 🌟 Living Engines Integration v21-v24
   const livingEngines = useLivingEngines(100);
-  
+
   const [logs, setLogs] = useState<string[]>([
     '[INFO] System initialized',
     '[DEBUG] All modules loaded',
@@ -35,25 +34,25 @@ export const DevTools = () => {
 
   // Living module metrics (dynamic from engines)
   const moduleMetrics = {
-    helios: { 
-      value: Math.round(livingEngines.state.cognitiveLoad * 100), 
-      label: 'Charge Cognitive', 
-      status: livingEngines.state.cognitiveLoad > 0.8 ? 'critical' as const : 'stable' as const 
+    helios: {
+      value: Math.round(livingEngines.state.cognitiveLoad * 100),
+      label: 'Charge Cognitive',
+      status: livingEngines.state.cognitiveLoad > 0.8 ? 'critical' as const : 'stable' as const
     },
-    nexus: { 
-      value: Math.round(livingEngines.state.rhythmScore * 100), 
-      label: 'Rythme Système', 
-      status: 'active' as const 
+    nexus: {
+      value: Math.round(livingEngines.state.rhythmScore * 100),
+      label: 'Rythme Système',
+      status: 'active' as const
     },
-    harmonia: { 
-      value: Math.round(livingEngines.state.presenceLevel * 100), 
-      label: 'Présence Persona', 
-      status: 'stable' as const 
+    harmonia: {
+      value: Math.round(livingEngines.state.presenceLevel * 100),
+      label: 'Présence Persona',
+      status: 'stable' as const
     },
-    memory: { 
-      value: Math.round((livingEngines.state.glow - 0.5) * 100 + 50), 
-      label: 'Intensité Glow', 
-      status: 'stable' as const 
+    memory: {
+      value: Math.round((livingEngines.state.glow - 0.5) * 100 + 50),
+      label: 'Intensité Glow',
+      status: 'stable' as const
     }
   };
 

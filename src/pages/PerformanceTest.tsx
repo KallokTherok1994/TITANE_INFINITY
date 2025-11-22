@@ -7,7 +7,6 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useLivingEngines } from '../hooks';
-import './DevTools.v20.css';
 
 interface PerformanceMetrics {
   fps: number;

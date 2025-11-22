@@ -1,13 +1,13 @@
-// TITANE∞ v17.1 - Pages Index
+// TITANE∞ v∞ - Pages Index (Cleaned)
 
-// New v17.1 Pages (Refactored Design System)
+// Main Pages (v17.2+)
 export { DashboardPage } from './DashboardPage';
 export { ChatPage } from './ChatPage';
 export { CognitivePage } from './CognitivePage';
 export { ProgressionPage } from './ProgressionPage';
+export { DesignSystemPage } from './DesignSystemPage';
 
-// Legacy Pages (v16.0 - kept for compatibility)
-export { Dashboard } from './Dashboard';
+// Engine Pages
 export { Helios } from './Helios';
 export { Nexus } from './Nexus';
 export { Harmonia } from './Harmonia';
@@ -16,5 +16,9 @@ export { Watchdog } from './Watchdog';
 export { SelfHeal } from './SelfHeal';
 export { AdaptiveEngine } from './AdaptiveEngine';
 export { Memory } from './Memory';
+
+// Utility Pages
 export { Settings } from './Settings';
 export { DevTools } from './DevTools';
+export { PerformanceTest } from './PerformanceTest';
+
