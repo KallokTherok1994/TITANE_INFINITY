@@ -13,7 +13,7 @@ import { AppLayout } from './ui/AppLayout';
 // LAZY LOADING DES PAGES (Performance optimale)
 // ═══════════════════════════════════════════════════════════════
 
-const Dashboard = lazy(() => import('./pages').then(m => ({ default: m.Dashboard })));
+const Dashboard = lazy(() => import('./pages').then(m => ({ default: m.DashboardPage })));
 const Chat = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
 const Helios = lazy(() => import('./pages').then(m => ({ default: m.Helios })));
 const Nexus = lazy(() => import('./pages').then(m => ({ default: m.Nexus })));

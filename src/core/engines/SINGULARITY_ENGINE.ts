@@ -114,29 +114,56 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       cognitive: null,
       persona: {
         personality: {
-          openness: 0.7,
-          conscientiousness: 0.8,
-          extraversion: 0.5,
-          agreeableness: 0.8,
-          neuroticism: 0.3,
+          traits: {
+            calm: 0.8,
+            precise: 0.8,
+            analytical: 0.9,
+            stable: 0.85,
+            responsive: 0.7,
+          },
+          temperament: 'focused',
+          evolution: 0.7,
         },
         mood: {
-          valence: 0.7,
-          arousal: 0.5,
-          dominance: 0.6,
-          trust: 0.8,
-          timestamp: Date.now(),
+          current: 'clair',
+          intensity: 0.7,
+          duration: 0,
+          trigger: 'internal',
+          visualEffect: {
+            glowShift: 0.1,
+            motionSpeed: 1.0,
+            depthIntensity: 0.7,
+          },
         },
         behavior: {
-          responseSpeed: 'normal',
-          expressiveness: 0.7,
-          predictability: 0.8,
-          adaptability: 0.8,
+          reactions: {
+            onError: { glowIntensity: 0.8, motionType: 'pulse', durationMs: 2000 },
+            onSuccess: { glowIntensity: 0.9, motionType: 'flow', durationMs: 1500 },
+            onWarning: { glowIntensity: 0.7, motionType: 'sway', durationMs: 1000 },
+            onOverload: { glowIntensity: 0.6, motionType: 'static', durationMs: 3000 },
+            onIdle: { glowIntensity: 0.5, motionType: 'breathe', durationMs: 5000 },
+          },
+          posture: 'attentive',
+          adaptationSpeed: 0.8,
         },
         memory: {
-          recentInteractions: [],
-          preferences: new Map(),
-          adaptations: new Map(),
+          userPreferences: {
+            typicalRhythm: 'medium',
+            preferredDensity: 0.7,
+            visualSensitivity: 0.6,
+            soundTolerance: 0.7,
+          },
+          interactionHistory: {
+            totalSessions: 0,
+            avgSessionDuration: 0,
+            mostUsedArchetype: 'helios',
+            errorTolerance: 0.8,
+          },
+          adaptiveProfile: {
+            needsSimplification: false,
+            prefersSpeed: false,
+            sensitiveToMotion: false,
+          },
         },
         presenceLevel: 0.7,
         lastUpdate: Date.now(),
@@ -167,7 +194,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
       },
       echo: {
         rhythmEcho: {
-          detectedRhythm: 'normal',
+          detectedRhythm: 'medium',
           confidenceLevel: 0.7,
           visualResponse: {
             animationSpeed: 1.0,
@@ -177,7 +204,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
           lastAnalysis: Date.now(),
         },
         symbolicEcho: {
-          dominantArchetype: 'global',
+          dominantArchetype: 'helios',
           affinityScore: 0.7,
           visualAdaptation: {
             accentColor: '#4f46e5',
@@ -193,8 +220,8 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
           adaptationStrategy: 'stabilize',
         },
         selfPortrait: {
-          rhythm: 'normal',
-          archetype: 'global',
+          rhythm: 'medium',
+          archetype: 'helios',
           cognitiveLoad: 0.5,
           explorationDepth: 0.7,
           presenceLevel: 0.7,
@@ -308,7 +335,7 @@ export class SingularityEngine implements Engine<SingularityState, SingularityCo
   /**
    * Mettre à jour l'état de la singularité
    */
-  update(delta: number): void {
+  update(_delta: number): void {
     const startTime = performance.now();
 
     try {
