@@ -3,7 +3,7 @@
  *
  * Applique automatiquement CSS variables selon système state
  * Active les engines visuels via variables CSS globales
- * 
+ *
  * SIMPLIFIÉ : Utilise CSS variables seulement (engines activés ailleurs)
  */
 
@@ -42,7 +42,7 @@ export const useVisualEngines = (
       '--system-state',
       systemState
     );
-    
+
     if (moduleId) {
       document.documentElement.style.setProperty(
         '--active-module-id',

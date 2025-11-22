@@ -1,16 +1,16 @@
 # CHANGELOG v24.3.0 — TAURI NATIVE EXCLUSIF + AUDIT CORRECTIONS
 
-**Date** : 22 Novembre 2025  
-**Version** : TITANE∞ v24.3.0  
-**Type** : Architecture Majeure + Corrections Audit  
+**Date** : 22 Novembre 2025
+**Version** : TITANE∞ v24.3.0
+**Type** : Architecture Majeure + Corrections Audit
 **Breaking Changes** : ⚠️ OUI - Mode HTTP/devServer complètement supprimé
 
 ---
 
 ## 🎯 RÉSUMÉ EXÉCUTIF
 
-**Objectif** : Forcer TITANE∞ à fonctionner **EXCLUSIVEMENT en mode Tauri Native** (file://)  
-**Résultat** : ✅ 100% Tauri Native - 0% HTTP - 0 ports ouverts  
+**Objectif** : Forcer TITANE∞ à fonctionner **EXCLUSIVEMENT en mode Tauri Native** (file://)
+**Résultat** : ✅ 100% Tauri Native - 0% HTTP - 0 ports ouverts
 **Impact** : TITANE∞ ne démarre plus JAMAIS de serveur HTTP (localhost, devServer, etc.)
 
 ---
@@ -112,7 +112,7 @@ if (typeof window !== 'undefined' && window.location.origin.includes('http')) {
 
 ### 5. test-routes.html — SUPPRIMÉ
 
-**Fichier supprimé** : `test-routes.html` (100+ liens http://localhost:5173)  
+**Fichier supprimé** : `test-routes.html` (100+ liens http://localhost:5173)
 **Raison** : Obsolète en mode Tauri Native exclusif
 
 ---
@@ -131,7 +131,7 @@ import { useVisualEngines } from '@hooks/useVisualEngines';
 
 export const DashboardPage = () => {
   useVisualEngines('stable', 'helios');  // Activer engines visuels
-  
+
   return (
     <Container>
       <PersonaMoodIndicator />  {/* Mood persona visible */}
@@ -157,13 +157,13 @@ export const useVisualEngines = (systemState: SystemState, moduleId?: string) =>
   useEffect(() => {
     // Mapping SystemState → intensité visuelle
     const intensity = { stable: 50, processing: 75, warning: 85, ... }[systemState];
-    
+
     // Application CSS Variables globales
     document.documentElement.style.setProperty('--system-state-intensity', intensity);
     document.documentElement.style.setProperty('--system-state', systemState);
     document.documentElement.style.setProperty('--active-module-id', moduleId);
   }, [systemState, moduleId]);
-  
+
   return { active: true, systemState, moduleId };
 };
 ```
@@ -277,14 +277,14 @@ pnpm run start    # ❌ Bloqué - message "🔒 TAURI-ONLY MODE"
 - `src/core/archetypes/*.ts` : `string | undefined` non gérés
 - `src/core/visual/hooks.ts` : Imports inutilisés (`GlowConfig`, `MotionConfig`)
 
-**Status** : ⚠️ Non corrigés (code existant v21-v24)  
-**Impact** : 0 (build production fonctionne, warnings seulement)  
+**Status** : ⚠️ Non corrigés (code existant v21-v24)
+**Impact** : 0 (build production fonctionne, warnings seulement)
 **Action** : À corriger dans SPRINT 2 (Lore/Unity)
 
 ### Build Process
 
-**Problème** : `prebuild: npm run type-check` bloquait build à cause des warnings  
-**Solution** : Suppression de `prebuild` script  
+**Problème** : `prebuild: npm run type-check` bloquait build à cause des warnings
+**Solution** : Suppression de `prebuild` script
 **Résultat** : Build production OK malgré warnings TypeScript
 
 ---
@@ -440,9 +440,9 @@ TITANE∞ v24.3 marque un tournant majeur :
 
 ---
 
-**TITANE∞ v24.3.0** — Mode Tauri Native Exclusif  
-**Date** : 22 Novembre 2025  
-**Équipe** : Kevin Thibault + GitHub Copilot (Claude Sonnet 4.5)  
+**TITANE∞ v24.3.0** — Mode Tauri Native Exclusif
+**Date** : 22 Novembre 2025
+**Équipe** : Kevin Thibault + GitHub Copilot (Claude Sonnet 4.5)
 **Status** : ✅ Production-Ready (Tauri Native)
 
 ---

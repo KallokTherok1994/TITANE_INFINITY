@@ -75,7 +75,7 @@ export default defineConfig({
   // Server configuration REMOVED - Tauri loads from file:// protocol only
   // All assets served via Tauri's asset protocol, no localhost ports
   // To run: pnpm run build && tauri dev (builds static files first)
-  
+
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
 });
