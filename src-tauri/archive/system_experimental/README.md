@@ -1,7 +1,7 @@
 # 📦 SYSTEM EXPERIMENTAL ARCHIVE
 
-**Date d'archivage** : 22 novembre 2025  
-**Phase** : Phase 3 - System Directory Cleanup  
+**Date d'archivage** : 22 novembre 2025
+**Phase** : Phase 3 - System Directory Cleanup
 **Raison** : Modules expérimentaux non actifs dans system/mod.rs
 
 ---
@@ -192,6 +192,6 @@ git log --all --full-history -- src-tauri/src/system/[nom_module]/
 
 ---
 
-**Créé par** : Kevin Thibault (TITANE∞ v17.2.0)  
-**Date** : 22 novembre 2025  
+**Créé par** : Kevin Thibault (TITANE∞ v17.2.0)
+**Date** : 22 novembre 2025
 **Commit** : Phase 3 Step 2 - Archive experimental modules
