@@ -1,6 +1,6 @@
 // TITANE∞ v12 - Memory Core Hook
 import { useState, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { memoryService } from '../services/api';
 
 interface MemoryEntry {
   id: string;
@@ -40,7 +40,13 @@ export const useMemoryCore = () => {
     try {
       setLoading(true);
       setError(null);
-      await invoke('memory_save_entry', { content });
+      // Note: memory_save_entry est legacy, utiliser memoryService.saveChatInteraction pour nouvelles interactions
+      await memoryService.saveChatInteraction({
+        userMessage: content,
+        aiResponse: '',
+        mode: 'manual',
+        timestamp: new Date().toISOString(),
+      });
       await loadEntries();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to save entry';
@@ -55,6 +61,8 @@ export const useMemoryCore = () => {
     try {
       setLoading(true);
       setError(null);
+      // Note: memory_clear est legacy, pas de service équivalent - garder invoke direct
+      const { invoke } = await import('@tauri-apps/api/core');
       await invoke('memory_clear');
       setEntries([]);
     } catch (err) {

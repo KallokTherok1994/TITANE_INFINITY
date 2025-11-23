@@ -1,5 +1,5 @@
 # 🔗 TITANE∞ v17.3.0 — DIAGNOSTIC FUSION FRONTEND/BACKEND
-**Date**: 22 novembre 2025  
+**Date**: 22 novembre 2025
 **Objectif**: Cartographier, analyser et aligner les contrats API entre React et Rust
 
 ---
@@ -164,15 +164,15 @@
 ```typescript
 export const tauri = {
   metaMode: {
-    process, getKevinState, getCurrentMode, 
+    process, getKevinState, getCurrentMode,
     listModes, getHistory, getStats, reset
   },
   exp: {
-    add, getProfile, listTalents, 
+    add, getProfile, listTalents,
     unlockTalent, getLevelUpHistory
   },
   memory: {
-    store, storeConversation, search, 
+    store, storeConversation, search,
     getRelated, getStats, clear
   },
   voice: {
@@ -384,7 +384,7 @@ await invokeWithTimeout('command', 5000);
 **Commandes réseau** (Gemini, Ollama) devraient retry automatiquement:
 ```typescript
 async function invokeWithRetry<T>(
-  cmd: string, 
+  cmd: string,
   retries: number = 3
 ): Promise<T> {
   for (let i = 0; i < retries; i++) {
@@ -482,7 +482,7 @@ export class VoiceService {
     if (text.length > 10000) {
       throw new ValidationError('Text too long (max 10000 chars)');
     }
-    
+
     // Appel Tauri
     await invoke('speak', { text, useOnline: online });
   }
@@ -500,7 +500,7 @@ export async function invokeWithRetry<T>(
 ): Promise<T> {
   const retries = options?.retries ?? 3;
   const timeout = options?.timeout ?? 30000;
-  
+
   for (let attempt = 0; attempt < retries; attempt++) {
     try {
       return await Promise.race([
@@ -547,7 +547,7 @@ describe('Memory Core Integration', () => {
     expect(projects).toHaveLength(5);
     expect(projects[0]).toMatchSchema(ProjectSummarySchema);
   });
-  
+
   it('should handle timeout gracefully', async () => {
     await expect(
       memory.getActiveProjects(1000000)
@@ -573,7 +573,7 @@ npx ts-rs generate
 pub async fn memory_get_projects(limit: usize) -> TauriResult<Vec<ProjectSummary>> {
     let start = Instant::now();
     let result = inner_get_projects(limit).await;
-    
+
     metrics::record_command_latency("memory_get_projects", start.elapsed());
     result
 }

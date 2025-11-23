@@ -31,7 +31,11 @@
     "verify:backend:quick": "sh ./scripts/verify_backend.sh --quick",
     "verify:backend:deep": "sh ./scripts/verify_backend.sh --deep",
     "repair:backend": "sh ./scripts/repair_backend.sh",
-    "test:build": "npm run type-check && npm run build"
+    "test:build": "npm run type-check && npm run build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.9.0",
@@ -48,6 +52,8 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
     "@types/node": "^20.19.25",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
@@ -55,15 +61,19 @@
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/ui": "^4.0.13",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "happy-dom": "^20.0.10",
+    "jsdom": "^27.2.0",
     "prettier": "^3.6.2",
     "terser": "^5.44.1",
     "typescript": "^5.5.3",
     "vite": "^6.0.0",
-    "vite-tsconfig-paths": "^5.1.4"
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^4.0.13"
   },
   "engines": {
     "node": ">=20.0.0",

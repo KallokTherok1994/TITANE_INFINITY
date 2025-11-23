@@ -62,8 +62,13 @@ export class InputValidator {
     let result = text;
 
     for (const tag of dangerousTags) {
+      // Tags avec fermeture normale
       const regex = new RegExp(`<${tag}\\b[^<]*(?:(?!<\\/${tag}>)<[^<]*)*<\\/${tag}>`, 'gi');
       result = result.replace(regex, '');
+
+      // Tags auto-fermants
+      const selfClosing = new RegExp(`<${tag}\\b[^>]*\\/?>`, 'gi');
+      result = result.replace(selfClosing, '');
     }
 
     return result;

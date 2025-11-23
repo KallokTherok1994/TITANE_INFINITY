@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { memoryService } from '../api';
 
 /**
  * Contexte enrichi provenant de Memory Core
@@ -132,14 +132,12 @@ export class MemoryIntegration {
     context?: Partial<MemoryContext>;
   }): Promise<void> {
     try {
-      await invoke('memory_save_chat_interaction', {
-        interaction: {
-          user_message: data.userMessage,
-          ai_response: data.aiResponse,
-          mode: data.mode,
-          emotion_state: data.emotionState,
-          timestamp: new Date().toISOString(),
-        },
+      await memoryService.saveChatInteraction({
+        userMessage: data.userMessage,
+        aiResponse: data.aiResponse,
+        mode: data.mode,
+        emotionState: data.emotionState,
+        timestamp: new Date().toISOString(),
       });
     } catch (error) {
       console.error('[MemoryIntegration] Erreur sauvegarde interaction:', error);
@@ -154,7 +152,7 @@ export class MemoryIntegration {
     if (cached) return cached as ProjectSummary[];
 
     try {
-      const projects = await invoke<ProjectSummary[]>('memory_get_active_projects', { limit });
+      const projects = await memoryService.getActiveProjects(limit);
       this.setCache('active_projects', projects);
       return projects;
     } catch (error) {
@@ -171,10 +169,7 @@ export class MemoryIntegration {
     if (cached) return cached as DecisionSummary[];
 
     try {
-      const decisions = await invoke<DecisionSummary[]>('memory_get_recent_decisions', {
-        limit,
-        timeWindow,
-      });
+      const decisions = await memoryService.getRecentDecisions(limit, timeWindow);
       this.setCache('recent_decisions', decisions);
       return decisions;
     } catch (error) {
@@ -191,7 +186,7 @@ export class MemoryIntegration {
     if (cached) return cached as KnowledgeEntry[];
 
     try {
-      const knowledge = await invoke<KnowledgeEntry[]>('memory_get_knowledge', { limit });
+      const knowledge = await memoryService.getKnowledge(limit);
       this.setCache('relevant_knowledge', knowledge);
       return knowledge;
     } catch (error) {
@@ -208,7 +203,7 @@ export class MemoryIntegration {
     if (cached) return cached as RitualInfo[];
 
     try {
-      const rituals = await invoke<RitualInfo[]>('memory_get_active_rituals');
+      const rituals = await memoryService.getActiveRituals();
       this.setCache('active_rituals', rituals);
       return rituals;
     } catch (error) {
@@ -222,7 +217,7 @@ export class MemoryIntegration {
    */
   private async loadTimeline(timeWindow: string): Promise<TimelineEntry[]> {
     try {
-      return await invoke<TimelineEntry[]>('memory_get_timeline', { timeWindow });
+      return await memoryService.getTimeline(timeWindow);
     } catch (error) {
       console.warn('[MemoryIntegration] Timeline non disponible:', error);
       return [];

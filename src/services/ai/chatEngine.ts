@@ -83,7 +83,7 @@ class ChatEngine {
     const context = this.formatMemoryContext(memoryContext);
 
     // 3. Construction du prompt selon le mode
-    const modeConfig = chatModes[finalConfig.mode] || chatModes.default;
+    const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
     const enrichedHistory = this.buildEnrichedHistory(
       history,
       context,
@@ -135,7 +135,7 @@ class ChatEngine {
     const context = this.formatMemoryContext(memoryContext);
 
     // Prompt selon mode
-    const modeConfig = chatModes[finalConfig.mode] || chatModes.default;
+    const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
     const enrichedHistory = this.buildEnrichedHistory(
       history,
       context,

@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { personaService } from './api';
 import type { PersonaState, SystemState } from '../core';
 
 // ═══════════════════════════════════════════════════════════════
@@ -149,7 +149,7 @@ export class PersonaTauriBridge {
     }
 
     try {
-      await invoke('persona_initialize');
+      await personaService.initialize();
       console.log('🌟 Persona Engine (Rust/Tauri) Initialized');
     } catch (error) {
       console.error('[PersonaTauriBridge] Initialization failed:', error);
@@ -244,7 +244,7 @@ export class PersonaTauriBridge {
     }
 
     try {
-      return await invoke('persona_get_multipliers');
+      return await personaService.getMultipliers();
     } catch (error) {
       console.error('[PersonaTauriBridge] Failed to get multipliers:', error);
       return null;

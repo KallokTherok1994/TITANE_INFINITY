@@ -2,7 +2,7 @@
 // React hook for Voice Mode functionality with local-first priority
 
 import { useState, useCallback, useRef } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { voiceService } from '../services/api';
 import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
 
@@ -30,7 +30,7 @@ export function useVoiceMode() {
     setError(null);
 
     try {
-      await invoke('start_recording');
+      await voiceService.startRecording();
 
       setState((prev) => ({
         ...prev,
@@ -49,7 +49,7 @@ export function useVoiceMode() {
     setError(null);
 
     try {
-      await invoke('stop_recording');
+      const result = await voiceService.stopRecording();
 
       setState((prev) => ({
         ...prev,
@@ -106,24 +106,24 @@ export function useVoiceMode() {
 
     try {
       const config = getAIConfig();
-      
+
       // Mode OFFLINE FIRST : toujours essayer local d'abord
       if (config.localFirst || !useOnline) {
         console.log('🔊 TTS Local...');
-        await invoke('speak', { text, useOnline: false });
+        await voiceService.speak(text);
       } else {
         // Mode cloud uniquement si confirmation
         const confirmed = await confirmCloudAPIUsage(
           'Google TTS',
           'Synthèse vocale de haute qualité'
         );
-        
+
         if (confirmed) {
           console.log('🌐 TTS Cloud (Google)...');
-          await invoke('speak', { text, useOnline: true });
+          await voiceService.speak(text);
         } else {
           console.log('🔊 TTS Local (fallback)...');
-          await invoke('speak', { text, useOnline: false });
+          await voiceService.speak(text);
         }
       }
 
