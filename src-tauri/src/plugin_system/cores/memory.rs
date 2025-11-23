@@ -5,7 +5,12 @@
 
 use crate::{
     plugin_system::{CoreModule, CoreStatus, CoreHealth, CoreResult, CoreError},
-    types::{MemoryState, Snapshot, LogEntry, TimelineEvent},
+    types::{
+        MemoryState, Snapshot, LogEntry, TimelineEvent,
+        ProjectSummary, ProjectStatus, DecisionSummary, ImpactLevel,
+        KnowledgeEntry, RitualInfo, TimelineEntry, TimelineEntryType,
+        ChatInteraction,
+    },
     services::StorageService,
     utils::{log_info, MEMORY_MAX_SNAPSHOTS},
 };
@@ -163,7 +168,7 @@ impl MemoryModule {
         })
     }
 
-    /// Clear all memory (for testing/reset)
+    /// Clear all memory (dangerous - for testing)
     pub async fn clear_all(&self) -> CoreResult<()> {
         let mut snapshots = self.snapshots.write().await;
         let mut logs = self.logs.write().await;
@@ -172,6 +177,124 @@ impl MemoryModule {
         snapshots.clear();
         logs.clear();
         timeline.clear();
+
+        Ok(())
+    }
+
+    // ───────────────────────────────────────────────────────────
+    //   CHAT IA ↔ MEMORY CORE INTEGRATION (v17.3.0)
+    // ───────────────────────────────────────────────────────────
+
+    /// Récupère projets actifs (MOCK pour l'instant)
+    pub async fn get_active_projects(&self, limit: usize) -> CoreResult<Vec<ProjectSummary>> {
+        // TODO: Implémenter vrai stockage projets
+        Ok(vec![
+            ProjectSummary {
+                id: "proj_1".to_string(),
+                name: "TITANE∞ v17.3.0 - Chat IA Optimization".to_string(),
+                status: ProjectStatus::Active,
+                priority: 1,
+                last_activity: chrono::Utc::now().to_rfc3339(),
+                tags: vec!["ia".to_string(), "refactor".to_string()],
+            },
+        ]
+        .into_iter()
+        .take(limit)
+        .collect())
+    }
+
+    /// Récupère décisions récentes (MOCK)
+    pub async fn get_recent_decisions(
+        &self,
+        limit: usize,
+        _time_window: &str,
+    ) -> CoreResult<Vec<DecisionSummary>> {
+        Ok(vec![
+            DecisionSummary {
+                id: "dec_1".to_string(),
+                title: "Unifier architecture Chat IA".to_string(),
+                context: "Fusion useChat + useAI en un seul hook".to_string(),
+                outcome: "ChatEngine créé avec 6 modes".to_string(),
+                timestamp: chrono::Utc::now().to_rfc3339(),
+                impact: ImpactLevel::High,
+            },
+        ]
+        .into_iter()
+        .take(limit)
+        .collect())
+    }
+
+    /// Récupère connaissances (MOCK)
+    pub async fn get_knowledge(&self, limit: usize) -> CoreResult<Vec<KnowledgeEntry>> {
+        Ok(vec![
+            KnowledgeEntry {
+                id: "know_1".to_string(),
+                topic: "Architecture Memory Core".to_string(),
+                content: "Système multi-niveaux: court/moyen/long terme".to_string(),
+                source: "docs/backend/architecture.md".to_string(),
+                relevance: 0.95,
+                timestamp: chrono::Utc::now().to_rfc3339(),
+            },
+        ]
+        .into_iter()
+        .take(limit)
+        .collect())
+    }
+
+    /// Récupère rituels actifs (MOCK)
+    pub async fn get_active_rituals(&self) -> CoreResult<Vec<RitualInfo>> {
+        Ok(vec![
+            RitualInfo {
+                id: "ritual_1".to_string(),
+                name: "Code Review matinal".to_string(),
+                frequency: "daily".to_string(),
+                last_execution: chrono::Utc::now().to_rfc3339(),
+                next_scheduled: Some(
+                    (chrono::Utc::now() + chrono::Duration::days(1)).to_rfc3339(),
+                ),
+                impact: "Qualité code +20%".to_string(),
+            },
+        ])
+    }
+
+    /// Récupère timeline (MOCK)
+    pub async fn get_timeline(&self, _time_window: &str) -> CoreResult<Vec<TimelineEntry>> {
+        Ok(vec![
+            TimelineEntry {
+                timestamp: chrono::Utc::now().to_rfc3339(),
+                entry_type: TimelineEntryType::Chat,
+                content: "Discussion architecture Chat IA".to_string(),
+                metadata: None,
+            },
+        ])
+    }
+
+    /// Sauvegarde interaction chat
+    pub async fn save_chat_interaction(&self, interaction: ChatInteraction) -> CoreResult<()> {
+        log_info("MemoryModule", "Saving chat interaction");
+
+        // Créer événement timeline
+        let event = TimelineEvent {
+            id: format!("chat_{}", chrono::Utc::now().timestamp_millis()),
+            timestamp: chrono::Utc::now().timestamp_millis(),
+            event_type: crate::types::memory::EventType::Alert, // Utiliser un type existant
+            description: format!("Chat interaction: mode {}", interaction.mode),
+            data: {
+                let mut map = HashMap::new();
+                map.insert(
+                    "interaction".to_string(),
+                    serde_json::json!({
+                        "user_message": interaction.user_message,
+                        "ai_response": interaction.ai_response,
+                        "mode": interaction.mode,
+                        "emotion_state": interaction.emotion_state,
+                    }),
+                );
+                map
+            },
+        };
+
+        self.add_event(event).await?;
 
         Ok(())
     }

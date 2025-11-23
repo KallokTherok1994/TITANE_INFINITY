@@ -8,4 +8,6 @@ mod tests_integration;  // Integration tests for old CoreModule system
 
 // Note: Core implementations migrated to plugin_system/cores/
 // This module kept for backward compatibility with old code
-pub use memory::MemoryCore;
+
+// Type alias for Memory Module
+pub type MemoryCore = crate::plugin_system::cores::MemoryModule;

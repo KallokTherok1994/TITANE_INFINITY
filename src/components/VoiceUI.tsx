@@ -1,16 +1,16 @@
-// TITANE∞ v12 - VoiceUI Component
+// TITANE∞ v17.3.0 - VoiceUI Component
 // Voice Mode interface with VAD and waveform
 
 import React, { useEffect, useState } from 'react';
 import { useVoiceMode } from '../hooks/useVoiceMode';
-import { useAI } from '../hooks/useAI';
+import { useChat } from '../hooks/useChat';
 import { VADIndicator } from './VADIndicator';
 // import './VoiceUI.css';
 
 export const VoiceUI: React.FC = () => {
   const { state, startRecording, stopRecording, getVADState, clearTranscript } =
     useVoiceMode();
-  const { query } = useAI();
+  const { sendMessage } = useChat();
 
   const [isActive, setIsActive] = useState(false);
 
@@ -38,7 +38,7 @@ export const VoiceUI: React.FC = () => {
 
   const handleTranscriptSubmit = async () => {
     if (state.transcript.trim()) {
-      await query(state.transcript);
+      await sendMessage(state.transcript);
       clearTranscript();
     }
   };

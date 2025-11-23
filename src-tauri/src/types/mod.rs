@@ -8,6 +8,7 @@ pub mod nexus;
 pub mod harmonia;
 pub mod sentinel;
 pub mod memory;
+pub mod memory_chat;  // ✨ NEW: Types Chat IA ↔ Memory Core
 pub mod evolution;
 pub mod shared;  // ✨ NEW: Types partagés unifiés
 
@@ -17,6 +18,11 @@ pub use nexus::{NexusState, ModuleStatus};
 pub use harmonia::{HarmoniaState, StabilizationLevel};
 pub use sentinel::{SentinelState, Alert, Severity, AlertCategory};
 pub use memory::{MemoryState, Snapshot, LogEntry, TimelineEvent};
+pub use memory_chat::{
+    ProjectSummary, ProjectStatus, DecisionSummary, ImpactLevel,
+    KnowledgeEntry, RitualInfo, TimelineEntry, TimelineEntryType,
+    ChatInteraction, EmotionState
+};
 pub use evolution::{
     EvolutionReport, EvolutionState, Issue, IssueSeverity, IssueCategory,
     Recommendation, RepairAction, RepairResult, EvolutionHistory

@@ -1,37 +1,54 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v16.0 — USE CHAT HOOK
- *   Hook React pour gestion Chat IA avec orchestrateur moderne
+ *   TITANE∞ v17.3.0 — USE CHAT HOOK (REFACTORED)
+ *   Hook React pour Chat IA avec ChatEngine unifié + Memory Core
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { askTitan } from '../services/ai/orchestrator';
-import type { AIMessage, AIResponse } from '../services/ai/types';
+import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
+import type { AIMessage } from '../services/ai/types';
 import {
   loadChatHistory,
   addMessageToHistory,
   clearChatHistory as clearHistoryStorage,
 } from '../services/chatMemory';
 
+interface UseChatOptions {
+  mode?: ChatMode;
+  emotionState?: { valence: number; intensity: number; energy: number };
+}
+
 interface UseChatReturn {
   messages: AIMessage[];
   isLoading: boolean;
   error: string | null;
+  currentMode: ChatMode;
+  suggestions: string[];
   sendMessage: (content: string) => Promise<void>;
   clearChat: () => void;
+  setMode: (mode: ChatMode) => void;
 }
 
-export function useChat(): UseChatReturn {
+export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currentMode, setCurrentMode] = useState<ChatMode>(options.mode || 'default');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   // Charge l'historique au montage
   useEffect(() => {
     const history = loadChatHistory();
     setMessages(history);
   }, []);
+
+  // Configure le mode dans chatEngine
+  useEffect(() => {
+    chatEngine.setMode(currentMode, {
+      emotionState: options.emotionState,
+    });
+  }, [currentMode, options.emotionState]);
 
   // Envoie un message
   const sendMessage = useCallback(async (content: string) => {
@@ -51,8 +68,11 @@ export function useChat(): UseChatReturn {
     setMessages([...updatedMessages]);
 
     try {
-      // Appelle l'orchestrateur IA
-      const response: AIResponse = await askTitan(content.trim(), updatedMessages);
+      // Appelle chatEngine unifié
+      const response: ChatEngineResponse = await chatEngine.generate(
+        content.trim(),
+        updatedMessages
+      );
 
       // Ajoute réponse IA
       const aiMessage: AIMessage = {
@@ -63,6 +83,11 @@ export function useChat(): UseChatReturn {
 
       const finalMessages = addMessageToHistory(aiMessage);
       setMessages([...finalMessages]);
+
+      // Met à jour suggestions
+      if (response.suggestions && response.suggestions.length > 0) {
+        setSuggestions(response.suggestions);
+      }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
       setError(errorMessage);
@@ -86,15 +111,22 @@ export function useChat(): UseChatReturn {
     clearHistoryStorage();
     setMessages([]);
     setError(null);
+    setSuggestions([]);
+  }, []);
+
+  // Change le mode de travail
+  const setMode = useCallback((mode: ChatMode) => {
+    setCurrentMode(mode);
   }, []);
 
   return {
     messages,
     isLoading,
     error,
+    currentMode,
+    suggestions,
     sendMessage,
     clearChat,
+    setMode,
   };
 }
-
-export default useChat;

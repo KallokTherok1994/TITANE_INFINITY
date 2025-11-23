@@ -5,7 +5,11 @@
 
 use crate::{
     core::MemoryCore,
-    types::{MemoryState, Snapshot, LogEntry, TimelineEvent},
+    types::{
+        MemoryState, Snapshot, LogEntry, TimelineEvent,
+        ProjectSummary, DecisionSummary, KnowledgeEntry, RitualInfo,
+        TimelineEntry, ChatInteraction,
+    },
     utils::AppResult,
 };
 
@@ -50,3 +54,62 @@ pub async fn add_timeline_event(
 ) -> AppResult<()> {
     memory.add_event(event).await
 }
+
+// ═══════════════════════════════════════════════════════════════
+// COMMANDES CHAT IA ↔ MEMORY CORE (v17.3.0)
+// ═══════════════════════════════════════════════════════════════
+
+/// Récupère les projets actifs pour contexte chat
+#[tauri::command]
+pub async fn memory_get_active_projects(
+    memory: tauri::State<'_, MemoryCore>,
+    limit: usize,
+) -> AppResult<Vec<ProjectSummary>> {
+    memory.get_active_projects(limit).await
+}
+
+/// Récupère les décisions récentes
+#[tauri::command]
+pub async fn memory_get_recent_decisions(
+    memory: tauri::State<'_, MemoryCore>,
+    limit: usize,
+    time_window: String,
+) -> AppResult<Vec<DecisionSummary>> {
+    memory.get_recent_decisions(limit, &time_window).await
+}
+
+/// Récupère les connaissances pertinentes
+#[tauri::command]
+pub async fn memory_get_knowledge(
+    memory: tauri::State<'_, MemoryCore>,
+    limit: usize,
+) -> AppResult<Vec<KnowledgeEntry>> {
+    memory.get_knowledge(limit).await
+}
+
+/// Récupère les rituels actifs
+#[tauri::command]
+pub async fn memory_get_active_rituals(
+    memory: tauri::State<'_, MemoryCore>,
+) -> AppResult<Vec<RitualInfo>> {
+    memory.get_active_rituals().await
+}
+
+/// Récupère la timeline récente
+#[tauri::command]
+pub async fn memory_get_timeline(
+    memory: tauri::State<'_, MemoryCore>,
+    time_window: String,
+) -> AppResult<Vec<TimelineEntry>> {
+    memory.get_timeline(&time_window).await
+}
+
+/// Sauvegarde une interaction chat dans Memory Core
+#[tauri::command]
+pub async fn memory_save_chat_interaction(
+    memory: tauri::State<'_, MemoryCore>,
+    interaction: ChatInteraction,
+) -> AppResult<()> {
+    memory.save_chat_interaction(interaction).await
+}
+

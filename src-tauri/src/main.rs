@@ -83,6 +83,14 @@ fn main() {
             api::write_log,
             api::read_logs,
             api::add_timeline_event,
+            // Memory ↔ Chat IA integration v17.3.0
+            api::memory_get_active_projects,
+            api::memory_get_recent_decisions,
+            api::memory_get_knowledge,
+            api::memory_get_active_rituals,
+            api::memory_get_timeline,
+            api::memory_save_chat_interaction,
+            // Evolution & diagnostics
             api::run_evolution,
             api::get_evolution_state,
             api::quick_health_check,

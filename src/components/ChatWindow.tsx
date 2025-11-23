@@ -1,8 +1,8 @@
-// TITANE∞ v12 - ChatWindow Component
+// TITANE∞ v17.3.0 - ChatWindow Component
 // Main chat interface with messages, input, and status
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useAI } from '../hooks/useAI';
+import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
@@ -17,9 +17,9 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onVoiceModeToggle,
   voiceModeActive = false,
 }) => {
-  const { messages, isLoading, error, status, query, checkHealth } = useAI();
+  const { messages, isLoading, error, sendMessage } = useChat();
   const { status: connectionStatus } = useConnection();
-  
+
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -29,18 +29,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Check health on mount
-  useEffect(() => {
-    checkHealth();
-  }, [checkHealth]);
-
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
 
     const prompt = input.trim();
     setInput('');
 
-    await query(prompt);
+    await sendMessage(prompt);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -58,7 +53,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           <StatusIndicator
             online={connectionStatus.online}
             provider={connectionStatus.provider}
-            health={status.health}
+            health={connectionStatus.online ? 'healthy' : 'degraded'}
           />
           {onVoiceModeToggle && (
             <button
