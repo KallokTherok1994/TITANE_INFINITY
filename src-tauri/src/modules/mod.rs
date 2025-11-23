@@ -1,12 +1,6 @@
-// TITANE∞ v12 - Internal Modules
-// Advanced cognitive modules for AI orchestration and self-healing
-
-pub mod adaptive;
-pub mod harmonia;
-pub mod helios;
-pub mod nexus;
-pub mod selfheal;
-pub mod sentinel;
+// TITANE∞ v17.2.0 - Internal Modules (Legacy)
+// Phase 2 cleanup: All v12 modules removed
+// Functionality migrated to plugin_system/cores/
 
 use serde::{Deserialize, Serialize};
 

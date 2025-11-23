@@ -1,21 +1,11 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ v17.2.0 — CORE MODULE
-//   Business logic for all core modules
+//   Legacy core module exports (Phase 2 cleanup - kept for compatibility)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod helios;
-pub mod helios_module;  // NEW: CoreModule wrapper
-pub mod nexus;
-pub mod harmonia;
-pub mod sentinel;
-pub mod memory;
-
 #[cfg(test)]
-mod tests_integration;  // NEW: Integration tests
+mod tests_integration;  // Integration tests for old CoreModule system
 
-pub use helios::HeliosCore;
-pub use helios_module::HeliosCoreModule;  // NEW: Export wrapper
-pub use nexus::NexusCore;
-pub use harmonia::HarmoniaCore;
-pub use sentinel::SentinelCore;
+// Note: Core implementations migrated to plugin_system/cores/
+// This module kept for backward compatibility with old code
 pub use memory::MemoryCore;
