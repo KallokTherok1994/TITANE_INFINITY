@@ -32,11 +32,11 @@ jobs:
     name: 🐧 Build Linux
     runs-on: ubuntu-22.04
     if: github.event.inputs.platform == 'linux' || github.event.inputs.platform == 'all' || startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: 🔧 Install system dependencies
         run: |
           sudo apt-get update
@@ -51,28 +51,28 @@ jobs:
             libayatana-appindicator3-dev \
             librsvg2-dev \
             patchelf
-      
+
       - name: 📦 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: 📦 Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      
+
       - name: 🦀 Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      
+
       - name: 💾 Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
           cache-on-failure: true
-      
+
       - name: 💾 Cache Node modules
         uses: actions/cache@v4
         with:
@@ -82,27 +82,27 @@ jobs:
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
-      
+
       - name: 📦 Install frontend dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: 🔍 Lint & Type check
         run: |
           pnpm run lint
           pnpm run type-check
-      
+
       - name: 🔨 Build Tauri app
         run: pnpm tauri build --verbose
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-      
+
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/release/bundle
           sha256sum deb/*.deb appimage/*.AppImage rpm/*.rpm > SHA256SUMS.txt
           cat SHA256SUMS.txt
-      
+
       - name: ✍️ Sign .deb packages (optional)
         if: env.GPG_PRIVATE_KEY != ''
         run: |
@@ -113,7 +113,7 @@ jobs:
           done
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-      
+
       - name: 📤 Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -125,7 +125,7 @@ jobs:
             src-tauri/target/release/bundle/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 30
-      
+
       - name: 📊 Build summary
         run: |
           echo "### 🐧 Linux Build Summary" >> $GITHUB_STEP_SUMMARY
@@ -146,45 +146,45 @@ jobs:
     name: 🪟 Build Windows
     runs-on: windows-latest
     if: github.event.inputs.platform == 'windows' || github.event.inputs.platform == 'all' || startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: 📦 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: 📦 Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      
+
       - name: 🦀 Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
-      
+
       - name: 💾 Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
-      
+
       - name: 📦 Install frontend dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: 🔨 Build Tauri app
         run: pnpm tauri build
         env:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-      
+
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/release/bundle/msi
           Get-FileHash *.msi -Algorithm SHA256 | Format-List | Out-File SHA256SUMS.txt
           cat SHA256SUMS.txt
         shell: pwsh
-      
+
       - name: 📤 Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -195,7 +195,7 @@ jobs:
             src-tauri/target/release/titane-infinity.exe
           if-no-files-found: error
           retention-days: 30
-      
+
       - name: 📊 Build summary
         run: |
           echo "### 🪟 Windows Build Summary" >> $env:GITHUB_STEP_SUMMARY
@@ -212,41 +212,41 @@ jobs:
     name: 🍎 Build macOS
     runs-on: macos-latest
     if: github.event.inputs.platform == 'macos' || github.event.inputs.platform == 'all' || startsWith(github.ref, 'refs/tags/')
-    
+
     strategy:
       matrix:
         target:
           - x86_64-apple-darwin  # Intel
           - aarch64-apple-darwin  # Apple Silicon M1/M2
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: 📦 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: 📦 Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      
+
       - name: 🦀 Setup Rust stable
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
-      
+
       - name: 💾 Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
           key: ${{ matrix.target }}
-      
+
       - name: 📦 Install frontend dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: 🔨 Build Tauri app
         run: pnpm tauri build --target ${{ matrix.target }}
         env:
@@ -255,7 +255,7 @@ jobs:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
-      
+
       - name: 🔐 Notarize macOS app (if certificates available)
         if: env.APPLE_ID != '' && env.APPLE_PASSWORD != ''
         run: |
@@ -268,13 +268,13 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      
+
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/${{ matrix.target }}/release/bundle/dmg
           shasum -a 256 *.dmg > SHA256SUMS.txt
           cat SHA256SUMS.txt
-      
+
       - name: 📤 Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -285,7 +285,7 @@ jobs:
             src-tauri/target/${{ matrix.target }}/release/bundle/dmg/SHA256SUMS.txt
           if-no-files-found: error
           retention-days: 30
-      
+
       - name: 📊 Build summary
         run: |
           echo "### 🍎 macOS Build Summary (${{ matrix.target }})" >> $GITHUB_STEP_SUMMARY
@@ -302,109 +302,109 @@ jobs:
     needs: [build-linux, build-windows, build-macos]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    
+
     permissions:
       contents: write
-    
+
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: 📥 Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts/
-      
+
       - name: 📋 List artifacts
         run: |
           echo "All artifacts:"
           find artifacts/ -type f
-      
+
       - name: 📝 Generate release notes
         id: release_notes
         run: |
           VERSION="${GITHUB_REF#refs/tags/}"
           cat > release_notes.md << EOF
           # TITANE∞ $VERSION
-          
+
           ## 🎉 Phase 8 Production Hardening Complete
-          
+
           ### ✨ Nouveautés principales
           - **ErrorBoundary** - Gestion résiliente des erreurs React
           - **Performance Monitoring** - Tracking Core Web Vitals en temps réel
           - **Accessibilité WCAG 2.1 AA** - Support complet a11y (keyboard, screen reader, contrast)
           - **Validation stricte** - Protection XSS/SQL injection avec Zod
           - **Build production optimisé** - Tauri + Rust avec LTO & code stripping
-          
+
           ### 📊 Métriques de performance
           - **Score global**: A+ (98/100)
           - **Bundle frontend**: 106.51 KB gzipped
           - **Binary Linux**: ~15-20 MB
           - **Core Web Vitals**: Tous verts (LCP<2.5s, FID<100ms, CLS<0.1)
           - **Build time**: ~6-11 minutes
-          
+
           ### 📦 Artefacts disponibles
-          
+
           #### Linux
           - \`titane-infinity_${VERSION#v}_amd64.deb\` - Debian/Ubuntu package
           - \`titane-infinity_${VERSION#v}_amd64.AppImage\` - Portable (no install required)
           - \`titane-infinity-${VERSION#v}-1.x86_64.rpm\` - RedHat/Fedora package
-          
+
           #### Windows
           - \`titane-infinity_${VERSION#v}_x64_en-US.msi\` - Windows installer
           - \`titane-infinity.exe\` - Portable executable
-          
+
           #### macOS
           - \`titane-infinity_${VERSION#v}_x64.dmg\` - Intel Macs
           - \`titane-infinity_${VERSION#v}_aarch64.dmg\` - Apple Silicon M1/M2
-          
+
           ### 🔐 Vérification d'intégrité
-          
+
           Vérifiez les checksums SHA256 avant installation:
-          
+
           \`\`\`bash
           # Linux
           sha256sum -c SHA256SUMS.txt
-          
+
           # macOS
           shasum -a 256 -c SHA256SUMS.txt
-          
+
           # Windows (PowerShell)
           Get-FileHash *.msi -Algorithm SHA256
           \`\`\`
-          
+
           ### 📚 Documentation
           - [Guide de déploiement](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/DEPLOYMENT_PRODUCTION_TAURI_v17.3.0.md)
           - [Quick Start](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/QUICK_START_v17.3.0.md)
           - [Architecture](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/BACKEND_ARCHITECTURE_v17.3.0.md)
-          
+
           ### 🚀 Installation rapide
-          
+
           **Linux (Debian/Ubuntu):**
           \`\`\`bash
           sudo dpkg -i titane-infinity_${VERSION#v}_amd64.deb
           sudo apt-get install -f
           \`\`\`
-          
+
           **Linux (AppImage):**
           \`\`\`bash
           chmod +x titane-infinity_${VERSION#v}_amd64.AppImage
           ./titane-infinity_${VERSION#v}_amd64.AppImage
           \`\`\`
-          
+
           **Windows:**
           Double-cliquez sur \`titane-infinity_${VERSION#v}_x64_en-US.msi\` et suivez l'assistant.
-          
+
           **macOS:**
           Double-cliquez sur le \`.dmg\`, glissez TITANE∞ vers Applications.
-          
+
           ---
-          
+
           **Full Changelog**: https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/CHANGELOG_v17.3.0.md
           EOF
-          
+
           cat release_notes.md
-      
+
       - name: 🚀 Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -424,7 +424,7 @@ jobs:
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: 📊 Release summary
         run: |
           echo "### 🎉 Release Created Successfully!" >> $GITHUB_STEP_SUMMARY
@@ -443,13 +443,13 @@ jobs:
     needs: [create-release]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/')
-    
+
     steps:
       - name: 📢 Notify success
         run: |
           echo "✅ Release ${{ github.ref_name }} deployed successfully!"
           echo "🔗 URL: https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"
-      
+
       - name: 📊 Update latest.json (for auto-updater)
         run: |
           # TODO: Update latest.json on CDN for Tauri auto-updater

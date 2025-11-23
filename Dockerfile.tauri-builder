@@ -1,0 +1,61 @@
+# ============================================================================
+# Dockerfile pour build production Tauri - TITANE∞ v17.3.0
+# ============================================================================
+# Usage:
+#   docker build -f Dockerfile.tauri-builder -t titane-builder .
+#   docker run --rm -v $(pwd):/app -w /app titane-builder
+# ============================================================================
+
+FROM ubuntu:22.04
+
+# Variables d'environnement
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RUST_BACKTRACE=1
+ENV CARGO_TERM_COLOR=always
+ENV NODE_VERSION=20
+
+# Mise à jour et installation des dépendances système
+RUN apt-get update && apt-get install -y \
+    # Build essentials
+    build-essential \
+    curl \
+    wget \
+    git \
+    file \
+    # Tauri dependencies
+    libwebkit2gtk-4.1-dev \
+    libjavascriptcoregtk-4.1-dev \
+    libssl-dev \
+    libayatana-appindicator3-dev \
+    librsvg2-dev \
+    patchelf \
+    # Additional tools
+    pkg-config \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Installer Node.js 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g pnpm@9
+
+# Installer Rust stable
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y \
+    && . $HOME/.cargo/env \
+    && rustup default stable \
+    && rustup component add rustfmt clippy
+
+# Ajouter Cargo au PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Vérifier versions installées
+RUN node --version \
+    && pnpm --version \
+    && rustc --version \
+    && cargo --version
+
+# Créer répertoire de travail
+WORKDIR /app
+
+# Script de build par défaut
+CMD ["bash", "-c", "pnpm install --frozen-lockfile && pnpm tauri build --verbose"]

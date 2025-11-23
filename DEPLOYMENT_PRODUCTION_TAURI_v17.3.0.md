@@ -41,12 +41,12 @@ Backend/Runtime:
 ```
 
 ### Avantages Tauri production
-✅ **Performance**: 3-10x plus rapide que Electron  
-✅ **Taille**: 5-20x plus petit (~600KB vs 50MB Electron)  
-✅ **Sécurité**: Sandboxing natif, pas de Node.js dans le renderer  
-✅ **Mémoire**: ~50MB RAM vs ~200MB Electron  
-✅ **Natif**: API système via Rust (système de fichiers, processus, etc.)  
-✅ **Cross-platform**: Linux, Windows, macOS avec un seul codebase  
+✅ **Performance**: 3-10x plus rapide que Electron
+✅ **Taille**: 5-20x plus petit (~600KB vs 50MB Electron)
+✅ **Sécurité**: Sandboxing natif, pas de Node.js dans le renderer
+✅ **Mémoire**: ~50MB RAM vs ~200MB Electron
+✅ **Natif**: API système via Rust (système de fichiers, processus, etc.)
+✅ **Cross-platform**: Linux, Windows, macOS avec un seul codebase
 
 ---
 
@@ -531,7 +531,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install dependencies
         run: |
           sudo apt-get update
@@ -545,36 +545,36 @@ jobs:
             libssl-dev \
             libayatana-appindicator3-dev \
             librsvg2-dev
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
-      
+
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri
-      
+
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build Tauri app
         run: pnpm tauri build --verbose
-      
+
       - name: Generate checksums
         run: |
           cd src-tauri/target/release/bundle
           sha256sum deb/*.deb appimage/*.AppImage rpm/*.rpm > SHA256SUMS.txt
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -589,26 +589,26 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
-      
+
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build Tauri app
         run: pnpm tauri build
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -621,31 +621,31 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
+
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
-      
+
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-apple-darwin,aarch64-apple-darwin
-      
+
       - name: Install frontend dependencies
         run: pnpm install --frozen-lockfile
-      
+
       - name: Build Tauri app (Intel)
         run: pnpm tauri build -- --target x86_64-apple-darwin
-      
+
       - name: Build Tauri app (Apple Silicon)
         run: pnpm tauri build -- --target aarch64-apple-darwin
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -659,10 +659,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
-      
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
@@ -788,7 +788,7 @@ async fn check_for_updates() -> Result<String, String> {
         .url("https://releases.titane.com/latest.json")
         .build()
         .map_err(|e| e.to_string())?;
-    
+
     match update.check().await {
         Ok(Some(update)) => {
             log::info!("Update available: v{}", update.version);
@@ -862,15 +862,15 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Build Tauri
         run: pnpm tauri build
-      
+
       - name: Deploy to canary channel
         run: |
           aws s3 cp src-tauri/target/release/bundle/ \
             s3://releases.titane.com/canary/ --recursive
-      
+
       - name: Notify canary users
         run: |
           curl -X POST https://api.titane.com/notify-canary \
@@ -1000,22 +1000,22 @@ cargo install cargo-flamegraph # Profiling
 
 **TITANE∞ v17.3.0 est PRÊT pour le déploiement production Tauri:**
 
-✅ **Build production**: `pnpm tauri build` génère artefacts optimisés  
-✅ **Multi-plateformes**: Linux (.deb, .AppImage, .rpm) + Windows (.msi) + macOS (.dmg)  
-✅ **Performance**: Score A+ (98/100), bundle 106KB gzipped, binary ~15MB  
-✅ **Sécurité**: CSP configuré, code signing ready, Rust memory safety  
-✅ **CI/CD**: GitHub Actions workflows automatiques sur tags  
-✅ **Monitoring**: Sentry + PerformanceMonitor + métriques Rust  
-✅ **Distribution**: GitHub Releases + auto-update mechanism  
+✅ **Build production**: `pnpm tauri build` génère artefacts optimisés
+✅ **Multi-plateformes**: Linux (.deb, .AppImage, .rpm) + Windows (.msi) + macOS (.dmg)
+✅ **Performance**: Score A+ (98/100), bundle 106KB gzipped, binary ~15MB
+✅ **Sécurité**: CSP configuré, code signing ready, Rust memory safety
+✅ **CI/CD**: GitHub Actions workflows automatiques sur tags
+✅ **Monitoring**: Sentry + PerformanceMonitor + métriques Rust
+✅ **Distribution**: GitHub Releases + auto-update mechanism
 
 **Commande de déploiement finale:**
 ```bash
 pnpm tauri build --verbose
 ```
 
-**Durée estimée:** ~6-11 minutes  
-**Artefacts générés:** .deb, .AppImage, .rpm (+ Windows/macOS si cross-compile)  
-**Taille totale:** ~15-25 MB par plateforme  
+**Durée estimée:** ~6-11 minutes
+**Artefacts générés:** .deb, .AppImage, .rpm (+ Windows/macOS si cross-compile)
+**Taille totale:** ~15-25 MB par plateforme
 
 🚀 **TITANE∞ EST PRÊT POUR LE LANCEMENT PRODUCTION!**
 

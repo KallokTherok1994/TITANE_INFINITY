@@ -412,7 +412,7 @@ async fn check_for_updates(app: tauri::AppHandle) -> Result<String, String> {
         .check()
         .await
         .map_err(|e| e.to_string())?;
-    
+
     if let Some(update) = update_available {
         update.download_and_install().await
             .map_err(|e| e.to_string())?;

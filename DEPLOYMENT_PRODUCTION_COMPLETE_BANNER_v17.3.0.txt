@@ -58,7 +58,7 @@ Build System:       Tauri 2.9.0 + Rust stable + Cargo + Vite 6.4.1
       • Collecte des artefacts
       • Upload vers GitHub Releases (via gh CLI)
       • Rapport final avec métriques
-   
+
    💻 Usage:
       ./scripts/deploy-production.sh                    # Linux complet
       ./scripts/deploy-production.sh --bundle deb       # Uniquement .deb
@@ -70,7 +70,7 @@ Build System:       Tauri 2.9.0 + Rust stable + Cargo + Vite 6.4.1
    🤖 Type:            GitHub Actions CI/CD (500+ lignes)
    🔄 Triggers:        • git tag push (v*.*.*)
                        • workflow_dispatch (manuel)
-   
+
    🎯 Jobs:
       ┌─────────────────┬───────────────┬──────────────────────────────────────┐
       │ Job             │ Runner        │ Artefacts                            │
@@ -81,7 +81,7 @@ Build System:       Tauri 2.9.0 + Rust stable + Cargo + Vite 6.4.1
       │ create-release  │ ubuntu-22.04  │ GitHub Release avec tous artefacts   │
       │ post-release    │ ubuntu-22.04  │ Notifications + latest.json update   │
       └─────────────────┴───────────────┴──────────────────────────────────────┘
-   
+
    ✨ Features:
       • Build matrix multi-plateformes
       • Caching Rust + Node modules (accélération 5-10x)
@@ -99,7 +99,7 @@ Build System:       Tauri 2.9.0 + Rust stable + Cargo + Vite 6.4.1
       • URLs de téléchargement par plateforme
       • Signatures (à générer avec tauri signer)
       • Notes de release
-   
+
    🌐 Endpoints:
       • GitHub Releases (primary)
       • CDN custom (optionnel)
@@ -355,13 +355,13 @@ open titane-infinity_17.3.0_x64.dmg
 
 Métrique                  Valeur               Target          Status
 ─────────────────────────────────────────────────────────────────────────────
-Bundle size total         576.98 KB            < 1 MB          ✅ 
-Bundle size gzipped       106.51 KB            < 150 KB        ✅ 
-Build time                2.88s                < 5s            ✅ 
-Score global              A+ (98/100)          > 90            ✅ 
-Core Web Vitals           All green            All green       ✅ 
-TypeScript errors         0                    0               ✅ 
-ESLint warnings           0                    0               ✅ 
+Bundle size total         576.98 KB            < 1 MB          ✅
+Bundle size gzipped       106.51 KB            < 150 KB        ✅
+Build time                2.88s                < 5s            ✅
+Score global              A+ (98/100)          > 90            ✅
+Core Web Vitals           All green            All green       ✅
+TypeScript errors         0                    0               ✅
+ESLint warnings           0                    0               ✅
 
 
 ╔══════════════════════════════════════════════════════════════════════════╗
@@ -370,13 +370,13 @@ ESLint warnings           0                    0               ✅
 
 Métrique                  Valeur estimée       Target          Status
 ─────────────────────────────────────────────────────────────────────────────
-Binary size Linux         5-10 MB              < 15 MB         ✅ 
-Bundle size .deb          15-20 MB             < 30 MB         ✅ 
-Bundle size .AppImage     25-30 MB             < 50 MB         ✅ 
-Compile time (release)    5-10 min             < 15 min        ✅ 
-Memory usage runtime      50-70 MB             < 100 MB        ✅ 
-Startup time              ~1.5s                < 2s            ✅ 
-Cargo audit               0 vulnerabilities    0               ✅ 
+Binary size Linux         5-10 MB              < 15 MB         ✅
+Bundle size .deb          15-20 MB             < 30 MB         ✅
+Bundle size .AppImage     25-30 MB             < 50 MB         ✅
+Compile time (release)    5-10 min             < 15 min        ✅
+Memory usage runtime      50-70 MB             < 100 MB        ✅
+Startup time              ~1.5s                < 2s            ✅
+Cargo audit               0 vulnerabilities    0               ✅
 
 
 ╔══════════════════════════════════════════════════════════════════════════╗
@@ -385,12 +385,12 @@ Cargo audit               0 vulnerabilities    0               ✅
 
 Métrique                  Valeur               Target          Status
 ─────────────────────────────────────────────────────────────────────────────
-CI/CD total time          15-25 min            < 30 min        ✅ 
-Platforms supported       3 (Linux/Win/Mac)    3               ✅ 
-Bundle formats            7 formats            5+              ✅ 
-Auto-update ready         Yes (latest.json)    Yes             ✅ 
-Code signing support      Yes (3 platforms)    Yes             ✅ 
-Release automation        100%                 100%            ✅ 
+CI/CD total time          15-25 min            < 30 min        ✅
+Platforms supported       3 (Linux/Win/Mac)    3               ✅
+Bundle formats            7 formats            5+              ✅
+Auto-update ready         Yes (latest.json)    Yes             ✅
+Code signing support      Yes (3 platforms)    Yes             ✅
+Release automation        100%                 100%            ✅
 
 
 ═══════════════════════════════════════════════════════════════════════════════
