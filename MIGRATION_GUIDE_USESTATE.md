@@ -232,7 +232,7 @@ useEffect(() => {
 
 **APRÈS**:
 ```tsx
-const isSystemHealthy = useSingularityStore(s => 
+const isSystemHealthy = useSingularityStore(s =>
   s.physical.helios.cpu_usage < 80 && s.physical.helios.memory_usage < 90
 );
 ```
@@ -361,7 +361,7 @@ function Dashboard() {
         setDiskUsage(heliosData.disk_usage);
         setTemperature(heliosData.temperature);
         setBattery(heliosData.battery_level);
-        
+
         setGlobalHealth(healthData.global_health);
         setServicesRunning(healthData.services_running);
         setErrorsCount(healthData.errors_count);
@@ -447,11 +447,11 @@ function PerformanceMonitor() {
   const [fps, setFps] = useState(60);
   const [latency, setLatency] = useState(0);
   const [temperature, setTemperature] = useState(0);
-  
+
   const [cpuHistory, setCpuHistory] = useState<number[]>([]);
   const [memoryHistory, setMemoryHistory] = useState<number[]>([]);
   const [alerts, setAlerts] = useState<string[]>([]);
-  
+
   const [showDetails, setShowDetails] = useState(false);
   const [chartType, setChartType] = useState('line');
   const [refreshRate, setRefreshRate] = useState(1000);
@@ -478,7 +478,7 @@ function PerformanceMonitor() {
         setAlerts(prev => [...prev, 'CPU > 90%']);
       }
     };
-    
+
     fetch();
     const interval = setInterval(fetch, refreshRate);
     return () => clearInterval(interval);
@@ -632,7 +632,7 @@ const complexMetric = useSingularityStore(s => {
 
 ```tsx
 const state = useSingularityStore(s => s, { equalityFn: shallowEqual });
-const complexMetric = useMemo(() => 
+const complexMetric = useMemo(() =>
   heavyComputation(state.physical, state.cognitive, state.symbolic),
   [state]
 );

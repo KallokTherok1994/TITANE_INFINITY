@@ -224,7 +224,7 @@ export function useGlobalCoherence() {
     // Calculer santé système globale
     const physicalHealth = s.physical.system_health.global_health;
     const cpuHealth = 1 - (s.physical.helios.cpu_usage / 100);
-    
+
     return (physicalHealth + cpuHealth) / 2;
   });
 }
@@ -250,11 +250,11 @@ export function useIsCritical() {
 
 /**
  * Hook pour update methods (pas de subscription)
- * 
+ *
  * @example
  * ```tsx
  * const { updatePhysical, save } = useSingularityActions();
- * 
+ *
  * const handleClick = async () => {
  *   await updatePhysical({ ...physicalLayer, helios: newHelios });
  *   await save();
