@@ -25,7 +25,7 @@ export function safeDisplay(value: unknown): string | number {
     if ('data' in value && value.data !== undefined) {
       return safeDisplay(value.data);
     }
-    
+
     // Sinon, retourner une représentation lisible
     try {
       return JSON.stringify(value, null, 2);
@@ -84,13 +84,14 @@ export interface ModuleData {
 
 export function mapBackendData(data: unknown): ModuleData {
   if (typeof data === 'object' && data !== null) {
+    const obj = data as Record<string, unknown>;
     return {
-      id: extractString((data as any).id || (data as any).node_type, 'unknown'),
-      name: extractString((data as any).name || (data as any).node_type, 'Module'),
-      status: extractString((data as any).status || (data as any).state, 'Unknown'),
-      value: (data as any).value ?? (data as any).weight ?? (data as any).data ?? 0,
-      unit: (data as any).unit,
-      metadata: (data as any).connections || (data as any).metrics || {},
+      id: extractString(obj.id || obj.node_type, 'unknown'),
+      name: extractString(obj.name || obj.node_type, 'Module'),
+      status: extractString(obj.status || obj.state, 'Unknown'),
+      value: obj.value ?? obj.weight ?? obj.data ?? 0,
+      unit: obj.unit as string | undefined,
+      metadata: (obj.connections || obj.metrics || {}) as Record<string, unknown>,
     };
   }
 
@@ -133,7 +134,7 @@ export function getStatusVariant(value: number, thresholds = { high: 80, low: 50
 export function formatUptime(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
-  
+
   if (hours > 24) {
     const days = Math.floor(hours / 24);
     return `${days}j ${hours % 24}h`;

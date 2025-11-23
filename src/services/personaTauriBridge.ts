@@ -76,11 +76,11 @@ function convertRustToTS(rustState: RustPersonaState): PersonaState {
         stable: rustState.personality.traits.stable,
         responsive: rustState.personality.traits.responsive,
       },
-      temperament: rustState.personality.temperament.toLowerCase() as any,
+      temperament: rustState.personality.temperament.toLowerCase() as Lowercase<RustPersonalityCore['temperament']>,
       evolution: rustState.personality.evolution,
     },
     mood: {
-      current: rustState.mood.current.toLowerCase() as any,
+      current: rustState.mood.current.toLowerCase() as 'clair' | 'vibrant' | 'attentif' | 'alerte' | 'neutre' | 'dormant',
       intensity: rustState.mood.intensity,
       duration: rustState.mood.duration,
       trigger: 'internal' as const,
@@ -98,12 +98,12 @@ function convertRustToTS(rustState: RustPersonaState): PersonaState {
         onOverload: { glowIntensity: 1.0, motionType: 'pulse', durationMs: 5000 },
         onIdle: { glowIntensity: 0.3, motionType: 'breathe', durationMs: 10000 },
       },
-      posture: rustState.behavior.posture.toLowerCase() as any,
+      posture: rustState.behavior.posture.toLowerCase() as 'attentive' | 'relaxed' | 'vigilant' | 'minimal',
       adaptationSpeed: 0.5,
     },
     memory: {
       userPreferences: {
-        typicalRhythm: 'normal' as any,
+        typicalRhythm: 'normal' as 'slow' | 'normal' | 'fast',
         preferredDensity: 0.5,
         visualSensitivity: 0.7,
         soundTolerance: 0.8,

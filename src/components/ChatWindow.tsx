@@ -88,7 +88,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         )}
 
         {messages.filter((message) => message.role !== 'system').map((message) => (
-          <MessageBubble key={message.timestamp} message={message as any} />
+          <MessageBubble key={message.timestamp} message={message} />
         ))}
 
         {isLoading && (

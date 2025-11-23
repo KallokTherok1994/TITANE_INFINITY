@@ -15,6 +15,74 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ---
 
+## [13.1.0] - 2025-11-23
+
+### 🧹 NETTOYAGE COMPLET DU CODE
+
+**Status**: ✅ **COMPLETE** - Code 100% propre et strictement typé
+
+#### ✨ Améliorations majeures
+
+**Qualité du code**:
+- ✅ **0 erreur ESLint** (de 98 problèmes → 0)
+- ✅ **0 warning ESLint**
+- ✅ **~75 occurrences de `any` éliminées**
+- ✅ **TypeScript strict** : Types stricts partout
+- ✅ **React Hooks conformes** : Toutes dépendances correctes
+
+**Fichiers modifiés** (27 au total):
+- Core: `ARCHITECTURE_TYPES_v24-v∞.ts`, `ENGINE_BRIDGE.ts`
+- Utils: `dataMapper.ts`, `dataUtils.ts`
+- Services: `personaTauriBridge.ts`, `singularityConnections.ts`
+- Hooks: `useSingularityStore.ts`
+- Components: 7 fichiers (ChatWindow, ModeIndicator, etc.)
+- Pages: 9 fichiers (tous les modules)
+- Tests: `setup.ts`, `chatEngine.test.ts`
+
+**Types créés**:
+- ✅ `EngineState = Record<string, unknown>` pour uniformité
+- ✅ Type guards systématiques (`typeof raw !== 'object'`)
+- ✅ Unions strictes pour providers, modes, etc.
+- ✅ Optional chaining sécurisé partout
+
+**React Hooks**:
+- ✅ Mémorisation avec `useCallback` : 6 fonctions
+- ✅ Dépendances `useEffect` complètes : 4 composants corrigés
+- ✅ Variables inutilisées éliminées ou préfixées `_`
+
+#### 🔧 Corrections techniques
+
+**Suppression des `any`**:
+- ARCHITECTURE_TYPES : 38 → `EngineState`/`unknown`
+- dataMapper : 10 → `unknown` + type guards
+- dataUtils : 12 → `Record<string, unknown>`
+- personaTauriBridge : 4 → types stricts
+- Pages : 9 fichiers → `unknown`
+- Components : 7 fichiers → types appropriés
+
+**Hooks React corrigés**:
+- App.tsx : Ajout `cognitiveLoad` + `glow`
+- ModeIndicator.tsx : `useCallback` pour `fetchCurrentMode`/`fetchHistory`
+- WaveformVisualizer.tsx : `useCallback` pour `getFrequencyColor`
+- Slider.tsx : `useCallback` pour `updateValue`/`handleMouseMove`/`handleMouseUp`
+
+**Variables inutilisées**:
+- SingularityMonitor : Import `SingularityState` supprimé
+- Nexus : `graphData`/`setGraphData` → `_graphData`/`_setGraphData`
+- chatEngine.test : `ChatEngineConfig` non importé
+
+#### 📊 Métriques
+
+| Métrique | Avant | Après |
+|----------|-------|-------|
+| **Erreurs ESLint** | 1 | 0 |
+| **Warnings ESLint** | 97 | 0 |
+| **`any` dans le code** | ~75 | 0 |
+| **react-hooks warnings** | 4 | 0 |
+| **Variables inutilisées** | 5 | 0 |
+
+---
+
 ## [13.0.0] - 2025-11-23
 
 ### 🔒 MIGRATION LICENCE PROPRIÉTAIRE

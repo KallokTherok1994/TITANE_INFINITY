@@ -10,10 +10,10 @@
  * ═══════════════════════════════════════════════════════════════════════════
  * TITANE INFINITY v16.1 - SETTINGS MODAL (AI MODE CONFIGURATION)
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Modal de configuration du mode AI : Local / Cloud / Hybrid
  * Gestion des providers, confirmations, et status
- * 
+ *
  * @module SettingsModal
  * @version 16.1.0
  * @date 2025-11-21
@@ -64,8 +64,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       disableCloudMode();
     } else {
       // Par défaut gemini pour cloud/hybrid
-      const cloudProvider = config.provider === 'gemini' || config.provider === 'openai' 
-        ? config.provider 
+      const cloudProvider = config.provider === 'gemini' || config.provider === 'openai'
+        ? config.provider
         : 'gemini';
       enableCloudMode(cloudProvider);
     }
@@ -105,7 +105,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
             <span className={`status-indicator ${isOnline ? 'online' : 'offline'}`}>
               {isOnline ? '🟢 En ligne' : '🔴 Hors ligne'}
             </span>
-            <button 
+            <button
               className="btn-secondary"
               onClick={handleCheckInternet}
               disabled={checking}
@@ -127,7 +127,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div className="mode-label">Local</div>
               <div className="mode-desc">100% offline</div>
             </button>
-            
+
             <button
               className={`mode-btn ${config.mode === 'cloud' ? 'active' : ''}`}
               onClick={() => handleModeChange('cloud')}
@@ -136,7 +136,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               <div className="mode-label">Cloud</div>
               <div className="mode-desc">APIs externes</div>
             </button>
-            
+
             <button
               className={`mode-btn ${config.mode === 'hybrid' ? 'active' : ''}`}
               onClick={() => handleModeChange('hybrid')}
@@ -152,10 +152,10 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {config.mode !== 'local' && (
           <div className="settings-section">
             <h3>🔌 Provider Cloud</h3>
-            <select 
+            <select
               className="provider-select"
               value={config.provider}
-              onChange={(e) => handleProviderChange(e.target.value as any)}
+              onChange={(e) => handleProviderChange(e.target.value as 'gemini' | 'openai' | 'ollama')}
             >
               <option value="gemini">Google Gemini</option>
               <option value="openai">OpenAI GPT</option>
@@ -184,7 +184,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         {(approvals.session.length > 0 || approvals.permanent.length > 0) && (
           <div className="settings-section">
             <h3>✅ Approbations Actives</h3>
-            
+
             {approvals.permanent.length > 0 && (
               <div className="approvals-list">
                 <div className="approvals-label">⭐ Permanentes:</div>
@@ -193,7 +193,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 ))}
               </div>
             )}
-            
+
             {approvals.session.length > 0 && (
               <div className="approvals-list">
                 <div className="approvals-label">🔄 Session:</div>
@@ -202,8 +202,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                 ))}
               </div>
             )}
-            
-            <button 
+
+            <button
               className="btn-danger"
               onClick={handleResetApprovals}
             >

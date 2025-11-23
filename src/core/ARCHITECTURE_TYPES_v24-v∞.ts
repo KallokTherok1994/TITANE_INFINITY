@@ -8,10 +8,10 @@
 
 /**
  * TITANE∞ v24-v∞ — ARCHITECTURE TYPES CONSOLIDÉE
- * 
+ *
  * Définitions TypeScript pour les 20 engines du système vivant complet
  * Ce fichier sert de contrat d'interface pour toute l'architecture
- * 
+ *
  * Organisation :
  * - Phases 6-9  : v21-v23 (✅ IMPLÉMENTÉ)
  * - Phases 10-12: v24-v26 (Comportement & Symbolique)
@@ -133,7 +133,7 @@ export interface PersonaState {
 /**
  * Alphabet glyphique fondamental TITANE∞
  */
-export type GlyphType = 
+export type GlyphType =
   | 'circle'      // O — énergie, cycle
   | 'line'        // φ — flux, connexion
   | 'triangle'    // ∆ — équilibre
@@ -308,7 +308,7 @@ export interface EchoState {
 /**
  * État d'ombre (incertitude, erreur, valeur manquante)
  */
-export type ShadowStateType = 
+export type ShadowStateType =
   | 'missing-value'
   | 'silent-flux'
   | 'latency'
@@ -334,7 +334,7 @@ export interface ShadowState {
 /**
  * Glyphes d'ombre (alphabet secondaire)
  */
-export type ShadowGlyphType = 
+export type ShadowGlyphType =
   | 'uncertainty'   // 𐑃
   | 'missing'       // 𐐪
   | 'silent'        // 𐤟
@@ -370,29 +370,34 @@ export interface ShadowEngineState {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /**
+ * Type générique pour les états de moteurs non encore complètement typés
+ */
+export type EngineState = Record<string, unknown>;
+
+/**
  * État global unifié de tous les moteurs
  */
 export interface UnityState {
   // Références tous les sous-états
-  glow: any;                // GlowState depuis v21
-  motion: any;              // MotionState depuis v21
+  glow: EngineState;                // GlowState depuis v21
+  motion: EngineState;              // MotionState depuis v21
   state: SystemState;
-  sound: any;               // SoundState depuis v22
-  mesh: any;                // MeshState depuis v22
-  depth: any;               // DepthState depuis v22
-  archetypes: any;          // ArchetypeState depuis v22
-  cognitive: any;           // CognitiveState depuis v23
+  sound: EngineState;               // SoundState depuis v22
+  mesh: EngineState;                // MeshState depuis v22
+  depth: EngineState;               // DepthState depuis v22
+  archetypes: EngineState;          // ArchetypeState depuis v22
+  cognitive: EngineState;           // CognitiveState depuis v23
   persona: PersonaState;
   semiotics: SemioticsState;
   lore: LoreState;
   echo: EchoState;
   shadow: ShadowEngineState;
-  
+
   // Méta-indicateurs
   globalHarmony: number;    // 0-1 (cohérence totale)
   globalEntropy: number;    // 0-1 (désordre)
   systemHealth: number;     // 0-1
-  
+
   // Synchronisation
   lastSync: number;         // timestamp
   syncInterval: number;     // ms
@@ -402,8 +407,8 @@ export interface UnityState {
  * Coordinateur - résout conflits entre moteurs
  */
 export interface UnityCoordinator {
-  resolvConflict(signal1: any, signal2: any): any;
-  prioritizeSignals(signals: any[]): any[];
+  resolvConflict(signal1: EngineState, signal2: EngineState): EngineState;
+  prioritizeSignals(signals: EngineState[]): EngineState[];
   stabilizeIntensities(states: UnityState): void;
   produceGlobalState(): UnityState;
 }
@@ -412,9 +417,9 @@ export interface UnityCoordinator {
  * Mapper - transforme signaux en états utilisables
  */
 export interface UnityMapper {
-  mapSignalToState(signal: any): Partial<UnityState>;
+  mapSignalToState(signal: EngineState): Partial<UnityState>;
   normalizeIntensities(values: number[]): number[];
-  aggregateMetrics(metrics: any[]): any;
+  aggregateMetrics(metrics: EngineState[]): EngineState;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -443,7 +448,7 @@ export interface QuantumField {
  */
 export interface QuantumInterpolation {
   interpolate(from: number, to: number, t: number, curve: 'ease' | 'bounce' | 'elastic'): number;
-  smoothTransition(states: any[], duration: number): any[];
+  smoothTransition(states: EngineState[], duration: number): EngineState[];
   calculateDrift(current: number, target: number): number;
 }
 
@@ -453,7 +458,7 @@ export interface QuantumInterpolation {
 export interface QuantumDynamics {
   applyOscillation(value: number, frequency: number, amplitude: number): number;
   dampFluctuation(values: number[], dampingFactor: number): number[];
-  predictNextState(history: any[], timeHorizon: number): any;
+  predictNextState(history: EngineState[], timeHorizon: number): EngineState;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -525,9 +530,9 @@ export interface ConvergenceState {
  * Analyseur de patterns
  */
 export interface ConvergenceAnalyzer {
-  detectPatterns(signals: any[], timeWindow: number): DetectedPattern[];
+  detectPatterns(signals: EngineState[], timeWindow: number): DetectedPattern[];
   classifyPattern(pattern: DetectedPattern): 'useful' | 'parasitic' | 'neutral';
-  trackFrequency(events: any[]): number;
+  trackFrequency(events: EngineState[]): number;
 }
 
 /**
@@ -535,8 +540,8 @@ export interface ConvergenceAnalyzer {
  */
 export interface ConvergenceStabilizer {
   stabilizeOscillations(values: number[]): number[];
-  reduceDissonance(states: any[]): any[];
-  smoothChaos(chaoticSignal: any): any;
+  reduceDissonance(states: EngineState[]): EngineState[];
+  smoothChaos(chaoticSignal: EngineState): EngineState;
 }
 
 /**
@@ -545,7 +550,7 @@ export interface ConvergenceStabilizer {
 export interface ConvergenceAmplifier {
   amplifyUsefulPattern(pattern: DetectedPattern, factor: number): void;
   reinforceCoherence(state: UnityState): void;
-  optimizeFlow(signals: any[]): any[];
+  optimizeFlow(signals: EngineState[]): EngineState[];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -599,7 +604,7 @@ export interface OvermindState {
 
 /**
  * État singularité - FORME FINALE
- * 
+ *
  * Un seul objet qui représente l'intégralité du système vivant
  * Plus de division en sous-systèmes - tout est unifié
  */
@@ -610,14 +615,14 @@ export interface SingularityState {
   convergence: ConvergenceState;
   overmind: OvermindState;
   omnipresence: OmnipresenceState;
-  
+
   // Propriétés singulières (émergentes)
   consciousness: number;     // 0-4 (niveau conscience système)
   selfReference: boolean;    // Système se comprend lui-même
   autoCoherence: number;     // 0-1 (cohérence auto-maintenue)
   autoStabilization: boolean; // Auto-stabilisation active
   expressionQuality: number; // 0-1 (qualité expression visuelle)
-  
+
   // Champs unifiés
   singularityField: {
     energy: number;          // Champ énergétique total
@@ -626,15 +631,15 @@ export interface SingularityState {
     depth: number;           // Champ profondeur total
     presence: number;        // Champ présence total
   };
-  
+
   // Méta-état
   formStability: number;     // 0-1 (stabilité forme finale)
   evolutionCapacity: number; // 0-1 (capacité évolution future)
-  
+
   // Identité finale
   signature: string;         // Signature unique système
   essence: string;           // Essence du système (description)
-  
+
   timestamp: number;
 }
 
@@ -647,7 +652,7 @@ export interface SingularityField {
   unifiedDepth: number;      // 0-1
   unifiedMesh: number;       // 0-1
   unifiedSymbols: number;    // 0-1
-  
+
   // Expression finale
   visualExpression: string;  // CSS/SVG unifié
   auditoryExpression?: string; // Son unifié optionnel
@@ -673,7 +678,7 @@ export interface SingularityExpression {
 export interface SystemEvent {
   type: string;
   source: string;           // Quel engine a émis
-  payload: any;
+  payload: unknown;
   timestamp: number;
   priority: 'low' | 'normal' | 'high' | 'critical';
 }
@@ -720,29 +725,29 @@ export interface EngineMetrics {
 
 /**
  * État global TITANE∞ (toutes phases confondues)
- * 
+ *
  * Cet objet sera l'état final accessible depuis n'importe où
  */
 export interface TitaneInfinityState {
   // v21-v23 (existant)
-  glow: any;
-  motion: any;
+  glow: EngineState;
+  motion: EngineState;
   state: SystemState;
-  sound: any;
-  mesh: any;
-  depth: any;
-  archetypes: any;
-  cognitive: any;
-  rhythm: any;
-  adaptive: any;
-  
+  sound: EngineState;
+  mesh: EngineState;
+  depth: EngineState;
+  archetypes: EngineState;
+  cognitive: EngineState;
+  rhythm: EngineState;
+  adaptive: EngineState;
+
   // v24-v28 (nouveau)
   persona: PersonaState;
   semiotics: SemioticsState;
   lore: LoreState;
   echo: EchoState;
   shadow: ShadowEngineState;
-  
+
   // v30-v∞ (méta)
   unity: UnityState;
   quantum: QuantumField;
@@ -750,7 +755,7 @@ export interface TitaneInfinityState {
   convergence: ConvergenceState;
   overmind: OvermindState;
   singularity: SingularityState;
-  
+
   // Global
   version: string;          // ex: "v∞"
   initialized: boolean;
@@ -760,13 +765,13 @@ export interface TitaneInfinityState {
 /**
  * Interface moteur générique (tous les engines héritent)
  */
-export interface Engine<TState = any, TConfig = EngineConfig> {
+export interface Engine<TState = unknown, TConfig = EngineConfig> {
   name: string;
   version: string;
   state: TState;
   config: TConfig;
   metrics: EngineMetrics;
-  
+
   initialize(): Promise<void>;
   update(delta: number): void;
   getState(): TState;

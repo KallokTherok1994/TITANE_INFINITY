@@ -23,8 +23,17 @@ afterEach(() => {
 });
 
 // Mock Tauri API (évite erreurs "window.__TAURI__ undefined")
-global.window = global.window || ({} as any);
-(global.window as any).__TAURI__ = {
+interface MockWindow extends Window {
+  __TAURI__?: {
+    invoke: ReturnType<typeof vi.fn>;
+    event: {
+      listen: ReturnType<typeof vi.fn>;
+    };
+  };
+}
+
+global.window = global.window || ({} as MockWindow);
+(global.window as MockWindow).__TAURI__ = {
   invoke: vi.fn(),
   event: {
     listen: vi.fn(),

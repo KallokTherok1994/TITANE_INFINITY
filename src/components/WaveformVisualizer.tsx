@@ -48,7 +48,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
   // Interpoler les données audio au nombre de barres souhaité
   const interpolateData = (data: number[], targetLength: number): number[] => {
     if (data.length === 0) return new Array(targetLength).fill(0);
-    
+
     const result: number[] = [];
     const ratio = data.length / targetLength;
 
@@ -61,7 +61,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
   };
 
   // Obtenir couleur selon fréquence
-  const getFrequencyColor = (index: number, value: number): string => {
+  const getFrequencyColor = React.useCallback((index: number, value: number): string => {
     if (!dynamicColors) return '#3b82f6';
 
     const ratio = index / barCount;
@@ -69,7 +69,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
 
     if (ratio < 0.3) {
       // Graves - Cyan vers Bleu
-      return `hsl(${190 + ratio * 30}, 100%, ${50 + intensity * 20}%)`;
+      return `hsl(${ 190 + ratio * 30}, 100%, ${50 + intensity * 20}%)`;
     } else if (ratio < 0.7) {
       // Médiums - Bleu vers Violet
       return `hsl(${220 + (ratio - 0.3) * 100}, 100%, ${50 + intensity * 20}%)`;
@@ -77,7 +77,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
       // Aigus - Violet vers Rose
       return `hsl(${280 + (ratio - 0.7) * 60}, 100%, ${50 + intensity * 20}%)`;
     }
-  };
+  }, [dynamicColors, barCount]);
 
   // Animation canvas
   useEffect(() => {
@@ -98,7 +98,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       const interpolated = interpolateData(audioData, barCount);
-      
+
       // Smoothing pour mouvement fluide
       const newSmoothedData = smoothedData.map((prev, i) => {
         const target = interpolated[i] || 0;
@@ -176,7 +176,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [audioData, barCount, maxHeight, mode, dynamicColors, mirror, smoothing, smoothedData]);
+  }, [audioData, barCount, maxHeight, mode, dynamicColors, mirror, smoothing, smoothedData, getFrequencyColor]);
 
   return (
     <div className="waveform-visualizer">
@@ -185,7 +185,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
         className="waveform-canvas"
         style={{ width: '100%', height: maxHeight }}
       />
-      
+
       {/* Overlay gradient pour effet depth */}
       <div className="waveform-overlay" />
     </div>

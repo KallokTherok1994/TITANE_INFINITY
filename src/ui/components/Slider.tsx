@@ -51,13 +51,13 @@ export const Slider = ({
   const [internalValue, setInternalValue] = useState(defaultValue);
   const [isDragging, setIsDragging] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
-  
+
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
   const percentage = ((value - min) / (max - min)) * 100;
 
-  const updateValue = (clientX: number) => {
+  const updateValue = React.useCallback((clientX: number) => {
     if (!sliderRef.current || disabled) {return;}
 
     const rect = sliderRef.current.getBoundingClientRect();
@@ -71,7 +71,7 @@ export const Slider = ({
     }
 
     onChange?.(clampedValue);
-  };
+  }, [disabled, min, max, step, isControlled, onChange]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (disabled) {return;}
@@ -79,18 +79,18 @@ export const Slider = ({
     updateValue(e.clientX);
   };
 
-  const handleMouseMove = (e: MouseEvent) => {
+  const handleMouseMove = React.useCallback((e: MouseEvent) => {
     if (isDragging) {
       updateValue(e.clientX);
     }
-  };
+  }, [isDragging, updateValue]);
 
-  const handleMouseUp = () => {
+  const handleMouseUp = React.useCallback(() => {
     if (isDragging) {
       setIsDragging(false);
       onChangeCommitted?.(value);
     }
-  };
+  }, [isDragging, value, onChangeCommitted]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (disabled) {return;}
@@ -136,7 +136,7 @@ export const Slider = ({
       };
     }
     return undefined;
-  }, [isDragging, value]);
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   const classes = [
     'slider',

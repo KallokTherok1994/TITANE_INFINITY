@@ -7,7 +7,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useSingularityState } from '@/services/singularityBridge';
-import type { SingularityState } from '@/types/singularityState';
 
 export function SingularityMonitor() {
   const {
@@ -157,7 +156,7 @@ export function SingularityMonitor() {
           />
           <MetricCard
             label="Stability"
-            value={`${(symbolic?.stability * 100).toFixed(0)}%`}
+            value={`${((symbolic?.stability ?? 0) * 100).toFixed(0)}%`}
             color="#10b981"
           />
         </div>
@@ -174,7 +173,7 @@ export function SingularityMonitor() {
           />
           <MetricCard
             label="Fitness Score"
-            value={`${(adaptive?.evolution.fitness_score * 100).toFixed(0)}%`}
+            value={`${((adaptive?.evolution.fitness_score ?? 0) * 100).toFixed(0)}%`}
             color="#10b981"
           />
           <MetricCard
@@ -211,7 +210,7 @@ export function SingularityMonitor() {
           />
           <MetricCard
             label="Runtime Health"
-            value={`${(meta?.runtime_health * 100).toFixed(0)}%`}
+            value={`${((meta?.runtime_health ?? 0) * 100).toFixed(0)}%`}
             color="#10b981"
           />
         </div>

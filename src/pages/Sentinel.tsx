@@ -21,7 +21,7 @@ import './ModulePages.css';
 
 export const Sentinel = () => {
   const { getSentinelStatus } = useTitaneCore();
-  const [status, setStatus] = useState<any>(null);
+  const [status, setStatus] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

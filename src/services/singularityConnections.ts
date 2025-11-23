@@ -325,7 +325,8 @@ export class SingularityConnections {
 
   private static calculateRuntimeHealth(): number {
     // Runtime health based on performance metrics
-    const memory = (performance as any).memory;
+    const perf = performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } };
+    const memory = perf.memory;
     if (memory) {
       const usage = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
       return Math.max(0, 1 - usage);

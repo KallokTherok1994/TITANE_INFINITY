@@ -21,7 +21,7 @@ import './ModulePages.css';
 
 export const Helios = () => {
   const { getHeliosMetrics } = useTitaneCore();
-  const [metrics, setMetrics] = useState<any>(null);
+  const [metrics, setMetrics] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

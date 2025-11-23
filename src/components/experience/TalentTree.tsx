@@ -15,13 +15,13 @@ import React from 'react';
 
 interface TalentTreeState {
 
-  branches: Record<string, any>;
+  branches: Record<string, unknown>;
 
   total_unlocked: number;
 
   total_talents: number;
 
-  global_effects: any[];
+  global_effects: unknown[];
 
 }
 

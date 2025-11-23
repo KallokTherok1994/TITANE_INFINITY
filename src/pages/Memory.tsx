@@ -33,7 +33,7 @@ export const Memory = () => {
     }
   };
 
-  const encryptedCount = entries.filter((e: any) => e.encrypted).length;
+  const encryptedCount = entries.filter((e: Record<string, unknown>) => e.encrypted).length;
   const totalEntries = entries.length;
 
   return (
@@ -104,12 +104,12 @@ export const Memory = () => {
         </div>
       ) : (
         <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '400px', overflowY: 'auto' }}>
-          {entries.map((entry: any) => (
-            <div key={entry.id} style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ marginBottom: '0.5rem', color: 'white', fontSize: '0.95rem' }}>{entry.content}</div>
+          {entries.map((entry: Record<string, unknown>) => (
+            <div key={entry.id as string} style={{ padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ marginBottom: '0.5rem', color: 'white', fontSize: '0.95rem' }}>{entry.content as string}</div>
               <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>
                 <span>{entry.encrypted ? '🔒 Chiffré' : 'Non chiffré'}</span>
-                <span>{new Date(entry.timestamp * 1000).toLocaleString()}</span>
+                <span>{new Date((entry.timestamp as number) * 1000).toLocaleString()}</span>
               </div>
             </div>
           ))}

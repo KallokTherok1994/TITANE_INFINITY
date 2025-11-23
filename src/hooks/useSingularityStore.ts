@@ -76,9 +76,12 @@ export const shallowEqual = <T,>(a: T, b: T): boolean => {
 
   if (keysA.length !== keysB.length) return false;
 
+  const objA = a as Record<string, unknown>;
+  const objB = b as Record<string, unknown>;
+
   for (const key of keysA) {
     if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
-    if ((a as any)[key] !== (b as any)[key]) return false;
+    if (objA[key] !== objB[key]) return false;
   }
 
   return true;
@@ -98,9 +101,12 @@ export const deepEqual = <T,>(a: T, b: T): boolean => {
 
   if (keysA.length !== keysB.length) return false;
 
+  const objA = a as Record<string, unknown>;
+  const objB = b as Record<string, unknown>;
+
   for (const key of keysA) {
     if (!Object.prototype.hasOwnProperty.call(b, key)) return false;
-    if (!deepEqual((a as any)[key], (b as any)[key])) return false;
+    if (!deepEqual(objA[key], objB[key])) return false;
   }
 
   return true;

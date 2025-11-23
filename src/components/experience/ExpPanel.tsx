@@ -50,10 +50,10 @@ interface ProjectState {
 }
 
 interface TalentTreeState {
-  branches: Record<string, any>;
+  branches: Record<string, unknown>;
   total_unlocked: number;
   total_talents: number;
-  global_effects: any[];
+  global_effects: unknown[];
 }
 
 export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
@@ -107,7 +107,7 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           {['overview', 'categories', 'projects', 'talents', 'timeline'].map((tab) => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as any)}
+              onClick={() => setActiveTab(tab as 'overview' | 'categories' | 'projects' | 'talents' | 'timeline')}
               style={{
                 padding: '0.5rem 1rem',
                 borderRadius: '0.5rem',

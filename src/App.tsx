@@ -90,7 +90,12 @@ const AppRouter: React.FC = () => {
       console.log('⚡ Glow:', livingEngines.state.glow.toFixed(2));
       console.log('🧠 Cognitive Load:', livingEngines.state.cognitiveLoad.toFixed(2));
     }
-  }, [livingEngines.state.initialized, livingEngines.state.persona]);
+  }, [
+    livingEngines.state.initialized,
+    livingEngines.state.persona,
+    livingEngines.state.cognitiveLoad,
+    livingEngines.state.glow,
+  ]);
 
   // Sidebar items configuration
   const sidebarItems = [

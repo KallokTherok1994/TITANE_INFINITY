@@ -24,19 +24,7 @@ export const ModeIndicator: React.FC = () => {
   const [transitioning, setTransitioning] = useState(false);
   const [history, setHistory] = useState<ModeHistory[]>([]);
 
-  useEffect(() => {
-    fetchCurrentMode();
-    fetchHistory();
-
-    // Polling toutes les 2 secondes
-    const interval = setInterval(() => {
-      fetchCurrentMode();
-    }, 2000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchCurrentMode = async () => {
+  const fetchCurrentMode = React.useCallback(async () => {
     try {
       const mode = await invoke<string>('meta_mode_get_current_mode');
       if (mode !== currentMode) {
@@ -48,16 +36,28 @@ export const ModeIndicator: React.FC = () => {
     } catch (error) {
       console.error('Erreur récupération mode:', error);
     }
-  };
+  }, [currentMode]);
 
-  const fetchHistory = async () => {
+  const fetchHistory = React.useCallback(async () => {
     try {
       const hist = await invoke<ModeHistory[]>('meta_mode_get_history');
-      setHistory(hist.slice(0, 5)); // 5 derniers
+      setHistory(hist);
     } catch (error) {
       console.error('Erreur récupération historique:', error);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCurrentMode();
+    fetchHistory();
+
+    // Polling toutes les 2 secondes
+    const interval = setInterval(() => {
+      fetchCurrentMode();
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [fetchCurrentMode, fetchHistory]);
 
   const getModeEmoji = (mode: string): string => {
     const map: Record<string, string> = {

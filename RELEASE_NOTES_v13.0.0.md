@@ -8,8 +8,8 @@
 
 **© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 
-**Release Date**: November 23, 2025  
-**Status**: ✅ PRODUCTION-READY  
+**Release Date**: November 23, 2025
+**Status**: ✅ PRODUCTION-READY
 **License**: Proprietary FR/EN (Restrictive)
 
 ---
@@ -225,8 +225,8 @@ Total: ~592 KB (~168 KB gzip)
 
 ## 📞 Contact & Support
 
-**Owner**: Kevin Thibault / Humain Total / TITANE Team  
-**Copyright**: © 2025 All Rights Reserved  
+**Owner**: Kevin Thibault / Humain Total / TITANE Team
+**Copyright**: © 2025 All Rights Reserved
 **Governing Law**: Québec and Canada
 
 **For license inquiries**:

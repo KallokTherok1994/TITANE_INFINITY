@@ -28,7 +28,7 @@ export type EngineEvent =
 // 🎨 Event data
 export interface EngineEventData {
   type: EngineEvent;
-  payload: any;
+  payload: unknown;
   timestamp: number;
 }
 

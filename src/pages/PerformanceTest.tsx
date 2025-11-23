@@ -96,8 +96,9 @@ export const PerformanceTest = () => {
   // Memory monitoring
   useEffect(() => {
     const interval = setInterval(() => {
-      if ((performance as any).memory) {
-        const memoryMB = (performance as any).memory.usedJSHeapSize / 1024 / 1024;
+      const perf = performance as { memory?: { usedJSHeapSize: number } };
+      if (perf.memory) {
+        const memoryMB = perf.memory.usedJSHeapSize / 1024 / 1024;
         setMetrics(prev => ({ ...prev, memoryUsed: memoryMB }));
       }
     }, 1000);
