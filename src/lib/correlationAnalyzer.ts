@@ -58,14 +58,18 @@ export class CorrelationAnalyzer {
     // Toutes combinaisons paires
     for (let i = 0; i < services.length; i++) {
       for (let j = i + 1; j < services.length; j++) {
+        const serviceI = services[i];
+        const serviceJ = services[j];
+        if (!serviceI || !serviceJ) continue;
+
         for (const metric of metrics) {
           const correlation = this.calculatePearsonCorrelation(
-            services[i],
-            services[j],
+            serviceI,
+            serviceJ,
             metric
           );
           if (correlation) {
-            const key = `${services[i]}_${services[j]}_${metric}`;
+            const key = `${serviceI}_${serviceJ}_${metric}`;
             this.correlationMatrix.set(key, correlation);
             pairs.push(correlation);
           }
@@ -118,8 +122,12 @@ export class CorrelationAnalyzer {
     let variance2 = 0;
 
     for (let i = 0; i < n; i++) {
-      const diff1 = aligned1[i] - mean1;
-      const diff2 = aligned2[i] - mean2;
+      const val1 = aligned1[i];
+      const val2 = aligned2[i];
+      if (val1 === undefined || val2 === undefined) continue;
+
+      const diff1 = val1 - mean1;
+      const diff2 = val2 - mean2;
       covariance += diff1 * diff2;
       variance1 += diff1 * diff1;
       variance2 += diff2 * diff2;
@@ -214,10 +222,12 @@ export class CorrelationAnalyzer {
           affected.push(targetService);
 
           // Temps propagation (approximatif)
-          const rootTs = recent[recent.length - 1].timestamp;
-          const targetTs = targetRecent[targetRecent.length - 1].timestamp;
-          const propTime = Math.abs(targetTs - rootTs);
-          minPropTime = Math.min(minPropTime, propTime);
+          const lastRecent = recent[recent.length - 1];
+          const lastTargetRecent = targetRecent[targetRecent.length - 1];
+          if (lastRecent && lastTargetRecent) {
+            const propTime = Math.abs(lastTargetRecent.timestamp - lastRecent.timestamp);
+            minPropTime = Math.min(minPropTime, propTime);
+          }
         }
       }
 
@@ -282,11 +292,11 @@ export class CorrelationAnalyzer {
    * Obtenir corrélations fortes
    */
   static getStrongCorrelations(minStrength: 'moderate' | 'strong' | 'very_strong' = 'strong'): CorrelationPair[] {
-    const strengthOrder = { weak: 0, moderate: 1, strong: 2, very_strong: 3 };
-    const minLevel = strengthOrder[minStrength];
+    const strengthOrder: Record<string, number> = { none: -1, weak: 0, moderate: 1, strong: 2, very_strong: 3 };
+    const minLevel = strengthOrder[minStrength] || 0;
 
     return Array.from(this.correlationMatrix.values()).filter(
-      (pair) => strengthOrder[pair.strength] >= minLevel
+      (pair) => (strengthOrder[pair.strength] ?? 0) >= minLevel
     );
   }
 

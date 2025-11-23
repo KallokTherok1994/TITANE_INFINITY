@@ -77,7 +77,6 @@ export class SoundEngine {
   private audioContext: AudioContext | null = null;
   private masterVolume: number = DS_CONSTANTS.audio.medium;
   private enabled: boolean = true;
-  private _soundCache: Map<SoundType, AudioBuffer> = new Map();
   private activeSounds: Map<string, AudioBufferSourceNode> = new Map();
 
   // 🌙 Mode jour/nuit

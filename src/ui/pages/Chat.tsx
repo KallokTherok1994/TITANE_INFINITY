@@ -21,7 +21,7 @@ export const Chat: React.FC = () => {
   const { messages, isLoading, error, sendMessage, clearChat } = useChat();
   const [showSettings, setShowSettings] = useState(false);
   const [voiceModeActive, setVoiceModeActive] = useState(false);
-  
+
   // TODO: Implémenter la récupération dynamique du provider status
   const [providerStatus, _setProviderStatus] = useState<ProviderStatus>({
     name: 'Gemini',
@@ -31,7 +31,7 @@ export const Chat: React.FC = () => {
 
   const handleClearChat = () => {
     if (messages.length === 0) return;
-    
+
     if (window.confirm('Effacer tout l\'historique du chat ?')) {
       clearChat();
     }
@@ -80,12 +80,12 @@ export const Chat: React.FC = () => {
         {/* Status Bar */}
         <div className="chat-status-bar">
           <div className="chat-status-item">
-            <span className={`status-indicator status-${providerStatus.status}`} 
+            <span className={`status-indicator status-${providerStatus.status}`}
                   aria-label={`Provider ${providerStatus.status}`} />
             <span className="status-label">Provider:</span>
             <span className="status-value">{providerStatus.name}</span>
           </div>
-          
+
           {providerStatus.latency && (
             <div className="chat-status-item">
               <span className="status-label">Latence:</span>

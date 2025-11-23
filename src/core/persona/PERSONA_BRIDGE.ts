@@ -1,6 +1,6 @@
 /**
  * TITANE∞ — PERSONA BRIDGE v24
- * 
+ *
  * Pont de synchronisation entre Persona Engine et autres moteurs
  * Propage l'état persona vers Glow, Motion, Sound, etc.
  */
@@ -16,10 +16,6 @@ export class PersonaBridge {
    * Synchronise tous les moteurs avec l'état persona
    */
   synchronize(): void {
-    const _personality = personalityCoreManager.getPersonality();
-    const _mood = moodEngine.getMoodState();
-    const _behavior = behavioralLayerManager.getLayer();
-    
     // Obtient multiplicateurs visuels
     const personalityMult = personalityCoreManager.getVisualMultipliers();
     const moodMult = moodEngine.getComputedVisualEffect();
@@ -42,7 +38,7 @@ export class PersonaBridge {
    */
   private applyToDOM(multipliers: Record<string, number>): void {
     const root = document.documentElement;
-    
+
     root.style.setProperty('--persona-glow', (multipliers.glow ?? 1).toFixed(3));
     root.style.setProperty('--persona-motion', (multipliers.motion ?? 1).toFixed(3));
     root.style.setProperty('--persona-sound', (multipliers.sound ?? 1).toFixed(3));
@@ -69,7 +65,7 @@ export class PersonaBridge {
   private calculatePresenceLevel(): number {
     const mood = moodEngine.getMoodState();
     const personality = personalityCoreManager.getPersonality();
-    
+
     // Présence = intensité mood * responsive personality
     return mood.intensity * personality.traits.responsive;
   }

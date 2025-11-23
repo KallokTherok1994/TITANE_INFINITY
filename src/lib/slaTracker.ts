@@ -329,7 +329,6 @@ export class SLATracker {
     const slo = this.slos.get(service);
     if (!slo) return null;
 
-    const now = Date.now();
     let periodMs = 0;
 
     switch (period) {

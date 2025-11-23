@@ -47,7 +47,7 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
 
   // Animation continue selon état
   useEffect(() => {
-    let startTime = Date.now();
+    const startTime = Date.now();
 
     const animate = () => {
       const elapsed = Date.now() - startTime;

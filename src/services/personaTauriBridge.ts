@@ -245,7 +245,16 @@ export class PersonaTauriBridge {
     }
 
     try {
-      return await personaService.getMultipliers();
+      const result = await personaService.getMultipliers();
+      // PersonaMultipliers a une structure différente, on retourne null pour l'instant
+      // TODO: mapper correctement PersonaMultipliers vers visual multipliers
+      console.warn('[PersonaTauriBridge] getMultipliers mapping not implemented');
+      return {
+        glow: result.creativity || 1,
+        motion: result.efficiency || 1,
+        sound: result.empathy || 1,
+        depth: result.analytical || 1
+      };
     } catch (error) {
       console.error('[PersonaTauriBridge] Failed to get multipliers:', error);
       return null;

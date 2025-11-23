@@ -247,7 +247,8 @@ export class IdentityEngine {
         this.identity.visual.typography.secondary,
         this.identity.visual.typography.monospace,
       ];
-      if (!validFonts.some((font) => element.typography?.includes(font.split(',')[0]))) {
+      const firstFonts = validFonts.map(f => f.split(',')[0]).filter((f): f is string => Boolean(f));
+      if (!firstFonts.some((font) => element.typography?.includes(font))) {
         issues.push(`Typographie non conforme à l'identité TITANE∞`);
       }
     }

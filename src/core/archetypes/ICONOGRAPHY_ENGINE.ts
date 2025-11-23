@@ -43,6 +43,8 @@ export class IconographyEngine {
     if (!icon) return {};
 
     const archetype = ARCHETYPES[icon.archetype];
+    if (!archetype) return {};
+
     const glowBlur = 8 + intensity * 12;
 
     return {

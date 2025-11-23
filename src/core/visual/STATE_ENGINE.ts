@@ -126,7 +126,6 @@ export const STATE_CONFIGS: Record<SystemState, StateVisualConfig> = {
 // 🧠 State Engine principal
 export class StateEngine {
   private currentState: SystemState = 'null';
-  private _previousState: SystemState | null = null;
   private stateChangeCallbacks: Array<(state: SystemState, config: StateVisualConfig) => void> = [];
 
   /**
@@ -149,7 +148,6 @@ export class StateEngine {
   setState(newState: SystemState): void {
     if (newState === this.currentState) return;
 
-    this.previousState = this.currentState;
     this.currentState = newState;
 
     const config = STATE_CONFIGS[newState];
@@ -224,7 +222,6 @@ export class StateEngine {
    */
   reset(): void {
     this.setState('null');
-    this.previousState = null;
   }
 }
 

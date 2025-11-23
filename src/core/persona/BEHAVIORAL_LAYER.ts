@@ -1,6 +1,6 @@
 /**
  * TITANE∞ — BEHAVIORAL LAYER v24
- * 
+ *
  * Définit comment le système réagit aux différents contextes :
  * - Erreurs → réaction ferme mais non anxiogène
  * - Succès → feedback calme et précis
@@ -58,7 +58,7 @@ const DEFAULT_BEHAVIORS: BehavioralLayer['reactions'] = {
 
 /**
  * Behavioral Layer Manager
- * 
+ *
  * Gère les réactions comportementales du système
  */
 export class BehavioralLayerManager {

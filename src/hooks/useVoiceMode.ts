@@ -50,7 +50,7 @@ export function useVoiceMode() {
     setError(null);
 
     try {
-      const _result = await voiceService.stopRecording();
+      await voiceService.stopRecording();
 
       setState((prev) => ({
         ...prev,

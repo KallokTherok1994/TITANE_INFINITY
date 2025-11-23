@@ -277,12 +277,6 @@ export class HoloMeshEngine {
       const cx = (node.x / 100) * width;
       const cy = (node.y / 100) * height;
       const radius = 6 + node.intensity * 8;
-      
-      // Obtenir couleur du module (avec fallback)
-      const moduleColor = DS_COLORS[node.module as keyof typeof DS_COLORS];
-      const _color = (moduleColor && typeof moduleColor !== 'string' && 'hex' in moduleColor) 
-        ? moduleColor.hex 
-        : DS_COLORS.diamant.hex;
 
       svg += `
         <circle

@@ -520,7 +520,7 @@ export class BundleSizeMonitor {
 // Types pour PerformanceEventTiming et LayoutShiftEntry
 declare global {
   interface PerformanceEventTiming extends PerformanceEntry {
-    processingStart: number;
+    readonly processingStart: number;
   }
 
   interface LayoutShiftEntry extends PerformanceEntry {

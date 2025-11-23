@@ -14,7 +14,6 @@ import { CognitiveModuleCard } from '../components/monitoring/CognitiveModuleCar
 import { LivingEnginesCard } from '../components/monitoring/LivingEnginesCard';
 import { useTitaneCore } from '../hooks';
 import { useLivingEngines } from '../hooks';
-import { extractString } from '../utils/dataUtils';
 import '../design-system/titane-v20.css';
 
 export const DevTools = () => {
@@ -67,8 +66,6 @@ export const DevTools = () => {
     return () => clearInterval(interval);
   }, [livingEngines.state.persona]);
 
-  const _systemStatusStr = extractString(systemStatus, 'Unknown');
-  const _errorStr = extractString(error, 'No errors');
   const errorCount = error ? 3 : 0;
 
   // Determine system status

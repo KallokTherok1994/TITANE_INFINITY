@@ -1,13 +1,13 @@
 /**
  * TITANE∞ — PERSONALITY CORE v24
- * 
+ *
  * Définit la personnalité fondamentale du système :
  * - calme
  * - précis
  * - analytique
  * - stable
  * - responsive
- * 
+ *
  * Personnalité non-humaine, non-anthropomorphique, mais reconnaissable.
  */
 
@@ -15,7 +15,7 @@ import type { PersonalityCore } from '../ARCHITECTURE_TYPES_v24-v∞';
 
 /**
  * Personnalité fondamentale TITANE∞
- * 
+ *
  * Ces valeurs définissent le "caractère" intrinsèque du système.
  * Elles sont stables et évoluent très lentement.
  */
@@ -63,7 +63,7 @@ export const TEMPERAMENTS = {
 
 /**
  * PersonalityCore Manager
- * 
+ *
  * Gère l'évolution très lente de la personnalité selon les contextes
  */
 export class PersonalityCoreManager {
@@ -92,7 +92,7 @@ export class PersonalityCoreManager {
   ): void {
     const current = this.personality.traits[trait];
     const delta = (target - current) * this.evolutionRate * urgency;
-    
+
     this.personality.traits[trait] = Math.max(
       0,
       Math.min(1, current + delta)
@@ -141,11 +141,11 @@ export class PersonalityCoreManager {
    */
   adaptToSystemStress(stress: number): void {
     // 0 = calme, 1 = stress maximum
-    
+
     // Sous stress : moins calme, plus réactif
     this.adjustTrait('calm', 1 - stress * 0.5, 2);
     this.adjustTrait('responsive', 0.5 + stress * 0.5, 2);
-    
+
     // Toujours maintenir précision et stabilité élevées
     this.adjustTrait('precise', 0.92, 1);
     this.adjustTrait('stable', 0.90, 1);
@@ -175,10 +175,10 @@ export class PersonalityCoreManager {
    */
   getPersonalityDescription(): string {
     const { traits, temperament } = this.personality;
-    
+
     const sorted = Object.entries(traits)
       .sort(([, a], [, b]) => b - a);
-    const dominant = sorted.length > 0 ? sorted[0][0] : 'calm';
+    const dominant = (sorted.length > 0 && sorted[0]) ? sorted[0][0] : 'calm';
 
     return `${temperament} - dominant: ${dominant}`;
   }

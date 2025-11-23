@@ -1,9 +1,9 @@
 /**
  * TITANE∞ — MOOD ENGINE v24
- * 
+ *
  * Gère l'humeur opérationnelle du système (non-anthropomorphique).
  * L'humeur reflète l'état système de manière perceptible visuellement.
- * 
+ *
  * Humeurs disponibles :
  * - clair    : stable, tout va bien
  * - vibrant  : haute activité, énergie élevée
@@ -14,7 +14,6 @@
  */
 
 import type { MoodState, MoodType, SystemState } from '../ARCHITECTURE_TYPES_v24-v∞';
-import { DS_CONSTANTS } from '../visual/DS_CONSTANTS';
 
 /**
  * Mapping état système → humeur
@@ -78,13 +77,12 @@ const MOOD_INTENSITY: Record<MoodType, number> = {
 
 /**
  * Mood Engine
- * 
+ *
  * Détermine et gère l'humeur actuelle du système
  */
 export class MoodEngine {
   private currentMood: MoodState;
   private moodHistory: Array<{ mood: MoodType; timestamp: number }> = [];
-  private _transitionDuration: number = DS_CONSTANTS.timing.medium; // 220ms
 
   constructor() {
     this.currentMood = {
@@ -101,7 +99,7 @@ export class MoodEngine {
    */
   updateFromSystemState(state: SystemState): void {
     const newMood = STATE_TO_MOOD[state];
-    
+
     if (newMood !== this.currentMood.current) {
       this.transitionToMood(newMood, state);
     } else {
@@ -174,7 +172,7 @@ export class MoodEngine {
 
     // Retourne le plus fréquent
     const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
-    if (sorted.length === 0) return 'clair';
+    if (sorted.length === 0 || !sorted[0]) return 'clair';
     return sorted[0][0] as MoodType;
   }
 
@@ -202,7 +200,7 @@ export class MoodEngine {
   getMoodDescription(): string {
     const { current, intensity, duration } = this.currentMood;
     const durationSec = Math.floor(duration / 1000);
-    
+
     return `${current} (${Math.round(intensity * 100)}%) depuis ${durationSec}s`;
   }
 
@@ -218,7 +216,7 @@ export class MoodEngine {
    */
   generateCSSVariables(): Record<string, string> {
     const effect = this.getComputedVisualEffect();
-    
+
     return {
       '--mood-glow': effect.glowMultiplier.toFixed(3),
       '--mood-motion': effect.motionMultiplier.toFixed(3),
