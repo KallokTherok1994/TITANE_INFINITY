@@ -14,7 +14,6 @@ pub mod monitor;
 // pub use diagnostics::SelfDiagnostics;
 
 use serde::{Deserialize, Serialize};
-use std::time::{Duration, Instant};
 
 /// État de santé du système
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -44,10 +43,10 @@ pub enum IssueType {
 pub struct SystemIncident {
     pub id: String,
     pub issue_type: IssueType,
-    pub detected_at: Instant,
-    pub resolved_at: Option<Instant>,
+    pub detected_at: u64,          // ms since epoch
+    pub resolved_at: Option<u64>,  // ms since epoch
     pub auto_recovered: bool,
-    pub recovery_duration: Option<Duration>,
+    pub recovery_duration_ms: Option<u64>,
 }
 
 impl SystemIncident {
@@ -55,18 +54,18 @@ impl SystemIncident {
         Self {
             id: uuid::Uuid::new_v4().to_string(),
             issue_type,
-            detected_at: Instant::now(),
+            detected_at: crate::core::utils::now_ms(),
             resolved_at: None,
             auto_recovered: false,
-            recovery_duration: None,
+            recovery_duration_ms: None,
         }
     }
 
     pub fn mark_resolved(&mut self, auto_recovered: bool) {
-        let now = Instant::now();
+        let now = crate::core::utils::now_ms();
         self.resolved_at = Some(now);
         self.auto_recovered = auto_recovered;
-        self.recovery_duration = Some(now.duration_since(self.detected_at));
+        self.recovery_duration_ms = Some(now.saturating_sub(self.detected_at));
     }
 }
 
@@ -94,10 +93,10 @@ mod tests {
     #[test]
     fn test_incident_resolution() {
         let mut incident = SystemIncident::new(IssueType::TTSFailure);
-        
+
         std::thread::sleep(Duration::from_millis(10));
         incident.mark_resolved(true);
-        
+
         assert!(incident.auto_recovered);
         assert!(incident.resolved_at.is_some());
         assert!(incident.recovery_duration.is_some());

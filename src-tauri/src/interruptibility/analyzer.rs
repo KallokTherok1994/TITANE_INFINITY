@@ -5,7 +5,6 @@
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 use super::InterruptionCause;
-use std::time::{Duration, Instant};
 
 /// Analyseur d'interruptions
 pub struct InterruptionAnalyzer {
@@ -18,12 +17,12 @@ pub struct InterruptionAnalyzer {
 /// Événement d'interruption
 #[derive(Debug, Clone)]
 struct InterruptionEvent {
-    /// Timestamp
-    timestamp: Instant,
+    /// Timestamp (ms since epoch)
+    timestamp: u64,
     /// Cause détectée
     cause: InterruptionCause,
     /// Temps depuis le début de la réponse IA (ms)
-    response_time: Duration,
+    response_time_ms: u64,
     /// Longueur de la réponse avant interruption (mots)
     response_length: usize,
     /// Contexte émotionnel
@@ -70,7 +69,7 @@ impl InterruptionAnalyzer {
     /// Analyse une interruption et détermine sa cause
     pub fn analyze_interruption(
         &mut self,
-        response_time: Duration,
+        response_time_ms: u64,
         response_length: usize,
         user_input: &str,
         emotion_intensity: f32,
@@ -82,7 +81,7 @@ impl InterruptionAnalyzer {
         };
 
         // Détection basée sur le timing
-        let timing_cause = self.analyze_timing(response_time);
+        let timing_cause = self.analyze_timing(response_time_ms);
 
         // Détection basée sur le contenu
         let content_cause = self.analyze_content(user_input);
@@ -100,9 +99,9 @@ impl InterruptionAnalyzer {
 
         // Enregistrer l'événement
         self.history.push(InterruptionEvent {
-            timestamp: Instant::now(),
+            timestamp: crate::core::utils::now_ms(),
             cause: cause.clone(),
-            response_time,
+            response_time_ms,
             response_length,
             emotional_context,
         });
@@ -114,12 +113,9 @@ impl InterruptionAnalyzer {
     }
 
     /// Analyse basée sur le timing
-    fn analyze_timing(&self, response_time: Duration) -> Option<InterruptionCause> {
-        let ms = response_time.as_millis() as u64;
-
-        if ms < self.thresholds.very_quick_interrupt_ms {
-            Some(InterruptionCause::Confusion)
-        } else if ms < self.thresholds.quick_interrupt_ms {
+    fn analyze_timing(&self, response_time_ms: u64) -> Option<InterruptionCause> {
+        if response_time_ms < self.thresholds.very_quick_interrupt_ms {
+        } else if response_time_ms < self.thresholds.quick_interrupt_ms {
             Some(InterruptionCause::Impatience)
         } else {
             None
@@ -131,7 +127,7 @@ impl InterruptionAnalyzer {
         let input_lower = user_input.to_lowercase();
 
         // Mots-clés de correction
-        if input_lower.contains("non") || input_lower.contains("faux") || 
+        if input_lower.contains("non") || input_lower.contains("faux") ||
            input_lower.contains("erreur") || input_lower.contains("pas ça") {
             return Some(InterruptionCause::Correction);
         }
@@ -198,10 +194,10 @@ impl InterruptionAnalyzer {
     }
 
     /// Calcule le taux d'interruption récent
-    pub fn calculate_interruption_rate(&self, window: Duration) -> f32 {
-        let now = Instant::now();
+    pub fn calculate_interruption_rate(&self, window_ms: u64) -> f32 {
+        let now = crate::core::utils::now_ms();
         let recent = self.history.iter()
-            .filter(|e| now.duration_since(e.timestamp) < window)
+            .filter(|e| now.saturating_sub(e.timestamp) < window_ms)
             .count();
 
         // Normaliser sur une échelle 0.0-1.0
@@ -220,21 +216,21 @@ impl InterruptionAnalyzer {
         let impatience_count = self.history.iter().filter(|e| matches!(e.cause, InterruptionCause::Impatience)).count();
 
         let avg_response_time = self.history.iter()
-            .map(|e| e.response_time.as_millis())
-            .sum::<u128>() / total as u128;
+            .map(|e| e.response_time_ms)
+            .sum::<u64>() / total as u64;
 
         InterruptionStats {
             total_interruptions: total,
             confusion_rate: confusion_count as f32 / total as f32,
             correction_rate: correction_count as f32 / total as f32,
             impatience_rate: impatience_count as f32 / total as f32,
-            avg_response_time_ms: avg_response_time as u64,
+            avg_response_time_ms: avg_response_time,
         }
     }
 
     /// Nettoie l'historique ancien
     fn cleanup_old_history(&mut self) {
-        let cutoff = Instant::now() - Duration::from_secs(3600); // 1 heure
+        let cutoff = crate::core::utils::now_ms().saturating_sub(3600_000); // 1 heure
         self.history.retain(|e| e.timestamp > cutoff);
     }
 }
@@ -256,7 +252,7 @@ mod tests {
     #[test]
     fn test_timing_analysis() {
         let analyzer = InterruptionAnalyzer::new();
-        
+
         // Très rapide = confusion
         let cause = analyzer.analyze_timing(Duration::from_millis(300));
         assert!(matches!(cause, Some(InterruptionCause::Confusion)));
@@ -280,7 +276,7 @@ mod tests {
     #[test]
     fn test_interruption_rate() {
         let mut analyzer = InterruptionAnalyzer::new();
-        
+
         // Simuler 3 interruptions
         for _ in 0..3 {
             analyzer.analyze_interruption(

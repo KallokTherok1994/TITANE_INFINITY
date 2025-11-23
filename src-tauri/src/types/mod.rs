@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 — TYPES MODULE
+//   TITANE∞ v14 — TYPES MODULE
 //   All business types centralized
 // ═══════════════════════════════════════════════════════════════
 
@@ -30,3 +30,9 @@ pub use evolution::{
 
 // Re-export shared types (unified HealthStatus, ModuleHealthInfo, etc.)
 pub use shared::{HealthStatus, ModuleHealthInfo, SystemMetrics, LogLevel, CognitiveNode};
+
+// Re-export AppError for backward compatibility
+pub use crate::utils::AppError;
+
+// Type alias for ModuleHealth (deprecated, use ModuleHealthInfo)
+pub type ModuleHealth = ModuleHealthInfo;

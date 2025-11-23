@@ -26,7 +26,7 @@ pub enum HealthStatus {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleHealth {
     pub name: String,
-    pub status: HealthStatus,
+    pub status: crate::types::shared::HealthStatus,
     pub uptime: u64,
     pub last_tick: u64,
     pub message: String,
@@ -36,7 +36,7 @@ pub struct ModuleHealth {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[allow(dead_code)]
 pub struct SystemStatus {
-    pub modules: Vec<ModuleHealth>,
+    pub modules: Vec<crate::types::shared::ModuleHealthInfo>,
 }
 
 /// System metrics

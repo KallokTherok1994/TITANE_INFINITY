@@ -139,7 +139,7 @@ pub async fn api_request(
     request: ApiRequest,
     state: State<'_, ApiBridgeState>,
 ) -> Result<ApiResponse, String> {
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
 
     println!("[API_BRIDGE] {} {} /{}", request.method, request.api_name, request.endpoint);
 
@@ -182,7 +182,7 @@ pub async fn api_request(
     // Effectuer requête
     let response = execute_http_request(&url, &request, &config).await?;
 
-    let latency_ms = start.elapsed().as_millis() as u64;
+    let latency_ms = crate::core::utils::elapsed_ms(start);
 
     // Mettre à jour stats
     update_stats(&state, &request.api_name, response.success, latency_ms);

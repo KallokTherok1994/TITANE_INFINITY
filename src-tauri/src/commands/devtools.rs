@@ -349,13 +349,9 @@ pub async fn discover_cores(
     for name in core_names {
         if let Some(module) = reg.get_core(&name) {
             let health = module.health_check().await
-                .unwrap_or(CoreHealth {
-                    is_healthy: false,
-                    message: "Failed to check health".to_string(),
-                    uptime_seconds: 0,
-                });
+                .unwrap_or(CoreHealth::Offline);
 
-            let status = if health.is_healthy {
+            let status = if matches!(health, CoreHealth::Healthy) {
                 CoreHealthStatus::Healthy
             } else {
                 CoreHealthStatus::Degraded

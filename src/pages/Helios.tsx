@@ -19,9 +19,21 @@ import { useTitaneCore } from '../hooks';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
+interface HeliosMetrics {
+  bpm?: number;
+  vitality_score?: number;
+  vitality?: number;
+  system_load?: number;
+  load?: number;
+  status?: string;
+  temperature?: number;
+  uptime?: number;
+  [key: string]: any;
+}
+
 export const Helios = () => {
   const { getHeliosMetrics } = useTitaneCore();
-  const [metrics, setMetrics] = useState<unknown>(null);
+  const [metrics, setMetrics] = useState<HeliosMetrics | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

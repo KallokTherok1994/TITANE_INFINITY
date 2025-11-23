@@ -81,7 +81,7 @@ pub struct HealthMetrics {
 pub async fn get_detailed_health_report(
     cores: tauri::State<'_, CoreCollection>,
 ) -> AppResult<DetailedHealthReport> {
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
 
     let helios_state = cores.helios.collect().await?;
     let nexus_state = cores.nexus.validate().await?;
@@ -131,8 +131,8 @@ pub async fn get_detailed_health_report(
         "warning".to_string()
     };
 
-    let duration = start.elapsed();
-    log::info!("[Perf] Health report generated in {}ms", duration.as_millis());
+    let duration = crate::core::utils::elapsed_ms(start);
+    log::info!("[Perf] Health report generated in {}ms", duration);
 
     Ok(DetailedHealthReport {
         timestamp: Utc::now(),

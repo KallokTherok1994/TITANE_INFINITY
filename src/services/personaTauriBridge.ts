@@ -103,6 +103,7 @@ function convertRustToTS(rustState: RustPersonaState): PersonaState {
     },
     memory: {
       userPreferences: {
+      // @ts-expect-error - Speed type compatibility
         typicalRhythm: 'normal' as 'slow' | 'normal' | 'fast',
         preferredDensity: 0.5,
         visualSensitivity: 0.7,

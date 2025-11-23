@@ -91,7 +91,7 @@ impl ResponseAdaptor {
             }
         }
 
-        self.state.last_update = std::time::Instant::now();
+        self.state.last_update = crate::core::utils::now_ms();
     }
 
     /// Génère une configuration d'adaptation
@@ -124,7 +124,7 @@ impl ResponseAdaptor {
 
         // Tronquer intelligemment à la phrase complète la plus proche
         let truncated = words[..self.state.optimal_length].join(" ");
-        
+
         // Trouver la dernière phrase complète
         if let Some(last_period) = truncated.rfind('.') {
             truncated[..=last_period].to_string()
@@ -163,7 +163,7 @@ impl ResponseAdaptor {
     /// Génère un prompt système adapté pour l'IA
     pub fn generate_system_prompt(&self) -> String {
         let config = self.generate_config();
-        
+
         let length_instruction = match config.style {
             ResponseStyle::Concise => "Sois très concis et direct. Maximum 50 mots.".to_string(),
             ResponseStyle::Balanced => format!("Réponds de manière équilibrée, environ {} mots.", config.target_length),
@@ -210,9 +210,9 @@ mod tests {
     fn test_confusion_adaptation() {
         let mut adaptor = ResponseAdaptor::new(ConversationState::default());
         let initial_length = adaptor.state.optimal_length;
-        
+
         adaptor.adapt_to_interruption(&InterruptionCause::Confusion);
-        
+
         assert!(adaptor.state.optimal_length < initial_length);
         assert_eq!(adaptor.state.style, ConversationStyle::Brief);
     }
@@ -221,9 +221,9 @@ mod tests {
     fn test_impatience_adaptation() {
         let mut adaptor = ResponseAdaptor::new(ConversationState::default());
         let initial_speed = adaptor.state.preferred_speed;
-        
+
         adaptor.adapt_to_interruption(&InterruptionCause::Impatience);
-        
+
         assert!(adaptor.state.preferred_speed > initial_speed);
         assert!(adaptor.state.optimal_length < 150);
     }
@@ -241,7 +241,7 @@ mod tests {
 
         let adjusted = adaptor.adjust_response_length(long_text);
         let word_count = adjusted.split_whitespace().count();
-        
+
         assert!(word_count <= 25); // Un peu de marge pour les phrases complètes
     }
 
@@ -249,7 +249,7 @@ mod tests {
     fn test_system_prompt_generation() {
         let adaptor = ResponseAdaptor::new(ConversationState::default());
         let prompt = adaptor.generate_system_prompt();
-        
+
         assert!(prompt.contains("TITANE∞"));
         assert!(prompt.contains("Longueur"));
         assert!(prompt.contains("Profondeur"));
@@ -260,7 +260,7 @@ mod tests {
         let adaptor = ResponseAdaptor::new(ConversationState::default());
         let text = "First sentence. Second sentence? Third sentence!";
         let with_pauses = adaptor.insert_pause_markers(text);
-        
+
         assert!(with_pauses.contains("[PAUSE_SHORT]"));
     }
 }

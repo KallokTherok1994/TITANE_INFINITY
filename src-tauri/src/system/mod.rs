@@ -1,33 +1,12 @@
-// TITANE∞ v17.2.0 - System Modules (Phase 3 cleanup)
+// TITANE∞ v14 - System Modules (Cleaned up)
 // Exports all system modules
 
-// ✅ MODULES ACTIFS (4 modules)
+// ✅ MODULES ACTIFS
 pub mod adaptive_engine;  // Moteur adaptatif
 pub mod self_heal;        // Self-healing
 pub mod watchdog;         // Surveillance système
 pub mod persona_engine;   // ✅ Persona Engine v24
-
-// ⚠️ SUPPRIMÉS - Migrated to plugin_system/cores/
-// pub mod harmonia;     → plugin_system/cores/harmonia.rs
-// pub mod helios;       → plugin_system/cores/helios.rs
-// pub mod memory;       → plugin_system/cores/memory.rs
-// pub mod nexus;        → plugin_system/cores/nexus.rs
-// pub mod sentinel;     → plugin_system/cores/sentinel.rs
-
-// ⚠️ MODULES TEMPORAIREMENT DÉSACTIVÉS - Correction en cours v11.0
-// pub mod memory_v2;
-// pub mod resonance;
-// pub mod cortex;
-// pub mod senses;
-// pub mod ans;
-// pub mod swarm;
-// pub mod field;
-// pub mod continuum;
-// pub mod cortex_sync;
-// pub mod kernel;
-// pub mod secureflow;
-// pub mod lowflow;
-// pub mod stability;
+pub mod memory;           // ✅ Memory stub (compat)
 // pub mod integrity;
 // pub mod balance;
 // pub mod pulse;

@@ -15,7 +15,6 @@ pub mod window;
 // pub use window::InterruptWindow;
 
 use serde::{Deserialize, Serialize};
-use std::time::{Duration, Instant};
 
 /// Cause d'interruption détectée
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -52,8 +51,8 @@ pub struct ConversationState {
     pub depth_level: u8,
     /// Style conversationnel détecté
     pub style: ConversationStyle,
-    /// Timestamp du dernier ajustement
-    pub last_update: Instant,
+    /// Timestamp du dernier ajustement (ms since epoch)
+    pub last_update: u64,
 }
 
 /// Style conversationnel de l'utilisateur
@@ -82,7 +81,7 @@ impl Default for ConversationState {
             preferred_speed: 2.5,
             depth_level: 3,
             style: ConversationStyle::Casual,
-            last_update: Instant::now(),
+            last_update: crate::core::utils::now_ms(),
         }
     }
 }
@@ -95,7 +94,7 @@ pub struct NaturalPause {
     /// Type de pause
     pub pause_type: PauseType,
     /// Durée recommandée (ms)
-    pub duration: Duration,
+    pub duration_ms: u64,
 }
 
 #[derive(Debug, Clone, PartialEq)]

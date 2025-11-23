@@ -1,5 +1,5 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v17.2.0 - Tauri Commands Central Hub                                ║
+// ║ TITANE∞ v14 - Tauri Commands Central Hub                                    ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
@@ -7,6 +7,10 @@ pub mod meta_mode;
 pub mod exp_fusion;
 pub mod evolution;
 pub mod devtools;
+pub mod engine_v14;  // ✅ NEW: SingularityEngine v14 commands
+
+// Re-export engine commands
+pub use engine_v14::*;
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;

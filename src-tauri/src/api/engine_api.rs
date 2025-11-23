@@ -9,7 +9,7 @@ use crate::{
     types::{EvolutionReport, EvolutionState, HealthStatus},
     utils::AppResult,
 };
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
 #[tauri::command]
 pub async fn run_evolution(
@@ -19,7 +19,7 @@ pub async fn run_evolution(
     sentinel: tauri::State<'_, SentinelCore>,
     evolution: tauri::State<'_, AutoEvolutionEngine>,
 ) -> AppResult<EvolutionReport> {
-    let start = Instant::now();
+    let start = crate::core::utils::now_ms();
     log::info!("[Engine] Starting evolution cycle...");
 
     let helios_state = helios.collect().await?;
@@ -33,8 +33,8 @@ pub async fn run_evolution(
 
     let report = match result {
         Ok(Ok(report)) => {
-            let duration = start.elapsed();
-            log::info!("[Perf] Evolution cycle completed in {}ms", duration.as_millis());
+            let duration = crate::core::utils::elapsed_ms(start);
+            log::info!("[Perf] Evolution cycle completed in {}ms", duration);
             report
         },
         Ok(Err(e)) => {

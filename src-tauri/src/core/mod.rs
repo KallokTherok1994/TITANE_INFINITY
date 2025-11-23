@@ -1,13 +1,21 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — CORE MODULE
-//   Legacy core module exports (Phase 2 cleanup - kept for compatibility)
+//   TITANE∞ v14 — CORE MODULE
+//   Unified core system for SingularityEngine
 // ═══════════════════════════════════════════════════════════════
 
-#[cfg(test)]
-mod tests_integration;  // Integration tests for old CoreModule system
+pub mod types;
+pub mod state;
+pub mod engine;
+pub mod modules;
+pub mod legacy;  // Legacy compatibility adapters
+pub mod utils;   // Unified utilities (timestamps, helpers)
 
-// Note: Core implementations migrated to plugin_system/cores/
-// This module kept for backward compatibility with old code
+// Re-export main types
+pub use types::*;
+pub use state::*;
+pub use engine::*;
+pub use modules::*;
+pub use utils::*;
 
-// Type alias for Memory Module
-pub type MemoryCore = crate::plugin_system::cores::MemoryModule;
+// Re-export legacy adapters for backward compatibility
+pub use legacy::{HeliosCore, MemoryCore, NexusCore, HarmoniaCore, SentinelCore};

@@ -379,14 +379,14 @@ export type EngineState = Record<string, unknown>;
  */
 export interface UnityState {
   // Références tous les sous-états
-  glow: EngineState;                // GlowState depuis v21
-  motion: EngineState;              // MotionState depuis v21
+  glow: EngineState | null;                // GlowState depuis v21
+  motion: EngineState | null;              // MotionState depuis v21
   state: SystemState;
-  sound: EngineState;               // SoundState depuis v22
-  mesh: EngineState;                // MeshState depuis v22
-  depth: EngineState;               // DepthState depuis v22
-  archetypes: EngineState;          // ArchetypeState depuis v22
-  cognitive: EngineState;           // CognitiveState depuis v23
+  sound: EngineState | null;               // SoundState depuis v22
+  mesh: EngineState | null;                // MeshState depuis v22
+  depth: EngineState | null;               // DepthState depuis v22
+  archetypes: EngineState | null;          // ArchetypeState depuis v22
+  cognitive: EngineState | null;           // CognitiveState depuis v23
   persona: PersonaState;
   semiotics: SemioticsState;
   lore: LoreState;

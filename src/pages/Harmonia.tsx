@@ -21,7 +21,7 @@ import './ModulePages.css';
 
 export const Harmonia = () => {
   const { getHarmoniaFlows } = useTitaneCore();
-  const [flows, setFlows] = useState<unknown>(null);
+  const [flows, setFlows] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

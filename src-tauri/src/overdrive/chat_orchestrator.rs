@@ -131,7 +131,7 @@ pub async fn chat_send_message(
     mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
 
     // Liste des providers à essayer (ordre de priorité)
     let providers_to_try: Vec<String> = if request.provider == "auto" {
@@ -166,7 +166,7 @@ pub async fn chat_send_message(
 
         match result {
             Ok(message) => {
-                let latency_ms = start.elapsed().as_millis() as u64;
+                let latency_ms = crate::core::utils::elapsed_ms(start);
 
                 // Stocker dans la conversation
                 if let Some(conv_id) = &request.conversation_id {

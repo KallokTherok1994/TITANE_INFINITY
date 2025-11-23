@@ -6,7 +6,6 @@
 
 use super::{ConversationState, ConversationStyle, InterruptionCause};
 use std::collections::VecDeque;
-use std::time::{Duration, Instant};
 
 /// Apprend et adapte le style conversationnel
 pub struct ConversationLearner {
@@ -14,18 +13,18 @@ pub struct ConversationLearner {
     interaction_history: VecDeque<Interaction>,
     /// État conversationnel courant
     current_state: ConversationState,
-    /// Fenêtre d'apprentissage
-    learning_window: Duration,
+    /// Fenêtre d'apprentissage (ms)
+    learning_window_ms: u64,
 }
 
 #[derive(Debug, Clone)]
 struct Interaction {
-    timestamp: Instant,
+    timestamp: u64,
     user_input_length: usize,
     ai_response_length: usize,
     was_interrupted: bool,
     interruption_cause: Option<InterruptionCause>,
-    response_time: Duration,
+    response_time_ms: u64,
 }
 
 impl ConversationLearner {
@@ -34,7 +33,7 @@ impl ConversationLearner {
         Self {
             interaction_history: VecDeque::with_capacity(100),
             current_state: ConversationState::default(),
-            learning_window: Duration::from_secs(600), // 10 minutes
+            learning_window_ms: 600_000, // 10 minutes
         }
     }
 
@@ -45,15 +44,15 @@ impl ConversationLearner {
         ai_response: &str,
         was_interrupted: bool,
         interruption_cause: Option<InterruptionCause>,
-        response_time: Duration,
+        response_time_ms: u64,
     ) {
         let interaction = Interaction {
-            timestamp: Instant::now(),
+            timestamp: crate::core::utils::now_ms(),
             user_input_length: user_input.split_whitespace().count(),
             ai_response_length: ai_response.split_whitespace().count(),
             was_interrupted,
             interruption_cause,
-            response_time,
+            response_time_ms,
         };
 
         self.interaction_history.push_back(interaction);
@@ -69,10 +68,10 @@ impl ConversationLearner {
 
     /// Met à jour l'état conversationnel basé sur l'historique
     fn update_state(&mut self) {
-        let now = Instant::now();
+        let now = crate::core::utils::now_ms();
         let recent: Vec<&Interaction> = self.interaction_history
             .iter()
-            .filter(|i| now.duration_since(i.timestamp) < self.learning_window)
+            .filter(|i| now.saturating_sub(i.timestamp) < self.learning_window_ms)
             .collect();
 
         if recent.is_empty() {
@@ -92,9 +91,9 @@ impl ConversationLearner {
             let avg_length: usize = successful_responses.iter()
                 .map(|i| i.ai_response_length)
                 .sum::<usize>() / successful_responses.len();
-            
+
             // Ajuster progressivement (lissage)
-            self.current_state.optimal_length = 
+            self.current_state.optimal_length =
                 (self.current_state.optimal_length as f32 * 0.7 + avg_length as f32 * 0.3) as usize;
         }
 
@@ -107,7 +106,7 @@ impl ConversationLearner {
         // Ajuster la profondeur
         self.current_state.depth_level = self.calculate_preferred_depth(&recent);
 
-        self.current_state.last_update = Instant::now();
+        self.current_state.last_update = crate::core::utils::now_ms();
     }
 
     /// Détecte le style conversationnel préféré
@@ -278,7 +277,7 @@ mod tests {
     #[test]
     fn test_interaction_recording() {
         let mut learner = ConversationLearner::new();
-        
+
         learner.record_interaction(
             "test input",
             "test response",
@@ -327,7 +326,7 @@ mod tests {
 
         // Réponses de 100 mots non interrompues
         let response = "word ".repeat(100);
-        
+
         for _ in 0..5 {
             learner.record_interaction(
                 "test",

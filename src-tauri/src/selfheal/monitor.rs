@@ -8,7 +8,6 @@ use super::{HealthStatus, IssueType, SystemIncident};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use std::time::{Duration, Instant};
 
 /// Surveillance système
 pub struct SystemMonitor {
@@ -22,7 +21,7 @@ pub struct SystemMonitor {
 struct ModuleHealth {
     name: String,
     status: HealthStatus,
-    last_check: Instant,
+    last_check: u64,      // ms since epoch
     response_time_ms: u64,
     error_count: u32,
 }
@@ -45,7 +44,7 @@ impl SystemMonitor {
 
         // Initialiser les modules à surveiller
         let modules = vec![
-            "ASR", "TTS", "Ollama", "Gemini", "Memory", 
+            "ASR", "TTS", "Ollama", "Gemini", "Memory",
             "Duplex", "Wakeword", "Emotion", "Interruptibility"
         ];
 
@@ -56,7 +55,7 @@ impl SystemMonitor {
                 ModuleHealth {
                     name: module.to_string(),
                     status: HealthStatus::Healthy,
-                    last_check: Instant::now(),
+                    last_check: crate::core::utils::now_ms(),
                     response_time_ms: 0,
                     error_count: 0,
                 },
@@ -67,7 +66,7 @@ impl SystemMonitor {
     /// Vérifie la santé d'un module spécifique
     pub async fn check_module_health(&self, module_name: &str) -> Result<HealthStatus, String> {
         let health_map = self.module_health.read().await;
-        
+
         match health_map.get(module_name) {
             Some(health) => Ok(health.status.clone()),
             None => Err(format!("Module {} not monitored", module_name)),
@@ -77,10 +76,10 @@ impl SystemMonitor {
     /// Enregistre une erreur de module
     pub async fn report_module_error(&self, module_name: &str, _error_msg: &str) {
         let mut health_map = self.module_health.write().await;
-        
+
         if let Some(health) = health_map.get_mut(module_name) {
             health.error_count += 1;
-            health.last_check = Instant::now();
+            health.last_check = crate::core::utils::now_ms();
 
             // Dégrader le statut selon le nombre d'erreurs
             health.status = match health.error_count {
@@ -93,7 +92,7 @@ impl SystemMonitor {
             if matches!(health.status, HealthStatus::Critical) {
                 let issue_type = Self::error_to_issue_type(module_name);
                 let incident = SystemIncident::new(issue_type);
-                
+
                 let mut incidents = self.incidents.write().await;
                 incidents.push(incident);
             }
@@ -106,11 +105,11 @@ impl SystemMonitor {
     /// Enregistre une récupération de module
     pub async fn report_module_recovery(&self, module_name: &str) {
         let mut health_map = self.module_health.write().await;
-        
+
         if let Some(health) = health_map.get_mut(module_name) {
             health.status = HealthStatus::Healthy;
             health.error_count = 0;
-            health.last_check = Instant::now();
+            health.last_check = crate::core::utils::now_ms();
         }
 
         self.update_global_health().await;
@@ -119,7 +118,7 @@ impl SystemMonitor {
     /// Met à jour le statut de santé global
     async fn update_global_health(&self) {
         let health_map = self.module_health.read().await;
-        
+
         let critical_count = health_map.values()
             .filter(|h| matches!(h.status, HealthStatus::Critical))
             .count();
@@ -164,8 +163,8 @@ impl SystemMonitor {
     /// Nettoie les anciens incidents (> 1 heure)
     pub async fn cleanup_old_incidents(&self) {
         let mut incidents = self.incidents.write().await;
-        let cutoff = Instant::now() - Duration::from_secs(3600);
-        
+        let cutoff = crate::core::utils::now_ms().saturating_sub(3600_000); // 1 heure
+
         incidents.retain(|i| i.detected_at > cutoff);
     }
 }
@@ -185,7 +184,7 @@ mod tests {
     async fn test_start_monitoring() {
         let monitor = SystemMonitor::new();
         monitor.start_monitoring().await;
-        
+
         let health_map = monitor.module_health.read().await;
         assert!(health_map.contains_key("ASR"));
         assert!(health_map.contains_key("TTS"));
@@ -195,9 +194,9 @@ mod tests {
     async fn test_error_reporting() {
         let monitor = SystemMonitor::new();
         monitor.start_monitoring().await;
-        
+
         monitor.report_module_error("ASR", "Test error").await;
-        
+
         let status = monitor.check_module_health("ASR").await.unwrap();
         assert_eq!(status, HealthStatus::Degraded);
     }
@@ -206,10 +205,10 @@ mod tests {
     async fn test_recovery_reporting() {
         let monitor = SystemMonitor::new();
         monitor.start_monitoring().await;
-        
+
         monitor.report_module_error("ASR", "Error").await;
         monitor.report_module_recovery("ASR").await;
-        
+
         let status = monitor.check_module_health("ASR").await.unwrap();
         assert_eq!(status, HealthStatus::Healthy);
     }

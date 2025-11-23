@@ -21,7 +21,7 @@ import './ModulePages.css';
 
 export const Nexus = () => {
   const { getNexusGraph } = useTitaneCore();
-  const [_graphData, _setGraphData] = useState<unknown>(null);
+  const [graph, setGraph] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

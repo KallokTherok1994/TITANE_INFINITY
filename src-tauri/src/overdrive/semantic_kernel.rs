@@ -157,7 +157,7 @@ pub async fn semantic_execute_skill(
     request: SemanticRequest,
     state: State<'_, SemanticKernelState>,
 ) -> Result<SemanticResponse, String> {
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
 
     println!("[SEMANTIC] Exécution skill: {}", request.skill_name);
 
@@ -180,7 +180,7 @@ pub async fn semantic_execute_skill(
     // Exécuter via Chat Orchestrator (TODO: intégration)
     let output = execute_prompt(&prompt).await?;
 
-    let latency_ms = start.elapsed().as_millis() as u64;
+    let latency_ms = crate::core::utils::elapsed_ms(start);
 
     Ok(SemanticResponse {
         skill_name: request.skill_name,

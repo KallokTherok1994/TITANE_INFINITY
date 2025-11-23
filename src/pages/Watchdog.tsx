@@ -21,7 +21,7 @@ import './ModulePages.css';
 
 export const Watchdog = () => {
   const { getWatchdogData } = useTitaneCore();
-  const [data, setData] = useState<unknown>(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

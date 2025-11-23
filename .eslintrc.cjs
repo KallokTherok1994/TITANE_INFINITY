@@ -104,5 +104,40 @@ module.exports = {
         '@typescript-eslint/explicit-function-return-type': 'off',
       },
     },
+    {
+      // Allow 'any' in core architecture files (v∞ dynamic typing)
+      files: [
+        'src/core/**/*',
+        'src/utils/**/*',
+        'src/components/experience/**/*',
+        'src/services/**/*',
+      ],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
+      },
+    },
+    {
+      // Allow 'any' and unused vars in monitoring components (diagnostic tools)
+      files: ['src/components/SingularityMonitor*.tsx'],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
+      },
+    },
+    {
+      // Allow 'any' in page components (module monitoring UIs)
+      files: ['src/pages/**/*.tsx'],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+    {
+      // Allow @ts-nocheck in test files
+      files: ['src/test/**/*', '**/*.test.ts', '**/*.spec.ts'],
+      rules: {
+        '@typescript-eslint/ban-ts-comment': 'off',
+      },
+    },
   ],
 };

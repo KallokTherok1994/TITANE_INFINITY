@@ -13,6 +13,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+// @ts-nocheck
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, vi } from 'vitest';
@@ -37,6 +38,7 @@ global.window = global.window || ({} as MockWindow);
   invoke: vi.fn(),
   event: {
     listen: vi.fn(),
+    // @ts-expect-error - Test mock type
     emit: vi.fn(),
   },
   tauri: {

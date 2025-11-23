@@ -106,15 +106,15 @@ pub async fn initialize_all_cores(
 ) -> Result<InitializationReport, String> {
     let orchestrator = CoreOrchestrator::new(registry.inner().clone());
 
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
     let report = orchestrator.initialize_all().await
         .map_err(|e| format!("Initialization failed: {}", e))?;
-    let duration = start.elapsed();
+    let duration = crate::core::utils::elapsed_ms(start);
 
     Ok(InitializationReport {
         successful: report.successful_modules,
         failed: report.failed_modules,
-        total_time_ms: duration.as_millis(),
+        total_time_ms: duration as u128,
     })
 }
 
@@ -127,15 +127,15 @@ pub async fn shutdown_all_cores(
 ) -> Result<ShutdownReport, String> {
     let orchestrator = CoreOrchestrator::new(registry.inner().clone());
 
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
     let report = orchestrator.shutdown_all().await
         .map_err(|e| format!("Shutdown failed: {}", e))?;
-    let duration = start.elapsed();
+    let duration = crate::core::utils::elapsed_ms(start);
 
     Ok(ShutdownReport {
         successful: report.successful_shutdowns,
         failed: report.failed_shutdowns,
-        total_time_ms: duration.as_millis(),
+        total_time_ms: duration as u128,
     })
 }
 

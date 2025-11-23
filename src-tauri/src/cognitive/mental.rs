@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::time::{Duration, Instant};
 
 /// Mode cognitif actif de l'utilisateur
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -61,15 +60,15 @@ pub struct CognitiveTask {
     pub complexity: f32,       // 0.0 → 1.0
     pub progress: f32,         // 0.0 → 1.0
     pub mental_load: f32,      // 0.0 → 1.0 (charge actuelle)
-    pub started_at: Instant,
+    pub started_at: u64,       // ms since epoch
     pub interruptions: Vec<InterruptionEvent>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InterruptionEvent {
-    pub timestamp: Instant,
+    pub timestamp: u64,        // ms since epoch
     pub cause: String,
-    pub duration: Duration,
+    pub duration_ms: u64,
 }
 
 /// État du centre mental (charge cognitive)

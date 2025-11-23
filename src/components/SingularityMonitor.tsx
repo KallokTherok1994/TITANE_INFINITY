@@ -1,42 +1,95 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — SINGULARITY MONITOR
- * Composant démo pour monitorer SingularityState en temps réel
+ * TITANE∞ v14 — SINGULARITY ENGINE MONITOR
+ * Composant pour monitorer le SingularityEngine v14 en temps réel
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import React, { useEffect, useState } from 'react';
-import { useSingularityState } from '@/services/singularityBridge';
+import { invoke } from '@tauri-apps/api/core';
+
+interface EngineMetrics {
+  ticks: number;
+  stability: number;
+  latency_ms: number;
+  last_update_ms: number;
+  error_count: number;
+  success_rate: number;
+}
+
+interface ModuleInfo {
+  name: string;
+  version: string;
+  initialized: boolean;
+  health: any;
+}
 
 export function SingularityMonitor() {
-  const {
-    state,
-    coherence,
-    isCritical,
-    physical,
-    cognitive,
-    symbolic,
-    adaptive,
-    meta,
-  } = useSingularityState();
-
+  const [metrics, setMetrics] = useState<EngineMetrics | null>(null);
+  const [modules, setModules] = useState<ModuleInfo[]>([]);
+  const [health, setHealth] = useState<string>('Unknown');
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
 
-  // Track state changes
   useEffect(() => {
-    if (state) {
-      setLastUpdate(new Date());
-    }
-  }, [state]);
+    let mounted = true;
+    let interval: any;
 
-  if (!state) {
+    const init = async () => {
+      try {
+        await invoke('engine_init');
+        if (mounted) {
+          console.log('✅ SingularityEngine v14 initialized');
+        }
+
+        // Poll engine state
+        interval = setInterval(async () => {
+          if (!mounted) return;
+
+          try {
+            // Tick the engine
+            await invoke('engine_tick');
+
+            // Get metrics
+            const m = await invoke<EngineMetrics>('engine_metrics');
+            setMetrics(m);
+
+            // Get health
+            const h = await invoke<any>('engine_health');
+            setHealth(Object.keys(h)[0] || 'Unknown');
+
+            // Get modules (less frequently)
+            if (m.ticks % 5 === 0) {
+              const mods = await invoke<ModuleInfo[]>('engine_modules');
+              setModules(mods);
+            }
+
+            setLastUpdate(new Date());
+          } catch (error) {
+            console.error('Engine poll error:', error);
+          }
+        }, 1000);
+      } catch (error) {
+        console.error('Engine init error:', error);
+      }
+    };
+
+    init();
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+      invoke('engine_stop').catch(console.error);
+    };
+  }, []);
+
+  if (!metrics) {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h2 style={styles.title}>🌌 SingularityState Monitor</h2>
-          <span style={styles.badge}>Loading...</span>
+          <h2 style={styles.title}>🌟 SingularityEngine v14</h2>
+          <span style={styles.badge}>Initializing...</span>
         </div>
-        <p style={styles.loading}>Synchronizing with backend Rust...</p>
+        <p style={styles.loading}>Starting unified engine...</p>
       </div>
     );
   }
@@ -45,12 +98,12 @@ export function SingularityMonitor() {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h2 style={styles.title}>🌌 SingularityState Monitor</h2>
+        <h2 style={styles.title}>🌌 SingularityEngine v14</h2>
         <span style={{
           ...styles.badge,
-          background: isCritical ? '#ef4444' : coherence > 0.8 ? '#10b981' : '#f59e0b',
+          background: health === 'Healthy' ? '#10b981' : health === 'Degraded' ? '#f59e0b' : '#ef4444',
         }}>
-          {isCritical ? '⚠️ CRITICAL' : coherence > 0.8 ? '✅ HEALTHY' : '⚠️ WARNING'}
+          {health === 'Healthy' ? '✅ HEALTHY' : health === 'Degraded' ? '⚠️ DEGRADED' : '❌ FAILING'}
         </span>
       </div>
 
@@ -59,178 +112,62 @@ export function SingularityMonitor() {
         <h3 style={styles.sectionTitle}>🎯 Global Metrics</h3>
         <div style={styles.metrics}>
           <MetricCard
-            label="Global Coherence"
-            value={`${(coherence * 100).toFixed(1)}%`}
-            color={coherence > 0.8 ? '#10b981' : coherence > 0.5 ? '#f59e0b' : '#ef4444'}
+            label="Ticks"
+            value={metrics.ticks.toString()}
+            color="#6366f1"
           />
           <MetricCard
-            label="Timestamp"
-            value={new Date(state.timestamp).toLocaleTimeString()}
-            color="#6366f1"
+            label="Stability"
+            value={`${(metrics.stability * 100).toFixed(1)}%`}
+            color={metrics.stability > 0.8 ? '#10b981' : metrics.stability > 0.5 ? '#f59e0b' : '#ef4444'}
+          />
+          <MetricCard
+            label="Latency"
+            value={`${metrics.latency_ms}ms`}
+            color={metrics.latency_ms < 100 ? '#10b981' : metrics.latency_ms < 500 ? '#f59e0b' : '#ef4444'}
+          />
+          <MetricCard
+            label="Success Rate"
+            value={`${(metrics.success_rate * 100).toFixed(1)}%`}
+            color={metrics.success_rate > 0.9 ? '#10b981' : metrics.success_rate > 0.7 ? '#f59e0b' : '#ef4444'}
           />
           <MetricCard
             label="Last Update"
             value={lastUpdate.toLocaleTimeString()}
-            color="#8b5cf6"
-          />
-          <MetricCard
-            label="Signature"
-            value={state.signature.slice(0, 12) + '...'}
-            color="#ec4899"
-          />
-        </div>
-      </div>
-
-      {/* Physical Layer */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>⚡ Physical Layer</h3>
-        <div style={styles.metrics}>
-          <MetricCard
-            label="CPU Usage"
-            value={`${((physical?.metrics.cpu_usage ?? 0) * 100).toFixed(1)}%`}
-            color="#ef4444"
-          />
-          <MetricCard
-            label="Memory Usage"
-            value={`${((physical?.metrics.memory_usage ?? 0) * 100).toFixed(1)}%`}
-            color="#f59e0b"
-          />
-          <MetricCard
-            label="Performance Score"
-            value={`${((physical?.metrics.performance_score ?? 0) * 100).toFixed(0)}%`}
-            color="#10b981"
-          />
-          <MetricCard
-            label="System Health"
-            value={`${((physical?.system_health.global_health ?? 0) * 100).toFixed(0)}%`}
-            color="#3b82f6"
-          />
-        </div>
-      </div>
-
-      {/* Cognitive Layer */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>🧠 Cognitive Layer</h3>
-        <div style={styles.metrics}>
-          <MetricCard
-            label="Total Memories"
-            value={cognitive?.memory.total_memories.toString() || '0'}
-            color="#8b5cf6"
-          />
-          <MetricCard
-            label="Active Memories"
-            value={cognitive?.memory.active_memories.toString() || '0'}
-            color="#ec4899"
-          />
-          <MetricCard
-            label="Knowledge Entries"
-            value={cognitive?.knowledge.total_entries.toString() || '0'}
             color="#6366f1"
           />
-          <MetricCard
-            label="Coherence"
-            value={`${((cognitive?.coherence ?? 0) * 100).toFixed(0)}%`}
-            color="#10b981"
-          />
         </div>
       </div>
 
-      {/* Symbolic Layer */}
+      {/* Modules */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>🎭 Symbolic Layer</h3>
-        <div style={styles.metrics}>
-          <MetricCard
-            label="Persona"
-            value={symbolic?.persona.name || 'Unknown'}
-            color="#ec4899"
-          />
-          <MetricCard
-            label="Mood"
-            value={symbolic?.persona.mood || 'neutre'}
-            color="#f59e0b"
-          />
-          <MetricCard
-            label="Archetype"
-            value={symbolic?.archetype.active_archetype || 'helios'}
-            color="#8b5cf6"
-          />
-          <MetricCard
-            label="Stability"
-            value={`${((symbolic?.stability ?? 0) * 100).toFixed(0)}%`}
-            color="#10b981"
-          />
+        <h3 style={styles.sectionTitle}>⚙️ Modules ({modules.length})</h3>
+        <div style={styles.modules}>
+          {modules.map((mod) => (
+            <div key={mod.name} style={styles.moduleCard}>
+              <div style={styles.moduleName}>{mod.name}</div>
+              <div style={styles.moduleVersion}>{mod.version}</div>
+              <div style={{
+                ...styles.moduleStatus,
+                background: mod.initialized ? '#10b981' : '#6b7280',
+              }}>
+                {mod.initialized ? '✓ Ready' : '○ Pending'}
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
-
-      {/* Adaptive Layer */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>🔄 Adaptive Layer</h3>
-        <div style={styles.metrics}>
-          <MetricCard
-            label="Generation"
-            value={adaptive?.evolution.generation.toString() || '0'}
-            color="#6366f1"
-          />
-          <MetricCard
-            label="Fitness Score"
-            value={`${((adaptive?.evolution.fitness_score ?? 0) * 100).toFixed(0)}%`}
-            color="#10b981"
-          />
-          <MetricCard
-            label="Auto-Heal"
-            value={adaptive?.auto_heal.active ? '✅ Active' : '❌ Inactive'}
-            color={adaptive?.auto_heal.active ? '#10b981' : '#ef4444'}
-          />
-          <MetricCard
-            label="Errors Healed"
-            value={adaptive?.auto_heal.errors_healed.toString() || '0'}
-            color="#8b5cf6"
-          />
-        </div>
-      </div>
-
-      {/* Meta Layer */}
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>🔧 Meta Layer</h3>
-        <div style={styles.metrics}>
-          <MetricCard
-            label="Active Page"
-            value={meta?.ui.active_page || '/'}
-            color="#3b82f6"
-          />
-          <MetricCard
-            label="Runtime Version"
-            value={meta?.runtime.version || '17.3.0'}
-            color="#6366f1"
-          />
-          <MetricCard
-            label="Environment"
-            value={meta?.runtime.environment || 'dev'}
-            color="#f59e0b"
-          />
-          <MetricCard
-            label="Runtime Health"
-            value={`${((meta?.runtime_health ?? 0) * 100).toFixed(0)}%`}
-            color="#10b981"
-          />
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div style={styles.footer}>
-        <p style={styles.footerText}>
-          🔄 Real-time sync: Backend Rust ↔ Frontend React via Tauri Events
-        </p>
-        <p style={styles.footerText}>
-          ⚡ Latency target: &lt; 50ms | 📡 16 Commands | 🎯 5 Layers
-        </p>
       </div>
     </div>
   );
 }
 
-// Helper component
-function MetricCard({ label, value, color }: { label: string; value: string; color: string }) {
+interface MetricCardProps {
+  label: string;
+  value: string;
+  color: string;
+}
+
+function MetricCard({ label, value, color }: MetricCardProps) {
   return (
     <div style={styles.metricCard}>
       <div style={styles.metricLabel}>{label}</div>
@@ -239,44 +176,38 @@ function MetricCard({ label, value, color }: { label: string; value: string; col
   );
 }
 
-// Inline styles (production: move to CSS modules)
 const styles: Record<string, React.CSSProperties> = {
   container: {
-    padding: '20px',
-    background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
+    padding: '24px',
+    background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
     borderRadius: '12px',
-    color: '#fff',
-    maxWidth: '1200px',
-    margin: '20px auto',
-    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+    color: '#e2e8f0',
+    fontFamily: 'Inter, system-ui, sans-serif',
   },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '24px',
+    borderBottom: '2px solid #334155',
     paddingBottom: '16px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
   },
   title: {
     margin: 0,
-    fontSize: '28px',
+    fontSize: '24px',
     fontWeight: 'bold',
-    background: 'linear-gradient(90deg, #a78bfa, #ec4899)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
+    color: '#f1f5f9',
   },
   badge: {
-    padding: '6px 16px',
-    borderRadius: '20px',
+    padding: '6px 12px',
+    borderRadius: '6px',
     fontSize: '14px',
-    fontWeight: 'bold',
-    background: '#10b981',
+    fontWeight: '600',
+    background: '#6366f1',
   },
   loading: {
     textAlign: 'center',
-    padding: '40px',
-    color: '#a78bfa',
+    color: '#94a3b8',
     fontSize: '16px',
   },
   section: {
@@ -286,42 +217,58 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: '18px',
     fontWeight: '600',
     marginBottom: '12px',
-    color: '#e0e7ff',
+    color: '#cbd5e1',
   },
   metrics: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
     gap: '12px',
   },
   metricCard: {
-    background: 'rgba(255, 255, 255, 0.05)',
+    background: '#1e293b',
     padding: '16px',
     borderRadius: '8px',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
-    transition: 'transform 0.2s, box-shadow 0.2s',
-    cursor: 'default',
+    border: '1px solid #334155',
   },
   metricLabel: {
     fontSize: '12px',
-    color: '#a5b4fc',
-    marginBottom: '6px',
+    color: '#94a3b8',
+    marginBottom: '4px',
     textTransform: 'uppercase',
-    letterSpacing: '0.5px',
   },
   metricValue: {
     fontSize: '20px',
     fontWeight: 'bold',
   },
-  footer: {
-    marginTop: '24px',
-    paddingTop: '16px',
-    borderTop: '1px solid rgba(255, 255, 255, 0.1)',
-    textAlign: 'center',
+  modules: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+    gap: '12px',
   },
-  footerText: {
-    margin: '6px 0',
-    fontSize: '13px',
-    color: '#a5b4fc',
+  moduleCard: {
+    background: '#1e293b',
+    padding: '12px',
+    borderRadius: '8px',
+    border: '1px solid #334155',
+  },
+  moduleName: {
+    fontSize: '14px',
+    fontWeight: '600',
+    color: '#f1f5f9',
+    marginBottom: '4px',
+  },
+  moduleVersion: {
+    fontSize: '12px',
+    color: '#94a3b8',
+    marginBottom: '8px',
+  },
+  moduleStatus: {
+    display: 'inline-block',
+    padding: '4px 8px',
+    borderRadius: '4px',
+    fontSize: '11px',
+    fontWeight: '600',
+    color: '#fff',
   },
 };
 

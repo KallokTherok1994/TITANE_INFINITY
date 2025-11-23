@@ -21,7 +21,7 @@
  */
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import type {
   SingularityState,
   PhysicalLayer,

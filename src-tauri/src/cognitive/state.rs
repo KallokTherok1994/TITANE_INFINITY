@@ -1,6 +1,5 @@
 use crate::cognitive::{BodyState, HeartState, MentalState};
 use serde::{Deserialize, Serialize};
-use std::time::Instant;
 
 /// État cognitif global unifiant les trois centres
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -17,9 +16,8 @@ pub struct CognitiveState {
     /// Scores de cohérence inter-centres
     pub coherence: CenterCoherence,
 
-    /// Timestamp de l'état
-    #[serde(skip)]
-    pub timestamp: Instant,
+    /// Timestamp de l'état (ms since epoch)
+    pub timestamp: u64,
 }
 
 impl Default for CognitiveState {
@@ -29,7 +27,7 @@ impl Default for CognitiveState {
             heart: HeartState::default(),
             body: BodyState::default(),
             coherence: CenterCoherence::default(),
-            timestamp: Instant::now(),
+            timestamp: crate::core::utils::now_ms(),
         }
     }
 }

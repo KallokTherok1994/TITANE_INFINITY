@@ -389,7 +389,7 @@ pub fn task_delete(task_id: String, state: State<ProjectAutoPilotState>) -> Resu
 
 #[tauri::command]
 pub fn autopilot_run(state: State<ProjectAutoPilotState>) -> Result<AutoPilotReport, String> {
-    let start = std::time::Instant::now();
+    let start = crate::core::utils::now_ms();
 
     println!("[AUTOPILOT] Démarrage analyse complète...");
 
@@ -428,7 +428,7 @@ pub fn autopilot_run(state: State<ProjectAutoPilotState>) -> Result<AutoPilotRep
     let mut state_suggestions = state.suggestions.lock().unwrap();
     *state_suggestions = suggestions.clone();
 
-    let execution_time = start.elapsed().as_secs();
+    let execution_time = crate::core::utils::elapsed_ms(start) / 1000;
 
     println!(
         "[AUTOPILOT] Terminé en {}s - {} suggestions, {} actions",
