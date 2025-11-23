@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "17.2.0",
-  "description": "TITANE∞ v17.2.0 - Modular Architecture Complete: Plugin System + DevTools + Cognitive Engine + 23 Tauri Commands, 100% Tauri v2, Rust Backend, Production-Ready",
+  "version": "17.3.0",
+  "description": "TITANE∞ v17.3.0 - Phase 8 Complete: Production Hardening + Multi-Platform Deployment, 100% Tauri v2, Rust Backend, Production-Ready",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch & tauri dev",

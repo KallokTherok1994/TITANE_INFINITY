@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "TITANE∞ v17.2",
-  "version": "17.2.0",
+  "productName": "TITANE∞ v17.3",
+  "version": "17.3.0",
   "identifier": "com.titane.infinity",
   "build": {
     "beforeDevCommand": "pnpm run build",
@@ -21,14 +21,14 @@
     "resources": [],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "Modular Architecture Complete - Plugin System + DevTools + Cognitive Engine",
-    "longDescription": "TITANE∞ v17.2.0 - Complete Modular Architecture with Plugin System (5 files), DevTools Observability (3 files), Cognitive Engine (5 files), 23 Tauri Commands, 80+ Tests, 100% Tauri v2, Production-Ready"
+    "shortDescription": "Phase 8 Complete - Production Hardening + Multi-Platform Deployment",
+    "longDescription": "TITANE∞ v17.3.0 - Phase 8 Production Hardening: ErrorBoundary, Performance Monitoring, Accessibility WCAG 2.1 AA, Security Hardening, Bundle Optimization, Multi-Platform CI/CD (Linux/Windows/macOS), 100% Tauri v2, Production-Ready"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "TITANE∞ v17.0",
+        "title": "TITANE∞ v17.3",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,
