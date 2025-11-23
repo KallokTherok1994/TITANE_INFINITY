@@ -88,22 +88,22 @@ export function SingularityMonitor() {
         <div style={styles.metrics}>
           <MetricCard
             label="CPU Usage"
-            value={`${(physical?.metrics.cpu_usage * 100).toFixed(1)}%`}
+            value={`${((physical?.metrics.cpu_usage ?? 0) * 100).toFixed(1)}%`}
             color="#ef4444"
           />
           <MetricCard
             label="Memory Usage"
-            value={`${(physical?.metrics.memory_usage * 100).toFixed(1)}%`}
+            value={`${((physical?.metrics.memory_usage ?? 0) * 100).toFixed(1)}%`}
             color="#f59e0b"
           />
           <MetricCard
             label="Performance Score"
-            value={`${(physical?.metrics.performance_score * 100).toFixed(0)}%`}
+            value={`${((physical?.metrics.performance_score ?? 0) * 100).toFixed(0)}%`}
             color="#10b981"
           />
           <MetricCard
             label="System Health"
-            value={`${(physical?.system_health.global_health * 100).toFixed(0)}%`}
+            value={`${((physical?.system_health.global_health ?? 0) * 100).toFixed(0)}%`}
             color="#3b82f6"
           />
         </div>
