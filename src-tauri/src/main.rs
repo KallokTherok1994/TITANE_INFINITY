@@ -21,7 +21,7 @@ mod plugin_system;
 
 use app::setup::TitaneApp;
 use tauri::Manager;
-use std::sync::Mutex;
+use tokio::sync::Mutex;
 use system::persona_engine::PersonaEngine;
 
 fn main() {

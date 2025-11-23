@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use tauri::State;
-use std::sync::Mutex;
+use tokio::sync::Mutex;
 use super::{PersonaEngine, PersonaState, SystemMetrics};
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -22,7 +22,7 @@ pub async fn persona_initialize() -> Result<String, String> {
 pub async fn persona_get_state(
     engine: State<'_, Mutex<PersonaEngine>>
 ) -> Result<PersonaState, String> {
-    let engine = engine.lock().map_err(|e| e.to_string())?;
+    let engine = engine.lock().await;
     Ok(engine.get_state())
 }
 
@@ -35,14 +35,14 @@ pub async fn persona_update(
     memory: f32,
     errors: u32,
 ) -> Result<PersonaState, String> {
-    let engine = engine.lock().map_err(|e| e.to_string())?;
-    
+    let engine = engine.lock().await;
+
     let metrics = SystemMetrics {
         cpu,
         memory,
         errors,
     };
-    
+
     engine.update(&system_state, metrics);
     Ok(engine.get_state())
 }
@@ -53,7 +53,7 @@ pub async fn persona_react(
     engine: State<'_, Mutex<PersonaEngine>>,
     reaction_type: String,
 ) -> Result<PersonaState, String> {
-    let engine = engine.lock().map_err(|e| e.to_string())?;
+    let engine = engine.lock().await;
     engine.react(&reaction_type);
     Ok(engine.get_state())
 }
@@ -63,7 +63,7 @@ pub async fn persona_react(
 pub async fn persona_reset(
     engine: State<'_, Mutex<PersonaEngine>>
 ) -> Result<PersonaState, String> {
-    let engine = engine.lock().map_err(|e| e.to_string())?;
+    let engine = engine.lock().await;
     engine.reset();
     Ok(engine.get_state())
 }
@@ -73,9 +73,9 @@ pub async fn persona_reset(
 pub async fn persona_get_multipliers(
     engine: State<'_, Mutex<PersonaEngine>>
 ) -> Result<serde_json::Value, String> {
-    let engine = engine.lock().map_err(|e| e.to_string())?;
+    let engine = engine.lock().await;
     let state = engine.get_state();
-    
+
     Ok(serde_json::json!({
         "glow": state.visual_multipliers.glow,
         "motion": state.visual_multipliers.motion,

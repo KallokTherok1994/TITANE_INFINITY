@@ -6,9 +6,14 @@
 #![allow(dead_code)] // Logging infrastructure - used by monitoring
 
 use chrono::Local;
-use std::sync::Mutex;
+use tokio::sync::Mutex;
+use std::sync::OnceLock;
 
-static LOG_BUFFER: Mutex<Vec<String>> = Mutex::new(Vec::new());
+static LOG_BUFFER: OnceLock<Mutex<Vec<String>>> = OnceLock::new();
+
+fn get_log_buffer() -> &'static Mutex<Vec<String>> {
+    LOG_BUFFER.get_or_init(|| Mutex::new(Vec::new()))
+}
 const MAX_BUFFER_SIZE: usize = 1000;
 
 /// Log info message
@@ -40,44 +45,43 @@ pub fn log_error(module: &str, message: &str) {
 
 /// Store log in memory buffer (circular buffer)
 fn store_log(message: String) {
-    if let Ok(mut buffer) = LOG_BUFFER.lock() {
+    tokio::spawn(async move {
+        let mut buffer = get_log_buffer().lock().await;
         if buffer.len() >= MAX_BUFFER_SIZE {
             buffer.remove(0);
         }
         buffer.push(message);
-    }
+    });
 }
 
 /// Retrieve recent logs
-pub fn get_recent_logs(count: usize) -> Vec<String> {
-    LOG_BUFFER
-        .lock()
-        .map(|buffer| {
-            let start = buffer.len().saturating_sub(count);
-            buffer[start..].to_vec()
-        })
-        .unwrap_or_default()
+pub async fn get_recent_logs(count: usize) -> Vec<String> {
+    let buffer = get_log_buffer().lock().await;
+    let start = buffer.len().saturating_sub(count);
+    buffer[start..].to_vec()
 }
 
 /// Clear log buffer
-pub fn clear_logs() {
-    if let Ok(mut buffer) = LOG_BUFFER.lock() {
-        buffer.clear();
-    }
+pub async fn clear_logs() {
+    let mut buffer = get_log_buffer().lock().await;
+    buffer.clear();
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_logging() {
-        clear_logs();
+    #[tokio::test]
+    async fn test_logging() {
+        clear_logs().await;
         log_info("test", "info message");
         log_warn("test", "warn message");
         log_error("test", "error message");
 
-        let logs = get_recent_logs(10);
+        // Wait a bit for async spawn to complete
+        tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+
+        let logs = get_recent_logs(10).await;
         assert_eq!(logs.len(), 3);
     }
 }

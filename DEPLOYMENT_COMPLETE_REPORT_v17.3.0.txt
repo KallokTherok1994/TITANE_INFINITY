@@ -181,11 +181,11 @@ Formats générés:
     ✅ titane-infinity_17.3.0_amd64.deb
     ✅ titane-infinity_17.3.0_amd64.AppImage
     ✅ titane-infinity-17.3.0-1.x86_64.rpm
-  
+
   Windows (2):
     ✅ titane-infinity_17.3.0_x64_en-US.msi
     ✅ titane-infinity.exe
-  
+
   macOS (2):
     ✅ titane-infinity_17.3.0_x64.dmg (Intel)
     ✅ titane-infinity_17.3.0_aarch64.dmg (Apple Silicon)
@@ -438,7 +438,7 @@ Les problèmes identifiés (tests Vitest, build local Rust) sont:
 ═══════════════════════════════════════════════════════════════════════════
 
                     🚀 DEPLOYMENT COMPLETE 🚀
-                    
+
            Prochain checkpoint dans 15-25 minutes
                pour vérifier succès du build CI/CD
 
