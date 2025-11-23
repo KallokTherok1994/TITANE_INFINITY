@@ -64,7 +64,7 @@ docker run --rm \
 if [ $? -eq 0 ]; then
     log_success "Build terminé avec succès!"
     log_info "Artefacts disponibles dans src-tauri/target/release/bundle/"
-    
+
     # Lister les artefacts
     if [ -d "$PROJECT_ROOT/src-tauri/target/release/bundle" ]; then
         echo ""
