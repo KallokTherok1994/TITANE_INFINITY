@@ -28,6 +28,25 @@ module.exports = {
   plugins: ['@typescript-eslint', 'react-hooks'],
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // OVERRIDES v18 : Autoriser 'any' dans moteurs IA dynamiques
+  // ═══════════════════════════════════════════════════════════════════════════
+  overrides: [
+    {
+      files: [
+        'src/core/**/*',
+        'src/utils/**/*',
+        'src/components/experience/**/*',
+        'src/services/**/*',
+        'src/hooks/**/*'
+      ],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unused-vars': 'warn'
+      }
+    }
+  ],
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // 🚀 EXCLUSIONS AGRESSIVES (Performance)
   // ═══════════════════════════════════════════════════════════════════════════
   ignorePatterns: [

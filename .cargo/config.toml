@@ -1,0 +1,22 @@
+# Cargo configuration for TITANE∞ in Flatpak environment
+# Allows access to host system libraries (WebKit)
+
+[build]
+# Use system libraries from host
+rustflags = [
+    "-L", "/usr/lib/x86_64-linux-gnu",
+    "-L", "/usr/lib",
+]
+
+[env]
+# Point pkg-config to host system
+PKG_CONFIG_PATH = "/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/lib/pkgconfig:/usr/share/pkgconfig"
+PKG_CONFIG_ALLOW_SYSTEM_CFLAGS = "1"
+PKG_CONFIG_ALLOW_SYSTEM_LIBS = "1"
+
+[target.x86_64-unknown-linux-gnu]
+# Link against host libraries
+rustflags = [
+    "-L", "/usr/lib/x86_64-linux-gnu",
+    "-L", "/usr/lib",
+]

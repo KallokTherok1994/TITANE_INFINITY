@@ -9,11 +9,12 @@
 // TITANE∞ v17.3.0 - ChatWindow Component
 // Main chat interface with messages, input, and status
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
+import { useSingularityState } from '../core/state/SingularityState';
 // No CSS import needed - styles are global
 
 export interface ChatWindowProps {
@@ -27,23 +28,60 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 }) => {
   const { messages, isLoading, error, sendMessage } = useChat();
   const { status: connectionStatus } = useConnection();
+  const setAIStatus = useSingularityState((state) => state.setAIStatus);
+  const setAIError = useSingularityState((state) => state.setAIError);
 
   const [input, setInput] = useState('');
+  const [retrying, setRetrying] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  const handleSendWithRetry = useCallback(async (prompt: string, retries = 3) => {
+    for (let attempt = 0; attempt < retries; attempt++) {
+      try {
+        setAIStatus('processing');
+
+        // Timeout après 30s
+        const timeoutPromise = new Promise((_, reject) => {
+          timeoutRef.current = setTimeout(() => reject(new Error('Timeout')), 30000);
+        });
+
+        await Promise.race([sendMessage(prompt), timeoutPromise]);
+
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        setAIStatus('idle');
+        setAIError(null);
+        return;
+      } catch (err) {
+        console.warn(`Tentative ${attempt + 1}/${retries} échouée:`, err);
+
+        if (attempt < retries - 1) {
+          // Exponential backoff: 1s, 2s, 4s
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        } else {
+          // Fallback local après 3 échecs
+          setAIError('Modèle distant indisponible. Basculer sur Ollama local?');
+          setAIStatus('error');
+        }
+      }
+    }
+  }, [sendMessage, setAIStatus, setAIError]);
+
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading || retrying) return;
 
     const prompt = input.trim();
     setInput('');
 
-    await sendMessage(prompt);
+    setRetrying(true);
+    await handleSendWithRetry(prompt);
+    setRetrying(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

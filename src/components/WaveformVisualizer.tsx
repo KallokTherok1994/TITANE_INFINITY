@@ -60,7 +60,12 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
     return result;
   };
 
-  // Obtenir couleur selon fréquence
+  // Limiter FPS à 30 pour performance
+  const lastFrameTimeRef = useRef(0);
+  const targetFPS = 30;
+  const frameDuration = React.useMemo(() => 1000 / targetFPS, [targetFPS]);
+
+  // Obtenir couleur selon fréquence (mémoïsé)
   const getFrequencyColor = React.useCallback((index: number, value: number): string => {
     if (!dynamicColors) return '#3b82f6';
 
@@ -94,7 +99,14 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
     canvas.height = rect.height * dpr;
     ctx.scale(dpr, dpr);
 
-    const draw = () => {
+    const draw = (timestamp: number) => {
+      // Throttle à 30 FPS
+      if (timestamp - lastFrameTimeRef.current < frameDuration) {
+        animationRef.current = requestAnimationFrame(draw);
+        return;
+      }
+      lastFrameTimeRef.current = timestamp;
+
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       const interpolated = interpolateData(audioData, barCount);
@@ -176,7 +188,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [audioData, barCount, maxHeight, mode, dynamicColors, mirror, smoothing, smoothedData, getFrequencyColor]);
+  }, [audioData, barCount, maxHeight, mode, dynamicColors, mirror, smoothing, smoothedData, getFrequencyColor, frameDuration]);
 
   return (
     <div className="waveform-visualizer">

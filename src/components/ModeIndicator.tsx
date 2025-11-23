@@ -9,7 +9,7 @@
 // 🎯 Mode Indicator — Affichage mode actif + transitions
 // Indicateur visuel compact du mode Meta-Mode actuel
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 // import './ModeIndicator.css';
 
@@ -18,7 +18,7 @@ interface ModeHistory {
   timestamp: string;
 }
 
-export const ModeIndicator: React.FC = () => {
+export const ModeIndicator: React.FC = React.memo(() => {
   const [currentMode, setCurrentMode] = useState<string>('Digital Twin');
   const [previousMode, setPreviousMode] = useState<string>('');
   const [transitioning, setTransitioning] = useState(false);
@@ -59,32 +59,33 @@ export const ModeIndicator: React.FC = () => {
     return () => clearInterval(interval);
   }, [fetchCurrentMode, fetchHistory]);
 
+  const modeEmojiMap = useMemo(() => ({
+    'Maître-Thérapeute Humaniste': '🌿',
+    'Coach Professionnel ICF': '🎯',
+    'PNL Master Practitioner': '🧠',
+    'Hypnose douce non médicale': '🌀',
+    'Méditation profonde TITANE ZÉRO': '🧘',
+    'Digital Twin (Kevin+)': '🧬',
+    'Emotional Engine': '❤️',
+    'Behavioral Engine': '🎭',
+    'LifeEngine': '⚡',
+    'Stratège': '🗺️',
+    'Architecte Systémique': '🏗️',
+    'Analyste': '🔍',
+    'Autopilot Proactif': '🚀',
+    'Creator Engine': '✨',
+    'Optimizer': '⚙️',
+    'Refactor Engine': '🔧',
+    'Voice Mode': '🎤',
+    'Risk Detector': '⚠️',
+    'Forecast Engine': '🔮',
+  }), []);
+
   const getModeEmoji = (mode: string): string => {
-    const map: Record<string, string> = {
-      'Maître-Thérapeute Humaniste': '🌿',
-      'Coach Professionnel ICF': '🎯',
-      'PNL Master Practitioner': '🧠',
-      'Hypnose douce non médicale': '🌀',
-      'Méditation profonde TITANE ZÉRO': '🧘',
-      'Digital Twin (Kevin+)': '🧬',
-      'Emotional Engine': '❤️',
-      'Behavioral Engine': '🎭',
-      'LifeEngine': '⚡',
-      'Stratège': '🗺️',
-      'Architecte Systémique': '🏗️',
-      'Analyste': '🔍',
-      'Autopilot Proactif': '🚀',
-      'Creator Engine': '✨',
-      'Optimizer': '⚙️',
-      'Refactor Engine': '🔧',
-      'Voice Mode': '🎤',
-      'Risk Detector': '⚠️',
-      'Forecast Engine': '🔮',
-    };
-    return map[mode] || '🧠';
+    return modeEmojiMap[mode as keyof typeof modeEmojiMap] || '🧠';
   };
 
-  const getModeColor = (mode: string): string => {
+  const getModeColor = React.useCallback((mode: string): string => {
     if (mode.includes('Thérapeute')) return '#4ade80';
     if (mode.includes('Coach')) return '#60a5fa';
     if (mode.includes('PNL')) return '#a78bfa';
@@ -99,7 +100,7 @@ export const ModeIndicator: React.FC = () => {
     if (mode.includes('Risk')) return '#ef4444';
     if (mode.includes('Forecast')) return '#8b5cf6';
     return '#667eea';
-  };
+  }, []);
 
   return (
     <div className="mode-indicator-container">
@@ -137,6 +138,6 @@ export const ModeIndicator: React.FC = () => {
       )}
     </div>
   );
-};
+});
 
 export default ModeIndicator;

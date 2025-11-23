@@ -53,13 +53,24 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
   const scale = useTransform(volumeSpring, [0, 1], [1, audioReactive ? 1.4 : 1.1]);
   const opacity = useTransform(volumeSpring, [0, 1], [0.6, 1]);
 
+  // Stabiliser animations (limiter à 30 FPS)
+  const lastFrameTimeRef = useRef(0);
+  const frameDuration = React.useMemo(() => 1000 / 30, []);
+
   // Animation continue selon état
   useEffect(() => {
     const startTime = Date.now();
 
-    const animate = () => {
+    const animate = (timestamp: number) => {
+      // Throttle à 30 FPS
+      if (timestamp - lastFrameTimeRef.current < frameDuration) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastFrameTimeRef.current = timestamp;
+
       const elapsed = Date.now() - startTime;
-      
+
       switch (state) {
         case 'listening':
           // Pulsation douce
@@ -89,9 +100,7 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [state]);
-
-  // Couleur dynamique selon état
+  }, [state, frameDuration]);  // Couleur dynamique selon état
   const getStateColor = () => {
     switch (state) {
       case 'listening': return '#06b6d4'; // Cyan
@@ -104,7 +113,7 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
   const currentColor = getStateColor();
 
   return (
-    <div 
+    <div
       className="voice-circle-container"
       style={{ width: size, height: size }}
     >
@@ -161,7 +170,7 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
         }}
       >
         {/* Gradient interne */}
-        <div 
+        <div
           className="voice-circle-gradient"
           style={{
             background: `radial-gradient(circle at 30% 30%, ${currentColor}80, ${currentColor}40)`,
