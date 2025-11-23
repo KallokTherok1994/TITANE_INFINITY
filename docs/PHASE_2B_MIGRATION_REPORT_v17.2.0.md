@@ -1,7 +1,7 @@
 # ✅ PHASE 2B — RAPPORT MIGRATION API
 
-**Version** : v17.2.0  
-**Date** : 22 novembre 2025  
+**Version** : v17.2.0
+**Date** : 22 novembre 2025
 **Status** : 🎉 Migration complétée
 
 ---
@@ -182,6 +182,6 @@ Migration réussie de l'API Tauri vers les nouveaux cores Phase 2.
 
 ---
 
-**Auteur** : Kevin Thibault (TITANE∞ v17.2.0)  
-**Date** : 22 novembre 2025  
+**Auteur** : Kevin Thibault (TITANE∞ v17.2.0)
+**Date** : 22 novembre 2025
 **Status** : Migration API complétée — Tests à adapter

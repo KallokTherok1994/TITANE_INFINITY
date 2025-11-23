@@ -37,7 +37,7 @@ impl TitaneApp {
         log_info("Setup", "Initializing core modules (Phase 2)...");
         let cores = initialize_all_cores().await
             .map_err(|e| format!("Failed to initialize cores: {}", e))?;
-        
+
         // Start all cores
         log_info("Setup", "Starting all cores...");
         start_all_cores(&cores).await
