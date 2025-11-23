@@ -17,6 +17,7 @@ export {
   Clock,
   Database,
   Download,
+  Info,
   Minus,
   RefreshCw,
   TrendingDown,

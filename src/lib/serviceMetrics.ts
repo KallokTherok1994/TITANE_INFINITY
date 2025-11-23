@@ -51,6 +51,17 @@ export interface CommandStats {
 
 export class ServiceMetrics {
   private static metrics: ServiceMetric[] = [];
+
+  /**
+   * Obtenir tous les services avec métriques
+   */
+  static getAllServices(): string[] {
+    const services = new Set<string>();
+    for (const metric of this.metrics) {
+      services.add(metric.service);
+    }
+    return Array.from(services);
+  }
   private static activeMetrics = new Map<string, ServiceMetric>();
   private static MAX_METRICS = 1000;
   private static enabled = true;
