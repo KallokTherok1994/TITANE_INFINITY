@@ -74,6 +74,7 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
         },
       },
+      external: ['@tauri-apps/api/tauri', '@tauri-apps/api/event'],
     },
   },
 
