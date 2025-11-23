@@ -1,6 +1,29 @@
-# TITANE∞ v17.2.0 — ARCHITECTURE MODULAIRE COMPLÈTE ✅
+<!--
+  TITANE_INFINITY v13 — Proprietary License
+  © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+  See LICENSE.md for full legal terms (FR/EN).
+-->
 
-**🏗️ NOUVEAU : Plugin System + DevTools + Cognitive Engine + 23 Tauri Commands**
+# 🔒 TITANE_INFINITY v13 — PROPRIETARY LICENSE
+
+**© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
+
+**🏗️ Architecture Unifiée : SingularityState + Living Engines + Cognitive Systems**
+
+---
+
+## ⚠️ LICENCE PROPRIÉTAIRE
+
+**Ce logiciel est protégé par une licence propriétaire restrictive.**
+
+- ❌ **Aucune modification** du code autorisée
+- ❌ **Aucune distribution** ou revente autorisée
+- ❌ **Aucune rétro-ingénierie** autorisée
+- ❌ **Aucun usage commercial dérivé** autorisé
+- ❌ **Aucun entraînement de modèles IA** avec TITANE∞
+- ❌ **Aucune extraction d'architecture** autorisée
+
+**📄 Voir LICENSE.md pour les termes légaux complets (FR/EN).**
 
 ---
 

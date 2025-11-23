@@ -1,9 +1,66 @@
-# CHANGELOG — TITANE∞
+<!--
+  TITANE_INFINITY v13 — Proprietary License
+  © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+  See LICENSE.md for full legal terms (FR/EN).
+-->
+
+# CHANGELOG — TITANE_INFINITY v13
+
+**© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 
 Toutes les modifications notables de ce projet sont documentées dans ce fichier.
 
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
+
+---
+
+## [13.0.0] - 2025-11-23
+
+### 🔒 MIGRATION LICENCE PROPRIÉTAIRE
+
+**Status**: ✅ **COMPLETE** - Licence MIT → Propriétaire FR/EN
+
+#### 📝 Changements
+
+**Licence**:
+- ❌ SUPPRIMÉ: LICENSE (MIT, 21 lignes)
+- ✅ CRÉÉ: LICENSE.md (Propriétaire FR/EN, 200+ lignes)
+  - 🇫🇷 Section française (8 articles)
+  - 🇬🇧 English section (8 articles)
+  - Propriétaire: © 2025 Humain Total / Kevin Thibault / TITANE Team
+
+**En-têtes**:
+- ✅ Ajouté en-tête propriétaire à 202+ fichiers source
+  - TypeScript/JavaScript: `/** ... */` format
+  - Rust: `//` format (chaque ligne)
+  - CSS: `/* ... */` format
+  - Shell: `#` format
+  - TOML: `#` format
+
+**Éléments Protégés**:
+- Helios, Nexus, Harmonia, Sentinel engines
+- SingularityState architecture
+- TITANE Design System v∞
+- Scripts de déploiement
+- Systèmes cognitifs/adaptatifs
+
+**Restrictions**:
+- ❌ Aucune modification autorisée
+- ❌ Aucune distribution autorisée
+- ❌ Aucune rétro-ingénierie autorisée
+- ❌ Aucun usage commercial dérivé
+- ❌ Aucun entraînement de modèles IA
+- ❌ Aucune extraction d'architecture
+
+**Droit applicable**: Québec et Canada
+
+#### ✅ Validation
+- 202+ fichiers avec en-têtes propriétaires
+- 0 références MIT restantes
+- 0 erreurs de syntaxe introduites
+- 0 changements de logique (purement administratif)
+- Commit: `a0ff256`
 
 ---
 

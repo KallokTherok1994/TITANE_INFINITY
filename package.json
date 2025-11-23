@@ -1,8 +1,9 @@
 {
   "name": "titane-infinity",
-  "version": "17.3.0",
-  "description": "TITANE∞ v17.3.0 - Phase 8 Complete: Production Hardening + Multi-Platform Deployment, 100% Tauri v2, Rust Backend, Production-Ready",
+  "version": "13.0.0",
+  "description": "TITANE_INFINITY v13 - Proprietary License: Unified Architecture + Singularity State + Living Engines, Production-Ready",
   "type": "module",
+  "license": "SEE LICENSE.md",
   "scripts": {
     "dev": "vite build --watch & tauri dev",
     "dev:tauri": "vite build && tauri dev",
