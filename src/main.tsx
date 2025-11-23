@@ -1,9 +1,14 @@
-// TITANE∞ v17.2.0 - Main Entry Point (Modular Architecture Complete)
+// TITANE∞ v17.3.0 - Main Entry Point (Phase 8: Production Hardening Complete)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './design-system/titane-v12.css';
 import './pages/styles.css';
+
+// Phase 8: Production Hardening
+import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';
+import { PerformanceMonitor } from './lib/performanceBudget';
+import { injectSROnlyStyles } from './lib/accessibility';
 
 // Initialize Singularity Engine
 import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
@@ -42,6 +47,28 @@ singularityEngine.initialize().then(() => {
   console.error('❌ SingularityEngine initialization failed:', err);
 });
 
+// Phase 8: Initialize Performance Monitoring (Core Web Vitals)
+PerformanceMonitor.initialize({
+  LCP: 2500,  // Largest Contentful Paint: 2.5s
+  FID: 100,   // First Input Delay: 100ms
+  CLS: 0.1,   // Cumulative Layout Shift: 0.1
+  FCP: 1800,  // First Contentful Paint: 1.8s
+  TTFB: 600,  // Time to First Byte: 600ms
+});
+
+// Generate performance report after 5s
+setTimeout(() => {
+  const report = PerformanceMonitor.generateReport();
+  console.log(`⚡ Performance Grade: ${report.grade}, Score: ${report.score.toFixed(1)}`);
+  if (report.violations.length > 0) {
+    console.warn('⚠️ Performance violations:', report.violations);
+  }
+}, 5000);
+
+// Phase 8: Inject accessibility styles (screen reader only)
+injectSROnlyStyles();
+console.log('♿ Accessibility styles injected (WCAG 2.1 AA)');
+
 // 🔧 Global error handlers (catch unhandled errors)
 window.addEventListener('error', (event) => {
   console.error('[TITANE] Global error caught:', event.error);
@@ -54,79 +81,24 @@ window.addEventListener('unhandledrejection', (event) => {
 console.log('✅ TITANE∞ frontend loaded successfully');
 console.log('>>> TITANE∞ FRONTEND READY TO MOUNT REACT');
 
-// ⚠️ FIX CRASH: Wrapper d'erreur React global
-class ErrorBoundary extends React.Component<
-  { children: React.ReactNode },
-  { hasError: boolean; error: Error | null }
-> {
-  constructor(props: { children: React.ReactNode }) {
-    super(props);
-    this.state = { hasError: false, error: null };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    console.error('[TITANE] React Error Boundary caught:', error);
-    return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('[TITANE] Error details:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          backgroundColor: '#0a0e1a',
-          color: '#fff',
-          fontFamily: 'monospace',
-          padding: '20px'
-        }}>
-          <h1>⚠️ TITANE∞ Error</h1>
-          <p>Une erreur s'est produite lors du chargement de l'application.</p>
-          <pre style={{
-            backgroundColor: '#1a1f2e',
-            padding: '20px',
-            borderRadius: '8px',
-            maxWidth: '80%',
-            overflow: 'auto'
-          }}>
-            {this.state.error?.toString()}
-          </pre>
-          <button
-            onClick={() => window.location.reload()}
-            style={{
-              marginTop: '20px',
-              padding: '10px 20px',
-              backgroundColor: '#4a90e2',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer'
-            }}
-          >
-            Recharger l'application
-          </button>
-        </div>
-      );
-    }
-
-    return this.props.children;
-  }
-}
-
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Root element not found');
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <ErrorBoundary>
+    <ProductionErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error('[TITANE∞] Production Error Boundary caught:', error);
+        console.error('[TITANE∞] Component stack:', errorInfo.componentStack);
+        // Hook for Sentry/LogRocket integration
+        if (window.Sentry) {
+          window.Sentry.captureException(error, {
+            contexts: { react: { componentStack: errorInfo.componentStack } },
+          });
+        }
+      }}
+    >
       <App />
-    </ErrorBoundary>
+    </ProductionErrorBoundary>
   </React.StrictMode>
 );
