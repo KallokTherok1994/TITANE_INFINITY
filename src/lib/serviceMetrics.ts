@@ -2,8 +2,11 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ v17.3.0 - Service Metrics
  * Tracking latency, error rate, retry count, cache hits
+ * Phase 5: Optimized with intelligent caching
  * ═══════════════════════════════════════════════════════════════
  */
+
+import { MetricsCache } from './metricsCache';
 
 // ────────────────────────────────────────────────────────────────
 // Types
@@ -48,6 +51,7 @@ export interface CommandStats {
 
 export class ServiceMetrics {
   private static metrics: ServiceMetric[] = [];
+  private static activeMetrics = new Map<string, ServiceMetric>();
   private static MAX_METRICS = 1000;
   private static enabled = true;
 
@@ -70,8 +74,7 @@ export class ServiceMetrics {
     };
 
     // Stocker temporairement dans Map pour récupération rapide
-    (this as any)._activeMetrics = (this as any)._activeMetrics || new Map();
-    (this as any)._activeMetrics.set(id, metric);
+    this.activeMetrics.set(id, metric);
 
     return id;
   }
@@ -82,10 +85,7 @@ export class ServiceMetrics {
   static endMetric(id: string, success: boolean, error?: string, retries = 0): void {
     if (!this.enabled || !id) return;
 
-    const activeMetrics = (this as any)._activeMetrics as Map<string, ServiceMetric>;
-    if (!activeMetrics) return;
-
-    const metric = activeMetrics.get(id);
+    const metric = this.activeMetrics.get(id);
     if (!metric) return;
 
     metric.endTime = Date.now();
@@ -102,8 +102,11 @@ export class ServiceMetrics {
       this.metrics = this.metrics.slice(-this.MAX_METRICS);
     }
 
+    // Notifier cache du changement
+    MetricsCache.updateMetricsCount(this.metrics.length);
+
     // Nettoyer active metrics
-    activeMetrics.delete(id);
+    this.activeMetrics.delete(id);
   }
 
   /**
@@ -135,12 +138,28 @@ export class ServiceMetrics {
     if (this.metrics.length > this.MAX_METRICS) {
       this.metrics = this.metrics.slice(-this.MAX_METRICS);
     }
+
+    // Notifier cache du changement
+    MetricsCache.updateMetricsCount(this.metrics.length);
   }
 
   /**
    * Statistiques par service
    */
   static getServiceStats(service: string, timeWindow?: number): ServiceStats {
+    const cacheKey = `${service}_${timeWindow || 'all'}`;
+
+    return MetricsCache.getServiceStats(
+      cacheKey,
+      this.metrics.length,
+      () => this.calculateServiceStats(service, timeWindow)
+    );
+  }
+
+  /**
+   * Calculer stats service (appelé si cache miss)
+   */
+  private static calculateServiceStats(service: string, timeWindow?: number): ServiceStats {
     const now = Date.now();
     const windowStart = timeWindow ? now - timeWindow : 0;
 
@@ -170,7 +189,7 @@ export class ServiceMetrics {
     const totalRetries = serviceMetrics.reduce((sum, m) => sum + m.retries, 0);
 
     const durations = serviceMetrics
-      .map((m) => m.duration!)
+      .map((m) => m.duration as number)
       .filter((d) => d !== undefined)
       .sort((a, b) => a - b);
 
@@ -204,6 +223,19 @@ export class ServiceMetrics {
    * Top commandes par volume
    */
   static getTopCommands(limit = 10): CommandStats[] {
+    const cacheKey = `top_${limit}`;
+
+    return MetricsCache.getCommandStats(
+      cacheKey,
+      this.metrics.length,
+      () => this.calculateTopCommands(limit)
+    );
+  }
+
+  /**
+   * Calculer top commandes (appelé si cache miss)
+   */
+  private static calculateTopCommands(limit: number): CommandStats[] {
     const commandMap = new Map<string, ServiceMetric[]>();
 
     for (const metric of this.metrics) {
@@ -211,15 +243,15 @@ export class ServiceMetrics {
       if (!commandMap.has(key)) {
         commandMap.set(key, []);
       }
-      commandMap.get(key)!.push(metric);
+      const arr = commandMap.get(key); if (arr) arr.push(metric);
     }
 
     const commandStats: CommandStats[] = [];
 
-    for (const [command, metrics] of commandMap.entries()) {
+    for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
         .filter((m) => m.duration !== undefined)
-        .map((m) => m.duration!);
+        .map((m) => m.duration as number);
       const avgLatency =
         durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
       const failed = metrics.filter((m) => !m.success).length;
@@ -242,6 +274,19 @@ export class ServiceMetrics {
    * Commandes les plus lentes
    */
   static getSlowestCommands(limit = 10): CommandStats[] {
+    const cacheKey = `slowest_${limit}`;
+
+    return MetricsCache.getCommandStats(
+      cacheKey,
+      this.metrics.length,
+      () => this.calculateSlowestCommands(limit)
+    );
+  }
+
+  /**
+   * Calculer commandes lentes (appelé si cache miss)
+   */
+  private static calculateSlowestCommands(limit: number): CommandStats[] {
     const commandMap = new Map<string, ServiceMetric[]>();
 
     for (const metric of this.metrics) {
@@ -249,15 +294,15 @@ export class ServiceMetrics {
       if (!commandMap.has(key)) {
         commandMap.set(key, []);
       }
-      commandMap.get(key)!.push(metric);
+      const arr = commandMap.get(key); if (arr) arr.push(metric);
     }
 
     const commandStats: CommandStats[] = [];
 
-    for (const [command, metrics] of commandMap.entries()) {
+    for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
         .filter((m) => m.duration !== undefined)
-        .map((m) => m.duration!);
+        .map((m) => m.duration as number);
       if (durations.length === 0) continue;
 
       const avgLatency =
@@ -282,6 +327,19 @@ export class ServiceMetrics {
    * Commandes avec le plus d'erreurs
    */
   static getErrorProneCommands(limit = 10): CommandStats[] {
+    const cacheKey = `errors_${limit}`;
+
+    return MetricsCache.getCommandStats(
+      cacheKey,
+      this.metrics.length,
+      () => this.calculateErrorProneCommands(limit)
+    );
+  }
+
+  /**
+   * Calculer commandes avec erreurs (appelé si cache miss)
+   */
+  private static calculateErrorProneCommands(limit: number): CommandStats[] {
     const commandMap = new Map<string, ServiceMetric[]>();
 
     for (const metric of this.metrics) {
@@ -289,15 +347,15 @@ export class ServiceMetrics {
       if (!commandMap.has(key)) {
         commandMap.set(key, []);
       }
-      commandMap.get(key)!.push(metric);
+      const arr = commandMap.get(key); if (arr) arr.push(metric);
     }
 
     const commandStats: CommandStats[] = [];
 
-    for (const [command, metrics] of commandMap.entries()) {
+    for (const [command, metrics] of Array.from(commandMap.entries())) {
       const durations = metrics
         .filter((m) => m.duration !== undefined)
-        .map((m) => m.duration!);
+        .map((m) => m.duration as number);
       const avgLatency =
         durations.reduce((sum, d) => sum + d, 0) / durations.length || 0;
       const failed = metrics.filter((m) => !m.success).length;
@@ -328,13 +386,29 @@ export class ServiceMetrics {
     globalErrorRate: number;
     globalAvgLatency: number;
   } {
+    return MetricsCache.getGlobalStats(
+      this.metrics.length,
+      () => this.calculateGlobalStats()
+    );
+  }
+
+  /**
+   * Calculer stats globales (appelé si cache miss)
+   */
+  private static calculateGlobalStats(): {
+    totalMetrics: number;
+    services: string[];
+    totalRetries: number;
+    globalErrorRate: number;
+    globalAvgLatency: number;
+  } {
     const services = [...new Set(this.metrics.map((m) => m.service))];
     const totalRetries = this.metrics.reduce((sum, m) => sum + m.retries, 0);
     const failed = this.metrics.filter((m) => !m.success).length;
     const globalErrorRate = this.metrics.length > 0 ? failed / this.metrics.length : 0;
     const durations = this.metrics
       .filter((m) => m.duration !== undefined)
-      .map((m) => m.duration!);
+      .map((m) => m.duration as number);
     const globalAvgLatency =
       durations.length > 0
         ? durations.reduce((sum, d) => sum + d, 0) / durations.length
@@ -354,7 +428,8 @@ export class ServiceMetrics {
    */
   static clear(): void {
     this.metrics = [];
-    (this as any)._activeMetrics = new Map();
+    this.activeMetrics.clear();
+    MetricsCache.invalidateAll();
   }
 
   /**
@@ -380,16 +455,17 @@ export class ServiceMetrics {
  * Décorateur pour mesurer performance
  */
 export function measurePerformance(service: string, command: string) {
-  return function <T extends (...args: any[]) => Promise<any>>(
-    _target: any,
+  return function <T extends (this: unknown, ...args: unknown[]) => Promise<unknown>>(
+    _target: unknown,
     _propertyKey: string,
     descriptor: TypedPropertyDescriptor<T>
   ) {
-    const originalMethod = descriptor.value!;
+    const originalMethod = descriptor.value;
+    if (!originalMethod) return descriptor;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (this: unknown, ...args: unknown[]) {
       const metricId = ServiceMetrics.startMetric(command, service);
-      let retries = 0;
+      const retries = 0;
 
       try {
         const result = await originalMethod.apply(this, args);

@@ -28,11 +28,6 @@ const mockInvoke = vi.mocked(tauriCore.invoke);
 describe('ServiceInvoker - invokeWithRetry', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   it('devrait réussir au premier appel', async () => {
@@ -52,17 +47,11 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       .mockRejectedValueOnce(new Error('Network error'))
       .mockResolvedValueOnce(mockData);
 
-    const promise = invokeWithRetry('test_command', {}, {
+    const result = await invokeWithRetry('test_command', {}, {
       retries: 3,
-      retryDelay: 100,
-      backoffFactor: 2,
+      retryDelay: 10, // Réduire délai pour tests rapides
+      backoffFactor: 1, // Pas de backoff pour accélérer
     });
-
-    // Advance timers pour attendre les delays
-    await vi.advanceTimersByTimeAsync(100); // Premier retry
-    await vi.advanceTimersByTimeAsync(200); // Deuxième retry
-
-    const result = await promise;
 
     expect(result).toEqual(mockData);
     expect(mockInvoke).toHaveBeenCalledTimes(3);
@@ -76,12 +65,10 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
     const promise = invokeWithRetry('test_command', {}, {
       retries: 3,
-      retryDelay: 100,
+      retryDelay: 10,
     });
 
     // Advance timers
-    await vi.advanceTimersByTimeAsync(100);
-    await vi.advanceTimersByTimeAsync(200);
 
     await expect(promise).rejects.toThrow(RetryError);
     await expect(promise).rejects.toThrow(
@@ -101,7 +88,6 @@ describe('ServiceInvoker - invokeWithRetry', () => {
     });
 
     // Advance timer au-delà du timeout
-    await vi.advanceTimersByTimeAsync(1000);
 
     await expect(promise).rejects.toThrow(TimeoutError);
     await expect(promise).rejects.toThrow(
@@ -118,15 +104,13 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
     const promise = invokeWithRetry('test_command', {}, {
       retries: 3,
-      retryDelay: 100,
+      retryDelay: 10,
       backoffFactor: 3, // 100 * 3^attempt
     });
 
     // Premier retry: ~100-150ms (avec jitter)
-    await vi.advanceTimersByTimeAsync(150);
 
     // Deuxième retry: ~300-450ms (avec jitter)
-    await vi.advanceTimersByTimeAsync(450);
 
     const result = await promise;
     expect(result).toEqual(mockData);
@@ -161,10 +145,9 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
     const promise = invokeWithRetry('test_command', {}, {
       retries: 2,
-      retryDelay: 50,
+      retryDelay: 10,
     });
 
-    await vi.advanceTimersByTimeAsync(100);
     const result = await promise;
 
     expect(result).toEqual(mockData);
@@ -175,7 +158,6 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 describe('ServiceInvoker - invokeWithTimeout', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
   });
 
   afterEach(() => {
@@ -199,7 +181,6 @@ describe('ServiceInvoker - invokeWithTimeout', () => {
 
     const promise = invokeWithTimeout('test_command', {}, 1000);
 
-    await vi.advanceTimersByTimeAsync(1000);
 
     await expect(promise).rejects.toThrow(TimeoutError);
   });
@@ -265,7 +246,6 @@ describe('ServiceInvoker - invokeBatch', () => {
 describe('ServiceInvoker - invokeSequence', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
   });
 
   afterEach(() => {

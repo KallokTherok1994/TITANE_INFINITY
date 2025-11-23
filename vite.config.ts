@@ -2,8 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { visualizer } from 'rollup-plugin-visualizer';
 
-// TITANE∞ v24 - Vite Configuration OPTIMIZED (CPU < 50%)
+// TITANE∞ v17.3.0 - Vite Configuration OPTIMIZED (CPU < 50%)
+// Phase 5: Bundle analysis + code splitting
 // https://vitejs.dev/config/
 export default defineConfig({
   root: '.',
@@ -18,6 +20,12 @@ export default defineConfig({
       }
     }),
     tsconfigPaths(), // Auto-sync avec tsconfig.json paths
+    visualizer({
+      open: false,
+      filename: 'dist/stats.html',
+      gzipSize: true,
+      brotliSize: true,
+    }),
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════
