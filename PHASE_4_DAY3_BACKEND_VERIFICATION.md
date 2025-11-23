@@ -21,7 +21,7 @@
 
 **Frontend usage**: `hooks/useMemoryCore.ts:67` → `invoke('memory_clear')`
 
-**DÉCISION**: 
+**DÉCISION**:
 - **KEEP**: `commands/mod.rs:306` (wrapper central)
 - **DELETE**: `api/legacy_commands.rs:21` + `overdrive/memory_engine.rs:352`
 - **ACTION**: Mettre à jour main.rs → `commands::memory_clear` (pas `api::memory_clear`)
@@ -208,7 +208,7 @@ pub async fn memory_clear() -> Result<(), String> {
 
 ### Risque 1: memory_clear appelle overdrive
 **Impact**: Si commands/mod.rs:306 appelle overdrive/memory_engine.rs:352
-**Mitigation**: 
+**Mitigation**:
 1. Vérifier implementation mod.rs
 2. Si dépendance overdrive → réécrire pour utiliser API v17.3.0
 3. Tester après migration

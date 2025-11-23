@@ -130,7 +130,7 @@ export function SingularityMonitor() {
           />
           <MetricCard
             label="Coherence"
-            value={`${(cognitive?.coherence * 100).toFixed(0)}%`}
+            value={`${((cognitive?.coherence ?? 0) * 100).toFixed(0)}%`}
             color="#10b981"
           />
         </div>

@@ -109,20 +109,10 @@ fn main() {
             api::get_harmonia_state,
             api::get_sentinel_state,
             api::get_detailed_health_report,
-            // Legacy compatibility commands
-            api::memory_save_entry,
-            api::memory_clear,
-            api::delete_conversation,
-            api::clear_all_memory,
-            api::meta_mode_reset,
-            api::speak,
-            api::start_recording,
-            api::stop_recording,
-            api::get_system_status,
-            api::harmonia_get_flows,
-            api::nexus_get_graph,
-            api::helios_get_metrics,
-            api::memory_get_state,
+            // Memory & MetaMode compatibility commands (used by frontend)
+            commands::memory_clear,                    // hooks/useMemoryCore.ts
+            commands::ai_chat::clear_all_memory,       // hooks/useMemory.ts
+            commands::meta_mode::meta_mode_reset,      // components/MetaModeConsole.tsx
             // 🌟 Persona Engine v24 commands
             system::persona_engine::commands::persona_initialize,
             system::persona_engine::commands::persona_get_state,
