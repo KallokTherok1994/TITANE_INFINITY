@@ -91,12 +91,13 @@ pub fn init() -> VoiceEngineState {
 }
 
 fn detect_audio_pipeline() -> String {
-    // Détecter PipeWire, PulseAudio ou ALSA
-    if std::process::Command::new("pactl")
-        .arg("info")
-        .output()
-        .is_ok()
-    {
+    // ✅ SECURED: Use ShellGuard for detection
+    use crate::security::shell_guard::ShellGuard;
+
+    let guard = ShellGuard::new();
+
+    // Détecter PipeWire/PulseAudio via pactl
+    if guard.execute_verified("pactl", &["info"]).is_ok() {
         return "pipewire".to_string();
     }
     "alsa".to_string()
@@ -108,13 +109,25 @@ fn detect_audio_pipeline() -> String {
 
 #[tauri::command]
 pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, String> {
-    let mut is_listening = state.is_listening.lock().unwrap();
+    let mut is_listening = match state.is_listening.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[VOICE] is_listening lock poisoned in voice_start_listening, recovering");
+            poisoned.into_inner()
+        }
+    };
     if *is_listening {
         return Err("Déjà en écoute".to_string());
     }
 
     *is_listening = true;
-    let mut status = state.status.lock().unwrap();
+    let mut status = match state.status.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[VOICE] status lock poisoned in voice_start_listening, recovering");
+            poisoned.into_inner()
+        }
+    };
     status.asr_active = true;
 
     println!("[VOICE] ASR démarré - En attente du wake word");
@@ -123,10 +136,22 @@ pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, S
 
 #[tauri::command]
 pub fn voice_stop_listening(state: State<VoiceEngineState>) -> Result<String, String> {
-    let mut is_listening = state.is_listening.lock().unwrap();
+    let mut is_listening = match state.is_listening.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[VOICE] is_listening lock poisoned in voice_stop_listening, recovering");
+            poisoned.into_inner()
+        }
+    };
     *is_listening = false;
 
-    let mut status = state.status.lock().unwrap();
+    let mut status = match state.status.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[VOICE] status lock poisoned in voice_stop_listening, recovering");
+            poisoned.into_inner()
+        }
+    };
     status.asr_active = false;
 
     println!("[VOICE] ASR arrêté");

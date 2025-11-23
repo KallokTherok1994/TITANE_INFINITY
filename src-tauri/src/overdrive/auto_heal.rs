@@ -64,7 +64,7 @@ pub struct AutoHealState {
 fn get_timestamp() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
 }
 
@@ -83,7 +83,13 @@ pub fn log_event(
         severity: severity.clone(),
     };
 
-    let mut events = state.events.lock().unwrap();
+    let mut events = match state.events.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTO-HEAL] Lock poisoned in log_event, recovering");
+            poisoned.into_inner()
+        }
+    };
     events.push(event);
 
     // Limiter à 100 derniers événements
@@ -113,7 +119,13 @@ pub fn log_action(
         success,
     };
 
-    let mut actions = state.actions.lock().unwrap();
+    let mut actions = match state.actions.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTO-HEAL] Lock poisoned in log_action, recovering");
+            poisoned.into_inner()
+        }
+    };
     actions.push(action_obj);
 
     // Limiter à 50 dernières actions
@@ -163,7 +175,13 @@ fn initialize_modules(state: &AutoHealState) {
         "api_bridge",
     ];
 
-    let mut module_health = state.module_health.lock().unwrap();
+    let mut module_health = match state.module_health.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTO-HEAL] Lock poisoned in initialize_modules, recovering");
+            poisoned.into_inner()
+        }
+    };
     for module in modules {
         module_health.push(ModuleHealth {
             module: module.to_string(),
@@ -184,7 +202,9 @@ fn initialize_modules(state: &AutoHealState) {
 #[tauri::command]
 pub fn auto_heal_scan(state: State<AutoHealState>) -> Result<HealReport, String> {
     let timestamp = get_timestamp();
-    *state.last_scan.lock().unwrap() = timestamp;
+    if let Ok(mut last_scan) = state.last_scan.lock() {
+        *last_scan = timestamp;
+    }
 
     log_event(
         &state,
@@ -518,7 +538,9 @@ fn repair_api_bridge(state: &AutoHealState) -> Result<String, String> {
 pub fn auto_heal_get_logs(state: State<AutoHealState>) -> Result<HealReport, String> {
     let events = get_recent_events(&state, 100);
     let actions = get_recent_actions(&state, 50);
-    let last_scan = *state.last_scan.lock().unwrap();
+    let last_scan = state.last_scan.lock()
+        .map(|guard| *guard)
+        .unwrap_or(0);
 
     // Compter erreurs critiques récentes
     let critical_errors = events
@@ -545,7 +567,13 @@ pub fn auto_heal_get_logs(state: State<AutoHealState>) -> Result<HealReport, Str
 }
 
 fn get_recent_events(state: &AutoHealState, count: usize) -> Vec<HealEvent> {
-    let events = state.events.lock().unwrap();
+    let events = match state.events.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTO-HEAL] Lock poisoned in get_recent_events, recovering");
+            poisoned.into_inner()
+        }
+    };
     let start = if events.len() > count {
         events.len() - count
     } else {
@@ -555,7 +583,13 @@ fn get_recent_events(state: &AutoHealState, count: usize) -> Vec<HealEvent> {
 }
 
 fn get_recent_actions(state: &AutoHealState, count: usize) -> Vec<HealAction> {
-    let actions = state.actions.lock().unwrap();
+    let actions = match state.actions.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTO-HEAL] Lock poisoned in get_recent_actions, recovering");
+            poisoned.into_inner()
+        }
+    };
     let start = if actions.len() > count {
         actions.len() - count
     } else {
@@ -565,7 +599,13 @@ fn get_recent_actions(state: &AutoHealState, count: usize) -> Vec<HealAction> {
 }
 
 fn update_module_health(state: &AutoHealState, new_health: ModuleHealth) {
-    let mut module_health = state.module_health.lock().unwrap();
+    let mut module_health = match state.module_health.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTO-HEAL] Lock poisoned in update_module_health, recovering");
+            poisoned.into_inner()
+        }
+    };
     if let Some(health) = module_health
         .iter_mut()
         .find(|h| h.module == new_health.module)

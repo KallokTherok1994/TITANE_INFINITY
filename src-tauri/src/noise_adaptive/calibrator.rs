@@ -72,8 +72,8 @@ impl AudioCalibrator {
 
         // Prendre le 10ème percentile comme niveau de bruit
         let mut sorted = self.calibration_samples.clone();
-        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        
+        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+
         let index = (sorted.len() as f32 * 0.1) as usize;
         sorted[index]
     }
@@ -86,8 +86,8 @@ impl AudioCalibrator {
 
         // Prendre le 70ème percentile comme niveau vocal
         let mut sorted = self.calibration_samples.clone();
-        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
-        
+        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+
         let index = (sorted.len() as f32 * 0.7) as usize;
         sorted[index]
     }
@@ -165,7 +165,7 @@ mod tests {
     #[test]
     fn test_noise_floor_calculation() {
         let mut calibrator = AudioCalibrator::new();
-        
+
         // Ajouter des échantillons simulés
         for i in 0..100 {
             let sample = if i < 10 { 0.1 } else { 0.5 };
@@ -179,7 +179,7 @@ mod tests {
     #[test]
     fn test_environment_detection() {
         let calibrator = AudioCalibrator::new();
-        
+
         let silent = calibrator.detect_environment(0.05);
         assert_eq!(silent, EnvironmentProfile::Silent);
 
@@ -190,8 +190,8 @@ mod tests {
     #[tokio::test]
     async fn test_calibration_flow() {
         let mut calibrator = AudioCalibrator::new();
-        
-        calibrator.start_calibration().await.unwrap();
+
+        calibrator.start_calibration().await.expect("Failed to start calibration");
         assert!(calibrator.is_calibrating);
 
         // Ajouter des échantillons
@@ -199,7 +199,7 @@ mod tests {
             calibrator.add_sample(0.3);
         }
 
-        let config = calibrator.finalize_calibration().unwrap();
+        let config = calibrator.finalize_calibration().expect("Failed to finalize calibration");
         assert!(config.is_calibrated);
         assert!(!calibrator.is_calibrating);
     }

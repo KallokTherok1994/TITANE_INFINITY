@@ -101,8 +101,9 @@ impl ExpFusionEngine {
         category: &str,
         project: Option<&str>,
         description: &str,
-    ) -> ExpEvent {
-        let mut state = self.global_state.lock().unwrap();
+    ) -> Result<ExpEvent, String> {
+        let mut state = self.global_state.lock()
+            .map_err(|e| format!("Failed to lock global state: {}", e))?;
 
         // Calculer XP pondéré
         let weighted_amount = self.calculator.calculate_weighted_exp(amount, &source);
@@ -145,17 +146,22 @@ impl ExpFusionEngine {
         }
 
         // Mettre à jour talents
-        self.talents.update_from_exp(self.global_state.lock().unwrap().total_exp, &self.categories);
+        let total_exp = self.global_state.lock()
+            .map_err(|e| format!("Failed to lock global state for talents: {}", e))?
+            .total_exp;
+        self.talents.update_from_exp(total_exp, &self.categories);
 
         // Sauvegarder
-        self.save_all();
+        self.save_all()?;
 
-        event
+        Ok(event)
     }
 
     /// Obtenir état global
-    pub fn get_global_state(&self) -> GlobalExpState {
-        self.global_state.lock().unwrap().clone()
+    pub fn get_global_state(&self) -> Result<GlobalExpState, String> {
+        self.global_state.lock()
+            .map(|state| state.clone())
+            .map_err(|e| format!("Failed to lock global state: {}", e))
     }
 
     /// Obtenir toutes les catégories
@@ -179,18 +185,22 @@ impl ExpFusionEngine {
     }
 
     /// Sauvegarder tout
-    fn save_all(&mut self) {
-        let state = self.global_state.lock().unwrap().clone();
+    fn save_all(&mut self) -> Result<(), String> {
+        let state = self.global_state.lock()
+            .map_err(|e| format!("Failed to lock global state for save: {}", e))?
+            .clone();
         self.memory_sync.save_global_state(&state);
         self.memory_sync.save_timeline(self.timeline.get_recent(365));
         self.memory_sync.save_categories(self.categories.get_all());
         self.memory_sync.save_projects(self.projects.get_all());
         self.memory_sync.save_talents(self.talents.get_state());
+        Ok(())
     }
 
     /// Réinitialiser (avec confirmation)
-    pub fn reset(&mut self) {
-        let mut state = self.global_state.lock().unwrap();
+    pub fn reset(&mut self) -> Result<(), String> {
+        let mut state = self.global_state.lock()
+            .map_err(|e| format!("Failed to lock global state for reset: {}", e))?;
         *state = GlobalExpState::default();
         drop(state);
 

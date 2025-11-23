@@ -180,16 +180,17 @@ mod tests {
 
     #[test]
     fn test_storage_creation() {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
         let storage = MemoryStorage::new(temp_dir.path().to_path_buf(), "test".to_string());
         assert!(storage.is_ok());
     }
 
     #[test]
     fn test_save_and_load_conversation() {
-        let temp_dir = TempDir::new().unwrap();
+        let temp_dir = TempDir::new().expect("Failed to create temp dir");
         let storage =
-            MemoryStorage::new(temp_dir.path().to_path_buf(), "test".to_string()).unwrap();
+            MemoryStorage::new(temp_dir.path().to_path_buf(), "test".to_string())
+                .expect("Failed to create storage");
 
         let mut conv = Conversation::new("Test".to_string());
         conv.add_entry(
@@ -198,8 +199,8 @@ mod tests {
             1,
         );
 
-        storage.save_conversation(&conv).unwrap();
-        let loaded = storage.load_conversation(&conv.id).unwrap();
+        storage.save_conversation(&conv).expect("Failed to save conversation");
+        let loaded = storage.load_conversation(&conv.id).expect("Failed to load conversation");
 
         assert_eq!(conv.id, loaded.id);
         assert_eq!(conv.entries.len(), loaded.entries.len());

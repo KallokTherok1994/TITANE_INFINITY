@@ -10,30 +10,33 @@ use serde::{Deserialize, Serialize};
 pub enum AppError {
     #[error("Internal error: {0}")]
     Internal(String),
-    
+
     #[error("System error: {0}")]
     System(String),
-    
+
     #[error("Memory error: {0}")]
     Memory(String),
-    
+
     #[error("Evolution error: {0}")]
     Evolution(String),
-    
+
     #[error("Validation error: {0}")]
     Validation(String),
-    
+
     #[error("IO error: {0}")]
     Io(String),
-    
+
     #[error("Network error: {0}")]
     Network(String),
-    
+
     #[error("Parse error: {0}")]
     Parse(String),
-    
+
     #[error("Not found: {0}")]
     NotFound(String),
+
+    #[error("Timeout: {0}")]
+    Timeout(String),
 }
 
 /// Conversion from std::io::Error

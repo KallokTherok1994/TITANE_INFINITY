@@ -54,9 +54,9 @@ impl DuplexPipeline {
 
         tokio::spawn(async move {
             while let Some(trigger) = wakeword_rx.recv().await {
-                println!("[Pipeline] Wakeword détecté: {} ({:.0}%)", 
+                println!("[Pipeline] Wakeword détecté: {} ({:.0}%)",
                     trigger.keyword, trigger.confidence * 100.0);
-                
+
                 let _ = event_tx_clone.send(PipelineEvent::WakewordDetected {
                     keyword: trigger.keyword.clone(),
                     confidence: trigger.confidence,
@@ -82,7 +82,7 @@ impl DuplexPipeline {
                 if chunk.has_voice && !is_user_speaking {
                     is_user_speaking = true;
                     sync_clone.user_started_speaking();
-                    
+
                     let _ = event_tx_clone.send(PipelineEvent::UserStartedSpeaking {
                         timestamp: chunk.timestamp,
                     }).await;
@@ -90,14 +90,14 @@ impl DuplexPipeline {
                     // Fin de parole détectée
                     is_user_speaking = false;
                     sync_clone.user_stopped_speaking();
-                    
+
                     let _ = event_tx_clone.send(PipelineEvent::UserStoppedSpeaking {
                         timestamp: chunk.timestamp,
                     }).await;
 
                     // TODO: Envoyer audio_buffer à ASR
                     let transcription = Self::mock_asr(&audio_buffer).await;
-                    
+
                     let _ = event_tx_clone.send(PipelineEvent::TranscriptionReady {
                         text: transcription,
                     }).await;
@@ -122,7 +122,13 @@ impl DuplexPipeline {
 
     /// Démarrer le pipeline complet
     pub async fn start(&self) -> Result<(), String> {
-        let mut active = self.is_active.lock().unwrap();
+        let mut active = match self.is_active.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[Pipeline] Lock poisoned in start(), recovering");
+                poisoned.into_inner()
+            }
+        };
         if *active {
             return Ok(());
         }
@@ -143,7 +149,13 @@ impl DuplexPipeline {
 
     /// Arrêter le pipeline
     pub fn stop(&self) {
-        let mut active = self.is_active.lock().unwrap();
+        let mut active = match self.is_active.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[Pipeline] Lock poisoned in stop(), recovering");
+                poisoned.into_inner()
+            }
+        };
         if !*active {
             return;
         }
@@ -166,7 +178,13 @@ impl DuplexPipeline {
 
     /// Est actif?
     pub fn is_active(&self) -> bool {
-        *self.is_active.lock().unwrap()
+        match self.is_active.lock() {
+            Ok(guard) => *guard,
+            Err(poisoned) => {
+                eprintln!("[Pipeline] Lock poisoned in is_active(), recovering");
+                *poisoned.into_inner()
+            }
+        }
     }
 
     // ===== MOCK FUNCTIONS =====
@@ -190,12 +208,12 @@ mod tests {
     #[tokio::test]
     async fn test_pipeline_start_stop() {
         let pipeline = DuplexPipeline::new().await.unwrap();
-        
+
         assert!(!pipeline.is_active());
-        
+
         pipeline.start().await.unwrap();
         assert!(pipeline.is_active());
-        
+
         pipeline.stop();
         assert!(!pipeline.is_active());
     }

@@ -9,6 +9,7 @@ use crate::{
     types::{EvolutionReport, EvolutionState, HealthStatus},
     utils::AppResult,
 };
+use std::time::{Duration, Instant};
 
 #[tauri::command]
 pub async fn run_evolution(
@@ -18,12 +19,35 @@ pub async fn run_evolution(
     sentinel: tauri::State<'_, SentinelCore>,
     evolution: tauri::State<'_, AutoEvolutionEngine>,
 ) -> AppResult<EvolutionReport> {
+    let start = Instant::now();
+    log::info!("[Engine] Starting evolution cycle...");
+
     let helios_state = helios.collect().await?;
     let nexus_state = nexus.validate().await?;
     let harmonia_state = harmonia.balance(&helios_state).await?;
     let sentinel_state = sentinel.scan(&helios_state).await?;
-    
-    evolution.evolve(&helios_state, &nexus_state, &harmonia_state, &sentinel_state).await
+
+    // Add timeout to prevent hanging (30 seconds)
+    let evolution_future = evolution.evolve(&helios_state, &nexus_state, &harmonia_state, &sentinel_state);
+    let result = tokio::time::timeout(Duration::from_secs(30), evolution_future).await;
+
+    let report = match result {
+        Ok(Ok(report)) => {
+            let duration = start.elapsed();
+            log::info!("[Perf] Evolution cycle completed in {}ms", duration.as_millis());
+            report
+        },
+        Ok(Err(e)) => {
+            log::error!("[Engine] Evolution failed: {}", e);
+            return Err(e);
+        },
+        Err(_) => {
+            log::error!("[Engine] Evolution timeout after 30s");
+            return Err(crate::types::AppError::Timeout("Evolution cycle exceeded 30s".into()));
+        }
+    };
+
+    Ok(report)
 }
 
 #[tauri::command]
@@ -45,6 +69,6 @@ pub async fn quick_health_check(
     let nexus_state = nexus.validate().await?;
     let harmonia_state = harmonia.balance(&helios_state).await?;
     let sentinel_state = sentinel.scan(&helios_state).await?;
-    
+
     evolution.quick_health_check(&helios_state, &nexus_state, &harmonia_state, &sentinel_state).await
 }

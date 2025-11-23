@@ -159,16 +159,14 @@ impl Sentinel {
         let mut sanitized = text.to_string();
 
         // Remove HTML tags
-        sanitized = Regex::new(r"<[^>]*>")
-            .unwrap()
-            .replace_all(&sanitized, "")
-            .to_string();
+        if let Ok(re) = Regex::new(r"<[^>]*>") {
+            sanitized = re.replace_all(&sanitized, "").to_string();
+        }
 
         // Remove script tags content
-        sanitized = Regex::new(r"<script[^>]*>.*?</script>")
-            .unwrap()
-            .replace_all(&sanitized, "")
-            .to_string();
+        if let Ok(re) = Regex::new(r"<script[^>]*>.*?</script>") {
+            sanitized = re.replace_all(&sanitized, "").to_string();
+        }
 
         // Escape shell special characters
         let special_chars = ['$', '`', '\\', '!', '&', '|', ';', '<', '>'];
@@ -185,10 +183,9 @@ impl Sentinel {
 
         // Remove code execution suggestions if in strict mode
         if self.strict_mode {
-            filtered = Regex::new(r"```bash\n.*?```")
-                .unwrap()
-                .replace_all(&filtered, "[Code execution removed for security]")
-                .to_string();
+            if let Ok(re) = Regex::new(r"```bash\n.*?```") {
+                filtered = re.replace_all(&filtered, "[Code execution removed for security]").to_string();
+            }
         }
 
         filtered

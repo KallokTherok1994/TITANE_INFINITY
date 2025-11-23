@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "17.2.1",
-  "description": "TITANE∞ v17.2.1 - Architecture Refactor Complete + Legacy Commands Bridge + Black Screen Fix, 100% Tauri v2, Rust Backend, Production-Ready",
+  "version": "17.2.0",
+  "description": "TITANE∞ v17.2.0 - Modular Architecture Complete: Plugin System + DevTools + Cognitive Engine + 23 Tauri Commands, 100% Tauri v2, Rust Backend, Production-Ready",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch & tauri dev",
@@ -27,12 +27,15 @@
     "verify:cognitive": "sh ./verify_cognitive_synthesis.sh && sh ./verify_strategic_direction.sh && sh ./verify_advanced_cognitive.sh",
     "verify:stacks": "sh ./verify_cognitive_stack.sh && sh ./verify_neural_mesh.sh && sh ./verify_perception_stack.sh",
     "verify:tauri": "sh ./verify_tauri_v2_api.sh",
+    "verify:backend": "sh ./scripts/verify_backend.sh",
+    "verify:backend:quick": "sh ./scripts/verify_backend.sh --quick",
+    "verify:backend:deep": "sh ./scripts/verify_backend.sh --deep",
+    "repair:backend": "sh ./scripts/repair_backend.sh",
     "test:build": "npm run type-check && npm run build"
   },
   "dependencies": {
     "@tauri-apps/api": "^2.9.0",
     "@tauri-apps/plugin-shell": "^2.0.0",
-    "@types/react-router-dom": "^5.3.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.24",
     "react": "^18.3.1",
@@ -45,9 +48,10 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0",
-    "@types/node": "^20.14.0",
+    "@types/node": "^20.19.25",
     "@types/react": "^18.3.27",
     "@types/react-dom": "^18.3.7",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react": "^4.3.1",

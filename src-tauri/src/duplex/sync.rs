@@ -26,7 +26,7 @@ impl DuplexSync {
     /// Notifier: utilisateur commence à parler
     pub fn user_started_speaking(&self) {
         self.is_user_speaking.store(true, Ordering::Relaxed);
-        
+
         // Si IA parle, déclencher atténuation/interruption
         if self.is_ai_speaking.load(Ordering::Relaxed) {
             self.should_interrupt.store(true, Ordering::Relaxed);
@@ -38,7 +38,7 @@ impl DuplexSync {
     /// Notifier: utilisateur arrête de parler
     pub fn user_stopped_speaking(&self) {
         self.is_user_speaking.store(false, Ordering::Relaxed);
-        
+
         // Restaurer volume IA si elle parle toujours
         if self.is_ai_speaking.load(Ordering::Relaxed) {
             self.set_attenuation(1.0);
@@ -49,7 +49,7 @@ impl DuplexSync {
     /// Notifier: IA commence à parler
     pub fn ai_started_speaking(&self) {
         self.is_ai_speaking.store(true, Ordering::Relaxed);
-        
+
         // Si user parle déjà, atténuer immédiatement
         if self.is_user_speaking.load(Ordering::Relaxed) {
             self.set_attenuation(0.2);
@@ -80,13 +80,17 @@ impl DuplexSync {
 
     /// Obtenir niveau atténuation (0.0-1.0)
     pub fn get_attenuation(&self) -> f32 {
-        *self.attenuation_level.lock().unwrap()
+        self.attenuation_level.lock()
+            .map(|level| *level)
+            .unwrap_or(1.0) // Fallback sûr en cas d'erreur
     }
 
     /// Définir niveau atténuation
     fn set_attenuation(&self, level: f32) {
         let clamped = level.clamp(0.0, 1.0);
-        *self.attenuation_level.lock().unwrap() = clamped;
+        if let Ok(mut attn) = self.attenuation_level.lock() {
+            *attn = clamped;
+        }
     }
 
     /// Réinitialiser l'état
@@ -138,10 +142,10 @@ mod tests {
     #[test]
     fn test_user_speaking_interrupts_ai() {
         let sync = DuplexSync::new();
-        
+
         sync.ai_started_speaking();
         assert!(sync.is_ai_speaking());
-        
+
         sync.user_started_speaking();
         assert!(sync.is_user_speaking());
         assert!(sync.should_interrupt());
@@ -151,11 +155,11 @@ mod tests {
     #[test]
     fn test_attenuation_restore() {
         let sync = DuplexSync::new();
-        
+
         sync.ai_started_speaking();
         sync.user_started_speaking();
         assert_eq!(sync.get_attenuation(), 0.2);
-        
+
         sync.user_stopped_speaking();
         assert_eq!(sync.get_attenuation(), 1.0);
     }
@@ -163,12 +167,12 @@ mod tests {
     #[test]
     fn test_reset() {
         let sync = DuplexSync::new();
-        
+
         sync.user_started_speaking();
         sync.ai_started_speaking();
-        
+
         sync.reset();
-        
+
         assert!(!sync.is_user_speaking());
         assert!(!sync.is_ai_speaking());
         assert_eq!(sync.get_attenuation(), 1.0);

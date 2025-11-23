@@ -126,7 +126,13 @@ pub fn project_add(
         },
     };
 
-    let mut projects = state.projects.lock().unwrap();
+    let mut projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] projects lock poisoned, recovering");
+            poisoned.into_inner()
+        }
+    };
     projects.insert(project_id.clone(), project.clone());
 
     println!("[PROJECT] Projet ajouté: {} [{}]", name, project_type);
@@ -136,7 +142,13 @@ pub fn project_add(
 
 #[tauri::command]
 pub fn project_list(state: State<ProjectAutoPilotState>) -> Result<Vec<Project>, String> {
-    let projects = state.projects.lock().unwrap();
+    let projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] projects lock poisoned in list, recovering");
+            poisoned.into_inner()
+        }
+    };
     let mut list: Vec<Project> = projects.values().cloned().collect();
 
     // Trier par last_opened (plus récents en premier)
@@ -150,7 +162,13 @@ pub fn project_get(
     project_id: String,
     state: State<ProjectAutoPilotState>,
 ) -> Result<Project, String> {
-    let projects = state.projects.lock().unwrap();
+    let projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] projects lock poisoned in get, recovering");
+            poisoned.into_inner()
+        }
+    };
     projects
         .get(&project_id)
         .cloned()
@@ -162,7 +180,13 @@ pub fn project_update(
     project: Project,
     state: State<ProjectAutoPilotState>,
 ) -> Result<Project, String> {
-    let mut projects = state.projects.lock().unwrap();
+    let mut projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] projects lock poisoned in update, recovering");
+            poisoned.into_inner()
+        }
+    };
     let id = project.id.clone();
     projects.insert(id.clone(), project.clone());
     Ok(project)
@@ -173,11 +197,23 @@ pub fn project_delete(
     project_id: String,
     state: State<ProjectAutoPilotState>,
 ) -> Result<String, String> {
-    let mut projects = state.projects.lock().unwrap();
+    let mut projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] projects lock poisoned in delete, recovering");
+            poisoned.into_inner()
+        }
+    };
     projects.remove(&project_id);
 
     // Supprimer tasks associées
-    let mut tasks = state.tasks.lock().unwrap();
+    let mut tasks = match state.tasks.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] tasks lock poisoned in delete, recovering");
+            poisoned.into_inner()
+        }
+    };
     tasks.retain(|t| t.project_id != project_id);
 
     Ok("Projet supprimé".to_string())
@@ -188,7 +224,13 @@ pub fn project_analyze(
     project_id: String,
     state: State<ProjectAutoPilotState>,
 ) -> Result<ProjectMetadata, String> {
-    let mut projects = state.projects.lock().unwrap();
+    let mut projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] projects lock poisoned in analyze, recovering");
+            poisoned.into_inner()
+        }
+    };
     let project = projects
         .get_mut(&project_id)
         .ok_or("Projet introuvable")?;
@@ -262,7 +304,13 @@ pub fn task_create(
         completed_at: None,
     };
 
-    let mut tasks = state.tasks.lock().unwrap();
+    let mut tasks = match state.tasks.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] tasks lock poisoned in task_add, recovering");
+            poisoned.into_inner()
+        }
+    };
     tasks.push(task.clone());
 
     println!("[PROJECT] Tâche créée: {} [{}]", title, project_id);
@@ -275,7 +323,13 @@ pub fn task_list(
     project_id: Option<String>,
     state: State<ProjectAutoPilotState>,
 ) -> Result<Vec<Task>, String> {
-    let tasks = state.tasks.lock().unwrap();
+    let tasks = match state.tasks.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] tasks lock poisoned in task_list, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     let filtered: Vec<Task> = if let Some(pid) = project_id {
         tasks.iter()
@@ -295,7 +349,13 @@ pub fn task_update_status(
     new_status: String,
     state: State<ProjectAutoPilotState>,
 ) -> Result<Task, String> {
-    let mut tasks = state.tasks.lock().unwrap();
+    let mut tasks = match state.tasks.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] tasks lock poisoned in task_update_status, recovering");
+            poisoned.into_inner()
+        }
+    };
     let task = tasks
         .iter_mut()
         .find(|t| t.id == task_id)
@@ -312,7 +372,13 @@ pub fn task_update_status(
 
 #[tauri::command]
 pub fn task_delete(task_id: String, state: State<ProjectAutoPilotState>) -> Result<String, String> {
-    let mut tasks = state.tasks.lock().unwrap();
+    let mut tasks = match state.tasks.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[PROJECT] tasks lock poisoned in task_delete, recovering");
+            poisoned.into_inner()
+        }
+    };
     tasks.retain(|t| t.id != task_id);
     Ok("Tâche supprimée".to_string())
 }
@@ -327,7 +393,13 @@ pub fn autopilot_run(state: State<ProjectAutoPilotState>) -> Result<AutoPilotRep
 
     println!("[AUTOPILOT] Démarrage analyse complète...");
 
-    let projects = state.projects.lock().unwrap();
+    let projects = match state.projects.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTOPILOT] projects lock poisoned, recovering");
+            poisoned.into_inner()
+        }
+    };
     let projects_count = projects.len();
 
     let mut suggestions = Vec::new();
@@ -427,13 +499,25 @@ fn execute_suggestion(suggestion: &AutoPilotSuggestion) -> Result<String, String
 pub fn autopilot_get_suggestions(
     state: State<ProjectAutoPilotState>,
 ) -> Result<Vec<AutoPilotSuggestion>, String> {
-    let suggestions = state.suggestions.lock().unwrap();
+    let suggestions = match state.suggestions.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTOPILOT] suggestions lock poisoned, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(suggestions.clone())
 }
 
 #[tauri::command]
 pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> Result<String, String> {
-    let mut autopilot_enabled = state.autopilot_enabled.lock().unwrap();
+    let mut autopilot_enabled = match state.autopilot_enabled.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTOPILOT] autopilot_enabled lock poisoned, recovering");
+            poisoned.into_inner()
+        }
+    };
     *autopilot_enabled = enabled;
 
     println!("[AUTOPILOT] {}", if enabled { "Activé" } else { "Désactivé" });
@@ -447,7 +531,13 @@ pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> R
 
 #[tauri::command]
 pub fn autopilot_get_schedule(state: State<ProjectAutoPilotState>) -> Result<String, String> {
-    let schedule = state.autopilot_schedule.lock().unwrap();
+    let schedule = match state.autopilot_schedule.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTOPILOT] schedule lock poisoned in get, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(schedule.clone())
 }
 
@@ -456,7 +546,13 @@ pub fn autopilot_set_schedule(
     cron: String,
     state: State<ProjectAutoPilotState>,
 ) -> Result<String, String> {
-    let mut schedule = state.autopilot_schedule.lock().unwrap();
+    let mut schedule = match state.autopilot_schedule.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[AUTOPILOT] schedule lock poisoned in set, recovering");
+            poisoned.into_inner()
+        }
+    };
     *schedule = cron.clone();
     Ok(format!("Schedule mis à jour: {}", cron))
 }
@@ -468,6 +564,6 @@ pub fn autopilot_set_schedule(
 fn get_timestamp() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
 }

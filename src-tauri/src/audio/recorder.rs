@@ -79,7 +79,8 @@ impl AudioRecorder {
     }
 
     pub fn start(&self) -> AudioResult<()> {
-        let mut recording = self.is_recording.lock().unwrap();
+        let mut recording = self.is_recording.lock()
+            .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
         if *recording {
             return Ok(()); // Already recording
         }
@@ -94,7 +95,8 @@ impl AudioRecorder {
     }
 
     pub fn stop(&self) -> AudioResult<()> {
-        let mut recording = self.is_recording.lock().unwrap();
+        let mut recording = self.is_recording.lock()
+            .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
         *recording = false;
 
         log::info!("Audio recording stopped");
@@ -102,24 +104,29 @@ impl AudioRecorder {
     }
 
     pub fn is_recording(&self) -> bool {
-        *self.is_recording.lock().unwrap()
+        self.is_recording.lock()
+            .map(|guard| *guard)
+            .unwrap_or(false)
     }
 
     pub fn get_audio_chunk(&self, duration_ms: u32) -> AudioResult<Vec<f32>> {
         let samples_count = (self.config.sample_rate * duration_ms / 1000) as usize;
-        let buffer = self.buffer.lock().unwrap();
+        let buffer = self.buffer.lock()
+            .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
         Ok(buffer.get_last_n(samples_count))
     }
 
     pub fn clear_buffer(&self) {
-        let mut buffer = self.buffer.lock().unwrap();
-        buffer.clear();
+        if let Ok(mut buffer) = self.buffer.lock() {
+            buffer.clear();
+        }
     }
 
     // Simulate audio input for testing
     pub fn simulate_audio(&self, samples: Vec<f32>) {
-        let mut buffer = self.buffer.lock().unwrap();
-        buffer.write(&samples);
+        if let Ok(mut buffer) = self.buffer.lock() {
+            buffer.write(&samples);
+        }
     }
 
     pub fn get_config(&self) -> &AudioConfig {

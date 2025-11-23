@@ -1,9 +1,11 @@
-// TITANE∞ v12 - Ollama Local AI Provider
-// Local AI inference with Ollama (llama3, mistral, phi4, etc.)
+// ═══════════════════════════════════════════════════════════════
+//   TITANE∞ v17.3.0 - Ollama Local AI (SECURED)
+//   Local AI inference with ShellGuard protection
+// ═══════════════════════════════════════════════════════════════
 
 use super::{AIError, AIRequest, AIResponse, AIProvider, AIResult};
+use crate::security::shell_guard::ShellGuard;
 use serde::{Deserialize, Serialize};
-use std::process::Command;
 use std::time::Duration;
 
 const OLLAMA_API_URL: &str = "http://localhost:11434/api/generate";
@@ -33,6 +35,7 @@ struct OllamaResponse {
 pub struct OllamaClient {
     model: String,
     client: reqwest::Client,
+    shell_guard: ShellGuard,
 }
 
 impl OllamaClient {
@@ -45,15 +48,16 @@ impl OllamaClient {
         Self {
             model: model.unwrap_or_else(|| DEFAULT_MODEL.to_string()),
             client,
+            shell_guard: ShellGuard::new(),
         }
     }
 
     pub fn is_installed(&self) -> bool {
-        Command::new("ollama")
-            .arg("list")
-            .output()
-            .map(|output| output.status.success())
-            .unwrap_or(false)
+        // ✅ SECURED: Use ShellGuard (ollama needs to be whitelisted)
+        // Note: 'ollama' NOT in default whitelist, must be added to policy
+        self.shell_guard
+            .execute_verified("ollama", &["list"])
+            .is_ok()
     }
 
     pub async fn is_available(&self) -> bool {
@@ -124,13 +128,13 @@ impl OllamaClient {
     }
 
     pub fn get_available_models(&self) -> Vec<String> {
-        Command::new("ollama")
-            .arg("list")
-            .output()
+        // ✅ SECURED: Use ShellGuard
+        self.shell_guard
+            .execute_verified("ollama", &["list"])
             .ok()
-            .and_then(|output| String::from_utf8(output.stdout).ok())
-            .map(|s| {
-                s.lines()
+            .map(|output| {
+                output
+                    .lines()
                     .skip(1) // Skip header
                     .filter_map(|line| line.split_whitespace().next())
                     .map(String::from)

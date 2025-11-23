@@ -9,8 +9,13 @@
 
 // Global modules export
 pub mod api;
+pub mod commands;
+pub mod cognitive;
 pub mod core;
+pub mod devtools;
 pub mod engine;
+pub mod plugin_system;
+pub mod security;  // ✅ NEW: Security framework
 pub mod services;
 pub mod shared;
 pub mod system;

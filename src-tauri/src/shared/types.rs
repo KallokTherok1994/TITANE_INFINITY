@@ -1,10 +1,18 @@
-// TITANE∞ v8.0 - Shared Types (Optimized)
-// Common types used across all modules - Zero unwrap, strict error handling
+// ═══════════════════════════════════════════════════════════════
+// TITANE∞ v8.0 → v17.3.0 - Shared Types (DEPRECATED)
+// ⚠️  CE FICHIER EST DEPRECATED
+// ⚠️  Utiliser `crate::types::shared` à la place
+// ⚠️  Migration guide: src-tauri/src/types/TYPES_MIGRATION_GUIDE.md
+// ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-/// Result type for all TITANE operations - explicit error handling
+
+/// ⚠️  DEPRECATED: Use `crate::types::AppResult` or `crate::utils::AppResult`
+#[deprecated(since = "17.3.0", note = "Use utils::AppResult or types::shared types instead")]
 pub type TitaneResult<T> = Result<T, String>;
-/// Module health status
+
+/// ⚠️  DEPRECATED: Use `crate::types::shared::HealthStatus`
+#[deprecated(since = "17.3.0", note = "Use types::shared::HealthStatus instead")]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum HealthStatus {
     Healthy,
@@ -12,7 +20,9 @@ pub enum HealthStatus {
     Critical,
     Offline,
 }
-/// Module health information
+
+/// ⚠️  DEPRECATED: Use `crate::types::shared::ModuleHealthInfo`
+#[deprecated(since = "17.3.0", note = "Use types::shared::ModuleHealthInfo instead")]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ModuleHealth {
     pub name: String,

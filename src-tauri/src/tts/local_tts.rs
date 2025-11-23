@@ -1,11 +1,14 @@
-// TITANE∞ v12 - Local TTS
-// Offline text-to-speech using local engines (Coqui, Piper, espeak)
+// ═══════════════════════════════════════════════════════════════
+//   TITANE∞ v17.3.0 - Local TTS (SECURED)
+//   Offline text-to-speech with ShellGuard protection
+// ═══════════════════════════════════════════════════════════════
 
 use super::{TTSError, TTSRequest, TTSResult};
-use std::process::Command;
+use crate::security::shell_guard::ShellGuard;
 
 pub struct LocalTTS {
     engine: TTSEngine,
+    shell_guard: ShellGuard,
 }
 
 #[derive(Debug, Clone)]
@@ -18,37 +21,29 @@ pub enum TTSEngine {
 
 impl LocalTTS {
     pub fn new() -> Self {
-        // Auto-detect available TTS engine
-        let engine = Self::detect_engine();
-        Self { engine }
+        let shell_guard = ShellGuard::new();
+        let engine = Self::detect_engine(&shell_guard);
+        Self { engine, shell_guard }
     }
 
-    fn detect_engine() -> TTSEngine {
-        if Self::is_command_available("piper") {
+    fn detect_engine(shell_guard: &ShellGuard) -> TTSEngine {
+        if shell_guard.is_command_available("piper") {
             TTSEngine::Piper
-        } else if Self::is_command_available("espeak") {
+        } else if shell_guard.is_command_available("espeak") {
             TTSEngine::Espeak
-        } else if Self::is_command_available("festival") {
+        } else if shell_guard.is_command_available("festival") {
             TTSEngine::Festival
         } else {
             TTSEngine::Espeak // Default fallback
         }
     }
 
-    fn is_command_available(command: &str) -> bool {
-        Command::new("which")
-            .arg(command)
-            .output()
-            .map(|output| output.status.success())
-            .unwrap_or(false)
-    }
-
     pub fn is_available(&self) -> bool {
         match self.engine {
-            TTSEngine::Espeak => Self::is_command_available("espeak"),
-            TTSEngine::Festival => Self::is_command_available("festival"),
-            TTSEngine::Piper => Self::is_command_available("piper"),
-            TTSEngine::Coqui => Self::is_command_available("tts"),
+            TTSEngine::Espeak => self.shell_guard.is_command_available("espeak"),
+            TTSEngine::Festival => self.shell_guard.is_command_available("festival"),
+            TTSEngine::Piper => self.shell_guard.is_command_available("piper"),
+            TTSEngine::Coqui => self.shell_guard.is_command_available("tts"),
         }
     }
 
@@ -62,74 +57,77 @@ impl LocalTTS {
     }
 
     fn speak_espeak(&self, request: &TTSRequest) -> TTSResult<()> {
-        let speed = (request.speed * 175.0) as u32; // espeak speed range
-        let pitch = (request.pitch * 50.0) as u32; // espeak pitch range
+        let speed = (request.speed * 175.0).clamp(80.0, 450.0) as u32;
+        let pitch = (request.pitch * 50.0).clamp(0.0, 99.0) as u32;
 
-        Command::new("espeak")
-            .arg("-v")
-            .arg("fr") // French voice
-            .arg("-s")
-            .arg(speed.to_string())
-            .arg("-p")
-            .arg(pitch.to_string())
-            .arg(&request.text)
-            .output()
-            .map_err(|e| TTSError::AudioError(e.to_string()))?;
+        // ✅ SECURED: Use ShellGuard
+        self.shell_guard
+            .execute_tts_espeak(&request.text, speed, pitch)
+            .map_err(|e| TTSError::AudioError(e))?;
 
         Ok(())
     }
 
     fn speak_festival(&self, request: &TTSRequest) -> TTSResult<()> {
-        // Festival doesn't support direct text input easily
-        // Write to temp file
+        // ✅ SECURED: Use ShellGuard for command execution
         let temp_path = std::env::temp_dir().join("titane_tts.txt");
         std::fs::write(&temp_path, &request.text)
             .map_err(|e| TTSError::AudioError(e.to_string()))?;
 
-        Command::new("festival")
-            .arg("--tts")
-            .arg(&temp_path)
-            .output()
-            .map_err(|e| TTSError::AudioError(e.to_string()))?;
+        let path_str = temp_path.to_str()
+            .ok_or_else(|| TTSError::AudioError("Invalid temp path".into()))?;
+
+        self.shell_guard
+            .execute_verified("festival", &["--tts", path_str])
+            .map_err(|e| TTSError::AudioError(e))?;
 
         Ok(())
     }
 
     fn speak_piper(&self, request: &TTSRequest) -> TTSResult<()> {
-        // Piper TTS (fast neural TTS)
+        // ✅ SECURED: No more sh -c, direct command execution
         let output_path = std::env::temp_dir().join("titane_tts.wav");
+        let output_str = output_path.to_str()
+            .ok_or_else(|| TTSError::AudioError("Invalid output path".into()))?;
 
-        Command::new("sh")
-            .arg("-c")
-            .arg(format!(
-                "echo '{}' | piper --model fr_FR-siwis-medium --output_file {}",
-                request.text,
-                output_path.display()
-            ))
-            .output()
+        // Write text to temp file for piper input
+        let input_path = std::env::temp_dir().join("titane_tts_input.txt");
+        std::fs::write(&input_path, &request.text)
             .map_err(|e| TTSError::AudioError(e.to_string()))?;
 
-        // Play the generated audio
+        let input_str = input_path.to_str()
+            .ok_or_else(|| TTSError::AudioError("Invalid input path".into()))?;
+
+        // Execute piper with input file
+        self.shell_guard
+            .execute_verified("piper", &[
+                "--model", "fr_FR-siwis-medium",
+                "--output_file", output_str,
+                input_str
+            ])
+            .map_err(|e| TTSError::AudioError(e))?;
+
+        // Play the generated audio on Linux
         #[cfg(target_os = "linux")]
-        Command::new("paplay")
-            .arg(&output_path)
-            .output()
-            .map_err(|e| TTSError::AudioError(e.to_string()))?;
+        {
+            self.shell_guard
+                .execute_verified("pactl", &["play-file", output_str])
+                .map_err(|e| TTSError::AudioError(e))?;
+        }
 
         Ok(())
     }
 
     fn speak_coqui(&self, request: &TTSRequest) -> TTSResult<()> {
-        // Coqui TTS
-        Command::new("tts")
-            .arg("--text")
-            .arg(&request.text)
-            .arg("--language_idx")
-            .arg("fr")
-            .arg("--out_path")
-            .arg("/tmp/titane_tts.wav")
-            .output()
-            .map_err(|e| TTSError::AudioError(e.to_string()))?;
+        // ✅ SECURED: Use ShellGuard (tts command needs to be whitelisted)
+        // NOTE: 'tts' is NOT in default whitelist - will fail unless added to policy
+        self.shell_guard
+            .execute_verified("tts", &[
+                "--text", &request.text,
+                "--language_idx", "fr",
+                "--out_path", "/tmp/titane_tts.wav"
+            ])
+            .map_err(|e| TTSError::AudioError(e))?;
 
         Ok(())
     }

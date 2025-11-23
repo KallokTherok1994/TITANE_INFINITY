@@ -1,4 +1,4 @@
-// TITANE∞ v∞ - Main Entry Point (Singularity Engine Complete)
+// TITANE∞ v17.2.0 - Main Entry Point (Modular Architecture Complete)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -12,12 +12,12 @@ import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
 document.documentElement.setAttribute('data-theme', 'dark');
 
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
-// @ts-ignore - __TAURI__ is injected by Tauri runtime
+// @ts-expect-error - __TAURI__ is injected by Tauri runtime
 if (typeof window.__TAURI__ !== 'undefined') {
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
       ev.preventDefault();
-      // @ts-ignore - __TAURI__ API
+      // @ts-expect-error - __TAURI__ API
       window.__TAURI__.window.getCurrent().openDevtools().catch((err: Error) => {
         console.error('[DevTools] Failed to open:', err);
       });
@@ -27,7 +27,7 @@ if (typeof window.__TAURI__ !== 'undefined') {
 }
 
 // Log system initialization
-console.log('🚀 TITANE∞ v∞ - Singularity Engine Complete');
+console.log('🚀 TITANE∞ v17.2.0 - Modular Architecture: Plugin System + DevTools + Cognitive Engine');
 console.log('🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
 console.log('✨ Frontend: 20 Unified Engines | SingularityState Active');
 console.log('🔒 Tauri v2.0 100% | Rust + React + TypeScript | Production-Ready');

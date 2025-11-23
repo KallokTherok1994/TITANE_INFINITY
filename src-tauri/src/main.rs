@@ -14,6 +14,10 @@ mod api;
 mod app;
 mod system;
 mod shared;
+mod commands;
+mod cognitive;
+mod devtools;
+mod plugin_system;
 
 use app::setup::TitaneApp;
 use tauri::Manager;
@@ -23,38 +27,40 @@ use system::persona_engine::PersonaEngine;
 fn main() {
     // Initialize logger
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
-    
+
     println!(">>> TITANE∞ BACKEND STARTING...");
-    
+
     utils::log_info("Main", &format!("Starting {} v{}", utils::APP_NAME, utils::APP_VERSION));
     utils::log_info("Main", utils::APP_DESCRIPTION);
-    
+
     tauri::Builder::default()
         .setup(|app| {
             // Get app data directory
             let app_data_dir = app.path().app_data_dir()
                 .map_err(|e| format!("Failed to get app data dir: {}", e))?;
-            
-            // Initialize TITANE∞
-            let titane_app = TitaneApp::new(app_data_dir)
+
+            // Initialize TITANE∞ (Phase 2b - async)
+            let titane_app = tauri::async_runtime::block_on(TitaneApp::new(app_data_dir))
                 .map_err(|e| format!("Failed to initialize TITANE: {}", e))?;
-            
-            // Register core modules as state
-            app.manage(titane_app.helios);
-            app.manage(titane_app.nexus);
-            app.manage(titane_app.harmonia);
-            app.manage(titane_app.sentinel);
-            app.manage(titane_app.memory);
+
+            // Register CoreCollection as single state (Phase 2b)
+            app.manage(titane_app.cores);
             app.manage(titane_app.evolution);
-            
+
+            // Register DevTools & Cognitive state
+            app.manage(titane_app.log_collector);
+            app.manage(titane_app.metrics_collector);
+            app.manage(titane_app.core_registry);
+            app.manage(titane_app.cognitive_engine);
+
             // 🌟 Initialize Persona Engine v24
             let persona_engine = PersonaEngine::new();
             app.manage(Mutex::new(persona_engine));
             utils::log_info("Main", "Persona Engine v24 initialized ✅");
-            
+
             utils::log_info("Main", "TITANE∞ Backend ready ✅");
             println!(">>> TITANE∞ BACKEND INITIALIZED SUCCESSFULLY");
-            
+
             // 🔧 AUTO-OPEN DEVTOOLS (Debug mode)
             #[cfg(debug_assertions)]
             {
@@ -64,7 +70,7 @@ fn main() {
                     println!(">>> DEVTOOLS OPENED");
                 }
             }
-            
+
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -84,6 +90,7 @@ fn main() {
             api::get_nexus_state,
             api::get_harmonia_state,
             api::get_sentinel_state,
+            api::get_detailed_health_report,
             // Legacy compatibility commands
             api::memory_save_entry,
             api::memory_clear,
@@ -105,6 +112,25 @@ fn main() {
             system::persona_engine::commands::persona_react,
             system::persona_engine::commands::persona_reset,
             system::persona_engine::commands::persona_get_multipliers,
+            // 🛠️ DevTools API v17.2.0 commands
+            commands::devtools::get_logs,
+            commands::devtools::get_correlated_logs,
+            commands::devtools::search_logs,
+            commands::devtools::export_logs,
+            commands::devtools::get_metric,
+            commands::devtools::list_all_metrics,
+            commands::devtools::get_core_metrics,
+            commands::devtools::get_dashboard_metrics,
+            commands::devtools::discover_cores,
+            commands::devtools::get_core_info,
+            commands::devtools::get_cognitive_state,
+            commands::devtools::update_cognitive_mode,
+            commands::devtools::get_three_centers_coherence,
+            commands::devtools::get_system_recommendations,
+            commands::devtools::check_needs_intervention,
+            commands::devtools::update_mental_charge,
+            commands::devtools::update_heart_alignment,
+            commands::devtools::update_body_energy,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

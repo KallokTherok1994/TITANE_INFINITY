@@ -1,11 +1,12 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v14.1 - Tauri Commands Central Hub (Meta-Mode Engine)               ║
+// ║ TITANE∞ v17.2.0 - Tauri Commands Central Hub                                ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 pub mod meta_mode;
 pub mod exp_fusion;
 pub mod evolution;
+pub mod devtools;
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;

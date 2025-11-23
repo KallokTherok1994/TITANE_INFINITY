@@ -1,9 +1,9 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3 — APP COMPONENT + LIVING ENGINES
+ *   TITANE∞ v17.2.0 — APP COMPONENT + MODULAR ARCHITECTURE
  *   100% TAURI NATIVE - NO HTTP SERVER MODE
- *   Backend v17.2.1 + 13 Living Engines (v21-v24)
- *   React Router v7 + AppShell + Auto-Heal + Persona Engine
+ *   Backend v17.2.0: Plugin System + DevTools + Cognitive Engine
+ *   React Router v7 + AppShell + 23 Tauri Commands API
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -25,7 +25,7 @@ if (typeof window !== 'undefined' && window.location.origin.includes('http')) {
     document.body.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:#ff4444;font-family:monospace;flex-direction:column;padding:2rem;text-align:center;">
         <h1 style="font-size:3rem;margin-bottom:1rem;">🔒 MODE TAURI EXCLUSIF</h1>
-        <p style="font-size:1.5rem;margin-bottom:2rem;">TITANE∞ v24.3 fonctionne UNIQUEMENT en mode Tauri Native</p>
+        <p style="font-size:1.5rem;margin-bottom:2rem;">TITANE∞ v17.2.0 fonctionne UNIQUEMENT en mode Tauri Native</p>
         <p style="font-size:1.2rem;color:#888;">Contexte HTTP détecté: ${window.location.origin}</p>
         <p style="font-size:1.2rem;color:#00ff88;margin-top:2rem;">✅ Commande correcte:</p>
         <code style="font-size:1.5rem;background:#1a1a1a;padding:1rem 2rem;border-radius:8px;margin-top:1rem;">pnpm run build && tauri dev</code>

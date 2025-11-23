@@ -68,7 +68,8 @@ pub fn init() -> SemanticKernelState {
     };
 
     // Charger skills par défaut (bloquer pour init synchrone)
-    let rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = tokio::runtime::Runtime::new()
+        .expect("[SEMANTIC_KERNEL] FATAL: Failed to create tokio runtime");
     rt.block_on(async {
         load_default_skills(&state).await;
     });

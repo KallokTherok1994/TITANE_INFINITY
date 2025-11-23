@@ -82,7 +82,8 @@ pub fn init() -> ChatOrchestratorState {
     };
 
     // Initialiser statuts providers (bloquer pour init synchrone)
-    let rt = tokio::runtime::Runtime::new().unwrap();
+    let rt = tokio::runtime::Runtime::new()
+        .expect("[CHAT_ORCHESTRATOR] FATAL: Failed to create tokio runtime");
     rt.block_on(async {
         initialize_providers(&state).await;
     });
@@ -148,7 +149,7 @@ pub async fn chat_send_message(
     // Boucle de fallback (au lieu de récursion)
     for provider in providers_to_try {
         println!("[CHAT] Tentative avec provider: {}", provider);
-        
+
         // Cloner request pour chaque tentative
         request.provider = provider.clone();
 
@@ -410,6 +411,6 @@ pub async fn chat_stream_message(
 fn get_timestamp() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
 }

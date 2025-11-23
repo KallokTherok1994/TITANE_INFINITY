@@ -29,16 +29,12 @@ fn main() {
             let app_data_dir = app.path().app_data_dir()
                 .map_err(|e| format!("Failed to get app data dir: {}", e))?;
             
-            // Initialize TITANE∞
-            let titane_app = TitaneApp::new(app_data_dir)
+            // Initialize TITANE∞ (Phase 2b - async)
+            let titane_app = tauri::async_runtime::block_on(TitaneApp::new(app_data_dir))
                 .map_err(|e| format!("Failed to initialize TITANE: {}", e))?;
             
-            // Register core modules as state
-            app.manage(titane_app.helios);
-            app.manage(titane_app.nexus);
-            app.manage(titane_app.harmonia);
-            app.manage(titane_app.sentinel);
-            app.manage(titane_app.memory);
+            // Register CoreCollection as single state (Phase 2b)
+            app.manage(titane_app.cores);
             app.manage(titane_app.evolution);
             
             utils::log_info("Main", "TITANE∞ Backend ready");

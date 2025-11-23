@@ -133,7 +133,13 @@ impl AutoEvolutionEngine {
 
     /// Cycle complet d'évolution : Observer → Comparer → Ajuster → Stabiliser → Renforcer → Aligner
     pub fn evolution_cycle(&mut self, kevin_metrics: &KevinMetrics) -> EvolutionResult {
-        let mut state = self.state.lock().unwrap();
+        let mut state = match self.state.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[AutoEvolution] Lock poisoned, recovering: {}", poisoned);
+                poisoned.into_inner()
+            }
+        };
         state.cycle_count += 1;
         let cycle_id = state.cycle_count;
         drop(state);
@@ -173,7 +179,13 @@ impl AutoEvolutionEngine {
         // Générer recommandations
         let recommendations = self.generate_recommendations(kevin_metrics);
 
-        let mut state = self.state.lock().unwrap();
+        let mut state = match self.state.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[AutoEvolution] Lock poisoned during finalization: {}", poisoned);
+                poisoned.into_inner()
+            }
+        };
         state.last_evolution = chrono::Utc::now().to_rfc3339();
 
         EvolutionResult {
@@ -278,12 +290,24 @@ impl AutoEvolutionEngine {
 
     /// Obtenir l'état actuel du système
     pub fn get_evolution_state(&self) -> EvolutionState {
-        self.state.lock().unwrap().clone()
+        match self.state.lock() {
+            Ok(guard) => guard.clone(),
+            Err(poisoned) => {
+                eprintln!("[AutoEvolution] Lock poisoned in get_state, recovering");
+                poisoned.into_inner().clone()
+            }
+        }
     }
 
     /// Réinitialiser le système (avec sécurité)
     pub fn safe_reset(&mut self) {
-        let mut state = self.state.lock().unwrap();
+        let mut state = match self.state.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[AutoEvolution] Lock poisoned during reset, recovering");
+                poisoned.into_inner()
+            }
+        };
         state.cycle_count = 0;
         state.stability_score = 1.0;
         state.coherence_score = 1.0;

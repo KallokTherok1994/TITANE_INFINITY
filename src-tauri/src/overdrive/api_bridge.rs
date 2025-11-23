@@ -76,7 +76,13 @@ pub fn init() -> ApiBridgeState {
 }
 
 fn initialize_default_apis(state: &ApiBridgeState) {
-    let mut configs = state.configs.lock().unwrap();
+    let mut configs = match state.configs.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] configs lock poisoned in initialize_default_apis, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     // Gemini API
     configs.insert(
@@ -139,7 +145,13 @@ pub async fn api_request(
 
     // Récupérer config API
     let config = {
-        let configs = state.configs.lock().unwrap();
+        let configs = match state.configs.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[API_BRIDGE] configs lock poisoned in api_request, recovering");
+                poisoned.into_inner()
+            }
+        };
         configs
             .get(&request.api_name)
             .cloned()
@@ -244,8 +256,14 @@ async fn execute_http_request(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn api_get_configs(state: State<ApiBridgeState>) -> Result<Vec<ApiConfig>, String> {
-    let configs = state.configs.lock().unwrap();
+pub fn api_list_configs(state: State<ApiBridgeState>) -> Result<Vec<ApiConfig>, String> {
+    let configs = match state.configs.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] configs lock poisoned in api_list_configs, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(configs.values().cloned().collect())
 }
 
@@ -254,7 +272,13 @@ pub fn api_update_config(
     config: ApiConfig,
     state: State<ApiBridgeState>,
 ) -> Result<String, String> {
-    let mut configs = state.configs.lock().unwrap();
+    let mut configs = match state.configs.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] configs lock poisoned in api_update_config, recovering");
+            poisoned.into_inner()
+        }
+    };
     let name = config.name.clone();
     configs.insert(name.clone(), config);
     println!("[API_BRIDGE] Config mise à jour: {}", name);
@@ -267,7 +291,13 @@ pub fn api_set_key(
     api_key: String,
     state: State<ApiBridgeState>,
 ) -> Result<String, String> {
-    let mut configs = state.configs.lock().unwrap();
+    let mut configs = match state.configs.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] configs lock poisoned in api_set_key, recovering");
+            poisoned.into_inner()
+        }
+    };
     if let Some(config) = configs.get_mut(&api_name) {
         config.api_key = Some(api_key);
         config.enabled = true;
@@ -284,7 +314,13 @@ pub fn api_enable(
     enabled: bool,
     state: State<ApiBridgeState>,
 ) -> Result<String, String> {
-    let mut configs = state.configs.lock().unwrap();
+    let mut configs = match state.configs.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] configs lock poisoned in api_enable, recovering");
+            poisoned.into_inner()
+        }
+    };
     if let Some(config) = configs.get_mut(&api_name) {
         config.enabled = enabled;
         Ok(format!(
@@ -303,12 +339,24 @@ pub fn api_enable(
 
 #[tauri::command]
 pub fn api_get_stats(state: State<ApiBridgeState>) -> Result<Vec<ApiStats>, String> {
-    let stats = state.stats.lock().unwrap();
+    let stats = match state.stats.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] stats lock poisoned in api_get_stats, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(stats.values().cloned().collect())
 }
 
 fn update_stats(state: &ApiBridgeState, api_name: &str, success: bool, latency_ms: u64) {
-    let mut stats = state.stats.lock().unwrap();
+    let mut stats = match state.stats.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] stats lock poisoned in update_stats, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     let stat = stats.entry(api_name.to_string()).or_insert(ApiStats {
         api_name: api_name.to_string(),
@@ -335,7 +383,13 @@ fn update_stats(state: &ApiBridgeState, api_name: &str, success: bool, latency_m
 
 #[tauri::command]
 pub fn api_reset_stats(state: State<ApiBridgeState>) -> Result<String, String> {
-    let mut stats = state.stats.lock().unwrap();
+    let mut stats = match state.stats.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] stats lock poisoned in api_reset_stats, recovering");
+            poisoned.into_inner()
+        }
+    };
     stats.clear();
     Ok("Statistiques réinitialisées".to_string())
 }
@@ -345,7 +399,13 @@ pub fn api_reset_stats(state: State<ApiBridgeState>) -> Result<String, String> {
 // ─────────────────────────────────────────────────────────────────────────────
 
 fn check_cache(state: &ApiBridgeState, url: &str) -> Option<String> {
-    let cache = state.cache.lock().unwrap();
+    let cache = match state.cache.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] cache lock poisoned in check_cache, recovering");
+            poisoned.into_inner()
+        }
+    };
     if let Some((response, timestamp)) = cache.get(url) {
         let age = get_timestamp() - timestamp;
         if age < 300 {
@@ -357,7 +417,13 @@ fn check_cache(state: &ApiBridgeState, url: &str) -> Option<String> {
 }
 
 fn set_cache(state: &ApiBridgeState, url: &str, response: &str) {
-    let mut cache = state.cache.lock().unwrap();
+    let mut cache = match state.cache.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] cache lock poisoned in set_cache, recovering");
+            poisoned.into_inner()
+        }
+    };
     cache.insert(url.to_string(), (response.to_string(), get_timestamp()));
 
     // Limiter taille cache à 100 entrées
@@ -375,7 +441,13 @@ fn set_cache(state: &ApiBridgeState, url: &str, response: &str) {
 
 #[tauri::command]
 pub fn api_clear_cache(state: State<ApiBridgeState>) -> Result<usize, String> {
-    let mut cache = state.cache.lock().unwrap();
+    let mut cache = match state.cache.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] cache lock poisoned in api_clear_cache, recovering");
+            poisoned.into_inner()
+        }
+    };
     let size = cache.len();
     cache.clear();
     Ok(size)
@@ -383,7 +455,13 @@ pub fn api_clear_cache(state: State<ApiBridgeState>) -> Result<usize, String> {
 
 #[tauri::command]
 pub fn api_get_cache_size(state: State<ApiBridgeState>) -> Result<usize, String> {
-    let cache = state.cache.lock().unwrap();
+    let cache = match state.cache.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[API_BRIDGE] cache lock poisoned in api_get_cache_size, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(cache.len())
 }
 

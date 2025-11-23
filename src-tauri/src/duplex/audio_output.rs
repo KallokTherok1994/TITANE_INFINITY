@@ -46,8 +46,14 @@ impl AudioOutput {
         let interrupt_flag = Arc::clone(&self.interrupt_flag);
 
         tokio::spawn(async move {
-            let mut rx = audio_rx.lock().unwrap();
-            
+            let mut rx = match audio_rx.lock() {
+                Ok(guard) => guard,
+                Err(poisoned) => {
+                    eprintln!("[AudioOutput] audio_rx lock poisoned, recovering");
+                    poisoned.into_inner()
+                }
+            };
+
             while is_playing.load(Ordering::Relaxed) {
                 // Vérifier interruption
                 if interrupt_flag.load(Ordering::Relaxed) {
@@ -62,7 +68,7 @@ impl AudioOutput {
                     Some(chunk) => {
                         let current_volume = volume.load(Ordering::Relaxed) as f32 / 100.0;
                         Self::play_chunk(&chunk, current_volume).await;
-                        
+
                         if chunk.is_final {
                             println!("[AudioOutput] Lecture terminée");
                         }
@@ -72,7 +78,7 @@ impl AudioOutput {
                     }
                 }
             }
-            
+
             println!("[AudioOutput] Lecture arrêtée");
         });
 
@@ -135,12 +141,12 @@ mod tests {
     async fn test_audio_output_volume() {
         let (_tx, rx) = mpsc::channel(10);
         let output = AudioOutput::new(rx);
-        
+
         assert_eq!(output.get_volume(), 100);
-        
+
         output.set_volume(50);
         assert_eq!(output.get_volume(), 50);
-        
+
         output.set_volume(150); // Over limit
         assert_eq!(output.get_volume(), 100);
     }
@@ -149,9 +155,9 @@ mod tests {
     async fn test_audio_output_interrupt() {
         let (_tx, rx) = mpsc::channel(10);
         let output = AudioOutput::new(rx);
-        
+
         assert!(!output.interrupt_flag.load(Ordering::Relaxed));
-        
+
         output.interrupt();
         assert!(output.interrupt_flag.load(Ordering::Relaxed));
     }

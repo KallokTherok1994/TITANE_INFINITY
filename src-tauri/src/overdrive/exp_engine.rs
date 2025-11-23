@@ -108,7 +108,13 @@ fn initialize_categories(state: &ExpEngineState) {
         "learning",
     ];
 
-    let mut profile = state.profile.lock().unwrap();
+    let mut profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in initialize_categories, recovering");
+            poisoned.into_inner()
+        }
+    };
     for category in categories {
         profile.categories.insert(
             category.to_string(),
@@ -123,7 +129,13 @@ fn initialize_categories(state: &ExpEngineState) {
 }
 
 fn initialize_talents(state: &ExpEngineState) {
-    let mut talents = state.talents.lock().unwrap();
+    let mut talents = match state.talents.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] talents lock poisoned in initialize_talents, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     // Tier 1 - Chat IA
     talents.insert(
@@ -212,7 +224,13 @@ pub fn exp_add(
 
     // Ajouter à l'historique
     {
-        let mut history = state.history.lock().unwrap();
+        let mut history = match state.history.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[EXP] history lock poisoned in exp_add_exp, recovering");
+                poisoned.into_inner()
+            }
+        };
         history.push(gain.clone());
 
         // Limiter historique à 1000 entrées
@@ -223,7 +241,13 @@ pub fn exp_add(
     }
 
     // Mettre à jour profil
-    let mut profile = state.profile.lock().unwrap();
+    let mut profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in exp_add_exp, recovering");
+            poisoned.into_inner()
+        }
+    };
     let old_level = profile.level;
     profile.total_exp += amount;
 
@@ -247,7 +271,13 @@ pub fn exp_add(
             timestamp: get_timestamp(),
         };
 
-        let mut events = state.level_up_events.lock().unwrap();
+        let mut events = match state.level_up_events.lock() {
+            Ok(guard) => guard,
+            Err(poisoned) => {
+                eprintln!("[EXP] level_up_events lock poisoned, recovering");
+                poisoned.into_inner()
+            }
+        };
         events.push(event);
 
         println!("[EXP] 🎉 LEVEL UP! {} → {} | +1 Talent Point", old_level, profile.level);
@@ -287,7 +317,13 @@ fn calculate_exp_for_next_level(current_level: u32) -> u64 {
 
 #[tauri::command]
 pub fn exp_get_profile(state: State<ExpEngineState>) -> Result<ExpProfile, String> {
-    let profile = state.profile.lock().unwrap();
+    let profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in exp_get_profile, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(profile.clone())
 }
 
@@ -296,7 +332,13 @@ pub fn exp_get_level_up_history(
     limit: usize,
     state: State<ExpEngineState>,
 ) -> Result<Vec<LevelUpEvent>, String> {
-    let events = state.level_up_events.lock().unwrap();
+    let events = match state.level_up_events.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] level_up_events lock poisoned in exp_get_level_up_history, recovering");
+            poisoned.into_inner()
+        }
+    };
     let start = if events.len() > limit {
         events.len() - limit
     } else {
@@ -313,8 +355,14 @@ pub fn exp_get_level_up_history(
 /*
 #[tauri::command]
 pub fn exp_get_talents(state: State<ExpEngineState>) -> Result<Vec<Talent>, String> {
-    let talents = state.talents.lock().unwrap();
-    let profile = state.profile.lock().unwrap();
+    let talents = match state.talents.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => { eprintln!("[EXP] talents lock poisoned"); poisoned.into_inner() }
+    };
+    let profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => { eprintln!("[EXP] profile lock poisoned"); poisoned.into_inner() }
+    };
 
     let mut result: Vec<Talent> = talents.values().cloned().collect();
 
@@ -337,8 +385,20 @@ pub fn exp_unlock_talent(
     talent_id: String,
     state: State<ExpEngineState>,
 ) -> Result<ExpProfile, String> {
-    let mut profile = state.profile.lock().unwrap();
-    let talents = state.talents.lock().unwrap();
+    let mut profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in exp_unlock_talent, recovering");
+            poisoned.into_inner()
+        }
+    };
+    let talents = match state.talents.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] talents lock poisoned in exp_unlock_talent, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     let talent = talents
         .get(&talent_id)
@@ -376,7 +436,13 @@ pub fn exp_unlock_talent(
 
 #[tauri::command]
 pub fn exp_reset_talents(state: State<ExpEngineState>) -> Result<ExpProfile, String> {
-    let mut profile = state.profile.lock().unwrap();
+    let mut profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in exp_reset_talents, recovering");
+            poisoned.into_inner()
+        }
+    };
     let talents_unlocked = profile.talents.len() as u32;
 
     profile.talents.clear();
@@ -397,7 +463,13 @@ pub fn exp_get_history(
     limit: usize,
     state: State<ExpEngineState>,
 ) -> Result<Vec<ExpGain>, String> {
-    let history = state.history.lock().unwrap();
+    let history = match state.history.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] history lock poisoned in exp_get_history, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     let filtered: Vec<ExpGain> = if let Some(cat) = category {
         history.iter()
@@ -422,7 +494,13 @@ pub fn exp_get_category_stats(
     category: String,
     state: State<ExpEngineState>,
 ) -> Result<CategoryExp, String> {
-    let profile = state.profile.lock().unwrap();
+    let profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in exp_get_category_stats, recovering");
+            poisoned.into_inner()
+        }
+    };
     profile
         .categories
         .get(&category)
@@ -432,7 +510,13 @@ pub fn exp_get_category_stats(
 
 #[tauri::command]
 pub fn exp_get_total_contributions(state: State<ExpEngineState>) -> Result<u32, String> {
-    let profile = state.profile.lock().unwrap();
+    let profile = match state.profile.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[EXP] profile lock poisoned in exp_get_total_contributions, recovering");
+            poisoned.into_inner()
+        }
+    };
     let total: u32 = profile.categories.values().map(|c| c.contributions).sum();
     Ok(total)
 }
@@ -485,6 +569,6 @@ pub fn exp_get_achievements(_state: State<ExpEngineState>) -> Result<Vec<Achieve
 fn get_timestamp() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
 }

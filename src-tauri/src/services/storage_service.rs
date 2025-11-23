@@ -1,17 +1,17 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.2.0 — SERVICES: STORAGE
-//   JSON persistence abstraction
+//   TITANE∞ v17.3.0 — SERVICES: STORAGE (SECURED)
+//   JSON persistence with StorageGuard protection
 // ═══════════════════════════════════════════════════════════════
 
 #![allow(dead_code)] // Storage service - used by memory persistence
 
 use crate::utils::{AppResult, AppError};
+use crate::security::storage_guard::StorageGuard;
 use serde::{Serialize, de::DeserializeOwned};
 use std::path::PathBuf;
-use tokio::fs;
 
 pub struct StorageService {
-    base_path: PathBuf,
+    storage_guard: StorageGuard,
 }
 
 impl StorageService {
@@ -21,28 +21,34 @@ impl StorageService {
                 .map_err(|e| AppError::Io(format!("Failed to create storage dir: {}", e)))?;
         }
 
-        Ok(Self { base_path })
+        Ok(Self {
+            storage_guard: StorageGuard::new(base_path),
+        })
     }
 
     /// Save object as JSON
     pub async fn save<T: Serialize>(&self, key: &str, data: &T) -> AppResult<()> {
-        let path = self.base_path.join(format!("{}.json", key));
+        // ✅ SECURED: Validate key through StorageGuard
+        let safe_key = StorageGuard::sanitize_filename(key);
+        let file_path = format!("{}.json", safe_key);
 
         let json = serde_json::to_string_pretty(data)
             .map_err(|e| AppError::Parse(format!("Failed to serialize: {}", e)))?;
 
-        fs::write(path, json).await
-            .map_err(|e| AppError::Io(format!("Failed to write storage: {}", e)))?;
+        self.storage_guard.safe_write_string(&file_path, &json).await
+            .map_err(|e| AppError::Io(e))?;
 
         Ok(())
     }
 
     /// Load object from JSON
     pub async fn load<T: DeserializeOwned>(&self, key: &str) -> AppResult<T> {
-        let path = self.base_path.join(format!("{}.json", key));
+        // ✅ SECURED: Validate key through StorageGuard
+        let safe_key = StorageGuard::sanitize_filename(key);
+        let file_path = format!("{}.json", safe_key);
 
-        let json = fs::read_to_string(path).await
-            .map_err(|e| AppError::Io(format!("Failed to read storage: {}", e)))?;
+        let json = self.storage_guard.safe_read_string(&file_path).await
+            .map_err(|e| AppError::Io(e))?;
 
         let data = serde_json::from_str(&json)
             .map_err(|e| AppError::Parse(format!("Failed to deserialize: {}", e)))?;
@@ -52,36 +58,33 @@ impl StorageService {
 
     /// Check if key exists
     pub fn exists(&self, key: &str) -> bool {
-        self.base_path.join(format!("{}.json", key)).exists()
+        let safe_key = StorageGuard::sanitize_filename(key);
+        let file_path = format!("{}.json", safe_key);
+        self.storage_guard.exists(&file_path)
     }
 
     /// Delete key
     pub async fn delete(&self, key: &str) -> AppResult<()> {
-        let path = self.base_path.join(format!("{}.json", key));
+        // ✅ SECURED: Validate key through StorageGuard
+        let safe_key = StorageGuard::sanitize_filename(key);
+        let file_path = format!("{}.json", safe_key);
 
-        if path.exists() {
-            fs::remove_file(path).await
-                .map_err(|e| AppError::Io(format!("Failed to delete storage: {}", e)))?;
-        }
+        self.storage_guard.safe_delete(&file_path).await
+            .map_err(|e| AppError::Io(e))?;
 
         Ok(())
     }
 
     /// List all keys
     pub async fn list_keys(&self) -> AppResult<Vec<String>> {
-        let mut entries = fs::read_dir(&self.base_path).await
-            .map_err(|e| AppError::Io(format!("Failed to read storage dir: {}", e)))?;
+        // ✅ SECURED: Use StorageGuard list_dir
+        let files = self.storage_guard.safe_list_dir("").await
+            .map_err(|e| AppError::Io(e))?;
 
-        let mut keys = Vec::new();
-        while let Some(entry) = entries.next_entry().await
-            .map_err(|e| AppError::Io(format!("Failed to read entry: {}", e)))? {
-
-            if let Some(name) = entry.file_name().to_str() {
-                if name.ends_with(".json") {
-                    keys.push(name.trim_end_matches(".json").to_string());
-                }
-            }
-        }
+        let keys: Vec<String> = files.iter()
+            .filter(|name| name.ends_with(".json"))
+            .map(|name| name.trim_end_matches(".json").to_string())
+            .collect();
 
         Ok(keys)
     }

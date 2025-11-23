@@ -103,11 +103,23 @@ pub async fn memory_store(
         access_count: 0,
     };
 
-    let mut entries = state.entries.lock().unwrap();
+    let mut entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_store, recovering");
+            poisoned.into_inner()
+        }
+    };
     entries.push(entry);
 
     // Marquer index comme à reconstruire
-    *state.index_built.lock().unwrap() = false;
+    *match state.index_built.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] index_built lock poisoned, recovering");
+            poisoned.into_inner()
+        }
+    } = false;
 
     Ok(entry_id)
 }
@@ -151,7 +163,13 @@ pub async fn memory_search(
     let query_embedding = generate_embedding(&query.query, &state).await?;
 
     // Recherche par similarité cosine
-    let entries = state.entries.lock().unwrap();
+    let entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_search, recovering");
+            poisoned.into_inner()
+        }
+    };
     let mut results: Vec<MemoryResult> = Vec::new();
 
     for entry in entries.iter() {
@@ -177,7 +195,7 @@ pub async fn memory_search(
     }
 
     // Trier par similarité décroissante
-    results.sort_by(|a, b| b.similarity.partial_cmp(&a.similarity).unwrap());
+    results.sort_by(|a, b| b.similarity.partial_cmp(&a.similarity).unwrap_or(std::cmp::Ordering::Equal));
 
     // Limiter résultats
     results.truncate(query.limit);
@@ -192,7 +210,13 @@ pub fn memory_get_related(
     limit: usize,
     state: State<MemoryEngineState>,
 ) -> Result<Vec<MemoryEntry>, String> {
-    let entries = state.entries.lock().unwrap();
+    let entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_get_related, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     let base_entry = entries
         .iter()
@@ -211,7 +235,7 @@ pub fn memory_get_related(
     }
 
     // Trier par similarité
-    related.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap());
+    related.sort_by(|a, b| b.0.partial_cmp(&a.0).unwrap_or(std::cmp::Ordering::Equal));
 
     // Extraire entries
     let results: Vec<MemoryEntry> = related.into_iter().take(limit).map(|(_, e)| e).collect();
@@ -230,14 +254,26 @@ pub fn memory_rebuild_index(state: State<MemoryEngineState>) -> Result<String, S
     // TODO: Implémenter HNSW ou FAISS pour recherche rapide
     // Pour l'instant, recherche linéaire
 
-    *state.index_built.lock().unwrap() = true;
+    *match state.index_built.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] index_built lock poisoned in memory_rebuild_index, recovering");
+            poisoned.into_inner()
+        }
+    } = true;
 
     Ok("Index reconstruit".to_string())
 }
 
 #[tauri::command]
 pub fn memory_get_stats(state: State<MemoryEngineState>) -> Result<MemoryStats, String> {
-    let entries = state.entries.lock().unwrap();
+    let entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_get_stats, recovering");
+            poisoned.into_inner()
+        }
+    };
 
     let total_entries = entries.len();
     let total_tokens: u64 = entries.iter().map(|e| e.content.len() as u64).sum();
@@ -280,7 +316,13 @@ pub fn memory_prune(
     min_access_count: u32,
     state: State<MemoryEngineState>,
 ) -> Result<usize, String> {
-    let mut entries = state.entries.lock().unwrap();
+    let mut entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_prune, recovering");
+            poisoned.into_inner()
+        }
+    };
     let initial_count = entries.len();
 
     entries.retain(|e| e.importance >= min_importance || e.access_count >= min_access_count);
@@ -293,7 +335,13 @@ pub fn memory_prune(
 
 #[tauri::command]
 pub fn memory_delete(entry_id: String, state: State<MemoryEngineState>) -> Result<String, String> {
-    let mut entries = state.entries.lock().unwrap();
+    let mut entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_delete, recovering");
+            poisoned.into_inner()
+        }
+    };
     entries.retain(|e| e.id != entry_id);
     Ok("Entrée supprimée".to_string())
 }
@@ -302,9 +350,15 @@ pub fn memory_delete(entry_id: String, state: State<MemoryEngineState>) -> Resul
 /*
 #[tauri::command]
 pub fn memory_clear(state: State<MemoryEngineState>) -> Result<String, String> {
-    let mut entries = state.entries.lock().unwrap();
+    let mut entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => { eprintln!("[MEMORY] entries lock poisoned"); poisoned.into_inner() }
+    };
     entries.clear();
-    *state.index_built.lock().unwrap() = false;
+    *match state.index_built.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => { eprintln!("[MEMORY] index_built lock poisoned"); poisoned.into_inner() }
+    } = false;
     println!("[MEMORY] Mémoire complètement vidée");
     Ok("Mémoire vidée".to_string())
 }
@@ -318,7 +372,13 @@ async fn generate_embedding(
     text: &str,
     state: &MemoryEngineState,
 ) -> Result<Vec<f32>, String> {
-    let model = state.embedding_model.lock().unwrap().clone();
+    let model = match state.embedding_model.lock() {
+        Ok(guard) => guard.clone(),
+        Err(poisoned) => {
+            eprintln!("[MEMORY] embedding_model lock poisoned, recovering");
+            poisoned.into_inner().clone()
+        }
+    };
 
     // TODO: Implémenter appel Ollama embeddings
     // POST http://localhost:11434/api/embeddings
@@ -377,7 +437,13 @@ fn calculate_importance(content: &str, metadata: &MemoryMetadata) -> f32 {
 
 #[tauri::command]
 pub fn memory_export(state: State<MemoryEngineState>) -> Result<Vec<MemoryEntry>, String> {
-    let entries = state.entries.lock().unwrap();
+    let entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_export, recovering");
+            poisoned.into_inner()
+        }
+    };
     Ok(entries.clone())
 }
 
@@ -386,10 +452,22 @@ pub fn memory_import(
     entries: Vec<MemoryEntry>,
     state: State<MemoryEngineState>,
 ) -> Result<usize, String> {
-    let mut current_entries = state.entries.lock().unwrap();
+    let mut current_entries = match state.entries.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] entries lock poisoned in memory_import, recovering");
+            poisoned.into_inner()
+        }
+    };
     let count = entries.len();
     current_entries.extend(entries);
-    *state.index_built.lock().unwrap() = false;
+    *match state.index_built.lock() {
+        Ok(guard) => guard,
+        Err(poisoned) => {
+            eprintln!("[MEMORY] index_built lock poisoned in memory_import, recovering");
+            poisoned.into_inner()
+        }
+    } = false;
     Ok(count)
 }
 
