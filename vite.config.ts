@@ -84,6 +84,35 @@ export default defineConfig({
   // All assets served via Tauri's asset protocol, no localhost ports
   // To run: pnpm run build && tauri dev (builds static files first)
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🎯 DEV SERVER CONFIGURATION (CPU OPTIMIZED)
+  // ═══════════════════════════════════════════════════════════════════════════
+  server: {
+    port: 1420,
+    strictPort: true,
+    host: '127.0.0.1',
+    hmr: {
+      protocol: 'ws',
+      host: '127.0.0.1',
+      port: 1421,
+      overlay: false  // Disable error overlay (CPU heavy)
+    },
+    watch: {
+      // Native file watching (faster than polling)
+      usePolling: false,
+      // Ignore heavy directories
+      ignored: [
+        '**/target/**',
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**',
+        '**/build/**',
+        '**/docs/archive/**',
+        '**/.tauri/**'
+      ]
+    }
+  },
+
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
 });

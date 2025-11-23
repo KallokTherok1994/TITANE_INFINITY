@@ -1,7 +1,7 @@
 # 🗑️ TITANE∞ v14 — LEGACY CODE AUDIT
 
-**Date**: 2025-01-XX  
-**Objectif**: Supprimer code legacy v9/v12/v15  
+**Date**: 2025-01-XX
+**Objectif**: Supprimer code legacy v9/v12/v15
 **Erreur #4**: Moteurs dupliqués
 
 ---
@@ -29,15 +29,15 @@
    - supervisor.rs
    - tests.rs
    ```
-   
+
    **Utilisé par**:
    - `commands/evolution.rs` → Importe `EvolutionSupervisor`, `KevinMetrics`, `PatternType`
    - `commands/meta_mode.rs` → Importe `AutoEvolutionEngine`, `KevinMetrics`
    - `exp_fusion_v15/weight_integration.rs` → Importe `LogicCalibrator`, `ModeAdapter`
-   
+
    **Remplacé par**: `engine/auto_evolution.rs` (v17.2.0)
-   
-   **Action**: 
+
+   **Action**:
    1. Migrer `commands/evolution.rs` vers `engine/auto_evolution.rs`
    2. Migrer `commands/meta_mode.rs` vers nouveau système
    3. Supprimer `auto_evolution_v15/`
@@ -53,13 +53,13 @@
    - timeline.rs
    - weight_integration.rs
    ```
-   
+
    **Utilisé par**:
    - `commands/exp_fusion.rs` → Importe tout le module
    - `auto_evolution_v15/` → Dépendances circulaires
-   
+
    **Remplacé par**: Nouveau système EXP (si existe) ou à implémenter
-   
+
    **Action**:
    1. Vérifier si nouveau système EXP existe
    2. Sinon, conserver temporairement ou refactorer
@@ -71,7 +71,7 @@
    - 18 commandes legacy (memory_clear, speak, etc.)
    - Doublons de `api/memory_api.rs`, `api/helios_api.rs`
    - Utilisé par `main.rs invoke_handler![]`
-   
+
    **Action**:
    1. Migrer commandes encore utilisées (6 identifiées)
    2. Supprimer fichier
@@ -84,7 +84,7 @@
 4. **`design-system/titane-v12.css`**
    - Ancien design system v12
    - Probablement non utilisé (Design System v∞ actif)
-   
+
    **Action**:
    ```bash
    grep -r "titane-v12" src
@@ -99,13 +99,13 @@
    - AUTO_EVOLUTION_v15_ACTIVATED.md
    - TITANE_DEPLOY_AI_v12_DOCUMENTATION.md
    - ANALYSE_FINALE_v12_TESTS.md
-   
+
    **Action**: Garder pour référence historique
 
 6. **`docs/archive/`** (50+ fichiers)
    - Tous les rapports v12, v15.0-15.7
    - CHANGELOG, STATUS, RAPPORT_* de versions anciennes
-   
+
    **Action**: Garder pour référence historique
 
 ---
@@ -247,7 +247,7 @@ grep -r "ExpPanel\|ExpProfile\|Talent" src --include="*.tsx"
    // Supprimer déclarations modules
    // mod auto_evolution_v15;  ❌
    // mod exp_fusion_v15;      ❌
-   
+
    // Garder uniquement
    mod engine;  ✅
    ```
@@ -403,5 +403,5 @@ src-tauri/src/
 
 ---
 
-**Status**: ⏳ EN COURS - Erreur #4 Audit Complete  
+**Status**: ⏳ EN COURS - Erreur #4 Audit Complete
 **Prochaine action**: Phase 1 - Migrer commands/evolution.rs vers engine/auto_evolution.rs (v17)

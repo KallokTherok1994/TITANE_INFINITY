@@ -1,7 +1,7 @@
 # 🔗 TITANE∞ v14 — COMMAND MAPPING AUDIT
 
-**Date**: 2025-01-XX  
-**Objectif**: Synchronisation complète Rust ↔ TypeScript  
+**Date**: 2025-01-XX
+**Objectif**: Synchronisation complète Rust ↔ TypeScript
 **Erreur #2**: Désynchronisation Tauri handlers
 
 ---
@@ -23,7 +23,7 @@ Ces commandes existent en **2+ versions** dans le backend (legacy vs nouveau):
 // 3x duplicates
 memory_clear              → api/legacy_commands.rs, commands/ai_chat.rs, ???
 
-// 2x duplicates  
+// 2x duplicates
 start_recording           → api/legacy_commands.rs, commands/ai_chat.rs
 stop_recording            → api/legacy_commands.rs, commands/ai_chat.rs
 speak                     → api/legacy_commands.rs, commands/ai_chat.rs
@@ -42,7 +42,7 @@ auto_heal_get_logs        → auto_heal.rs, ???
 exp_get_talents           → ??? (2 fichiers)
 ```
 
-**Action requise**: 
+**Action requise**:
 1. Garder **UNE SEULE** version de chaque commande
 2. Supprimer les doublons legacy
 3. Mettre à jour `main.rs invoke_handler![]`
@@ -209,7 +209,7 @@ Fichier: `src/hooks/useMemory.ts`, `useMemoryCore.ts`
        api::memory_clear,        // Doublon!
        // ... 60+ commands
    ])
-   
+
    // APRÈS (60 lignes):
    .invoke_handler(tauri::generate_handler![
        api::get_helios_state,
@@ -255,7 +255,7 @@ Fichier: `src/hooks/useMemory.ts`, `useMemoryCore.ts`
    ```typescript
    // AVANT:
    await invoke('get_system_status'); // Legacy
-   
+
    // APRÈS:
    await invoke('get_system_health'); // v17.3.0
    ```
@@ -298,5 +298,5 @@ Créer `COMMAND_REFERENCE_v14.md`:
 
 ---
 
-**Status**: ⏳ EN COURS - Erreur #2 Audit Complete  
+**Status**: ⏳ EN COURS - Erreur #2 Audit Complete
 **Prochaine action**: Phase 1 - Déduplication Rust

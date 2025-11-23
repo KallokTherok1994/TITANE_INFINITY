@@ -42,6 +42,14 @@ instant-distance = "0.6.1"
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
+[profile.dev]
+# ═══════════════════════════════════════════════════════════════
+# CPU OPTIMIZATION: Reduced compilation time in development
+# ═══════════════════════════════════════════════════════════════
+opt-level = 1          # Light optimization (vs 0 default) → faster execution
+debug = false          # Disable debug symbols → 50% faster compilation
+incremental = true     # Faster rebuilds
+
 [profile.release]
 panic = "abort"
 codegen-units = 1
