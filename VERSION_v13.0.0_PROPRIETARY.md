@@ -8,7 +8,7 @@
 
 **© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 
-**Date de release**: 23 novembre 2025  
+**Date de release**: 23 novembre 2025
 **Status**: ✅ **PRODUCTION-READY** - Proprietary License Complete
 
 ---
@@ -32,13 +32,13 @@
 
 ### 📄 LICENSE.md
 
-**Format**: Dual-language (FR/EN)  
-**Taille**: 5.5 KB (~200 lignes)  
+**Format**: Dual-language (FR/EN)
+**Taille**: 5.5 KB (~200 lignes)
 **Structure**:
 - 🇫🇷 Section française (8 articles)
 - 🇬🇧 English section (8 articles)
 
-**Propriétaire**:  
+**Propriétaire**:
 © 2025 Humain Total / Kevin Thibault / TITANE Team
 
 **Articles Clés**:
@@ -271,9 +271,9 @@ Si demandé par l'utilisateur, migration complète vers `useSingularityStore`:
 
 ## 📞 CONTACT & SUPPORT
 
-**Propriétaire**: Kevin Thibault / Humain Total / TITANE Team  
-**Copyright**: © 2025 All Rights Reserved  
-**Droit applicable**: Québec et Canada  
+**Propriétaire**: Kevin Thibault / Humain Total / TITANE Team
+**Copyright**: © 2025 All Rights Reserved
+**Droit applicable**: Québec et Canada
 
 **Pour toute question concernant la licence**:
 - Voir `LICENSE.md` (termes complets FR/EN)
@@ -285,10 +285,10 @@ Si demandé par l'utilisateur, migration complète vers `useSingularityStore`:
 
 **TITANE_INFINITY v13.0.0** est désormais **entièrement protégé** sous **licence propriétaire restrictive bilingue (FR/EN)**.
 
-**Conformité légale**: ✅ 100%  
-**Protection intellectuelle**: ✅ Maximale  
-**Documentation**: ✅ Complète  
-**Production-ready**: ✅ Oui  
+**Conformité légale**: ✅ 100%
+**Protection intellectuelle**: ✅ Maximale
+**Documentation**: ✅ Complète
+**Production-ready**: ✅ Oui
 
 **Tous les objectifs de migration de licence ont été atteints avec succès.**
 
