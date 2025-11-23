@@ -18,8 +18,11 @@ mod commands;
 mod cognitive;
 mod devtools;
 mod plugin_system;
+mod singularity_state;  // ✅ NEW: SingularityState module
 
 use app::setup::TitaneApp;
+use singularity_state::SingularityEngine;  // ✅ NEW: SingularityEngine
+use std::sync::Arc;
 use tauri::Manager;
 use tokio::sync::Mutex;
 use system::persona_engine::PersonaEngine;
@@ -57,6 +60,13 @@ fn main() {
             let persona_engine = PersonaEngine::new();
             app.manage(Mutex::new(persona_engine));
             utils::log_info("Main", "Persona Engine v24 initialized ✅");
+
+            // 🌟 Initialize SingularityEngine (v14 State Fusion)
+            let singularity_engine = Arc::new(SingularityEngine::new(app.handle().clone()));
+            tauri::async_runtime::block_on(singularity_engine.initialize())
+                .map_err(|e| format!("Failed to initialize SingularityEngine: {}", e))?;
+            app.manage(singularity_engine);
+            utils::log_info("Main", "SingularityEngine v14 initialized ✅");
 
             utils::log_info("Main", "TITANE∞ Backend ready ✅");
             println!(">>> TITANE∞ BACKEND INITIALIZED SUCCESSFULLY");
@@ -139,6 +149,23 @@ fn main() {
             commands::devtools::update_mental_charge,
             commands::devtools::update_heart_alignment,
             commands::devtools::update_body_energy,
+            // 🌟 SingularityState v14 commands (Unified State)
+            singularity_state::commands::singularity_get_full_state,
+            singularity_state::commands::singularity_get_physical,
+            singularity_state::commands::singularity_get_cognitive,
+            singularity_state::commands::singularity_get_symbolic,
+            singularity_state::commands::singularity_get_adaptive,
+            singularity_state::commands::singularity_get_meta,
+            singularity_state::commands::singularity_get_global_coherence,
+            singularity_state::commands::singularity_is_critical,
+            singularity_state::commands::singularity_update_physical,
+            singularity_state::commands::singularity_update_cognitive,
+            singularity_state::commands::singularity_update_symbolic,
+            singularity_state::commands::singularity_update_adaptive,
+            singularity_state::commands::singularity_update_meta,
+            singularity_state::commands::singularity_update_full_state,
+            singularity_state::commands::singularity_save_state,
+            singularity_state::commands::singularity_load_state,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

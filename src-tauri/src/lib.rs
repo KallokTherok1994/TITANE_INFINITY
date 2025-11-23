@@ -18,6 +18,7 @@ pub mod plugin_system;
 pub mod security;  // ✅ NEW: Security framework
 pub mod services;
 pub mod shared;
+pub mod singularity_state;  // ✅ NEW: SingularityState unified backend
 pub mod system;
 pub mod types;
 pub mod utils;
