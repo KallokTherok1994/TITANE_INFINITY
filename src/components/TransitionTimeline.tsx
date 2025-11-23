@@ -1,3 +1,11 @@
+/**
+ * TITANE_INFINITY v13 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * Unauthorized use, reproduction, modification, distribution or extraction
+ * of the software, its architecture, engines or components is strictly prohibited.
+ * See LICENSE.md for the full legal terms (FR/EN).
+ */
+
 // 📈 Transition Timeline — Historique visuel des transitions de modes
 // Visualisation chronologique des changements de modes Meta-Mode Engine
 

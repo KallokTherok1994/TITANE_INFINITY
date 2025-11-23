@@ -2,7 +2,7 @@
 
 **Proprietary Dual-Language License (FR / EN)**
 
-© 2025 Humain Total / Kevin Thibault / TITANE Team.  
+© 2025 Humain Total / Kevin Thibault / TITANE Team.
 **All rights reserved. / Tous droits réservés.**
 
 ---
@@ -37,7 +37,7 @@ Cette licence **n'autorise pas** :
 
 ### 3. Confidentialité
 
-TITANE_INFINITY contient des concepts, architectures, systèmes cognitifs et designs **confidentiels**.  
+TITANE_INFINITY contient des concepts, architectures, systèmes cognitifs et designs **confidentiels**.
 Toute divulgation, diffusion ou extraction non autorisée est **strictement interdite**.
 
 ### 4. Rétro-ingénierie interdite
@@ -64,17 +64,17 @@ Sont **protégés** :
 
 ### 6. Limitation de responsabilité
 
-Le logiciel est fourni **« tel quel »**, sans garantie d'aucune sorte.  
+Le logiciel est fourni **« tel quel »**, sans garantie d'aucune sorte.
 L'auteur ne peut être tenu responsable d'aucun dommage indirect, direct ou consécutif.
 
 ### 7. Résiliation
 
-En cas de non-respect de la licence, tous les droits d'utilisation sont **immédiatement révoqués**.  
+En cas de non-respect de la licence, tous les droits d'utilisation sont **immédiatement révoqués**.
 L'utilisateur doit supprimer toutes les copies du logiciel.
 
 ### 8. Droit applicable
 
-Cette licence est régie par les lois du **Québec et du Canada**.  
+Cette licence est régie par les lois du **Québec et du Canada**.
 Tout litige relève des tribunaux compétents du Québec.
 
 ---
@@ -109,7 +109,7 @@ This license **does not grant rights** to:
 
 ### 3. Confidentiality
 
-TITANE_INFINITY contains **confidential** concepts, models, systems and architectures.  
+TITANE_INFINITY contains **confidential** concepts, models, systems and architectures.
 Unauthorized disclosure, sharing, replication or extraction is **strictly prohibited**.
 
 ### 4. Reverse Engineering Prohibited
@@ -136,17 +136,17 @@ The following are **fully protected**:
 
 ### 6. Liability Limitation
 
-The software is provided **"as is"**, without any warranty.  
+The software is provided **"as is"**, without any warranty.
 The author shall not be liable for any direct, indirect, incidental or consequential damages.
 
 ### 7. Termination
 
-Any violation of this license results in **immediate termination**.  
+Any violation of this license results in **immediate termination**.
 The user must delete all copies of the software upon termination.
 
 ### 8. Governing Law
 
-This license is governed by the laws of **Québec and Canada**.  
+This license is governed by the laws of **Québec and Canada**.
 Any dispute shall be brought before competent courts in Québec.
 
 ---

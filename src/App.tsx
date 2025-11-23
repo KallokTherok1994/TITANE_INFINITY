@@ -1,4 +1,12 @@
 /**
+ * TITANE_INFINITY v13 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * Unauthorized use, reproduction, modification, distribution or extraction
+ * of the software, its architecture, engines or components is strictly prohibited.
+ * See LICENSE.md for the full legal terms (FR/EN).
+ */
+
+/**
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v17.2.0 — APP COMPONENT + MODULAR ARCHITECTURE
  *   100% TAURI NATIVE - NO HTTP SERVER MODE

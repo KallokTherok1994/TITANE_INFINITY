@@ -1,3 +1,11 @@
+/**
+ * TITANE_INFINITY v13 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * Unauthorized use, reproduction, modification, distribution or extraction
+ * of the software, its architecture, engines or components is strictly prohibited.
+ * See LICENSE.md for the full legal terms (FR/EN).
+ */
+
 // TITANE∞ v17.3.0 - Main Entry Point (Phase 8: Production Hardening Complete)
 import React from 'react';
 import ReactDOM from 'react-dom/client';

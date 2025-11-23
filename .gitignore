@@ -81,3 +81,4 @@ tsc
 *Phase
 test_persona_v24/
 
+add_license_headers*.sh
