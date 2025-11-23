@@ -2,6 +2,7 @@
 // React hook for Voice Mode functionality with local-first priority
 
 import { useState, useCallback, useRef } from 'react';
+import { invoke } from '@tauri-apps/api/core';
 import { voiceService } from '../services/api';
 import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
@@ -49,7 +50,7 @@ export function useVoiceMode() {
     setError(null);
 
     try {
-      const result = await voiceService.stopRecording();
+      const _result = await voiceService.stopRecording();
 
       setState((prev) => ({
         ...prev,

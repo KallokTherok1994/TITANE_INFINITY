@@ -280,7 +280,7 @@ export class HoloMeshEngine {
       
       // Obtenir couleur du module (avec fallback)
       const moduleColor = DS_COLORS[node.module as keyof typeof DS_COLORS];
-      const color = (moduleColor && typeof moduleColor !== 'string' && 'hex' in moduleColor) 
+      const _color = (moduleColor && typeof moduleColor !== 'string' && 'hex' in moduleColor) 
         ? moduleColor.hex 
         : DS_COLORS.diamant.hex;
 

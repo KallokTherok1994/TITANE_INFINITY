@@ -2,8 +2,8 @@
 // Hooks React pour utiliser Glow Engine, Motion Engine, State Engine
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { glowEngine, GlowConfig } from './GLOW_ENGINE';
-import { motionEngine, MotionConfig, MotionType } from './MOTION_ENGINE';
+import { glowEngine } from './GLOW_ENGINE';
+import { motionEngine, MotionType } from './MOTION_ENGINE';
 import { stateEngine, SystemState, StateVisualConfig } from './STATE_ENGINE';
 import { DS_COLORS } from './DS_COLORS';
 

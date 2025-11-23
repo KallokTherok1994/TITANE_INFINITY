@@ -5,6 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import { personaService } from './api';
 import type { PersonaState, SystemState } from '../core';
 

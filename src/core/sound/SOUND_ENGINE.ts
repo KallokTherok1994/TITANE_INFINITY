@@ -1,7 +1,7 @@
 // ⚡ TITANE∞ v22 — Sound Engine
 // Moteur audio intelligent avec signature sonore premium
 
-import { SystemState, stateEngine } from '../visual/STATE_ENGINE';
+import type { SystemState } from '../visual/STATE_ENGINE';
 import { DS_CONSTANTS } from '../visual/DS_CONSTANTS';
 
 // 🎵 Types de sons
@@ -77,7 +77,7 @@ export class SoundEngine {
   private audioContext: AudioContext | null = null;
   private masterVolume: number = DS_CONSTANTS.audio.medium;
   private enabled: boolean = true;
-  private soundCache: Map<SoundType, AudioBuffer> = new Map();
+  private _soundCache: Map<SoundType, AudioBuffer> = new Map();
   private activeSounds: Map<string, AudioBufferSourceNode> = new Map();
 
   // 🌙 Mode jour/nuit
@@ -239,7 +239,7 @@ export class SoundEngine {
   /**
    * Feedback sonore sur changement de valeur module
    */
-  playModuleFeedback(moduleName: string, value: number, previousValue: number): void {
+  playModuleFeedback(_moduleName: string, value: number, previousValue: number): void {
     if (!this.enabled) return;
 
     const delta = Math.abs(value - previousValue);

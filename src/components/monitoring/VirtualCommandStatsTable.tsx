@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { FixedSizeList as List } from 'react-window';
 import { ServiceMetrics } from '../../lib/serviceMetrics';
 import { ArrowUp, ArrowDown, Clock, AlertCircle, Activity } from 'lucide-react';
 
@@ -30,7 +29,6 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
   refreshInterval = 5000,
   className = '',
   height = 600,
-  rowHeight = 48,
 }) => {
   const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getTopCommands>>([]);
   const [sortColumn, setSortColumn] = useState<SortColumn>('calls');
@@ -258,22 +256,18 @@ export const VirtualCommandStatsTable: React.FC<VirtualCommandStatsTableProps> =
         <div className="w-28 px-4 py-3 text-right">Dernier</div>
       </div>
 
-      {/* Virtual List */}
-      {sortedStats.length > 0 ? (
-        <List
-          height={height}
-          itemCount={sortedStats.length}
-          itemSize={rowHeight}
-          width="100%"
-          className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900"
-        >
-          {Row}
-        </List>
-      ) : (
-        <div className="flex items-center justify-center py-12 text-gray-400">
-          Aucune donnée disponible
-        </div>
-      )}
+      {/* Standard List (Virtual scrolling removed due to react-window compatibility) */}
+      <div style={{ maxHeight: height, overflowY: 'auto' }} className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+        {sortedStats.length > 0 ? (
+          sortedStats.map((_, index) => (
+            <div key={index}>{Row({ index, style: {} })}</div>
+          ))
+        ) : (
+          <div className="flex items-center justify-center py-12 text-gray-400">
+            Aucune donnée disponible
+          </div>
+        )}
+      </div>
     </div>
   );
 };

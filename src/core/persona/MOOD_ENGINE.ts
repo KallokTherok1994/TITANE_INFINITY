@@ -14,7 +14,6 @@
  */
 
 import type { MoodState, MoodType, SystemState } from '../ARCHITECTURE_TYPES_v24-v∞';
-import type { MotionType } from '../visual/MOTION_ENGINE';
 import { DS_CONSTANTS } from '../visual/DS_CONSTANTS';
 
 /**
@@ -85,7 +84,7 @@ const MOOD_INTENSITY: Record<MoodType, number> = {
 export class MoodEngine {
   private currentMood: MoodState;
   private moodHistory: Array<{ mood: MoodType; timestamp: number }> = [];
-  private transitionDuration: number = DS_CONSTANTS.timing.systemic; // 220ms
+  private _transitionDuration: number = DS_CONSTANTS.timing.medium; // 220ms
 
   constructor() {
     this.currentMood = {
@@ -174,7 +173,9 @@ export class MoodEngine {
     });
 
     // Retourne le plus fréquent
-    return Object.entries(counts).sort(([, a], [, b]) => b - a)[0][0] as MoodType;
+    const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
+    if (sorted.length === 0) return 'clair';
+    return sorted[0][0] as MoodType;
   }
 
   /**

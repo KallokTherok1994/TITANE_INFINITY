@@ -176,8 +176,9 @@ export class PersonalityCoreManager {
   getPersonalityDescription(): string {
     const { traits, temperament } = this.personality;
     
-    const dominant = Object.entries(traits)
-      .sort(([, a], [, b]) => b - a)[0][0];
+    const sorted = Object.entries(traits)
+      .sort(([, a], [, b]) => b - a);
+    const dominant = sorted.length > 0 ? sorted[0][0] : 'calm';
 
     return `${temperament} - dominant: ${dominant}`;
   }
@@ -200,5 +201,6 @@ export const personalityCoreManager = new PersonalityCoreManager();
  */
 export function getPersonalitySignature(): string {
   const p = personalityCoreManager.getPersonality();
-  return `T${p.temperament[0].toUpperCase()}-C${Math.round(p.traits.calm * 100)}-P${Math.round(p.traits.precise * 100)}`;
+  const tempChar = p.temperament?.[0]?.toUpperCase() || 'N';
+  return `T${tempChar}-C${Math.round((p.traits?.calm || 0) * 100)}-P${Math.round((p.traits?.precise || 0) * 100)}`;
 }

@@ -1,8 +1,7 @@
 // ⚡ TITANE∞ v23 — Interface Mirror
-// Miroir cognitif : L'interface reflète l'état utilisateur et système
+// Miroir cognitif : L’interface reflète l’état utilisateur et système
 
 import { cognitiveEngine, CognitiveState } from './COGNITIVE_ENGINE';
-import { glowEngine } from '../visual/GLOW_ENGINE';
 import { motionEngine } from '../visual/MOTION_ENGINE';
 import { hyperDepthEngine } from '../hyperdepth/HYPERDEPTH_ENGINE';
 import { soundEngine } from '../sound/SOUND_ENGINE';

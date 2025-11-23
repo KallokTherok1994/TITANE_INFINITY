@@ -53,7 +53,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           <StatusIndicator
             online={connectionStatus.online}
             provider={connectionStatus.provider}
-            health={connectionStatus.online ? 'healthy' : 'degraded'}
+            health={connectionStatus.online ? 1 : 0.3}
           />
           {onVoiceModeToggle && (
             <button
@@ -80,7 +80,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         )}
 
         {messages.filter((message) => message.role !== 'system').map((message) => (
-          <MessageBubble key={message.id} message={message as any} />
+          <MessageBubble key={message.timestamp} message={message as any} />
         ))}
 
         {isLoading && (

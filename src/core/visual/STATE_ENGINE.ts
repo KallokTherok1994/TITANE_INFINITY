@@ -126,7 +126,7 @@ export const STATE_CONFIGS: Record<SystemState, StateVisualConfig> = {
 // 🧠 State Engine principal
 export class StateEngine {
   private currentState: SystemState = 'null';
-  private previousState: SystemState | null = null;
+  private _previousState: SystemState | null = null;
   private stateChangeCallbacks: Array<(state: SystemState, config: StateVisualConfig) => void> = [];
 
   /**

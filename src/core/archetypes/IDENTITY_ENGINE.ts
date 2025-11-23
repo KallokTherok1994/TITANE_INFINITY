@@ -2,7 +2,6 @@
 // Moteur de cohérence identitaire globale
 
 import { DS_COLORS } from '../visual/DS_COLORS';
-import { DS_CONSTANTS } from '../visual/DS_CONSTANTS';
 import { ARCHETYPES, ArchetypeId } from './ARCHETYPES';
 
 // 🎨 Grammaire symbolique

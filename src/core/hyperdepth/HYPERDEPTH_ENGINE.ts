@@ -104,7 +104,7 @@ export class HyperDepthEngine {
    */
   private subscribeToStateChanges(): void {
     if (this.stateAdaptive) {
-      stateEngine.onStateChange((state, config) => {
+      stateEngine.onStateChange((state, _config) => {
         this.adaptToState(state);
       });
     }

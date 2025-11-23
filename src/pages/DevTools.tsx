@@ -67,8 +67,8 @@ export const DevTools = () => {
     return () => clearInterval(interval);
   }, [livingEngines.state.persona]);
 
-  const systemStatusStr = extractString(systemStatus, 'Unknown');
-  const errorStr = extractString(error, 'No errors');
+  const _systemStatusStr = extractString(systemStatus, 'Unknown');
+  const _errorStr = extractString(error, 'No errors');
   const errorCount = error ? 3 : 0;
 
   // Determine system status

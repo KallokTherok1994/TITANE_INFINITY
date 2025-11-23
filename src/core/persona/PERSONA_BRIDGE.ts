@@ -16,9 +16,9 @@ export class PersonaBridge {
    * Synchronise tous les moteurs avec l'état persona
    */
   synchronize(): void {
-    const personality = personalityCoreManager.getPersonality();
-    const mood = moodEngine.getMoodState();
-    const behavior = behavioralLayerManager.getLayer();
+    const _personality = personalityCoreManager.getPersonality();
+    const _mood = moodEngine.getMoodState();
+    const _behavior = behavioralLayerManager.getLayer();
     
     // Obtient multiplicateurs visuels
     const personalityMult = personalityCoreManager.getVisualMultipliers();
@@ -43,10 +43,10 @@ export class PersonaBridge {
   private applyToDOM(multipliers: Record<string, number>): void {
     const root = document.documentElement;
     
-    root.style.setProperty('--persona-glow', multipliers.glow.toFixed(3));
-    root.style.setProperty('--persona-motion', multipliers.motion.toFixed(3));
-    root.style.setProperty('--persona-sound', multipliers.sound.toFixed(3));
-    root.style.setProperty('--persona-depth', multipliers.depth.toFixed(3));
+    root.style.setProperty('--persona-glow', (multipliers.glow ?? 1).toFixed(3));
+    root.style.setProperty('--persona-motion', (multipliers.motion ?? 1).toFixed(3));
+    root.style.setProperty('--persona-sound', (multipliers.sound ?? 1).toFixed(3));
+    root.style.setProperty('--persona-depth', (multipliers.depth ?? 1).toFixed(3));
   }
 
   /**

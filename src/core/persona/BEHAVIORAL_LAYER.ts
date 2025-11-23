@@ -13,9 +13,7 @@ import type {
   BehavioralLayer,
   BehaviorResponse,
   SystemState,
-  MotionType,
 } from '../ARCHITECTURE_TYPES_v24-v∞';
-import { DS_CONSTANTS } from '../visual/DS_CONSTANTS';
 
 /**
  * Réponses comportementales par défaut

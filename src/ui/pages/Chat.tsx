@@ -23,7 +23,6 @@ export const Chat: React.FC = () => {
   const [voiceModeActive, setVoiceModeActive] = useState(false);
   
   // TODO: Implémenter la récupération dynamique du provider status
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [providerStatus, _setProviderStatus] = useState<ProviderStatus>({
     name: 'Gemini',
     status: 'online',

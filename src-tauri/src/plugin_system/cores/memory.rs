@@ -298,6 +298,11 @@ impl MemoryModule {
 
         Ok(())
     }
+
+    /// Get current status (non-trait method)
+    pub async fn get_status(&self) -> CoreStatus {
+        *self.status.read().await
+    }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -335,7 +340,7 @@ impl CoreModule for MemoryModule {
         ]
     }
 
-    async fn initialize(&self) -> CoreResult<()> {
+    async fn initialize(&self, _config: serde_json::Value) -> CoreResult<()> {
         log_info("MemoryModule", "Initializing Memory core");
 
         let mut status = self.status.write().await;
@@ -351,32 +356,6 @@ impl CoreModule for MemoryModule {
         Ok(())
     }
 
-    async fn start(&self) -> CoreResult<()> {
-        log_info("MemoryModule", "Starting Memory core");
-
-        let status = self.status.read().await;
-        if *status != CoreStatus::Ready {
-            return Err(CoreError::InvalidState(
-                format!("Cannot start from {:?} state", *status)
-            ));
-        }
-        drop(status);
-
-        let mut status = self.status.write().await;
-        *status = CoreStatus::Running;
-
-        Ok(())
-    }
-
-    async fn stop(&self) -> CoreResult<()> {
-        log_info("MemoryModule", "Stopping Memory core");
-
-        let mut status = self.status.write().await;
-        *status = CoreStatus::Stopped;
-
-        Ok(())
-    }
-
     async fn shutdown(&self) -> CoreResult<()> {
         log_info("MemoryModule", "Shutting down Memory core");
 
@@ -386,10 +365,6 @@ impl CoreModule for MemoryModule {
         *status = CoreStatus::Stopped;
 
         Ok(())
-    }
-
-    async fn get_status(&self) -> CoreStatus {
-        *self.status.read().await
     }
 
     async fn health_check(&self) -> CoreResult<CoreHealth> {
@@ -471,7 +446,7 @@ mod tests {
         assert_eq!(module.get_status().await, CoreStatus::Stopped);
 
         // Initialize
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
         assert_eq!(module.get_status().await, CoreStatus::Ready);
 
         // Start
@@ -490,7 +465,7 @@ mod tests {
     #[tokio::test]
     async fn test_snapshot_write_read() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
         module.start().await.unwrap();
 
         // Write snapshot
@@ -511,7 +486,7 @@ mod tests {
     #[tokio::test]
     async fn test_snapshot_circular_buffer() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Write more than max snapshots
         for i in 0..MEMORY_MAX_SNAPSHOTS + 10 {
@@ -535,7 +510,7 @@ mod tests {
     #[tokio::test]
     async fn test_logs_write_read() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Write logs
         module.write_log(create_test_log("Log 1")).await.unwrap();
@@ -556,7 +531,7 @@ mod tests {
     #[tokio::test]
     async fn test_logs_circular_buffer() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Write 1100 logs (exceeds 1000 max)
         for i in 0..1100 {
@@ -576,7 +551,7 @@ mod tests {
     #[tokio::test]
     async fn test_timeline_events() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Add events
         module.add_event(create_test_event("Event 1")).await.unwrap();
@@ -597,7 +572,7 @@ mod tests {
     #[tokio::test]
     async fn test_timeline_circular_buffer() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Add 550 events (exceeds 500 max)
         for i in 0..550 {
@@ -617,7 +592,7 @@ mod tests {
     #[tokio::test]
     async fn test_memory_state() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Add some data
         module.write_snapshot(create_test_snapshot("s1")).await.unwrap();
@@ -636,7 +611,7 @@ mod tests {
     #[tokio::test]
     async fn test_clear_all() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
 
         // Add data
         module.write_snapshot(create_test_snapshot("s1")).await.unwrap();
@@ -656,7 +631,7 @@ mod tests {
     #[tokio::test]
     async fn test_health_check() {
         let module = create_test_module();
-        module.initialize().await.unwrap();
+        module.initialize(serde_json::json!({})).await.unwrap();
         module.start().await.unwrap();
 
         // Initially healthy

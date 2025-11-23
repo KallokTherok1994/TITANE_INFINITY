@@ -45,6 +45,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
       const interval = setInterval(loadStats, refreshInterval);
       return () => clearInterval(interval);
     }
+    return undefined;
   }, [loadStats, autoRefresh, refreshInterval]);
 
   if (!stats) {
@@ -118,7 +119,7 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
         {/* Average Latency */}
         <MetricsCard
           title="Latence Moy."
-          value={stats.avgLatency}
+          value={stats.averageLatency}
           format="duration"
           thresholds={{ warning: 1000, critical: 5000 }}
           className="col-span-1"
@@ -142,11 +143,12 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
           className="col-span-1"
         />
 
-        {/* Cache Hit Rate */}
+        {/* P95 Latency */}
         <MetricsCard
-          title="Cache Hit Rate"
-          value={stats.cacheHitRate}
-          format="percentage"
+          title="P95 Latency"
+          value={stats.p95Latency}
+          format="duration"
+          thresholds={{ warning: 2000, critical: 10000 }}
           className="col-span-1"
         />
       </div>
@@ -181,14 +183,14 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
             <span className="font-medium text-yellow-400">{stats.totalRetries}</span>
           </div>
 
-          {/* Cache Hits */}
+          {/* P99 Latency */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-gray-400">
-              <Database className="w-4 h-4 text-blue-500" />
-              <span>Cache Hits</span>
+              <Activity className="w-4 h-4 text-purple-500" />
+              <span>P99 Latency</span>
             </div>
-            <span className="font-medium text-blue-400">
-              {Math.round((stats.cacheHitRate || 0) * stats.totalCalls)}
+            <span className="font-medium text-purple-400">
+              {stats.p99Latency.toFixed(0)}ms
             </span>
           </div>
         </div>

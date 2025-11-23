@@ -1,8 +1,7 @@
 // ⚡ TITANE∞ v22 — Iconography Engine
-// Système d'icônes vivantes avec animations
+// Système d’icônes vivantes avec animations
 
 import { ARCHETYPES, ArchetypeId } from './ARCHETYPES';
-import { DS_COLORS } from '../visual/DS_COLORS';
 
 // 🎨 Configuration d'une icône
 export interface IconConfig {

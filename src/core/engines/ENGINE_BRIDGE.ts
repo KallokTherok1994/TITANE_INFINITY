@@ -38,7 +38,7 @@ export class EngineBridge {
    */
   private initializeSynchronization(): void {
     // Synchroniser State Engine avec les autres moteurs
-    stateEngine.onStateChange((state, config) => {
+    stateEngine.onStateChange((state, _config) => {
       this.handleStateChange(state);
     });
   }

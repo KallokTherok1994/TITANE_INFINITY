@@ -45,6 +45,34 @@ impl HeliosModule {
     //   BUSINESS METHODS
     // ───────────────────────────────────────────────────────────
 
+    /// Start the Helios module
+    pub async fn start(&self) -> CoreResult<()> {
+        log_info("HeliosModule", "Starting Helios core");
+
+        let status = self.status.read().await;
+        if *status != CoreStatus::Ready {
+            return Err(CoreError::InvalidState(
+                format!("Cannot start from {:?} state", *status)
+            ));
+        }
+        drop(status);
+
+        let mut status = self.status.write().await;
+        *status = CoreStatus::Running;
+
+        Ok(())
+    }
+
+    /// Stop the Helios module
+    pub async fn stop(&self) -> CoreResult<()> {
+        log_info("HeliosModule", "Stopping Helios core");
+
+        let mut status = self.status.write().await;
+        *status = CoreStatus::Stopped;
+
+        Ok(())
+    }
+
     /// Collect current system metrics
     pub async fn collect(&self) -> CoreResult<HeliosState> {
         log_info("HeliosModule", "Collecting system metrics");
@@ -102,34 +130,6 @@ impl Default for HeliosModule {
 // ═══════════════════════════════════════════════════════════════
 
 #[async_trait]
-impl CoreModule for HeliosModule {
-    fn name(&self) -> &str {
-        &self.name
-    }
-
-    fn version(&self) -> &str {
-        &self.version
-    }
-
-    fn description(&self) -> &str {
-        "System monitoring core tracking CPU, RAM, disk usage, load average, and system uptime"
-    }
-
-    fn dependencies(&self) -> Vec<String> {
-        vec![] // Foundational core - no dependencies
-    }
-
-    fn capabilities(&self) -> Vec<String> {
-        vec![
-            "system.monitor.cpu".to_string(),
-            "system.monitor.ram".to_string(),
-            "system.monitor.disk".to_string(),
-            "system.monitor.load".to_string(),
-            "system.monitor.uptime".to_string(),
-            "system.state".to_string(),
-        ]
-    }
-
     async fn initialize(&self) -> CoreResult<()> {
         log_info("HeliosModule", "Initializing Helios core");
 
@@ -152,6 +152,8 @@ impl CoreModule for HeliosModule {
 
         Ok(())
     }
+
+    async fn shutdown(&self) -> CoreResult<()> {
 
     async fn start(&self) -> CoreResult<()> {
         log_info("HeliosModule", "Starting Helios core");
