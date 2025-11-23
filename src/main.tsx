@@ -13,6 +13,9 @@ import { injectSROnlyStyles } from './lib/accessibility';
 // Initialize Singularity Engine
 import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
 
+// 🌟 v14: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
+import { SingularityBridge } from './services/singularityBridge';
+
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
 
@@ -45,6 +48,27 @@ singularityEngine.initialize().then(() => {
   console.log('🔮 Auto-Coherence:', (singularityEngine.getState().autoCoherence * 100).toFixed(1) + '%');
 }).catch((err) => {
   console.error('❌ SingularityEngine initialization failed:', err);
+});
+
+// 🌟 v14: Initialize SingularityBridge (Backend State Sync)
+SingularityBridge.initialize().then(() => {
+  console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
+
+  // Log initial state
+  SingularityBridge.getGlobalCoherence().then((coherence) => {
+    console.log('🔗 Backend Coherence:', (coherence * 100).toFixed(1) + '%');
+  });
+
+  SingularityBridge.isCritical().then((critical) => {
+    if (critical) {
+      console.warn('⚠️  System in CRITICAL state!');
+    } else {
+      console.log('✅ System health: Normal');
+    }
+  });
+}).catch((err) => {
+  console.error('❌ SingularityBridge initialization failed:', err);
+  console.error('   → Backend state sync disabled, frontend-only mode active');
 });
 
 // Phase 8: Initialize Performance Monitoring (Core Web Vitals)

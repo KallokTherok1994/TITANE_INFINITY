@@ -3,7 +3,7 @@
  * TITANE∞ v14 — SINGULARITY BRIDGE (TypeScript)
  * Pont bidirectionnel Rust Backend ↔ React Frontend
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * Fonctionnalités:
  * - Sync initial (Rust → React)
  * - Événements temps réel (listen Tauri events)
@@ -249,12 +249,12 @@ import { useState, useEffect } from 'react';
 
 /**
  * Hook React pour accéder à SingularityState
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
  *   const { state, coherence, isCritical } = useSingularityState();
- *   
+ *
  *   return (
  *     <div>
  *       <p>Global Coherence: {coherence}</p>
@@ -286,7 +286,7 @@ export function useSingularityState() {
     state,
     coherence,
     isCritical: critical,
-    
+
     // Layers shortcuts
     physical: state?.physical,
     cognitive: state?.cognitive,
@@ -300,7 +300,7 @@ export function useSingularityState() {
     updateSymbolic: SingularityBridge.updateSymbolic,
     updateAdaptive: SingularityBridge.updateAdaptive,
     updateMeta: SingularityBridge.updateMeta,
-    
+
     // Persistence
     save: SingularityBridge.saveState,
     load: SingularityBridge.loadState,

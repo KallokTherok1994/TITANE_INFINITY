@@ -42,6 +42,9 @@ import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { DesignSystemPage } from './pages/DesignSystemPage';
 
+// v14: SingularityState Monitor
+import { SingularityMonitor } from './components/SingularityMonitor';
+
 // Engine & System pages
 import {
   Helios,
@@ -133,6 +136,9 @@ const AppRouter: React.FC = () => {
         <Route path="/cognitive" element={<CognitivePage />} />
         <Route path="/progression" element={<ProgressionPage />} />
         <Route path="/design-system" element={<DesignSystemPage />} />
+
+        {/* v14: SingularityState Monitor */}
+        <Route path="/singularity" element={<SingularityMonitor />} />
 
         {/* Engine Routes */}
         <Route path="/helios" element={<Helios />} />
