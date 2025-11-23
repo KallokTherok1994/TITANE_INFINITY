@@ -15,6 +15,7 @@ import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
 
 // 🌟 v14: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
 import { SingularityBridge } from './services/singularityBridge';
+import { SingularityConnections } from './services/singularityConnections';
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
@@ -65,6 +66,18 @@ SingularityBridge.initialize().then(() => {
     } else {
       console.log('✅ System health: Normal');
     }
+  });
+
+  // 🔗 v14: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
+  SingularityConnections.start(5000).then(() => {
+    console.log('🔗 SingularityConnections started (5s polling)');
+    console.log('   → Helios → PhysicalLayer');
+    console.log('   → Memory → CognitiveLayer');
+    console.log('   → Persona → SymbolicLayer');
+    console.log('   → AutoHeal → AdaptiveLayer');
+    console.log('   → UI Router → MetaLayer');
+  }).catch((err) => {
+    console.error('❌ SingularityConnections failed:', err);
   });
 }).catch((err) => {
   console.error('❌ SingularityBridge initialization failed:', err);
