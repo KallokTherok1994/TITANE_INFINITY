@@ -348,3 +348,77 @@ pub async fn get_system_info() -> AppResult<serde_json::Value> {
         "features": ["frontend-only", "mock-data"]
     }))
 }
+
+// ═══════════════════════════════════════════════════════════════
+// EXPERIENCE - XP & Knowledge Domains (v24)
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn experience_get_state() -> AppResult<Option<serde_json::Value>> {
+    // Try to load from localStorage emulation (file-based mock)
+    // For now, return None to trigger frontend default state creation
+    log::info!("Mock: experience_get_state called");
+    Ok(None)
+}
+
+#[tauri::command]
+pub async fn experience_update_state(state: serde_json::Value) -> AppResult<()> {
+    log::info!("Mock: experience_update_state called with state: {:?}", state);
+    // In mock mode, we just log. Real impl would save to JSON file.
+    Ok(())
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MEMORY - File Ingestion (v24)
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn memory_ingest_file(path: String) -> AppResult<serde_json::Value> {
+    log::info!("Mock: memory_ingest_file called with path: {}", path);
+
+    // Extract filename from path
+    let filename = std::path::Path::new(&path)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("unknown.txt")
+        .to_string();
+
+    // Mock file reading
+    let mock_size = 1024; // 1KB
+    let mock_type = if path.ends_with(".md") {
+        "markdown"
+    } else if path.ends_with(".json") {
+        "json"
+    } else if path.ends_with(".rs") {
+        "rust"
+    } else {
+        "text"
+    };
+
+    Ok(json!({
+        "filename": filename,
+        "size": mock_size,
+        "type": mock_type,
+        "ingested_at": chrono::Utc::now().timestamp_millis()
+    }))
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILE IMPORT - Real Implementation (v24)
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn import_file(path: String) -> AppResult<String> {
+    log::info!("Reading file: {}", path);
+
+    match tokio::fs::read_to_string(&path).await {
+        Ok(content) => {
+            log::info!("File read successfully: {} bytes", content.len());
+            Ok(content)
+        },
+        Err(e) => {
+            log::error!("Failed to read file {}: {}", path, e);
+            Err(crate::utils::AppError::Io(format!("Failed to read file: {}", e)))
+        }
+    }
+}

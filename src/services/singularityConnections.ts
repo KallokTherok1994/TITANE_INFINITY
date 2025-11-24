@@ -309,7 +309,7 @@ export class SingularityConnections {
         ...current,
         evolution: {
           ...current.evolution,
-          generation: current.evolution.generation,
+          generation: current.evolution?.generation ?? 0, // ✅ Guard against undefined
           fitness: 0.85, // TODO: Calculate from system health
           mutation_rate: 0.1,
           last_evolution: Date.now(),

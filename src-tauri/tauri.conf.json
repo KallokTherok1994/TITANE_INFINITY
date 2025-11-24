@@ -64,7 +64,10 @@
             "core:window:allow-hide",
             "core:window:allow-close",
             "core:webview:default",
-            "core:app:default"
+            "core:app:default",
+            "dialog:default",
+            "dialog:allow-open",
+            "dialog:allow-save"
           ]
         }
       ]
@@ -81,6 +84,11 @@
     "shell": {
       "open": false,
       "scope": []
+    },
+    "dialog": {
+      "all": true,
+      "open": true,
+      "save": true
     }
   }
 }

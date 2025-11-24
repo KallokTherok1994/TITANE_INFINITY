@@ -8,15 +8,17 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v16.0 — AI ORCHESTRATOR
- *   Orchestrateur intelligent avec cascade Gemini → Ollama → Fallback
+ *   TITANE∞ v24.0 — AI ORCHESTRATOR
+ *   Orchestrateur intelligent : TITANE Local → Gemini → Ollama
+ *   IA locale autonome en priorité, APIs externes en backup
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIMessage, AIResponse, AIConfig } from './types';
+import { titaneLocalProvider } from './providers/titaneLocal';
 import { geminiProvider } from './providers/gemini';
 import { ollamaProvider } from './providers/ollama';
-import { fallbackProvider } from './providers/fallback';
+import { fallbackProvider } from './providers/fallback'; // Legacy wrapper
 
 /**
  * Sanitize et valide un message utilisateur
@@ -33,8 +35,9 @@ function sanitizeMessage(message: string): string {
  * Orchestrateur principal
  */
 class AIOrchestrator {
-  // CORRECTION v19.1.0: Fallback en premier pour dev (Gemini/Ollama non configurés)
-  private providers = [fallbackProvider, geminiProvider, ollamaProvider];
+  // v24.0: TITANE Local en dernier (toujours disponible comme safety net)
+  // Ordre de priorité: Gemini (performant) → Ollama (privé) → TITANE Local (autonome)
+  private providers = [geminiProvider, ollamaProvider, titaneLocalProvider];
 
   /**
    * Génère une réponse en cascade

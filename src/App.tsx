@@ -22,6 +22,7 @@ import { useSingularityState } from './core/state/SingularityState';
 import { ThemeProvider } from './themes';
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
+import { CompactXPBar } from './components/experience/CompactXPBar';
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
 
@@ -135,6 +136,29 @@ const AppRouter: React.FC = () => {
           }))}
           onItemClick={(item) => { navigate(item.id); }}
           collapsed={sidebarCollapsed}
+          header={
+            <>
+              {/* Logo TITANE∞ */}
+              <div
+                style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 700,
+                  textAlign: 'center',
+                  marginBottom: '16px',
+                  background: 'linear-gradient(135deg, #727b81, #93b399)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                TITANE∞
+              </div>
+              {/* Compact XP Bar */}
+              {!sidebarCollapsed && (
+                <CompactXPBar onClick={() => { navigate('/progression'); }} />
+              )}
+            </>
+          }
         />
       }
       header={

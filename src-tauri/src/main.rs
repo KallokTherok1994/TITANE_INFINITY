@@ -24,8 +24,10 @@ fn main() {
     log::info!("All backend commands return mocked data for frontend development");
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             log::info!("✅ Mock Backend initialized");
+            log::info!("✅ Dialog plugin registered");
 
             // Auto-open DevTools in debug mode
             #[cfg(debug_assertions)]
@@ -79,6 +81,14 @@ fn main() {
             mock_commands::get_logs,
             mock_commands::clear_logs,
             mock_commands::get_system_info,
+
+            // Experience - XP & Knowledge Domains (v24)
+            mock_commands::experience_get_state,
+            mock_commands::experience_update_state,
+
+            // Memory - File Ingestion (v24)
+            mock_commands::memory_ingest_file,
+            mock_commands::import_file,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

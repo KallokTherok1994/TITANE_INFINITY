@@ -22,6 +22,8 @@ import {
   clearChatHistory as clearHistoryStorage,
 } from '../services/chatMemory';
 import { hybridTTS } from '../services/tts/hybridTTS';
+import { awardExperience } from '../services/experienceService';
+import { XPSource } from '../types/experience';
 
 interface UseChatOptions {
   mode?: ChatMode;
@@ -112,6 +114,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       const finalMessages = addMessageToHistory(aiMessage);
       setMessages([...finalMessages]);
       console.log('✅ AI response added to history');
+
+      // Attribution XP pour message chat (+5 XP)
+      try {
+        await awardExperience('chat', 5, XPSource.ChatMessage, {
+          messageLength: content.trim().length,
+          provider: response.provider,
+        });
+        console.log('✨ +5 XP awarded to Chat domain');
+      } catch (xpError) {
+        console.warn('⚠️ XP award failed (non-blocking):', xpError);
+      }
 
       // Met à jour suggestions
       if (response.suggestions && response.suggestions.length > 0) {

@@ -17,7 +17,7 @@ import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
 
 /**
  * Construit le contexte de conversation pour Gemini
@@ -28,7 +28,7 @@ function buildContext(message: string, history: AIMessage[]): string {
     (msg) => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
   );
 
-  return `Tu es TITANE∞, une IA cognitive avancée intégrée dans un système d'auto-évolution. 
+  return `Tu es TITANE∞, une IA cognitive avancée intégrée dans un système d'auto-évolution.
 Tu es professionnelle, précise et tu réponds en français.
 
 ${contextLines.length > 0 ? `Contexte récent:\n${contextLines.join('\n')}\n\n` : ''}Utilisateur: ${message}
@@ -141,7 +141,7 @@ export const geminiProvider: AIProvider = {
   // Streaming non implémenté pour le moment
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     const response = await this.generate(message, history);
-    
+
     // Simule le streaming caractère par caractère
     for (let i = 0; i < response.content.length; i++) {
       const char = response.content[i];

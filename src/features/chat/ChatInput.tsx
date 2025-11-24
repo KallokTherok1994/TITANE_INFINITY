@@ -7,8 +7,12 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback, type KeyboardEvent, type ChangeEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { open } from '@tauri-apps/plugin-dialog';
+import { invoke } from '@tauri-apps/api/core';
 import { Button, Badge } from '../../ui';
 import { colors, spacing, radius, shadows, fontSizes, fontWeights } from '@themes/tokens';
+import { awardExperience } from '../../services/experienceService';
+import { XPSource } from '../../types/experience';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -25,6 +29,7 @@ export interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit: (message: string) => void;
+  onFileImported?: (filename: string, xpGained: number) => void; // Nouveau callback
   placeholder?: string;
   disabled?: boolean;
   suggestions?: ChatSuggestion[];
@@ -55,6 +60,7 @@ export const ChatInput = ({
   value,
   onChange,
   onSubmit,
+  onFileImported,
   placeholder = 'Écrivez votre message...',
   disabled = false,
   suggestions = [],
@@ -63,6 +69,7 @@ export const ChatInput = ({
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(-1);
+  const [isImporting, setIsImporting] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const filteredSuggestions = useMemo(
@@ -102,6 +109,51 @@ export const ChatInput = ({
     setSelectedSuggestion(-1);
     textareaRef.current?.focus();
   }, [onChange]);
+
+  const handleFileImport = useCallback(async (): Promise<void> => {
+    setIsImporting(true);
+    try {
+      // Ouvrir dialogue de sélection de fichier
+      const selected = await open({
+        multiple: false,
+        filters: [
+          {
+            name: 'Fichiers supportés',
+            extensions: ['txt', 'md', 'json', 'js', 'ts', 'tsx', 'jsx', 'py', 'rs', 'toml', 'yaml', 'yml', 'xml', 'html', 'css', 'csv'],
+          },
+        ],
+      });
+
+      if (!selected) {
+        setIsImporting(false);
+        return;
+      }
+
+      // Appeler commande Tauri pour ingérer le fichier
+      const result = await invoke<{ filename: string; size: number; type: string }>('memory_ingest_file', {
+        path: selected,
+      });
+
+      // Attribuer XP
+      await awardExperience('memory', 20, XPSource.FileImport, {
+        filename: result.filename,
+        size: result.size,
+        type: result.type,
+      });
+
+      // Notifier le parent
+      if (onFileImported) {
+        onFileImported(result.filename, 20);
+      }
+
+      console.log(`✅ Fichier importé: ${result.filename} (+20 XP)`);
+    } catch (err) {
+      console.error('❌ Erreur import fichier:', err);
+      // TODO: Afficher notification d'erreur à l'utilisateur
+    } finally {
+      setIsImporting(false);
+    }
+  }, [onFileImported]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>): void => {
     // Submit on Ctrl/Cmd + Enter
@@ -278,6 +330,18 @@ export const ChatInput = ({
             alignItems: 'flex-end',
           }}
         >
+          {/* Bouton Import Fichier */}
+          <Button
+            variant="ghost"
+            onClick={handleFileImport}
+            disabled={disabled || isImporting}
+            title="Importer un fichier (+20 XP)"
+            leftIcon="📂"
+          >
+            {isImporting ? 'Import...' : 'Fichier'}
+          </Button>
+
+          {/* Bouton Envoyer */}
           <Button
             variant="primary"
             onClick={handleSubmit}
