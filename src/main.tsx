@@ -6,12 +6,11 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v17.3.0 - Main Entry Point (Phase 8: Production Hardening Complete)
+// TITANE∞ v24.0.0 - Main Entry Point (Design System Unifié Métallique)
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './styles/titane-design-system.css';
-import './styles/titane-theme-metal.css'; // 🔩 Thème métallique unifié (override v12+v20)
+import './styles/titane-design-system-v24.css'; // 🔩 Design System v24 : Métallique Unifié
 import './pages/styles.css';
 
 // Phase 8: Production Hardening

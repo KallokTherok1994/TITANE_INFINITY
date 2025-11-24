@@ -1,0 +1,28 @@
+🔩 TITANE∞ - AVERTISSEMENT ENVIRONNEMENT FLATPAK
+================================================
+
+❌ VOUS ÊTES DANS UN CONTENEUR FLATPAK (VS Code)
+
+Ce terminal VS Code intégré fonctionne dans un sandbox Flatpak qui:
+- N'a PAS accès aux bibliothèques système
+- N'a PAS sudo/su pour installer des paquets
+- NE PEUT PAS compiler Tauri (WebKit manquant)
+
+✅ POUR DÉVELOPPER TITANE∞ EN TAURI:
+
+1. Ouvrez un VRAI terminal système:
+   Super + T (sur Pop!_OS/Ubuntu)
+
+2. Vérifiez que vous êtes HORS Flatpak:
+   which sudo
+   # Doit afficher: /usr/bin/sudo
+
+3. Suivez les instructions:
+   cd /home/titane/Documents/TITANE_INFINITY
+   cat TAURI_SETUP_INSTRUCTIONS.md
+
+4. Installez WebKit et lancez Tauri:
+   ./dev_tauri.sh
+
+================================================
+🔩 TITANE∞ - TAURI FIRST, ALWAYS 🔩
