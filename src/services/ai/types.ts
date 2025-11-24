@@ -21,13 +21,13 @@ export interface AIMessage {
 
 export interface AIResponse {
   content: string;
-  provider: 'gemini' | 'ollama' | 'fallback';
+  provider: 'gemini' | 'ollama' | 'fallback' | 'emergency-fallback';
   timestamp: number;
   model?: string;
 }
 
 export interface AIProvider {
-  name: 'gemini' | 'ollama' | 'fallback';
+  name: 'gemini' | 'ollama' | 'fallback' | 'emergency-fallback';
   isAvailable: () => Promise<boolean>;
   generate: (message: string, history: AIMessage[]) => Promise<AIResponse>;
   stream?: (message: string, history: AIMessage[]) => AsyncGenerator<string>;

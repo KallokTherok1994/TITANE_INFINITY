@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/titane-design-system.css';
+import './styles/titane-theme-metal.css'; // 🔩 Thème métallique unifié (override v12+v20)
 import './pages/styles.css';
 
 // Phase 8: Production Hardening

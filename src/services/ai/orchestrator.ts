@@ -100,7 +100,7 @@ class AIOrchestrator {
           // NOUVEAU: Réponse d'urgence garantie (jamais throw)
           return {
             content: "🚨 **Erreur système critique**: Tous les services IA sont indisponibles, y compris le mode fallback. Contactez le support technique.\n\n**Détails**: " + errorMsg,
-            provider: 'emergency-fallback',
+            provider: 'emergency-fallback' as const,
             timestamp: Date.now(),
             model: 'emergency-v1',
           };

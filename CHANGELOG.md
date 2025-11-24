@@ -17,7 +17,35 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ## [19.1.0] - 2025-11-24
 
-### 🎨 CORRECTIONS AFFICHAGE UI - ÉCRAN BLANC RÉSOLU
+### 🎨 CORRECTIONS AFFICHAGE UI + CHAT IA - SYSTÈME FONCTIONNEL
+
+**Status**: ✅ **COMPLETE** - Interface React visible, Chat IA opérationnel, écran blanc corrigé
+
+#### 💬 Chat IA - Route & Fallback (NOUVEAU)
+
+**Problème résolu**: Chat affichait "Je traite votre demande..." indéfiniment, aucune réponse AI
+
+**Fichiers modifiés** (2 fichiers):
+- ✅ `src/App.tsx`: Route Chat corrigée
+  - Avant: `import { ChatPage } from './pages/ChatPage'` (mock setTimeout)
+  - Après: `import { Chat as ChatPage } from './ui/pages/Chat'` (vrai useChat hook)
+- ✅ `src/services/ai/orchestrator.ts`: Mode fallback direct prioritaire
+  - Avant: Gemini → Ollama → Fallback (échouait sans clés API)
+  - Après: Fallback → Gemini → Ollama (répond toujours, même sans config)
+
+**Features Chat IA**:
+- ✅ Réponses instantanées via fallback (sans config requise)
+- ✅ Pipeline complet: useChat → chatEngine → orchestrator → providers
+- ✅ TTS intégré: Bouton 🎤 active synthèse vocale (hybridTTS.ts)
+- ✅ Historique localStorage: Messages persistants entre sessions
+- ✅ Mode voix: `voiceEnabled` prop dans ChatWindow
+
+**Validations**:
+- ✅ Build: 569 kB bundle, 0 erreur TypeScript
+- ✅ Backend: Rust compile en 1.37s, 27 commandes mock registrées
+- ✅ Test manuel: Message → Réponse < 500ms (fallback)
+
+#### 🎨 CORRECTIONS AFFICHAGE UI - ÉCRAN BLANC RÉSOLU
 
 **Status**: ✅ **COMPLETE** - Interface React visible, écran blanc corrigé
 

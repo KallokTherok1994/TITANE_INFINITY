@@ -58,7 +58,7 @@ export const fallbackProvider: AIProvider = {
 
       const response = {
         content,
-        provider: 'fallback',
+        provider: 'fallback' as const,
         timestamp: Date.now(),
         model: 'fallback-v1',
       };
@@ -71,7 +71,7 @@ export const fallbackProvider: AIProvider = {
       // Fallback du fallback : réponse minimale garantie
       return {
         content: "🚨 Erreur système critique. Tous les providers IA sont indisponibles, y compris le mode fallback. Redémarrez l'application.",
-        provider: 'fallback-emergency',
+        provider: 'emergency-fallback' as const,
         timestamp: Date.now(),
         model: 'emergency-v1',
       };

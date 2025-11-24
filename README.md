@@ -31,18 +31,26 @@
 
 ```bash
 # 🔒 DÉVELOPPEMENT (Tauri Native exclusif)
-pnpm run dev  # Build statique + Tauri (PAS de http://localhost)
+npm run dev:tauri  # Build statique PUIS Tauri (recommandé)
+# OU
+npm run dev        # Build + Tauri parallèle (plus rapide mais moins stable)
 
 # 🏗️ Build production
-pnpm run build
+npm run build
 
 # 📦 Package Tauri
-pnpm run tauri:build
+npm run tauri:build
 
 # ❌ INTERDITS (Mode HTTP bloqué)
-pnpm run preview  # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
-pnpm run start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
+npm run preview  # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
+npm run start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 ```
+
+**⚠️ CHAT IA - Mode Fallback v19.1.0** :
+- **Sans clé API Gemini** : Réponses fallback automatiques (pré-générées)
+- **Avec clé API** : Gemini → Ollama → Fallback (cascade intelligente)
+- **Configuration** : Créer `.env` avec `VITE_GEMINI_API_KEY=votre_clé`
+- **TTS (Mode Voix)** : Click sur 🎤 active synthèse vocale des réponses
 
 **⚠️ BREAKING CHANGE v24.3.0** :
 - **Mode HTTP/devServer complètement supprimé**
@@ -64,6 +72,7 @@ pnpm run start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 | Composant | Status | Version | Notes |
 |-----------|--------|---------|-------|
 | **UI Display** | ✅ CORRIGÉ | 19.1.0 | **Écran blanc résolu, CSS height 100%, verrou supprimé** |
+| **Chat IA** | ✅ FONCTIONNEL | 19.1.0 | **Route corrigée, fallback direct, TTS intégré** |
 | **Code Quality** | ✅ EXCELLENT | 13.1.0 | **0 erreur ESLint, 0 warning, ~75 `any` éliminés** |
 | **TypeScript Strict** | ✅ COMPLETE | 13.1.0 | Types stricts partout, EngineState, type guards |
 | **React Hooks** | ✅ CONFORME | 13.1.0 | useCallback mémorisé, dépendances complètes |

@@ -251,7 +251,10 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
           </button>
 
           <button
-            onClick={() => (window as any).__TAURI__?.window.getCurrent().openDevtools()}
+            onClick={() => {
+              const tauri = (window as { __TAURI__?: { window: { getCurrent: () => { openDevtools: () => void } } } }).__TAURI__;
+              tauri?.window.getCurrent().openDevtools();
+            }}
             style={{
               padding: '0.875rem 1.5rem',
               background: 'transparent',

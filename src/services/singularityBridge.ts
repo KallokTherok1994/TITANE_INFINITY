@@ -192,17 +192,18 @@ export class SingularityBridge {
           last_interaction: Date.now(),
         },
         archetype: {
-          primary: 'sentinel',
-          secondary: 'sage',
-          traits: ['vigilant', 'analytical', 'adaptive'],
-          stability: 0.95,
+          active_archetype: 'sentinel',
+          strength: 0.95,
+          transition: null,
         },
         visual: {
-          active_theme: 'dark',
-          animation_state: 'idle',
-          effect_intensity: 0.7,
-          last_transition: Date.now(),
+          theme: 'dark',
+          accent_color: '#4f46e5',
+          glow_intensity: 0.7,
+          motion_enabled: true,
+          depth_enabled: true,
         },
+        stability: 0.95,
       };
     }
   }
@@ -219,16 +220,10 @@ export class SingularityBridge {
       }
       // Return safe default
       return {
-        learning: {
-          rate: 0.001,
-          history: [],
-          performance_trend: 'stable',
-          last_update: Date.now(),
-        },
         evolution: {
           generation: 0,
-          fitness: 0.85,
           mutation_rate: 0.1,
+          fitness_score: 0.85,
           last_evolution: Date.now(),
         },
         auto_heal: {
@@ -237,6 +232,7 @@ export class SingularityBridge {
           errors_healed: 0,
           last_heal: null,
         },
+        evolution_capacity: 0.85,
       };
     }
   }
@@ -253,12 +249,6 @@ export class SingularityBridge {
       }
       // Return safe default
       return {
-        reflection: {
-          depth: 2,
-          insights: [],
-          patterns: [],
-          last_reflection: Date.now(),
-        },
         ui: {
           active_page: window.location.pathname,
           sidebar_open: true,
@@ -267,11 +257,13 @@ export class SingularityBridge {
           last_interaction: Date.now(),
         },
         runtime: {
-          version: '17.3.0',
+          version: '19.1.0',
+          build: 'production',
           environment: import.meta.env.MODE,
           uptime: performance.now(),
-          health: 0.95,
+          restart_count: 0,
         },
+        runtime_health: 0.95,
       };
     }
   }

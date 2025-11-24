@@ -156,7 +156,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       setIsLoading(false);
       console.log('🔓 isLoading set to false\n');
     }
-  }, [isLoading, currentMode]);
+  }, [isLoading, currentMode, options.voiceEnabled]);
 
   // Efface tout le chat
   const clearChat = useCallback(() => {
