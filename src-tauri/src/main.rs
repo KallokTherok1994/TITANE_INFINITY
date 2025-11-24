@@ -66,6 +66,9 @@ fn main() {
             mock_commands::get_nexus_graph,
 
             // Singularity - Unity State
+            mock_commands::singularity_get_full_state,
+            mock_commands::singularity_get_global_coherence,
+            mock_commands::singularity_is_critical,
             mock_commands::get_singularity_state,
             mock_commands::sync_singularity,
 

@@ -1,84 +1,80 @@
-/* TITANE∞ v12 - MessageBubble Styles */
+/* TITANE∞ v17.3.0 - MessageBubble Styles (Design System Unified) */
 
 .message-bubble {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
   max-width: 80%;
-  padding: 1rem;
-  border-radius: 16px;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  padding: var(--space-4);
+  border-radius: var(--radius-2xl);
+  animation: fade-in 0.3s ease;
 }
 
 .message-bubble.user {
   align-self: flex-end;
-  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
-  color: #fff;
+  background: linear-gradient(135deg, var(--titane-saphir-500), var(--titane-saphir-600));
+  color: var(--text-primary);
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-sm) var(--radius-2xl);
 }
 
 .message-bubble.assistant {
   align-self: flex-start;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: linear-gradient(135deg, var(--titane-diamant-700), var(--titane-diamant-800));
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-2xl) var(--radius-sm);
 }
 
 .message-bubble.system {
   align-self: center;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  color: #00d4ff;
-  font-size: 0.9rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--titane-rubis-500);
+  color: var(--titane-rubis-50);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-lg);
 }
 
 .message-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-2);
 }
 
 .message-role {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--text-sm);
+  color: var(--text-primary);
 }
 
 .message-time {
-  font-size: 0.8rem;
-  opacity: 0.7;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
 }
 
 .message-content {
-  line-height: 1.6;
+  line-height: var(--leading-relaxed);
+  color: var(--text-primary);
 }
 
 .message-content p {
   margin: 0;
+  color: var(--text-primary);
 }
 
 .message-content code {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
+  background: var(--bg-elevated);
+  color: var(--titane-emeraude-400);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
   font-family: 'Courier New', monospace;
 }
 
 .message-content pre {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 1rem;
-  border-radius: 8px;
+  background: var(--bg-base);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
   overflow-x: auto;
 }
 
@@ -89,14 +85,15 @@
 
 .message-actions {
   display: flex;
-  gap: 1rem;
+  gap: var(--space-4);
   align-items: center;
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border-subtle);
 }
 
 .message-tokens {
-  font-size: 0.8rem;
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
   opacity: 0.6;
 }

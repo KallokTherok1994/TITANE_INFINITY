@@ -65,6 +65,39 @@ interface MemoryState {
 export class SingularityConnections {
   private static updateInterval: number | null = null;
   private static isRunning: boolean = false;
+  private static disabledCommands: Set<string> = new Set();
+
+  /**
+   * Safe invoke wrapper with "command not found" handling
+   */
+  private static async safeInvoke<T>(
+    cmd: string,
+    args?: any
+  ): Promise<T | null> {
+    // Skip if already marked as disabled
+    if (this.disabledCommands.has(cmd)) {
+      return null;
+    }
+
+    try {
+      return await invoke<T>(cmd, args);
+    } catch (err: any) {
+      const msg = String(err?.message ?? err);
+
+      // Gracefully disable command if not found
+      if (msg.includes('command') && msg.includes('not found')) {
+        console.warn(
+          `[SingularityConnections] Command "${cmd}" not found. Disabling this sync.`
+        );
+        this.disabledCommands.add(cmd);
+        return null;
+      }
+
+      // Log other errors but don't crash
+      console.error(`[SingularityConnections] Error invoking ${cmd}:`, err);
+      return null;
+    }
+  }
 
   /**
    * Start automatic subsystem connections (polling 5s)
@@ -121,8 +154,11 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncHelios(): Promise<void> {
+    // Changed: get_helios_metrics → get_helios_state (to match Rust)
+    const helios = await this.safeInvoke<HeliosState>('get_helios_state');
+    if (!helios) return;
+
     try {
-      const helios = await invoke<HeliosState>('get_helios_metrics');
       const current = await SingularityBridge.getPhysical();
 
       const updated: PhysicalLayer = {
@@ -154,7 +190,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updatePhysical(updated);
     } catch (err) {
-      console.error('❌ Failed to sync Helios:', err);
+      console.error('[SingularityConnections] Failed to update Helios state:', err);
     }
   }
 
@@ -177,8 +213,11 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncMemory(): Promise<void> {
+    // Changed: memory_get_state → get_memory_state (to match Rust)
+    const memory = await this.safeInvoke<MemoryState>('get_memory_state');
+    if (!memory) return;
+
     try {
-      const memory = await invoke<MemoryState>('memory_get_state');
       const current = await SingularityBridge.getCognitive();
 
       const totalEntries = memory.snapshots_count + memory.log_entries_count + memory.timeline_events;
@@ -211,7 +250,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateCognitive(updated);
     } catch (err) {
-      console.error('❌ Failed to sync Memory:', err);
+      console.error('[SingularityConnections] Failed to update Memory state:', err);
     }
   }
 
@@ -220,9 +259,9 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncPersona(): Promise<void> {
+    // Note: singularity_get_symbolic not available yet
+    // Using mock data gracefully without crashing
     try {
-      // TODO: Add persona_get_state command in backend
-      // For now, use mock data or skip
       const current = await SingularityBridge.getSymbolic();
 
       // Mock data until backend command available
@@ -230,7 +269,7 @@ export class SingularityConnections {
         ...current,
         persona: {
           name: 'TITANE∞',
-          mood: 'focused', // TODO: Get from PersonaEngine
+          mood: 'focused',
           intensity: 0.8,
           evolution_level: 5,
           last_interaction: Date.now(),
@@ -251,7 +290,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateSymbolic(updated);
     } catch (err) {
-      console.error('❌ Failed to sync Persona:', err);
+      console.error('[SingularityConnections] Failed to update Persona state:', err);
     }
   }
 
@@ -260,9 +299,9 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncAutoHeal(): Promise<void> {
+    // Note: singularity_get_adaptive not available yet
+    // Using mock data gracefully without crashing
     try {
-      // TODO: Add auto_heal_get_state command in backend
-      // For now, track errors from React ErrorBoundary
       const current = await SingularityBridge.getAdaptive();
 
       // Mock data until backend command available
@@ -285,7 +324,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateAdaptive(updated);
     } catch (err) {
-      console.error('❌ Failed to sync AutoHeal:', err);
+      console.error('[SingularityConnections] Failed to update AutoHeal state:', err);
     }
   }
 
@@ -294,6 +333,8 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncUIState(): Promise<void> {
+    // Note: singularity_get_meta not available yet
+    // Using client-side data gracefully
     try {
       const current = await SingularityBridge.getMeta();
 
@@ -320,7 +361,7 @@ export class SingularityConnections {
 
       await SingularityBridge.updateMeta(updated);
     } catch (err) {
-      console.error('❌ Failed to sync UI State:', err);
+      console.error('[SingularityConnections] Failed to update UI state:', err);
     }
   }
 

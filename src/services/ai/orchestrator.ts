@@ -45,39 +45,67 @@ class AIOrchestrator {
       throw new Error('Message vide ou invalide');
     }
 
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🚀 ORCHESTRATOR: Début cascade AI providers');
+    console.log(`📝 Message: "${sanitized.substring(0, 50)}${sanitized.length > 50 ? '...' : ''}"`);
+    console.log(`📚 Historique: ${history.length} messages`);
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
     // Tente chaque provider dans l'ordre
-    for (const provider of this.providers) {
+    for (let i = 0; i < this.providers.length; i++) {
+      const provider = this.providers[i];
+      if (!provider) continue;
+
+      console.log(`\n🔍 [${i + 1}/${this.providers.length}] Testing ${provider.name}...`);
+
       try {
         // Vérifie disponibilité
+        console.log(`   ⏳ Checking availability...`);
         const isAvailable = await provider.isAvailable();
-        
+        console.log(`   ${isAvailable ? '✅' : '❌'} Available: ${isAvailable}`);
+
         if (!isAvailable) {
-          console.log(`⚠️ Provider ${provider.name} non disponible, suivant...`);
+          console.log(`   ⏭️  Skipping to next provider...\n`);
           continue;
         }
 
-        console.log(`🌟 Tentative ${provider.name}...`);
-        
+        console.log(`   🌟 Generating response...`);
+        const startTime = Date.now();
+
         // Génère la réponse (config ignoré pour l'instant)
         const response = await provider.generate(sanitized, history);
-        
-        console.log(`✅ ${provider.name} OK`);
+
+        const duration = Date.now() - startTime;
+        console.log(`   ✅ Success in ${duration}ms`);
+        console.log(`   📦 Response length: ${response.content.length} chars`);
+        console.log(`   🏷️  Provider: ${response.provider}, Model: ${response.model || 'N/A'}`);
+        console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('🎉 ORCHESTRATOR: Response generated successfully!');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
         return response;
-        
+
       } catch (error) {
-        console.warn(`⚠️ ${provider.name} échoué:`, error instanceof Error ? error.message : 'Unknown error');
-        
-        // Si c'est le dernier provider (fallback), on le laisse passer
+        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+        console.error(`   ❌ Error: ${errorMsg}`);
+
+        // Si c'est le dernier provider (fallback), on enregistre l'erreur critique
         if (provider === fallbackProvider) {
+          console.error('\n🚨 CRITICAL: Fallback provider failed!');
+          console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+          console.error('Error details:', error);
+          console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
           throw error;
         }
-        
-        // Sinon on continue avec le suivant
+
+        console.log(`   ⏭️  Trying next provider...\n`);
         continue;
       }
     }
 
     // Ceci ne devrait jamais arriver (fallback toujours disponible)
+    console.error('\n🚨 ORCHESTRATOR: All providers exhausted without success!');
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     throw new Error('Tous les providers IA ont échoué');
   }
 
@@ -95,7 +123,7 @@ class AIOrchestrator {
     for (const provider of this.providers) {
       try {
         const isAvailable = await provider.isAvailable();
-        
+
         if (!isAvailable) {
           continue;
         }
@@ -103,7 +131,7 @@ class AIOrchestrator {
         if (!provider.stream) {
           // Si pas de streaming, utilise generate() et simule
           const response = await provider.generate(sanitized, history);
-          
+
           for (let i = 0; i < response.content.length; i++) {
             const char = response.content[i];
             if (char !== undefined) {
@@ -117,14 +145,14 @@ class AIOrchestrator {
         // Streaming natif
         yield* provider.stream(sanitized, history);
         return;
-        
+
       } catch (error) {
         console.warn(`⚠️ ${provider.name} streaming échoué:`, error);
-        
+
         if (provider === fallbackProvider) {
           throw error;
         }
-        
+
         continue;
       }
     }

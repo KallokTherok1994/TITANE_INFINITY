@@ -1,0 +1,148 @@
+/**
+ * TITANE_INFINITY v17.3.0 — Voice Control Panel Styles
+ */
+
+.voice-control-panel {
+  background: var(--glass-bg, rgba(0, 0, 0, 0.6));
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.voice-control-panel.enabled {
+  border-color: var(--accent-primary, #00d4ff);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.voice-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.voice-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--glass-bg, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  color: var(--text-primary, #ffffff);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.voice-toggle:hover {
+  background: var(--glass-bg-hover, rgba(255, 255, 255, 0.1));
+  border-color: var(--accent-primary, #00d4ff);
+}
+
+.voice-toggle.active {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 127, 0.2));
+  border-color: var(--accent-primary, #00d4ff);
+}
+
+.voice-details {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.voice-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+
+.voice-provider {
+  font-size: 13px;
+  color: var(--text-secondary, #b0b0b0);
+}
+
+.voice-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.voice-indicator.available {
+  color: var(--success, #00ff7f);
+  background: rgba(0, 255, 127, 0.1);
+}
+
+.voice-indicator.unavailable {
+  color: var(--error, #ff4757);
+  background: rgba(255, 71, 87, 0.1);
+}
+
+.voice-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.voice-test-button,
+.voice-stop-button {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.voice-test-button {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 127, 0.1));
+  color: var(--accent-primary, #00d4ff);
+}
+
+.voice-test-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 127, 0.2));
+  border-color: var(--accent-primary, #00d4ff);
+}
+
+.voice-test-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.voice-stop-button {
+  background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 0, 0, 0.1));
+  color: var(--error, #ff4757);
+}
+
+.voice-stop-button:hover {
+  background: linear-gradient(135deg, rgba(255, 71, 87, 0.2), rgba(255, 0, 0, 0.2));
+  border-color: var(--error, #ff4757);
+}
+
+.voice-help {
+  padding: 8px;
+  text-align: center;
+  color: var(--text-tertiary, #808080);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

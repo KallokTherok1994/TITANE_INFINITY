@@ -21,10 +21,12 @@ import {
   addMessageToHistory,
   clearChatHistory as clearHistoryStorage,
 } from '../services/chatMemory';
+import { hybridTTS } from '../services/tts/hybridTTS';
 
 interface UseChatOptions {
   mode?: ChatMode;
   emotionState?: { valence: number; intensity: number; energy: number };
+  voiceEnabled?: boolean; // Active la synthèse vocale des réponses
 }
 
 interface UseChatReturn {
@@ -62,6 +64,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const sendMessage = useCallback(async (content: string) => {
     if (!content.trim() || isLoading) return;
 
+    console.log('\n═════════════════════════════════════════════════════════════');
+    console.log('💬 USE CHAT: Sending new message');
+    console.log(`📝 Content: "${content.substring(0, 60)}${content.length > 60 ? '...' : ''}"`);
+    console.log(`🎯 Mode: ${currentMode}`);
+    console.log('═════════════════════════════════════════════════════════════\n');
+
     setError(null);
     setIsLoading(true);
 
@@ -74,13 +82,20 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     const updatedMessages = addMessageToHistory(userMessage);
     setMessages([...updatedMessages]);
+    console.log('✅ User message added to history');
 
     try {
+      console.log('🚀 Calling chatEngine.generate()...\n');
+
       // Appelle chatEngine unifié
       const response: ChatEngineResponse = await chatEngine.generate(
         content.trim(),
         updatedMessages
       );
+
+      console.log('\n✅ Response received from chatEngine');
+      console.log(`📦 Content length: ${response.content.length} chars`);
+      console.log(`🏷️  Provider: ${response.provider}`);
 
       // Ajoute réponse IA
       const aiMessage: AIMessage = {
@@ -91,13 +106,36 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       const finalMessages = addMessageToHistory(aiMessage);
       setMessages([...finalMessages]);
+      console.log('✅ AI response added to history');
 
       // Met à jour suggestions
       if (response.suggestions && response.suggestions.length > 0) {
         setSuggestions(response.suggestions);
+        console.log(`💡 ${response.suggestions.length} suggestions available`);
       }
+
+      // Synthèse vocale si activée
+      if (options.voiceEnabled && response.content) {
+        console.log('🔊 TTS: Voice mode enabled, synthesizing response...');
+        try {
+          await hybridTTS.speak(response.content, { lang: 'fr-FR', rate: 1.0 });
+          console.log('✅ TTS: Synthesis complete');
+        } catch (ttsError) {
+          console.warn('⚠️ TTS: Synthesis failed (non-blocking):', ttsError);
+          // TTS échoue silencieusement, n'affecte pas le chat
+        }
+      }
+
+      console.log('\n═════════════════════════════════════════════════════════════');
+      console.log('🎉 USE CHAT: Message processed successfully!');
+      console.log('═════════════════════════════════════════════════════════════\n');
+
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+      console.error('\n❌ USE CHAT: Error occurred');
+      console.error('Error:', err);
+      console.error('═════════════════════════════════════════════════════════════\n');
+
       setError(errorMessage);
 
       // Ajoute message d'erreur dans le chat
@@ -111,8 +149,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       setMessages([...finalMessages]);
     } finally {
       setIsLoading(false);
+      console.log('🔓 isLoading set to false\n');
     }
-  }, [isLoading]);
+  }, [isLoading, currentMode]);
 
   // Efface tout le chat
   const clearChat = useCallback(() => {

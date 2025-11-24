@@ -187,6 +187,62 @@ pub async fn get_nexus_graph() -> AppResult<serde_json::Value> {
 // ═══════════════════════════════════════════════════════════════
 
 #[tauri::command]
+pub async fn singularity_get_full_state() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "physical": {
+            "cpu_load": 0.25,
+            "ram_usage": 0.45,
+            "io_throughput": 1024,
+            "network_latency": 15,
+            "gpu_usage": 0.0,
+            "temperature": 55.0,
+            "power_consumption": 45.0,
+            "timestamp": chrono::Utc::now().timestamp_millis()
+        },
+        "cognitive": {
+            "attention_focus": 0.7,
+            "memory_load": 0.4,
+            "processing_depth": 3,
+            "creativity_index": 0.6,
+            "reasoning_score": 0.8,
+            "decision_latency": 120,
+            "timestamp": chrono::Utc::now().timestamp_millis()
+        },
+        "symbolic": {
+            "language_model_temp": 0.7,
+            "context_window": 4096,
+            "token_count": 1250,
+            "embedding_dim": 768,
+            "semantic_drift": 0.02,
+            "symbol_coherence": 0.85,
+            "timestamp": chrono::Utc::now().timestamp_millis()
+        },
+        "adaptive": {
+            "learning_rate": 0.001,
+            "exploration_rate": 0.15,
+            "plasticity": 0.6,
+            "resilience": 0.8,
+            "adaptation_speed": 0.5,
+            "stability_index": 0.75,
+            "timestamp": chrono::Utc::now().timestamp_millis()
+        },
+        "meta": {
+            "self_awareness": 0.65,
+            "reflection_depth": 2,
+            "meta_learning": 0.5,
+            "consciousness_level": 1,
+            "coherence_score": 0.8,
+            "integration_level": 0.7,
+            "timestamp": chrono::Utc::now().timestamp_millis()
+        },
+        "global_coherence": 0.72,
+        "is_critical": false,
+        "mode": "MOCK",
+        "version": "14.0.0"
+    }))
+}
+
+#[tauri::command]
 pub async fn get_singularity_state() -> AppResult<serde_json::Value> {
     Ok(json!({
         "timestamp": chrono::Utc::now().timestamp_millis(),
@@ -200,6 +256,16 @@ pub async fn get_singularity_state() -> AppResult<serde_json::Value> {
             "sentinel": "active"
         }
     }))
+}
+
+#[tauri::command]
+pub async fn singularity_get_global_coherence() -> AppResult<f64> {
+    Ok(0.72)
+}
+
+#[tauri::command]
+pub async fn singularity_is_critical() -> AppResult<bool> {
+    Ok(false)
 }
 
 #[tauri::command]

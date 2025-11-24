@@ -19,10 +19,6 @@ import type {
   ChatConfig,
   ChatResponse,
   VoiceRecordingResult,
-  EngineMetrics,
-  ModuleInfo,
-  SystemStatus,
-  SystemInfo,
 } from '../types/tauri';
 
 // ═══════════════════════════════════════════════════════════════

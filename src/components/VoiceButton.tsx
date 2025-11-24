@@ -46,7 +46,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
 
   const handlePress = () => {
     if (disabled) return;
-    
+
     if (mode === 'push-to-talk') {
       setIsPressed(true);
       onActivate?.();
@@ -69,7 +69,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
   const isActive = mode === 'push-to-talk' ? isPressed : active;
 
   return (
-    <div 
+    <div
       className="voice-button-container"
       style={{ width: size + 60, height: size + 60 }}
     >
@@ -132,6 +132,9 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
             duration: 1.5,
             repeat: isActive ? Infinity : 0,
             ease: 'easeInOut',
+          },
+          scale: {
+            duration: 0.2,
           },
         }}
         disabled={disabled}

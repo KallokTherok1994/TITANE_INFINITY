@@ -81,34 +81,51 @@ class ChatEngine {
     history: AIMessage[] = [],
     config?: Partial<ChatEngineConfig>
   ): Promise<ChatEngineResponse> {
+    console.log('\n╔══════════════════════════════════════════════════════════════╗');
+    console.log('║  CHAT ENGINE: Starting generation                            ║');
+    console.log('╚══════════════════════════════════════════════════════════════╝');
+
     const finalConfig = { ...this.config, ...config };
+    console.log(`🎯 Mode: ${finalConfig.mode}`);
+    console.log(`📝 Message: "${message.substring(0, 60)}${message.length > 60 ? '...' : ''}"`);
 
     // 1. Validation & sécurité
+    console.log('🔒 Step 1: Validating input...');
     const validatedMessage = inputValidator.validate(message);
+    console.log(`   ✅ Validated (${validatedMessage.length} chars)`);
 
     // 2. Enrichissement contextuel depuis Memory Core
+    console.log('🧠 Step 2: Loading Memory Core context...');
     const memoryContext = await memoryIntegration.loadContext(finalConfig.contextSources || {});
     const context = this.formatMemoryContext(memoryContext);
+    console.log(`   ✅ Context loaded (${context.sources.length} sources)`);
 
     // 3. Construction du prompt selon le mode
+    console.log(`🎨 Step 3: Building prompt for mode "${finalConfig.mode}"...`);
     const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
     const enrichedHistory = this.buildEnrichedHistory(
       history,
       context,
       modeConfig
     );
+    console.log(`   ✅ Enriched history built (${enrichedHistory.length} messages)`);
 
     // 4. Appel orchestrateur
+    console.log('🚀 Step 4: Calling orchestrator...\n');
     const response = await aiOrchestrator.generate(
       validatedMessage,
       enrichedHistory,
       finalConfig.aiConfig
     );
+    console.log('   ✅ Orchestrator response received');
 
     // 5. Post-traitement selon mode
+    console.log('⚙️  Step 5: Post-processing...');
     const processedResponse = this.postProcess(response, finalConfig);
+    console.log('   ✅ Response processed');
 
     // 6. Sauvegarde dans Memory Core
+    console.log('💾 Step 6: Saving to Memory Core...');
     await memoryIntegration.saveInteraction({
       mode: finalConfig.mode,
       userMessage: validatedMessage,
@@ -116,6 +133,11 @@ class ChatEngine {
       emotionState: finalConfig.emotionState,
       context: memoryContext,
     });
+    console.log('   ✅ Interaction saved');
+
+    console.log('\n╔══════════════════════════════════════════════════════════════╗');
+    console.log('║  CHAT ENGINE: Generation complete!                           ║');
+    console.log('╚══════════════════════════════════════════════════════════════╝\n');
 
     return {
       ...processedResponse,

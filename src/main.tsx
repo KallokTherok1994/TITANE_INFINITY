@@ -10,7 +10,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './design-system/titane-v12.css';
+import './styles/titane-design-system.css';
 import './pages/styles.css';
 
 // Phase 8: Production Hardening

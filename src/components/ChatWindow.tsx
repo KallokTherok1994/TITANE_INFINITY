@@ -27,7 +27,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onVoiceModeToggle,
   voiceModeActive = false,
 }) => {
-  const { messages, isLoading, error, sendMessage } = useChat();
+  const { messages, isLoading, error, sendMessage } = useChat({ voiceEnabled: voiceModeActive });
   const { status: connectionStatus } = useConnection();
   const setAIStatus = useSingularityState((state) => state.setAIStatus);
   const setAIError = useSingularityState((state) => state.setAIError);

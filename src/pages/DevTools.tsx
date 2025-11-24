@@ -22,7 +22,6 @@ import { CognitiveModuleCard } from '../components/monitoring/CognitiveModuleCar
 import { LivingEnginesCard } from '../components/monitoring/LivingEnginesCard';
 import { useTitaneCore } from '../hooks';
 import { useLivingEngines } from '../hooks';
-import '../design-system/titane-v20.css';
 
 export const DevTools = () => {
   const { systemStatus, error } = useTitaneCore();
