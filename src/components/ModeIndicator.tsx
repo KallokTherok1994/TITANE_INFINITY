@@ -9,8 +9,9 @@
 // 🎯 Mode Indicator — Affichage mode actif + transitions
 // Indicateur visuel compact du mode Meta-Mode actuel
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { useSingularityState, selectMetaModeState } from '../core/state/SingularityState';
 // import './ModeIndicator.css';
 
 interface ModeHistory {
@@ -19,26 +20,27 @@ interface ModeHistory {
 }
 
 export const ModeIndicator: React.FC = React.memo(() => {
-  const [currentMode, setCurrentMode] = useState<string>('Digital Twin');
-  const [previousMode, setPreviousMode] = useState<string>('');
-  const [transitioning, setTransitioning] = useState(false);
+  // Use Zustand instead of local state
+  const metaModeState = useSingularityState(selectMetaModeState);
+  const setMetaMode = useSingularityState((s) => s.setMetaMode);
+  const setMetaModeTransition = useSingularityState((s) => s.setMetaModeTransition);
+
+  const { currentMode, transitioning } = metaModeState;
   const [history, setHistory] = useState<ModeHistory[]>([]);
 
-  const fetchCurrentMode = React.useCallback(async () => {
+  const fetchCurrentMode = useCallback(async () => {
     try {
       const mode = await invoke<string>('meta_mode_get_current_mode');
       if (mode !== currentMode) {
-        setPreviousMode(currentMode);
-        setCurrentMode(mode);
-        setTransitioning(true);
-        setTimeout(() => setTransitioning(false), 600);
+        setMetaMode(mode);
+        setTimeout(() => setMetaModeTransition(false), 600);
       }
     } catch (error) {
       console.error('Erreur récupération mode:', error);
     }
-  }, [currentMode]);
+  }, [currentMode, setMetaMode, setMetaModeTransition]);
 
-  const fetchHistory = React.useCallback(async () => {
+  const fetchHistory = useCallback(async () => {
     try {
       const hist = await invoke<ModeHistory[]>('meta_mode_get_history');
       setHistory(hist);
@@ -114,8 +116,8 @@ export const ModeIndicator: React.FC = React.memo(() => {
           <div className="mode-name" style={{ color: getModeColor(currentMode) }}>
             {currentMode}
           </div>
-          {previousMode && transitioning && (
-            <div className="mode-transition">← {previousMode}</div>
+          {metaModeState.previousMode && transitioning && (
+            <div className="mode-transition">← {metaModeState.previousMode}</div>
           )}
         </div>
         <div className="mode-pulse" style={{ backgroundColor: getModeColor(currentMode) }} />

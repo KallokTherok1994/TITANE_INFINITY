@@ -15,9 +15,10 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useLivingEngines } from './hooks';
+import { useSingularityState } from './core/state/SingularityState';
 import { ThemeProvider } from './themes';
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
@@ -78,7 +79,10 @@ import { PerformanceTest } from './pages/PerformanceTest';
 const AppRouter: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Use Singularity State instead of local state
+  const sidebarCollapsed = useSingularityState((s) => s.context.sidebarCollapsed);
+  const toggleSidebar = useSingularityState((s) => s.toggleSidebar);
 
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
@@ -132,7 +136,7 @@ const AppRouter: React.FC = () => {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => { setSidebarCollapsed(!sidebarCollapsed); }}
+              onClick={toggleSidebar}
               leftIcon={sidebarCollapsed ? '→' : '←'}
             >
               {sidebarCollapsed ? 'Ouvrir' : 'Fermer'}

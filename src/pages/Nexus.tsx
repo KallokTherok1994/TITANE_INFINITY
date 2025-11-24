@@ -13,35 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber } from '../utils/dataUtils';
 import './ModulePages.css';
 
 export const Nexus = () => {
-  const { getNexusGraph } = useTitaneCore();
-  const [graph, setGraph] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchGraph = async () => {
-      try {
-        const data = await getNexusGraph();
-        setGraph(data);
-      } catch (err) {
-        console.error('Failed to fetch Nexus graph:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGraph();
-    const interval = setInterval(fetchGraph, 5000);
-    return () => clearInterval(interval);
-  }, [getNexusGraph]);
-
-  if (loading) {
+  const nexusData = useEngineSubscription('nexus');
+  const { data: graph, loading } = nexusData as { data: any; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

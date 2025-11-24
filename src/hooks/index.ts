@@ -10,6 +10,11 @@
 export { useTitaneCore } from './useTitaneCore';
 export { useMemoryCore } from './useMemoryCore';
 export { useLivingEngines } from './useLivingEngines';
+export { useEngineSubscription } from './useEngineSubscription';
+export { useAIChatStreaming } from './useAIChatStreaming';
+export { useBatchCommands } from './useBatchCommands';
+export { useFileOperations } from './useFileOperations';
+export { useRAG } from './useRAG';
 export type { LivingEnginesState } from './useLivingEngines';
 
 // v∞ - Singularity Hook

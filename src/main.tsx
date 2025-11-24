@@ -29,12 +29,10 @@ import { SingularityConnections } from './services/singularityConnections';
 document.documentElement.setAttribute('data-theme', 'dark');
 
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
-// @ts-expect-error - __TAURI__ is injected by Tauri runtime
 if (typeof window.__TAURI__ !== 'undefined') {
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
       ev.preventDefault();
-      // @ts-expect-error - __TAURI__ API
       window.__TAURI__.window.getCurrent().openDevtools().catch((err: Error) => {
         console.error('[DevTools] Failed to open:', err);
       });

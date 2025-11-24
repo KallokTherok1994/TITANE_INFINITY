@@ -16,6 +16,7 @@
 import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
 import { useMemoryCore } from '../hooks';
+import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Memory = () => {
@@ -33,8 +34,7 @@ export const Memory = () => {
     }
   };
 
-    // @ts-expect-error - MemoryEntry type mismatch
-  const encryptedCount = entries.filter((e: Record<string, unknown>) => e.encrypted).length;
+  const encryptedCount = (entries as MemoryEntry[]).filter((e) => e.encrypted).length;
   const totalEntries = entries.length;
 
   return (

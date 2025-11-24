@@ -11,26 +11,15 @@
 
 import React from 'react';
 
-
-
 export interface Message {
-
   id: string;
-
-  role: 'user' | 'assistant';
-
+  role: 'user' | 'assistant' | 'system';
   content: string;
-
-  timestamp: Date;
-
+  timestamp: number | Date;
 }
 
-
-
 export interface MessageBubbleProps {
-
   message: Message;
-
 }
 
 
@@ -45,7 +34,9 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
       <div className="message-timestamp">
 
-        {message.timestamp.toLocaleTimeString()}
+        {typeof message.timestamp === 'number'
+          ? new Date(message.timestamp).toLocaleTimeString()
+          : message.timestamp.toLocaleTimeString()}
 
       </div>
 

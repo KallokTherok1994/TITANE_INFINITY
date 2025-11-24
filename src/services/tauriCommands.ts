@@ -183,6 +183,31 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     returnType: 'Vec<ModeHistory>',
     active: false,
   },
+  'meta_mode_reset': {
+    name: 'meta_mode_reset',
+    description: 'Reset Meta-Mode to default',
+    returnType: 'void',
+    active: false,
+  },
+  'delete_conversation': {
+    name: 'delete_conversation',
+    description: 'Delete a conversation by ID',
+    params: { conversationId: 'string' },
+    returnType: 'void',
+    active: false,
+  },
+  'clear_all_memory': {
+    name: 'clear_all_memory',
+    description: 'Clear all memory entries',
+    returnType: 'void',
+    active: false,
+  },
+  'memory_clear': {
+    name: 'memory_clear',
+    description: 'Clear memory core',
+    returnType: 'void',
+    active: false,
+  },
   'singularity_update_physical': {
     name: 'singularity_update_physical',
     description: 'Update physical state',
@@ -197,6 +222,34 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     returnType: 'void',
     active: false,
   },
+  'singularity_update_symbolic': {
+    name: 'singularity_update_symbolic',
+    description: 'Update symbolic state',
+    params: { symbolic: 'SymbolicState' },
+    returnType: 'void',
+    active: false,
+  },
+  'singularity_update_adaptive': {
+    name: 'singularity_update_adaptive',
+    description: 'Update adaptive state',
+    params: { adaptive: 'AdaptiveState' },
+    returnType: 'void',
+    active: false,
+  },
+  'singularity_update_meta': {
+    name: 'singularity_update_meta',
+    description: 'Update meta state',
+    params: { meta: 'MetaState' },
+    returnType: 'void',
+    active: false,
+  },
+  'singularity_update_full_state': {
+    name: 'singularity_update_full_state',
+    description: 'Update full Singularity state',
+    params: { state: 'SingularityState' },
+    returnType: 'void',
+    active: false,
+  },
   'singularity_save_state': {
     name: 'singularity_save_state',
     description: 'Save Singularity state to disk',
@@ -208,7 +261,7 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     description: 'Load Singularity state from disk',
     returnType: 'SingularityState',
     active: false,
-  },
+  }
 };
 
 // ═══════════════════════════════════════════════════════════════

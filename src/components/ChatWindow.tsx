@@ -15,6 +15,7 @@ import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
 import { useSingularityState } from '../core/state/SingularityState';
+import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
 // No CSS import needed - styles are global
 
 export interface ChatWindowProps {
@@ -125,10 +126,11 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
           </div>
         )}
 
-        {messages.filter((message) => message.role !== 'system').map((message) => (
-        // @ts-expect-error - Message type compatibility
-          <MessageBubble key={message.timestamp} message={message} />
-        ))}
+        {messages
+          .filter((message) => message.role !== 'system')
+          .map((message) => (
+            <MessageBubble key={message.timestamp} message={message as Message} />
+          ))}
 
         {isLoading && (
           <div className="typing-indicator">

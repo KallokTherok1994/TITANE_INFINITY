@@ -32,7 +32,7 @@ export function SingularityMonitor() {
 
   useEffect(() => {
     let mounted = true;
-    let interval: any;
+    let interval: NodeJS.Timeout;
 
     const init = async () => {
       try {

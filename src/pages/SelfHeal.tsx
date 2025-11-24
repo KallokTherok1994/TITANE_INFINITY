@@ -13,35 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
 export const SelfHeal = () => {
-  const { getSelfHealData } = useTitaneCore();
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getSelfHealData();
-        setData(result);
-      } catch (err) {
-        console.error('Failed to fetch SelfHeal data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
-  }, [getSelfHealData]);
-
-  if (loading) {
+  const selfhealData = useEngineSubscription('selfheal');
+  const { data, loading } = selfhealData as { data: any; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

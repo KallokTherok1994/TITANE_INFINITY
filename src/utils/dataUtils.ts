@@ -89,8 +89,8 @@ export function mapBackendData(data: unknown): ModuleData {
       id: extractString(obj.id || obj.node_type, 'unknown'),
       name: extractString(obj.name || obj.node_type, 'Module'),
       status: extractString(obj.status || obj.state, 'Unknown'),
-  // @ts-expect-error - Fallback empty object
-      value: obj.value ?? obj.weight ?? obj.data ?? 0,
+      // Fallback values with explicit unknown type
+      value: (obj.value ?? obj.weight ?? obj.data ?? 0) as number,
       unit: obj.unit as string | undefined,
       metadata: (obj.connections || obj.metrics || {}) as Record<string, unknown>,
     };

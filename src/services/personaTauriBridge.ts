@@ -6,6 +6,8 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
+
 /**
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v24 — PERSONA ENGINE TAURI BRIDGE
@@ -103,8 +105,7 @@ function convertRustToTS(rustState: RustPersonaState): PersonaState {
     },
     memory: {
       userPreferences: {
-      // @ts-expect-error - Speed type compatibility
-        typicalRhythm: 'normal' as 'slow' | 'normal' | 'fast',
+        typicalRhythm: 'normal' as UserSpeed,
         preferredDensity: 0.5,
         visualSensitivity: 0.7,
         soundTolerance: 0.8,

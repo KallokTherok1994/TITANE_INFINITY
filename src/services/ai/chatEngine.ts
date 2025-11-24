@@ -214,29 +214,25 @@ class ChatEngine {
     // Projets actifs
     if (memory.activeProjects.length > 0) {
       sources.push('projets');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data.projects = memory.activeProjects.map((p: any) => `[${p.status}] ${p.name} (P${p.priority})`).join(', ');
+      data.projects = memory.activeProjects.map((p) => `[${p.status}] ${p.name} (P${p.priority})`).join(', ');
     }
 
     // Décisions récentes
     if (memory.recentDecisions.length > 0) {
       sources.push('decisions');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data.decisions = memory.recentDecisions.map((d: any) => `${d.title}: ${d.outcome}`).join('; ');
+      data.decisions = memory.recentDecisions.map((d) => `${d.title}: ${d.outcome}`).join('; ');
     }
 
     // Connaissances
     if (memory.relevantKnowledge.length > 0) {
       sources.push('knowledge');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data.knowledge = memory.relevantKnowledge.map((k: any) => k.topic).join(', ');
+      data.knowledge = memory.relevantKnowledge.map((k) => k.topic).join(', ');
     }
 
     // Rituels
     if (memory.activeRituals.length > 0) {
       sources.push('rituals');
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data.rituals = memory.activeRituals.map((r: any) => r.name).join(', ');
+      data.rituals = memory.activeRituals.map((r) => r.name).join(', ');
     }
 
     return { sources, data };

@@ -13,35 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
 export const Watchdog = () => {
-  const { getWatchdogData } = useTitaneCore();
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getWatchdogData();
-        setData(result);
-      } catch (err) {
-        console.error('Failed to fetch Watchdog data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    const interval = setInterval(fetchData, 2000);
-    return () => clearInterval(interval);
-  }, [getWatchdogData]);
-
-  if (loading) {
+  const watchdogData = useEngineSubscription('watchdog');
+  const { data, loading } = watchdogData as { data: any; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

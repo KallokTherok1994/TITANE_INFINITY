@@ -23,12 +23,10 @@ describe('InputValidator', () => {
     });
 
     it('devrait rejeter message null', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => inputValidator.validate(null as any)).toThrow('Message invalide');
     });
 
     it('devrait rejeter message undefined', () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => inputValidator.validate(undefined as any)).toThrow('Message invalide');
     });
 

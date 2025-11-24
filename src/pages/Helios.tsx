@@ -13,9 +13,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
@@ -32,28 +31,8 @@ interface HeliosMetrics {
 }
 
 export const Helios = () => {
-  const { getHeliosMetrics } = useTitaneCore();
-  const [metrics, setMetrics] = useState<HeliosMetrics | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchMetrics = async () => {
-      try {
-        const data = await getHeliosMetrics();
-        setMetrics(data);
-      } catch (err) {
-        console.error('Failed to fetch Helios metrics:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMetrics();
-    const interval = setInterval(fetchMetrics, 3000);
-    return () => clearInterval(interval);
-  }, [getHeliosMetrics]);
-
-  if (loading) {
+  const heliosData = useEngineSubscription('helios');
+  const { data: metrics, loading } = heliosData as { data: HeliosMetrics | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

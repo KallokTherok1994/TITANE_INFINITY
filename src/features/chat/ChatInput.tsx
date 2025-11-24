@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useRef, useEffect, type KeyboardEvent, type ChangeEvent } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback, type KeyboardEvent, type ChangeEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button, Badge } from '../../ui';
 import { colors, spacing, radius, shadows, fontSizes, fontWeights } from '@themes/tokens';
@@ -65,8 +65,9 @@ export const ChatInput = ({
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(-1);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const filteredSuggestions = suggestions.filter(s =>
-    s.text.toLowerCase().includes(value.toLowerCase())
+  const filteredSuggestions = useMemo(
+    () => suggestions.filter(s => s.text.toLowerCase().includes(value.toLowerCase())),
+    [suggestions, value]
   );
 
   // Auto-resize textarea
@@ -78,15 +79,31 @@ export const ChatInput = ({
     }
   }, [value]);
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>): void => {
     const newValue = e.target.value;
     if (newValue.length <= maxLength) {
       onChange(newValue);
       setShowSuggestions(newValue.length > 0 && filteredSuggestions.length > 0);
     }
-  };
+  }, [maxLength, onChange, filteredSuggestions.length]);
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>): void => {
+  const handleSubmit = useCallback((): void => {
+    if (value.trim() && !disabled) {
+      onSubmit(value.trim());
+      onChange('');
+      setShowSuggestions(false);
+      setSelectedSuggestion(-1);
+    }
+  }, [value, disabled, onSubmit, onChange]);
+
+  const applySuggestion = useCallback((suggestion: ChatSuggestion): void => {
+    onChange(suggestion.text);
+    setShowSuggestions(false);
+    setSelectedSuggestion(-1);
+    textareaRef.current?.focus();
+  }, [onChange]);
+
+  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>): void => {
     // Submit on Ctrl/Cmd + Enter
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
@@ -117,23 +134,7 @@ export const ChatInput = ({
         setSelectedSuggestion(-1);
       }
     }
-  };
-
-  const handleSubmit = (): void => {
-    if (value.trim() && !disabled) {
-      onSubmit(value.trim());
-      onChange('');
-      setShowSuggestions(false);
-      setSelectedSuggestion(-1);
-    }
-  };
-
-  const applySuggestion = (suggestion: ChatSuggestion): void => {
-    onChange(suggestion.text);
-    setShowSuggestions(false);
-    setSelectedSuggestion(-1);
-    textareaRef.current?.focus();
-  };
+  }, [showSuggestions, filteredSuggestions, selectedSuggestion, handleSubmit, applySuggestion]);
 
   const charCount = value.length;
   const charPercentage = (charCount / maxLength) * 100;

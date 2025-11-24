@@ -13,35 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
 export const AdaptiveEngine = () => {
-  const { getAdaptiveData } = useTitaneCore();
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await getAdaptiveData();
-        setData(result);
-      } catch (err) {
-        console.error('Failed to fetch Adaptive Engine data:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-    const interval = setInterval(fetchData, 4000);
-    return () => clearInterval(interval);
-  }, [getAdaptiveData]);
-
-  if (loading) {
+  const adaptiveData = useEngineSubscription('adaptive');
+  const { data, loading } = adaptiveData as { data: any; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

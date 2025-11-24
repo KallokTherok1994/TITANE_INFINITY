@@ -13,35 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
 export const Harmonia = () => {
-  const { getHarmoniaFlows } = useTitaneCore();
-  const [flows, setFlows] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchFlows = async () => {
-      try {
-        const data = await getHarmoniaFlows();
-        setFlows(data);
-      } catch (err) {
-        console.error('Failed to fetch Harmonia flows:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFlows();
-    const interval = setInterval(fetchFlows, 4000);
-    return () => clearInterval(interval);
-  }, [getHarmoniaFlows]);
-
-  if (loading) {
+  const harmoniaData = useEngineSubscription('harmonia');
+  const { data: flows, loading } = harmoniaData as { data: any; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">

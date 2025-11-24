@@ -13,35 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
-import { useTitaneCore } from '../hooks';
+import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber, extractString } from '../utils/dataUtils';
 import './ModulePages.css';
 
 export const Sentinel = () => {
-  const { getSentinelStatus } = useTitaneCore();
-  const [status, setStatus] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const data = await getSentinelStatus();
-        setStatus(data);
-      } catch (err) {
-        console.error('Failed to fetch Sentinel status:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 3000);
-    return () => clearInterval(interval);
-  }, [getSentinelStatus]);
-
-  if (loading) {
+  const sentinelData = useEngineSubscription('sentinel');
+  const { data: status, loading } = sentinelData as { data: any; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
