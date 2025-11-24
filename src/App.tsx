@@ -57,7 +57,8 @@ if (typeof window !== 'undefined') {
 
 // New v17.1 pages
 import { DashboardPage } from './pages/DashboardPage';
-import { ChatPage } from './pages/ChatPage';
+// CORRECTION v19.1.0: Utiliser la vraie page Chat avec useChat() au lieu du mock setTimeout
+import { Chat as ChatPage } from './ui/pages/Chat';
 import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { DesignSystemPage } from './pages/DesignSystemPage';

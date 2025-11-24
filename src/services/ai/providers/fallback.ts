@@ -38,6 +38,8 @@ export const fallbackProvider: AIProvider = {
       console.log('[Fallback] generate() called with:', { message: message.substring(0, 50), historyLength: _history.length });
 
       // Réponse personnalisée selon le message
+      console.log('🔄 FALLBACK: Generating emergency response...');
+
       const randomIndex = Math.floor(Math.random() * FALLBACK_RESPONSES.length);
       let content: string = FALLBACK_RESPONSES[randomIndex] as string;
 

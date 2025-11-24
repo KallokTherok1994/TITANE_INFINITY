@@ -87,10 +87,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     try {
       console.log('🚀 Calling chatEngine.generate()...\n');
 
-      // Timeout safety: 30s max
+      // Timeout safety: 10s max (réduit pour dev rapide)
       const generatePromise = chatEngine.generate(content.trim(), updatedMessages);
       const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout: Chat engine took >30s')), 30000)
+        setTimeout(() => reject(new Error('Timeout: Chat engine took >10s')), 10000)
       );
 
       const response: ChatEngineResponse = await Promise.race([

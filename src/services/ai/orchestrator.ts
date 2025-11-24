@@ -33,7 +33,8 @@ function sanitizeMessage(message: string): string {
  * Orchestrateur principal
  */
 class AIOrchestrator {
-  private providers = [geminiProvider, ollamaProvider, fallbackProvider];
+  // CORRECTION v19.1.0: Fallback en premier pour dev (Gemini/Ollama non configurés)
+  private providers = [fallbackProvider, geminiProvider, ollamaProvider];
 
   /**
    * Génère une réponse en cascade
