@@ -1,11 +1,12 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "TITANE∞ v17.3",
-  "version": "17.3.0",
+  "productName": "TITANE∞ v19.1",
+  "version": "19.1.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "beforeDevCommand": "pnpm run build",
+    "beforeDevCommand": "pnpm vite dev",
     "beforeBuildCommand": "pnpm run build",
+    "devUrl": "http://localhost:1420",
     "frontendDist": "../dist"
   },
   "bundle": {
@@ -21,8 +22,8 @@
     "resources": [],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "Phase 8 Complete - Production Hardening + Multi-Platform Deployment",
-    "longDescription": "TITANE∞ v17.3.0 - Phase 8 Production Hardening: ErrorBoundary, Performance Monitoring, Accessibility WCAG 2.1 AA, Security Hardening, Bundle Optimization, Multi-Platform CI/CD (Linux/Windows/macOS), 100% Tauri v2, Production-Ready"
+    "shortDescription": "v19.1.0 - UI Corrections + CSS Height Fix",
+    "longDescription": "TITANE∞ v19.1.0 - UI Display Corrections: Removed HTTP/Tauri blocking verrou, Fixed CSS height 100%, Optimized environment detection, Console warnings only (non-blocking)"
   },
   "app": {
     "windows": [

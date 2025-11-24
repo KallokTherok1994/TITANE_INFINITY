@@ -7,6 +7,23 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import type { CoreResponse } from '../core/ARCHITECTURE_TYPES_v∞';
+import type {
+  SingularityState,
+  HeliosModule,
+  HeliosHealth,
+  ActiveProject,
+  RecentMemory,
+  NexusStatus,
+  PersonaMultipliers,
+  ChatMessage,
+  ChatConfig,
+  ChatResponse,
+  VoiceRecordingResult,
+  EngineMetrics,
+  ModuleInfo,
+  SystemStatus,
+  SystemInfo,
+} from '../types/tauri';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -316,43 +333,43 @@ export async function invokeTauriCommand<T = unknown>(
 export const TauriAPI = {
   // Singularity
   getSingularityState: () =>
-    invokeTauriCommand<any>('singularity_get_state'),
+    invokeTauriCommand<SingularityState>('singularity_get_state'),
 
-  syncSingularityState: (state: any) =>
+  syncSingularityState: (state: Partial<SingularityState>) =>
     invokeTauriCommand('singularity_sync_state', { state }),
 
   // Helios
   getHeliosModules: () =>
-    invokeTauriCommand<any[]>('helios_get_modules'),
+    invokeTauriCommand<HeliosModule[]>('helios_get_modules'),
 
   getHeliosHealth: () =>
-    invokeTauriCommand<string>('helios_get_health'),
+    invokeTauriCommand<HeliosHealth>('helios_get_health'),
 
   // Memory
   getActiveProjects: (limit = 10) =>
-    invokeTauriCommand<any[]>('memory_get_active_projects', { limit }),
+    invokeTauriCommand<ActiveProject[]>('memory_get_active_projects', { limit }),
 
   getRecentMemories: (limit = 20) =>
-    invokeTauriCommand<any[]>('memory_get_recent_memories', { limit }),
+    invokeTauriCommand<RecentMemory[]>('memory_get_recent_memories', { limit }),
 
   // Nexus
   getNexusStatus: () =>
-    invokeTauriCommand<any>('nexus_get_status'),
+    invokeTauriCommand<NexusStatus>('nexus_get_status'),
 
   // Persona
   getPersonaMultipliers: () =>
-    invokeTauriCommand<any>('persona_get_multipliers'),
+    invokeTauriCommand<PersonaMultipliers>('persona_get_multipliers'),
 
   // Chat
-  sendChatMessage: (messages: any[], config: any) =>
-    invokeTauriCommand<string>('chat_send_message', { messages, config }),
+  sendChatMessage: (messages: ChatMessage[], config: ChatConfig) =>
+    invokeTauriCommand<ChatResponse>('chat_send_message', { messages, config }),
 
   // Voice
   startVoiceRecording: () =>
     invokeTauriCommand('voice_start_recording'),
 
   stopVoiceRecording: () =>
-    invokeTauriCommand<any>('voice_stop_recording'),
+    invokeTauriCommand<VoiceRecordingResult>('voice_stop_recording'),
 
   speak: (text: string, voice = 'default') =>
     invokeTauriCommand('voice_speak', { text, voice }),

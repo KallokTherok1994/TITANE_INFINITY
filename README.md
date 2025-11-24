@@ -59,10 +59,11 @@ pnpm run start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 
 ---
 
-## 📌 Status Actuel (23 nov 2025)
+## 📌 Status Actuel (24 nov 2025)
 
 | Composant | Status | Version | Notes |
 |-----------|--------|---------|-------|
+| **UI Display** | ✅ CORRIGÉ | 19.1.0 | **Écran blanc résolu, CSS height 100%, verrou supprimé** |
 | **Code Quality** | ✅ EXCELLENT | 13.1.0 | **0 erreur ESLint, 0 warning, ~75 `any` éliminés** |
 | **TypeScript Strict** | ✅ COMPLETE | 13.1.0 | Types stricts partout, EngineState, type guards |
 | **React Hooks** | ✅ CONFORME | 13.1.0 | useCallback mémorisé, dépendances complètes |

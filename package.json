@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "13.0.0",
-  "description": "TITANE_INFINITY v13 - Proprietary License: Unified Architecture + Singularity State + Living Engines, Production-Ready",
+  "version": "19.1.0",
+  "description": "TITANE_INFINITY v19.1.0 - Proprietary License: Unified Architecture + UI Corrections + CSS Height Fix",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {

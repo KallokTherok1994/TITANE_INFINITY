@@ -1,7 +1,7 @@
 [package]
 name = "titane-infinity"
-version = "13.0.0"
-description = "TITANE_INFINITY v13 - Proprietary License: Unified Architecture + Singularity State + Living Engines, Production-Ready"
+version = "19.1.0"
+description = "TITANE_INFINITY v19.1.0 - Proprietary License: Unified Architecture + UI Corrections + CSS Height Fix"
 authors = ["Kevin Thibault / Humain Total / TITANE Team"]
 license = "SEE LICENSE.md"
 repository = "https://github.com/KallokTherok1994/TITANE_INFINITY"

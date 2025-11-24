@@ -41,12 +41,18 @@ if (typeof window.__TAURI__ !== 'undefined') {
   console.log('🔧 DevTools shortcuts enabled: F12 or Ctrl+Shift+I');
 }
 
-// Log system initialization
-console.log('🚀 TITANE∞ v17.2.0 - Modular Architecture: Plugin System + DevTools + Cognitive Engine');
-console.log('🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
-console.log('✨ Frontend: 20 Unified Engines | SingularityState Active');
-console.log('🔒 Tauri v2.0 100% | Rust + React + TypeScript | Production-Ready');
-console.log('>>> TITANE∞ FRONTEND INITIALIZING... (timestamp: ' + new Date().toISOString() + ')');
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🚀 BOOT SEQUENCE START
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+console.log('\n╔════════════════════════════════════════════════════════════════╗');
+console.log('║  🌌 TITANE∞ v17.3 - BOOT SEQUENCE                             ║');
+console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
+console.log('╚════════════════════════════════════════════════════════════════╝\n');
+console.log('[1/5] 🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
+console.log('[2/5] ✨ Frontend: 20 Unified Engines | SingularityState Active');
+console.log('[3/5] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
+console.log('[4/5] 📦 Loading React 18 + TypeScript 5...');
+console.log('[5/5] 🎯 Mounting root component...');
 
 // Initialize Singularity Engine
 singularityEngine.initialize().then(() => {
@@ -122,26 +128,119 @@ window.addEventListener('unhandledrejection', (event) => {
 });
 
 console.log('✅ TITANE∞ frontend loaded successfully');
-console.log('>>> TITANE∞ FRONTEND READY TO MOUNT REACT');
+console.log('>>> MOUNTING REACT ROOT NOW...\n');
 
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// 🎯 REACT ROOT MOUNT - Point critique d'affichage
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Root element not found');
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
-    <ProductionErrorBoundary
-      onError={(error, errorInfo) => {
-        console.error('[TITANE∞] Production Error Boundary caught:', error);
-        console.error('[TITANE∞] Component stack:', errorInfo.componentStack);
-        // Hook for Sentry/LogRocket integration
-        if (window.Sentry) {
-          window.Sentry.captureException(error, {
-            contexts: { react: { componentStack: errorInfo.componentStack } },
-          });
-        }
-      }}
-    >
-      <App />
-    </ProductionErrorBoundary>
-  </React.StrictMode>
-);
+if (!rootElement) {
+  const errorMsg = '❌ CRITICAL: #root element not found in DOM!';
+  console.error(errorMsg);
+
+  // Fallback visuel si #root manque
+  document.body.innerHTML = `
+    <div style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #0a0a0a;
+      color: #ff4444;
+      font-family: monospace;
+      padding: 2rem;
+      text-align: center;
+    ">
+      <div>
+        <h1 style="font-size: 2rem; margin-bottom: 1rem;">⚠️ TITANE∞ Boot Error</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem;">${errorMsg}</p>
+        <pre style="background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: left; overflow: auto;">${document.documentElement.outerHTML}</pre>
+      </div>
+    </div>
+  `;
+  throw new Error(errorMsg);
+}
+
+console.log('✅ Root element found:', rootElement);
+console.log('🎨 Starting React 18 render...');
+
+try {
+  // Option 1: Utiliser App complet (production)
+  const AppComponent = App;
+
+  // Option 2: Pour débugger l'écran blanc, remplacer par AppMinimal:
+  // import AppMinimal from './AppMinimal';
+  // const AppComponent = AppMinimal;
+
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <ProductionErrorBoundary
+        onError={(error, errorInfo) => {
+          console.error('[TITANE∞] Production Error Boundary caught:', error);
+          console.error('[TITANE∞] Component stack:', errorInfo.componentStack);
+
+          // Hook for Sentry/LogRocket integration
+          if (window.Sentry) {
+            window.Sentry.captureException(error, {
+              contexts: { react: { componentStack: errorInfo.componentStack } },
+            });
+          }
+        }}
+      >
+        <AppComponent />
+      </ProductionErrorBoundary>
+    </React.StrictMode>
+  );
+
+  console.log('\n╔════════════════════════════════════════════════════════════════╗');
+  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED SUCCESSFULLY                   ║');
+  console.log('║  Component:', AppComponent.name || 'App');
+  console.log('╚════════════════════════════════════════════════════════════════╝\n');
+} catch (error) {
+  console.error('❌ CRITICAL: React mount failed:', error);
+
+  // Fallback visuel en cas d'erreur React
+  const errorMsg = error instanceof Error ? error.message : String(error);
+  const errorStack = error instanceof Error ? error.stack : '';
+
+  document.body.innerHTML = `
+    <div style="
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: #0a0a0a;
+      color: #ff4444;
+      font-family: monospace;
+      padding: 2rem;
+      text-align: center;
+    ">
+      <div style="max-width: 800px;">
+        <h1 style="font-size: 2rem; margin-bottom: 1rem;">⚠️ TITANE∞ React Mount Error</h1>
+        <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #ff8888;">${errorMsg}</p>
+        <details style="text-align: left; background: #1a1a1a; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <summary style="cursor: pointer; color: #888; margin-bottom: 0.5rem;">Stack Trace</summary>
+          <pre style="font-size: 0.75rem; color: #aaa; overflow: auto;">${errorStack}</pre>
+        </details>
+        <p style="color: #888; font-size: 0.875rem;">Appuyez sur F12 pour ouvrir la console DevTools</p>
+        <button
+          onclick="window.location.reload()"
+          style="
+            margin-top: 1rem;
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+          "
+        >
+          🔄 Recharger
+        </button>
+      </div>
+    </div>
+  `;
+  throw error;
+}

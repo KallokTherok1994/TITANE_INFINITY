@@ -45,16 +45,16 @@ export interface EngineHealth {
   lastUpdate: number;
 }
 
-export interface EngineState<T = any> {
+export interface EngineState<TConfig = unknown, TData = unknown> {
   id: string;
   name: string;
   version: string;
   initialized: boolean;
   running: boolean;
   health: EngineHealth;
-  config: T;
+  config: TConfig;
   metrics: EngineMetrics;
-  data?: any;
+  data?: TData;
 }
 
 export interface EngineMetrics {
@@ -66,16 +66,16 @@ export interface EngineMetrics {
   lastTick: number;
 }
 
-export interface EnginePulse {
+export interface EnginePulse<TData = unknown> {
   timestamp: number;
   engineId: string;
   health: EngineHealth;
-  data?: any;
+  data?: TData;
 }
 
-export interface EngineAction<T = any> {
+export interface EngineAction<TPayload = unknown> {
   type: string;
-  payload: T;
+  payload: TPayload;
   timestamp: number;
   engineId?: string;
 }

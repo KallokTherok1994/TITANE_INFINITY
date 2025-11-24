@@ -7,22 +7,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-
-interface EngineMetrics {
-  ticks: number;
-  stability: number;
-  latency_ms: number;
-  last_update_ms: number;
-  error_count: number;
-  success_rate: number;
-}
-
-interface ModuleInfo {
-  name: string;
-  version: string;
-  initialized: boolean;
-  health: any;
-}
+import type { EngineMetrics, ModuleInfo } from '../types/tauri';
 
 export function SingularityMonitor() {
   const [metrics, setMetrics] = useState<EngineMetrics | null>(null);
@@ -54,8 +39,8 @@ export function SingularityMonitor() {
             setMetrics(m);
 
             // Get health
-            const h = await invoke<any>('engine_health');
-            setHealth(Object.keys(h)[0] || 'Unknown');
+            const h = await invoke<{status: 'healthy' | 'degraded' | 'failing'}>('engine_health');
+            setHealth(h.status || 'Unknown');
 
             // Get modules (less frequently)
             if (m.ticks % 5 === 0) {

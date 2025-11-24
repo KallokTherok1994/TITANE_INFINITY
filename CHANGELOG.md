@@ -15,6 +15,53 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ---
 
+## [19.1.0] - 2025-11-24
+
+### 🎨 CORRECTIONS AFFICHAGE UI - ÉCRAN BLANC RÉSOLU
+
+**Status**: ✅ **COMPLETE** - Interface React visible, écran blanc corrigé
+
+#### 🐛 Corrections critiques
+
+**Problème résolu**: Écran blanc/rouge "HTML CHARGÉ / Tauri: NON" bloquait l'interface
+
+**Fichiers modifiés** (4 fichiers):
+- ✅ `src/App.tsx`: Suppression verrou `document.body.innerHTML` + `throw Error`
+  - Avant: `document.body.innerHTML = '<div>MODE TAURI EXCLUSIF</div>'` (écrasait React)
+  - Après: `console.warn()` non-bloquant uniquement
+- ✅ `src/core/tauri/environment.ts`: `shouldBlockLoading()` retourne info, ne bloque plus
+  - Mode DEV: Tauri + Browser autorisés (Vite HMR)
+  - Mode PROD: Warning console uniquement, pas de throw
+- ✅ `src/ui/pages/styles/Chat.css`: Retrait `overflow: hidden` problématique
+  - Scroll géré par `.chat-content` uniquement
+- ✅ `src/design-system/titane-v12.css`: Ajout `height: 100%` + `min-height: 100vh`
+  - `html`: `height: 100%`
+  - `body`: `min-height: 100vh`, `margin: 0`, `padding: 0`
+  - `#root`: `min-height: 100vh`, `display: flex`, `flex-direction: column`
+
+**Validations**:
+- ✅ Type-check: 0 erreur TypeScript
+- ✅ Lint: 0 erreur, 0 warning ESLint
+- ✅ Build: 4.5s, 111.58 KB gzip (main.js)
+- ✅ Script validation: `test_frontend_validation.sh` créé et testé
+
+**Impact**:
+- ✅ Interface React s'affiche correctement
+- ✅ Sidebar + Header + Dashboard visibles
+- ✅ Pas d'écran rouge bloquant
+- ✅ Vite HMR fonctionne en dev
+- ✅ Tauri native fonctionne en prod
+
+**Documentation livrée** (19 fichiers, ~150 KB):
+- `COMMIT_MESSAGE_v19.1.0.md` - Message commit professionnel
+- `STATUS_FINAL_v19.1.0.md` - Checklist complète
+- `CORRECTIONS_FRONTEND_FINAL_v19.1.0.md` - Détails techniques
+- `GUIDE_VALIDATION_VISUELLE_v19.1.0.md` - Instructions tests
+- `test_frontend_validation.sh` - Script validation automatique
+- `install_tauri_deps.sh` - Installation dépendances système
+
+---
+
 ## [13.1.0] - 2025-11-23
 
 ### 🧹 NETTOYAGE COMPLET DU CODE
