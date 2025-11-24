@@ -34,8 +34,8 @@ export function useTitaneCore(autoRefresh: boolean = true) {
     try {
       setLoading(true);
       setError(null);
-      const modules = await tauri<ModuleHealth[]>('get_system_status');
-      const status: SystemStatus = { 
+      const modules = await tauri<ModuleHealth[]>('get_system_health');
+      const status: SystemStatus = {
         modules,
         uptime: 0,
         status: 'operational',
@@ -95,7 +95,7 @@ export function useTitaneCore(autoRefresh: boolean = true) {
 
   useEffect(() => {
     if (!autoRefresh) return;
-    
+
     // ⚠️ FIX CRASH: Attendre que Tauri soit prêt avant d'appeler les commandes
     const initTimeout = setTimeout(() => {
       getSystemStatus().catch((err) => {
@@ -103,13 +103,13 @@ export function useTitaneCore(autoRefresh: boolean = true) {
         setError('Connexion au backend en cours...');
       });
     }, 100); // Délai de 100ms pour laisser Tauri s'initialiser
-    
+
     const interval = setInterval(() => {
       getSystemStatus().catch((err) => {
         console.warn('[TITANE] Failed to refresh system status:', err);
       });
     }, 5000);
-    
+
     return () => {
       clearTimeout(initTimeout);
       clearInterval(interval);

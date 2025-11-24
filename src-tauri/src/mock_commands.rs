@@ -274,6 +274,49 @@ pub async fn sync_singularity() -> AppResult<()> {
     Ok(())
 }
 
+// ─────────────────────────────────────────────────────────────────
+// SINGULARITY - Layer-specific getters (Phase 2 additions)
+// ─────────────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub async fn singularity_get_symbolic() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "language_model_temp": 0.7,
+        "context_window": 4096,
+        "token_count": 1250,
+        "embedding_dim": 768,
+        "semantic_drift": 0.02,
+        "symbol_coherence": 0.85,
+        "timestamp": chrono::Utc::now().timestamp_millis()
+    }))
+}
+
+#[tauri::command]
+pub async fn singularity_get_adaptive() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "learning_rate": 0.001,
+        "exploration_rate": 0.15,
+        "plasticity": 0.6,
+        "resilience": 0.8,
+        "adaptation_speed": 0.5,
+        "stability_index": 0.75,
+        "timestamp": chrono::Utc::now().timestamp_millis()
+    }))
+}
+
+#[tauri::command]
+pub async fn singularity_get_meta() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "self_awareness": 0.65,
+        "reflection_depth": 2,
+        "meta_learning": 0.5,
+        "consciousness_level": 1,
+        "coherence_score": 0.8,
+        "integration_level": 0.7,
+        "timestamp": chrono::Utc::now().timestamp_millis()
+    }))
+}
+
 // ═══════════════════════════════════════════════════════════════
 // DEVTOOLS - Logging & Debug
 // ═══════════════════════════════════════════════════════════════

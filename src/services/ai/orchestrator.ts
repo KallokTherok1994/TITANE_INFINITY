@@ -89,13 +89,20 @@ class AIOrchestrator {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error';
         console.error(`   ❌ Error: ${errorMsg}`);
 
-        // Si c'est le dernier provider (fallback), on enregistre l'erreur critique
+        // Si c'est le dernier provider (fallback), on renvoie quand même une réponse
         if (provider === fallbackProvider) {
           console.error('\n🚨 CRITICAL: Fallback provider failed!');
           console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
           console.error('Error details:', error);
           console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-          throw error;
+
+          // NOUVEAU: Réponse d'urgence garantie (jamais throw)
+          return {
+            content: "🚨 **Erreur système critique**: Tous les services IA sont indisponibles, y compris le mode fallback. Contactez le support technique.\n\n**Détails**: " + errorMsg,
+            provider: 'emergency-fallback',
+            timestamp: Date.now(),
+            model: 'emergency-v1',
+          };
         }
 
         console.log(`   ⏭️  Trying next provider...\n`);

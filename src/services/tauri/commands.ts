@@ -58,10 +58,10 @@ async function invokeWithValidation<T>(
     const validated = schema.parse(result);
     return validated;
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error 
-      ? error.message 
+    const errorMessage = error instanceof Error
+      ? error.message
       : String(error);
-    
+
     console.error(`[Tauri Command Error] ${cmd}:`, errorMessage);
     throw new Error(`Command "${cmd}" failed: ${errorMessage}`);
   }
@@ -77,10 +77,10 @@ async function invokeVoid(
   try {
     await invoke(cmd, payload ?? {});
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error 
-      ? error.message 
+    const errorMessage = error instanceof Error
+      ? error.message
       : String(error);
-    
+
     console.error(`[Tauri Command Error] ${cmd}:`, errorMessage);
     throw new Error(`Command "${cmd}" failed: ${errorMessage}`);
   }
@@ -97,7 +97,7 @@ export const metaMode = {
   async process(request: InteractionRequest): Promise<InteractionResponse> {
     // Valider l'entrée
     InteractionRequestSchema.parse(request);
-    
+
     return invokeWithValidation(
       'meta_mode_process',
       InteractionResponseSchema,
@@ -247,7 +247,7 @@ export const memory = {
   async search(query: MemoryQuery): Promise<MemoryResult[]> {
     // Valider la requête
     MemoryQuerySchema.parse(query);
-    
+
     const result = await invoke<MemoryResult[]>('memory_search', { query });
     return result.map(r => MemoryResultSchema.parse(r));
   },
@@ -315,7 +315,7 @@ export const system = {
    * Obtenir le statut système
    */
   async getStatus(): Promise<SystemStatus> {
-    return invokeWithValidation('get_system_status', SystemStatusSchema);
+    return invokeWithValidation('get_system_health', SystemStatusSchema);
   },
 
   /**

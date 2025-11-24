@@ -71,6 +71,9 @@ fn main() {
             mock_commands::singularity_is_critical,
             mock_commands::get_singularity_state,
             mock_commands::sync_singularity,
+            mock_commands::singularity_get_symbolic,
+            mock_commands::singularity_get_adaptive,
+            mock_commands::singularity_get_meta,
 
             // DevTools - Logging & Debug
             mock_commands::get_logs,

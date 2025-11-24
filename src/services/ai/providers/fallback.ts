@@ -34,33 +34,52 @@ export const fallbackProvider: AIProvider = {
   },
 
   async generate(message: string, _history: AIMessage[] = []): Promise<AIResponse> {
-    // Réponse personnalisée selon le message
-    const randomIndex = Math.floor(Math.random() * FALLBACK_RESPONSES.length);
-    let content: string = FALLBACK_RESPONSES[randomIndex] as string;
+    try {
+      console.log('[Fallback] generate() called with:', { message: message.substring(0, 50), historyLength: _history.length });
 
-    // Détection de patterns pour réponses contextuelles
-    const lowerMessage = message.toLowerCase();
+      // Réponse personnalisée selon le message
+      const randomIndex = Math.floor(Math.random() * FALLBACK_RESPONSES.length);
+      let content: string = FALLBACK_RESPONSES[randomIndex] as string;
 
-    if (lowerMessage.includes('configuration') || lowerMessage.includes('configurer')) {
-      content = "Pour configurer TITANE∞:\n\n1. **Gemini** (recommandé): Ajoute `VITE_GEMINI_API_KEY=ta_clé` dans `.env`\n2. **Ollama** (local): Lance `ollama serve` et installe un modèle avec `ollama pull llama2`\n\nRedémarre l'application ensuite.";
-    } else if (lowerMessage.includes('aide') || lowerMessage.includes('help')) {
-      content = "TITANE∞ nécessite un service IA pour fonctionner:\n\n• **Gemini API** (cloud, rapide): Obtiens une clé sur ai.google.dev\n• **Ollama** (local, privé): Installe depuis ollama.ai\n\nConsulte la documentation pour plus de détails.";
-    } else if (lowerMessage.includes('erreur') || lowerMessage.includes('error')) {
-      content = "Mode dégradé actif. Les services IA (Gemini + Ollama) sont inaccessibles. Vérifie :\n\n✓ Connexion internet\n✓ Configuration .env\n✓ Status Ollama (si local)\n✓ Logs console pour détails";
+      // Détection de patterns pour réponses contextuelles
+      const lowerMessage = message.toLowerCase();
+
+      if (lowerMessage.includes('configuration') || lowerMessage.includes('configurer')) {
+        content = "Pour configurer TITANE∞:\n\n1. **Gemini** (recommandé): Ajoute `VITE_GEMINI_API_KEY=ta_clé` dans `.env`\n2. **Ollama** (local): Lance `ollama serve` et installe un modèle avec `ollama pull llama2`\n\nRedémarre l'application ensuite.";
+      } else if (lowerMessage.includes('aide') || lowerMessage.includes('help')) {
+        content = "TITANE∞ nécessite un service IA pour fonctionner:\n\n• **Gemini API** (cloud, rapide): Obtiens une clé sur ai.google.dev\n• **Ollama** (local, privé): Installe depuis ollama.ai\n\nConsulte la documentation pour plus de détails.";
+      } else if (lowerMessage.includes('erreur') || lowerMessage.includes('error')) {
+        content = "Mode dégradé actif. Les services IA (Gemini + Ollama) sont inaccessibles. Vérifie :\n\n✓ Connexion internet\n✓ Configuration .env\n✓ Status Ollama (si local)\n✓ Logs console pour détails";
+      }
+
+      console.log('[Fallback] Generated response:', { contentLength: content.length });
+
+      const response = {
+        content,
+        provider: 'fallback',
+        timestamp: Date.now(),
+        model: 'fallback-v1',
+      };
+
+      console.log('[Fallback] Returning response successfully');
+      return response;
+
+    } catch (error) {
+      console.error('[Fallback] CRITICAL ERROR in generate():', error);
+      // Fallback du fallback : réponse minimale garantie
+      return {
+        content: "🚨 Erreur système critique. Tous les providers IA sont indisponibles, y compris le mode fallback. Redémarrez l'application.",
+        provider: 'fallback-emergency',
+        timestamp: Date.now(),
+        model: 'emergency-v1',
+      };
     }
-
-    return {
-      content,
-      provider: 'fallback',
-      timestamp: Date.now(),
-      model: 'fallback-v1',
-    };
   },
 
   // Pas de streaming pour le fallback
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     const response = await this.generate(message, history);
-    
+
     // Simule le streaming mot par mot
     const words = response.content.split(' ');
     for (const word of words) {
