@@ -295,6 +295,72 @@ export type EngineData =
   | AdaptiveData;
 
 // ═══════════════════════════════════════════════════════════════
+// TAURI BRIDGE TYPES
+// ═══════════════════════════════════════════════════════════════
+
+// Chat message types
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  timestamp?: number;
+}
+
+export interface ChatConfig {
+  model?: string;
+  temperature?: number;
+  maxTokens?: number;
+  stream?: boolean;
+}
+
+// Voice recording result
+export interface VoiceRecordingResult {
+  text: string;
+  confidence: number;
+  duration: number;
+}
+
+// System status and metrics
+export interface SystemStatus {
+  version: string;
+  uptime: number;
+  platform: string;
+  architecture: string;
+}
+
+export interface SystemMetrics {
+  cpuUsage: number;
+  memoryUsage: number;
+  diskUsage: number;
+  networkActivity: number;
+}
+
+// Module info
+export interface ModuleInfo {
+  id: string;
+  name: string;
+  version: string;
+  status: 'active' | 'inactive' | 'error';
+  description?: string;
+}
+
+// Project info
+export interface ProjectInfo {
+  id: string;
+  name: string;
+  path: string;
+  lastAccess: number;
+  status: 'active' | 'archived';
+}
+
+// Persona multipliers
+export interface PersonaMultipliers {
+  creativity: number;
+  precision: number;
+  speed: number;
+  complexity: number;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // UTILITY TYPES
 // ═══════════════════════════════════════════════════════════════
 

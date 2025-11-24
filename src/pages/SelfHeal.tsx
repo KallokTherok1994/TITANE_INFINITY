@@ -15,12 +15,13 @@
 
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
-import { extractNumber, extractString } from '../utils/dataUtils';
+import { extractNumber } from '../utils/dataUtils';
+import type { SelfHealData } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const SelfHeal = () => {
   const selfhealData = useEngineSubscription('selfheal');
-  const { data, loading } = selfhealData as { data: any; loading: boolean };  if (loading) {
+  const { data, loading } = selfhealData as { data: SelfHealData | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -31,9 +32,9 @@ export const SelfHeal = () => {
     );
   }
 
-  const repairs = extractNumber(data?.repairs, 0);
-  const successRate = extractNumber(data?.success_rate, 0);
-  const status = extractString(data?.status, 'Unknown');
+  const repairs = extractNumber(data?.totalHeals, 0);
+  const successRate = extractNumber(data?.successRate, 0);
+  const repairQueue = extractNumber(data?.repairQueue, 0);
 
   return (
     <div className="module-page">
@@ -47,12 +48,11 @@ export const SelfHeal = () => {
 
       <div className="module-page__grid">
         <ModuleCard
-          title="Réparations Effectuées"
+          title="Réparations"
           icon="🔧"
           value={repairs}
-          status={status}
-          subtitle="Actions correctives totales"
-          variant="success"
+          subtitle="Corrections appliquées"
+          variant="primary"
         />
 
         <ModuleCard
@@ -60,16 +60,16 @@ export const SelfHeal = () => {
           icon="✅"
           value={successRate}
           unit="%"
-          subtitle="Efficacité des corrections"
-          variant={successRate > 95 ? 'success' : successRate > 80 ? 'warning' : 'error'}
+          subtitle="Réussites"
+          variant={successRate > 80 ? 'success' : 'warning'}
         />
 
         <ModuleCard
-          title="État Système"
-          icon="📊"
-          status={status}
-          subtitle="Statut actuel"
-          variant="primary"
+          title="File d'Attente"
+          icon="📝"
+          value={repairQueue}
+          subtitle="Réparations en attente"
+          variant={repairQueue === 0 ? 'success' : 'warning'}
         />
       </div>
     </div>

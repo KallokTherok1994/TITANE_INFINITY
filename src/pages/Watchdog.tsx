@@ -15,12 +15,13 @@
 
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
-import { extractNumber, extractString } from '../utils/dataUtils';
+import { extractNumber } from '../utils/dataUtils';
+import type { WatchdogData } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Watchdog = () => {
   const watchdogData = useEngineSubscription('watchdog');
-  const { data, loading } = watchdogData as { data: any; loading: boolean };  if (loading) {
+  const { data, loading } = watchdogData as { data: WatchdogData | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -31,9 +32,9 @@ export const Watchdog = () => {
     );
   }
 
-  const tickMisses = extractNumber(data?.tick_misses, 0);
-  const anomalies = extractNumber(data?.anomalies, 0);
-  const status = extractString(data?.status, 'Unknown');
+  const monitored = extractNumber(data?.monitored, 0);
+  const healthy = extractNumber(data?.healthy, 0);
+  const critical = extractNumber(data?.critical, 0);
 
   return (
     <div className="module-page">
@@ -47,28 +48,27 @@ export const Watchdog = () => {
 
       <div className="module-page__grid">
         <ModuleCard
-          title="Tick Manqués"
-          icon="⏱️"
-          value={tickMisses}
-          status={status}
-          subtitle="Cycles manqués"
-          variant={tickMisses === 0 ? 'success' : tickMisses < 5 ? 'warning' : 'error'}
-        />
-
-        <ModuleCard
-          title="Anomalies Détectées"
-          icon="🔍"
-          value={anomalies}
-          subtitle="Comportements atypiques"
-          variant={anomalies === 0 ? 'success' : anomalies < 3 ? 'warning' : 'error'}
-        />
-
-        <ModuleCard
-          title="État de Surveillance"
-          icon="📡"
-          status={status}
-          subtitle="Monitoring actif"
+          title="Éléments Surveillés"
+          icon="👁️"
+          value={monitored}
+          subtitle="Composants actifs"
           variant="primary"
+        />
+
+        <ModuleCard
+          title="Santé"
+          icon="✅"
+          value={healthy}
+          subtitle="Composants sains"
+          variant="success"
+        />
+
+        <ModuleCard
+          title="Critiques"
+          icon="❌"
+          value={critical}
+          subtitle="Incidents critiques"
+          variant={critical === 0 ? 'success' : 'error'}
         />
       </div>
     </div>

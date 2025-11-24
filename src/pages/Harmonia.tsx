@@ -15,12 +15,13 @@
 
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
-import { extractNumber, extractString } from '../utils/dataUtils';
+import { extractNumber } from '../utils/dataUtils';
+import type { HarmoniaFlows } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Harmonia = () => {
   const harmoniaData = useEngineSubscription('harmonia');
-  const { data: flows, loading } = harmoniaData as { data: any; loading: boolean };  if (loading) {
+  const { data: flows, loading } = harmoniaData as { data: HarmoniaFlows | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -31,9 +32,9 @@ export const Harmonia = () => {
     );
   }
 
-  const activeFlows = extractNumber(flows?.active_flows, 0);
-  const balanceScore = extractNumber(flows?.balance_score, 0);
-  const status = extractString(flows?.status, 'Unknown');
+  const activeFlows = flows?.activeFlows?.length ?? 0;
+  const balanceScore = extractNumber(flows?.balance, 0);
+  const coherence = extractNumber(flows?.coherence, 0);
 
   return (
     <div className="module-page">
@@ -59,17 +60,17 @@ export const Harmonia = () => {
           icon="⚖️"
           value={balanceScore}
           unit="%"
-          status={status}
           subtitle="Niveau d'harmonisation"
           variant={balanceScore > 75 ? 'success' : balanceScore > 50 ? 'warning' : 'error'}
         />
 
         <ModuleCard
-          title="État Système"
-          icon="💫"
-          status={status}
-          subtitle="Statut global"
-          variant="success"
+          title="Cohérence"
+          icon="🔗"
+          value={coherence}
+          unit="%"
+          subtitle="Cohérence système"
+          variant={coherence > 75 ? 'success' : 'warning'}
         />
       </div>
     </div>

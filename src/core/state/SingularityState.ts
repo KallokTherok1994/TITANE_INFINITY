@@ -47,7 +47,7 @@ export type EngineDataMap = {
 // STATE INTERFACE
 // ═══════════════════════════════════════════════════════════════
 
-interface SingularityFrontendState {
+export interface SingularityFrontendState {
   // UI State
   ui: {
     mode: UIMode;
@@ -119,11 +119,11 @@ interface SingularityFrontendState {
   setAIStatus: (status: AIStatus) => void;
   setAIError: (error: string | null) => void;
   updateEngine: (name: string, state: EngineState) => void;
-  
+
   // Type-safe engine data setters
   setEngineData: <T extends EngineName>(engine: T, data: EngineDataMap[T] | null) => void;
   setEngineLoading: (engine: EngineName, loading: boolean) => void;
-  
+
   setMetaMode: (mode: string) => void;
   setMetaModeTransition: (transitioning: boolean) => void;
   setPage: (page: string) => void;

@@ -27,7 +27,6 @@ interface HeliosMetrics {
   status?: string;
   temperature?: number;
   uptime?: number;
-  [key: string]: any;
 }
 
 export const Helios = () => {

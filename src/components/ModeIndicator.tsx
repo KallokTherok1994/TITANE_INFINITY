@@ -12,7 +12,7 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { useSingularityState, selectMetaModeState } from '../core/state/SingularityState';
-// import './ModeIndicator.css';
+import './ModeIndicator.css';
 
 interface ModeHistory {
   mode: string;

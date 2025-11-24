@@ -110,7 +110,7 @@ export const ChatPage = (): JSX.Element => {
     <div
       style={{
         display: 'flex',
-        height: '100%',
+        minHeight: 'calc(100vh - 64px - 48px)', // viewport height - header - footer
         background: colors.neutral[950],
       }}
     >
@@ -120,7 +120,7 @@ export const ChatPage = (): JSX.Element => {
           flex: 1,
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
+          minHeight: 0,
         }}
       >
         {/* Messages */}

@@ -81,13 +81,16 @@ const sidebarStyles: React.CSSProperties = {
 
 const mainStyles: React.CSSProperties = {
   flex: 1,
-  overflow: 'auto',
+  overflow: 'hidden',
   position: 'relative',
+  display: 'flex',
+  flexDirection: 'column',
 };
 
 const contentStyles: React.CSSProperties = {
   padding: spacing[6],
-  minHeight: '100%',
+  flex: 1,
+  overflow: 'auto',
 };
 
 const footerStyles: React.CSSProperties = {
@@ -141,12 +144,12 @@ export const AppShell = ({
             <motion.aside
               style={sidebarStyles}
               initial={{ x: -sidebarWidth }}
-              animate={{ 
+              animate={{
                 x: 0,
                 width: sidebarWidth,
               }}
-              transition={{ 
-                duration: 0.3, 
+              transition={{
+                duration: 0.3,
                 ease: 'easeInOut',
               }}
             >

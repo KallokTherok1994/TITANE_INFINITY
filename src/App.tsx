@@ -23,24 +23,35 @@ import { ThemeProvider } from './themes';
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
+import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
 
-// 🔒 VERROU ANTI-HTTP - Bloquer chargement si contexte HTTP détecté
-if (typeof window !== 'undefined' && window.location.origin.includes('http')) {
-  const isTauriContext = '__TAURI__' in window;
-  if (!isTauriContext) {
-    console.error('🔒 TITANE∞ - MODE TAURI EXCLUSIF');
-    console.error('❌ Détection contexte HTTP interdite:', window.location.origin);
-    console.error('✅ Utilisez: pnpm run build && tauri dev');
-    document.body.innerHTML = `
-      <div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0a0a0a;color:#ff4444;font-family:monospace;flex-direction:column;padding:2rem;text-align:center;">
-        <h1 style="font-size:3rem;margin-bottom:1rem;">🔒 MODE TAURI EXCLUSIF</h1>
-        <p style="font-size:1.5rem;margin-bottom:2rem;">TITANE∞ v17.2.0 fonctionne UNIQUEMENT en mode Tauri Native</p>
-        <p style="font-size:1.2rem;color:#888;">Contexte HTTP détecté: ${window.location.origin}</p>
-        <p style="font-size:1.2rem;color:#00ff88;margin-top:2rem;">✅ Commande correcte:</p>
-        <code style="font-size:1.5rem;background:#1a1a1a;padding:1rem 2rem;border-radius:8px;margin-top:1rem;">pnpm run build && tauri dev</code>
-      </div>
-    `;
-    throw new Error('TITANE∞ - HTTP context blocked. Use Tauri Native mode only.');
+/**
+ * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT
+ *
+ * Mode DEV (import.meta.env.DEV === true):
+ *   - ✅ Tauri dev: Autorisé (http://127.0.0.1:xxxx avec __TAURI__)
+ *   - ✅ Browser dev: Autorisé (http://localhost:5173 pour Vite HMR)
+ *   - Logs: Warning console si pas Tauri, mais n'empêche PAS le rendu
+ *
+ * Mode PROD (import.meta.env.DEV === false):
+ *   - ✅ Tauri prod: Autorisé (tauri://localhost)
+ *   - ⚠️ Browser prod: Affiche warning UI non-bloquant
+ *   - Note: Pas de throw ni document.body.innerHTML qui cassent React
+ */
+if (typeof window !== 'undefined') {
+  const env = detectEnvironment();
+
+  // Log environnement (toujours utile, pas bloquant)
+  logEnvironmentWarnings();
+
+  // En dev: JAMAIS bloquer (autoriser Vite HMR + Tauri dev)
+  // En prod browser: Afficher warning dans l'UI via composant, pas via document.body
+  if (shouldBlockLoading()) {
+    console.warn('⚠️ TITANE∞ - Contexte browser production détecté');
+    console.warn('   Origine:', env.origin);
+    console.warn('   Recommandation: Utiliser build Tauri natif');
+    // Note: Le warning sera affiché dans l'UI via un composant dédié si nécessaire,
+    // mais on ne bloque plus le rendu React pour permettre l'affichage
   }
 }
 
@@ -87,19 +98,16 @@ const AppRouter: React.FC = () => {
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
 
-  // Log living state (debug)
+  // Log living state (debug) - effet optimisé avec dépendances stables
   useEffect(() => {
-    if (livingEngines.state.initialized) {
-      console.log('🎭 Persona:', livingEngines.state.persona?.mood.current);
-      console.log('⚡ Glow:', livingEngines.state.glow.toFixed(2));
-      console.log('🧠 Cognitive Load:', livingEngines.state.cognitiveLoad.toFixed(2));
-    }
-  }, [
-    livingEngines.state.initialized,
-    livingEngines.state.persona,
-    livingEngines.state.cognitiveLoad,
-    livingEngines.state.glow,
-  ]);
+    if (!livingEngines.state.initialized) return;
+
+    console.log('🎭 Persona:', livingEngines.state.persona?.mood.current);
+    console.log('⚡ Glow:', livingEngines.state.glow.toFixed(2));
+    console.log('🧠 Cognitive Load:', livingEngines.state.cognitiveLoad.toFixed(2));
+    // Note: Cet effet log uniquement à l'initialisation, pas à chaque update
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [livingEngines.state.initialized]);
 
   // Sidebar items configuration
   const sidebarItems = [

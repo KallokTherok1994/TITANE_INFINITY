@@ -6,7 +6,23 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
-import type { CoreResponse, CoreError } from '../core/ARCHITECTURE_TYPES_v∞';
+import type {
+  CoreResponse,
+  CoreError,
+  ChatMessage,
+  ChatConfig,
+  VoiceRecordingResult,
+  SystemStatus,
+  SystemMetrics,
+  ModuleInfo,
+  ProjectInfo,
+  PersonaMultipliers,
+  HeliosMetrics,
+  NexusGraph,
+  MemoryEntry,
+  HealthStatus,
+} from '../core/ARCHITECTURE_TYPES_v∞';
+import type { SingularityFrontendState } from '../core/state/SingularityState';
 
 // ═══════════════════════════════════════════════════════════════
 // LOGGING & DEBUG
@@ -14,19 +30,19 @@ import type { CoreResponse, CoreError } from '../core/ARCHITECTURE_TYPES_v∞';
 
 const DEBUG_MODE = import.meta.env.DEV;
 
-function logCommand(command: string, params?: any): void {
+function logCommand(command: string, params?: Record<string, unknown>): void {
   if (DEBUG_MODE) {
     console.log(`[TauriBridge] → ${command}`, params ?? '');
   }
 }
 
-function logResponse(command: string, response: any, duration: number): void {
+function logResponse(command: string, response: unknown, duration: number): void {
   if (DEBUG_MODE) {
     console.log(`[TauriBridge] ← ${command} (${duration}ms)`, response);
   }
 }
 
-function logError(command: string, error: any): void {
+function logError(command: string, error: unknown): void {
   console.error(`[TauriBridge] ✗ ${command}`, error);
 }
 
@@ -64,9 +80,9 @@ function wrapError(error: unknown): CoreError {
  * - Timeout configurable
  * - Retry logic optionnel
  */
-export async function invokeTauriCommand<T = any>(
+export async function invokeTauriCommand<T = unknown>(
   command: string,
-  params?: Record<string, any>,
+  params?: Record<string, unknown>,
   options: {
     timeout?: number;
     retries?: number;
@@ -121,43 +137,43 @@ export async function invokeTauriCommand<T = any>(
 
 // --- SINGULARITY ---
 export async function getSingularityState() {
-  return invokeTauriCommand<any>('singularity_get_state');
+  return invokeTauriCommand<Partial<SingularityFrontendState>>('singularity_get_state');
 }
 
-export async function syncSingularityState(state: any) {
+export async function syncSingularityState(state: Partial<SingularityFrontendState>) {
   return invokeTauriCommand<void>('singularity_sync_state', { state });
 }
 
 // --- HELIOS ---
 export async function getHeliosModules() {
-  return invokeTauriCommand<any[]>('helios_get_modules');
+  return invokeTauriCommand<ModuleInfo[]>('helios_get_modules');
 }
 
 export async function getHeliosHealth() {
-  return invokeTauriCommand<any>('helios_get_health');
+  return invokeTauriCommand<HealthStatus>('helios_get_health');
 }
 
 // --- MEMORY ---
 export async function getActiveProjects(limit = 10) {
-  return invokeTauriCommand<any[]>('memory_get_active_projects', { limit });
+  return invokeTauriCommand<ProjectInfo[]>('memory_get_active_projects', { limit });
 }
 
 export async function getRecentMemories(limit = 20) {
-  return invokeTauriCommand<any[]>('memory_get_recent_memories', { limit });
+  return invokeTauriCommand<MemoryEntry[]>('memory_get_recent_memories', { limit });
 }
 
 // --- NEXUS ---
 export async function getNexusStatus() {
-  return invokeTauriCommand<any>('nexus_get_status');
+  return invokeTauriCommand<NexusGraph>('nexus_get_status');
 }
 
 // --- PERSONA ---
 export async function getPersonaMultipliers() {
-  return invokeTauriCommand<any>('persona_get_multipliers');
+  return invokeTauriCommand<PersonaMultipliers>('persona_get_multipliers');
 }
 
 // --- CHAT ---
-export async function sendChatMessage(messages: any[], config: any) {
+export async function sendChatMessage(messages: ChatMessage[], config: ChatConfig) {
   return invokeTauriCommand<string>(
     'chat_send_message',
     { messages, config },
@@ -171,7 +187,7 @@ export async function startVoiceRecording() {
 }
 
 export async function stopVoiceRecording() {
-  return invokeTauriCommand<any>('voice_stop_recording');
+  return invokeTauriCommand<VoiceRecordingResult>('voice_stop_recording');
 }
 
 export async function voiceSpeak(text: string, voice?: string) {
@@ -188,15 +204,15 @@ export async function engineTick() {
 }
 
 export async function engineMetrics() {
-  return invokeTauriCommand<any>('engine_metrics');
+  return invokeTauriCommand<HeliosMetrics>('engine_metrics');
 }
 
 export async function engineHealth() {
-  return invokeTauriCommand<any>('engine_health');
+  return invokeTauriCommand<HealthStatus>('engine_health');
 }
 
 export async function engineModules() {
-  return invokeTauriCommand<any[]>('engine_modules');
+  return invokeTauriCommand<ModuleInfo[]>('engine_modules');
 }
 
 // --- DEVTOOLS ---
@@ -210,11 +226,11 @@ export async function clearDevToolsLogs() {
 
 // --- SYSTEM ---
 export async function getSystemStatus() {
-  return invokeTauriCommand<any>('system_get_status');
+  return invokeTauriCommand<SystemStatus>('system_get_status');
 }
 
 export async function getSystemMetrics() {
-  return invokeTauriCommand<any>('system_get_metrics');
+  return invokeTauriCommand<SystemMetrics>('system_get_metrics');
 }
 
 // --- FILE SYSTEM ---
@@ -311,7 +327,7 @@ export async function createDirectory(path: string, recursive: boolean = true) {
 
 export type BatchCommand = {
   command: string;
-  params?: Record<string, any>;
+  params?: Record<string, unknown>;
   id?: string; // Optional identifier for tracking
 };
 

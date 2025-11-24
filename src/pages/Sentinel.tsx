@@ -15,12 +15,13 @@
 
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
-import { extractNumber, extractString } from '../utils/dataUtils';
+import { extractNumber } from '../utils/dataUtils';
+import type { SentinelAlerts } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Sentinel = () => {
   const sentinelData = useEngineSubscription('sentinel');
-  const { data: status, loading } = sentinelData as { data: any; loading: boolean };  if (loading) {
+  const { data: status, loading } = sentinelData as { data: SentinelAlerts | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -31,9 +32,9 @@ export const Sentinel = () => {
     );
   }
 
-  const integrityScore = extractNumber(status?.integrity_score, 0);
-  const alerts = extractNumber(status?.alerts, 0);
-  const statusText = extractString(status?.status, 'Unknown');
+  const threatLevel = extractNumber(status?.threatLevel, 0);
+  const activeAlerts = extractNumber(status?.activeAlerts, 0);
+  const criticalCount = extractNumber(status?.criticalCount, 0);
 
   return (
     <div className="module-page">
@@ -47,30 +48,28 @@ export const Sentinel = () => {
 
       <div className="module-page__grid">
         <ModuleCard
-          title="Score d'Intégrité"
-          icon="🔒"
-          value={integrityScore}
+          title="Niveau de Menace"
+          icon="🚨"
+          value={threatLevel}
           unit="%"
-          status={statusText}
-          subtitle="Niveau de protection"
-          variant={integrityScore > 90 ? 'success' : integrityScore > 70 ? 'warning' : 'error'}
+          subtitle="Menaces détectées"
+          variant={threatLevel < 30 ? 'success' : threatLevel < 60 ? 'warning' : 'error'}
         />
 
         <ModuleCard
-          title="Alertes"
+          title="Alertes Actives"
           icon="⚠️"
-          value={alerts}
-          status={alerts === 0 ? 'Aucune alerte' : `${alerts} alerte(s)`}
-          subtitle="Notifications actives"
-          variant={alerts === 0 ? 'success' : alerts < 5 ? 'warning' : 'error'}
+          value={activeAlerts}
+          subtitle="Alertes en cours"
+          variant={activeAlerts === 0 ? 'success' : 'warning'}
         />
 
         <ModuleCard
-          title="État"
-          icon="✅"
-          status={statusText}
-          subtitle="Statut du gardien"
-          variant="success"
+          title="Alertes Critiques"
+          icon="🔴"
+          value={criticalCount}
+          subtitle="Incidents critiques"
+          variant={criticalCount === 0 ? 'success' : 'error'}
         />
       </div>
     </div>

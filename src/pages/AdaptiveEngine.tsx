@@ -15,12 +15,13 @@
 
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
-import { extractNumber, extractString } from '../utils/dataUtils';
+import { extractNumber } from '../utils/dataUtils';
+import type { AdaptiveData } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const AdaptiveEngine = () => {
   const adaptiveData = useEngineSubscription('adaptive');
-  const { data, loading } = adaptiveData as { data: any; loading: boolean };  if (loading) {
+  const { data, loading } = adaptiveData as { data: AdaptiveData | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -31,9 +32,9 @@ export const AdaptiveEngine = () => {
     );
   }
 
-  const adjustments = extractNumber(data?.adjustments, 0);
-  const efficiency = extractNumber(data?.efficiency, 0);
-  const status = extractString(data?.status, 'Unknown');
+  const adaptations = extractNumber(data?.adaptations, 0);
+  const efficiency = extractNumber(data?.optimizationScore, 0);
+  const confidence = extractNumber(data?.confidence, 0);
 
   return (
     <div className="module-page">
@@ -47,28 +48,28 @@ export const AdaptiveEngine = () => {
 
       <div className="module-page__grid">
         <ModuleCard
-          title="Ajustements Effectués"
-          icon="⚙️"
-          value={adjustments}
-          subtitle="Optimisations totales"
+          title="Adaptations"
+          icon="🎯"
+          value={adaptations}
+          subtitle="Ajustements réalisés"
           variant="primary"
         />
 
         <ModuleCard
           title="Efficacité"
-          icon="📈"
+          icon="⚡"
           value={efficiency}
           unit="%"
-          status={status}
-          subtitle="Performance globale"
-          variant={efficiency > 85 ? 'success' : efficiency > 70 ? 'warning' : 'error'}
+          subtitle="Score d'optimisation"
+          variant={efficiency > 75 ? 'success' : 'warning'}
         />
 
         <ModuleCard
-          title="État"
-          icon="💫"
-          status={status}
-          subtitle="Statut du moteur"
+          title="Confiance"
+          icon="📊"
+          value={confidence}
+          unit="%"
+          subtitle="Niveau de confiance"
           variant="success"
         />
       </div>

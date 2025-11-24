@@ -16,7 +16,7 @@ import { MessageBubble } from './MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
 import { useSingularityState } from '../core/state/SingularityState';
 import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
-// No CSS import needed - styles are global
+import './ChatWindow.css';
 
 export interface ChatWindowProps {
   onVoiceModeToggle?: () => void;

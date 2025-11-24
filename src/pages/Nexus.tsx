@@ -16,11 +16,12 @@
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { extractNumber } from '../utils/dataUtils';
+import type { NexusGraph } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Nexus = () => {
   const nexusData = useEngineSubscription('nexus');
-  const { data: graph, loading } = nexusData as { data: any; loading: boolean };  if (loading) {
+  const { data: graph, loading } = nexusData as { data: NexusGraph | null; loading: boolean };  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -31,8 +32,8 @@ export const Nexus = () => {
     );
   }
 
-  const nodes = extractNumber(graph?.nodes, 0);
-  const connections = extractNumber(graph?.connections, 0);
+  const nodes = extractNumber(graph?.nodeCount, 0);
+  const connections = extractNumber(graph?.edgeCount, 0);
 
   return (
     <div className="module-page">

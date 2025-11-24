@@ -268,9 +268,9 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
 // TYPED INVOKE WRAPPERS
 // ═══════════════════════════════════════════════════════════════
 
-export async function invokeTauriCommand<T = any>(
+export async function invokeTauriCommand<T = unknown>(
   command: string,
-  params?: Record<string, any>
+  params?: Record<string, unknown>
 ): Promise<CoreResponse<T>> {
   const cmd = TAURI_COMMANDS[command];
 
