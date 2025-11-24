@@ -154,7 +154,7 @@ export class SingularityConnections {
   // ═══════════════════════════════════════════════════════════
 
   static async syncHelios(): Promise<void> {
-    // Changed: get_helios_metrics → get_helios_state (to match Rust)
+    // ✅ FIXED v18: get_helios_metrics → get_helios_state (to match Rust)
     const helios = await this.safeInvoke<HeliosState>('get_helios_state');
     if (!helios) return;
 

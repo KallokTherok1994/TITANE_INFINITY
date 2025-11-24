@@ -69,6 +69,8 @@ fn main() {
 
             // Singularity - Unity State
             mock_commands::singularity_get_full_state,
+            mock_commands::singularity_get_physical,
+            mock_commands::singularity_get_cognitive,
             mock_commands::singularity_get_global_coherence,
             mock_commands::singularity_is_critical,
             mock_commands::get_singularity_state,

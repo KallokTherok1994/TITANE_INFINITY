@@ -114,10 +114,16 @@ class AIOrchestrator {
       }
     }
 
-    // Ceci ne devrait jamais arriver (fallback toujours disponible)
-    console.error('\n🚨 ORCHESTRATOR: All providers exhausted without success!');
+    // ✅ SAFETY NET ULTIME: Si tous échouent (impossible en théorie), garantir réponse
+    console.error('\n🚨 ORCHESTRATOR: All providers exhausted - RETURNING ULTIMATE FALLBACK!');
     console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    throw new Error('Tous les providers IA ont échoué');
+
+    return {
+      content: "⚠️ **TITANE∞ en mode dégradé**: Tous les systèmes IA principaux sont indisponibles.\n\n**Actions recommandées:**\n• Configure ta clé Gemini API dans .env\n• Lance Ollama local: `ollama serve`\n• Vérifie ta connexion internet\n\nJe reste disponible pour les fonctions système (Helios, Memory, Progression).",
+      provider: 'ultimate-fallback',
+      timestamp: Date.now(),
+      model: 'emergency-v2',
+    };
   }
 
   /**

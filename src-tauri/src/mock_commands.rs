@@ -187,6 +187,58 @@ pub async fn get_nexus_graph() -> AppResult<serde_json::Value> {
 // ═══════════════════════════════════════════════════════════════
 
 #[tauri::command]
+pub async fn singularity_get_physical() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "helios": {
+            "active": true,
+            "cpu_usage": 0.25,
+            "memory_usage": 0.45,
+            "disk_usage": 0.62,
+            "temperature": 55.0,
+            "battery_level": 1.0,
+            "last_update": chrono::Utc::now().timestamp_millis()
+        },
+        "system_health": {
+            "global_health": 0.95,
+            "last_check": chrono::Utc::now().timestamp_millis()
+        },
+        "metrics": {
+            "cpu_usage": 0.25,
+            "memory_usage": 0.45,
+            "disk_usage": 0.62,
+            "response_time": 15,
+            "throughput": 1024,
+            "performance_score": 0.85
+        }
+    }))
+}
+
+#[tauri::command]
+pub async fn singularity_get_cognitive() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "memory": {
+            "total_memories": 42,
+            "active_memories": 5,
+            "memory_usage": 0.012,
+            "last_retrieval": chrono::Utc::now().timestamp_millis(),
+            "compression_ratio": 0.9
+        },
+        "conversation": {
+            "active_threads": 1,
+            "message_count": 12,
+            "context_depth": 5,
+            "last_message": chrono::Utc::now().timestamp_millis()
+        },
+        "knowledge": {
+            "graph_size": 128,
+            "connections": 256,
+            "depth": 7,
+            "last_update": chrono::Utc::now().timestamp_millis()
+        }
+    }))
+}
+
+#[tauri::command]
 pub async fn singularity_get_full_state() -> AppResult<serde_json::Value> {
     Ok(json!({
         "physical": {
