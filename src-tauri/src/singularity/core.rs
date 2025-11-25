@@ -12,6 +12,12 @@ pub struct SingularityCore {
     pub active: bool,
 }
 
+impl Default for SingularityCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SingularityCore {
     pub fn new() -> Self {
         Self {

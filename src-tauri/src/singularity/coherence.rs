@@ -15,6 +15,12 @@ pub struct CoherenceReport {
 
 pub struct CoherenceEngine;
 
+impl Default for CoherenceEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CoherenceEngine {
     pub fn new() -> Self {
         Self

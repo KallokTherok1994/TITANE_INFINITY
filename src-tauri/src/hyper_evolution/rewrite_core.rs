@@ -33,6 +33,12 @@ pub struct RewriteReport {
 
 pub struct RewriteCoreEngine;
 
+impl Default for RewriteCoreEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RewriteCoreEngine {
     pub fn new() -> Self {
         Self

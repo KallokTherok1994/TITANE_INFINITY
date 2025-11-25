@@ -17,6 +17,12 @@ pub struct Summary {
 
 pub struct Summarizer;
 
+impl Default for Summarizer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Summarizer {
     pub fn new() -> Self {
         Self
@@ -32,7 +38,7 @@ impl Summarizer {
             .filter(|s| !s.trim().is_empty())
             .take(5)
             .map(|s| {
-                let words: Vec<&str> = s.trim().split_whitespace().collect();
+                let words: Vec<&str> = s.split_whitespace().collect();
                 words.into_iter().take(10).collect::<Vec<_>>().join(" ")
             })
             .collect();

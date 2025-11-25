@@ -26,6 +26,12 @@ pub struct AssociationEngine {
     associations: HashMap<(String, String), Association>,
 }
 
+impl Default for AssociationEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AssociationEngine {
     pub fn new() -> Self {
         Self {
@@ -68,7 +74,7 @@ impl AssociationEngine {
 
     pub fn get_report(&self) -> AssociationReport {
         let strongest = self.get_strongest(10);
-        let network_density = if self.associations.len() > 0 {
+        let network_density = if !self.associations.is_empty() {
             self.associations.values()
                 .map(|a| a.strength)
                 .sum::<f32>() / self.associations.len() as f32

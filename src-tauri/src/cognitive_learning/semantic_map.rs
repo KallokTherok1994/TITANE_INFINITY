@@ -53,6 +53,12 @@ pub struct SemanticMap {
     domains: HashMap<String, Vec<String>>,
 }
 
+impl Default for SemanticMap {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SemanticMap {
     pub fn new() -> Self {
         Self {
@@ -82,7 +88,7 @@ impl SemanticMap {
 
         self.concepts.insert(id.clone(), concept);
         self.domains.entry(domain)
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(id.clone());
 
         id

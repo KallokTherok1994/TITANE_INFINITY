@@ -80,7 +80,7 @@ impl SentinelModule {
         // Trigger alert if health is degraded
         if system_health.severity() > 1 {
             self.alert_count += 1;
-            self.protection_level = 10 - system_health.severity() as u8;
+            self.protection_level = 10 - system_health.severity();
         } else {
             // Restore protection level
             self.protection_level = (self.protection_level + 1).min(10);

@@ -25,6 +25,12 @@ pub struct KnowledgeGrowthEngine {
     domains: Vec<String>,
 }
 
+impl Default for KnowledgeGrowthEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl KnowledgeGrowthEngine {
     pub fn new() -> Self {
         Self {

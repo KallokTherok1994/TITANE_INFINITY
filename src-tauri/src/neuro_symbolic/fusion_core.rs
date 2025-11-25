@@ -28,6 +28,12 @@ pub struct FusionCore {
     fusion_level: f32,
 }
 
+impl Default for FusionCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FusionCore {
     pub fn new() -> Self {
         Self {

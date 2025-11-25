@@ -33,6 +33,12 @@ pub struct StructuralReport {
 
 pub struct StructuralEngine;
 
+impl Default for StructuralEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl StructuralEngine {
     pub fn new() -> Self {
         Self

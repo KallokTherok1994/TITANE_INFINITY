@@ -14,6 +14,12 @@ pub struct RecoveryResult {
 
 pub struct FallbackRecovery;
 
+impl Default for FallbackRecovery {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FallbackRecovery {
     pub fn new() -> Self {
         Self

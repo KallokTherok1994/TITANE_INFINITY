@@ -20,6 +20,12 @@ pub struct ModuleStatus {
     pub issues: Vec<String>,
 }
 
+impl Default for IntegrityMap {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl IntegrityMap {
     pub fn new() -> Self {
         let mut modules = HashMap::new();

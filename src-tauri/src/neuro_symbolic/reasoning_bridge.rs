@@ -16,6 +16,12 @@ pub struct ReasoningContext {
 
 pub struct ReasoningBridge;
 
+impl Default for ReasoningBridge {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ReasoningBridge {
     pub fn new() -> Self {
         Self

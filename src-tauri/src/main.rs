@@ -8,8 +8,23 @@
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+// ═══════════════════════════════════════════════════════════════
+// TITANE∞ HARDENING: Import Hygiene v19.2.0
+// DO NOT REMOVE: Each import is actively used in production code
+// ═══════════════════════════════════════════════════════════════
+
+// Tauri core (Manager trait required for .get_webview_window() at line 98)
+// Only used in debug mode for DevTools auto-open
+#[cfg(debug_assertions)]
 use tauri::Manager;
-use titane_infinity::{mock_commands, secure_commands, time_commands, control_panel_commands};
+
+// TITANE∞ command modules
+use titane_infinity::{
+    control_panel_commands,
+    mock_commands,
+    secure_commands,
+    time_commands,
+};
 
 #[tokio::main]
 async fn main() {
@@ -45,6 +60,7 @@ async fn main() {
     // ═══════════════════════════════════════════════════════════════
     // INITIALIZE SECURITY SYSTEM (Super-Prompts J, K)
     // ═══════════════════════════════════════════════════════════════
+    // TITANE∞ HARDENING: Scoped imports for security modules
     use titane_infinity::security::encryption;
     use titane_infinity::security::sandbox;
 

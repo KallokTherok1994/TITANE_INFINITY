@@ -24,6 +24,12 @@ pub enum PatternType {
 
 pub struct PatternInventor;
 
+impl Default for PatternInventor {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PatternInventor {
     pub fn new() -> Self {
         Self

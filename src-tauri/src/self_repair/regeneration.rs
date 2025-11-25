@@ -14,6 +14,12 @@ pub struct RegenerationResult {
 
 pub struct Regeneration;
 
+impl Default for Regeneration {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Regeneration {
     pub fn new() -> Self {
         Self

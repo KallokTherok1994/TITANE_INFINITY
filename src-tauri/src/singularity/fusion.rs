@@ -14,6 +14,12 @@ pub struct FusionState {
 
 pub struct Fusion;
 
+impl Default for Fusion {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Fusion {
     pub fn new() -> Self {
         Self

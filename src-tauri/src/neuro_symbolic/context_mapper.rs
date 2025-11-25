@@ -26,6 +26,12 @@ pub struct ContextMap {
 
 pub struct ContextMapper;
 
+impl Default for ContextMapper {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ContextMapper {
     pub fn new() -> Self {
         Self

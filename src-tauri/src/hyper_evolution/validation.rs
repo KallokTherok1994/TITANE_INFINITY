@@ -25,6 +25,12 @@ pub struct ValidationReport {
 
 pub struct ValidationEngine;
 
+impl Default for ValidationEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ValidationEngine {
     pub fn new() -> Self {
         Self

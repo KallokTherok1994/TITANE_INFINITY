@@ -15,6 +15,12 @@ pub struct SystemDesign {
 
 pub struct SystemDesigner;
 
+impl Default for SystemDesigner {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SystemDesigner {
     pub fn new() -> Self {
         Self

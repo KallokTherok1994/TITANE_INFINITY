@@ -205,7 +205,7 @@ fn build_permission_matrix() -> PermissionMatrix {
 pub fn check_permission(action: &str, role: Role) -> bool {
     PERMISSIONS
         .get(action)
-        .map_or(false, |roles| roles.contains(&role))
+        .is_some_and(|roles| roles.contains(&role))
 }
 
 /// Exiger une permission (erreur si refusée)

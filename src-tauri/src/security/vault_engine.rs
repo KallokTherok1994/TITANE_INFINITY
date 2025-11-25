@@ -191,7 +191,7 @@ impl VaultEngine {
             .map_err(|e| VaultError::DecryptionFailed(e.to_string()))?;
 
         // 4. Décompresser (si compressé)
-        let json = if compressed.len() > 10 && &compressed[0..2] == &[0x1f, 0x8b] {
+        let json = if compressed.len() > 10 && compressed[0..2] == [0x1f, 0x8b] {
             // Magic bytes GZip détecté
             use flate2::read::GzDecoder;
             use std::io::Read;

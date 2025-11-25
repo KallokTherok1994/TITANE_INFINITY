@@ -51,6 +51,12 @@ pub struct PredictorEngine {
     trends: HashMap<String, Vec<f32>>,
 }
 
+impl Default for PredictorEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PredictorEngine {
     pub fn new() -> Self {
         Self {
@@ -153,7 +159,7 @@ impl PredictorEngine {
 
     pub fn track_trend(&mut self, metric: String, value: f32) {
         self.trends.entry(metric)
-            .or_insert_with(Vec::new)
+            .or_default()
             .push(value);
     }
 }

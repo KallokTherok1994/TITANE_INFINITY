@@ -22,6 +22,12 @@ pub struct AdapterReport {
 
 pub struct CognitiveAdapter;
 
+impl Default for CognitiveAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CognitiveAdapter {
     pub fn new() -> Self {
         Self

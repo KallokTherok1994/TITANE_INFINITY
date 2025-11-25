@@ -33,6 +33,12 @@ pub struct AcceleratorEngine {
     active_optimizations: Vec<Optimization>,
 }
 
+impl Default for AcceleratorEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AcceleratorEngine {
     pub fn new() -> Self {
         Self {

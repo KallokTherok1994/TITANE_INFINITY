@@ -16,6 +16,12 @@ pub struct Solution {
 
 pub struct SolutionBuilder;
 
+impl Default for SolutionBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SolutionBuilder {
     pub fn new() -> Self {
         Self

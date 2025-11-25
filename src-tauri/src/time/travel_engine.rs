@@ -288,7 +288,7 @@ impl TravelEngine {
         let public_key = self.keypair.public_key_bytes();
         snapshot
             .verify_signature(&public_key)
-            .map_err(|e| TravelError::InvalidSignature(e))
+            .map_err(TravelError::InvalidSignature)
     }
 
     /// Sauvegarder index
@@ -297,7 +297,7 @@ impl TravelEngine {
         index
             .save(&path)
             .await
-            .map_err(|e| TravelError::IoError(e))
+            .map_err(TravelError::IoError)
     }
 
     /// Obtenir chemin base

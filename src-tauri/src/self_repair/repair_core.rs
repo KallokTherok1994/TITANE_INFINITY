@@ -21,6 +21,12 @@ pub struct RepairReport {
 
 pub struct RepairCore;
 
+impl Default for RepairCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RepairCore {
     pub fn new() -> Self {
         Self

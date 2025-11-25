@@ -35,6 +35,12 @@ pub struct IdeationReport {
 
 pub struct IdeationEngine;
 
+impl Default for IdeationEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl IdeationEngine {
     pub fn new() -> Self {
         Self

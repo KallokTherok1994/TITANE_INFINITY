@@ -33,6 +33,12 @@ pub struct MemoryBuildReport {
 
 pub struct MemoryBuilder;
 
+impl Default for MemoryBuilder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MemoryBuilder {
     pub fn new() -> Self {
         Self

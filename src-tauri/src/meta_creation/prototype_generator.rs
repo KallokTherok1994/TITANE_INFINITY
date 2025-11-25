@@ -16,6 +16,12 @@ pub struct Prototype {
 
 pub struct PrototypeGenerator;
 
+impl Default for PrototypeGenerator {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl PrototypeGenerator {
     pub fn new() -> Self {
         Self

@@ -15,6 +15,12 @@ use serde::{Serialize, Deserialize};
 #[derive(Clone)]
 pub struct HeliosCore;
 
+impl Default for HeliosCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl HeliosCore {
     pub fn new() -> Self {
         Self
@@ -29,6 +35,12 @@ impl HeliosCore {
 /// Legacy MemoryCore adapter with stub methods
 #[derive(Clone)]
 pub struct MemoryCore;
+
+impl Default for MemoryCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl MemoryCore {
     pub fn new() -> Self {
@@ -100,6 +112,12 @@ impl MemoryCore {
 #[derive(Clone)]
 pub struct NexusCore;
 
+impl Default for NexusCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl NexusCore {
     pub fn new() -> Self {
         Self
@@ -114,6 +132,12 @@ impl NexusCore {
 #[derive(Clone)]
 pub struct HarmoniaCore;
 
+impl Default for HarmoniaCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl HarmoniaCore {
     pub fn new() -> Self {
         Self
@@ -127,6 +151,12 @@ impl HarmoniaCore {
 /// Legacy SentinelCore adapter
 #[derive(Clone)]
 pub struct SentinelCore;
+
+impl Default for SentinelCore {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl SentinelCore {
     pub fn new() -> Self {

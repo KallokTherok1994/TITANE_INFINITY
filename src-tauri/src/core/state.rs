@@ -139,12 +139,10 @@ impl SingularityState {
     /// Get overall system health
     pub fn health(&self) -> EngineHealth {
         // Aggregate health from all modules
-        let healths = vec![
-            self.nexus.health(),
+        let healths = [self.nexus.health(),
             self.memory.health(),
             self.harmonia.health(),
-            self.sentinel.health(),
-        ];
+            self.sentinel.health()];
 
         // Find worst health status
         let max_severity = healths.iter().map(|h| h.severity()).max().unwrap_or(0);

@@ -23,6 +23,12 @@ pub struct SymbolicTranslation {
 
 pub struct SymbolicAdapter;
 
+impl Default for SymbolicAdapter {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SymbolicAdapter {
     pub fn new() -> Self {
         Self

@@ -44,6 +44,12 @@ pub struct RegenerationEngine {
     templates: HashMap<String, String>,
 }
 
+impl Default for RegenerationEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl RegenerationEngine {
     pub fn new() -> Self {
         let mut templates = HashMap::new();

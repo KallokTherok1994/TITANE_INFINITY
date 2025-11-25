@@ -22,6 +22,12 @@ pub struct DetectionReport {
 
 pub struct Detector;
 
+impl Default for Detector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Detector {
     pub fn new() -> Self {
         Self

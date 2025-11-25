@@ -27,6 +27,12 @@ pub struct ReinforcementLoop {
     patterns: HashMap<String, Pattern>,
 }
 
+impl Default for ReinforcementLoop {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ReinforcementLoop {
     pub fn new() -> Self {
         Self {

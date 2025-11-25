@@ -208,12 +208,10 @@ async fn verify_engines() -> Result<bool, String> {
 /// Vérifier commandes Tauri
 async fn verify_tauri_commands() -> Result<bool, String> {
     // Liste des commandes critiques
-    let critical_commands = vec![
-        "get_helios_state",
+    let critical_commands = ["get_helios_state",
         "get_memory_state",
         "singularity_get_full_state",
-        "sync_singularity",
-    ];
+        "sync_singularity"];
 
     // TODO: Vérifier que chaque commande est bien enregistrée dans invoke_handler
     log::debug!("✅ Tauri Commands: OK (mock mode)");

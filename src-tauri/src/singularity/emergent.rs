@@ -22,6 +22,12 @@ pub struct EmergentReport {
 
 pub struct Emergent;
 
+impl Default for Emergent {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Emergent {
     pub fn new() -> Self {
         Self

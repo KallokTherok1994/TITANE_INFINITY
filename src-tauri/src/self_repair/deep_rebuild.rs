@@ -14,6 +14,12 @@ pub struct RebuildResult {
 
 pub struct DeepRebuild;
 
+impl Default for DeepRebuild {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl DeepRebuild {
     pub fn new() -> Self {
         Self

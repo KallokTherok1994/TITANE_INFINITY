@@ -137,7 +137,7 @@ impl HyperVisionEngine {
     }
 
     async fn scan_layer(layer_id: usize) -> LayerMetrics {
-        let layer_names = vec!["Physical", "Network", "Logic", "Memory", "Security"];
+        let layer_names = ["Physical", "Network", "Logic", "Memory", "Security"];
 
         LayerMetrics {
             layer_id,

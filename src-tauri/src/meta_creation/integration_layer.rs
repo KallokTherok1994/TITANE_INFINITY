@@ -14,6 +14,12 @@ pub struct IntegrationResult {
 
 pub struct IntegrationLayer;
 
+impl Default for IntegrationLayer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl IntegrationLayer {
     pub fn new() -> Self {
         Self

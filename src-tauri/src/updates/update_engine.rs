@@ -188,7 +188,7 @@ impl UpdateEngine {
             });
         }
 
-        log::info!("✅ [UPDATE] Verified: {} ({})", entry.path, entry.sha256[..8].to_string());
+        log::info!("✅ [UPDATE] Verified: {} ({})", entry.path, &entry.sha256[..8]);
 
         Ok(())
     }

@@ -14,6 +14,12 @@ pub struct TotalityState {
 
 pub struct Totality;
 
+impl Default for Totality {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Totality {
     pub fn new() -> Self {
         Self
