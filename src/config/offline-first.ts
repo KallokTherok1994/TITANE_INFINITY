@@ -13,13 +13,13 @@ export interface AIConfig {
 export const AI_CONFIG: AIConfig = {
   // Mode par défaut: LOCAL ONLY
   mode: 'local',
-  
+
   // Provider par défaut: Ollama (local)
   provider: 'ollama',
-  
+
   // Demander confirmation avant d'utiliser une API cloud
   requireOnlineConfirmation: true,
-  
+
   // Toujours essayer local en premier
   localFirst: true,
 };
@@ -28,7 +28,7 @@ export const API_ENDPOINTS = {
   // Local endpoints (toujours disponibles)
   ollama: 'http://localhost:11434',
   localLLM: 'http://localhost:8000',
-  
+
   // Cloud endpoints (utilisés seulement si activé)
   gemini: 'https://generativelanguage.googleapis.com/v1beta',
   openai: 'https://api.openai.com/v1',
@@ -41,7 +41,7 @@ export const OFFLINE_FEATURES = {
   memory: true,
   modules: true,
   devtools: true,
-  
+
   // Features nécessitant Internet (désactivées si offline)
   cloudSync: false,
   apiUpdates: false,
@@ -63,6 +63,7 @@ export function isOnlineModeEnabled(): boolean {
 
 /**
  * Vérifie si une connexion Internet est disponible
+ * ⚠️ NOTE: fetch() ici est OK car test minimaliste (favicon Google)
  */
 export async function checkInternetConnection(): Promise<boolean> {
   try {

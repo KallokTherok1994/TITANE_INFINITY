@@ -5,36 +5,41 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE CHAT STREAMING (Gestion streaming isolée)
- *   Hook isolé: Streaming temps réel uniquement
+ *   TITANE∞ v14 — USE CHAT STREAMING (Streaming Tauri Réel)
+ *   Hook isolé: Streaming temps réel via tauriClient
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import { useState, useCallback, useRef } from 'react';
-import { chatEngine, type ChatMode } from '../services/ai';
+import { tauriClient } from '../services/tauriClient';
+import type { ChatRequest, StreamCallbacks } from '../services/tauriClient';
+import type { ChatMode } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 
 export interface UseChatStreamingOptions {
   mode?: ChatMode;
+  provider?: 'auto' | 'gemini' | 'ollama' | 'local';
   onChunk?: (chunk: string) => void;
-  onComplete?: (fullContent: string) => void;
+  onComplete?: (data: { content: string; provider: string; latency_ms: number }) => void;
   onError?: (error: Error) => void;
 }
 
 export interface UseChatStreamingReturn {
   isStreaming: boolean;
   streamedContent: string;
-  streamProgress: number; // 0-100
-  startStream: (message: string, history: AIMessage[]) => Promise<void>;
+  streamProgress: number;
+  currentProvider: string | null;
+  startStream: (message: string, history?: AIMessage[]) => Promise<void>;
   stopStream: () => void;
 }
 
 /**
- * Hook streaming isolé
- * - Gestion streaming temps réel
- * - Progress tracking
+ * Hook streaming isolé v14
+ * - Streaming Tauri RÉEL (événements chunk par chunk)
+ * - Provider detection temps réel
+ * - Timeout dynamique par provider (Gemini 60s, Ollama 45s, Local 15s)
  * - Abort control
- * - 0 UI, 0 state messages
+ * - Progress tracking intelligent
  */
 export function useChatStreaming(
   options: UseChatStreamingOptions = {}
@@ -42,90 +47,104 @@ export function useChatStreaming(
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamedContent, setStreamedContent] = useState('');
   const [streamProgress, setStreamProgress] = useState(0);
-  const abortRef = useRef(false);
+  const [currentProvider, setCurrentProvider] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
-  /**
-   * Start streaming
-   */
   const startStream = useCallback(
-    async (message: string, history: AIMessage[]) => {
+    async (message: string, history: AIMessage[] = []) => {
       console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT STREAMING: Start                                 ║');
+      console.log('║  USE CHAT STREAMING v14: Tauri Real Stream                ║');
       console.log('╚════════════════════════════════════════════════════════════╝');
 
       setIsStreaming(true);
       setStreamedContent('');
       setStreamProgress(0);
-      abortRef.current = false;
+      setCurrentProvider(null);
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
 
       try {
+        const provider = options.provider || 'auto';
+        const timeout = provider === 'gemini' ? 60000
+                      : provider === 'ollama' ? 45000
+                      : provider === 'local' ? 15000
+                      : 60000;
+
+        console.log(`🎯 Provider: ${provider} (timeout: ${timeout}ms)`);
+
+        const request: ChatRequest = {
+          message: message.trim(),
+          provider,
+          streaming: true,
+          system_prompt: `Mode: ${options.mode || 'default'}`,
+        };
+
         let fullContent = '';
         let chunkCount = 0;
 
-        // Configure mode
-        if (options.mode) {
-          chatEngine.setMode(options.mode);
-        }
+        const callbacks: StreamCallbacks = {
+          onChunk: (chunk: string) => {
+            fullContent += chunk;
+            chunkCount++;
 
-        // Stream via chatEngine
-        const stream = chatEngine.stream(message, history);
+            const estimatedProgress = Math.min((fullContent.length / 800) * 100, 95);
+            setStreamProgress(estimatedProgress);
+            setStreamedContent(fullContent);
 
-        for await (const chunk of stream) {
-          // Check abort
-          if (abortRef.current) {
-            console.log('⚠️ Streaming aborted by user');
-            break;
-          }
+            options.onChunk?.(chunk);
+            console.log(`📦 Chunk ${chunkCount}: +${chunk.length} chars (total: ${fullContent.length})`);
+          },
 
-          fullContent += chunk;
-          chunkCount++;
+          onComplete: (data) => {
+            setStreamProgress(100);
+            setCurrentProvider(data.provider);
 
-          // Update progress (estimation: 1 chunk = ~10 chars, max 500 chars)
-          const estimatedProgress = Math.min((fullContent.length / 500) * 100, 95);
-          setStreamProgress(estimatedProgress);
+            console.log(`✅ Stream complete: ${chunkCount} chunks, ${fullContent.length} chars`);
+            console.log(`   Provider: ${data.provider}, Latency: ${data.latency_ms}ms`);
 
-          setStreamedContent(fullContent);
+            options.onComplete?.(data);
+          },
 
-          // Callback chunk
-          options.onChunk?.(chunk);
+          onError: (error) => {
+            console.error('❌ Streaming error:', error);
+            options.onError?.(new Error(error.message));
+          },
+        };
 
-          console.log(`📦 Chunk ${chunkCount}: +${chunk.length} chars (total: ${fullContent.length})`);
-        }
+        await tauriClient.chatStreamMessage(request, callbacks, {
+          timeout,
+          abortSignal: controller.signal,
+        });
 
-        setStreamProgress(100);
-        console.log(`✅ Streaming complete (${chunkCount} chunks, ${fullContent.length} chars)`);
-
-        // Callback complete
-        options.onComplete?.(fullContent);
-
-        console.log('╚════════════════════════════════════════════════════════════╝\n');
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error('Streaming error');
-        console.error('❌ USE CHAT STREAMING: Error', error);
-
-        // Callback error
-        options.onError?.(error);
-
-        throw error;
+      } catch (error) {
+        console.error('❌ Start stream error:', error);
+        options.onError?.(error instanceof Error ? error : new Error(String(error)));
       } finally {
         setIsStreaming(false);
+        abortControllerRef.current = null;
       }
     },
-    [options.mode, options.onChunk, options.onComplete, options.onError]
+    [options]
   );
 
-  /**
-   * Stop streaming
-   */
   const stopStream = useCallback(() => {
-    console.log('🛑 USE CHAT STREAMING: Stop requested');
-    abortRef.current = true;
+    console.log('🛑 Stopping stream...');
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+
+    setIsStreaming(false);
+    console.log('✅ Stream stopped');
   }, []);
 
   return {
     isStreaming,
     streamedContent,
     streamProgress,
+    currentProvider,
     startStream,
     stopStream,
   };

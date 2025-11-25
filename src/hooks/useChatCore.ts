@@ -17,6 +17,7 @@ import { chatValidator } from '../services/chatValidator';
 
 export interface UseChatCoreOptions {
   mode?: ChatMode;
+  provider?: 'auto' | 'gemini' | 'ollama' | 'local';
   emotionState?: { valence: number; intensity: number; energy: number };
   onResponse?: (response: ChatEngineResponse) => void;
   onError?: (error: Error) => void;
@@ -25,8 +26,10 @@ export interface UseChatCoreOptions {
 export interface UseChatCoreReturn {
   currentMode: ChatMode;
   anomalyCount: number;
+  currentProvider: string | null;
   generate: (message: string, history: AIMessage[]) => Promise<ChatEngineResponse>;
   setMode: (mode: ChatMode) => void;
+  setProvider: (provider: 'auto' | 'gemini' | 'ollama' | 'local') => void;
   validateResponse: (content: string, mode: ChatMode, prompt: string) => {
     isValid: boolean;
     score: number;
@@ -36,37 +39,49 @@ export interface UseChatCoreReturn {
 }
 
 /**
- * Hook logique IA pure
- * - 0 UI
- * - 0 state messages
- * - 0 loading state
- * - Génération IA uniquement
+ * Hook logique IA pure v14
+ * - 0 UI, 0 state messages, 0 loading state
+ * - Génération IA avec provider configurable
+ * - Timeout dynamique (Gemini 60s, Ollama 45s, Local 15s)
+ * - Reset cognitif automatique si changement mode
  */
 export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn {
   const [currentMode, setCurrentMode] = useState<ChatMode>(options.mode || 'default');
+  const [currentProvider, setCurrentProvider] = useState<'auto' | 'gemini' | 'ollama' | 'local'>(
+    options.provider || 'auto'
+  );
   const [anomalyCount, setAnomalyCount] = useState(0);
+  const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(null);
 
   /**
-   * Génère réponse IA (logique pure)
+   * Génère réponse IA avec timeout dynamique par provider
    */
   const generate = useCallback(
     async (message: string, history: AIMessage[]): Promise<ChatEngineResponse> => {
       console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT CORE: Generation start (logic only)              ║');
+      console.log('║  USE CHAT CORE v14: Generation (provider-aware)            ║');
       console.log('╚════════════════════════════════════════════════════════════╝');
       console.log(`🎯 Mode: ${currentMode}`);
+      console.log(`🔌 Provider: ${currentProvider}`);
       console.log(`📝 Prompt: "${message.substring(0, 60)}..."`);
 
       try {
-        // Configure mode
+        // Configure mode (reset cognitif automatique dans chatEngine)
         chatEngine.setMode(currentMode, {
           emotionState: options.emotionState,
         });
 
-        // Timeout 30s (Gemini peut être lent)
+        // Timeout dynamique par provider
+        const timeout = currentProvider === 'gemini' ? 60000  // Gemini cloud: 60s
+                      : currentProvider === 'ollama' ? 45000  // Ollama local: 45s
+                      : currentProvider === 'local' ? 15000   // Local builtin: 15s
+                      : 60000; // auto: défaut 60s
+
+        console.log(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
+
         const generatePromise = chatEngine.generate(message, history);
         const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('Timeout: AI took >30s')), 30000)
+          setTimeout(() => reject(new Error(`Timeout: ${currentProvider} took >${timeout}ms`)), timeout)
         );
 
         const response: ChatEngineResponse = await Promise.race([
@@ -74,8 +89,10 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           timeoutPromise,
         ]);
 
+        setLastResponseProvider(response.provider);
+
         console.log(`✅ Response received (${response.content.length} chars)`);
-        console.log(`🏷️  Provider: ${response.provider}`);
+        console.log(`🏷️  Provider used: ${response.provider}`);
 
         // SENTINEL validation
         const validation = chatValidator.validate(response.content, currentMode, message);
@@ -106,8 +123,16 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
         throw error;
       }
     },
-    [currentMode, options.emotionState, options.onResponse, options.onError]
+    [currentMode, currentProvider, options]
   );
+
+  /**
+   * Change provider
+   */
+  const setProvider = useCallback((provider: 'auto' | 'gemini' | 'ollama' | 'local') => {
+    console.log(`🔌 USE CHAT CORE: Provider change → ${provider}`);
+    setCurrentProvider(provider);
+  }, []);
 
   /**
    * Valide réponse (NEXUS/SENTINEL)
@@ -129,9 +154,11 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
 
   return {
     currentMode,
+    currentProvider: lastResponseProvider,
     anomalyCount,
     generate,
     setMode,
+    setProvider,
     validateResponse,
   };
 }

@@ -33,12 +33,14 @@ export { useChatCore } from './useChatCore';
 export { useChatUI } from './useChatUI';
 export { useChatStreaming } from './useChatStreaming';
 export { useChatMemory } from './useChatMemory';
+export { useProviderStatus } from './useProviderStatus';
 
 // Types
 export type { UseChatCoreOptions, UseChatCoreReturn } from './useChatCore';
 export type { UseChatUIOptions, UseChatUIReturn } from './useChatUI';
 export type { UseChatStreamingOptions, UseChatStreamingReturn } from './useChatStreaming';
 export type { UseChatMemoryOptions, UseChatMemoryReturn } from './useChatMemory';
+export type { UseProviderStatusOptions, UseProviderStatusReturn } from './useProviderStatus';
 
 // ═══════════════════════════════════════════════════════════════
 // v14 - Refactored Hooks (TauriClient integration)
@@ -51,6 +53,14 @@ export type { ConnectionStatus } from './useConnection';
 // System Vitals
 export { useVitals } from './useVitals';
 export type { SystemVitals, VitalsState } from './useVitals';
+
+// Engine Vitals (NOUVEAU v14)
+export { useEngineVitals } from './useEngineVitals';
+export type { EngineVitals, UseEngineVitalsOptions, UseEngineVitalsReturn } from './useEngineVitals';
+
+// System Monitor (NOUVEAU v14 - Combine vitals + engines)
+export { useSystemMonitor } from './useSystemMonitor';
+export type { UseSystemMonitorOptions, UseSystemMonitorReturn } from './useSystemMonitor';
 
 // Engine State
 export { useEngineState } from './useEngineState';

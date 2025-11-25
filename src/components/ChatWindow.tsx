@@ -124,7 +124,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         currentMode={currentMode}
         provider={connectionStatus.provider}
         latency={lastLatency}
-        cpuLoad={Math.round(cpuLoad * 100)}
+        cpuLoad={0}
         messagesCount={messages.length}
         anomalyCount={anomalyCount}
       />

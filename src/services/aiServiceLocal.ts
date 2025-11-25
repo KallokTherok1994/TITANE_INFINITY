@@ -91,6 +91,9 @@ async function callOllamaLocal(message: string, _history: AIMessage[] = []): Pro
   const OLLAMA_URL = 'http://localhost:11434/api/generate';
 
   try {
+    // ⚠️ NOTE: fetch() ici est OK car localhost uniquement (pas de réseau externe)
+    // TODO Phase 2+: Considérer utiliser tauriClient.chatSendMessage() pour unification
+
     // Test de disponibilité rapide (200ms timeout)
     const testController = new AbortController();
     const testTimeout = setTimeout(() => testController.abort(), 200);

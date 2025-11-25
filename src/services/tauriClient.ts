@@ -95,7 +95,7 @@ interface CircuitBreakerState {
 
 /**
  * Client centralisé pour tous les appels Tauri
- * 
+ *
  * Features:
  * - Timeout configurable par commande
  * - Retry automatique avec backoff
@@ -106,7 +106,7 @@ interface CircuitBreakerState {
 class TauriClient {
   private streamListeners = new Map<string, UnlistenFn>();
   private circuitBreakers = new Map<string, CircuitBreakerState>();
-  
+
   // Circuit breaker config
   private readonly CIRCUIT_BREAKER_THRESHOLD = 5; // Échecs avant ouverture
   private readonly CIRCUIT_BREAKER_TIMEOUT = 60000; // 60s avant retry half-open
@@ -163,7 +163,7 @@ class TauriClient {
 
       } catch (error) {
         lastError = this.handleError(error);
-        
+
         // Échec → Incrémenter circuit breaker
         this.recordFailure(command);
 
@@ -330,9 +330,12 @@ class TauriClient {
   /**
    * Récupère le statut des providers
    */
-  async chatGetProvidersStatus(): Promise<ProviderStatus[]> {
+  async chatGetProvidersStatus(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      const response = await invoke<string>('chat_get_providers_status');
+      const response = await this.safeInvoke<string>('chat_get_providers_status', {}, {
+        timeout: 10000, // 10s pour check rapide
+        ...options,
+      });
       return JSON.parse(response) as ProviderStatus[];
     } catch (error) {
       throw this.handleError(error);
@@ -342,9 +345,12 @@ class TauriClient {
   /**
    * Vérifie la disponibilité des providers
    */
-  async chatCheckProviders(): Promise<ProviderStatus[]> {
+  async chatCheckProviders(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      const response = await invoke<string>('chat_check_providers');
+      const response = await this.safeInvoke<string>('chat_check_providers', {}, {
+        timeout: 15000, // 15s pour check réseau
+        ...options,
+      });
       return JSON.parse(response) as ProviderStatus[];
     } catch (error) {
       throw this.handleError(error);
@@ -354,9 +360,12 @@ class TauriClient {
   /**
    * Configure la clé API Gemini
    */
-  async chatSetGeminiKey(apiKey: string): Promise<void> {
+  async chatSetGeminiKey(apiKey: string, options?: InvokeOptions): Promise<void> {
     try {
-      await invoke('chat_set_gemini_key', { apiKey });
+      await this.safeInvoke('chat_set_gemini_key', { apiKey }, {
+        timeout: 5000, // 5s pour config
+        ...options,
+      });
     } catch (error) {
       throw this.handleError(error);
     }
@@ -365,9 +374,12 @@ class TauriClient {
   /**
    * Crée une nouvelle conversation
    */
-  async chatCreateConversation(): Promise<string> {
+  async chatCreateConversation(options?: InvokeOptions): Promise<string> {
     try {
-      return await invoke<string>('chat_create_conversation');
+      return await this.safeInvoke<string>('chat_create_conversation', {}, {
+        timeout: 5000,
+        ...options,
+      });
     } catch (error) {
       throw this.handleError(error);
     }
@@ -376,9 +388,12 @@ class TauriClient {
   /**
    * Récupère une conversation
    */
-  async chatGetConversation(conversationId: string): Promise<any> {
+  async chatGetConversation(conversationId: string, options?: InvokeOptions): Promise<any> {
     try {
-      const response = await invoke<string>('chat_get_conversation', { conversationId });
+      const response = await this.safeInvoke<string>('chat_get_conversation', { conversationId }, {
+        timeout: 10000,
+        ...options,
+      });
       return JSON.parse(response);
     } catch (error) {
       throw this.handleError(error);
@@ -388,9 +403,12 @@ class TauriClient {
   /**
    * Supprime une conversation
    */
-  async chatDeleteConversation(conversationId: string): Promise<void> {
+  async chatDeleteConversation(conversationId: string, options?: InvokeOptions): Promise<void> {
     try {
-      await invoke('chat_delete_conversation', { conversationId });
+      await this.safeInvoke('chat_delete_conversation', { conversationId }, {
+        timeout: 5000,
+        ...options,
+      });
     } catch (error) {
       throw this.handleError(error);
     }
@@ -403,9 +421,13 @@ class TauriClient {
   /**
    * Récupère les vitals système
    */
-  async getSystemVitals(): Promise<any> {
+  async getSystemVitals(options?: InvokeOptions): Promise<any> {
     try {
-      const response = await invoke<string>('get_system_vitals');
+      const response = await this.safeInvoke<string>('get_system_vitals', {}, {
+        timeout: 5000,
+        retries: 0, // Pas de retry pour vitals (donnée temps réel)
+        ...options,
+      });
       return JSON.parse(response);
     } catch (error) {
       throw this.handleError(error);
@@ -415,9 +437,12 @@ class TauriClient {
   /**
    * Récupère l'état Singularity complet
    */
-  async getSingularityState(): Promise<any> {
+  async getSingularityState(options?: InvokeOptions): Promise<any> {
     try {
-      const response = await invoke<string>('singularity_get_full_state');
+      const response = await this.safeInvoke<string>('singularity_get_full_state', {}, {
+        timeout: 10000,
+        ...options,
+      });
       return JSON.parse(response);
     } catch (error) {
       throw this.handleError(error);
