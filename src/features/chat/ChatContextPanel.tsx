@@ -50,12 +50,12 @@ const memoryTypeColors: Record<ActiveMemory['type'], string> = {
 
 const getMetricColor = (value: number): string => {
   if (value >= 0.7) {
-    return colors.semantic.success as string;
+    return colors.semantic.success[500];
   }
   if (value >= 0.4) {
-    return colors.semantic.warning as string;
+    return colors.semantic.warning[500];
   }
-  return colors.semantic.error as string;
+  return colors.semantic.error[500];
 };
 
 // ─────────────────────────────────────────────────────────────────

@@ -13,7 +13,6 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { Container, Stack } from '@components/layout';
 import { Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
 import { KnowledgeDomains } from '../components/progression/KnowledgeDomains';
@@ -25,11 +24,11 @@ export const ProgressionPage = (): JSX.Element => {
 
   if (isLoading) {
     return (
-      <Container maxWidth="xl">
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
         <div style={{ textAlign: 'center', padding: '48px', color: '#727b81' }}>
           Chargement du système d'expérience...
         </div>
-      </Container>
+      </div>
     );
   }
 
@@ -38,8 +37,8 @@ export const ProgressionPage = (): JSX.Element => {
   const xpNeededForNextLevel = xpForNextLevel - xpForCurrentLevel;
 
   return (
-    <Container maxWidth="xl">
-      <Stack spacing={6}>
+    <div style={{ maxWidth: '1280px', margin: '0 auto', padding: spacing[6] }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: spacing[6] }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: spacing[4] }}>
           <h1
@@ -172,7 +171,7 @@ export const ProgressionPage = (): JSX.Element => {
             // TODO: Ouvrir modal avec détails du domaine
           }}
         />
-      </Stack>
-    </Container>
+      </div>
+    </div>
   );
 };

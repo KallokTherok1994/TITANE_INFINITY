@@ -18,7 +18,7 @@ import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { titaneLocalProvider } from './titaneLocal';
 
 // OBSOLETE : Ces messages ne sont plus utilisés
-const FALLBACK_RESPONSES: readonly string[] = [
+const _FALLBACK_RESPONSES: readonly string[] = [
   "🤖 TITANE∞ — IA Locale Autonome Active",
 ] as const;
 

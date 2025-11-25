@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "TITANE∞ v19.1",
-  "version": "19.1.0",
+  "productName": "TITANE∞ v∞",
+  "version": "999.0.0",
   "identifier": "com.titane.infinity",
   "build": {
     "beforeDevCommand": "pnpm vite dev",
@@ -22,14 +22,14 @@
     "resources": [],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "v19.1.0 - UI Corrections + CSS Height Fix",
-    "longDescription": "TITANE∞ v19.1.0 - UI Display Corrections: Removed HTTP/Tauri blocking verrou, Fixed CSS height 100%, Optimized environment detection, Console warnings only (non-blocking)"
+    "shortDescription": "v∞ Phase 3 - Security + Time-Travel + Auto-Audit Complete",
+    "longDescription": "TITANE∞ v∞ Phase 3: Update Engine (Ed25519), Auto-Audit Engine (6 categories), TimeNavigator UI, SystemGovernance UI, VaultEngine (AES-256-GCM), Security Stack (ROOT/SYSTEM/IA permissions), Time Commands (4 Tauri APIs)"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "TITANE∞ v17.3",
+        "title": "TITANE∞ v∞ Phase 3",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

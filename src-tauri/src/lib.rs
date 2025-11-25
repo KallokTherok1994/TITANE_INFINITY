@@ -27,6 +27,26 @@ pub mod security;       // ✅ v∞ Super-Prompts H, J, K, L
 pub mod time;           // ✅ v∞ Super-Prompt N (Time-Travel + Backups)
 pub mod updates;        // ✅ v∞ Super-Prompt L (Update Engine)
 
+// ═══════════════════════════════════════════════════════════════
+// PHASES 5-10 MODULES (Super-Prompts P-U)
+// ═══════════════════════════════════════════════════════════════
+pub mod cluster;        // ✅ Phase 5: Node-Cluster (Super-Prompt P)
+pub mod knowledge;      // ✅ Phase 6: Knowledge Fusion (Super-Prompt Q)
+pub mod hypervision;    // ✅ Phase 7: HyperVision (Super-Prompt R)
+pub mod creation;       // ✅ Phase 8: Mode Création (Super-Prompt S)
+pub mod introspection;  // ✅ Phase 9: Introspection (Super-Prompt T)
+pub mod evolution;      // ✅ Phase 10: Auto-Évolution (Super-Prompt U)
+
+// ═══════════════════════════════════════════════════════════════
+// PHASES V-Ω MODULES (Super-Prompts V-Ω) — TITANE∞ v∞ ULTIMATE
+// ═══════════════════════════════════════════════════════════════
+pub mod hyper_evolution;    // ✅ Phase V: HyperEvolution Engine
+pub mod cognitive_learning; // ✅ Phase W: Auto-Apprentissage Cognitif
+pub mod neuro_symbolic;     // ✅ Phase X: NeuroSymbolic Fusion
+pub mod meta_creation;      // ✅ Phase Y: Méta-Création
+pub mod self_repair;        // ✅ Phase Z: Auto-Réparation Totale
+pub mod singularity;        // ✅ Phase Ω: Singularity Engine
+
 // Commented out complex modules - to be fixed progressively
 // pub mod api;           // ❌ Type mismatches (HeliosCore methods)
 // pub mod commands;      // ❌ Depends on complex engines

@@ -42,7 +42,7 @@ const sizeStyles: Record<SpinnerSize, { size: string; border: string }> = {
 
 const variantStyles: Record<SpinnerVariant, { color: string }> = {
   primary: { color: colors.rubis.primary[500] },
-  secondary: { color: colors.rubis.accent[500] },
+  secondary: { color: colors.rubis.primary.accent },
   white: { color: colors.neutral[100] },
 };
 

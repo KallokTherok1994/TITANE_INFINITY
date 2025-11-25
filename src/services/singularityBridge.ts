@@ -6,6 +6,8 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+import { invoke } from '@tauri-apps/api/core';
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v14 — SINGULARITY BRIDGE (TypeScript)
@@ -372,14 +374,9 @@ export function mergeFileKnowledge(
   category: string,
   path: string
 ): void {
-  const state = SingularityBridge.getState();
-  if (!state) {
-    console.warn('[mergeFileKnowledge] No state available');
-    return;
-  }
-
+  // Removed getState() call - not used
   // Ajouter à la mémoire cognitive (connaissances)
-  const newKnowledge = {
+  const _newKnowledge = {
     id: `file_${Date.now()}`,
     source: 'file_import',
     category,

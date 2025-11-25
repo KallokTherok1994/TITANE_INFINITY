@@ -65,10 +65,12 @@ export const colors = {
       800: '#373232',
       900: '#282424',
       main: '#736868',
+      accent: '#93b399', // Accent pour compatibilité
     },
     surface: {
       solid: '#1a1717',
       translucent: 'rgba(115, 104, 104, 0.12)',
+      glass: 'rgba(26, 23, 23, 0.75)',  // Glass morphism
     },
   },
 
@@ -88,10 +90,12 @@ export const colors = {
       800: '#394044',
       900: '#2a2f32',
       main: '#727b81',
+      accent: '#93b399', // Accent pour compatibilité
     },
     surface: {
       solid: '#181a1c',
       translucent: 'rgba(114, 123, 129, 0.12)',
+      glass: 'rgba(24, 26, 28, 0.75)',  // Glass morphism
     },
   },
 
@@ -111,10 +115,12 @@ export const colors = {
       800: '#4b5f52',
       900: '#36463c',
       main: '#93b399',
+      accent: '#93b399', // Accent pour compatibilité
     },
     surface: {
       solid: '#171a18',
       translucent: 'rgba(147, 179, 153, 0.12)',
+      glass: 'rgba(23, 26, 24, 0.75)',  // Glass morphism
     },
   },
 
@@ -134,10 +140,12 @@ export const colors = {
       800: '#545454',
       900: '#383838',
       main: '#c4c4c4',
+      accent: '#93b399', // Accent pour compatibilité
     },
     surface: {
       solid: '#1f1f1f',
       translucent: 'rgba(196, 196, 196, 0.08)',
+      glass: 'rgba(31, 31, 31, 0.75)',  // Glass morphism
     },
   },
 
@@ -145,6 +153,60 @@ export const colors = {
   // NEUTRAL → Échelle de gris pure
   // ─────────────────────────────────────────────────────────────────
   neutral: metalScale,
+
+  // ─────────────────────────────────────────────────────────────────
+  // SEMANTIC → Tokens sémantiques (success/warning/error/info)
+  // ─────────────────────────────────────────────────────────────────
+  semantic: {
+    success: {
+      50: '#eef2f0',
+      100: '#dae3df',
+      200: '#bfcfc7',
+      300: '#a4bbaf',
+      400: '#8ba899',
+      500: '#93b399',  // Vert-gris métallique
+      600: '#7a9682',
+      700: '#627a69',
+      800: '#4b5f52',
+      900: '#36463c',
+    },
+    warning: {
+      50: '#f0eeee',
+      100: '#dcdada',
+      200: '#c0bbbb',
+      300: '#a49c9c',
+      400: '#8a7e7e',
+      500: '#736868',  // Gris chaud
+      600: '#5e5454',
+      700: '#4a4242',
+      800: '#373232',
+      900: '#282424',
+    },
+    error: {
+      50: '#f0eeee',
+      100: '#dcdada',
+      200: '#c0bbbb',
+      300: '#a49c9c',
+      400: '#8a7e7e',
+      500: '#736868',  // Gris chaud (même que warning, subtil)
+      600: '#5e5454',
+      700: '#4a4242',
+      800: '#373232',
+      900: '#282424',
+    },
+    info: {
+      50: '#e8eaec',
+      100: '#d4d8db',
+      200: '#b8bfc4',
+      300: '#9ca6ad',
+      400: '#838e96',
+      500: '#727b81',  // Gris bleuté
+      600: '#5e676d',
+      700: '#4b5357',
+      800: '#394044',
+      900: '#2a2f32',
+    },
+  },
 
   // ─────────────────────────────────────────────────────────────────
   // SPACING, RADIUS, SHADOWS (Design System tokens)
@@ -186,6 +248,8 @@ export const shadows = {
   xl: '0 12px 24px rgba(0, 0, 0, 0.8)',
   glow: '0 0 20px rgba(114, 123, 129, 0.25)',
   glowAccent: '0 0 20px rgba(147, 179, 153, 0.2)',
+  glowRubis: '0 0 20px rgba(115, 104, 104, 0.3)',    // Glow rubis (warm gray)
+  focusRubis: '0 0 0 3px rgba(115, 104, 104, 0.5)',  // Focus rubis
 };
 
 export const fontSizes = {

@@ -73,13 +73,61 @@ export default defineConfig({
     sourcemap: false,
     minify: 'terser',
     target: 'esnext',
+    chunkSizeWarningLimit: 1000, // Increased for large dashboards
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html')
       },
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
+        manualChunks: (id) => {
+          // Vendor libs (React ecosystem)
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor-react';
+          }
+          if (id.includes('node_modules/react-router-dom')) {
+            return 'vendor-router';
+          }
+          if (id.includes('node_modules/framer-motion')) {
+            return 'vendor-motion';
+          }
+          if (id.includes('node_modules/lucide-react')) {
+            return 'vendor-icons';
+          }
+          if (id.includes('node_modules/@tauri-apps')) {
+            return 'vendor-tauri';
+          }
+
+          // Core IA agents (Heavy computational logic)
+          if (id.includes('src/core/ai/agents/')) {
+            return 'agents-core';
+          }
+
+          // Phases V-Ω dashboards (Lazy loaded)
+          if (id.includes('src/ui/pages/NodeClusterDashboard') ||
+              id.includes('src/ui/pages/KnowledgeFusionPage') ||
+              id.includes('src/ui/pages/HyperVisionDashboard')) {
+            return 'dashboards-vomega-1';
+          }
+          if (id.includes('src/ui/pages/QuantumEngineDashboard') ||
+              id.includes('src/ui/pages/EvolutionMonitor') ||
+              id.includes('src/ui/pages/CreationStudio')) {
+            return 'dashboards-vomega-2';
+          }
+
+          // Services (Business logic)
+          if (id.includes('src/services/')) {
+            return 'services';
+          }
+
+          // UI components
+          if (id.includes('src/ui/') || id.includes('src/components/')) {
+            return 'ui-components';
+          }
+
+          // Other node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor-misc';
+          }
         },
       },
       external: ['@tauri-apps/api/tauri', '@tauri-apps/api/event'],

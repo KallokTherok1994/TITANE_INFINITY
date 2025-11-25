@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE_INFINITY v∞ — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,10 +8,10 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v17.2.0 — APP COMPONENT + MODULAR ARCHITECTURE
- *   100% TAURI NATIVE - NO HTTP SERVER MODE
- *   Backend v17.2.0: Plugin System + DevTools + Cognitive Engine
- *   React Router v7 + AppShell + 23 Tauri Commands API
+ *   TITANE∞ v∞ — APP COMPONENT (PHASE 3 COMPLETE)
+ *   Super-Prompts H→N: Security + Permissions + Time-Travel + Auto-Audit
+ *   Backend v∞: VaultEngine + UpdateEngine + TimeNavigator + SystemGovernance
+ *   React Router v7 + AppShell + Auto-Audit Engine (30s scans)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -91,6 +91,23 @@ import { PerformanceTest } from './pages/PerformanceTest';
 import { TimeNavigator } from './pages/TimeNavigator';
 import { SystemGovernance } from './pages/SystemGovernance';
 
+// v∞ Phase 4 - Multi-Agent System (Super-Prompt O)
+import { MultiAIDashboard } from './ui/pages/MultiAIDashboard';
+import { multiAgentEngine } from './core/ai/multi_agent_engine';
+import { HeliosAgent } from './core/ai/agents/helios_agent';
+import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
+import { PersonaAgent } from './core/ai/agents/persona_agent';
+import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
+import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
+
+// v∞ Phases 5-10 - Super-Prompts P-U
+import NodeClusterDashboard from './ui/pages/NodeClusterDashboard';
+import KnowledgeFusionPage from './ui/pages/KnowledgeFusionPage';
+import HyperVisionDashboard from './ui/pages/HyperVisionDashboard';
+import CreationStudio from './ui/pages/CreationStudio';
+import IntrospectionDashboard from './ui/pages/IntrospectionDashboard';
+import EvolutionMonitor from './ui/pages/EvolutionMonitor';
+
 /**
  * ═══════════════════════════════════════════════════════════════
  * APP ROUTER - Composant interne avec accès au router + Living Engines
@@ -112,6 +129,31 @@ const AppRouter: React.FC = () => {
     return () => {
       console.log('🛑 [AUTO-AUDIT] Stopping audits...');
       autoAuditEngine.stop();
+    };
+  }, []);
+
+  // ✨ v∞ Phase 4 - Initialiser Multi-Agent System
+  useEffect(() => {
+    const initAgents = async () => {
+      console.log('🌌 [MULTI-AGENT] Initializing 5-agent system...');
+
+      // Register all 5 agents
+      multiAgentEngine.registerAgent(new HeliosAgent());
+      multiAgentEngine.registerAgent(new HarmoniaAgent());
+      multiAgentEngine.registerAgent(new PersonaAgent());
+      multiAgentEngine.registerAgent(new MemoryCoreAgent());
+      multiAgentEngine.registerAgent(new WatchdogAgent());
+
+      // Start orchestration
+      await multiAgentEngine.initialize();
+      console.log('✅ [MULTI-AGENT] System ready');
+    };
+
+    initAgents();
+
+    return () => {
+      console.log('🛑 [MULTI-AGENT] Shutting down...');
+      multiAgentEngine.shutdown();
     };
   }, []);
 
@@ -138,6 +180,13 @@ const AppRouter: React.FC = () => {
     { id: '/design-system', label: 'Design System', icon: '🎨', badge: 'v17.1' },
     { id: '/time-navigator', label: 'Time Navigator', icon: '⏱️', badge: 'v∞' },
     { id: '/governance', label: 'Governance', icon: '⚖️', badge: 'v∞' },
+    { id: '/multi-ai', label: 'Multi-AI System', icon: '🌌', badge: 'Phase 4' },
+    { id: '/cluster', label: 'Node Cluster', icon: '📦', badge: 'Phase 5' },
+    { id: '/knowledge', label: 'Knowledge Fusion', icon: '📚', badge: 'Phase 6' },
+    { id: '/hypervision', label: 'HyperVision', icon: '🔍', badge: 'Phase 7' },
+    { id: '/creation', label: 'Creation Studio', icon: '🎨', badge: 'Phase 8' },
+    { id: '/introspection', label: 'Introspection', icon: '🔬', badge: 'Phase 9' },
+    { id: '/evolution', label: 'Evolution', icon: '🧬', badge: 'Phase 10' },
     { id: '/helios', label: 'Helios', icon: '☀️' },
     { id: '/nexus', label: 'Nexus', icon: '🔗' },
     { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
@@ -216,6 +265,17 @@ const AppRouter: React.FC = () => {
         {/* v∞ Super-Prompt N6/K8 - Time Navigation & Governance */}
         <Route path="/time-navigator" element={<TimeNavigator />} />
         <Route path="/governance" element={<SystemGovernance />} />
+
+        {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) */}
+        <Route path="/multi-ai" element={<MultiAIDashboard />} />
+
+        {/* v∞ Phases 5-10 - Super-Prompts P-U */}
+        <Route path="/cluster" element={<NodeClusterDashboard />} />
+        <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+        <Route path="/hypervision" element={<HyperVisionDashboard />} />
+        <Route path="/creation" element={<CreationStudio />} />
+        <Route path="/introspection" element={<IntrospectionDashboard />} />
+        <Route path="/evolution" element={<EvolutionMonitor />} />
 
         {/* v14: SingularityState Monitor */}
         <Route path="/singularity" element={<SingularityMonitor />} />

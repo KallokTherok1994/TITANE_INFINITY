@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import './SystemGovernance.css';
 
 interface AuditEntry {
@@ -25,7 +25,7 @@ interface PermissionMatrix {
   [action: string]: string[]; // action -> roles autorisés
 }
 
-type Role = 'ROOT' | 'SYSTEM' | 'IA' | 'USER';
+type _Role = 'ROOT' | 'SYSTEM' | 'IA' | 'USER';
 
 export const SystemGovernance: React.FC = () => {
   const [auditLog, setAuditLog] = useState<AuditEntry[]>([]);

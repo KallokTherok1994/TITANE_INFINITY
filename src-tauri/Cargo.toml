@@ -44,6 +44,9 @@ ed25519-dalek = "2.1"
 lazy_static = "1.4"
 flate2 = "1.0"
 
+# Super-Prompts P-U - Phases 5-10 (Node-Cluster, Knowledge, HyperVision, Création, Introspection, Évolution)
+walkdir = "2.4"  # Phase 9: Introspection filesystem traversal
+
 [features]
 default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]

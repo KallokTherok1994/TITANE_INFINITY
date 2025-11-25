@@ -182,6 +182,88 @@ async fn main() {
             time_commands::get_travel_stats,
             time_commands::restore_snapshot,
             time_commands::delete_snapshot,
+
+            // ═══════════════════════════════════════════════════════════════
+            // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U
+            // ═══════════════════════════════════════════════════════════════
+
+            // Phase 5: Node-Cluster (Super-Prompt P)
+            titane_infinity::cluster::mesh_initialize,
+            titane_infinity::cluster::mesh_get_stats,
+
+            // Phase 6: Knowledge Fusion (Super-Prompt Q)
+            titane_infinity::knowledge::parse_document,
+            titane_infinity::knowledge::detect_file_format,
+
+            // Phase 7: HyperVision (Super-Prompt R)
+            titane_infinity::hypervision::hypervision_start,
+            titane_infinity::hypervision::get_system_metrics,
+
+            // Phase 8: Mode Création (Super-Prompt S)
+            titane_infinity::creation::create_module,
+
+            // Phase 9: Introspection (Super-Prompt T)
+            titane_infinity::introspection::introspection_scan,
+            titane_infinity::introspection::introspection_auto_fix,
+
+            // Phase 10: Auto-Évolution (Super-Prompt U)
+            titane_infinity::evolution::evolution_run_cycle,
+            titane_infinity::evolution::evolution_get_stats,
+
+            // ═══════════════════════════════════════════════════════════════
+            // PHASES V-Ω COMMANDS v∞ - Super-Prompts V-Ω ULTIMATE
+            // ═══════════════════════════════════════════════════════════════
+
+            // Phase V: HyperEvolution Engine
+            titane_infinity::hyper_evolution::hyper_predict_issues,
+            titane_infinity::hyper_evolution::hyper_accelerate,
+            titane_infinity::hyper_evolution::hyper_analyze_structure,
+            titane_infinity::hyper_evolution::hyper_detect_regeneration,
+            titane_infinity::hyper_evolution::hyper_analyze_rewrite,
+            titane_infinity::hyper_evolution::hyper_validate,
+
+            // Phase W: Auto-Apprentissage Cognitif
+            titane_infinity::cognitive_learning::cognitive_get_map,
+            titane_infinity::cognitive_learning::cognitive_add_concept,
+            titane_infinity::cognitive_learning::cognitive_build_memory,
+            titane_infinity::cognitive_learning::cognitive_create_association,
+            titane_infinity::cognitive_learning::cognitive_get_associations,
+            titane_infinity::cognitive_learning::cognitive_grow_knowledge,
+            titane_infinity::cognitive_learning::cognitive_run_reinforcement,
+            titane_infinity::cognitive_learning::cognitive_summarize,
+
+            // Phase X: NeuroSymbolic Fusion
+            titane_infinity::neuro_symbolic::neuro_fuse,
+            titane_infinity::neuro_symbolic::neuro_adapt_intent,
+            titane_infinity::neuro_symbolic::neuro_translate_symbolic,
+            titane_infinity::neuro_symbolic::neuro_bridge_reasoning,
+            titane_infinity::neuro_symbolic::neuro_map_context,
+            titane_infinity::neuro_symbolic::neuro_get_state,
+
+            // Phase Y: Méta-Création
+            titane_infinity::meta_creation::meta_generate_ideas,
+            titane_infinity::meta_creation::meta_invent_pattern,
+            titane_infinity::meta_creation::meta_design_system,
+            titane_infinity::meta_creation::meta_generate_prototype,
+            titane_infinity::meta_creation::meta_build_solution,
+            titane_infinity::meta_creation::meta_integrate_module,
+            titane_infinity::meta_creation::meta_get_creative_memory,
+
+            // Phase Z: Auto-Réparation Totale
+            titane_infinity::self_repair::repair_detect_anomalies,
+            titane_infinity::self_repair::repair_execute,
+            titane_infinity::self_repair::repair_regenerate_module,
+            titane_infinity::self_repair::repair_fallback_recovery,
+            titane_infinity::self_repair::repair_deep_rebuild,
+            titane_infinity::self_repair::repair_get_integrity_map,
+
+            // Phase Ω: Singularity Engine
+            titane_infinity::singularity::singularity_activate,
+            titane_infinity::singularity::singularity_check_coherence,
+            titane_infinity::singularity::singularity_fuse_all,
+            titane_infinity::singularity::singularity_unify,
+            titane_infinity::singularity::singularity_get_state,
+            titane_infinity::singularity::singularity_detect_emergence,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
