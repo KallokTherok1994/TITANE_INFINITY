@@ -104,7 +104,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   useEffect(() => {
     console.log(`🔄 USE CHAT v14: Mode changed to ${currentMode}, loading history...`);
     addMessages(messagesForMode);
-  }, [currentMode, messagesForMode]);
+  }, [currentMode, messagesForMode, addMessages]);
 
   /**
    * Envoie message (orchestration complète)
@@ -245,7 +245,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     setError(null);
     setSuggestions([]);
     console.log(`🧹 USE CHAT v14: Cleared mode ${currentMode}`);
-  }, [currentMode, clearMode, clearMessages]);
+  }, [currentMode, clearMode, clearMessages, setError, setSuggestions]);
 
   /**
    * Change le mode

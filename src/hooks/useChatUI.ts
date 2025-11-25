@@ -81,7 +81,7 @@ export function useChatUI(options: UseChatUIOptions = {}): UseChatUIReturn {
     const trimmedInput = input.trim();
     setInput(''); // Clear input
     options.onSend?.(trimmedInput);
-  }, [input, isLoading, options.onSend]);
+  }, [input, isLoading, options]);
 
   return {
     messages,

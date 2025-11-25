@@ -132,7 +132,8 @@ export function useVitals(options: { pollInterval?: number; enabled?: boolean } 
       state.current.memory > 90 ||
       state.current.disk > 95
     );
-  }, [state.current]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Poll vitals automatiquement
   useEffect(() => {

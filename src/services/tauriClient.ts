@@ -176,7 +176,7 @@ class TauriClient {
       }
     }
 
-    throw lastError!;
+    throw lastError || this.createError('InternalError', 'All retries failed');
   }
 
   /**
@@ -208,7 +208,9 @@ class TauriClient {
         state: 'closed',
       });
     }
-    return this.circuitBreakers.get(command)!;
+    const breaker = this.circuitBreakers.get(command);
+    if (!breaker) throw new Error(`Circuit breaker not found for ${command}`);
+    return breaker;
   }
 
   /**

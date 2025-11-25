@@ -67,7 +67,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
     } catch {
       return 0;
     }
-  }, [messagesCount]);
+  }, []);
 
   // Helpers couleurs memoized avec useCallback
   const getHealthColor = useCallback((health: number) => {
