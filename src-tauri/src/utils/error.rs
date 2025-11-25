@@ -53,6 +53,13 @@ impl From<serde_json::Error> for AppError {
     }
 }
 
+/// Conversion from String (pour permission errors)
+impl From<String> for AppError {
+    fn from(err: String) -> Self {
+        AppError::Validation(err)
+    }
+}
+
 /// Result type alias using AppError
 pub type AppResult<T> = Result<T, AppError>;
 

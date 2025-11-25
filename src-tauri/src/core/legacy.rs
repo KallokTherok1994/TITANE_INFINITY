@@ -39,8 +39,8 @@ impl MemoryCore {
         use std::time::{SystemTime, UNIX_EPOCH};
         let now = SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_millis() as i64;
+            .map(|d| d.as_millis() as i64)
+            .unwrap_or(0); // Fallback si l'horloge système est avant UNIX_EPOCH
 
         Ok(TypesMemoryState {
             snapshots_count: 0,

@@ -14,6 +14,7 @@ pub mod encryption;
 pub mod validation;
 pub mod sandbox;
 pub mod pre_boot_validation;
+pub mod vault_engine; // ✅ v∞ J3 - Memory Vault Layer
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

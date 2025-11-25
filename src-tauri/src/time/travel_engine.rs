@@ -355,7 +355,7 @@ mod tests {
             persona_mood: "focused".to_string(),
         };
 
-        let data = b"TITANE INFINITY v∞".to_vec();
+        let data = "TITANE INFINITY v∞".as_bytes().to_vec();
         let id = engine
             .create_snapshot(data.clone(), context, "Test".to_string())
             .await

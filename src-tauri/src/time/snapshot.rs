@@ -111,13 +111,16 @@ impl Snapshot {
 
     /// Vérifier signature
     pub fn verify_signature(&self, public_key: &[u8]) -> Result<(), String> {
-        use ed25519_dalek::{PublicKey, Signature, Verifier};
+        use ed25519_dalek::{VerifyingKey, Signature, Verifier};
 
-        let public = PublicKey::from_bytes(public_key)
+        let public_array: [u8; 32] = public_key.try_into()
+            .map_err(|_| "Invalid public key length".to_string())?;
+        let public = VerifyingKey::from_bytes(&public_array)
             .map_err(|e| format!("Invalid public key: {}", e))?;
 
-        let sig = Signature::from_bytes(&self.signature)
-            .map_err(|e| format!("Invalid signature: {}", e))?;
+        let sig_array: [u8; 64] = self.signature.as_slice().try_into()
+            .map_err(|_| "Invalid signature length".to_string())?;
+        let sig = Signature::from_bytes(&sig_array);
 
         let data = serde_json::to_vec(&self.metadata)
             .map_err(|e| format!("Failed to serialize metadata: {}", e))?;

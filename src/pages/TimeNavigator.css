@@ -1,0 +1,257 @@
+/* TimeNavigator.css */
+
+.time-navigator {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+  min-height: 100vh;
+  color: #e0e0e0;
+}
+
+.navigator-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.navigator-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  background: linear-gradient(90deg, #00f5ff, #00aaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.travel-stats {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(0, 170, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 170, 255, 0.3);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+.stat-label {
+  color: #888;
+}
+
+.stat-value {
+  font-weight: bold;
+  color: #00f5ff;
+}
+
+.navigator-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.timeline-container,
+.details-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.timeline {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 2rem;
+  margin-bottom: 2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.timeline-item:hover {
+  transform: translateX(5px);
+}
+
+.timeline-item.selected {
+  background: rgba(0, 170, 255, 0.1);
+  border-radius: 8px;
+  padding: 1rem 1rem 1rem 2rem;
+  margin-left: -1rem;
+}
+
+.timeline-dot {
+  position: absolute;
+  left: 0;
+  top: 0.5rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #00aaff;
+  box-shadow: 0 0 10px #00aaff;
+}
+
+.timeline-item.selected .timeline-dot {
+  background: #00f5ff;
+  box-shadow: 0 0 20px #00f5ff;
+  width: 16px;
+  height: 16px;
+}
+
+.timeline-content {
+  font-size: 0.9rem;
+}
+
+.timeline-time {
+  color: #00f5ff;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.timeline-version {
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.timeline-context {
+  color: #aaa;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.timeline-size {
+  color: #666;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.snapshot-details {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.no-selection {
+  text-align: center;
+  color: #666;
+  padding: 3rem;
+}
+
+.detail-section {
+  margin-bottom: 2rem;
+}
+
+.detail-section h4 {
+  color: #00aaff;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.detail-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.detail-section td {
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-section td:first-child {
+  color: #888;
+  width: 30%;
+}
+
+.detail-section code {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.detail-actions button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-restore {
+  background: linear-gradient(135deg, #00aaff, #0088cc);
+  color: white;
+}
+
+.btn-restore:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 170, 255, 0.4);
+}
+
+.btn-compare {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-compare:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-delete {
+  background: rgba(255, 0, 0, 0.2);
+  color: #ff6666;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.btn-delete:hover {
+  background: rgba(255, 0, 0, 0.3);
+}
+
+.detail-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.compare-panel {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 0, 0.3);
+}
+
+@media (max-width: 1024px) {
+  .navigator-content {
+    grid-template-columns: 1fr;
+  }
+}

@@ -10,7 +10,7 @@ use aes_gcm::{
     aead::{Aead, KeyInit, OsRng},
     Aes256Gcm, Nonce,
 };
-use ed25519_dalek::{Keypair, PublicKey, SecretKey, Signature, Signer, Verifier};
+use ed25519_dalek::{SigningKey, VerifyingKey, Signature, Signer, Verifier};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -181,15 +181,19 @@ impl CryptoEngine {
 
 /// Keypair Ed25519 pour signatures
 pub struct SigningKeypair {
-    keypair: Keypair,
+    signing_key: SigningKey,
+    verifying_key: VerifyingKey,
 }
 
 impl SigningKeypair {
     /// Générer nouvelle paire de clés
     pub fn generate() -> Self {
-        let mut csprng = OsRng;
-        let keypair = Keypair::generate(&mut csprng);
-        Self { keypair }
+        use rand::RngCore;
+        let mut secret_bytes = [0u8; 32];
+        OsRng.fill_bytes(&mut secret_bytes);
+        let signing_key = SigningKey::from_bytes(&secret_bytes);
+        let verifying_key = signing_key.verifying_key();
+        Self { signing_key, verifying_key }
     }
 
     /// Charger depuis fichiers
@@ -200,17 +204,16 @@ impl SigningKeypair {
         let secret_bytes = fs::read(secret_path)
             .await
             .map_err(|e| CryptoError::IoError(e.to_string()))?;
-        let public_bytes = fs::read(public_path)
+        let _public_bytes = fs::read(public_path)
             .await
             .map_err(|e| CryptoError::IoError(e.to_string()))?;
 
-        let secret = SecretKey::from_bytes(&secret_bytes)
-            .map_err(|e| CryptoError::InvalidKey(e.to_string()))?;
-        let public = PublicKey::from_bytes(&public_bytes)
-            .map_err(|e| CryptoError::InvalidKey(e.to_string()))?;
+        let secret_array: [u8; 32] = secret_bytes.as_slice().try_into()
+            .map_err(|_| CryptoError::InvalidKey("Invalid secret key length".to_string()))?;
+        let signing_key = SigningKey::from_bytes(&secret_array);
+        let verifying_key = signing_key.verifying_key();
 
-        let keypair = Keypair { secret, public };
-        Ok(Self { keypair })
+        Ok(Self { signing_key, verifying_key })
     }
 
     /// Sauvegarder dans fichiers
@@ -231,10 +234,10 @@ impl SigningKeypair {
                 .map_err(|e| CryptoError::IoError(e.to_string()))?;
         }
 
-        fs::write(secret_path, self.keypair.secret.to_bytes())
+        fs::write(secret_path, self.signing_key.to_bytes())
             .await
             .map_err(|e| CryptoError::IoError(e.to_string()))?;
-        fs::write(public_path, self.keypair.public.to_bytes())
+        fs::write(public_path, self.verifying_key.to_bytes())
             .await
             .map_err(|e| CryptoError::IoError(e.to_string()))?;
 
@@ -243,22 +246,23 @@ impl SigningKeypair {
 
     /// Signer données
     pub fn sign(&self, data: &[u8]) -> Vec<u8> {
-        self.keypair.sign(data).to_bytes().to_vec()
+        self.signing_key.sign(data).to_bytes().to_vec()
     }
 
     /// Vérifier signature
     pub fn verify(&self, data: &[u8], signature: &[u8]) -> Result<(), CryptoError> {
-        let sig = Signature::from_bytes(signature)
-            .map_err(|e| CryptoError::InvalidSignature(e.to_string()))?;
+        let sig_array: [u8; 64] = signature.try_into()
+            .map_err(|_| CryptoError::InvalidSignature("Invalid signature length".to_string()))?;
+        let sig = Signature::from_bytes(&sig_array);
 
-        self.keypair
+        self.verifying_key
             .verify(data, &sig)
             .map_err(|e| CryptoError::InvalidSignature(e.to_string()))
     }
 
     /// Obtenir clé publique
     pub fn public_key_bytes(&self) -> [u8; 32] {
-        self.keypair.public.to_bytes()
+        self.verifying_key.to_bytes()
     }
 }
 
@@ -317,7 +321,7 @@ mod tests {
         let key = MasterKey::generate();
         let engine = CryptoEngine::new(&key);
 
-        let plaintext = b"TITANE INFINITY v∞";
+        let plaintext = "TITANE INFINITY v∞".as_bytes();
         let ciphertext = engine.encrypt(plaintext).unwrap();
         let decrypted = engine.decrypt(&ciphertext).unwrap();
 
@@ -339,7 +343,7 @@ mod tests {
     #[test]
     fn test_sign_verify() {
         let keypair = SigningKeypair::generate();
-        let data = b"TITANE INFINITY v∞";
+        let data = "TITANE INFINITY v∞".as_bytes();
 
         let signature = keypair.sign(data);
         assert!(keypair.verify(data, &signature).is_ok());

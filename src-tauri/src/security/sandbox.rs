@@ -394,7 +394,7 @@ mod tests {
         let sandbox = FileImportSandbox::new();
         sandbox.initialize().await.unwrap();
 
-        let data = b"TITANE INFINITY v∞".to_vec();
+        let data = "TITANE INFINITY v∞".as_bytes().to_vec();
         let result = sandbox.import_file("test.txt", data).await;
 
         assert!(result.is_ok());

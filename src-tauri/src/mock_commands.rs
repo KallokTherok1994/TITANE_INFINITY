@@ -1,10 +1,12 @@
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 //   TITANE∞ v14 — MOCK COMMANDS
 //   Stubs pour développement frontend-only
-// ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════
 
 use serde_json::json;
 use crate::utils::AppResult;
+use crate::security::permissions::Role;
+use crate::security::permission_guard::PERMISSION_GUARD;
 
 // ═══════════════════════════════════════════════════════════════
 // HELIOS - System Monitoring
@@ -80,6 +82,11 @@ pub async fn memory_get_state() -> AppResult<serde_json::Value> {
 
 #[tauri::command]
 pub async fn write_snapshot(_snapshot: serde_json::Value) -> AppResult<()> {
+    // ✅ v∞ Permission check (SYSTEM level required)
+    PERMISSION_GUARD
+        .require("snapshot_write", Role::System, "write_snapshot")
+        .await?;
+
     log::info!("Mock: write_snapshot called");
     Ok(())
 }
@@ -264,6 +271,11 @@ pub async fn singularity_get_cognitive() -> AppResult<serde_json::Value> {
 
 #[tauri::command]
 pub async fn singularity_get_full_state() -> AppResult<serde_json::Value> {
+    // ✅ v∞ Permission check (SYSTEM level required)
+    PERMISSION_GUARD
+        .require("singularity_read", Role::System, "singularity_get_full_state")
+        .await?;
+
     Ok(json!({
         "physical": {
             "cpu_load": 0.25,
@@ -346,6 +358,11 @@ pub async fn singularity_is_critical() -> AppResult<bool> {
 
 #[tauri::command]
 pub async fn sync_singularity() -> AppResult<()> {
+    // ✅ v∞ Permission check (SYSTEM level required)
+    PERMISSION_GUARD
+        .require("singularity_write", Role::System, "sync_singularity")
+        .await?;
+
     log::info!("Mock: sync_singularity called");
     Ok(())
 }
@@ -770,7 +787,8 @@ pub async fn upload_and_process_file(path: String) -> Result<String, String> {
 pub async fn get_all_files() -> Result<String, String> {
     log::info!("[MEMORY] get_all_files");
     match crate::memory_persistence::get_all_files() {
-        Ok(files) => Ok(serde_json::to_string(&files).unwrap()),
+        Ok(files) => serde_json::to_string(&files)
+            .map_err(|e| format!("Serialization error: {}", e)),
         Err(e) => Err(e),
     }
 }
@@ -780,7 +798,8 @@ pub async fn get_all_files() -> Result<String, String> {
 pub async fn get_files_by_category(category: String) -> Result<String, String> {
     log::info!("[MEMORY] get_files_by_category: {}", category);
     match crate::memory_persistence::get_files_by_category(&category) {
-        Ok(files) => Ok(serde_json::to_string(&files).unwrap()),
+        Ok(files) => serde_json::to_string(&files)
+            .map_err(|e| format!("Serialization error: {}", e)),
         Err(e) => Err(e),
     }
 }

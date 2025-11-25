@@ -26,6 +26,7 @@ import { CompactXPBar } from './components/experience/CompactXPBar';
 import { XPBar } from './components/experience/XPBar'; // ✨ v∞.D4 - Barre XP
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
+import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
 
 /**
  * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT
@@ -86,6 +87,10 @@ import {
 // Performance Test Page
 import { PerformanceTest } from './pages/PerformanceTest';
 
+// v∞ Super-Prompt N6/K8 - Time Navigation & Governance
+import { TimeNavigator } from './pages/TimeNavigator';
+import { SystemGovernance } from './pages/SystemGovernance';
+
 /**
  * ═══════════════════════════════════════════════════════════════
  * APP ROUTER - Composant interne avec accès au router + Living Engines
@@ -98,6 +103,17 @@ const AppRouter: React.FC = () => {
   // Use Singularity State instead of local state
   const sidebarCollapsed = useSingularityState((s) => s.context.sidebarCollapsed);
   const toggleSidebar = useSingularityState((s) => s.toggleSidebar);
+
+  // ✨ v∞ - Démarrer Auto-Audit Engine au chargement
+  useEffect(() => {
+    console.log('🔍 [AUTO-AUDIT] Starting automatic audits...');
+    autoAuditEngine.start();
+
+    return () => {
+      console.log('🛑 [AUTO-AUDIT] Stopping audits...');
+      autoAuditEngine.stop();
+    };
+  }, []);
 
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
@@ -120,6 +136,8 @@ const AppRouter: React.FC = () => {
     { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
     { id: '/progression', label: 'Progression', icon: '⚡', badge: 'NEW' },
     { id: '/design-system', label: 'Design System', icon: '🎨', badge: 'v17.1' },
+    { id: '/time-navigator', label: 'Time Navigator', icon: '⏱️', badge: 'v∞' },
+    { id: '/governance', label: 'Governance', icon: '⚖️', badge: 'v∞' },
     { id: '/helios', label: 'Helios', icon: '☀️' },
     { id: '/nexus', label: 'Nexus', icon: '🔗' },
     { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
@@ -194,6 +212,10 @@ const AppRouter: React.FC = () => {
         <Route path="/progression" element={<ProgressionPage />} />
         <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
         <Route path="/design-system" element={<DesignSystemPage />} />
+
+        {/* v∞ Super-Prompt N6/K8 - Time Navigation & Governance */}
+        <Route path="/time-navigator" element={<TimeNavigator />} />
+        <Route path="/governance" element={<SystemGovernance />} />
 
         {/* v14: SingularityState Monitor */}
         <Route path="/singularity" element={<SingularityMonitor />} />
