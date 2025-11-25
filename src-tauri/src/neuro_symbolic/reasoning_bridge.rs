@@ -36,8 +36,7 @@ impl ReasoningBridge {
         // Fusion hybride
         let hybrid_response = format!(
             "Réponse hybride: {} + Context: {}",
-            ai_reasoning,
-            structural_context
+            ai_reasoning, structural_context
         );
 
         let confidence = 0.87;

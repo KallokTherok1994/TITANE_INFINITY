@@ -49,10 +49,7 @@ impl ContextMapper {
         impact.insert("technical".to_string(), 0.6);
         impact.insert("symbolic".to_string(), 0.7);
 
-        let cross_domain_links = vec![
-            "MemoryCore".to_string(),
-            "CognitiveEngine".to_string(),
-        ];
+        let cross_domain_links = vec!["MemoryCore".to_string(), "CognitiveEngine".to_string()];
 
         let intention_vector = IntentionVector {
             domain: domain.clone(),
@@ -85,7 +82,8 @@ impl ContextMapper {
             "Technical"
         } else {
             "General"
-        }.to_string();
+        }
+        .to_string();
 
         let importance = if query_lower.contains("critical") || query_lower.contains("urgent") {
             0.95

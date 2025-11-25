@@ -45,25 +45,25 @@ lazy_static = "1.4"
 flate2 = "1.0"
 
 # Super-Prompts P-U - Phases 5-10 (Node-Cluster, Knowledge, HyperVision, Création, Introspection, Évolution)
-walkdir = "2.4"  # Phase 9: Introspection filesystem traversal
+walkdir = "2.4" # Phase 9: Introspection filesystem traversal
 
 [features]
 default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]
-mock = []  # Mock backend mode for frontend-only development
-full = []  # Full backend mode with all real implementations
+mock = []                                   # Mock backend mode for frontend-only development
+full = []                                   # Full backend mode with all real implementations
 
 [profile.dev]
 # ═══════════════════════════════════════════════════════════════
 # CPU OPTIMIZATION: Reduced compilation time in development
 # ═══════════════════════════════════════════════════════════════
-opt-level = 1          # Light optimization (vs 0 default) → faster execution
-debug = false          # Disable debug symbols → 50% faster compilation
-incremental = true     # Faster rebuilds
+opt-level = 1      # Light optimization (vs 0 default) → faster execution
+debug = false      # Disable debug symbols → 50% faster compilation
+incremental = true # Faster rebuilds
 
 [profile.release]
 panic = "abort"
 codegen-units = 1
 lto = true
 opt-level = "z"
-strip = "none"  # Required for Tauri bundler to inject __TAURI_BUNDLE_TYPE
+strip = "none"    # Required for Tauri bundler to inject __TAURI_BUNDLE_TYPE

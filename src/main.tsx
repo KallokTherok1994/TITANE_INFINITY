@@ -10,7 +10,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './styles/titane-design-system-v24.css'; // 🔩 Design System v24 : Métallique Unifié
+import './design-system/titane-v14.css'; // 🔩 Design System v14 : Tokens centralisés + Monochrome Métallique
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles
 import './pages/styles.css';
 

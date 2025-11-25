@@ -4,11 +4,11 @@
 // Pont unified pour APIs externes: Gemini, Ollama, GitHub, etc.
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use tauri::State;
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -28,7 +28,7 @@ pub struct ApiConfig {
 pub struct ApiRequest {
     pub api_name: String,
     pub endpoint: String,
-    pub method: String,            // GET|POST|PUT|DELETE
+    pub method: String, // GET|POST|PUT|DELETE
     pub headers: Option<HashMap<String, String>>,
     pub body: Option<String>,
     pub query_params: Option<HashMap<String, String>>,
@@ -120,7 +120,10 @@ fn initialize_default_apis(state: &ApiBridgeState) {
             api_key: None,
             headers: {
                 let mut h = HashMap::new();
-                h.insert("Accept".to_string(), "application/vnd.github+json".to_string());
+                h.insert(
+                    "Accept".to_string(),
+                    "application/vnd.github+json".to_string(),
+                );
                 h
             },
             timeout_ms: 10000,
@@ -142,7 +145,10 @@ pub async fn api_request(
 ) -> Result<ApiResponse, String> {
     let start = crate::core::utils::now_ms();
 
-    println!("[API_BRIDGE] {} {} /{}", request.method, request.api_name, request.endpoint);
+    println!(
+        "[API_BRIDGE] {} {} /{}",
+        request.method, request.api_name, request.endpoint
+    );
 
     // Récupérer config API
     let config = {

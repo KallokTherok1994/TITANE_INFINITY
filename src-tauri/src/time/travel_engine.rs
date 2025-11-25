@@ -69,11 +69,12 @@ impl TravelEngine {
 
         // Charger index
         let index_path = base_path.join("index.json");
-        let index = SnapshotIndex::load(&index_path)
-            .await
-            .unwrap_or_default();
+        let index = SnapshotIndex::load(&index_path).await.unwrap_or_default();
 
-        log::info!("✅ TravelEngine initialized: {} snapshots", index.snapshots.len());
+        log::info!(
+            "✅ TravelEngine initialized: {} snapshots",
+            index.snapshots.len()
+        );
 
         Ok(Self {
             ram_cache: Arc::new(RwLock::new(VecDeque::new())),
@@ -97,7 +98,8 @@ impl TravelEngine {
         let compressed = self.compress(&data).await?;
 
         // Chiffrer
-        let encrypted = self.crypto
+        let encrypted = self
+            .crypto
             .encrypt(&compressed)
             .map_err(|e| TravelError::DecryptionFailed(e.to_string()))?;
 
@@ -149,7 +151,9 @@ impl TravelEngine {
         self.verify_snapshot(&snapshot).await?;
 
         // Déchiffrer et décompresser
-        let data = self.decrypt_and_decompress(&snapshot.encrypted_data).await?;
+        let data = self
+            .decrypt_and_decompress(&snapshot.encrypted_data)
+            .await?;
 
         // Ajouter au cache RAM pour futurs accès rapides
         let mut cache = self.ram_cache.write().await;
@@ -239,7 +243,8 @@ impl TravelEngine {
     /// Déchiffrer et décompresser
     async fn decrypt_and_decompress(&self, encrypted: &[u8]) -> Result<Vec<u8>, TravelError> {
         // Déchiffrer
-        let compressed = self.crypto
+        let compressed = self
+            .crypto
             .decrypt(encrypted)
             .map_err(|e| TravelError::DecryptionFailed(e.to_string()))?;
 
@@ -279,8 +284,7 @@ impl TravelEngine {
             .await
             .map_err(|e| TravelError::IoError(e.to_string()))?;
 
-        serde_json::from_slice(&data)
-            .map_err(|e| TravelError::SerializationError(e.to_string()))
+        serde_json::from_slice(&data).map_err(|e| TravelError::SerializationError(e.to_string()))
     }
 
     /// Vérifier signature snapshot
@@ -294,10 +298,7 @@ impl TravelEngine {
     /// Sauvegarder index
     async fn save_index(&self, index: &SnapshotIndex) -> Result<(), TravelError> {
         let path = self.base_path.join("index.json");
-        index
-            .save(&path)
-            .await
-            .map_err(TravelError::IoError)
+        index.save(&path).await.map_err(TravelError::IoError)
     }
 
     /// Obtenir chemin base

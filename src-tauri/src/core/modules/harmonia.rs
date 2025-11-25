@@ -3,8 +3,8 @@
 //   System harmony and balance management
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::*;
 use crate::core::state::SingularityState;
+use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
 /// Harmonia Module - Harmony and balance

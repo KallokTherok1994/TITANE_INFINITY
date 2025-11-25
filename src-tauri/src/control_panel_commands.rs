@@ -1,3 +1,5 @@
+use serde::{Deserialize, Serialize};
+use std::sync::Mutex;
 /**
  * TITANE∞ OS - Commandes Tauri Control Panel
  * Backend handlers pour toutes les sections du Control Panel
@@ -5,8 +7,6 @@
  * © 2025 Humain Total / Kevin Thibault
  */
 use tauri::State;
-use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
 
 // ══════════════════════════════════════════════════════════
 // STRUCTURES DE DONNÉES
@@ -24,7 +24,7 @@ pub struct SystemInfo {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DesignSystemConfig {
-    pub mode: String, // "light", "dark", "auto"
+    pub mode: String,    // "light", "dark", "auto"
     pub density: String, // "compact", "normal", "comfortable"
     pub animations_enabled: bool,
     pub transparency_enabled: bool,

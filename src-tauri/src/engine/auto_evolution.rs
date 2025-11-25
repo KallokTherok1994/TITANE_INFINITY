@@ -4,10 +4,12 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::{
-    types::{EvolutionState, EvolutionReport, EvolutionHistory, RepairResult,
-            HeliosState, NexusState, HarmoniaState, SentinelState},
-    engine::{DiagnosticsEngine, RepairEngine, HealthCheckEngine},
-    utils::{AppResult, log_info, EVOLUTION_MAX_HISTORY},
+    engine::{DiagnosticsEngine, HealthCheckEngine, RepairEngine},
+    types::{
+        EvolutionHistory, EvolutionReport, EvolutionState, HarmoniaState, HeliosState, NexusState,
+        RepairResult, SentinelState,
+    },
+    utils::{log_info, AppResult, EVOLUTION_MAX_HISTORY},
 };
 use chrono::Utc;
 use std::sync::Arc;
@@ -48,7 +50,10 @@ impl AutoEvolutionEngine {
         // 1. Collect state (already done via parameters)
 
         // 2. Diagnose
-        let report = self.diagnostics.diagnose(helios, nexus, harmonia, sentinel).await?;
+        let report = self
+            .diagnostics
+            .diagnose(helios, nexus, harmonia, sentinel)
+            .await?;
 
         // 3. Decide (prioritize recommendations)
         let recommendations = report.prioritized_recommendations();
@@ -68,7 +73,11 @@ impl AutoEvolutionEngine {
     }
 
     /// Record evolution in history
-    async fn record_evolution(&self, report: &EvolutionReport, results: &[RepairResult]) -> AppResult<()> {
+    async fn record_evolution(
+        &self,
+        report: &EvolutionReport,
+        results: &[RepairResult],
+    ) -> AppResult<()> {
         let mut state = self.state.write().await;
 
         state.reports_generated += 1;
@@ -86,7 +95,11 @@ impl AutoEvolutionEngine {
             timestamp: Utc::now().timestamp(),
             report_id: report.id.clone(),
             repairs_applied: results.len(),
-            outcome: if report.has_critical_issues() { "Critical issues found".to_string() } else { "Healthy".to_string() },
+            outcome: if report.has_critical_issues() {
+                "Critical issues found".to_string()
+            } else {
+                "Healthy".to_string()
+            },
         });
 
         // Keep only last N entries
@@ -94,7 +107,13 @@ impl AutoEvolutionEngine {
             state.history.remove(0);
         }
 
-        log_info("Evolution", &format!("Evolution cycle complete - {} repairs applied", results.len()));
+        log_info(
+            "Evolution",
+            &format!(
+                "Evolution cycle complete - {} repairs applied",
+                results.len()
+            ),
+        );
 
         Ok(())
     }
@@ -113,7 +132,9 @@ impl AutoEvolutionEngine {
         harmonia: &HarmoniaState,
         sentinel: &SentinelState,
     ) -> AppResult<crate::types::HealthStatus> {
-        self.health_check.check(helios, nexus, harmonia, sentinel).await
+        self.health_check
+            .check(helios, nexus, harmonia, sentinel)
+            .await
     }
 }
 

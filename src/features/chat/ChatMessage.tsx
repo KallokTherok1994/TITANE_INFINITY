@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Badge } from '../../ui';
 import { colors, spacing, radius, shadows, fontSizes, fontWeights, lineHeights } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -80,6 +81,7 @@ export const ChatMessage = ({
   streaming = false,
   metadata,
 }: ChatMessageProps): JSX.Element => {
+  const { animationConfig } = useAnimation();
   const [displayedContent, setDisplayedContent] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const config = roleConfig[role];
@@ -116,7 +118,7 @@ export const ChatMessage = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: animationConfig.duration }}
       style={{
         display: 'flex',
         flexDirection: 'column',

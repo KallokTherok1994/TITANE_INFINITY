@@ -15,6 +15,7 @@
 
 import { motion } from 'framer-motion';
 import { useExperience } from '../../hooks/useExperience';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // PROPS
@@ -31,6 +32,7 @@ export interface CompactXPBarProps {
 
 export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
   const { totalXp, level, progress, isLoading } = useExperience();
+  const { animationConfig, shouldReduceMotion } = useAnimation();
 
   if (isLoading) {
     return (
@@ -59,11 +61,12 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
         cursor: onClick ? 'pointer' : 'default',
         border: '1px solid rgba(114, 123, 129, 0.2)',
       }}
-      whileHover={onClick ? {
+      whileHover={onClick && !shouldReduceMotion ? {
         background: 'rgba(114, 123, 129, 0.15)',
         borderColor: 'rgba(147, 179, 153, 0.5)',
       } : undefined}
-      whileTap={onClick ? { scale: 0.98 } : undefined}
+      whileTap={onClick && !shouldReduceMotion ? { scale: 0.98 } : undefined}
+      transition={{ duration: animationConfig.duration }}
     >
       {/* Level Badge + Total XP */}
       <div
@@ -135,7 +138,7 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
           }}
           initial={{ width: 0 }}
           animate={{ width: `${Math.min(progress * 100, 100)}%` }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
+          transition={{ duration: animationConfig.skipAnimation ? 0 : Math.max(animationConfig.duration * 3, 0.6), ease: 'easeOut' }}
         />
       </div>
 

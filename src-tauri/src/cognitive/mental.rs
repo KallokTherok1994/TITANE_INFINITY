@@ -57,16 +57,16 @@ pub enum TaskType {
 pub struct CognitiveTask {
     pub id: String,
     pub task_type: TaskType,
-    pub complexity: f32,       // 0.0 → 1.0
-    pub progress: f32,         // 0.0 → 1.0
-    pub mental_load: f32,      // 0.0 → 1.0 (charge actuelle)
-    pub started_at: u64,       // ms since epoch
+    pub complexity: f32,  // 0.0 → 1.0
+    pub progress: f32,    // 0.0 → 1.0
+    pub mental_load: f32, // 0.0 → 1.0 (charge actuelle)
+    pub started_at: u64,  // ms since epoch
     pub interruptions: Vec<InterruptionEvent>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InterruptionEvent {
-    pub timestamp: u64,        // ms since epoch
+    pub timestamp: u64, // ms since epoch
     pub cause: String,
     pub duration_ms: u64,
 }
@@ -94,9 +94,9 @@ impl Default for MentalState {
 /// Charge mentale globale
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MentalCharge {
-    pub current: f32,      // 0.0 → 1.0
-    pub capacity: f32,     // max sustainable
-    pub fatigue: f32,      // 0.0 → 1.0
+    pub current: f32,  // 0.0 → 1.0
+    pub capacity: f32, // max sustainable
+    pub fatigue: f32,  // 0.0 → 1.0
     pub recovery_needed: bool,
     pub history: Vec<f32>, // Dernières minutes (simplifié pour serde)
 }
@@ -135,7 +135,13 @@ impl MentalCharge {
             return 0.0;
         }
 
-        let recent = self.history.iter().rev().take(10).copied().collect::<Vec<_>>();
+        let recent = self
+            .history
+            .iter()
+            .rev()
+            .take(10)
+            .copied()
+            .collect::<Vec<_>>();
         if recent.len() < 2 {
             return 0.0;
         }

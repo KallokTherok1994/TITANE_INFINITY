@@ -1,14 +1,14 @@
 # RUST IMPORTS HARDENING v19.2.1
 
-**Date**: 2025-01-XX  
-**Version**: TITANE∞ v19.2.1  
+**Date**: 2025-01-XX
+**Version**: TITANE∞ v19.2.1
 **Objectif**: Corriger erreur ACL HTTP + Confirmer hardening imports Rust
 
 ---
 
 ## 📋 CONTEXTE
 
-User a signalé un warning potentiel "unused import: `tauri::Manager`" ligne 11 main.rs.  
+User a signalé un warning potentiel "unused import: `tauri::Manager`" ligne 11 main.rs.
 L'analyse révèle que **l'import est déjà correct** (conditionnel debug) mais une **erreur de compilation ACL** existait.
 
 ---
@@ -23,9 +23,9 @@ error: proc macro panicked
 328 |         .run(tauri::generate_context!())
     |              ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-= help: message: failed to resolve ACL: UnknownManifest { 
-    key: "http", 
-    available: "core, dialog" 
+= help: message: failed to resolve ACL: UnknownManifest {
+    key: "http",
+    available: "core, dialog"
 }
 ```
 
@@ -55,9 +55,9 @@ use tauri::Manager; // Only used in debug mode for DevTools auto-open
 }
 ```
 
-✅ **Import conditionnel** `#[cfg(debug_assertions)]`  
-✅ **Usage correct** `.get_webview_window()` (trait Manager)  
-✅ **Commentaires hardening v19.2.0** présents  
+✅ **Import conditionnel** `#[cfg(debug_assertions)]`
+✅ **Usage correct** `.get_webview_window()` (trait Manager)
+✅ **Commentaires hardening v19.2.0** présents
 ✅ **Pas de warning** (import uniquement compilé mode debug)
 
 ---
@@ -66,7 +66,7 @@ use tauri::Manager; // Only used in debug mode for DevTools auto-open
 
 ### Action 1: Retirer permissions HTTP tauri.conf.json
 
-**Fichier**: `src-tauri/tauri.conf.json`  
+**Fichier**: `src-tauri/tauri.conf.json`
 **Ligne 73-74 supprimées**:
 ```diff
              "dialog:default",
@@ -78,7 +78,7 @@ use tauri::Manager; // Only used in debug mode for DevTools auto-open
            ]
 ```
 
-**Justification**: 
+**Justification**:
 - Backend Rust TITANE∞ **n'utilise pas** `tauri-plugin-http` directement
 - Frontend utilise `@tauri-apps/plugin-http` (installé Phase 8) pour httpClient.ts
 - Permissions HTTP frontend suffisent (CSP localhost:11434 + googleapis.com)
@@ -93,7 +93,7 @@ use tauri::Manager; // Only used in debug mode for DevTools auto-open
 $ cargo check
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.93s
 ```
-✅ **0 erreur**  
+✅ **0 erreur**
 ✅ **0 warning**
 
 ### Build Release
@@ -101,7 +101,7 @@ $ cargo check
 $ cargo build --release
     Finished `release` profile [optimized] target(s) in 1m 31s
 ```
-✅ **0 erreur**  
+✅ **0 erreur**
 ✅ **0 warning**
 
 ### Conformité Tauri-Only
@@ -133,9 +133,9 @@ $ cargo build --release
 - **Réalité**: Import déjà conditionnel `#[cfg(debug_assertions)]` (correct), **erreur ACL http** différente
 
 ### Correction Effectuée
-✅ **Retrait permissions HTTP** tauri.conf.json (backend ne les utilise pas)  
-✅ **Compilation réussie** dev + release  
-✅ **0 warning Rust** (import Manager conditionnel correct)  
+✅ **Retrait permissions HTTP** tauri.conf.json (backend ne les utilise pas)
+✅ **Compilation réussie** dev + release
+✅ **0 warning Rust** (import Manager conditionnel correct)
 ✅ **Hardening imports v19.2.0** confirmé propre
 
 ### Garantie Permanente
@@ -162,6 +162,6 @@ Si DevTools auto-open n'est plus souhaité:
 
 ---
 
-**STATUS**: ✅ **RUST IMPORTS 100% HARDENED v19.2.1**  
-**BUILD**: ✅ **RELEASE 0 ERROR 0 WARNING**  
+**STATUS**: ✅ **RUST IMPORTS 100% HARDENED v19.2.1**
+**BUILD**: ✅ **RELEASE 0 ERROR 0 WARNING**
 **CONFORMITÉ**: ✅ **TAURI-ONLY STRICT**

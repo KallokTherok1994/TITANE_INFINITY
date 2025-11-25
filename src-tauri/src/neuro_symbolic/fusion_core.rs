@@ -49,12 +49,12 @@ impl FusionCore {
             .as_secs();
 
         // Calcul de la force neuronale
-        let neuronal_strength = self.neuronal_data.values().sum::<f32>()
-            / self.neuronal_data.len().max(1) as f32;
+        let neuronal_strength =
+            self.neuronal_data.values().sum::<f32>() / self.neuronal_data.len().max(1) as f32;
 
         // Calcul de la force symbolique
-        let symbolic_strength = self.symbolic_data.values().sum::<f32>()
-            / self.symbolic_data.len().max(1) as f32;
+        let symbolic_strength =
+            self.symbolic_data.values().sum::<f32>() / self.symbolic_data.len().max(1) as f32;
 
         // Fusion progressive
         self.fusion_level = (neuronal_strength + symbolic_strength) / 2.0;
@@ -71,7 +71,10 @@ impl FusionCore {
         };
 
         let insights = vec![
-            format!("Fusion neuronale-symbolique: {:.1}%", self.fusion_level * 100.0),
+            format!(
+                "Fusion neuronale-symbolique: {:.1}%",
+                self.fusion_level * 100.0
+            ),
             format!("Cohérence: {:.1}%", coherence * 100.0),
             format!("{} connexions actives", active_connections),
         ];

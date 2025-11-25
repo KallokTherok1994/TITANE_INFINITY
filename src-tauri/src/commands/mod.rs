@@ -3,18 +3,22 @@
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-pub mod meta_mode;
-pub mod exp_fusion;
-pub mod evolution;
 pub mod devtools;
-pub mod engine_v14;  // ✅ NEW: SingularityEngine v14 commands
+pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
+pub mod engine_v14; // ✅ NEW: SingularityEngine v14 commands
+pub mod evolution;
+pub mod evolution_v14; // ✅ Phase 6: Auto-Evolution v14 commands
+pub mod exp_fusion;
+pub mod harmonia_commands;
 pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
-pub mod harmonia_commands; // ✅ v14 Phase 5: Harmonia Engine
+pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
 
 // Re-export engine commands
+pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
 pub use engine_v14::*;
-pub use memory_compactor_commands::*;
+pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands
 pub use harmonia_commands::*;
+pub use memory_compactor_commands::*;
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;
@@ -85,9 +89,7 @@ pub async fn helios_get_metrics(
 /// # Errors
 /// Returns an error if the state cannot be locked or serialization fails.
 #[tauri::command]
-pub async fn nexus_get_graph(
-    state: State<'_, Arc<Mutex<TitaneCore>>>,
-) -> Result<String, String> {
+pub async fn nexus_get_graph(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🔗 Command: nexus_get_graph");
     let core = state
         .lock()
@@ -190,9 +192,7 @@ pub async fn watchdog_get_logs(
 /// # Errors
 /// Returns an error if the state cannot be locked.
 #[tauri::command]
-pub async fn watchdog_get_data(
-    state: State<'_, Arc<Mutex<TitaneCore>>>,
-) -> Result<String, String> {
+pub async fn watchdog_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🐕 Command: watchdog_get_data");
     let core = state
         .lock()
@@ -221,9 +221,7 @@ pub async fn watchdog_get_data(
 /// # Errors
 /// Returns an error if the state cannot be locked.
 #[tauri::command]
-pub async fn selfheal_get_data(
-    state: State<'_, Arc<Mutex<TitaneCore>>>,
-) -> Result<String, String> {
+pub async fn selfheal_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🔧 Command: selfheal_get_data");
     let core = state
         .lock()
@@ -252,9 +250,7 @@ pub async fn selfheal_get_data(
 /// # Errors
 /// Returns an error if the state cannot be locked.
 #[tauri::command]
-pub async fn adaptive_get_data(
-    state: State<'_, Arc<Mutex<TitaneCore>>>,
-) -> Result<String, String> {
+pub async fn adaptive_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🧠 Command: adaptive_get_data");
     let core = state
         .lock()

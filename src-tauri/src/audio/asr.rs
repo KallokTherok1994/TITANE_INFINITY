@@ -5,8 +5,8 @@
 
 use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
-use std::time::Duration;
 use std::path::Path;
+use std::time::Duration;
 
 #[derive(Debug, Clone, Copy)]
 pub enum ASRProvider {
@@ -78,14 +78,14 @@ impl ASREngine {
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
         // Use ShellGuard helper for Whisper
-        let result = self.shell_guard
+        let result = self
+            .shell_guard
             .execute_asr_whisper(&temp_path)
             .map_err(|e| AudioError::ProcessingError(e))?;
 
         // Read transcription from output
         let txt_path = temp_path.with_extension("txt");
-        let transcription = std::fs::read_to_string(txt_path)
-            .unwrap_or(result); // Fallback to stdout if no file
+        let transcription = std::fs::read_to_string(txt_path).unwrap_or(result); // Fallback to stdout if no file
 
         Ok(transcription.trim().to_string())
     }
@@ -96,15 +96,17 @@ impl ASREngine {
         std::fs::write(&temp_path, audio_data)
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
-        let path_str = temp_path.to_str()
+        let path_str = temp_path
+            .to_str()
             .ok_or_else(|| AudioError::ProcessingError("Invalid temp path".into()))?;
 
         // NOTE: vosk-transcriber NOT in default whitelist, will fail unless added
-        let output = self.shell_guard
-            .execute_verified("vosk-transcriber", &[
-                "-i", path_str,
-                "-m", "/usr/share/vosk/models/vosk-model-fr"
-            ])
+        let output = self
+            .shell_guard
+            .execute_verified(
+                "vosk-transcriber",
+                &["-i", path_str, "-m", "/usr/share/vosk/models/vosk-model-fr"],
+            )
             .map_err(|e| AudioError::ProcessingError(e))?;
 
         Ok(output.trim().to_string())

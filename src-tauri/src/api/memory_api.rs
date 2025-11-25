@@ -6,9 +6,8 @@
 use crate::{
     core::MemoryCore,
     types::{
-        MemoryState, Snapshot, LogEntry, TimelineEvent,
-        ProjectSummary, DecisionSummary, KnowledgeEntry, RitualInfo,
-        TimelineEntry, ChatInteraction,
+        ChatInteraction, DecisionSummary, KnowledgeEntry, LogEntry, MemoryState, ProjectSummary,
+        RitualInfo, Snapshot, TimelineEntry, TimelineEvent,
     },
     utils::AppResult,
 };
@@ -32,10 +31,7 @@ pub async fn read_snapshot(memory: tauri::State<'_, MemoryCore>) -> AppResult<Op
 }
 
 #[tauri::command]
-pub async fn write_log(
-    memory: tauri::State<'_, MemoryCore>,
-    log: LogEntry,
-) -> AppResult<()> {
+pub async fn write_log(memory: tauri::State<'_, MemoryCore>, log: LogEntry) -> AppResult<()> {
     memory.write_log(log).await
 }
 
@@ -112,4 +108,3 @@ pub async fn memory_save_chat_interaction(
 ) -> AppResult<()> {
     memory.save_chat_interaction(interaction).await
 }
-

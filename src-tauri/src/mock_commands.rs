@@ -3,10 +3,10 @@
 //   Stubs pour développement frontend-only
 // ═══════════════════════════════════════════════════════════════════
 
-use serde_json::json;
-use crate::utils::AppResult;
-use crate::security::permissions::Role;
 use crate::security::permission_guard::PERMISSION_GUARD;
+use crate::security::permissions::Role;
+use crate::utils::AppResult;
+use serde_json::json;
 
 // ═══════════════════════════════════════════════════════════════
 // HELIOS - System Monitoring
@@ -120,7 +120,7 @@ pub async fn read_logs(_count: usize) -> AppResult<Vec<serde_json::Value>> {
             "timestamp": chrono::Utc::now().timestamp_millis() - 60000,
             "message": "Mock log entry 2",
             "level": "debug"
-        })
+        }),
     ])
 }
 
@@ -132,58 +132,48 @@ pub async fn add_timeline_event(_event: serde_json::Value) -> AppResult<()> {
 
 #[tauri::command]
 pub async fn get_timeline(_limit: usize) -> AppResult<Vec<serde_json::Value>> {
-    Ok(vec![
-        json!({
-            "id": "event_001",
-            "timestamp": chrono::Utc::now().timestamp_millis(),
-            "event_type": "SystemStart",
-            "description": "Mock timeline event"
-        })
-    ])
+    Ok(vec![json!({
+        "id": "event_001",
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+        "event_type": "SystemStart",
+        "description": "Mock timeline event"
+    })])
 }
 
 #[tauri::command]
 pub async fn get_active_projects() -> AppResult<Vec<serde_json::Value>> {
-    Ok(vec![
-        json!({
-            "name": "TITANE_INFINITY",
-            "status": "active",
-            "level": 14
-        })
-    ])
+    Ok(vec![json!({
+        "name": "TITANE_INFINITY",
+        "status": "active",
+        "level": 14
+    })])
 }
 
 #[tauri::command]
 pub async fn get_recent_decisions(_count: usize) -> AppResult<Vec<serde_json::Value>> {
-    Ok(vec![
-        json!({
-            "id": "decision_001",
-            "timestamp": chrono::Utc::now().timestamp_millis(),
-            "description": "Mock decision"
-        })
-    ])
+    Ok(vec![json!({
+        "id": "decision_001",
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+        "description": "Mock decision"
+    })])
 }
 
 #[tauri::command]
 pub async fn get_knowledge() -> AppResult<Vec<serde_json::Value>> {
-    Ok(vec![
-        json!({
-            "id": "knowledge_001",
-            "category": "system",
-            "content": "Mock knowledge entry"
-        })
-    ])
+    Ok(vec![json!({
+        "id": "knowledge_001",
+        "category": "system",
+        "content": "Mock knowledge entry"
+    })])
 }
 
 #[tauri::command]
 pub async fn get_active_rituals() -> AppResult<Vec<serde_json::Value>> {
-    Ok(vec![
-        json!({
-            "id": "ritual_001",
-            "name": "Daily Sync",
-            "frequency": "daily"
-        })
-    ])
+    Ok(vec![json!({
+        "id": "ritual_001",
+        "name": "Daily Sync",
+        "frequency": "daily"
+    })])
 }
 
 #[tauri::command]
@@ -273,7 +263,11 @@ pub async fn singularity_get_cognitive() -> AppResult<serde_json::Value> {
 pub async fn singularity_get_full_state() -> AppResult<serde_json::Value> {
     // ✅ v∞ Permission check (SYSTEM level required)
     PERMISSION_GUARD
-        .require("singularity_read", Role::System, "singularity_get_full_state")
+        .require(
+            "singularity_read",
+            Role::System,
+            "singularity_get_full_state",
+        )
         .await?;
 
     Ok(json!({
@@ -410,14 +404,12 @@ pub async fn singularity_get_meta() -> AppResult<serde_json::Value> {
 
 #[tauri::command]
 pub async fn get_logs(_filter: Option<String>) -> AppResult<Vec<serde_json::Value>> {
-    Ok(vec![
-        json!({
-            "timestamp": chrono::Utc::now().timestamp_millis(),
-            "level": "INFO",
-            "message": "Mock backend active",
-            "target": "mock_commands"
-        })
-    ])
+    Ok(vec![json!({
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+        "level": "INFO",
+        "message": "Mock backend active",
+        "target": "mock_commands"
+    })])
 }
 
 #[tauri::command]
@@ -450,7 +442,10 @@ pub async fn experience_get_state() -> AppResult<Option<serde_json::Value>> {
 
 #[tauri::command]
 pub async fn experience_update_state(state: serde_json::Value) -> AppResult<()> {
-    log::info!("Mock: experience_update_state called with state: {:?}", state);
+    log::info!(
+        "Mock: experience_update_state called with state: {:?}",
+        state
+    );
     // In mock mode, we just log. Real impl would save to JSON file.
     Ok(())
 }
@@ -502,10 +497,13 @@ pub async fn import_file(path: String) -> AppResult<String> {
         Ok(content) => {
             log::info!("File read successfully: {} bytes", content.len());
             Ok(content)
-        },
+        }
         Err(e) => {
             log::error!("Failed to read file {}: {}", path, e);
-            Err(crate::utils::AppError::Io(format!("Failed to read file: {}", e)))
+            Err(crate::utils::AppError::Io(format!(
+                "Failed to read file: {}",
+                e
+            )))
         }
     }
 }
@@ -564,7 +562,9 @@ pub struct MockProviderStatus {
 #[tauri::command]
 pub async fn chat_generate(input: String) -> Result<String, String> {
     // Permission check: IA role required
-    PERMISSION_GUARD.require("chat_generate", Role::Ia, "chat_generate").await?;
+    PERMISSION_GUARD
+        .require("chat_generate", Role::Ia, "chat_generate")
+        .await?;
 
     log::info!("[CHAT GENERATE] Received: {}", input);
 
@@ -572,8 +572,9 @@ pub async fn chat_generate(input: String) -> Result<String, String> {
 
     // Simulate AI processing delay
     tokio::time::sleep(tokio::time::Duration::from_millis(
-        300 + (rand::random::<u64>() % 500)
-    )).await;
+        300 + (rand::random::<u64>() % 500),
+    ))
+    .await;
 
     // Generate response
     let response_content = generate_mock_response(&input);
@@ -601,8 +602,9 @@ pub async fn chat_send_message(request: MockChatRequest) -> AppResult<MockChatRe
 
     // Simulate AI processing delay (200-800ms)
     tokio::time::sleep(tokio::time::Duration::from_millis(
-        400 + (rand::random::<u64>() % 400)
-    )).await;
+        400 + (rand::random::<u64>() % 400),
+    ))
+    .await;
 
     // Determine which mock provider to use based on request
     let (provider, model) = match request.provider.as_str() {
@@ -708,7 +710,9 @@ pub async fn chat_set_gemini_key(api_key: String) -> AppResult<()> {
 #[tauri::command]
 pub async fn chat_stream_message(_request: MockChatRequest) -> AppResult<String> {
     log::info!("[MOCK CHAT] chat_stream_message: streaming not implemented in mock mode");
-    Err(crate::utils::AppError::Io("Streaming not supported in mock mode".to_string()))
+    Err(crate::utils::AppError::Io(
+        "Streaming not supported in mock mode".to_string(),
+    ))
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -776,7 +780,12 @@ pub async fn upload_and_process_file(path: String) -> Result<String, String> {
         "success": true
     });
 
-    log::info!("[FILE UPLOAD] ✅ Processed: {} ({} lines, {} words)", filename, lines, words);
+    log::info!(
+        "[FILE UPLOAD] ✅ Processed: {} ({} lines, {} words)",
+        filename,
+        lines,
+        words
+    );
 
     Ok(response.to_string())
 }
@@ -790,8 +799,9 @@ pub async fn upload_and_process_file(path: String) -> Result<String, String> {
 pub async fn get_all_files() -> Result<String, String> {
     log::info!("[MEMORY] get_all_files");
     match crate::memory_persistence::get_all_files() {
-        Ok(files) => serde_json::to_string(&files)
-            .map_err(|e| format!("Serialization error: {}", e)),
+        Ok(files) => {
+            serde_json::to_string(&files).map_err(|e| format!("Serialization error: {}", e))
+        }
         Err(e) => Err(e),
     }
 }
@@ -801,8 +811,9 @@ pub async fn get_all_files() -> Result<String, String> {
 pub async fn get_files_by_category(category: String) -> Result<String, String> {
     log::info!("[MEMORY] get_files_by_category: {}", category);
     match crate::memory_persistence::get_files_by_category(&category) {
-        Ok(files) => serde_json::to_string(&files)
-            .map_err(|e| format!("Serialization error: {}", e)),
+        Ok(files) => {
+            serde_json::to_string(&files).map_err(|e| format!("Serialization error: {}", e))
+        }
         Err(e) => Err(e),
     }
 }

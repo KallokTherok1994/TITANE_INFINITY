@@ -23,7 +23,10 @@ impl LocalTTS {
     pub fn new() -> Self {
         let shell_guard = ShellGuard::new();
         let engine = Self::detect_engine(&shell_guard);
-        Self { engine, shell_guard }
+        Self {
+            engine,
+            shell_guard,
+        }
     }
 
     fn detect_engine(shell_guard: &ShellGuard) -> TTSEngine {
@@ -74,7 +77,8 @@ impl LocalTTS {
         std::fs::write(&temp_path, &request.text)
             .map_err(|e| TTSError::AudioError(e.to_string()))?;
 
-        let path_str = temp_path.to_str()
+        let path_str = temp_path
+            .to_str()
             .ok_or_else(|| TTSError::AudioError("Invalid temp path".into()))?;
 
         self.shell_guard
@@ -87,7 +91,8 @@ impl LocalTTS {
     fn speak_piper(&self, request: &TTSRequest) -> TTSResult<()> {
         // ✅ SECURED: No more sh -c, direct command execution
         let output_path = std::env::temp_dir().join("titane_tts.wav");
-        let output_str = output_path.to_str()
+        let output_str = output_path
+            .to_str()
             .ok_or_else(|| TTSError::AudioError("Invalid output path".into()))?;
 
         // Write text to temp file for piper input
@@ -95,16 +100,22 @@ impl LocalTTS {
         std::fs::write(&input_path, &request.text)
             .map_err(|e| TTSError::AudioError(e.to_string()))?;
 
-        let input_str = input_path.to_str()
+        let input_str = input_path
+            .to_str()
             .ok_or_else(|| TTSError::AudioError("Invalid input path".into()))?;
 
         // Execute piper with input file
         self.shell_guard
-            .execute_verified("piper", &[
-                "--model", "fr_FR-siwis-medium",
-                "--output_file", output_str,
-                input_str
-            ])
+            .execute_verified(
+                "piper",
+                &[
+                    "--model",
+                    "fr_FR-siwis-medium",
+                    "--output_file",
+                    output_str,
+                    input_str,
+                ],
+            )
             .map_err(|e| TTSError::AudioError(e))?;
 
         // Play the generated audio on Linux
@@ -122,11 +133,17 @@ impl LocalTTS {
         // ✅ SECURED: Use ShellGuard (tts command needs to be whitelisted)
         // NOTE: 'tts' is NOT in default whitelist - will fail unless added to policy
         self.shell_guard
-            .execute_verified("tts", &[
-                "--text", &request.text,
-                "--language_idx", "fr",
-                "--out_path", "/tmp/titane_tts.wav"
-            ])
+            .execute_verified(
+                "tts",
+                &[
+                    "--text",
+                    &request.text,
+                    "--language_idx",
+                    "fr",
+                    "--out_path",
+                    "/tmp/titane_tts.wav",
+                ],
+            )
             .map_err(|e| TTSError::AudioError(e))?;
 
         Ok(())

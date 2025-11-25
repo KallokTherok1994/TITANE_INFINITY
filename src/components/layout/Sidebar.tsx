@@ -16,6 +16,7 @@
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { colors, spacing, fontSizes, radius } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -108,6 +109,8 @@ export const Sidebar = ({
   header,
   footer,
 }: SidebarProps): JSX.Element => {
+  const { animationConfig, shouldReduceMotion } = useAnimation();
+
   const handleClick = (item: SidebarItem): void => {
     if (onItemClick) {
       onItemClick(item);
@@ -125,11 +128,12 @@ export const Sidebar = ({
           ...(isActive && itemActiveStyles),
         }}
         onClick={() => handleClick(item)}
-        whileHover={{
+        whileHover={shouldReduceMotion ? undefined : {
           background: colors.rubis.surface.glass,
           paddingLeft: spacing[5],
         }}
-        whileTap={{ scale: 0.98 }}
+        whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+        transition={{ duration: animationConfig.duration }}
       >
         {item.icon && (
           <span style={{ display: 'flex', fontSize: '1.25rem' }}>
@@ -151,7 +155,7 @@ export const Sidebar = ({
   return (
     <div style={sidebarStyles}>
       {header && <div style={headerStyles}>{header}</div>}
-      
+
       <nav style={navStyles}>
         {items.map(item => renderItem(item))}
       </nav>

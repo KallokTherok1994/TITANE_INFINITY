@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::{
-    core::{HeliosCore, NexusCore, HarmoniaCore, SentinelCore},
+    core::{HarmoniaCore, HeliosCore, NexusCore, SentinelCore},
     engine::AutoEvolutionEngine,
     types::{EvolutionReport, EvolutionState, HealthStatus},
     utils::AppResult,
@@ -28,7 +28,12 @@ pub async fn run_evolution(
     let sentinel_state = sentinel.scan(&helios_state).await?;
 
     // Add timeout to prevent hanging (30 seconds)
-    let evolution_future = evolution.evolve(&helios_state, &nexus_state, &harmonia_state, &sentinel_state);
+    let evolution_future = evolution.evolve(
+        &helios_state,
+        &nexus_state,
+        &harmonia_state,
+        &sentinel_state,
+    );
     let result = tokio::time::timeout(Duration::from_secs(30), evolution_future).await;
 
     let report = match result {
@@ -36,14 +41,16 @@ pub async fn run_evolution(
             let duration = crate::core::utils::elapsed_ms(start);
             log::info!("[Perf] Evolution cycle completed in {}ms", duration);
             report
-        },
+        }
         Ok(Err(e)) => {
             log::error!("[Engine] Evolution failed: {}", e);
             return Err(e);
-        },
+        }
         Err(_) => {
             log::error!("[Engine] Evolution timeout after 30s");
-            return Err(crate::types::AppError::Timeout("Evolution cycle exceeded 30s".into()));
+            return Err(crate::types::AppError::Timeout(
+                "Evolution cycle exceeded 30s".into(),
+            ));
         }
     };
 
@@ -70,5 +77,12 @@ pub async fn quick_health_check(
     let harmonia_state = harmonia.balance(&helios_state).await?;
     let sentinel_state = sentinel.scan(&helios_state).await?;
 
-    evolution.quick_health_check(&helios_state, &nexus_state, &harmonia_state, &sentinel_state).await
+    evolution
+        .quick_health_check(
+            &helios_state,
+            &nexus_state,
+            &harmonia_state,
+            &sentinel_state,
+        )
+        .await
 }

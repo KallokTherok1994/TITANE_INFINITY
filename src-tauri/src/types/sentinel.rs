@@ -55,7 +55,7 @@ impl SentinelState {
     /// Add new alert
     pub fn add_alert(&mut self, alert: Alert) {
         self.alerts.push(alert);
-        
+
         // Keep only last 100 alerts
         if self.alerts.len() > 100 {
             self.alerts.remove(0);

@@ -2,7 +2,7 @@
 //   TITANE∞ v14 — COMPAT: Memory module stub
 // ═══════════════════════════════════════════════════════════════
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryEntry {

@@ -172,12 +172,27 @@ impl CenterCoherence {
 /// Recommandations système basées sur état cognitif
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SystemRecommendation {
-    ReduceMentalLoad { reason: String },
-    CheckHeartAlignment { reason: String },
-    PhysicalBreak { duration_secs: u64, reason: String },
-    CenteringExercise { exercise: String },
-    MaintainFlow { message: String },
-    SwitchMode { from_mode: String, to_mode: String, reason: String },
+    ReduceMentalLoad {
+        reason: String,
+    },
+    CheckHeartAlignment {
+        reason: String,
+    },
+    PhysicalBreak {
+        duration_secs: u64,
+        reason: String,
+    },
+    CenteringExercise {
+        exercise: String,
+    },
+    MaintainFlow {
+        message: String,
+    },
+    SwitchMode {
+        from_mode: String,
+        to_mode: String,
+        reason: String,
+    },
 }
 
 #[cfg(test)]
@@ -272,7 +287,9 @@ mod tests {
         state.mental.charge.capacity = 0.8;
 
         let recs = state.generate_recommendations();
-        assert!(recs.iter().any(|r| matches!(r, SystemRecommendation::ReduceMentalLoad { .. })));
+        assert!(recs
+            .iter()
+            .any(|r| matches!(r, SystemRecommendation::ReduceMentalLoad { .. })));
 
         // Flow
         state = CognitiveState::new();
@@ -282,14 +299,18 @@ mod tests {
         state.coherence.global = 0.8;
 
         let recs = state.generate_recommendations();
-        assert!(recs.iter().any(|r| matches!(r, SystemRecommendation::MaintainFlow { .. })));
+        assert!(recs
+            .iter()
+            .any(|r| matches!(r, SystemRecommendation::MaintainFlow { .. })));
 
         // Corps épuisé
         state = CognitiveState::new();
         state.body.energy_level = 0.1;
 
         let recs = state.generate_recommendations();
-        assert!(recs.iter().any(|r| matches!(r, SystemRecommendation::PhysicalBreak { .. })));
+        assert!(recs
+            .iter()
+            .any(|r| matches!(r, SystemRecommendation::PhysicalBreak { .. })));
     }
 
     #[test]

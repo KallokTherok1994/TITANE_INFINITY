@@ -4,12 +4,12 @@
 // Moteur de gestion intelligente de projets + autopilot nocturne
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::State;
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -20,9 +20,9 @@ pub struct Project {
     pub id: String,
     pub name: String,
     pub path: PathBuf,
-    pub project_type: String,      // rust|node|python|mono|other
-    pub status: String,             // active|paused|completed|archived
-    pub priority: u8,               // 1-5
+    pub project_type: String, // rust|node|python|mono|other
+    pub status: String,       // active|paused|completed|archived
+    pub priority: u8,         // 1-5
     pub created_at: u64,
     pub last_opened: u64,
     pub metadata: ProjectMetadata,
@@ -35,7 +35,7 @@ pub struct ProjectMetadata {
     pub dependencies: Vec<String>,
     pub total_files: usize,
     pub total_lines: usize,
-    pub health_score: u8,          // 0-100
+    pub health_score: u8, // 0-100
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -44,8 +44,8 @@ pub struct Task {
     pub project_id: String,
     pub title: String,
     pub description: String,
-    pub status: String,            // todo|in_progress|blocked|done
-    pub priority: u8,              // 1-5
+    pub status: String, // todo|in_progress|blocked|done
+    pub priority: u8,   // 1-5
     pub estimated_hours: f32,
     pub dependencies: Vec<String>, // IDs autres tasks
     pub assigned_to: Option<String>,
@@ -55,12 +55,12 @@ pub struct Task {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AutoPilotSuggestion {
-    pub suggestion_type: String,   // optimize|refactor|test|doc|fix
+    pub suggestion_type: String, // optimize|refactor|test|doc|fix
     pub project_id: String,
     pub title: String,
     pub description: String,
     pub priority: u8,
-    pub estimated_impact: f32,     // 0.0-1.0
+    pub estimated_impact: f32, // 0.0-1.0
     pub auto_executable: bool,
 }
 
@@ -333,7 +333,8 @@ pub fn task_list(
     };
 
     let filtered: Vec<Task> = if let Some(pid) = project_id {
-        tasks.iter()
+        tasks
+            .iter()
             .filter(|t| t.project_id == pid)
             .cloned()
             .collect()
@@ -372,7 +373,10 @@ pub fn task_update_status(
 }
 
 #[tauri::command]
-pub fn task_delete(task_id: String, state: State<ProjectAutoPilotState>) -> Result<String, TAPIError> {
+pub fn task_delete(
+    task_id: String,
+    state: State<ProjectAutoPilotState>,
+) -> Result<String, TAPIError> {
     let mut tasks = match state.tasks.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -511,7 +515,10 @@ pub fn autopilot_get_suggestions(
 }
 
 #[tauri::command]
-pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> Result<String, TAPIError> {
+pub fn autopilot_enable(
+    enabled: bool,
+    state: State<ProjectAutoPilotState>,
+) -> Result<String, TAPIError> {
     let mut autopilot_enabled = match state.autopilot_enabled.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -521,7 +528,10 @@ pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> R
     };
     *autopilot_enabled = enabled;
 
-    println!("[AUTOPILOT] {}", if enabled { "Activé" } else { "Désactivé" });
+    println!(
+        "[AUTOPILOT] {}",
+        if enabled { "Activé" } else { "Désactivé" }
+    );
 
     Ok(if enabled {
         "AutoPilot activé".to_string()

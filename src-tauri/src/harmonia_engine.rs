@@ -85,7 +85,12 @@ impl CpuMonitor {
             0.0
         };
         let core_count = self.system.cpus().len();
-        let per_core_usage: Vec<f32> = self.system.cpus().iter().map(|cpu| cpu.cpu_usage()).collect();
+        let per_core_usage: Vec<f32> = self
+            .system
+            .cpus()
+            .iter()
+            .map(|cpu| cpu.cpu_usage())
+            .collect();
 
         // Historique
         self.history.push(global_usage);
@@ -154,9 +159,9 @@ impl CpuMonitor {
         };
 
         match self.current_mode {
-            HarmoniaMode::Normal => 100,      // 100ms (réactif)
-            HarmoniaMode::Balanced => 250,    // 250ms (équilibré)
-            HarmoniaMode::Throttled => 500,   // 500ms (throttlé)
+            HarmoniaMode::Normal => 100,    // 100ms (réactif)
+            HarmoniaMode::Balanced => 250,  // 250ms (équilibré)
+            HarmoniaMode::Throttled => 500, // 500ms (throttlé)
         }
     }
 }
@@ -203,6 +208,9 @@ mod tests {
         let mode = monitor.get_mode();
 
         // Mode doit être valide
-        assert!(matches!(mode, HarmoniaMode::Normal | HarmoniaMode::Balanced | HarmoniaMode::Throttled));
+        assert!(matches!(
+            mode,
+            HarmoniaMode::Normal | HarmoniaMode::Balanced | HarmoniaMode::Throttled
+        ));
     }
 }

@@ -127,8 +127,14 @@ impl PredictorEngine {
             });
         }
 
-        let critical_count = issues.iter().filter(|i| matches!(i.severity, Severity::Critical)).count();
-        let high_count = issues.iter().filter(|i| matches!(i.severity, Severity::High)).count();
+        let critical_count = issues
+            .iter()
+            .filter(|i| matches!(i.severity, Severity::Critical))
+            .count();
+        let high_count = issues
+            .iter()
+            .filter(|i| matches!(i.severity, Severity::High))
+            .count();
 
         PredictionReport {
             timestamp,
@@ -157,9 +163,7 @@ impl PredictorEngine {
     }
 
     pub fn track_trend(&mut self, metric: String, value: f32) {
-        self.trends.entry(metric)
-            .or_default()
-            .push(value);
+        self.trends.entry(metric).or_default().push(value);
     }
 }
 

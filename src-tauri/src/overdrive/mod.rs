@@ -4,18 +4,18 @@
 // Module principal exportant tous les sous-modules Overdrive
 // ═══════════════════════════════════════════════════════════════════════════
 
-pub mod auto_heal;
-pub mod voice_engine;
-pub mod chat_orchestrator;
-pub mod memory_engine;
-pub mod memory_compactor;
-pub mod semantic_kernel;
-pub mod exp_engine;
-pub mod project_autopilot;
 pub mod api_bridge;
+pub mod auto_heal;
+pub mod chat_orchestrator;
+pub mod exp_engine;
+pub mod memory_compactor;
+pub mod memory_engine;
+pub mod project_autopilot;
+pub mod semantic_kernel;
+pub mod voice_engine;
 
-use tauri::State;
 use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use tauri::State;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATE GLOBAL OVERDRIVE
@@ -91,7 +91,9 @@ pub fn init() -> OverdriveState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn overdrive_health_check(state: State<OverdriveState>) -> Result<OverdriveHealthReport, TAPIError> {
+pub fn overdrive_health_check(
+    state: State<OverdriveState>,
+) -> Result<OverdriveHealthReport, TAPIError> {
     println!("[OVERDRIVE] Health check global...");
 
     let report = OverdriveHealthReport {

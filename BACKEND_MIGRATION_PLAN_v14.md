@@ -1,7 +1,7 @@
 # 🚀 TITANE∞ v14 — PLAN DE MIGRATION BACKEND COMPLET
 
-**Date**: 2025-11-25  
-**Version cible**: v14.0.0 Backend Unified  
+**Date**: 2025-11-25
+**Version cible**: v14.0.0 Backend Unified
 **Status**: PLANIFICATION COMPLÈTE 9 PHASES
 
 ---
@@ -73,7 +73,7 @@ Nettoyer `lib.rs` pour préparer réactivation progressive modules réels.
    // MOCK MODE (default)
    #[cfg(feature = "mock")]
    pub mod mock_commands;
-   
+
    // FULL BACKEND
    #[cfg(not(feature = "mock"))]
    pub mod commands;  // Real commands (ai_chat, etc.)
@@ -92,17 +92,17 @@ Nettoyer `lib.rs` pour préparer réactivation progressive modules réels.
    pub mod utils;
    pub mod types;
    pub mod shared;
-   
+
    // MOCK MODE vs FULL MODE
    #[cfg(feature = "mock")]
    pub mod mock_commands;
-   
+
    #[cfg(not(feature = "mock"))]
    pub mod commands;  // ai_chat, engine_v14, etc.
-   
+
    #[cfg(not(feature = "mock"))]
    pub mod api;       // helios_api, memory_api, engine_api, system_api
-   
+
    // Modules always active
    pub mod security;
    pub mod memory_compactor;
@@ -165,7 +165,7 @@ Adapter modules legacy v12 pour utiliser architecture v14 (SingularityEngine + m
    pub struct CoreCollection {
        engine: Arc<Mutex<SingularityEngine>>,
    }
-   
+
    impl CoreCollection {
        pub fn helios(&self) -> Arc<Mutex<HeliosCore>> { /* adapter */ }
        pub fn nexus(&self) -> Arc<Mutex<NexusCore>> { /* adapter */ }
@@ -312,7 +312,7 @@ Corriger `engine/` et `overdrive/` pour garantir async safety + alignment v14.
    // ❌ MAUVAIS
    let guard = mutex.lock().unwrap();
    some_async_fn().await;  // Guard still held!
-   
+
    // ✅ BON
    let data = {
        let guard = mutex.lock().unwrap();
@@ -344,29 +344,29 @@ Unifier `api/` et `commands/` pour exposer API officielle v14.
    // api/mod.rs
    pub mod handlers_v14;  // Nouvelles APIs
    pub mod legacy;        // Anciennes APIs (deprecated)
-   
+
    pub fn get_handlers() -> impl Fn(tauri::Invoke) {
        tauri::generate_handler![
            // SingularityEngine v14
            commands::engine_v14::singularity_init,
            commands::engine_v14::singularity_get_state,
            commands::engine_v14::singularity_tick,
-           
+
            // Chat IA v14
            commands::ai_chat::ai_query,
            commands::ai_chat::ai_stream,
-           
+
            // Memory v14
            api::memory_api::memory_get_conversations,
            api::memory_api::memory_save_entry,
-           
+
            // System v14
            api::system_api::system_get_vitals,
            api::system_api::system_get_health,
-           
+
            // AutoEvolution
            commands::evolution::run_auto_evolution,
-           
+
            // Legacy (deprecated)
            commands::meta_mode::meta_mode_activate,
        ]

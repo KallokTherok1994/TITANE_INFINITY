@@ -60,11 +60,7 @@ pub struct Snapshot {
 
 impl Snapshot {
     /// Créer nouveau snapshot
-    pub fn new(
-        data: Vec<u8>,
-        context: SnapshotContext,
-        description: String,
-    ) -> Self {
+    pub fn new(data: Vec<u8>, context: SnapshotContext, description: String) -> Self {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map(|d| d.as_secs())
@@ -111,14 +107,18 @@ impl Snapshot {
 
     /// Vérifier signature
     pub fn verify_signature(&self, public_key: &[u8]) -> Result<(), String> {
-        use ed25519_dalek::{VerifyingKey, Signature, Verifier};
+        use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 
-        let public_array: [u8; 32] = public_key.try_into()
+        let public_array: [u8; 32] = public_key
+            .try_into()
             .map_err(|_| "Invalid public key length".to_string())?;
         let public = VerifyingKey::from_bytes(&public_array)
             .map_err(|e| format!("Invalid public key: {}", e))?;
 
-        let sig_array: [u8; 64] = self.signature.as_slice().try_into()
+        let sig_array: [u8; 64] = self
+            .signature
+            .as_slice()
+            .try_into()
             .map_err(|_| "Invalid signature length".to_string())?;
         let sig = Signature::from_bytes(&sig_array);
 
@@ -148,8 +148,7 @@ impl SnapshotIndex {
             .await
             .map_err(|e| format!("Failed to read index: {}", e))?;
 
-        serde_json::from_slice(&data)
-            .map_err(|e| format!("Failed to parse index: {}", e))
+        serde_json::from_slice(&data).map_err(|e| format!("Failed to parse index: {}", e))
     }
 
     /// Sauvegarder index
@@ -200,11 +199,7 @@ mod tests {
             persona_mood: "focused".to_string(),
         };
 
-        let snapshot = Snapshot::new(
-            vec![1, 2, 3, 4],
-            context,
-            "Test snapshot".to_string(),
-        );
+        let snapshot = Snapshot::new(vec![1, 2, 3, 4], context, "Test snapshot".to_string());
 
         assert!(!snapshot.metadata.id.is_empty());
         assert_eq!(snapshot.metadata.compressed_size, 4);

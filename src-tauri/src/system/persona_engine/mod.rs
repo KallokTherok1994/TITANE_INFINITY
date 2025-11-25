@@ -15,11 +15,11 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PersonalityTraits {
-    pub calm: f32,          // 0.0 - 1.0
-    pub precise: f32,       // 0.0 - 1.0
-    pub analytical: f32,    // 0.0 - 1.0
-    pub stable: f32,        // 0.0 - 1.0
-    pub responsive: f32,    // 0.0 - 1.0
+    pub calm: f32,       // 0.0 - 1.0
+    pub precise: f32,    // 0.0 - 1.0
+    pub analytical: f32, // 0.0 - 1.0
+    pub stable: f32,     // 0.0 - 1.0
+    pub responsive: f32, // 0.0 - 1.0
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -39,19 +39,19 @@ pub struct PersonalityCore {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Mood {
-    Clair,      // Clear, lucid
-    Vibrant,    // Energetic, active
-    Attentif,   // Attentive, focused
-    Alerte,     // Alert, vigilant
-    Neutre,     // Neutral, baseline
-    Dormant,    // Dormant, low-energy
+    Clair,    // Clear, lucid
+    Vibrant,  // Energetic, active
+    Attentif, // Attentive, focused
+    Alerte,   // Alert, vigilant
+    Neutre,   // Neutral, baseline
+    Dormant,  // Dormant, low-energy
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MoodState {
     pub current: Mood,
-    pub intensity: f32,     // 0.0 - 1.0
-    pub duration: u64,      // milliseconds
+    pub intensity: f32, // 0.0 - 1.0
+    pub duration: u64,  // milliseconds
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -81,7 +81,7 @@ pub struct PersonaState {
     pub personality: PersonalityCore,
     pub mood: MoodState,
     pub behavior: BehaviorState,
-    pub presence_level: f32,        // 0.0 - 1.0
+    pub presence_level: f32, // 0.0 - 1.0
     pub visual_multipliers: VisualMultipliers,
     pub timestamp: u64,
 }
@@ -152,7 +152,7 @@ impl PersonaEngine {
 
     pub fn update(&self, system_state: &str, metrics: SystemMetrics) {
         let mut state = self.state.lock().unwrap();
-        
+
         // Update mood based on system state
         state.mood.current = match system_state {
             "stable" => Mood::Clair,
@@ -209,7 +209,8 @@ impl PersonaEngine {
         state.visual_multipliers.depth = state.mood.intensity * 0.6 + 0.3;
 
         // Update presence level
-        state.presence_level = (state.mood.intensity + state.visual_multipliers.glow - 1.0) * 0.5 + 0.5;
+        state.presence_level =
+            (state.mood.intensity + state.visual_multipliers.glow - 1.0) * 0.5 + 0.5;
         state.presence_level = state.presence_level.max(0.3).min(1.0);
 
         state.timestamp = Self::current_timestamp();
@@ -217,7 +218,7 @@ impl PersonaEngine {
 
     pub fn react(&self, reaction_type: &str) {
         let mut state = self.state.lock().unwrap();
-        
+
         match reaction_type {
             "error" => {
                 state.mood.current = Mood::Alerte;

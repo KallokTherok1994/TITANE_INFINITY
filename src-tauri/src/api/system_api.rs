@@ -5,11 +5,11 @@
 
 use crate::{
     plugin_system::core_system::CoreCollection,
-    types::{HeliosState, NexusState, HarmoniaState, SentinelState},
+    types::{HarmoniaState, HeliosState, NexusState, SentinelState},
     utils::AppResult,
 };
-use serde::{Serialize, Deserialize};
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SystemState {
@@ -94,7 +94,8 @@ pub async fn get_detailed_health_report(
     // Check CPU
     if helios_state.cpu > 80.0 {
         issues.push(format!("High CPU usage: {:.1}%", helios_state.cpu));
-        recommendations.push("Consider closing unused applications or switching to Eco mode".to_string());
+        recommendations
+            .push("Consider closing unused applications or switching to Eco mode".to_string());
     }
 
     // Check RAM
@@ -113,12 +114,18 @@ pub async fn get_detailed_health_report(
 
     // Check Memory entries
     if memory_state.total_entries > 10000 {
-        recommendations.push(format!("Large memory dataset ({} entries), consider archiving", memory_state.total_entries));
+        recommendations.push(format!(
+            "Large memory dataset ({} entries), consider archiving",
+            memory_state.total_entries
+        ));
     }
 
     // Check Sentinel alerts
     if sentinel_state.active_alerts > 0 {
-        issues.push(format!("{} active security alerts", sentinel_state.active_alerts));
+        issues.push(format!(
+            "{} active security alerts",
+            sentinel_state.active_alerts
+        ));
         recommendations.push("Review security alerts in Sentinel dashboard".to_string());
     }
 

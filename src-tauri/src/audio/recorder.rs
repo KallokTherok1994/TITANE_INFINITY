@@ -79,7 +79,9 @@ impl AudioRecorder {
     }
 
     pub fn start(&self) -> AudioResult<()> {
-        let mut recording = self.is_recording.lock()
+        let mut recording = self
+            .is_recording
+            .lock()
             .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
         if *recording {
             return Ok(()); // Already recording
@@ -95,7 +97,9 @@ impl AudioRecorder {
     }
 
     pub fn stop(&self) -> AudioResult<()> {
-        let mut recording = self.is_recording.lock()
+        let mut recording = self
+            .is_recording
+            .lock()
             .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
         *recording = false;
 
@@ -104,14 +108,17 @@ impl AudioRecorder {
     }
 
     pub fn is_recording(&self) -> bool {
-        self.is_recording.lock()
+        self.is_recording
+            .lock()
             .map(|guard| *guard)
             .unwrap_or(false)
     }
 
     pub fn get_audio_chunk(&self, duration_ms: u32) -> AudioResult<Vec<f32>> {
         let samples_count = (self.config.sample_rate * duration_ms / 1000) as usize;
-        let buffer = self.buffer.lock()
+        let buffer = self
+            .buffer
+            .lock()
             .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
         Ok(buffer.get_last_n(samples_count))
     }

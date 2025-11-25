@@ -6,10 +6,10 @@
 //   Système de mise à jour sécurisé avec signatures Ed25519
 // ═══════════════════════════════════════════════════════════════
 
-pub mod update_engine;
 pub mod manifest;
 pub mod migration;
+pub mod update_engine;
 
-pub use update_engine::UpdateEngine;
-pub use manifest::{UpdateManifest, FileEntry};
+pub use manifest::{FileEntry, UpdateManifest};
 pub use migration::MigrationScript;
+pub use update_engine::UpdateEngine;

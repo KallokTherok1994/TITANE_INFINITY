@@ -201,8 +201,7 @@ mod tests {
 
     #[test]
     fn test_module_health_info() {
-        let info = ModuleHealthInfo::healthy("TestModule")
-            .with_message("All systems nominal");
+        let info = ModuleHealthInfo::healthy("TestModule").with_message("All systems nominal");
 
         assert_eq!(info.name, "TestModule");
         assert_eq!(info.status, HealthStatus::Healthy);

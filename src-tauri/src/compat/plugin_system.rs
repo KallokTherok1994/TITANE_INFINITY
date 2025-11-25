@@ -2,8 +2,8 @@
 //   TITANE∞ v14 — COMPAT: PluginSystem stub
 // ═══════════════════════════════════════════════════════════════
 
-use serde::{Serialize, Deserialize};
-use crate::core::legacy::{HeliosCore, NexusCore, MemoryCore, HarmoniaCore, SentinelCore};
+use crate::core::legacy::{HarmoniaCore, HeliosCore, MemoryCore, NexusCore, SentinelCore};
+use serde::{Deserialize, Serialize};
 
 pub mod core_system {
     use super::*;
@@ -42,7 +42,12 @@ pub mod registry {
         }
 
         pub fn list_cores(&self) -> Vec<String> {
-            vec!["nexus".to_string(), "memory".to_string(), "harmonia".to_string(), "sentinel".to_string()]
+            vec![
+                "nexus".to_string(),
+                "memory".to_string(),
+                "harmonia".to_string(),
+                "sentinel".to_string(),
+            ]
         }
 
         pub fn get_core(&self, _name: &str) -> Option<CoreModule> {
@@ -57,7 +62,8 @@ pub mod registry {
             Ok(super::core_module::CoreHealth::Healthy)
         }
     }
-}pub mod core_module {
+}
+pub mod core_module {
     use super::*;
 
     #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

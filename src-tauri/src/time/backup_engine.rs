@@ -11,7 +11,7 @@ use super::travel_engine::TravelEngine;
 use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use tokio::time::{Duration, interval};
+use tokio::time::{interval, Duration};
 
 /// Fréquences de backup
 const QUICK_BACKUP_INTERVAL: Duration = Duration::from_secs(5 * 60); // 5 min
@@ -21,10 +21,10 @@ const DEEP_BACKUP_INTERVAL: Duration = Duration::from_secs(24 * 60 * 60); // 24h
 /// Types de backup
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BackupType {
-    Quick,    // 5 min - léger
-    Stable,   // 1h - complet
-    Deep,     // 24h - snapshot permanent
-    Forced,   // Manuel/migration
+    Quick,  // 5 min - léger
+    Stable, // 1h - complet
+    Deep,   // 24h - snapshot permanent
+    Forced, // Manuel/migration
 }
 
 /// Erreurs backup
@@ -64,9 +64,9 @@ impl Default for BackupConfig {
             quick_enabled: true,
             stable_enabled: true,
             deep_enabled: true,
-            max_quick_backups: 12,    // 12 * 5min = 1h
-            max_stable_backups: 24,   // 24 * 1h = 1 jour
-            max_deep_backups: 30,     // 30 jours
+            max_quick_backups: 12,  // 12 * 5min = 1h
+            max_stable_backups: 24, // 24 * 1h = 1 jour
+            max_deep_backups: 30,   // 30 jours
         }
     }
 }
@@ -136,13 +136,12 @@ impl BackupEngine {
     }
 
     /// Effectuer backup
-    async fn perform_backup(
-        &self,
-        backup_type: BackupType,
-    ) -> Result<String, BackupError> {
+    async fn perform_backup(&self, backup_type: BackupType) -> Result<String, BackupError> {
         let running = self.running.read().await;
         if !*running {
-            return Err(BackupError::DataCollectionFailed("Engine stopped".to_string()));
+            return Err(BackupError::DataCollectionFailed(
+                "Engine stopped".to_string(),
+            ));
         }
         drop(running);
 
@@ -153,7 +152,8 @@ impl BackupEngine {
         let description = format!("{:?} backup", backup_type);
 
         // Créer snapshot
-        let id = self.travel_engine
+        let id = self
+            .travel_engine
             .create_snapshot(data, context, description)
             .await
             .map_err(|e| BackupError::TravelEngineError(e.to_string()))?;
@@ -183,8 +183,7 @@ impl BackupEngine {
             "placeholder": "Integration with SingularityState pending"
         });
 
-        serde_json::to_vec(&data)
-            .map_err(|e| BackupError::DataCollectionFailed(e.to_string()))
+        serde_json::to_vec(&data).map_err(|e| BackupError::DataCollectionFailed(e.to_string()))
     }
 
     /// Collecter contexte
@@ -401,7 +400,10 @@ mod tests {
         };
 
         let data = b"Test backup".to_vec();
-        let id = engine.force_backup(data, context, "unit test").await.unwrap();
+        let id = engine
+            .force_backup(data, context, "unit test")
+            .await
+            .unwrap();
         assert!(!id.is_empty());
     }
 }

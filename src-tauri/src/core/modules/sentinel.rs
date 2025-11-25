@@ -3,8 +3,8 @@
 //   System monitoring and protection
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::*;
 use crate::core::state::SingularityState;
+use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
 /// Sentinel Module - Monitoring and protection

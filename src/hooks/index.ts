@@ -62,6 +62,13 @@ export type { EngineVitals, UseEngineVitalsOptions, UseEngineVitalsReturn } from
 export { useSystemMonitor } from './useSystemMonitor';
 export type { UseSystemMonitorOptions, UseSystemMonitorReturn } from './useSystemMonitor';
 
+// Performance Monitor (NOUVEAU v14 - FPS tracking)
+export { usePerformanceMonitor } from './usePerformanceMonitor';
+export type { PerformanceMetrics, UsePerformanceMonitorReturn } from './usePerformanceMonitor';
+
+// Animation Context hook (re-export from contexts)
+export { useAnimation } from '../contexts/AnimationContext';
+
 // Engine State
 export { useEngineState } from './useEngineState';
 export type {

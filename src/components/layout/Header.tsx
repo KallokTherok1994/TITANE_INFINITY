@@ -16,6 +16,7 @@
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
 import { colors, spacing, fontSizes } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -91,12 +92,14 @@ export const Header = ({
   navigation,
   actions,
 }: HeaderProps): JSX.Element => {
+  const { animationConfig } = useAnimation();
+
   return (
     <motion.div
       style={headerStyles}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: animationConfig.duration }}
     >
       {/* Logo */}
       {logo && (

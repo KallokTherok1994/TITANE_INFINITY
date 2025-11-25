@@ -147,7 +147,10 @@ impl FileImportSandbox {
             .await
             .map_err(|e| SandboxError::IoError(e.to_string()))?;
 
-        log::info!("✅ File Import Sandbox initialized: {:?}", self.sandbox_path);
+        log::info!(
+            "✅ File Import Sandbox initialized: {:?}",
+            self.sandbox_path
+        );
         Ok(())
     }
 

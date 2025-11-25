@@ -73,9 +73,8 @@ impl HyperVisionEngine {
         let interval = self.scan_interval_ms;
 
         tokio::spawn(async move {
-            let mut interval_timer = tokio::time::interval(
-                std::time::Duration::from_millis(interval)
-            );
+            let mut interval_timer =
+                tokio::time::interval(std::time::Duration::from_millis(interval));
 
             loop {
                 interval_timer.tick().await;

@@ -61,9 +61,9 @@ impl BodyState {
 /// Indicateurs physiologiques (via audio)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PhysiologicalSignals {
-    pub speech_rate: f32,      // mots/min
-    pub pitch_stability: f32,  // variabilité pitch
-    pub energy_mean: f32,      // volume moyen
+    pub speech_rate: f32,     // mots/min
+    pub pitch_stability: f32, // variabilité pitch
+    pub energy_mean: f32,     // volume moyen
     pub pause_pattern: PausePattern,
     pub stress_markers: Vec<StressMarker>,
 }
@@ -82,19 +82,19 @@ impl Default for PhysiologicalSignals {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum PausePattern {
-    Regular,    // Pauses régulières, respiration normale
-    Irregular,  // Pauses chaotiques
-    Rare,       // Peu de pauses (stress/précipitation)
-    Excessive,  // Trop de pauses (fatigue/hésitation)
+    Regular,   // Pauses régulières, respiration normale
+    Irregular, // Pauses chaotiques
+    Rare,      // Peu de pauses (stress/précipitation)
+    Excessive, // Trop de pauses (fatigue/hésitation)
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum StressMarker {
-    RapidSpeech,       // Parole rapide (>200 mots/min)
-    PitchTension,      // Tension dans la voix
-    IrregularPauses,   // Pauses irrégulières
-    LowEnergy,         // Volume faible (fatigue)
-    VoiceShaking,      // Tremblement vocal (stress/émotion)
+    RapidSpeech,     // Parole rapide (>200 mots/min)
+    PitchTension,    // Tension dans la voix
+    IrregularPauses, // Pauses irrégulières
+    LowEnergy,       // Volume faible (fatigue)
+    VoiceShaking,    // Tremblement vocal (stress/émotion)
 }
 
 impl PhysiologicalSignals {
@@ -131,7 +131,8 @@ impl PhysiologicalSignals {
             (self.speech_rate - 200.0) / 100.0
         } else {
             0.0
-        }.min(0.5);
+        }
+        .min(0.5);
 
         let stability_factor = (1.0 - self.pitch_stability) * 0.3;
 

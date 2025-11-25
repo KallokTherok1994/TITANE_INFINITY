@@ -45,8 +45,7 @@ impl UpdateManifest {
     pub fn signable_data(&self) -> Result<Vec<u8>, String> {
         let mut manifest_copy = self.clone();
         manifest_copy.signature = Vec::new();
-        serde_json::to_vec(&manifest_copy)
-            .map_err(|e| format!("Serialization error: {}", e))
+        serde_json::to_vec(&manifest_copy).map_err(|e| format!("Serialization error: {}", e))
     }
 
     fn current_timestamp() -> u64 {

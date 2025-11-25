@@ -13,6 +13,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useAnimation } from '../contexts/AnimationContext';
 import './ListeningIndicator.css';
 
 interface ListeningIndicatorProps {
@@ -32,6 +33,8 @@ export const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({
   size = 120,
   intensity = 0.8,
 }) => {
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
+
   const getColors = () => {
     switch (mode) {
       case 'listening':
@@ -61,7 +64,7 @@ export const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({
   const rotationSpeed = mode === 'thinking' ? 2 : 4;
 
   return (
-    <div 
+    <div
       className="listening-indicator"
       style={{ width: size, height: size }}
     >

@@ -3,23 +3,20 @@
 //   Tauri commands for observability: logging, metrics, core discovery, cognitive state
 // ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::devtools::{
-    logging::{LogCollector, LogEntry, LogLevel},
-    metrics::{MetricsCollector, MetricPoint, MetricSeries, MetricStats},
-};
-use crate::plugin_system::{
-    registry::CoreRegistry,
-    core_module::CoreHealth,
-};
 use crate::cognitive::{
     engine::CognitiveEngine,
-    state::{CognitiveState, CenterCoherence, SystemRecommendation},
     mental::CognitiveMode,
+    state::{CenterCoherence, CognitiveState, SystemRecommendation},
 };
+use crate::devtools::{
+    logging::{LogCollector, LogEntry, LogLevel},
+    metrics::{MetricPoint, MetricSeries, MetricStats, MetricsCollector},
+};
+use crate::plugin_system::{core_module::CoreHealth, registry::CoreRegistry};
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
 use tokio::sync::RwLock;
-use serde::{Serialize, Deserialize};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPE DEFINITIONS
@@ -105,13 +102,15 @@ pub async fn get_logs(
 ) -> Result<LogsResponse, String> {
     let collector = log_collector.read().await;
 
-    let log_level = level.as_ref().and_then(|l| match l.to_lowercase().as_str() {
-        "debug" => Some(LogLevel::Debug),
-        "info" => Some(LogLevel::Info),
-        "warn" => Some(LogLevel::Warn),
-        "error" => Some(LogLevel::Error),
-        _ => None,
-    });
+    let log_level = level
+        .as_ref()
+        .and_then(|l| match l.to_lowercase().as_str() {
+            "debug" => Some(LogLevel::Debug),
+            "info" => Some(LogLevel::Info),
+            "warn" => Some(LogLevel::Warn),
+            "error" => Some(LogLevel::Error),
+            _ => None,
+        });
 
     let mut logs = collector.filter_logs(log_level, source.as_deref());
 
@@ -120,10 +119,7 @@ pub async fn get_logs(
     let limit_val = limit.unwrap_or(100);
 
     // Apply pagination
-    logs = logs.into_iter()
-        .skip(offset_val)
-        .take(limit_val)
-        .collect();
+    logs = logs.into_iter().skip(offset_val).take(limit_val).collect();
 
     let has_more = offset_val + logs.len() < total;
 
@@ -168,10 +164,11 @@ pub async fn search_logs(
     let all_logs = collector.get_all_logs();
 
     let query_lower = query.to_lowercase();
-    let mut results: Vec<LogEntry> = all_logs.into_iter()
+    let mut results: Vec<LogEntry> = all_logs
+        .into_iter()
         .filter(|log| {
-            log.message.to_lowercase().contains(&query_lower) ||
-            log.source.to_lowercase().contains(&query_lower)
+            log.message.to_lowercase().contains(&query_lower)
+                || log.source.to_lowercase().contains(&query_lower)
         })
         .collect();
 
@@ -198,18 +195,19 @@ pub async fn export_logs(
 ) -> Result<String, String> {
     let collector = log_collector.read().await;
 
-    let log_level = level.as_ref().and_then(|l| match l.to_lowercase().as_str() {
-        "debug" => Some(LogLevel::Debug),
-        "info" => Some(LogLevel::Info),
-        "warn" => Some(LogLevel::Warn),
-        "error" => Some(LogLevel::Error),
-        _ => None,
-    });
+    let log_level = level
+        .as_ref()
+        .and_then(|l| match l.to_lowercase().as_str() {
+            "debug" => Some(LogLevel::Debug),
+            "info" => Some(LogLevel::Info),
+            "warn" => Some(LogLevel::Warn),
+            "error" => Some(LogLevel::Error),
+            _ => None,
+        });
 
     let logs = collector.filter_logs(log_level, source.as_deref());
 
-    serde_json::to_string_pretty(&logs)
-        .map_err(|e| format!("Failed to serialize logs: {}", e))
+    serde_json::to_string_pretty(&logs).map_err(|e| format!("Failed to serialize logs: {}", e))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -230,7 +228,8 @@ pub async fn get_metric(
 ) -> Result<MetricResponse, String> {
     let collector = metrics_collector.read().await;
 
-    let series = collector.get_metric(&metric_name)
+    let series = collector
+        .get_metric(&metric_name)
         .ok_or_else(|| format!("Metric '{}' not found", metric_name))?;
 
     let stats = series.compute_stats();
@@ -281,7 +280,7 @@ pub async fn get_core_metrics(
                         metric_name,
                         points: series.get_points(),
                         stats,
-                    }
+                    },
                 );
             }
         }
@@ -303,10 +302,12 @@ pub async fn get_dashboard_metrics(
     let reg = registry.read().await;
 
     let all_logs = logs.get_all_logs();
-    let error_count = all_logs.iter()
+    let error_count = all_logs
+        .iter()
         .filter(|log| matches!(log.level, LogLevel::Error))
         .count();
-    let warning_count = all_logs.iter()
+    let warning_count = all_logs
+        .iter()
         .filter(|log| matches!(log.level, LogLevel::Warn))
         .count();
 
@@ -348,8 +349,7 @@ pub async fn discover_cores(
 
     for name in core_names {
         if let Some(module) = reg.get_core(&name) {
-            let health = module.health_check().await
-                .unwrap_or(CoreHealth::Offline);
+            let health = module.health_check().await.unwrap_or(CoreHealth::Offline);
 
             let status = if matches!(health, CoreHealth::Healthy) {
                 CoreHealthStatus::Healthy
@@ -358,7 +358,8 @@ pub async fn discover_cores(
             };
 
             let metrics_data = module.metrics().await.unwrap_or_default();
-            let metrics: Vec<CoreMetricInfo> = metrics_data.iter()
+            let metrics: Vec<CoreMetricInfo> = metrics_data
+                .iter()
                 .map(|(k, v)| CoreMetricInfo {
                     name: k.clone(),
                     value: *v,
@@ -393,10 +394,13 @@ pub async fn get_core_info(
 ) -> Result<CoreInfo, String> {
     let reg = registry.read().await;
 
-    let module = reg.get_core(&core_name)
+    let module = reg
+        .get_core(&core_name)
         .ok_or_else(|| format!("Core '{}' not found", core_name))?;
 
-    let health = module.health_check().await
+    let health = module
+        .health_check()
+        .await
         .map_err(|e| format!("Failed to check health: {}", e))?;
 
     let status = if health.is_healthy {
@@ -405,10 +409,13 @@ pub async fn get_core_info(
         CoreHealthStatus::Degraded
     };
 
-    let metrics_data = module.metrics().await
+    let metrics_data = module
+        .metrics()
+        .await
         .map_err(|e| format!("Failed to get metrics: {}", e))?;
 
-    let metrics: Vec<CoreMetricInfo> = metrics_data.iter()
+    let metrics: Vec<CoreMetricInfo> = metrics_data
+        .iter()
         .map(|(k, v)| CoreMetricInfo {
             name: k.clone(),
             value: *v,

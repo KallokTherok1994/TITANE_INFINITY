@@ -86,9 +86,7 @@ impl SemanticMap {
         };
 
         self.concepts.insert(id.clone(), concept);
-        self.domains.entry(domain)
-            .or_default()
-            .push(id.clone());
+        self.domains.entry(domain).or_default().push(id.clone());
 
         id
     }
@@ -116,7 +114,8 @@ impl SemanticMap {
     }
 
     pub fn find_related_concepts(&self, concept_id: &str) -> Vec<String> {
-        self.relations.iter()
+        self.relations
+            .iter()
             .filter(|r| r.from == concept_id)
             .map(|r| r.to.clone())
             .collect()
@@ -140,9 +139,8 @@ impl SemanticMap {
             return 0.0;
         }
 
-        let avg_weight: f32 = self.concepts.values()
-            .map(|c| c.weight)
-            .sum::<f32>() / self.concepts.len() as f32;
+        let avg_weight: f32 =
+            self.concepts.values().map(|c| c.weight).sum::<f32>() / self.concepts.len() as f32;
 
         let relation_density = if self.concepts.len() > 1 {
             self.relations.len() as f32 / (self.concepts.len() * (self.concepts.len() - 1)) as f32

@@ -63,14 +63,15 @@ export function isOnlineModeEnabled(): boolean {
 
 /**
  * Vérifie si une connexion Internet est disponible
- * ⚠️ NOTE: fetch() ici est OK car test minimaliste (favicon Google)
+ * Utilise Tauri HTTP client pour conformité sécurité
  */
 export async function checkInternetConnection(): Promise<boolean> {
   try {
-    await fetch('https://www.google.com/favicon.ico', {
-      method: 'HEAD',
-      mode: 'no-cors',
-      cache: 'no-cache',
+    // Import dynamique pour éviter erreur si httpClient pas disponible
+    const { httpClient } = await import('../core/http/httpClient');
+
+    await httpClient.head('https://www.google.com/favicon.ico', {
+      timeout: 5000,
     });
     return true;
   } catch {

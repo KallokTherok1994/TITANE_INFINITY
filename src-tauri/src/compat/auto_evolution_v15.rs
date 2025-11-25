@@ -2,7 +2,7 @@
 //   TITANE∞ v14 — COMPAT: AutoEvolution stub
 // ═══════════════════════════════════════════════════════════════
 
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub mod supervisor {
     use super::*;

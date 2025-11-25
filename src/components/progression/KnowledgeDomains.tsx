@@ -17,6 +17,7 @@ import { motion } from 'framer-motion';
 import { Card } from '../../ui';
 import type { ExperienceDomain } from '../../types/experience';
 import { xpForNextLevel } from '../../types/experience';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -49,6 +50,7 @@ interface DomainCardProps {
 }
 
 const DomainCard = ({ domain, onClick }: DomainCardProps): JSX.Element => {
+  const { animationConfig, shouldReduceMotion } = useAnimation();
   const progress = domain.level > 0
     ? ((domain.xp - domain.level ** 2 * 100) / ((domain.level + 1) ** 2 * 100 - domain.level ** 2 * 100))
     : domain.xp / 100;
@@ -59,8 +61,9 @@ const DomainCard = ({ domain, onClick }: DomainCardProps): JSX.Element => {
   return (
     <motion.div
       onClick={onClick}
-      whileHover={{ scale: 1.02, y: -4 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={shouldReduceMotion ? undefined : { scale: 1.02, y: -4 }}
+      whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+      transition={{ duration: animationConfig.duration }}
       style={{
         padding: '20px',
         background: 'rgba(114, 123, 129, 0.1)',

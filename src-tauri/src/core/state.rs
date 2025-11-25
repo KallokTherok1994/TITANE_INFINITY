@@ -3,8 +3,8 @@
 //   Global unified state for SingularityEngine
 // ═══════════════════════════════════════════════════════════════
 
+use crate::core::modules::{HarmoniaModule, MemoryModule, NexusModule, SentinelModule};
 use crate::core::types::*;
-use crate::core::modules::{NexusModule, MemoryModule, HarmoniaModule, SentinelModule};
 use serde::{Deserialize, Serialize};
 
 /// Cognition state - tracks cognitive processing
@@ -139,10 +139,12 @@ impl SingularityState {
     /// Get overall system health
     pub fn health(&self) -> EngineHealth {
         // Aggregate health from all modules
-        let healths = [self.nexus.health(),
+        let healths = [
+            self.nexus.health(),
             self.memory.health(),
             self.harmonia.health(),
-            self.sentinel.health()];
+            self.sentinel.health(),
+        ];
 
         // Find worst health status
         let max_severity = healths.iter().map(|h| h.severity()).max().unwrap_or(0);

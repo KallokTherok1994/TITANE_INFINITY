@@ -4,7 +4,7 @@
  *
  * Commandes Tauri pour compacter et valider la mémoire
  */
-use crate::memory_compactor::{MemoryCompactor, CompactorConfig, CompactionResult};
+use crate::memory_compactor::{CompactionResult, CompactorConfig, MemoryCompactor};
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -28,9 +28,7 @@ pub fn compact_memory_file(path: String) -> Result<String, String> {
 
     Ok(format!(
         "Compacted {} -> {} entries ({:.2}% compression)",
-        result.original_entries,
-        result.compacted_entries,
-        result.compression_ratio
+        result.original_entries, result.compacted_entries, result.compression_ratio
     ))
 }
 
@@ -97,7 +95,10 @@ pub fn auto_compact_memory() -> Result<CompactionStats, String> {
         },
     };
 
-    log::info!("Auto-compact completed: {} files processed", stats.files_processed);
+    log::info!(
+        "Auto-compact completed: {} files processed",
+        stats.files_processed
+    );
 
     Ok(stats)
 }

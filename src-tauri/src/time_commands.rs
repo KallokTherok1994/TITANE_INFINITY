@@ -6,8 +6,8 @@
 //   Commandes Tauri pour TimeNavigator UI
 // ═══════════════════════════════════════════════════════════════
 
-use crate::security::permissions::Role;
 use crate::security::permission_guard::PERMISSION_GUARD;
+use crate::security::permissions::Role;
 use serde::{Deserialize, Serialize};
 
 /// Métadonnées snapshot pour UI
@@ -76,7 +76,11 @@ pub async fn list_snapshots() -> Result<Vec<SnapshotMetadata>, String> {
             context: SnapshotContext {
                 xp: 1500,
                 level: 6,
-                active_engines: vec!["Helios".to_string(), "Memory".to_string(), "Nexus".to_string()],
+                active_engines: vec![
+                    "Helios".to_string(),
+                    "Memory".to_string(),
+                    "Nexus".to_string(),
+                ],
                 design_system: "v24".to_string(),
                 persona_mood: "Energized".to_string(),
             },

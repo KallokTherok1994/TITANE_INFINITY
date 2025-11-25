@@ -8,12 +8,12 @@ pub mod shell_guard;
 pub mod storage_guard;
 
 // Super-Prompts H, J, K, L modules
-pub mod permissions;
-pub mod permission_guard;
 pub mod encryption;
-pub mod validation;
-pub mod sandbox;
+pub mod permission_guard;
+pub mod permissions;
 pub mod pre_boot_validation;
+pub mod sandbox;
+pub mod validation;
 pub mod vault_engine; // ✅ v∞ J3 - Memory Vault Layer
 
 use serde::{Deserialize, Serialize};

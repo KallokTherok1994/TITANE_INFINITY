@@ -51,7 +51,8 @@ impl MemoryBuilder {
             .as_secs();
 
         // Extraction simple de concepts (mots-clés)
-        let concepts: Vec<String> = message.split_whitespace()
+        let concepts: Vec<String> = message
+            .split_whitespace()
             .filter(|word| word.len() > 5)
             .take(5)
             .map(|s| s.to_lowercase())
@@ -83,13 +84,18 @@ impl MemoryBuilder {
             .unwrap()
             .as_secs();
 
-        let concepts: Vec<String> = content.split_whitespace()
+        let concepts: Vec<String> = content
+            .split_whitespace()
             .filter(|word| word.len() > 5)
             .take(20)
             .map(|s| s.to_lowercase())
             .collect();
 
-        let summary = format!("Fichier importé: {} ({} concepts)", filename, concepts.len());
+        let summary = format!(
+            "Fichier importé: {} ({} concepts)",
+            filename,
+            concepts.len()
+        );
 
         MemoryBlock {
             id,

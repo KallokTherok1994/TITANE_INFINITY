@@ -45,7 +45,8 @@ impl ReinforcementLoop {
 
             if success {
                 pattern.strength = (pattern.strength + 0.1).min(1.0);
-                pattern.success_rate = (pattern.success_rate * (pattern.usage_count - 1) as f32 + 1.0)
+                pattern.success_rate = (pattern.success_rate * (pattern.usage_count - 1) as f32
+                    + 1.0)
                     / pattern.usage_count as f32;
             } else {
                 pattern.strength = (pattern.strength - 0.05).max(0.0);

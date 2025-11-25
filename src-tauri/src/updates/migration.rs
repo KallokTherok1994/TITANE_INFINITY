@@ -30,10 +30,7 @@ pub enum MigrationOperation {
         default_value: serde_json::Value,
     },
     /// Supprimer un champ
-    RemoveField {
-        path: String,
-        field_name: String,
-    },
+    RemoveField { path: String, field_name: String },
     /// Transformer une valeur
     TransformValue {
         path: String,

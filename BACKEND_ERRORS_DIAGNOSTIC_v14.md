@@ -1,7 +1,7 @@
 # 🚨 BACKEND v14 — DIAGNOSTIC ERREURS COMPILATION
 
-**Date**: 2025-11-25  
-**Phase**: 1 - Sortie MOCK MODE  
+**Date**: 2025-11-25
+**Phase**: 1 - Sortie MOCK MODE
 **Status**: ERREURS DÉTECTÉES
 
 ---

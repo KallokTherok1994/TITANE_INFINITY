@@ -8,7 +8,10 @@
 use serde::{Deserialize, Serialize};
 
 /// ⚠️  DEPRECATED: Use `crate::types::AppResult` or `crate::utils::AppResult`
-#[deprecated(since = "17.3.0", note = "Use utils::AppResult or types::shared types instead")]
+#[deprecated(
+    since = "17.3.0",
+    note = "Use utils::AppResult or types::shared types instead"
+)]
 pub type TitaneResult<T> = Result<T, String>;
 
 /// ⚠️  DEPRECATED: Use `crate::types::shared::HealthStatus`

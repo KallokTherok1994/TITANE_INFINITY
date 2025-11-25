@@ -18,14 +18,14 @@
  */
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use tokio::sync::RwLock;
 use tauri::{AppHandle, Manager};
+use tokio::sync::RwLock;
 
 // Sub-modules
+pub mod commands;
 pub mod layers;
 pub mod persistence;
 pub mod sync;
-pub mod commands;
 
 pub use layers::*;
 pub use persistence::PersistenceLayer;

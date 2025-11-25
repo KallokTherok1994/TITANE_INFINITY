@@ -9,6 +9,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, Badge, Button, Modal } from '../../ui';
 import { colors, spacing, radius, shadows } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -62,6 +63,7 @@ export const TalentTree = ({
   availablePoints,
   onUnlock,
 }: TalentTreeProps): JSX.Element => {
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
   const [selectedTalent, setSelectedTalent] = useState<TalentNode | null>(null);
   const [hoveredTalent, setHoveredTalent] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);

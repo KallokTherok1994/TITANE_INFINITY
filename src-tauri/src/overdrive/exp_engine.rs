@@ -4,11 +4,11 @@
 // Système d'expérience, progression, niveaux et talent tree
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use tauri::State;
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -20,7 +20,7 @@ pub struct ExpProfile {
     pub level: u32,
     pub exp_to_next_level: u64,
     pub categories: HashMap<String, CategoryExp>,
-    pub talents: Vec<String>,              // IDs des talents débloqués
+    pub talents: Vec<String>, // IDs des talents débloqués
     pub talent_points: u32,
 }
 
@@ -29,17 +29,17 @@ pub struct CategoryExp {
     pub category: String,
     pub exp: u64,
     pub level: u32,
-    pub contributions: u32,                // Nombre d'actions
+    pub contributions: u32, // Nombre d'actions
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ExpGain {
     pub amount: u64,
     pub category: String,
-    pub source: String,                    // chat|voice|project|code
+    pub source: String, // chat|voice|project|code
     pub description: String,
     pub timestamp: u64,
-    pub multiplier: f32,                   // Bonus événementiel
+    pub multiplier: f32, // Bonus événementiel
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -48,9 +48,9 @@ pub struct Talent {
     pub name: String,
     pub description: String,
     pub category: String,
-    pub tier: u32,                         // 1-5
-    pub cost: u32,                         // Points de talent
-    pub requirements: Vec<String>,         // IDs des talents prérequis
+    pub tier: u32,                 // 1-5
+    pub cost: u32,                 // Points de talent
+    pub requirements: Vec<String>, // IDs des talents prérequis
     pub unlocked: bool,
 }
 
@@ -100,14 +100,7 @@ pub fn init() -> ExpEngineState {
 }
 
 fn initialize_categories(state: &ExpEngineState) {
-    let categories = vec![
-        "chat_ia",
-        "voice",
-        "code",
-        "projects",
-        "system",
-        "learning",
-    ];
+    let categories = vec!["chat_ia", "voice", "code", "projects", "system", "learning"];
 
     let mut profile = match state.profile.lock() {
         Ok(guard) => guard,
@@ -281,7 +274,10 @@ pub fn exp_add(
         };
         events.push(event);
 
-        println!("[EXP] 🎉 LEVEL UP! {} → {} | +1 Talent Point", old_level, profile.level);
+        println!(
+            "[EXP] 🎉 LEVEL UP! {} → {} | +1 Talent Point",
+            old_level, profile.level
+        );
     }
 
     Ok(profile.clone())
@@ -295,7 +291,13 @@ pub fn exp_add_batch(
     let mut profile_result = None;
 
     for (amount, category, source, description) in gains {
-        profile_result = Some(exp_add(amount, category, source, description, state.clone())?);
+        profile_result = Some(exp_add(
+            amount,
+            category,
+            source,
+            description,
+            state.clone(),
+        )?);
     }
 
     profile_result.ok_or_else(|| TAPIError::validation("Aucun gain d'expérience"))
@@ -336,7 +338,9 @@ pub fn exp_get_level_up_history(
     let events = match state.level_up_events.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
-            eprintln!("[EXP] level_up_events lock poisoned in exp_get_level_up_history, recovering");
+            eprintln!(
+                "[EXP] level_up_events lock poisoned in exp_get_level_up_history, recovering"
+            );
             poisoned.into_inner()
         }
     };
@@ -421,7 +425,10 @@ pub fn exp_unlock_talent(
     // Vérifier prérequis
     for req_id in &talent.requirements {
         if !profile.talents.contains(req_id) {
-            return Err(TAPIError::validation(&format!("Prérequis manquant: {}", req_id)));
+            return Err(TAPIError::validation(&format!(
+                "Prérequis manquant: {}",
+                req_id
+            )));
         }
     }
 
@@ -429,7 +436,10 @@ pub fn exp_unlock_talent(
     profile.talents.push(talent_id.clone());
     profile.talent_points -= talent.cost;
 
-    println!("[EXP] Talent débloqué: {} (-{} points)", talent.name, talent.cost);
+    println!(
+        "[EXP] Talent débloqué: {} (-{} points)",
+        talent.name, talent.cost
+    );
 
     Ok(profile.clone())
 }
@@ -448,7 +458,10 @@ pub fn exp_reset_talents(state: State<ExpEngineState>) -> Result<ExpProfile, TAP
     profile.talents.clear();
     profile.talent_points += talents_unlocked;
 
-    println!("[EXP] Talents réinitialisés - +{} points récupérés", talents_unlocked);
+    println!(
+        "[EXP] Talents réinitialisés - +{} points récupérés",
+        talents_unlocked
+    );
 
     Ok(profile.clone())
 }
@@ -472,7 +485,8 @@ pub fn exp_get_history(
     };
 
     let filtered: Vec<ExpGain> = if let Some(cat) = category {
-        history.iter()
+        history
+            .iter()
             .filter(|g| g.category == cat)
             .cloned()
             .collect()
@@ -553,7 +567,7 @@ pub struct Achievement {
     pub description: String,
     pub icon: String,
     pub unlocked: bool,
-    pub progress: f32,         // 0.0-1.0
+    pub progress: f32, // 0.0-1.0
 }
 
 #[tauri::command]

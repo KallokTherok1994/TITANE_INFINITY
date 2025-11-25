@@ -2,4 +2,3 @@
 //   TITANE∞ v17.2.0 — UTILS: RESULT ALIAS
 //   Re-export of AppResult for convenience
 // ═══════════════════════════════════════════════════════════════
-

@@ -1,5 +1,6 @@
-// TITANE∞ v12 - AI Chat Commands
+// TITANE∞ v14 - AI Chat Commands
 // Tauri commands for AI interaction and Voice Mode
+// Migrated to SingularityEngine CoreCollection architecture
 
 use crate::ai::router::AIRouter;
 use crate::ai::{AIRequest, AIResponse};
@@ -7,12 +8,9 @@ use crate::audio::asr::ASREngine;
 use crate::audio::recorder::AudioRecorder;
 use crate::audio::vad::VoiceActivityDetector;
 use crate::audio::AudioConfig;
+use crate::compat::CoreCollection;
 use crate::memory::model::{Conversation, MessageRole};
 use crate::memory::storage::MemoryStorage;
-use crate::modules::{
-    adaptive::AdaptiveEngine, harmonia::Harmonia, helios::Helios, nexus::Nexus,
-    selfheal::SelfHeal, sentinel::Sentinel,
-};
 use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
 use crate::tts::TTSRequest;
@@ -20,7 +18,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::State;
 
-// Global state for AI Chat system
+// Global state for AI Chat system (v14)
 pub struct AIChatState {
     pub ai_router: Arc<Mutex<AIRouter>>,
     pub memory_storage: Arc<Mutex<MemoryStorage>>,
@@ -30,12 +28,8 @@ pub struct AIChatState {
     pub audio_recorder: Arc<Mutex<AudioRecorder>>,
     pub asr_engine: Arc<Mutex<ASREngine>>,
     pub vad: Arc<Mutex<VoiceActivityDetector>>,
-    pub helios: Arc<Mutex<Helios>>,
-    pub nexus: Arc<Mutex<Nexus>>,
-    pub harmonia: Arc<Mutex<Harmonia>>,
-    pub sentinel: Arc<Mutex<Sentinel>>,
-    pub adaptive: Arc<Mutex<AdaptiveEngine>>,
-    pub selfheal: Arc<Mutex<SelfHeal>>,
+    /// v14 Unified Core Collection (Bridge v12↔v14)
+    pub core_collection: Arc<CoreCollection>,
 }
 
 impl AIChatState {
@@ -63,13 +57,8 @@ impl AIChatState {
         let asr_engine = Arc::new(Mutex::new(ASREngine::auto()));
         let vad = Arc::new(Mutex::new(VoiceActivityDetector::new()));
 
-        // TITANE∞ modules
-        let helios = Arc::new(Mutex::new(Helios::new()));
-        let nexus = Arc::new(Mutex::new(Nexus::new()));
-        let harmonia = Arc::new(Mutex::new(Harmonia::new()));
-        let sentinel = Arc::new(Mutex::new(Sentinel::new(false)));
-        let adaptive = Arc::new(Mutex::new(AdaptiveEngine::new()));
-        let selfheal = Arc::new(Mutex::new(SelfHeal::new()));
+        // v14 Unified Core Collection (replaces individual v12 modules)
+        let core_collection = Arc::new(CoreCollection::default());
 
         Self {
             ai_router,
@@ -80,12 +69,7 @@ impl AIChatState {
             audio_recorder,
             asr_engine,
             vad,
-            helios,
-            nexus,
-            harmonia,
-            sentinel,
-            adaptive,
-            selfheal,
+            core_collection,
         }
     }
 }
@@ -97,22 +81,29 @@ pub async fn ai_query(
     temperature: Option<f32>,
     max_tokens: Option<usize>,
 ) -> Result<String, String> {
-    log::info!("AI query received: {}", prompt);
+    log::info!("[AI Chat v14] Query received: {}", prompt);
 
-    // Security scan with Sentinel
+    // Security scan with Sentinel (v14 - via CoreCollection)
     let scan_result = {
-        let sentinel = state.sentinel.lock().unwrap();
+        let sentinel_adapter = state.core_collection.sentinel();
+        let sentinel = sentinel_adapter.lock().unwrap();
         sentinel.scan_input(&prompt)
     };
 
     if !scan_result.safe {
-        log::warn!("Security scan failed: {:?}", scan_result.threats);
+        log::warn!("[Sentinel v14] Security scan failed: {:?}", scan_result.threats);
+        // Log to SingularityEngine Sentinel module
+        if let Ok(engine) = state.core_collection.engine().lock() {
+            let sentinel_mod = engine.sentinel();
+            log::info!("[Sentinel v14] Alert count: {}", sentinel_mod.alert_count);
+        }
         return Err("Input rejected by security scan".to_string());
     }
 
-    // Analyze context with Harmonia
+    // Analyze context with Harmonia (v14 - via CoreCollection)
     let context_analysis = {
-        let harmonia = state.harmonia.lock().unwrap();
+        let harmonia_adapter = state.core_collection.harmonia();
+        let harmonia = harmonia_adapter.lock().unwrap();
         harmonia.analyze_context(&prompt)
     };
 
@@ -124,27 +115,42 @@ pub async fn ai_query(
         stream: false,
     };
 
-    // Query AI through router
+    // Query AI through router (cascade Gemini → Ollama → Local)
     let router = state.ai_router.lock().unwrap();
     let response = router
         .query(request)
         .await
         .map_err(|e| e.to_string())?;
 
-    // Balance response with Harmonia
+    log::info!("[AI Router v14] Response from {:?} ({} tokens)", response.provider, response.tokens);
+
+    // Balance response with Harmonia (v14 - via CoreCollection)
     let balanced_response = {
-        let harmonia = state.harmonia.lock().unwrap();
+        let harmonia_adapter = state.core_collection.harmonia();
+        let harmonia = harmonia_adapter.lock().unwrap();
         harmonia.balance_response(&response.content, &context_analysis)
     };
 
-    // Save to memory
+    // Save to memory + sync to MemoryModule v14
     if let Ok(mut conv_opt) = state.current_conversation.lock() {
         if let Some(conv) = conv_opt.as_mut() {
             conv.add_entry(MessageRole::User, prompt, 0);
             conv.add_entry(MessageRole::Assistant, balanced_response.clone(), response.tokens);
 
+            // Save to persistent storage
             let storage = state.memory_storage.lock().unwrap();
-            let _ = storage.save_conversation(conv);
+            if let Err(e) = storage.save_conversation(conv) {
+                log::warn!("[Memory v14] Failed to save conversation: {}", e);
+            } else {
+                log::info!("[Memory v14] Conversation saved: {}", conv.id);
+
+                // Sync to MemoryModule in SingularityEngine
+                if let Ok(engine) = state.core_collection.engine().lock() {
+                    let memory_mod = engine.memory();
+                    log::info!("[Memory v14] Memory count: {}, capacity: {:.2}%",
+                        memory_mod.memory_count, memory_mod.capacity_usage * 100.0);
+                }
+            }
         }
     }
 

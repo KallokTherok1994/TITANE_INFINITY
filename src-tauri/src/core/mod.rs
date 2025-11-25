@@ -3,21 +3,21 @@
 //   Unified core system for SingularityEngine
 // ═══════════════════════════════════════════════════════════════
 
-pub mod types;
-pub mod state;
 pub mod engine;
+pub mod legacy; // Legacy compatibility adapters
 pub mod modules;
-pub mod legacy;  // Legacy compatibility adapters
-pub mod utils;   // Unified utilities (timestamps, helpers)
-pub mod tapi_error; // Standard error type for all APIs
+pub mod state;
+pub mod tapi_error;
+pub mod types;
+pub mod utils; // Unified utilities (timestamps, helpers) // Standard error type for all APIs
 
 // Re-export main types
-pub use types::*;
-pub use state::*;
 pub use engine::*;
 pub use modules::*;
-pub use utils::*;
+pub use state::*;
 pub use tapi_error::{TAPIError, TAPIErrorKind};
+pub use types::*;
+pub use utils::*;
 
 // Re-export legacy adapters for backward compatibility
-pub use legacy::{HeliosCore, MemoryCore, NexusCore, HarmoniaCore, SentinelCore};
+pub use legacy::{HarmoniaCore, HeliosCore, MemoryCore, NexusCore, SentinelCore};

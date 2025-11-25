@@ -254,40 +254,48 @@ pub fn set_session_id(id: Option<String>) {
 #[macro_export]
 macro_rules! log_info {
     ($collector:expr, $core:expr, $msg:expr) => {
-        $collector.log(
-            $crate::devtools::LogLevel::Info,
-            $core.into(),
-            $msg.into(),
-            serde_json::json!({}),
-        ).await
+        $collector
+            .log(
+                $crate::devtools::LogLevel::Info,
+                $core.into(),
+                $msg.into(),
+                serde_json::json!({}),
+            )
+            .await
     };
     ($collector:expr, $core:expr, $msg:expr, $ctx:expr) => {
-        $collector.log(
-            $crate::devtools::LogLevel::Info,
-            $core.into(),
-            $msg.into(),
-            $ctx,
-        ).await
+        $collector
+            .log(
+                $crate::devtools::LogLevel::Info,
+                $core.into(),
+                $msg.into(),
+                $ctx,
+            )
+            .await
     };
 }
 
 #[macro_export]
 macro_rules! log_error {
     ($collector:expr, $core:expr, $msg:expr) => {
-        $collector.log(
-            $crate::devtools::LogLevel::Error,
-            $core.into(),
-            $msg.into(),
-            serde_json::json!({}),
-        ).await
+        $collector
+            .log(
+                $crate::devtools::LogLevel::Error,
+                $core.into(),
+                $msg.into(),
+                serde_json::json!({}),
+            )
+            .await
     };
     ($collector:expr, $core:expr, $msg:expr, $ctx:expr) => {
-        $collector.log(
-            $crate::devtools::LogLevel::Error,
-            $core.into(),
-            $msg.into(),
-            $ctx,
-        ).await
+        $collector
+            .log(
+                $crate::devtools::LogLevel::Error,
+                $core.into(),
+                $msg.into(),
+                $ctx,
+            )
+            .await
     };
 }
 

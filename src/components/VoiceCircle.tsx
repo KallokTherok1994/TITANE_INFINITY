@@ -14,6 +14,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
+import { useAnimation } from '../contexts/AnimationContext';
 import './VoiceCircle.css';
 
 interface VoiceCircleProps {
@@ -39,13 +40,14 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
   color = '#3b82f6',
   glowIntensity = 1,
 }) => {
+  const { shouldReduceMotion, shouldThrottle } = useAnimation();
   const [energy, setEnergy] = useState(0);
   const animationRef = useRef<number>();
 
-  // Spring physics pour mouvement fluide
+  // Spring physics pour mouvement fluide (adaptatif selon performance)
   const volumeSpring = useSpring(volume, {
-    stiffness: 300,
-    damping: 30,
+    stiffness: shouldReduceMotion ? 100 : shouldThrottle ? 200 : 300,
+    damping: shouldReduceMotion ? 50 : shouldThrottle ? 40 : 30,
     mass: 0.5,
   });
 

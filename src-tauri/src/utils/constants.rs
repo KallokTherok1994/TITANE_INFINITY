@@ -14,7 +14,7 @@ pub const APP_DESCRIPTION: &str = "Backend Architecture Refactor - Clean, Modula
 
 /// System monitoring intervals
 pub const HELIOS_INTERVAL_MS: u64 = 1000; // 1s
-pub const NEXUS_INTERVAL_MS: u64 = 2000;  // 2s
+pub const NEXUS_INTERVAL_MS: u64 = 2000; // 2s
 pub const SENTINEL_INTERVAL_MS: u64 = 5000; // 5s
 
 /// Memory management

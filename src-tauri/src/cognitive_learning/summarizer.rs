@@ -44,15 +44,18 @@ impl Summarizer {
 
         // Création du résumé (premiers 300 caractères + points clés)
         let summary_text = if content.len() > 300 {
-            format!("{}...\n\nPoints clés:\n- {}",
+            format!(
+                "{}...\n\nPoints clés:\n- {}",
                 &content[..300],
-                key_points.join("\n- "))
+                key_points.join("\n- ")
+            )
         } else {
             content.clone()
         };
 
         let summary_length = summary_text.len();
-        let compression_ratio = (original_length as f32 - summary_length as f32) / original_length as f32;
+        let compression_ratio =
+            (original_length as f32 - summary_length as f32) / original_length as f32;
 
         Summary {
             id,

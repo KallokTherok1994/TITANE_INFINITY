@@ -133,7 +133,10 @@ impl EvolutionEngine {
             analysis.insert("performance".to_string(), "needs_optimization".to_string());
         }
         if metrics.cognitive_depth < 80.0 {
-            analysis.insert("cognitive_depth".to_string(), "needs_enhancement".to_string());
+            analysis.insert(
+                "cognitive_depth".to_string(),
+                "needs_enhancement".to_string(),
+            );
         }
 
         analysis
@@ -191,7 +194,10 @@ impl EvolutionEngine {
     }
 
     fn track_improvements(&mut self, current: &EvolutionMetrics) {
-        if let Some(previous) = self.metrics_history.get(self.metrics_history.len().saturating_sub(2)) {
+        if let Some(previous) = self
+            .metrics_history
+            .get(self.metrics_history.len().saturating_sub(2))
+        {
             self.improvements.insert(
                 "stability".to_string(),
                 current.stability - previous.stability,
@@ -211,9 +217,18 @@ impl EvolutionEngine {
     pub fn get_stats(&self) -> HashMap<String, serde_json::Value> {
         let mut stats = HashMap::new();
 
-        stats.insert("total_cycles".to_string(), serde_json::json!(self.cycle_count));
-        stats.insert("pending_mutations".to_string(), serde_json::json!(self.mutations.len()));
-        stats.insert("improvements".to_string(), serde_json::to_value(&self.improvements).unwrap());
+        stats.insert(
+            "total_cycles".to_string(),
+            serde_json::json!(self.cycle_count),
+        );
+        stats.insert(
+            "pending_mutations".to_string(),
+            serde_json::json!(self.mutations.len()),
+        );
+        stats.insert(
+            "improvements".to_string(),
+            serde_json::to_value(&self.improvements).unwrap(),
+        );
 
         stats
     }

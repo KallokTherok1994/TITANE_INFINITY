@@ -1,11 +1,12 @@
 // TITANE∞ v12 - Gemini AI Provider
 // Google Gemini API integration with streaming support
 
-use super::{AIError, AIRequest, AIResponse, AIProvider, AIResult};
+use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
-const GEMINI_API_URL: &str = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+const GEMINI_API_URL: &str =
+    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
 const TIMEOUT_SECONDS: u64 = 30;
 
 #[derive(Debug, Serialize)]

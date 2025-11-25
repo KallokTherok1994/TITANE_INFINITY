@@ -56,8 +56,8 @@ impl PersistenceLayer {
             .await
             .map_err(|e| format!("Read error: {}", e))?;
 
-        let state: SingularityState = serde_json::from_str(&json)
-            .map_err(|e| format!("Deserialization error: {}", e))?;
+        let state: SingularityState =
+            serde_json::from_str(&json).map_err(|e| format!("Deserialization error: {}", e))?;
 
         Ok(state)
     }

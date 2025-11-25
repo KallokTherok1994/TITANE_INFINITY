@@ -18,28 +18,46 @@ pub struct NodeInfo {
     pub id: String,
     pub addr: SocketAddr,
     pub role: NodeRole,
-    pub health: u8,       // 0-100
-    pub load: u8,         // 0-100
-    pub last_seen: u64,   // timestamp
+    pub health: u8,     // 0-100
+    pub load: u8,       // 0-100
+    pub last_seen: u64, // timestamp
     pub capabilities: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum NodeRole {
-    Root,      // Main authority
-    Worker,    // Computation node
-    Storage,   // Data storage
-    Monitor,   // Observation
+    Root,    // Main authority
+    Worker,  // Computation node
+    Storage, // Data storage
+    Monitor, // Observation
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MeshMessage {
-    Discover { node_id: String },
-    DiscoverReply { node_info: NodeInfo },
-    Heartbeat { node_id: String, health: u8, load: u8 },
-    StateSync { data: Vec<u8> },
-    Request { id: String, command: String, payload: Vec<u8> },
-    Response { id: String, success: bool, data: Vec<u8> },
+    Discover {
+        node_id: String,
+    },
+    DiscoverReply {
+        node_info: NodeInfo,
+    },
+    Heartbeat {
+        node_id: String,
+        health: u8,
+        load: u8,
+    },
+    StateSync {
+        data: Vec<u8>,
+    },
+    Request {
+        id: String,
+        command: String,
+        payload: Vec<u8>,
+    },
+    Response {
+        id: String,
+        success: bool,
+        data: Vec<u8>,
+    },
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -98,7 +116,9 @@ impl MeshLayer {
                 interval.tick().await;
 
                 // Broadcast discovery message
-                let msg = MeshMessage::Discover { node_id: node_id.clone() };
+                let msg = MeshMessage::Discover {
+                    node_id: node_id.clone(),
+                };
                 let serialized = serde_json::to_vec(&msg).unwrap();
 
                 // Broadcast to local network (255.255.255.255)
@@ -111,9 +131,10 @@ impl MeshLayer {
                     .unwrap()
                     .as_secs();
 
-                peers.lock().unwrap().retain(|_, node| {
-                    now - node.last_seen < 30
-                });
+                peers
+                    .lock()
+                    .unwrap()
+                    .retain(|_, node| now - node.last_seen < 30);
             }
         });
     }
@@ -131,12 +152,8 @@ impl MeshLayer {
                 interval.tick().await;
 
                 // Send heartbeat to all known peers
-                let peer_addrs: Vec<SocketAddr> = peers
-                    .lock()
-                    .unwrap()
-                    .values()
-                    .map(|n| n.addr)
-                    .collect();
+                let peer_addrs: Vec<SocketAddr> =
+                    peers.lock().unwrap().values().map(|n| n.addr).collect();
 
                 for addr in peer_addrs {
                     let msg = MeshMessage::Heartbeat {
@@ -165,13 +182,19 @@ impl MeshLayer {
     /// Send message to specific peer
     pub async fn send_to_peer(&self, peer_id: &str, msg: MeshMessage) -> Result<(), String> {
         let socket = self.socket.as_ref().ok_or("Socket not initialized")?;
-        let peers = self.peers.lock().unwrap();
-        let peer = peers.get(peer_id).ok_or("Peer not found")?;
 
-        let serialized = serde_json::to_vec(&msg)
-            .map_err(|e| format!("Serialization failed: {}", e))?;
+        // Clone peer address before await (drop MutexGuard)
+        let peer_addr = {
+            let peers = self.peers.lock().unwrap();
+            let peer = peers.get(peer_id).ok_or("Peer not found")?;
+            peer.addr
+        };
 
-        socket.send_to(&serialized, peer.addr)
+        let serialized =
+            serde_json::to_vec(&msg).map_err(|e| format!("Serialization failed: {}", e))?;
+
+        socket
+            .send_to(&serialized, peer_addr)
             .await
             .map_err(|e| format!("Send failed: {}", e))?;
 
@@ -181,13 +204,18 @@ impl MeshLayer {
     /// Broadcast message to all peers
     pub async fn broadcast(&self, msg: MeshMessage) -> Result<(), String> {
         let socket = self.socket.as_ref().ok_or("Socket not initialized")?;
-        let peers = self.peers.lock().unwrap();
 
-        let serialized = serde_json::to_vec(&msg)
-            .map_err(|e| format!("Serialization failed: {}", e))?;
+        // Clone all peer addresses before await (drop MutexGuard)
+        let peer_addrs: Vec<_> = {
+            let peers = self.peers.lock().unwrap();
+            peers.values().map(|p| p.addr).collect()
+        };
 
-        for peer in peers.values() {
-            let _ = socket.send_to(&serialized, peer.addr).await;
+        let serialized =
+            serde_json::to_vec(&msg).map_err(|e| format!("Serialization failed: {}", e))?;
+
+        for peer_addr in peer_addrs {
+            let _ = socket.send_to(&serialized, peer_addr).await;
         }
 
         Ok(())

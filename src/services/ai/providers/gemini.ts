@@ -1,20 +1,18 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE_INFINITY v14 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v16.0 — GEMINI PROVIDER
- *   Provider Google Gemini API avec gestion erreurs robuste
+ *   TITANE∞ v14 — GEMINI PROVIDER (TAURI-ONLY)
+ *   Provider Google Gemini API via httpClient Tauri sécurisé
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
+import { httpClient } from '../../../core/http/httpClient';
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
@@ -58,12 +56,20 @@ export const geminiProvider: AIProvider = {
     try {
       const prompt = buildContext(message, history);
 
-      const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
+      const response = await httpClient.post<{
+        candidates?: Array<{
+          content?: {
+            parts?: Array<{ text?: string }>;
+          };
+        }>;
+        error?: {
+          message?: string;
+        };
+      }>(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
+        body: {
           contents: [
             {
               parts: [{ text: prompt }],
@@ -93,26 +99,24 @@ export const geminiProvider: AIProvider = {
               threshold: 'BLOCK_NONE',
             },
           ],
-        }),
+        },
+        timeout: finalConfig.timeout,
         signal: controller.signal,
       });
 
       clearTimeout(timeout);
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          `Gemini API error: ${response.status} - ${errorData.error?.message || 'Unknown error'}`
+          `Gemini API error: ${response.status} - ${response.data?.error?.message || 'Unknown error'}`
         );
       }
 
-      const data = await response.json();
-
-      if (!data.candidates || data.candidates.length === 0) {
+      if (!response.data.candidates || response.data.candidates.length === 0) {
         throw new Error('Gemini: No candidates returned');
       }
 
-      const content = data.candidates[0]?.content?.parts?.[0]?.text;
+      const content = response.data.candidates[0]?.content?.parts?.[0]?.text;
 
       if (!content) {
         throw new Error('Gemini: Empty response');

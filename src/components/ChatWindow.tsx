@@ -122,11 +122,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
       {/* VitalsPanel - System Status */}
       <VitalsPanel
         currentMode={currentMode}
-        provider={connectionStatus.provider}
-        latency={lastLatency}
-        cpuLoad={0}
         messagesCount={messages.length}
-        anomalyCount={anomalyCount}
       />
 
       <div className="chat-messages">\n        {messages.length === 0 && (

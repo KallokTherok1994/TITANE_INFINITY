@@ -55,13 +55,16 @@ impl AssociationEngine {
             assoc.strength = (assoc.strength + 0.1).min(1.0);
             assoc.last_reinforced = timestamp;
         } else {
-            self.associations.insert(key, Association {
-                concept_a,
-                concept_b,
-                strength: 0.3,
-                frequency: 1,
-                last_reinforced: timestamp,
-            });
+            self.associations.insert(
+                key,
+                Association {
+                    concept_a,
+                    concept_b,
+                    strength: 0.3,
+                    frequency: 1,
+                    last_reinforced: timestamp,
+                },
+            );
         }
     }
 
@@ -74,9 +77,8 @@ impl AssociationEngine {
     pub fn get_report(&self) -> AssociationReport {
         let strongest = self.get_strongest(10);
         let network_density = if !self.associations.is_empty() {
-            self.associations.values()
-                .map(|a| a.strength)
-                .sum::<f32>() / self.associations.len() as f32
+            self.associations.values().map(|a| a.strength).sum::<f32>()
+                / self.associations.len() as f32
         } else {
             0.0
         };
@@ -90,7 +92,10 @@ impl AssociationEngine {
 }
 
 #[tauri::command]
-pub async fn cognitive_create_association(concept_a: String, concept_b: String) -> Result<String, String> {
+pub async fn cognitive_create_association(
+    concept_a: String,
+    concept_b: String,
+) -> Result<String, String> {
     let mut engine = AssociationEngine::new();
     engine.create_association(concept_a, concept_b);
     Ok("Association created".to_string())

@@ -120,8 +120,14 @@ fn build_permission_matrix() -> PermissionMatrix {
     // ═══════════════════════════════════════════════════════════════
     // MÉMOIRE
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert("memory_read".to_string(), vec![Role::Root, Role::System, Role::Ia]);
-    matrix.insert("memory_write".to_string(), vec![Role::Root, Role::System, Role::Ia]);
+    matrix.insert(
+        "memory_read".to_string(),
+        vec![Role::Root, Role::System, Role::Ia],
+    );
+    matrix.insert(
+        "memory_write".to_string(),
+        vec![Role::Root, Role::System, Role::Ia],
+    );
     matrix.insert("memory_delete".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("memory_encrypt".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("memory_decrypt".to_string(), vec![Role::Root, Role::System]);
@@ -129,16 +135,28 @@ fn build_permission_matrix() -> PermissionMatrix {
     // ═══════════════════════════════════════════════════════════════
     // FICHIERS
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert("file_read".to_string(), vec![Role::Root, Role::System, Role::User]);
+    matrix.insert(
+        "file_read".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
     matrix.insert("file_write".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("file_delete".to_string(), vec![Role::Root, Role::System]);
-    matrix.insert("file_import".to_string(), vec![Role::Root, Role::System, Role::User]);
-    matrix.insert("file_export".to_string(), vec![Role::Root, Role::System, Role::User]);
+    matrix.insert(
+        "file_import".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
+    matrix.insert(
+        "file_export".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // SINGULARITY STATE
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert("state_read".to_string(), vec![Role::Root, Role::System, Role::Ia, Role::User]);
+    matrix.insert(
+        "state_read".to_string(),
+        vec![Role::Root, Role::System, Role::Ia, Role::User],
+    );
     matrix.insert("state_write".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("state_reset".to_string(), vec![Role::Root]);
     matrix.insert("state_backup".to_string(), vec![Role::Root, Role::System]);
@@ -150,13 +168,19 @@ fn build_permission_matrix() -> PermissionMatrix {
     matrix.insert("engine_start".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("engine_stop".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("engine_reconfigure".to_string(), vec![Role::Root]);
-    matrix.insert("engine_health_check".to_string(), vec![Role::Root, Role::System]);
+    matrix.insert(
+        "engine_health_check".to_string(),
+        vec![Role::Root, Role::System],
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // XP & PROGRESSION
     // ═══════════════════════════════════════════════════════════════
     matrix.insert("xp_gain".to_string(), vec![Role::Root, Role::System]);
-    matrix.insert("xp_read".to_string(), vec![Role::Root, Role::System, Role::Ia, Role::User]);
+    matrix.insert(
+        "xp_read".to_string(),
+        vec![Role::Root, Role::System, Role::Ia, Role::User],
+    );
     matrix.insert("xp_modify".to_string(), vec![Role::Root]);
     matrix.insert("talent_unlock".to_string(), vec![Role::Root, Role::System]);
 
@@ -172,22 +196,40 @@ fn build_permission_matrix() -> PermissionMatrix {
     // ═══════════════════════════════════════════════════════════════
     // PERMISSIONS
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert("permission_view".to_string(), vec![Role::Root, Role::System]);
+    matrix.insert(
+        "permission_view".to_string(),
+        vec![Role::Root, Role::System],
+    );
     matrix.insert("permission_modify".to_string(), vec![Role::Root]);
     matrix.insert("role_escalate".to_string(), vec![Role::Root]);
 
     // ═══════════════════════════════════════════════════════════════
     // IA
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert("ia_generate".to_string(), vec![Role::Root, Role::System, Role::Ia]);
-    matrix.insert("ia_analyze".to_string(), vec![Role::Root, Role::System, Role::Ia]);
-    matrix.insert("ia_learn".to_string(), vec![Role::Root, Role::System, Role::Ia]);
-    matrix.insert("ia_memory_access".to_string(), vec![Role::Root, Role::System, Role::Ia]);
+    matrix.insert(
+        "ia_generate".to_string(),
+        vec![Role::Root, Role::System, Role::Ia],
+    );
+    matrix.insert(
+        "ia_analyze".to_string(),
+        vec![Role::Root, Role::System, Role::Ia],
+    );
+    matrix.insert(
+        "ia_learn".to_string(),
+        vec![Role::Root, Role::System, Role::Ia],
+    );
+    matrix.insert(
+        "ia_memory_access".to_string(),
+        vec![Role::Root, Role::System, Role::Ia],
+    );
 
     // ═══════════════════════════════════════════════════════════════
     // CONFIGURATION
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert("config_read".to_string(), vec![Role::Root, Role::System, Role::User]);
+    matrix.insert(
+        "config_read".to_string(),
+        vec![Role::Root, Role::System, Role::User],
+    );
     matrix.insert("config_write".to_string(), vec![Role::Root]);
 
     // ═══════════════════════════════════════════════════════════════
@@ -233,7 +275,10 @@ pub fn verify_permissions() -> Result<(), String> {
 
     for action in critical_actions {
         let roles = PERMISSIONS.get(action).ok_or_else(|| {
-            format!("Critical action '{}' not defined in permission matrix", action)
+            format!(
+                "Critical action '{}' not defined in permission matrix",
+                action
+            )
         })?;
 
         if !roles.contains(&Role::Root) {
@@ -244,7 +289,10 @@ pub fn verify_permissions() -> Result<(), String> {
         }
     }
 
-    log::info!("✅ Permission matrix verified: {} actions", PERMISSIONS.len());
+    log::info!(
+        "✅ Permission matrix verified: {} actions",
+        PERMISSIONS.len()
+    );
     Ok(())
 }
 

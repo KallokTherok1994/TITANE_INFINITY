@@ -29,26 +29,30 @@ impl IntegrityMap {
     pub fn new() -> Self {
         let mut modules = HashMap::new();
 
-        modules.insert("Frontend".to_string(), ModuleStatus {
-            name: "Frontend".to_string(),
-            health: 0.95,
-            issues: vec![],
-        });
+        modules.insert(
+            "Frontend".to_string(),
+            ModuleStatus {
+                name: "Frontend".to_string(),
+                health: 0.95,
+                issues: vec![],
+            },
+        );
 
-        modules.insert("Backend".to_string(), ModuleStatus {
-            name: "Backend".to_string(),
-            health: 0.92,
-            issues: vec![],
-        });
+        modules.insert(
+            "Backend".to_string(),
+            ModuleStatus {
+                name: "Backend".to_string(),
+                health: 0.92,
+                issues: vec![],
+            },
+        );
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()
             .as_secs();
 
-        let overall_health = modules.values()
-            .map(|m| m.health)
-            .sum::<f32>() / modules.len() as f32;
+        let overall_health = modules.values().map(|m| m.health).sum::<f32>() / modules.len() as f32;
 
         Self {
             timestamp,

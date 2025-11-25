@@ -55,7 +55,8 @@ impl IdeationEngine {
             Idea {
                 id: format!("idea_{}", uuid::Uuid::new_v4()),
                 title: "Cognitive Dashboard Auto-Génér\u{e9}".to_string(),
-                description: "Dashboard qui s'adapte automatiquement aux besoins détectés".to_string(),
+                description: "Dashboard qui s'adapte automatiquement aux besoins détectés"
+                    .to_string(),
                 category: IdeaCategory::UIComponent,
                 innovation_score: 0.85,
                 feasibility: 0.70,
@@ -64,7 +65,8 @@ impl IdeationEngine {
             Idea {
                 id: format!("idea_{}", uuid::Uuid::new_v4()),
                 title: "Protocole d'Auto-Audit Continu".to_string(),
-                description: "Système qui audite le code en temps réel et propose corrections".to_string(),
+                description: "Système qui audite le code en temps réel et propose corrections"
+                    .to_string(),
                 category: IdeaCategory::Protocol,
                 innovation_score: 0.90,
                 feasibility: 0.75,
@@ -72,7 +74,8 @@ impl IdeationEngine {
             },
         ];
 
-        let avg_innovation = ideas.iter().map(|i| i.innovation_score).sum::<f32>() / ideas.len() as f32;
+        let avg_innovation =
+            ideas.iter().map(|i| i.innovation_score).sum::<f32>() / ideas.len() as f32;
 
         IdeationReport {
             timestamp,

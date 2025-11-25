@@ -57,10 +57,16 @@ fn test_path_traversal_blocked() {
 
     // Tentatives de path traversal
     let result = guard.validate_and_resolve("../../etc/passwd");
-    assert!(result.is_err(), "Path traversal avec .. devrait être bloqué");
+    assert!(
+        result.is_err(),
+        "Path traversal avec .. devrait être bloqué"
+    );
 
     let result = guard.validate_and_resolve("subdir/../../../etc/passwd");
-    assert!(result.is_err(), "Path traversal complexe devrait être bloqué");
+    assert!(
+        result.is_err(),
+        "Path traversal complexe devrait être bloqué"
+    );
 
     // Cleanup
     let _ = std::fs::remove_dir_all(&temp_dir);
@@ -141,7 +147,10 @@ fn test_text_sanitization() {
     // Limite longueur
     let long_text = "a".repeat(2000);
     let safe = ShellGuard::sanitize_text(&long_text);
-    assert!(safe.len() <= 1000, "Texte devrait être tronqué à 1000 chars");
+    assert!(
+        safe.len() <= 1000,
+        "Texte devrait être tronqué à 1000 chars"
+    );
 }
 
 #[tokio::test]
@@ -156,7 +165,10 @@ async fn test_safe_operations_workflow() {
     // Workflow complet sécurisé
 
     // 1. Écriture
-    guard.safe_write_string("data.json", r#"{"test": true}"#).await.unwrap();
+    guard
+        .safe_write_string("data.json", r#"{"test": true}"#)
+        .await
+        .unwrap();
 
     // 2. Vérification existence
     assert!(guard.exists("data.json"));

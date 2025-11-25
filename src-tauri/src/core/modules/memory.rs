@@ -3,8 +3,8 @@
 //   Persistent memory and state management
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::*;
 use crate::core::state::SingularityState;
+use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
 /// Memory Module - Persistent memory system

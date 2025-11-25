@@ -17,6 +17,7 @@ import { WakewordIndicator } from './WakewordIndicator';
 import { VoiceCircle } from './VoiceCircle';
 import { FullDuplexWave } from './FullDuplexWave';
 import { ListeningIndicator } from './ListeningIndicator';
+import { useAnimation } from '../contexts/AnimationContext';
 import './VoiceDuplexUI.css';
 
 type DuplexState = 'waiting-wakeword' | 'listening' | 'thinking' | 'speaking' | 'idle';
@@ -32,6 +33,7 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
   onManualActivate,
   onDeactivate,
 }) => {
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
   const [state, setState] = useState<DuplexState>('waiting-wakeword');
   const [wakewordState, setWakewordState] = useState<'waiting' | 'detecting' | 'activated'>('waiting');
   const [inputAudioData, setInputAudioData] = useState<number[]>([]);
@@ -105,7 +107,7 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
           <span className="title-icon">🎙️</span>
           <h2>TITANE∞ Voice Mode Full Duplex</h2>
         </div>
-        
+
         <div className="duplex-status">
           <div className="status-badge" data-state={state}>
             {state === 'waiting-wakeword' && '⏳ En attente'}
@@ -114,7 +116,7 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
             {state === 'speaking' && '🗣️ Parole'}
             {state === 'idle' && '💤 Repos'}
           </div>
-          
+
           <div className="latency-indicator">
             <span className="latency-value">{Math.round(volume * 100)}ms</span>
             <span className="latency-label">latence</span>
@@ -140,7 +142,7 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
                 confidence={0.85}
                 size={180}
               />
-              
+
               <motion.button
                 className="manual-activate-btn glass"
                 onClick={handleManualActivate}

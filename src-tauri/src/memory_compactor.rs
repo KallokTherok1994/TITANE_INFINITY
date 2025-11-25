@@ -26,7 +26,7 @@ pub struct CompactorConfig {
 impl Default for CompactorConfig {
     fn default() -> Self {
         Self {
-            max_file_size: 10 * 1024 * 1024,  // 10 MB
+            max_file_size: 10 * 1024 * 1024, // 10 MB
             max_entries: 10_000,
             enable_deduplication: true,
             enable_sorting: true,
@@ -78,14 +78,14 @@ impl MemoryCompactor {
         let path = path.as_ref();
 
         // Lecture du fichier
-        let content = fs::read_to_string(path)
-            .map_err(|e| format!("Failed to read file: {}", e))?;
+        let content =
+            fs::read_to_string(path).map_err(|e| format!("Failed to read file: {}", e))?;
 
         let original_size = content.len();
 
         // Parse JSON
-        let entries: Vec<MemoryEntry> = serde_json::from_str(&content)
-            .map_err(|e| format!("Failed to parse JSON: {}", e))?;
+        let entries: Vec<MemoryEntry> =
+            serde_json::from_str(&content).map_err(|e| format!("Failed to parse JSON: {}", e))?;
 
         let original_count = entries.len();
 
@@ -128,8 +128,7 @@ impl MemoryCompactor {
         }
 
         // Écriture du fichier compacté
-        fs::write(path, compacted_json)
-            .map_err(|e| format!("Failed to write file: {}", e))?;
+        fs::write(path, compacted_json).map_err(|e| format!("Failed to write file: {}", e))?;
 
         // Calcul des métriques
         let compression_ratio = if original_size > 0 {
@@ -165,7 +164,10 @@ impl MemoryCompactor {
     }
 
     /// Compacte tous les fichiers d'un répertoire
-    pub fn compact_directory<P: AsRef<Path>>(&self, dir: P) -> Result<Vec<CompactionResult>, String> {
+    pub fn compact_directory<P: AsRef<Path>>(
+        &self,
+        dir: P,
+    ) -> Result<Vec<CompactionResult>, String> {
         let dir = dir.as_ref();
 
         if !dir.is_dir() {
@@ -181,7 +183,12 @@ impl MemoryCompactor {
             if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("json") {
                 match self.compact_file(&path) {
                     Ok(result) => {
-                        log::info!("Compacted {:?}: {} -> {} entries", path, result.original_entries, result.compacted_entries);
+                        log::info!(
+                            "Compacted {:?}: {} -> {} entries",
+                            path,
+                            result.original_entries,
+                            result.compacted_entries
+                        );
                         results.push(result);
                     }
                     Err(e) => {
@@ -204,19 +211,18 @@ impl MemoryCompactor {
         }
 
         // Vérification taille
-        let metadata = fs::metadata(path)
-            .map_err(|e| format!("Failed to read metadata: {}", e))?;
+        let metadata = fs::metadata(path).map_err(|e| format!("Failed to read metadata: {}", e))?;
 
         if metadata.len() as usize > self.config.max_file_size {
             return Err(format!("File too large: {} bytes", metadata.len()));
         }
 
         // Vérification JSON
-        let content = fs::read_to_string(path)
-            .map_err(|e| format!("Failed to read file: {}", e))?;
+        let content =
+            fs::read_to_string(path).map_err(|e| format!("Failed to read file: {}", e))?;
 
-        let entries: Vec<MemoryEntry> = serde_json::from_str(&content)
-            .map_err(|e| format!("Invalid JSON: {}", e))?;
+        let entries: Vec<MemoryEntry> =
+            serde_json::from_str(&content).map_err(|e| format!("Invalid JSON: {}", e))?;
 
         // Vérification nombre d'entrées
         if entries.len() > self.config.max_entries {

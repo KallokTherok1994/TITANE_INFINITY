@@ -45,12 +45,12 @@ impl PhysicalLayer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HeliosState {
     pub active: bool,
-    pub cpu_usage: f32,        // 0-1
-    pub memory_usage: f32,     // 0-1
-    pub disk_usage: f32,       // 0-1
-    pub temperature: f32,      // Celsius
+    pub cpu_usage: f32,             // 0-1
+    pub memory_usage: f32,          // 0-1
+    pub disk_usage: f32,            // 0-1
+    pub temperature: f32,           // Celsius
     pub battery_level: Option<f32>, // 0-1 (None if desktop)
-    pub last_update: u64,      // timestamp
+    pub last_update: u64,           // timestamp
 }
 
 impl Default for HeliosState {
@@ -69,11 +69,11 @@ impl Default for HeliosState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SystemHealth {
-    pub global_health: f32,    // 0-1
+    pub global_health: f32, // 0-1
     pub services_running: u32,
     pub errors_count: u32,
     pub warnings_count: u32,
-    pub uptime: u64,           // seconds
+    pub uptime: u64, // seconds
 }
 
 impl Default for SystemHealth {
@@ -90,10 +90,10 @@ impl Default for SystemHealth {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PerformanceMetrics {
-    pub cpu_usage: f32,        // 0-1
-    pub memory_usage: f32,     // 0-1
-    pub fps: f32,              // frames per second
-    pub latency: u64,          // ms
+    pub cpu_usage: f32,         // 0-1
+    pub memory_usage: f32,      // 0-1
+    pub fps: f32,               // frames per second
+    pub latency: u64,           // ms
     pub performance_score: f32, // 0-1
 }
 
@@ -149,9 +149,9 @@ impl CognitiveLayer {
 pub struct MemoryState {
     pub total_memories: u32,
     pub active_memories: u32,
-    pub memory_usage: f32,     // 0-1
+    pub memory_usage: f32,           // 0-1
     pub last_retrieval: Option<u64>, // timestamp
-    pub compression_ratio: f32, // 0-1
+    pub compression_ratio: f32,      // 0-1
 }
 
 impl Default for MemoryState {
@@ -170,7 +170,7 @@ impl Default for MemoryState {
 pub struct ConversationState {
     pub active_session: bool,
     pub message_count: u32,
-    pub context_length: u32,   // tokens
+    pub context_length: u32, // tokens
     pub last_message: Option<String>,
     pub last_timestamp: Option<u64>,
 }
@@ -191,7 +191,7 @@ impl Default for ConversationState {
 pub struct KnowledgeState {
     pub total_entries: u32,
     pub indexed_entries: u32,
-    pub knowledge_score: f32,  // 0-1
+    pub knowledge_score: f32, // 0-1
     pub last_update: Option<u64>,
 }
 
@@ -245,9 +245,9 @@ impl SymbolicLayer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PersonaState {
     pub name: String,
-    pub mood: String,          // "clair", "vibrant", "alerte"
-    pub intensity: f32,        // 0-1
-    pub evolution_level: f32,  // 0-1
+    pub mood: String,         // "clair", "vibrant", "alerte"
+    pub intensity: f32,       // 0-1
+    pub evolution_level: f32, // 0-1
     pub last_interaction: Option<u64>,
 }
 
@@ -265,8 +265,8 @@ impl Default for PersonaState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ArchetypeState {
-    pub active_archetype: String, // "helios", "nexus", "harmonia"
-    pub strength: f32,     // 0-1
+    pub active_archetype: String,   // "helios", "nexus", "harmonia"
+    pub strength: f32,              // 0-1
     pub transition: Option<String>, // archétype de transition
 }
 
@@ -282,9 +282,9 @@ impl Default for ArchetypeState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VisualState {
-    pub theme: String,         // "light", "dark", "auto"
-    pub accent_color: String,  // hex color
-    pub glow_intensity: f32,   // 0-1
+    pub theme: String,        // "light", "dark", "auto"
+    pub accent_color: String, // hex color
+    pub glow_intensity: f32,  // 0-1
     pub motion_enabled: bool,
     pub depth_enabled: bool,
 }
@@ -330,8 +330,8 @@ impl Default for AdaptiveLayer {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EvolutionState {
     pub generation: u32,
-    pub mutation_rate: f32,    // 0-1
-    pub fitness_score: f32,    // 0-1
+    pub mutation_rate: f32, // 0-1
+    pub fitness_score: f32, // 0-1
     pub last_evolution: Option<u64>,
 }
 
@@ -416,8 +416,8 @@ impl Default for UIState {
 pub struct RuntimeState {
     pub version: String,
     pub build: String,
-    pub environment: String,   // "dev", "prod"
-    pub uptime: u64,           // seconds
+    pub environment: String, // "dev", "prod"
+    pub uptime: u64,         // seconds
     pub restart_count: u32,
 }
 

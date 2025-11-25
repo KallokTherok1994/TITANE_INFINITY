@@ -145,7 +145,9 @@ fn count_functions_rust(text: &str) -> usize {
     text.lines()
         .filter(|line| {
             let trimmed = line.trim();
-            trimmed.starts_with("fn ") || trimmed.starts_with("pub fn ") || trimmed.starts_with("async fn ")
+            trimmed.starts_with("fn ")
+                || trimmed.starts_with("pub fn ")
+                || trimmed.starts_with("async fn ")
         })
         .count()
 }
@@ -176,5 +178,7 @@ fn count_hooks(text: &str) -> usize {
 }
 
 fn count_headers_md(text: &str) -> usize {
-    text.lines().filter(|line| line.trim().starts_with('#')).count()
+    text.lines()
+        .filter(|line| line.trim().starts_with('#'))
+        .count()
 }

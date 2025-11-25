@@ -3,14 +3,14 @@
 //! Classification automatique + stockage fichiers + VaultEngine (Super-Prompt J3)
 //! ═══════════════════════════════════════════════════════════════════
 
+use crate::security::encryption::MasterKey;
+use crate::security::vault_engine::{VaultEngine, VaultError};
+use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
-use crate::security::vault_engine::{VaultEngine, VaultError};
-use crate::security::encryption::MasterKey;
-use lazy_static::lazy_static;
-use tokio::sync::RwLock;
 use std::sync::Arc;
+use tokio::sync::RwLock;
 
 /// Fichier sauvegardé dans la mémoire
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -128,7 +128,8 @@ pub async fn save_encrypted<T: Serialize>(file_id: &str, data: &T) -> Result<(),
     let vault_lock = VAULT.read().await;
     let vault = vault_lock.as_ref().ok_or("VaultEngine not initialized")?;
 
-    vault.save(file_id, data)
+    vault
+        .save(file_id, data)
         .await
         .map(|_| ())
         .map_err(|e| e.to_string())
@@ -139,9 +140,7 @@ pub async fn load_encrypted<T: for<'de> Deserialize<'de>>(file_id: &str) -> Resu
     let vault_lock = VAULT.read().await;
     let vault = vault_lock.as_ref().ok_or("VaultEngine not initialized")?;
 
-    vault.load(file_id)
-        .await
-        .map_err(|e| e.to_string())
+    vault.load(file_id).await.map_err(|e| e.to_string())
 }
 
 #[cfg(test)]
@@ -150,9 +149,18 @@ mod tests {
 
     #[test]
     fn test_classify_text() {
-        assert_eq!(classify_text("fn main() { println!(\"Rust\"); }"), "code-rust");
-        assert_eq!(classify_text("const App = () => <div>React</div>"), "code-react");
-        assert_eq!(classify_text("interface User { name: string; }"), "code-typescript");
+        assert_eq!(
+            classify_text("fn main() { println!(\"Rust\"); }"),
+            "code-rust"
+        );
+        assert_eq!(
+            classify_text("const App = () => <div>React</div>"),
+            "code-react"
+        );
+        assert_eq!(
+            classify_text("interface User { name: string; }"),
+            "code-typescript"
+        );
         assert_eq!(classify_text("Hello"), "notes-courtes");
     }
 

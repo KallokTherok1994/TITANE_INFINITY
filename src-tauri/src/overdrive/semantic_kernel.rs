@@ -7,8 +7,8 @@
 use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use tokio::sync::RwLock;
 use tauri::State;
+use tokio::sync::RwLock;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -87,7 +87,8 @@ async fn load_default_skills(state: &SemanticKernelState) {
         SemanticSkill {
             name: "summarize".to_string(),
             description: "Résume un texte long en conservant les points clés".to_string(),
-            prompt_template: "Résume le texte suivant de manière concise :\n\n{{$input}}\n\nRésumé:".to_string(),
+            prompt_template:
+                "Résume le texte suivant de manière concise :\n\n{{$input}}\n\nRésumé:".to_string(),
             input_variables: vec!["input".to_string()],
             examples: vec![],
             enabled: true,
@@ -126,7 +127,9 @@ async fn load_default_skills(state: &SemanticKernelState) {
         SemanticSkill {
             name: "translate".to_string(),
             description: "Traduit un texte d'une langue à une autre".to_string(),
-            prompt_template: "Traduis le texte suivant de {{$from}} vers {{$to}} :\n\n{{$text}}\n\nTraduction:".to_string(),
+            prompt_template:
+                "Traduis le texte suivant de {{$from}} vers {{$to}} :\n\n{{$text}}\n\nTraduction:"
+                    .to_string(),
             input_variables: vec!["from".to_string(), "to".to_string(), "text".to_string()],
             examples: vec![],
             enabled: true,
@@ -167,7 +170,9 @@ pub async fn semantic_execute_skill(
         let skills = state.skills.read().await;
         skills
             .get(&request.skill_name)
-            .ok_or_else(|| TAPIError::not_found(format!("Skill introuvable: {}", request.skill_name)))?
+            .ok_or_else(|| {
+                TAPIError::not_found(format!("Skill introuvable: {}", request.skill_name))
+            })?
             .clone()
     };
 
@@ -203,7 +208,7 @@ fn build_prompt(skill: &SemanticSkill, request: &SemanticRequest) -> Result<Stri
             .inputs
             .get(var)
             .ok_or_else(|| TAPIError::validation(format!("Variable manquante: {}", var)))?;
-        prompt = prompt.replace(&format!("{{{{${}}}}}",var), value);
+        prompt = prompt.replace(&format!("{{{{${}}}}}", var), value);
     }
 
     // Ajouter contexte si présent
@@ -310,7 +315,9 @@ async fn suggest_skill(intent: &str, state: &SemanticKernelState) -> Option<Stri
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn semantic_list_skills(state: State<'_, SemanticKernelState>) -> Result<Vec<SemanticSkill>, TAPIError> {
+pub async fn semantic_list_skills(
+    state: State<'_, SemanticKernelState>,
+) -> Result<Vec<SemanticSkill>, TAPIError> {
     let skills = state.skills.read().await;
     Ok(skills.values().cloned().collect())
 }
@@ -359,7 +366,11 @@ pub async fn semantic_toggle_skill(
     let mut skills = state.skills.write().await;
     if let Some(skill) = skills.get_mut(&skill_name) {
         skill.enabled = enabled;
-        println!("[SEMANTIC] Skill {} {}", skill_name, if enabled { "activé" } else { "désactivé" });
+        println!(
+            "[SEMANTIC] Skill {} {}",
+            skill_name,
+            if enabled { "activé" } else { "désactivé" }
+        );
         Ok(())
     } else {
         Err(TAPIError::not_found(
@@ -407,7 +418,9 @@ pub async fn semantic_chain_skills(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn semantic_clear_cache(state: State<'_, SemanticKernelState>) -> Result<usize, TAPIError> {
+pub async fn semantic_clear_cache(
+    state: State<'_, SemanticKernelState>,
+) -> Result<usize, TAPIError> {
     let mut cache = state.intent_cache.write().await;
     let size = cache.len();
     cache.clear();
@@ -415,7 +428,9 @@ pub async fn semantic_clear_cache(state: State<'_, SemanticKernelState>) -> Resu
 }
 
 #[tauri::command]
-pub async fn semantic_get_cache_size(state: State<'_, SemanticKernelState>) -> Result<usize, TAPIError> {
+pub async fn semantic_get_cache_size(
+    state: State<'_, SemanticKernelState>,
+) -> Result<usize, TAPIError> {
     let cache = state.intent_cache.read().await;
     Ok(cache.len())
 }

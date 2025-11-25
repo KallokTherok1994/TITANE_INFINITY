@@ -20,6 +20,7 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
 import { ThemeProvider } from './themes/ThemeProvider';
+import { AnimationProvider } from './contexts/AnimationContext';
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 import { CompactXPBar } from './components/experience/CompactXPBar';
@@ -305,17 +306,19 @@ const AppRouter: React.FC = () => {
 /**
  * ═══════════════════════════════════════════════════════════════
  * APP COMPONENT - Point d'entrée principal avec Auto-Heal
- * ThemeProvider > BrowserRouter > AutoHealErrorBoundary
+ * ThemeProvider > AnimationProvider > BrowserRouter > AutoHealErrorBoundary
  * ═══════════════════════════════════════════════════════════════
  */
 const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AutoHealErrorBoundary>
-          <AppRouter />
-        </AutoHealErrorBoundary>
-      </BrowserRouter>
+      <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+        <BrowserRouter>
+          <AutoHealErrorBoundary>
+            <AppRouter />
+          </AutoHealErrorBoundary>
+        </BrowserRouter>
+      </AnimationProvider>
     </ThemeProvider>
   );
 };

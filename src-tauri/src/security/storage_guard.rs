@@ -25,7 +25,8 @@ impl StorageGuard {
     pub async fn safe_read(&self, relative_path: &str) -> Result<Vec<u8>, String> {
         let full_path = self.validate_and_resolve(relative_path)?;
 
-        fs::read(&full_path).await
+        fs::read(&full_path)
+            .await
             .map_err(|e| format!("Read failed: {}", e))
     }
 
@@ -33,7 +34,8 @@ impl StorageGuard {
     pub async fn safe_read_string(&self, relative_path: &str) -> Result<String, String> {
         let full_path = self.validate_and_resolve(relative_path)?;
 
-        fs::read_to_string(&full_path).await
+        fs::read_to_string(&full_path)
+            .await
             .map_err(|e| format!("Read string failed: {}", e))
     }
 
@@ -43,11 +45,13 @@ impl StorageGuard {
 
         // Créer répertoires parents si nécessaire
         if let Some(parent) = full_path.parent() {
-            fs::create_dir_all(parent).await
+            fs::create_dir_all(parent)
+                .await
                 .map_err(|e| format!("Create dir failed: {}", e))?;
         }
 
-        fs::write(&full_path, data).await
+        fs::write(&full_path, data)
+            .await
             .map_err(|e| format!("Write failed: {}", e))
     }
 
@@ -61,7 +65,8 @@ impl StorageGuard {
         let full_path = self.validate_and_resolve(relative_path)?;
 
         if full_path.exists() {
-            fs::remove_file(&full_path).await
+            fs::remove_file(&full_path)
+                .await
                 .map_err(|e| format!("Delete failed: {}", e))?;
         }
 
@@ -81,13 +86,16 @@ impl StorageGuard {
     pub async fn safe_list_dir(&self, relative_path: &str) -> Result<Vec<String>, String> {
         let full_path = self.validate_and_resolve(relative_path)?;
 
-        let mut entries = fs::read_dir(&full_path).await
+        let mut entries = fs::read_dir(&full_path)
+            .await
             .map_err(|e| format!("Read dir failed: {}", e))?;
 
         let mut files = Vec::new();
-        while let Some(entry) = entries.next_entry().await
-            .map_err(|e| format!("Entry error: {}", e))? {
-
+        while let Some(entry) = entries
+            .next_entry()
+            .await
+            .map_err(|e| format!("Entry error: {}", e))?
+        {
             if let Some(name) = entry.file_name().to_str() {
                 files.push(name.to_string());
             }
@@ -98,7 +106,6 @@ impl StorageGuard {
 
     /// Valide et résout un chemin relatif vers chemin absolu sécurisé
     pub fn validate_and_resolve(&self, relative_path: &str) -> Result<PathBuf, String> {
-
         // 1. Vérifications basiques
         if relative_path.is_empty() {
             return Err("Empty path".into());
@@ -143,13 +150,15 @@ impl StorageGuard {
             // Tenter canonicalisation (résout symlinks, ..)
             // Note: échoue si le fichier n'existe pas encore, donc on vérifie aussi le parent
             let canonical = if full_path.exists() {
-                full_path.canonicalize()
+                full_path
+                    .canonicalize()
                     .map_err(|e| format!("Canonicalize failed: {}", e))?
             } else {
                 // Pour nouveaux fichiers, vérifier le répertoire parent
                 if let Some(parent) = full_path.parent() {
                     if parent.exists() {
-                        let canonical_parent = parent.canonicalize()
+                        let canonical_parent = parent
+                            .canonicalize()
                             .map_err(|e| format!("Canonicalize parent failed: {}", e))?;
 
                         if !canonical_parent.starts_with(&self.data_root) {
@@ -182,13 +191,9 @@ impl StorageGuard {
 
     /// Sanitize filename (enlever caractères interdits)
     pub fn sanitize_filename(filename: &str) -> String {
-        filename.chars()
-            .filter(|c| {
-                c.is_alphanumeric()
-                || *c == '_'
-                || *c == '-'
-                || *c == '.'
-            })
+        filename
+            .chars()
+            .filter(|c| c.is_alphanumeric() || *c == '_' || *c == '-' || *c == '.')
             .take(255) // Limite longueur nom fichier
             .collect()
     }

@@ -4,10 +4,10 @@
 // Moteur de mémoire conversationnelle avec embeddings + vector store
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use tauri::State;
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -20,16 +20,16 @@ pub struct MemoryEntry {
     pub embedding: Vec<f32>,
     pub metadata: MemoryMetadata,
     pub timestamp: u64,
-    pub importance: f32,      // 0.0-1.0
+    pub importance: f32, // 0.0-1.0
     pub access_count: u32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryMetadata {
-    pub entry_type: String,   // conversation|fact|skill|experience
+    pub entry_type: String, // conversation|fact|skill|experience
     pub tags: Vec<String>,
     pub related_ids: Vec<String>,
-    pub source: String,       // chat|voice|project|system
+    pub source: String, // chat|voice|project|system
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -86,7 +86,10 @@ pub async fn memory_store(
 ) -> Result<String, TAPIError> {
     let entry_id = uuid::Uuid::new_v4().to_string();
 
-    println!("[MEMORY] Stockage: {} - Type: {}", content, metadata.entry_type);
+    println!(
+        "[MEMORY] Stockage: {} - Type: {}",
+        content, metadata.entry_type
+    );
 
     // Générer embedding
     let embedding = generate_embedding(&content, &state).await?;
@@ -145,7 +148,10 @@ pub async fn memory_store_conversation(
         stored += 1;
     }
 
-    println!("[MEMORY] {} messages stockés pour conversation {}", stored, conversation_id);
+    println!(
+        "[MEMORY] {} messages stockés pour conversation {}",
+        stored, conversation_id
+    );
     Ok(stored)
 }
 
@@ -158,7 +164,10 @@ pub async fn memory_search(
     query: MemoryQuery,
     state: State<'_, MemoryEngineState>,
 ) -> Result<Vec<MemoryResult>, TAPIError> {
-    println!("[MEMORY] Recherche: '{}' (limit: {})", query.query, query.limit);
+    println!(
+        "[MEMORY] Recherche: '{}' (limit: {})",
+        query.query, query.limit
+    );
 
     // Générer embedding de la requête
     let query_embedding = generate_embedding(&query.query, &state).await?;
@@ -196,7 +205,11 @@ pub async fn memory_search(
     }
 
     // Trier par similarité décroissante
-    results.sort_by(|a, b| b.similarity.partial_cmp(&a.similarity).unwrap_or(std::cmp::Ordering::Equal));
+    results.sort_by(|a, b| {
+        b.similarity
+            .partial_cmp(&a.similarity)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 
     // Limiter résultats
     results.truncate(query.limit);
@@ -335,7 +348,10 @@ pub fn memory_prune(
 }
 
 #[tauri::command]
-pub fn memory_delete(entry_id: String, state: State<MemoryEngineState>) -> Result<String, TAPIError> {
+pub fn memory_delete(
+    entry_id: String,
+    state: State<MemoryEngineState>,
+) -> Result<String, TAPIError> {
     let mut entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -368,10 +384,7 @@ pub fn memory_clear(state: State<MemoryEngineState>) -> Result<String, String> {
 // EMBEDDINGS
 // ─────────────────────────────────────────────────────────────────────────────
 
-async fn generate_embedding(
-    text: &str,
-    state: &MemoryEngineState,
-) -> Result<Vec<f32>, TAPIError> {
+async fn generate_embedding(text: &str, state: &MemoryEngineState) -> Result<Vec<f32>, TAPIError> {
     let model = match state.embedding_model.lock() {
         Ok(guard) => guard.clone(),
         Err(poisoned) => {

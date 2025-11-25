@@ -3,7 +3,7 @@
 
 use super::gemini::GeminiClient;
 use super::ollama::OllamaClient;
-use super::{AIError, AIRequest, AIResponse, AIProvider, AIResult};
+use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use log::{info, warn};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -69,14 +69,30 @@ impl AIRouter {
     pub async fn query(&self, request: AIRequest) -> AIResult<AIResponse> {
         self.update_status().await;
 
+        log::info!(
+            "[AI Router v14] Query: prompt_len={}, temp={}, max_tokens={}",
+            request.prompt.len(),
+            request.temperature,
+            request.max_tokens
+        );
+
         // Try Gemini first if available
         if let Some(gemini) = &self.gemini_client {
             if self.check_internet().await {
-                info!("Routing to Gemini API");
+                info!("[AI Router v14] Routing to Gemini API (primary)");
                 match gemini.query(&request).await {
-                    Ok(response) => return Ok(response),
+                    Ok(response) => {
+                        log::info!(
+                            "[AI Router v14] ✓ Gemini success: {} tokens",
+                            response.tokens
+                        );
+                        return Ok(response);
+                    }
                     Err(e) => {
-                        warn!("Gemini failed: {}, falling back to Ollama", e);
+                        warn!(
+                            "[AI Router v14] ✗ Gemini failed: {}, falling back to Ollama",
+                            e
+                        );
                     }
                 }
             }
@@ -84,15 +100,22 @@ impl AIRouter {
 
         // Fallback to Ollama
         if self.ollama_client.is_available().await {
-            info!("Routing to Ollama (local)");
+            info!("[AI Router v14] Routing to Ollama (local fallback)");
             match self.ollama_client.query(&request).await {
-                Ok(response) => return Ok(response),
+                Ok(response) => {
+                    log::info!(
+                        "[AI Router v14] ✓ Ollama success: {} tokens",
+                        response.tokens
+                    );
+                    return Ok(response);
+                }
                 Err(e) => {
-                    warn!("Ollama failed: {}", e);
+                    warn!("[AI Router v14] ✗ Ollama failed: {}", e);
                 }
             }
         }
 
+        log::error!("[AI Router v14] ✗ No provider available (Gemini + Ollama both failed)");
         // No provider available
         Err(AIError::NoProviderAvailable)
     }

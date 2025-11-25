@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, Input, Badge } from '../../ui';
 import { Stack } from '../../components/layout';
 import { colors, spacing } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -67,6 +68,7 @@ export const MemoryTimeline = ({
   onSearch,
   onEntryClick,
 }: MemoryTimelineProps): JSX.Element => {
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (value: string): void => {

@@ -3,11 +3,11 @@ use serde::{Deserialize, Serialize};
 /// État du centre cœur (alignement/désir/sens)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HeartState {
-    pub alignment: f32,          // 0.0 → 1.0 (tâche = désir?)
-    pub motivation: f32,         // 0.0 → 1.0
-    pub meaning_connection: f32, // sens perçu
-    pub authenticity: f32,       // "deuxième vitesse"
-    pub emotional_valence: f32,  // -1.0 → +1.0
+    pub alignment: f32,           // 0.0 → 1.0 (tâche = désir?)
+    pub motivation: f32,          // 0.0 → 1.0
+    pub meaning_connection: f32,  // sens perçu
+    pub authenticity: f32,        // "deuxième vitesse"
+    pub emotional_valence: f32,   // -1.0 → +1.0
     pub emotional_intensity: f32, // 0.0 → 1.0
 }
 
@@ -42,7 +42,8 @@ impl HeartState {
 
     /// Score global de "well-being" cœur
     pub fn wellbeing_score(&self) -> f32 {
-        let positive_factors = (self.alignment + self.motivation + self.meaning_connection + self.authenticity) / 4.0;
+        let positive_factors =
+            (self.alignment + self.motivation + self.meaning_connection + self.authenticity) / 4.0;
 
         // Ajuster selon valence émotionnelle
         let emotion_factor = if self.emotional_valence > 0.0 {
@@ -81,7 +82,9 @@ impl HeartRecommendation {
         // Désalignement + motivation basse
         if state.is_misaligned() && state.is_unmotivated() {
             return HeartRecommendation::Redirect {
-                suggestion: "Cette tâche semble éloignée de vos désirs. Peut-être changer d'activité?".into(),
+                suggestion:
+                    "Cette tâche semble éloignée de vos désirs. Peut-être changer d'activité?"
+                        .into(),
             };
         }
 
@@ -95,7 +98,8 @@ impl HeartRecommendation {
         // Alignement moyen mais authenticity faible
         if state.alignment > 0.4 && state.authenticity < 0.4 {
             return HeartRecommendation::PauseAndReflect {
-                reason: "Vous semblez faire ce qui est attendu plutôt que ce qui résonne en vous.".into(),
+                reason: "Vous semblez faire ce qui est attendu plutôt que ce qui résonne en vous."
+                    .into(),
             };
         }
 

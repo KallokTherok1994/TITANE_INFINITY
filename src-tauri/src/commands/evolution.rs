@@ -1,9 +1,11 @@
 // 🎯 Evolution Commands — Commandes Tauri pour l'auto-évolution
 // Expose le superviseur d'évolution au frontend
 
-use crate::auto_evolution_v15::{supervisor::EvolutionSupervisor, KevinMetrics, pattern_learning::PatternType};
-use tokio::sync::RwLock;
+use crate::auto_evolution_v15::{
+    pattern_learning::PatternType, supervisor::EvolutionSupervisor, KevinMetrics,
+};
 use tauri::State;
+use tokio::sync::RwLock;
 
 /// État global du superviseur d'évolution
 pub struct EvolutionState {
@@ -52,7 +54,9 @@ pub async fn evolution_emergency_heal(state: State<'_, EvolutionState>) -> Resul
 }
 
 #[tauri::command]
-pub async fn evolution_auto_correct(state: State<'_, EvolutionState>) -> Result<Vec<String>, String> {
+pub async fn evolution_auto_correct(
+    state: State<'_, EvolutionState>,
+) -> Result<Vec<String>, String> {
     let mut supervisor = state.supervisor.write().await;
     Ok(supervisor.auto_correct_system())
 }
@@ -89,7 +93,7 @@ pub async fn evolution_get_pattern(
     pattern_type: String,
 ) -> Result<Option<String>, String> {
     let supervisor = state.supervisor.read().await;
-    
+
     let pattern_type = match pattern_type.as_str() {
         "CommunicationStyle" => PatternType::CommunicationStyle,
         "DecisionLogic" => PatternType::DecisionLogic,
@@ -100,12 +104,14 @@ pub async fn evolution_get_pattern(
         "CreativeHabits" => PatternType::CreativeHabits,
         _ => return Err("Invalid pattern type".to_string()),
     };
-    
+
     Ok(supervisor.get_pattern(pattern_type))
 }
 
 #[tauri::command]
-pub async fn evolution_detect_inconsistencies(state: State<'_, EvolutionState>) -> Result<Vec<String>, String> {
+pub async fn evolution_detect_inconsistencies(
+    state: State<'_, EvolutionState>,
+) -> Result<Vec<String>, String> {
     let supervisor = state.supervisor.read().await;
     Ok(supervisor.detect_all_inconsistencies())
 }
@@ -121,7 +127,9 @@ pub async fn evolution_record_prediction(
 }
 
 #[tauri::command]
-pub async fn evolution_get_prediction_history(state: State<'_, EvolutionState>) -> Result<Vec<String>, String> {
+pub async fn evolution_get_prediction_history(
+    state: State<'_, EvolutionState>,
+) -> Result<Vec<String>, String> {
     let supervisor = state.supervisor.read().await;
     Ok(supervisor.get_prediction_history())
 }
@@ -137,21 +145,27 @@ pub async fn evolution_adjust_emotional_sensitivity(
 }
 
 #[tauri::command]
-pub async fn evolution_get_emotional_recommendations(state: State<'_, EvolutionState>) -> Result<Vec<String>, String> {
+pub async fn evolution_get_emotional_recommendations(
+    state: State<'_, EvolutionState>,
+) -> Result<Vec<String>, String> {
     let supervisor = state.supervisor.read().await;
     let metrics = get_test_metrics();
     Ok(supervisor.get_emotional_recommendations(&metrics))
 }
 
 #[tauri::command]
-pub async fn evolution_should_be_proactive(state: State<'_, EvolutionState>) -> Result<bool, String> {
+pub async fn evolution_should_be_proactive(
+    state: State<'_, EvolutionState>,
+) -> Result<bool, String> {
     let supervisor = state.supervisor.read().await;
     let metrics = get_test_metrics();
     Ok(supervisor.should_be_proactive(&metrics))
 }
 
 #[tauri::command]
-pub async fn evolution_auto_detect_mode(state: State<'_, EvolutionState>) -> Result<String, String> {
+pub async fn evolution_auto_detect_mode(
+    state: State<'_, EvolutionState>,
+) -> Result<String, String> {
     let supervisor = state.supervisor.read().await;
     let metrics = get_test_metrics();
     Ok(supervisor.auto_detect_optimal_mode(&metrics))

@@ -73,9 +73,11 @@ impl StructuralEngine {
             },
         ];
 
-        let estimated_improvement = actions.iter()
+        let estimated_improvement = actions
+            .iter()
             .map(|a| a.impact * (1.0 - a.risk))
-            .sum::<f32>() / actions.len() as f32;
+            .sum::<f32>()
+            / actions.len() as f32;
 
         StructuralReport {
             timestamp,

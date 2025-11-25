@@ -53,7 +53,11 @@ pub struct Recommendation {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum RepairAction {
     RestartModule(String),
-    AdjustThreshold { module: String, parameter: String, value: f64 },
+    AdjustThreshold {
+        module: String,
+        parameter: String,
+        value: f64,
+    },
     ClearCache(String),
     Rebalance,
     Log(String),
@@ -103,9 +107,11 @@ impl Default for EvolutionState {
 impl EvolutionReport {
     /// Check if report has critical issues
     pub fn has_critical_issues(&self) -> bool {
-        self.issues.iter().any(|i| i.severity == IssueSeverity::Critical)
+        self.issues
+            .iter()
+            .any(|i| i.severity == IssueSeverity::Critical)
     }
-    
+
     /// Get prioritized recommendations
     pub fn prioritized_recommendations(&self) -> Vec<Recommendation> {
         let mut recs = self.recommendations.clone();

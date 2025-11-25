@@ -47,7 +47,8 @@ impl Emergent {
             },
             EmergentBehavior {
                 name: "Predictive Healing".to_string(),
-                description: "Le système répare les problèmes avant qu'ils n'apparaissent".to_string(),
+                description: "Le système répare les problèmes avant qu'ils n'apparaissent"
+                    .to_string(),
                 emerged_at: timestamp - 7200,
                 strength: 0.82,
             },

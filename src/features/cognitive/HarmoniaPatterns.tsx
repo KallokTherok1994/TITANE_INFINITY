@@ -9,6 +9,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Card, Badge } from '../../ui';
 import { colors, spacing } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -56,6 +57,7 @@ export const HarmoniaPatterns = ({
   selectedPattern,
   onPatternSelect,
 }: HarmoniaPatternsProps): JSX.Element => {
+  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle, animationConfig: _animationConfig } = useAnimation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

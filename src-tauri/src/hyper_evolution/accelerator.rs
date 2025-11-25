@@ -75,21 +75,21 @@ impl AcceleratorEngine {
                 module: "TauriSync".to_string(),
                 current_efficiency: 70.0,
                 target_efficiency: 98.0,
-                optimizations: vec![
-                    Optimization {
-                        name: "Batch Commands".to_string(),
-                        impact: 0.90,
-                        effort: 0.50,
-                        description: "Grouper commandes Tauri".to_string(),
-                    },
-                ],
+                optimizations: vec![Optimization {
+                    name: "Batch Commands".to_string(),
+                    impact: 0.90,
+                    effort: 0.50,
+                    description: "Grouper commandes Tauri".to_string(),
+                }],
             },
         ];
 
-        let total_gain: f32 = targets.iter()
+        let total_gain: f32 = targets
+            .iter()
             .flat_map(|t| &t.optimizations)
             .map(|o| o.impact)
-            .sum::<f32>() / targets.len() as f32;
+            .sum::<f32>()
+            / targets.len() as f32;
 
         AccelerationReport {
             timestamp,

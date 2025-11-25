@@ -7,6 +7,7 @@
 
 import { motion } from 'framer-motion';
 import { colors, spacing, radius } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -29,6 +30,7 @@ export const XPProgressBar = ({
   level,
   showDetails = true,
 }: XPProgressBarProps): JSX.Element => {
+  const { animationConfig } = useAnimation();
   const progress = Math.min((currentXP / requiredXP) * 100, 100);
 
   return (
@@ -67,7 +69,7 @@ export const XPProgressBar = ({
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 1, ease: 'easeOut' }}
+          transition={{ duration: animationConfig.skipAnimation ? 0 : Math.max(animationConfig.duration * 5, 1), ease: 'easeOut' }}
           style={{
             height: '100%',
             background: `linear-gradient(90deg, ${colors.rubis.primary[600]}, ${colors.rubis.primary[500]})`,

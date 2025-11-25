@@ -9,6 +9,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../../ui';
 import { colors, spacing } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -50,6 +51,7 @@ const nodeColors: Record<NexusNode['type'], string> = {
 // ─────────────────────────────────────────────────────────────────
 
 export const NexusGraph = ({ nodes, edges, onNodeClick }: NexusGraphProps): JSX.Element => {
+  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle } = useAnimation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

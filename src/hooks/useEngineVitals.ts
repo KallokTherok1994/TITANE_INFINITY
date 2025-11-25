@@ -180,7 +180,7 @@ export function useEngineVitals(
     const harmoniaScore = 100 - vitals.harmonia.load; // Inversé (moins de load = meilleur)
     const sentinelScore = Math.max(0, 100 - vitals.sentinel.errors * 10); // -10 par erreur
 
-    const globalScore = 
+    const globalScore =
       heliosScore * heliosWeight +
       nexusScore * nexusWeight +
       harmoniaScore * harmoniaWeight +

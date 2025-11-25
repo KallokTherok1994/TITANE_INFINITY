@@ -32,11 +32,17 @@ impl std::fmt::Display for ValidationError {
                 write!(f, "Payload too long: {} bytes (max {})", actual, max)
             }
             ValidationError::TooDeep(depth) => {
-                write!(f, "Nesting too deep: {} levels (max {})", depth, MAX_OBJECT_DEPTH)
+                write!(
+                    f,
+                    "Nesting too deep: {} levels (max {})",
+                    depth, MAX_OBJECT_DEPTH
+                )
             }
             ValidationError::InvalidFormat(msg) => write!(f, "Invalid format: {}", msg),
             ValidationError::ForbiddenCharacters(msg) => write!(f, "Forbidden characters: {}", msg),
-            ValidationError::EmptyRequired(field) => write!(f, "Required field '{}' is empty", field),
+            ValidationError::EmptyRequired(field) => {
+                write!(f, "Required field '{}' is empty", field)
+            }
             ValidationError::InvalidType(msg) => write!(f, "Invalid type: {}", msg),
             ValidationError::OutOfRange(msg) => write!(f, "Out of range: {}", msg),
         }
@@ -48,7 +54,11 @@ pub struct PayloadValidator;
 
 impl PayloadValidator {
     /// Valider chaîne de caractères
-    pub fn validate_string(s: &str, field_name: &str, required: bool) -> Result<(), ValidationError> {
+    pub fn validate_string(
+        s: &str,
+        field_name: &str,
+        required: bool,
+    ) -> Result<(), ValidationError> {
         // Vérifier si vide
         if required && s.is_empty() {
             return Err(ValidationError::EmptyRequired(field_name.to_string()));
@@ -143,7 +153,9 @@ impl PayloadValidator {
         Self::validate_string(email, "email", true)?;
 
         if !email.contains('@') || !email.contains('.') {
-            return Err(ValidationError::InvalidFormat("Invalid email format".to_string()));
+            return Err(ValidationError::InvalidFormat(
+                "Invalid email format".to_string(),
+            ));
         }
 
         Ok(())
@@ -178,7 +190,10 @@ impl PayloadValidator {
     }
 
     /// Valider extension de fichier
-    pub fn validate_file_extension(filename: &str, allowed: &[&str]) -> Result<(), ValidationError> {
+    pub fn validate_file_extension(
+        filename: &str,
+        allowed: &[&str],
+    ) -> Result<(), ValidationError> {
         Self::validate_string(filename, "filename", true)?;
 
         let ext = std::path::Path::new(filename)
@@ -216,7 +231,9 @@ impl PayloadValidator {
     pub fn validate_uuid(uuid: &str) -> Result<(), ValidationError> {
         let parts: Vec<&str> = uuid.split('-').collect();
         if parts.len() != 5 {
-            return Err(ValidationError::InvalidFormat("Invalid UUID format".to_string()));
+            return Err(ValidationError::InvalidFormat(
+                "Invalid UUID format".to_string(),
+            ));
         }
 
         if parts[0].len() != 8
@@ -225,12 +242,16 @@ impl PayloadValidator {
             || parts[3].len() != 4
             || parts[4].len() != 12
         {
-            return Err(ValidationError::InvalidFormat("Invalid UUID format".to_string()));
+            return Err(ValidationError::InvalidFormat(
+                "Invalid UUID format".to_string(),
+            ));
         }
 
         for part in parts {
             if !part.chars().all(|c| c.is_ascii_hexdigit()) {
-                return Err(ValidationError::InvalidFormat("Invalid UUID characters".to_string()));
+                return Err(ValidationError::InvalidFormat(
+                    "Invalid UUID characters".to_string(),
+                ));
             }
         }
 

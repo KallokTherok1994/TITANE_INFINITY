@@ -3,9 +3,9 @@
 //   Technical isolation layer
 // ═══════════════════════════════════════════════════════════════
 
-pub mod system_service;
 pub mod io_service;
 pub mod storage_service;
+pub mod system_service;
 
-pub use system_service::SystemService;
 pub use storage_service::StorageService;
+pub use system_service::SystemService;

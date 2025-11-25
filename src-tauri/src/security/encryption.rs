@@ -10,7 +10,7 @@ use aes_gcm::{
     aead::{Aead, KeyInit, OsRng},
     Aes256Gcm, Nonce,
 };
-use ed25519_dalek::{SigningKey, VerifyingKey, Signature, Signer, Verifier};
+use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -176,7 +176,10 @@ impl CryptoEngine {
     }
 
     /// Déchiffrer JSON
-    pub fn decrypt_json<T: for<'de> Deserialize<'de>>(&self, data: &[u8]) -> Result<T, CryptoError> {
+    pub fn decrypt_json<T: for<'de> Deserialize<'de>>(
+        &self,
+        data: &[u8],
+    ) -> Result<T, CryptoError> {
         let json = self.decrypt(data)?;
         serde_json::from_slice(&json)
             .map_err(|e| CryptoError::DecryptionFailed(format!("JSON deserialization: {}", e)))
@@ -197,7 +200,10 @@ impl SigningKeypair {
         OsRng.fill_bytes(&mut secret_bytes);
         let signing_key = SigningKey::from_bytes(&secret_bytes);
         let verifying_key = signing_key.verifying_key();
-        Self { signing_key, verifying_key }
+        Self {
+            signing_key,
+            verifying_key,
+        }
     }
 
     /// Charger depuis fichiers
@@ -212,12 +218,17 @@ impl SigningKeypair {
             .await
             .map_err(|e| CryptoError::IoError(e.to_string()))?;
 
-        let secret_array: [u8; 32] = secret_bytes.as_slice().try_into()
+        let secret_array: [u8; 32] = secret_bytes
+            .as_slice()
+            .try_into()
             .map_err(|_| CryptoError::InvalidKey("Invalid secret key length".to_string()))?;
         let signing_key = SigningKey::from_bytes(&secret_array);
         let verifying_key = signing_key.verifying_key();
 
-        Ok(Self { signing_key, verifying_key })
+        Ok(Self {
+            signing_key,
+            verifying_key,
+        })
     }
 
     /// Sauvegarder dans fichiers
@@ -255,7 +266,8 @@ impl SigningKeypair {
 
     /// Vérifier signature
     pub fn verify(&self, data: &[u8], signature: &[u8]) -> Result<(), CryptoError> {
-        let sig_array: [u8; 64] = signature.try_into()
+        let sig_array: [u8; 64] = signature
+            .try_into()
             .map_err(|_| CryptoError::InvalidSignature("Invalid signature length".to_string()))?;
         let sig = Signature::from_bytes(&sig_array);
 
@@ -287,7 +299,8 @@ pub async fn initialize_crypto_engine() -> Result<(), CryptoError> {
     };
 
     // Stocker dans OnceLock (thread-safe)
-    MASTER_KEY_STORE.set(master_key)
+    MASTER_KEY_STORE
+        .set(master_key)
         .map_err(|_| CryptoError::InvalidKey("Master Key already initialized".to_string()))?;
 
     // Vérifier keypair Ed25519
@@ -305,9 +318,12 @@ pub async fn initialize_crypto_engine() -> Result<(), CryptoError> {
 
 /// Récupérer Master Key stockée (pour VaultEngine)
 pub async fn get_master_key() -> Result<MasterKey, CryptoError> {
-    MASTER_KEY_STORE.get()
+    MASTER_KEY_STORE
+        .get()
         .cloned()
-        .ok_or(CryptoError::InvalidKey("Master Key not initialized".to_string()))
+        .ok_or(CryptoError::InvalidKey(
+            "Master Key not initialized".to_string(),
+        ))
 }
 
 fn get_master_key_path() -> PathBuf {

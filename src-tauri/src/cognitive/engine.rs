@@ -1,4 +1,6 @@
-use crate::cognitive::{BodyState, CognitiveMode, CognitiveState, HeartState, MentalState, PhysiologicalSignals};
+use crate::cognitive::{
+    BodyState, CognitiveMode, CognitiveState, HeartState, MentalState, PhysiologicalSignals,
+};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
@@ -64,7 +66,10 @@ impl CognitiveEngine {
         state.body.environment_stress = stress;
 
         // Détecter fatigue vocale
-        if signals.stress_markers.contains(&crate::cognitive::StressMarker::LowEnergy) {
+        if signals
+            .stress_markers
+            .contains(&crate::cognitive::StressMarker::LowEnergy)
+        {
             state.body.voice_fatigue = (state.body.voice_fatigue + 0.1).min(1.0);
         }
 

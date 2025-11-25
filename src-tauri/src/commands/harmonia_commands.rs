@@ -4,7 +4,9 @@
  *
  * Commandes Tauri pour monitoring CPU et throttling
  */
-use crate::harmonia_engine::{get_cpu_status, should_throttle_watchers, get_watch_delay, CpuStatus};
+use crate::harmonia_engine::{
+    get_cpu_status, get_watch_delay, should_throttle_watchers, CpuStatus,
+};
 
 /// Obtient le statut CPU actuel
 #[tauri::command]

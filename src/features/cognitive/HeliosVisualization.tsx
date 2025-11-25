@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../../ui';
 import { colors, spacing } from '@themes/tokens';
+import { useAnimation } from '../../contexts/AnimationContext';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -35,6 +36,7 @@ export interface HeliosVisualizationProps {
 export const HeliosVisualization = ({
   metrics,
 }: HeliosVisualizationProps): JSX.Element => {
+  const { shouldReduceMotion: _shouldReduceMotion, shouldThrottle: _shouldThrottle } = useAnimation();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [dimensions] = useState({ width: 400, height: 400 });
 

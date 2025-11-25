@@ -87,8 +87,8 @@ impl VaultEngine {
         data: &T,
     ) -> Result<VaultMetadata, VaultError> {
         // 1. Sérialiser
-        let json = serde_json::to_vec(data)
-            .map_err(|e| VaultError::SerializationError(e.to_string()))?;
+        let json =
+            serde_json::to_vec(data).map_err(|e| VaultError::SerializationError(e.to_string()))?;
 
         let original_size = json.len();
 
@@ -149,17 +149,18 @@ impl VaultEngine {
         index.retain(|m| m.file_id != file_id);
         index.push(metadata.clone());
 
-        log::info!("✅ [VAULT] Saved encrypted: {} ({} → {} bytes)",
-            file_id, original_size, encrypted_size);
+        log::info!(
+            "✅ [VAULT] Saved encrypted: {} ({} → {} bytes)",
+            file_id,
+            original_size,
+            encrypted_size
+        );
 
         Ok(metadata)
     }
 
     /// Charger données déchiffrées (avec vérification intégrité)
-    pub async fn load<T: for<'de> Deserialize<'de>>(
-        &self,
-        file_id: &str,
-    ) -> Result<T, VaultError> {
+    pub async fn load<T: for<'de> Deserialize<'de>>(&self, file_id: &str) -> Result<T, VaultError> {
         let file_path = self.get_file_path(file_id);
         let checksum_path = self.get_checksum_path(file_id);
 
@@ -320,7 +321,8 @@ impl VaultEngine {
     }
 
     fn get_checksum_path(&self, file_id: &str) -> PathBuf {
-        self.base_path.join(format!("{}.enc{}", file_id, CHECKSUM_SUFFIX))
+        self.base_path
+            .join(format!("{}.enc{}", file_id, CHECKSUM_SUFFIX))
     }
 
     fn current_timestamp(&self) -> u64 {
@@ -392,7 +394,10 @@ mod tests {
         // Doit détecter corruption
         let result: Result<Vec<String>, _> = vault.load("corrupt_test").await;
         assert!(result.is_err());
-        assert!(matches!(result.unwrap_err(), VaultError::CorruptionDetected(_)));
+        assert!(matches!(
+            result.unwrap_err(),
+            VaultError::CorruptionDetected(_)
+        ));
     }
 
     #[tokio::test]

@@ -68,15 +68,17 @@ impl MetricSeries {
     }
 
     pub fn max(&self) -> Option<f64> {
-        self.values.iter().map(|p| p.value).fold(None, |max, v| {
-            Some(max.map_or(v, |m: f64| m.max(v)))
-        })
+        self.values
+            .iter()
+            .map(|p| p.value)
+            .fold(None, |max, v| Some(max.map_or(v, |m: f64| m.max(v))))
     }
 
     pub fn min(&self) -> Option<f64> {
-        self.values.iter().map(|p| p.value).fold(None, |min, v| {
-            Some(min.map_or(v, |m: f64| m.min(v)))
-        })
+        self.values
+            .iter()
+            .map(|p| p.value)
+            .fold(None, |min, v| Some(min.map_or(v, |m: f64| m.min(v))))
     }
 }
 
@@ -105,7 +107,12 @@ impl MetricsCollector {
     }
 
     /// Incrémente un compteur d'une valeur spécifique
-    pub async fn increment_counter_by(&self, name: &str, value: f64, labels: HashMap<String, String>) {
+    pub async fn increment_counter_by(
+        &self,
+        name: &str,
+        value: f64,
+        labels: HashMap<String, String>,
+    ) {
         let mut metrics = self.metrics.write().await;
 
         let series = metrics

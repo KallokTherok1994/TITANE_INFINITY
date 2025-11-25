@@ -3,8 +3,8 @@
 //   Central coordination and orchestration
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::*;
 use crate::core::state::SingularityState;
+use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
 /// Nexus Module - Central coordinator

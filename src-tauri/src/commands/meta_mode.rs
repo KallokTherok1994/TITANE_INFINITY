@@ -1,10 +1,10 @@
 //! 🚀 TAURI COMMANDS — Meta-Mode Engine Integration + Auto-Evolution v15.0
 //! Commandes Tauri exposant le Meta-Mode Engine au frontend
 
-use crate::meta_mode_engine::{MetaModeEngine, MetaModeConfig, MetaModeResponse, KevinState};
 use crate::auto_evolution_v15::{AutoEvolutionEngine, KevinMetrics};
-use tokio::sync::RwLock;
+use crate::meta_mode_engine::{KevinState, MetaModeConfig, MetaModeEngine, MetaModeResponse};
 use tauri::State;
+use tokio::sync::RwLock;
 
 /// État global du Meta-Mode Engine partagé entre les commandes
 pub struct MetaModeState {
@@ -50,7 +50,8 @@ impl From<MetaModeResponse> for InteractionResponse {
             adapted_tone: response.adapted_tone,
             adapted_depth: response.adapted_depth,
             adapted_speed: response.adapted_speed,
-            next_suggested_modes: response.next_suggested_modes
+            next_suggested_modes: response
+                .next_suggested_modes
                 .iter()
                 .map(|mode| mode.name().to_string())
                 .collect(),
@@ -113,27 +114,31 @@ pub async fn meta_mode_process(
         let mut engine = state.engine.write().await;
         engine.process_interaction(&request.input, &request.context)
     };
-    
+
     // Déclencher cycle d'évolution (apprentissage continu)
     let kevin_metrics = {
         let engine = state.engine.read().await;
         kevin_state_to_metrics(&engine.kevin_state)
     };
-    
+
     {
         let mut evolution_engine = state.evolution_engine.write().await;
         let _evolution_result = evolution_engine.evolution_cycle(&kevin_metrics);
     }
-    
+
     Ok(InteractionResponse::from(response))
 }
 
 /// Convertir KevinState en KevinMetrics pour Auto-Evolution
 fn kevin_state_to_metrics(state: &KevinState) -> KevinMetrics {
     KevinMetrics {
-        emotional_state: if state.emotional_tone.contains("positif") { 0.5 } 
-                        else if state.emotional_tone.contains("négatif") { -0.5 } 
-                        else { 0.0 },
+        emotional_state: if state.emotional_tone.contains("positif") {
+            0.5
+        } else if state.emotional_tone.contains("négatif") {
+            -0.5
+        } else {
+            0.0
+        },
         cognitive_load: state.cognitive_load,
         energy_level: state.energy_level,
         clarity_level: state.clarity_level,
@@ -155,9 +160,7 @@ pub async fn meta_mode_get_kevin_state(
 
 /// **Obtenir le mode actif**
 #[tauri::command]
-pub async fn meta_mode_get_current_mode(
-    state: State<'_, MetaModeState>,
-) -> Result<String, String> {
+pub async fn meta_mode_get_current_mode(state: State<'_, MetaModeState>) -> Result<String, String> {
     let engine = state.engine.read().await;
     Ok(engine.current_mode.name().to_string())
 }
@@ -200,7 +203,7 @@ pub async fn meta_mode_list_modes() -> Result<Vec<String>, String> {
         "Holistic Consistency Engine",
         "OmniContext",
     ];
-    
+
     Ok(modes.into_iter().map(String::from).collect())
 }
 
@@ -210,14 +213,15 @@ pub async fn meta_mode_get_history(
     state: State<'_, MetaModeState>,
 ) -> Result<Vec<(String, String)>, String> {
     let engine = state.engine.read().await;
-    
-    let history: Vec<(String, String)> = engine.mode_history
+
+    let history: Vec<(String, String)> = engine
+        .mode_history
         .iter()
         .rev()
         .take(10)
         .map(|(mode, timestamp)| (mode.name().to_string(), timestamp.to_rfc3339()))
         .collect();
-    
+
     Ok(history)
 }
 
@@ -233,17 +237,16 @@ pub struct MetaModeStats {
 }
 
 #[tauri::command]
-pub async fn meta_mode_get_stats(
-    state: State<'_, MetaModeState>,
-) -> Result<MetaModeStats, String> {
+pub async fn meta_mode_get_stats(state: State<'_, MetaModeState>) -> Result<MetaModeStats, String> {
     let engine = state.engine.read().await;
-    
+
     let avg_stress = if engine.emotional_sync.stress_history.is_empty() {
         0.0
     } else {
-        engine.emotional_sync.stress_history.iter().sum::<f32>() / engine.emotional_sync.stress_history.len() as f32
+        engine.emotional_sync.stress_history.iter().sum::<f32>()
+            / engine.emotional_sync.stress_history.len() as f32
     };
-    
+
     Ok(MetaModeStats {
         total_interactions: engine.response_history.len(),
         current_mode: engine.current_mode.name().to_string(),
@@ -256,9 +259,7 @@ pub async fn meta_mode_get_stats(
 
 /// **Réinitialiser le Meta-Mode Engine**
 #[tauri::command]
-pub async fn meta_mode_reset(
-    state: State<'_, MetaModeState>,
-) -> Result<String, String> {
+pub async fn meta_mode_reset(state: State<'_, MetaModeState>) -> Result<String, String> {
     let mut engine = state.engine.write().await;
     *engine = MetaModeEngine::new(MetaModeConfig::default());
     Ok("Meta-Mode Engine réinitialisé avec succès".to_string())
@@ -267,7 +268,7 @@ pub async fn meta_mode_reset(
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_meta_mode_state_creation() {
         let state = MetaModeState::new();

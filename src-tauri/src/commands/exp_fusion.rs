@@ -2,14 +2,14 @@
 // Exposition du système EXP au frontend React
 
 use crate::exp_fusion_v15::{
-    ExpFusionEngine, GlobalExpState, ExpSource, ExpEvent,
-    timeline::{TimelineEntry, TimelineStats},
     categories::CategoryState,
     projects::{ProjectState, ProjectStats},
     talents::TalentTreeState,
+    timeline::{TimelineEntry, TimelineStats},
+    ExpEvent, ExpFusionEngine, ExpSource, GlobalExpState,
 };
-use tokio::sync::RwLock;
 use tauri::State;
+use tokio::sync::RwLock;
 
 /// État global partagé
 pub struct ExpFusionState {
@@ -26,28 +26,36 @@ impl ExpFusionState {
 
 /// Obtenir état global XP
 #[tauri::command]
-pub async fn exp_get_global_state(state: State<'_, ExpFusionState>) -> Result<GlobalExpState, String> {
+pub async fn exp_get_global_state(
+    state: State<'_, ExpFusionState>,
+) -> Result<GlobalExpState, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_global_state())
 }
 
 /// Obtenir toutes les catégories
 #[tauri::command]
-pub async fn exp_get_categories(state: State<'_, ExpFusionState>) -> Result<Vec<CategoryState>, String> {
+pub async fn exp_get_categories(
+    state: State<'_, ExpFusionState>,
+) -> Result<Vec<CategoryState>, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_categories())
 }
 
 /// Obtenir tous les projets
 #[tauri::command]
-pub async fn exp_get_projects(state: State<'_, ExpFusionState>) -> Result<Vec<ProjectState>, String> {
+pub async fn exp_get_projects(
+    state: State<'_, ExpFusionState>,
+) -> Result<Vec<ProjectState>, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_projects())
 }
 
 /// Obtenir statistiques projets
 #[tauri::command]
-pub async fn exp_get_project_stats(state: State<'_, ExpFusionState>) -> Result<ProjectStats, String> {
+pub async fn exp_get_project_stats(
+    state: State<'_, ExpFusionState>,
+) -> Result<ProjectStats, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_projects().iter().fold(
         ProjectStats {
@@ -73,27 +81,41 @@ pub async fn exp_get_talents(state: State<'_, ExpFusionState>) -> Result<TalentT
 
 /// Obtenir timeline (N derniers jours)
 #[tauri::command]
-pub async fn exp_get_timeline(state: State<'_, ExpFusionState>, days: u32) -> Result<Vec<TimelineEntry>, String> {
+pub async fn exp_get_timeline(
+    state: State<'_, ExpFusionState>,
+    days: u32,
+) -> Result<Vec<TimelineEntry>, String> {
     let engine = state.engine.read().await;
     Ok(engine.get_timeline(days))
 }
 
 /// Obtenir statistiques timeline
 #[tauri::command]
-pub async fn exp_get_timeline_stats(state: State<'_, ExpFusionState>, days: u32) -> Result<TimelineStats, String> {
+pub async fn exp_get_timeline_stats(
+    state: State<'_, ExpFusionState>,
+    days: u32,
+) -> Result<TimelineStats, String> {
     let engine = state.engine.read().await;
     let timeline = engine.get_timeline(days);
-    
+
     let total_exp: u64 = timeline.iter().map(|e| e.exp_gained).sum();
     let event_count = timeline.len();
-    
+
     Ok(TimelineStats {
         days,
         total_exp,
         event_count,
-        avg_exp: if event_count > 0 { total_exp / event_count as u64 } else { 0 },
+        avg_exp: if event_count > 0 {
+            total_exp / event_count as u64
+        } else {
+            0
+        },
         peak_exp: timeline.iter().map(|e| e.exp_gained).max().unwrap_or(0),
-        active_categories: timeline.iter().map(|e| e.category.clone()).collect::<std::collections::HashSet<_>>().len(),
+        active_categories: timeline
+            .iter()
+            .map(|e| e.category.clone())
+            .collect::<std::collections::HashSet<_>>()
+            .len(),
     })
 }
 
@@ -175,7 +197,7 @@ pub async fn exp_reset(state: State<'_, ExpFusionState>) -> Result<(), String> {
 #[tauri::command]
 pub async fn exp_export_all(state: State<'_, ExpFusionState>) -> Result<String, String> {
     let engine = state.engine.read().await;
-    
+
     let data = serde_json::json!({
         "global_state": engine.get_global_state(),
         "categories": engine.get_categories(),

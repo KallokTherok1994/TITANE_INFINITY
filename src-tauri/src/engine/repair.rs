@@ -5,7 +5,7 @@
 
 use crate::{
     types::{Recommendation, RepairAction, RepairResult},
-    utils::{AppResult, log_info, log_warn},
+    utils::{log_info, log_warn, AppResult},
 };
 use chrono::Utc;
 
@@ -18,7 +18,10 @@ impl RepairEngine {
 
     /// Apply repair action
     pub async fn repair(&self, recommendation: &Recommendation) -> AppResult<RepairResult> {
-        log_info("Repair", &format!("Applying repair action: {:?}", recommendation.action));
+        log_info(
+            "Repair",
+            &format!("Applying repair action: {:?}", recommendation.action),
+        );
 
         let result = match &recommendation.action {
             RepairAction::RestartModule(module) => {
@@ -31,8 +34,18 @@ impl RepairEngine {
                 }
             }
 
-            RepairAction::AdjustThreshold { module, parameter, value } => {
-                log_info("Repair", &format!("Adjusting threshold: {} -> {} = {}", module, parameter, value));
+            RepairAction::AdjustThreshold {
+                module,
+                parameter,
+                value,
+            } => {
+                log_info(
+                    "Repair",
+                    &format!(
+                        "Adjusting threshold: {} -> {} = {}",
+                        module, parameter, value
+                    ),
+                );
                 RepairResult {
                     success: true,
                     action: format!("Adjust threshold: {}.{} = {}", module, parameter, value),
@@ -76,11 +89,20 @@ impl RepairEngine {
     }
 
     /// Apply multiple repairs with rollback on failure (P1.4 - Saga pattern)
-    pub async fn repair_batch(&self, recommendations: &[Recommendation]) -> AppResult<Vec<RepairResult>> {
+    pub async fn repair_batch(
+        &self,
+        recommendations: &[Recommendation],
+    ) -> AppResult<Vec<RepairResult>> {
         let mut results = Vec::new();
         let mut applied_actions = Vec::new();
 
-        log_info("Repair", &format!("Starting batch repair with {} actions", recommendations.len()));
+        log_info(
+            "Repair",
+            &format!(
+                "Starting batch repair with {} actions",
+                recommendations.len()
+            ),
+        );
 
         for recommendation in recommendations {
             match self.repair(recommendation).await {
@@ -90,8 +112,14 @@ impl RepairEngine {
                         results.push(result);
                     } else {
                         // Action failed - rollback all previous actions
-                        log_warn("Repair", &format!("Repair failed: {} - Rolling back {} actions",
-                                 result.message, applied_actions.len()));
+                        log_warn(
+                            "Repair",
+                            &format!(
+                                "Repair failed: {} - Rolling back {} actions",
+                                result.message,
+                                applied_actions.len()
+                            ),
+                        );
 
                         for (prev_rec, prev_result) in applied_actions.iter().rev() {
                             if let Err(e) = self.compensate(prev_rec, prev_result).await {
@@ -100,15 +128,22 @@ impl RepairEngine {
                             }
                         }
 
-                        return Err(crate::utils::AppError::Evolution(
-                            format!("Repair batch failed at action: {}. All actions rolled back.", result.action)
-                        ));
+                        return Err(crate::utils::AppError::Evolution(format!(
+                            "Repair batch failed at action: {}. All actions rolled back.",
+                            result.action
+                        )));
                     }
                 }
                 Err(e) => {
                     // Error occurred - rollback all previous actions
-                    log_warn("Repair", &format!("Repair error: {} - Rolling back {} actions",
-                             e, applied_actions.len()));
+                    log_warn(
+                        "Repair",
+                        &format!(
+                            "Repair error: {} - Rolling back {} actions",
+                            e,
+                            applied_actions.len()
+                        ),
+                    );
 
                     for (prev_rec, prev_result) in applied_actions.iter().rev() {
                         if let Err(comp_err) = self.compensate(prev_rec, prev_result).await {
@@ -121,32 +156,68 @@ impl RepairEngine {
             }
         }
 
-        log_info("Repair", &format!("Batch repair completed successfully: {} actions applied", results.len()));
+        log_info(
+            "Repair",
+            &format!(
+                "Batch repair completed successfully: {} actions applied",
+                results.len()
+            ),
+        );
         Ok(results)
     }
 
     /// Compensate/rollback a repair action (P1.4)
-    async fn compensate(&self, recommendation: &Recommendation, _result: &RepairResult) -> AppResult<()> {
-        log_info("Repair", &format!("Compensating action: {:?}", recommendation.action));
+    async fn compensate(
+        &self,
+        recommendation: &Recommendation,
+        _result: &RepairResult,
+    ) -> AppResult<()> {
+        log_info(
+            "Repair",
+            &format!("Compensating action: {:?}", recommendation.action),
+        );
 
         match &recommendation.action {
             RepairAction::RestartModule(module) => {
-                log_info("Repair", &format!("Compensation: Would restore previous state of module {}", module));
+                log_info(
+                    "Repair",
+                    &format!(
+                        "Compensation: Would restore previous state of module {}",
+                        module
+                    ),
+                );
                 // In real implementation: restore module to previous state
             }
 
-            RepairAction::AdjustThreshold { module, parameter, .. } => {
-                log_info("Repair", &format!("Compensation: Would revert threshold {}.{} to previous value", module, parameter));
+            RepairAction::AdjustThreshold {
+                module, parameter, ..
+            } => {
+                log_info(
+                    "Repair",
+                    &format!(
+                        "Compensation: Would revert threshold {}.{} to previous value",
+                        module, parameter
+                    ),
+                );
                 // In real implementation: restore previous threshold value
             }
 
             RepairAction::ClearCache(module) => {
-                log_info("Repair", &format!("Compensation: Cache clear of {} cannot be reverted (idempotent)", module));
+                log_info(
+                    "Repair",
+                    &format!(
+                        "Compensation: Cache clear of {} cannot be reverted (idempotent)",
+                        module
+                    ),
+                );
                 // Cache clear is generally safe and idempotent
             }
 
             RepairAction::Rebalance => {
-                log_info("Repair", "Compensation: Would restore previous system balance");
+                log_info(
+                    "Repair",
+                    "Compensation: Would restore previous system balance",
+                );
                 // In real implementation: restore previous balance state
             }
 

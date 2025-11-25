@@ -87,7 +87,10 @@ impl IntrospectionScanner {
         // Generate report
         let report = self.generate_report(total_files);
 
-        println!("[Introspection] Scan complete: {} files, {} issues", total_files, report.total_issues);
+        println!(
+            "[Introspection] Scan complete: {} files, {} issues",
+            total_files, report.total_issues
+        );
 
         Ok(report)
     }
@@ -150,7 +153,8 @@ impl IntrospectionScanner {
         for entry in WalkDir::new(&src_path).into_iter().filter_map(|e| e.ok()) {
             let ext = entry.path().extension().and_then(|s| s.to_str());
             if ext == Some("ts") || ext == Some("tsx") {
-                self.scan_typescript_file(entry.path().to_str().unwrap()).await?;
+                self.scan_typescript_file(entry.path().to_str().unwrap())
+                    .await?;
                 count += 1;
             }
         }

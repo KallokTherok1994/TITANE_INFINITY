@@ -3,9 +3,9 @@
 // Tauri commands to expose Persona Engine to frontend
 // ═══════════════════════════════════════════════════════════════════════════
 
+use super::{PersonaEngine, PersonaState, SystemMetrics};
 use tauri::State;
 use tokio::sync::Mutex;
-use super::{PersonaEngine, PersonaState, SystemMetrics};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TAURI COMMANDS
@@ -20,7 +20,7 @@ pub async fn persona_initialize() -> Result<String, String> {
 /// Get current Persona state
 #[tauri::command]
 pub async fn persona_get_state(
-    engine: State<'_, Mutex<PersonaEngine>>
+    engine: State<'_, Mutex<PersonaEngine>>,
 ) -> Result<PersonaState, String> {
     let engine = engine.lock().await;
     Ok(engine.get_state())
@@ -61,7 +61,7 @@ pub async fn persona_react(
 /// Reset Persona state
 #[tauri::command]
 pub async fn persona_reset(
-    engine: State<'_, Mutex<PersonaEngine>>
+    engine: State<'_, Mutex<PersonaEngine>>,
 ) -> Result<PersonaState, String> {
     let engine = engine.lock().await;
     engine.reset();
@@ -71,7 +71,7 @@ pub async fn persona_reset(
 /// Get visual multipliers
 #[tauri::command]
 pub async fn persona_get_multipliers(
-    engine: State<'_, Mutex<PersonaEngine>>
+    engine: State<'_, Mutex<PersonaEngine>>,
 ) -> Result<serde_json::Value, String> {
     let engine = engine.lock().await;
     let state = engine.get_state();

@@ -1,32 +1,59 @@
 /**
- * TITANE∞ v14 — VitalsPanel Component
- * Real-time system vitals display for Chat IA
+ * TITANE_INFINITY v14 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
-import React, { useEffect, useState } from 'react';
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *   TITANE∞ v14 — VITALS PANEL COMPONENT
+ *   Component: Panneau vitals temps réel (System + Engines)
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+import React, { useMemo, useCallback } from 'react';
+import { useSystemMonitor } from '../hooks/useSystemMonitor';
+import { useProviderStatus } from '../hooks/useProviderStatus';
+import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 import './VitalsPanel.css';
 
-interface VitalsPanelProps {
+export interface VitalsPanelProps {
   currentMode?: string;
-  provider?: string;
-  latency?: number;
-  cpuLoad?: number;
   messagesCount?: number;
-  anomalyCount?: number; // SENTINEL tracking
+  className?: string;
 }
 
-export const VitalsPanel: React.FC<VitalsPanelProps> = ({
+export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
   currentMode = 'default',
-  provider = 'auto',
-  latency = 0,
-  cpuLoad = 0,
   messagesCount = 0,
-  anomalyCount = 0,
+  className = '',
 }) => {
-  const [memoryUsage, setMemoryUsage] = useState(0);
+  // Performance monitoring pour throttling adaptatif
+  const { shouldThrottle } = usePerformanceMonitor({
+    fpsThreshold: 40,
+    cpuThreshold: 80,
+  });
 
-  useEffect(() => {
-    // Calcul usage mémoire localStorage
+  // Monitoring complet (system + engines) avec throttling adaptatif
+  const {
+    systemVitals,
+    engineVitals,
+    globalHealth,
+    isSystemOverloaded,
+    criticalIssues,
+  } = useSystemMonitor({
+    vitalsInterval: shouldThrottle ? 8000 : 5000,
+    enginesInterval: shouldThrottle ? 15000 : 10000,
+    enabled: true,
+  });
+
+  // Status providers IA
+  const { activeProvider } = useProviderStatus({
+    autoRefresh: true,
+    refreshInterval: 30000,
+  });
+
+  // Calcul mémoire chat (localStorage)
+  const memoryUsage = useMemo(() => {
     try {
       let total = 0;
       for (let i = 0; i < localStorage.length; i++) {
@@ -36,68 +63,231 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = ({
           total += (value?.length || 0);
         }
       }
-      setMemoryUsage(Math.round(total / 1024)); // KB
-    } catch {}
+      return Math.round(total / 1024); // KB
+    } catch {
+      return 0;
+    }
   }, [messagesCount]);
 
-  const getLatencyColor = () => {
-    if (latency < 1000) return 'var(--success-color)';
-    if (latency < 3000) return 'var(--warning-color)';
-    return 'var(--error-color)';
-  };
+  // Helpers couleurs memoized avec useCallback
+  const getHealthColor = useCallback((health: number) => {
+    if (health >= 80) return 'var(--color-success-500)';
+    if (health >= 60) return 'var(--color-warning-500)';
+    return 'var(--color-danger-500)';
+  }, []);
 
-  const getCpuColor = () => {
-    if (cpuLoad < 50) return 'var(--success-color)';
-    if (cpuLoad < 80) return 'var(--warning-color)';
-    return 'var(--error-color)';
-  };
+  const getCpuColor = useCallback((cpu: number) => {
+    if (cpu < 50) return 'var(--color-success-500)';
+    if (cpu < 80) return 'var(--color-warning-500)';
+    return 'var(--color-danger-500)';
+  }, []);
+
+  const getMemoryColor = useCallback((memory: number) => {
+    if (memory < 70) return 'var(--color-success-500)';
+    if (memory < 90) return 'var(--color-warning-500)';
+    return 'var(--color-danger-500)';
+  }, []);
 
   return (
-    <div className="vitals-panel">
-      <div className="vitals-title">⚡ System Vitals</div>
-
-      <div className="vitals-grid">
-        <div className="vital-item">
-          <span className="vital-label">Mode:</span>
-          <span className="vital-value mode">{currentMode}</span>
+    <div className={`vitals-panel ${className}`}>
+      {/* Header */}
+      <div className="vitals-header">
+        <div className="vitals-title">
+          <span className="vitals-icon">⚡</span>
+          <span>System Vitals</span>
         </div>
-
-        <div className="vital-item">
-          <span className="vital-label">Provider:</span>
-          <span className="vital-value">{provider}</span>
+        <div
+          className="vitals-health"
+          style={{ color: getHealthColor(globalHealth) }}
+        >
+          {globalHealth}%
         </div>
+      </div>
 
-        <div className="vital-item">
-          <span className="vital-label">Latency:</span>
-          <span className="vital-value" style={{ color: getLatencyColor() }}>
-            {latency > 0 ? `${latency}ms` : '-'}
-          </span>
+      {/* Critical Issues */}
+      {criticalIssues.length > 0 && (
+        <div className="vitals-alerts">
+          {criticalIssues.map((issue, idx) => (
+            <div key={idx} className="vital-alert">
+              🚨 {issue}
+            </div>
+          ))}
         </div>
+      )}
 
-        <div className="vital-item">
-          <span className="vital-label">CPU:</span>
-          <span className="vital-value" style={{ color: getCpuColor() }}>
-            {cpuLoad > 0 ? `${cpuLoad}%` : '-'}
-          </span>
+      {/* System Vitals */}
+      <div className="vitals-section">
+        <div className="vitals-section-title">System</div>
+        <div className="vitals-grid">
+          <div className="vital-item">
+            <span className="vital-label">CPU</span>
+            <span
+              className="vital-value"
+              style={{
+                color: systemVitals
+                  ? getCpuColor(systemVitals.cpu)
+                  : 'var(--text-tertiary)',
+              }}
+            >
+              {systemVitals ? `${systemVitals.cpu.toFixed(1)}%` : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Memory</span>
+            <span
+              className="vital-value"
+              style={{
+                color: systemVitals
+                  ? getMemoryColor(systemVitals.memory)
+                  : 'var(--text-tertiary)',
+              }}
+            >
+              {systemVitals ? `${systemVitals.memory.toFixed(1)}%` : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Disk</span>
+            <span className="vital-value">
+              {systemVitals ? `${systemVitals.disk.toFixed(1)}%` : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Overload</span>
+            <span
+              className="vital-value"
+              style={{
+                color: isSystemOverloaded
+                  ? 'var(--color-danger-500)'
+                  : 'var(--color-success-500)',
+              }}
+            >
+              {isSystemOverloaded ? 'YES' : 'NO'}
+            </span>
+          </div>
         </div>
+      </div>
 
-        <div className="vital-item">
-          <span className="vital-label">Messages:</span>
-          <span className="vital-value">{messagesCount}</span>
+      {/* Engine Vitals */}
+      <div className="vitals-section">
+        <div className="vitals-section-title">Engines</div>
+        <div className="vitals-grid">
+          <div className="vital-item">
+            <span className="vital-label">Harmonia</span>
+            <span
+              className="vital-value"
+              style={{
+                color: engineVitals
+                  ? getCpuColor(engineVitals.harmonia.load)
+                  : 'var(--text-tertiary)',
+              }}
+            >
+              {engineVitals
+                ? `${engineVitals.harmonia.load.toFixed(0)}%`
+                : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Helios</span>
+            <span
+              className="vital-value"
+              style={{
+                color: engineVitals
+                  ? getHealthColor(engineVitals.helios.health)
+                  : 'var(--text-tertiary)',
+              }}
+            >
+              {engineVitals
+                ? `${engineVitals.helios.health.toFixed(0)}%`
+                : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Nexus</span>
+            <span
+              className="vital-value"
+              style={{
+                color: engineVitals
+                  ? getHealthColor(engineVitals.nexus.coherence)
+                  : 'var(--text-tertiary)',
+              }}
+            >
+              {engineVitals
+                ? `${engineVitals.nexus.coherence.toFixed(0)}%`
+                : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Sentinel</span>
+            <span
+              className="vital-value"
+              style={{
+                color:
+                  engineVitals && engineVitals.sentinel.errors > 0
+                    ? 'var(--color-warning-500)'
+                    : 'var(--color-success-500)',
+              }}
+            >
+              {engineVitals ? `${engineVitals.sentinel.errors}` : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">SelfHeal++</span>
+            <span className="vital-value">
+              {engineVitals
+                ? `${engineVitals.selfheal.interventions}`
+                : '-'}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Tasks</span>
+            <span className="vital-value">
+              {engineVitals
+                ? `${engineVitals.harmonia.tasksActive}`
+                : '-'}
+            </span>
+          </div>
         </div>
+      </div>
 
-        <div className="vital-item">
-          <span className="vital-label">Memory:</span>
-          <span className="vital-value">{memoryUsage} KB</span>
-        </div>
+      {/* Chat Vitals */}
+      <div className="vitals-section">
+        <div className="vitals-section-title">Chat IA</div>
+        <div className="vitals-grid">
+          <div className="vital-item">
+            <span className="vital-label">Provider</span>
+            <span className="vital-value vital-value-accent">
+              {activeProvider || 'auto'}
+            </span>
+          </div>
 
-        <div className="vital-item">
-          <span className="vital-label">Anomalies:</span>
-          <span className="vital-value" style={{ color: anomalyCount > 0 ? 'var(--warning-color)' : 'var(--success-color)' }}>
-            {anomalyCount}
-          </span>
+          <div className="vital-item">
+            <span className="vital-label">Mode</span>
+            <span className="vital-value vital-value-accent">
+              {currentMode}
+            </span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Messages</span>
+            <span className="vital-value">{messagesCount}</span>
+          </div>
+
+          <div className="vital-item">
+            <span className="vital-label">Memory</span>
+            <span className="vital-value">{memoryUsage} KB</span>
+          </div>
         </div>
       </div>
     </div>
   );
-};
+});
+
+VitalsPanel.displayName = 'VitalsPanel';

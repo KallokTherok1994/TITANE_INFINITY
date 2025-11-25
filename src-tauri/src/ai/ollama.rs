@@ -3,7 +3,7 @@
 //   Local AI inference with ShellGuard protection
 // ═══════════════════════════════════════════════════════════════
 
-use super::{AIError, AIRequest, AIResponse, AIProvider, AIResult};
+use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use crate::security::shell_guard::ShellGuard;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;

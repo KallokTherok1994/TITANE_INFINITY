@@ -3,9 +3,11 @@
 //   Sécurisation exécution commandes shell
 // ═══════════════════════════════════════════════════════════════
 
-use super::{SecurityDomain, SecurityEvent, SecurityPolicy, SecurityViolation, Severity, OperationClass};
-use std::process::Command;
+use super::{
+    OperationClass, SecurityDomain, SecurityEvent, SecurityPolicy, SecurityViolation, Severity,
+};
 use std::path::Path;
+use std::process::Command;
 
 /// Garde centralisé pour l'exécution de commandes shell
 pub struct ShellGuard {
@@ -20,12 +22,7 @@ impl ShellGuard {
     }
 
     /// Exécute une commande vérifiée avec arguments validés
-    pub fn execute_verified(
-        &self,
-        command: &str,
-        args: &[&str],
-    ) -> Result<String, String> {
-
+    pub fn execute_verified(&self, command: &str, args: &[&str]) -> Result<String, String> {
         // 1. Validation commande via whitelist
         self.validate_command(command)?;
 
@@ -34,11 +31,7 @@ impl ShellGuard {
 
         // 3. Log tentative
         if self.policy.security_logging {
-            eprintln!(
-                "[SECURITY:SHELL] Executing: {} {}",
-                command,
-                args.join(" ")
-            );
+            eprintln!("[SECURITY:SHELL] Executing: {} {}", command, args.join(" "));
         }
 
         // 4. Exécution
@@ -50,9 +43,7 @@ impl ShellGuard {
         // 5. Vérification status
         if !output.status.success() {
             let stderr = String::from_utf8_lossy(&output.stderr);
-            return Err(format!(
-                "Command failed: {} (stderr: {})", command, stderr
-            ));
+            return Err(format!("Command failed: {} (stderr: {})", command, stderr));
         }
 
         Ok(String::from_utf8_lossy(&output.stdout).to_string())
@@ -70,7 +61,11 @@ impl ShellGuard {
             .and_then(|s| s.to_str())
             .unwrap_or(command);
 
-        if !self.policy.allowed_shell_commands.contains(&command_name.to_string()) {
+        if !self
+            .policy
+            .allowed_shell_commands
+            .contains(&command_name.to_string())
+        {
             if self.policy.security_logging {
                 eprintln!(
                     "[SECURITY:SHELL] BLOCKED: Unauthorized command: {}",
@@ -96,18 +91,14 @@ impl ShellGuard {
             // Vérification caractères individuels
             for ch in FORBIDDEN_CHARS {
                 if arg.contains(*ch) {
-                    return Err(format!(
-                        "Forbidden character '{}' in argument: {}", ch, arg
-                    ));
+                    return Err(format!("Forbidden character '{}' in argument: {}", ch, arg));
                 }
             }
 
             // Vérification séquences dangereuses
             for seq in FORBIDDEN_SEQUENCES {
                 if arg.contains(seq) {
-                    return Err(format!(
-                        "Forbidden sequence '{}' in argument: {}", seq, arg
-                    ));
+                    return Err(format!("Forbidden sequence '{}' in argument: {}", seq, arg));
                 }
             }
 
@@ -129,9 +120,12 @@ impl ShellGuard {
         self.execute_verified(
             "espeak",
             &[
-                "-v", "fr",
-                "-s", &speed.to_string(),
-                "-p", &pitch.to_string(),
+                "-v",
+                "fr",
+                "-s",
+                &speed.to_string(),
+                "-p",
+                &pitch.to_string(),
                 &safe_text,
             ],
         )?;
@@ -150,16 +144,20 @@ impl ShellGuard {
             return Err(format!("Path is not a file: {:?}", audio_path));
         }
 
-        let path_str = audio_path.to_str()
+        let path_str = audio_path
+            .to_str()
             .ok_or_else(|| "Invalid UTF-8 in path".to_string())?;
 
         self.execute_verified(
             "whisper",
             &[
                 path_str,
-                "--model", "base",
-                "--language", "fr",
-                "--output_format", "txt",
+                "--model",
+                "base",
+                "--language",
+                "fr",
+                "--output_format",
+                "txt",
             ],
         )
     }
@@ -186,9 +184,7 @@ impl ShellGuard {
     pub fn sanitize_text(text: &str) -> String {
         text.chars()
             .filter(|c| {
-                c.is_alphanumeric()
-                || c.is_whitespace()
-                || ".,!?':-()[]éèêàâùûôîç".contains(*c)
+                c.is_alphanumeric() || c.is_whitespace() || ".,!?':-()[]éèêàâùûôîç".contains(*c)
             })
             .take(1000) // Limiter longueur pour éviter DoS
             .collect()

@@ -5,7 +5,7 @@
 
 #![allow(dead_code)] // IO Service - used by file commands
 
-use crate::utils::{AppResult, AppError};
+use crate::utils::{AppError, AppResult};
 use std::path::{Path, PathBuf};
 use tokio::fs;
 
@@ -20,11 +20,14 @@ impl IoService {
 
     /// Validate path is within allowed directory
     fn validate_path(&self, path: &Path) -> AppResult<PathBuf> {
-        let canonical = path.canonicalize()
+        let canonical = path
+            .canonicalize()
             .map_err(|e| AppError::Validation(format!("Invalid path: {}", e)))?;
 
         if !canonical.starts_with(&self.base_path) {
-            return Err(AppError::Validation("Path outside allowed directory".to_string()));
+            return Err(AppError::Validation(
+                "Path outside allowed directory".to_string(),
+            ));
         }
 
         Ok(canonical)
@@ -34,7 +37,8 @@ impl IoService {
     pub async fn read_file(&self, path: &Path) -> AppResult<String> {
         let validated = self.validate_path(path)?;
 
-        let content = fs::read_to_string(&validated).await
+        let content = fs::read_to_string(&validated)
+            .await
             .map_err(|e| AppError::Io(format!("Failed to read file: {}", e)))?;
 
         Ok(content)
@@ -46,11 +50,13 @@ impl IoService {
 
         // Create parent directories if needed
         if let Some(parent) = validated.parent() {
-            fs::create_dir_all(parent).await
+            fs::create_dir_all(parent)
+                .await
                 .map_err(|e| AppError::Io(format!("Failed to create directories: {}", e)))?;
         }
 
-        fs::write(validated, content).await
+        fs::write(validated, content)
+            .await
             .map_err(|e| AppError::Io(format!("Failed to write file: {}", e)))?;
 
         Ok(())
@@ -69,7 +75,8 @@ impl IoService {
     pub async fn delete_file(&self, path: &Path) -> AppResult<()> {
         let validated = self.validate_path(path)?;
 
-        fs::remove_file(validated).await
+        fs::remove_file(validated)
+            .await
             .map_err(|e| AppError::Io(format!("Failed to delete file: {}", e)))?;
 
         Ok(())
@@ -79,12 +86,16 @@ impl IoService {
     pub async fn list_dir(&self, path: &Path) -> AppResult<Vec<PathBuf>> {
         let validated = self.validate_path(path)?;
 
-        let mut entries = fs::read_dir(validated).await
+        let mut entries = fs::read_dir(validated)
+            .await
             .map_err(|e| AppError::Io(format!("Failed to read directory: {}", e)))?;
 
         let mut files = Vec::new();
-        while let Some(entry) = entries.next_entry().await
-            .map_err(|e| AppError::Io(format!("Failed to read entry: {}", e)))? {
+        while let Some(entry) = entries
+            .next_entry()
+            .await
+            .map_err(|e| AppError::Io(format!("Failed to read entry: {}", e)))?
+        {
             files.push(entry.path());
         }
 

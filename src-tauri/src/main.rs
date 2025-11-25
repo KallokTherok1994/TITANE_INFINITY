@@ -19,12 +19,7 @@
 use tauri::Manager;
 
 // TITANE∞ command modules
-use titane_infinity::{
-    control_panel_commands,
-    mock_commands,
-    secure_commands,
-    time_commands,
-};
+use titane_infinity::{control_panel_commands, mock_commands, secure_commands, time_commands};
 
 #[tokio::main]
 async fn main() {
@@ -70,7 +65,8 @@ async fn main() {
     }
 
     // Initialize VaultEngine with master key (Super-Prompt J3)
-    let master_key = encryption::get_master_key().await
+    let master_key = encryption::get_master_key()
+        .await
         .expect("Master key not initialized");
     if let Err(e) = titane_infinity::memory_persistence::init_vault_engine(&master_key).await {
         log::error!("❌ Failed to initialize VaultEngine: {}", e);
@@ -112,7 +108,6 @@ async fn main() {
             // Helios - System Monitoring
             mock_commands::get_helios_state,
             mock_commands::get_system_health,
-
             // Memory - Storage & Timeline
             mock_commands::get_memory_state,
             mock_commands::write_snapshot,
@@ -126,11 +121,9 @@ async fn main() {
             mock_commands::get_knowledge,
             mock_commands::get_active_rituals,
             mock_commands::save_chat_interaction,
-
             // Nexus - Validation
             mock_commands::validate_nexus,
             mock_commands::get_nexus_graph,
-
             // Singularity - Unity State
             mock_commands::singularity_get_full_state,
             mock_commands::singularity_get_physical,
@@ -142,34 +135,27 @@ async fn main() {
             mock_commands::singularity_get_symbolic,
             mock_commands::singularity_get_adaptive,
             mock_commands::singularity_get_meta,
-
             // DevTools - Logging & Debug
             mock_commands::get_logs,
             mock_commands::clear_logs,
             mock_commands::get_system_info,
-
             // Helios + Memory - Additional Metrics (v∞)
             mock_commands::get_helios_metrics,
             mock_commands::memory_get_state,
-
             // Experience - XP & Knowledge Domains (v24)
             mock_commands::experience_get_state,
             mock_commands::experience_update_state,
-
             // Memory - File Ingestion (v24)
             mock_commands::memory_ingest_file,
             mock_commands::import_file,
-
             // Chat AI - Unified Command (v∞)
             mock_commands::chat_generate,
             mock_commands::upload_and_process_file,
-
             // Memory Persistence - v∞.C
             mock_commands::get_all_files,
             mock_commands::get_files_by_category,
             mock_commands::clear_memory,
             mock_commands::store_file,
-
             // Chat AI - Mock Orchestrator (v18)
             mock_commands::chat_send_message,
             mock_commands::chat_get_providers_status,
@@ -179,7 +165,6 @@ async fn main() {
             mock_commands::chat_delete_conversation,
             mock_commands::chat_set_gemini_key,
             mock_commands::chat_stream_message,
-
             // ═══════════════════════════════════════════════════════════════
             // SECURE COMMANDS v∞ - Super-Prompts H, I, J, K
             // ═══════════════════════════════════════════════════════════════
@@ -190,7 +175,6 @@ async fn main() {
             secure_commands::get_permission_audit,
             secure_commands::validate_chat_message,
             secure_commands::check_system_integrity,
-
             // ═══════════════════════════════════════════════════════════════
             // TIME-TRAVEL COMMANDS v∞ - Super-Prompt N
             // ═══════════════════════════════════════════════════════════════
@@ -198,7 +182,6 @@ async fn main() {
             time_commands::get_travel_stats,
             time_commands::restore_snapshot,
             time_commands::delete_snapshot,
-
             // ═══════════════════════════════════════════════════════════════
             // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U
             // ═══════════════════════════════════════════════════════════════
@@ -206,26 +189,20 @@ async fn main() {
             // Phase 5: Node-Cluster (Super-Prompt P)
             titane_infinity::cluster::mesh_initialize,
             titane_infinity::cluster::mesh_get_stats,
-
             // Phase 6: Knowledge Fusion (Super-Prompt Q)
             titane_infinity::knowledge::parse_document,
             titane_infinity::knowledge::detect_file_format,
-
             // Phase 7: HyperVision (Super-Prompt R)
             titane_infinity::hypervision::hypervision_start,
             titane_infinity::hypervision::get_system_metrics,
-
             // Phase 8: Mode Création (Super-Prompt S)
             titane_infinity::creation::create_module,
-
             // Phase 9: Introspection (Super-Prompt T)
             titane_infinity::introspection::introspection_scan,
             titane_infinity::introspection::introspection_auto_fix,
-
             // Phase 10: Auto-Évolution (Super-Prompt U)
             titane_infinity::evolution::evolution_run_cycle,
             titane_infinity::evolution::evolution_get_stats,
-
             // ═══════════════════════════════════════════════════════════════
             // PHASES V-Ω COMMANDS v∞ - Super-Prompts V-Ω ULTIMATE
             // ═══════════════════════════════════════════════════════════════
@@ -237,7 +214,6 @@ async fn main() {
             titane_infinity::hyper_evolution::hyper_detect_regeneration,
             titane_infinity::hyper_evolution::hyper_analyze_rewrite,
             titane_infinity::hyper_evolution::hyper_validate,
-
             // Phase W: Auto-Apprentissage Cognitif
             titane_infinity::cognitive_learning::cognitive_get_map,
             titane_infinity::cognitive_learning::cognitive_add_concept,
@@ -247,7 +223,6 @@ async fn main() {
             titane_infinity::cognitive_learning::cognitive_grow_knowledge,
             titane_infinity::cognitive_learning::cognitive_run_reinforcement,
             titane_infinity::cognitive_learning::cognitive_summarize,
-
             // Phase X: NeuroSymbolic Fusion
             titane_infinity::neuro_symbolic::neuro_fuse,
             titane_infinity::neuro_symbolic::neuro_adapt_intent,
@@ -255,7 +230,6 @@ async fn main() {
             titane_infinity::neuro_symbolic::neuro_bridge_reasoning,
             titane_infinity::neuro_symbolic::neuro_map_context,
             titane_infinity::neuro_symbolic::neuro_get_state,
-
             // Phase Y: Méta-Création
             titane_infinity::meta_creation::meta_generate_ideas,
             titane_infinity::meta_creation::meta_invent_pattern,
@@ -264,7 +238,6 @@ async fn main() {
             titane_infinity::meta_creation::meta_build_solution,
             titane_infinity::meta_creation::meta_integrate_module,
             titane_infinity::meta_creation::meta_get_creative_memory,
-
             // Phase Z: Auto-Réparation Totale
             titane_infinity::self_repair::repair_detect_anomalies,
             titane_infinity::self_repair::repair_execute,
@@ -272,7 +245,6 @@ async fn main() {
             titane_infinity::self_repair::repair_fallback_recovery,
             titane_infinity::self_repair::repair_deep_rebuild,
             titane_infinity::self_repair::repair_get_integrity_map,
-
             // Phase Ω: Singularity Engine
             titane_infinity::singularity::singularity_activate,
             titane_infinity::singularity::singularity_check_coherence,
@@ -280,7 +252,6 @@ async fn main() {
             titane_infinity::singularity::singularity_unify,
             titane_infinity::singularity::singularity_get_state,
             titane_infinity::singularity::singularity_detect_emergence,
-
             // ═══════════════════════════════════════════════════════════════
             // CONTROL PANEL COMMANDS v19.1.0
             // ═══════════════════════════════════════════════════════════════
@@ -288,39 +259,30 @@ async fn main() {
             // Système
             control_panel_commands::cp_get_system_info,
             control_panel_commands::cp_run_system_diagnostic,
-
             // Apparence / Design System
             control_panel_commands::cp_get_design_config,
             control_panel_commands::cp_set_design_config,
-
             // Singularité
             control_panel_commands::cp_get_singularity_status,
             control_panel_commands::cp_toggle_singularity,
-
             // IA & APIs
             control_panel_commands::cp_get_ai_config,
             control_panel_commands::cp_set_ai_config,
-
             // Mémoire
             control_panel_commands::cp_get_memory_stats,
             control_panel_commands::cp_clear_memory_cache,
-
             // Modules
             control_panel_commands::cp_get_modules_status,
             control_panel_commands::cp_toggle_module,
-
             // Réseau
             control_panel_commands::cp_get_network_config,
             control_panel_commands::cp_set_network_config,
-
             // Mises à jour
             control_panel_commands::cp_check_for_updates,
             control_panel_commands::cp_install_update,
-
             // Logs
             control_panel_commands::cp_get_logs,
             control_panel_commands::cp_clear_logs,
-
             // Sécurité
             control_panel_commands::cp_get_security_config,
             control_panel_commands::cp_set_security_config,

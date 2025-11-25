@@ -6,10 +6,10 @@
 //   Snapshots, Backups, Time-Travel, Redundancy
 // ═══════════════════════════════════════════════════════════════
 
-pub mod travel_engine;
 pub mod backup_engine;
 pub mod snapshot;
+pub mod travel_engine;
 
-pub use travel_engine::TravelEngine;
 pub use backup_engine::BackupEngine;
 pub use snapshot::{Snapshot, SnapshotMetadata};
+pub use travel_engine::TravelEngine;

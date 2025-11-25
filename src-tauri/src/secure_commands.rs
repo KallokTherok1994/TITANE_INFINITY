@@ -6,11 +6,11 @@
 //   Commandes Tauri avec permissions, validation et chiffrement
 // ═══════════════════════════════════════════════════════════════
 
-use crate::security::permissions::Role;
 use crate::security::permission_guard::PERMISSION_GUARD;
-use crate::security::validation::PayloadValidator;
-use crate::security::sandbox::FileImportSandbox;
+use crate::security::permissions::Role;
 use crate::security::pre_boot_validation::validate_pre_boot;
+use crate::security::sandbox::FileImportSandbox;
+use crate::security::validation::PayloadValidator;
 use serde::{Deserialize, Serialize};
 
 /// Response format uniforme
@@ -178,7 +178,10 @@ pub async fn check_system_integrity() -> Result<SecureResponse<String>, String> 
     // 2. Effectuer validation
     match validate_pre_boot().await {
         Ok(validation) => Ok(SecureResponse::success(validation.report())),
-        Err(e) => Ok(SecureResponse::error(format!("Integrity check failed: {}", e))),
+        Err(e) => Ok(SecureResponse::error(format!(
+            "Integrity check failed: {}",
+            e
+        ))),
     }
 }
 

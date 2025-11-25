@@ -3,8 +3,8 @@
 //   System Monitoring Types (CPU, RAM, Disk)
 // ═══════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::shared::HealthStatus;
+use serde::{Deserialize, Serialize};
 
 /// Helios module state - System metrics
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -58,8 +58,9 @@ impl Default for LoadAverage {
 impl HeliosState {
     /// Evaluate health status based on thresholds
     pub fn health_status(&self) -> HealthStatus {
-        use crate::utils::constants::{HEALTH_CPU_CRITICAL, HEALTH_CPU_WARNING,
-                                       HEALTH_MEM_CRITICAL, HEALTH_MEM_WARNING};
+        use crate::utils::constants::{
+            HEALTH_CPU_CRITICAL, HEALTH_CPU_WARNING, HEALTH_MEM_CRITICAL, HEALTH_MEM_WARNING,
+        };
 
         if self.cpu_usage >= HEALTH_CPU_CRITICAL || self.ram_usage >= HEALTH_MEM_CRITICAL {
             HealthStatus::Critical

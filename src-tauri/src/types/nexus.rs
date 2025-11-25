@@ -48,9 +48,17 @@ impl Default for NexusState {
 impl NexusState {
     /// Calculate overall health from module states
     pub fn calculate_health(&mut self) {
-        let failing = self.modules.values().filter(|m| matches!(m.health, ModuleHealth::Failing | ModuleHealth::Offline)).count();
-        let degraded = self.modules.values().filter(|m| matches!(m.health, ModuleHealth::Degraded)).count();
-        
+        let failing = self
+            .modules
+            .values()
+            .filter(|m| matches!(m.health, ModuleHealth::Failing | ModuleHealth::Offline))
+            .count();
+        let degraded = self
+            .modules
+            .values()
+            .filter(|m| matches!(m.health, ModuleHealth::Degraded))
+            .count();
+
         self.health = if failing > 0 {
             ModuleHealth::Failing
         } else if degraded > 1 {

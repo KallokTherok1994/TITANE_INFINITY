@@ -7,8 +7,8 @@
 use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use tokio::sync::RwLock;
 use tauri::State;
+use tokio::sync::RwLock;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -17,10 +17,10 @@ use tauri::State;
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ChatMessage {
     pub id: String,
-    pub role: String,           // user|assistant|system
+    pub role: String, // user|assistant|system
     pub content: String,
     pub timestamp: u64,
-    pub provider: String,       // gemini|ollama|local
+    pub provider: String, // gemini|ollama|local
     pub model: String,
     pub tokens: Option<u32>,
     pub multimodal: bool,
@@ -30,7 +30,7 @@ pub struct ChatMessage {
 pub struct ChatRequest {
     pub message: String,
     pub conversation_id: Option<String>,
-    pub provider: String,       // auto|gemini|ollama|local
+    pub provider: String, // auto|gemini|ollama|local
     pub model: Option<String>,
     pub streaming: bool,
     pub images: Option<Vec<String>>, // base64
@@ -132,10 +132,7 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 /// Vérifie rapidement si un provider est disponible (cache 30s)
-async fn is_provider_available(
-    provider: &str,
-    state: &ChatOrchestratorState,
-) -> bool {
+async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) -> bool {
     const CACHE_DURATION_MS: u64 = 30000; // 30s
     const MAX_FAILURES: u32 = 3;
 
@@ -159,11 +156,11 @@ async fn is_provider_available(
         "gemini" => {
             let api_key = state.gemini_api_key.read().await;
             api_key.is_some() // Simplifié: si clé présente, considérer disponible
-        },
+        }
         "ollama" => {
             // TODO: Ping rapide http://localhost:11434/api/tags
             true // Temporaire: assume disponible
-        },
+        }
         "local" => true, // Toujours disponible
         _ => false,
     };
@@ -184,7 +181,10 @@ async fn increment_provider_failures(provider: &str, state: &ChatOrchestratorSta
     *count += 1;
 
     if *count >= 3 {
-        println!("[CHAT] ⚠️ Provider {} temporairement désactivé (3 échecs)", provider);
+        println!(
+            "[CHAT] ⚠️ Provider {} temporairement désactivé (3 échecs)",
+            provider
+        );
     }
 }
 
@@ -216,7 +216,11 @@ pub async fn chat_send_message(
 
     // Liste des providers à essayer (ordre de priorité)
     let providers_to_try: Vec<String> = if request.provider == "auto" {
-        vec!["gemini".to_string(), "ollama".to_string(), "local".to_string()]
+        vec![
+            "gemini".to_string(),
+            "ollama".to_string(),
+            "local".to_string(),
+        ]
     } else {
         let mut providers = vec![request.provider.clone()];
         if request.provider != "local" {
@@ -284,9 +288,8 @@ pub async fn chat_send_message(
     }
 
     // Tous les providers ont échoué
-    let final_error = last_error.unwrap_or_else(|| {
-        TAPIError::internal("All providers failed without specific error")
-    });
+    let final_error = last_error
+        .unwrap_or_else(|| TAPIError::internal("All providers failed without specific error"));
 
     Err(final_error.into())
 }
@@ -382,7 +385,9 @@ async fn send_to_local(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn chat_create_conversation(state: State<'_, ChatOrchestratorState>) -> Result<String, TAPIError> {
+pub async fn chat_create_conversation(
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<String, TAPIError> {
     let conversation_id = uuid::Uuid::new_v4().to_string();
 
     let conversation = ConversationMemory {
@@ -423,7 +428,11 @@ pub async fn chat_delete_conversation(
     Ok("Conversation supprimée".to_string())
 }
 
-async fn store_message(state: &ChatOrchestratorState, conversation_id: &str, message: &ChatMessage) {
+async fn store_message(
+    state: &ChatOrchestratorState,
+    conversation_id: &str,
+    message: &ChatMessage,
+) {
     let mut conversations = state.conversations.write().await;
     if let Some(conv) = conversations
         .iter_mut()
@@ -462,7 +471,9 @@ pub async fn chat_get_providers_status(
 }
 
 #[tauri::command]
-pub async fn chat_check_providers(state: State<'_, ChatOrchestratorState>) -> Result<Vec<ProviderStatus>, TAPIError> {
+pub async fn chat_check_providers(
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<Vec<ProviderStatus>, TAPIError> {
     // TODO: Ping tous les providers
     // - Gemini: HEAD request avec API key
     // - Ollama: GET http://localhost:11434/api/tags
@@ -575,11 +586,14 @@ pub async fn chat_stream_message(
 
     // Événement final
     let latency_ms = crate::core::utils::elapsed_ms(start);
-    let _ = window.emit("chat_stream_complete", serde_json::json!({
-        "content": content,
-        "latency_ms": latency_ms,
-        "provider": response.message.provider,
-    }));
+    let _ = window.emit(
+        "chat_stream_complete",
+        serde_json::json!({
+            "content": content,
+            "latency_ms": latency_ms,
+            "provider": response.message.provider,
+        }),
+    );
 
     Ok(content)
 }

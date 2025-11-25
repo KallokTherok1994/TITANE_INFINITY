@@ -78,7 +78,11 @@ impl ValidationEngine {
             passed,
             tests_run,
             tests_passed,
-            issues: if passed { vec![] } else { vec!["Minor type inconsistency".to_string()] },
+            issues: if passed {
+                vec![]
+            } else {
+                vec!["Minor type inconsistency".to_string()]
+            },
             warnings: vec!["Consider adding unit tests".to_string()],
         }
     }

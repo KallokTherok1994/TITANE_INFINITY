@@ -22,7 +22,11 @@ const BACKUP_DIR: &str = "vault/rollback";
 #[derive(Debug, Clone)]
 pub enum UpdateError {
     InvalidSignature(String),
-    HashMismatch { file: String, expected: String, actual: String },
+    HashMismatch {
+        file: String,
+        expected: String,
+        actual: String,
+    },
     DownloadFailed(String),
     RollbackFailed(String),
     MigrationFailed(String),
@@ -33,8 +37,16 @@ impl std::fmt::Display for UpdateError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
             UpdateError::InvalidSignature(e) => write!(f, "Invalid signature: {}", e),
-            UpdateError::HashMismatch { file, expected, actual } => {
-                write!(f, "Hash mismatch for {}: expected {}, got {}", file, expected, actual)
+            UpdateError::HashMismatch {
+                file,
+                expected,
+                actual,
+            } => {
+                write!(
+                    f,
+                    "Hash mismatch for {}: expected {}, got {}",
+                    file, expected, actual
+                )
             }
             UpdateError::DownloadFailed(e) => write!(f, "Download failed: {}", e),
             UpdateError::RollbackFailed(e) => write!(f, "Rollback failed: {}", e),
@@ -70,7 +82,10 @@ pub struct UpdateEngine {
 
 impl UpdateEngine {
     /// Créer nouveau UpdateEngine
-    pub async fn new(keypair: Arc<SigningKeypair>, current_version: String) -> Result<Self, UpdateError> {
+    pub async fn new(
+        keypair: Arc<SigningKeypair>,
+        current_version: String,
+    ) -> Result<Self, UpdateError> {
         let update_dir = PathBuf::from(UPDATE_DIR);
         let backup_dir = PathBuf::from(BACKUP_DIR);
 
@@ -139,15 +154,19 @@ impl UpdateEngine {
         *self.current_version.write().await = manifest.version.clone();
         *self.state.write().await = UpdateState::Success;
 
-        log::info!("🎉 [UPDATE] Update completed successfully to {}", manifest.version);
+        log::info!(
+            "🎉 [UPDATE] Update completed successfully to {}",
+            manifest.version
+        );
 
         Ok(())
     }
 
     /// Vérifier signature du manifest
     fn verify_manifest_signature(&self, manifest: &UpdateManifest) -> Result<(), UpdateError> {
-        let data = manifest.signable_data()
-            .map_err(|e| UpdateError::InvalidSignature(format!("Failed to get signable data: {}", e)))?;
+        let data = manifest.signable_data().map_err(|e| {
+            UpdateError::InvalidSignature(format!("Failed to get signable data: {}", e))
+        })?;
 
         self.keypair
             .verify(&data, &manifest.signature)
@@ -188,7 +207,11 @@ impl UpdateEngine {
             });
         }
 
-        log::info!("✅ [UPDATE] Verified: {} ({})", entry.path, &entry.sha256[..8]);
+        log::info!(
+            "✅ [UPDATE] Verified: {} ({})",
+            entry.path,
+            &entry.sha256[..8]
+        );
 
         Ok(())
     }
@@ -207,9 +230,9 @@ impl UpdateEngine {
             }
 
             // Copier fichier
-            fs::copy(&source, &dest)
-                .await
-                .map_err(|e| UpdateError::IoError(format!("Failed to copy {}: {}", entry.path, e)))?;
+            fs::copy(&source, &dest).await.map_err(|e| {
+                UpdateError::IoError(format!("Failed to copy {}: {}", entry.path, e))
+            })?;
 
             log::info!("📦 [UPDATE] Applied: {}", entry.path);
         }
@@ -257,7 +280,9 @@ impl UpdateEngine {
         log::info!("🔧 [UPDATE] Running migration: {}", migration_id);
 
         // Charger script de migration
-        let script_path = self.update_dir.join(format!("migrations/{}.json", migration_id));
+        let script_path = self
+            .update_dir
+            .join(format!("migrations/{}.json", migration_id));
         let script_data = fs::read(&script_path)
             .await
             .map_err(|e| UpdateError::MigrationFailed(format!("Script not found: {}", e)))?;
@@ -327,7 +352,9 @@ mod tests {
     #[tokio::test]
     async fn test_update_engine_creation() {
         let keypair = Arc::new(SigningKeypair::generate());
-        let engine = UpdateEngine::new(keypair, "v1.0.0".to_string()).await.unwrap();
+        let engine = UpdateEngine::new(keypair, "v1.0.0".to_string())
+            .await
+            .unwrap();
         assert_eq!(engine.current_version().await, "v1.0.0");
         assert_eq!(engine.state().await, UpdateState::Idle);
     }
@@ -335,7 +362,9 @@ mod tests {
     #[tokio::test]
     async fn test_manifest_signature() {
         let keypair = Arc::new(SigningKeypair::generate());
-        let engine = UpdateEngine::new(keypair.clone(), "v1.0.0".to_string()).await.unwrap();
+        let engine = UpdateEngine::new(keypair.clone(), "v1.0.0".to_string())
+            .await
+            .unwrap();
 
         let mut manifest = UpdateManifest::new("v1.1.0".to_string(), "Test update".to_string());
 

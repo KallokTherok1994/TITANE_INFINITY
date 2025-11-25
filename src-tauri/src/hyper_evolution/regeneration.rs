@@ -64,7 +64,8 @@ export const {{COMPONENT_NAME}}: React.FC = () => {
     </div>
   );
 };
-"#.to_string(),
+"#
+            .to_string(),
         );
 
         templates.insert(
@@ -74,7 +75,8 @@ pub async fn {{COMMAND_NAME}}() -> Result<{{RETURN_TYPE}}, String> {
     {{IMPLEMENTATION}}
     Ok(result)
 }
-"#.to_string(),
+"#
+            .to_string(),
         );
 
         Self { templates }
@@ -110,8 +112,14 @@ pub async fn {{COMMAND_NAME}}() -> Result<{{RETURN_TYPE}}, String> {
         }
     }
 
-    pub fn generate_from_template(&self, template_name: &str, vars: HashMap<String, String>) -> Result<String, String> {
-        let template = self.templates.get(template_name)
+    pub fn generate_from_template(
+        &self,
+        template_name: &str,
+        vars: HashMap<String, String>,
+    ) -> Result<String, String> {
+        let template = self
+            .templates
+            .get(template_name)
             .ok_or_else(|| format!("Template {} not found", template_name))?;
 
         let mut result = template.clone();

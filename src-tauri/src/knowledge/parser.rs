@@ -129,8 +129,8 @@ impl UniversalParser {
             .map_err(|e| format!("Failed to read file: {}", e))?;
 
         // Validate JSON
-        let _: serde_json::Value = serde_json::from_str(&content)
-            .map_err(|e| format!("Invalid JSON: {}", e))?;
+        let _: serde_json::Value =
+            serde_json::from_str(&content).map_err(|e| format!("Invalid JSON: {}", e))?;
 
         let metadata = self.extract_metadata(file_path).await?;
 

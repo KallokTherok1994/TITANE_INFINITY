@@ -16,11 +16,11 @@ use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CompactionConfig {
-    pub max_entries: usize,              // Limite avant compaction
-    pub min_importance: f32,             // Importance minimale (0.0-1.0)
-    pub max_age_days: u64,               // Âge maximum en jours
-    pub preserve_recent_count: usize,   // Garder N entrées récentes
-    pub merge_similar_threshold: f32,    // Seuil similarité pour merge
+    pub max_entries: usize,           // Limite avant compaction
+    pub min_importance: f32,          // Importance minimale (0.0-1.0)
+    pub max_age_days: u64,            // Âge maximum en jours
+    pub preserve_recent_count: usize, // Garder N entrées récentes
+    pub merge_similar_threshold: f32, // Seuil similarité pour merge
 }
 
 impl Default for CompactionConfig {
@@ -106,7 +106,9 @@ impl MemoryCompactor {
         let start = std::time::Instant::now();
         let total_before = entries.len();
 
-        let config = self.config.lock()
+        let config = self
+            .config
+            .lock()
             .map_err(|_| TAPIError::internal("Config lock poisoned", "memory_compactor"))?;
 
         println!("[COMPACTOR] Début compaction: {} entrées", total_before);
@@ -140,7 +142,9 @@ impl MemoryCompactor {
         *entries = result;
 
         // Mettre à jour schema
-        let mut schema = self.schema.lock()
+        let mut schema = self
+            .schema
+            .lock()
             .map_err(|_| TAPIError::internal("Schema lock poisoned", "memory_compactor"))?;
         schema.last_compaction = now_timestamp();
         schema.checksum = calculate_checksum(entries);
@@ -155,8 +159,10 @@ impl MemoryCompactor {
             duration_ms,
         };
 
-        println!("[COMPACTOR] Terminé: {} → {} entrées (-{}), {}ms",
-            total_before, total_after, removed, duration_ms);
+        println!(
+            "[COMPACTOR] Terminé: {} → {} entrées (-{}), {}ms",
+            total_before, total_after, removed, duration_ms
+        );
 
         Ok(report)
     }
@@ -228,10 +234,12 @@ impl MemoryCompactor {
         // Rechercher fichiers temporaires (.tmp, .bak, .lock)
         let temp_patterns = vec![".tmp", ".bak", ".lock", ".corrupt"];
 
-        for entry in std::fs::read_dir(memory_dir)
-            .map_err(|e| TAPIError::storage(format!("Cannot read memory dir: {}", e), "garbage_collect"))?
-        {
-            let entry = entry.map_err(|e| TAPIError::storage(format!("Entry error: {}", e), "garbage_collect"))?;
+        for entry in std::fs::read_dir(memory_dir).map_err(|e| {
+            TAPIError::storage(format!("Cannot read memory dir: {}", e), "garbage_collect")
+        })? {
+            let entry = entry.map_err(|e| {
+                TAPIError::storage(format!("Entry error: {}", e), "garbage_collect")
+            })?;
             let path = entry.path();
 
             if let Some(filename) = path.file_name().and_then(|n| n.to_str()) {
@@ -263,7 +271,9 @@ impl MemoryCompactor {
             .map_err(|e| TAPIError::parse(format!("JSON invalide: {}", e), "verify_integrity"))?;
 
         // Vérifier checksum si disponible
-        let schema = self.schema.lock()
+        let schema = self
+            .schema
+            .lock()
             .map_err(|_| TAPIError::internal("Schema lock poisoned", "verify_integrity"))?;
 
         if !schema.checksum.is_empty() {
@@ -299,7 +309,7 @@ fn now_timestamp() -> u64 {
 }
 
 fn calculate_checksum<T: Serialize>(data: &[T]) -> String {
-    use sha2::{Sha256, Digest};
+    use sha2::{Digest, Sha256};
 
     let json = serde_json::to_string(data).unwrap_or_default();
     let mut hasher = Sha256::new();
@@ -308,7 +318,7 @@ fn calculate_checksum<T: Serialize>(data: &[T]) -> String {
 }
 
 fn calculate_checksum_str(data: &str) -> String {
-    use sha2::{Sha256, Digest};
+    use sha2::{Digest, Sha256};
 
     let mut hasher = Sha256::new();
     hasher.update(data.as_bytes());
@@ -336,9 +346,7 @@ pub fn memory_compactor_run(
 }
 
 #[tauri::command]
-pub fn memory_compactor_gc(
-    memory_path: String,
-) -> Result<usize, TAPIError> {
+pub fn memory_compactor_gc(memory_path: String) -> Result<usize, TAPIError> {
     let compactor = MemoryCompactor::new();
     let path = PathBuf::from(memory_path);
     compactor.garbage_collect(&path)

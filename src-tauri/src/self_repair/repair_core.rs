@@ -37,11 +37,14 @@ impl RepairCore {
             .unwrap()
             .as_secs();
 
-        let actions: Vec<RepairAction> = targets.iter().map(|t| RepairAction {
-            target: t.clone(),
-            action: "Auto-fixed".to_string(),
-            success: true,
-        }).collect();
+        let actions: Vec<RepairAction> = targets
+            .iter()
+            .map(|t| RepairAction {
+                target: t.clone(),
+                action: "Auto-fixed".to_string(),
+                success: true,
+            })
+            .collect();
 
         let success_rate = 1.0;
 

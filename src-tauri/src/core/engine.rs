@@ -3,8 +3,8 @@
 //   Main unified engine for TITANE∞ architecture
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::types::*;
 use crate::core::state::SingularityState;
+use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
 /// SingularityEngine - Main engine coordinating all modules
@@ -155,6 +155,31 @@ impl SingularityEngine {
     /// Get full state snapshot
     pub fn snapshot(&self) -> &SingularityState {
         &self.state
+    }
+
+    /// Get mutable state reference (use with caution)
+    pub fn state_mut(&mut self) -> &mut SingularityState {
+        &mut self.state
+    }
+
+    /// Get reference to Nexus module
+    pub fn nexus(&self) -> &crate::core::modules::NexusModule {
+        &self.state.nexus
+    }
+
+    /// Get reference to Memory module
+    pub fn memory(&self) -> &crate::core::modules::MemoryModule {
+        &self.state.memory
+    }
+
+    /// Get reference to Harmonia module
+    pub fn harmonia(&self) -> &crate::core::modules::HarmoniaModule {
+        &self.state.harmonia
+    }
+
+    /// Get reference to Sentinel module
+    pub fn sentinel(&self) -> &crate::core::modules::SentinelModule {
+        &self.state.sentinel
     }
 }
 

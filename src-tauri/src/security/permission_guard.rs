@@ -6,7 +6,7 @@
 //   Interception et vérification de toutes les commandes
 // ═══════════════════════════════════════════════════════════════
 
-use super::permissions::{Role, check_permission, require_permission};
+use super::permissions::{check_permission, require_permission, Role};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -109,8 +109,7 @@ impl PermissionGuard {
         require_permission("system_audit", role)?;
 
         let log = self.audit_log.read().await;
-        serde_json::to_string_pretty(&*log)
-            .map_err(|e| format!("Failed to export audit: {}", e))
+        serde_json::to_string_pretty(&*log).map_err(|e| format!("Failed to export audit: {}", e))
     }
 
     /// Détecter tentatives d'escalade de privilèges
@@ -178,7 +177,10 @@ mod tests {
     async fn test_audit_export() {
         let guard = PermissionGuard::new();
         guard.check("file_read", Role::User, "test").await.ok();
-        guard.check("system_shutdown", Role::User, "test").await.ok();
+        guard
+            .check("system_shutdown", Role::User, "test")
+            .await
+            .ok();
 
         let json = guard.export_audit(Role::Root).await;
         assert!(json.is_ok());

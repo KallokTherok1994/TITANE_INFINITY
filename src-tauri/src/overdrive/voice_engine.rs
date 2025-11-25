@@ -4,10 +4,10 @@
 // Moteur vocal full-duplex avec ASR (Whisper) + TTS (Piper/Kokoro)
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use tauri::State;
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -15,11 +15,11 @@ use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VoiceConfig {
-    pub asr_model: String,        // whisper-tiny, whisper-base, whisper-small
-    pub tts_model: String,         // piper, kokoro
-    pub language: String,          // fr, en, etc.
-    pub sample_rate: u32,          // 16000, 48000
-    pub wake_word: String,         // "TITANE"
+    pub asr_model: String, // whisper-tiny, whisper-base, whisper-small
+    pub tts_model: String, // piper, kokoro
+    pub language: String,  // fr, en, etc.
+    pub sample_rate: u32,  // 16000, 48000
+    pub wake_word: String, // "TITANE"
     pub duplex_enabled: bool,
     pub noise_reduction: bool,
     pub auto_calibration: bool,
@@ -29,8 +29,8 @@ pub struct VoiceConfig {
 pub struct VoiceStatus {
     pub asr_active: bool,
     pub tts_active: bool,
-    pub audio_pipeline: String,   // pipewire|pulseaudio|alsa
-    pub mic_level: f32,            // 0.0-1.0
+    pub audio_pipeline: String, // pipewire|pulseaudio|alsa
+    pub mic_level: f32,         // 0.0-1.0
     pub wake_word_detected: bool,
     pub processing: bool,
 }
@@ -167,7 +167,11 @@ pub fn voice_transcribe_audio(
     let config = state.config.lock().unwrap();
     let model = &config.asr_model;
 
-    println!("[VOICE] Transcription avec {} - {} bytes", model, audio_data.len());
+    println!(
+        "[VOICE] Transcription avec {} - {} bytes",
+        model,
+        audio_data.len()
+    );
 
     // TODO: Intégrer Whisper.cpp ou Faster-Whisper
     // Pour l'instant, simulation
@@ -233,7 +237,10 @@ pub fn voice_synthesize_speech(
 }
 
 #[tauri::command]
-pub fn voice_play_audio(audio_data: Vec<u8>, state: State<VoiceEngineState>) -> Result<String, TAPIError> {
+pub fn voice_play_audio(
+    audio_data: Vec<u8>,
+    state: State<VoiceEngineState>,
+) -> Result<String, TAPIError> {
     println!("[VOICE] Lecture audio - {} bytes", audio_data.len());
 
     // TODO: Jouer l'audio via le pipeline détecté (PipeWire, PulseAudio, ALSA)
@@ -371,7 +378,9 @@ fn test_speakers() -> bool {
 }
 
 #[tauri::command]
-pub fn voice_get_available_models(state: State<VoiceEngineState>) -> Result<Vec<String>, TAPIError> {
+pub fn voice_get_available_models(
+    state: State<VoiceEngineState>,
+) -> Result<Vec<String>, TAPIError> {
     // Liste des modèles ASR/TTS disponibles
     let models = vec![
         "whisper-tiny".to_string(),

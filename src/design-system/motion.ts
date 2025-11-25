@@ -3,18 +3,31 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.F - Motion System (Framer Motion Variants)
+ * TITANE∞ v14 - Motion System (Framer Motion Variants)
  * ═══════════════════════════════════════════════════════════════════
  *
- * Système d'animations unifié pour éliminer les variants obsolètes
- * et corriger les erreurs color-not-animatable.
+ * Système d'animations unifié avec throttling performance adaptatif.
  *
- * RÈGLES v∞.F:
+ * RÈGLES v14:
  * - Durées courtes (120-250ms)
  * - Easings organiques (easeOut, easeInOut)
  * - Propriétés animables uniquement (opacity, y, scale, x)
  * - JAMAIS: rgba(), background-color, border-color (non animables)
  * - Toujours utiliser 'transparent' au lieu de rgba(0,0,0,0)
+ * - Throttling adaptatif via useAnimation() hook
+ *
+ * USAGE AVEC THROTTLING:
+ * ```tsx
+ * import { useAnimation } from '../contexts/AnimationContext';
+ * import { FadeIn } from '../design-system/motion';
+ *
+ * const { animationConfig } = useAnimation();
+ *
+ * <motion.div
+ *   variants={FadeIn}
+ *   transition={{ duration: animationConfig.duration }}
+ * />
+ * ```
  */
 
 import type { Variants } from 'framer-motion';

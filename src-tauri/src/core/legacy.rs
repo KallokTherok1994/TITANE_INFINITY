@@ -4,12 +4,12 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::types::{
-    HeliosState, HealthStatus, MemoryState as TypesMemoryState,
-    Snapshot, LogEntry, TimelineEvent, ProjectSummary, DecisionSummary,
-    KnowledgeEntry, RitualInfo, TimelineEntry, ChatInteraction,
+    ChatInteraction, DecisionSummary, HealthStatus, HeliosState, KnowledgeEntry, LogEntry,
+    MemoryState as TypesMemoryState, ProjectSummary, RitualInfo, Snapshot, TimelineEntry,
+    TimelineEvent,
 };
 use crate::utils::AppResult;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Legacy HeliosCore adapter
 #[derive(Clone)]
