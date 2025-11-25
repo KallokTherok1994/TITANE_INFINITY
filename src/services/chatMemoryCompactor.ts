@@ -18,7 +18,7 @@ import type { ChatMode } from './ai/chatEngine';
 // ─────────────────────────────────────────────────────────────────
 
 const STORAGE_KEY_PREFIX = 'titane_chat_mode_';
-const MAX_MESSAGES_PER_MODE = 50;
+const _MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
 const COMPRESSION_THRESHOLD = 30; // Compresser si > 30 messages
 const COMPRESSION_TARGET = 20; // Garder 20 messages après compression
 
@@ -122,7 +122,9 @@ class ChatMemoryCompactor {
     // Nettoyer ancienne clé globale si existe
     try {
       localStorage.removeItem('titane_chat_history');
-    } catch {}
+    } catch {
+      // Ignore storage errors silently
+    }
   }
 
   /**

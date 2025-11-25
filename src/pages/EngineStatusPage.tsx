@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useSystemMonitor } from '../hooks/useSystemMonitor';
 import { usePerformanceMonitor } from '../hooks/usePerformanceMonitor';
 import { EngineVitalsCard } from '../components/EngineVitalsCard';

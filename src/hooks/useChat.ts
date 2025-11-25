@@ -84,7 +84,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     addMessage,
     addMessages,
     clearMessages,
-    handleSend: handleUISend,
+    handleSend: _handleUISend,
   } = useChatUI();
 
   // 3. Memory Backend Sync

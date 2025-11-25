@@ -6,7 +6,7 @@
 import { WebDriver } from 'selenium-webdriver';
 
 describe('Control Panel E2E', () => {
-  let driver: WebDriver;
+  let _driver: WebDriver;
 
   beforeAll(async () => {
     // Note: Nécessite WebDriver configuré
@@ -22,7 +22,7 @@ describe('Control Panel E2E', () => {
       // TODO: Implémenter avec WebDriver
       // await driver.get('http://localhost:1420');
 
-      const sections = [
+      const _sections = [
         'system',
         'appearance',
         'singularity',

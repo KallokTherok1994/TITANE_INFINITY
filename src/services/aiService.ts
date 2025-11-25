@@ -34,7 +34,7 @@ export interface AIResponse {
  */
 export async function askTitan(
   message: string,
-  history: AIMessage[] = []
+  _history: AIMessage[] = []
 ): Promise<AIResponse> {
   console.warn('⚠️ DEPRECATED: aiService.askTitan() → Utilisez tauriClient.chatSendMessage()');
 

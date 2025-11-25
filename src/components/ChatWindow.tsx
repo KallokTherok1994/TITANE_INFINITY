@@ -29,7 +29,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onVoiceModeToggle,
   voiceModeActive = false,
 }) => {
-  const { messages, isLoading, error, sendMessage, currentMode, anomalyCount } = useChat({ voiceEnabled: voiceModeActive });
+  const { messages, isLoading, error, sendMessage, currentMode, anomalyCount: _anomalyCount } = useChat({ voiceEnabled: voiceModeActive });
   const { status: connectionStatus } = useConnection();
   const setAIStatus = useSingularityState((state) => state.setAIStatus);
   const setAIError = useSingularityState((state) => state.setAIError);
@@ -38,7 +38,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   const [input, setInput] = useState('');
   const [retrying, setRetrying] = useState(false);
   const [showFileImport, setShowFileImport] = useState(false);
-  const [lastLatency, setLastLatency] = useState(0);
+  const [_lastLatency, _setLastLatency] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();

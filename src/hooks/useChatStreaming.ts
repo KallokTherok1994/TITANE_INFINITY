@@ -51,7 +51,7 @@ export function useChatStreaming(
   const abortControllerRef = useRef<AbortController | null>(null);
 
   const startStream = useCallback(
-    async (message: string, history: AIMessage[] = []) => {
+    async (message: string, _history: AIMessage[] = []) => {
       console.log('\n╔════════════════════════════════════════════════════════════╗');
       console.log('║  USE CHAT STREAMING v14: Tauri Real Stream                ║');
       console.log('╚════════════════════════════════════════════════════════════╝');
