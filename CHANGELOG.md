@@ -15,6 +15,31 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ---
 
+## [v19.2.1] - 2025-11-25
+
+### 🛡️ RUST IMPORTS HARDENING - Correction ACL HTTP Backend
+
+**Correction**: Erreur compilation ACL HTTP + Validation imports hardening
+
+#### 🔧 Fixed
+- **Erreur ACL HTTP Backend**: Retiré permissions `http:default` + `http:allow-fetch` de `tauri.conf.json`
+  - Backend Rust ne nécessite pas `tauri-plugin-http` (frontend httpClient.ts suffit)
+  - Erreur `UnknownManifest { key: "http" }` résolue
+  - Build release réussit: 0 erreur, 0 warning (1m31s)
+
+#### ✅ Validated
+- **Import `tauri::Manager`**: Déjà conditionnel `#[cfg(debug_assertions)]` ligne 17 main.rs
+  - Usage correct DevTools auto-open mode debug ligne 98
+  - Commentaires hardening v19.2.0 présents
+  - 0 warning compilation (import compilé debug seulement, pas release)
+- **Conformité Tauri-Only**: 100% natif, 0 HTTP backend, 0 dépendance morte
+- **Compilation**: `cargo check` 1.93s ✅, `cargo build --release` 1m31s ✅
+
+#### 📄 Documentation
+- **RUST_IMPORTS_HARDENING_v19.2.1.md**: Diagnostic complet, correction ACL, validation hardening
+
+---
+
 ## [v19.2.0] - 2025-11-25
 
 ### 🎉 SUPER-PROMPT 100% COMPLÉTÉ - PHASE 4: TESTS AUTOMATISÉS
