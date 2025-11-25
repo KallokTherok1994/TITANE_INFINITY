@@ -3,20 +3,21 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.E - Themes Index
+ * TITANE∞ v∞ - Theme Provider
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { ReactNode } from 'react';
 
-export { colors, spacing, radius, shadows, fontSizes, fontWeights, metalPalette } from './tokens';
-// Remove empty export type to fix syntax error
-// export type { } from './tokens';
+interface ThemeProviderProps {
+  children: ReactNode;
+}
 
-// Re-export pour compatibilité
-export { default } from './tokens';
-
-// Theme Provider vide pour compatibilité (v∞ = un seul thème)
-export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+/**
+ * ThemeProvider simplifié pour TITANE∞ v∞
+ * Un seul thème METAL actif, pas de switching
+ */
+export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+  // v∞ : Thème unique, pas de context nécessaire
   return children;
 };

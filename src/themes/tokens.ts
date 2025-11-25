@@ -206,5 +206,35 @@ export const fontWeights = {
   bold: 700,
 };
 
+export const lineHeights = {
+  none: '1',
+  tight: '1.25',
+  snug: '1.375',
+  normal: '1.5',
+  relaxed: '1.625',
+  loose: '2',
+};
+
+// Transitions (pour animations cohérentes)
+export const transitions = {
+  preset: {
+    all: 'all 0.2s ease-in-out',
+    colors: 'background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out',
+    transform: 'transform 0.2s ease-in-out',
+    opacity: 'opacity 0.15s ease-in-out',
+  },
+  duration: {
+    fast: '150ms',
+    base: '200ms',
+    slow: '300ms',
+  },
+  timing: {
+    ease: 'ease-in-out',
+    linear: 'linear',
+    in: 'ease-in',
+    out: 'ease-out',
+  },
+};
+
 // Export default pour compatibilité
 export default colors;

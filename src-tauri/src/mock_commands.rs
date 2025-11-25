@@ -563,6 +563,9 @@ pub struct MockProviderStatus {
 
 #[tauri::command]
 pub async fn chat_generate(input: String) -> Result<String, String> {
+    // Permission check: IA role required
+    PERMISSION_GUARD.require("chat_generate", Role::Ia, "chat_generate").await?;
+
     log::info!("[CHAT GENERATE] Received: {}", input);
 
     let start = std::time::Instant::now();

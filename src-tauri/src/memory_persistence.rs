@@ -1,11 +1,16 @@
 //! ═══════════════════════════════════════════════════════════════════
 //! TITANE∞ v∞.C - Memory Persistence Module
-//! Classification automatique + stockage fichiers
+//! Classification automatique + stockage fichiers + VaultEngine (Super-Prompt J3)
 //! ═══════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
+use crate::security::vault_engine::{VaultEngine, VaultError};
+use crate::security::encryption::MasterKey;
+use lazy_static::lazy_static;
+use tokio::sync::RwLock;
+use std::sync::Arc;
 
 /// Fichier sauvegardé dans la mémoire
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -21,6 +26,20 @@ pub struct StoredFile {
 
 /// Base de données mémoire (fichier JSON)
 const MEMORY_DB_PATH: &str = "memory_db.json";
+
+// VaultEngine singleton pour chiffrement transparent
+lazy_static! {
+    static ref VAULT: Arc<RwLock<Option<VaultEngine>>> = Arc::new(RwLock::new(None));
+}
+
+/// Initialiser VaultEngine (appelé au démarrage)
+pub async fn init_vault_engine(master_key: &MasterKey) -> Result<(), VaultError> {
+    let vault = VaultEngine::new(master_key).await?;
+    let mut lock = VAULT.write().await;
+    *lock = Some(vault);
+    log::info!("✅ [VAULT] Memory Vault Engine initialized");
+    Ok(())
+}
 
 /// Sauvegarder un fichier dans la base de données
 pub fn store_file(path: &str, content: &str, category: &str) -> Result<(), String> {
@@ -102,6 +121,27 @@ pub fn clear_memory() -> Result<(), String> {
         fs::remove_file(MEMORY_DB_PATH).map_err(|e| e.to_string())?;
     }
     Ok(())
+}
+
+/// Sauvegarder données chiffrées via VaultEngine
+pub async fn save_encrypted<T: Serialize>(file_id: &str, data: &T) -> Result<(), String> {
+    let vault_lock = VAULT.read().await;
+    let vault = vault_lock.as_ref().ok_or("VaultEngine not initialized")?;
+
+    vault.save(file_id, data)
+        .await
+        .map(|_| ())
+        .map_err(|e| e.to_string())
+}
+
+/// Charger données déchiffrées via VaultEngine
+pub async fn load_encrypted<T: for<'de> Deserialize<'de>>(file_id: &str) -> Result<T, String> {
+    let vault_lock = VAULT.read().await;
+    let vault = vault_lock.as_ref().ok_or("VaultEngine not initialized")?;
+
+    vault.load(file_id)
+        .await
+        .map_err(|e| e.to_string())
 }
 
 #[cfg(test)]

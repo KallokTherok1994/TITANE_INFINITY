@@ -19,7 +19,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
-import { ThemeProvider } from './themes';
+import { ThemeProvider } from './themes/ThemeProvider';
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 import { CompactXPBar } from './components/experience/CompactXPBar';

@@ -14,10 +14,14 @@ use ed25519_dalek::{SigningKey, VerifyingKey, Signature, Signer, Verifier};
 use rand::RngCore;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use std::sync::OnceLock;
 use tokio::fs;
 
 const NONCE_SIZE: usize = 12;
 const KEY_SIZE: usize = 32;
+
+// Static storage pour Master Key (initialisée au boot)
+static MASTER_KEY_STORE: OnceLock<MasterKey> = OnceLock::new();
 
 /// Erreurs de cryptographie
 #[derive(Debug, Clone)]
@@ -282,6 +286,10 @@ pub async fn initialize_crypto_engine() -> Result<(), CryptoError> {
         key
     };
 
+    // Stocker dans OnceLock (thread-safe)
+    MASTER_KEY_STORE.set(master_key)
+        .map_err(|_| CryptoError::InvalidKey("Master Key already initialized".to_string()))?;
+
     // Vérifier keypair Ed25519
     let (secret_path, public_path) = get_signing_keypair_paths();
     if !secret_path.exists() || !public_path.exists() {
@@ -293,6 +301,13 @@ pub async fn initialize_crypto_engine() -> Result<(), CryptoError> {
 
     log::info!("✅ Crypto Engine initialized");
     Ok(())
+}
+
+/// Récupérer Master Key stockée (pour VaultEngine)
+pub async fn get_master_key() -> Result<MasterKey, CryptoError> {
+    MASTER_KEY_STORE.get()
+        .cloned()
+        .ok_or(CryptoError::InvalidKey("Master Key not initialized".to_string()))
 }
 
 fn get_master_key_path() -> PathBuf {

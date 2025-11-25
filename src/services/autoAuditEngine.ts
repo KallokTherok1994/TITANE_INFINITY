@@ -8,8 +8,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/tauri';
-import { writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
+import { invoke } from '@tauri-apps/api/core';
 
 export interface AuditResult {
   timestamp: number;
@@ -203,7 +202,7 @@ export class AutoAuditEngine {
 
     for (const cmd of criticalCommands) {
       try {
-        const response = await invoke(cmd);
+        const _response = await invoke(cmd);
         results.push({
           timestamp: Date.now(),
           category: 'commands',
@@ -375,17 +374,20 @@ export class AutoAuditEngine {
   }
 
   /**
-   * Sauvegarder dans audit.log
+   * Sauvegarder dans audit.log (localStorage pour v1)
    */
   private async saveAuditLog(report: AuditReport): Promise<void> {
     try {
       const timestamp = new Date(report.timestamp).toISOString();
-      const logLine = `[${timestamp}] ${report.passed}✅ ${report.warnings}⚠️ ${report.errors}❌ ${report.critical}🚨 (${report.duration.toFixed(0)}ms)\n`;
+      const logLine = `[${timestamp}] ${report.passed}✅ ${report.warnings}⚠️ ${report.errors}❌ ${report.critical}🚨 (${report.duration.toFixed(0)}ms)`;
 
-      await writeTextFile('security/audit.log', logLine, {
-        dir: BaseDirectory.AppData,
-        append: true,
-      });
+      // Sauvegarder dans localStorage (v1 - TODO: utiliser filesystem command)
+      const existingLog = localStorage.getItem('audit_log') || '';
+      const newLog = existingLog + '\n' + logLine;
+
+      // Garder seulement les 1000 dernières lignes
+      const lines = newLog.split('\n').slice(-1000);
+      localStorage.setItem('audit_log', lines.join('\n'));
     } catch (error) {
       console.error('[AUTO-AUDIT] Failed to write audit.log:', error);
     }

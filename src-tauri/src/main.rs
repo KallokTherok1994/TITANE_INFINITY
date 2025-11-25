@@ -8,8 +8,8 @@
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use titane_infinity::{mock_commands, secure_commands, time_commands};
 use tauri::Manager;
+use titane_infinity::{mock_commands, secure_commands, time_commands};
 
 #[tokio::main]
 async fn main() {
@@ -53,25 +53,34 @@ async fn main() {
         std::process::exit(1);
     }
 
+    // Initialize VaultEngine with master key (Super-Prompt J3)
+    let master_key = encryption::get_master_key().await
+        .expect("Master key not initialized");
+    if let Err(e) = titane_infinity::memory_persistence::init_vault_engine(&master_key).await {
+        log::error!("❌ Failed to initialize VaultEngine: {}", e);
+        std::process::exit(1);
+    }
+
     if let Err(e) = sandbox::initialize_sandbox().await {
         log::error!("❌ Failed to initialize sandbox: {}", e);
         std::process::exit(1);
     }
 
     log::info!("✅ Security System initialized");
+    log::info!("✅ VaultEngine: Memory encryption ready");
     log::info!("✅ Permissions: ROOT/SYSTEM/IA/USER active");
     log::info!("✅ Encryption: AES-256-GCM + Ed25519");
     log::info!("✅ Sandbox: /userdata/imports/ ready");
 
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
-        .setup(|app| {
+        .setup(|_app| {
             log::info!("✅ Tauri Builder initialized");
 
             // Auto-open DevTools in debug mode
             #[cfg(debug_assertions)]
             {
-                if let Some(window) = app.get_webview_window("main") {
+                if let Some(window) = _app.get_webview_window("main") {
                     window.open_devtools();
                     log::info!("DevTools opened automatically (debug mode)");
                 }
