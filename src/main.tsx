@@ -11,6 +11,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/titane-design-system-v24.css'; // 🔩 Design System v24 : Métallique Unifié
+import './styles/experience.css'; // ✨ v∞.D - XP System Styles
 import './pages/styles.css';
 
 // Phase 8: Production Hardening
@@ -24,6 +25,11 @@ import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
 // 🌟 v14: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
 import { SingularityBridge } from './services/singularityBridge';
 import { SingularityConnections } from './services/singularityConnections';
+
+// ✨ v∞.D: Initialize XP Engine
+import { XP } from './core/experience/XP_ENGINE';
+XP.load();
+console.log(`[XP] Système chargé: Level ${XP.state.level}, ${XP.state.total} XP`);
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');

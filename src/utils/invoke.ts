@@ -1,0 +1,119 @@
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * TITANE∞ v∞.A - Safe Invoke Wrapper
+ * Wrapper universel pour tous les appels Tauri avec gestion d'erreur
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+import { invoke } from '@tauri-apps/api/core';
+
+/**
+ * Wrapper universel pour invoke() avec gestion d'erreur automatique
+ * @param cmd - Nom de la commande Tauri
+ * @param payload - Paramètres de la commande (optionnel)
+ * @returns Résultat de la commande ou null en cas d'erreur
+ */
+export async function safeInvoke<T = unknown>(
+  cmd: string,
+  payload: Record<string, unknown> = {}
+): Promise<T | null> {
+  try {
+    const result = await invoke<T>(cmd, payload);
+    return result;
+  } catch (err) {
+    console.error(`❌ Tauri Command Error [${cmd}]:`, err);
+
+    // Log payload si non vide pour debug
+    if (Object.keys(payload).length > 0) {
+      console.error(`   Payload:`, payload);
+    }
+
+    return null;
+  }
+}
+
+/**
+ * Wrapper pour invoke() avec retry automatique
+ * @param cmd - Nom de la commande Tauri
+ * @param payload - Paramètres de la commande
+ * @param maxRetries - Nombre maximum de tentatives (défaut: 3)
+ * @param retryDelay - Délai entre tentatives en ms (défaut: 1000)
+ * @returns Résultat de la commande ou null après épuisement des tentatives
+ */
+export async function safeInvokeWithRetry<T = unknown>(
+  cmd: string,
+  payload: Record<string, unknown> = {},
+  maxRetries = 3,
+  retryDelay = 1000
+): Promise<T | null> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await invoke<T>(cmd, payload);
+
+      // Succès dès la première tentative
+      if (attempt > 1) {
+        console.log(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
+      }
+
+      return result;
+    } catch (err) {
+      lastError = err;
+
+      if (attempt < maxRetries) {
+        console.warn(
+          `⚠️ Tentative ${attempt}/${maxRetries} échouée pour ${cmd}, retry dans ${retryDelay}ms...`
+        );
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      }
+    }
+  }
+
+  console.error(
+    `❌ Commande ${cmd} échouée après ${maxRetries} tentatives:`,
+    lastError
+  );
+  return null;
+}
+
+/**
+ * Wrapper pour invoke() avec timeout
+ * @param cmd - Nom de la commande Tauri
+ * @param payload - Paramètres de la commande
+ * @param timeoutMs - Timeout en millisecondes (défaut: 10000)
+ * @returns Résultat de la commande ou null si timeout
+ */
+export async function safeInvokeWithTimeout<T = unknown>(
+  cmd: string,
+  payload: Record<string, unknown> = {},
+  timeoutMs = 10000
+): Promise<T | null> {
+  try {
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error(`Timeout after ${timeoutMs}ms`)), timeoutMs);
+    });
+
+    const invokePromise = invoke<T>(cmd, payload);
+
+    const result = await Promise.race([invokePromise, timeoutPromise]);
+    return result;
+  } catch (err) {
+    console.error(`❌ Tauri Command Timeout [${cmd}]:`, err);
+    return null;
+  }
+}
+
+/**
+ * Type guard pour vérifier qu'un résultat est non-null
+ */
+export function isValidResult<T>(result: T | null): result is T {
+  return result !== null && result !== undefined;
+}
+
+/**
+ * Helper pour extraire une valeur avec fallback
+ */
+export function getResultOrDefault<T>(result: T | null, defaultValue: T): T {
+  return isValidResult(result) ? result : defaultValue;
+}

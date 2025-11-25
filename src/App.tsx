@@ -23,6 +23,7 @@ import { ThemeProvider } from './themes';
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 import { CompactXPBar } from './components/experience/CompactXPBar';
+import { XPBar } from './components/experience/XPBar'; // ✨ v∞.D4 - Barre XP
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
 
@@ -63,6 +64,7 @@ import { Chat as ChatPage } from './ui/pages/Chat';
 import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { DesignSystemPage } from './pages/DesignSystemPage';
+import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 
 // v14: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
@@ -164,7 +166,12 @@ const AppRouter: React.FC = () => {
       header={
         <Header
           title="TITANE∞"
-          subtitle="v17.2.1 - Backend Refactor Complete"
+          subtitle={
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span>v17.2.1 - Backend Refactor Complete</span>
+              <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
+            </div>
+          }
           actions={
             <Button
               variant="ghost"
@@ -185,6 +192,7 @@ const AppRouter: React.FC = () => {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/cognitive" element={<CognitivePage />} />
         <Route path="/progression" element={<ProgressionPage />} />
+        <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
         <Route path="/design-system" element={<DesignSystemPage />} />
 
         {/* v14: SingularityState Monitor */}

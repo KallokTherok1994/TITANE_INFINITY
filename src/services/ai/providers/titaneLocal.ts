@@ -164,7 +164,7 @@ En attendant, je peux t'aider avec l'architecture TITANE∞, le monitoring, ou l
  * Provider TITANE Local
  */
 export const titaneLocalProvider: AIProvider = {
-  name: 'fallback', // Garde le nom 'fallback' pour compatibilité avec orchestrateur
+  name: 'titane-local', // Provider autonome local
 
   async isAvailable(): Promise<boolean> {
     return true; // Toujours disponible (IA locale)
@@ -180,7 +180,7 @@ export const titaneLocalProvider: AIProvider = {
 
     return {
       content,
-      provider: 'fallback',
+      provider: 'titane-local',
       timestamp: Date.now(),
       model: 'titane-local-v24',
     };

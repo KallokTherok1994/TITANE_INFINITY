@@ -19,15 +19,28 @@ export interface AIMessage {
   timestamp: number;
 }
 
+export type AIProviderName =
+  | 'gemini'
+  | 'ollama'
+  | 'titane-local'
+  | 'tauri-backend'
+  | 'tauri-gemini'
+  | 'tauri-ollama'
+  | 'tauri-local'
+  | 'fallback'
+  | 'emergency-fallback'
+  | 'ultimate-fallback';
+
 export interface AIResponse {
   content: string;
-  provider: 'gemini' | 'ollama' | 'fallback' | 'emergency-fallback';
+  provider: AIProviderName;
   timestamp: number;
   model?: string;
+  tokens?: number;
 }
 
 export interface AIProvider {
-  name: 'gemini' | 'ollama' | 'fallback' | 'emergency-fallback';
+  name: AIProviderName;
   isAvailable: () => Promise<boolean>;
   generate: (message: string, history: AIMessage[]) => Promise<AIResponse>;
   stream?: (message: string, history: AIMessage[]) => AsyncGenerator<string>;

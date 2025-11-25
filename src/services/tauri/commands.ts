@@ -195,15 +195,16 @@ export const exp = {
   },
 
   /**
-   * Débloquer un talent
+   * ❌ v∞.D1 - OBSOLETE: Débloquer un talent
+   * Tous les talents sont maintenant débloqués par défaut
    */
-  async unlockTalent(talentId: string): Promise<ExpProfile> {
-    return invokeWithValidation(
-      'exp_unlock_talent',
-      ExpProfileSchema,
-      { talentId }
-    );
-  },
+  // async unlockTalent(talentId: string): Promise<ExpProfile> {
+  //   return invokeWithValidation(
+  //     'exp_unlock_talent',
+  //     ExpProfileSchema,
+  //     { talentId }
+  //   );
+  // },
 
   /**
    * Obtenir l'historique des level-ups

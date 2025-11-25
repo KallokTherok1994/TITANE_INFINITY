@@ -55,6 +55,30 @@ pub async fn get_memory_state() -> AppResult<serde_json::Value> {
 }
 
 #[tauri::command]
+pub async fn get_helios_metrics() -> AppResult<serde_json::Value> {
+    log::info!("Mock: get_helios_metrics called");
+    Ok(json!({
+        "temperature": 0.0,
+        "load": 0.0,
+        "status": "ok",
+        "ok": true,
+        "ts": chrono::Utc::now().timestamp()
+    }))
+}
+
+#[tauri::command]
+pub async fn memory_get_state() -> AppResult<serde_json::Value> {
+    log::info!("Mock: memory_get_state called");
+    Ok(json!({
+        "short_term": [],
+        "long_term": [],
+        "checksum": "ok",
+        "ok": true,
+        "ts": chrono::Utc::now().timestamp()
+    }))
+}
+
+#[tauri::command]
 pub async fn write_snapshot(_snapshot: serde_json::Value) -> AppResult<()> {
     log::info!("Mock: write_snapshot called");
     Ok(())
@@ -333,39 +357,33 @@ pub async fn sync_singularity() -> AppResult<()> {
 #[tauri::command]
 pub async fn singularity_get_symbolic() -> AppResult<serde_json::Value> {
     Ok(json!({
-        "language_model_temp": 0.7,
-        "context_window": 4096,
-        "token_count": 1250,
-        "embedding_dim": 768,
-        "semantic_drift": 0.02,
-        "symbol_coherence": 0.85,
-        "timestamp": chrono::Utc::now().timestamp_millis()
+        "persona": "default",
+        "identity": {},
+        "symbolic_map": {},
+        "ok": true,
+        "ts": chrono::Utc::now().timestamp()
     }))
 }
 
 #[tauri::command]
 pub async fn singularity_get_adaptive() -> AppResult<serde_json::Value> {
     Ok(json!({
-        "learning_rate": 0.001,
-        "exploration_rate": 0.15,
-        "plasticity": 0.6,
-        "resilience": 0.8,
-        "adaptation_speed": 0.5,
-        "stability_index": 0.75,
-        "timestamp": chrono::Utc::now().timestamp_millis()
+        "autoheal": "stable",
+        "watchdog": "active",
+        "anomalies": 0,
+        "ok": true,
+        "ts": chrono::Utc::now().timestamp()
     }))
 }
 
 #[tauri::command]
 pub async fn singularity_get_meta() -> AppResult<serde_json::Value> {
     Ok(json!({
-        "self_awareness": 0.65,
-        "reflection_depth": 2,
-        "meta_learning": 0.5,
-        "consciousness_level": 1,
-        "coherence_score": 0.8,
-        "integration_level": 0.7,
-        "timestamp": chrono::Utc::now().timestamp_millis()
+        "route": "Dashboard",
+        "ui_state": {},
+        "system_flags": {},
+        "ok": true,
+        "ts": chrono::Utc::now().timestamp()
     }))
 }
 
@@ -473,4 +491,347 @@ pub async fn import_file(path: String) -> AppResult<String> {
             Err(crate::utils::AppError::Io(format!("Failed to read file: {}", e)))
         }
     }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHAT AI - Mock Chat Orchestrator (v18)
+// Simulates backend chat_orchestrator.rs behavior for frontend dev
+// ═══════════════════════════════════════════════════════════════
+
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MockChatRequest {
+    pub message: String,
+    pub conversation_id: Option<String>,
+    pub provider: String,
+    pub model: Option<String>,
+    pub streaming: bool,
+    pub images: Option<Vec<String>>,
+    pub system_prompt: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MockChatMessage {
+    pub id: String,
+    pub role: String,
+    pub content: String,
+    pub timestamp: u64,
+    pub provider: String,
+    pub model: String,
+    pub tokens: Option<u32>,
+    pub multimodal: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MockChatResponse {
+    pub message: MockChatMessage,
+    pub success: bool,
+    pub error: Option<String>,
+    pub latency_ms: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MockProviderStatus {
+    pub provider: String,
+    pub available: bool,
+    pub latency_ms: u64,
+    pub models: Vec<String>,
+    pub error: Option<String>,
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHAT GENERATE — Commande Unifiée Simplifiée (v∞)
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn chat_generate(input: String) -> Result<String, String> {
+    log::info!("[CHAT GENERATE] Received: {}", input);
+
+    let start = std::time::Instant::now();
+
+    // Simulate AI processing delay
+    tokio::time::sleep(tokio::time::Duration::from_millis(
+        300 + (rand::random::<u64>() % 500)
+    )).await;
+
+    // Generate response
+    let response_content = generate_mock_response(&input);
+
+    let latency = start.elapsed().as_millis();
+
+    // Return JSON structure
+    let response = json!({
+        "content": response_content,
+        "provider": "titane-local",
+        "model": "titane-echo-v∞",
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+        "latency_ms": latency,
+        "success": true
+    });
+
+    Ok(response.to_string())
+}
+
+#[tauri::command]
+pub async fn chat_send_message(request: MockChatRequest) -> AppResult<MockChatResponse> {
+    log::info!("[MOCK CHAT] chat_send_message: {}", request.message);
+
+    let start = std::time::Instant::now();
+
+    // Simulate AI processing delay (200-800ms)
+    tokio::time::sleep(tokio::time::Duration::from_millis(
+        400 + (rand::random::<u64>() % 400)
+    )).await;
+
+    // Determine which mock provider to use based on request
+    let (provider, model) = match request.provider.as_str() {
+        "gemini" => ("gemini", "gemini-2.0-flash-exp"),
+        "ollama" => ("ollama", "llama3.1"),
+        "local" => ("local", "titane-echo"),
+        _ => {
+            // Auto mode: simulate cascade (always succeed with local in mock)
+            log::info!("[MOCK CHAT] Auto mode: simulating fallback to local");
+            ("local", "titane-echo")
+        }
+    };
+
+    // Generate mock response based on message content
+    let response_content = generate_mock_response(&request.message);
+
+    let latency = start.elapsed().as_millis() as u64;
+
+    Ok(MockChatResponse {
+        message: MockChatMessage {
+            id: format!("msg_{}", chrono::Utc::now().timestamp_millis()),
+            role: "assistant".to_string(),
+            content: response_content,
+            timestamp: chrono::Utc::now().timestamp_millis() as u64,
+            provider: provider.to_string(),
+            model: model.to_string(),
+            tokens: Some(150),
+            multimodal: false,
+        },
+        success: true,
+        error: None,
+        latency_ms: latency,
+    })
+}
+
+#[tauri::command]
+pub async fn chat_get_providers_status() -> AppResult<Vec<MockProviderStatus>> {
+    log::info!("[MOCK CHAT] chat_get_providers_status");
+
+    Ok(vec![
+        MockProviderStatus {
+            provider: "gemini".to_string(),
+            available: false, // Mock: not configured
+            latency_ms: 0,
+            models: vec!["gemini-2.0-flash-exp".to_string()],
+            error: Some("API key not configured (mock mode)".to_string()),
+        },
+        MockProviderStatus {
+            provider: "ollama".to_string(),
+            available: false, // Mock: not running
+            latency_ms: 0,
+            models: vec!["llama3.1".to_string(), "qwen2.5".to_string()],
+            error: Some("Ollama not running (mock mode)".to_string()),
+        },
+        MockProviderStatus {
+            provider: "local".to_string(),
+            available: true, // Always available in mock
+            latency_ms: 50,
+            models: vec!["titane-echo".to_string()],
+            error: None,
+        },
+    ])
+}
+
+#[tauri::command]
+pub async fn chat_check_providers() -> AppResult<Vec<MockProviderStatus>> {
+    // Same as get_providers_status in mock mode
+    chat_get_providers_status().await
+}
+
+#[tauri::command]
+pub async fn chat_create_conversation() -> AppResult<String> {
+    let conv_id = format!("conv_{}", chrono::Utc::now().timestamp_millis());
+    log::info!("[MOCK CHAT] chat_create_conversation: {}", conv_id);
+    Ok(conv_id)
+}
+
+#[tauri::command]
+pub async fn chat_get_conversation(conversation_id: String) -> AppResult<serde_json::Value> {
+    log::info!("[MOCK CHAT] chat_get_conversation: {}", conversation_id);
+
+    Ok(json!({
+        "conversation_id": conversation_id,
+        "messages": [],
+        "created_at": chrono::Utc::now().timestamp_millis(),
+        "last_updated": chrono::Utc::now().timestamp_millis(),
+    }))
+}
+
+#[tauri::command]
+pub async fn chat_delete_conversation(conversation_id: String) -> AppResult<()> {
+    log::info!("[MOCK CHAT] chat_delete_conversation: {}", conversation_id);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn chat_set_gemini_key(api_key: String) -> AppResult<()> {
+    log::info!("[MOCK CHAT] chat_set_gemini_key: {} chars", api_key.len());
+    // Mock: just log, don't actually store
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn chat_stream_message(_request: MockChatRequest) -> AppResult<String> {
+    log::info!("[MOCK CHAT] chat_stream_message: streaming not implemented in mock mode");
+    Err(crate::utils::AppError::Io("Streaming not supported in mock mode".to_string()))
+}
+
+// ═══════════════════════════════════════════════════════════════
+// FILE UPLOAD & PROCESSING — Unified Command (v∞)
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn upload_and_process_file(path: String) -> Result<String, String> {
+    log::info!("[FILE UPLOAD] Processing: {}", path);
+
+    // Read file content
+    let content = match tokio::fs::read_to_string(&path).await {
+        Ok(c) => c,
+        Err(e) => return Err(format!("Failed to read file: {}", e)),
+    };
+
+    // Extract filename
+    let filename = std::path::Path::new(&path)
+        .file_name()
+        .and_then(|n| n.to_str())
+        .unwrap_or("unknown")
+        .to_string();
+
+    // Analyze content
+    let lines = content.lines().count();
+    let words = content.split_whitespace().count();
+    let size = content.len();
+
+    // Classify by extension
+    let file_type = if path.ends_with(".md") {
+        "markdown"
+    } else if path.ends_with(".rs") {
+        "rust"
+    } else if path.ends_with(".ts") || path.ends_with(".tsx") {
+        "typescript"
+    } else if path.ends_with(".json") {
+        "json"
+    } else {
+        "text"
+    };
+
+    // ✅ v∞.C - Generate AI summary with fallback
+    let summary = match crate::ai::analyze_file(&content).await {
+        Ok(s) => s,
+        Err(_) => {
+            // Fallback: first 300 chars
+            if content.len() > 300 {
+                format!("{}...", &content[..300])
+            } else {
+                content.clone()
+            }
+        }
+    };
+
+    // Create response JSON
+    let response = json!({
+        "filename": filename,
+        "path": path,
+        "type": file_type,
+        "lines": lines,
+        "words": words,
+        "size": size,
+        "summary": summary,
+        "processed_at": chrono::Utc::now().timestamp_millis(),
+        "success": true
+    });
+
+    log::info!("[FILE UPLOAD] ✅ Processed: {} ({} lines, {} words)", filename, lines, words);
+
+    Ok(response.to_string())
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ✅ v∞.C - MEMORY PERSISTENCE COMMANDS
+// ═══════════════════════════════════════════════════════════════
+
+/// Récupérer tous les fichiers stockés
+#[tauri::command]
+pub async fn get_all_files() -> Result<String, String> {
+    log::info!("[MEMORY] get_all_files");
+    match crate::memory_persistence::get_all_files() {
+        Ok(files) => Ok(serde_json::to_string(&files).unwrap()),
+        Err(e) => Err(e),
+    }
+}
+
+/// Récupérer les fichiers par catégorie
+#[tauri::command]
+pub async fn get_files_by_category(category: String) -> Result<String, String> {
+    log::info!("[MEMORY] get_files_by_category: {}", category);
+    match crate::memory_persistence::get_files_by_category(&category) {
+        Ok(files) => Ok(serde_json::to_string(&files).unwrap()),
+        Err(e) => Err(e),
+    }
+}
+
+/// Effacer toute la mémoire
+#[tauri::command]
+pub async fn clear_memory() -> Result<bool, String> {
+    log::info!("[MEMORY] clear_memory");
+    match crate::memory_persistence::clear_memory() {
+        Ok(_) => Ok(true),
+        Err(e) => Err(e),
+    }
+}
+
+/// Sauvegarder un fichier dans la mémoire
+#[tauri::command]
+pub async fn store_file(path: String, category: String, content: String) -> Result<bool, String> {
+    log::info!("[MEMORY] store_file: {} ({})", path, category);
+    match crate::memory_persistence::store_file(&path, &category, &content) {
+        Ok(_) => Ok(true),
+        Err(e) => Err(e),
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// Helper: Generate mock AI responses
+// ─────────────────────────────────────────────────────────────────
+
+fn generate_mock_response(message: &str) -> String {
+    let lower = message.to_lowercase();
+
+    // Pattern-based responses
+    if lower.contains("bonjour") || lower.contains("salut") || lower.contains("hello") {
+        return "Bonjour ! Je suis TITANE∞ en mode mock backend. Mes réponses sont simulées pour le développement frontend. Pour utiliser les vrais services IA, configure Gemini API ou lance Ollama.".to_string();
+    }
+
+    if lower.contains("comment ça va") || lower.contains("comment vas-tu") {
+        return "Je fonctionne en mode mock ! Tous mes systèmes sont opérationnels pour le développement. Backend réel non activé.".to_string();
+    }
+
+    if lower.contains("qui es-tu") || lower.contains("présente-toi") {
+        return "TITANE∞ — Système cognitif local\n\n**Mode actuel:** Mock Backend (développement frontend)\n**Architecture:** React + Tauri + Rust\n**Design System:** v24 Metallic Monochrome\n\nPour activer l'IA réelle, configure `.env` avec ta clé Gemini API.".to_string();
+    }
+
+    if lower.contains("test") {
+        return "✅ Test réussi ! Le backend mock répond correctement. L'architecture Chat IA v18 fonctionne:\n\n• Provider cascade: tauri → gemini → ollama → local\n• Fallback automatique garanti\n• UI métallique active\n\nProchaine étape: activer backend réel avec Gemini/Ollama.".to_string();
+    }
+
+    // Default response
+    format!(
+        "Message reçu: \"{}\"\n\n🤖 **Mode Mock Backend**\nCeci est une réponse simulée du backend Rust. \n\nPour des réponses IA réelles:\n• Configure `VITE_GEMINI_API_KEY` dans `.env`\n• Ou lance Ollama: `ollama serve`\n\nArchitecture Chat IA v18 fonctionnelle ✅",
+        message
+    )
 }

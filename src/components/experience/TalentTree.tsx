@@ -1,67 +1,35 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE_INFINITY v∞ — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
+ *
+ * ═══════════════════════════════════════════════════════════════════
+ * TITANE∞ v∞.D1 - TalentTree (Visualiseur uniquement)
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * Tous les talents sont débloqués - Plus de logique de progression
+ * Le TalentTree est maintenant un visualiseur, pas un système de jeu
  */
-
-
-// 🌳 TalentTree — Arbre de talents
 
 import React from 'react';
 
-
-
-interface TalentTreeState {
-
-  branches: Record<string, unknown>;
-
-  total_unlocked: number;
-
-  total_talents: number;
-
-  global_effects: unknown[];
-
-}
-
-
-
 interface TalentTreeProps {
-
-  talents: TalentTreeState;
-
+  talents?: unknown;
 }
 
-
-
-export const TalentTree: React.FC<TalentTreeProps> = ({ talents }) => {
-
+export const TalentTree: React.FC<TalentTreeProps> = () => {
   return (
-
     <div style={{ gridColumn: '1 / -1', padding: '2rem', textAlign: 'center' }}>
-
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#f3f4f6', marginBottom: '1rem' }}>
-
+      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'var(--text)', marginBottom: '1rem' }}>
         🌳 Arbre de Talents
-
       </h2>
-
-      <div style={{ color: '#9ca3af', fontSize: '0.875rem' }}>
-
-        {talents.total_unlocked} / {talents.total_talents} talents débloqués
-
+      <div style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+        Tous les talents sont débloqués par défaut
       </div>
-
-      <div style={{ marginTop: '2rem', color: '#6b7280' }}>
-
+      <div style={{ marginTop: '2rem', color: 'var(--text-muted)' }}>
         Visualisation de l'arbre de talents à venir...
-
       </div>
-
     </div>
-
   );
-
 };
+
 

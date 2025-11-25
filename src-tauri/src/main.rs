@@ -16,12 +16,13 @@ fn main() {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
     println!("╔══════════════════════════════════════════════════════════════╗");
-    println!("║     TITANE∞ v14 — MOCK BACKEND MODE                         ║");
+    println!("║     TITANE∞ v18 — MOCK BACKEND MODE + CHAT AI              ║");
     println!("║     Frontend Development - Mocked Data                      ║");
     println!("╚══════════════════════════════════════════════════════════════╝");
 
-    log::info!("Starting TITANE∞ v14 in MOCK BACKEND mode");
+    log::info!("Starting TITANE∞ v18 in MOCK BACKEND mode");
     log::info!("All backend commands return mocked data for frontend development");
+    log::info!("Chat AI mock orchestrator: 8 commands registered");
 
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
@@ -84,6 +85,10 @@ fn main() {
             mock_commands::clear_logs,
             mock_commands::get_system_info,
 
+            // Helios + Memory - Additional Metrics (v∞)
+            mock_commands::get_helios_metrics,
+            mock_commands::memory_get_state,
+
             // Experience - XP & Knowledge Domains (v24)
             mock_commands::experience_get_state,
             mock_commands::experience_update_state,
@@ -91,6 +96,26 @@ fn main() {
             // Memory - File Ingestion (v24)
             mock_commands::memory_ingest_file,
             mock_commands::import_file,
+
+            // Chat AI - Unified Command (v∞)
+            mock_commands::chat_generate,
+            mock_commands::upload_and_process_file,
+
+            // Memory Persistence - v∞.C
+            mock_commands::get_all_files,
+            mock_commands::get_files_by_category,
+            mock_commands::clear_memory,
+            mock_commands::store_file,
+
+            // Chat AI - Mock Orchestrator (v18)
+            mock_commands::chat_send_message,
+            mock_commands::chat_get_providers_status,
+            mock_commands::chat_check_providers,
+            mock_commands::chat_create_conversation,
+            mock_commands::chat_get_conversation,
+            mock_commands::chat_delete_conversation,
+            mock_commands::chat_set_gemini_key,
+            mock_commands::chat_stream_message,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

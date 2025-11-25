@@ -16,6 +16,7 @@
 import { useState } from 'react';
 import { ChatMessage, ChatInput, ChatContextPanel, type ChatSuggestion, type ChatMessageProps } from '@features/chat';
 import { colors, spacing } from '@themes/tokens';
+import { XP } from '../core/experience/XP_ENGINE'; // ✨ v∞.D3 - XP Engine
 
 export const ChatPage = (): JSX.Element => {
   const [messages, setMessages] = useState<ChatMessageProps[]>([
@@ -93,8 +94,11 @@ export const ChatPage = (): JSX.Element => {
 
     setMessages((prev) => [...prev, userMessage]);
 
+    // ✨ v∞.D3 - Gain XP pour réponse AI (simulée)
     // Simulate assistant response with streaming
     setTimeout(() => {
+      XP.gain(8, "response_ai", "Réponse générée par TITANE");
+
       const assistantMessage = {
         role: 'assistant' as const,
         content: 'Je traite votre demande...',

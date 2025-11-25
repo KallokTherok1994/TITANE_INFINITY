@@ -8,13 +8,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.0 — AI ORCHESTRATOR
- *   Orchestrateur intelligent : TITANE Local → Gemini → Ollama
- *   IA locale autonome en priorité, APIs externes en backup
+ *   TITANE∞ v18.0 — AI ORCHESTRATOR
+ *   Orchestrateur hybride : Backend Rust → Gemini → Ollama → Local
+ *   Priorise le backend Tauri (cascade automatique) si disponible
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIMessage, AIResponse, AIConfig } from './types';
+import { tauriChatProvider } from './providers/tauriChat'; // ← NOUVEAU: Backend Rust
 import { titaneLocalProvider } from './providers/titaneLocal';
 import { geminiProvider } from './providers/gemini';
 import { ollamaProvider } from './providers/ollama';
@@ -35,9 +36,18 @@ function sanitizeMessage(message: string): string {
  * Orchestrateur principal
  */
 class AIOrchestrator {
-  // v24.0: TITANE Local en dernier (toujours disponible comme safety net)
-  // Ordre de priorité: Gemini (performant) → Ollama (privé) → TITANE Local (autonome)
-  private providers = [geminiProvider, ollamaProvider, titaneLocalProvider];
+  // v18.0: Backend Rust d'abord (gère sa propre cascade), puis providers frontend
+  // Ordre de priorité:
+  // 1. tauriChatProvider (Backend Rust: gemini → ollama → local)
+  // 2. geminiProvider (Frontend API direct)
+  // 3. ollamaProvider (Frontend local direct)
+  // 4. titaneLocalProvider (Frontend autonome, toujours disponible)
+  private providers = [
+    tauriChatProvider,   // ← NOUVEAU: Backend Rust (mock cascade)
+    geminiProvider,      // Frontend API
+    ollamaProvider,      // Frontend local
+    titaneLocalProvider  // Frontend autonomous safety net
+  ];
 
   /**
    * Génère une réponse en cascade

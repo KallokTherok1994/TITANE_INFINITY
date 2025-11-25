@@ -1,10 +1,19 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 — SECURITY MODULE
-//   Sentinel-integrated security framework
+//   TITANE∞ v∞ — SECURITY MODULE
+//   Super-Prompts H, I, J, K, L integration
+//   Hardening, Permissions, Encryption, Validation, Sandbox
 // ═══════════════════════════════════════════════════════════════
 
 pub mod shell_guard;
 pub mod storage_guard;
+
+// Super-Prompts H, J, K, L modules
+pub mod permissions;
+pub mod permission_guard;
+pub mod encryption;
+pub mod validation;
+pub mod sandbox;
+pub mod pre_boot_validation;
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

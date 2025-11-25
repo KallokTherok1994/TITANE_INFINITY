@@ -11,3 +11,4 @@ export { GlobalExpBar } from './GlobalExpBar';
 export { ExpPanel } from './ExpPanel';
 export { TalentTree } from './TalentTree';
 export { TimelineChart } from './TimelineChart';
+export { XPBar } from './XPBar'; // ✨ v∞.D4

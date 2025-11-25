@@ -1,11 +1,21 @@
 /**
- * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Theme System Index
- * Export centralisé du système de thèmes
- * ═══════════════════════════════════════════════════════════════
+ * TITANE_INFINITY v∞ — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ *
+ * ═══════════════════════════════════════════════════════════════════
+ * TITANE∞ v∞.E - Themes Index
+ * ═══════════════════════════════════════════════════════════════════
  */
 
-export { ThemeProvider } from './ThemeProvider';
-export { useTheme } from './useTheme';
-export type { ThemeContextValue } from './ThemeContext';
-export type { UseThemeReturn } from './useTheme';
+import type { ReactNode } from 'react';
+
+export { colors, spacing, radius, shadows, fontSizes, fontWeights, metalPalette } from './tokens';
+export type { } from './tokens';
+
+// Re-export pour compatibilité
+export { default } from './tokens';
+
+// Theme Provider vide pour compatibilité (v∞ = un seul thème)
+export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  return <>{children}</>;
+};

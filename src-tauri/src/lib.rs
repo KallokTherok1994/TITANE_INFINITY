@@ -18,6 +18,9 @@ pub mod utils;          // ✅ Utilities (AppResult, AppError)
 pub mod types;          // ✅ Type definitions
 pub mod shared;         // ✅ Shared types and utilities
 pub mod core;           // ✅ Core system (legacy adapters)
+pub mod system_state;   // ✅ v∞.A MinimalState structure
+pub mod memory_persistence; // ✅ v∞.C Memory persistence + classification
+pub mod ai;             // ✅ v∞.C AI module with analyze_file
 
 // Commented out complex modules - to be fixed progressively
 // pub mod api;           // ❌ Type mismatches (HeliosCore methods)

@@ -1,0 +1,290 @@
+/**
+ * TITANE_INFINITY v∞ — XP System Styles
+ * Design System v∞ - Métallique monochrome
+ */
+
+/* ═══════════════════════════════════════════════════════════════════
+   XP Bar (Header)
+   ═══════════════════════════════════════════════════════════════════ */
+
+.xp-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+  cursor: pointer;
+  transition: opacity 120ms ease;
+}
+
+.xp-bar-wrapper:hover {
+  opacity: 0.8;
+}
+
+.xp-bar-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.xp-level {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.xp-next {
+  color: var(--text-muted);
+}
+
+.xp-bar-container {
+  width: 100%;
+  height: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   Experience Page
+   ═══════════════════════════════════════════════════════════════════ */
+
+.experience-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  color: var(--text);
+}
+
+.exp-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.exp-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 0.5rem 0;
+}
+
+.exp-header p {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Stats Grid */
+.exp-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.exp-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.exp-stat-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.exp-stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Progress Section */
+.exp-progress-section {
+  margin-bottom: 2rem;
+}
+
+.exp-progress-bar-large {
+  width: 100%;
+  height: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.exp-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  transition: width 0.5s ease;
+}
+
+.exp-progress-text {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Sources Section */
+.exp-sources-section {
+  margin-bottom: 2rem;
+}
+
+.exp-sources-section h2 {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.exp-sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.exp-source-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.exp-source-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.exp-source-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.exp-source-stats span:first-child {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.exp-source-count {
+  color: var(--text-muted);
+}
+
+/* Filters */
+.exp-filters {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.exp-filters button {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.875rem;
+}
+
+.exp-filters button:hover {
+  background: var(--hover);
+}
+
+.exp-filters button.active {
+  background: var(--accent);
+  color: var(--background);
+  border-color: var(--accent);
+}
+
+/* History */
+.exp-history h2 {
+  font-size: 1.5rem;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+.exp-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.exp-event {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  align-items: center;
+}
+
+.exp-event-time {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  min-width: 160px;
+}
+
+.exp-event-amount {
+  font-weight: 700;
+  color: var(--accent);
+  min-width: 60px;
+}
+
+.exp-event-source {
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+.exp-event-desc {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-style: italic;
+  grid-column: 1 / -1;
+  margin-top: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .experience-page {
+    padding: 1rem;
+  }
+
+  .exp-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exp-sources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .exp-event {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .exp-event-time,
+  .exp-event-amount {
+    min-width: auto;
+  }
+}

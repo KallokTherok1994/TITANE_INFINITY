@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../utils/invoke';
 import type {
   ExperienceState,
   ExperienceDomain,
@@ -51,7 +51,7 @@ export const initExperienceService = async (): Promise<void> => {
 
   try {
     // Tenter de charger l'état depuis le backend
-    const savedState = await invoke<ExperienceState | null>('experience_get_state');
+    const savedState = await safeInvoke<ExperienceState | null>('experience_get_state');
 
     if (savedState) {
       experienceState = savedState;
@@ -199,7 +199,7 @@ export const getProgressToNextLevel = (): number => {
  */
 const saveState = async (): Promise<void> => {
   try {
-    await invoke('experience_update_state', { state: experienceState });
+    await safeInvoke('experience_update_state', { state: experienceState });
   } catch (err) {
     // Fallback localStorage si Tauri non disponible
     console.warn('[Experience] Tauri save failed, using localStorage:', err);

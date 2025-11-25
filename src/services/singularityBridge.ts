@@ -21,7 +21,8 @@
  */
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../utils/invoke';
+import { XP } from '../core/experience/XP_ENGINE'; // ✨ v∞.D6 - XP Engine
 import type {
   SingularityState,
   PhysicalLayer,
@@ -55,10 +56,17 @@ export class SingularityBridge {
     try {
       // 1. Sync initial state (Rust → React)
       this.state = await this.getFullState();
+
+      // ✨ v∞.D6 - Injecter l'état XP dans SingularityState
+      this.syncXPToState();
+
       console.log('[SingularityBridge] Initial state synced:', this.state);
 
       // 2. Listen for layer updates (événements Tauri)
       await this.setupEventListeners();
+
+      // 3. Synchroniser XP toutes les 5 secondes
+      setInterval(() => this.syncXPToState(), 5000);
 
       this.initialized = true;
       console.log('[SingularityBridge] ✅ Initialized successfully');
@@ -100,6 +108,21 @@ export class SingularityBridge {
         console.error('[SingularityBridge] Subscriber error:', error);
       }
     });
+  }
+
+  /**
+   * ✨ v∞.D6 - Synchroniser l'état XP dans SingularityState
+   */
+  private static syncXPToState(): void {
+    if (!this.state) return;
+
+    this.state.progression = {
+      xp: XP.state.total,
+      level: XP.state.level,
+      events: XP.state.history,
+    };
+
+    this.notifySubscribers();
   }
 
   /**
@@ -273,7 +296,7 @@ export class SingularityBridge {
   }
 
   static async isCritical(): Promise<boolean> {
-    return invoke<boolean>('singularity_is_critical');
+    return (await safeInvoke<boolean>('singularity_is_critical')) || false;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -281,23 +304,23 @@ export class SingularityBridge {
   // ═══════════════════════════════════════════════════════════════════
 
   static async updatePhysical(physical: PhysicalLayer): Promise<void> {
-    await invoke('singularity_update_physical', { physical });
+    await safeInvoke('singularity_update_physical', { physical });
   }
 
   static async updateCognitive(cognitive: CognitiveLayer): Promise<void> {
-    await invoke('singularity_update_cognitive', { cognitive });
+    await safeInvoke('singularity_update_cognitive', { cognitive });
   }
 
   static async updateSymbolic(symbolic: SymbolicLayer): Promise<void> {
-    await invoke('singularity_update_symbolic', { symbolic });
+    await safeInvoke('singularity_update_symbolic', { symbolic });
   }
 
   static async updateAdaptive(adaptive: AdaptiveLayer): Promise<void> {
-    await invoke('singularity_update_adaptive', { adaptive });
+    await safeInvoke('singularity_update_adaptive', { adaptive });
   }
 
   static async updateMeta(meta: MetaLayer): Promise<void> {
-    await invoke('singularity_update_meta', { meta });
+    await safeInvoke('singularity_update_meta', { meta });
   }
 
   static async updateFullState(state: SingularityState): Promise<void> {
@@ -331,6 +354,50 @@ export class SingularityBridge {
     this.initialized = false;
     console.log('[SingularityBridge] Destroyed ✅');
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ✅ v∞.C6 - FILE KNOWLEDGE INTEGRATION
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Intégrer la connaissance d'un fichier importé dans le SingularityState
+ *
+ * @param summary - Résumé IA du fichier
+ * @param category - Catégorie du fichier (code-rust, code-react, etc.)
+ * @param path - Chemin du fichier
+ */
+export function mergeFileKnowledge(
+  summary: string,
+  category: string,
+  path: string
+): void {
+  const state = SingularityBridge.getState();
+  if (!state) {
+    console.warn('[mergeFileKnowledge] No state available');
+    return;
+  }
+
+  // Ajouter à la mémoire cognitive (connaissances)
+  const newKnowledge = {
+    id: `file_${Date.now()}`,
+    source: 'file_import',
+    category,
+    path,
+    summary,
+    timestamp: Date.now(),
+  };
+
+  console.log('[mergeFileKnowledge] ✅ Integrated:', { category, path });
+
+  // Notifier le backend pour persistence
+  safeInvoke('store_file', {
+    path,
+    category,
+    content: summary,
+  }).catch((err) => {
+    console.error('[mergeFileKnowledge] Storage failed:', err);
+  });
 }
 
 // ═══════════════════════════════════════════════════════════════════

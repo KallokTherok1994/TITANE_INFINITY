@@ -19,8 +19,24 @@ export interface SingularityState {
   symbolic: SymbolicLayer;
   adaptive: AdaptiveLayer;
   meta: MetaLayer;
+  progression?: ProgressionState; // ✨ v∞.D6 - État XP (optionnel pour compatibilité backend)
   timestamp: number;
   signature: string;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PROGRESSION STATE (v∞.D6)
+// ═══════════════════════════════════════════════════════════════════
+
+export interface ProgressionState {
+  xp: number;
+  level: number;
+  events: Array<{
+    source: string;
+    amount: number;
+    timestamp: number;
+    description?: string;
+  }>;
 }
 
 // ═══════════════════════════════════════════════════════════════════

@@ -8,11 +8,13 @@
 import { useState, useRef, useEffect, useMemo, useCallback, type KeyboardEvent, type ChangeEvent } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { open } from '@tauri-apps/plugin-dialog';
-import { invoke } from '@tauri-apps/api/core';
+import { safeInvoke } from '../../utils/invoke';
+import { mergeFileKnowledge } from '../../services/singularityBridge';
 import { Button, Badge } from '../../ui';
 import { colors, spacing, radius, shadows, fontSizes, fontWeights } from '@themes/tokens';
 import { awardExperience } from '../../services/experienceService';
 import { XPSource } from '../../types/experience';
+import { XP } from '../../core/experience/XP_ENGINE'; // ✨ v∞.D3 - XP Engine
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -70,6 +72,7 @@ export const ChatInput = ({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(-1);
   const [isImporting, setIsImporting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // ✅ v∞.B7 - Loading state
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const filteredSuggestions = useMemo(
@@ -95,13 +98,21 @@ export const ChatInput = ({
   }, [maxLength, onChange, filteredSuggestions.length]);
 
   const handleSubmit = useCallback((): void => {
-    if (value.trim() && !disabled) {
+    if (value.trim() && !disabled && !isLoading) {
+      setIsLoading(true); // ✅ v∞.B7 - Activer loading
+
+      // ✨ v∞.D3 - Gain XP pour message utilisateur
+      XP.gain(5, "message_user", `Message: "${value.trim().substring(0, 50)}..."`);
+
       onSubmit(value.trim());
       onChange('');
       setShowSuggestions(false);
       setSelectedSuggestion(-1);
+
+      // Désactiver loading après délai simulé (le parent gère la vraie réponse)
+      setTimeout(() => setIsLoading(false), 500);
     }
-  }, [value, disabled, onSubmit, onChange]);
+  }, [value, disabled, isLoading, onSubmit, onChange]);
 
   const applySuggestion = useCallback((suggestion: ChatSuggestion): void => {
     onChange(suggestion.text);
@@ -129,15 +140,36 @@ export const ChatInput = ({
         return;
       }
 
-      // Appeler commande Tauri pour ingérer le fichier
-      const result = await invoke<{ filename: string; size: number; type: string }>('memory_ingest_file', {
-        path: selected,
-      });
+      // ✅ v∞.B - Appel sécurisé avec safeInvoke
+      const result = await safeInvoke<{
+        filename: string;
+        path: string;
+        type: string;
+        lines: number;
+        words: number;
+        size: number;
+        summary: string;
+        processed_at: string;
+        success: boolean;
+      }>('upload_and_process_file', { path: selected });
 
-      // Attribuer XP
+      if (!result || !result.success) {
+        console.error('❌ Échec traitement fichier');
+        setIsImporting(false);
+        return;
+      }
+
+      // ✅ v∞.C6 - Intégrer la connaissance dans SingularityState
+      mergeFileKnowledge(result.summary, result.type, result.path);
+
+      // ✨ v∞.D3 - Gain XP pour import fichier
+      XP.gain(20, "file_import", `Fichier: ${result.filename} (${result.lines} lignes)`);
+
+      // Attribuer XP (Memory +20)
       await awardExperience('memory', 20, XPSource.FileImport, {
         filename: result.filename,
-        size: result.size,
+        lines: result.lines,
+        words: result.words,
         type: result.type,
       });
 
@@ -146,10 +178,10 @@ export const ChatInput = ({
         onFileImported(result.filename, 20);
       }
 
-      console.log(`✅ Fichier importé: ${result.filename} (+20 XP)`);
+      console.log(`✅ Fichier importé: ${result.filename} (${result.lines} lignes, ${result.words} mots) +20 XP`);
     } catch (err) {
       console.error('❌ Erreur import fichier:', err);
-      // TODO: Afficher notification d'erreur à l'utilisateur
+      // TODO v∞: Afficher bulle d'erreur élégante (jamais de crash)
     } finally {
       setIsImporting(false);
     }
@@ -293,6 +325,31 @@ export const ChatInput = ({
           transition: 'all 0.3s',
         }}
       >
+        {/* ✅ v∞.B7 - Loading Indicator */}
+        {isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="chat-thinking"
+            style={{
+              position: 'absolute',
+              top: '-40px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              padding: spacing[2],
+              background: colors.rubis.primary[900],
+              border: `1px solid ${colors.rubis.primary[700]}`,
+              borderRadius: radius.md,
+              color: colors.neutral[200],
+              fontSize: fontSizes.sm,
+              whiteSpace: 'nowrap',
+              boxShadow: shadows.lg,
+            }}
+          >
+            Je traite votre demande...
+          </motion.div>
+        )}
+
         {/* Textarea */}
         <textarea
           ref={textareaRef}

@@ -24,7 +24,7 @@ import { colors, spacing, fontSizes } from '@themes/tokens';
 export interface HeaderProps {
   logo?: ReactNode;
   title?: string;
-  subtitle?: string;
+  subtitle?: ReactNode; // ✨ v∞.D4 - Support ReactNode pour barre XP
   navigation?: ReactNode;
   actions?: ReactNode;
 }
@@ -109,7 +109,11 @@ export const Header = ({
       {(title || subtitle) && (
         <div style={titleContainerStyles}>
           {title && <h1 style={titleStyles}>{title}</h1>}
-          {subtitle && <p style={subtitleStyles}>{subtitle}</p>}
+          {subtitle && (
+            typeof subtitle === 'string'
+              ? <p style={subtitleStyles}>{subtitle}</p>
+              : <div style={subtitleStyles}>{subtitle}</div>
+          )}
         </div>
       )}
 

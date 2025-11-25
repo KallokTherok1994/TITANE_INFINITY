@@ -14,6 +14,7 @@ import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
+import { ChatFileImport } from './chat/ChatFileImport';
 import { useSingularityState } from '../core/state/SingularityState';
 import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ChatWindow.css';
@@ -34,6 +35,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
   const [input, setInput] = useState('');
   const [retrying, setRetrying] = useState(false);
+  const [showFileImport, setShowFileImport] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -134,9 +136,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
 
         {isLoading && (
           <div className="typing-indicator">
-            <span></span>
-            <span></span>
-            <span></span>
+            <div className="typing-indicator-label">TITANE réfléchit...</div>
+            <div className="typing-indicator-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
           </div>
         )}
 
@@ -149,7 +154,42 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
+      {showFileImport && (
+        <div className="chat-file-import-section">
+          <ChatFileImport
+            onFileAnalyzed={(analysis) => {
+              console.log('✅ Fichier analysé:', analysis);
+              // Injecte résumé fichier dans input
+              setInput(
+                `Analyse ce fichier:
+
+**${analysis.filename}** (${analysis.lines} lignes, ${analysis.wordCount} mots)
+
+Contenu:
+\`\`\`
+${analysis.summary}
+\`\`\`
+
+Que peux-tu en dire?`
+              );
+              setShowFileImport(false);
+              // Award +20 XP Memory (si backend disponible)
+              console.log('🎁 +20 XP Memory (fichier analysé)');
+            }}
+            disabled={isLoading}
+          />
+        </div>
+      )}
+
       <div className="chat-input-container">
+        <button
+          className="file-import-button"
+          onClick={() => setShowFileImport(!showFileImport)}
+          disabled={isLoading}
+          title="Importer un fichier"
+        >
+          📎
+        </button>
         <textarea
           ref={textareaRef}
           className="chat-input"

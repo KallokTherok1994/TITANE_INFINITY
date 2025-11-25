@@ -67,6 +67,22 @@ export class SingularityConnections {
   private static isRunning: boolean = false;
   private static disabledCommands: Set<string> = new Set();
 
+  // ═══ v∞.A THROTTLE GLOBAL ═══
+  private static lastCall: number = 0;
+  private static readonly THROTTLE_DELAY = 2000; // 2000ms entre chaque sync
+
+  /**
+   * Throttle global pour éviter spam (2000ms minimum entre appels)
+   */
+  private static throttle(delay: number = this.THROTTLE_DELAY): boolean {
+    const now = Date.now();
+    if (now - this.lastCall < delay) {
+      return false; // Trop tôt, skip
+    }
+    this.lastCall = now;
+    return true; // OK pour continuer
+  }
+
   /**
    * Safe invoke wrapper with "command not found" handling
    */
@@ -140,6 +156,11 @@ export class SingularityConnections {
    * Sync all subsystems → SingularityState
    */
   static async syncAll(): Promise<void> {
+    // v∞.A: Check throttle avant sync
+    if (!this.throttle()) {
+      return; // Skip si appelé trop tôt
+    }
+
     await Promise.all([
       this.syncHelios(),
       this.syncMemory(),
