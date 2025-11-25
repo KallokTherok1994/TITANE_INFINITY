@@ -48,8 +48,10 @@ flate2 = "1.0"
 walkdir = "2.4"  # Phase 9: Introspection filesystem traversal
 
 [features]
-default = ["custom-protocol"]
+default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]
+mock = []  # Mock backend mode for frontend-only development
+full = []  # Full backend mode with all real implementations
 
 [profile.dev]
 # ═══════════════════════════════════════════════════════════════
