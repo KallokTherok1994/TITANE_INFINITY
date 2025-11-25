@@ -1,197 +1,288 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE_INFINITY v14 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v17.3.0 — USE CHAT HOOK (REFACTORED)
- *   Hook React pour Chat IA avec ChatEngine unifié + Memory Core
+ *   TITANE∞ v14 — USE CHAT (Composition Hook)
+ *   Hook composé : Orchestre useChatCore, useChatUI, useChatMemory
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
+import { useCallback, useEffect } from 'react';
+import { useChatCore } from './useChatCore';
+import { useChatUI } from './useChatUI';
+import { useChatMemory } from './useChatMemory';
+import type { ChatMode, ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
-import {
-  loadChatHistory,
-  addMessageToHistory,
-  clearChatHistory as clearHistoryStorage,
-} from '../services/chatMemory';
 import { hybridTTS } from '../services/tts/hybridTTS';
-import { awardExperience } from '../services/experienceService';
-import { XPSource } from '../types/experience';
+import { errorTracker } from '../services/errorTracker';
 
 interface UseChatOptions {
   mode?: ChatMode;
   emotionState?: { valence: number; intensity: number; energy: number };
-  voiceEnabled?: boolean; // Active la synthèse vocale des réponses
+  voiceEnabled?: boolean;
 }
 
 interface UseChatReturn {
+  // UI State
   messages: AIMessage[];
+  input: string;
   isLoading: boolean;
   error: string | null;
-  currentMode: ChatMode;
   suggestions: string[];
+
+  // Mode & Stats
+  currentMode: ChatMode;
+  anomalyCount: number;
+  memoryStats: {
+    count: number;
+    sizeMB: number;
+    compressed: boolean;
+  };
+
+  // Actions
   sendMessage: (content: string) => Promise<void>;
   clearChat: () => void;
   setMode: (mode: ChatMode) => void;
+  setInput: (value: string) => void;
+  handleSend: () => void;
 }
 
+/**
+ * Hook principal Chat
+ * Composition propre des 3 hooks spécialisés
+ */
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
-  const [messages, setMessages] = useState<AIMessage[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [currentMode, setCurrentMode] = useState<ChatMode>(options.mode || 'default');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  console.log('\n╔════════════════════════════════════════════════════════════╗');
+  console.log('║  USE CHAT v14: Initialization (Composition Hook)           ║');
+  console.log('╚════════════════════════════════════════════════════════════╝\n');
 
-  // Charge l'historique au montage
+  // 1. Core IA Logic
+  const {
+    currentMode,
+    anomalyCount,
+    generate,
+    setMode: setCoreMode,
+  } = useChatCore({
+    mode: options.mode,
+    emotionState: options.emotionState,
+  });
+
+  // 2. UI State
+  const {
+    messages,
+    input,
+    isLoading,
+    error,
+    suggestions,
+    setInput,
+    setIsLoading,
+    setError,
+    setSuggestions,
+    addMessage,
+    addMessages,
+    clearMessages,
+    handleSend: handleUISend,
+  } = useChatUI();
+
+  // 3. Memory Backend Sync
+  const {
+    messagesForMode,
+    memoryStats,
+    saveMessage,
+    clearMode,
+    awardXP,
+  } = useChatMemory({
+    mode: currentMode,
+    autoCleanup: true,
+    autoSave: true,
+  });
+
+  // Sync messages depuis memory au changement de mode
   useEffect(() => {
-    const history = loadChatHistory();
-    setMessages(history);
-  }, []);
+    console.log(`🔄 USE CHAT v14: Mode changed to ${currentMode}, loading history...`);
+    addMessages(messagesForMode);
+  }, [currentMode, messagesForMode]);
 
-  // Configure le mode dans chatEngine
-  useEffect(() => {
-    chatEngine.setMode(currentMode, {
-      emotionState: options.emotionState,
-    });
-  }, [currentMode, options.emotionState]);
-
-  // Envoie un message
-  const sendMessage = useCallback(async (content: string) => {
-    if (!content.trim() || isLoading) return;
-
-    console.log('\n═════════════════════════════════════════════════════════════');
-    console.log('💬 USE CHAT: Sending new message');
-    console.log(`📝 Content: "${content.substring(0, 60)}${content.length > 60 ? '...' : ''}"`);
-    console.log(`🎯 Mode: ${currentMode}`);
-    console.log('═════════════════════════════════════════════════════════════\n');
-
-    setError(null);
-    setIsLoading(true);
-
-    // Ajoute message utilisateur
-    const userMessage: AIMessage = {
-      role: 'user',
-      content: content.trim(),
-      timestamp: Date.now(),
-    };
-
-    const updatedMessages = addMessageToHistory(userMessage);
-    setMessages([...updatedMessages]);
-    console.log('✅ User message added to history');
-
-    try {
-      console.log('🚀 Calling chatEngine.generate()...\n');
-
-      // Timeout safety: 10s max (réduit pour dev rapide)
-      const generatePromise = chatEngine.generate(content.trim(), updatedMessages);
-      const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout: Chat engine took >10s')), 10000)
-      );
-
-      const response: ChatEngineResponse = await Promise.race([
-        generatePromise,
-        timeoutPromise
-      ]);
-
-      console.log('\n✅ Response received from chatEngine');
-      console.log(`📦 Content length: ${response.content.length} chars`);
-      console.log(`🏷️  Provider: ${response.provider}`);
-
-      // Ajoute réponse IA
-      const aiMessage: AIMessage = {
-        role: 'assistant',
-        content: response.content,
-        timestamp: response.timestamp,
-      };
-
-      const finalMessages = addMessageToHistory(aiMessage);
-      setMessages([...finalMessages]);
-      console.log('✅ AI response added to history');
-
-      // Attribution XP pour message chat (+5 XP)
-      try {
-        await awardExperience('chat', 5, XPSource.ChatMessage, {
-          messageLength: content.trim().length,
-          provider: response.provider,
-        });
-        console.log('✨ +5 XP awarded to Chat domain');
-      } catch (xpError) {
-        console.warn('⚠️ XP award failed (non-blocking):', xpError);
-      }
-
-      // Met à jour suggestions
-      if (response.suggestions && response.suggestions.length > 0) {
-        setSuggestions(response.suggestions);
-        console.log(`💡 ${response.suggestions.length} suggestions available`);
-      }
-
-      // Synthèse vocale si activée
-      if (options.voiceEnabled && response.content) {
-        console.log('🔊 TTS: Voice mode enabled, synthesizing response...');
-        try {
-          await hybridTTS.speak(response.content, { lang: 'fr-FR', rate: 1.0 });
-          console.log('✅ TTS: Synthesis complete');
-        } catch (ttsError) {
-          console.warn('⚠️ TTS: Synthesis failed (non-blocking):', ttsError);
-          // TTS échoue silencieusement, n'affecte pas le chat
-        }
-      }
+  /**
+   * Envoie message (orchestration complète)
+   */
+  const sendMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isLoading) return;
 
       console.log('\n═════════════════════════════════════════════════════════════');
-      console.log('🎉 USE CHAT: Message processed successfully!');
+      console.log('💬 USE CHAT v14: Send message start');
+      console.log(`📝 Content: "${content.substring(0, 60)}..."`);
+      console.log(`🎯 Mode: ${currentMode}`);
       console.log('═════════════════════════════════════════════════════════════\n');
 
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
-      console.error('\n❌ USE CHAT: Error occurred');
-      console.error('Error:', err);
-      console.error('═════════════════════════════════════════════════════════════\n');
+      setError(null);
+      setIsLoading(true);
 
-      setError(errorMessage);
-
-      // Ajoute message d'erreur dans le chat
-      const errorAiMessage: AIMessage = {
-        role: 'assistant',
-        content: `❌ Erreur: ${errorMessage}`,
+      // Ajoute message utilisateur
+      const userMessage: AIMessage = {
+        role: 'user',
+        content: content.trim(),
         timestamp: Date.now(),
       };
 
-      const finalMessages = addMessageToHistory(errorAiMessage);
-      setMessages([...finalMessages]);
-    } finally {
-      setIsLoading(false);
-      console.log('🔓 isLoading set to false\n');
-    }
-  }, [isLoading, currentMode, options.voiceEnabled]);
+      addMessage(userMessage);
+      saveMessage(userMessage); // Sync backend
+      console.log(`✅ User message added + saved`);
 
-  // Efface tout le chat
+      try {
+        // Génération IA (timeout 30s géré dans useChatCore)
+        console.log('🚀 Calling generate()...\n');
+        const response: ChatEngineResponse = await generate(content.trim(), messages);
+
+        console.log('\n✅ Response received');
+        console.log(`📦 Content: ${response.content.length} chars`);
+        console.log(`🏷️  Provider: ${response.provider}`);
+
+        // Ajoute réponse IA
+        const aiMessage: AIMessage = {
+          role: 'assistant',
+          content: response.content,
+          timestamp: response.timestamp || Date.now(),
+        };
+
+        addMessage(aiMessage);
+        saveMessage(aiMessage); // Sync backend
+        console.log(`✅ AI response added + saved`);
+
+        // Suggestions
+        if (response.suggestions && response.suggestions.length > 0) {
+          setSuggestions(response.suggestions);
+          console.log(`💡 ${response.suggestions.length} suggestions available`);
+        }
+
+        // Attribution XP (+5 par message)
+        await awardXP('chat', 5, content.trim().length, response.provider);
+
+        // Synthèse vocale si activée
+        if (options.voiceEnabled && response.content) {
+          console.log('🔊 TTS: Synthesizing response...');
+          try {
+            await hybridTTS.speak(response.content, { lang: 'fr-FR', rate: 1.0 });
+            console.log('✅ TTS: Complete');
+          } catch (ttsError) {
+            console.warn('⚠️ TTS: Failed (non-blocking):', ttsError);
+          }
+        }
+
+        console.log('\n═════════════════════════════════════════════════════════════');
+        console.log('🎉 USE CHAT v14: Message processed successfully!');
+        console.log('═════════════════════════════════════════════════════════════\n');
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
+        console.error('\n❌ USE CHAT v14: Error', err);
+
+        // Track error (SELFHEAL++)
+        errorTracker.track('chat', errorMessage, 'high');
+
+        // Check auto-reset
+        const errorStats = errorTracker.getStats();
+        if (errorStats.shouldReset) {
+          console.warn('🚨 SELFHEAL++: Auto-reset triggered (3+ errors in 60s)');
+
+          // Reset soft: clear mode actuel
+          clearMode();
+          clearMessages();
+          setError('⚠️ Système réinitialisé automatiquement suite à des erreurs répétées');
+          errorTracker.markReset();
+
+          // Notification user
+          const resetMessage: AIMessage = {
+            role: 'assistant',
+            content: '🔄 **Reset automatique TITANE∞**\n\nDes erreurs répétées ont été détectées. Le chat a été réinitialisé pour garantir un fonctionnement optimal.',
+            timestamp: Date.now(),
+          };
+          addMessage(resetMessage);
+
+          return;
+        }
+
+        setError(errorMessage);
+
+        // Ajoute message d'erreur dans le chat
+        const errorAiMessage: AIMessage = {
+          role: 'assistant',
+          content: `❌ Erreur: ${errorMessage}`,
+          timestamp: Date.now(),
+        };
+        addMessage(errorAiMessage);
+      } finally {
+        setIsLoading(false);
+        console.log('🔓 isLoading = false\n');
+      }
+    },
+    [
+      isLoading,
+      currentMode,
+      messages,
+      options.voiceEnabled,
+      generate,
+      addMessage,
+      saveMessage,
+      setSuggestions,
+      awardXP,
+      clearMode,
+      clearMessages,
+      setError,
+      setIsLoading,
+    ]
+  );
+
+  /**
+   * Efface tout le chat (mode actuel)
+   */
   const clearChat = useCallback(() => {
-    clearHistoryStorage();
-    setMessages([]);
+    clearMode();
+    clearMessages();
     setError(null);
     setSuggestions([]);
-  }, []);
+    console.log(`🧹 USE CHAT v14: Cleared mode ${currentMode}`);
+  }, [currentMode, clearMode, clearMessages]);
 
-  // Change le mode de travail
+  /**
+   * Change le mode
+   */
   const setMode = useCallback((mode: ChatMode) => {
-    setCurrentMode(mode);
-  }, []);
+    console.log(`🔄 USE CHAT v14: Change mode → ${mode}`);
+    setCoreMode(mode);
+  }, [setCoreMode]);
+
+  /**
+   * Handle send depuis UI
+   */
+  const handleSend = useCallback(() => {
+    if (!input.trim() || isLoading) return;
+    const trimmedInput = input.trim();
+    setInput(''); // Clear input
+    sendMessage(trimmedInput);
+  }, [input, isLoading, setInput, sendMessage]);
 
   return {
+    // UI State
     messages,
+    input,
     isLoading,
     error,
-    currentMode,
     suggestions,
+
+    // Mode & Stats
+    currentMode,
+    anomalyCount,
+    memoryStats,
+
+    // Actions
     sendMessage,
     clearChat,
     setMode,
+    setInput,
+    handleSend,
   };
 }

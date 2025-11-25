@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Coherence Engine (Phase Ω)
  * Garantit cohérence parfaite entre tous les systèmes
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

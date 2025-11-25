@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Knowledge Growth Engine
  * Extension et consolidation des connaissances
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

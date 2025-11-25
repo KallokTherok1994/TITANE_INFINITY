@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Reasoning Bridge (Phase X)
  * Fusionne reasoning IA + structure interne
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

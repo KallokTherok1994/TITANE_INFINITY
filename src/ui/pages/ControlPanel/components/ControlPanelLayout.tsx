@@ -5,12 +5,13 @@
 
 import React from 'react';
 import { ControlPanelSection } from '../ControlPanel';
+import { SystemInfo } from '../../../../types/tauri';
 import './ControlPanelLayout.css';
 
 interface ControlPanelLayoutProps {
   activeSection: ControlPanelSection;
   onSectionChange: (section: ControlPanelSection) => void;
-  systemInfo: any;
+  systemInfo: SystemInfo;
   children: React.ReactNode;
 }
 

@@ -16,7 +16,6 @@
  * - Frontend React → Backend Rust (invoke commands)
  * - Persistence SQLite (état sauvegardé)
  */
-
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Validation Engine
  * Valide toutes les transformations HyperEvolution
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

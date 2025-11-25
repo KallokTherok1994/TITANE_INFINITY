@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Reinforcement Loop
  * Renforce patterns utiles, diminue les moins pertinents
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

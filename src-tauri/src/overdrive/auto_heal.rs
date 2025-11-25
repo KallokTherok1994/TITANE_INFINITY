@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v16 — OVERDRIVE AUTO-HEAL ENGINE
+// TITANE∞ v14 — OVERDRIVE AUTO-HEAL ENGINE
 // ═══════════════════════════════════════════════════════════════════════════
 // Module de réparation automatique avancé avec détection proactive
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -354,7 +355,6 @@ fn check_webview_health() -> String {
 
 }
 */
-
 // ─────────────────────────────────────────────────────────────────────────────
 // RÉPARATION AUTOMATIQUE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -527,7 +527,6 @@ fn repair_api_bridge(state: &AutoHealState) -> Result<String, String> {
 
 }
 */
-
 // ─────────────────────────────────────────────────────────────────────────────
 // LOGS & HISTORIQUE
 // ─────────────────────────────────────────────────────────────────────────────
@@ -618,7 +617,6 @@ fn update_module_health(state: &AutoHealState, new_health: ModuleHealth) {
 
 }
 */
-
 // ─────────────────────────────────────────────────────────────────────────────
 // PANIC HANDLER
 // ─────────────────────────────────────────────────────────────────────────────

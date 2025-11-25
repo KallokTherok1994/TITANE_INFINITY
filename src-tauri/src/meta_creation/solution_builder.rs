@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Solution Builder (Phase Y)
  * Calcule solutions les plus impactantes
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

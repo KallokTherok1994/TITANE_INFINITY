@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Regeneration Engine
  * Régénère automatiquement code et modules
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

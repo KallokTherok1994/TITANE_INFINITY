@@ -4,7 +4,6 @@
  * Synchronisation Rust → Frontend via événements Tauri
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use crate::singularity_state::layers::*;
 use crate::singularity_state::SingularityState;
 use serde::Serialize;

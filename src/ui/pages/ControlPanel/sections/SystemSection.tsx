@@ -5,9 +5,10 @@
 
 import React, { useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { SystemInfo } from '../../../../types/tauri';
 
 interface SystemSectionProps {
-  systemInfo: any;
+  systemInfo: SystemInfo;
   onRefresh: () => void;
 }
 

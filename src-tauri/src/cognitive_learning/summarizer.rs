@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Summarizer
  * Crée des synthèses pour optimiser la mémoire
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

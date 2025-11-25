@@ -7,6 +7,7 @@
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use tauri::State;
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -82,7 +83,7 @@ pub async fn memory_store(
     content: String,
     metadata: MemoryMetadata,
     state: State<'_, MemoryEngineState>,
-) -> Result<String, String> {
+) -> Result<String, TAPIError> {
     let entry_id = uuid::Uuid::new_v4().to_string();
 
     println!("[MEMORY] Stockage: {} - Type: {}", content, metadata.entry_type);
@@ -129,7 +130,7 @@ pub async fn memory_store_conversation(
     conversation_id: String,
     messages: Vec<String>,
     state: State<'_, MemoryEngineState>,
-) -> Result<usize, String> {
+) -> Result<usize, TAPIError> {
     let mut stored = 0;
 
     for message in messages {
@@ -156,7 +157,7 @@ pub async fn memory_store_conversation(
 pub async fn memory_search(
     query: MemoryQuery,
     state: State<'_, MemoryEngineState>,
-) -> Result<Vec<MemoryResult>, String> {
+) -> Result<Vec<MemoryResult>, TAPIError> {
     println!("[MEMORY] Recherche: '{}' (limit: {})", query.query, query.limit);
 
     // Générer embedding de la requête
@@ -209,7 +210,7 @@ pub fn memory_get_related(
     entry_id: String,
     limit: usize,
     state: State<MemoryEngineState>,
-) -> Result<Vec<MemoryEntry>, String> {
+) -> Result<Vec<MemoryEntry>, TAPIError> {
     let entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -221,7 +222,7 @@ pub fn memory_get_related(
     let base_entry = entries
         .iter()
         .find(|e| e.id == entry_id)
-        .ok_or("Entry introuvable")?;
+        .ok_or_else(|| TAPIError::not_found("Entry introuvable"))?;
 
     let mut related: Vec<(f32, MemoryEntry)> = Vec::new();
 
@@ -248,7 +249,7 @@ pub fn memory_get_related(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn memory_rebuild_index(state: State<MemoryEngineState>) -> Result<String, String> {
+pub fn memory_rebuild_index(state: State<MemoryEngineState>) -> Result<String, TAPIError> {
     println!("[MEMORY] Reconstruction index...");
 
     // TODO: Implémenter HNSW ou FAISS pour recherche rapide
@@ -266,7 +267,7 @@ pub fn memory_rebuild_index(state: State<MemoryEngineState>) -> Result<String, S
 }
 
 #[tauri::command]
-pub fn memory_get_stats(state: State<MemoryEngineState>) -> Result<MemoryStats, String> {
+pub fn memory_get_stats(state: State<MemoryEngineState>) -> Result<MemoryStats, TAPIError> {
     let entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -315,7 +316,7 @@ pub fn memory_prune(
     min_importance: f32,
     min_access_count: u32,
     state: State<MemoryEngineState>,
-) -> Result<usize, String> {
+) -> Result<usize, TAPIError> {
     let mut entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -334,7 +335,7 @@ pub fn memory_prune(
 }
 
 #[tauri::command]
-pub fn memory_delete(entry_id: String, state: State<MemoryEngineState>) -> Result<String, String> {
+pub fn memory_delete(entry_id: String, state: State<MemoryEngineState>) -> Result<String, TAPIError> {
     let mut entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -363,7 +364,6 @@ pub fn memory_clear(state: State<MemoryEngineState>) -> Result<String, String> {
     Ok("Mémoire vidée".to_string())
 }
 */
-
 // ─────────────────────────────────────────────────────────────────────────────
 // EMBEDDINGS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -371,7 +371,7 @@ pub fn memory_clear(state: State<MemoryEngineState>) -> Result<String, String> {
 async fn generate_embedding(
     text: &str,
     state: &MemoryEngineState,
-) -> Result<Vec<f32>, String> {
+) -> Result<Vec<f32>, TAPIError> {
     let model = match state.embedding_model.lock() {
         Ok(guard) => guard.clone(),
         Err(poisoned) => {
@@ -436,7 +436,7 @@ fn calculate_importance(content: &str, metadata: &MemoryMetadata) -> f32 {
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn memory_export(state: State<MemoryEngineState>) -> Result<Vec<MemoryEntry>, String> {
+pub fn memory_export(state: State<MemoryEngineState>) -> Result<Vec<MemoryEntry>, TAPIError> {
     let entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -451,7 +451,7 @@ pub fn memory_export(state: State<MemoryEngineState>) -> Result<Vec<MemoryEntry>
 pub fn memory_import(
     entries: Vec<MemoryEntry>,
     state: State<MemoryEngineState>,
-) -> Result<usize, String> {
+) -> Result<usize, TAPIError> {
     let mut current_entries = match state.entries.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {

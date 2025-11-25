@@ -8,6 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { SystemInfo } from '../../../types/tauri';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
 import { SystemSection } from './sections/SystemSection';
 import { AppearanceSection } from './sections/AppearanceSection';
@@ -32,15 +33,6 @@ export type ControlPanelSection =
   | 'updates'
   | 'logs'
   | 'security';
-
-interface SystemInfo {
-  version: string;
-  uptime: number;
-  memory_usage: number;
-  cpu_usage: number;
-  disk_usage: number;
-  singularity_active: boolean;
-}
 
 export const ControlPanel: React.FC = () => {
   const [activeSection, setActiveSection] = useState<ControlPanelSection>('system');

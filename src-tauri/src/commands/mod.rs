@@ -8,9 +8,13 @@ pub mod exp_fusion;
 pub mod evolution;
 pub mod devtools;
 pub mod engine_v14;  // ✅ NEW: SingularityEngine v14 commands
+pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
+pub mod harmonia_commands; // ✅ v14 Phase 5: Harmonia Engine
 
 // Re-export engine commands
 pub use engine_v14::*;
+pub use memory_compactor_commands::*;
+pub use harmonia_commands::*;
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;

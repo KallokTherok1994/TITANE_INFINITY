@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Ideation Engine (Phase Y)
  * Génère idées, concepts, outils, designs
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

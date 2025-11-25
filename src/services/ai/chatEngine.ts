@@ -21,6 +21,7 @@ import {
 } from './memoryIntegration';
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
+import { chatValidator } from '../chatValidator';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES ÉTENDUS
@@ -62,11 +63,20 @@ export interface ChatEngineResponse extends AIResponse {
 
 class ChatEngine {
   private config: ChatEngineConfig = { mode: 'default' };
+  private lastMode: ChatMode = 'default';
+  private conversationContext: Map<string, any> = new Map();
 
   /**
-   * Configure le mode de travail
+   * Configure le mode de travail avec reset cognitif
    */
   setMode(mode: ChatMode, config?: Partial<ChatEngineConfig>): void {
+    // Reset cognitif si changement de mode
+    if (this.lastMode !== mode) {
+      console.log(`🔄 RESET COGNITIF: ${this.lastMode} → ${mode}`);
+      this.conversationContext.clear();
+      this.lastMode = mode;
+    }
+
     this.config = {
       mode,
       ...config,
@@ -118,6 +128,24 @@ class ChatEngine {
       finalConfig.aiConfig
     );
     console.log('   ✅ Orchestrator response received');
+
+    // 4.5. NEXUS & SENTINEL - Validation cohérence
+    console.log('🛡️  Step 4.5: Validating response with Nexus/Sentinel...');
+    const validation = chatValidator.validate(response.content, finalConfig.mode, validatedMessage);
+    console.log(`   ✅ Validation score: ${(validation.score * 100).toFixed(0)}% (coherence: ${(validation.coherenceScore * 100).toFixed(0)}%, anomaly: ${(validation.anomalyScore * 100).toFixed(0)}%)`);
+
+    if (validation.issues.length > 0) {
+      console.log(`   ⚠️  Issues detected: ${validation.issues.length}`);
+      validation.issues.forEach(issue => {
+        console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+      });
+    }
+
+    // Si validation échoue, utiliser réponse nettoyée
+    if (!validation.isValid && validation.cleaned) {
+      console.log('   🧹 Using cleaned response');
+      response.content = validation.cleaned;
+    }
 
     // 5. Post-traitement selon mode
     console.log('⚙️  Step 5: Post-processing...');
@@ -177,6 +205,12 @@ class ChatEngine {
     for await (const chunk of aiOrchestrator.stream(validatedMessage, enrichedHistory)) {
       fullContent += chunk;
       yield chunk;
+    }
+
+    // Validation Nexus/Sentinel
+    const validation = chatValidator.validate(fullContent, finalConfig.mode, validatedMessage);
+    if (!validation.isValid && validation.cleaned) {
+      fullContent = validation.cleaned;
     }
 
     // Post-traitement
@@ -267,7 +301,21 @@ class ChatEngine {
     modeConfig: ChatModeConfig,
     context: { sources: string[]; data: Record<string, unknown> }
   ): string {
-    let prompt = modeConfig.systemPrompt;
+    // Signature TITANE∞ obligatoire
+    let prompt = `═══════════════════════════════════════════════════════════════════
+TITANE∞ v14 — Système Cognitif Auto-Évolutif
+Mode actif: ${modeConfig.name} (${modeConfig.icon})
+═══════════════════════════════════════════════════════════════════
+
+`;
+
+    // Ajout du prompt spécifique au mode (isolé)
+    prompt += modeConfig.systemPrompt;
+
+    // Isolation: Rappel du mode pour éviter contamination
+    prompt += `
+
+⚠️ ISOLATION MODE: Tu es actuellement en mode ${modeConfig.name}. Reste fidèle à ce mode, ne dérive pas vers d'autres styles de réponse.`;
 
     // Adaptation émotionnelle
     if (this.config.emotionState) {
@@ -297,6 +345,14 @@ class ChatEngine {
         prompt += `\n\nDécisions récentes: ${(context.data.recentDecisions as string[]).join('; ')}`;
       }
     }
+
+    // Signature de clôture TITANE∞
+    prompt += `
+
+═══════════════════════════════════════════════════════════════════
+Fin du contexte système TITANE∞ v14
+Réponds maintenant en mode ${modeConfig.name} uniquement.
+═══════════════════════════════════════════════════════════════════`;
 
     return prompt;
   }

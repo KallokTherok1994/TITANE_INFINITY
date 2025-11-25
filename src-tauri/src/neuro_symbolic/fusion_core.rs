@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Fusion Core (Phase X)
  * Fusionne IA + Architecture Symbolique + Mémoire
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

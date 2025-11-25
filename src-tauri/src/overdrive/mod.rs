@@ -8,12 +8,14 @@ pub mod auto_heal;
 pub mod voice_engine;
 pub mod chat_orchestrator;
 pub mod memory_engine;
+pub mod memory_compactor;
 pub mod semantic_kernel;
 pub mod exp_engine;
 pub mod project_autopilot;
 pub mod api_bridge;
 
 use tauri::State;
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STATE GLOBAL OVERDRIVE
@@ -89,7 +91,7 @@ pub fn init() -> OverdriveState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn overdrive_health_check(state: State<OverdriveState>) -> Result<OverdriveHealthReport, String> {
+pub fn overdrive_health_check(state: State<OverdriveState>) -> Result<OverdriveHealthReport, TAPIError> {
     println!("[OVERDRIVE] Health check global...");
 
     let report = OverdriveHealthReport {
@@ -125,7 +127,7 @@ pub struct OverdriveHealthReport {
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn overdrive_get_version() -> Result<OverdriveVersion, String> {
+pub fn overdrive_get_version() -> Result<OverdriveVersion, TAPIError> {
     Ok(OverdriveVersion {
         version: "16.1.0".to_string(),
         codename: "OVERDRIVE".to_string(),

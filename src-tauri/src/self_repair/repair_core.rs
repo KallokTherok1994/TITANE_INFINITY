@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Repair Core (Phase Z)
  * Applique correctifs immédiats
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

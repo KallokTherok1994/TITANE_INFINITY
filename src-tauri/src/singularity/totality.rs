@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Totality Engine (Phase Ω)
  * Unifie IA + architecture + UI + backend + mémoire
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

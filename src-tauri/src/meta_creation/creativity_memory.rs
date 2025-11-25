@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Creativity Memory (Phase Y)
  * Mémoire dédiée à la création
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

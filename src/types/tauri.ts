@@ -164,6 +164,11 @@ export interface SystemInfo {
   arch: string;
   cores: number;
   totalMemory: number;
+  cpu_usage?: number;
+  memory_usage?: number;
+  disk_usage?: number;
+  uptime?: number;
+  singularity_active?: boolean;
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

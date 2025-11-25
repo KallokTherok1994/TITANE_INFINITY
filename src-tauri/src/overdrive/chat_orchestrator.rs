@@ -1,9 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v16 — OVERDRIVE CHAT ORCHESTRATOR
+// TITANE∞ v14 — OVERDRIVE CHAT ORCHESTRATOR
 // ═══════════════════════════════════════════════════════════════════════════
 // Orchestrateur IA hybride : Gemini (cloud) + Ollama (local) + fallback
 // ═══════════════════════════════════════════════════════════════════════════
 
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -65,6 +66,8 @@ pub struct ConversationMemory {
 pub struct ChatOrchestratorState {
     conversations: Arc<RwLock<Vec<ConversationMemory>>>,
     provider_status: Arc<RwLock<Vec<ProviderStatus>>>,
+    provider_last_check: Arc<RwLock<std::collections::HashMap<String, u64>>>,
+    provider_failure_count: Arc<RwLock<std::collections::HashMap<String, u32>>>,
     gemini_api_key: Arc<RwLock<Option<String>>>,
     default_provider: Arc<RwLock<String>>,
 }
@@ -77,6 +80,8 @@ pub fn init() -> ChatOrchestratorState {
     let state = ChatOrchestratorState {
         conversations: Arc::new(RwLock::new(Vec::new())),
         provider_status: Arc::new(RwLock::new(Vec::new())),
+        provider_last_check: Arc::new(RwLock::new(std::collections::HashMap::new())),
+        provider_failure_count: Arc::new(RwLock::new(std::collections::HashMap::new())),
         gemini_api_key: Arc::new(RwLock::new(None)),
         default_provider: Arc::new(RwLock::new("auto".to_string())),
     };
@@ -123,6 +128,73 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
+// PROVIDER HEARTBEAT & STATUS
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Vérifie rapidement si un provider est disponible (cache 30s)
+async fn is_provider_available(
+    provider: &str,
+    state: &ChatOrchestratorState,
+) -> bool {
+    const CACHE_DURATION_MS: u64 = 30000; // 30s
+    const MAX_FAILURES: u32 = 3;
+
+    let now = get_timestamp();
+
+    // Vérifier cache
+    {
+        let last_check = state.provider_last_check.read().await;
+        if let Some(&last_time) = last_check.get(provider) {
+            if now - last_time < CACHE_DURATION_MS {
+                // Cache valide, vérifier les échecs
+                let failures = state.provider_failure_count.read().await;
+                let count = failures.get(provider).unwrap_or(&0);
+                return *count < MAX_FAILURES;
+            }
+        }
+    }
+
+    // Cache expiré ou première vérification, faire un heartbeat
+    let is_available = match provider {
+        "gemini" => {
+            let api_key = state.gemini_api_key.read().await;
+            api_key.is_some() // Simplifié: si clé présente, considérer disponible
+        },
+        "ollama" => {
+            // TODO: Ping rapide http://localhost:11434/api/tags
+            true // Temporaire: assume disponible
+        },
+        "local" => true, // Toujours disponible
+        _ => false,
+    };
+
+    // Mettre à jour cache
+    {
+        let mut last_check = state.provider_last_check.write().await;
+        last_check.insert(provider.to_string(), now);
+    }
+
+    is_available
+}
+
+/// Incrémente le compteur d'échecs d'un provider
+async fn increment_provider_failures(provider: &str, state: &ChatOrchestratorState) {
+    let mut failures = state.provider_failure_count.write().await;
+    let count = failures.entry(provider.to_string()).or_insert(0);
+    *count += 1;
+
+    if *count >= 3 {
+        println!("[CHAT] ⚠️ Provider {} temporairement désactivé (3 échecs)", provider);
+    }
+}
+
+/// Reset le compteur d'échecs d'un provider
+async fn reset_provider_failures(provider: &str, state: &ChatOrchestratorState) {
+    let mut failures = state.provider_failure_count.write().await;
+    failures.insert(provider.to_string(), 0);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // ORCHESTRATION PRINCIPALE
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -132,6 +204,15 @@ pub async fn chat_send_message(
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
     let start = crate::core::utils::now_ms();
+
+    // Validation input
+    if request.message.trim().is_empty() {
+        return Err(TAPIError::validation("Message cannot be empty").into());
+    }
+
+    if request.message.len() > 10000 {
+        return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
+    }
 
     // Liste des providers à essayer (ordre de priorité)
     let providers_to_try: Vec<String> = if request.provider == "auto" {
@@ -144,11 +225,18 @@ pub async fn chat_send_message(
         providers
     };
 
-    let mut last_error = String::new();
+    let mut last_error: Option<TAPIError> = None;
 
     // Boucle de fallback (au lieu de récursion)
     for provider in providers_to_try {
-        println!("[CHAT] Tentative avec provider: {}", provider);
+        // Vérifier disponibilité via heartbeat (avec cache)
+        if !is_provider_available(&provider, &state).await {
+            println!("[CHAT] ⏭️ Provider {} non disponible (skip)", provider);
+            last_error = Some(TAPIError::provider_unavailable(&provider));
+            continue;
+        }
+
+        println!("[CHAT] 🔄 Tentative avec provider: {}", provider);
 
         // Cloner request pour chaque tentative
         request.provider = provider.clone();
@@ -159,7 +247,7 @@ pub async fn chat_send_message(
             "ollama" => send_to_ollama(&request, &state).await,
             "local" => send_to_local(&request, &state).await,
             _ => {
-                last_error = format!("Provider inconnu: {}", provider);
+                last_error = Some(TAPIError::provider_unavailable(&provider));
                 continue;
             }
         };
@@ -167,6 +255,9 @@ pub async fn chat_send_message(
         match result {
             Ok(message) => {
                 let latency_ms = crate::core::utils::elapsed_ms(start);
+
+                // Reset compteur échecs sur succès
+                reset_provider_failures(&provider, &state).await;
 
                 // Stocker dans la conversation
                 if let Some(conv_id) = &request.conversation_id {
@@ -181,15 +272,23 @@ pub async fn chat_send_message(
                 });
             }
             Err(e) => {
-                last_error = e;
-                println!("[CHAT] Échec {} - {}", provider, last_error);
+                last_error = Some(e.clone());
+                println!("[CHAT] ❌ Échec {} - {}", provider, e);
+
+                // Incrémenter échecs
+                increment_provider_failures(&provider, &state).await;
+
                 // Continue vers le prochain provider
             }
         }
     }
 
     // Tous les providers ont échoué
-    Err(format!("Tous les providers ont échoué. Dernière erreur: {}", last_error))
+    let final_error = last_error.unwrap_or_else(|| {
+        TAPIError::internal("All providers failed without specific error")
+    });
+
+    Err(final_error.into())
 }
 
 async fn select_best_provider(state: &ChatOrchestratorState) -> String {
@@ -212,10 +311,10 @@ async fn select_best_provider(state: &ChatOrchestratorState) -> String {
 async fn send_to_gemini(
     request: &ChatRequest,
     state: &ChatOrchestratorState,
-) -> Result<ChatMessage, String> {
+) -> Result<ChatMessage, TAPIError> {
     let api_key = state.gemini_api_key.read().await;
     if api_key.is_none() {
-        return Err("Gemini API key non configurée".to_string());
+        return Err(TAPIError::config("Gemini API key not configured"));
     }
 
     // TODO: Implémenter appel API Gemini
@@ -240,7 +339,7 @@ async fn send_to_gemini(
 async fn send_to_ollama(
     request: &ChatRequest,
     state: &ChatOrchestratorState,
-) -> Result<ChatMessage, String> {
+) -> Result<ChatMessage, TAPIError> {
     // TODO: Implémenter appel Ollama
     // POST http://localhost:11434/api/generate
     // Body: { model: "llama3.1", prompt: "...", stream: false }
@@ -262,7 +361,7 @@ async fn send_to_ollama(
 async fn send_to_local(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
-) -> Result<ChatMessage, String> {
+) -> Result<ChatMessage, TAPIError> {
     // Fallback ultra-simple : echo
     println!("[CHAT] Fallback local");
 
@@ -283,7 +382,7 @@ async fn send_to_local(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn chat_create_conversation(state: State<'_, ChatOrchestratorState>) -> Result<String, String> {
+pub async fn chat_create_conversation(state: State<'_, ChatOrchestratorState>) -> Result<String, TAPIError> {
     let conversation_id = uuid::Uuid::new_v4().to_string();
 
     let conversation = ConversationMemory {
@@ -363,7 +462,7 @@ pub async fn chat_get_providers_status(
 }
 
 #[tauri::command]
-pub async fn chat_check_providers(state: State<'_, ChatOrchestratorState>) -> Result<Vec<ProviderStatus>, String> {
+pub async fn chat_check_providers(state: State<'_, ChatOrchestratorState>) -> Result<Vec<ProviderStatus>, TAPIError> {
     // TODO: Ping tous les providers
     // - Gemini: HEAD request avec API key
     // - Ollama: GET http://localhost:11434/api/tags
@@ -388,20 +487,101 @@ async fn update_provider_status(
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────────────────────
 // STREAMING (pour token-par-token)
-// ─────────────────────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub async fn ai_chat_stream(
+    message: String,
+    model: Option<String>,
+    temperature: Option<f32>,
+    max_tokens: Option<u32>,
+    system_prompt: Option<String>,
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<String, String> {
+    let request = ChatRequest {
+        message,
+        conversation_id: None,
+        provider: "auto".to_string(),
+        model,
+        streaming: false, // TODO: Implémenter vrai streaming
+        images: None,
+        system_prompt,
+    };
+
+    let response = chat_send_message(request, state).await?;
+    Ok(response.message.content)
+}
+
+#[tauri::command]
+pub async fn ai_chat_send(
+    message: String,
+    model: Option<String>,
+    temperature: Option<f32>,
+    max_tokens: Option<u32>,
+    system_prompt: Option<String>,
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<String, String> {
+    let request = ChatRequest {
+        message,
+        conversation_id: None,
+        provider: "auto".to_string(),
+        model,
+        streaming: false,
+        images: None,
+        system_prompt,
+    };
+
+    let response = chat_send_message(request, state).await?;
+    Ok(response.message.content)
+}
 
 #[tauri::command]
 pub async fn chat_stream_message(
     request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
+    window: tauri::Window,
 ) -> Result<String, String> {
-    // TODO: Implémenter streaming avec Server-Sent Events (SSE)
-    // Ou WebSocket pour envoyer tokens progressivement
+    println!("[CHAT_STREAM] Starting streaming request");
+    let start = crate::core::utils::now_ms();
 
-    println!("[CHAT] Mode streaming activé");
-    Ok("Streaming non implémenté".to_string())
+    // Validation
+    if request.message.trim().is_empty() {
+        return Err(TAPIError::validation("Message cannot be empty").into());
+    }
+
+    // Pour le moment, on récupère la réponse complète puis on la stream
+    // TODO: Implémenter vrai streaming depuis les providers
+    let response = chat_send_message(request.clone(), state).await?;
+
+    let content = response.message.content;
+    let words = content.split_whitespace().collect::<Vec<&str>>();
+
+    // Streamer les mots un par un
+    for (i, word) in words.iter().enumerate() {
+        let chunk = if i < words.len() - 1 {
+            format!("{} ", word)
+        } else {
+            word.to_string()
+        };
+
+        // Émettre événement Tauri
+        let _ = window.emit("chat_stream_chunk", chunk);
+
+        // Délai simulé
+        tokio::time::sleep(tokio::time::Duration::from_millis(30)).await;
+    }
+
+    // Événement final
+    let latency_ms = crate::core::utils::elapsed_ms(start);
+    let _ = window.emit("chat_stream_complete", serde_json::json!({
+        "content": content,
+        "latency_ms": latency_ms,
+        "provider": response.message.provider,
+    }));
+
+    Ok(content)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

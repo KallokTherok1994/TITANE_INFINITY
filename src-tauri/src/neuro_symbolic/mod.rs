@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase X - NeuroSymbolic Fusion
  * Super-Prompt X: Hybrid Intelligence Integration Layer
  */
-
 pub mod fusion_core;
 pub mod cognitive_adapter;
 pub mod symbolic_adapter;

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase Ω - Singularity Engine
  * Super-Prompt Ω: Fusion Absolue de tous les moteurs
  */
-
 pub mod core;
 pub mod coherence;
 pub mod fusion;

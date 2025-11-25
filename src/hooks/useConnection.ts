@@ -1,57 +1,107 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE_INFINITY v14 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - useConnection Hook
-// React hook for connection status monitoring
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * TITANE∞ v14 — USE CONNECTION HOOK (REFACTORED)
+ * Hook React pour monitoring status providers IA temps réel
+ * ═══════════════════════════════════════════════════════════════
+ */
 
 import { useState, useCallback, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { tauriClient, type ProviderStatus } from '../services/tauriClient';
 
 export interface ConnectionStatus {
   online: boolean;
   lastCheck: number;
-  provider: 'Gemini' | 'Ollama' | 'Offline';
+  provider: string; // gemini | ollama | local
+  availableProviders: ProviderStatus[];
+  latency: number;
 }
 
 export function useConnection() {
   const [status, setStatus] = useState<ConnectionStatus>({
     online: false,
     lastCheck: 0,
-    provider: 'Offline',
+    provider: 'local',
+    availableProviders: [],
+    latency: 0,
   });
 
   const [isChecking, setIsChecking] = useState(false);
 
+  /**
+   * Vérifie le statut de tous les providers
+   */
   const checkConnection = useCallback(async () => {
     setIsChecking(true);
+    const startTime = Date.now();
 
     try {
-      const online = await invoke<boolean>('check_connection');
+      // Récupère le statut de tous les providers via Tauri
+      const providers = await tauriClient.chatCheckProviders();
+      const latency = Date.now() - startTime;
+
+      // Trouve le premier provider disponible (cascade: gemini → ollama → local)
+      const availableProvider = providers.find(p => p.available);
+      const online = providers.some(p => p.available && p.provider !== 'local');
 
       setStatus({
         online,
         lastCheck: Date.now(),
-        provider: online ? 'Gemini' : 'Ollama',
+        provider: availableProvider?.provider || 'local',
+        availableProviders: providers,
+        latency,
       });
+
+      console.log(`🔗 Connection check: ${providers.length} providers, best: ${availableProvider?.provider}`);
 
       return online;
     } catch (err) {
-      console.error('Connection check error:', err);
+      console.error('❌ Connection check error:', err);
+
+      // Fallback: mode local uniquement
       setStatus({
         online: false,
         lastCheck: Date.now(),
-        provider: 'Offline',
+        provider: 'local',
+        availableProviders: [{
+          provider: 'local',
+          available: true,
+          latency_ms: 0,
+          models: ['echo'],
+          error: undefined,
+        }],
+        latency: 0,
       });
+
       return false;
     } finally {
       setIsChecking(false);
     }
   }, []);
+
+  /**
+   * Récupère le statut des providers sans re-check (cache)
+   */
+  const getProvidersStatus = useCallback(async () => {
+    try {
+      const providers = await tauriClient.chatGetProvidersStatus();
+
+      // Mise à jour partielle du status
+      setStatus(prev => ({
+        ...prev,
+        availableProviders: providers,
+      }));
+
+      return providers;
+    } catch (err) {
+      console.error('❌ Failed to get providers status:', err);
+      return status.availableProviders;
+    }
+  }, [status.availableProviders]);
 
   // Auto-check on mount
   useEffect(() => {
@@ -68,5 +118,6 @@ export function useConnection() {
     status,
     isChecking,
     checkConnection,
+    getProvidersStatus,
   };
 }

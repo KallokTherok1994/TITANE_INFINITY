@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Structural Engine
  * Restructure l'architecture automatiquement
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

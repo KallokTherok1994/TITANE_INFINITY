@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase 10 - Mode Auto-Évolution (Super-Prompt U)
  * Evolution Loop - Self-Upgrade & Reinforcement Learning
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

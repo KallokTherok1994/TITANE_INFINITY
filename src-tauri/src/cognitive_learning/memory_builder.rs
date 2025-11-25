@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Memory Builder
  * Convertit conversations + fichiers en connaissance
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

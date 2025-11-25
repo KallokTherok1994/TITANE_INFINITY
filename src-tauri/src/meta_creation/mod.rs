@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase Y - Meta-Creation Engine
  * Super-Prompt Y: Autonomous System Generator
  */
-
 pub mod ideation;
 pub mod pattern_inventor;
 pub mod system_designer;

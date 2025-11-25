@@ -4,7 +4,6 @@
  *
  * © 2025 Humain Total / Kevin Thibault
  */
-
 use tauri::State;
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;

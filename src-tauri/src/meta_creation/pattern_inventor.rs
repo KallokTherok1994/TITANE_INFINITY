@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Pattern Inventor (Phase Y)
  * Crée nouveaux patterns de code, UI, structures
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Deep Rebuild (Phase Z)
  * Reconstruction totale après crash majeur
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

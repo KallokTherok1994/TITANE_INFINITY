@@ -83,7 +83,7 @@ function generateBuiltinResponse(message: string): string {
  * OLLAMA LOCAL (Optional - Localhost Only)
  * ═══════════════════════════════════════════════
  */
-async function callOllamaLocal(message: string, history: AIMessage[] = []): Promise<AIResponse> {
+async function callOllamaLocal(message: string, _history: AIMessage[] = []): Promise<AIResponse> {
   if (!isAIProviderEnabled('ollama')) {
     throw new Error('Ollama provider is disabled in featureFlags.ts');
   }

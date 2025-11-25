@@ -3,7 +3,6 @@
  * Orchestre: wakeword → audio input → ASR → IA → TTS → audio output
  * Gestion interruptions, synchronisation, fallback
  */
-
 use std::sync::{Arc, Mutex};
 use tokio::sync::mpsc;
 

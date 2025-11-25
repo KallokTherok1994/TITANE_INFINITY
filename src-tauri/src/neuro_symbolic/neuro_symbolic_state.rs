@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - NeuroSymbolic State (Phase X)
  * État hybride neuronal + symbolique
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

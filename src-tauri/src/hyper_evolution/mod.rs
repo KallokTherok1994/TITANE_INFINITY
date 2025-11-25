@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase V - HyperEvolution Engine
  * Super-Prompt V: Acceleration, Prediction, Structural Growth
  */
-
 pub mod predictor;
 pub mod accelerator;
 pub mod structural_engine;

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Association Engine
  * Crée des liens entre concepts (réseau neuronal)
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

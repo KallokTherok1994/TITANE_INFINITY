@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Emergent Behavior (Phase Ω)
  * Permet l'apparition de comportements intelligents émergents
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

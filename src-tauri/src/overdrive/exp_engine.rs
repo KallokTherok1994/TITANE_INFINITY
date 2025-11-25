@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use tauri::State;
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -210,7 +211,7 @@ pub fn exp_add(
     source: String,
     description: String,
     state: State<ExpEngineState>,
-) -> Result<ExpProfile, String> {
+) -> Result<ExpProfile, TAPIError> {
     let gain = ExpGain {
         amount,
         category: category.clone(),
@@ -290,14 +291,14 @@ pub fn exp_add(
 pub fn exp_add_batch(
     gains: Vec<(u64, String, String, String)>,
     state: State<ExpEngineState>,
-) -> Result<ExpProfile, String> {
+) -> Result<ExpProfile, TAPIError> {
     let mut profile_result = None;
 
     for (amount, category, source, description) in gains {
         profile_result = Some(exp_add(amount, category, source, description, state.clone())?);
     }
 
-    profile_result.ok_or("Aucun gain d'expérience".to_string())
+    profile_result.ok_or_else(|| TAPIError::validation("Aucun gain d'expérience"))
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -316,7 +317,7 @@ fn calculate_exp_for_next_level(current_level: u32) -> u64 {
 }
 
 #[tauri::command]
-pub fn exp_get_profile(state: State<ExpEngineState>) -> Result<ExpProfile, String> {
+pub fn exp_get_profile(state: State<ExpEngineState>) -> Result<ExpProfile, TAPIError> {
     let profile = match state.profile.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -331,7 +332,7 @@ pub fn exp_get_profile(state: State<ExpEngineState>) -> Result<ExpProfile, Strin
 pub fn exp_get_level_up_history(
     limit: usize,
     state: State<ExpEngineState>,
-) -> Result<Vec<LevelUpEvent>, String> {
+) -> Result<Vec<LevelUpEvent>, TAPIError> {
     let events = match state.level_up_events.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -379,12 +380,11 @@ pub fn exp_get_talents(state: State<ExpEngineState>) -> Result<Vec<Talent>, Stri
     Ok(result)
 }
 */
-
 #[tauri::command]
 pub fn exp_unlock_talent(
     talent_id: String,
     state: State<ExpEngineState>,
-) -> Result<ExpProfile, String> {
+) -> Result<ExpProfile, TAPIError> {
     let mut profile = match state.profile.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -402,26 +402,26 @@ pub fn exp_unlock_talent(
 
     let talent = talents
         .get(&talent_id)
-        .ok_or("Talent introuvable")?
+        .ok_or_else(|| TAPIError::not_found("Talent introuvable"))?
         .clone();
 
     // Vérifier si déjà débloqué
     if profile.talents.contains(&talent_id) {
-        return Err("Talent déjà débloqué".to_string());
+        return Err(TAPIError::validation("Talent déjà débloqué"));
     }
 
     // Vérifier points de talent
     if profile.talent_points < talent.cost {
-        return Err(format!(
+        return Err(TAPIError::validation(&format!(
             "Points insuffisants: {} requis, {} disponibles",
             talent.cost, profile.talent_points
-        ));
+        )));
     }
 
     // Vérifier prérequis
     for req_id in &talent.requirements {
         if !profile.talents.contains(req_id) {
-            return Err(format!("Prérequis manquant: {}", req_id));
+            return Err(TAPIError::validation(&format!("Prérequis manquant: {}", req_id)));
         }
     }
 
@@ -435,7 +435,7 @@ pub fn exp_unlock_talent(
 }
 
 #[tauri::command]
-pub fn exp_reset_talents(state: State<ExpEngineState>) -> Result<ExpProfile, String> {
+pub fn exp_reset_talents(state: State<ExpEngineState>) -> Result<ExpProfile, TAPIError> {
     let mut profile = match state.profile.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -462,7 +462,7 @@ pub fn exp_get_history(
     category: Option<String>,
     limit: usize,
     state: State<ExpEngineState>,
-) -> Result<Vec<ExpGain>, String> {
+) -> Result<Vec<ExpGain>, TAPIError> {
     let history = match state.history.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -493,7 +493,7 @@ pub fn exp_get_history(
 pub fn exp_get_category_stats(
     category: String,
     state: State<ExpEngineState>,
-) -> Result<CategoryExp, String> {
+) -> Result<CategoryExp, TAPIError> {
     let profile = match state.profile.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -505,11 +505,11 @@ pub fn exp_get_category_stats(
         .categories
         .get(&category)
         .cloned()
-        .ok_or("Catégorie introuvable".to_string())
+        .ok_or_else(|| TAPIError::not_found("Catégorie introuvable"))
 }
 
 #[tauri::command]
-pub fn exp_get_total_contributions(state: State<ExpEngineState>) -> Result<u32, String> {
+pub fn exp_get_total_contributions(state: State<ExpEngineState>) -> Result<u32, TAPIError> {
     let profile = match state.profile.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -537,7 +537,7 @@ pub struct LeaderboardEntry {
 pub fn exp_get_leaderboard(
     _limit: usize,
     _state: State<ExpEngineState>,
-) -> Result<Vec<LeaderboardEntry>, String> {
+) -> Result<Vec<LeaderboardEntry>, TAPIError> {
     // TODO: Implémenter système multi-utilisateurs
     Ok(vec![])
 }
@@ -557,7 +557,7 @@ pub struct Achievement {
 }
 
 #[tauri::command]
-pub fn exp_get_achievements(_state: State<ExpEngineState>) -> Result<Vec<Achievement>, String> {
+pub fn exp_get_achievements(_state: State<ExpEngineState>) -> Result<Vec<Achievement>, TAPIError> {
     // TODO: Implémenter système d'achievements
     Ok(vec![])
 }

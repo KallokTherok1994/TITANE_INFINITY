@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase Z - Self-Repair Engine
  * Super-Prompt Z: Indestructible Architecture & Emergent Evolution
  */
-
 pub mod detector;
 pub mod repair_core;
 pub mod regeneration;

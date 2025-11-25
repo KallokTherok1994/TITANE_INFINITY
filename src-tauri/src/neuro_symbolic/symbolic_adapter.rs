@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Symbolic Adapter (Phase X)
  * Traduit état des moteurs TITANE∞ en langage IA
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Fallback Recovery (Phase Z)
  * Restaure version fonctionnelle précédente
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

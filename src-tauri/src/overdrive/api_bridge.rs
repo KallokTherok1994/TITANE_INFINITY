@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use tauri::State;
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -256,7 +257,7 @@ async fn execute_http_request(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn api_list_configs(state: State<ApiBridgeState>) -> Result<Vec<ApiConfig>, String> {
+pub fn api_list_configs(state: State<ApiBridgeState>) -> Result<Vec<ApiConfig>, TAPIError> {
     let configs = match state.configs.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -338,7 +339,7 @@ pub fn api_enable(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn api_get_stats(state: State<ApiBridgeState>) -> Result<Vec<ApiStats>, String> {
+pub fn api_get_stats(state: State<ApiBridgeState>) -> Result<Vec<ApiStats>, TAPIError> {
     let stats = match state.stats.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -382,7 +383,7 @@ fn update_stats(state: &ApiBridgeState, api_name: &str, success: bool, latency_m
 }
 
 #[tauri::command]
-pub fn api_reset_stats(state: State<ApiBridgeState>) -> Result<String, String> {
+pub fn api_reset_stats(state: State<ApiBridgeState>) -> Result<String, TAPIError> {
     let mut stats = match state.stats.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -440,7 +441,7 @@ fn set_cache(state: &ApiBridgeState, url: &str, response: &str) {
 }
 
 #[tauri::command]
-pub fn api_clear_cache(state: State<ApiBridgeState>) -> Result<usize, String> {
+pub fn api_clear_cache(state: State<ApiBridgeState>) -> Result<usize, TAPIError> {
     let mut cache = match state.cache.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -454,7 +455,7 @@ pub fn api_clear_cache(state: State<ApiBridgeState>) -> Result<usize, String> {
 }
 
 #[tauri::command]
-pub fn api_get_cache_size(state: State<ApiBridgeState>) -> Result<usize, String> {
+pub fn api_get_cache_size(state: State<ApiBridgeState>) -> Result<usize, TAPIError> {
     let cache = match state.cache.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {

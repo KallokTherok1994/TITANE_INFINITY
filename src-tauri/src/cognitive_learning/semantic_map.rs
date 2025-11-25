@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Semantic Map (Carte Cognitive)
  * Le "cerveau" de TITANE∞
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

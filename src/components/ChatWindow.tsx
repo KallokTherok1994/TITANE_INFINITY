@@ -14,6 +14,7 @@ import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
+import { VitalsPanel } from './VitalsPanel';
 import { ChatFileImport } from './chat/ChatFileImport';
 import { useSingularityState } from '../core/state/SingularityState';
 import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
@@ -28,14 +29,16 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
   onVoiceModeToggle,
   voiceModeActive = false,
 }) => {
-  const { messages, isLoading, error, sendMessage } = useChat({ voiceEnabled: voiceModeActive });
+  const { messages, isLoading, error, sendMessage, currentMode, anomalyCount } = useChat({ voiceEnabled: voiceModeActive });
   const { status: connectionStatus } = useConnection();
   const setAIStatus = useSingularityState((state) => state.setAIStatus);
   const setAIError = useSingularityState((state) => state.setAIError);
+  // CPU load removed - not in SingularityFrontendState (use useVitals for system metrics)
 
   const [input, setInput] = useState('');
   const [retrying, setRetrying] = useState(false);
   const [showFileImport, setShowFileImport] = useState(false);
+  const [lastLatency, setLastLatency] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
@@ -101,7 +104,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         <div className="chat-header-actions">
           <StatusIndicator
             online={connectionStatus.online}
-            provider={connectionStatus.provider}
+            provider={connectionStatus.provider as 'Gemini' | 'Ollama' | 'Offline'}
             health={connectionStatus.online ? 1 : 0.3}
           />
           {onVoiceModeToggle && (
@@ -116,14 +119,23 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({
         </div>
       </div>
 
-      <div className="chat-messages">
-        {messages.length === 0 && (
+      {/* VitalsPanel - System Status */}
+      <VitalsPanel
+        currentMode={currentMode}
+        provider={connectionStatus.provider}
+        latency={lastLatency}
+        cpuLoad={Math.round(cpuLoad * 100)}
+        messagesCount={messages.length}
+        anomalyCount={anomalyCount}
+      />
+
+      <div className="chat-messages">\n        {messages.length === 0 && (
           <div className="chat-welcome">
             <h3>Bienvenue dans TITANE∞</h3>
             <p>
               Chat IA hybride avec Gemini & Ollama
               <br />
-              Mode offline garanti • Mémoire cryptée • TTS intégré
+              Mode {currentMode} actif • Mémoire par mode • TTS intégré
             </p>
           </div>
         )}

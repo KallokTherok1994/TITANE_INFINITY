@@ -1,12 +1,13 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE_INFINITY v14 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v∞ - Hooks Index
+// ═══════════════════════════════════════════════════════════════
+// TITANE∞ v14 - Hooks Central Export
+// ═══════════════════════════════════════════════════════════════
+
+// Legacy hooks
 export { useTitaneCore } from './useTitaneCore';
 export { useMemoryCore } from './useMemoryCore';
 export { useLivingEngines } from './useLivingEngines';
@@ -17,5 +18,48 @@ export { useFileOperations } from './useFileOperations';
 export { useRAG } from './useRAG';
 export type { LivingEnginesState } from './useLivingEngines';
 
-// v∞ - Singularity Hook
+// Singularity hooks
 export { useSingularity, useSingularityMetrics, useSingularityField } from './useSingularity';
+
+// ═══════════════════════════════════════════════════════════════
+// v14 - Chat IA Architecture (Composition + Isolation)
+// ═══════════════════════════════════════════════════════════════
+
+// Hook principal (composition)
+export { useChat } from './useChat';
+
+// Hooks spécialisés (isolation)
+export { useChatCore } from './useChatCore';
+export { useChatUI } from './useChatUI';
+export { useChatStreaming } from './useChatStreaming';
+export { useChatMemory } from './useChatMemory';
+
+// Types
+export type { UseChatCoreOptions, UseChatCoreReturn } from './useChatCore';
+export type { UseChatUIOptions, UseChatUIReturn } from './useChatUI';
+export type { UseChatStreamingOptions, UseChatStreamingReturn } from './useChatStreaming';
+export type { UseChatMemoryOptions, UseChatMemoryReturn } from './useChatMemory';
+
+// ═══════════════════════════════════════════════════════════════
+// v14 - Refactored Hooks (TauriClient integration)
+// ═══════════════════════════════════════════════════════════════
+
+// Connection & Providers
+export { useConnection } from './useConnection';
+export type { ConnectionStatus } from './useConnection';
+
+// System Vitals
+export { useVitals } from './useVitals';
+export type { SystemVitals, VitalsState } from './useVitals';
+
+// Engine State
+export { useEngineState } from './useEngineState';
+export type {
+  EngineStateHook,
+  SingularityState,
+  PhysicalState,
+  CognitiveState,
+  SymbolicState,
+  AdaptiveState,
+  MetaState,
+} from './useEngineState';

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Predictor Engine
  * Anticipe les problèmes avant qu'ils apparaissent
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

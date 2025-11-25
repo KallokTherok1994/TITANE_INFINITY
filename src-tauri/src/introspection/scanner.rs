@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase 9 - Mode Introspection (Super-Prompt T)
  * Self-Scan Engine - Code Analysis & Auto-Fix
  */
-
 use serde::{Deserialize, Serialize};
 use std::path::Path;
 use walkdir::WalkDir;

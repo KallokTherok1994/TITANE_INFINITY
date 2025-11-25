@@ -7,6 +7,7 @@
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use tauri::State;
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -108,7 +109,7 @@ fn detect_audio_pipeline() -> String {
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     let mut is_listening = match state.is_listening.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -117,7 +118,7 @@ pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, S
         }
     };
     if *is_listening {
-        return Err("Déjà en écoute".to_string());
+        return Err(TAPIError::validation("Déjà en écoute"));
     }
 
     *is_listening = true;
@@ -135,7 +136,7 @@ pub fn voice_start_listening(state: State<VoiceEngineState>) -> Result<String, S
 }
 
 #[tauri::command]
-pub fn voice_stop_listening(state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_stop_listening(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     let mut is_listening = match state.is_listening.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -162,7 +163,7 @@ pub fn voice_stop_listening(state: State<VoiceEngineState>) -> Result<String, St
 pub fn voice_transcribe_audio(
     audio_data: Vec<u8>,
     state: State<VoiceEngineState>,
-) -> Result<TranscriptionResult, String> {
+) -> Result<TranscriptionResult, TAPIError> {
     let config = state.config.lock().unwrap();
     let model = &config.asr_model;
 
@@ -184,7 +185,7 @@ pub fn voice_transcribe_audio(
 pub fn voice_detect_wake_word(
     audio_data: Vec<u8>,
     state: State<VoiceEngineState>,
-) -> Result<bool, String> {
+) -> Result<bool, TAPIError> {
     let config = state.config.lock().unwrap();
     let wake_word = &config.wake_word;
 
@@ -209,7 +210,7 @@ pub fn voice_detect_wake_word(
 pub fn voice_synthesize_speech(
     request: SynthesisRequest,
     state: State<VoiceEngineState>,
-) -> Result<Vec<u8>, String> {
+) -> Result<Vec<u8>, TAPIError> {
     let config = state.config.lock().unwrap();
     let model = &config.tts_model;
 
@@ -232,7 +233,7 @@ pub fn voice_synthesize_speech(
 }
 
 #[tauri::command]
-pub fn voice_play_audio(audio_data: Vec<u8>, state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_play_audio(audio_data: Vec<u8>, state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     println!("[VOICE] Lecture audio - {} bytes", audio_data.len());
 
     // TODO: Jouer l'audio via le pipeline détecté (PipeWire, PulseAudio, ALSA)
@@ -242,7 +243,7 @@ pub fn voice_play_audio(audio_data: Vec<u8>, state: State<VoiceEngineState>) -> 
 }
 
 #[tauri::command]
-pub fn voice_stop_speaking(state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_stop_speaking(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     let mut is_speaking = state.is_speaking.lock().unwrap();
     *is_speaking = false;
 
@@ -258,7 +259,7 @@ pub fn voice_stop_speaking(state: State<VoiceEngineState>) -> Result<String, Str
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn voice_get_config(state: State<VoiceEngineState>) -> Result<VoiceConfig, String> {
+pub fn voice_get_config(state: State<VoiceEngineState>) -> Result<VoiceConfig, TAPIError> {
     let config = state.config.lock().unwrap();
     Ok(config.clone())
 }
@@ -267,7 +268,7 @@ pub fn voice_get_config(state: State<VoiceEngineState>) -> Result<VoiceConfig, S
 pub fn voice_update_config(
     new_config: VoiceConfig,
     state: State<VoiceEngineState>,
-) -> Result<String, String> {
+) -> Result<String, TAPIError> {
     let mut config = state.config.lock().unwrap();
     *config = new_config;
     println!("[VOICE] Configuration mise à jour");
@@ -275,13 +276,13 @@ pub fn voice_update_config(
 }
 
 #[tauri::command]
-pub fn voice_get_status(state: State<VoiceEngineState>) -> Result<VoiceStatus, String> {
+pub fn voice_get_status(state: State<VoiceEngineState>) -> Result<VoiceStatus, TAPIError> {
     let status = state.status.lock().unwrap();
     Ok(status.clone())
 }
 
 #[tauri::command]
-pub fn voice_calibrate_microphone(state: State<VoiceEngineState>) -> Result<f32, String> {
+pub fn voice_calibrate_microphone(state: State<VoiceEngineState>) -> Result<f32, TAPIError> {
     println!("[VOICE] Calibration micro en cours...");
 
     // TODO: Mesurer niveau ambiant pendant 2s
@@ -302,7 +303,7 @@ pub fn voice_calibrate_microphone(state: State<VoiceEngineState>) -> Result<f32,
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn voice_enable_duplex(state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_enable_duplex(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     let mut config = state.config.lock().unwrap();
     config.duplex_enabled = true;
 
@@ -311,7 +312,7 @@ pub fn voice_enable_duplex(state: State<VoiceEngineState>) -> Result<String, Str
 }
 
 #[tauri::command]
-pub fn voice_disable_duplex(state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_disable_duplex(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     let mut config = state.config.lock().unwrap();
     config.duplex_enabled = false;
 
@@ -320,7 +321,7 @@ pub fn voice_disable_duplex(state: State<VoiceEngineState>) -> Result<String, St
 }
 
 #[tauri::command]
-pub fn voice_check_interruption(state: State<VoiceEngineState>) -> Result<bool, String> {
+pub fn voice_check_interruption(state: State<VoiceEngineState>) -> Result<bool, TAPIError> {
     let is_speaking = state.is_speaking.lock().unwrap();
     let is_listening = state.is_listening.lock().unwrap();
 
@@ -339,7 +340,7 @@ pub fn voice_check_interruption(state: State<VoiceEngineState>) -> Result<bool, 
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn voice_test_pipeline(state: State<VoiceEngineState>) -> Result<String, String> {
+pub fn voice_test_pipeline(state: State<VoiceEngineState>) -> Result<String, TAPIError> {
     let status = state.status.lock().unwrap();
     let pipeline = &status.audio_pipeline;
 
@@ -353,7 +354,7 @@ pub fn voice_test_pipeline(state: State<VoiceEngineState>) -> Result<String, Str
     if mic_test && speaker_test {
         Ok(format!("Pipeline {} opérationnel", pipeline))
     } else {
-        Err("Échec test audio".to_string())
+        Err(TAPIError::internal("Échec test audio"))
     }
 }
 
@@ -370,7 +371,7 @@ fn test_speakers() -> bool {
 }
 
 #[tauri::command]
-pub fn voice_get_available_models(state: State<VoiceEngineState>) -> Result<Vec<String>, String> {
+pub fn voice_get_available_models(state: State<VoiceEngineState>) -> Result<Vec<String>, TAPIError> {
     // Liste des modèles ASR/TTS disponibles
     let models = vec![
         "whisper-tiny".to_string(),

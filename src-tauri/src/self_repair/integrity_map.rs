@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Integrity Map (Phase Z)
  * Carte complète de l'intégrité système
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

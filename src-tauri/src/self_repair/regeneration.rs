@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Regeneration (Phase Z)
  * Regénère blocs de code ou modules entiers
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

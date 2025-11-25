@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Cognitive Adapter (Phase X)
  * Traduit pensée IA en structure TITANE∞
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

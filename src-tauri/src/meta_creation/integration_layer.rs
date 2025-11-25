@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Integration Layer (Phase Y)
  * Intègre automatiquement nouveaux modules
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Fusion Module (Phase Ω)
  * Fusion des moteurs cognitifs, adaptatifs, symboliques, physiques, meta
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

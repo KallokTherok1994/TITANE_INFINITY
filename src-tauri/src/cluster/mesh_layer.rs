@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase 5 - Node-Cluster (Super-Prompt P)
  * Mesh Layer - Réseau distribué peer-to-peer
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::net::SocketAddr;

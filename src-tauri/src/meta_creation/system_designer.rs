@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - System Designer (Phase Y)
  * Produit structures complètes de systèmes
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

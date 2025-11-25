@@ -4,7 +4,6 @@
  * Commandes Tauri exposées au frontend React
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use crate::singularity_state::layers::*;
 use crate::singularity_state::{SingularityEngine, SingularityState};
 use std::sync::Arc;

@@ -1,0 +1,40 @@
+{
+  "system_state": {
+    "version": "v14.0.0",
+    "last_update": "2025-11-25T00:00:00Z",
+    "harmonia_mode": "normal",
+    "memory_compaction_enabled": true,
+    "auto_verify_enabled": true
+  },
+  "engines": {
+    "helios": {
+      "status": "active",
+      "ai_provider": "ollama",
+      "model": "qwen2.5-coder:latest"
+    },
+    "nexus": {
+      "status": "active",
+      "mode": "hybrid"
+    },
+    "harmonia": {
+      "status": "active",
+      "cpu_threshold": 80,
+      "watch_delay_ms": 100
+    },
+    "sentinel": {
+      "status": "active",
+      "monitoring": true
+    },
+    "memory": {
+      "status": "active",
+      "max_size_mb": 10,
+      "deduplication": true
+    }
+  },
+  "metrics": {
+    "uptime_seconds": 0,
+    "total_requests": 0,
+    "memory_usage_mb": 0,
+    "cpu_usage_percent": 0
+  }
+}

@@ -2,7 +2,6 @@
  * 🎯 Wakeword Listener - Écoute passive continue pour détecter "TITANE"
  * Ultra-léger, <200ms latence, zéro envoi réseau
  */
-
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, Ordering};
 use tokio::sync::mpsc;

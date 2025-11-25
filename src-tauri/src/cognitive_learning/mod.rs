@@ -2,7 +2,6 @@
  * TITANE∞ v∞ Phase W - Auto-Apprentissage Cognitif
  * Super-Prompt W: Deep Knowledge Engine
  */
-
 pub mod semantic_map;
 pub mod memory_builder;
 pub mod association_engine;

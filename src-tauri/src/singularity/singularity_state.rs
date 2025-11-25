@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Singularity State (Phase Ω)
  * État global ultime
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

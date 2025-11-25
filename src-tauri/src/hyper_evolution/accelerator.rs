@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Accelerator Engine
  * Accélère l'évolution du système
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Detector (Phase Z)
  * Détecte anomalies et corruptions
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

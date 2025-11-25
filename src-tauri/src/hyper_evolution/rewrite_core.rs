@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Rewrite Core Engine
  * Réécrit intelligemment le code pour l'optimiser
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

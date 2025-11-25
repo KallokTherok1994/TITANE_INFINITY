@@ -2,7 +2,6 @@
  * ⚡ Duplex Sync - Synchronisation entrée/sortie full duplex
  * Gère interruptions, atténuation automatique, coordination pipelines
  */
-
 use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, Ordering};
 

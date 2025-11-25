@@ -2,7 +2,6 @@
  * 🧠 Wakeword Engine - Détection locale "TITANE"
  * Utilise VAD + pattern matching pour hotword
  */
-
 use std::collections::VecDeque;
 
 pub struct WakewordEngine {

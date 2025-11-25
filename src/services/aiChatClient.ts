@@ -1,11 +1,11 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v19.0.0 — AI STREAMING CHAT CLIENT
- * Support SSE (Server-Sent Events) pour streaming token-by-token
+ * TITANE∞ v14 — AI STREAMING CHAT CLIENT
+ * Client IA avec support streaming réel via Tauri events
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { tauriClient, type ChatRequest, type StreamCallbacks, type TAPIError } from './tauriClient';
 
 export type ChatMessage = {
   role: 'user' | 'assistant' | 'system';
@@ -19,7 +19,7 @@ export type StreamChunk = {
   error?: string;
 };
 
-export type StreamCallbacks = {
+export type StreamCallbacksLegacy = {
   onChunk?: (chunk: string) => void;
   onComplete?: (fullResponse: string) => void;
   onError?: (error: Error) => void;
@@ -72,14 +72,14 @@ class CircuitBreaker {
 }
 
 /**
- * Client AI avec support streaming SSE
+ * Client AI avec support streaming réel via Tauri
  */
 class AIChatClient {
   private circuitBreaker = new CircuitBreaker();
-  private abortControllers = new Map<string, AbortController>();
+  private abortControllers = new Map<string, () => void>();
 
   /**
-   * Envoie un message avec streaming token-by-token
+   * Envoie un message avec streaming token-by-token (VRAI streaming via Tauri events)
    * @param message Message utilisateur
    * @param callbacks Callbacks pour gérer le stream
    * @param options Options (model, temperature, etc.)
@@ -87,7 +87,7 @@ class AIChatClient {
    */
   async sendMessageStreaming(
     message: string,
-    callbacks: StreamCallbacks = {},
+    callbacks: StreamCallbacksLegacy = {},
     options: {
       model?: string;
       temperature?: number;
@@ -96,46 +96,34 @@ class AIChatClient {
     } = {}
   ): Promise<string> {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const abortController = new AbortController();
-    this.abortControllers.set(requestId, abortController);
 
     try {
       await this.circuitBreaker.execute(async () => {
-        let fullResponse = '';
-
-        // Simuler SSE streaming (en attente de backend Tauri SSE)
-        // Pour l'instant, découpe la réponse en chunks
-        const response = await invoke<string>('ai_chat_stream', {
+        const request: ChatRequest = {
           message,
-          model: options.model || 'gpt-4',
-          temperature: options.temperature || 0.7,
-          maxTokens: options.maxTokens || 500,
-          systemPrompt: options.systemPrompt || 'You are TITANE∞ AI assistant.',
-        });
+          provider: 'auto',
+          model: options.model,
+          streaming: true,
+          system_prompt: options.systemPrompt,
+        };
 
-        // Simuler streaming en découpant la réponse
-        const words = response.split(' ');
-        for (let i = 0; i < words.length; i++) {
-          if (abortController.signal.aborted) {
-            throw new Error('Request aborted');
-          }
+        // Convertir callbacks legacy vers nouveau format
+        const tauriCallbacks: StreamCallbacks = {
+          onChunk: callbacks.onChunk,
+          onComplete: (data) => {
+            if (callbacks.onComplete) {
+              callbacks.onComplete(data.content);
+            }
+          },
+          onError: (error: TAPIError) => {
+            if (callbacks.onError) {
+              callbacks.onError(new Error(`[${error.kind}] ${error.message}`));
+            }
+          },
+        };
 
-          const chunk = words[i] + (i < words.length - 1 ? ' ' : '');
-          fullResponse += chunk;
-
-          if (callbacks.onChunk) {
-            callbacks.onChunk(chunk);
-          }
-
-          // Simuler délai réseau
-          await new Promise(resolve => setTimeout(resolve, 30));
-        }
-
-        if (callbacks.onComplete) {
-          callbacks.onComplete(fullResponse);
-        }
-
-        return fullResponse;
+        // Utiliser le vrai streaming Tauri
+        await tauriClient.chatStreamMessage(request, tauriCallbacks);
       });
 
       return requestId;
@@ -155,9 +143,9 @@ class AIChatClient {
    * @param requestId ID de la requête
    */
   cancelRequest(requestId: string): void {
-    const controller = this.abortControllers.get(requestId);
-    if (controller) {
-      controller.abort();
+    const cancelFn = this.abortControllers.get(requestId);
+    if (cancelFn) {
+      cancelFn();
       this.abortControllers.delete(requestId);
     }
   }
@@ -184,14 +172,16 @@ class AIChatClient {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         return await this.circuitBreaker.execute(async () => {
-          const response = await invoke<string>('ai_chat_send', {
+          const request: ChatRequest = {
             message,
-            model: options.model || 'gpt-4',
-            temperature: options.temperature || 0.7,
-            maxTokens: options.maxTokens || 500,
-            systemPrompt: options.systemPrompt || 'You are TITANE∞ AI assistant.',
-          });
-          return response;
+            provider: 'auto',
+            model: options.model,
+            streaming: false,
+            system_prompt: options.systemPrompt,
+          };
+
+          const response = await tauriClient.chatSendMessage(request);
+          return response.message.content;
         });
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));

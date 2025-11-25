@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Prototype Generator (Phase Y)
  * Génère prototypes automatiquement
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

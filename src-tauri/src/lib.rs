@@ -27,6 +27,9 @@ pub mod ai;             // ✅ v∞.C AI module with analyze_file
 pub mod security;       // ✅ v∞ Super-Prompts H, J, K, L
 pub mod time;           // ✅ v∞ Super-Prompt N (Time-Travel + Backups)
 pub mod updates;        // ✅ v∞ Super-Prompt L (Update Engine)
+pub mod memory_compactor; // ✅ v14 Phase 4: Memory Compactor
+pub mod harmonia_engine;  // ✅ v14 Phase 5: Harmonia Engine (CPU Monitoring)
+// pub mod overdrive;     // ⏳ v16 Overdrive Engine (Chat, Voice, Auto-Heal) - TODO: Intégrer en remplaçant mock_commands
 
 // ═══════════════════════════════════════════════════════════════
 // PHASES 5-10 MODULES (Super-Prompts P-U)

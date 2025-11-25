@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Context Mapper (Phase X)
  * Associe chaque question à l'état interne du système
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 

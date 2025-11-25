@@ -9,6 +9,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::State;
+use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -104,7 +105,7 @@ pub fn project_add(
     path: String,
     project_type: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<Project, String> {
+) -> Result<Project, TAPIError> {
     let project_id = uuid::Uuid::new_v4().to_string();
 
     let project = Project {
@@ -141,7 +142,7 @@ pub fn project_add(
 }
 
 #[tauri::command]
-pub fn project_list(state: State<ProjectAutoPilotState>) -> Result<Vec<Project>, String> {
+pub fn project_list(state: State<ProjectAutoPilotState>) -> Result<Vec<Project>, TAPIError> {
     let projects = match state.projects.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -161,7 +162,7 @@ pub fn project_list(state: State<ProjectAutoPilotState>) -> Result<Vec<Project>,
 pub fn project_get(
     project_id: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<Project, String> {
+) -> Result<Project, TAPIError> {
     let projects = match state.projects.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -172,14 +173,14 @@ pub fn project_get(
     projects
         .get(&project_id)
         .cloned()
-        .ok_or("Projet introuvable".to_string())
+        .ok_or_else(|| TAPIError::not_found("Projet introuvable"))
 }
 
 #[tauri::command]
 pub fn project_update(
     project: Project,
     state: State<ProjectAutoPilotState>,
-) -> Result<Project, String> {
+) -> Result<Project, TAPIError> {
     let mut projects = match state.projects.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -196,7 +197,7 @@ pub fn project_update(
 pub fn project_delete(
     project_id: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<String, String> {
+) -> Result<String, TAPIError> {
     let mut projects = match state.projects.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -223,7 +224,7 @@ pub fn project_delete(
 pub fn project_analyze(
     project_id: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<ProjectMetadata, String> {
+) -> Result<ProjectMetadata, TAPIError> {
     let mut projects = match state.projects.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -233,7 +234,7 @@ pub fn project_analyze(
     };
     let project = projects
         .get_mut(&project_id)
-        .ok_or("Projet introuvable")?;
+        .ok_or_else(|| TAPIError::not_found("Projet introuvable"))?;
 
     println!("[PROJECT] Analyse: {}", project.name);
 
@@ -287,7 +288,7 @@ pub fn task_create(
     title: String,
     description: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<Task, String> {
+) -> Result<Task, TAPIError> {
     let task_id = uuid::Uuid::new_v4().to_string();
 
     let task = Task {
@@ -322,7 +323,7 @@ pub fn task_create(
 pub fn task_list(
     project_id: Option<String>,
     state: State<ProjectAutoPilotState>,
-) -> Result<Vec<Task>, String> {
+) -> Result<Vec<Task>, TAPIError> {
     let tasks = match state.tasks.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -348,7 +349,7 @@ pub fn task_update_status(
     task_id: String,
     new_status: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<Task, String> {
+) -> Result<Task, TAPIError> {
     let mut tasks = match state.tasks.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -359,7 +360,7 @@ pub fn task_update_status(
     let task = tasks
         .iter_mut()
         .find(|t| t.id == task_id)
-        .ok_or("Tâche introuvable")?;
+        .ok_or_else(|| TAPIError::not_found("Tâche introuvable"))?;
 
     task.status = new_status.clone();
 
@@ -371,7 +372,7 @@ pub fn task_update_status(
 }
 
 #[tauri::command]
-pub fn task_delete(task_id: String, state: State<ProjectAutoPilotState>) -> Result<String, String> {
+pub fn task_delete(task_id: String, state: State<ProjectAutoPilotState>) -> Result<String, TAPIError> {
     let mut tasks = match state.tasks.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -388,7 +389,7 @@ pub fn task_delete(task_id: String, state: State<ProjectAutoPilotState>) -> Resu
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub fn autopilot_run(state: State<ProjectAutoPilotState>) -> Result<AutoPilotReport, String> {
+pub fn autopilot_run(state: State<ProjectAutoPilotState>) -> Result<AutoPilotReport, TAPIError> {
     let start = crate::core::utils::now_ms();
 
     println!("[AUTOPILOT] Démarrage analyse complète...");
@@ -498,7 +499,7 @@ fn execute_suggestion(suggestion: &AutoPilotSuggestion) -> Result<String, String
 #[tauri::command]
 pub fn autopilot_get_suggestions(
     state: State<ProjectAutoPilotState>,
-) -> Result<Vec<AutoPilotSuggestion>, String> {
+) -> Result<Vec<AutoPilotSuggestion>, TAPIError> {
     let suggestions = match state.suggestions.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -510,7 +511,7 @@ pub fn autopilot_get_suggestions(
 }
 
 #[tauri::command]
-pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> Result<String, String> {
+pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> Result<String, TAPIError> {
     let mut autopilot_enabled = match state.autopilot_enabled.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -530,7 +531,7 @@ pub fn autopilot_enable(enabled: bool, state: State<ProjectAutoPilotState>) -> R
 }
 
 #[tauri::command]
-pub fn autopilot_get_schedule(state: State<ProjectAutoPilotState>) -> Result<String, String> {
+pub fn autopilot_get_schedule(state: State<ProjectAutoPilotState>) -> Result<String, TAPIError> {
     let schedule = match state.autopilot_schedule.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {
@@ -545,7 +546,7 @@ pub fn autopilot_get_schedule(state: State<ProjectAutoPilotState>) -> Result<Str
 pub fn autopilot_set_schedule(
     cron: String,
     state: State<ProjectAutoPilotState>,
-) -> Result<String, String> {
+) -> Result<String, TAPIError> {
     let mut schedule = match state.autopilot_schedule.lock() {
         Ok(guard) => guard,
         Err(poisoned) => {

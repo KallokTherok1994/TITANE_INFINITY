@@ -2,7 +2,6 @@
  * TITANE∞ v∞ - Singularity Core (Phase Ω)
  * Cœur central: fusion des moteurs internes
  */
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
