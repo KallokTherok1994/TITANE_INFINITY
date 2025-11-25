@@ -9,7 +9,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use tauri::Manager;
-use titane_infinity::{mock_commands, secure_commands, time_commands};
+use titane_infinity::{mock_commands, secure_commands, time_commands, control_panel_commands};
 
 #[tokio::main]
 async fn main() {
@@ -264,6 +264,50 @@ async fn main() {
             titane_infinity::singularity::singularity_unify,
             titane_infinity::singularity::singularity_get_state,
             titane_infinity::singularity::singularity_detect_emergence,
+
+            // ═══════════════════════════════════════════════════════════════
+            // CONTROL PANEL COMMANDS v19.1.0
+            // ═══════════════════════════════════════════════════════════════
+
+            // Système
+            control_panel_commands::cp_get_system_info,
+            control_panel_commands::cp_run_system_diagnostic,
+
+            // Apparence / Design System
+            control_panel_commands::cp_get_design_config,
+            control_panel_commands::cp_set_design_config,
+
+            // Singularité
+            control_panel_commands::cp_get_singularity_status,
+            control_panel_commands::cp_toggle_singularity,
+
+            // IA & APIs
+            control_panel_commands::cp_get_ai_config,
+            control_panel_commands::cp_set_ai_config,
+
+            // Mémoire
+            control_panel_commands::cp_get_memory_stats,
+            control_panel_commands::cp_clear_memory_cache,
+
+            // Modules
+            control_panel_commands::cp_get_modules_status,
+            control_panel_commands::cp_toggle_module,
+
+            // Réseau
+            control_panel_commands::cp_get_network_config,
+            control_panel_commands::cp_set_network_config,
+
+            // Mises à jour
+            control_panel_commands::cp_check_for_updates,
+            control_panel_commands::cp_install_update,
+
+            // Logs
+            control_panel_commands::cp_get_logs,
+            control_panel_commands::cp_clear_logs,
+
+            // Sécurité
+            control_panel_commands::cp_get_security_config,
+            control_panel_commands::cp_set_security_config,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

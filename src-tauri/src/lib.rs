@@ -16,6 +16,7 @@
 pub mod mock_commands;  // ✅ Mock commands for frontend development
 pub mod secure_commands; // ✅ v∞ Secure commands with permissions
 pub mod time_commands;  // ✅ v∞ Time-Travel commands for TimeNavigator
+pub mod control_panel_commands; // ✅ v19.1.0 Control Panel commands
 pub mod utils;          // ✅ Utilities (AppResult, AppError)
 pub mod types;          // ✅ Type definitions
 pub mod shared;         // ✅ Shared types and utilities
