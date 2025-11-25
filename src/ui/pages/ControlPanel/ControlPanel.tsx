@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
 import { SystemSection } from './sections/SystemSection';
 import { AppearanceSection } from './sections/AppearanceSection';
