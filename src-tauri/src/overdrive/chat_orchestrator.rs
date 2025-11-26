@@ -4,7 +4,7 @@
 // Orchestrateur IA hybride : Gemini (cloud) + Ollama (local) + fallback
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
@@ -69,6 +69,7 @@ pub struct ChatOrchestratorState {
     provider_last_check: Arc<RwLock<std::collections::HashMap<String, u64>>>,
     provider_failure_count: Arc<RwLock<std::collections::HashMap<String, u32>>>,
     gemini_api_key: Arc<RwLock<Option<String>>>,
+    #[allow(dead_code)]
     default_provider: Arc<RwLock<String>>,
 }
 
@@ -294,6 +295,8 @@ pub async fn chat_send_message(
     Err(final_error.into())
 }
 
+// Fonction utilitaire pour sélectionner le meilleur provider (unused actuellement)
+#[allow(dead_code)]
 async fn select_best_provider(state: &ChatOrchestratorState) -> String {
     let status_list = state.provider_status.read().await;
 
@@ -316,47 +319,168 @@ async fn send_to_gemini(
     state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
     let api_key = state.gemini_api_key.read().await;
-    if api_key.is_none() {
-        return Err(TAPIError::config("Gemini API key not configured"));
+    let key = api_key.as_ref().ok_or_else(|| TAPIError::config("Gemini API key not configured"))?;
+
+    let model = request.model.as_deref().unwrap_or("gemini-2.0-flash-exp");
+    let url = format!(
+        "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent",
+        model
+    );
+
+    println!("[CHAT] 🌐 Gemini API call: {} (timeout 60s)", model);
+
+    // Build request body
+    let body = serde_json::json!({
+        "contents": [{
+            "role": "user",
+            "parts": [{ "text": request.message }]
+        }],
+        "generationConfig": {
+            "temperature": 0.7,
+            "maxOutputTokens": 2048,
+        }
+    });
+
+    // HTTP client with timeout
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(60))
+        .build()
+        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+
+    // POST request with retry (3 attempts)
+    let mut last_error = None;
+    for attempt in 1..=3 {
+        match client
+            .post(&url)
+            .header("x-goog-api-key", key.as_str())
+            .header("Content-Type", "application/json")
+            .json(&body)
+            .send()
+            .await
+        {
+            Ok(response) => {
+                if !response.status().is_success() {
+                    let status = response.status();
+                    let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+                    let err_msg = format!("Gemini API error {}: {}", status, error_text);
+
+                    if attempt < 3 {
+                        println!("[CHAT] ⚠️ Attempt {}/3 failed: {}, retrying...", attempt, err_msg);
+                        tokio::time::sleep(tokio::time::Duration::from_secs(attempt as u64)).await;
+                        last_error = Some(err_msg);
+                        continue;
+                    }
+                    return Err(TAPIError::network(err_msg));
+                }
+
+                let response_json: serde_json::Value = response.json().await
+                    .map_err(|e| TAPIError::parse(format!("Failed to parse Gemini response: {}", e)))?;
+
+                let content = response_json["candidates"][0]["content"]["parts"][0]["text"]
+                    .as_str()
+                    .unwrap_or("No response from Gemini")
+                    .to_string();
+
+                let tokens = response_json["usageMetadata"]["totalTokenCount"]
+                    .as_u64()
+                    .map(|t| t as u32);
+
+                println!("[CHAT] ✅ Gemini success: {} chars, {} tokens", content.len(), tokens.unwrap_or(0));
+
+                return Ok(ChatMessage {
+                    id: uuid::Uuid::new_v4().to_string(),
+                    role: "assistant".to_string(),
+                    content,
+                    timestamp: get_timestamp(),
+                    provider: "gemini".to_string(),
+                    model: model.to_string(),
+                    tokens,
+                    multimodal: request.images.is_some(),
+                });
+            }
+            Err(e) => {
+                let err_msg = format!("Gemini HTTP error: {}", e);
+                if attempt < 3 {
+                    println!("[CHAT] ⚠️ Attempt {}/3 failed: {}, retrying...", attempt, err_msg);
+                    tokio::time::sleep(tokio::time::Duration::from_secs(attempt as u64)).await;
+                    last_error = Some(err_msg);
+                    continue;
+                }
+                last_error = Some(err_msg);
+            }
+        }
     }
 
-    // TODO: Implémenter appel API Gemini
-    // POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent
-    // Headers: x-goog-api-key: <API_KEY>
-    // Body: { contents: [{ role: "user", parts: [{ text: "..." }] }] }
-
-    println!("[CHAT] Appel Gemini API...");
-
-    Ok(ChatMessage {
-        id: uuid::Uuid::new_v4().to_string(),
-        role: "assistant".to_string(),
-        content: "Réponse simulée de Gemini".to_string(),
-        timestamp: get_timestamp(),
-        provider: "gemini".to_string(),
-        model: "gemini-2.0-flash-exp".to_string(),
-        tokens: Some(50),
-        multimodal: request.images.is_some(),
-    })
+    Err(TAPIError::network(last_error.unwrap_or_else(|| "Gemini failed after 3 attempts".to_string())))
 }
 
 async fn send_to_ollama(
     request: &ChatRequest,
-    state: &ChatOrchestratorState,
+    _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    // TODO: Implémenter appel Ollama
-    // POST http://localhost:11434/api/generate
-    // Body: { model: "llama3.1", prompt: "...", stream: false }
+    let model = request.model.as_deref().unwrap_or("llama2:latest");
+    let url = "http://localhost:11434/api/generate";
 
-    println!("[CHAT] Appel Ollama local...");
+    println!("[CHAT] 🦙 Ollama API call: {} (timeout 45s)", model);
+
+    // Build request body
+    let body = serde_json::json!({
+        "model": model,
+        "prompt": request.message,
+        "stream": false,
+        "options": {
+            "temperature": 0.7,
+            "num_predict": 2048,
+        }
+    });
+
+    // HTTP client with timeout
+    let client = reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(45))
+        .build()
+        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+
+    // POST request (no retry for Ollama local - fast fail)
+    let response = client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&body)
+        .send()
+        .await
+        .map_err(|e| {
+            let msg = format!("Ollama connection error: {} (is Ollama running? Try: ollama serve)", e);
+            println!("[CHAT] ❌ {}", msg);
+            TAPIError::provider_unavailable("ollama")
+        })?;
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(TAPIError::network(format!("Ollama API error {}: {}", status, error_text)));
+    }
+
+    let response_json: serde_json::Value = response.json().await
+        .map_err(|e| TAPIError::parse(format!("Failed to parse Ollama response: {}", e)))?;
+
+    let content = response_json["response"]
+        .as_str()
+        .unwrap_or("No response from Ollama")
+        .to_string();
+
+    let tokens = response_json["eval_count"]
+        .as_u64()
+        .map(|t| t as u32);
+
+    println!("[CHAT] ✅ Ollama success: {} chars, {} tokens", content.len(), tokens.unwrap_or(0));
 
     Ok(ChatMessage {
         id: uuid::Uuid::new_v4().to_string(),
         role: "assistant".to_string(),
-        content: "Réponse simulée d'Ollama".to_string(),
+        content,
         timestamp: get_timestamp(),
         provider: "ollama".to_string(),
-        model: request.model.clone().unwrap_or("llama3.1".to_string()),
-        tokens: Some(40),
+        model: model.to_string(),
+        tokens,
         multimodal: false,
     })
 }
@@ -366,7 +490,7 @@ async fn send_to_local(
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
     // Fallback ultra-simple : echo
-    println!("[CHAT] Fallback local");
+    println!("[CHAT] 🔄 Local fallback (offline mode)");
 
     Ok(ChatMessage {
         id: uuid::Uuid::new_v4().to_string(),
@@ -506,8 +630,8 @@ async fn update_provider_status(
 pub async fn ai_chat_stream(
     message: String,
     model: Option<String>,
-    temperature: Option<f32>,
-    max_tokens: Option<u32>,
+    _temperature: Option<f32>,
+    _max_tokens: Option<u32>,
     system_prompt: Option<String>,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<String, String> {
@@ -529,8 +653,8 @@ pub async fn ai_chat_stream(
 pub async fn ai_chat_send(
     message: String,
     model: Option<String>,
-    temperature: Option<f32>,
-    max_tokens: Option<u32>,
+    _temperature: Option<f32>,
+    _max_tokens: Option<u32>,
     system_prompt: Option<String>,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<String, String> {
@@ -557,7 +681,7 @@ pub async fn chat_stream_message(
     // FIXME v16.1: Streaming temporairement désactivé (window.emit incompatible Tauri v2)
     // TODO: Utiliser tauri::Emitter trait pour Tauri v2
     println!("[CHAT_STREAM] Fallback to non-streaming mode (emit API changed in Tauri v2)");
-    
+
     let response = chat_send_message(request, state).await?;
     Ok(response.message.content)
 }

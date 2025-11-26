@@ -20,10 +20,10 @@ use tauri::Manager;
 
 // TITANE∞ command modules
 use titane_infinity::{
-    control_panel_commands, 
-    mock_commands, 
+    control_panel_commands,
+    mock_commands,
     overdrive,  // ✅ v16.1 CHAT ORCHESTRATOR
-    secure_commands, 
+    secure_commands,
     time_commands
 };
 

@@ -4,7 +4,7 @@
 // Moteur de mémoire conversationnelle avec embeddings + vector store
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use tauri::State;
@@ -384,8 +384,8 @@ pub fn memory_clear(state: State<MemoryEngineState>) -> Result<String, String> {
 // EMBEDDINGS
 // ─────────────────────────────────────────────────────────────────────────────
 
-async fn generate_embedding(text: &str, state: &MemoryEngineState) -> Result<Vec<f32>, TAPIError> {
-    let model = match state.embedding_model.lock() {
+async fn generate_embedding(_text: &str, state: &MemoryEngineState) -> Result<Vec<f32>, TAPIError> {
+    let _model = match state.embedding_model.lock() {
         Ok(guard) => guard.clone(),
         Err(poisoned) => {
             eprintln!("[MEMORY] embedding_model lock poisoned, recovering");

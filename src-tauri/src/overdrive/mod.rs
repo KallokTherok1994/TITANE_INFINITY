@@ -94,7 +94,7 @@ pub fn init() -> OverdriveState {
 
 #[tauri::command]
 pub fn overdrive_health_check(
-    state: State<OverdriveState>,
+    _state: State<OverdriveState>,
 ) -> Result<OverdriveHealthReport, TAPIError> {
     println!("[OVERDRIVE] Health check global...");
 

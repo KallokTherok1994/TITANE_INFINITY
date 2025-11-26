@@ -4,7 +4,7 @@
 // Système d'expérience, progression, niveaux et talent tree
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};

@@ -4,7 +4,7 @@
 // Moteur vocal full-duplex avec ASR (Whisper) + TTS (Piper/Kokoro)
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use tauri::State;
@@ -187,20 +187,21 @@ pub fn voice_transcribe_audio(
 
 #[tauri::command]
 pub fn voice_detect_wake_word(
-    audio_data: Vec<u8>,
-    state: State<VoiceEngineState>,
+    _audio_data: Vec<u8>,
+    _state: State<VoiceEngineState>,
 ) -> Result<bool, TAPIError> {
-    let config = state.config.lock().unwrap();
-    let wake_word = &config.wake_word;
+    // TODO: Implémenter détection wake word (Porcupine, Snowboy, ou Whisper)
+    // let config = state.config.lock().unwrap();
+    // let wake_word = &config.wake_word;
 
     // TODO: Implémenter détection wake word (Porcupine, Snowboy, ou Whisper)
     // Simulation pour l'instant
     let detected = false; // audio_data contient "TITANE" ?
 
     if detected {
-        let mut status = state.status.lock().unwrap();
+        let mut status = _state.status.lock().unwrap();
         status.wake_word_detected = true;
-        println!("[VOICE] Wake word '{}' détecté!", wake_word);
+        println!("[VOICE] Wake word détecté!");
     }
 
     Ok(detected)
@@ -238,10 +239,10 @@ pub fn voice_synthesize_speech(
 
 #[tauri::command]
 pub fn voice_play_audio(
-    audio_data: Vec<u8>,
-    state: State<VoiceEngineState>,
+    _audio_data: Vec<u8>,
+    _state: State<VoiceEngineState>,
 ) -> Result<String, TAPIError> {
-    println!("[VOICE] Lecture audio - {} bytes", audio_data.len());
+    println!("[VOICE] Lecture audio - stub");
 
     // TODO: Jouer l'audio via le pipeline détecté (PipeWire, PulseAudio, ALSA)
     // Utiliser rodio, cpal, ou appel direct à paplay/aplay
@@ -379,7 +380,7 @@ fn test_speakers() -> bool {
 
 #[tauri::command]
 pub fn voice_get_available_models(
-    state: State<VoiceEngineState>,
+    _state: State<VoiceEngineState>,
 ) -> Result<Vec<String>, TAPIError> {
     // Liste des modèles ASR/TTS disponibles
     let models = vec![

@@ -4,7 +4,7 @@
 // Moteur de gestion intelligente de projets + autopilot nocturne
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -258,22 +258,22 @@ pub fn project_analyze(
     Ok(metadata)
 }
 
-fn detect_dependencies(path: &PathBuf) -> Vec<String> {
+fn detect_dependencies(_path: &PathBuf) -> Vec<String> {
     // TODO: Parser package.json, Cargo.toml, requirements.txt
     vec![]
 }
 
-fn count_files(path: &PathBuf) -> usize {
+fn count_files(_path: &PathBuf) -> usize {
     // TODO: Compter récursivement
     0
 }
 
-fn count_lines(path: &PathBuf) -> usize {
+fn count_lines(_path: &PathBuf) -> usize {
     // TODO: Compter lignes de code
     0
 }
 
-fn calculate_health(path: &PathBuf) -> u8 {
+fn calculate_health(_path: &PathBuf) -> u8 {
     // TODO: Vérifier build, tests, linting
     85
 }

@@ -79,10 +79,10 @@ overdrive::chat_orchestrator::chat_stream_message,
 ```rust
 // src-tauri/src/main.rs ligne 20
 use titane_infinity::{
-    control_panel_commands, 
-    mock_commands, 
+    control_panel_commands,
+    mock_commands,
     overdrive,  // ✅ NOUVEAU v16.1
-    secure_commands, 
+    secure_commands,
     time_commands
 };
 
@@ -163,11 +163,11 @@ ChatWindow.tsx
   ↓ aiOrchestrator.generate()
   ↓ tauriChatProvider.generate()
   ↓ invokeTauri(TAURI_COMMANDS.CHAT_SEND_MESSAGE)
-  ↓ 
+  ↓
 src-tauri/main.rs
   ↓ overdrive::chat_orchestrator::chat_send_message
   ↓ select provider: auto → gemini | ollama | local
-  ↓ 
+  ↓
   ├─→ send_to_gemini() [STUB: TODO implement API call]
   ├─→ send_to_ollama() [STUB: TODO implement API call]
   └─→ send_to_local() [STUB: always available]
@@ -185,7 +185,7 @@ async fn send_to_gemini(request: &ChatRequest, state: &ChatOrchestratorState) ->
     // TODO: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent
     // Headers: x-goog-api-key: <API_KEY>
     // Body: { contents: [{ role: "user", parts: [{ text: "..." }] }] }
-    
+
     // ✅ STUB fonctionnel pour v16.1
     Ok(ChatMessage { ... })
 }
@@ -193,7 +193,7 @@ async fn send_to_gemini(request: &ChatRequest, state: &ChatOrchestratorState) ->
 async fn send_to_ollama(request: &ChatRequest, state: &ChatOrchestratorState) -> Result<ChatMessage, TAPIError> {
     // TODO: POST http://localhost:11434/api/generate
     // Body: { model: "llama2:latest", prompt: "...", stream: false }
-    
+
     // ✅ STUB fonctionnel pour v16.1
     Ok(ChatMessage { ... })
 }
@@ -240,7 +240,7 @@ async fn send_to_ollama(request: &ChatRequest, state: &ChatOrchestratorState) ->
 ## 🎯 VALIDATION CHECKLIST
 
 - [x] Backend compile 0 errors
-- [x] Frontend compile 0 errors  
+- [x] Frontend compile 0 errors
 - [x] Command names aligned (frontend ↔ backend)
 - [x] Mocks removed (0 conflicts)
 - [x] Overdrive module accessible from main.rs
@@ -353,7 +353,7 @@ cargo run --release 2>&1 | grep -E "(CHAT|ORCHESTRATOR)"
   - Crates: 556 total
   - Warnings: 28 (non-critiques)
   - Binary size: ~8.8 MB
-  
+
 - Frontend Vite: **4.64s**
   - Modules: 2567
   - Chunks: 14 (code splitting)
@@ -378,6 +378,6 @@ cargo run --release 2>&1 | grep -E "(CHAT|ORCHESTRATOR)"
 **Blockers**: 0 (stubs fonctionnels permettent tests end-to-end)
 
 ---
-**Auteur**: TITANE∞ Cognitive System v16.1.0  
-**Date**: 2025-01-26  
+**Auteur**: TITANE∞ Cognitive System v16.1.0
+**Date**: 2025-01-26
 **Version**: v16.1.0 (Chat Pipeline Fix Complete)

@@ -4,7 +4,7 @@
 // Pont unified pour APIs externes: Gemini, Ollama, GitHub, etc.
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -207,8 +207,8 @@ pub async fn api_request(
 
 async fn execute_http_request(
     url: &str,
-    request: &ApiRequest,
-    config: &ApiConfig,
+    _request: &ApiRequest,
+    _config: &ApiConfig,
 ) -> Result<ApiResponse, String> {
     // TODO: Implémenter reqwest HTTP client
     // let client = reqwest::Client::new();

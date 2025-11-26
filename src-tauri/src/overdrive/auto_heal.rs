@@ -4,11 +4,9 @@
 // Module de réparation automatique avancé avec détection proactive
 // ═══════════════════════════════════════════════════════════════════════════
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
-use tauri::State;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
@@ -54,6 +52,7 @@ pub struct ModuleHealth {
 pub struct AutoHealState {
     events: Arc<Mutex<Vec<HealEvent>>>,
     actions: Arc<Mutex<Vec<HealAction>>>,
+    #[allow(dead_code)]
     last_scan: Arc<Mutex<u64>>,
     module_health: Arc<Mutex<Vec<ModuleHealth>>>,
 }
