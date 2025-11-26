@@ -182,6 +182,13 @@ pub async fn save_chat_interaction(_interaction: serde_json::Value) -> AppResult
     Ok(())
 }
 
+// Alias pour compatibilité frontend
+#[tauri::command]
+pub async fn memory_save_chat_interaction(_interaction: serde_json::Value) -> AppResult<()> {
+    log::info!("Mock: memory_save_chat_interaction (alias) called");
+    save_chat_interaction(_interaction).await
+}
+
 // ═══════════════════════════════════════════════════════════════
 // NEXUS - Validation
 // ═══════════════════════════════════════════════════════════════

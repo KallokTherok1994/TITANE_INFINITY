@@ -166,6 +166,7 @@ async fn main() {
             mock_commands::get_knowledge,
             mock_commands::get_active_rituals,
             mock_commands::save_chat_interaction,
+            mock_commands::memory_save_chat_interaction,  // Alias frontend compatibility
             // Nexus - Validation
             mock_commands::validate_nexus,
             mock_commands::get_nexus_graph,
@@ -210,6 +211,18 @@ async fn main() {
             overdrive::chat_orchestrator::chat_delete_conversation,
             overdrive::chat_orchestrator::chat_set_gemini_key,
             overdrive::chat_orchestrator::chat_stream_message,
+            // Memory Engine Commands (✅ Active commands only)
+            overdrive::memory_engine::memory_store,
+            overdrive::memory_engine::memory_store_conversation,
+            overdrive::memory_engine::memory_search,
+            overdrive::memory_engine::memory_get_related,
+            overdrive::memory_engine::memory_rebuild_index,
+            overdrive::memory_engine::memory_get_stats,
+            overdrive::memory_engine::memory_prune,
+            overdrive::memory_engine::memory_delete,
+            // memory_clear: DISABLED (conflict with commands::memory_clear)
+            overdrive::memory_engine::memory_export,
+            overdrive::memory_engine::memory_import,
             // ═══════════════════════════════════════════════════════════════
             // SECURE COMMANDS v∞ - Super-Prompts H, I, J, K
             // ═══════════════════════════════════════════════════════════════

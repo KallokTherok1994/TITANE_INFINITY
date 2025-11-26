@@ -376,13 +376,25 @@ async fn send_to_gemini(
                 let response_json: serde_json::Value = response.json().await
                     .map_err(|e| TAPIError::parse(format!("Failed to parse Gemini response: {}", e)))?;
 
-                let content = response_json["candidates"][0]["content"]["parts"][0]["text"]
-                    .as_str()
-                    .unwrap_or("No response from Gemini")
+                // Safe JSON navigation avec messages d'erreur détaillés
+                let content = response_json
+                    .get("candidates")
+                    .and_then(|c| c.get(0))
+                    .and_then(|c0| c0.get("content"))
+                    .and_then(|content| content.get("parts"))
+                    .and_then(|parts| parts.get(0))
+                    .and_then(|part| part.get("text"))
+                    .and_then(|t| t.as_str())
+                    .ok_or_else(|| {
+                        let json_str = serde_json::to_string_pretty(&response_json).unwrap_or_else(|_| "<unparseable>".to_string());
+                        TAPIError::parse(format!("Gemini response missing expected fields. Response: {}", json_str))
+                    })?
                     .to_string();
 
-                let tokens = response_json["usageMetadata"]["totalTokenCount"]
-                    .as_u64()
+                let tokens = response_json
+                    .get("usageMetadata")
+                    .and_then(|meta| meta.get("totalTokenCount"))
+                    .and_then(|t| t.as_u64())
                     .map(|t| t as u32);
 
                 println!("[CHAT] ✅ Gemini success: {} chars, {} tokens", content.len(), tokens.unwrap_or(0));
