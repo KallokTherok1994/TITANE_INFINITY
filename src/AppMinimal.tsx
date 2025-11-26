@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v17.3 — Proprietary License
+ * TITANE_INFINITY v15.3 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
@@ -72,7 +72,7 @@ export const AppMinimal: React.FC = () => {
             color: 'rgba(255, 255, 255, 0.5)',
           }}
         >
-          v17.3.0 - Interface de test minimale
+          v15.3.0 - Interface de test minimale
         </p>
       </div>
 

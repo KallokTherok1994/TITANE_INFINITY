@@ -1,12 +1,12 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — DESIGN SYSTEM MÉTALLIQUE UNIFIÉ
+ * TITANE∞ v15 — DESIGN SYSTEM MÉTALLIQUE UNIFIÉ
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Design System Monochrome Premium : HUD Technologique Métallique
  * Inspirations : Vercel AI, Linear, Arc Browser, Tron Legacy, Destiny OS
  *
- * PHILOSOPHIE v24 :
+ * PHILOSOPHIE v15 :
  * ----------------
  * • Thème UNIQUE : monochrome métallique, pas de multi-thèmes Gemme
  * • 3 couleurs de base :
@@ -34,8 +34,8 @@
  *
  * COMPATIBILITÉ :
  * ---------------
- * ✅ Tokens v12 remappés vers palette métallique
- * ✅ Tokens v20 (rubis/saphir/émeraude/diamant) remappés
+ * ✅ Tokens v15 remappés vers palette métallique
+ * ✅ Tokens v15 (rubis/saphir/émeraude/diamant) remappés
  * ✅ Tous les composants existants continuent de fonctionner
  * ✅ Migration progressive sans breaking changes
  */
@@ -46,7 +46,7 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════════════
-     Couleurs de base TITANE∞ v24
+     Couleurs de base TITANE∞ v15
      ═══════════════════════════════════════════════════════════════════ */
 
   --metal-primary: #727b81;      /* Cœur du thème : gris métal chaud */
@@ -238,7 +238,7 @@
   --text-4xl: 2.25rem;     /* 36px */
   --text-5xl: 3rem;        /* 48px */
 
-  /* Alias v12 pour compatibilité */
+  /* Alias v15 pour compatibilité */
   --font-size-xs: var(--text-xs);
   --font-size-sm: var(--text-sm);
   --font-size-base: var(--text-base);
@@ -255,7 +255,7 @@
   --font-semibold: 600;
   --font-bold: 700;
 
-  /* Alias v12 */
+  /* Alias v15 */
   --font-weight-normal: var(--font-regular);
   --font-weight-medium: var(--font-medium);
   --font-weight-semibold: var(--font-semibold);
@@ -266,7 +266,7 @@
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
 
-  /* Alias v12 */
+  /* Alias v15 */
   --line-height-tight: var(--leading-tight);
   --line-height-normal: var(--leading-normal);
   --line-height-relaxed: var(--leading-relaxed);
@@ -276,7 +276,7 @@
   --tracking-normal: 0;
   --tracking-wide: 0.02em;
 
-  /* Alias v12 */
+  /* Alias v15 */
   --letter-spacing-tight: var(--tracking-tight);
   --letter-spacing-normal: var(--tracking-normal);
   --letter-spacing-wide: var(--tracking-wide);
@@ -348,11 +348,11 @@
   --z-top: 9999;
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     🔄 11. COMPATIBILITÉ v12/v20 - REMAPPING
+     🔄 11. COMPATIBILITÉ v15/v15 - REMAPPING
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
   /* ═══════════════════════════════════════════════════════════════════
-     Tokens v12 : Primary/Secondary/Accent → Palette métallique
+     Tokens v15 : Primary/Secondary/Accent → Palette métallique
      ═══════════════════════════════════════════════════════════════════ */
 
   /* Primary = Metal Primary */
@@ -406,7 +406,7 @@
   --color-gray-950: var(--gray-950);
 
   /* ═══════════════════════════════════════════════════════════════════
-     Tokens v20 : Gemmes (Rubis/Saphir/Émeraude/Diamant) → Métallique
+     Tokens v15 : Gemmes (Rubis/Saphir/Émeraude/Diamant) → Métallique
      ═══════════════════════════════════════════════════════════════════ */
 
   /* Rubis (erreurs) → Métal rouillé désaturé */
@@ -674,7 +674,7 @@ body {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   ✅ DESIGN SYSTEM v24 COMPLETE
+   ✅ DESIGN SYSTEM v15 COMPLETE
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
    🔩 Palette centrale : 3 couleurs métalliques + échelle de gris
@@ -682,6 +682,6 @@ body {
    🌑 Backgrounds : dark HUD, profondeur organique
    📝 Texte : hiérarchie claire, contraste AA+
    ✨ Effets premium : glass, glow, animations
-   🔄 Compatibilité : v12 + v20 remappés sans breaking changes
+   🔄 Compatibilité : v15 + v15 remappés sans breaking changes
 
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */

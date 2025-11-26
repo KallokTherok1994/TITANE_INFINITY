@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Collapse Component
+// TITANE∞ v15 - Collapse Component
 import { ReactNode, useState } from 'react';
 import { Icons } from '../Icons';
 import './Collapse.css';

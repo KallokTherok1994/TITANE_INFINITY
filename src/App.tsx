@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v∞ — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,10 +8,9 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v∞ — APP COMPONENT (PHASE 3 COMPLETE)
- *   Super-Prompts H→N: Security + Permissions + Time-Travel + Auto-Audit
- *   Backend v∞: VaultEngine + UpdateEngine + TimeNavigator + SystemGovernance
- *   React Router v7 + AppShell + Auto-Audit Engine (30s scans)
+ *   TITANE∞ v15 — APP COMPONENT
+ *   Unified Architecture v15: AIRouter + Memory + SingularityEngine
+ *   React Router + AppShell + Living Engines
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -59,7 +58,7 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// New v17.1 pages
+// New v15.1 pages
 import { DashboardPage } from './pages/DashboardPage';
 // CORRECTION v19.1.0: Utiliser la vraie page Chat avec useChat() au lieu du mock setTimeout
 import { Chat as ChatPage } from './ui/pages/Chat';
@@ -68,7 +67,7 @@ import { ProgressionPage } from './pages/ProgressionPage';
 import { DesignSystemPage } from './pages/DesignSystemPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 
-// v14: SingularityState Monitor
+// v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
 
 // Engine & System pages
@@ -175,10 +174,10 @@ const AppRouter: React.FC = () => {
   // Sidebar items configuration
   const sidebarItems = [
     { id: '/', label: 'Tableau de bord', icon: '📊' },
-    { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'v17.1' },
+    { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'v15.1' },
     { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
     { id: '/progression', label: 'Progression', icon: '⚡', badge: 'NEW' },
-    { id: '/design-system', label: 'Design System', icon: '🎨', badge: 'v17.1' },
+    { id: '/design-system', label: 'Design System', icon: '🎨', badge: 'v15.1' },
     { id: '/time-navigator', label: 'Time Navigator', icon: '⏱️', badge: 'v∞' },
     { id: '/governance', label: 'Governance', icon: '⚖️', badge: 'v∞' },
     { id: '/multi-ai', label: 'Multi-AI System', icon: '🌌', badge: 'Phase 4' },
@@ -236,7 +235,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v17.2.1 - Backend Refactor Complete</span>
+              <span>v15.2.1 - Backend Refactor Complete</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }
@@ -255,7 +254,7 @@ const AppRouter: React.FC = () => {
       sidebarCollapsed={sidebarCollapsed}
     >
       <Routes>
-        {/* Main Routes v17.2+ */}
+        {/* Main Routes v15.2+ */}
         <Route path="/" element={<DashboardPage />} />
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/cognitive" element={<CognitivePage />} />
@@ -278,7 +277,7 @@ const AppRouter: React.FC = () => {
         <Route path="/introspection" element={<IntrospectionDashboard />} />
         <Route path="/evolution" element={<EvolutionMonitor />} />
 
-        {/* v14: SingularityState Monitor */}
+        {/* v15: SingularityState Monitor */}
         <Route path="/singularity" element={<SingularityMonitor />} />
 
         {/* Engine Routes */}

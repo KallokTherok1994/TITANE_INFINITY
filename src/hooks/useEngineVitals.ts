@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE ENGINE VITALS
+ *   TITANE∞ v15 — USE ENGINE VITALS
  *   Hook: Vitals moteurs cognitifs temps réel
  * ═══════════════════════════════════════════════════════════════
  */
@@ -76,7 +76,7 @@ const DEFAULT_VITALS: EngineVitals = {
 };
 
 /**
- * Hook engine vitals v14
+ * Hook engine vitals v15
  * - Vitals moteurs cognitifs temps réel
  * - Health score global
  * - Detection issues critiques

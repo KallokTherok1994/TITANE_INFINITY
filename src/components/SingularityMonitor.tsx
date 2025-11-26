@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — SINGULARITY ENGINE MONITOR
- * Composant pour monitorer le SingularityEngine v14 en temps réel
+ * TITANE∞ v15 — SINGULARITY ENGINE MONITOR
+ * Composant pour monitorer le SingularityEngine v15 en temps réel
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -23,7 +23,7 @@ export function SingularityMonitor() {
       try {
         await invoke('engine_init');
         if (mounted) {
-          console.log('✅ SingularityEngine v14 initialized');
+          console.log('✅ SingularityEngine v15 initialized');
         }
 
         // Poll engine state
@@ -71,7 +71,7 @@ export function SingularityMonitor() {
     return (
       <div style={styles.container}>
         <div style={styles.header}>
-          <h2 style={styles.title}>🌟 SingularityEngine v14</h2>
+          <h2 style={styles.title}>🌟 SingularityEngine v15</h2>
           <span style={styles.badge}>Initializing...</span>
         </div>
         <p style={styles.loading}>Starting unified engine...</p>
@@ -83,7 +83,7 @@ export function SingularityMonitor() {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h2 style={styles.title}>🌌 SingularityEngine v14</h2>
+        <h2 style={styles.title}>🌌 SingularityEngine v15</h2>
         <span style={{
           ...styles.badge,
           background: health === 'Healthy' ? '#10b981' : health === 'Degraded' ? '#f59e0b' : '#ef4444',

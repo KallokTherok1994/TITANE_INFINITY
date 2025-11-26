@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — useSingularityState Hook
+//   TITANE∞ v15 — useSingularityState Hook
 //   Phase 7: OS Cognitif Unifié — Frontend Integration
 // ═══════════════════════════════════════════════════════════════
 
@@ -88,7 +88,7 @@ export interface UseSingularityStateReturn {
 }
 
 /**
- * Hook React pour consommer l'état Singularity TITANE∞ v14
+ * Hook React pour consommer l'état Singularity TITANE∞ v15
  *
  * Features:
  * - État unifié des 3 moteurs (Nexus, Harmonia, Sentinel)

@@ -95,7 +95,7 @@ export const TAURI_COMMANDS = {
   CHAT_CHECK_PROVIDERS: 'chat_check_providers',
 
   // ═══════════════════════════════════════════════════════════════
-  // AI LEGACY - Old AI Commands (v12)
+  // AI LEGACY - Old AI Commands (v15)
   // ═══════════════════════════════════════════════════════════════
   AI_QUERY: 'ai_query', // Legacy: ai_chat.rs, superseded by chat_send_message
 
@@ -163,7 +163,7 @@ export async function invokeTauri<T>(
  * ⚠️  AI_QUERY (1 commande):
  *    - Définie dans src-tauri/src/commands/ai_chat.rs
  *    - NON enregistrée dans main.rs
- *    - Legacy v12, superseded by chat_orchestrator
+ *    - Legacy v15, superseded by chat_orchestrator
  *
  * ⚠️  PERSONA (6 commandes):
  *    - Définies dans src-tauri/src/system/persona_engine/commands.rs

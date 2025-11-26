@@ -1,4 +1,4 @@
-// TITANE∞ v12 - StatusIndicator Component
+// TITANE∞ v15 - StatusIndicator Component
 // Connection and AI status display
 
 import React from 'react';

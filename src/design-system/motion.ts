@@ -3,12 +3,12 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 - Motion System (Framer Motion Variants)
+ * TITANE∞ v15 - Motion System (Framer Motion Variants)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Système d'animations unifié avec throttling performance adaptatif.
  *
- * RÈGLES v14:
+ * RÈGLES v15:
  * - Durées courtes (120-250ms)
  * - Easings organiques (easeOut, easeInOut)
  * - Propriétés animables uniquement (opacity, y, scale, x)

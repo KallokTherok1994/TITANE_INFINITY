@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Tabs Component
+// TITANE∞ v15 - Tabs Component
 import { ReactNode, useState } from 'react';
 import './Tabs.css';
 

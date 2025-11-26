@@ -8,13 +8,13 @@
  * • Surface claire (Silver Bullet) : #c4c4c4
  * • Accent organique : #93b399
  *
- * Ce fichier OVERRIDE les couleurs des design systems v12 et v20
+ * Ce fichier OVERRIDE les couleurs des design systems v15 et v15
  * pour converger vers une palette unique, moderne, épurée et hardware.
  *
  * STRATÉGIE :
  * -----------
- * 1. Redéfinir les tokens primaires/secondaires/accent/gris de v12
- * 2. Remapper les palettes Rubis/Émeraude/Saphir/Diamant de v20 → métal
+ * 1. Redéfinir les tokens primaires/secondaires/accent/gris de v15
+ * 2. Remapper les palettes Rubis/Émeraude/Saphir/Diamant de v15 → métal
  * 3. Neutraliser les couleurs des modules cognitifs vers la palette métal
  * 4. Garantir lisibilité texte/fond pour dark mode
  *
@@ -126,7 +126,7 @@
   --color-info-700: #4a5157;
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     💎 REMAPPING v20 : RUBIS / ÉMERAUDE / SAPHIR / DIAMANT → MÉTAL
+     💎 REMAPPING v15 : RUBIS / ÉMERAUDE / SAPHIR / DIAMANT → MÉTAL
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
   /* ──────────────────────────────────────────────────────────────────────────

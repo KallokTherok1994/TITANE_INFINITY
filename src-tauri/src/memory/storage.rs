@@ -14,6 +14,7 @@ use std::path::PathBuf;
 pub struct MemoryStorage {
     storage_dir: PathBuf,
     encryption: MemoryEncryption,
+    #[allow(dead_code)] // Future use: automatic compaction
     compactor: MemoryCompactor,
 }
 

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — SingularityPanel Component
+//   TITANE∞ v15 — SingularityPanel Component
 //   Phase 6-7: UI Synchronisation + OS Cognitif Unifié
 // ═══════════════════════════════════════════════════════════════
 

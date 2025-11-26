@@ -13,11 +13,11 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-// Legacy API (v17.1)
+// Legacy API (v15.1)
 export { tauri, metaMode, exp, memory, voice, system } from './commands';
 export * from './types';
 export * from './validation';
 
-// New Backend API (v17.2)
+// New Backend API (v15.2)
 export { backendV17, helios, memory as memoryV17, engine, system as systemV17, composite } from './backend-v17.2.commands';
 export * from './backend-v17.2.types';

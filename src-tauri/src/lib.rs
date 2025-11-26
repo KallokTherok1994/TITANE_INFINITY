@@ -1,13 +1,14 @@
 //! ═══════════════════════════════════════════════════════════════
-//!   TITANE∞ v15 — LIB CONFIGURATION
-//!   Unified backend architecture - Clean v15
+//!   TITANE∞ v16 — LIB CONFIGURATION
+//!   Unified backend architecture - v15 Core + v16 Cognitive
 //! ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
-// CORE MODULES v15 (Always Active)
+// CORE MODULES v16 (Always Active)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod core;       // ✅ SingularityEngine v15 + modules
+pub mod core;       // ✅ SingularityEngine v16 + modules
+pub mod cognitive;  // ✅ Cognitive Layer v16 (NEW)
 pub mod shared;     // ✅ Shared types and utilities
 pub mod types;      // ✅ Type definitions
 pub mod utils;      // ✅ Utilities (AppResult, AppError)

@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - ScrollContainer Component
+// TITANE∞ v15 - ScrollContainer Component
 import { ReactNode, UIEvent, useRef, useState } from 'react';
 import './ScrollContainer.css';
 

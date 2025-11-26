@@ -8,7 +8,7 @@
 
 // TITANE∞ v∞ - Pages Index (Cleaned)
 
-// Main Pages (v17.2+)
+// Main Pages (v15.2+)
 export { DashboardPage } from './DashboardPage';
 export { ChatPage } from './ChatPage';
 export { CognitivePage } from './CognitivePage';

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v17.3 — Proprietary License
+ * TITANE_INFINITY v15.3 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.

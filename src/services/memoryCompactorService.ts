@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v14.0 — Memory Compactor Service
+ * TITANE∞ v15.0 — Memory Compactor Service
  * ════════════════════════════════════════
  *
  * Service TypeScript pour compacter et valider la mémoire

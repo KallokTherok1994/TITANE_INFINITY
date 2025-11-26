@@ -1,16 +1,16 @@
 /**
- * TITANE_INFINITY v19.2.2 — Proprietary License
+ * TITANE_INFINITY v16.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v19.2.2 - Main Entry Point - Backend Migration v14 Complete
+// TITANE∞ v16.0.0 - Main Entry Point - Cognitive Layer Active
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './design-system/titane-v14.css'; // 🔩 Design System v14 : Tokens centralisés + Monochrome Métallique
+import './design-system/titane-v∞.css'; // 🔩 Design System v∞ : Unified tokens
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles
 import './pages/styles.css';
 
@@ -22,7 +22,7 @@ import { injectSROnlyStyles } from './lib/accessibility';
 // Initialize Singularity Engine
 import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
 
-// 🌟 v14: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
+// 🌟 v15: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
 import { SingularityBridge } from './services/singularityBridge';
 import { SingularityConnections } from './services/singularityConnections';
 
@@ -69,7 +69,7 @@ singularityEngine.initialize().then(() => {
   console.error('❌ SingularityEngine initialization failed:', err);
 });
 
-// 🌟 v14: Initialize SingularityBridge (Backend State Sync)
+// 🌟 v15: Initialize SingularityBridge (Backend State Sync)
 SingularityBridge.initialize().then(() => {
   console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
@@ -86,7 +86,7 @@ SingularityBridge.initialize().then(() => {
     }
   });
 
-  // 🔗 v14: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
+  // 🔗 v15: Start subsystem connections (Helios, Memory, Persona, AutoHeal, UI)
   SingularityConnections.start(5000).then(() => {
     console.log('🔗 SingularityConnections started (5s polling)');
     console.log('   → Helios → PhysicalLayer');

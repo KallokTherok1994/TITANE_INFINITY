@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — HTTP CLIENT TAURI-ONLY
+ *   TITANE∞ v15 — HTTP CLIENT TAURI-ONLY
  *   Client: Wrapper Tauri pour toutes requêtes HTTP externes
  * ═══════════════════════════════════════════════════════════════
  */

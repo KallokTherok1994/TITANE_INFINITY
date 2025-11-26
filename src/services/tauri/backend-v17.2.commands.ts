@@ -38,7 +38,7 @@ async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promi
     return result;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error(`[Backend v17.2] Command "${cmd}" failed:`, errorMsg);
+    console.error(`[Backend v15.2] Command "${cmd}" failed:`, errorMsg);
     throw new Error(`Backend command "${cmd}" failed: ${errorMsg}`);
   }
 }

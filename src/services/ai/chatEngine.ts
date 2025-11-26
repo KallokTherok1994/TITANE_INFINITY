@@ -303,7 +303,7 @@ class ChatEngine {
   ): string {
     // Signature TITANE∞ obligatoire
     let prompt = `═══════════════════════════════════════════════════════════════════
-TITANE∞ v14 — Système Cognitif Auto-Évolutif
+TITANE∞ v15 — Système Cognitif Auto-Évolutif
 Mode actif: ${modeConfig.name} (${modeConfig.icon})
 ═══════════════════════════════════════════════════════════════════
 
@@ -350,7 +350,7 @@ Mode actif: ${modeConfig.name} (${modeConfig.icon})
     prompt += `
 
 ═══════════════════════════════════════════════════════════════════
-Fin du contexte système TITANE∞ v14
+Fin du contexte système TITANE∞ v15
 Réponds maintenant en mode ${modeConfig.name} uniquement.
 ═══════════════════════════════════════════════════════════════════`;
 

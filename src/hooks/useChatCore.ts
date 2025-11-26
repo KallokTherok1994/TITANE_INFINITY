@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE CHAT CORE (Logic IA Pure)
+ *   TITANE∞ v15 — USE CHAT CORE (Logic IA Pure)
  *   Hook isolé: Logique IA uniquement, 0 UI
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -39,7 +39,7 @@ export interface UseChatCoreReturn {
 }
 
 /**
- * Hook logique IA pure v14
+ * Hook logique IA pure v15
  * - 0 UI, 0 state messages, 0 loading state
  * - Génération IA avec provider configurable
  * - Timeout dynamique (Gemini 60s, Ollama 45s, Local 15s)
@@ -59,7 +59,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
   const generate = useCallback(
     async (message: string, history: AIMessage[]): Promise<ChatEngineResponse> => {
       console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT CORE v14: Generation (provider-aware)            ║');
+      console.log('║  USE CHAT CORE v15: Generation (provider-aware)            ║');
       console.log('╚════════════════════════════════════════════════════════════╝');
       console.log(`🎯 Mode: ${currentMode}`);
       console.log(`🔌 Provider: ${currentProvider}`);

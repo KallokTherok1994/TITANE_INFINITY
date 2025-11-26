@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE CHAT MEMORY (Synchro Backend)
+ *   TITANE∞ v15 — USE CHAT MEMORY (Synchro Backend)
  *   Hook isolé: Synchronisation mémoire backend uniquement
  * ═══════════════════════════════════════════════════════════════════
  */

@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v14 — SingularityState Subsystem Connections
+ * TITANE∞ v15 — SingularityState Subsystem Connections
  * Connecte Helios, Memory, Persona, AutoHeal, UI → SingularityState
  * ═══════════════════════════════════════════════════════════════
  */

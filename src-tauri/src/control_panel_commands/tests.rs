@@ -138,7 +138,7 @@ mod control_panel_tests {
         assert!(result.is_ok());
 
         let modules = result.unwrap();
-        assert!(modules.len() > 0);
+        assert!(!modules.is_empty());
         assert!(modules.iter().all(|m| !m.id.is_empty()));
         assert!(modules.iter().all(|m| !m.name.is_empty()));
     }

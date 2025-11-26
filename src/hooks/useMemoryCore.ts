@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Memory Core Hook
+// TITANE∞ v15 - Memory Core Hook
 import { useState, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { memoryService } from '../services/api';

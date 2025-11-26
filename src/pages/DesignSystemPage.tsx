@@ -51,7 +51,7 @@ export function DesignSystemPage() {
   return (
     <div className="design-system-page">
       <div className="design-system-header">
-        <h1 className="design-system-title">Design System v17.1</h1>
+        <h1 className="design-system-title">Design System v15.1</h1>
         <p className="design-system-subtitle">
           Primitives UI avec Design Tokens optimisés
         </p>

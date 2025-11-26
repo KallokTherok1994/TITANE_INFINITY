@@ -138,7 +138,7 @@ export const MetaModeConsole: React.FC = () => {
       <div className="console-header">
         <div className="header-title">
           <h2>🧠 Meta-Mode Console</h2>
-          <span className="version">v14.1</span>
+          <span className="version">v15.1</span>
         </div>
         <button className="reset-btn" onClick={handleReset} title="Réinitialiser">
           🔄 Reset

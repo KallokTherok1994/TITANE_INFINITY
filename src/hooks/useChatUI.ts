@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE CHAT UI (État UI pur)
+ *   TITANE∞ v15 — USE CHAT UI (État UI pur)
  *   Hook isolé: État UI uniquement, 0 logique IA
  * ═══════════════════════════════════════════════════════════════════
  */

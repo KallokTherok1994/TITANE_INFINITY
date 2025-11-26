@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Card Component
+// TITANE∞ v15 - Card Component
 import { ReactNode } from 'react';
 import './Card.css';
 

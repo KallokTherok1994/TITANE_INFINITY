@@ -1,23 +1,22 @@
-// ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — HANDLERS FACTORY
-//   Conditional command handlers based on build configuration
-// ═══════════════════════════════════════════════════════════════
+// TITANE∞ v16 — HANDLERS FACTORY
+// Conditional command handlers based on build configuration
+// Architecture v16: Cognitive Layer + v15 Core
 
-/// Generate invoke handler for Tauri based on enabled features
+/// Generate invoke handler for Tauri based on enabled features (v16)
 ///
 /// - In mock mode: uses mock_commands for frontend development
-/// - In full mode: uses real backend commands with SingularityEngine
+/// - In full mode: uses real backend commands with SingularityEngine v16
 #[macro_export]
 macro_rules! generate_titane_handlers {
     () => {
         {
             #[cfg(all(feature = "mock", not(feature = "full")))]
             {
-                // MOCK MODE: Frontend development with simulated backend
+                // MOCK MODE: Frontend development with simulated backend (v16)
                 use $crate::mock_commands;
 
                 tauri::generate_handler![
-                    // System & Helios
+                    // System & Helios v16
                     mock_commands::get_helios_state,
                     commands::get_system_vitals,
                     commands::helios_get_metrics,
@@ -25,7 +24,15 @@ macro_rules! generate_titane_handlers {
                     commands::harmonia_get_flows,
                     commands::sentinel_get_alerts,
 
-                    // Engine v14
+                    // Cognitive Layer v16 (NEW)
+                    commands::cognitive_analyze,
+                    commands::cognitive_check_coherence,
+                    commands::cognitive_integrate,
+                    commands::cognitive_learn,
+                    commands::cognitive_get_status,
+                    commands::cognitive_optimize,
+
+                    // Engine v16
                     commands::engine_init,
                     commands::engine_tick,
                     commands::engine_sync,
@@ -33,11 +40,11 @@ macro_rules! generate_titane_handlers {
                     commands::engine_metrics,
                     commands::engine_modules_info,
 
-                    // Memory Compactor
+                    // Memory Compactor v15
                     commands::memory_compactor_run,
                     commands::memory_compactor_status,
 
-                    // Memory v14 (Key-Value + Conversations)
+                    // Memory v15 (Key-Value + Conversations)
                     commands::memory_get,
                     commands::memory_set,
                     commands::memory_get_stats,
@@ -46,19 +53,19 @@ macro_rules! generate_titane_handlers {
                     commands::memory_export_conversation,
                     commands::memory_compact,
 
-                    // Evolution v14
+                    // Evolution v15
                     commands::evolution_run_cycle,
                     commands::evolution_get_stats,
                     commands::evolution_get_state,
 
-                    // Harmonia
+                    // Harmonia v15
                     commands::harmonia_get_cpu_metrics,
                     commands::harmonia_get_system_info,
 
-                    // Diagnostic
+                    // Diagnostic v15
                     commands::backend_self_check,
 
-                    // AI Chat v14 (Real Backend)
+                    // AI Chat v15 (Real Backend)
                     commands::ai_query,
                     commands::speak,
                     commands::start_recording,
@@ -74,14 +81,14 @@ macro_rules! generate_titane_handlers {
                     commands::get_vad_state,
                     commands::get_module_status,
 
-                    // AI Chat v14 — Frontend Integration Commands
+                    // AI Chat v15 — Frontend Integration Commands
                     commands::chat_send_message,
                     commands::chat_stream_message,
                     commands::chat_set_gemini_key,
                     commands::chat_get_providers_status,
                     commands::chat_check_providers,
 
-                    // Engine Commands v14 — Phase 5: Moteurs TITANE∞
+                    // Engine Commands v15 — TITANE∞ Core Engines
                     commands::engine_get_nexus_state,
                     commands::engine_get_harmonia_state,
                     commands::engine_get_sentinel_state,
@@ -91,7 +98,7 @@ macro_rules! generate_titane_handlers {
                     commands::engine_tick,
                     commands::engine_get_evolution_state,
 
-                    // Secure Commands
+                    // Secure Commands v15
                     secure_commands::secure_import_file,
                     secure_commands::secure_read_file,
                     secure_commands::secure_list_files,

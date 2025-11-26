@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Input Component
+// TITANE∞ v15 - Input Component
 import { InputHTMLAttributes, forwardRef } from 'react';
 import './Input.css';
 

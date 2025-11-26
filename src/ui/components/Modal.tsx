@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Modal Component
+// TITANE∞ v15 - Modal Component
 import { ReactNode, useEffect } from 'react';
 import { Icons } from '../Icons';
 import './Modal.css';

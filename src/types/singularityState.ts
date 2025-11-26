@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — SINGULARITY STATE TYPES
+ * TITANE∞ v15 — SINGULARITY STATE TYPES
  * Mirrors exacts des types Rust backend
  * ═══════════════════════════════════════════════════════════════════
  */

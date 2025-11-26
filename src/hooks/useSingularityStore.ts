@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — useSingularityStore Hook
+ * TITANE∞ v15 — useSingularityStore Hook
  * Selector-based React hook pour SingularityState
  * ═══════════════════════════════════════════════════════════════════
  *

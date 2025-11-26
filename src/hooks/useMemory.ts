@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - useMemory Hook
+// TITANE∞ v15 - useMemory Hook
 // React hook for conversational memory management
 
 import { useState, useCallback, useEffect } from 'react';

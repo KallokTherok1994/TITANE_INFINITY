@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE PROVIDER STATUS
+ *   TITANE∞ v15 — USE PROVIDER STATUS
  *   Hook: Status providers IA temps réel
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -29,7 +29,7 @@ export interface UseProviderStatusReturn {
 }
 
 /**
- * Hook provider status v14
+ * Hook provider status v15
  * - Check status providers temps réel
  * - Auto-refresh optionnel
  * - Detection provider actif

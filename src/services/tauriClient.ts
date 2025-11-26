@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v14 — TAURI CLIENT (Centralized Invoke)
+ * TITANE∞ v15 — TAURI CLIENT (Centralized Invoke)
  * Client centralisé pour tous les appels Tauri invoke()
  * ═══════════════════════════════════════════════════════════════
  */

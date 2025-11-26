@@ -1,10 +1,10 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 // ═══════════════════════════════════════════════════════════════
-// TITANE∞ v14 - Hooks Central Export
+// TITANE∞ v15 - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
 // Legacy hooks
@@ -22,7 +22,7 @@ export type { LivingEnginesState } from './useLivingEngines';
 export { useSingularity, useSingularityMetrics, useSingularityField } from './useSingularity';
 
 // ═══════════════════════════════════════════════════════════════
-// v14 - Chat IA Architecture (Composition + Isolation)
+// v15 - Chat IA Architecture (Composition + Isolation)
 // ═══════════════════════════════════════════════════════════════
 
 // Hook principal (composition)
@@ -43,7 +43,7 @@ export type { UseChatMemoryOptions, UseChatMemoryReturn } from './useChatMemory'
 export type { UseProviderStatusOptions, UseProviderStatusReturn } from './useProviderStatus';
 
 // ═══════════════════════════════════════════════════════════════
-// v14 - Refactored Hooks (TauriClient integration)
+// v15 - Refactored Hooks (TauriClient integration)
 // ═══════════════════════════════════════════════════════════════
 
 // Connection & Providers
@@ -54,15 +54,15 @@ export type { ConnectionStatus } from './useConnection';
 export { useVitals } from './useVitals';
 export type { SystemVitals, VitalsState } from './useVitals';
 
-// Engine Vitals (NOUVEAU v14)
+// Engine Vitals (NOUVEAU v15)
 export { useEngineVitals } from './useEngineVitals';
 export type { EngineVitals, UseEngineVitalsOptions, UseEngineVitalsReturn } from './useEngineVitals';
 
-// System Monitor (NOUVEAU v14 - Combine vitals + engines)
+// System Monitor (NOUVEAU v15 - Combine vitals + engines)
 export { useSystemMonitor } from './useSystemMonitor';
 export type { UseSystemMonitorOptions, UseSystemMonitorReturn } from './useSystemMonitor';
 
-// Performance Monitor (NOUVEAU v14 - FPS tracking)
+// Performance Monitor (NOUVEAU v15 - FPS tracking)
 export { usePerformanceMonitor } from './usePerformanceMonitor';
 export type { PerformanceMetrics, UsePerformanceMonitorReturn } from './usePerformanceMonitor';
 

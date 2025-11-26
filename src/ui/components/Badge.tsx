@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Badge Component
+// TITANE∞ v15 - Badge Component
 import { ReactNode } from 'react';
 import './Badge.css';
 

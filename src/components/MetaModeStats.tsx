@@ -192,7 +192,7 @@ export const MetaModeStats: React.FC = () => {
           <div className="metadata-icon">🔧</div>
           <div className="metadata-content">
             <div className="metadata-label">Version Engine</div>
-            <div className="metadata-value">TITANE∞ v14.1</div>
+            <div className="metadata-value">TITANE∞ v15.1</div>
           </div>
         </div>
 

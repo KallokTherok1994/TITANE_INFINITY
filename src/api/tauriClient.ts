@@ -7,7 +7,7 @@
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v12.0 - Tauri Client Wrapper                                        ║
+// ║ TITANE∞ v15.0 - Tauri Client Wrapper                                        ║
 // ║ Type-safe communication layer with automatic error handling                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

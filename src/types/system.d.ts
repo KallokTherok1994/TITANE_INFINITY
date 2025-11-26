@@ -7,7 +7,7 @@
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v12.0 - System Type Definitions                                     ║
+// ║ TITANE∞ v15.0 - System Type Definitions                                     ║
 // ║ TypeScript interfaces matching Rust backend structures                      ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

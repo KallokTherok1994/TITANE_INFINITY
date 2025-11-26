@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — ANIMATION CONTEXT
+ *   TITANE∞ v15 — ANIMATION CONTEXT
  *   Context: Performance-aware Framer Motion throttling
  * ═══════════════════════════════════════════════════════════════
  */

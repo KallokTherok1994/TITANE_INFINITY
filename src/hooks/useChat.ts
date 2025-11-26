@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE CHAT (Composition Hook)
+ *   TITANE∞ v15 — USE CHAT (Composition Hook)
  *   Hook composé : Orchestre useChatCore, useChatUI, useChatMemory
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -56,7 +56,7 @@ interface UseChatReturn {
  */
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   console.log('\n╔════════════════════════════════════════════════════════════╗');
-  console.log('║  USE CHAT v14: Initialization (Composition Hook)           ║');
+  console.log('║  USE CHAT v15: Initialization (Composition Hook)           ║');
   console.log('╚════════════════════════════════════════════════════════════╝\n');
 
   // 1. Core IA Logic
@@ -102,7 +102,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // Sync messages depuis memory au changement de mode
   useEffect(() => {
-    console.log(`🔄 USE CHAT v14: Mode changed to ${currentMode}, loading history...`);
+    console.log(`🔄 USE CHAT v15: Mode changed to ${currentMode}, loading history...`);
     addMessages(messagesForMode);
   }, [currentMode, messagesForMode, addMessages]);
 
@@ -114,7 +114,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       if (!content.trim() || isLoading) return;
 
       console.log('\n═════════════════════════════════════════════════════════════');
-      console.log('💬 USE CHAT v14: Send message start');
+      console.log('💬 USE CHAT v15: Send message start');
       console.log(`📝 Content: "${content.substring(0, 60)}..."`);
       console.log(`🎯 Mode: ${currentMode}`);
       console.log('═════════════════════════════════════════════════════════════\n');
@@ -174,11 +174,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
 
         console.log('\n═════════════════════════════════════════════════════════════');
-        console.log('🎉 USE CHAT v14: Message processed successfully!');
+        console.log('🎉 USE CHAT v15: Message processed successfully!');
         console.log('═════════════════════════════════════════════════════════════\n');
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
-        console.error('\n❌ USE CHAT v14: Error', err);
+        console.error('\n❌ USE CHAT v15: Error', err);
 
         // Track error (SELFHEAL++)
         errorTracker.track('chat', errorMessage, 'high');
@@ -244,14 +244,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     clearMessages();
     setError(null);
     setSuggestions([]);
-    console.log(`🧹 USE CHAT v14: Cleared mode ${currentMode}`);
+    console.log(`🧹 USE CHAT v15: Cleared mode ${currentMode}`);
   }, [currentMode, clearMode, clearMessages, setError, setSuggestions]);
 
   /**
    * Change le mode
    */
   const setMode = useCallback((mode: ChatMode) => {
-    console.log(`🔄 USE CHAT v14: Change mode → ${mode}`);
+    console.log(`🔄 USE CHAT v15: Change mode → ${mode}`);
     setCoreMode(mode);
   }, [setCoreMode]);
 

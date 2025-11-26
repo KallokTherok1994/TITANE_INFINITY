@@ -1,9 +1,9 @@
 /**
- * TITANE_INFINITY v14.0.0 — Proprietary License
+ * TITANE_INFINITY v15.0.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — Design System Tokens (TypeScript Export)
+ * TITANE∞ v15 — Design System Tokens (TypeScript Export)
  * ═══════════════════════════════════════════════════════════════════
  *
  * Export programmatique des tokens pour usage en TypeScript/React.

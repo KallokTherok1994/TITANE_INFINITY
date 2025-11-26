@@ -10,7 +10,7 @@ import { invoke } from '@tauri-apps/api/core';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v14 — SINGULARITY BRIDGE (TypeScript)
+ * TITANE∞ v15 — SINGULARITY BRIDGE (TypeScript)
  * Pont bidirectionnel Rust Backend ↔ React Frontend
  * ═══════════════════════════════════════════════════════════════════
  *

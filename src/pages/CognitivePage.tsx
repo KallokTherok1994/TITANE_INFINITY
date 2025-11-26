@@ -59,7 +59,7 @@ export const CognitivePage = (): JSX.Element => {
     {
       id: 'mem1',
       type: 'conversation' as const,
-      content: 'Discussion sur l\'architecture de TITANE∞ v17',
+      content: 'Discussion sur l\'architecture de TITANE∞ v15',
       timestamp: new Date(Date.now() - 3600000),
       importance: 0.9,
       tags: ['architecture', 'typescript', 'design'],

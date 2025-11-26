@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — PERFORMANCE MONITOR
+ *   TITANE∞ v15 — PERFORMANCE MONITOR
  *   Hook: Monitoring performance temps réel + throttling intelligent
  * ═══════════════════════════════════════════════════════════════
  */
@@ -36,7 +36,7 @@ export interface UsePerformanceMonitorReturn {
 }
 
 /**
- * Hook performance monitor v14
+ * Hook performance monitor v15
  * - FPS tracking temps réel
  * - CPU load detection (via Harmonia si disponible)
  * - Throttling intelligent animations

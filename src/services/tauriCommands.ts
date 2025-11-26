@@ -117,7 +117,7 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     active: true,
   },
 
-  // ━━━ ENGINE COMMANDS (v14) ━━━
+  // ━━━ ENGINE COMMANDS (v15) ━━━
   'engine_init': {
     name: 'engine_init',
     description: 'Initialize Singularity Engine',

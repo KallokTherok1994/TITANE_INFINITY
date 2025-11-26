@@ -1,26 +1,26 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ — DESIGN SYSTEM UNIFIÉ v12+v20
+ * TITANE∞ — DESIGN SYSTEM UNIFIÉ v15+v15
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * Fusion cohérente des design systems v12 (fondation) et v20 (vivant)
+ * Fusion cohérente des design systems v15 (fondation) et v15 (vivant)
  * Architecture premium : HUD Cognitif + Glassmorphism + Animations organiques
  *
  * DÉCISIONS CLÉS :
  * ----------------
- * • Base theme & surfaces : v20 (plus premium, subtil, profondeur organique)
+ * • Base theme & surfaces : v15 (plus premium, subtil, profondeur organique)
  * • Palettes legacy (primary/secondary/accent/gray) : conservées pour compatibilité
- * • Palettes premium (rubis/émeraude/saphir/diamant) : ajoutées de v20
- * • Modules cognitifs (Helios/Nexus/Harmonia/Memory) : préservés de v20
- * • Typographie : valeurs v20 (--text-*), alias v12 (--font-size-*) pour compat
- * • Glass effects & glows : intégrés de v20
- * • Animations organiques : toutes préservées de v20
- * • Light mode : maintenu de v12
+ * • Palettes premium (rubis/émeraude/saphir/diamant) : ajoutées de v15
+ * • Modules cognitifs (Helios/Nexus/Harmonia/Memory) : préservés de v15
+ * • Typographie : valeurs v15 (--text-*), alias v15 (--font-size-*) pour compat
+ * • Glass effects & glows : intégrés de v15
+ * • Animations organiques : toutes préservées de v15
+ * • Light mode : maintenu de v15
  *
  * COMPATIBILITÉ :
  * ---------------
- * ✅ Tous les composants utilisant v12 continuent de fonctionner
- * ✅ Tous les effets v20 sont disponibles globalement
+ * ✅ Tous les composants utilisant v15 continuent de fonctionner
+ * ✅ Tous les effets v15 sont disponibles globalement
  * ✅ Migration progressive possible via alias de tokens
  */
 
@@ -30,7 +30,7 @@
 
 :root {
   /* ═══════════════════════════════════════════════════════════════════
-     PALETTES LEGACY v12 (Compatibilité)
+     PALETTES LEGACY v15 (Compatibilité)
      ═══════════════════════════════════════════════════════════════════ */
 
   /* Primary Colors (Indigo) */
@@ -105,7 +105,7 @@
   --color-info-700: #1d4ed8;
 
   /* ═══════════════════════════════════════════════════════════════════
-     PALETTES PREMIUM v20 (TITANE∞)
+     PALETTES PREMIUM v15 (TITANE∞)
      ═══════════════════════════════════════════════════════════════════ */
 
   /* Rubis — Erreurs & Alertes Critiques */
@@ -155,7 +155,7 @@
   --titane-diamant-950: #0a0a0a;
 
   /* ═══════════════════════════════════════════════════════════════════
-     MODULES COGNITIFS v20 (Couleurs Vivantes)
+     MODULES COGNITIFS v15 (Couleurs Vivantes)
      ═══════════════════════════════════════════════════════════════════ */
 
   /* Helios — Énergie & Charge CPU */
@@ -183,10 +183,10 @@
   --memory-gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
 
   /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-     🌑 THEME TOKENS — DARK MODE (Default, v20 Premium)
+     🌑 THEME TOKENS — DARK MODE (Default, v15 Premium)
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-  /* Backgrounds — Profondeur Organique v20 */
+  /* Backgrounds — Profondeur Organique v15 */
   --bg-base: #0a0a0a;
   --bg-elevated: #0f0f0f;
   --bg-panel: #141414;
@@ -195,26 +195,26 @@
   --bg-hover: rgba(255, 255, 255, 0.04);
   --bg-active: rgba(255, 255, 255, 0.08);
 
-  /* Borders — Subtils & Élégants v20 */
+  /* Borders — Subtils & Élégants v15 */
   --border-subtle: rgba(255, 255, 255, 0.04);
   --border-default: rgba(255, 255, 255, 0.08);
   --border-medium: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.16);
   --border-accent: var(--color-primary-500);
 
-  /* Text — Hiérarchie Claire v20 */
+  /* Text — Hiérarchie Claire v15 */
   --text-primary: rgba(255, 255, 255, 0.95);
   --text-secondary: rgba(255, 255, 255, 0.70);
   --text-tertiary: rgba(255, 255, 255, 0.50);
   --text-disabled: rgba(255, 255, 255, 0.30);
   --text-inverse: #0a0a0a;
 
-  /* Glass Effects — Surfaces Vivantes v20 */
+  /* Glass Effects — Surfaces Vivantes v15 */
   --glass-blur: blur(12px);
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
 
-  /* Shadows — Profondeur Subtile v20 */
+  /* Shadows — Profondeur Subtile v15 */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.20);
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.25);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.30);
@@ -222,7 +222,7 @@
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.40);
   --shadow-inner: inset 0 0 8px rgba(255, 255, 255, 0.04);
 
-  /* Glow Effects — Vie Interne v20 */
+  /* Glow Effects — Vie Interne v15 */
   --glow-subtle: 0 0 12px rgba(255, 255, 255, 0.08);
   --glow-medium: 0 0 20px rgba(255, 255, 255, 0.12);
   --glow-strong: 0 0 32px rgba(255, 255, 255, 0.16);
@@ -240,7 +240,7 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Consolas', monospace;
 
-  /* Font Sizes — Système v20 (--text-*) */
+  /* Font Sizes — Système v15 (--text-*) */
   --text-xs: 0.75rem;      /* 12px */
   --text-sm: 0.875rem;     /* 14px */
   --text-base: 1rem;       /* 16px */
@@ -251,7 +251,7 @@
   --text-4xl: 2.25rem;     /* 36px */
   --text-5xl: 3rem;        /* 48px */
 
-  /* Alias v12 (--font-size-*) pour compatibilité */
+  /* Alias v15 (--font-size-*) pour compatibilité */
   --font-size-xs: var(--text-xs);
   --font-size-sm: var(--text-sm);
   --font-size-base: var(--text-base);
@@ -303,9 +303,9 @@
   --space-10: 2.5rem;   /* 40px */
   --space-12: 3rem;     /* 48px */
   --space-16: 4rem;     /* 64px */
-  --space-20: 5rem;     /* 80px (v12 only) */
+  --space-20: 5rem;     /* 80px (v15 only) */
 
-  /* Border Radius — v20 Premium */
+  /* Border Radius — v15 Premium */
   --radius-xs: 0.125rem;   /* 2px */
   --radius-sm: 0.25rem;    /* 4px */
   --radius-md: 0.5rem;     /* 8px */
@@ -328,7 +328,7 @@
      ⚡ ANIMATIONS & TRANSITIONS (Organiques & Fluides)
      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-  /* Durations — v20 + v12 combined */
+  /* Durations — v15 + v15 combined */
   --duration-instant: 80ms;
   --duration-fast: 150ms;
   --duration-base: 200ms;
@@ -355,7 +355,7 @@
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🌞 LIGHT MODE THEME (v12)
+   🌞 LIGHT MODE THEME (v15)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 [data-theme='light'] {
@@ -512,7 +512,7 @@ body {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   💫 ANIMATIONS KEYFRAMES (v20)
+   💫 ANIMATIONS KEYFRAMES (v15)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 /* Pulse Organique — Respiration Système */
@@ -595,7 +595,7 @@ body {
    🎨 UTILITY CLASSES
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* Glass Surface (v20) */
+/* Glass Surface (v15) */
 .glass-surface {
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
@@ -603,7 +603,7 @@ body {
   border: 1px solid var(--glass-border);
 }
 
-/* Glow Effects (v20) */
+/* Glow Effects (v15) */
 .glow-subtle {
   box-shadow: var(--glow-subtle);
 }
@@ -629,7 +629,7 @@ body {
   transition: all var(--duration-slow) var(--ease-out);
 }
 
-/* Animations (v20) */
+/* Animations (v15) */
 .animate-pulse {
   animation: pulse-organic 3s ease-in-out infinite;
 }

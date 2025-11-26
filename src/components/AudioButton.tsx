@@ -7,7 +7,7 @@
  */
 
 
-// TITANE∞ v12 - AudioButton Component
+// TITANE∞ v15 - AudioButton Component
 
 // Button component for text-to-speech functionality
 

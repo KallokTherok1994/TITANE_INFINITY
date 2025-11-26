@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v14.0 — System Vitals Panel
+ * TITANE∞ v15.0 — System Vitals Panel
  * ═══════════════════════════════════════
  *
  * Panneau de visualisation des métriques système en temps réel

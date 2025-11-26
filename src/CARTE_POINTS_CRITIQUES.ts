@@ -168,8 +168,8 @@
  * 8️⃣ STYLES GLOBAUX
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  *
- * Fichier : src/design-system/titane-v12.css
- * Emplacement : /home/titane/Documents/TITANE_INFINITY/src/design-system/titane-v12.css
+ * Fichier : src/design-system/titane-v15.css
+ * Emplacement : /home/titane/Documents/TITANE_INFINITY/src/design-system/titane-v15.css
  * Lignes critiques : 262-291
  *
  * Règles critiques :

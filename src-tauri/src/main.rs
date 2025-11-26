@@ -1,9 +1,9 @@
-// TITANE_INFINITY v∞ — Proprietary License
+// TITANE_INFINITY v16 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v∞ — MAIN ENTRY POINT
-//   Super-Prompts H→N: Security, Permissions, Encryption, Time-Travel
+//   TITANE∞ v16 — MAIN ENTRY POINT (Cognitive Layer)
+//   v15 Core + v16 Cognitive: Self-aware, Learning, Reasoning
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
@@ -19,7 +19,10 @@
 use tauri::Manager;
 
 // TITANE∞ command modules
-use titane_infinity::{control_panel_commands, mock_commands, secure_commands, time_commands};
+use titane_infinity::{
+    commands::cognitive_commands::CognitiveSystemState, control_panel_commands, mock_commands,
+    secure_commands, time_commands,
+};
 
 #[tokio::main]
 async fn main() {
@@ -27,11 +30,11 @@ async fn main() {
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
     println!("╔══════════════════════════════════════════════════════════════╗");
-    println!("║     TITANE∞ v∞ — SECURED + ENCRYPTED + TIME-TRAVEL          ║");
-    println!("║     Super-Prompts H, I, J, K, L, M, N Active                ║");
+    println!("║     TITANE∞ v16 — COGNITIVE OS ACTIVE                       ║");
+    println!("║     Reasoning + Learning + Self-Aware + Secure              ║");
     println!("╚══════════════════════════════════════════════════════════════╝");
 
-    log::info!("🔐 Starting TITANE∞ v∞ Security System...");
+    log::info!("🧠 Starting TITANE∞ v16 Cognitive System...");
 
     // ═══════════════════════════════════════════════════════════════
     // PRE-BOOT VALIDATION (Super-Prompt L4)
@@ -84,10 +87,23 @@ async fn main() {
     log::info!("✅ Encryption: AES-256-GCM + Ed25519");
     log::info!("✅ Sandbox: /userdata/imports/ ready");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE COGNITIVE SYSTEM v16
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🧠 Initializing Cognitive Layer v16...");
+    let cognitive_state = CognitiveSystemState::new();
+    log::info!("✅ Cognitive Layer v16: 4 engines active");
+    log::info!("   - AnalysisEngine: Pattern detection");
+    log::info!("   - ConsistencyEngine: Coherence management");
+    log::info!("   - IntegrationEngine: Signal fusion");
+    log::info!("   - EvolutionEngine: Learning & optimization");
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .manage(cognitive_state)
         .setup(|_app| {
             log::info!("✅ Tauri Builder initialized");
+            log::info!("✅ Cognitive System State managed");
 
             // Auto-open DevTools in debug mode
             #[cfg(debug_assertions)]

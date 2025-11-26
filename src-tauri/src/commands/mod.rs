@@ -1,8 +1,9 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v14 - Tauri Commands Central Hub                                    ║
+// ║ TITANE∞ v16 - Tauri Commands Central Hub (Cognitive Layer)                 ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
 pub mod devtools;
 pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
 pub mod engine_v14; // ✅ NEW: SingularityEngine v14 commands
@@ -14,6 +15,7 @@ pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
 
 // Re-export engine commands
+pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
 pub use engine_v14::*;
 pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands

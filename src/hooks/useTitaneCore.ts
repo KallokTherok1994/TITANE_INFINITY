@@ -7,7 +7,7 @@
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v12.0 - Core System Hook (Optimized)                                ║
+// ║ TITANE∞ v15.0 - Core System Hook (Optimized)                                ║
 // ║ React hook for TITANE∞ backend communication via Tauri v2                   ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 

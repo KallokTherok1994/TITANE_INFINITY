@@ -7,7 +7,7 @@
  */
 
 /**
- * TITANE∞ v12.0 - Type Constants
+ * TITANE∞ v15.0 - Type Constants
  * Constantes runtime pour types system.d.ts
  */
 

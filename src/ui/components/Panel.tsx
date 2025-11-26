@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v12 - Panel Component
+// TITANE∞ v15 - Panel Component
 import { ReactNode } from 'react';
 import './Panel.css';
 

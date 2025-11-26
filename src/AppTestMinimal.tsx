@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v17.3 — Test minimal d'affichage
+ * TITANE_INFINITY v15.3 — Test minimal d'affichage
  * À utiliser pour debug uniquement
  */
 

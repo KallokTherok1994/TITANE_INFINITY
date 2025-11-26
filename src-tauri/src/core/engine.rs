@@ -1,19 +1,20 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v15 — SINGULARITY ENGINE
-//   Unified engine architecture: Nexus + Harmonia + Sentinel + Memory
+//   TITANE∞ v16 — SINGULARITY ENGINE (Cognitive Layer)
+//   Unified engine: Nexus + Harmonia + Sentinel + Memory + Cognitive v16
 // ═══════════════════════════════════════════════════════════════
 
 use crate::core::state::SingularityState;
 use crate::core::types::*;
+use crate::cognitive::{AnalysisEngine, ConsistencyEngine, IntegrationEngine, EvolutionCognitiveEngine};
 use serde::{Deserialize, Serialize};
 
-/// SingularityEngine v15 - Main unified engine coordinating all modules
+/// SingularityEngine v16 - Main unified engine with cognitive layer
 ///
-/// Architecture v15:
-/// - Clean separation of concerns
-/// - Unified state management
-/// - Modular design (Nexus, Harmonia, Sentinel, Memory)
-/// - Zero legacy code
+/// Architecture v16:
+/// - v15 core (Nexus, Harmonia, Sentinel, Memory)
+/// - v16 cognitive layer (Analysis, Consistency, Integration, Evolution)
+/// - Reasoning loop support
+/// - Meta-mode capability
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingularityEngine {
     /// Global state v15
@@ -27,49 +28,63 @@ pub struct SingularityEngine {
 
     /// Engine running
     running: bool,
+
+    /// Cognitive mode active (v16)
+    #[serde(skip)]
+    cognitive_active: bool,
 }
 
 impl Default for SingularityEngine {
     fn default() -> Self {
         Self {
             state: SingularityState::new(),
-            version: "15.0.0".to_string(),
+            version: "16.0.0".to_string(),
             initialized: false,
             running: false,
+            cognitive_active: false,
         }
     }
 }
 
 impl SingularityEngine {
-    /// Create new SingularityEngine v15
+    /// Create new SingularityEngine v16
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Initialize the engine and all modules v15
+    /// Initialize the engine and all modules v16
     pub async fn init(&mut self) -> EngineResult<()> {
         if self.initialized {
             return Ok(());
         }
 
-        println!("🚀 SingularityEngine v15 initializing...");
+        println!("🚀 SingularityEngine v16 initializing...");
 
-        // Initialize all modules v15 (clean sync init - no borrow issues)
+        // Initialize v15 core modules (clean sync init - no borrow issues)
         self.state.nexus.init()?;
         self.state.memory.init()?;
         self.state.harmonia.init()?;
         self.state.sentinel.init()?;
 
+        // Activate cognitive layer v16
+        self.cognitive_active = true;
+
         self.initialized = true;
         self.running = true;
 
-        println!("✅ SingularityEngine v15 initialized successfully");
+        println!("✅ SingularityEngine v16 initialized successfully");
         println!("   - Nexus v15: Ready");
         println!("   - Memory v15: Ready");
         println!("   - Harmonia v15: Ready");
         println!("   - Sentinel v15: Ready");
+        println!("   - Cognitive v16: Active");
 
         Ok(())
+    }
+
+    /// Check if cognitive layer is active
+    pub fn is_cognitive_active(&self) -> bool {
+        self.cognitive_active
     }
 
     /// Execute one engine tick (update all modules)

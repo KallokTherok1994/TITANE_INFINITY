@@ -8,7 +8,7 @@
 
 /**
  * ============================================================================
- * SERVICES API UNIFIÉS - COUCHE FUSION FRONTEND/BACKEND v17.3.0
+ * SERVICES API UNIFIÉS - COUCHE FUSION FRONTEND/BACKEND v15.3.0
  * ============================================================================
  *
  * Centralisation de TOUS les appels Tauri dans une couche de services typés.
@@ -22,7 +22,7 @@
  *   ├── system.ts       → System (santé, métriques, config, restart)
  *   └── evolution.ts    → Evolution Engine (cycles, suggestions, patterns, feedback)
  *
- * Conformément à DIAGNOSTIC_FUSION_v17.3.0.md Phase 1
+ * Conformément à DIAGNOSTIC_FUSION_v15.3.0.md Phase 1
  */
 
 // ============================================================================

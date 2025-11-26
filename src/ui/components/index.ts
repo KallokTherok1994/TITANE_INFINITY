@@ -17,7 +17,7 @@ export { Modal } from './Modal';
 export { Tabs } from './Tabs';
 export { Badge } from './Badge';
 
-// Design System v17.1 - New Primitives
+// Design System v15.1 - New Primitives
 export { Switch } from './Switch';
 export { Checkbox } from './Checkbox';
 export { Radio, RadioGroup } from './Radio';

@@ -1,11 +1,11 @@
 /**
- * TITANE_INFINITY v14 — Proprietary License
+ * TITANE_INFINITY v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v14 — USE CHAT STREAMING (Streaming Tauri Réel)
+ *   TITANE∞ v15 — USE CHAT STREAMING (Streaming Tauri Réel)
  *   Hook isolé: Streaming temps réel via tauriClient
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -34,7 +34,7 @@ export interface UseChatStreamingReturn {
 }
 
 /**
- * Hook streaming isolé v14
+ * Hook streaming isolé v15
  * - Streaming Tauri RÉEL (événements chunk par chunk)
  * - Provider detection temps réel
  * - Timeout dynamique par provider (Gemini 60s, Ollama 45s, Local 15s)
@@ -53,7 +53,7 @@ export function useChatStreaming(
   const startStream = useCallback(
     async (message: string, _history: AIMessage[] = []) => {
       console.log('\n╔════════════════════════════════════════════════════════════╗');
-      console.log('║  USE CHAT STREAMING v14: Tauri Real Stream                ║');
+      console.log('║  USE CHAT STREAMING v15: Tauri Real Stream                ║');
       console.log('╚════════════════════════════════════════════════════════════╝');
 
       setIsStreaming(true);
