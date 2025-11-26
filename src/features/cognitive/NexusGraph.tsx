@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Nexus Graph Visualization
+ * TITANE∞ v15 - Nexus Graph Visualization
  * Visualisation du graphe de connaissances Nexus
  * ═══════════════════════════════════════════════════════════════
  */

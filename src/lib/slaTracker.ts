@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 6: SLA Tracking
+ * TITANE∞ v15 - Phase 6: SLA Tracking
  * Suivi SLO/SLA avec violations, reports, uptime
  * ═══════════════════════════════════════════════════════════════
  */

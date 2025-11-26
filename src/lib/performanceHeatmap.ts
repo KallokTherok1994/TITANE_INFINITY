@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 7: Performance Heatmap
+ * TITANE∞ v15 - Phase 7: Performance Heatmap
  * Heatmap de latence par service × heure
  * ═══════════════════════════════════════════════════════════════
  */

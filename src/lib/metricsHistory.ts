@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 5: Metrics History
+ * TITANE∞ v15 - Phase 5: Metrics History
  * Historique des métriques pour graphiques temporels
  * ═══════════════════════════════════════════════════════════════
  */

@@ -1,17 +1,26 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — SINGULARITY ENGINE
-//   Main unified engine for TITANE∞ architecture
+//   TITANE∞ v15 — SINGULARITY ENGINE
+//   Unified engine architecture: Nexus + Harmonia + Sentinel + Memory
 // ═══════════════════════════════════════════════════════════════
 
 use crate::core::state::SingularityState;
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
-/// SingularityEngine - Main engine coordinating all modules
+/// SingularityEngine v15 - Main unified engine coordinating all modules
+///
+/// Architecture v15:
+/// - Clean separation of concerns
+/// - Unified state management
+/// - Modular design (Nexus, Harmonia, Sentinel, Memory)
+/// - Zero legacy code
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingularityEngine {
-    /// Global state
+    /// Global state v15
     pub state: SingularityState,
+
+    /// Engine version
+    pub version: String,
 
     /// Engine initialized
     initialized: bool,
@@ -24,6 +33,7 @@ impl Default for SingularityEngine {
     fn default() -> Self {
         Self {
             state: SingularityState::new(),
+            version: "15.0.0".to_string(),
             initialized: false,
             running: false,
         }
@@ -31,31 +41,33 @@ impl Default for SingularityEngine {
 }
 
 impl SingularityEngine {
-    /// Create new SingularityEngine
+    /// Create new SingularityEngine v15
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Initialize the engine and all modules
+    /// Initialize the engine and all modules v15
     pub async fn init(&mut self) -> EngineResult<()> {
         if self.initialized {
             return Ok(());
         }
 
-        println!("🚀 SingularityEngine v14 initializing (stub mode)...");
+        println!("🚀 SingularityEngine v15 initializing...");
 
-        // Skip complex initialization in mock backend mode
-        // All modules use default values from SingularityState::new()
-        // This avoids borrow checker issues with &mut self.state
+        // Initialize all modules v15 (clean sync init - no borrow issues)
+        self.state.nexus.init()?;
+        self.state.memory.init()?;
+        self.state.harmonia.init()?;
+        self.state.sentinel.init()?;
 
         self.initialized = true;
         self.running = true;
 
-        println!("✅ SingularityEngine v14 initialized successfully");
-        println!("   - Nexus: Ready");
-        println!("   - Memory: Ready");
-        println!("   - Harmonia: Ready");
-        println!("   - Sentinel: Ready");
+        println!("✅ SingularityEngine v15 initialized successfully");
+        println!("   - Nexus v15: Ready");
+        println!("   - Memory v15: Ready");
+        println!("   - Harmonia v15: Ready");
+        println!("   - Sentinel v15: Ready");
 
         Ok(())
     }

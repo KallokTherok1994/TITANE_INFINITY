@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Cognitive Modules Index
+ * TITANE∞ v15 - Cognitive Modules Index
  * Export centralisé des modules cognitifs
  * ═══════════════════════════════════════════════════════════════
  */

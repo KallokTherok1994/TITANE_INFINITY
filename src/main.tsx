@@ -51,7 +51,7 @@ if (typeof window.__TAURI__ !== 'undefined') {
 // 🚀 BOOT SEQUENCE START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 console.log('\n╔════════════════════════════════════════════════════════════════╗');
-console.log('║  🌌 TITANE∞ v17.3 - BOOT SEQUENCE                             ║');
+console.log('║  🌌 TITANE∞ v15 - BOOT SEQUENCE                             ║');
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 console.log('[1/5] 🦀 Backend: 40+ Rust modules | 29 Tauri Commands');

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — MEMORY MODULE
+//   TITANE∞ v15 — MEMORY MODULE
 //   Persistent memory and state management
 // ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ use crate::core::state::SingularityState;
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
-/// Memory Module - Persistent memory system
+/// Memory Module v15 - Persistent memory system
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryModule {
     /// Module health
@@ -39,13 +39,13 @@ impl Default for MemoryModule {
 }
 
 impl MemoryModule {
-    /// Create new Memory module
+    /// Create new Memory module v15
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Initialize the Memory module
-    pub async fn init(&mut self, _state: &mut SingularityState) -> EngineResult<()> {
+    /// Initialize the Memory module v15 (no external state needed)
+    pub fn init(&mut self) -> EngineResult<()> {
         if self.initialized {
             return Ok(());
         }

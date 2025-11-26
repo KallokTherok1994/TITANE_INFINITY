@@ -64,6 +64,9 @@ export default defineConfig({
       '@types': resolve(__dirname, './src/types'),
       '@assets': resolve(__dirname, './src/assets'),
       '@styles': resolve(__dirname, './src/styles'),
+      // Fix Tauri v2 API imports resolution
+      '@tauri-apps/api/core': resolve(__dirname, './node_modules/@tauri-apps/api/core.js'),
+      '@tauri-apps/api/event': resolve(__dirname, './node_modules/@tauri-apps/api/event.js'),
     },
   },
 
@@ -130,7 +133,7 @@ export default defineConfig({
           }
         },
       },
-      external: ['@tauri-apps/api/tauri', '@tauri-apps/api/event'],
+      // external removed - Tauri API now bundled with proper alias resolution
     },
   },
 

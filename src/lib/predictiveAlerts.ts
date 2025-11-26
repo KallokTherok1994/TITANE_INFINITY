@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 7: Predictive Alerts
+ * TITANE∞ v15 - Phase 7: Predictive Alerts
  * Prédiction de tendances avec régression linéaire
  * ═══════════════════════════════════════════════════════════════
  */

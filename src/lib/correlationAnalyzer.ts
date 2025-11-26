@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 6: Correlation Analysis
+ * TITANE∞ v15 - Phase 6: Correlation Analysis
  * Analyse corrélations entre services (Pearson, cascade failures)
  * ═══════════════════════════════════════════════════════════════
  */

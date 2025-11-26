@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3 - TAURI API TYPES
+ * TITANE∞ v15 - TAURI API TYPES
  * Types TypeScript stricts pour toutes les commandes Tauri
  * ═══════════════════════════════════════════════════════════════
  */

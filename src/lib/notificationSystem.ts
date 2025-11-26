@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 7: Notifications System
+ * TITANE∞ v15 - Phase 7: Notifications System
  * Browser notifications + sound alerts + toast messages
  * ═══════════════════════════════════════════════════════════════
  */

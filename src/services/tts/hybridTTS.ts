@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v17.3.0 — HYBRID TTS SERVICE
+ *   TITANE∞ v15 — HYBRID TTS SERVICE
  *   Service TTS hybride avec fallback Web Speech API
  *   Priorité: Tauri Backend → Web Speech API → Silence
  * ═══════════════════════════════════════════════════════════════════

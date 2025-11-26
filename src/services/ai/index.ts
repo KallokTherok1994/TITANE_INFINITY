@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE∞ v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v17.3.0 — AI SERVICES INDEX
+ *   TITANE∞ v15 — AI SERVICES INDEX
  *   Export centralisé des services IA
  * ═══════════════════════════════════════════════════════════════════
  */

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Service Invoker
+ * TITANE∞ v15 - Service Invoker
  * Retry, timeout, et error handling pour tous les services Tauri
  * ═══════════════════════════════════════════════════════════════
  */

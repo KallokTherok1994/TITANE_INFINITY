@@ -1,7 +1,6 @@
-// ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.3.0 - Ollama Local AI (SECURED)
-//   Local AI inference with ShellGuard protection
-// ═══════════════════════════════════════════════════════════════
+// TITANE∞ v15 - Ollama Local AI (SECURED)
+// Local AI inference with ShellGuard protection
+// Architecture v15: Clean, documented, production-ready
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use crate::security::shell_guard::ShellGuard;

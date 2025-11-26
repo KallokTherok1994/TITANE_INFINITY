@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — SENTINEL MODULE
+//   TITANE∞ v15 — SENTINEL MODULE
 //   System monitoring and protection
 // ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ use crate::core::state::SingularityState;
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
-/// Sentinel Module - Monitoring and protection
+/// Sentinel Module v15 - Monitoring and protection
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SentinelModule {
     /// Module health
@@ -43,13 +43,13 @@ impl Default for SentinelModule {
 }
 
 impl SentinelModule {
-    /// Create new Sentinel module
+    /// Create new Sentinel module v15
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Initialize the Sentinel module
-    pub async fn init(&mut self, _state: &mut SingularityState) -> EngineResult<()> {
+    /// Initialize the Sentinel module v15 (no external state needed)
+    pub fn init(&mut self) -> EngineResult<()> {
         if self.initialized {
             return Ok(());
         }

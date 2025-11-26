@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Metrics Alert System
+ * TITANE∞ v15 - Metrics Alert System
  * Détection seuils critiques + toast notifications
  * ═══════════════════════════════════════════════════════════════
  */

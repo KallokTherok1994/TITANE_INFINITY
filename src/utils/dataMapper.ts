@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15.7 — DATA MAPPER & SANITIZER
+ *   TITANE∞ v15 — DATA MAPPER & SANITIZER
  *   Conversion Backend Rust → Frontend React (Safe Rendering)
  * ═══════════════════════════════════════════════════════════════════
  */

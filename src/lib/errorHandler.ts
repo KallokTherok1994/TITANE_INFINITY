@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Error Handler
+ * TITANE∞ v15 - Error Handler
  * Gestion centralisée erreurs + toast notifications
  * ═══════════════════════════════════════════════════════════════
  */

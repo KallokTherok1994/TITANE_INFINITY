@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v17.3.0 — VOICE CONTROL PANEL
+ *   TITANE∞ v15 — VOICE CONTROL PANEL
  *   Panneau de contrôle TTS avec status et configuration
  * ═══════════════════════════════════════════════════════════════════
  */

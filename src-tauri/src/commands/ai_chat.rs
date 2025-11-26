@@ -1,6 +1,6 @@
-// TITANE∞ v14 - AI Chat Commands
+// TITANE∞ v15 - AI Chat Commands
 // Tauri commands for AI interaction and Voice Mode
-// Migrated to SingularityEngine CoreCollection architecture
+// Clean architecture v15: Unified SingularityEngine, documented, production-ready
 
 use crate::ai::router::AIRouter;
 use crate::ai::{AIRequest, AIResponse};
@@ -18,7 +18,7 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::State;
 
-// Global state for AI Chat system (v14)
+// Global state for AI Chat system (v15)
 pub struct AIChatState {
     pub ai_router: Arc<Mutex<AIRouter>>,
     pub memory_storage: Arc<Mutex<MemoryStorage>>,
@@ -28,7 +28,7 @@ pub struct AIChatState {
     pub audio_recorder: Arc<Mutex<AudioRecorder>>,
     pub asr_engine: Arc<Mutex<ASREngine>>,
     pub vad: Arc<Mutex<VoiceActivityDetector>>,
-    /// v14 Unified Core Collection (Bridge v12↔v14)
+    /// v15 Unified Core Collection (Clean architecture)
     pub core_collection: Arc<CoreCollection>,
 }
 
@@ -57,7 +57,7 @@ impl AIChatState {
         let asr_engine = Arc::new(Mutex::new(ASREngine::auto()));
         let vad = Arc::new(Mutex::new(VoiceActivityDetector::new()));
 
-        // v14 Unified Core Collection (replaces individual v12 modules)
+        // v15 Unified Core Collection (Clean architecture)
         let core_collection = Arc::new(CoreCollection::default());
 
         Self {
@@ -81,9 +81,9 @@ pub async fn ai_query(
     temperature: Option<f32>,
     max_tokens: Option<usize>,
 ) -> Result<String, String> {
-    log::info!("[AI Chat v14] Query received: {}", prompt);
+    log::info!("[AI Chat v15] Query received: {}", prompt);
 
-    // Security scan with Sentinel (v14 - via CoreCollection)
+    // Security scan with Sentinel (v15 - via CoreCollection)
     let scan_result = {
         let sentinel_adapter = state.core_collection.sentinel();
         let sentinel = sentinel_adapter.lock().unwrap();
@@ -91,23 +91,23 @@ pub async fn ai_query(
     };
 
     if !scan_result.safe {
-        log::warn!("[Sentinel v14] Security scan failed: {:?}", scan_result.threats);
+        log::warn!("[Sentinel v15] Security scan failed: {:?}", scan_result.threats);
         // Log to SingularityEngine Sentinel module
         if let Ok(engine) = state.core_collection.engine().lock() {
             let sentinel_mod = engine.sentinel();
-            log::info!("[Sentinel v14] Alert count: {}", sentinel_mod.alert_count);
+            log::info!("[Sentinel v15] Alert count: {}", sentinel_mod.alert_count);
         }
         return Err("Input rejected by security scan".to_string());
     }
 
-    // Analyze context with Harmonia (v14 - via CoreCollection)
+    // Analyze context with Harmonia (v15 - via CoreCollection)
     let context_analysis = {
         let harmonia_adapter = state.core_collection.harmonia();
         let harmonia = harmonia_adapter.lock().unwrap();
         harmonia.analyze_context(&prompt)
     };
 
-    // Create AI request
+    // Create AI request v15
     let request = AIRequest {
         prompt: scan_result.sanitized,
         temperature: temperature.unwrap_or(0.7),
@@ -122,16 +122,16 @@ pub async fn ai_query(
         .await
         .map_err(|e| e.to_string())?;
 
-    log::info!("[AI Router v14] Response from {:?} ({} tokens)", response.provider, response.tokens);
+    log::info!("[AI Router v15] Response from {:?} ({} tokens)", response.provider, response.tokens);
 
-    // Balance response with Harmonia (v14 - via CoreCollection)
+    // Balance response with Harmonia (v15 - via CoreCollection)
     let balanced_response = {
         let harmonia_adapter = state.core_collection.harmonia();
         let harmonia = harmonia_adapter.lock().unwrap();
         harmonia.balance_response(&response.content, &context_analysis)
     };
 
-    // Save to memory + sync to MemoryModule v14
+    // Save to memory + sync to MemoryModule v15
     if let Ok(mut conv_opt) = state.current_conversation.lock() {
         if let Some(conv) = conv_opt.as_mut() {
             conv.add_entry(MessageRole::User, prompt, 0);
@@ -140,14 +140,14 @@ pub async fn ai_query(
             // Save to persistent storage
             let storage = state.memory_storage.lock().unwrap();
             if let Err(e) = storage.save_conversation(conv) {
-                log::warn!("[Memory v14] Failed to save conversation: {}", e);
+                log::warn!("[Memory v15] Failed to save conversation: {}", e);
             } else {
-                log::info!("[Memory v14] Conversation saved: {}", conv.id);
+                log::info!("[Memory v15] Conversation saved: {}", conv.id);
 
-                // Sync to MemoryModule in SingularityEngine
+                // Sync to MemoryModule in SingularityEngine v15
                 if let Ok(engine) = state.core_collection.engine().lock() {
                     let memory_mod = engine.memory();
-                    log::info!("[Memory v14] Memory count: {}, capacity: {:.2}%",
+                    log::info!("[Memory v15] Memory count: {}, capacity: {:.2}%",
                         memory_mod.memory_count, memory_mod.capacity_usage * 100.0);
                 }
             }

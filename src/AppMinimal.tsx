@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3 - APP MINIMAL (TEST D'AFFICHAGE)
+ * TITANE∞ v15 - APP MINIMAL (TEST D'AFFICHAGE)
  * Version minimale pour valider que React s'affiche dans Tauri
  * ═══════════════════════════════════════════════════════════════
  */

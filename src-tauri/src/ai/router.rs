@@ -1,5 +1,6 @@
-// TITANE∞ v12 - AI Router
+// TITANE∞ v15 - AI Router
 // Intelligent routing with automatic fallback (Gemini → Ollama → Offline)
+// Clean architecture v15: simplified, maintainable, documented
 
 use super::gemini::GeminiClient;
 use super::ollama::OllamaClient;
@@ -10,11 +11,17 @@ use tokio::sync::RwLock;
 
 #[derive(Debug, Clone)]
 pub enum AIRouterStatus {
-    Online,
-    Offline,
-    Degraded,
+    Online,      // Gemini available
+    Offline,     // No provider available
+    Degraded,    // Only Ollama available
 }
 
+/// AIRouter v15 - Central AI request coordinator
+///
+/// Cascade strategy:
+/// 1. Try Gemini API (if internet + API key)
+/// 2. Fallback to Ollama (localhost:11434)
+/// 3. Return error if both fail
 pub struct AIRouter {
     gemini_client: Option<Arc<GeminiClient>>,
     ollama_client: Arc<OllamaClient>,
@@ -22,6 +29,7 @@ pub struct AIRouter {
 }
 
 impl AIRouter {
+    /// Create new AIRouter v15
     pub fn new(gemini_api_key: Option<String>, ollama_model: Option<String>) -> Self {
         let gemini_client = gemini_api_key.map(|key| Arc::new(GeminiClient::new(key)));
         let ollama_client = Arc::new(OllamaClient::new(ollama_model));
@@ -33,10 +41,12 @@ impl AIRouter {
         }
     }
 
+    /// Get current router status
     pub async fn get_status(&self) -> AIRouterStatus {
         self.status.read().await.clone()
     }
 
+    /// Check internet connectivity (fast timeout)
     async fn check_internet(&self) -> bool {
         tokio::time::timeout(
             std::time::Duration::from_secs(3),
@@ -46,6 +56,7 @@ impl AIRouter {
         .is_ok()
     }
 
+    /// Update router status based on available providers
     async fn update_status(&self) {
         let has_internet = self.check_internet().await;
         let has_gemini = self
@@ -66,31 +77,32 @@ impl AIRouter {
         *self.status.write().await = new_status;
     }
 
+    /// Execute AI query with automatic cascade fallback v15
     pub async fn query(&self, request: AIRequest) -> AIResult<AIResponse> {
         self.update_status().await;
 
         log::info!(
-            "[AI Router v14] Query: prompt_len={}, temp={}, max_tokens={}",
+            "[AI Router v15] Query: prompt_len={}, temp={}, max_tokens={}",
             request.prompt.len(),
             request.temperature,
             request.max_tokens
         );
 
-        // Try Gemini first if available
+        // 1. Try Gemini first if available
         if let Some(gemini) = &self.gemini_client {
             if self.check_internet().await {
-                info!("[AI Router v14] Routing to Gemini API (primary)");
+                info!("[AI Router v15] Trying Gemini API (primary)");
                 match gemini.query(&request).await {
                     Ok(response) => {
                         log::info!(
-                            "[AI Router v14] ✓ Gemini success: {} tokens",
+                            "[AI Router v15] ✓ Gemini success: {} tokens",
                             response.tokens
                         );
                         return Ok(response);
                     }
                     Err(e) => {
                         warn!(
-                            "[AI Router v14] ✗ Gemini failed: {}, falling back to Ollama",
+                            "[AI Router v15] ✗ Gemini failed: {}, fallback to Ollama",
                             e
                         );
                     }

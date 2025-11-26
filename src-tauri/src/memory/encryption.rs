@@ -1,4 +1,6 @@
-// TITANE∞ v12 - Memory Encryption
+// TITANE∞ v15 - Memory Encryption
+// AES-256-GCM encryption for conversation data
+// Clean architecture v15: documented, production-ready
 // AES-256-GCM encryption with Argon2id key derivation
 
 use super::{MemoryError, MemoryResult};

@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Helios Visualization
+ * TITANE∞ v15 - Helios Visualization
  * Module de visualisation du système Helios (analyse d'état)
  * ═══════════════════════════════════════════════════════════════
  */

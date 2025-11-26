@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v13 — Proprietary License
+ * TITANE∞ v15 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Chat Page
+ * TITANE∞ v15 - Chat Page
  * Interface de chat avec contexte cognitif
  * ═══════════════════════════════════════════════════════════════
  */

@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3 - LOADING SCREEN
+ * TITANE∞ v15 - LOADING SCREEN
  * Écran de chargement pendant l'initialisation des engines
  * ═══════════════════════════════════════════════════════════════
  */

@@ -1,5 +1,6 @@
-// TITANE∞ v12 - AI Module
+// TITANE∞ v15 - AI Module
 // Multi-provider AI system with automatic fallback (Gemini → Ollama)
+// Architecture v15: Clean, documented, production-ready
 
 pub mod gemini;
 pub mod ollama;
@@ -7,6 +8,7 @@ pub mod router;
 
 use serde::{Deserialize, Serialize};
 
+/// AI Request structure v15
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIRequest {
     pub prompt: String,
@@ -15,6 +17,7 @@ pub struct AIRequest {
     pub stream: bool,
 }
 
+/// AI Response structure v15
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIResponse {
     pub content: String,
@@ -23,13 +26,15 @@ pub struct AIResponse {
     pub tokens: usize,
 }
 
+/// AI Provider enum v15
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AIProvider {
-    Gemini,
-    Ollama,
-    Offline,
+    Gemini,      // Google Gemini API
+    Ollama,      // Local Ollama (localhost:11434)
+    Offline,     // Fallback mode (basic responses)
 }
 
+/// AI Error types v15
 #[derive(Debug)]
 pub enum AIError {
     NetworkError(String),
@@ -56,15 +61,15 @@ impl std::error::Error for AIError {}
 pub type AIResult<T> = Result<T, AIError>;
 
 // ═══════════════════════════════════════════════════════════════
-// ✅ v∞.C - Analyse intelligente de fichiers
+// ✅ v15 - File analysis (intelligent summary generation)
 // ═══════════════════════════════════════════════════════════════
 
-/// Analyser un fichier texte et générer un résumé intelligent
+/// Analyze text file and generate intelligent summary
 pub async fn analyze_file(text: &str) -> Result<String, String> {
     generate_local_summary(text)
 }
 
-/// Générer un résumé local intelligent
+/// Generate local intelligent summary (no AI needed)
 fn generate_local_summary(text: &str) -> Result<String, String> {
     if text.is_empty() {
         return Ok("Fichier vide.".to_string());
@@ -74,10 +79,8 @@ fn generate_local_summary(text: &str) -> Result<String, String> {
     let words = text.split_whitespace().count();
     let chars = text.len();
 
-    // Détecter le type de contenu
+    // Detect content type
     let content_type = detect_content_type(text);
-
-    // Construire résumé contextuel
     let summary = match content_type.as_str() {
         "code-rust" => {
             let functions = count_functions_rust(text);

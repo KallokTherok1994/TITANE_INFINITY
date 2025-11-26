@@ -24,7 +24,7 @@ export function AppTestMinimal() {
     >
       <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
       <h1 style={{ fontSize: '3rem', fontWeight: 'bold', margin: 0, marginBottom: '1rem' }}>
-        TITANE∞ v17.3
+        TITANE∞ v15
       </h1>
       <p style={{ fontSize: '1.5rem', opacity: 0.9, margin: 0, marginBottom: '2rem' }}>
         React monté avec succès !

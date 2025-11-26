@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Chat Input
+ * TITANE∞ v15 - Chat Input
  * Input de chat avec suggestions et auto-complete
  * ═══════════════════════════════════════════════════════════════
  */

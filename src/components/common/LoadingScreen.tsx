@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3 - Loading Screen
+ * TITANE∞ v15 - Loading Screen
  * Écran de chargement élégant pendant l'initialisation
  * ═══════════════════════════════════════════════════════════════
  */
@@ -67,7 +67,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
           backgroundClip: 'text',
         }}
       >
-        TITANE∞ v17.3
+        TITANE∞ v15
       </h1>
 
       {/* Message */}

@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — NEXUS MODULE
+//   TITANE∞ v15 — NEXUS MODULE
 //   Central coordination and orchestration
 // ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ use crate::core::state::SingularityState;
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
-/// Nexus Module - Central coordinator
+/// Nexus Module v15 - Central coordinator
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NexusModule {
     /// Module health
@@ -39,13 +39,13 @@ impl Default for NexusModule {
 }
 
 impl NexusModule {
-    /// Create new Nexus module
+    /// Create new Nexus module v15
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Initialize the Nexus module
-    pub async fn init(&mut self, _state: &mut SingularityState) -> EngineResult<()> {
+    /// Initialize the Nexus module v15 (no external state needed)
+    pub fn init(&mut self) -> EngineResult<()> {
         if self.initialized {
             return Ok(());
         }

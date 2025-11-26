@@ -1,4 +1,6 @@
-// TITANE∞ v12 - Memory Module
+// TITANE∞ v15 - Memory Module
+// Persistent conversation storage with encryption
+// Architecture v15: Clean, documented, versioning support
 // Encrypted persistent conversational memory with AES-256-GCM + Argon2id
 
 pub mod encryption;

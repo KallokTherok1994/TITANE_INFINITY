@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — HARMONIA MODULE
+//   TITANE∞ v15 — HARMONIA MODULE
 //   System harmony and balance management
 // ═══════════════════════════════════════════════════════════════
 
@@ -7,7 +7,7 @@ use crate::core::state::SingularityState;
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
-/// Harmonia Module - Harmony and balance
+/// Harmonia Module v15 - Harmony and balance
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HarmoniaModule {
     /// Module health
@@ -39,13 +39,13 @@ impl Default for HarmoniaModule {
 }
 
 impl HarmoniaModule {
-    /// Create new Harmonia module
+    /// Create new Harmonia module v15
     pub fn new() -> Self {
         Self::default()
     }
 
-    /// Initialize the Harmonia module
-    pub async fn init(&mut self, _state: &mut SingularityState) -> EngineResult<()> {
+    /// Initialize the Harmonia module v15 (no external state needed)
+    pub fn init(&mut self) -> EngineResult<()> {
         if self.initialized {
             return Ok(());
         }

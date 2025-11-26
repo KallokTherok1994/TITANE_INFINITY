@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 6: Anomaly Detection
+ * TITANE∞ v15 - Phase 6: Anomaly Detection
  * Détection patterns anormaux avec ML (Z-score, baseline dynamique)
  * ═══════════════════════════════════════════════════════════════
  */

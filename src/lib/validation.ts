@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Service Validation Schemas
+ * TITANE∞ v15 - Service Validation Schemas
  * Schemas Zod pour validation responses Tauri backend
  * ═══════════════════════════════════════════════════════════════
  */

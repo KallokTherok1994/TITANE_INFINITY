@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3 - SYSTEM ERROR PAGE
+ * TITANE∞ v15 - SYSTEM ERROR PAGE
  * Page d'erreur système pour problèmes backend/services
  * ═══════════════════════════════════════════════════════════════
  */
@@ -287,7 +287,7 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
               margin: 0,
             }}
           >
-            TITANE∞ v17.3 | Error Recovery System
+            TITANE∞ v15 | Error Recovery System
           </p>
         </div>
       </div>

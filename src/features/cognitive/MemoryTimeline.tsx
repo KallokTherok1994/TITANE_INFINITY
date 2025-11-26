@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Memory Core Timeline
+ * TITANE∞ v15 - Memory Core Timeline
  * Timeline des entrées mémoire avec recherche sémantique
  * ═══════════════════════════════════════════════════════════════
  */

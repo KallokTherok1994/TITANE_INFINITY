@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Talent Tree
+ * TITANE∞ v15 - Talent Tree
  * Arbre de compétences interactif avec déblocage progressif
  * ═══════════════════════════════════════════════════════════════
  */

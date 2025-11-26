@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "19.2.2",
-  "description": "TITANE_INFINITY v19.2.2 - Backend Migration v14 Complete (9/9 phases) + 49 Tauri Handlers + Production Ready",
+  "version": "15.0.0",
+  "description": "TITANE∞ v15.0.0 - Unified System: Clean Architecture + AI Pipeline v15 + Memory v15 + Design System v15 + Production Ready",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {

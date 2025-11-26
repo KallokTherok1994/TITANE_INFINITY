@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.3.0 - Phase 8: Accessibility Utilities
+ * TITANE∞ v15 - Phase 8: Accessibility Utilities
  * WCAG 2.1 AA compliance helpers
  * ═══════════════════════════════════════════════════════════════
  */

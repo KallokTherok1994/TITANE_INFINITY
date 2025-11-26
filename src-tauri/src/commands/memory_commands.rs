@@ -1,13 +1,12 @@
-// ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — MEMORY COMMANDS
-//   Frontend-accessible memory management commands
-// ═══════════════════════════════════════════════════════════════
+// TITANE∞ v15 — MEMORY COMMANDS
+// Frontend-accessible memory management commands
+// Architecture v15: Clean, documented, production-ready
 
 use crate::commands::ai_chat::AIChatState;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 
-/// Memory key-value entry
+/// Memory key-value entry v15
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryEntry {
     pub key: String,
@@ -15,13 +14,13 @@ pub struct MemoryEntry {
     pub timestamp: i64,
 }
 
-/// Get memory value by key
+/// Get memory value by key (v15)
 #[tauri::command]
 pub async fn memory_get(
     state: State<'_, AIChatState>,
     key: String,
 ) -> Result<Option<String>, String> {
-    log::info!("[Memory v14] memory_get: key={}", key);
+    log::info!("[Memory v15] memory_get: key={}", key);
 
     let storage = state.memory_storage.lock().unwrap();
 
@@ -40,16 +39,16 @@ pub async fn memory_get(
     }
 }
 
-/// Set memory value by key
+/// Set memory value by key (v15)
 #[tauri::command]
 pub async fn memory_set(
     state: State<'_, AIChatState>,
     key: String,
     value: String,
 ) -> Result<(), String> {
-    log::info!("[Memory v14] memory_set: key={}, value_len={}", key, value.len());
+    log::info!("[Memory v15] memory_set: key={}, value_len={}", key, value.len());
 
-    // For now, store as conversation title
+    // Store as conversation with key as title
     let mut conversation = crate::memory::model::Conversation::new(key.clone());
     conversation.add_entry(
         crate::memory::model::MessageRole::System,
@@ -62,12 +61,12 @@ pub async fn memory_set(
         .map_err(|e| format!("Failed to save memory: {}", e))
 }
 
-/// Get memory statistics
+/// Get memory statistics (v15)
 #[tauri::command]
 pub async fn memory_get_stats(
     state: State<'_, AIChatState>,
 ) -> Result<String, String> {
-    log::info!("[Memory v14] memory_get_stats");
+    log::info!("[Memory v15] memory_get_stats");
 
     let storage = state.memory_storage.lock().unwrap();
 

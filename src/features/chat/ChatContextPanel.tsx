@@ -1,6 +1,6 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v17.1 - Chat Context Panel
+ * TITANE∞ v15 - Chat Context Panel
  * Panneau latéral affichant le contexte cognitif pendant le chat
  * ═══════════════════════════════════════════════════════════════
  */
