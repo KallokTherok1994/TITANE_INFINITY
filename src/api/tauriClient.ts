@@ -7,24 +7,28 @@
  */
 
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v15.0 - Tauri Client Wrapper                                        ║
+// ║ TITANE∞ v17.0 - Tauri Client Wrapper (SECURED)                            ║
 // ║ Type-safe communication layer with automatic error handling                 ║
+// ║ Intégration module security: whitelist, anti-injection, anti-loop          ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke, type SecureInvokeOptions } from '../lib/security';
 
 /**
  * Unified Tauri command invocation with type safety
  *
- * Wraps the Tauri invoke() API with:
+ * Wraps secureInvoke with:
+ * - Command whitelist validation
+ * - Anti-injection protection
+ * - Anti-loop detection
  * - Automatic error handling and logging
  * - Type-safe request/response
- * - Retry logic for connection failures
  * - Consistent error message formatting
  *
  * @template T - Expected response type
  * @param cmd - Command name (must match backend #[tauri::command])
  * @param payload - Optional command payload
+ * @param validator - Optional type guard for response validation
  * @returns Promise resolving to typed response
  * @throws Error with formatted message on failure
  *
@@ -33,16 +37,17 @@ import { invoke } from '@tauri-apps/api/core';
  * // Simple command without payload
  * const status = await tauri<SystemStatus>('get_system_status');
  *
- * // Command with payload
- * await tauri<void>('memory_save_entry', { entry: 'data' });
+ * // Command with payload and validator
+ * await tauri<MemoryState>('memory_get_state', {}, isMemoryState);
  * ```
  */
 export async function tauri<T>(
   cmd: string,
-  payload?: Record<string, unknown>
+  payload?: Record<string, unknown>,
+  validator?: (val: unknown) => val is T
 ): Promise<T> {
   try {
-    const result = await invoke<T>(cmd, payload ?? {});
+    const result = await secureInvoke<T>(cmd, payload ?? {}, {}, validator);
     return result;
   } catch (error: unknown) {
     // Format error message consistently
@@ -61,13 +66,14 @@ export async function tauri<T>(
  * Tauri command with retry logic
  *
  * Automatically retries failed commands with exponential backoff.
- * Useful for commands that may fail due to temporary unavailability.
+ * Includes all security protections from secureInvoke.
  *
  * @template T - Expected response type
  * @param cmd - Command name
  * @param payload - Optional command payload
  * @param maxRetries - Maximum number of retry attempts (default: 3)
  * @param initialDelay - Initial delay in ms (default: 1000)
+ * @param validator - Optional type guard for response validation
  * @returns Promise resolving to typed response
  *
  * @example
@@ -80,14 +86,15 @@ export async function tauriWithRetry<T>(
   cmd: string,
   payload?: Record<string, unknown>,
   maxRetries: number = 3,
-  initialDelay: number = 1000
+  initialDelay: number = 1000,
+  validator?: (val: unknown) => val is T
 ): Promise<T> {
   let lastError: Error | null = null;
   let delay = initialDelay;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      return await tauri<T>(cmd, payload);
+      return await tauri<T>(cmd, payload, validator);
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
 
@@ -111,24 +118,31 @@ export async function tauriWithRetry<T>(
  * Batch invoke multiple commands in parallel
  *
  * Executes multiple Tauri commands concurrently and returns results
- * in the same order as the input commands.
+ * in the same order as the input commands. All commands are protected
+ * by secureInvoke validations.
  *
- * @param commands - Array of command configurations
+ * @param commands - Array of command configurations with optional validators
  * @returns Promise resolving to array of results
  *
  * @example
  * ```typescript
  * const [status, metrics, graph] = await tauriBatch([
- *   { cmd: 'get_system_status' },
+ *   { cmd: 'get_system_status', validator: isSystemStatus },
  *   { cmd: 'helios_get_metrics' },
  *   { cmd: 'nexus_get_graph' }
  * ]);
  * ```
  */
 export async function tauriBatch<T = unknown>(
-  commands: Array<{ cmd: string; payload?: Record<string, unknown> }>
+  commands: Array<{
+    cmd: string;
+    payload?: Record<string, unknown>;
+    validator?: (val: unknown) => val is T;
+  }>
 ): Promise<T[]> {
-  const promises = commands.map(({ cmd, payload }) => tauri<T>(cmd, payload));
+  const promises = commands.map(({ cmd, payload, validator }) =>
+    tauri<T>(cmd, payload, validator)
+  );
   return Promise.all(promises);
 }
 

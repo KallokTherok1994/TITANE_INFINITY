@@ -47,8 +47,8 @@ impl AnalysisEngine {
             confidence_score: confidence,
             timestamp: std::time::SystemTime::now()
                 .duration_since(std::time::SystemTime::UNIX_EPOCH)
-                .unwrap()
-                .as_secs(),
+                .map(|d| d.as_secs())
+                .unwrap_or(0), // Fallback to epoch if system time is invalid
         }
     }
 

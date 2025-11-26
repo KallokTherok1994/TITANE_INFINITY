@@ -1,21 +1,20 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Service Invoker
+ * TITANE∞ v17 - Service Invoker (SECURED)
  * Retry, timeout, et error handling pour tous les services Tauri
+ * Avec intégration du module security (whitelist, anti-injection, anti-loop)
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke, type SecureInvokeOptions } from './security';
 
 // ────────────────────────────────────────────────────────────────
 // Types
 // ────────────────────────────────────────────────────────────────
 
-export interface InvokeOptions {
+export interface InvokeOptions extends SecureInvokeOptions {
   /** Nombre de tentatives (défaut: 3) */
   retries?: number;
-  /** Timeout en ms (défaut: 30000) */
-  timeout?: number;
   /** Délai initial entre tentatives en ms (défaut: 500) */
   retryDelay?: number;
   /** Facteur multiplicateur pour backoff exponentiel (défaut: 2) */
@@ -24,6 +23,8 @@ export interface InvokeOptions {
   noRetry?: boolean;
   /** Contexte pour logs/métriques */
   context?: string;
+  /** Type guard personnalisé pour validation réponse */
+  validator?: <T>(val: unknown) => val is T;
 }
 
 export class TimeoutError extends Error {
@@ -166,9 +167,14 @@ export async function invokeWithRetry<T>(
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
-      // Race entre invoke et timeout
+      // Race entre secureInvoke et timeout
       const result = await Promise.race<T>([
-        invoke<T>(command, payload ?? {}),
+        secureInvoke<T>(command, payload ?? {}, {
+          timeout,
+          skipWhitelistCheck: options.skipWhitelistCheck,
+          skipInjectionCheck: options.skipInjectionCheck,
+          skipLoopCheck: options.skipLoopCheck,
+        }, options.validator),
         timeoutPromise<T>(timeout, command),
       ]);
 
@@ -243,10 +249,11 @@ export async function invokeWithTimeout<T>(
  */
 export async function invokeSimple<T>(
   command: string,
-  payload?: Record<string, unknown>
+  payload?: Record<string, unknown>,
+  validator?: <U>(val: unknown) => val is U
 ): Promise<T> {
   try {
-    return await invoke<T>(command, payload ?? {});
+    return await secureInvoke<T>(command, payload ?? {}, {}, validator as any);
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error(`[Service] Command "${command}" failed:`, errorMsg);

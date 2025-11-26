@@ -12,6 +12,9 @@ pub mod cognitive;  // ✅ Cognitive Layer v16 (NEW)
 pub mod shared;     // ✅ Shared types and utilities
 pub mod types;      // ✅ Type definitions
 pub mod utils;      // ✅ Utilities (AppResult, AppError)
+pub mod watchdog;   // ✅ Watchdog Engine v17 (NEW)
+pub mod backend_selftest; // ✅ Backend Global Self-Test v17.7 (NEW)
+pub mod meta;       // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // AI & MEMORY v15

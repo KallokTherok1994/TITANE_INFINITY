@@ -355,6 +355,34 @@ async fn main() {
             // Sécurité
             control_panel_commands::cp_get_security_config,
             control_panel_commands::cp_set_security_config,
+            // ═══════════════════════════════════════════════════════════════
+            // SECURITY HARDENING v17 - Global Self-Test
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::security::run_hardening_selftest,
+            // ═══════════════════════════════════════════════════════════════
+            // COGNITIVE HARDENING v17.3.0 - Cognitive Security Commands
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::cognitive::cognitive_run_selftest,
+            titane_infinity::cognitive::cognitive_validate_state,
+            titane_infinity::cognitive::cognitive_compute_hash_cmd,
+            // ═══════════════════════════════════════════════════════════════
+            // WATCHDOG ENGINE v17.3.0 - Auto-Repair & Monitoring Commands
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::watchdog::watchdog_run_selftest,
+            titane_infinity::watchdog::watchdog_scan,
+            titane_infinity::watchdog::watchdog_fix,
+            // ═══════════════════════════════════════════════════════════════
+            // BACKEND GLOBAL SELF-TEST v17.7 - Full System Validation
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::backend_selftest::backend_run_global_selftest,
+            // ═══════════════════════════════════════════════════════════════
+            // META-COGNITION & DEEP SYNC v18 - Cognitive Supervision
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::meta::meta_get_report,
+            titane_infinity::meta::meta_trigger_sync,
+            titane_infinity::meta::meta_get_alignment,
+            titane_infinity::meta::meta_get_state,
+            titane_infinity::meta::meta_selftest_all, // v18.1: Self-test complet
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

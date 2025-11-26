@@ -186,21 +186,15 @@ impl MemoryStorage {
     /// This is called after save operations to keep the unified
     /// SingularityEngine state in sync with persistent storage.
     #[cfg(feature = "full")]
-    pub fn sync_to_module(
+    pub fn sync_module_state(
         &self,
         memory_module: &mut crate::core::modules::MemoryModule,
     ) -> MemoryResult<()> {
-        use crate::core::modules::MemoryModule;
-
         let index = self.load_index()?;
 
         // Update module stats
         memory_module.memory_count = index.total_conversations as u64;
-        memory_module.capacity_usage = if index.total_messages > 10000 {
-            (index.total_messages as f32) / 10000.0
-        } else {
-            (index.total_messages as f32) / 10000.0
-        };
+        memory_module.capacity_usage = (index.total_messages as f32) / 10000.0;
         memory_module.last_operation_ms = chrono::Utc::now().timestamp_millis() as u64;
 
         Ok(())

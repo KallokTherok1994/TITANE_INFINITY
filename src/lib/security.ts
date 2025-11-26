@@ -1,0 +1,545 @@
+/**
+ * TITANE∞ v17 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ *
+ * ═══════════════════════════════════════════════════════════════════════════
+ * TITANE∞ v17 - Frontend Security Module
+ * Type guards, validation, anti-injection, command whitelist
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+// ────────────────────────────────────────────────────────────────
+// Constants
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Whitelist des commandes Tauri autorisées
+ * DOIT correspondre à commands/security.rs côté Rust
+ */
+export const ALLOWED_COMMANDS = new Set<string>([
+  // Memory commands (10)
+  'memory_init',
+  'memory_save_entry',
+  'memory_get_entry',
+  'memory_delete_entry',
+  'memory_list_entries',
+  'memory_update_entry',
+  'memory_get_state',
+  'memory_clear_all',
+  'memory_search',
+  'memory_export',
+
+  // AI commands (4)
+  'ai_send_prompt',
+  'ai_get_response',
+  'ai_set_model',
+  'ai_get_available_models',
+
+  // Singularity commands (3)
+  'singularity_get_state',
+  'singularity_update_metric',
+  'singularity_reset',
+
+  // State commands (2)
+  'state_get',
+  'state_save',
+
+  // XP commands (3)
+  'xp_add',
+  'xp_get_total',
+  'xp_get_level',
+
+  // Cognitive commands (2)
+  'cognitive_analyze',
+  'cognitive_get_insights',
+
+  // Session commands (3)
+  'session_start',
+  'session_end',
+  'session_get_current',
+
+  // Security command (1)
+  'run_hardening_selftest',
+]);
+
+/**
+ * Patterns d'injection détectés (aligné avec ai/security.rs)
+ */
+const INJECTION_PATTERNS = [
+  /<script[^>]*>.*?<\/script>/gi,
+  /javascript:/gi,
+  /on\w+\s*=\s*["'][^"']*["']/gi,
+  /eval\s*\(/gi,
+  /__proto__/gi,
+  /constructor\s*\[/gi,
+  /\.\.\//g, // Path traversal
+  /[;&|`$]/g, // Shell injection
+];
+
+/**
+ * Taille maximale des payloads (10 MB)
+ */
+const MAX_PAYLOAD_SIZE = 10 * 1024 * 1024;
+
+/**
+ * Timeout maximal par défaut (30s)
+ */
+const DEFAULT_TIMEOUT_MS = 30000;
+
+/**
+ * Cache pour détecter les boucles infinies
+ */
+interface CallTracker {
+  count: number;
+  firstCall: number;
+  lastCall: number;
+}
+
+const callTracking = new Map<string, CallTracker>();
+const MAX_CALLS_PER_SECOND = 10;
+const TRACKING_WINDOW_MS = 1000;
+
+// ────────────────────────────────────────────────────────────────
+// Types & Interfaces
+// ────────────────────────────────────────────────────────────────
+
+export interface SecureInvokeOptions {
+  /** Timeout en ms (défaut: 30000) */
+  timeout?: number;
+  /** Désactiver validation anti-injection (défaut: false) */
+  skipInjectionCheck?: boolean;
+  /** Désactiver validation whitelist (défaut: false) */
+  skipWhitelistCheck?: boolean;
+  /** Désactiver anti-loop protection (défaut: false) */
+  skipLoopCheck?: boolean;
+}
+
+export interface ValidationResult {
+  valid: boolean;
+  errors: string[];
+}
+
+export interface HardeningTestResult {
+  name: string;
+  passed: boolean;
+  details: string;
+}
+
+export interface HardeningReport {
+  tests: HardeningTestResult[];
+  pass_rate: number;
+  timestamp: string;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Validation Functions
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Valider qu'une commande est dans la whitelist
+ */
+export function validateCommand(command: string): ValidationResult {
+  const errors: string[] = [];
+
+  if (!command || typeof command !== 'string') {
+    errors.push('Command must be a non-empty string');
+    return { valid: false, errors };
+  }
+
+  if (!ALLOWED_COMMANDS.has(command)) {
+    errors.push(
+      `Command "${command}" is not in whitelist. Allowed: ${Array.from(ALLOWED_COMMANDS).join(', ')}`
+    );
+    return { valid: false, errors };
+  }
+
+  return { valid: true, errors: [] };
+}
+
+/**
+ * Détecter les tentatives d'injection dans le payload
+ */
+export function detectInjection(payload: Record<string, unknown>): ValidationResult {
+  const errors: string[] = [];
+
+  // Convertir payload en JSON pour analyse
+  const jsonString = JSON.stringify(payload);
+
+  for (const pattern of INJECTION_PATTERNS) {
+    if (pattern.test(jsonString)) {
+      errors.push(`Injection pattern detected: ${pattern.source}`);
+      // Reset lastIndex pour regex globales
+      pattern.lastIndex = 0;
+    }
+  }
+
+  return { valid: errors.length === 0, errors };
+}
+
+/**
+ * Valider la taille du payload
+ */
+export function validatePayloadSize(payload: Record<string, unknown>): ValidationResult {
+  const errors: string[] = [];
+  const jsonString = JSON.stringify(payload);
+  const sizeBytes = new Blob([jsonString]).size;
+
+  if (sizeBytes > MAX_PAYLOAD_SIZE) {
+    errors.push(
+      `Payload too large: ${sizeBytes} bytes (max: ${MAX_PAYLOAD_SIZE} bytes)`
+    );
+    return { valid: false, errors };
+  }
+
+  return { valid: true, errors: [] };
+}
+
+/**
+ * Détecter les boucles infinies (trop d'appels rapides)
+ */
+export function detectInfiniteLoop(command: string): ValidationResult {
+  const now = Date.now();
+  const key = command;
+
+  if (!callTracking.has(key)) {
+    callTracking.set(key, {
+      count: 1,
+      firstCall: now,
+      lastCall: now,
+    });
+    return { valid: true, errors: [] };
+  }
+
+  const tracker = callTracking.get(key);
+  if (!tracker) {
+    // Shouldn't happen but handle gracefully
+    callTracking.set(key, {
+      count: 1,
+      firstCall: now,
+      lastCall: now,
+    });
+    return { valid: true, errors: [] };
+  }
+
+  // Reset si fenêtre expirée
+  if (now - tracker.firstCall > TRACKING_WINDOW_MS) {
+    callTracking.set(key, {
+      count: 1,
+      firstCall: now,
+      lastCall: now,
+    });
+    return { valid: true, errors: [] };
+  }
+
+  // Incrémenter compteur
+  tracker.count += 1;
+  tracker.lastCall = now;
+
+  // Vérifier dépassement
+  if (tracker.count > MAX_CALLS_PER_SECOND) {
+    const errors = [
+      `Infinite loop detected: "${command}" called ${tracker.count} times in ${TRACKING_WINDOW_MS}ms (max: ${MAX_CALLS_PER_SECOND})`,
+    ];
+    return { valid: false, errors };
+  }
+
+  return { valid: true, errors: [] };
+}
+
+/**
+ * Nettoyer le cache de tracking (à appeler périodiquement)
+ */
+export function cleanupCallTracking(): void {
+  const now = Date.now();
+  for (const [key, tracker] of callTracking.entries()) {
+    if (now - tracker.lastCall > TRACKING_WINDOW_MS * 5) {
+      callTracking.delete(key);
+    }
+  }
+}
+
+// Cleanup automatique toutes les 5 secondes
+if (typeof window !== 'undefined') {
+  setInterval(cleanupCallTracking, 5000);
+}
+
+// ────────────────────────────────────────────────────────────────
+// Type Guards
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Type guard pour vérifier qu'un objet est un Record<string, unknown>
+ */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Type guard pour HardeningReport
+ */
+export function isHardeningReport(value: unknown): value is HardeningReport {
+  if (!isRecord(value)) return false;
+
+  const hasTests =
+    Array.isArray(value.tests) &&
+    value.tests.every(
+      (test) =>
+        isRecord(test) &&
+        typeof test.name === 'string' &&
+        typeof test.passed === 'boolean' &&
+        typeof test.details === 'string'
+    );
+
+  const hasPassRate = typeof value.pass_rate === 'number';
+  const hasTimestamp = typeof value.timestamp === 'string';
+
+  return hasTests && hasPassRate && hasTimestamp;
+}
+
+/**
+ * Type guard pour tableau de strings
+ */
+export function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === 'string');
+}
+
+/**
+ * Type guard pour valider qu'une réponse Tauri est valide
+ */
+export function isValidTauriResponse<T>(
+  value: unknown,
+  validator?: (val: unknown) => val is T
+): value is T {
+  if (value === null || value === undefined) {
+    return false;
+  }
+
+  // Si validator personnalisé fourni
+  if (validator) {
+    return validator(value);
+  }
+
+  // Validation générique (non-null, non-undefined)
+  return true;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Secure Response Validation
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Valider une réponse Tauri avec type guard optionnel
+ */
+export function validateResponse<T>(
+  response: unknown,
+  validator?: (val: unknown) => val is T
+): ValidationResult & { data?: T } {
+  const errors: string[] = [];
+
+  if (response === null || response === undefined) {
+    errors.push('Response is null or undefined');
+    return { valid: false, errors };
+  }
+
+  // Validation personnalisée
+  if (validator && !validator(response)) {
+    errors.push('Response failed custom validation');
+    return { valid: false, errors };
+  }
+
+  return {
+    valid: true,
+    errors: [],
+    data: response as T,
+  };
+}
+
+/**
+ * Sanitizer générique pour supprimer les propriétés dangereuses
+ */
+export function sanitizeResponse<T>(response: T): T {
+  if (typeof response !== 'object' || response === null) {
+    return response;
+  }
+
+  // Supprimer __proto__ et constructor
+  const sanitized = JSON.parse(JSON.stringify(response));
+
+  if ('__proto__' in sanitized) {
+    delete sanitized.__proto__;
+  }
+  if ('constructor' in sanitized) {
+    delete sanitized.constructor;
+  }
+
+  return sanitized;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Secure Invoke Wrapper
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Wrapper sécurisé pour invoke Tauri
+ *
+ * Protections:
+ * - ✅ Command whitelist validation
+ * - ✅ Injection pattern detection
+ * - ✅ Payload size validation
+ * - ✅ Infinite loop detection
+ * - ✅ Timeout protection
+ * - ✅ Response validation with type guards
+ *
+ * @example
+ * ```ts
+ * // Simple call
+ * const state = await secureInvoke<MemoryState>('memory_get_state');
+ *
+ * // With payload
+ * await secureInvoke('memory_save_entry', {
+ *   key: 'test',
+ *   value: 'data'
+ * });
+ *
+ * // With custom validator
+ * const report = await secureInvoke<HardeningReport>(
+ *   'run_hardening_selftest',
+ *   {},
+ *   { timeout: 60000 },
+ *   isHardeningReport
+ * );
+ * ```
+ */
+export async function secureInvoke<T>(
+  command: string,
+  payload: Record<string, unknown> = {},
+  options: SecureInvokeOptions = {},
+  validator?: (val: unknown) => val is T
+): Promise<T> {
+  const {
+    timeout = DEFAULT_TIMEOUT_MS,
+    skipInjectionCheck = false,
+    skipWhitelistCheck = false,
+    skipLoopCheck = false,
+  } = options;
+
+  // [1] Validation commande whitelist
+  if (!skipWhitelistCheck) {
+    const cmdValidation = validateCommand(command);
+    if (!cmdValidation.valid) {
+      const errorMsg = `Security: ${cmdValidation.errors.join('; ')}`;
+      console.error(`[Security] ✗ ${errorMsg}`);
+      throw new Error(errorMsg);
+    }
+  }
+
+  // [2] Détection injection
+  if (!skipInjectionCheck) {
+    const injectionCheck = detectInjection(payload);
+    if (!injectionCheck.valid) {
+      const errorMsg = `Security: ${injectionCheck.errors.join('; ')}`;
+      console.error(`[Security] ✗ ${errorMsg}`);
+      throw new Error(errorMsg);
+    }
+  }
+
+  // [3] Validation taille payload
+  const sizeCheck = validatePayloadSize(payload);
+  if (!sizeCheck.valid) {
+    const errorMsg = `Security: ${sizeCheck.errors.join('; ')}`;
+    console.error(`[Security] ✗ ${errorMsg}`);
+    throw new Error(errorMsg);
+  }
+
+  // [4] Détection boucle infinie
+  if (!skipLoopCheck) {
+    const loopCheck = detectInfiniteLoop(command);
+    if (!loopCheck.valid) {
+      const errorMsg = `Security: ${loopCheck.errors.join('; ')}`;
+      console.error(`[Security] ✗ ${errorMsg}`);
+      throw new Error(errorMsg);
+    }
+  }
+
+  // [5] Invoke avec timeout
+  try {
+    // Import dynamique pour éviter circular dependency
+    const { invoke } = await import('@tauri-apps/api/core');
+
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(
+        () => reject(new Error(`Timeout: "${command}" exceeded ${timeout}ms`)),
+        timeout
+      )
+    );
+
+    const invokePromise = invoke<T>(command, payload);
+
+    const response = await Promise.race([invokePromise, timeoutPromise]);
+
+    // [6] Validation réponse
+    const responseValidation = validateResponse<T>(response, validator);
+    if (!responseValidation.valid) {
+      const errorMsg = `Response validation failed: ${responseValidation.errors.join('; ')}`;
+      console.error(`[Security] ✗ ${errorMsg}`);
+      throw new Error(errorMsg);
+    }
+
+    // [7] Sanitization
+    if (!responseValidation.data) {
+      throw new Error('Response validation succeeded but data is null/undefined');
+    }
+    const sanitized = sanitizeResponse(responseValidation.data);
+
+    return sanitized;
+  } catch (error) {
+    // Log et re-throw
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, errorMsg);
+    throw error;
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+// Security Testing
+// ────────────────────────────────────────────────────────────────
+
+/**
+ * Appeler le self-test backend de sécurité
+ * Retourne le rapport de hardening avec type safety
+ */
+export async function runSecuritySelfTest(): Promise<HardeningReport> {
+  const report = await secureInvoke<HardeningReport>(
+    'run_hardening_selftest',
+    {},
+    { timeout: 60000 },
+    isHardeningReport
+  );
+
+  console.log(
+    `[Security Self-Test] Pass rate: ${(report.pass_rate * 100).toFixed(1)}%`
+  );
+  console.table(
+    report.tests.map((t) => ({
+      Test: t.name,
+      Status: t.passed ? '✅ PASS' : '❌ FAIL',
+      Details: t.details,
+    }))
+  );
+
+  return report;
+}
+
+/**
+ * Exporter les statistiques de sécurité frontend
+ */
+export function getSecurityStats() {
+  return {
+    tracked_commands: callTracking.size,
+    allowed_commands: ALLOWED_COMMANDS.size,
+    tracking_window_ms: TRACKING_WINDOW_MS,
+    max_calls_per_second: MAX_CALLS_PER_SECOND,
+    max_payload_size_bytes: MAX_PAYLOAD_SIZE,
+    default_timeout_ms: DEFAULT_TIMEOUT_MS,
+  };
+}

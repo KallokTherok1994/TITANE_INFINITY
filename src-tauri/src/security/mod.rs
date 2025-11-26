@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v∞ — SECURITY MODULE
-//   Super-Prompts H, I, J, K, L integration
+//   TITANE∞ v17 — SECURITY MODULE
+//   Super-Prompts H, I, J, K, L integration + Global Hardening
 //   Hardening, Permissions, Encryption, Validation, Sandbox
 // ═══════════════════════════════════════════════════════════════
 
@@ -9,12 +9,15 @@ pub mod storage_guard;
 
 // Super-Prompts H, J, K, L modules
 pub mod encryption;
+pub mod hardening; // NEW: Global hardening self-test
 pub mod permission_guard;
 pub mod permissions;
 pub mod pre_boot_validation;
 pub mod sandbox;
 pub mod validation;
 pub mod vault_engine; // ✅ v∞ J3 - Memory Vault Layer
+
+pub use hardening::*; // Export hardening functions
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;

@@ -1,10 +1,11 @@
-// TITANE∞ v15 - Memory Module
-// Persistent conversation storage with encryption
-// Architecture v15: Clean, documented, versioning support
+// TITANE∞ v17 - Memory Module with Security Hardening
+// Persistent conversation storage with encryption + SHA256 validation
+// Architecture v17: Clean, documented, versioning support, security hardened
 // Encrypted persistent conversational memory with AES-256-GCM + Argon2id
 
 pub mod encryption;
 pub mod model;
+pub mod security; // NEW: Security hardening module
 pub mod storage;
 
 use serde::{Deserialize, Serialize};
@@ -42,6 +43,8 @@ pub enum MemoryError {
     DecryptionError(String),
     StorageError(String),
     InvalidData(String),
+    ValidationError(String), // NEW: v17 Validation errors
+    TimeoutError(String),    // NEW: v17 Timeout errors
 }
 
 impl std::fmt::Display for MemoryError {
@@ -51,6 +54,8 @@ impl std::fmt::Display for MemoryError {
             MemoryError::DecryptionError(e) => write!(f, "Decryption error: {}", e),
             MemoryError::StorageError(e) => write!(f, "Storage error: {}", e),
             MemoryError::InvalidData(e) => write!(f, "Invalid data: {}", e),
+            MemoryError::ValidationError(e) => write!(f, "Validation error: {}", e),
+            MemoryError::TimeoutError(e) => write!(f, "Timeout error: {}", e),
         }
     }
 }

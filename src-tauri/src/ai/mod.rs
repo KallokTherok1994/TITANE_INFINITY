@@ -1,10 +1,11 @@
-// TITANE∞ v15 - AI Module
-// Multi-provider AI system with automatic fallback (Gemini → Ollama)
-// Architecture v15: Clean, documented, production-ready
+// TITANE∞ v17 - AI Module with Security Hardening
+// Multi-provider AI system with automatic fallback (Gemini → Ollama) + security validation
+// Architecture v17: Clean, documented, production-ready, security hardened
 
 pub mod gemini;
 pub mod ollama;
 pub mod router;
+pub mod security; // NEW: Security hardening module
 
 use serde::{Deserialize, Serialize};
 

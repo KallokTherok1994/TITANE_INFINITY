@@ -28,8 +28,8 @@ impl CoherenceEngine {
     pub async fn check_coherence(&self) -> CoherenceReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or(0); // Fallback to epoch if system time is invalid
 
         CoherenceReport {
             timestamp,

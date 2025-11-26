@@ -138,9 +138,12 @@ impl MentalCharge {
         }
 
         // Slope simple: (last - first) / count
-        let first = recent.last().unwrap();
-        let last = recent.first().unwrap();
-        (last - first) / recent.len() as f32
+        // Safe: recent.len() >= 2 guaranteed by check above
+        if let (Some(first), Some(last)) = (recent.last(), recent.first()) {
+            (last - first) / recent.len() as f32
+        } else {
+            0.0
+        }
     }
 }
 

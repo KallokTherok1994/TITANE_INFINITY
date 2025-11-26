@@ -35,8 +35,8 @@ impl Emergent {
     pub async fn detect_emergence(&self) -> EmergentReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or(0); // Fallback to epoch if system time is invalid
 
         let behaviors = vec![
             EmergentBehavior {

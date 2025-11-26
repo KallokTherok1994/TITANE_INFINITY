@@ -1,6 +1,6 @@
-// TITANE∞ v16 - Cognitive Module
+// TITANE∞ v17 - Cognitive Module
 // Advanced reasoning, meta-cognition, self-optimization
-// Legacy v15 + New v16 engines coexist
+// Legacy v15 + New v16 engines coexist + v17 security hardening
 
 // Legacy v15 (three centers philosophy)
 pub mod body;
@@ -17,6 +17,11 @@ pub mod evolution;
 // Unified engine (v15 + v16 bridge)
 pub mod engine;
 
+// v17 Security hardening
+pub mod security;
+pub mod selftest;
+pub mod commands;
+
 // Re-exports v15
 pub use body::*;
 pub use heart::*;
@@ -29,3 +34,6 @@ pub use consistency::ConsistencyEngine;
 pub use integration::IntegrationEngine;
 pub use evolution::EvolutionCognitiveEngine;
 pub use engine::*;
+
+// Re-exports v17 (commands for Tauri)
+pub use commands::*;
