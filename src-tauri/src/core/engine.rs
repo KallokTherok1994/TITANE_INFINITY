@@ -5,7 +5,6 @@
 
 use crate::core::state::SingularityState;
 use crate::core::types::*;
-use crate::cognitive::{AnalysisEngine, ConsistencyEngine, IntegrationEngine, EvolutionCognitiveEngine};
 use serde::{Deserialize, Serialize};
 
 /// SingularityEngine v16 - Main unified engine with cognitive layer

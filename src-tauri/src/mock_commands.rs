@@ -874,7 +874,7 @@ fn generate_mock_response(message: &str) -> String {
 // ═══════════════════════════════════════════════════════════════
 
 #[tauri::command]
-pub async fn cognitive_analyze(data: String) -> AppResult<serde_json::Value> {
+pub async fn cognitive_analyze(_data: String) -> AppResult<serde_json::Value> {
     Ok(json!({
         "anomalies_detected": 0,
         "patterns_found": ["normal_operation"],
@@ -884,7 +884,7 @@ pub async fn cognitive_analyze(data: String) -> AppResult<serde_json::Value> {
 }
 
 #[tauri::command]
-pub async fn cognitive_check_coherence(state_data: String) -> AppResult<serde_json::Value> {
+pub async fn cognitive_check_coherence(_state_data: String) -> AppResult<serde_json::Value> {
     Ok(json!({
         "is_coherent": true,
         "contradictions_found": 0,
