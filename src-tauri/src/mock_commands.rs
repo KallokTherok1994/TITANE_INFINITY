@@ -271,7 +271,7 @@ pub async fn singularity_get_full_state() -> AppResult<serde_json::Value> {
     // ✅ v∞ Permission check (SYSTEM level required)
     PERMISSION_GUARD
         .require(
-            "singularity_read",
+            "state_read",
             Role::System,
             "singularity_get_full_state",
         )
@@ -361,7 +361,7 @@ pub async fn singularity_is_critical() -> AppResult<bool> {
 pub async fn sync_singularity() -> AppResult<()> {
     // ✅ v∞ Permission check (SYSTEM level required)
     PERMISSION_GUARD
-        .require("singularity_write", Role::System, "sync_singularity")
+        .require("state_write", Role::System, "sync_singularity")
         .await?;
 
     log::info!("Mock: sync_singularity called");
