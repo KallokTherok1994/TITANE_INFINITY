@@ -9,8 +9,8 @@
 // TITANE∞ v16.0.0 - Main Entry Point - Cognitive Layer Active
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Use minimal app to test rendering
-// import App from './App'; // DÉSACTIVÉ temporairement pour debug
+// import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
+import App from './App'; // ✅ v16.2.3: Réactivé après validation AppMinimal
 import './design-system/titane-v∞.css'; // 🔩 Design System v∞ : Unified tokens
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles
 import './pages/styles.css';
@@ -181,7 +181,7 @@ console.log('✅ Root element found:', rootElement);
 console.log('🎨 Starting React 18 render...');
 
 try {
-  console.log('🔍 [DEBUG] Using AppMinimal to diagnose white screen issue');
+  console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
@@ -198,13 +198,13 @@ try {
           }
         }}
       >
-        <AppMinimal />
+        <App />
       </ProductionErrorBoundary>
     </React.StrictMode>
   );
 
   console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (DEBUG MODE: AppMinimal)      ║');
+  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
   console.log('╚════════════════════════════════════════════════════════════════╝\n');
 } catch (error) {
   console.error('❌ CRITICAL: React mount failed:', error);
