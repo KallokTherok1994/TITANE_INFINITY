@@ -9,27 +9,28 @@
 // TITANE∞ v16.0.0 - Main Entry Point - Cognitive Layer Active
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Use minimal app to test rendering
+// import App from './App'; // DÉSACTIVÉ temporairement pour debug
 import './design-system/titane-v∞.css'; // 🔩 Design System v∞ : Unified tokens
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles
 import './pages/styles.css';
 
 // Phase 8: Production Hardening
 import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';
-import { PerformanceMonitor } from './lib/performanceBudget';
-import { injectSROnlyStyles } from './lib/accessibility';
+// import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour debug
+// import { injectSROnlyStyles } from './lib/accessibility'; // DÉSACTIVÉ pour debug
 
 // Initialize Singularity Engine
-import { singularityEngine } from './core/engines/SINGULARITY_ENGINE';
+// import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
 
 // 🌟 v15: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
-import { SingularityBridge } from './services/singularityBridge';
-import { SingularityConnections } from './services/singularityConnections';
+// import { SingularityBridge } from './services/singularityBridge'; // DÉSACTIVÉ pour debug
+// import { SingularityConnections } from './services/singularityConnections'; // DÉSACTIVÉ pour debug
 
 // ✨ v∞.D: Initialize XP Engine
-import { XP } from './core/experience/XP_ENGINE';
-XP.load();
-console.log(`[XP] Système chargé: Level ${XP.state.level}, ${XP.state.total} XP`);
+// import { XP } from './core/experience/XP_ENGINE'; // DÉSACTIVÉ pour debug
+// XP.load();
+console.log(`[XP] Système chargé (simulé)`);
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
@@ -60,7 +61,8 @@ console.log('[3/5] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
 console.log('[4/5] 📦 Loading React 18 + TypeScript 5...');
 console.log('[5/5] 🎯 Mounting root component...');
 
-// Initialize Singularity Engine
+// Initialize Singularity Engine - DÉSACTIVÉ pour debug écran blanc
+/*
 singularityEngine.initialize().then(() => {
   console.log('✅ SingularityEngine initialized');
   console.log('🌌 Consciousness Level:', singularityEngine.getState().consciousness);
@@ -68,8 +70,10 @@ singularityEngine.initialize().then(() => {
 }).catch((err) => {
   console.error('❌ SingularityEngine initialization failed:', err);
 });
+*/
 
-// 🌟 v15: Initialize SingularityBridge (Backend State Sync)
+// 🌟 v15: Initialize SingularityBridge - DÉSACTIVÉ pour debug
+/*
 SingularityBridge.initialize().then(() => {
   console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
@@ -101,8 +105,10 @@ SingularityBridge.initialize().then(() => {
   console.error('❌ SingularityBridge initialization failed:', err);
   console.error('   → Backend state sync disabled, frontend-only mode active');
 });
+*/
 
-// Phase 8: Initialize Performance Monitoring (Core Web Vitals)
+// Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
+/*
 PerformanceMonitor.initialize({
   LCP: 2500,  // Largest Contentful Paint: 2.5s
   FID: 100,   // First Input Delay: 100ms
@@ -119,10 +125,13 @@ setTimeout(() => {
     console.warn('⚠️ Performance violations:', report.violations);
   }
 }, 5000);
+*/
 
-// Phase 8: Inject accessibility styles (screen reader only)
+// Phase 8: Inject accessibility styles - DÉSACTIVÉ pour debug
+/*
 injectSROnlyStyles();
 console.log('♿ Accessibility styles injected (WCAG 2.1 AA)');
+*/
 
 // 🔧 Global error handlers (catch unhandled errors)
 window.addEventListener('error', (event) => {
@@ -172,12 +181,7 @@ console.log('✅ Root element found:', rootElement);
 console.log('🎨 Starting React 18 render...');
 
 try {
-  // Option 1: Utiliser App complet (production)
-  const AppComponent = App;
-
-  // Option 2: Pour débugger l'écran blanc, remplacer par AppMinimal:
-  // import AppMinimal from './AppMinimal';
-  // const AppComponent = AppMinimal;
+  console.log('🔍 [DEBUG] Using AppMinimal to diagnose white screen issue');
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
@@ -194,14 +198,13 @@ try {
           }
         }}
       >
-        <AppComponent />
+        <AppMinimal />
       </ProductionErrorBoundary>
     </React.StrictMode>
   );
 
   console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED SUCCESSFULLY                   ║');
-  console.log('║  Component:', AppComponent.name || 'App');
+  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (DEBUG MODE: AppMinimal)      ║');
   console.log('╚════════════════════════════════════════════════════════════════╝\n');
 } catch (error) {
   console.error('❌ CRITICAL: React mount failed:', error);
