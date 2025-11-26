@@ -868,3 +868,59 @@ fn generate_mock_response(message: &str) -> String {
         message
     )
 }
+
+// ═══════════════════════════════════════════════════════════════
+// COGNITIVE LAYER v16 - Mock Commands
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn cognitive_analyze(data: String) -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "anomalies_detected": 0,
+        "patterns_found": ["normal_operation"],
+        "confidence_score": 0.95,
+        "timestamp": chrono::Utc::now().timestamp()
+    }))
+}
+
+#[tauri::command]
+pub async fn cognitive_check_coherence(state_data: String) -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "is_coherent": true,
+        "contradictions_found": 0,
+        "coherence_score": 0.98,
+        "recommendations": []
+    }))
+}
+
+#[tauri::command]
+pub async fn cognitive_integrate(signals: Vec<String>) -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "signals_merged": signals.len(),
+        "context_depth": 5,
+        "integration_quality": 0.92
+    }))
+}
+
+#[tauri::command]
+pub async fn cognitive_learn(experience: String) -> AppResult<()> {
+    log::info!("[Cognitive v16 Mock] Learning from: {}", experience);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn cognitive_get_status() -> AppResult<serde_json::Value> {
+    Ok(json!({
+        "analysis_scans": 42,
+        "consistency_checks": 35,
+        "integration_cycles": 28,
+        "learning_cycles": 15,
+        "optimization_score": 0.87
+    }))
+}
+
+#[tauri::command]
+pub async fn cognitive_optimize() -> AppResult<()> {
+    log::info!("[Cognitive v16 Mock] Running optimization");
+    Ok(())
+}

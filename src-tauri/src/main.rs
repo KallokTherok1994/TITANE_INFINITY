@@ -19,10 +19,33 @@
 use tauri::Manager;
 
 // TITANE∞ command modules
-use titane_infinity::{
-    commands::cognitive_commands::CognitiveSystemState, control_panel_commands, mock_commands,
-    secure_commands, time_commands,
+use titane_infinity::{control_panel_commands, mock_commands, secure_commands, time_commands};
+
+// Cognitive system (always available)
+use titane_infinity::cognitive::{
+    AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
 };
+use std::sync::Arc;
+use tokio::sync::Mutex;
+
+/// Cognitive System State (v16)
+pub struct CognitiveSystemState {
+    pub analysis: Arc<Mutex<AnalysisEngine>>,
+    pub consistency: Arc<Mutex<ConsistencyEngine>>,
+    pub integration: Arc<Mutex<IntegrationEngine>>,
+    pub evolution: Arc<Mutex<EvolutionCognitiveEngine>>,
+}
+
+impl CognitiveSystemState {
+    pub fn new() -> Self {
+        Self {
+            analysis: Arc::new(Mutex::new(AnalysisEngine::new())),
+            consistency: Arc::new(Mutex::new(ConsistencyEngine::new())),
+            integration: Arc::new(Mutex::new(IntegrationEngine::new())),
+            evolution: Arc::new(Mutex::new(EvolutionCognitiveEngine::new())),
+        }
+    }
+}
 
 #[tokio::main]
 async fn main() {
