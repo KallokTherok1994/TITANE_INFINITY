@@ -11,9 +11,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
 import App from './App'; // ✅ v16.2.3: Réactivé après validation AppMinimal
-import './design-system/titane-v∞.css'; // 🔩 Design System v∞ : Unified tokens
-import './styles/experience.css'; // ✨ v∞.D - XP System Styles
-import './pages/styles.css';
+
+// ✅ v17 DESIGN SYSTEM FUSION - Un seul fichier CSS unifié
+import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)
+import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)
+import './styles/exp-fusion.css'; // 🎯 XP Advanced Features (unique)
+import './pages/styles.css'; // 📄 Pages styles (minimal)
 
 // Phase 8: Production Hardening
 import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';

@@ -146,122 +146,150 @@ mod tests {
 
     #[test]
     fn test_body_state_energy() {
-        let mut state = BodyState::default();
+        let state1 = BodyState {
+            energy_level: 0.1,
+            ..Default::default()
+        };
 
-        state.energy_level = 0.1;
-        assert!(state.is_depleted());
+        assert!(state1.is_depleted());
 
-        state.energy_level = 0.8;
-        assert!(!state.is_depleted());
+        let state2 = BodyState {
+            energy_level: 0.8,
+            ..Default::default()
+        };
+        assert!(!state2.is_depleted());
     }
 
     #[test]
     fn test_body_state_tension() {
-        let mut state = BodyState::default();
+        let state1 = BodyState {
+            physical_tension: 0.8,
+            ..Default::default()
+        };
 
-        state.physical_tension = 0.8;
-        assert!(state.is_tense());
+        assert!(state1.is_tense());
 
-        state.physical_tension = 0.3;
-        assert!(!state.is_tense());
+        let state2 = BodyState {
+            physical_tension: 0.3,
+            ..Default::default()
+        };
+        assert!(!state2.is_tense());
     }
 
     #[test]
     fn test_body_vitality_score() {
-        let mut state = BodyState::default();
-
         // Haute énergie, faible stress
-        state.energy_level = 0.9;
-        state.rhythm_quality = 0.9;
-        state.physical_tension = 0.1;
-        state.voice_fatigue = 0.1;
-        state.environment_stress = 0.1;
+        let state1 = BodyState {
+            energy_level: 0.9,
+            rhythm_quality: 0.9,
+            physical_tension: 0.1,
+            voice_fatigue: 0.1,
+            environment_stress: 0.1,
+        };
 
-        let score = state.vitality_score();
+        let score = state1.vitality_score();
         assert!(score > 0.7);
 
         // Faible énergie, stress élevé
-        state.energy_level = 0.2;
-        state.rhythm_quality = 0.2;
-        state.physical_tension = 0.9;
-        state.voice_fatigue = 0.9;
-        state.environment_stress = 0.9;
+        let state2 = BodyState {
+            energy_level: 0.2,
+            rhythm_quality: 0.2,
+            physical_tension: 0.9,
+            voice_fatigue: 0.9,
+            environment_stress: 0.9,
+        };
 
-        let score = state.vitality_score();
+        let score = state2.vitality_score();
         assert!(score < 0.3);
     }
 
     #[test]
     fn test_body_needs_break() {
-        let mut state = BodyState::default();
-
         // Cas 1: Énergie déplétée
-        state.energy_level = 0.1;
-        assert!(state.needs_physical_break());
+        let state1 = BodyState {
+            energy_level: 0.1,
+            ..Default::default()
+        };
+        assert!(state1.needs_physical_break());
 
         // Cas 2: Tension élevée
-        state = BodyState::default();
-        state.physical_tension = 0.8;
-        assert!(state.needs_physical_break());
+        let state2 = BodyState {
+            physical_tension: 0.8,
+            ..Default::default()
+        };
+        assert!(state2.needs_physical_break());
 
         // Cas 3: Fatigue vocale
-        state = BodyState::default();
-        state.voice_fatigue = 0.7;
-        assert!(state.needs_physical_break());
+        let state3 = BodyState {
+            voice_fatigue: 0.7,
+            ..Default::default()
+        };
+        assert!(state3.needs_physical_break());
 
         // Cas 4: Tout va bien
-        state = BodyState::default();
-        assert!(!state.needs_physical_break());
+        let state4 = BodyState::default();
+        assert!(!state4.needs_physical_break());
     }
 
     #[test]
     fn test_physiological_signals_stress_detection() {
-        let mut signals = PhysiologicalSignals::default();
-
         // Parole rapide
-        signals.speech_rate = 250.0;
-        let markers = signals.detect_stress_markers();
+        let signals1 = PhysiologicalSignals {
+            speech_rate: 250.0,
+            ..Default::default()
+        };
+        let markers = signals1.detect_stress_markers();
         assert!(markers.contains(&StressMarker::RapidSpeech));
 
         // Tension pitch
-        signals = PhysiologicalSignals::default();
-        signals.pitch_stability = 0.3;
-        let markers = signals.detect_stress_markers();
+        let signals2 = PhysiologicalSignals {
+            pitch_stability: 0.3,
+            ..Default::default()
+        };
+        let markers = signals2.detect_stress_markers();
         assert!(markers.contains(&StressMarker::PitchTension));
 
         // Pauses irrégulières
-        signals = PhysiologicalSignals::default();
-        signals.pause_pattern = PausePattern::Irregular;
-        let markers = signals.detect_stress_markers();
+        let signals3 = PhysiologicalSignals {
+            pause_pattern: PausePattern::Irregular,
+            ..Default::default()
+        };
+        let markers = signals3.detect_stress_markers();
         assert!(markers.contains(&StressMarker::IrregularPauses));
 
         // Énergie faible
-        signals = PhysiologicalSignals::default();
-        signals.energy_mean = 0.2;
-        let markers = signals.detect_stress_markers();
+        let signals4 = PhysiologicalSignals {
+            energy_mean: 0.2,
+            ..Default::default()
+        };
+        let markers = signals4.detect_stress_markers();
         assert!(markers.contains(&StressMarker::LowEnergy));
     }
 
     #[test]
     fn test_physiological_stress_score() {
-        let mut signals = PhysiologicalSignals::default();
-
         // Stress élevé
-        signals.speech_rate = 250.0;
-        signals.pitch_stability = 0.2;
-        signals.pause_pattern = PausePattern::Irregular;
-        signals.energy_mean = 0.2;
+        let signals1 = PhysiologicalSignals {
+            speech_rate: 250.0,
+            pitch_stability: 0.2,
+            pause_pattern: PausePattern::Irregular,
+            energy_mean: 0.2,
+            stress_markers: Vec::new(),
+        };
 
-        let score = signals.stress_score();
+        let score = signals1.stress_score();
         assert!(score > 0.6);
 
         // Calme
-        signals = PhysiologicalSignals::default();
-        signals.speech_rate = 150.0;
-        signals.pitch_stability = 0.9;
-        signals.pause_pattern = PausePattern::Regular;
+        let signals2 = PhysiologicalSignals {
+            speech_rate: 150.0,
+            pitch_stability: 0.9,
+            pause_pattern: PausePattern::Regular,
+            energy_mean: 0.5,
+            stress_markers: Vec::new(),
+        };
 
-        let score = signals.stress_score();
+        let score = signals2.stress_score();
         assert!(score < 0.3);
     }
 }

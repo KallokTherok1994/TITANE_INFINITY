@@ -2,10 +2,10 @@
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v17.0 — APP LAYOUT STYLES OPTIMISÉS
  *   Design responsive avec mobile overlay et accessibilité
- * ═══════════════════════════════════════════════════════════════
+ * ═══════════════════════════════════════════════════════════════════
  */
 
-@import '../../styles/variables.css';
+/* Variables héritées de titane-fusion.css (global) */
 
 .app-layout {
   width: 100vw;

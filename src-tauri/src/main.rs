@@ -173,6 +173,11 @@ async fn main() {
             mock_commands::get_active_rituals,
             mock_commands::save_chat_interaction,
             mock_commands::memory_save_chat_interaction,  // Alias frontend compatibility
+            // Memory Aliases v17 - Frontend compatibility
+            mock_commands::memory_get_active_projects,
+            mock_commands::memory_get_recent_decisions,
+            mock_commands::memory_get_knowledge,
+            mock_commands::memory_get_active_rituals,
             // Nexus - Validation
             mock_commands::validate_nexus,
             mock_commands::get_nexus_graph,

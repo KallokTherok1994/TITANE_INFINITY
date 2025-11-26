@@ -116,58 +116,74 @@ mod tests {
 
     #[test]
     fn test_heart_state_alignment() {
-        let mut state = HeartState::default();
+        let state1 = HeartState {
+            alignment: 0.8,
+            ..Default::default()
+        };
 
-        state.alignment = 0.8;
-        assert!(state.is_aligned());
-        assert!(!state.is_misaligned());
+        assert!(state1.is_aligned());
+        assert!(!state1.is_misaligned());
 
-        state.alignment = 0.2;
-        assert!(!state.is_aligned());
-        assert!(state.is_misaligned());
+        let state2 = HeartState {
+            alignment: 0.2,
+            ..Default::default()
+        };
+        assert!(!state2.is_aligned());
+        assert!(state2.is_misaligned());
     }
 
     #[test]
     fn test_heart_state_motivation() {
-        let mut state = HeartState::default();
+        let state1 = HeartState {
+            motivation: 0.2,
+            ..Default::default()
+        };
 
-        state.motivation = 0.2;
-        assert!(state.is_unmotivated());
+        assert!(state1.is_unmotivated());
 
-        state.motivation = 0.8;
-        assert!(!state.is_unmotivated());
+        let state2 = HeartState {
+            motivation: 0.8,
+            ..Default::default()
+        };
+        assert!(!state2.is_unmotivated());
     }
 
     #[test]
     fn test_heart_wellbeing_score() {
-        let mut state = HeartState::default();
-
         // Tout au max + émotion positive
-        state.alignment = 1.0;
-        state.motivation = 1.0;
-        state.meaning_connection = 1.0;
-        state.authenticity = 1.0;
-        state.emotional_valence = 1.0;
+        let state1 = HeartState {
+            alignment: 1.0,
+            motivation: 1.0,
+            meaning_connection: 1.0,
+            authenticity: 1.0,
+            emotional_valence: 1.0,
+            ..Default::default()
+        };
 
-        let score = state.wellbeing_score();
+        let score = state1.wellbeing_score();
         assert!(score > 0.9);
 
         // Tout au min + émotion négative
-        state.alignment = 0.0;
-        state.motivation = 0.0;
-        state.meaning_connection = 0.0;
-        state.authenticity = 0.0;
-        state.emotional_valence = -1.0;
+        let state2 = HeartState {
+            alignment: 0.0,
+            motivation: 0.0,
+            meaning_connection: 0.0,
+            authenticity: 0.0,
+            emotional_valence: -1.0,
+            ..Default::default()
+        };
 
-        let score = state.wellbeing_score();
+        let score = state2.wellbeing_score();
         assert!(score < 0.1);
     }
 
     #[test]
     fn test_heart_recommendation_flow() {
-        let mut state = HeartState::default();
-        state.alignment = 0.9;
-        state.emotional_valence = 0.8;
+        let state = HeartState {
+            alignment: 0.9,
+            emotional_valence: 0.8,
+            ..Default::default()
+        };
 
         let rec = HeartRecommendation::from_heart_state(&state);
         assert!(matches!(rec, HeartRecommendation::Continue { .. }));
@@ -175,9 +191,11 @@ mod tests {
 
     #[test]
     fn test_heart_recommendation_redirect() {
-        let mut state = HeartState::default();
-        state.alignment = 0.2;
-        state.motivation = 0.2;
+        let state = HeartState {
+            alignment: 0.2,
+            motivation: 0.2,
+            ..Default::default()
+        };
 
         let rec = HeartRecommendation::from_heart_state(&state);
         assert!(matches!(rec, HeartRecommendation::Redirect { .. }));
@@ -185,9 +203,11 @@ mod tests {
 
     #[test]
     fn test_heart_recommendation_emotional_rest() {
-        let mut state = HeartState::default();
-        state.emotional_valence = -0.8;
-        state.emotional_intensity = 0.9;
+        let state = HeartState {
+            emotional_valence: -0.8,
+            emotional_intensity: 0.9,
+            ..Default::default()
+        };
 
         let rec = HeartRecommendation::from_heart_state(&state);
         assert!(matches!(rec, HeartRecommendation::EmotionalRest { .. }));
@@ -195,9 +215,11 @@ mod tests {
 
     #[test]
     fn test_heart_recommendation_pause_reflect() {
-        let mut state = HeartState::default();
-        state.alignment = 0.5;
-        state.authenticity = 0.3;
+        let state = HeartState {
+            alignment: 0.5,
+            authenticity: 0.3,
+            ..Default::default()
+        };
 
         let rec = HeartRecommendation::from_heart_state(&state);
         assert!(matches!(rec, HeartRecommendation::PauseAndReflect { .. }));

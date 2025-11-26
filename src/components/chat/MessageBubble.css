@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-@import '../../styles/variables.css';
+/* Variables héritées de titane-fusion.css (global) */
 
 .message-bubble {
   display: flex;
@@ -287,7 +287,7 @@
   .message-bubble-text {
     font-size: var(--text-sm);
   }
-  
+
   .message-bubble-text .code-block {
     font-size: 12px;
     padding: var(--spacing-sm);

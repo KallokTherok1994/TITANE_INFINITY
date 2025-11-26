@@ -198,7 +198,6 @@ pub enum SystemRecommendation {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::cognitive::CognitiveMode;
 
     #[test]
     fn test_cognitive_state_creation() {

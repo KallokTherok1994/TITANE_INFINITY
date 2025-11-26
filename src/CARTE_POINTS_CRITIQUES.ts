@@ -130,17 +130,17 @@
  * Emplacement : /home/titane/Documents/TITANE_INFINITY/src-tauri/tauri.conf.json
  * Lignes critiques : 6-10
  *
- * Configuration correcte :
+ * Configuration correcte (MODE TAURI-ONLY v16.2.3+) :
  *   "build": {
- *     "beforeDevCommand": "pnpm vite dev",
- *     "beforeBuildCommand": "pnpm run build",
- *     "devUrl": "http://localhost:1420",
+ *     "beforeDevCommand": "npm run build:watch",
+ *     "beforeBuildCommand": "npm run build",
+ *     "devUrl": "tauri://localhost",
  *     "frontendDist": "../dist"
  *   }
  *
  * ⚠️ ERREUR COURANTE :
- *   "beforeDevCommand": "pnpm run build"  ❌ (build statique)
- *   Correct : "pnpm vite dev" ✅ (dev server)
+ *   "devUrl": "http://localhost:1420"  ❌ (mode HTTP obsolète)
+ *   Correct : "tauri://localhost" ✅ (asset-only mode)
  */
 
 /**
@@ -231,13 +231,13 @@
  *      → Chercher les logs de boot
  *      → Chercher les erreurs JS/React
  *
- *   2. ✅ Vérifier que Vite tourne sur le bon port
- *      → curl http://127.0.0.1:1420/
- *      → Doit retourner le HTML avec #root
+ *   2. ✅ Vérifier que le build Vite existe
+ *      → ls -la dist/index.html
+ *      → Doit contenir le HTML avec #root
  *
  *   3. ✅ Vérifier tauri.conf.json
- *      → "beforeDevCommand": "pnpm vite dev" ✅
- *      → "devUrl": "http://localhost:1420" ✅
+ *      → "beforeDevCommand": "npm run build:watch" ✅
+ *      → "devUrl": "tauri://localhost" ✅ (asset-only mode)
  *
  *   4. ✅ Vérifier index.html
  *      → <div id="root"></div> présent ✅

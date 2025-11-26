@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-@import '../../styles/variables.css';
+/* Variables héritées de titane-fusion.css (global) */
 
 .chat-input-container {
   padding: var(--spacing-md);

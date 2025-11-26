@@ -167,7 +167,7 @@ fi
 print_header "VÉRIFICATION RÉFÉRENCES LEGACY"
 
 # Recherche de localhost:1420 dans le code principal (hors docs/tests désactivés)
-LOCALHOST_REFS=$(grep -r "localhost:1420" src/ --include="*.ts" --include="*.tsx" --include="*.rs" 2>/dev/null || true)
+LOCALHOST_REFS=$(grep -r "localhost:1420" src/ --include="*.ts" --include="*.tsx" --include="*.rs" --exclude="CARTE_POINTS_CRITIQUES.ts" 2>/dev/null || true)
 
 if [ -z "$LOCALHOST_REFS" ]; then
     print_success "Aucune référence localhost:1420 dans src/ ✅"

@@ -81,6 +81,13 @@
     }
   },
   "plugins": {
+    "http": {
+      "all": true,
+      "scope": [
+        "https://generativelanguage.googleapis.com/**",
+        "http://localhost:11434/**"
+      ]
+    },
     "shell": {
       "open": false,
       "scope": []

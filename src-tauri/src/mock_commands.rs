@@ -190,6 +190,34 @@ pub async fn memory_save_chat_interaction(_interaction: serde_json::Value) -> Ap
 }
 
 // ═══════════════════════════════════════════════════════════════
+// MEMORY ALIASES - Frontend Compatibility v17
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn memory_get_active_projects() -> AppResult<Vec<serde_json::Value>> {
+    log::info!("Mock: memory_get_active_projects (alias) called");
+    get_active_projects().await
+}
+
+#[tauri::command]
+pub async fn memory_get_recent_decisions(_count: usize) -> AppResult<Vec<serde_json::Value>> {
+    log::info!("Mock: memory_get_recent_decisions (alias) called");
+    get_recent_decisions(_count).await
+}
+
+#[tauri::command]
+pub async fn memory_get_knowledge() -> AppResult<Vec<serde_json::Value>> {
+    log::info!("Mock: memory_get_knowledge (alias) called");
+    get_knowledge().await
+}
+
+#[tauri::command]
+pub async fn memory_get_active_rituals() -> AppResult<Vec<serde_json::Value>> {
+    log::info!("Mock: memory_get_active_rituals (alias) called");
+    get_active_rituals().await
+}
+
+// ═══════════════════════════════════════════════════════════════
 // NEXUS - Validation
 // ═══════════════════════════════════════════════════════════════
 

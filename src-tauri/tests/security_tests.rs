@@ -4,7 +4,6 @@
 // ═══════════════════════════════════════════════════════════════
 
 use std::env;
-use std::path::PathBuf;
 
 // Note: These tests reference modules from the main crate
 // Run with: cargo test --test security_tests
@@ -200,10 +199,8 @@ fn test_whitelisted_command_allowed() {
     // Commandes whitelistées devraient passer validation
     // (mais peuvent échouer à l'exécution si non installées)
 
-    // which est whitelisté
-    let is_available = guard.is_command_available("espeak");
-    // Peu importe le résultat (dépend de l'install), pas d'erreur de validation
-    drop(is_available);
+    // Vérification de la disponibilité d'espeak
+    let _is_available = guard.is_command_available("espeak");
 
     // Validation seule (sans exécution)
     let result = guard.validate_command("espeak");

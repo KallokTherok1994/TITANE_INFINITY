@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-@import '../../styles/variables.css';
+/* Variables héritées de titane-fusion.css (global) */
 
 .message-list-container {
   flex: 1;

@@ -156,24 +156,31 @@ mod tests {
 
     #[test]
     fn test_mental_charge_overload() {
-        let mut charge = MentalCharge::default();
-        charge.current = 0.9;
-        charge.capacity = 0.8;
+        let charge = MentalCharge {
+            current: 0.9,
+            capacity: 0.8,
+            ..Default::default()
+        };
 
         assert!(charge.is_overloaded());
     }
 
     #[test]
     fn test_mental_charge_needs_break() {
-        let mut charge = MentalCharge::default();
-        charge.fatigue = 0.8;
+        let charge = MentalCharge {
+            fatigue: 0.8,
+            ..Default::default()
+        };
 
         assert!(charge.needs_break());
 
-        charge.fatigue = 0.5;
-        charge.recovery_needed = true;
+        let charge2 = MentalCharge {
+            fatigue: 0.5,
+            recovery_needed: true,
+            ..Default::default()
+        };
 
-        assert!(charge.needs_break());
+        assert!(charge2.needs_break());
     }
 
     #[test]
