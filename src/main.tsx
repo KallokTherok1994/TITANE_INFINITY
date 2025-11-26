@@ -17,20 +17,20 @@ import './pages/styles.css';
 
 // Phase 8: Production Hardening
 import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';
-// import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour debug
-// import { injectSROnlyStyles } from './lib/accessibility'; // DÉSACTIVÉ pour debug
+// import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
+import { injectSROnlyStyles } from './lib/accessibility';
 
 // Initialize Singularity Engine
 // import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
 
 // 🌟 v15: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
-// import { SingularityBridge } from './services/singularityBridge'; // DÉSACTIVÉ pour debug
-// import { SingularityConnections } from './services/singularityConnections'; // DÉSACTIVÉ pour debug
+import { SingularityBridge } from './services/singularityBridge';
+import { SingularityConnections } from './services/singularityConnections';
 
 // ✨ v∞.D: Initialize XP Engine
-// import { XP } from './core/experience/XP_ENGINE'; // DÉSACTIVÉ pour debug
-// XP.load();
-console.log(`[XP] Système chargé (simulé)`);
+import { XP } from './core/experience/XP_ENGINE';
+XP.load();
+console.log(`[XP] Système chargé:`, { level: XP.getLevel(), xp: XP.getXP() });
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
@@ -72,8 +72,7 @@ singularityEngine.initialize().then(() => {
 });
 */
 
-// 🌟 v15: Initialize SingularityBridge - DÉSACTIVÉ pour debug
-/*
+// 🌟 v15: Initialize SingularityBridge
 SingularityBridge.initialize().then(() => {
   console.log('✅ SingularityBridge initialized (Rust ↔ React sync active)');
 
@@ -105,7 +104,6 @@ SingularityBridge.initialize().then(() => {
   console.error('❌ SingularityBridge initialization failed:', err);
   console.error('   → Backend state sync disabled, frontend-only mode active');
 });
-*/
 
 // Phase 8: Initialize Performance Monitoring - DÉSACTIVÉ pour debug
 /*
@@ -127,11 +125,9 @@ setTimeout(() => {
 }, 5000);
 */
 
-// Phase 8: Inject accessibility styles - DÉSACTIVÉ pour debug
-/*
+// Phase 8: Inject accessibility styles
 injectSROnlyStyles();
 console.log('♿ Accessibility styles injected (WCAG 2.1 AA)');
-*/
 
 // 🔧 Global error handlers (catch unhandled errors)
 window.addEventListener('error', (event) => {
