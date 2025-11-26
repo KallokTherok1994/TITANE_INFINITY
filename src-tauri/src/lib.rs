@@ -28,6 +28,7 @@ pub mod control_panel_commands;    // ✅ Control Panel
 pub mod harmonia_engine;           // ✅ Harmonia CPU monitoring
 pub mod memory_compactor;          // ✅ Memory compaction
 pub mod memory_persistence;        // ✅ Memory persistence
+pub mod overdrive;                 // ✅ Chat orchestrator (always active)
 pub mod secure_commands;           // ✅ Secure commands
 pub mod security;                  // ✅ Security layer
 pub mod system_state;              // ✅ System state

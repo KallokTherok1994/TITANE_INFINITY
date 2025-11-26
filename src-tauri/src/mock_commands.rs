@@ -594,126 +594,20 @@ pub async fn chat_generate(input: String) -> Result<String, String> {
     Ok(response.to_string())
 }
 
-#[tauri::command]
-pub async fn chat_send_message(request: MockChatRequest) -> AppResult<MockChatResponse> {
-    log::info!("[MOCK CHAT] chat_send_message: {}", request.message);
+// ═══════════════════════════════════════════════════════════════
+// CHAT AI - MOCKS REMOVED v16.1
+// Real implementations in src/overdrive/chat_orchestrator.rs
+// ═══════════════════════════════════════════════════════════════
 
-    let start = std::time::Instant::now();
-
-    // Simulate AI processing delay (200-800ms)
-    tokio::time::sleep(tokio::time::Duration::from_millis(
-        400 + (rand::random::<u64>() % 400),
-    ))
-    .await;
-
-    // Determine which mock provider to use based on request
-    let (provider, model) = match request.provider.as_str() {
-        "gemini" => ("gemini", "gemini-2.0-flash-exp"),
-        "ollama" => ("ollama", "llama3.1"),
-        "local" => ("local", "titane-echo"),
-        _ => {
-            // Auto mode: simulate cascade (always succeed with local in mock)
-            log::info!("[MOCK CHAT] Auto mode: simulating fallback to local");
-            ("local", "titane-echo")
-        }
-    };
-
-    // Generate mock response based on message content
-    let response_content = generate_mock_response(&request.message);
-
-    let latency = start.elapsed().as_millis() as u64;
-
-    Ok(MockChatResponse {
-        message: MockChatMessage {
-            id: format!("msg_{}", chrono::Utc::now().timestamp_millis()),
-            role: "assistant".to_string(),
-            content: response_content,
-            timestamp: chrono::Utc::now().timestamp_millis() as u64,
-            provider: provider.to_string(),
-            model: model.to_string(),
-            tokens: Some(150),
-            multimodal: false,
-        },
-        success: true,
-        error: None,
-        latency_ms: latency,
-    })
-}
-
-#[tauri::command]
-pub async fn chat_get_providers_status() -> AppResult<Vec<MockProviderStatus>> {
-    log::info!("[MOCK CHAT] chat_get_providers_status");
-
-    Ok(vec![
-        MockProviderStatus {
-            provider: "gemini".to_string(),
-            available: false, // Mock: not configured
-            latency_ms: 0,
-            models: vec!["gemini-2.0-flash-exp".to_string()],
-            error: Some("API key not configured (mock mode)".to_string()),
-        },
-        MockProviderStatus {
-            provider: "ollama".to_string(),
-            available: false, // Mock: not running
-            latency_ms: 0,
-            models: vec!["llama3.1".to_string(), "qwen2.5".to_string()],
-            error: Some("Ollama not running (mock mode)".to_string()),
-        },
-        MockProviderStatus {
-            provider: "local".to_string(),
-            available: true, // Always available in mock
-            latency_ms: 50,
-            models: vec!["titane-echo".to_string()],
-            error: None,
-        },
-    ])
-}
-
-#[tauri::command]
-pub async fn chat_check_providers() -> AppResult<Vec<MockProviderStatus>> {
-    // Same as get_providers_status in mock mode
-    chat_get_providers_status().await
-}
-
-#[tauri::command]
-pub async fn chat_create_conversation() -> AppResult<String> {
-    let conv_id = format!("conv_{}", chrono::Utc::now().timestamp_millis());
-    log::info!("[MOCK CHAT] chat_create_conversation: {}", conv_id);
-    Ok(conv_id)
-}
-
-#[tauri::command]
-pub async fn chat_get_conversation(conversation_id: String) -> AppResult<serde_json::Value> {
-    log::info!("[MOCK CHAT] chat_get_conversation: {}", conversation_id);
-
-    Ok(json!({
-        "conversation_id": conversation_id,
-        "messages": [],
-        "created_at": chrono::Utc::now().timestamp_millis(),
-        "last_updated": chrono::Utc::now().timestamp_millis(),
-    }))
-}
-
-#[tauri::command]
-pub async fn chat_delete_conversation(conversation_id: String) -> AppResult<()> {
-    log::info!("[MOCK CHAT] chat_delete_conversation: {}", conversation_id);
-    Ok(())
-}
-
-#[tauri::command]
-pub async fn chat_set_gemini_key(api_key: String) -> AppResult<()> {
-    log::info!("[MOCK CHAT] chat_set_gemini_key: {} chars", api_key.len());
-    // Mock: just log, don't actually store
-    Ok(())
-}
-
-#[tauri::command]
-pub async fn chat_stream_message(_request: MockChatRequest) -> AppResult<String> {
-    log::info!("[MOCK CHAT] chat_stream_message: streaming not implemented in mock mode");
-    Err(crate::utils::AppError::Io(
-        "Streaming not supported in mock mode".to_string(),
-    ))
-}
+// Removed 8 mock chat commands:
+// - chat_send_message
+// - chat_get_providers_status
+// - chat_check_providers
+// - chat_create_conversation
+// - chat_get_conversation
+// - chat_delete_conversation
+// - chat_set_gemini_key
+// - chat_stream_message
 
 // ═══════════════════════════════════════════════════════════════
 // FILE UPLOAD & PROCESSING — Unified Command (v∞)

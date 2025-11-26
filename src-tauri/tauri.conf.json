@@ -4,9 +4,8 @@
   "version": "15.0.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "beforeDevCommand": "pnpm vite dev",
+    "beforeDevCommand": "pnpm vite build --watch",
     "beforeBuildCommand": "pnpm run build",
-    "devUrl": "http://localhost:1420",
     "frontendDist": "../dist"
   },
   "bundle": {

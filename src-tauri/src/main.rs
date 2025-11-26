@@ -19,7 +19,13 @@
 use tauri::Manager;
 
 // TITANE∞ command modules
-use titane_infinity::{control_panel_commands, mock_commands, secure_commands, time_commands};
+use titane_infinity::{
+    control_panel_commands, 
+    mock_commands, 
+    overdrive,  // ✅ v16.1 CHAT ORCHESTRATOR
+    secure_commands, 
+    time_commands
+};
 
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
@@ -195,15 +201,15 @@ async fn main() {
             mock_commands::get_files_by_category,
             mock_commands::clear_memory,
             mock_commands::store_file,
-            // Chat AI - Mock Orchestrator (v18)
-            mock_commands::chat_send_message,
-            mock_commands::chat_get_providers_status,
-            mock_commands::chat_check_providers,
-            mock_commands::chat_create_conversation,
-            mock_commands::chat_get_conversation,
-            mock_commands::chat_delete_conversation,
-            mock_commands::chat_set_gemini_key,
-            mock_commands::chat_stream_message,
+            // Chat AI - Real Orchestrator (v18) ✅ FIXED v16.1
+            overdrive::chat_orchestrator::chat_send_message,
+            overdrive::chat_orchestrator::chat_get_providers_status,
+            overdrive::chat_orchestrator::chat_check_providers,
+            overdrive::chat_orchestrator::chat_create_conversation,
+            overdrive::chat_orchestrator::chat_get_conversation,
+            overdrive::chat_orchestrator::chat_delete_conversation,
+            overdrive::chat_orchestrator::chat_set_gemini_key,
+            overdrive::chat_orchestrator::chat_stream_message,
             // ═══════════════════════════════════════════════════════════════
             // SECURE COMMANDS v∞ - Super-Prompts H, I, J, K
             // ═══════════════════════════════════════════════════════════════

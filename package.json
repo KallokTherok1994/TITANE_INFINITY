@@ -8,6 +8,7 @@
     "dev": "vite build --watch & tauri dev",
     "dev:tauri": "vite build && tauri dev",
     "build": "vite build",
+    "build:watch": "vite build --watch",
     "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",
     "tauri": "tauri",
     "start": "echo '🔒 TAURI-ONLY MODE: Use npm run dev instead' && exit 1",

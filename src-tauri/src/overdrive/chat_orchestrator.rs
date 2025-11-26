@@ -552,50 +552,14 @@ pub async fn ai_chat_send(
 pub async fn chat_stream_message(
     request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
-    window: tauri::Window,
+    _window: tauri::Window,
 ) -> Result<String, String> {
-    println!("[CHAT_STREAM] Starting streaming request");
-    let start = crate::core::utils::now_ms();
-
-    // Validation
-    if request.message.trim().is_empty() {
-        return Err(TAPIError::validation("Message cannot be empty").into());
-    }
-
-    // Pour le moment, on récupère la réponse complète puis on la stream
-    // TODO: Implémenter vrai streaming depuis les providers
-    let response = chat_send_message(request.clone(), state).await?;
-
-    let content = response.message.content;
-    let words = content.split_whitespace().collect::<Vec<&str>>();
-
-    // Streamer les mots un par un
-    for (i, word) in words.iter().enumerate() {
-        let chunk = if i < words.len() - 1 {
-            format!("{} ", word)
-        } else {
-            word.to_string()
-        };
-
-        // Émettre événement Tauri
-        let _ = window.emit("chat_stream_chunk", chunk);
-
-        // Délai simulé
-        tokio::time::sleep(tokio::time::Duration::from_millis(30)).await;
-    }
-
-    // Événement final
-    let latency_ms = crate::core::utils::elapsed_ms(start);
-    let _ = window.emit(
-        "chat_stream_complete",
-        serde_json::json!({
-            "content": content,
-            "latency_ms": latency_ms,
-            "provider": response.message.provider,
-        }),
-    );
-
-    Ok(content)
+    // FIXME v16.1: Streaming temporairement désactivé (window.emit incompatible Tauri v2)
+    // TODO: Utiliser tauri::Emitter trait pour Tauri v2
+    println!("[CHAT_STREAM] Fallback to non-streaming mode (emit API changed in Tauri v2)");
+    
+    let response = chat_send_message(request, state).await?;
+    Ok(response.message.content)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

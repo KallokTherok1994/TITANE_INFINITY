@@ -1,24 +1,25 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// TITANE∞ v16 — OVERDRIVE MODULE
+// TITANE∞ v16.1 — OVERDRIVE MODULE (PARTIAL ACTIVATION)
 // ═══════════════════════════════════════════════════════════════════════════
-// Module principal exportant tous les sous-modules Overdrive
+// Module principal exportant les sous-modules Overdrive actifs
+// TEMP DISABLED: semantic_kernel, memory_compactor (TAPIError API mismatch)
 // ═══════════════════════════════════════════════════════════════════════════
 
 pub mod api_bridge;
 pub mod auto_heal;
-pub mod chat_orchestrator;
+pub mod chat_orchestrator; // ✅ ACTIVE v16.1
 pub mod exp_engine;
-pub mod memory_compactor;
+// pub mod memory_compactor; // ❌ DISABLED v16.1: TAPIError::storage/internal/parse signature changed
 pub mod memory_engine;
 pub mod project_autopilot;
-pub mod semantic_kernel;
+// pub mod semantic_kernel; // ❌ DISABLED v16.1: TAPIError API mismatch
 pub mod voice_engine;
 
-use crate::core::tapi_error::{TAPIError, TAPIErrorKind};
+use crate::core::tapi_error::TAPIError;
 use tauri::State;
 
 // ─────────────────────────────────────────────────────────────────────────────
-// STATE GLOBAL OVERDRIVE
+// STATE GLOBAL OVERDRIVE v16.1 (PARTIAL)
 // ─────────────────────────────────────────────────────────────────────────────
 
 pub struct OverdriveState {
@@ -26,7 +27,7 @@ pub struct OverdriveState {
     pub voice: voice_engine::VoiceEngineState,
     pub chat: chat_orchestrator::ChatOrchestratorState,
     pub memory: memory_engine::MemoryEngineState,
-    pub semantic: semantic_kernel::SemanticKernelState,
+    // pub semantic: semantic_kernel::SemanticKernelState, // DISABLED v16.1
     pub exp: exp_engine::ExpEngineState,
     pub projects: project_autopilot::ProjectAutoPilotState,
     pub api: api_bridge::ApiBridgeState,
@@ -53,8 +54,9 @@ pub fn init() -> OverdriveState {
     let memory_state = memory_engine::init();
     println!("✅ Memory Engine initialisé");
 
-    let semantic_state = semantic_kernel::init();
-    println!("✅ Semantic Kernel initialisé");
+    // DISABLED v16.1: semantic_kernel TAPIError API mismatch
+    // let semantic_state = semantic_kernel::init();
+    // println!("✅ Semantic Kernel initialisé");
 
     let exp_state = exp_engine::init();
     println!("✅ EXP Engine initialisé");
@@ -79,7 +81,7 @@ pub fn init() -> OverdriveState {
         voice: voice_state,
         chat: chat_state,
         memory: memory_state,
-        semantic: semantic_state,
+        // semantic: semantic_state, // DISABLED v16.1
         exp: exp_state,
         projects: projects_state,
         api: api_state,
