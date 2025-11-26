@@ -31,9 +31,8 @@ export const Experience = (): JSX.Element => {
     return state.history.filter(e => e.source === filter);
   }, [state.history, filter]);
 
-  // Statistiques par source
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const stats = useMemo(() => XP.getStatsBySource(), [state.history.length]);
+  // Statistiques par source (getStatsBySource utilise state interne)
+  const stats = XP.getStatsBySource();
   const sources = useMemo(() => Object.keys(stats).sort(), [stats]);
 
   // Progression vers le prochain niveau

@@ -1,12 +1,16 @@
-#![allow(dead_code)]
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║                   TITANE∞ v13 - INTERRUPTIBILITY 2.0                        ║
+// ║                   TITANE∞ v13 - INTERRUPTIBILITY 2.0 — LEGACY              ║
 // ║              Analyse intelligente des interruptions humaines                ║
+// ║              ⚠️  NON UTILISÉ — Prévu pour v15                           ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+#[allow(dead_code)] // Module v13 legacy, pas encore intégré à v14
 pub mod analyzer;
+#[allow(dead_code)]
 pub mod adaptor;
+#[allow(dead_code)]
 pub mod learner;
+#[allow(dead_code)]
 pub mod window;
 
 // pub use analyzer::InterruptionAnalyzer;

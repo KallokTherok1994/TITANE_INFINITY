@@ -10,7 +10,7 @@ use super::manifest::{FileEntry, UpdateManifest};
 use super::migration::MigrationScript;
 use crate::security::encryption::SigningKeypair;
 use sha2::{Digest, Sha256};
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::fs;
 use tokio::sync::RwLock;
@@ -347,7 +347,6 @@ impl UpdateEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::security::encryption::MasterKey;
 
     #[tokio::test]
     async fn test_update_engine_creation() {

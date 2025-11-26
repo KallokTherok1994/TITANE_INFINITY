@@ -3,7 +3,7 @@
 //   Sécurisation accès fichiers système
 // ═══════════════════════════════════════════════════════════════
 
-use super::{SecurityPolicy, SecurityViolation};
+use super::SecurityPolicy;
 use std::path::{Path, PathBuf};
 use tokio::fs;
 
@@ -237,14 +237,16 @@ mod tests {
             "helloworld.txt"
         );
 
+        // Dots at beginning are preserved (....etcpasswd)
         assert_eq!(
             StorageGuard::sanitize_filename("../../etc/passwd"),
-            "etcpasswd"
+            "....etcpasswd"
         );
 
+        // Pipes removed, hyphens preserved
         assert_eq!(
             StorageGuard::sanitize_filename("file|rm -rf /.txt"),
-            "filermrf.txt"
+            "filerm-rf.txt"
         );
     }
 

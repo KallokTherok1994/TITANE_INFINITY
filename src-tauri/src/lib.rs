@@ -115,10 +115,9 @@ pub mod system; // ⏳ v12 System (Persona) - migrating to v14
 #[allow(dead_code)]
 pub mod devtools; // ⏳ v12 DevTools - migrating to v14
 
-// Old singularity state (deprecated, use core::state::SingularityState)
-#[cfg(all(not(feature = "mock"), feature = "full"))]
-#[allow(dead_code)]
-pub mod singularity_state; // ❌ DEPRECATED: Use core::state::SingularityState (conflicts with mock)
+// ❌ REMOVED v14.7: Old singularity_state (5-layer architecture)
+// → Use core::state::SingularityState instead (4 modules: Nexus, Memory, Harmonia, Sentinel)
+// Reason: Incompatible structure, 0 active commands in main.rs, obsolete architecture
 
 // Services (v12, need audit)
 #[cfg(all(not(feature = "mock"), feature = "full"))]

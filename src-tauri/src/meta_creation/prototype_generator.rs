@@ -26,7 +26,7 @@ impl PrototypeGenerator {
         Self
     }
 
-    pub async fn generate(&self, spec: String) -> Prototype {
+    pub async fn generate(&self, _spec: String) -> Prototype {
         Prototype {
             id: format!("proto_{}", uuid::Uuid::new_v4()),
             name: "Auto-Generated Prototype".to_string(),

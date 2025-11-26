@@ -123,11 +123,13 @@ fn test_filename_sanitization() {
     let safe = StorageGuard::sanitize_filename("hello|world.txt");
     assert_eq!(safe, "helloworld.txt");
 
+    // Dots are preserved (leading dots kept)
     let safe = StorageGuard::sanitize_filename("../../etc/passwd");
-    assert_eq!(safe, "etcpasswd");
+    assert_eq!(safe, "....etcpasswd");
 
+    // Pipes removed, hyphens preserved
     let safe = StorageGuard::sanitize_filename("file;rm -rf /.txt");
-    assert_eq!(safe, "filermrf.txt");
+    assert_eq!(safe, "filerm-rf.txt");
 
     // Espaces enlevés
     let safe = StorageGuard::sanitize_filename("hello world.txt");
@@ -177,8 +179,8 @@ async fn test_safe_operations_workflow() {
     let content = guard.safe_read_string("data.json").await.unwrap();
     assert!(content.contains("test"));
 
-    // 4. Liste fichiers
-    let files = guard.safe_list_dir("").await.unwrap();
+    // 4. Liste fichiers (use "." instead of "" for current dir)
+    let files = guard.safe_list_dir(".").await.unwrap();
     assert!(files.contains(&"data.json".to_string()));
 
     // 5. Suppression

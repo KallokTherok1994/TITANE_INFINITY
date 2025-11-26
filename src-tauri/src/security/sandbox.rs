@@ -10,7 +10,6 @@ use super::validation::PayloadValidator;
 use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use tokio::fs;
-use tokio::io::AsyncReadExt;
 
 const MAX_FILE_SIZE: u64 = 25 * 1024 * 1024; // 25 MB
 const SANDBOX_DIR: &str = "userdata/imports";
@@ -403,7 +402,8 @@ mod tests {
         assert!(result.is_ok());
         let imported = result.unwrap();
         assert_eq!(imported.extension, "txt");
-        assert_eq!(imported.size, 18);
+        // UTF-8 character '∞' = 3 bytes, total = 20 bytes
+        assert_eq!(imported.size, 20);
     }
 
     #[tokio::test]

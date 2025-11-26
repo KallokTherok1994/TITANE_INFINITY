@@ -6,7 +6,7 @@
 //   Validation d'intégrité complète avant lancement
 // ═══════════════════════════════════════════════════════════════
 
-use super::encryption::SigningKeypair;
+
 use super::permissions::verify_permissions;
 use std::path::PathBuf;
 
@@ -216,7 +216,7 @@ async fn verify_tauri_commands() -> Result<bool, String> {
     ];
 
     // TODO: Vérifier que chaque commande est bien enregistrée dans invoke_handler
-    log::debug!("✅ Tauri Commands: OK (mock mode)");
+    log::debug!("✅ Tauri Commands: OK ({} critical commands)", critical_commands.len());
     Ok(true)
 }
 

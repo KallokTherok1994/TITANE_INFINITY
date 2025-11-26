@@ -45,7 +45,7 @@ impl IdeationEngine {
         Self
     }
 
-    pub async fn generate_ideas(&self, context: String) -> IdeationReport {
+    pub async fn generate_ideas(&self, _context: String) -> IdeationReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .unwrap()

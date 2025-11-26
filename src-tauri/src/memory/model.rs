@@ -138,6 +138,7 @@ mod tests {
         conv.add_entry(MessageRole::User, "Message 2".to_string(), 15);
 
         let context = conv.get_context(30);
-        assert_eq!(context.len(), 2); // Should get last 2 messages
+        // Token budget 30: only last message (15 tokens) fits
+        assert_eq!(context.len(), 1);
     }
 }

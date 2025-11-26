@@ -7,7 +7,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// Métadonnées snapshot
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -96,12 +96,12 @@ impl Snapshot {
     }
 
     /// Obtenir chemin fichier snapshot
-    pub fn get_path(&self, base_dir: &PathBuf) -> PathBuf {
+    pub fn get_path(&self, base_dir: &Path) -> PathBuf {
         base_dir.join(format!("{}.snapshot", self.metadata.id))
     }
 
     /// Obtenir chemin signature
-    pub fn get_signature_path(&self, base_dir: &PathBuf) -> PathBuf {
+    pub fn get_signature_path(&self, base_dir: &Path) -> PathBuf {
         base_dir.join(format!("{}.sig", self.metadata.id))
     }
 

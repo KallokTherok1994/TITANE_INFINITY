@@ -1,9 +1,10 @@
-#![allow(dead_code)]
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║                     NOISE ADAPTIVE ENGINE v13                                ║
+// ║                     NOISE ADAPTIVE ENGINE v13 — LEGACY                     ║
 // ║              Auto-calibration + Réduction Bruit Adaptive                     ║
+// ║              ⚠️  NON UTILISÉ — Prévu pour v15                           ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+#[allow(dead_code)] // Module v13 legacy, pas encore intégré à v14
 pub mod calibrator;
 
 // Modules à implémenter (templates disponibles dans TITANE_V13_INTEGRATION_GUIDE.md)

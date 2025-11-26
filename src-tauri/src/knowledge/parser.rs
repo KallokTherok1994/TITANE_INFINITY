@@ -52,6 +52,7 @@ pub struct DocumentMetadata {
 // ══════════════════════════════════════════════════════════════════
 
 pub struct UniversalParser {
+    #[allow(dead_code)]
     supported_formats: Vec<FileFormat>,
 }
 

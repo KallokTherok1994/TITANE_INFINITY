@@ -46,6 +46,7 @@ pub struct PredictionReport {
 }
 
 pub struct PredictorEngine {
+    #[allow(dead_code)]
     history: Vec<PredictiveIssue>,
     trends: HashMap<String, Vec<f32>>,
 }

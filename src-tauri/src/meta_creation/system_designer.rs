@@ -25,7 +25,7 @@ impl SystemDesigner {
         Self
     }
 
-    pub async fn design_system(&self, requirements: String) -> SystemDesign {
+    pub async fn design_system(&self, _requirements: String) -> SystemDesign {
         SystemDesign {
             name: "Auto-Generated System".to_string(),
             components: vec!["Core".to_string(), "UI".to_string(), "Backend".to_string()],

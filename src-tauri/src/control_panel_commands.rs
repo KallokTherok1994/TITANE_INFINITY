@@ -1,12 +1,10 @@
 use serde::{Deserialize, Serialize};
-use std::sync::Mutex;
 /**
  * TITANE∞ OS - Commandes Tauri Control Panel
  * Backend handlers pour toutes les sections du Control Panel
  *
  * © 2025 Humain Total / Kevin Thibault
  */
-use tauri::State;
 
 // ══════════════════════════════════════════════════════════
 // STRUCTURES DE DONNÉES
@@ -182,7 +180,7 @@ pub async fn cp_get_ai_config() -> Result<AIConfig, String> {
 }
 
 #[tauri::command]
-pub async fn cp_set_ai_config(config: AIConfig) -> Result<(), String> {
+pub async fn cp_set_ai_config(_config: AIConfig) -> Result<(), String> {
     // TODO: Sauvegarder config de manière sécurisée
     println!("AI config updated");
     Ok(())
@@ -300,7 +298,7 @@ pub async fn cp_install_update() -> Result<(), String> {
 #[tauri::command]
 pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
     // TODO: Récupérer les logs depuis le système de logging
-    Ok(vec![
+    let logs = vec![
         LogEntry {
             timestamp: "2025-11-25 10:30:00".to_string(),
             level: "info".to_string(),
@@ -313,7 +311,10 @@ pub async fn cp_get_logs(limit: usize) -> Result<Vec<LogEntry>, String> {
             message: "Singularity engine initialized".to_string(),
             source: "singularity".to_string(),
         },
-    ])
+    ];
+
+    // Limiter au nombre demandé
+    Ok(logs.into_iter().take(limit).collect())
 }
 
 #[tauri::command]

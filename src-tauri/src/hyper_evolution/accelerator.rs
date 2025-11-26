@@ -29,6 +29,7 @@ pub struct AccelerationReport {
 }
 
 pub struct AcceleratorEngine {
+    #[allow(dead_code)]
     active_optimizations: Vec<Optimization>,
 }
 

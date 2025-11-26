@@ -3,7 +3,7 @@
  * Traduit état des moteurs TITANE∞ en langage IA
  */
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SymbolicState {

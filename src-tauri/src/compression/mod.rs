@@ -1,9 +1,10 @@
-#![allow(dead_code)]
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║                  COMPRESSION COGNITIVE v13                                   ║
+// ║                  COMPRESSION COGNITIVE v13 — LEGACY                        ║
 // ║          Mémoire longue durée intelligente et hiérarchisée                   ║
+// ║          ⚠️  NON UTILISÉ — Prévu pour v15                               ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+#[allow(dead_code)] // Module v13 legacy, pas encore intégré à v14
 pub mod compressor;
 
 // Modules à implémenter (templates disponibles dans TITANE_V13_INTEGRATION_GUIDE.md)

@@ -7,7 +7,7 @@ use super::model::{Conversation, ConversationSummary, MemoryIndex};
 use super::{MemoryError, MemoryResult};
 use crate::memory_compactor::{CompactorConfig, MemoryCompactor};
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 pub struct MemoryStorage {
     storage_dir: PathBuf,

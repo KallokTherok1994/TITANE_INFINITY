@@ -66,6 +66,7 @@ pub enum MeshMessage {
 
 pub struct MeshLayer {
     node_id: String,
+    #[allow(dead_code)]
     role: NodeRole,
     listen_addr: SocketAddr,
     peers: Arc<Mutex<HashMap<String, NodeInfo>>>,

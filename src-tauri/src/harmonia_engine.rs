@@ -152,12 +152,13 @@ impl CpuMonitor {
     /// Calcule le délai recommandé pour les watchers (en ms)
     pub fn get_recommended_watch_delay(&mut self) -> u64 {
         self.refresh();
-        let load = if let Some(cpu) = self.system.cpus().first() {
+        let _load = if let Some(cpu) = self.system.cpus().first() {
             cpu.cpu_usage()
         } else {
             0.0
         };
 
+        // Délai basé sur le mode Harmonia
         match self.current_mode {
             HarmoniaMode::Normal => 100,    // 100ms (réactif)
             HarmoniaMode::Balanced => 250,  // 250ms (équilibré)

@@ -68,8 +68,8 @@ mod control_panel_tests {
         assert!(result.is_ok());
 
         let status = result.unwrap();
-        assert!(status.power_level >= 0 && status.power_level <= 100);
-        assert!(status.iterations >= 0);
+        assert!(status.power_level <= 100);
+        // iterations is u32, always >= 0
     }
 
     #[tokio::test]
@@ -119,8 +119,7 @@ mod control_panel_tests {
         let stats = result.unwrap();
         assert!(stats.total_size > 0);
         assert!(stats.used_size <= stats.total_size);
-        assert!(stats.cache_size >= 0);
-        assert!(stats.vector_count >= 0);
+        // cache_size and vector_count are unsigned, always >= 0
     }
 
     #[tokio::test]
