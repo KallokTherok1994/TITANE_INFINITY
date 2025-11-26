@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "15.0.0",
-  "description": "TITANE∞ v15.0.0 - Unified System: Clean Architecture + AI Pipeline v15 + Memory v15 + Design System v15 + Production Ready",
+  "version": "16.2.2",
+  "description": "TITANE∞ v16.2.2 - Cognitive Layer v16 + Real API Gemini/Ollama + Memory Engine + Singularity Permissions Fixed",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {

@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
-version      = "15.0.0"
-description  = "TITANE∞ v15.0.0 - Unified Architecture: SingularityEngine v15 + AIRouter v15 + Memory v15 + Overdrive v15 + Complete Tauri API"
+version      = "16.2.2"
+description  = "TITANE∞ v16.2.2 - Cognitive Layer v16 + Real Gemini/Ollama API + Memory Engine + Singularity Fixed"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
