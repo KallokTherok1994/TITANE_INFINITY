@@ -138,40 +138,14 @@ export default defineConfig({
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // 🔒 TAURI NATIVE ONLY - NO HTTP SERVER
+  // 🔒 TAURI NATIVE ONLY - ASSET PROTOCOL MODE
   // ═══════════════════════════════════════════════════════════════════════════
-  // Server configuration REMOVED - Tauri loads from file:// protocol only
-  // All assets served via Tauri's asset protocol, no localhost ports
-  // To run: pnpm run build && tauri dev (builds static files first)
+  // No HTTP server in dev or prod - Tauri loads from tauri:// protocol only
+  // All assets served via Tauri's asset protocol (tauri://localhost)
+  // Dev workflow: npm run build:watch (Vite watch) + tauri dev (beforeDevCommand)
+  // Build workflow: npm run build (Vite static) + tauri build
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // 🎯 DEV SERVER CONFIGURATION (CPU OPTIMIZED)
-  // ═══════════════════════════════════════════════════════════════════════════
-  server: {
-    port: 1420,
-    strictPort: true,
-    host: '127.0.0.1',
-    hmr: {
-      protocol: 'ws',
-      host: '127.0.0.1',
-      port: 1421,
-      overlay: false  // Disable error overlay (CPU heavy)
-    },
-    watch: {
-      // Native file watching (faster than polling)
-      usePolling: false,
-      // Ignore heavy directories
-      ignored: [
-        '**/target/**',
-        '**/node_modules/**',
-        '**/.git/**',
-        '**/dist/**',
-        '**/build/**',
-        '**/docs/archive/**',
-        '**/.tauri/**'
-      ]
-    }
-  },
+  // Server config REMOVED - pure asset-only mode
 
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],

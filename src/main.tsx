@@ -30,7 +30,7 @@ import { SingularityConnections } from './services/singularityConnections';
 // ✨ v∞.D: Initialize XP Engine
 import { XP } from './core/experience/XP_ENGINE';
 XP.load();
-console.log(`[XP] Système chargé:`, { level: XP.getLevel(), xp: XP.getXP() });
+console.log(`[XP] Système chargé:`, { level: XP.state.level, xp: XP.state.total });
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');

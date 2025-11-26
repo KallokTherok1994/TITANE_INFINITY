@@ -416,7 +416,7 @@ pub fn exp_unlock_talent(
 
     // Vérifier points de talent
     if profile.talent_points < talent.cost {
-        return Err(TAPIError::validation(&format!(
+        return Err(TAPIError::validation(format!(
             "Points insuffisants: {} requis, {} disponibles",
             talent.cost, profile.talent_points
         )));
@@ -425,7 +425,7 @@ pub fn exp_unlock_talent(
     // Vérifier prérequis
     for req_id in &talent.requirements {
         if !profile.talents.contains(req_id) {
-            return Err(TAPIError::validation(&format!(
+            return Err(TAPIError::validation(format!(
                 "Prérequis manquant: {}",
                 req_id
             )));

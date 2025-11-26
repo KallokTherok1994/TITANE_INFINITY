@@ -42,6 +42,12 @@ pub struct CognitiveSystemState {
     pub evolution: Arc<Mutex<EvolutionCognitiveEngine>>,
 }
 
+impl Default for CognitiveSystemState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl CognitiveSystemState {
     pub fn new() -> Self {
         Self {

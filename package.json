@@ -5,8 +5,8 @@
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {
-    "dev": "vite build --watch & tauri dev",
-    "dev:tauri": "vite build && tauri dev",
+    "dev": "npm run build:watch",
+    "dev:tauri": "tauri dev",
     "build": "vite build",
     "build:watch": "vite build --watch",
     "preview": "echo '🔒 TAURI-ONLY MODE: HTTP preview disabled. Use: npm run dev' && exit 1",

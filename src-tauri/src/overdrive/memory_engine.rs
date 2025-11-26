@@ -441,7 +441,7 @@ fn calculate_importance(content: &str, metadata: &MemoryMetadata) -> f32 {
     }
 
     // Clamp à [0.0, 1.0]
-    importance.min(1.0).max(0.0)
+    importance.clamp(0.0, 1.0)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

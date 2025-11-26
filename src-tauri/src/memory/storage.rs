@@ -195,7 +195,7 @@ impl MemoryStorage {
         let index = self.load_index()?;
 
         // Update module stats
-        memory_module.memory_count = index.total_conversations;
+        memory_module.memory_count = index.total_conversations as u64;
         memory_module.capacity_usage = if index.total_messages > 10000 {
             (index.total_messages as f32) / 10000.0
         } else {

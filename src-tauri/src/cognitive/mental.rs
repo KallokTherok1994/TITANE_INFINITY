@@ -73,6 +73,7 @@ pub struct InterruptionEvent {
 
 /// État du centre mental (charge cognitive)
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Default)]
 pub struct MentalState {
     pub mode: CognitiveMode,
     pub charge: MentalCharge,
@@ -80,16 +81,6 @@ pub struct MentalState {
     pub session: Option<String>, // Session ID
 }
 
-impl Default for MentalState {
-    fn default() -> Self {
-        Self {
-            mode: CognitiveMode::default(),
-            charge: MentalCharge::default(),
-            current_task: None,
-            session: None,
-        }
-    }
-}
 
 /// Charge mentale globale
 #[derive(Debug, Clone, Serialize, Deserialize)]

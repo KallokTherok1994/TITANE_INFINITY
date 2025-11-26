@@ -51,6 +51,11 @@
     "target",
     ".tauri",
     "backups",
+    "backup_*",
+    "docs/legacy",
+    "docs/archive",
+    "src-tauri/archive",
+    "scripts/archive",
     "**/*.spec.ts",
     "**/*.test.ts"
   ],
