@@ -2,9 +2,9 @@
 
 ## 🎯 TITANE∞ v16.2.2 — Cognitive Layer + Real APIs + Singularity Fixed
 
-**Version complète** : v16.2.2  
-**Date de release** : 26 Novembre 2025  
-**Type** : Corrections critiques + Mises à jour API  
+**Version complète** : v16.2.2
+**Date de release** : 26 Novembre 2025
+**Type** : Corrections critiques + Mises à jour API
 **Statut** : ✅ Production Ready
 
 ---
@@ -136,9 +136,9 @@ Permission denied: System cannot perform 'singularity_read' from singularity_get
 
 **Permissions Matrix** (`permissions.rs`) :
 ```rust
-matrix.insert("state_read".to_string(), 
+matrix.insert("state_read".to_string(),
     vec![Role::Root, Role::System, Role::Ia, Role::User]); // ✅
-matrix.insert("state_write".to_string(), 
+matrix.insert("state_write".to_string(),
     vec![Role::Root, Role::System]); // ✅
 ```
 
@@ -277,6 +277,6 @@ matrix.insert("state_write".to_string(),
 
 ---
 
-**Signature** : TITANE∞ Team — Kevin Thibault / Humain Total  
-**License** : Proprietary — See LICENSE.md  
+**Signature** : TITANE∞ Team — Kevin Thibault / Humain Total
+**License** : Proprietary — See LICENSE.md
 **Date** : 26 Novembre 2025
