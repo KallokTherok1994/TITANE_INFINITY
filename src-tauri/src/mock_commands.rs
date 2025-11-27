@@ -386,14 +386,54 @@ pub async fn singularity_is_critical() -> AppResult<bool> {
 }
 
 #[tauri::command]
-pub async fn sync_singularity() -> AppResult<()> {
+pub async fn sync_singularity() -> AppResult<serde_json::Value> {
     // ✅ v∞ Permission check (SYSTEM level required)
     PERMISSION_GUARD
         .require("state_write", Role::System, "sync_singularity")
         .await?;
 
     log::info!("Mock: sync_singularity called");
-    Ok(())
+    
+    // ✅ FIXED v16.2.2+: Toujours retourner un état valide, jamais null
+    Ok(json!({
+        "physical": {
+            "cpu": 0.0,
+            "ram": 0.0,
+            "disk": 0.0,
+            "network": 0.0,
+            "energy": 1.0,
+            "temperature": 50.0,
+            "power_mode": "balanced"
+        },
+        "cognitive": {
+            "focus": 0.8,
+            "load": 0.3,
+            "depth": 0.5,
+            "clarity": 0.9,
+            "creativity": 0.7,
+            "mode": "default"
+        },
+        "symbolic": {
+            "narrative_coherence": 0.9,
+            "identity_strength": 0.8,
+            "purpose_alignment": 0.85,
+            "meaning_depth": 0.7
+        },
+        "adaptive": {
+            "learning_rate": 0.5,
+            "adaptation_speed": 0.6,
+            "resilience": 0.8,
+            "flexibility": 0.7
+        },
+        "meta": {
+            "self_awareness": 0.8,
+            "introspection_depth": 0.7,
+            "evolution_stage": "stable",
+            "consciousness_level": 0.75
+        },
+        "coherence": 0.85,
+        "timestamp": chrono::Utc::now().timestamp_millis()
+    }))
 }
 
 // ─────────────────────────────────────────────────────────────────

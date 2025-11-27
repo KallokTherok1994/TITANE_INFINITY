@@ -93,15 +93,24 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("singularity_get_full_state");
     commands.insert("singularity_get_physical");
     commands.insert("singularity_get_cognitive");
+    commands.insert("singularity_get_symbolic");
+    commands.insert("singularity_get_adaptive");
+    commands.insert("singularity_get_meta");
     commands.insert("singularity_get_global_coherence");
     commands.insert("singularity_is_critical");
     commands.insert("get_singularity_state");
     commands.insert("sync_singularity");
-    commands.insert("singularity_get_symbolic");
-    commands.insert("singularity_get_adaptive");
-    commands.insert("singularity_get_meta");
     commands.insert("update_singularity_state");
     commands.insert("singularity_self_check");
+    // Mutation commands (v16.2.2+)
+    commands.insert("singularity_update_physical");
+    commands.insert("singularity_update_cognitive");
+    commands.insert("singularity_update_symbolic");
+    commands.insert("singularity_update_adaptive");
+    commands.insert("singularity_update_meta");
+    commands.insert("singularity_update_full_state");
+    commands.insert("singularity_save_state");
+    commands.insert("singularity_load_state");
 
     // ═══════════════════════════════════════════════════════════════
     // NEXUS - Validation
@@ -123,6 +132,16 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     // ═══════════════════════════════════════════════════════════════
     commands.insert("get_cognitive_state");
     commands.insert("update_cognitive_mode");
+
+    // ═══════════════════════════════════════════════════════════════
+    // VOICE COMMANDS - TTS & ASR (v16.2.2+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("speak");
+    commands.insert("stop_speaking");
+    commands.insert("is_speaking");
+    commands.insert("start_recording");
+    commands.insert("stop_recording");
+    commands.insert("transcribe_audio");
 
     // ═══════════════════════════════════════════════════════════════
     // DEVTOOLS & LOGS
