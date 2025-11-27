@@ -55,7 +55,13 @@
     "docs/legacy",
     "docs/archive",
     "src-tauri/archive",
-    "scripts/archive"
+    "scripts/archive",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "src/__tests__/**",
+    "src/test/**"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
