@@ -68,6 +68,7 @@ import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
+import { ChatIADiagnostic } from './components/ChatIADiagnostic'; // ✨ v16.2.2 - Chat IA Diagnostic
 
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
