@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 use super::immersive_avatar_engine::{
-    ImmersiveAvatarEngine, ImmersiveVoiceProfile, ProsodyControl, 
+    ImmersiveAvatarEngine, ImmersiveVoiceProfile, ProsodyControl,
     LipSyncModel, ExpressionModel, FacialExpression, FrenchPhoneme,
 };
 use std::time::Instant;
@@ -13,7 +13,7 @@ use std::time::Instant;
 #[tauri::command]
 pub async fn avatar_run_selftest() -> Result<String, String> {
     log::info!("🧪 [AvatarSelfTest] Starting comprehensive self-test suite...");
-    
+
     let start = Instant::now();
     let mut results = Vec::new();
     let mut passed = 0;
@@ -140,7 +140,7 @@ pub async fn avatar_run_selftest() -> Result<String, String> {
     }
 
     let duration = start.elapsed();
-    
+
     let summary = format!(
         "\n╔══════════════════════════════════════════════════════════════╗\n\
          ║     TITANE∞ v23 — AVATAR ENGINE SELF-TEST REPORT            ║\n\
@@ -205,7 +205,7 @@ fn test_adjust_for_narrative() -> Result<String, String> {
         return Err(format!("Architecte should decrease speech_rate: {} ≥ {}", profile.speech_rate, baseline_rate));
     }
 
-    Ok(format!("Narrative adjustment correct (Architecte: stability={:.2}, rate={:.2})", 
+    Ok(format!("Narrative adjustment correct (Architecte: stability={:.2}, rate={:.2})",
                profile.stability, profile.speech_rate))
 }
 
@@ -221,11 +221,11 @@ fn test_adjust_for_cognitive_load() -> Result<String, String> {
     profile.adjust_for_cognitive_load(0.3, 0.5);
 
     if profile.stability <= baseline_stability {
-        return Err(format!("Low cognitive_stability should increase voice stability: {} ≤ {}", 
+        return Err(format!("Low cognitive_stability should increase voice stability: {} ≤ {}",
                           profile.stability, baseline_stability));
     }
 
-    Ok(format!("Cognitive load adjustment correct (low stability → voice_stability={:.2})", 
+    Ok(format!("Cognitive load adjustment correct (low stability → voice_stability={:.2})",
                profile.stability))
 }
 
@@ -246,7 +246,7 @@ fn test_ssml_generation() -> Result<String, String> {
         return Err("Missing period pause (180ms)".to_string());
     }
 
-    Ok(format!("SSML generation correct ({} breaks inserted)", 
+    Ok(format!("SSML generation correct ({} breaks inserted)",
                output.matches("<break").count()))
 }
 
@@ -258,7 +258,7 @@ fn test_text_segmentation() -> Result<String, String> {
     let prosody = ProsodyControl::default();
     let long_text = "Voici une phrase très longue qui contient plus de quinze mots \
                      et devrait être segmentée pour optimiser la synthèse vocale.";
-    
+
     let segments = prosody.segment_text(long_text);
 
     if segments.len() < 2 {
@@ -325,7 +325,7 @@ fn test_lip_sync_progression() -> Result<String, String> {
         return Err("Morph target should be available".to_string());
     }
 
-    Ok(format!("Lip-sync progression correct ({} frames generated)", 
+    Ok(format!("Lip-sync progression correct ({} frames generated)",
                lip_sync.morph_targets.len()))
 }
 
@@ -339,21 +339,21 @@ fn test_expression_selection() -> Result<String, String> {
     // Test 1: Low cognitive stability → RelaxedBrows
     expression.update_from_state(0.3, 50, "Architecte", false);
     if expression.current_expression != FacialExpression::RelaxedBrows {
-        return Err(format!("Low cognitive_stability should trigger RelaxedBrows: {:?}", 
+        return Err(format!("Low cognitive_stability should trigger RelaxedBrows: {:?}",
                           expression.current_expression));
     }
 
     // Test 2: High cognitive stability → WarmFocus
     expression.update_from_state(0.90, 55, "Architecte", false);
     if expression.current_expression != FacialExpression::WarmFocus {
-        return Err(format!("High cognitive_stability should trigger WarmFocus: {:?}", 
+        return Err(format!("High cognitive_stability should trigger WarmFocus: {:?}",
                           expression.current_expression));
     }
 
     // Test 3: XP milestone (level % 10 == 0) → SoftSmile
     expression.update_from_state(0.75, 60, "Architecte", false);
     if expression.current_expression != FacialExpression::SoftSmile {
-        return Err(format!("XP milestone should trigger SoftSmile: {:?}", 
+        return Err(format!("XP milestone should trigger SoftSmile: {:?}",
                           expression.current_expression));
     }
 
@@ -366,18 +366,18 @@ fn test_expression_selection() -> Result<String, String> {
 
 fn test_wake_word_reaction() -> Result<String, String> {
     let mut engine = ImmersiveAvatarEngine::default();
-    
+
     engine.on_wake_word_detected();
 
     // Vérifier expression LiftedBrows
     if engine.expression.current_expression != FacialExpression::LiftedBrows {
-        return Err(format!("Wake-word should trigger LiftedBrows: {:?}", 
+        return Err(format!("Wake-word should trigger LiftedBrows: {:?}",
                           engine.expression.current_expression));
     }
 
     // Vérifier intensité élevée
     if engine.expression.intensity < 0.8 {
-        return Err(format!("Wake-word intensity should be high: {}", 
+        return Err(format!("Wake-word intensity should be high: {}",
                           engine.expression.intensity));
     }
 
@@ -408,7 +408,7 @@ fn test_performance_benchmark() -> Result<String, String> {
     let prepare_duration = start.elapsed();
 
     if prepare_duration.as_millis() > 50 {
-        return Err(format!("prepare_for_speech too slow: {}ms (target: ≤50ms)", 
+        return Err(format!("prepare_for_speech too slow: {}ms (target: ≤50ms)",
                           prepare_duration.as_millis()));
     }
 
@@ -418,7 +418,7 @@ fn test_performance_benchmark() -> Result<String, String> {
     let morph_duration = start.elapsed();
 
     if morph_duration.as_millis() > 10 {
-        return Err(format!("Morph generation too slow: {}ms (target: ≤10ms)", 
+        return Err(format!("Morph generation too slow: {}ms (target: ≤10ms)",
                           morph_duration.as_millis()));
     }
 
@@ -428,12 +428,12 @@ fn test_performance_benchmark() -> Result<String, String> {
     let expression_duration = start.elapsed();
 
     if expression_duration.as_millis() > 20 {
-        return Err(format!("Expression update too slow: {}ms (target: ≤20ms)", 
+        return Err(format!("Expression update too slow: {}ms (target: ≤20ms)",
                           expression_duration.as_millis()));
     }
 
-    Ok(format!("Performance benchmarks passed (prepare={}ms, morph={}ms, expression={}ms)", 
-               prepare_duration.as_millis(), 
+    Ok(format!("Performance benchmarks passed (prepare={}ms, morph={}ms, expression={}ms)",
+               prepare_duration.as_millis(),
                morph_duration.as_millis(),
                expression_duration.as_millis()))
 }

@@ -1,7 +1,7 @@
 # CHANGELOG v23.0.0 — IMMERSIVE AVATAR ENGINE
 
-**Release Date**: 26 novembre 2025  
-**Status**: ✅ PRODUCTION READY  
+**Release Date**: 26 novembre 2025
+**Status**: ✅ PRODUCTION READY
 **Integration**: SingularityState v∞ (v20) + AdaptiveEngine (v21) + NarrativeEngine (v22)
 
 ---
@@ -273,7 +273,7 @@ import { TitaneAvatar } from '@/components/avatar/TitaneAvatar';
 
 3. **Immersive Mode**:
 ```tsx
-<TitaneAvatar 
+<TitaneAvatar
   size={300}
   enableImmersion={true}
   enableWakeWord={true}
@@ -402,17 +402,17 @@ npm run tauri:build
 
 ## 🙏 ACKNOWLEDGMENTS
 
-**Voice Model**: ElevenLabs Adina (voice_id: FvmvwvObRqIHojkEGh5N)  
-**Framework**: Tauri v2 + React + Rust  
-**Team**: Humain Total / Kevin Thibault / TITANE Team  
+**Voice Model**: ElevenLabs Adina (voice_id: FvmvwvObRqIHojkEGh5N)
+**Framework**: Tauri v2 + React + Rust
+**Team**: Humain Total / Kevin Thibault / TITANE Team
 
 ---
 
 ## 📞 SUPPORT
 
-**Repository**: TITANE_INFINITY  
-**License**: Proprietary © 2025  
-**Issues**: GitHub Issues (internal)  
+**Repository**: TITANE_INFINITY
+**License**: Proprietary © 2025
+**Issues**: GitHub Issues (internal)
 
 ---
 
@@ -422,14 +422,14 @@ npm run tauri:build
 - Backend Rust: ~1,220 lignes (engine + commands + self-tests)
 - Frontend TypeScript/React: ~580 lignes (bridge + component)
 
-**Features**: 6 major (Voice, Prosody, Lip-Sync, Expression, Avatar, Self-Tests)  
-**Commands**: +9 Tauri commands  
-**Tests**: 10 comprehensive self-tests  
-**Documentation**: 900+ lignes  
+**Features**: 6 major (Voice, Prosody, Lip-Sync, Expression, Avatar, Self-Tests)
+**Commands**: +9 Tauri commands
+**Tests**: 10 comprehensive self-tests
+**Documentation**: 900+ lignes
 
 **Status**: ✅ v23.0.0 PRODUCTION READY
 
 ---
 
-**Previous Version**: v22.0.0 (NarrativeEngine)  
+**Previous Version**: v22.0.0 (NarrativeEngine)
 **Next Version**: v24.0.0 (Real G2P + Wake-Word Detection)

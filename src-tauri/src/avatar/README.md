@@ -1,7 +1,7 @@
 # TITANE∞ v23 — Immersive Avatar Engine
 
-**Version**: 23.0.0  
-**Status**: ✅ PRODUCTION READY  
+**Version**: 23.0.0
+**Status**: ✅ PRODUCTION READY
 **Date**: 26 novembre 2025
 
 ---
@@ -52,7 +52,7 @@ import { immersiveAvatarBridge } from '@/services/immersiveAvatarBridgeV23';
 // Component
 function App() {
   return (
-    <TitaneAvatar 
+    <TitaneAvatar
       size={200}
       showExpression={true}
       enableImmersion={true}
@@ -70,7 +70,7 @@ const handleSpeak = async () => {
     0.90,
     0.25
   );
-  
+
   // Send to TTS...
   immersiveAvatarBridge.startLipSync(5000, 60);
 };
@@ -150,8 +150,8 @@ ImmersiveVoiceProfile {
 
 ### French Phonemes (20)
 
-**Vowels**: A, E, I, O, U, EU, OU, AN, ON, IN  
-**Consonants**: P, B, T, D, K, G, F, V, S, Z, CH, J, L, R, M, N  
+**Vowels**: A, E, I, O, U, EU, OU, AN, ON, IN
+**Consonants**: P, B, T, D, K, G, F, V, S, Z, CH, J, L, R, M, N
 **Special**: Silence
 
 ### Morph Targets (4D)
@@ -238,12 +238,12 @@ interface TitaneAvatarProps {
 
 ### Features
 
-✅ **60 FPS Animation** — requestAnimationFrame loop  
-✅ **Morph Application** — Real-time jaw/lips/tongue/spread  
-✅ **Expression Colors** — 8 color variants based on state  
-✅ **Wake-Word Halo** — Radial gradient effect (1.5s)  
-✅ **Auto-Sync** — Backend expression polling (every 2s)  
-✅ **Responsive** — Canvas adapts to size prop  
+✅ **60 FPS Animation** — requestAnimationFrame loop
+✅ **Morph Application** — Real-time jaw/lips/tongue/spread
+✅ **Expression Colors** — 8 color variants based on state
+✅ **Wake-Word Halo** — Radial gradient effect (1.5s)
+✅ **Auto-Sync** — Backend expression polling (every 2s)
+✅ **Responsive** — Canvas adapts to size prop
 
 ### Drawing Functions
 
@@ -325,9 +325,9 @@ await invoke('avatar_run_selftest')
 
 ## 📞 SUPPORT
 
-**Repository**: TITANE_INFINITY  
-**Team**: Humain Total / Kevin Thibault  
-**License**: Proprietary © 2025  
+**Repository**: TITANE_INFINITY
+**Team**: Humain Total / Kevin Thibault
+**License**: Proprietary © 2025
 
 ---
 

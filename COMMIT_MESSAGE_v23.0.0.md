@@ -160,7 +160,7 @@ Pipeline: prepare_for_speech() unifies all v20-v22 state → voice + expressions
 ═══════════════════════════════════════════════════════════════════
 
 // React Component
-<TitaneAvatar 
+<TitaneAvatar
   size={200}
   enableImmersion={true}
   enableWakeWord={true}

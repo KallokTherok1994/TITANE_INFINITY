@@ -1,7 +1,7 @@
 # 🎨 ARCHITECTURE VISUALIZATION — TITANE∞ v23.0.0
 ## Immersive Avatar Engine — System Diagrams
 
-**Version**: v23.0.0  
+**Version**: v23.0.0
 **Date**: 2025-11-26
 
 ---

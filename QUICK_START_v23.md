@@ -1,8 +1,8 @@
 # 🚀 QUICK START — TITANE∞ v23.0.0
 ## Immersive Avatar Engine — Get Started in 5 Minutes
 
-**Version**: v23.0.0  
-**Status**: ✅ PRODUCTION READY  
+**Version**: v23.0.0
+**Status**: ✅ PRODUCTION READY
 **Date**: 2025-11-26
 
 ---
@@ -35,7 +35,7 @@ function App() {
   return (
     <div>
       <h1>TITANE∞ Avatar</h1>
-      <TitaneAvatar 
+      <TitaneAvatar
         mode="2D"
         size={200}
         showExpression={true}
@@ -282,7 +282,7 @@ htop
 ## 🔧 9. Troubleshooting
 
 ### Avatar Not Rendering
-**Problem**: Canvas is blank or not visible  
+**Problem**: Canvas is blank or not visible
 **Solution**:
 1. Check browser console for errors
 2. Verify `TitaneAvatar` component is imported correctly
@@ -290,7 +290,7 @@ htop
 4. Check canvas size: `size={200}` (minimum 100px)
 
 ### Lip-Sync Not Working
-**Problem**: Mouth not moving during speech  
+**Problem**: Mouth not moving during speech
 **Solution**:
 1. Verify `prepareSpeech()` was called before TTS
 2. Check `advanceLipSync()` is called at 60 FPS (every ~16ms)
@@ -298,7 +298,7 @@ htop
 4. Check browser console for Tauri invoke errors
 
 ### Expressions Not Changing
-**Problem**: Face stays Neutral  
+**Problem**: Face stays Neutral
 **Solution**:
 1. Verify `cognitive_stability` and `xp_level` are passed to `prepareSpeech()`
 2. Check expression rules (e.g., `cognitive_stability < 0.5` → RelaxedBrows)
@@ -306,7 +306,7 @@ htop
 4. Ensure `showExpression={true}` prop is set
 
 ### Performance Issues (< 60 FPS)
-**Problem**: Animation is laggy or choppy  
+**Problem**: Animation is laggy or choppy
 **Solution**:
 1. Reduce canvas size: `size={150}` or `size={100}`
 2. Disable expression colors (modify CSS)
@@ -405,15 +405,15 @@ You'll know v23 is working when:
 
 ## 🙏 Support
 
-**Issues**: Report bugs or request features via GitHub Issues  
-**Documentation**: Read `IMMERSIVE_AVATAR_COMPLETE_v23.md` for deep dive  
-**Team**: TITANE∞ Development Team  
-**Version**: v23.0.0  
+**Issues**: Report bugs or request features via GitHub Issues
+**Documentation**: Read `IMMERSIVE_AVATAR_COMPLETE_v23.md` for deep dive
+**Team**: TITANE∞ Development Team
+**Version**: v23.0.0
 **Status**: ✅ PRODUCTION READY
 
 ---
 
-**Welcome to the Immersive Avatar Engine! 🚀**  
+**Welcome to the Immersive Avatar Engine! 🚀**
 Start by importing `<TitaneAvatar />` and calling `prepareSpeech()` — your AI now has a face! 😊
 
 ---

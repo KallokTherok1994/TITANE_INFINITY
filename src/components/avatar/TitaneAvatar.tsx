@@ -30,7 +30,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>(0);
-  
+
   const [_currentMorph, setCurrentMorph] = useState<MorphTarget>({
     jaw_open: 0.1,
     lip_rounding: 0.2,
@@ -38,7 +38,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
     lip_spread: 0.3,
     duration_ms: 0,
   });
-  
+
   const [currentExpression, setCurrentExpression] = useState<FacialExpression>('neutral');
   const [isImmersive, setIsImmersive] = useState(false);
   const [wakeWordActive, setWakeWordActive] = useState(false);
@@ -46,7 +46,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   // ═══════════════════════════════════════════════════════════════
   // INITIALIZATION
   // ═══════════════════════════════════════════════════════════════
-  
+
   useEffect(() => {
     if (enableImmersion) {
       immersiveAvatarBridge.enableImmersion();
@@ -57,7 +57,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   // ═══════════════════════════════════════════════════════════════
   // EXPRESSION UPDATE (poll every 2s)
   // ═══════════════════════════════════════════════════════════════
-  
+
   useEffect(() => {
     const updateExpression = async () => {
       try {
@@ -76,7 +76,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   // ═══════════════════════════════════════════════════════════════
   // WAKE-WORD DETECTION REACTION
   // ═══════════════════════════════════════════════════════════════
-  
+
   const handleWakeWord = useCallback(async () => {
     if (!enableWakeWord) return;
 
@@ -101,7 +101,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   // ═══════════════════════════════════════════════════════════════
   // LIP-SYNC ANIMATION LOOP (60 FPS)
   // ═══════════════════════════════════════════════════════════════
-  
+
   const renderAvatar = useCallback((morph: MorphTarget) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -117,7 +117,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
       ctx.save();
       ctx.beginPath();
       ctx.arc(size / 2, size / 2, size / 2 - 10, 0, Math.PI * 2);
-      
+
       // Halo effect on wake-word
       if (wakeWordActive) {
         const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
@@ -127,7 +127,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
       } else {
         ctx.fillStyle = 'rgba(157, 124, 255, 0.1)';
       }
-      
+
       ctx.fill();
       ctx.restore();
     }
@@ -159,18 +159,18 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
       try {
         // Advance lip-sync frame
         await immersiveAvatarBridge.advanceLipSync();
-        
+
         // Get current morph target
         const morph = await immersiveAvatarBridge.getCurrentMorph();
         setCurrentMorph(morph);
-        
+
         // Render avatar with new morph
         renderAvatar(morph);
-        
+
       } catch (err) {
         console.error('[TitaneAvatar] Animation loop error:', err);
       }
-      
+
       animationFrameRef.current = requestAnimationFrame(animate);
     };
 
@@ -185,7 +185,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   // ═══════════════════════════════════════════════════════════════
   // DRAWING HELPERS
   // ═══════════════════════════════════════════════════════════════
-  
+
   const drawEyes = (ctx: CanvasRenderingContext2D, size: number, expression: FacialExpression) => {
     const centerX = size / 2;
     const centerY = size / 2 - size / 10;
@@ -333,7 +333,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   // ═══════════════════════════════════════════════════════════════
   // RENDER
   // ═══════════════════════════════════════════════════════════════
-  
+
   return (
     <div className="titane-avatar-container" style={{ position: 'relative', width: size, height: size }}>
       <canvas
@@ -347,7 +347,7 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
           transition: 'box-shadow 0.3s ease',
         }}
       />
-      
+
       {showExpression && (
         <div
           style={{

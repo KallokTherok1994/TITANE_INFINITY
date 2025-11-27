@@ -162,7 +162,7 @@ impl ProsodyControl {
 
         for sentence in sentences {
             let word_count = sentence.split_whitespace().count();
-            
+
             if current.split_whitespace().count() + word_count > 15 {
                 // Segment plein → pousser
                 if !current.is_empty() {
@@ -294,7 +294,7 @@ impl LipSyncModel {
     pub fn generate_from_text(&mut self, text: &str) {
         // TODO: Implémenter phonemizer réel (G2P French)
         // Pour l'instant: mapping simple basé sur voyelles/consonnes
-        
+
         self.morph_targets.clear();
         let words: Vec<&str> = text.split_whitespace().collect();
 

@@ -15,7 +15,7 @@
   - 6 styles narratifs: Clear, Structured, Elegant, Embodied, Technical, Synthetic
   - 4 règles d'expression par défaut
   - `generate_expression()`, `adjust_style()`, `evolve_identity()`
-  
+
 - `narrative_commands.rs` (146 lignes)
   - 7 commandes Tauri: `narrative_generate`, `narrative_get_style`, `narrative_set_style`, `narrative_get_identity`, `narrative_evolve`, `narrative_get_archetype`, `narrative_set_archetype`
   - `NarrativeEngineGlobal` avec thread-safety (Arc<Mutex>)
@@ -260,8 +260,8 @@ None. v21+v22 sont fully backward-compatible avec v20.
 
 ---
 
-**Version v22.0.0 released**: 26 novembre 2025  
-**Total commits**: 2 (v21 + v22)  
-**Lines changed**: +4983 / -0  
-**Contributors**: KallokTherok1994  
+**Version v22.0.0 released**: 26 novembre 2025
+**Total commits**: 2 (v21 + v22)
+**Lines changed**: +4983 / -0
+**Contributors**: KallokTherok1994
 **Status**: ✅ PRODUCTION READY
