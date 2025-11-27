@@ -4,7 +4,7 @@
   "version": "16.2.2",
   "identifier": "com.titane.infinity",
   "build": {
-    "beforeDevCommand": "npm run build:watch",
+    "beforeDevCommand": "npm run vite:dev",
     "beforeBuildCommand": "npm run build",
     "frontendDist": "../dist",
     "devUrl": "http://localhost:5173"
