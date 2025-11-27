@@ -68,6 +68,7 @@ import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
+import { ChatDiagnostic } from './components/ChatDiagnostic'; // ✨ v16.2.2 - Chat IA Diagnostic
 import { ChatIADiagnostic } from './components/ChatIADiagnostic'; // ✨ v16.2.2 - Chat IA Diagnostic
 
 // v15: SingularityState Monitor
@@ -254,6 +255,9 @@ const AppRouter: React.FC = () => {
       }
       sidebarCollapsed={sidebarCollapsed}
     >
+      {/* Chat IA Diagnostic Overlay */}
+      <ChatDiagnostic />
+
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={
         <div style={{

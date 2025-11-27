@@ -68,7 +68,7 @@ pub struct ChatOrchestratorState {
     provider_status: Arc<RwLock<Vec<ProviderStatus>>>,
     provider_last_check: Arc<RwLock<std::collections::HashMap<String, u64>>>,
     provider_failure_count: Arc<RwLock<std::collections::HashMap<String, u32>>>,
-    gemini_api_key: Arc<RwLock<Option<String>>>,
+    pub gemini_api_key: Arc<RwLock<Option<String>>>,
     #[allow(dead_code)]
     default_provider: Arc<RwLock<String>>,
 }
@@ -87,14 +87,11 @@ pub fn init() -> ChatOrchestratorState {
         default_provider: Arc::new(RwLock::new("auto".to_string())),
     };
 
-    // Initialiser statuts providers (bloquer pour init synchrone)
-    let rt = tokio::runtime::Runtime::new()
-        .expect("[CHAT_ORCHESTRATOR] FATAL: Failed to create tokio runtime");
-    rt.block_on(async {
-        initialize_providers(&state).await;
-    });
-
     state
+}
+
+pub async fn initialize_providers_async(state: &ChatOrchestratorState) {
+    initialize_providers(state).await;
 }
 
 async fn initialize_providers(state: &ChatOrchestratorState) {
@@ -159,8 +156,19 @@ async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) ->
             api_key.is_some() // Simplifié: si clé présente, considérer disponible
         }
         "ollama" => {
-            // TODO: Ping rapide http://localhost:11434/api/tags
-            true // Temporaire: assume disponible
+            // Ping rapide http://localhost:11434/api/tags
+            match reqwest::Client::builder()
+                .timeout(std::time::Duration::from_millis(500))
+                .build()
+            {
+                Ok(client) => {
+                    match client.get("http://localhost:11434/api/tags").send().await {
+                        Ok(resp) if resp.status().is_success() => true,
+                        _ => false,
+                    }
+                }
+                Err(_) => false,
+            }
         }
         "local" => true, // Toujours disponible
         _ => false,

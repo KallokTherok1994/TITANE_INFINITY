@@ -5,11 +5,11 @@
  * Tests automatisés complets sans interaction utilisateur
  */
 
-import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 // Mock Tauri avec réponses réalistes
 vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn().mockImplementation(async (cmd: string, args?: any) => {
+  invoke: vi.fn().mockImplementation(async (cmd: string, args?: unknown) => {
     // Simuler latence réseau réaliste
     await new Promise(resolve => setTimeout(resolve, Math.random() * 50 + 10));
 
@@ -37,13 +37,14 @@ vi.mock('@tauri-apps/api/core', () => ({
         return 0.96 + Math.random() * 0.04;
 
       // Pipeline
-      case 'pipeline_analyze_intention':
+      case 'pipeline_analyze_intention': {
         const intentions = ['question', 'command', 'conversation', 'analysis'];
         return {
           primary: intentions[Math.floor(Math.random() * intentions.length)],
           confidence: 0.75 + Math.random() * 0.25,
           context: ['user_interaction', 'chat_flow'],
         };
+      }
 
       case 'pipeline_generate_cognitive_response':
         return {
@@ -178,18 +179,18 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
         const response = await invoke('pipeline_generate_cognitive_response', {
           message: `Test ${i}`,
-          intention: (intention as any).primary,
+          intention: (intention as Record<string, unknown>).primary,
         });
 
         expect(intention).toBeDefined();
         expect(response).toBeDefined();
-        expect((response as any).confidence).toBeGreaterThan(0.5);
+        expect((response as Record<string, number>).confidence).toBeGreaterThan(0.5);
 
         results.push({ intention, response });
       }
 
       expect(results).toHaveLength(100);
-      const avgConfidence = results.reduce((sum, r) => sum + (r.response as any).confidence, 0) / 100;
+      const avgConfidence = results.reduce((sum, r) => sum + (r.response as Record<string, number>).confidence, 0) / 100;
       expect(avgConfidence).toBeGreaterThan(0.7);
     }, 30000); // 30s timeout
   });
@@ -205,12 +206,12 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
         const brokenModules = await invoke('autoheal_detect_broken_modules');
 
         // Réparer si nécessaire
-        if ((rustWarnings as any[]).length > 0 || (tsErrors as any[]).length > 0) {
+        if ((rustWarnings as unknown[]).length > 0 || (tsErrors as unknown[]).length > 0) {
           await invoke('autofix_fix_all');
         }
 
-        if ((brokenModules as any[]).length > 0) {
-          for (const module of brokenModules as any[]) {
+        if ((brokenModules as unknown[]).length > 0) {
+          for (const module of brokenModules as Record<string, unknown>[]) {
             await invoke('autoheal_heal_cognitive_module', { module_type: module.module_type });
           }
         }
@@ -238,12 +239,12 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
         });
 
         const animation = await invoke('pipeline_prepare_avatar_animation', {
-          tts_duration: (tts as any).duration,
+          tts_duration: (tts as Record<string, number>).duration,
         });
 
         expect(animation).toBeDefined();
-        expect((animation as any).keyframes).toBeDefined();
-        expect((animation as any).fps).toBeGreaterThan(30);
+        expect((animation as Record<string, unknown>).keyframes).toBeDefined();
+        expect((animation as Record<string, number>).fps).toBeGreaterThan(30);
 
         states.push({ tts, animation });
       }
@@ -261,7 +262,7 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
         const metrics = await invoke('performance_get_metrics');
 
         expect(state).toBeDefined();
-        expect((metrics as any).fps).toBeGreaterThan(30);
+        expect((metrics as Record<string, number>).fps).toBeGreaterThan(30);
 
         appearances.push({ state, metrics });
       }
@@ -295,7 +296,7 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
       for (let i = 0; i < 100; i++) {
         const metrics = await invoke('performance_get_metrics');
-        samples.push((metrics as any).fps);
+        samples.push((metrics as Record<string, number>).fps);
       }
 
       const avgFps = samples.reduce((sum, fps) => sum + fps, 0) / samples.length;
@@ -306,7 +307,7 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
     }, 20000);
 
     it('should handle concurrent operations', async () => {
-      const operations = Array(50).fill(null).map(async (_, i) => {
+      const operations = Array(50).fill(null).map(async () => {
         const [state, metrics, stats] = await Promise.all([
           invoke('singularity_get_fusion_state'),
           invoke('performance_get_metrics'),
@@ -333,15 +334,15 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
       for (let i = 0; i < 20; i++) {
         // Simuler détection de problèmes
-        const threats = await invoke('crashguard_detect_threats');
+        void await invoke('crashguard_detect_threats');
         const broken = await invoke('autoheal_detect_broken_modules');
 
         // Auto-heal si nécessaire
-        if ((broken as any[]).length > 0) {
+        if ((broken as unknown[]).length > 0) {
           const healed = await invoke('autoheal_heal_cognitive_module', {
             module_type: 'cognitive',
           });
-          expect((healed as any).success).toBe(true);
+          expect((healed as Record<string, boolean>).success).toBe(true);
           failures.push(healed);
         }
 
@@ -370,15 +371,15 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
     });
 
     it('should have stable performance metrics', async () => {
-      const samples = [];
+      const samples: Array<{ cpu_usage: number; memory_usage: number }> = [];
 
       for (let i = 0; i < 10; i++) {
-        const metrics = await invoke('performance_get_metrics');
+        const metrics = await invoke('performance_get_metrics') as { cpu_usage: number; memory_usage: number };
         samples.push(metrics);
       }
 
-      const avgCpu = samples.reduce((sum, m) => sum + (m as any).cpu_usage, 0) / 10;
-      const avgMemory = samples.reduce((sum, m) => sum + (m as any).memory_usage, 0) / 10;
+      const avgCpu = samples.reduce((sum, m) => sum + m.cpu_usage, 0) / 10;
+      const avgMemory = samples.reduce((sum, m) => sum + m.memory_usage, 0) / 10;
 
       expect(avgCpu).toBeLessThan(80); // <80% CPU
       expect(avgMemory).toBeLessThan(4096000000); // <4GB

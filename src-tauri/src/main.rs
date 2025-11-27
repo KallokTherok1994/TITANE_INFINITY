@@ -81,6 +81,9 @@ impl CognitiveSystemState {
 
 #[tokio::main]
 async fn main() {
+    // Load .env file for API keys and configuration
+    dotenv::dotenv().ok();
+
     // Initialize logger
     env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("info")).init();
 
@@ -189,6 +192,26 @@ async fn main() {
     log::info!("✅ ImmersiveAvatarEngine v23: Voice + Lip-Sync + Expressions active");
 
     // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE CHAT ORCHESTRATOR v16 (OVERDRIVE)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("💬 Initializing ChatOrchestrator v16...");
+    let chat_orchestrator_state = overdrive::chat_orchestrator::init();
+
+    // Initialize providers async (use existing tokio runtime)
+    overdrive::chat_orchestrator::initialize_providers_async(&chat_orchestrator_state).await;
+
+    // Load Gemini API key from environment
+    if let Ok(api_key) = std::env::var("GEMINI_API_KEY") {
+        let mut key = chat_orchestrator_state.gemini_api_key.write().await;
+        *key = Some(api_key);
+        log::info!("✅ Gemini API key loaded from environment");
+    } else {
+        log::warn!("⚠️  GEMINI_API_KEY not found in environment");
+    }
+
+    log::info!("✅ ChatOrchestrator v16: Gemini + Ollama + Local ready");
+
+    // ═══════════════════════════════════════════════════════════════
     // INITIALIZE SINGULARITY-FUSION vΩ
     // ═══════════════════════════════════════════════════════════════
     log::info!("🌀 Initializing SINGULARITY-FUSION vΩ...");
@@ -208,6 +231,7 @@ async fn main() {
         .manage(adaptive_engine)
         .manage(narrative_engine)
         .manage(avatar_engine)
+        .manage(chat_orchestrator_state)
         .manage(fusion_engine_state)
         .manage(unified_pipeline_state)
         .manage(autofix_state)
@@ -222,6 +246,7 @@ async fn main() {
             log::info!("✅ AdaptiveEngine v21 managed");
             log::info!("✅ NarrativeEngine v22 managed");
             log::info!("✅ ImmersiveAvatarEngine v23 managed");
+            log::info!("✅ ChatOrchestrator v16 managed");
             log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
 
             // Auto-open DevTools in debug mode
