@@ -20,6 +20,7 @@ pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
 pub mod adaptive;   // ✅ AdaptiveEngine v21 (NEW)
 pub mod narrative;  // ✅ NarrativeEngine v22 (NEW)
 pub mod avatar;     // ✅ ImmersiveAvatarEngine v23 (NEW)
+pub mod singularity_fusion;  // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // AI & MEMORY v15

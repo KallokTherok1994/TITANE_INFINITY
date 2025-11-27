@@ -523,6 +523,41 @@ async fn main() {
             titane_infinity::avatar::fullbody_commands::fullbody_get_posture,
             titane_infinity::avatar::fullbody_commands::fullbody_get_stats,
             titane_infinity::avatar::fullbody_selftest::fullbody_run_selftest,
+            // ═══════════════════════════════════════════════════════════════
+            // APPEARANCE ENGINE v24.5 - Outfit, Style & Appearance Control
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::avatar::appearance_commands::avatar_get_appearance,
+            titane_infinity::avatar::appearance_commands::avatar_set_appearance,
+            titane_infinity::avatar::appearance_commands::avatar_update_appearance,
+            titane_infinity::avatar::appearance_commands::avatar_apply_style_preset,
+            titane_infinity::avatar::appearance_commands::avatar_parse_style_command,
+            titane_infinity::avatar::appearance_commands::avatar_save_custom_style,
+            titane_infinity::avatar::appearance_commands::avatar_load_custom_style,
+            titane_infinity::avatar::appearance_commands::avatar_merge_styles,
+            titane_infinity::avatar::appearance_commands::avatar_list_styles,
+            titane_infinity::avatar::appearance_commands::avatar_add_archetype,
+            // ═══════════════════════════════════════════════════════════════
+            // FLOATING AVATAR WINDOW v24.12 - Display State & Window Control
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::avatar::avatar_floating_commands::avatar_get_display_state,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_display_state,
+            titane_infinity::avatar::avatar_floating_commands::avatar_update_display_state,
+            titane_infinity::avatar::avatar_floating_commands::avatar_reset_display_state,
+            titane_infinity::avatar::avatar_floating_commands::avatar_mode_floating,
+            titane_infinity::avatar::avatar_floating_commands::avatar_mode_embed,
+            titane_infinity::avatar::avatar_floating_commands::avatar_mode_hidden,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_position,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_size,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_scale,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_opacity,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_always_on_top,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_locked,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_mirror_mode,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_click_through,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor,
+            titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor_by_name,
+            titane_infinity::avatar::avatar_floating_commands::avatar_list_screens,
+            titane_infinity::avatar::avatar_floating_commands::avatar_move_to_screen,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

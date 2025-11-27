@@ -5,12 +5,13 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — USE CHAT (Composition Hook)
+ *   TITANE∞ v24.20 — USE CHAT (Composition Hook)
  *   Hook composé : Orchestre useChatCore, useChatUI, useChatMemory
+ *   v24.20: Optimisé avec cache et debouncing
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef, useMemo } from 'react';
 import { useChatCore } from './useChatCore';
 import { useChatUI } from './useChatUI';
 import { useChatMemory } from './useChatMemory';
@@ -102,19 +103,38 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // Sync messages depuis memory au changement de mode
   useEffect(() => {
-    console.log(`🔄 USE CHAT v15: Mode changed to ${currentMode}, loading history...`);
+    console.log(`🔄 USE CHAT v24.20: Mode changed to ${currentMode}, loading history...`);
     addMessages(messagesForMode);
   }, [currentMode, messagesForMode, addMessages]);
 
+  // v24.20: Simple response cache (LRU-like avec Map)
+  const responseCache = useRef(new Map<string, ChatEngineResponse>());
+  const lastRequestTime = useRef(0);
+
+  // v24.20: Cache key generator
+  const getCacheKey = useMemo(
+    () => (content: string, mode: ChatMode) => `${mode}:${content.trim().toLowerCase()}`,
+    []
+  );
+
   /**
-   * Envoie message (orchestration complète)
+   * v24.20: Envoie message avec cache + debounce
    */
   const sendMessage = useCallback(
     async (content: string) => {
       if (!content.trim() || isLoading) return;
 
+      // v24.20: Debounce 300ms (évite spam)
+      const now = Date.now();
+      const timeSinceLastRequest = now - lastRequestTime.current;
+      if (timeSinceLastRequest < 300) {
+        console.log(`⏸️ USE CHAT v24.20: Debounced (${timeSinceLastRequest}ms since last request)`);
+        return;
+      }
+      lastRequestTime.current = now;
+
       console.log('\n═════════════════════════════════════════════════════════════');
-      console.log('💬 USE CHAT v15: Send message start');
+      console.log('💬 USE CHAT v24.20: Send message start (cached + debounced)');
       console.log(`📝 Content: "${content.substring(0, 60)}..."`);
       console.log(`🎯 Mode: ${currentMode}`);
       console.log('═════════════════════════════════════════════════════════════\n');
@@ -134,9 +154,26 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       console.log(`✅ User message added + saved`);
 
       try {
-        // Génération IA (timeout 30s géré dans useChatCore)
-        console.log('🚀 Calling generate()...\n');
-        const response: ChatEngineResponse = await generate(content.trim(), messages);
+        // v24.20: Check cache first
+        const cacheKey = getCacheKey(content.trim(), currentMode);
+        let response: ChatEngineResponse;
+
+        if (responseCache.current.has(cacheKey)) {
+          response = responseCache.current.get(cacheKey)!;
+          console.log('🎯 USE CHAT v24.20: Cache HIT (skipping AI call)');
+        } else {
+          // Génération IA (timeout 30s géré dans useChatCore)
+          console.log('🚀 Calling generate() [Cache MISS]...\n');
+          response = await generate(content.trim(), messages);
+
+          // Store in cache (LRU: limit to 100 entries)
+          if (responseCache.current.size >= 100) {
+            const firstKey = responseCache.current.keys().next().value;
+            responseCache.current.delete(firstKey);
+          }
+          responseCache.current.set(cacheKey, response);
+          console.log(`💾 Cached response (${responseCache.current.size}/100 entries)`);
+        }
 
         console.log('\n✅ Response received');
         console.log(`📦 Content: ${response.content.length} chars`);
@@ -174,11 +211,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
 
         console.log('\n═════════════════════════════════════════════════════════════');
-        console.log('🎉 USE CHAT v15: Message processed successfully!');
+        console.log('🎉 USE CHAT v24.20: Message processed successfully!');
         console.log('═════════════════════════════════════════════════════════════\n');
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
-        console.error('\n❌ USE CHAT v15: Error', err);
+        console.error('\n❌ USE CHAT v24.20: Error', err);
 
         // Track error (SELFHEAL++)
         errorTracker.track('chat', errorMessage, 'high');
@@ -233,6 +270,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       clearMessages,
       setError,
       setIsLoading,
+      getCacheKey,
     ]
   );
 
@@ -244,14 +282,16 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     clearMessages();
     setError(null);
     setSuggestions([]);
-    console.log(`🧹 USE CHAT v15: Cleared mode ${currentMode}`);
+    // v24.20: Clear cache on chat clear
+    responseCache.current.clear();
+    console.log(`🧹 USE CHAT v24.20: Cleared mode ${currentMode} + cache`);
   }, [currentMode, clearMode, clearMessages, setError, setSuggestions]);
 
   /**
    * Change le mode
    */
   const setMode = useCallback((mode: ChatMode) => {
-    console.log(`🔄 USE CHAT v15: Change mode → ${mode}`);
+    console.log(`🔄 USE CHAT v24.20: Change mode → ${mode}`);
     setCoreMode(mode);
   }, [setCoreMode]);
 

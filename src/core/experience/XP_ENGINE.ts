@@ -155,14 +155,38 @@ export const XP = {
   }
 };
 
+// ─────────────────────────────────────────────────────────────────
+// Auto-save interval (v24.20: with cleanup)
+// ─────────────────────────────────────────────────────────────────
+
+let autoSaveIntervalId: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * Démarrer l'auto-save (appelé automatiquement)
+ */
+function startAutoSave() {
+  if (autoSaveIntervalId !== null) return; // Already running
+
+  autoSaveIntervalId = setInterval(() => {
+    XP.persist();
+  }, 60000); // Every 60s
+
+  console.log('[XP] Auto-save activé (60s)');
+}
+
+/**
+ * Arrêter l'auto-save (cleanup)
+ */
+export function stopAutoSave() {
+  if (autoSaveIntervalId !== null) {
+    clearInterval(autoSaveIntervalId);
+    autoSaveIntervalId = null;
+    console.log('[XP] Auto-save désactivé');
+  }
+}
+
 // Initialisation automatique
 if (typeof window !== 'undefined') {
   XP.load();
-
-  // ✨ v∞.D7 - Sauvegarde automatique toutes les 60 secondes
-  setInterval(() => {
-    XP.persist();
-  }, 60000);
-
-  console.log('[XP] Auto-save activé (60s)');
+  startAutoSave();
 }

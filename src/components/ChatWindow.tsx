@@ -25,7 +25,7 @@ export interface ChatWindowProps {
   voiceModeActive?: boolean;
 }
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({
+export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
   onVoiceModeToggle,
   voiceModeActive = false,
 }) => {
@@ -218,4 +218,6 @@ Que peux-tu en dire?`
       </div>
     </div>
   );
-};
+});
+
+ChatWindow.displayName = 'ChatWindow';

@@ -116,28 +116,33 @@ export class SingularityConnections {
   }
 
   /**
-   * Start automatic subsystem connections (polling 5s)
+   * Start automatic subsystem connections (v24.20: event-driven + optional fallback polling)
    */
-  static async start(intervalMs: number = 5000): Promise<void> {
+  static async start(intervalMs: number = 0): Promise<void> {
     if (this.isRunning) {
       console.warn('⚠️ SingularityConnections already running');
       return;
     }
 
-    console.log('🔗 Starting SingularityConnections (interval:', intervalMs, 'ms)');
+    console.log('🔗 Starting SingularityConnections v24.20 (event-driven mode)');
     this.isRunning = true;
 
     // Initial sync
     await this.syncAll();
 
-    // Polling loop
-    this.updateInterval = window.setInterval(async () => {
-      try {
-        await this.syncAll();
-      } catch (err) {
-        console.error('❌ SingularityConnections sync error:', err);
-      }
-    }, intervalMs);
+    // v24.20: Fallback polling only if intervalMs > 0 (default: pure event-driven)
+    if (intervalMs > 0) {
+      console.log(`⚠️ SingularityConnections: Fallback polling enabled (${intervalMs}ms)`);
+      this.updateInterval = window.setInterval(async () => {
+        try {
+          await this.syncAll();
+        } catch (err) {
+          console.error('❌ SingularityConnections sync error:', err);
+        }
+      }, intervalMs);
+    } else {
+      console.log('✅ SingularityConnections: Pure event-driven mode (no polling)');
+    }
   }
 
   /**

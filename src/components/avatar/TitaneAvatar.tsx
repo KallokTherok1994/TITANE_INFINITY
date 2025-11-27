@@ -1,12 +1,13 @@
 /**
- * TITANE_INFINITY v23 — Proprietary License
+ * TITANE_INFINITY v24.20 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v23 — IMMERSIVE AVATAR COMPONENT
+ *   TITANE∞ v24.20 — IMMERSIVE AVATAR COMPONENT
  *   2D/3D Avatar avec lip-sync, expressions, wake-word feedback
+ *   v24.20: RAF throttling 60fps, skip unchanged frames, performance optimized
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -30,6 +31,14 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>(0);
+
+  // v24.20: RAF throttling refs (60fps cap)
+  const lastFrameTimeRef = useRef<number>(0);
+  const targetFPS = 60;
+  const frameDuration = 1000 / targetFPS; // 16.67ms
+
+  // v24.20: Skip unchanged frames
+  const lastMorphRef = useRef<MorphTarget | null>(null);
 
   const [_currentMorph, setCurrentMorph] = useState<MorphTarget>({
     jaw_open: 0.1,
@@ -98,9 +107,9 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
     return () => window.removeEventListener('titane:wakeword', handleGlobalWakeWord);
   }, [handleWakeWord]);
 
-  // ═══════════════════════════════════════════════════════════════
-  // LIP-SYNC ANIMATION LOOP (60 FPS)
-  // ═══════════════════════════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
+  // LIP-SYNC ANIMATION LOOP (60 FPS with throttling v24.20)
+  // ═════════════════════════════════════════════════════════════════
 
   const renderAvatar = useCallback((morph: MorphTarget) => {
     const canvas = canvasRef.current;
@@ -155,17 +164,36 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
   }, [size, currentExpression, isImmersive, wakeWordActive]);
 
   useEffect(() => {
-    const animate = async () => {
+    const animate = async (timestamp: number) => {
       try {
+        // v24.20: RAF throttling (60fps cap)
+        const elapsed = timestamp - lastFrameTimeRef.current;
+        if (elapsed < frameDuration) {
+          animationFrameRef.current = requestAnimationFrame(animate);
+          return; // Skip frame if < 16.67ms
+        }
+        lastFrameTimeRef.current = timestamp;
+
         // Advance lip-sync frame
         await immersiveAvatarBridge.advanceLipSync();
 
         // Get current morph target
         const morph = await immersiveAvatarBridge.getCurrentMorph();
-        setCurrentMorph(morph);
 
-        // Render avatar with new morph
-        renderAvatar(morph);
+        // v24.20: Skip render if morph unchanged (performance boost)
+        const changed = (
+          !lastMorphRef.current ||
+          lastMorphRef.current.jaw_open !== morph.jaw_open ||
+          lastMorphRef.current.lip_rounding !== morph.lip_rounding ||
+          lastMorphRef.current.tongue_position !== morph.tongue_position ||
+          lastMorphRef.current.lip_spread !== morph.lip_spread
+        );
+
+        if (changed || wakeWordActive) {
+          setCurrentMorph(morph);
+          lastMorphRef.current = morph;
+          renderAvatar(morph);
+        }
 
       } catch (err) {
         console.error('[TitaneAvatar] Animation loop error:', err);
@@ -174,15 +202,18 @@ export const TitaneAvatar: React.FC<TitaneAvatarProps> = ({
       animationFrameRef.current = requestAnimationFrame(animate);
     };
 
-    animate();
+    // v24.20: Start with initial timestamp
+    lastFrameTimeRef.current = performance.now();
+    animationFrameRef.current = requestAnimationFrame(animate);
+
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [renderAvatar]);
+  }, [renderAvatar, frameDuration, wakeWordActive]);
 
-  // ═══════════════════════════════════════════════════════════════
+  // ═════════════════════════════════════════════════════════════════
   // DRAWING HELPERS
   // ═══════════════════════════════════════════════════════════════
 

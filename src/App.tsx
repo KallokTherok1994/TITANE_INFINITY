@@ -8,13 +8,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — APP COMPONENT
+ *   TITANE∞ v24.20 Phase 9 — APP COMPONENT
  *   Unified Architecture v15: AIRouter + Memory + SingularityEngine
  *   React Router + AppShell + Living Engines
+ *   Phase 9: Route-based code splitting with React.lazy()
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
@@ -59,20 +60,34 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// New v15.1 pages
+// New v15.1 pages (Phase 9: Core pages eagerly loaded)
 import { DashboardPage } from './pages/DashboardPage';
 // CORRECTION v19.1.0: Utiliser la vraie page Chat avec useChat() au lieu du mock setTimeout
 import { Chat as ChatPage } from './ui/pages/Chat';
 import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
-import { DesignSystemPage } from './pages/DesignSystemPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
 
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
 
-// Engine & System pages
+// Phase 9: Lazy load heavy pages (code splitting with named exports)
+const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
+const DevTools = lazy(() => import('./pages/DevTools').then(m => ({ default: m.DevTools })));
+const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage').then(m => ({ default: m.DesignSystemPage })));
+const PerformanceTest = lazy(() => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })));
+const TimeNavigator = lazy(() => import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator })));
+const SystemGovernance = lazy(() => import('./pages/SystemGovernance').then(m => ({ default: m.SystemGovernance })));
+const MultiAIDashboard = lazy(() => import('./ui/pages/MultiAIDashboard'));
+const NodeClusterDashboard = lazy(() => import('./ui/pages/NodeClusterDashboard'));
+const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
+const HyperVisionDashboard = lazy(() => import('./ui/pages/HyperVisionDashboard'));
+const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
+const IntrospectionDashboard = lazy(() => import('./ui/pages/IntrospectionDashboard'));
+const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
+
+// Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
   Nexus,
@@ -82,33 +97,7 @@ import {
   SelfHeal,
   AdaptiveEngine,
   Memory,
-  Settings,
-  DevTools,
 } from './pages';
-
-// Performance Test Page
-import { PerformanceTest } from './pages/PerformanceTest';
-
-// v∞ Super-Prompt N6/K8 - Time Navigation & Governance
-import { TimeNavigator } from './pages/TimeNavigator';
-import { SystemGovernance } from './pages/SystemGovernance';
-
-// v∞ Phase 4 - Multi-Agent System (Super-Prompt O)
-import { MultiAIDashboard } from './ui/pages/MultiAIDashboard';
-import { multiAgentEngine } from './core/ai/multi_agent_engine';
-import { HeliosAgent } from './core/ai/agents/helios_agent';
-import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
-import { PersonaAgent } from './core/ai/agents/persona_agent';
-import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
-import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
-
-// v∞ Phases 5-10 - Super-Prompts P-U
-import NodeClusterDashboard from './ui/pages/NodeClusterDashboard';
-import KnowledgeFusionPage from './ui/pages/KnowledgeFusionPage';
-import HyperVisionDashboard from './ui/pages/HyperVisionDashboard';
-import CreationStudio from './ui/pages/CreationStudio';
-import IntrospectionDashboard from './ui/pages/IntrospectionDashboard';
-import EvolutionMonitor from './ui/pages/EvolutionMonitor';
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -256,72 +245,86 @@ const AppRouter: React.FC = () => {
       }
       sidebarCollapsed={sidebarCollapsed}
     >
-      <Routes>
-        {/* Main Routes v15.2+ */}
-        <Route path="/" element={<DashboardPage />} />
-        <Route path="/chat" element={
-          <ErrorBoundary context="ChatPage">
-            <ChatPage />
-          </ErrorBoundary>
-        } />
-        <Route path="/cognitive" element={
-          <ErrorBoundary context="CognitivePage">
-            <CognitivePage />
-          </ErrorBoundary>
-        } />
-        <Route path="/progression" element={<ProgressionPage />} />
-        <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-        <Route path="/design-system" element={<DesignSystemPage />} />
-        <Route path="/diagnostics" element={<DiagnosticPanel />} /> {/* ✨ v19.1.0 - System Diagnostics */}
+      {/* Phase 9: Suspense boundary for lazy-loaded routes */}
+      <Suspense fallback={
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          fontSize: '1.2rem',
+          color: '#727b81'
+        }}>
+          ⚡ Chargement...
+        </div>
+      }>
+        <Routes>
+          {/* Main Routes v15.2+ */}
+          <Route path="/" element={<DashboardPage />} />
+          <Route path="/chat" element={
+            <ErrorBoundary context="ChatPage">
+              <ChatPage />
+            </ErrorBoundary>
+          } />
+          <Route path="/cognitive" element={
+            <ErrorBoundary context="CognitivePage">
+              <CognitivePage />
+            </ErrorBoundary>
+          } />
+          <Route path="/progression" element={<ProgressionPage />} />
+          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+          <Route path="/design-system" element={<DesignSystemPage />} />
+          <Route path="/diagnostics" element={<DiagnosticPanel />} /> {/* ✨ v19.1.0 - System Diagnostics */}
 
-        {/* v∞ Super-Prompt N6/K8 - Time Navigation & Governance */}
-        <Route path="/time-navigator" element={<TimeNavigator />} />
-        <Route path="/governance" element={<SystemGovernance />} />
+          {/* v∞ Super-Prompt N6/K8 - Time Navigation & Governance (Phase 9: lazy loaded) */}
+          <Route path="/time-navigator" element={<TimeNavigator />} />
+          <Route path="/governance" element={<SystemGovernance />} />
 
-        {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) */}
-        <Route path="/multi-ai" element={
-          <ErrorBoundary context="MultiAIDashboard">
-            <MultiAIDashboard />
-          </ErrorBoundary>
-        } />
+          {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) (Phase 9: lazy loaded) */}
+          <Route path="/multi-ai" element={
+            <ErrorBoundary context="MultiAIDashboard">
+              <MultiAIDashboard />
+            </ErrorBoundary>
+          } />
 
-        {/* v∞ Phases 5-10 - Super-Prompts P-U */}
-        <Route path="/cluster" element={<NodeClusterDashboard />} />
-        <Route path="/knowledge" element={<KnowledgeFusionPage />} />
-        <Route path="/hypervision" element={<HyperVisionDashboard />} />
-        <Route path="/creation" element={<CreationStudio />} />
-        <Route path="/introspection" element={<IntrospectionDashboard />} />
-        <Route path="/evolution" element={<EvolutionMonitor />} />
+          {/* v∞ Phases 5-10 - Super-Prompts P-U (Phase 9: lazy loaded) */}
+          <Route path="/cluster" element={<NodeClusterDashboard />} />
+          <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+          <Route path="/hypervision" element={<HyperVisionDashboard />} />
+          <Route path="/creation" element={<CreationStudio />} />
+          <Route path="/introspection" element={<IntrospectionDashboard />} />
+          <Route path="/evolution" element={<EvolutionMonitor />} />
 
-        {/* v15: SingularityState Monitor */}
-        <Route path="/singularity" element={
-          <ErrorBoundary context="SingularityMonitor">
-            <SingularityMonitor />
-          </ErrorBoundary>
-        } />
+          {/* v15: SingularityState Monitor */}
+          <Route path="/singularity" element={
+            <ErrorBoundary context="SingularityMonitor">
+              <SingularityMonitor />
+            </ErrorBoundary>
+          } />
 
-        {/* Engine Routes */}
-        <Route path="/helios" element={<Helios />} />
-        <Route path="/nexus" element={<Nexus />} />
-        <Route path="/harmonia" element={<Harmonia />} />
-        <Route path="/sentinel" element={<Sentinel />} />
-        <Route path="/watchdog" element={<Watchdog />} />
-        <Route path="/selfheal" element={<SelfHeal />} />
-        <Route path="/adaptive" element={<AdaptiveEngine />} />
-        <Route path="/memory" element={<Memory />} />
+          {/* Engine Routes */}
+          <Route path="/helios" element={<Helios />} />
+          <Route path="/nexus" element={<Nexus />} />
+          <Route path="/harmonia" element={<Harmonia />} />
+          <Route path="/sentinel" element={<Sentinel />} />
+          <Route path="/watchdog" element={<Watchdog />} />
+          <Route path="/selfheal" element={<SelfHeal />} />
+          <Route path="/adaptive" element={<AdaptiveEngine />} />
+          <Route path="/memory" element={<Memory />} />
 
-        {/* System Routes */}
-        <Route path="/settings" element={
-          <ErrorBoundary context="Settings">
-            <Settings />
-          </ErrorBoundary>
-        } />
-        <Route path="/devtools" element={<DevTools />} />
-        <Route path="/performance" element={<PerformanceTest />} />
+          {/* System Routes (Phase 9: lazy loaded) */}
+          <Route path="/settings" element={
+            <ErrorBoundary context="Settings">
+              <Settings />
+            </ErrorBoundary>
+          } />
+          <Route path="/devtools" element={<DevTools />} />
+          <Route path="/performance" element={<PerformanceTest />} />
 
-        {/* Catch-all - Redirection vers Dashboard */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Catch-all - Redirection vers Dashboard */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </AppShell>
   );
 };

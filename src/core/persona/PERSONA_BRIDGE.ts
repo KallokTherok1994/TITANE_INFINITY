@@ -81,9 +81,37 @@ export class PersonaBridge {
 
 export const personaBridge = new PersonaBridge();
 
+// ─────────────────────────────────────────────────────────────────
+// Auto-sync interval (v24.20: with cleanup)
+// ─────────────────────────────────────────────────────────────────
+
+let autoSyncIntervalId: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * Démarrer l'auto-sync (appelé automatiquement)
+ */
+function startAutoSync() {
+  if (autoSyncIntervalId !== null) return; // Already running
+
+  autoSyncIntervalId = setInterval(() => {
+    personaBridge.synchronize();
+  }, 5000); // Every 5s
+
+  console.log('[PersonaBridge] Auto-sync activé (5s)');
+}
+
+/**
+ * Arrêter l'auto-sync (cleanup)
+ */
+export function stopAutoSync() {
+  if (autoSyncIntervalId !== null) {
+    clearInterval(autoSyncIntervalId);
+    autoSyncIntervalId = null;
+    console.log('[PersonaBridge] Auto-sync désactivé');
+  }
+}
+
 // Auto-sync toutes les 5 secondes
 if (typeof window !== 'undefined') {
-  setInterval(() => {
-    personaBridge.synchronize();
-  }, 5000);
+  startAutoSync();
 }

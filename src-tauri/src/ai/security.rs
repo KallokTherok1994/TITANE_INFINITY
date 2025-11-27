@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17.0 — AI ROUTER SECURITY HARDENING
+//   TITANE∞ v24.20 Phase 8 — AI ROUTER SECURITY HARDENING
 //   Timeout strict, filtrage prompts, validation réponses, pare-feu
+//   Optimization: Static pattern arrays (no heap allocations)
 // ═══════════════════════════════════════════════════════════════
 
 use regex::Regex;
@@ -15,6 +16,29 @@ const ALLOWED_ENDPOINTS: &[&str] = &[
     "https://generativelanguage.googleapis.com",
     "http://localhost:11434",
     "http://127.0.0.1:11434",
+];
+
+// Phase 8: Static security patterns (no runtime allocation)
+const INJECTION_PATTERNS: &[&str] = &[
+    r"<script",
+    r"javascript:",
+    r"eval\(",
+    r"__proto__",
+    r"constructor\[",
+    r"\$\{",
+    r"exec\(",
+    r"system\(",
+];
+
+const SUSPICIOUS_COMMANDS: &[&str] = &[
+    "sudo", "rm -rf", "chmod", "wget", "curl", "nc ", "bash", "sh ", "exec",
+];
+
+const DANGEROUS_PATTERNS: &[&str] = &[
+    r"<script",
+    r"javascript:",
+    r"data:text/html",
+    r"vbscript:",
 ];
 
 #[derive(Debug, Clone)]
@@ -42,19 +66,8 @@ pub fn sanitize_prompt(prompt: &str) -> Result<String, AISecurityError> {
         .filter(|c| !c.is_control() || *c == '\n' || *c == '\r' || *c == '\t')
         .collect();
 
-    // Détecter les tentatives d'injection
-    let injection_patterns = vec![
-        r"<script",
-        r"javascript:",
-        r"eval\(",
-        r"__proto__",
-        r"constructor\[",
-        r"\$\{",
-        r"exec\(",
-        r"system\(",
-    ];
-
-    for pattern in injection_patterns {
+    // Détecter les tentatives d'injection (Phase 8: use static patterns)
+    for pattern in INJECTION_PATTERNS {
         let re = Regex::new(pattern).unwrap();
         if re.is_match(&cleaned.to_lowercase()) {
             return Err(AISecurityError::InjectionAttempt(format!(
@@ -64,13 +77,9 @@ pub fn sanitize_prompt(prompt: &str) -> Result<String, AISecurityError> {
         }
     }
 
-    // Limite le nombre de commandes système suspectes
-    let suspicious_commands = vec![
-        "sudo", "rm -rf", "chmod", "wget", "curl", "nc ", "bash", "sh ", "exec",
-    ];
-
+    // Limite le nombre de commandes système suspectes (Phase 8: use static patterns)
     let mut suspicious_count = 0;
-    for cmd in suspicious_commands {
+    for cmd in SUSPICIOUS_COMMANDS {
         if cleaned.to_lowercase().contains(cmd) {
             suspicious_count += 1;
         }
@@ -93,15 +102,8 @@ pub fn validate_ai_response(response: &str) -> Result<(), AISecurityError> {
         return Err(AISecurityError::ResponseTooLarge(response.len()));
     }
 
-    // Détecter du contenu potentiellement dangereux
-    let dangerous_patterns = vec![
-        r"<script",
-        r"javascript:",
-        r"data:text/html",
-        r"vbscript:",
-    ];
-
-    for pattern in dangerous_patterns {
+    // Détecter du contenu potentiellement dangereux (Phase 8: use static patterns)
+    for pattern in DANGEROUS_PATTERNS {
         let re = Regex::new(pattern).unwrap();
         if re.is_match(&response.to_lowercase()) {
             return Err(AISecurityError::DangerousContent(format!(

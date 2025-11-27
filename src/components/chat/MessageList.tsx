@@ -24,7 +24,7 @@ interface MessageListProps {
   error?: string | null;
 }
 
-export const MessageList: React.FC<MessageListProps> = ({
+export const MessageList: React.FC<MessageListProps> = React.memo(({
   messages,
   isLoading = false,
   error = null,
@@ -107,6 +107,15 @@ export const MessageList: React.FC<MessageListProps> = ({
       </div>
     </div>
   );
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if messages length changed or loading/error state changed
+  return (
+    prevProps.messages.length === nextProps.messages.length &&
+    prevProps.isLoading === nextProps.isLoading &&
+    prevProps.error === nextProps.error
+  );
+});
+
+MessageList.displayName = 'MessageList';
 
 export default MessageList;

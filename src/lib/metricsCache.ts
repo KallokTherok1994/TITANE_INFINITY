@@ -256,10 +256,36 @@ export class MetricsCache {
 }
 
 // ────────────────────────────────────────────────────────────────
-// Auto-cleanup périodique
+// Auto-cleanup périodique (v24.20: with cleanup)
 // ────────────────────────────────────────────────────────────────
 
-// Nettoyer toutes les 10s
-setInterval(() => {
-  MetricsCache.cleanup();
-}, 10000);
+let autoCleanupIntervalId: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * Démarrer l'auto-cleanup (appelé automatiquement)
+ */
+function startAutoCleanup() {
+  if (autoCleanupIntervalId !== null) return; // Already running
+
+  autoCleanupIntervalId = setInterval(() => {
+    MetricsCache.cleanup();
+  }, 10000); // Every 10s
+
+  console.log('[MetricsCache] Auto-cleanup activé (10s)');
+}
+
+/**
+ * Arrêter l'auto-cleanup (cleanup)
+ */
+export function stopAutoCleanup() {
+  if (autoCleanupIntervalId !== null) {
+    clearInterval(autoCleanupIntervalId);
+    autoCleanupIntervalId = null;
+    console.log('[MetricsCache] Auto-cleanup désactivé');
+  }
+}
+
+// Démarrer auto-cleanup si dans le navigateur
+if (typeof window !== 'undefined') {
+  startAutoCleanup();
+}

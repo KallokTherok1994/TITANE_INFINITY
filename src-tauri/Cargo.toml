@@ -47,6 +47,9 @@ flate2        = "1.0"
 # Super-Prompts P-U - Phases 5-10 (Node-Cluster, Knowledge, HyperVision, Création, Introspection, Évolution)
 walkdir = "2.4" # Phase 9: Introspection filesystem traversal
 
+# Phase 8: Rust Allocations Optimization (v24.20)
+smallvec = "1.13" # Stack-allocated Vec for small arrays (<8 elements)
+
 [features]
 default         = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]

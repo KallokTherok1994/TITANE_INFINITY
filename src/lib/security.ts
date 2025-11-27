@@ -258,9 +258,36 @@ export function cleanupCallTracking(): void {
   }
 }
 
-// Cleanup automatique toutes les 5 secondes
+// ─────────────────────────────────────────────────────────────────
+// Cleanup automatique toutes les 5 secondes (v24.20: with cleanup)
+// ─────────────────────────────────────────────────────────────────
+
+let callTrackingIntervalId: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * Démarrer le cleanup call tracking (appelé automatiquement)
+ */
+function startCallTrackingCleanup() {
+  if (callTrackingIntervalId !== null) return; // Already running
+
+  callTrackingIntervalId = setInterval(cleanupCallTracking, 5000);
+  console.log('[Security] Call tracking cleanup activé (5s)');
+}
+
+/**
+ * Arrêter le cleanup call tracking (cleanup)
+ */
+export function stopCallTrackingCleanup() {
+  if (callTrackingIntervalId !== null) {
+    clearInterval(callTrackingIntervalId);
+    callTrackingIntervalId = null;
+    console.log('[Security] Call tracking cleanup désactivé');
+  }
+}
+
+// Démarrer cleanup si dans le navigateur
 if (typeof window !== 'undefined') {
-  setInterval(cleanupCallTracking, 5000);
+  startCallTrackingCleanup();
 }
 
 // ────────────────────────────────────────────────────────────────

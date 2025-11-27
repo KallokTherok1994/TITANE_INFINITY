@@ -89,6 +89,7 @@ export class SoundEngine {
 
   // 🌙 Mode jour/nuit
   private timeBasedVolume: number = 1.0;
+  private timeBasedVolumeIntervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor() {
     this.initializeAudioContext();
@@ -117,7 +118,31 @@ export class SoundEngine {
 
     updateVolume();
     // Vérifier toutes les heures
-    setInterval(updateVolume, 3600000);
+    this.timeBasedVolumeIntervalId = setInterval(updateVolume, 3600000);
+  }
+
+  /**
+   * Arrêter l'update du volume time-based (cleanup)
+   */
+  shutdown(): void {
+    if (this.timeBasedVolumeIntervalId !== null) {
+      clearInterval(this.timeBasedVolumeIntervalId);
+      this.timeBasedVolumeIntervalId = null;
+    }
+
+    // Stop all active sounds
+    for (const [id, source] of this.activeSounds) {
+      source.stop();
+      this.activeSounds.delete(id);
+    }
+
+    // Close audio context
+    if (this.audioContext) {
+      this.audioContext.close();
+      this.audioContext = null;
+    }
+
+    console.log('[SoundEngine] Shutdown complete');
   }
 
   /**

@@ -24,7 +24,7 @@ export interface MessageBubbleProps {
 
 
 
-export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
+export const MessageBubble: React.FC<MessageBubbleProps> = React.memo(({ message }) => {
 
   return (
 
@@ -44,5 +44,14 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
 
   );
 
-};
+}, (prevProps, nextProps) => {
+  // Only re-render if message content, role, or timestamp changed
+  return (
+    prevProps.message.content === nextProps.message.content &&
+    prevProps.message.role === nextProps.message.role &&
+    prevProps.message.timestamp === nextProps.message.timestamp
+  );
+});
+
+MessageBubble.displayName = 'MessageBubble';
 

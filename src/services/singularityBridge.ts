@@ -67,8 +67,8 @@ export class SingularityBridge {
       // 2. Listen for layer updates (événements Tauri)
       await this.setupEventListeners();
 
-      // 3. Synchroniser XP toutes les 5 secondes
-      setInterval(() => this.syncXPToState(), 5000);
+      // v24.20: Event-driven sync (no more setInterval polling)
+      console.log('[SingularityBridge] v24.20: Event-driven delta sync enabled');
 
       this.initialized = true;
       console.log('[SingularityBridge] ✅ Initialized successfully');
@@ -171,13 +171,24 @@ export class SingularityBridge {
       }
     });
 
-    // Full State (full sync)
+    // Full State (full sync - rare, only on init or major changes)
     const unlisten6 = await listen<SingularityState>('singularity:full:updated', (event) => {
+      console.log('[SingularityBridge] v24.20: Full state update (rare)');
       this.state = event.payload;
       this.notifySubscribers();
     });
 
-    this.listeners = [unlisten1, unlisten2, unlisten3, unlisten4, unlisten5, unlisten6];
+    // v24.20: Delta updates (payload < 5KB instead of 500KB)
+    const unlisten7 = await listen<Partial<SingularityState>>('singularity:delta:updated', (event) => {
+      if (this.state) {
+        // Merge delta into current state (only changed fields)
+        this.state = { ...this.state, ...event.payload };
+        console.log('[SingularityBridge] v24.20: Delta update applied', Object.keys(event.payload));
+        this.notifySubscribers();
+      }
+    });
+
+    this.listeners = [unlisten1, unlisten2, unlisten3, unlisten4, unlisten5, unlisten6, unlisten7];
     console.log('[SingularityBridge] Event listeners configured ✅');
   }
 

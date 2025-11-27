@@ -23,6 +23,7 @@ import type {
   SelfHealData,
   AdaptiveData,
 } from '../ARCHITECTURE_TYPES_v∞';
+import type { AvatarDisplayState } from '@/modules/avatar/floating/AvatarDisplayState';
 
 // ═══════════════════════════════════════════════════════════════
 // ENGINE DATA MAPPING
@@ -75,6 +76,9 @@ export interface SingularityFrontendState {
     lastUpdate: number;
   }
 
+  // Avatar Display State (NEW v24.12)
+  avatarDisplay: AvatarDisplayState | null;
+
   // Engines State
   engines: {
     glow: EngineState | null;
@@ -126,6 +130,8 @@ export interface SingularityFrontendState {
 
   setMetaMode: (mode: string) => void;
   setMetaModeTransition: (transitioning: boolean) => void;
+  setAvatarDisplay: (displayState: AvatarDisplayState | null) => void;
+  updateAvatarDisplay: (partial: Partial<AvatarDisplayState>) => void;
   setPage: (page: string) => void;
   setFocus: (focus: boolean) => void;
   setFullscreen: (fullscreen: boolean) => void;
@@ -166,6 +172,9 @@ export const useSingularityState = create<SingularityFrontendState>()(persist(
     transitioning: false,
     lastUpdate: Date.now(),
   },
+
+  // Initial Avatar Display State (NEW v24.12)
+  avatarDisplay: null,
 
   // Initial Engines State
   engines: {
@@ -264,6 +273,16 @@ export const useSingularityState = create<SingularityFrontendState>()(persist(
     metaMode: { ...state.metaMode, transitioning }
   })),
 
+  setAvatarDisplay: (displayState) => set({
+    avatarDisplay: displayState ? { ...displayState, last_updated: Date.now() } : null
+  }),
+
+  updateAvatarDisplay: (partial) => set((state) => ({
+    avatarDisplay: state.avatarDisplay
+      ? { ...state.avatarDisplay, ...partial, last_updated: Date.now() }
+      : null
+  })),
+
   setPage: (page) => set((state) => ({
     context: { ...state.context, page }
   })),
@@ -293,6 +312,7 @@ export const useSingularityState = create<SingularityFrontendState>()(persist(
       ui: state.ui,
       context: { ...state.context, page: 'dashboard' }, // reset page on reload
       metaMode: state.metaMode,
+      avatarDisplay: state.avatarDisplay, // Persist avatar display state (NEW v24.12)
       // Don't persist: ai (dynamic), engines (dynamic), enginesData (dynamic), globalHealth (dynamic)
     }),
   }
@@ -309,6 +329,7 @@ export const selectEngine = (name: string) => (state: SingularityFrontendState) 
 export const selectGlobalHealth = (state: SingularityFrontendState) => state.globalHealth;
 export const selectMetaMode = (state: SingularityFrontendState) => state.metaMode.currentMode;
 export const selectMetaModeState = (state: SingularityFrontendState) => state.metaMode;
+export const selectAvatarDisplay = (state: SingularityFrontendState) => state.avatarDisplay;
 
 // Type-safe engine data selector
 export const selectEngineData = <T extends EngineName>(engine: T) => (state: SingularityFrontendState) =>

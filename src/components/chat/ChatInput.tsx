@@ -24,7 +24,7 @@ interface ChatInputProps {
   onToggleVoiceMode?: () => void;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({
+export const ChatInput: React.FC<ChatInputProps> = React.memo(({
   onSend,
   disabled = false,
   placeholder = 'Posez votre question...',
@@ -112,6 +112,8 @@ export const ChatInput: React.FC<ChatInputProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ChatInput.displayName = 'ChatInput';
 
 export default ChatInput;

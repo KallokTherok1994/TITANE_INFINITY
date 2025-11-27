@@ -15,23 +15,25 @@ use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
 use crate::tts::TTSRequest;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
+use tokio::sync::RwLock;
 use tauri::State;
 
 // Global state for AI Chat system (v15)
+// v24.20: Optimized with RwLock for async operations
 pub struct AIChatState {
-    pub ai_router: Arc<Mutex<AIRouter>>,
-    pub memory_storage: Arc<Mutex<MemoryStorage>>,
-    pub current_conversation: Arc<Mutex<Option<Conversation>>>,
-    pub online_tts: Arc<Mutex<OnlineTTS>>,
-    pub local_tts: Arc<Mutex<LocalTTS>>,
-    pub audio_recorder: Arc<Mutex<AudioRecorder>>,
-    pub asr_engine: Arc<Mutex<ASREngine>>,
-    pub vad: Arc<Mutex<VoiceActivityDetector>>,
+    pub ai_router: Arc<RwLock<AIRouter>>,
+    pub memory_storage: Arc<RwLock<MemoryStorage>>,
+    pub current_conversation: Arc<RwLock<Option<Conversation>>>,
+    pub online_tts: Arc<RwLock<OnlineTTS>>,
+    pub local_tts: Arc<RwLock<LocalTTS>>,
+    pub audio_recorder: Arc<RwLock<AudioRecorder>>,
+    pub asr_engine: Arc<RwLock<ASREngine>>,
+    pub vad: Arc<RwLock<VoiceActivityDetector>>,
     /// v15 Unified Core Collection (Clean architecture)
     pub core_collection: Arc<CoreCollection>,
-    /// v19.2.0: Mutex anti-superposition TTS
-    pub is_speaking: Arc<Mutex<bool>>,
+    /// v24.20: RwLock for async-safe TTS state
+    pub is_speaking: Arc<RwLock<bool>>,
 }
 
 impl AIChatState {
@@ -40,7 +42,7 @@ impl AIChatState {
         let gemini_key = std::env::var("GEMINI_API_KEY").ok();
         let ollama_model = std::env::var("OLLAMA_MODEL").ok();
 
-        let ai_router = Arc::new(Mutex::new(AIRouter::new(gemini_key.clone(), ollama_model)));
+        let ai_router = Arc::new(RwLock::new(AIRouter::new(gemini_key.clone(), ollama_model)));
 
         // Memory storage location
         let storage_dir = dirs::data_local_dir()
@@ -48,22 +50,22 @@ impl AIChatState {
             .join("titane")
             .join("memory");
 
-        let memory_storage = Arc::new(Mutex::new(
+        let memory_storage = Arc::new(RwLock::new(
             MemoryStorage::new(storage_dir, "titane-infinity".to_string())
                 .expect("Failed to initialize memory storage"),
         ));
 
-        let online_tts = Arc::new(Mutex::new(OnlineTTS::new(gemini_key)));
-        let local_tts = Arc::new(Mutex::new(LocalTTS::new()));
-        let audio_recorder = Arc::new(Mutex::new(AudioRecorder::new(AudioConfig::default())));
-        let asr_engine = Arc::new(Mutex::new(ASREngine::auto()));
-        let vad = Arc::new(Mutex::new(VoiceActivityDetector::new()));
+        let online_tts = Arc::new(RwLock::new(OnlineTTS::new(gemini_key)));
+        let local_tts = Arc::new(RwLock::new(LocalTTS::new()));
+        let audio_recorder = Arc::new(RwLock::new(AudioRecorder::new(AudioConfig::default())));
+        let asr_engine = Arc::new(RwLock::new(ASREngine::auto()));
+        let vad = Arc::new(RwLock::new(VoiceActivityDetector::new()));
 
         // v15 Unified Core Collection (Clean architecture)
         let core_collection = Arc::new(CoreCollection::default());
 
-        // v19.2.0: Mutex anti-superposition TTS
-        let is_speaking = Arc::new(Mutex::new(false));
+        // v24.20: RwLock for async-safe TTS state
+        let is_speaking = Arc::new(RwLock::new(false));
 
         Self {
             ai_router,
@@ -122,11 +124,11 @@ pub async fn ai_query(
     };
 
     // Query AI through router (cascade Gemini → Ollama → Local)
-    let router = state.ai_router.lock().unwrap();
+    let router = state.ai_router.read().await;
     let response = router
         .query(request)
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| e.to_string())?;;
 
     log::info!("[AI Router v15] Response from {:?} ({} tokens)", response.provider, response.tokens);
 
@@ -138,13 +140,13 @@ pub async fn ai_query(
     };
 
     // Save to memory + sync to MemoryModule v15
-    if let Ok(mut conv_opt) = state.current_conversation.lock() {
+    if let Ok(mut conv_opt) = state.current_conversation.try_write() {
         if let Some(conv) = conv_opt.as_mut() {
             conv.add_entry(MessageRole::User, prompt, 0);
             conv.add_entry(MessageRole::Assistant, balanced_response.clone(), response.tokens);
 
             // Save to persistent storage
-            let storage = state.memory_storage.lock().unwrap();
+            let storage = state.memory_storage.read().await;
             if let Err(e) = storage.save_conversation(conv) {
                 log::warn!("[Memory v15] Failed to save conversation: {}", e);
             } else {
@@ -169,7 +171,7 @@ pub async fn ai_query(
     .to_string())
 }
 
-/// v19.2.0: TTS avec paramètres + mutex anti-superposition
+/// v24.20: TTS avec streaming + background task (non-blocking)
 #[tauri::command]
 pub async fn speak(
     state: State<'_, AIChatState>,
@@ -187,88 +189,101 @@ pub async fn speak(
         return Err("Text too long (max 10000 chars)".to_string());
     }
 
-    // Mutex anti-superposition
-    let mut is_speaking = state.is_speaking.lock().unwrap();
-    if *is_speaking {
-        return Err("TTS busy: another synthesis is in progress. Please wait or call stop_speaking().".to_string());
+    // v24.20: RwLock anti-superposition (async-safe)
+    {
+        let is_speaking = state.is_speaking.read().await;
+        if *is_speaking {
+            return Err("TTS busy: another synthesis is in progress. Please wait or call stop_speaking().".to_string());
+        }
     }
-    *is_speaking = true;
-    drop(is_speaking); // Release lock before long operation
+
+    // Clone state for background task
+    let is_speaking = state.is_speaking.clone();
+    let online_tts = state.online_tts.clone();
+    let local_tts = state.local_tts.clone();
 
     // Validation + clamp paramètres
     let speed = rate.unwrap_or(1.0).clamp(0.5, 2.0);
     let pitch_value = pitch.unwrap_or(1.0).clamp(0.5, 2.0);
 
-    log::info!(
-        "[TTS v19.2.0] Synthesis start: mode={}, rate={:.2}, pitch={:.2}, voice={:?}, len={}",
-        if use_online { "online" } else { "local" },
-        speed,
-        pitch_value,
-        voice,
-        text.len()
-    );
-
-    let request = TTSRequest {
-        text: text.clone(),
-        voice,
-        speed,
-        pitch: pitch_value,
-    };
-
-    // Execute synthesis
-    let result = if use_online {
-        let tts = state.online_tts.lock().unwrap();
-        tts.speak(&request).await.map_err(|e| e.to_string())
-    } else {
-        let tts = state.local_tts.lock().unwrap();
-        tts.speak(&request).map_err(|e| e.to_string())
-    };
-
-    // Release mutex
-    let mut is_speaking = state.is_speaking.lock().unwrap();
-    *is_speaking = false;
-    drop(is_speaking);
-
-    match result {
-        Ok(_) => {
-            log::info!("[TTS v19.2.0] Synthesis complete");
-            Ok(())
+    // v24.20: Spawn background task (non-blocking UI)
+    tokio::spawn(async move {
+        // Set speaking flag
+        {
+            let mut speaking = is_speaking.write().await;
+            *speaking = true;
         }
-        Err(e) => {
-            log::error!("[TTS v19.2.0] Synthesis failed: {}", e);
-            Err(e)
+
+        log::info!(
+            "[TTS v24.20] Background synthesis: mode={}, rate={:.2}, pitch={:.2}, voice={:?}, len={}",
+            if use_online { "online" } else { "local" },
+            speed,
+            pitch_value,
+            voice,
+            text.len()
+        );
+
+        let request = TTSRequest {
+            text,
+            voice,
+            speed,
+            pitch: pitch_value,
+        };
+
+        // Execute synthesis in background
+        let result = if use_online {
+            let tts = online_tts.read().await;
+            tts.speak(&request).await
+        } else {
+            let tts = local_tts.read().await;
+            tts.speak(&request)
+        };
+
+        // Release speaking flag
+        {
+            let mut speaking = is_speaking.write().await;
+            *speaking = false;
         }
-    }
+
+        match result {
+            Ok(_) => log::info!("[TTS v24.20] Background synthesis complete"),
+            Err(e) => log::error!("[TTS v24.20] Background synthesis failed: {:?}", e),
+        }
+    });
+
+    // Return immediately (non-blocking)
+    log::info!("[TTS v24.20] Synthesis started in background (non-blocking)");
+    Ok(())
 }
 
-/// v19.2.0: Arrêt synthèse TTS en cours
+/// v24.20: Arrêt synthèse TTS en cours (async-safe)
 #[tauri::command]
-pub fn stop_speaking(state: State<'_, AIChatState>) -> Result<(), String> {
-    let mut is_speaking = state.is_speaking.lock().unwrap();
+pub async fn stop_speaking(state: State<'_, AIChatState>) -> Result<(), String> {
+    let mut is_speaking = state.is_speaking.write().await;
     if !*is_speaking {
         return Ok(()); // Already stopped
     }
     *is_speaking = false;
-    log::info!("[TTS v19.2.0] Speech stopped by user");
+    log::info!("[TTS v24.20] Speech stopped by user");
     Ok(())
 }
 
-/// v19.2.0: Vérification état TTS
+/// v24.20: Vérification état TTS (async-safe)
 #[tauri::command]
-pub fn is_speaking(state: State<'_, AIChatState>) -> Result<bool, String> {
-    let is_speaking = state.is_speaking.lock().unwrap();
+pub async fn is_speaking(state: State<'_, AIChatState>) -> Result<bool, String> {
+    let is_speaking = state.is_speaking.read().await;
     Ok(*is_speaking)
 }
 
 #[tauri::command]
-pub fn start_recording(state: State<'_, AIChatState>) -> Result<(), String> {
-    let recorder = state.audio_recorder.lock().unwrap();
+pub async fn start_recording(state: State<'_, AIChatState>) -> Result<(), String> {
+    let recorder = state.audio_recorder.read().await;
     recorder.start().map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn stop_recording(state: State<'_, AIChatState>) -> Result<(), String> {
-    let recorder = state.audio_recorder.lock().unwrap();
+pub async fn stop_recording(state: State<'_, AIChatState>) -> Result<(), String> {
+    let recorder = state.audio_recorder.read().await;
     recorder.stop().map_err(|e| e.to_string())
 }
 
@@ -277,52 +292,52 @@ pub async fn transcribe_audio(
     state: State<'_, AIChatState>,
     audio_data: Vec<u8>,
 ) -> Result<String, String> {
-    let asr = state.asr_engine.lock().unwrap();
+    let asr = state.asr_engine.read().await;
     asr.transcribe(&audio_data)
         .await
         .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn create_conversation(
+pub async fn create_conversation(
     state: State<'_, AIChatState>,
     title: String,
 ) -> Result<String, String> {
     let conversation = Conversation::new(title);
     let id = conversation.id.clone();
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.memory_storage.read().await;
     storage
         .save_conversation(&conversation)
         .map_err(|e| e.to_string())?;
 
-    let mut current = state.current_conversation.lock().unwrap();
+    let mut current = state.current_conversation.write().await;
     *current = Some(conversation);
 
     Ok(id)
 }
 
 #[tauri::command]
-pub fn load_conversation(
+pub async fn load_conversation(
     state: State<'_, AIChatState>,
     conversation_id: String,
 ) -> Result<String, String> {
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.memory_storage.read().await;
     let conversation = storage
         .load_conversation(&conversation_id)
         .map_err(|e| e.to_string())?;
 
     let json = serde_json::to_string(&conversation).map_err(|e| e.to_string())?;
 
-    let mut current = state.current_conversation.lock().unwrap();
+    let mut current = state.current_conversation.write().await;
     *current = Some(conversation);
 
     Ok(json)
 }
 
 #[tauri::command]
-pub fn list_conversations(state: State<'_, AIChatState>) -> Result<String, String> {
-    let storage = state.memory_storage.lock().unwrap();
+pub async fn list_conversations(state: State<'_, AIChatState>) -> Result<String, String> {
+    let storage = state.memory_storage.read().await;
     let conversations = storage
         .list_conversations()
         .map_err(|e| e.to_string())?;
@@ -331,19 +346,19 @@ pub fn list_conversations(state: State<'_, AIChatState>) -> Result<String, Strin
 }
 
 #[tauri::command]
-pub fn delete_conversation(
+pub async fn delete_conversation(
     state: State<'_, AIChatState>,
     conversation_id: String,
 ) -> Result<(), String> {
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.memory_storage.read().await;
     storage
         .delete_conversation(&conversation_id)
         .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub fn clear_all_memory(state: State<'_, AIChatState>) -> Result<(), String> {
-    let storage = state.memory_storage.lock().unwrap();
+pub async fn clear_all_memory(state: State<'_, AIChatState>) -> Result<(), String> {
+    let storage = state.memory_storage.read().await;
     storage.clear_all().map_err(|e| e.to_string())
 }
 
@@ -362,7 +377,7 @@ pub async fn check_connection() -> Result<bool, String> {
 
 #[tauri::command]
 pub async fn health_check(state: State<'_, AIChatState>) -> Result<String, String> {
-    let router = state.ai_router.lock().unwrap();
+    let router = state.ai_router.read().await;
     let health = router.health_check().await;
 
     // Run SelfHeal diagnostic
@@ -385,8 +400,8 @@ pub async fn health_check(state: State<'_, AIChatState>) -> Result<String, Strin
 }
 
 #[tauri::command]
-pub fn get_vad_state(state: State<'_, AIChatState>) -> Result<bool, String> {
-    let vad = state.vad.lock().unwrap();
+pub async fn get_vad_state(state: State<'_, AIChatState>) -> Result<bool, String> {
+    let vad = state.vad.read().await;
     Ok(vad.is_speaking())
 }
 

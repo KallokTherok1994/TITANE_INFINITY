@@ -19,6 +19,8 @@ export interface SingularityState {
   symbolic: SymbolicLayer;
   adaptive: AdaptiveLayer;
   meta: MetaLayer;
+  autonomy?: AutonomyLayer; // ✨ v24.30 - Autonomous system state
+  devops?: DevOpsLayer; // ✨ v26.0 - Visual DevOps + Local Agent state
   progression?: ProgressionState; // ✨ v∞.D6 - État XP (optionnel pour compatibilité backend)
   timestamp: number;
   signature: string;
@@ -38,6 +40,41 @@ export interface ProgressionState {
     description?: string;
   }>;
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// AUTONOMY LAYER (v24.30)
+// ═══════════════════════════════════════════════════════════════════
+
+export interface AutonomyLayer {
+  enabled: boolean;
+  health_score: number; // 0-100
+  stability_index: number; // 0-100
+  pipeline_integrity: number; // 0-100
+  auto_evolution_level: number; // 0-10
+  last_scan: number | null; // timestamp ms
+  last_fix: number | null; // timestamp ms
+  last_optimization: number | null; // timestamp ms
+  last_evolution: number | null; // timestamp ms
+  errors_fixed: number;
+  warnings_resolved: number;
+  optimizations_applied: number;
+  evolutions_completed: number;
+  cycle_count: number; // Nombre de cycles autonomes exécutés
+  last_cycle_duration_ms: number; // Durée dernier cycle
+  average_cycle_duration_ms: number; // Moyenne des durées de cycle
+  autonomous_actions: AutonomousAction[];
+}
+
+export interface AutonomousAction {
+  id: string;
+  action_type: 'scan' | 'detect' | 'fix' | 'heal' | 'optimize' | 'evolve' | 'test' | 'shield' | 'analyse' | 'report';
+  timestamp: number;
+  duration_ms: number;
+  success: boolean;
+  details: string;
+  impact_score: number; // 0-1
+}
+
 
 // ═══════════════════════════════════════════════════════════════════
 // PHYSICAL LAYER
@@ -191,3 +228,40 @@ export interface RuntimeState {
   uptime: number;
   restart_count: number;
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// DEVOPS LAYER (v26.0)
+// ═══════════════════════════════════════════════════════════════════
+
+export interface DevOpsLayer {
+  enabled: boolean;
+  visual_mode_active: boolean;
+  local_agent_active: boolean;
+
+  // Stats
+  total_actions: number;
+  successful_actions: number;
+  failed_actions: number;
+  pending_validations: number;
+
+  // Sécurité
+  security_level: 'strict' | 'moderate' | 'permissive';
+  require_validation_for: string[]; // ActionType[]
+  blocked_actions: string[]; // ActionType[]
+
+  // Tracking
+  last_screen_analysis: number | null; // timestamp ms
+  last_devops_action: number | null; // timestamp ms
+  last_build: number | null; // timestamp ms
+  last_test: number | null; // timestamp ms
+  last_deploy: number | null; // timestamp ms
+
+  // Project health
+  project_health_score: number; // 0-100
+  active_workflows: number;
+
+  // Session
+  session_id: string | null;
+  session_duration_ms: number;
+}
+
