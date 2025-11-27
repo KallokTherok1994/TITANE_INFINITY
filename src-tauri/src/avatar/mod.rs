@@ -8,6 +8,7 @@ pub mod avatar_commands;
 pub mod avatar_selftest;
 pub mod fullbody; // v24 — Full-Body Avatar Engine
 pub mod fullbody_commands; // v24 — Tauri Commands
+pub mod fullbody_selftest; // v24 — Self-Tests
 
 pub use immersive_avatar_engine::{
     ImmersiveAvatarEngine,

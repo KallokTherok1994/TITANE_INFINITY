@@ -188,6 +188,7 @@ export const TAURI_COMMANDS = {
   FULLBODY_UPDATE_CONTEXT: 'fullbody_update_context',
   FULLBODY_GET_POSTURE: 'fullbody_get_posture',
   FULLBODY_GET_STATS: 'fullbody_get_stats',
+  FULLBODY_RUN_SELFTEST: 'fullbody_run_selftest',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════

@@ -522,6 +522,7 @@ async fn main() {
             titane_infinity::avatar::fullbody_commands::fullbody_update_context,
             titane_infinity::avatar::fullbody_commands::fullbody_get_posture,
             titane_infinity::avatar::fullbody_commands::fullbody_get_stats,
+            titane_infinity::avatar::fullbody_selftest::fullbody_run_selftest,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
