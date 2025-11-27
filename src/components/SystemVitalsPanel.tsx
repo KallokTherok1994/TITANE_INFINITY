@@ -7,7 +7,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { Activity, Cpu, Database, HardDrive, Zap } from 'lucide-react';
 
 interface CpuStatus {
@@ -47,7 +47,7 @@ export const SystemVitalsPanel: React.FC = () => {
   // Récupération des métriques
   const fetchMetrics = async () => {
     try {
-      const metrics = await invoke<HarmoniaMetrics>('get_harmonia_metrics');
+      const metrics = await secureInvoke<HarmoniaMetrics>('get_harmonia_metrics');
       setHarmoniaMetrics(metrics);
     } catch (error) {
       console.error('Failed to fetch Harmonia metrics:', error);
@@ -68,7 +68,7 @@ export const SystemVitalsPanel: React.FC = () => {
   // Compactage mémoire
   const handleCompactMemory = async () => {
     try {
-      const stats = await invoke<CompactionStats>('auto_compact_memory');
+      const stats = await secureInvoke<CompactionStats>('auto_compact_memory');
       setCompactionStats(stats);
       alert(`Memory compacted!\nFiles: ${stats.files_processed}\nDuplicates removed: ${stats.duplicates_removed}`);
     } catch (error) {

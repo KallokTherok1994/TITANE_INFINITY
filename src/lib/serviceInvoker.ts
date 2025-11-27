@@ -253,7 +253,7 @@ export async function invokeSimple<T>(
   validator?: <U>(val: unknown) => val is U
 ): Promise<T> {
   try {
-    return await secureInvoke<T>(command, payload ?? {}, {}, validator as any);
+    return await secureInvoke<T>(command, payload ?? {}, {}, validator as unknown as (val: unknown) => val is T);
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);
     console.error(`[Service] Command "${command}" failed:`, errorMsg);

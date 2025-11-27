@@ -15,6 +15,11 @@ pub mod utils;      // ✅ Utilities (AppResult, AppError)
 pub mod watchdog;   // ✅ Watchdog Engine v17 (NEW)
 pub mod backend_selftest; // ✅ Backend Global Self-Test v17.7 (NEW)
 pub mod meta;       // ✅ Meta-Cognition & Deep Sync v18 (NEW)
+pub mod qa;         // ✅ QA Engine v19.8 (NEW)
+pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
+pub mod adaptive;   // ✅ AdaptiveEngine v21 (NEW)
+pub mod narrative;  // ✅ NarrativeEngine v22 (NEW)
+pub mod avatar;     // ✅ ImmersiveAvatarEngine v23 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // AI & MEMORY v15
@@ -59,7 +64,7 @@ pub mod hyper_evolution;       // ✅ HyperEvolution
 pub mod meta_creation;         // ✅ Méta-Création
 pub mod neuro_symbolic;        // ✅ NeuroSymbolic
 pub mod self_repair;           // ✅ Auto-Réparation
-pub mod singularity;           // ✅ Singularity
+// pub mod singularity;        // ⚠️ Deprecated - Use top-level singularity v∞ (v20)
 
 // ═══════════════════════════════════════════════════════════════
 // BACKEND MODE SELECTION (Mock vs Full)

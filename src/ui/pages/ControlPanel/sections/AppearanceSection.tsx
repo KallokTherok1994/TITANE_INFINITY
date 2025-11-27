@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface DesignSystemConfig {
   mode: 'light' | 'dark' | 'auto';
@@ -27,7 +27,7 @@ export const AppearanceSection: React.FC = () => {
 
   const loadConfig = async () => {
     try {
-      const loadedConfig = await invoke<DesignSystemConfig>('get_design_config');
+      const loadedConfig = await secureInvoke<DesignSystemConfig>('get_design_config');
       setConfig(loadedConfig);
     } catch (error) {
       console.error('Erreur chargement config:', error);
@@ -36,7 +36,7 @@ export const AppearanceSection: React.FC = () => {
 
   const saveConfig = async (newConfig: DesignSystemConfig) => {
     try {
-      await invoke('set_design_config', { config: newConfig });
+      await secureInvoke('set_design_config', { config: newConfig });
       setConfig(newConfig);
     } catch (error) {
       console.error('Erreur sauvegarde config:', error);

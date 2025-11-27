@@ -39,6 +39,51 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   /**
+   * Valide le type MIME du fichier
+   */
+  const validateFileMimeType = (file: File): boolean => {
+    const allowedMimeTypes = [
+      'text/plain',
+      'text/markdown',
+      'text/x-markdown',
+      'application/json',
+      'application/x-yaml',
+      'text/yaml',
+      'text/javascript',
+      'application/javascript',
+      'text/typescript',
+      'application/typescript',
+      'text/x-typescript',
+      'text/jsx',
+      'text/tsx',
+    ];
+
+    // Vérification MIME
+    if (file.type && allowedMimeTypes.includes(file.type)) {
+      return true;
+    }
+
+    // Fallback: vérification extension si MIME vide
+    const allowedExtensions = ['.txt', '.md', '.json', '.yaml', '.yml', '.js', '.ts', '.tsx', '.jsx', '.log'];
+    const hasValidExtension = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+
+    if (!file.type && hasValidExtension) {
+      console.warn(`⚠️  MIME type vide pour ${file.name}, validé par extension`);
+      return true;
+    }
+
+    return false;
+  };
+
+  /**
+   * Valide la taille du fichier (max 5MB)
+   */
+  const validateFileSize = (file: File): boolean => {
+    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    return file.size > 0 && file.size <= MAX_SIZE;
+  };
+
+  /**
    * Analyse le contenu d'un fichier
    */
   const analyzeFileContent = (filename: string, content: string): FileAnalysis => {
@@ -76,6 +121,19 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
   const handleFileImport = useCallback(
     async (file: File) => {
       if (disabled || isProcessing) return;
+
+      // Validation MIME type
+      if (!validateFileMimeType(file)) {
+        alert(`Type de fichier non supporté: ${file.type || 'inconnu'}\nExtensions autorisées: .txt, .md, .json, .yaml, .yml, .js, .ts, .tsx, .jsx, .log`);
+        return;
+      }
+
+      // Validation taille
+      if (!validateFileSize(file)) {
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        alert(`Fichier trop volumineux: ${sizeMB} MB\nTaille maximale autorisée: 5 MB`);
+        return;
+      }
 
       setIsProcessing(true);
 

@@ -14,7 +14,7 @@
  */
 
 // @ts-nocheck - Complex dynamic types from v∞ architecture
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { SingularityBridge } from './singularityBridge';
 import type {
   PhysicalLayer,
@@ -88,7 +88,7 @@ export class SingularityConnections {
    */
   private static async safeInvoke<T>(
     cmd: string,
-    args?: any
+    args?: Record<string, unknown>
   ): Promise<T | null> {
     // Skip if already marked as disabled
     if (this.disabledCommands.has(cmd)) {
@@ -96,8 +96,8 @@ export class SingularityConnections {
     }
 
     try {
-      return await invoke<T>(cmd, args);
-    } catch (err: any) {
+      return await secureInvoke<T>(cmd, args);
+    } catch (err: unknown) {
       const msg = String(err?.message ?? err);
 
       // Gracefully disable command if not found

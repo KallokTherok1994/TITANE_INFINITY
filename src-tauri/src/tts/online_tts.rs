@@ -84,7 +84,10 @@ impl OnlineTTS {
 
         #[cfg(target_os = "linux")]
         {
-            // Try pactl first (most common), fallback to alternatives
+            // v19.1.0: Try multiple audio players (all now whitelisted)
+            // Priority: pactl > aplay > ffplay
+
+            // 1. Try pactl (PulseAudio/PipeWire - most common)
             if let Ok(_) = self
                 .shell_guard
                 .execute_verified("pactl", &["play-file", path_str])
@@ -92,33 +95,46 @@ impl OnlineTTS {
                 return Ok(());
             }
 
-            // Note: aplay, ffplay NOT in default whitelist
-            // This will fail unless added to SecurityPolicy.allowed_shell_commands
-            if self.shell_guard.is_command_available("aplay") {
-                if let Ok(_) = self.shell_guard.execute_verified("aplay", &[path_str]) {
-                    return Ok(());
-                }
+            // 2. Try aplay (ALSA - fallback)
+            if let Ok(_) = self.shell_guard.execute_verified("aplay", &[path_str]) {
+                return Ok(());
+            }
+
+            // 3. Try ffplay (FFmpeg - universal fallback)
+            if let Ok(_) = self.shell_guard.execute_verified("ffplay", &["-nodisp", "-autoexit", path_str]) {
+                return Ok(());
             }
 
             return Err(TTSError::AudioError(
-                "No audio player available (pactl required)".into(),
+                "No audio player available. Install one of: pulseaudio-utils (pactl), alsa-utils (aplay), or ffmpeg (ffplay)".into(),
             ));
         }
 
         #[cfg(target_os = "macos")]
         {
-            // Note: afplay NOT in default whitelist
+            // v19.1.0: afplay now whitelisted
             self.shell_guard
                 .execute_verified("afplay", &[path_str])
                 .map_err(|e| TTSError::AudioError(e))?;
+            return Ok(());
         }
 
         #[cfg(target_os = "windows")]
         {
-            // Note: powershell NOT in default whitelist, and -c flag is dangerous
-            // Alternative: Use Windows API directly (winapi crate)
+            // v19.1.0: Windows audio using native WinAPI (TODO)
+            // powershell is blocked for security (arbitrary code execution risk)
+            // Solution: Implement native Windows audio playback using winapi crate
+            //
+            // Recommended implementation:
+            // 1. Use PlaySound API (winapi::um::mmsystem::PlaySoundW)
+            // 2. Or use Media Foundation API for better control
+            // 3. Or embed rodio crate (pure Rust audio playback)
+
+            // For now, return clear error message
             return Err(TTSError::AudioError(
-                "Windows audio playback requires native API (powershell blocked for security)"
+                "Windows TTS: Native audio playback not yet implemented. \
+                 Use Web Speech API fallback in frontend, or implement WinAPI playback. \
+                 See: https://docs.rs/winapi/*/winapi/um/mmsystem/fn.PlaySoundW.html"
                     .into(),
             ));
         }

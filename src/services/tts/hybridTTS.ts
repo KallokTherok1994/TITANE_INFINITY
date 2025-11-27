@@ -14,7 +14,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 export interface TTSConfig {
   rate?: number; // 0.5 - 2.0
@@ -47,8 +47,8 @@ class HybridTTSService {
     }
 
     try {
-      // Teste si commande voice_synthesize existe
-      await invoke('voice_get_available_voices', {});
+      // Teste si commande speak existe (ai_chat.rs)
+      await secureInvoke('ping'); // Simple health check
       this.tauriAvailable = true;
       console.log('✅ TTS: Tauri backend available');
       return true;
@@ -69,19 +69,20 @@ class HybridTTSService {
   /**
    * Synthétise texte via Tauri Backend
    */
-  private async speakTauri(text: string, config: TTSConfig = {}): Promise<void> {
+  private async speakTauri(text: string, config: TTSConfig = {}, useOnline: boolean = false): Promise<void> {
     try {
       console.log('🎤 TTS (Tauri): Synthesizing...');
+      console.log(`📡 Mode: ${useOnline ? 'Online (Google TTS)' : 'Local (espeak/piper)'}`);
+      console.log(`⚙️  Config: rate=${config.rate || 1.0}, pitch=${config.pitch || 1.0}, voice=${config.voice || 'default'}`);
       this.speaking = true;
 
-      await invoke('voice_synthesize_speech', {
+      // ✅ v19.2.0: Transmission paramètres rate/pitch/voice frontend → backend
+      await secureInvoke('speak', {
         text,
-        config: {
-          rate: config.rate || 1.0,
-          pitch: config.pitch || 1.0,
-          volume: config.volume || 1.0,
-          voice: config.voice || '',
-        },
+        use_online: useOnline,
+        rate: config.rate || null,
+        pitch: config.pitch || null,
+        voice: config.voice || null,
       });
 
       console.log('✅ TTS (Tauri): Success');
@@ -149,7 +150,7 @@ class HybridTTSService {
   /**
    * Synthétise texte (avec fallback automatique)
    */
-  async speak(text: string, config: TTSConfig = {}): Promise<void> {
+  async speak(text: string, config: TTSConfig = {}, useOnline: boolean = false): Promise<void> {
     if (!text.trim()) {
       console.warn('⚠️ TTS: Empty text, skipping');
       return;
@@ -157,19 +158,20 @@ class HybridTTSService {
 
     console.log('\n🔊 TTS: Starting synthesis...');
     console.log(`📝 Text: "${text.substring(0, 60)}${text.length > 60 ? '...' : ''}"`);
+    console.log(`🌐 Mode: ${useOnline ? 'Online' : 'Offline First'}`);
 
-    // Stratégie 1: Tauri Backend
+    // Stratégie 1: Tauri Backend (priorité)
     const tauriAvailable = await this.checkTauriAvailable();
     if (tauriAvailable) {
       try {
-        await this.speakTauri(text, config);
+        await this.speakTauri(text, config, useOnline);
         return;
       } catch (error) {
         console.warn('⚠️ TTS: Tauri failed, falling back to Web Speech API');
       }
     }
 
-    // Stratégie 2: Web Speech API
+    // Stratégie 2: Web Speech API (fallback)
     if (this.checkWebSpeechAvailable()) {
       try {
         await this.speakWebSpeech(text, config);
@@ -179,7 +181,7 @@ class HybridTTSService {
       }
     }
 
-    // Stratégie 3: Silent mode
+    // Stratégie 3: Silent mode (dernier recours)
     console.log('🔇 TTS: No provider available, silent mode');
   }
 
@@ -189,10 +191,11 @@ class HybridTTSService {
   async stop(): Promise<void> {
     console.log('⏹️ TTS: Stopping...');
 
-    // Arrêt Tauri
+    // v19.2.0: Arrêt Tauri via commande stop_speaking
     if (this.tauriAvailable) {
       try {
-        await invoke('voice_stop_speech', {});
+        await secureInvoke('stop_speaking');
+        console.log('✅ TTS: Tauri backend stopped');
       } catch (error) {
         console.warn('⚠️ TTS: Tauri stop failed:', error);
       }
@@ -215,6 +218,16 @@ class HybridTTSService {
     const tauriAvailable = await this.checkTauriAvailable();
     const webSpeechAvailable = this.checkWebSpeechAvailable();
 
+    // v19.2.0: Vérifier état backend si disponible
+    let backendSpeaking = false;
+    if (tauriAvailable) {
+      try {
+        backendSpeaking = await secureInvoke<boolean>('is_speaking');
+      } catch (error) {
+        console.warn('⚠️ TTS: Could not check backend speaking state:', error);
+      }
+    }
+
     let provider: 'tauri' | 'webspeech' | 'none' = 'none';
     let available = false;
 
@@ -229,7 +242,7 @@ class HybridTTSService {
     return {
       provider,
       available,
-      speaking: this.speaking,
+      speaking: backendSpeaking || this.speaking, // v19.2.0: Combine backend + local state
     };
   }
 
@@ -237,20 +250,7 @@ class HybridTTSService {
    * Obtient voix disponibles
    */
   async getAvailableVoices(): Promise<Array<{ name: string; lang: string }>> {
-    // Tauri
-    if (await this.checkTauriAvailable()) {
-      try {
-        const voices = await invoke<Array<{ name: string; lang: string }>>(
-          'voice_get_available_voices',
-          {}
-        );
-        return voices;
-      } catch (error) {
-        console.warn('⚠️ TTS: Tauri voices failed:', error);
-      }
-    }
-
-    // Web Speech API
+    // Web Speech API (plus fiable que backend Tauri pour liste voix)
     if (this.checkWebSpeechAvailable()) {
       const voices = window.speechSynthesis.getVoices();
       return voices.map((v) => ({

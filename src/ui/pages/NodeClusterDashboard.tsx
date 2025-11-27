@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface NodeInfo {
   id: string;
@@ -35,7 +35,7 @@ const NodeClusterDashboard: React.FC = () => {
 
   const initialize = async () => {
     try {
-      await invoke('mesh_initialize', { nodeId, port });
+      await secureInvoke('mesh_initialize', { nodeId, port });
       setIsInitialized(true);
       setError(null);
     } catch (err) {
@@ -49,7 +49,7 @@ const NodeClusterDashboard: React.FC = () => {
         if (!isInitialized) return;
 
         try {
-          const data = await invoke<MeshStats>('mesh_get_stats');
+          const data = await secureInvoke<MeshStats>('mesh_get_stats');
           setStats(data);
           // Mock peers for now (backend will return actual peers later)
           setPeers([

@@ -106,14 +106,15 @@ export class MemoryCoreAgent implements Agent {
     }
 
     if (event.type === 'snapshot:restore') {
-      return this.restoreSnapshot((event.payload as any).snapshotId);
+      const payload = event.payload as { snapshotId?: string };
+      return this.restoreSnapshot(payload.snapshotId || '');
     }
 
     return { success: false, error: `Unknown event type: ${event.type}` };
   }
 
   // Import new knowledge from file/url/user
-  private async importKnowledge(data: any): Promise<AgentResponse> {
+  private async importKnowledge(data: unknown): Promise<AgentResponse> {
     try {
       const entry: KnowledgeEntry = {
         id: `kb_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
@@ -162,7 +163,7 @@ export class MemoryCoreAgent implements Agent {
   }
 
   // Query knowledge base
-  private queryKnowledge(query: any): AgentResponse {
+  private queryKnowledge(query: unknown): AgentResponse {
     const { keyword, category, limit = 10 } = query;
 
     let results: KnowledgeEntry[] = Array.from(this.knowledge.values());

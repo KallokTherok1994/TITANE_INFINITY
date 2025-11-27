@@ -8,13 +8,20 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v16.0 — OLLAMA PROVIDER
+ *   TITANE∞ v19.0 — OLLAMA PROVIDER SÉCURISÉ
  *   Provider Ollama local avec support Llama2, Mistral, etc.
+ *   + Sanitization, validation, rate limiting
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
+import {
+  SecureAIService,
+  type SecureAIRequest,
+  type SecureAIResponse,
+  type ChatResponse,
+} from '@/lib/security';
 
 const OLLAMA_API_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama2';
@@ -24,7 +31,7 @@ const OLLAMA_MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama2';
  */
 function buildPrompt(message: string, history: AIMessage[]): string {
   const recentHistory = history.slice(-5);
-  
+
   if (recentHistory.length === 0) {
     return `Tu es TITANE∞, une IA cognitive avancée. Réponds en français de manière professionnelle et précise.
 
@@ -71,59 +78,127 @@ export const ollamaProvider: AIProvider = {
 
   async generate(message: string, history: AIMessage[] = [], config: AIConfig = {}): Promise<AIResponse> {
     const finalConfig = { ...DEFAULT_AI_CONFIG, ...config };
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
+
+    // ============================================================
+    // SECURE AI REQUEST
+    // ============================================================
+    const secureRequest: SecureAIRequest = {
+      input: message,
+      provider: 'ollama',
+      model: OLLAMA_MODEL,
+      userId: 'system', // TODO: Get from auth context
+      metadata: {
+        temperature: finalConfig.temperature,
+        maxTokens: finalConfig.maxTokens,
+        historyLength: history.length,
+        requestId: `ollama-${Date.now()}`,
+      },
+    };
 
     try {
-      const prompt = buildPrompt(message, history);
+      const secureResult: SecureAIResponse<ChatResponse> =
+        await SecureAIService.executeSecureChat(
+          secureRequest,
+          async (sanitizedMessage) => {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
 
-      const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: OLLAMA_MODEL,
-          prompt,
-          stream: false,
-          options: {
-            temperature: finalConfig.temperature,
-            top_p: finalConfig.topP,
-            top_k: finalConfig.topK,
-            num_predict: finalConfig.maxTokens,
-          },
-        }),
-        signal: controller.signal,
-      });
+            try {
+              const prompt = buildPrompt(sanitizedMessage, history);
 
-      clearTimeout(timeout);
+              const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  model: OLLAMA_MODEL,
+                  prompt,
+                  stream: false,
+                  options: {
+                    temperature: finalConfig.temperature,
+                    top_p: finalConfig.topP,
+                    top_k: finalConfig.topK,
+                    num_predict: finalConfig.maxTokens,
+                  },
+                }),
+                signal: controller.signal,
+              });
 
-      if (!response.ok) {
-        throw new Error(`Ollama API error: ${response.status}`);
+              clearTimeout(timeout);
+
+              if (!response.ok) {
+                throw new Error(`Ollama API error: ${response.status}`);
+              }
+
+              const data = await response.json();
+
+              if (!data.response) {
+                throw new Error('Ollama: Empty response');
+              }
+
+              // Return in ChatResponse format
+              return {
+                content: data.response.trim(),
+                model: OLLAMA_MODEL,
+                usage: {
+                  prompt_tokens: data.prompt_eval_count || Math.ceil(prompt.length / 4),
+                  completion_tokens: data.eval_count || Math.ceil(data.response.length / 4),
+                  total_tokens: (data.prompt_eval_count || 0) + (data.eval_count || 0),
+                },
+              };
+            } catch (error) {
+              clearTimeout(timeout);
+
+              if (error instanceof Error) {
+                if (error.name === 'AbortError') {
+                  throw new Error('Ollama: Request timeout (30s)');
+                }
+                throw error;
+              }
+
+              throw new Error('Ollama: Unknown error');
+            }
+          }
+        );
+
+      // ============================================================
+      // SECURITY VALIDATION CHECK
+      // ============================================================
+      if (!secureResult.success) {
+        const errorMsg = secureResult.error || 'Security validation failed';
+
+        if (secureResult.rateLimitExceeded) {
+          throw new Error(`Rate limit exceeded — ${errorMsg}`);
+        }
+
+        if (secureResult.sanitization?.violations.length) {
+          const violations = secureResult.sanitization.violations
+            .map((v) => v.type)
+            .join(', ');
+          throw new Error(`Input blocked — Detected: ${violations}`);
+        }
+
+        if (!secureResult.validation?.isValid) {
+          throw new Error(`Response validation failed — ${errorMsg}`);
+        }
+
+        throw new Error(errorMsg);
       }
 
-      const data = await response.json();
-
-      if (!data.response) {
-        throw new Error('Ollama: Empty response');
-      }
-
+      // ============================================================
+      // SUCCESS
+      // ============================================================
       return {
-        content: data.response.trim(),
+        content: secureResult.response.content,
         provider: 'ollama',
         timestamp: Date.now(),
         model: OLLAMA_MODEL,
       };
     } catch (error) {
-      clearTimeout(timeout);
-
       if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          throw new Error('Ollama: Request timeout (30s)');
-        }
         throw error;
       }
-
       throw new Error('Ollama: Unknown error');
     }
   },

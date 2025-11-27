@@ -1,0 +1,146 @@
+/**
+ * TITANE∞ v19.1.0 - XPBar Styles
+ * Animations polish + accessibilité améliorée
+ */
+
+.xp-bar-wrapper {
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  outline: none;
+}
+
+.xp-bar-wrapper:hover {
+  background: rgba(0, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.xp-bar-wrapper:focus-visible {
+  outline: 2px solid rgba(0, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+.xp-bar-wrapper:active {
+  transform: translateY(0);
+}
+
+.xp-bar-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.xp-level {
+  color: #00ffff;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.xp-next {
+  color: rgba(0, 255, 255, 0.7);
+  font-size: 11px;
+}
+
+.xp-bar-container {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.xp-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00ffff 0%, #00cccc 50%, #00ffff 100%);
+  background-size: 200% 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+  animation: shimmer 2s linear infinite;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  position: relative;
+}
+
+.xp-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+  border-radius: 4px 4px 0 0;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  }
+  50% {
+    text-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Level up animation (ajouté dynamiquement) */
+@keyframes level-up {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.xp-bar-wrapper.level-up {
+  animation: level-up 0.6s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .xp-bar-wrapper {
+    padding: 8px;
+  }
+
+  .xp-bar-info {
+    font-size: 11px;
+  }
+
+  .xp-bar-container {
+    height: 6px;
+  }
+}
+
+/* Accessibility - Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .xp-bar-wrapper,
+  .xp-bar,
+  .xp-level {
+    animation: none;
+    transition: none;
+  }
+
+  .xp-bar-wrapper:hover {
+    transform: none;
+  }
+}

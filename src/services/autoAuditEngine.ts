@@ -8,7 +8,24 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
+
+interface MemoryState {
+  snapshots_count?: number;
+  [key: string]: unknown;
+}
+
+interface PerformanceMemory {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
+interface SingularityStateXP {
+  xp?: number;
+  level?: number;
+  [key: string]: unknown;
+}
 
 export interface AuditResult {
   timestamp: number;
@@ -147,7 +164,7 @@ export class AutoAuditEngine {
 
     try {
       // Appeler commande Tauri pour vérifier intégrité du vault
-      const response = await invoke<{ ok: boolean; data?: string[]; error?: string }>(
+      const response = await secureInvoke<{ ok: boolean; data?: string[]; error?: string }>(
         'check_system_integrity'
       );
 
@@ -202,7 +219,7 @@ export class AutoAuditEngine {
 
     for (const cmd of criticalCommands) {
       try {
-        const _response = await invoke(cmd);
+        const _response = await secureInvoke(cmd);
         results.push({
           timestamp: Date.now(),
           category: 'commands',
@@ -229,7 +246,7 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     try {
-      const state = await invoke<any>('get_memory_state');
+      const state = await secureInvoke<MemoryState>('get_memory_state');
 
       // Vérifier présence des champs critiques
       if (!state.snapshots_count && state.snapshots_count !== 0) {
@@ -267,7 +284,7 @@ export class AutoAuditEngine {
 
     try {
       // Vérifier que les clés crypto sont accessibles
-      const response = await invoke<{ ok: boolean }>(
+      const response = await secureInvoke<{ ok: boolean }>(
         'check_system_integrity'
       );
 
@@ -296,8 +313,9 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     // Memory usage
-    if (performance && (performance as any).memory) {
-      const memory = (performance as any).memory;
+    const perfWithMemory = performance as Performance & { memory?: PerformanceMemory };
+    if (perfWithMemory.memory) {
+      const memory = perfWithMemory.memory;
       const usedMB = memory.usedJSHeapSize / 1024 / 1024;
       const totalMB = memory.totalJSHeapSize / 1024 / 1024;
 
@@ -323,7 +341,7 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     try {
-      const state = await invoke<any>('singularity_get_full_state');
+      const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
 
       // Vérifier champs XP
       if (state.xp !== undefined && state.level !== undefined) {

@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import './SystemGovernance.css';
 
 interface AuditEntry {
@@ -43,7 +43,7 @@ export const SystemGovernance: React.FC = () => {
   const loadAuditLog = async () => {
     try {
       setLoading(true);
-      const response = await invoke<{ ok: boolean; data?: AuditEntry[]; error?: string }>(
+      const response = await secureInvoke<{ ok: boolean; data?: AuditEntry[]; error?: string }>(
         'get_permission_audit'
       );
 

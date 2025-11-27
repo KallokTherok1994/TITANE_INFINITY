@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════
 //   TYPES — Mirror Rust backend types
@@ -131,16 +131,16 @@ export function useSingularityState(
       setError(null);
 
       // Get full unified state
-      const state = await invoke<SingularityState>('engine_get_singularity_state');
+      const state = await secureInvoke<SingularityState>('engine_get_singularity_state');
       setSingularityState(state);
 
       // Get individual module states (optional, for granular access)
       const [nexus, harmonia, sentinel, cognition, evolution] = await Promise.all([
-        invoke<NexusState>('engine_get_nexus_state'),
-        invoke<HarmoniaState>('engine_get_harmonia_state'),
-        invoke<SentinelState>('engine_get_sentinel_state'),
-        invoke<CognitionState>('engine_get_cognition_state'),
-        invoke<EvolutionState>('engine_get_evolution_state'),
+        secureInvoke<NexusState>('engine_get_nexus_state'),
+        secureInvoke<HarmoniaState>('engine_get_harmonia_state'),
+        secureInvoke<SentinelState>('engine_get_sentinel_state'),
+        secureInvoke<CognitionState>('engine_get_cognition_state'),
+        secureInvoke<EvolutionState>('engine_get_evolution_state'),
       ]);
 
       setNexusState(nexus);
@@ -165,7 +165,7 @@ export function useSingularityState(
       setLoading(true);
       setError(null);
 
-      const result = await invoke<string>('engine_init_singularity');
+      const result = await secureInvoke<string>('engine_init_singularity');
       console.log('[useSingularityState] Init:', result);
 
       // Refresh state after init
@@ -184,7 +184,7 @@ export function useSingularityState(
    */
   const tickEngine = useCallback(async () => {
     try {
-      const result = await invoke<string>('engine_tick');
+      const result = await secureInvoke<string>('engine_tick');
       console.log('[useSingularityState] Tick:', result);
 
       // Refresh state after tick

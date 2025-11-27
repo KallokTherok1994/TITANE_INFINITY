@@ -25,6 +25,7 @@ import { Button } from './ui';
 import { CompactXPBar } from './components/experience/CompactXPBar';
 import { XPBar } from './components/experience/XPBar'; // ✨ v∞.D4 - Barre XP
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
+import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
 import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
 import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
 
@@ -66,6 +67,7 @@ import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { DesignSystemPage } from './pages/DesignSystemPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
+import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
 
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
@@ -177,6 +179,7 @@ const AppRouter: React.FC = () => {
     { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'v15.1' },
     { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
     { id: '/progression', label: 'Progression', icon: '⚡', badge: 'NEW' },
+    { id: '/diagnostics', label: 'Diagnostics', icon: '🔬', badge: 'v19.1.0' },
     { id: '/design-system', label: 'Design System', icon: '🎨', badge: 'v15.1' },
     { id: '/time-navigator', label: 'Time Navigator', icon: '⏱️', badge: 'v∞' },
     { id: '/governance', label: 'Governance', icon: '⚖️', badge: 'v∞' },
@@ -256,18 +259,31 @@ const AppRouter: React.FC = () => {
       <Routes>
         {/* Main Routes v15.2+ */}
         <Route path="/" element={<DashboardPage />} />
-        <Route path="/chat" element={<ChatPage />} />
-        <Route path="/cognitive" element={<CognitivePage />} />
+        <Route path="/chat" element={
+          <ErrorBoundary context="ChatPage">
+            <ChatPage />
+          </ErrorBoundary>
+        } />
+        <Route path="/cognitive" element={
+          <ErrorBoundary context="CognitivePage">
+            <CognitivePage />
+          </ErrorBoundary>
+        } />
         <Route path="/progression" element={<ProgressionPage />} />
         <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
         <Route path="/design-system" element={<DesignSystemPage />} />
+        <Route path="/diagnostics" element={<DiagnosticPanel />} /> {/* ✨ v19.1.0 - System Diagnostics */}
 
         {/* v∞ Super-Prompt N6/K8 - Time Navigation & Governance */}
         <Route path="/time-navigator" element={<TimeNavigator />} />
         <Route path="/governance" element={<SystemGovernance />} />
 
         {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) */}
-        <Route path="/multi-ai" element={<MultiAIDashboard />} />
+        <Route path="/multi-ai" element={
+          <ErrorBoundary context="MultiAIDashboard">
+            <MultiAIDashboard />
+          </ErrorBoundary>
+        } />
 
         {/* v∞ Phases 5-10 - Super-Prompts P-U */}
         <Route path="/cluster" element={<NodeClusterDashboard />} />
@@ -278,7 +294,11 @@ const AppRouter: React.FC = () => {
         <Route path="/evolution" element={<EvolutionMonitor />} />
 
         {/* v15: SingularityState Monitor */}
-        <Route path="/singularity" element={<SingularityMonitor />} />
+        <Route path="/singularity" element={
+          <ErrorBoundary context="SingularityMonitor">
+            <SingularityMonitor />
+          </ErrorBoundary>
+        } />
 
         {/* Engine Routes */}
         <Route path="/helios" element={<Helios />} />
@@ -291,7 +311,11 @@ const AppRouter: React.FC = () => {
         <Route path="/memory" element={<Memory />} />
 
         {/* System Routes */}
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/settings" element={
+          <ErrorBoundary context="Settings">
+            <Settings />
+          </ErrorBoundary>
+        } />
         <Route path="/devtools" element={<DevTools />} />
         <Route path="/performance" element={<PerformanceTest />} />
 

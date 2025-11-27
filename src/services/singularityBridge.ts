@@ -6,7 +6,7 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -199,9 +199,9 @@ export class SingularityBridge {
 
   static async getSymbolic(): Promise<SymbolicLayer> {
     try {
-      return await invoke<SymbolicLayer>('singularity_get_symbolic');
-    } catch (err: any) {
-      const msg = String(err?.message ?? err);
+      return await secureInvoke<SymbolicLayer>('singularity_get_symbolic');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes('command') && msg.includes('not found')) {
         console.warn('[SingularityBridge] singularity_get_symbolic not available, using fallback');
       } else {
@@ -235,9 +235,9 @@ export class SingularityBridge {
 
   static async getAdaptive(): Promise<AdaptiveLayer> {
     try {
-      return await invoke<AdaptiveLayer>('singularity_get_adaptive');
-    } catch (err: any) {
-      const msg = String(err?.message ?? err);
+      return await secureInvoke<AdaptiveLayer>('singularity_get_adaptive');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes('command') && msg.includes('not found')) {
         console.warn('[SingularityBridge] singularity_get_adaptive not available, using fallback');
       } else {
@@ -264,9 +264,9 @@ export class SingularityBridge {
 
   static async getMeta(): Promise<MetaLayer> {
     try {
-      return await invoke<MetaLayer>('singularity_get_meta');
-    } catch (err: any) {
-      const msg = String(err?.message ?? err);
+      return await secureInvoke<MetaLayer>('singularity_get_meta');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes('command') && msg.includes('not found')) {
         console.warn('[SingularityBridge] singularity_get_meta not available, using fallback');
       } else {
@@ -326,7 +326,7 @@ export class SingularityBridge {
   }
 
   static async updateFullState(state: SingularityState): Promise<void> {
-    await invoke('singularity_update_full_state', { state });
+    await secureInvoke('singularity_update_full_state', { state });
     this.state = state;
     this.notifySubscribers();
   }
@@ -336,11 +336,11 @@ export class SingularityBridge {
   // ═══════════════════════════════════════════════════════════════════
 
   static async saveState(): Promise<void> {
-    await invoke('singularity_save_state');
+    await secureInvoke('singularity_save_state');
   }
 
   static async loadState(): Promise<void> {
-    await invoke('singularity_load_state');
+    await secureInvoke('singularity_load_state');
     this.state = await this.getFullState();
     this.notifySubscribers();
   }

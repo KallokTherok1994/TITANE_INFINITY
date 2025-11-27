@@ -10,7 +10,7 @@
 // Cliquer → ouvre ExpPanel complet
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import '../../styles/exp-fusion.css';
 
 interface GlobalExpState {
@@ -38,7 +38,7 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
 
   const fetchExpState = async () => {
     try {
-      const state = await invoke<GlobalExpState>('exp_get_global_state');
+      const state = await secureInvoke<GlobalExpState>('exp_get_global_state');
       setExpState(state);
     } catch (error) {
       console.error('Erreur fetch EXP state:', error);

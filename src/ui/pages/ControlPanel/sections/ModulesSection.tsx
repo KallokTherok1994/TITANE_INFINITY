@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface ModuleStatus {
   id: string;
@@ -23,7 +23,7 @@ export const ModulesSection: React.FC = () => {
 
   const loadModules = async () => {
     try {
-      const modulesList = await invoke<ModuleStatus[]>('get_modules_status');
+      const modulesList = await secureInvoke<ModuleStatus[]>('get_modules_status');
       setModules(modulesList);
     } catch (error) {
       console.error('Erreur chargement modules:', error);
@@ -32,7 +32,7 @@ export const ModulesSection: React.FC = () => {
 
   const toggleModule = async (moduleId: string) => {
     try {
-      await invoke('toggle_module', { moduleId });
+      await secureInvoke('toggle_module', { moduleId });
       await loadModules();
     } catch (error) {
       console.error('Erreur toggle module:', error);

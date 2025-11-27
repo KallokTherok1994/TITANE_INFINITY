@@ -43,7 +43,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' tauri: asset: https://asset.localhost; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: https://asset.localhost; font-src 'self' data:; connect-src 'self' tauri: asset: ipc: http://localhost:11434 https://generativelanguage.googleapis.com https://*.googleapis.com;",
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://localhost:11434 https://generativelanguage.googleapis.com; media-src 'self' asset:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": false,
       "assetProtocol": {
         "enable": true,

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface AIConfig {
   gemini_api_key: string;
@@ -28,7 +28,7 @@ export const AISection: React.FC = () => {
 
   const loadConfig = async () => {
     try {
-      const aiConfig = await invoke<AIConfig>('get_ai_config');
+      const aiConfig = await secureInvoke<AIConfig>('get_ai_config');
       setConfig(aiConfig);
     } catch (error) {
       console.error('Erreur chargement config IA:', error);
@@ -37,7 +37,7 @@ export const AISection: React.FC = () => {
 
   const saveConfig = async () => {
     try {
-      await invoke('set_ai_config', { config });
+      await secureInvoke('set_ai_config', { config });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {

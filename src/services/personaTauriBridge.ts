@@ -15,7 +15,7 @@ import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { personaService } from './api';
 import type { PersonaState, SystemState } from '../core';
 
@@ -177,7 +177,7 @@ export class PersonaTauriBridge {
     }
 
     try {
-      const rustState = await invoke<RustPersonaState>('persona_get_state');
+      const rustState = await secureInvoke<RustPersonaState>('persona_get_state');
       return convertRustToTS(rustState);
     } catch (error) {
       console.error('[PersonaTauriBridge] Failed to get state:', error);
@@ -197,7 +197,7 @@ export class PersonaTauriBridge {
     }
 
     try {
-      const rustState = await invoke<RustPersonaState>('persona_update', {
+      const rustState = await secureInvoke<RustPersonaState>('persona_update', {
         systemState,
         cpu: metrics.cpu,
         memory: metrics.memory,
@@ -219,7 +219,7 @@ export class PersonaTauriBridge {
     }
 
     try {
-      const rustState = await invoke<RustPersonaState>('persona_react', {
+      const rustState = await secureInvoke<RustPersonaState>('persona_react', {
         reactionType,
       });
       return convertRustToTS(rustState);
@@ -238,7 +238,7 @@ export class PersonaTauriBridge {
     }
 
     try {
-      const rustState = await invoke<RustPersonaState>('persona_reset');
+      const rustState = await secureInvoke<RustPersonaState>('persona_reset');
       return convertRustToTS(rustState);
     } catch (error) {
       console.error('[PersonaTauriBridge] Failed to reset:', error);

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface EvolutionMetrics {
   stability: number;
@@ -45,7 +45,7 @@ const EvolutionMonitor: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      const data = await invoke<EvolutionStats>('evolution_get_stats');
+      const data = await secureInvoke<EvolutionStats>('evolution_get_stats');
       setStats(data);
     } catch (err) {
       console.error('Failed to fetch stats:', err);
@@ -55,7 +55,7 @@ const EvolutionMonitor: React.FC = () => {
   const runEvolutionCycle = async () => {
     setIsEvolving(true);
     try {
-      const report = await invoke<EvolutionReport>('evolution_run_cycle');
+      const report = await secureInvoke<EvolutionReport>('evolution_run_cycle');
       setLastReport(report);
       await fetchStats();
     } catch (err) {

@@ -10,7 +10,7 @@
 // React hook for conversational memory management
 
 import { useState, useCallback, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 export interface MemoryEntry {
   id: string;
@@ -55,7 +55,7 @@ export function useMemory() {
     setError(null);
 
     try {
-      const conversationsJson = await invoke<string>('list_conversations');
+      const conversationsJson = await secureInvoke<string>('list_conversations');
       const parsed: ConversationSummary[] = JSON.parse(conversationsJson);
       setConversations(parsed);
     } catch (err) {
@@ -72,7 +72,7 @@ export function useMemory() {
     setError(null);
 
     try {
-      const conversationId = await invoke<string>('create_conversation', {
+      const conversationId = await secureInvoke<string>('create_conversation', {
         title,
       });
 
@@ -94,7 +94,7 @@ export function useMemory() {
     setError(null);
 
     try {
-      const conversationJson = await invoke<string>('load_conversation', {
+      const conversationJson = await secureInvoke<string>('load_conversation', {
         conversationId,
       });
 

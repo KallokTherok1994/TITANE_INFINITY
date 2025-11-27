@@ -7,6 +7,7 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import type { SingularityState } from '../types/singularityState';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -49,6 +50,22 @@ export interface ChatRequest {
   streaming: boolean;
   images?: string[]; // base64
   system_prompt?: string;
+}
+
+export interface SystemVitals {
+  cpu_usage: number;
+  memory_usage: number;
+  disk_usage: number;
+  timestamp: number;
+  [key: string]: unknown;
+}
+
+export interface ConversationData {
+  id: string;
+  messages: ChatMessage[];
+  created_at: number;
+  updated_at: number;
+  [key: string]: unknown;
 }
 
 export interface ChatResponse {
@@ -390,7 +407,7 @@ class TauriClient {
   /**
    * Récupère une conversation
    */
-  async chatGetConversation(conversationId: string, options?: InvokeOptions): Promise<any> {
+  async chatGetConversation(conversationId: string, options?: InvokeOptions): Promise<ConversationData> {
     try {
       const response = await this.safeInvoke<string>('chat_get_conversation', { conversationId }, {
         timeout: 10000,
@@ -423,7 +440,7 @@ class TauriClient {
   /**
    * Récupère les vitals système
    */
-  async getSystemVitals(options?: InvokeOptions): Promise<any> {
+  async getSystemVitals(options?: InvokeOptions): Promise<SystemVitals> {
     try {
       const response = await this.safeInvoke<string>('get_system_vitals', {}, {
         timeout: 5000,
@@ -439,7 +456,7 @@ class TauriClient {
   /**
    * Récupère l'état Singularity complet
    */
-  async getSingularityState(options?: InvokeOptions): Promise<any> {
+  async getSingularityState(options?: InvokeOptions): Promise<SingularityState> {
     try {
       const response = await this.safeInvoke<string>('singularity_get_full_state', {}, {
         timeout: 10000,

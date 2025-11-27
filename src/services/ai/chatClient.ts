@@ -1,11 +1,21 @@
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v18.3.0 — AI CHAT CLIENT ROBUSTE
- * Client centralisé pour chat AI avec retry, timeout, fallback
+ * TITANE∞ v19.0 — AI CHAT CLIENT SÉCURISÉ
+ * Client centralisé pour chat AI avec:
+ * - Sanitization input (prompt injection, XSS, code execution)
+ * - Validation output (JSON schema, XSS detection)
+ * - Rate limiting (50 req/min, 100k tokens/min, 1$/min)
+ * - Circuit breaker, retry, timeout, fallback
  * ═══════════════════════════════════════════════════════════════
  */
 
 import { sendChatMessage } from '../tauriBridge';
+import {
+  SecureAIService,
+  type SecureAIRequest,
+  type SecureAIResponse,
+  type ChatResponse,
+} from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -95,7 +105,16 @@ class CircuitBreaker {
 const circuitBreaker = new CircuitBreaker(5, 60000, 30000);
 
 /**
- * Envoie un message au chat AI avec retry, timeout, et fallback
+ * ═══════════════════════════════════════════════════════════════
+ * TITANE∞ v19 CHAT SERVICE — ENVOI MESSAGE SÉCURISÉ
+ * ═══════════════════════════════════════════════════════════════
+ * 1. Sanitize input (prompt injection, XSS, code execution)
+ * 2. Rate limit check (50 req/min, 100k tokens/min, 1$/min)
+ * 3. Circuit breaker + retry loop
+ * 4. API call via tauriBridge
+ * 5. Validate output (JSON schema, XSS detection)
+ * 6. Record metrics + violations
+ * ---------------------------------------------------------------
  */
 export async function sendMessage(
   messages: ChatMessage[],
@@ -112,7 +131,25 @@ export async function sendMessage(
 
   const startTime = Date.now();
 
-  // Check circuit breaker
+  // ============================================================
+  // SECURITY: Extract user input for sanitization
+  // ============================================================
+  const userInput = messages
+    .filter((m) => m.role === 'user')
+    .map((m) => m.content)
+    .join('\n');
+
+  if (!userInput.trim()) {
+    return {
+      success: false,
+      error: 'Empty message - no user input found',
+      duration: Date.now() - startTime,
+    };
+  }
+
+  // ============================================================
+  // CIRCUIT BREAKER CHECK
+  // ============================================================
   if (!circuitBreaker.canExecute()) {
     return {
       success: false,
@@ -120,25 +157,101 @@ export async function sendMessage(
     };
   }
 
-  // Try primary model with retries
+  // ============================================================
+  // SECURE AI REQUEST
+  // ============================================================
+  const secureRequest: SecureAIRequest = {
+    input: userInput,
+    provider: model.includes('gpt') ? 'openai' :
+              model.includes('claude') ? 'anthropic' :
+              model.includes('gemini') ? 'google' : 'ollama',
+    model,
+    userId: 'system', // TODO: Get from auth context
+    metadata: {
+      temperature,
+      maxTokens,
+      messageCount: messages.length,
+      requestId: `chat-${Date.now()}`,
+    },
+  };
+
+  // ============================================================
+  // RETRY LOOP WITH SECURITY
+  // ============================================================
   for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      const response = await sendChatMessage(messages, {
-        model,
-        temperature,
-        maxTokens,
-      });
+      const secureResult: SecureAIResponse<ChatResponse> =
+        await SecureAIService.executeSecureChat(
+          secureRequest,
+          async (sanitizedInput) => {
+            // Rebuild messages with sanitized input
+            const sanitizedMessages = messages.map((m) =>
+              m.role === 'user'
+                ? { ...m, content: sanitizedInput }
+                : m
+            );
 
-      if (response.success && response.data) {
-        circuitBreaker.recordSuccess();
-        return {
-          success: true,
-          content: response.data,
-          model,
-          attempt,
-          duration: Date.now() - startTime,
-        };
+            // API call via tauriBridge
+            const response = await sendChatMessage(sanitizedMessages, {
+              model,
+              temperature,
+              maxTokens,
+            });
+
+            return response;
+          }
+        );
+
+      // ============================================================
+      // SECURITY VALIDATION CHECK
+      // ============================================================
+      if (!secureResult.success) {
+        // Security failure (rate limit, validation, sanitization)
+        const errorMsg = secureResult.error || 'Security validation failed';
+
+        if (secureResult.rateLimitExceeded) {
+          return {
+            success: false,
+            error: `Rate limit exceeded — ${errorMsg}`,
+            duration: Date.now() - startTime,
+          };
+        }
+
+        if (secureResult.sanitization?.violations.length) {
+          const violations = secureResult.sanitization.violations
+            .map((v) => v.type)
+            .join(', ');
+          return {
+            success: false,
+            error: `Input blocked — Detected: ${violations}`,
+            duration: Date.now() - startTime,
+          };
+        }
+
+        if (!secureResult.validation?.isValid) {
+          return {
+            success: false,
+            error: `Response validation failed — ${errorMsg}`,
+            duration: Date.now() - startTime,
+          };
+        }
+
+        // Generic error - retry
+        throw new Error(errorMsg);
       }
+
+      // ============================================================
+      // SUCCESS
+      // ============================================================
+      circuitBreaker.recordSuccess();
+      return {
+        success: true,
+        content: secureResult.response.content,
+        model: secureResult.response.model || model,
+        attempt,
+        duration: Date.now() - startTime,
+      };
+
     } catch (error) {
       console.warn(`[ChatClient] Attempt ${attempt}/${retries} failed:`, error);
 
@@ -148,22 +261,36 @@ export async function sendMessage(
     }
   }
 
-  // Try fallback models
+  // ============================================================
+  // FALLBACK MODELS (with security)
+  // ============================================================
   for (const fallbackModel of fallbackModels) {
     try {
       console.log(`[ChatClient] Trying fallback model: ${fallbackModel}`);
 
-      const response = await sendChatMessage(messages, {
-        model: fallbackModel,
-        temperature,
-        maxTokens,
-      });
+      const fallbackRequest = { ...secureRequest, model: fallbackModel };
+      const fallbackResult = await SecureAIService.executeSecureChat(
+        fallbackRequest,
+        async (sanitizedInput) => {
+          const sanitizedMessages = messages.map((m) =>
+            m.role === 'user' ? { ...m, content: sanitizedInput } : m
+          );
 
-      if (response.success && response.data) {
+          const response = await sendChatMessage(sanitizedMessages, {
+            model: fallbackModel,
+            temperature,
+            maxTokens,
+          });
+
+          return response;
+        }
+      );
+
+      if (fallbackResult.success) {
         circuitBreaker.recordSuccess();
         return {
           success: true,
-          content: response.data,
+          content: fallbackResult.response.content,
           model: fallbackModel,
           duration: Date.now() - startTime,
         };
@@ -173,7 +300,9 @@ export async function sendMessage(
     }
   }
 
-  // All attempts failed
+  // ============================================================
+  // ALL RETRIES + FALLBACKS FAILED
+  // ============================================================
   circuitBreaker.recordFailure();
   return {
     success: false,

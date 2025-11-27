@@ -7,7 +7,7 @@
  * @module WatchdogBridge
  */
 
-import { invoke } from '@tauri-apps/api/tauri';
+import { secureInvoke } from '@/lib/security';
 import type { CognitiveState } from './CognitiveBridge';
 
 // ═══════════════════════════════════════════════════════════════
@@ -237,7 +237,7 @@ export class WatchdogBridge {
    */
   static async runSelfTest(): Promise<WatchdogSelfTestResult> {
     try {
-      const result = await invoke<unknown>('watchdog_run_selftest');
+      const result = await secureInvoke<unknown>('watchdog_run_selftest');
 
       if (!isWatchdogSelfTestResult(result)) {
         throw new Error('Invalid WatchdogSelfTestResult received from Rust');
@@ -268,7 +268,7 @@ export class WatchdogBridge {
     }
 
     try {
-      const result = await invoke<unknown>('watchdog_scan', {
+      const result = await secureInvoke<unknown>('watchdog_scan', {
         cognitiveState,
         singularityState
       });
@@ -304,7 +304,7 @@ export class WatchdogBridge {
     this.antiLoop.recordAttempt();
 
     try {
-      const result = await invoke<unknown>('watchdog_fix', {
+      const result = await secureInvoke<unknown>('watchdog_fix', {
         cognitiveState,
         scanResult
       });

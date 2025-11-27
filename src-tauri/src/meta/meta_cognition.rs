@@ -526,6 +526,11 @@ impl MetaCognitionEngine {
         &self.state
     }
 
+    /// Get baseline coherence
+    pub fn get_baseline(&self) -> f32 {
+        self.baseline_coherence
+    }
+
     /// Establish new baseline
     pub fn establish_baseline(&mut self, coherence: f32) {
         self.baseline_coherence = coherence.clamp(0.0, 1.0);
@@ -709,12 +714,12 @@ mod tests {
     #[tokio::test]
     async fn test_meta_selftest() {
         let mut engine = MetaCognitionEngine::new();
-        
+
         // Établir baseline d'abord
         engine.establish_baseline(0.85);
-        
+
         let (success, issues) = engine.meta_selftest().await;
-        
+
         assert!(success, "Meta selftest failed: {:?}", issues);
         assert_eq!(issues.len(), 0);
     }

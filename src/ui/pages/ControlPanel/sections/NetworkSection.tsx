@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface NetworkConfig {
   online_mode: boolean;
@@ -28,7 +28,7 @@ export const NetworkSection: React.FC = () => {
 
   const loadConfig = async () => {
     try {
-      const networkConfig = await invoke<NetworkConfig>('get_network_config');
+      const networkConfig = await secureInvoke<NetworkConfig>('get_network_config');
       setConfig(networkConfig);
     } catch (error) {
       console.error('Erreur chargement config réseau:', error);
@@ -37,7 +37,7 @@ export const NetworkSection: React.FC = () => {
 
   const saveConfig = async () => {
     try {
-      await invoke('set_network_config', { config });
+      await secureInvoke('set_network_config', { config });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {

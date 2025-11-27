@@ -132,7 +132,7 @@ class ChatMemoryCompactor {
    */
   getMemoryStats(): Record<ChatMode, { messages: number; compressed: number; size: string }> {
     const modes: ChatMode[] = ['default', 'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive'];
-    const stats: any = {};
+    const stats: Record<string, { messages: number; compressed: number; size: string }> = {};
 
     modes.forEach(mode => {
       const memory = this.loadMemoryObject(mode);

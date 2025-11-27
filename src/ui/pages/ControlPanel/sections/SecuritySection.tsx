@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface SecurityConfig {
   hn_security_enabled: boolean;
@@ -28,7 +28,7 @@ export const SecuritySection: React.FC = () => {
 
   const loadConfig = async () => {
     try {
-      const securityConfig = await invoke<SecurityConfig>('get_security_config');
+      const securityConfig = await secureInvoke<SecurityConfig>('get_security_config');
       setConfig(securityConfig);
     } catch (error) {
       console.error('Erreur chargement config sécurité:', error);
@@ -37,7 +37,7 @@ export const SecuritySection: React.FC = () => {
 
   const saveConfig = async () => {
     try {
-      await invoke('set_security_config', { config });
+      await secureInvoke('set_security_config', { config });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     } catch (error) {

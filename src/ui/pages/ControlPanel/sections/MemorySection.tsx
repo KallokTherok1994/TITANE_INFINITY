@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface MemoryStats {
   total_size: number;
@@ -23,7 +23,7 @@ export const MemorySection: React.FC = () => {
 
   const loadStats = async () => {
     try {
-      const memoryStats = await invoke<MemoryStats>('get_memory_stats');
+      const memoryStats = await secureInvoke<MemoryStats>('get_memory_stats');
       setStats(memoryStats);
     } catch (error) {
       console.error('Erreur chargement stats mémoire:', error);
@@ -33,7 +33,7 @@ export const MemorySection: React.FC = () => {
   const clearCache = async () => {
     setClearing(true);
     try {
-      await invoke('clear_memory_cache');
+      await secureInvoke('clear_memory_cache');
       await loadStats();
     } catch (error) {
       console.error('Erreur nettoyage cache:', error);

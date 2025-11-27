@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   HeliosState,
   HealthStatus,
@@ -34,7 +34,7 @@ import type {
  */
 async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
   try {
-    const result = await invoke<T>(cmd, args);
+    const result = await secureInvoke<T>(cmd, args);
     return result;
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : String(error);

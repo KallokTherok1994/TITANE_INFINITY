@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 /**
  * Wrapper universel pour invoke() avec gestion d'erreur automatique
@@ -18,7 +18,7 @@ export async function safeInvoke<T = unknown>(
   payload: Record<string, unknown> = {}
 ): Promise<T | null> {
   try {
-    const result = await invoke<T>(cmd, payload);
+    const result = await secureInvoke<T>(cmd, payload);
     return result;
   } catch (err) {
     console.error(`❌ Tauri Command Error [${cmd}]:`, err);
@@ -50,7 +50,7 @@ export async function safeInvokeWithRetry<T = unknown>(
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-      const result = await invoke<T>(cmd, payload);
+      const result = await secureInvoke<T>(cmd, payload);
 
       // Succès dès la première tentative
       if (attempt > 1) {

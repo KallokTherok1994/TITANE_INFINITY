@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface CodeIssue {
   id: string;
@@ -36,7 +36,7 @@ const IntrospectionDashboard: React.FC = () => {
   const handleScan = async () => {
     setIsScanning(true);
     try {
-      const result = await invoke<ScanReport>('introspection_scan', {
+      const result = await secureInvoke<ScanReport>('introspection_scan', {
         projectRoot: projectPath
       });
       setReport(result);
@@ -50,7 +50,7 @@ const IntrospectionDashboard: React.FC = () => {
   const handleAutoFix = async () => {
     setIsFixing(true);
     try {
-      const result = await invoke<ScanReport>('introspection_auto_fix', {
+      const result = await secureInvoke<ScanReport>('introspection_auto_fix', {
         projectRoot: projectPath
       });
       setReport(result);

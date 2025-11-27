@@ -8,7 +8,7 @@
  * - Establish cognitive baselines
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { useState, useCallback } from 'react';
 
 export interface MetaCognitiveReport {
@@ -83,7 +83,7 @@ export function useMetaCognition() {
     setError(null);
 
     try {
-      const result = await invoke<MetaCognitiveReport>('meta_get_report', params);
+      const result = await secureInvoke<MetaCognitiveReport>('meta_get_report', params);
       setReport(result);
       return result;
     } catch (err) {
@@ -100,7 +100,7 @@ export function useMetaCognition() {
    */
   const getAlignment = useCallback(async () => {
     try {
-      const alignment = await invoke<Record<string, boolean>>('meta_get_alignment');
+      const alignment = await secureInvoke<Record<string, boolean>>('meta_get_alignment');
       return alignment;
     } catch (err) {
       console.error('Failed to get alignment:', err);
@@ -113,7 +113,7 @@ export function useMetaCognition() {
    */
   const getMetaState = useCallback(async () => {
     try {
-      const [metaState, _deepSyncState] = await invoke<[MetaCognitionState, any]>('meta_get_state');
+      const [metaState, _deepSyncState] = await secureInvoke<[MetaCognitionState, Record<string, unknown>]>('meta_get_state');
       setState(metaState);
       return metaState;
     } catch (err) {

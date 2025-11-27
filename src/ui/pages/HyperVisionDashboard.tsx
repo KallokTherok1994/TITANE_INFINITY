@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface SystemMetrics {
   timestamp: number;
@@ -45,7 +45,7 @@ const HyperVisionDashboard: React.FC = () => {
 
   const startMonitoring = async () => {
     try {
-      await invoke('hypervision_start');
+      await secureInvoke('hypervision_start');
       setIsMonitoring(true);
     } catch (err) {
       console.error('Failed to start monitoring:', err);
@@ -54,7 +54,7 @@ const HyperVisionDashboard: React.FC = () => {
 
   const fetchMetrics = async () => {
     try {
-      const data = await invoke<SystemMetrics>('get_system_metrics');
+      const data = await secureInvoke<SystemMetrics>('get_system_metrics');
       setMetrics(data);
       setHistory(prev => [...prev.slice(-29), data]);
 

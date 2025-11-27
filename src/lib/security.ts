@@ -114,7 +114,7 @@ export interface SecureInvokeOptions {
   skipLoopCheck?: boolean;
 }
 
-export interface ValidationResult {
+export interface AIValidationResult {
   valid: boolean;
   errors: string[];
 }
@@ -138,7 +138,7 @@ export interface HardeningReport {
 /**
  * Valider qu'une commande est dans la whitelist
  */
-export function validateCommand(command: string): ValidationResult {
+export function validateCommand(command: string): AIValidationResult {
   const errors: string[] = [];
 
   if (!command || typeof command !== 'string') {
@@ -159,7 +159,7 @@ export function validateCommand(command: string): ValidationResult {
 /**
  * Détecter les tentatives d'injection dans le payload
  */
-export function detectInjection(payload: Record<string, unknown>): ValidationResult {
+export function detectInjection(payload: Record<string, unknown>): AIValidationResult {
   const errors: string[] = [];
 
   // Convertir payload en JSON pour analyse
@@ -179,7 +179,7 @@ export function detectInjection(payload: Record<string, unknown>): ValidationRes
 /**
  * Valider la taille du payload
  */
-export function validatePayloadSize(payload: Record<string, unknown>): ValidationResult {
+export function validatePayloadSize(payload: Record<string, unknown>): AIValidationResult {
   const errors: string[] = [];
   const jsonString = JSON.stringify(payload);
   const sizeBytes = new Blob([jsonString]).size;
@@ -197,7 +197,7 @@ export function validatePayloadSize(payload: Record<string, unknown>): Validatio
 /**
  * Détecter les boucles infinies (trop d'appels rapides)
  */
-export function detectInfiniteLoop(command: string): ValidationResult {
+export function detectInfiniteLoop(command: string): AIValidationResult {
   const now = Date.now();
   const key = command;
 
@@ -333,7 +333,7 @@ export function isValidTauriResponse<T>(
 export function validateResponse<T>(
   response: unknown,
   validator?: (val: unknown) => val is T
-): ValidationResult & { data?: T } {
+): AIValidationResult & { data?: T } {
   const errors: string[] = [];
 
   if (response === null || response === undefined) {
@@ -543,3 +543,32 @@ export function getSecurityStats() {
     default_timeout_ms: DEFAULT_TIMEOUT_MS,
   };
 }
+
+// ═══════════════════════════════════════════════════════════════
+// v19.0 PHASE 2: AI SECURITY MODULES
+// ═══════════════════════════════════════════════════════════════
+
+export { AIInputSanitizer, type SanitizationResult } from './security/AIInputSanitizer';
+export {
+  AIResponseValidator,
+  type AIValidationResult,
+  ChatResponseSchema,
+  StreamingChunkSchema,
+  MetaModeResponseSchema,
+  type ChatResponse,
+  type StreamingChunk,
+  type MetaModeResponse,
+} from './security/AIResponseValidator';
+export {
+  AIRateLimiter,
+  globalAIRateLimiter,
+  type RateLimitConfig,
+  type RateLimitStatus,
+  type RequestMetrics,
+} from './security/AIRateLimiter';
+export {
+  SecureAIService,
+  type SecureAIRequest,
+  type SecureAIResponse,
+  type SecureAIServiceFunction,
+} from './security/SecureAIService';

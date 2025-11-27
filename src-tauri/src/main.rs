@@ -34,6 +34,21 @@ use titane_infinity::cognitive::{
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
+// QA System v19.8
+use titane_infinity::qa::qa_commands::QaState;
+
+// Singularity State v∞ (v20)
+use titane_infinity::singularity::singularity_commands::SingularityStateGlobal;
+
+// Adaptive Engine v21
+use titane_infinity::adaptive::adaptive_commands::AdaptiveEngineGlobal;
+
+// Narrative Engine v22
+use titane_infinity::narrative::narrative_commands::NarrativeEngineGlobal;
+
+// Immersive Avatar Engine v23
+use titane_infinity::avatar::AvatarEngineGlobal;
+
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
     pub analysis: Arc<Mutex<AnalysisEngine>>,
@@ -133,12 +148,57 @@ async fn main() {
     log::info!("   - IntegrationEngine: Signal fusion");
     log::info!("   - EvolutionEngine: Learning & optimization");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE QA SYSTEM v19.8
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🧪 Initializing QA System v19.8...");
+    let qa_state = QaState::new();
+    log::info!("✅ QA System v19.8: Automated testing engine active");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE SINGULARITY STATE v∞ (v20)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🌌 Initializing SingularityState v∞...");
+    let singularity_state = SingularityStateGlobal::new();
+    log::info!("✅ SingularityState v∞: 20 engines unified");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE ADAPTIVE ENGINE v21
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🧠 Initializing AdaptiveEngine v21...");
+    let adaptive_engine = AdaptiveEngineGlobal::new();
+    log::info!("✅ AdaptiveEngine v21: Auto-optimization active");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE NARRATIVE ENGINE v22
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("📖 Initializing NarrativeEngine v22...");
+    let narrative_engine = NarrativeEngineGlobal::new();
+    log::info!("✅ NarrativeEngine v22: Expressive layer active");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE IMMERSIVE AVATAR ENGINE v23
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🎭 Initializing ImmersiveAvatarEngine v23...");
+    let avatar_engine = AvatarEngineGlobal::new();
+    log::info!("✅ ImmersiveAvatarEngine v23: Voice + Lip-Sync + Expressions active");
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .manage(cognitive_state)
+        .manage(qa_state)
+        .manage(singularity_state)
+        .manage(adaptive_engine)
+        .manage(narrative_engine)
+        .manage(avatar_engine)
         .setup(|_app| {
             log::info!("✅ Tauri Builder initialized");
             log::info!("✅ Cognitive System State managed");
+            log::info!("✅ QA System State managed");
+            log::info!("✅ SingularityState v∞ managed");
+            log::info!("✅ AdaptiveEngine v21 managed");
+            log::info!("✅ NarrativeEngine v22 managed");
+            log::info!("✅ ImmersiveAvatarEngine v23 managed");
 
             // Auto-open DevTools in debug mode
             #[cfg(debug_assertions)]
@@ -383,6 +443,71 @@ async fn main() {
             titane_infinity::meta::meta_get_alignment,
             titane_infinity::meta::meta_get_state,
             titane_infinity::meta::meta_selftest_all, // v18.1: Self-test complet
+            // ═══════════════════════════════════════════════════════════════
+            // META MONITORING & AUTO-HEALING v18.2 - Production Systems
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::meta::meta_get_monitoring_metrics,
+            titane_infinity::meta::meta_get_evaluation_history,
+            titane_infinity::meta::meta_get_sync_history,
+            titane_infinity::meta::meta_get_alerts,
+            titane_infinity::meta::meta_acknowledge_alert,
+            titane_infinity::meta::meta_set_auto_healing,
+            titane_infinity::meta::meta_get_auto_healing_status,
+            titane_infinity::meta::meta_get_healing_history,
+            titane_infinity::meta::meta_get_recalibration_history,
+            titane_infinity::meta::meta_trigger_recalibration,
+            // ═══════════════════════════════════════════════════════════════
+            // QA SYSTEM v19.8 - Automated Testing & Quality Assurance
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::qa::qa_commands::qa_run_all,
+            titane_infinity::qa::qa_commands::qa_run_module,
+            titane_infinity::qa::qa_commands::qa_get_last_report,
+            // ═══════════════════════════════════════════════════════════════
+            // SINGULARITY STATE v∞ (v20) - Global Unified State
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::singularity::singularity_commands::singularity_get,
+            titane_infinity::singularity::singularity_commands::singularity_set,
+            titane_infinity::singularity::singularity_commands::singularity_diff,
+            titane_infinity::singularity::singularity_commands::singularity_hash,
+            titane_infinity::singularity::singularity_commands::singularity_sync,
+            titane_infinity::singularity::singularity_commands::singularity_meta,
+            titane_infinity::singularity::singularity_commands::singularity_integrity,
+            titane_infinity::singularity::singularity_commands::singularity_repair,
+            titane_infinity::singularity::singularity_commands::singularity_export_json,
+            titane_infinity::singularity::singularity_commands::singularity_snapshot,
+            titane_infinity::singularity::singularity_selftest::singularity_selftest_full,
+            // ═══════════════════════════════════════════════════════════════
+            // ADAPTIVE ENGINE v21 - Auto-Optimization & Learning
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::adaptive::adaptive_commands::adaptive_get_profile,
+            titane_infinity::adaptive::adaptive_commands::adaptive_set_mode,
+            titane_infinity::adaptive::adaptive_commands::adaptive_learn,
+            titane_infinity::adaptive::adaptive_commands::adaptive_run_optimization,
+            titane_infinity::adaptive::adaptive_commands::adaptive_get_history,
+            titane_infinity::adaptive::adaptive_commands::adaptive_capture_sample,
+            titane_infinity::adaptive::adaptive_commands::adaptive_get_summary,
+            // ═══════════════════════════════════════════════════════════════
+            // NARRATIVE ENGINE v22 - Expressive & Symbolic Layer
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::narrative::narrative_commands::narrative_generate,
+            titane_infinity::narrative::narrative_commands::narrative_get_style,
+            titane_infinity::narrative::narrative_commands::narrative_set_style,
+            titane_infinity::narrative::narrative_commands::narrative_get_identity,
+            titane_infinity::narrative::narrative_commands::narrative_evolve,
+            titane_infinity::narrative::narrative_commands::narrative_get_archetype,
+            titane_infinity::narrative::narrative_commands::narrative_set_archetype,
+            // ═══════════════════════════════════════════════════════════════
+            // IMMERSIVE AVATAR ENGINE v23 - Voice, Lip-Sync & Expressions
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::avatar::avatar_commands::avatar_prepare_speech,
+            titane_infinity::avatar::avatar_commands::avatar_finish_speech,
+            titane_infinity::avatar::avatar_commands::avatar_enable_immersion,
+            titane_infinity::avatar::avatar_commands::avatar_on_wake_word,
+            titane_infinity::avatar::avatar_commands::avatar_get_current_morph,
+            titane_infinity::avatar::avatar_commands::avatar_advance_lip_sync,
+            titane_infinity::avatar::avatar_commands::avatar_get_expression,
+            titane_infinity::avatar::avatar_commands::avatar_get_state,
+            titane_infinity::avatar::avatar_selftest::avatar_run_selftest,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

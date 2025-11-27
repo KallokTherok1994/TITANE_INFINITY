@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type { CoreResponse } from '../core/ARCHITECTURE_TYPES_v∞';
 import type {
   SingularityState,
@@ -306,7 +306,7 @@ export async function invokeTauriCommand<T = unknown>(
   }
 
   try {
-    const result = await invoke<T>(command, params || {});
+    const result = await secureInvoke<T>(command, params || {});
     return {
       success: true,
       data: result,
@@ -375,33 +375,33 @@ export const TauriAPI = {
     invokeTauriCommand('engine_init'),
 
   tickEngine: () =>
-    invokeTauriCommand<any>('engine_tick'),
+    invokeTauriCommand<void>('engine_tick'),
 
   stopEngine: () =>
     invokeTauriCommand('engine_stop'),
 
   getEngineState: () =>
-    invokeTauriCommand<any>('engine_get_state'),
+    invokeTauriCommand<Record<string, unknown>>('engine_get_state'),
 
   getEngineHealth: () =>
     invokeTauriCommand<string>('engine_get_health'),
 
   // DevTools
   getDevToolsLogs: () =>
-    invokeTauriCommand<any[]>('devtools_get_logs'),
+    invokeTauriCommand<unknown[]>('devtools_get_logs'),
 
   getDevToolsMetrics: () =>
-    invokeTauriCommand<any>('devtools_get_metrics'),
+    invokeTauriCommand<Record<string, unknown>>('devtools_get_metrics'),
 
   inspectSingularity: () =>
-    invokeTauriCommand<any>('devtools_inspect_singularity'),
+    invokeTauriCommand<Record<string, unknown>>('devtools_inspect_singularity'),
 
   // System
   getSystemStatus: () =>
-    invokeTauriCommand<any>('system_get_status'),
+    invokeTauriCommand<Record<string, unknown>>('system_get_status'),
 
   getSystemInfo: () =>
-    invokeTauriCommand<any>('system_get_info'),
+    invokeTauriCommand<Record<string, unknown>>('system_get_info'),
 };
 
 // ═══════════════════════════════════════════════════════════════

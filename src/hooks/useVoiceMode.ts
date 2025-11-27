@@ -10,7 +10,7 @@
 // React hook for Voice Mode functionality with local-first priority
 
 import { useState, useCallback, useRef } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { voiceService } from '../services/api';
 import { getAIConfig } from '../config/offline-first';
 import { confirmCloudAPIUsage } from '../utils/cloudAPIConfirmation';
@@ -80,7 +80,7 @@ export function useVoiceMode() {
     setError(null);
 
     try {
-      const transcript = await invoke<string>('transcribe_audio', {
+      const transcript = await secureInvoke<string>('transcribe_audio', {
         audioData: Array.from(audioData),
       });
 
@@ -119,7 +119,7 @@ export function useVoiceMode() {
       // Mode OFFLINE FIRST : toujours essayer local d'abord
       if (config.localFirst || !useOnline) {
         console.log('🔊 TTS Local...');
-        await voiceService.speak(text);
+        await voiceService.speak(text, undefined, false); // ✅ FIX: Passer useOnline
       } else {
         // Mode cloud uniquement si confirmation
         const confirmed = await confirmCloudAPIUsage(
@@ -129,10 +129,10 @@ export function useVoiceMode() {
 
         if (confirmed) {
           console.log('🌐 TTS Cloud (Google)...');
-          await voiceService.speak(text);
+          await voiceService.speak(text, undefined, true); // ✅ FIX: Passer useOnline=true
         } else {
           console.log('🔊 TTS Local (fallback)...');
-          await voiceService.speak(text);
+          await voiceService.speak(text, undefined, false);
         }
       }
 
@@ -154,7 +154,7 @@ export function useVoiceMode() {
 
   const getVADState = useCallback(async () => {
     try {
-      const vadActive = await invoke<boolean>('get_vad_state');
+      const vadActive = await secureInvoke<boolean>('get_vad_state');
 
       setState((prev) => ({
         ...prev,

@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface KnowledgeDocument {
   id: string;
@@ -44,7 +44,7 @@ const KnowledgeFusionPage: React.FC = () => {
       setError(null);
 
       // Detect format
-      const format = await invoke<string>('detect_file_format', { filePath });
+      const format = await secureInvoke<string>('detect_file_format', { filePath });
       setDetectedFormat(format);
     } catch (err) {
       setError(`Format detection failed: ${err}`);
@@ -58,7 +58,7 @@ const KnowledgeFusionPage: React.FC = () => {
     setError(null);
 
     try {
-      const doc = await invoke<KnowledgeDocument>('parse_document', {
+      const doc = await secureInvoke<KnowledgeDocument>('parse_document', {
         filePath: selectedFile
       });
       setParsedDoc(doc);

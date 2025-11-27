@@ -9,14 +9,14 @@ import React, { useEffect, useState } from 'react';
 
 // NOTE: Installer @tauri-apps/api si nécessaire
 // npm install @tauri-apps/api
-declare const window: Window & { __TAURI__?: any };
+declare const window: Window & { __TAURI__?: { invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T> } };
 
-const invoke = async <T = any>(cmd: string, args?: any): Promise<T> => {
+const invoke = async <T = unknown>(cmd: string, args?: Record<string, unknown>): Promise<T> => {
   if (window.__TAURI__?.invoke) {
-    return window.__TAURI__.invoke(cmd, args);
+    return window.__TAURI__.secureInvoke(cmd, args);
   }
   console.warn(`Tauri not available, mock invoke: ${cmd}`);
-  return null as any;
+  throw new Error('Tauri API not available');
 };
 
 interface EngineMetrics {
@@ -26,6 +26,10 @@ interface EngineMetrics {
   last_update_ms: number;
   error_count: number;
   success_rate: number;
+}
+
+interface EngineHealth {
+  [key: string]: unknown;
 }
 
 interface ModuleInfo {
@@ -43,11 +47,11 @@ export function SingularityMonitorV14() {
 
   useEffect(() => {
     let mounted = true;
-    let interval: any;
+    let interval: NodeJS.Timeout | undefined;
 
     const init = async () => {
       try {
-        await invoke('engine_init');
+        await secureInvoke('engine_init');
         console.log('✅ SingularityEngine v15 initialized');
 
         // Poll engine state every second
@@ -55,9 +59,9 @@ export function SingularityMonitorV14() {
           if (!mounted) return;
 
           try {
-            await invoke('engine_tick');
-            const m = await invoke<EngineMetrics>('engine_metrics');
-            const h = await invoke<any>('engine_health');
+            await secureInvoke('engine_tick');
+            const m = await secureInvoke<EngineMetrics>('engine_metrics');
+            const h = await secureInvoke<EngineHealth>('engine_health');
 
             setMetrics(m);
             setHealth(Object.keys(h || {})[0] || 'Unknown');
@@ -65,7 +69,7 @@ export function SingularityMonitorV14() {
 
             // Fetch modules less frequently
             if (m.ticks % 5 === 0) {
-              const mods = await invoke<ModuleInfo[]>('engine_modules');
+              const mods = await secureInvoke<ModuleInfo[]>('engine_modules');
               setModules(mods || []);
             }
           } catch (error) {
@@ -82,7 +86,7 @@ export function SingularityMonitorV14() {
     return () => {
       mounted = false;
       clearInterval(interval);
-      invoke('engine_stop').catch(console.error);
+      secureInvoke('engine_stop').catch(console.error);
     };
   }, []);
 

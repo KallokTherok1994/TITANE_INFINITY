@@ -61,8 +61,9 @@ export class HeliosAgent implements Agent {
       this.metrics.cpuUsage = Math.random() * 40 + 10; // 10-50%
 
       // Memory
-      if (typeof performance !== 'undefined' && (performance as any).memory) {
-        const mem = (performance as any).memory;
+      const perfWithMemory = performance as Performance & { memory?: { usedJSHeapSize: number; totalJSHeapSize: number } };
+      if (typeof performance !== 'undefined' && perfWithMemory.memory) {
+        const mem = perfWithMemory.memory;
         this.metrics.memoryUsage = (mem.usedJSHeapSize / mem.jsHeapSizeLimit) * 100;
       } else {
         this.metrics.memoryUsage = Math.random() * 30 + 20;

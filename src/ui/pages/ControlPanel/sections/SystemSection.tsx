@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { SystemInfo } from '../../../../types/tauri';
 
 interface SystemSectionProps {
@@ -19,7 +19,7 @@ export const SystemSection: React.FC<SystemSectionProps> = ({ systemInfo, onRefr
   const runDiagnostic = async () => {
     setDiagnosticRunning(true);
     try {
-      const result = await invoke<string>('run_system_diagnostic');
+      const result = await secureInvoke<string>('run_system_diagnostic');
       setDiagnosticResult(result);
     } catch (error) {
       console.error('Erreur diagnostic:', error);

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface SingularityStatus {
   active: boolean;
@@ -23,7 +23,7 @@ export const SingularitySection: React.FC = () => {
 
   const loadStatus = async () => {
     try {
-      const singularityStatus = await invoke<SingularityStatus>('get_singularity_status');
+      const singularityStatus = await secureInvoke<SingularityStatus>('get_singularity_status');
       setStatus(singularityStatus);
     } catch (error) {
       console.error('Erreur chargement statut singularité:', error);
@@ -33,7 +33,7 @@ export const SingularitySection: React.FC = () => {
   const toggleSingularity = async () => {
     setLoading(true);
     try {
-      await invoke('toggle_singularity');
+      await secureInvoke('toggle_singularity');
       await loadStatus();
     } catch (error) {
       console.error('Erreur toggle singularité:', error);

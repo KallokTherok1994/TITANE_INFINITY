@@ -10,7 +10,7 @@
 // Visualisation chronologique des changements de modes Meta-Mode Engine
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 // import './TransitionTimeline.css';
 
 interface TransitionEntry {
@@ -32,7 +32,7 @@ export const TransitionTimeline: React.FC = () => {
 
   const fetchHistory = async () => {
     try {
-      const result = await invoke<TransitionEntry[]>('meta_mode_get_history');
+      const result = await secureInvoke<TransitionEntry[]>('meta_mode_get_history');
       setHistory(result);
       setLoading(false);
     } catch (error) {

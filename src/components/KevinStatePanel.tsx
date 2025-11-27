@@ -10,7 +10,7 @@
 // Affichage temps réel de l'état cognitif, émotionnel et énergétique
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 // import './KevinStatePanel.css';
 
 interface KevinStateResponse {
@@ -45,7 +45,7 @@ export const KevinStatePanel: React.FC = () => {
   const fetchState = async () => {
     try {
       setRefreshing(true);
-      const result = await invoke<KevinStateResponse>('meta_mode_get_kevin_state');
+      const result = await secureInvoke<KevinStateResponse>('meta_mode_get_kevin_state');
       setState(result);
     } catch (error) {
       console.error('Erreur récupération état Kevin:', error);

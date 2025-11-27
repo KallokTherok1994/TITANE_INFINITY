@@ -21,7 +21,7 @@
  * // AVANT (useState local)
  * const [cpuUsage, setCpuUsage] = useState(0);
  * useEffect(() => {
- *   invoke('get_helios_metrics').then(data => setCpuUsage(data.cpu));
+ *   secureInvoke('get_helios_metrics').then(data => setCpuUsage(data.cpu));
  * }, []);
  *
  * // APRÈS (useSingularityStore)

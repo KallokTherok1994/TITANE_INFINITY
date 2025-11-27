@@ -1,7 +1,7 @@
 // TITANE∞ v16.0 — Auto-Heal Client Frontend
 // Client TypeScript pour interagir avec le système Auto-Heal
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ============================================================================
 // TYPES
@@ -39,7 +39,7 @@ export interface HealReport {
  */
 export async function scanSystem(): Promise<HealReport> {
   try {
-    const report = await invoke<HealReport>('auto_heal_scan');
+    const report = await secureInvoke<HealReport>('auto_heal_scan');
     console.log('[AutoHeal] Scan terminé:', report);
     return report;
   } catch (error) {
@@ -54,7 +54,7 @@ export async function scanSystem(): Promise<HealReport> {
  */
 export async function repairSystem(module?: string): Promise<string[]> {
   try {
-    const results = await invoke<string[]>('auto_heal_repair', { module });
+    const results = await secureInvoke<string[]>('auto_heal_repair', { module });
     console.log('[AutoHeal] Réparation terminée:', results);
     return results;
   } catch (error) {
@@ -68,7 +68,7 @@ export async function repairSystem(module?: string): Promise<string[]> {
  */
 export async function getLogs(): Promise<HealReport> {
   try {
-    const logs = await invoke<HealReport>('auto_heal_get_logs');
+    const logs = await secureInvoke<HealReport>('auto_heal_get_logs');
     return logs;
   } catch (error) {
     console.error('[AutoHeal] Erreur récupération logs:', error);

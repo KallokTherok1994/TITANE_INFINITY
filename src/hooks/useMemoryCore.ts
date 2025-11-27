@@ -8,7 +8,7 @@
 
 // TITANE∞ v15 - Memory Core Hook
 import { useState, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { memoryService } from '../services/api';
 
 interface MemoryEntry {
@@ -33,7 +33,7 @@ export const useMemoryCore = () => {
     try {
       setLoading(true);
       setError(null);
-      const state = await invoke<MemoryState>('memory_get_state');
+      const state = await secureInvoke<MemoryState>('memory_get_state');
       setEntries(state.entries);
       return state;
     } catch (err) {
@@ -85,7 +85,7 @@ export const useMemoryCore = () => {
 
   const getMemoryState = useCallback(async () => {
     try {
-      return await invoke<MemoryState>('memory_get_state');
+      return await secureInvoke<MemoryState>('memory_get_state');
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to get memory state';
       setError(message);

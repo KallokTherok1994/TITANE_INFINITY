@@ -211,6 +211,16 @@ pub fn voice_detect_wake_word(
 // COMMANDES TAURI — TTS (Text-to-Speech)
 // ─────────────────────────────────────────────────────────────────────────────
 
+/// ⚠️ DEPRECATED: Cette fonction est un STUB et ne produit que de l'audio vide.
+///
+/// UTILISER À LA PLACE: La commande `speak()` dans `src-tauri/src/commands/ai_chat.rs`
+/// qui implémente un TTS complet avec:
+/// - Support local (espeak, piper, festival, coqui)
+/// - Support online (Google TTS API)
+/// - Protection ShellGuard contre injection de commandes
+/// - Gestion erreurs complète
+///
+/// Cette fonction restera pour compatibilité legacy mais ne sera pas implémentée.
 #[tauri::command]
 pub fn voice_synthesize_speech(
     request: SynthesisRequest,
@@ -219,6 +229,8 @@ pub fn voice_synthesize_speech(
     let config = state.config.lock().unwrap();
     let model = &config.tts_model;
 
+    println!("[VOICE] ⚠️ DEPRECATED: voice_synthesize_speech called");
+    println!("[VOICE] ℹ️ Use 'speak' command in ai_chat.rs instead");
     println!("[VOICE] Synthèse avec {} : '{}'", model, request.text);
 
     let mut is_speaking = state.is_speaking.lock().unwrap();
@@ -227,8 +239,8 @@ pub fn voice_synthesize_speech(
     let mut status = state.status.lock().unwrap();
     status.tts_active = true;
 
-    // TODO: Intégrer Piper ou Kokoro TTS
-    // Pour l'instant, simulation
+    // TODO: Soit supprimer cette fonction, soit implémenter réellement
+    // Pour l'instant, retourne audio vide (STUB)
     let audio_data = vec![0u8; 16000]; // 1 seconde d'audio vide
 
     *is_speaking = false;

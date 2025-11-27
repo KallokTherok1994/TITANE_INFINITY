@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 interface GeneratedArtifact {
   id: string;
@@ -42,7 +42,7 @@ const CreationStudio: React.FC = () => {
     setError(null);
 
     try {
-      const result = await invoke<GeneratedArtifact>('create_module', {
+      const result = await secureInvoke<GeneratedArtifact>('create_module', {
         intent: intent.trim(),
         targetType
       });

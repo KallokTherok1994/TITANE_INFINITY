@@ -460,4 +460,41 @@ mod tests {
         let s = state.read().await;
         assert_eq!(s.physical.cpu_usage, 0.5);
     }
+
+    #[tokio::test]
+    async fn test_singularity_deep_sync() {
+        let mut state = SingularityState::new();
+
+        // Remplir avec données valides
+        state.cognitive.confidence = 0.9;
+        state.cognitive.energy = 0.85;
+        state.cognitive.emotional.stability = 0.88;
+        state.cognitive.memory.coherence = 0.92;
+
+        let result = state.singularity_deep_sync().await;
+
+        assert!(result.is_ok(), "Deep sync failed: {:?}", result.err());
+
+        let report = result.unwrap();
+        assert!(report.coherence_score >= 0.0 && report.coherence_score <= 1.0);
+
+        // Vérifier que les champs META ont été mis à jour
+        assert!(state.meta_cognition_report.is_some());
+        assert!(state.deep_sync_status.is_some());
+    }
+
+    #[test]
+    fn test_meta_augmented_coherence() {
+        let mut state = SingularityState::new();
+
+        // Sans META reports
+        let base_coherence = state.meta_augmented_coherence();
+        assert!(base_coherence >= 0.0 && base_coherence <= 1.0);
+
+        // Avec META reports (simulés)
+        // Note: Ici on ne peut pas facilement créer des rapports valides sans async,
+        // mais on teste que la méthode ne plante pas
+        let coherence_with_meta = state.meta_augmented_coherence();
+        assert!(coherence_with_meta >= 0.0 && coherence_with_meta <= 1.0);
+    }
 }

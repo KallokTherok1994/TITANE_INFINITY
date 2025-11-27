@@ -58,19 +58,22 @@ export interface AudioState {
 
 /**
  * Service centralisé Voice (TTS + ASR)
- * Remplace appels invoke() voice_*
+ * Remplace appels secureInvoke() voice_*
  */
 class VoiceService {
   private recordingId: string | null = null;
 
   /**
    * Synthèse vocale (TTS)
+   * @param text - Texte à synthétiser
+   * @param config - Configuration TTS (rate, pitch, volume, voice)
+   * @param useOnline - Mode online (Google TTS) vs offline (espeak/piper)
    */
-  async speak(text: string, config?: TTSConfig): Promise<void> {
+  async speak(text: string, config?: TTSConfig, useOnline: boolean = false): Promise<void> {
     try {
       await invokeWithRetry<void>(
-        'voice_synthesize_speech',
-        { text, config: config || {} },
+        'speak',
+        { text, use_online: useOnline },
         { ...LONG_COMMAND_OPTIONS, context: 'Voice' }
       );
     } catch (error) {

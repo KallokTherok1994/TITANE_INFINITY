@@ -639,8 +639,8 @@ impl DeepSyncEngine {
 
         // [5] Test détection drift avec état dégradé
         let mut drift_states = HashMap::new();
-        drift_states.insert("engine_healthy".to_string(), EngineState::new("engine_healthy".to_string(), 0.95));
-        drift_states.insert("engine_drift".to_string(), EngineState::new("engine_drift".to_string(), 0.2)); // Drift critique
+        drift_states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.95));
+        drift_states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.2)); // Drift critique
 
         let drift_result = self.deep_sync(&drift_states).await;
         if drift_result.issues.is_empty() {

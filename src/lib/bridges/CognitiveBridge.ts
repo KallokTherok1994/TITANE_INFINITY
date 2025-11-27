@@ -7,7 +7,7 @@
  * @module CognitiveBridge
  */
 
-import { invoke } from '@tauri-apps/api/tauri';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES (mirror des types Rust)
@@ -158,7 +158,7 @@ export class CognitiveBridge {
    */
   static async runSelfTest(): Promise<CognitiveSelfTestResult> {
     try {
-      const result = await invoke<unknown>('cognitive_run_selftest');
+      const result = await secureInvoke<unknown>('cognitive_run_selftest');
 
       if (!isCognitiveSelfTestResult(result)) {
         throw new Error('Invalid CognitiveSelfTestResult received from Rust');
@@ -185,7 +185,7 @@ export class CognitiveBridge {
     }
 
     try {
-      const result = await invoke<unknown>('cognitive_validate_state', { state });
+      const result = await secureInvoke<unknown>('cognitive_validate_state', { state });
 
       if (!isCognitiveValidationResult(result)) {
         throw new Error('Invalid CognitiveValidationResult received from Rust');
@@ -212,7 +212,7 @@ export class CognitiveBridge {
     }
 
     try {
-      const hash = await invoke<string>('cognitive_compute_hash_cmd', { state });
+      const hash = await secureInvoke<string>('cognitive_compute_hash_cmd', { state });
 
       if (typeof hash !== 'string' || hash.length !== 64) {
         throw new Error('Invalid SHA256 hash received from Rust');

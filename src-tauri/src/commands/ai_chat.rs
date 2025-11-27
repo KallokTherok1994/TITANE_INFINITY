@@ -30,6 +30,8 @@ pub struct AIChatState {
     pub vad: Arc<Mutex<VoiceActivityDetector>>,
     /// v15 Unified Core Collection (Clean architecture)
     pub core_collection: Arc<CoreCollection>,
+    /// v19.2.0: Mutex anti-superposition TTS
+    pub is_speaking: Arc<Mutex<bool>>,
 }
 
 impl AIChatState {
@@ -60,6 +62,9 @@ impl AIChatState {
         // v15 Unified Core Collection (Clean architecture)
         let core_collection = Arc::new(CoreCollection::default());
 
+        // v19.2.0: Mutex anti-superposition TTS
+        let is_speaking = Arc::new(Mutex::new(false));
+
         Self {
             ai_router,
             memory_storage,
@@ -70,6 +75,7 @@ impl AIChatState {
             asr_engine,
             vad,
             core_collection,
+            is_speaking,
         }
     }
 }
@@ -163,30 +169,95 @@ pub async fn ai_query(
     .to_string())
 }
 
+/// v19.2.0: TTS avec paramètres + mutex anti-superposition
 #[tauri::command]
 pub async fn speak(
     state: State<'_, AIChatState>,
     text: String,
     use_online: bool,
+    rate: Option<f32>,
+    pitch: Option<f32>,
+    voice: Option<String>,
 ) -> Result<(), String> {
-    let request = TTSRequest {
-        text: text.clone(),
-        voice: None,
-        speed: 1.0,
-        pitch: 1.0,
-    };
-
-    if use_online {
-        let tts = state.online_tts.lock().unwrap();
-        tts.speak(&request)
-            .await
-            .map_err(|e| e.to_string())?;
-    } else {
-        let tts = state.local_tts.lock().unwrap();
-        tts.speak(&request).map_err(|e| e.to_string())?;
+    // Validation entrée
+    if text.trim().is_empty() {
+        return Err("Text cannot be empty".to_string());
+    }
+    if text.len() > 10000 {
+        return Err("Text too long (max 10000 chars)".to_string());
     }
 
+    // Mutex anti-superposition
+    let mut is_speaking = state.is_speaking.lock().unwrap();
+    if *is_speaking {
+        return Err("TTS busy: another synthesis is in progress. Please wait or call stop_speaking().".to_string());
+    }
+    *is_speaking = true;
+    drop(is_speaking); // Release lock before long operation
+
+    // Validation + clamp paramètres
+    let speed = rate.unwrap_or(1.0).clamp(0.5, 2.0);
+    let pitch_value = pitch.unwrap_or(1.0).clamp(0.5, 2.0);
+
+    log::info!(
+        "[TTS v19.2.0] Synthesis start: mode={}, rate={:.2}, pitch={:.2}, voice={:?}, len={}",
+        if use_online { "online" } else { "local" },
+        speed,
+        pitch_value,
+        voice,
+        text.len()
+    );
+
+    let request = TTSRequest {
+        text: text.clone(),
+        voice,
+        speed,
+        pitch: pitch_value,
+    };
+
+    // Execute synthesis
+    let result = if use_online {
+        let tts = state.online_tts.lock().unwrap();
+        tts.speak(&request).await.map_err(|e| e.to_string())
+    } else {
+        let tts = state.local_tts.lock().unwrap();
+        tts.speak(&request).map_err(|e| e.to_string())
+    };
+
+    // Release mutex
+    let mut is_speaking = state.is_speaking.lock().unwrap();
+    *is_speaking = false;
+    drop(is_speaking);
+
+    match result {
+        Ok(_) => {
+            log::info!("[TTS v19.2.0] Synthesis complete");
+            Ok(())
+        }
+        Err(e) => {
+            log::error!("[TTS v19.2.0] Synthesis failed: {}", e);
+            Err(e)
+        }
+    }
+}
+
+/// v19.2.0: Arrêt synthèse TTS en cours
+#[tauri::command]
+pub fn stop_speaking(state: State<'_, AIChatState>) -> Result<(), String> {
+    let mut is_speaking = state.is_speaking.lock().unwrap();
+    if !*is_speaking {
+        return Ok(()); // Already stopped
+    }
+    *is_speaking = false;
+    log::info!("[TTS v19.2.0] Speech stopped by user");
     Ok(())
+}
+
+/// v19.2.0: Vérification état TTS
+#[tauri::command]
+pub fn is_speaking(state: State<'_, AIChatState>) -> Result<bool, String> {
+    let is_speaking = state.is_speaking.lock().unwrap();
+    Ok(*is_speaking)
 }
 
 #[tauri::command]

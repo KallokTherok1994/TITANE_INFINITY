@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { z } from 'zod';
 import type {
   InteractionRequest,
@@ -119,7 +119,7 @@ export const metaMode = {
    * Obtenir le mode actif
    */
   async getCurrentMode(): Promise<string> {
-    const result = await invoke<string>('meta_mode_get_current_mode');
+    const result = await secureInvoke<string>('meta_mode_get_current_mode');
     return result;
   },
 
@@ -127,7 +127,7 @@ export const metaMode = {
    * Lister tous les modes disponibles
    */
   async listModes(): Promise<string[]> {
-    const result = await invoke<string[]>('meta_mode_list_modes');
+    const result = await secureInvoke<string[]>('meta_mode_list_modes');
     return result;
   },
 
@@ -135,7 +135,7 @@ export const metaMode = {
    * Obtenir l'historique des modes (10 derniers)
    */
   async getHistory(): Promise<Array<[string, string]>> {
-    const result = await invoke<Array<[string, string]>>('meta_mode_get_history');
+    const result = await secureInvoke<Array<[string, string]>>('meta_mode_get_history');
     return result;
   },
 
@@ -153,7 +153,7 @@ export const metaMode = {
    * Réinitialiser le Meta-Mode Engine
    */
   async reset(): Promise<string> {
-    const result = await invoke<string>('meta_mode_reset');
+    const result = await secureInvoke<string>('meta_mode_reset');
     return result;
   },
 };
@@ -190,7 +190,7 @@ export const exp = {
    * Lister tous les talents
    */
   async listTalents(): Promise<Talent[]> {
-    const result = await invoke<Talent[]>('exp_list_talents');
+    const result = await secureInvoke<Talent[]>('exp_list_talents');
     return result.map(t => TalentSchema.parse(t));
   },
 
@@ -210,7 +210,7 @@ export const exp = {
    * Obtenir l'historique des level-ups
    */
   async getLevelUpHistory(): Promise<LevelUpEvent[]> {
-    const result = await invoke<LevelUpEvent[]>('exp_get_level_up_history');
+    const result = await secureInvoke<LevelUpEvent[]>('exp_get_level_up_history');
     return result.map(e => LevelUpEventSchema.parse(e));
   },
 };
@@ -224,7 +224,7 @@ export const memory = {
    * Stocker une entrée mémoire
    */
   async store(content: string, metadata: MemoryMetadata): Promise<string> {
-    const result = await invoke<string>('memory_store', { content, metadata });
+    const result = await secureInvoke<string>('memory_store', { content, metadata });
     return result;
   },
 
@@ -235,7 +235,7 @@ export const memory = {
     conversationId: string,
     messages: string[]
   ): Promise<number> {
-    const result = await invoke<number>('memory_store_conversation', {
+    const result = await secureInvoke<number>('memory_store_conversation', {
       conversationId,
       messages,
     });
@@ -249,7 +249,7 @@ export const memory = {
     // Valider la requête
     MemoryQuerySchema.parse(query);
 
-    const result = await invoke<MemoryResult[]>('memory_search', { query });
+    const result = await secureInvoke<MemoryResult[]>('memory_search', { query });
     return result.map(r => MemoryResultSchema.parse(r));
   },
 
@@ -257,7 +257,7 @@ export const memory = {
    * Obtenir les entrées liées
    */
   async getRelated(entryId: string, limit: number): Promise<MemoryEntry[]> {
-    const result = await invoke<MemoryEntry[]>('memory_get_related', {
+    const result = await secureInvoke<MemoryEntry[]>('memory_get_related', {
       entryId,
       limit,
     });
@@ -295,7 +295,7 @@ export const voice = {
    * Arrêter l'enregistrement vocal
    */
   async stopRecording(): Promise<string> {
-    const result = await invoke<string>('stop_recording');
+    const result = await secureInvoke<string>('stop_recording');
     return result;
   },
 

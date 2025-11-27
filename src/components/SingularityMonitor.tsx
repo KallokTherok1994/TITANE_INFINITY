@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type { EngineMetrics, ModuleInfo } from '../types/tauri';
 
 export function SingularityMonitor() {
@@ -21,7 +21,7 @@ export function SingularityMonitor() {
 
     const init = async () => {
       try {
-        await invoke('engine_init');
+        await secureInvoke('engine_init');
         if (mounted) {
           console.log('✅ SingularityEngine v15 initialized');
         }
@@ -32,19 +32,19 @@ export function SingularityMonitor() {
 
           try {
             // Tick the engine
-            await invoke('engine_tick');
+            await secureInvoke('engine_tick');
 
             // Get metrics
-            const m = await invoke<EngineMetrics>('engine_metrics');
+            const m = await secureInvoke<EngineMetrics>('engine_metrics');
             setMetrics(m);
 
             // Get health
-            const h = await invoke<{status: 'healthy' | 'degraded' | 'failing'}>('engine_health');
+            const h = await secureInvoke<{status: 'healthy' | 'degraded' | 'failing'}>('engine_health');
             setHealth(h.status || 'Unknown');
 
             // Get modules (less frequently)
             if (m.ticks % 5 === 0) {
-              const mods = await invoke<ModuleInfo[]>('engine_modules');
+              const mods = await secureInvoke<ModuleInfo[]>('engine_modules');
               setModules(mods);
             }
 
@@ -63,7 +63,7 @@ export function SingularityMonitor() {
     return () => {
       mounted = false;
       clearInterval(interval);
-      invoke('engine_stop').catch(console.error);
+      secureInvoke('engine_stop').catch(console.error);
     };
   }, []);
 

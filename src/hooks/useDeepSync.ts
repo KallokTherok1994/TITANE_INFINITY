@@ -8,7 +8,7 @@
  * - Detect desynchronization
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { useState, useCallback } from 'react';
 
 export interface SyncedState {
@@ -75,7 +75,7 @@ export function useDeepSync() {
     setError(null);
 
     try {
-      const result = await invoke<SyncedState>('meta_trigger_sync', {
+      const result = await secureInvoke<SyncedState>('meta_trigger_sync', {
         engineStates,
       });
       setSyncedState(result);
@@ -94,7 +94,7 @@ export function useDeepSync() {
    */
   const verifySync = useCallback(async () => {
     try {
-      const isValid = await invoke<boolean>('meta_verify_sync');
+      const isValid = await secureInvoke<boolean>('meta_verify_sync');
       return isValid;
     } catch (err) {
       console.error('Failed to verify sync:', err);
@@ -107,7 +107,7 @@ export function useDeepSync() {
    */
   const detectDesync = useCallback(async () => {
     try {
-      const detected = await invoke<boolean>('meta_detect_desync');
+      const detected = await secureInvoke<boolean>('meta_detect_desync');
       return detected;
     } catch (err) {
       console.error('Failed to detect desync:', err);
@@ -120,7 +120,7 @@ export function useDeepSync() {
    */
   const getDeepSyncState = useCallback(async () => {
     try {
-      const [_metaState, deepState] = await invoke<[any, DeepSyncState]>('meta_get_state');
+      const [_metaState, deepState] = await secureInvoke<[Record<string, unknown>, DeepSyncState]>('meta_get_state');
       setDeepSyncState(deepState);
       return deepState;
     } catch (err) {

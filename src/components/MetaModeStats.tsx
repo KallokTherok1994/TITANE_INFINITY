@@ -2,7 +2,7 @@
 // Tableau de bord statistiques pour le Meta-Mode Engine
 
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 // import './MetaModeStats.css';
 
 interface MetaModeStatsData {
@@ -35,7 +35,7 @@ export const MetaModeStats: React.FC = () => {
 
   const fetchStats = async () => {
     try {
-      const result = await invoke<MetaModeStatsData>('meta_mode_get_stats');
+      const result = await secureInvoke<MetaModeStatsData>('meta_mode_get_stats');
       setStats(result);
       setLoading(false);
     } catch (error) {

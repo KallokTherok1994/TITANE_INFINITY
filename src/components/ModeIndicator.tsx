@@ -10,7 +10,7 @@
 // Indicateur visuel compact du mode Meta-Mode actuel
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { useSingularityState, selectMetaModeState } from '../core/state/SingularityState';
 import './ModeIndicator.css';
 
@@ -30,7 +30,7 @@ export const ModeIndicator: React.FC = React.memo(() => {
 
   const fetchCurrentMode = useCallback(async () => {
     try {
-      const mode = await invoke<string>('meta_mode_get_current_mode');
+      const mode = await secureInvoke<string>('meta_mode_get_current_mode');
       if (mode !== currentMode) {
         setMetaMode(mode);
         setTimeout(() => setMetaModeTransition(false), 600);
@@ -42,7 +42,7 @@ export const ModeIndicator: React.FC = React.memo(() => {
 
   const fetchHistory = useCallback(async () => {
     try {
-      const hist = await invoke<ModeHistory[]>('meta_mode_get_history');
+      const hist = await secureInvoke<ModeHistory[]>('meta_mode_get_history');
       setHistory(hist);
     } catch (error) {
       console.error('Erreur récupération historique:', error);

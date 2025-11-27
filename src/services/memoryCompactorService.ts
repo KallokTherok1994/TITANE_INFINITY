@@ -5,7 +5,7 @@
  * Service TypeScript pour compacter et valider la mémoire
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 export interface CompactionStats {
   files_processed: number;
@@ -22,7 +22,7 @@ export interface CompactionStats {
  */
 export async function compactMemoryFile(path: string): Promise<string> {
   try {
-    const result = await invoke<string>('compact_memory_file', { path });
+    const result = await secureInvoke<string>('compact_memory_file', { path });
     return result;
   } catch (error) {
     console.error('Failed to compact memory file:', error);
@@ -35,7 +35,7 @@ export async function compactMemoryFile(path: string): Promise<string> {
  */
 export async function compactMemoryDirectory(dir: string): Promise<CompactionStats> {
   try {
-    const stats = await invoke<CompactionStats>('compact_memory_directory', { dir });
+    const stats = await secureInvoke<CompactionStats>('compact_memory_directory', { dir });
     return stats;
   } catch (error) {
     console.error('Failed to compact memory directory:', error);
@@ -48,7 +48,7 @@ export async function compactMemoryDirectory(dir: string): Promise<CompactionSta
  */
 export async function validateMemoryFile(path: string): Promise<string> {
   try {
-    const result = await invoke<string>('validate_memory_file', { path });
+    const result = await secureInvoke<string>('validate_memory_file', { path });
     return result;
   } catch (error) {
     console.error('Failed to validate memory file:', error);
@@ -61,7 +61,7 @@ export async function validateMemoryFile(path: string): Promise<string> {
  */
 export async function autoCompactMemory(): Promise<CompactionStats> {
   try {
-    const stats = await invoke<CompactionStats>('auto_compact_memory');
+    const stats = await secureInvoke<CompactionStats>('auto_compact_memory');
     console.log('Auto-compact completed:', stats);
     return stats;
   } catch (error) {

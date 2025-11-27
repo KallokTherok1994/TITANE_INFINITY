@@ -2,7 +2,7 @@
 // Interaction utilisateur avec détection automatique et transitions fluides
 
 import React, { useState, useEffect, useRef } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import './MetaModeConsole.css';
 
 interface InteractionRequest {
@@ -52,7 +52,7 @@ export const MetaModeConsole: React.FC = () => {
 
   const fetchCurrentMode = async () => {
     try {
-      const mode = await invoke<string>('meta_mode_get_current_mode');
+      const mode = await secureInvoke<string>('meta_mode_get_current_mode');
       setCurrentMode(mode);
     } catch (error) {
       console.error('Erreur récupération mode:', error);
@@ -61,7 +61,7 @@ export const MetaModeConsole: React.FC = () => {
 
   const fetchKevinState = async () => {
     try {
-      const state = await invoke<KevinState>('meta_mode_get_kevin_state');
+      const state = await secureInvoke<KevinState>('meta_mode_get_kevin_state');
       setKevinState(state);
     } catch (error) {
       console.error('Erreur récupération état Kevin:', error);
@@ -80,7 +80,7 @@ export const MetaModeConsole: React.FC = () => {
         context: context.trim() || 'general',
       };
 
-      const result = await invoke<InteractionResponse>('meta_mode_process', { request });
+      const result = await secureInvoke<InteractionResponse>('meta_mode_process', { request });
 
       setResponse(result);
       setCurrentMode(result.active_mode);
@@ -102,7 +102,7 @@ export const MetaModeConsole: React.FC = () => {
       try {
         // Note: meta_mode_reset pas encore dans services unifiés - garder invoke temporaire
         const { invoke } = await import('@tauri-apps/api/core');
-        await invoke('meta_mode_reset');
+        await secureInvoke('meta_mode_reset');
         setResponse(null);
         setHistory([]);
         setCurrentMode('Digital Twin');

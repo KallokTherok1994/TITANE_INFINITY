@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { SystemInfo } from '../../../types/tauri';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
 import { SystemSection } from './sections/SystemSection';
@@ -47,7 +47,7 @@ export const ControlPanel: React.FC = () => {
 
   const loadSystemInfo = async () => {
     try {
-      const info = await invoke<SystemInfo>('get_system_info');
+      const info = await secureInvoke<SystemInfo>('get_system_info');
       setSystemInfo(info);
       setLoading(false);
     } catch (error) {

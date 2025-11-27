@@ -23,6 +23,9 @@ import { ErrorBoundary as ProductionErrorBoundary } from './components/common/Er
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
 
+// Phase 3 (v19): UI Logger - Isolate frontend logs from backend
+import { logInfo } from './lib/UILogger';
+
 // Initialize Singularity Engine
 // import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
 
@@ -55,14 +58,24 @@ if (typeof window.__TAURI__ !== 'undefined') {
 // 🚀 BOOT SEQUENCE START
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 console.log('\n╔════════════════════════════════════════════════════════════════╗');
-console.log('║  🌌 TITANE∞ v15 - BOOT SEQUENCE                             ║');
+console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                             ║');
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
-console.log('[1/5] 🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
-console.log('[2/5] ✨ Frontend: 20 Unified Engines | SingularityState Active');
-console.log('[3/5] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
-console.log('[4/5] 📦 Loading React 18 + TypeScript 5...');
-console.log('[5/5] 🎯 Mounting root component...');
+
+// Initialize UILogger (overrides console.* in production)
+logInfo('🔒 UILogger initialized', {
+  mode: import.meta.env.PROD ? 'production' : 'development',
+  consoleOverride: import.meta.env.PROD,
+  maxLogsPerMinute: 100,
+  maxStoredLogs: 1000,
+});
+
+console.log('[1/6] 🔒 UILogger: Activated (console override in production)');
+console.log('[2/6] 🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
+console.log('[3/6] ✨ Frontend: 20 Unified Engines | SingularityState Active');
+console.log('[4/6] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
+console.log('[5/6] 📦 Loading React 18 + TypeScript 5...');
+console.log('[6/6] 🎯 Mounting root component...');
 
 // Initialize Singularity Engine - DÉSACTIVÉ pour debug écran blanc
 /*

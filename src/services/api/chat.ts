@@ -52,7 +52,7 @@ export interface ChatResponse {
 
 /**
  * Service centralisé pour Chat IA
- * Remplace les appels invoke() dispersés
+ * Remplace les appels secureInvoke() dispersés
  */
 class ChatService {
   /**

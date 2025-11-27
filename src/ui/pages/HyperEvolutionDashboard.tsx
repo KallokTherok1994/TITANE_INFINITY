@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { Activity, Zap, RefreshCw, AlertTriangle, TrendingUp, Settings } from 'lucide-react';
 
 interface PredictiveIssue {
@@ -52,7 +52,7 @@ export const HyperEvolutionDashboard: React.FC = () => {
   const loadPredictions = async () => {
     setLoading(true);
     try {
-      const report = await invoke<PredictionReport>('hyper_predict_issues');
+      const report = await secureInvoke<PredictionReport>('hyper_predict_issues');
       setPredictionReport(report);
     } catch (error) {
       console.error('Failed to load predictions:', error);
@@ -64,7 +64,7 @@ export const HyperEvolutionDashboard: React.FC = () => {
   const loadAcceleration = async () => {
     setLoading(true);
     try {
-      const report = await invoke<AccelerationReport>('hyper_accelerate');
+      const report = await secureInvoke<AccelerationReport>('hyper_accelerate');
       setAccelerationReport(report);
     } catch (error) {
       console.error('Failed to load acceleration:', error);
