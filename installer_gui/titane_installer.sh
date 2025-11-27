@@ -47,11 +47,12 @@ show_progress() {
 zenity --info \
     --title="TITANE∞ OS Installer" \
     --text="<big><b>Bienvenue dans TITANE∞ OS Installer</b></big>\n\n\
-Version: v19.1.0\n\
-Installation native, locale et sécurisée\n\n\
+Version: v16.2.2 (Latest - 27 Nov 2025)\n\
+Installation native, locale et sécurisée\n\
+✅ Chat IA corrigé - Cognitive Layer v16 - 20 Engines\n\n\
 <i>Ce programme va installer TITANE∞ OS sur votre système.</i>" \
-    --width=500 \
-    --height=200
+    --width=550 \
+    --height=250
 
 # ═══════════════════════════════════════════════════════════════
 # SÉLECTION DU MODE D'INSTALLATION
