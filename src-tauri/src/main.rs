@@ -336,6 +336,15 @@ async fn main() {
             overdrive::chat_orchestrator::chat_delete_conversation,
             overdrive::chat_orchestrator::chat_set_gemini_key,
             overdrive::chat_orchestrator::chat_stream_message,
+            // ═══════════════════════════════════════════════════════════════
+            // VOICE COMMANDS v16.2.2+ - TTS & ASR
+            // ═══════════════════════════════════════════════════════════════
+            mock_commands::speak,
+            mock_commands::stop_speaking,
+            mock_commands::is_speaking,
+            mock_commands::start_recording,
+            mock_commands::stop_recording,
+            mock_commands::transcribe_audio,
             // Memory Engine Commands (✅ Active commands only)
             overdrive::memory_engine::memory_store,
             overdrive::memory_engine::memory_store_conversation,

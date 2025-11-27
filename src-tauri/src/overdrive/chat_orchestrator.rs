@@ -78,16 +78,14 @@ pub struct ChatOrchestratorState {
 // ─────────────────────────────────────────────────────────────────────────────
 
 pub fn init() -> ChatOrchestratorState {
-    let state = ChatOrchestratorState {
+    ChatOrchestratorState {
         conversations: Arc::new(RwLock::new(Vec::new())),
         provider_status: Arc::new(RwLock::new(Vec::new())),
         provider_last_check: Arc::new(RwLock::new(std::collections::HashMap::new())),
         provider_failure_count: Arc::new(RwLock::new(std::collections::HashMap::new())),
         gemini_api_key: Arc::new(RwLock::new(None)),
         default_provider: Arc::new(RwLock::new("auto".to_string())),
-    };
-
-    state
+    }
 }
 
 pub async fn initialize_providers_async(state: &ChatOrchestratorState) {
@@ -162,10 +160,10 @@ async fn is_provider_available(provider: &str, state: &ChatOrchestratorState) ->
                 .build()
             {
                 Ok(client) => {
-                    match client.get("http://localhost:11434/api/tags").send().await {
-                        Ok(resp) if resp.status().is_success() => true,
-                        _ => false,
-                    }
+                    matches!(
+                        client.get("http://localhost:11434/api/tags").send().await,
+                        Ok(resp) if resp.status().is_success()
+                    )
                 }
                 Err(_) => false,
             }

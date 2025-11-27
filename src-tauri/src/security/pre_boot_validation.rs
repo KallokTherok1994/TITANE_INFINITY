@@ -167,7 +167,7 @@ async fn verify_design_system() -> Result<bool, String> {
     let ds_paths = vec![
         "src/themes/tokens.ts",
         "src/design-system/motion.ts",
-        "src/styles/titane-v∞.css",
+        "src/design-system/titane-fusion.css",
     ];
 
     let workspace =

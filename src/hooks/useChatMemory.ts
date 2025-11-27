@@ -94,13 +94,18 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
 
   /**
    * Save message
+   * FIX v15.1: Ne plus mettre à jour messagesForMode ici (évite re-render cascade)
+   * La sauvegarde en localStorage est suffisante, l'UI gère son propre state
    */
   const saveMessage = useCallback(
     (message: AIMessage) => {
       const updatedMessages = chatMemoryCompactor.addMessageToMode(options.mode, message);
-      setMessagesForMode([...updatedMessages]);
 
-      // Update stats
+      // FIX v15.1: Ne plus faire setMessagesForMode ici!
+      // Cela déclenchait un re-render de useChat qui écrasait l'UI
+      // L'historique sera rechargé uniquement au changement de mode
+
+      // Update stats seulement
       const stats = chatMemoryCompactor.getStats(options.mode);
       setMemoryStats({
         count: updatedMessages.length,

@@ -60,6 +60,19 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   console.log('║  USE CHAT v15: Initialization (Composition Hook)           ║');
   console.log('╚════════════════════════════════════════════════════════════╝\n');
 
+  // FIX v15.1: Charger l'historique une seule fois au mount (mode initial)
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      const history = messagesForMode;
+      if (history.length > 0) {
+        addMessages(history);
+        console.log(`✅ Initial load: ${history.length} messages from memory (mode: ${currentMode})`);
+      }
+    }
+  }, []);
+
   // 1. Core IA Logic
   const {
     currentMode,
@@ -101,11 +114,28 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     autoSave: true,
   });
 
-  // Sync messages depuis memory au changement de mode
+  // Sync messages depuis memory UNIQUEMENT au changement de mode (pas à chaque save!)
+  // FIX v15.1: Retirer messagesForMode des dépendances pour éviter le reset à chaque message
+  const prevModeRef = useRef<ChatMode>(currentMode);
+
   useEffect(() => {
-    console.log(`🔄 USE CHAT v24.20: Mode changed to ${currentMode}, loading history...`);
-    addMessages(messagesForMode);
-  }, [currentMode, messagesForMode, addMessages]);
+    // Charger l'historique UNIQUEMENT si le mode a réellement changé
+    if (prevModeRef.current !== currentMode) {
+      console.log(`🔄 USE CHAT v24.20: Mode changed ${prevModeRef.current} → ${currentMode}, loading history...`);
+      prevModeRef.current = currentMode;
+
+      // Charger l'historique sauvegardé
+      const history = messagesForMode;
+      if (history.length > 0) {
+        addMessages(history);
+        console.log(`✅ Loaded ${history.length} messages from memory`);
+      } else {
+        // Mode vide : clear UI
+        clearMessages();
+        console.log(`✅ Mode ${currentMode} is empty, UI cleared`);
+      }
+    }
+  }, [currentMode, addMessages, clearMessages]);
 
   // v24.20: Simple response cache (LRU-like avec Map)
   const responseCache = useRef(new Map<string, ChatEngineResponse>());
@@ -142,6 +172,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       setError(null);
       setIsLoading(true);
 
+      // FIX v15.1: Sauvegarder le nombre de messages AVANT ajout (pour vérification post-IA)
+      const messagesCountBefore = messages.length;
+
       // Ajoute message utilisateur
       const userMessage: AIMessage = {
         role: 'user',
@@ -151,7 +184,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       addMessage(userMessage);
       saveMessage(userMessage); // Sync backend
-      console.log(`✅ User message added + saved`);
+      console.log(`✅ User message added + saved (total: ${messagesCountBefore + 1})`);
 
       try {
         // v24.20: Check cache first
@@ -188,7 +221,19 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         addMessage(aiMessage);
         saveMessage(aiMessage); // Sync backend
-        console.log(`✅ AI response added + saved`);
+        console.log(`✅ AI response added + saved (total: ${messagesCountBefore + 2})`);
+
+        // FIX v15.1: GARDE-FOU - Vérifier que les messages n'ont pas été écrasés
+        // Si le count est inférieur à avant + 2, c'est qu'il y a eu un reset involontaire
+        setTimeout(() => {
+          if (messages.length < messagesCountBefore + 2) {
+            console.error(`🚨 CRITICAL: Messages were reset! Expected ${messagesCountBefore + 2}, got ${messages.length}`);
+            console.error('🚨 This should NEVER happen after v15.1 fix');
+            // Re-ajouter les messages si nécessaire (recovery)
+            addMessage(userMessage);
+            addMessage(aiMessage);
+          }
+        }, 100); // Check après render
 
         // Suggestions
         if (response.suggestions && response.suggestions.length > 0) {

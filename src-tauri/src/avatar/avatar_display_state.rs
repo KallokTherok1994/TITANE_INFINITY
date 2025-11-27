@@ -321,12 +321,14 @@ mod tests {
 
     #[test]
     fn test_validate_constraints() {
-        let mut state = AvatarDisplayState::default();
-        state.scale = 5.0;
-        state.opacity = -0.5;
-        state.brightness = 3.0;
-        state.width = 50;
-        state.height = 100;
+        let mut state = AvatarDisplayState {
+            scale: 5.0,
+            opacity: -0.5,
+            brightness: 3.0,
+            width: 50,
+            height: 100,
+            ..Default::default()
+        };
 
         state.validate();
 

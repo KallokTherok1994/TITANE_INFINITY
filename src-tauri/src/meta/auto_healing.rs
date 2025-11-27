@@ -387,7 +387,6 @@ impl Default for AutoHealingEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::meta::{MetaCognitiveReport, CognitiveHealthIndicators};
 
     #[tokio::test]
     async fn test_auto_healing_creation() {

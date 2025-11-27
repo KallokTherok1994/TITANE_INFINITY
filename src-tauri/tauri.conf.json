@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "TITANE∞ v16.2.2",
+  "productName": "TITANE∞ v16.2.2+",
   "version": "16.2.2",
   "identifier": "com.titane.infinity",
   "build": {
@@ -22,8 +22,8 @@
     "resources": [],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "v16.2.2 - Cognitive Layer + Real APIs",
-    "longDescription": "TITANE∞ v16.2.2: Cognitive Layer v16 (4 engines), Real Gemini/Ollama API, Memory Engine, Singularity Permissions Fixed, 0 Warnings, Production Ready"
+    "shortDescription": "v16.2.2+ - Voice Systems + Security + Zero Errors",
+    "longDescription": "TITANE∞ v16.2.2+: Voice Systems (TTS/ASR), Chat IA 4 Providers, Security Whitelist 146 Commands, Zero Warnings/Errors, Production Ready"
   },
   "app": {
     "windows": [

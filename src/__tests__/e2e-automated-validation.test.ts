@@ -7,9 +7,87 @@
 
 import { describe, it, expect, vi } from 'vitest';
 
+// Type definitions pour les réponses mock
+interface MockArgs {
+  message?: string;
+  intention?: string;
+  text?: string;
+  tts_duration?: number;
+  module_type?: string;
+  issue_id?: string;
+  [key: string]: unknown;
+}
+
+interface IntentionResponse {
+  primary: string;
+  confidence: number;
+  context: string[];
+}
+
+interface CognitiveResponse {
+  text: string;
+  confidence: number;
+  reasoning: string[];
+}
+
+interface _TTSResponse {
+  audio_data: number[];
+  duration: number;
+  phonemes: string[];
+  visemes: string[];
+}
+
+interface _AnimationResponse {
+  keyframes: Array<{ x: number; y: number }>;
+  duration: number;
+  fps: number;
+}
+
+interface FusionStateResponse {
+  fusion_integrity: number;
+  sync_score: number;
+  pipeline_health: number;
+  engines_status: Record<string, string>;
+  active_pipelines: string[];
+  total_syncs: number;
+  inconsistencies_detected: number;
+}
+
+interface PerformanceMetrics {
+  cpu_usage: number;
+  gpu_usage: number;
+  memory_usage: number;
+  memory_available: number;
+  fps: number;
+  frame_time: number;
+  render_time: number;
+  idle_time: number;
+  gc_time: number;
+  network_latency: number;
+}
+
+interface PipelineStats {
+  total_processed: number;
+  avg_latency: number;
+  success_rate: number;
+}
+
+interface AutoFixStats {
+  total_issues_detected: number;
+  total_issues_fixed: number;
+  success_rate: number;
+}
+
+interface _HealResult {
+  module_type: string;
+  success: boolean;
+  actions: string[];
+  duration: number;
+}
+
 // Mock Tauri avec réponses réalistes
 vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn().mockImplementation(async (cmd: string, args?: unknown) => {
+  invoke: vi.fn().mockImplementation(async (cmd: string, args?: MockArgs) => {
     // Simuler latence réseau réaliste
     await new Promise(resolve => setTimeout(resolve, Math.random() * 50 + 10));
 
@@ -175,22 +253,22 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
       for (let i = 0; i < 100; i++) {
         const intention = await invoke('pipeline_analyze_intention', {
           message: `Test message ${i}`,
-        });
+        }) as IntentionResponse;
 
         const response = await invoke('pipeline_generate_cognitive_response', {
           message: `Test ${i}`,
-          intention: (intention as Record<string, unknown>).primary,
-        });
+          intention: intention.primary,
+        }) as CognitiveResponse;
 
         expect(intention).toBeDefined();
         expect(response).toBeDefined();
-        expect((response as Record<string, number>).confidence).toBeGreaterThan(0.5);
+        expect(response.confidence).toBeGreaterThan(0.5);
 
         results.push({ intention, response });
       }
 
       expect(results).toHaveLength(100);
-      const avgConfidence = results.reduce((sum, r) => sum + (r.response as Record<string, number>).confidence, 0) / 100;
+      const avgConfidence = results.reduce((sum, r) => sum + (r.response as CognitiveResponse).confidence, 0) / 100;
       expect(avgConfidence).toBeGreaterThan(0.7);
     }, 30000); // 30s timeout
   });
@@ -277,16 +355,16 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
       const intention = await invoke('pipeline_analyze_intention', {
         message: longMessage,
-      });
+      }) as IntentionResponse;
 
       const response = await invoke('pipeline_generate_cognitive_response', {
         message: longMessage,
-        intention: (intention as any).primary,
-      });
+        intention: intention.primary,
+      }) as CognitiveResponse;
 
       expect(intention).toBeDefined();
       expect(response).toBeDefined();
-      expect((response as any).confidence).toBeGreaterThan(0.5);
+      expect(response.confidence).toBeGreaterThan(0.5);
     }, 10000);
   });
 
@@ -358,16 +436,16 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
   describe('✅ Validation Omega Finale', () => {
     it('should have zero critical issues', async () => {
-      const state = await invoke('singularity_get_fusion_state');
-      const integrity = await invoke('singularity_check_integrity');
-      const metrics = await invoke('performance_get_metrics');
-      const stats = await invoke('autofix_get_stats');
+      const state = await invoke('singularity_get_fusion_state') as FusionStateResponse;
+      const integrity = await invoke('singularity_check_integrity') as number;
+      const metrics = await invoke('performance_get_metrics') as PerformanceMetrics;
+      const stats = await invoke('autofix_get_stats') as AutoFixStats;
 
       // Zero critical issues
-      expect((state as any).inconsistencies_detected).toBeLessThan(5);
+      expect(state.inconsistencies_detected).toBeLessThan(5);
       expect(integrity).toBeGreaterThan(0.85);
-      expect((metrics as any).fps).toBeGreaterThan(30);
-      expect((stats as any).success_rate).toBeGreaterThan(0.8);
+      expect(metrics.fps).toBeGreaterThan(30);
+      expect(stats.success_rate).toBeGreaterThan(0.8);
     });
 
     it('should have stable performance metrics', async () => {
@@ -387,24 +465,24 @@ describe('SINGULARITY-FUSION vΩ - E2E Automated Validation', async () => {
 
     it('should complete full system health check', async () => {
       // Fusion state
-      const fusionState = await invoke('singularity_get_fusion_state');
-      expect((fusionState as any).fusion_integrity).toBeGreaterThan(0.85);
+      const fusionState = await invoke('singularity_get_fusion_state') as FusionStateResponse;
+      expect(fusionState.fusion_integrity).toBeGreaterThan(0.85);
 
       // Pipeline health
-      const pipelineStats = await invoke('pipeline_get_stats');
-      expect((pipelineStats as any).success_rate).toBeGreaterThan(0.9);
+      const pipelineStats = await invoke('pipeline_get_stats') as PipelineStats;
+      expect(pipelineStats.success_rate).toBeGreaterThan(0.9);
 
       // Performance health
-      const perfMetrics = await invoke('performance_get_metrics');
-      expect((perfMetrics as any).fps).toBeGreaterThan(30);
+      const perfMetrics = await invoke('performance_get_metrics') as PerformanceMetrics;
+      expect(perfMetrics.fps).toBeGreaterThan(30);
 
       // Security health
-      const threats = await invoke('crashguard_detect_threats');
-      expect((threats as any[]).length).toBeLessThan(3);
+      const threats = await invoke('crashguard_detect_threats') as unknown[];
+      expect(threats.length).toBeLessThan(3);
 
       // Auto-fix health
-      const autofixStats = await invoke('autofix_get_stats');
-      expect((autofixStats as any).success_rate).toBeGreaterThan(0.8);
+      const autofixStats = await invoke('autofix_get_stats') as AutoFixStats;
+      expect(autofixStats.success_rate).toBeGreaterThan(0.8);
     });
   });
 });

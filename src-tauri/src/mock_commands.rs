@@ -853,3 +853,54 @@ pub async fn cognitive_optimize() -> AppResult<()> {
     log::info!("[Cognitive v16 Mock] Running optimization");
     Ok(())
 }
+
+// ═══════════════════════════════════════════════════════════════
+// VOICE / TTS / ASR (v16.2.2+)
+// ═══════════════════════════════════════════════════════════════
+
+#[tauri::command]
+pub async fn speak(
+    text: String,
+    _config: Option<serde_json::Value>,
+    _use_online: Option<bool>,
+) -> AppResult<()> {
+    log::info!("[Voice Mock] TTS: \"{}\"", text.chars().take(50).collect::<String>());
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn stop_speaking() -> AppResult<()> {
+    log::info!("[Voice Mock] TTS stopped");
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn is_speaking() -> AppResult<bool> {
+    Ok(false)
+}
+
+#[tauri::command]
+pub async fn start_recording(_config: Option<serde_json::Value>) -> AppResult<String> {
+    log::info!("[Voice Mock] Recording started");
+    Ok("mock-recording-id".to_string())
+}
+
+#[tauri::command]
+pub async fn stop_recording() -> AppResult<serde_json::Value> {
+    log::info!("[Voice Mock] Recording stopped");
+    Ok(json!({
+        "transcript": "Bonjour TITANE (mock transcript)",
+        "confidence": 0.95,
+        "duration": 2.5
+    }))
+}
+
+#[tauri::command]
+pub async fn transcribe_audio(_audio_data: Vec<u8>) -> AppResult<serde_json::Value> {
+    log::info!("[Voice Mock] Transcribing audio");
+    Ok(json!({
+        "transcript": "Mock transcription result",
+        "confidence": 0.9,
+        "language": "fr-FR"
+    }))
+}

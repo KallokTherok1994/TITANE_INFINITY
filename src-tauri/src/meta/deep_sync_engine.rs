@@ -520,86 +520,7 @@ impl DeepSyncEngine {
     pub fn detect_desync(&self) -> bool {
         self.state.desync_detected || !self.state.engines_out_of_sync.is_empty()
     }
-}
 
-/// Engine state snapshot
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EngineState {
-    pub name: String,
-    pub value: f32,
-    pub timestamp: u64,
-}
-
-impl EngineState {
-    pub fn new(name: String, value: f32) -> Self {
-        let timestamp = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_secs())
-            .unwrap_or(0);
-
-        Self {
-            name,
-            value: value.clamp(0.0, 1.0),
-            timestamp,
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[tokio::test]
-    async fn test_deep_sync_basic() {
-        let mut engine = DeepSyncEngine::new();
-
-        let mut states = HashMap::new();
-        states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.9));
-        states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.88));
-        states.insert("timeline".to_string(), EngineState::new("timeline".to_string(), 0.87));
-
-        let result = engine.deep_sync(&states).await;
-
-        assert!(result.success);
-        assert!(matches!(result.quality, SyncQuality::Good | SyncQuality::Excellent | SyncQuality::Perfect));
-    }
-
-    #[tokio::test]
-    async fn test_sync_issue_detection() {
-        let mut engine = DeepSyncEngine::new();
-
-        let mut states = HashMap::new();
-        states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.9));
-        states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.3)); // Drift
-
-        let result = engine.deep_sync(&states).await;
-
-        assert!(!result.issues.is_empty());
-    }
-
-    #[tokio::test]
-    async fn test_integrity_hash() {
-        let engine = DeepSyncEngine::new();
-
-        let mut values = HashMap::new();
-        values.insert("cognitive".to_string(), 0.9);
-        values.insert("memory".to_string(), 0.88);
-
-        let hash1 = engine.compute_integrity_hash(&values);
-        let hash2 = engine.compute_integrity_hash(&values);
-
-        assert_eq!(hash1, hash2); // Deterministic
-    }
-
-    #[tokio::test]
-    async fn test_deep_sync_selftest() {
-        let mut engine = DeepSyncEngine::new();
-        let (success, issues) = engine.deep_sync_selftest().await;
-        assert!(success, "Self-test failed: {:?}", issues);
-    }
-}
-
-impl DeepSyncEngine {
     /// META v18.1: Self-test du DEEP SYNC ENGINE
     ///
     /// Vérifie la cohérence interne du moteur:
@@ -681,5 +602,82 @@ impl DeepSyncEngine {
         }
 
         (success, issues)
+    }
+}
+
+/// Engine state snapshot
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EngineState {
+    pub name: String,
+    pub value: f32,
+    pub timestamp: u64,
+}
+
+impl EngineState {
+    pub fn new(name: String, value: f32) -> Self {
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
+
+        Self {
+            name,
+            value: value.clamp(0.0, 1.0),
+            timestamp,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_deep_sync_basic() {
+        let mut engine = DeepSyncEngine::new();
+
+        let mut states = HashMap::new();
+        states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.9));
+        states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.88));
+        states.insert("timeline".to_string(), EngineState::new("timeline".to_string(), 0.87));
+
+        let result = engine.deep_sync(&states).await;
+
+        assert!(result.success);
+        assert!(matches!(result.quality, SyncQuality::Good | SyncQuality::Excellent | SyncQuality::Perfect));
+    }
+
+    #[tokio::test]
+    async fn test_sync_issue_detection() {
+        let mut engine = DeepSyncEngine::new();
+
+        let mut states = HashMap::new();
+        states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.9));
+        states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.3)); // Drift
+
+        let result = engine.deep_sync(&states).await;
+
+        assert!(!result.issues.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_integrity_hash() {
+        let engine = DeepSyncEngine::new();
+
+        let mut values = HashMap::new();
+        values.insert("cognitive".to_string(), 0.9);
+        values.insert("memory".to_string(), 0.88);
+
+        let hash1 = engine.compute_integrity_hash(&values);
+        let hash2 = engine.compute_integrity_hash(&values);
+
+        assert_eq!(hash1, hash2); // Deterministic
+    }
+
+    #[tokio::test]
+    async fn test_deep_sync_selftest() {
+        let mut engine = DeepSyncEngine::new();
+        let (success, issues) = engine.deep_sync_selftest().await;
+        assert!(success, "Self-test failed: {:?}", issues);
     }
 }

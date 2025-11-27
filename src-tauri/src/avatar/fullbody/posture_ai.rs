@@ -324,9 +324,11 @@ mod tests {
         let mut ai = BodyPostureAI::new();
 
         // Context: haute complexité + haut engagement → Professional
-        let mut ctx = ConversationalContext::default();
-        ctx.topic_complexity = 0.8;
-        ctx.user_engagement = 0.9;
+        let ctx = ConversationalContext {
+            topic_complexity: 0.8,
+            user_engagement: 0.9,
+            ..Default::default()
+        };
         ai.update_context(ctx);
 
         ai.stability_counter = 200; // Force sélection

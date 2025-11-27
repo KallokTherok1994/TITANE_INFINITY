@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
   "version": "16.2.2",
-  "description": "TITANE∞ v16.2.2 - Cognitive Layer v16 + Real API Gemini/Ollama + Memory Engine + Singularity Permissions Fixed",
+  "description": "TITANE∞ v16.2.2+ - Voice Systems (TTS/ASR) + Chat IA 4 Providers + Security Whitelist 146 Commands + Zero Errors",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {

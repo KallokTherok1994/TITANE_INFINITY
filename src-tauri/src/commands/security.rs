@@ -18,43 +18,140 @@ pub enum CommandSecurityError {
 pub fn get_allowed_commands() -> HashSet<&'static str> {
     let mut commands = HashSet::new();
 
-    // Memory commands
-    commands.insert("memory_get_active_projects");
-    commands.insert("memory_get_recent_decisions");
-    commands.insert("memory_get_knowledge");
-    commands.insert("memory_get_active_rituals");
-    commands.insert("memory_save_chat_interaction");
+    // ═══════════════════════════════════════════════════════════════
+    // HELIOS - System Monitoring
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("get_helios_state");
+    commands.insert("get_system_health");
+    commands.insert("get_helios_metrics");
+    commands.insert("get_system_info");
+
+    // ═══════════════════════════════════════════════════════════════
+    // MEMORY - Storage & Timeline
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("get_memory_state");
+    commands.insert("memory_get_state");
+    commands.insert("write_snapshot");
+    commands.insert("read_snapshot");
+    commands.insert("write_log");
+    commands.insert("read_logs");
+    commands.insert("add_timeline_event");
+    commands.insert("get_timeline");
     commands.insert("get_active_projects");
     commands.insert("get_recent_decisions");
     commands.insert("get_knowledge");
     commands.insert("get_active_rituals");
     commands.insert("save_chat_interaction");
+    commands.insert("memory_save_chat_interaction");
+    commands.insert("memory_get_active_projects");
+    commands.insert("memory_get_recent_decisions");
+    commands.insert("memory_get_knowledge");
+    commands.insert("memory_get_active_rituals");
+    commands.insert("memory_ingest_file");
+    commands.insert("import_file");
+    commands.insert("get_all_files");
+    commands.insert("get_files_by_category");
+    commands.insert("clear_memory");
+    commands.insert("store_file");
 
-    // AI commands
+    // ═══════════════════════════════════════════════════════════════
+    // MEMORY ENGINE (Overdrive)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("memory_store");
+    commands.insert("memory_store_conversation");
+    commands.insert("memory_search");
+    commands.insert("memory_get_related");
+    commands.insert("memory_rebuild_index");
+    commands.insert("memory_get_stats");
+    commands.insert("memory_prune");
+    commands.insert("memory_delete");
+    commands.insert("memory_export");
+    commands.insert("memory_import");
+
+    // ═══════════════════════════════════════════════════════════════
+    // AI / CHAT COMMANDS
+    // ═══════════════════════════════════════════════════════════════
     commands.insert("query_ai");
     commands.insert("get_ai_status");
     commands.insert("test_gemini");
     commands.insert("test_ollama");
+    commands.insert("chat_generate");
+    commands.insert("upload_and_process_file");
+    // Chat Orchestrator (v18)
+    commands.insert("chat_send_message");
+    commands.insert("chat_get_providers_status");
+    commands.insert("chat_check_providers");
+    commands.insert("chat_create_conversation");
+    commands.insert("chat_get_conversation");
+    commands.insert("chat_delete_conversation");
+    commands.insert("chat_set_gemini_key");
+    commands.insert("chat_stream_message");
 
-    // Singularity commands
+    // ═══════════════════════════════════════════════════════════════
+    // SINGULARITY STATE
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("singularity_get_full_state");
+    commands.insert("singularity_get_physical");
+    commands.insert("singularity_get_cognitive");
+    commands.insert("singularity_get_global_coherence");
+    commands.insert("singularity_is_critical");
     commands.insert("get_singularity_state");
+    commands.insert("sync_singularity");
+    commands.insert("singularity_get_symbolic");
+    commands.insert("singularity_get_adaptive");
+    commands.insert("singularity_get_meta");
     commands.insert("update_singularity_state");
     commands.insert("singularity_self_check");
 
-    // State commands
-    commands.insert("get_system_state");
-    commands.insert("get_module_health");
+    // ═══════════════════════════════════════════════════════════════
+    // NEXUS - Validation
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("validate_nexus");
+    commands.insert("get_nexus_graph");
 
-    // XP commands
+    // ═══════════════════════════════════════════════════════════════
+    // XP & EXPERIENCE SYSTEM (v24)
+    // ═══════════════════════════════════════════════════════════════
     commands.insert("xp_add");
     commands.insert("xp_get_level");
     commands.insert("xp_get_state");
+    commands.insert("experience_get_state");
+    commands.insert("experience_update_state");
 
-    // Cognitive commands
+    // ═══════════════════════════════════════════════════════════════
+    // COGNITIVE LAYER
+    // ═══════════════════════════════════════════════════════════════
     commands.insert("get_cognitive_state");
     commands.insert("update_cognitive_mode");
 
-    // Session commands
+    // ═══════════════════════════════════════════════════════════════
+    // DEVTOOLS & LOGS
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("get_logs");
+    commands.insert("clear_logs");
+
+    // ═══════════════════════════════════════════════════════════════
+    // DEVOPS (v19)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("devops_run");
+    commands.insert("devops_stats");
+
+    // ═══════════════════════════════════════════════════════════════
+    // SECURE COMMANDS (v∞)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("secure_import_file");
+    commands.insert("secure_read_file");
+    commands.insert("secure_list_files");
+    commands.insert("secure_delete_file");
+    commands.insert("get_permission_audit");
+    commands.insert("validate_chat_message");
+    commands.insert("check_system_integrity");
+
+    // ═══════════════════════════════════════════════════════════════
+    // STATE & SESSION
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("get_system_state");
+    commands.insert("get_module_health");
     commands.insert("start_session");
     commands.insert("end_session");
     commands.insert("get_session_info");

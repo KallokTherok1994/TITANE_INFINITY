@@ -423,9 +423,7 @@ impl Default for MetaMonitoringEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::meta::{
-        MetaCognitiveReport, SyncedState, SyncQuality, CognitiveHealthIndicators,
-    };
+    use crate::meta::MetaCognitiveReport;
     use crate::meta::meta_cognition::{CognitiveIssue, IssueSeverity, IssueCategory};
 
     #[tokio::test]

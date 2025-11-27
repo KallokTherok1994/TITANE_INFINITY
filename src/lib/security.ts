@@ -15,50 +15,185 @@
 /**
  * Whitelist des commandes Tauri autorisées
  * DOIT correspondre à commands/security.rs côté Rust
+ * ✅ SYNCHRONISÉ v16.2.2+ (27 nov 2025)
  */
 export const ALLOWED_COMMANDS = new Set<string>([
-  // Memory commands (10)
+  // ═══════════════════════════════════════════════════════════════
+  // HELIOS - System Monitoring
+  // ═══════════════════════════════════════════════════════════════
+  'get_helios_state',
+  'get_system_health',
+  'get_helios_metrics',
+  'get_system_info',
+
+  // ═══════════════════════════════════════════════════════════════
+  // MEMORY - Storage & Timeline
+  // ═══════════════════════════════════════════════════════════════
+  'get_memory_state',
+  'memory_get_state',
+  'write_snapshot',
+  'read_snapshot',
+  'write_log',
+  'read_logs',
+  'add_timeline_event',
+  'get_timeline',
+  'get_active_projects',
+  'get_recent_decisions',
+  'get_knowledge',
+  'get_active_rituals',
+  'save_chat_interaction',
+  'memory_save_chat_interaction',
+  'memory_get_active_projects',
+  'memory_get_recent_decisions',
+  'memory_get_knowledge',
+  'memory_get_active_rituals',
+  'memory_ingest_file',
+  'import_file',
+  'get_all_files',
+  'get_files_by_category',
+  'clear_memory',
+  'store_file',
+
+  // Legacy Memory commands
   'memory_init',
   'memory_save_entry',
   'memory_get_entry',
   'memory_delete_entry',
   'memory_list_entries',
   'memory_update_entry',
-  'memory_get_state',
   'memory_clear_all',
   'memory_search',
   'memory_export',
 
-  // AI commands (4)
+  // ═══════════════════════════════════════════════════════════════
+  // MEMORY ENGINE (Overdrive)
+  // ═══════════════════════════════════════════════════════════════
+  'memory_store',
+  'memory_store_conversation',
+  'memory_get_related',
+  'memory_rebuild_index',
+  'memory_get_stats',
+  'memory_prune',
+  'memory_delete',
+  'memory_import',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AI / CHAT COMMANDS
+  // ═══════════════════════════════════════════════════════════════
   'ai_send_prompt',
   'ai_get_response',
   'ai_set_model',
   'ai_get_available_models',
+  'query_ai',
+  'get_ai_status',
+  'test_gemini',
+  'test_ollama',
+  'chat_generate',
+  'upload_and_process_file',
 
-  // Singularity commands (3)
+  // Chat Orchestrator (v18)
+  'chat_send_message',
+  'chat_get_providers_status',
+  'chat_check_providers',
+  'chat_create_conversation',
+  'chat_get_conversation',
+  'chat_delete_conversation',
+  'chat_set_gemini_key',
+  'chat_stream_message',
+
+  // ═══════════════════════════════════════════════════════════════
+  // VOICE / TTS / ASR (v16.2.2+)
+  // ═══════════════════════════════════════════════════════════════
+  'speak',
+  'stop_speaking',
+  'is_speaking',
+  'start_recording',
+  'stop_recording',
+  'transcribe_audio',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SINGULARITY STATE
+  // ═══════════════════════════════════════════════════════════════
   'singularity_get_state',
+  'singularity_get_full_state',
+  'singularity_get_physical',
+  'singularity_get_cognitive',
+  'singularity_get_symbolic',
+  'singularity_get_adaptive',
+  'singularity_get_meta',
+  'singularity_get_global_coherence',
+  'singularity_is_critical',
+  'get_singularity_state',
+  'sync_singularity',
   'singularity_update_metric',
   'singularity_reset',
+  'update_singularity_state',
+  'singularity_self_check',
 
-  // State commands (2)
-  'state_get',
-  'state_save',
+  // ═══════════════════════════════════════════════════════════════
+  // NEXUS - Validation
+  // ═══════════════════════════════════════════════════════════════
+  'validate_nexus',
+  'get_nexus_graph',
 
-  // XP commands (3)
+  // ═══════════════════════════════════════════════════════════════
+  // XP & EXPERIENCE SYSTEM (v24)
+  // ═══════════════════════════════════════════════════════════════
   'xp_add',
-  'xp_get_total',
   'xp_get_level',
+  'xp_get_total',
+  'xp_get_state',
+  'experience_get_state',
+  'experience_update_state',
 
-  // Cognitive commands (2)
+  // ═══════════════════════════════════════════════════════════════
+  // COGNITIVE LAYER
+  // ═══════════════════════════════════════════════════════════════
   'cognitive_analyze',
   'cognitive_get_insights',
+  'get_cognitive_state',
+  'update_cognitive_mode',
 
-  // Session commands (3)
+  // ═══════════════════════════════════════════════════════════════
+  // DEVTOOLS & LOGS
+  // ═══════════════════════════════════════════════════════════════
+  'get_logs',
+  'clear_logs',
+
+  // ═══════════════════════════════════════════════════════════════
+  // DEVOPS (v19)
+  // ═══════════════════════════════════════════════════════════════
+  'devops_run',
+  'devops_stats',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SECURE COMMANDS (v∞)
+  // ═══════════════════════════════════════════════════════════════
+  'secure_import_file',
+  'secure_read_file',
+  'secure_list_files',
+  'secure_delete_file',
+  'get_permission_audit',
+  'validate_chat_message',
+  'check_system_integrity',
+
+  // ═══════════════════════════════════════════════════════════════
+  // STATE & SESSION
+  // ═══════════════════════════════════════════════════════════════
+  'state_get',
+  'state_save',
+  'get_system_state',
+  'get_module_health',
   'session_start',
   'session_end',
   'session_get_current',
+  'start_session',
+  'end_session',
+  'get_session_info',
 
-  // Security command (1)
+  // ═══════════════════════════════════════════════════════════════
+  // SECURITY & HARDENING
+  // ═══════════════════════════════════════════════════════════════
   'run_hardening_selftest',
 ]);
 
