@@ -273,8 +273,6 @@ impl QaEngine {
 
         if anomalies.is_empty() && subtests.iter().all(|s| s.status == QaStatus::Ok) {
             QaResult::success("TTS".to_string(), latency_ms, subtests)
-        } else if anomalies.is_empty() {
-            QaResult::warning("TTS".to_string(), latency_ms, anomalies, subtests)
         } else {
             QaResult::warning("TTS".to_string(), latency_ms, anomalies, subtests)
         }
@@ -349,14 +347,12 @@ impl QaEngine {
     /// `QaResult` avec status OK si module accessible
     async fn test_file_import(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "File Import Validation".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("FileImport".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -364,14 +360,12 @@ impl QaEngine {
     /// Test Documents Légaux
     async fn test_legal_docs(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "Legal Docs Module".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("LegalDocs".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -379,14 +373,12 @@ impl QaEngine {
     /// Test Recherche Web
     async fn test_websearch(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "WebSearch Module".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("WebSearch".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -426,14 +418,12 @@ impl QaEngine {
     /// Test XP Engine
     async fn test_xp(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "XP Engine".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("XP".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -441,14 +431,12 @@ impl QaEngine {
     /// Test Timeline
     async fn test_timeline(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "Timeline Module".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("Timeline".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -456,14 +444,12 @@ impl QaEngine {
     /// Test Meta-Cognition
     async fn test_cognitive(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "Cognitive Module".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("Cognitive".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -471,14 +457,12 @@ impl QaEngine {
     /// Test Deep Sync Engine
     async fn test_deep_sync(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "Deep Sync Engine".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("DeepSync".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -486,14 +470,12 @@ impl QaEngine {
     /// Test SingularityState
     async fn test_singularity_state(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "SingularityState".to_string(),
             status: QaStatus::Ok,
             message: "Module disponible".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success(
             "SingularityState".to_string(),
@@ -505,14 +487,12 @@ impl QaEngine {
     /// Test UI Bridges
     async fn test_ui_bridges(&self) -> QaResult {
         let start = Instant::now();
-        let mut subtests = Vec::new();
-
-        subtests.push(QaSubResult {
+        let subtests = vec![QaSubResult {
             name: "UI Bridges".to_string(),
             status: QaStatus::Ok,
             message: "Bridges disponibles".to_string(),
             latency_ms: start.elapsed().as_millis(),
-        });
+        }];
 
         QaResult::success("UIBridges".to_string(), start.elapsed().as_millis(), subtests)
     }
@@ -662,13 +642,13 @@ impl QaEngine {
             }
 
             // Clamper entre 0 et 100
-            module_score = module_score.max(0.0).min(100.0);
+            module_score = module_score.clamp(0.0, 100.0);
             score += module_score;
         }
 
         // Score global = moyenne des scores modules
         let global_score = score / total;
-        global_score.min(100.0).max(0.0)
+        global_score.clamp(0.0, 100.0)
     }
 }
 

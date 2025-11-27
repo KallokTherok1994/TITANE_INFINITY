@@ -71,12 +71,12 @@ export { useAnimation } from '../contexts/AnimationContext';
 
 // Engine State
 export { useEngineState } from './useEngineState';
+export type { EngineStateHook } from './useEngineState';
 export type {
-  EngineStateHook,
   SingularityState,
-  PhysicalState,
-  CognitiveState,
-  SymbolicState,
-  AdaptiveState,
-  MetaState,
-} from './useEngineState';
+  PhysicalLayer as PhysicalState,
+  CognitiveLayer as CognitiveState,
+  SymbolicLayer as SymbolicState,
+  AdaptiveLayer as AdaptiveState,
+  MetaLayer as MetaState,
+} from '@/types/singularityState';

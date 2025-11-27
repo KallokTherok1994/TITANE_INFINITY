@@ -67,7 +67,7 @@ export function useEngineSubscription(engine: EngineType) {
         if (mounted) {
           // Note: Backend validates data structure, type assertion safe here
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          setEngineData(engine as EngineName, data as Record<string, unknown>);
+          setEngineData(engine as EngineName, data as any);
         }
       } catch (error) {
         console.error(`[useEngineSubscription] Error fetching ${engine}:`, error);

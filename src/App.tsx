@@ -72,6 +72,14 @@ import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 -
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
 
+// ✨ v∞ - Multi-Agent Engine & Agents
+import { multiAgentEngine } from './core/ai/multi_agent_engine';
+import { HeliosAgent } from './core/ai/agents/helios_agent';
+import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
+import { PersonaAgent } from './core/ai/agents/persona_agent';
+import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
+import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
+
 // Phase 9: Lazy load heavy pages (code splitting with named exports)
 const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
 const DevTools = lazy(() => import('./pages/DevTools').then(m => ({ default: m.DevTools })));

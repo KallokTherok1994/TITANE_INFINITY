@@ -15,8 +15,8 @@ pub fn adaptive_selftest() -> (usize, usize) {
     // Test 1: Initialization
     match std::panic::catch_unwind(|| {
         let engine = crate::adaptive::adaptive_engine::AdaptiveOptimizationEngine::new();
-        assert_eq!(engine.rules.len(), 5);
-        assert_eq!(engine.history.len(), 0);
+        assert_eq!(engine.optimization_rules.len(), 5);
+        assert_eq!(engine.performance_history.len(), 0);
     }) {
         Ok(_) => { passed += 1; println!("✅ Test 1: Initialization"); }
         Err(_) => println!("❌ Test 1: Initialization FAILED"),
@@ -26,18 +26,18 @@ pub fn adaptive_selftest() -> (usize, usize) {
     match std::panic::catch_unwind(|| {
         let mut engine = crate::adaptive::adaptive_engine::AdaptiveOptimizationEngine::new();
         let sample = crate::adaptive::adaptive_engine::SystemPerformanceSample {
-            timestamp: chrono::Utc::now().to_rfc3339(),
+            timestamp: chrono::Utc::now().timestamp() as u64,
             cpu_load: 0.45,
             memory_usage: 0.60,
-            latency_ai: 250.0,
-            latency_tauri_invoke: 15.0,
-            ui_fps: 58.0,
+            latency_ai: 250,
+            latency_tauri_invoke: 15,
+            ui_fps: 58,
             sync_quality: 0.92,
             cognitive_stability: 0.88,
             hash_integrity_ok: true,
         };
         engine.capture_sample(sample);
-        assert_eq!(engine.history.len(), 1);
+        assert_eq!(engine.performance_history.len(), 1);
     }) {
         Ok(_) => { passed += 1; println!("✅ Test 2: Capture sample"); }
         Err(_) => println!("❌ Test 2: Capture sample FAILED"),

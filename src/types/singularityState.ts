@@ -26,6 +26,13 @@ export interface SingularityState {
   signature: string;
 }
 
+// Aliases pour compatibilité backend (PhysicalState = PhysicalLayer, etc.)
+export type PhysicalState = PhysicalLayer;
+export type CognitiveState = CognitiveLayer;
+export type SymbolicState = SymbolicLayer;
+export type AdaptiveState = AdaptiveLayer;
+export type MetaState = MetaLayer;
+
 // ═══════════════════════════════════════════════════════════════════
 // PROGRESSION STATE (v∞.D6)
 // ═══════════════════════════════════════════════════════════════════

@@ -107,32 +107,33 @@ export function useEngineVitals(
         retries: 0, // Temps réel, pas de retry
       });
 
-      // Parse engine vitals depuis Singularity state
+      // Parse engine vitals depuis Singularity state (nouveau format v15+)
+      // Mapping: ancien format (harmonia/helios/nexus) → nouveau format (physical/cognitive/symbolic)
       const engineVitals: EngineVitals = {
         harmonia: {
-          load: singularityState.harmonia?.cpu_load || 0,
-          tasksActive: singularityState.harmonia?.active_tasks || 0,
-          throttled: singularityState.harmonia?.throttled || false,
+          load: singularityState.physical?.helios?.cpu_usage || 0,
+          tasksActive: singularityState.physical?.system_health?.services_running || 0,
+          throttled: (singularityState.physical?.helios?.cpu_usage || 0) > 80,
         },
         helios: {
-          health: singularityState.helios?.health || 100,
-          lastCheck: singularityState.helios?.last_check || Date.now(),
-          issues: singularityState.helios?.issues || 0,
+          health: singularityState.physical?.system_health?.global_health || 100,
+          lastCheck: singularityState.physical?.helios?.last_update || Date.now(),
+          issues: singularityState.physical?.system_health?.errors_count || 0,
         },
         nexus: {
-          coherence: singularityState.nexus?.coherence || 100,
-          validations: singularityState.nexus?.validations || 0,
-          score: singularityState.nexus?.score || 100,
+          coherence: singularityState.cognitive?.coherence || 100,
+          validations: singularityState.cognitive?.memory?.total_memories || 0,
+          score: singularityState.physical?.metrics?.performance_score || 100,
         },
         sentinel: {
-          errors: singularityState.sentinel?.errors || 0,
-          anomalies: singularityState.sentinel?.anomalies || 0,
-          lastError: singularityState.sentinel?.last_error || null,
+          errors: singularityState.physical?.system_health?.errors_count || 0,
+          anomalies: singularityState.physical?.system_health?.warnings_count || 0,
+          lastError: null, // TODO: Ajouter last_error à SystemHealth
         },
         selfheal: {
-          interventions: singularityState.selfheal?.interventions || 0,
-          autoResets: singularityState.selfheal?.auto_resets || 0,
-          lastHeal: singularityState.selfheal?.last_heal || null,
+          interventions: singularityState.adaptive?.auto_heal?.errors_healed || 0,
+          autoResets: singularityState.adaptive?.evolution?.generation || 0,
+          lastHeal: singularityState.adaptive?.auto_heal?.last_heal || null,
         },
         timestamp: Date.now(),
       };

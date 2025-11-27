@@ -688,14 +688,61 @@ pub async fn ai_chat_send(
 pub async fn chat_stream_message(
     request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
-    _window: tauri::Window,
+    app: tauri::AppHandle,
 ) -> Result<String, String> {
-    // FIXME v16.1: Streaming temporairement désactivé (window.emit incompatible Tauri v2)
-    // TODO: Utiliser tauri::Emitter trait pour Tauri v2
-    println!("[CHAT_STREAM] Fallback to non-streaming mode (emit API changed in Tauri v2)");
+    use tauri::Emitter;
 
-    let response = chat_send_message(request, state).await?;
-    Ok(response.message.content)
+    println!("[CHAT_STREAM] ✅ Streaming enabled (Tauri v2 Emitter trait)");
+    println!("[CHAT_STREAM] Provider: {}, Model: {:?}", request.provider, request.model);
+
+    let start = crate::core::utils::now_ms();
+    let mut accumulated_content = String::new();
+    let chunk_size = 50; // Characters per chunk for simulation
+
+    // TODO: Implement real streaming for Gemini/Ollama APIs
+    // For now: simulate streaming by chunking the non-streaming response
+    let response = chat_send_message(request.clone(), state).await?;
+    let full_content = response.message.content;
+    let total_chunks = (full_content.len() + chunk_size - 1) / chunk_size;
+
+    println!("[CHAT_STREAM] Simulating {} chunks for {} chars", total_chunks, full_content.len());
+
+    // Emit chunks progressively
+    for (i, chunk_text) in full_content.chars().collect::<Vec<char>>().chunks(chunk_size).enumerate() {
+        let chunk: String = chunk_text.iter().collect();
+        accumulated_content.push_str(&chunk);
+
+        // Emit chunk event (Tauri v2 compatible)
+        let chunk_payload = serde_json::json!({
+            "chunk": chunk,
+            "index": i,
+            "total": total_chunks,
+            "accumulated": accumulated_content.clone()
+        });
+
+        app.emit("chat:stream:chunk", chunk_payload)
+            .map_err(|e| format!("Failed to emit chunk: {}", e))?;
+
+        // Small delay to simulate network streaming (remove for real API streaming)
+        tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+    }
+
+    let latency_ms = crate::core::utils::elapsed_ms(start);
+
+    // Emit completion event
+    let complete_payload = serde_json::json!({
+        "content": full_content.clone(),
+        "provider": response.message.provider,
+        "model": response.message.model,
+        "latency_ms": latency_ms,
+        "tokens": response.message.tokens
+    });
+
+    app.emit("chat:stream:complete", complete_payload)
+        .map_err(|e| format!("Failed to emit completion: {}", e))?;
+
+    println!("[CHAT_STREAM] ✅ Streaming completed: {} chars in {}ms", full_content.len(), latency_ms);
+    Ok(full_content)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

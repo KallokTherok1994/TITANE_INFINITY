@@ -154,11 +154,11 @@ export const geminiProvider: AIProvider = {
               // Return in ChatResponse format
               return {
                 content: content.trim(),
-                model: 'gemini-pro',
-                usage: {
-                  prompt_tokens: Math.ceil(prompt.length / 4),
-                  completion_tokens: Math.ceil(content.length / 4),
-                  total_tokens: Math.ceil((prompt.length + content.length) / 4),
+                role: 'assistant' as const,
+                timestamp: Date.now(),
+                metadata: {
+                  model: 'gemini-pro',
+                  tokens: Math.ceil(prompt.length / 4) + Math.ceil(content.length / 4),
                 },
               };
             } catch (error) {
@@ -186,11 +186,9 @@ export const geminiProvider: AIProvider = {
           throw new Error(`Rate limit exceeded — ${errorMsg}`);
         }
 
-        if (secureResult.sanitization?.violations.length) {
-          const violations = secureResult.sanitization.violations
-            .map((v) => v.type)
-            .join(', ');
-          throw new Error(`Input blocked — Detected: ${violations}`);
+        if (secureResult.sanitization?.isBlocked) {
+          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
+          throw new Error(`Input blocked — Detected: ${patterns}`);
         }
 
         if (!secureResult.validation?.isValid) {

@@ -87,7 +87,7 @@ pub fn avatar_apply_style_preset(style_name: String) -> Result<String, String> {
     let engine = APPEARANCE_ENGINE.lock().map_err(|e| e.to_string())?;
     let mut state = APPEARANCE_STATE.lock().map_err(|e| e.to_string())?;
 
-    engine.apply_style_to_appearance(&style_name, &mut *state);
+    engine.apply_style_to_appearance(&style_name, &mut state);
 
     let description = state.describe();
     log::info!("🎨 Style preset applied: {} → {}", style_name, description);
@@ -104,7 +104,7 @@ pub fn avatar_parse_style_command(command: String) -> Result<String, String> {
     let parser = StyleCommandParser::new();
     let current_state = APPEARANCE_STATE.lock().map_err(|e| e.to_string())?;
 
-    let update_request = parser.parse(&command, &*current_state)?;
+    let update_request = parser.parse(&command, &current_state)?;
 
     let json = serde_json::to_string(&update_request)
         .map_err(|e| format!("Serialization error: {}", e))?;
@@ -204,6 +204,12 @@ pub fn avatar_add_archetype(name: String, keywords_json: String) -> Result<Strin
 // ═══════════════════════════════════════════════════════════════════════════
 
 pub struct StyleCommandParser;
+
+impl Default for StyleCommandParser {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl StyleCommandParser {
     pub fn new() -> Self {

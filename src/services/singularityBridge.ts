@@ -7,6 +7,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { invoke } from '@tauri-apps/api/core';
 
 /**
  * ═══════════════════════════════════════════════════════════════════

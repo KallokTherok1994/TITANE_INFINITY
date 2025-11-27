@@ -29,8 +29,12 @@ export interface SecureAIRequest {
   provider?: string;
   /** Model */
   model?: string;
+  /** User ID (pour tracking/audit) */
+  userId?: string;
   /** Tokens estimés (pour rate limiting) */
   estimatedTokens?: number;
+  /** Metadata additionnelle */
+  metadata?: Record<string, unknown>;
   /** Options sanitization */
   sanitizationOptions?: {
     strictMode?: boolean;
@@ -47,11 +51,17 @@ export interface SecureAIResponse<T = ChatResponse> {
   /** Original response (avant sanitization) */
   originalResponse?: T;
   /** Sanitization result (input) */
-  inputSanitization: SanitizationResult;
+  inputSanitization?: SanitizationResult;
+  /** Sanitization result (alias pour compatibilité) */
+  sanitization?: SanitizationResult;
   /** Validation result (output) */
-  outputValidation: AIValidationResult<T>;
+  outputValidation?: AIValidationResult<T>;
+  /** Validation result (alias pour compatibilité) */
+  validation?: AIValidationResult<T>;
   /** Rate limit status */
-  rateLimitStatus: RateLimitStatus;
+  rateLimitStatus?: RateLimitStatus;
+  /** Rate limit exceeded flag */
+  rateLimitExceeded?: boolean;
   /** Success */
   success: boolean;
   /** Error message (si échec) */
@@ -99,12 +109,19 @@ export class SecureAIService {
       return {
         response: {} as ChatResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation: {
           isValid: false,
           errors: ['Input blocked by sanitizer'],
           warnings: [],
         },
+        validation: {
+          isValid: false,
+          errors: ['Input blocked by sanitizer'],
+          warnings: [],
+        },
         rateLimitStatus: globalAIRateLimiter.getStatus(),
+        rateLimitExceeded: false,
         success: false,
         error: `Input blocked: ${inputSanitization.detectedPatterns.join(', ')}`,
       };
@@ -117,12 +134,19 @@ export class SecureAIService {
       return {
         response: {} as ChatResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation: {
           isValid: false,
           errors: ['Rate limit exceeded'],
           warnings: [],
         },
+        validation: {
+          isValid: false,
+          errors: ['Rate limit exceeded'],
+          warnings: [],
+        },
         rateLimitStatus,
+        rateLimitExceeded: true,
         success: false,
         error: rateLimitStatus.blockReason,
       };
@@ -136,12 +160,19 @@ export class SecureAIService {
       return {
         response: {} as ChatResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation: {
           isValid: false,
           errors: [error instanceof Error ? error.message : String(error)],
           warnings: [],
         },
+        validation: {
+          isValid: false,
+          errors: [error instanceof Error ? error.message : String(error)],
+          warnings: [],
+        },
         rateLimitStatus,
+        rateLimitExceeded: false,
         success: false,
         error: `API call failed: ${error}`,
       };
@@ -154,8 +185,11 @@ export class SecureAIService {
       return {
         response: {} as ChatResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation,
+        validation: outputValidation,
         rateLimitStatus,
+        rateLimitExceeded: false,
         success: false,
         error: `Output validation failed: ${outputValidation.errors.join(', ')}`,
       };
@@ -166,14 +200,17 @@ export class SecureAIService {
     globalAIRateLimiter.recordRequest(actualTokens, provider, model);
 
     // 6. Return sanitized response (si warnings)
-    const finalResponse = outputValidation.sanitizedData || outputValidation.data!;
+    const finalResponse = outputValidation.sanitizedData || outputValidation.data || ({} as ChatResponse);
 
     return {
       response: finalResponse,
       originalResponse: outputValidation.sanitizedData ? outputValidation.data : undefined,
       inputSanitization,
+      sanitization: inputSanitization,
       outputValidation,
+      validation: outputValidation,
       rateLimitStatus: globalAIRateLimiter.getStatus(),
+      rateLimitExceeded: false,
       success: true,
     };
   }
@@ -203,12 +240,19 @@ export class SecureAIService {
       return {
         response: {} as MetaModeResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation: {
           isValid: false,
           errors: ['Input blocked by sanitizer'],
           warnings: [],
         },
+        validation: {
+          isValid: false,
+          errors: ['Input blocked by sanitizer'],
+          warnings: [],
+        },
         rateLimitStatus: globalAIRateLimiter.getStatus(),
+        rateLimitExceeded: false,
         success: false,
         error: `Input blocked: ${inputSanitization.detectedPatterns.join(', ')}`,
       };
@@ -221,12 +265,19 @@ export class SecureAIService {
       return {
         response: {} as MetaModeResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation: {
           isValid: false,
           errors: ['Rate limit exceeded'],
           warnings: [],
         },
+        validation: {
+          isValid: false,
+          errors: ['Rate limit exceeded'],
+          warnings: [],
+        },
         rateLimitStatus,
+        rateLimitExceeded: true,
         success: false,
         error: rateLimitStatus.blockReason,
       };
@@ -240,12 +291,19 @@ export class SecureAIService {
       return {
         response: {} as MetaModeResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation: {
           isValid: false,
           errors: [error instanceof Error ? error.message : String(error)],
           warnings: [],
         },
+        validation: {
+          isValid: false,
+          errors: [error instanceof Error ? error.message : String(error)],
+          warnings: [],
+        },
         rateLimitStatus,
+        rateLimitExceeded: false,
         success: false,
         error: `API call failed: ${error}`,
       };
@@ -258,8 +316,11 @@ export class SecureAIService {
       return {
         response: {} as MetaModeResponse,
         inputSanitization,
+        sanitization: inputSanitization,
         outputValidation,
+        validation: outputValidation,
         rateLimitStatus,
+        rateLimitExceeded: false,
         success: false,
         error: `Output validation failed: ${outputValidation.errors.join(', ')}`,
       };
@@ -269,14 +330,17 @@ export class SecureAIService {
     globalAIRateLimiter.recordRequest(estimatedTokens, provider, model);
 
     // 6. Return sanitized response (si warnings)
-    const finalResponse = outputValidation.sanitizedData || outputValidation.data!;
+    const finalResponse = outputValidation.sanitizedData || outputValidation.data || ({} as MetaModeResponse);
 
     return {
       response: finalResponse,
       originalResponse: outputValidation.sanitizedData ? outputValidation.data : undefined,
       inputSanitization,
+      sanitization: inputSanitization,
       outputValidation,
+      validation: outputValidation,
       rateLimitStatus: globalAIRateLimiter.getStatus(),
+      rateLimitExceeded: false,
       success: true,
     };
   }

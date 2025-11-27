@@ -2,7 +2,6 @@
  * TITANE∞ v20 - Singularity Engine v∞
  * Architecture finale: 20 moteurs → 1 état global cohérent
  */
-
 // Modules existants v17
 pub mod coherence;
 pub mod core;

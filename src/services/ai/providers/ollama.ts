@@ -140,11 +140,11 @@ export const ollamaProvider: AIProvider = {
               // Return in ChatResponse format
               return {
                 content: data.response.trim(),
-                model: OLLAMA_MODEL,
-                usage: {
-                  prompt_tokens: data.prompt_eval_count || Math.ceil(prompt.length / 4),
-                  completion_tokens: data.eval_count || Math.ceil(data.response.length / 4),
-                  total_tokens: (data.prompt_eval_count || 0) + (data.eval_count || 0),
+                role: 'assistant' as const,
+                timestamp: Date.now(),
+                metadata: {
+                  model: OLLAMA_MODEL,
+                  tokens: (data.prompt_eval_count || 0) + (data.eval_count || 0),
                 },
               };
             } catch (error) {
@@ -172,11 +172,9 @@ export const ollamaProvider: AIProvider = {
           throw new Error(`Rate limit exceeded — ${errorMsg}`);
         }
 
-        if (secureResult.sanitization?.violations.length) {
-          const violations = secureResult.sanitization.violations
-            .map((v) => v.type)
-            .join(', ');
-          throw new Error(`Input blocked — Detected: ${violations}`);
+        if (secureResult.sanitization?.isBlocked) {
+          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
+          throw new Error(`Input blocked — Detected: ${patterns}`);
         }
 
         if (!secureResult.validation?.isValid) {

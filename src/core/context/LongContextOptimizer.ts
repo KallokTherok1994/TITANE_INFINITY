@@ -354,11 +354,11 @@ export class LongContextOptimizer {
       preserveSystemMessages?: boolean;
     } = {}
   ): Promise<GatingResult> {
-    try {
-      const threshold = options.threshold || this.DEFAULT_GATING_THRESHOLD;
-      const preserveRecent = options.preserveRecent || 3;
-      const preserveSystemMessages = options.preserveSystemMessages !== false;
+    const threshold = options.threshold ?? this.DEFAULT_GATING_THRESHOLD;
+    const preserveRecent = options.preserveRecent ?? 3;
+    const preserveSystemMessages = options.preserveSystemMessages !== false;
 
+    try {
       const result = await invoke<GatingResult>('context_gating', {
         messages,
         threshold,

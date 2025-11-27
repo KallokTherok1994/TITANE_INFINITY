@@ -531,6 +531,12 @@ impl ImmersiveAvatarEngine {
 
 pub struct AvatarEngineGlobal(pub Arc<Mutex<ImmersiveAvatarEngine>>);
 
+impl Default for AvatarEngineGlobal {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AvatarEngineGlobal {
     pub fn new() -> Self {
         AvatarEngineGlobal(Arc::new(Mutex::new(ImmersiveAvatarEngine::new())))

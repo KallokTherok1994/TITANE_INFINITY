@@ -71,14 +71,6 @@ export const TAURI_COMMANDS = {
   SINGULARITY_V_EXPORT: 'singularity_export_json',   // Export JSON complet
   SINGULARITY_V_SNAPSHOT: 'singularity_snapshot',    // Snapshot résumé
   SINGULARITY_V_SELFTEST: 'singularity_selftest_full', // Self-test complet 10 tests
-  SINGULARITY_GET_COGNITIVE: 'singularity_get_cognitive',
-  SINGULARITY_GET_SYMBOLIC: 'singularity_get_symbolic',
-  SINGULARITY_GET_ADAPTIVE: 'singularity_get_adaptive',
-  SINGULARITY_GET_META: 'singularity_get_meta',
-  SINGULARITY_GET_GLOBAL_COHERENCE: 'singularity_get_global_coherence',
-  SINGULARITY_IS_CRITICAL: 'singularity_is_critical',
-  SINGULARITY_GET_STATE: 'get_singularity_state',
-  SINGULARITY_SYNC: 'sync_singularity',
 
   // ═══════════════════════════════════════════════════════════════
   // EXPERIENCE - XP & Knowledge Domains

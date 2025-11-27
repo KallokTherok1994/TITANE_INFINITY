@@ -32,7 +32,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { SingularityState } from '@/types/singularityState';
+import type { SingularityState as _SingularityState } from '@/types/singularityState';
 import { invoke } from '@tauri-apps/api/core';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -328,7 +328,7 @@ export class SingularityAutonomyEngine {
       result.frontend_warnings = this.scanFrontendWarnings();
 
       // Scanner IA
-      result.ia_anomalies = await this.scanIAAnoma lies();
+      result.ia_anomalies = await this.scanIAAnomalies();
 
       // Scanner TTS
       result.tts_issues = await this.scanTTSIssues();

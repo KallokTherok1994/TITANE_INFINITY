@@ -18,6 +18,12 @@ pub struct AppearanceTaxonomyEngine {
     pub user_invented_styles: HashMap<String, StyleDefinition>,
 }
 
+impl Default for AppearanceTaxonomyEngine {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AppearanceTaxonomyEngine {
     pub fn new() -> Self {
         Self {
@@ -75,8 +81,8 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Bureau_Pro".to_string(),
                 parent_archetype: "Bureau".to_string(),
-                keywords: vec!["professionnel", "formel", "élégant"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: vec!["chemise", "pantalon", "blazer"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["professionnel", "formel", "élégant"].iter().map(|s| s.to_string()).collect(),
+                visual_tags: ["chemise", "pantalon", "blazer"].iter().map(|s| s.to_string()).collect(),
                 default_palette: Some(ColorPalette::Neutral),
                 default_outfit: Some(OutfitTemplate::OfficeFormal),
                 default_hair: Some(HairTemplate::TiedUp),
@@ -85,8 +91,8 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Casual_Light".to_string(),
                 parent_archetype: "Casual".to_string(),
-                keywords: vec!["décontracté", "léger", "confort"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: vec!["t-shirt", "jeans", "baskets"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["décontracté", "léger", "confort"].iter().map(|s| s.to_string()).collect(),
+                visual_tags: ["t-shirt", "jeans", "baskets"].iter().map(|s| s.to_string()).collect(),
                 default_palette: Some(ColorPalette::Pastel),
                 default_outfit: Some(OutfitTemplate::CasualLight),
                 default_hair: Some(HairTemplate::Loose),
@@ -95,8 +101,8 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Sport_Dynamic".to_string(),
                 parent_archetype: "Sport".to_string(),
-                keywords: vec!["sportif", "athlétique", "actif"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: vec!["leggings", "top sport", "baskets"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["sportif", "athlétique", "actif"].iter().map(|s| s.to_string()).collect(),
+                visual_tags: ["leggings", "top sport", "baskets"].iter().map(|s| s.to_string()).collect(),
                 default_palette: Some(ColorPalette::Monochrome),
                 default_outfit: Some(OutfitTemplate::SportActive),
                 default_hair: Some(HairTemplate::Ponytail),
@@ -105,8 +111,8 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Montagne_Nordic".to_string(),
                 parent_archetype: "Nature".to_string(),
-                keywords: vec!["montagne", "nordique", "nature"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: vec!["laine", "bottes", "layering"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["montagne", "nordique", "nature"].iter().map(|s| s.to_string()).collect(),
+                visual_tags: ["laine", "bottes", "layering"].iter().map(|s| s.to_string()).collect(),
                 default_palette: Some(ColorPalette::Earth),
                 default_outfit: Some(OutfitTemplate::MountainNordic),
                 default_hair: Some(HairTemplate::Braid),

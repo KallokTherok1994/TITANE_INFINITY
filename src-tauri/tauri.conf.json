@@ -55,7 +55,8 @@
         "center": false,
         "visible": false,
         "skipTaskbar": true,
-        "alwaysOnTop": false
+        "alwaysOnTop": false,
+        "devtools": true
       }
     ],
     "security": {

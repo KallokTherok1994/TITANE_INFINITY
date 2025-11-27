@@ -232,13 +232,9 @@ pub async fn avatar_set_anchor(
 ) -> Result<AvatarDisplayState, String> {
     // Récupère les infos de l'écran
     let (screen_width, screen_height) = if let Some(window) = app.get_webview_window("avatar-floating") {
-        if let Ok(monitor) = window.current_monitor() {
-            if let Some(monitor) = monitor {
-                let size = monitor.size();
-                (size.width, size.height)
-            } else {
-                (1920, 1080) // Fallback
-            }
+        if let Ok(Some(monitor)) = window.current_monitor() {
+            let size = monitor.size();
+            (size.width, size.height)
         } else {
             (1920, 1080) // Fallback
         }
@@ -401,7 +397,7 @@ mod tests {
         let result = avatar_set_scale(0.5).await;
         assert!(result.is_ok());
 
-        let state = result.unwrap();
+        let state = result.expect("avatar_set_scale should succeed");
         assert_eq!(state.scale, 0.5);
     }
 
@@ -410,7 +406,7 @@ mod tests {
         let result = avatar_set_opacity(0.8).await;
         assert!(result.is_ok());
 
-        let state = result.unwrap();
+        let state = result.expect("avatar_set_opacity should succeed");
         assert_eq!(state.opacity, 0.8);
     }
 }

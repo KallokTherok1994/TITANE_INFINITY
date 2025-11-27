@@ -27,6 +27,11 @@ use titane_infinity::{
     time_commands
 };
 
+// DevOps commands (module local)
+mod devops_commands {
+    include!("commands/devops.rs");
+}
+
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
@@ -183,6 +188,18 @@ async fn main() {
     let avatar_engine = AvatarEngineGlobal::new();
     log::info!("✅ ImmersiveAvatarEngine v23: Voice + Lip-Sync + Expressions active");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE SINGULARITY-FUSION vΩ
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🌀 Initializing SINGULARITY-FUSION vΩ...");
+    let fusion_engine_state = titane_infinity::singularity_fusion::FusionEngineState::default();
+    let unified_pipeline_state = titane_infinity::singularity_fusion::UnifiedPipelineState::default();
+    let autofix_state = titane_infinity::singularity_fusion::AutoFixState::default();
+    let autoheal_state = titane_infinity::singularity_fusion::AutoHealState::default();
+    let performance_state = titane_infinity::singularity_fusion::PerformanceState::default();
+    let crashguard_state = titane_infinity::singularity_fusion::CrashGuardState::default();
+    log::info!("✅ SINGULARITY-FUSION vΩ: 8 engines unified");
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .manage(cognitive_state)
@@ -191,6 +208,12 @@ async fn main() {
         .manage(adaptive_engine)
         .manage(narrative_engine)
         .manage(avatar_engine)
+        .manage(fusion_engine_state)
+        .manage(unified_pipeline_state)
+        .manage(autofix_state)
+        .manage(autoheal_state)
+        .manage(performance_state)
+        .manage(crashguard_state)
         .setup(|_app| {
             log::info!("✅ Tauri Builder initialized");
             log::info!("✅ Cognitive System State managed");
@@ -199,6 +222,7 @@ async fn main() {
             log::info!("✅ AdaptiveEngine v21 managed");
             log::info!("✅ NarrativeEngine v22 managed");
             log::info!("✅ ImmersiveAvatarEngine v23 managed");
+            log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
 
             // Auto-open DevTools in debug mode
             #[cfg(debug_assertions)]
@@ -256,6 +280,11 @@ async fn main() {
             mock_commands::get_logs,
             mock_commands::clear_logs,
             mock_commands::get_system_info,
+            // ═══════════════════════════════════════════════════════════════
+            // DEVOPS COMMANDS v19 - Dashboard & Build Tools
+            // ═══════════════════════════════════════════════════════════════
+            devops_commands::devops_run,
+            devops_commands::devops_stats,
             // Helios + Memory - Additional Metrics (v∞)
             mock_commands::get_helios_metrics,
             mock_commands::memory_get_state,
@@ -558,6 +587,70 @@ async fn main() {
             titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor_by_name,
             titane_infinity::avatar::avatar_floating_commands::avatar_list_screens,
             titane_infinity::avatar::avatar_floating_commands::avatar_move_to_screen,
+            // ═══════════════════════════════════════════════════════════════
+            // SINGULARITY-FUSION vΩ - Unified System Commands
+            // ═══════════════════════════════════════════════════════════════
+            // Fusion Engine
+            titane_infinity::singularity_fusion::singularity_get_fusion_state,
+            titane_infinity::singularity_fusion::singularity_start_sync_loop,
+            titane_infinity::singularity_fusion::singularity_perform_sync,
+            titane_infinity::singularity_fusion::singularity_check_integrity,
+            titane_infinity::singularity_fusion::singularity_create_snapshot,
+            titane_infinity::singularity_fusion::singularity_restore_snapshot,
+            titane_infinity::singularity_fusion::singularity_register_pipeline,
+            titane_infinity::singularity_fusion::singularity_complete_pipeline,
+            titane_infinity::singularity_fusion::singularity_detect_inconsistencies,
+            titane_infinity::singularity_fusion::singularity_get_metrics,
+            titane_infinity::singularity_fusion::singularity_get_diagnostics,
+            titane_infinity::singularity_fusion::singularity_reset,
+            // Unified Pipeline
+            titane_infinity::singularity_fusion::pipeline_analyze_intention,
+            titane_infinity::singularity_fusion::pipeline_generate_cognitive_response,
+            titane_infinity::singularity_fusion::pipeline_prepare_tts,
+            titane_infinity::singularity_fusion::pipeline_prepare_avatar_animation,
+            titane_infinity::singularity_fusion::pipeline_get_stats,
+            titane_infinity::singularity_fusion::pipeline_pause,
+            titane_infinity::singularity_fusion::pipeline_resume,
+            titane_infinity::singularity_fusion::pipeline_reset,
+            titane_infinity::singularity_fusion::pipeline_validate,
+            // AutoFix Engine
+            titane_infinity::singularity_fusion::autofix_detect_rust_warnings,
+            titane_infinity::singularity_fusion::autofix_detect_typescript_errors,
+            titane_infinity::singularity_fusion::autofix_detect_react_hook_violations,
+            titane_infinity::singularity_fusion::autofix_detect_invalid_states,
+            titane_infinity::singularity_fusion::autofix_fix_issue,
+            titane_infinity::singularity_fusion::autofix_fix_all,
+            titane_infinity::singularity_fusion::autofix_get_history,
+            titane_infinity::singularity_fusion::autofix_get_stats,
+            titane_infinity::singularity_fusion::autofix_reset,
+            // AutoHeal Engine
+            titane_infinity::singularity_fusion::autoheal_detect_broken_modules,
+            titane_infinity::singularity_fusion::autoheal_heal_cognitive_module,
+            titane_infinity::singularity_fusion::autoheal_heal_avatar_module,
+            titane_infinity::singularity_fusion::autoheal_heal_tts_module,
+            titane_infinity::singularity_fusion::autoheal_heal_lipsync_module,
+            titane_infinity::singularity_fusion::autoheal_heal_memory_module,
+            titane_infinity::singularity_fusion::autoheal_heal_pipeline,
+            titane_infinity::singularity_fusion::autoheal_resync_state,
+            titane_infinity::singularity_fusion::autoheal_get_history,
+            titane_infinity::singularity_fusion::autoheal_reset,
+            // Performance Optimizer
+            titane_infinity::singularity_fusion::performance_get_metrics,
+            titane_infinity::singularity_fusion::performance_throttle_cpu,
+            titane_infinity::singularity_fusion::performance_optimize_gpu,
+            titane_infinity::singularity_fusion::performance_reduce_render_quality,
+            titane_infinity::singularity_fusion::performance_compress_memory,
+            titane_infinity::singularity_fusion::performance_reset_optimizations,
+            // CrashGuard
+            titane_infinity::singularity_fusion::crashguard_detect_threats,
+            titane_infinity::singularity_fusion::crashguard_clear_memory,
+            titane_infinity::singularity_fusion::crashguard_kill_thread,
+            titane_infinity::singularity_fusion::crashguard_restart_module,
+            titane_infinity::singularity_fusion::crashguard_emergency_shutdown,
+            titane_infinity::singularity_fusion::crashguard_reset_pipeline,
+            titane_infinity::singularity_fusion::crashguard_emergency_rollback,
+            titane_infinity::singularity_fusion::crashguard_get_active_threats,
+            titane_infinity::singularity_fusion::crashguard_get_stats,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

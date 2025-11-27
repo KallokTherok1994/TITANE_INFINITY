@@ -7,6 +7,17 @@
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Extended Performance interface with memory property (Chrome/Edge only)
+interface PerformanceMemory {
+  usedJSHeapSize: number;
+  totalJSHeapSize: number;
+  jsHeapSizeLimit: number;
+}
+
+interface PerformanceWithMemory extends Performance {
+  memory?: PerformanceMemory;
+}
+
 export interface PerformanceMetrics {
   fps: number;                    // Current FPS
   averageFps: number;             // Average FPS (last 60 frames)
@@ -120,8 +131,9 @@ export class PerformanceMonitor {
     this.currentMetrics.maxFps = 1000 / minFrameTime;
 
     // Update memory (if available)
-    if ('memory' in performance && (performance as any).memory) {
-      const memory = (performance as any).memory;
+    const perfWithMemory = performance as PerformanceWithMemory;
+    if ('memory' in performance && perfWithMemory.memory) {
+      const memory = perfWithMemory.memory;
       this.currentMetrics.memoryUsed = memory.usedJSHeapSize / (1024 * 1024);
       this.currentMetrics.memoryTotal = memory.jsHeapSizeLimit / (1024 * 1024);
     }

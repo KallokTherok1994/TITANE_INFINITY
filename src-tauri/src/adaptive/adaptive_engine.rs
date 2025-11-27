@@ -302,7 +302,7 @@ impl AdaptiveOptimizationEngine {
             return Vec::new();
         }
 
-        let latest_sample = self.performance_history.last().unwrap();
+        let latest_sample = self.performance_history.last().expect("History should not be empty after check");
         let mut actions = Vec::new();
 
         // Trier par priorité

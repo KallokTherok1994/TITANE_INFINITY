@@ -6,18 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-
-// NOTE: Installer @tauri-apps/api si nécessaire
-// npm install @tauri-apps/api
-declare const window: Window & { __TAURI__?: { invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T> } };
-
-const invoke = async <T = unknown>(cmd: string, args?: Record<string, unknown>): Promise<T> => {
-  if (window.__TAURI__?.invoke) {
-    return window.__TAURI__.secureInvoke(cmd, args);
-  }
-  console.warn(`Tauri not available, mock invoke: ${cmd}`);
-  throw new Error('Tauri API not available');
-};
+import { secureInvoke } from '@/lib/security';
 
 interface EngineMetrics {
   ticks: number;

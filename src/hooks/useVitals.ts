@@ -53,10 +53,10 @@ export function useVitals(options: { pollInterval?: number; enabled?: boolean } 
 
       // Parser les vitals (format peut varier selon le backend)
       const vitals: SystemVitals = {
-        cpu: vitalsData.cpu_usage || 0,
-        memory: vitalsData.memory_usage || 0,
-        disk: vitalsData.disk_usage || 0,
-        uptime: vitalsData.uptime || 0,
+        cpu: (vitalsData.cpu_usage as number) || 0,
+        memory: (vitalsData.memory_usage as number) || 0,
+        disk: (vitalsData.disk_usage as number) || 0,
+        uptime: (vitalsData.uptime as number) || 0,
         timestamp: Date.now(),
       };
 

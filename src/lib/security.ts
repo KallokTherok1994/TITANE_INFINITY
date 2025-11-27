@@ -114,7 +114,7 @@ export interface SecureInvokeOptions {
   skipLoopCheck?: boolean;
 }
 
-export interface AIValidationResult {
+export interface CommandValidationResult {
   valid: boolean;
   errors: string[];
 }
@@ -138,7 +138,7 @@ export interface HardeningReport {
 /**
  * Valider qu'une commande est dans la whitelist
  */
-export function validateCommand(command: string): AIValidationResult {
+export function validateCommand(command: string): CommandValidationResult {
   const errors: string[] = [];
 
   if (!command || typeof command !== 'string') {
@@ -159,7 +159,7 @@ export function validateCommand(command: string): AIValidationResult {
 /**
  * Détecter les tentatives d'injection dans le payload
  */
-export function detectInjection(payload: Record<string, unknown>): AIValidationResult {
+export function detectInjection(payload: Record<string, unknown>): CommandValidationResult {
   const errors: string[] = [];
 
   // Convertir payload en JSON pour analyse
@@ -179,7 +179,7 @@ export function detectInjection(payload: Record<string, unknown>): AIValidationR
 /**
  * Valider la taille du payload
  */
-export function validatePayloadSize(payload: Record<string, unknown>): AIValidationResult {
+export function validatePayloadSize(payload: Record<string, unknown>): CommandValidationResult {
   const errors: string[] = [];
   const jsonString = JSON.stringify(payload);
   const sizeBytes = new Blob([jsonString]).size;
@@ -197,7 +197,7 @@ export function validatePayloadSize(payload: Record<string, unknown>): AIValidat
 /**
  * Détecter les boucles infinies (trop d'appels rapides)
  */
-export function detectInfiniteLoop(command: string): AIValidationResult {
+export function detectInfiniteLoop(command: string): CommandValidationResult {
   const now = Date.now();
   const key = command;
 
@@ -360,7 +360,7 @@ export function isValidTauriResponse<T>(
 export function validateResponse<T>(
   response: unknown,
   validator?: (val: unknown) => val is T
-): AIValidationResult & { data?: T } {
+): CommandValidationResult & { data?: T } {
   const errors: string[] = [];
 
   if (response === null || response === undefined) {

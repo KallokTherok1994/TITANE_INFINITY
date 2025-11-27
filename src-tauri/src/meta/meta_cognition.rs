@@ -568,7 +568,7 @@ impl MetaCognitionEngine {
         let test_snapshot = CognitiveSnapshot {
             timestamp: SystemTime::now()
                 .duration_since(UNIX_EPOCH)
-                .unwrap()
+                .expect("System time before UNIX_EPOCH")
                 .as_secs(),
             cognitive_integrity: Some(0.9),
             timeline_coherence: Some(0.85),

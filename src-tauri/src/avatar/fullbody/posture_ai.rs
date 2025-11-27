@@ -190,6 +190,12 @@ pub struct BodyPostureAI {
     pub stability_counter: u32, // Éviter changements trop fréquents
 }
 
+impl Default for BodyPostureAI {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl BodyPostureAI {
     pub fn new() -> Self {
         Self {

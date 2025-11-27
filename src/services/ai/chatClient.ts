@@ -198,7 +198,16 @@ export async function sendMessage(
               maxTokens,
             });
 
-            return response;
+            // Convert CoreResponse<string> to ChatResponse
+            return {
+              content: response.data || '',
+              role: 'assistant' as const,
+              timestamp: Date.now(),
+              metadata: {
+                model,
+                tokens: maxTokens,
+              },
+            };
           }
         );
 
@@ -217,13 +226,11 @@ export async function sendMessage(
           };
         }
 
-        if (secureResult.sanitization?.violations.length) {
-          const violations = secureResult.sanitization.violations
-            .map((v) => v.type)
-            .join(', ');
+        if (secureResult.sanitization?.isBlocked) {
+          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
           return {
             success: false,
-            error: `Input blocked — Detected: ${violations}`,
+            error: `Input blocked — Detected: ${patterns}`,
             duration: Date.now() - startTime,
           };
         }
@@ -247,7 +254,7 @@ export async function sendMessage(
       return {
         success: true,
         content: secureResult.response.content,
-        model: secureResult.response.model || model,
+        model: secureResult.response.metadata?.model || model,
         attempt,
         duration: Date.now() - startTime,
       };
@@ -282,7 +289,16 @@ export async function sendMessage(
             maxTokens,
           });
 
-          return response;
+          // Convert CoreResponse<string> to ChatResponse
+          return {
+            content: response.data || '',
+            role: 'assistant' as const,
+            timestamp: Date.now(),
+            metadata: {
+              model: fallbackModel,
+              tokens: maxTokens,
+            },
+          };
         }
       );
 

@@ -198,7 +198,7 @@ export class CognitiveOptimizationEngine {
   async optimizeLongContext(messages: CognitiveMessage[]): Promise<ContextOptimization> {
     try {
       // Calculer tokens totaux
-      const originalTokens = messages.reduce((sum, msg) => sum + msg.tokens, 0);
+      const _originalTokens = messages.reduce((sum, msg) => sum + msg.tokens, 0);
 
       // Appliquer compression contextuelle
       const result = await invoke<ContextOptimization>('cognitive_optimize_context', {

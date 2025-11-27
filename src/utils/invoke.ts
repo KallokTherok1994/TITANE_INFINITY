@@ -6,6 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { invoke } from '@tauri-apps/api/core';
 
 /**
  * Wrapper universel pour invoke() avec gestion d'erreur automatique

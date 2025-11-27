@@ -38,7 +38,7 @@ export function stateDiff<T extends Record<string, unknown>>(
     return newState as DeepPartial<T>;
   }
 
-  const delta: DeepPartial<T> = {};
+  const delta = {} as unknown as DeepPartial<T>;
   let hasChanges = false;
 
   for (const key in newState) {
@@ -53,17 +53,17 @@ export function stateDiff<T extends Record<string, unknown>>(
       );
 
       if (Object.keys(nestedDelta).length > 0) {
-        delta[key] = nestedDelta as DeepPartial<T>[Extract<keyof T, string>];
+        (delta as Record<string, unknown>)[key as string] = nestedDelta;
         hasChanges = true;
       }
     } else if (oldValue !== newValue) {
       // Primitive or array changed
-      delta[key] = newValue as DeepPartial<T>[Extract<keyof T, string>];
+      (delta as Record<string, unknown>)[key as string] = newValue;
       hasChanges = true;
     }
   }
 
-  return hasChanges ? delta : {};
+  return hasChanges ? delta : ({} as unknown as DeepPartial<T>);
 }
 
 /**
@@ -88,13 +88,13 @@ export function mergeStateDelta<T extends Record<string, unknown>>(
 
     if (typeof deltaValue === 'object' && deltaValue !== null && !Array.isArray(deltaValue)) {
       // Deep merge for nested objects
-      merged[key] = mergeStateDelta(
+      (merged as Record<string, unknown>)[key as string] = mergeStateDelta(
         currentState[key] as Record<string, unknown>,
         deltaValue as DeepPartial<Record<string, unknown>>
-      ) as T[Extract<keyof T, string>];
+      );
     } else {
       // Direct assign for primitives/arrays
-      merged[key] = deltaValue as T[Extract<keyof T, string>];
+      (merged as Record<string, unknown>)[key as string] = deltaValue;
     }
   }
 
@@ -173,22 +173,22 @@ export function exampleDeltaSync() {
     cognitive: { load: number };
   }
 
-  const oldState: State = {
+  const oldState = {
     physical: { cpu: 50, memory: 60 },
     cognitive: { load: 30 },
-  };
+  } as State;
 
-  const newState: State = {
+  const newState = {
     physical: { cpu: 55, memory: 60 }, // cpu changed
     cognitive: { load: 30 }, // unchanged
-  };
+  } as State;
 
   // Calculate delta (only changed fields)
-  const delta = stateDiff(oldState, newState);
+  const delta = stateDiff(oldState as any, newState as any);
   console.log('Delta:', delta); // => { physical: { cpu: 55 } }
 
   // Merge delta into old state
-  const merged = mergeStateDelta(oldState, delta);
+  const merged = mergeStateDelta(oldState as any, delta);
   console.log('Merged:', merged); // => newState
 
   // Check payload reduction

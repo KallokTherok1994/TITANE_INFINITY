@@ -25,6 +25,18 @@ interface MemorySnapshot {
   categories: string[];
 }
 
+interface ImportData {
+  content?: string;
+  type?: 'text' | 'code' | 'config' | 'data';
+  source?: string;
+}
+
+interface QueryData {
+  keyword?: string;
+  category?: string;
+  limit?: number;
+}
+
 interface LearningMetrics {
   totalKnowledge: number;
   categoriesLearned: number;
@@ -114,14 +126,14 @@ export class MemoryCoreAgent implements Agent {
   }
 
   // Import new knowledge from file/url/user
-  private async importKnowledge(data: unknown): Promise<AgentResponse> {
+  private async importKnowledge(data: ImportData): Promise<AgentResponse> {
     try {
       const entry: KnowledgeEntry = {
         id: `kb_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`,
         content: data.content || '',
         type: data.type || 'text',
         source: data.source || 'unknown',
-        category: this.classifyContent(data.content),
+        category: this.classifyContent(data.content || ''),
         confidence: 70, // Initial confidence
         timestamp: Date.now(),
       };
@@ -163,7 +175,7 @@ export class MemoryCoreAgent implements Agent {
   }
 
   // Query knowledge base
-  private queryKnowledge(query: unknown): AgentResponse {
+  private queryKnowledge(query: QueryData): AgentResponse {
     const { keyword, category, limit = 10 } = query;
 
     let results: KnowledgeEntry[] = Array.from(this.knowledge.values());

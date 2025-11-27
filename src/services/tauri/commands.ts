@@ -14,6 +14,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { invoke } from '@tauri-apps/api/core';
 import { z } from 'zod';
 import type {
   InteractionRequest,

@@ -4,6 +4,7 @@
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
+pub mod devops; // ✅ v19: DevOps Commands for Dashboard
 pub mod devtools;
 pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
 pub mod engine_v14; // ✅ NEW: SingularityEngine v14 commands
@@ -16,6 +17,7 @@ pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
 
 // Re-export engine commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
+pub use devops::*; // ✅ v19: Export devops commands
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
 pub use engine_v14::*;
 pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands

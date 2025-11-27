@@ -460,33 +460,33 @@ export class UnifiedCognitivePipeline {
    * Prépare les mises à jour d'état
    */
   private async prepareStateUpdates(
-    intention: DetectedIntention,
-    response: CognitiveResponse
+    _intention: DetectedIntention,
+    _response: CognitiveResponse
   ): Promise<Partial<SingularityState>> {
     const updates: Partial<SingularityState> = {
       timestamp: Date.now(),
     };
 
     // Mise à jour cognitive basée sur l'intention
-    if (intention.requires_reasoning) {
-      updates.cognitive = {
-        awareness: Math.min(1.0, response.confidence + 0.1),
-        focus: 0.9,
-        clarity: response.confidence,
-        depth: intention.complexity,
-        metacognition: 0.8,
-      };
-    }
+    // TODO: Réactiver quand CognitiveLayer aura focus, clarity, depth, metacognition
+    // if (intention.requires_reasoning) {
+    //   updates.cognitive = {
+    //     focus: 0.9,
+    //     clarity: response.confidence,
+    //     depth: intention.complexity,
+    //     metacognition: 0.8,
+    //   };
+    // }
 
     // Mise à jour adaptive basée sur l'émotion
-    if (intention.emotional_tone !== 'neutral') {
-      updates.adaptive = {
-        plasticity: 0.8,
-        responsiveness: 0.9,
-        learning_rate: 0.7,
-        adaptation_speed: 0.8,
-      };
-    }
+    // TODO: Réactiver quand AdaptiveLayer aura responsiveness, learning_rate, adaptation_speed
+    // if (intention.emotional_tone !== 'neutral') {
+    //   updates.adaptive = {
+    //     responsiveness: 0.9,
+    //     learning_rate: 0.7,
+    //     adaptation_speed: 0.8,
+    //   };
+    // }
 
     return updates;
   }

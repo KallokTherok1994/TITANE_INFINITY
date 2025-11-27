@@ -497,7 +497,9 @@ impl DeepSyncEngine {
                 };
 
                 corrections.push(correction);
-                log::info!("🔧 Applied correction: {}", corrections.last().unwrap());
+                if let Some(last_correction) = corrections.last() {
+                    log::info!("🔧 Applied correction: {}", last_correction);
+                }
             }
         }
 

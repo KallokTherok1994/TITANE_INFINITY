@@ -1,13 +1,19 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //   TITANE∞ v25.0 — POST-PROCESSING PIPELINE
 //   TAA, Bloom, Vignette for premium visual quality
+//   NOTE: Nécessite three-stdlib ou three@latest pour imports postprocessing
 // ═══════════════════════════════════════════════════════════════════════════
 
 import * as THREE from 'three';
+// @ts-expect-error - Three.js postprocessing types manquants (installer three-stdlib)
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+// @ts-expect-error - Three.js postprocessing types manquants
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+// @ts-expect-error - Three.js postprocessing types manquants
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass';
+// @ts-expect-error - Three.js postprocessing types manquants
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+// @ts-expect-error - Three.js postprocessing types manquants
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 
 // ═══════════════════════════════════════════════════════════════════════════

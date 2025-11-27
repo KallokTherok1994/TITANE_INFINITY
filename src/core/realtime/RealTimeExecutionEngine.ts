@@ -269,7 +269,7 @@ export class RealTimeExecutionEngine {
   /**
    * Exécuter tâches en attente
    */
-  private executeTasks(deltaTime: number): void {
+  private executeTasks(_deltaTime: number): void {
     const maxExecutionTime = this.frameTime * 0.8; // 80% du temps de frame disponible
     const startTime = performance.now();
 
@@ -597,7 +597,7 @@ class AvatarScheduler {
     this.schedule.isAnimating = true;
   }
 
-  update(deltaTime: number): void {
+  update(_deltaTime: number): void {
     if (!this.schedule.isAnimating || this.schedule.animations.length === 0) return;
 
     const currentTime = Date.now();

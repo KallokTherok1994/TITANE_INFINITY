@@ -12,6 +12,12 @@ pub struct QaState {
     pub engine: Mutex<QaEngine>,
 }
 
+impl Default for QaState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl QaState {
     pub fn new() -> Self {
         Self {

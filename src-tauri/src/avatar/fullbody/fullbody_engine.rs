@@ -349,6 +349,12 @@ pub struct MotionLayer {
     pub elapsed_ms: u32,
 }
 
+impl Default for MotionLayer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl MotionLayer {
     pub fn new() -> Self {
         let mut library = HashMap::new();
@@ -443,6 +449,12 @@ pub struct ExpressionBridge {
     pub intensity: f32, // 0.0–1.0
 }
 
+impl Default for ExpressionBridge {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl ExpressionBridge {
     pub fn new() -> Self {
         Self {
@@ -477,6 +489,12 @@ pub struct LipSyncFeed {
     pub current_phoneme: String,
     pub morph_weights: [f32; 4], // Jaw, Lips, Tongue, Cheeks
     pub speech_active: bool,
+}
+
+impl Default for LipSyncFeed {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl LipSyncFeed {
@@ -536,6 +554,12 @@ pub struct AvatarStateBinding {
     pub current_state: AvatarStateSnapshot,
 }
 
+impl Default for AvatarStateBinding {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl AvatarStateBinding {
     pub fn new() -> Self {
         Self {
@@ -582,6 +606,12 @@ pub struct FullBodyAvatarEngine {
     pub state_binding: AvatarStateBinding,
     pub frame_count: u64,
     pub target_fps: u32,
+}
+
+impl Default for FullBodyAvatarEngine {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl FullBodyAvatarEngine {

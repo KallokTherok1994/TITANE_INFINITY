@@ -163,7 +163,7 @@ pub async fn singularity_create_snapshot(
     state: State<'_, FusionEngineState>,
     compressed: bool,
 ) -> Result<String, String> {
-    let fusion_state = state.state.lock().map_err(|e| e.to_string())?;
+    let _fusion_state = state.state.lock().map_err(|e| e.to_string())?;
 
     // Générer ID snapshot
     let snapshot_id = format!("snapshot-{}", current_timestamp());
@@ -183,14 +183,12 @@ pub async fn singularity_restore_snapshot(
     println!("[FusionEngine] Restoration snapshot: {}", snapshot_id);
 
     // Restaurer état (simulé)
-    let mut fusion_state = state.state.lock().map_err(|e| e.to_string())?;
-    fusion_state.fusion_integrity = 1.0;
-    fusion_state.sync_score = 1.0;
+    let mut _fusion_state = state.state.lock().map_err(|e| e.to_string())?;
+    _fusion_state.fusion_integrity = 1.0;
+    _fusion_state.sync_score = 1.0;
 
     Ok(())
-}
-
-/// Enregistre un pipeline
+}/// Enregistre un pipeline
 #[tauri::command]
 pub async fn singularity_register_pipeline(
     state: State<'_, FusionEngineState>,
@@ -304,6 +302,6 @@ pub async fn singularity_reset(
 fn current_timestamp() -> u64 {
     std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
-        .unwrap()
+        .expect("System time before UNIX_EPOCH")
         .as_millis() as u64
 }

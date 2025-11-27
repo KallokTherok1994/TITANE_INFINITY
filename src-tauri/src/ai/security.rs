@@ -68,7 +68,7 @@ pub fn sanitize_prompt(prompt: &str) -> Result<String, AISecurityError> {
 
     // Détecter les tentatives d'injection (Phase 8: use static patterns)
     for pattern in INJECTION_PATTERNS {
-        let re = Regex::new(pattern).unwrap();
+        let re = Regex::new(pattern).expect("Failed to compile static injection pattern regex");
         if re.is_match(&cleaned.to_lowercase()) {
             return Err(AISecurityError::InjectionAttempt(format!(
                 "Detected pattern: {}",
@@ -104,7 +104,7 @@ pub fn validate_ai_response(response: &str) -> Result<(), AISecurityError> {
 
     // Détecter du contenu potentiellement dangereux (Phase 8: use static patterns)
     for pattern in DANGEROUS_PATTERNS {
-        let re = Regex::new(pattern).unwrap();
+        let re = Regex::new(pattern).expect("Failed to compile static dangerous pattern regex");
         if re.is_match(&response.to_lowercase()) {
             return Err(AISecurityError::DangerousContent(format!(
                 "Detected pattern: {}",

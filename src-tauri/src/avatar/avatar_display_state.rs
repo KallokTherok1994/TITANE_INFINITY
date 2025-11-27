@@ -14,21 +14,19 @@ use once_cell::sync::Lazy;
 /// Mode d'affichage avatar
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "lowercase")]
+#[derive(Default)]
 pub enum AvatarDisplayMode {
     Floating,  // Fenêtre flottante indépendante
+    #[default]
     Embed,     // Intégré dans fenêtre principale
     Hidden,    // Caché
 }
 
-impl Default for AvatarDisplayMode {
-    fn default() -> Self {
-        Self::Embed
-    }
-}
 
 /// Position d'ancrage pour la fenêtre flottante
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(rename_all = "snake_case")]
+#[derive(Default)]
 pub enum AnchorPosition {
     TopLeft,
     TopCenter,
@@ -38,15 +36,11 @@ pub enum AnchorPosition {
     CenterRight,
     BottomLeft,
     BottomCenter,
+    #[default]
     BottomRight,
     Free,  // Position libre (drag)
 }
 
-impl Default for AnchorPosition {
-    fn default() -> Self {
-        Self::BottomRight
-    }
-}
 
 /// État d'affichage complet de l'avatar
 #[derive(Debug, Clone, Serialize, Deserialize)]

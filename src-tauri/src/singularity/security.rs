@@ -297,7 +297,7 @@ mod tests {
         let state = SingularityState::default();
 
         // First validation stores hash
-        watchdog.validate_structure(&state).unwrap();
+        watchdog.validate_structure(&state).expect("Failed to validate initial state structure");
 
         // Hash should match
         assert!(watchdog.verify_hash(&state));

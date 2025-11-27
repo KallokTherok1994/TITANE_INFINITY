@@ -89,7 +89,7 @@ impl AutoHealingEngine {
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .expect("System time before UNIX_EPOCH")
             .as_secs();
 
         let backup = CognitiveBackupSnapshot {
@@ -119,7 +119,7 @@ impl AutoHealingEngine {
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .expect("System time before UNIX_EPOCH")
             .as_secs();
 
         let coherence_before = report.coherence_score;
@@ -312,7 +312,7 @@ impl AutoHealingEngine {
 
         // Calculate new baseline (median of recent good snapshots)
         let mut sorted = recent_good.clone();
-        sorted.sort_by(|a, b| a.partial_cmp(b).unwrap());
+        sorted.sort_by(|a, b| a.partial_cmp(b).expect("NaN value in coherence scores"));
         let new_baseline = sorted[sorted.len() / 2];
 
         // Get old baseline from META engine
@@ -329,7 +329,7 @@ impl AutoHealingEngine {
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
+            .expect("System time before UNIX_EPOCH")
             .as_secs();
 
         let result = RecalibrationResult {
@@ -433,7 +433,7 @@ mod tests {
         let result = engine.recalibrate_baseline().await;
         assert!(result.is_ok());
 
-        let recal = result.unwrap();
+        let recal = result.expect("Recalibration should succeed");
         assert!(recal.samples_used >= 10);
         assert!(recal.new_baseline > 0.0);
     }

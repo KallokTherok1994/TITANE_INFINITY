@@ -15,7 +15,7 @@ interface DashboardMetrics {
   agentStates: Map<string, AgentState>;
 }
 
-export const MultiAIDashboard: React.FC = () => {
+const MultiAIDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<DashboardMetrics>({
     globalCoherence: 100,
     globalStability: 100,
@@ -622,3 +622,5 @@ export const MultiAIDashboard: React.FC = () => {
     </div>
   );
 };
+
+export default MultiAIDashboard;

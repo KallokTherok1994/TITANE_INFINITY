@@ -29,6 +29,12 @@ pub struct FullBodySelfTestReport {
     pub total_duration_ms: u128,
 }
 
+impl Default for FullBodySelfTestReport {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl FullBodySelfTestReport {
     pub fn new() -> Self {
         Self {

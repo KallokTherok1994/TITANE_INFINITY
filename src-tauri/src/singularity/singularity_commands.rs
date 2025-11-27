@@ -22,6 +22,12 @@ pub struct SingularityStateGlobal {
     pub state: Arc<Mutex<SingularityStateVInfinity>>,
 }
 
+impl Default for SingularityStateGlobal {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl SingularityStateGlobal {
     pub fn new() -> Self {
         Self {

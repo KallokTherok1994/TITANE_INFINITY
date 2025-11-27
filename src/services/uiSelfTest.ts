@@ -151,8 +151,8 @@ async function testTauriIsolation(): Promise<UITestResult> {
     // Tenter manipulation (doit échouer)
     let isolationOk = false;
     try {
-      // @ts-expect-error - test intentionnel
-      window.__TAURI__ = null;
+      // Test intentionnel de manipulation
+      (window as any).__TAURI__ = null;
       isolationOk = false; // Si on arrive ici, isolation faible
     } catch {
       isolationOk = true; // Exception = bonne isolation
@@ -202,7 +202,7 @@ async function testNoExternalScripts(): Promise<UITestResult> {
       passed,
       details: passed
         ? '✅ Aucun script externe chargé'
-        : `⚠️ ${externalScripts.length} scripts externes détectés: ${externalScripts.map((s) => s.src).join(', ')}`,
+        : `⚠️ ${externalScripts.length} scripts externes détectés: ${externalScripts.map((s) => (s as HTMLScriptElement).src).join(', ')}`,
       severity: passed ? 'info' : 'warning',
     };
   } catch (error) {
