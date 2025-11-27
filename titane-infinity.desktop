@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=TITANE∞ v16.2.2
+Comment=Cognitive OS - Real APIs Gemini/Ollama + Memory Engine
+Exec=/home/titane/Documents/TITANE_INFINITY/src-tauri/target/release/titane-infinity
+Icon=/home/titane/Documents/TITANE_INFINITY/src-tauri/icons/128x128.png
+Terminal=false
+Categories=Development;Utility;
+Keywords=AI;Chat;Cognitive;System;
+StartupWMClass=titane-infinity
+StartupNotify=true

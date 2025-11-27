@@ -110,7 +110,7 @@ Score global: **90% / 100** ✅ Production Ready
 "script-src 'self' 'unsafe-eval' asset: tauri:;"
 ```
 
-**Risque**: Injection code malveillant  
+**Risque**: Injection code malveillant
 **Action**: Tester sans `'unsafe-eval'`, documenter si obligatoire (WASM, etc.)
 
 ### 3. Design System: Duplication XP possible
@@ -157,5 +157,5 @@ A  STATUS_AUDIT_v16.2.2_FINAL.txt
 
 ---
 
-**Closes**: #AUDIT-TOTAL-v16.2.2  
+**Closes**: #AUDIT-TOTAL-v16.2.2
 **Related**: #CHAT-IA-v16.2.2 (commit précédent)
