@@ -5,7 +5,6 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //   STRUCTURES DE DONNÉES — CAPTURE DE PERFORMANCE

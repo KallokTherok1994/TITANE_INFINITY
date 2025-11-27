@@ -5,7 +5,7 @@
 
 use crate::singularity::singularity_state_vinfinity::{
     SingularityStateVInfinity, DiffResult, MetaCognitiveReport,
-    IntegrityCheckResult, AllEnginesState, collect_all_engines_state
+    IntegrityCheckResult, collect_all_engines_state
 };
 use std::sync::Arc;
 use tokio::sync::Mutex;

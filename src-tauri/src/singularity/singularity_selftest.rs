@@ -3,9 +3,7 @@
 //   Tests complets de l'état global unifié
 // ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::singularity::singularity_state_vinfinity::{
-    SingularityStateVInfinity, collect_all_engines_state
-};
+use crate::singularity::singularity_state_vinfinity::SingularityStateVInfinity;
 
 /// Résultat d'un test de cohérence
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
