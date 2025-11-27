@@ -508,6 +508,20 @@ async fn main() {
             titane_infinity::avatar::avatar_commands::avatar_get_expression,
             titane_infinity::avatar::avatar_commands::avatar_get_state,
             titane_infinity::avatar::avatar_selftest::avatar_run_selftest,
+            // ═══════════════════════════════════════════════════════════════
+            // FULL-BODY AVATAR ENGINE v24 - Complete Body, Gestures & Postures
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::avatar::fullbody_commands::fullbody_initialize,
+            titane_infinity::avatar::fullbody_commands::fullbody_advance_frame,
+            titane_infinity::avatar::fullbody_commands::fullbody_activate_gesture,
+            titane_infinity::avatar::fullbody_commands::fullbody_update_expression,
+            titane_infinity::avatar::fullbody_commands::fullbody_update_lipsync,
+            titane_infinity::avatar::fullbody_commands::fullbody_update_state,
+            titane_infinity::avatar::fullbody_commands::fullbody_on_wake_word,
+            titane_infinity::avatar::fullbody_commands::fullbody_export_skeleton,
+            titane_infinity::avatar::fullbody_commands::fullbody_update_context,
+            titane_infinity::avatar::fullbody_commands::fullbody_get_posture,
+            titane_infinity::avatar::fullbody_commands::fullbody_get_stats,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

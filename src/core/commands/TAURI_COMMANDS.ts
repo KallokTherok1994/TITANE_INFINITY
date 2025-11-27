@@ -173,6 +173,21 @@ export const TAURI_COMMANDS = {
   AVATAR_GET_EXPRESSION: 'avatar_get_expression',
   AVATAR_GET_STATE: 'avatar_get_state',
   AVATAR_RUN_SELFTEST: 'avatar_run_selftest',
+
+  // ═══════════════════════════════════════════════════════════════
+  // FULL-BODY AVATAR ENGINE v24 - Complete Body, Gestures & Postures
+  // ═══════════════════════════════════════════════════════════════
+  FULLBODY_INITIALIZE: 'fullbody_initialize',
+  FULLBODY_ADVANCE_FRAME: 'fullbody_advance_frame',
+  FULLBODY_ACTIVATE_GESTURE: 'fullbody_activate_gesture',
+  FULLBODY_UPDATE_EXPRESSION: 'fullbody_update_expression',
+  FULLBODY_UPDATE_LIPSYNC: 'fullbody_update_lipsync',
+  FULLBODY_UPDATE_STATE: 'fullbody_update_state',
+  FULLBODY_ON_WAKE_WORD: 'fullbody_on_wake_word',
+  FULLBODY_EXPORT_SKELETON: 'fullbody_export_skeleton',
+  FULLBODY_UPDATE_CONTEXT: 'fullbody_update_context',
+  FULLBODY_GET_POSTURE: 'fullbody_get_posture',
+  FULLBODY_GET_STATS: 'fullbody_get_stats',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════
