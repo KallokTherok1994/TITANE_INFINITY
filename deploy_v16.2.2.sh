@@ -69,7 +69,7 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo ""
     echo -e "${YELLOW}→ Création commit...${NC}"
-    
+
     git commit -F COMMIT_MESSAGE_v16.2.2_CHAT_FIX.md || {
         echo -e "${YELLOW}→ Commit sans message file (fallback)...${NC}"
         git commit -m "fix(chat-ia): Réparation complète Chat IA + TTS v16.2.2
@@ -85,7 +85,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
 Closes #CHATIA-REPAIR"
     }
-    
+
     echo -e "${GREEN}✓${NC} Commit créé avec succès"
     echo ""
     git log --oneline -1
@@ -109,17 +109,17 @@ echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo ""
     echo -e "${YELLOW}→ Build production (ceci peut prendre 5-10 min)...${NC}"
-    
+
     # Arrêter app dev si lancée
     if pgrep -f titane-infinity > /dev/null 2>&1; then
         echo -e "${YELLOW}→ Arrêt app dev...${NC}"
         pkill -f titane-infinity
         sleep 2
     fi
-    
+
     # Build
     npm run tauri:build
-    
+
     if [ $? -eq 0 ]; then
         echo ""
         echo -e "${GREEN}✓${NC} Build production réussi !"
@@ -128,7 +128,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         ls -lh installer_build/*.deb 2>/dev/null || echo "  Aucun .deb trouvé"
         ls -lh installer_build/*.AppImage 2>/dev/null || echo "  Aucun AppImage trouvé"
         echo ""
-        
+
         echo -e "${BLUE}═══════════════════════════════════════════════════════════════════════════${NC}"
         echo -e "${BLUE}  INSTALLATION${NC}"
         echo -e "${BLUE}═══════════════════════════════════════════════════════════════════════════${NC}"

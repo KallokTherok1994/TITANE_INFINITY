@@ -1,16 +1,16 @@
 /**
- * TITANE_INFINITY v16.0.0 — Proprietary License
+ * TITANE_INFINITY v16.2.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v16.0.0 - Main Entry Point - Cognitive Layer Active
+// TITANE∞ v16.2.2 - Main Entry Point - Cognitive Layer Active
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
-import App from './App'; // ✅ v16.2.3: Réactivé après validation AppMinimal
+import App from './App'; // ✅ v16.2.2: App principal activé
 
 // ✅ v17 DESIGN SYSTEM FUSION - Un seul fichier CSS unifié
 import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)

@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v16.2.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,10 +8,9 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v24.20 Phase 9 — APP COMPONENT
- *   Unified Architecture v15: AIRouter + Memory + SingularityEngine
- *   React Router + AppShell + Living Engines
- *   Phase 9: Route-based code splitting with React.lazy()
+ *   TITANE∞ v16.2.2 — APP COMPONENT
+ *   Unified Architecture: AIRouter + Memory + SingularityEngine
+ *   React Router + AppShell + Living Engines + Code Splitting
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -237,7 +236,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v15.2.1 - Backend Refactor Complete</span>
+              <span>v16.2.2 - Chat IA + TTS Operationnel</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }

@@ -330,11 +330,11 @@ Session collaborative intensive 2h :
 
 ---
 
-**Version** : v16.2.2  
-**Date** : 27 novembre 2025  
-**Author** : TITANE∞ Team  
-**Type** : fix (critical)  
+**Version** : v16.2.2
+**Date** : 27 novembre 2025
+**Author** : TITANE∞ Team
+**Type** : fix (critical)
 **Scope** : chat-ia, tts, backend, infrastructure
 
-**Closes** : #CHATIA-REPAIR  
+**Closes** : #CHATIA-REPAIR
 **Related** : #STATE-MANAGEMENT, #OLLAMA-INTEGRATION, #TTS-PIPELINE
