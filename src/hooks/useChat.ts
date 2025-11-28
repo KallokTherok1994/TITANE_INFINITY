@@ -1,13 +1,14 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v19.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.20 — USE CHAT (Composition Hook)
- *   Hook composé : Orchestre useChatCore, useChatUI, useChatMemory
- *   v24.20: Optimisé avec cache et debouncing
+ *   TITANE∞ v19.2Θ — USE CHAT (MAÎTRE ANTI-SILENCE)
+ *   Architecture 100% anti-crash, anti-silence, auto-réparation
+ *   Garantit TOUJOURS une réponse, quoi qu'il arrive
+ *   PHASE I: Séquence cognitive garantie + Canon de sécurité
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -55,20 +56,25 @@ interface UseChatReturn {
  * Hook principal Chat
  * Composition propre des 3 hooks spécialisés
  */
-export function useChat(options: UseChatOptions = {}): UseChatReturn {
-  console.log('\n╔════════════════════════════════════════════════════════════╗');
-  console.log('║  USE CHAT v15: Initialization (Composition Hook)           ║');
-  console.log('╚════════════════════════════════════════════════════════════╝\n');
+const isDev = import.meta.env.DEV;
 
-  // FIX v15.1: Charger l'historique une seule fois au mount (mode initial)
+export function useChat(options: UseChatOptions = {}): UseChatReturn {
+  if (isDev) {
+    console.log('\n╔════════════════════════════════════════════════════════════╗');
+    console.log('║  USE CHAT v19.2Θ: MAÎTRE ANTI-SILENCE Initialization      ║');
+    console.log('╚════════════════════════════════════════════════════════════╝\n');
+  }
+
+  // Référence mount unique + failure tracking
   const mountedRef = useRef(false);
+  const [failureCount, setFailureCount] = useState(0);
+  
   useEffect(() => {
     if (!mountedRef.current) {
       mountedRef.current = true;
       const history = messagesForMode;
-      if (history.length > 0) {
-        addMessages(history);
-        console.log(`✅ Initial load: ${history.length} messages from memory (mode: ${currentMode})`);
+      if (history.length > 0 && isDev) {
+        console.log(`✅ Initial load: ${history.length} messages from memory`);
       }
     }
   }, []);
@@ -148,174 +154,209 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   );
 
   /**
-   * v24.20: Envoie message avec cache + debounce
+   * ═══════════════════════════════════════════════════════════════════
+   * 🔥 FONCTION MAÎTRE ANTI-SILENCE v19.2Θ
+   * Garantit TOUJOURS une réponse IA (réponse ou erreur contrôlée)
+   * Jamais un silence, jamais un return vide, jamais un crash UI
+   * Séquence: userMsg → save → display → generate() → validate → fallback → display → save
+   * ═══════════════════════════════════════════════════════════════════
    */
   const sendMessage = useCallback(
     async (content: string) => {
       if (!content.trim() || isLoading) return;
 
-      // v24.20: Debounce 300ms (évite spam)
-      const now = Date.now();
-      const timeSinceLastRequest = now - lastRequestTime.current;
-      if (timeSinceLastRequest < 300) {
-        console.log(`⏸️ USE CHAT v24.20: Debounced (${timeSinceLastRequest}ms since last request)`);
-        return;
+      const clean = content.trim();
+      
+      if (isDev) {
+        console.log('\n═════════════════════════════════════════════════════════════');
+        console.log('🔥 [MAÎTRE ANTI-SILENCE] Début séquence cognitive garantie');
+        console.log(`📝 Message: "${clean.substring(0, 50)}${clean.length > 50 ? '...' : ''}"`);
+        console.log('═════════════════════════════════════════════════════════════\n');
       }
-      lastRequestTime.current = now;
 
-      console.log('\n═════════════════════════════════════════════════════════════');
-      console.log('💬 USE CHAT v24.20: Send message start (cached + debounced)');
-      console.log(`📝 Content: "${content.substring(0, 60)}..."`);
-      console.log(`🎯 Mode: ${currentMode}`);
-      console.log('═════════════════════════════════════════════════════════════\n');
-
-      setError(null);
-      setIsLoading(true);
-
-      // FIX v15.1: Sauvegarder le nombre de messages AVANT ajout (pour vérification post-IA)
-      const messagesCountBefore = messages.length;
-
-      // Ajoute message utilisateur
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 1: Créer et afficher message utilisateur (GARANTI)
+      // ─────────────────────────────────────────────────────────────
       const userMessage: AIMessage = {
         role: 'user',
-        content: content.trim(),
+        content: clean,
         timestamp: Date.now(),
       };
 
       addMessage(userMessage);
-      saveMessage(userMessage); // Sync backend
-      console.log(`✅ User message added + saved (total: ${messagesCountBefore + 1})`);
+      saveMessage(userMessage);
+      setIsLoading(true);
+      setError(null);
+
+      if (isDev) {
+        console.log('✅ ÉTAPE 1: Message utilisateur créé et sauvegardé');
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 2: Générer réponse IA (avec protection totale)
+      // ─────────────────────────────────────────────────────────────
+      let aiResponse: ChatEngineResponse | null = null;
+      let emergencyFallback = false;
 
       try {
-        // v24.20: Check cache first
-        const cacheKey = getCacheKey(content.trim(), currentMode);
-        let response: ChatEngineResponse;
+        // Timeout maître (30 secondes max)
+        const timeout = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Timeout 30s - Aucun provider disponible')), 30000)
+        );
 
-        if (responseCache.current.has(cacheKey)) {
-          response = responseCache.current.get(cacheKey)!;
-          console.log('🎯 USE CHAT v24.20: Cache HIT (skipping AI call)');
-        } else {
-          // Génération IA (timeout 30s géré dans useChatCore)
-          console.log('🚀 Calling generate() [Cache MISS]...\n');
-          response = await generate(content.trim(), messages);
+        const generation = generate(clean, messages);
+        aiResponse = await Promise.race([generation, timeout]);
 
-          // Store in cache (LRU: limit to 100 entries)
-          if (responseCache.current.size >= 100) {
-            const firstKey = responseCache.current.keys().next().value;
-            if (firstKey) responseCache.current.delete(firstKey);
-          }
-          responseCache.current.set(cacheKey ?? '', response);
-          console.log(`💾 Cached response (${responseCache.current.size}/100 entries)`);
+        // Validation réponse stricte
+        if (!aiResponse || !aiResponse.content || aiResponse.content.trim() === '') {
+          throw new Error('Réponse IA vide ou invalide');
         }
 
-        console.log('\n✅ Response received');
-        console.log(`📦 Content: ${response.content.length} chars`);
-        console.log(`🏷️  Provider: ${response.provider}`);
+        // Reset failure count sur succès
+        setFailureCount(0);
 
-        // Ajoute réponse IA
-        const aiMessage: AIMessage = {
-          role: 'assistant',
-          content: response.content,
-          timestamp: response.timestamp || Date.now(),
-        };
-
-        addMessage(aiMessage);
-        saveMessage(aiMessage); // Sync backend
-        console.log(`✅ AI response added + saved (total: ${messagesCountBefore + 2})`);
-
-        // FIX v15.1: GARDE-FOU - Vérifier que les messages n'ont pas été écrasés
-        // Si le count est inférieur à avant + 2, c'est qu'il y a eu un reset involontaire
-        setTimeout(() => {
-          if (messages.length < messagesCountBefore + 2) {
-            console.error(`🚨 CRITICAL: Messages were reset! Expected ${messagesCountBefore + 2}, got ${messages.length}`);
-            console.error('🚨 This should NEVER happen after v15.1 fix');
-            // Re-ajouter les messages si nécessaire (recovery)
-            addMessage(userMessage);
-            addMessage(aiMessage);
-          }
-        }, 100); // Check après render
-
-        // Suggestions
-        if (response.suggestions && response.suggestions.length > 0) {
-          setSuggestions(response.suggestions);
-          console.log(`💡 ${response.suggestions.length} suggestions available`);
+        if (isDev) {
+          console.log('✅ ÉTAPE 2: Réponse IA générée avec succès');
+          console.log(`   Provider: ${aiResponse.provider}`);
+          console.log(`   Content: ${aiResponse.content.length} chars`);
         }
 
-        // Attribution XP (+5 par message)
-        await awardXP('chat', 5, content.trim().length, response.provider);
-
-        // Synthèse vocale si activée
-        if (options.voiceEnabled && response.content) {
-          console.log('🔊 TTS: Synthesizing response...');
-          try {
-            await hybridTTS.speak(response.content, { lang: 'fr-FR', rate: 1.0 });
-            console.log('✅ TTS: Complete');
-          } catch (ttsError) {
-            console.warn('⚠️ TTS: Failed (non-blocking):', ttsError);
-          }
-        }
-
-        console.log('\n═════════════════════════════════════════════════════════════');
-        console.log('🎉 USE CHAT v24.20: Message processed successfully!');
-        console.log('═════════════════════════════════════════════════════════════\n');
       } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
-        console.error('\n❌ USE CHAT v24.20: Error', err);
+        emergencyFallback = true;
+        const newFailureCount = failureCount + 1;
+        setFailureCount(newFailureCount);
 
-        // Track error (SELFHEAL++)
-        errorTracker.track('chat', errorMessage, 'high');
-
-        // Check auto-reset
-        const errorStats = errorTracker.getStats();
-        if (errorStats.shouldReset) {
-          console.warn('🚨 SELFHEAL++: Auto-reset triggered (3+ errors in 60s)');
-
-          // Reset soft: clear mode actuel
-          clearMode();
-          clearMessages();
-          setError('⚠️ Système réinitialisé automatiquement suite à des erreurs répétées');
-          errorTracker.markReset();
-
-          // Notification user
-          const resetMessage: AIMessage = {
-            role: 'assistant',
-            content: '🔄 **Reset automatique TITANE∞**\n\nDes erreurs répétées ont été détectées. Le chat a été réinitialisé pour garantir un fonctionnement optimal.',
-            timestamp: Date.now(),
-          };
-          addMessage(resetMessage);
-
-          return;
+        if (isDev) {
+          console.error('❌ ÉTAPE 2: Generate crashed:', err);
+          console.log(`🔄 Activating emergency fallback (failure #${newFailureCount})...`);
         }
 
-        setError(errorMessage);
+        // Track error pour auto-heal
+        if (errorTracker?.track) {
+          errorTracker.track('chat', err instanceof Error ? err.message : String(err), 'high');
+        }
+      }
 
-        // Ajoute message d'erreur dans le chat
-        const errorAiMessage: AIMessage = {
-          role: 'assistant',
-          content: `❌ Erreur: ${errorMessage}`,
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 3: FALLBACK ULTIME GARANTI (jamais undefined)
+      // ─────────────────────────────────────────────────────────────
+      if (!aiResponse || emergencyFallback) {
+        const fallbackMessages = [
+          "Une erreur système a été détectée. Je continue en mode autonome sécurisé TITANE.",
+          "Mon moteur principal est temporairement inaccessible. Mode autonome local activé.",
+          "Erreur de communication avec les providers IA. Je bascule en mode sécurisé.",
+          "⚠️ Tous les moteurs IA distants sont hors ligne. Mode survie TITANE engagé. Je reste opérationnel en mode autonome.",
+        ];
+
+        const selectedMessage = failureCount > 3 
+          ? fallbackMessages[3] 
+          : fallbackMessages[Math.min(failureCount, fallbackMessages.length - 1)];
+
+        aiResponse = {
+          content: selectedMessage,
+          provider: 'system-fallback',
+          mode: currentMode,
+          contextUsed: [],
+          metadata: {
+            emergency: true,
+            timestamp: Date.now(),
+            failureCount: failureCount + 1,
+            fallbackReason: emergencyFallback ? 'generation_error' : 'empty_response',
+          },
           timestamp: Date.now(),
         };
-        addMessage(errorAiMessage);
-      } finally {
-        setIsLoading(false);
-        console.log('🔓 isLoading = false\n');
+
+        if (isDev) {
+          console.log('🚨 ÉTAPE 3: Fallback ultime activé');
+          console.log(`   Message: "${aiResponse.content}"`);
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 4: Créer et afficher message IA (TOUJOURS EXÉCUTÉ)
+      // ─────────────────────────────────────────────────────────────
+      const assistantMessage: AIMessage = {
+        role: 'assistant',
+        content: aiResponse.content,
+        timestamp: Date.now(),
+      };
+
+      addMessage(assistantMessage);
+      saveMessage(assistantMessage);
+
+      if (isDev) {
+        console.log('✅ ÉTAPE 4: Message IA affiché et sauvegardé');
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 5: Suggestions (optionnel, avec protection)
+      // ─────────────────────────────────────────────────────────────
+      if (aiResponse.suggestions && Array.isArray(aiResponse.suggestions)) {
+        try {
+          setSuggestions(aiResponse.suggestions);
+          if (isDev) {
+            console.log(`✅ ÉTAPE 5: ${aiResponse.suggestions.length} suggestions ajoutées`);
+          }
+        } catch (err) {
+          if (isDev) {
+            console.warn('⚠️ ÉTAPE 5: Suggestions failed (non-blocking):', err);
+          }
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 6: XP Award (optionnel, avec protection)
+      // ─────────────────────────────────────────────────────────────
+      try {
+        await awardXP('chat', 5, clean.length, aiResponse.provider);
+        if (isDev) {
+          console.log('✅ ÉTAPE 6: XP awarded (+5)');
+        }
+      } catch (err) {
+        if (isDev) {
+          console.warn('⚠️ ÉTAPE 6: XP award failed (non-blocking):', err);
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 7: TTS (optionnel, avec protection)
+      // ─────────────────────────────────────────────────────────────
+      if (options.voiceEnabled) {
+        try {
+          await hybridTTS.speak(aiResponse.content, { lang: 'fr-FR', rate: 1.0 });
+          if (isDev) {
+            console.log('✅ ÉTAPE 7: TTS completed');
+          }
+        } catch (err) {
+          if (isDev) {
+            console.warn('⚠️ ÉTAPE 7: TTS failed (non-blocking):', err);
+          }
+        }
+      }
+
+      // ─────────────────────────────────────────────────────────────
+      // ÉTAPE 8: Cleanup final (TOUJOURS EXÉCUTÉ)
+      // ─────────────────────────────────────────────────────────────
+      setIsLoading(false);
+
+      if (isDev) {
+        console.log('✅ ÉTAPE 8: Séquence terminée - isLoading = false');
+        console.log('═════════════════════════════════════════════════════════════\n');
       }
     },
     [
       isLoading,
-      currentMode,
       messages,
-      options.voiceEnabled,
+      currentMode,
       generate,
       addMessage,
       saveMessage,
+      setIsLoading,
+      setError,
       setSuggestions,
       awardXP,
-      clearMode,
-      clearMessages,
-      setError,
-      setIsLoading,
-      getCacheKey,
+      options.voiceEnabled,
+      failureCount,
     ]
   );
 

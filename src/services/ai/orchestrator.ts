@@ -1,25 +1,24 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v19.2Θ — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v18.0 — AI ORCHESTRATOR
- *   Orchestrateur hybride : Backend Rust → Gemini → Ollama → Local
- *   Priorise le backend Tauri (cascade automatique) si disponible
+ *   TITANE∞ v19.2Θ — AI ORCHESTRATOR (MAÎTRE COHÉRENCE TOTALE)
+ *   Architecture 100% anti-silence avec fallback ultime garanti
+ *   PHASE II: TITANE Local en premier + Boucle MAÎTRE anti-crash
+ *   Ordre: Local → Tauri → Gemini → Ollama (sécurité absolue)
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIMessage, AIResponse, AIConfig } from './types';
-import { tauriChatProvider } from './providers/tauriChat'; // ← NOUVEAU: Backend Rust
-import { titaneLocalProvider } from './providers/titaneLocal';
+import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (sécurité absolue)
+import { tauriChatProvider } from './providers/tauriChat';
 import { geminiProvider } from './providers/gemini';
 import { ollamaProvider } from './providers/ollama';
-import { fallbackProvider } from './providers/fallback'; // Legacy wrapper
+
+const isDev = import.meta.env.DEV;
 
 /**
  * Sanitize et valide un message utilisateur

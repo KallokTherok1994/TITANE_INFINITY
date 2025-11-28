@@ -78,7 +78,7 @@ interface AutoFixStats {
   success_rate: number;
 }
 
-interface _HealResult {
+interface HealResult {
   module_type: string;
   success: boolean;
   actions: string[];
