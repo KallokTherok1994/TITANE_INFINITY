@@ -32,7 +32,7 @@ Impact:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. Whitelist TypeScript Mise à Jour (src/lib/security.ts)
-   
+
    Ajout des 8 commandes Singularity Mutation:
    ✅ 'singularity_update_physical'
    ✅ 'singularity_update_cognitive'
@@ -44,7 +44,7 @@ Impact:
    ✅ 'singularity_load_state'
 
 2. Script de Validation Créé (validate_security_whitelist.sh)
-   
+
    Tests automatisés:
    ✅ Vérification fichiers sécurité existent
    ✅ Extraction commandes Rust et TypeScript
@@ -179,7 +179,7 @@ Utilisation du script:
   ```bash
   cd /home/titane/Documents/TITANE_INFINITY
   ./validate_security_whitelist.sh
-  
+
   # Output:
   # 🎉 VALIDATION RÉUSSIE
   # ✅ Les whitelists Rust et TypeScript sont synchronisées

@@ -91,7 +91,7 @@ SINGULARITY_UPDATE_COMMANDS=(
 for cmd in "${SINGULARITY_UPDATE_COMMANDS[@]}"; do
     RUST_HAS=$(echo "$RUST_COMMANDS" | grep -c "^$cmd$")
     TS_HAS=$(echo "$TS_COMMANDS" | grep -c "^$cmd$")
-    
+
     if [ "$RUST_HAS" -eq 1 ] && [ "$TS_HAS" -eq 1 ]; then
         echo -e "${GREEN}✅ PASS${NC}: '$cmd' présent des deux côtés"
         ((PASS++))
@@ -127,7 +127,7 @@ CRITICAL_COMMANDS=(
 for cmd in "${CRITICAL_COMMANDS[@]}"; do
     RUST_HAS=$(echo "$RUST_COMMANDS" | grep -c "^$cmd$")
     TS_HAS=$(echo "$TS_COMMANDS" | grep -c "^$cmd$")
-    
+
     if [ "$RUST_HAS" -eq 1 ] && [ "$TS_HAS" -eq 1 ]; then
         echo -e "${GREEN}✅ PASS${NC}: '$cmd' présent"
         ((PASS++))

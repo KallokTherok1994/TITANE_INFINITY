@@ -68,7 +68,7 @@ import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
 import { ChatDiagnostic } from './components/ChatDiagnostic'; // ✨ v16.2.2 - Chat IA Diagnostic
-import { ChatIADiagnostic } from './components/ChatIADiagnostic'; // ✨ v16.2.2 - Chat IA Diagnostic
+// ChatIADiagnostic disponible mais non utilisé actuellement
 
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';

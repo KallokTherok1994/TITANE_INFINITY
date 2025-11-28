@@ -587,7 +587,7 @@ pub async fn get_system_info() -> AppResult<serde_json::Value> {
 pub async fn experience_get_state() -> AppResult<serde_json::Value> {
     // Return default experience state matching TypeScript ExperienceState interface
     log::info!("Mock: experience_get_state called - returning default state");
-    
+
     let default_state = serde_json::json!({
         "totalXp": 0,
         "level": 1,
@@ -652,7 +652,7 @@ pub async fn experience_get_state() -> AppResult<serde_json::Value> {
         "lastUpdated": chrono::Utc::now().timestamp_millis(),
         "version": "1.0.0"
     });
-    
+
     Ok(default_state)
 }
 

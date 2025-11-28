@@ -129,7 +129,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'singularity_reset',
   'update_singularity_state',
   'singularity_self_check',
-  
+
   // Singularity Mutation Commands (v16.2.2+)
   'singularity_update_physical',
   'singularity_update_cognitive',
