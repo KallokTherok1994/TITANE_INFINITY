@@ -259,7 +259,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       errorType: error.name || 'Error',
       message: error.message,
       stack: error.stack,
-      componentStack: errorInfo.componentStack,
+      componentStack: errorInfo?.componentStack ?? undefined,
       userAgent: navigator.userAgent,
       url: window.location.href,
       retryCount,
@@ -275,7 +275,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
       console.error('Component:', this.props.componentName);
       console.error('Error:', error);
       console.error('Retry Count:', retryCount);
-      console.error('Component Stack:', errorInfo.componentStack);
+      console.error('Component Stack:', errorInfo?.componentStack);
       console.groupEnd();
     }
 

@@ -147,7 +147,7 @@ export const ChatDiagnostic: React.FC = () => {
               <div style={{ fontSize: '13px', opacity: 0.9 }}>
                 {result.message}
               </div>
-              {result.data && (
+              {typeof result.data !== 'undefined' && (
                 <details style={{ marginTop: '8px', fontSize: '12px' }}>
                   <summary style={{ cursor: 'pointer', opacity: 0.7 }}>
                     Voir détails

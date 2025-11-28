@@ -15,9 +15,7 @@
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useChatCore } from './useChatCore';
 import { useChatMemory } from './useChatMemory';
-import { chatEngineOmnis } from '../services/ai/chatEngine_OMNIS_v1';
-import { aiOrchestrator } from '../services/ai/orchestrator_OMNIS_v1';
-import type { ChatMode } from '../services/ai';
+import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { hybridTTS } from '../services/tts/hybridTTS';
 
@@ -58,6 +56,9 @@ interface UseChatReturn {
     errorCount: number;
     successRate: number;
     engineVersion: string;
+    failureCount: number;
+    autoHealCount: number;
+    pipelineHealth: 'optimal' | 'stable' | 'degraded' | 'error';
   };
 
   // Actions
@@ -82,8 +83,6 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
 
-  const lastMessageRef = useRef<string>('');
-  const processRef = useRef<{ aborted: boolean }>({ aborted: false });
   const messagesRef = useRef<AIMessage[]>([]);
 
   const omnisConfig = {
@@ -102,7 +101,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }) || {
     currentMode: 'default' as ChatMode,
     anomalyCount: 0,
-    setMode: () => {}
+    setMode: () => {},
+    generate: async () => ({
+      content: 'TITANE∞ prépare une réponse.',
+      provider: 'titane-local',
+      timestamp: Date.now(),
+    } as ChatEngineResponse)
   };
 
   const memoryHookResult = useChatMemory({
@@ -116,7 +120,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     clearMode: () => {}
   };
 
-  const { currentMode, anomalyCount, setMode: setCoreMode } = coreHookResult;
+  const { currentMode, anomalyCount, setMode: setCoreMode, generate } = coreHookResult;
   const { messagesForMode, memoryStats, saveMessage, clearMode } = memoryHookResult;
 
   // ═══ SYNC INITIAL MESSAGES ═══
@@ -136,127 +140,100 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const sendMessage = useCallback(async (content: string): Promise<AIMessage> => {
     const startTime = Date.now();
 
-    // Input validation
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
-      const errorResponse: AIMessage = {
+      return {
         role: 'assistant',
         content: 'Veuillez entrer un message pour continuer la conversation.',
         timestamp: Date.now(),
         metadata: { status: 'input-error' }
       };
-      return errorResponse;
     }
 
     const cleanMessage = content.trim();
-
-    // UI State update
     setIsLoading(true);
     setError(null);
-    processRef.current = { aborted: false };
 
-    // Add user message
     const userMessage: AIMessage = {
       role: 'user',
       content: cleanMessage,
       timestamp: Date.now(),
-      metadata: { inputLength: cleanMessage.length }
+      metadata: { inputLength: cleanMessage.length, mode: currentMode }
     };
 
-    // Update both ref and state atomically to prevent race condition
-    const newMessages = [...messagesRef.current, userMessage];
-    messagesRef.current = newMessages;
-    setMessages(newMessages);
-    lastMessageRef.current = cleanMessage;
+    const bufferedMessages = [...messagesRef.current, userMessage];
+    messagesRef.current = bufferedMessages;
+    setMessages(bufferedMessages);
 
     try {
-      // Engine call with synchronized state
       const engineResponse = await Promise.race([
-        chatEngineOmnis.generate(cleanMessage, newMessages),
+        generate(cleanMessage, bufferedMessages),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 15000)
         )
       ]);
 
-      // Response validation
-      let validatedResponse: AIMessage;
+      const assistantMessage: AIMessage = {
+        role: 'assistant',
+        content: engineResponse.content,
+        provider: engineResponse.provider || 'titane-local',
+        timestamp: Date.now(),
+        metadata: {
+          status: 'success',
+          duration: Date.now() - startTime,
+          ...(engineResponse.metadata || {}),
+          omegaMetadata: engineResponse.omegaMetadata,
+          mode: currentMode
+        }
+      };
 
-      if (engineResponse && engineResponse.content && typeof engineResponse.content === 'string') {
-        validatedResponse = {
-          role: 'assistant',
-          content: engineResponse.content,
-          timestamp: Date.now(),
-          provider: engineResponse.provider || 'omnis',
-          metadata: {
-            status: 'success',
-            duration: Date.now() - startTime,
-            ...engineResponse.metadata
-          }
-        };
-      } else {
-        validatedResponse = {
-          role: 'assistant',
-          content: 'Le système TITANE∞ traite votre demande. Une réponse sera générée momentanément.',
-          timestamp: Date.now(),
-          provider: 'omnis-fallback',
-          metadata: {
-            status: 'fallback',
-            duration: Date.now() - startTime,
-            reason: 'invalid-engine-response'
-          }
-        };
-      }
-
-      // Memory integration (non-critical)
-      try {
-        saveMessage(userMessage);
-        saveMessage(validatedResponse);
-      } catch (memoryError) {
-        console.warn('[OMNIS] Memory integration warning:', memoryError);
-      }
-
-      // Add response to UI with synchronized state
-      const finalMessages = [...messagesRef.current, validatedResponse];
+      const finalMessages = [...bufferedMessages, assistantMessage];
       messagesRef.current = finalMessages;
       setMessages(finalMessages);
 
-      // Voice integration (if enabled)
-      if (options.voiceEnabled && validatedResponse.content) {
+      try {
+        saveMessage(userMessage);
+        saveMessage(assistantMessage);
+      } catch (memoryError) {
+        console.warn('[Chat] Memory integration warning:', memoryError);
+      }
+
+      if (options.voiceEnabled && assistantMessage.content) {
         try {
-          hybridTTS.speak(validatedResponse.content);
+          hybridTTS.speak(assistantMessage.content);
         } catch (voiceError) {
-          console.warn('[OMNIS] Voice warning:', voiceError);
+          console.warn('[Chat] Voice warning:', voiceError);
         }
       }
 
+      setSuggestions(engineResponse.suggestions ?? []);
       setIsLoading(false);
-      return validatedResponse;
+      return assistantMessage;
 
     } catch (error) {
-      console.error('[OMNIS] Pipeline error:', error);
+      console.error('[Chat] Engine pipeline error:', error);
 
       const fallbackResponse: AIMessage = {
         role: 'assistant',
-        content: 'TITANE∞ est opérationnel. Le système s\'auto-répare et reste disponible pour vos questions.',
+        content: 'TITANE∞ reste présent. Une légère turbulence a été détectée mais l\'espace de discussion est stable. Reformule ou continue quand tu veux.',
         timestamp: Date.now(),
-        provider: 'omnis-safety',
+        provider: 'omnis-fallback',
         metadata: {
           status: 'error',
           duration: Date.now() - startTime,
-          error: String(error),
-          autoGenerated: true
+          error: error instanceof Error ? error.message : String(error)
         }
       };
 
       const errorMessages = [...messagesRef.current, fallbackResponse];
       messagesRef.current = errorMessages;
       setMessages(errorMessages);
-      setError('Une anomalie a été détectée et réparée automatiquement.');
+      setError('TITANE∞ a rencontré une anomalie et s\'est réparé. Tu peux réessayer immédiatement.');
       setIsLoading(false);
       setInternalAnomalyCount(prev => prev + 1);
 
       return fallbackResponse;
     }
-  }, [messages, options.voiceEnabled, omnisConfig.timeoutMs, saveMessage]);
+  }, [currentMode, generate, omnisConfig.timeoutMs, options.voiceEnabled, saveMessage]);
 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {
@@ -309,20 +286,45 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
   }, []);
 
-  const getDebugInfo = useCallback(() => {
-    return {
-      engineStats: chatEngineOmnis.getStats(),
-      memoryStats,
-      anomalyCount: anomalyCount + internalAnomalyCount,
-      currentMode,
-      isLoading,
-      messagesCount: messages.length,
-      omnisConfig
-    };
-  }, [memoryStats, anomalyCount, internalAnomalyCount, currentMode, isLoading, messages.length, omnisConfig]);
-
   // ═══ COMPUTED VALUES ═══
-  const omnisStats = useMemo(() => chatEngineOmnis.getStats(), []);
+  const omnisStats = useMemo(() => {
+    const totalRequests = messages.filter((msg) => msg.role === 'user').length;
+    const successCount = messages.filter((msg) => msg.role === 'assistant').length;
+    const errorCount = internalAnomalyCount;
+    const successRate = totalRequests === 0
+      ? 100
+      : Math.max(0, Math.min(100, Math.round((successCount / totalRequests) * 100)));
+    const autoHealCount = internalAnomalyCount;
+    const pipelineHealth: 'optimal' | 'stable' | 'degraded' | 'error' = (() => {
+      if (error) {
+        return 'error';
+      }
+      if (successRate >= 90) return 'optimal';
+      if (successRate >= 65) return 'stable';
+      return 'degraded';
+    })();
+
+    return {
+      totalRequests,
+      successCount,
+      errorCount,
+      successRate,
+      engineVersion: 'omega-v19.2',
+      failureCount: errorCount,
+      autoHealCount,
+      pipelineHealth
+    };
+  }, [messages, internalAnomalyCount, error]);
+
+  const getDebugInfo = useCallback(() => ({
+    engineStats: omnisStats,
+    memoryStats,
+    anomalyCount: anomalyCount + internalAnomalyCount,
+    currentMode,
+    isLoading,
+    messagesCount: messages.length,
+    omnisConfig
+  }), [anomalyCount, currentMode, internalAnomalyCount, isLoading, messages.length, memoryStats, omnisConfig, omnisStats]);
 
   return {
     // UI State

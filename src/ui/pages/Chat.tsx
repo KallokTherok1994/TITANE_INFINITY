@@ -120,11 +120,20 @@ export const Chat: React.FC = () => {
       error: 'Erreur d\'initialisation du chat',
       sendMessage: () => Promise.resolve(),
       clearChat: () => {},
-      omegaStats: { failureCount: 0, autoHealCount: 0, pipelineHealth: 'degraded' }
+      omnisStats: {
+        failureCount: 0,
+        autoHealCount: 0,
+        pipelineHealth: 'degraded',
+        totalRequests: 0,
+        successCount: 0,
+        errorCount: 0,
+        successRate: 0,
+        engineVersion: 'unknown'
+      }
     };
   }
 
-  const { messages, isLoading, error, sendMessage, clearChat, omegaStats } = chatHookResult;
+  const { messages, isLoading, error, sendMessage, clearChat, omnisStats } = chatHookResult;
 
   // ═══ PHASE 5.2: PROTECTED STATE ═══
   const [showSettings, setShowSettings] = useState(false);
@@ -134,7 +143,7 @@ export const Chat: React.FC = () => {
     name: 'OMEGA Neural',
     status: 'online',
     latency: 245,
-    autoHealed: omegaStats?.autoHealCount > 0
+    autoHealed: omnisStats?.autoHealCount > 0
   });
 
   // ═══ PHASE 5.3: MEMOIZED HANDLERS (éviter render loops) ═══
@@ -187,13 +196,31 @@ export const Chat: React.FC = () => {
     }
   }, [isLoading, voiceModeActive, pageState.isCorrupted]);
 
-  const omegaStats_safe = useMemo(() => {
+  const omnisStatsSafe = useMemo(() => {
     try {
-      return omegaStats || { failureCount: 0, autoHealCount: 0, pipelineHealth: 'unknown' };
+      return omnisStats || {
+        failureCount: 0,
+        autoHealCount: 0,
+        pipelineHealth: 'unknown',
+        totalRequests: 0,
+        successCount: 0,
+        errorCount: 0,
+        successRate: 0,
+        engineVersion: 'unknown'
+      };
     } catch (statsError) {
-      return { failureCount: 0, autoHealCount: 0, pipelineHealth: 'error' };
+      return {
+        failureCount: 0,
+        autoHealCount: 0,
+        pipelineHealth: 'error',
+        totalRequests: 0,
+        successCount: 0,
+        errorCount: 0,
+        successRate: 0,
+        engineVersion: 'unknown'
+      };
     }
-  }, [omegaStats]);
+  }, [omnisStats]);
 
   // ═══ PHASE 5.5: MOUNT PROTECTION ═══
   useEffect(() => {
@@ -221,7 +248,7 @@ export const Chat: React.FC = () => {
           </p>
           <div className="chat-critical-details">
             <span>Tentatives : {pageState.recoveryCount}</span>
-            <span>Auto-heal : {omegaStats_safe.autoHealCount}</span>
+            <span>Auto-heal : {omnisStatsSafe.autoHealCount}</span>
             <span>Version état : v{pageState.stateVersion}</span>
           </div>
           <div className="chat-critical-actions">
@@ -301,16 +328,16 @@ export const Chat: React.FC = () => {
 
             <div className="chat-status-item">
               <span className="status-label">Pipeline:</span>
-              <span className={`status-value status-${omegaStats_safe.pipelineHealth}`}>
-                {omegaStats_safe.pipelineHealth}
+              <span className={`status-value status-${omnisStatsSafe.pipelineHealth}`}>
+                {omnisStatsSafe.pipelineHealth}
               </span>
             </div>
 
-            {omegaStats_safe.autoHealCount > 0 && (
+            {omnisStatsSafe.autoHealCount > 0 && (
               <div className="chat-status-item chat-status-heal">
                 <span className="status-icon">🩹</span>
                 <span className="status-label">Auto-heal:</span>
-                <span className="status-value">{omegaStats_safe.autoHealCount}</span>
+                <span className="status-value">{omnisStatsSafe.autoHealCount}</span>
               </div>
             )}
 
@@ -409,13 +436,13 @@ export const Chat: React.FC = () => {
                   <div className="chat-setting-item">
                     <label className="chat-setting-label">Pipeline Health</label>
                     <div className="chat-setting-value">
-                      {omegaStats_safe.pipelineHealth}
+                      {omnisStatsSafe.pipelineHealth}
                     </div>
                   </div>
                   <div className="chat-setting-item">
                     <label className="chat-setting-label">Auto-guérisons</label>
                     <div className="chat-setting-value">
-                      {omegaStats_safe.autoHealCount} réparations automatiques
+                      {omnisStatsSafe.autoHealCount} réparations automatiques
                     </div>
                   </div>
                   <div className="chat-setting-item">

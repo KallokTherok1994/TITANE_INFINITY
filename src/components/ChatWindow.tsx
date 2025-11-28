@@ -9,7 +9,7 @@
 // TITANE∞ v15 - ChatWindow Component
 // Main chat interface with messages, input, and status
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
 import { MessageBubble } from './MessageBubble';
@@ -18,6 +18,8 @@ import { VitalsPanel } from './VitalsPanel';
 import { ChatFileImport } from './chat/ChatFileImport';
 import { useSingularityState } from '../core/state/SingularityState';
 import type { Message } from '../core/ARCHITECTURE_TYPES_v∞';
+import { listPromptPresets } from '@/core/prompts';
+import type { ChatMode } from '@/services/ai';
 import './ChatWindow.css';
 
 export interface ChatWindowProps {
@@ -29,7 +31,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
   onVoiceModeToggle,
   voiceModeActive = false,
 }) => {
-  const { messages, isLoading, error, sendMessage, currentMode, anomalyCount: _anomalyCount } = useChat({ voiceEnabled: voiceModeActive });
+  const {
+    messages,
+    isLoading,
+    error,
+    sendMessage,
+    currentMode,
+    anomalyCount: _anomalyCount,
+    setMode,
+  } = useChat({ voiceEnabled: voiceModeActive });
   const { status: connectionStatus } = useConnection();
   const setAIStatus = useSingularityState((state) => state.setAIStatus);
   const setAIError = useSingularityState((state) => state.setAIError);
@@ -42,6 +52,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const promptPresets = useMemo(() => listPromptPresets(), []);
+  const presetModeMap = useMemo<Partial<Record<string, ChatMode>>>(() => ({
+    core: 'default',
+    guide_deuxieme_vitesse: 'debug_cognitive',
+    facilitateur_ecoute: 'journal',
+    architecte_projet: 'planning',
+    optimiseur_decision: 'planning',
+    coach_ancrage: 'journal',
+  }), []);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -97,6 +116,22 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
     }
   };
 
+  const handlePresetSelect = useCallback((presetId: string) => {
+    const preset = promptPresets.find((item) => item.id === presetId);
+    if (!preset) return;
+
+    setInput(preset.userPrompt);
+
+    const mappedMode = presetModeMap[preset.profileId];
+    if (mappedMode && mappedMode !== currentMode) {
+      try {
+        setMode(mappedMode);
+      } catch (error) {
+        console.warn('[ChatWindow] preset mode switch failed', error);
+      }
+    }
+  }, [promptPresets, presetModeMap, currentMode, setMode]);
+
   return (
     <div className="chat-window">
       <div className="chat-header">
@@ -125,7 +160,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
         messagesCount={messages.length}
       />
 
-      <div className="chat-messages">\n        {messages.length === 0 && (
+      <div className="chat-messages">
+        {messages.length === 0 && (
           <div className="chat-welcome">
             <h3>Bienvenue dans TITANE∞</h3>
             <p>
@@ -166,6 +202,20 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
         )}
 
         <div ref={messagesEndRef} />
+      </div>
+
+      <div className="chat-presets">
+        {promptPresets.slice(0, 4).map((preset) => (
+          <button
+            key={preset.id}
+            type="button"
+            className="chat-preset-button"
+            onClick={() => handlePresetSelect(preset.id)}
+            disabled={isLoading}
+          >
+            {preset.label}
+          </button>
+        ))}
       </div>
 
       {showFileImport && (

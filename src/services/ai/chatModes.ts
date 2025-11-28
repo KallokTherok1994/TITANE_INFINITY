@@ -17,6 +17,7 @@ export interface ChatModeConfig {
   name: string;
   description: string;
   systemPrompt: string;
+  profileId?: string;
   temperature: number;
   suggestedActions: string[];
   icon: string;
@@ -27,6 +28,7 @@ export const chatModes: Record<string, ChatModeConfig> = {
     name: 'Standard',
     description: 'Mode par défaut pour conversations générales',
     systemPrompt: `Tu es TITANE∞, une IA cognitive avancée intégrée dans un système d'auto-évolution. Tu es professionnelle, précise et tu réponds en français. Tu accompagnes Kevin Thibault dans sa réflexion et ses projets.`,
+    profileId: 'core',
     temperature: 0.7,
     suggestedActions: [
       'Poser une question',
@@ -54,6 +56,7 @@ Ton style:
 • Questions du type "Et si...", "Imagine que...", "Qu'est-ce qui se passerait si..."
 
 Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
+  profileId: 'architecte_projet',
     temperature: 0.9,
     suggestedActions: [
       'Et si on changeait complètement d\'angle ?',
@@ -81,6 +84,7 @@ Ton style:
 • Questions du type "Quel est le lien entre X et Y ?", "Qu'est-ce qui unifie ces éléments ?"
 
 Kevin a exploré. Maintenant aide-le à connecter les points.`,
+  profileId: 'tisseur_oeuvre',
     temperature: 0.7,
     suggestedActions: [
       'Quels liens entre ces 3 idées ?',
@@ -108,6 +112,7 @@ Ton style:
 • Questions du type "Quelle est la première action ?", "Qu'est-ce qui bloque ?", "Comment mesurer ?"
 
 Kevin est prêt à structurer. Aide-le à passer à l'action de façon méthodique.`,
+  profileId: 'architecte_projet',
     temperature: 0.6,
     suggestedActions: [
       'Quelle est la première action concrète ?',
@@ -135,6 +140,7 @@ Ton style:
 • Questions du type "Comment te sens-tu vraiment ?", "Qu'est-ce qui est important ici ?", "De quoi as-tu besoin ?"
 
 Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
+  profileId: 'facilitateur_ecoute',
     temperature: 0.7,
     suggestedActions: [
       'Comment te sens-tu par rapport à ça ?',
@@ -162,6 +168,7 @@ Ton style:
 • Questions du type "Qu'est-ce qui te draine le plus ?", "Quelle serait une version plus simple ?", "As-tu pris une pause ?"
 
 Kevin sent une surcharge. Aide-le à diagnostiquer et réguler.`,
+  profileId: 'guide_deuxieme_vitesse',
     temperature: 0.6,
     suggestedActions: [
       'Quelle est ta charge actuelle (0-10) ?',

@@ -18,6 +18,7 @@ import {
   STANDARD_COMMAND_OPTIONS,
   FAST_COMMAND_OPTIONS,
 } from '../../lib/serviceInvoker';
+import type { StructuredMemoryEntry } from '@/core/prompts/memoryTemplates';
 import type {
   MemoryContext,
   MemoryLoadConfig,
@@ -192,6 +193,19 @@ export class MemoryService {
 
     // Invalider cache après sauvegarde
     this.clearCache();
+  }
+
+  /**
+   * Sauvegarde une entrée structurée (medium/long terme)
+   */
+  async saveStructuredEntry(entry: StructuredMemoryEntry | string): Promise<void> {
+    const serialized = typeof entry === 'string' ? entry : JSON.stringify(entry);
+
+    await invokeWithRetry<void>(
+      'memory_save_entry',
+      { entry: serialized },
+      { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
+    );
   }
 
   /**

@@ -12,6 +12,8 @@
  */
 
 import type { AIMessage, AIResponse, AIConfig } from './types';
+import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
+import type { PromptContext } from '@/core/prompts';
 import { aiOrchestrator } from './orchestrator';
 import {
   memoryIntegration,
@@ -180,7 +182,8 @@ class ChatEngineOmega {
           activeProjects: [],
           recentDecisions: [],
           relevantKnowledge: [],
-          activeRituals: []
+          activeRituals: [],
+          timeline: []
         };
         context = { sources: [], data: {} };
         autoHealed = true;
@@ -191,10 +194,17 @@ class ChatEngineOmega {
       isDev && console.log(`🎨 Step 1.3: Building OMEGA prompt for mode "${finalConfig.mode}"...`);
 
       const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
+      const promptContext: PromptContext = {
+        modeName: modeConfig.name,
+        modeIcon: modeConfig.icon,
+        emotionState: finalConfig.emotionState || this.config.emotionState,
+        memory: context.sources.length > 0 ? context : undefined,
+      };
       const enrichedHistory = this.buildEnrichedHistory(
         history,
         context,
-        modeConfig
+        modeConfig,
+        promptContext
       );
       isDev && console.log(`   ✅ Enriched history built (${enrichedHistory.length} messages)`);
 
@@ -204,7 +214,11 @@ class ChatEngineOmega {
 
       const timeoutMs = finalConfig.omegaConfig?.timeoutMs || 30000;
       const response = await this.withTimeout(
-        aiOrchestrator.generate(validatedMessage, enrichedHistory, finalConfig.aiConfig),
+        aiOrchestrator.generate(validatedMessage, enrichedHistory, {
+          ...(finalConfig.aiConfig || {}),
+          promptProfileId: modeConfig.profileId,
+          promptContext,
+        }),
         timeoutMs,
         `Orchestrator timeout (${timeoutMs}ms)`
       );
@@ -461,17 +475,30 @@ Que souhaites-tu explorer ?`;
         context = this.formatMemoryContext(memoryContext);
       } catch (error) {
         // Fallback pour streaming
-        memoryContext = { activeProjects: [], recentDecisions: [], relevantKnowledge: [], activeRituals: [] };
+        memoryContext = {
+          activeProjects: [],
+          recentDecisions: [],
+          relevantKnowledge: [],
+          activeRituals: [],
+          timeline: []
+        };
         context = { sources: [], data: {} };
       }
 
       // Prompt selon mode
       pipelineSteps.push("stream-prompt");
       const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
+      const promptContext: PromptContext = {
+        modeName: modeConfig.name,
+        modeIcon: modeConfig.icon,
+        emotionState: finalConfig.emotionState || this.config.emotionState,
+        memory: context.sources.length > 0 ? context : undefined,
+      };
       const enrichedHistory = this.buildEnrichedHistory(
         history,
         context,
-        modeConfig
+        modeConfig,
+        promptContext
       );
 
       // Stream orchestrateur
@@ -505,7 +532,7 @@ Que souhaites-tu explorer ?`;
       // Retour final
       return {
         content: finalContent,
-        provider: 'omega-stream',
+        provider: 'tauri-chat',
         model: 'omega-stream-v19.2Ω',
         timestamp: Date.now(),
         mode: finalConfig.mode,
@@ -527,7 +554,7 @@ Que souhaites-tu explorer ?`;
 
       return {
         content: fullContent || `Erreur streaming récupérée. Message traité : "${message.substring(0, 50)}"`,
-        provider: 'omega-emergency',
+        provider: 'omnis-emergency',
         model: 'omega-stream-emergency-v19.2Ω',
         timestamp: Date.now(),
         mode: config?.mode || this.config.mode,
@@ -556,7 +583,8 @@ Que souhaites-tu explorer ?`;
   private buildEnrichedHistory(
     history: AIMessage[],
     context: { sources: string[]; data: Record<string, unknown> },
-    modeConfig: ChatModeConfig
+    modeConfig: ChatModeConfig,
+    promptContext?: PromptContext
   ): AIMessage[] {
     try {
       const enrichedHistory: AIMessage[] = [];
@@ -564,7 +592,7 @@ Que souhaites-tu explorer ?`;
       // Message système avec mode & contexte OMEGA
       enrichedHistory.push({
         role: 'system',
-        content: this.buildSystemPrompt(modeConfig, context),
+        content: this.buildSystemPrompt(modeConfig, context, promptContext),
         timestamp: Date.now(),
       });
 
@@ -633,66 +661,20 @@ Que souhaites-tu explorer ?`;
    */
   private buildSystemPrompt(
     modeConfig: ChatModeConfig,
-    context: { sources: string[]; data: Record<string, unknown> }
+    context: { sources: string[]; data: Record<string, unknown> },
+    promptContext?: PromptContext
   ): string {
     try {
-      // Signature TITANE∞ OMEGA obligatoire
-      let prompt = `═══════════════════════════════════════════════════════════════════
-TITANE∞ v19.2Ω — Système Cognitif OMEGA Auto-Évolutif
-Mode actif: ${modeConfig.name} (${modeConfig.icon})
-Architecture: Pipeline OMEGA • Auto-guérison • Validation multi-niveaux
-═══════════════════════════════════════════════════════════════════
+      const contextPayload: PromptContext =
+        promptContext || {
+          modeName: modeConfig.name,
+          modeIcon: modeConfig.icon,
+          emotionState: this.config.emotionState,
+          memory: context.sources.length > 0 ? context : undefined,
+        };
 
-`;
-
-      // Ajout du prompt spécifique au mode (isolé)
-      prompt += modeConfig.systemPrompt;
-
-      // Isolation OMEGA: Rappel du mode pour éviter contamination
-      prompt += `
-
-⚠️ ISOLATION MODE OMEGA: Tu es actuellement en mode ${modeConfig.name}. Reste fidèle à ce mode avec cohérence TITANE∞, ne dérive pas vers d'autres styles de réponse.`;
-
-      // Adaptation émotionnelle OMEGA
-      if (this.config.emotionState) {
-        const { valence, intensity, energy } = this.config.emotionState;
-
-        if (intensity > 0.7 && energy < 0.3) {
-          prompt += '\n\n⚠️ OMEGA ÉMOTIONNEL: Utilisateur fatigué avec forte intensité. Adopte un ton apaisant TITANE∞, propose des pauses cognitives.';
-        } else if (valence < -0.5) {
-          prompt += '\n\n💙 OMEGA SUPPORT: État émotionnel négatif détecté. Sois empathique avec la personnalité TITANE∞, écoute active, questions réflexives douces.';
-        } else if (energy > 0.8 && valence > 0.5) {
-          prompt += '\n\n🚀 OMEGA DYNAMIQUE: Utilisateur énergisé et positif. Encourage l\'action avec l\'efficacité TITANE∞, propose des défis stimulants.';
-        }
-      }
-
-      // Contexte Memory Core OMEGA
-      if (context.sources.length > 0) {
-        prompt += '\n\n📚 Contexte OMEGA actif:\n';
-        prompt += context.sources.map(s => `  • ${s}`).join('\n');
-
-        // Projets actifs
-        if (context.data.projects) {
-          prompt += `\n\nProjets en cours: ${context.data.projects}`;
-        }
-
-        // Décisions récentes
-        if (context.data.decisions) {
-          prompt += `\n\nDécisions récentes: ${context.data.decisions}`;
-        }
-      }
-
-      // Signature de clôture TITANE∞ OMEGA
-      prompt += `
-
-═══════════════════════════════════════════════════════════════════
-Fin du contexte système TITANE∞ v19.2Ω OMEGA
-Réponds maintenant en mode ${modeConfig.name} avec personnalité TITANE∞.
-═══════════════════════════════════════════════════════════════════`;
-
-      return prompt;
+      return buildTitanePrompt(modeConfig.profileId, undefined, contextPayload);
     } catch (error) {
-      // Fallback prompt sécurisé
       isDev && console.warn('[OMEGA] buildSystemPrompt failed:', error);
       return `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency Mode)`;
     }

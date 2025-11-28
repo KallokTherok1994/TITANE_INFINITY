@@ -13,6 +13,8 @@
  */
 
 import type { AIMessage, AIResponse, AIConfig } from './types';
+import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
+import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
 import { tauriChatProvider } from './providers/tauriChat';
 import { geminiProvider } from './providers/gemini';
@@ -234,7 +236,7 @@ class AIOrchestrator {
           score += requiresRealtime ? 20 : 0; // Bonus temps réel
           break;
 
-        case 'tauriChat':
+        case 'tauri-backend':
           score += isComplexQuery ? 20 : 10; // Bonus complexité
           score -= contextLength > 10000 ? 15 : 0; // Malus gros contexte
           break;
@@ -297,7 +299,7 @@ class AIOrchestrator {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  async generate(message: string, history: AIMessage[] = [], _config?: AIConfig): Promise<AIResponse> {
+  async generate(message: string, history: AIMessage[] = [], config?: AIConfig): Promise<AIResponse> {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const requestStartTime = Date.now();
 
@@ -356,10 +358,17 @@ class AIOrchestrator {
 
           // ═══ ISOLATED EXECUTION WITH TIMEOUT ═══
           const executionTimeout = providerName === 'titane-local' ? 10000 : 30000; // Local plus rapide
+          const historyForProvider = this.buildHistoryForProvider(
+            history,
+            providerName,
+            config?.promptProfileId,
+            config?.promptContext
+          );
+
           const response = await this.executeProviderIsolated(
             provider,
             sanitized,
-            history,
+            historyForProvider,
             executionTimeout,
             requestId
           );
@@ -455,7 +464,7 @@ Une défaillance multi-niveaux a été détectée et traitée automatiquement.
 • Résolution de problèmes techniques
 
 Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
-        provider: 'omega-ultimate-fallback',
+        provider: 'ultimate-fallback',
         model: 'omega-emergency-v19.2Ω',
         timestamp: Date.now(),
         metadata: {
@@ -494,7 +503,7 @@ Une erreur système majeure a été interceptée et neutralisée automatiquement
 **Statut** : Système stable et opérationnel
 
 Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu réessayer ta demande ?`,
-        provider: 'omega-critical-recovery',
+        provider: 'emergency-fallback',
         model: 'omega-critical-v19.2Ω',
         timestamp: Date.now(),
         metadata: {
@@ -516,6 +525,68 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * PHASE 3.5: ISOLATED PROVIDER EXECUTION + SANDBOXING
    * ═══════════════════════════════════════════════════════════════════
    */
+
+  private mapProviderToPromptProvider(providerName: string): PromptProvider {
+    switch (providerName) {
+      case 'titane-local':
+        return 'titane-local';
+      case 'tauri-backend':
+        return 'tauri';
+      case 'ollama':
+        return 'ollama';
+      case 'gemini':
+        return 'gemini';
+      default:
+        if (providerName.includes('claude')) {
+          return 'claude';
+        }
+        if (providerName.includes('ollama')) {
+          return 'ollama';
+        }
+        if (providerName.includes('tauri')) {
+          return 'tauri';
+        }
+        return 'openai';
+    }
+  }
+
+  private buildHistoryForProvider(
+    history: AIMessage[],
+    providerName: string,
+    promptProfileId?: string,
+    promptContext?: PromptContext
+  ): AIMessage[] {
+    if (!promptProfileId) {
+      return history;
+    }
+
+    try {
+      const promptProvider = this.mapProviderToPromptProvider(providerName);
+      const prompt = buildTitanePrompt(promptProfileId, promptProvider, promptContext);
+
+      if (history.length === 0) {
+        return [{ role: 'system', content: prompt, timestamp: Date.now() }];
+      }
+
+      const cloned = history.map(msg => ({ ...msg }));
+      const systemIndex = cloned.findIndex(msg => msg.role === 'system');
+
+      if (systemIndex >= 0) {
+        cloned[systemIndex] = {
+          ...cloned[systemIndex],
+          content: prompt,
+          timestamp: Date.now(),
+        };
+      } else {
+        cloned.unshift({ role: 'system', content: prompt, timestamp: Date.now() });
+      }
+
+      return cloned;
+    } catch (error) {
+      isDev && console.warn('[OMEGA] Prompt rebuild skipped for provider', providerName, error);
+      return history;
+    }
+  }
 
   private async executeProviderIsolated(
     provider: any,
@@ -660,13 +731,15 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
         if (provider.stream) {
           // Streaming natif avec timeout
-          let streamTimeout: NodeJS.Timeout;
+          let streamTimeout: NodeJS.Timeout | null = null;
           const streamPromise = provider.stream(sanitized, history);
 
           try {
             for await (const chunk of streamPromise) {
               // Reset timeout à chaque chunk
-              clearTimeout(streamTimeout);
+              if (streamTimeout) {
+                clearTimeout(streamTimeout);
+              }
               streamTimeout = setTimeout(() => {
                 throw new Error('Stream timeout');
               }, 10000);
@@ -676,10 +749,14 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
                 hasStreamed = true;
               }
             }
-            clearTimeout(streamTimeout);
+            if (streamTimeout) {
+              clearTimeout(streamTimeout);
+            }
             return; // Streaming successful
           } catch (streamError) {
-            clearTimeout(streamTimeout);
+            if (streamTimeout) {
+              clearTimeout(streamTimeout);
+            }
             throw streamError;
           }
         } else {

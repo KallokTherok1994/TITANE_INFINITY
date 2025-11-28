@@ -14,6 +14,7 @@
  */
 
 import { memoryService } from '../api';
+import type { StructuredMemoryEntry } from '@/core/prompts';
 
 /**
  * Contexte enrichi provenant de Memory Core
@@ -152,6 +153,21 @@ export class MemoryIntegration {
     }
   }
 
+  /** Sauvegarde une entrée structurée (decision, listening_entry, etc.) */
+  async saveStructuredEntry(entry: StructuredMemoryEntry): Promise<void> {
+    const normalized: StructuredMemoryEntry = {
+      ...entry,
+      id: entry.id || this.generateEntryId(),
+      timestamp: entry.timestamp || new Date().toISOString(),
+    };
+
+    try {
+      await memoryService.saveStructuredEntry(normalized);
+    } catch (error) {
+      console.error('[MemoryIntegration] Erreur sauvegarde structured entry:', error);
+    }
+  }
+
   /**
    * Charge projets actifs
    */
@@ -273,6 +289,14 @@ export class MemoryIntegration {
    */
   clearCache(): void {
     this.cache.clear();
+  }
+
+  private generateEntryId(): string {
+    const globalCrypto = typeof globalThis !== 'undefined' ? (globalThis.crypto as Crypto | undefined) : undefined;
+    if (globalCrypto?.randomUUID) {
+      return globalCrypto.randomUUID();
+    }
+    return `mem_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
   }
 }
 

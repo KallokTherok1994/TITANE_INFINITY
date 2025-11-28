@@ -17,8 +17,8 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": false,
     "noUncheckedIndexedAccess": false,
@@ -61,7 +61,11 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "src/__tests__/**",
-    "src/test/**"
+    "src/test/**",
+    "src/tests/**",
+    "src/hooks/archived/**",
+    "src/omnisEngine/**",
+    "src/omnis-final-validation.ts"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

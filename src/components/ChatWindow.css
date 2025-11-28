@@ -198,6 +198,77 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   PRESET SHORTCUTS
+   ═══════════════════════════════════════════════════════════════════ */
+
+.chat-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 24px 8px;
+  border-top: 1px solid rgba(196, 196, 196, 0.08);
+  border-bottom: 1px solid rgba(196, 196, 196, 0.08);
+  background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(33, 33, 33, 0.85));
+}
+
+.chat-preset-button {
+  flex: 1 1 160px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(196, 196, 196, 0.15);
+  background: rgba(114, 123, 129, 0.15);
+  color: #c4c4c4;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.chat-preset-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, rgba(147, 179, 153, 0.25), rgba(114, 123, 129, 0.15));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.chat-preset-button:hover::after {
+  opacity: 1;
+}
+
+.chat-preset-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  color: #f2f2f2;
+}
+
+.chat-preset-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .chat-presets {
+    padding: 12px 16px 4px;
+    gap: 8px;
+  }
+
+  .chat-preset-button {
+    flex: 1 1 calc(50% - 8px);
+    font-size: 13px;
+    padding: 8px 10px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    INPUT ZONE
    ═══════════════════════════════════════════════════════════════════ */
 

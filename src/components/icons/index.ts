@@ -28,6 +28,7 @@ export {
   Info,
   Minus,
   RefreshCw,
+  Shield,
   TrendingDown,
   TrendingUp,
   XCircle,

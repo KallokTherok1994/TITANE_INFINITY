@@ -163,9 +163,9 @@ export const ChatIADiagnostic: React.FC = () => {
               )}
             </div>
 
-            {result.status === 'success' && result.data && (
+            {result.status === 'success' && typeof result.data !== 'undefined' && (
               <pre style={styles.resultData}>
-                {JSON.stringify(result.data, null, 2) as unknown as React.ReactNode}
+                {JSON.stringify(result.data, null, 2)}
               </pre>
             )}
 

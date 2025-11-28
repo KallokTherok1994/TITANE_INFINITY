@@ -12,7 +12,7 @@
  * ══════════════════════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIProvider, AIConfig, AIProviderName } from '../types';
+import type { AIMessage, AIResponse, AIProvider, AIConfig, AIProviderName } from '../../types';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMNIS HARDENING
@@ -452,7 +452,7 @@ export class OmnisProviderWrapper implements AIProvider {
         // 3. Execute with Retry + Timeout Protection
         const result = await this.executeWithRetry(async () => {
           return Promise.race([
-            this.originalProvider.generate(message, history, config),
+            this.originalProvider.generate(message, history),
             this.createTimeoutPromise<AIResponse>(this.config.timeoutMs)
           ]);
         });

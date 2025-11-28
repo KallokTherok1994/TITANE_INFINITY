@@ -44,17 +44,40 @@ console.log(`[XP] Système chargé:`, { level: XP.state.level, xp: XP.state.tota
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
 
+const getTauriWindowAPI = () => {
+  if (typeof window === 'undefined') {
+    return undefined;
+  }
+
+  return (window as typeof window & {
+    __TAURI__?: {
+      window?: {
+        getCurrent: () => {
+          openDevtools: () => Promise<void>;
+        };
+      };
+    };
+  }).__TAURI__?.window;
+};
+
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
-if (typeof window.__TAURI__ !== 'undefined' && window.__TAURI__) {
-  window.addEventListener('keydown', (ev: KeyboardEvent) => {
-    if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
-      ev.preventDefault();
-      window.__TAURI__.window.getCurrent().openDevtools().catch((err: Error) => {
-        console.error('[DevTools] Failed to open:', err);
-      });
-    }
-  });
-  console.log('🔧 DevTools shortcuts enabled: F12 or Ctrl+Shift+I');
+if (typeof window !== 'undefined') {
+  const tauriWindowAPI = getTauriWindowAPI();
+
+  if (tauriWindowAPI) {
+    window.addEventListener('keydown', (ev: KeyboardEvent) => {
+      if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
+        ev.preventDefault();
+        tauriWindowAPI
+          .getCurrent()
+          .openDevtools()
+          .catch((err: Error) => {
+            console.error('[DevTools] Failed to open:', err);
+          });
+      }
+    });
+    console.log('🔧 DevTools shortcuts enabled: F12 or Ctrl+Shift+I');
+  }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

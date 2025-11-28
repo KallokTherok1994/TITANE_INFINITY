@@ -6,16 +6,23 @@
  * Correction des erreurs "Cannot read properties of undefined (reading 'invoke')"
  */
 
-// Déclaration globale pour window.__TAURI__
-declare global {
-  interface Window {
-    __TAURI__?: {
-      core?: {
-        invoke?: (command: string, args?: any) => Promise<any>;
-      };
-    };
+type TauriCoreBridge = {
+  core?: {
+    invoke?: (command: string, args?: any) => Promise<any>;
+  };
+};
+
+const getTauriGlobal = (): TauriCoreBridge | undefined => {
+  if (typeof window === 'undefined') {
+    return undefined;
   }
-}
+
+  const candidate = (window as typeof window & { __TAURI__?: unknown }).__TAURI__;
+  if (candidate && typeof candidate === 'object') {
+    return candidate as TauriCoreBridge;
+  }
+  return undefined;
+};
 
 /**
  * Protection robuste pour les appels Tauri invoke
@@ -38,7 +45,7 @@ export class TauriInvokeProtector {
    */
   private checkTauriAvailability(): boolean {
     if (this.isTauriAvailable !== null) {
-      return this.isTauriAvailable;
+      return this.isTauriAvailable === true;
     }
 
     try {
@@ -49,8 +56,8 @@ export class TauriInvokeProtector {
       }
 
       // Vérification API Tauri
-      const hasTauriGlobal = window.__TAURI__ && window.__TAURI__.core;
-      const hasTauriInvoke = hasTauriGlobal && typeof window.__TAURI__?.core?.invoke === 'function';
+      const tauriGlobal = getTauriGlobal();
+      const hasTauriInvoke = typeof tauriGlobal?.core?.invoke === 'function';
 
       this.isTauriAvailable = hasTauriInvoke;
 
@@ -58,7 +65,7 @@ export class TauriInvokeProtector {
         console.warn('[TauriProtector] Tauri API not available - using fallback mode');
       }
 
-      return this.isTauriAvailable;
+      return hasTauriInvoke;
     } catch (error) {
       console.warn('[TauriProtector] Error checking Tauri availability:', error);
       this.isTauriAvailable = false;

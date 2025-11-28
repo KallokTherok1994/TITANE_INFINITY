@@ -6,6 +6,8 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+import type { PromptContext } from '@/core/prompts';
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v16.0 — AI TYPES
@@ -56,6 +58,9 @@ export interface AIProvider {
   isAvailable: () => Promise<boolean>;
   generate: (message: string, history: AIMessage[]) => Promise<AIResponse>;
   stream?: (message: string, history: AIMessage[]) => AsyncGenerator<string>;
+  resetErrors?: () => void;
+  getStats?: () => Record<string, unknown>;
+  description?: string;
 }
 
 export interface AIConfig {
@@ -64,6 +69,8 @@ export interface AIConfig {
   topP?: number;
   topK?: number;
   timeout?: number;
+  promptProfileId?: string;
+  promptContext?: PromptContext;
 }
 
 export const DEFAULT_AI_CONFIG: AIConfig = {
