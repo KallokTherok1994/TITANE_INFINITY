@@ -427,7 +427,7 @@ export class SingularityFusionEngine {
   private async step4_GenerateIA(
     message: string,
     history: Message[],
-    intention: IntentionAnalysis,
+    _intention: IntentionAnalysis,
     styleConfig: StyleConfig
   ): Promise<string> {
     try {

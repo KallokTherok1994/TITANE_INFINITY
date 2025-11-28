@@ -42,6 +42,7 @@ const metalScale = {
   700: '#4a4a4a',
   800: '#353535',
   900: '#252525',
+  950: '#1f1f1f',  // Ajout pour compatibilité
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -64,6 +65,7 @@ export const colors = {
       700: '#4a4242',
       800: '#373232',
       900: '#282424',
+      950: '#1a1717',
       main: '#736868',
       accent: '#93b399', // Accent pour compatibilité
     },
@@ -89,6 +91,7 @@ export const colors = {
       700: '#4b5357',
       800: '#394044',
       900: '#2a2f32',
+      950: '#181a1c',
       main: '#727b81',
       accent: '#93b399', // Accent pour compatibilité
     },
@@ -114,6 +117,7 @@ export const colors = {
       700: '#627a69',
       800: '#4b5f52',
       900: '#36463c',
+      950: '#212d26',
       main: '#93b399',
       accent: '#93b399', // Accent pour compatibilité
     },
@@ -139,6 +143,7 @@ export const colors = {
       700: '#707070',
       800: '#545454',
       900: '#383838',
+      950: '#1f1f1f',
       main: '#c4c4c4',
       accent: '#93b399', // Accent pour compatibilité
     },
@@ -169,6 +174,7 @@ export const colors = {
       700: '#627a69',
       800: '#4b5f52',
       900: '#36463c',
+      950: '#212d26',
     },
     warning: {
       50: '#f0eeee',
@@ -181,6 +187,7 @@ export const colors = {
       700: '#4a4242',
       800: '#373232',
       900: '#282424',
+      950: '#1a1717',
     },
     error: {
       50: '#f0eeee',
@@ -193,6 +200,7 @@ export const colors = {
       700: '#4a4242',
       800: '#373232',
       900: '#282424',
+      950: '#1a1717',
     },
     info: {
       50: '#e8eaec',
@@ -205,6 +213,7 @@ export const colors = {
       700: '#4b5357',
       800: '#394044',
       900: '#2a2f32',
+      950: '#181a1c',
     },
   },
 
@@ -236,6 +245,7 @@ export const radius = {
   md: '0.5rem',    // 8px
   lg: '0.75rem',   // 12px
   xl: '1rem',      // 16px
+  '2xl': '1.5rem', // 24px
   full: '9999px',
 };
 
@@ -246,6 +256,7 @@ export const shadows = {
   md: '0 4px 8px rgba(0, 0, 0, 0.7)',
   lg: '0 8px 16px rgba(0, 0, 0, 0.75)',
   xl: '0 12px 24px rgba(0, 0, 0, 0.8)',
+  '2xl': '0 24px 48px rgba(0, 0, 0, 0.85)',
   glow: '0 0 20px rgba(114, 123, 129, 0.25)',
   glowAccent: '0 0 20px rgba(147, 179, 153, 0.2)',
   glowRubis: '0 0 20px rgba(115, 104, 104, 0.3)',    // Glow rubis (warm gray)

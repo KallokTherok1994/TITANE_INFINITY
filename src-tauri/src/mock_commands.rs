@@ -393,7 +393,7 @@ pub async fn sync_singularity() -> AppResult<serde_json::Value> {
         .await?;
 
     log::info!("Mock: sync_singularity called");
-    
+
     // ✅ FIXED v16.2.2+: Toujours retourner un état valide, jamais null
     Ok(json!({
         "physical": {
@@ -473,6 +473,82 @@ pub async fn singularity_get_meta() -> AppResult<serde_json::Value> {
     }))
 }
 
+// ─────────────────────────────────────────────────────────────────
+// SINGULARITY - Update commands (v16.2.2+)
+// ─────────────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub async fn singularity_update_physical(physical: serde_json::Value) -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::System, "singularity_update_physical")
+        .await?;
+    log::info!("Mock: singularity_update_physical called with: {:?}", physical);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_update_cognitive(cognitive: serde_json::Value) -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::System, "singularity_update_cognitive")
+        .await?;
+    log::info!("Mock: singularity_update_cognitive called with: {:?}", cognitive);
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_update_symbolic(_symbolic: serde_json::Value) -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::System, "singularity_update_symbolic")
+        .await?;
+    log::info!("Mock: singularity_update_symbolic called");
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_update_adaptive(_adaptive: serde_json::Value) -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::System, "singularity_update_adaptive")
+        .await?;
+    log::info!("Mock: singularity_update_adaptive called");
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_update_meta(_meta: serde_json::Value) -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::User, "singularity_update_meta")
+        .await?;
+    log::info!("Mock: singularity_update_meta called");
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_update_full_state(_state: serde_json::Value) -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::System, "singularity_update_full_state")
+        .await?;
+    log::info!("Mock: singularity_update_full_state called");
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_save_state() -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_write", Role::System, "singularity_save_state")
+        .await?;
+    log::info!("Mock: singularity_save_state called");
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn singularity_load_state() -> AppResult<()> {
+    PERMISSION_GUARD
+        .require("state_read", Role::System, "singularity_load_state")
+        .await?;
+    log::info!("Mock: singularity_load_state called");
+    Ok(())
+}
+
 // ═══════════════════════════════════════════════════════════════
 // DEVTOOLS - Logging & Debug
 // ═══════════════════════════════════════════════════════════════
@@ -508,11 +584,76 @@ pub async fn get_system_info() -> AppResult<serde_json::Value> {
 // ═══════════════════════════════════════════════════════════════
 
 #[tauri::command]
-pub async fn experience_get_state() -> AppResult<Option<serde_json::Value>> {
-    // Try to load from localStorage emulation (file-based mock)
-    // For now, return None to trigger frontend default state creation
-    log::info!("Mock: experience_get_state called");
-    Ok(None)
+pub async fn experience_get_state() -> AppResult<serde_json::Value> {
+    // Return default experience state matching TypeScript ExperienceState interface
+    log::info!("Mock: experience_get_state called - returning default state");
+    
+    let default_state = serde_json::json!({
+        "totalXp": 0,
+        "level": 1,
+        "domains": {
+            "cognitive": {
+                "id": "cognitive",
+                "label": "Cognition",
+                "description": "Intelligence cognitive, analyse, raisonnement",
+                "xp": 0,
+                "level": 1,
+                "category": "cognitive",
+                "lastUpdated": chrono::Utc::now().timestamp_millis(),
+                "icon": "🧠",
+                "position": { "x": 400, "y": 100 }
+            },
+            "business": {
+                "id": "business",
+                "label": "Business",
+                "description": "Stratégie, management, opérations",
+                "xp": 0,
+                "level": 1,
+                "category": "business",
+                "lastUpdated": chrono::Utc::now().timestamp_millis(),
+                "icon": "💼",
+                "position": { "x": 200, "y": 250 }
+            },
+            "memory": {
+                "id": "memory",
+                "label": "Mémoire",
+                "description": "Ingestion de fichiers, stockage de connaissances",
+                "xp": 0,
+                "level": 1,
+                "category": "memory",
+                "lastUpdated": chrono::Utc::now().timestamp_millis(),
+                "icon": "📂",
+                "position": { "x": 600, "y": 250 }
+            },
+            "chat": {
+                "id": "chat",
+                "label": "Chat IA",
+                "description": "Interactions conversationnelles",
+                "xp": 0,
+                "level": 1,
+                "category": "cognitive",
+                "lastUpdated": chrono::Utc::now().timestamp_millis(),
+                "icon": "💬",
+                "position": { "x": 300, "y": 400 }
+            },
+            "system": {
+                "id": "system",
+                "label": "Système",
+                "description": "Événements système, auto-heal, évolution",
+                "xp": 0,
+                "level": 1,
+                "category": "system",
+                "lastUpdated": chrono::Utc::now().timestamp_millis(),
+                "icon": "⚙️",
+                "position": { "x": 500, "y": 400 }
+            }
+        },
+        "history": [],
+        "lastUpdated": chrono::Utc::now().timestamp_millis(),
+        "version": "1.0.0"
+    });
+    
+    Ok(default_state)
 }
 
 #[tauri::command]

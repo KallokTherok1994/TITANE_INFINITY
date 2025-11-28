@@ -68,7 +68,7 @@ export const ControlPanel: React.FC = () => {
 
     switch (activeSection) {
       case 'system':
-        return <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />;
+        return systemInfo ? <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} /> : null;
       case 'appearance':
         return <AppearanceSection />;
       case 'singularity':
@@ -88,7 +88,7 @@ export const ControlPanel: React.FC = () => {
       case 'security':
         return <SecuritySection />;
       default:
-        return <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />;
+        return systemInfo ? <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} /> : null;
     }
   };
 
@@ -96,7 +96,7 @@ export const ControlPanel: React.FC = () => {
     <ControlPanelLayout
       activeSection={activeSection}
       onSectionChange={setActiveSection}
-      systemInfo={systemInfo}
+      systemInfo={systemInfo || null}
     >
       <div className="cp-content">
         {renderSection()}

@@ -160,7 +160,7 @@ export const ChatDiagnostic: React.FC = () => {
                     overflow: 'auto',
                     maxHeight: '200px'
                   }}>
-                    {JSON.stringify(result.data, null, 2)}
+                    {String(JSON.stringify(result.data, null, 2))}
                   </pre>
                 </details>
               )}

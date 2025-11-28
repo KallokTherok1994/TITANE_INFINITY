@@ -23,7 +23,6 @@
  * - Scripts générés, jamais exécutés
  */
 
-import { invoke } from '@tauri-apps/api/core';
 import type {
   ProjectAnalysis,
   ProjectType,

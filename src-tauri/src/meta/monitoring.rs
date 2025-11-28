@@ -12,6 +12,8 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 
 use crate::meta::{MetaCognitiveReport, SyncedState, DeepSyncAction};
+#[cfg(test)]
+use crate::meta::CognitiveHealthIndicators;
 
 /// Maximum number of evaluation history entries to keep in memory
 const MAX_HISTORY_SIZE: usize = 1000;

@@ -73,7 +73,7 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
   }, []);
 
   // Connect to FullBody engine (starts 60 FPS animation)
-  const _fullBodyAvatar = useFullBodyAvatar({
+  const __fullBodyAvatar = useFullBodyAvatar({
     autoStart: true,
     onSkeletonUpdate: handleSkeletonUpdate,
   });

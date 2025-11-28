@@ -51,16 +51,16 @@ export const initExperienceService = async (): Promise<void> => {
 
   try {
     // Tenter de charger l'état depuis le backend
-    const savedState = await safeInvoke<ExperienceState | null>('experience_get_state');
+    const savedState = await safeInvoke<ExperienceState>('experience_get_state');
 
-    if (savedState) {
+    if (savedState && typeof savedState === 'object' && savedState.domains) {
       experienceState = savedState;
       console.log('[Experience] État chargé depuis Tauri:', experienceState);
     } else {
-      // Premier démarrage : sauvegarder l'état par défaut
+      // État invalide ou vide : créer état par défaut
+      console.log('[Experience] État backend invalide, création état par défaut');
       experienceState = createDefaultExperienceState();
       await saveState();
-      console.log('[Experience] État initial créé');
     }
 
     isInitialized = true;

@@ -48,7 +48,7 @@ class VisualDevOpsEngine {
 
   // Limites
   private readonly MAX_HISTORY = 50;
-  private readonly MAX_SESSION_DURATION_MS = 8 * 60 * 60 * 1000; // 8 heures
+  private readonly _MAX_SESSION_DURATION_MS = 8 * 60 * 60 * 1000; // 8 heures
 
   private constructor() {
     console.log('[VisualDevOpsEngine] Initialized v25.5');
@@ -200,7 +200,7 @@ class VisualDevOpsEngine {
    */
   private extractTechnicalContent(
     elements: DetectedElement[],
-    contextHint?: string
+    _contextHint?: string
   ): TechnicalContent {
     const content: TechnicalContent = {
       languages_detected: [],
@@ -591,7 +591,7 @@ class VisualDevOpsEngine {
     return commands;
   }
 
-  private async generateOptimizationScript(analysis: ScreenAnalysis): Promise<GeneratedScript> {
+  private async generateOptimizationScript(_analysis: ScreenAnalysis): Promise<GeneratedScript> {
     let content = '#!/bin/bash\n\n';
     content += '# TITANE∞ Optimization Script\n';
     content += '# Review carefully before execution\n\n';
@@ -661,7 +661,7 @@ echo "✅ Operation complete"
 
   private async generateGenericCommands(
     actionType: ActionType,
-    analysis: ScreenAnalysis
+    _analysis: ScreenAnalysis
   ): Promise<Command[]> {
     // Commandes génériques selon type d'action
     const commands: Command[] = [];

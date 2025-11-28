@@ -219,7 +219,7 @@ export class AutoAuditEngine {
 
     for (const cmd of criticalCommands) {
       try {
-        const _response = await secureInvoke(cmd);
+        const __response = await secureInvoke(cmd);
         results.push({
           timestamp: Date.now(),
           category: 'commands',

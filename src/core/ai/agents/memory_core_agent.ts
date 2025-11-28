@@ -106,11 +106,11 @@ export class MemoryCoreAgent implements Agent {
 
   async handle(event: AgentEvent): Promise<AgentResponse> {
     if (event.type === 'knowledge:import') {
-      return this.importKnowledge(event.payload);
+      return this.importKnowledge(event.payload as ImportData);
     }
 
     if (event.type === 'knowledge:query') {
-      return this.queryKnowledge(event.payload);
+      return this.queryKnowledge(event.payload as QueryData);
     }
 
     if (event.type === 'snapshot:create') {

@@ -42,7 +42,7 @@ console.log(`[XP] Système chargé:`, { level: XP.state.level, xp: XP.state.tota
 document.documentElement.setAttribute('data-theme', 'dark');
 
 // 🔧 DevTools keyboard shortcuts (F12 + Ctrl+Shift+I)
-if (typeof window.__TAURI__ !== 'undefined') {
+if (typeof window.__TAURI__ !== 'undefined' && window.__TAURI__) {
   window.addEventListener('keydown', (ev: KeyboardEvent) => {
     if (ev.key === 'F12' || (ev.ctrlKey && ev.shiftKey && ev.key === 'I')) {
       ev.preventDefault();

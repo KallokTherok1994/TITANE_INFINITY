@@ -498,14 +498,22 @@ export function validateResponse<T>(
 ): CommandValidationResult & { data?: T } {
   const errors: string[] = [];
 
-  if (response === null || response === undefined) {
-    errors.push('Response is null or undefined');
-    return { valid: false, errors };
+  // Si validator personnalisé fourni, l'utiliser (peut accepter null)
+  if (validator) {
+    if (!validator(response)) {
+      errors.push('Response failed custom validation');
+      return { valid: false, errors };
+    }
+    return {
+      valid: true,
+      errors: [],
+      data: response as T,
+    };
   }
 
-  // Validation personnalisée
-  if (validator && !validator(response)) {
-    errors.push('Response failed custom validation');
+  // Validation générique : accepter objets valides, rejeter null/undefined
+  if (response === null || response === undefined) {
+    errors.push('Response is null or undefined');
     return { valid: false, errors };
   }
 

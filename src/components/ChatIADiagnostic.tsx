@@ -165,7 +165,7 @@ export const ChatIADiagnostic: React.FC = () => {
 
             {result.status === 'success' && result.data && (
               <pre style={styles.resultData}>
-                {JSON.stringify(result.data, null, 2)}
+                {String(JSON.stringify(result.data, null, 2))}
               </pre>
             )}
 

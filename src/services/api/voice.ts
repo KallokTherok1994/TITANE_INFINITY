@@ -69,7 +69,7 @@ class VoiceService {
    * @param config - Configuration TTS (rate, pitch, volume, voice)
    * @param useOnline - Mode online (Google TTS) vs offline (espeak/piper)
    */
-  async speak(text: string, config?: TTSConfig, useOnline: boolean = false): Promise<void> {
+  async speak(text: string, _config?: TTSConfig, useOnline: boolean = false): Promise<void> {
     try {
       await invokeWithRetry<void>(
         'speak',

@@ -78,7 +78,7 @@ export type ExpressionType =
 export class FullBodyAvatarBridge {
   private animationFrameId: number | null = null;
   private isRunning: boolean = false;
-  private targetFPS: number = 60;
+  private _targetFPS: number = 60;
   private onSkeletonUpdate?: (snapshot: SkeletonSnapshot) => void;
 
   // ─────────────────────────────────────────────────────────────────────────

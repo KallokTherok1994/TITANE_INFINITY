@@ -388,7 +388,7 @@ export function mergeFileKnowledge(
 ): void {
   // Removed getState() call - not used
   // Ajouter à la mémoire cognitive (connaissances)
-  const _newKnowledge = {
+  const __newKnowledge = {
     id: `file_${Date.now()}`,
     source: 'file_import',
     category,

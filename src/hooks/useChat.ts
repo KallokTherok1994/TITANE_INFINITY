@@ -202,9 +202,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           // Store in cache (LRU: limit to 100 entries)
           if (responseCache.current.size >= 100) {
             const firstKey = responseCache.current.keys().next().value;
-            responseCache.current.delete(firstKey);
+            if (firstKey) responseCache.current.delete(firstKey);
           }
-          responseCache.current.set(cacheKey, response);
+          responseCache.current.set(cacheKey ?? '', response);
           console.log(`💾 Cached response (${responseCache.current.size}/100 entries)`);
         }
 

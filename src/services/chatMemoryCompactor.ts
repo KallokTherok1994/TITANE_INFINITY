@@ -18,7 +18,7 @@ import type { ChatMode } from './ai/chatEngine';
 // ─────────────────────────────────────────────────────────────────
 
 const STORAGE_KEY_PREFIX = 'titane_chat_mode_';
-const _MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
+const __MAX_MESSAGES_PER_MODE = 50; // Reserved for future use
 const COMPRESSION_THRESHOLD = 30; // Compresser si > 30 messages
 const COMPRESSION_TARGET = 20; // Garder 20 messages après compression
 

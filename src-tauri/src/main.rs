@@ -301,6 +301,15 @@ async fn main() {
             mock_commands::singularity_get_symbolic,
             mock_commands::singularity_get_adaptive,
             mock_commands::singularity_get_meta,
+            // Singularity - Update commands (v16.2.2+)
+            mock_commands::singularity_update_physical,
+            mock_commands::singularity_update_cognitive,
+            mock_commands::singularity_update_symbolic,
+            mock_commands::singularity_update_adaptive,
+            mock_commands::singularity_update_meta,
+            mock_commands::singularity_update_full_state,
+            mock_commands::singularity_save_state,
+            mock_commands::singularity_load_state,
             // DevTools - Logging & Debug
             mock_commands::get_logs,
             mock_commands::clear_logs,

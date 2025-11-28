@@ -3,7 +3,6 @@
  * À utiliser pour debug uniquement
  */
 
-import React from 'react';
 
 export function AppTestMinimal() {
   return (

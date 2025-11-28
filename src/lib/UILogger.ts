@@ -350,8 +350,8 @@ export class UILogger {
       filtered = filtered.filter((log) => log.level === filter.level);
     }
 
-    if (filter?.since) {
-      filtered = filtered.filter((log) => log.timestamp >= filter.since);
+    if (filter?.since !== undefined) {
+      filtered = filtered.filter((log) => log.timestamp >= (filter.since ?? 0));
     }
 
     if (filter?.limit) {

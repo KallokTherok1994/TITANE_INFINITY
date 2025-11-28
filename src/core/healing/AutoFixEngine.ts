@@ -278,7 +278,7 @@ export class AutoFixEngine {
     return 'TypeScript error fixed';
   }
 
-  private async fixReactHookViolation(issue: DetectedIssue): Promise<string> {
+  private async fixReactHookViolation(_issue: DetectedIssue): Promise<string> {
     return 'React hook violation fixed';
   }
 
@@ -292,12 +292,12 @@ export class AutoFixEngine {
     return 'Pipeline restarted';
   }
 
-  private async fixLipSyncDesync(issue: DetectedIssue): Promise<string> {
+  private async fixLipSyncDesync(_issue: DetectedIssue): Promise<string> {
     await invoke('autofix_resync_lipsync');
     return 'Lip-sync resynchronized';
   }
 
-  private async fixUIFreeze(issue: DetectedIssue): Promise<string> {
+  private async fixUIFreeze(_issue: DetectedIssue): Promise<string> {
     // Force re-render
     window.dispatchEvent(new Event('resize'));
     return 'UI refresh triggered';

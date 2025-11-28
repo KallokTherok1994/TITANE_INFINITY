@@ -436,7 +436,7 @@ export class CognitiveOptimizationEngine {
     if (this.shortTermCache.size >= this.MAX_CACHE_SIZE) {
       // Supprimer entrée la plus ancienne (FIFO)
       const firstKey = this.shortTermCache.keys().next().value;
-      this.shortTermCache.delete(firstKey);
+      if (firstKey) this.shortTermCache.delete(firstKey);
     }
     this.shortTermCache.set(key, value);
   }

@@ -262,7 +262,7 @@ export async function secureFetch(
     method,
     headers,
     body,
-    signal: init?.signal,
+    signal: init?.signal ?? undefined,
   });
 
   // Convertir HttpResponse en Response standard (compatibilité)

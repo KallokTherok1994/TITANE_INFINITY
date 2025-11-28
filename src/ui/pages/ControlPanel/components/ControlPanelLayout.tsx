@@ -11,7 +11,7 @@ import './ControlPanelLayout.css';
 interface ControlPanelLayoutProps {
   activeSection: ControlPanelSection;
   onSectionChange: (section: ControlPanelSection) => void;
-  systemInfo: SystemInfo;
+  systemInfo: SystemInfo | null;
   children: React.ReactNode;
 }
 

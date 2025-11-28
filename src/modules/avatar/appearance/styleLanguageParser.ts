@@ -79,7 +79,7 @@ export class StyleLanguageParser {
     sac: ["sac", "bag"],
   };
 
-  private readonly MODULATOR_KEYWORDS = {
+  private readonly _MODULATOR_KEYWORDS = {
     texture_laine: ["laine", "wool", "cozy", "douillet"],
     texture_tech: ["tech", "synthétique", "moderne", "high-tech"],
     epoch_futur: ["futur", "futuriste", "future", "avant-gardiste"],

@@ -75,7 +75,7 @@ export function useFileOperations() {
     try {
       const response = await getFileInfo(path);
       const fileInfo = response.data;
-      setState(prev => ({ ...prev, currentFile: fileInfo, loading: false, error: null }));
+      setState(prev => ({ ...prev, currentFile: fileInfo || null, loading: false, error: null }));
       return fileInfo;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to get file info';
@@ -213,6 +213,11 @@ export function useFileOperations() {
       // Get file size first
       const fileInfoResponse = await getFileInfo(path);
       const fileInfo = fileInfoResponse.data;
+
+      if (!fileInfo) {
+        throw new Error('File info not available');
+      }
+
       const totalSize = fileInfo.size;
 
       // Read file

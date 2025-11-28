@@ -508,7 +508,7 @@ export class UnifiedCognitivePipeline {
     };
   }
 
-  private createErrorResponse(error: any): CognitiveResponse {
+  private createErrorResponse(_error: any): CognitiveResponse {
     return {
       text: "Je rencontre une difficulté technique. Pouvez-vous reformuler votre demande ?",
       reasoning: ['Erreur de traitement'],

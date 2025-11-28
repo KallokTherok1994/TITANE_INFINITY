@@ -11,7 +11,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { secureInvoke } from '@/lib/security';
 import '../../styles/exp-fusion.css';
 import { TalentTree } from './TalentTree';
 import { TimelineChart } from './TimelineChart';

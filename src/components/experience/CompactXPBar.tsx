@@ -34,6 +34,11 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
   const { totalXp, level, progress, isLoading } = useExperience();
   const { animationConfig, shouldReduceMotion } = useAnimation();
 
+  // Protection contre valeurs undefined
+  const safeXp = totalXp ?? 0;
+  const safeLevel = level ?? 1;
+  const safeProgress = progress ?? 0;
+
   if (isLoading) {
     return (
       <div
@@ -98,10 +103,10 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
               color: '#000',
             }}
           >
-            NIV. {level}
+            NIV. {safeLevel}
           </span>
           <span style={{ color: '#727b81', fontSize: '0.75rem' }}>
-            {totalXp.toLocaleString()} XP
+            {safeXp.toLocaleString()} XP
           </span>
         </div>
 
@@ -137,7 +142,7 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
             boxShadow: '0 0 8px rgba(147, 179, 153, 0.5)',
           }}
           initial={{ width: 0 }}
-          animate={{ width: `${Math.min(progress * 100, 100)}%` }}
+          animate={{ width: `${Math.min(safeProgress * 100, 100)}%` }}
           transition={{ duration: animationConfig.skipAnimation ? 0 : Math.max(animationConfig.duration * 3, 0.6), ease: 'easeOut' }}
         />
       </div>
@@ -151,7 +156,7 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
           textAlign: 'center',
         }}
       >
-        {(progress * 100).toFixed(0)}% vers Niv. {level + 1}
+        {(safeProgress * 100).toFixed(0)}% vers Niv. {safeLevel + 1}
       </div>
     </motion.div>
   );

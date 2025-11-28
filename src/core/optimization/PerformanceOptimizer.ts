@@ -98,7 +98,7 @@ export class PerformanceOptimizer {
   private optimizationHistory: OptimizationResult[] = [];
 
   private metricsInterval: number | null = null;
-  private optimizationInterval: number | null = null;
+  private _optimizationInterval: number | null = null;
 
   private constructor() {
     this.config = this.getDefaultConfig();

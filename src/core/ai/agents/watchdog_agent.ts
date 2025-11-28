@@ -47,7 +47,7 @@ export class WatchdogAgent implements Agent {
 
   // Security thresholds
   private readonly MAX_ERRORS_PER_MINUTE = 10;
-  private readonly MAX_LOAD_SUSTAINED = 95; // 95% for 5+ minutes
+  private readonly _MAX_LOAD_SUSTAINED = 95; // 95% for 5+ minutes
   private readonly SUSPICION_THRESHOLD = 70;
 
   async initialize(): Promise<void> {
