@@ -16,7 +16,7 @@ Statut: 🟢 PERFECTION ULTIME ACHIEVED
 
 Kevin,
 
-TITANE∞ est maintenant **100% prêt pour production**. Voici ce qui a été 
+TITANE∞ est maintenant **100% prêt pour production**. Voici ce qui a été
 accompli en 2h30 de travail intensif :
 
 
@@ -89,9 +89,9 @@ accompli en 2h30 de travail intensif :
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🟡 OPTIONNEL : Installer espeak pour TTS
-   
+
    $ ./install_espeak.sh
-   
+
    Cela permettra à TITANE de parler avec sa voix (synthèse vocale).
    Pas critique pour le fonctionnement de base.
 
@@ -101,13 +101,13 @@ accompli en 2h30 de travail intensif :
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 1. Lancer TITANE :
-   
+
    $ npm run tauri:dev
-   
+
    → Attendre "NAISSANCE v∞" message
 
 2. Ouvrir DevTools (F12) et coller ce code :
-   
+
    // Test Chat IA Ollama
    await window.__TAURI__.core.invoke('chat_send_message', {
      request: {
@@ -116,11 +116,11 @@ accompli en 2h30 de travail intensif :
        streaming: false
      }
    });
-   
+
    → Devrait répondre en quelques secondes
 
 3. Test Chat IA Gemini :
-   
+
    await window.__TAURI__.core.invoke('chat_send_message', {
      request: {
        message: "Hello, what can you do?",
@@ -128,11 +128,11 @@ accompli en 2h30 de travail intensif :
        streaming: false
      }
    });
-   
+
    → Devrait répondre via Google Gemini API
 
 4. Vérifier Experience System :
-   
+
    - Cliquer sur "Experience" dans le menu
    - Vérifier que "NIV. 1 - 0 XP" s'affiche (CompactXPBar)
    - Pas d'erreur dans Console
