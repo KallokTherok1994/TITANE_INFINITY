@@ -129,6 +129,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'singularity_reset',
   'update_singularity_state',
   'singularity_self_check',
+  
+  // Singularity Mutation Commands (v16.2.2+)
+  'singularity_update_physical',
+  'singularity_update_cognitive',
+  'singularity_update_symbolic',
+  'singularity_update_adaptive',
+  'singularity_update_meta',
+  'singularity_update_full_state',
+  'singularity_save_state',
+  'singularity_load_state',
 
   // ═══════════════════════════════════════════════════════════════
   // NEXUS - Validation
