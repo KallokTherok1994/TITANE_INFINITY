@@ -32,6 +32,11 @@ mod devops_commands {
     include!("commands/devops.rs");
 }
 
+// System Health commands (module local)
+mod system_health_commands {
+    include!("commands/system_health.rs");
+}
+
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
@@ -268,6 +273,10 @@ async fn main() {
             // Helios - System Monitoring
             mock_commands::get_helios_state,
             mock_commands::get_system_health,
+            // OMNIS Auto-Heal - System Health (Phase 7)
+            system_health_commands::get_system_health,
+            system_health_commands::memory_repair,
+            system_health_commands::system_optimize,
             // Memory - Storage & Timeline
             mock_commands::get_memory_state,
             mock_commands::write_snapshot,

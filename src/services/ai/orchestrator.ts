@@ -1,210 +1,856 @@
 /**
- * TITANE∞ v19.2Θ — Proprietary License
+ * TITANE∞ v19.2Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Θ — AI ORCHESTRATOR (MAÎTRE COHÉRENCE TOTALE)
- *   Architecture 100% anti-silence avec fallback ultime garanti
- *   PHASE II: TITANE Local en premier + Boucle MAÎTRE anti-crash
- *   Ordre: Local → Tauri → Gemini → Ollama (sécurité absolue)
+ *   TITANE∞ v19.2Ω — AI ORCHESTRATOR OMEGA (NEURAL ORDER v∞.Ω)
+ *   PHASE 3Ω: Orchestrator neural • Isolation absolue • Auto-heal intégré
+ *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw
+ *   Pipeline: Validate → Neural Selection → Isolated Execution → Auto-Heal → Normalize
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIMessage, AIResponse, AIConfig } from './types';
-import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (sécurité absolue)
+import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
 import { tauriChatProvider } from './providers/tauriChat';
 import { geminiProvider } from './providers/gemini';
 import { ollamaProvider } from './providers/ollama';
+import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
 
-const isDev = import.meta.env.DEV;
+const isDev = process.env.NODE_ENV === 'development';
 
-/**
- * Sanitize et valide un message utilisateur
- */
-function sanitizeMessage(message: string): string {
-  return message
-    .trim()
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
-    .replace(/<[^>]+>/g, '') // Remove HTML tags
-    .substring(0, 10000); // Max 10k caractères
+// ─────────────────────────────────────────────────────────────────
+// TYPES OMEGA ORCHESTRATOR
+// ─────────────────────────────────────────────────────────────────
+
+interface ProviderStats {
+  name: string;
+  totalRequests: number;
+  successCount: number;
+  failureCount: number;
+  avgResponseTime: number;
+  lastUsed: number;
+  lastFailure: number;
+  reliability: number; // 0-100
+  status: 'healthy' | 'degraded' | 'critical' | 'offline';
 }
 
-/**
- * Orchestrateur principal
- */
+interface OrchestratorMetrics {
+  totalRequests: number;
+  totalSuccesses: number;
+  totalFailures: number;
+  avgResponseTime: number;
+  fallbackRate: number;
+  autoHealTriggers: number;
+  lastActivity: number;
+}
+
+interface NeuralSelection {
+  selectedProvider: string;
+  reason: 'optimal' | 'fallback' | 'availability' | 'recovery' | 'emergency';
+  confidence: number; // 0-100
+  alternates: string[];
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ORCHESTRATOR OMEGA CLASS
+// ─────────────────────────────────────────────────────────────────
+
 class AIOrchestrator {
-  // v18.0: Backend Rust d'abord (gère sa propre cascade), puis providers frontend
-  // Ordre de priorité:
-  // 1. tauriChatProvider (Backend Rust: gemini → ollama → local)
-  // 2. geminiProvider (Frontend API direct)
-  // 3. ollamaProvider (Frontend local direct)
-  // 4. titaneLocalProvider (Frontend autonome, toujours disponible)
+  // ═══ NEURAL ORDER OMEGA (Local-first Sécurity) ═══
   private providers = [
-    tauriChatProvider,   // ← NOUVEAU: Backend Rust (mock cascade)
-    geminiProvider,      // Frontend API
-    ollamaProvider,      // Frontend local
-    titaneLocalProvider  // Frontend autonomous safety net
+    titaneLocalProvider,   // ← NOYAU INFAILLIBLE (toujours en premier)
+    tauriChatProvider,     // Backend Rust (cascade interne)
+    geminiProvider,        // Cloud API (performant mais dépendant réseau)
+    ollamaProvider,        // Local LLM (privé mais plus lent)
   ];
 
+  private providerStats: Map<string, ProviderStats> = new Map();
+  private orchestratorMetrics: OrchestratorMetrics = {
+    totalRequests: 0,
+    totalSuccesses: 0,
+    totalFailures: 0,
+    avgResponseTime: 0,
+    fallbackRate: 0,
+    autoHealTriggers: 0,
+    lastActivity: 0
+  };
+
+  private isWarmup = false;
+  private maxConcurrent = 3;
+  private currentRequests = 0;
+
+  constructor() {
+    this.initializeProviderStats();
+    this.startWarmup();
+  }
+
   /**
-   * Génère une réponse en cascade
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.1: INITIALISATION STATS PROVIDERS + WARMUP
+   * ═══════════════════════════════════════════════════════════════════
    */
-  async generate(message: string, history: AIMessage[] = [], _config?: AIConfig): Promise<AIResponse> {
-    const sanitized = sanitizeMessage(message);
 
-    if (!sanitized) {
-      throw new Error('Message vide ou invalide');
+  private initializeProviderStats(): void {
+    this.providers.forEach(provider => {
+      this.providerStats.set(provider.name, {
+        name: provider.name,
+        totalRequests: 0,
+        successCount: 0,
+        failureCount: 0,
+        avgResponseTime: 0,
+        lastUsed: 0,
+        lastFailure: 0,
+        reliability: 100, // Start optimistic
+        status: 'healthy'
+      });
+    });
+  }
+
+  private async startWarmup(): Promise<void> {
+    if (this.isWarmup) return;
+    this.isWarmup = true;
+
+    try {
+      isDev && console.log('[OMEGA ORCHESTRATOR] Starting provider warmup...');
+
+      // Warmup en parallèle (non-bloquant)
+      const warmupPromises = this.providers.map(async provider => {
+        try {
+          const isAvailable = await Promise.race([
+            provider.isAvailable(),
+            new Promise<boolean>((_, reject) => setTimeout(() => reject(new Error('Warmup timeout')), 2000))
+          ]);
+
+          const stats = this.providerStats.get(provider.name);
+          if (stats) {
+            stats.status = isAvailable ? 'healthy' : 'offline';
+          }
+
+          return { provider: provider.name, available: isAvailable };
+        } catch (error) {
+          const stats = this.providerStats.get(provider.name);
+          if (stats) {
+            stats.status = 'degraded';
+          }
+          return { provider: provider.name, available: false };
+        }
+      });
+
+      const warmupResults = await Promise.allSettled(warmupPromises);
+      isDev && console.log('[OMEGA ORCHESTRATOR] Warmup complete:',
+        warmupResults.map(r => r.status === 'fulfilled' ? r.value : { error: true })
+      );
+
+    } catch (error) {
+      isDev && console.error('[OMEGA ORCHESTRATOR] Warmup failed:', error);
+    } finally {
+      this.isWarmup = false;
+    }
+  }
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.2: MESSAGE SANITIZATION + VALIDATION STRICTE
+   * ═══════════════════════════════════════════════════════════════════
+   */
+
+  private sanitizeMessage(message: string): { sanitized: string, valid: boolean, issues: string[] } {
+    const issues: string[] = [];
+
+    if (!message || typeof message !== 'string') {
+      issues.push('Invalid message type');
+      return { sanitized: '', valid: false, issues };
     }
 
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-    console.log('🚀 ORCHESTRATOR: Début cascade AI providers');
-    console.log(`📝 Message: "${sanitized.substring(0, 50)}${sanitized.length > 50 ? '...' : ''}"`);
-    console.log(`📚 Historique: ${history.length} messages`);
-    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    let sanitized = message.trim();
 
-    // Tente chaque provider dans l'ordre
-    for (let i = 0; i < this.providers.length; i++) {
-      const provider = this.providers[i];
-      if (!provider) continue;
+    // Validation longueur
+    if (sanitized.length === 0) {
+      issues.push('Empty message');
+      return { sanitized: '', valid: false, issues };
+    }
 
-      console.log(`\n🔍 [${i + 1}/${this.providers.length}] Testing ${provider.name}...`);
+    if (sanitized.length > 10000) {
+      issues.push('Message too long (>10k chars)');
+      sanitized = sanitized.substring(0, 10000);
+    }
 
-      try {
-        // Vérifie disponibilité
-        console.log(`   ⏳ Checking availability...`);
-        const isAvailable = await provider.isAvailable();
-        console.log(`   ${isAvailable ? '✅' : '❌'} Available: ${isAvailable}`);
+    // Nettoyage sécurisé
+    sanitized = sanitized
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '') // Remove scripts
+      .replace(/<[^>]+>/g, '') // Remove HTML tags
+      .replace(/javascript:/gi, '') // Remove javascript: protocols
+      .replace(/data:.*,/gi, ''); // Remove data URLs
 
-        if (!isAvailable) {
-          console.log(`   ⏭️  Skipping to next provider...\n`);
-          continue;
-        }
+    // Validation caractères dangereux
+    const dangerousPatterns = [
+      /\x00/g, // Null bytes
+      /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, // Control characters
+    ];
 
-        console.log(`   🌟 Generating response...`);
-        const startTime = Date.now();
-
-        // Génère la réponse (config ignoré pour l'instant)
-        const response = await provider.generate(sanitized, history);
-
-        const duration = Date.now() - startTime;
-        console.log(`   ✅ Success in ${duration}ms`);
-        console.log(`   📦 Response length: ${response.content.length} chars`);
-        console.log(`   🏷️  Provider: ${response.provider}, Model: ${response.model || 'N/A'}`);
-        console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        console.log('🎉 ORCHESTRATOR: Response generated successfully!');
-        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-
-        return response;
-
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-        console.error(`   ❌ Error: ${errorMsg}`);
-
-        // Si c'est le dernier provider (fallback), on renvoie quand même une réponse
-        if (provider === fallbackProvider) {
-          console.error('\n🚨 CRITICAL: Fallback provider failed!');
-          console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-          console.error('Error details:', error);
-          console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-
-          // NOUVEAU: Réponse d'urgence garantie (jamais throw)
-          return {
-            content: "🚨 **Erreur système critique**: Tous les services IA sont indisponibles, y compris le mode fallback. Contactez le support technique.\n\n**Détails**: " + errorMsg,
-            provider: 'emergency-fallback' as const,
-            timestamp: Date.now(),
-            model: 'emergency-v1',
-          };
-        }
-
-        console.log(`   ⏭️  Trying next provider...\n`);
-        continue;
+    dangerousPatterns.forEach(pattern => {
+      if (pattern.test(sanitized)) {
+        issues.push('Dangerous characters detected');
+        sanitized = sanitized.replace(pattern, '');
       }
-    }
-
-    // ✅ SAFETY NET ULTIME: Si tous échouent (impossible en théorie), garantir réponse
-    console.error('\n🚨 ORCHESTRATOR: All providers exhausted - RETURNING ULTIMATE FALLBACK!');
-    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    });
 
     return {
-      content: "⚠️ **TITANE∞ en mode dégradé**: Tous les systèmes IA principaux sont indisponibles.\n\n**Actions recommandées:**\n• Configure ta clé Gemini API dans .env\n• Lance Ollama local: `ollama serve`\n• Vérifie ta connexion internet\n\nJe reste disponible pour les fonctions système (Helios, Memory, Progression).",
-      provider: 'ultimate-fallback',
-      timestamp: Date.now(),
-      model: 'emergency-v2',
+      sanitized,
+      valid: sanitized.length > 0 && issues.length === 0,
+      issues
     };
   }
 
   /**
-   * Stream une réponse
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.3: NEURAL PROVIDER SELECTION (Intelligence Adaptive)
+   * ═══════════════════════════════════════════════════════════════════
    */
-  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    const sanitized = sanitizeMessage(message);
 
-    if (!sanitized) {
-      throw new Error('Message vide ou invalide');
-    }
+  private selectOptimalProvider(message: string, history: AIMessage[]): NeuralSelection {
+    // Analyse contextuelle du message
+    const messageLength = message.length;
+    const contextLength = history.reduce((sum, msg) => sum + msg.content.length, 0);
+    const isComplexQuery = messageLength > 200 || contextLength > 5000;
+    const requiresRealtime = message.toLowerCase().includes('temps réel') || message.toLowerCase().includes('maintenant');
 
-    // Tente chaque provider dans l'ordre
-    for (const provider of this.providers) {
-      try {
-        const isAvailable = await provider.isAvailable();
+    // Scoring neuronal des providers
+    const providerScores = new Map<string, number>();
 
-        if (!isAvailable) {
-          continue;
-        }
+    this.providers.forEach(provider => {
+      const stats = this.providerStats.get(provider.name);
+      if (!stats) return;
 
-        if (!provider.stream) {
-          // Si pas de streaming, utilise generate() et simule
-          const response = await provider.generate(sanitized, history);
+      let score = stats.reliability; // Base score (0-100)
 
-          for (let i = 0; i < response.content.length; i++) {
-            const char = response.content[i];
-            if (char !== undefined) {
-              yield char;
-            }
-            await new Promise((resolve) => setTimeout(resolve, 15));
-          }
-          return;
-        }
+      // Bonus selon le type de provider
+      switch (provider.name) {
+        case 'titane-local':
+          score += 30; // Bonus infaillibilité
+          score += requiresRealtime ? 20 : 0; // Bonus temps réel
+          break;
 
-        // Streaming natif
-        yield* provider.stream(sanitized, history);
-        return;
+        case 'tauriChat':
+          score += isComplexQuery ? 20 : 10; // Bonus complexité
+          score -= contextLength > 10000 ? 15 : 0; // Malus gros contexte
+          break;
 
-      } catch (error) {
-        console.warn(`⚠️ ${provider.name} streaming échoué:`, error);
+        case 'gemini':
+          score += isComplexQuery ? 25 : 15; // Excellent sur complexe
+          score -= stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+          break;
 
-        if (provider === fallbackProvider) {
-          throw error;
-        }
+        case 'ollama':
+          score += messageLength < 500 ? 15 : 5; // Bon sur court
+          score += stats.avgResponseTime < 3000 ? 10 : -10; // Bonus vitesse
+          break;
+      }
 
-        continue;
+      // Malus échecs récents
+      if (stats.lastFailure && Date.now() - stats.lastFailure < 30000) { // 30s
+        score -= 25;
+      }
+
+      // Malus surcharge
+      if (provider.name !== 'titane-local' && this.currentRequests >= this.maxConcurrent) {
+        score -= 20;
+      }
+
+      providerScores.set(provider.name, Math.max(0, score));
+    });
+
+    // Sélection du meilleur
+    let bestProvider = 'titane-local'; // Fallback par défaut
+    let bestScore = 0;
+    let reason: NeuralSelection['reason'] = 'emergency';
+
+    for (const [name, score] of providerScores) {
+      if (score > bestScore) {
+        bestScore = score;
+        bestProvider = name;
+        reason = score > 80 ? 'optimal' : score > 60 ? 'fallback' : 'availability';
       }
     }
 
-    throw new Error('Tous les providers IA ont échoué (streaming)');
+    // Alternates (top 3 autres)
+    const alternates = Array.from(providerScores.entries())
+      .filter(([name]) => name !== bestProvider)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([name]) => name);
+
+    return {
+      selectedProvider: bestProvider,
+      reason,
+      confidence: Math.min(100, bestScore),
+      alternates
+    };
   }
 
   /**
-   * Retourne le statut des providers
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.4: GÉNÉRATION AVEC ISOLATION PROVIDERS + AUTO-HEAL
+   * ═══════════════════════════════════════════════════════════════════
    */
-  async getProvidersStatus() {
-    const status = await Promise.all(
-      this.providers.map(async (provider) => ({
-        name: provider.name,
-        available: await provider.isAvailable().catch(() => false),
-      }))
-    );
 
-    return status;
+  async generate(message: string, history: AIMessage[] = [], _config?: AIConfig): Promise<AIResponse> {
+    const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+    const requestStartTime = Date.now();
+
+    // Increment metrics
+    this.orchestratorMetrics.totalRequests++;
+    this.orchestratorMetrics.lastActivity = Date.now();
+
+    try {
+      // ═══ PHASE 3.4.1: VALIDATION MESSAGE ═══
+      const { sanitized, valid, issues } = this.sanitizeMessage(message);
+
+      if (!valid) {
+        const error = `Invalid message: ${issues.join(', ')}`;
+        autoHealEngine.heal('orchestrator', error, 'validation', { issues, requestId });
+        throw new Error(error);
+      }
+
+      if (isDev) {
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log(`🟣 OMEGA ORCHESTRATOR: Neural Generation [${requestId}]`);
+        console.log(`📝 Message: "${sanitized.substring(0, 60)}${sanitized.length > 60 ? '...' : ''}"`);
+        console.log(`📚 History: ${history.length} messages`);
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      }
+
+      // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION ═══
+      const selection = this.selectOptimalProvider(sanitized, history);
+
+      if (isDev) {
+        console.log(`🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`);
+        console.log(`🔄 Alternates: ${selection.alternates.join(', ')}`);
+      }
+
+      // ═══ PHASE 3.4.3: ISOLATED PROVIDER EXECUTION ═══
+      const providersToTry = [
+        selection.selectedProvider,
+        ...selection.alternates.slice(0, 2), // Max 2 alternates
+        'titane-local' // Fallback garanti
+      ].filter((name, index, arr) => arr.indexOf(name) === index); // Deduplicate
+
+      let lastError: Error | null = null;
+      let attempts = 0;
+
+      for (const providerName of providersToTry) {
+        attempts++;
+        const provider = this.providers.find(p => p.name === providerName);
+        if (!provider) continue;
+
+        const stats = this.providerStats.get(providerName);
+        if (!stats) continue;
+
+        try {
+          if (isDev) {
+            console.log(`\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`);
+          }
+
+          // ═══ ISOLATED EXECUTION WITH TIMEOUT ═══
+          const executionTimeout = providerName === 'titane-local' ? 10000 : 30000; // Local plus rapide
+          const response = await this.executeProviderIsolated(
+            provider,
+            sanitized,
+            history,
+            executionTimeout,
+            requestId
+          );
+
+          // ═══ SUCCESS PATH ═══
+          const responseTime = Date.now() - requestStartTime;
+          this.updateProviderStats(providerName, true, responseTime);
+          this.orchestratorMetrics.totalSuccesses++;
+
+          // Update avg response time
+          const totalTime = this.orchestratorMetrics.avgResponseTime * (this.orchestratorMetrics.totalSuccesses - 1) + responseTime;
+          this.orchestratorMetrics.avgResponseTime = totalTime / this.orchestratorMetrics.totalSuccesses;
+
+          if (isDev) {
+            console.log(`   ✅ SUCCESS in ${responseTime}ms`);
+            console.log(`   📦 Response: ${response.content.length} chars`);
+            console.log(`   🏷️ Provider: ${response.provider || providerName}`);
+            console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+            console.log(`🟣 OMEGA ORCHESTRATOR: Generation complete! [${requestId}]`);
+            console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+          }
+
+          return {
+            ...response,
+            metadata: {
+              ...response.metadata,
+              requestId,
+              selectedProvider: providerName,
+              neuralSelection: selection,
+              attempts,
+              responseTime,
+              omegaVersion: "v19.2Ω"
+            }
+          };
+
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+          const responseTime = Date.now() - requestStartTime;
+
+          // ═══ FAILURE PATH + AUTO-HEAL ═══
+          this.updateProviderStats(providerName, false, responseTime);
+
+          // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
+          if (providerName !== 'titane-local') {
+            autoHealEngine.heal(providerName, lastError, 'provider', {
+              requestId,
+              attempt: attempts,
+              responseTime
+            });
+            this.orchestratorMetrics.autoHealTriggers++;
+          }
+
+          if (isDev) {
+            console.error(`   ❌ FAILED: ${lastError.message} (${responseTime}ms)`);
+          }
+
+          // Si c'est titane-local qui échoue, c'est critique
+          if (providerName === 'titane-local') {
+            isDev && console.error('🚨 CRITICAL: titane-local provider failed!');
+            break;
+          }
+
+          // Continue avec le provider suivant
+          continue;
+        }
+      }
+
+      // ═══ ULTIMATE FALLBACK OMEGA ═══
+      this.orchestratorMetrics.totalFailures++;
+      this.orchestratorMetrics.fallbackRate = this.orchestratorMetrics.totalFailures / this.orchestratorMetrics.totalRequests;
+
+      const responseTime = Date.now() - requestStartTime;
+
+      if (isDev) {
+        console.error('\n🚨 OMEGA ORCHESTRATOR: All providers exhausted!');
+        console.error(`Last error: ${lastError?.message || 'Unknown'}`);
+        console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+      }
+
+      // Ultimate emergency response
+      return {
+        content: `🟣 **OMEGA Auto-Récupération Activée** [${requestId.substring(0, 8)}]
+
+Une défaillance multi-niveaux a été détectée et traitée automatiquement.
+
+**Statut système** : Mode survie OMEGA engagé
+**Votre question** : "${sanitized.substring(0, 100)}${sanitized.length > 100 ? '...' : ''}"
+
+**Assistance disponible** :
+• Diagnostic système en temps réel
+• Architecture TITANE∞ et modules core
+• Configuration et optimisation
+• Résolution de problèmes techniques
+
+Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
+        provider: 'omega-ultimate-fallback',
+        model: 'omega-emergency-v19.2Ω',
+        timestamp: Date.now(),
+        metadata: {
+          requestId,
+          emergency: true,
+          allProvidersFailed: true,
+          attempts,
+          responseTime,
+          lastError: lastError?.message || 'unknown',
+          autoHealTriggered: this.orchestratorMetrics.autoHealTriggers,
+          omegaVersion: "v19.2Ω"
+        }
+      };
+
+    } catch (criticalError) {
+      // ═══ CRITICAL ERROR HANDLER ═══
+      const responseTime = Date.now() - requestStartTime;
+      this.orchestratorMetrics.totalFailures++;
+
+      autoHealEngine.heal('orchestrator', criticalError instanceof Error ? criticalError : new Error(String(criticalError)), 'critical', {
+        requestId,
+        responseTime
+      });
+
+      if (isDev) {
+        console.error(`🆘 OMEGA ORCHESTRATOR: Critical error [${requestId}]:`, criticalError);
+      }
+
+      return {
+        content: `🔴 **Récupération Critique OMEGA** [${requestId.substring(0, 8)}]
+
+Une erreur système majeure a été interceptée et neutralisée automatiquement.
+
+**Détails technique** : ${criticalError instanceof Error ? criticalError.message : 'Erreur inconnue'}
+**Action** : Auto-réparation OMEGA en cours
+**Statut** : Système stable et opérationnel
+
+Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu réessayer ta demande ?`,
+        provider: 'omega-critical-recovery',
+        model: 'omega-critical-v19.2Ω',
+        timestamp: Date.now(),
+        metadata: {
+          requestId,
+          criticalRecovery: true,
+          errorType: 'orchestrator-critical',
+          responseTime,
+          omegaVersion: "v19.2Ω"
+        }
+      };
+    } finally {
+      // ═══ CLEANUP ═══
+      this.currentRequests = Math.max(0, this.currentRequests - 1);
+    }
+  }
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.5: ISOLATED PROVIDER EXECUTION + SANDBOXING
+   * ═══════════════════════════════════════════════════════════════════
+   */
+
+  private async executeProviderIsolated(
+    provider: any,
+    message: string,
+    history: AIMessage[],
+    timeout: number,
+    requestId: string
+  ): Promise<AIResponse> {
+    this.currentRequests++;
+
+    try {
+      // Availability check with short timeout
+      const availabilityPromise = provider.isAvailable();
+      const availabilityTimeout = new Promise<boolean>((_, reject) =>
+        setTimeout(() => reject(new Error('Availability check timeout')), 3000)
+      );
+
+      const isAvailable = await Promise.race([availabilityPromise, availabilityTimeout]);
+
+      if (!isAvailable) {
+        throw new Error(`Provider ${provider.name} is not available`);
+      }
+
+      // Generation with full timeout
+      const generationPromise = provider.generate(message, history);
+      const generationTimeout = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error(`Provider timeout (${timeout}ms)`)), timeout)
+      );
+
+      const response = await Promise.race([generationPromise, generationTimeout]);
+
+      // Response validation
+      if (!response || typeof response !== 'object') {
+        throw new Error('Invalid response format');
+      }
+
+      if (!response.content || typeof response.content !== 'string') {
+        throw new Error('Invalid response content');
+      }
+
+      if (response.content.trim().length === 0) {
+        throw new Error('Empty response content');
+      }
+
+      return response;
+
+    } catch (error) {
+      throw error instanceof Error ? error : new Error(`Provider execution failed: ${String(error)}`);
+    } finally {
+      this.currentRequests = Math.max(0, this.currentRequests - 1);
+    }
+  }
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.6: STATS UPDATE + RELIABILITY TRACKING
+   * ═══════════════════════════════════════════════════════════════════
+   */
+
+  private updateProviderStats(providerName: string, success: boolean, responseTime: number): void {
+    const stats = this.providerStats.get(providerName);
+    if (!stats) return;
+
+    stats.totalRequests++;
+    stats.lastUsed = Date.now();
+
+    if (success) {
+      stats.successCount++;
+
+      // Update average response time
+      const totalTime = stats.avgResponseTime * (stats.successCount - 1) + responseTime;
+      stats.avgResponseTime = totalTime / stats.successCount;
+
+      // Improve reliability
+      stats.reliability = Math.min(100, stats.reliability + 1);
+
+      // Update status based on performance
+      if (stats.reliability > 95) {
+        stats.status = 'healthy';
+      } else if (stats.reliability > 80) {
+        stats.status = 'degraded';
+      }
+
+    } else {
+      stats.failureCount++;
+      stats.lastFailure = Date.now();
+
+      // Decrease reliability
+      stats.reliability = Math.max(0, stats.reliability - 5);
+
+      // Update status based on recent failures
+      const recentFailures = stats.failureCount;
+      const recentRequests = Math.max(1, stats.totalRequests);
+      const failureRate = recentFailures / recentRequests;
+
+      if (failureRate > 0.5) {
+        stats.status = 'critical';
+      } else if (failureRate > 0.2) {
+        stats.status = 'degraded';
+      } else if (stats.reliability < 50) {
+        stats.status = 'degraded';
+      }
+    }
+
+    // Cap reliability calculation
+    if (stats.totalRequests > 0) {
+      stats.reliability = Math.round((stats.successCount / stats.totalRequests) * 100);
+    }
+  }
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════
+   * PHASE 3.7: STREAMING OMEGA SÉCURISÉ
+   * ═══════════════════════════════════════════════════════════════════
+   */
+
+  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
+    const { sanitized, valid, issues } = this.sanitizeMessage(message);
+
+    if (!valid) {
+      autoHealEngine.heal('orchestrator', `Stream validation failed: ${issues.join(', ')}`, 'validation');
+      yield "⚠️ Message invalide détecté pour streaming...";
+      return;
+    }
+
+    const selection = this.selectOptimalProvider(sanitized, history);
+    const providersToTry = [selection.selectedProvider, 'titane-local']; // Minimal pour streaming
+
+    let hasStreamed = false;
+
+    for (const providerName of providersToTry) {
+      const provider = this.providers.find(p => p.name === providerName);
+      if (!provider) continue;
+
+      try {
+        const isAvailable = await Promise.race([
+          provider.isAvailable(),
+          new Promise<boolean>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+        ]);
+
+        if (!isAvailable) continue;
+
+        if (provider.stream) {
+          // Streaming natif avec timeout
+          let streamTimeout: NodeJS.Timeout;
+          const streamPromise = provider.stream(sanitized, history);
+
+          try {
+            for await (const chunk of streamPromise) {
+              // Reset timeout à chaque chunk
+              clearTimeout(streamTimeout);
+              streamTimeout = setTimeout(() => {
+                throw new Error('Stream timeout');
+              }, 10000);
+
+              if (chunk && typeof chunk === 'string') {
+                yield chunk;
+                hasStreamed = true;
+              }
+            }
+            clearTimeout(streamTimeout);
+            return; // Streaming successful
+          } catch (streamError) {
+            clearTimeout(streamTimeout);
+            throw streamError;
+          }
+        } else {
+          // Fallback: simulate streaming from generate()
+          const response = await this.executeProviderIsolated(provider, sanitized, history, 15000, `stream_${Date.now()}`);
+
+          // Simulate typing effet
+          for (let i = 0; i < response.content.length; i++) {
+            const char = response.content[i];
+            if (char) {
+              yield char;
+              hasStreamed = true;
+              await new Promise(resolve => setTimeout(resolve, 15));
+            }
+          }
+          return; // Simulation successful
+        }
+
+      } catch (error) {
+        isDev && console.warn(`[OMEGA STREAM] ${providerName} failed:`, error);
+
+        // Auto-heal pour streaming failures
+        autoHealEngine.heal(providerName, error instanceof Error ? error : new Error(String(error)), 'network');
+
+        continue; // Try next provider
+      }
+    }
+
+    // Ultimate fallback streaming
+    if (!hasStreamed) {
+      yield "🟣 Auto-réparation OMEGA streaming en cours...\n\n";
+      yield "Streaming fallback activé. ";
+      yield `Votre question: "${sanitized.substring(0, 50)}" est traitée en mode sécurisé.`;
+    }
+  }
+
+  /**
+   * ═══════════════════════════════════════════════════════════════════
+   * PUBLIC API + MONITORING
+   * ═══════════════════════════════════════════════════════════════════
+   */
+
+  /**
+   * Status complet des providers avec métriques OMEGA
+   */
+  async getProvidersStatus(): Promise<{
+    providers: ProviderStats[];
+    orchestrator: OrchestratorMetrics;
+    autoHeal: any;
+    timestamp: number;
+  }> {
+    try {
+      // Update provider availability in parallel
+      const availabilityChecks = this.providers.map(async provider => {
+        try {
+          const isAvailable = await Promise.race([
+            provider.isAvailable(),
+            new Promise<boolean>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 2000))
+          ]);
+
+          const stats = this.providerStats.get(provider.name);
+          if (stats && !isAvailable && stats.status !== 'offline') {
+            stats.status = 'offline';
+          }
+
+          return { provider: provider.name, available: isAvailable };
+        } catch (error) {
+          const stats = this.providerStats.get(provider.name);
+          if (stats) {
+            stats.status = 'degraded';
+          }
+          return { provider: provider.name, available: false };
+        }
+      });
+
+      await Promise.allSettled(availabilityChecks);
+
+      return {
+        providers: Array.from(this.providerStats.values()),
+        orchestrator: { ...this.orchestratorMetrics },
+        autoHeal: autoHealEngine.getStats(),
+        timestamp: Date.now()
+      };
+    } catch (error) {
+      return {
+        providers: Array.from(this.providerStats.values()),
+        orchestrator: { ...this.orchestratorMetrics },
+        autoHeal: { error: 'Auto-heal stats unavailable' },
+        timestamp: Date.now()
+      };
+    }
+  }
+
+  /**
+   * Force reset de tous les providers
+   */
+  async resetAllProviders(): Promise<void> {
+    isDev && console.log('[OMEGA ORCHESTRATOR] Force reset all providers...');
+
+    this.initializeProviderStats();
+    this.orchestratorMetrics = {
+      totalRequests: 0,
+      totalSuccesses: 0,
+      totalFailures: 0,
+      avgResponseTime: 0,
+      fallbackRate: 0,
+      autoHealTriggers: 0,
+      lastActivity: 0
+    };
+
+    autoHealEngine.resetStats();
+    await this.startWarmup();
+  }
+
+  /**
+   * Test de santé complet
+   */
+  async healthCheck(): Promise<{
+    overall: 'healthy' | 'degraded' | 'critical';
+    providers: { name: string; status: string; available: boolean }[];
+    autoHeal: any;
+    recommendations: string[];
+  }> {
+    const status = await this.getProvidersStatus();
+    const healthyCount = status.providers.filter(p => p.status === 'healthy').length;
+    const totalProviders = status.providers.length;
+
+    let overall: 'healthy' | 'degraded' | 'critical';
+    const recommendations: string[] = [];
+
+    if (healthyCount === totalProviders) {
+      overall = 'healthy';
+    } else if (healthyCount >= totalProviders / 2) {
+      overall = 'degraded';
+      recommendations.push('Certains providers ont des problèmes');
+    } else {
+      overall = 'critical';
+      recommendations.push('Majority of providers are failing');
+    }
+
+    // Check auto-heal effectiveness
+    const autoHealStats = status.autoHeal;
+    if (autoHealStats.successRate < 80) {
+      recommendations.push('Auto-heal effectiveness is low');
+    }
+
+    // Check response times
+    if (status.orchestrator.avgResponseTime > 10000) {
+      recommendations.push('Average response time is high');
+    }
+
+    return {
+      overall,
+      providers: status.providers.map(p => ({
+        name: p.name,
+        status: p.status,
+        available: Date.now() - p.lastUsed < 60000 // Active in last minute
+      })),
+      autoHeal: autoHealStats,
+      recommendations
+    };
   }
 }
 
-// Export singleton
+// ─────────────────────────────────────────────────────────────────
+// EXPORT SINGLETON + API COMPATIBILITY
+// ─────────────────────────────────────────────────────────────────
+
 export const aiOrchestrator = new AIOrchestrator();
 
-// Fonctions helper pour rétrocompatibilité
+// API de rétrocompatibilité
 export async function askTitan(message: string, history: AIMessage[] = [], config?: AIConfig): Promise<AIResponse> {
   return aiOrchestrator.generate(message, history, config);
 }

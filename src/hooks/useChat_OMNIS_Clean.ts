@@ -16,7 +16,6 @@ import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useChatCore } from './useChatCore';
 import { useChatMemory } from './useChatMemory';
 import { chatEngineOmnis } from '../services/ai/chatEngine_OMNIS_v1';
-import { aiOrchestrator } from '../services/ai/orchestrator_OMNIS_v1';
 import type { ChatMode } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { hybridTTS } from '../services/tts/hybridTTS';

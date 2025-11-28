@@ -17,6 +17,10 @@ export interface AIMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp: number;
+  provider?: string;
+  metadata?: {
+    [key: string]: any;
+  };
 }
 
 export type AIProviderName =
@@ -27,9 +31,14 @@ export type AIProviderName =
   | 'tauri-gemini'
   | 'tauri-ollama'
   | 'tauri-local'
+  | 'tauri-chat'
+  | 'openai'
+  | 'claude'
   | 'fallback'
   | 'emergency-fallback'
-  | 'ultimate-fallback';
+  | 'ultimate-fallback'
+  | 'omnis-emergency'
+  | 'omnis-fallback';
 
 export interface AIResponse {
   content: string;
@@ -37,6 +46,9 @@ export interface AIResponse {
   timestamp: number;
   model?: string;
   tokens?: number;
+  metadata?: {
+    [key: string]: any;
+  };
 }
 
 export interface AIProvider {

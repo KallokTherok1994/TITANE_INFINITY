@@ -1,13 +1,13 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE∞ v19.2Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.0 — GEMINI PROVIDER SÉCURISÉ (TAURI-ONLY)
- *   Provider Google Gemini API via httpClient Tauri sécurisé
- *   + Sanitization, validation, rate limiting
+ *   TITANE∞ v19.2Ω — GEMINI PROVIDER OMEGA (HTTP ISOLATION)
+ *   PHASE 4Ω: Protection HTTP errors • Rate limiting • Auto-heal integration
+ *   Provider Google Gemini API avec isolation complète des erreurs
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -20,9 +20,17 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
+import { autoHealEngine } from '../autoHealEngine';
 
+const isDev = process.env.NODE_ENV === 'development';
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
+
+// OMEGA: Error tracking
+let errorCount = 0;
+let lastErrorTime = 0;
+const MAX_ERRORS_PER_HOUR = 10;
+const ERROR_RESET_TIME = 60 * 60 * 1000; // 1 hour
 
 /**
  * Construit le contexte de conversation pour Gemini
@@ -44,10 +52,71 @@ TITANE∞:`;
 /**
  * Provider Gemini
  */
+/**
+ * OMEGA: Error handler avec auto-heal integration
+ */
+function handleGeminiError(error: unknown, context: string, metadata?: any): void {
+  const now = Date.now();
+
+  // Reset error count if enough time has passed
+  if (now - lastErrorTime > ERROR_RESET_TIME) {
+    errorCount = 0;
+  }
+
+  errorCount++;
+  lastErrorTime = now;
+
+  const errorObj = error instanceof Error ? error : new Error(String(error));
+
+  // Auto-heal trigger
+  autoHealEngine.heal('gemini', errorObj, 'provider', {
+    context,
+    errorCount,
+    metadata,
+    timestamp: now
+  });
+
+  isDev && console.error(`[GEMINI OMEGA] Error [${context}]: ${errorObj.message} (${errorCount}/${MAX_ERRORS_PER_HOUR})`);
+}
+
+/**
+ * OMEGA: HTTP error classifier
+ */
+function classifyHttpError(status: number, data?: any): { type: string, shouldRetry: boolean, message: string } {
+  switch (status) {
+    case 400:
+      return { type: 'bad_request', shouldRetry: false, message: 'Invalid request format' };
+    case 401:
+      return { type: 'unauthorized', shouldRetry: false, message: 'Invalid API key' };
+    case 403:
+      return { type: 'forbidden', shouldRetry: false, message: 'API access forbidden' };
+    case 429:
+      return { type: 'rate_limit', shouldRetry: true, message: 'Rate limit exceeded' };
+    case 500:
+    case 502:
+    case 503:
+    case 504:
+      return { type: 'server_error', shouldRetry: true, message: 'Gemini server error' };
+    default:
+      return { type: 'unknown', shouldRetry: false, message: `HTTP ${status}: ${data?.error?.message || 'Unknown error'}` };
+  }
+}
+
 export const geminiProvider: AIProvider = {
   name: 'gemini',
 
   async isAvailable(): Promise<boolean> {
+    // OMEGA: Check error rate
+    if (errorCount >= MAX_ERRORS_PER_HOUR) {
+      const timeLeft = ERROR_RESET_TIME - (Date.now() - lastErrorTime);
+      if (timeLeft > 0) {
+        isDev && console.warn(`[GEMINI OMEGA] Disabled due to error rate (${errorCount}/${MAX_ERRORS_PER_HOUR}). Reset in ${Math.ceil(timeLeft / 1000)}s`);
+        return false;
+      } else {
+        errorCount = 0; // Reset if time passed
+      }
+    }
+
     return Boolean(GEMINI_API_KEY && GEMINI_API_KEY.length > 10);
   },
 
@@ -85,6 +154,7 @@ export const geminiProvider: AIProvider = {
             try {
               const prompt = buildContext(sanitizedMessage, history);
 
+              // OMEGA: Protected HTTP request with error handling
               const response = await httpClient.post<{
                 candidates?: Array<{
                   content?: {
@@ -93,6 +163,7 @@ export const geminiProvider: AIProvider = {
                 }>;
                 error?: {
                   message?: string;
+                  code?: string;
                 };
               }>(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
                 headers: {
@@ -135,10 +206,19 @@ export const geminiProvider: AIProvider = {
 
               clearTimeout(timeout);
 
+              // OMEGA: Enhanced HTTP error handling
               if (!response.ok) {
-                throw new Error(
-                  `Gemini API error: ${response.status} - ${response.data?.error?.message || 'Unknown error'}`
-                );
+                const { type, shouldRetry, message } = classifyHttpError(response.status, response.data);
+                const error = new Error(`Gemini ${type}: ${message}`);
+
+                handleGeminiError(error, 'http_request', {
+                  status: response.status,
+                  type,
+                  shouldRetry,
+                  errorCode: response.data?.error?.code
+                });
+
+                throw error;
               }
 
               if (!response.data.candidates || response.data.candidates.length === 0) {
@@ -164,14 +244,28 @@ export const geminiProvider: AIProvider = {
             } catch (error) {
               clearTimeout(timeout);
 
+              // OMEGA: Enhanced error handling
               if (error instanceof Error) {
                 if (error.name === 'AbortError') {
-                  throw new Error('Gemini: Request timeout (30s)');
+                  const timeoutError = new Error('Gemini: Request timeout');
+                  handleGeminiError(timeoutError, 'timeout', { timeout: finalConfig.timeout });
+                  throw timeoutError;
                 }
+
+                // Handle network errors
+                if (error.message.includes('network') || error.message.includes('fetch')) {
+                  const networkError = new Error('Gemini: Network error');
+                  handleGeminiError(networkError, 'network', { originalError: error.message });
+                  throw networkError;
+                }
+
+                handleGeminiError(error, 'request', { originalError: error.message });
                 throw error;
               }
 
-              throw new Error('Gemini: Unknown error');
+              const unknownError = new Error('Gemini: Unknown error');
+              handleGeminiError(unknownError, 'unknown', { error });
+              throw unknownError;
             }
           }
         );
@@ -208,11 +302,39 @@ export const geminiProvider: AIProvider = {
         model: 'gemini-pro',
       };
     } catch (error) {
+      // OMEGA: Final error handler
       if (error instanceof Error) {
+        // Don't double-handle errors already processed
+        if (!error.message.includes('Gemini')) {
+          handleGeminiError(error, 'generate_final', { stage: 'secure_validation' });
+        }
         throw error;
       }
-      throw new Error('Gemini: Unknown error');
+
+      const finalError = new Error('Gemini: Unknown error');
+      handleGeminiError(finalError, 'generate_unknown', { error });
+      throw finalError;
     }
+  },
+
+  /**
+   * OMEGA: Reset error counter (for auto-heal)
+   */
+  resetErrors(): void {
+    errorCount = 0;
+    lastErrorTime = 0;
+    isDev && console.log('🔄 Gemini Provider: Errors reset');
+  },
+
+  /**
+   * OMEGA: Get provider stats
+   */
+  getStats(): { errorCount: number, maxErrors: number, lastErrorTime: number } {
+    return {
+      errorCount,
+      maxErrors: MAX_ERRORS_PER_HOUR,
+      lastErrorTime
+    };
   },
 
   // Streaming non implémenté pour le moment

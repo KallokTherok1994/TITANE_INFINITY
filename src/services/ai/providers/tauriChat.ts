@@ -1,18 +1,21 @@
 /**
- * TITANE_INFINITY v18 — Proprietary License
+ * TITANE∞ v19.2Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v18 — TAURI CHAT PROVIDER
- *   Provider utilisant le backend Rust chat_orchestrator.rs
- *   Fallback automatique sur frontend si backend indisponible
+ *   TITANE∞ v19.2Ω — TAURI CHAT PROVIDER OMEGA (ISOLATION)
+ *   PHASE 4Ω: Protection invoke() • Timeout handling • Error isolation
+ *   Provider utilisant le backend Rust avec protection maximale
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import { TAURI_COMMANDS, invokeTauri } from '../../../core/commands/TAURI_COMMANDS';
+import { autoHealEngine } from '../autoHealEngine';
+
+const isDev = process.env.NODE_ENV === 'development';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES (matching Rust structs)
@@ -63,9 +66,12 @@ class TauriChatProvider implements AIProvider {
   private backendAvailable: boolean | null = null;
   private lastCheckTime = 0;
   private readonly CHECK_INTERVAL = 30000; // 30s cache
+  private errorCount = 0;
+  private readonly MAX_ERRORS = 5;
+  private readonly TIMEOUT_MS = 45000; // 45s timeout pour invoke
 
   /**
-   * Vérifie si le backend chat_orchestrator est disponible
+   * Vérifie si le backend chat_orchestrator est disponible (OMEGA Protected)
    */
   async isAvailable(): Promise<boolean> {
     const now = Date.now();
@@ -75,22 +81,40 @@ class TauriChatProvider implements AIProvider {
       return this.backendAvailable;
     }
 
-    try {
-      console.log('🔍 Tauri Chat Provider: Checking backend availability...');
+    // Si trop d'erreurs, considérer comme indisponible
+    if (this.errorCount >= this.MAX_ERRORS) {
+      isDev && console.warn(`⚠️ Tauri Backend: Disabled after ${this.errorCount} errors`);
+      this.backendAvailable = false;
+      this.lastCheckTime = now;
+      return false;
+    }
 
-      // Teste si la commande existe
-      const status = await invokeTauri<ProviderStatus[]>(
-        TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS
-      ).catch(() => null);
+    try {
+      isDev && console.log('🔍 Tauri Chat Provider OMEGA: Checking backend availability...');
+
+      // OMEGA: Protected invoke with timeout
+      const status = await Promise.race([
+        invokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+        new Promise<null>((_, reject) =>
+          setTimeout(() => reject(new Error('Backend check timeout')), 5000)
+        )
+      ]).catch((error) => {
+        this.handleInvokeError(error, 'isAvailable');
+        return null;
+      });
 
       this.backendAvailable = status !== null && status.length > 0;
       this.lastCheckTime = now;
 
-      console.log(`   ${this.backendAvailable ? '✅' : '❌'} Backend available: ${this.backendAvailable}`);
+      if (this.backendAvailable) {
+        this.errorCount = 0; // Reset error count on success
+      }
+
+      isDev && console.log(`   ${this.backendAvailable ? '✅' : '❌'} Backend available: ${this.backendAvailable}`);
 
       return this.backendAvailable;
     } catch (error) {
-      console.warn('⚠️ Tauri Chat Provider: Backend not available (fallback to frontend)');
+      this.handleInvokeError(error, 'isAvailable');
       this.backendAvailable = false;
       this.lastCheckTime = now;
       return false;
@@ -98,37 +122,62 @@ class TauriChatProvider implements AIProvider {
   }
 
   /**
-   * Génère une réponse via backend Rust
+   * Génère une réponse via backend Rust (OMEGA Protected)
    */
   async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> {
-    console.log('🦀 Tauri Chat Provider: Sending to Rust backend...');
+    isDev && console.log('🦀 Tauri Chat Provider OMEGA: Sending to Rust backend...');
 
     try {
+      // OMEGA: Input validation
+      if (!message?.trim()) {
+        throw new Error('Empty message');
+      }
+
+      if (message.length > 50000) {
+        throw new Error('Message too long (max 50k chars)');
+      }
+
+      // OMEGA: Check if backend is available first
+      const isAvail = await this.isAvailable();
+      if (!isAvail) {
+        throw new Error('Backend not available');
+      }
+
       // Construit la requête
       const request: ChatRequest = {
-        message,
+        message: message.trim(),
         provider: 'auto', // Rust choisira gemini → ollama → local
         streaming: false,
         system_prompt: this.buildSystemPrompt(history),
       };
 
-      console.log(`   📝 Message: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`);
-      console.log(`   📚 History: ${history.length} messages`);
-      console.log(`   🎯 Provider mode: auto (cascade)`);
+      isDev && console.log(`   📝 Message: "${message.substring(0, 50)}${message.length > 50 ? '...' : ''}"`);
+      isDev && console.log(`   📚 History: ${history.length} messages`);
+      isDev && console.log(`   🎯 Provider mode: auto (cascade)`);
 
-      // Appelle le backend
-      const response = await invokeTauri<ChatResponse>(
-        TAURI_COMMANDS.CHAT_SEND_MESSAGE,
-        { request }
-      );
+      // OMEGA: Protected invoke with timeout and retry
+      const response = await Promise.race([
+        invokeTauri<ChatResponse>(TAURI_COMMANDS.CHAT_SEND_MESSAGE, { request }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
+        )
+      ]);
 
-      if (!response.success) {
-        throw new Error(response.error || 'Backend returned error');
+      if (!response?.success) {
+        const error = response?.error || 'Backend returned error';
+        throw new Error(error);
       }
 
-      console.log(`   ✅ Response received in ${response.latency_ms}ms`);
-      console.log(`   🏷️  Provider: ${response.message.provider}, Model: ${response.message.model}`);
-      console.log(`   📦 Content: ${response.message.content.length} chars`);
+      if (!response.message?.content?.trim()) {
+        throw new Error('Empty response from backend');
+      }
+
+      isDev && console.log(`   ✅ Response received in ${response.latency_ms}ms`);
+      isDev && console.log(`   🏷️  Provider: ${response.message.provider}, Model: ${response.message.model}`);
+      isDev && console.log(`   📦 Content: ${response.message.content.length} chars`);
+
+      // Reset error count on success
+      this.errorCount = 0;
 
       // Map backend provider names to frontend types
       const providerMap: Record<string, import('../types').AIProviderName> = {
@@ -140,32 +189,63 @@ class TauriChatProvider implements AIProvider {
       return {
         content: response.message.content,
         provider: providerMap[response.message.provider] || 'tauri-backend',
-        timestamp: response.message.timestamp,
-        model: response.message.model,
+        timestamp: response.message.timestamp || Date.now(),
+        model: response.message.model || 'unknown',
         tokens: response.message.tokens,
       };
     } catch (error) {
+      this.handleInvokeError(error, 'generate', { message: message.substring(0, 100) });
       const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-      console.error(`   ❌ Tauri Chat Provider failed: ${errorMsg}`);
       throw new Error(`Backend chat failed: ${errorMsg}`);
     }
   }
 
   /**
-   * Stream pas encore implémenté côté Rust
+   * OMEGA: Error handler avec auto-heal integration
+   */
+  private handleInvokeError(error: unknown, context: string, metadata?: any): void {
+    this.errorCount++;
+
+    const errorObj = error instanceof Error ? error : new Error(String(error));
+
+    // Auto-heal trigger
+    autoHealEngine.heal('tauri-chat', errorObj, 'provider', {
+      context,
+      errorCount: this.errorCount,
+      metadata,
+      timestamp: Date.now()
+    });
+
+    isDev && console.error(`   ❌ Tauri invoke error [${context}]: ${errorObj.message} (${this.errorCount}/${this.MAX_ERRORS})`);
+
+    // Si trop d'erreurs, marquer comme indisponible
+    if (this.errorCount >= this.MAX_ERRORS) {
+      this.backendAvailable = false;
+      this.lastCheckTime = Date.now();
+      isDev && console.warn(`   🚫 Tauri backend disabled after ${this.errorCount} errors`);
+    }
+  }
+
+  /**
+   * Stream pas encore implémenté côté Rust (OMEGA Protected)
    */
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    console.warn('⚠️ Tauri Chat Provider: Streaming not implemented, falling back to generate()');
+    isDev && console.warn('⚠️ Tauri Chat Provider OMEGA: Streaming not implemented, falling back to generate()');
 
-    // Fallback: utilise generate() et simule le streaming
-    const response = await this.generate(message, history);
+    try {
+      // Fallback: utilise generate() et simule le streaming
+      const response = await this.generate(message, history);
 
-    for (let i = 0; i < response.content.length; i++) {
-      const char = response.content[i];
-      if (char !== undefined) {
-        yield char;
+      for (let i = 0; i < response.content.length; i++) {
+        const char = response.content[i];
+        if (char !== undefined) {
+          yield char;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 10));
       }
-      await new Promise((resolve) => setTimeout(resolve, 10));
+    } catch (error) {
+      this.handleInvokeError(error, 'stream');
+      yield '❌ Erreur de streaming Tauri';
     }
   }
 
@@ -184,29 +264,67 @@ class TauriChatProvider implements AIProvider {
   }
 
   /**
-   * Retourne le statut des providers backend
+   * Retourne le statut des providers backend (OMEGA Protected)
    */
   async getProvidersStatus(): Promise<ProviderStatus[]> {
     try {
-      return await invokeTauri<ProviderStatus[]>(
-        TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS
-      );
-    } catch {
+      const status = await Promise.race([
+        invokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+        new Promise<ProviderStatus[]>((_, reject) =>
+          setTimeout(() => reject(new Error('Status check timeout')), 10000)
+        )
+      ]);
+
+      return Array.isArray(status) ? status : [];
+    } catch (error) {
+      this.handleInvokeError(error, 'getProvidersStatus');
       return [];
     }
   }
 
   /**
-   * Configure la clé API Gemini côté backend
+   * Configure la clé API Gemini côté backend (OMEGA Protected)
    */
   async setGeminiKey(apiKey: string): Promise<void> {
     try {
-      await invokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey });
-      console.log('✅ Gemini API key configured in backend');
+      if (!apiKey?.trim() || apiKey.length < 10) {
+        throw new Error('Invalid API key format');
+      }
+
+      await Promise.race([
+        invokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey.trim() }),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Set API key timeout')), 15000)
+        )
+      ]);
+
+      isDev && console.log('✅ Gemini API key configured in backend');
     } catch (error) {
-      console.error('❌ Failed to set Gemini key in backend:', error);
-      throw error;
+      this.handleInvokeError(error, 'setGeminiKey');
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to set Gemini key: ${errorMsg}`);
     }
+  }
+
+  /**
+   * OMEGA: Reset error counter (for auto-heal)
+   */
+  resetErrors(): void {
+    this.errorCount = 0;
+    this.backendAvailable = null;
+    this.lastCheckTime = 0;
+    isDev && console.log('🔄 Tauri Chat Provider: Errors reset');
+  }
+
+  /**
+   * OMEGA: Get provider stats
+   */
+  getStats(): { errorCount: number, maxErrors: number, available: boolean | null } {
+    return {
+      errorCount: this.errorCount,
+      maxErrors: this.MAX_ERRORS,
+      available: this.backendAvailable
+    };
   }
 }
 
