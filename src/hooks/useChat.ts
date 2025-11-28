@@ -84,6 +84,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   const lastMessageRef = useRef<string>('');
   const processRef = useRef<{ aborted: boolean }>({ aborted: false });
+  const messagesRef = useRef<AIMessage[]>([]);
 
   const omnisConfig = {
     enablePredictive: false,
@@ -122,8 +123,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   useEffect(() => {
     if (messagesForMode.length > 0) {
       setMessages(messagesForMode);
+      messagesRef.current = messagesForMode;
     }
   }, [messagesForMode]);
+
+  // ═══ SYNC MESSAGES REF ═══
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
 
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
   const sendMessage = useCallback(async (content: string): Promise<AIMessage> => {
@@ -155,15 +162,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       metadata: { inputLength: cleanMessage.length }
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    // Update both ref and state atomically to prevent race condition
+    const newMessages = [...messagesRef.current, userMessage];
+    messagesRef.current = newMessages;
+    setMessages(newMessages);
     lastMessageRef.current = cleanMessage;
 
     try {
-      // Engine call with timeout
+      // Engine call with synchronized state
       const engineResponse = await Promise.race([
-        chatEngineOmnis.generate(cleanMessage, messages),
+        chatEngineOmnis.generate(cleanMessage, newMessages),
         new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 20000)
+          setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 15000)
         )
       ]);
 
@@ -204,8 +214,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         console.warn('[OMNIS] Memory integration warning:', memoryError);
       }
 
-      // Add response to UI
-      setMessages(prev => [...prev, validatedResponse]);
+      // Add response to UI with synchronized state
+      const finalMessages = [...messagesRef.current, validatedResponse];
+      messagesRef.current = finalMessages;
+      setMessages(finalMessages);
 
       // Voice integration (if enabled)
       if (options.voiceEnabled && validatedResponse.content) {
@@ -235,7 +247,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
       };
 
-      setMessages(prev => [...prev, fallbackResponse]);
+      const errorMessages = [...messagesRef.current, fallbackResponse];
+      messagesRef.current = errorMessages;
+      setMessages(errorMessages);
       setError('Une anomalie a été détectée et réparée automatiquement.');
       setIsLoading(false);
       setInternalAnomalyCount(prev => prev + 1);
@@ -246,6 +260,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {
+    messagesRef.current = [];
     setMessages([]);
     setError(null);
     setInput('');
@@ -284,6 +299,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     try {
       const parsed = JSON.parse(data);
       if (parsed.messages && Array.isArray(parsed.messages)) {
+        messagesRef.current = parsed.messages;
         setMessages(parsed.messages);
         return true;
       }

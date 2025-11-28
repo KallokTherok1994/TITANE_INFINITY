@@ -12,7 +12,8 @@
  */
 
 import type { AIMessage, AIProvider, AIResponse } from '../types';
-import { TAURI_COMMANDS, invokeTauri } from '../../../core/commands/TAURI_COMMANDS';
+import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
+import { safeInvokeTauri } from '../../../utils/tauriProtector';
 import { autoHealEngine } from '../autoHealEngine';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -94,7 +95,7 @@ class TauriChatProvider implements AIProvider {
 
       // OMEGA: Protected invoke with timeout
       const status = await Promise.race([
-        invokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+        safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
         new Promise<null>((_, reject) =>
           setTimeout(() => reject(new Error('Backend check timeout')), 5000)
         )
@@ -157,7 +158,7 @@ class TauriChatProvider implements AIProvider {
 
       // OMEGA: Protected invoke with timeout and retry
       const response = await Promise.race([
-        invokeTauri<ChatResponse>(TAURI_COMMANDS.CHAT_SEND_MESSAGE, { request }),
+        safeInvokeTauri<ChatResponse>(TAURI_COMMANDS.CHAT_SEND_MESSAGE, { request }),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
         )
@@ -269,7 +270,7 @@ class TauriChatProvider implements AIProvider {
   async getProvidersStatus(): Promise<ProviderStatus[]> {
     try {
       const status = await Promise.race([
-        invokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+        safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
         new Promise<ProviderStatus[]>((_, reject) =>
           setTimeout(() => reject(new Error('Status check timeout')), 10000)
         )
@@ -292,7 +293,7 @@ class TauriChatProvider implements AIProvider {
       }
 
       await Promise.race([
-        invokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey.trim() }),
+        safeInvokeTauri(TAURI_COMMANDS.CHAT_SET_GEMINI_KEY, { api_key: apiKey.trim() }),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Set API key timeout')), 15000)
         )

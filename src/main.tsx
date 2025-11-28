@@ -6,6 +6,9 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
+// 🛡️ TAURI INVOKE PROTECTION - Applied first
+import './tauri-protection-patch';
+
 // TITANE∞ v16.2.2 - Main Entry Point - Cognitive Layer Active
 import React from 'react';
 import ReactDOM from 'react-dom/client';

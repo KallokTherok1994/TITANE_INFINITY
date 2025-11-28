@@ -39,7 +39,6 @@ interface CognitiveSelection {
   expectedQuality: number;
   timeout: number; // Adaptive timeout based on provider + context
 }
-}
 
 interface OmnisMetrics {
   totalRequests: number;

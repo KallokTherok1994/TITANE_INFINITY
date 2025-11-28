@@ -197,7 +197,7 @@ export function isValidTauriCommand(cmd: string): cmd is TauriCommand {
 }
 
 /**
- * Helper pour invoke() avec validation
+ * Helper pour invoke() avec validation et protection robuste
  */
 export async function invokeTauri<T>(
   command: TauriCommand,
@@ -207,9 +207,56 @@ export async function invokeTauri<T>(
     throw new Error(`Invalid Tauri command: ${command}`);
   }
 
-  // Dynamic import pour éviter erreurs SSR
-  const { invoke } = await import('@tauri-apps/api/core');
-  return invoke<T>(command, args);
+  try {
+    // Dynamic import pour éviter erreurs SSR
+    const tauriCore = await import('@tauri-apps/api/core');
+
+    // Protection contre undefined
+    if (!tauriCore || typeof tauriCore.invoke !== 'function') {
+      throw new Error('Tauri invoke function not available');
+    }
+
+    const { invoke } = tauriCore;
+    return await invoke<T>(command, args);
+  } catch (error) {
+    // Fallback en cas d'erreur Tauri (mode web ou erreur backend)
+    console.warn(`[TAURI] Command ${command} failed:`, error);
+
+    // Retourner une réponse de fallback selon le type de commande
+    return createFallbackResponse<T>(command, error);
+  }
+}
+
+/**
+ * Créer une réponse de fallback selon le type de commande
+ */
+function createFallbackResponse<T>(command: string, error: unknown): T {
+  console.log(`[TAURI] Using fallback for ${command}`);
+
+  // Fallbacks spécifiques par type de commande
+  if (command.includes('chat') || command.includes('providers')) {
+    return {
+      success: false,
+      error: 'Backend not available - using local fallback',
+      fallback: true,
+      provider: 'titane-local'
+    } as T;
+  }
+
+  if (command.includes('status') || command.includes('health')) {
+    return {
+      status: 'offline',
+      available: false,
+      fallback: true
+    } as T;
+  }
+
+  // Fallback générique
+  return {
+    success: false,
+    error: String(error),
+    fallback: true
+  } as T;
 }
 
 // ═══════════════════════════════════════════════════════════════

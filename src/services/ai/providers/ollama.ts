@@ -379,28 +379,6 @@ export const ollamaProvider: AIProvider = {
       throw error;
     }
   },
-
-  /**
-   * OMEGA: Reset error state (for auto-heal)
-   */
-  resetErrors(): void {
-    errorCount = 0;
-    endpointHealthy = null;
-    lastHealthCheck = 0;
-    isDev && console.log('🔄 Ollama Provider: Errors and health state reset');
-  },
-
-  /**
-   * OMEGA: Get provider stats
-   */
-  getStats(): { errorCount: number; maxErrors: number; endpointHealthy: boolean | null; lastHealthCheck: number } {
-    return {
-      errorCount,
-      maxErrors: MAX_ENDPOINT_ERRORS,
-      endpointHealthy,
-      lastHealthCheck
-    };
-  },
 };
 
 export default ollamaProvider;

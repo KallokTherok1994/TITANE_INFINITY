@@ -35,6 +35,7 @@ class ChatEngineOmnis {
    */
   async generate(message: string, history: AIMessage[]): Promise<AIMessage> {
     const startTime = Date.now();
+    const timeout = 15000; // Single unified timeout
 
     // OMNIS Step 1: Input Validation (never throw)
     const validatedInput = this.validateInput(message, history);
@@ -45,13 +46,15 @@ class ChatEngineOmnis {
     // OMNIS Step 2: Context Preparation (pure)
     const context = this.prepareContext(validatedInput.message, validatedInput.history);
 
-    // OMNIS Step 3: Core Engine Call (isolated)
+    // OMNIS Step 3: Core Engine Call with unified timeout
     let orchestratorResponse = null;
     try {
-      orchestratorResponse = await aiOrchestrator.generate(
-        context.message,
-        context.history
-      );
+      orchestratorResponse = await Promise.race([
+        aiOrchestrator.generate(context.message, context.history),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('OMNIS_TIMEOUT')), timeout)
+        )
+      ]);
     } catch (error) {
       console.error('[OMNIS] Orchestrator error:', error);
       // Continue with null - normalizeResponse will handle it

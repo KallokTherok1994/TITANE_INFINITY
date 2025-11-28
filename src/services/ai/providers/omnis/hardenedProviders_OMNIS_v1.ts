@@ -150,4 +150,166 @@ export const tauriChatOmnis = wrapProviderWithOmnis(
       logErrors: true
     }
   }
-);\n\n/**\n * ═══════════════════════════════════════════════════════════════════\n * OPENAI - OMNIS HARDENED MOCK (En attente du vrai provider)\n * ═══════════════════════════════════════════════════════════════════\n */\nconst openaiMockProvider = {\n  name: 'openai' as const,\n  async isAvailable(): Promise<boolean> {\n    return false; // Désactivé pour l'instant\n  },\n  async generate(): Promise<any> {\n    throw new Error('OpenAI provider not yet implemented - using fallback');\n  }\n};\n\nexport const openaiOmnis = wrapProviderWithOmnis(\n  openaiMockProvider,\n  {\n    // Quality-focused config (ready for real implementation)\n    timeoutMs: 15000,\n    circuitBreaker: {\n      failureThreshold: 4,\n      recoveryTimeoutMs: 30000,\n      halfOpenMaxCalls: 2\n    },\n    retry: {\n      maxRetries: 3,\n      baseDelay: 2000,\n      maxDelay: 10000,\n      backoffMultiplier: 2.2,\n      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']\n    },\n    isolation: {\n      maxConcurrentCalls: 6,\n      queueTimeout: 4000\n    },\n    monitoring: {\n      enableMetrics: true,\n      logErrors: true\n    }\n  }\n);\n\n/**\n * ═══════════════════════════════════════════════════════════════════\n * CLAUDE - OMNIS HARDENED MOCK (En attente du vrai provider)\n * ═══════════════════════════════════════════════════════════════════\n */\nconst claudeMockProvider = {\n  name: 'claude' as const,\n  async isAvailable(): Promise<boolean> {\n    return false; // Désactivé pour l'instant\n  },\n  async generate(): Promise<any> {\n    throw new Error('Claude provider not yet implemented - using fallback');\n  }\n};\n\nexport const claudeOmnis = wrapProviderWithOmnis(\n  claudeMockProvider,\n  {\n    // Context-aware config (ready for real implementation)\n    timeoutMs: 12000,\n    circuitBreaker: {\n      failureThreshold: 4,\n      recoveryTimeoutMs: 25000,\n      halfOpenMaxCalls: 3\n    },\n    retry: {\n      maxRetries: 2,\n      baseDelay: 1500,\n      maxDelay: 8000,\n      backoffMultiplier: 2,\n      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']\n    },\n    isolation: {\n      maxConcurrentCalls: 6,\n      queueTimeout: 4000\n    },\n    monitoring: {\n      enableMetrics: true,\n      logErrors: true\n    }\n  }\n);\n\n/**\n * ═══════════════════════════════════════════════════════════════════\n * OMNIS HARDENED PROVIDERS REGISTRY\n * ═══════════════════════════════════════════════════════════════════\n */\nexport const omnisHardenedProviders = {\n  'titane-local': titaneLocalOmnis,\n  'gemini': geminiOmnis,\n  'ollama': ollamaOmnis,\n  'tauri-chat': tauriChatOmnis,\n  'openai': openaiOmnis,\n  'claude': claudeOmnis\n} as const;\n\n/**\n * ═══════════════════════════════════════════════════════════════════\n * OMNIS PROVIDERS ARRAY (for orchestrator)\n * ═══════════════════════════════════════════════════════════════════\n */\nexport const omnisProvidersArray = [\n  titaneLocalOmnis,    // Baseline ultra-fiable\n  geminiOmnis,         // Vitesse + intelligence\n  tauriChatOmnis,      // Backend Rust performant\n  ollamaOmnis,         // Local LLM\n  // openaiOmnis,      // Quality provider (mock for now)\n  // claudeOmnis,      // Context provider (mock for now)\n];\n\n/**\n * ═══════════════════════════════════════════════════════════════════\n * OMNIS DIAGNOSTICS HELPERS\n * ═══════════════════════════════════════════════════════════════════\n */\nexport function getAllOmnisProviderStats() {\n  return Object.entries(omnisHardenedProviders).map(([name, provider]) => ({\n    name,\n    metrics: provider.getOmnisMetrics(),\n    isActive: provider.name in omnisHardenedProviders\n  }));\n}\n\nexport function resetAllOmnisProviders() {\n  Object.values(omnisHardenedProviders).forEach(provider => {\n    provider.resetOmnisMetrics();\n  });\n}\n\nexport function getOmnisSystemHealth(): {\n  overallHealth: number;\n  activeProviders: number;\n  totalProviders: number;\n  criticalIssues: string[];\n} {\n  const stats = getAllOmnisProviderStats();\n  const activeStats = stats.filter(s => s.isActive);\n  \n  const healthScores = activeStats.map(s => s.metrics.healthScore);\n  const overallHealth = healthScores.length > 0 \n    ? Math.round(healthScores.reduce((sum, score) => sum + score, 0) / healthScores.length)\n    : 0;\n\n  const criticalIssues = activeStats\n    .filter(s => s.metrics.circuitBreakerState.state === 'OPEN')\n    .map(s => `${s.name}: Circuit breaker OPEN`);\n\n  return {\n    overallHealth,\n    activeProviders: activeStats.length,\n    totalProviders: stats.length,\n    criticalIssues\n  };\n}\n\n// Export types for external use\nexport type { OmnisWrapperConfig } from './providerWrapper_OMNIS_v1';
+);
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * OPENAI - OMNIS HARDENED MOCK (En attente du vrai provider)
+ * ═══════════════════════════════════════════════════════════════════
+ */
+const openaiMockProvider = {
+  name: 'openai' as const,
+  async isAvailable(): Promise<boolean> {
+    return false; // Désactivé pour l'instant
+  },
+  async generate(): Promise<any> {
+    throw new Error('OpenAI provider not yet implemented - using fallback');
+  }
+};
+
+export const openaiOmnis = wrapProviderWithOmnis(
+  openaiMockProvider,
+  {
+    // Quality-focused config (ready for real implementation)
+    timeoutMs: 15000,
+    circuitBreaker: {
+      failureThreshold: 4,
+      recoveryTimeoutMs: 30000,
+      halfOpenMaxCalls: 2
+    },
+    retry: {
+      maxRetries: 3,
+      baseDelay: 2000,
+      maxDelay: 10000,
+      backoffMultiplier: 2.2,
+      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']
+    },
+    isolation: {
+      maxConcurrentCalls: 6,
+      queueTimeout: 4000
+    },
+    monitoring: {
+      enableMetrics: true,
+      logErrors: true
+    }
+  }
+);
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * CLAUDE - OMNIS HARDENED MOCK (En attente du vrai provider)
+ * ═══════════════════════════════════════════════════════════════════
+ */
+const claudeMockProvider = {
+  name: 'claude' as const,
+  async isAvailable(): Promise<boolean> {
+    return false; // Désactivé pour l'instant
+  },
+  async generate(): Promise<any> {
+    throw new Error('Claude provider not yet implemented - using fallback');
+  }
+};
+
+export const claudeOmnis = wrapProviderWithOmnis(
+  claudeMockProvider,
+  {
+    // Context-aware config (ready for real implementation)
+    timeoutMs: 12000,
+    circuitBreaker: {
+      failureThreshold: 4,
+      recoveryTimeoutMs: 25000,
+      halfOpenMaxCalls: 3
+    },
+    retry: {
+      maxRetries: 2,
+      baseDelay: 1500,
+      maxDelay: 8000,
+      backoffMultiplier: 2,
+      retryableErrors: ['RATE_LIMIT', 'SERVER_ERROR', 'TIMEOUT']
+    },
+    isolation: {
+      maxConcurrentCalls: 6,
+      queueTimeout: 4000
+    },
+    monitoring: {
+      enableMetrics: true,
+      logErrors: true
+    }
+  }
+);
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * OMNIS HARDENED PROVIDERS REGISTRY
+ * ═══════════════════════════════════════════════════════════════════
+ */
+export const omnisHardenedProviders = {
+  'titane-local': titaneLocalOmnis,
+  'gemini': geminiOmnis,
+  'ollama': ollamaOmnis,
+  'tauri-chat': tauriChatOmnis,
+  'openai': openaiOmnis,
+  'claude': claudeOmnis
+} as const;
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * OMNIS PROVIDERS ARRAY (for orchestrator)
+ * ═══════════════════════════════════════════════════════════════════
+ */
+export const omnisProvidersArray = [
+  titaneLocalOmnis,    // Baseline ultra-fiable
+  geminiOmnis,         // Vitesse + intelligence
+  tauriChatOmnis,      // Backend Rust performant
+  ollamaOmnis,         // Local LLM
+  // openaiOmnis,      // Quality provider (mock for now)
+  // claudeOmnis,      // Context provider (mock for now)
+];
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * OMNIS DIAGNOSTICS HELPERS
+ * ═══════════════════════════════════════════════════════════════════
+ */
+export function getAllOmnisProviderStats() {
+  return Object.entries(omnisHardenedProviders).map(([name, provider]) => ({
+    name,
+    metrics: provider.getOmnisMetrics(),
+    isActive: provider.name in omnisHardenedProviders
+  }));
+}
+
+export function resetAllOmnisProviders() {
+  Object.values(omnisHardenedProviders).forEach(provider => {
+    provider.resetOmnisMetrics();
+  });
+}
+
+export function getOmnisSystemHealth(): {
+  overallHealth: number;
+  activeProviders: number;
+  totalProviders: number;
+  criticalIssues: string[];
+} {
+  const stats = getAllOmnisProviderStats();
+  const activeStats = stats.filter(s => s.isActive);
+  
+  const healthScores = activeStats.map(s => s.metrics.healthScore);
+  const overallHealth = healthScores.length > 0 
+    ? Math.round(healthScores.reduce((sum, score) => sum + score, 0) / healthScores.length)
+    : 0;
+
+  const criticalIssues = activeStats
+    .filter(s => s.metrics.circuitBreakerState.state === 'OPEN')
+    .map(s => `${s.name}: Circuit breaker OPEN`);
+
+  return {
+    overallHealth,
+    activeProviders: activeStats.length,
+    totalProviders: stats.length,
+    criticalIssues
+  };
+}
+
+// Export types for external use
+export type { OmnisWrapperConfig } from './providerWrapper_OMNIS_v1';

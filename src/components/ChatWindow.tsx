@@ -137,7 +137,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
         )}
 
         {messages
-          .filter((message) => message.role !== 'system')
+          .filter((message) =>
+            message &&
+            message.role &&
+            ['user', 'assistant'].includes(message.role) &&
+            message.content &&
+            message.content.trim().length > 0
+          )
           .map((message) => (
             <MessageBubble key={message.timestamp} message={message as Message} />
           ))}

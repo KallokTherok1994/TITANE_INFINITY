@@ -51,7 +51,6 @@ interface OmnisWrapperConfig {
     logErrors: boolean;
   };
 };
-}
 
 interface ProviderMetrics {
   totalCalls: number;

@@ -8,6 +8,109 @@
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
+const WORKSPACE_DIR: &str = "/home/titane/Documents/TITANE_INFINITY";
+
+#[derive(Debug, Clone, Copy)]
+enum AllowedCommand {
+    NpmRunBuild,
+    NpmTypeCheck,
+    NpmTest,
+    NpmClean,
+    CargoCheck,
+    CargoClippy,
+    CargoBuild,
+    CargoBuildRelease,
+    AutoBuildScript,
+    InstallerScript,
+    GitStatus,
+    GitLogRecent,
+}
+
+impl AllowedCommand {
+    fn from_input(input: &str) -> Option<Self> {
+        match input.trim() {
+            "npm run build" => Some(Self::NpmRunBuild),
+            "npm run type-check" => Some(Self::NpmTypeCheck),
+            "npm run test" => Some(Self::NpmTest),
+            "npm run clean" => Some(Self::NpmClean),
+            "cargo check" => Some(Self::CargoCheck),
+            "cargo clippy" => Some(Self::CargoClippy),
+            "cargo build" => Some(Self::CargoBuild),
+            "cargo build --release" => Some(Self::CargoBuildRelease),
+            "./autobuild_full.sh" => Some(Self::AutoBuildScript),
+            "./titane_installer.sh" => Some(Self::InstallerScript),
+            "git status" => Some(Self::GitStatus),
+            "git log --oneline -10" => Some(Self::GitLogRecent),
+            _ => None,
+        }
+    }
+
+    fn build_command(&self) -> Command {
+        match self {
+            Self::NpmRunBuild => {
+                let mut cmd = Command::new("npm");
+                cmd.args(["run", "build"]);
+                cmd
+            }
+            Self::NpmTypeCheck => {
+                let mut cmd = Command::new("npm");
+                cmd.args(["run", "type-check"]);
+                cmd
+            }
+            Self::NpmTest => {
+                let mut cmd = Command::new("npm");
+                cmd.args(["run", "test"]);
+                cmd
+            }
+            Self::NpmClean => {
+                let mut cmd = Command::new("npm");
+                cmd.args(["run", "clean"]);
+                cmd
+            }
+            Self::CargoCheck => {
+                let mut cmd = Command::new("cargo");
+                cmd.arg("check");
+                cmd
+            }
+            Self::CargoClippy => {
+                let mut cmd = Command::new("cargo");
+                cmd.args(["clippy"]);
+                cmd
+            }
+            Self::CargoBuild => {
+                let mut cmd = Command::new("cargo");
+                cmd.arg("build");
+                cmd
+            }
+            Self::CargoBuildRelease => {
+                let mut cmd = Command::new("cargo");
+                cmd.args(["build", "--release"]);
+                cmd
+            }
+            Self::AutoBuildScript => {
+                let mut cmd = Command::new("sh");
+                cmd.arg("./autobuild_full.sh");
+                cmd
+            }
+            Self::InstallerScript => {
+                let mut cmd = Command::new("sh");
+                cmd.arg("./titane_installer.sh");
+                cmd
+            }
+            Self::GitStatus => {
+                let mut cmd = Command::new("git");
+                cmd.arg("status");
+                cmd
+            }
+            Self::GitLogRecent => {
+                let mut cmd = Command::new("git");
+                cmd.args(["log", "--oneline", "-10"]);
+                cmd
+            }
+        }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DevOpsStats {
     pub cpu_usage: String,
@@ -21,39 +124,20 @@ pub struct DevOpsStats {
 /// Exécute une commande shell DevOps (build, test, clean, etc.)
 #[tauri::command]
 pub async fn devops_run(cmd: String) -> Result<String, String> {
-    log::info!("🚀 DevOps command execution: {}", cmd);
+    log::info!("🚀 DevOps command execution request: {}", cmd);
 
-    // Sécurité: Liste blanche de commandes autorisées
-    let allowed_commands = vec![
-        "npm run build",
-        "npm run type-check",
-        "npm run test",
-        "npm run clean",
-        "cargo check",
-        "cargo clippy",
-        "cargo build",
-        "cargo build --release",
-        "./autobuild_full.sh",
-        "./titane_installer.sh",
-        "git status",
-        "git log --oneline -10",
-    ];
-
-    if !allowed_commands.iter().any(|c| cmd.starts_with(c)) {
+    let allowed = AllowedCommand::from_input(&cmd).ok_or_else(|| {
         log::warn!("🚫 DevOps command rejected (not in whitelist): {}", cmd);
-        return Err(format!("Commande non autorisée: {}", cmd));
-    }
+        format!("Commande non autorisée: {}", cmd)
+    })?;
 
-    // Exécution de la commande
-    let output = Command::new("sh")
-        .arg("-c")
-        .arg(&cmd)
-        .current_dir("/home/titane/Documents/TITANE_INFINITY")
-        .output()
-        .map_err(|e| {
-            log::error!("❌ DevOps command execution error: {}", e);
-            format!("Erreur d'exécution: {}", e)
-        })?;
+    let mut command = allowed.build_command();
+    command.current_dir(WORKSPACE_DIR);
+
+    let output = command.output().map_err(|e| {
+        log::error!("❌ DevOps command execution error: {}", e);
+        format!("Erreur d'exécution: {}", e)
+    })?;
 
     let stdout = String::from_utf8_lossy(&output.stdout).to_string();
     let stderr = String::from_utf8_lossy(&output.stderr).to_string();
@@ -120,7 +204,7 @@ pub async fn devops_stats() -> Result<DevOpsStats, String> {
         .arg("check")
         .arg("--manifest-path")
         .arg("src-tauri/Cargo.toml")
-        .current_dir("/home/titane/Documents/TITANE_INFINITY")
+        .current_dir(WORKSPACE_DIR)
         .output()
         .map_err(|e| format!("Cargo check error: {}", e))?;
     let cargo_status = if cargo_check.status.success() {
@@ -133,7 +217,7 @@ pub async fn devops_stats() -> Result<DevOpsStats, String> {
     let npm_check = Command::new("npm")
         .arg("run")
         .arg("type-check")
-        .current_dir("/home/titane/Documents/TITANE_INFINITY")
+        .current_dir(WORKSPACE_DIR)
         .output()
         .map_err(|e| format!("NPM check error: {}", e))?;
     let npm_status = if npm_check.status.success() {
