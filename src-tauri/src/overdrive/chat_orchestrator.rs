@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::core::tapi_error::TAPIError;
+use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
@@ -43,6 +44,41 @@ pub struct ChatResponse {
     pub success: bool,
     pub error: Option<String>,
     pub latency_ms: u64,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct ChatStreamResult {
+    pub conversation_id: String,
+    pub message_id: String,
+    pub content: String,
+    pub provider: String,
+    pub model: String,
+    pub latency_ms: u64,
+    pub chunk_count: u32,
+    pub tokens: Option<u32>,
+    pub prompt_tokens: Option<u32>,
+    pub total_duration: Option<u64>,
+    pub load_duration: Option<u64>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct StreamEventPayload {
+    conversation_id: String,
+    message_id: String,
+    ordinal: u32,
+    content: String,
+    done: bool,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+struct OllamaStreamChunk {
+    response: Option<String>,
+    done: Option<bool>,
+    error: Option<String>,
+    total_duration: Option<u64>,
+    load_duration: Option<u64>,
+    prompt_eval_count: Option<u32>,
+    eval_count: Option<u32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -618,7 +654,20 @@ async fn store_message(
         conv.messages.push(message.clone());
         conv.last_updated = get_timestamp();
         conv.context_tokens += message.tokens.unwrap_or(0);
+        return;
     }
+
+    let mut conversation = ConversationMemory {
+        conversation_id: conversation_id.to_string(),
+        messages: Vec::new(),
+        context_tokens: 0,
+        created_at: get_timestamp(),
+        last_updated: get_timestamp(),
+    };
+
+    conversation.messages.push(message.clone());
+    conversation.context_tokens = message.tokens.unwrap_or(0);
+    conversations.push(conversation);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -727,10 +776,10 @@ pub async fn ai_chat_send(
 
 #[tauri::command]
 pub async fn chat_stream_message(
-    request: ChatRequest,
+    mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
     app: tauri::AppHandle,
-) -> Result<String, String> {
+) -> Result<ChatStreamResult, String> {
     use tauri::Emitter;
 
     println!("[CHAT_STREAM] ✅ Streaming enabled (Tauri v2 Emitter trait)");
@@ -739,15 +788,66 @@ pub async fn chat_stream_message(
         request.provider, request.model
     );
 
+    let conversation_id = request
+        .conversation_id
+        .clone()
+        .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
+
+    if request.conversation_id.is_none() {
+        request.conversation_id = Some(conversation_id.clone());
+    }
+
+    let user_message = ChatMessage {
+        id: uuid::Uuid::new_v4().to_string(),
+        role: "user".to_string(),
+        content: request.message.clone(),
+        timestamp: get_timestamp(),
+        provider: request.provider.clone(),
+        model: request
+            .model
+            .clone()
+            .unwrap_or_else(|| "auto".to_string()),
+        tokens: None,
+        multimodal: request.images.is_some(),
+    };
+
+    store_message(state.inner(), &conversation_id, &user_message).await;
+
+    let should_use_ollama = match request.provider.as_str() {
+        "ollama" | "local" => true,
+        "auto" => is_provider_available("ollama", state.inner()).await,
+        _ => false,
+    };
+
+    if should_use_ollama {
+        let mut streaming_request = request.clone();
+        streaming_request.provider = "ollama".to_string();
+        streaming_request.streaming = true;
+
+        let message_id = uuid::Uuid::new_v4().to_string();
+
+        return stream_with_ollama(
+            streaming_request,
+            state.inner(),
+            &app,
+            conversation_id,
+            message_id,
+        )
+        .await;
+    }
+
     let start = crate::core::utils::now_ms();
     let mut accumulated_content = String::new();
     let chunk_size = 50; // Characters per chunk for simulation
 
-    // TODO: Implement real streaming for Gemini/Ollama APIs
-    // For now: simulate streaming by chunking the non-streaming response
-    let response = chat_send_message(request.clone(), state).await?;
+    let mut streaming_request = request.clone();
+    streaming_request.streaming = false;
+
+    let response = chat_send_message(streaming_request, state).await?;
     let full_content = response.message.content;
+    let message_id = response.message.id.clone();
     let total_chunks = (full_content.len() + chunk_size - 1) / chunk_size;
+    let mut ordinal: u32 = 0;
 
     println!(
         "[CHAT_STREAM] Simulating {} chunks for {} chars",
@@ -755,43 +855,53 @@ pub async fn chat_stream_message(
         full_content.len()
     );
 
-    // Emit chunks progressively
-    for (i, chunk_text) in full_content
-        .chars()
-        .collect::<Vec<char>>()
-        .chunks(chunk_size)
-        .enumerate()
-    {
+    for chunk_text in full_content.chars().collect::<Vec<char>>().chunks(chunk_size) {
         let chunk: String = chunk_text.iter().collect();
         accumulated_content.push_str(&chunk);
 
-        // Emit chunk event (Tauri v2 compatible)
-        let chunk_payload = serde_json::json!({
-            "chunk": chunk,
-            "index": i,
-            "total": total_chunks,
-            "accumulated": accumulated_content.clone()
-        });
+        let stream_event = StreamEventPayload {
+            conversation_id: conversation_id.clone(),
+            message_id: message_id.clone(),
+            ordinal,
+            content: chunk.clone(),
+            done: false,
+        };
 
-        app.emit("chat:stream:chunk", chunk_payload)
+        app.emit("chat:stream:chunk", &stream_event)
             .map_err(|e| format!("Failed to emit chunk: {}", e))?;
 
-        // Small delay to simulate network streaming (remove for real API streaming)
         tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+        ordinal += 1;
     }
 
     let latency_ms = crate::core::utils::elapsed_ms(start);
 
-    // Emit completion event
-    let complete_payload = serde_json::json!({
+    let completion_metadata = serde_json::json!({
         "content": full_content.clone(),
         "provider": response.message.provider,
         "model": response.message.model,
         "latency_ms": latency_ms,
-        "tokens": response.message.tokens
+        "tokens": response.message.tokens,
+        "chunk_count": ordinal,
+        "conversation_id": conversation_id.clone(),
+        "message_id": message_id.clone(),
+        "prompt_tokens": serde_json::Value::Null,
+        "total_duration": serde_json::Value::Null,
+        "load_duration": serde_json::Value::Null,
     });
 
-    app.emit("chat:stream:complete", complete_payload)
+    let done_event = StreamEventPayload {
+        conversation_id: conversation_id.clone(),
+        message_id: message_id.clone(),
+        ordinal,
+        content: completion_metadata.to_string(),
+        done: true,
+    };
+
+    app.emit("chat:stream:done", &done_event)
+        .map_err(|e| format!("Failed to emit stream done: {}", e))?;
+
+    app.emit("chat:stream:complete", completion_metadata)
         .map_err(|e| format!("Failed to emit completion: {}", e))?;
 
     println!(
@@ -799,7 +909,307 @@ pub async fn chat_stream_message(
         full_content.len(),
         latency_ms
     );
-    Ok(full_content)
+
+    Ok(ChatStreamResult {
+        conversation_id,
+        message_id,
+        content: full_content,
+        provider: response.message.provider,
+        model: response.message.model,
+        latency_ms,
+        chunk_count: ordinal,
+        tokens: response.message.tokens,
+        prompt_tokens: None,
+        total_duration: None,
+        load_duration: None,
+    })
+}
+
+async fn stream_with_ollama(
+    request: ChatRequest,
+    state: &ChatOrchestratorState,
+    app: &tauri::AppHandle,
+    conversation_id: String,
+    message_id: String,
+) -> Result<ChatStreamResult, String> {
+    use tauri::Emitter;
+
+    println!(
+        "[CHAT_STREAM] 🦙 Ollama streaming active (model: {:?})",
+        request.model
+    );
+
+    let model = request
+        .model
+        .clone()
+        .unwrap_or_else(|| "llama2:latest".to_string());
+    let url = "http://localhost:11434/api/generate";
+
+    let body = serde_json::json!({
+        "model": model,
+        "prompt": request.message,
+        "stream": true,
+        "options": {
+            "temperature": 0.7,
+            "num_predict": 2048,
+        }
+    });
+
+    let client = match reqwest::Client::builder()
+        .timeout(std::time::Duration::from_secs(45))
+        .build()
+    {
+        Ok(client) => client,
+        Err(e) => {
+            increment_provider_failures("ollama", state).await;
+            return Err(format!("Ollama streaming client error: {}", e));
+        }
+    };
+
+    let response = match client
+        .post(url)
+        .header("Content-Type", "application/json")
+        .json(&body)
+        .send()
+        .await
+    {
+        Ok(response) => response,
+        Err(e) => {
+            increment_provider_failures("ollama", state).await;
+            return Err(format!(
+                "Ollama streaming request error: {} (is Ollama running?)",
+                e
+            ));
+        }
+    };
+
+    if !response.status().is_success() {
+        let status = response.status();
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        increment_provider_failures("ollama", state).await;
+        return Err(format!("Ollama streaming error {}: {}", status, error_text));
+    }
+
+    let start = crate::core::utils::now_ms();
+    let mut stream = response.bytes_stream();
+
+    let mut buffer = String::new();
+    let mut accumulated = String::new();
+    let mut ordinal: u32 = 0;
+    let mut tokens: Option<u32> = None;
+    let mut prompt_tokens: Option<u32> = None;
+    let mut done_chunk: Option<OllamaStreamChunk> = None;
+
+    while let Some(chunk_result) = stream.next().await {
+        let chunk_bytes = match chunk_result {
+            Ok(bytes) => bytes,
+            Err(e) => {
+                increment_provider_failures("ollama", state).await;
+                return Err(format!("Ollama streaming read error: {}", e));
+            }
+        };
+
+        let chunk_str = String::from_utf8_lossy(&chunk_bytes);
+        buffer.push_str(&chunk_str);
+
+        loop {
+            if let Some(pos) = buffer.find('\n') {
+                let line: String = buffer.drain(..=pos).collect();
+                let trimmed = line.trim();
+                if trimmed.is_empty() {
+                    continue;
+                }
+
+                match handle_ollama_line(
+                    trimmed,
+                    app,
+                    &conversation_id,
+                    &message_id,
+                    &mut ordinal,
+                    &mut accumulated,
+                    &mut tokens,
+                    &mut prompt_tokens,
+                ) {
+                    Ok(Some(final_chunk)) => {
+                        done_chunk = Some(final_chunk);
+                        break;
+                    }
+                    Ok(None) => continue,
+                    Err(err) => {
+                        increment_provider_failures("ollama", state).await;
+                        return Err(err);
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+
+        if done_chunk.is_some() {
+            break;
+        }
+    }
+
+    if done_chunk.is_none() && !buffer.trim().is_empty() {
+        match handle_ollama_line(
+            buffer.trim(),
+            app,
+            &conversation_id,
+            &message_id,
+            &mut ordinal,
+            &mut accumulated,
+            &mut tokens,
+            &mut prompt_tokens,
+        ) {
+            Ok(Some(final_chunk)) => {
+                done_chunk = Some(final_chunk);
+            }
+            Ok(None) => {}
+            Err(err) => {
+                increment_provider_failures("ollama", state).await;
+                return Err(err);
+            }
+        }
+    }
+
+    let done_info = match done_chunk {
+        Some(info) => info,
+        None => {
+            increment_provider_failures("ollama", state).await;
+            return Err("Ollama streaming ended without completion signal".to_string());
+        }
+    };
+
+    if tokens.is_none() {
+        tokens = done_info.eval_count;
+    }
+    if prompt_tokens.is_none() {
+        prompt_tokens = done_info.prompt_eval_count;
+    }
+
+    let total_duration = done_info.total_duration;
+    let load_duration = done_info.load_duration;
+
+    let latency_ms = crate::core::utils::elapsed_ms(start);
+
+    let completion_metadata = serde_json::json!({
+        "content": accumulated.clone(),
+        "provider": "ollama",
+        "model": model.clone(),
+        "latency_ms": latency_ms,
+        "tokens": tokens,
+        "prompt_tokens": prompt_tokens,
+        "chunk_count": ordinal,
+        "conversation_id": conversation_id.clone(),
+        "message_id": message_id.clone(),
+        "total_duration": total_duration,
+        "load_duration": load_duration,
+    });
+
+    let done_event = StreamEventPayload {
+        conversation_id: conversation_id.clone(),
+        message_id: message_id.clone(),
+        ordinal,
+        content: completion_metadata.to_string(),
+        done: true,
+    };
+
+    app.emit("chat:stream:done", &done_event)
+        .map_err(|e| format!("Failed to emit stream done: {}", e))?;
+
+    app.emit("chat:stream:complete", completion_metadata)
+        .map_err(|e| format!("Failed to emit completion: {}", e))?;
+
+    reset_provider_failures("ollama", state).await;
+
+    let assistant_message = ChatMessage {
+        id: message_id.clone(),
+        role: "assistant".to_string(),
+        content: accumulated.clone(),
+        timestamp: get_timestamp(),
+        provider: "ollama".to_string(),
+        model: model.clone(),
+        tokens,
+        multimodal: false,
+    };
+
+    store_message(state, &conversation_id, &assistant_message).await;
+
+    println!(
+        "[CHAT_STREAM] ✅ Ollama streaming completed: {} chars in {}ms (chunks: {})",
+        accumulated.len(),
+        latency_ms,
+        ordinal
+    );
+
+    Ok(ChatStreamResult {
+        conversation_id,
+        message_id,
+        content: accumulated,
+        provider: "ollama".to_string(),
+        model,
+        latency_ms,
+        chunk_count: ordinal,
+        tokens,
+        prompt_tokens,
+        total_duration,
+        load_duration,
+    })
+}
+
+fn handle_ollama_line(
+    line: &str,
+    app: &tauri::AppHandle,
+    conversation_id: &str,
+    message_id: &str,
+    ordinal: &mut u32,
+    accumulated: &mut String,
+    tokens: &mut Option<u32>,
+    prompt_tokens: &mut Option<u32>,
+) -> Result<Option<OllamaStreamChunk>, String> {
+    use tauri::Emitter;
+
+    if line.trim().is_empty() {
+        return Ok(None);
+    }
+
+    let chunk: OllamaStreamChunk = serde_json::from_str(line)
+        .map_err(|e| format!("Failed to parse Ollama stream chunk: {}", e))?;
+
+    if let Some(error) = chunk.error.clone() {
+        return Err(error);
+    }
+
+    if let Some(part) = chunk.response.as_ref() {
+        if !part.is_empty() {
+            accumulated.push_str(part);
+            let payload = StreamEventPayload {
+                conversation_id: conversation_id.to_string(),
+                message_id: message_id.to_string(),
+                ordinal: *ordinal,
+                content: part.clone(),
+                done: false,
+            };
+            app.emit("chat:stream:chunk", &payload)
+                .map_err(|e| format!("Failed to emit chunk: {}", e))?;
+            *ordinal += 1;
+        }
+    }
+
+    if chunk.done.unwrap_or(false) {
+        if let Some(eval) = chunk.eval_count {
+            *tokens = Some(eval);
+        }
+        if let Some(prompt_eval) = chunk.prompt_eval_count {
+            *prompt_tokens = Some(prompt_eval);
+        }
+        return Ok(Some(chunk));
+    }
+
+    Ok(None)
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

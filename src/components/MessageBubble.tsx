@@ -19,6 +19,10 @@ export interface MessageMetadata {
   latencyMs?: number;
   mode?: string;
   provider?: string;
+  tokenCount?: number;
+  promptTokens?: number;
+  totalDuration?: number;
+  loadDuration?: number;
   [key: string]: unknown;
 }
 
@@ -80,11 +84,26 @@ export const MessageBubble: React.FC<MessageBubbleProps> = React.memo(({ message
       ? message.metadata?.latencyMs
       : (message.metadata?.duration as number | undefined)
   );
+  const totalDurationLabel = formatDuration(
+    typeof message.metadata?.totalDuration === 'number'
+      ? message.metadata?.totalDuration
+      : undefined
+  );
+  const loadDurationLabel = formatDuration(
+    typeof message.metadata?.loadDuration === 'number'
+      ? message.metadata?.loadDuration
+      : undefined
+  );
+  const promptTokens = typeof message.metadata?.promptTokens === 'number' ? message.metadata?.promptTokens : undefined;
+  const completionTokens = typeof message.metadata?.tokenCount === 'number' ? message.metadata?.tokenCount : undefined;
+  const totalTokens = typeof promptTokens === 'number' || typeof completionTokens === 'number'
+    ? (promptTokens ?? 0) + (completionTokens ?? 0)
+    : undefined;
   const mode = typeof message.metadata?.mode === 'string' ? message.metadata?.mode : undefined;
 
   return (
     <div className={`message-bubble ${message.role}`}>
-      {(provider || mode || durationLabel || isStreaming) && (
+      {(provider || mode || durationLabel || isStreaming || totalTokens != null || totalDurationLabel || loadDurationLabel) && (
         <div className="message-meta">
           {provider && <span className="message-badge message-badge-provider">⚡ {provider}</span>}
           {mode && <span className="message-badge message-badge-mode">Mode {mode}</span>}
@@ -97,6 +116,24 @@ export const MessageBubble: React.FC<MessageBubbleProps> = React.memo(({ message
             <span className="message-badge message-badge-fallback">Auto-réparation</span>
           )}
           {durationLabel && <span className="message-badge message-badge-duration">⏱ {durationLabel}</span>}
+          {totalTokens != null && (
+            <span className="message-badge message-badge-tokens">
+              🧠 Tokens {totalTokens}
+              {promptTokens != null && completionTokens != null
+                ? ` (prompt ${promptTokens}, sortie ${completionTokens})`
+                : completionTokens != null
+                  ? ` (${completionTokens})`
+                  : promptTokens != null
+                    ? ` (prompt ${promptTokens})`
+                    : ''}
+            </span>
+          )}
+          {totalDurationLabel && (
+            <span className="message-badge message-badge-total-duration">🕒 Total {totalDurationLabel}</span>
+          )}
+          {loadDurationLabel && (
+            <span className="message-badge message-badge-load-duration">⚙️ Chargement {loadDurationLabel}</span>
+          )}
         </div>
       )}
 

@@ -437,6 +437,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               status: 'streaming',
               streamChunks: chunkCount,
               mode: currentMode,
+              provider: 'tauri-backend',
             }
           );
         }
@@ -488,6 +489,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         throw new Error('Pipeline returned no response');
       }
 
+      const provider = finalResponse.provider || 'tauri-backend';
       const metadataPatch: Record<string, unknown> = {
         status: streamingError ? 'fallback' : 'success',
         duration: Date.now() - startTime,
@@ -495,10 +497,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         omegaMetadata: finalResponse.omegaMetadata,
         mode: currentMode,
         streamChunks: chunkCount,
+        provider,
       };
 
       const finalContent = finalResponse.content ?? aggregatedContent;
-      const provider = finalResponse.provider || 'tauri-backend';
 
       updateAssistant(
         (message) => ({

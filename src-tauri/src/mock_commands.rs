@@ -7,7 +7,25 @@ use crate::memory::telemetry;
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::utils::AppResult;
+use serde::Serialize;
 use serde_json::json;
+
+#[derive(Debug, Serialize)]
+pub struct MockCommandAck {
+    command: &'static str,
+    status: &'static str,
+    timestamp_ms: i64,
+}
+
+impl MockCommandAck {
+    fn new(command: &'static str) -> Self {
+        Self {
+            command,
+            status: "ok",
+            timestamp_ms: chrono::Utc::now().timestamp_millis(),
+        }
+    }
+}
 
 // ═══════════════════════════════════════════════════════════════
 // HELIOS - System Monitoring
@@ -494,7 +512,7 @@ pub async fn singularity_get_meta() -> AppResult<serde_json::Value> {
 // ─────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn singularity_update_physical(physical: serde_json::Value) -> AppResult<()> {
+pub async fn singularity_update_physical(physical: serde_json::Value) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_physical")
         .await?;
@@ -502,11 +520,13 @@ pub async fn singularity_update_physical(physical: serde_json::Value) -> AppResu
         "Mock: singularity_update_physical called with: {:?}",
         physical
     );
-    Ok(())
+    Ok(MockCommandAck::new("singularity_update_physical"))
 }
 
 #[tauri::command]
-pub async fn singularity_update_cognitive(cognitive: serde_json::Value) -> AppResult<()> {
+pub async fn singularity_update_cognitive(
+    cognitive: serde_json::Value,
+) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_cognitive")
         .await?;
@@ -514,61 +534,67 @@ pub async fn singularity_update_cognitive(cognitive: serde_json::Value) -> AppRe
         "Mock: singularity_update_cognitive called with: {:?}",
         cognitive
     );
-    Ok(())
+    Ok(MockCommandAck::new("singularity_update_cognitive"))
 }
 
 #[tauri::command]
-pub async fn singularity_update_symbolic(_symbolic: serde_json::Value) -> AppResult<()> {
+pub async fn singularity_update_symbolic(
+    _symbolic: serde_json::Value,
+) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_symbolic")
         .await?;
     log::info!("Mock: singularity_update_symbolic called");
-    Ok(())
+    Ok(MockCommandAck::new("singularity_update_symbolic"))
 }
 
 #[tauri::command]
-pub async fn singularity_update_adaptive(_adaptive: serde_json::Value) -> AppResult<()> {
+pub async fn singularity_update_adaptive(
+    _adaptive: serde_json::Value,
+) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_adaptive")
         .await?;
     log::info!("Mock: singularity_update_adaptive called");
-    Ok(())
+    Ok(MockCommandAck::new("singularity_update_adaptive"))
 }
 
 #[tauri::command]
-pub async fn singularity_update_meta(_meta: serde_json::Value) -> AppResult<()> {
+pub async fn singularity_update_meta(_meta: serde_json::Value) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
-        .require("state_write", Role::User, "singularity_update_meta")
+        .require("state_write", Role::System, "singularity_update_meta")
         .await?;
     log::info!("Mock: singularity_update_meta called");
-    Ok(())
+    Ok(MockCommandAck::new("singularity_update_meta"))
 }
 
 #[tauri::command]
-pub async fn singularity_update_full_state(_state: serde_json::Value) -> AppResult<()> {
+pub async fn singularity_update_full_state(
+    _state: serde_json::Value,
+) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_full_state")
         .await?;
     log::info!("Mock: singularity_update_full_state called");
-    Ok(())
+    Ok(MockCommandAck::new("singularity_update_full_state"))
 }
 
 #[tauri::command]
-pub async fn singularity_save_state() -> AppResult<()> {
+pub async fn singularity_save_state() -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_save_state")
         .await?;
     log::info!("Mock: singularity_save_state called");
-    Ok(())
+    Ok(MockCommandAck::new("singularity_save_state"))
 }
 
 #[tauri::command]
-pub async fn singularity_load_state() -> AppResult<()> {
+pub async fn singularity_load_state() -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_read", Role::System, "singularity_load_state")
         .await?;
     log::info!("Mock: singularity_load_state called");
-    Ok(())
+    Ok(MockCommandAck::new("singularity_load_state"))
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -751,7 +777,7 @@ pub async fn import_file(path: String) -> AppResult<String> {
 // Simulates backend chat_orchestrator.rs behavior for frontend dev
 // ═══════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MockChatRequest {

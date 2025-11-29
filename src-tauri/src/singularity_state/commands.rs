@@ -6,8 +6,26 @@
  */
 use crate::singularity_state::layers::*;
 use crate::singularity_state::{SingularityEngine, SingularityState};
+use serde::Serialize;
 use std::sync::Arc;
 use tauri::State;
+
+#[derive(Debug, Clone, Serialize)]
+pub struct SingularityUpdateAck {
+    pub command: &'static str,
+    pub status: &'static str,
+    pub timestamp_ms: u64,
+}
+
+impl SingularityUpdateAck {
+    fn new(command: &'static str) -> Self {
+        Self {
+            command,
+            status: "ok",
+            timestamp_ms: chrono::Utc::now().timestamp_millis() as u64,
+        }
+    }
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // QUERY COMMANDS (Read-only)
@@ -91,8 +109,9 @@ pub async fn singularity_is_critical(
 pub async fn singularity_update_physical(
     engine: State<'_, Arc<SingularityEngine>>,
     physical: PhysicalLayer,
-) -> Result<(), String> {
-    engine.update_physical(physical).await
+) -> Result<SingularityUpdateAck, String> {
+    engine.update_physical(physical).await?;
+    Ok(SingularityUpdateAck::new("singularity_update_physical"))
 }
 
 /// Mettre à jour Cognitive Layer
@@ -100,8 +119,9 @@ pub async fn singularity_update_physical(
 pub async fn singularity_update_cognitive(
     engine: State<'_, Arc<SingularityEngine>>,
     cognitive: CognitiveLayer,
-) -> Result<(), String> {
-    engine.update_cognitive(cognitive).await
+) -> Result<SingularityUpdateAck, String> {
+    engine.update_cognitive(cognitive).await?;
+    Ok(SingularityUpdateAck::new("singularity_update_cognitive"))
 }
 
 /// Mettre à jour Symbolic Layer
@@ -109,8 +129,9 @@ pub async fn singularity_update_cognitive(
 pub async fn singularity_update_symbolic(
     engine: State<'_, Arc<SingularityEngine>>,
     symbolic: SymbolicLayer,
-) -> Result<(), String> {
-    engine.update_symbolic(symbolic).await
+) -> Result<SingularityUpdateAck, String> {
+    engine.update_symbolic(symbolic).await?;
+    Ok(SingularityUpdateAck::new("singularity_update_symbolic"))
 }
 
 /// Mettre à jour Adaptive Layer
@@ -118,8 +139,9 @@ pub async fn singularity_update_symbolic(
 pub async fn singularity_update_adaptive(
     engine: State<'_, Arc<SingularityEngine>>,
     adaptive: AdaptiveLayer,
-) -> Result<(), String> {
-    engine.update_adaptive(adaptive).await
+) -> Result<SingularityUpdateAck, String> {
+    engine.update_adaptive(adaptive).await?;
+    Ok(SingularityUpdateAck::new("singularity_update_adaptive"))
 }
 
 /// Mettre à jour Meta Layer
@@ -127,8 +149,9 @@ pub async fn singularity_update_adaptive(
 pub async fn singularity_update_meta(
     engine: State<'_, Arc<SingularityEngine>>,
     meta: MetaLayer,
-) -> Result<(), String> {
-    engine.update_meta(meta).await
+) -> Result<SingularityUpdateAck, String> {
+    engine.update_meta(meta).await?;
+    Ok(SingularityUpdateAck::new("singularity_update_meta"))
 }
 
 /// Mettre à jour état complet (full sync)
@@ -136,8 +159,9 @@ pub async fn singularity_update_meta(
 pub async fn singularity_update_full_state(
     engine: State<'_, Arc<SingularityEngine>>,
     state: SingularityState,
-) -> Result<(), String> {
-    engine.update_full_state(state).await
+) -> Result<SingularityUpdateAck, String> {
+    engine.update_full_state(state).await?;
+    Ok(SingularityUpdateAck::new("singularity_update_full_state"))
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -148,16 +172,18 @@ pub async fn singularity_update_full_state(
 #[tauri::command]
 pub async fn singularity_save_state(
     engine: State<'_, Arc<SingularityEngine>>,
-) -> Result<(), String> {
-    engine.save_state().await
+) -> Result<SingularityUpdateAck, String> {
+    engine.save_state().await?;
+    Ok(SingularityUpdateAck::new("singularity_save_state"))
 }
 
 /// Charger état depuis persistence
 #[tauri::command]
 pub async fn singularity_load_state(
     engine: State<'_, Arc<SingularityEngine>>,
-) -> Result<(), String> {
-    engine.load_state().await
+) -> Result<SingularityUpdateAck, String> {
+    engine.load_state().await?;
+    Ok(SingularityUpdateAck::new("singularity_load_state"))
 }
 
 // ═══════════════════════════════════════════════════════════════════

@@ -35,6 +35,12 @@ type BackendStreamMetadata = {
   model?: string;
   latency_ms?: number;
   tokens?: number;
+  prompt_tokens?: number;
+  chunk_count?: number;
+  conversation_id?: string;
+  message_id?: string;
+  total_duration?: number;
+  load_duration?: number;
   timestamp?: number;
   error?: string;
   parseError?: string;
@@ -764,6 +770,10 @@ Que souhaites-tu explorer ?`;
         const timestamp = typeof meta.timestamp === 'number' ? meta.timestamp : Date.now();
         const latencyMs = typeof meta.latency_ms === 'number' ? meta.latency_ms : 0;
         const tokenCount = typeof meta.tokens === 'number' ? meta.tokens : undefined;
+        const promptTokenCount = typeof meta.prompt_tokens === 'number' ? meta.prompt_tokens : undefined;
+        const chunkCount = typeof meta.chunk_count === 'number' ? meta.chunk_count : undefined;
+        const totalDuration = typeof meta.total_duration === 'number' ? meta.total_duration : undefined;
+        const loadDuration = typeof meta.load_duration === 'number' ? meta.load_duration : undefined;
 
         let response: AIResponse = {
           content: aggregatedContent,
@@ -777,6 +787,10 @@ Que souhaites-tu explorer ?`;
             backendProvider,
             latencyMs,
             tokenCount,
+            promptTokens: promptTokenCount,
+            chunkCount,
+            totalDuration,
+            loadDuration,
           },
         };
 
