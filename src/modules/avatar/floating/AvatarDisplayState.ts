@@ -36,7 +36,6 @@ export interface AvatarDisplayState {
   mode: AvatarDisplayMode;
   position: [number, number];  // [x, y] en pixels
   anchor: AnchorPosition;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   screen_index: number;   // Index de l'écran (0 = principal)
 
   // Dimensions
@@ -49,17 +48,13 @@ export interface AvatarDisplayState {
   brightness: number;       // 0.0 à 2.0
 
   // Comportement
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   always_on_top: boolean;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   mirror_mode: boolean;     // Effet miroir horizontal
   locked: boolean;          // Verrouillage drag & resize
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   click_through: boolean;   // Passthrough des clics
 
   // État
   visible: boolean;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   last_updated: number;     // Timestamp
 }
 
@@ -70,19 +65,15 @@ export interface AvatarDisplayStateUpdate {
   mode?: AvatarDisplayMode;
   position?: [number, number];
   anchor?: AnchorPosition;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   screen_index?: number;
   width?: number;
   height?: number;
   scale?: number;
   opacity?: number;
   brightness?: number;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   always_on_top?: boolean;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   mirror_mode?: boolean;
   locked?: boolean;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   click_through?: boolean;
   visible?: boolean;
 }
@@ -97,7 +88,6 @@ export interface ScreenInfo {
   height: number;
   x: number;
   y: number;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   scale_factor: number;
 }
 

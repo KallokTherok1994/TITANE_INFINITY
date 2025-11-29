@@ -12,3 +12,5 @@ export {
   isValidResult,
   getResultOrDefault,
 } from './invoke';
+
+export { queryOllama } from './ollama';

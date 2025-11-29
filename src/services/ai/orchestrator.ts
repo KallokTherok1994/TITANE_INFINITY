@@ -22,6 +22,8 @@ import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
 
 const isDev = process.env.NODE_ENV === 'development';
+const NULL_BYTE_PATTERN = /\u0000+/g;
+const CONTROL_CHAR_PATTERN = /\p{Cc}+/gu;
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ORCHESTRATOR
@@ -192,8 +194,8 @@ class AIOrchestrator {
 
     // Validation caractères dangereux
     const dangerousPatterns = [
-      /\x00/g, // Null bytes
-      /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, // Control characters
+      NULL_BYTE_PATTERN, // Null bytes
+      CONTROL_CHAR_PATTERN, // Control characters
     ];
 
     dangerousPatterns.forEach(pattern => {

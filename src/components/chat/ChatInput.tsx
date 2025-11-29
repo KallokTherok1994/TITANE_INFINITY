@@ -16,6 +16,7 @@ import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import './ChatInput.css';
 
 const isDev = process.env.NODE_ENV === 'development';
+const CONTROL_CHAR_PATTERN = /\p{Cc}+/gu;
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -140,8 +141,8 @@ function useOmegaInputProtection() {
     try {
       // Nettoyage basique mais sécurisé
       return input
-        .replace(/[\u0000-\u001F\u007F-\u009F]/g, '') // Caractères de contrôle
-        .replace(/\s+/g, ' ')                          // Espaces multiples
+        .replace(CONTROL_CHAR_PATTERN, '')               // Caractères de contrôle
+        .replace(/\s+/g, ' ')                           // Espaces multiples
         .trim();                                       // Trim sécurisé
     } catch (sanitizeError) {
       handleInputError(
@@ -284,7 +285,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
         value
       );
     }
-  }, [value, disabled, onSend, sanitizeInput, validateMessage, handleInputError]);
+  }, [value, disabled, onSend, sanitizeInput, validateMessage, handleInputError, messageSent, lastMessageTime]);
 
   // ═══ PHASE 5.5: PROTECTED KEYBOARD HANDLER ═══
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {

@@ -3,8 +3,6 @@
 //   Stress testing, edge cases, recovery scenarios
 // ═══════════════════════════════════════════════════════════════════════════
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { AvatarDisplayMode, AnchorPosition, DEFAULT_DISPLAY_STATE } from './AvatarDisplayState';
 import type { AvatarDisplayState } from './AvatarDisplayState';
 

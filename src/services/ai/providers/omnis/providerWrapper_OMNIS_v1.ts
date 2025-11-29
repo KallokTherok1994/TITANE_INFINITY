@@ -195,7 +195,7 @@ export class OmnisProviderWrapper implements AIProvider {
   private readonly circuitBreaker: CircuitBreakerState;
   private readonly metrics: ProviderMetrics;
   private readonly activeCalls = new Set<string>();
-  private readonly callQueue: Array<{ resolve: Function; reject: Function; timestamp: number }> = [];
+  private readonly callQueue: Array<{ resolve: () => void; reject: (error: Error) => void; timestamp: number }> = [];
 
   public readonly name: AIProviderName;
 

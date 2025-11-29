@@ -373,11 +373,21 @@ export function useSingularityStore<T>(
   selector?: Selector<T>,
   options?: UseSingularityStoreOptions
 ): T | SingularityLegacyStore {
-  if (typeof selector !== 'function') {
-    return useLegacySingularityStore();
-  }
+  const legacyStore = useLegacySingularityStore();
 
-  return useSingularitySelector(selector, options);
+  const selectorToUse = useMemo<Selector<T> | null>(() => {
+    if (typeof selector !== 'function') {
+      return null;
+    }
+    return selector;
+  }, [selector]);
+
+  const selected = useSingularitySelector(
+    selectorToUse ?? ((state: SingularityState) => state as unknown as T),
+    options
+  );
+
+  return selectorToUse ? selected : (legacyStore as unknown as T | SingularityLegacyStore);
 }
 
 // ═══════════════════════════════════════════════════════════════════

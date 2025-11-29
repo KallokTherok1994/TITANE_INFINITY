@@ -9,3 +9,4 @@ export { useSystemStore } from './systemStore';
 export { useMemoryStore } from './memoryStore';
 export { useEvolutionStore } from './evolutionStore';
 export { useUIStore, type Toast } from './uiStore';
+export { useSelfHealingStore } from './selfHealingStore';

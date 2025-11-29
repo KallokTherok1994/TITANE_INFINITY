@@ -108,43 +108,9 @@ export const Chat: React.FC = () => {
   const [voiceModeActive, setVoiceModeActive] = useState(false);
 
   // ═══ PHASE 5.1: PROTECTED HOOKS ═══
-  let chatHookResult;
-  try {
-    chatHookResult = useChat({
-      voiceEnabled: voiceModeActive
-    });
-  } catch (hookError) {
-    handleRenderError(
-      hookError instanceof Error ? hookError : new Error(String(hookError)),
-      'useChat-hook'
-    );
-    chatHookResult = {
-      messages: [],
-      isLoading: false,
-      error: 'Erreur d\'initialisation du chat',
-      sendMessage: () => Promise.resolve(),
-      clearChat: () => {},
-       restoreFromVault: () => {},
-      omnisStats: {
-        failureCount: 0,
-        autoHealCount: 0,
-        pipelineHealth: 'degraded',
-        totalRequests: 0,
-        successCount: 0,
-        errorCount: 0,
-        successRate: 0,
-        engineVersion: 'unknown'
-      },
-      uiIntegrity: {
-        version: 1,
-        preventedResets: 0,
-        recoveries: 0,
-        lastRecoveryAt: null,
-        lastContext: 'uninitialized',
-        hasSnapshot: false
-      }
-    };
-  }
+  const chatHookResult = useChat({
+    voiceEnabled: voiceModeActive
+  });
 
   const {
     messages,
@@ -156,6 +122,12 @@ export const Chat: React.FC = () => {
     uiIntegrity,
     restoreFromVault
   } = chatHookResult;
+
+  useEffect(() => {
+    if (error) {
+      handleRenderError(new Error(error), 'useChat-hook');
+    }
+  }, [error, handleRenderError]);
 
   // ═══ PHASE 5.2: PROTECTED STATE ═══
   const [providerStatus, _setProviderStatus] = useState<ProviderStatus>({

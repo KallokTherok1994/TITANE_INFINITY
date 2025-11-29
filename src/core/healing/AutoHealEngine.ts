@@ -18,6 +18,7 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import type { SingularityState } from '@/types/singularityState';
+import { runSelfHealing, type SelfHealingRunResult } from '@/engines/selfHealing';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -68,6 +69,7 @@ export class AutoHealEngine {
   private config: AutoHealConfig;
   private brokenModules: Map<string, BrokenModule> = new Map();
   private healHistory: HealResult[] = [];
+  private lastSelfHealingResult: SelfHealingRunResult | null = null;
 
   private constructor() {
     this.config = {
@@ -123,6 +125,10 @@ export class AutoHealEngine {
   public async healAll(): Promise<HealResult[]> {
     const results: HealResult[] = [];
 
+    if (this.brokenModules.size > 0) {
+      await this.runSelfHealingCycle('autoheal.detected.modules');
+    }
+
     for (const [name, module] of this.brokenModules) {
       if (module.healable) {
         const result = await this.healModule(module);
@@ -136,6 +142,28 @@ export class AutoHealEngine {
     }
 
     return results;
+  }
+
+  /**
+   * Lance un cycle de self-healing via TITANE Local
+   */
+  public async runSelfHealingCycle(symptoms: string): Promise<SelfHealingRunResult | null> {
+    try {
+      console.log('[AutoHeal] 🤖 Running TITANE Local self-healing...');
+      const result = await runSelfHealing(symptoms);
+      this.lastSelfHealingResult = result;
+      return result;
+    } catch (error) {
+      console.error('[AutoHeal] Self-healing cycle failed:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Retourne la dernière analyse TITANE Local
+   */
+  public getLastSelfHealingResult(): SelfHealingRunResult | null {
+    return this.lastSelfHealingResult;
   }
 
   /**

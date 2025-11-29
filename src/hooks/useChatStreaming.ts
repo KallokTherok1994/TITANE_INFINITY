@@ -88,28 +88,26 @@ export function useChatStreaming(
         let chunkCount = 0;
         let finalResponse: ChatEngineResponse | null = null;
 
-        while (true) {
-          const { value, done } = await stream.next(undefined);
+        let nextResult = await stream.next();
+        while (!nextResult.done) {
+          const value = nextResult.value;
 
-          if (done) {
-            finalResponse = value ?? null;
-            break;
+          if (typeof value === 'string') {
+            fullContent += value;
+            chunkCount++;
+
+            const estimatedProgress = Math.min((fullContent.length / 800) * 100, 95);
+            setStreamProgress(estimatedProgress);
+            setStreamedContent(fullContent);
+
+            options.onChunk?.(value);
+            console.log(`📦 Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`);
           }
 
-          if (typeof value !== 'string') {
-            continue;
-          }
-
-          fullContent += value;
-          chunkCount++;
-
-          const estimatedProgress = Math.min((fullContent.length / 800) * 100, 95);
-          setStreamProgress(estimatedProgress);
-          setStreamedContent(fullContent);
-
-          options.onChunk?.(value);
-          console.log(`📦 Chunk ${chunkCount}: +${value.length} chars (total: ${fullContent.length})`);
+          nextResult = await stream.next();
         }
+
+        finalResponse = nextResult.value ?? null;
 
         if (finalResponse) {
           setStreamProgress(100);

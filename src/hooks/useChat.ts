@@ -408,39 +408,39 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       let completed = false;
 
       const streamingTask = (async (): Promise<ChatEngineResponse> => {
-        while (true) {
-          const { value, done } = await iterator.next();
+        let next = await iterator.next();
 
-          if (done) {
-            const response = value ?? null;
-            if (!response) {
-              throw new Error('Streaming sans réponse finale');
-            }
-            aggregatedContent = response.content ?? aggregatedContent;
-            return response;
+        while (!next.done) {
+          const value = next.value;
+
+          if (typeof value === 'string' && value.length > 0) {
+            aggregatedContent += value;
+            chunkCount += 1;
+
+            updateAssistant(
+              message => ({
+                ...message,
+                content: aggregatedContent,
+              }),
+              'assistant-stream-update',
+              {
+                status: 'streaming',
+                streamChunks: chunkCount,
+                mode: currentMode,
+                provider: 'tauri-backend',
+              }
+            );
           }
 
-          if (typeof value !== 'string' || value.length === 0) {
-            continue;
-          }
-
-          aggregatedContent += value;
-          chunkCount += 1;
-
-          updateAssistant(
-            (message) => ({
-              ...message,
-              content: aggregatedContent,
-            }),
-            'assistant-stream-update',
-            {
-              status: 'streaming',
-              streamChunks: chunkCount,
-              mode: currentMode,
-              provider: 'tauri-backend',
-            }
-          );
+          next = await iterator.next();
         }
+
+        const response = next.value ?? null;
+        if (!response) {
+          throw new Error('Streaming sans réponse finale');
+        }
+        aggregatedContent = response.content ?? aggregatedContent;
+        return response;
       })();
 
       const timeoutPromise = new Promise<never>((_, reject) => {

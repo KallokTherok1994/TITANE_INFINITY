@@ -163,8 +163,7 @@ export async function setOpacity(opacity: number): Promise<AvatarDisplayState> {
 export async function setAlwaysOnTop(alwaysOnTop: boolean): Promise<AvatarDisplayState> {
   try {
     return await invoke<AvatarDisplayState>('avatar_set_always_on_top', {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      always_on_top: alwaysOnTop,
+      'always_on_top': alwaysOnTop,
     });
   } catch (error) {
     console.error('[FloatingEngine] Failed to set always on top:', error);
@@ -190,8 +189,7 @@ export async function setLocked(locked: boolean): Promise<AvatarDisplayState> {
 export async function setMirrorMode(mirrorMode: boolean): Promise<AvatarDisplayState> {
   try {
     return await invoke<AvatarDisplayState>('avatar_set_mirror_mode', {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      mirror_mode: mirrorMode,
+      'mirror_mode': mirrorMode,
     });
   } catch (error) {
     console.error('[FloatingEngine] Failed to set mirror mode:', error);
@@ -205,8 +203,7 @@ export async function setMirrorMode(mirrorMode: boolean): Promise<AvatarDisplayS
 export async function setClickThrough(clickThrough: boolean): Promise<AvatarDisplayState> {
   try {
     return await invoke<AvatarDisplayState>('avatar_set_click_through', {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      click_through: clickThrough,
+      'click_through': clickThrough,
     });
   } catch (error) {
     console.error('[FloatingEngine] Failed to set click through:', error);
@@ -236,8 +233,7 @@ export async function setAnchor(anchor: AnchorPosition): Promise<AvatarDisplaySt
 export async function setAnchorByName(anchorName: string): Promise<AvatarDisplayState> {
   try {
     return await invoke<AvatarDisplayState>('avatar_set_anchor_by_name', {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      anchor_name: anchorName,
+      'anchor_name': anchorName,
     });
   } catch (error) {
     console.error('[FloatingEngine] Failed to set anchor by name:', error);
@@ -267,8 +263,7 @@ export async function listScreens(): Promise<ScreenInfo[]> {
 export async function moveToScreen(screenIndex: number): Promise<AvatarDisplayState> {
   try {
     return await invoke<AvatarDisplayState>('avatar_move_to_screen', {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      screen_index: screenIndex,
+      'screen_index': screenIndex,
     });
   } catch (error) {
     console.error('[FloatingEngine] Failed to move to screen:', error);

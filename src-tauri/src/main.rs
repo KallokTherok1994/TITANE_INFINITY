@@ -43,6 +43,8 @@ mod system_health_commands {
     include!("commands/system_health.rs");
 }
 
+mod ollama;
+
 // Cognitive system (always available)
 use std::sync::Arc;
 use titane_infinity::cognitive::{
@@ -88,6 +90,11 @@ impl CognitiveSystemState {
             evolution: Arc::new(Mutex::new(EvolutionCognitiveEngine::new())),
         }
     }
+}
+
+#[tauri::command]
+async fn ollama_query(prompt: String) -> Result<String, String> {
+    ollama::query_ollama(prompt).await
 }
 
 #[tokio::main]
@@ -338,6 +345,8 @@ async fn main() {
     });
 
     builder = builder.invoke_handler(tauri::generate_handler![
+        // TITANE∞ Local Ollama bridge
+        ollama_query,
         // ═══════════════════════════════════════════════════════════════
         // MOCK COMMANDS - Frontend Development
         // ═══════════════════════════════════════════════════════════════
