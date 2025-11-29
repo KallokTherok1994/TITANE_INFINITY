@@ -1516,6 +1516,8 @@ beforeEach(() => {
 afterEach(() => {
   vi.restoreAllMocks();
 });
+
+interface MockArgs {
   module_type?: string;
   issue_id?: string;
   [key: string]: unknown;

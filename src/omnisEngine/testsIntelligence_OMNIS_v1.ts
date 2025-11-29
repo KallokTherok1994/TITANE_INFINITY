@@ -22,14 +22,14 @@
  */
 
 // Test Intelligence imports
-import { describe, it, expect, beforeEach, afterEach, jest } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // Mock implementations
 const mockConsole = {
-  log: jest.fn(),
-  warn: jest.fn(),
-  error: jest.fn(),
-  info: jest.fn()
+  log: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+  info: vi.fn()
 };
 
 // Replace console for testing
@@ -1093,7 +1093,7 @@ describe('🧪 OMNIS Tests Intelligence Auto-Generated v1.0', () => {
   });
 
   afterEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('should execute all OMNIS test patterns', async () => {

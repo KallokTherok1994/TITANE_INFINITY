@@ -145,6 +145,12 @@ const handleTauriInvoke = async (
   payload: Record<string, any> = {}
 ): Promise<unknown> => {
   switch (command) {
+    case 'test_1':
+    case 'test_2':
+    case 'test_3':
+      return { ok: true, command };
+    case 'test_invalid':
+      throw new Error('Simulated Tauri failure for invalid test command');
     case 'get_system_health':
       return {
         status: 'green',

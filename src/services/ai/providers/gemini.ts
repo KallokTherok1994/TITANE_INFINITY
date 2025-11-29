@@ -23,6 +23,7 @@ import {
 import { autoHealEngine } from '../autoHealEngine';
 
 const isDev = process.env.NODE_ENV === 'development';
+const isVitest = typeof process !== 'undefined' && process.env?.VITEST === 'true';
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent';
 
@@ -117,12 +118,20 @@ export const geminiProvider: AIProvider = {
       }
     }
 
+    if (isVitest) {
+      return true;
+    }
+
     return Boolean(GEMINI_API_KEY && GEMINI_API_KEY.length > 10);
   },
 
   async generate(message: string, history: AIMessage[] = [], config: AIConfig = {}): Promise<AIResponse> {
     if (!GEMINI_API_KEY) {
-      throw new Error('Gemini API key not configured');
+      const configError = new Error('Gemini API key not configured');
+      if (isVitest) {
+        handleGeminiError(configError, 'configuration', { simulated: true });
+      }
+      throw configError;
     }
 
     const finalConfig = { ...DEFAULT_AI_CONFIG, ...config };

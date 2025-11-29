@@ -24,6 +24,7 @@ import { autoHealEngine } from '../autoHealEngine';
 const isDev = process.env.NODE_ENV === 'development';
 const OLLAMA_API_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama2';
+const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
 
 // OMEGA: Endpoint health tracking
 let endpointHealthy: boolean | null = null;
@@ -121,8 +122,10 @@ export const ollamaProvider: AIProvider = {
   async isAvailable(): Promise<boolean> {
     const now = Date.now();
 
-    // OMEGA: Use cached health status if recent
-    if (endpointHealthy !== null && now - lastHealthCheck < HEALTH_CHECK_INTERVAL) {
+    const bypassCache = isTestEnv;
+
+    // OMEGA: Use cached health status if recent (unless test forces re-check)
+    if (!bypassCache && endpointHealthy !== null && now - lastHealthCheck < HEALTH_CHECK_INTERVAL) {
       return endpointHealthy;
     }
 

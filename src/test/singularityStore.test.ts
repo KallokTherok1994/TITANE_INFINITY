@@ -9,7 +9,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useSingularityStore } from '../store/singularityStore';
+import { useSingularityStore } from '../hooks/useSingularityStore';
 
 describe('SingularityState Store', () => {
   beforeEach(() => {

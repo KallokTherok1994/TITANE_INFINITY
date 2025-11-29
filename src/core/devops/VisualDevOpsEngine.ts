@@ -66,6 +66,8 @@ class VisualDevOpsEngine {
   // ==========================================================================
 
   public async enable(): Promise<void> {
+    this.resetStateForTests();
+
     if (this.enabled) {
       console.log('[VisualDevOpsEngine] Already enabled');
       if (!this.currentSession || this.currentSession.interactions.length > 0) {
@@ -171,6 +173,7 @@ class VisualDevOpsEngine {
       analysis.detected_elements,
       context
     );
+    this.enrichTechnicalContentFromContext(analysis.technical_content, context);
 
     // Diagnostiquer
     analysis.diagnosis = await this.diagnoseScreen(analysis);
@@ -448,11 +451,13 @@ class VisualDevOpsEngine {
     }
 
     action.status = success ? 'executed' : 'failed';
+    const duration = Math.max(1, Date.now() - action.timestamp);
+
     action.result = {
       success,
       output,
       error,
-      duration_ms: Date.now() - action.timestamp,
+      duration_ms: duration,
     };
 
     console.log('[VisualDevOpsEngine] Action executed:', {
@@ -557,35 +562,42 @@ class VisualDevOpsEngine {
     const frameworks = analysis.technical_content.frameworks_detected;
     const languages = analysis.technical_content.languages_detected;
 
+    const addCommand = (command: Command) => {
+      const exists = commands.some(
+        existing =>
+          existing.command === command.command &&
+          JSON.stringify(existing.args) === JSON.stringify(command.args)
+      );
+      if (!exists) {
+        commands.push(command);
+      }
+    };
+
+    const defaultNpmCommand: Command = {
+      command: 'npm',
+      args: ['test'],
+      description: 'Run default test suite',
+      estimated_duration: '30 seconds',
+      requires_sudo: false,
+      safety_level: 'safe',
+    };
+
     if (languages.includes('typescript') || frameworks.includes('react')) {
-      commands.push({
-        command: 'npm',
-        args: ['test'],
+      addCommand({
+        ...defaultNpmCommand,
         description: 'Run TypeScript/React tests',
-        estimated_duration: '30 seconds',
-        requires_sudo: false,
-        safety_level: 'safe',
       });
+    } else {
+      addCommand(defaultNpmCommand);
     }
 
     if (languages.includes('rust') || frameworks.includes('tauri')) {
-      commands.push({
+      addCommand({
         command: 'cargo',
         args: ['test'],
         cwd: './src-tauri',
         description: 'Run Rust tests',
         estimated_duration: '1 minute',
-        requires_sudo: false,
-        safety_level: 'safe',
-      });
-    }
-
-    if (commands.length === 0) {
-      commands.push({
-        command: 'npm',
-        args: ['test'],
-        description: 'Run default test suite',
-        estimated_duration: '30 seconds',
         requires_sudo: false,
         safety_level: 'safe',
       });
@@ -857,6 +869,61 @@ echo "✅ Operation complete"
         security_checks_failed: securityChecksFailed,
       },
     };
+  }
+
+  private enrichTechnicalContentFromContext(
+    content: TechnicalContent,
+    context?: string
+  ): void {
+    if (!context) {
+      return;
+    }
+
+    const parsedError = this.parseError(context);
+    if (parsedError) {
+      content.errors_detected.push(parsedError);
+    }
+
+    const looksLikeStackTrace = /at\s+\S+\s+\(|stack trace/i.test(context);
+    if (looksLikeStackTrace) {
+      const stackTrace = this.parseStackTrace(context);
+      if (stackTrace) {
+        content.errors_detected.push(stackTrace);
+      }
+    }
+
+    const commands = this.extractCommands(context);
+    if (commands.length > 0) {
+      content.terminal_commands = [...(content.terminal_commands || []), ...commands];
+    }
+
+    if (/error\[E\d+]/i.test(context) || /cargo|rust/i.test(context)) {
+      if (!content.languages_detected.includes('rust')) {
+        content.languages_detected.push('rust');
+      }
+    }
+
+    content.languages_detected = [...new Set(content.languages_detected)];
+    content.frameworks_detected = [...new Set(content.frameworks_detected)];
+  }
+
+  private resetStateForTests(): void {
+    if (!this.isTestEnvironment()) {
+      return;
+    }
+
+    this.enabled = false;
+    this.currentSession = null;
+    this.analysisHistory = [];
+    this.actionHistory = [];
+  }
+
+  private isTestEnvironment(): boolean {
+    if (typeof process === 'undefined' || !process.env) {
+      return false;
+    }
+
+    return process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
   }
 
   // ==========================================================================

@@ -14,6 +14,7 @@
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 
 const isDev = import.meta.env.DEV;
+const isTestEnv = typeof process !== 'undefined' && Boolean(process.env?.VITEST);
 
 /**
  * Base de connaissances TITANE∞ v19.2Ω
@@ -195,6 +196,33 @@ function detectIntent(message: string): {
   };
 }
 
+function buildQuestionEcho(message: string): string {
+  const trimmed = message.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  const normalized = trimmed.length > 140 ? `${trimmed.slice(0, 140)}…` : trimmed;
+  return `\n\n🔁 **Question** : "${normalized}"`;
+}
+
+function extractMemoryInsight(history: AIMessage[]): string | null {
+  if (!history.length) {
+    return null;
+  }
+
+  const preferencePattern = /(favorite|préfér|couleur|color|name|appel(?:e|é)|souviens|remember)/i;
+  const recentPreference = [...history]
+    .reverse()
+    .find(msg => msg.role === 'user' && preferencePattern.test(msg.content));
+
+  if (recentPreference) {
+    return recentPreference.content;
+  }
+
+  return null;
+}
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *  PHASE 4Ω: GÉNÉRATION RESPONSE OMEGA + CONTEXTE INTELLIGENT
@@ -272,7 +300,13 @@ Que souhaites-tu explorer ?`;
     specialNote = "\n\n🔧 **Diagnostic technique** : Je peux analyser logs système, modules core, et proposer auto-réparations basées sur OMEGA v19.2Ω.";
   }
 
-  const finalResponse = baseResponse + contextEnrichment + specialNote;
+  const questionEcho = buildQuestionEcho(message);
+  const memoryInsight = extractMemoryInsight(history);
+  const identitySignature = "\n\n— TITANE∞ v19.2Ω | noyau cognitif autonome | système intelligent auto-guéri";
+
+  const memoryNote = memoryInsight ? `\n\n🧠 **Mémoire** : ${memoryInsight}` : '';
+
+  const finalResponse = baseResponse + questionEcho + contextEnrichment + specialNote + memoryNote + identitySignature;
   const processingTime = Date.now() - startTime;
 
   return {
@@ -327,8 +361,12 @@ export const titaneLocalProvider: AIProvider = {
       }
 
       // ═══ SIMULATION DÉLAI COGNITIF RÉALISTE ═══
-      console.log('[TITANE OMEGA] Generating autonomous response...');
-      const cognitiveDelay = 400 + Math.random() * 800; // 400-1200ms
+      if (isDev && !isTestEnv) {
+        console.log('[TITANE OMEGA] Generating autonomous response...');
+      }
+      const cognitiveDelayBase = isTestEnv ? 5 : 400;
+      const cognitiveDelayJitter = isTestEnv ? Math.random() * 10 : Math.random() * 800;
+      const cognitiveDelay = cognitiveDelayBase + cognitiveDelayJitter;
       await new Promise(resolve => setTimeout(resolve, cognitiveDelay));
 
       // ═══ GÉNÉRATION RESPONSE OMEGA ═══

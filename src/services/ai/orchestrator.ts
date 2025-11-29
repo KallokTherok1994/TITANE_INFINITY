@@ -83,6 +83,9 @@ class AIOrchestrator {
   private isWarmup = false;
   private maxConcurrent = 3;
   private currentRequests = 0;
+  private lastProviderUsed: string | null = null;
+  private consecutiveLocalResponses = 0;
+  private readonly diversityThreshold = 2;
 
   constructor() {
     this.initializeProviderStats();
@@ -257,6 +260,11 @@ class AIOrchestrator {
         score -= 25;
       }
 
+      // Encourage provider diversity by penalizing recently used engines (except titane-local emergency fallback)
+      if (stats.lastUsed && Date.now() - stats.lastUsed < 2000 && provider.name === this.lastProviderUsed) {
+        score -= 20;
+      }
+
       // Malus surcharge
       if (provider.name !== 'titane-local' && this.currentRequests >= this.maxConcurrent) {
         score -= 20;
@@ -265,23 +273,38 @@ class AIOrchestrator {
       providerScores.set(provider.name, Math.max(0, score));
     });
 
-    // Sélection du meilleur
-    let bestProvider = 'titane-local'; // Fallback par défaut
-    let bestScore = 0;
-    let reason: NeuralSelection['reason'] = 'emergency';
+    const sortedProviders = Array.from(providerScores.entries()).sort(([, a], [, b]) => b - a);
+    const defaultBest = sortedProviders[0];
 
-    for (const [name, score] of providerScores) {
-      if (score > bestScore) {
-        bestScore = score;
-        bestProvider = name;
-        reason = score > 80 ? 'optimal' : score > 60 ? 'fallback' : 'availability';
+    let bestProvider = defaultBest?.[0] || 'titane-local';
+    let bestScore = defaultBest?.[1] || 0;
+    let reason: NeuralSelection['reason'] = bestScore > 80 ? 'optimal' : bestScore > 60 ? 'fallback' : 'availability';
+
+    if (this.shouldForceDiversity() && bestProvider === 'titane-local') {
+      const geminiCandidate = sortedProviders.find(([name]) => name === 'gemini');
+      const diversityCandidate = geminiCandidate || sortedProviders.find(([name]) => name !== 'titane-local');
+
+      if (diversityCandidate) {
+        bestProvider = diversityCandidate[0];
+        bestScore = diversityCandidate[1];
+        reason = 'recovery';
+        this.consecutiveLocalResponses = 0;
+      }
+    }
+
+    const messageLower = message.toLowerCase();
+    if (messageLower.includes('auto-heal') || messageLower.includes('autoheal')) {
+      const geminiStats = this.providerStats.get('gemini');
+      if (geminiStats) {
+        bestProvider = 'gemini';
+        bestScore = providerScores.get('gemini') ?? geminiStats.reliability;
+        reason = 'recovery';
       }
     }
 
     // Alternates (top 3 autres)
-    const alternates = Array.from(providerScores.entries())
+    const alternates = sortedProviders
       .filter(([name]) => name !== bestProvider)
-      .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
       .map(([name]) => name);
 
@@ -291,6 +314,10 @@ class AIOrchestrator {
       confidence: Math.min(100, bestScore),
       alternates
     };
+  }
+
+  private shouldForceDiversity(): boolean {
+    return this.consecutiveLocalResponses >= this.diversityThreshold;
   }
 
   /**
@@ -652,9 +679,16 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
     stats.totalRequests++;
     stats.lastUsed = Date.now();
+    this.lastProviderUsed = providerName;
 
     if (success) {
       stats.successCount++;
+
+      if (providerName === 'titane-local') {
+        this.consecutiveLocalResponses++;
+      } else {
+        this.consecutiveLocalResponses = 0;
+      }
 
       // Update average response time
       const totalTime = stats.avgResponseTime * (stats.successCount - 1) + responseTime;
@@ -673,6 +707,9 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     } else {
       stats.failureCount++;
       stats.lastFailure = Date.now();
+      if (providerName !== 'titane-local') {
+        this.consecutiveLocalResponses = 0;
+      }
 
       // Decrease reliability
       stats.reliability = Math.max(0, stats.reliability - 5);

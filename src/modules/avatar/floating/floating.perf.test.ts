@@ -10,6 +10,25 @@ import * as THREE from 'three';
 import { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 
+const createRendererStub = (three: typeof import('three')) => ({
+  setSize: vi.fn(),
+  setPixelRatio: vi.fn(),
+  render: vi.fn(),
+  dispose: vi.fn(),
+  shadowMap: { enabled: false, type: null },
+  outputColorSpace: three.SRGBColorSpace,
+  toneMapping: three.ACESFilmicToneMapping,
+  toneMappingExposure: 1,
+});
+
+vi.mock('three', async () => {
+  const actual = await vi.importActual<typeof import('three')>('three');
+  return {
+    ...actual,
+    WebGLRenderer: vi.fn(() => createRendererStub(actual)),
+  };
+});
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MOCK SETUP
 // ═══════════════════════════════════════════════════════════════════════════
@@ -42,20 +61,6 @@ class MockCanvas {
 let mockTime = 0;
 const originalPerformanceNow = performance.now;
 performance.now = vi.fn(() => mockTime);
-
-// Provide lightweight WebGLRenderer mock (no GPU required)
-const webglRendererMock = vi.fn(() => ({
-  setSize: vi.fn(),
-  setPixelRatio: vi.fn(),
-  render: vi.fn(),
-  dispose: vi.fn(),
-  shadowMap: { enabled: false, type: null },
-  outputColorSpace: THREE.SRGBColorSpace,
-  toneMapping: THREE.ACESFilmicToneMapping,
-  toneMappingExposure: 1,
-})) as unknown as { new (...args: any[]): THREE.WebGLRenderer };
-
-vi.spyOn(THREE, 'WebGLRenderer').mockImplementation(webglRendererMock);
 
 // Polyfill RAF in case jsdom environment is missing it
 if (typeof globalThis.requestAnimationFrame !== 'function') {

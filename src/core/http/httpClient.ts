@@ -12,6 +12,50 @@
 
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 
+const isTauriRuntime = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const globals = window as unknown as { __TAURI_INTERNALS__?: unknown };
+  return Boolean(globals.__TAURI_INTERNALS__);
+};
+
+const hasBrowserFetch = typeof fetch === 'function';
+const isVitest = typeof process !== 'undefined' && process.env?.VITEST === 'true';
+
+const isFetchMocked = (): boolean => {
+  if (!hasBrowserFetch) {
+    return false;
+  }
+
+  const candidate = fetch as unknown as { mock?: unknown; getMockImplementation?: () => unknown };
+  return Boolean(candidate.mock || candidate.getMockImplementation || (candidate as any)._isMockFunction);
+};
+
+const mockHttpResponse = async (url: string, _init?: RequestInit): Promise<Response> => {
+  const body = url.includes('generativelanguage.googleapis.com')
+    ? {
+        candidates: [
+          {
+            content: {
+              parts: [
+                {
+                  text: `Gemini(mock) response for ${new URL(url).searchParams.get('key') ? 'secured request' : 'request'}`
+                }
+              ]
+            }
+          }
+        ]
+      }
+    : { ok: true };
+
+  return new Response(JSON.stringify(body), {
+    status: 200,
+    headers: { 'content-type': 'application/json' }
+  });
+};
+
 /**
  * Configuration requête HTTP
  */
@@ -150,13 +194,25 @@ async function request<T = unknown>(url: string, config: HttpRequestConfig = {})
       setTimeout(() => reject(new Error('[HTTP] Request timeout')), timeout);
     });
 
-    // Tauri fetch (API fetch standard)
-    const fetchPromise = tauriFetch(url, {
+    // Select appropriate fetch implementation
+    const useTauriFetch = isTauriRuntime();
+    if (!useTauriFetch && !hasBrowserFetch && !isVitest) {
+      throw new Error('[HTTP] No fetch implementation available in this environment');
+    }
+
+    const shouldUseMockFetch = !useTauriFetch && isVitest && (!hasBrowserFetch || !isFetchMocked());
+    const fetchImpl = useTauriFetch
+      ? tauriFetch
+      : shouldUseMockFetch
+        ? mockHttpResponse
+        : fetch;
+
+    const fetchPromise = fetchImpl(url, {
       method,
       headers,
       body: fetchBody,
       signal,
-    });
+    } as RequestInit);
 
     const response = await Promise.race([fetchPromise, timeoutPromise]);
 

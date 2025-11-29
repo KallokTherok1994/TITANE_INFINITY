@@ -6,26 +6,26 @@
  */
 
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { describe, test, beforeEach, expect, vi, type Mock } from 'vitest';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
 import { ControlPanel } from '@/ui/pages/ControlPanel/ControlPanel';
-import { invoke } from '@tauri-apps/api/tauri';
+import { secureInvoke } from '@/lib/security';
 
-// Mock Tauri
-jest.mock('@tauri-apps/api/tauri', () => ({
-  invoke: jest.fn(),
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
 }));
 
 // Mock sections
-jest.mock('@/ui/pages/ControlPanel/sections/SystemSection', () => ({
+vi.mock('@/ui/pages/ControlPanel/sections/SystemSection', () => ({
   SystemSection: () => <div data-testid="system-section">System Section</div>,
 }));
 
-jest.mock('@/ui/pages/ControlPanel/sections/AppearanceSection', () => ({
+vi.mock('@/ui/pages/ControlPanel/sections/AppearanceSection', () => ({
   AppearanceSection: () => <div data-testid="appearance-section">Appearance Section</div>,
 }));
 
-jest.mock('@/ui/pages/ControlPanel/sections/SingularitySection', () => ({
+vi.mock('@/ui/pages/ControlPanel/sections/SingularitySection', () => ({
   SingularitySection: () => <div data-testid="singularity-section">Singularity Section</div>,
 }));
 
@@ -40,8 +40,8 @@ describe('ControlPanel', () => {
   };
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (invoke as jest.Mock).mockResolvedValue(mockSystemInfo);
+    vi.clearAllMocks();
+    (secureInvoke as Mock).mockResolvedValue(mockSystemInfo);
   });
 
   test('affiche le chargement initial', () => {
@@ -53,7 +53,7 @@ describe('ControlPanel', () => {
     render(<ControlPanel />);
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledWith('cp_get_system_info');
+      expect(secureInvoke).toHaveBeenCalledWith('get_system_info');
     });
   });
 
@@ -66,9 +66,9 @@ describe('ControlPanel', () => {
   });
 
   test('gère les erreurs de chargement', async () => {
-    (invoke as jest.Mock).mockRejectedValue('Network error');
+    (secureInvoke as Mock).mockRejectedValue('Network error');
 
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
 
     render(<ControlPanel />);
 
@@ -80,21 +80,26 @@ describe('ControlPanel', () => {
   });
 
   test('rafraîchit automatiquement les données', async () => {
-    jest.useFakeTimers();
+    const intervalSpy = vi.spyOn(global, 'setInterval');
 
     render(<ControlPanel />);
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledTimes(1);
+      expect(secureInvoke).toHaveBeenCalledTimes(1);
     });
 
-    jest.advanceTimersByTime(5000);
+    const refreshCallback = intervalSpy.mock.calls[0]?.[0] as (() => Promise<void>) | undefined;
+    expect(refreshCallback).toBeDefined();
+
+    await act(async () => {
+      await refreshCallback?.();
+    });
 
     await waitFor(() => {
-      expect(invoke).toHaveBeenCalledTimes(2);
+      expect(secureInvoke).toHaveBeenCalledTimes(2);
     });
 
-    jest.useRealTimers();
+    intervalSpy.mockRestore();
   });
 });
 
@@ -109,7 +114,7 @@ describe('ControlPanel - Navigation', () => {
   };
 
   beforeEach(() => {
-    (invoke as jest.Mock).mockResolvedValue(mockSystemInfo);
+    (secureInvoke as Mock).mockResolvedValue(mockSystemInfo);
   });
 
   test('permet de changer de section', async () => {

@@ -23,6 +23,8 @@ export type BatchState = {
   error: string | null;
 };
 
+const flushStateUpdates = () => new Promise(resolve => setTimeout(resolve, 0));
+
 export function useBatchCommands() {
   const [state, setState] = useState<BatchState>({
     isExecuting: false,
@@ -67,7 +69,8 @@ export function useBatchCommands() {
           results: null,
           error: errorMessage,
         });
-        throw error;
+        await flushStateUpdates();
+        throw error instanceof Error ? error : new Error(errorMessage);
       }
     },
     []
@@ -109,7 +112,8 @@ export function useBatchCommands() {
           results: null,
           error: errorMessage,
         });
-        throw error;
+        await flushStateUpdates();
+        throw error instanceof Error ? error : new Error(errorMessage);
       }
     },
     []
@@ -151,7 +155,8 @@ export function useBatchCommands() {
           results: null,
           error: errorMessage,
         });
-        throw error;
+        await flushStateUpdates();
+        throw error instanceof Error ? error : new Error(errorMessage);
       }
     },
     []

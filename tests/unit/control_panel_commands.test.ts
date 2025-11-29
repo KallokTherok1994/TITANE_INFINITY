@@ -5,16 +5,17 @@
  * @jest-environment jsdom
  */
 
-import { invoke } from '@tauri-apps/api/tauri';
+import { describe, test, beforeEach, expect, vi, type Mock } from 'vitest';
+import { invoke } from '@tauri-apps/api/core';
 
 // Mock Tauri invoke
-jest.mock('@tauri-apps/api/tauri', () => ({
-  invoke: jest.fn(),
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(),
 }));
 
 describe('Control Panel Commands - Système', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test('cp_get_system_info retourne les métriques système', async () => {
@@ -27,7 +28,7 @@ describe('Control Panel Commands - Système', () => {
       singularity_active: true,
     };
 
-    (invoke as jest.Mock).mockResolvedValue(mockSystemInfo);
+    (invoke as Mock).mockResolvedValue(mockSystemInfo);
 
     const result = await invoke('cp_get_system_info');
 
@@ -41,7 +42,7 @@ describe('Control Panel Commands - Système', () => {
   test('cp_run_system_diagnostic retourne un rapport', async () => {
     const mockDiagnostic = '✅ Système: OK\n✅ Mémoire: OK\n✅ Disque: OK';
 
-    (invoke as jest.Mock).mockResolvedValue(mockDiagnostic);
+    (invoke as Mock).mockResolvedValue(mockDiagnostic);
 
     const result = await invoke('cp_run_system_diagnostic');
 
@@ -60,7 +61,7 @@ describe('Control Panel Commands - Design System', () => {
       transparency_enabled: false,
     };
 
-    (invoke as jest.Mock).mockResolvedValue(mockConfig);
+    (invoke as Mock).mockResolvedValue(mockConfig);
 
     const result = await invoke('cp_get_design_config');
 
@@ -77,7 +78,7 @@ describe('Control Panel Commands - Design System', () => {
       transparency_enabled: true,
     };
 
-    (invoke as jest.Mock).mockResolvedValue(undefined);
+    (invoke as Mock).mockResolvedValue(undefined);
 
     await invoke('cp_set_design_config', { config: newConfig });
 
@@ -96,7 +97,7 @@ describe('Control Panel Commands - Singularité', () => {
       phase: 'Optimization',
     };
 
-    (invoke as jest.Mock).mockResolvedValue(mockStatus);
+    (invoke as Mock).mockResolvedValue(mockStatus);
 
     const result = await invoke('cp_get_singularity_status');
 
@@ -106,7 +107,7 @@ describe('Control Panel Commands - Singularité', () => {
   });
 
   test('cp_toggle_singularity active/désactive le moteur', async () => {
-    (invoke as jest.Mock).mockResolvedValue(undefined);
+    (invoke as Mock).mockResolvedValue(undefined);
 
     await invoke('cp_toggle_singularity');
 
@@ -123,7 +124,7 @@ describe('Control Panel Commands - IA & APIs', () => {
       max_tokens: 2048,
     };
 
-    (invoke as jest.Mock).mockResolvedValue(mockConfig);
+    (invoke as Mock).mockResolvedValue(mockConfig);
 
     const result = await invoke('cp_get_ai_config');
 
@@ -142,7 +143,7 @@ describe('Control Panel Commands - Mémoire', () => {
       vector_count: 1250,
     };
 
-    (invoke as jest.Mock).mockResolvedValue(mockStats);
+    (invoke as Mock).mockResolvedValue(mockStats);
 
     const result = await invoke('cp_get_memory_stats');
 
@@ -152,7 +153,7 @@ describe('Control Panel Commands - Mémoire', () => {
   });
 
   test('cp_clear_memory_cache nettoie le cache', async () => {
-    (invoke as jest.Mock).mockResolvedValue(undefined);
+    (invoke as Mock).mockResolvedValue(undefined);
 
     await invoke('cp_clear_memory_cache');
 
@@ -179,7 +180,7 @@ describe('Control Panel Commands - Modules', () => {
       },
     ];
 
-    (invoke as jest.Mock).mockResolvedValue(mockModules);
+    (invoke as Mock).mockResolvedValue(mockModules);
 
     const result = await invoke('cp_get_modules_status');
 
@@ -190,7 +191,7 @@ describe('Control Panel Commands - Modules', () => {
   });
 
   test('cp_toggle_module active/désactive un module', async () => {
-    (invoke as jest.Mock).mockResolvedValue(undefined);
+    (invoke as Mock).mockResolvedValue(undefined);
 
     await invoke('cp_toggle_module', { moduleId: 'ai_core' });
 
