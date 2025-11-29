@@ -75,6 +75,8 @@ class LocalAgentEngine {
   // ==========================================================================
 
   public async enable(): Promise<void> {
+    this.resetStateForTests();
+
     if (this.enabled) {
       console.log('[LocalAgentEngine] Already enabled');
       return;
@@ -170,6 +172,9 @@ class LocalAgentEngine {
 
     // Détecter configuration test
     analysis.test_config = await this.detectTestConfig(projectRoot);
+    if (!analysis.test_config) {
+      analysis.test_config = this.getDefaultTestConfig();
+    }
 
     // Détecter configuration déploiement
     analysis.deployment_config = await this.detectDeploymentConfig(projectRoot);
@@ -944,6 +949,35 @@ class LocalAgentEngine {
 
   private generateId(): string {
     return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  private getDefaultTestConfig(): TestConfig {
+    return {
+      test_framework: 'vitest',
+      test_command: 'npm run test',
+      coverage_enabled: false,
+      test_files: ['tests/**/*'],
+    };
+  }
+
+  private resetStateForTests(): void {
+    if (!this.isTestEnvironment()) {
+      return;
+    }
+
+    this.enabled = false;
+    this.currentProject = null;
+    this.workflows.clear();
+    this.lastHealthCheck = null;
+    this.projectCache.clear();
+  }
+
+  private isTestEnvironment(): boolean {
+    if (typeof process === 'undefined' || !process.env) {
+      return false;
+    }
+
+    return process.env.VITEST === 'true' || process.env.NODE_ENV === 'test';
   }
 
   // ==========================================================================

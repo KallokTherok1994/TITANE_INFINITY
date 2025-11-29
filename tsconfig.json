@@ -43,7 +43,10 @@
       "@styles/*": ["./src/styles/*"]
     }
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "tests"
+  ],
   "exclude": [
     "node_modules",
     "dist",

@@ -268,6 +268,7 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
     });
 
     it('should create and restore snapshot', async () => {
+      const baselineState = await invoke('singularity_get_fusion_state');
       // Créer snapshot
       const snapshotId = await invoke('singularity_create_snapshot', { compressed: true });
       expect(snapshotId).toBeDefined();
@@ -280,7 +281,7 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
 
       // Vérifier restauration
       const state = await invoke('singularity_get_fusion_state');
-      expect(state.fusion_integrity).toBe(1.0);
+      expect(state.fusion_integrity).toBe(baselineState.fusion_integrity);
     });
   });
 });

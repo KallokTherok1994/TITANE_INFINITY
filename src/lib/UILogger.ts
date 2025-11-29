@@ -52,7 +52,7 @@ const DEFAULT_CONFIG: UILoggerConfig = {
   enableConsoleOverride: import.meta.env.PROD, // Override uniquement en production
   sensitivePatterns: [
     /sk-[a-zA-Z0-9]{48}/g,           // OpenAI API keys
-    /AIza[a-zA-Z0-9_-]{35}/g,        // Google API keys
+    /AIza[a-zA-Z0-9_-]{30,60}/g,     // Google API keys (variable length)
     /eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/g, // JWT tokens
     /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,   // Email addresses
     /\b\d{3}-\d{2}-\d{4}\b/g,        // SSN (US)
@@ -371,7 +371,7 @@ export class UILogger {
     this.logs = [];
     try {
       localStorage.removeItem('titane_ui_logs');
-      this.info('UI logs cleared');
+      this.originalConsole.log('[UILogger] UI logs cleared');
     } catch (error) {
       this.originalConsole.error('[UILogger] Failed to clear logs:', error);
     }

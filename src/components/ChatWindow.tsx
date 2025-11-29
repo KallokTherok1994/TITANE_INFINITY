@@ -39,6 +39,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
     currentMode,
     anomalyCount: _anomalyCount,
     setMode,
+    uiIntegrity,
+    restoreFromVault,
   } = useChat({ voiceEnabled: voiceModeActive });
   const { status: connectionStatus } = useConnection();
   const setAIStatus = useSingularityState((state) => state.setAIStatus);
@@ -61,6 +63,13 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
     optimiseur_decision: 'planning',
     coach_ancrage: 'journal',
   }), []);
+
+  const handleRestoreHistory = useCallback(() => {
+    if (!uiIntegrity?.hasSnapshot) {
+      return;
+    }
+    restoreFromVault();
+  }, [restoreFromVault, uiIntegrity?.hasSnapshot]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -142,6 +151,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
             provider={connectionStatus.provider as 'Gemini' | 'Ollama' | 'Offline'}
             health={connectionStatus.online ? 1 : 0.3}
           />
+          <button
+            className={`ui-shield-button ${uiIntegrity?.hasSnapshot ? 'active' : ''}`}
+            onClick={handleRestoreHistory}
+            disabled={!uiIntegrity?.hasSnapshot}
+            title={uiIntegrity?.hasSnapshot ? 'Restaurer la dernière session stable' : 'Aucun instantané disponible'}
+            aria-label="Restaurer l\'historique sécurisé"
+          >
+            🛡️
+          </button>
           {onVoiceModeToggle && (
             <button
               className={`voice-mode-toggle ${voiceModeActive ? 'active' : ''}`}
@@ -161,6 +179,15 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
       />
 
       <div className="chat-messages">
+        {uiIntegrity?.preventedResets ? (
+          <div className="ui-shield-banner">
+            <span className="ui-shield-label">UI Shield actif</span>
+            <span className="ui-shield-value">
+              {uiIntegrity.preventedResets} blocage(s) évité(s) • Version {uiIntegrity.version}
+            </span>
+          </div>
+        ) : null}
+
         {messages.length === 0 && (
           <div className="chat-welcome">
             <h3>Bienvenue dans TITANE∞</h3>

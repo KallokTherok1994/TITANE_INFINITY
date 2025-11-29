@@ -5,7 +5,7 @@ import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // TITANE∞ v17.3.0 - Vite + Vitest Configuration
-export default defineConfig({
+export const sharedTestConfig = defineConfig({
   root: '.',
   publicDir: 'public',
   base: './',
@@ -24,10 +24,15 @@ export default defineConfig({
   // 🧪 VITEST CONFIGURATION
   // ═══════════════════════════════════════════════════════════════════════════
   test: {
+    name: 'core',
     globals: true,
     environment: 'happy-dom',
     setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    include: [
+      'src/**/*.{test,spec}.{ts,tsx}',
+      'tests/unit/**/*.{test,spec}.{ts,tsx}',
+      'tests/integration/**/*.{test,spec}.{ts,tsx}'
+    ],
     exclude: ['node_modules', 'dist', 'src-tauri'],
     coverage: {
       provider: 'v8',
@@ -107,3 +112,5 @@ export default defineConfig({
     },
   },
 });
+
+export default sharedTestConfig;

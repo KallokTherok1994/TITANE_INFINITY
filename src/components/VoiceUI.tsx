@@ -18,7 +18,7 @@ import { VADIndicator } from './VADIndicator';
 export const VoiceUI: React.FC = () => {
   const { state, startRecording, stopRecording, getVADState, clearTranscript } =
     useVoiceMode();
-  const { sendMessage } = useChat();
+  const { sendMessage } = useChat({ voiceEnabled: true });
 
   const [isActive, setIsActive] = useState(false);
 
@@ -37,7 +37,7 @@ export const VoiceUI: React.FC = () => {
   const toggleVoiceMode = async () => {
     if (isActive) {
       await stopRecording();
-      setIsActive(false);0
+      setIsActive(false);
     } else {
       await startRecording();
       setIsActive(true);

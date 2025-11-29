@@ -93,14 +93,14 @@ const ANCHOR_PATTERNS_FR = [
 ];
 
 const SCREEN_PATTERNS_FR = [
-  { pattern: /(?:va|passe)\s+(?:sur\s+l')?écran\s+(?:numéro\s+)?(\d+)/i, extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1 },
+  { pattern: /(?:va|passe)\s+(?:sur\s+(?:l')?)?écran\s+(?:numéro\s+)?(\d+)/i, extract: (match: RegExpMatchArray) => parseInt(match[1]) - 1 },
   { pattern: /(?:déplace-toi|va)\s+(?:vers|sur)\s+(?:le\s+)?(?:deuxième|2e|second)\s+écran/i, value: 1 },
   { pattern: /(?:déplace-toi|va)\s+(?:vers|sur)\s+(?:le\s+)?(?:troisième|3e)\s+écran/i, value: 2 },
   { pattern: /(?:reviens?|retourne)\s+(?:sur\s+)?(?:l')?écran\s+principal/i, value: 0 },
 ];
 
 const MODE_PATTERNS_FR = [
-  { pattern: /(?:devient?|mets?-toi|passe)\s+en\s+(?:mode\s+)?(?:fenêtre\s+)?flottante?/i, value: 'floating' },
+  { pattern: /(?:devient?|deviens?|mets?-toi|passe)\s+(?:en\s+)?(?:mode\s+)?(?:fen(?:ê|e)tre\s+)?flottante?/i, value: 'floating' },
   { pattern: /(?:détache-toi|sort|libère-toi)/i, value: 'floating' },
   { pattern: /(?:devient?|mets?-toi|passe)\s+en\s+(?:mode\s+)?(?:intégré|embed|incorporé)/i, value: 'embed' },
   { pattern: /(?:rentre|reviens?|intègre-toi)\s+dans\s+(?:la\s+)?fenêtre\s+principale/i, value: 'embed' },
@@ -110,9 +110,9 @@ const MODE_PATTERNS_FR = [
 
 const TOGGLE_PATTERNS_FR = [
   // Locked
-  { pattern: /(?:verrouille-toi|bloque-toi|reste\s+en\s+place)/i, type: 'toggle_locked', value: true },
-  { pattern: /(?:déverrouille-toi|débloque-toi|bouge\s+librement)/i, type: 'toggle_locked', value: false },
-  { pattern: /(?:verrouillage|lock|verrouille)/i, type: 'toggle_locked', value: true },
+  { pattern: /(?:^|\b)(?:déverrouille-toi|débloque-toi|bouge\s+librement)(?:\b|$)/i, type: 'toggle_locked', value: false },
+  { pattern: /(?:^|\b)(?:verrouille-toi|bloque-toi|reste\s+en\s+place)(?:\b|$)/i, type: 'toggle_locked', value: true },
+  { pattern: /(?:^|\b)(?<!dé)(?:verrouillage|lock|verrouille)(?:\b|$)/i, type: 'toggle_locked', value: true },
 
   // Always on top
   { pattern: /(?:reste|mets?-toi)\s+(?:toujours\s+)?(?:au-dessus|par-dessus|devant)/i, type: 'toggle_always_on_top', value: true },

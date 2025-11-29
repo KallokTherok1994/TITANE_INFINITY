@@ -6,6 +6,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import * as THREE from 'three';
 import { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 
@@ -17,12 +18,19 @@ import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 class MockCanvas {
   width = 400;
   height = 600;
+  style: Record<string, unknown> = {};
+  addEventListener = vi.fn();
+  removeEventListener = vi.fn();
   getContext() {
     return {
       canvas: this,
       clearColor: vi.fn(),
       clear: vi.fn(),
       getParameter: vi.fn(() => 16384),
+      getExtension: vi.fn(),
+      enable: vi.fn(),
+      disable: vi.fn(),
+      viewport: vi.fn(),
     };
   }
   getBoundingClientRect() {
@@ -34,6 +42,31 @@ class MockCanvas {
 let mockTime = 0;
 const originalPerformanceNow = performance.now;
 performance.now = vi.fn(() => mockTime);
+
+// Provide lightweight WebGLRenderer mock (no GPU required)
+const webglRendererMock = vi.fn(() => ({
+  setSize: vi.fn(),
+  setPixelRatio: vi.fn(),
+  render: vi.fn(),
+  dispose: vi.fn(),
+  shadowMap: { enabled: false, type: null },
+  outputColorSpace: THREE.SRGBColorSpace,
+  toneMapping: THREE.ACESFilmicToneMapping,
+  toneMappingExposure: 1,
+})) as unknown as { new (...args: any[]): THREE.WebGLRenderer };
+
+vi.spyOn(THREE, 'WebGLRenderer').mockImplementation(webglRendererMock);
+
+// Polyfill RAF in case jsdom environment is missing it
+if (typeof globalThis.requestAnimationFrame !== 'function') {
+  (globalThis as any).requestAnimationFrame = (cb: (time: number) => void) =>
+    setTimeout(() => cb(performance.now()), 16);
+}
+if (typeof globalThis.cancelAnimationFrame !== 'function') {
+  (globalThis as any).cancelAnimationFrame = (handle: ReturnType<typeof setTimeout>) => {
+    clearTimeout(handle);
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPER FUNCTIONS

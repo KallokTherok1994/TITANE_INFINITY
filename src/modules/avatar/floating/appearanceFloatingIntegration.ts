@@ -5,6 +5,7 @@
 
 import * as THREE from 'three';
 import type { AvatarAppearanceState } from '../appearance/appearanceState';
+import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import { invoke } from '@tauri-apps/api/core';
 
@@ -155,17 +156,32 @@ export class AppearanceFloatingIntegration {
       return;
     }
 
-    this.currentAppearance = appearance;
+    const resolvedStyle: AvatarAppearanceState['style'] = {
+      ...DEFAULT_APPEARANCE_STATE.style,
+      ...(appearance.style ?? {}),
+    };
+
+    const resolvedOutfit: AvatarAppearanceState['outfit'] = {
+      ...DEFAULT_APPEARANCE_STATE.outfit,
+      ...(appearance.outfit ?? {}),
+    };
+
+    this.currentAppearance = {
+      ...DEFAULT_APPEARANCE_STATE,
+      ...appearance,
+      style: resolvedStyle,
+      outfit: resolvedOutfit,
+    };
 
     // Apply color palette
-    const palette = this.getPaletteForAppearance(appearance);
+    const palette = this.getPaletteForAppearance(resolvedStyle);
     this.applyColorPalette(palette);
 
     // Apply style modifications
-    this.applyStyleState(appearance.style);
+    this.applyStyleState(resolvedStyle);
 
     // Apply outfit colors
-    this.applyOutfitState(appearance.outfit);
+    this.applyOutfitState(resolvedOutfit);
 
     if (DEBUG) console.log('[AppearanceFloatingIntegration] Appearance applied:', appearance.mode_preset);
   }
@@ -173,8 +189,8 @@ export class AppearanceFloatingIntegration {
   /**
    * Get color palette based on appearance
    */
-  private getPaletteForAppearance(appearance: AvatarAppearanceState): ColorPalette {
-    const paletteName = appearance.style.color_palette || 'neutre';
+  private getPaletteForAppearance(style: AvatarAppearanceState['style']): ColorPalette {
+    const paletteName = style.color_palette || 'neutre';
     return COLOR_PALETTES[paletteName] || COLOR_PALETTES.neutre;
   }
 
@@ -230,7 +246,7 @@ export class AppearanceFloatingIntegration {
    * Apply outfit colors (simplified for now)
    */
   private applyOutfitState(outfit: AvatarAppearanceState['outfit']): void {
-    if (!this.materials) return;
+    if (!this.materials || !outfit) return;
 
     // TODO v24.13: Parse outfit.top, outfit.bottom colors
     // For now, keep default palette colors

@@ -3,23 +3,73 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
-/**
- * ═══════════════════════════════════════════════════════════════════
- * SINGULARITY AUTONOMY ENGINE - TEST SUITE
- * Tests for autonomous maintenance system (Phase 1)
- * ═══════════════════════════════════════════════════════════════════
- */
-
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { SingularityAutonomyEngine } from '../../src/core/autonomy/SingularityAutonomyEngine';
+import {
+  SingularityAutonomyEngine,
+  type ScanResult,
+  type DetectionResult,
+  type FixResult,
+  type HealResult,
+  type OptimizationResult,
+  type EvolutionResult,
+  type TestResult,
+  type ShieldResult,
+  type AnalyseResult,
+  type ReportData,
+} from '@/core/autonomy/SingularityAutonomyEngine';
+import { invoke } from '@tauri-apps/api/core';
 
-// Mock Tauri invoke
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(),
 }));
 
-import { invoke } from '@tauri-apps/api/core';
 const mockInvoke = vi.mocked(invoke);
+
+const createAutonomyState = () => ({
+  last_scan: 0,
+  last_fix: 0,
+  last_heal: 0,
+  last_optimize: 0,
+  last_evolve: 0,
+  last_test: 0,
+  last_shield: 0,
+  last_analyse: 0,
+  health_score: 100,
+  stability_index: 100,
+  cognitive_load_score: 0,
+  pipeline_integrity: 100,
+});
+
+const createScanResult = (overrides: Partial<ScanResult> = {}): ScanResult => ({
+  timestamp: 0,
+  backend_errors: [],
+  frontend_warnings: [],
+  tauri_issues: [],
+  ia_anomalies: [],
+  tts_issues: [],
+  avatar_issues: [],
+  memory_issues: [],
+  singularity_inconsistencies: [],
+  ...overrides,
+});
+
+const createDetectionResult = (overrides: Partial<DetectionResult> = {}): DetectionResult => ({
+  error_patterns: [],
+  abnormal_behaviors: [],
+  latency_issues: [],
+  sync_losses: [],
+  race_conditions: [],
+  state_misalignments: [],
+  ia_coherence_issues: [],
+  tts_lip_sync_errors: [],
+  cpu_gpu_overload: [],
+  warnings: [],
+  ...overrides,
+});
+
+const cleanupSpies = (...spies: Array<{ mockRestore: () => void }>) => {
+  spies.forEach((spy) => spy.mockRestore());
+};
 
 describe('SingularityAutonomyEngine', () => {
   let engine: SingularityAutonomyEngine;
@@ -27,6 +77,10 @@ describe('SingularityAutonomyEngine', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     engine = SingularityAutonomyEngine.getInstance();
+    engine.stop();
+    (engine as any).autonomyState = createAutonomyState();
+    (globalThis as any).window = { queryClient: { clear: vi.fn() } };
+    (globalThis as any).performance = { reactRenderCount: 0 };
   });
 
   afterEach(() => {
@@ -34,7 +88,7 @@ describe('SingularityAutonomyEngine', () => {
   });
 
   describe('Singleton Pattern', () => {
-    it('should return the same instance', () => {
+    it('returns the same instance', () => {
       const instance1 = SingularityAutonomyEngine.getInstance();
       const instance2 = SingularityAutonomyEngine.getInstance();
       expect(instance1).toBe(instance2);
@@ -42,282 +96,357 @@ describe('SingularityAutonomyEngine', () => {
   });
 
   describe('Lifecycle Management', () => {
-    it('should start autonomy cycle successfully', () => {
+    it('starts the autonomous cycle once', () => {
+      const cycleSpy = vi.spyOn(engine as any, 'autonomousCycle').mockResolvedValue();
       engine.start();
-      expect(engine['scanIntervalId']).not.toBeNull();
-    });
-
-    it('should stop autonomy cycle successfully', () => {
-      engine.start();
+      expect(engine.isEngineRunning()).toBe(true);
+      expect(cycleSpy).toHaveBeenCalledTimes(1);
+      expect((engine as any).scanIntervalId).not.toBeNull();
       engine.stop();
-      expect(engine['scanIntervalId']).toBeNull();
+      cleanupSpies(cycleSpy);
     });
 
-    it('should not restart if already running', () => {
+    it('does not register multiple intervals when already running', () => {
+      const cycleSpy = vi.spyOn(engine as any, 'autonomousCycle').mockResolvedValue();
       engine.start();
-      const firstIntervalId = engine['scanIntervalId'];
+      const firstInterval = (engine as any).scanIntervalId;
       engine.start();
-      expect(engine['scanIntervalId']).toBe(firstIntervalId);
+      expect((engine as any).scanIntervalId).toBe(firstInterval);
+      cleanupSpies(cycleSpy);
     });
   });
 
   describe('auto_scan', () => {
-    it('should perform backend scan successfully', async () => {
-      mockInvoke.mockResolvedValueOnce({
-        backend_health: 95,
-        frontend_health: 90,
-        issues_found: 2,
-        scan_duration_ms: 150,
-      });
+    it('aggregates diagnostics from every subsystem', async () => {
+      const frontendSpy = vi.spyOn(engine as any, 'scanFrontendWarnings').mockReturnValue(['React churn']);
+      const iaSpy = vi.spyOn(engine as any, 'scanIAAnomalies').mockResolvedValue(['Loop']);
+      const ttsSpy = vi.spyOn(engine as any, 'scanTTSIssues').mockResolvedValue(['Lag']);
+      const avatarSpy = vi.spyOn(engine as any, 'scanAvatarIssues').mockResolvedValue(['Artifact']);
+      const memorySpy = vi.spyOn(engine as any, 'scanMemoryIssues').mockResolvedValue(['Leak']);
+      const singularitySpy = vi.spyOn(engine as any, 'scanSingularityState').mockResolvedValue(['Drift']);
+
+      mockInvoke.mockResolvedValueOnce({ errors: ['Backend deadlock'] });
 
       const result = await engine.auto_scan();
 
       expect(mockInvoke).toHaveBeenCalledWith('autonomy_scan_backend');
-      expect(result.backend_health).toBeGreaterThanOrEqual(0);
-      expect(result.backend_health).toBeLessThanOrEqual(100);
-      expect(result.issues_found).toBe(2);
+      expect(result.backend_errors).toEqual(['Backend deadlock']);
+      expect(result.frontend_warnings).toEqual(['React churn']);
+      expect(result.ia_anomalies).toEqual(['Loop']);
+      expect(result.tts_issues).toEqual(['Lag']);
+      expect(result.avatar_issues).toEqual(['Artifact']);
+      expect(result.memory_issues).toEqual(['Leak']);
+      expect(result.singularity_inconsistencies).toEqual(['Drift']);
+
+      cleanupSpies(frontendSpy, iaSpy, ttsSpy, avatarSpy, memorySpy, singularitySpy);
     });
 
-    it('should handle scan errors gracefully', async () => {
-      mockInvoke.mockRejectedValueOnce(new Error('Backend unavailable'));
+    it('logs backend failures without breaking the scan', async () => {
+      const frontendSpy = vi.spyOn(engine as any, 'scanFrontendWarnings').mockReturnValue([]);
+      const iaSpy = vi.spyOn(engine as any, 'scanIAAnomalies').mockResolvedValue([]);
+      const ttsSpy = vi.spyOn(engine as any, 'scanTTSIssues').mockResolvedValue([]);
+      const avatarSpy = vi.spyOn(engine as any, 'scanAvatarIssues').mockResolvedValue([]);
+      const memorySpy = vi.spyOn(engine as any, 'scanMemoryIssues').mockResolvedValue([]);
+      const singularitySpy = vi.spyOn(engine as any, 'scanSingularityState').mockResolvedValue([]);
+
+      mockInvoke.mockRejectedValueOnce(new Error('Backend offline'));
 
       const result = await engine.auto_scan();
+      expect(result.backend_errors[0]).toContain('Backend scan failed');
 
-      expect(result.backend_health).toBe(0);
-      expect(result.issues_found).toBeGreaterThan(0);
+      cleanupSpies(frontendSpy, iaSpy, ttsSpy, avatarSpy, memorySpy, singularitySpy);
     });
   });
 
   describe('auto_detect', () => {
-    it('should detect anomalies from scan results', async () => {
-      const scanResult = {
-        backend_health: 75,
-        frontend_health: 80,
-        issues_found: 5,
-        scan_duration_ms: 200,
-      };
-
-      mockInvoke.mockResolvedValueOnce({
-        anomalies: [
-          { type: 'memory_leak', severity: 'high', location: 'ChatPanel' },
-          { type: 'performance_degradation', severity: 'medium', location: 'AvatarEngine' },
-        ],
-        critical_count: 1,
-        warnings_count: 1,
+    it('derives higher-level issues from scan data', async () => {
+      const scanResult = createScanResult({
+        backend_errors: ['mutex lock timeout', 'request timeout'],
+        ia_anomalies: ['A', 'B', 'C', 'D', 'E', 'F'],
+        tts_issues: ['lag'],
+        avatar_issues: ['offset'],
+        singularity_inconsistencies: ['state drift'],
       });
 
       const result = await engine.auto_detect(scanResult);
 
-      expect(mockInvoke).toHaveBeenCalledWith('autonomy_detect_anomalies', { scanResult });
-      expect(result.anomalies.length).toBeGreaterThan(0);
-      expect(result.critical_count).toBeGreaterThanOrEqual(0);
+      expect(result.error_patterns).toContain('Race condition detected: mutex lock timeout');
+      expect(result.latency_issues).toContain('Timeout detected: request timeout');
+      expect(result.abnormal_behaviors).toContain('IA: Multiple anomalies detected');
+      expect(result.tts_lip_sync_errors).toContain('TTS-Avatar synchronization lost');
+      expect(result.state_misalignments).toContain('state drift');
     });
   });
 
   describe('auto_fix', () => {
-    it('should fix detected anomalies', async () => {
-      const detectionResult = {
-        anomalies: [
-          { type: 'memory_leak', severity: 'high', location: 'ChatPanel' },
-        ],
-        critical_count: 1,
-        warnings_count: 0,
-      };
-
-      mockInvoke.mockResolvedValueOnce({
-        fixed_issues: ['memory_leak in ChatPanel'],
-        success_count: 1,
-        failed_count: 0,
-        fix_duration_ms: 300,
+    it('invokes backend fixes and clears caches when latency issues are present', async () => {
+      const detectionResult = createDetectionResult({
+        state_misalignments: ['state drift'],
+        latency_issues: ['timeout'],
+        tts_lip_sync_errors: ['lip drift'],
       });
+
+      mockInvoke
+        .mockResolvedValueOnce({ fixed: ['state drift'] })
+        .mockResolvedValueOnce(undefined);
 
       const result = await engine.auto_fix(detectionResult);
 
-      expect(mockInvoke).toHaveBeenCalledWith('autonomy_fix_issues', { detectionResult });
-      expect(result.success_count).toBe(1);
-      expect(result.fixed_issues.length).toBeGreaterThan(0);
-    });
-
-    it('should report failed fixes', async () => {
-      const detectionResult = {
-        anomalies: [
-          { type: 'critical_error', severity: 'critical', location: 'Core' },
-        ],
-        critical_count: 1,
-        warnings_count: 0,
-      };
-
-      mockInvoke.mockResolvedValueOnce({
-        fixed_issues: [],
-        success_count: 0,
-        failed_count: 1,
-        fix_duration_ms: 100,
+      expect(mockInvoke).toHaveBeenNthCalledWith(1, 'autonomy_fix_states', {
+        issues: ['state drift'],
       });
-
-      const result = await engine.auto_fix(detectionResult);
-
-      expect(result.failed_count).toBe(1);
-      expect(result.success_count).toBe(0);
+      expect(mockInvoke).toHaveBeenNthCalledWith(2, 'autonomy_fix_tts_sync');
+      expect(result.fixed_states).toEqual(['state drift']);
+      expect(result.cleaned_caches).toContain('Frontend caches cleared');
+      expect((window as any).queryClient.clear).toHaveBeenCalled();
+      expect(result.success).toBe(true);
     });
   });
 
   describe('auto_heal', () => {
-    it('should heal system state', async () => {
-      const detectionResult = {
-        anomalies: [],
-        critical_count: 0,
-        warnings_count: 3,
-      };
-
-      mockInvoke.mockResolvedValueOnce({
-        healed_components: ['StateManager', 'MemoryCache'],
-        health_improvement: 15,
-        heal_duration_ms: 250,
+    it('repairs damaged modules and resynchronizes state', async () => {
+      const detectionResult = createDetectionResult({
+        abnormal_behaviors: ['memory leak'],
+        state_misalignments: ['state drift'],
       });
+
+      mockInvoke
+        .mockResolvedValueOnce({ repaired: ['Core'] })
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce(undefined);
 
       const result = await engine.auto_heal(detectionResult);
 
-      expect(result.healed_components.length).toBeGreaterThan(0);
-      expect(result.health_improvement).toBeGreaterThan(0);
+      expect(mockInvoke).toHaveBeenNthCalledWith(1, 'autonomy_heal_modules', {
+        abnormal_behaviors: ['memory leak'],
+      });
+      expect(mockInvoke).toHaveBeenNthCalledWith(2, 'autonomy_resync_singularity_state');
+      expect(mockInvoke).toHaveBeenNthCalledWith(3, 'autonomy_clean_memory');
+      expect(result.rebuilt_modules).toEqual(['Core']);
+      expect(result.cleaned_memory).toContain('Memory inconsistencies cleaned');
+      expect(result.success).toBe(true);
     });
   });
 
   describe('auto_optimize', () => {
-    it('should optimize system performance', async () => {
-      mockInvoke.mockResolvedValueOnce({
-        optimizations: ['Memory compaction', 'Cache cleanup', 'Dead code removal'],
-        performance_gain: 20,
-        optimization_duration_ms: 400,
-      });
+    it('compresses caches and cleans memory after backend optimizations', async () => {
+      const compressSpy = vi.spyOn(engine as any, 'compressCaches').mockImplementation(() => {});
+      const cleanMemorySpy = vi.spyOn(engine as any, 'cleanMemory').mockImplementation(() => {});
+      mockInvoke.mockResolvedValueOnce({ gains: 17 });
 
       const result = await engine.auto_optimize();
 
-      expect(mockInvoke).toHaveBeenCalledWith('autonomy_optimize_system');
-      expect(result.optimizations.length).toBeGreaterThan(0);
-      expect(result.performance_gain).toBeGreaterThanOrEqual(0);
+      expect(mockInvoke).toHaveBeenCalledWith('autonomy_optimize_performance');
+      expect(compressSpy).toHaveBeenCalled();
+      expect(cleanMemorySpy).toHaveBeenCalled();
+      expect(result.performance_gain_percentage).toBe(17);
+      expect(result.caches_compressed).toBe(true);
+
+      cleanupSpies(compressSpy, cleanMemorySpy);
     });
   });
 
   describe('auto_evolve', () => {
-    it('should evolve system capabilities', async () => {
-      mockInvoke.mockResolvedValueOnce({
-        new_capabilities: ['Enhanced memory', 'Better caching'],
-        evolution_level: 2,
-        evolution_duration_ms: 500,
-      });
+    it('records IA improvements returned by the backend', async () => {
+      mockInvoke.mockResolvedValueOnce({ improvements: ['Heuristic tuning'] });
 
       const result = await engine.auto_evolve();
 
-      expect(result.new_capabilities.length).toBeGreaterThanOrEqual(0);
-      expect(result.evolution_level).toBeGreaterThanOrEqual(0);
+      expect(mockInvoke).toHaveBeenCalledWith('autonomy_evolve_ia');
+      expect(result.heuristics_updated).toEqual(['Heuristic tuning']);
+      expect(result.ia_coherence_improved).toBe(true);
     });
   });
 
   describe('auto_test', () => {
-    it('should run automated tests', async () => {
-      mockInvoke.mockResolvedValueOnce({
-        tests_passed: 45,
-        tests_failed: 2,
-        coverage: 87,
-        test_duration_ms: 3000,
-      });
+    it('updates health score based on live telemetry', async () => {
+      mockInvoke
+        .mockResolvedValueOnce({ coherent: true })
+        .mockResolvedValueOnce(undefined);
 
       const result = await engine.auto_test();
 
-      expect(result.tests_passed).toBeGreaterThanOrEqual(0);
-      expect(result.coverage).toBeGreaterThanOrEqual(0);
-      expect(result.coverage).toBeLessThanOrEqual(100);
+      expect(mockInvoke).toHaveBeenNthCalledWith(1, 'autonomy_test_ia_coherence');
+      expect(mockInvoke).toHaveBeenNthCalledWith(2, 'autonomy_ping');
+      expect(result.success).toBe(true);
+      expect(engine.getAutonomyState().health_score).toBe(100);
     });
   });
 
   describe('auto_shield', () => {
-    it('should activate protective measures', async () => {
-      mockInvoke.mockResolvedValueOnce({
-        threats_blocked: 3,
-        shield_strength: 95,
-        shield_duration_ms: 150,
-      });
+    it('protects singularity state and deduplicates memory keys', async () => {
+      const preventSpy = vi.spyOn(engine as any, 'preventMemoryDuplicates').mockImplementation(() => {});
+      mockInvoke.mockResolvedValueOnce({ protected: true });
 
       const result = await engine.auto_shield();
 
-      expect(result.threats_blocked).toBeGreaterThanOrEqual(0);
-      expect(result.shield_strength).toBeGreaterThanOrEqual(0);
+      expect(mockInvoke).toHaveBeenCalledWith('autonomy_shield_state');
+      expect(preventSpy).toHaveBeenCalled();
+      expect(result.singularity_state_protected).toBe(true);
+      expect(result.memory_duplicates_prevented).toBe(true);
+
+      cleanupSpies(preventSpy);
     });
   });
 
   describe('auto_analyse', () => {
-    it('should analyze detection results', async () => {
-      const detectionResult = {
-        anomalies: [
-          { type: 'memory_leak', severity: 'high', location: 'ChatPanel' },
-        ],
-        critical_count: 1,
-        warnings_count: 0,
-      };
-
-      mockInvoke.mockResolvedValueOnce({
-        root_causes: ['Uncleared event listeners'],
-        recommendations: ['Add cleanup in useEffect'],
-        priority: 'high',
-        analysis_duration_ms: 200,
+    it('logs recurrence when multiple error patterns are present', async () => {
+      mockInvoke.mockResolvedValueOnce({ analyzed_count: 42 });
+      const detectionResult = createDetectionResult({
+        error_patterns: ['p1', 'p2', 'p3', 'p4'],
       });
 
       const result = await engine.auto_analyse(detectionResult);
 
-      expect(result.root_causes.length).toBeGreaterThan(0);
-      expect(result.recommendations.length).toBeGreaterThan(0);
-      expect(result.priority).toBeDefined();
+      expect(mockInvoke).toHaveBeenCalledWith('autonomy_analyse_logs');
+      expect(result.logs_analyzed).toBe(42);
+      expect(result.recurring_anomalies).toContain('Multiple error patterns detected');
     });
   });
 
-  describe('State Tracking', () => {
-    it('should track autonomy state correctly', async () => {
-      mockInvoke.mockResolvedValue({
-        backend_health: 95,
-        frontend_health: 90,
-        issues_found: 0,
-        scan_duration_ms: 100,
-      });
+  describe('auto_report', () => {
+    it('forwards report payloads to the backend logger', async () => {
+      const payload: ReportData = {
+        diagnostics: ['error'],
+        improvements_applied: [],
+        errors_fixed: [],
+        modules_repaired: [],
+        optimizations_performed: [],
+        preventions_activated: [],
+        timestamp: Date.now(),
+      };
 
-      await engine.auto_scan();
+      mockInvoke.mockResolvedValueOnce(undefined);
+      await engine.auto_report(payload);
 
-      const state = engine['autonomyState'];
-      expect(state.health_score).toBeGreaterThan(0);
-      expect(state.stability_index).toBeGreaterThan(0);
-    });
-
-    it('should update metrics after operations', async () => {
-      mockInvoke.mockResolvedValue({
-        optimizations: ['Test optimization'],
-        performance_gain: 10,
-        optimization_duration_ms: 200,
-      });
-
-      const initialOptimizations = engine['autonomyState'].optimizations_applied;
-      await engine.auto_optimize();
-
-      expect(engine['autonomyState'].optimizations_applied).toBeGreaterThan(initialOptimizations);
+      expect(mockInvoke).toHaveBeenCalledWith('autonomy_log_report', { report: payload });
     });
   });
 
-  describe('Integration', () => {
-    it('should complete full autonomy cycle', async () => {
-      // Mock all backend calls
-      mockInvoke
-        .mockResolvedValueOnce({ backend_health: 95, frontend_health: 90, issues_found: 1, scan_duration_ms: 100 }) // scan
-        .mockResolvedValueOnce({ anomalies: [], critical_count: 0, warnings_count: 0 }) // detect
-        .mockResolvedValueOnce({ fixed_issues: [], success_count: 0, failed_count: 0, fix_duration_ms: 0 }) // fix
-        .mockResolvedValueOnce({ healed_components: [], health_improvement: 0, heal_duration_ms: 0 }) // heal
-        .mockResolvedValueOnce({ optimizations: [], performance_gain: 5, optimization_duration_ms: 50 }) // optimize
-        .mockResolvedValueOnce({ new_capabilities: [], evolution_level: 0, evolution_duration_ms: 0 }) // evolve
-        .mockResolvedValueOnce({ tests_passed: 10, tests_failed: 0, coverage: 80, test_duration_ms: 500 }) // test
-        .mockResolvedValueOnce({ threats_blocked: 0, shield_strength: 100, shield_duration_ms: 50 }) // shield
-        .mockResolvedValueOnce({ root_causes: [], recommendations: [], priority: 'low', analysis_duration_ms: 100 }); // analyse
+  describe('State helpers', () => {
+    it('exposes a defensive copy of the autonomy state', () => {
+      const snapshot = engine.getAutonomyState();
+      snapshot.health_score = 0;
+      expect(engine.getAutonomyState().health_score).toBe(100);
+    });
+  });
 
-      await engine['autonomousCycle']();
+  describe('Autonomous cycle', () => {
+    it('chains scan, detection, protections, and remediation steps', async () => {
+      const scanResult = createScanResult({ backend_errors: ['panic'], frontend_warnings: [] });
+      const detectionResult = createDetectionResult({
+        error_patterns: ['panic'],
+        abnormal_behaviors: ['glitch'],
+        state_misalignments: ['drift'],
+      });
+      const analyseResult: AnalyseResult = {
+        logs_analyzed: 1,
+        long_context_analyzed: false,
+        memory_inconsistencies_detected: [],
+        conversational_dynamics_analyzed: false,
+        user_misinterpretations: [],
+        low_performance_zones: [],
+        recurring_anomalies: [],
+      };
 
-      expect(mockInvoke).toHaveBeenCalledTimes(9); // 8 functions + 1 report
-      expect(engine['autonomyState'].cycle_count).toBeGreaterThan(0);
+      const scanSpy = vi.spyOn(engine, 'auto_scan').mockResolvedValue(scanResult);
+      const detectSpy = vi.spyOn(engine, 'auto_detect').mockResolvedValue(detectionResult);
+      const analyseSpy = vi.spyOn(engine, 'auto_analyse').mockResolvedValue(analyseResult);
+      const shieldSpy = vi.spyOn(engine, 'auto_shield').mockResolvedValue({
+        singularity_state_protected: true,
+        memory_duplicates_prevented: true,
+        tts_crashes_prevented: false,
+        invalid_states_blocked: false,
+        ia_services_restarted: [],
+        internal_bugs_neutralized: [],
+        structural_inconsistencies_defended: [],
+      } as ShieldResult);
+      const fixSpy = vi.spyOn(engine, 'auto_fix').mockResolvedValue({
+        fixed_states: ['drift'],
+        reloaded_modules: [],
+        corrected_hooks: [],
+        cleaned_caches: [],
+        repaired_files: [],
+        corrected_tts_delays: [],
+        fixed_avatar_artifacts: [],
+        fixed_react_freezes: [],
+        success: true,
+      } as FixResult);
+      const healSpy = vi.spyOn(engine, 'auto_heal').mockResolvedValue({
+        rebuilt_modules: [],
+        resynchronized_states: ['SingularityState re-synchronized'],
+        repaired_ia_integrity: [],
+        recalculated_graphs: [],
+        cleaned_memory: ['Memory inconsistencies cleaned'],
+        repaired_pipelines: [],
+        success: true,
+      } as HealResult);
+      const optimizeSpy = vi.spyOn(engine, 'auto_optimize').mockResolvedValue({
+        cpu_optimization: 'ok',
+        gpu_optimization: 'ok',
+        react_rendering_optimized: true,
+        tauri_events_optimized: true,
+        tts_pipeline_optimized: true,
+        ia_pipeline_optimized: true,
+        memory_cleaned: true,
+        caches_compressed: true,
+        performance_gain_percentage: 5,
+      } as OptimizationResult);
+      const evolveSpy = vi.spyOn(engine, 'auto_evolve').mockResolvedValue({
+        ia_coherence_improved: true,
+        chat_speed_improved: false,
+        tts_behavior_adjusted: false,
+        emotional_modulators_tuned: false,
+        lip_sync_improved: false,
+        avatar_pipeline_tuned: false,
+        user_preferences_learned: [],
+        heuristics_updated: [],
+      } as EvolutionResult);
+      const testSpy = vi.spyOn(engine, 'auto_test').mockResolvedValue({
+        ia_coherence: true,
+        memory_coherence: true,
+        tts_coherence: true,
+        avatar_coherence: true,
+        latency_acceptable: true,
+        no_memory_leaks: true,
+        no_warnings: true,
+        no_event_collisions: true,
+        all_modules_responsive: true,
+        success: true,
+      } as TestResult);
+      const reportSpy = vi.spyOn(engine, 'auto_report').mockResolvedValue();
+
+      const state = (engine as any).autonomyState;
+      const now = Date.now();
+      state.last_optimize = now - 600000;
+      state.last_evolve = now - 700000;
+      state.last_test = now - 200000;
+
+      await (engine as any).autonomousCycle();
+
+      expect(scanSpy).toHaveBeenCalled();
+      expect(detectSpy).toHaveBeenCalled();
+      expect(analyseSpy).toHaveBeenCalled();
+      expect(shieldSpy).toHaveBeenCalled();
+      expect(fixSpy).toHaveBeenCalled();
+      expect(healSpy).toHaveBeenCalled();
+      expect(optimizeSpy).toHaveBeenCalled();
+      expect(evolveSpy).toHaveBeenCalled();
+      expect(testSpy).toHaveBeenCalled();
+      expect(reportSpy).toHaveBeenCalled();
+
+      cleanupSpies(
+        scanSpy,
+        detectSpy,
+        analyseSpy,
+        shieldSpy,
+        fixSpy,
+        healSpy,
+        optimizeSpy,
+        evolveSpy,
+        testSpy,
+        reportSpy,
+      );
     });
   });
 });

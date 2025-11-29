@@ -8,129 +8,138 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
-import * as tauriBridge from '../services/tauriBridge';
+import { useSingularityState } from '../core/state/SingularityState';
+import { useTitaneCore } from '../hooks/useTitaneCore';
 
-vi.mock('../services/tauriBridge');
+vi.mock('../hooks/useTitaneCore');
+
+const mockedUseTitaneCore = vi.mocked(useTitaneCore);
+
+const createDefaultEnginesSlice = () => ({
+  helios: { data: null, loading: false },
+  memory: { data: null, loading: false },
+  harmonia: { data: null, loading: false },
+  nexus: { data: null, loading: false },
+  sentinel: { data: null, loading: false },
+  watchdog: { data: null, loading: false },
+  selfheal: { data: null, loading: false },
+  adaptive: { data: null, loading: false },
+});
+
+const resetEngineStore = () => {
+  useSingularityState.setState({ enginesData: createDefaultEnginesSlice() });
+};
+
+const createCoreMock = () => ({
+  systemStatus: null,
+  loading: false,
+  error: null,
+  getSystemStatus: vi.fn(),
+  getHeliosMetrics: vi.fn(),
+  getHarmoniaFlows: vi.fn(),
+  getNexusGraph: vi.fn(),
+  getSentinelStatus: vi.fn(),
+  getWatchdogData: vi.fn(),
+  getSelfHealData: vi.fn(),
+  getAdaptiveData: vi.fn(),
+});
 
 describe('useEngineSubscription Hook', () => {
+  let coreMock: ReturnType<typeof useTitaneCore>;
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
+    resetEngineStore();
+    coreMock = createCoreMock() as ReturnType<typeof useTitaneCore>;
+    mockedUseTitaneCore.mockReturnValue(coreMock);
   });
 
   afterEach(() => {
-    vi.restoreAllMocks();
     vi.useRealTimers();
   });
 
-  it('should initialize with loading state', () => {
+  const flushAsyncUpdates = async () => {
+    await act(async () => {
+      await Promise.resolve();
+    });
+  };
+
+  const advanceTimers = async (ms: number) => {
+    await act(async () => {
+      vi.advanceTimersByTime(ms);
+    });
+    await flushAsyncUpdates();
+  };
+
+  it('should expose the current engine slice from the store', async () => {
     const { result } = renderHook(() => useEngineSubscription('nexus'));
 
-    expect(result.current.loading).toBe(true);
-    expect(result.current.data).toBeNull();
-    expect(result.current.error).toBeNull();
+    await flushAsyncUpdates();
+
+    const storeSlice = useSingularityState.getState().enginesData.nexus;
+    expect(result.current).toEqual(storeSlice);
   });
 
-  it('should fetch engine data on mount', async () => {
+  it('should fetch engine data on mount and update loading flags', async () => {
     const mockData = { status: 'active', uptime: 1000 };
-    vi.spyOn(tauriBridge, 'engineMetrics').mockResolvedValue({
-      success: true,
-      data: mockData,
-      message: 'Success',
-    });
+    coreMock.getNexusGraph.mockResolvedValue(mockData);
 
     const { result } = renderHook(() => useEngineSubscription('nexus'));
+    await flushAsyncUpdates();
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
+    expect(coreMock.getNexusGraph).toHaveBeenCalledTimes(1);
 
+    await flushAsyncUpdates();
+
+    expect(result.current.loading).toBe(false);
     expect(result.current.data).toEqual(mockData);
-    expect(result.current.error).toBeNull();
   });
 
-  it('should handle fetch errors', async () => {
-    const mockError = new Error('Failed to fetch engine data');
-    vi.spyOn(tauriBridge, 'engineMetrics').mockRejectedValue(mockError);
+  it('should handle fetch errors without crashing', async () => {
+    coreMock.getNexusGraph.mockRejectedValue(new Error('Failed to fetch engine data'));
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
     const { result } = renderHook(() => useEngineSubscription('nexus'));
+    await flushAsyncUpdates();
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false);
-    });
+    expect(consoleSpy).toHaveBeenCalled();
+    await flushAsyncUpdates();
 
+    expect(result.current.loading).toBe(false);
     expect(result.current.data).toBeNull();
-    expect(result.current.error).toBe('Failed to fetch engine data');
+
+    consoleSpy.mockRestore();
   });
 
-  it('should poll for updates at specified interval', async () => {
+  it('should poll for updates using the configured engine interval', async () => {
     const mockData = { status: 'active', uptime: 1000 };
-    const engineMetricsSpy = vi.spyOn(tauriBridge, 'engineMetrics').mockResolvedValue({
-      success: true,
-      data: mockData,
-      message: 'Success',
-    });
+    coreMock.getNexusGraph.mockResolvedValue(mockData);
 
-    renderHook(() => useEngineSubscription('nexus', { pollInterval: 5000 }));
+    renderHook(() => useEngineSubscription('nexus'));
+    await flushAsyncUpdates();
 
-    // Initial fetch
-    await waitFor(() => {
-      expect(engineMetricsSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(coreMock.getNexusGraph).toHaveBeenCalledTimes(1);
 
-    // Advance timer by 5 seconds
-    vi.advanceTimersByTime(5000);
+    await advanceTimers(5000);
 
-    await waitFor(() => {
-      expect(engineMetricsSpy).toHaveBeenCalledTimes(2);
-    });
-
-    // Advance timer by another 5 seconds
-    vi.advanceTimersByTime(5000);
-
-    await waitFor(() => {
-      expect(engineMetricsSpy).toHaveBeenCalledTimes(3);
-    });
+    expect(coreMock.getNexusGraph).toHaveBeenCalledTimes(2);
   });
 
   it('should cleanup polling on unmount', async () => {
-    const mockData = { status: 'active', uptime: 1000 };
-    const engineMetricsSpy = vi.spyOn(tauriBridge, 'engineMetrics').mockResolvedValue({
-      success: true,
-      data: mockData,
-      message: 'Success',
-    });
+    coreMock.getWatchdogData.mockResolvedValue({ status: 'active' });
 
-    const { unmount } = renderHook(() => useEngineSubscription('nexus', { pollInterval: 5000 }));
+    const { unmount } = renderHook(() => useEngineSubscription('watchdog'));
+    await flushAsyncUpdates();
 
-    await waitFor(() => {
-      expect(engineMetricsSpy).toHaveBeenCalledTimes(1);
-    });
+    expect(coreMock.getWatchdogData).toHaveBeenCalledTimes(1);
 
-    // Unmount hook
     unmount();
 
-    // Advance timer - should NOT trigger another call
-    vi.advanceTimersByTime(5000);
+    await advanceTimers(4000);
 
-    // Should still be 1 call (no new calls after unmount)
-    expect(engineMetricsSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('should respect enabled option', async () => {
-    const engineMetricsSpy = vi.spyOn(tauriBridge, 'engineMetrics').mockResolvedValue({
-      success: true,
-      data: { status: 'active' },
-      message: 'Success',
-    });
-
-    renderHook(() => useEngineSubscription('nexus', { enabled: false }));
-
-    // Should NOT fetch when disabled
-    await waitFor(() => {
-      expect(engineMetricsSpy).not.toHaveBeenCalled();
-    }, { timeout: 1000 });
+    expect(coreMock.getWatchdogData).toHaveBeenCalledTimes(1);
   });
 });

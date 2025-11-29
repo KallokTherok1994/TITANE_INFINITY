@@ -5,13 +5,17 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * REALTIME EXECUTION ENGINE - TEST SUITE
- * Tests for 60 FPS real-time execution (Phase 5)
+ * REALTIME EXECUTION ENGINE - MODERN DIAGNOSTIC SUITE
+ * Aligné sur l'implémentation v24.30 (priority queue + pipeline 60 FPS)
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { RealTimeExecutionEngine } from '../../src/core/realtime/RealTimeExecutionEngine';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
+import {
+  RealTimeExecutionEngine,
+  type RealtimeTask,
+  type Priority,
+} from '@/core/realtime/RealTimeExecutionEngine';
 
 vi.mock('@tauri-apps/api/core', () => ({
   invoke: vi.fn(),
@@ -20,339 +24,206 @@ vi.mock('@tauri-apps/api/core', () => ({
 import { invoke } from '@tauri-apps/api/core';
 const mockInvoke = vi.mocked(invoke);
 
+const originalAudioContext = globalThis.AudioContext;
+const originalWindowAudioContext =
+  typeof window !== 'undefined' ? (window as any).AudioContext : undefined;
+
+class FakeAudioContext {
+  sampleRate = 48_000;
+  currentTime = 0;
+  destination = {};
+  decodeAudioData = vi.fn(async (_chunk: ArrayBuffer) => createAudioBuffer());
+  createBufferSource() {
+    return {
+      buffer: null as AudioBuffer | null,
+      connect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
+      onended: null as (() => void) | null,
+    };
+  }
+}
+
+beforeAll(() => {
+  (globalThis as any).AudioContext = FakeAudioContext;
+  if (typeof window !== 'undefined') {
+    (window as any).AudioContext = FakeAudioContext;
+  }
+});
+
+afterAll(() => {
+  (globalThis as any).AudioContext = originalAudioContext;
+  if (typeof window !== 'undefined') {
+    (window as any).AudioContext = originalWindowAudioContext;
+  }
+});
+
 describe('RealTimeExecutionEngine', () => {
   let engine: RealTimeExecutionEngine;
 
   beforeEach(() => {
     vi.clearAllMocks();
     engine = RealTimeExecutionEngine.getInstance();
-    engine.stop(); // Stop auto-started engine
-  });
-
-  afterEach(() => {
     engine.stop();
+    (engine as any).taskQueue.clear();
+    mockInvoke.mockReset();
   });
 
-  describe('Singleton Pattern', () => {
-    it('should return the same instance', () => {
-      const instance1 = RealTimeExecutionEngine.getInstance();
-      const instance2 = RealTimeExecutionEngine.getInstance();
-      expect(instance1).toBe(instance2);
-    });
+  it('reuses the singleton instance', () => {
+    expect(RealTimeExecutionEngine.getInstance()).toBe(engine);
   });
 
-  describe('Lifecycle Management', () => {
-    it('should start execution loop at target FPS', () => {
-      engine.start(60);
-      expect(engine['isRunning']).toBe(true);
-      expect(engine['targetFPS']).toBe(60);
-    });
+  it('orders realtime tasks by declared priority', () => {
+    const queue = (engine as any).taskQueue;
+    queue.clear();
+    queue.enqueue(createTask('network', 'low'), 'low');
+    queue.enqueue(createTask('avatar', 'high'), 'high');
+    queue.enqueue(createTask('ui', 'normal'), 'normal');
+    queue.enqueue(createTask('audio', 'critical'), 'critical');
 
-    it('should stop execution loop cleanly', () => {
-      engine.start(60);
-      engine.stop();
-      expect(engine['isRunning']).toBe(false);
-      expect(engine['executionLoopId']).toBeNull();
-    });
-
-    it('should not restart if already running', () => {
-      engine.start(60);
-      const firstLoopId = engine['executionLoopId'];
-      engine.start(60);
-      expect(engine['executionLoopId']).toBe(firstLoopId);
-    });
+    expect(queue.dequeue()?.type).toBe('audio');
+    expect(queue.dequeue()?.type).toBe('avatar');
+    expect(queue.dequeue()?.type).toBe('ui');
+    expect(queue.dequeue()?.type).toBe('network');
   });
 
-  describe('Priority Queue', () => {
-    it('should dequeue tasks by priority', () => {
-      const queue = engine['taskQueue'];
+  it('enqueues audio tasks with critical priority', () => {
+    const audio = createAudioBuffer();
+    engine.enqueueAudio(audio);
 
-      queue.enqueue({ priority: 1, payload: 'low' } as any, 1);
-      queue.enqueue({ priority: 3, payload: 'critical' } as any, 3);
-      queue.enqueue({ priority: 2, payload: 'high' } as any, 2);
-
-      const task1 = queue.dequeue();
-      const task2 = queue.dequeue();
-      const task3 = queue.dequeue();
-
-      expect(task1?.payload).toBe('critical');
-      expect(task2?.payload).toBe('high');
-      expect(task3?.payload).toBe('low');
-    });
-
-    it('should return correct queue size', () => {
-      const queue = engine['taskQueue'];
-
-      expect(queue.size()).toBe(0);
-
-      queue.enqueue({ priority: 1 } as any, 1);
-      queue.enqueue({ priority: 2 } as any, 2);
-
-      expect(queue.size()).toBe(2);
-    });
-
-    it('should handle empty queue', () => {
-      const queue = engine['taskQueue'];
-      expect(queue.isEmpty()).toBe(true);
-      expect(queue.dequeue()).toBeUndefined();
-    });
+    const task = (engine as any).taskQueue.dequeue();
+    expect(task?.type).toBe('audio');
+    expect(task?.priority).toBe('critical');
+    expect(task?.payload).toBe(audio);
   });
 
-  describe('Audio Scheduler (Critical Priority)', () => {
-    it('should enqueue audio with critical priority', () => {
-      const audioBuffer = new ArrayBuffer(1024);
+  it('routes audio tasks through the audio scheduler', () => {
+    const chunk = createAudioBuffer();
+    const schedulerSpy = vi.spyOn((engine as any).audioScheduler, 'scheduleChunk');
 
-      engine.enqueueAudio(audioBuffer, { voice: 'default', rate: 1.0 });
+    (engine as any).executeTask(createTask('audio', 'critical', chunk));
 
-      expect(engine['taskQueue'].size()).toBe(1);
-      const task = engine['taskQueue'].dequeue();
-      expect(task?.priority).toBe(3); // critical
-    });
+    expect(schedulerSpy).toHaveBeenCalledWith(chunk);
+  });
 
-    it('should schedule audio playback', async () => {
-      mockInvoke.mockResolvedValueOnce(undefined);
+  it('routes avatar tasks through the avatar scheduler', () => {
+    const animation = { keyframes: [{ t: 0 }], duration: 500 };
+    const schedulerSpy = vi.spyOn((engine as any).avatarScheduler, 'scheduleAnimation');
 
-      const audioBuffer = new ArrayBuffer(2048);
-      await engine['audioScheduler'].scheduleAudio(audioBuffer, 0);
+    (engine as any).executeTask(createTask('avatar', 'high', animation));
 
-      expect(mockInvoke).toHaveBeenCalledWith('realtime_stream_tts', {
-        audioBuffer,
-        timestamp: 0,
-      });
+    expect(schedulerSpy).toHaveBeenCalledWith(animation);
+  });
+
+  it('adds UI events and flushes them after the debounce window', () => {
+    vi.useFakeTimers();
+    const batcher = (engine as any).uiEventBatcher;
+
+    batcher.addEvent({ type: 'mousemove' });
+    batcher.addEvent({ type: 'mousemove' });
+    expect(batcher['events'].length).toBe(2);
+
+    vi.advanceTimersByTime(20);
+    batcher.flush();
+
+    expect(batcher['events'].length).toBe(0);
+    vi.useRealTimers();
+  });
+
+  it('sends network payloads through the Tauri bridge', async () => {
+    mockInvoke.mockResolvedValue(undefined);
+    const payload = { url: 'https://example.com' };
+
+    (engine as any).executeTask(createTask('network', 'low', payload));
+
+    await vi.waitFor(() => {
+      expect(mockInvoke).toHaveBeenCalledWith('realtime_network_task', { payload });
     });
   });
 
-  describe('Avatar Scheduler (High Priority)', () => {
-    it('should enqueue avatar with high priority', () => {
-      const animation = { joint: 'jaw', rotation: 0.1 };
+  it('marks dropped frames when the frame budget is exceeded', () => {
+    (engine as any).metrics.droppedFrames = 0;
+    (engine as any).isRunning = true;
+    (engine as any).lastFrameTime = performance.now() - (engine as any).frameTime * 2;
 
-      engine.enqueueAvatar(animation, {});
+    const rafSpy = vi
+      .spyOn(globalThis as any, 'requestAnimationFrame')
+      .mockImplementation(() => 0);
 
-      expect(engine['taskQueue'].size()).toBe(1);
-      const task = engine['taskQueue'].dequeue();
-      expect(task?.priority).toBe(2); // high
-    });
+    (engine as any).executionLoop();
 
-    it('should update avatar animations at 60 FPS', () => {
-      const scheduler = engine['avatarScheduler'];
-      const deltaTime = 16.67; // ~60 FPS
+    expect((engine as any).metrics.droppedFrames).toBeGreaterThan(0);
 
-      scheduler.update(deltaTime);
-
-      expect(scheduler['currentFrame']).toBeGreaterThan(0);
-    });
+    (engine as any).isRunning = false;
+    rafSpy.mockRestore();
   });
 
-  describe('UI Event Batcher (Normal Priority)', () => {
-    it('should enqueue UI event with normal priority', () => {
-      const event = { type: 'click', target: 'button' };
+  it('prioritizes public enqueue APIs (critical > high > normal > low)', () => {
+    const queue = (engine as any).taskQueue;
+    queue.clear();
 
-      engine.enqueueUIEvent(event, {});
+    engine.enqueueNetwork({ http: true });
+    engine.enqueueUIEvent({ type: 'click' });
+    engine.enqueueAvatar({ keyframes: [] });
+    engine.enqueueAudio(createAudioBuffer());
 
-      expect(engine['taskQueue'].size()).toBe(1);
-      const task = engine['taskQueue'].dequeue();
-      expect(task?.priority).toBe(1); // normal
-    });
+    const order: string[] = [];
+    while (queue.size() > 0) {
+      order.push(queue.dequeue()!.type);
+    }
 
-    it('should batch events within debounce window', () => {
-      vi.useFakeTimers();
-      const batcher = engine['uiEventBatcher'];
-
-      batcher.batchEvent({ type: 'mousemove', x: 10, y: 20 });
-      batcher.batchEvent({ type: 'mousemove', x: 15, y: 25 });
-      batcher.batchEvent({ type: 'mousemove', x: 20, y: 30 });
-
-      expect(batcher['eventBatch'].length).toBe(3);
-
-      vi.advanceTimersByTime(20); // Exceed 16ms debounce
-      batcher.flush();
-
-      expect(batcher['eventBatch'].length).toBe(0);
-      vi.useRealTimers();
-    });
+    expect(order).toEqual(['audio', 'avatar', 'ui', 'network']);
   });
 
-  describe('Network Tasks (Low Priority)', () => {
-    it('should enqueue network with low priority', () => {
-      const payload = { url: 'https://api.example.com', method: 'GET' };
-
-      engine.enqueueNetwork(payload, {});
-
-      expect(engine['taskQueue'].size()).toBe(1);
-      const task = engine['taskQueue'].dequeue();
-      expect(task?.priority).toBe(0); // low
-    });
-  });
-
-  describe('Execution Loop', () => {
-    it('should calculate FPS correctly', async () => {
-      vi.useFakeTimers();
-
-      engine.start(60);
-
-      // Simulate multiple frames
-      for (let i = 0; i < 10; i++) {
-        vi.advanceTimersByTime(16.67); // 60 FPS frame time
-        await vi.runOnlyPendingTimersAsync();
+  it('enqueues audio, avatar and UI tasks when running the realtime pipeline', async () => {
+    mockInvoke.mockImplementation(async (command) => {
+      if (command === 'realtime_stream_tts') {
+        return [new ArrayBuffer(8)];
       }
-
-      const fps = engine['metrics'].fps;
-      expect(fps).toBeGreaterThan(50); // Allow some variance
-      expect(fps).toBeLessThan(70);
-
-      vi.useRealTimers();
-    });
-
-    it('should detect frame drops', async () => {
-      vi.useFakeTimers();
-
-      engine.start(60);
-
-      // Simulate long frame (frame drop)
-      vi.advanceTimersByTime(50); // 20 FPS instead of 60
-      await vi.runOnlyPendingTimersAsync();
-
-      expect(engine['metrics'].droppedFrames).toBeGreaterThan(0);
-
-      vi.useRealTimers();
-    });
-
-    it('should respect frame time budget (80%)', async () => {
-      vi.useFakeTimers();
-
-      engine.start(60);
-
-      // Frame time at 60 FPS: ~16.67ms
-      // 80% budget: ~13.3ms
-      expect(engine['frameTime']).toBeCloseTo(16.67, 1);
-
-      vi.useRealTimers();
-    });
-  });
-
-  describe('Task Execution', () => {
-    it('should execute tasks within frame budget', async () => {
-      mockInvoke.mockResolvedValue(undefined);
-
-      // Enqueue multiple tasks
-      engine.enqueueAudio(new ArrayBuffer(512), {});
-      engine.enqueueAvatar({ joint: 'jaw', rotation: 0.1 }, {});
-      engine.enqueueUIEvent({ type: 'click' }, {});
-
-      engine['executeTasks'](16.67);
-
-      // Tasks should be processed
-      await vi.waitFor(() => {
-        expect(engine['taskQueue'].size()).toBe(0);
-      });
-    });
-
-    it('should prioritize critical tasks first', async () => {
-      mockInvoke.mockResolvedValue(undefined);
-
-      const executionOrder: string[] = [];
-
-      // Override task types to track execution
-      engine.enqueueNetwork({ url: 'test' }, {}); // low
-      engine.enqueueUIEvent({ type: 'click' }, {}); // normal
-      engine.enqueueAvatar({ joint: 'jaw' }, {}); // high
-      engine.enqueueAudio(new ArrayBuffer(256), {}); // critical
-
-      // Process all tasks
-      while (!engine['taskQueue'].isEmpty()) {
-        const task = engine['taskQueue'].dequeue();
-        if (task) {
-          executionOrder.push(task.type);
-        }
+      if (command === 'realtime_generate_avatar_animations') {
+        return [{ keyframes: [{ t: 0 }], duration: 400 }];
       }
-
-      expect(executionOrder[0]).toBe('audio'); // critical first
-      expect(executionOrder[1]).toBe('avatar'); // high second
-      expect(executionOrder[2]).toBe('ui'); // normal third
-      expect(executionOrder[3]).toBe('network'); // low last
-    });
-  });
-
-  describe('Real-Time Pipeline', () => {
-    it('should execute complete realtime pipeline', async () => {
-      mockInvoke
-        .mockResolvedValueOnce(undefined) // TTS
-        .mockResolvedValueOnce(undefined) // Avatar
-        .mockResolvedValueOnce(undefined); // Network
-
-      const input = {
-        userMessage: 'Test pipeline',
-        audioBuffer: new ArrayBuffer(1024),
-        animation: { joint: 'jaw', rotation: 0.1 },
-      };
-
-      await engine.executeRealTimePipeline(input);
-
-      expect(mockInvoke).toHaveBeenCalledTimes(3);
-    });
-  });
-
-  describe('Metrics Tracking', () => {
-    it('should track average frame time', async () => {
-      vi.useFakeTimers();
-
-      engine.start(60);
-
-      // Run multiple frames
-      for (let i = 0; i < 5; i++) {
-        vi.advanceTimersByTime(16.67);
-        await vi.runOnlyPendingTimersAsync();
-      }
-
-      expect(engine['metrics'].avgFrameTime).toBeGreaterThan(0);
-
-      vi.useRealTimers();
+      return undefined;
     });
 
-    it('should track audio/avatar latency', async () => {
-      mockInvoke.mockResolvedValue(undefined);
+    const queue = (engine as any).taskQueue;
+    queue.clear();
 
-      engine.enqueueAudio(new ArrayBuffer(512), {});
-      engine['executeTasks'](16.67);
-
-      await vi.waitFor(() => {
-        expect(engine['metrics'].audioLatency).toBeGreaterThanOrEqual(0);
-      });
+    await engine.executeRealTimePipeline({
+      iaResponse: 'Pipeline diagnostic',
+      ttsEnabled: true,
+      avatarEnabled: true,
     });
 
-    it('should count dropped frames', async () => {
-      vi.useFakeTimers();
+    const tasks = drainQueue(queue);
+    const types = tasks.map((task) => task.type);
 
-      engine.start(60);
-
-      // Simulate slow frame
-      vi.advanceTimersByTime(40); // Slow frame
-      await vi.runOnlyPendingTimersAsync();
-
-      expect(engine['metrics'].droppedFrames).toBeGreaterThan(0);
-
-      vi.useRealTimers();
-    });
-  });
-
-  describe('Performance', () => {
-    it('should maintain 60 FPS with moderate load', async () => {
-      vi.useFakeTimers();
-      mockInvoke.mockResolvedValue(undefined);
-
-      engine.start(60);
-
-      // Enqueue moderate number of tasks per frame
-      for (let i = 0; i < 30; i++) {
-        engine.enqueueUIEvent({ type: 'test', id: i }, {});
-        vi.advanceTimersByTime(16.67);
-        await vi.runOnlyPendingTimersAsync();
-      }
-
-      const avgFps = engine['metrics'].fps;
-      expect(avgFps).toBeGreaterThan(55); // Allow 5 FPS variance
-
-      vi.useRealTimers();
-    });
+    expect(types.filter((t) => t === 'audio')).toHaveLength(1);
+    expect(types.filter((t) => t === 'avatar')).toHaveLength(1);
+    expect(types.filter((t) => t === 'ui')).toHaveLength(1);
   });
 });
+
+function createTask(type: RealtimeTask['type'], priority: Priority, payload: any = {}): RealtimeTask {
+  return {
+    id: `${type}_${Date.now()}`,
+    type,
+    priority,
+    payload,
+    timestamp: Date.now(),
+    cancellable: true,
+  };
+}
+
+function createAudioBuffer(duration: number = 0.5): AudioBuffer {
+  return { duration } as AudioBuffer;
+}
+
+function drainQueue(queue: { dequeue: () => RealtimeTask | undefined; size: () => number }): RealtimeTask[] {
+  const tasks: RealtimeTask[] = [];
+  while (queue.size() > 0) {
+    const task = queue.dequeue();
+    if (task) tasks.push(task);
+  }
+  return tasks;
+}

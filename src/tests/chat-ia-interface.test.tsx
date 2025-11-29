@@ -3,15 +3,22 @@
  * Test complet du Chat IA en mode interface pour identifier tous les blocages
  */
 
-import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { describe, test, expect, beforeEach, beforeAll, vi } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/vitest';
-import { ChatWindow } from '../components/ChatWindow';
+import { useChat } from '../hooks/useChat';
 
 // Mock du hook useChat pour isoler les tests interface
 vi.mock('../hooks/useChat', () => ({
   useChat: vi.fn()
+}));
+
+// Mock du panneau de vitals (évite les hooks système/Tauri)
+vi.mock('../components/VitalsPanel', () => ({
+  VitalsPanel: ({ currentMode }: { currentMode?: string }) => (
+    <div data-testid="mock-vitals-panel">Mock VitalsPanel - mode {currentMode}</div>
+  )
 }));
 
 // Mock des composants enfants
@@ -19,28 +26,56 @@ vi.mock('../hooks/useConnection', () => ({
   useConnection: () => ({ status: { online: true, provider: 'Gemini' } })
 }));
 
+const mockSingularityStore = {
+  setAIStatus: vi.fn(),
+  setAIError: vi.fn()
+};
+
 vi.mock('../core/state/SingularityState', () => ({
-  useSingularityState: () => ({
-    setAIStatus: vi.fn(),
-    setAIError: vi.fn()
-  })
+  useSingularityState: (selector?: (state: typeof mockSingularityStore) => unknown) => {
+    const state = mockSingularityStore;
+    return selector ? selector(state) : state;
+  }
 }));
 
+let ChatWindow: typeof import('../components/ChatWindow')['ChatWindow'];
+
+beforeAll(async () => {
+  ({ ChatWindow } = await import('../components/ChatWindow'));
+});
+
 describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
-  const mockSendMessage = vi.fn();
-  const { useChat } = await import('../hooks/useChat');
-  const defaultChatState = {
+  const mockSendMessage = vi.fn().mockResolvedValue({
+    role: 'assistant',
+    content: 'ok',
+    timestamp: Date.now()
+  });
+
+  const buildChatState = (overrides: Record<string, unknown> = {}) => ({
     messages: [],
     isLoading: false,
     error: null,
     sendMessage: mockSendMessage,
     currentMode: 'default',
-    anomalyCount: 0
-  };
+    anomalyCount: 0,
+    setMode: vi.fn(),
+    restoreFromVault: vi.fn(),
+    uiIntegrity: {
+      version: 1,
+      preventedResets: 0,
+      recoveries: 0,
+      lastRecoveryAt: null,
+      lastContext: 'test',
+      hasSnapshot: false
+    },
+    ...overrides
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(useChat).mockReturnValue(defaultChatState);
+    mockSingularityStore.setAIStatus.mockReset();
+    mockSingularityStore.setAIError.mockReset();
+    vi.mocked(useChat).mockReturnValue(buildChatState());
   });
 
   test('1️⃣ Composant ChatWindow se rend sans crash', () => {
@@ -78,10 +113,9 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   });
 
   test('4️⃣ État de loading affiché correctement', async () => {
-    vi.mocked(useChat).mockReturnValue({
-      ...defaultChatState,
+    vi.mocked(useChat).mockReturnValue(buildChatState({
       isLoading: true
-    });
+    }));
 
     render(<ChatWindow />);
 
@@ -103,10 +137,9 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
       }
     ];
 
-    vi.mocked(useChat).mockReturnValue({
-      ...defaultChatState,
+    vi.mocked(useChat).mockReturnValue(buildChatState({
       messages: mockMessages
-    });
+    }));
 
     render(<ChatWindow />);
 
@@ -115,16 +148,17 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   });
 
   test('6️⃣ Gestion des erreurs Chat IA', async () => {
-    vi.mocked(useChat).mockReturnValue({
-      ...defaultChatState,
+    vi.mocked(useChat).mockReturnValue(buildChatState({
       error: 'Erreur de connexion Chat IA'
-    });
+    }));
 
     render(<ChatWindow />);
 
     expect(screen.getByText(/Erreur de connexion Chat IA/)).toBeInTheDocument();
-  });  test('7️⃣ Mode voix toggle fonctionnel', () => {
-    const mockVoiceToggle = jest.fn();
+  });
+
+  test('7️⃣ Mode voix toggle fonctionnel', () => {
+    const mockVoiceToggle = vi.fn();
 
     render(<ChatWindow onVoiceModeToggle={mockVoiceToggle} voiceModeActive={false} />);
 

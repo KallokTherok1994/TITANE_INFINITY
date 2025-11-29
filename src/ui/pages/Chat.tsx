@@ -104,11 +104,15 @@ function useOmegaRenderProtection() {
 export const Chat: React.FC = () => {
   const mountedRef = useRef(false);
   const { pageState, handleRenderError, resetError } = useOmegaRenderProtection();
+  const [showSettings, setShowSettings] = useState(false);
+  const [voiceModeActive, setVoiceModeActive] = useState(false);
 
   // ═══ PHASE 5.1: PROTECTED HOOKS ═══
   let chatHookResult;
   try {
-    chatHookResult = useChat();
+    chatHookResult = useChat({
+      voiceEnabled: voiceModeActive
+    });
   } catch (hookError) {
     handleRenderError(
       hookError instanceof Error ? hookError : new Error(String(hookError)),
@@ -120,6 +124,7 @@ export const Chat: React.FC = () => {
       error: 'Erreur d\'initialisation du chat',
       sendMessage: () => Promise.resolve(),
       clearChat: () => {},
+       restoreFromVault: () => {},
       omnisStats: {
         failureCount: 0,
         autoHealCount: 0,
@@ -129,22 +134,50 @@ export const Chat: React.FC = () => {
         errorCount: 0,
         successRate: 0,
         engineVersion: 'unknown'
+      },
+      uiIntegrity: {
+        version: 1,
+        preventedResets: 0,
+        recoveries: 0,
+        lastRecoveryAt: null,
+        lastContext: 'uninitialized',
+        hasSnapshot: false
       }
     };
   }
 
-  const { messages, isLoading, error, sendMessage, clearChat, omnisStats } = chatHookResult;
+  const {
+    messages,
+    isLoading,
+    error,
+    sendMessage,
+    clearChat,
+    omnisStats,
+    uiIntegrity,
+    restoreFromVault
+  } = chatHookResult;
 
   // ═══ PHASE 5.2: PROTECTED STATE ═══
-  const [showSettings, setShowSettings] = useState(false);
-  const [voiceModeActive, setVoiceModeActive] = useState(false);
-
   const [providerStatus, _setProviderStatus] = useState<ProviderStatus>({
     name: 'OMEGA Neural',
     status: 'online',
     latency: 245,
     autoHealed: omnisStats?.autoHealCount > 0
   });
+
+  const handleRestoreHistory = useCallback(() => {
+    try {
+      if (!uiIntegrity?.hasSnapshot) {
+        return;
+      }
+      restoreFromVault();
+    } catch (restoreError) {
+      handleRenderError(
+        restoreError instanceof Error ? restoreError : new Error(String(restoreError)),
+        'restore-history'
+      );
+    }
+  }, [handleRenderError, restoreFromVault, uiIntegrity?.hasSnapshot]);
 
   // ═══ PHASE 5.3: MEMOIZED HANDLERS (éviter render loops) ═══
   const handleClearChat = useCallback(() => {
@@ -293,6 +326,15 @@ export const Chat: React.FC = () => {
               </button>
               <button
                 className="chat-action-btn"
+                onClick={handleRestoreHistory}
+                disabled={!uiIntegrity?.hasSnapshot}
+                title="Restaurer la dernière session stable"
+                aria-label="Restaurer l'historique sauvegardé"
+              >
+                🛡️
+              </button>
+              <button
+                className="chat-action-btn"
                 onClick={toggleSettings}
                 title="Paramètres OMEGA"
                 aria-label="Ouvrir les paramètres"
@@ -353,6 +395,14 @@ export const Chat: React.FC = () => {
                 <span className="status-icon">🔄</span>
                 <span className="status-label">Récupérations:</span>
                 <span className="status-value">{pageState.recoveryCount}</span>
+              </div>
+            )}
+
+            {uiIntegrity?.preventedResets > 0 && (
+              <div className="chat-status-item chat-status-ui-shield">
+                <span className="status-icon">🛡️</span>
+                <span className="status-label">UI Shield:</span>
+                <span className="status-value">{uiIntegrity.preventedResets}</span>
               </div>
             )}
           </div>
@@ -449,6 +499,12 @@ export const Chat: React.FC = () => {
                     <label className="chat-setting-label">Récupérations UI</label>
                     <div className="chat-setting-value">
                       {pageState.recoveryCount} récupérations render
+                    </div>
+                  </div>
+                  <div className="chat-setting-item">
+                    <label className="chat-setting-label">UI Shield</label>
+                    <div className="chat-setting-value">
+                      {uiIntegrity?.preventedResets ?? 0} protections — version {uiIntegrity?.version ?? 1}
                     </div>
                   </div>
                 </div>

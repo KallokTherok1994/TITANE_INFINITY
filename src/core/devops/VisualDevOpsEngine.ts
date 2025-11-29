@@ -68,6 +68,9 @@ class VisualDevOpsEngine {
   public async enable(): Promise<void> {
     if (this.enabled) {
       console.log('[VisualDevOpsEngine] Already enabled');
+      if (!this.currentSession || this.currentSession.interactions.length > 0) {
+        this.currentSession = this.createSession();
+      }
       return;
     }
 

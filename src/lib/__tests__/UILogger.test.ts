@@ -5,6 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { UILogger } from '../UILogger';
 import type { LogLevel } from '../UILogger';
 
@@ -17,18 +18,18 @@ describe('UILogger', () => {
     mockLocalStorage = {};
 
     global.localStorage = {
-      getItem: jest.fn((key: string) => mockLocalStorage[key] || null),
-      setItem: jest.fn((key: string, value: string) => {
+      getItem: vi.fn((key: string) => mockLocalStorage[key] || null),
+      setItem: vi.fn((key: string, value: string) => {
         mockLocalStorage[key] = value;
       }),
-      removeItem: jest.fn((key: string) => {
+      removeItem: vi.fn((key: string) => {
         delete mockLocalStorage[key];
       }),
-      clear: jest.fn(() => {
+      clear: vi.fn(() => {
         mockLocalStorage = {};
       }),
       length: 0,
-      key: jest.fn(() => null),
+      key: vi.fn(() => null),
     } as Storage;
 
     // Create fresh logger instance with console override disabled for tests
@@ -43,7 +44,8 @@ describe('UILogger', () => {
 
   afterEach(() => {
     logger.clearLogs();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   // ─────────────────────────────────────────────────────────────
@@ -218,9 +220,8 @@ describe('UILogger', () => {
 
     it('should reset throttle after time window', async () => {
       // Mock Date.now to control time
-      const originalNow = Date.now;
       let currentTime = Date.now();
-      Date.now = jest.fn(() => currentTime);
+      const dateNowSpy = vi.spyOn(Date, 'now').mockImplementation(() => currentTime);
 
       // Fill to limit
       for (let i = 0; i < 10; i++) {
@@ -239,7 +240,7 @@ describe('UILogger', () => {
       expect(logger.getLogs()).toHaveLength(11);
 
       // Restore
-      Date.now = originalNow;
+      dateNowSpy.mockRestore();
     });
   });
 
@@ -249,6 +250,7 @@ describe('UILogger', () => {
 
   describe('Storage & Rotation', () => {
     it('should rotate logs when max exceeded', () => {
+      logger.updateConfig({ maxLogsPerMinute: 1000 });
       // maxStoredLogs = 50 in test config
       for (let i = 0; i < 60; i++) {
         logger.info(`Log ${i}`);

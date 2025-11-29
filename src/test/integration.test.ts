@@ -25,6 +25,7 @@ const mockInvoke = vi.mocked(tauriCore.invoke);
 describe('Phase 3 Integration - Robustness Layer', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockInvoke.mockReset();
     ServiceMetrics.clear();
   });
 

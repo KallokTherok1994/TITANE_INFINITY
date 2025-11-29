@@ -3,9 +3,64 @@
  * URGENCE: Analyse complète des blocages et problèmes
  */
 
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { chatEngineOmnis } from '../services/ai/chatEngine_OMNIS_v1';
 import { safeInvokeTauri } from '../utils/tauriProtector';
 import { TAURI_COMMANDS } from '../core/commands/TAURI_COMMANDS';
+
+const mockGenerate = vi.fn(async (message: string) => ({
+  role: 'assistant',
+  content: `Réponse OMNIS simulée: ${message}`,
+  provider: 'titane-mock',
+  timestamp: Date.now()
+}));
+
+const mockSafeInvoke = vi.fn(async (command: string, args?: unknown) => {
+  if (command === 'test_command') {
+    return { ok: true, echoed: args };
+  }
+
+  if (command?.includes('chat_send_message')) {
+    return {
+      success: true,
+      provider: 'mock-backend',
+      message: {
+        id: 'mock-response',
+        content: 'Réponse backend simulée',
+        role: 'assistant',
+        timestamp: Date.now()
+      }
+    };
+  }
+
+  if (command?.includes('providers')) {
+    return {
+      success: true,
+      providers: [
+        { name: 'Gemini', status: 'healthy' },
+        { name: 'Ollama', status: 'standby' }
+      ],
+      refreshedAt: Date.now()
+    };
+  }
+
+  return { success: true, command, args };
+});
+
+vi.mock('../services/ai/chatEngine_OMNIS_v1', () => ({
+  chatEngineOmnis: {
+    generate: (...params: Parameters<typeof mockGenerate>) => mockGenerate(...params)
+  }
+}));
+
+vi.mock('../utils/tauriProtector', () => ({
+  safeInvokeTauri: (...params: Parameters<typeof mockSafeInvoke>) => mockSafeInvoke(...params)
+}));
+
+beforeEach(() => {
+  mockGenerate.mockClear();
+  mockSafeInvoke.mockClear();
+});
 
 describe('🔍 DIAGNOSTIC CHAT IA COMPLET', () => {
   const testMessage = "Bonjour, pouvez-vous me répondre ?";

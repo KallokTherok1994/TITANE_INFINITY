@@ -476,7 +476,7 @@ describe('Regression Test 10: Deep Sync Failures', () => {
 
       // Vérifier alignment après sync
       const alignment = await invoke('meta_get_alignment');
-      if (typeof alignment !== 'number' || alignment < 0 || alignment > 1) {
+      if (typeof alignment !== 'object' || alignment === null) {
         alerts.push({
           module: 'meta',
           cause: 'Alignment invalide après Deep Sync',
@@ -484,6 +484,17 @@ describe('Regression Test 10: Deep Sync Failures', () => {
           solution_suggeree: 'Recalculer alignment meta-cognitif',
           timestamp: new Date().toISOString(),
         });
+      } else {
+        const alignmentValues = Object.values(alignment as Record<string, unknown>);
+        if (!alignmentValues.every((value) => typeof value === 'boolean')) {
+          alerts.push({
+            module: 'meta',
+            cause: 'Alignment meta contient des valeurs non booléennes',
+            severity: 'MEDIUM',
+            solution_suggeree: 'Restaurer HashMap<String, bool> pour meta_get_alignment',
+            timestamp: new Date().toISOString(),
+          });
+        }
       }
     } catch (error) {
       alerts.push({

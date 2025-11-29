@@ -19,6 +19,33 @@ import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { hybridTTS } from '../services/tts/hybridTTS';
 
+type MaybeAIMessage = Partial<AIMessage> | null | undefined;
+
+const normalizeMessages = (messages: MaybeAIMessage[]): AIMessage[] => {
+  if (!Array.isArray(messages)) {
+    return [];
+  }
+
+  const now = Date.now();
+  return messages.map((message, index) => {
+    const role = message?.role === 'assistant' || message?.role === 'system' || message?.role === 'user'
+      ? message.role
+      : 'assistant';
+
+    const content = typeof message?.content === 'string'
+      ? message.content
+      : JSON.stringify(message?.content ?? '');
+
+    return {
+      role,
+      content,
+      timestamp: typeof message?.timestamp === 'number' ? message.timestamp : now + index,
+      provider: message?.provider,
+      metadata: message?.metadata
+    };
+  });
+};
+
 interface UseChatOptions {
   mode?: ChatMode;
   emotionState?: { valence: number; intensity: number; energy: number };
@@ -67,11 +94,22 @@ interface UseChatReturn {
   setMode: (mode: ChatMode) => void;
   setInput: (value: string) => void;
   handleSend: () => void;
+  restoreFromVault: () => void;
 
   // OMNIS Actions
   getDebugInfo: () => object;
   exportChat: () => string;
   importChat: (data: string) => boolean;
+
+  // UI Integrity
+  uiIntegrity: {
+    version: number;
+    preventedResets: number;
+    recoveries: number;
+    lastRecoveryAt: number | null;
+    lastContext: string;
+    hasSnapshot: boolean;
+  };
 }
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
@@ -84,6 +122,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
 
   const messagesRef = useRef<AIMessage[]>([]);
+  const stateVaultRef = useRef<{ stable: AIMessage[]; lastContext: string }>({
+    stable: [],
+    lastContext: 'init'
+  });
+  const [uiIntegrity, setUiIntegrity] = useState({
+    version: 1,
+    preventedResets: 0,
+    recoveries: 0,
+    lastRecoveryAt: null as number | null,
+    lastContext: 'init',
+    hasSnapshot: false
+  });
 
   const omnisConfig = {
     enablePredictive: false,
@@ -123,13 +173,83 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const { currentMode, anomalyCount, setMode: setCoreMode, generate } = coreHookResult;
   const { messagesForMode, memoryStats, saveMessage, clearMode } = memoryHookResult;
 
+  const applyMessagesSafely = useCallback((nextMessages: MaybeAIMessage[], context: string, options: { allowEmpty?: boolean } = {}) => {
+    const allowEmpty = options.allowEmpty ?? false;
+    const normalized = normalizeMessages(nextMessages);
+    const hasMessages = normalized.length > 0;
+
+    if (!allowEmpty && !hasMessages && stateVaultRef.current.stable.length > 0) {
+      const restored = stateVaultRef.current.stable.map(message => ({ ...message }));
+      setMessages(restored);
+      messagesRef.current = restored;
+      setUiIntegrity(prev => ({
+        ...prev,
+        preventedResets: prev.preventedResets + 1,
+        recoveries: prev.recoveries + 1,
+        lastRecoveryAt: Date.now(),
+        version: prev.version + 1,
+        lastContext: context,
+        hasSnapshot: true
+      }));
+      return restored;
+    }
+
+    if (hasMessages) {
+      stateVaultRef.current.stable = normalized;
+      stateVaultRef.current.lastContext = context;
+    } else if (allowEmpty) {
+      stateVaultRef.current.stable = [];
+      stateVaultRef.current.lastContext = context;
+    }
+
+    const applied = hasMessages ? normalized : [];
+    const emitted = applied.map(message => ({ ...message }));
+
+    setMessages(emitted);
+    messagesRef.current = emitted;
+    setUiIntegrity(prev => ({
+      ...prev,
+      version: prev.version + 1,
+      lastContext: context,
+      hasSnapshot: emitted.length > 0
+    }));
+
+    return emitted;
+  }, []);
+
+  const restoreFromVault = useCallback(() => {
+    if (stateVaultRef.current.stable.length === 0) {
+      return;
+    }
+
+    const restored = stateVaultRef.current.stable.map(message => ({ ...message }));
+    setMessages(restored);
+    messagesRef.current = restored;
+    setUiIntegrity(prev => ({
+      ...prev,
+      recoveries: prev.recoveries + 1,
+      lastRecoveryAt: Date.now(),
+      version: prev.version + 1,
+      lastContext: 'manual-restore',
+      hasSnapshot: true
+    }));
+  }, []);
+
   // ═══ SYNC INITIAL MESSAGES ═══
   useEffect(() => {
-    if (messagesForMode.length > 0) {
-      setMessages(messagesForMode);
-      messagesRef.current = messagesForMode;
+    if (!messagesForMode) {
+      return;
     }
-  }, [messagesForMode]);
+
+    if (messagesForMode.length === 0) {
+      if (stateVaultRef.current.stable.length === 0) {
+        applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
+      }
+      return;
+    }
+
+    applyMessagesSafely(messagesForMode, 'memory-sync');
+  }, [messagesForMode, applyMessagesSafely]);
 
   // ═══ SYNC MESSAGES REF ═══
   useEffect(() => {
@@ -161,12 +281,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     };
 
     const bufferedMessages = [...messagesRef.current, userMessage];
-    messagesRef.current = bufferedMessages;
-    setMessages(bufferedMessages);
+    const historyBuffer = applyMessagesSafely(bufferedMessages, 'user-message');
 
     try {
       const engineResponse = await Promise.race([
-        generate(cleanMessage, bufferedMessages),
+        generate(cleanMessage, historyBuffer),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 15000)
         )
@@ -186,9 +305,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
       };
 
-      const finalMessages = [...bufferedMessages, assistantMessage];
-      messagesRef.current = finalMessages;
-      setMessages(finalMessages);
+      const finalMessages = [...messagesRef.current, assistantMessage];
+      applyMessagesSafely(finalMessages, 'assistant-response');
 
       try {
         saveMessage(userMessage);
@@ -225,20 +343,18 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       };
 
       const errorMessages = [...messagesRef.current, fallbackResponse];
-      messagesRef.current = errorMessages;
-      setMessages(errorMessages);
+      applyMessagesSafely(errorMessages, 'fallback-response');
       setError('TITANE∞ a rencontré une anomalie et s\'est réparé. Tu peux réessayer immédiatement.');
       setIsLoading(false);
       setInternalAnomalyCount(prev => prev + 1);
 
       return fallbackResponse;
     }
-  }, [currentMode, generate, omnisConfig.timeoutMs, options.voiceEnabled, saveMessage]);
+  }, [applyMessagesSafely, currentMode, generate, omnisConfig.timeoutMs, options.voiceEnabled, saveMessage]);
 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {
-    messagesRef.current = [];
-    setMessages([]);
+    applyMessagesSafely([], 'clear-chat', { allowEmpty: true });
     setError(null);
     setInput('');
     setInternalAnomalyCount(0);
@@ -247,7 +363,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     } catch (error) {
       console.warn('[OMNIS] Clear mode warning:', error);
     }
-  }, [clearMode]);
+  }, [applyMessagesSafely, clearMode]);
 
   const setMode = useCallback((mode: ChatMode) => {
     try {
@@ -276,15 +392,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     try {
       const parsed = JSON.parse(data);
       if (parsed.messages && Array.isArray(parsed.messages)) {
-        messagesRef.current = parsed.messages;
-        setMessages(parsed.messages);
+        applyMessagesSafely(parsed.messages, 'import-chat', { allowEmpty: parsed.messages.length === 0 });
         return true;
       }
       return false;
     } catch {
       return false;
     }
-  }, []);
+  }, [applyMessagesSafely]);
 
   // ═══ COMPUTED VALUES ═══
   const omnisStats = useMemo(() => {
@@ -339,6 +454,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     anomalyCount: anomalyCount + internalAnomalyCount,
     memoryStats,
     omnisStats,
+    uiIntegrity,
 
     // Actions
     sendMessage,
@@ -346,6 +462,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     setMode,
     setInput,
     handleSend,
+    restoreFromVault,
 
     // OMNIS Actions
     getDebugInfo,

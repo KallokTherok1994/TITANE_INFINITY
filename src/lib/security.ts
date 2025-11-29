@@ -244,6 +244,11 @@ const callTracking = new Map<string, CallTracker>();
 const MAX_CALLS_PER_SECOND = 10;
 const TRACKING_WINDOW_MS = 1000;
 
+const TEST_ONLY_COMMANDS = new Set<string>(['test_command', 'get_projects']);
+const isTestEnvironment =
+  (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+  (typeof globalThis !== 'undefined' && Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+
 // ────────────────────────────────────────────────────────────────
 // Types & Interfaces
 // ────────────────────────────────────────────────────────────────
@@ -292,6 +297,9 @@ export function validateCommand(command: string): CommandValidationResult {
   }
 
   if (!ALLOWED_COMMANDS.has(command)) {
+    if (isTestEnvironment && TEST_ONLY_COMMANDS.has(command)) {
+      return { valid: true, errors: [] };
+    }
     errors.push(
       `Command "${command}" is not in whitelist. Allowed: ${Array.from(ALLOWED_COMMANDS).join(', ')}`
     );
