@@ -30,9 +30,192 @@
  * ```
  */
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { SingularityBridge } from '@/services/singularityBridge';
 import type { SingularityState } from '@/types/singularityState';
+
+const SINGULARITY_STORAGE_KEY = 'singularity-storage';
+
+type LegacyMode = 'standard' | 'meta';
+type LegacyTheme = 'dark' | 'light';
+
+interface SingularityLegacyState {
+  metaMode: LegacyMode;
+  theme: LegacyTheme;
+  enginesData: Record<string, unknown>;
+}
+
+const DEFAULT_LEGACY_STATE: SingularityLegacyState = {
+  metaMode: 'standard',
+  theme: 'dark',
+  enginesData: {},
+};
+
+const canUseStorage = (): boolean => typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+
+let legacyState: SingularityLegacyState = readPersistedLegacyState();
+const legacyListeners = new Set<(state: SingularityLegacyState) => void>();
+
+function readPersistedLegacyState(): SingularityLegacyState {
+  if (!canUseStorage()) {
+    return { ...DEFAULT_LEGACY_STATE };
+  }
+
+  try {
+    const stored = window.localStorage.getItem(SINGULARITY_STORAGE_KEY);
+    if (!stored) {
+      return { ...DEFAULT_LEGACY_STATE };
+    }
+
+    const parsed = JSON.parse(stored);
+    const rawState = parsed?.state ?? parsed ?? {};
+
+    return {
+      metaMode: rawState.metaMode === 'meta' ? 'meta' : 'standard',
+      theme: rawState.theme === 'light' ? 'light' : 'dark',
+      enginesData: rawState.enginesData ?? {},
+    };
+  } catch (error) {
+    console.warn('[useSingularityStore] Failed to parse persisted state:', error);
+    return { ...DEFAULT_LEGACY_STATE };
+  }
+}
+
+const legacyStatesEqual = (a: SingularityLegacyState, b: SingularityLegacyState): boolean => {
+  if (a.metaMode !== b.metaMode || a.theme !== b.theme) {
+    return false;
+  }
+
+  const aData = JSON.stringify(a.enginesData ?? {});
+  const bData = JSON.stringify(b.enginesData ?? {});
+  return aData === bData;
+};
+
+const notifyLegacySubscribers = () => {
+  legacyListeners.forEach(listener => {
+    try {
+      listener(legacyState);
+    } catch (error) {
+      console.error('[useSingularityStore] Legacy subscriber error:', error);
+    }
+  });
+};
+
+function persistLegacyState(nextState: SingularityLegacyState): void {
+  legacyState = {
+    metaMode: nextState.metaMode,
+    theme: nextState.theme,
+    enginesData: { ...nextState.enginesData },
+  };
+
+  if (canUseStorage()) {
+    try {
+      window.localStorage.setItem(
+        SINGULARITY_STORAGE_KEY,
+        JSON.stringify({
+          version: 0,
+          state: legacyState,
+        })
+      );
+    } catch (error) {
+      console.warn('[useSingularityStore] Failed to persist Singularity state:', error);
+    }
+  }
+
+  notifyLegacySubscribers();
+}
+
+const updateLegacyState = (partial: Partial<SingularityLegacyState>): void => {
+  persistLegacyState({
+    metaMode: partial.metaMode ?? legacyState.metaMode,
+    theme: partial.theme ?? legacyState.theme,
+    enginesData: partial.enginesData ?? legacyState.enginesData,
+  });
+};
+
+const rehydrateLegacyStateFromStorage = (): void => {
+  if (!canUseStorage()) {
+    return;
+  }
+
+  const persisted = readPersistedLegacyState();
+  if (!legacyStatesEqual(legacyState, persisted)) {
+    legacyState = persisted;
+    notifyLegacySubscribers();
+  }
+};
+
+const subscribeToLegacyState = (listener: (state: SingularityLegacyState) => void): (() => void) => {
+  legacyListeners.add(listener);
+  return () => {
+    legacyListeners.delete(listener);
+  };
+};
+
+export interface SingularityLegacyStore {
+  metaMode: LegacyMode;
+  theme: LegacyTheme;
+  enginesData: Record<string, unknown>;
+  setMode: (mode: LegacyMode) => void;
+  setTheme: (theme: LegacyTheme) => void;
+  setEnginesData: (data: Record<string, unknown>) => void;
+  selectUIMode: () => LegacyMode;
+  selectEngineData: (engineId: string) => unknown;
+}
+
+function useLegacySingularityStore(): SingularityLegacyStore {
+  rehydrateLegacyStateFromStorage();
+
+  const [version, setVersion] = useState(0);
+
+  useEffect(() => {
+    const unsubscribe = subscribeToLegacyState(() => {
+      setVersion(prev => prev + 1);
+    });
+    return unsubscribe;
+  }, []);
+
+  const setMode = useCallback((mode: LegacyMode) => {
+    if (mode !== 'standard' && mode !== 'meta') {
+      return;
+    }
+    if (legacyState.metaMode === mode) {
+      return;
+    }
+    updateLegacyState({ metaMode: mode });
+  }, []);
+
+  const setTheme = useCallback((theme: LegacyTheme) => {
+    if (theme !== 'dark' && theme !== 'light') {
+      return;
+    }
+    if (legacyState.theme === theme) {
+      return;
+    }
+    updateLegacyState({ theme });
+  }, []);
+
+  const setEnginesData = useCallback((data: Record<string, unknown>) => {
+    updateLegacyState({ enginesData: { ...data } });
+  }, []);
+
+  const selectUIMode = useCallback(() => legacyState.metaMode, []);
+
+  const selectEngineData = useCallback((engineId: string) => {
+    return legacyState.enginesData ? legacyState.enginesData[engineId] : undefined;
+  }, []);
+
+  return useMemo(() => ({
+    metaMode: legacyState.metaMode,
+    theme: legacyState.theme,
+    enginesData: legacyState.enginesData,
+    setMode,
+    setTheme,
+    setEnginesData,
+    selectUIMode,
+    selectEngineData,
+  }), [version, setMode, setTheme, setEnginesData, selectUIMode, selectEngineData]);
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -143,7 +326,7 @@ export const deepEqual = <T,>(a: T, b: T): boolean => {
  * );
  * ```
  */
-export function useSingularityStore<T>(
+function useSingularitySelector<T>(
   selector: Selector<T>,
   options?: UseSingularityStoreOptions
 ): T {
@@ -182,6 +365,19 @@ export function useSingularityStore<T>(
 
   // Retourner valeur actuelle (ou undefined si pas encore sync)
   return selectedRef.current as T;
+}
+
+export function useSingularityStore(): SingularityLegacyStore;
+export function useSingularityStore<T>(selector: Selector<T>, options?: UseSingularityStoreOptions): T;
+export function useSingularityStore<T>(
+  selector?: Selector<T>,
+  options?: UseSingularityStoreOptions
+): T | SingularityLegacyStore {
+  if (typeof selector !== 'function') {
+    return useLegacySingularityStore();
+  }
+
+  return useSingularitySelector(selector, options);
 }
 
 // ═══════════════════════════════════════════════════════════════════

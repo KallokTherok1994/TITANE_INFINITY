@@ -5,7 +5,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import * as THREE from 'three';
 import { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
@@ -25,8 +25,58 @@ vi.mock('three', async () => {
   const actual = await vi.importActual<typeof import('three')>('three');
   return {
     ...actual,
-    WebGLRenderer: vi.fn(() => createRendererStub(actual)),
-  };
+    WebGLRenderer: vi.fn().mockImplementation(function () {
+      return createRendererStub(actual);
+    }),
+    WebGLRenderTarget: vi.fn().mockImplementation(function () {
+      return {
+        setSize: vi.fn(),
+        dispose: vi.fn(),
+        texture: {},
+      };
+    }),
+    EffectComposer: vi.fn().mockImplementation(() => ({
+      setSize: vi.fn(),
+      render: vi.fn(),
+      dispose: vi.fn(),
+      addPass: vi.fn(),
+    })),
+  } as typeof import('three');
+});
+
+vi.mock('../rendering/PBRMaterialSystem', () => {
+  class MockPBRMaterialSystem {
+    createClothMaterial() {
+      return { dispose: vi.fn() };
+    }
+    createSkinMaterial() {
+      return { dispose: vi.fn() };
+    }
+    dispose() {
+      return void 0;
+    }
+  }
+  return { PBRMaterialSystem: MockPBRMaterialSystem };
+});
+
+vi.mock('../rendering/StudioLightingRig', () => {
+  class MockStudioLightingRig {
+    applyStyle = vi.fn();
+    setKeyIntensity = vi.fn();
+    setFillIntensity = vi.fn();
+    setRimIntensity = vi.fn();
+    dispose = vi.fn();
+  }
+  return { StudioLightingRig: MockStudioLightingRig };
+});
+
+vi.mock('../rendering/PostProcessingPipeline', () => {
+  class MockPostProcessingPipeline {
+    render = vi.fn();
+    setSize = vi.fn();
+    dispose = vi.fn();
+  }
+  return { PostProcessingPipeline: MockPostProcessingPipeline };
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -59,8 +109,24 @@ class MockCanvas {
 
 // Mock performance.now()
 let mockTime = 0;
+
 const originalPerformanceNow = performance.now;
-performance.now = vi.fn(() => mockTime);
+const originalRandom = Math.random;
+
+const createDeterministicRandomGenerator = () => {
+  let seed = 0x1337babe;
+  return () => {
+    seed = (seed * 1664525 + 1013904223) % 0x100000000;
+    return seed / 0x100000000;
+  };
+};
+
+let deterministicRandom = createDeterministicRandomGenerator();
+
+beforeAll(() => {
+  performance.now = vi.fn(() => mockTime);
+  Math.random = vi.fn(() => deterministicRandom());
+});
 
 // Polyfill RAF in case jsdom environment is missing it
 if (typeof globalThis.requestAnimationFrame !== 'function') {
@@ -256,6 +322,7 @@ describe('Floating Window Performance Tests', () => {
 
   beforeEach(() => {
     mockTime = 0;
+    deterministicRandom = createDeterministicRandomGenerator();
     canvas = new MockCanvas();
     renderer = new ThreeJSAvatarRenderer(canvas, {
       width: 400,
@@ -506,7 +573,7 @@ describe('Floating Window Performance Tests', () => {
 // CLEANUP
 // ═══════════════════════════════════════════════════════════════════════════
 
-afterEach(() => {
-  // Restore original performance.now
+afterAll(() => {
   performance.now = originalPerformanceNow;
+  Math.random = originalRandom;
 });
