@@ -32,11 +32,11 @@ pub enum PostureType {
 #[derive(Debug, Clone)]
 pub struct PostureConfiguration {
     pub posture_type: PostureType,
-    pub spine_alignment: f32,      // -1.0 (penché arrière) → 1.0 (penché avant)
-    pub shoulder_openness: f32,    // 0.0 (fermé) → 1.0 (ouvert)
-    pub arm_activity: f32,         // 0.0 (repos) → 1.0 (très expressif)
-    pub energy_level: f32,         // 0.0 (calme) → 1.0 (dynamique)
-    pub breathing_rate: f32,       // 0.5 (lent) → 1.5 (rapide)
+    pub spine_alignment: f32,   // -1.0 (penché arrière) → 1.0 (penché avant)
+    pub shoulder_openness: f32, // 0.0 (fermé) → 1.0 (ouvert)
+    pub arm_activity: f32,      // 0.0 (repos) → 1.0 (très expressif)
+    pub energy_level: f32,      // 0.0 (calme) → 1.0 (dynamique)
+    pub breathing_rate: f32,    // 0.5 (lent) → 1.5 (rapide)
 }
 
 impl PostureConfiguration {
@@ -44,11 +44,11 @@ impl PostureConfiguration {
     pub fn professional() -> Self {
         Self {
             posture_type: PostureType::Professional,
-            spine_alignment: 0.0,      // Droit, neutre
-            shoulder_openness: 0.8,    // Épaules ouvertes
-            arm_activity: 0.3,         // Mouvements contrôlés
-            energy_level: 0.6,         // Énergie modérée
-            breathing_rate: 1.0,       // Respiration normale
+            spine_alignment: 0.0,   // Droit, neutre
+            shoulder_openness: 0.8, // Épaules ouvertes
+            arm_activity: 0.3,      // Mouvements contrôlés
+            energy_level: 0.6,      // Énergie modérée
+            breathing_rate: 1.0,    // Respiration normale
         }
     }
 
@@ -56,11 +56,11 @@ impl PostureConfiguration {
     pub fn engaged() -> Self {
         Self {
             posture_type: PostureType::Engaged,
-            spine_alignment: 0.2,      // Léger lean-in
-            shoulder_openness: 0.9,    // Très ouvert
-            arm_activity: 0.7,         // Gestuelle active
-            energy_level: 0.85,        // Haute énergie
-            breathing_rate: 1.2,       // Respiration légèrement accélérée
+            spine_alignment: 0.2,   // Léger lean-in
+            shoulder_openness: 0.9, // Très ouvert
+            arm_activity: 0.7,      // Gestuelle active
+            energy_level: 0.85,     // Haute énergie
+            breathing_rate: 1.2,    // Respiration légèrement accélérée
         }
     }
 
@@ -68,11 +68,11 @@ impl PostureConfiguration {
     pub fn calm() -> Self {
         Self {
             posture_type: PostureType::Calm,
-            spine_alignment: -0.05,    // Légèrement en retrait
-            shoulder_openness: 0.6,    // Épaules relâchées
-            arm_activity: 0.2,         // Mouvements minimaux
-            energy_level: 0.4,         // Basse énergie
-            breathing_rate: 0.7,       // Respiration lente
+            spine_alignment: -0.05, // Légèrement en retrait
+            shoulder_openness: 0.6, // Épaules relâchées
+            arm_activity: 0.2,      // Mouvements minimaux
+            energy_level: 0.4,      // Basse énergie
+            breathing_rate: 0.7,    // Respiration lente
         }
     }
 
@@ -80,11 +80,11 @@ impl PostureConfiguration {
     pub fn creative() -> Self {
         Self {
             posture_type: PostureType::Creative,
-            spine_alignment: 0.1,      // Légère inclinaison
-            shoulder_openness: 0.85,   // Ouvert
-            arm_activity: 0.9,         // Très expressif
-            energy_level: 0.75,        // Énergie créative
-            breathing_rate: 1.1,       // Respiration dynamique
+            spine_alignment: 0.1,    // Légère inclinaison
+            shoulder_openness: 0.85, // Ouvert
+            arm_activity: 0.9,       // Très expressif
+            energy_level: 0.75,      // Énergie créative
+            breathing_rate: 1.1,     // Respiration dynamique
         }
     }
 
@@ -92,11 +92,11 @@ impl PostureConfiguration {
     pub fn welcoming() -> Self {
         Self {
             posture_type: PostureType::Welcoming,
-            spine_alignment: 0.05,     // Légèrement vers avant
-            shoulder_openness: 1.0,    // Complètement ouvert
-            arm_activity: 0.5,         // Gestuelle accueillante
-            energy_level: 0.7,         // Énergie chaleureuse
-            breathing_rate: 1.0,       // Respiration normale
+            spine_alignment: 0.05,  // Légèrement vers avant
+            shoulder_openness: 1.0, // Complètement ouvert
+            arm_activity: 0.5,      // Gestuelle accueillante
+            energy_level: 0.7,      // Énergie chaleureuse
+            breathing_rate: 1.0,    // Respiration normale
         }
     }
 
@@ -135,9 +135,9 @@ impl PostureConfiguration {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConversationalContext {
-    pub user_engagement: f32,      // 0.0–1.0 (détecté via durée interaction)
-    pub topic_complexity: f32,     // 0.0–1.0 (détecté via cognitive_load)
-    pub emotional_valence: f32,    // -1.0 (négatif) → 1.0 (positif)
+    pub user_engagement: f32,       // 0.0–1.0 (détecté via durée interaction)
+    pub topic_complexity: f32,      // 0.0–1.0 (détecté via cognitive_load)
+    pub emotional_valence: f32,     // -1.0 (négatif) → 1.0 (positif)
     pub conversation_phase: String, // "opening" | "middle" | "closing" | "brainstorm"
     pub recent_gestures: VecDeque<String>, // Historique gestes (éviter répétitions)
 }
@@ -209,7 +209,8 @@ impl BodyPostureAI {
     /// Analyser contexte et sélectionner posture optimale
     pub fn select_optimal_posture(&mut self) -> PostureConfiguration {
         // Stabilité: ne changer que si counter > seuil (éviter jitter)
-        if self.stability_counter < 180 { // ~3 secondes à 60 FPS
+        if self.stability_counter < 180 {
+            // ~3 secondes à 60 FPS
             self.stability_counter += 1;
             return self.current_posture.clone();
         }

@@ -1,3 +1,4 @@
+use crate::cognitive::security::*;
 /**
  * TITANE∞ v17 - Cognitive Commands
  *
@@ -5,7 +6,6 @@
  */
 use crate::cognitive::selftest::{cognitive_selftest, CognitiveSelfTestResult};
 use crate::cognitive::CognitiveState;
-use crate::cognitive::security::*;
 
 #[tauri::command]
 pub async fn cognitive_run_selftest() -> Result<CognitiveSelfTestResult, String> {
@@ -13,7 +13,9 @@ pub async fn cognitive_run_selftest() -> Result<CognitiveSelfTestResult, String>
 }
 
 #[tauri::command]
-pub async fn cognitive_validate_state(state: CognitiveState) -> Result<CognitiveValidationResult, String> {
+pub async fn cognitive_validate_state(
+    state: CognitiveState,
+) -> Result<CognitiveValidationResult, String> {
     Ok(cognitive_validate(&state))
 }
 

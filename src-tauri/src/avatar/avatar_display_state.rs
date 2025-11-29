@@ -3,9 +3,9 @@
 //   Floating Window State Management
 // ═══════════════════════════════════════════════════════════════════════════════
 
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, RwLock};
-use once_cell::sync::Lazy;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -16,12 +16,11 @@ use once_cell::sync::Lazy;
 #[serde(rename_all = "lowercase")]
 #[derive(Default)]
 pub enum AvatarDisplayMode {
-    Floating,  // Fenêtre flottante indépendante
+    Floating, // Fenêtre flottante indépendante
     #[default]
-    Embed,     // Intégré dans fenêtre principale
-    Hidden,    // Caché
+    Embed, // Intégré dans fenêtre principale
+    Hidden,   // Caché
 }
-
 
 /// Position d'ancrage pour la fenêtre flottante
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -38,37 +37,36 @@ pub enum AnchorPosition {
     BottomCenter,
     #[default]
     BottomRight,
-    Free,  // Position libre (drag)
+    Free, // Position libre (drag)
 }
-
 
 /// État d'affichage complet de l'avatar
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AvatarDisplayState {
     // Mode & Position
     pub mode: AvatarDisplayMode,
-    pub position: (i32, i32),  // (x, y) en pixels
+    pub position: (i32, i32), // (x, y) en pixels
     pub anchor: AnchorPosition,
-    pub screen_index: usize,   // Index de l'écran (0 = principal)
+    pub screen_index: usize, // Index de l'écran (0 = principal)
 
     // Dimensions
     pub width: u32,
     pub height: u32,
-    pub scale: f32,            // 0.1 à 2.0
+    pub scale: f32, // 0.1 à 2.0
 
     // Apparence
-    pub opacity: f32,          // 0.0 à 1.0
-    pub brightness: f32,       // 0.0 à 2.0
+    pub opacity: f32,    // 0.0 à 1.0
+    pub brightness: f32, // 0.0 à 2.0
 
     // Comportement
     pub always_on_top: bool,
-    pub mirror_mode: bool,     // Effet miroir horizontal
-    pub locked: bool,          // Verrouillage drag & resize
-    pub click_through: bool,   // Passthrough des clics
+    pub mirror_mode: bool,   // Effet miroir horizontal
+    pub locked: bool,        // Verrouillage drag & resize
+    pub click_through: bool, // Passthrough des clics
 
     // État
     pub visible: bool,
-    pub last_updated: i64,     // Timestamp
+    pub last_updated: i64, // Timestamp
 }
 
 impl Default for AvatarDisplayState {
@@ -222,7 +220,9 @@ pub fn set_display_state(mut new_state: AvatarDisplayState) -> Result<AvatarDisp
 }
 
 /// Met à jour l'état d'affichage (partiel)
-pub fn update_display_state(update: AvatarDisplayStateUpdate) -> Result<AvatarDisplayState, String> {
+pub fn update_display_state(
+    update: AvatarDisplayStateUpdate,
+) -> Result<AvatarDisplayState, String> {
     AVATAR_DISPLAY_STATE
         .write()
         .map(|mut state| {
@@ -256,10 +256,7 @@ pub fn calculate_anchored_position(
             ((screen_width / 2) - (window_width / 2)) as i32,
             margin as i32,
         ),
-        AnchorPosition::TopRight => (
-            (screen_width - window_width - margin) as i32,
-            margin as i32,
-        ),
+        AnchorPosition::TopRight => ((screen_width - window_width - margin) as i32, margin as i32),
         AnchorPosition::CenterLeft => (
             margin as i32,
             ((screen_height / 2) - (window_height / 2)) as i32,
@@ -291,15 +288,27 @@ pub fn calculate_anchored_position(
 /// Parse une chaîne d'ancrage en AnchorPosition
 pub fn parse_anchor_position(anchor_str: &str) -> Option<AnchorPosition> {
     match anchor_str.to_lowercase().as_str() {
-        "top-left" | "topleft" | "haut-gauche" | "coin haut gauche" => Some(AnchorPosition::TopLeft),
-        "top-center" | "topcenter" | "haut-centre" | "haut centre" => Some(AnchorPosition::TopCenter),
-        "top-right" | "topright" | "haut-droite" | "coin haut droite" => Some(AnchorPosition::TopRight),
+        "top-left" | "topleft" | "haut-gauche" | "coin haut gauche" => {
+            Some(AnchorPosition::TopLeft)
+        }
+        "top-center" | "topcenter" | "haut-centre" | "haut centre" => {
+            Some(AnchorPosition::TopCenter)
+        }
+        "top-right" | "topright" | "haut-droite" | "coin haut droite" => {
+            Some(AnchorPosition::TopRight)
+        }
         "center-left" | "centerleft" | "centre-gauche" => Some(AnchorPosition::CenterLeft),
         "center" | "centre" | "milieu" => Some(AnchorPosition::Center),
         "center-right" | "centerright" | "centre-droite" => Some(AnchorPosition::CenterRight),
-        "bottom-left" | "bottomleft" | "bas-gauche" | "coin bas gauche" => Some(AnchorPosition::BottomLeft),
-        "bottom-center" | "bottomcenter" | "bas-centre" | "bas centre" => Some(AnchorPosition::BottomCenter),
-        "bottom-right" | "bottomright" | "bas-droite" | "coin bas droite" => Some(AnchorPosition::BottomRight),
+        "bottom-left" | "bottomleft" | "bas-gauche" | "coin bas gauche" => {
+            Some(AnchorPosition::BottomLeft)
+        }
+        "bottom-center" | "bottomcenter" | "bas-centre" | "bas centre" => {
+            Some(AnchorPosition::BottomCenter)
+        }
+        "bottom-right" | "bottomright" | "bas-droite" | "coin bas droite" => {
+            Some(AnchorPosition::BottomRight)
+        }
         "free" | "libre" | "custom" => Some(AnchorPosition::Free),
         _ => None,
     }
@@ -332,10 +341,10 @@ mod tests {
 
         state.validate();
 
-        assert_eq!(state.scale, 2.0);  // Clamped to max
+        assert_eq!(state.scale, 2.0); // Clamped to max
         assert_eq!(state.opacity, 0.0); // Clamped to min
         assert_eq!(state.brightness, 2.0); // Clamped to max
-        assert_eq!(state.width, 200);  // Min width
+        assert_eq!(state.width, 200); // Min width
         assert_eq!(state.height, 300); // Min height
     }
 
@@ -359,23 +368,26 @@ mod tests {
 
     #[test]
     fn test_calculate_anchored_position() {
-        let pos = calculate_anchored_position(
-            &AnchorPosition::BottomRight,
-            1920,
-            1080,
-            400,
-            600,
-            20,
-        );
+        let pos =
+            calculate_anchored_position(&AnchorPosition::BottomRight, 1920, 1080, 400, 600, 20);
 
         assert_eq!(pos, (1500, 460)); // (1920-400-20, 1080-600-20)
     }
 
     #[test]
     fn test_parse_anchor_position() {
-        assert_eq!(parse_anchor_position("haut-droite"), Some(AnchorPosition::TopRight));
-        assert_eq!(parse_anchor_position("coin bas gauche"), Some(AnchorPosition::BottomLeft));
-        assert_eq!(parse_anchor_position("centre"), Some(AnchorPosition::Center));
+        assert_eq!(
+            parse_anchor_position("haut-droite"),
+            Some(AnchorPosition::TopRight)
+        );
+        assert_eq!(
+            parse_anchor_position("coin bas gauche"),
+            Some(AnchorPosition::BottomLeft)
+        );
+        assert_eq!(
+            parse_anchor_position("centre"),
+            Some(AnchorPosition::Center)
+        );
         assert_eq!(parse_anchor_position("invalid"), None);
     }
 }

@@ -30,9 +30,9 @@ pub struct AIResponse {
 /// AI Provider enum v15
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AIProvider {
-    Gemini,      // Google Gemini API
-    Ollama,      // Local Ollama (localhost:11434)
-    Offline,     // Fallback mode (basic responses)
+    Gemini,  // Google Gemini API
+    Ollama,  // Local Ollama (localhost:11434)
+    Offline, // Fallback mode (basic responses)
 }
 
 /// AI Error types v15

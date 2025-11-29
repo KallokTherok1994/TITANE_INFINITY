@@ -101,7 +101,10 @@ impl OnlineTTS {
             }
 
             // 3. Try ffplay (FFmpeg - universal fallback)
-            if let Ok(_) = self.shell_guard.execute_verified("ffplay", &["-nodisp", "-autoexit", path_str]) {
+            if let Ok(_) = self
+                .shell_guard
+                .execute_verified("ffplay", &["-nodisp", "-autoexit", path_str])
+            {
                 return Ok(());
             }
 

@@ -3,15 +3,12 @@
 //   Commandes Tauri pour l'optimisation adaptative
 // ═══════════════════════════════════════════════════════════════════════════════
 
+use crate::adaptive::{
+    AdaptiveOptimizationEngine, AdaptiveSummary, PreferenceProfile, SystemBehaviorMode,
+    SystemPerformanceSample,
+};
 use tauri::State;
 use tokio::sync::Mutex;
-use crate::adaptive::{
-    AdaptiveOptimizationEngine,
-    SystemPerformanceSample,
-    PreferenceProfile,
-    SystemBehaviorMode,
-    AdaptiveSummary,
-};
 
 /// État global du moteur adaptatif
 pub struct AdaptiveEngineGlobal(pub Mutex<AdaptiveOptimizationEngine>);
@@ -67,9 +64,7 @@ pub async fn adaptive_set_mode(
 
 /// Lance un cycle d'apprentissage manuel
 #[tauri::command]
-pub async fn adaptive_learn(
-    state: State<'_, AdaptiveEngineGlobal>,
-) -> Result<String, String> {
+pub async fn adaptive_learn(state: State<'_, AdaptiveEngineGlobal>) -> Result<String, String> {
     log::info!("[AdaptiveCommands] adaptive_learn called");
 
     let mut engine = state.0.lock().await;
@@ -91,10 +86,7 @@ pub async fn adaptive_run_optimization(
     let mut engine = state.0.lock().await;
     let actions = engine.evaluate_rules();
 
-    let action_descriptions: Vec<String> = actions
-        .iter()
-        .map(|a| format!("{:?}", a))
-        .collect();
+    let action_descriptions: Vec<String> = actions.iter().map(|a| format!("{:?}", a)).collect();
 
     Ok(action_descriptions)
 }

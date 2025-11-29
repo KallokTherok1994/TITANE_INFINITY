@@ -3,8 +3,8 @@
 //   Tauri Backend Commands for Floating Window Management
 // ═══════════════════════════════════════════════════════════════════════════════
 
-use tauri::{AppHandle, Manager};
 use crate::avatar::avatar_display_state::*;
+use tauri::{AppHandle, Manager};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // DISPLAY STATE COMMANDS
@@ -18,13 +18,17 @@ pub async fn avatar_get_display_state() -> Result<AvatarDisplayState, String> {
 
 /// Définit l'état d'affichage complet (override)
 #[tauri::command]
-pub async fn avatar_set_display_state(state: AvatarDisplayState) -> Result<AvatarDisplayState, String> {
+pub async fn avatar_set_display_state(
+    state: AvatarDisplayState,
+) -> Result<AvatarDisplayState, String> {
     set_display_state(state)
 }
 
 /// Met à jour l'état d'affichage (partiel)
 #[tauri::command]
-pub async fn avatar_update_display_state(update: AvatarDisplayStateUpdate) -> Result<AvatarDisplayState, String> {
+pub async fn avatar_update_display_state(
+    update: AvatarDisplayStateUpdate,
+) -> Result<AvatarDisplayState, String> {
     update_display_state(update)
 }
 
@@ -102,7 +106,11 @@ pub async fn avatar_mode_hidden(app: AppHandle) -> Result<AvatarDisplayState, St
 
 /// Change la position de la fenêtre flottante
 #[tauri::command]
-pub async fn avatar_set_position(app: AppHandle, x: i32, y: i32) -> Result<AvatarDisplayState, String> {
+pub async fn avatar_set_position(
+    app: AppHandle,
+    x: i32,
+    y: i32,
+) -> Result<AvatarDisplayState, String> {
     let update = AvatarDisplayStateUpdate {
         position: Some((x, y)),
         anchor: Some(AnchorPosition::Free),
@@ -113,7 +121,8 @@ pub async fn avatar_set_position(app: AppHandle, x: i32, y: i32) -> Result<Avata
 
     if let Some(window) = app.get_webview_window("avatar-floating") {
         use tauri::PhysicalPosition;
-        window.set_position(PhysicalPosition { x, y })
+        window
+            .set_position(PhysicalPosition { x, y })
             .map_err(|e| e.to_string())?;
     }
 
@@ -122,7 +131,11 @@ pub async fn avatar_set_position(app: AppHandle, x: i32, y: i32) -> Result<Avata
 
 /// Change la taille de la fenêtre flottante
 #[tauri::command]
-pub async fn avatar_set_size(app: AppHandle, width: u32, height: u32) -> Result<AvatarDisplayState, String> {
+pub async fn avatar_set_size(
+    app: AppHandle,
+    width: u32,
+    height: u32,
+) -> Result<AvatarDisplayState, String> {
     let update = AvatarDisplayStateUpdate {
         width: Some(width),
         height: Some(height),
@@ -133,7 +146,8 @@ pub async fn avatar_set_size(app: AppHandle, width: u32, height: u32) -> Result<
 
     if let Some(window) = app.get_webview_window("avatar-floating") {
         use tauri::PhysicalSize;
-        window.set_size(PhysicalSize { width, height })
+        window
+            .set_size(PhysicalSize { width, height })
             .map_err(|e| e.to_string())?;
     }
 
@@ -164,7 +178,10 @@ pub async fn avatar_set_opacity(opacity: f32) -> Result<AvatarDisplayState, Stri
 
 /// Active/désactive le mode "Always On Top"
 #[tauri::command]
-pub async fn avatar_set_always_on_top(app: AppHandle, always_on_top: bool) -> Result<AvatarDisplayState, String> {
+pub async fn avatar_set_always_on_top(
+    app: AppHandle,
+    always_on_top: bool,
+) -> Result<AvatarDisplayState, String> {
     let update = AvatarDisplayStateUpdate {
         always_on_top: Some(always_on_top),
         ..Default::default()
@@ -173,7 +190,8 @@ pub async fn avatar_set_always_on_top(app: AppHandle, always_on_top: bool) -> Re
     let state = update_display_state(update)?;
 
     if let Some(window) = app.get_webview_window("avatar-floating") {
-        window.set_always_on_top(always_on_top)
+        window
+            .set_always_on_top(always_on_top)
             .map_err(|e| e.to_string())?;
     }
 
@@ -204,7 +222,10 @@ pub async fn avatar_set_mirror_mode(mirror_mode: bool) -> Result<AvatarDisplaySt
 
 /// Active/désactive le click-through (passthrough)
 #[tauri::command]
-pub async fn avatar_set_click_through(app: AppHandle, click_through: bool) -> Result<AvatarDisplayState, String> {
+pub async fn avatar_set_click_through(
+    app: AppHandle,
+    click_through: bool,
+) -> Result<AvatarDisplayState, String> {
     let update = AvatarDisplayStateUpdate {
         click_through: Some(click_through),
         ..Default::default()
@@ -213,7 +234,8 @@ pub async fn avatar_set_click_through(app: AppHandle, click_through: bool) -> Re
     let state = update_display_state(update)?;
 
     if let Some(window) = app.get_webview_window("avatar-floating") {
-        window.set_ignore_cursor_events(click_through)
+        window
+            .set_ignore_cursor_events(click_through)
             .map_err(|e| e.to_string())?;
     }
 
@@ -231,16 +253,17 @@ pub async fn avatar_set_anchor(
     anchor: AnchorPosition,
 ) -> Result<AvatarDisplayState, String> {
     // Récupère les infos de l'écran
-    let (screen_width, screen_height) = if let Some(window) = app.get_webview_window("avatar-floating") {
-        if let Ok(Some(monitor)) = window.current_monitor() {
-            let size = monitor.size();
-            (size.width, size.height)
+    let (screen_width, screen_height) =
+        if let Some(window) = app.get_webview_window("avatar-floating") {
+            if let Ok(Some(monitor)) = window.current_monitor() {
+                let size = monitor.size();
+                (size.width, size.height)
+            } else {
+                (1920, 1080) // Fallback
+            }
         } else {
             (1920, 1080) // Fallback
-        }
-    } else {
-        (1920, 1080) // Fallback
-    };
+        };
 
     let state = get_display_state()?;
     let position = calculate_anchored_position(
@@ -262,7 +285,11 @@ pub async fn avatar_set_anchor(
 
     if let Some(window) = app.get_webview_window("avatar-floating") {
         use tauri::PhysicalPosition;
-        window.set_position(PhysicalPosition { x: position.0, y: position.1 })
+        window
+            .set_position(PhysicalPosition {
+                x: position.0,
+                y: position.1,
+            })
             .map_err(|e| e.to_string())?;
     }
 
@@ -298,7 +325,10 @@ pub async fn avatar_list_screens(app: AppHandle) -> Result<Vec<ScreenInfo>, Stri
                     let position = monitor.position();
                     ScreenInfo {
                         index,
-                        name: monitor.name().map(String::from).unwrap_or_else(|| format!("Screen {}", index)),
+                        name: monitor
+                            .name()
+                            .map(String::from)
+                            .unwrap_or_else(|| format!("Screen {}", index)),
                         width: size.width,
                         height: size.height,
                         x: position.x,
@@ -324,7 +354,11 @@ pub async fn avatar_move_to_screen(
     let screens = avatar_list_screens(app.clone()).await?;
 
     if screen_index >= screens.len() {
-        return Err(format!("Screen index {} out of bounds (max: {})", screen_index, screens.len() - 1));
+        return Err(format!(
+            "Screen index {} out of bounds (max: {})",
+            screen_index,
+            screens.len() - 1
+        ));
     }
 
     let screen = &screens[screen_index];
@@ -341,10 +375,7 @@ pub async fn avatar_move_to_screen(
     );
 
     // Ajoute l'offset de l'écran
-    let final_position = (
-        screen.x + position.0,
-        screen.y + position.1,
-    );
+    let final_position = (screen.x + position.0, screen.y + position.1);
 
     let update = AvatarDisplayStateUpdate {
         screen_index: Some(screen_index),
@@ -356,7 +387,11 @@ pub async fn avatar_move_to_screen(
 
     if let Some(window) = app.get_webview_window("avatar-floating") {
         use tauri::PhysicalPosition;
-        window.set_position(PhysicalPosition { x: final_position.0, y: final_position.1 })
+        window
+            .set_position(PhysicalPosition {
+                x: final_position.0,
+                y: final_position.1,
+            })
             .map_err(|e| e.to_string())?;
     }
 

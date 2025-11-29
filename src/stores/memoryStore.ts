@@ -9,6 +9,7 @@ import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import type {
   MemoryState,
+  MemoryDirectoryReport,
   Snapshot,
   LogEntry,
   TimelineEvent,
@@ -21,6 +22,7 @@ interface MemoryStore {
   snapshots: Snapshot[];
   logs: LogEntry[];
   timeline: TimelineEvent[];
+  telemetry: MemoryDirectoryReport | null;
   loading: boolean;
   error: string | null;
 
@@ -30,6 +32,7 @@ interface MemoryStore {
   createSnapshot: (description: string) => Promise<void>;
   addLog: (entry: Omit<LogEntry, 'id' | 'timestamp'>) => Promise<void>;
   addTimelineEvent: (event: Omit<TimelineEvent, 'id' | 'timestamp'>) => Promise<void>;
+  fetchTelemetry: () => Promise<void>;
   reset: () => void;
 }
 
@@ -38,6 +41,7 @@ const initialState = {
   snapshots: [],
   logs: [],
   timeline: [],
+  telemetry: null,
   loading: false,
   error: null,
 };
@@ -121,6 +125,20 @@ export const useMemoryStore = create<MemoryStore>()(
         } catch (error) {
           set({
             error: error instanceof Error ? error.message : 'Failed to add timeline event',
+          });
+        }
+      },
+
+      fetchTelemetry: async () => {
+        try {
+          const telemetry = await backendV17.memory.debugScan();
+          set({ telemetry });
+        } catch (error) {
+          set({
+            error:
+              error instanceof Error
+                ? error.message
+                : 'Failed to scan memory directory',
           });
         }
       },

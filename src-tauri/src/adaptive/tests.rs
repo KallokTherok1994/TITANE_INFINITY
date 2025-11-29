@@ -18,7 +18,10 @@ pub fn adaptive_selftest() -> (usize, usize) {
         assert_eq!(engine.optimization_rules.len(), 5);
         assert_eq!(engine.performance_history.len(), 0);
     }) {
-        Ok(_) => { passed += 1; println!("✅ Test 1: Initialization"); }
+        Ok(_) => {
+            passed += 1;
+            println!("✅ Test 1: Initialization");
+        }
         Err(_) => println!("❌ Test 1: Initialization FAILED"),
     }
 
@@ -39,7 +42,10 @@ pub fn adaptive_selftest() -> (usize, usize) {
         engine.capture_sample(sample);
         assert_eq!(engine.performance_history.len(), 1);
     }) {
-        Ok(_) => { passed += 1; println!("✅ Test 2: Capture sample"); }
+        Ok(_) => {
+            passed += 1;
+            println!("✅ Test 2: Capture sample");
+        }
         Err(_) => println!("❌ Test 2: Capture sample FAILED"),
     }
 

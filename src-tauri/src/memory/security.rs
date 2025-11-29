@@ -62,10 +62,7 @@ pub fn sanitize_string(input: &str) -> String {
 }
 
 /// Écriture sécurisée avec double validation
-pub async fn memory_safe_write<F>(
-    write_fn: F,
-    data: &[u8],
-) -> MemoryResult<MemoryIntegrityCheck>
+pub async fn memory_safe_write<F>(write_fn: F, data: &[u8]) -> MemoryResult<MemoryIntegrityCheck>
 where
     F: std::future::Future<Output = MemoryResult<()>>,
 {

@@ -34,12 +34,7 @@ const SUSPICIOUS_COMMANDS: &[&str] = &[
     "sudo", "rm -rf", "chmod", "wget", "curl", "nc ", "bash", "sh ", "exec",
 ];
 
-const DANGEROUS_PATTERNS: &[&str] = &[
-    r"<script",
-    r"javascript:",
-    r"data:text/html",
-    r"vbscript:",
-];
+const DANGEROUS_PATTERNS: &[&str] = &[r"<script", r"javascript:", r"data:text/html", r"vbscript:"];
 
 #[derive(Debug, Clone)]
 pub enum AISecurityError {

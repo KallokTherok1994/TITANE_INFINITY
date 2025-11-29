@@ -5,16 +5,25 @@
 
 use crate::{
     core::MemoryCore,
+    memory::telemetry,
     types::{
-        ChatInteraction, DecisionSummary, KnowledgeEntry, LogEntry, MemoryState, ProjectSummary,
-        RitualInfo, Snapshot, TimelineEntry, TimelineEvent,
+        ChatInteraction, DecisionSummary, KnowledgeEntry, LogEntry, MemoryDirectoryReport,
+        MemoryState, ProjectSummary, RitualInfo, Snapshot, TimelineEntry, TimelineEvent,
     },
     utils::AppResult,
 };
 
 #[tauri::command]
 pub async fn get_memory_state(memory: tauri::State<'_, MemoryCore>) -> AppResult<MemoryState> {
-    memory.get_state().await
+    let state = memory.get_state().await?;
+    log::info!(
+        target: "memory",
+        "get_memory_state disk_mode={:?} synthetic={} issues={}",
+        state.disk_mode,
+        state.synthetic_mode,
+        state.issues.len()
+    );
+    Ok(state)
 }
 
 #[tauri::command]
@@ -107,4 +116,18 @@ pub async fn memory_save_chat_interaction(
     interaction: ChatInteraction,
 ) -> AppResult<()> {
     memory.save_chat_interaction(interaction).await
+}
+
+/// Debug helper exposing the memory/ directory scan (Phase Ω.6)
+#[tauri::command]
+pub async fn memory_debug_scan() -> AppResult<MemoryDirectoryReport> {
+    let report = telemetry::scan_memory_directory();
+    log::info!(
+        target: "memory",
+        "memory_debug_scan path={} files={} size_bytes={}",
+        report.base_path,
+        report.files.len(),
+        report.total_size_bytes
+    );
+    Ok(report)
 }

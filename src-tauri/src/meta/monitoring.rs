@@ -11,9 +11,9 @@ use std::collections::VecDeque;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-use crate::meta::{MetaCognitiveReport, SyncedState, DeepSyncAction};
 #[cfg(test)]
 use crate::meta::CognitiveHealthIndicators;
+use crate::meta::{DeepSyncAction, MetaCognitiveReport, SyncedState};
 
 /// Maximum number of evaluation history entries to keep in memory
 const MAX_HISTORY_SIZE: usize = 1000;
@@ -167,7 +167,12 @@ impl MetaMonitoringEngine {
         // Calculate average coherence (last 100)
         let recent_count = history.len().min(100);
         if recent_count > 0 {
-            let sum: f32 = history.iter().rev().take(recent_count).map(|e| e.coherence_score).sum();
+            let sum: f32 = history
+                .iter()
+                .rev()
+                .take(recent_count)
+                .map(|e| e.coherence_score)
+                .sum();
             metrics.avg_coherence = (sum + report.coherence_score) / (recent_count + 1) as f32;
         } else {
             metrics.avg_coherence = report.coherence_score;
@@ -199,15 +204,19 @@ impl MetaMonitoringEngine {
             self.generate_alert(
                 AlertSeverity::Warning,
                 "META-COGNITION",
-                format!("Anomaly detected: coherence={:.2}, issues={}",
-                    report.coherence_score, report.detected_issues.len()),
+                format!(
+                    "Anomaly detected: coherence={:.2}, issues={}",
+                    report.coherence_score,
+                    report.detected_issues.len()
+                ),
                 serde_json::json!({
                     "coherence_score": report.coherence_score,
                     "confidence": report.confidence,
                     "issues": report.detected_issues,
                     "recommended_action": format!("{:?}", report.recommended_next_state),
                 }),
-            ).await;
+            )
+            .await;
         }
 
         // Critical alert if coherence very low
@@ -220,7 +229,8 @@ impl MetaMonitoringEngine {
                     "coherence_score": report.coherence_score,
                     "anomaly_detected": report.anomaly_detected,
                 }),
-            ).await;
+            )
+            .await;
         }
     }
 
@@ -256,7 +266,10 @@ impl MetaMonitoringEngine {
 
         let recent_count = history.len().min(100);
         if recent_count > 0 {
-            let sum: f32 = history.iter().rev().take(recent_count)
+            let sum: f32 = history
+                .iter()
+                .rev()
+                .take(recent_count)
                 .map(|e| match e.quality.as_str() {
                     "Perfect" => 1.0,
                     "Excellent" => 0.95,
@@ -273,7 +286,11 @@ impl MetaMonitoringEngine {
         }
 
         // Add to history
-        let engines_in_sync = sync_state.engine_alignment.iter().filter(|(_, a)| a.is_aligned).count();
+        let engines_in_sync = sync_state
+            .engine_alignment
+            .iter()
+            .filter(|(_, a)| a.is_aligned)
+            .count();
         let engines_out_of_sync = sync_state.engine_alignment.len() - engines_in_sync;
 
         let entry = SyncHistoryEntry {
@@ -296,19 +313,26 @@ impl MetaMonitoringEngine {
             self.generate_alert(
                 AlertSeverity::Error,
                 "DEEP-SYNC",
-                format!("Sync failed: quality={:?}, issues={}",
-                    sync_state.quality, sync_state.issues.len()),
+                format!(
+                    "Sync failed: quality={:?}, issues={}",
+                    sync_state.quality,
+                    sync_state.issues.len()
+                ),
                 serde_json::json!({
                     "quality": format!("{:?}", sync_state.quality),
                     "engines_in_sync": engines_in_sync,
                     "engines_out_of_sync": engines_out_of_sync,
                     "issues": sync_state.issues,
                 }),
-            ).await;
+            )
+            .await;
         }
 
         // Warning if quality degraded
-        if matches!(sync_state.quality, crate::meta::SyncQuality::Degraded | crate::meta::SyncQuality::Poor) {
+        if matches!(
+            sync_state.quality,
+            crate::meta::SyncQuality::Degraded | crate::meta::SyncQuality::Poor
+        ) {
             self.generate_alert(
                 AlertSeverity::Warning,
                 "DEEP-SYNC",
@@ -317,7 +341,8 @@ impl MetaMonitoringEngine {
                     "quality": format!("{:?}", sync_state.quality),
                     "engines_out_of_sync": engines_out_of_sync,
                 }),
-            ).await;
+            )
+            .await;
         }
     }
 
@@ -357,9 +382,13 @@ impl MetaMonitoringEngine {
 
         // Log alert
         match severity {
-            AlertSeverity::Critical => log::error!("🚨 CRITICAL ALERT [{}]: {}", category, alert.message),
+            AlertSeverity::Critical => {
+                log::error!("🚨 CRITICAL ALERT [{}]: {}", category, alert.message)
+            }
             AlertSeverity::Error => log::error!("❌ ERROR ALERT [{}]: {}", category, alert.message),
-            AlertSeverity::Warning => log::warn!("⚠️  WARNING ALERT [{}]: {}", category, alert.message),
+            AlertSeverity::Warning => {
+                log::warn!("⚠️  WARNING ALERT [{}]: {}", category, alert.message)
+            }
             AlertSeverity::Info => log::info!("ℹ️  INFO ALERT [{}]: {}", category, alert.message),
         }
 
@@ -387,7 +416,11 @@ impl MetaMonitoringEngine {
     }
 
     /// Get recent alerts
-    pub async fn get_alerts(&self, limit: usize, severity: Option<AlertSeverity>) -> Vec<MetaAlert> {
+    pub async fn get_alerts(
+        &self,
+        limit: usize,
+        severity: Option<AlertSeverity>,
+    ) -> Vec<MetaAlert> {
         let alerts = self.alerts.read().await;
         alerts
             .iter()
@@ -425,8 +458,8 @@ impl Default for MetaMonitoringEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::meta::meta_cognition::{CognitiveIssue, IssueCategory, IssueSeverity};
     use crate::meta::MetaCognitiveReport;
-    use crate::meta::meta_cognition::{CognitiveIssue, IssueSeverity, IssueCategory};
 
     #[tokio::test]
     async fn test_monitoring_engine_creation() {
@@ -483,15 +516,13 @@ mod tests {
             delta_map: std::collections::HashMap::new(),
             engine_alignment: std::collections::HashMap::new(),
             recommended_next_state: Some(DeepSyncAction::FullDeepSync),
-            detected_issues: vec![
-                CognitiveIssue {
-                    severity: IssueSeverity::Critical,
-                    category: IssueCategory::CognitiveDrift,
-                    description: "Critical coherence".to_string(),
-                    affected_engines: vec![],
-                    suggested_fix: None,
-                }
-            ],
+            detected_issues: vec![CognitiveIssue {
+                severity: IssueSeverity::Critical,
+                category: IssueCategory::CognitiveDrift,
+                description: "Critical coherence".to_string(),
+                affected_engines: vec![],
+                suggested_fix: None,
+            }],
             health_indicators: CognitiveHealthIndicators {
                 stability: 0.2,
                 consistency: 0.3,

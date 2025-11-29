@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage, AIResponse, AIConfig } from './types';
+import { DEFAULT_AI_CONFIG } from './types';
+import type { AIMessage, AIResponse, AIConfig, AIProviderName } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { PromptContext } from '@/core/prompts';
 import { aiOrchestrator } from './orchestrator';
@@ -22,6 +23,22 @@ import {
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { chatValidator } from '../chatValidator';
+import { chatEngineCommands } from '@services/tauri';
+import type {
+  ChatEngineProviderPreference,
+  ChatEngineRequestArgs,
+  ChatEngineCompletion,
+} from '@services/tauri';
+
+type BackendStreamMetadata = {
+  provider?: string;
+  model?: string;
+  latency_ms?: number;
+  tokens?: number;
+  timestamp?: number;
+  error?: string;
+  parseError?: string;
+};
 
 const isDev = import.meta.env.DEV;
 
@@ -82,6 +99,8 @@ class ChatEngineOmega {
   private conversationContext: Map<string, any> = new Map();
   private pipelineFailures: number = 0;
   private lastHealing: number = 0;
+  private conversationIds: Map<ChatMode, string> = new Map();
+  private providerPreference: ChatEngineProviderPreference = 'auto';
 
   /**
    * PHASE 1Ω: Configure le mode avec reset cognitif OMEGA
@@ -119,6 +138,36 @@ class ChatEngineOmega {
       isDev && console.error('[OMEGA ENGINE] Erreur setMode (récupérée):', error);
       this.config = { mode: 'default' };
     }
+  }
+
+  setProvider(provider: ChatEngineProviderPreference): void {
+    this.providerPreference = provider;
+  }
+
+  private isBackendAvailable(): boolean {
+    return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+  }
+
+  private getConversationId(mode: ChatMode): string | undefined {
+    return this.conversationIds.get(mode);
+  }
+
+  private setConversationId(mode: ChatMode, id: string): void {
+    this.conversationIds.set(mode, id);
+  }
+
+  private normalizeBackendProvider(provider: string): AIProviderName {
+    const normalized = provider.toLowerCase();
+    if (normalized.includes('gemini')) {
+      return 'tauri-gemini';
+    }
+    if (normalized.includes('ollama')) {
+      return 'tauri-ollama';
+    }
+    if (normalized.includes('local')) {
+      return 'tauri-local';
+    }
+    return 'tauri-backend';
   }
 
   /**
@@ -200,11 +249,29 @@ class ChatEngineOmega {
         emotionState: finalConfig.emotionState || this.config.emotionState,
         memory: context.sources.length > 0 ? context : undefined,
       };
+      const systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext);
+
+      const backendResponse = await this.tryBackendPipeline({
+        finalConfig,
+        validatedMessage,
+        systemPrompt,
+        memoryContext,
+        context,
+        pipelineSteps,
+        pipelineStartTime,
+        initialAutoHealed: autoHealed,
+      });
+
+      if (backendResponse) {
+        return backendResponse;
+      }
+
       const enrichedHistory = this.buildEnrichedHistory(
         history,
         context,
         modeConfig,
-        promptContext
+        promptContext,
+        systemPrompt
       );
       isDev && console.log(`   ✅ Enriched history built (${enrichedHistory.length} messages)`);
 
@@ -395,6 +462,408 @@ Que souhaites-tu explorer ?`;
     };
   }
 
+  private async tryBackendPipeline(params: {
+    finalConfig: ChatEngineConfig;
+    validatedMessage: string;
+    systemPrompt: string;
+    memoryContext: MemoryContext;
+    context: { sources: string[]; data: Record<string, unknown> };
+    pipelineSteps: string[];
+    pipelineStartTime: number;
+    initialAutoHealed: boolean;
+  }): Promise<ChatEngineResponse | null> {
+    const {
+      finalConfig,
+      validatedMessage,
+      systemPrompt,
+      memoryContext,
+      context,
+      pipelineSteps,
+      pipelineStartTime,
+      initialAutoHealed,
+    } = params;
+
+    if (!this.isBackendAvailable()) {
+      return null;
+    }
+
+    try {
+      pipelineSteps.push('backend-dispatch');
+
+      const payload: ChatEngineRequestArgs = {
+        conversationId: this.getConversationId(finalConfig.mode),
+        userMessage: validatedMessage,
+        systemPrompt,
+        temperature:
+          finalConfig.aiConfig?.temperature ??
+          DEFAULT_AI_CONFIG.temperature ??
+          0.7,
+        maxOutputTokens:
+          finalConfig.aiConfig?.maxTokens ??
+          DEFAULT_AI_CONFIG.maxTokens ??
+          1024,
+        provider: this.providerPreference,
+        enableStreaming: false,
+      };
+
+      const completion: ChatEngineCompletion = await chatEngineCommands.generateResponse(payload);
+      this.setConversationId(finalConfig.mode, completion.conversationId);
+      pipelineSteps.push('backend-response');
+
+      let autoHealed = initialAutoHealed;
+
+      let response: AIResponse = {
+        content: completion.content,
+        provider: this.normalizeBackendProvider(completion.provider),
+        timestamp: completion.timestamp,
+        model: completion.provider,
+        tokens: completion.tokenCount,
+        metadata: {
+          backendMessageId: completion.messageId,
+          backendConversationId: completion.conversationId,
+          backendProvider: completion.provider,
+          latencyMs: completion.latencyMs,
+          tokenCount: completion.tokenCount,
+        },
+      };
+
+      pipelineSteps.push('nexus-sentinel-validation');
+      const validation = chatValidator.validate(response.content, finalConfig.mode, validatedMessage);
+      isDev && console.log(`   ✅ Backend validation score: ${(validation.score * 100).toFixed(0)}%`);
+
+      if (validation.issues.length > 0) {
+        validation.issues.forEach(issue => {
+          isDev && console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+        });
+      }
+
+      if (!validation.isValid) {
+        if (validation.cleaned && finalConfig.omegaConfig?.enableSanitizer) {
+          response = {
+            ...response,
+            content: validation.cleaned,
+          };
+          autoHealed = true;
+        } else if (finalConfig.omegaConfig?.enableAutoHeal) {
+          response = {
+            ...response,
+            content: this.generateEmergencyResponse(validatedMessage, finalConfig.mode),
+            provider: 'omnis-emergency',
+            model: 'omega-emergency-v19.2Ω',
+            metadata: {
+              ...(response.metadata || {}),
+              emergency: true,
+            },
+          };
+          autoHealed = true;
+        }
+      }
+
+      pipelineSteps.push('post-processing');
+      const processedResponse = this.postProcess(response, finalConfig);
+
+      pipelineSteps.push('memory-saving');
+      try {
+        await this.withTimeout(
+          memoryIntegration.saveInteraction({
+            mode: finalConfig.mode,
+            userMessage: validatedMessage,
+            aiResponse: processedResponse.content,
+            emotionState: finalConfig.emotionState,
+            context: memoryContext,
+          }),
+          3000,
+          'Memory save timeout'
+        );
+      } catch (error) {
+        isDev && console.warn('   ⚠️ Memory save failed (continuing)');
+        autoHealed = true;
+      }
+
+      pipelineSteps.push('response-building');
+      const processingTime = Date.now() - pipelineStartTime;
+
+      const finalResponse: ChatEngineResponse = {
+        ...processedResponse,
+        mode: finalConfig.mode,
+        contextUsed: context.sources,
+        suggestions: this.generateSuggestions(finalConfig.mode),
+        omegaMetadata: {
+          pipelineSteps,
+          validationScore: validation.score,
+          autoHealed,
+          failureHandled: false,
+          processingTime,
+        },
+      };
+
+      if (isDev) {
+        console.log('\n╔══════════════════════════════════════════════════════════════╗');
+        console.log(`║  🟣 CHAT ENGINE OMEGA: Backend pipeline complete! (${processingTime}ms) ║`);
+        console.log('╚══════════════════════════════════════════════════════════════╝\n');
+      }
+
+      this.pipelineFailures = 0;
+      return finalResponse;
+    } catch (error) {
+      pipelineSteps.push('backend-error');
+      isDev && console.warn('[OMEGA ENGINE] Backend pipeline failed, falling back to orchestrator:', error);
+      return null;
+    }
+  }
+
+  private tryBackendStream(params: {
+    finalConfig: ChatEngineConfig;
+    validatedMessage: string;
+    systemPrompt: string;
+    memoryContext: MemoryContext;
+    context: { sources: string[]; data: Record<string, unknown> };
+    pipelineSteps: string[];
+    pipelineStartTime: number;
+    initialAutoHealed: boolean;
+  }): AsyncGenerator<string, ChatEngineResponse> | null {
+    const engine = this;
+    if (!engine.isBackendAvailable()) {
+      return null;
+    }
+
+    const {
+      finalConfig,
+      validatedMessage,
+      systemPrompt,
+      memoryContext,
+      context,
+      pipelineSteps,
+      pipelineStartTime,
+      initialAutoHealed,
+    } = params;
+
+    return (async function* backendStreamGenerator() {
+      let autoHealed = initialAutoHealed;
+      let conversationId: string | null = engine.getConversationId(finalConfig.mode) ?? null;
+      let messageId: string | null = null;
+      let aggregatedContent = '';
+      let done = false;
+      let error: Error | null = null;
+      let metadata: BackendStreamMetadata | null = null;
+      let resolver: (() => void) | null = null;
+      const queue: string[] = [];
+
+      const notify = () => {
+        if (resolver) {
+          const resolve = resolver;
+          resolver = null;
+          resolve();
+        }
+      };
+
+      const payload: ChatEngineRequestArgs = {
+        conversationId: conversationId ?? undefined,
+        userMessage: validatedMessage,
+        systemPrompt,
+        temperature:
+          finalConfig.aiConfig?.temperature ??
+          DEFAULT_AI_CONFIG.temperature ??
+          0.7,
+        maxOutputTokens:
+          finalConfig.aiConfig?.maxTokens ??
+          DEFAULT_AI_CONFIG.maxTokens ??
+          1024,
+        provider: engine.providerPreference,
+        enableStreaming: true,
+      };
+
+      const chunkUnlisten = await chatEngineCommands.onStreamChunk(chunk => {
+        if (!conversationId || !messageId) {
+          return;
+        }
+        if (chunk.done) {
+          return;
+        }
+        if (chunk.conversationId !== conversationId || chunk.messageId !== messageId) {
+          return;
+        }
+
+        queue.push(chunk.content);
+        notify();
+      });
+
+      const doneUnlisten = await chatEngineCommands.onStreamDone(chunk => {
+        if (!conversationId || !messageId) {
+          return;
+        }
+        if (chunk.conversationId !== conversationId || chunk.messageId !== messageId) {
+          return;
+        }
+
+        metadata = {};
+        if (chunk.content) {
+          try {
+            metadata = JSON.parse(chunk.content) as BackendStreamMetadata;
+          } catch (parseError) {
+            const message = parseError instanceof Error ? parseError.message : String(parseError);
+            metadata = { parseError: message };
+            autoHealed = true;
+          }
+        }
+
+        if (metadata?.error) {
+          error = new Error(metadata.error);
+        }
+
+        done = true;
+        notify();
+      });
+
+      try {
+        pipelineSteps.push('backend-stream-dispatch');
+        const handle = await chatEngineCommands.streamResponse(payload);
+        conversationId = handle.conversationId;
+        messageId = handle.messageId;
+        engine.setConversationId(finalConfig.mode, handle.conversationId);
+        pipelineSteps.push('backend-stream-open');
+
+        const waitForData = async () => {
+          if (queue.length > 0 || done || error) {
+            return;
+          }
+          await new Promise<void>(resolve => {
+            resolver = resolve;
+          });
+        };
+
+        while (true) {
+          if (error) {
+            throw error;
+          }
+
+          if (queue.length === 0) {
+            if (done) {
+              break;
+            }
+            await waitForData();
+            continue;
+          }
+
+          const nextChunk = queue.shift();
+          if (!nextChunk) {
+            continue;
+          }
+
+          aggregatedContent += nextChunk;
+          yield nextChunk;
+        }
+
+        if (error) {
+          throw error;
+        }
+
+        const meta: BackendStreamMetadata = metadata ?? {};
+        const backendProvider = typeof meta.provider === 'string' ? meta.provider : 'tauri-backend';
+        const provider = engine.normalizeBackendProvider(backendProvider);
+        const timestamp = typeof meta.timestamp === 'number' ? meta.timestamp : Date.now();
+        const latencyMs = typeof meta.latency_ms === 'number' ? meta.latency_ms : 0;
+        const tokenCount = typeof meta.tokens === 'number' ? meta.tokens : undefined;
+
+        let response: AIResponse = {
+          content: aggregatedContent,
+          provider,
+          timestamp,
+          model: typeof meta.model === 'string' ? meta.model : backendProvider,
+          tokens: tokenCount,
+          metadata: {
+            backendMessageId: messageId,
+            backendConversationId: conversationId,
+            backendProvider,
+            latencyMs,
+            tokenCount,
+          },
+        };
+
+        pipelineSteps.push('nexus-sentinel-validation');
+        const validation = chatValidator.validate(response.content, finalConfig.mode, validatedMessage);
+        isDev && console.log(`   ✅ Backend stream validation score: ${(validation.score * 100).toFixed(0)}%`);
+
+        if (!validation.isValid) {
+          if (validation.cleaned && finalConfig.omegaConfig?.enableSanitizer) {
+            response = {
+              ...response,
+              content: validation.cleaned,
+            };
+            autoHealed = true;
+          } else if (finalConfig.omegaConfig?.enableAutoHeal) {
+            response = {
+              ...response,
+              content: engine.generateEmergencyResponse(validatedMessage, finalConfig.mode),
+              provider: 'omnis-emergency',
+              model: 'omega-emergency-v19.2Ω',
+              metadata: {
+                ...(response.metadata || {}),
+                emergency: true,
+              },
+            };
+            autoHealed = true;
+          }
+        }
+
+        pipelineSteps.push('post-processing');
+        const processed = engine.postProcess(response, finalConfig);
+
+        pipelineSteps.push('memory-saving');
+        try {
+          await engine.withTimeout(
+            memoryIntegration.saveInteraction({
+              mode: finalConfig.mode,
+              userMessage: validatedMessage,
+              aiResponse: processed.content,
+              emotionState: finalConfig.emotionState,
+              context: memoryContext,
+            }),
+            3000,
+            'Memory save timeout'
+          );
+        } catch (memoryError) {
+          isDev && console.warn('   ⚠️ Memory save failed (streaming)');
+          autoHealed = true;
+        }
+
+        pipelineSteps.push('response-building');
+        const processingTime = Date.now() - pipelineStartTime;
+
+        const finalResponse: ChatEngineResponse = {
+          ...processed,
+          mode: finalConfig.mode,
+          contextUsed: context.sources,
+          suggestions: engine.generateSuggestions(finalConfig.mode),
+          omegaMetadata: {
+            pipelineSteps,
+            validationScore: validation.score,
+            autoHealed,
+            failureHandled: false,
+            processingTime,
+          },
+        };
+
+        if (isDev) {
+          console.log('\n╔══════════════════════════════════════════════════════════════╗');
+          console.log(`║  🟣 CHAT ENGINE OMEGA: Backend stream complete! (${processingTime}ms) ║`);
+          console.log('╚══════════════════════════════════════════════════════════════╝\n');
+        }
+
+        engine.pipelineFailures = 0;
+        return finalResponse;
+      } catch (err) {
+        pipelineSteps.push('backend-stream-error');
+        throw err;
+      } finally {
+        done = true;
+        notify();
+        chunkUnlisten();
+        doneUnlisten();
+      }
+    })();
+  }
+
   /**
    * ═══════════════════════════════════════════════════════════════════
    * PHASE 1Ω: Emergency Response Generator
@@ -449,6 +918,7 @@ Que souhaites-tu explorer ?`;
     const startTime = Date.now();
     let fullContent = '';
     const pipelineSteps: string[] = [];
+    let autoHealed = false;
 
     try {
       const finalConfig = { ...this.config, ...config };
@@ -483,6 +953,7 @@ Que souhaites-tu explorer ?`;
           timeline: []
         };
         context = { sources: [], data: {} };
+        autoHealed = true;
       }
 
       // Prompt selon mode
@@ -494,11 +965,34 @@ Que souhaites-tu explorer ?`;
         emotionState: finalConfig.emotionState || this.config.emotionState,
         memory: context.sources.length > 0 ? context : undefined,
       };
+      const systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext);
+
+      const backendStream = this.tryBackendStream({
+        finalConfig,
+        validatedMessage,
+        systemPrompt,
+        memoryContext,
+        context,
+        pipelineSteps,
+        pipelineStartTime: startTime,
+        initialAutoHealed: autoHealed,
+      });
+
+      if (backendStream) {
+        try {
+          return yield* backendStream;
+        } catch (error) {
+          pipelineSteps.push('backend-error');
+          isDev && console.warn('[OMEGA STREAM] Backend pipeline failed, falling back to orchestrator:', error);
+        }
+      }
+
       const enrichedHistory = this.buildEnrichedHistory(
         history,
         context,
         modeConfig,
-        promptContext
+        promptContext,
+        systemPrompt
       );
 
       // Stream orchestrateur
@@ -515,6 +1009,7 @@ Que souhaites-tu explorer ?`;
       if (!validation.isValid && validation.cleaned && finalConfig.omegaConfig?.enableSanitizer) {
         finalContent = validation.cleaned;
         yield "\n\n🧹 *[Réponse optimisée automatiquement]*";
+        autoHealed = true;
       }
 
       // Sauvegarde (async, non-bloquante pour streaming)
@@ -541,7 +1036,7 @@ Que souhaites-tu explorer ?`;
         omegaMetadata: {
           pipelineSteps,
           validationScore: validation.score,
-          autoHealed: false,
+          autoHealed,
           failureHandled: false,
           processingTime: Date.now() - startTime
         }
@@ -584,15 +1079,17 @@ Que souhaites-tu explorer ?`;
     history: AIMessage[],
     context: { sources: string[]; data: Record<string, unknown> },
     modeConfig: ChatModeConfig,
-    promptContext?: PromptContext
+    promptContext?: PromptContext,
+    systemPrompt?: string
   ): AIMessage[] {
     try {
       const enrichedHistory: AIMessage[] = [];
 
       // Message système avec mode & contexte OMEGA
+      const systemContent = systemPrompt ?? this.buildSystemPrompt(modeConfig, context, promptContext);
       enrichedHistory.push({
         role: 'system',
-        content: this.buildSystemPrompt(modeConfig, context, promptContext),
+        content: systemContent,
         timestamp: Date.now(),
       });
 
@@ -608,7 +1105,7 @@ Que souhaites-tu explorer ?`;
       return [
         {
           role: 'system',
-          content: `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency)`,
+          content: systemPrompt || `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency)`,
           timestamp: Date.now(),
         },
         ...history.slice(-3) // Minimal history

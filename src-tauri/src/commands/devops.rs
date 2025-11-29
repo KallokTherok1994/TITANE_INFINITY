@@ -147,7 +147,12 @@ pub async fn devops_run(cmd: String) -> Result<String, String> {
         format!("✅ SUCCESS\n\n{}\n{}", stdout, stderr)
     } else {
         log::warn!("⚠️ DevOps command failed: {}", cmd);
-        format!("❌ ERROR (exit code: {:?})\n\n{}\n{}", output.status.code(), stdout, stderr)
+        format!(
+            "❌ ERROR (exit code: {:?})\n\n{}\n{}",
+            output.status.code(),
+            stdout,
+            stderr
+        )
     };
 
     Ok(result)

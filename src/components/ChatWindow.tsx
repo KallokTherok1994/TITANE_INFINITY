@@ -207,8 +207,11 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
             message.content &&
             message.content.trim().length > 0
           )
-          .map((message) => (
-            <MessageBubble key={message.timestamp} message={message as Message} />
+          .map((message, index) => (
+            <MessageBubble
+              key={(message as any)?.metadata?.uiId ?? `${message.timestamp}-${index}`}
+              message={message as Message}
+            />
           ))}
 
         {isLoading && (

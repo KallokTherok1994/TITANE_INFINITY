@@ -72,9 +72,7 @@ impl SingularityWatchdog {
 
         // 1. Valider intégrité
         if state.integrity < MIN_INTEGRITY {
-            errors.push(SingularityValidationError::IntegrityTooLow(
-                state.integrity,
-            ));
+            errors.push(SingularityValidationError::IntegrityTooLow(state.integrity));
         }
         if state.integrity > MAX_INTEGRITY {
             errors.push(SingularityValidationError::IntegrityTooHigh(
@@ -130,9 +128,7 @@ impl SingularityWatchdog {
 
         for engine in &state.active_engines {
             if !valid_engines.contains(engine.as_str()) {
-                errors.push(SingularityValidationError::UnknownEngine(
-                    engine.clone(),
-                ));
+                errors.push(SingularityValidationError::UnknownEngine(engine.clone()));
             }
         }
 
@@ -212,7 +208,9 @@ impl SingularityWatchdog {
         .cloned()
         .collect();
 
-        state.active_engines.retain(|e| valid_engines.contains(e.as_str()));
+        state
+            .active_engines
+            .retain(|e| valid_engines.contains(e.as_str()));
 
         log::info!("✅ Auto-repair completed");
 
@@ -271,7 +269,7 @@ mod tests {
     fn test_auto_repair() {
         let mut watchdog = SingularityWatchdog::new();
         let mut state = SingularityState {
-            integrity: 0.3, // Invalid
+            integrity: 0.3,        // Invalid
             global_coherence: 0.2, // Invalid
             ..Default::default()
         };
@@ -297,7 +295,9 @@ mod tests {
         let state = SingularityState::default();
 
         // First validation stores hash
-        watchdog.validate_structure(&state).expect("Failed to validate initial state structure");
+        watchdog
+            .validate_structure(&state)
+            .expect("Failed to validate initial state structure");
 
         // Hash should match
         assert!(watchdog.verify_hash(&state));

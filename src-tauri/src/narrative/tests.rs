@@ -18,7 +18,10 @@ pub fn narrative_selftest() -> (usize, usize) {
         assert_eq!(engine.symbolic_model.archetypes.len(), 8);
         assert_eq!(engine.identity_profile.name, "TITANE∞");
     }) {
-        Ok(_) => { passed += 1; println!("✅ Test 1: Initialization"); }
+        Ok(_) => {
+            passed += 1;
+            println!("✅ Test 1: Initialization");
+        }
         Err(_) => println!("❌ Test 1: Initialization FAILED"),
     }
 
@@ -28,7 +31,10 @@ pub fn narrative_selftest() -> (usize, usize) {
         engine.set_active_archetype("Observateur".to_string());
         assert_eq!(engine.symbolic_model.active_archetype, "Observateur");
     }) {
-        Ok(_) => { passed += 1; println!("✅ Test 2: Archetype selection"); }
+        Ok(_) => {
+            passed += 1;
+            println!("✅ Test 2: Archetype selection");
+        }
         Err(_) => println!("❌ Test 2: Archetype selection FAILED"),
     }
 
@@ -39,7 +45,10 @@ pub fn narrative_selftest() -> (usize, usize) {
         engine.set_active_archetype("Invalid".to_string());
         assert_eq!(engine.symbolic_model.active_archetype, before);
     }) {
-        Ok(_) => { passed += 1; println!("✅ Test 3: Invalid archetype rejection"); }
+        Ok(_) => {
+            passed += 1;
+            println!("✅ Test 3: Invalid archetype rejection");
+        }
         Err(_) => println!("❌ Test 3: Invalid archetype rejection FAILED"),
     }
 

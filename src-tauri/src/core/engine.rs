@@ -222,7 +222,10 @@ mod tests {
         assert!(result.is_ok());
         assert!(engine.is_initialized());
         // Engine starts Offline, requires tick() to become Healthy
-        assert!(matches!(engine.health(), EngineHealth::Offline | EngineHealth::Healthy));
+        assert!(matches!(
+            engine.health(),
+            EngineHealth::Offline | EngineHealth::Healthy
+        ));
     }
 
     #[tokio::test]

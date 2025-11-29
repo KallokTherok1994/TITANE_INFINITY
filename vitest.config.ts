@@ -3,6 +3,47 @@ import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { availableParallelism, cpus } from 'os';
+
+const detectedCpuCount = typeof availableParallelism === 'function'
+  ? availableParallelism()
+  : cpus().length;
+const maxThreadBudget = Math.min(4, Math.max(1, Math.floor(detectedCpuCount / 2)));
+const isVitest = process.env.VITEST === 'true';
+
+const baseAliasEntries = [
+  { find: '@', replacement: resolve(__dirname, './src') },
+  { find: '@app', replacement: resolve(__dirname, './src/app') },
+  { find: '@pages', replacement: resolve(__dirname, './src/pages') },
+  { find: '@features', replacement: resolve(__dirname, './src/features') },
+  { find: '@components', replacement: resolve(__dirname, './src/components') },
+  { find: '@ui', replacement: resolve(__dirname, './src/ui') },
+  { find: '@hooks', replacement: resolve(__dirname, './src/hooks') },
+  { find: '@services', replacement: resolve(__dirname, './src/services') },
+  { find: '@stores', replacement: resolve(__dirname, './src/stores') },
+  { find: '@themes', replacement: resolve(__dirname, './src/themes') },
+  { find: '@utils', replacement: resolve(__dirname, './src/utils') },
+  { find: '@types', replacement: resolve(__dirname, './src/types') },
+  { find: '@assets', replacement: resolve(__dirname, './src/assets') },
+  { find: '@styles', replacement: resolve(__dirname, './src/styles') },
+];
+
+const vitestAliasEntries = isVitest
+  ? [
+      {
+        find: /\/src\/hooks\/useChatCore$/,
+        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts')
+      },
+      {
+        find: /\/src\/hooks\/useChatMemory$/,
+        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts')
+      },
+      {
+        find: /\/src\/services\/tts\/hybridTTS$/,
+        replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts')
+      }
+    ]
+  : [];
 
 // TITANE∞ v17.3.0 - Vite + Vitest Configuration
 export const sharedTestConfig = defineConfig({
@@ -28,6 +69,16 @@ export const sharedTestConfig = defineConfig({
     globals: true,
     environment: 'happy-dom',
     setupFiles: ['./src/test/setup.ts'],
+    testTimeout: 45000,
+    hookTimeout: 20000,
+    teardownTimeout: 10000,
+    minThreads: 1,
+    maxThreads: maxThreadBudget,
+    poolOptions: {
+      threads: {
+        singleThread: maxThreadBudget === 1
+      }
+    },
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
@@ -59,22 +110,7 @@ export const sharedTestConfig = defineConfig({
   },
 
   resolve: {
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '@app': resolve(__dirname, './src/app'),
-      '@pages': resolve(__dirname, './src/pages'),
-      '@features': resolve(__dirname, './src/features'),
-      '@components': resolve(__dirname, './src/components'),
-      '@ui': resolve(__dirname, './src/ui'),
-      '@hooks': resolve(__dirname, './src/hooks'),
-      '@services': resolve(__dirname, './src/services'),
-      '@stores': resolve(__dirname, './src/stores'),
-      '@themes': resolve(__dirname, './src/themes'),
-      '@utils': resolve(__dirname, './src/utils'),
-      '@types': resolve(__dirname, './src/types'),
-      '@assets': resolve(__dirname, './src/assets'),
-      '@styles': resolve(__dirname, './src/styles'),
-    }
+    alias: [...baseAliasEntries, ...vitestAliasEntries]
   },
 
   build: {

@@ -7,6 +7,7 @@ pub mod encryption;
 pub mod model;
 pub mod security; // NEW: Security hardening module
 pub mod storage;
+pub mod telemetry;
 
 use serde::{Deserialize, Serialize};
 

@@ -115,9 +115,7 @@ pub async fn singularity_start_sync_loop(
 
 /// Effectue une synchronisation
 #[tauri::command]
-pub async fn singularity_perform_sync(
-    state: State<'_, FusionEngineState>,
-) -> Result<f32, String> {
+pub async fn singularity_perform_sync(state: State<'_, FusionEngineState>) -> Result<f32, String> {
     let mut fusion_state = state.state.lock().map_err(|e| e.to_string())?;
     let mut metrics = state.metrics.lock().map_err(|e| e.to_string())?;
 
@@ -169,7 +167,10 @@ pub async fn singularity_create_snapshot(
     let snapshot_id = format!("snapshot-{}", current_timestamp());
 
     // Sauvegarder (simulé)
-    println!("[FusionEngine] Snapshot créé: {} (compressed: {})", snapshot_id, compressed);
+    println!(
+        "[FusionEngine] Snapshot créé: {} (compressed: {})",
+        snapshot_id, compressed
+    );
 
     Ok(snapshot_id)
 }
@@ -188,7 +189,8 @@ pub async fn singularity_restore_snapshot(
     _fusion_state.sync_score = 1.0;
 
     Ok(())
-}/// Enregistre un pipeline
+}
+/// Enregistre un pipeline
 #[tauri::command]
 pub async fn singularity_register_pipeline(
     state: State<'_, FusionEngineState>,
@@ -214,7 +216,9 @@ pub async fn singularity_complete_pipeline(
     let mut fusion_state = state.state.lock().map_err(|e| e.to_string())?;
 
     // Retirer de la liste active
-    fusion_state.active_pipelines.retain(|id| id != &pipeline_id);
+    fusion_state
+        .active_pipelines
+        .retain(|id| id != &pipeline_id);
 
     // Mettre à jour santé
     if success {
@@ -223,7 +227,10 @@ pub async fn singularity_complete_pipeline(
         fusion_state.pipeline_health = (fusion_state.pipeline_health * 0.9).max(0.1);
     }
 
-    println!("[FusionEngine] Pipeline complété: {} (success: {})", pipeline_id, success);
+    println!(
+        "[FusionEngine] Pipeline complété: {} (success: {})",
+        pipeline_id, success
+    );
 
     Ok(())
 }
@@ -256,21 +263,34 @@ pub async fn singularity_get_diagnostics(
     let metrics = state.metrics.lock().map_err(|e| e.to_string())?;
 
     let mut diagnostics = HashMap::new();
-    diagnostics.insert("fusion_integrity".to_string(), format!("{:.2}", fusion_state.fusion_integrity));
-    diagnostics.insert("sync_score".to_string(), format!("{:.2}", fusion_state.sync_score));
-    diagnostics.insert("pipeline_health".to_string(), format!("{:.2}", fusion_state.pipeline_health));
-    diagnostics.insert("total_syncs".to_string(), fusion_state.total_syncs.to_string());
+    diagnostics.insert(
+        "fusion_integrity".to_string(),
+        format!("{:.2}", fusion_state.fusion_integrity),
+    );
+    diagnostics.insert(
+        "sync_score".to_string(),
+        format!("{:.2}", fusion_state.sync_score),
+    );
+    diagnostics.insert(
+        "pipeline_health".to_string(),
+        format!("{:.2}", fusion_state.pipeline_health),
+    );
+    diagnostics.insert(
+        "total_syncs".to_string(),
+        fusion_state.total_syncs.to_string(),
+    );
     diagnostics.insert("uptime_ms".to_string(), metrics.uptime.to_string());
-    diagnostics.insert("active_pipelines".to_string(), fusion_state.active_pipelines.len().to_string());
+    diagnostics.insert(
+        "active_pipelines".to_string(),
+        fusion_state.active_pipelines.len().to_string(),
+    );
 
     Ok(diagnostics)
 }
 
 /// Réinitialise le système
 #[tauri::command]
-pub async fn singularity_reset(
-    state: State<'_, FusionEngineState>,
-) -> Result<(), String> {
+pub async fn singularity_reset(state: State<'_, FusionEngineState>) -> Result<(), String> {
     let mut fusion_state = state.state.lock().map_err(|e| e.to_string())?;
     let mut metrics = state.metrics.lock().map_err(|e| e.to_string())?;
     let mut inconsistencies = state.inconsistencies.lock().map_err(|e| e.to_string())?;

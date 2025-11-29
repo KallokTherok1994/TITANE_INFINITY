@@ -47,6 +47,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("memory_get_recent_decisions");
     commands.insert("memory_get_knowledge");
     commands.insert("memory_get_active_rituals");
+    commands.insert("memory_debug_scan");
     commands.insert("memory_ingest_file");
     commands.insert("import_file");
     commands.insert("get_all_files");

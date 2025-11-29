@@ -45,10 +45,12 @@ impl EvolutionCognitiveEngine {
         // Optimization score improves with learning
         self.metrics.optimization_score = (self.metrics.optimization_score + 0.001).min(1.0);
 
-        log::debug!("[Evolution v16] Learning cycle {} (patterns: {}, opt: {:.3})",
-                   self.metrics.learning_cycles,
-                   self.metrics.pattern_library_size,
-                   self.metrics.optimization_score);
+        log::debug!(
+            "[Evolution v16] Learning cycle {} (patterns: {}, opt: {:.3})",
+            self.metrics.learning_cycles,
+            self.metrics.pattern_library_size,
+            self.metrics.optimization_score
+        );
     }
 
     /// Get evolution metrics

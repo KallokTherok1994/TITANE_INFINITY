@@ -80,7 +80,11 @@ pub async fn autoheal_heal_avatar_module(
     let result = HealResult {
         module_type: "avatar".to_string(),
         success: true,
-        actions: vec!["Stop".to_string(), "Reload".to_string(), "Restart".to_string()],
+        actions: vec![
+            "Stop".to_string(),
+            "Reload".to_string(),
+            "Restart".to_string(),
+        ],
         duration: 150,
     };
 
@@ -142,13 +146,15 @@ pub async fn autoheal_heal_memory_module(
 }
 
 #[tauri::command]
-pub async fn autoheal_heal_pipeline(
-    state: State<'_, AutoHealState>,
-) -> Result<HealResult, String> {
+pub async fn autoheal_heal_pipeline(state: State<'_, AutoHealState>) -> Result<HealResult, String> {
     let result = HealResult {
         module_type: "pipeline".to_string(),
         success: true,
-        actions: vec!["Stop".to_string(), "Clear".to_string(), "Restart".to_string()],
+        actions: vec![
+            "Stop".to_string(),
+            "Clear".to_string(),
+            "Restart".to_string(),
+        ],
         duration: 120,
     };
 
@@ -159,8 +165,7 @@ pub async fn autoheal_heal_pipeline(
 }
 
 #[tauri::command]
-pub async fn autoheal_resync_state(
-) -> Result<(), String> {
+pub async fn autoheal_resync_state() -> Result<(), String> {
     println!("[AutoHeal] State resynchronization complete");
     Ok(())
 }
@@ -174,9 +179,7 @@ pub async fn autoheal_get_history(
 }
 
 #[tauri::command]
-pub async fn autoheal_reset(
-    state: State<'_, AutoHealState>,
-) -> Result<(), String> {
+pub async fn autoheal_reset(state: State<'_, AutoHealState>) -> Result<(), String> {
     let mut modules = state.broken_modules.lock().map_err(|e| e.to_string())?;
     let mut history = state.heal_history.lock().map_err(|e| e.to_string())?;
 

@@ -7,65 +7,67 @@
 // CORE MODULES v16 (Always Active)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod core;       // ✅ SingularityEngine v16 + modules
-pub mod cognitive;  // ✅ Cognitive Layer v16 (NEW)
-pub mod shared;     // ✅ Shared types and utilities
-pub mod types;      // ✅ Type definitions
-pub mod utils;      // ✅ Utilities (AppResult, AppError)
-pub mod watchdog;   // ✅ Watchdog Engine v17 (NEW)
+pub mod adaptive; // ✅ AdaptiveEngine v21 (NEW)
+pub mod avatar; // ✅ ImmersiveAvatarEngine v23 (NEW)
 pub mod backend_selftest; // ✅ Backend Global Self-Test v17.7 (NEW)
-pub mod meta;       // ✅ Meta-Cognition & Deep Sync v18 (NEW)
-pub mod qa;         // ✅ QA Engine v19.8 (NEW)
+pub mod cognitive; // ✅ Cognitive Layer v16 (NEW)
+pub mod core; // ✅ SingularityEngine v16 + modules
+pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
+pub mod narrative; // ✅ NarrativeEngine v22 (NEW)
+pub mod qa; // ✅ QA Engine v19.8 (NEW)
+pub mod shared; // ✅ Shared types and utilities
 pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
-pub mod adaptive;   // ✅ AdaptiveEngine v21 (NEW)
-pub mod narrative;  // ✅ NarrativeEngine v22 (NEW)
-pub mod avatar;     // ✅ ImmersiveAvatarEngine v23 (NEW)
-pub mod singularity_fusion;  // ✅ SingularityFusion vΩ (NEW)
+pub mod singularity_fusion;
+pub mod types; // ✅ Type definitions
+pub mod utils; // ✅ Utilities (AppResult, AppError)
+pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // AI & MEMORY v15
 // ═══════════════════════════════════════════════════════════════
 
-pub mod ai;                 // ✅ AI Router (v15 migration in progress)
-pub mod memory;             // ✅ Memory Storage v15
+pub mod ai; // ✅ AI Router (v15 migration in progress)
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+pub mod chat_engine; // ✅ High-performance Chat Engine v∞
+pub mod memory; // ✅ Memory Storage v15
 
 // ═══════════════════════════════════════════════════════════════
 // PRODUCTION MODULES (Active)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod control_panel_commands;    // ✅ Control Panel
-pub mod harmonia_engine;           // ✅ Harmonia CPU monitoring
-pub mod memory_compactor;          // ✅ Memory compaction
-pub mod memory_persistence;        // ✅ Memory persistence
-pub mod overdrive;                 // ✅ Chat orchestrator (always active)
-pub mod secure_commands;           // ✅ Secure commands
-pub mod security;                  // ✅ Security layer
-pub mod system_state;              // ✅ System state
-pub mod time;                      // ✅ Time-travel engine
-pub mod time_commands;             // ✅ Time commands
-pub mod updates;                   // ✅ Update engine
+pub mod control_panel_commands; // ✅ Control Panel
+pub mod harmonia_engine; // ✅ Harmonia CPU monitoring
+pub mod memory_compactor; // ✅ Memory compaction
+pub mod memory_persistence; // ✅ Memory persistence
+pub mod overdrive; // ✅ Chat orchestrator (always active)
+pub mod secure_commands; // ✅ Secure commands
+pub mod security; // ✅ Security layer
+pub mod system_state; // ✅ System state
+pub mod time; // ✅ Time-travel engine
+pub mod time_commands; // ✅ Time commands
+pub mod updates; // ✅ Update engine
 
 // ═══════════════════════════════════════════════════════════════
 // PHASES 5-10 MODULES (Active)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod cluster;               // ✅ Node-Cluster
-pub mod creation;              // ✅ Mode Création
-pub mod evolution;             // ✅ Auto-Évolution
-pub mod hypervision;           // ✅ HyperVision
-pub mod introspection;         // ✅ Introspection
-pub mod knowledge;             // ✅ Knowledge Fusion
+pub mod cluster; // ✅ Node-Cluster
+pub mod creation; // ✅ Mode Création
+pub mod evolution; // ✅ Auto-Évolution
+pub mod hypervision; // ✅ HyperVision
+pub mod introspection; // ✅ Introspection
+pub mod knowledge; // ✅ Knowledge Fusion
 
 // ═══════════════════════════════════════════════════════════════
 // PHASES V-Ω MODULES (Active)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod cognitive_learning;    // ✅ Auto-Apprentissage
-pub mod hyper_evolution;       // ✅ HyperEvolution
-pub mod meta_creation;         // ✅ Méta-Création
-pub mod neuro_symbolic;        // ✅ NeuroSymbolic
-pub mod self_repair;           // ✅ Auto-Réparation
-// pub mod singularity;        // ⚠️ Deprecated - Use top-level singularity v∞ (v20)
+pub mod cognitive_learning; // ✅ Auto-Apprentissage
+pub mod hyper_evolution; // ✅ HyperEvolution
+pub mod meta_creation; // ✅ Méta-Création
+pub mod neuro_symbolic; // ✅ NeuroSymbolic
+pub mod self_repair; // ✅ Auto-Réparation
+                     // pub mod singularity;        // ⚠️ Deprecated - Use top-level singularity v∞ (v20)
 
 // ═══════════════════════════════════════════════════════════════
 // BACKEND MODE SELECTION (Mock vs Full)

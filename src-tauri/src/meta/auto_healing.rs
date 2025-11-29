@@ -11,12 +11,10 @@ use std::collections::{HashMap, VecDeque};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-use crate::meta::{
-    MetaCognitiveReport, DeepSyncAction, CognitiveSnapshot,
-};
+use crate::meta::{CognitiveSnapshot, DeepSyncAction, MetaCognitiveReport};
 
 // Import globals from commands module
-use crate::meta::commands::{META_ENGINE, DEEP_SYNC_ENGINE};
+use crate::meta::commands::{DEEP_SYNC_ENGINE, META_ENGINE};
 
 /// Maximum number of snapshots to keep for rollback
 const MAX_SNAPSHOT_HISTORY: usize = 50;
@@ -124,22 +122,31 @@ impl AutoHealingEngine {
 
         let coherence_before = report.coherence_score;
 
-        let action = report.recommended_next_state.as_ref().unwrap_or(&DeepSyncAction::None);
+        let action = report
+            .recommended_next_state
+            .as_ref()
+            .unwrap_or(&DeepSyncAction::None);
         let action_name = format!("{:?}", action);
 
         log::info!("🔧 Applying healing action: {}", action_name);
 
         let (success, details, coherence_after) = match action {
-            DeepSyncAction::None => {
-                (true, "No action needed".to_string(), coherence_before)
-            }
+            DeepSyncAction::None => (true, "No action needed".to_string(), coherence_before),
 
             DeepSyncAction::StabilizeCognitive => {
                 // Stabilize cognitive state by reducing complexity
                 let result = self.stabilize_cognitive().await;
                 match result {
-                    Ok(new_coherence) => (true, "Cognitive stabilization applied".to_string(), new_coherence),
-                    Err(e) => (false, format!("Stabilization failed: {}", e), coherence_before),
+                    Ok(new_coherence) => (
+                        true,
+                        "Cognitive stabilization applied".to_string(),
+                        new_coherence,
+                    ),
+                    Err(e) => (
+                        false,
+                        format!("Stabilization failed: {}", e),
+                        coherence_before,
+                    ),
                 }
             }
 
@@ -148,7 +155,11 @@ impl AutoHealingEngine {
                 let result = self.reanchor_memory().await;
                 match result {
                     Ok(new_coherence) => (true, "Memory re-anchored".to_string(), new_coherence),
-                    Err(e) => (false, format!("Memory re-anchor failed: {}", e), coherence_before),
+                    Err(e) => (
+                        false,
+                        format!("Memory re-anchor failed: {}", e),
+                        coherence_before,
+                    ),
                 }
             }
 
@@ -158,15 +169,29 @@ impl AutoHealingEngine {
                     let mut engine = DEEP_SYNC_ENGINE.lock().await;
                     let mut states = HashMap::new();
                     // TODO: Get real engine states from SingularityState
-                    states.insert("cognitive".to_string(), crate::meta::EngineState::new("cognitive".to_string(), 0.7));
-                    states.insert("memory".to_string(), crate::meta::EngineState::new("memory".to_string(), 0.7));
+                    states.insert(
+                        "cognitive".to_string(),
+                        crate::meta::EngineState::new("cognitive".to_string(), 0.7),
+                    );
+                    states.insert(
+                        "memory".to_string(),
+                        crate::meta::EngineState::new("memory".to_string(), 0.7),
+                    );
                     engine.deep_sync(&states).await
                 };
 
                 if sync_result.success {
-                    (true, "Engines realigned".to_string(), coherence_before + 0.1)
+                    (
+                        true,
+                        "Engines realigned".to_string(),
+                        coherence_before + 0.1,
+                    )
                 } else {
-                    (false, "Engine realignment failed".to_string(), coherence_before)
+                    (
+                        false,
+                        "Engine realignment failed".to_string(),
+                        coherence_before,
+                    )
                 }
             }
 
@@ -175,7 +200,11 @@ impl AutoHealingEngine {
                 let result = self.correct_timeline().await;
                 match result {
                     Ok(new_coherence) => (true, "Timeline corrected".to_string(), new_coherence),
-                    Err(e) => (false, format!("Timeline correction failed: {}", e), coherence_before),
+                    Err(e) => (
+                        false,
+                        format!("Timeline correction failed: {}", e),
+                        coherence_before,
+                    ),
                 }
             }
 
@@ -183,8 +212,19 @@ impl AutoHealingEngine {
                 // Recalibrate AI baseline
                 let result = self.recalibrate_baseline().await;
                 match result {
-                    Ok(recal) => (true, format!("Baseline recalibrated: {:.2} → {:.2}", recal.old_baseline, recal.new_baseline), coherence_before + 0.05),
-                    Err(e) => (false, format!("Recalibration failed: {}", e), coherence_before),
+                    Ok(recal) => (
+                        true,
+                        format!(
+                            "Baseline recalibrated: {:.2} → {:.2}",
+                            recal.old_baseline, recal.new_baseline
+                        ),
+                        coherence_before + 0.05,
+                    ),
+                    Err(e) => (
+                        false,
+                        format!("Recalibration failed: {}", e),
+                        coherence_before,
+                    ),
                 }
             }
 
@@ -194,14 +234,27 @@ impl AutoHealingEngine {
                     let mut engine = DEEP_SYNC_ENGINE.lock().await;
                     let mut states = HashMap::new();
                     // TODO: Get all engine states
-                    states.insert("cognitive".to_string(), crate::meta::EngineState::new("cognitive".to_string(), 0.7));
-                    states.insert("memory".to_string(), crate::meta::EngineState::new("memory".to_string(), 0.7));
-                    states.insert("emotional".to_string(), crate::meta::EngineState::new("emotional".to_string(), 0.7));
+                    states.insert(
+                        "cognitive".to_string(),
+                        crate::meta::EngineState::new("cognitive".to_string(), 0.7),
+                    );
+                    states.insert(
+                        "memory".to_string(),
+                        crate::meta::EngineState::new("memory".to_string(), 0.7),
+                    );
+                    states.insert(
+                        "emotional".to_string(),
+                        crate::meta::EngineState::new("emotional".to_string(), 0.7),
+                    );
                     engine.deep_sync(&states).await
                 };
 
                 if sync_result.success {
-                    (true, "Full deep sync completed".to_string(), coherence_before + 0.15)
+                    (
+                        true,
+                        "Full deep sync completed".to_string(),
+                        coherence_before + 0.15,
+                    )
                 } else {
                     (false, "Full deep sync failed".to_string(), coherence_before)
                 }
@@ -211,8 +264,16 @@ impl AutoHealingEngine {
                 // Emergency rollback to last good snapshot
                 let result = self.rollback_to_last_good().await;
                 match result {
-                    Ok(coherence) => (true, format!("Emergency rollback: coherence restored to {:.2}", coherence), coherence),
-                    Err(e) => (false, format!("Emergency rollback failed: {}", e), coherence_before),
+                    Ok(coherence) => (
+                        true,
+                        format!("Emergency rollback: coherence restored to {:.2}", coherence),
+                        coherence,
+                    ),
+                    Err(e) => (
+                        false,
+                        format!("Emergency rollback failed: {}", e),
+                        coherence_before,
+                    ),
                 }
             }
         };
@@ -236,7 +297,12 @@ impl AutoHealingEngine {
         }
 
         if success {
-            log::info!("✅ Healing action succeeded: {} ({:.2} → {:.2})", details, coherence_before, coherence_after);
+            log::info!(
+                "✅ Healing action succeeded: {} ({:.2} → {:.2})",
+                details,
+                coherence_before,
+                coherence_after
+            );
         } else {
             log::error!("❌ Healing action failed: {}", details);
         }
@@ -256,16 +322,17 @@ impl AutoHealingEngine {
 
         match last_good {
             Some(snapshot) => {
-                log::warn!("🔄 Rolling back to snapshot from {} (coherence={:.2})",
-                    snapshot.timestamp, snapshot.coherence_score);
+                log::warn!(
+                    "🔄 Rolling back to snapshot from {} (coherence={:.2})",
+                    snapshot.timestamp,
+                    snapshot.coherence_score
+                );
 
                 // Apply snapshot (in real implementation, this would restore state)
                 // For now, just return the coherence score
                 Ok(snapshot.coherence_score)
             }
-            None => {
-                Err("No good snapshot found for rollback".to_string())
-            }
+            None => Err("No good snapshot found for rollback".to_string()),
         }
     }
 
@@ -343,8 +410,12 @@ impl AutoHealingEngine {
         let mut recal_history = self.recalibration_history.write().await;
         recal_history.push(result.clone());
 
-        log::info!("📊 Baseline recalibrated: {:.2} → {:.2} (using {} samples)",
-            old_baseline, new_baseline, recent_good.len());
+        log::info!(
+            "📊 Baseline recalibrated: {:.2} → {:.2} (using {} samples)",
+            old_baseline,
+            new_baseline,
+            recent_good.len()
+        );
 
         Ok(result)
     }
@@ -352,7 +423,10 @@ impl AutoHealingEngine {
     /// Enable/disable auto-healing
     pub async fn set_enabled(&self, enabled: bool) {
         *self.enabled.write().await = enabled;
-        log::info!("🔧 Auto-healing {}", if enabled { "enabled" } else { "disabled" });
+        log::info!(
+            "🔧 Auto-healing {}",
+            if enabled { "enabled" } else { "disabled" }
+        );
     }
 
     /// Check if auto-healing is enabled
@@ -425,7 +499,9 @@ mod tests {
                 cognitive_integrity: Some(0.8 + (i as f32 * 0.01)),
                 ..Default::default()
             };
-            engine.save_snapshot(snapshot, 0.8 + (i as f32 * 0.01)).await;
+            engine
+                .save_snapshot(snapshot, 0.8 + (i as f32 * 0.01))
+                .await;
         }
 
         // Recalibrate

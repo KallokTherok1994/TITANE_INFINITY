@@ -1,13 +1,13 @@
+use crate::cognitive::security::*;
 /**
  * TITANE∞ v17 - Watchdog Fixer
  *
  * Auto-réparation du système cognitif
  */
 use crate::cognitive::CognitiveState;
-use crate::cognitive::security::*;
-use crate::watchdog::scanner::Anomaly;
 use crate::watchdog::alerts::{AlertLevel, WatchdogAlert};
-use serde::{Serialize, Deserialize};
+use crate::watchdog::scanner::Anomaly;
+use serde::{Deserialize, Serialize};
 
 #[cfg(test)]
 use crate::watchdog::scanner::AnomalyType;
@@ -62,11 +62,7 @@ impl WatchdogFixer {
      * 2. Rollback si corruption majeure
      * 3. Partial reset si cohérence critique
      */
-    pub fn fix(
-        &mut self,
-        current: &mut CognitiveState,
-        anomalies: &[Anomaly],
-    ) -> FixResult {
+    pub fn fix(&mut self, current: &mut CognitiveState, anomalies: &[Anomaly]) -> FixResult {
         let mut alerts = Vec::new();
         let start_timestamp = crate::core::utils::now_ms();
 
@@ -141,10 +137,10 @@ impl WatchdogFixer {
 
             match cognitive_auto_repair(&prev_clone, current) {
                 Ok(msg) => {
-                    alerts.push(WatchdogAlert::warn(
-                        "Auto-repair successful".to_string(),
-                        msg.clone(),
-                    ).with_action("Sanitized invalid values".to_string()));
+                    alerts.push(
+                        WatchdogAlert::warn("Auto-repair successful".to_string(), msg.clone())
+                            .with_action("Sanitized invalid values".to_string()),
+                    );
 
                     // Sauvegarder nouvel état valide
                     self.last_valid_state = Some(current.clone());

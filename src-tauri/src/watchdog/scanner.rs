@@ -1,3 +1,4 @@
+use crate::cognitive::security::*;
 /**
  * TITANE∞ v17 - Watchdog Scanner
  *
@@ -8,10 +9,9 @@
  * - Moteurs désynchronisés
  */
 use crate::cognitive::CognitiveState;
-use crate::cognitive::security::*;
 use crate::singularity::SingularityState;
 use crate::watchdog::alerts::AlertLevel;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 // ────────────────────────────────────────────────────────────────
 // Types
@@ -26,15 +26,27 @@ pub enum AnomalyType {
     /// Hash mismatch détecté
     HashMismatch { expected: String, got: String },
     /// Transition invalide
-    InvalidTransition { from_state: String, to_state: String, reason: String },
+    InvalidTransition {
+        from_state: String,
+        to_state: String,
+        reason: String,
+    },
     /// Valeurs NaN détectées
     NaNDetected { fields: Vec<String> },
     /// Valeurs hors limites
-    OutOfBounds { field: String, value: f32, min: f32, max: f32 },
+    OutOfBounds {
+        field: String,
+        value: f32,
+        min: f32,
+        max: f32,
+    },
     /// Désynchronisation avec SingularityState
     SingularityMismatch { reason: String },
     /// Historique trop long
-    HistoryOverflow { current_size: usize, max_size: usize },
+    HistoryOverflow {
+        current_size: usize,
+        max_size: usize,
+    },
     /// Timestamp invalide
     InvalidTimestamp { timestamp: u64, reason: String },
 }
@@ -300,7 +312,13 @@ mod tests {
         let singularity = SingularityState::new();
 
         let result = scanner.scan(&cognitive, &singularity);
-        assert!(result.clean || result.anomalies.iter().all(|a| matches!(a.severity, AlertLevel::Info | AlertLevel::Warn)));
+        assert!(
+            result.clean
+                || result
+                    .anomalies
+                    .iter()
+                    .all(|a| matches!(a.severity, AlertLevel::Info | AlertLevel::Warn))
+        );
     }
 
     #[test]
@@ -312,10 +330,10 @@ mod tests {
 
         let result = scanner.scan(&cognitive, &singularity);
         assert!(!result.clean);
-        assert!(result.anomalies.iter().any(|a| matches!(
-            a.anomaly_type,
-            AnomalyType::NaNDetected { .. }
-        )));
+        assert!(result
+            .anomalies
+            .iter()
+            .any(|a| matches!(a.anomaly_type, AnomalyType::NaNDetected { .. })));
     }
 
     #[test]
@@ -328,10 +346,10 @@ mod tests {
 
         let result = scanner.scan(&cognitive, &singularity);
         assert!(!result.clean);
-        assert!(result.anomalies.iter().any(|a| matches!(
-            a.anomaly_type,
-            AnomalyType::CognitiveOverload { .. }
-        )));
+        assert!(result
+            .anomalies
+            .iter()
+            .any(|a| matches!(a.anomaly_type, AnomalyType::CognitiveOverload { .. })));
     }
 
     #[test]
@@ -343,10 +361,10 @@ mod tests {
 
         let result = scanner.scan(&cognitive, &singularity);
         assert!(!result.clean);
-        assert!(result.anomalies.iter().any(|a| matches!(
-            a.anomaly_type,
-            AnomalyType::LowCoherence { .. }
-        )));
+        assert!(result
+            .anomalies
+            .iter()
+            .any(|a| matches!(a.anomaly_type, AnomalyType::LowCoherence { .. })));
     }
 
     #[test]
@@ -357,9 +375,8 @@ mod tests {
 
         let anomalies = scanner.quick_scan(&cognitive);
         assert!(!anomalies.is_empty());
-        assert!(anomalies.iter().any(|a| matches!(
-            a.anomaly_type,
-            AnomalyType::NaNDetected { .. }
-        )));
+        assert!(anomalies
+            .iter()
+            .any(|a| matches!(a.anomaly_type, AnomalyType::NaNDetected { .. })));
     }
 }

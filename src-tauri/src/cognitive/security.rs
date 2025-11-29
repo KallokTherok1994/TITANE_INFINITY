@@ -9,8 +9,8 @@
  * - Hash SHA256 intégrité
  */
 use crate::cognitive::CognitiveState;
-use sha2::{Sha256, Digest};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 
 // ────────────────────────────────────────────────────────────────
 // Constants
@@ -53,9 +53,19 @@ pub struct CognitiveIntegrityCheck {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum CognitiveTransitionError {
-    InvalidTransition { from: String, to: String, reason: String },
-    IncoherentState { field: String, value: String },
-    HashMismatch { expected: String, got: String },
+    InvalidTransition {
+        from: String,
+        to: String,
+        reason: String,
+    },
+    IncoherentState {
+        field: String,
+        value: String,
+    },
+    HashMismatch {
+        expected: String,
+        got: String,
+    },
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -80,7 +90,8 @@ pub fn cognitive_validate(state: &CognitiveState) -> CognitiveValidationResult {
     if state.mental.charge.current.is_nan() {
         errors.push("mental.charge.current is NaN".to_string());
     }
-    if state.mental.charge.current < MIN_NORMALIZED || state.mental.charge.current > MAX_NORMALIZED {
+    if state.mental.charge.current < MIN_NORMALIZED || state.mental.charge.current > MAX_NORMALIZED
+    {
         errors.push(format!(
             "mental.charge.current out of bounds: {} (expected [0.0, 1.0])",
             state.mental.charge.current
@@ -90,7 +101,9 @@ pub fn cognitive_validate(state: &CognitiveState) -> CognitiveValidationResult {
     if state.mental.charge.capacity.is_nan() {
         errors.push("mental.charge.capacity is NaN".to_string());
     }
-    if state.mental.charge.capacity < MIN_NORMALIZED || state.mental.charge.capacity > MAX_NORMALIZED {
+    if state.mental.charge.capacity < MIN_NORMALIZED
+        || state.mental.charge.capacity > MAX_NORMALIZED
+    {
         errors.push(format!(
             "mental.charge.capacity out of bounds: {} (expected [0.0, 1.0])",
             state.mental.charge.capacity
@@ -154,7 +167,9 @@ pub fn cognitive_validate(state: &CognitiveState) -> CognitiveValidationResult {
     if state.heart.emotional_intensity.is_nan() {
         errors.push("heart.emotional_intensity is NaN".to_string());
     }
-    if state.heart.emotional_intensity < MIN_NORMALIZED || state.heart.emotional_intensity > MAX_NORMALIZED {
+    if state.heart.emotional_intensity < MIN_NORMALIZED
+        || state.heart.emotional_intensity > MAX_NORMALIZED
+    {
         errors.push(format!(
             "heart.emotional_intensity out of bounds: {} (expected [0.0, 1.0])",
             state.heart.emotional_intensity
@@ -175,7 +190,8 @@ pub fn cognitive_validate(state: &CognitiveState) -> CognitiveValidationResult {
     if state.body.physical_tension.is_nan() {
         errors.push("body.physical_tension is NaN".to_string());
     }
-    if state.body.physical_tension < MIN_NORMALIZED || state.body.physical_tension > MAX_NORMALIZED {
+    if state.body.physical_tension < MIN_NORMALIZED || state.body.physical_tension > MAX_NORMALIZED
+    {
         errors.push(format!(
             "body.physical_tension out of bounds: {} (expected [0.0, 1.0])",
             state.body.physical_tension
@@ -250,16 +266,28 @@ pub fn cognitive_sanitize(state: &mut CognitiveState) {
     if state.mental.charge.current.is_nan() {
         state.mental.charge.current = 0.5; // Default safe value
     }
-    state.mental.charge.current = state.mental.charge.current.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.mental.charge.current = state
+        .mental
+        .charge
+        .current
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     if state.mental.charge.capacity.is_nan() {
         state.mental.charge.capacity = 1.0;
     }
-    state.mental.charge.capacity = state.mental.charge.capacity.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.mental.charge.capacity = state
+        .mental
+        .charge
+        .capacity
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     // Limiter historique
     if state.mental.charge.history.len() > MAX_HISTORY_SIZE {
-        state.mental.charge.history.drain(0..state.mental.charge.history.len() - MAX_HISTORY_SIZE);
+        state
+            .mental
+            .charge
+            .history
+            .drain(0..state.mental.charge.history.len() - MAX_HISTORY_SIZE);
     }
 
     // Supprimer NaN de l'historique
@@ -279,44 +307,66 @@ pub fn cognitive_sanitize(state: &mut CognitiveState) {
     if state.heart.emotional_valence.is_nan() {
         state.heart.emotional_valence = 0.0;
     }
-    state.heart.emotional_valence = state.heart.emotional_valence.clamp(MIN_VALENCE, MAX_VALENCE);
+    state.heart.emotional_valence = state
+        .heart
+        .emotional_valence
+        .clamp(MIN_VALENCE, MAX_VALENCE);
 
     if state.heart.emotional_intensity.is_nan() {
         state.heart.emotional_intensity = 0.5;
     }
-    state.heart.emotional_intensity = state.heart.emotional_intensity.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.heart.emotional_intensity = state
+        .heart
+        .emotional_intensity
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     // [3] Sanitize Body
     if state.body.energy_level.is_nan() {
         state.body.energy_level = 0.5;
     }
-    state.body.energy_level = state.body.energy_level.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.body.energy_level = state
+        .body
+        .energy_level
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     if state.body.physical_tension.is_nan() {
         state.body.physical_tension = 0.3;
     }
-    state.body.physical_tension = state.body.physical_tension.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.body.physical_tension = state
+        .body
+        .physical_tension
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     if state.body.voice_fatigue.is_nan() {
         state.body.voice_fatigue = 0.0;
     }
-    state.body.voice_fatigue = state.body.voice_fatigue.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.body.voice_fatigue = state
+        .body
+        .voice_fatigue
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     if state.body.environment_stress.is_nan() {
         state.body.environment_stress = 0.3;
     }
-    state.body.environment_stress = state.body.environment_stress.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.body.environment_stress = state
+        .body
+        .environment_stress
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     if state.body.rhythm_quality.is_nan() {
         state.body.rhythm_quality = 0.5;
     }
-    state.body.rhythm_quality = state.body.rhythm_quality.clamp(MIN_NORMALIZED, MAX_NORMALIZED);
+    state.body.rhythm_quality = state
+        .body
+        .rhythm_quality
+        .clamp(MIN_NORMALIZED, MAX_NORMALIZED);
 
     // [4] Recalcul cohérence si nécessaire
     if state.coherence.global.is_nan()
         || state.coherence.mental_heart.is_nan()
         || state.coherence.heart_body.is_nan()
-        || state.coherence.body_mental.is_nan() {
+        || state.coherence.body_mental.is_nan()
+    {
         state.update_coherence();
     }
 
@@ -356,7 +406,11 @@ pub fn cognitive_transition_validate(
     if !validation.valid {
         return Err(CognitiveTransitionError::IncoherentState {
             field: "multiple".to_string(),
-            value: format!("{} errors: {}", validation.errors.len(), validation.errors.join("; ")),
+            value: format!(
+                "{} errors: {}",
+                validation.errors.len(),
+                validation.errors.join("; ")
+            ),
         });
     }
 

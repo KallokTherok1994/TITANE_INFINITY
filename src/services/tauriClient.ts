@@ -85,8 +85,16 @@ export interface ProviderStatus {
 
 export interface StreamCallbacks {
   onChunk?: (chunk: string) => void;
-  onComplete?: (data: { content: string; latency_ms: number; provider: string }) => void;
+  onComplete?: (data: { content: string; latency_ms: number; provider: string; model?: string; tokens?: number }) => void;
   onError?: (error: TAPIError) => void;
+}
+
+interface BackendStreamChunk {
+  conversation_id: string;
+  message_id: string;
+  ordinal: number;
+  content: string;
+  done: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -265,19 +273,10 @@ class TauriClient {
    */
   async chatSendMessage(request: ChatRequest, options?: InvokeOptions): Promise<ChatResponse> {
     try {
-      const response = await this.safeInvoke<string>('chat_send_message', { request }, {
+      return await this.safeInvoke<ChatResponse>('chat_send_message', { request }, {
         timeout: 60000, // 60s pour génération IA
         ...options,
       });
-
-      // Parser la réponse (peut être JSON ou string)
-      try {
-        return JSON.parse(response) as ChatResponse;
-      } catch {
-        // Si erreur de parsing, c'est peut-être une TAPIError
-        const error = this.parseError(response);
-        throw error;
-      }
     } catch (error) {
       throw this.handleError(error);
     }
@@ -292,41 +291,139 @@ class TauriClient {
     options?: InvokeOptions
   ): Promise<string> {
     const streamId = `stream_${Date.now()}`;
+    let accumulated = '';
+    let targetConversationId: string | null = null;
+    let targetMessageId: string | null = null;
+    const pendingChunks: BackendStreamChunk[] = [];
+    let pendingDone: BackendStreamChunk | null = null;
+    let unlistenChunk: UnlistenFn | null = null;
+    let unlistenDone: UnlistenFn | null = null;
+
+    const cleanup = () => {
+      if (unlistenChunk) {
+        unlistenChunk();
+        unlistenChunk = null;
+      }
+      if (unlistenDone) {
+        unlistenDone();
+        unlistenDone = null;
+      }
+      this.streamListeners.delete(streamId);
+    };
+
+    const processChunk = (payload: BackendStreamChunk) => {
+      if (payload.done) {
+        return;
+      }
+      accumulated += payload.content;
+      callbacks.onChunk?.(payload.content);
+    };
+
+    const processDoneEvent = (payload: BackendStreamChunk) => {
+      let meta: Record<string, unknown> = {};
+      try {
+        meta = payload.content ? JSON.parse(payload.content) : {};
+      } catch (parseError) {
+        console.warn('[TauriClient] Failed to parse stream metadata:', parseError);
+      }
+
+      const errorMessage = typeof meta.error === 'string' ? meta.error : undefined;
+
+      if (errorMessage) {
+        callbacks.onError?.(this.createError('InternalError', errorMessage));
+      } else {
+        callbacks.onComplete?.({
+          content: accumulated,
+          latency_ms: typeof meta.latency_ms === 'number' ? meta.latency_ms : 0,
+          provider: typeof meta.provider === 'string' ? meta.provider : 'tauri-backend',
+          model: typeof meta.model === 'string' ? meta.model : undefined,
+          tokens: typeof meta.tokens === 'number' ? meta.tokens : undefined,
+        });
+      }
+
+      cleanup();
+    };
+
+    const flushPending = () => {
+      if (!targetConversationId || !targetMessageId) {
+        return;
+      }
+
+      if (pendingChunks.length > 0) {
+        const remaining: BackendStreamChunk[] = [];
+        for (const chunk of pendingChunks) {
+          if (chunk.conversation_id === targetConversationId && chunk.message_id === targetMessageId) {
+            processChunk(chunk);
+          } else {
+            remaining.push(chunk);
+          }
+        }
+        pendingChunks.length = 0;
+        pendingChunks.push(...remaining);
+      }
+
+      if (
+        pendingDone &&
+        pendingDone.conversation_id === targetConversationId &&
+        pendingDone.message_id === targetMessageId
+      ) {
+        const donePayload = pendingDone;
+        pendingDone = null;
+        processDoneEvent(donePayload);
+      }
+    };
 
     try {
       // Écouter les chunks
-      const unlistenChunk = await listen<string>('chat_stream_chunk', (event) => {
-        if (callbacks.onChunk) {
-          callbacks.onChunk(event.payload);
+      unlistenChunk = await listen<BackendStreamChunk>('chat:stream:chunk', (event) => {
+        const payload = event.payload;
+
+        if (!targetConversationId || !targetMessageId) {
+          pendingChunks.push(payload);
+          return;
         }
+
+        if (payload.conversation_id !== targetConversationId || payload.message_id !== targetMessageId) {
+          return;
+        }
+
+        if (payload.done) {
+          return;
+        }
+
+        processChunk(payload);
       });
 
       // Écouter la complétion
-      const unlistenComplete = await listen<{ content: string; latency_ms: number; provider: string }>(
-        'chat_stream_complete',
-        (event) => {
-          if (callbacks.onComplete) {
-            callbacks.onComplete(event.payload);
-          }
-          // Nettoyer les listeners
-          unlistenChunk();
-          unlistenComplete();
-          this.streamListeners.delete(streamId);
+      unlistenDone = await listen<BackendStreamChunk>('chat:stream:done', (event) => {
+        const payload = event.payload;
+
+        if (!targetConversationId || !targetMessageId) {
+          pendingDone = payload;
+          return;
         }
-      );
+
+        if (payload.conversation_id !== targetConversationId || payload.message_id !== targetMessageId) {
+          return;
+        }
+
+        processDoneEvent(payload);
+      });
 
       // Sauvegarder listeners pour cleanup manuel si besoin
       this.streamListeners.set(streamId, () => {
-        unlistenChunk();
-        unlistenComplete();
+        cleanup();
       });
 
       // Démarrer le streaming
-      const result = await this.safeInvoke<string>('chat_stream_message', { request }, {
+      const result = await this.safeInvoke<{ conversationId: string; messageId: string }>('chat_stream_message', { request }, {
         timeout: 90000, // 90s pour streaming IA
         ...options,
       });
-      return result;
+      targetConversationId = result.conversationId ?? null;
+      targetMessageId = result.messageId ?? null;
+      flushPending();
+      return result.messageId;
     } catch (error) {
       if (callbacks.onError) {
         callbacks.onError(this.handleError(error));
@@ -351,11 +448,10 @@ class TauriClient {
    */
   async chatGetProvidersStatus(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      const response = await this.safeInvoke<string>('chat_get_providers_status', {}, {
+      return await this.safeInvoke<ProviderStatus[]>('chat_get_providers_status', {}, {
         timeout: 10000, // 10s pour check rapide
         ...options,
       });
-      return JSON.parse(response) as ProviderStatus[];
     } catch (error) {
       throw this.handleError(error);
     }
@@ -366,11 +462,10 @@ class TauriClient {
    */
   async chatCheckProviders(options?: InvokeOptions): Promise<ProviderStatus[]> {
     try {
-      const response = await this.safeInvoke<string>('chat_check_providers', {}, {
+      return await this.safeInvoke<ProviderStatus[]>('chat_check_providers', {}, {
         timeout: 15000, // 15s pour check réseau
         ...options,
       });
-      return JSON.parse(response) as ProviderStatus[];
     } catch (error) {
       throw this.handleError(error);
     }
@@ -409,11 +504,10 @@ class TauriClient {
    */
   async chatGetConversation(conversationId: string, options?: InvokeOptions): Promise<ConversationData> {
     try {
-      const response = await this.safeInvoke<string>('chat_get_conversation', { conversationId }, {
+      return await this.safeInvoke<ConversationData>('chat_get_conversation', { conversationId }, {
         timeout: 10000,
         ...options,
       });
-      return JSON.parse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -442,12 +536,11 @@ class TauriClient {
    */
   async getSystemVitals(options?: InvokeOptions): Promise<SystemVitals> {
     try {
-      const response = await this.safeInvoke<string>('get_system_vitals', {}, {
+      return await this.safeInvoke<SystemVitals>('get_system_vitals', {}, {
         timeout: 5000,
         retries: 0, // Pas de retry pour vitals (donnée temps réel)
         ...options,
       });
-      return JSON.parse(response);
     } catch (error) {
       throw this.handleError(error);
     }
@@ -458,11 +551,10 @@ class TauriClient {
    */
   async getSingularityState(options?: InvokeOptions): Promise<SingularityState> {
     try {
-      const response = await this.safeInvoke<string>('singularity_get_full_state', {}, {
+      return await this.safeInvoke<SingularityState>('singularity_get_full_state', {}, {
         timeout: 10000,
         ...options,
       });
-      return JSON.parse(response);
     } catch (error) {
       throw this.handleError(error);
     }

@@ -4,12 +4,12 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 use crate::singularity::singularity_state_vinfinity::{
-    SingularityStateVInfinity, DiffResult, MetaCognitiveReport,
-    IntegrityCheckResult, collect_all_engines_state
+    collect_all_engines_state, DiffResult, IntegrityCheckResult, MetaCognitiveReport,
+    SingularityStateVInfinity,
 };
 use std::sync::Arc;
-use tokio::sync::Mutex;
 use tauri::State;
+use tokio::sync::Mutex;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 //   ÉTAT GLOBAL PARTAGÉ
@@ -46,7 +46,7 @@ impl SingularityStateGlobal {
 /// `SingularityStateVInfinity` - État complet sérialisé en JSON
 #[tauri::command]
 pub async fn singularity_get(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<SingularityStateVInfinity, String> {
     log::info!("[Command] singularity_get");
 
@@ -104,9 +104,7 @@ pub async fn singularity_diff(
 /// # Returns
 /// `String` - Hash SHA-256 hexadécimal
 #[tauri::command]
-pub async fn singularity_hash(
-    state: State<'_, SingularityStateGlobal>
-) -> Result<String, String> {
+pub async fn singularity_hash(state: State<'_, SingularityStateGlobal>) -> Result<String, String> {
     log::info!("[Command] singularity_hash");
 
     let state_lock = state.state.lock().await;
@@ -121,7 +119,7 @@ pub async fn singularity_hash(
 /// `SingularityStateVInfinity` - État après synchronisation
 #[tauri::command]
 pub async fn singularity_sync(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<SingularityStateVInfinity, String> {
     log::info!("[Command] singularity_sync - Starting Deep Sync");
 
@@ -146,7 +144,7 @@ pub async fn singularity_sync(
 /// `MetaCognitiveReport` - Analyse complète de la cohérence globale
 #[tauri::command]
 pub async fn singularity_meta(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<MetaCognitiveReport, String> {
     log::info!("[Command] singularity_meta");
 
@@ -160,7 +158,7 @@ pub async fn singularity_meta(
 /// `IntegrityCheckResult` - Rapport d'intégrité détaillé
 #[tauri::command]
 pub async fn singularity_integrity(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<IntegrityCheckResult, String> {
     log::info!("[Command] singularity_integrity");
 
@@ -174,7 +172,7 @@ pub async fn singularity_integrity(
 /// `SingularityStateVInfinity` - État après réparation
 #[tauri::command]
 pub async fn singularity_repair(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<SingularityStateVInfinity, String> {
     log::warn!("[Command] singularity_repair - Starting auto-repair");
 
@@ -191,7 +189,7 @@ pub async fn singularity_repair(
 /// `String` - État complet sérialisé en JSON formaté
 #[tauri::command]
 pub async fn singularity_export_json(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<String, String> {
     log::info!("[Command] singularity_export_json");
 
@@ -205,7 +203,7 @@ pub async fn singularity_export_json(
 /// `HashMap<String, String>` - Résumé avec version, hash, cohérence, etc.
 #[tauri::command]
 pub async fn singularity_snapshot(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<std::collections::HashMap<String, String>, String> {
     log::info!("[Command] singularity_snapshot");
 

@@ -33,7 +33,6 @@ pub fn get_handlers() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
         crate::commands::evolution_v14::run_auto_evolution,
         crate::commands::evolution_v14::get_evolution_state,
         crate::commands::evolution_v14::evolution_health_check,
-
         // ═══════════════════════════════════════════════════════════════
         // DIAGNOSTIC v14 (Backend Self-Check + Validation)
         // ═══════════════════════════════════════════════════════════════

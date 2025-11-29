@@ -22,10 +22,13 @@ use tauri::Manager;
 use titane_infinity::{
     control_panel_commands,
     mock_commands,
-    overdrive,  // ✅ v16.1 CHAT ORCHESTRATOR
+    overdrive, // ✅ v16.1 CHAT ORCHESTRATOR
     secure_commands,
-    time_commands
+    time_commands,
 };
+
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use titane_infinity::chat_engine;
 
 // DevOps commands (module local)
 mod devops_commands {
@@ -38,10 +41,10 @@ mod system_health_commands {
 }
 
 // Cognitive system (always available)
+use std::sync::Arc;
 use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
 };
-use std::sync::Arc;
 use tokio::sync::Mutex;
 
 // QA System v19.8
@@ -216,19 +219,34 @@ async fn main() {
 
     log::info!("✅ ChatOrchestrator v16: Gemini + Ollama + Local ready");
 
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    log::info!("⚡ Initializing ChatEngine v∞ (high-performance mode)...");
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    let chat_engine_state = match chat_engine::bootstrap_from_env(None).await {
+        Ok(state) => {
+            log::info!("✅ ChatEngine v∞ ready: streaming, memory, TTS active");
+            state
+        }
+        Err(err) => {
+            log::error!("❌ Failed to initialize ChatEngine v∞: {}", err);
+            std::process::exit(1);
+        }
+    };
+
     // ═══════════════════════════════════════════════════════════════
     // INITIALIZE SINGULARITY-FUSION vΩ
     // ═══════════════════════════════════════════════════════════════
     log::info!("🌀 Initializing SINGULARITY-FUSION vΩ...");
     let fusion_engine_state = titane_infinity::singularity_fusion::FusionEngineState::default();
-    let unified_pipeline_state = titane_infinity::singularity_fusion::UnifiedPipelineState::default();
+    let unified_pipeline_state =
+        titane_infinity::singularity_fusion::UnifiedPipelineState::default();
     let autofix_state = titane_infinity::singularity_fusion::AutoFixState::default();
     let autoheal_state = titane_infinity::singularity_fusion::AutoHealState::default();
     let performance_state = titane_infinity::singularity_fusion::PerformanceState::default();
     let crashguard_state = titane_infinity::singularity_fusion::CrashGuardState::default();
     log::info!("✅ SINGULARITY-FUSION vΩ: 8 engines unified");
 
-    tauri::Builder::default()
+    let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .manage(cognitive_state)
         .manage(qa_state)
@@ -242,468 +260,493 @@ async fn main() {
         .manage(autofix_state)
         .manage(autoheal_state)
         .manage(performance_state)
-        .manage(crashguard_state)
-        .setup(|_app| {
-            log::info!("✅ Tauri Builder initialized");
-            log::info!("✅ Cognitive System State managed");
-            log::info!("✅ QA System State managed");
-            log::info!("✅ SingularityState v∞ managed");
-            log::info!("✅ AdaptiveEngine v21 managed");
-            log::info!("✅ NarrativeEngine v22 managed");
-            log::info!("✅ ImmersiveAvatarEngine v23 managed");
-            log::info!("✅ ChatOrchestrator v16 managed");
-            log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
+        .manage(crashguard_state);
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    {
+        builder = builder.manage(chat_engine_state.clone());
+    }
 
-            // Auto-open DevTools in debug mode
-            #[cfg(debug_assertions)]
-            {
-                if let Some(window) = _app.get_webview_window("main") {
-                    window.open_devtools();
-                    log::info!("DevTools opened automatically (debug mode)");
-                }
+    builder = builder.setup(|_app| {
+        log::info!("✅ Cognitive System State managed");
+        log::info!("✅ QA System State managed");
+        log::info!("✅ SingularityState v∞ managed");
+        log::info!("✅ AdaptiveEngine v21 managed");
+        log::info!("✅ NarrativeEngine v22 managed");
+        log::info!("✅ ImmersiveAvatarEngine v23 managed");
+        log::info!("✅ ChatOrchestrator v16 managed");
+        log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
+
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        log::info!("✅ ChatEngine v∞ managed");
+        // Auto-open DevTools in debug mode
+        #[cfg(debug_assertions)]
+        {
+            if let Some(window) = _app.get_webview_window("main") {
+                window.open_devtools();
+                log::info!("DevTools opened automatically (debug mode)");
             }
+        }
 
-            Ok(())
-        })
-        .invoke_handler(tauri::generate_handler![
-            // ═══════════════════════════════════════════════════════════════
-            // MOCK COMMANDS - Frontend Development
-            // ═══════════════════════════════════════════════════════════════
+        Ok(())
+    });
 
-            // Helios - System Monitoring
-            mock_commands::get_helios_state,
-            mock_commands::get_system_health,
-            // OMNIS Auto-Heal - System Health (Phase 7)
-            system_health_commands::get_system_health,
-            system_health_commands::memory_repair,
-            system_health_commands::system_optimize,
-            // Memory - Storage & Timeline
-            mock_commands::get_memory_state,
-            mock_commands::write_snapshot,
-            mock_commands::read_snapshot,
-            mock_commands::write_log,
-            mock_commands::read_logs,
-            mock_commands::add_timeline_event,
-            mock_commands::get_timeline,
-            mock_commands::get_active_projects,
-            mock_commands::get_recent_decisions,
-            mock_commands::get_knowledge,
-            mock_commands::get_active_rituals,
-            mock_commands::save_chat_interaction,
-            mock_commands::memory_save_chat_interaction,  // Alias frontend compatibility
-            // Memory Aliases v17 - Frontend compatibility
-            mock_commands::memory_get_active_projects,
-            mock_commands::memory_get_recent_decisions,
-            mock_commands::memory_get_knowledge,
-            mock_commands::memory_get_active_rituals,
-            // Nexus - Validation
-            mock_commands::validate_nexus,
-            mock_commands::get_nexus_graph,
-            // Singularity - Unity State
-            mock_commands::singularity_get_full_state,
-            mock_commands::singularity_get_physical,
-            mock_commands::singularity_get_cognitive,
-            mock_commands::singularity_get_global_coherence,
-            mock_commands::singularity_is_critical,
-            mock_commands::get_singularity_state,
-            mock_commands::sync_singularity,
-            mock_commands::singularity_get_symbolic,
-            mock_commands::singularity_get_adaptive,
-            mock_commands::singularity_get_meta,
-            // Singularity - Update commands (v16.2.2+)
-            mock_commands::singularity_update_physical,
-            mock_commands::singularity_update_cognitive,
-            mock_commands::singularity_update_symbolic,
-            mock_commands::singularity_update_adaptive,
-            mock_commands::singularity_update_meta,
-            mock_commands::singularity_update_full_state,
-            mock_commands::singularity_save_state,
-            mock_commands::singularity_load_state,
-            // DevTools - Logging & Debug
-            mock_commands::get_logs,
-            mock_commands::clear_logs,
-            mock_commands::get_system_info,
-            // ═══════════════════════════════════════════════════════════════
-            // DEVOPS COMMANDS v19 - Dashboard & Build Tools
-            // ═══════════════════════════════════════════════════════════════
-            devops_commands::devops_run,
-            devops_commands::devops_stats,
-            // Helios + Memory - Additional Metrics (v∞)
-            mock_commands::get_helios_metrics,
-            mock_commands::memory_get_state,
-            // Experience - XP & Knowledge Domains (v24)
-            mock_commands::experience_get_state,
-            mock_commands::experience_update_state,
-            // Memory - File Ingestion (v24)
-            mock_commands::memory_ingest_file,
-            mock_commands::import_file,
-            // Chat AI - Unified Command (v∞)
-            mock_commands::chat_generate,
-            mock_commands::upload_and_process_file,
-            // Memory Persistence - v∞.C
-            mock_commands::get_all_files,
-            mock_commands::get_files_by_category,
-            mock_commands::clear_memory,
-            mock_commands::store_file,
-            // Chat AI - Real Orchestrator (v18) ✅ FIXED v16.1
-            overdrive::chat_orchestrator::chat_send_message,
-            overdrive::chat_orchestrator::chat_get_providers_status,
-            overdrive::chat_orchestrator::chat_check_providers,
-            overdrive::chat_orchestrator::chat_create_conversation,
-            overdrive::chat_orchestrator::chat_get_conversation,
-            overdrive::chat_orchestrator::chat_delete_conversation,
-            overdrive::chat_orchestrator::chat_set_gemini_key,
-            overdrive::chat_orchestrator::chat_stream_message,
-            // ═══════════════════════════════════════════════════════════════
-            // VOICE COMMANDS v16.2.2+ - TTS & ASR
-            // ═══════════════════════════════════════════════════════════════
-            mock_commands::speak,
-            mock_commands::stop_speaking,
-            mock_commands::is_speaking,
-            mock_commands::start_recording,
-            mock_commands::stop_recording,
-            mock_commands::transcribe_audio,
-            // Memory Engine Commands (✅ Active commands only)
-            overdrive::memory_engine::memory_store,
-            overdrive::memory_engine::memory_store_conversation,
-            overdrive::memory_engine::memory_search,
-            overdrive::memory_engine::memory_get_related,
-            overdrive::memory_engine::memory_rebuild_index,
-            overdrive::memory_engine::memory_get_stats,
-            overdrive::memory_engine::memory_prune,
-            overdrive::memory_engine::memory_delete,
-            // memory_clear: DISABLED (conflict with commands::memory_clear)
-            overdrive::memory_engine::memory_export,
-            overdrive::memory_engine::memory_import,
-            // ═══════════════════════════════════════════════════════════════
-            // SECURE COMMANDS v∞ - Super-Prompts H, I, J, K
-            // ═══════════════════════════════════════════════════════════════
-            secure_commands::secure_import_file,
-            secure_commands::secure_read_file,
-            secure_commands::secure_list_files,
-            secure_commands::secure_delete_file,
-            secure_commands::get_permission_audit,
-            secure_commands::validate_chat_message,
-            secure_commands::check_system_integrity,
-            // ═══════════════════════════════════════════════════════════════
-            // TIME-TRAVEL COMMANDS v∞ - Super-Prompt N
-            // ═══════════════════════════════════════════════════════════════
-            time_commands::list_snapshots,
-            time_commands::get_travel_stats,
-            time_commands::restore_snapshot,
-            time_commands::delete_snapshot,
-            // ═══════════════════════════════════════════════════════════════
-            // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U
-            // ═══════════════════════════════════════════════════════════════
+    builder = builder.invoke_handler(tauri::generate_handler![
+        // ═══════════════════════════════════════════════════════════════
+        // MOCK COMMANDS - Frontend Development
+        // ═══════════════════════════════════════════════════════════════
 
-            // Phase 5: Node-Cluster (Super-Prompt P)
-            titane_infinity::cluster::mesh_initialize,
-            titane_infinity::cluster::mesh_get_stats,
-            // Phase 6: Knowledge Fusion (Super-Prompt Q)
-            titane_infinity::knowledge::parse_document,
-            titane_infinity::knowledge::detect_file_format,
-            // Phase 7: HyperVision (Super-Prompt R)
-            titane_infinity::hypervision::hypervision_start,
-            titane_infinity::hypervision::get_system_metrics,
-            // Phase 8: Mode Création (Super-Prompt S)
-            titane_infinity::creation::create_module,
-            // Phase 9: Introspection (Super-Prompt T)
-            titane_infinity::introspection::introspection_scan,
-            titane_infinity::introspection::introspection_auto_fix,
-            // Phase 10: Auto-Évolution (Super-Prompt U)
-            titane_infinity::evolution::evolution_run_cycle,
-            titane_infinity::evolution::evolution_get_stats,
-            // ═══════════════════════════════════════════════════════════════
-            // PHASES V-Ω COMMANDS v∞ - Super-Prompts V-Ω ULTIMATE
-            // ═══════════════════════════════════════════════════════════════
+        // Helios - System Monitoring
+        mock_commands::get_helios_state,
+        mock_commands::get_system_health,
+        // OMNIS Auto-Heal - System Health (Phase 7)
+        system_health_commands::get_system_health,
+        system_health_commands::memory_repair,
+        system_health_commands::system_optimize,
+        // Memory - Storage & Timeline
+        mock_commands::get_memory_state,
+        mock_commands::write_snapshot,
+        mock_commands::read_snapshot,
+        mock_commands::write_log,
+        mock_commands::read_logs,
+        mock_commands::add_timeline_event,
+        mock_commands::get_timeline,
+        mock_commands::get_active_projects,
+        mock_commands::get_recent_decisions,
+        mock_commands::get_knowledge,
+        mock_commands::get_active_rituals,
+        mock_commands::save_chat_interaction,
+        mock_commands::memory_save_chat_interaction, // Alias frontend compatibility
+        mock_commands::memory_debug_scan,
+        // Memory Aliases v17 - Frontend compatibility
+        mock_commands::memory_get_active_projects,
+        mock_commands::memory_get_recent_decisions,
+        mock_commands::memory_get_knowledge,
+        mock_commands::memory_get_active_rituals,
+        // Nexus - Validation
+        mock_commands::validate_nexus,
+        mock_commands::get_nexus_graph,
+        // Singularity - Unity State
+        mock_commands::singularity_get_full_state,
+        mock_commands::singularity_get_physical,
+        mock_commands::singularity_get_cognitive,
+        mock_commands::singularity_get_global_coherence,
+        mock_commands::singularity_is_critical,
+        mock_commands::get_singularity_state,
+        mock_commands::sync_singularity,
+        mock_commands::singularity_get_symbolic,
+        mock_commands::singularity_get_adaptive,
+        mock_commands::singularity_get_meta,
+        // Singularity - Update commands (v16.2.2+)
+        mock_commands::singularity_update_physical,
+        mock_commands::singularity_update_cognitive,
+        mock_commands::singularity_update_symbolic,
+        mock_commands::singularity_update_adaptive,
+        mock_commands::singularity_update_meta,
+        mock_commands::singularity_update_full_state,
+        mock_commands::singularity_save_state,
+        mock_commands::singularity_load_state,
+        // DevTools - Logging & Debug
+        mock_commands::get_logs,
+        mock_commands::clear_logs,
+        mock_commands::get_system_info,
+        // ═══════════════════════════════════════════════════════════════
+        // DEVOPS COMMANDS v19 - Dashboard & Build Tools
+        // ═══════════════════════════════════════════════════════════════
+        devops_commands::devops_run,
+        devops_commands::devops_stats,
+        // Helios + Memory - Additional Metrics (v∞)
+        mock_commands::get_helios_metrics,
+        mock_commands::memory_get_state,
+        // Experience - XP & Knowledge Domains (v24)
+        mock_commands::experience_get_state,
+        mock_commands::experience_update_state,
+        // Memory - File Ingestion (v24)
+        mock_commands::memory_ingest_file,
+        mock_commands::import_file,
+        // Chat AI - Unified Command (v∞)
+        mock_commands::chat_generate,
+        mock_commands::upload_and_process_file,
+        // Memory Persistence - v∞.C
+        mock_commands::get_all_files,
+        mock_commands::get_files_by_category,
+        mock_commands::clear_memory,
+        mock_commands::store_file,
+        // Chat Engine v∞ - High-Performance Pipeline
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::generate_response,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::stream_response,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::speak_text,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::save_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::load_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::reset_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        chat_engine::commands::health_check,
+        // Chat AI - Real Orchestrator (v18) ✅ FIXED v16.1
+        overdrive::chat_orchestrator::chat_send_message,
+        overdrive::chat_orchestrator::chat_get_providers_status,
+        overdrive::chat_orchestrator::chat_check_providers,
+        overdrive::chat_orchestrator::chat_create_conversation,
+        overdrive::chat_orchestrator::chat_get_conversation,
+        overdrive::chat_orchestrator::chat_delete_conversation,
+        overdrive::chat_orchestrator::chat_set_gemini_key,
+        overdrive::chat_orchestrator::chat_stream_message,
+        // ═══════════════════════════════════════════════════════════════
+        // VOICE COMMANDS v16.2.2+ - TTS & ASR
+        // ═══════════════════════════════════════════════════════════════
+        mock_commands::speak,
+        mock_commands::stop_speaking,
+        mock_commands::is_speaking,
+        mock_commands::start_recording,
+        mock_commands::stop_recording,
+        mock_commands::transcribe_audio,
+        // Memory Engine Commands (✅ Active commands only)
+        overdrive::memory_engine::memory_store,
+        overdrive::memory_engine::memory_store_conversation,
+        overdrive::memory_engine::memory_search,
+        overdrive::memory_engine::memory_get_related,
+        overdrive::memory_engine::memory_rebuild_index,
+        overdrive::memory_engine::memory_get_stats,
+        overdrive::memory_engine::memory_prune,
+        overdrive::memory_engine::memory_delete,
+        // memory_clear: DISABLED (conflict with commands::memory_clear)
+        overdrive::memory_engine::memory_export,
+        overdrive::memory_engine::memory_import,
+        // ═══════════════════════════════════════════════════════════════
+        // SECURE COMMANDS v∞ - Super-Prompts H, I, J, K
+        // ═══════════════════════════════════════════════════════════════
+        secure_commands::secure_import_file,
+        secure_commands::secure_read_file,
+        secure_commands::secure_list_files,
+        secure_commands::secure_delete_file,
+        secure_commands::get_permission_audit,
+        secure_commands::validate_chat_message,
+        secure_commands::check_system_integrity,
+        // ═══════════════════════════════════════════════════════════════
+        // TIME-TRAVEL COMMANDS v∞ - Super-Prompt N
+        // ═══════════════════════════════════════════════════════════════
+        time_commands::list_snapshots,
+        time_commands::get_travel_stats,
+        time_commands::restore_snapshot,
+        time_commands::delete_snapshot,
+        // ═══════════════════════════════════════════════════════════════
+        // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U
+        // ═══════════════════════════════════════════════════════════════
 
-            // Phase V: HyperEvolution Engine
-            titane_infinity::hyper_evolution::hyper_predict_issues,
-            titane_infinity::hyper_evolution::hyper_accelerate,
-            titane_infinity::hyper_evolution::hyper_analyze_structure,
-            titane_infinity::hyper_evolution::hyper_detect_regeneration,
-            titane_infinity::hyper_evolution::hyper_analyze_rewrite,
-            titane_infinity::hyper_evolution::hyper_validate,
-            // Phase W: Auto-Apprentissage Cognitif
-            titane_infinity::cognitive_learning::cognitive_get_map,
-            titane_infinity::cognitive_learning::cognitive_add_concept,
-            titane_infinity::cognitive_learning::cognitive_build_memory,
-            titane_infinity::cognitive_learning::cognitive_create_association,
-            titane_infinity::cognitive_learning::cognitive_get_associations,
-            titane_infinity::cognitive_learning::cognitive_grow_knowledge,
-            titane_infinity::cognitive_learning::cognitive_run_reinforcement,
-            titane_infinity::cognitive_learning::cognitive_summarize,
-            // Phase X: NeuroSymbolic Fusion
-            titane_infinity::neuro_symbolic::neuro_fuse,
-            titane_infinity::neuro_symbolic::neuro_adapt_intent,
-            titane_infinity::neuro_symbolic::neuro_translate_symbolic,
-            titane_infinity::neuro_symbolic::neuro_bridge_reasoning,
-            titane_infinity::neuro_symbolic::neuro_map_context,
-            titane_infinity::neuro_symbolic::neuro_get_state,
-            // Phase Y: Méta-Création
-            titane_infinity::meta_creation::meta_generate_ideas,
-            titane_infinity::meta_creation::meta_invent_pattern,
-            titane_infinity::meta_creation::meta_design_system,
-            titane_infinity::meta_creation::meta_generate_prototype,
-            titane_infinity::meta_creation::meta_build_solution,
-            titane_infinity::meta_creation::meta_integrate_module,
-            titane_infinity::meta_creation::meta_get_creative_memory,
-            // Phase Z: Auto-Réparation Totale
-            titane_infinity::self_repair::repair_detect_anomalies,
-            titane_infinity::self_repair::repair_execute,
-            titane_infinity::self_repair::repair_regenerate_module,
-            titane_infinity::self_repair::repair_fallback_recovery,
-            titane_infinity::self_repair::repair_deep_rebuild,
-            titane_infinity::self_repair::repair_get_integrity_map,
-            // Phase Ω: Singularity Engine
-            titane_infinity::singularity::singularity_activate,
-            titane_infinity::singularity::singularity_check_coherence,
-            titane_infinity::singularity::singularity_fuse_all,
-            titane_infinity::singularity::singularity_unify,
-            titane_infinity::singularity::singularity_get_state,
-            titane_infinity::singularity::singularity_detect_emergence,
-            // ═══════════════════════════════════════════════════════════════
-            // CONTROL PANEL COMMANDS v19.1.0
-            // ═══════════════════════════════════════════════════════════════
+        // Phase 5: Node-Cluster (Super-Prompt P)
+        titane_infinity::cluster::mesh_initialize,
+        titane_infinity::cluster::mesh_get_stats,
+        // Phase 6: Knowledge Fusion (Super-Prompt Q)
+        titane_infinity::knowledge::parse_document,
+        titane_infinity::knowledge::detect_file_format,
+        // Phase 7: HyperVision (Super-Prompt R)
+        titane_infinity::hypervision::hypervision_start,
+        titane_infinity::hypervision::get_system_metrics,
+        // Phase 8: Mode Création (Super-Prompt S)
+        titane_infinity::creation::create_module,
+        // Phase 9: Introspection (Super-Prompt T)
+        titane_infinity::introspection::introspection_scan,
+        titane_infinity::introspection::introspection_auto_fix,
+        // Phase 10: Auto-Évolution (Super-Prompt U)
+        titane_infinity::evolution::evolution_run_cycle,
+        titane_infinity::evolution::evolution_get_stats,
+        // ═══════════════════════════════════════════════════════════════
+        // PHASES V-Ω COMMANDS v∞ - Super-Prompts V-Ω ULTIMATE
+        // ═══════════════════════════════════════════════════════════════
 
-            // Système
-            control_panel_commands::cp_get_system_info,
-            control_panel_commands::cp_run_system_diagnostic,
-            // Apparence / Design System
-            control_panel_commands::cp_get_design_config,
-            control_panel_commands::cp_set_design_config,
-            // Singularité
-            control_panel_commands::cp_get_singularity_status,
-            control_panel_commands::cp_toggle_singularity,
-            // IA & APIs
-            control_panel_commands::cp_get_ai_config,
-            control_panel_commands::cp_set_ai_config,
-            // Mémoire
-            control_panel_commands::cp_get_memory_stats,
-            control_panel_commands::cp_clear_memory_cache,
-            // Modules
-            control_panel_commands::cp_get_modules_status,
-            control_panel_commands::cp_toggle_module,
-            // Réseau
-            control_panel_commands::cp_get_network_config,
-            control_panel_commands::cp_set_network_config,
-            // Mises à jour
-            control_panel_commands::cp_check_for_updates,
-            control_panel_commands::cp_install_update,
-            // Logs
-            control_panel_commands::cp_get_logs,
-            control_panel_commands::cp_clear_logs,
-            // Sécurité
-            control_panel_commands::cp_get_security_config,
-            control_panel_commands::cp_set_security_config,
-            // ═══════════════════════════════════════════════════════════════
-            // SECURITY HARDENING v17 - Global Self-Test
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::security::run_hardening_selftest,
-            // ═══════════════════════════════════════════════════════════════
-            // COGNITIVE HARDENING v17.3.0 - Cognitive Security Commands
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::cognitive::cognitive_run_selftest,
-            titane_infinity::cognitive::cognitive_validate_state,
-            titane_infinity::cognitive::cognitive_compute_hash_cmd,
-            // ═══════════════════════════════════════════════════════════════
-            // WATCHDOG ENGINE v17.3.0 - Auto-Repair & Monitoring Commands
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::watchdog::watchdog_run_selftest,
-            titane_infinity::watchdog::watchdog_scan,
-            titane_infinity::watchdog::watchdog_fix,
-            // ═══════════════════════════════════════════════════════════════
-            // BACKEND GLOBAL SELF-TEST v17.7 - Full System Validation
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::backend_selftest::backend_run_global_selftest,
-            // ═══════════════════════════════════════════════════════════════
-            // META-COGNITION & DEEP SYNC v18 - Cognitive Supervision
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::meta::meta_get_report,
-            titane_infinity::meta::meta_trigger_sync,
-            titane_infinity::meta::meta_get_alignment,
-            titane_infinity::meta::meta_get_state,
-            titane_infinity::meta::meta_selftest_all, // v18.1: Self-test complet
-            // ═══════════════════════════════════════════════════════════════
-            // META MONITORING & AUTO-HEALING v18.2 - Production Systems
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::meta::meta_get_monitoring_metrics,
-            titane_infinity::meta::meta_get_evaluation_history,
-            titane_infinity::meta::meta_get_sync_history,
-            titane_infinity::meta::meta_get_alerts,
-            titane_infinity::meta::meta_acknowledge_alert,
-            titane_infinity::meta::meta_set_auto_healing,
-            titane_infinity::meta::meta_get_auto_healing_status,
-            titane_infinity::meta::meta_get_healing_history,
-            titane_infinity::meta::meta_get_recalibration_history,
-            titane_infinity::meta::meta_trigger_recalibration,
-            // ═══════════════════════════════════════════════════════════════
-            // QA SYSTEM v19.8 - Automated Testing & Quality Assurance
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::qa::qa_commands::qa_run_all,
-            titane_infinity::qa::qa_commands::qa_run_module,
-            titane_infinity::qa::qa_commands::qa_get_last_report,
-            // ═══════════════════════════════════════════════════════════════
-            // SINGULARITY STATE v∞ (v20) - Global Unified State
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::singularity::singularity_commands::singularity_get,
-            titane_infinity::singularity::singularity_commands::singularity_set,
-            titane_infinity::singularity::singularity_commands::singularity_diff,
-            titane_infinity::singularity::singularity_commands::singularity_hash,
-            titane_infinity::singularity::singularity_commands::singularity_sync,
-            titane_infinity::singularity::singularity_commands::singularity_meta,
-            titane_infinity::singularity::singularity_commands::singularity_integrity,
-            titane_infinity::singularity::singularity_commands::singularity_repair,
-            titane_infinity::singularity::singularity_commands::singularity_export_json,
-            titane_infinity::singularity::singularity_commands::singularity_snapshot,
-            titane_infinity::singularity::singularity_selftest::singularity_selftest_full,
-            // ═══════════════════════════════════════════════════════════════
-            // ADAPTIVE ENGINE v21 - Auto-Optimization & Learning
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::adaptive::adaptive_commands::adaptive_get_profile,
-            titane_infinity::adaptive::adaptive_commands::adaptive_set_mode,
-            titane_infinity::adaptive::adaptive_commands::adaptive_learn,
-            titane_infinity::adaptive::adaptive_commands::adaptive_run_optimization,
-            titane_infinity::adaptive::adaptive_commands::adaptive_get_history,
-            titane_infinity::adaptive::adaptive_commands::adaptive_capture_sample,
-            titane_infinity::adaptive::adaptive_commands::adaptive_get_summary,
-            // ═══════════════════════════════════════════════════════════════
-            // NARRATIVE ENGINE v22 - Expressive & Symbolic Layer
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::narrative::narrative_commands::narrative_generate,
-            titane_infinity::narrative::narrative_commands::narrative_get_style,
-            titane_infinity::narrative::narrative_commands::narrative_set_style,
-            titane_infinity::narrative::narrative_commands::narrative_get_identity,
-            titane_infinity::narrative::narrative_commands::narrative_evolve,
-            titane_infinity::narrative::narrative_commands::narrative_get_archetype,
-            titane_infinity::narrative::narrative_commands::narrative_set_archetype,
-            // ═══════════════════════════════════════════════════════════════
-            // IMMERSIVE AVATAR ENGINE v23 - Voice, Lip-Sync & Expressions
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::avatar::avatar_commands::avatar_prepare_speech,
-            titane_infinity::avatar::avatar_commands::avatar_finish_speech,
-            titane_infinity::avatar::avatar_commands::avatar_enable_immersion,
-            titane_infinity::avatar::avatar_commands::avatar_on_wake_word,
-            titane_infinity::avatar::avatar_commands::avatar_get_current_morph,
-            titane_infinity::avatar::avatar_commands::avatar_advance_lip_sync,
-            titane_infinity::avatar::avatar_commands::avatar_get_expression,
-            titane_infinity::avatar::avatar_commands::avatar_get_state,
-            titane_infinity::avatar::avatar_selftest::avatar_run_selftest,
-            // ═══════════════════════════════════════════════════════════════
-            // FULL-BODY AVATAR ENGINE v24 - Complete Body, Gestures & Postures
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::avatar::fullbody_commands::fullbody_initialize,
-            titane_infinity::avatar::fullbody_commands::fullbody_advance_frame,
-            titane_infinity::avatar::fullbody_commands::fullbody_activate_gesture,
-            titane_infinity::avatar::fullbody_commands::fullbody_update_expression,
-            titane_infinity::avatar::fullbody_commands::fullbody_update_lipsync,
-            titane_infinity::avatar::fullbody_commands::fullbody_update_state,
-            titane_infinity::avatar::fullbody_commands::fullbody_on_wake_word,
-            titane_infinity::avatar::fullbody_commands::fullbody_export_skeleton,
-            titane_infinity::avatar::fullbody_commands::fullbody_update_context,
-            titane_infinity::avatar::fullbody_commands::fullbody_get_posture,
-            titane_infinity::avatar::fullbody_commands::fullbody_get_stats,
-            titane_infinity::avatar::fullbody_selftest::fullbody_run_selftest,
-            // ═══════════════════════════════════════════════════════════════
-            // APPEARANCE ENGINE v24.5 - Outfit, Style & Appearance Control
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::avatar::appearance_commands::avatar_get_appearance,
-            titane_infinity::avatar::appearance_commands::avatar_set_appearance,
-            titane_infinity::avatar::appearance_commands::avatar_update_appearance,
-            titane_infinity::avatar::appearance_commands::avatar_apply_style_preset,
-            titane_infinity::avatar::appearance_commands::avatar_parse_style_command,
-            titane_infinity::avatar::appearance_commands::avatar_save_custom_style,
-            titane_infinity::avatar::appearance_commands::avatar_load_custom_style,
-            titane_infinity::avatar::appearance_commands::avatar_merge_styles,
-            titane_infinity::avatar::appearance_commands::avatar_list_styles,
-            titane_infinity::avatar::appearance_commands::avatar_add_archetype,
-            // ═══════════════════════════════════════════════════════════════
-            // FLOATING AVATAR WINDOW v24.12 - Display State & Window Control
-            // ═══════════════════════════════════════════════════════════════
-            titane_infinity::avatar::avatar_floating_commands::avatar_get_display_state,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_display_state,
-            titane_infinity::avatar::avatar_floating_commands::avatar_update_display_state,
-            titane_infinity::avatar::avatar_floating_commands::avatar_reset_display_state,
-            titane_infinity::avatar::avatar_floating_commands::avatar_mode_floating,
-            titane_infinity::avatar::avatar_floating_commands::avatar_mode_embed,
-            titane_infinity::avatar::avatar_floating_commands::avatar_mode_hidden,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_position,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_size,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_scale,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_opacity,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_always_on_top,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_locked,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_mirror_mode,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_click_through,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor,
-            titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor_by_name,
-            titane_infinity::avatar::avatar_floating_commands::avatar_list_screens,
-            titane_infinity::avatar::avatar_floating_commands::avatar_move_to_screen,
-            // ═══════════════════════════════════════════════════════════════
-            // SINGULARITY-FUSION vΩ - Unified System Commands
-            // ═══════════════════════════════════════════════════════════════
-            // Fusion Engine
-            titane_infinity::singularity_fusion::singularity_get_fusion_state,
-            titane_infinity::singularity_fusion::singularity_start_sync_loop,
-            titane_infinity::singularity_fusion::singularity_perform_sync,
-            titane_infinity::singularity_fusion::singularity_check_integrity,
-            titane_infinity::singularity_fusion::singularity_create_snapshot,
-            titane_infinity::singularity_fusion::singularity_restore_snapshot,
-            titane_infinity::singularity_fusion::singularity_register_pipeline,
-            titane_infinity::singularity_fusion::singularity_complete_pipeline,
-            titane_infinity::singularity_fusion::singularity_detect_inconsistencies,
-            titane_infinity::singularity_fusion::singularity_get_metrics,
-            titane_infinity::singularity_fusion::singularity_get_diagnostics,
-            titane_infinity::singularity_fusion::singularity_reset,
-            // Unified Pipeline
-            titane_infinity::singularity_fusion::pipeline_analyze_intention,
-            titane_infinity::singularity_fusion::pipeline_generate_cognitive_response,
-            titane_infinity::singularity_fusion::pipeline_prepare_tts,
-            titane_infinity::singularity_fusion::pipeline_prepare_avatar_animation,
-            titane_infinity::singularity_fusion::pipeline_get_stats,
-            titane_infinity::singularity_fusion::pipeline_pause,
-            titane_infinity::singularity_fusion::pipeline_resume,
-            titane_infinity::singularity_fusion::pipeline_reset,
-            titane_infinity::singularity_fusion::pipeline_validate,
-            // AutoFix Engine
-            titane_infinity::singularity_fusion::autofix_detect_rust_warnings,
-            titane_infinity::singularity_fusion::autofix_detect_typescript_errors,
-            titane_infinity::singularity_fusion::autofix_detect_react_hook_violations,
-            titane_infinity::singularity_fusion::autofix_detect_invalid_states,
-            titane_infinity::singularity_fusion::autofix_fix_issue,
-            titane_infinity::singularity_fusion::autofix_fix_all,
-            titane_infinity::singularity_fusion::autofix_get_history,
-            titane_infinity::singularity_fusion::autofix_get_stats,
-            titane_infinity::singularity_fusion::autofix_reset,
-            // AutoHeal Engine
-            titane_infinity::singularity_fusion::autoheal_detect_broken_modules,
-            titane_infinity::singularity_fusion::autoheal_heal_cognitive_module,
-            titane_infinity::singularity_fusion::autoheal_heal_avatar_module,
-            titane_infinity::singularity_fusion::autoheal_heal_tts_module,
-            titane_infinity::singularity_fusion::autoheal_heal_lipsync_module,
-            titane_infinity::singularity_fusion::autoheal_heal_memory_module,
-            titane_infinity::singularity_fusion::autoheal_heal_pipeline,
-            titane_infinity::singularity_fusion::autoheal_resync_state,
-            titane_infinity::singularity_fusion::autoheal_get_history,
-            titane_infinity::singularity_fusion::autoheal_reset,
-            // Performance Optimizer
-            titane_infinity::singularity_fusion::performance_get_metrics,
-            titane_infinity::singularity_fusion::performance_throttle_cpu,
-            titane_infinity::singularity_fusion::performance_optimize_gpu,
-            titane_infinity::singularity_fusion::performance_reduce_render_quality,
-            titane_infinity::singularity_fusion::performance_compress_memory,
-            titane_infinity::singularity_fusion::performance_reset_optimizations,
-            // CrashGuard
-            titane_infinity::singularity_fusion::crashguard_detect_threats,
-            titane_infinity::singularity_fusion::crashguard_clear_memory,
-            titane_infinity::singularity_fusion::crashguard_kill_thread,
-            titane_infinity::singularity_fusion::crashguard_restart_module,
-            titane_infinity::singularity_fusion::crashguard_emergency_shutdown,
-            titane_infinity::singularity_fusion::crashguard_reset_pipeline,
-            titane_infinity::singularity_fusion::crashguard_emergency_rollback,
-            titane_infinity::singularity_fusion::crashguard_get_active_threats,
-            titane_infinity::singularity_fusion::crashguard_get_stats,
-        ])
+        // Phase V: HyperEvolution Engine
+        titane_infinity::hyper_evolution::hyper_predict_issues,
+        titane_infinity::hyper_evolution::hyper_accelerate,
+        titane_infinity::hyper_evolution::hyper_analyze_structure,
+        titane_infinity::hyper_evolution::hyper_detect_regeneration,
+        titane_infinity::hyper_evolution::hyper_analyze_rewrite,
+        titane_infinity::hyper_evolution::hyper_validate,
+        // Phase W: Auto-Apprentissage Cognitif
+        titane_infinity::cognitive_learning::cognitive_get_map,
+        titane_infinity::cognitive_learning::cognitive_add_concept,
+        titane_infinity::cognitive_learning::cognitive_build_memory,
+        titane_infinity::cognitive_learning::cognitive_create_association,
+        titane_infinity::cognitive_learning::cognitive_get_associations,
+        titane_infinity::cognitive_learning::cognitive_grow_knowledge,
+        titane_infinity::cognitive_learning::cognitive_run_reinforcement,
+        titane_infinity::cognitive_learning::cognitive_summarize,
+        // Phase X: NeuroSymbolic Fusion
+        titane_infinity::neuro_symbolic::neuro_fuse,
+        titane_infinity::neuro_symbolic::neuro_adapt_intent,
+        titane_infinity::neuro_symbolic::neuro_translate_symbolic,
+        titane_infinity::neuro_symbolic::neuro_bridge_reasoning,
+        titane_infinity::neuro_symbolic::neuro_map_context,
+        titane_infinity::neuro_symbolic::neuro_get_state,
+        // Phase Y: Méta-Création
+        titane_infinity::meta_creation::meta_generate_ideas,
+        titane_infinity::meta_creation::meta_invent_pattern,
+        titane_infinity::meta_creation::meta_design_system,
+        titane_infinity::meta_creation::meta_generate_prototype,
+        titane_infinity::meta_creation::meta_build_solution,
+        titane_infinity::meta_creation::meta_integrate_module,
+        titane_infinity::meta_creation::meta_get_creative_memory,
+        // Phase Z: Auto-Réparation Totale
+        titane_infinity::self_repair::repair_detect_anomalies,
+        titane_infinity::self_repair::repair_execute,
+        titane_infinity::self_repair::repair_regenerate_module,
+        titane_infinity::self_repair::repair_fallback_recovery,
+        titane_infinity::self_repair::repair_deep_rebuild,
+        titane_infinity::self_repair::repair_get_integrity_map,
+        // Phase Ω: Singularity Engine
+        titane_infinity::singularity::singularity_activate,
+        titane_infinity::singularity::singularity_check_coherence,
+        titane_infinity::singularity::singularity_fuse_all,
+        titane_infinity::singularity::singularity_unify,
+        titane_infinity::singularity::singularity_get_state,
+        titane_infinity::singularity::singularity_detect_emergence,
+        // ═══════════════════════════════════════════════════════════════
+        // CONTROL PANEL COMMANDS v19.1.0
+        // ═══════════════════════════════════════════════════════════════
+
+        // Système
+        control_panel_commands::cp_get_system_info,
+        control_panel_commands::cp_run_system_diagnostic,
+        // Apparence / Design System
+        control_panel_commands::cp_get_design_config,
+        control_panel_commands::cp_set_design_config,
+        // Singularité
+        control_panel_commands::cp_get_singularity_status,
+        control_panel_commands::cp_toggle_singularity,
+        // IA & APIs
+        control_panel_commands::cp_get_ai_config,
+        control_panel_commands::cp_set_ai_config,
+        // Mémoire
+        control_panel_commands::cp_get_memory_stats,
+        control_panel_commands::cp_clear_memory_cache,
+        // Modules
+        control_panel_commands::cp_get_modules_status,
+        control_panel_commands::cp_toggle_module,
+        // Réseau
+        control_panel_commands::cp_get_network_config,
+        control_panel_commands::cp_set_network_config,
+        // Mises à jour
+        control_panel_commands::cp_check_for_updates,
+        control_panel_commands::cp_install_update,
+        // Logs
+        control_panel_commands::cp_get_logs,
+        control_panel_commands::cp_clear_logs,
+        // Sécurité
+        control_panel_commands::cp_get_security_config,
+        control_panel_commands::cp_set_security_config,
+        // ═══════════════════════════════════════════════════════════════
+        // SECURITY HARDENING v17 - Global Self-Test
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::security::run_hardening_selftest,
+        // ═══════════════════════════════════════════════════════════════
+        // COGNITIVE HARDENING v17.3.0 - Cognitive Security Commands
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::cognitive::cognitive_run_selftest,
+        titane_infinity::cognitive::cognitive_validate_state,
+        titane_infinity::cognitive::cognitive_compute_hash_cmd,
+        // ═══════════════════════════════════════════════════════════════
+        // WATCHDOG ENGINE v17.3.0 - Auto-Repair & Monitoring Commands
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::watchdog::watchdog_run_selftest,
+        titane_infinity::watchdog::watchdog_scan,
+        titane_infinity::watchdog::watchdog_fix,
+        // ═══════════════════════════════════════════════════════════════
+        // BACKEND GLOBAL SELF-TEST v17.7 - Full System Validation
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::backend_selftest::backend_run_global_selftest,
+        // ═══════════════════════════════════════════════════════════════
+        // META-COGNITION & DEEP SYNC v18 - Cognitive Supervision
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::meta::meta_get_report,
+        titane_infinity::meta::meta_trigger_sync,
+        titane_infinity::meta::meta_get_alignment,
+        titane_infinity::meta::meta_get_state,
+        titane_infinity::meta::meta_selftest_all, // v18.1: Self-test complet
+        // ═══════════════════════════════════════════════════════════════
+        // META MONITORING & AUTO-HEALING v18.2 - Production Systems
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::meta::meta_get_monitoring_metrics,
+        titane_infinity::meta::meta_get_evaluation_history,
+        titane_infinity::meta::meta_get_sync_history,
+        titane_infinity::meta::meta_get_alerts,
+        titane_infinity::meta::meta_acknowledge_alert,
+        titane_infinity::meta::meta_set_auto_healing,
+        titane_infinity::meta::meta_get_auto_healing_status,
+        titane_infinity::meta::meta_get_healing_history,
+        titane_infinity::meta::meta_get_recalibration_history,
+        titane_infinity::meta::meta_trigger_recalibration,
+        // ═══════════════════════════════════════════════════════════════
+        // QA SYSTEM v19.8 - Automated Testing & Quality Assurance
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::qa::qa_commands::qa_run_all,
+        titane_infinity::qa::qa_commands::qa_run_module,
+        titane_infinity::qa::qa_commands::qa_get_last_report,
+        // ═══════════════════════════════════════════════════════════════
+        // SINGULARITY STATE v∞ (v20) - Global Unified State
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::singularity::singularity_commands::singularity_get,
+        titane_infinity::singularity::singularity_commands::singularity_set,
+        titane_infinity::singularity::singularity_commands::singularity_diff,
+        titane_infinity::singularity::singularity_commands::singularity_hash,
+        titane_infinity::singularity::singularity_commands::singularity_sync,
+        titane_infinity::singularity::singularity_commands::singularity_meta,
+        titane_infinity::singularity::singularity_commands::singularity_integrity,
+        titane_infinity::singularity::singularity_commands::singularity_repair,
+        titane_infinity::singularity::singularity_commands::singularity_export_json,
+        titane_infinity::singularity::singularity_commands::singularity_snapshot,
+        titane_infinity::singularity::singularity_selftest::singularity_selftest_full,
+        // ═══════════════════════════════════════════════════════════════
+        // ADAPTIVE ENGINE v21 - Auto-Optimization & Learning
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::adaptive::adaptive_commands::adaptive_get_profile,
+        titane_infinity::adaptive::adaptive_commands::adaptive_set_mode,
+        titane_infinity::adaptive::adaptive_commands::adaptive_learn,
+        titane_infinity::adaptive::adaptive_commands::adaptive_run_optimization,
+        titane_infinity::adaptive::adaptive_commands::adaptive_get_history,
+        titane_infinity::adaptive::adaptive_commands::adaptive_capture_sample,
+        titane_infinity::adaptive::adaptive_commands::adaptive_get_summary,
+        // ═══════════════════════════════════════════════════════════════
+        // NARRATIVE ENGINE v22 - Expressive & Symbolic Layer
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::narrative::narrative_commands::narrative_generate,
+        titane_infinity::narrative::narrative_commands::narrative_get_style,
+        titane_infinity::narrative::narrative_commands::narrative_set_style,
+        titane_infinity::narrative::narrative_commands::narrative_get_identity,
+        titane_infinity::narrative::narrative_commands::narrative_evolve,
+        titane_infinity::narrative::narrative_commands::narrative_get_archetype,
+        titane_infinity::narrative::narrative_commands::narrative_set_archetype,
+        // ═══════════════════════════════════════════════════════════════
+        // IMMERSIVE AVATAR ENGINE v23 - Voice, Lip-Sync & Expressions
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::avatar::avatar_commands::avatar_prepare_speech,
+        titane_infinity::avatar::avatar_commands::avatar_finish_speech,
+        titane_infinity::avatar::avatar_commands::avatar_enable_immersion,
+        titane_infinity::avatar::avatar_commands::avatar_on_wake_word,
+        titane_infinity::avatar::avatar_commands::avatar_get_current_morph,
+        titane_infinity::avatar::avatar_commands::avatar_advance_lip_sync,
+        titane_infinity::avatar::avatar_commands::avatar_get_expression,
+        titane_infinity::avatar::avatar_commands::avatar_get_state,
+        titane_infinity::avatar::avatar_selftest::avatar_run_selftest,
+        // ═══════════════════════════════════════════════════════════════
+        // FULL-BODY AVATAR ENGINE v24 - Complete Body, Gestures & Postures
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::avatar::fullbody_commands::fullbody_initialize,
+        titane_infinity::avatar::fullbody_commands::fullbody_advance_frame,
+        titane_infinity::avatar::fullbody_commands::fullbody_activate_gesture,
+        titane_infinity::avatar::fullbody_commands::fullbody_update_expression,
+        titane_infinity::avatar::fullbody_commands::fullbody_update_lipsync,
+        titane_infinity::avatar::fullbody_commands::fullbody_update_state,
+        titane_infinity::avatar::fullbody_commands::fullbody_on_wake_word,
+        titane_infinity::avatar::fullbody_commands::fullbody_export_skeleton,
+        titane_infinity::avatar::fullbody_commands::fullbody_update_context,
+        titane_infinity::avatar::fullbody_commands::fullbody_get_posture,
+        titane_infinity::avatar::fullbody_commands::fullbody_get_stats,
+        titane_infinity::avatar::fullbody_selftest::fullbody_run_selftest,
+        // ═══════════════════════════════════════════════════════════════
+        // APPEARANCE ENGINE v24.5 - Outfit, Style & Appearance Control
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::avatar::appearance_commands::avatar_get_appearance,
+        titane_infinity::avatar::appearance_commands::avatar_set_appearance,
+        titane_infinity::avatar::appearance_commands::avatar_update_appearance,
+        titane_infinity::avatar::appearance_commands::avatar_apply_style_preset,
+        titane_infinity::avatar::appearance_commands::avatar_parse_style_command,
+        titane_infinity::avatar::appearance_commands::avatar_save_custom_style,
+        titane_infinity::avatar::appearance_commands::avatar_load_custom_style,
+        titane_infinity::avatar::appearance_commands::avatar_merge_styles,
+        titane_infinity::avatar::appearance_commands::avatar_list_styles,
+        titane_infinity::avatar::appearance_commands::avatar_add_archetype,
+        // ═══════════════════════════════════════════════════════════════
+        // FLOATING AVATAR WINDOW v24.12 - Display State & Window Control
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::avatar::avatar_floating_commands::avatar_get_display_state,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_display_state,
+        titane_infinity::avatar::avatar_floating_commands::avatar_update_display_state,
+        titane_infinity::avatar::avatar_floating_commands::avatar_reset_display_state,
+        titane_infinity::avatar::avatar_floating_commands::avatar_mode_floating,
+        titane_infinity::avatar::avatar_floating_commands::avatar_mode_embed,
+        titane_infinity::avatar::avatar_floating_commands::avatar_mode_hidden,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_position,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_size,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_scale,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_opacity,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_always_on_top,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_locked,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_mirror_mode,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_click_through,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor,
+        titane_infinity::avatar::avatar_floating_commands::avatar_set_anchor_by_name,
+        titane_infinity::avatar::avatar_floating_commands::avatar_list_screens,
+        titane_infinity::avatar::avatar_floating_commands::avatar_move_to_screen,
+        // ═══════════════════════════════════════════════════════════════
+        // SINGULARITY-FUSION vΩ - Unified System Commands
+        // ═══════════════════════════════════════════════════════════════
+        // Fusion Engine
+        titane_infinity::singularity_fusion::singularity_get_fusion_state,
+        titane_infinity::singularity_fusion::singularity_start_sync_loop,
+        titane_infinity::singularity_fusion::singularity_perform_sync,
+        titane_infinity::singularity_fusion::singularity_check_integrity,
+        titane_infinity::singularity_fusion::singularity_create_snapshot,
+        titane_infinity::singularity_fusion::singularity_restore_snapshot,
+        titane_infinity::singularity_fusion::singularity_register_pipeline,
+        titane_infinity::singularity_fusion::singularity_complete_pipeline,
+        titane_infinity::singularity_fusion::singularity_detect_inconsistencies,
+        titane_infinity::singularity_fusion::singularity_get_metrics,
+        titane_infinity::singularity_fusion::singularity_get_diagnostics,
+        titane_infinity::singularity_fusion::singularity_reset,
+        // Unified Pipeline
+        titane_infinity::singularity_fusion::pipeline_analyze_intention,
+        titane_infinity::singularity_fusion::pipeline_generate_cognitive_response,
+        titane_infinity::singularity_fusion::pipeline_prepare_tts,
+        titane_infinity::singularity_fusion::pipeline_prepare_avatar_animation,
+        titane_infinity::singularity_fusion::pipeline_get_stats,
+        titane_infinity::singularity_fusion::pipeline_pause,
+        titane_infinity::singularity_fusion::pipeline_resume,
+        titane_infinity::singularity_fusion::pipeline_reset,
+        titane_infinity::singularity_fusion::pipeline_validate,
+        // AutoFix Engine
+        titane_infinity::singularity_fusion::autofix_detect_rust_warnings,
+        titane_infinity::singularity_fusion::autofix_detect_typescript_errors,
+        titane_infinity::singularity_fusion::autofix_detect_react_hook_violations,
+        titane_infinity::singularity_fusion::autofix_detect_invalid_states,
+        titane_infinity::singularity_fusion::autofix_fix_issue,
+        titane_infinity::singularity_fusion::autofix_fix_all,
+        titane_infinity::singularity_fusion::autofix_get_history,
+        titane_infinity::singularity_fusion::autofix_get_stats,
+        titane_infinity::singularity_fusion::autofix_reset,
+        // AutoHeal Engine
+        titane_infinity::singularity_fusion::autoheal_detect_broken_modules,
+        titane_infinity::singularity_fusion::autoheal_heal_cognitive_module,
+        titane_infinity::singularity_fusion::autoheal_heal_avatar_module,
+        titane_infinity::singularity_fusion::autoheal_heal_tts_module,
+        titane_infinity::singularity_fusion::autoheal_heal_lipsync_module,
+        titane_infinity::singularity_fusion::autoheal_heal_memory_module,
+        titane_infinity::singularity_fusion::autoheal_heal_pipeline,
+        titane_infinity::singularity_fusion::autoheal_resync_state,
+        titane_infinity::singularity_fusion::autoheal_get_history,
+        titane_infinity::singularity_fusion::autoheal_reset,
+        // Performance Optimizer
+        titane_infinity::singularity_fusion::performance_get_metrics,
+        titane_infinity::singularity_fusion::performance_throttle_cpu,
+        titane_infinity::singularity_fusion::performance_optimize_gpu,
+        titane_infinity::singularity_fusion::performance_reduce_render_quality,
+        titane_infinity::singularity_fusion::performance_compress_memory,
+        titane_infinity::singularity_fusion::performance_reset_optimizations,
+        // CrashGuard
+        titane_infinity::singularity_fusion::crashguard_detect_threats,
+        titane_infinity::singularity_fusion::crashguard_clear_memory,
+        titane_infinity::singularity_fusion::crashguard_kill_thread,
+        titane_infinity::singularity_fusion::crashguard_restart_module,
+        titane_infinity::singularity_fusion::crashguard_emergency_shutdown,
+        titane_infinity::singularity_fusion::crashguard_reset_pipeline,
+        titane_infinity::singularity_fusion::crashguard_emergency_rollback,
+        titane_infinity::singularity_fusion::crashguard_get_active_threats,
+        titane_infinity::singularity_fusion::crashguard_get_stats,
+    ]);
+
+    builder
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 

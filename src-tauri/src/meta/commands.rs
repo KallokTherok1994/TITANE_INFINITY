@@ -6,8 +6,8 @@
 //! Tauri commands for Meta-Cognition and Deep Sync engines
 
 use crate::meta::{
-    CognitiveSnapshot, DeepSyncEngine, EngineState, MetaCognitionEngine,
-    MetaCognitiveReport, DeepSyncState, SyncedState,
+    CognitiveSnapshot, DeepSyncEngine, DeepSyncState, EngineState, MetaCognitionEngine,
+    MetaCognitiveReport, SyncedState,
 };
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -49,9 +49,7 @@ pub async fn meta_get_report(
 
 /// Trigger deep sync
 #[tauri::command]
-pub async fn meta_trigger_sync(
-    engine_states: HashMap<String, f32>,
-) -> Result<SyncedState, String> {
+pub async fn meta_trigger_sync(engine_states: HashMap<String, f32>) -> Result<SyncedState, String> {
     let mut sync_engine = DEEP_SYNC_ENGINE.lock().await;
 
     // Convert to EngineState map
@@ -88,7 +86,10 @@ pub async fn meta_get_state() -> Result<(crate::meta::MetaCognitionState, DeepSy
     let meta_engine = META_ENGINE.lock().await;
     let sync_engine = DEEP_SYNC_ENGINE.lock().await;
 
-    Ok((meta_engine.get_state().clone(), sync_engine.get_state().clone()))
+    Ok((
+        meta_engine.get_state().clone(),
+        sync_engine.get_state().clone(),
+    ))
 }
 
 /// Establish baseline for meta-cognition
@@ -127,7 +128,10 @@ pub async fn meta_selftest_all() -> Result<SelfTestReport, String> {
     let mut all_issues = Vec::new();
 
     if !meta_success {
-        all_issues.push(format!("META-COGNITION ENGINE: {} issues", meta_issues.len()));
+        all_issues.push(format!(
+            "META-COGNITION ENGINE: {} issues",
+            meta_issues.len()
+        ));
         all_issues.extend(meta_issues.iter().map(|i| format!("  • {}", i)));
     }
 
@@ -148,7 +152,10 @@ pub async fn meta_selftest_all() -> Result<SelfTestReport, String> {
     if all_success {
         log::info!("✅ META self-test: ALL PASSED");
     } else {
-        log::error!("❌ META self-test: FAILED ({} total issues)", all_issues.len());
+        log::error!(
+            "❌ META self-test: FAILED ({} total issues)",
+            all_issues.len()
+        );
     }
 
     Ok(report)
@@ -169,8 +176,10 @@ pub struct SelfTestReport {
 // v18.2: MONITORING & AUTO-HEALING COMMANDS
 // ═══════════════════════════════════════════════════════════════════
 
-use crate::meta::monitoring::{MetaMonitoringEngine, MetaMonitoringMetrics, MetaAlert, AlertSeverity};
 use crate::meta::auto_healing::{AutoHealingEngine, HealingActionResult, RecalibrationResult};
+use crate::meta::monitoring::{
+    AlertSeverity, MetaAlert, MetaMonitoringEngine, MetaMonitoringMetrics,
+};
 
 /// Global monitoring engine
 static MONITORING_ENGINE: once_cell::sync::Lazy<Arc<Mutex<MetaMonitoringEngine>>> =
@@ -189,14 +198,18 @@ pub async fn meta_get_monitoring_metrics() -> Result<MetaMonitoringMetrics, Stri
 
 /// Get evaluation history
 #[tauri::command]
-pub async fn meta_get_evaluation_history(limit: usize) -> Result<Vec<crate::meta::monitoring::EvaluationHistoryEntry>, String> {
+pub async fn meta_get_evaluation_history(
+    limit: usize,
+) -> Result<Vec<crate::meta::monitoring::EvaluationHistoryEntry>, String> {
     let engine = MONITORING_ENGINE.lock().await;
     Ok(engine.get_evaluation_history(limit).await)
 }
 
 /// Get sync history
 #[tauri::command]
-pub async fn meta_get_sync_history(limit: usize) -> Result<Vec<crate::meta::monitoring::SyncHistoryEntry>, String> {
+pub async fn meta_get_sync_history(
+    limit: usize,
+) -> Result<Vec<crate::meta::monitoring::SyncHistoryEntry>, String> {
     let engine = MONITORING_ENGINE.lock().await;
     Ok(engine.get_sync_history(limit).await)
 }
@@ -251,7 +264,9 @@ pub async fn meta_get_healing_history(limit: usize) -> Result<Vec<HealingActionR
 
 /// Get recalibration history
 #[tauri::command]
-pub async fn meta_get_recalibration_history(limit: usize) -> Result<Vec<RecalibrationResult>, String> {
+pub async fn meta_get_recalibration_history(
+    limit: usize,
+) -> Result<Vec<RecalibrationResult>, String> {
     let engine = AUTO_HEALING_ENGINE.lock().await;
     Ok(engine.get_recalibration_history(limit).await)
 }

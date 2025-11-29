@@ -27,7 +27,11 @@ impl AnalysisEngine {
     pub fn scan(&mut self, data: &str) -> AnalysisResult {
         self.scan_count += 1;
 
-        log::debug!("[Analysis v16] Scan #{}: {} bytes", self.scan_count, data.len());
+        log::debug!(
+            "[Analysis v16] Scan #{}: {} bytes",
+            self.scan_count,
+            data.len()
+        );
 
         // Detect patterns (simplified)
         let mut patterns = vec![];

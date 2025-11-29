@@ -3,22 +3,14 @@
 //   Module d'optimisation adaptative
 // ═══════════════════════════════════════════════════════════════════════════════
 
-pub mod adaptive_engine;
 pub mod adaptive_commands;
+pub mod adaptive_engine;
 
 #[cfg(test)]
 pub mod tests;
 
 pub use adaptive_engine::{
-    AdaptiveOptimizationEngine,
+    AdaptiveAction, AdaptiveCondition, AdaptiveOptimizationEngine, AdaptiveRule, AdaptiveSummary,
+    AiPreference, LearningState, OptimizationBias, PreferenceProfile, SystemBehaviorMode,
     SystemPerformanceSample,
-    AdaptiveRule,
-    AdaptiveCondition,
-    AdaptiveAction,
-    PreferenceProfile,
-    LearningState,
-    AiPreference,
-    SystemBehaviorMode,
-    OptimizationBias,
-    AdaptiveSummary,
 };

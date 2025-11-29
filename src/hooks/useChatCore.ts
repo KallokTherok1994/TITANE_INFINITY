@@ -28,6 +28,7 @@ export interface UseChatCoreReturn {
   anomalyCount: number;
   currentProvider: string | null;
   generate: (message: string, history: AIMessage[]) => Promise<ChatEngineResponse>;
+  stream: (message: string, history: AIMessage[]) => AsyncGenerator<string, ChatEngineResponse>;
   setMode: (mode: ChatMode) => void;
   setProvider: (provider: 'auto' | 'gemini' | 'ollama' | 'local') => void;
   validateResponse: (content: string, mode: ChatMode, prompt: string) => {
@@ -67,6 +68,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
 
       try {
         // Configure mode (reset cognitif automatique dans chatEngine)
+        chatEngine.setProvider(currentProvider);
         chatEngine.setMode(currentMode, {
           emotionState: options.emotionState,
         });
@@ -127,11 +129,92 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
   );
 
   /**
+   * Lance une génération streaming avec la même configuration que generate()
+   */
+  const stream = useCallback(
+    (message: string, history: AIMessage[]): AsyncGenerator<string, ChatEngineResponse> => {
+      console.log('\n╔════════════════════════════════════════════════════════════╗');
+      console.log('║  USE CHAT CORE v15: Streaming (provider-aware)            ║');
+      console.log('╚════════════════════════════════════════════════════════════╝');
+      console.log(`🎯 Mode: ${currentMode}`);
+      console.log(`🔌 Provider: ${currentProvider}`);
+      console.log(`📝 Prompt: "${message.substring(0, 60)}..."`);
+
+      try {
+        chatEngine.setProvider(currentProvider);
+        chatEngine.setMode(currentMode, {
+          emotionState: options.emotionState,
+        });
+
+        const baseStream = chatEngine.stream(message, history, {
+          mode: currentMode,
+          emotionState: options.emotionState,
+        });
+
+        return (async function* streamWrapper(): AsyncGenerator<string, ChatEngineResponse> {
+          let completed = false;
+          let finalResponse: ChatEngineResponse | null = null;
+
+          try {
+            while (true) {
+              const result = await baseStream.next();
+              if (result.done) {
+                finalResponse = result.value ?? null;
+                break;
+              }
+
+              const chunk = result.value;
+              if (typeof chunk === 'string' && chunk.length > 0) {
+                yield chunk;
+              }
+            }
+
+            if (!finalResponse) {
+              throw new Error('Streaming completed without final response');
+            }
+
+            setLastResponseProvider(finalResponse.provider);
+
+            const validation = chatValidator.validate(finalResponse.content, currentMode, message);
+            if (!validation.isValid) {
+              setAnomalyCount((prev) => prev + 1);
+            }
+
+            options.onResponse?.(finalResponse);
+            completed = true;
+            return finalResponse;
+          } catch (err) {
+            const error = err instanceof Error ? err : new Error('Unknown AI stream error');
+            console.error('❌ USE CHAT CORE: Stream error', error);
+            options.onError?.(error);
+            throw error;
+          } finally {
+            if (!completed && typeof baseStream.return === 'function') {
+              try {
+                await baseStream.return(undefined as unknown as ChatEngineResponse);
+              } catch (cleanupError) {
+                console.warn('⚠️ USE CHAT CORE: Stream cleanup failed', cleanupError);
+              }
+            }
+          }
+        })();
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Unknown AI stream error');
+        console.error('❌ USE CHAT CORE: Failed to start stream', error);
+        options.onError?.(error);
+        throw error;
+      }
+    },
+    [currentMode, currentProvider, options]
+  );
+
+  /**
    * Change provider
    */
   const setProvider = useCallback((provider: 'auto' | 'gemini' | 'ollama' | 'local') => {
     console.log(`🔌 USE CHAT CORE: Provider change → ${provider}`);
     setCurrentProvider(provider);
+    chatEngine.setProvider(provider);
   }, []);
 
   /**
@@ -157,6 +240,7 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
     currentProvider: lastResponseProvider,
     anomalyCount,
     generate,
+    stream,
     setMode,
     setProvider,
     validateResponse,

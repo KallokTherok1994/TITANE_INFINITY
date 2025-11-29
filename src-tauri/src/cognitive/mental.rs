@@ -72,15 +72,13 @@ pub struct InterruptionEvent {
 }
 
 /// État du centre mental (charge cognitive)
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[derive(Default)]
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct MentalState {
     pub mode: CognitiveMode,
     pub charge: MentalCharge,
     pub current_task: Option<CognitiveTask>,
     pub session: Option<String>, // Session ID
 }
-
 
 /// Charge mentale globale
 #[derive(Debug, Clone, Serialize, Deserialize)]

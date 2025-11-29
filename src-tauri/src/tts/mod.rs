@@ -6,7 +6,7 @@ pub mod local_tts;
 pub mod online_tts;
 
 use serde::{Deserialize, Serialize};
-use smallvec::{SmallVec, smallvec};
+use smallvec::{smallvec, SmallVec};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TTSRequest {

@@ -99,9 +99,7 @@ impl Default for UnifiedPipelineState {
 
 /// Analyse l'intention d'un message
 #[tauri::command]
-pub async fn pipeline_analyze_intention(
-    message: String,
-) -> Result<DetectedIntention, String> {
+pub async fn pipeline_analyze_intention(message: String) -> Result<DetectedIntention, String> {
     // Analyse basique (à enrichir avec IA)
     let intention = if message.contains("?") {
         "question"
@@ -141,9 +139,7 @@ pub async fn pipeline_generate_cognitive_response(
 
 /// Prépare l'audio TTS
 #[tauri::command]
-pub async fn pipeline_prepare_tts(
-    text: String,
-) -> Result<TTSAudio, String> {
+pub async fn pipeline_prepare_tts(text: String) -> Result<TTSAudio, String> {
     // Simuler génération TTS
     let duration = text.len() as f32 * 0.05; // ~50ms par caractère
 
@@ -192,9 +188,7 @@ pub async fn pipeline_get_stats(
 
 /// Pause le pipeline
 #[tauri::command]
-pub async fn pipeline_pause(
-    state: State<'_, UnifiedPipelineState>,
-) -> Result<(), String> {
+pub async fn pipeline_pause(state: State<'_, UnifiedPipelineState>) -> Result<(), String> {
     let mut active = state.active.lock().map_err(|e| e.to_string())?;
     *active = false;
     println!("[Pipeline] Paused");
@@ -203,9 +197,7 @@ pub async fn pipeline_pause(
 
 /// Reprend le pipeline
 #[tauri::command]
-pub async fn pipeline_resume(
-    state: State<'_, UnifiedPipelineState>,
-) -> Result<(), String> {
+pub async fn pipeline_resume(state: State<'_, UnifiedPipelineState>) -> Result<(), String> {
     let mut active = state.active.lock().map_err(|e| e.to_string())?;
     *active = true;
     println!("[Pipeline] Resumed");
@@ -214,9 +206,7 @@ pub async fn pipeline_resume(
 
 /// Réinitialise le pipeline
 #[tauri::command]
-pub async fn pipeline_reset(
-    state: State<'_, UnifiedPipelineState>,
-) -> Result<(), String> {
+pub async fn pipeline_reset(state: State<'_, UnifiedPipelineState>) -> Result<(), String> {
     let mut stats = state.stats.lock().map_err(|e| e.to_string())?;
     stats.total_processed = 0;
     stats.success_rate = 1.0;
@@ -228,8 +218,7 @@ pub async fn pipeline_reset(
 
 /// Valide la configuration du pipeline
 #[tauri::command]
-pub async fn pipeline_validate(
-) -> Result<bool, String> {
+pub async fn pipeline_validate() -> Result<bool, String> {
     // Validation basique
     Ok(true)
 }

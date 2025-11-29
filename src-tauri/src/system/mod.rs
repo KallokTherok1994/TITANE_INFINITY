@@ -7,31 +7,31 @@ pub mod memory;
 pub mod persona_engine; // ✅ Persona Engine v24
 pub mod self_heal; // Self-healing
 pub mod watchdog; // Surveillance système // ✅ Memory stub (compat)
-                                          // pub mod integrity;
-                                          // pub mod balance;
-                                          // pub mod pulse;
-                                          // pub mod flowsync;
-                                          // pub mod harmonic;
-                                          // pub mod deepsense;
-                                          // pub mod deepalignment;
-                                          // pub mod vitalcore;
-                                          // pub mod neurofield;
-                                          // pub mod neuromesh;
-                                          // pub mod coremesh;
-                                          // pub mod metacortex;
-                                          // pub mod governor;
-                                          // pub mod conscience;
-                                          // pub mod adaptive;
-                                          // pub mod evolution;
-                                          // pub mod sentient;
-                                          // pub mod harmonic_brain;
-                                          // pub mod meta_integration;
-                                          // pub mod architecture;
-                                          // pub mod central_governor;
-                                          // pub mod executive_flow;
-                                          // pub mod strategic_intelligence;
-                                          // pub mod intention;
-                                          // pub mod action_potential;
+                  // pub mod integrity;
+                  // pub mod balance;
+                  // pub mod pulse;
+                  // pub mod flowsync;
+                  // pub mod harmonic;
+                  // pub mod deepsense;
+                  // pub mod deepalignment;
+                  // pub mod vitalcore;
+                  // pub mod neurofield;
+                  // pub mod neuromesh;
+                  // pub mod coremesh;
+                  // pub mod metacortex;
+                  // pub mod governor;
+                  // pub mod conscience;
+                  // pub mod adaptive;
+                  // pub mod evolution;
+                  // pub mod sentient;
+                  // pub mod harmonic_brain;
+                  // pub mod meta_integration;
+                  // pub mod architecture;
+                  // pub mod central_governor;
+                  // pub mod executive_flow;
+                  // pub mod strategic_intelligence;
+                  // pub mod intention;
+                  // pub mod action_potential;
 
 // ⚠️ AUTRES MODULES DÉSACTIVÉS v11.0
 // pub mod dashboard;

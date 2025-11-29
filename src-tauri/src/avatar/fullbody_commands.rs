@@ -2,13 +2,10 @@
 // License: Proprietary — TITANE OS
 // Module: Tauri Commands for FullBodyAvatarEngine
 
-use tauri::command;
 use serde_json::json;
+use tauri::command;
 
-use super::fullbody::{
-    get_fullbody_engine, AvatarStateSnapshot,
-    BodyProfile,
-};
+use super::fullbody::{get_fullbody_engine, AvatarStateSnapshot, BodyProfile};
 use super::immersive_avatar_engine::FacialExpression;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -38,8 +35,10 @@ pub fn fullbody_initialize(
     let mut engine = engine_arc.lock().map_err(|e| e.to_string())?;
     *engine = super::fullbody::FullBodyAvatarEngine::with_profile(profile.clone());
 
-    Ok(format!("FullBodyAvatarEngine initialized: height={:.2}m, build={}",
-               profile.height, profile.build))
+    Ok(format!(
+        "FullBodyAvatarEngine initialized: height={:.2}m, build={}",
+        profile.height, profile.build
+    ))
 }
 
 /// Avancer d'une frame (60 FPS)
@@ -84,7 +83,10 @@ pub fn fullbody_update_expression(expression: String, intensity: f32) -> Result<
 
     engine.update_expression(expr, intensity);
 
-    Ok(format!("Expression '{}' updated (intensity: {:.2})", expression, intensity))
+    Ok(format!(
+        "Expression '{}' updated (intensity: {:.2})",
+        expression, intensity
+    ))
 }
 
 /// Mettre à jour lip-sync (depuis v23)
@@ -102,7 +104,10 @@ pub fn fullbody_update_lipsync(
     let weights = [jaw, lips, tongue, cheeks];
     engine.update_lipsync(phoneme.clone(), weights);
 
-    Ok(format!("Lip-sync updated: phoneme={}, weights={:?}", phoneme, weights))
+    Ok(format!(
+        "Lip-sync updated: phoneme={}, weights={:?}",
+        phoneme, weights
+    ))
 }
 
 /// Mettre à jour état SingularityState
@@ -166,8 +171,10 @@ pub fn fullbody_update_context(
     // Note: Cette commande nécessite d'exposer BodyPostureAI dans FullBodyAvatarEngine
     // Pour l'instant, retourne succès (à compléter dans phase 3)
 
-    Ok(format!("Context updated: engagement={:.2}, complexity={:.2}, phase={}",
-               user_engagement, topic_complexity, conversation_phase))
+    Ok(format!(
+        "Context updated: engagement={:.2}, complexity={:.2}, phase={}",
+        user_engagement, topic_complexity, conversation_phase
+    ))
 }
 
 /// Obtenir configuration posture courante
@@ -179,7 +186,8 @@ pub fn fullbody_get_posture() -> Result<String, String> {
         "spine_alignment": 0.0,
         "shoulder_openness": 0.8,
         "energy_level": 0.6
-    }).to_string())
+    })
+    .to_string())
 }
 
 /// Statistiques moteur full-body
@@ -197,5 +205,6 @@ pub fn fullbody_get_stats() -> Result<String, String> {
         "current_gesture": engine.motion_layer.current_gesture.as_ref().map(|g| g.name.clone()),
         "transition_progress": engine.motion_layer.transition_progress,
         "speech_active": engine.lip_sync_feed.speech_active,
-    }).to_string())
+    })
+    .to_string())
 }

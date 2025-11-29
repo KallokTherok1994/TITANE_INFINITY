@@ -477,7 +477,10 @@ impl SingularityStateVInfinity {
 
         // Validation
         if self.verify_integrity() {
-            log::info!("[SingularityState v∞] Merge successful - hash: {}", &self.global_hash[..16]);
+            log::info!(
+                "[SingularityState v∞] Merge successful - hash: {}",
+                &self.global_hash[..16]
+            );
             Ok(())
         } else {
             Err("Merge failed: integrity check failed".to_string())
@@ -500,7 +503,7 @@ impl SingularityStateVInfinity {
             ($name:expr, $field:ident) => {
                 if let (Ok(a), Ok(b)) = (
                     serde_json::to_string(&self.$field),
-                    serde_json::to_string(&next.$field)
+                    serde_json::to_string(&next.$field),
                 ) {
                     if a != b {
                         changed_modules.push($name.to_string());
@@ -557,9 +560,9 @@ impl SingularityStateVInfinity {
         self.deep_sync.last_sync_timestamp = sync_timestamp;
 
         // 2. Synchroniser cohérence
-        let avg_coherence = (self.cognitive.coherence
-            + self.meta.alignment_score
-            + self.core.coherence_absolute) / 3.0;
+        let avg_coherence =
+            (self.cognitive.coherence + self.meta.alignment_score + self.core.coherence_absolute)
+                / 3.0;
 
         self.deep_sync.sync_level = avg_coherence;
 
@@ -570,7 +573,10 @@ impl SingularityStateVInfinity {
         self.updated_at = chrono::Utc::now().to_rfc3339();
         self.global_hash = self.compute_hash();
 
-        log::info!("[SingularityState v∞] Deep Sync complete - sync_level: {:.2}", self.deep_sync.sync_level);
+        log::info!(
+            "[SingularityState v∞] Deep Sync complete - sync_level: {:.2}",
+            self.deep_sync.sync_level
+        );
         Ok(())
     }
 
@@ -579,7 +585,8 @@ impl SingularityStateVInfinity {
         let global_coherence = (self.cognitive.coherence
             + self.meta.alignment_score
             + self.core.coherence_absolute
-            + self.deep_sync.sync_level) / 4.0;
+            + self.deep_sync.sync_level)
+            / 4.0;
 
         let mut recommendations = Vec::new();
         let mut anomalies = Vec::new();
@@ -593,7 +600,10 @@ impl SingularityStateVInfinity {
         // Analyser watchdog
         if self.watchdog.anomalies_detected > 5 {
             recommendations.push("Review watchdog anomalies".to_string());
-            anomalies.push(format!("{} anomalies detected", self.watchdog.anomalies_detected));
+            anomalies.push(format!(
+                "{} anomalies detected",
+                self.watchdog.anomalies_detected
+            ));
         }
 
         // Analyser intégrité
@@ -761,8 +771,7 @@ impl SingularityStateVInfinity {
 
     /// Exporte l'état complet en JSON
     pub fn export_json(&self) -> Result<String, String> {
-        serde_json::to_string_pretty(self)
-            .map_err(|e| format!("Failed to export JSON: {}", e))
+        serde_json::to_string_pretty(self).map_err(|e| format!("Failed to export JSON: {}", e))
     }
 
     /// Crée un snapshot minimal pour affichage rapide
@@ -771,7 +780,10 @@ impl SingularityStateVInfinity {
 
         summary.insert("version".to_string(), self.version.clone());
         summary.insert("hash".to_string(), self.global_hash[..16].to_string());
-        summary.insert("coherence".to_string(), format!("{:.2}", self.core.coherence_absolute));
+        summary.insert(
+            "coherence".to_string(),
+            format!("{:.2}", self.core.coherence_absolute),
+        );
         summary.insert("modules".to_string(), "20".to_string());
         summary.insert("updated_at".to_string(), self.updated_at.clone());
 

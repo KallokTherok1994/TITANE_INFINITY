@@ -3,15 +3,11 @@
 //   Commandes Tauri pour le NarrativeEngine
 // ═══════════════════════════════════════════════════════════════════════════════
 
+use crate::narrative::{
+    IdentityProfile, NarrativeArchetype, NarrativeEngine, NarrativeOutput, StyleProfile,
+};
 use tauri::State;
 use tokio::sync::Mutex;
-use crate::narrative::{
-    NarrativeEngine,
-    IdentityProfile,
-    StyleProfile,
-    NarrativeOutput,
-    NarrativeArchetype,
-};
 
 /// État global du moteur narratif
 pub struct NarrativeEngineGlobal(pub Mutex<NarrativeEngine>);
@@ -125,7 +121,10 @@ pub async fn narrative_set_archetype(
     state: State<'_, NarrativeEngineGlobal>,
     archetype_name: String,
 ) -> Result<(), String> {
-    log::info!("[NarrativeCommands] narrative_set_archetype called: {}", archetype_name);
+    log::info!(
+        "[NarrativeCommands] narrative_set_archetype called: {}",
+        archetype_name
+    );
 
     let mut engine = state.0.lock().await;
     engine.set_active_archetype(archetype_name);

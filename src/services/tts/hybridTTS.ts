@@ -14,7 +14,13 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+import {
+  chatEngineHealthCheck,
+  chatEngineSpeakText,
+  type ChatEngineSpeechMode,
+} from '@services/tauri';
 
 export interface TTSConfig {
   rate?: number; // 0.5 - 2.0
@@ -28,6 +34,8 @@ export interface TTSStatus {
   provider: 'tauri' | 'webspeech' | 'none';
   available: boolean;
   speaking: boolean;
+  tauriAvailable: boolean;
+  webSpeechAvailable: boolean;
 }
 
 /**
@@ -46,17 +54,27 @@ class HybridTTSService {
       return this.tauriAvailable;
     }
 
-    try {
-      // Teste si commande speak existe (ai_chat.rs)
-      await secureInvoke('ping'); // Simple health check
-      this.tauriAvailable = true;
-      console.log('✅ TTS: Tauri backend available');
-      return true;
-    } catch (error) {
+    if (typeof window === 'undefined') {
       this.tauriAvailable = false;
-      console.log('⚠️ TTS: Tauri backend unavailable, using Web Speech API fallback');
       return false;
     }
+
+    const env = detectEnvironment();
+    if (!env.isTauri) {
+      this.tauriAvailable = false;
+      return false;
+    }
+
+    try {
+      await chatEngineHealthCheck();
+      this.tauriAvailable = true;
+      console.log('✅ TTS: Tauri backend available');
+    } catch (error) {
+      this.tauriAvailable = false;
+      console.warn('⚠️ TTS: Tauri backend unavailable, using Web Speech API fallback', error);
+    }
+
+    return this.tauriAvailable;
   }
 
   /**
@@ -76,13 +94,16 @@ class HybridTTSService {
       console.log(`⚙️  Config: rate=${config.rate || 1.0}, pitch=${config.pitch || 1.0}, voice=${config.voice || 'default'}`);
       this.speaking = true;
 
-      // ✅ v19.2.0: Transmission paramètres rate/pitch/voice frontend → backend
-      await secureInvoke('speak', {
+      const mode: ChatEngineSpeechMode = useOnline ? 'online' : 'auto';
+      const speed = Math.min(Math.max(config.rate ?? 1.0, 0.5), 2.0);
+      const pitch = Math.min(Math.max(config.pitch ?? 1.0, 0.5), 2.0);
+
+      await chatEngineSpeakText({
         text,
-        use_online: useOnline,
-        rate: config.rate || null,
-        pitch: config.pitch || null,
-        voice: config.voice || null,
+        mode,
+        speed,
+        pitch,
+        voice: config.voice ?? null,
       });
 
       console.log('✅ TTS (Tauri): Success');
@@ -243,6 +264,8 @@ class HybridTTSService {
       provider,
       available,
       speaking: backendSpeaking || this.speaking, // v19.2.0: Combine backend + local state
+      tauriAvailable,
+      webSpeechAvailable,
     };
   }
 

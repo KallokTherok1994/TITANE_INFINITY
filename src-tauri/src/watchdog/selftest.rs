@@ -5,9 +5,9 @@
  */
 use crate::cognitive::CognitiveState;
 use crate::singularity::SingularityState;
-use crate::watchdog::{WatchdogScanner, WatchdogFixer, AlertLevel};
 use crate::watchdog::scanner::AnomalyType;
-use serde::{Serialize, Deserialize};
+use crate::watchdog::{AlertLevel, WatchdogFixer, WatchdogScanner};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct WatchdogSelfTestResult {
@@ -57,15 +57,20 @@ fn test_scan_clean_state() -> TestResult {
     let result = scanner.scan(&cognitive, &singularity);
 
     // Clean ou seulement warnings/info
-    let passed = result.clean || result.anomalies.iter().all(|a| {
-        matches!(a.severity, AlertLevel::Info | AlertLevel::Warn)
-    });
+    let passed = result.clean
+        || result
+            .anomalies
+            .iter()
+            .all(|a| matches!(a.severity, AlertLevel::Info | AlertLevel::Warn));
 
     TestResult {
         name: "Scan Clean State".to_string(),
         passed,
         details: if passed {
-            format!("Clean scan: {} anomalies (all minor)", result.anomalies.len())
+            format!(
+                "Clean scan: {} anomalies (all minor)",
+                result.anomalies.len()
+            )
         } else {
             format!("Unexpected anomalies detected: {}", result.anomalies.len())
         },
@@ -80,9 +85,10 @@ fn test_scan_detect_nan() -> TestResult {
 
     let result = scanner.scan(&cognitive, &singularity);
 
-    let detected = result.anomalies.iter().any(|a| {
-        matches!(a.anomaly_type, AnomalyType::NaNDetected { .. })
-    });
+    let detected = result
+        .anomalies
+        .iter()
+        .any(|a| matches!(a.anomaly_type, AnomalyType::NaNDetected { .. }));
 
     TestResult {
         name: "Scan Detect NaN".to_string(),
@@ -104,9 +110,10 @@ fn test_scan_detect_overload() -> TestResult {
 
     let result = scanner.scan(&cognitive, &singularity);
 
-    let detected = result.anomalies.iter().any(|a| {
-        matches!(a.anomaly_type, AnomalyType::CognitiveOverload { .. })
-    });
+    let detected = result
+        .anomalies
+        .iter()
+        .any(|a| matches!(a.anomaly_type, AnomalyType::CognitiveOverload { .. }));
 
     TestResult {
         name: "Scan Detect Overload".to_string(),

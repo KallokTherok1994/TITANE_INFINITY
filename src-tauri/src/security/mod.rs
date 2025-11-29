@@ -98,21 +98,18 @@ impl Default for SecurityPolicy {
             allowed_shell_commands: vec![
                 // TTS engines
                 "espeak".into(),
-                "espeak-ng".into(),  // v19.1.0: Enhanced eSpeak version
+                "espeak-ng".into(), // v19.1.0: Enhanced eSpeak version
                 "festival".into(),
                 "piper".into(),
                 "whisper".into(),
-
                 // Audio players - Linux
-                "pactl".into(),      // PulseAudio/PipeWire control
-                "aplay".into(),      // v19.1.0: ALSA player
-                "ffplay".into(),     // v19.1.0: FFmpeg player (universal)
-
+                "pactl".into(),  // PulseAudio/PipeWire control
+                "aplay".into(),  // v19.1.0: ALSA player
+                "ffplay".into(), // v19.1.0: FFmpeg player (universal)
                 // Audio players - macOS
-                "afplay".into(),     // v19.1.0: macOS native audio player
-
+                "afplay".into(), // v19.1.0: macOS native audio player
                 // Utilities
-                "which".into(),      // Command detection
+                "which".into(), // Command detection
             ],
             security_logging: true,
             sentinel_strict_mode: false, // Désactivé par défaut pour ne pas bloquer dev

@@ -81,8 +81,14 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Bureau_Pro".to_string(),
                 parent_archetype: "Bureau".to_string(),
-                keywords: ["professionnel", "formel", "élégant"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: ["chemise", "pantalon", "blazer"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["professionnel", "formel", "élégant"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+                visual_tags: ["chemise", "pantalon", "blazer"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
                 default_palette: Some(ColorPalette::Neutral),
                 default_outfit: Some(OutfitTemplate::OfficeFormal),
                 default_hair: Some(HairTemplate::TiedUp),
@@ -91,8 +97,14 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Casual_Light".to_string(),
                 parent_archetype: "Casual".to_string(),
-                keywords: ["décontracté", "léger", "confort"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: ["t-shirt", "jeans", "baskets"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["décontracté", "léger", "confort"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+                visual_tags: ["t-shirt", "jeans", "baskets"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
                 default_palette: Some(ColorPalette::Pastel),
                 default_outfit: Some(OutfitTemplate::CasualLight),
                 default_hair: Some(HairTemplate::Loose),
@@ -101,8 +113,14 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Sport_Dynamic".to_string(),
                 parent_archetype: "Sport".to_string(),
-                keywords: ["sportif", "athlétique", "actif"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: ["leggings", "top sport", "baskets"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["sportif", "athlétique", "actif"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+                visual_tags: ["leggings", "top sport", "baskets"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
                 default_palette: Some(ColorPalette::Monochrome),
                 default_outfit: Some(OutfitTemplate::SportActive),
                 default_hair: Some(HairTemplate::Ponytail),
@@ -111,8 +129,14 @@ impl AppearanceTaxonomyEngine {
             StyleDefinition {
                 name: "Montagne_Nordic".to_string(),
                 parent_archetype: "Nature".to_string(),
-                keywords: ["montagne", "nordique", "nature"].iter().map(|s| s.to_string()).collect(),
-                visual_tags: ["laine", "bottes", "layering"].iter().map(|s| s.to_string()).collect(),
+                keywords: ["montagne", "nordique", "nature"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
+                visual_tags: ["laine", "bottes", "layering"]
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect(),
                 default_palette: Some(ColorPalette::Earth),
                 default_outfit: Some(OutfitTemplate::MountainNordic),
                 default_hair: Some(HairTemplate::Braid),
@@ -123,7 +147,8 @@ impl AppearanceTaxonomyEngine {
 
     pub fn register_user_style(&mut self, style: StyleDefinition) {
         log::info!("📝 Style personnalisé enregistré: {}", style.name);
-        self.user_invented_styles.insert(style.name.clone(), style.clone());
+        self.user_invented_styles
+            .insert(style.name.clone(), style.clone());
         self.styles.push(style);
     }
 
@@ -248,7 +273,11 @@ impl AppearanceTaxonomyEngine {
     // APPLICATION À L'ÉTAT D'APPARENCE
     // ───────────────────────────────────────────────────────────────────────
 
-    pub fn apply_style_to_appearance(&self, style_name: &str, appearance: &mut AvatarAppearanceState) {
+    pub fn apply_style_to_appearance(
+        &self,
+        style_name: &str,
+        appearance: &mut AvatarAppearanceState,
+    ) {
         if let Some(style) = self.styles.iter().find(|s| s.name == style_name) {
             // Appliquer palette
             if let Some(palette) = &style.default_palette {
@@ -272,7 +301,11 @@ impl AppearanceTaxonomyEngine {
 
             appearance.style.theme = style.parent_archetype.clone();
 
-            log::info!("✅ Style appliqué: {} → {}", style_name, appearance.describe());
+            log::info!(
+                "✅ Style appliqué: {} → {}",
+                style_name,
+                appearance.describe()
+            );
         }
     }
 
@@ -283,25 +316,25 @@ impl AppearanceTaxonomyEngine {
                 outfit.bottom = "pantalon noir".to_string();
                 outfit.shoes = "escarpins".to_string();
                 outfit.outerwear = Some("blazer foncé".to_string());
-            },
+            }
             OutfitTemplate::CasualLight => {
                 outfit.top = "t-shirt blanc".to_string();
                 outfit.bottom = "jeans bleu".to_string();
                 outfit.shoes = "baskets blanches".to_string();
                 outfit.outerwear = None;
-            },
+            }
             OutfitTemplate::SportActive => {
                 outfit.top = "top sport noir".to_string();
                 outfit.bottom = "leggings noirs".to_string();
                 outfit.shoes = "baskets running".to_string();
                 outfit.outerwear = None;
-            },
+            }
             OutfitTemplate::MountainNordic => {
                 outfit.top = "pull laine".to_string();
                 outfit.bottom = "pantalon outdoor".to_string();
                 outfit.shoes = "bottes montagne".to_string();
                 outfit.outerwear = Some("veste technique".to_string());
-            },
+            }
         }
     }
 
@@ -309,19 +342,19 @@ impl AppearanceTaxonomyEngine {
         match template {
             HairTemplate::TiedUp => {
                 hair.style = "queue de cheval haute".to_string();
-            },
+            }
             HairTemplate::Loose => {
                 hair.style = "détachés".to_string();
-            },
+            }
             HairTemplate::Ponytail => {
                 hair.style = "queue de cheval".to_string();
-            },
+            }
             HairTemplate::Braid => {
                 hair.style = "tressés".to_string();
-            },
+            }
             HairTemplate::Bun => {
                 hair.style = "chignon".to_string();
-            },
+            }
         }
     }
 }
@@ -408,10 +441,7 @@ pub struct StyleCombiner {
 impl Default for StyleCombiner {
     fn default() -> Self {
         Self {
-            merge_rules: vec![
-                MergeRule::PreferLast,
-                MergeRule::ConcatKeywords,
-            ],
+            merge_rules: vec![MergeRule::PreferLast, MergeRule::ConcatKeywords],
         }
     }
 }

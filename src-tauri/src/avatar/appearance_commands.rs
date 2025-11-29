@@ -4,8 +4,8 @@
 
 use super::appearance_state::*;
 use super::appearance_taxonomy_engine::*;
-use std::sync::{Arc, Mutex};
 use lazy_static::lazy_static;
+use std::sync::{Arc, Mutex};
 
 // ═══════════════════════════════════════════════════════════════════════════
 // GLOBAL STATE — Appearance Engine & State
@@ -14,7 +14,6 @@ use lazy_static::lazy_static;
 lazy_static! {
     static ref APPEARANCE_ENGINE: Arc<Mutex<AppearanceTaxonomyEngine>> =
         Arc::new(Mutex::new(AppearanceTaxonomyEngine::new()));
-
     static ref APPEARANCE_STATE: Arc<Mutex<AvatarAppearanceState>> =
         Arc::new(Mutex::new(AvatarAppearanceState::default()));
 }
@@ -35,8 +34,7 @@ pub fn get_appearance_state() -> Arc<Mutex<AvatarAppearanceState>> {
 pub fn avatar_get_appearance() -> Result<String, String> {
     let state = APPEARANCE_STATE.lock().map_err(|e| e.to_string())?;
 
-    let json = serde_json::to_string(&*state)
-        .map_err(|e| format!("Serialization error: {}", e))?;
+    let json = serde_json::to_string(&*state).map_err(|e| format!("Serialization error: {}", e))?;
 
     log::info!("📸 Appearance state retrieved");
     Ok(json)
@@ -48,8 +46,8 @@ pub fn avatar_get_appearance() -> Result<String, String> {
 
 #[tauri::command]
 pub fn avatar_set_appearance(state_json: String) -> Result<String, String> {
-    let new_state: AvatarAppearanceState = serde_json::from_str(&state_json)
-        .map_err(|e| format!("Deserialization error: {}", e))?;
+    let new_state: AvatarAppearanceState =
+        serde_json::from_str(&state_json).map_err(|e| format!("Deserialization error: {}", e))?;
 
     let mut state = APPEARANCE_STATE.lock().map_err(|e| e.to_string())?;
     *state = new_state;
@@ -66,8 +64,8 @@ pub fn avatar_set_appearance(state_json: String) -> Result<String, String> {
 
 #[tauri::command]
 pub fn avatar_update_appearance(update_json: String) -> Result<String, String> {
-    let update: AppearanceUpdateRequest = serde_json::from_str(&update_json)
-        .map_err(|e| format!("Deserialization error: {}", e))?;
+    let update: AppearanceUpdateRequest =
+        serde_json::from_str(&update_json).map_err(|e| format!("Deserialization error: {}", e))?;
 
     let mut state = APPEARANCE_STATE.lock().map_err(|e| e.to_string())?;
     state.apply_update(update);
@@ -118,7 +116,11 @@ pub fn avatar_parse_style_command(command: String) -> Result<String, String> {
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[tauri::command]
-pub fn avatar_save_custom_style(name: String, archetype: String, keywords_json: String) -> Result<String, String> {
+pub fn avatar_save_custom_style(
+    name: String,
+    archetype: String,
+    keywords_json: String,
+) -> Result<String, String> {
     let keywords: Vec<String> = serde_json::from_str(&keywords_json)
         .map_err(|e| format!("Deserialization error: {}", e))?;
 
@@ -158,8 +160,7 @@ pub fn avatar_merge_styles(style_names_json: String) -> Result<String, String> {
     let style_refs: Vec<&str> = style_names.iter().map(|s| s.as_str()).collect();
     let merged = engine.merge_styles(style_refs);
 
-    let json = serde_json::to_string(&merged)
-        .map_err(|e| format!("Serialization error: {}", e))?;
+    let json = serde_json::to_string(&merged).map_err(|e| format!("Serialization error: {}", e))?;
 
     log::info!("🔀 Styles merged: {:?}", style_names);
     Ok(json)
@@ -173,12 +174,10 @@ pub fn avatar_merge_styles(style_names_json: String) -> Result<String, String> {
 pub fn avatar_list_styles() -> Result<String, String> {
     let engine = APPEARANCE_ENGINE.lock().map_err(|e| e.to_string())?;
 
-    let style_names: Vec<String> = engine.styles.iter()
-        .map(|s| s.name.clone())
-        .collect();
+    let style_names: Vec<String> = engine.styles.iter().map(|s| s.name.clone()).collect();
 
-    let json = serde_json::to_string(&style_names)
-        .map_err(|e| format!("Serialization error: {}", e))?;
+    let json =
+        serde_json::to_string(&style_names).map_err(|e| format!("Serialization error: {}", e))?;
 
     Ok(json)
 }
@@ -216,7 +215,11 @@ impl StyleCommandParser {
         Self
     }
 
-    pub fn parse(&self, command: &str, current: &AvatarAppearanceState) -> Result<AppearanceUpdateRequest, String> {
+    pub fn parse(
+        &self,
+        command: &str,
+        current: &AvatarAppearanceState,
+    ) -> Result<AppearanceUpdateRequest, String> {
         let cmd_lower = command.to_lowercase();
         let mut update = AppearanceUpdateRequest {
             outfit: None,
@@ -254,19 +257,31 @@ impl StyleCommandParser {
         }
 
         if cmd_lower.contains("pantalon") {
-            let mut outfit = update.outfit.clone().unwrap_or_else(|| current.outfit.clone());
+            let mut outfit = update
+                .outfit
+                .clone()
+                .unwrap_or_else(|| current.outfit.clone());
             outfit.bottom = "pantalon".to_string();
             update.outfit = Some(outfit);
         } else if cmd_lower.contains("jeans") {
-            let mut outfit = update.outfit.clone().unwrap_or_else(|| current.outfit.clone());
+            let mut outfit = update
+                .outfit
+                .clone()
+                .unwrap_or_else(|| current.outfit.clone());
             outfit.bottom = "jeans".to_string();
             update.outfit = Some(outfit);
         } else if cmd_lower.contains("jupe") {
-            let mut outfit = update.outfit.clone().unwrap_or_else(|| current.outfit.clone());
+            let mut outfit = update
+                .outfit
+                .clone()
+                .unwrap_or_else(|| current.outfit.clone());
             outfit.bottom = "jupe".to_string();
             update.outfit = Some(outfit);
         } else if cmd_lower.contains("leggings") {
-            let mut outfit = update.outfit.clone().unwrap_or_else(|| current.outfit.clone());
+            let mut outfit = update
+                .outfit
+                .clone()
+                .unwrap_or_else(|| current.outfit.clone());
             outfit.bottom = "leggings".to_string();
             update.outfit = Some(outfit);
         }

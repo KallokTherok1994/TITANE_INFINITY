@@ -228,8 +228,8 @@ async fn test_json_validation() -> HardeningTestResult {
     let valid_json = r#"{"key": "value"}"#;
     let invalid_json = r#"{"key": "value""#;
 
-    let passed =
-        validate_json_structure(valid_json).is_ok() && validate_json_structure(invalid_json).is_err();
+    let passed = validate_json_structure(valid_json).is_ok()
+        && validate_json_structure(invalid_json).is_err();
 
     HardeningTestResult {
         test_name,
@@ -350,7 +350,8 @@ mod tests {
         );
 
         // Au moins 85% doivent passer (6/7 = 85.7% en mode mock)
-        assert!(report.pass_rate >= 0.85,
+        assert!(
+            report.pass_rate >= 0.85,
             "Security hardening pass rate too low: {:.1}% (expected >= 85%)",
             report.pass_rate * 100.0
         );

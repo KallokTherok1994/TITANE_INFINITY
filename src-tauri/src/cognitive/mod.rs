@@ -11,16 +11,16 @@ pub mod state;
 // New v16 (cognitive engines)
 pub mod analysis;
 pub mod consistency;
-pub mod integration;
 pub mod evolution;
+pub mod integration;
 
 // Unified engine (v15 + v16 bridge)
 pub mod engine;
 
 // v17 Security hardening
+pub mod commands;
 pub mod security;
 pub mod selftest;
-pub mod commands;
 
 // Re-exports v15
 pub use body::*;
@@ -31,9 +31,9 @@ pub use state::*;
 // Re-exports v16
 pub use analysis::AnalysisEngine;
 pub use consistency::ConsistencyEngine;
-pub use integration::IntegrationEngine;
-pub use evolution::EvolutionCognitiveEngine;
 pub use engine::*;
+pub use evolution::EvolutionCognitiveEngine;
+pub use integration::IntegrationEngine;
 
 // Re-exports v17 (commands for Tauri)
 pub use commands::*;

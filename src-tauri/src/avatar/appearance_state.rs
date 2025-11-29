@@ -39,11 +39,11 @@ impl Default for AvatarAppearanceState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OutfitState {
-    pub top: String,           // "chemise blanche", "t-shirt", "blouse", etc.
-    pub bottom: String,        // "pantalon noir", "jupe", "jeans", etc.
-    pub shoes: String,         // "escarpins", "baskets", "bottes", etc.
+    pub top: String,               // "chemise blanche", "t-shirt", "blouse", etc.
+    pub bottom: String,            // "pantalon noir", "jupe", "jeans", etc.
+    pub shoes: String,             // "escarpins", "baskets", "bottes", etc.
     pub outerwear: Option<String>, // "blazer", "veste", "manteau", etc.
-    pub layering: Vec<String>, // calques additionnels
+    pub layering: Vec<String>,     // calques additionnels
 }
 
 impl Default for OutfitState {
@@ -64,7 +64,7 @@ impl Default for OutfitState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct StyleState {
-    pub theme: String,         // "bureau", "casual", "sport", "soirée", "fantasy"
+    pub theme: String, // "bureau", "casual", "sport", "soirée", "fantasy"
     pub formality: Formality,
     pub color_palette: String, // "neutre", "pastel", "terre", "monochrome", etc.
     pub vibe: Option<String>,  // "solaire", "lunaire", "mystique", "énergétique"
@@ -98,10 +98,10 @@ impl Default for StyleState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AccessoriesState {
-    pub glasses: Option<String>,   // "lunettes fines", "lunettes noires", etc.
-    pub jewelry: Vec<String>,       // ["boucles d'oreilles discrètes", "collier fin"]
-    pub bag: Option<String>,        // "sac élégant", "sac à dos", etc.
-    pub other: Vec<String>,         // ["écharpe", "montre"]
+    pub glasses: Option<String>, // "lunettes fines", "lunettes noires", etc.
+    pub jewelry: Vec<String>,    // ["boucles d'oreilles discrètes", "collier fin"]
+    pub bag: Option<String>,     // "sac élégant", "sac à dos", etc.
+    pub other: Vec<String>,      // ["écharpe", "montre"]
 }
 
 impl Default for AccessoriesState {
@@ -121,7 +121,7 @@ impl Default for AccessoriesState {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HairState {
-    pub style: String,  // "détachés", "queue de cheval", "chignon", "tressés"
+    pub style: String, // "détachés", "queue de cheval", "chignon", "tressés"
     pub length: HairLength,
     pub color: Option<String>, // "dark", "châtain", "blonde", etc.
     pub details: Vec<String>,  // ["frange", "mèches"]

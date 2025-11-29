@@ -27,6 +27,8 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({ enabled, o
     provider: 'none',
     available: false,
     speaking: false,
+    tauriAvailable: false,
+    webSpeechAvailable: false,
   });
 
   const [testInProgress, setTestInProgress] = useState(false);
@@ -125,9 +127,9 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({ enabled, o
 
           <div className="voice-help">
             <small>
-              {status.provider === 'tauri' && '💡 Backend Rust optimal activé'}
-              {status.provider === 'webspeech' && '💡 Fallback navigateur utilisé'}
-              {status.provider === 'none' && '⚠️ Aucun provider TTS disponible'}
+              {status.tauriAvailable && '💡 Backend Tauri optimal activé'}
+              {!status.tauriAvailable && status.webSpeechAvailable && '🌐 Web Speech actif (fallback)'}
+              {!status.tauriAvailable && !status.webSpeechAvailable && '⚠️ Aucun moteur TTS disponible'}
             </small>
           </div>
         </div>

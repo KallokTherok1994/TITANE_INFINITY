@@ -91,7 +91,7 @@ export interface Alert {
 
 export type Severity = 'Low' | 'Medium' | 'High' | 'Critical';
 
-export type AlertCategory = 
+export type AlertCategory =
   | 'Performance'
   | 'Security'
   | 'Stability'
@@ -102,12 +102,38 @@ export type AlertCategory =
 // MEMORY - Unified Storage
 // ─────────────────────────────────────────────────────────────────
 
+export type MemoryDiskMode = 'disabled' | 'read_only' | 'write_only' | 'read_write';
+
 export interface MemoryState {
   snapshots_count: number;
-  logs_count: number;
-  timeline_count: number;
+  log_entries_count: number;
+  timeline_events: number;
+  storage_size_mb: number;
+  timestamp: number;
+  disk_mode: MemoryDiskMode;
+  synthetic_mode: boolean;
+  last_validation_ts?: number | null;
+  last_compaction_ts?: number | null;
+  issues: string[];
+  /** Legacy optional props preserved for backwards compatibility */
+  logs_count?: number;
+  timeline_count?: number;
   last_snapshot?: Snapshot;
   last_event?: TimelineEvent;
+}
+
+export interface MemoryFileReport {
+  name: string;
+  size_bytes: number;
+  modified_ts: number;
+  version?: string | null;
+}
+
+export interface MemoryDirectoryReport {
+  base_path: string;
+  missing: boolean;
+  total_size_bytes: number;
+  files: MemoryFileReport[];
 }
 
 export interface Snapshot {
@@ -137,7 +163,7 @@ export interface TimelineEvent {
   metadata?: Record<string, string>;
 }
 
-export type EventType = 
+export type EventType =
   | 'SystemStart'
   | 'SystemStop'
   | 'ModuleRegistered'
@@ -212,7 +238,7 @@ export interface SystemState {
 // API RESPONSES
 // ─────────────────────────────────────────────────────────────────
 
-export type ApiResult<T> = 
+export type ApiResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: string };
 

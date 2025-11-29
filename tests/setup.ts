@@ -15,7 +15,7 @@ global.window.__TAURI__ = {
   tauri: {
     invoke: jest.fn(),
   },
-};
+} as any;
 
 // Mock console methods pour tests propres
 global.console = {
@@ -34,7 +34,7 @@ global.IntersectionObserver = class IntersectionObserver {
     return [];
   }
   unobserve() {}
-} as unknown as IntersectionObserver;
+} as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {

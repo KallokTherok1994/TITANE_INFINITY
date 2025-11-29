@@ -11,9 +11,9 @@ use tokio::sync::RwLock;
 
 #[derive(Debug, Clone)]
 pub enum AIRouterStatus {
-    Online,      // Gemini available
-    Offline,     // No provider available
-    Degraded,    // Only Ollama available
+    Online,   // Gemini available
+    Offline,  // No provider available
+    Degraded, // Only Ollama available
 }
 
 /// AIRouter v15 - Central AI request coordinator
@@ -101,10 +101,7 @@ impl AIRouter {
                         return Ok(response);
                     }
                     Err(e) => {
-                        warn!(
-                            "[AI Router v15] ✗ Gemini failed: {}, fallback to Ollama",
-                            e
-                        );
+                        warn!("[AI Router v15] ✗ Gemini failed: {}, fallback to Ollama", e);
                     }
                 }
             }

@@ -3,6 +3,7 @@
 //   Stubs pour développement frontend-only
 // ═══════════════════════════════════════════════════════════════════
 
+use crate::memory::telemetry;
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::utils::AppResult;
@@ -52,7 +53,12 @@ pub async fn get_memory_state() -> AppResult<serde_json::Value> {
         "log_entries_count": 42,
         "timeline_events": 128,
         "storage_size_mb": 12.5,
-        "timestamp": chrono::Utc::now().timestamp_millis()
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+        "disk_mode": "disabled",
+        "synthetic_mode": true,
+        "last_validation_ts": chrono::Utc::now().timestamp_millis(),
+        "last_compaction_ts": chrono::Utc::now().timestamp_millis() - 86_400_000,
+        "issues": ["mock_mode"],
     }))
 }
 
@@ -189,6 +195,20 @@ pub async fn memory_save_chat_interaction(_interaction: serde_json::Value) -> Ap
     save_chat_interaction(_interaction).await
 }
 
+#[tauri::command]
+pub async fn memory_debug_scan() -> AppResult<serde_json::Value> {
+    log::info!("Mock: memory_debug_scan called");
+    let report = telemetry::scan_memory_directory();
+    Ok(serde_json::to_value(report).unwrap_or_else(|_| {
+        json!({
+            "base_path": "memory",
+            "missing": true,
+            "total_size_bytes": 0,
+            "files": []
+        })
+    }))
+}
+
 // ═══════════════════════════════════════════════════════════════
 // MEMORY ALIASES - Frontend Compatibility v17
 // ═══════════════════════════════════════════════════════════════
@@ -298,11 +318,7 @@ pub async fn singularity_get_cognitive() -> AppResult<serde_json::Value> {
 pub async fn singularity_get_full_state() -> AppResult<serde_json::Value> {
     // ✅ v∞ Permission check (SYSTEM level required)
     PERMISSION_GUARD
-        .require(
-            "state_read",
-            Role::System,
-            "singularity_get_full_state",
-        )
+        .require("state_read", Role::System, "singularity_get_full_state")
         .await?;
 
     Ok(json!({
@@ -482,7 +498,10 @@ pub async fn singularity_update_physical(physical: serde_json::Value) -> AppResu
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_physical")
         .await?;
-    log::info!("Mock: singularity_update_physical called with: {:?}", physical);
+    log::info!(
+        "Mock: singularity_update_physical called with: {:?}",
+        physical
+    );
     Ok(())
 }
 
@@ -491,7 +510,10 @@ pub async fn singularity_update_cognitive(cognitive: serde_json::Value) -> AppRe
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_cognitive")
         .await?;
-    log::info!("Mock: singularity_update_cognitive called with: {:?}", cognitive);
+    log::info!(
+        "Mock: singularity_update_cognitive called with: {:?}",
+        cognitive
+    );
     Ok(())
 }
 
@@ -1045,7 +1067,10 @@ pub async fn speak(
     _config: Option<serde_json::Value>,
     _use_online: Option<bool>,
 ) -> AppResult<()> {
-    log::info!("[Voice Mock] TTS: \"{}\"", text.chars().take(50).collect::<String>());
+    log::info!(
+        "[Voice Mock] TTS: \"{}\"",
+        text.chars().take(50).collect::<String>()
+    );
     Ok(())
 }
 

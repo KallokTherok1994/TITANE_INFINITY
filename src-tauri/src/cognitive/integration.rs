@@ -19,7 +19,9 @@ pub struct IntegrationEngine {
 impl IntegrationEngine {
     pub fn new() -> Self {
         log::info!("[Integration v16] Initializing IntegrationEngine");
-        Self { integration_count: 0 }
+        Self {
+            integration_count: 0,
+        }
     }
 
     /// Integrate multiple signals into unified context
@@ -30,8 +32,12 @@ impl IntegrationEngine {
         let context_depth = (signals_count / 2).min(10) as u8;
         let quality = 0.9 - (signals_count as f32 * 0.01);
 
-        log::debug!("[Integration v16] Integrated {} signals (depth: {}, quality: {:.2})",
-                   signals_count, context_depth, quality);
+        log::debug!(
+            "[Integration v16] Integrated {} signals (depth: {}, quality: {:.2})",
+            signals_count,
+            context_depth,
+            quality
+        );
 
         IntegrationResult {
             signals_merged: signals_count,

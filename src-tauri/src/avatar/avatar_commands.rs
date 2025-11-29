@@ -16,26 +16,23 @@ pub async fn avatar_prepare_speech(
     cpu_load: f32,
     engine: State<'_, AvatarEngineGlobal>,
 ) -> Result<String, String> {
-    log::info!("[AvatarEngine] Preparing speech (archetype: {}, mood: {})", archetype, mood);
+    log::info!(
+        "[AvatarEngine] Preparing speech (archetype: {}, mood: {})",
+        archetype,
+        mood
+    );
 
     let mut avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
 
-    let prepared = avatar.prepare_for_speech(
-        &text,
-        &archetype,
-        &mood,
-        cognitive_stability,
-        cpu_load,
-    );
+    let prepared =
+        avatar.prepare_for_speech(&text, &archetype, &mood, cognitive_stability, cpu_load);
 
     Ok(prepared)
 }
 
 /// Termine synthèse vocale
 #[tauri::command]
-pub async fn avatar_finish_speech(
-    engine: State<'_, AvatarEngineGlobal>,
-) -> Result<(), String> {
+pub async fn avatar_finish_speech(engine: State<'_, AvatarEngineGlobal>) -> Result<(), String> {
     log::info!("[AvatarEngine] Finishing speech");
 
     let mut avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
@@ -46,9 +43,7 @@ pub async fn avatar_finish_speech(
 
 /// Active mode immersion
 #[tauri::command]
-pub async fn avatar_enable_immersion(
-    engine: State<'_, AvatarEngineGlobal>,
-) -> Result<(), String> {
+pub async fn avatar_enable_immersion(engine: State<'_, AvatarEngineGlobal>) -> Result<(), String> {
     log::info!("[AvatarEngine] Enabling immersion mode");
 
     let mut avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
@@ -59,9 +54,7 @@ pub async fn avatar_enable_immersion(
 
 /// Réaction au wake-word "TITANE"
 #[tauri::command]
-pub async fn avatar_on_wake_word(
-    engine: State<'_, AvatarEngineGlobal>,
-) -> Result<(), String> {
+pub async fn avatar_on_wake_word(engine: State<'_, AvatarEngineGlobal>) -> Result<(), String> {
     log::info!("[AvatarEngine] Wake-word detected");
 
     let mut avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
@@ -78,15 +71,13 @@ pub async fn avatar_get_current_morph(
     let avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
 
     match avatar.lip_sync.get_current_morph() {
-        Some(morph) => {
-            Ok(serde_json::json!({
-                "jaw_open": morph.jaw_open,
-                "lip_rounding": morph.lip_rounding,
-                "tongue_position": morph.tongue_position,
-                "lip_spread": morph.lip_spread,
-                "duration_ms": morph.duration_ms,
-            }))
-        }
+        Some(morph) => Ok(serde_json::json!({
+            "jaw_open": morph.jaw_open,
+            "lip_rounding": morph.lip_rounding,
+            "tongue_position": morph.tongue_position,
+            "lip_spread": morph.lip_spread,
+            "duration_ms": morph.duration_ms,
+        })),
         None => Ok(serde_json::json!({
             "jaw_open": 0.1,
             "lip_rounding": 0.2,
@@ -99,9 +90,7 @@ pub async fn avatar_get_current_morph(
 
 /// Avance frame lip-sync
 #[tauri::command]
-pub async fn avatar_advance_lip_sync(
-    engine: State<'_, AvatarEngineGlobal>,
-) -> Result<(), String> {
+pub async fn avatar_advance_lip_sync(engine: State<'_, AvatarEngineGlobal>) -> Result<(), String> {
     let mut avatar = engine.0.lock().map_err(|e| format!("Lock error: {}", e))?;
     avatar.lip_sync.advance_frame();
 

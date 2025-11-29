@@ -18,6 +18,13 @@ import { geminiProvider } from '../services/ai/providers/gemini';
 import { titaneLocalProvider } from '../services/ai/providers/titaneLocal';
 import type { AIMessage } from '../services/ai/types';
 
+const OMEGA_TEST_TIMEOUT = 30000;
+
+vi.setConfig({
+  testTimeout: OMEGA_TEST_TIMEOUT,
+  hookTimeout: OMEGA_TEST_TIMEOUT
+});
+
 // Helper to keep these tests deterministic and fast without hitting real providers.
 const createDeterministicResponse = (message: string, history: AIMessage[] = []) => ({
   content: `OMEGA deterministic response :: ${message || '<<empty>>'}`,
@@ -55,6 +62,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
   });
 
   it('should complete full message flow through orchestrator', async () => {

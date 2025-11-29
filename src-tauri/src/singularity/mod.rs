@@ -12,9 +12,9 @@ pub mod singularity_state;
 pub mod totality;
 
 // Modules v∞ (v20)
-pub mod singularity_state_vinfinity;
 pub mod singularity_commands;
 pub mod singularity_selftest;
+pub mod singularity_state_vinfinity;
 
 // Exports v17
 pub use self::core::*;
@@ -26,6 +26,6 @@ pub use singularity_state::*;
 pub use totality::*;
 
 // Exports v∞
-pub use singularity_state_vinfinity::*;
 pub use singularity_commands::*;
 pub use singularity_selftest::*;
+pub use singularity_state_vinfinity::*;

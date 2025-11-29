@@ -228,7 +228,7 @@ export const MessageList: React.FC<MessageListProps> = React.memo(({
 
               return (
                 <MessageBubble
-                  key={`${message.timestamp}-${index}-omega`}
+                  key={`${message.metadata?.uiId ?? `${message.timestamp}-${index}`}-omega`}
                   role={message.role || 'user'}
                   content={String(message.content)}
                   timestamp={message.timestamp || Date.now()}
@@ -334,19 +334,6 @@ export const MessageList: React.FC<MessageListProps> = React.memo(({
         <div ref={endRef} />
       </div>
     );
-  }
-}, (prevProps, nextProps) => {
-  // ═══ MEMOIZATION WITH SAFETY ═══
-  try {
-    return (
-      prevProps.messages?.length === nextProps.messages?.length &&
-      prevProps.isLoading === nextProps.isLoading &&
-      prevProps.error === nextProps.error
-    );
-  } catch (memoError) {
-    // Si même la memoization plante, on re-render
-    isDev && console.error('[OMEGA MESSAGE LIST] Memo comparison failed:', memoError);
-    return false;
   }
 });
 

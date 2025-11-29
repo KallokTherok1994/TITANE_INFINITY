@@ -30,7 +30,11 @@ impl ConsistencyEngine {
         log::debug!("[Consistency v16] Check #{}", self.check_count);
 
         // Simple coherence check (can be enhanced)
-        let contradictions = if state_data.contains("conflict") { 1 } else { 0 };
+        let contradictions = if state_data.contains("conflict") {
+            1
+        } else {
+            0
+        };
         let is_coherent = contradictions == 0;
         let coherence_score = if is_coherent { 0.98 } else { 0.65 };
 

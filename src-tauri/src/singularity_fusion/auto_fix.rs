@@ -154,9 +154,7 @@ pub async fn autofix_fix_issue(
 
 /// Corrige tous les problèmes
 #[tauri::command]
-pub async fn autofix_fix_all(
-    state: State<'_, AutoFixState>,
-) -> Result<Vec<FixResult>, String> {
+pub async fn autofix_fix_all(state: State<'_, AutoFixState>) -> Result<Vec<FixResult>, String> {
     let issues = state.issues.lock().map_err(|e| e.to_string())?.clone();
     let mut results = Vec::new();
 
@@ -190,29 +188,24 @@ pub async fn autofix_fix_all(
     issues_lock.clear();
 
     Ok(results)
-}/// Obtient l'historique des corrections
+}
+/// Obtient l'historique des corrections
 #[tauri::command]
-pub async fn autofix_get_history(
-    state: State<'_, AutoFixState>,
-) -> Result<Vec<FixResult>, String> {
+pub async fn autofix_get_history(state: State<'_, AutoFixState>) -> Result<Vec<FixResult>, String> {
     let history = state.fix_history.lock().map_err(|e| e.to_string())?;
     Ok(history.clone())
 }
 
 /// Obtient les statistiques
 #[tauri::command]
-pub async fn autofix_get_stats(
-    state: State<'_, AutoFixState>,
-) -> Result<AutoFixStats, String> {
+pub async fn autofix_get_stats(state: State<'_, AutoFixState>) -> Result<AutoFixStats, String> {
     let stats = state.stats.lock().map_err(|e| e.to_string())?;
     Ok(stats.clone())
 }
 
 /// Réinitialise AutoFix
 #[tauri::command]
-pub async fn autofix_reset(
-    state: State<'_, AutoFixState>,
-) -> Result<(), String> {
+pub async fn autofix_reset(state: State<'_, AutoFixState>) -> Result<(), String> {
     let mut issues = state.issues.lock().map_err(|e| e.to_string())?;
     let mut history = state.fix_history.lock().map_err(|e| e.to_string())?;
     let mut stats = state.stats.lock().map_err(|e| e.to_string())?;

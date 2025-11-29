@@ -3,21 +3,13 @@
 //   Module narratif et expressif
 // ═══════════════════════════════════════════════════════════════════════════════
 
-pub mod narrative_engine;
 pub mod narrative_commands;
+pub mod narrative_engine;
 
 #[cfg(test)]
 pub mod tests;
 
 pub use narrative_engine::{
-    NarrativeEngine,
-    IdentityProfile,
-    ToneModel,
-    SymbolicModel,
-    NarrativeArchetype,
-    ExpressionRule,
-    NarrativeOutput,
-    StyleProfile,
-    ToneModulation,
-    NarrativePerspective,
+    ExpressionRule, IdentityProfile, NarrativeArchetype, NarrativeEngine, NarrativeOutput,
+    NarrativePerspective, StyleProfile, SymbolicModel, ToneModel, ToneModulation,
 };

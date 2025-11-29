@@ -8,7 +8,6 @@
 
 use serde::{Deserialize, Serialize};
 
-
 const MAX_STRING_LENGTH: usize = 1_000_000; // 1 MB
 const MAX_ARRAY_LENGTH: usize = 10_000;
 const MAX_OBJECT_DEPTH: usize = 32;

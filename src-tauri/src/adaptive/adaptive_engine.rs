@@ -106,7 +106,11 @@ impl AdaptiveRule {
         }
     }
 
-    fn evaluate_single(&self, condition: &AdaptiveCondition, sample: &SystemPerformanceSample) -> bool {
+    fn evaluate_single(
+        &self,
+        condition: &AdaptiveCondition,
+        sample: &SystemPerformanceSample,
+    ) -> bool {
         match condition {
             AdaptiveCondition::LatencyAIAbove(t) => sample.latency_ai > *t,
             AdaptiveCondition::CpuLoadAbove(t) => sample.cpu_load > *t,
@@ -135,10 +139,10 @@ pub enum AiPreference {
 /// Mode de comportement système
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum SystemBehaviorMode {
-    Speed,          // Optimisation vitesse maximale
-    Stability,      // Optimisation stabilité maximale
-    Reliability,    // Optimisation fiabilité maximale
-    Adaptive,       // Adaptation automatique selon usage
+    Speed,       // Optimisation vitesse maximale
+    Stability,   // Optimisation stabilité maximale
+    Reliability, // Optimisation fiabilité maximale
+    Adaptive,    // Adaptation automatique selon usage
 }
 
 /// Biais d'optimisation
@@ -302,7 +306,10 @@ impl AdaptiveOptimizationEngine {
             return Vec::new();
         }
 
-        let latest_sample = self.performance_history.last().expect("History should not be empty after check");
+        let latest_sample = self
+            .performance_history
+            .last()
+            .expect("History should not be empty after check");
         let mut actions = Vec::new();
 
         // Trier par priorité
@@ -319,8 +326,11 @@ impl AdaptiveOptimizationEngine {
 
         // Mettre à jour les compteurs
         for action in &actions {
-            if let Some(rule) = self.optimization_rules.iter_mut()
-                .find(|r| std::mem::discriminant(&r.action) == std::mem::discriminant(action)) {
+            if let Some(rule) = self
+                .optimization_rules
+                .iter_mut()
+                .find(|r| std::mem::discriminant(&r.action) == std::mem::discriminant(action))
+            {
                 rule.execution_count += 1;
             }
         }
@@ -338,15 +348,17 @@ impl AdaptiveOptimizationEngine {
         }
 
         // Analyse simple: moyenne des derniers échantillons
-        let recent_samples: Vec<_> = self.performance_history
-            .iter()
-            .rev()
-            .take(100)
-            .collect();
+        let recent_samples: Vec<_> = self.performance_history.iter().rev().take(100).collect();
 
-        let avg_cpu = recent_samples.iter().map(|s| s.cpu_load).sum::<f32>() / recent_samples.len() as f32;
-        let avg_latency = recent_samples.iter().map(|s| s.latency_ai).sum::<u128>() / recent_samples.len() as u128;
-        let avg_stability = recent_samples.iter().map(|s| s.cognitive_stability).sum::<f32>() / recent_samples.len() as f32;
+        let avg_cpu =
+            recent_samples.iter().map(|s| s.cpu_load).sum::<f32>() / recent_samples.len() as f32;
+        let avg_latency = recent_samples.iter().map(|s| s.latency_ai).sum::<u128>()
+            / recent_samples.len() as u128;
+        let avg_stability = recent_samples
+            .iter()
+            .map(|s| s.cognitive_stability)
+            .sum::<f32>()
+            / recent_samples.len() as f32;
 
         // Détection de patterns simples
         let mut patterns = Vec::new();
@@ -372,8 +384,10 @@ impl AdaptiveOptimizationEngine {
             self.adjust_preferences_from_patterns();
         }
 
-        log::info!("[AdaptiveEngine] Learning cycle complete - {} patterns detected",
-            self.learning_state.patterns_detected.len());
+        log::info!(
+            "[AdaptiveEngine] Learning cycle complete - {} patterns detected",
+            self.learning_state.patterns_detected.len()
+        );
     }
 
     /// Ajuste les préférences selon les patterns détectés
@@ -392,7 +406,10 @@ impl AdaptiveOptimizationEngine {
         }
 
         // Si stabilité cognitive basse → mode Reliability
-        if patterns.iter().any(|p| p.contains("Low cognitive stability")) {
+        if patterns
+            .iter()
+            .any(|p| p.contains("Low cognitive stability"))
+        {
             self.preference_profile.system_mode = SystemBehaviorMode::Reliability;
             self.preference_profile.optimization_bias = OptimizationBias::Consistency;
         }
@@ -403,14 +420,20 @@ impl AdaptiveOptimizationEngine {
         let latest_sample = self.performance_history.last().cloned();
 
         let avg_cpu = if !self.performance_history.is_empty() {
-            self.performance_history.iter().map(|s| s.cpu_load).sum::<f32>()
+            self.performance_history
+                .iter()
+                .map(|s| s.cpu_load)
+                .sum::<f32>()
                 / self.performance_history.len() as f32
         } else {
             0.0
         };
 
         let avg_latency = if !self.performance_history.is_empty() {
-            self.performance_history.iter().map(|s| s.latency_ai).sum::<u128>()
+            self.performance_history
+                .iter()
+                .map(|s| s.latency_ai)
+                .sum::<u128>()
                 / self.performance_history.len() as u128
         } else {
             0

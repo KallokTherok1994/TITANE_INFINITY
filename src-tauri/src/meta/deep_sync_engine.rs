@@ -212,22 +212,22 @@ impl DeepSyncEngine {
     pub fn new() -> Self {
         Self {
             state: DeepSyncState::new(),
-            sync_threshold: 0.7, // Minimum sync quality required
+            sync_threshold: 0.7,  // Minimum sync quality required
             drift_tolerance: 0.1, // Maximum allowed drift
         }
     }
 
     /// Perform deep sync cycle
-    pub async fn deep_sync(
-        &mut self,
-        engine_states: &HashMap<String, EngineState>,
-    ) -> SyncedState {
+    pub async fn deep_sync(&mut self, engine_states: &HashMap<String, EngineState>) -> SyncedState {
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| d.as_secs())
             .unwrap_or(0);
 
-        log::info!("🔄 Deep Sync cycle started: {} engines", engine_states.len());
+        log::info!(
+            "🔄 Deep Sync cycle started: {} engines",
+            engine_states.len()
+        );
 
         // Step 1: Read all engine states
         let engine_values = self.read_engine_states(engine_states);
@@ -315,10 +315,7 @@ impl DeepSyncEngine {
     }
 
     /// Cross-validate engine states
-    fn cross_validate(
-        &self,
-        values: &HashMap<String, f32>,
-    ) -> (f32, Vec<SyncIssue>) {
+    fn cross_validate(&self, values: &HashMap<String, f32>) -> (f32, Vec<SyncIssue>) {
         let mut issues = Vec::new();
         let mut total_score = 0.0;
         let mut count = 0.0;
@@ -377,10 +374,7 @@ impl DeepSyncEngine {
     }
 
     /// Check engine alignments
-    fn check_alignments(
-        &self,
-        values: &HashMap<String, f32>,
-    ) -> HashMap<String, EngineAlignment> {
+    fn check_alignments(&self, values: &HashMap<String, f32>) -> HashMap<String, EngineAlignment> {
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| d.as_secs())
@@ -485,14 +479,15 @@ impl DeepSyncEngine {
             if issue.auto_correctable {
                 let correction = match issue.category {
                     SyncIssueCategory::SilentCorruption => {
-                        format!("Clamped {} to valid range", issue.affected_engines.join(", "))
+                        format!(
+                            "Clamped {} to valid range",
+                            issue.affected_engines.join(", ")
+                        )
                     }
                     SyncIssueCategory::CrossEngineInconsistency => {
                         format!("Harmonized {} engines", issue.affected_engines.len())
                     }
-                    SyncIssueCategory::TemporalAnomaly => {
-                        "Realigned temporal states".to_string()
-                    }
+                    SyncIssueCategory::TemporalAnomaly => "Realigned temporal states".to_string(),
                     _ => "Generic correction applied".to_string(),
                 };
 
@@ -550,8 +545,14 @@ impl DeepSyncEngine {
 
         // [3] Test synchronisation avec états valides
         let mut test_states = HashMap::new();
-        test_states.insert("engine_a".to_string(), EngineState::new("engine_a".to_string(), 0.95));
-        test_states.insert("engine_b".to_string(), EngineState::new("engine_b".to_string(), 0.92));
+        test_states.insert(
+            "engine_a".to_string(),
+            EngineState::new("engine_a".to_string(), 0.95),
+        );
+        test_states.insert(
+            "engine_b".to_string(),
+            EngineState::new("engine_b".to_string(), 0.92),
+        );
 
         let sync_result = self.deep_sync(&test_states).await;
 
@@ -562,8 +563,14 @@ impl DeepSyncEngine {
 
         // [5] Test détection drift avec état dégradé
         let mut drift_states = HashMap::new();
-        drift_states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.95));
-        drift_states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.2)); // Drift critique
+        drift_states.insert(
+            "cognitive".to_string(),
+            EngineState::new("cognitive".to_string(), 0.95),
+        );
+        drift_states.insert(
+            "memory".to_string(),
+            EngineState::new("memory".to_string(), 0.2),
+        ); // Drift critique
 
         let drift_result = self.deep_sync(&drift_states).await;
         if drift_result.issues.is_empty() {
@@ -637,14 +644,26 @@ mod tests {
         let mut engine = DeepSyncEngine::new();
 
         let mut states = HashMap::new();
-        states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.9));
-        states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.88));
-        states.insert("timeline".to_string(), EngineState::new("timeline".to_string(), 0.87));
+        states.insert(
+            "cognitive".to_string(),
+            EngineState::new("cognitive".to_string(), 0.9),
+        );
+        states.insert(
+            "memory".to_string(),
+            EngineState::new("memory".to_string(), 0.88),
+        );
+        states.insert(
+            "timeline".to_string(),
+            EngineState::new("timeline".to_string(), 0.87),
+        );
 
         let result = engine.deep_sync(&states).await;
 
         assert!(result.success);
-        assert!(matches!(result.quality, SyncQuality::Good | SyncQuality::Excellent | SyncQuality::Perfect));
+        assert!(matches!(
+            result.quality,
+            SyncQuality::Good | SyncQuality::Excellent | SyncQuality::Perfect
+        ));
     }
 
     #[tokio::test]
@@ -652,8 +671,14 @@ mod tests {
         let mut engine = DeepSyncEngine::new();
 
         let mut states = HashMap::new();
-        states.insert("cognitive".to_string(), EngineState::new("cognitive".to_string(), 0.9));
-        states.insert("memory".to_string(), EngineState::new("memory".to_string(), 0.3)); // Drift
+        states.insert(
+            "cognitive".to_string(),
+            EngineState::new("cognitive".to_string(), 0.9),
+        );
+        states.insert(
+            "memory".to_string(),
+            EngineState::new("memory".to_string(), 0.3),
+        ); // Drift
 
         let result = engine.deep_sync(&states).await;
 

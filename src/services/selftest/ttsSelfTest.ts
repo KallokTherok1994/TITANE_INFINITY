@@ -76,8 +76,8 @@ export async function tts_selftest(): Promise<TtsSelfTestResult> {
       engine: status.provider as any,
       latency_ms: latency,
       details: {
-        tauriAvailable: status.provider === 'tauri',
-        webSpeechAvailable,
+        tauriAvailable: status.tauriAvailable,
+        webSpeechAvailable: status.webSpeechAvailable,
         voiceCount: voices.length,
         testedPhrase: testPhrase,
       },

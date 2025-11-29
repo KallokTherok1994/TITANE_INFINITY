@@ -1,6 +1,4 @@
-use crate::cognitive::{
-    CognitiveMode, CognitiveState, PhysiologicalSignals,
-};
+use crate::cognitive::{CognitiveMode, CognitiveState, PhysiologicalSignals};
 use std::sync::Arc;
 use tokio::sync::RwLock;
 

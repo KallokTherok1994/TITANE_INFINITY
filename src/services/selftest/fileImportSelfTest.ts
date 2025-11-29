@@ -1,3 +1,4 @@
+import { detectEnvironment } from '@/core/tauri/environment';
 /**
  * TITANE∞ v19.1.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
@@ -81,15 +82,15 @@ export async function fileImport_selftest(): Promise<FileImportSelfTestResult> {
     }
 
     // 3. Vérifier backend Tauri (MEMORY_INGEST_FILE)
-    let tauriAvailable = false;
-    try {
-      // Check si Tauri est disponible
-      tauriAvailable =
-        typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
-      console.log('Tauri backend:', tauriAvailable ? 'Disponible' : 'Indisponible');
-    } catch {
-      console.log('Tauri backend: Indisponible');
+    const envInfo = detectEnvironment();
+    let tauriAvailable = envInfo.isTauri;
+
+    if (!tauriAvailable && typeof window !== 'undefined') {
+      const possibleTauri = window as typeof window & { __TAURI__?: { core?: { invoke?: unknown } } };
+      tauriAvailable = Boolean(possibleTauri.__TAURI__?.core?.invoke);
     }
+
+    console.log('Tauri backend:', tauriAvailable ? 'Disponible' : 'Indisponible');
 
     // 4. Vérifier limites taille
     console.log('Taille max fichier:', (MAX_FILE_SIZE / 1024 / 1024).toFixed(2), 'MB');

@@ -190,16 +190,13 @@ impl MetaCognitionEngine {
     pub fn new() -> Self {
         Self {
             state: MetaCognitionState::new(),
-            baseline_coherence: 0.85, // Default baseline
+            baseline_coherence: 0.85,  // Default baseline
             deviation_threshold: 0.15, // 15% deviation triggers anomaly
         }
     }
 
     /// Perform meta-cognitive evaluation
-    pub async fn evaluate(
-        &mut self,
-        cognitive_state: &CognitiveSnapshot,
-    ) -> MetaCognitiveReport {
+    pub async fn evaluate(&mut self, cognitive_state: &CognitiveSnapshot) -> MetaCognitiveReport {
         let timestamp = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map(|d| d.as_secs())
@@ -209,7 +206,8 @@ impl MetaCognitionEngine {
         let coherence_score = self.compute_coherence(cognitive_state);
 
         // Detect anomalies
-        let (anomaly_detected, detected_issues) = self.detect_anomalies(cognitive_state, coherence_score);
+        let (anomaly_detected, detected_issues) =
+            self.detect_anomalies(cognitive_state, coherence_score);
 
         // Compute deltas
         let delta_map = self.compute_deltas(cognitive_state);
@@ -225,11 +223,8 @@ impl MetaCognitionEngine {
         };
 
         // Recommend next action
-        let recommended_next_state = self.recommend_action(
-            coherence_score,
-            anomaly_detected,
-            &detected_issues,
-        );
+        let recommended_next_state =
+            self.recommend_action(coherence_score, anomaly_detected, &detected_issues);
 
         // Compute health indicators
         let health_indicators = self.compute_health_indicators(cognitive_state);
@@ -245,7 +240,8 @@ impl MetaCognitionEngine {
 
         // Update average coherence
         let alpha = 0.2; // Smoothing factor
-        self.state.average_coherence = alpha * coherence_score + (1.0 - alpha) * self.state.average_coherence;
+        self.state.average_coherence =
+            alpha * coherence_score + (1.0 - alpha) * self.state.average_coherence;
 
         let report = MetaCognitiveReport {
             timestamp,
@@ -367,7 +363,8 @@ impl MetaCognitionEngine {
         }
 
         // Check memory-cognitive alignment
-        if let (Some(cog), Some(mem)) = (&snapshot.cognitive_integrity, &snapshot.memory_alignment) {
+        if let (Some(cog), Some(mem)) = (&snapshot.cognitive_integrity, &snapshot.memory_alignment)
+        {
             let delta = (cog - mem).abs();
             if delta > 0.3 {
                 issues.push(CognitiveIssue {
@@ -444,7 +441,10 @@ impl MetaCognitionEngine {
             return "No adjustment needed".to_string();
         }
 
-        let critical_count = issues.iter().filter(|i| matches!(i.severity, IssueSeverity::Critical)).count();
+        let critical_count = issues
+            .iter()
+            .filter(|i| matches!(i.severity, IssueSeverity::Critical))
+            .count();
 
         if critical_count > 0 {
             "Emergency realignment required".to_string()
@@ -470,9 +470,15 @@ impl MetaCognitionEngine {
         }
 
         // Check issue categories
-        let has_memory_issue = issues.iter().any(|i| matches!(i.category, IssueCategory::MemoryDivergence));
-        let has_timeline_issue = issues.iter().any(|i| matches!(i.category, IssueCategory::TemporalInconsistency));
-        let has_sync_issue = issues.iter().any(|i| matches!(i.category, IssueCategory::SyncDesynchronization));
+        let has_memory_issue = issues
+            .iter()
+            .any(|i| matches!(i.category, IssueCategory::MemoryDivergence));
+        let has_timeline_issue = issues
+            .iter()
+            .any(|i| matches!(i.category, IssueCategory::TemporalInconsistency));
+        let has_sync_issue = issues
+            .iter()
+            .any(|i| matches!(i.category, IssueCategory::SyncDesynchronization));
 
         if has_memory_issue {
             Some(DeepSyncAction::ReanchorMemory)
@@ -493,7 +499,9 @@ impl MetaCognitionEngine {
         let temporal_coherence = snapshot.timeline_coherence.unwrap_or(0.5);
         let memory_alignment = snapshot.memory_alignment.unwrap_or(0.5);
 
-        let overall_health = (stability + consistency + logic_integrity + temporal_coherence + memory_alignment) / 5.0;
+        let overall_health =
+            (stability + consistency + logic_integrity + temporal_coherence + memory_alignment)
+                / 5.0;
 
         CognitiveHealthIndicators {
             stability,
@@ -535,7 +543,10 @@ impl MetaCognitionEngine {
     pub fn establish_baseline(&mut self, coherence: f32) {
         self.baseline_coherence = coherence.clamp(0.0, 1.0);
         self.state.baseline_established = true;
-        log::info!("🧠 Meta-cognition baseline established: {:.2}", self.baseline_coherence);
+        log::info!(
+            "🧠 Meta-cognition baseline established: {:.2}",
+            self.baseline_coherence
+        );
     }
 
     /// META v18.1: Self-test du META-COGNITION ENGINE
@@ -561,7 +572,10 @@ impl MetaCognitionEngine {
 
         // [2] Vérifier thresholds
         if self.deviation_threshold < 0.0 || self.deviation_threshold > 1.0 {
-            issues.push(format!("Invalid deviation_threshold: {}", self.deviation_threshold));
+            issues.push(format!(
+                "Invalid deviation_threshold: {}",
+                self.deviation_threshold
+            ));
         }
 
         // [3] Test évaluation avec snapshot valide
@@ -613,7 +627,10 @@ impl MetaCognitionEngine {
         if success {
             log::info!("✅ META-COGNITION ENGINE self-test: PASSED");
         } else {
-            log::error!("❌ META-COGNITION ENGINE self-test: FAILED ({})", issues.len());
+            log::error!(
+                "❌ META-COGNITION ENGINE self-test: FAILED ({})",
+                issues.len()
+            );
             for issue in &issues {
                 log::error!("   • {}", issue);
             }

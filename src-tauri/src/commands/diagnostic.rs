@@ -105,7 +105,9 @@ pub async fn backend_self_check(
         metrics,
         tauri_only: true, // ✅ Hardcoded guarantee: NO HTTP backend
         backend_version: env!("CARGO_PKG_VERSION").to_string(),
-        build_timestamp: env!("VERGEN_BUILD_TIMESTAMP").unwrap_or("unknown").to_string(),
+        build_timestamp: env!("VERGEN_BUILD_TIMESTAMP")
+            .unwrap_or("unknown")
+            .to_string(),
         features,
     };
 

@@ -1,11 +1,11 @@
+use crate::cognitive::security::*;
 /**
  * TITANE∞ v17 - Cognitive Self-Test
  *
  * Tests automatisés pour validation cognitive system
  */
 use crate::cognitive::CognitiveState;
-use crate::cognitive::security::*;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CognitiveSelfTestResult {
@@ -89,7 +89,11 @@ fn test_bounds_detection() -> TestResult {
 
     TestResult {
         name: "Bounds Detection".to_string(),
-        passed: !validation.valid && validation.errors.iter().any(|e| e.contains("out of bounds")),
+        passed: !validation.valid
+            && validation
+                .errors
+                .iter()
+                .any(|e| e.contains("out of bounds")),
         details: if !validation.valid {
             "Out of bounds correctly detected".to_string()
         } else {

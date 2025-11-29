@@ -12,16 +12,16 @@ use std::sync::{Arc, Mutex};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImmersiveVoiceProfile {
-    pub voice_id: String,            // "FvmvwvObRqIHojkEGh5N" (Adina)
-    pub stability: f32,              // 0.45 (éviter rigidité)
-    pub clarity: f32,                // 0.78 (intelligibilité)
-    pub similarity_boost: f32,       // 0.92 (préserver timbre)
-    pub style: f32,                  // 0.65 (expressivité)
-    pub exaggeration: f32,           // 0.22 (éviter mélodrame)
-    pub speech_rate: f32,            // 0.88 (réduire vitesse native)
-    pub breathiness: f32,            // 0.15 (légère respiration)
-    pub soft_transitions: bool,      // true (transitions douces)
-    pub dynamic_range: f32,          // 0.70 (modulation)
+    pub voice_id: String,       // "FvmvwvObRqIHojkEGh5N" (Adina)
+    pub stability: f32,         // 0.45 (éviter rigidité)
+    pub clarity: f32,           // 0.78 (intelligibilité)
+    pub similarity_boost: f32,  // 0.92 (préserver timbre)
+    pub style: f32,             // 0.65 (expressivité)
+    pub exaggeration: f32,      // 0.22 (éviter mélodrame)
+    pub speech_rate: f32,       // 0.88 (réduire vitesse native)
+    pub breathiness: f32,       // 0.15 (légère respiration)
+    pub soft_transitions: bool, // true (transitions douces)
+    pub dynamic_range: f32,     // 0.70 (modulation)
 }
 
 impl Default for ImmersiveVoiceProfile {
@@ -109,12 +109,12 @@ impl ImmersiveVoiceProfile {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProsodyControl {
-    pub pause_after_comma: u32,      // ms (120)
-    pub pause_after_period: u32,     // ms (180)
-    pub pause_emotional: u32,        // ms (250-300)
-    pub soft_r_phonemes: bool,       // Adoucir "r" roulés
-    pub smooth_consonants: bool,     // Lisser "tr", "cr", "pr"
-    pub intonation_curve: String,    // "natural" | "flat" | "dynamic"
+    pub pause_after_comma: u32,   // ms (120)
+    pub pause_after_period: u32,  // ms (180)
+    pub pause_emotional: u32,     // ms (250-300)
+    pub soft_r_phonemes: bool,    // Adoucir "r" roulés
+    pub smooth_consonants: bool,  // Lisser "tr", "cr", "pr"
+    pub intonation_curve: String, // "natural" | "flat" | "dynamic"
 }
 
 impl Default for ProsodyControl {
@@ -137,12 +137,18 @@ impl ProsodyControl {
 
         // Ajouter pauses après virgules
         if self.pause_after_comma > 0 {
-            output = output.replace(", ", &format!(", <break time='{}ms'/>", self.pause_after_comma));
+            output = output.replace(
+                ", ",
+                &format!(", <break time='{}ms'/>", self.pause_after_comma),
+            );
         }
 
         // Ajouter pauses après points
         if self.pause_after_period > 0 {
-            output = output.replace(". ", &format!(". <break time='{}ms'/>", self.pause_after_period));
+            output = output.replace(
+                ". ",
+                &format!(". <break time='{}ms'/>", self.pause_after_period),
+            );
         }
 
         // Adoucir phonèmes FR difficiles
@@ -190,9 +196,33 @@ impl ProsodyControl {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum FrenchPhoneme {
     // Voyelles
-    A, E, I, O, U, EU, OU, AN, ON, IN,
+    A,
+    E,
+    I,
+    O,
+    U,
+    EU,
+    OU,
+    AN,
+    ON,
+    IN,
     // Consonnes
-    P, B, T, D, K, G, F, V, S, Z, CH, J, L, R, M, N,
+    P,
+    B,
+    T,
+    D,
+    K,
+    G,
+    F,
+    V,
+    S,
+    Z,
+    CH,
+    J,
+    L,
+    R,
+    M,
+    N,
     // Silence
     Silence,
 }
@@ -200,10 +230,10 @@ pub enum FrenchPhoneme {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MorphTarget {
     pub phoneme: FrenchPhoneme,
-    pub jaw_open: f32,       // 0.0-1.0
-    pub lip_rounding: f32,   // 0.0-1.0
+    pub jaw_open: f32,        // 0.0-1.0
+    pub lip_rounding: f32,    // 0.0-1.0
     pub tongue_position: f32, // 0.0-1.0
-    pub lip_spread: f32,     // 0.0-1.0
+    pub lip_spread: f32,      // 0.0-1.0
     pub duration_ms: u32,
 }
 
@@ -306,7 +336,8 @@ impl LipSyncModel {
             }
 
             // Pause entre mots
-            self.morph_targets.push(MorphTarget::from_phoneme(FrenchPhoneme::Silence, 40));
+            self.morph_targets
+                .push(MorphTarget::from_phoneme(FrenchPhoneme::Silence, 40));
         }
     }
 
@@ -361,9 +392,9 @@ pub enum FacialExpression {
     Attentive,
     WarmFocus,
     ExplainMode,
-    LiftedBrows,     // Intérêt
-    RelaxedBrows,    // Apaisement
-    TinyNod,         // Acquiescement
+    LiftedBrows,  // Intérêt
+    RelaxedBrows, // Apaisement
+    TinyNod,      // Acquiescement
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -486,7 +517,8 @@ impl ImmersiveAvatarEngine {
     ) -> String {
         // 1. Ajuster profil vocal
         self.voice_profile.adjust_for_narrative(archetype, mood);
-        self.voice_profile.adjust_for_cognitive_load(cognitive_stability, cpu_load);
+        self.voice_profile
+            .adjust_for_cognitive_load(cognitive_stability, cpu_load);
 
         // 2. Préparer texte avec prosodie
         let prepared_text = self.prosody_control.prepare_text(text);
@@ -496,7 +528,8 @@ impl ImmersiveAvatarEngine {
         self.lip_sync.active = self.immersion_mode;
 
         // 4. Mettre à jour expression
-        self.expression.update_from_state(cognitive_stability, 0, archetype, true);
+        self.expression
+            .update_from_state(cognitive_stability, 0, archetype, true);
 
         // 5. Marquer comme parlant
         self.is_speaking = true;

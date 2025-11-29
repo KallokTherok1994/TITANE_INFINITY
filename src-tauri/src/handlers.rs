@@ -210,6 +210,7 @@ macro_rules! generate_titane_handlers {
                     mock_commands::read_logs,
                     mock_commands::add_timeline_event,
                     mock_commands::get_timeline,
+                    mock_commands::memory_debug_scan,
 
                     // Nexus
                     mock_commands::validate_nexus,

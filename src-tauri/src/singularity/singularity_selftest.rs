@@ -344,7 +344,10 @@ fn test_sandbox_security(state: &SingularityStateVInfinity) -> SelfTestResult {
     // Vérifier violations
     if state.sandbox.violations_detected > 0 {
         score -= 30.0;
-        details.push_str(&format!("{} security violations. ", state.sandbox.violations_detected));
+        details.push_str(&format!(
+            "{} security violations. ",
+            state.sandbox.violations_detected
+        ));
         recommendations.push("Investigate security breaches".to_string());
     }
 
@@ -377,8 +380,11 @@ fn test_hash_validation(state: &SingularityStateVInfinity) -> SelfTestResult {
     let details = if matches {
         "Hash validation passed".to_string()
     } else {
-        format!("Hash mismatch! Expected: {}, Got: {}",
-            &state.global_hash[..16], &computed_hash[..16])
+        format!(
+            "Hash mismatch! Expected: {}, Got: {}",
+            &state.global_hash[..16],
+            &computed_hash[..16]
+        )
     };
 
     let mut recommendations = Vec::new();
@@ -404,8 +410,10 @@ fn test_deep_sync_complete(state: &SingularityStateVInfinity) -> SelfTestResult 
     // Vérifier modules synced
     if state.deep_sync.modules_synced < 20 {
         score -= 30.0;
-        details.push_str(&format!("Only {} modules synced (expected 20). ",
-            state.deep_sync.modules_synced));
+        details.push_str(&format!(
+            "Only {} modules synced (expected 20). ",
+            state.deep_sync.modules_synced
+        ));
         recommendations.push("Execute full deep_sync()".to_string());
     }
 
@@ -466,12 +474,14 @@ fn test_meta_cognition_active(state: &SingularityStateVInfinity) -> SelfTestResu
 fn test_total_integrity(state: &SingularityStateVInfinity) -> SelfTestResult {
     let integrity_check = state.integrity_check();
 
-    let score = if integrity_check.is_valid { 100.0 } else { 50.0 };
+    let score = if integrity_check.is_valid {
+        100.0
+    } else {
+        50.0
+    };
     let details = format!(
         "Valid: {}, Hash: {}, Corrupted: {:?}",
-        integrity_check.is_valid,
-        integrity_check.hash_matches,
-        integrity_check.corrupted_modules
+        integrity_check.is_valid, integrity_check.hash_matches, integrity_check.corrupted_modules
     );
 
     let mut recommendations = integrity_check.repair_suggestions.clone();
@@ -498,15 +508,19 @@ use tauri::State;
 /// Exécute le self-test complet v∞
 #[tauri::command]
 pub async fn singularity_selftest_full(
-    state: State<'_, SingularityStateGlobal>
+    state: State<'_, SingularityStateGlobal>,
 ) -> Result<SelfTestReport, String> {
     log::info!("[Command] singularity_selftest_full");
 
     let state_lock = state.state.lock().await;
     let report = singularity_selftest(&state_lock);
 
-    log::info!("[SelfTest] Score: {:.1}%, Passed: {}/{}",
-        report.global_score, report.passed_tests, report.total_tests);
+    log::info!(
+        "[SelfTest] Score: {:.1}%, Passed: {}/{}",
+        report.global_score,
+        report.passed_tests,
+        report.total_tests
+    );
 
     if !report.critical_issues.is_empty() {
         log::warn!("[SelfTest] Critical issues: {:?}", report.critical_issues);

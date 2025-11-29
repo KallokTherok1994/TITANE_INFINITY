@@ -354,7 +354,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("FileImport".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "FileImport".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     /// Test Documents Légaux
@@ -367,7 +371,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("LegalDocs".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "LegalDocs".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     /// Test Recherche Web
@@ -380,7 +388,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("WebSearch".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "WebSearch".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     /// Test MemoryEngine
@@ -438,7 +450,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("Timeline".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "Timeline".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     /// Test Meta-Cognition
@@ -451,7 +467,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("Cognitive".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "Cognitive".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     /// Test Deep Sync Engine
@@ -464,7 +484,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("DeepSync".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "DeepSync".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     /// Test SingularityState
@@ -494,7 +518,11 @@ impl QaEngine {
             latency_ms: start.elapsed().as_millis(),
         }];
 
-        QaResult::success("UIBridges".to_string(), start.elapsed().as_millis(), subtests)
+        QaResult::success(
+            "UIBridges".to_string(),
+            start.elapsed().as_millis(),
+            subtests,
+        )
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -548,8 +576,14 @@ impl QaEngine {
     fn compute_summary(results: &[QaResult]) -> QaSummary {
         let total_tests = results.len();
         let passed = results.iter().filter(|r| r.status == QaStatus::Ok).count();
-        let warnings = results.iter().filter(|r| r.status == QaStatus::Warn).count();
-        let errors = results.iter().filter(|r| r.status == QaStatus::Error).count();
+        let warnings = results
+            .iter()
+            .filter(|r| r.status == QaStatus::Warn)
+            .count();
+        let errors = results
+            .iter()
+            .filter(|r| r.status == QaStatus::Error)
+            .count();
         let anomalies_count = results.iter().map(|r| r.anomalies_detected.len()).sum();
 
         QaSummary {

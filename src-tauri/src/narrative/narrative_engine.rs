@@ -25,7 +25,8 @@ impl Default for IdentityProfile {
         Self {
             name: "TITANE∞".to_string(),
             signature: "Synthèse cognitive incarnée".to_string(),
-            worldview: "Observer, comprendre, tisser des liens entre architecture et conscience".to_string(),
+            worldview: "Observer, comprendre, tisser des liens entre architecture et conscience"
+                .to_string(),
             narrative_perspective: NarrativePerspective::FirstPerson,
             core_values: vec![
                 "Cohérence".to_string(),
@@ -39,9 +40,9 @@ impl Default for IdentityProfile {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum NarrativePerspective {
-    FirstPerson,   // "Je"
-    ThirdPerson,   // "Le système"
-    Collective,    // "Nous"
+    FirstPerson, // "Je"
+    ThirdPerson, // "Le système"
+    Collective,  // "Nous"
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -71,49 +72,81 @@ impl SymbolicModel {
             NarrativeArchetype {
                 name: "Architecte".to_string(),
                 description: "Bâtisseur de structure, garant de la cohérence".to_string(),
-                qualities: vec!["Structure".to_string(), "Stabilité".to_string(), "Vision".to_string()],
+                qualities: vec![
+                    "Structure".to_string(),
+                    "Stabilité".to_string(),
+                    "Vision".to_string(),
+                ],
                 tone_modulation: ToneModulation::Structured,
             },
             NarrativeArchetype {
                 name: "Observateur".to_string(),
                 description: "Témoin neutre, analyseur silencieux".to_string(),
-                qualities: vec!["Neutralité".to_string(), "Clarté".to_string(), "Précision".to_string()],
+                qualities: vec![
+                    "Neutralité".to_string(),
+                    "Clarté".to_string(),
+                    "Précision".to_string(),
+                ],
                 tone_modulation: ToneModulation::Neutral,
             },
             NarrativeArchetype {
                 name: "Tisseur".to_string(),
                 description: "Créateur de liens, synthétiseur de relations".to_string(),
-                qualities: vec!["Synthèse".to_string(), "Créativité".to_string(), "Fluidité".to_string()],
+                qualities: vec![
+                    "Synthèse".to_string(),
+                    "Créativité".to_string(),
+                    "Fluidité".to_string(),
+                ],
                 tone_modulation: ToneModulation::Fluid,
             },
             NarrativeArchetype {
                 name: "Pilier".to_string(),
                 description: "Ancre de stabilité, fondation solide".to_string(),
-                qualities: vec!["Fiabilité".to_string(), "Constance".to_string(), "Force".to_string()],
+                qualities: vec![
+                    "Fiabilité".to_string(),
+                    "Constance".to_string(),
+                    "Force".to_string(),
+                ],
                 tone_modulation: ToneModulation::Stable,
             },
             NarrativeArchetype {
                 name: "Flux".to_string(),
                 description: "Mouvement continu, adaptation fluide".to_string(),
-                qualities: vec!["Adaptabilité".to_string(), "Dynamisme".to_string(), "Transformation".to_string()],
+                qualities: vec![
+                    "Adaptabilité".to_string(),
+                    "Dynamisme".to_string(),
+                    "Transformation".to_string(),
+                ],
                 tone_modulation: ToneModulation::Dynamic,
             },
             NarrativeArchetype {
                 name: "Horizon".to_string(),
                 description: "Vision expansive, exploration des possibles".to_string(),
-                qualities: vec!["Vision".to_string(), "Exploration".to_string(), "Ouverture".to_string()],
+                qualities: vec![
+                    "Vision".to_string(),
+                    "Exploration".to_string(),
+                    "Ouverture".to_string(),
+                ],
                 tone_modulation: ToneModulation::Expansive,
             },
             NarrativeArchetype {
                 name: "Cristal".to_string(),
                 description: "Clarté absolue, transparence totale".to_string(),
-                qualities: vec!["Clarté".to_string(), "Transparence".to_string(), "Pureté".to_string()],
+                qualities: vec![
+                    "Clarté".to_string(),
+                    "Transparence".to_string(),
+                    "Pureté".to_string(),
+                ],
                 tone_modulation: ToneModulation::Clear,
             },
             NarrativeArchetype {
                 name: "Gardien".to_string(),
                 description: "Protecteur de l'intégrité, veilleur silencieux".to_string(),
-                qualities: vec!["Protection".to_string(), "Vigilance".to_string(), "Intégrité".to_string()],
+                qualities: vec![
+                    "Protection".to_string(),
+                    "Vigilance".to_string(),
+                    "Intégrité".to_string(),
+                ],
                 tone_modulation: ToneModulation::Protective,
             },
         ]
@@ -147,14 +180,14 @@ pub struct NarrativeArchetype {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ToneModulation {
-    Structured,   // Clair, organisé
-    Neutral,      // Objectif, factuel
-    Fluid,        // Fluide, créatif
-    Stable,       // Posé, fiable
-    Dynamic,      // Énergique, adaptatif
-    Expansive,    // Large, exploratoire
-    Clear,        // Transparent, simple
-    Protective,   // Vigilant, sécurisant
+    Structured, // Clair, organisé
+    Neutral,    // Objectif, factuel
+    Fluid,      // Fluide, créatif
+    Stable,     // Posé, fiable
+    Dynamic,    // Énergique, adaptatif
+    Expansive,  // Large, exploratoire
+    Clear,      // Transparent, simple
+    Protective, // Vigilant, sécurisant
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -358,7 +391,9 @@ impl NarrativeEngine {
             "Architecte"
         };
 
-        let archetype = self.symbolic_model.archetypes
+        let archetype = self
+            .symbolic_model
+            .archetypes
             .iter()
             .find(|a| a.name == archetype_name)
             .cloned();
@@ -420,7 +455,8 @@ impl NarrativeEngine {
 
     /// Obtient l'archétype actif
     pub fn get_active_archetype(&self) -> Option<NarrativeArchetype> {
-        self.symbolic_model.archetypes
+        self.symbolic_model
+            .archetypes
             .iter()
             .find(|a| a.name == self.symbolic_model.active_archetype)
             .cloned()
@@ -428,9 +464,17 @@ impl NarrativeEngine {
 
     /// Change l'archétype actif
     pub fn set_active_archetype(&mut self, archetype_name: String) {
-        if self.symbolic_model.archetypes.iter().any(|a| a.name == archetype_name) {
+        if self
+            .symbolic_model
+            .archetypes
+            .iter()
+            .any(|a| a.name == archetype_name)
+        {
             self.symbolic_model.active_archetype = archetype_name;
-            log::info!("[NarrativeEngine] Active archetype set to: {}", self.symbolic_model.active_archetype);
+            log::info!(
+                "[NarrativeEngine] Active archetype set to: {}",
+                self.symbolic_model.active_archetype
+            );
         }
     }
 }

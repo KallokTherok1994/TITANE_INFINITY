@@ -105,6 +105,8 @@ export const TAURI_COMMANDS = {
   CHAT_CREATE_CONVERSATION: 'chat_create_conversation',
   CHAT_GET_CONVERSATION: 'chat_get_conversation',
   CHAT_DELETE_CONVERSATION: 'chat_delete_conversation',
+  /** @deprecated Use CHAT_GET_PROVIDERS_STATUS instead */
+  GET_PROVIDERS_STATUS: 'chat_get_providers_status',
   CHAT_SET_GEMINI_KEY: 'chat_set_gemini_key',
   CHAT_GET_PROVIDERS_STATUS: 'chat_get_providers_status',
   CHAT_CHECK_PROVIDERS: 'chat_check_providers',

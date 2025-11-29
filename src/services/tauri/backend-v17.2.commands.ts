@@ -21,6 +21,7 @@ import type {
   HarmoniaState,
   SentinelState,
   MemoryState,
+  MemoryDirectoryReport,
   Snapshot,
   LogEntry,
   TimelineEvent,
@@ -108,6 +109,13 @@ export const memory = {
    */
   async addEvent(event: TimelineEvent): Promise<void> {
     return safeInvoke<void>('add_timeline_event', { event });
+  },
+
+  /**
+   * Audit on-disk memory files for observability (Phase Ω.6)
+   */
+  async debugScan(): Promise<MemoryDirectoryReport> {
+    return safeInvoke<MemoryDirectoryReport>('memory_debug_scan');
   },
 };
 
@@ -201,7 +209,7 @@ export const composite = {
    */
   async captureSnapshot(description: string): Promise<Snapshot> {
     const state = await safeInvoke<SystemState>('get_full_system_state');
-    
+
     const snapshot: Snapshot = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
@@ -235,7 +243,7 @@ export const composite = {
       timestamp: Date.now(),
       level: 'Error',
       module,
-      message: context 
+      message: context
         ? `${message} | Context: ${JSON.stringify(context)}`
         : message,
     };

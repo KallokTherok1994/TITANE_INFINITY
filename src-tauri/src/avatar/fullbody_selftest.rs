@@ -3,8 +3,8 @@
 // Module: Comprehensive Testing Suite for FullBodyAvatarEngine
 
 use super::fullbody::{
-    FullBodyAvatarEngine, BodyProfile, AvatarStateSnapshot,
-    BodyPostureAI, ConversationalContext, PostureType,
+    AvatarStateSnapshot, BodyPostureAI, BodyProfile, ConversationalContext, FullBodyAvatarEngine,
+    PostureType,
 };
 use super::immersive_avatar_engine::FacialExpression;
 use std::time::Instant;
@@ -77,9 +77,15 @@ fn test_body_profile_initialization() -> SelfTestResult {
     let default_profile = BodyProfile::default();
     if default_profile.height < 1.65 || default_profile.height > 1.72 {
         passed = false;
-        details.push_str(&format!("❌ Height out of range: {}\n", default_profile.height));
+        details.push_str(&format!(
+            "❌ Height out of range: {}\n",
+            default_profile.height
+        ));
     } else {
-        details.push_str(&format!("✅ Height valid: {:.2}m\n", default_profile.height));
+        details.push_str(&format!(
+            "✅ Height valid: {:.2}m\n",
+            default_profile.height
+        ));
     }
 
     if default_profile.build != "athletic-toned" {
@@ -147,21 +153,21 @@ fn test_posture_transitions() -> SelfTestResult {
             PostureType::Professional => {
                 context.topic_complexity = 0.8;
                 context.user_engagement = 0.9;
-            },
+            }
             PostureType::Engaged => {
                 context.user_engagement = 0.9;
                 context.emotional_valence = 0.5;
-            },
+            }
             PostureType::Calm => {
                 context.user_engagement = 0.3;
                 context.topic_complexity = 0.6;
-            },
+            }
             PostureType::Creative => {
                 context.conversation_phase = "brainstorm".to_string();
-            },
+            }
             PostureType::Welcoming => {
                 context.conversation_phase = "opening".to_string();
-            },
+            }
         }
 
         posture_ai.update_context(context);
@@ -171,7 +177,10 @@ fn test_posture_transitions() -> SelfTestResult {
             details.push_str(&format!("✅ {} posture selected correctly\n", name));
         } else {
             passed = false;
-            details.push_str(&format!("❌ {} posture not selected (got {:?})\n", name, selected.posture_type));
+            details.push_str(&format!(
+                "❌ {} posture not selected (got {:?})\n",
+                name, selected.posture_type
+            ));
         }
     }
 
@@ -196,8 +205,12 @@ fn test_gesture_blending() -> SelfTestResult {
 
     // Test activation gestes
     let gestures = vec![
-        "listening", "explaining", "thinking",
-        "smiling_warm", "attention_shift", "idle_cycle"
+        "listening",
+        "explaining",
+        "thinking",
+        "smiling_warm",
+        "attention_shift",
+        "idle_cycle",
     ];
 
     for gesture_name in gestures {
@@ -208,11 +221,17 @@ fn test_gesture_blending() -> SelfTestResult {
                 details.push_str(&format!("✅ Gesture '{}' activated\n", gesture_name));
             } else {
                 passed = false;
-                details.push_str(&format!("❌ Gesture '{}' not activated correctly\n", gesture_name));
+                details.push_str(&format!(
+                    "❌ Gesture '{}' not activated correctly\n",
+                    gesture_name
+                ));
             }
         } else {
             passed = false;
-            details.push_str(&format!("❌ Gesture '{}' failed to activate\n", gesture_name));
+            details.push_str(&format!(
+                "❌ Gesture '{}' failed to activate\n",
+                gesture_name
+            ));
         }
 
         // Test transitions fluides
@@ -221,7 +240,10 @@ fn test_gesture_blending() -> SelfTestResult {
         }
 
         if engine.motion_layer.transition_progress > 0.0 {
-            details.push_str(&format!("  ↳ Transition progress: {:.2}\n", engine.motion_layer.transition_progress));
+            details.push_str(&format!(
+                "  ↳ Transition progress: {:.2}\n",
+                engine.motion_layer.transition_progress
+            ));
         }
     }
 
@@ -256,12 +278,16 @@ fn test_tts_synchronization() -> SelfTestResult {
 
     // Test ajustement gestuelle pendant parole
     let transition_before = engine.motion_layer.transition_progress;
-    engine.lip_sync_feed.adjust_body_motion(&mut engine.motion_layer);
+    engine
+        .lip_sync_feed
+        .adjust_body_motion(&mut engine.motion_layer);
     let transition_after = engine.motion_layer.transition_progress;
 
     if transition_after < transition_before {
-        details.push_str(&format!("✅ Motion reduced during speech ({:.2} → {:.2})\n",
-                                 transition_before, transition_after));
+        details.push_str(&format!(
+            "✅ Motion reduced during speech ({:.2} → {:.2})\n",
+            transition_before, transition_after
+        ));
     } else {
         details.push_str("⚠️  Motion not reduced (expected behavior)\n");
     }
@@ -306,12 +332,16 @@ fn test_expression_mapping() -> SelfTestResult {
 
         if let Some(current) = &engine.motion_layer.current_gesture {
             if current.name == expected_gesture {
-                details.push_str(&format!("✅ {:?} → '{}' mapped correctly\n",
-                                         expression, expected_gesture));
+                details.push_str(&format!(
+                    "✅ {:?} → '{}' mapped correctly\n",
+                    expression, expected_gesture
+                ));
             } else {
                 passed = false;
-                details.push_str(&format!("❌ {:?} → '{}' (expected '{}')\n",
-                                         expression, current.name, expected_gesture));
+                details.push_str(&format!(
+                    "❌ {:?} → '{}' (expected '{}')\n",
+                    expression, current.name, expected_gesture
+                ));
             }
         } else {
             passed = false;
@@ -347,10 +377,16 @@ fn test_performance_benchmark() -> SelfTestResult {
     let avg_frame_ms = frame_duration.as_micros() as f32 / 1000.0 / 1000.0;
 
     if avg_frame_ms < 5.0 {
-        details.push_str(&format!("✅ Avg frame time: {:.3}ms (target <5ms)\n", avg_frame_ms));
+        details.push_str(&format!(
+            "✅ Avg frame time: {:.3}ms (target <5ms)\n",
+            avg_frame_ms
+        ));
     } else {
         passed = false;
-        details.push_str(&format!("❌ Avg frame time: {:.3}ms (exceeds 5ms target)\n", avg_frame_ms));
+        details.push_str(&format!(
+            "❌ Avg frame time: {:.3}ms (exceeds 5ms target)\n",
+            avg_frame_ms
+        ));
     }
 
     // Benchmark export_skeleton
@@ -359,9 +395,15 @@ fn test_performance_benchmark() -> SelfTestResult {
     let export_duration = export_start.elapsed().as_micros() as f32 / 1000.0;
 
     if export_duration < 1.0 {
-        details.push_str(&format!("✅ Export skeleton: {:.3}ms (target <1ms)\n", export_duration));
+        details.push_str(&format!(
+            "✅ Export skeleton: {:.3}ms (target <1ms)\n",
+            export_duration
+        ));
     } else {
-        details.push_str(&format!("⚠️  Export skeleton: {:.3}ms (acceptable)\n", export_duration));
+        details.push_str(&format!(
+            "⚠️  Export skeleton: {:.3}ms (acceptable)\n",
+            export_duration
+        ));
     }
 
     // Benchmark avec lip-sync actif
@@ -373,10 +415,16 @@ fn test_performance_benchmark() -> SelfTestResult {
     let speaking_duration = speaking_start.elapsed().as_micros() as f32 / 100.0 / 1000.0;
 
     if speaking_duration < 10.0 {
-        details.push_str(&format!("✅ Speaking frame time: {:.3}ms (target <10ms)\n", speaking_duration));
+        details.push_str(&format!(
+            "✅ Speaking frame time: {:.3}ms (target <10ms)\n",
+            speaking_duration
+        ));
     } else {
         passed = false;
-        details.push_str(&format!("❌ Speaking frame time: {:.3}ms (exceeds 10ms)\n", speaking_duration));
+        details.push_str(&format!(
+            "❌ Speaking frame time: {:.3}ms (exceeds 10ms)\n",
+            speaking_duration
+        ));
     }
 
     SelfTestResult {
@@ -410,12 +458,16 @@ fn test_state_coherence() -> SelfTestResult {
 
     engine.update_state(snapshot_high_load);
     let transition_before = engine.motion_layer.transition_progress;
-    engine.state_binding.adjust_motion_for_state(&mut engine.motion_layer);
+    engine
+        .state_binding
+        .adjust_motion_for_state(&mut engine.motion_layer);
     let transition_after = engine.motion_layer.transition_progress;
 
     if transition_after < transition_before {
-        details.push_str(&format!("✅ High cognitive load reduced motion ({:.2} → {:.2})\n",
-                                 transition_before, transition_after));
+        details.push_str(&format!(
+            "✅ High cognitive load reduced motion ({:.2} → {:.2})\n",
+            transition_before, transition_after
+        ));
     } else {
         details.push_str("⚠️  Cognitive load did not reduce motion\n");
     }
@@ -431,13 +483,18 @@ fn test_state_coherence() -> SelfTestResult {
     };
 
     engine.update_state(snapshot_explain);
-    engine.state_binding.adjust_motion_for_state(&mut engine.motion_layer);
+    engine
+        .state_binding
+        .adjust_motion_for_state(&mut engine.motion_layer);
 
     if let Some(gesture) = &engine.motion_layer.current_gesture {
         if gesture.name == "explaining" {
             details.push_str("✅ meta_intention 'explain' triggered 'explaining' gesture\n");
         } else {
-            details.push_str(&format!("⚠️  meta_intention 'explain' triggered '{}'\n", gesture.name));
+            details.push_str(&format!(
+                "⚠️  meta_intention 'explain' triggered '{}'\n",
+                gesture.name
+            ));
         }
     }
 
@@ -466,16 +523,19 @@ fn test_boundaries_respect() -> SelfTestResult {
     }
 
     for (bone_name, bone) in &engine.skeleton.bones {
-        let quat_magnitude = (bone.rotation[0].powi(2) +
-                              bone.rotation[1].powi(2) +
-                              bone.rotation[2].powi(2) +
-                              bone.rotation[3].powi(2)).sqrt();
+        let quat_magnitude = (bone.rotation[0].powi(2)
+            + bone.rotation[1].powi(2)
+            + bone.rotation[2].powi(2)
+            + bone.rotation[3].powi(2))
+        .sqrt();
 
         // Tolérance 5% pour approximations
         if (quat_magnitude - 1.0).abs() > 0.05 {
             passed = false;
-            details.push_str(&format!("❌ Bone '{}' quaternion not normalized: {:.3}\n",
-                                     bone_name, quat_magnitude));
+            details.push_str(&format!(
+                "❌ Bone '{}' quaternion not normalized: {:.3}\n",
+                bone_name, quat_magnitude
+            ));
         }
     }
 
@@ -484,24 +544,30 @@ fn test_boundaries_respect() -> SelfTestResult {
     }
 
     // Test position bounds (pas de téléportation)
-    let prev_positions: std::collections::HashMap<String, [f32; 3]> =
-        engine.skeleton.bones.iter()
-            .map(|(k, v)| (k.clone(), v.position))
-            .collect();    for _ in 0..100 {
+    let prev_positions: std::collections::HashMap<String, [f32; 3]> = engine
+        .skeleton
+        .bones
+        .iter()
+        .map(|(k, v)| (k.clone(), v.position))
+        .collect();
+    for _ in 0..100 {
         engine.advance_frame();
     }
 
     for (bone_name, bone) in &engine.skeleton.bones {
         if let Some(prev_pos) = prev_positions.get(bone_name) {
-            let distance = ((bone.position[0] - prev_pos[0]).powi(2) +
-                           (bone.position[1] - prev_pos[1]).powi(2) +
-                           (bone.position[2] - prev_pos[2]).powi(2)).sqrt();
+            let distance = ((bone.position[0] - prev_pos[0]).powi(2)
+                + (bone.position[1] - prev_pos[1]).powi(2)
+                + (bone.position[2] - prev_pos[2]).powi(2))
+            .sqrt();
 
             // Max 10cm déplacement sur 100 frames (mouvement normal)
             if distance > 0.1 {
                 passed = false;
-                details.push_str(&format!("❌ Bone '{}' moved too far: {:.3}m\n",
-                                         bone_name, distance));
+                details.push_str(&format!(
+                    "❌ Bone '{}' moved too far: {:.3}m\n",
+                    bone_name, distance
+                ));
             }
         }
     }
@@ -545,8 +611,15 @@ pub fn run_fullbody_selftest() -> FullBodySelfTestReport {
         println!("▶ Test {}/8: Running...", i + 1);
         let result = test_fn();
 
-        let status = if result.passed { "✅ PASS" } else { "❌ FAIL" };
-        println!("  {} — {} ({} ms)", status, result.test_name, result.duration_ms);
+        let status = if result.passed {
+            "✅ PASS"
+        } else {
+            "❌ FAIL"
+        };
+        println!(
+            "  {} — {} ({} ms)",
+            status, result.test_name, result.duration_ms
+        );
         println!("{}", result.details);
 
         report.add_result(result);

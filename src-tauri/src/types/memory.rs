@@ -14,6 +14,39 @@ pub struct MemoryState {
     pub timeline_events: usize,
     pub storage_size_mb: f64,
     pub timestamp: i64,
+    pub disk_mode: DiskMode,
+    pub synthetic_mode: bool,
+    pub last_validation_ts: Option<i64>,
+    pub last_compaction_ts: Option<i64>,
+    pub issues: Vec<String>,
+}
+
+/// Disk operating mode advertised to the UI
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum DiskMode {
+    Disabled,
+    ReadOnly,
+    WriteOnly,
+    ReadWrite,
+}
+
+/// File-level telemetry for the memory directory audit
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MemoryFileReport {
+    pub name: String,
+    pub size_bytes: u64,
+    pub modified_ts: i64,
+    pub version: Option<String>,
+}
+
+/// Directory scan snapshot surfaced to the frontend
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct MemoryDirectoryReport {
+    pub base_path: String,
+    pub missing: bool,
+    pub total_size_bytes: u64,
+    pub files: Vec<MemoryFileReport>,
 }
 
 /// System snapshot at a point in time
@@ -73,6 +106,11 @@ impl Default for MemoryState {
             timeline_events: 0,
             storage_size_mb: 0.0,
             timestamp: 0,
+            disk_mode: DiskMode::Disabled,
+            synthetic_mode: true,
+            last_validation_ts: None,
+            last_compaction_ts: None,
+            issues: Vec::new(),
         }
     }
 }

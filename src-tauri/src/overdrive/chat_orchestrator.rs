@@ -325,7 +325,9 @@ async fn send_to_gemini(
     state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
     let api_key = state.gemini_api_key.read().await;
-    let key = api_key.as_ref().ok_or_else(|| TAPIError::config("Gemini API key not configured"))?;
+    let key = api_key
+        .as_ref()
+        .ok_or_else(|| TAPIError::config("Gemini API key not configured"))?;
 
     let model = request.model.as_deref().unwrap_or("gemini-2.0-flash-exp");
     let url = format!(
@@ -367,11 +369,17 @@ async fn send_to_gemini(
             Ok(response) => {
                 if !response.status().is_success() {
                     let status = response.status();
-                    let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
+                    let error_text = response
+                        .text()
+                        .await
+                        .unwrap_or_else(|_| "Unknown error".to_string());
                     let err_msg = format!("Gemini API error {}: {}", status, error_text);
 
                     if attempt < 3 {
-                        println!("[CHAT] ⚠️ Attempt {}/3 failed: {}, retrying...", attempt, err_msg);
+                        println!(
+                            "[CHAT] ⚠️ Attempt {}/3 failed: {}, retrying...",
+                            attempt, err_msg
+                        );
                         tokio::time::sleep(tokio::time::Duration::from_secs(attempt as u64)).await;
                         last_error = Some(err_msg);
                         continue;
@@ -379,8 +387,9 @@ async fn send_to_gemini(
                     return Err(TAPIError::network(err_msg));
                 }
 
-                let response_json: serde_json::Value = response.json().await
-                    .map_err(|e| TAPIError::parse(format!("Failed to parse Gemini response: {}", e)))?;
+                let response_json: serde_json::Value = response.json().await.map_err(|e| {
+                    TAPIError::parse(format!("Failed to parse Gemini response: {}", e))
+                })?;
 
                 // Safe JSON navigation avec messages d'erreur détaillés
                 let content = response_json
@@ -392,8 +401,12 @@ async fn send_to_gemini(
                     .and_then(|part| part.get("text"))
                     .and_then(|t| t.as_str())
                     .ok_or_else(|| {
-                        let json_str = serde_json::to_string_pretty(&response_json).unwrap_or_else(|_| "<unparseable>".to_string());
-                        TAPIError::parse(format!("Gemini response missing expected fields. Response: {}", json_str))
+                        let json_str = serde_json::to_string_pretty(&response_json)
+                            .unwrap_or_else(|_| "<unparseable>".to_string());
+                        TAPIError::parse(format!(
+                            "Gemini response missing expected fields. Response: {}",
+                            json_str
+                        ))
                     })?
                     .to_string();
 
@@ -403,7 +416,11 @@ async fn send_to_gemini(
                     .and_then(|t| t.as_u64())
                     .map(|t| t as u32);
 
-                println!("[CHAT] ✅ Gemini success: {} chars, {} tokens", content.len(), tokens.unwrap_or(0));
+                println!(
+                    "[CHAT] ✅ Gemini success: {} chars, {} tokens",
+                    content.len(),
+                    tokens.unwrap_or(0)
+                );
 
                 return Ok(ChatMessage {
                     id: uuid::Uuid::new_v4().to_string(),
@@ -419,7 +436,10 @@ async fn send_to_gemini(
             Err(e) => {
                 let err_msg = format!("Gemini HTTP error: {}", e);
                 if attempt < 3 {
-                    println!("[CHAT] ⚠️ Attempt {}/3 failed: {}, retrying...", attempt, err_msg);
+                    println!(
+                        "[CHAT] ⚠️ Attempt {}/3 failed: {}, retrying...",
+                        attempt, err_msg
+                    );
                     tokio::time::sleep(tokio::time::Duration::from_secs(attempt as u64)).await;
                     last_error = Some(err_msg);
                     continue;
@@ -429,7 +449,9 @@ async fn send_to_gemini(
         }
     }
 
-    Err(TAPIError::network(last_error.unwrap_or_else(|| "Gemini failed after 3 attempts".to_string())))
+    Err(TAPIError::network(last_error.unwrap_or_else(|| {
+        "Gemini failed after 3 attempts".to_string()
+    })))
 }
 
 async fn send_to_ollama(
@@ -466,18 +488,29 @@ async fn send_to_ollama(
         .send()
         .await
         .map_err(|e| {
-            let msg = format!("Ollama connection error: {} (is Ollama running? Try: ollama serve)", e);
+            let msg = format!(
+                "Ollama connection error: {} (is Ollama running? Try: ollama serve)",
+                e
+            );
             println!("[CHAT] ❌ {}", msg);
             TAPIError::provider_unavailable("ollama")
         })?;
 
     if !response.status().is_success() {
         let status = response.status();
-        let error_text = response.text().await.unwrap_or_else(|_| "Unknown error".to_string());
-        return Err(TAPIError::network(format!("Ollama API error {}: {}", status, error_text)));
+        let error_text = response
+            .text()
+            .await
+            .unwrap_or_else(|_| "Unknown error".to_string());
+        return Err(TAPIError::network(format!(
+            "Ollama API error {}: {}",
+            status, error_text
+        )));
     }
 
-    let response_json: serde_json::Value = response.json().await
+    let response_json: serde_json::Value = response
+        .json()
+        .await
         .map_err(|e| TAPIError::parse(format!("Failed to parse Ollama response: {}", e)))?;
 
     let content = response_json["response"]
@@ -485,11 +518,13 @@ async fn send_to_ollama(
         .unwrap_or("No response from Ollama")
         .to_string();
 
-    let tokens = response_json["eval_count"]
-        .as_u64()
-        .map(|t| t as u32);
+    let tokens = response_json["eval_count"].as_u64().map(|t| t as u32);
 
-    println!("[CHAT] ✅ Ollama success: {} chars, {} tokens", content.len(), tokens.unwrap_or(0));
+    println!(
+        "[CHAT] ✅ Ollama success: {} chars, {} tokens",
+        content.len(),
+        tokens.unwrap_or(0)
+    );
 
     Ok(ChatMessage {
         id: uuid::Uuid::new_v4().to_string(),
@@ -699,7 +734,10 @@ pub async fn chat_stream_message(
     use tauri::Emitter;
 
     println!("[CHAT_STREAM] ✅ Streaming enabled (Tauri v2 Emitter trait)");
-    println!("[CHAT_STREAM] Provider: {}, Model: {:?}", request.provider, request.model);
+    println!(
+        "[CHAT_STREAM] Provider: {}, Model: {:?}",
+        request.provider, request.model
+    );
 
     let start = crate::core::utils::now_ms();
     let mut accumulated_content = String::new();
@@ -711,10 +749,19 @@ pub async fn chat_stream_message(
     let full_content = response.message.content;
     let total_chunks = (full_content.len() + chunk_size - 1) / chunk_size;
 
-    println!("[CHAT_STREAM] Simulating {} chunks for {} chars", total_chunks, full_content.len());
+    println!(
+        "[CHAT_STREAM] Simulating {} chunks for {} chars",
+        total_chunks,
+        full_content.len()
+    );
 
     // Emit chunks progressively
-    for (i, chunk_text) in full_content.chars().collect::<Vec<char>>().chunks(chunk_size).enumerate() {
+    for (i, chunk_text) in full_content
+        .chars()
+        .collect::<Vec<char>>()
+        .chunks(chunk_size)
+        .enumerate()
+    {
         let chunk: String = chunk_text.iter().collect();
         accumulated_content.push_str(&chunk);
 
@@ -747,7 +794,11 @@ pub async fn chat_stream_message(
     app.emit("chat:stream:complete", complete_payload)
         .map_err(|e| format!("Failed to emit completion: {}", e))?;
 
-    println!("[CHAT_STREAM] ✅ Streaming completed: {} chars in {}ms", full_content.len(), latency_ms);
+    println!(
+        "[CHAT_STREAM] ✅ Streaming completed: {} chars in {}ms",
+        full_content.len(),
+        latency_ms
+    );
     Ok(full_content)
 }
 

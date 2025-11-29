@@ -13,43 +13,50 @@
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChat } from '../hooks/useChat';
-import { chatEngineOmnis } from '../services/ai/chatEngine_OMNIS_v1';
+import type { AIMessage } from '../services/ai/types';
 
-// Mock des dépendances
-vi.mock('../services/ai/chatEngine_OMNIS_v1', () => ({
-  chatEngineOmnis: {
-    generate: vi.fn(),
-    getStats: vi.fn(() => ({
-      totalRequests: 0,
-      successCount: 0,
-      errorCount: 0,
-      successRate: 100,
-      engineVersion: 'omnis-v1.0-test'
-    }))
-  }
+const mockGenerate = vi.fn(async (message: string, history: AIMessage[] = []) => ({
+  content: `Mocked response for: ${message}`,
+  provider: 'mock-provider',
+  timestamp: Date.now(),
+  metadata: { historyLength: history.length }
 }));
 
-vi.mock('../hooks/useChatCore', () => ({
+vi.mock('@hooks/useChatCore', () => ({
   useChatCore: () => ({
     currentMode: 'default',
     anomalyCount: 0,
-    setMode: vi.fn()
+    setMode: vi.fn(),
+    generate: mockGenerate
   })
 }));
 
-vi.mock('../hooks/useChatMemory', () => ({
-  useChatMemory: () => ({
-    messagesForMode: [],
-    memoryStats: { count: 0, sizeMB: 0, compressed: false },
-    saveMessage: vi.fn(),
-    clearMode: vi.fn()
-  })
+const mockMemoryState = {
+  messagesForMode: [] as AIMessage[],
+  memoryStats: { count: 0, sizeMB: 0, compressed: false },
+  saveMessage: vi.fn(),
+  clearMode: vi.fn(),
+  loadHistory: vi.fn(() => []),
+  compactIfNeeded: vi.fn(() => ({ cleaned: false, sizeMB: 0 })),
+  awardXP: vi.fn()
+};
+
+vi.mock('@hooks/useChatMemory', () => ({
+  useChatMemory: () => mockMemoryState
 }));
 
 describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockGenerate.mockReset();
+    mockGenerate.mockImplementation(async (message: string, history: AIMessage[] = []) => ({
+      content: `Mocked response for: ${message}`,
+      provider: 'mock-provider',
+      timestamp: Date.now(),
+      metadata: { historyLength: history.length }
+    }));
+    mockMemoryState.messagesForMode = [];
   });
 
   describe('RACE CONDITION FIXES', () => {
@@ -61,7 +68,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       provider: 'omnis'
     };
 
-    (chatEngineOmnis.generate as unknown as ReturnType<typeof vi.fn>).mockResolvedValue(mockResponse);
+    mockGenerate.mockResolvedValueOnce(mockResponse);
 
     const { result } = renderHook(() => useChat());
 
@@ -70,7 +77,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
     });
 
     // Vérifier que l'engine a été appelé avec le bon historique
-    expect(chatEngineOmnis.generate).toHaveBeenCalledWith(
+    expect(mockGenerate).toHaveBeenCalledWith(
       'Test message utilisateur',
       expect.arrayContaining([
         expect.objectContaining({
@@ -107,7 +114,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         provider: 'omnis'
       };
 
-      (chatEngineOmnis.generate as any)
+      mockGenerate
         .mockResolvedValueOnce(mockResponse1)
         .mockResolvedValueOnce(mockResponse2);
 
@@ -138,7 +145,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         setTimeout(() => reject(new Error('TIMEOUT')), 100)
       );
 
-      (chatEngineOmnis.generate as any).mockImplementation(() => timeoutPromise);
+      mockGenerate.mockImplementation(() => timeoutPromise as never);
 
       const { result } = renderHook(() => useChat({ timeout: 15000 }));
 
@@ -205,7 +212,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
     });
 
     test('messages de fallback avec rôle correct sont affichés', async () => {
-      (chatEngineOmnis.generate as any).mockRejectedValue(new Error('Test error'));
+      mockGenerate.mockRejectedValueOnce(new Error('Test error'));
 
       const { result } = renderHook(() => useChat());
 
@@ -233,7 +240,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         provider: 'omnis'
       };
 
-      (chatEngineOmnis.generate as jest.Mock).mockResolvedValue(mockResponse);
+      mockGenerate.mockResolvedValue(mockResponse);
 
       await act(async () => {
         await result.current.sendMessage('Test synchronization');
@@ -276,7 +283,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         metadata: { status: 'success' }
       };
 
-      (chatEngineOmnis.generate as jest.Mock).mockResolvedValue(mockResponse);
+      mockGenerate.mockResolvedValueOnce(mockResponse);
 
       const { result } = renderHook(() => useChat());
 

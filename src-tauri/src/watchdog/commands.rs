@@ -5,12 +5,12 @@
  */
 use crate::cognitive::CognitiveState;
 use crate::singularity::SingularityState;
-use crate::watchdog::{WatchdogScanner, WatchdogFixer};
-use crate::watchdog::scanner::ScanResult;
 use crate::watchdog::fixer::FixResult;
+use crate::watchdog::scanner::ScanResult;
 use crate::watchdog::selftest::{watchdog_selftest, WatchdogSelfTestResult};
-use std::sync::Mutex;
+use crate::watchdog::{WatchdogFixer, WatchdogScanner};
 use once_cell::sync::Lazy;
+use std::sync::Mutex;
 
 // Global scanner et fixer instances
 static SCANNER: Lazy<Mutex<WatchdogScanner>> = Lazy::new(|| Mutex::new(WatchdogScanner::new()));

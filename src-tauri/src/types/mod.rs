@@ -19,7 +19,10 @@ pub use evolution::{
 };
 pub use harmonia::{HarmoniaState, StabilizationLevel};
 pub use helios::{HeliosState, LoadAverage};
-pub use memory::{LogEntry, MemoryState, Snapshot, TimelineEvent};
+pub use memory::{
+    DiskMode, LogEntry, MemoryDirectoryReport, MemoryFileReport, MemoryState, Snapshot,
+    TimelineEvent,
+};
 pub use memory_chat::{
     ChatInteraction, DecisionSummary, EmotionState, ImpactLevel, KnowledgeEntry, ProjectStatus,
     ProjectSummary, RitualInfo, TimelineEntry, TimelineEntryType,

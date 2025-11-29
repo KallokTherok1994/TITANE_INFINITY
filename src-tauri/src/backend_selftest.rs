@@ -5,9 +5,9 @@
  * Valide tous les engines, systèmes critiques, sécurité
  */
 use crate::cognitive::selftest::cognitive_selftest;
-use crate::watchdog::selftest::watchdog_selftest;
 use crate::security::hardening::hardening_selftest;
-use serde::{Serialize, Deserialize};
+use crate::watchdog::selftest::watchdog_selftest;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BackendSelfTestReport {
@@ -91,12 +91,24 @@ pub async fn backend_global_selftest() -> BackendSelfTestReport {
     let total_tests: f32 = 6.0;
     let mut total_passed = 0.0;
 
-    if cognitive_passed { total_passed += 1.0; }
-    if watchdog_passed { total_passed += 1.0; }
-    if hardening_passed { total_passed += 1.0; }
-    if system_health.memory_ok { total_passed += 1.0; }
-    if system_health.singularity_ok { total_passed += 1.0; }
-    if system_health.ai_router_ok { total_passed += 1.0; }
+    if cognitive_passed {
+        total_passed += 1.0;
+    }
+    if watchdog_passed {
+        total_passed += 1.0;
+    }
+    if hardening_passed {
+        total_passed += 1.0;
+    }
+    if system_health.memory_ok {
+        total_passed += 1.0;
+    }
+    if system_health.singularity_ok {
+        total_passed += 1.0;
+    }
+    if system_health.ai_router_ok {
+        total_passed += 1.0;
+    }
 
     let overall_pass_rate = total_passed / total_tests;
 
@@ -133,10 +145,10 @@ fn test_singularity_health() -> bool {
     let state = SingularityState::default();
 
     // Validation basique des champs critiques
-    state.integrity >= 0.8 &&
-    state.global_coherence >= 0.1 &&
-    state.cognitive_depth >= 0.0 &&
-    state.symbolic_depth >= 0.0
+    state.integrity >= 0.8
+        && state.global_coherence >= 0.1
+        && state.cognitive_depth >= 0.0
+        && state.symbolic_depth >= 0.0
 }
 
 /**
@@ -170,12 +182,24 @@ mod tests {
 
         // Affiche rapport pour debug
         println!("Backend Self-Test Report:");
-        println!("  Overall Pass Rate: {:.1}%", report.overall_pass_rate * 100.0);
-        println!("  Cognitive: {:.1}%", report.cognitive_test.pass_rate * 100.0);
+        println!(
+            "  Overall Pass Rate: {:.1}%",
+            report.overall_pass_rate * 100.0
+        );
+        println!(
+            "  Cognitive: {:.1}%",
+            report.cognitive_test.pass_rate * 100.0
+        );
         println!("  Watchdog: {:.1}%", report.watchdog_test.pass_rate * 100.0);
-        println!("  Hardening: {:.1}%", report.hardening_test.pass_rate * 100.0);
+        println!(
+            "  Hardening: {:.1}%",
+            report.hardening_test.pass_rate * 100.0
+        );
         println!("  Memory Health: {}", report.system_health.memory_ok);
-        println!("  Singularity Health: {}", report.system_health.singularity_ok);
+        println!(
+            "  Singularity Health: {}",
+            report.system_health.singularity_ok
+        );
         println!("  AI Router Health: {}", report.system_health.ai_router_ok);
     }
 }

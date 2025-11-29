@@ -91,10 +91,24 @@ impl SkeletonModel {
 
         // Définir squelette de base (18 bones)
         let bone_names = vec![
-            "root", "spine_lower", "spine_mid", "spine_upper", "neck", "head",
-            "shoulder_left", "upper_arm_left", "forearm_left", "hand_left",
-            "shoulder_right", "upper_arm_right", "forearm_right", "hand_right",
-            "hip_left", "thigh_left", "calf_left", "foot_left",
+            "root",
+            "spine_lower",
+            "spine_mid",
+            "spine_upper",
+            "neck",
+            "head",
+            "shoulder_left",
+            "upper_arm_left",
+            "forearm_left",
+            "hand_left",
+            "shoulder_right",
+            "upper_arm_right",
+            "forearm_right",
+            "hand_right",
+            "hip_left",
+            "thigh_left",
+            "calf_left",
+            "foot_left",
         ];
 
         for name in bone_names {
@@ -105,13 +119,21 @@ impl SkeletonModel {
         let mut ik_chains = HashMap::new();
         ik_chains.insert(
             "arm_left".to_string(),
-            vec!["shoulder_left".to_string(), "upper_arm_left".to_string(),
-                 "forearm_left".to_string(), "hand_left".to_string()],
+            vec![
+                "shoulder_left".to_string(),
+                "upper_arm_left".to_string(),
+                "forearm_left".to_string(),
+                "hand_left".to_string(),
+            ],
         );
         ik_chains.insert(
             "arm_right".to_string(),
-            vec!["shoulder_right".to_string(), "upper_arm_right".to_string(),
-                 "forearm_right".to_string(), "hand_right".to_string()],
+            vec![
+                "shoulder_right".to_string(),
+                "upper_arm_right".to_string(),
+                "forearm_right".to_string(),
+                "hand_right".to_string(),
+            ],
         );
 
         Self {
@@ -268,17 +290,15 @@ impl Gesture {
     pub fn smiling_warm() -> Self {
         Self {
             name: "smiling_warm".to_string(),
-            keyframes: vec![
-                GestureKeyframe {
-                    bone_name: "head".to_string(),
-                    transform: BoneTransform {
-                        rotation: [0.02, 0.0, 0.0, 0.9998], // Léger tilt
-                        ..Default::default()
-                    },
-                    duration_ms: 500,
-                    easing: "ease-out".to_string(),
+            keyframes: vec![GestureKeyframe {
+                bone_name: "head".to_string(),
+                transform: BoneTransform {
+                    rotation: [0.02, 0.0, 0.0, 0.9998], // Léger tilt
+                    ..Default::default()
                 },
-            ],
+                duration_ms: 500,
+                easing: "ease-out".to_string(),
+            }],
             loop_enabled: false,
             transition_in_ms: 150,
             transition_out_ms: 200,
@@ -289,17 +309,15 @@ impl Gesture {
     pub fn attention_shift() -> Self {
         Self {
             name: "attention_shift".to_string(),
-            keyframes: vec![
-                GestureKeyframe {
-                    bone_name: "head".to_string(),
-                    transform: BoneTransform {
-                        rotation: [0.0, 0.1, 0.0, 0.995], // Rotation rapide
-                        ..Default::default()
-                    },
-                    duration_ms: 200,
-                    easing: "ease-out".to_string(),
+            keyframes: vec![GestureKeyframe {
+                bone_name: "head".to_string(),
+                transform: BoneTransform {
+                    rotation: [0.0, 0.1, 0.0, 0.995], // Rotation rapide
+                    ..Default::default()
                 },
-            ],
+                duration_ms: 200,
+                easing: "ease-out".to_string(),
+            }],
             loop_enabled: false,
             transition_in_ms: 100,
             transition_out_ms: 150,
@@ -423,13 +441,13 @@ impl MotionLayer {
                     // Position blend
                     for i in 0..3 {
                         bone.position[i] = bone.position[i] * (1.0 - blend)
-                                         + keyframe.transform.position[i] * blend;
+                            + keyframe.transform.position[i] * blend;
                     }
 
                     // Rotation blend (quaternion slerp simplifié)
                     for i in 0..4 {
                         bone.rotation[i] = bone.rotation[i] * (1.0 - blend)
-                                         + keyframe.transform.rotation[i] * blend;
+                            + keyframe.transform.rotation[i] * blend;
                     }
                 }
             }
@@ -473,7 +491,9 @@ impl ExpressionBridge {
     pub fn map_to_body_gesture(&self) -> Option<String> {
         match self.current_expression {
             FacialExpression::ExplainMode => Some("explaining".to_string()),
-            FacialExpression::SoftSmile | FacialExpression::WarmFocus => Some("smiling_warm".to_string()),
+            FacialExpression::SoftSmile | FacialExpression::WarmFocus => {
+                Some("smiling_warm".to_string())
+            }
             FacialExpression::Attentive => Some("listening".to_string()),
             _ => None,
         }
@@ -656,10 +676,12 @@ impl FullBodyAvatarEngine {
         self.motion_layer.advance_frame(delta_ms);
 
         // 2. Ajuster gestes selon lip-sync
-        self.lip_sync_feed.adjust_body_motion(&mut self.motion_layer);
+        self.lip_sync_feed
+            .adjust_body_motion(&mut self.motion_layer);
 
         // 3. Ajuster selon état cognitif
-        self.state_binding.adjust_motion_for_state(&mut self.motion_layer);
+        self.state_binding
+            .adjust_motion_for_state(&mut self.motion_layer);
 
         // 4. Appliquer au squelette
         self.motion_layer.apply_to_skeleton(&mut self.skeleton);
@@ -674,7 +696,8 @@ impl FullBodyAvatarEngine {
 
     /// Mettre à jour expression faciale
     pub fn update_expression(&mut self, expression: FacialExpression, intensity: f32) {
-        self.expression_bridge.update_expression(expression, intensity);
+        self.expression_bridge
+            .update_expression(expression, intensity);
 
         // Mapper expression → geste corporel si applicable
         if let Some(gesture_name) = self.expression_bridge.map_to_body_gesture() {
@@ -684,7 +707,8 @@ impl FullBodyAvatarEngine {
 
     /// Mettre à jour lip-sync
     pub fn update_lipsync(&mut self, phoneme: String, morph_weights: [f32; 4]) {
-        self.lip_sync_feed.update_from_lipsync(phoneme, morph_weights);
+        self.lip_sync_feed
+            .update_from_lipsync(phoneme, morph_weights);
     }
 
     /// Mettre à jour état SingularityState

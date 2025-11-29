@@ -15,17 +15,17 @@
 //! @version Ω (Omega - Final Fusion)
 //! @created 2025-11-27
 
-pub mod fusion_engine;
-pub mod unified_pipeline;
 pub mod auto_fix;
 pub mod auto_heal;
-pub mod performance;
 pub mod crash_guard;
+pub mod fusion_engine;
+pub mod performance;
+pub mod unified_pipeline;
 
 // Réexporter les types publics
-pub use fusion_engine::*;
-pub use unified_pipeline::*;
 pub use auto_fix::*;
 pub use auto_heal::*;
-pub use performance::*;
 pub use crash_guard::*;
+pub use fusion_engine::*;
+pub use performance::*;
+pub use unified_pipeline::*;

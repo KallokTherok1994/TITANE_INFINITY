@@ -103,7 +103,7 @@ describe('🔍 DIAGNOSTIC CHAT IA COMPLET', () => {
 
   test('5️⃣ Providers status vérification', async () => {
     try {
-      const status = await safeInvokeTauri(TAURI_COMMANDS.GET_PROVIDERS_STATUS);
+      const status = await safeInvokeTauri(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS);
       console.log('✅ Providers status:', status);
     } catch (error) {
       console.warn('⚠️ Providers status via fallback:', error);

@@ -1,16 +1,16 @@
+pub mod alerts;
+pub mod commands;
+pub mod fixer;
 /**
  * TITANE∞ v17 - Watchdog Engine Module
  *
  * Moteur de surveillance et auto-réparation du système cognitif
  */
 pub mod scanner;
-pub mod fixer;
-pub mod alerts;
 pub mod selftest;
-pub mod commands;
 
-pub use scanner::{WatchdogScanner, ScanResult, AnomalyType};
-pub use fixer::{WatchdogFixer, FixResult, FixAction};
-pub use alerts::{WatchdogAlert, AlertLevel};
-pub use selftest::{watchdog_selftest, WatchdogSelfTestResult};
+pub use alerts::{AlertLevel, WatchdogAlert};
 pub use commands::*;
+pub use fixer::{FixAction, FixResult, WatchdogFixer};
+pub use scanner::{AnomalyType, ScanResult, WatchdogScanner};
+pub use selftest::{watchdog_selftest, WatchdogSelfTestResult};

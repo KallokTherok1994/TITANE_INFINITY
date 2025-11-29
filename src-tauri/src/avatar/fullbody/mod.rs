@@ -5,11 +5,8 @@ pub mod fullbody_engine;
 pub mod posture_ai;
 
 pub use fullbody_engine::{
-    FullBodyAvatarEngine, BodyProfile, SkeletonModel, Gesture,
-    MotionLayer, ExpressionBridge, LipSyncFeed, AvatarStateBinding,
-    AvatarStateSnapshot, SkeletonSnapshot, get_fullbody_engine,
+    get_fullbody_engine, AvatarStateBinding, AvatarStateSnapshot, BodyProfile, ExpressionBridge,
+    FullBodyAvatarEngine, Gesture, LipSyncFeed, MotionLayer, SkeletonModel, SkeletonSnapshot,
 };
 
-pub use posture_ai::{
-    BodyPostureAI, PostureType, PostureConfiguration, ConversationalContext,
-};
+pub use posture_ai::{BodyPostureAI, ConversationalContext, PostureConfiguration, PostureType};

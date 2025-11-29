@@ -1,11 +1,13 @@
 // TITANE∞ v16 - Cognitive Commands
 // Tauri commands for cognitive layer interaction
 
-use crate::cognitive::{AnalysisEngine, ConsistencyEngine, IntegrationEngine, EvolutionCognitiveEngine};
+use crate::cognitive::{
+    AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
+};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use tokio::sync::Mutex;
 use tauri::State;
+use tokio::sync::Mutex;
 
 /// Global cognitive state v16
 pub struct CognitiveSystemState {
@@ -70,7 +72,10 @@ pub async fn cognitive_integrate(
     state: State<'_, CognitiveSystemState>,
     signals: Vec<String>,
 ) -> Result<String, String> {
-    log::info!("[Cognitive v16] cognitive_integrate: {} signals", signals.len());
+    log::info!(
+        "[Cognitive v16] cognitive_integrate: {} signals",
+        signals.len()
+    );
 
     let mut engine = state.integration.lock().await;
     let result = engine.integrate(signals);
@@ -115,9 +120,7 @@ pub async fn cognitive_get_status(
 
 /// Run optimization cycle
 #[tauri::command]
-pub async fn cognitive_optimize(
-    state: State<'_, CognitiveSystemState>,
-) -> Result<(), String> {
+pub async fn cognitive_optimize(state: State<'_, CognitiveSystemState>) -> Result<(), String> {
     log::info!("[Cognitive v16] cognitive_optimize");
 
     let mut engine = state.evolution.lock().await;

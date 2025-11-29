@@ -13,15 +13,15 @@
  */
 
 import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
-import { useChatCore } from './useChatCore';
-import { useChatMemory } from './useChatMemory';
+import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
+import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
-import { hybridTTS } from '../services/tts/hybridTTS';
+import { hybridTTS } from '@services/tts/hybridTTS';
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
-const normalizeMessages = (messages: MaybeAIMessage[]): AIMessage[] => {
+const normalizeMessages = (messages: MaybeAIMessage[], getUiId: () => string): AIMessage[] => {
   if (!Array.isArray(messages)) {
     return [];
   }
@@ -36,12 +36,20 @@ const normalizeMessages = (messages: MaybeAIMessage[]): AIMessage[] => {
       ? message.content
       : JSON.stringify(message?.content ?? '');
 
+    const metadata = message?.metadata && typeof message.metadata === 'object'
+      ? { ...message.metadata }
+      : {};
+
+    if (!metadata.uiId) {
+      metadata.uiId = getUiId();
+    }
+
     return {
       role,
       content,
       timestamp: typeof message?.timestamp === 'number' ? message.timestamp : now + index,
       provider: message?.provider,
-      metadata: message?.metadata
+      metadata
     };
   });
 };
@@ -122,6 +130,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
 
   const messagesRef = useRef<AIMessage[]>([]);
+  const messageIdRef = useRef(0);
   const stateVaultRef = useRef<{ stable: AIMessage[]; lastContext: string }>({
     stable: [],
     lastContext: 'init'
@@ -151,13 +160,33 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }) || {
     currentMode: 'default' as ChatMode,
     anomalyCount: 0,
-    setMode: () => {},
+    currentProvider: 'titane-local',
     generate: async () => ({
       content: 'TITANE∞ prépare une réponse.',
       provider: 'titane-local',
       timestamp: Date.now(),
-    } as ChatEngineResponse)
-  };
+      mode: 'default' as ChatMode,
+      contextUsed: [],
+    } as ChatEngineResponse),
+    async *stream(): AsyncGenerator<string, ChatEngineResponse> {
+      yield '⏳ Initialisation du flux TITANE∞...';
+      return {
+        content: 'Streaming indisponible pour le moment. Passage en mode standard.',
+        provider: 'titane-local',
+        timestamp: Date.now(),
+        mode: 'default' as ChatMode,
+        contextUsed: [],
+        suggestions: [],
+      } as ChatEngineResponse;
+    },
+    setMode: () => {},
+    setProvider: () => {},
+    validateResponse: () => ({
+      isValid: true,
+      score: 1,
+      issues: [],
+    }),
+  } as UseChatCoreReturn;
 
   const memoryHookResult = useChatMemory({
     mode: coreHookResult.currentMode,
@@ -170,12 +199,28 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     clearMode: () => {}
   };
 
-  const { currentMode, anomalyCount, setMode: setCoreMode, generate } = coreHookResult;
+  const { currentMode, anomalyCount, setMode: setCoreMode, generate, stream } = coreHookResult;
   const { messagesForMode, memoryStats, saveMessage, clearMode } = memoryHookResult;
+
+  const getNextUiId = useCallback(() => {
+    messageIdRef.current += 1;
+    return `chat-ui-${Date.now()}-${messageIdRef.current}`;
+  }, []);
+
+  const withUiId = useCallback(
+    (metadata?: AIMessage['metadata']) => {
+      const safeMetadata = metadata && typeof metadata === 'object' ? { ...metadata } : {};
+      if (!safeMetadata.uiId) {
+        safeMetadata.uiId = getNextUiId();
+      }
+      return safeMetadata;
+    },
+    [getNextUiId]
+  );
 
   const applyMessagesSafely = useCallback((nextMessages: MaybeAIMessage[], context: string, options: { allowEmpty?: boolean } = {}) => {
     const allowEmpty = options.allowEmpty ?? false;
-    const normalized = normalizeMessages(nextMessages);
+    const normalized = normalizeMessages(nextMessages, getNextUiId);
     const hasMessages = normalized.length > 0;
 
     if (!allowEmpty && !hasMessages && stateVaultRef.current.stable.length > 0) {
@@ -215,7 +260,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }));
 
     return emitted;
-  }, []);
+  }, [getNextUiId]);
 
   const restoreFromVault = useCallback(() => {
     if (stateVaultRef.current.stable.length === 0) {
@@ -277,36 +322,202 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       role: 'user',
       content: cleanMessage,
       timestamp: Date.now(),
-      metadata: { inputLength: cleanMessage.length, mode: currentMode }
+      metadata: withUiId({ inputLength: cleanMessage.length, mode: currentMode })
     };
 
     const bufferedMessages = [...messagesRef.current, userMessage];
     const historyBuffer = applyMessagesSafely(bufferedMessages, 'user-message');
 
-    try {
-      const engineResponse = await Promise.race([
-        generate(cleanMessage, historyBuffer),
-        new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error('TIMEOUT')), omnisConfig.timeoutMs || 15000)
-        )
-      ]);
+    const timeoutMs = Math.max(1000, omnisConfig.timeoutMs || 15000);
+    let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-      const assistantMessage: AIMessage = {
-        role: 'assistant',
-        content: engineResponse.content,
-        provider: engineResponse.provider || 'titane-local',
-        timestamp: Date.now(),
-        metadata: {
-          status: 'success',
-          duration: Date.now() - startTime,
-          ...(engineResponse.metadata || {}),
-          omegaMetadata: engineResponse.omegaMetadata,
-          mode: currentMode
+    const assistantMetadata = withUiId({
+      status: 'streaming',
+      mode: currentMode,
+      streamChunks: 0,
+    });
+
+    const assistantPlaceholder: AIMessage = {
+      role: 'assistant',
+      content: '',
+      timestamp: Date.now(),
+      provider: 'tauri-backend',
+      metadata: assistantMetadata,
+    };
+
+    applyMessagesSafely([...messagesRef.current, assistantPlaceholder], 'assistant-stream-start');
+
+    const targetUiId = assistantMetadata.uiId;
+
+    const getAssistantFromState = (): AIMessage | null => {
+      if (!targetUiId) {
+        return null;
+      }
+      const current = messagesRef.current.find((msg) => msg.metadata?.uiId === targetUiId);
+      return current ? { ...current } : null;
+    };
+
+    const updateAssistant = (
+      mutate: (message: AIMessage) => AIMessage,
+      context: string,
+      metadataPatch?: Record<string, unknown>
+    ) => {
+      if (!targetUiId) {
+        return;
+      }
+
+      const nextMessages = messagesRef.current.map((msg) => {
+        if (!msg?.metadata || msg.metadata.uiId !== targetUiId) {
+          return msg;
         }
+
+        const updated = mutate({ ...msg });
+        const existingMetadata = updated.metadata && typeof updated.metadata === 'object'
+          ? { ...updated.metadata }
+          : {};
+
+        const mergedMetadata = {
+          ...existingMetadata,
+          ...(metadataPatch || {}),
+        };
+
+        if (targetUiId && mergedMetadata.uiId !== targetUiId) {
+          mergedMetadata.uiId = targetUiId;
+        }
+
+        return {
+          ...updated,
+          metadata: mergedMetadata,
+        };
+      });
+
+      applyMessagesSafely(nextMessages, context);
+    };
+
+    let aggregatedContent = '';
+    let chunkCount = 0;
+    let finalResponse: ChatEngineResponse | null = null;
+    let streamingError: Error | null = null;
+
+    const executeStreaming = async (): Promise<ChatEngineResponse> => {
+      if (typeof stream !== 'function') {
+        throw new Error('Streaming non disponible');
+      }
+
+      const iterator = stream(cleanMessage, historyBuffer);
+      let completed = false;
+
+      const streamingTask = (async (): Promise<ChatEngineResponse> => {
+        while (true) {
+          const { value, done } = await iterator.next();
+
+          if (done) {
+            const response = value ?? null;
+            if (!response) {
+              throw new Error('Streaming sans réponse finale');
+            }
+            aggregatedContent = response.content ?? aggregatedContent;
+            return response;
+          }
+
+          if (typeof value !== 'string' || value.length === 0) {
+            continue;
+          }
+
+          aggregatedContent += value;
+          chunkCount += 1;
+
+          updateAssistant(
+            (message) => ({
+              ...message,
+              content: aggregatedContent,
+            }),
+            'assistant-stream-update',
+            {
+              status: 'streaming',
+              streamChunks: chunkCount,
+              mode: currentMode,
+            }
+          );
+        }
+      })();
+
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error('TIMEOUT'));
+        }, timeoutMs);
+      });
+
+      try {
+        const response = await Promise.race([streamingTask, timeoutPromise]);
+        completed = true;
+        return response;
+      } finally {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+          timeoutId = null;
+        }
+
+        if (!completed && typeof iterator.return === 'function') {
+          try {
+            await iterator.return(undefined as unknown as ChatEngineResponse);
+          } catch {
+            // ignore cleanup failure
+          }
+        }
+      }
+    };
+
+    try {
+      if (typeof stream === 'function') {
+        try {
+          finalResponse = await executeStreaming();
+        } catch (error) {
+          streamingError = error instanceof Error ? error : new Error(String(error));
+          console.warn('[Chat] Streaming fallback triggered:', streamingError);
+        }
+      }
+
+      if (!finalResponse) {
+        const response = await generate(cleanMessage, historyBuffer);
+        finalResponse = response;
+        aggregatedContent = response.content;
+      }
+
+      if (!finalResponse) {
+        throw new Error('Pipeline returned no response');
+      }
+
+      const metadataPatch: Record<string, unknown> = {
+        status: streamingError ? 'fallback' : 'success',
+        duration: Date.now() - startTime,
+        ...(finalResponse.metadata || {}),
+        omegaMetadata: finalResponse.omegaMetadata,
+        mode: currentMode,
+        streamChunks: chunkCount,
       };
 
-      const finalMessages = [...messagesRef.current, assistantMessage];
-      applyMessagesSafely(finalMessages, 'assistant-response');
+      const finalContent = finalResponse.content ?? aggregatedContent;
+      const provider = finalResponse.provider || 'tauri-backend';
+
+      updateAssistant(
+        (message) => ({
+          ...message,
+          content: finalContent,
+          provider,
+          timestamp: Date.now(),
+        }),
+        streamingError ? 'assistant-stream-fallback' : 'assistant-stream-complete',
+        metadataPatch
+      );
+
+      const assistantMessage = getAssistantFromState() ?? {
+        role: 'assistant',
+        content: finalContent,
+        provider,
+        timestamp: Date.now(),
+        metadata: withUiId(metadataPatch),
+      };
 
       try {
         saveMessage(userMessage);
@@ -323,7 +534,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         }
       }
 
-      setSuggestions(engineResponse.suggestions ?? []);
+      setSuggestions(finalResponse.suggestions ?? []);
       setIsLoading(false);
       return assistantMessage;
 
@@ -335,22 +546,31 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         content: 'TITANE∞ reste présent. Une légère turbulence a été détectée mais l\'espace de discussion est stable. Reformule ou continue quand tu veux.',
         timestamp: Date.now(),
         provider: 'omnis-fallback',
-        metadata: {
+        metadata: withUiId({
           status: 'error',
           duration: Date.now() - startTime,
           error: error instanceof Error ? error.message : String(error)
-        }
+        })
       };
 
-      const errorMessages = [...messagesRef.current, fallbackResponse];
-      applyMessagesSafely(errorMessages, 'fallback-response');
+      if (targetUiId) {
+        updateAssistant(
+          () => ({ ...fallbackResponse }),
+          'assistant-stream-error',
+          fallbackResponse.metadata
+        );
+      } else {
+        const errorMessages = [...messagesRef.current, fallbackResponse];
+        applyMessagesSafely(errorMessages, 'fallback-response');
+      }
+
       setError('TITANE∞ a rencontré une anomalie et s\'est réparé. Tu peux réessayer immédiatement.');
       setIsLoading(false);
       setInternalAnomalyCount(prev => prev + 1);
 
       return fallbackResponse;
     }
-  }, [applyMessagesSafely, currentMode, generate, omnisConfig.timeoutMs, options.voiceEnabled, saveMessage]);
+  }, [applyMessagesSafely, currentMode, generate, omnisConfig.timeoutMs, options.voiceEnabled, saveMessage, stream, withUiId]);
 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {

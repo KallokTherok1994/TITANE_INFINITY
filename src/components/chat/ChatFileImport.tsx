@@ -273,7 +273,7 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
               {isDragging ? 'Déposer le fichier' : 'Glisser un fichier ou cliquer'}
             </span>
             <span className="hint">
-              .txt, .md, .json, .yaml, .js, .ts, .log
+              .txt, .md, .json, .yaml/.yml, .js/.ts/.tsx/.jsx, .log
             </span>
           </>
         )}
