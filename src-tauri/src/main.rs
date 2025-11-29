@@ -23,9 +23,12 @@ use titane_infinity::{
     control_panel_commands,
     mock_commands,
     overdrive, // ✅ v16.1 CHAT ORCHESTRATOR
+    runtime_config,
     secure_commands,
     time_commands,
 };
+
+use titane_infinity::security::secrets_engine::SecureSecretsEngine;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
@@ -154,6 +157,20 @@ async fn main() {
     log::info!("✅ Sandbox: /userdata/imports/ ready");
 
     // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE SECURE SECRETS ENGINE v∞
+    // ═══════════════════════════════════════════════════════════════
+    let secrets_passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE").ok();
+    let secrets_engine = match SecureSecretsEngine::new(secrets_passphrase) {
+        Ok(engine) => engine,
+        Err(err) => {
+            log::error!("❌ Failed to initialize SecureSecretsEngine: {}", err);
+            std::process::exit(1);
+        }
+    };
+
+    log::info!("✅ SecureSecretsEngine v∞ ready");
+
+    // ═══════════════════════════════════════════════════════════════
     // INITIALIZE COGNITIVE SYSTEM v16
     // ═══════════════════════════════════════════════════════════════
     log::info!("🧠 Initializing Cognitive Layer v16...");
@@ -208,13 +225,40 @@ async fn main() {
     // Initialize providers async (use existing tokio runtime)
     overdrive::chat_orchestrator::initialize_providers_async(&chat_orchestrator_state).await;
 
-    // Load Gemini API key from environment
-    if let Ok(api_key) = std::env::var("GEMINI_API_KEY") {
-        let mut key = chat_orchestrator_state.gemini_api_key.write().await;
-        *key = Some(api_key);
-        log::info!("✅ Gemini API key loaded from environment");
-    } else {
-        log::warn!("⚠️  GEMINI_API_KEY not found in environment");
+    // Load Gemini API key from secure secrets (fallback to environment for migration)
+    let mut gemini_ready = false;
+    if let Ok(Some(api_key)) = secrets_engine.get_secret("gemini_api_key") {
+        {
+            let mut key = chat_orchestrator_state.gemini_api_key.write().await;
+            *key = Some(api_key.clone());
+        }
+        chat_orchestrator_state
+            .set_provider_availability("gemini", true)
+            .await;
+        log::info!("✅ Gemini API key loaded from SecureSecretsEngine");
+        gemini_ready = true;
+    } else if let Ok(env_key) = std::env::var("GEMINI_API_KEY") {
+        match secrets_engine.set_secret("gemini_api_key", env_key.clone()) {
+            Ok(_) => {
+                log::info!("🔐 Migrated GEMINI_API_KEY from environment into SecureSecretsEngine")
+            }
+            Err(err) => log::error!(
+                "❌ Failed to persist Gemini API key into SecureSecretsEngine: {}",
+                err
+            ),
+        }
+        {
+            let mut key = chat_orchestrator_state.gemini_api_key.write().await;
+            *key = Some(env_key);
+        }
+        chat_orchestrator_state
+            .set_provider_availability("gemini", true)
+            .await;
+        gemini_ready = true;
+    }
+
+    if !gemini_ready {
+        log::warn!("⚠️ Gemini API key not configured. Cloud provider disabled");
     }
 
     log::info!("✅ ChatOrchestrator v16: Gemini + Ollama + Local ready");
@@ -222,16 +266,17 @@ async fn main() {
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     log::info!("⚡ Initializing ChatEngine v∞ (high-performance mode)...");
     #[cfg(all(not(feature = "mock"), feature = "full"))]
-    let chat_engine_state = match chat_engine::bootstrap_from_env(None).await {
-        Ok(state) => {
-            log::info!("✅ ChatEngine v∞ ready: streaming, memory, TTS active");
-            state
-        }
-        Err(err) => {
-            log::error!("❌ Failed to initialize ChatEngine v∞: {}", err);
-            std::process::exit(1);
-        }
-    };
+    let chat_engine_state =
+        match chat_engine::bootstrap_from_env(None, Some(secrets_engine.clone())).await {
+            Ok(state) => {
+                log::info!("✅ ChatEngine v∞ ready: streaming, memory, TTS active");
+                state
+            }
+            Err(err) => {
+                log::error!("❌ Failed to initialize ChatEngine v∞: {}", err);
+                std::process::exit(1);
+            }
+        };
 
     // ═══════════════════════════════════════════════════════════════
     // INITIALIZE SINGULARITY-FUSION vΩ
@@ -255,6 +300,7 @@ async fn main() {
         .manage(narrative_engine)
         .manage(avatar_engine)
         .manage(chat_orchestrator_state)
+        .manage(secrets_engine.clone())
         .manage(fusion_engine_state)
         .manage(unified_pipeline_state)
         .manage(autofix_state)
@@ -274,6 +320,7 @@ async fn main() {
         log::info!("✅ NarrativeEngine v22 managed");
         log::info!("✅ ImmersiveAvatarEngine v23 managed");
         log::info!("✅ ChatOrchestrator v16 managed");
+        log::info!("✅ SecureSecretsEngine v∞ managed");
         log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
 
         #[cfg(all(not(feature = "mock"), feature = "full"))]
@@ -378,6 +425,7 @@ async fn main() {
         mock_commands::get_files_by_category,
         mock_commands::clear_memory,
         mock_commands::store_file,
+        runtime_config::get_runtime_config,
         // Chat Engine v∞ - High-Performance Pipeline
         #[cfg(all(not(feature = "mock"), feature = "full"))]
         chat_engine::commands::generate_response,

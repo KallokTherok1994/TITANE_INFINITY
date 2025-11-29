@@ -7,6 +7,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use super::permissions::verify_permissions;
+use super::secrets_engine::{SecretsMode, SecureSecretsEngine};
 use std::path::PathBuf;
 
 /// Résultat validation pre-boot
@@ -20,6 +21,7 @@ pub struct PreBootValidation {
     pub singularity_state_ok: bool,
     pub permissions_ok: bool,
     pub vault_ok: bool,
+    pub secrets_engine_ok: bool,
 }
 
 impl PreBootValidation {
@@ -33,6 +35,7 @@ impl PreBootValidation {
             && self.singularity_state_ok
             && self.permissions_ok
             && self.vault_ok
+            && self.secrets_engine_ok
     }
 
     /// Générer rapport
@@ -50,6 +53,7 @@ impl PreBootValidation {
 ║ SingularityState    : {}
 ║ Permissions Matrix  : {}
 ║ Encrypted Vault     : {}
+║ Secure Secrets      : {}
 ╠══════════════════════════════════════════════════════════════╣
 ║ Status: {}
 ╚══════════════════════════════════════════════════════════════╝
@@ -62,6 +66,7 @@ impl PreBootValidation {
             status_icon(self.singularity_state_ok),
             status_icon(self.permissions_ok),
             status_icon(self.vault_ok),
+            status_icon(self.secrets_engine_ok),
             if self.is_valid() {
                 "✅ VALID - Boot authorized"
             } else {
@@ -92,6 +97,7 @@ pub async fn validate_pre_boot() -> Result<PreBootValidation, String> {
         singularity_state_ok: false,
         permissions_ok: false,
         vault_ok: false,
+        secrets_engine_ok: false,
     };
 
     // 1. Vérifier signature binaire (si activée)
@@ -117,6 +123,9 @@ pub async fn validate_pre_boot() -> Result<PreBootValidation, String> {
 
     // 8. Vérifier Vault chiffrée
     validation.vault_ok = verify_vault().await?;
+
+    // 9. Vérifier SecureSecretsEngine
+    validation.secrets_engine_ok = verify_secrets_engine().await?;
 
     log::info!("{}", validation.report());
 
@@ -257,6 +266,30 @@ async fn verify_vault() -> Result<bool, String> {
     Ok(true)
 }
 
+/// Vérifier configuration SecureSecretsEngine
+async fn verify_secrets_engine() -> Result<bool, String> {
+    let passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
+        .map_err(|_| "TITANE_SECRETS_PASSPHRASE environment variable is missing".to_string())?;
+
+    let trimmed = passphrase.trim();
+    if trimmed.len() < 12 {
+        return Err("TITANE_SECRETS_PASSPHRASE must be at least 12 characters".to_string());
+    }
+
+    let engine = SecureSecretsEngine::new(Some(trimmed.to_string()))
+        .map_err(|e| format!("SecureSecretsEngine initialization failed: {}", e))?;
+
+    match engine.mode() {
+        SecretsMode::Encrypted { .. } => {
+            log::debug!("✅ SecureSecretsEngine: encrypted mode active");
+            Ok(true)
+        }
+        SecretsMode::Ephemeral => {
+            Err("SecureSecretsEngine is running in ephemeral mode".to_string())
+        }
+    }
+}
+
 fn get_memory_dir() -> PathBuf {
     dirs::data_local_dir()
         .unwrap_or_else(|| PathBuf::from("."))
@@ -278,6 +311,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_pre_boot_validation() {
+        std::env::set_var("TITANE_SECRETS_PASSPHRASE", "integration-test-pass");
         let result = validate_pre_boot().await;
         // En mode dev, devrait réussir
         assert!(result.is_ok());

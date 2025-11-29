@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::core::tapi_error::TAPIError;
+use crate::security::secrets_engine::SecureSecretsEngine;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -107,6 +108,18 @@ pub struct ChatOrchestratorState {
     pub gemini_api_key: Arc<RwLock<Option<String>>>,
     #[allow(dead_code)]
     default_provider: Arc<RwLock<String>>,
+}
+
+impl ChatOrchestratorState {
+    pub async fn set_provider_availability(&self, provider: &str, available: bool) {
+        let mut status = self.provider_status.write().await;
+        if let Some(entry) = status.iter_mut().find(|s| s.provider == provider) {
+            entry.available = available;
+            if available {
+                entry.error = None;
+            }
+        }
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -678,14 +691,19 @@ async fn store_message(
 pub async fn chat_set_gemini_key(
     api_key: String,
     state: State<'_, ChatOrchestratorState>,
+    secrets: State<'_, SecureSecretsEngine>,
 ) -> Result<String, String> {
+    secrets
+        .set_secret("gemini_api_key", api_key.clone())
+        .map_err(|e| e.to_string())?;
+
     let mut key = state.gemini_api_key.write().await;
     *key = Some(api_key);
 
     // Vérifier disponibilité
     update_provider_status(&state, "gemini", true, 0, None).await;
 
-    Ok("API key configurée".to_string())
+    Ok("Gemini API key securely stored".to_string())
 }
 
 #[tauri::command]
@@ -803,10 +821,7 @@ pub async fn chat_stream_message(
         content: request.message.clone(),
         timestamp: get_timestamp(),
         provider: request.provider.clone(),
-        model: request
-            .model
-            .clone()
-            .unwrap_or_else(|| "auto".to_string()),
+        model: request.model.clone().unwrap_or_else(|| "auto".to_string()),
         tokens: None,
         multimodal: request.images.is_some(),
     };
@@ -855,7 +870,11 @@ pub async fn chat_stream_message(
         full_content.len()
     );
 
-    for chunk_text in full_content.chars().collect::<Vec<char>>().chunks(chunk_size) {
+    for chunk_text in full_content
+        .chars()
+        .collect::<Vec<char>>()
+        .chunks(chunk_size)
+    {
         let chunk: String = chunk_text.iter().collect();
         accumulated_content.push_str(&chunk);
 

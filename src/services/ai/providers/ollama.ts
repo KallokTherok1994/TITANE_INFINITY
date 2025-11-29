@@ -22,8 +22,13 @@ import {
 import { autoHealEngine } from '../autoHealEngine';
 
 const isDev = process.env.NODE_ENV === 'development';
-const OLLAMA_API_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434';
-const OLLAMA_MODEL = import.meta.env.VITE_OLLAMA_MODEL || 'llama2';
+const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
+const OLLAMA_API_URL = typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
+  ? runtimeConfig.ollamaUrl.trim()
+  : 'http://127.0.0.1:11434';
+const OLLAMA_MODEL = typeof runtimeConfig.ollamaModel === 'string' && runtimeConfig.ollamaModel.trim().length > 0
+  ? runtimeConfig.ollamaModel.trim()
+  : 'llama3.1';
 const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
 
 // OMEGA: Endpoint health tracking

@@ -25,6 +25,8 @@ import './pages/styles.css'; // 📄 Pages styles (minimal)
 import { ErrorBoundary as ProductionErrorBoundary } from './components/common/ErrorBoundary';
 // import { PerformanceMonitor } from './lib/performanceBudget'; // DÉSACTIVÉ pour diagnostic progressif
 import { injectSROnlyStyles } from './lib/accessibility';
+import { safeInvokeTauri } from './utils/tauriProtector';
+import { TAURI_COMMANDS } from './core/commands/TAURI_COMMANDS';
 
 // Phase 3 (v19): UI Logger - Isolate frontend logs from backend
 import { logInfo } from './lib/UILogger';
@@ -43,6 +45,71 @@ console.log(`[XP] Système chargé:`, { level: XP.state.level, xp: XP.state.tota
 
 // Set default theme
 document.documentElement.setAttribute('data-theme', 'dark');
+
+type RuntimeConfigPayload = {
+  ollamaUrl: string;
+  ollamaModel: string;
+  secretsMode: string;
+  geminiConfigured: boolean;
+  timestamp: number;
+};
+
+const DEFAULT_RUNTIME_CONFIG: RuntimeConfigPayload = Object.freeze({
+  ollamaUrl: 'http://127.0.0.1:11434',
+  ollamaModel: 'llama3.1',
+  secretsMode: 'ephemeral',
+  geminiConfigured: false,
+  timestamp: Date.now(),
+});
+
+function setRuntimeConfig(config: Partial<RuntimeConfigPayload>): void {
+  const target = globalThis as Record<string, unknown>;
+  const merged: RuntimeConfigPayload = {
+    ...DEFAULT_RUNTIME_CONFIG,
+    ...config,
+    timestamp: config.timestamp ?? Date.now(),
+  } as RuntimeConfigPayload;
+
+  Object.defineProperty(target, '__TITANE_RUNTIME_CONFIG__', {
+    value: Object.freeze(merged),
+    configurable: true,
+    enumerable: false,
+    writable: false,
+  });
+}
+
+async function initializeRuntimeConfig(): Promise<void> {
+  setRuntimeConfig(DEFAULT_RUNTIME_CONFIG);
+
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const isTauri = Boolean((window as any).__TAURI__ || (window as any).__TAURI_INTERNALS__);
+  if (!isTauri) {
+    console.warn('[RuntimeConfig] Tauri bridge unavailable; falling back to defaults');
+    return;
+  }
+
+  try {
+    const runtimeConfig = await safeInvokeTauri<Partial<RuntimeConfigPayload>>(TAURI_COMMANDS.RUNTIME_GET_CONFIG);
+
+    if (runtimeConfig && typeof runtimeConfig === 'object' && 'ollamaUrl' in runtimeConfig) {
+      setRuntimeConfig(runtimeConfig as RuntimeConfigPayload);
+      console.log('[RuntimeConfig] Loaded (sanitized)', {
+        secretsMode: runtimeConfig.secretsMode,
+        geminiConfigured: runtimeConfig.geminiConfigured,
+        ollamaEndpoint: runtimeConfig.ollamaUrl,
+      });
+    } else {
+      console.warn('[RuntimeConfig] Backend returned unexpected payload; keeping defaults');
+    }
+  } catch (error) {
+    console.warn('[RuntimeConfig] Failed to load from backend; using defaults', error);
+  }
+}
+
+void initializeRuntimeConfig();
 
 const getTauriWindowAPI = () => {
   if (typeof window === 'undefined') {

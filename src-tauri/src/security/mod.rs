@@ -4,6 +4,7 @@
 //   Hardening, Permissions, Encryption, Validation, Sandbox
 // ═══════════════════════════════════════════════════════════════
 
+pub mod secrets_engine;
 pub mod shell_guard;
 pub mod storage_guard;
 

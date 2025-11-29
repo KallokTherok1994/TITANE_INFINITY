@@ -108,6 +108,9 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'load_memory',
   'reset_memory',
   'health_check',
+  // Control Panel (secure)
+  'cp_get_ai_config',
+  'cp_set_ai_config',
 
   // ═══════════════════════════════════════════════════════════════
   // VOICE / TTS / ASR (v16.2.2+)

@@ -11,6 +11,7 @@ use crate::audio::AudioConfig;
 use crate::compat::CoreCollection;
 use crate::memory::model::{Conversation, MessageRole};
 use crate::memory::storage::MemoryStorage;
+use crate::security::secrets_engine::SecureSecretsEngine;
 use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
 use crate::tts::TTSRequest;
@@ -38,8 +39,14 @@ pub struct AIChatState {
 
 impl AIChatState {
     pub fn new() -> Self {
-        // Get Gemini API key from environment
-        let gemini_key = std::env::var("GEMINI_API_KEY").ok();
+        let secrets_engine = SecureSecretsEngine::new(std::env::var("TITANE_SECRETS_PASSPHRASE").ok())
+            .unwrap_or_default();
+
+        let gemini_key = secrets_engine
+            .get_secret("gemini_api_key")
+            .ok()
+            .flatten()
+            .or_else(|| std::env::var("GEMINI_API_KEY").ok());
         let ollama_model = std::env::var("OLLAMA_MODEL").ok();
 
         let ai_router = Arc::new(RwLock::new(AIRouter::new(gemini_key.clone(), ollama_model)));

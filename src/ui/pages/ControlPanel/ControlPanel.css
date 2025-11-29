@@ -269,6 +269,25 @@
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
 }
 
+.cp-helper-text {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+}
+
+.cp-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+}
+
+.cp-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-surface-alt, rgba(255, 255, 255, 0.04));
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
 .cp-textarea {
   min-height: 100px;
   resize: vertical;

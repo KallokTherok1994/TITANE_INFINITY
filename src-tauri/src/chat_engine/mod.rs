@@ -18,6 +18,7 @@ use streaming::{chunk_text, new_stream_channel, StreamReceiver, StreamSender};
 use crate::ai::router::AIRouter;
 use crate::memory::model::Conversation;
 use crate::memory::MemoryEntry;
+use crate::security::secrets_engine::SecureSecretsEngine;
 use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
 
@@ -353,12 +354,16 @@ impl ChatEngine {
 
 pub async fn bootstrap_from_env(
     config: Option<ChatEngineConfig>,
+    secrets_engine: Option<SecureSecretsEngine>,
 ) -> Result<Arc<ChatEngine>, ChatEngineError> {
     let config = config.unwrap_or_default();
 
-    let gemini_key = std::env::var("GEMINI_API_KEY").ok();
+    let gemini_key = secrets_engine
+        .as_ref()
+        .and_then(|engine| engine.get_secret("gemini_api_key").ok().flatten())
+        .or_else(|| std::env::var("GEMINI_API_KEY").ok());
     if gemini_key.is_none() {
-        log::warn!("[ChatEngine] GEMINI_API_KEY not configured. Gemini provider will be offline");
+        log::warn!("[ChatEngine] Gemini API key not configured. Cloud provider will be offline");
     }
     let ollama_model = std::env::var("OLLAMA_MODEL").ok();
 

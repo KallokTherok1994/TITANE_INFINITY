@@ -13,6 +13,11 @@
 
 export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
+  // RUNTIME CONFIGURATION (Security)
+  // ═══════════════════════════════════════════════════════════════
+  RUNTIME_GET_CONFIG: 'get_runtime_config',
+
+  // ═══════════════════════════════════════════════════════════════
   // HELIOS - System Monitoring
   // ═══════════════════════════════════════════════════════════════
   HELIOS_GET_STATE: 'get_helios_state',
@@ -91,6 +96,12 @@ export const TAURI_COMMANDS = {
   DEVTOOLS_GET_LOGS: 'get_logs',
   DEVTOOLS_CLEAR_LOGS: 'clear_logs',
   DEVTOOLS_GET_SYSTEM_INFO: 'get_system_info',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CONTROL PANEL — IA & Security (v∞)
+  // ═══════════════════════════════════════════════════════════════
+  CONTROL_PANEL_GET_AI_CONFIG: 'cp_get_ai_config',
+  CONTROL_PANEL_SET_AI_CONFIG: 'cp_set_ai_config',
 
   // ═══════════════════════════════════════════════════════════════
   // CHAT AI - Unified Command (v∞)

@@ -4,6 +4,14 @@
 #[cfg(test)]
 mod control_panel_tests {
     use super::super::*;
+    use crate::overdrive::chat_orchestrator;
+    use crate::security::secrets_engine::SecureSecretsEngine;
+    use lazy_static::lazy_static;
+    use tokio::sync::Mutex as AsyncMutex;
+
+    lazy_static! {
+        static ref TEST_ENV_MUTEX: AsyncMutex<()> = AsyncMutex::new(());
+    }
 
     // ═══════════════════════════════════════════════════════════
     // TESTS: Système
@@ -41,8 +49,11 @@ mod control_panel_tests {
         assert!(result.is_ok());
 
         let config = result.unwrap();
-        assert!(["light", "dark", "auto"].contains(&config.mode.as_str()));
-        assert!(["compact", "normal", "comfortable"].contains(&config.density.as_str()));
+        assert!(matches!(config.mode.as_str(), "light" | "dark" | "auto"));
+        assert!(matches!(
+            config.density.as_str(),
+            "compact" | "normal" | "comfortable"
+        ));
     }
 
     #[tokio::test]
@@ -69,7 +80,6 @@ mod control_panel_tests {
 
         let status = result.unwrap();
         assert!(status.power_level <= 100);
-        // iterations is u32, always >= 0
     }
 
     #[tokio::test]
@@ -79,23 +89,35 @@ mod control_panel_tests {
     }
 
     // ═══════════════════════════════════════════════════════════
-    // TESTS: IA Configuration
+    // TESTS: IA Configuration (Secure Helpers)
     // ═══════════════════════════════════════════════════════════
 
     #[tokio::test]
-    async fn test_cp_get_ai_config() {
-        let result = cp_get_ai_config().await;
-        assert!(result.is_ok());
+    async fn test_ai_config_defaults_from_helpers() {
+        let _guard = TEST_ENV_MUTEX.lock().await;
+        let temp_dir = tempfile::TempDir::new().expect("temp dir");
+        std::env::set_var("TITANE_CONFIG_DIR", temp_dir.path());
 
-        let config = result.unwrap();
-        assert_eq!(config.gemini_api_key, "***MASKED***");
-        assert!(["gemini-pro", "gemini-pro-vision"].contains(&config.gemini_model.as_str()));
-        assert!(config.temperature >= 0.0 && config.temperature <= 1.0);
-        assert!(config.max_tokens > 0);
+        let secrets = SecureSecretsEngine::default();
+        let config = build_ai_config_response(&secrets).expect("config");
+
+        assert!(!config.gemini_model.trim().is_empty());
+        assert!((0.0..=1.0).contains(&config.temperature));
+        assert!(config.max_tokens >= 64);
+        assert!(config.gemini_api_key.is_empty());
+
+        std::env::remove_var("TITANE_CONFIG_DIR");
     }
 
     #[tokio::test]
-    async fn test_cp_set_ai_config() {
+    async fn test_ai_config_apply_flow() {
+        let _guard = TEST_ENV_MUTEX.lock().await;
+        let temp_dir = tempfile::TempDir::new().expect("temp dir");
+        std::env::set_var("TITANE_CONFIG_DIR", temp_dir.path());
+
+        let secrets = SecureSecretsEngine::default();
+        let orchestrator = chat_orchestrator::init();
+
         let config = AIConfig {
             gemini_api_key: "test-key-123".to_string(),
             gemini_model: "gemini-pro".to_string(),
@@ -103,8 +125,73 @@ mod control_panel_tests {
             max_tokens: 2048,
         };
 
-        let result = cp_set_ai_config(config).await;
-        assert!(result.is_ok());
+        apply_ai_config(config, &secrets, &orchestrator)
+            .await
+            .expect("apply config");
+
+        let stored = build_ai_config_response(&secrets).expect("stored config");
+        assert_eq!(stored.gemini_model, "gemini-pro");
+        assert!((stored.temperature - 0.7).abs() < f32::EPSILON);
+        assert_eq!(stored.max_tokens, 2048);
+        assert_eq!(stored.gemini_api_key, GEMINI_KEY_SENTINEL);
+
+        assert_eq!(
+            secrets.get_secret("gemini_api_key").expect("secret fetch"),
+            Some("test-key-123".to_string())
+        );
+
+        let active_key = orchestrator.gemini_api_key.read().await.clone();
+        assert_eq!(active_key, Some("test-key-123".to_string()));
+
+        std::env::remove_var("TITANE_CONFIG_DIR");
+    }
+
+    #[tokio::test]
+    async fn test_ai_config_clear_flow() {
+        let _guard = TEST_ENV_MUTEX.lock().await;
+        let temp_dir = tempfile::TempDir::new().expect("temp dir");
+        std::env::set_var("TITANE_CONFIG_DIR", temp_dir.path());
+
+        let secrets = SecureSecretsEngine::default();
+        let orchestrator = chat_orchestrator::init();
+
+        let initial = AIConfig {
+            gemini_api_key: "secret-abc".to_string(),
+            gemini_model: "gemini-pro".to_string(),
+            temperature: 0.3,
+            max_tokens: 1024,
+        };
+
+        apply_ai_config(initial, &secrets, &orchestrator)
+            .await
+            .expect("initial apply");
+
+        let cleared = AIConfig {
+            gemini_api_key: String::new(),
+            gemini_model: "gemini-pro".to_string(),
+            temperature: 0.6,
+            max_tokens: 1536,
+        };
+
+        apply_ai_config(cleared, &secrets, &orchestrator)
+            .await
+            .expect("apply clear config");
+
+        let stored = build_ai_config_response(&secrets).expect("stored config after clear");
+        assert_eq!(stored.gemini_api_key, "");
+        assert_eq!(stored.gemini_model, "gemini-pro");
+        assert!((stored.temperature - 0.6).abs() < f32::EPSILON);
+        assert_eq!(stored.max_tokens, 1536);
+
+        assert_eq!(
+            secrets.get_secret("gemini_api_key").expect("secret fetch"),
+            None
+        );
+
+        let active_key = orchestrator.gemini_api_key.read().await.clone();
+        assert!(active_key.is_none());
+
+        std::env::remove_var("TITANE_CONFIG_DIR");
     }
 
     // ═══════════════════════════════════════════════════════════
@@ -119,7 +206,6 @@ mod control_panel_tests {
         let stats = result.unwrap();
         assert!(stats.total_size > 0);
         assert!(stats.used_size <= stats.total_size);
-        // cache_size and vector_count are unsigned, always >= 0
     }
 
     #[tokio::test]
@@ -159,7 +245,6 @@ mod control_panel_tests {
         assert!(result.is_ok());
 
         let config = result.unwrap();
-        // Test basic structure - proxy_url is String now
         assert!(config.proxy_url.is_empty() || !config.proxy_url.is_empty());
     }
 

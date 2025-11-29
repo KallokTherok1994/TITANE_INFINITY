@@ -183,6 +183,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("start_session");
     commands.insert("end_session");
     commands.insert("get_session_info");
+    commands.insert("get_runtime_config");
 
     commands
 }

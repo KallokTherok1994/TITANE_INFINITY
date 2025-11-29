@@ -1,4 +1,9 @@
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::security::secrets_engine::SecureSecretsEngine;
 use serde::{Deserialize, Serialize};
+use std::fs;
+use std::path::PathBuf;
+use tauri::State;
 /**
  * TITANE∞ OS - Commandes Tauri Control Panel
  * Backend handlers pour toutes les sections du Control Panel
@@ -94,6 +99,209 @@ pub struct SecurityConfig {
 }
 
 // ══════════════════════════════════════════════════════════
+// IA CONFIGURATION PERSISTENCE (GEMINI)
+// ══════════════════════════════════════════════════════════
+
+const AI_CONFIG_FILE_NAME: &str = "ai_config.json";
+const GEMINI_KEY_SENTINEL: &str = "***MASKED***";
+const DEFAULT_GEMINI_MODEL: &str = "gemini-pro";
+const MIN_TEMPERATURE: f32 = 0.0;
+const MAX_TEMPERATURE: f32 = 1.0;
+const MIN_TOKENS: u32 = 64;
+const MAX_TOKENS: u32 = 8192;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct StoredAIConfig {
+    gemini_model: String,
+    temperature: f32,
+    max_tokens: u32,
+}
+
+impl StoredAIConfig {
+    fn sanitize(self) -> Self {
+        Self {
+            gemini_model: normalize_model(&self.gemini_model),
+            temperature: sanitize_temperature(self.temperature),
+            max_tokens: sanitize_max_tokens(self.max_tokens),
+        }
+    }
+}
+
+impl Default for StoredAIConfig {
+    fn default() -> Self {
+        Self {
+            gemini_model: default_gemini_model(),
+            temperature: 0.7,
+            max_tokens: 2048,
+        }
+    }
+}
+
+fn default_gemini_model() -> String {
+    std::env::var("GEMINI_MODEL").unwrap_or_else(|_| DEFAULT_GEMINI_MODEL.to_string())
+}
+
+fn normalize_model(raw: &str) -> String {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() {
+        default_gemini_model()
+    } else {
+        trimmed.to_string()
+    }
+}
+
+fn sanitize_temperature(value: f32) -> f32 {
+    value.clamp(MIN_TEMPERATURE, MAX_TEMPERATURE)
+}
+
+fn sanitize_max_tokens(value: u32) -> u32 {
+    value.clamp(MIN_TOKENS, MAX_TOKENS)
+}
+
+fn config_base_dir() -> Result<PathBuf, String> {
+    if let Ok(custom) = std::env::var("TITANE_CONFIG_DIR") {
+        let path = PathBuf::from(custom);
+        if !path.exists() {
+            fs::create_dir_all(&path)
+                .map_err(|e| format!("Failed to create custom config dir: {}", e))?;
+        }
+        return Ok(path);
+    }
+
+    let base = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
+    let path = base.join("titane_infinity");
+    if !path.exists() {
+        fs::create_dir_all(&path).map_err(|e| format!("Failed to create config dir: {}", e))?;
+    }
+    Ok(path)
+}
+
+fn ai_config_path() -> Result<PathBuf, String> {
+    Ok(config_base_dir()?.join(AI_CONFIG_FILE_NAME))
+}
+
+fn load_ai_config_from_disk() -> Result<StoredAIConfig, String> {
+    let path = ai_config_path()?;
+    if !path.exists() {
+        return Ok(StoredAIConfig::default());
+    }
+
+    let content =
+        fs::read_to_string(&path).map_err(|e| format!("Failed to read AI config: {}", e))?;
+
+    match serde_json::from_str::<StoredAIConfig>(&content) {
+        Ok(config) => Ok(config.sanitize()),
+        Err(err) => {
+            log::warn!(
+                "[ControlPanel] Invalid AI config detected, resetting to defaults: {}",
+                err
+            );
+            Ok(StoredAIConfig::default())
+        }
+    }
+}
+
+fn save_ai_config_to_disk(config: &StoredAIConfig) -> Result<(), String> {
+    let path = ai_config_path()?;
+    let sanitized = config.clone().sanitize();
+    let payload = serde_json::to_vec_pretty(&sanitized)
+        .map_err(|e| format!("Failed to serialize AI config: {}", e))?;
+
+    fs::write(&path, payload).map_err(|e| format!("Failed to write AI config: {}", e))?;
+
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        if let Ok(metadata) = fs::metadata(&path) {
+            let mut perms = metadata.permissions();
+            perms.set_mode(0o600);
+            if let Err(err) = fs::set_permissions(&path, perms) {
+                log::warn!(
+                    "[ControlPanel] Failed to set permissions on AI config: {}",
+                    err
+                );
+            }
+        }
+    }
+
+    Ok(())
+}
+
+pub(crate) fn build_ai_config_response(secrets: &SecureSecretsEngine) -> Result<AIConfig, String> {
+    let stored = load_ai_config_from_disk()?;
+
+    let masked_key = match secrets.has_secret("gemini_api_key") {
+        Ok(true) => GEMINI_KEY_SENTINEL.to_string(),
+        Ok(false) => String::new(),
+        Err(err) => return Err(format!("Failed to inspect secrets engine: {}", err)),
+    };
+
+    Ok(AIConfig {
+        gemini_api_key: masked_key,
+        gemini_model: stored.gemini_model,
+        temperature: stored.temperature,
+        max_tokens: stored.max_tokens,
+    })
+}
+
+pub(crate) async fn apply_ai_config(
+    config: AIConfig,
+    secrets: &SecureSecretsEngine,
+    orchestrator: &ChatOrchestratorState,
+) -> Result<(), String> {
+    let AIConfig {
+        gemini_api_key,
+        gemini_model,
+        temperature,
+        max_tokens,
+    } = config;
+
+    let key_input = gemini_api_key.trim().to_string();
+    let sanitized = StoredAIConfig {
+        gemini_model: normalize_model(&gemini_model),
+        temperature: sanitize_temperature(temperature),
+        max_tokens: sanitize_max_tokens(max_tokens),
+    }
+    .sanitize();
+
+    if key_input == GEMINI_KEY_SENTINEL {
+        log::debug!("[ControlPanel] Gemini API key unchanged via control panel");
+    } else if key_input.is_empty() {
+        secrets
+            .clear_secret("gemini_api_key")
+            .map_err(|e| format!("Failed to clear Gemini secret: {}", e))?;
+        {
+            let mut guard = orchestrator.gemini_api_key.write().await;
+            *guard = None;
+        }
+        orchestrator
+            .set_provider_availability("gemini", false)
+            .await;
+        log::info!("[ControlPanel] Gemini API key cleared");
+    } else {
+        secrets
+            .set_secret("gemini_api_key", key_input.clone())
+            .map_err(|e| format!("Failed to store Gemini secret: {}", e))?;
+        {
+            let mut guard = orchestrator.gemini_api_key.write().await;
+            *guard = Some(key_input.clone());
+        }
+        orchestrator.set_provider_availability("gemini", true).await;
+        log::info!("[ControlPanel] Gemini API key updated");
+    }
+
+    save_ai_config_to_disk(&sanitized)?;
+    log::info!(
+        "[ControlPanel] Gemini config saved (model={}, temperature={:.2}, max_tokens={})",
+        sanitized.gemini_model,
+        sanitized.temperature,
+        sanitized.max_tokens
+    );
+
+    Ok(())
+}
+
+// ══════════════════════════════════════════════════════════
 // COMMANDES TAURI
 // ══════════════════════════════════════════════════════════
 
@@ -169,21 +377,17 @@ pub async fn cp_toggle_singularity() -> Result<(), String> {
 // ────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn cp_get_ai_config() -> Result<AIConfig, String> {
-    // TODO: Charger depuis fichier config sécurisé
-    Ok(AIConfig {
-        gemini_api_key: "***MASKED***".to_string(),
-        gemini_model: "gemini-pro".to_string(),
-        temperature: 0.7,
-        max_tokens: 2048,
-    })
+pub async fn cp_get_ai_config(secrets: State<'_, SecureSecretsEngine>) -> Result<AIConfig, String> {
+    build_ai_config_response(&*secrets)
 }
 
 #[tauri::command]
-pub async fn cp_set_ai_config(_config: AIConfig) -> Result<(), String> {
-    // TODO: Sauvegarder config de manière sécurisée
-    println!("AI config updated");
-    Ok(())
+pub async fn cp_set_ai_config(
+    config: AIConfig,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<(), String> {
+    apply_ai_config(config, &*secrets, &*orchestrator).await
 }
 
 // ────────────────────────────────────────────────────────

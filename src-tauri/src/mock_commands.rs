@@ -217,7 +217,9 @@ pub async fn get_active_rituals() -> AppResult<Vec<serde_json::Value>> {
 }
 
 #[tauri::command]
-pub async fn save_chat_interaction(_interaction: serde_json::Value) -> AppResult<serde_json::Value> {
+pub async fn save_chat_interaction(
+    _interaction: serde_json::Value,
+) -> AppResult<serde_json::Value> {
     log::info!("Mock: save_chat_interaction called");
     Ok(json!({
         "status": "ok",
@@ -301,11 +303,7 @@ pub async fn generate_response(payload: MockStreamRequest) -> AppResult<serde_js
         .unwrap_or_else(|| format!("mock-conv-{}", Uuid::new_v4()));
 
     let message_id = format!("mock-msg-{}", Uuid::new_v4());
-    let user_preview: String = payload
-        .user_message
-        .chars()
-        .take(180)
-        .collect();
+    let user_preview: String = payload.user_message.chars().take(180).collect();
 
     let provider = payload.provider.unwrap_or_else(|| "mock".to_string());
     let content = if user_preview.is_empty() {
@@ -415,13 +413,19 @@ pub async fn speak_text(
 
 #[tauri::command]
 pub async fn save_memory(conversation_id: String) -> AppResult<String> {
-    log::info!("Mock: save_memory called conversation_id={}", conversation_id);
+    log::info!(
+        "Mock: save_memory called conversation_id={}",
+        conversation_id
+    );
     Ok(conversation_id)
 }
 
 #[tauri::command]
 pub async fn load_memory(conversation_id: String) -> AppResult<serde_json::Value> {
-    log::info!("Mock: load_memory called conversation_id={}", conversation_id);
+    log::info!(
+        "Mock: load_memory called conversation_id={}",
+        conversation_id
+    );
     Ok(json!({
         "conversation_id": conversation_id,
         "messages": [
@@ -775,9 +779,7 @@ pub async fn singularity_update_meta(_meta: serde_json::Value) -> AppResult<Mock
 }
 
 #[tauri::command]
-pub async fn singularity_update_full_state(
-    _state: serde_json::Value,
-) -> AppResult<MockCommandAck> {
+pub async fn singularity_update_full_state(_state: serde_json::Value) -> AppResult<MockCommandAck> {
     PERMISSION_GUARD
         .require("state_write", Role::System, "singularity_update_full_state")
         .await?;
@@ -1226,7 +1228,7 @@ fn generate_mock_response(message: &str) -> String {
 
     // Default response
     format!(
-        "Message reçu: \"{}\"\n\n🤖 **Mode Mock Backend**\nCeci est une réponse simulée du backend Rust. \n\nPour des réponses IA réelles:\n• Configure `VITE_GEMINI_API_KEY` dans `.env`\n• Ou lance Ollama: `ollama serve`\n\nArchitecture Chat IA v18 fonctionnelle ✅",
+        "Message reçu: \"{}\"\n\n🤖 **Mode Mock Backend**\nCeci est une réponse simulée du backend Rust. \n\nPour activer le backend sécurisé:\n• Définis `TITANE_SECRETS_PASSPHRASE` puis appelle `chat_set_gemini_key`\n• Ou lance Ollama: `ollama serve`\n\nArchitecture Chat IA v18 fonctionnelle ✅",
         message
     )
 }
