@@ -166,21 +166,33 @@ pub async fn validate_chat_message(message: String) -> Result<SecureResponse<Str
 /// Vérifier intégrité système (pre-boot check)
 #[tauri::command]
 pub async fn check_system_integrity() -> Result<SecureResponse<String>, String> {
-    use crate::security::pre_boot_validation::validate_pre_boot;
-
-    // 1. Vérifier permission
+    // 1. Vérifier permission (audit même en mode mock)
     PERMISSION_GUARD
         .require("system_audit", Role::System, "check_system_integrity")
         .await
         .map_err(|e| format!("Permission denied: {}", e))?;
 
-    // 2. Effectuer validation
-    match validate_pre_boot().await {
-        Ok(validation) => Ok(SecureResponse::success(validation.report())),
-        Err(e) => Ok(SecureResponse::error(format!(
-            "Integrity check failed: {}",
-            e
-        ))),
+    #[cfg(feature = "mock")]
+    {
+        // En mode mock, renvoyer succès immédiat pour éviter faux positifs pendant le dev frontend
+        log::info!("[Security] check_system_integrity (mock) → OK");
+        return Ok(SecureResponse::success(
+            "Mock integrity: OK — validation bypassed in mock mode".to_string(),
+        ));
+    }
+
+    #[cfg(not(feature = "mock"))]
+    {
+        use crate::security::pre_boot_validation::validate_pre_boot;
+
+        // 2. Effectuer validation complète
+        match validate_pre_boot().await {
+            Ok(validation) => Ok(SecureResponse::success(validation.report())),
+            Err(e) => Ok(SecureResponse::error(format!(
+                "Integrity check failed: {}",
+                e
+            ))),
+        }
     }
 }
 

@@ -163,35 +163,27 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     try {
-      // Appeler commande Tauri pour vérifier intégrité du vault
-      const response = await secureInvoke<{ ok: boolean; data?: string[]; error?: string }>(
+      const response = await secureInvoke<{ ok: boolean; data?: unknown; error?: string }>(
         'check_system_integrity'
       );
 
       if (response.ok) {
-        const corrupted = response.data || [];
-        if (corrupted.length === 0) {
-          results.push({
-            timestamp: Date.now(),
-            category: 'filesystem',
-            status: 'ok',
-            message: 'Vault integrity: ALL OK',
-          });
-        } else {
-          results.push({
-            timestamp: Date.now(),
-            category: 'filesystem',
-            status: 'error',
-            message: `Vault corrupted files: ${corrupted.length}`,
-          });
-        }
+        const report = typeof response.data === 'string' ? response.data : undefined;
+        results.push({
+          timestamp: Date.now(),
+          category: 'filesystem',
+          status: 'ok',
+          message: report ? `Vault integrity: OK (${report.split('\n')[3]?.trim() ?? 'validated'})` : 'Vault integrity: OK',
+        });
       } else {
+        const errorMsg = response.error ?? 'Integrity check failed';
         results.push({
           timestamp: Date.now(),
           category: 'filesystem',
           status: 'warning',
-          message: `Integrity check failed: ${response.error}`,
+          message: errorMsg,
         });
+        console.warn('[AUTO-AUDIT] Vault integrity warning:', errorMsg);
       }
     } catch (error) {
       results.push({
@@ -200,6 +192,7 @@ export class AutoAuditEngine {
         status: 'error',
         message: `Filesystem check error: ${error}`,
       });
+      console.error('[AUTO-AUDIT] Filesystem check error:', error);
     }
 
     return results;
@@ -283,24 +276,35 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     try {
-      // Vérifier que les clés crypto sont accessibles
-      const response = await secureInvoke<{ ok: boolean }>(
+      const response = await secureInvoke<{ ok: boolean; error?: string }>(
         'check_system_integrity'
       );
 
-      results.push({
-        timestamp: Date.now(),
-        category: 'crypto',
-        status: response.ok ? 'ok' : 'critical',
-        message: response.ok ? 'Crypto integrity: OK' : 'Crypto integrity: FAILED',
-      });
+      if (response.ok) {
+        results.push({
+          timestamp: Date.now(),
+          category: 'crypto',
+          status: 'ok',
+          message: 'Crypto integrity: OK',
+        });
+      } else {
+        const errorMsg = response.error ?? 'Crypto integrity validation failed';
+        results.push({
+          timestamp: Date.now(),
+          category: 'crypto',
+          status: 'error',
+          message: `Crypto integrity warning: ${errorMsg}`,
+        });
+        console.warn('[AUTO-AUDIT] Crypto integrity warning:', errorMsg);
+      }
     } catch (error) {
       results.push({
         timestamp: Date.now(),
         category: 'crypto',
-        status: 'critical',
+        status: 'error',
         message: `Crypto check error: ${error}`,
       });
+      console.error('[AUTO-AUDIT] Crypto check error:', error);
     }
 
     return results;

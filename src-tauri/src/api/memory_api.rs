@@ -12,6 +12,8 @@ use crate::{
     },
     utils::AppResult,
 };
+use chrono::Utc;
+use serde::Serialize;
 
 #[tauri::command]
 pub async fn get_memory_state(memory: tauri::State<'_, MemoryCore>) -> AppResult<MemoryState> {
@@ -64,6 +66,23 @@ pub async fn add_timeline_event(
 // COMMANDES CHAT IA ↔ MEMORY CORE (v17.3.0)
 // ═══════════════════════════════════════════════════════════════
 
+#[derive(Debug, Serialize)]
+pub struct ChatInteractionAck {
+    status: &'static str,
+    saved: bool,
+    timestamp_ms: i64,
+}
+
+impl ChatInteractionAck {
+    fn success() -> Self {
+        Self {
+            status: "ok",
+            saved: true,
+            timestamp_ms: Utc::now().timestamp_millis(),
+        }
+    }
+}
+
 /// Récupère les projets actifs pour contexte chat
 #[tauri::command]
 pub async fn memory_get_active_projects(
@@ -114,8 +133,9 @@ pub async fn memory_get_timeline(
 pub async fn memory_save_chat_interaction(
     memory: tauri::State<'_, MemoryCore>,
     interaction: ChatInteraction,
-) -> AppResult<()> {
-    memory.save_chat_interaction(interaction).await
+) -> AppResult<ChatInteractionAck> {
+    memory.save_chat_interaction(interaction).await?;
+    Ok(ChatInteractionAck::success())
 }
 
 /// Debug helper exposing the memory/ directory scan (Phase Ω.6)

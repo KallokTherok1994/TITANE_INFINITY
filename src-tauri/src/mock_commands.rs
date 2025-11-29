@@ -7,8 +7,12 @@ use crate::memory::telemetry;
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::utils::AppResult;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::time::Duration;
+use tauri::{async_runtime, Emitter, Window};
+use tokio::time::sleep;
+use uuid::Uuid;
 
 #[derive(Debug, Serialize)]
 pub struct MockCommandAck {
@@ -25,6 +29,18 @@ impl MockCommandAck {
             timestamp_ms: chrono::Utc::now().timestamp_millis(),
         }
     }
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub struct MockStreamRequest {
+    pub conversation_id: Option<String>,
+    pub user_message: String,
+    pub system_prompt: Option<String>,
+    pub temperature: Option<f32>,
+    pub max_output_tokens: Option<u32>,
+    pub provider: Option<String>,
+    pub enable_streaming: Option<bool>,
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -201,14 +217,20 @@ pub async fn get_active_rituals() -> AppResult<Vec<serde_json::Value>> {
 }
 
 #[tauri::command]
-pub async fn save_chat_interaction(_interaction: serde_json::Value) -> AppResult<()> {
+pub async fn save_chat_interaction(_interaction: serde_json::Value) -> AppResult<serde_json::Value> {
     log::info!("Mock: save_chat_interaction called");
-    Ok(())
+    Ok(json!({
+        "status": "ok",
+        "saved": true,
+        "timestamp_ms": chrono::Utc::now().timestamp_millis(),
+    }))
 }
 
 // Alias pour compatibilité frontend
 #[tauri::command]
-pub async fn memory_save_chat_interaction(_interaction: serde_json::Value) -> AppResult<()> {
+pub async fn memory_save_chat_interaction(
+    _interaction: serde_json::Value,
+) -> AppResult<serde_json::Value> {
     log::info!("Mock: memory_save_chat_interaction (alias) called");
     save_chat_interaction(_interaction).await
 }
@@ -238,9 +260,16 @@ pub async fn memory_get_active_projects() -> AppResult<Vec<serde_json::Value>> {
 }
 
 #[tauri::command]
-pub async fn memory_get_recent_decisions(_count: usize) -> AppResult<Vec<serde_json::Value>> {
-    log::info!("Mock: memory_get_recent_decisions (alias) called");
-    get_recent_decisions(_count).await
+pub async fn memory_get_recent_decisions(
+    limit: usize,
+    time_window: Option<String>,
+) -> AppResult<Vec<serde_json::Value>> {
+    log::info!(
+        "Mock: memory_get_recent_decisions (alias) called — limit={} time_window={:?}",
+        limit,
+        time_window
+    );
+    get_recent_decisions(limit).await
 }
 
 #[tauri::command]
@@ -253,6 +282,183 @@ pub async fn memory_get_knowledge() -> AppResult<Vec<serde_json::Value>> {
 pub async fn memory_get_active_rituals() -> AppResult<Vec<serde_json::Value>> {
     log::info!("Mock: memory_get_active_rituals (alias) called");
     get_active_rituals().await
+}
+
+#[tauri::command]
+pub async fn memory_get_timeline(time_window: Option<String>) -> AppResult<Vec<serde_json::Value>> {
+    log::info!(
+        "Mock: memory_get_timeline (alias) called — time_window={:?}",
+        time_window
+    );
+    get_timeline(10).await
+}
+
+#[tauri::command]
+pub async fn generate_response(payload: MockStreamRequest) -> AppResult<serde_json::Value> {
+    let conversation_id = payload
+        .conversation_id
+        .filter(|id| !id.trim().is_empty())
+        .unwrap_or_else(|| format!("mock-conv-{}", Uuid::new_v4()));
+
+    let message_id = format!("mock-msg-{}", Uuid::new_v4());
+    let user_preview: String = payload
+        .user_message
+        .chars()
+        .take(180)
+        .collect();
+
+    let provider = payload.provider.unwrap_or_else(|| "mock".to_string());
+    let content = if user_preview.is_empty() {
+        "(MOCK) Réponse générée automatiquement.".to_string()
+    } else {
+        format!("(MOCK) Réponse instantanée pour: {}", user_preview)
+    };
+
+    Ok(json!({
+        "conversation_id": conversation_id,
+        "message_id": message_id,
+        "provider": provider,
+        "content": content,
+        "token_count": (content.len() / 4).max(12),
+        "latency_ms": 42,
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+    }))
+}
+
+#[tauri::command]
+pub async fn stream_response(
+    window: Window,
+    payload: MockStreamRequest,
+) -> AppResult<serde_json::Value> {
+    let MockStreamRequest {
+        conversation_id,
+        user_message,
+        ..
+    } = payload;
+
+    let conversation_id = conversation_id
+        .filter(|id| !id.trim().is_empty())
+        .unwrap_or_else(|| format!("mock-conv-{}", Uuid::new_v4()));
+
+    let message_id = format!("mock-msg-{}", Uuid::new_v4());
+    let user_preview: String = user_message.chars().take(180).collect();
+    let response_text = if user_preview.is_empty() {
+        "(MOCK) Réponse générée pour message vide.".to_string()
+    } else {
+        format!("(MOCK) Réponse générée pour: {}", user_preview)
+    };
+
+    let conv_for_chunk = conversation_id.clone();
+    let conv_for_done = conversation_id.clone();
+    let msg_for_chunk = message_id.clone();
+    let msg_for_done = message_id.clone();
+    let chunk_text = response_text.clone();
+
+    async_runtime::spawn(async move {
+        let chunk_event = json!({
+            "conversation_id": conv_for_chunk,
+            "message_id": msg_for_chunk,
+            "ordinal": 0,
+            "content": chunk_text,
+            "done": false,
+        });
+
+        if let Err(err) = window.emit("chat:stream:chunk", chunk_event) {
+            log::error!("[Mock ChatEngine] Failed to emit chunk: {}", err);
+            return;
+        }
+
+        sleep(Duration::from_millis(150)).await;
+
+        let done_event = json!({
+            "conversation_id": conv_for_done,
+            "message_id": msg_for_done,
+            "ordinal": 1,
+            "content": "",
+            "done": true,
+        });
+
+        if let Err(err) = window.emit("chat:stream:done", done_event) {
+            log::error!("[Mock ChatEngine] Failed to emit done: {}", err);
+        }
+    });
+
+    Ok(json!({
+        "conversationId": conversation_id,
+        "messageId": message_id,
+    }))
+}
+
+#[tauri::command]
+pub async fn speak_text(
+    text: String,
+    mode: Option<String>,
+    speed: Option<f32>,
+    pitch: Option<f32>,
+    voice: Option<String>,
+) -> AppResult<serde_json::Value> {
+    log::info!(
+        "Mock: speak_text called (len={}, mode={:?}, speed={:?}, pitch={:?}, voice={:?})",
+        text.len(),
+        mode,
+        speed,
+        pitch,
+        voice
+    );
+    Ok(json!({
+        "status": "ok",
+        "mode": mode.unwrap_or_else(|| "auto".to_string()),
+        "speed": speed.unwrap_or(1.0),
+        "pitch": pitch.unwrap_or(1.0),
+    }))
+}
+
+#[tauri::command]
+pub async fn save_memory(conversation_id: String) -> AppResult<String> {
+    log::info!("Mock: save_memory called conversation_id={}", conversation_id);
+    Ok(conversation_id)
+}
+
+#[tauri::command]
+pub async fn load_memory(conversation_id: String) -> AppResult<serde_json::Value> {
+    log::info!("Mock: load_memory called conversation_id={}", conversation_id);
+    Ok(json!({
+        "conversation_id": conversation_id,
+        "messages": [
+            {
+                "role": "user",
+                "content": "(MOCK) Message utilisateur précédent"
+            },
+            {
+                "role": "assistant",
+                "content": "(MOCK) Réponse historique"
+            }
+        ]
+    }))
+}
+
+#[tauri::command]
+pub async fn reset_memory() -> AppResult<serde_json::Value> {
+    log::info!("Mock: reset_memory called");
+    Ok(json!({
+        "status": "ok",
+        "reset": true,
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+    }))
+}
+
+#[tauri::command]
+pub async fn health_check() -> AppResult<serde_json::Value> {
+    log::info!("Mock: health_check called");
+    Ok(json!({
+        "providers_online": ["mock"],
+        "providers_degraded": [],
+        "provider_errors": [],
+        "memory_entries": 5,
+        "memory_tokens": 256,
+        "auto_tts_enabled": false,
+        "timestamp": chrono::Utc::now().timestamp_millis(),
+    }))
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -776,8 +982,6 @@ pub async fn import_file(path: String) -> AppResult<String> {
 // CHAT AI - Mock Chat Orchestrator (v18)
 // Simulates backend chat_orchestrator.rs behavior for frontend dev
 // ═══════════════════════════════════════════════════════════════
-
-use serde::Deserialize;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MockChatRequest {

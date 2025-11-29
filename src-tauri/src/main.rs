@@ -364,8 +364,15 @@ async fn main() {
         mock_commands::memory_ingest_file,
         mock_commands::import_file,
         // Chat AI - Unified Command (v∞)
+        mock_commands::generate_response,
         mock_commands::chat_generate,
         mock_commands::upload_and_process_file,
+        mock_commands::stream_response,
+        mock_commands::speak_text,
+        mock_commands::save_memory,
+        mock_commands::load_memory,
+        mock_commands::reset_memory,
+        mock_commands::health_check,
         // Memory Persistence - v∞.C
         mock_commands::get_all_files,
         mock_commands::get_files_by_category,

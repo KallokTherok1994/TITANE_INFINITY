@@ -47,6 +47,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("memory_get_recent_decisions");
     commands.insert("memory_get_knowledge");
     commands.insert("memory_get_active_rituals");
+    commands.insert("memory_get_timeline");
     commands.insert("memory_debug_scan");
     commands.insert("memory_ingest_file");
     commands.insert("import_file");
@@ -87,6 +88,13 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("chat_delete_conversation");
     commands.insert("chat_set_gemini_key");
     commands.insert("chat_stream_message");
+    commands.insert("generate_response");
+    commands.insert("stream_response");
+    commands.insert("speak_text");
+    commands.insert("save_memory");
+    commands.insert("load_memory");
+    commands.insert("reset_memory");
+    commands.insert("health_check");
 
     // ═══════════════════════════════════════════════════════════════
     // SINGULARITY STATE

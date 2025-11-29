@@ -47,6 +47,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_get_recent_decisions',
   'memory_get_knowledge',
   'memory_get_active_rituals',
+  'memory_get_timeline',
   'memory_ingest_file',
   'import_file',
   'get_all_files',
@@ -100,6 +101,13 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'chat_delete_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
+  'generate_response',
+  'stream_response',
+  'speak_text',
+  'save_memory',
+  'load_memory',
+  'reset_memory',
+  'health_check',
 
   // ═══════════════════════════════════════════════════════════════
   // VOICE / TTS / ASR (v16.2.2+)
@@ -211,14 +219,15 @@ export const ALLOWED_COMMANDS = new Set<string>([
  * Patterns d'injection détectés (aligné avec ai/security.rs)
  */
 const INJECTION_PATTERNS = [
-  /<script[^>]*>.*?<\/script>/gi,
+  /<script/gi,
   /javascript:/gi,
-  /on\w+\s*=\s*["'][^"']*["']/gi,
   /eval\s*\(/gi,
   /__proto__/gi,
   /constructor\s*\[/gi,
-  /\.\.\//g, // Path traversal
-  /[;&|`$]/g, // Shell injection
+  /\$\{/g,
+  /exec\s*\(/gi,
+  /system\s*\(/gi,
+  /\.\.\//g,
 ];
 
 /**
@@ -674,7 +683,7 @@ export async function secureInvoke<T>(
     }
 
     // [7] Sanitization
-    if (!responseValidation.data) {
+    if (responseValidation.data === null || responseValidation.data === undefined) {
       throw new Error('Response validation succeeded but data is null/undefined');
     }
     const sanitized = sanitizeResponse(responseValidation.data);

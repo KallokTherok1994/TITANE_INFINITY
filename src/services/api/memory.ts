@@ -82,7 +82,7 @@ export class MemoryService {
 
     const decisions = await invokeWithRetry<DecisionSummary[]>(
       'memory_get_recent_decisions',
-      { limit, timeWindow },
+      { limit, time_window: timeWindow },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
@@ -130,7 +130,7 @@ export class MemoryService {
   async getTimeline(timeWindow: string = '7d'): Promise<TimelineEntry[]> {
     const timeline = await invokeWithRetry<TimelineEntry[]>(
       'memory_get_timeline',
-      { timeWindow },
+      { time_window: timeWindow },
       { ...STANDARD_COMMAND_OPTIONS, context: 'Memory' }
     );
 
