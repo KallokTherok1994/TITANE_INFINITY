@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v16.0 — CHAT COMPONENTS INDEX
+ *   TITANE∞ v19.2Ω — CHAT COMPONENTS INDEX
  *   Export centralisé des composants chat
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -17,3 +17,7 @@ export { MessageBubble } from './MessageBubble';
 export { MessageList } from './MessageList';
 export { ChatInput } from './ChatInput';
 export { ChatFileImport } from './ChatFileImport';
+export { ChatModeSelector } from './ChatModeSelector';
+export { ModeBadge } from './ModeBadge';
+export { AutomationPanel } from './AutomationPanel';
+export { EvolutionTracker } from './EvolutionTracker';

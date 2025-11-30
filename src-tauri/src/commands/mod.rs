@@ -3,6 +3,8 @@
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
+pub mod automations;    // ✅ v19.2Ω: Automation System
+pub mod chat_modes;     // ✅ v19.2Ω: Chat Modes System
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
 pub mod devops; // ✅ v19: DevOps Commands for Dashboard
 pub mod devtools;

@@ -391,24 +391,36 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // ═══ SYNC INITIAL MESSAGES ═══
   useEffect(() => {
-    // OMEGA FIX: Ne pas écraser les messages existants lors du remount
+    // OMEGA FIX v2: Protection renforcée contre les resets intempestifs
     if (!messagesForMode) {
       return;
     }
 
-    // Si on a déjà des messages dans le state actuel, ne pas reset
-    if (messagesRef.current.length > 0 && messagesForMode.length === 0) {
-      console.log('[useChat OMNIS] ⏭️ Skipping memory sync - current messages preserved:', messagesRef.current.length);
+    // CRITICAL: Si on a déjà des messages, JAMAIS les effacer sauf si memoryForMode a plus de contenu
+    const currentCount = messagesRef.current.length;
+    const memoryCount = messagesForMode.length;
+
+    if (currentCount > 0 && memoryCount === 0) {
+      console.log('[useChat OMNIS] 🛡️ PROTECTED: Skipping empty memory sync - preserving', currentCount, 'messages');
       return;
     }
 
-    if (messagesForMode.length === 0) {
-      if (stateVaultRef.current.stable.length === 0 && messagesRef.current.length === 0) {
+    // Si mémoire et state ont des messages, prendre le plus complet
+    if (currentCount > 0 && memoryCount > 0 && currentCount >= memoryCount) {
+      console.log('[useChat OMNIS] 🛡️ PROTECTED: Current state has more messages, skipping sync');
+      return;
+    }
+
+    if (memoryCount === 0) {
+      // Seulement reset si TOUT est vide (vault + ref + memoryForMode)
+      if (stateVaultRef.current.stable.length === 0 && currentCount === 0) {
         applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
       }
       return;
     }
 
+    // Sync uniquement si mémoire a plus de contenu
+    console.log('[useChat OMNIS] 📥 Syncing from memory:', memoryCount, 'messages');
     applyMessagesSafely(messagesForMode, 'memory-sync');
   }, [messagesForMode, applyMessagesSafely]);
 

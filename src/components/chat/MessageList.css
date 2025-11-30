@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v17.0 — MESSAGE LIST CSS OPTIMISÉ
- *   Design System avec variables CSS et animations améliorées
+ *   TITANE∞ v19.2Ω — MESSAGE LIST CSS PREMIUM
+ *   Design System Violet/Bleu OMEGA + UI/UX Optimisé
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -15,7 +15,7 @@
   flex-direction: column;
   min-height: 0;
   scroll-behavior: smooth;
-  padding: var(--spacing-md);
+  padding: var(--spacing-lg, 24px) var(--spacing-xl, 32px);
 }
 
 .message-list-container::-webkit-scrollbar {
@@ -23,25 +23,24 @@
 }
 
 .message-list-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 212, 255, 0.03);
   border-radius: var(--radius-sm);
 }
 
 .message-list-container::-webkit-scrollbar-thumb {
-  background: var(--accent-blue);
+  background: linear-gradient(180deg, #00d4ff 0%, #a855f7 100%);
   border-radius: var(--radius-sm);
-  opacity: 0.3;
   transition: var(--transition-fast);
 }
 
 .message-list-container::-webkit-scrollbar-thumb:hover {
-  opacity: 0.5;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 }
 
 .message-list {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--spacing-md, 16px);
   padding: 0;
   margin: 0;
 }
@@ -74,22 +73,23 @@
 }
 
 .message-list-empty-title {
-  font-size: var(--text-2xl);
-  font-weight: var(--font-semibold);
+  font-size: var(--text-2xl, 1.5rem);
+  font-weight: var(--font-bold, 700);
   color: var(--text-primary);
-  margin: 0 0 var(--spacing-sm) 0;
-  background: var(--gradient-blue);
+  margin: 0 0 var(--spacing-md, 16px) 0;
+  background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
 }
 
 .message-list-empty-text {
-  font-size: 15px;
+  font-size: 16px;
   color: var(--text-secondary, #a0a0a0);
-  line-height: 1.6;
-  max-width: 500px;
-  margin: 0 0 24px 0;
+  line-height: 1.7;
+  max-width: 520px;
+  margin: 0 0 28px 0;
 }
 
 .message-list-empty-providers {
@@ -102,21 +102,23 @@
 .provider-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 20px;
-  font-size: 13px;
+  gap: 8px;
+  padding: 10px 18px;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 24px;
+  font-size: 14px;
   font-weight: 500;
   color: #00d4ff;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  cursor: default;
 }
 
 .provider-badge:hover {
   background: rgba(0, 212, 255, 0.15);
-  border-color: rgba(0, 212, 255, 0.3);
-  transform: translateY(-2px);
+  border-color: rgba(0, 212, 255, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 212, 255, 0.2);
 }
 
 /* Loading state */
@@ -150,15 +152,15 @@
   display: flex;
   gap: 6px;
   padding: 12px 16px;
-  background: rgba(0, 212, 255, 0.05);
+  background: rgba(147, 179, 153, 0.05);
   border-radius: 12px;
-  border: 1px solid rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(147, 179, 153, 0.1);
 }
 
 .message-loading-dots .dot {
   width: 8px;
   height: 8px;
-  background: #00d4ff;
+  background: #93b399;
   border-radius: 50%;
   animation: dotPulse 1.4s ease-in-out infinite;
 }
@@ -257,6 +259,48 @@
 
   .message-list-empty-text {
     font-size: 14px;
+  }
+}
+
+/* Small Mobile (max-width: 479px) */
+@media (max-width: 479px) {
+  .message-list-container {
+    padding: 6px;
+  }
+
+  .message-list-empty {
+    padding: 32px 12px;
+    min-height: 250px;
+  }
+
+  .message-list-empty-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+  }
+
+  .message-list-empty-title {
+    font-size: 18px;
+  }
+
+  .message-list-empty-text {
+    font-size: 13px;
+    max-width: 280px;
+  }
+
+  .provider-badge {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .message-bubble {
+    max-width: 95%;
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+
+  .suggestion-chip {
+    padding: 6px 12px;
+    font-size: 11px;
   }
 }
 
@@ -567,7 +611,7 @@
 .empty-title {
   font-size: 24px;
   font-weight: 600;
-  background: linear-gradient(135deg, #00d4ff, #a855f7);
+  background: linear-gradient(135deg, #93b399, #727b81);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -589,17 +633,17 @@
 
 .suggestion-chip {
   padding: 8px 16px;
-  background: rgba(0, 212, 255, 0.1);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  background: rgba(147, 179, 153, 0.1);
+  border: 1px solid rgba(147, 179, 153, 0.2);
   border-radius: 20px;
   font-size: 12px;
-  color: #00d4ff;
+  color: #93b399;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .suggestion-chip:hover {
-  background: rgba(0, 212, 255, 0.2);
+  background: rgba(147, 179, 153, 0.2);
   transform: translateY(-2px);
 }
 

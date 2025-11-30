@@ -1,0 +1,479 @@
+/**
+ * TITANE∞ v19.2Ω — EvolutionTracker Styles
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MAIN CONTAINER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  background: linear-gradient(145deg, rgba(15, 15, 25, 0.98), rgba(20, 20, 35, 0.95));
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(139, 92, 246, 0.15);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.evolution-tracker.compact {
+  padding: 12px 16px;
+  gap: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPACT MODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker__compact-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.evolution-tracker__phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  white-space: nowrap;
+}
+
+.evolution-tracker__compact-stats {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker__header {
+  margin-bottom: 4px;
+}
+
+.evolution-tracker__current-phase {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--phase-color) 20%, transparent),
+    transparent
+  );
+  border-radius: 10px;
+  border-left: 3px solid var(--phase-color);
+}
+
+.evolution-tracker__phase-icon {
+  font-size: 28px;
+}
+
+.evolution-tracker__phase-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.evolution-tracker__phase-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.evolution-tracker__phase-desc {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.evolution-tracker__multiplier {
+  padding: 4px 10px;
+  background: rgba(139, 92, 246, 0.2);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #a78bfa;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   XP BAR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.xp-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.xp-bar.compact {
+  flex: 1;
+}
+
+.xp-bar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.xp-bar__level {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.xp-bar.compact .xp-bar__level {
+  font-size: 12px;
+}
+
+.xp-bar__xp {
+  font-size: 12px;
+  color: #a78bfa;
+  font-weight: 500;
+}
+
+.xp-bar.compact .xp-bar__xp {
+  font-size: 11px;
+}
+
+.xp-bar__track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.xp-bar.compact .xp-bar__track {
+  height: 6px;
+}
+
+.xp-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.xp-bar__footer {
+  font-size: 11px;
+  color: #64748b;
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TIMELINE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker__timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding: 16px 0;
+}
+
+.evolution-tracker__timeline-track {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-50%);
+  z-index: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PHASE INDICATOR
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.phase-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+  cursor: default;
+  transition: transform 0.2s ease;
+}
+
+.phase-indicator:hover {
+  transform: scale(1.05);
+}
+
+.phase-indicator__icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(30, 30, 45, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.phase-indicator.active .phase-indicator__icon {
+  border-color: var(--phase-color);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--phase-color) 50%, transparent);
+}
+
+.phase-indicator.completed .phase-indicator__icon {
+  background: var(--phase-color);
+  border-color: var(--phase-color);
+  color: white;
+}
+
+.phase-indicator__name {
+  font-size: 9px;
+  color: #64748b;
+  text-align: center;
+  max-width: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phase-indicator.active .phase-indicator__name {
+  color: var(--phase-color);
+  font-weight: 600;
+}
+
+.phase-indicator.completed .phase-indicator__name {
+  color: #94a3b8;
+}
+
+.phase-indicator__progress {
+  width: 30px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.phase-indicator__progress-bar {
+  height: 100%;
+  background: var(--phase-color);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   NEXT PHASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker__next-phase {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.evolution-tracker__next-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.evolution-tracker__progress-pct {
+  font-weight: 600;
+  color: #a78bfa;
+}
+
+.evolution-tracker__requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.evolution-tracker__requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.evolution-tracker__requirement.missing {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+}
+
+.evolution-tracker__requirement.met {
+  background: rgba(34, 197, 94, 0.1);
+  color: #86efac;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CAPABILITIES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker__unlockable {
+  margin-top: 8px;
+}
+
+.evolution-tracker__section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.evolution-tracker__capabilities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CAPABILITY CARD
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.capability-card {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.capability-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.capability-card.unlockable {
+  border-color: color-mix(in srgb, var(--tier-color) 40%, transparent);
+}
+
+.capability-card.locked {
+  opacity: 0.5;
+}
+
+.capability-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.capability-card__icon {
+  font-size: 18px;
+}
+
+.capability-card__tier {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--tier-color);
+  background: color-mix(in srgb, var(--tier-color) 20%, transparent);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.capability-card__name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #e2e8f0;
+  margin-bottom: 4px;
+}
+
+.capability-card__category {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.capability-card__unlock-btn {
+  padding: 6px 10px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(59, 130, 246, 0.3));
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  border-radius: 6px;
+  color: #c4b5fd;
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.capability-card__unlock-btn:hover {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(59, 130, 246, 0.5));
+  transform: translateY(-1px);
+}
+
+.capability-card__status-badge {
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.capability-card__status-badge.unlocked {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+}
+
+.capability-card__status-badge.mastered {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fde68a;
+}
+
+.capability-card__status-badge.locked {
+  background: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STATS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.evolution-tracker__stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.evolution-tracker__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.evolution-tracker__stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.evolution-tracker__stat-label {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

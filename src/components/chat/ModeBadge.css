@@ -1,0 +1,200 @@
+/**
+ * TITANE∞ v19.2Ω — Mode Badge Styles
+ * Badge indicateur mode actif avec tooltip
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BADGE BASE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mode-badge {
+  --badge-color: #6366f1;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.15) 0%,
+    rgba(168, 85, 247, 0.1) 100%
+  );
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: 20px;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.mode-badge:hover {
+  background: linear-gradient(135deg,
+    rgba(99, 102, 241, 0.25) 0%,
+    rgba(168, 85, 247, 0.2) 100%
+  );
+  border-color: var(--badge-color);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SIZES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mode-badge--small {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  gap: 4px;
+}
+
+.mode-badge--small .mode-badge__icon {
+  font-size: 0.85rem;
+}
+
+.mode-badge--medium {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+
+.mode-badge--medium .mode-badge__icon {
+  font-size: 1rem;
+}
+
+.mode-badge--large {
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  gap: 8px;
+}
+
+.mode-badge--large .mode-badge__icon {
+  font-size: 1.2rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CLICKABLE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mode-badge--clickable {
+  cursor: pointer;
+}
+
+.mode-badge--clickable:active {
+  transform: scale(0.97);
+}
+
+.mode-badge--clickable:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ICON & LABEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mode-badge__icon {
+  line-height: 1;
+}
+
+.mode-badge__label {
+  white-space: nowrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TOOLTIP
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.mode-badge__tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  max-width: 280px;
+  padding: 14px;
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  animation: tooltipFadeIn 0.2s ease;
+}
+
+.mode-badge__tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: rgba(15, 23, 42, 0.98);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.mode-badge__tooltip-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.mode-badge__tooltip-icon {
+  font-size: 1.3rem;
+}
+
+.mode-badge__tooltip-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.mode-badge__tooltip-desc {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0 0 10px 0;
+}
+
+.mode-badge__tooltip-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.7rem;
+  color: #64748b;
+}
+
+.mode-badge__tooltip-temp,
+.mode-badge__tooltip-perm {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .mode-badge__tooltip {
+    min-width: 180px;
+    max-width: 220px;
+    padding: 10px;
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+
+  .mode-badge__tooltip::after {
+    left: auto;
+    right: 16px;
+    transform: none;
+  }
+}

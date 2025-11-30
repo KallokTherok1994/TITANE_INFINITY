@@ -26,6 +26,9 @@ import { MessageListOptimized as MessageList } from '../../components/chat/Messa
 // import { MessageListSimple as MessageList } from '../../components/chat/MessageListSimple';
 // import { MessageList } from '../../components/chat/MessageList';
 import { ChatInput } from '../../components/chat/ChatInput';
+import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
+import { ModeBadge } from '../../components/chat/ModeBadge';
+import type { ChatModeId } from '../../services/ai/chatModes.config';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import './styles/Chat.css';
 
@@ -440,6 +443,10 @@ function useOmegaRenderProtection() {
  * CHAT PAGE OMEGA COMPONENT
  * ═══════════════════════════════════════════════════════════════════
  */
+
+// Clé localStorage pour persistance du mode
+const CHAT_MODE_STORAGE_KEY = 'titane-chat-mode';
+
 export const Chat: React.FC = () => {
   const mountedRef = useRef(false);
 
@@ -449,6 +456,26 @@ export const Chat: React.FC = () => {
   const [debugPanelVisible, setDebugPanelVisible] = useState(false);
   const [debugPanelCollapsed, setDebugPanelCollapsed] = useState(false);
   const [debugPanelPosition, setDebugPanelPosition] = useState<PanelPosition>(DEFAULT_PANEL_POSITION);
+
+  // ═══ MODE CHAT STATE ═══
+  const [currentChatMode, setCurrentChatMode] = useState<ChatModeId>(() => {
+    try {
+      const saved = localStorage.getItem(CHAT_MODE_STORAGE_KEY);
+      if (saved && ['default', 'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive', 'coach', 'dev', 'admin', 'strategy', 'audit'].includes(saved)) {
+        return saved as ChatModeId;
+      }
+    } catch { /* ignore */ }
+    return 'default';
+  });
+
+  // Handler changement de mode avec persistance
+  const handleModeChange = useCallback((newMode: ChatModeId) => {
+    setCurrentChatMode(newMode);
+    try {
+      localStorage.setItem(CHAT_MODE_STORAGE_KEY, newMode);
+    } catch { /* ignore */ }
+    isDev && console.log(`[OMEGA CHAT] Mode changé: ${newMode}`);
+  }, []);
 
   const toggleDebugPanelVisibility = useCallback(() => {
     setDebugPanelVisible(prev => !prev);
@@ -706,6 +733,17 @@ export const Chat: React.FC = () => {
               </div>
             </div>
 
+            {/* ═══ SÉLECTEUR DE MODE ═══ */}
+            <div className="chat-header-mode">
+              <ChatModeSelector
+                currentMode={currentChatMode}
+                onModeChange={handleModeChange}
+                userPermissionLevel={3}
+                variant="dropdown"
+                disabled={isLoading}
+              />
+            </div>
+
             <div className="chat-header-actions">
               <button
                 className="chat-action-btn"
@@ -766,6 +804,16 @@ export const Chat: React.FC = () => {
               {providerStatus.lastError && (
                 <span className="status-badge status-error" title={providerStatus.lastError}>⚠️</span>
               )}
+            </div>
+
+            {/* Mode Badge compact dans status bar */}
+            <div className="chat-status-item chat-status-mode">
+              <ModeBadge
+                mode={currentChatMode}
+                size="small"
+                showLabel={true}
+                showTooltip={true}
+              />
             </div>
 
             <div className="chat-status-item chat-status-preference">
