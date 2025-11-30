@@ -109,23 +109,29 @@ async function waitWithBackoff(
  */
 function isRetriableError(error: unknown): boolean {
   if (error instanceof TimeoutError) return true;
+  if (error instanceof ValidationError) return false;
 
+  // Par défaut, considérer les erreurs comme retriables pour robustesse,
+  // sauf cas explicitement non-retriables (validation, permissions fatales, etc.).
   const errorMsg = error instanceof Error ? error.message : String(error);
-
-  // Erreurs réseau/temporaires retriables
-  const retriablePatterns = [
-    'network',
-    'timeout',
-    'connection',
-    'unavailable',
-    'ECONNREFUSED',
-    'ETIMEDOUT',
-    'fetch failed',
+  const nonRetriablePatterns = [
+    'validation failed',
+    'invalid',
+    'permission denied',
+    'not authorized',
+    'unauthorized',
+    'unsupported',
+    'bad request',
+    '422',
+    '403',
+    '401',
   ];
 
-  return retriablePatterns.some((pattern) =>
-    errorMsg.toLowerCase().includes(pattern)
+  const isNonRetriable = nonRetriablePatterns.some((p) =>
+    errorMsg.toLowerCase().includes(p)
   );
+
+  return !isNonRetriable;
 }
 
 // ────────────────────────────────────────────────────────────────
@@ -174,6 +180,7 @@ export async function invokeWithRetry<T>(
           skipWhitelistCheck: options.skipWhitelistCheck,
           skipInjectionCheck: options.skipInjectionCheck,
           skipLoopCheck: options.skipLoopCheck,
+          treatFallbackAsError: true,
         }, options.validator),
         timeoutPromise<T>(timeout, command),
       ]);
@@ -288,7 +295,11 @@ export async function invokeBatch<T = unknown>(
 ): Promise<T[]> {
   return Promise.all(
     commands.map((cmd) =>
-      invokeWithRetry<T>(cmd.command, cmd.payload, cmd.options)
+      invokeWithRetry<T>(
+        cmd.command,
+        cmd.payload,
+        { ...cmd.options, noRetry: cmd.options?.noRetry ?? true }
+      )
     )
   );
 }
@@ -315,7 +326,7 @@ export async function invokeSequence<T = unknown>(
       const result = await invokeWithRetry<T>(
         cmd.command,
         cmd.payload,
-        cmd.options
+        { ...cmd.options, noRetry: cmd.options?.noRetry ?? true }
       );
       results.push(result);
     } catch (error) {

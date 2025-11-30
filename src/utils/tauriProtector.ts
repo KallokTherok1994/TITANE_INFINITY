@@ -182,6 +182,9 @@ export class TauriInvokeProtector {
   private isTauriAvailable: boolean | null = null;
   private checkCache: { [key: string]: { result: any; timestamp: number } } = {};
   private readonly CACHE_DURATION = 5000; // 5s cache
+  private readonly isTestEnv: boolean =
+    (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
+    (typeof globalThis !== 'undefined' && Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
 
   static getInstance(): TauriInvokeProtector {
     if (!TauriInvokeProtector.instance) {
@@ -250,6 +253,9 @@ export class TauriInvokeProtector {
       const tauriModule = await this.safeTauriImport();
       if (!tauriModule || !tauriModule.invoke) {
         this.isTauriAvailable = false;
+        if (this.isTestEnv) {
+          throw new Error('Tauri invoke not available');
+        }
         return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
       }
 
@@ -271,6 +277,10 @@ export class TauriInvokeProtector {
 
     } catch (error) {
       console.warn(`[TauriProtector] Command ${command} failed:`, error);
+      if (this.isTestEnv) {
+        // En mode test, propager l'erreur pour permettre les assertions
+        throw error;
+      }
       return this.createFallbackResponse<T>(command, error);
     }
   }

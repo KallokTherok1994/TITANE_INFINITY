@@ -16,6 +16,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { invokeWithRetry } from '../lib/serviceInvoker';
 import { ServiceMetrics } from '../lib/serviceMetrics';
+import { MetricsCache } from '../lib/metricsCache';
 import * as tauriCore from '@tauri-apps/api/core';
 
 // Mock Tauri invoke
@@ -82,6 +83,7 @@ describe('Phase 3 Integration - Robustness Layer', () => {
       ServiceMetrics.endMetric(metricId, false, String(error), 3);
     }
 
+    MetricsCache.invalidateAll();
     const stats = ServiceMetrics.getServiceStats('memory');
     expect(stats.failedCalls).toBe(1);
     expect(stats.totalRetries).toBe(3);
@@ -112,6 +114,7 @@ describe('Phase 3 Integration - Robustness Layer', () => {
     }
 
     // Vérifier agrégations
+    MetricsCache.invalidateAll();
     const globalStats = ServiceMetrics.getGlobalStats();
     expect(globalStats.totalMetrics).toBe(3);
     expect(globalStats.totalRetries).toBe(1);

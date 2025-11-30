@@ -107,6 +107,16 @@ export class ServiceMetrics {
 
     // Ajouter aux métriques historiques
     this.metrics.push(metric);
+    if (typeof console !== 'undefined' && process?.env?.VITEST_WORKER_ID) {
+      console.log('[ServiceMetrics] endMetric', {
+        service: metric.service,
+        command: metric.command,
+        success: metric.success,
+        retries: metric.retries,
+        error: metric.error,
+      });
+      console.log('[ServiceMetrics] metrics length =', this.metrics.length);
+    }
 
     // Limiter taille
     if (this.metrics.length > this.MAX_METRICS) {
