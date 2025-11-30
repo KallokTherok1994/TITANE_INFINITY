@@ -6,9 +6,9 @@
 
 # 🔁 TITANE_INFINITY v16.2.3 — RELEASE NOTES
 
-**Release Date**: November 29, 2025  
-**Status**: ✅ Production-Ready  
-**License**: Proprietary (FR/EN)  
+**Release Date**: November 29, 2025
+**Status**: ✅ Production-Ready
+**License**: Proprietary (FR/EN)
 **Tag**: `v16.2.3`
 
 ---
@@ -39,8 +39,8 @@ Stabilisation robuste des invocations Tauri + métriques déterministes + durcis
 | TypeScript (`tsc --noEmit`) | 0 erreurs |
 
 Warnings restants (délibérément différés):
-- Boucle transformable en `while let` (stream parsing)  
-- Fonction à 8 paramètres (future refactor struct de contexte)  
+- Boucle transformable en `while let` (stream parsing)
+- Fonction à 8 paramètres (future refactor struct de contexte)
 - `needless_return` mineur (secure_commands)
 
 ---
@@ -88,7 +88,7 @@ Invocations: retries loggés (succès sur 2/3 ou échec final avec `RetryError`)
 ## ✅ Conclusion
 La version `v16.2.3` est prête pour production: sécurité consolidée, métriques fiables, builds stables, tests exhaustifs verts. Les améliorations restantes sont évolutives et non bloquantes.
 
-**Tag**: `v16.2.3` publié.  
+**Tag**: `v16.2.3` publié.
 **Recommandation**: Enchaîner avec sprint Refactor Streaming + Audit CSP.
 
 — Fin des Release Notes —

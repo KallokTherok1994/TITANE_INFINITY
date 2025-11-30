@@ -999,36 +999,32 @@ async fn stream_with_ollama(
         let chunk_str = String::from_utf8_lossy(&chunk_bytes);
         buffer.push_str(&chunk_str);
 
-        loop {
-            if let Some(pos) = buffer.find('\n') {
-                let line: String = buffer.drain(..=pos).collect();
-                let trimmed = line.trim();
-                if trimmed.is_empty() {
-                    continue;
-                }
+        while let Some(pos) = buffer.find('\n') {
+            let line: String = buffer.drain(..=pos).collect();
+            let trimmed = line.trim();
+            if trimmed.is_empty() {
+                continue;
+            }
 
-                match handle_ollama_line(
-                    trimmed,
-                    app,
-                    &conversation_id,
-                    &message_id,
-                    &mut ordinal,
-                    &mut accumulated,
-                    &mut tokens,
-                    &mut prompt_tokens,
-                ) {
-                    Ok(Some(final_chunk)) => {
-                        done_chunk = Some(final_chunk);
-                        break;
-                    }
-                    Ok(None) => continue,
-                    Err(err) => {
-                        increment_provider_failures("ollama", state).await;
-                        return Err(err);
-                    }
+            match handle_ollama_line(
+                trimmed,
+                app,
+                &conversation_id,
+                &message_id,
+                &mut ordinal,
+                &mut accumulated,
+                &mut tokens,
+                &mut prompt_tokens,
+            ) {
+                Ok(Some(final_chunk)) => {
+                    done_chunk = Some(final_chunk);
+                    break;
                 }
-            } else {
-                break;
+                Ok(None) => continue,
+                Err(err) => {
+                    increment_provider_failures("ollama", state).await;
+                    return Err(err);
+                }
             }
         }
 
@@ -1144,6 +1140,7 @@ async fn stream_with_ollama(
     })
 }
 
+#[allow(clippy::too_many_arguments)]
 fn handle_ollama_line(
     line: &str,
     app: &tauri::AppHandle,
