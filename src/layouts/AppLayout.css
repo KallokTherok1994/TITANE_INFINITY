@@ -47,6 +47,7 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0; /* Fix flexbox overflow bug */
   overflow: hidden;
   position: relative;
 }
@@ -99,15 +100,23 @@
 /* Responsive - Tablet */
 @media (max-width: 1024px) {
   .layout__sidebar {
-    width: 240px;
+    width: 220px;
   }
 
   .layout__content {
     padding: 20px;
   }
+
+  .layout__header {
+    padding: 14px 20px;
+  }
+
+  .layout__xpbar {
+    padding: 10px 20px;
+  }
 }
 
-/* Responsive - Mobile */
+/* Responsive - Large Mobile / Small Tablet */
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
@@ -116,11 +125,14 @@
   .layout__sidebar {
     width: 100%;
     height: auto;
-    max-height: 60px;
+    max-height: none;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     overflow-x: auto;
     overflow-y: hidden;
+    flex-direction: row;
+    padding: 8px 12px;
+    gap: 8px;
   }
 
   .layout__header {
@@ -133,6 +145,28 @@
 
   .layout__content {
     padding: 16px;
+    flex: 1;
+    min-height: 0;
+  }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+  .layout__sidebar {
+    padding: 6px 8px;
+    gap: 6px;
+  }
+
+  .layout__header {
+    padding: 10px 12px;
+  }
+
+  .layout__xpbar {
+    padding: 6px 12px;
+  }
+
+  .layout__content {
+    padding: 12px;
   }
 }
 

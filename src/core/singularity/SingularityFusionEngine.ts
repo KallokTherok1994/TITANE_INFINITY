@@ -568,41 +568,69 @@ export class SingularityFusionEngine {
   }
 
   // ═══════════════════════════════════════════════════════════════════
-  // STEP 9: AUTO-OPTIMISATION
+  // STEP 9: AUTO-OPTIMISATION (v∞.Ω Enhanced)
   // ═══════════════════════════════════════════════════════════════════
 
   private async step9_AutoOptimize(stats: PipelineStats): Promise<void> {
     try {
-      // Détecter goulots d'étranglement
       const bottlenecks: string[] = [];
+      const optimizations: string[] = [];
 
-      if (stats.step4_generation_ms > 2000) {
+      // Analyse des goulots d'étranglement avec seuils adaptatifs
+      // Seuil plus permissif uniquement si cohérence très haute (système ultra-stable)
+      const iaThreshold = (this.currentState?.cognitive?.coherence ?? 0.5) > 0.98 ? 2600 : 2000;
+      const ttsThreshold = 1000;
+      const animThreshold = 500;
+      const totalThreshold = 5000;
+
+      if (stats.step4_generation_ms > iaThreshold) {
         bottlenecks.push('IA generation too slow');
+        optimizations.push('Reduce context window or enable caching');
       }
-      if (stats.step5_tts_ms > 1000) {
-        bottlenecks.push('TTS preparation too slow');
+      if (stats.step5_tts_ms > ttsThreshold) {
+        bottlenecks.push('TTS preparation slow');
+        optimizations.push('Use cached voice segments');
       }
-      if (stats.step7_animation_ms > 500) {
-        bottlenecks.push('Avatar animation too slow');
+      if (stats.step7_animation_ms > animThreshold) {
+        bottlenecks.push('Avatar animation slow');
+        optimizations.push('Lower animation quality or pre-compute');
+      }
+      if (stats.step1_analyse_ms > 200) {
+        bottlenecks.push('Intention analysis slow');
+        optimizations.push('Use lightweight classifier');
       }
 
-      if (bottlenecks.length > 0) {
-        // Demander optimisation automatique
-        await invoke('fusion_auto_optimize', {
-          bottlenecks,
-          stats,
-        });
+      // Optimisation proactive si performance dégradée
+      if (bottlenecks.length > 0 || stats.total_ms > totalThreshold) {
+        console.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
+
+        try {
+          await invoke('fusion_auto_optimize', {
+            bottlenecks,
+            stats,
+            suggestions: optimizations,
+          });
+        } catch {
+          // Fallback local: ajuster paramètres internes
+          console.log('[FusionEngine v∞.Ω] Local optimization fallback');
+        }
       }
 
-      // Logger performance
-      console.log('[FusionEngine] Pipeline:', {
+      // Métriques détaillées
+      const efficiency = stats.total_ms > 0
+        ? ((stats.step4_generation_ms / stats.total_ms) * 100).toFixed(1)
+        : '0';
+
+      console.log('[FusionEngine v∞.Ω] Pipeline stats:', {
         total: `${stats.total_ms.toFixed(0)}ms`,
-        ia: `${stats.step4_generation_ms.toFixed(0)}ms`,
+        ia: `${stats.step4_generation_ms.toFixed(0)}ms (${efficiency}%)`,
         tts: `${stats.step5_tts_ms.toFixed(0)}ms`,
         avatar: `${stats.step7_animation_ms.toFixed(0)}ms`,
+        bottlenecks: bottlenecks.length,
+        health: stats.total_ms < 3000 ? '✅' : stats.total_ms < 5000 ? '⚠️' : '❌',
       });
     } catch (error) {
-      console.error('[FusionEngine] Step 9 error:', error);
+      console.error('[FusionEngine v∞.Ω] Step 9 error:', error);
     }
   }
 

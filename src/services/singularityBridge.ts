@@ -43,7 +43,7 @@ import type {
 } from '@/types/singularityState';
 
 // ═══════════════════════════════════════════════════════════════════
-// SINGULARITY BRIDGE CLASS
+// SINGULARITY BRIDGE CLASS (v∞.Ω Enhanced)
 // ═══════════════════════════════════════════════════════════════════
 
 export class SingularityBridge {
@@ -51,6 +51,12 @@ export class SingularityBridge {
   private static state: SingularityState | null = null;
   private static listeners: UnlistenFn[] = [];
   private static subscribers: Set<(state: SingularityState) => void> = new Set();
+
+  // v∞.Ω: Cache intelligent avec TTL
+  private static cache: Map<string, { data: unknown; timestamp: number }> = new Map();
+  private static readonly CACHE_TTL_MS = 5000; // 5 secondes
+  private static lastStateHash = '';
+  private static updateCount = 0;
 
   /**
    * Initialiser le bridge (appelé au startup)
@@ -104,10 +110,29 @@ export class SingularityBridge {
   }
 
   /**
-   * Notifier tous les subscribers
+   * Notifier tous les subscribers (v∞.Ω: avec debounce intelligent)
    */
   private static notifySubscribers(): void {
     if (!this.state) return;
+
+    // Calcul rapide de hash pour détecter changements réels
+    const stateHash = JSON.stringify({
+      c: this.state.cognitive?.coherence,
+      p: this.state.physical?.helios?.cpu_usage,
+      m: this.state.meta?.runtime_health,
+    });
+
+    // Éviter notifications redondantes
+    if (stateHash === this.lastStateHash) {
+      return;
+    }
+    this.lastStateHash = stateHash;
+    this.updateCount++;
+
+    // Log périodique pour monitoring
+    if (this.updateCount % 100 === 0) {
+      console.log(`[SingularityBridge v∞.Ω] ${this.updateCount} state updates processed`);
+    }
 
     this.subscribers.forEach(callback => {
       try {
@@ -118,6 +143,31 @@ export class SingularityBridge {
         console.error('[SingularityBridge] Subscriber error:', error);
       }
     });
+  }
+
+  /**
+   * v∞.Ω: Cache avec TTL pour réduire appels backend
+   */
+  private static getCached<T>(key: string): T | null {
+    const cached = this.cache.get(key);
+    if (cached && Date.now() - cached.timestamp < this.CACHE_TTL_MS) {
+      return cached.data as T;
+    }
+    return null;
+  }
+
+  private static setCache<T>(key: string, data: T): void {
+    this.cache.set(key, { data, timestamp: Date.now() });
+
+    // Nettoyage cache si trop grand
+    if (this.cache.size > 50) {
+      const now = Date.now();
+      for (const [k, v] of this.cache.entries()) {
+        if (now - v.timestamp > this.CACHE_TTL_MS * 2) {
+          this.cache.delete(k);
+        }
+      }
+    }
   }
 
   /**

@@ -8,10 +8,13 @@
  *   TITANE∞ v19.2Ω — FILE UPLOAD BUTTON
  *   Bouton d'import de fichiers avec drag & drop pour analyse IA
  *   Features: Multi-fichiers, Preview, Classification automatique
+ *   + Sauvegarde permanente mémoire IA + Attribution XP
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import React, { useRef, useState, useCallback, memo } from 'react';
+import { invoke } from '@tauri-apps/api/core';
+import { XP } from '../../core/experience/XP_ENGINE';
 import './FileUploadButton.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -279,6 +282,44 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(({
       const result = await processFile(file);
       results.push(result);
       onFileAnalyzed?.(result);
+
+      // ═══ SAUVEGARDE MÉMOIRE PERMANENTE + XP ═══
+      // Enregistrer le fichier dans la mémoire IA permanente (backend Tauri)
+      if (result.status === 'done' && result.content) {
+        try {
+          // Ingestion dans la mémoire IA permanente
+          const memoryResult = await invoke('memory_ingest_file', {
+            path: result.name,
+            content: result.content,
+            category: result.category,
+            metadata: {
+              name: result.name,
+              size: result.size,
+              type: result.type,
+              analysis: result.analysis,
+              timestamp: Date.now(),
+            }
+          });
+
+          isDev && console.log('[FileUpload] ✅ File ingested to memory:', result.name, memoryResult);
+
+          // +20 XP pour chaque fichier importé avec succès
+          XP.gain(20, 'file_import', `Fichier importé: ${result.name}`);
+          isDev && console.log('[FileUpload] ✨ +20 XP awarded for file import:', result.name);
+
+        } catch (memoryError) {
+          // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
+          console.warn('[FileUpload] Memory ingestion warning (non-blocking):', memoryError);
+
+          // On donne quand même +10 XP pour l'analyse locale
+          try {
+            XP.gain(10, 'file_analysis', `Fichier analysé localement: ${result.name}`);
+            isDev && console.log('[FileUpload] ✨ +10 XP awarded for local analysis:', result.name);
+          } catch (xpError) {
+            console.warn('[FileUpload] XP award warning:', xpError);
+          }
+        }
+      }
     }
 
     setSelectedFiles(results);

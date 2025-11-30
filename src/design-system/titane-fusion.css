@@ -484,12 +484,42 @@ body {
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🔧 RESPONSIVE (Mobile-First)
+   🔧 RESPONSIVE (Mobile-First) — TITANE∞ v∞ Unified Breakpoints
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Breakpoints:
+   - xs: 0-479px (small mobile)
+   - sm: 480-639px (mobile)
+   - md: 640-767px (large mobile)
+   - lg: 768-1023px (tablet)
+   - xl: 1024-1279px (small desktop)
+   - 2xl: 1280-1535px (desktop)
+   - 3xl: 1536px+ (large desktop)
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-@media (max-width: 640px) {
+/* Small Mobile (xs: 0-479px) */
+@media (max-width: 479px) {
   :root {
-    --font-size-base: 0.9375rem; /* 15px sur mobile */
+    --font-size-base: 0.875rem;
+    --space-md: 10px;
+    --space-lg: 14px;
+    --space-xl: 20px;
+  }
+
+  .chat-message-user,
+  .chat-message-assistant {
+    max-width: 95%;
+    padding: 10px 12px;
+  }
+
+  .titane-container {
+    padding-inline: var(--space-sm);
+  }
+}
+
+/* Mobile (sm: 480-639px) */
+@media (min-width: 480px) and (max-width: 639px) {
+  :root {
+    --font-size-base: 0.9375rem;
     --space-md: 12px;
     --space-lg: 16px;
   }
@@ -498,17 +528,74 @@ body {
   .chat-message-assistant {
     max-width: 90%;
   }
+}
 
+/* Large Mobile (md: 640-767px) */
+@media (max-width: 767px) {
   .grid-cols-2,
   .grid-cols-3,
   .grid-cols-4 {
     grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .titane-card {
+    padding: var(--space-md);
+  }
+
+  /* Hide on mobile */
+  .hide-mobile {
+    display: none !important;
   }
 }
 
-@media (max-width: 768px) {
-  .titane-card {
-    padding: var(--space-md);
+/* Tablet (lg: 768-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .titane-container {
+    padding-inline: var(--space-lg);
+  }
+
+  /* Hide on tablet */
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Small Desktop (xl: 1024-1279px) */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop (2xl: 1280px+) */
+@media (min-width: 1280px) {
+  .titane-container {
+    max-width: 1400px;
+    margin-inline: auto;
+  }
+
+  /* Show only on desktop */
+  .show-desktop {
+    display: block;
+  }
+}
+
+/* Large Desktop (3xl: 1536px+) */
+@media (min-width: 1536px) {
+  :root {
+    --font-size-base: 1rem;
+    --space-xl: 40px;
+    --space-2xl: 56px;
+  }
+
+  .titane-container {
+    max-width: 1600px;
   }
 }
 

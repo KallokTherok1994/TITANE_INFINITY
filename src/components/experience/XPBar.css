@@ -1,23 +1,25 @@
 /**
- * TITANE∞ v19.1.0 - XPBar Styles
+ * TITANE∞ v∞ - XPBar Styles
+ * Design System Monochrome Métallique
  * Animations polish + accessibilité améliorée
  */
 
 .xp-bar-wrapper {
   padding: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  border-radius: 8px;
+  transition: all var(--transition-fast, 120ms) ease;
+  border-radius: var(--radius, 4px);
   outline: none;
+  background: transparent;
 }
 
 .xp-bar-wrapper:hover {
-  background: rgba(0, 255, 255, 0.05);
-  transform: translateY(-2px);
+  background: rgba(147, 179, 153, 0.08);
+  transform: translateY(-1px);
 }
 
 .xp-bar-wrapper:focus-visible {
-  outline: 2px solid rgba(0, 255, 255, 0.6);
+  outline: 2px solid var(--accent, #93b399);
   outline-offset: 2px;
 }
 
@@ -35,34 +37,38 @@
 }
 
 .xp-level {
-  color: #00ffff;
-  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
-  animation: pulse-glow 2s ease-in-out infinite;
+  color: var(--accent, #93b399);
+  text-shadow: 0 0 6px rgba(147, 179, 153, 0.4);
+  animation: pulse-glow-metal 2.5s ease-in-out infinite;
 }
 
 .xp-next {
-  color: rgba(0, 255, 255, 0.7);
+  color: var(--text-muted, #9ca3af);
   font-size: 11px;
 }
 
 .xp-bar-container {
   width: 100%;
-  height: 8px;
-  background: rgba(0, 255, 255, 0.1);
-  border-radius: 4px;
+  height: 6px;
+  background: rgba(147, 179, 153, 0.12);
+  border-radius: var(--radius-sm, 2px);
   overflow: hidden;
   position: relative;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .xp-bar {
   height: 100%;
-  background: linear-gradient(90deg, #00ffff 0%, #00cccc 50%, #00ffff 100%);
+  background: linear-gradient(90deg,
+    var(--primary, #727b81) 0%,
+    var(--accent, #93b399) 50%,
+    var(--primary, #727b81) 100%
+  );
   background-size: 200% 100%;
-  border-radius: 4px;
-  transition: width 0.5s ease-out;
-  animation: shimmer 2s linear infinite;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+  border-radius: var(--radius-sm, 2px);
+  transition: width 0.4s ease-out;
+  animation: shimmer-metal 3s linear infinite;
+  box-shadow: 0 0 8px rgba(147, 179, 153, 0.4);
   position: relative;
 }
 
@@ -73,21 +79,21 @@
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
-  border-radius: 4px 4px 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+  border-radius: var(--radius-sm, 2px) var(--radius-sm, 2px) 0 0;
 }
 
 /* Animations */
-@keyframes pulse-glow {
+@keyframes pulse-glow-metal {
   0%, 100% {
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    text-shadow: 0 0 6px rgba(147, 179, 153, 0.4);
   }
   50% {
-    text-shadow: 0 0 12px rgba(0, 255, 255, 0.7);
+    text-shadow: 0 0 10px rgba(147, 179, 153, 0.6);
   }
 }
 
-@keyframes shimmer {
+@keyframes shimmer-metal {
   0% {
     background-position: 200% 0;
   }
@@ -97,26 +103,34 @@
 }
 
 /* Level up animation (ajouté dynamiquement) */
+/* Level up animation */
 @keyframes level-up {
   0% {
     transform: scale(1);
-    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(147, 179, 153, 0.4);
   }
   50% {
-    transform: scale(1.2);
-    opacity: 0.8;
+    transform: scale(1.02);
+    box-shadow: 0 0 20px 4px rgba(147, 179, 153, 0.3);
   }
   100% {
     transform: scale(1);
-    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(147, 179, 153, 0);
   }
 }
 
 .xp-bar-wrapper.level-up {
-  animation: level-up 0.6s ease-out;
+  animation: level-up 0.5s ease-out;
 }
 
-/* Responsive */
+/* Responsive - Tablet */
+@media (max-width: 1024px) {
+  .xp-bar-wrapper {
+    padding: 10px;
+  }
+}
+
+/* Responsive - Mobile */
 @media (max-width: 768px) {
   .xp-bar-wrapper {
     padding: 8px;
@@ -127,7 +141,27 @@
   }
 
   .xp-bar-container {
-    height: 6px;
+    height: 5px;
+  }
+
+  .xp-next {
+    font-size: 10px;
+  }
+}
+
+/* Responsive - Small Mobile */
+@media (max-width: 480px) {
+  .xp-bar-wrapper {
+    padding: 6px;
+  }
+
+  .xp-bar-info {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+
+  .xp-bar-container {
+    height: 4px;
   }
 }
 

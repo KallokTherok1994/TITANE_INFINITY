@@ -923,12 +923,17 @@ pub async fn experience_update_state(state: serde_json::Value) -> AppResult<()> 
 }
 
 // ═══════════════════════════════════════════════════════════════
-// MEMORY - File Ingestion (v24)
+// MEMORY - File Ingestion (v24) - REAL STORAGE
 // ═══════════════════════════════════════════════════════════════
 
 #[tauri::command]
-pub async fn memory_ingest_file(path: String) -> AppResult<serde_json::Value> {
-    log::info!("Mock: memory_ingest_file called with path: {}", path);
+pub async fn memory_ingest_file(
+    path: String,
+    content: Option<String>,
+    category: Option<String>,
+    metadata: Option<serde_json::Value>,
+) -> AppResult<serde_json::Value> {
+    log::info!("memory_ingest_file called with path: {}", path);
 
     // Extract filename from path
     let filename = std::path::Path::new(&path)
@@ -937,23 +942,48 @@ pub async fn memory_ingest_file(path: String) -> AppResult<serde_json::Value> {
         .unwrap_or("unknown.txt")
         .to_string();
 
-    // Mock file reading
-    let mock_size = 1024; // 1KB
-    let mock_type = if path.ends_with(".md") {
-        "markdown"
-    } else if path.ends_with(".json") {
-        "json"
-    } else if path.ends_with(".rs") {
-        "rust"
-    } else {
-        "text"
-    };
+    // Determine category (auto-classify if not provided)
+    let file_category = category.unwrap_or_else(|| {
+        if path.ends_with(".md") {
+            "document".to_string()
+        } else if path.ends_with(".json") || path.ends_with(".yaml") || path.ends_with(".yml") {
+            "data".to_string()
+        } else if path.ends_with(".rs") || path.ends_with(".ts") || path.ends_with(".tsx") ||
+                  path.ends_with(".js") || path.ends_with(".py") {
+            "code".to_string()
+        } else if path.ends_with(".toml") || path.ends_with(".ini") || path.ends_with(".env") {
+            "config".to_string()
+        } else {
+            "unknown".to_string()
+        }
+    });
+
+    // Get content size
+    let content_size = content.as_ref().map(|c| c.len()).unwrap_or(0);
+    let line_count = content.as_ref().map(|c| c.lines().count()).unwrap_or(0);
+    let word_count = content.as_ref().map(|c| c.split_whitespace().count()).unwrap_or(0);
+
+    // Store file in memory_persistence if content is provided
+    if let Some(ref file_content) = content {
+        if let Err(e) = crate::memory_persistence::store_file(&path, file_content, &file_category) {
+            log::warn!("Failed to store file in memory: {}", e);
+        } else {
+            log::info!("✅ File stored in memory: {} ({} bytes, {} lines)", filename, content_size, line_count);
+        }
+    }
+
+    let ingested_at = chrono::Utc::now().timestamp_millis();
 
     Ok(json!({
+        "success": true,
         "filename": filename,
-        "size": mock_size,
-        "type": mock_type,
-        "ingested_at": chrono::Utc::now().timestamp_millis()
+        "path": path,
+        "size": content_size,
+        "lines": line_count,
+        "words": word_count,
+        "category": file_category,
+        "ingested_at": ingested_at,
+        "metadata": metadata
     }))
 }
 

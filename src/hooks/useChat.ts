@@ -24,6 +24,7 @@ import {
   type ChatResponse,
   type StreamConfig,
 } from '../services/api';
+import { XP } from '../core/experience/XP_ENGINE';
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
@@ -818,6 +819,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       try {
         saveMessage(userMessage);
         saveMessage(assistantMessage);
+
+        // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
+        // +5 XP pour l'utilisateur à chaque message envoyé avec succès
+        try {
+          XP.gain(5, 'chat_message', `Message envoyé: ${cleanMessage.substring(0, 50)}...`);
+          console.log('[useChat OMNIS] ✨ +5 XP awarded for chat message');
+        } catch (xpError) {
+          console.warn('[useChat OMNIS] XP award warning:', xpError);
+        }
       } catch (memoryError) {
         console.warn('[Chat] Memory integration warning:', memoryError);
       }
