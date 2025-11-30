@@ -8,11 +8,13 @@
  *   TITANE∞ v19.2Ω — CHAT INPUT OMEGA (UI ANTI-CRASH)
  *   PHASE 5Ω: Validation input • Anti-spam • Sanitisation sécurisée
  *   Zone de saisie avec protection contre injection et états corrompus
+ *   + Import de fichiers pour analyse IA
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
+import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
 import './ChatInput.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -20,10 +22,12 @@ const CONTROL_CHAR_PATTERN = /\p{Cc}+/gu;
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  onFilesAnalyzed?: (files: AnalyzedFile[]) => void;
   disabled?: boolean;
   placeholder?: string;
   voiceModeActive?: boolean;
   onToggleVoiceMode?: () => void;
+  enableFileUpload?: boolean;
 }
 
 interface ChatInputState {
@@ -179,12 +183,16 @@ function useOmegaInputProtection() {
  */
 export const ChatInput: React.FC<ChatInputProps> = React.memo(({
   onSend,
+  onFilesAnalyzed,
   disabled = false,
   placeholder = 'Posez votre question...',
   voiceModeActive = false,
   onToggleVoiceMode,
+  enableFileUpload = true,
 }) => {
   const [value, setValue] = useState('');
+  const [showFileUpload, setShowFileUpload] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<AnalyzedFile[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const mountedRef = useRef(false);
 
@@ -246,20 +254,37 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
 
   // ═══ PHASE 5.4: PROTECTED SEND HANDLER ═══
   const handleSend = useCallback(() => {
-    if (!mountedRef.current) return;
+    console.log('[ChatInput OMEGA] 🔘 handleSend appelé', {
+      value: value.substring(0, 30),
+      disabled,
+      mounted: mountedRef.current
+    });
+
+    if (!mountedRef.current) {
+      console.log('[ChatInput OMEGA] ❌ Non monté, abandon');
+      return;
+    }
 
     try {
       const sanitized = sanitizeInput(value);
       const validation = validateMessage(sanitized);
 
+      console.log('[ChatInput OMEGA] 🔍 Validation:', validation);
+
       if (!validation.valid) {
+        console.log('[ChatInput OMEGA] ❌ Validation échouée:', validation.reason);
         if (validation.reason) {
           handleInputError(new Error(validation.reason), 'send-validation', sanitized);
         }
         return;
       }
 
-      if (disabled || messageSent.current) return;
+      if (disabled || messageSent.current) {
+        console.log('[ChatInput OMEGA] ❌ Disabled ou déjà envoyé');
+        return;
+      }
+
+      console.log('[ChatInput OMEGA] ✅ Envoi du message:', sanitized.substring(0, 50));
 
       // Marquer comme envoyé pour éviter les doubles
       messageSent.current = true;
@@ -357,6 +382,37 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
     }
   }, [onToggleVoiceMode, handleInputError]);
 
+  // ═══ PHASE 5.7.1: FILE UPLOAD HANDLERS ═══
+  const handleToggleFileUpload = useCallback(() => {
+    setShowFileUpload(prev => !prev);
+  }, []);
+
+  const handleFilesSelected = useCallback((files: AnalyzedFile[]) => {
+    isDev && console.log('[ChatInput] Files selected:', files.length);
+    setUploadedFiles(files);
+
+    // Notifier le parent
+    if (onFilesAnalyzed) {
+      onFilesAnalyzed(files);
+    }
+
+    // Créer un message formaté avec les fichiers
+    if (files.length > 0) {
+      const filesSummary = files
+        .filter(f => f.status === 'done' && f.analysis)
+        .map(f => `📄 **${f.name}**\n${f.analysis?.summary || 'Analyse non disponible'}`)
+        .join('\n\n');
+
+      if (filesSummary) {
+        const currentValue = value.trim();
+        const newValue = currentValue
+          ? `${currentValue}\n\n---\n📎 Fichiers importés:\n${filesSummary}`
+          : `📎 Fichiers importés pour analyse:\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé.`;
+        setValue(newValue);
+      }
+    }
+  }, [onFilesAnalyzed, value]);
+
   // ═══ PHASE 5.8: MEMOIZED COMPUTATIONS ═══
   const isInputDisabled = useMemo(() => {
     return disabled || inputState.isBlocked || !!inputState.inputError;
@@ -407,7 +463,54 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
           </div>
         )}
 
+        {/* File upload zone (expanded) */}
+        {enableFileUpload && showFileUpload && (
+          <div className="chat-file-upload-zone">
+            <FileUploadButton
+              onFilesSelected={handleFilesSelected}
+              disabled={isInputDisabled}
+              showPreview={true}
+              maxFiles={10}
+              className="chat-file-upload-expanded"
+            />
+          </div>
+        )}
+
+        {/* Uploaded files preview */}
+        {uploadedFiles.length > 0 && (
+          <div className="chat-uploaded-files">
+            {uploadedFiles.map((file, idx) => (
+              <div key={`${file.name}-${idx}`} className={`chat-file-chip ${file.status}`}>
+                <span className="chat-file-chip-icon">
+                  {file.status === 'analyzing' ? '⏳' : file.status === 'done' ? '✅' : '❌'}
+                </span>
+                <span className="chat-file-chip-name">{file.name}</span>
+                <button
+                  className="chat-file-chip-remove"
+                  onClick={() => setUploadedFiles(prev => prev.filter((_, i) => i !== idx))}
+                  title="Retirer ce fichier"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="chat-input-wrapper">
+          {/* File upload toggle button */}
+          {enableFileUpload && (
+            <button
+              className={`chat-file-btn ${showFileUpload ? 'active' : ''}`}
+              onClick={handleToggleFileUpload}
+              disabled={isInputDisabled}
+              title="Importer des fichiers à analyser"
+              aria-label="Importer des fichiers"
+            >
+              <span className="chat-file-icon">📎</span>
+            </button>
+          )}
+
           <textarea
             ref={textareaRef}
             className={`chat-input ${inputState.inputError ? 'chat-input-error' : ''}`}
@@ -457,12 +560,16 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
         <div className="chat-input-hint">
           <span className="chat-hint-text">
             Entrée pour envoyer • Maj+Entrée pour nouvelle ligne
-            {onToggleVoiceMode && ' • 🎤 Mode vocal disponible'}
+            {enableFileUpload && ' • 📎 Fichiers'}
+            {onToggleVoiceMode && ' • 🎤 Vocal'}
             {inputState.spamCount > 0 && (
               <span className="chat-hint-spam"> • ⚠️ Spam: {inputState.spamCount}/{OMEGA_INPUT_CONFIG.maxSpam}</span>
             )}
             {inputState.recoveryCount > 0 && (
               <span className="chat-hint-recovery"> • 🔄 Récupérations: {inputState.recoveryCount}</span>
+            )}
+            {uploadedFiles.length > 0 && (
+              <span className="chat-hint-files"> • 📄 {uploadedFiles.length} fichier(s)</span>
             )}
           </span>
         </div>

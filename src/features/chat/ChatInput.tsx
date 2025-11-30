@@ -107,7 +107,14 @@ export const ChatInput = ({
   }, [maxLength, onChange, filteredSuggestions.length]);
 
   const handleSubmit = useCallback((): void => {
+    console.log('[ChatInput] 🔘 handleSubmit appelé', {
+      value: value.trim().substring(0, 30),
+      disabled,
+      isLoading
+    });
+
     if (value.trim() && !disabled && !isLoading) {
+      console.log('[ChatInput] ✅ Conditions OK, appel onSubmit');
       if (typeof isProcessing !== 'boolean') {
         setInternalLoading(true); // ✅ v∞.B7 - Activer loading local en mode autonome
       }
@@ -124,6 +131,12 @@ export const ChatInput = ({
         // Désactiver loading après délai simulé (le parent gère la vraie réponse quand contrôlé)
         setTimeout(() => setInternalLoading(false), 500);
       }
+    } else {
+      console.log('[ChatInput] ❌ Conditions NON remplies:', {
+        hasValue: !!value.trim(),
+        disabled,
+        isLoading
+      });
     }
   }, [value, disabled, isLoading, onSubmit, onChange, isProcessing]);
 
@@ -414,7 +427,10 @@ export const ChatInput = ({
           {/* Bouton Envoyer */}
           <Button
             variant="primary"
-            onClick={handleSubmit}
+            onClick={() => {
+              console.log('[ChatInput] 🖱️ Bouton Envoyer cliqué');
+              handleSubmit();
+            }}
             disabled={disabled || !value.trim() || isLoading}
             leftIcon={isLoading ? '⏳' : '🚀'}
           >

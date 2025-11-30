@@ -373,11 +373,15 @@ export const ChatPage = (): JSX.Element => {
 
   const handleSendMessage = useCallback(
     async (content: string) => {
+      console.log('[ChatPage] 🎯 handleSendMessage appelé avec:', content?.substring(0, 50));
+
       const trimmed = content.trim();
       if (!trimmed) {
+        console.log('[ChatPage] ⚠️ Message vide, abandon');
         return;
       }
 
+      console.log('[ChatPage] ✅ Message valide, traitement...');
       const userTimestamp = new Date();
       const userMessage: ChatMessageProps = {
         role: 'user',

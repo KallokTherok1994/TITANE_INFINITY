@@ -40,7 +40,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`message-bubble message-bubble-${role} ${isLatest ? 'message-bubble-latest' : ''}`}
       role="article"
       aria-label={`Message de ${role === 'user' ? 'vous' : 'TITANE∞'}`}
@@ -69,33 +69,41 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
 
         <div className="message-bubble-text">
           {role === 'assistant' ? (
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                code: ({ className, children, ...props }) => {
-                  const inline = !className;
-                  return inline ? (
-                    <code className="inline-code" {...props}>
+            content.length > 0 ? (
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  code: ({ className, children, ...props }) => {
+                    const inline = !className;
+                    return inline ? (
+                      <code className="inline-code" {...props}>
+                        {children}
+                      </code>
+                    ) : (
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    );
+                  },
+                  pre: ({ children }) => (
+                    <pre className="code-block">{children}</pre>
+                  ),
+                  a: ({ href, children }) => (
+                    <a href={href} target="_blank" rel="noopener noreferrer" className="markdown-link">
                       {children}
-                    </code>
-                  ) : (
-                    <code className={className} {...props}>
-                      {children}
-                    </code>
-                  );
-                },
-                pre: ({ children }) => (
-                  <pre className="code-block">{children}</pre>
-                ),
-                a: ({ href, children }) => (
-                  <a href={href} target="_blank" rel="noopener noreferrer" className="markdown-link">
-                    {children}
-                  </a>
-                ),
-              }}
-            >
-              {content}
-            </ReactMarkdown>
+                    </a>
+                  ),
+                }}
+              >
+                {content}
+              </ReactMarkdown>
+            ) : (
+              <span className="typing-indicator" aria-label="TITANE∞ génère une réponse...">
+                <span className="typing-dot">●</span>
+                <span className="typing-dot">●</span>
+                <span className="typing-dot">●</span>
+              </span>
+            )
           ) : (
             content
           )}

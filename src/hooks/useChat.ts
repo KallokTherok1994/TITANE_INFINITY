@@ -176,18 +176,36 @@ interface UseChatReturn {
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ OMNIS STATE ═══
-  const [messages, setMessages] = useState<AIMessage[]>([]);
+  // OMEGA FIX: Charger les messages depuis localStorage au démarrage pour éviter le flash
+  const [messages, setMessages] = useState<AIMessage[]>(() => {
+    if (typeof window === 'undefined') return [];
+    try {
+      // Clé utilisée par chatMemoryCompactor
+      const stored = localStorage.getItem('titane_chat_mode_default');
+      if (stored) {
+        const memory = JSON.parse(stored);
+        if (memory && Array.isArray(memory.messages)) {
+          console.log('[useChat OMNIS] 📂 Initial load from localStorage:', memory.messages.length, 'messages');
+          return memory.messages;
+        }
+      }
+    } catch (e) {
+      console.warn('[useChat OMNIS] ⚠️ Failed to load initial messages:', e);
+    }
+    return [];
+  });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
 
-  const messagesRef = useRef<AIMessage[]>([]);
+  // OMEGA FIX: Initialiser messagesRef avec les messages initiaux
+  const messagesRef = useRef<AIMessage[]>(messages);
   const messageIdRef = useRef(0);
   const stateVaultRef = useRef<{ stable: AIMessage[]; lastContext: string }>({
-    stable: [],
-    lastContext: 'init'
+    stable: messages.length > 0 ? [...messages] : [],
+    lastContext: messages.length > 0 ? 'initial-load' : 'init'
   });
 
   const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
@@ -372,12 +390,19 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // ═══ SYNC INITIAL MESSAGES ═══
   useEffect(() => {
+    // OMEGA FIX: Ne pas écraser les messages existants lors du remount
     if (!messagesForMode) {
       return;
     }
 
+    // Si on a déjà des messages dans le state actuel, ne pas reset
+    if (messagesRef.current.length > 0 && messagesForMode.length === 0) {
+      console.log('[useChat OMNIS] ⏭️ Skipping memory sync - current messages preserved:', messagesRef.current.length);
+      return;
+    }
+
     if (messagesForMode.length === 0) {
-      if (stateVaultRef.current.stable.length === 0) {
+      if (stateVaultRef.current.stable.length === 0 && messagesRef.current.length === 0) {
         applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
       }
       return;
@@ -399,9 +424,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
   const sendMessage = useCallback(async (content: string): Promise<AIMessage> => {
+    console.log('[useChat OMNIS] 🚀 sendMessage appelé avec:', content?.substring(0, 50));
     const startTime = Date.now();
 
     if (!content || typeof content !== 'string' || content.trim().length === 0) {
+      console.log('[useChat OMNIS] ❌ Message invalide ou vide');
       return {
         role: 'assistant',
         content: 'Veuillez entrer un message pour continuer la conversation.',
@@ -410,6 +437,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       };
     }
 
+    console.log('[useChat OMNIS] ✅ Message valide, traitement...');
     const cleanMessage = content.trim();
     setIsLoading(true);
     setError(null);
@@ -442,6 +470,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     };
 
     applyMessagesSafely([...messagesRef.current, assistantPlaceholder], 'assistant-stream-start');
+    console.log('[useChat OMNIS DEBUG] ✅ Placeholder ajouté, targetUiId:', assistantMetadata.uiId, 'messagesCount:', messagesRef.current.length);
 
     const targetUiId = assistantMetadata.uiId;
 
@@ -459,8 +488,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       metadataPatch?: Record<string, unknown>
     ) => {
       if (!targetUiId) {
+        console.error('[useChat OMNIS DEBUG] ❌ updateAssistant: targetUiId manquant!');
         return;
       }
+
+      console.log('[useChat OMNIS DEBUG] 🔄 updateAssistant appelé, context:', context, 'targetUiId:', targetUiId);
 
       const nextMessages = messagesRef.current.map((msg) => {
         if (!msg?.metadata || msg.metadata.uiId !== targetUiId) {
@@ -485,6 +517,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           ...updated,
           metadata: mergedMetadata,
         };
+      });
+
+      console.log('[useChat OMNIS DEBUG] 📤 updateAssistant: Mise à jour des messages, count:', nextMessages.length);
+      nextMessages.forEach((msg, idx) => {
+        console.log(`[useChat OMNIS DEBUG] Message ${idx}:`, { role: msg.role, contentLen: msg.content?.length });
       });
 
       applyMessagesSafely(nextMessages, context);
@@ -619,8 +656,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
             return ['local', 'ollama'];
           case 'ollama':
             return ['ollama', 'local'];
+          case 'auto':
           default:
-            return ['local', 'ollama'];
+            // OMEGA FIX: 'auto' permet au backend de choisir Gemini → Ollama → Local
+            return ['auto'];
         }
       })();
 
@@ -753,6 +792,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       };
 
       const finalContent = finalResponse.content ?? aggregatedContent;
+      console.log('[useChat OMNIS DEBUG] 🎯 finalContent:', finalContent?.substring(0, 100), 'length:', finalContent?.length);
 
       updateAssistant(
         (message) => ({
@@ -764,6 +804,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         streamingError ? 'assistant-stream-fallback' : 'assistant-stream-complete',
         metadataPatch
       );
+
+      console.log('[useChat OMNIS DEBUG] ✅ updateAssistant terminé, messages actuels:', messagesRef.current.length);
 
       const assistantMessage = getAssistantFromState() ?? {
         role: 'assistant',

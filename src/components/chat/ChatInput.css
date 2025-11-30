@@ -285,3 +285,165 @@
     font-size: 10px;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   FILE UPLOAD STYLES - CHAT INPUT
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* File Upload Button */
+.chat-file-btn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-base);
+  position: relative;
+}
+
+.chat-file-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: var(--accent-blue);
+  transform: scale(1.05);
+  box-shadow: var(--shadow-glow-blue);
+}
+
+.chat-file-btn.active {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: var(--accent-blue);
+  box-shadow: var(--shadow-glow-blue);
+}
+
+.chat-file-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.chat-file-icon {
+  font-size: 18px;
+  transition: transform var(--transition-fast);
+}
+
+.chat-file-btn:hover .chat-file-icon {
+  transform: rotate(15deg);
+}
+
+/* File Upload Zone (expanded) */
+.chat-file-upload-zone {
+  margin-bottom: var(--spacing-md);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 300px;
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+.chat-file-upload-expanded {
+  width: 100%;
+}
+
+/* Uploaded Files Preview */
+.chat-uploaded-files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.chat-file-chip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+  transition: var(--transition-fast);
+}
+
+.chat-file-chip.analyzing {
+  border-color: rgba(251, 191, 36, 0.5);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.chat-file-chip.done {
+  border-color: rgba(34, 197, 94, 0.5);
+}
+
+.chat-file-chip.error {
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.chat-file-chip-icon {
+  font-size: 14px;
+}
+
+.chat-file-chip-name {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-file-chip-remove {
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  padding: 2px;
+  font-size: 12px;
+  opacity: 0.6;
+  transition: var(--transition-fast);
+}
+
+.chat-file-chip-remove:hover {
+  opacity: 1;
+  color: var(--accent-red);
+}
+
+/* Hint Files Badge */
+.chat-hint-files {
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .chat-file-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .chat-file-icon {
+    font-size: 16px;
+  }
+
+  .chat-file-chip-name {
+    max-width: 100px;
+  }
+
+  .chat-uploaded-files {
+    padding: var(--spacing-xs);
+  }
+}

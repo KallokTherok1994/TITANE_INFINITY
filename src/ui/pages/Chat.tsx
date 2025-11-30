@@ -21,7 +21,10 @@ import React, {
 } from 'react';
 import type { CSSProperties } from 'react';
 import { useChat, type ProviderPreference, type ChatDebugEntry } from '../../hooks/useChat';
-import { MessageList } from '../../components/chat/MessageList';
+// OMEGA v19.2Ω: Utiliser MessageListOptimized pour production
+import { MessageListOptimized as MessageList } from '../../components/chat/MessageListOptimized';
+// import { MessageListSimple as MessageList } from '../../components/chat/MessageListSimple';
+// import { MessageList } from '../../components/chat/MessageList';
 import { ChatInput } from '../../components/chat/ChatInput';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import './styles/Chat.css';
@@ -495,6 +498,11 @@ export const Chat: React.FC = () => {
     debugEntries
   } = chatHookResult;
 
+  // OMEGA DEBUG: Trace messages dans Chat.tsx
+  useEffect(() => {
+    console.log('[OMEGA CHAT PAGE DEBUG] 📊 Messages state changed:', messages?.length, 'messages');
+  }, [messages]);
+
   const providerStatus = useMemo<ProviderStatus>(() => {
     const lastEntry = debugEntries[0];
     const attemptedProviders = lastEntry?.request?.attemptedProviders ?? [];
@@ -856,6 +864,11 @@ export const Chat: React.FC = () => {
               messages={messages || []}
               isLoading={isLoading}
               error={error}
+              enableTTS={true}
+              autoScroll={true}
+              onCopyMessage={(content) => {
+                isDev && console.log('[OMEGA] Message copié:', content?.substring(0, 30));
+              }}
             />
           )}
         </div>

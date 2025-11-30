@@ -66,10 +66,10 @@ class TauriChatProvider implements AIProvider {
   readonly name = 'tauri-backend' as const;
   private backendAvailable: boolean | null = null;
   private lastCheckTime = 0;
-  private readonly CHECK_INTERVAL = 30000; // 30s cache
+  private readonly CHECK_INTERVAL = 20000; // 20s cache (plus réactif)
   private errorCount = 0;
-  private readonly MAX_ERRORS = 5;
-  private readonly TIMEOUT_MS = 45000; // 45s timeout pour invoke
+  private readonly MAX_ERRORS = 8; // Plus tolérant aux erreurs réseau
+  private readonly TIMEOUT_MS = 50000; // 50s timeout pour invoke (Gemini peut être lent)
 
   /**
    * Vérifie si le backend chat_orchestrator est disponible (OMEGA Protected)

@@ -258,6 +258,10 @@ pub async fn chat_send_message(
     mut request: ChatRequest,
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<ChatResponse, String> {
+    println!("[CHAT] 📨 chat_send_message appelé - provider: {}, message: {}...",
+             request.provider,
+             request.message.chars().take(50).collect::<String>());
+
     let start = crate::core::utils::now_ms();
 
     // Validation input
@@ -511,10 +515,19 @@ async fn send_to_ollama(
 
     println!("[CHAT] 🦙 Ollama API call: {} (timeout 45s)", model);
 
-    // Build request body
+    // System prompt TITANE∞ en français
+    let system_prompt = request.system_prompt.as_deref().unwrap_or(
+        "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
+         Tu réponds TOUJOURS en français, de manière claire, concise et utile. \
+         Tu es amical, professionnel et tu aides l'utilisateur avec ses questions. \
+         Si on te demande du code, tu fournis des exemples bien commentés en français."
+    );
+
+    // Build request body avec system prompt
     let body = serde_json::json!({
         "model": model,
         "prompt": request.message,
+        "system": system_prompt,
         "stream": false,
         "options": {
             "temperature": 0.7,

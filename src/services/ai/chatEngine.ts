@@ -225,7 +225,7 @@ class ChatEngineOmega {
       try {
         memoryContext = await this.withTimeout(
           memoryIntegration.loadContext(finalConfig.contextSources || {}),
-          5000,
+          3000, // 3s timeout optimisé
           'Memory context timeout'
         );
         context = this.formatMemoryContext(memoryContext);
@@ -285,7 +285,11 @@ class ChatEngineOmega {
       pipelineSteps.push("orchestrator-call");
       isDev && console.log('🚀 Step 1.4: Calling OMEGA orchestrator...');
 
-      const timeoutMs = finalConfig.omegaConfig?.timeoutMs || 30000;
+      // Timeout adaptatif selon le mode (plus long pour modes complexes)
+      const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
+      const timeoutMs = finalConfig.mode === 'brainstorming' ? baseTimeout * 1.5
+                      : finalConfig.mode === 'synthesis' ? baseTimeout * 1.3
+                      : baseTimeout;
       const response = await this.withTimeout(
         aiOrchestrator.generate(validatedMessage, enrichedHistory, {
           ...(finalConfig.aiConfig || {}),

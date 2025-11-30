@@ -35,9 +35,9 @@ const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env
 let endpointHealthy: boolean | null = null;
 let lastHealthCheck = 0;
 let errorCount = 0;
-const HEALTH_CHECK_INTERVAL = 60000; // 1 minute
-const MAX_ENDPOINT_ERRORS = 3;
-const ENDPOINT_TIMEOUT = 10000; // 10s for health checks
+const HEALTH_CHECK_INTERVAL = 45000; // 45 secondes
+const MAX_ENDPOINT_ERRORS = 5;
+const ENDPOINT_TIMEOUT = 8000; // 8s for health checks (optimisé)
 
 /**
  * Construit le prompt pour Ollama

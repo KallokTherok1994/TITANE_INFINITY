@@ -122,14 +122,14 @@ class AIOrchestrator {
     this.isWarmup = true;
 
     try {
-      isDev && console.log('[OMEGA ORCHESTRATOR] Starting provider warmup...');
+      isDev && console.log('[OMEGA ORCHESTRATOR] Starting provider warmup (optimized)...');
 
-      // Warmup en parallèle (non-bloquant)
+      // Warmup en parallèle avec timeout court pour performance
       const warmupPromises = this.providers.map(async provider => {
         try {
           const isAvailable = await Promise.race([
             provider.isAvailable(),
-            new Promise<boolean>((_, reject) => setTimeout(() => reject(new Error('Warmup timeout')), 2000))
+            new Promise<boolean>((resolve) => setTimeout(() => resolve(provider.name === 'titane-local'), 1500)) // 1.5s timeout, local toujours dispo
           ]);
 
           const stats = this.providerStats.get(provider.name);
@@ -168,22 +168,26 @@ class AIOrchestrator {
   private sanitizeMessage(message: string): { sanitized: string, valid: boolean, issues: string[] } {
     const issues: string[] = [];
 
+    // Quick type check
     if (!message || typeof message !== 'string') {
       issues.push('Invalid message type');
       return { sanitized: '', valid: false, issues };
     }
 
+    // Fast trim and basic validation
     let sanitized = message.trim();
+    const originalLength = sanitized.length;
 
-    // Validation longueur
-    if (sanitized.length === 0) {
+    // Validation longueur (optimisé)
+    if (originalLength === 0) {
       issues.push('Empty message');
       return { sanitized: '', valid: false, issues };
     }
 
-    if (sanitized.length > 10000) {
-      issues.push('Message too long (>10k chars)');
-      sanitized = sanitized.substring(0, 10000);
+    // Support messages plus longs (50k max)
+    if (originalLength > 50000) {
+      issues.push('Message too long (>50k chars)');
+      sanitized = sanitized.substring(0, 50000);
     }
 
     // Nettoyage sécurisé
@@ -392,8 +396,12 @@ class AIOrchestrator {
             console.log(`\n🔍 [${attempts}/${providersToTry.length}] Trying ${providerName}...`);
           }
 
-          // ═══ ISOLATED EXECUTION WITH TIMEOUT ═══
-          const executionTimeout = providerName === 'titane-local' ? 10000 : 30000; // Local plus rapide
+          // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT ═══
+          const executionTimeout = providerName === 'titane-local' ? 8000   // Local ultra-rapide
+                                 : providerName === 'tauri-backend' ? 45000 // Backend Rust (cascade interne)
+                                 : providerName === 'gemini' ? 40000        // Cloud API
+                                 : providerName === 'ollama' ? 35000        // Local LLM
+                                 : 25000; // Default
           const historyForProvider = this.buildHistoryForProvider(
             history,
             providerName,
