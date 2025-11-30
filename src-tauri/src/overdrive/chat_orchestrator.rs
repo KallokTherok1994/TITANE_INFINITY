@@ -590,19 +590,71 @@ async fn send_to_local(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    // Fallback ultra-simple : echo
-    println!("[CHAT] 🔄 Local fallback (offline mode)");
+    println!("[CHAT] 🔄 Local fallback (offline mode intelligent)");
+
+    // Génération de réponse locale intelligente basée sur le contexte
+    let user_message = request.message.to_lowercase();
+    let response_content = generate_local_response(&user_message, &request.message);
+
+    println!(
+        "[CHAT] ✅ Local success: {} chars",
+        response_content.len()
+    );
 
     Ok(ChatMessage {
         id: uuid::Uuid::new_v4().to_string(),
         role: "assistant".to_string(),
-        content: format!("Echo: {}", request.message),
+        content: response_content,
         timestamp: get_timestamp(),
         provider: "local".to_string(),
-        model: "echo".to_string(),
+        model: "titane-local-v1".to_string(),
         tokens: None,
         multimodal: false,
     })
+}
+
+/// Génère une réponse locale intelligente basée sur le contexte du message
+fn generate_local_response(message_lower: &str, original_message: &str) -> String {
+    // Salutations
+    if message_lower.contains("bonjour") || message_lower.contains("salut") || message_lower.contains("hello") {
+        return "Bonjour ! Je suis TITANE∞, ton assistant cognitif. Je fonctionne actuellement en mode local (hors-ligne). Comment puis-je t'aider aujourd'hui ?".to_string();
+    }
+
+    // Questions sur l'identité
+    if message_lower.contains("qui es-tu") || message_lower.contains("qui êtes-vous") || message_lower.contains("c'est quoi titane") {
+        return "Je suis TITANE∞, un système d'intelligence artificielle cognitif avancé. En mode local, je dispose de capacités de réponse limitées mais je reste disponible pour t'assister. Pour des réponses plus complètes, configure Ollama ou une clé API Gemini.".to_string();
+    }
+
+    // Aide et capacités
+    if message_lower.contains("aide") || message_lower.contains("help") || message_lower.contains("que peux-tu faire") {
+        return "En mode local, je peux :\n\n• Répondre à des questions simples\n• Fournir des informations de base\n• Maintenir une conversation\n\nPour des capacités avancées (génération de code, analyse complexe), connecte Ollama ou configure une clé API Gemini dans les paramètres.".to_string();
+    }
+
+    // Questions techniques
+    if message_lower.contains("code") || message_lower.contains("programmation") || message_lower.contains("développement") {
+        return "Pour la génération de code et l'assistance au développement, je recommande d'activer Ollama (local) ou Gemini (cloud). En mode local basique, mes capacités de codage sont limitées.\n\nPour démarrer Ollama : `ollama serve` puis `ollama pull llama3.1`".to_string();
+    }
+
+    // État du système
+    if message_lower.contains("status") || message_lower.contains("état") || message_lower.contains("diagnostic") {
+        return "🔄 **État TITANE∞**\n\n• Mode: Local (hors-ligne)\n• Moteur: titane-local-v1\n• Statut: Opérationnel\n\nPour des diagnostics avancés, utilise la commande `/diagnostic` ou accède au panneau DevTools.".to_string();
+    }
+
+    // Remerciements
+    if message_lower.contains("merci") || message_lower.contains("thanks") {
+        return "Je t'en prie ! N'hésite pas si tu as d'autres questions. TITANE∞ est là pour t'assister.".to_string();
+    }
+
+    // Au revoir
+    if message_lower.contains("au revoir") || message_lower.contains("bye") || message_lower.contains("à bientôt") {
+        return "À bientôt ! TITANE∞ reste disponible quand tu en auras besoin. 🌟".to_string();
+    }
+
+    // Réponse par défaut contextuelle
+    format!(
+        "Je suis TITANE∞ en mode local. J'ai bien reçu ton message :\n\n> {}\n\nEn mode hors-ligne, mes capacités sont limitées. Pour des réponses plus élaborées, active Ollama (`ollama serve`) ou configure une clé API Gemini dans les paramètres.",
+        original_message
+    )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

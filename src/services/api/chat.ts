@@ -55,7 +55,7 @@ export interface ChatResponseUsage {
  */
 export interface ChatResponseMetadata {
   messageId?: string;
-  timestamp?: string;
+  timestamp?: string | number;
   success?: boolean;
   chunkCount?: number;
   source?: string;
@@ -82,7 +82,7 @@ interface BackendChatMessage {
   content: string;
   model: string;
   provider: string;
-  timestamp: string;
+  timestamp: string | number; // Backend can send u64 or string
   tokens?: number;
 }
 
@@ -155,6 +155,12 @@ class ChatService {
   ): Promise<ChatResponse> {
     const request = this.buildRequest(messages, config, false);
 
+    console.log('[ChatService] 📤 Envoi message:', {
+      provider: config?.provider ?? 'auto',
+      messageCount: messages.length,
+      lastMessage: messages[messages.length - 1]?.content?.substring(0, 50) + '...',
+    });
+
     try {
       const backendResponse = await invokeWithRetry<BackendChatResponse>(
         'chat_send_message',
@@ -162,9 +168,16 @@ class ChatService {
         { ...LONG_COMMAND_OPTIONS, context: 'Chat' }
       );
 
+      console.log('[ChatService] 📥 Réponse reçue:', {
+        success: backendResponse.success,
+        provider: backendResponse.message?.provider,
+        contentLength: backendResponse.message?.content?.length ?? 0,
+        latencyMs: backendResponse.latency_ms,
+      });
+
       return this.normalizeResponse(backendResponse, config);
     } catch (error) {
-      console.error('[ChatService] Erreur sendMessage:', error);
+      console.error('[ChatService] ❌ Erreur sendMessage:', error);
       const reason = error instanceof Error ? error.message : String(error);
       throw new Error(`Chat envoi échoué: ${reason}`);
     }
@@ -652,7 +665,9 @@ class ChatService {
       latencyMs: backend.latency_ms,
       metadata: {
         messageId: backend.message.id,
-        timestamp: backend.message.timestamp,
+        timestamp: typeof backend.message.timestamp === 'number'
+          ? new Date(backend.message.timestamp * 1000).toISOString()
+          : backend.message.timestamp,
         success: backend.success,
       },
       omegaMetadata: backend.omega_metadata,

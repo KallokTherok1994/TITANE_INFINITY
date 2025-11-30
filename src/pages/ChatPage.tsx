@@ -405,15 +405,24 @@ export const ChatPage = (): JSX.Element => {
       let successfulProvider: string | null = null;
       let failureMessage: string | null = null;
 
+      console.log('[ChatPage] 🔄 Début envoi message, providers:', candidates);
+
       for (const candidate of candidates) {
         try {
+          console.log(`[ChatPage] 📤 Tentative avec provider: ${candidate}`);
           const response = await chatService.sendMessage(requestHistory, { provider: candidate });
+          console.log('[ChatPage] 📥 Réponse reçue:', {
+            provider: candidate,
+            contentLength: response?.content?.length,
+            content: response?.content?.substring(0, 100),
+          });
           attempts.push({ provider: candidate, success: true, response });
           finalResponse = response;
           successfulProvider = candidate;
           break;
         } catch (error) {
           const message = error instanceof Error ? error.message : String(error);
+          console.error(`[ChatPage] ❌ Erreur provider ${candidate}:`, message);
           attempts.push({ provider: candidate, success: false, error: message });
           failureMessage = message;
         }
@@ -422,12 +431,15 @@ export const ChatPage = (): JSX.Element => {
       const requestConfig: StreamConfig = { provider };
 
       if (finalResponse) {
+        console.log('[ChatPage] ✅ Réponse finale reçue, ajout au state messages');
         XP.gain(12, 'response_ai', `Chat provider ${successfulProvider ?? provider}`);
         const assistantTimestamp = new Date();
         const contentToDisplay =
           finalResponse.content && finalResponse.content.trim().length > 0
             ? finalResponse.content
             : 'Réponse vide du moteur IA.';
+
+        console.log('[ChatPage] 📝 Contenu à afficher:', contentToDisplay.substring(0, 100));
 
         const assistantMessage: ChatMessageProps = {
           role: 'assistant',
@@ -439,7 +451,12 @@ export const ChatPage = (): JSX.Element => {
               }
             : undefined,
         };
-        setMessages((prev) => [...prev, assistantMessage]);
+        setMessages((prev) => {
+          console.log('[ChatPage] 📊 Messages avant ajout:', prev.length);
+          const newMessages = [...prev, assistantMessage];
+          console.log('[ChatPage] 📊 Messages après ajout:', newMessages.length);
+          return newMessages;
+        });
 
         const backendAssistant: BackendChatMessage = {
           role: 'assistant',
