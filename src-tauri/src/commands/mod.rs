@@ -16,6 +16,7 @@ pub mod exp_fusion;
 pub mod harmonia_commands;
 pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
+pub mod persistent_memory; // ✅ v19.2Ω: Persistent Memory 3-Level System
 
 // Re-export engine commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
@@ -25,6 +26,7 @@ pub use engine_v14::*;
 pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands
 pub use harmonia_commands::*;
 pub use memory_compactor_commands::*;
+pub use persistent_memory::*; // ✅ v19.2Ω: Export persistent memory commands
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;

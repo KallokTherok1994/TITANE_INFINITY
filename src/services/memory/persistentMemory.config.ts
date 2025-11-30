@@ -527,7 +527,7 @@ export interface ModeMemoryPermissions {
 
 /** Permissions mémoire par mode IA */
 export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermissions>> = {
-  casual: {
+  default: {
     canReadSession: true,
     canReadIntermediate: true,
     canReadLongTerm: false,
@@ -537,7 +537,7 @@ export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermi
     maxImportance: 3,
     contextInjectionLimit: 500,
   },
-  dev_expert: {
+  dev: {
     canReadSession: true,
     canReadIntermediate: true,
     canReadLongTerm: true,
@@ -547,7 +547,7 @@ export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermi
     maxImportance: 5,
     contextInjectionLimit: 2000,
   },
-  dev_extreme: {
+  debug_cognitive: {
     canReadSession: true,
     canReadIntermediate: true,
     canReadLongTerm: true,
@@ -557,7 +557,7 @@ export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermi
     maxImportance: 5,
     contextInjectionLimit: 3000,
   },
-  creative: {
+  brainstorming: {
     canReadSession: true,
     canReadIntermediate: true,
     canReadLongTerm: true,
@@ -567,7 +567,7 @@ export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermi
     maxImportance: 4,
     contextInjectionLimit: 1500,
   },
-  analyst: {
+  audit: {
     canReadSession: true,
     canReadIntermediate: true,
     canReadLongTerm: true,
@@ -577,7 +577,7 @@ export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermi
     maxImportance: 5,
     contextInjectionLimit: 2500,
   },
-  system: {
+  admin: {
     canReadSession: true,
     canReadIntermediate: true,
     canReadLongTerm: true,
@@ -674,7 +674,7 @@ export const DEFAULT_AUTO_SAVE_RULES: AutoSaveRule[] = [
     contentType: 'code_snippet',
     defaultImportance: 3,
     autoSummarize: false,
-    applicableModes: ['dev_expert', 'dev_extreme'],
+    applicableModes: ['dev', 'debug_cognitive'],
   },
   {
     id: 'auto_daily_summary',

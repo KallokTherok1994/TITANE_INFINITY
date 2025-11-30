@@ -1,9 +1,12 @@
-// TITANE∞ v24.20 - TTS (Text-to-Speech) Module
+// TITANE∞ vΩΩΩ - TTS (Text-to-Speech) Module
 // Hybrid online/offline speech synthesis + streaming support
-// Phase 8: SmallVec optimization for reduced heap allocations
+// Phase 8: SmallVec optimization + ElevenLabs Premium Integration
 
 pub mod local_tts;
 pub mod online_tts;
+pub mod elevenlabs_tts;
+
+pub use elevenlabs_tts::{ElevenLabsTTS, TTSEmotion, TITANE_VOICE_ID};
 
 use serde::{Deserialize, Serialize};
 use smallvec::{smallvec, SmallVec};
@@ -18,6 +21,9 @@ pub struct TTSRequest {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TTSProvider {
+    ElevenLabs,
+    Piper,
+    Espeak,
     GoogleTTS,
     LocalTTS,
 }

@@ -21,3 +21,5 @@ export { ChatModeSelector } from './ChatModeSelector';
 export { ModeBadge } from './ModeBadge';
 export { AutomationPanel } from './AutomationPanel';
 export { EvolutionTracker } from './EvolutionTracker';
+export { MemoryDashboard } from './MemoryDashboard';
+export { MemoryViewer } from './MemoryViewer';
