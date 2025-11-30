@@ -85,7 +85,11 @@ async function initializeRuntimeConfig(): Promise<void> {
     return;
   }
 
-  const isTauri = Boolean((window as any).__TAURI__ || (window as any).__TAURI_INTERNALS__);
+  const tauriCandidate = window as Window & {
+    __TAURI__?: Record<string, unknown>;
+    __TAURI_INTERNALS__?: Record<string, unknown>;
+  };
+  const isTauri = Boolean(tauriCandidate.__TAURI__ || tauriCandidate.__TAURI_INTERNALS__);
   if (!isTauri) {
     console.warn('[RuntimeConfig] Tauri bridge unavailable; falling back to defaults');
     return;

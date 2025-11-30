@@ -211,7 +211,7 @@ export const fallbackProvider: AIProvider = {
 ```bash
 # Dans /home/titane/Documents/TITANE_INFINITY/
 cat .env | grep VITE_GEMINI_API_KEY
-# Attendu: VITE_GEMINI_API_KEY=AIzaSy...
+# Attendu: VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 cat .env | grep VITE_OLLAMA
 # Attendu:

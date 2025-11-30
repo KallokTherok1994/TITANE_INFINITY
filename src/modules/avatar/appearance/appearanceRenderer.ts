@@ -17,7 +17,7 @@
  */
 
 import type { AvatarAppearanceState } from './appearanceState';
-import type { AppearanceAssets, AssetDefinition, MaterialProperties } from './appearanceMapper';
+import type { AppearanceAssets, AssetDefinition } from './appearanceMapper';
 import { AppearanceMapper } from './appearanceMapper';
 import { getAppearance } from './appearanceEngine';
 

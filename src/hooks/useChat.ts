@@ -16,10 +16,58 @@ import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
 import { type ChatMode, type ChatEngineResponse } from '../services/ai';
-import type { AIMessage } from '../services/ai/types';
+import type { AIMessage, AIProviderName } from '../services/ai/types';
 import { hybridTTS } from '@services/tts/hybridTTS';
+import {
+  chatService,
+  type ChatMessage as BackendChatMessage,
+  type ChatResponse,
+  type StreamConfig,
+} from '../services/api';
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
+
+export type ProviderPreference = 'auto' | 'local' | 'ollama';
+
+export interface ChatDebugAttempt {
+  provider: string;
+  success: boolean;
+  error?: string;
+  response?: ChatResponse;
+}
+
+export interface ChatDebugEntry {
+  id: string;
+  timestamp: number;
+  requestedProvider: ProviderPreference | string;
+  attempts: ChatDebugAttempt[];
+  request: {
+    messages: BackendChatMessage[];
+    config: StreamConfig;
+    attemptedProviders: string[];
+  };
+  status: 'success' | 'error';
+  response?: ChatResponse;
+  error?: string;
+  selectedProvider?: string;
+  latencyMs?: number;
+}
+
+const DEBUG_MAX_ENTRIES = 20;
+
+const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
+
+const isProviderPreference = (value: unknown): value is ProviderPreference =>
+  value === 'auto' || value === 'local' || value === 'ollama';
+
+const readStoredPreferredProvider = (): ProviderPreference => {
+  if (typeof window === 'undefined') {
+    return 'auto';
+  }
+
+  const stored = window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
+  return isProviderPreference(stored) ? stored : 'auto';
+};
 
 const normalizeMessages = (messages: MaybeAIMessage[], getUiId: () => string): AIMessage[] => {
   if (!Array.isArray(messages)) {
@@ -96,6 +144,12 @@ interface UseChatReturn {
     pipelineHealth: 'optimal' | 'stable' | 'degraded' | 'error';
   };
 
+  // Provider state
+  preferredProvider: ProviderPreference;
+  setPreferredProvider: (provider: ProviderPreference) => void;
+  lastProvider: AIProviderName | null;
+  debugEntries: ChatDebugEntry[];
+
   // Actions
   sendMessage: (content: string) => Promise<AIMessage>;
   clearChat: () => void;
@@ -135,6 +189,41 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     stable: [],
     lastContext: 'init'
   });
+
+  const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
+  const [preferredProviderState, setPreferredProviderState] = useState<ProviderPreference>(() => readStoredPreferredProvider());
+  const [lastProviderUsed, setLastProviderUsed] = useState<AIProviderName | null>(null);
+  const debugEntriesRef = useRef<ChatDebugEntry[]>([]);
+  const [debugEntries, setDebugEntries] = useState<ChatDebugEntry[]>([]);
+
+  const updatePreferredProvider = useCallback((provider: ProviderPreference) => {
+    setPreferredProviderState(provider);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, provider);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    setPreferredProviderState(prev => {
+      const stored = readStoredPreferredProvider();
+      return stored !== prev ? stored : prev;
+    });
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === PREFERRED_PROVIDER_STORAGE_KEY && isProviderPreference(event.newValue)) {
+        setPreferredProviderState(event.newValue);
+      }
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
   const [uiIntegrity, setUiIntegrity] = useState({
     version: 1,
     preventedResets: 0,
@@ -144,14 +233,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     hasSnapshot: false
   });
 
-  const omnisConfig = {
+  const omnisConfig = useMemo(() => ({
     enablePredictive: false,
     enableAutoRepair: true,
     fallbackMode: true,
     debugMetrics: true,
     timeoutMs: 20000,
-    ...options.omnisConfig
-  };
+    ...(options.omnisConfig ?? {})
+  }), [options.omnisConfig]);
 
   // ═══ HOOKS INTEGRATION ═══
   const coreHookResult = useChatCore({
@@ -200,6 +289,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   };
 
   const { currentMode, anomalyCount, setMode: setCoreMode, generate, stream } = coreHookResult;
+  const [currentModeState, setCurrentModeState] = useState<ChatMode>(currentMode);
   const { messagesForMode, memoryStats, saveMessage, clearMode } = memoryHookResult;
 
   const getNextUiId = useCallback(() => {
@@ -301,6 +391,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     messagesRef.current = messages;
   }, [messages]);
 
+  useEffect(() => {
+    if (currentMode !== currentModeState) {
+      setCurrentModeState(currentMode);
+    }
+  }, [currentMode, currentModeState]);
+
   // ═══ OMNIS SENDMESSAGE KERNEL ═══
   const sendMessage = useCallback(async (content: string): Promise<AIMessage> => {
     const startTime = Date.now();
@@ -322,7 +418,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       role: 'user',
       content: cleanMessage,
       timestamp: Date.now(),
-      metadata: withUiId({ inputLength: cleanMessage.length, mode: currentMode })
+      metadata: withUiId({ inputLength: cleanMessage.length, mode: currentModeState })
     };
 
     const bufferedMessages = [...messagesRef.current, userMessage];
@@ -333,7 +429,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
     const assistantMetadata = withUiId({
       status: 'streaming',
-      mode: currentMode,
+      mode: currentModeState,
       streamChunks: 0,
     });
 
@@ -426,7 +522,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               {
                 status: 'streaming',
                 streamChunks: chunkCount,
-                mode: currentMode,
+                mode: currentModeState,
                 provider: 'tauri-backend',
               }
             );
@@ -470,12 +566,168 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     };
 
     try {
-      if (typeof stream === 'function') {
-        try {
-          finalResponse = await executeStreaming();
-        } catch (error) {
-          streamingError = error instanceof Error ? error : new Error(String(error));
-          console.warn('[Chat] Streaming fallback triggered:', streamingError);
+      const normalizeProvider = (provider?: string | null): AIProviderName => {
+        if (!provider) {
+          return 'tauri-backend';
+        }
+
+        const normalized = provider.toLowerCase();
+
+        if (normalized.includes('ultimate')) {
+          return 'ultimate-fallback';
+        }
+        if (normalized.includes('omnis') && normalized.includes('emergency')) {
+          return 'omnis-emergency';
+        }
+        if (normalized.includes('emergency')) {
+          return 'emergency-fallback';
+        }
+        if (normalized.includes('fallback')) {
+          return 'omnis-fallback';
+        }
+        if (normalized.includes('ollama')) {
+          return 'tauri-ollama';
+        }
+        if (normalized.includes('titane') && normalized.includes('local')) {
+          return 'titane-local';
+        }
+        if (normalized.includes('local')) {
+          return 'tauri-local';
+        }
+        if (normalized.includes('gemini')) {
+          return 'tauri-gemini';
+        }
+        if (normalized.includes('tauri-chat')) {
+          return 'tauri-chat';
+        }
+        if (normalized.includes('openai')) {
+          return 'openai';
+        }
+        if (normalized.includes('claude')) {
+          return 'claude';
+        }
+        if (normalized.includes('tauri')) {
+          return 'tauri-backend';
+        }
+
+        return 'tauri-backend';
+      };
+
+      const providerCandidates: string[] = (() => {
+        switch (preferredProviderState) {
+          case 'local':
+            return ['local', 'ollama'];
+          case 'ollama':
+            return ['ollama', 'local'];
+          default:
+            return ['local', 'ollama'];
+        }
+      })();
+
+      const backendHistory: BackendChatMessage[] = historyBuffer.map((message) => ({
+        role: message.role,
+        content: message.content,
+        timestamp: new Date(message.timestamp).toISOString(),
+      }));
+
+      const chatAttempts: ChatDebugAttempt[] = [];
+      const attemptedProviders: string[] = [];
+      let chatServiceResponse: ChatResponse | null = null;
+      let chatServiceError: string | null = null;
+
+      if (backendHistory.length > 0) {
+        const requestConfig: StreamConfig = { provider: providerCandidates[0] };
+        for (const candidate of providerCandidates) {
+          try {
+            requestConfig.provider = candidate;
+            attemptedProviders.push(candidate);
+            const response = await chatService.sendMessage(backendHistory, { provider: candidate });
+            chatServiceResponse = response;
+            chatAttempts.push({ provider: candidate, success: true, response });
+            break;
+          } catch (candidateError) {
+            const reason = candidateError instanceof Error ? candidateError.message : String(candidateError);
+            chatAttempts.push({ provider: candidate, success: false, error: reason });
+            chatServiceError = reason;
+          }
+        }
+
+        const debugEntry: ChatDebugEntry = {
+          id: `chat-debug-${Date.now()}`,
+          timestamp: Date.now(),
+          requestedProvider: preferredProviderState,
+          attempts: chatAttempts,
+          request: {
+            messages: backendHistory,
+            config: { ...requestConfig },
+            attemptedProviders: [...attemptedProviders],
+          },
+          status: chatServiceResponse ? 'success' : 'error',
+          response: chatServiceResponse ?? undefined,
+          error: chatServiceResponse ? undefined : chatServiceError ?? 'Aucune réponse du moteur IA',
+          selectedProvider: chatServiceResponse?.provider,
+          latencyMs: chatServiceResponse?.latencyMs,
+        };
+
+        debugEntriesRef.current = [debugEntry, ...debugEntriesRef.current].slice(0, DEBUG_MAX_ENTRIES);
+        setDebugEntries(debugEntriesRef.current);
+      }
+
+      if (chatServiceResponse) {
+        const mappedProvider = normalizeProvider(chatServiceResponse.provider);
+        const resolvedOmegaMetadata = (() => {
+          const metadata = chatServiceResponse?.omegaMetadata;
+          if (!metadata || typeof metadata !== 'object') {
+            return undefined;
+          }
+
+          const typed = metadata as Record<string, unknown>;
+          const pipelineStepsRaw = typed['pipelineSteps'];
+          const validationScoreRaw = typed['validationScore'];
+          const autoHealedRaw = typed['autoHealed'];
+          const failureHandledRaw = typed['failureHandled'];
+          const processingTimeRaw = typed['processingTime'];
+
+          const pipelineSteps = Array.isArray(pipelineStepsRaw)
+            ? pipelineStepsRaw.map(step => String(step))
+            : [];
+          const validationScore = typeof validationScoreRaw === 'number' ? validationScoreRaw : 1;
+          const autoHealed = typeof autoHealedRaw === 'boolean' ? autoHealedRaw : Boolean(autoHealedRaw);
+          const failureHandled = typeof failureHandledRaw === 'boolean' ? failureHandledRaw : Boolean(failureHandledRaw);
+          const processingTime = typeof processingTimeRaw === 'number'
+            ? processingTimeRaw
+            : Date.now() - startTime;
+
+          return {
+            pipelineSteps,
+            validationScore,
+            autoHealed,
+            failureHandled,
+            processingTime,
+          } satisfies ChatEngineResponse['omegaMetadata'];
+        })();
+
+        finalResponse = {
+          content: chatServiceResponse.content,
+          provider: mappedProvider,
+          timestamp: Date.now(),
+          mode: currentModeState,
+          contextUsed: [],
+          suggestions: [],
+          metadata: chatServiceResponse.metadata,
+          omegaMetadata: resolvedOmegaMetadata,
+        } satisfies ChatEngineResponse;
+        aggregatedContent = chatServiceResponse.content ?? '';
+      }
+
+      if (!finalResponse) {
+        if (typeof stream === 'function') {
+          try {
+            finalResponse = await executeStreaming();
+          } catch (error) {
+            streamingError = error instanceof Error ? error : new Error(String(error));
+            console.warn('[Chat] Streaming fallback triggered:', streamingError);
+          }
         }
       }
 
@@ -495,7 +747,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         duration: Date.now() - startTime,
         ...(finalResponse.metadata || {}),
         omegaMetadata: finalResponse.omegaMetadata,
-        mode: currentMode,
+        mode: currentModeState,
         streamChunks: chunkCount,
         provider,
       };
@@ -538,6 +790,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       setSuggestions(finalResponse.suggestions ?? []);
       setIsLoading(false);
+      setLastProviderUsed(chatServiceResponse ? normalizeProvider(chatServiceResponse.provider) : provider);
       return assistantMessage;
 
     } catch (error) {
@@ -545,7 +798,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       const fallbackResponse: AIMessage = {
         role: 'assistant',
-        content: 'TITANE∞ reste présent. Une légère turbulence a été détectée mais l\'espace de discussion est stable. Reformule ou continue quand tu veux.',
+        content: '⚠️ Erreur détectée — TITANE∞ reste présent. Une légère turbulence a été détectée mais l\'espace de discussion est stable. Reformule ou continue quand tu veux.',
         timestamp: Date.now(),
         provider: 'omnis-fallback',
         metadata: withUiId({
@@ -570,9 +823,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       setIsLoading(false);
       setInternalAnomalyCount(prev => prev + 1);
 
+      setLastProviderUsed('omnis-fallback');
       return fallbackResponse;
     }
-  }, [applyMessagesSafely, currentMode, generate, omnisConfig.timeoutMs, options.voiceEnabled, saveMessage, stream, withUiId]);
+  }, [applyMessagesSafely, currentModeState, debugEntriesRef, generate, omnisConfig.timeoutMs, options.voiceEnabled, preferredProviderState, saveMessage, stream, withUiId]);
 
   // ═══ OTHER ACTIONS ═══
   const clearChat = useCallback(() => {
@@ -588,6 +842,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }, [applyMessagesSafely, clearMode]);
 
   const setMode = useCallback((mode: ChatMode) => {
+    setCurrentModeState(mode);
     try {
       setCoreMode(mode);
     } catch (error) {
@@ -657,11 +912,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     engineStats: omnisStats,
     memoryStats,
     anomalyCount: anomalyCount + internalAnomalyCount,
-    currentMode,
+    currentMode: currentModeState,
     isLoading,
     messagesCount: messages.length,
     omnisConfig
-  }), [anomalyCount, currentMode, internalAnomalyCount, isLoading, messages.length, memoryStats, omnisConfig, omnisStats]);
+  }), [anomalyCount, currentModeState, internalAnomalyCount, isLoading, messages.length, memoryStats, omnisConfig, omnisStats]);
 
   return {
     // UI State
@@ -672,11 +927,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     suggestions,
 
     // Mode & Stats
-    currentMode,
+    currentMode: currentModeState,
     anomalyCount: anomalyCount + internalAnomalyCount,
     memoryStats,
     omnisStats,
     uiIntegrity,
+
+    // Provider state
+    preferredProvider: preferredProviderState,
+    setPreferredProvider: updatePreferredProvider,
+    lastProvider: lastProviderUsed,
+    debugEntries,
 
     // Actions
     sendMessage,

@@ -23,7 +23,7 @@ import {
  * TEST COMPONENT - INTENTIONAL CRASH GENERATOR
  */
 function CrashTestComponent({ shouldCrash = false }: { shouldCrash?: boolean }) {
-  const { health, reportError, reportRecovery } = useOmnisComponentHealth('CrashTestComponent');
+  const { health, reportRecovery } = useOmnisComponentHealth('CrashTestComponent');
 
   if (shouldCrash) {
     throw new Error('Intentional crash for OMNIS testing');

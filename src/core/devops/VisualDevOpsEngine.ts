@@ -30,7 +30,6 @@ import type {
   Command,
   SecurityCheck,
   CollaborationSession,
-  Interaction,
   DevOpsReport,
 } from '../../types/devops';
 

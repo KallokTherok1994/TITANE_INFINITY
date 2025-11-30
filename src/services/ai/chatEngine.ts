@@ -190,7 +190,7 @@ class ChatEngineOmega {
     const pipelineStartTime = Date.now();
     const pipelineSteps: string[] = [];
     let autoHealed = false;
-    let failureHandled = false;
+    const failureHandled = false;
 
     try {
       isDev && console.log('\n╔══════════════════════════════════════════════════════════════╗');

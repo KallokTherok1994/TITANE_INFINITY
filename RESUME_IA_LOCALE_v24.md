@@ -105,7 +105,7 @@ Je suis TITANE∞, système cognitif local autonome. Comment puis-je t'assister 
 ### Test 2 : Avec Gemini configuré
 
 ```bash
-# VITE_GEMINI_API_KEY=AIzaSy...
+# VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ./dev_tauri.sh
 ```
 

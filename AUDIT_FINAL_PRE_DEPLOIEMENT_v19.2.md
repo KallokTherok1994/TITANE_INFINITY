@@ -30,7 +30,7 @@
 - ⏱️ **Latency**: ~450ms
 
 #### Provider: Gemini
-- ✅ **API Key**: Configured `AIzaSyBwIjo6yLZzn8Ql3mVgIi946W...`
+- ✅ **API Key**: Configured `YOUR_GEMINI_API_KEY`
 - ✅ **Model**: `gemini-2.0-flash-exp`
 - ✅ **API Call**: Success (HTTP 200)
 - ✅ **Test Response**: `"Je suis un grand modèle linguistique, entraîné par Google."`
@@ -138,8 +138,8 @@ src-tauri/src/
 ### Configuration
 ```bash
 .env
-├── GEMINI_API_KEY=AIzaSyBwIjo6yLZzn8Ql3mVgIi946W... ✅
-├── VITE_GEMINI_API_KEY=AIzaSyBwIjo6yLZzn8Ql3mVgIi946W... ✅
+├── GEMINI_API_KEY=YOUR_GEMINI_API_KEY ✅
+├── VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY ✅
 ├── OLLAMA_BASE_URL=http://localhost:11434 ✅
 ├── OLLAMA_DEFAULT_MODEL=llama2:latest ✅
 ├── VITE_OLLAMA_URL=http://localhost:11434 ✅

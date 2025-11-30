@@ -553,7 +553,7 @@ npm run dev
 1. **Gemini API** (performance optimale)
    ```bash
    # https://ai.google.dev
-   VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE
+  VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
    npm run dev
    ```
 

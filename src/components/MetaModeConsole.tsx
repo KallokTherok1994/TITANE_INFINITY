@@ -100,8 +100,6 @@ export const MetaModeConsole: React.FC = () => {
   const handleReset = async () => {
     if (confirm('Réinitialiser le Meta-Mode Engine ?')) {
       try {
-        // Note: meta_mode_reset pas encore dans services unifiés - garder invoke temporaire
-        const { invoke } = await import('@tauri-apps/api/core');
         await secureInvoke('meta_mode_reset');
         setResponse(null);
         setHistory([]);

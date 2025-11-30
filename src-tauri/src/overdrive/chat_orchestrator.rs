@@ -5,7 +5,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::core::tapi_error::TAPIError;
-use crate::security::secrets_engine::SecureSecretsEngine;
 use futures_util::StreamExt;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -688,25 +687,6 @@ async fn store_message(
 // ─────────────────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn chat_set_gemini_key(
-    api_key: String,
-    state: State<'_, ChatOrchestratorState>,
-    secrets: State<'_, SecureSecretsEngine>,
-) -> Result<String, String> {
-    secrets
-        .set_secret("gemini_api_key", api_key.clone())
-        .map_err(|e| e.to_string())?;
-
-    let mut key = state.gemini_api_key.write().await;
-    *key = Some(api_key);
-
-    // Vérifier disponibilité
-    update_provider_status(&state, "gemini", true, 0, None).await;
-
-    Ok("Gemini API key securely stored".to_string())
-}
-
-#[tauri::command]
 pub async fn chat_get_providers_status(
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<Vec<ProviderStatus>, String> {
@@ -725,21 +705,6 @@ pub async fn chat_check_providers(
 
     let status_list = state.provider_status.read().await;
     Ok(status_list.clone())
-}
-
-async fn update_provider_status(
-    state: &ChatOrchestratorState,
-    provider: &str,
-    available: bool,
-    latency_ms: u64,
-    error: Option<String>,
-) {
-    let mut status_list = state.provider_status.write().await;
-    if let Some(status) = status_list.iter_mut().find(|s| s.provider == provider) {
-        status.available = available;
-        status.latency_ms = latency_ms;
-        status.error = error;
-    }
 }
 
 // ───────────────────────────────────────────────────────────────────────────

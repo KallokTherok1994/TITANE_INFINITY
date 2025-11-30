@@ -13,6 +13,7 @@ import {
   AvatarStateSnapshot,
   ConversationalContext,
   FullBodyStats,
+  LipSyncMorphWeights,
 } from './fullbody_engine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -42,7 +43,7 @@ export interface UseFullBodyAvatarReturn {
   stopAnimation: () => void;
   activateGesture: (gesture: GestureType) => Promise<void>;
   updateExpression: (expression: ExpressionType, intensity?: number) => Promise<void>;
-  updateLipSync: (phoneme: string, morphWeights: any) => Promise<void>;
+  updateLipSync: (phoneme: string, morphWeights: LipSyncMorphWeights) => Promise<void>;
   updateState: (state: AvatarStateSnapshot) => Promise<void>;
   updateContext: (context: ConversationalContext) => Promise<void>;
   onWakeWord: () => Promise<void>;
@@ -165,7 +166,7 @@ export function useFullBodyAvatar(
     }
   }, [enableLogging]);
 
-  const updateLipSync = useCallback(async (phoneme: string, morphWeights: any) => {
+  const updateLipSync = useCallback(async (phoneme: string, morphWeights: LipSyncMorphWeights) => {
     if (!bridgeRef.current) return;
 
     try {

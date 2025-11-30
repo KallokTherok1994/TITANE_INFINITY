@@ -53,7 +53,7 @@ Backend: chat_orchestrator.rs::chat_send_message()
 
 **Configuration .env**:
 ```env
-GEMINI_API_KEY=AIzaSyBwIjo6yLZzn8Ql3mVgIi946WfZ4cd_DW0 ✅
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY ✅
 OLLAMA_BASE_URL=http://localhost:11434 ✅
 ```
 
@@ -154,7 +154,7 @@ The GStreamer FDK AAC plugin is missing
 
 ### Scénario 1: Gemini Seul ✅
 ```env
-GEMINI_API_KEY=AIzaSyBwIjo6... ✅
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY ✅
 OLLAMA_BASE_URL=http://localhost:11434 ❌ (non démarré)
 ```
 **Résultat**: Backend tente Gemini → ✅ Succès (logs confirment API key loaded)

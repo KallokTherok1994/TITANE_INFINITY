@@ -118,6 +118,20 @@
   gap: var(--spacing-xs);
 }
 
+.chat-status-provider {
+  gap: var(--spacing-xs);
+}
+
+.chat-status-preference,
+.chat-status-debug {
+  gap: var(--spacing-xs);
+}
+
+.chat-status-debug .status-value {
+  color: var(--accent-blue);
+  font-weight: var(--font-semibold);
+}
+
 .status-indicator {
   width: 8px;
   height: 8px;
@@ -140,6 +154,11 @@
   box-shadow: 0 0 8px var(--warning);
 }
 
+.status-error {
+  background: var(--error);
+  box-shadow: 0 0 8px var(--error);
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -159,6 +178,42 @@
   font-weight: var(--font-semibold);
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-xs);
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--text-primary);
+}
+
+.status-badge.status-healed {
+  background: rgba(56, 189, 248, 0.18);
+  color: var(--accent-blue);
+}
+
+.status-badge.status-error {
+  background: rgba(248, 113, 113, 0.2);
+  color: var(--error);
+}
+
+.chat-provider-select {
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  padding: 4px 10px;
+  font-size: var(--text-xs);
+  cursor: pointer;
+}
+
+.chat-provider-select:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
 .chat-status-voice {
   color: var(--accent-purple);
   font-weight: var(--font-semibold);
@@ -167,6 +222,10 @@
 .status-icon {
   font-size: 16px;
   animation: voicePulse 1.5s ease-in-out infinite;
+}
+
+.chat-status-error .status-value {
+  color: var(--error);
 }
 
 @keyframes voicePulse {

@@ -656,7 +656,7 @@ class LocalAgentEngine {
    */
   public async generateDeployAction(
     projectRoot?: string,
-    target?: string
+    _target?: string
   ): Promise<DevOpsAction> {
     const project = projectRoot
       ? await this.analyzeProject(projectRoot)
@@ -928,7 +928,7 @@ class LocalAgentEngine {
   // HELPERS
   // ==========================================================================
 
-  private async fileExists(path: string): Promise<boolean> {
+  private async fileExists(_path: string): Promise<boolean> {
     try {
       // TODO: Use Tauri fs API or Node fs
       return false;

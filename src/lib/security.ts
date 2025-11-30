@@ -8,6 +8,8 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { safeInvokeTauri } from '@/utils/tauriProtector';
+
 // ────────────────────────────────────────────────────────────────
 // Constants
 // ────────────────────────────────────────────────────────────────
@@ -194,6 +196,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'secure_read_file',
   'secure_list_files',
   'secure_delete_file',
+  'get_gemini_key_status',
   'get_permission_audit',
   'validate_chat_message',
   'check_system_integrity',
@@ -663,19 +666,7 @@ export async function secureInvoke<T>(
 
   // [5] Invoke avec timeout
   try {
-    // Import dynamique pour éviter circular dependency
-    const { invoke } = await import('@tauri-apps/api/core');
-
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(
-        () => reject(new Error(`Timeout: "${command}" exceeded ${timeout}ms`)),
-        timeout
-      )
-    );
-
-    const invokePromise = invoke<T>(command, payload);
-
-    const response = await Promise.race([invokePromise, timeoutPromise]);
+    const response = await safeInvokeTauri<T>(command, payload, timeout);
 
     // [6] Validation réponse
     const responseValidation = validateResponse<T>(response, validator);

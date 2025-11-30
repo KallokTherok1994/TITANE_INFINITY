@@ -139,7 +139,7 @@ Tauri Error: "Command 'get_system_health' is not in whitelist"
 **Configuration .env**:
 ```dotenv
 # ✅ VALIDÉ
-GEMINI_API_KEY=AIzaSyBwIjo6yLZzn8Ql3mVgIi946WfZ4cd_DW0
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 GEMINI_MODEL=gemini-2.0-flash
 GEMINI_BASE_URL=https://generativelanguage.googleapis.com/v1
 
@@ -380,7 +380,7 @@ update-desktop-database ~/.local/share/applications/
 
 **Configuration**:
 ```env
-GEMINI_API_KEY=AIzaSyBwIjo6yLZzn8Ql3mVgIi946WfZ4cd_DW0  # ✅ Configuré
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY  # ✅ Configuré
 OLLAMA_BASE_URL=http://localhost:11434  # ❌ Non démarré
 ```
 

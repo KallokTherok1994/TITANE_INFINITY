@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { geminiProvider } from '../services/ai/providers/gemini';
 import { tauriChatProvider } from '../services/ai/providers/tauriChat';
 import { ollamaProvider } from '../services/ai/providers/ollama';
@@ -86,10 +86,13 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 1: Gemini Provider Down', () => {
     }
 
     expect(healSpy).toHaveBeenCalledWith(
-      'gemini',
+      'tauri-chat',
       expect.any(Error),
       'provider',
-      expect.any(Object)
+      expect.objectContaining({
+        context: expect.any(String),
+        errorCount: expect.any(Number),
+      })
     );
   });
 });
@@ -122,14 +125,10 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 2: Tauri Backend Down', () => {
   });
 
   it('should disable Tauri backend after max errors', async () => {
-    // Reset error count first
-    if ('resetErrors' in tauriChatProvider) {
-      (tauriChatProvider as any).resetErrors();
-    }
+    const resettableProvider = tauriChatProvider as unknown as { resetErrors?: () => void };
+    resettableProvider.resetErrors?.();
 
     // Simulate multiple failures
-    const mockInvoke = vi.fn().mockRejectedValue(new Error('Backend not available'));
-
     for (let i = 0; i < 6; i++) {
       const available = await tauriChatProvider.isAvailable();
       if (i >= 5) {
@@ -201,7 +200,8 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 3: Ollama Offline', () => {
 
   it('should track Ollama health status correctly', async () => {
     if ('getStats' in ollamaProvider) {
-      const stats = (ollamaProvider as any).getStats();
+      const statsProvider = ollamaProvider as unknown as { getStats?: () => unknown };
+      const stats = statsProvider.getStats?.();
       expect(stats).toHaveProperty('errorCount');
       expect(stats).toHaveProperty('endpointHealthy');
       expect(stats).toHaveProperty('maxErrors');

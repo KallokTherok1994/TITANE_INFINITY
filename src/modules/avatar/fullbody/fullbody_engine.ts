@@ -53,6 +53,13 @@ export interface FullBodyStats {
   speech_active: boolean;
 }
 
+export interface LipSyncMorphWeights {
+  jaw: number;
+  lips: number;
+  tongue: number;
+  cheeks: number;
+}
+
 export type GestureType =
   | 'listening'
   | 'explaining'
@@ -194,10 +201,7 @@ export class FullBodyAvatarBridge {
   /**
    * Mettre à jour lip-sync (appelé depuis ImmersiveAvatarBridge v23)
    */
-  async updateLipSync(
-    phoneme: string,
-    morphWeights: { jaw: number; lips: number; tongue: number; cheeks: number }
-  ): Promise<void> {
+  async updateLipSync(phoneme: string, morphWeights: LipSyncMorphWeights): Promise<void> {
     try {
       await invoke<string>('fullbody_update_lipsync', {
         phoneme,

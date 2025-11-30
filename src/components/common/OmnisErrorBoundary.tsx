@@ -39,9 +39,22 @@ interface OmnisErrorState {
   retryCount: number;
   isRecovering: boolean;
   lastErrorTimestamp: number;
-  backupState?: any;
+  backupState?: BackupSnapshot | null;
   degradedMode: boolean;
   recoveryAttempts: number[];
+}
+
+interface BackupSnapshot {
+  timestamp: number;
+  componentName?: string;
+  metadata: {
+    userAgent: string;
+    url: string;
+    viewport: {
+      width: number;
+      height: number;
+    };
+  };
 }
 
 interface ErrorMetrics {
@@ -156,7 +169,7 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
     if (!this.props.stateBackup) return;
 
     try {
-      const stateSnapshot = {
+      const stateSnapshot: BackupSnapshot = {
         timestamp: Date.now(),
         componentName: this.props.componentName,
         // Try to capture React state from children (limited access)
@@ -180,14 +193,14 @@ export class OmnisErrorBoundary extends Component<OmnisErrorBoundaryProps, Omnis
     }
   }
 
-  private loadBackupState(): any {
+  private loadBackupState(): BackupSnapshot | null {
     try {
       const stored = localStorage.getItem(this.stateBackupKey);
       if (stored) {
         const parsed = JSON.parse(stored);
         // Only use backup if less than 1 hour old
         if (Date.now() - parsed.timestamp < 3600000) {
-          return parsed;
+          return parsed as BackupSnapshot;
         }
       }
     } catch (error) {

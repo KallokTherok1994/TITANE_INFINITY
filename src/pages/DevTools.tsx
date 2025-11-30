@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MonitoringHeader } from '../components/monitoring/MonitoringHeader';
 import { SystemStatusCard, SystemStatus } from '../components/monitoring/SystemStatusCard';
 import { LogsCard } from '../components/monitoring/LogsCard';
@@ -22,12 +22,25 @@ import { CognitiveModuleCard } from '../components/monitoring/CognitiveModuleCar
 import { LivingEnginesCard } from '../components/monitoring/LivingEnginesCard';
 import { useTitaneCore } from '../hooks';
 import { useLivingEngines } from '../hooks';
+import {
+  getGeminiKeyStatus,
+  hasSecureData,
+  setGeminiApiKey,
+  type GeminiKeyStatus,
+} from '../utils/secureSecrets';
+import { isTauriRuntimeAvailable } from '../utils/tauriProtector';
+import { ChatDiagnostic } from '../components/ChatDiagnostic';
 
 export const DevTools = () => {
   const { systemStatus, error } = useTitaneCore();
 
   // 🌟 Living Engines Integration v21-v24
   const livingEngines = useLivingEngines(100);
+  const [tauriAvailable, setTauriAvailable] = useState(isTauriRuntimeAvailable());
+  const [keyStatus, setKeyStatus] = useState<GeminiKeyStatus | null>(null);
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [keyMessage, setKeyMessage] = useState<string | null>(null);
+  const [savingKey, setSavingKey] = useState(false);
 
   const [logs, setLogs] = useState<string[]>([
     '[INFO] System initialized',
@@ -37,6 +50,91 @@ export const DevTools = () => {
   ]);
   const [activeTab, setActiveTab] = useState<'system' | 'logs' | 'performance'>('system');
   const [debugMode, setDebugMode] = useState(false);
+
+  const loadGeminiStatus = useCallback(async () => {
+    try {
+      const response = await getGeminiKeyStatus();
+      const runtimeDetected = isTauriRuntimeAvailable();
+      setTauriAvailable(runtimeDetected);
+
+      if (hasSecureData(response)) {
+        setKeyStatus(response.data);
+        setKeyMessage(
+          response.data.masked_key
+            ? `Clé sécurisée détectée (${response.data.masked_key})`
+            : 'SecureSecrets actif mais aucune clé enregistrée.'
+        );
+        return;
+      }
+
+      if (response && typeof response === 'object' && 'ok' in response) {
+        const secureResponse = response as {
+          ok: boolean;
+          data?: GeminiKeyStatus | null;
+          error?: string | null;
+        };
+        setKeyStatus(secureResponse.data ?? null);
+        setKeyMessage(
+          secureResponse.error ?? 'SecureSecrets a répondu sans données exploitables.'
+        );
+        return;
+      }
+
+      setKeyStatus(null);
+      setKeyMessage('Tauri backend indisponible : SecureSecrets en mode lecture seule.');
+    } catch (err) {
+      console.error('[DevTools] Chargement statut SecureSecrets échoué:', err);
+      setTauriAvailable(isTauriRuntimeAvailable());
+      setKeyStatus(null);
+      setKeyMessage('Erreur lors du chargement du statut sécurisé.');
+    }
+  }, []);
+
+  useEffect(() => {
+    void loadGeminiStatus();
+  }, [loadGeminiStatus]);
+
+  const handleSaveApiKey = async () => {
+    const trimmedKey = apiKeyInput.trim();
+
+    if (!trimmedKey) {
+      setKeyMessage('Veuillez saisir une clé API valide avant de sauvegarder.');
+      return;
+    }
+
+    if (!isTauriRuntimeAvailable()) {
+      setTauriAvailable(false);
+      setKeyMessage('Tauri backend indisponible : impossible de sécuriser la clé.');
+      return;
+    }
+
+    setSavingKey(true);
+    let success = false;
+    let failureMessage: string | null = null;
+
+    try {
+      const response = await setGeminiApiKey(trimmedKey);
+      if (response?.ok && response.data) {
+        setKeyStatus(response.data);
+        success = true;
+      } else {
+        failureMessage = response?.error ?? 'Enregistrement impossible. Vérifiez les journaux Tauri.';
+      }
+    } catch (err) {
+      console.error('[DevTools] Impossible de sauvegarder la clé API:', err);
+      failureMessage = 'Erreur lors de la sauvegarde de la clé API.';
+    }
+
+    setApiKeyInput('');
+    setSavingKey(false);
+    await loadGeminiStatus();
+
+    if (success) {
+      setKeyMessage('Clé API enregistrée via SecureSecretsEngine.');
+    } else if (failureMessage) {
+      setKeyMessage(failureMessage);
+    }
+  };
 
   // Living module metrics (dynamic from engines)
   const moduleMetrics = {
@@ -90,6 +188,101 @@ export const DevTools = () => {
         onDebugClick={() => setDebugMode(!debugMode)}
         debugActive={debugMode}
       />
+
+      {/* Secure Secrets Engine */}
+      <div className="devtools-section" style={{ marginTop: '1.5rem' }}>
+        <div className="devtools-section__header">
+          <h2 className="devtools-section__title">Gestion SecureSecrets</h2>
+          <p className="devtools-section__subtitle">
+            Stockez votre clé Gemini via le moteur cryptographique interne.
+          </p>
+        </div>
+        <div
+          style={{
+            background: '#10151c',
+            borderRadius: '16px',
+            border: '1px solid #1f2933',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px'
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label
+              htmlFor="devtools-secure-api-key"
+              style={{ fontSize: '0.85rem', opacity: 0.8 }}
+            >
+              Clé API Gemini sécurisée
+            </label>
+            <input
+              id="devtools-secure-api-key"
+              type="password"
+              placeholder={tauriAvailable ? 'Entrez votre clé API Gemini' : 'Tauri indisponible'}
+              value={apiKeyInput}
+              onChange={(event) => setApiKeyInput(event.target.value)}
+              disabled={!tauriAvailable || savingKey}
+              style={{
+                padding: '10px 12px',
+                borderRadius: '8px',
+                border: '1px solid rgba(148, 163, 184, 0.35)',
+                background: '#0b1016',
+                color: '#e2e8f0',
+                fontSize: '0.95rem'
+              }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              alignItems: 'center',
+              flexWrap: 'wrap'
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleSaveApiKey}
+              disabled={!tauriAvailable || savingKey}
+              style={{
+                padding: '10px 18px',
+                borderRadius: '8px',
+                background: !tauriAvailable ? '#2f3541' : '#2563eb',
+                border: 'none',
+                color: '#fff',
+                cursor: !tauriAvailable || savingKey ? 'not-allowed' : 'pointer',
+                opacity: savingKey ? 0.7 : 1,
+                transition: 'opacity 0.2s ease'
+              }}
+            >
+              {savingKey ? '🔐 Sauvegarde...' : '🔐 Sauvegarder la clé'}
+            </button>
+            <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
+              {tauriAvailable
+                ? (keyStatus?.masked_key
+                  ? `Clé actuelle : ${keyStatus.masked_key}`
+                  : 'Aucune clé enregistrée')
+                : 'Tauri non disponible : stockage désactivé'}
+            </div>
+          </div>
+          {keyMessage && (
+            <div
+              style={{
+                fontSize: '0.85rem',
+                color: /erreur|impossible|indisponible|fallback/i.test(keyMessage)
+                  ? '#f87171'
+                  : '#34d399'
+              }}
+            >
+              {keyMessage}
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="devtools-section" style={{ marginTop: '2rem' }}>
+        <ChatDiagnostic variant="panel" />
+      </div>
 
       {/* Cards Grid — Overview */}
       <div className="devtools-grid devtools-grid--cards">

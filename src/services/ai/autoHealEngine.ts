@@ -113,7 +113,7 @@ class AutoHealEngine {
 
     // Analyse automatique du type d'erreur
     const analyzedType = type || this.analyzeErrorType(error);
-    const severity = this.classifyErrorSeverity(analyzedType, error);
+    const severity = this.classifyErrorSeverity(analyzedType);
 
     const autoHealError: AutoHealError = {
       id: errorId,
@@ -184,7 +184,7 @@ class AutoHealEngine {
   /**
    * Classification de la sévérité
    */
-  private classifyErrorSeverity(type: AutoHealError['type'], error: Error | string): AutoHealError['severity'] {
+  private classifyErrorSeverity(type: AutoHealError['type']): AutoHealError['severity'] {
     switch (type) {
       case 'critical':
         return 'critical';
@@ -228,7 +228,7 @@ class AutoHealEngine {
       this.stats.lastHeal = Date.now();
 
       // Mettre à jour statistiques
-      this.updateStats(action, healingDuration);
+      this.updateStats();
 
       if (action.success) {
         this.updateProviderHealth(error.source, 'recovery');
@@ -518,7 +518,7 @@ class AutoHealEngine {
     this.providerHealthMap.set(source, current);
   }
 
-  private updateStats(action: AutoHealAction, duration: number): void {
+  private updateStats(): void {
     // Calcul success rate
     const totalActions = this.stats.totalHeals;
     const successfulActions = Array.from(this.actions.values()).filter(a => a.success).length;

@@ -113,7 +113,7 @@ pub async fn devops_run(cmd: String) -> Result<String, String> {
 
 ```dotenv
 # ⚠️ ACTUEL (MAUVAIS)
-TITANE_MEMORY_PASSPHRASE=titane_infinity_dev_passphrase_change_in_production_2025
+TITANE_MEMORY_PASSPHRASE=change_me_before_release
 ```
 
 **Risque**:
@@ -208,7 +208,7 @@ fn main() {
 ```diff
 - # Passphrase pour mémoire chiffrée (AES-256-GCM)
 - # ⚠️ IMPORTANT: Changer en production, minimum 32 caractères
-- TITANE_MEMORY_PASSPHRASE=titane_infinity_dev_passphrase_change_in_production_2025
+- TITANE_MEMORY_PASSPHRASE=change_me_before_release
 + # ✅ Passphrase générée automatiquement et stockée dans app_data_dir/.titane_passphrase
 + # Permissions: 0600 (user read/write only)
 + # NEVER commit .titane_passphrase to git!

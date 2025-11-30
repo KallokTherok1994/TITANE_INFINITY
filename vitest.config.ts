@@ -26,6 +26,8 @@ const baseAliasEntries = [
   { find: '@types', replacement: resolve(__dirname, './src/types') },
   { find: '@assets', replacement: resolve(__dirname, './src/assets') },
   { find: '@styles', replacement: resolve(__dirname, './src/styles') },
+  { find: '@tauri-apps/api/tauri', replacement: resolve(__dirname, './tests/mocks/tauri.ts') },
+  { find: '@tauri-apps/api/core', replacement: resolve(__dirname, './tests/mocks/tauriCore.ts') },
 ];
 
 const vitestAliasEntries = isVitest

@@ -3,11 +3,14 @@
  * Tests des flux complets du Control Panel
  */
 
+import { describe, it, expect, test, beforeEach, vi } from 'vitest';
 import { invoke } from '@tauri-apps/api/tauri';
 
-jest.mock('@tauri-apps/api/tauri', () => ({
-  invoke: jest.fn(),
-}));
+const mockedInvoke = vi.mocked(invoke);
+
+beforeEach(() => {
+  mockedInvoke.mockReset();
+});
 
 describe('Control Panel - Flux complet Système', () => {
   test('Récupération et diagnostic système', async () => {
@@ -21,14 +24,14 @@ describe('Control Panel - Flux complet Système', () => {
       singularity_active: true,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(mockSystemInfo);
+    mockedInvoke.mockResolvedValueOnce(mockSystemInfo);
     const systemInfo = await invoke('cp_get_system_info');
 
     expect(systemInfo).toEqual(mockSystemInfo);
 
     // Step 2: Lancer un diagnostic
     const mockDiagnostic = '✅ Système: OK\n✅ Mémoire: OK';
-    (invoke as jest.Mock).mockResolvedValueOnce(mockDiagnostic);
+    mockedInvoke.mockResolvedValueOnce(mockDiagnostic);
     const diagnostic = await invoke('cp_run_system_diagnostic');
 
     expect(diagnostic).toContain('OK');
@@ -45,7 +48,7 @@ describe('Control Panel - Flux complet Configuration', () => {
       transparency_enabled: false,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(currentConfig);
+    mockedInvoke.mockResolvedValueOnce(currentConfig);
     const config = await invoke('cp_get_design_config');
 
     expect(config.mode).toBe('auto');
@@ -57,11 +60,11 @@ describe('Control Panel - Flux complet Configuration', () => {
       animations_enabled: false,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(undefined);
+    mockedInvoke.mockResolvedValueOnce(undefined);
     await invoke('cp_set_design_config', { config: newConfig });
 
     // Step 3: Vérifier la sauvegarde
-    (invoke as jest.Mock).mockResolvedValueOnce(newConfig);
+    mockedInvoke.mockResolvedValueOnce(newConfig);
     const updatedConfig = await invoke('cp_get_design_config');
 
     expect(updatedConfig.mode).toBe('dark');
@@ -79,13 +82,13 @@ describe('Control Panel - Flux complet Singularité', () => {
       phase: 'Idle',
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(initialStatus);
+    mockedInvoke.mockResolvedValueOnce(initialStatus);
     let status = await invoke('cp_get_singularity_status');
 
     expect(status.active).toBe(false);
 
     // Step 2: Activer la singularité
-    (invoke as jest.Mock).mockResolvedValueOnce(undefined);
+    mockedInvoke.mockResolvedValueOnce(undefined);
     await invoke('cp_toggle_singularity');
 
     // Step 3: Vérifier l'activation
@@ -96,7 +99,7 @@ describe('Control Panel - Flux complet Singularité', () => {
       phase: 'Optimization',
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(activeStatus);
+    mockedInvoke.mockResolvedValueOnce(activeStatus);
     status = await invoke('cp_get_singularity_status');
 
     expect(status.active).toBe(true);
@@ -114,13 +117,13 @@ describe('Control Panel - Flux complet Mémoire', () => {
       vector_count: 1250,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(initialStats);
+    mockedInvoke.mockResolvedValueOnce(initialStats);
     let stats = await invoke('cp_get_memory_stats');
 
     const initialCacheSize = stats.cache_size;
 
     // Step 2: Nettoyer le cache
-    (invoke as jest.Mock).mockResolvedValueOnce(undefined);
+    mockedInvoke.mockResolvedValueOnce(undefined);
     await invoke('cp_clear_memory_cache');
 
     // Step 3: Vérifier le nettoyage
@@ -129,7 +132,7 @@ describe('Control Panel - Flux complet Mémoire', () => {
       cache_size: 0,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(cleanedStats);
+    mockedInvoke.mockResolvedValueOnce(cleanedStats);
     stats = await invoke('cp_get_memory_stats');
 
     expect(stats.cache_size).toBeLessThan(initialCacheSize);
@@ -156,14 +159,14 @@ describe('Control Panel - Flux complet Modules', () => {
       },
     ];
 
-    (invoke as jest.Mock).mockResolvedValueOnce(mockModules);
+    mockedInvoke.mockResolvedValueOnce(mockModules);
     let modules = await invoke('cp_get_modules_status');
 
     expect(modules.length).toBe(2);
     expect(modules[0].enabled).toBe(true);
 
     // Step 2: Désactiver un module
-    (invoke as jest.Mock).mockResolvedValueOnce(undefined);
+    mockedInvoke.mockResolvedValueOnce(undefined);
     await invoke('cp_toggle_module', { moduleId: 'ai_core' });
 
     // Step 3: Vérifier la désactivation
@@ -172,7 +175,7 @@ describe('Control Panel - Flux complet Modules', () => {
       { ...mockModules[1], enabled: false },
     ];
 
-    (invoke as jest.Mock).mockResolvedValueOnce(updatedModules);
+    mockedInvoke.mockResolvedValueOnce(updatedModules);
     modules = await invoke('cp_get_modules_status');
 
     expect(modules[1].enabled).toBe(false);
@@ -189,13 +192,13 @@ describe('Control Panel - Flux complet Updates', () => {
       changelog: '- New features\n- Bug fixes',
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(updateInfo);
+    mockedInvoke.mockResolvedValueOnce(updateInfo);
     let info = await invoke('cp_check_for_updates');
 
     expect(info.update_available).toBe(true);
 
     // Step 2: Installer la mise à jour
-    (invoke as jest.Mock).mockResolvedValueOnce(undefined);
+    mockedInvoke.mockResolvedValueOnce(undefined);
     await invoke('cp_install_update');
 
     // Step 3: Vérifier la nouvelle version
@@ -205,7 +208,7 @@ describe('Control Panel - Flux complet Updates', () => {
       update_available: false,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(updatedInfo);
+    mockedInvoke.mockResolvedValueOnce(updatedInfo);
     info = await invoke('cp_check_for_updates');
 
     expect(info.current_version).toBe('v19.2.0');
@@ -216,7 +219,7 @@ describe('Control Panel - Flux complet Updates', () => {
 describe('Control Panel - Gestion des erreurs en cascade', () => {
   test('Récupération après échec de commande', async () => {
     // Step 1: Tentative de récupération des infos (échec)
-    (invoke as jest.Mock).mockRejectedValueOnce('Network error');
+    mockedInvoke.mockRejectedValueOnce('Network error');
 
     await expect(invoke('cp_get_system_info')).rejects.toBe('Network error');
 
@@ -230,7 +233,7 @@ describe('Control Panel - Gestion des erreurs en cascade', () => {
       singularity_active: true,
     };
 
-    (invoke as jest.Mock).mockResolvedValueOnce(mockSystemInfo);
+    mockedInvoke.mockResolvedValueOnce(mockSystemInfo);
     const result = await invoke('cp_get_system_info');
 
     expect(result).toEqual(mockSystemInfo);

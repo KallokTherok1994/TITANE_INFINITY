@@ -36,6 +36,7 @@ export interface ChatInputProps {
   disabled?: boolean;
   suggestions?: ChatSuggestion[];
   maxLength?: number;
+  isProcessing?: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -67,18 +68,26 @@ export const ChatInput = ({
   disabled = false,
   suggestions = [],
   maxLength = 2000,
+  isProcessing,
 }: ChatInputProps): JSX.Element => {
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(-1);
   const [isImporting, setIsImporting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // ✅ v∞.B7 - Loading state
+  const [internalLoading, setInternalLoading] = useState(false); // ✅ v∞.B7 - Loading state
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isLoading = typeof isProcessing === 'boolean' ? isProcessing : internalLoading;
 
   const filteredSuggestions = useMemo(
     () => suggestions.filter(s => s.text.toLowerCase().includes(value.toLowerCase())),
     [suggestions, value]
   );
+
+  useEffect(() => {
+    if (typeof isProcessing === 'boolean') {
+      setInternalLoading(isProcessing);
+    }
+  }, [isProcessing]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -99,7 +108,9 @@ export const ChatInput = ({
 
   const handleSubmit = useCallback((): void => {
     if (value.trim() && !disabled && !isLoading) {
-      setIsLoading(true); // ✅ v∞.B7 - Activer loading
+      if (typeof isProcessing !== 'boolean') {
+        setInternalLoading(true); // ✅ v∞.B7 - Activer loading local en mode autonome
+      }
 
       // ✨ v∞.D3 - Gain XP pour message utilisateur
       XP.gain(5, "message_user", `Message: "${value.trim().substring(0, 50)}..."`);
@@ -109,10 +120,12 @@ export const ChatInput = ({
       setShowSuggestions(false);
       setSelectedSuggestion(-1);
 
-      // Désactiver loading après délai simulé (le parent gère la vraie réponse)
-      setTimeout(() => setIsLoading(false), 500);
+      if (typeof isProcessing !== 'boolean') {
+        // Désactiver loading après délai simulé (le parent gère la vraie réponse quand contrôlé)
+        setTimeout(() => setInternalLoading(false), 500);
+      }
     }
-  }, [value, disabled, isLoading, onSubmit, onChange]);
+  }, [value, disabled, isLoading, onSubmit, onChange, isProcessing]);
 
   const applySuggestion = useCallback((suggestion: ChatSuggestion): void => {
     onChange(suggestion.text);
@@ -359,7 +372,7 @@ export const ChatInput = ({
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
-          disabled={disabled}
+          disabled={disabled || isLoading}
           rows={1}
           style={{
             flex: 1,
@@ -391,7 +404,7 @@ export const ChatInput = ({
           <Button
             variant="ghost"
             onClick={handleFileImport}
-            disabled={disabled || isImporting}
+            disabled={disabled || isImporting || isLoading}
             title="Importer un fichier (+20 XP)"
             leftIcon="📂"
           >
@@ -402,9 +415,10 @@ export const ChatInput = ({
           <Button
             variant="primary"
             onClick={handleSubmit}
-            disabled={disabled || !value.trim()}
+            disabled={disabled || !value.trim() || isLoading}
+            leftIcon={isLoading ? '⏳' : '🚀'}
           >
-            Envoyer
+            {isLoading ? 'Envoi...' : 'Envoyer'}
           </Button>
 
           {/* Character Count */}

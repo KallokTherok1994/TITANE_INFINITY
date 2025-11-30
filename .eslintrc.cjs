@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
-// TITANE∞ v24 - ESLint Configuration OPTIMIZED (CPU < 30%)
-// TypeScript strict rules with React Hooks — Performance-first
+// TITANE∞ v24 - ESLint Configuration (Optimisée)
+// TypeScript strict + React Hooks
 // ═══════════════════════════════════════════════════════════════
 
 module.exports = {
@@ -10,60 +10,45 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:react-hooks/recommended', 'prettier', 'plugin:storybook/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'prettier',
+    'plugin:storybook/recommended',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
-    // Désactivé pour performance (type checking coûteux)
+    warnOnUnsupportedTypeScriptVersion: false,
+    // Type-aware lint désactivé (performances)
     // project: ['./tsconfig.json'],
     // tsconfigRootDir: __dirname,
   },
   plugins: ['@typescript-eslint', 'react-hooks'],
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // OVERRIDES v18 : Autoriser 'any' dans moteurs IA dynamiques
-  // ═══════════════════════════════════════════════════════════════════════════
-  overrides: [
-    {
-      files: [
-        'src/core/**/*',
-        'src/utils/**/*',
-        'src/components/experience/**/*',
-        'src/services/**/*',
-        'src/hooks/**/*'
-      ],
-      rules: {
-        '@typescript-eslint/no-explicit-any': 'off',
-        '@typescript-eslint/no-unused-vars': 'warn'
-      }
-    }
-  ],
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // 🚀 EXCLUSIONS AGRESSIVES (Performance)
-  // ═══════════════════════════════════════════════════════════════════════════
   ignorePatterns: [
-    'node_modules/',
-    'dist/',
-    'build/',
-    'target/',
-    '.tauri/',
-    'backups/',
-    '*.config.js',
+    'dist',
+    'build',
+    'target',
+    'node_modules',
+    'src-tauri',
+    '.tauri',
+    '.vite',
+    'backups',
+    '*.cjs',
     '*.config.ts',
+    '*.config.js',
     'vite.config.ts',
-    '**/*.test.ts',
-    '**/*.spec.ts',
-    '**/*.d.ts',
     'pnpm-lock.yaml',
     'Cargo.lock',
+    '**/*.d.ts',
   ],
   rules: {
     // ─────────────────────────────────────────────────────────────
-    // TypeScript Rules (Performance-optimized)
+    // TypeScript Rules (performance)
     // ─────────────────────────────────────────────────────────────
-    '@typescript-eslint/no-explicit-any': 'warn', // downgrade pour performance
+    '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-unused-vars': [
       'warn',
       {
@@ -72,53 +57,39 @@ module.exports = {
         caughtErrorsIgnorePattern: '^_',
       },
     ],
-    '@typescript-eslint/explicit-function-return-type': 'off', // disabled pour performance
+    '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-non-null-assertion': 'warn',
-    // Désactivés car nécessitent type checking (CPU intensif)
-    // '@typescript-eslint/no-floating-promises': 'error',
-    // '@typescript-eslint/no-misused-promises': 'error',
-    // '@typescript-eslint/await-thenable': 'error',
-    // '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/prefer-nullish-coalescing': 'off',
     '@typescript-eslint/prefer-optional-chain': 'off',
     '@typescript-eslint/consistent-type-imports': 'off',
 
     // ─────────────────────────────────────────────────────────────
-    // React Hooks Rules
+    // React Hooks
     // ─────────────────────────────────────────────────────────────
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
 
     // ─────────────────────────────────────────────────────────────
-    // General Best Practices (Lightweight)
+    // Règles générales
     // ─────────────────────────────────────────────────────────────
-    'no-console': 'off', // Désactivé pour debug
+    'no-console': 'off',
     'prefer-const': 'warn',
     'no-var': 'error',
-    'eqeqeq': 'off',
-    'curly': 'off',
+    eqeqeq: 'off',
+    curly: 'off',
     'no-throw-literal': 'off',
     'prefer-promise-reject-errors': 'off',
   },
-  ignorePatterns: [
-    'dist',
-    'node_modules',
-    'src-tauri',
-    '.vite',
-    '*.cjs',
-    '*.config.ts',
-    '*.config.js',
-  ],
   overrides: [
     {
-      // Relax rules for config files
+      // Config files (vite, eslint, etc.)
       files: ['*.config.ts', '*.config.js', 'vite.config.ts'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'off',
       },
     },
     {
-      // Allow 'any' in core architecture files (v∞ dynamic typing)
+      // Noyau dynamique (autoriser any/t-comment)
       files: [
         'src/core/**/*',
         'src/utils/**/*',
@@ -131,7 +102,7 @@ module.exports = {
       },
     },
     {
-      // Allow 'any' and unused vars in monitoring components (diagnostic tools)
+      // Monitoring temps réel
       files: ['src/components/SingularityMonitor*.tsx'],
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
@@ -139,17 +110,42 @@ module.exports = {
       },
     },
     {
-      // Allow 'any' in page components (module monitoring UIs)
+      // Pages (UIs modulaires)
       files: ['src/pages/**/*.tsx'],
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
       },
     },
     {
-      // Allow @ts-nocheck in test files
-      files: ['src/test/**/*', '**/*.test.ts', '**/*.spec.ts'],
+      // Désactiver règles strictes sur tests & archives
+      files: [
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        '**/*.spec.ts',
+        '**/*.spec.tsx',
+        'tests/**/*.ts',
+        'tests/**/*.tsx',
+        'src/test/**/*',
+        'src/hooks/archived/**/*',
+      ],
       rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-non-null-assertion': 'off',
+        'react-hooks/rules-of-hooks': 'off',
+        'react-hooks/exhaustive-deps': 'off',
+      },
+    },
+    {
+      // Legacy OMNIS engine (maintained separately)
+      files: [
+        'src/omnisEngine/**/*',
+        'src/services/ai/providers/omnis/**/*',
+      ],
+      rules: {
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
       },
     },
   ],

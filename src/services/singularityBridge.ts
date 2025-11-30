@@ -7,7 +7,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { invoke } from '@tauri-apps/api/core';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -24,7 +23,15 @@ import { invoke } from '@tauri-apps/api/core';
  */
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { safeInvoke } from '../utils/invoke';
+import { getResultOrDefault, safeInvoke } from '../utils/invoke';
+import {
+  createFallbackAdaptive,
+  createFallbackCognitive,
+  createFallbackMeta,
+  createFallbackPhysical,
+  createFallbackSingularityState,
+  createFallbackSymbolic,
+} from '@/utils/tauriProtector';
 import { XP } from '../core/experience/XP_ENGINE'; // ✨ v∞.D6 - XP Engine
 import type {
   SingularityState,
@@ -198,115 +205,53 @@ export class SingularityBridge {
   // ═══════════════════════════════════════════════════════════════════
 
   static async getFullState(): Promise<SingularityState> {
-    return invoke<SingularityState>('singularity_get_full_state');
+    const state = await safeInvoke<SingularityState>('singularity_get_full_state');
+    return getResultOrDefault(state, createFallbackSingularityState());
   }
 
   static async getPhysical(): Promise<PhysicalLayer> {
-    return invoke<PhysicalLayer>('singularity_get_physical');
+    const result = await safeInvoke<PhysicalLayer>('singularity_get_physical');
+    return getResultOrDefault(result, createFallbackPhysical());
   }
 
   static async getCognitive(): Promise<CognitiveLayer> {
-    return invoke<CognitiveLayer>('singularity_get_cognitive');
+    const result = await safeInvoke<CognitiveLayer>('singularity_get_cognitive');
+    return getResultOrDefault(result, createFallbackCognitive());
   }
 
   static async getSymbolic(): Promise<SymbolicLayer> {
-    try {
-      return await secureInvoke<SymbolicLayer>('singularity_get_symbolic');
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes('command') && msg.includes('not found')) {
-        console.warn('[SingularityBridge] singularity_get_symbolic not available, using fallback');
-      } else {
-        console.error('[SingularityBridge] Error getting symbolic layer:', err);
-      }
-      // Return safe default
-      return {
-        persona: {
-          name: 'TITANE∞',
-          mood: 'focused',
-          intensity: 0.8,
-          evolution_level: 5,
-          last_interaction: Date.now(),
-        },
-        archetype: {
-          active_archetype: 'sentinel',
-          strength: 0.95,
-          transition: null,
-        },
-        visual: {
-          theme: 'dark',
-          accent_color: '#4f46e5',
-          glow_intensity: 0.7,
-          motion_enabled: true,
-          depth_enabled: true,
-        },
-        stability: 0.95,
-      };
+    const result = await safeInvoke<SymbolicLayer>('singularity_get_symbolic');
+    if (result) {
+      return result;
     }
+
+    console.warn('[SingularityBridge] singularity_get_symbolic unavailable, using fallback state');
+    return createFallbackSymbolic();
   }
 
   static async getAdaptive(): Promise<AdaptiveLayer> {
-    try {
-      return await secureInvoke<AdaptiveLayer>('singularity_get_adaptive');
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes('command') && msg.includes('not found')) {
-        console.warn('[SingularityBridge] singularity_get_adaptive not available, using fallback');
-      } else {
-        console.error('[SingularityBridge] Error getting adaptive layer:', err);
-      }
-      // Return safe default
-      return {
-        evolution: {
-          generation: 0,
-          mutation_rate: 0.1,
-          fitness_score: 0.85,
-          last_evolution: Date.now(),
-        },
-        auto_heal: {
-          active: true,
-          healing_capacity: 1.0,
-          errors_healed: 0,
-          last_heal: null,
-        },
-        evolution_capacity: 0.85,
-      };
+    const result = await safeInvoke<AdaptiveLayer>('singularity_get_adaptive');
+    if (result) {
+      return result;
     }
+
+    console.warn('[SingularityBridge] singularity_get_adaptive unavailable, using fallback state');
+    return createFallbackAdaptive();
   }
 
   static async getMeta(): Promise<MetaLayer> {
-    try {
-      return await secureInvoke<MetaLayer>('singularity_get_meta');
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes('command') && msg.includes('not found')) {
-        console.warn('[SingularityBridge] singularity_get_meta not available, using fallback');
-      } else {
-        console.error('[SingularityBridge] Error getting meta layer:', err);
-      }
-      // Return safe default
-      return {
-        ui: {
-          active_page: window.location.pathname,
-          sidebar_open: true,
-          modal_open: false,
-          theme: 'dark',
-          last_interaction: Date.now(),
-        },
-        runtime: {
-          version: '19.1.0',
-          build: 'production',
-          environment: import.meta.env.MODE,
-          uptime: performance.now(),
-          restart_count: 0,
-        },
-        runtime_health: 0.95,
-      };
+    const result = await safeInvoke<MetaLayer>('singularity_get_meta');
+    if (result) {
+      return result;
     }
+
+    console.warn('[SingularityBridge] singularity_get_meta unavailable, using fallback state');
+    return createFallbackMeta();
   }
 
   static async getGlobalCoherence(): Promise<number> {
-    return invoke<number>('singularity_get_global_coherence');
+    const result = await safeInvoke<number>('singularity_get_global_coherence');
+    return getResultOrDefault(result, 0.5);
   }
 
   static async isCritical(): Promise<boolean> {

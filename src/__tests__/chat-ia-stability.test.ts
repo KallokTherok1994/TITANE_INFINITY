@@ -6,41 +6,108 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useChat } from '../hooks/useChat';
+import type { ChatMode } from '../services/ai';
+import type { AIMessage } from '../services/ai/types';
 
 // Mock des dépendances
-vi.mock('../hooks/useChatCore', () => ({
-  useChatCore: () => ({
-    currentMode: 'default' as const,
+const mockModules = vi.hoisted(() => {
+  const memoryMessages: AIMessage[] = [];
+  const memoryStats = { count: 0, sizeMB: 0, compressed: false };
+
+  const memoryLoadHistory = vi.fn(() => memoryMessages);
+  const memorySaveMessage = vi.fn((message: AIMessage) => {
+    memoryMessages.push(message);
+    memoryStats.count = memoryMessages.length;
+  });
+  const memoryClearMode = vi.fn(() => {
+    memoryMessages.length = 0;
+    memoryStats.count = 0;
+  });
+  const memoryCompact = vi.fn(() => ({ cleaned: false, sizeMB: 0 }));
+  const memoryAwardXP = vi.fn();
+
+  const useChatMemoryMock = vi.fn(() => ({
+    messagesForMode: memoryMessages,
+    memoryStats,
+    loadHistory: memoryLoadHistory,
+    saveMessage: memorySaveMessage,
+    clearMode: memoryClearMode,
+    compactIfNeeded: memoryCompact,
+    awardXP: memoryAwardXP,
+  }));
+
+  const coreGenerateMock = vi.fn(async (message: string) => ({
+    content: `Réponse IA pour: ${message}`,
+    provider: 'gemini',
+    timestamp: Date.now(),
+    mode: 'default' as const,
+    contextUsed: [],
+  }));
+
+  const coreValidateMock = vi.fn(() => ({
+    isValid: true,
+    score: 0.95,
+    issues: [],
+  }));
+
+  let currentModeValue: ChatMode = 'default';
+  const setModeMock = vi.fn((mode: ChatMode) => {
+    currentModeValue = mode;
+  });
+
+  const useChatCoreMock = vi.fn(() => ({
+    get currentMode() {
+      return currentModeValue;
+    },
     anomalyCount: 0,
     currentProvider: null,
-    generate: vi.fn(async (message: string) => ({
-      content: `Réponse IA pour: ${message}`,
-      provider: 'gemini',
-      timestamp: Date.now(),
-      mode: 'default' as const,
-      contextUsed: [],
-    })),
-    setMode: vi.fn(),
+    generate: coreGenerateMock,
+    stream: undefined,
+    setMode: setModeMock,
     setProvider: vi.fn(),
-    validateResponse: vi.fn(() => ({
-      isValid: true,
-      score: 0.95,
-      issues: [],
-    })),
-  }),
+    validateResponse: coreValidateMock,
+  }));
+
+  return {
+    coreGenerateMock,
+    coreValidateMock,
+    useChatCoreMock,
+    memoryMessages,
+    memoryStats,
+    memoryLoadHistory,
+    memorySaveMessage,
+    memoryClearMode,
+    memoryCompact,
+    memoryAwardXP,
+    useChatMemoryMock,
+    resetCurrentMode: (mode: ChatMode = 'default') => {
+      currentModeValue = mode;
+    },
+  } as const;
+});
+
+vi.mock('../hooks/useChatCore', () => ({
+  useChatCore: mockModules.useChatCoreMock,
 }));
 
 vi.mock('../hooks/useChatMemory', () => ({
-  useChatMemory: () => ({
-    messagesForMode: [],
-    memoryStats: { count: 0, sizeMB: 0, compressed: false },
-    loadHistory: vi.fn(() => []),
-    saveMessage: vi.fn(),
-    clearMode: vi.fn(),
-    compactIfNeeded: vi.fn(() => ({ cleaned: false, sizeMB: 0 })),
-    awardXP: vi.fn(),
-  }),
+  useChatMemory: mockModules.useChatMemoryMock,
 }));
+
+const {
+  coreGenerateMock,
+  coreValidateMock,
+  useChatCoreMock,
+  memoryMessages,
+  memoryStats,
+  memoryLoadHistory,
+  memorySaveMessage,
+  memoryClearMode,
+  memoryCompact,
+  memoryAwardXP,
+  useChatMemoryMock,
+  resetCurrentMode,
+} = mockModules;
 
 vi.mock('../services/tts/hybridTTS', () => ({
   hybridTTS: {
@@ -59,6 +126,11 @@ vi.mock('../services/errorTracker', () => ({
 describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    resetCurrentMode();
+    memoryMessages.length = 0;
+    memoryStats.count = 0;
+    memoryStats.sizeMB = 0;
+    memoryStats.compressed = false;
   });
 
   it('SCÉNARIO A: Messages utilisateur + IA doivent persister', async () => {
@@ -184,16 +256,7 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
 
   it('SCÉNARIO E: Erreur IA ne fait pas crasher', async () => {
     // Mock d'erreur dans generate
-    const { useChatCore } = await import('../hooks/useChatCore');
-    vi.mocked(useChatCore).mockReturnValueOnce({
-      currentMode: 'default' as const,
-      anomalyCount: 0,
-      currentProvider: null,
-      generate: vi.fn().mockRejectedValue(new Error('Provider unavailable')),
-      setMode: vi.fn(),
-      setProvider: vi.fn(),
-      validateResponse: vi.fn(),
-    });
+    coreGenerateMock.mockRejectedValueOnce(new Error('Provider unavailable'));
 
     const { result } = renderHook(() => useChat());
 

@@ -419,7 +419,7 @@ const data = await invoke<SomeCommandResponse>('some_command');
 
 **Fichier**: `.env:26`
 ```
-TITANE_MEMORY_PASSPHRASE=titane_infinity_dev_passphrase_change_in_production_2025
+TITANE_MEMORY_PASSPHRASE=change_me_before_release
 ```
 
 **⚠️ CRITIQUE SÉCURITÉ**: Passphrase visible en clair

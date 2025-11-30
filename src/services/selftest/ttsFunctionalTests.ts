@@ -14,10 +14,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { hybridTTS } from '../tts/hybridTTS';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import type { TTSConfig, TTSStatus } from '../tts/hybridTTS';
 
 // ═══════════════════════════════════════════════════════════════════
 //   TYPES & INTERFACES

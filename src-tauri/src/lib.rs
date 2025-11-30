@@ -42,6 +42,7 @@ pub mod memory_persistence; // ✅ Memory persistence
 pub mod overdrive; // ✅ Chat orchestrator (always active)
 pub mod runtime_config; // ✅ Runtime configuration bridge
 pub mod secure_commands; // ✅ Secure commands
+pub mod secure_engine; // ✅ Secure engine helpers
 pub mod security; // ✅ Security layer
 pub mod system_state; // ✅ System state
 pub mod time; // ✅ Time-travel engine

@@ -436,7 +436,7 @@ import { VoiceControlPanel } from './VoiceControlPanel';
 nano .env
 
 # 2. Ajouter clé
-VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE_ICI
+VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 # 3. Redémarrer
 npm run dev
@@ -543,7 +543,7 @@ ollama pull mistral
 https://ai.google.dev
 
 # 2. Éditer .env
-VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE_ICI
+VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 # 3. Redémarrer
 npm run dev
@@ -605,7 +605,7 @@ ollama pull llama2
 **Configuration :**
 ```bash
 # .env
-VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE_ICI  # Cloud principal
+VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY  # Cloud principal
 VITE_OLLAMA_URL=http://localhost:11434    # Fallback local
 VITE_OLLAMA_MODEL=llama2
 
@@ -722,7 +722,7 @@ npm run dev
 # 1. Obtenir clé : https://ai.google.dev
 # 2. Éditer .env
 nano .env
-# Remplacer : VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE
+# Remplacer : VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 # 3. Redémarrer : npm run dev
 ```
 

@@ -15,7 +15,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
 import { geminiProvider } from '../services/ai/providers/gemini';
-import { titaneLocalProvider } from '../services/ai/providers/titaneLocal';
 import type { AIMessage } from '../services/ai/types';
 
 const OMEGA_TEST_TIMEOUT = 30000;
@@ -37,7 +36,6 @@ const createDeterministicResponse = (message: string, history: AIMessage[] = [])
 });
 
 const runWithDeterministicOrchestrator = async (callback: () => Promise<void>) => {
-  const originalGenerate = aiOrchestrator.generate.bind(aiOrchestrator);
   const generateSpy = vi
     .spyOn(aiOrchestrator, 'generate')
     .mockImplementation(async (message: string, history: AIMessage[] = []) =>
@@ -221,7 +219,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
     console.log('✅ Criterion 1: Always respond - PASSED');
 
     // 2. Ne jamais geler (never freeze) - timeout test
-    const timeoutPromise = new Promise((_, reject) =>
+    const timeoutPromise: Promise<never> = new Promise((_, reject) =>
       setTimeout(() => reject(new Error('Timeout')), 30000)
     );
 
@@ -229,7 +227,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E Validation', () => {
 
     const response2 = await Promise.race([messagePromise, timeoutPromise]);
     expect(response2).toBeDefined();
-    expect((response2 as any).content).toBeTruthy();
+    expect(response2.content).toBeTruthy();
     console.log('✅ Criterion 2: Never freeze - PASSED');
 
     // 3. Toujours fallback (always fallback)

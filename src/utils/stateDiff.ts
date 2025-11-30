@@ -11,11 +11,21 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+type PlainObject = { [key: string]: unknown };
 
-export type DeepPartial<T> = T extends object
-  ? { [P in keyof T]?: DeepPartial<T[P]> }
-  : T;
+const isPlainObject = (value: unknown): value is PlainObject =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+export type DeepPartial<T> =
+  T extends (infer U)[]
+    ? Array<DeepPartial<U>>
+    : T extends Map<infer K, infer V>
+      ? Map<DeepPartial<K>, DeepPartial<V>>
+      : T extends Set<infer U>
+        ? Set<DeepPartial<U>>
+        : T extends object
+          ? { [P in keyof T]?: DeepPartial<T[P]> }
+          : T;
 
 /**
  * Calculate diff between two objects (shallow comparison per field)
@@ -29,7 +39,7 @@ export type DeepPartial<T> = T extends object
  * // => { cpu: 55 }  (only changed field)
  * ```
  */
-export function stateDiff<T extends Record<string, unknown>>(
+export function stateDiff<T extends object>(
   oldState: T | null,
   newState: T
 ): DeepPartial<T> {
@@ -38,32 +48,36 @@ export function stateDiff<T extends Record<string, unknown>>(
     return newState as DeepPartial<T>;
   }
 
-  const delta = {} as unknown as DeepPartial<T>;
+  const delta: DeepPartial<T> = {} as DeepPartial<T>;
   let hasChanges = false;
 
-  for (const key in newState) {
+  for (const key of Object.keys(newState) as Array<keyof T>) {
     const oldValue = oldState[key];
     const newValue = newState[key];
 
-    // Deep comparison for objects
-    if (typeof newValue === 'object' && newValue !== null && !Array.isArray(newValue)) {
+    if (isPlainObject(newValue)) {
       const nestedDelta = stateDiff(
-        oldValue as Record<string, unknown> | null,
-        newValue as Record<string, unknown>
-      );
+        isPlainObject(oldValue) ? (oldValue as PlainObject) : null,
+        newValue as PlainObject
+      ) as DeepPartial<T[typeof key]>;
 
-      if (Object.keys(nestedDelta).length > 0) {
-        (delta as Record<string, unknown>)[key as string] = nestedDelta;
+      if (
+        (isPlainObject(nestedDelta) && Object.keys(nestedDelta).length > 0) ||
+        (Array.isArray(nestedDelta) && nestedDelta.length > 0)
+      ) {
+        (delta as Record<keyof T, DeepPartial<T[keyof T]>>)[key] = nestedDelta;
         hasChanges = true;
       }
-    } else if (oldValue !== newValue) {
-      // Primitive or array changed
-      (delta as Record<string, unknown>)[key as string] = newValue;
+      continue;
+    }
+
+    if (!Object.is(oldValue, newValue)) {
+      (delta as Record<keyof T, DeepPartial<T[keyof T]>>)[key] = newValue as DeepPartial<T[typeof key]>;
       hasChanges = true;
     }
   }
 
-  return hasChanges ? delta : ({} as unknown as DeepPartial<T>);
+  return hasChanges ? delta : ({} as DeepPartial<T>);
 }
 
 /**
@@ -77,24 +91,33 @@ export function stateDiff<T extends Record<string, unknown>>(
  * // => { physical: { cpu: 55 }, cognitive: { load: 30 } }
  * ```
  */
-export function mergeStateDelta<T extends Record<string, unknown>>(
+export function mergeStateDelta<T extends object>(
   currentState: T,
   delta: DeepPartial<T>
 ): T {
-  const merged = { ...currentState };
+  if (!isPlainObject(delta)) {
+    return currentState;
+  }
 
-  for (const key in delta) {
-    const deltaValue = delta[key];
+  const merged: T = { ...currentState };
+  const deltaRecord = delta as Record<keyof T, DeepPartial<T[keyof T]>>;
 
-    if (typeof deltaValue === 'object' && deltaValue !== null && !Array.isArray(deltaValue)) {
-      // Deep merge for nested objects
-      (merged as Record<string, unknown>)[key as string] = mergeStateDelta(
-        currentState[key] as Record<string, unknown>,
-        deltaValue as DeepPartial<Record<string, unknown>>
-      );
-    } else {
-      // Direct assign for primitives/arrays
-      (merged as Record<string, unknown>)[key as string] = deltaValue;
+  for (const key of Object.keys(deltaRecord) as Array<keyof T>) {
+    const deltaValue = deltaRecord[key];
+
+    if (isPlainObject(deltaValue)) {
+      const currentValue = merged[key];
+      const nestedBase = isPlainObject(currentValue) ? currentValue : {};
+
+      merged[key] = mergeStateDelta(
+        nestedBase as PlainObject,
+        deltaValue as DeepPartial<PlainObject>
+      ) as T[typeof key];
+      continue;
+    }
+
+    if (deltaValue !== undefined) {
+      merged[key] = deltaValue as T[typeof key];
     }
   }
 
@@ -145,19 +168,25 @@ export function isDeltaSignificant<T>(
  * Count total number of changed fields (recursive)
  */
 function countChangedFields<T>(obj: DeepPartial<T>): number {
-  let count = 0;
-
-  for (const key in obj) {
-    const value = obj[key];
-
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      count += countChangedFields(value as DeepPartial<unknown>);
-    } else {
-      count += 1;
-    }
+  if (Array.isArray(obj)) {
+    return obj.reduce<number>((total, item) => total + countChangedFields(item as DeepPartial<unknown>), 0);
   }
 
-  return count;
+  if (!isPlainObject(obj)) {
+    return obj === undefined ? 0 : 1;
+  }
+
+  const entries = obj as Record<string, DeepPartial<unknown>>;
+
+  return Object.keys(entries).reduce((total, key) => {
+    const value = entries[key];
+
+    if (isPlainObject(value) || Array.isArray(value)) {
+      return total + countChangedFields(value as DeepPartial<unknown>);
+    }
+
+    return value === undefined ? total : total + 1;
+  }, 0);
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -173,22 +202,22 @@ export function exampleDeltaSync() {
     cognitive: { load: number };
   }
 
-  const oldState = {
+  const oldState: State = {
     physical: { cpu: 50, memory: 60 },
     cognitive: { load: 30 },
-  } as State;
+  };
 
-  const newState = {
+  const newState: State = {
     physical: { cpu: 55, memory: 60 }, // cpu changed
     cognitive: { load: 30 }, // unchanged
-  } as State;
+  };
 
   // Calculate delta (only changed fields)
-  const delta = stateDiff(oldState as any, newState as any);
+  const delta = stateDiff<State>(oldState, newState);
   console.log('Delta:', delta); // => { physical: { cpu: 55 } }
 
   // Merge delta into old state
-  const merged = mergeStateDelta(oldState as any, delta);
+  const merged = mergeStateDelta<State>(oldState, delta);
   console.log('Merged:', merged); // => newState
 
   // Check payload reduction

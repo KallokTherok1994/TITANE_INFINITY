@@ -314,11 +314,13 @@ export class EventCoalescerEngine {
    * Enregistre un handler
    */
   public on(type: string, handler: (event: CoalescedEvent) => void): () => void {
-    if (!this.handlers.has(type)) {
-      this.handlers.set(type, new Set());
+    let handlerSet = this.handlers.get(type);
+    if (!handlerSet) {
+      handlerSet = new Set();
+      this.handlers.set(type, handlerSet);
     }
 
-    this.handlers.get(type)!.add(handler);
+    handlerSet.add(handler);
 
     // Retourne fonction de cleanup
     return () => {

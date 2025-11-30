@@ -19,7 +19,6 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
-import type { SingularityState } from '@/types/singularityState';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

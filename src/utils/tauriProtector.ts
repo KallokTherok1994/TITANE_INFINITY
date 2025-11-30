@@ -6,9 +6,159 @@
  * Correction des erreurs "Cannot read properties of undefined (reading 'invoke')"
  */
 
+import type {
+  AdaptiveLayer,
+  CognitiveLayer,
+  MetaLayer,
+  PhysicalLayer,
+  SingularityState,
+  SymbolicLayer,
+} from '@/types/singularityState';
+
 type TauriCoreBridge = {
   core?: {
     invoke?: (command: string, args?: any) => Promise<any>;
+  };
+};
+
+export const createFallbackPhysical = (): PhysicalLayer => {
+  const now = Date.now();
+  return {
+    helios: {
+      active: false,
+      cpu_usage: 0,
+      memory_usage: 0,
+      disk_usage: 0,
+      temperature: 0,
+      battery_level: null,
+      last_update: now,
+    },
+    system_health: {
+      global_health: 0.5,
+      services_running: 0,
+      errors_count: 0,
+      warnings_count: 0,
+      uptime: 0,
+    },
+    metrics: {
+      cpu_usage: 0,
+      memory_usage: 0,
+      fps: 0,
+      latency: 0,
+      performance_score: 0.5,
+    },
+  };
+};
+
+export const createFallbackCognitive = (): CognitiveLayer => {
+  const now = Date.now();
+  return {
+    memory: {
+      total_memories: 0,
+      active_memories: 0,
+      memory_usage: 0,
+      last_retrieval: now,
+      compression_ratio: 1,
+    },
+    conversation: {
+      active_session: false,
+      message_count: 0,
+      context_length: 0,
+      last_message: null,
+      last_timestamp: null,
+    },
+    knowledge: {
+      total_entries: 0,
+      indexed_entries: 0,
+      knowledge_score: 0,
+      last_update: now,
+    },
+    coherence: 0.5,
+  };
+};
+
+export const createFallbackSymbolic = (): SymbolicLayer => {
+  const now = Date.now();
+  return {
+    persona: {
+      name: 'TITANE∞ (offline)',
+      mood: 'neutral',
+      intensity: 0.25,
+      evolution_level: 1,
+      last_interaction: now,
+    },
+    archetype: {
+      active_archetype: 'sentinel',
+      strength: 0.35,
+      transition: null,
+    },
+    visual: {
+      theme: 'dark',
+      accent_color: '#6366f1',
+      glow_intensity: 0.2,
+      motion_enabled: false,
+      depth_enabled: false,
+    },
+    stability: 0.6,
+  };
+};
+
+export const createFallbackAdaptive = (): AdaptiveLayer => {
+  const now = Date.now();
+  return {
+    evolution: {
+      generation: 0,
+      mutation_rate: 0,
+      fitness_score: 0.5,
+      last_evolution: now,
+    },
+    auto_heal: {
+      active: false,
+      healing_capacity: 0.25,
+      errors_healed: 0,
+      last_heal: null,
+    },
+    evolution_capacity: 0.3,
+  };
+};
+
+export const createFallbackMeta = (): MetaLayer => {
+  const now = Date.now();
+  const activePath = typeof window !== 'undefined' ? window.location.pathname : '/';
+  return {
+    ui: {
+      active_page: activePath,
+      sidebar_open: false,
+      modal_open: false,
+      theme: 'dark',
+      last_interaction: now,
+    },
+    runtime: {
+      version: 'dev-offline',
+      build: 'web-fallback',
+      environment: import.meta.env.MODE,
+      uptime: 0,
+      restart_count: 0,
+    },
+    runtime_health: 0.4,
+  };
+};
+
+export const createFallbackSingularityState = (): SingularityState => {
+  const now = Date.now();
+  return {
+    physical: createFallbackPhysical(),
+    cognitive: createFallbackCognitive(),
+    symbolic: createFallbackSymbolic(),
+    adaptive: createFallbackAdaptive(),
+    meta: createFallbackMeta(),
+    progression: {
+      xp: 0,
+      level: 1,
+      events: [],
+    },
+    timestamp: now,
+    signature: 'web-fallback-state',
   };
 };
 
@@ -41,31 +191,41 @@ export class TauriInvokeProtector {
   }
 
   /**
+   * Expose Tauri availability for callers needing a quick check.
+   */
+  isAvailable(): boolean {
+    if (this.isTauriAvailable === true) {
+      return true;
+    }
+    return this.syncCheckTauriAvailability();
+  }
+
+  /**
    * Vérifie si Tauri est disponible dans l'environnement actuel
    */
-  private checkTauriAvailability(): boolean {
-    if (this.isTauriAvailable !== null) {
-      return this.isTauriAvailable === true;
+  private syncCheckTauriAvailability(): boolean {
+    if (this.isTauriAvailable === true) {
+      return true;
     }
 
     try {
-      // Vérification environnement
       if (typeof window === 'undefined') {
         this.isTauriAvailable = false;
         return false;
       }
 
-      // Vérification API Tauri
       const tauriGlobal = getTauriGlobal();
-      const hasTauriInvoke = typeof tauriGlobal?.core?.invoke === 'function';
+      const internals = (window as typeof window & { __TAURI_INTERNALS__?: { invoke?: unknown } }).__TAURI_INTERNALS__;
+      const hasInvoke =
+        typeof tauriGlobal?.core?.invoke === 'function' ||
+        typeof internals?.invoke === 'function';
 
-      this.isTauriAvailable = hasTauriInvoke;
-
-      if (!this.isTauriAvailable) {
-        console.warn('[TauriProtector] Tauri API not available - using fallback mode');
+      if (hasInvoke) {
+        this.isTauriAvailable = true;
+        return true;
       }
 
-      return hasTauriInvoke;
+      return false;
     } catch (error) {
       console.warn('[TauriProtector] Error checking Tauri availability:', error);
       this.isTauriAvailable = false;
@@ -76,7 +236,7 @@ export class TauriInvokeProtector {
   /**
    * Invoke protégé avec fallback intelligent
    */
-  async safeInvoke<T>(command: string, args?: any): Promise<T> {
+  async safeInvoke<T>(command: string, args?: any, timeoutMs = 10000): Promise<T> {
     const cacheKey = `${command}:${JSON.stringify(args)}`;
 
     // Check cache first pour éviter appels répétés
@@ -86,21 +246,19 @@ export class TauriInvokeProtector {
     }
 
     try {
-      // Vérifier disponibilité Tauri
-      if (!this.checkTauriAvailability()) {
-        return this.createFallbackResponse<T>(command, 'Tauri not available');
-      }
-
-      // Import dynamique avec protection
+      // Import dynamique avec protection (détermine disponibilité réelle)
       const tauriModule = await this.safeTauriImport();
       if (!tauriModule || !tauriModule.invoke) {
+        this.isTauriAvailable = false;
         return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
       }
+
+      this.isTauriAvailable = true;
 
       // Appel avec timeout
       const result = await Promise.race([
         tauriModule.invoke<T>(command, args),
-        this.createTimeoutPromise<T>(10000) // 10s timeout
+        this.createTimeoutPromise<T>(timeoutMs)
       ]);
 
       // Cache du résultat positif
@@ -124,11 +282,13 @@ export class TauriInvokeProtector {
     try {
       const module = await import('@tauri-apps/api/core');
       if (module && typeof module.invoke === 'function') {
+        this.isTauriAvailable = true;
         return { invoke: module.invoke };
       }
       return null;
     } catch (error) {
       console.warn('[TauriProtector] Failed to import Tauri core:', error);
+      this.isTauriAvailable = false;
       return null;
     }
   }
@@ -152,6 +312,38 @@ export class TauriInvokeProtector {
     const errorMessage = error instanceof Error ? error.message : String(error);
 
     // Fallbacks spécifiques par type de commande
+    if (safeCommand.includes('singularity_get_full_state')) {
+      return createFallbackSingularityState() as T;
+    }
+
+    if (safeCommand.includes('singularity_get_physical')) {
+      return createFallbackPhysical() as T;
+    }
+
+    if (safeCommand.includes('singularity_get_cognitive')) {
+      return createFallbackCognitive() as T;
+    }
+
+    if (safeCommand.includes('singularity_get_symbolic')) {
+      return createFallbackSymbolic() as T;
+    }
+
+    if (safeCommand.includes('singularity_get_adaptive')) {
+      return createFallbackAdaptive() as T;
+    }
+
+    if (safeCommand.includes('singularity_get_meta')) {
+      return createFallbackMeta() as T;
+    }
+
+    if (safeCommand.includes('singularity_get_global_coherence')) {
+      return 0.5 as T;
+    }
+
+    if (safeCommand.includes('singularity_is_critical')) {
+      return false as T;
+    }
+
     if (safeCommand.includes('chat_get_providers_status') || safeCommand.includes('providers')) {
       return {
         success: false,
@@ -213,6 +405,13 @@ export const tauriProtector = TauriInvokeProtector.getInstance();
  * Fonction utilitaire pour invoke protégé
  * Remplace directement les appels invokeTauri problématiques
  */
-export async function safeInvokeTauri<T>(command: string, args?: any): Promise<T> {
-  return tauriProtector.safeInvoke<T>(command, args);
+export async function safeInvokeTauri<T>(command: string, args?: any, timeoutMs?: number): Promise<T> {
+  return tauriProtector.safeInvoke<T>(command, args, timeoutMs);
+}
+
+/**
+ * Helper pour vérifier rapidement la disponibilité du runtime Tauri.
+ */
+export function isTauriRuntimeAvailable(): boolean {
+  return tauriProtector.isAvailable();
 }

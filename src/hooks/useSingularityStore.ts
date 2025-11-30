@@ -205,16 +205,19 @@ function useLegacySingularityStore(): SingularityLegacyStore {
     return legacyState.enginesData ? legacyState.enginesData[engineId] : undefined;
   }, []);
 
-  return useMemo(() => ({
-    metaMode: legacyState.metaMode,
-    theme: legacyState.theme,
-    enginesData: legacyState.enginesData,
-    setMode,
-    setTheme,
-    setEnginesData,
-    selectUIMode,
-    selectEngineData,
-  }), [version, setMode, setTheme, setEnginesData, selectUIMode, selectEngineData]);
+  return useMemo(() => {
+    void version; // trigger recompute when legacy version changes
+    return {
+      metaMode: legacyState.metaMode,
+      theme: legacyState.theme,
+      enginesData: legacyState.enginesData,
+      setMode,
+      setTheme,
+      setEnginesData,
+      selectUIMode,
+      selectEngineData,
+    };
+  }, [version, setMode, setTheme, setEnginesData, selectUIMode, selectEngineData]);
 }
 
 // ═══════════════════════════════════════════════════════════════════

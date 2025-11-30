@@ -71,7 +71,7 @@ ollama pull qwen2.5:latest
    - Va sur : https://ai.google.dev
    - Connecte-toi avec ton compte Google
    - Clique "Get API Key"
-   - Copie la clé (commence par `AIzaSy...`)
+   - Copie la clé (format `YOUR_GEMINI_API_KEY`)
 
 2. **Ajouter dans .env :**
    ```bash

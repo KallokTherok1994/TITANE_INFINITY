@@ -64,7 +64,7 @@
      ✓ Test curl: {"models":[{"name":"llama2:latest",...}]}
 
   ☁️  Gemini Cloud AI
-     ✓ API Key: Configurée .env (AIzaSy...)
+    ✓ API Key: Configurée .env (YOUR_GEMINI_API_KEY)
      ✓ Modèle: gemini-2.0-flash-exp
      ✓ Chargement: Auto au boot (dotenv)
      ✓ Retry: 3x avec exponential backoff

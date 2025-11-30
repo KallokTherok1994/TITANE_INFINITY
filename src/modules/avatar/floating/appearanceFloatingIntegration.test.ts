@@ -3,9 +3,6 @@
 //   Test appearance sync with Three.js materials
 // ═══════════════════════════════════════════════════════════════════════════
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as THREE from 'three';
 import { AppearanceFloatingIntegration, parseColor, formalityToMetalness, energyToRoughness } from './appearanceFloatingIntegration';

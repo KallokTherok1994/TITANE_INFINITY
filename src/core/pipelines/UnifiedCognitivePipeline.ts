@@ -590,7 +590,10 @@ export class UnifiedCognitivePipeline {
     this.isProcessing = true;
 
     while (this.queue.length > 0) {
-      const message = this.queue.shift()!;
+      const message = this.queue.shift();
+      if (!message) {
+        break;
+      }
       await this.processMessage(message);
     }
 

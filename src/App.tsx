@@ -67,8 +67,7 @@ import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
-import { ChatDiagnostic } from './components/ChatDiagnostic'; // ✨ v16.2.2 - Chat IA Diagnostic
-// ChatIADiagnostic disponible mais non utilisé actuellement
+// Chat IA Diagnostic désormais intégré au DevTools
 
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
@@ -88,6 +87,7 @@ const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage').then(m =>
 const PerformanceTest = lazy(() => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })));
 const TimeNavigator = lazy(() => import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator })));
 const SystemGovernance = lazy(() => import('./pages/SystemGovernance').then(m => ({ default: m.SystemGovernance })));
+const SecureSettings = lazy(() => import('./pages/SecureSettings').then(m => ({ default: m.SecureSettings })));
 const MultiAIDashboard = lazy(() => import('./ui/pages/MultiAIDashboard'));
 const NodeClusterDashboard = lazy(() => import('./ui/pages/NodeClusterDashboard'));
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
@@ -193,6 +193,7 @@ const AppRouter: React.FC = () => {
     { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
     { id: '/memory', label: 'Memory', icon: '💾' },
     { id: '/settings', label: 'Paramètres', icon: '⚙️' },
+    { id: '/secure', label: 'Sécurité', icon: '🔐', badge: 'NEW' },
     { id: '/devtools', label: 'DevTools', icon: '🔧' },
   ];
 
@@ -254,9 +255,6 @@ const AppRouter: React.FC = () => {
       }
       sidebarCollapsed={sidebarCollapsed}
     >
-      {/* Chat IA Diagnostic Overlay */}
-      <ChatDiagnostic />
-
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={
         <div style={{
@@ -328,6 +326,11 @@ const AppRouter: React.FC = () => {
           <Route path="/settings" element={
             <ErrorBoundary context="Settings">
               <Settings />
+            </ErrorBoundary>
+          } />
+          <Route path="/secure" element={
+            <ErrorBoundary context="SecureSettings">
+              <SecureSettings />
             </ErrorBoundary>
           } />
           <Route path="/devtools" element={<DevTools />} />

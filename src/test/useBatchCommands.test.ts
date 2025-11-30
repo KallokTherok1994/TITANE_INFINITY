@@ -29,14 +29,13 @@ describe('useBatchCommands Hook', () => {
       { command: 'test_command_2', params: { id: 2 } },
     ];
 
-    let batchResult;
-    await waitFor(async () => {
-      batchResult = await result.current.executeBatch(commands, { mode: 'parallel' });
-    });
+    const batchResult = await result.current.executeBatch(commands, { mode: 'parallel' });
 
     expect(batchResult).toEqual(mockResults);
+    await waitFor(() => {
+      expect(result.current.results).toEqual(mockResults);
+    });
     expect(result.current.isExecuting).toBe(false);
-    expect(result.current.results).toEqual(mockResults);
     expect(result.current.error).toBeNull();
   });
 

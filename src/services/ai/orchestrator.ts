@@ -22,8 +22,9 @@ import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
 
 const isDev = process.env.NODE_ENV === 'development';
-const NULL_BYTE_PATTERN = /\u0000+/g;
-const CONTROL_CHAR_PATTERN = /\p{Cc}+/gu;
+const NULL_BYTE = String.fromCharCode(0);
+const CONTROL_CHAR_DETECTOR = /\p{Cc}/u;
+const CONTROL_CHAR_REMOVER = /\p{Cc}+/gu;
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ORCHESTRATOR
@@ -193,15 +194,21 @@ class AIOrchestrator {
       .replace(/data:.*,/gi, ''); // Remove data URLs
 
     // Validation caractères dangereux
-    const dangerousPatterns = [
-      NULL_BYTE_PATTERN, // Null bytes
-      CONTROL_CHAR_PATTERN, // Control characters
+    const sanitizers: Array<{ hasIssue: (value: string) => boolean; clean: (value: string) => string }> = [
+      {
+        hasIssue: value => value.includes(NULL_BYTE),
+        clean: value => value.split(NULL_BYTE).join('')
+      },
+      {
+        hasIssue: value => CONTROL_CHAR_DETECTOR.test(value),
+        clean: value => value.replace(CONTROL_CHAR_REMOVER, '')
+      }
     ];
 
-    dangerousPatterns.forEach(pattern => {
-      if (pattern.test(sanitized)) {
+    sanitizers.forEach(({ hasIssue, clean }) => {
+      if (hasIssue(sanitized)) {
         issues.push('Dangerous characters detected');
-        sanitized = sanitized.replace(pattern, '');
+        sanitized = clean(sanitized);
       }
     });
 
@@ -627,10 +634,11 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     this.currentRequests++;
 
     try {
+      isDev && console.debug('[OMEGA] Provider execution start', requestId, provider.name);
       // Availability check with short timeout
       const availabilityPromise = provider.isAvailable();
       const availabilityTimeout = new Promise<boolean>((_, reject) =>
-        setTimeout(() => reject(new Error('Availability check timeout')), 3000)
+        setTimeout(() => reject(new Error(`Availability check timeout (${requestId})`)), 3000)
       );
 
       const isAvailable = await Promise.race([availabilityPromise, availabilityTimeout]);
@@ -642,14 +650,14 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       // Generation with full timeout
       const generationPromise = provider.generate(message, history);
       const generationTimeout = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(new Error(`Provider timeout (${timeout}ms)`)), timeout)
+        setTimeout(() => reject(new Error(`Provider timeout (${timeout}ms) [${requestId}]`)), timeout)
       );
 
       const response = await Promise.race([generationPromise, generationTimeout]);
 
       // Response validation
       if (!response || typeof response !== 'object') {
-        throw new Error('Invalid response format');
+        throw new Error(`Invalid response format (${requestId})`);
       }
 
       if (!response.content || typeof response.content !== 'string') {

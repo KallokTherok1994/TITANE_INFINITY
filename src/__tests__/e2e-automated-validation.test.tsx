@@ -18,9 +18,6 @@ import { chatEngine } from '../services/ai/chatEngine';
 import { aiOrchestrator } from '../services/ai/orchestrator';
 import { autoHealEngine } from '../services/ai/autoHealEngine';
 import { geminiProvider } from '../services/ai/providers/gemini';
-import { tauriChatProvider } from '../services/ai/providers/tauriChat';
-import { ollamaProvider } from '../services/ai/providers/ollama';
-import { titaneLocalProvider } from '../services/ai/providers/titaneLocal';
 import type { AIMessage } from '../services/ai/types';
 import type { ChatEngineResponse } from '../services/ai';
 import { useChat } from '../hooks/useChat';
@@ -1202,18 +1199,30 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
 
 describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
   it('should recover gracefully when all providers fail', async () => {
-    vi.spyOn(chatEngine, 'generate').mockRejectedValue(new Error('All providers down'));
-
-    const { result } = renderHook(() => useChat());
-
-    await act(async () => {
-      await result.current.sendMessage('Test when everything fails');
+    const streamSpy = vi.spyOn(chatEngine, 'stream').mockImplementation(() => {
+      return (async function* () {
+        throw new Error('Streaming not available');
+        yield undefined as never;
+      })();
     });
+    const generateSpy = vi.spyOn(chatEngine, 'generate').mockRejectedValue(new Error('All providers down'));
 
-    const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
-    expect(assistantMessages.length).toBeGreaterThan(0);
-    expect(assistantMessages[assistantMessages.length - 1]?.provider).toBe('omnis-fallback');
-    expect(result.current.isLoading).toBe(false);
+    try {
+      const { result } = renderHook(() => useChat());
+
+      await act(async () => {
+        await result.current.sendMessage('Test when everything fails');
+      });
+
+      const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
+      console.log('Providers (all fail):', assistantMessages.map(msg => msg.provider));
+      expect(assistantMessages.length).toBeGreaterThan(0);
+      expect(assistantMessages[assistantMessages.length - 1]?.provider).toBe('omnis-fallback');
+      expect(result.current.isLoading).toBe(false);
+    } finally {
+      streamSpy.mockRestore();
+      generateSpy.mockRestore();
+    }
   });
 
   it('should handle UI crashes with error boundaries', () => {
@@ -1234,25 +1243,37 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
   });
 
   it('should auto-heal from temporary network issues', async () => {
-    vi.spyOn(chatEngine, 'generate')
+    const streamSpy = vi.spyOn(chatEngine, 'stream').mockImplementation(() => {
+      return (async function* () {
+        throw new Error('Streaming not available');
+        yield undefined as never;
+      })();
+    });
+    const generateSpy = vi.spyOn(chatEngine, 'generate')
       .mockRejectedValueOnce(new Error('Network error'))
       .mockResolvedValue(createMockResponse('Network recovered'));
 
-    const { result } = renderHook(() => useChat());
+    try {
+      const { result } = renderHook(() => useChat());
 
-    // First attempt should fall back gracefully
-    await act(async () => {
-      await result.current.sendMessage('Test auto-healing');
-    });
+      // First attempt should fall back gracefully
+      await act(async () => {
+        await result.current.sendMessage('Test auto-healing');
+      });
 
-    // Second attempt succeeds after recovery
-    await act(async () => {
-      await result.current.sendMessage('Test auto-healing again');
-    });
+      // Second attempt succeeds after recovery
+      await act(async () => {
+        await result.current.sendMessage('Test auto-healing again');
+      });
 
-    const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
-    expect(assistantMessages.length).toBeGreaterThanOrEqual(2);
-    expect(assistantMessages[assistantMessages.length - 1]?.content).toBe('Network recovered');
+      const assistantMessages = result.current.messages.filter(message => message.role === 'assistant');
+      console.log('Messages after network auto-heal:', assistantMessages.map(msg => msg.content));
+      expect(assistantMessages.length).toBeGreaterThanOrEqual(2);
+      expect(assistantMessages[assistantMessages.length - 1]?.content).toBe('Network recovered');
+    } finally {
+      streamSpy.mockRestore();
+      generateSpy.mockRestore();
+    }
   });
 
   it('should maintain state consistency during concurrent operations', async () => {

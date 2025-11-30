@@ -188,9 +188,9 @@ Si logs absents:
 cat .env | grep GEMINI
 
 # Devrait contenir:
-VITE_GEMINI_API_KEY=AIzaSy...
+VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 # OU
-GEMINI_API_KEY=AIzaSy...
+GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
 **Si absent**:

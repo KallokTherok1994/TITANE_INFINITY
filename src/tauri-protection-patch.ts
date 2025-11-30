@@ -10,6 +10,12 @@
 import './tests/tauri-invoke-fix-validator';
 import { safeInvokeTauri } from './utils/tauriProtector';
 
+declare global {
+  interface Window {
+    safeInvokeTauri: typeof safeInvokeTauri;
+  }
+}
+
 // Protection globale - remplace window.__TAURI__ si défaillant
 if (typeof window !== 'undefined') {
   // Patch du window global si nécessaire
@@ -29,7 +35,8 @@ if (typeof window !== 'undefined') {
   console.log('✅ Fallback mode available for browser context');
 }
 
-// Export de la fonction protégée pour usage global
-(window as any).safeInvokeTauri = safeInvokeTauri;
+if (typeof window !== 'undefined') {
+  window.safeInvokeTauri = safeInvokeTauri;
+}
 
 export { safeInvokeTauri };

@@ -240,6 +240,16 @@ fn build_permission_matrix() -> PermissionMatrix {
     matrix.insert("crypto_sign".to_string(), vec![Role::Root]);
     matrix.insert("crypto_verify".to_string(), vec![Role::Root, Role::System]);
 
+    // ═══════════════════════════════════════════════════════════════
+    // SECRETS
+    // ═══════════════════════════════════════════════════════════════
+    matrix.insert(
+        "secret_read".to_string(),
+        vec![Role::Root, Role::System],
+    );
+    matrix.insert("secret_status".to_string(), vec![Role::Root, Role::System]);
+    matrix.insert("secret_write".to_string(), vec![Role::Root]);
+
     matrix
 }
 

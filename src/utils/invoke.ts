@@ -6,7 +6,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { invoke } from '@tauri-apps/api/core';
 
 /**
  * Wrapper universel pour invoke() avec gestion d'erreur automatique
@@ -91,13 +90,7 @@ export async function safeInvokeWithTimeout<T = unknown>(
   timeoutMs = 10000
 ): Promise<T | null> {
   try {
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      setTimeout(() => reject(new Error(`Timeout after ${timeoutMs}ms`)), timeoutMs);
-    });
-
-    const invokePromise = invoke<T>(cmd, payload);
-
-    const result = await Promise.race([invokePromise, timeoutPromise]);
+    const result = await secureInvoke<T>(cmd, payload, { timeout: timeoutMs });
     return result;
   } catch (err) {
     console.error(`❌ Tauri Command Timeout [${cmd}]:`, err);

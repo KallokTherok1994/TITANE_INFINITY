@@ -29,4 +29,5 @@ export { Memory } from './Memory';
 export { Settings } from './Settings';
 export { DevTools } from './DevTools';
 export { PerformanceTest } from './PerformanceTest';
+export { SecureSettings } from './SecureSettings';
 

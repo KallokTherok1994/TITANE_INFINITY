@@ -10,19 +10,31 @@
 import { useState, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { memoryService } from '../services/api';
-
-interface MemoryEntry {
-  id: string;
-  content: string;
-  timestamp: number;
-  encrypted: boolean;
-}
+import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 
 interface MemoryState {
   entries: MemoryEntry[];
   total: number;
   encrypted_count: number;
 }
+
+const normalizeMemoryState = (state: Partial<MemoryState> | null | undefined): MemoryState => {
+  const rawEntries = Array.isArray(state?.entries) ? state.entries : [];
+  const entries = rawEntries.filter((item): item is MemoryEntry => {
+    if (!item || typeof item !== 'object') {
+      return false;
+    }
+    const candidate = item as Partial<MemoryEntry>;
+    return typeof candidate.id === 'string' && typeof candidate.content === 'string';
+  });
+  const encryptedCount = entries.filter((item) => Boolean(item?.encrypted)).length;
+
+  return {
+    entries,
+    total: typeof state?.total === 'number' ? state.total : entries.length,
+    encrypted_count: typeof state?.encrypted_count === 'number' ? state.encrypted_count : encryptedCount,
+  };
+};
 
 export const useMemoryCore = () => {
   const [entries, setEntries] = useState<MemoryEntry[]>([]);
@@ -33,9 +45,10 @@ export const useMemoryCore = () => {
     try {
       setLoading(true);
       setError(null);
-      const state = await secureInvoke<MemoryState>('memory_get_state');
-      setEntries(state.entries);
-      return state;
+      const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
+      const normalized = normalizeMemoryState(state);
+      setEntries(normalized.entries);
+      return normalized;
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to load memory entries';
       setError(message);
@@ -85,7 +98,10 @@ export const useMemoryCore = () => {
 
   const getMemoryState = useCallback(async () => {
     try {
-      return await secureInvoke<MemoryState>('memory_get_state');
+      const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
+      const normalized = normalizeMemoryState(state);
+      setEntries(normalized.entries);
+      return normalized;
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to get memory state';
       setError(message);

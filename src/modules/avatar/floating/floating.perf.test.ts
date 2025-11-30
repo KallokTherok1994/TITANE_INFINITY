@@ -3,8 +3,6 @@
 //   Benchmark 60 FPS stability, CPU/GPU usage, memory leaks
 // ═══════════════════════════════════════════════════════════════════════════
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest';
 import * as THREE from 'three';
 import { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';

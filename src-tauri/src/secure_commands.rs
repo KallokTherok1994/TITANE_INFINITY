@@ -6,11 +6,17 @@
 //   Commandes Tauri avec permissions, validation et chiffrement
 // ═══════════════════════════════════════════════════════════════
 
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::secure_engine::{purge_env_key, zeroize_string};
 use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::security::sandbox::FileImportSandbox;
 use crate::security::validation::PayloadValidator;
 use serde::{Deserialize, Serialize};
+use tauri::State;
+
+use crate::security::secrets_engine::SecureSecretsEngine;
+use log::{info, warn};
 
 /// Response format uniforme
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -36,6 +42,240 @@ impl<T> SecureResponse<T> {
             error: Some(message),
         }
     }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GeminiKeyStatus {
+    pub configured: bool,
+    pub provider_enabled: bool,
+    pub masked_key: Option<String>,
+    pub env_present: bool,
+    pub env_purged: bool,
+    pub was_updated: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SecureSecretRequest {
+    pub key: String,
+    pub value: String,
+    #[serde(default)]
+    pub purge_env: bool,
+    #[serde(default)]
+    pub env_variable: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SecretOperationResult {
+    pub key: String,
+    pub stored: bool,
+    pub env_purged: bool,
+}
+
+fn mask_secret_for_display(secret: &str) -> String {
+    if secret.is_empty() {
+        return String::new();
+    }
+
+    let mut visible: Vec<char> = secret.chars().rev().take(4).collect();
+    visible.reverse();
+
+    let total = secret.chars().count();
+    let masked_len = total.saturating_sub(visible.len());
+
+    let mut output = String::with_capacity(total);
+    if masked_len > 0 {
+        output.push_str(&"•".repeat(masked_len));
+    }
+    for ch in visible {
+        output.push(ch);
+    }
+
+    output
+}
+
+fn build_gemini_status_sync(
+    secrets: &SecureSecretsEngine,
+    provider_enabled: bool,
+    env_present: bool,
+) -> GeminiKeyStatus {
+    let configured = secrets
+        .has_secret("gemini_api_key")
+        .unwrap_or(false);
+
+    let masked_key = secrets
+        .get_secret("gemini_api_key")
+        .ok()
+        .flatten()
+        .map(|value| {
+            let zero = zeroize_string(value);
+            mask_secret_for_display(zero.as_str())
+        });
+
+    GeminiKeyStatus {
+        configured,
+        provider_enabled,
+        masked_key,
+        env_present,
+        env_purged: configured && !env_present,
+        was_updated: false,
+    }
+}
+
+/// Enregistrer la clé Gemini de manière sécurisée depuis le frontend
+#[tauri::command]
+pub async fn chat_set_gemini_key(
+    api_key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+    PERMISSION_GUARD
+        .require("secret_write", Role::Root, "chat_set_gemini_key")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
+    let trimmed = api_key.trim();
+    if let Err(err) = PayloadValidator::validate_string(trimmed, "api_key", true) {
+        return Ok(SecureResponse::error(format!("Invalid API key: {}", err)));
+    }
+
+    if trimmed.len() < 16 {
+        return Ok(SecureResponse::error(
+            "Gemini API key semble invalide (longueur insuffisante)".to_string(),
+        ));
+    }
+
+    let zero = zeroize_string(trimmed.to_string());
+    let new_value = zero.as_str().to_string();
+    let previously_configured = secrets
+        .has_secret("gemini_api_key")
+        .unwrap_or(false);
+
+    secrets
+        .set_secret("gemini_api_key", new_value.clone())
+        .map_err(|e| format!("Failed to store Gemini key: {}", e))?;
+
+    {
+        let mut guard = orchestrator.gemini_api_key.write().await;
+        *guard = Some(new_value.clone());
+    }
+    orchestrator
+        .set_provider_availability("gemini", true)
+        .await;
+
+    drop(zero); // zeroized buffer dropped here
+
+    let env_present = std::env::var("GEMINI_API_KEY").is_ok();
+    let env_purged = match purge_env_key("GEMINI_API_KEY").await {
+        Ok(_) => {
+            info!("[SecureCommands] Purged GEMINI_API_KEY from .env");
+            true
+        }
+        Err(err) => {
+            if env_present {
+                warn!(
+                    "[SecureCommands] Failed to purge GEMINI_API_KEY from .env: {}",
+                    err
+                );
+            }
+            false
+        }
+    };
+
+    let mut status = build_gemini_status_sync(&secrets, true, env_present && !env_purged);
+    status.env_present = env_present && !env_purged;
+    status.env_purged = env_purged;
+    status.was_updated = !previously_configured || env_purged;
+
+    Ok(SecureResponse::success(status))
+}
+
+/// Obtenir l'état actuel de la clé Gemini (masquée)
+#[tauri::command]
+pub async fn get_gemini_key_status(
+    secrets: State<'_, SecureSecretsEngine>,
+    orchestrator: State<'_, ChatOrchestratorState>,
+) -> Result<SecureResponse<GeminiKeyStatus>, String> {
+    PERMISSION_GUARD
+        .require("secret_status", Role::System, "get_gemini_key_status")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
+    let provider_enabled = orchestrator.gemini_api_key.read().await.is_some();
+    let env_present = std::env::var("GEMINI_API_KEY").is_ok();
+    let mut status = build_gemini_status_sync(&secrets, provider_enabled, env_present);
+    status.was_updated = false;
+    Ok(SecureResponse::success(status))
+}
+
+/// Stocker un secret arbitraire dans le SecureSecretsEngine
+#[tauri::command]
+pub async fn secure_store_secret(
+    payload: SecureSecretRequest,
+    secrets: State<'_, SecureSecretsEngine>,
+) -> Result<SecureResponse<SecretOperationResult>, String> {
+    PERMISSION_GUARD
+        .require("secret_write", Role::Root, "secure_store_secret")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
+    let normalized_key = payload.key.trim();
+    if let Err(err) = PayloadValidator::validate_string(normalized_key, "key", true) {
+        return Ok(SecureResponse::error(format!("Invalid secret key: {}", err)));
+    }
+
+    if !normalized_key
+        .chars()
+        .all(|c| c.is_ascii_alphanumeric() || matches!(c, '_' | '-'))
+    {
+        return Ok(SecureResponse::error(
+            "Secret key must be alphanumeric with optional '_' or '-'".to_string(),
+        ));
+    }
+
+    let value_trimmed = payload.value.trim();
+    if let Err(err) = PayloadValidator::validate_string(value_trimmed, "value", true) {
+        return Ok(SecureResponse::error(format!("Invalid secret value: {}", err)));
+    }
+
+    let zero_value = zeroize_string(value_trimmed.to_string());
+    let stored_value = zero_value.as_str().to_string();
+    secrets
+        .set_secret(normalized_key, stored_value)
+        .map_err(|e| format!("Failed to store secret: {}", e))?;
+    drop(zero_value);
+
+    let mut env_purged = false;
+    if payload.purge_env {
+        let target = payload
+            .env_variable
+            .as_deref()
+            .map(str::to_string)
+            .unwrap_or_else(|| normalized_key.to_ascii_uppercase());
+
+        match purge_env_key(&target).await {
+            Ok(_) => {
+                info!(
+                    "[SecureCommands] Purged {} from .env after secure_store_secret",
+                    target
+                );
+                env_purged = true;
+            }
+            Err(err) => {
+                warn!(
+                    "[SecureCommands] Unable to purge {} from .env: {}",
+                    target, err
+                );
+            }
+        }
+    }
+
+    let result = SecretOperationResult {
+        key: normalized_key.to_string(),
+        stored: true,
+        env_purged,
+    };
+
+    Ok(SecureResponse::success(result))
 }
 
 /// Import fichier sécurisé
@@ -207,5 +447,15 @@ mod tests {
         let sanitized = PayloadValidator::sanitize_html(input);
         assert!(!sanitized.contains("<script>"));
         assert!(sanitized.contains("Hello"));
+    }
+
+    #[test]
+    fn test_mask_secret_for_display() {
+        let masked = super::mask_secret_for_display("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        assert!(masked.ends_with("WXYZ"));
+        assert_eq!(masked.chars().filter(|c| *c == '•').count(), 22);
+
+        let short = super::mask_secret_for_display("AB");
+        assert_eq!(short, "AB");
     }
 }

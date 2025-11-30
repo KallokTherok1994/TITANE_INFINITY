@@ -47,11 +47,36 @@ interface OmnisUIState {
   startTime: number;
 }
 
-interface OmnisUIAction {
-  type: 'COMPONENT_ERROR' | 'COMPONENT_RECOVERY' | 'SET_DEGRADED' | 'CLEAR_DEGRADED'
-       | 'UPDATE_HEALTH' | 'BACKUP_STATE' | 'RESTORE_STATE' | 'RESET';
-  payload?: any;
-}
+type OmnisUIAction =
+  | { type: 'COMPONENT_ERROR'; payload: ComponentErrorPayload }
+  | { type: 'COMPONENT_RECOVERY'; payload: { component: string } }
+  | { type: 'SET_DEGRADED'; payload: { component: string; degraded: boolean } }
+  | { type: 'CLEAR_DEGRADED' }
+  | { type: 'UPDATE_HEALTH'; payload: { component: string; health: number } }
+  | { type: 'BACKUP_STATE' }
+  | { type: 'RESTORE_STATE'; payload: { restoredState: Partial<OmnisUIState> } }
+  | { type: 'RESET' };
+
+type ComponentErrorPayload =
+  | { component: string; error: Error; level?: 'critical' | 'important' | 'minor' }
+  | { errors: OmnisUIState['errors'] };
+
+const isSerializedOmnisError = (value: unknown): value is OmnisUIState['errors'][number] => {
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
+
+  const record = value as Record<string, unknown>;
+  const level = record.level;
+
+  return (
+    typeof record.id === 'string' &&
+    typeof record.component === 'string' &&
+    typeof record.message === 'string' &&
+    typeof record.timestamp === 'number' &&
+    (level === 'critical' || level === 'important' || level === 'minor')
+  );
+};
 
 interface OmnisUIContextType {
   state: OmnisUIState;
@@ -75,6 +100,13 @@ interface OmnisUIContextType {
 function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIState {
   switch (action.type) {
     case 'COMPONENT_ERROR': {
+      if ('errors' in action.payload) {
+        return {
+          ...state,
+          errors: action.payload.errors,
+        };
+      }
+
       const { component, error, level = 'important' } = action.payload;
       const newError = {
         id: `${component}-${Date.now()}`,
@@ -206,6 +238,27 @@ const OmnisUIContext = createContext<OmnisUIContextType | null>(null);
 export function OmnisUIProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(omnisUIReducer, createInitialState());
 
+  const backupCurrentState = useCallback(() => {
+    try {
+      const stateBackup = {
+        timestamp: Date.now(),
+        sessionId: state.sessionId,
+        errors: state.errors,
+        recoveryCount: state.recoveryCount,
+        componentHealth: Array.from(state.componentHealth.entries()),
+        uiHealth: state.uiHealth
+      };
+
+      localStorage.setItem('omnis-ui-state-backup', JSON.stringify(stateBackup));
+      sessionStorage.setItem('omnis-ui-state-session', JSON.stringify(stateBackup));
+
+      dispatch({ type: 'BACKUP_STATE' });
+
+    } catch (error) {
+      console.warn('[OMNIS UI] State backup failed:', error);
+    }
+  }, [state, dispatch]);
+
   // Periodic state backup
   useEffect(() => {
     const backupInterval = setInterval(() => {
@@ -213,7 +266,7 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
     }, 30000); // Backup every 30 seconds
 
     return () => clearInterval(backupInterval);
-  }, []);
+  }, [backupCurrentState]);
 
   // Cleanup old errors
   useEffect(() => {
@@ -230,7 +283,7 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
     }, 300000); // Cleanup every 5 minutes
 
     return () => clearInterval(cleanupInterval);
-  }, [state.errors]);
+  }, [dispatch, state.errors]);
 
   // Helper Functions
   const reportComponentError = useCallback((
@@ -258,44 +311,45 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const backupCurrentState = useCallback(() => {
-    try {
-      const stateBackup = {
-        timestamp: Date.now(),
-        sessionId: state.sessionId,
-        errors: state.errors,
-        recoveryCount: state.recoveryCount,
-        componentHealth: Array.from(state.componentHealth.entries()),
-        uiHealth: state.uiHealth
-      };
-
-      localStorage.setItem('omnis-ui-state-backup', JSON.stringify(stateBackup));
-      sessionStorage.setItem('omnis-ui-state-session', JSON.stringify(stateBackup));
-
-      dispatch({ type: 'BACKUP_STATE' });
-
-    } catch (error) {
-      console.warn('[OMNIS UI] State backup failed:', error);
-    }
-  }, [state]);
-
   const restoreFromBackup = useCallback((): boolean => {
     try {
       const stored = localStorage.getItem('omnis-ui-state-backup');
       if (!stored) return false;
 
-      const backup = JSON.parse(stored);
+      const backup = JSON.parse(stored) as Partial<Record<string, unknown>>;
+
+      const backupTimestamp = typeof backup.timestamp === 'number' ? backup.timestamp : 0;
 
       // Only restore if backup is less than 24 hours old
-      if (Date.now() - backup.timestamp > 86400000) {
+      if (Date.now() - backupTimestamp > 86400000) {
         return false;
       }
 
-      const restoredState = {
-        errors: backup.errors || [],
-        recoveryCount: backup.recoveryCount || 0,
-        componentHealth: new Map(backup.componentHealth || []),
-        uiHealth: backup.uiHealth || 100
+      const errors = Array.isArray(backup.errors)
+        ? backup.errors.filter(isSerializedOmnisError)
+        : [];
+
+      const componentHealthEntries: Array<[string, number]> = Array.isArray(backup.componentHealth)
+        ? backup.componentHealth
+            .filter((entry): entry is [string, number] =>
+              Array.isArray(entry) &&
+              typeof entry[0] === 'string' &&
+              typeof entry[1] === 'number'
+            )
+        : typeof backup.componentHealth === 'object' && backup.componentHealth !== null
+          ? Object.entries(backup.componentHealth as Record<string, unknown>).reduce<Array<[string, number]>>((acc, [key, value]) => {
+              if (typeof value === 'number') {
+                acc.push([key, value]);
+              }
+              return acc;
+            }, [])
+          : [];
+
+      const restoredState: Partial<OmnisUIState> = {
+        errors,
+        recoveryCount: typeof backup.recoveryCount === 'number' ? backup.recoveryCount : 0,
+        componentHealth: new Map(componentHealthEntries),
+        uiHealth: typeof backup.uiHealth === 'number' ? backup.uiHealth : 100,
       };
 
       dispatch({
@@ -387,7 +441,7 @@ export function withOmnisHealthTracking<P extends object>(
 ) {
   const WrappedComponent = (props: P) => {
     const name = componentName || Component.displayName || Component.name || 'Unknown';
-    const { reportError, reportRecovery } = useOmnisComponentHealth(name);
+    const { reportRecovery } = useOmnisComponentHealth(name);
 
     useEffect(() => {
       // Report component mount as recovery

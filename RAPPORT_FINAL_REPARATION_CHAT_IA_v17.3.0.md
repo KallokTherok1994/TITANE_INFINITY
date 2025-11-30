@@ -218,7 +218,7 @@ npm run dev
    - Aller sur https://ai.google.dev
    - Se connecter avec compte Google
    - Créer API Key gratuite
-   - Copier la clé (format: `AIzaSyC...`)
+   - Copier la clé (format: `YOUR_GEMINI_API_KEY`)
 
 2. **Configurer .env**
    ```bash
@@ -229,7 +229,7 @@ npm run dev
 
    Modifier ligne :
    ```bash
-   VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE_ICI
+   VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
    ```
 
 3. **Redémarrer app**
@@ -389,7 +389,7 @@ npm run dev
 # 2. Éditer .env
 nano .env
 # Remplacer:
-VITE_GEMINI_API_KEY=AIzaSyC_TA_CLE_ICI
+VITE_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 
 # 3. Redémarrer
 npm run dev

@@ -174,6 +174,8 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("get_permission_audit");
     commands.insert("validate_chat_message");
     commands.insert("check_system_integrity");
+    commands.insert("get_gemini_key_status");
+    commands.insert("secure_store_secret");
 
     // ═══════════════════════════════════════════════════════════════
     // STATE & SESSION

@@ -244,12 +244,7 @@ impl BodyPostureAI {
 
         // Règles de décision (heuristiques)
 
-        // Phase d'ouverture → Welcoming
-        if ctx.conversation_phase == "opening" {
-            return PostureType::Welcoming;
-        }
-
-        // Phase brainstorm → Creative
+        // Phase brainstorm → Creative (prioritaire car contexte explicite)
         if ctx.conversation_phase == "brainstorm" {
             return PostureType::Creative;
         }
@@ -269,8 +264,8 @@ impl BodyPostureAI {
             return PostureType::Calm;
         }
 
-        // Phase de clôture → Welcoming
-        if ctx.conversation_phase == "closing" {
+        // Phases d'ouverture/fermeture après heuristiques pour éviter override
+        if ctx.conversation_phase == "opening" || ctx.conversation_phase == "closing" {
             return PostureType::Welcoming;
         }
 

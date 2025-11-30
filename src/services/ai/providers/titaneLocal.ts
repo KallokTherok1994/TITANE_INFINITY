@@ -94,7 +94,7 @@ function detectIntent(message: string): {
   emergency: boolean
 } {
   const lower = message.toLowerCase().trim();
-  let detectedPatterns: string[] = [];
+  const detectedPatterns: string[] = [];
   let isEmergency = false;
 
   // ═══ PATTERNS OMEGA REINFORCÉS ═══
