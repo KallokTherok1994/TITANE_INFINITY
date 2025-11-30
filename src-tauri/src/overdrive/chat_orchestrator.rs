@@ -1153,7 +1153,7 @@ fn handle_ollama_line(
     accumulated: &mut String,
     tokens: &mut Option<u32>,
     prompt_tokens: &mut Option<u32>,
-) -> Result<Option<OllamaStreamChunk>, String> {
+) -> Result<Option<OllamaStreamChunk>, String> { // clippy: keep signature (8 params) pending refactor
     use tauri::Emitter;
 
     if line.trim().is_empty() {

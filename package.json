@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "16.2.2",
-  "description": "TITANE∞ v16.2.2+ - Voice Systems (TTS/ASR) + Chat IA 4 Providers + Security Whitelist 146 Commands + Zero Errors",
+  "version": "16.2.3",
+  "description": "TITANE∞ v16.2.3 - Secure Invoke Stabilized + Full Metrics Reliability + Voice Systems (TTS/ASR) + Chat IA Providers",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {

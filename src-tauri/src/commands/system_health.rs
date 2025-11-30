@@ -1,13 +1,10 @@
-/**
- * TITANE∞ v19.2Ω — Proprietary License
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- *
- * TAURI WHITELIST FIX - get_system_health command
- * Phase 7 OMNIS: Auto-Heal Integration
- */
-
+// TITANE∞ v19.2Ω — Proprietary License
+// © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+// TAURI WHITELIST FIX - get_system_health command
+/// Phase 7 OMNIS: Auto-Heal Integration
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SystemHealth {

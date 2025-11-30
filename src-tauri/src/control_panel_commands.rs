@@ -378,7 +378,7 @@ pub async fn cp_toggle_singularity() -> Result<(), String> {
 
 #[tauri::command]
 pub async fn cp_get_ai_config(secrets: State<'_, SecureSecretsEngine>) -> Result<AIConfig, String> {
-    build_ai_config_response(&*secrets)
+    build_ai_config_response(&secrets)
 }
 
 #[tauri::command]
@@ -387,7 +387,7 @@ pub async fn cp_set_ai_config(
     secrets: State<'_, SecureSecretsEngine>,
     orchestrator: State<'_, ChatOrchestratorState>,
 ) -> Result<(), String> {
-    apply_ai_config(config, &*secrets, &*orchestrator).await
+    apply_ai_config(config, &secrets, &orchestrator).await
 }
 
 // ────────────────────────────────────────────────────────

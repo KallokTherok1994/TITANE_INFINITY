@@ -428,10 +428,7 @@ pub async fn check_system_integrity() -> Result<SecureResponse<String>, String> 
         // 2. Effectuer validation complète
         match validate_pre_boot().await {
             Ok(validation) => Ok(SecureResponse::success(validation.report())),
-            Err(e) => Ok(SecureResponse::error(format!(
-                "Integrity check failed: {}",
-                e
-            ))),
+            Err(e) => Ok(SecureResponse::error(format!("Integrity check failed: {}", e))),
         }
     }
 }
