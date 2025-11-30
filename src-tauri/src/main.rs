@@ -298,6 +298,13 @@ async fn main() {
     let crashguard_state = titane_infinity::singularity_fusion::CrashGuardState::default();
     log::info!("✅ SINGULARITY-FUSION vΩ: 8 engines unified");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE EVOLUTION ENGINE vΩ∞
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🧬 Initializing EVOLUTION ENGINE vΩ∞...");
+    let evolution_engine_state = titane_infinity::evolution::create_evolution_state();
+    log::info!("✅ EVOLUTION ENGINE vΩ∞: Continuous improvement active");
+
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .manage(cognitive_state)
@@ -313,7 +320,8 @@ async fn main() {
         .manage(autofix_state)
         .manage(autoheal_state)
         .manage(performance_state)
-        .manage(crashguard_state);
+        .manage(crashguard_state)
+        .manage(evolution_engine_state);
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     {
         builder = builder.manage(chat_engine_state.clone());
@@ -520,6 +528,27 @@ async fn main() {
         // Phase 10: Auto-Évolution (Super-Prompt U)
         titane_infinity::evolution::evolution_run_cycle,
         titane_infinity::evolution::evolution_get_stats,
+        // Phase 10+: EVOLUTION ENGINE vΩ∞ - Continuous Improvement
+        titane_infinity::evolution::evolution_get_state,
+        titane_infinity::evolution::evolution_start,
+        titane_infinity::evolution::evolution_stop,
+        titane_infinity::evolution::evolution_get_scores,
+        titane_infinity::evolution::evolution_update_score,
+        titane_infinity::evolution::evolution_generate_report,
+        titane_infinity::evolution::evolution_add_data_point,
+        titane_infinity::evolution::evolution_get_data_points,
+        titane_infinity::evolution::evolution_get_patterns,
+        titane_infinity::evolution::evolution_get_insights,
+        titane_infinity::evolution::evolution_get_suggestions,
+        titane_infinity::evolution::evolution_approve_suggestion,
+        titane_infinity::evolution::evolution_reject_suggestion,
+        titane_infinity::evolution::evolution_create_action,
+        titane_infinity::evolution::evolution_execute_action,
+        titane_infinity::evolution::evolution_rollback_action,
+        titane_infinity::evolution::evolution_get_history,
+        titane_infinity::evolution::evolution_clear_old_history,
+        titane_infinity::evolution::evolution_run_full_cycle,
+        titane_infinity::evolution::evolution_get_statistics,
         // ═══════════════════════════════════════════════════════════════
         // PHASES V-Ω COMMANDS v∞ - Super-Prompts V-Ω ULTIMATE
         // ═══════════════════════════════════════════════════════════════

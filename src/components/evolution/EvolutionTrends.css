@@ -1,0 +1,173 @@
+/**
+ * TITANE∞ Evolution Engine - Trends Styles
+ * Copyright (c) 2025 MUSIC∞AI
+ */
+
+.evolution-trends {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.trends-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(0, 255, 247, 0.1), rgba(124, 58, 237, 0.1));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.trends-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.time-range-badge {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.trends-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.summary-item.improving { border-bottom: 2px solid #22c55e; }
+.summary-item.stable { border-bottom: 2px solid #3b82f6; }
+.summary-item.degrading { border-bottom: 2px solid #ef4444; }
+.summary-item.volatile { border-bottom: 2px solid #f59e0b; }
+
+.summary-icon { font-size: 20px; }
+.summary-count { font-size: 24px; font-weight: 700; }
+.summary-label { font-size: 10px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
+
+.anomaly-alert {
+  padding: 10px 16px;
+  background: rgba(239, 68, 68, 0.15);
+  border-left: 3px solid #ef4444;
+  font-size: 13px;
+  color: #ef4444;
+}
+
+.trends-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+  max-height: 400px;
+}
+
+.trend-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trend-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.trend-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.trend-icon { font-size: 16px; }
+.trend-metric { flex: 1; font-size: 13px; font-weight: 500; }
+.trend-direction { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+
+.trend-chart {
+  height: 40px;
+  margin-bottom: 12px;
+}
+
+.sparkline {
+  width: 100%;
+  height: 100%;
+}
+
+.trend-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.trend-stats .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.trend-stats .stat-label { font-size: 9px; color: rgba(255, 255, 255, 0.4); text-transform: uppercase; }
+.trend-stats .stat-value { font-size: 12px; font-weight: 500; }
+
+.trend-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.change-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.anomaly-badge {
+  font-size: 10px;
+  color: #f59e0b;
+}
+
+.empty-trends {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.empty-trends .empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.5; }
+.empty-trends p { margin: 0 0 4px 0; font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+.empty-trends small { font-size: 11px; color: rgba(255, 255, 255, 0.4); }
+
+@media (max-width: 768px) {
+  .trends-summary { grid-template-columns: repeat(2, 1fr); }
+  .trends-grid { grid-template-columns: 1fr; }
+}

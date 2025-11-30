@@ -1192,7 +1192,8 @@ export function formatDuration(ms: number): string {
   if (ms < 1) return `${(ms * 1000).toFixed(0)}µs`;
   if (ms < 1000) return `${ms.toFixed(1)}ms`;
   if (ms < 60000) return `${(ms / 1000).toFixed(2)}s`;
-  return `${(ms / 60000).toFixed(2)}min`;
+  if (ms < 3600000) return `${(ms / 60000).toFixed(2)}min`;
+  return `${(ms / 3600000).toFixed(2)}h`;
 }
 
 /**
@@ -1242,7 +1243,7 @@ export function createEmptySnapshot(): MetricsSnapshot {
       uptime: 0,
     },
     frontend: {
-      fps: { current: 60, average: 60, min: 60, max: 60, drops: 0 },
+      fps: { current: 0, average: 0, min: 0, max: 0, drops: 0 },
       render: { lastTime: 0, averageTime: 0, rerenderCount: 0, slowRenders: 0 },
       tauri: { invokeLatency: 0, invokeCount: 0, invokeErrors: 0 },
       bundle: { totalSize: 0, modulesLoaded: 0, lazyLoaded: 0 },
