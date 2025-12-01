@@ -377,6 +377,49 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'adaptive_get_history',
   'adaptive_capture_sample',
   'adaptive_get_summary',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PERFORMANCE OPTIMIZER (v∞.Ω HARDENING)
+  // ═══════════════════════════════════════════════════════════════
+  'performance_get_metrics',
+  'performance_throttle_cpu',
+  'performance_optimize_gpu',
+  'performance_reduce_render_quality',
+  'performance_compress_memory',
+  'performance_reset_optimizations',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AUTONOMY ENGINE (v∞.Ω HARDENING)
+  // ═══════════════════════════════════════════════════════════════
+  'autonomy_scan_backend',
+  'autonomy_fix_states',
+  'autonomy_heal_modules',
+  'autonomy_optimize_performance',
+  'autonomy_evolve_ia',
+  'autonomy_test_ia_coherence',
+  'autonomy_ping',
+  'autonomy_shield_state',
+  'autonomy_analyse_logs',
+  'autonomy_log_report',
+  'autonomy_scan_ia',
+  'autonomy_scan_tts',
+  'autonomy_scan_avatar',
+  'autonomy_scan_memory',
+  'autonomy_scan_singularity_state',
+  'autonomy_fix_tts_sync',
+  'autonomy_resync_singularity_state',
+  'autonomy_clean_memory',
+
+  // ═══════════════════════════════════════════════════════════════
+  // OMNIS AUTO-HEAL (v∞.Ω HARDENING)
+  // ═══════════════════════════════════════════════════════════════
+  'get_system_health',
+  'memory_repair',
+  'system_optimize',
+  'memory_list_entries',
+  'memory_save_entry',
+  'memory_get_entry',
+  'memory_delete_entry',
 ]);
 
 /**

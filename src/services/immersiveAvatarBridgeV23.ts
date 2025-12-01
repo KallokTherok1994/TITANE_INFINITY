@@ -3,7 +3,7 @@
  * TypeScript API pour AvatarEngine v23
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -78,7 +78,7 @@ export class ImmersiveAvatarBridge {
     cognitiveStability: number,
     cpuLoad: number
   ): Promise<string> {
-    return await invoke<string>(TAURI_COMMANDS.AVATAR_PREPARE_SPEECH, {
+    return await secureInvoke<string>(TAURI_COMMANDS.AVATAR_PREPARE_SPEECH, {
       text,
       archetype,
       mood,
@@ -91,49 +91,49 @@ export class ImmersiveAvatarBridge {
    * Termine synthèse vocale
    */
   async finishSpeech(): Promise<void> {
-    await invoke(TAURI_COMMANDS.AVATAR_FINISH_SPEECH);
+    await secureInvoke(TAURI_COMMANDS.AVATAR_FINISH_SPEECH);
   }
 
   /**
    * Active mode immersion
    */
   async enableImmersion(): Promise<void> {
-    await invoke(TAURI_COMMANDS.AVATAR_ENABLE_IMMERSION);
+    await secureInvoke(TAURI_COMMANDS.AVATAR_ENABLE_IMMERSION);
   }
 
   /**
    * Réaction au wake-word "TITANE"
    */
   async onWakeWord(): Promise<void> {
-    await invoke(TAURI_COMMANDS.AVATAR_ON_WAKE_WORD);
+    await secureInvoke(TAURI_COMMANDS.AVATAR_ON_WAKE_WORD);
   }
 
   /**
    * Récupère morph target actuel (lip-sync)
    */
   async getCurrentMorph(): Promise<MorphTarget> {
-    return await invoke<MorphTarget>(TAURI_COMMANDS.AVATAR_GET_CURRENT_MORPH);
+    return await secureInvoke<MorphTarget>(TAURI_COMMANDS.AVATAR_GET_CURRENT_MORPH);
   }
 
   /**
    * Avance frame lip-sync
    */
   async advanceLipSync(): Promise<void> {
-    await invoke(TAURI_COMMANDS.AVATAR_ADVANCE_LIP_SYNC);
+    await secureInvoke(TAURI_COMMANDS.AVATAR_ADVANCE_LIP_SYNC);
   }
 
   /**
    * Récupère expression faciale actuelle
    */
   async getExpression(): Promise<FacialExpression> {
-    return await invoke<FacialExpression>(TAURI_COMMANDS.AVATAR_GET_EXPRESSION);
+    return await secureInvoke<FacialExpression>(TAURI_COMMANDS.AVATAR_GET_EXPRESSION);
   }
 
   /**
    * Récupère état complet de l'avatar
    */
   async getState(): Promise<AvatarState> {
-    return await invoke<AvatarState>(TAURI_COMMANDS.AVATAR_GET_STATE);
+    return await secureInvoke<AvatarState>(TAURI_COMMANDS.AVATAR_GET_STATE);
   }
 
   /**

@@ -14,6 +14,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { chatService } from '@/services/api/chat';
+import { detectEnvironment } from '@/core/tauri/environment';
+import { secureInvoke } from '@/lib/security';
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
@@ -111,9 +113,26 @@ export const VoiceConversation = ({
     },
   });
 
-  // Visualisation audio
+  // Visualisation audio - OPUS v∞.Ω: Tauri guard
   const startAudioVisualization = useCallback(async () => {
     try {
+      const env = detectEnvironment();
+      
+      // En mode Tauri, vérifier d'abord le micro via backend
+      if (env.isTauri) {
+        const testResult = await secureInvoke<{ success: boolean }>('test_microphone');
+        if (!testResult?.success) {
+          console.warn('[VoiceConversation] Microphone not available in Tauri');
+          return;
+        }
+      }
+
+      // Vérifier que getUserMedia est disponible
+      if (!navigator.mediaDevices?.getUserMedia) {
+        console.warn('[VoiceConversation] getUserMedia not available');
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
       audioContextRef.current = new AudioContext();

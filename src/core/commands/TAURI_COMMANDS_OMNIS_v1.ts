@@ -6,10 +6,14 @@
  * Auto-Heal Integration with Tauri Backend
  */
 
-// Mock Tauri invoke for TypeScript compatibility
-// Replace with actual import when Tauri is available
-const invoke = async (cmd: string, args?: Record<string, unknown>): Promise<unknown> => {
-  // Mock implementation for development
+import { secureInvoke } from '@/lib/security';
+import { detectEnvironment } from '@/core/tauri/environment';
+
+// ═══════════════════════════════════════════════════════════════
+// 🔧 MOCK FALLBACK FOR NON-TAURI ENVIRONMENTS
+// ═══════════════════════════════════════════════════════════════
+
+const getMockResponse = (cmd: string, args?: Record<string, unknown>): unknown => {
   console.log(`🔧 Mock Tauri command: ${cmd}`, args);
 
   switch (cmd) {
@@ -31,6 +35,17 @@ const invoke = async (cmd: string, args?: Record<string, unknown>): Promise<unkn
       return null;
   }
 };
+
+/**
+ * Wrapper sécurisé pour invoke avec fallback mock
+ */
+async function safeInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
+  const env = detectEnvironment();
+  if (!env.isTauri) {
+    return getMockResponse(cmd, args) as T;
+  }
+  return await secureInvoke<T>(cmd, args);
+}
 
 // ═══════════════════════════════════════════════════════════════
 // 🏗️ SYSTEM HEALTH TYPES
@@ -61,8 +76,8 @@ export interface SystemHealth {
  */
 export async function getSystemHealth(): Promise<SystemHealth> {
   try {
-    const result = await invoke('get_system_health');
-    return result as SystemHealth;
+    const result = await safeInvoke<SystemHealth>('get_system_health');
+    return result;
   } catch (error) {
     console.error('🔱 System health check failed:', error);
     // Fallback to default healthy state
@@ -89,8 +104,8 @@ export async function getSystemHealth(): Promise<SystemHealth> {
  */
 export async function triggerMemoryRepair(): Promise<string> {
   try {
-    const result = await invoke('memory_repair');
-    return result as string;
+    const result = await safeInvoke<string>('memory_repair');
+    return result;
   } catch (error) {
     console.error('🔧 Memory repair failed:', error);
     return 'Memory repair failed - using fallback mode';
@@ -103,8 +118,8 @@ export async function triggerMemoryRepair(): Promise<string> {
  */
 export async function triggerSystemOptimization(): Promise<string> {
   try {
-    const result = await invoke('system_optimize');
-    return result as string;
+    const result = await safeInvoke<string>('system_optimize');
+    return result;
   } catch (error) {
     console.error('⚡ System optimization failed:', error);
     return 'System optimization failed - using fallback mode';
@@ -121,7 +136,7 @@ export async function triggerSystemOptimization(): Promise<string> {
  */
 export async function safeMemoryList(): Promise<unknown[]> {
   try {
-    const result = await invoke('memory_list_entries');
+    const result = await safeInvoke<unknown[]>('memory_list_entries');
 
     // Ensure we always return an array
     if (Array.isArray(result)) {
@@ -141,7 +156,7 @@ export async function safeMemoryList(): Promise<unknown[]> {
  */
 export async function safeMemorySearch(query: string): Promise<unknown[]> {
   try {
-    const result = await invoke('memory_search', { query });
+    const result = await safeInvoke<unknown[]>('memory_search', { query });
     return Array.isArray(result) ? result : [];
   } catch (error) {
     console.error('💥 Memory search failed:', error);
@@ -154,7 +169,7 @@ export async function safeMemorySearch(query: string): Promise<unknown[]> {
  */
 export async function safeMemoryStore(id: string, key: string, value: unknown): Promise<boolean> {
   try {
-    await invoke('memory_save_entry', { id, key, value });
+    await safeInvoke('memory_save_entry', { id, key, value });
     return true;
   } catch (error) {
     console.error('💥 Memory store failed:', error);
@@ -167,7 +182,7 @@ export async function safeMemoryStore(id: string, key: string, value: unknown): 
  */
 export async function safeMemoryGet(id: string): Promise<unknown | null> {
   try {
-    return await invoke('memory_get_entry', { id });
+    return await safeInvoke('memory_get_entry', { id });
   } catch (error) {
     console.error('💥 Memory get failed:', error);
     return null;
@@ -179,7 +194,7 @@ export async function safeMemoryGet(id: string): Promise<unknown | null> {
  */
 export async function safeMemoryDelete(id: string): Promise<boolean> {
   try {
-    await invoke('memory_delete_entry', { id });
+    await safeInvoke('memory_delete_entry', { id });
     return true;
   } catch (error) {
     console.error('💥 Memory delete failed:', error);

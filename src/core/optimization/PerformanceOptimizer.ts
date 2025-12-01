@@ -20,7 +20,8 @@
  * @created 2025-11-27
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
+import { detectEnvironment } from '@/core/tauri/environment';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -173,8 +174,13 @@ export class PerformanceOptimizer {
    */
   private async collectMetrics(): Promise<void> {
     try {
-      // Métriques depuis le backend
-      const backendMetrics = await invoke<PerformanceMetrics>('performance_get_metrics');
+      const env = detectEnvironment();
+      
+      // Métriques depuis le backend (uniquement en Tauri)
+      let backendMetrics: PerformanceMetrics | null = null;
+      if (env.isTauri) {
+        backendMetrics = await secureInvoke<PerformanceMetrics>('performance_get_metrics');
+      }
 
       // Métriques frontend
       const memoryInfo = (performance as any).memory;
@@ -184,8 +190,23 @@ export class PerformanceOptimizer {
         timestamp: Date.now(),
       };
 
-      // Fusionner
-      this.metrics = { ...backendMetrics, ...frontendMetrics } as PerformanceMetrics;
+      // Fusionner ou utiliser fallback
+      if (backendMetrics) {
+        this.metrics = { ...backendMetrics, ...frontendMetrics } as PerformanceMetrics;
+      } else {
+        // Fallback pour non-Tauri
+        this.metrics = {
+          cpu_usage: 0,
+          gpu_usage: 0,
+          fps: 60,
+          frame_time: 16.67,
+          render_time: 8,
+          idle_time: 8,
+          gc_time: 0,
+          network_latency: 0,
+          ...frontendMetrics,
+        } as PerformanceMetrics;
+      }
     } catch (error) {
       console.warn('[PerformanceOptimizer] Failed to collect metrics:', error);
     }
@@ -239,7 +260,10 @@ export class PerformanceOptimizer {
     if (!this.config.cpu_throttle_enabled) return null;
 
     try {
-      await invoke('performance_throttle_cpu');
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        await secureInvoke('performance_throttle_cpu');
+      }
 
       return {
         type: 'cpu_throttle',
@@ -260,7 +284,10 @@ export class PerformanceOptimizer {
     if (!this.config.gpu_acceleration) return null;
 
     try {
-      await invoke('performance_optimize_gpu');
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        await secureInvoke('performance_optimize_gpu');
+      }
 
       return {
         type: 'gpu_offload',
@@ -279,8 +306,11 @@ export class PerformanceOptimizer {
    */
   private async optimizeRendering(): Promise<OptimizationResult | null> {
     try {
-      // Réduire qualité temporairement
-      await invoke('performance_reduce_render_quality');
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        // Réduire qualité temporairement
+        await secureInvoke('performance_reduce_render_quality');
+      }
 
       return {
         type: 'render_optimization',
@@ -299,8 +329,9 @@ export class PerformanceOptimizer {
    */
   private async optimizeMemory(): Promise<OptimizationResult | null> {
     try {
-      if (this.config.memory_compression) {
-        await invoke('performance_compress_memory');
+      const env = detectEnvironment();
+      if (this.config.memory_compression && env.isTauri) {
+        await secureInvoke('performance_compress_memory');
       }
 
       // Force GC si disponible
@@ -363,7 +394,10 @@ export class PerformanceOptimizer {
    * Réinitialise les optimisations
    */
   public async reset(): Promise<void> {
-    await invoke('performance_reset_optimizations');
+    const env = detectEnvironment();
+    if (env.isTauri) {
+      await secureInvoke('performance_reset_optimizations');
+    }
     this.optimizationHistory = [];
     console.log('[PerformanceOptimizer] ♻️ Optimizations reset');
   }
