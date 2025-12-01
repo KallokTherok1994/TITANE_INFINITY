@@ -148,10 +148,10 @@ impl CryptoStore {
     }
 
     /// Configurer le chiffrement avec un mot de passe maître
-    /// 
+    ///
     /// # Arguments
     /// * `password` - Mot de passe maître (sera dérivé, jamais stocké)
-    /// 
+    ///
     /// # Note de sécurité
     /// - Le mot de passe n'est JAMAIS stocké en clair
     /// - Une clé est dérivée via PBKDF2-SHA256

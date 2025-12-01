@@ -93,12 +93,12 @@ const formatTimestamp = (ts: number | null): string => {
   const date = new Date(ts);
   const now = new Date();
   const diff = now.getTime() - ts;
-  
+
   if (diff < 60000) return 'Il y a quelques secondes';
   if (diff < 3600000) return `Il y a ${Math.floor(diff / 60000)} min`;
   if (diff < 86400000) return `Il y a ${Math.floor(diff / 3600000)}h`;
-  return date.toLocaleDateString('fr-FR', { 
-    day: '2-digit', 
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
     month: 'short',
     hour: '2-digit',
     minute: '2-digit'
@@ -138,10 +138,10 @@ export const MemoryHealthPanel: FC = () => {
   // Charger l'état de santé
   const loadHealth = useCallback(async () => {
     if (!env.isTauri) return;
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const result = await secureInvoke<MemoryHealth>('titan_get_memory_health');
       setHealth(result);
@@ -156,10 +156,10 @@ export const MemoryHealthPanel: FC = () => {
   // Lancer Self-Healing
   const runSelfHealing = useCallback(async () => {
     if (!env.isTauri) return;
-    
+
     setIsHealing(true);
     setError(null);
-    
+
     try {
       const report = await secureInvoke<SelfHealingReport>('titan_run_self_healing');
       setHealingReport(report);
@@ -175,7 +175,7 @@ export const MemoryHealthPanel: FC = () => {
   // Forcer un snapshot
   const forceSnapshot = useCallback(async () => {
     if (!env.isTauri) return;
-    
+
     try {
       // TODO: obtenir l'état actuel depuis le store
       const stateJson = JSON.stringify({});
@@ -189,7 +189,7 @@ export const MemoryHealthPanel: FC = () => {
   // Compacter le journal
   const compactJournal = useCallback(async () => {
     if (!env.isTauri) return;
-    
+
     try {
       await secureInvoke('titan_compact_journal');
       await loadHealth();
@@ -201,7 +201,7 @@ export const MemoryHealthPanel: FC = () => {
   // Vérifier l'intégrité
   const checkIntegrity = useCallback(async () => {
     if (!env.isTauri) return;
-    
+
     try {
       await secureInvoke('titan_run_full_integrity_check');
       await loadHealth();
@@ -213,11 +213,11 @@ export const MemoryHealthPanel: FC = () => {
   // Exporter les données
   const exportData = useCallback(async () => {
     if (!env.isTauri) return;
-    
+
     try {
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const path = `~/Documents/TITANE_INFINITY_Backups/backup_${timestamp}.titane`;
-      await secureInvoke('titan_export_data', { 
+      await secureInvoke('titan_export_data', {
         path,
         description: `Backup manuel ${new Date().toLocaleDateString('fr-FR')}`
       });
@@ -284,8 +284,8 @@ export const MemoryHealthPanel: FC = () => {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-t ${
-              activeTab === tab 
-                ? 'bg-gray-700 text-white' 
+              activeTab === tab
+                ? 'bg-gray-700 text-white'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -315,23 +315,23 @@ export const MemoryHealthPanel: FC = () => {
         <div className="space-y-4">
           {/* Stats Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatCard 
-              label="Schéma" 
+            <StatCard
+              label="Schéma"
               value={`v${health.schema_version}`}
               subvalue={health.schema_version < health.current_version ? `→ v${health.current_version}` : '✓'}
             />
-            <StatCard 
-              label="Événements" 
+            <StatCard
+              label="Événements"
               value={health.event_count.toLocaleString()}
               subvalue={formatBytes(health.event_log_size_bytes)}
             />
-            <StatCard 
-              label="Snapshots" 
+            <StatCard
+              label="Snapshots"
               value={health.snapshot_count.toString()}
               subvalue={formatTimestamp(health.last_snapshot_at)}
             />
-            <StatCard 
-              label="Intégrité" 
+            <StatCard
+              label="Intégrité"
               value={health.db_integrity_ok ? '✅ OK' : '❌ Erreur'}
               subvalue={formatTimestamp(health.last_integrity_check)}
             />
@@ -345,7 +345,7 @@ export const MemoryHealthPanel: FC = () => {
               </h4>
               <div className="space-y-1">
                 {health.issues.map(issue => (
-                  <div 
+                  <div
                     key={issue.id}
                     className={`p-2 rounded text-sm flex items-center justify-between ${getSeverityColor(issue.severity)}`}
                   >
@@ -367,7 +367,7 @@ export const MemoryHealthPanel: FC = () => {
               </h4>
               <div className="space-y-1">
                 {health.recommendations.map(rec => (
-                  <div 
+                  <div
                     key={rec.id}
                     className="p-2 bg-blue-900/20 border border-blue-800/30 rounded text-sm text-blue-300"
                   >
