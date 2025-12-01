@@ -369,53 +369,115 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
 }
 
 // ─────────────────────────────────────────────────────────────────
-//  Audio Transcription (STT/ASR)
+//  Audio Transcription (STT/ASR) - Whisper Native
 // ─────────────────────────────────────────────────────────────────
 
 #[tauri::command]
 pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
-    // Utilise Vosk pour la transcription offline
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
-    let model_path = format!("{}/.local/share/vosk/vosk-model-small-fr-0.22", home);
+    let whisper_bin = format!("{}/.local/bin/whisper", home);
 
-    // Check if Vosk model exists
-    if !std::path::Path::new(&model_path).exists() {
-        return Err("Modèle Vosk non installé. Veuillez télécharger vosk-model-small-fr-0.22".into());
+    // Check if Whisper is available
+    if !std::path::Path::new(&whisper_bin).exists() {
+        // Fallback to Vosk if Whisper not installed
+        return transcribe_with_vosk(audio_data).await;
     }
 
     // Save audio to temp file
     let temp_audio = std::env::temp_dir().join("titane_stt_input.wav");
-    std::fs::write(&temp_audio, &audio_data)
-        .map_err(|e| format!("Erreur écriture audio: {}", e))?;
 
-    // Use Python vosk for transcription (more reliable than CLI)
+    // If audio_data is empty, use the last recorded mic test file
+    if audio_data.is_empty() {
+        let mic_test_file = std::env::temp_dir().join("titane_mic_test.wav");
+        if mic_test_file.exists() {
+            std::fs::copy(&mic_test_file, &temp_audio)
+                .map_err(|e| format!("Erreur copie audio: {}", e))?;
+        } else {
+            return Err("Aucun fichier audio disponible".into());
+        }
+    } else {
+        std::fs::write(&temp_audio, &audio_data)
+            .map_err(|e| format!("Erreur écriture audio: {}", e))?;
+    }
+
+    // Run Whisper with French language, tiny model for speed
+    let output = Command::new(&whisper_bin)
+        .args([
+            temp_audio.to_str().unwrap(),
+            "--model", "tiny",
+            "--language", "fr",
+            "--output_format", "txt",
+            "--output_dir", std::env::temp_dir().to_str().unwrap(),
+            "--fp16", "False",  // For CPU compatibility
+        ])
+        .output()
+        .map_err(|e| format!("Erreur Whisper: {}", e))?;
+
+    // Read the output file
+    let txt_file = std::env::temp_dir().join("titane_stt_input.txt");
+    let transcript = if txt_file.exists() {
+        std::fs::read_to_string(&txt_file)
+            .map_err(|e| format!("Erreur lecture transcription: {}", e))?
+            .trim()
+            .to_string()
+    } else {
+        // Try parsing stdout
+        String::from_utf8_lossy(&output.stdout).trim().to_string()
+    };
+
+    // Clean up
+    let _ = std::fs::remove_file(&temp_audio);
+    let _ = std::fs::remove_file(&txt_file);
+
+    if transcript.is_empty() {
+        Ok("(Aucune parole détectée)".to_string())
+    } else {
+        Ok(transcript)
+    }
+}
+
+/// Fallback to Vosk if Whisper is not available
+async fn transcribe_with_vosk(audio_data: Vec<u8>) -> CommandResult<String> {
+    let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+    let model_path = format!("{}/.local/share/vosk/vosk-model-small-fr-0.22", home);
+
+    if !std::path::Path::new(&model_path).exists() {
+        return Err("Ni Whisper ni Vosk installés. Installez openai-whisper via pip.".into());
+    }
+
+    let temp_audio = std::env::temp_dir().join("titane_stt_input.wav");
+
+    if audio_data.is_empty() {
+        let mic_test_file = std::env::temp_dir().join("titane_mic_test.wav");
+        if mic_test_file.exists() {
+            std::fs::copy(&mic_test_file, &temp_audio)
+                .map_err(|e| format!("Erreur copie audio: {}", e))?;
+        } else {
+            return Err("Aucun fichier audio disponible".into());
+        }
+    } else {
+        std::fs::write(&temp_audio, &audio_data)
+            .map_err(|e| format!("Erreur écriture audio: {}", e))?;
+    }
+
     let script = format!(
         r#"
-import json
-import sys
+import json, sys
 from vosk import Model, KaldiRecognizer
 import wave
-
 try:
     model = Model("{}")
     wf = wave.open("{}", "rb")
     rec = KaldiRecognizer(model, wf.getframerate())
-    rec.SetWords(True)
-
     results = []
     while True:
         data = wf.readframes(4000)
-        if len(data) == 0:
-            break
+        if not data: break
         if rec.AcceptWaveform(data):
-            result = json.loads(rec.Result())
-            if result.get("text"):
-                results.append(result["text"])
-
+            r = json.loads(rec.Result())
+            if r.get("text"): results.append(r["text"])
     final = json.loads(rec.FinalResult())
-    if final.get("text"):
-        results.append(final["text"])
-
+    if final.get("text"): results.append(final["text"])
     print(" ".join(results) if results else "")
 except Exception as e:
     print(f"VOSK_ERROR: {{e}}", file=sys.stderr)
@@ -429,23 +491,16 @@ except Exception as e:
         .arg("-c")
         .arg(&script)
         .output()
-        .map_err(|e| format!("Erreur Python/Vosk: {}", e))?;
+        .map_err(|e| format!("Erreur Vosk: {}", e))?;
 
-    // Clean up temp file
     let _ = std::fs::remove_file(&temp_audio);
 
     if !output.status.success() {
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        return Err(format!("Vosk transcription failed: {}", stderr));
+        return Err(format!("Vosk failed: {}", String::from_utf8_lossy(&output.stderr)));
     }
 
     let transcript = String::from_utf8_lossy(&output.stdout).trim().to_string();
-
-    if transcript.is_empty() {
-        Ok("(Aucune parole détectée)".to_string())
-    } else {
-        Ok(transcript)
-    }
+    Ok(if transcript.is_empty() { "(Aucune parole détectée)".to_string() } else { transcript })
 }
 
 // ─────────────────────────────────────────────────────────────────
