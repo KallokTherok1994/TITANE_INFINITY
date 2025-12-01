@@ -369,6 +369,86 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
 }
 
 // ─────────────────────────────────────────────────────────────────
+//  Audio Transcription (STT/ASR)
+// ─────────────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
+    // Utilise Vosk pour la transcription offline
+    let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+    let model_path = format!("{}/.local/share/vosk/vosk-model-small-fr-0.22", home);
+
+    // Check if Vosk model exists
+    if !std::path::Path::new(&model_path).exists() {
+        return Err("Modèle Vosk non installé. Veuillez télécharger vosk-model-small-fr-0.22".into());
+    }
+
+    // Save audio to temp file
+    let temp_audio = std::env::temp_dir().join("titane_stt_input.wav");
+    std::fs::write(&temp_audio, &audio_data)
+        .map_err(|e| format!("Erreur écriture audio: {}", e))?;
+
+    // Use Python vosk for transcription (more reliable than CLI)
+    let script = format!(
+        r#"
+import json
+import sys
+from vosk import Model, KaldiRecognizer
+import wave
+
+try:
+    model = Model("{}")
+    wf = wave.open("{}", "rb")
+    rec = KaldiRecognizer(model, wf.getframerate())
+    rec.SetWords(True)
+
+    results = []
+    while True:
+        data = wf.readframes(4000)
+        if len(data) == 0:
+            break
+        if rec.AcceptWaveform(data):
+            result = json.loads(rec.Result())
+            if result.get("text"):
+                results.append(result["text"])
+
+    final = json.loads(rec.FinalResult())
+    if final.get("text"):
+        results.append(final["text"])
+
+    print(" ".join(results) if results else "")
+except Exception as e:
+    print(f"VOSK_ERROR: {{e}}", file=sys.stderr)
+    sys.exit(1)
+"#,
+        model_path,
+        temp_audio.to_string_lossy()
+    );
+
+    let output = Command::new("python3")
+        .arg("-c")
+        .arg(&script)
+        .output()
+        .map_err(|e| format!("Erreur Python/Vosk: {}", e))?;
+
+    // Clean up temp file
+    let _ = std::fs::remove_file(&temp_audio);
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("Vosk transcription failed: {}", stderr));
+    }
+
+    let transcript = String::from_utf8_lossy(&output.stdout).trim().to_string();
+
+    if transcript.is_empty() {
+        Ok("(Aucune parole détectée)".to_string())
+    } else {
+        Ok(transcript)
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  Export all commands for registration (utility function)
 // ─────────────────────────────────────────────────────────────────
 
@@ -383,5 +463,6 @@ pub fn get_audio_commands() -> Vec<&'static str> {
         "set_audio_output_device",
         "set_audio_input_device",
         "test_microphone",
+        "transcribe_audio",
     ]
 }

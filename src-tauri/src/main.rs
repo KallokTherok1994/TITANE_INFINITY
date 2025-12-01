@@ -484,7 +484,8 @@ async fn main() {
         mock_commands::is_speaking,
         mock_commands::start_recording,
         mock_commands::stop_recording,
-        mock_commands::transcribe_audio,
+        // ✅ v19.3: Utilise la vraie implémentation Vosk au lieu du mock
+        audio::commands::transcribe_audio,
         // Memory Engine Commands (✅ Active commands only)
         overdrive::memory_engine::memory_store,
         overdrive::memory_engine::memory_store_conversation,

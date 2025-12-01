@@ -99,15 +99,8 @@ class AudioService {
   async updateTTSSettings(settings: Partial<TTSSettings>): Promise<void> {
     this.config.tts = { ...this.config.tts, ...settings };
     this.saveConfig();
-
-    // Sync with Tauri backend if available
-    if (this.isTauri) {
-      try {
-        await secureInvoke('update_tts_settings', { settings: this.config.tts });
-      } catch (error) {
-        console.warn('Failed to sync TTS settings with backend:', error);
-      }
-    }
+    // Note: Settings are stored locally and passed to tts_speak on each call
+    // No backend sync needed - Piper/espeak use settings per-call
   }
 
   getAvailableVoices() {
@@ -261,7 +254,7 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        await secureInvoke('set_audio_output_device', { deviceId });
+        await secureInvoke('set_audio_output_device', { device_id: deviceId });
       } catch (error) {
         console.warn('Failed to set output device:', error);
       }
@@ -274,7 +267,7 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        await secureInvoke('set_audio_input_device', { deviceId });
+        await secureInvoke('set_audio_input_device', { device_id: deviceId });
       } catch (error) {
         console.warn('Failed to set input device:', error);
       }
@@ -288,27 +281,13 @@ class AudioService {
   async updateOutputSettings(settings: Partial<AudioOutputSettings>): Promise<void> {
     this.config.output = { ...this.config.output, ...settings };
     this.saveConfig();
-
-    if (this.isTauri) {
-      try {
-        await secureInvoke('update_audio_output_settings', { settings: this.config.output });
-      } catch (error) {
-        console.warn('Failed to update output settings:', error);
-      }
-    }
+    // Note: Output settings are stored locally. Device changes use set_audio_output_device.
   }
 
   async updateInputSettings(settings: Partial<AudioInputSettings>): Promise<void> {
     this.config.input = { ...this.config.input, ...settings };
     this.saveConfig();
-
-    if (this.isTauri) {
-      try {
-        await secureInvoke('update_audio_input_settings', { settings: this.config.input });
-      } catch (error) {
-        console.warn('Failed to update input settings:', error);
-      }
-    }
+    // Note: Input settings are stored locally. Device changes use set_audio_input_device.
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -322,8 +301,8 @@ class AudioService {
     try {
       if (this.isTauri) {
         await secureInvoke('test_tts', { text, settings: this.config.tts });
-      } else {
-        // Web Speech fallback
+      } else if (this.isWebSpeechAvailable()) {
+        // Web Speech fallback only if available
         await new Promise<void>((resolve, reject) => {
           const utterance = new SpeechSynthesisUtterance(text);
           utterance.lang = this.config.tts.language;
@@ -334,6 +313,8 @@ class AudioService {
           utterance.onerror = (e) => reject(e);
           window.speechSynthesis.speak(utterance);
         });
+      } else {
+        throw new Error('No TTS engine available (Web Speech API not supported in WebKitGTK)');
       }
 
       const latencyMs = Date.now() - startTime;
@@ -356,8 +337,7 @@ class AudioService {
     try {
       if (this.isTauri) {
         const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
-          durationMs,
-          settings: this.config.input
+          duration_ms: durationMs,
         });
         return result;
       }
@@ -465,19 +445,41 @@ class AudioService {
           console.log('[AudioService] tts_speak completed successfully');
         } catch (error) {
           console.error('[AudioService] tts_speak error:', error);
-          // Fallback to Web Speech on error
-          console.log('[AudioService] Falling back to Web Speech API...');
-          await this.speakWithWebSpeech(text);
+          // Only fallback to Web Speech if it's available
+          if (this.isWebSpeechAvailable()) {
+            console.log('[AudioService] Falling back to Web Speech API...');
+            await this.speakWithWebSpeech(text);
+          } else {
+            console.warn('[AudioService] No TTS available (Tauri failed, Web Speech not supported)');
+            throw error;
+          }
         }
       } else {
-        await this.speakWithWebSpeech(text);
+        if (this.isWebSpeechAvailable()) {
+          await this.speakWithWebSpeech(text);
+        } else {
+          console.warn('[AudioService] Web Speech API not available');
+        }
       }
     } finally {
       this.isSpeaking = false;
     }
   }
 
+  /**
+   * Check if Web Speech API is available
+   */
+  private isWebSpeechAvailable(): boolean {
+    return typeof window !== 'undefined' &&
+           'speechSynthesis' in window &&
+           typeof SpeechSynthesisUtterance !== 'undefined';
+  }
+
   private speakWithWebSpeech(text: string): Promise<void> {
+    if (!this.isWebSpeechAvailable()) {
+      return Promise.reject(new Error('Web Speech API not available'));
+    }
+
     console.log('[AudioService] Using Web Speech API');
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = this.config.tts.language;

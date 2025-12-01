@@ -1364,11 +1364,9 @@ pub async fn stop_recording() -> AppResult<serde_json::Value> {
 }
 
 #[tauri::command]
-pub async fn transcribe_audio(_audio_data: Vec<u8>) -> AppResult<serde_json::Value> {
-    log::info!("[Voice Mock] Transcribing audio");
-    Ok(json!({
-        "transcript": "Mock transcription result",
-        "confidence": 0.9,
-        "language": "fr-FR"
-    }))
+pub async fn transcribe_audio(_audio_data: Vec<u8>) -> AppResult<String> {
+    log::info!("[Voice Mock] Transcribing audio ({} bytes)", _audio_data.len());
+    // En mode mock, retourner une transcription fictive
+    // En production, ceci utilise Whisper/Vosk via asr.rs
+    Ok("Bonjour, ceci est une transcription de test.".to_string())
 }

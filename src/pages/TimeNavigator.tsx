@@ -82,7 +82,7 @@ export const TimeNavigator: React.FC = () => {
 
     try {
       setLoading(true);
-      await secureInvoke('restore_snapshot', { snapshotId: snapshot.id });
+      await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
       alert('✅ Restauration réussie ! Redémarrage requis.');
       // TODO: Recharger l'application
       window.location.reload();
@@ -99,7 +99,7 @@ export const TimeNavigator: React.FC = () => {
     }
 
     try {
-      await secureInvoke('delete_snapshot', { snapshotId: snapshot.id });
+      await secureInvoke('delete_snapshot', { snapshot_id: snapshot.id });
       loadSnapshots();
     } catch (error) {
       alert(`❌ Erreur: ${error}`);

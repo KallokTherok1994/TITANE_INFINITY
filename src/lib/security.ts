@@ -15,6 +15,34 @@ import { safeInvokeTauri } from '@/utils/tauriProtector';
 // ────────────────────────────────────────────────────────────────
 
 /**
+ * Commandes qui retournent void/null (Unit en Rust → null en JS)
+ * Ces commandes sont valides même avec une réponse null/undefined
+ * ✅ AJOUTÉ v19.3 pour support Audio/TTS
+ */
+export const VOID_COMMANDS = new Set<string>([
+  // Audio/TTS commands that return () in Rust
+  'tts_speak',
+  'tts_stop',
+  'stop_speaking',
+  'set_audio_output_device',
+  'set_audio_input_device',
+  // Memory commands that return ()
+  'memory_delete_entry',
+  'memory_clear_all',
+  'memory_prune',
+  'memory_delete',
+  'clear_memory',
+  'clear_logs',
+  // Session commands
+  'session_end',
+  'end_session',
+  // State save commands
+  'state_save',
+  'singularity_save_state',
+  'singularity_reset',
+]);
+
+/**
  * Whitelist des commandes Tauri autorisées
  * DOIT correspondre à commands/security.rs côté Rust
  * ✅ SYNCHRONISÉ v16.2.2+ (27 nov 2025)
@@ -135,9 +163,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'set_audio_output_device',
   'set_audio_input_device',
   'test_microphone',
-  'update_tts_settings',
-  'update_audio_output_settings',
-  'update_audio_input_settings',
+  // Note: update_*_settings commands removed - settings stored locally
 
   // ═══════════════════════════════════════════════════════════════
   // SINGULARITY STATE
@@ -700,7 +726,15 @@ export async function secureInvoke<T>(
       response = await safeInvokeTauri<T>(command, payload, timeout);
     }
 
-    // [6] Validation réponse
+    // [6] Validation réponse - avec support des commandes void
+    const isVoidCommand = VOID_COMMANDS.has(command);
+
+    // Pour les commandes void, null/undefined est une réponse valide
+    if (isVoidCommand && (response === null || response === undefined)) {
+      // Commande void réussie - retourner un objet vide typé ou null
+      return (response ?? null) as T;
+    }
+
     const responseValidation = validateResponse<T>(response, validator);
     if (!responseValidation.valid) {
       const errorMsg = `Response validation failed: ${responseValidation.errors.join('; ')}`;

@@ -100,6 +100,9 @@ const GovernanceCenterPage = lazy(() => import('./features/governance-center').t
 // ✨ AUDIO CENTER - Centre Audio & Voix v19.2
 const AudioCenterPage = lazy(() => import('./features/audio-center').then(m => ({ default: m.AudioCenterPage })));
 
+// ✨ EVOLUTION CENTER - Centre d'Évolution Cognitive v19.3 (OPUS #4)
+const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage').then(m => ({ default: m.EvolutionCenterPage })));
+
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
@@ -181,12 +184,13 @@ const AppRouter: React.FC = () => {
     { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'v15.1' },
     { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
     { id: '/progression', label: 'Progression', icon: '⚡', badge: 'NEW' },
+    { id: '/evolution-center', label: 'Évolution Cognitive', icon: '🧬', badge: 'OPUS#4' },
     { id: '/system-center', label: 'Centre Système', icon: '⚙️', badge: 'v∞' },
     { id: '/design-center', label: 'Design & Apparence', icon: '🎨', badge: 'v16' },
     { id: '/governance-center', label: 'Gouvernance & Sécurité', icon: '🛡️', badge: 'v∞' },
+    { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.2' },
     { id: '/time-navigator', label: 'Navigateur Temporel', icon: '⏱️', badge: 'v∞' },
     { id: '/multi-ai', label: 'Système Multi-IA', icon: '🌌', badge: 'Phase 4' },
-    { id: '/evolution', label: 'Évolution', icon: '🧬', badge: 'Phase 10' },
     { id: '/helios', label: 'Helios', icon: '☀️' },
     { id: '/nexus', label: 'Nexus', icon: '🔗' },
     { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
@@ -327,6 +331,17 @@ const AppRouter: React.FC = () => {
           <Route path="/audio" element={<Navigate to="/audio-center" replace />} />
           <Route path="/voice" element={<Navigate to="/audio-center" replace />} />
           <Route path="/tts" element={<Navigate to="/audio-center" replace />} />
+
+          {/* ✨ v19.3 EVOLUTION CENTER - Centre d'Évolution Cognitive (OPUS #4) */}
+          <Route path="/evolution-center" element={
+            <ErrorBoundary context="EvolutionCenter">
+              <EvolutionCenterPage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers Evolution Center pour anciennes routes */}
+          <Route path="/cognitive-evolution" element={<Navigate to="/evolution-center" replace />} />
+          <Route path="/xp" element={<Navigate to="/evolution-center" replace />} />
 
           {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />

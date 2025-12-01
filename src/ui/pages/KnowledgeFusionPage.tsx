@@ -44,7 +44,7 @@ const KnowledgeFusionPage: React.FC = () => {
       setError(null);
 
       // Detect format
-      const format = await secureInvoke<string>('detect_file_format', { filePath });
+      const format = await secureInvoke<string>('detect_file_format', { file_path: filePath });
       setDetectedFormat(format);
     } catch (err) {
       setError(`Détection du format échouée : ${err}`);

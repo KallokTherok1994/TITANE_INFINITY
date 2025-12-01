@@ -36,7 +36,7 @@ export const AppearanceSection: React.FC = () => {
 
   const saveConfig = async (newConfig: DesignSystemConfig) => {
     try {
-      await secureInvoke('set_design_config', { config: newConfig });
+      await secureInvoke('cp_set_design_config', { config: newConfig });
       setConfig(newConfig);
     } catch (error) {
       console.error('Erreur sauvegarde config:', error);

@@ -32,7 +32,7 @@ export const ModulesSection: React.FC = () => {
 
   const toggleModule = async (moduleId: string) => {
     try {
-      await secureInvoke('toggle_module', { moduleId });
+      await secureInvoke('cp_toggle_module', { module_id: moduleId });
       await loadModules();
     } catch (error) {
       console.error('Erreur toggle module:', error);

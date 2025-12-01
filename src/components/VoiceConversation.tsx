@@ -12,6 +12,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
+import { NativeVoiceRecorder } from './NativeVoiceRecorder';
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
@@ -272,11 +273,13 @@ export const VoiceConversation = ({
   };
 
   if (!isSupported) {
+    // Utiliser le recorder natif Tauri pour WebKitGTK
     return (
-      <div className={className} style={{ textAlign: 'center', color: 'rgba(255,255,255,0.5)' }}>
-        <span>🚫</span>
-        <p style={{ fontSize: '0.8rem', margin: '0.5rem 0 0' }}>Reconnaissance vocale non supportée</p>
-      </div>
+      <NativeVoiceRecorder
+        className={className}
+        onTranscript={onTranscript}
+        onResponse={onResponse}
+      />
     );
   }
 

@@ -35,7 +35,7 @@ const NodeClusterDashboard: React.FC = () => {
 
   const initialize = async () => {
     try {
-      await secureInvoke('mesh_initialize', { nodeId, port });
+      await secureInvoke('mesh_initialize', { node_id: nodeId, port });
       setIsInitialized(true);
       setError(null);
     } catch (err) {

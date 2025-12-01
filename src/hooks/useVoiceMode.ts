@@ -81,7 +81,7 @@ export function useVoiceMode() {
 
     try {
       const transcript = await secureInvoke<string>('transcribe_audio', {
-        audioData: Array.from(audioData),
+        audio_data: Array.from(audioData),
       });
 
       setState((prev) => ({
