@@ -334,7 +334,7 @@ export function detectEnvironment(): EnvironmentInfo {
   // 2. window.__TAURI_INTERNALS__      (internes)
   // 3. User-Agent contient "tauri"     (UA)
   // 4. Protocole tauri://              (production)
-  
+
   return {
     isTauri: boolean,   // Au moins 1 critère = true
     isBrowser: boolean, // !isTauri && (http|https)
@@ -457,7 +457,7 @@ localStorage:
 ```markdown
 [ ] 1.1 Ajouter commandes voice_* aux ACL (si besoin de les utiliser)
     - Fichiers: security.ts, tauri.conf.json
-    - Commandes: voice_start_listening, voice_stop_listening, 
+    - Commandes: voice_start_listening, voice_stop_listening,
                  voice_get_status, voice_transcribe_audio
     - Note: Optionnel car ce sont des STUBS
 
