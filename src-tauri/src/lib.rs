@@ -27,6 +27,7 @@ pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ 
 // ═══════════════════════════════════════════════════════════════
 
 pub mod ai; // ✅ AI Router (v15 migration in progress)
+pub mod ai_chat; // ✅ AI Chat & Training Mode v∞ (OPUS #12)
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod chat_engine; // ✅ High-performance Chat Engine v∞
 pub mod memory; // ✅ Memory Storage v15

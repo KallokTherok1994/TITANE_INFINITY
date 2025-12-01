@@ -1212,6 +1212,24 @@ async fn main() {
         persistence::commands::titan_memory_doctor_compact,
         persistence::commands::titan_memory_doctor_export,
         persistence::commands::titan_memory_doctor_summary,
+        // ═══════════════════════════════════════════════════════════════
+        // AI TRAINING MODE v∞ (OPUS #12) - Kevin-Only Learning System
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::ai_chat::training_verify_kevin,
+        titane_infinity::ai_chat::training_enable,
+        titane_infinity::ai_chat::training_disable,
+        titane_infinity::ai_chat::training_get_state,
+        titane_infinity::ai_chat::training_get_stats,
+        titane_infinity::ai_chat::training_record_feedback,
+        titane_infinity::ai_chat::training_learn_pattern,
+        titane_infinity::ai_chat::training_find_patterns,
+        titane_infinity::ai_chat::training_start_session,
+        titane_infinity::ai_chat::training_process_feedbacks,
+        titane_infinity::ai_chat::training_end_session,
+        titane_infinity::ai_chat::training_export_patterns,
+        titane_infinity::ai_chat::training_import_patterns,
+        titane_infinity::ai_chat::training_prune_patterns,
+        titane_infinity::ai_chat::training_generate_report,
     ]);
 
     builder

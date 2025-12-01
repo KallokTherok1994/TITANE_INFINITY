@@ -1,46 +1,19 @@
-// TITANE∞ v12 - AI Chat Entry Point
-// Integration point for AI Chat and Voice Mode
+// TITANE∞ v∞ - AI Chat & Training Module
+// Système d'entraînement IA et commandes de chat
+// © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
-mod ai;
-mod audio;
-mod memory;
-mod modules;
-mod tts;
+// ═══════════════════════════════════════════════════════════════════════════════
+// OPUS #12 — AI TRAINING MODE
+// ═══════════════════════════════════════════════════════════════════════════════
 
-pub mod ai_chat_commands;
+pub mod training_engine;
+pub mod training_commands;
 
-use ai_chat_commands::AIChatState;
+pub use training_engine::{AITrainingEngine, TrainingMode, TrainingState, AI_TRAINING_ENGINE};
+pub use training_commands::*;
 
-pub fn setup_ai_chat() -> AIChatState {
-    log::info!("Setting up AI Chat & Voice Mode...");
-    
-    // Load environment variables
-    dotenv::dotenv().ok();
-    
-    let state = AIChatState::new();
-    
-    log::info!("✅ AI Chat & Voice Mode initialized");
-    
-    state
-}
-
-pub fn get_ai_commands() -> Vec<Box<dyn tauri::Invoker>> {
-    vec![
-        tauri::generate_handler![
-            ai_chat_commands::ai_query,
-            ai_chat_commands::speak,
-            ai_chat_commands::start_recording,
-            ai_chat_commands::stop_recording,
-            ai_chat_commands::transcribe_audio,
-            ai_chat_commands::create_conversation,
-            ai_chat_commands::load_conversation,
-            ai_chat_commands::list_conversations,
-            ai_chat_commands::delete_conversation,
-            ai_chat_commands::clear_all_memory,
-            ai_chat_commands::check_connection,
-            ai_chat_commands::health_check,
-            ai_chat_commands::get_vad_state,
-            ai_chat_commands::get_module_status,
-        ],
-    ]
+/// Initialiser le module AI Training
+pub fn init_ai_training() {
+    log::info!("[AIChat] 🧠 AI Training Module initialized");
+    log::info!("[AIChat] ⚠️ Training mode requires Kevin verification");
 }

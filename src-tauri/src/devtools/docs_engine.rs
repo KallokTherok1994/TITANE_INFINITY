@@ -4,7 +4,7 @@
  * Système de documentation auto-généré embarqué
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * ═══════════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Ce module fournit:
  * - Extraction automatique des docstrings Rust
  * - Génération de documentation pour les commandes Tauri
@@ -175,7 +175,7 @@ impl DocsEngine {
                 search_index: HashMap::new(),
             },
         };
-        
+
         // Charger la documentation statique
         engine.load_builtin_docs();
         engine
@@ -519,7 +519,7 @@ if (report.score < 70) {
 
         // Construire l'index de recherche
         self.build_search_index();
-        
+
         // Construire les modules
         self.build_modules();
     }
@@ -532,7 +532,7 @@ if (report.score < 70) {
     /// Construire l'index de recherche
     fn build_search_index(&mut self) {
         self.registry.search_index.clear();
-        
+
         for (name, doc) in &self.registry.commands {
             // Indexer par tags
             for tag in &doc.tags {
@@ -541,14 +541,14 @@ if (report.score < 70) {
                     .or_insert_with(Vec::new)
                     .push(name.clone());
             }
-            
+
             // Indexer par catégorie
             let cat_str = format!("{:?}", doc.category).to_lowercase();
             self.registry.search_index
                 .entry(cat_str)
                 .or_insert_with(Vec::new)
                 .push(name.clone());
-            
+
             // Indexer par module
             self.registry.search_index
                 .entry(doc.module.clone())
@@ -560,17 +560,17 @@ if (report.score < 70) {
     /// Construire la structure des modules
     fn build_modules(&mut self) {
         self.registry.modules.clear();
-        
+
         // Grouper par module
         let mut module_commands: HashMap<String, Vec<String>> = HashMap::new();
-        
+
         for (name, doc) in &self.registry.commands {
             module_commands
                 .entry(doc.module.clone())
                 .or_insert_with(Vec::new)
                 .push(name.clone());
         }
-        
+
         // Créer les modules
         for (module_name, commands) in module_commands {
             let description = match module_name.as_str() {
@@ -581,7 +581,7 @@ if (report.score < 70) {
                 "devtools/docs_engine" => "Documentation embarquée",
                 _ => "Module TITANE",
             };
-            
+
             self.registry.modules.insert(module_name.clone(), ModuleDoc {
                 name: module_name,
                 description: description.to_string(),
@@ -599,23 +599,23 @@ if (report.score < 70) {
     pub fn search(&self, query: &str) -> Vec<&CommandDoc> {
         let query_lower = query.to_lowercase();
         let terms: Vec<&str> = query_lower.split_whitespace().collect();
-        
+
         let mut results: Vec<&CommandDoc> = Vec::new();
         let mut scores: HashMap<String, i32> = HashMap::new();
-        
+
         for (name, doc) in &self.registry.commands {
             let mut score = 0;
-            
+
             // Match sur le nom
             if name.to_lowercase().contains(&query_lower) {
                 score += 100;
             }
-            
+
             // Match sur la description
             if doc.summary.to_lowercase().contains(&query_lower) {
                 score += 50;
             }
-            
+
             // Match sur les termes individuels
             for term in &terms {
                 if doc.tags.iter().any(|t| t.to_lowercase().contains(term)) {
@@ -625,22 +625,22 @@ if (report.score < 70) {
                     score += 10;
                 }
             }
-            
+
             if score > 0 {
                 scores.insert(name.clone(), score);
             }
         }
-        
+
         // Trier par score
         let mut sorted: Vec<_> = scores.iter().collect();
         sorted.sort_by(|a, b| b.1.cmp(a.1));
-        
+
         for (name, _) in sorted {
             if let Some(doc) = self.registry.commands.get(name) {
                 results.push(doc);
             }
         }
-        
+
         results
     }
 
@@ -678,17 +678,17 @@ if (report.score < 70) {
     /// Générer la documentation Markdown
     pub fn generate_markdown(&self) -> String {
         let mut md = String::new();
-        
+
         md.push_str("# 📚 TITANE∞ API Documentation\n\n");
-        md.push_str(&format!("> Version: {} | API: {}\n\n", 
-            self.registry.titane_version, 
+        md.push_str(&format!("> Version: {} | API: {}\n\n",
+            self.registry.titane_version,
             self.registry.api_version
         ));
         md.push_str("---\n\n");
-        
+
         // Table des matières par catégorie
         md.push_str("## 📑 Table des matières\n\n");
-        
+
         let categories = [
             (CommandCategory::State, "🔄 State"),
             (CommandCategory::Memory, "💾 Memory"),
@@ -697,14 +697,14 @@ if (report.score < 70) {
             (CommandCategory::Security, "🔐 Security"),
             (CommandCategory::DevTools, "🛠️ DevTools"),
         ];
-        
+
         for (cat, label) in &categories {
             let cmds: Vec<_> = self.list(Some(cat.clone()));
             if !cmds.is_empty() {
                 md.push_str(&format!("### {}\n\n", label));
                 for cmd in cmds {
-                    md.push_str(&format!("- [`{}`](#{}): {}\n", 
-                        cmd.name, 
+                    md.push_str(&format!("- [`{}`](#{}): {}\n",
+                        cmd.name,
                         cmd.name.replace('_', "-"),
                         cmd.summary
                     ));
@@ -712,16 +712,16 @@ if (report.score < 70) {
                 md.push_str("\n");
             }
         }
-        
+
         md.push_str("---\n\n");
         md.push_str("## 📖 Commandes détaillées\n\n");
-        
+
         // Détails de chaque commande
         for (_, doc) in &self.registry.commands {
             md.push_str(&format!("### `{}`\n\n", doc.name));
             md.push_str(&format!("**{}**\n\n", doc.summary));
             md.push_str(&format!("{}\n\n", doc.description));
-            
+
             if !doc.params.is_empty() {
                 md.push_str("#### Paramètres\n\n");
                 md.push_str("| Nom | Type | Requis | Description |\n");
@@ -734,11 +734,11 @@ if (report.score < 70) {
                 }
                 md.push_str("\n");
             }
-            
+
             md.push_str("#### Retour\n\n");
             md.push_str(&format!("- **Type**: `{}`\n", doc.returns.ts_type));
             md.push_str(&format!("- **Description**: {}\n\n", doc.returns.description));
-            
+
             if !doc.examples.is_empty() {
                 md.push_str("#### Exemples\n\n");
                 for ex in &doc.examples {
@@ -746,11 +746,11 @@ if (report.score < 70) {
                     md.push_str(&format!("```typescript\n{}\n```\n\n", ex.code));
                 }
             }
-            
+
             md.push_str(&format!("*Depuis: {}*\n\n", doc.since));
             md.push_str("---\n\n");
         }
-        
+
         md
     }
 }

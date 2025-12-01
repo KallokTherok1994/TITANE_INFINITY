@@ -26,7 +26,7 @@ pub fn titan_docs_get(command_name: String) -> Option<CommandDoc> {
 #[tauri::command]
 pub fn titan_docs_list(category: Option<String>) -> Vec<CommandDoc> {
     let engine = DOCS_ENGINE.read().unwrap();
-    
+
     let cat = category.and_then(|c| {
         match c.to_lowercase().as_str() {
             "state" => Some(CommandCategory::State),
@@ -42,7 +42,7 @@ pub fn titan_docs_list(category: Option<String>) -> Vec<CommandDoc> {
             _ => None,
         }
     });
-    
+
     engine.list(cat).into_iter().cloned().collect()
 }
 
