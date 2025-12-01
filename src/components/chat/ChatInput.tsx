@@ -15,6 +15,7 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import { FileUploadButton, type AnalyzedFile } from './FileUploadButton';
+import { DictationButton } from './DictationButton';
 import './ChatInput.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -28,6 +29,7 @@ interface ChatInputProps {
   voiceModeActive?: boolean;
   onToggleVoiceMode?: () => void;
   enableFileUpload?: boolean;
+  enableDictation?: boolean;
 }
 
 interface ChatInputState {
@@ -189,6 +191,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
   voiceModeActive: externalVoiceModeActive,
   onToggleVoiceMode: externalToggleVoiceMode,
   enableFileUpload = true,
+  enableDictation = true,
 }) => {
   // Debug: vérifier si onToggleVoiceMode est défini
   console.log('[ChatInput] onToggleVoiceMode:', typeof externalToggleVoiceMode, !!externalToggleVoiceMode);
@@ -423,6 +426,20 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
     }
   }, [onFilesAnalyzed, value]);
 
+  // ═══ PHASE 5.7.2: DICTATION HANDLER ═══
+  const handleDictationResult = useCallback((text: string) => {
+    isDev && console.log('[ChatInput] Dictation result:', text);
+
+    // Insérer le texte dicté dans le champ de saisie
+    setValue(prev => {
+      const separator = prev.trim() ? ' ' : '';
+      return prev + separator + text;
+    });
+
+    // Focus sur le textarea
+    textareaRef.current?.focus();
+  }, []);
+
   // ═══ PHASE 5.8: MEMOIZED COMPUTATIONS ═══
   const isInputDisabled = useMemo(() => {
     return disabled || inputState.isBlocked || !!inputState.inputError;
@@ -519,6 +536,15 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
             >
               <span className="chat-file-icon">📎</span>
             </button>
+          )}
+
+          {/* Dictation button (micro → texte, sans IA) */}
+          {enableDictation && (
+            <DictationButton
+              onDictationResult={handleDictationResult}
+              disabled={isInputDisabled}
+              title="Dictée vocale (micro → texte)"
+            />
           )}
 
           <textarea

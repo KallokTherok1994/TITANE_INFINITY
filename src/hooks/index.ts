@@ -69,6 +69,10 @@ export type { PerformanceMetrics, UsePerformanceMonitorReturn } from './usePerfo
 // Animation Context hook (re-export from contexts)
 export { useAnimation } from '../contexts/AnimationContext';
 
+// Voice Activity Detection (VAD) v∞
+export { useVAD } from './useVAD';
+export type { VADState, VADConfig, VADTestResult, UseVADReturn } from './useVAD';
+
 // Engine State
 export { useEngineState } from './useEngineState';
 export type { EngineStateHook } from './useEngineState';
@@ -80,3 +84,28 @@ export type {
   AdaptiveLayer as AdaptiveState,
   MetaLayer as MetaState,
 } from '@/types/singularityState';
+
+// ═══════════════════════════════════════════════════════════════
+// v19.3 - Audio & Voice Unified Hooks
+// ═══════════════════════════════════════════════════════════════
+
+// Voice Engine (100% Tauri backend - Central hook)
+export { useVoiceEngine, default as useVoiceEngineDefault } from './useVoiceEngine';
+export type {
+  VoiceEngineState,
+  VoiceEngineStatus,
+  UseVoiceEngineOptions,
+  UseVoiceEngineReturn
+} from './useVoiceEngine';
+
+// Audio Settings & Diagnostics
+export { useAudioSettings, default as useAudioSettingsDefault } from './useAudioSettings';
+export type {
+  AudioDiagnosticStep,
+  AudioHealthSummary,
+  UseAudioSettingsReturn
+} from './useAudioSettings';
+
+// Legacy voice hooks (DEPRECATED - use useVoiceEngine instead)
+// export { useVoice } from './useVoice';
+// export { useVoiceMode } from './useVoiceMode';

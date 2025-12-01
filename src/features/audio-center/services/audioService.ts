@@ -533,6 +533,154 @@ class AudioService {
   isCurrentlySpeaking(): boolean {
     return this.isSpeaking;
   }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  Voice Activity Detection (VAD) v∞
+  // ─────────────────────────────────────────────────────────────────
+
+  /**
+   * Get current VAD state (silence/speech)
+   */
+  async getVADState(): Promise<{ state: string; isSpeaking: boolean }> {
+    if (!this.isTauri) {
+      return { state: 'silence', isSpeaking: false };
+    }
+    try {
+      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>('vad_get_state');
+      return result;
+    } catch (error) {
+      console.error('[AudioService] VAD get state error:', error);
+      return { state: 'silence', isSpeaking: false };
+    }
+  }
+
+  /**
+   * Process audio frame through VAD
+   * @param audioData Float32Array of audio samples
+   */
+  async processVADFrame(audioData: Float32Array | number[]): Promise<{ state: string; isSpeaking: boolean }> {
+    if (!this.isTauri) {
+      return { state: 'silence', isSpeaking: false };
+    }
+    try {
+      const samples = Array.from(audioData);
+      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>('vad_process_frame', {
+        audioData: samples
+      });
+      return result;
+    } catch (error) {
+      console.error('[AudioService] VAD process frame error:', error);
+      return { state: 'silence', isSpeaking: false };
+    }
+  }
+
+  /**
+   * Configure VAD parameters
+   */
+  async configureVAD(config: {
+    threshold?: number;
+    minSpeechFrames?: number;
+    minSilenceFrames?: number;
+  }): Promise<string> {
+    if (!this.isTauri) {
+      return 'VAD configuration not available (browser mode)';
+    }
+    try {
+      const result = await secureInvoke<string>('vad_configure', {
+        config: {
+          threshold: config.threshold ?? 0.02,
+          minSpeechFrames: config.minSpeechFrames ?? 10,
+          minSilenceFrames: config.minSilenceFrames ?? 20
+        }
+      });
+      console.log('[AudioService] VAD configured:', result);
+      return result;
+    } catch (error) {
+      console.error('[AudioService] VAD configure error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Reset VAD state to silence
+   */
+  async resetVAD(): Promise<string> {
+    if (!this.isTauri) {
+      return 'VAD reset not available (browser mode)';
+    }
+    try {
+      const result = await secureInvoke<string>('vad_reset');
+      console.log('[AudioService] VAD reset:', result);
+      return result;
+    } catch (error) {
+      console.error('[AudioService] VAD reset error:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Run VAD self-test
+   */
+  async testVAD(): Promise<{
+    success: boolean;
+    tests: {
+      silenceDetection: boolean;
+      speechDetection: boolean;
+      speechTransition: boolean;
+      silenceTransition: boolean;
+    };
+    message: string;
+  }> {
+    if (!this.isTauri) {
+      return {
+        success: false,
+        tests: {
+          silenceDetection: false,
+          speechDetection: false,
+          speechTransition: false,
+          silenceTransition: false
+        },
+        message: 'VAD test not available (browser mode)'
+      };
+    }
+    try {
+      const result = await secureInvoke<{
+        success: boolean;
+        tests: {
+          silence_detection: boolean;
+          speech_detection: boolean;
+          speech_transition: boolean;
+          silence_transition: boolean;
+        };
+        message: string;
+      }>('vad_test');
+
+      console.log('[AudioService] VAD test result:', result);
+
+      return {
+        success: result.success,
+        tests: {
+          silenceDetection: result.tests.silence_detection,
+          speechDetection: result.tests.speech_detection,
+          speechTransition: result.tests.speech_transition,
+          silenceTransition: result.tests.silence_transition
+        },
+        message: result.message
+      };
+    } catch (error) {
+      console.error('[AudioService] VAD test error:', error);
+      return {
+        success: false,
+        tests: {
+          silenceDetection: false,
+          speechDetection: false,
+          speechTransition: false,
+          silenceTransition: false
+        },
+        message: `VAD test error: ${error}`
+      };
+    }
+  }
 }
 
 // Singleton export

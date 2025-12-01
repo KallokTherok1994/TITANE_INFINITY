@@ -1,13 +1,31 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE_INFINITY v19.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v16.1 - useVoiceMode Hook (OFFLINE FIRST)
-// React hook for Voice Mode functionality with local-first priority
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v19.3 — VOICE MODE HOOK
+ *
+ *   ⚠️ DEPRECATED: Ce hook est une ancienne version v15/v16.
+ *
+ *   👉 Utilisez plutôt: useVoiceEngine (unifié + state machine)
+ *
+ *   Migration:
+ *   - import { useVoiceMode } from '@/hooks/useVoiceMode'
+ *   + import { useVoiceEngine } from '@/hooks/useVoiceEngine'
+ *
+ *   Mapping des APIs:
+ *   - startRecording() → startDictation()
+ *   - stopRecording()  → stopDictation()
+ *   - state.transcript → status.transcript
+ *
+ *   Ce fichier est conservé pour compatibilité mais sera supprimé en v20.
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+// Log deprecation warning on first import
+console.warn('[DEPRECATED] useVoiceMode hook is deprecated. Use useVoiceEngine instead.');
 
 import { useState, useCallback, useRef } from 'react';
 import { secureInvoke } from '@/lib/security';

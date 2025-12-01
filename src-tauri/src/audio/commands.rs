@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ v19.2 — AUDIO COMMANDS
-//   Commandes Tauri pour Audio Center (TTS, devices, tests)
+//   Commandes Tauri pour Audio Center (TTS, devices, tests, VAD)
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
@@ -100,21 +100,29 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
             log::info!("[TTS] Output path: {}", output_str);
 
-            // Generate audio with piper
-            let piper_cmd = format!(
-                "echo '{}' | '{}' --model '{}' --output_file '{}'",
-                text.replace('\'', "\\'"),
-                piper_bin,
-                model_path,
-                output_str
-            );
-            log::info!("[TTS] Executing: {}", piper_cmd);
+            // ✅ SECURED: Use stdin pipe instead of shell interpolation to prevent injection
+            // This avoids shell interpretation of special characters in text
+            use std::io::Write;
 
-            let piper_output = Command::new("bash")
-                .arg("-c")
-                .arg(&piper_cmd)
-                .output()
-                .map_err(|e| format!("Erreur Piper: {}", e))?;
+            let mut piper_process = Command::new(&piper_bin)
+                .arg("--model")
+                .arg(&model_path)
+                .arg("--output_file")
+                .arg(&output_str)
+                .stdin(std::process::Stdio::piped())
+                .stdout(std::process::Stdio::piped())
+                .stderr(std::process::Stdio::piped())
+                .spawn()
+                .map_err(|e| format!("Erreur lancement Piper: {}", e))?;
+
+            // Write text to stdin (safe - no shell interpretation)
+            if let Some(mut stdin) = piper_process.stdin.take() {
+                stdin.write_all(text.as_bytes())
+                    .map_err(|e| format!("Erreur écriture stdin Piper: {}", e))?;
+            }
+
+            let piper_output = piper_process.wait_with_output()
+                .map_err(|e| format!("Erreur attente Piper: {}", e))?;
 
             if !piper_output.status.success() {
                 let stderr = String::from_utf8_lossy(&piper_output.stderr);
@@ -709,6 +717,270 @@ pub async fn is_speaking() -> CommandResult<bool> {
 }
 
 // ─────────────────────────────────────────────────────────────────
+//  Voice Activity Detection (VAD) Commands v∞
+//  Inline VAD to avoid module conflicts with mock mode
+// ─────────────────────────────────────────────────────────────────
+
+use std::sync::Mutex as StdMutex;
+
+// ═══════════════════════════════════════════════════════════════
+// Inline VAD Implementation (avoids module dependency issues)
+// ═══════════════════════════════════════════════════════════════
+
+const VAD_THRESHOLD: f32 = 0.02;
+const VAD_MIN_SPEECH_FRAMES: usize = 10;
+const VAD_MIN_SILENCE_FRAMES: usize = 20;
+
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum VADState {
+    Silence,
+    Speech,
+}
+
+pub struct VoiceActivityDetector {
+    threshold: f32,
+    min_speech_frames: usize,
+    min_silence_frames: usize,
+    state: VADState,
+    speech_frame_count: usize,
+    silence_frame_count: usize,
+}
+
+impl VoiceActivityDetector {
+    pub fn new() -> Self {
+        Self {
+            threshold: VAD_THRESHOLD,
+            min_speech_frames: VAD_MIN_SPEECH_FRAMES,
+            min_silence_frames: VAD_MIN_SILENCE_FRAMES,
+            state: VADState::Silence,
+            speech_frame_count: 0,
+            silence_frame_count: 0,
+        }
+    }
+
+    pub fn with_threshold(mut self, threshold: f32) -> Self {
+        self.threshold = threshold;
+        self
+    }
+
+    pub fn with_sensitivity(mut self, speech_frames: usize, silence_frames: usize) -> Self {
+        self.min_speech_frames = speech_frames;
+        self.min_silence_frames = silence_frames;
+        self
+    }
+
+    pub fn process_frame(&mut self, audio_data: &[f32]) -> VADState {
+        let energy = self.calculate_energy(audio_data);
+        let is_speech = energy > self.threshold;
+
+        match self.state {
+            VADState::Silence => {
+                if is_speech {
+                    self.speech_frame_count += 1;
+                    if self.speech_frame_count >= self.min_speech_frames {
+                        self.state = VADState::Speech;
+                        self.silence_frame_count = 0;
+                    }
+                } else {
+                    self.speech_frame_count = 0;
+                }
+            }
+            VADState::Speech => {
+                if is_speech {
+                    self.silence_frame_count = 0;
+                } else {
+                    self.silence_frame_count += 1;
+                    if self.silence_frame_count >= self.min_silence_frames {
+                        self.state = VADState::Silence;
+                        self.speech_frame_count = 0;
+                    }
+                }
+            }
+        }
+
+        self.state
+    }
+
+    fn calculate_energy(&self, audio_data: &[f32]) -> f32 {
+        if audio_data.is_empty() {
+            return 0.0;
+        }
+        let sum_squares: f32 = audio_data.iter().map(|&sample| sample * sample).sum();
+        (sum_squares / audio_data.len() as f32).sqrt()
+    }
+
+    pub fn get_state(&self) -> VADState {
+        self.state
+    }
+
+    pub fn reset(&mut self) {
+        self.state = VADState::Silence;
+        self.speech_frame_count = 0;
+        self.silence_frame_count = 0;
+    }
+
+    pub fn is_speaking(&self) -> bool {
+        self.state == VADState::Speech
+    }
+}
+
+impl Default for VoiceActivityDetector {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// Global VAD instance (thread-safe)
+static VAD: Lazy<StdMutex<VoiceActivityDetector>> = Lazy::new(|| {
+    StdMutex::new(VoiceActivityDetector::new())
+});
+
+/// VAD configuration
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VADConfig {
+    pub threshold: f32,
+    pub min_speech_frames: usize,
+    pub min_silence_frames: usize,
+}
+
+impl Default for VADConfig {
+    fn default() -> Self {
+        Self {
+            threshold: 0.02,
+            min_speech_frames: 10,
+            min_silence_frames: 20,
+        }
+    }
+}
+
+/// VAD status response
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct VADStatus {
+    pub state: String,
+    pub is_speaking: bool,
+}
+
+/// Get current VAD state
+#[tauri::command]
+pub async fn vad_get_state() -> CommandResult<VADStatus> {
+    let vad = VAD.lock().map_err(|e| format!("VAD lock error: {}", e))?;
+
+    let state = match vad.get_state() {
+        VADState::Silence => "silence",
+        VADState::Speech => "speech",
+    };
+
+    Ok(VADStatus {
+        state: state.to_string(),
+        is_speaking: vad.is_speaking(),
+    })
+}
+
+/// Process audio frame through VAD
+#[tauri::command]
+pub async fn vad_process_frame(audio_data: Vec<f32>) -> CommandResult<VADStatus> {
+    let mut vad = VAD.lock().map_err(|e| format!("VAD lock error: {}", e))?;
+
+    let state = vad.process_frame(&audio_data);
+    let state_str = match state {
+        VADState::Silence => "silence",
+        VADState::Speech => "speech",
+    };
+
+    Ok(VADStatus {
+        state: state_str.to_string(),
+        is_speaking: state == VADState::Speech,
+    })
+}
+
+/// Configure VAD parameters
+#[tauri::command]
+pub async fn vad_configure(config: VADConfig) -> CommandResult<String> {
+    log::info!("[VAD] Configuring: threshold={}, speech_frames={}, silence_frames={}",
+        config.threshold, config.min_speech_frames, config.min_silence_frames);
+
+    let mut vad = VAD.lock().map_err(|e| format!("VAD lock error: {}", e))?;
+
+    // Create new VAD with updated config
+    *vad = VoiceActivityDetector::new()
+        .with_threshold(config.threshold)
+        .with_sensitivity(config.min_speech_frames, config.min_silence_frames);
+
+    Ok("VAD configured successfully".to_string())
+}
+
+/// Reset VAD state to silence
+#[tauri::command]
+pub async fn vad_reset() -> CommandResult<String> {
+    log::info!("[VAD] Resetting state");
+
+    let mut vad = VAD.lock().map_err(|e| format!("VAD lock error: {}", e))?;
+    vad.reset();
+
+    Ok("VAD reset to silence".to_string())
+}
+
+/// Test VAD with generated test data
+#[tauri::command]
+pub async fn vad_test() -> CommandResult<serde_json::Value> {
+    log::info!("[VAD] Running self-test...");
+
+    let mut vad = VoiceActivityDetector::new();
+
+    // Test 1: Silence detection
+    let silence = vec![0.001f32; 512];
+    let mut silence_correct = true;
+    for _ in 0..30 {
+        if vad.process_frame(&silence) == VADState::Speech {
+            silence_correct = false;
+            break;
+        }
+    }
+
+    // Test 2: Speech detection
+    vad.reset();
+    let speech: Vec<f32> = (0..512).map(|i| (i as f32 * 0.05).sin() * 0.15).collect();
+    let mut speech_detected = false;
+    for _ in 0..30 {
+        if vad.process_frame(&speech) == VADState::Speech {
+            speech_detected = true;
+            break;
+        }
+    }
+
+    // Test 3: Transition test
+    vad.reset();
+    let speech_short: Vec<f32> = (0..512).map(|i| (i as f32 * 0.05).sin() * 0.15).collect();
+    for _ in 0..15 {
+        vad.process_frame(&speech_short);
+    }
+    let in_speech = vad.is_speaking();
+
+    // Return to silence
+    for _ in 0..30 {
+        vad.process_frame(&silence);
+    }
+    let back_to_silence = !vad.is_speaking();
+
+    let all_passed = silence_correct && speech_detected && in_speech && back_to_silence;
+
+    log::info!("[VAD] Self-test complete: {}", if all_passed { "✅ PASS" } else { "❌ FAIL" });
+
+    Ok(serde_json::json!({
+        "success": all_passed,
+        "tests": {
+            "silence_detection": silence_correct,
+            "speech_detection": speech_detected,
+            "speech_transition": in_speech,
+            "silence_transition": back_to_silence
+        },
+        "message": if all_passed { "All VAD tests passed" } else { "Some VAD tests failed" }
+    }))
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  Export all commands for registration (utility function)
 // ─────────────────────────────────────────────────────────────────
 
@@ -730,6 +1002,12 @@ pub fn get_audio_commands() -> Vec<&'static str> {
         "speak",
         "stop_speaking",
         "is_speaking",
+        // VAD commands
+        "vad_get_state",
+        "vad_process_frame",
+        "vad_configure",
+        "vad_reset",
+        "vad_test",
     ];
 
     #[cfg(feature = "audio-capture")]

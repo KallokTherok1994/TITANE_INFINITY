@@ -1,126 +1,44 @@
 /**
- * TITANE_INFINITY v19.2.0 — Proprietary License
+ * TITANE_INFINITY v19.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2 — VOICE CONVERSATION COMPONENT
+ *   TITANE∞ v19.3 — VOICE CONVERSATION COMPONENT (UNIFIED)
  *   Mode conversation audio live avec TITANE
+ *   Utilise useVoiceEngine (100% Tauri backend, pas de Web Speech API)
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useRef, useEffect } from 'react';
-import { audioService } from '@/features/audio-center/services/audioService';
-import { NativeVoiceRecorder } from './NativeVoiceRecorder';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useVoiceEngine } from '@/hooks/useVoiceEngine';
+import { chatService } from '@/services/api/chat';
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
   onResponse?: (text: string) => void;
   className?: string;
-}
-
-type ConversationState = 'idle' | 'listening' | 'processing' | 'speaking';
-
-// Fonction utilitaire pour obtenir SpeechRecognition
-function getSpeechRecognition() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const win = window as any;
-  return win.SpeechRecognition || win.webkitSpeechRecognition;
+  /** Mode auto-conversation (continue après chaque réponse) */
+  autoContinue?: boolean;
 }
 
 export const VoiceConversation = ({
   onTranscript,
   onResponse,
   className = '',
+  autoContinue = true,
 }: VoiceConversationProps) => {
-  const [state, setState] = useState<ConversationState>('idle');
-  const [transcript, setTranscript] = useState('');
   const [audioLevel, setAudioLevel] = useState(0);
-  const [isSupported, setIsSupported] = useState(true);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const recognitionRef = useRef<any>(null);
+  const [lastTranscript, setLastTranscript] = useState('');
+  const [lastResponse, setLastResponse] = useState('');
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
-  const stateRef = useRef(state);
+  const streamRef = useRef<MediaStream | null>(null);
 
-  // Sync state ref
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
-
-  // Vérifier le support
-  useEffect(() => {
-    if (!getSpeechRecognition()) {
-      setIsSupported(false);
-    }
-  }, []);
-
-  const stopAudioVisualization = () => {
-    if (animationFrameRef.current) {
-      cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = null;
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close().catch(() => {});
-      audioContextRef.current = null;
-    }
-    setAudioLevel(0);
-  };
-
-  const startAudioVisualization = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioContextRef.current = new AudioContext();
-      analyserRef.current = audioContextRef.current.createAnalyser();
-      const source = audioContextRef.current.createMediaStreamSource(stream);
-      source.connect(analyserRef.current);
-      analyserRef.current.fftSize = 256;
-
-      const updateLevel = () => {
-        if (!analyserRef.current || stateRef.current === 'idle') return;
-
-        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
-        analyserRef.current.getByteFrequencyData(dataArray);
-        const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-        setAudioLevel(average / 255);
-
-        animationFrameRef.current = requestAnimationFrame(updateLevel);
-      };
-      updateLevel();
-    } catch (error) {
-      console.error('[VoiceConversation] Audio visualization error:', error);
-    }
-  };
-
-  const stopListening = () => {
-    if (recognitionRef.current) {
-      try {
-        recognitionRef.current.stop();
-      } catch {
-        // Ignore
-      }
-      recognitionRef.current = null;
-    }
-    stopAudioVisualization();
-    setState('idle');
-    setTranscript('');
-  };
-
-  // Nettoyage
-  useEffect(() => {
-    return () => {
-      stopListening();
-    };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Générer réponse IA (mock pour l'instant)
-  const generateAIResponse = async (input: string): Promise<string> => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-
+  // Réponses locales de fallback
+  const generateLocalResponse = useCallback((input: string): string => {
     const lower = input.toLowerCase();
 
     if (lower.includes('bonjour') || lower.includes('salut')) {
@@ -140,105 +58,150 @@ export const VoiceConversation = ({
     }
 
     return "Je comprends. Je suis en mode conversation vocale et prêt à vous aider.";
-  };
+  }, []);
 
-  const processUserInput = async (text: string) => {
-    setState('processing');
-    setTranscript('');
-
+  // Générer réponse IA
+  const generateAIResponse = useCallback(async (input: string): Promise<string> => {
     try {
-      const response = await generateAIResponse(text);
-      onResponse?.(response);
-
-      setState('speaking');
-      await audioService.speak(response);
-
-      // Revenir en écoute
-      setState('listening');
-      startListening();
+      const messages = [{
+        role: 'user' as const,
+        content: input,
+        timestamp: new Date().toISOString(),
+      }];
+      const response = await chatService.sendMessage(messages);
+      return response.content || "Je n'ai pas pu générer de réponse.";
     } catch (error) {
-      console.error('[VoiceConversation] Error:', error);
-      setState('idle');
+      console.error('[VoiceConversation] Chat service error:', error);
+      return generateLocalResponse(input);
     }
-  };
+  }, [generateLocalResponse]);
 
-  const startListening = () => {
-    const SpeechRecognition = getSpeechRecognition();
-    if (!SpeechRecognition) return;
+  // Hook unifié pour la voix
+  const {
+    status,
+    startTurn,
+    cancelTurn,
+    speak,
+    clearError,
+  } = useVoiceEngine({
+    onTranscript: async (text) => {
+      if (!text.trim()) return;
 
-    recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = 'fr-FR';
+      setLastTranscript(text);
+      onTranscript?.(text);
 
-    recognitionRef.current.onstart = () => {
-      setState('listening');
-      startAudioVisualization();
-    };
+      try {
+        const response = await generateAIResponse(text);
+        setLastResponse(response);
+        onResponse?.(response);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    recognitionRef.current.onresult = (event: any) => {
-      const last = event.results.length - 1;
-      const result = event.results[last];
-      const text = result[0].transcript;
+        await speak(response);
 
-      setTranscript(text);
-
-      if (result.isFinal) {
-        onTranscript?.(text);
-        processUserInput(text);
-      }
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    recognitionRef.current.onerror = (event: any) => {
-      console.error('[VoiceConversation] Error:', event.error);
-      if (event.error !== 'no-speech') {
-        stopListening();
-      }
-    };
-
-    recognitionRef.current.onend = () => {
-      if (stateRef.current === 'listening') {
-        try {
-          recognitionRef.current?.start();
-        } catch {
-          // Ignore
+        if (autoContinue) {
+          setTimeout(() => {
+            startTurn();
+          }, 500);
         }
+      } catch (error) {
+        console.error('[VoiceConversation] AI response error:', error);
       }
-    };
+    },
+    onError: (error) => {
+      console.error('[VoiceConversation] Error:', error);
+    },
+  });
 
+  // Visualisation audio
+  const startAudioVisualization = useCallback(async () => {
     try {
-      recognitionRef.current.start();
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      audioContextRef.current = new AudioContext();
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      const source = audioContextRef.current.createMediaStreamSource(stream);
+      source.connect(analyserRef.current);
+      analyserRef.current.fftSize = 256;
+
+      const updateLevel = () => {
+        if (!analyserRef.current) return;
+
+        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+        analyserRef.current.getByteFrequencyData(dataArray);
+        const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+        setAudioLevel(average / 255);
+
+        animationFrameRef.current = requestAnimationFrame(updateLevel);
+      };
+      updateLevel();
     } catch (error) {
-      console.error('[VoiceConversation] Start error:', error);
+      console.error('[VoiceConversation] Audio visualization error:', error);
     }
-  };
+  }, []);
+
+  const stopAudioVisualization = useCallback(() => {
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current);
+      animationFrameRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close().catch(() => {});
+      audioContextRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setAudioLevel(0);
+  }, []);
+
+  // Sync visualisation avec état
+  useEffect(() => {
+    if (status.isRecording) {
+      startAudioVisualization();
+    } else {
+      stopAudioVisualization();
+    }
+
+    return () => {
+      stopAudioVisualization();
+    };
+  }, [status.isRecording, startAudioVisualization, stopAudioVisualization]);
+
+  // Nettoyage
+  useEffect(() => {
+    return () => {
+      stopAudioVisualization();
+      cancelTurn();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const toggleConversation = () => {
-    if (state === 'idle') {
-      startListening();
+    if (status.state === 'idle') {
+      clearError();
+      startTurn();
     } else {
-      stopListening();
+      cancelTurn();
     }
   };
 
-  const getButtonStyle = () => {
-    const base = {
+  const getButtonStyle = (): React.CSSProperties => {
+    const base: React.CSSProperties = {
       width: '56px',
       height: '56px',
       borderRadius: '50%',
       border: 'none',
-      cursor: 'pointer',
-      display: 'flex' as const,
-      alignItems: 'center' as const,
-      justifyContent: 'center' as const,
+      cursor: status.isMicAvailable ? 'pointer' : 'not-allowed',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       fontSize: '24px',
       transition: 'all 0.3s ease',
-      position: 'relative' as const,
+      position: 'relative',
+      opacity: status.isMicAvailable ? 1 : 0.5,
     };
 
-    switch (state) {
+    switch (status.state) {
       case 'idle':
         return { ...base, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)' };
       case 'listening':
@@ -247,49 +210,49 @@ export const VoiceConversation = ({
         return { ...base, background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)' };
       case 'speaking':
         return { ...base, background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)', boxShadow: '0 4px 20px rgba(139, 92, 246, 0.5)' };
+      case 'error':
+        return { ...base, background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)' };
       default:
         return base;
     }
   };
 
   const getStatusText = () => {
-    switch (state) {
-      case 'idle': return 'Cliquez pour parler';
-      case 'listening': return transcript || 'Je vous écoute...';
+    if (status.lastError) return `⚠️ ${status.lastError}`;
+
+    switch (status.state) {
+      case 'idle': return status.isMicAvailable ? 'Cliquez pour parler' : 'Microphone non disponible';
+      case 'listening': return status.interimTranscript || lastTranscript || 'Je vous écoute...';
       case 'processing': return 'Réflexion...';
-      case 'speaking': return 'TITANE parle...';
+      case 'speaking': return lastResponse ? `TITANE: "${lastResponse.substring(0, 50)}..."` : 'TITANE parle...';
+      case 'error': return 'Erreur - Réessayez';
       default: return '';
     }
   };
 
   const getIcon = () => {
-    switch (state) {
+    switch (status.state) {
       case 'idle': return '🎤';
       case 'listening': return '👂';
       case 'processing': return '🧠';
       case 'speaking': return '🔊';
+      case 'error': return '⚠️';
       default: return '🎤';
     }
   };
 
-  if (!isSupported) {
-    // Utiliser le recorder natif Tauri pour WebKitGTK
-    return (
-      <NativeVoiceRecorder
-        className={className}
-        onTranscript={onTranscript}
-        onResponse={onResponse}
-      />
-    );
-  }
-
   return (
-    <div className={className} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
-      <button onClick={toggleConversation} style={getButtonStyle()} title={state === 'idle' ? 'Activer la conversation vocale' : 'Arrêter'}>
+    <div className={`voice-conversation ${className}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+      <button
+        onClick={toggleConversation}
+        style={getButtonStyle()}
+        title={status.state === 'idle' ? 'Activer la conversation vocale' : 'Arrêter'}
+        disabled={!status.isMicAvailable && status.state === 'idle'}
+      >
         <span>{getIcon()}</span>
       </button>
 
-      {state === 'listening' && (
+      {status.isRecording && (
         <div style={{ width: '100px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
           <div style={{ width: `${audioLevel * 100}%`, height: '100%', background: 'linear-gradient(90deg, #10b981, #34d399)', transition: 'width 0.1s ease' }} />
         </div>
@@ -298,6 +261,12 @@ export const VoiceConversation = ({
       <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', textAlign: 'center', maxWidth: '200px' }}>
         {getStatusText()}
       </span>
+
+      {/* Indicateur TTS/Mic */}
+      <div style={{ display: 'flex', gap: '8px', fontSize: '10px', opacity: 0.5 }}>
+        <span title="Microphone">{status.isMicAvailable ? '🎤✓' : '🎤✗'}</span>
+        <span title="TTS">{status.isTTSAvailable ? '🔊✓' : '🔊✗'}</span>
+      </div>
     </div>
   );
 };

@@ -158,6 +158,11 @@ export interface AudioTestResult {
   latencyMs: number;
   qualityScore: number;  // 0-100
   errorMessage?: string;
+  provider?: string;     // Which TTS/audio provider was used
+  duration?: number;     // Test duration in ms
+  signalToNoise?: number; // For mic tests (dB)
+  peakLevel?: number;    // For mic tests (0.0 - 1.0)
+  noiseFloor?: number;   // For mic tests (0.0 - 1.0)
 }
 
 export interface MicrophoneTestResult {

@@ -141,34 +141,42 @@ class VoiceService {
 
   /**
    * Annulation enregistrement
+   * NOTE: Cette commande peut ne pas exister dans tous les backends
+   * Fallback silencieux si non disponible
    */
   async cancelRecording(): Promise<void> {
     try {
+      // Reset local state first
+      this.recordingId = null;
+
+      // Try Tauri command, fallback silently if not available
       await invokeWithRetry<void>(
         'voice_cancel_recording',
         {},
-        { ...FAST_COMMAND_OPTIONS, context: 'Voice' }
+        { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
       );
-      this.recordingId = null;
     } catch (error) {
-      console.error('[VoiceService] Erreur annulation:', error);
+      // Silently handle - command may not exist in all backends
+      console.warn('[VoiceService] Cancel recording fallback (command may not exist):', error);
     }
   }
 
   /**
    * Récupération état audio
+   * NOTE: Retourne un état par défaut si la commande n'existe pas
    */
   async getAudioState(): Promise<AudioState> {
     try {
       return await invokeWithRetry<AudioState>(
         'voice_get_audio_state',
         {},
-        { ...FAST_COMMAND_OPTIONS, context: 'Voice' }
+        { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
       );
     } catch (error) {
-      console.error('[VoiceService] Erreur état audio:', error);
+      // Return safe defaults if command not available
+      console.warn('[VoiceService] État audio fallback (command may not exist)');
       return {
-        isRecording: false,
+        isRecording: !!this.recordingId,
         isSpeaking: false,
         volume: 0,
         duration: 0,
@@ -178,6 +186,7 @@ class VoiceService {
 
   /**
    * Liste voix disponibles
+   * NOTE: Retourne liste vide si la commande n'existe pas
    */
   async listVoices(): Promise<
     Array<{
@@ -191,10 +200,10 @@ class VoiceService {
       return await invokeWithRetry(
         'voice_list_voices',
         {},
-        { ...FAST_COMMAND_OPTIONS, context: 'Voice' }
+        { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
       );
     } catch (error) {
-      console.error('[VoiceService] Erreur liste voix:', error);
+      console.warn('[VoiceService] Liste voix fallback (command may not exist)');
       return [];
     }
   }

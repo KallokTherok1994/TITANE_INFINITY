@@ -597,6 +597,14 @@ async fn main() {
         audio::commands::set_audio_input_device,
         audio::commands::test_microphone,
         // ═══════════════════════════════════════════════════════════════
+        // VAD COMMANDS v∞ - Voice Activity Detection
+        // ═══════════════════════════════════════════════════════════════
+        audio::commands::vad_get_state,
+        audio::commands::vad_process_frame,
+        audio::commands::vad_configure,
+        audio::commands::vad_reset,
+        audio::commands::vad_test,
+        // ═══════════════════════════════════════════════════════════════
         // AUDIO CAPTURE COMMANDS v∞ - Real-time cpal capture
         // Requires: feature "audio-capture" + libasound2-dev on Linux
         // ═══════════════════════════════════════════════════════════════

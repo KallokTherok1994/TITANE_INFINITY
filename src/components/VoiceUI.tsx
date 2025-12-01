@@ -1,82 +1,74 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE_INFINITY v19.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * Unauthorized use, reproduction, modification, distribution or extraction
- * of the software, its architecture, engines or components is strictly prohibited.
- * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-// TITANE∞ v15 - VoiceUI Component
-// Voice Mode interface with VAD and waveform
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v19.3 — VOICE UI (Migré vers useVoiceEngine)
+ *   Interface Voice Mode avec VAD - Version unifiée Tauri
+ * ═══════════════════════════════════════════════════════════════════
+ */
 
-import React, { useEffect, useState } from 'react';
-import { useVoiceMode } from '../hooks/useVoiceMode';
+import React from 'react';
+import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useChat } from '../hooks/useChat';
 import { VADIndicator } from './VADIndicator';
 // import './VoiceUI.css';
 
 export const VoiceUI: React.FC = () => {
-  const { state, startRecording, stopRecording, getVADState, clearTranscript } =
-    useVoiceMode();
+  const {
+    status,
+    startDictation,
+    stopDictation,
+    clearTranscript
+  } = useVoiceEngine();
   const { sendMessage } = useChat({ voiceEnabled: true });
 
-  const [isActive, setIsActive] = useState(false);
-
-  useEffect(() => {
-    let interval: ReturnType<typeof setInterval>;
-
-    if (isActive) {
-      interval = setInterval(() => {
-        getVADState();
-      }, 100);
-    }
-
-    return () => clearInterval(interval);
-  }, [isActive, getVADState]);
-
   const toggleVoiceMode = async () => {
-    if (isActive) {
-      await stopRecording();
-      setIsActive(false);
+    if (status.isRecording) {
+      await stopDictation();
     } else {
-      await startRecording();
-      setIsActive(true);
+      await startDictation();
     }
   };
 
   const handleTranscriptSubmit = async () => {
-    if (state.transcript.trim()) {
-      await sendMessage(state.transcript);
+    if (status.transcript.trim()) {
+      await sendMessage(status.transcript);
       clearTranscript();
     }
   };
+
+  // Dérive l'état VAD du status
+  const isVadActive = status.state === 'listening';
 
   return (
     <div className="voice-ui">
       <div className="voice-header">
         <h3>🎤 Voice Mode</h3>
         <button
-          className={`voice-toggle ${isActive ? 'active' : ''}`}
+          className={`voice-toggle ${status.isRecording ? 'active' : ''}`}
           onClick={toggleVoiceMode}
         >
-          {isActive ? 'Stop' : 'Start'}
+          {status.isRecording ? 'Stop' : 'Start'}
         </button>
       </div>
 
-      <VADIndicator active={state.vadActive} />
+      <VADIndicator active={isVadActive} />
 
       <div className="voice-status">
-        {state.isRecording && <span className="status-badge recording">🔴 Recording</span>}
-        {state.isTranscribing && (
+        {status.isRecording && <span className="status-badge recording">🔴 Recording</span>}
+        {status.state === 'processing' && (
           <span className="status-badge transcribing">⏳ Transcribing...</span>
         )}
-        {state.isSpeaking && <span className="status-badge speaking">🔊 Speaking</span>}
+        {status.state === 'speaking' && <span className="status-badge speaking">🔊 Speaking</span>}
       </div>
 
-      {state.transcript && (
+      {status.transcript && (
         <div className="voice-transcript">
           <h4>Transcription:</h4>
-          <p>{state.transcript}</p>
+          <p>{status.transcript}</p>
           <button onClick={handleTranscriptSubmit}>Envoyer</button>
         </div>
       )}

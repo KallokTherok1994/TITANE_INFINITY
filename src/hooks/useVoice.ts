@@ -1,18 +1,29 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE_INFINITY v19.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — UNIFIED VOICE HOOK
- *   Hook unifié pour TTS (Text-to-Speech) et STT (Speech-to-Text)
- *   Features: WebSpeech API fallback, Tauri backend support, Auto-detection
+ *   TITANE∞ v19.3 — UNIFIED VOICE HOOK
+ *
+ *   ⚠️ DEPRECATED: Ce hook utilise Web Speech API qui ne fonctionne pas sur Linux.
+ *
+ *   👉 Utilisez plutôt: useVoiceEngine (100% Tauri backend)
+ *
+ *   Migration:
+ *   - import { useVoice } from '@/hooks/useVoice'
+ *   + import { useVoiceEngine } from '@/hooks/useVoiceEngine'
+ *
+ *   Ce fichier est conservé pour compatibilité mais sera supprimé en v20.
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { hybridTTS, type TTSConfig, type TTSStatus } from '../services/tts/hybridTTS';
+
+// Log deprecation warning on first import
+console.warn('[DEPRECATED] useVoice hook is deprecated. Use useVoiceEngine instead.');
 
 // ═══ TYPES ═══
 

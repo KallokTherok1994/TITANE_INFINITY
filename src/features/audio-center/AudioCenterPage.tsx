@@ -1,17 +1,18 @@
 /**
- * TITANE_INFINITY v19.2.0 — Proprietary License
+ * TITANE_INFINITY v19.3.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2 — AUDIO CENTER PAGE
+ *   TITANE∞ v19.3 — AUDIO CENTER PAGE
  *   Interface de configuration audio complète
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import React, { useState } from 'react';
 import { useAudio } from './hooks/useAudio';
+import { AudioDiagnosticsPanel } from '@/components/audio';
 import type { TTSEngine, VoiceProfile } from './types';
 
 // ─────────────────────────────────────────────────────────────────
@@ -189,7 +190,7 @@ export const AudioCenterPage: React.FC = () => {
     refreshDevices,
   } = useAudio();
 
-  const [activeTab, setActiveTab] = useState<'voice' | 'devices' | 'advanced'>('voice');
+  const [activeTab, setActiveTab] = useState<'voice' | 'devices' | 'diagnostics' | 'advanced'>('voice');
   const [testType, setTestType] = useState<'speaker' | 'microphone'>('speaker');
 
   const handleVoiceSelect = async (voice: VoiceProfile) => {
@@ -238,6 +239,7 @@ export const AudioCenterPage: React.FC = () => {
           {[
             { id: 'voice', label: '🎤 Voix', icon: '🎤' },
             { id: 'devices', label: '🔊 Appareils', icon: '🔊' },
+            { id: 'diagnostics', label: '🔧 Diagnostic', icon: '🔧' },
             { id: 'advanced', label: '⚙️ Avancé', icon: '⚙️' },
           ].map((tab) => (
             <button
@@ -442,6 +444,20 @@ export const AudioCenterPage: React.FC = () => {
               {testType === 'microphone' && <TestResult result={testResult} type="microphone" />}
             </section>
           </>
+        )}
+
+        {/* Diagnostics Tab */}
+        {activeTab === 'diagnostics' && (
+          <section className="bg-neutral-800/50 rounded-xl p-6 border border-neutral-700">
+            <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <span>🔧</span> Diagnostic Audio
+            </h2>
+            <p className="text-neutral-400 text-sm mb-6">
+              Vérifiez et résolvez les problèmes audio de votre système.
+            </p>
+
+            <AudioDiagnosticsPanel className="max-w-2xl" />
+          </section>
         )}
 
         {/* Advanced Tab */}
