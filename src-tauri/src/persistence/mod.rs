@@ -231,6 +231,30 @@ impl PersistenceEngine {
         log::info!("[PersistenceEngine] ✅ Shutdown terminé");
         Ok(())
     }
+
+    /// Récupérer les événements depuis un timestamp
+    pub async fn get_events_since(&self, timestamp: u64) -> Result<Vec<TitanEvent>, PersistenceError> {
+        if let Some(db) = &self.db {
+            db.load_events_since(timestamp).await
+        } else {
+            Err(PersistenceError::NotInitialized)
+        }
+    }
+
+    /// Lister les snapshots disponibles
+    pub async fn list_snapshots(&self) -> Result<Vec<SnapshotInfo>, PersistenceError> {
+        if let Some(db) = &self.db {
+            db.list_snapshots().await
+        } else {
+            Err(PersistenceError::NotInitialized)
+        }
+    }
+
+    /// Récupérer l'état via recovery (snapshot + events)
+    pub async fn recover_state(&self) -> Result<Option<SingularityState>, PersistenceError> {
+        // Utilise la même logique que load_latest_state
+        self.load_latest_state().await
+    }
 }
 
 impl Default for PersistenceEngine {

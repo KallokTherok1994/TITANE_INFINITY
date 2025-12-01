@@ -138,6 +138,15 @@ impl Snapshot {
 // PERSISTENCE STATUS
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/// Information sur un snapshot (métadonnées légères)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SnapshotInfo {
+    pub id: String,
+    pub timestamp: u64,
+    pub size_bytes: u64,
+    pub schema_version: u32,
+}
+
 /// Status du système de persistence
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct PersistenceStatus {

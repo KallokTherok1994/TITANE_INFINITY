@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-use super::types::{CompactionReport, IntegrityReport, PersistenceError, Snapshot, TitanEvent};
+use super::types::{CompactionReport, IntegrityReport, PersistenceError, Snapshot, SnapshotInfo, TitanEvent};
 use std::path::PathBuf;
 use tokio::sync::Mutex;
 
@@ -341,6 +341,29 @@ impl PersistenceDB {
             duration_ms: start.elapsed().as_millis() as u64,
             success: true,
         })
+    }
+
+    /// Lister les snapshots disponibles
+    pub async fn list_snapshots(&self) -> Result<Vec<SnapshotInfo>, PersistenceError> {
+        let snapshots_path = self.db_path.with_extension("snapshots.json");
+
+        if !snapshots_path.exists() {
+            return Ok(Vec::new());
+        }
+
+        let content = tokio::fs::read_to_string(&snapshots_path)
+            .await
+            .map_err(|e| PersistenceError::IoError(e.to_string()))?;
+
+        let snapshots: Vec<SnapshotRecord> =
+            serde_json::from_str(&content).unwrap_or_default();
+
+        Ok(snapshots.iter().map(|r| SnapshotInfo {
+            id: r.id.clone(),
+            timestamp: r.timestamp,
+            size_bytes: r.state_blob_base64.len() as u64,
+            schema_version: r.schema_version,
+        }).collect())
     }
 
     /// Fermer la base

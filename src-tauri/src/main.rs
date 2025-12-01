@@ -23,6 +23,7 @@ use titane_infinity::{
     control_panel_commands,
     mock_commands,
     overdrive, // ✅ v16.1 CHAT ORCHESTRATOR
+    persistence, // ✅ v∞.MPE PERSISTENCE ENGINE
     runtime_config,
     secure_commands,
     time_commands,
@@ -525,6 +526,18 @@ async fn main() {
         // memory_clear: DISABLED (conflict with commands::memory_clear)
         overdrive::memory_engine::memory_export,
         overdrive::memory_engine::memory_import,
+        // ═══════════════════════════════════════════════════════════════
+        // PERSISTENCE ENGINE v∞.MPE - 100% SAVE Architecture
+        // Event Log + Snapshots + Recovery (OPUS v∞.MPE)
+        // ═══════════════════════════════════════════════════════════════
+        persistence::commands::titan_persist_event,
+        persistence::commands::titan_force_snapshot,
+        persistence::commands::titan_load_state,
+        persistence::commands::titan_get_events_since,
+        persistence::commands::titan_list_snapshots,
+        persistence::commands::titan_recover_state,
+        persistence::commands::titan_get_persistence_status,
+        persistence::commands::titan_verify_integrity,
         // ═══════════════════════════════════════════════════════════════
         // SECURE COMMANDS v∞ - Super-Prompts H, I, J, K
         // ═══════════════════════════════════════════════════════════════

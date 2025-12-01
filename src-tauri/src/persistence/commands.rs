@@ -101,6 +101,34 @@ pub async fn titan_load_state() -> Result<Option<SingularityState>, String> {
     engine.load_latest_state().await.map_err(|e| e.to_string())
 }
 
+/// Récupérer les événements depuis un timestamp
+#[tauri::command]
+pub async fn titan_get_events_since(timestamp: u64) -> Result<Vec<TitanEvent>, String> {
+    let engine = PERSISTENCE_ENGINE.read().await;
+    engine.get_events_since(timestamp).await.map_err(|e| e.to_string())
+}
+
+/// Lister les snapshots disponibles
+#[tauri::command]
+pub async fn titan_list_snapshots() -> Result<Vec<crate::persistence::SnapshotInfo>, String> {
+    let engine = PERSISTENCE_ENGINE.read().await;
+    engine.list_snapshots().await.map_err(|e| e.to_string())
+}
+
+/// Récupérer l'état depuis snapshot + events (recovery)
+#[tauri::command]
+pub async fn titan_recover_state() -> Result<Option<SingularityState>, String> {
+    let engine = PERSISTENCE_ENGINE.read().await;
+    engine.recover_state().await.map_err(|e| e.to_string())
+}
+
+/// Vérifier l'intégrité complète
+#[tauri::command]
+pub async fn titan_verify_integrity() -> Result<IntegrityReport, String> {
+    let mut engine = PERSISTENCE_ENGINE.write().await;
+    engine.check_integrity().await.map_err(|e| e.to_string())
+}
+
 /// Shutdown propre
 #[tauri::command]
 pub async fn titan_persistence_shutdown() -> Result<(), String> {
