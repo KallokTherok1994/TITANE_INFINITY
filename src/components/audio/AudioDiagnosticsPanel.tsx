@@ -409,6 +409,31 @@ export const AudioDiagnosticsPanel = ({
                 </button>
               </div>
             </div>
+
+            {/* OPUS-FIX v∞: Auto-Réparation */}
+            <div className="adp-section">
+              <h4>🩺 Auto-Réparation</h4>
+              <p className="adp-help-text" style={{ marginBottom: '0.75rem' }}>
+                Lance un diagnostic complet avec tentative de réparation automatique des problèmes détectés.
+              </p>
+              <button
+                className="adp-btn primary"
+                onClick={async () => {
+                  try {
+                    const { audioHealthService } = await import('@/services/audio/audioHealthCheck');
+                    const result = await audioHealthService.diagnoseAndRepair();
+                    console.log('[AudioDiagnosticsPanel] Auto-repair result:', result);
+                    // Rafraîchir l'UI après réparation
+                    await runDiagnostics();
+                  } catch (error) {
+                    console.error('[AudioDiagnosticsPanel] Auto-repair failed:', error);
+                  }
+                }}
+                disabled={isDiagnosing}
+              >
+                🩺 Lancer Auto-Réparation
+              </button>
+            </div>
           </div>
         )}
       </div>

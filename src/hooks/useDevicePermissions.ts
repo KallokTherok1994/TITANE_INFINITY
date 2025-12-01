@@ -62,6 +62,12 @@ export interface DevicePermissionsResult {
   requestPermission: (device: DeviceType) => Promise<boolean>;
   /** Réinitialiser l'état */
   reset: () => void;
+
+  // OPUS-FIX v∞: Self-Healing
+  /** Reset cache et re-vérifier toutes les permissions */
+  resetAndRecheck: () => Promise<void>;
+  /** Logger un problème de périphérique */
+  logDeviceIssue: (device: DeviceType, code: string, details?: unknown) => void;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -425,10 +431,71 @@ export function useDevicePermissions(): DevicePermissionsResult {
     return result.status === 'granted';
   }, [checkPermission]);
 
-  // Réinitialiser
+  // Réinitialiser l'état local
   const reset = useCallback(() => {
     setPermissions(initialState);
   }, []);
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // OPUS-FIX v∞: SELF-HEALING — Reset cache et forcer re-vérification
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Réinitialise le cache des permissions et force une re-vérification complète
+   * Utilisé par le Self-Healing Engine pour récupérer d'un état incohérent
+   */
+  const resetAndRecheck = useCallback(async () => {
+    console.log('[DevicePermissions] 🔄 Reset cache et re-vérification...');
+    
+    // 1. Reset état local
+    setPermissions(initialState);
+    
+    // 2. Clear localStorage cache si présent
+    try {
+      localStorage.removeItem('titane_device_permissions_cache');
+    } catch {
+      // Ignore localStorage errors
+    }
+    
+    // 3. Petit délai pour laisser les états se réinitialiser
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // 4. Re-vérifier toutes les permissions
+    await checkAll();
+    
+    console.log('[DevicePermissions] ✅ Reset et re-vérification terminés');
+  }, [checkAll]);
+
+  /**
+   * Log structuré pour les problèmes de périphériques
+   * Compatible avec le Self-Healing Engine
+   */
+  const logDeviceIssue = useCallback((
+    device: DeviceType,
+    code: string,
+    details?: unknown
+  ) => {
+    const timestamp = new Date().toISOString();
+    const entry = {
+      timestamp,
+      device,
+      code,
+      environment: environment.isTauri ? 'tauri' : 'browser',
+      details,
+    };
+    
+    console.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
+    
+    // Stocker dans localStorage pour debugging (max 50 entrées)
+    try {
+      const logs = JSON.parse(localStorage.getItem('titane_device_issues') || '[]');
+      logs.push(entry);
+      if (logs.length > 50) logs.shift();
+      localStorage.setItem('titane_device_issues', JSON.stringify(logs));
+    } catch {
+      // Ignore localStorage errors
+    }
+  }, [environment.isTauri]);
 
   // Vérification initiale au montage
   useEffect(() => {
@@ -445,6 +512,9 @@ export function useDevicePermissions(): DevicePermissionsResult {
     checkPermission,
     requestPermission,
     reset,
+    // OPUS-FIX v∞: Self-Healing exports
+    resetAndRecheck,
+    logDeviceIssue,
   };
 }
 
