@@ -363,7 +363,7 @@ impl AITrainingEngine {
     fn calculate_pattern_match(&self, input: &str, pattern: &str) -> i32 {
         let input_lower = input.to_lowercase();
         let pattern_lower = pattern.to_lowercase();
-        
+
         let input_words: Vec<&str> = input_lower.split_whitespace().collect();
         let pattern_words: Vec<&str> = pattern_lower.split_whitespace().collect();
 

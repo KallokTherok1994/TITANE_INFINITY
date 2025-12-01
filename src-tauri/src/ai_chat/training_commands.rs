@@ -9,9 +9,8 @@
  */
 
 use super::training_engine::{
-    AITrainingEngine, TrainingMode, TrainingState, TrainingStats,
-    FeedbackType, PatternCategory, LearnedPattern, TrainingSession,
-    AI_TRAINING_ENGINE,
+    FeedbackType, LearnedPattern, PatternCategory, TrainingMode, TrainingSession, TrainingState,
+    TrainingStats, AI_TRAINING_ENGINE,
 };
 
 /// Vérifier le code Kevin
