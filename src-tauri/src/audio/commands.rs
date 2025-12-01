@@ -62,6 +62,9 @@ pub struct MicrophoneTestResult {
 
 #[tauri::command]
 pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()> {
+    log::info!("[TTS] tts_speak called with text: '{}...' engine: {}", 
+        text.chars().take(50).collect::<String>(), settings.engine);
+    
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
 
     match settings.engine.as_str() {
@@ -71,9 +74,13 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 "{}/.local/share/piper/voices/{}.onnx",
                 home, settings.voice_id
             );
+            
+            log::info!("[TTS] Piper binary: {}", piper_bin);
+            log::info!("[TTS] Model path: {}", model_path);
 
             // Check if piper and model exist
             if !std::path::Path::new(&piper_bin).exists() {
+                log::warn!("[TTS] Piper not found at {}", piper_bin);
                 if settings.auto_fallback {
                     return tts_speak_espeak(&text, &settings).await;
                 }
@@ -81,6 +88,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
             }
 
             if !std::path::Path::new(&model_path).exists() {
+                log::warn!("[TTS] Model not found at {}", model_path);
                 if settings.auto_fallback {
                     return tts_speak_espeak(&text, &settings).await;
                 }
@@ -89,33 +97,49 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
             let output_path = std::env::temp_dir().join("titane_tts_output.wav");
             let output_str = output_path.to_string_lossy().to_string();
+            
+            log::info!("[TTS] Output path: {}", output_str);
 
             // Generate audio with piper
+            let piper_cmd = format!(
+                "echo '{}' | '{}' --model '{}' --output_file '{}'",
+                text.replace('\'', "\\'"),
+                piper_bin,
+                model_path,
+                output_str
+            );
+            log::info!("[TTS] Executing: {}", piper_cmd);
+            
             let piper_output = Command::new("bash")
                 .arg("-c")
-                .arg(format!(
-                    "echo '{}' | '{}' --model '{}' --output_file '{}'",
-                    text.replace('\'', "\\'"),
-                    piper_bin,
-                    model_path,
-                    output_str
-                ))
+                .arg(&piper_cmd)
                 .output()
                 .map_err(|e| format!("Erreur Piper: {}", e))?;
 
             if !piper_output.status.success() {
                 let stderr = String::from_utf8_lossy(&piper_output.stderr);
+                log::error!("[TTS] Piper failed: {}", stderr);
                 if settings.auto_fallback {
                     return tts_speak_espeak(&text, &settings).await;
                 }
                 return Err(format!("Piper a échoué: {}", stderr));
             }
+            
+            log::info!("[TTS] Piper synthesis completed, playing audio...");
 
             // Play audio
-            Command::new("aplay")
+            let play_output = Command::new("aplay")
                 .arg(&output_str)
                 .output()
                 .map_err(|e| format!("Erreur lecture audio: {}", e))?;
+                
+            if !play_output.status.success() {
+                let stderr = String::from_utf8_lossy(&play_output.stderr);
+                log::error!("[TTS] aplay failed: {}", stderr);
+                return Err(format!("Erreur lecture: {}", stderr));
+            }
+            
+            log::info!("[TTS] Audio playback completed successfully");
 
             Ok(())
         }
