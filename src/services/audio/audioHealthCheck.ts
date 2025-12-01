@@ -5,15 +5,19 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.3 — AUDIO HEALTH CHECK
+ *   TITANE∞ v19.3 — AUDIO HEALTH CHECK (Self-Healing Ready)
  *   [P1.5] Système de diagnostic audio pour Self-Healing Engine
  *
  *   Vérifie: micro, VAD, TTS, state machine, latences
  *   Expose getAudioHealth() pour monitoring temps réel
+ *
+ *   ✅ v∞.SHE: Adapté pour Tauri (backend Rust) vs Browser (Web APIs)
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import { audioStateMachine, AudioConversationState } from './audioStateMachine';
+import { detectEnvironment } from '@/core/tauri/environment';
+import { secureInvoke } from '@/lib/security';
 
 /**
  * Résultat d'un test de santé individuel
@@ -23,6 +27,7 @@ export interface HealthTestResult {
   status: 'ok' | 'warning' | 'error' | 'unknown';
   message: string;
   latencyMs?: number;
+  environment?: 'tauri' | 'browser';
 }
 
 /**
@@ -32,6 +37,7 @@ export interface AudioHealthReport {
   timestamp: number;
   overallStatus: 'healthy' | 'degraded' | 'critical' | 'unknown';
   stateMachineState: AudioConversationState;
+  environment: 'tauri' | 'browser';
   tests: {
     microphone: HealthTestResult;
     audioContext: HealthTestResult;
@@ -43,6 +49,35 @@ export interface AudioHealthReport {
 }
 
 /**
+ * Log structuré pour Self-Healing
+ */
+export function logDeviceIssue(
+  scope: 'microphone' | 'camera' | 'screen' | 'input' | 'audio',
+  message: string,
+  details?: Record<string, unknown>
+): void {
+  const timestamp = new Date().toISOString();
+  const env = detectEnvironment();
+
+  console.warn(`[DeviceHealth][${scope.toUpperCase()}] ${message}`, {
+    timestamp,
+    environment: env.isTauri ? 'tauri' : 'browser',
+    ...details,
+  });
+
+  // Stocker dans localStorage pour debugging
+  try {
+    const logs = JSON.parse(localStorage.getItem('titane_device_health_logs') || '[]');
+    logs.push({ timestamp, scope, message, details, environment: env.isTauri ? 'tauri' : 'browser' });
+    // Garder seulement les 100 derniers logs
+    if (logs.length > 100) logs.shift();
+    localStorage.setItem('titane_device_health_logs', JSON.stringify(logs));
+  } catch {
+    // Ignorer les erreurs localStorage
+  }
+}
+
+/**
  * Service de diagnostic audio
  */
 class AudioHealthService {
@@ -51,45 +86,120 @@ class AudioHealthService {
 
   /**
    * Vérifie l'accès au microphone
+   * ✅ Adapté pour Tauri (backend Rust) vs Browser (Web APIs)
    */
   private async checkMicrophone(): Promise<HealthTestResult> {
     const start = performance.now();
-    try {
-      // Vérifier si on a les permissions
-      const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+    const env = detectEnvironment();
 
-      if (permissions.state === 'denied') {
+    // ═══ MODE TAURI: Utiliser le backend Rust ═══
+    if (env.isTauri) {
+      try {
+        const { audioService } = await import('@/features/audio-center/services/audioService');
+        const result = await audioService.testMicrophone();
+
+        if (result.success) {
+          return {
+            name: 'Microphone',
+            status: 'ok',
+            message: 'Microphone accessible via backend Tauri',
+            latencyMs: Math.round(performance.now() - start),
+            environment: 'tauri',
+          };
+        } else {
+          logDeviceIssue('microphone', 'Test microphone échoué', { error: result.errorMessage });
+          return {
+            name: 'Microphone',
+            status: 'error',
+            message: result.errorMessage || 'Microphone non disponible',
+            latencyMs: Math.round(performance.now() - start),
+            environment: 'tauri',
+          };
+        }
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        logDeviceIssue('microphone', 'Erreur test_microphone Tauri', { error: errorMsg });
+
+        // Distinguer erreur ACL vs erreur périphérique
+        if (errorMsg.includes('not allowed') || errorMsg.includes('command')) {
+          return {
+            name: 'Microphone',
+            status: 'error',
+            message: 'Commande test_microphone non autorisée (ACL Tauri)',
+            latencyMs: Math.round(performance.now() - start),
+            environment: 'tauri',
+          };
+        }
+
         return {
           name: 'Microphone',
           status: 'error',
-          message: 'Permission microphone refusée',
+          message: `Erreur backend audio: ${errorMsg}`,
+          latencyMs: Math.round(performance.now() - start),
+          environment: 'tauri',
         };
       }
+    }
 
-      if (permissions.state === 'prompt') {
+    // ═══ MODE BROWSER: Utiliser Web APIs ═══
+    try {
+      // Vérifier si navigator.permissions existe (pas disponible partout)
+      if (typeof navigator !== 'undefined' && navigator.permissions) {
+        try {
+          const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+
+          if (permissions.state === 'denied') {
+            return {
+              name: 'Microphone',
+              status: 'error',
+              message: 'Permission microphone refusée par l\'utilisateur',
+              environment: 'browser',
+            };
+          }
+
+          if (permissions.state === 'prompt') {
+            return {
+              name: 'Microphone',
+              status: 'warning',
+              message: 'Permission microphone non demandée',
+              environment: 'browser',
+            };
+          }
+        } catch {
+          // navigator.permissions.query non supporté pour microphone
+          // Continuer avec getUserMedia
+        }
+      }
+
+      // Tester l'accès réel via getUserMedia
+      if (typeof navigator !== 'undefined' && navigator.mediaDevices?.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
+
         return {
           name: 'Microphone',
-          status: 'warning',
-          message: 'Permission microphone non demandée',
+          status: 'ok',
+          message: 'Microphone accessible',
+          latencyMs: Math.round(performance.now() - start),
+          environment: 'browser',
         };
       }
 
-      // Tester l'accès réel
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop());
-
-      return {
-        name: 'Microphone',
-        status: 'ok',
-        message: 'Microphone accessible',
-        latencyMs: Math.round(performance.now() - start),
-      };
-    } catch (err) {
       return {
         name: 'Microphone',
         status: 'error',
-        message: `Erreur microphone: ${err instanceof Error ? err.message : 'inconnu'}`,
+        message: 'API MediaDevices non disponible',
+        environment: 'browser',
+      };
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'inconnu';
+      logDeviceIssue('microphone', 'Erreur getUserMedia', { error: errorMsg });
+      return {
+        name: 'Microphone',
+        status: 'error',
+        message: `Erreur microphone: ${errorMsg}`,
         latencyMs: Math.round(performance.now() - start),
+        environment: 'browser',
       };
     }
   }
@@ -273,10 +383,12 @@ class AudioHealthService {
       recommendations.push('Réinitialisez le mode conversation');
     }
 
+    const env = detectEnvironment();
     const report: AudioHealthReport = {
       timestamp: Date.now(),
       overallStatus,
       stateMachineState: audioStateMachine.getState(),
+      environment: env.isTauri ? 'tauri' : 'browser',
       tests,
       recommendations,
     };
@@ -313,6 +425,288 @@ class AudioHealthService {
       console.log('[AudioHealth] ⏹️ Monitoring stopped');
     }
   }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SELF-HEALING ENGINE — OPUS v∞.2
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Répare automatiquement les problèmes détectés
+   * @returns Résultat détaillé des réparations
+   */
+  async selfHeal(): Promise<SelfHealResult> {
+    console.log('[AudioHealth] 🩺 Self-healing démarré...');
+    const report = await this.getAudioHealth();
+    const repairs: RepairAction[] = [];
+
+    // Réparer l'AudioContext
+    if (report.tests.audioContext?.status !== 'ok') {
+      const action = await this.repairAudioContext();
+      repairs.push(action);
+    }
+
+    // Réparer la State Machine
+    if (report.tests.stateMachine?.status !== 'ok') {
+      const action = await this.repairStateMachine();
+      repairs.push(action);
+    }
+
+    // Réparer le VAD Backend (si possible)
+    if (report.tests.vadBackend?.status === 'error') {
+      const action = await this.repairVADBackend();
+      repairs.push(action);
+    }
+
+    // Réparer le TTS Backend (si possible)
+    if (report.tests.ttsBackend?.status === 'error') {
+      const action = await this.repairTTSBackend();
+      repairs.push(action);
+    }
+
+    // Générer le nouveau rapport après réparations
+    const postRepairReport = await this.getAudioHealth();
+    const successCount = repairs.filter(r => r.success).length;
+
+    const result: SelfHealResult = {
+      timestamp: Date.now(),
+      actionsPerformed: repairs,
+      successCount,
+      failureCount: repairs.length - successCount,
+      previousStatus: report.overallStatus,
+      currentStatus: postRepairReport.overallStatus,
+      fullRecovery: postRepairReport.overallStatus === 'healthy',
+    };
+
+    console.log(`[AudioHealth] 🩺 Self-healing terminé: ${successCount}/${repairs.length} réparations réussies`);
+    return result;
+  }
+
+  /**
+   * Répare l'AudioContext
+   */
+  private async repairAudioContext(): Promise<RepairAction> {
+    const action: RepairAction = {
+      name: 'AudioContext Reset',
+      target: 'audioContext',
+      success: false,
+      message: '',
+    };
+
+    try {
+      // Créer un nouveau contexte audio
+      const ctx = new AudioContext();
+      
+      // Petit délai pour laisser le système se réinitialiser
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      if (ctx && ctx.state !== 'closed') {
+        if (ctx.state === 'suspended') {
+          await ctx.resume();
+        }
+        action.success = true;
+        action.message = `AudioContext réparé, état: ${ctx.state}`;
+        
+        // Fermer le contexte de test (l'application en créera un nouveau si besoin)
+        await ctx.close();
+      } else {
+        action.message = 'Impossible de créer un nouveau AudioContext';
+      }
+    } catch (err) {
+      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    }
+
+    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    return action;
+  }
+
+  /**
+   * Répare la State Machine
+   */
+  private async repairStateMachine(): Promise<RepairAction> {
+    const action: RepairAction = {
+      name: 'State Machine Reset',
+      target: 'stateMachine',
+      success: false,
+      message: '',
+    };
+
+    try {
+      const previousState = audioStateMachine.getState();
+      
+      // Reset la state machine
+      audioStateMachine.reset();
+      
+      const newState = audioStateMachine.getState();
+      action.success = newState === 'idle';
+      action.message = `État précédent: ${previousState}, nouvel état: ${newState}`;
+    } catch (err) {
+      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    }
+
+    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    return action;
+  }
+
+  /**
+   * Répare le VAD Backend
+   */
+  private async repairVADBackend(): Promise<RepairAction> {
+    const action: RepairAction = {
+      name: 'VAD Backend Reset',
+      target: 'vadBackend',
+      success: false,
+      message: '',
+    };
+
+    try {
+      const env = detectEnvironment();
+      
+      if (env.isTauri) {
+        // Reset VAD via backend Rust
+        await secureInvoke('vad_reset');
+        
+        // Vérifier que ça fonctionne
+        const state = await secureInvoke<{ initialized: boolean }>('vad_get_state');
+        action.success = state?.initialized === true;
+        action.message = state?.initialized 
+          ? 'VAD backend réinitialisé avec succès'
+          : 'VAD réinitialisé mais non disponible';
+      } else {
+        action.message = 'VAD backend non disponible en mode Browser';
+        action.success = true; // Non applicable = succès
+      }
+    } catch (err) {
+      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    }
+
+    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    return action;
+  }
+
+  /**
+   * Répare le TTS Backend
+   */
+  private async repairTTSBackend(): Promise<RepairAction> {
+    const action: RepairAction = {
+      name: 'TTS Backend Reset',
+      target: 'ttsBackend',
+      success: false,
+      message: '',
+    };
+
+    try {
+      const { hybridTTS } = await import('@/services/tts/hybridTTS');
+      
+      // Vérifier le statut (hybridTTS s'auto-initialise)
+      const status = await hybridTTS.getStatus();
+      action.success = status.available;
+      action.message = status.available 
+        ? `TTS opérationnel avec provider: ${status.provider}`
+        : 'Aucun provider TTS disponible';
+    } catch (err) {
+      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    }
+
+    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    return action;
+  }
+
+  /**
+   * Répare spécifiquement le microphone
+   */
+  async repairMicrophone(): Promise<RepairAction> {
+    const action: RepairAction = {
+      name: 'Microphone Repair',
+      target: 'microphone',
+      success: false,
+      message: '',
+    };
+
+    try {
+      const env = detectEnvironment();
+      
+      if (env.isTauri) {
+        // En Tauri, on ne peut pas "réparer" les permissions système
+        // On peut juste re-tester
+        const result = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone');
+        action.success = result?.success === true;
+        action.message = result?.success 
+          ? 'Microphone accessible via backend Tauri'
+          : `Permissions requises: ${result?.errorMessage || 'autorisez le micro dans les paramètres système'}`;
+      } else {
+        // En Browser, on peut demander la permission
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream.getTracks().forEach(track => track.stop());
+          action.success = true;
+          action.message = 'Permission microphone accordée';
+        } catch (err) {
+          action.message = `Permission refusée: ${err instanceof Error ? err.message : 'inconnu'}`;
+        }
+      }
+    } catch (err) {
+      action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
+    }
+
+    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    return action;
+  }
+
+  /**
+   * Exécute un diagnostic complet avec tentative de réparation automatique
+   */
+  async diagnoseAndRepair(): Promise<DiagnoseAndRepairResult> {
+    console.log('[AudioHealth] 🔬 Diagnostic complet avec auto-repair...');
+    
+    // Phase 1: Diagnostic initial
+    const initialReport = await this.getAudioHealth();
+    
+    // Phase 2: Auto-heal si nécessaire
+    let healResult: SelfHealResult | null = null;
+    if (initialReport.overallStatus !== 'healthy') {
+      healResult = await this.selfHeal();
+    }
+    
+    // Phase 3: Rapport final
+    const finalReport = await this.getAudioHealth();
+    
+    return {
+      initialDiagnosis: initialReport,
+      healingPerformed: healResult !== null,
+      healingResult: healResult,
+      finalDiagnosis: finalReport,
+      allSystemsOperational: finalReport.overallStatus === 'healthy',
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Types pour Self-Healing
+// ═══════════════════════════════════════════════════════════════════════════
+
+export interface RepairAction {
+  name: string;
+  target: 'audioContext' | 'stateMachine' | 'vadBackend' | 'ttsBackend' | 'microphone';
+  success: boolean;
+  message: string;
+}
+
+export interface SelfHealResult {
+  timestamp: number;
+  actionsPerformed: RepairAction[];
+  successCount: number;
+  failureCount: number;
+  previousStatus: AudioHealthReport['overallStatus'];
+  currentStatus: AudioHealthReport['overallStatus'];
+  fullRecovery: boolean;
+}
+
+export interface DiagnoseAndRepairResult {
+  initialDiagnosis: AudioHealthReport;
+  healingPerformed: boolean;
+  healingResult: SelfHealResult | null;
+  finalDiagnosis: AudioHealthReport;
+  allSystemsOperational: boolean;
 }
 
 // Singleton

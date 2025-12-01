@@ -106,6 +106,27 @@ export type {
   UseAudioSettingsReturn
 } from './useAudioSettings';
 
+// ═══════════════════════════════════════════════════════════════
+// v∞.2 - Device Permissions & Self-Healing (OPUS DEVICE-SHE)
+// ═══════════════════════════════════════════════════════════════
+
+// Device Permissions Engine
+export { useDevicePermissions, default as useDevicePermissionsDefault } from './useDevicePermissions';
+export type {
+  PermissionStatus,
+  DeviceType,
+  DevicePermission,
+  DevicePermissionsState,
+  DevicePermissionsResult
+} from './useDevicePermissions';
+
+// Device Health & Self-Healing
+export { useDeviceHealth, default as useDeviceHealthDefault } from './useDeviceHealth';
+export type {
+  UseDeviceHealthReturn,
+  UseDeviceHealthOptions
+} from './useDeviceHealth';
+
 // Legacy voice hooks (DEPRECATED - use useVoiceEngine instead)
 // export { useVoice } from './useVoice';
 // export { useVoiceMode } from './useVoiceMode';

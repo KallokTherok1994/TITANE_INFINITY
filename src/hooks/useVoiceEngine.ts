@@ -12,6 +12,7 @@
  *   - Priorité: Tauri Backend (100% offline) → WebSpeech fallback (dev)
  *   - États: idle → listening → processing → speaking → idle
  *   - Deux modes: conversation (avec IA) ou dictation (texte seul)
+ *   - OPUS v∞.2: Détection Tauri vs Browser pour permissions
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -19,6 +20,8 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { voiceService } from '@/services/api';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { audioStateMachine, type AudioConversationState } from '@/services/audio/audioStateMachine';
+import { detectEnvironment } from '@/core/tauri/environment';
+import { secureInvoke } from '@/lib/security';
 
 // ═══ TYPES ═══
 
@@ -89,14 +92,29 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
         // Check TTS
         const ttsStatus = await hybridTTS.getStatus();
 
-        // Check mic (request permission if needed)
+        // Check mic - OPUS v∞.2: Tauri vs Browser
         let micAvailable = false;
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          stream.getTracks().forEach(track => track.stop());
-          micAvailable = true;
-        } catch {
-          console.warn('[useVoiceEngine] Microphone not available');
+        const env = detectEnvironment();
+        
+        if (env.isTauri) {
+          // En mode Tauri, utiliser test_microphone backend
+          try {
+            const result = await secureInvoke<{ success: boolean }>('test_microphone');
+            micAvailable = result?.success === true;
+          } catch {
+            console.warn('[useVoiceEngine] Tauri microphone test failed');
+          }
+        } else {
+          // En mode Browser, utiliser getUserMedia
+          try {
+            if (navigator.mediaDevices?.getUserMedia) {
+              const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+              stream.getTracks().forEach(track => track.stop());
+              micAvailable = true;
+            }
+          } catch {
+            console.warn('[useVoiceEngine] Browser microphone not available');
+          }
         }
 
         if (mountedRef.current) {
