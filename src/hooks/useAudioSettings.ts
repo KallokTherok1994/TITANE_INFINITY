@@ -194,68 +194,94 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const checkPermissions = useCallback(async () => {
-    // Dans Tauri, tenter directement d'accéder au micro
-    // car l'API Permissions peut ne pas fonctionner
+    // Détecter l'environnement d'exécution
     const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
 
     if (isTauri) {
-      // Pour Tauri, essayer d'accéder directement au micro
+      // ✅ En Tauri: utiliser le backend Rust (test_microphone) comme source de vérité
+      // car WebKitGTK ne supporte pas bien getUserMedia sur Linux
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        stream.getTracks().forEach(track => track.stop());
-        if (mountedRef.current) {
+        const result = await audioService.testMicrophone();
+        if (!mountedRef.current) return;
+
+        if (result.success) {
           setPermissions({ microphone: 'granted', speaker: 'granted' });
+          setLastError(null);
+        } else {
+          // Le micro ne fonctionne pas (problème OS/driver)
+          setPermissions({ microphone: 'unavailable', speaker: 'granted' });
+          setLastError(result.errorMessage ?? 'Test microphone échoué');
         }
-        return;
       } catch (error) {
-        // Si refusé ou erreur, mettre à prompt pour permettre retry
+        // Erreur Tauri (ACL ou autre)
+        console.error('[useAudioSettings] Tauri test_microphone error:', error);
         if (mountedRef.current) {
-          const isDenied = error instanceof DOMException &&
-            (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError');
-          setPermissions({
-            microphone: isDenied ? 'denied' : 'prompt',
-            speaker: 'granted',
-          });
-        }
-        return;
-      }
-    }
+          const errorMsg = error instanceof Error ? error.message : String(error);
 
-    // Fallback: Utiliser l'API Permissions si disponible (navigateur web)
-    if (navigator.permissions) {
-      try {
-        const result = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-        if (mountedRef.current) {
-          setPermissions(prev => ({
-            ...prev,
-            microphone: result.state as PermissionStatus,
-          }));
-        }
-
-        // Écouter les changements de permission
-        result.addEventListener('change', () => {
-          if (mountedRef.current) {
-            setPermissions(prev => ({
-              ...prev,
-              microphone: result.state as PermissionStatus,
-            }));
+          // Si c'est une erreur ACL Tauri
+          if (errorMsg.includes('not allowed') || errorMsg.includes('command')) {
+            setPermissions({ microphone: 'denied', speaker: 'granted' });
+            setLastError('Commande audio non autorisée. Vérifiez la configuration Tauri.');
+          } else {
+            setPermissions({ microphone: 'unavailable', speaker: 'granted' });
+            setLastError('Erreur de vérification microphone');
           }
-        });
-        return;
-      } catch {
-        // Permissions API non supportée pour microphone
+        }
       }
+      return;
     }
 
-    // Par défaut: mettre à prompt pour permettre la demande
-    if (mountedRef.current) {
-      setPermissions({ microphone: 'prompt', speaker: 'granted' });
+    // ✅ En browser HTTP: utiliser navigator.mediaDevices.getUserMedia
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach(track => track.stop());
+      if (mountedRef.current) {
+        setPermissions({ microphone: 'granted', speaker: 'granted' });
+      }
+    } catch (error) {
+      if (mountedRef.current) {
+        const err = error as DOMException;
+        const isDenied = err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError';
+        setPermissions({
+          microphone: isDenied ? 'denied' : 'prompt',
+          speaker: 'granted',
+        });
+      }
     }
   }, []);
 
   const requestMicrophonePermission = useCallback(async (): Promise<boolean> => {
+    const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+
+    if (isTauri) {
+      // ✅ En Tauri: le test via backend Rust EST la demande de permission
+      // Pas besoin de getUserMedia car le backend utilise arecord/pactl
+      try {
+        const result = await audioService.testMicrophone();
+        if (!mountedRef.current) return false;
+
+        if (result.success) {
+          setPermissions({ microphone: 'granted', speaker: 'granted' });
+          setLastError(null);
+          await refreshDevices();
+          return true;
+        } else {
+          setPermissions({ microphone: 'unavailable', speaker: 'granted' });
+          setLastError(result.errorMessage ?? 'Microphone non disponible. Vérifiez les paramètres système audio.');
+          return false;
+        }
+      } catch (error) {
+        console.error('[useAudioSettings] Tauri permission request failed:', error);
+        if (mountedRef.current) {
+          setPermissions({ microphone: 'unavailable', speaker: 'granted' });
+          setLastError('Erreur lors du test microphone. Vérifiez que le service audio est actif.');
+        }
+        return false;
+      }
+    }
+
+    // ✅ En browser: utiliser getUserMedia classique
     try {
-      // Demander l'accès au microphone avec contraintes optimisées
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
@@ -264,25 +290,22 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         }
       });
 
-      // Arrêter immédiatement le stream pour libérer le micro
       stream.getTracks().forEach(track => track.stop());
 
       if (mountedRef.current) {
         setPermissions({ microphone: 'granted', speaker: 'granted' });
-        setLastError(null); // Effacer les erreurs précédentes
+        setLastError(null);
       }
 
-      // Rafraîchir les devices (les labels seront maintenant disponibles)
       await refreshDevices();
-
       return true;
     } catch (error) {
-      console.error('[useAudioSettings] Permission request failed:', error);
+      console.error('[useAudioSettings] Browser permission request failed:', error);
 
       if (mountedRef.current) {
-        const isDenied = error instanceof DOMException &&
-          (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError');
-        const isNotFound = error instanceof DOMException && error.name === 'NotFoundError';
+        const err = error as DOMException;
+        const isDenied = err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError';
+        const isNotFound = err.name === 'NotFoundError';
 
         setPermissions(prev => ({
           ...prev,
