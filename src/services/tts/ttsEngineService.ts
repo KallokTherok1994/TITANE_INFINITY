@@ -10,7 +10,7 @@
  * - Queue de synthèse
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { detectEnvironment } from '@/core/tauri/environment';
 import {
   TTSEmotion,
@@ -154,7 +154,7 @@ class TTSEngineService {
     // Stop backend Tauri (v19.3.0: use tts_stop from audio::commands)
     if (this.tauriAvailable) {
       try {
-        await invoke('tts_stop');
+        await secureInvoke('tts_stop');
       } catch (error) {
         console.warn('⚠️ TTS: Backend stop failed:', error);
       }
@@ -271,7 +271,7 @@ class TTSEngineService {
     if (tauriAvailable) {
       try {
         // Check ElevenLabs
-        const elevenLabsOk = await invoke<boolean>('check_elevenlabs_available');
+        const elevenLabsOk = await secureInvoke<boolean>('check_elevenlabs_available');
         status.elevenlabs = elevenLabsOk ? 'available' : 'unavailable';
       } catch {
         status.elevenlabs = 'unavailable';
@@ -279,7 +279,7 @@ class TTSEngineService {
 
       try {
         // Check local TTS
-        const localStatus = await invoke<{ piper: boolean; espeak: boolean }>('check_local_tts');
+        const localStatus = await secureInvoke<{ piper: boolean; espeak: boolean }>('check_local_tts');
         status.piper = localStatus.piper ? 'available' : 'unavailable';
         status.espeak = localStatus.espeak ? 'available' : 'unavailable';
       } catch {
@@ -466,7 +466,7 @@ class TTSEngineService {
       throw new Error('Tauri backend not available');
     }
 
-    const response = await invoke<{ audio_path: string; duration_ms: number }>(
+    const response = await secureInvoke<{ audio_path: string; duration_ms: number }>(
       'synthesize_speech',
       {
         text: request.text,
@@ -556,7 +556,7 @@ class TTSEngineService {
     }
 
     try {
-      await invoke('health_check');
+      await secureInvoke('health_check');
       this.tauriAvailable = true;
     } catch {
       this.tauriAvailable = false;

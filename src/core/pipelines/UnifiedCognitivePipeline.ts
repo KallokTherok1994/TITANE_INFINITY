@@ -26,7 +26,7 @@
  * @created 2025-11-27
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type { SingularityState } from '@/types/singularityState';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -340,7 +340,7 @@ export class UnifiedCognitivePipeline {
    */
   private async analyzeIntention(message: UserMessage): Promise<DetectedIntention> {
     try {
-      const result = await invoke<DetectedIntention>('cognitive_analyze_intention', {
+      const result = await secureInvoke<DetectedIntention>('cognitive_analyze_intention', {
         content: message.content,
         context: message.context,
       });
@@ -386,7 +386,7 @@ export class UnifiedCognitivePipeline {
     intention: DetectedIntention
   ): Promise<CognitiveResponse> {
     try {
-      const result = await invoke<CognitiveResponse>('cognitive_generate_response', {
+      const result = await secureInvoke<CognitiveResponse>('cognitive_generate_response', {
         message: message.content,
         intention,
         context: message.context,
@@ -417,7 +417,7 @@ export class UnifiedCognitivePipeline {
    */
   private async prepareTTS(text: string): Promise<TTSAudio> {
     try {
-      const result = await invoke<TTSAudio>('tts_generate_audio', {
+      const result = await secureInvoke<TTSAudio>('tts_generate_audio', {
         text,
         voice: this.config.tts_voice,
         speed: this.config.tts_speed,
@@ -439,7 +439,7 @@ export class UnifiedCognitivePipeline {
    */
   private async prepareAvatarAnimation(ttsAudio: TTSAudio): Promise<AvatarAnimation> {
     try {
-      const result = await invoke<AvatarAnimation>('avatar_prepare_animation', {
+      const result = await secureInvoke<AvatarAnimation>('avatar_prepare_animation', {
         visemes: ttsAudio.visemes,
         duration: ttsAudio.duration,
         expressionIntensity: this.config.avatar_expression_intensity,

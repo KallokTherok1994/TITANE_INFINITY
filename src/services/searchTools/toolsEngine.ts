@@ -13,7 +13,7 @@
  * @version Ω∞+
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import {
   type IAMode as _IAMode,
   type ToolCategory,
@@ -530,7 +530,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', `Searching web for: ${input.query}`);
 
     try {
-      const results = await invoke('search_web', {
+      const results = await secureInvoke('search_web', {
         provider: input.provider ?? 'duckduckgo',
         query: input.query,
         maxResults: input.maxResults ?? 10,
@@ -555,7 +555,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', `Searching locally for: ${input.query}`);
 
     try {
-      return await invoke('search_local', {
+      return await secureInvoke('search_local', {
         query: input.query,
         path: input.path ?? '.',
         fileTypes: input.fileTypes ?? [],
@@ -576,7 +576,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', `Reading file: ${input.path}`);
 
     try {
-      return await invoke('read_file_content', {
+      return await secureInvoke('read_file_content', {
         path: input.path,
         encoding: input.encoding ?? 'utf-8',
         startLine: input.startLine,
@@ -597,7 +597,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', `Writing file: ${input.path}`);
 
     try {
-      await invoke('write_file_content', {
+      await secureInvoke('write_file_content', {
         path: input.path,
         content: input.content,
         mode: input.mode ?? 'write',
@@ -616,7 +616,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', `Listing directory: ${input.path ?? '.'}`);
 
     try {
-      return await invoke('list_directory', {
+      return await secureInvoke('list_directory', {
         path: input.path ?? '.',
         recursive: input.recursive ?? false,
         includeHidden: input.includeHidden ?? false,
@@ -637,7 +637,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', `Analyzing code: ${input.path}`);
 
     try {
-      return await invoke('analyze_code', {
+      return await secureInvoke('analyze_code', {
         path: input.path,
         language: input.language,
         checks: input.checks ?? ['syntax', 'lint'],
@@ -661,7 +661,7 @@ export class ToolsEngine {
     }
 
     try {
-      return await invoke('execute_code_sandbox', {
+      return await secureInvoke('execute_code_sandbox', {
         code: input.code,
         language: input.language,
         timeout: input.timeout ?? this.config.sandbox.maxExecutionTime,
@@ -679,7 +679,7 @@ export class ToolsEngine {
     this.addLog(context, 'info', 'Getting system info');
 
     try {
-      return await invoke('get_system_info', {
+      return await secureInvoke('get_system_info', {
         include: input.include ?? ['os', 'cpu', 'memory'],
       });
     } catch {
@@ -701,7 +701,7 @@ export class ToolsEngine {
     this.addLog(context, 'warn', `Executing command: ${input.command}`);
 
     try {
-      return await invoke('execute_command', {
+      return await secureInvoke('execute_command', {
         command: input.command,
         cwd: input.cwd,
         timeout: input.timeout ?? 30000,

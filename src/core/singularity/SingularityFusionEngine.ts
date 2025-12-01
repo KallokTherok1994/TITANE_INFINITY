@@ -41,7 +41,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { CognitiveOptimizer } from '../cognitive/CognitiveOptimizationEngine';
 import { AutonomyEngine } from '../autonomy/SingularityAutonomyEngine';
 import type { SingularityState } from '@/types/singularityState';
@@ -338,7 +338,7 @@ export class SingularityFusionEngine {
       const basicIntention = await CognitiveOptimizer.analyzeIntention(message);
 
       // Enrichir avec analyse backend
-      const fullIntention = await invoke<IntentionAnalysis>('fusion_analyze_intention', {
+      const fullIntention = await secureInvoke<IntentionAnalysis>('fusion_analyze_intention', {
         message,
         history: cognitiveMessages,
         basicAnalysis: basicIntention,
@@ -366,7 +366,7 @@ export class SingularityFusionEngine {
 
   private async step2_ActivateModules(intention: IntentionAnalysis): Promise<ModuleActivation> {
     try {
-      const activation = await invoke<ModuleActivation>('fusion_activate_modules', {
+      const activation = await secureInvoke<ModuleActivation>('fusion_activate_modules', {
         intention,
       });
 
@@ -396,7 +396,7 @@ export class SingularityFusionEngine {
     preferences: UserPreferences
   ): Promise<StyleConfig> {
     try {
-      const styleConfig = await invoke<StyleConfig>('fusion_adjust_styles', {
+      const styleConfig = await secureInvoke<StyleConfig>('fusion_adjust_styles', {
         intention,
         preferences,
       });
@@ -446,7 +446,7 @@ export class SingularityFusionEngine {
       );
 
       // Générer réponse via backend IA
-      const response = await invoke<string>('fusion_generate_ia_response', {
+      const response = await secureInvoke<string>('fusion_generate_ia_response', {
         message,
         optimizedContext: optimizedPipeline.optimizedContext,
         intention: optimizedPipeline.intention,
@@ -478,7 +478,7 @@ export class SingularityFusionEngine {
     voiceParams: VoiceParams
   ): Promise<ArrayBuffer> {
     try {
-      const audioBuffer = await invoke<ArrayBuffer>('fusion_prepare_tts', {
+      const audioBuffer = await secureInvoke<ArrayBuffer>('fusion_prepare_tts', {
         text,
         voiceParams,
       });
@@ -497,7 +497,7 @@ export class SingularityFusionEngine {
 
   private async step6_LipSync(audioBuffer: ArrayBuffer, text: string): Promise<LipSyncData> {
     try {
-      const lipsyncData = await invoke<LipSyncData>('fusion_process_lipsync', {
+      const lipsyncData = await secureInvoke<LipSyncData>('fusion_process_lipsync', {
         audioBuffer,
         text,
       });
@@ -523,7 +523,7 @@ export class SingularityFusionEngine {
     styleConfig: StyleConfig
   ): Promise<AnimationData> {
     try {
-      const animationData = await invoke<AnimationData>('fusion_animate_avatar', {
+      const animationData = await secureInvoke<AnimationData>('fusion_animate_avatar', {
         lipsyncData,
         styleConfig,
       });
@@ -554,7 +554,7 @@ export class SingularityFusionEngine {
     }
   ): Promise<SingularityState> {
     try {
-      const updatedState = await invoke<SingularityState>('fusion_update_state', {
+      const updatedState = await secureInvoke<SingularityState>('fusion_update_state', {
         currentState,
         cycleData,
       });
@@ -605,7 +605,7 @@ export class SingularityFusionEngine {
         console.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
 
         try {
-          await invoke('fusion_auto_optimize', {
+          await secureInvoke('fusion_auto_optimize', {
             bottlenecks,
             stats,
             suggestions: optimizations,

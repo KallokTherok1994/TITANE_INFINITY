@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   LogEntry,
   LogFilter,
@@ -45,8 +45,8 @@ export function useSystemLogs(autoRefresh = false, refreshInterval = 2000): UseS
 
     try {
       const [logsResult, statsResult] = await Promise.all([
-        invoke<LogEntry[]>('sc_get_logs', { filter }),
-        invoke<LogStats>('sc_get_log_stats'),
+        secureInvoke<LogEntry[]>('sc_get_logs', { filter }),
+        secureInvoke<LogStats>('sc_get_log_stats'),
       ]);
 
       setLogs(logsResult);
@@ -62,7 +62,7 @@ export function useSystemLogs(autoRefresh = false, refreshInterval = 2000): UseS
 
   const clearLogs = useCallback(async () => {
     try {
-      await invoke('sc_clear_logs');
+      await secureInvoke('sc_clear_logs');
       setLogs([]);
       setStats({ total_entries: 0, by_level: {}, by_source: {} });
     } catch (err) {
@@ -74,7 +74,7 @@ export function useSystemLogs(autoRefresh = false, refreshInterval = 2000): UseS
 
   const addLog = useCallback(async (level: LogLevel, source: string, message: string) => {
     try {
-      await invoke('sc_add_log', { level, source, message });
+      await secureInvoke('sc_add_log', { level, source, message });
       // Refresh after adding
       await refreshLogs();
     } catch (err) {

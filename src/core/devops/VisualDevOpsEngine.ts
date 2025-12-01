@@ -16,7 +16,7 @@
  * - Collaboration temps réel
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   ScreenAnalysis,
   DevOpsAction,
@@ -149,7 +149,7 @@ class VisualDevOpsEngine {
     // Analyser avec backend (si image fournie)
     if (imageBase64) {
       try {
-        const backendAnalysis = await invoke<{
+        const backendAnalysis = await secureInvoke<{
           detected_elements: DetectedElement[];
           context_type: string;
           confidence: number;
@@ -489,7 +489,7 @@ class VisualDevOpsEngine {
 
     // Appeler backend pour générer patch
     try {
-      const patch = await invoke<CodePatch>('visual_devops_generate_fix', {
+      const patch = await secureInvoke<CodePatch>('visual_devops_generate_fix', {
         error: firstError,
       });
 

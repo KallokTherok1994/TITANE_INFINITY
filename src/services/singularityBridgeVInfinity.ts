@@ -18,7 +18,7 @@
  * - Export JSON complet
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -229,7 +229,7 @@ export class SingularityBridgeVInfinity {
    */
   static async getState(): Promise<SingularityStateVInfinity> {
     try {
-      const state = await invoke<SingularityStateVInfinity>(
+      const state = await secureInvoke<SingularityStateVInfinity>(
         TAURI_COMMANDS.SINGULARITY_V_GET
       );
       console.log('[SingularityBridge v∞] State retrieved:', state);
@@ -245,7 +245,7 @@ export class SingularityBridgeVInfinity {
    */
   static async setState(newState: SingularityStateVInfinity): Promise<string> {
     try {
-      const hash = await invoke<string>(
+      const hash = await secureInvoke<string>(
         TAURI_COMMANDS.SINGULARITY_V_SET,
         { newState }
       );
@@ -262,7 +262,7 @@ export class SingularityBridgeVInfinity {
    */
   static async diff(nextState: SingularityStateVInfinity): Promise<DiffResult> {
     try {
-      const diff = await invoke<DiffResult>(
+      const diff = await secureInvoke<DiffResult>(
         TAURI_COMMANDS.SINGULARITY_V_DIFF,
         { nextState }
       );
@@ -279,7 +279,7 @@ export class SingularityBridgeVInfinity {
    */
   static async getHash(): Promise<string> {
     try {
-      const hash = await invoke<string>(TAURI_COMMANDS.SINGULARITY_V_HASH);
+      const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_HASH);
       return hash;
     } catch (error) {
       console.error('[SingularityBridge v∞] Failed to get hash:', error);
@@ -295,7 +295,7 @@ export class SingularityBridgeVInfinity {
   static async sync(): Promise<SingularityStateVInfinity> {
     try {
       console.log('[SingularityBridge v∞] Starting Deep Sync...');
-      const state = await invoke<SingularityStateVInfinity>(
+      const state = await secureInvoke<SingularityStateVInfinity>(
         TAURI_COMMANDS.SINGULARITY_V_SYNC
       );
       console.log('[SingularityBridge v∞] Deep Sync complete');
@@ -311,7 +311,7 @@ export class SingularityBridgeVInfinity {
    */
   static async evaluateMeta(): Promise<MetaCognitiveReport> {
     try {
-      const report = await invoke<MetaCognitiveReport>(
+      const report = await secureInvoke<MetaCognitiveReport>(
         TAURI_COMMANDS.SINGULARITY_V_META
       );
       console.log('[SingularityBridge v∞] Meta evaluation:', report);
@@ -327,7 +327,7 @@ export class SingularityBridgeVInfinity {
    */
   static async verifyIntegrity(): Promise<IntegrityCheckResult> {
     try {
-      const result = await invoke<IntegrityCheckResult>(
+      const result = await secureInvoke<IntegrityCheckResult>(
         TAURI_COMMANDS.SINGULARITY_V_INTEGRITY
       );
       console.log('[SingularityBridge v∞] Integrity check:', result);
@@ -344,7 +344,7 @@ export class SingularityBridgeVInfinity {
   static async repair(): Promise<SingularityStateVInfinity> {
     try {
       console.warn('[SingularityBridge v∞] Starting auto-repair...');
-      const state = await invoke<SingularityStateVInfinity>(
+      const state = await secureInvoke<SingularityStateVInfinity>(
         TAURI_COMMANDS.SINGULARITY_V_REPAIR
       );
       console.log('[SingularityBridge v∞] Auto-repair complete');
@@ -360,7 +360,7 @@ export class SingularityBridgeVInfinity {
    */
   static async exportJSON(): Promise<string> {
     try {
-      const json = await invoke<string>(TAURI_COMMANDS.SINGULARITY_V_EXPORT);
+      const json = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_EXPORT);
       console.log('[SingularityBridge v∞] JSON export complete');
       return json;
     } catch (error) {
@@ -374,7 +374,7 @@ export class SingularityBridgeVInfinity {
    */
   static async getSnapshot(): Promise<Record<string, string>> {
     try {
-      const snapshot = await invoke<Record<string, string>>(
+      const snapshot = await secureInvoke<Record<string, string>>(
         TAURI_COMMANDS.SINGULARITY_V_SNAPSHOT
       );
       return snapshot;

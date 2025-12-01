@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import { useState, useCallback, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   DeveloperModeState,
   PatchAction,
@@ -29,7 +29,7 @@ export function useDeveloperMode() {
   const fetchState = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await invoke<DeveloperModeState>('engines_devmode_get_state');
+      const result = await secureInvoke<DeveloperModeState>('engines_devmode_get_state');
       setState(result);
       setError(null);
     } catch (err) {
@@ -41,7 +41,7 @@ export function useDeveloperMode() {
 
   const enable = useCallback(async (authToken: string) => {
     try {
-      const success = await invoke<boolean>('engines_devmode_enable', { authToken });
+      const success = await secureInvoke<boolean>('engines_devmode_enable', { authToken });
       if (success) {
         await fetchState();
       }
@@ -54,7 +54,7 @@ export function useDeveloperMode() {
 
   const disable = useCallback(async () => {
     try {
-      const success = await invoke<boolean>('engines_devmode_disable');
+      const success = await secureInvoke<boolean>('engines_devmode_disable');
       if (success) {
         await fetchState();
       }
@@ -83,7 +83,7 @@ export function usePatchOperations() {
   const validatePatch = useCallback(async (patch: PatchAction): Promise<PatchResult | null> => {
     try {
       setLoading(true);
-      const result = await invoke<PatchResult>('engines_devmode_validate_patch', { patch });
+      const result = await secureInvoke<PatchResult>('engines_devmode_validate_patch', { patch });
       setError(null);
       return result;
     } catch (err) {
@@ -97,7 +97,7 @@ export function usePatchOperations() {
   const applyPatch = useCallback(async (patch: PatchAction): Promise<PatchResult | null> => {
     try {
       setLoading(true);
-      const result = await invoke<PatchResult>('engines_devmode_apply_patch', { patch });
+      const result = await secureInvoke<PatchResult>('engines_devmode_apply_patch', { patch });
       setError(null);
       return result;
     } catch (err) {
@@ -111,7 +111,7 @@ export function usePatchOperations() {
   const previewChanges = useCallback(async (patch: PatchAction): Promise<DiffPreview | null> => {
     try {
       setLoading(true);
-      const result = await invoke<DiffPreview>('engines_devmode_preview', { patch });
+      const result = await secureInvoke<DiffPreview>('engines_devmode_preview', { patch });
       setError(null);
       return result;
     } catch (err) {
@@ -125,7 +125,7 @@ export function usePatchOperations() {
   const rollback = useCallback(async (patchId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await invoke<boolean>('engines_devmode_rollback', { patchId });
+      const success = await secureInvoke<boolean>('engines_devmode_rollback', { patchId });
       setError(null);
       return success;
     } catch (err) {
@@ -151,7 +151,7 @@ export function usePatchHistory() {
   const fetchHistory = useCallback(async (limit?: number) => {
     try {
       setLoading(true);
-      const result = await invoke<PatchHistory>('engines_devmode_get_history', { limit });
+      const result = await secureInvoke<PatchHistory>('engines_devmode_get_history', { limit });
       setHistory(result);
       setError(null);
     } catch (err) {
@@ -179,7 +179,7 @@ export function useBackupOperations() {
   const createBackup = useCallback(async (name: string): Promise<string | null> => {
     try {
       setLoading(true);
-      const backupId = await invoke<string>('engines_devmode_create_backup', { name });
+      const backupId = await secureInvoke<string>('engines_devmode_create_backup', { name });
       setError(null);
       return backupId;
     } catch (err) {
@@ -193,7 +193,7 @@ export function useBackupOperations() {
   const restoreBackup = useCallback(async (backupId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await invoke<boolean>('engines_devmode_restore_backup', { backupId });
+      const success = await secureInvoke<boolean>('engines_devmode_restore_backup', { backupId });
       setError(null);
       return success;
     } catch (err) {
@@ -219,7 +219,7 @@ export function useFileAnalysis() {
   const analyzeFile = useCallback(async (filePath: string) => {
     try {
       setLoading(true);
-      const result = await invoke<CodeSuggestion[]>('engines_devmode_analyze_file', { filePath });
+      const result = await secureInvoke<CodeSuggestion[]>('engines_devmode_analyze_file', { filePath });
       setSuggestions(result);
       setError(null);
     } catch (err) {
@@ -245,7 +245,7 @@ export function useBuildPipeline() {
   const startBuild = useCallback(async (config?: Record<string, unknown>): Promise<string | null> => {
     try {
       setLoading(true);
-      const buildId = await invoke<string>('engines_build_start', { config });
+      const buildId = await secureInvoke<string>('engines_build_start', { config });
       setError(null);
       return buildId;
     } catch (err) {
@@ -258,7 +258,7 @@ export function useBuildPipeline() {
 
   const getStatus = useCallback(async (buildId: string) => {
     try {
-      const result = await invoke<BuildStatus>('engines_build_get_status', { buildId });
+      const result = await secureInvoke<BuildStatus>('engines_build_get_status', { buildId });
       setStatus(result);
       setError(null);
     } catch (err) {
@@ -268,7 +268,7 @@ export function useBuildPipeline() {
 
   const getResult = useCallback(async (buildId: string) => {
     try {
-      const res = await invoke<BuildResult>('engines_build_get_result', { buildId });
+      const res = await secureInvoke<BuildResult>('engines_build_get_result', { buildId });
       setResult(res);
       setError(null);
     } catch (err) {
@@ -279,7 +279,7 @@ export function useBuildPipeline() {
   const cancelBuild = useCallback(async (buildId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await invoke<boolean>('engines_build_cancel', { buildId });
+      const success = await secureInvoke<boolean>('engines_build_cancel', { buildId });
       setError(null);
       return success;
     } catch (err) {
@@ -293,7 +293,7 @@ export function useBuildPipeline() {
   const cleanArtifacts = useCallback(async (): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await invoke<boolean>('engines_build_clean');
+      const success = await secureInvoke<boolean>('engines_build_clean');
       setError(null);
       return success;
     } catch (err) {
@@ -319,7 +319,7 @@ export function useEnginesDashboard() {
   const fetchDashboard = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await invoke<UnifiedEnginesDashboard>('engines_get_dashboard');
+      const result = await secureInvoke<UnifiedEnginesDashboard>('engines_get_dashboard');
       setDashboard(result);
       setError(null);
     } catch (err) {
@@ -350,7 +350,7 @@ export function useChangelog() {
   const generateChangelog = useCallback(async (since?: string) => {
     try {
       setLoading(true);
-      const result = await invoke<string>('engines_devmode_changelog', { since });
+      const result = await secureInvoke<string>('engines_devmode_changelog', { since });
       setChangelog(result);
       setError(null);
     } catch (err) {

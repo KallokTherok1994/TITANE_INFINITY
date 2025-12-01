@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { DEFAULT_APPEARANCE_STATE } from '../appearance/appearanceState';
 import type { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;
@@ -138,7 +138,7 @@ export class AppearanceFloatingIntegration {
    */
   public async fetchAppearance(): Promise<AvatarAppearanceState> {
     try {
-      const appearance = await invoke<string>('avatar_get_appearance');
+      const appearance = await secureInvoke<string>('avatar_get_appearance');
       this.currentAppearance = JSON.parse(appearance) as AvatarAppearanceState;
       return this.currentAppearance;
     } catch (error) {

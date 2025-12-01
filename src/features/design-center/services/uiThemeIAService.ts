@@ -5,7 +5,7 @@
  * @license AGPL-3.0 - TITANE AI Project
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type { UICommand, UICommandResult, UIThemeTokens } from '../types/designCenter.types';
 
 // ============================================================================
@@ -193,7 +193,7 @@ export const uiThemeIAService = {
             contrast: 'contrast',
           };
 
-          await invoke<UIThemeTokens>('update_ui_token', {
+          await secureInvoke<UIThemeTokens>('update_ui_token', {
             category: categoryMap[category] || category,
             key: command.key,
             value: command.value,
@@ -207,7 +207,7 @@ export const uiThemeIAService = {
         }
 
         case 'reset_defaults': {
-          await invoke<UIThemeTokens>('reset_ui_theme');
+          await secureInvoke<UIThemeTokens>('reset_ui_theme');
           return {
             success: true,
             message: '✅ Thème réinitialisé aux valeurs par défaut',
@@ -215,8 +215,8 @@ export const uiThemeIAService = {
         }
 
         case 'save_theme': {
-          const tokens = await invoke<UIThemeTokens>('load_ui_theme');
-          await invoke('save_ui_theme', { tokens });
+          const tokens = await secureInvoke<UIThemeTokens>('load_ui_theme');
+          await secureInvoke('save_ui_theme', { tokens });
           return {
             success: true,
             message: '✅ Thème sauvegardé',
@@ -224,7 +224,7 @@ export const uiThemeIAService = {
         }
 
         case 'reload_theme': {
-          await invoke<UIThemeTokens>('load_ui_theme');
+          await secureInvoke<UIThemeTokens>('load_ui_theme');
           return {
             success: true,
             message: '✅ Thème rechargé',

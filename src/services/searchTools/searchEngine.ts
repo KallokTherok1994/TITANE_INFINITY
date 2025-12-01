@@ -16,7 +16,7 @@
  * @version Ω∞+
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import {
   type SearchProvider,
   type SearchType,
@@ -321,7 +321,7 @@ export class SearchEngine {
       this.incrementRateLimit(provider.id);
 
       // Appeler le backend Tauri pour la recherche web
-      const results = await invoke<SearchResult[]>('search_web', {
+      const results = await secureInvoke<SearchResult[]>('search_web', {
         provider: provider.id,
         query: query.query,
         searchType: query.type,
@@ -413,7 +413,7 @@ export class SearchEngine {
   ): Promise<SearchResponse> {
     try {
       // Appeler le backend Tauri pour la recherche locale
-      const results = await invoke<SearchResult[]>('search_local', {
+      const results = await secureInvoke<SearchResult[]>('search_local', {
         query: query.query,
         path: query.filters?.domain?.[0] ?? '.',
         fileTypes: query.filters?.fileType ?? [],

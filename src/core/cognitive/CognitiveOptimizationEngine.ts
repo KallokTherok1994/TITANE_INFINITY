@@ -29,7 +29,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES COGNITIFS
@@ -139,7 +139,7 @@ export class CognitiveOptimizationEngine {
       }
 
       // Analyser via backend IA
-      const result = await invoke<IntentionAnalysis>('cognitive_analyze_intention', {
+      const result = await secureInvoke<IntentionAnalysis>('cognitive_analyze_intention', {
         message,
         context: this.context,
       });
@@ -167,7 +167,7 @@ export class CognitiveOptimizationEngine {
 
   async checkCoherence(response: string, context: CognitiveMessage[]): Promise<CoherenceCheck> {
     try {
-      const result = await invoke<CoherenceCheck>('cognitive_check_coherence', {
+      const result = await secureInvoke<CoherenceCheck>('cognitive_check_coherence', {
         response,
         context,
         threshold: this.COHERENCE_THRESHOLD,
@@ -201,7 +201,7 @@ export class CognitiveOptimizationEngine {
       const _originalTokens = messages.reduce((sum, msg) => sum + msg.tokens, 0);
 
       // Appliquer compression contextuelle
-      const result = await invoke<ContextOptimization>('cognitive_optimize_context', {
+      const result = await secureInvoke<ContextOptimization>('cognitive_optimize_context', {
         messages,
         maxTokens: 8000, // Limite pour IA (GPT-4 Turbo = 128k, on garde marge)
         compressionStrategy: 'semantic_grouping',
@@ -232,7 +232,7 @@ export class CognitiveOptimizationEngine {
   async memoryGating(query: string, threshold: number = 0.7): Promise<MemoryGatingResult> {
     try {
       // Récupérer mémoires pertinentes via vectorisation
-      const result = await invoke<MemoryGatingResult>('cognitive_memory_gating', {
+      const result = await secureInvoke<MemoryGatingResult>('cognitive_memory_gating', {
         query,
         threshold,
         maxRetrieve: 10,
@@ -259,7 +259,7 @@ export class CognitiveOptimizationEngine {
 
   async clusterSemanticMessages(messages: CognitiveMessage[]): Promise<SemanticCluster[]> {
     try {
-      const clusters = await invoke<SemanticCluster[]>('cognitive_cluster_messages', {
+      const clusters = await secureInvoke<SemanticCluster[]>('cognitive_cluster_messages', {
         messages,
         algorithm: 'kmeans',
         numClusters: Math.min(5, Math.ceil(messages.length / 10)),
@@ -285,7 +285,7 @@ export class CognitiveOptimizationEngine {
     issues: string[]
   ): Promise<string> {
     try {
-      const corrected = await invoke<string>('cognitive_auto_correct_response', {
+      const corrected = await secureInvoke<string>('cognitive_auto_correct_response', {
         response,
         context,
         issues,
@@ -304,7 +304,7 @@ export class CognitiveOptimizationEngine {
 
   async removeNoise(messages: CognitiveMessage[]): Promise<CognitiveMessage[]> {
     try {
-      const cleaned = await invoke<CognitiveMessage[]>('cognitive_remove_noise', {
+      const cleaned = await secureInvoke<CognitiveMessage[]>('cognitive_remove_noise', {
         messages,
         strategies: [
           'remove_duplicates',
@@ -331,7 +331,7 @@ export class CognitiveOptimizationEngine {
   ): Promise<CognitiveMessage[]> {
     try {
       // Injecter uniquement messages pertinents via scoring
-      const injected = await invoke<CognitiveMessage[]>('cognitive_inject_selective', {
+      const injected = await secureInvoke<CognitiveMessage[]>('cognitive_inject_selective', {
         baseContext,
         additionalContext,
         relevanceThreshold: 0.6,
@@ -350,7 +350,7 @@ export class CognitiveOptimizationEngine {
 
   async prioritizeAnalysisSteps(intention: IntentionAnalysis): Promise<string[]> {
     try {
-      const steps = await invoke<string[]>('cognitive_prioritize_steps', {
+      const steps = await secureInvoke<string[]>('cognitive_prioritize_steps', {
         intention,
         context: this.context,
       });
@@ -368,7 +368,7 @@ export class CognitiveOptimizationEngine {
 
   async miniReasoning(query: string, response: string): Promise<{ valid: boolean; reasoning: string }> {
     try {
-      const result = await invoke<{ valid: boolean; reasoning: string }>('cognitive_mini_reasoning', {
+      const result = await secureInvoke<{ valid: boolean; reasoning: string }>('cognitive_mini_reasoning', {
         query,
         response,
       });
@@ -386,7 +386,7 @@ export class CognitiveOptimizationEngine {
 
   async maintainNarrativeContinuity(messages: CognitiveMessage[]): Promise<number> {
     try {
-      const continuityScore = await invoke<number>('cognitive_narrative_continuity', {
+      const continuityScore = await secureInvoke<number>('cognitive_narrative_continuity', {
         messages,
       });
 

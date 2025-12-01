@@ -18,7 +18,7 @@
  * @created 2025-01-07
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { emit } from '@tauri-apps/api/event';
 import {
   type HealingAction,
@@ -114,35 +114,35 @@ type ActionHandler = (action: HealingAction) => Promise<unknown>;
 
 const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
   restart_module: async (action) => {
-    return invoke('selfheal_restart_module', {
+    return secureInvoke('selfheal_restart_module', {
       module: action.targetModule,
       force: action.parameters.force ?? false,
     });
   },
 
   clear_cache: async (action) => {
-    return invoke('selfheal_clear_cache', {
+    return secureInvoke('selfheal_clear_cache', {
       module: action.targetModule,
       cacheType: action.parameters.type ?? 'all',
     });
   },
 
   regenerate_config: async (action) => {
-    return invoke('selfheal_regenerate_config', {
+    return secureInvoke('selfheal_regenerate_config', {
       module: action.targetModule,
       template: action.parameters.template ?? 'default',
     });
   },
 
   repair_json: async (action) => {
-    return invoke('selfheal_repair_json', {
+    return secureInvoke('selfheal_repair_json', {
       file: action.parameters.file,
       backup: action.parameters.backup ?? true,
     });
   },
 
   rebuild_memory: async (action) => {
-    return invoke('selfheal_rebuild_memory', {
+    return secureInvoke('selfheal_rebuild_memory', {
       scope: action.parameters.type ?? 'full',
       preserveRecent: action.parameters.preserveRecent ?? true,
     });
@@ -150,14 +150,14 @@ const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
 
   fallback_provider: async (action) => {
     const providers = action.parameters.providers as string[] | undefined;
-    return invoke('selfheal_switch_provider', {
+    return secureInvoke('selfheal_switch_provider', {
       module: action.targetModule,
       providers: providers ?? [],
     });
   },
 
   reset_state: async (action) => {
-    return invoke('selfheal_reset_state', {
+    return secureInvoke('selfheal_reset_state', {
       module: action.targetModule,
       scope: action.parameters.scope ?? 'module',
       source: action.parameters.source,
@@ -165,7 +165,7 @@ const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
   },
 
   restart_worker: async (action) => {
-    return invoke('selfheal_restart_worker', {
+    return secureInvoke('selfheal_restart_worker', {
       module: action.targetModule,
       graceful: action.parameters.graceful ?? true,
     });
@@ -178,28 +178,28 @@ const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
   },
 
   restart_process: async (action) => {
-    return invoke('selfheal_restart_process', {
+    return secureInvoke('selfheal_restart_process', {
       module: action.targetModule,
       emergency: action.parameters.emergency ?? false,
     });
   },
 
   sync_state: async (action) => {
-    return invoke('selfheal_sync_state', {
+    return secureInvoke('selfheal_sync_state', {
       module: action.targetModule,
       force: action.parameters.force ?? false,
     });
   },
 
   mini_audit: async (action) => {
-    return invoke('selfheal_mini_audit', {
+    return secureInvoke('selfheal_mini_audit', {
       module: action.targetModule,
       depth: action.parameters.depth ?? 'standard',
     });
   },
 
   isolate_module: async (action) => {
-    return invoke('selfheal_isolate_module', {
+    return secureInvoke('selfheal_isolate_module', {
       module: action.targetModule,
       reason: action.parameters.reason ?? 'auto-healing',
     });

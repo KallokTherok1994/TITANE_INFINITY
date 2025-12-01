@@ -6,7 +6,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -76,7 +76,7 @@ export class AdaptiveBridgeV21 {
    * Récupère le profil d'adaptation actuel
    */
   static async getProfile(): Promise<PreferenceProfile> {
-    return await invoke<PreferenceProfile>(TAURI_COMMANDS.ADAPTIVE_GET_PROFILE);
+    return await secureInvoke<PreferenceProfile>(TAURI_COMMANDS.ADAPTIVE_GET_PROFILE);
   }
 
   /**
@@ -84,28 +84,28 @@ export class AdaptiveBridgeV21 {
    */
   static async setMode(mode: SystemBehaviorMode): Promise<void> {
     const modeStr = mode.toLowerCase();
-    await invoke(TAURI_COMMANDS.ADAPTIVE_SET_MODE, { mode: modeStr });
+    await secureInvoke(TAURI_COMMANDS.ADAPTIVE_SET_MODE, { mode: modeStr });
   }
 
   /**
    * Lance un cycle d'apprentissage manuel
    */
   static async learn(): Promise<string> {
-    return await invoke<string>(TAURI_COMMANDS.ADAPTIVE_LEARN);
+    return await secureInvoke<string>(TAURI_COMMANDS.ADAPTIVE_LEARN);
   }
 
   /**
    * Exécute une optimisation manuelle
    */
   static async runOptimization(): Promise<string[]> {
-    return await invoke<string[]>(TAURI_COMMANDS.ADAPTIVE_RUN_OPTIMIZATION);
+    return await secureInvoke<string[]>(TAURI_COMMANDS.ADAPTIVE_RUN_OPTIMIZATION);
   }
 
   /**
    * Récupère l'historique de performance récent
    */
   static async getHistory(limit?: number): Promise<SystemPerformanceSample[]> {
-    return await invoke<SystemPerformanceSample[]>(TAURI_COMMANDS.ADAPTIVE_GET_HISTORY, {
+    return await secureInvoke<SystemPerformanceSample[]>(TAURI_COMMANDS.ADAPTIVE_GET_HISTORY, {
       limit,
     });
   }
@@ -114,14 +114,14 @@ export class AdaptiveBridgeV21 {
    * Capture un échantillon de performance
    */
   static async captureSample(sample: SystemPerformanceSample): Promise<void> {
-    await invoke(TAURI_COMMANDS.ADAPTIVE_CAPTURE_SAMPLE, { sample });
+    await secureInvoke(TAURI_COMMANDS.ADAPTIVE_CAPTURE_SAMPLE, { sample });
   }
 
   /**
    * Récupère un résumé de l'état adaptatif
    */
   static async getSummary(): Promise<AdaptiveSummary> {
-    return await invoke<AdaptiveSummary>(TAURI_COMMANDS.ADAPTIVE_GET_SUMMARY);
+    return await secureInvoke<AdaptiveSummary>(TAURI_COMMANDS.ADAPTIVE_GET_SUMMARY);
   }
 
   // ═══════════════════════════════════════════════════════════════

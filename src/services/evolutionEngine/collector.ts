@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   EvolutionDataPoint,
   DataCategory,
@@ -193,7 +193,7 @@ export class Collector {
    */
   private async collectIAUsage(): Promise<void> {
     try {
-      const stats = await invoke<{
+      const stats = await secureInvoke<{
         total_queries: number;
         ollama_queries: number;
         gemini_queries: number;
@@ -249,7 +249,7 @@ export class Collector {
       if (this.config.excludedModules.includes(moduleId)) continue;
 
       try {
-        const stats = await invoke<{
+        const stats = await secureInvoke<{
           total_calls: number;
           error_count: number;
           avg_latency: number;
@@ -293,7 +293,7 @@ export class Collector {
    */
   private async collectPerformanceMetrics(): Promise<void> {
     try {
-      const metrics = await invoke<{
+      const metrics = await secureInvoke<{
         cpu: number;
         ram: number;
         fps: number;
@@ -318,7 +318,7 @@ export class Collector {
    */
   private async collectSelfHealingMetrics(): Promise<void> {
     try {
-      const metrics = await invoke<{
+      const metrics = await secureInvoke<{
         total_repairs: number;
         successful_repairs: number;
         failed_repairs: number;
@@ -355,7 +355,7 @@ export class Collector {
    */
   private async collectPromptMemoryMetrics(): Promise<void> {
     try {
-      const metrics = await invoke<{
+      const metrics = await secureInvoke<{
         context_size: number;
         compression_ratio: number;
         memory_utilization: number;
@@ -396,7 +396,7 @@ export class Collector {
    */
   private async collectSystemMetrics(): Promise<void> {
     try {
-      const metrics = await invoke<{
+      const metrics = await secureInvoke<{
         uptime: number;
         active_modules: number;
         pending_tasks: number;
@@ -515,7 +515,7 @@ export class Collector {
     this.pendingBatch = [];
 
     try {
-      await invoke('submit_evolution_data', { dataPoints: batch });
+      await secureInvoke('submit_evolution_data', { dataPoints: batch });
 
       // Notifier les listeners de batch
       this.batchListeners.forEach((listener) => {

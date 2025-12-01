@@ -2,7 +2,7 @@
 // License: Proprietary — TITANE OS
 // Module: Tauri Bridge for Appearance Engine
 
-import { invoke } from "@tauri-apps/api/core";
+import { secureInvoke } from '@/lib/security';
 import type {
   AvatarAppearanceState,
   AppearanceUpdateRequest,
@@ -16,7 +16,7 @@ import type {
  * Get current avatar appearance state
  */
 export async function getAppearance(): Promise<AvatarAppearanceState> {
-  const json = await invoke<string>("avatar_get_appearance");
+  const json = await secureInvoke<string>("avatar_get_appearance");
   return JSON.parse(json);
 }
 
@@ -27,7 +27,7 @@ export async function setAppearance(
   state: AvatarAppearanceState,
 ): Promise<string> {
   const json = JSON.stringify(state);
-  return invoke<string>("avatar_set_appearance", { stateJson: json });
+  return secureInvoke<string>("avatar_set_appearance", { stateJson: json });
 }
 
 /**
@@ -37,14 +37,14 @@ export async function updateAppearance(
   update: AppearanceUpdateRequest,
 ): Promise<string> {
   const json = JSON.stringify(update);
-  return invoke<string>("avatar_update_appearance", { updateJson: json });
+  return secureInvoke<string>("avatar_update_appearance", { updateJson: json });
 }
 
 /**
  * Apply style preset (e.g., "Bureau_Pro", "Casual_Light")
  */
 export async function applyStylePreset(styleName: string): Promise<string> {
-  return invoke<string>("avatar_apply_style_preset", { styleName });
+  return secureInvoke<string>("avatar_apply_style_preset", { styleName });
 }
 
 /**
@@ -55,7 +55,7 @@ export async function applyStylePreset(styleName: string): Promise<string> {
 export async function parseStyleCommand(
   command: string,
 ): Promise<AppearanceUpdateRequest> {
-  const json = await invoke<string>("avatar_parse_style_command", { command });
+  const json = await secureInvoke<string>("avatar_parse_style_command", { command });
   return JSON.parse(json);
 }
 
@@ -68,7 +68,7 @@ export async function saveCustomStyle(
   keywords: string[],
 ): Promise<string> {
   const keywordsJson = JSON.stringify(keywords);
-  return invoke<string>("avatar_save_custom_style", {
+  return secureInvoke<string>("avatar_save_custom_style", {
     name,
     archetype,
     keywordsJson,
@@ -79,7 +79,7 @@ export async function saveCustomStyle(
  * Load saved custom style
  */
 export async function loadCustomStyle(name: string): Promise<string> {
-  return invoke<string>("avatar_load_custom_style", { name });
+  return secureInvoke<string>("avatar_load_custom_style", { name });
 }
 
 /**
@@ -88,14 +88,14 @@ export async function loadCustomStyle(name: string): Promise<string> {
  */
 export async function mergeStyles(styleNames: string[]): Promise<string> {
   const json = JSON.stringify(styleNames);
-  return invoke<string>("avatar_merge_styles", { styleNamesJson: json });
+  return secureInvoke<string>("avatar_merge_styles", { styleNamesJson: json });
 }
 
 /**
  * List all available style names
  */
 export async function listStyles(): Promise<string[]> {
-  const json = await invoke<string>("avatar_list_styles");
+  const json = await secureInvoke<string>("avatar_list_styles");
   return JSON.parse(json);
 }
 
@@ -107,7 +107,7 @@ export async function addArchetype(
   keywords: string[],
 ): Promise<string> {
   const keywordsJson = JSON.stringify(keywords);
-  return invoke<string>("avatar_add_archetype", { name, keywordsJson });
+  return secureInvoke<string>("avatar_add_archetype", { name, keywordsJson });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   AdminSnapshot,
   AdminVitals,
@@ -196,7 +196,7 @@ export class StateAggregator {
     // Collecter depuis Rust (Tauri)
     let rustVitals: RustVitalsResponse | null = null;
     try {
-      rustVitals = await invoke<RustVitalsResponse>('get_admin_vitals');
+      rustVitals = await secureInvoke<RustVitalsResponse>('get_admin_vitals');
     } catch (error) {
       console.warn('[StateAggregator] Impossible de collecter vitals Rust:', error);
     }
@@ -262,7 +262,7 @@ export class StateAggregator {
   private async pingOllama(): Promise<number> {
     try {
       const start = performance.now();
-      await invoke('ping_ollama');
+      await secureInvoke('ping_ollama');
       return performance.now() - start;
     } catch {
       return -1; // -1 = offline
@@ -275,7 +275,7 @@ export class StateAggregator {
   private async pingGemini(): Promise<number> {
     try {
       const start = performance.now();
-      await invoke('ping_gemini');
+      await secureInvoke('ping_gemini');
       return performance.now() - start;
     } catch {
       return -1;
@@ -294,7 +294,7 @@ export class StateAggregator {
 
     // Essayer de récupérer depuis Rust
     try {
-      const rustStatuses = await invoke<RustModuleStatusResponse[]>('get_module_statuses');
+      const rustStatuses = await secureInvoke<RustModuleStatusResponse[]>('get_module_statuses');
 
       for (const rs of rustStatuses) {
         const moduleId = rs.module_id as TitaneModule;
@@ -371,7 +371,7 @@ export class StateAggregator {
 
     try {
       // Récupérer depuis Performance Engine
-      const perfAnomalies = await invoke<AdminAnomaly[]>('get_performance_anomalies');
+      const perfAnomalies = await secureInvoke<AdminAnomaly[]>('get_performance_anomalies');
       anomalies.push(...perfAnomalies);
     } catch {
       // Performance Engine non disponible
@@ -379,7 +379,7 @@ export class StateAggregator {
 
     try {
       // Récupérer depuis Self-Healing Engine
-      const healingAnomalies = await invoke<AdminAnomaly[]>('get_healing_anomalies');
+      const healingAnomalies = await secureInvoke<AdminAnomaly[]>('get_healing_anomalies');
       anomalies.push(...healingAnomalies);
     } catch {
       // Self-Healing Engine non disponible
@@ -398,7 +398,7 @@ export class StateAggregator {
    */
   private async getSystemMode(): Promise<SystemMode> {
     try {
-      const mode = await invoke<string>('get_system_mode');
+      const mode = await secureInvoke<string>('get_system_mode');
       return mode as SystemMode;
     } catch {
       return 'NORMAL';

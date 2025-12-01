@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   IntrospectionReport,
   AutoFixResult,
@@ -44,7 +44,7 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await invoke<IntrospectionReport>('sc_introspection_quick_scan', {
+      const result = await secureInvoke<IntrospectionReport>('sc_introspection_quick_scan', {
         projectPath
       });
       setReport(result);
@@ -62,7 +62,7 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await invoke<IntrospectionReport>('sc_introspection_full_scan', {
+      const result = await secureInvoke<IntrospectionReport>('sc_introspection_full_scan', {
         projectPath
       });
       setReport(result);
@@ -80,7 +80,7 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await invoke<AutoFixResult>('sc_introspection_auto_fix', {
+      const result = await secureInvoke<AutoFixResult>('sc_introspection_auto_fix', {
         projectPath
       });
 

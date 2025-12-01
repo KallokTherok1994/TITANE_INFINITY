@@ -24,7 +24,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES CONTEXTE LONG
@@ -157,7 +157,7 @@ export class LongContextOptimizer {
       }
 
       // Appeler backend pour compression intelligente
-      const result = await invoke<CompressionResult>('context_compress', {
+      const result = await secureInvoke<CompressionResult>('context_compress', {
         messages,
         maxTokens,
         targetRatio,
@@ -209,7 +209,7 @@ export class LongContextOptimizer {
       const algorithm = options.algorithm || 'kmeans';
       const minGroupSize = options.minGroupSize || 2;
 
-      const groups = await invoke<SemanticGroup[]>('context_semantic_grouping', {
+      const groups = await secureInvoke<SemanticGroup[]>('context_semantic_grouping', {
         messages,
         numGroups,
         algorithm,
@@ -259,7 +259,7 @@ export class LongContextOptimizer {
       const relevanceThreshold = options.relevanceThreshold || this.DEFAULT_RELEVANCE_THRESHOLD;
       const maxInjected = options.maxInjected || 10;
 
-      const result = await invoke<InjectionResult>('context_selective_injection', {
+      const result = await secureInvoke<InjectionResult>('context_selective_injection', {
         baseContext,
         additionalContext,
         relevanceThreshold,
@@ -307,7 +307,7 @@ export class LongContextOptimizer {
 
       const minImportance = options.minImportance || 0.3;
 
-      const result = await invoke<NoiseRemovalResult>('context_remove_noise', {
+      const result = await secureInvoke<NoiseRemovalResult>('context_remove_noise', {
         messages,
         strategies,
         minImportance,
@@ -359,7 +359,7 @@ export class LongContextOptimizer {
     const preserveSystemMessages = options.preserveSystemMessages !== false;
 
     try {
-      const result = await invoke<GatingResult>('context_gating', {
+      const result = await secureInvoke<GatingResult>('context_gating', {
         messages,
         threshold,
         preserveRecent,
@@ -407,7 +407,7 @@ export class LongContextOptimizer {
       const similarityThreshold = options.similarityThreshold || 0.8;
       const maxLinks = options.maxLinks || 20;
 
-      const result = await invoke<CrossChatContext>('context_link_conversations', {
+      const result = await secureInvoke<CrossChatContext>('context_link_conversations', {
         chats,
         similarityThreshold,
         maxLinks,

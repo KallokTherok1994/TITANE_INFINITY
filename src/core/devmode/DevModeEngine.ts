@@ -23,7 +23,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES DEV-MODE
@@ -199,7 +199,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<PatchResult>('devmode_patch', {
+      const result = await secureInvoke<PatchResult>('devmode_patch', {
         location: request.location,
         issueDescription: request.issue_description,
         expectedBehavior: request.expected_behavior,
@@ -233,7 +233,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<RefactorResult>('devmode_refactor', {
+      const result = await secureInvoke<RefactorResult>('devmode_refactor', {
         location: request.location,
         refactorType: request.refactor_type,
         options: request.options || {},
@@ -266,7 +266,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<RewriteResult>('devmode_rewrite', {
+      const result = await secureInvoke<RewriteResult>('devmode_rewrite', {
         location: request.location,
         requirements: request.requirements,
         constraints: request.constraints || [],
@@ -300,7 +300,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<AuditResult>('devmode_audit', {
+      const result = await secureInvoke<AuditResult>('devmode_audit', {
         scope: request.scope,
         targetPath: request.target_path,
         checks: request.checks,
@@ -377,7 +377,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<OptimizeResult>('devmode_optimize', {
+      const result = await secureInvoke<OptimizeResult>('devmode_optimize', {
         location: request.location,
         optimizationTargets: request.optimization_targets,
         constraints: request.constraints || {},
@@ -419,7 +419,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<FusionResult>('devmode_fusion', {
+      const result = await secureInvoke<FusionResult>('devmode_fusion', {
         sourceFiles: request.source_files,
         outputFile: request.output_file,
         fusionStrategy: request.fusion_strategy,
@@ -453,7 +453,7 @@ export class DevModeEngine {
     const startTime = performance.now();
 
     try {
-      const result = await invoke<HardeningResult>('devmode_hardening', {
+      const result = await secureInvoke<HardeningResult>('devmode_hardening', {
         location: request.location,
         hardeningLevels: request.hardening_levels,
       });

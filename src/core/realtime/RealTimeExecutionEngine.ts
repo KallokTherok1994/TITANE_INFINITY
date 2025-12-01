@@ -26,7 +26,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES TEMPS RÉEL
@@ -316,7 +316,7 @@ export class RealTimeExecutionEngine {
    */
   private async executeNetworkTask(payload: any): Promise<void> {
     try {
-      await invoke('realtime_network_task', { payload });
+      await secureInvoke('realtime_network_task', { payload });
     } catch (error) {
       console.error('[RealtimeEngine] Network task error:', error);
     }
@@ -448,7 +448,7 @@ export class RealTimeExecutionEngine {
    */
   private async streamTTS(text: string): Promise<AudioBuffer[]> {
     try {
-      const chunks = await invoke<ArrayBuffer[]>('realtime_stream_tts', { text });
+      const chunks = await secureInvoke<ArrayBuffer[]>('realtime_stream_tts', { text });
 
       // Convertir ArrayBuffer en AudioBuffer
       const audioContext = new AudioContext();
@@ -468,7 +468,7 @@ export class RealTimeExecutionEngine {
    */
   private async generateAvatarAnimations(text: string): Promise<any[]> {
     try {
-      const animations = await invoke<any[]>('realtime_generate_avatar_animations', { text });
+      const animations = await secureInvoke<any[]>('realtime_generate_avatar_animations', { text });
       return animations;
     } catch (error) {
       console.error('[RealtimeEngine] Avatar animation generation error:', error);

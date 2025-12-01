@@ -6,7 +6,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -69,7 +69,7 @@ export class NarrativeBridgeV22 {
     cognitiveStability: number,
     syncQuality: number
   ): Promise<NarrativeOutput> {
-    return await invoke<NarrativeOutput>(TAURI_COMMANDS.NARRATIVE_GENERATE, {
+    return await secureInvoke<NarrativeOutput>(TAURI_COMMANDS.NARRATIVE_GENERATE, {
       input,
       cognitiveStability,
       syncQuality,
@@ -80,7 +80,7 @@ export class NarrativeBridgeV22 {
    * Récupère le style actuel
    */
   static async getStyle(): Promise<string> {
-    return await invoke<string>(TAURI_COMMANDS.NARRATIVE_GET_STYLE);
+    return await secureInvoke<string>(TAURI_COMMANDS.NARRATIVE_GET_STYLE);
   }
 
   /**
@@ -88,21 +88,21 @@ export class NarrativeBridgeV22 {
    */
   static async setStyle(style: StyleProfile): Promise<void> {
     const styleStr = style.toLowerCase();
-    await invoke(TAURI_COMMANDS.NARRATIVE_SET_STYLE, { style: styleStr });
+    await secureInvoke(TAURI_COMMANDS.NARRATIVE_SET_STYLE, { style: styleStr });
   }
 
   /**
    * Récupère le profil d'identité
    */
   static async getIdentity(): Promise<IdentityProfile> {
-    return await invoke<IdentityProfile>(TAURI_COMMANDS.NARRATIVE_GET_IDENTITY);
+    return await secureInvoke<IdentityProfile>(TAURI_COMMANDS.NARRATIVE_GET_IDENTITY);
   }
 
   /**
    * Évolue l'identité narrative
    */
   static async evolve(totalInteractions: number): Promise<string> {
-    return await invoke<string>(TAURI_COMMANDS.NARRATIVE_EVOLVE, {
+    return await secureInvoke<string>(TAURI_COMMANDS.NARRATIVE_EVOLVE, {
       totalInteractions,
     });
   }
@@ -111,14 +111,14 @@ export class NarrativeBridgeV22 {
    * Récupère l'archétype actif
    */
   static async getArchetype(): Promise<NarrativeArchetype | null> {
-    return await invoke<NarrativeArchetype | null>(TAURI_COMMANDS.NARRATIVE_GET_ARCHETYPE);
+    return await secureInvoke<NarrativeArchetype | null>(TAURI_COMMANDS.NARRATIVE_GET_ARCHETYPE);
   }
 
   /**
    * Définit l'archétype actif
    */
   static async setArchetype(archetypeName: string): Promise<void> {
-    await invoke(TAURI_COMMANDS.NARRATIVE_SET_ARCHETYPE, { archetypeName });
+    await secureInvoke(TAURI_COMMANDS.NARRATIVE_SET_ARCHETYPE, { archetypeName });
   }
 
   // ═══════════════════════════════════════════════════════════════

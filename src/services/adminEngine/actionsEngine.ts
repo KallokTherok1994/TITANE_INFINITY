@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   AdminActionDefinition,
   AdminActionRequest,
@@ -208,7 +208,7 @@ export class ActionsEngine {
   private async defaultHandler(context: ActionExecutionContext): Promise<AdminActionResult> {
     const startTime = Date.now();
 
-    const result = await invoke<{
+    const result = await secureInvoke<{
       success: boolean;
       message: string;
       data?: Record<string, unknown>;

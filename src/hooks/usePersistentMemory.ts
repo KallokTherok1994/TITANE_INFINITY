@@ -19,7 +19,7 @@
  */
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   MemoryEntry,
   MemoryLevel,
@@ -213,7 +213,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
         limit: 500,
       };
 
-      const response = await invoke<MemoryReadResponse>('persistent_memory_read', { request });
+      const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', { request });
 
       // Filtrer selon les permissions du mode
       const filteredEntries = filterByPermissions(response.entries, modeId);
@@ -232,14 +232,14 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
       }
 
       // Charger les bundles séparément
-      const bundles = await invoke<MemoryBundle[]>('persistent_memory_get_bundles');
+      const bundles = await secureInvoke<MemoryBundle[]>('persistent_memory_get_bundles');
       if (enableCache) {
         persistentMemoryCache.bundles.clear();
         bundles.forEach(b => persistentMemoryCache.bundles.set(b.id, b));
       }
 
       // Charger les stats
-      const stats = await invoke<MemoryStats>('persistent_memory_get_stats');
+      const stats = await secureInvoke<MemoryStats>('persistent_memory_get_stats');
 
       setState({
         entries: filteredEntries,
@@ -283,7 +283,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
         minRelevanceScore: minScore,
       };
 
-      const response = await invoke<MemoryReadResponse>('persistent_memory_read', { request });
+      const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', { request });
 
       // Re-scorer et trier côté frontend pour plus de précision
       const ranked = rankByRelevance(response.entries, query);
@@ -320,7 +320,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
     if (entries.length === 0) {
       // Charger depuis Rust
       try {
-        const response = await invoke<MemoryReadResponse>('persistent_memory_read', {
+        const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', {
           request: {
             levels,
             currentMode: modeId,
@@ -366,7 +366,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const saveEntry = useCallback(async (content: string, saveOptions?: SaveEntryOptions): Promise<string> => {
     try {
-      const entryId = await invoke<string>('persistent_memory_write_entry', {
+      const entryId = await secureInvoke<string>('persistent_memory_write_entry', {
         content,
         level: saveOptions?.level || 'session',
         topic: saveOptions?.topic,
@@ -390,7 +390,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const promoteEntry = useCallback(async (entryId: string): Promise<boolean> => {
     try {
-      await invoke('persistent_memory_promote_entry', { entryId });
+      await secureInvoke('persistent_memory_promote_entry', { entryId });
       await refresh();
       return true;
     } catch (err) {
@@ -401,7 +401,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const archiveEntry = useCallback(async (entryId: string): Promise<boolean> => {
     try {
-      await invoke('persistent_memory_archive_entry', { entryId });
+      await secureInvoke('persistent_memory_archive_entry', { entryId });
       await refresh();
       return true;
     } catch (err) {
@@ -412,7 +412,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const deleteEntry = useCallback(async (entryId: string): Promise<boolean> => {
     try {
-      await invoke('persistent_memory_delete_entry', { entryId });
+      await secureInvoke('persistent_memory_delete_entry', { entryId });
 
       // Supprimer du cache immédiatement
       persistentMemoryCache.entries.delete(entryId);
@@ -427,7 +427,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const requestSummary = useCallback(async (entryIds: string[], title?: string): Promise<string> => {
     try {
-      const summaryId = await invoke<string>('persistent_memory_create_summary', {
+      const summaryId = await secureInvoke<string>('persistent_memory_create_summary', {
         entryIds,
         title,
         modeId,
@@ -451,7 +451,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
     topic?: MemoryTopic
   ): Promise<string> => {
     try {
-      const bundleId = await invoke<string>('persistent_memory_create_bundle', {
+      const bundleId = await secureInvoke<string>('persistent_memory_create_bundle', {
         name,
         entryIds,
         topic: topic || 'general',
@@ -467,7 +467,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const addToBundle = useCallback(async (bundleId: string, entryIds: string[]): Promise<boolean> => {
     try {
-      await invoke('persistent_memory_add_to_bundle', { bundleId, entryIds });
+      await secureInvoke('persistent_memory_add_to_bundle', { bundleId, entryIds });
       await refresh();
       return true;
     } catch (err) {
@@ -497,7 +497,7 @@ export function usePersistentMemory(options: UsePersistentMemoryOptions): UsePer
 
   const exportMemory = useCallback(async (): Promise<string> => {
     try {
-      return await invoke<string>('persistent_memory_export');
+      return await secureInvoke<string>('persistent_memory_export');
     } catch (err) {
       console.error('[usePersistentMemory] Erreur d\'export:', err);
       throw err;
@@ -605,7 +605,7 @@ export function usePersistentMemoryContext(modeId: ChatModeId, query: string): {
     const fetchContext = async () => {
       setIsLoading(true);
       try {
-        const response = await invoke<{ context: string; usedEntries: string[] }>(
+        const response = await secureInvoke<{ context: string; usedEntries: string[] }>(
           'persistent_memory_get_context',
           { modeId, query }
         );

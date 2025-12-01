@@ -10,7 +10,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   OneCoreState,
   EngineStatus,
@@ -59,10 +59,10 @@ export function useOneCore(): UseOneCoreReturn {
       setError(null);
 
       const [stateResult, metricsResult, commandsResult, historyResult] = await Promise.all([
-        invoke<OneCoreState>('one_core_get_state').catch(() => null),
-        invoke<OneCoreMetrics>('one_core_get_metrics').catch(() => null),
-        invoke<OneCoreCommand[]>('one_core_list_commands').catch(() => []),
-        invoke<OneCoreActionResult[]>('one_core_get_event_history', { limit: 20 }).catch(() => []),
+        secureInvoke<OneCoreState>('one_core_get_state').catch(() => null),
+        secureInvoke<OneCoreMetrics>('one_core_get_metrics').catch(() => null),
+        secureInvoke<OneCoreCommand[]>('one_core_list_commands').catch(() => []),
+        secureInvoke<OneCoreActionResult[]>('one_core_get_event_history', { limit: 20 }).catch(() => []),
       ]);
 
       if (stateResult) setState(stateResult);
@@ -114,7 +114,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Exécuter une commande
   const executeCommand = useCallback(async (commandId: string): Promise<OneCoreActionResult | null> => {
     try {
-      const result = await invoke<OneCoreActionResult>('one_core_execute_command', { commandId });
+      const result = await secureInvoke<OneCoreActionResult>('one_core_execute_command', { commandId });
       await refresh();
       return result;
     } catch (err) {
@@ -131,7 +131,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Lancer un diagnostic
   const runDiagnostic = useCallback(async () => {
     try {
-      const result = await invoke<OneCoreDiagnostic>('one_core_run_diagnostic');
+      const result = await secureInvoke<OneCoreDiagnostic>('one_core_run_diagnostic');
       setDiagnostic(result);
     } catch (err) {
       console.error('[ONE_CORE] Diagnostic error:', err);
@@ -152,7 +152,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Force sync
   const forceSync = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
-      const result = await invoke<OneCoreActionResult>('one_core_force_sync');
+      const result = await secureInvoke<OneCoreActionResult>('one_core_force_sync');
       await refresh();
       return result;
     } catch (err) {
@@ -163,7 +163,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Cleanup
   const cleanup = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
-      const result = await invoke<OneCoreActionResult>('one_core_cleanup');
+      const result = await secureInvoke<OneCoreActionResult>('one_core_cleanup');
       return result;
     } catch (err) {
       return { success: true, action: 'cleanup', message: 'Cleanup (mock)', timestamp: Date.now() };
@@ -173,7 +173,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Set mode
   const setMode = useCallback(async (mode: string): Promise<OneCoreActionResult | null> => {
     try {
-      const result = await invoke<OneCoreActionResult>('one_core_set_mode', { mode });
+      const result = await secureInvoke<OneCoreActionResult>('one_core_set_mode', { mode });
       await refresh();
       return result;
     } catch (err) {
@@ -184,7 +184,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Verify integrity
   const verifyIntegrity = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
-      return await invoke<OneCoreActionResult>('one_core_verify_integrity');
+      return await secureInvoke<OneCoreActionResult>('one_core_verify_integrity');
     } catch (err) {
       return { success: true, action: 'verify_integrity', message: 'Intégrité OK (mock)', timestamp: Date.now() };
     }
@@ -193,7 +193,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Get engine status
   const getEngineStatus = useCallback(async (engineName: string): Promise<EngineStatus | null> => {
     try {
-      return await invoke<EngineStatus>('one_core_get_engine_status', { engineName });
+      return await secureInvoke<EngineStatus>('one_core_get_engine_status', { engineName });
     } catch (err) {
       return {
         name: engineName,
@@ -216,7 +216,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Rafraîchissement automatique
   useEffect(() => {
     const interval = setInterval(() => {
-      invoke<OneCoreMetrics>('one_core_get_metrics')
+      secureInvoke<OneCoreMetrics>('one_core_get_metrics')
         .then(setMetrics)
         .catch(() => {});
     }, 5000);

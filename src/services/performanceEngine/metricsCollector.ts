@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import {
   generateSnapshotId,
   createEmptySnapshot,
@@ -529,7 +529,7 @@ export class MetricsCollector {
   private async collectSystemMetrics(): Promise<SystemMetrics> {
     try {
       // Appeler la commande Tauri
-      const rustMetrics = await invoke<{
+      const rustMetrics = await secureInvoke<{
         cpu_global: number;
         cpu_process: number;
         cpu_cores: number[];

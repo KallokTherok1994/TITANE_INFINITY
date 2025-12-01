@@ -8,7 +8,7 @@
 // Copyright (c) 2024-∞ MUSIC Music Music & CODE∞ (musicmusic.music.music0@gmail.com)
 // Licensed under Apache 2.0 - NO CONTRIBUTION LICENSE
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES ALIGNÉS SUR RUST
@@ -209,21 +209,21 @@ export interface EvolutionStatistics {
  * Obtenir l'état actuel de l'Evolution Engine
  */
 export async function getEvolutionState(): Promise<EvolutionEngineState> {
-  return invoke<EvolutionEngineState>('evolution_get_state');
+  return secureInvoke<EvolutionEngineState>('evolution_get_state');
 }
 
 /**
  * Démarrer l'Evolution Engine
  */
 export async function startEvolutionEngine(): Promise<boolean> {
-  return invoke<boolean>('evolution_start');
+  return secureInvoke<boolean>('evolution_start');
 }
 
 /**
  * Arrêter l'Evolution Engine
  */
 export async function stopEvolutionEngine(): Promise<boolean> {
-  return invoke<boolean>('evolution_stop');
+  return secureInvoke<boolean>('evolution_stop');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -234,7 +234,7 @@ export async function stopEvolutionEngine(): Promise<boolean> {
  * Obtenir les scores actuels
  */
 export async function getEvolutionScores(): Promise<EvolutionScores> {
-  return invoke<EvolutionScores>('evolution_get_scores');
+  return secureInvoke<EvolutionScores>('evolution_get_scores');
 }
 
 /**
@@ -244,7 +244,7 @@ export async function updateEvolutionScore(
   scoreType: 'stability' | 'coherence' | 'performance' | 'security' | 'userSatisfaction',
   value: number
 ): Promise<EvolutionScores> {
-  return invoke<EvolutionScores>('evolution_update_score', {
+  return secureInvoke<EvolutionScores>('evolution_update_score', {
     scoreType,
     value,
   });
@@ -254,7 +254,7 @@ export async function updateEvolutionScore(
  * Générer un rapport complet
  */
 export async function generateEvolutionReport(): Promise<EvolutionFullReport> {
-  return invoke<EvolutionFullReport>('evolution_generate_report');
+  return secureInvoke<EvolutionFullReport>('evolution_generate_report');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -270,7 +270,7 @@ export async function addEvolutionDataPoint(
   value: number,
   metadata?: Record<string, unknown>
 ): Promise<EvolutionDataPoint> {
-  return invoke<EvolutionDataPoint>('evolution_add_data_point', {
+  return secureInvoke<EvolutionDataPoint>('evolution_add_data_point', {
     category,
     module,
     value,
@@ -286,7 +286,7 @@ export async function getEvolutionDataPoints(options?: {
   module?: TitaneModule;
   limit?: number;
 }): Promise<EvolutionDataPoint[]> {
-  return invoke<EvolutionDataPoint[]>('evolution_get_data_points', options || {});
+  return secureInvoke<EvolutionDataPoint[]>('evolution_get_data_points', options || {});
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -299,7 +299,7 @@ export async function getEvolutionDataPoints(options?: {
 export async function getEvolutionPatterns(
   patternType?: PatternType
 ): Promise<EvolutionPattern[]> {
-  return invoke<EvolutionPattern[]>('evolution_get_patterns', {
+  return secureInvoke<EvolutionPattern[]>('evolution_get_patterns', {
     patternType,
   });
 }
@@ -310,7 +310,7 @@ export async function getEvolutionPatterns(
 export async function getEvolutionInsights(
   riskLevel?: EvolutionRiskLevel
 ): Promise<EvolutionInsight[]> {
-  return invoke<EvolutionInsight[]>('evolution_get_insights', {
+  return secureInvoke<EvolutionInsight[]>('evolution_get_insights', {
     riskLevel,
   });
 }
@@ -326,7 +326,7 @@ export async function getEvolutionSuggestions(options?: {
   status?: SuggestionStatus;
   category?: SuggestionCategory;
 }): Promise<EvolutionSuggestion[]> {
-  return invoke<EvolutionSuggestion[]>('evolution_get_suggestions', options || {});
+  return secureInvoke<EvolutionSuggestion[]>('evolution_get_suggestions', options || {});
 }
 
 /**
@@ -336,7 +336,7 @@ export async function approveEvolutionSuggestion(
   suggestionId: string,
   role: GovernanceRole
 ): Promise<EvolutionSuggestion> {
-  return invoke<EvolutionSuggestion>('evolution_approve_suggestion', {
+  return secureInvoke<EvolutionSuggestion>('evolution_approve_suggestion', {
     suggestionId,
     role,
   });
@@ -349,7 +349,7 @@ export async function rejectEvolutionSuggestion(
   suggestionId: string,
   reason: string
 ): Promise<EvolutionSuggestion> {
-  return invoke<EvolutionSuggestion>('evolution_reject_suggestion', {
+  return secureInvoke<EvolutionSuggestion>('evolution_reject_suggestion', {
     suggestionId,
     reason,
   });
@@ -368,7 +368,7 @@ export async function createEvolutionAction(
   targetModule: TitaneModule,
   parameters: Record<string, unknown>
 ): Promise<EvolutionAction> {
-  return invoke<EvolutionAction>('evolution_create_action', {
+  return secureInvoke<EvolutionAction>('evolution_create_action', {
     suggestionId,
     actionType,
     targetModule,
@@ -383,7 +383,7 @@ export async function executeEvolutionAction(
   actionId: string,
   role: GovernanceRole
 ): Promise<EvolutionAction> {
-  return invoke<EvolutionAction>('evolution_execute_action', {
+  return secureInvoke<EvolutionAction>('evolution_execute_action', {
     actionId,
     role,
   });
@@ -396,7 +396,7 @@ export async function rollbackEvolutionAction(
   actionId: string,
   reason: string
 ): Promise<EvolutionAction> {
-  return invoke<EvolutionAction>('evolution_rollback_action', {
+  return secureInvoke<EvolutionAction>('evolution_rollback_action', {
     actionId,
     reason,
   });
@@ -413,7 +413,7 @@ export async function getEvolutionHistory(options?: {
   limit?: number;
   actionTypeFilter?: string;
 }): Promise<EvolutionHistoryEntry[]> {
-  return invoke<EvolutionHistoryEntry[]>('evolution_get_history', options || {});
+  return secureInvoke<EvolutionHistoryEntry[]>('evolution_get_history', options || {});
 }
 
 /**
@@ -422,7 +422,7 @@ export async function getEvolutionHistory(options?: {
 export async function clearOldEvolutionHistory(
   beforeTimestamp: number
 ): Promise<number> {
-  return invoke<number>('evolution_clear_old_history', {
+  return secureInvoke<number>('evolution_clear_old_history', {
     beforeTimestamp,
   });
 }
@@ -435,14 +435,14 @@ export async function clearOldEvolutionHistory(
  * Exécuter un cycle complet d'évolution
  */
 export async function runFullEvolutionCycle(): Promise<EvolutionFullReport> {
-  return invoke<EvolutionFullReport>('evolution_run_full_cycle');
+  return secureInvoke<EvolutionFullReport>('evolution_run_full_cycle');
 }
 
 /**
  * Obtenir les statistiques complètes
  */
 export async function getEvolutionStatistics(): Promise<EvolutionStatistics> {
-  return invoke<EvolutionStatistics>('evolution_get_statistics');
+  return secureInvoke<EvolutionStatistics>('evolution_get_statistics');
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -453,14 +453,14 @@ export async function getEvolutionStatistics(): Promise<EvolutionStatistics> {
  * Exécuter un cycle d'évolution (legacy)
  */
 export async function evolutionRunCycle(): Promise<unknown> {
-  return invoke('evolution_run_cycle');
+  return secureInvoke('evolution_run_cycle');
 }
 
 /**
  * Obtenir les statistiques (legacy)
  */
 export async function evolutionGetStats(): Promise<unknown> {
-  return invoke('evolution_get_stats');
+  return secureInvoke('evolution_get_stats');
 }
 
 // ══════════════════════════════════════════════════════════════════

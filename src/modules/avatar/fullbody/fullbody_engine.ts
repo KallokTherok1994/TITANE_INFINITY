@@ -2,7 +2,7 @@
 // License: Proprietary — TITANE OS
 // Module: TypeScript Bridge for FullBodyAvatarEngine
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -97,7 +97,7 @@ export class FullBodyAvatarBridge {
    */
   async initialize(profile?: Partial<BodyProfile>): Promise<void> {
     try {
-      const result = await invoke<string>('fullbody_initialize', {
+      const result = await secureInvoke<string>('fullbody_initialize', {
         height: profile?.height,
         build: profile?.build,
         postureDefault: profile?.postureDefault,
@@ -130,7 +130,7 @@ export class FullBodyAvatarBridge {
 
       try {
         // 1. Avancer d'une frame backend
-        await invoke('fullbody_advance_frame');
+        await secureInvoke('fullbody_advance_frame');
 
         // 2. Récupérer snapshot skeleton
         if (this.onSkeletonUpdate) {
@@ -170,7 +170,7 @@ export class FullBodyAvatarBridge {
    */
   async activateGesture(gesture: GestureType): Promise<void> {
     try {
-      await invoke<string>('fullbody_activate_gesture', {
+      await secureInvoke<string>('fullbody_activate_gesture', {
         gestureName: gesture,
       });
     } catch (error) {
@@ -188,7 +188,7 @@ export class FullBodyAvatarBridge {
    */
   async updateExpression(expression: ExpressionType, intensity: number = 0.7): Promise<void> {
     try {
-      await invoke<string>('fullbody_update_expression', {
+      await secureInvoke<string>('fullbody_update_expression', {
         expression,
         intensity,
       });
@@ -203,7 +203,7 @@ export class FullBodyAvatarBridge {
    */
   async updateLipSync(phoneme: string, morphWeights: LipSyncMorphWeights): Promise<void> {
     try {
-      await invoke<string>('fullbody_update_lipsync', {
+      await secureInvoke<string>('fullbody_update_lipsync', {
         phoneme,
         jaw: morphWeights.jaw,
         lips: morphWeights.lips,
@@ -225,7 +225,7 @@ export class FullBodyAvatarBridge {
    */
   async updateState(state: AvatarStateSnapshot): Promise<void> {
     try {
-      await invoke<string>('fullbody_update_state', {
+      await secureInvoke<string>('fullbody_update_state', {
         cognitiveLoad: state.cognitive_load,
         emotionalTone: state.emotional_tone,
         metaIntention: state.meta_intention,
@@ -244,7 +244,7 @@ export class FullBodyAvatarBridge {
    */
   async updateContext(context: ConversationalContext): Promise<void> {
     try {
-      await invoke<string>('fullbody_update_context', {
+      await secureInvoke<string>('fullbody_update_context', {
         userEngagement: context.user_engagement,
         topicComplexity: context.topic_complexity,
         emotionalValence: context.emotional_valence,
@@ -265,7 +265,7 @@ export class FullBodyAvatarBridge {
    */
   async onWakeWord(): Promise<void> {
     try {
-      await invoke<string>('fullbody_on_wake_word');
+      await secureInvoke<string>('fullbody_on_wake_word');
     } catch (error) {
       console.error('[FullBodyAvatarBridge] Wake-word reaction failed:', error);
       throw error;
@@ -281,7 +281,7 @@ export class FullBodyAvatarBridge {
    */
   async exportSkeleton(): Promise<SkeletonSnapshot> {
     try {
-      const json = await invoke<string>('fullbody_export_skeleton');
+      const json = await secureInvoke<string>('fullbody_export_skeleton');
       return JSON.parse(json) as SkeletonSnapshot;
     } catch (error) {
       console.error('[FullBodyAvatarBridge] Skeleton export failed:', error);
@@ -294,7 +294,7 @@ export class FullBodyAvatarBridge {
    */
   async getStats(): Promise<FullBodyStats> {
     try {
-      const json = await invoke<string>('fullbody_get_stats');
+      const json = await secureInvoke<string>('fullbody_get_stats');
       return JSON.parse(json) as FullBodyStats;
     } catch (error) {
       console.error('[FullBodyAvatarBridge] Stats retrieval failed:', error);

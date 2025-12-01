@@ -16,7 +16,7 @@
  * @created 2025-11-27
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { runSelfHealing, type SelfHealingRunResult } from '@/engines/selfHealing';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -102,7 +102,7 @@ export class AutoHealEngine {
     const broken: BrokenModule[] = [];
 
     try {
-      const modules = await invoke<BrokenModule[]>('autoheal_detect_broken');
+      const modules = await secureInvoke<BrokenModule[]>('autoheal_detect_broken');
       broken.push(...modules);
     } catch (error) {
       console.warn('[AutoHeal] Detection failed:', error);
@@ -227,66 +227,66 @@ export class AutoHealEngine {
 
   private async healCognitiveModule(actions: string[]): Promise<void> {
     actions.push('Resetting cognitive state');
-    await invoke('autoheal_reset_cognitive');
+    await secureInvoke('autoheal_reset_cognitive');
 
     actions.push('Reinitializing cognitive engine');
-    await invoke('autoheal_init_cognitive');
+    await secureInvoke('autoheal_init_cognitive');
   }
 
   private async healAdaptiveModule(actions: string[]): Promise<void> {
     actions.push('Resetting adaptive parameters');
-    await invoke('autoheal_reset_adaptive');
+    await secureInvoke('autoheal_reset_adaptive');
   }
 
   private async healNarrativeModule(actions: string[]): Promise<void> {
     actions.push('Clearing narrative buffer');
-    await invoke('autoheal_clear_narrative');
+    await secureInvoke('autoheal_clear_narrative');
 
     actions.push('Reinitializing narrative engine');
-    await invoke('autoheal_init_narrative');
+    await secureInvoke('autoheal_init_narrative');
   }
 
   private async healAvatarModule(actions: string[]): Promise<void> {
     actions.push('Stopping avatar animations');
-    await invoke('autoheal_stop_avatar');
+    await secureInvoke('autoheal_stop_avatar');
 
     actions.push('Reloading avatar model');
-    await invoke('autoheal_reload_avatar');
+    await secureInvoke('autoheal_reload_avatar');
 
     actions.push('Restarting avatar engine');
-    await invoke('autoheal_start_avatar');
+    await secureInvoke('autoheal_start_avatar');
   }
 
   private async healTTSModule(actions: string[]): Promise<void> {
     actions.push('Clearing TTS queue');
-    await invoke('autoheal_clear_tts_queue');
+    await secureInvoke('autoheal_clear_tts_queue');
 
     actions.push('Reinitializing TTS engine');
-    await invoke('autoheal_init_tts');
+    await secureInvoke('autoheal_init_tts');
   }
 
   private async healLipSyncModule(actions: string[]): Promise<void> {
     actions.push('Resynchronizing lip-sync');
-    await invoke('autoheal_resync_lipsync');
+    await secureInvoke('autoheal_resync_lipsync');
   }
 
   private async healMemoryModule(actions: string[]): Promise<void> {
     actions.push('Rebuilding memory index');
-    await invoke('autoheal_rebuild_memory_index');
+    await secureInvoke('autoheal_rebuild_memory_index');
 
     actions.push('Validating memory integrity');
-    await invoke('autoheal_validate_memory');
+    await secureInvoke('autoheal_validate_memory');
   }
 
   private async healPipeline(actions: string[]): Promise<void> {
     actions.push('Stopping pipeline');
-    await invoke('autoheal_stop_pipeline');
+    await secureInvoke('autoheal_stop_pipeline');
 
     actions.push('Clearing pipeline buffers');
-    await invoke('autoheal_clear_pipeline');
+    await secureInvoke('autoheal_clear_pipeline');
 
     actions.push('Restarting pipeline');
-    await invoke('autoheal_start_pipeline');
+    await secureInvoke('autoheal_start_pipeline');
   }
 
   /**
@@ -296,7 +296,7 @@ export class AutoHealEngine {
     console.log('[AutoHeal] 🔄 Resynchronizing state...');
 
     try {
-      await invoke('autoheal_resync_state');
+      await secureInvoke('autoheal_resync_state');
       console.log('[AutoHeal] ✅ State resynchronized');
     } catch (error) {
       console.error('[AutoHeal] State resync failed:', error);

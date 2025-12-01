@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   EvolutionSuggestion,
   EvolutionAction,
@@ -270,7 +270,7 @@ export class Executor {
     action: EvolutionAction
   ): Promise<{ valid: boolean; reason?: string }> {
     try {
-      const result = await invoke<{ allowed: boolean; reason?: string }>(
+      const result = await secureInvoke<{ allowed: boolean; reason?: string }>(
         'check_evolution_action',
         {
           actionType: action.type,
@@ -456,7 +456,7 @@ export class Executor {
       setTimeout(() => reject(new Error('Timeout')), timeout);
     });
 
-    const actionPromise = invoke<{
+    const actionPromise = secureInvoke<{
       success: boolean;
       message: string;
       changes?: Array<{ target: string; before: unknown; after: unknown }>;
@@ -477,7 +477,7 @@ export class Executor {
    */
   private async createBackup(action: EvolutionAction): Promise<string | undefined> {
     try {
-      const result = await invoke<{ backupId: string }>('create_evolution_backup', {
+      const result = await secureInvoke<{ backupId: string }>('create_evolution_backup', {
         targetModule: action.targetModule,
         actionType: action.type,
       });
@@ -512,7 +512,7 @@ export class Executor {
     }
 
     try {
-      const rollbackResult = await invoke<{ success: boolean; message: string }>(
+      const rollbackResult = await secureInvoke<{ success: boolean; message: string }>(
         'rollback_evolution_action',
         { backupId: result.rollbackId }
       );

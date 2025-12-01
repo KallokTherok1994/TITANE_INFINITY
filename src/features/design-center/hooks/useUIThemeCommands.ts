@@ -6,7 +6,7 @@
  */
 
 import { useCallback } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { useUITheme } from '../providers/UIThemeProvider';
 import type {
   UICommand,
@@ -48,7 +48,7 @@ export function useUIThemeCommands() {
               return { success: false, message: 'Clé et valeur requises pour set_color' };
             }
             const previousValue = tokens.colors[command.key as keyof typeof tokens.colors];
-            await invoke<UIThemeTokens>('update_ui_token', {
+            await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'colors',
               key: command.key,
               value: command.value,
@@ -67,7 +67,7 @@ export function useUIThemeCommands() {
               return { success: false, message: 'Clé et valeur requises pour set_typography' };
             }
             const previousValue = tokens.typography[command.key as keyof typeof tokens.typography];
-            await invoke<UIThemeTokens>('update_ui_token', {
+            await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'typography',
               key: command.key,
               value: command.value,
@@ -86,7 +86,7 @@ export function useUIThemeCommands() {
               return { success: false, message: 'Clé et valeur requises pour set_spacing' };
             }
             const previousValue = tokens.spacing[command.key as keyof typeof tokens.spacing];
-            await invoke<UIThemeTokens>('update_ui_token', {
+            await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'spacing',
               key: command.key,
               value: command.value,
@@ -105,7 +105,7 @@ export function useUIThemeCommands() {
               return { success: false, message: 'Clé et valeur requises pour set_borders' };
             }
             const previousValue = tokens.borders[command.key as keyof typeof tokens.borders];
-            await invoke<UIThemeTokens>('update_ui_token', {
+            await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'borders',
               key: command.key,
               value: command.value,
@@ -124,7 +124,7 @@ export function useUIThemeCommands() {
               return { success: false, message: 'Clé et valeur requises pour set_animations' };
             }
             const previousValue = tokens.animations[command.key as keyof typeof tokens.animations];
-            await invoke<UIThemeTokens>('update_ui_token', {
+            await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'animations',
               key: command.key,
               value: command.value,
@@ -143,7 +143,7 @@ export function useUIThemeCommands() {
               return { success: false, message: 'Clé et valeur requises pour set_contrast' };
             }
             const previousValue = tokens.contrast[command.key as keyof typeof tokens.contrast];
-            await invoke<UIThemeTokens>('update_ui_token', {
+            await secureInvoke<UIThemeTokens>('update_ui_token', {
               category: 'contrast',
               key: command.key,
               value: command.value,
@@ -158,7 +158,7 @@ export function useUIThemeCommands() {
           }
 
           case 'reset_defaults': {
-            await invoke<UIThemeTokens>('reset_ui_theme');
+            await secureInvoke<UIThemeTokens>('reset_ui_theme');
             await reloadTokens();
             return {
               success: true,
@@ -167,7 +167,7 @@ export function useUIThemeCommands() {
           }
 
           case 'save_theme': {
-            await invoke('save_ui_theme', { tokens });
+            await secureInvoke('save_ui_theme', { tokens });
             return {
               success: true,
               message: 'Thème sauvegardé',

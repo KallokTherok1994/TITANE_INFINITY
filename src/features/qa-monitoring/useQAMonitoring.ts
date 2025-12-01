@@ -4,7 +4,7 @@
 // Licensed under MIT License
 // ============================================================================
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   QASystemState,
   TestSuite,
@@ -31,28 +31,28 @@ export function useQAMonitoring() {
    * Obtenir l'état global du système QA
    */
   const getState = async (): Promise<QASystemState> => {
-    return await invoke<QASystemState>('qa_get_state');
+    return await secureInvoke<QASystemState>('qa_get_state');
   };
 
   /**
    * Lister toutes les suites de tests
    */
   const listTestSuites = async (): Promise<TestSuite[]> => {
-    return await invoke<TestSuite[]>('qa_list_test_suites');
+    return await secureInvoke<TestSuite[]>('qa_list_test_suites');
   };
 
   /**
    * Exécuter une suite de tests
    */
   const runTestSuite = async (suiteId: string): Promise<TestResult[]> => {
-    return await invoke<TestResult[]>('qa_run_test_suite', { suiteId });
+    return await secureInvoke<TestResult[]>('qa_run_test_suite', { suiteId });
   };
 
   /**
    * Obtenir un résultat de test spécifique
    */
   const getTestResult = async (testId: string): Promise<TestResult> => {
-    return await invoke<TestResult>('qa_get_test_result', { testId });
+    return await secureInvoke<TestResult>('qa_get_test_result', { testId });
   };
 
   // =========================================================================
@@ -63,7 +63,7 @@ export function useQAMonitoring() {
    * Lister tous les moniteurs
    */
   const listMonitors = async (): Promise<Monitor[]> => {
-    return await invoke<Monitor[]>('qa_list_monitors');
+    return await secureInvoke<Monitor[]>('qa_list_monitors');
   };
 
   /**
@@ -76,7 +76,7 @@ export function useQAMonitoring() {
     thresholdWarning: number,
     thresholdCritical: number
   ): Promise<Monitor> => {
-    return await invoke<Monitor>('qa_create_monitor', {
+    return await secureInvoke<Monitor>('qa_create_monitor', {
       name,
       target,
       intervalMs,
@@ -89,21 +89,21 @@ export function useQAMonitoring() {
    * Activer/désactiver un moniteur
    */
   const toggleMonitor = async (monitorId: string, active: boolean): Promise<Monitor> => {
-    return await invoke<Monitor>('qa_toggle_monitor', { monitorId, active });
+    return await secureInvoke<Monitor>('qa_toggle_monitor', { monitorId, active });
   };
 
   /**
    * Supprimer un moniteur
    */
   const deleteMonitor = async (monitorId: string): Promise<boolean> => {
-    return await invoke<boolean>('qa_delete_monitor', { monitorId });
+    return await secureInvoke<boolean>('qa_delete_monitor', { monitorId });
   };
 
   /**
    * Obtenir les métriques système
    */
   const getSystemMetrics = async (): Promise<SystemMetrics> => {
-    return await invoke<SystemMetrics>('qa_get_system_metrics');
+    return await secureInvoke<SystemMetrics>('qa_get_system_metrics');
   };
 
   // =========================================================================
@@ -114,21 +114,21 @@ export function useQAMonitoring() {
    * Lister toutes les alertes
    */
   const listAlerts = async (includeResolved: boolean = false): Promise<Alert[]> => {
-    return await invoke<Alert[]>('qa_list_alerts', { includeResolved });
+    return await secureInvoke<Alert[]>('qa_list_alerts', { includeResolved });
   };
 
   /**
    * Acquitter une alerte
    */
   const acknowledgeAlert = async (alertId: string): Promise<Alert> => {
-    return await invoke<Alert>('qa_acknowledge_alert', { alertId });
+    return await secureInvoke<Alert>('qa_acknowledge_alert', { alertId });
   };
 
   /**
    * Résoudre une alerte
    */
   const resolveAlert = async (alertId: string, resolutionNote: string): Promise<Alert> => {
-    return await invoke<Alert>('qa_resolve_alert', { alertId, resolutionNote });
+    return await secureInvoke<Alert>('qa_resolve_alert', { alertId, resolutionNote });
   };
 
   // =========================================================================
@@ -139,21 +139,21 @@ export function useQAMonitoring() {
    * Obtenir la configuration hardening
    */
   const getHardeningConfig = async (): Promise<HardeningConfig> => {
-    return await invoke<HardeningConfig>('qa_get_hardening_config');
+    return await secureInvoke<HardeningConfig>('qa_get_hardening_config');
   };
 
   /**
    * Mettre à jour la configuration hardening
    */
   const updateHardeningConfig = async (config: HardeningConfig): Promise<HardeningConfig> => {
-    return await invoke<HardeningConfig>('qa_update_hardening_config', { config });
+    return await secureInvoke<HardeningConfig>('qa_update_hardening_config', { config });
   };
 
   /**
    * Exécuter un audit de sécurité
    */
   const runSecurityAudit = async (): Promise<SecurityAuditResult> => {
-    return await invoke<SecurityAuditResult>('qa_run_security_audit');
+    return await secureInvoke<SecurityAuditResult>('qa_run_security_audit');
   };
 
   // =========================================================================
@@ -164,7 +164,7 @@ export function useQAMonitoring() {
    * Obtenir un rapport de performance
    */
   const getPerformanceReport = async (period: string): Promise<PerformanceReport> => {
-    return await invoke<PerformanceReport>('qa_get_performance_report', { period });
+    return await secureInvoke<PerformanceReport>('qa_get_performance_report', { period });
   };
 
   /**
@@ -175,21 +175,21 @@ export function useQAMonitoring() {
     source?: string,
     limit?: number
   ): Promise<LogEntry[]> => {
-    return await invoke<LogEntry[]>('qa_get_logs', { level, source, limit });
+    return await secureInvoke<LogEntry[]>('qa_get_logs', { level, source, limit });
   };
 
   /**
    * Exporter les métriques au format Prometheus
    */
   const exportPrometheus = async (): Promise<string> => {
-    return await invoke<string>('qa_export_metrics_prometheus');
+    return await secureInvoke<string>('qa_export_metrics_prometheus');
   };
 
   /**
    * Vérification de santé complète
    */
   const healthCheck = async (): Promise<HealthCheckResult> => {
-    return await invoke<HealthCheckResult>('qa_health_check');
+    return await secureInvoke<HealthCheckResult>('qa_health_check');
   };
 
   return {

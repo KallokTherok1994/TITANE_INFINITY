@@ -20,7 +20,7 @@
  * @created 2025-11-27
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -220,7 +220,7 @@ export class AutoFixEngine {
 
   private async detectRustWarnings(): Promise<DetectedIssue[]> {
     try {
-      const warnings = await invoke<string[]>('autofix_detect_rust_warnings');
+      const warnings = await secureInvoke<string[]>('autofix_detect_rust_warnings');
 
       return warnings.map((warning, idx) => ({
         id: `rust-${idx}-${Date.now()}`,
@@ -238,7 +238,7 @@ export class AutoFixEngine {
 
   private async detectTypeScriptErrors(): Promise<DetectedIssue[]> {
     try {
-      const errors = await invoke<string[]>('autofix_detect_typescript_errors');
+      const errors = await secureInvoke<string[]>('autofix_detect_typescript_errors');
 
       return errors.map((error, idx) => ({
         id: `ts-${idx}-${Date.now()}`,
@@ -269,12 +269,12 @@ export class AutoFixEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private async fixRustWarning(issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_rust_warning', { warning: issue.description });
+    await secureInvoke('autofix_rust_warning', { warning: issue.description });
     return 'Rust warning fixed';
   }
 
   private async fixTypeScriptError(issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_typescript_error', { error: issue.description });
+    await secureInvoke('autofix_typescript_error', { error: issue.description });
     return 'TypeScript error fixed';
   }
 
@@ -283,17 +283,17 @@ export class AutoFixEngine {
   }
 
   private async fixInvalidState(issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_reset_state', { component: issue.affected_component });
+    await secureInvoke('autofix_reset_state', { component: issue.affected_component });
     return 'State reset to valid values';
   }
 
   private async fixPipelineStall(issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_restart_pipeline', { pipeline: issue.affected_component });
+    await secureInvoke('autofix_restart_pipeline', { pipeline: issue.affected_component });
     return 'Pipeline restarted';
   }
 
   private async fixLipSyncDesync(_issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_resync_lipsync');
+    await secureInvoke('autofix_resync_lipsync');
     return 'Lip-sync resynchronized';
   }
 
@@ -304,12 +304,12 @@ export class AutoFixEngine {
   }
 
   private async fixTauriError(issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_restart_tauri_command', { command: issue.affected_component });
+    await secureInvoke('autofix_restart_tauri_command', { command: issue.affected_component });
     return 'Tauri command restarted';
   }
 
   private async fixRaceCondition(issue: DetectedIssue): Promise<string> {
-    await invoke('autofix_add_mutex', { component: issue.affected_component });
+    await secureInvoke('autofix_add_mutex', { component: issue.affected_component });
     return 'Mutex added to prevent race condition';
   }
 

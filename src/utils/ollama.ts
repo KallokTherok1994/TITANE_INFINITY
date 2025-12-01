@@ -1,5 +1,5 @@
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 
 export async function queryOllama(prompt: string): Promise<string> {
-  return invoke<string>('ollama_query', { prompt });
+  return secureInvoke<string>('ollama_query', { prompt });
 }
