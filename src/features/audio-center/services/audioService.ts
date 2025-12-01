@@ -334,15 +334,24 @@ class AudioService {
   }
 
   async testMicrophone(durationMs: number = 3000): Promise<MicrophoneTestResult> {
+    console.log('[AudioService] testMicrophone called, duration:', durationMs, 'isTauri:', this.isTauri);
+    
     try {
       if (this.isTauri) {
-        const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
-          duration_ms: durationMs,
-        });
+        console.log('[AudioService] Calling Tauri test_microphone...');
+        // Timeout = durée enregistrement + 5s de marge pour traitement
+        const timeoutMs = durationMs + 5000;
+        const result = await secureInvoke<MicrophoneTestResult>(
+          'test_microphone',
+          { duration_ms: durationMs },
+          { timeout: timeoutMs }
+        );
+        console.log('[AudioService] test_microphone result:', result);
         return result;
       }
 
       // Web Audio fallback
+      console.log('[AudioService] Using Web Audio API fallback...');
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           deviceId: this.config.input.deviceId !== 'default' ? this.config.input.deviceId : undefined,
@@ -404,12 +413,13 @@ class AudioService {
         }, durationMs);
       });
     } catch (error) {
+      console.error('[AudioService] testMicrophone error:', error);
       return {
         success: false,
         peakLevel: 0,
         noiseFloor: 0,
         signalToNoise: 0,
-        errorMessage: error instanceof Error ? error.message : 'Microphone access denied',
+        errorMessage: error instanceof Error ? error.message : 'Microphone test failed',
       };
     }
   }
