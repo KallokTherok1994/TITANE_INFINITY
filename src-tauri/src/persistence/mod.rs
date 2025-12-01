@@ -1,15 +1,13 @@
-/**
- * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.MPE — PERSISTENCE ENGINE (100% SAVE)
- * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- *
- * Architecture:
- * - Event Log (append-only, idempotent)
- * - Snapshots (état complet périodique)
- * - SQLite WAL mode (robustesse crash)
- * - Auto-save triggers (data + 30min + shutdown)
- * ═══════════════════════════════════════════════════════════════════════════════
- */
+//! ═══════════════════════════════════════════════════════════════════════════════
+//! TITANE∞ v∞.MPE — PERSISTENCE ENGINE (100% SAVE)
+//! © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+//!
+//! # Architecture
+//!
+//! - Event Log (append-only, idempotent)
+//! - Snapshots (état complet périodique)
+//! - SQLite WAL mode (robustesse crash)
+//! - Auto-save triggers (data + 30min + shutdown)
 
 pub mod event_log;
 pub mod snapshot;

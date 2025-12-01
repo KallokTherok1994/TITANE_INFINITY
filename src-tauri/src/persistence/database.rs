@@ -1,15 +1,15 @@
-/**
- * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.MPE — PERSISTENCE DATABASE
- * Base de données SQLite avec mode WAL pour robustesse
- * ═══════════════════════════════════════════════════════════════════════════════
- */
+//! ═══════════════════════════════════════════════════════════════════════════════
+//! TITANE∞ v∞.MPE — PERSISTENCE DATABASE
+//! Base de données SQLite avec mode WAL pour robustesse
+//! ═══════════════════════════════════════════════════════════════════════════════
 
 use super::types::{CompactionReport, IntegrityReport, PersistenceError, Snapshot, SnapshotInfo, TitanEvent};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use tokio::sync::Mutex;
 
 /// Configuration SQLite WAL pour robustesse crash
+/// (Préparé pour migration future vers SQLite)
+#[allow(dead_code)]
 const SQLITE_PRAGMAS: &str = r#"
     PRAGMA journal_mode = WAL;
     PRAGMA synchronous = NORMAL;
@@ -20,6 +20,8 @@ const SQLITE_PRAGMAS: &str = r#"
 "#;
 
 /// Schéma de la base de données
+/// (Préparé pour migration future vers SQLite)
+#[allow(dead_code)]
 const SCHEMA_SQL: &str = r#"
     -- Table des événements (append-only)
     CREATE TABLE IF NOT EXISTS events (
@@ -109,7 +111,7 @@ impl PersistenceDB {
     }
 
     /// S'assurer que le schéma existe
-    async fn ensure_schema(db_path: &PathBuf) -> Result<(), PersistenceError> {
+    async fn ensure_schema(db_path: &Path) -> Result<(), PersistenceError> {
         // Pour l'instant, créer les fichiers JSON de backup
         let events_path = db_path.with_extension("events.json");
         let snapshots_path = db_path.with_extension("snapshots.json");

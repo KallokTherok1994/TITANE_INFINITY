@@ -1,9 +1,7 @@
-/**
- * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.MPE — PERSISTENCE COMMANDS
- * Commandes Tauri pour la persistence 100% SAVE
- * ═══════════════════════════════════════════════════════════════════════════════
- */
+//! ═══════════════════════════════════════════════════════════════════════════════
+//! TITANE∞ v∞.MPE — PERSISTENCE COMMANDS
+//! Commandes Tauri pour la persistence 100% SAVE
+//! ═══════════════════════════════════════════════════════════════════════════════
 
 use crate::persistence::{PERSISTENCE_ENGINE, TitanEvent, PersistenceStatus, IntegrityReport};
 use crate::core::SingularityState;

@@ -1,9 +1,7 @@
-/**
- * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.MPE — RECOVERY ENGINE
- * Récupération automatique après crash/corruption
- * ═══════════════════════════════════════════════════════════════════════════════
- */
+//! ═══════════════════════════════════════════════════════════════════════════════
+//! TITANE∞ v∞.MPE — RECOVERY ENGINE
+//! Récupération automatique après crash/corruption
+//! ═══════════════════════════════════════════════════════════════════════════════
 
 use super::event_log::EventLog;
 use super::snapshot::SnapshotManager;
@@ -32,7 +30,7 @@ impl RecoveryEngine {
     pub async fn recover(
         &mut self,
         event_log: &mut EventLog,
-        snapshot_manager: &mut SnapshotManager,
+        _snapshot_manager: &mut SnapshotManager,
     ) -> Result<RecoveryReport, PersistenceError> {
         log::info!("[RecoveryEngine] 🔄 Démarrage de la récupération...");
 

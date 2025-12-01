@@ -1,9 +1,7 @@
-/**
- * ═══════════════════════════════════════════════════════════════════════════════
- * TITANE∞ v∞.MPE — PERSISTENCE TYPES
- * Types pour le système de persistence 100% SAVE
- * ═══════════════════════════════════════════════════════════════════════════════
- */
+//! ═══════════════════════════════════════════════════════════════════════════════
+//! TITANE∞ v∞.MPE — PERSISTENCE TYPES
+//! Types pour le système de persistence 100% SAVE
+//! ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
