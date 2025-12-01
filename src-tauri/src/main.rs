@@ -43,6 +43,13 @@ mod system_health_commands {
     include!("commands/system_health.rs");
 }
 
+// Audio commands v19.2
+mod audio {
+    pub mod commands {
+        include!("audio/commands.rs");
+    }
+}
+
 mod ollama;
 
 // Cognitive system (always available)
@@ -550,6 +557,18 @@ async fn main() {
         titane_infinity::design_center::reset_ui_theme,
         titane_infinity::design_center::update_ui_token,
         titane_infinity::design_center::export_ui_theme_css,
+
+        // ═══════════════════════════════════════════════════════════════
+        // AUDIO CENTER COMMANDS v19.2 - TTS, Devices, Tests
+        // ═══════════════════════════════════════════════════════════════
+        audio::commands::tts_speak,
+        audio::commands::tts_stop,
+        audio::commands::test_tts,
+        audio::commands::get_audio_output_devices,
+        audio::commands::get_audio_input_devices,
+        audio::commands::set_audio_output_device,
+        audio::commands::set_audio_input_device,
+        audio::commands::test_microphone,
 
         // ═══════════════════════════════════════════════════════════════
         // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U (Legacy, kept for compatibility)

@@ -27,6 +27,7 @@ import {
 import { XP } from '../core/experience/XP_ENGINE';
 import { awardExperience } from '../services/experienceService';
 import { XPSource, XP_REWARDS } from '../types/experience';
+import { userPreferencesEngine } from '../services/userPreferencesEngine';
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
@@ -684,6 +685,17 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         timestamp: new Date(message.timestamp).toISOString(),
       }));
 
+      // ═══ INJECT USER PREFERENCES CONTEXT ═══
+      const preferencesContext = userPreferencesEngine.generateContextForAI();
+      if (preferencesContext && backendHistory.length > 0) {
+        // Ajouter le contexte au premier message utilisateur
+        const firstUserMsgIndex = backendHistory.findIndex(m => m.role === 'user');
+        if (firstUserMsgIndex >= 0) {
+          backendHistory[firstUserMsgIndex].content =
+            `${preferencesContext}\n\n${backendHistory[firstUserMsgIndex].content}`;
+        }
+      }
+
       const chatAttempts: ChatDebugAttempt[] = [];
       const attemptedProviders: string[] = [];
       let chatServiceResponse: ChatResponse | null = null;
@@ -833,6 +845,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       try {
         saveMessage(userMessage);
         saveMessage(assistantMessage);
+
+        // ═══ RECORD INTERACTION FOR PREFERENCES LEARNING ═══
+        try {
+          userPreferencesEngine.recordInteraction(cleanMessage, finalContent);
+        } catch (prefError) {
+          console.warn('[useChat OMNIS] ⚠️ Preferences recording failed:', prefError);
+        }
 
         // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
         // Système XP global + domaines spécifiques

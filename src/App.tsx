@@ -97,6 +97,9 @@ const DesignCenterPage = lazy(() => import('./features/design-center').then(m =>
 // ✨ GOVERNANCE CENTER - Centre Gouvernance & Sécurité v∞
 const GovernanceCenterPage = lazy(() => import('./features/governance-center').then(m => ({ default: m.GovernanceCenterPage })));
 
+// ✨ AUDIO CENTER - Centre Audio & Voix v19.2
+const AudioCenterPage = lazy(() => import('./features/audio-center').then(m => ({ default: m.AudioCenterPage })));
+
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
@@ -312,6 +315,18 @@ const AppRouter: React.FC = () => {
           {/* Redirections vers Governance Center pour anciennes routes */}
           <Route path="/governance" element={<Navigate to="/governance-center" replace />} />
           <Route path="/secure" element={<Navigate to="/governance-center" replace />} />
+
+          {/* ✨ v19.2 AUDIO CENTER - Centre Audio & Voix */}
+          <Route path="/audio-center" element={
+            <ErrorBoundary context="AudioCenter">
+              <AudioCenterPage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers Audio Center pour anciennes routes */}
+          <Route path="/audio" element={<Navigate to="/audio-center" replace />} />
+          <Route path="/voice" element={<Navigate to="/audio-center" replace />} />
+          <Route path="/tts" element={<Navigate to="/audio-center" replace />} />
 
           {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />

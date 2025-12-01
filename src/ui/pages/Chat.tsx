@@ -28,6 +28,7 @@ import { MessageListOptimized as MessageList } from '../../components/chat/Messa
 import { ChatInput } from '../../components/chat/ChatInput';
 import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
+import { VoiceConversation } from '../../components/VoiceConversation';
 import type { ChatModeId } from '../../services/ai/chatModes.config';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import './styles/Chat.css';
@@ -923,6 +924,28 @@ export const Chat: React.FC = () => {
 
         {/* Enhanced Input with Voice Button + Protection */}
         <div className="chat-footer">
+          {/* Voice Conversation Panel when active */}
+          {voiceModeActive && (
+            <div
+              style={{
+                padding: '1rem',
+                background: 'rgba(102, 126, 234, 0.1)',
+                borderRadius: '12px',
+                marginBottom: '1rem',
+                border: '1px solid rgba(102, 126, 234, 0.2)',
+              }}
+            >
+              <VoiceConversation
+                onTranscript={(text) => {
+                  isDev && console.log('[OMEGA] Voice transcript:', text);
+                }}
+                onResponse={(response) => {
+                  isDev && console.log('[OMEGA] Voice response:', response);
+                }}
+              />
+            </div>
+          )}
+
           <ChatInput
             onSend={sendMessage}
             disabled={isLoading || pageState.isCorrupted}

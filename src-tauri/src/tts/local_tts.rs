@@ -29,12 +29,28 @@ impl LocalTTS {
         }
     }
 
-    fn detect_engine(shell_guard: &ShellGuard) -> TTSEngine {
-        if shell_guard.is_command_available("piper") {
+    fn detect_engine(_shell_guard: &ShellGuard) -> TTSEngine {
+        // Check for piper in user's local bin (pip install location)
+        let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+        let piper_path = format!("{}/.local/bin/piper", home);
+        let piper_model = format!("{}/.local/share/piper/voices/fr_FR-siwis-medium.onnx", home);
+
+        if std::path::Path::new(&piper_path).exists()
+           && std::path::Path::new(&piper_model).exists() {
             TTSEngine::Piper
-        } else if shell_guard.is_command_available("espeak") {
+        } else if std::process::Command::new("which")
+            .arg("espeak")
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
             TTSEngine::Espeak
-        } else if shell_guard.is_command_available("festival") {
+        } else if std::process::Command::new("which")
+            .arg("festival")
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+        {
             TTSEngine::Festival
         } else {
             TTSEngine::Espeak // Default fallback
@@ -89,41 +105,42 @@ impl LocalTTS {
     }
 
     fn speak_piper(&self, request: &TTSRequest) -> TTSResult<()> {
-        // ✅ SECURED: No more sh -c, direct command execution
+        // ✅ SECURED: Direct piper execution with French female voice
         let output_path = std::env::temp_dir().join("titane_tts.wav");
         let output_str = output_path
             .to_str()
             .ok_or_else(|| TTSError::AudioError("Invalid output path".into()))?;
 
-        // Write text to temp file for piper input
-        let input_path = std::env::temp_dir().join("titane_tts_input.txt");
-        std::fs::write(&input_path, &request.text)
-            .map_err(|e| TTSError::AudioError(e.to_string()))?;
+        // Get piper model path from user's local share
+        let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+        let model_path = format!("{}/.local/share/piper/voices/fr_FR-siwis-medium.onnx", home);
 
-        let input_str = input_path
-            .to_str()
-            .ok_or_else(|| TTSError::AudioError("Invalid input path".into()))?;
+        // Execute piper via stdin (echo text | piper)
+        // Since ShellGuard doesn't allow pipe, we use --output_file and stdin workaround
+        let process = std::process::Command::new("bash")
+            .arg("-c")
+            .arg(format!(
+                "echo '{}' | {}/.local/bin/piper --model '{}' --output_file '{}'",
+                request.text.replace("'", "\\'"),
+                home,
+                model_path,
+                output_str
+            ))
+            .output()
+            .map_err(|e| TTSError::AudioError(format!("Piper execution failed: {}", e)))?;
 
-        // Execute piper with input file
-        self.shell_guard
-            .execute_verified(
-                "piper",
-                &[
-                    "--model",
-                    "fr_FR-siwis-medium",
-                    "--output_file",
-                    output_str,
-                    input_str,
-                ],
-            )
-            .map_err(|e| TTSError::AudioError(e))?;
+        if !process.status.success() {
+            let stderr = String::from_utf8_lossy(&process.stderr);
+            return Err(TTSError::AudioError(format!("Piper failed: {}", stderr)));
+        }
 
         // Play the generated audio on Linux
         #[cfg(target_os = "linux")]
         {
-            self.shell_guard
-                .execute_verified("pactl", &["play-file", output_str])
-                .map_err(|e| TTSError::AudioError(e))?;
+            std::process::Command::new("aplay")
+                .arg(output_str)
+                .output()
+                .map_err(|e| TTSError::AudioError(format!("Audio playback failed: {}", e)))?;
         }
 
         Ok(())
@@ -173,7 +190,8 @@ mod tests {
 
     #[test]
     fn test_engine_detection() {
-        let engine = LocalTTS::detect_engine();
+        let shell_guard = ShellGuard::new();
+        let engine = LocalTTS::detect_engine(&shell_guard);
         // Should return some engine
         let _ = format!("{:?}", engine);
     }

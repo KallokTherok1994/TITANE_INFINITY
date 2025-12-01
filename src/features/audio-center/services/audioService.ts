@@ -1,0 +1,525 @@
+/**
+ * TITANE_INFINITY v19.2.0 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v19.2 — AUDIO SERVICE
+ *   Service audio avec gestion TTS, devices et tests
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+import { detectEnvironment } from '@/core/tauri/environment';
+import { secureInvoke } from '@/lib/security';
+import {
+  type TTSSettings,
+  type AudioDevice,
+  type AudioOutputSettings,
+  type AudioInputSettings,
+  type AudioTestResult,
+  type MicrophoneTestResult,
+  type AudioConfiguration,
+  DEFAULT_AUDIO_CONFIG,
+  AVAILABLE_VOICES,
+} from '../types';
+
+const STORAGE_KEY = 'titane_audio_config';
+const DEVICE_CACHE_TTL = 30000; // 30 secondes
+
+interface DeviceCache {
+  output: AudioDevice[];
+  input: AudioDevice[];
+  timestamp: number;
+}
+
+class AudioService {
+  private config: AudioConfiguration;
+  private isTauri: boolean = false;
+  private deviceCache: DeviceCache | null = null;
+  private isSpeaking: boolean = false;
+
+  constructor() {
+    this.config = this.loadConfig();
+    // Détection synchrone (detectEnvironment est sync malgré son nom)
+    const env = detectEnvironment();
+    this.isTauri = env.isTauri;
+    console.log('[AudioService] Initialized. Tauri mode:', this.isTauri);
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  Status
+  // ─────────────────────────────────────────────────────────────────
+
+  getIsSpeaking(): boolean {
+    return this.isSpeaking;
+  }
+
+  getIsTauri(): boolean {
+    return this.isTauri;
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  Configuration Persistence
+  // ─────────────────────────────────────────────────────────────────
+
+  private loadConfig(): AudioConfiguration {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Failed to load audio config:', error);
+    }
+    return DEFAULT_AUDIO_CONFIG;
+  }
+
+  private saveConfig(): void {
+    try {
+      this.config.lastUpdated = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.config));
+    } catch (error) {
+      console.error('Failed to save audio config:', error);
+    }
+  }
+
+  getConfig(): AudioConfiguration {
+    return { ...this.config };
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  TTS Settings
+  // ─────────────────────────────────────────────────────────────────
+
+  getTTSSettings(): TTSSettings {
+    return { ...this.config.tts };
+  }
+
+  async updateTTSSettings(settings: Partial<TTSSettings>): Promise<void> {
+    this.config.tts = { ...this.config.tts, ...settings };
+    this.saveConfig();
+
+    // Sync with Tauri backend if available
+    if (this.isTauri) {
+      try {
+        await secureInvoke('update_tts_settings', { settings: this.config.tts });
+      } catch (error) {
+        console.warn('Failed to sync TTS settings with backend:', error);
+      }
+    }
+  }
+
+  getAvailableVoices() {
+    return AVAILABLE_VOICES.filter(voice => {
+      // Filter based on available engines
+      if (voice.engine === 'elevenlabs') {
+        // ElevenLabs requires API key
+        return !!localStorage.getItem('elevenlabs_api_key');
+      }
+      return true;
+    });
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  Audio Devices (with cache)
+  // ─────────────────────────────────────────────────────────────────
+
+  private isCacheValid(): boolean {
+    return this.deviceCache !== null &&
+           (Date.now() - this.deviceCache.timestamp) < DEVICE_CACHE_TTL;
+  }
+
+  async getOutputDevices(forceRefresh = false): Promise<AudioDevice[]> {
+    // Return cached devices if valid
+    if (!forceRefresh && this.isCacheValid() && this.deviceCache!.output.length > 0) {
+      return this.deviceCache!.output;
+    }
+
+    let devices: AudioDevice[] = [];
+
+    if (this.isTauri) {
+      try {
+        devices = await secureInvoke<AudioDevice[]>('get_audio_output_devices');
+      } catch (error) {
+        console.warn('Failed to get output devices from Tauri:', error);
+      }
+    }
+
+    // Fallback: Use Web Audio API if no devices from Tauri
+    if (devices.length === 0 && typeof navigator !== 'undefined' && navigator.mediaDevices) {
+      try {
+        const webDeviceList = await navigator.mediaDevices.enumerateDevices();
+        const webDevices = webDeviceList
+          .filter(d => d.kind === 'audiooutput')
+          .map((d, index) => ({
+            id: d.deviceId || `output-${index}`,
+            name: d.label || `Speaker ${index + 1}`,
+            type: 'output' as const,
+            isDefault: d.deviceId === 'default',
+            isActive: index === 0,
+            driver: 'webaudio',
+          }));
+        devices = webDevices;
+      } catch (error) {
+        console.warn('Failed to enumerate devices:', error);
+      }
+    }
+
+    // Default fallback
+    if (devices.length === 0) {
+      devices = [{
+        id: 'default',
+        name: 'Default Speaker',
+        type: 'output',
+        isDefault: true,
+        isActive: true,
+        driver: 'unknown',
+      }];
+    }
+
+    // Update cache
+    this.deviceCache = {
+      ...this.deviceCache,
+      output: devices,
+      input: this.deviceCache?.input || [],
+      timestamp: Date.now(),
+    };
+
+    return devices;
+  }
+
+  async getInputDevices(forceRefresh = false): Promise<AudioDevice[]> {
+    // Return cached devices if valid
+    if (!forceRefresh && this.isCacheValid() && this.deviceCache!.input.length > 0) {
+      return this.deviceCache!.input;
+    }
+
+    let devices: AudioDevice[] = [];
+
+    if (this.isTauri) {
+      try {
+        devices = await secureInvoke<AudioDevice[]>('get_audio_input_devices');
+      } catch (error) {
+        console.warn('Failed to get input devices from Tauri:', error);
+      }
+    }
+
+    // Fallback: Use Web Audio API if no devices from Tauri
+    if (devices.length === 0 && typeof navigator !== 'undefined' && navigator.mediaDevices) {
+      try {
+        // Request permission first
+        await navigator.mediaDevices.getUserMedia({ audio: true });
+        const allDevices = await navigator.mediaDevices.enumerateDevices();
+        devices = allDevices
+          .filter(d => d.kind === 'audioinput')
+          .map((d, index) => ({
+            id: d.deviceId || `input-${index}`,
+            name: d.label || `Microphone ${index + 1}`,
+            type: 'input' as const,
+            isDefault: d.deviceId === 'default',
+            isActive: index === 0,
+            driver: 'webaudio',
+          }));
+      } catch (error) {
+        console.warn('Failed to enumerate input devices:', error);
+      }
+    }
+
+    // Default fallback
+    if (devices.length === 0) {
+      devices = [{
+        id: 'default',
+        name: 'Default Microphone',
+        type: 'input',
+        isDefault: true,
+        isActive: false,
+        driver: 'unknown',
+      }];
+    }
+
+    // Update cache
+    this.deviceCache = {
+      ...this.deviceCache,
+      output: this.deviceCache?.output || [],
+      input: devices,
+      timestamp: Date.now(),
+    };
+
+    return devices;
+  }
+
+  // Invalider le cache si besoin
+  invalidateDeviceCache(): void {
+    this.deviceCache = null;
+  }
+
+  async setOutputDevice(deviceId: string): Promise<void> {
+    this.config.output.deviceId = deviceId;
+    this.saveConfig();
+    this.invalidateDeviceCache();
+
+    if (this.isTauri) {
+      try {
+        await secureInvoke('set_audio_output_device', { deviceId });
+      } catch (error) {
+        console.warn('Failed to set output device:', error);
+      }
+    }
+  }
+
+  async setInputDevice(deviceId: string): Promise<void> {
+    this.config.input.deviceId = deviceId;
+    this.saveConfig();
+
+    if (this.isTauri) {
+      try {
+        await secureInvoke('set_audio_input_device', { deviceId });
+      } catch (error) {
+        console.warn('Failed to set input device:', error);
+      }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  Volume & Settings
+  // ─────────────────────────────────────────────────────────────────
+
+  async updateOutputSettings(settings: Partial<AudioOutputSettings>): Promise<void> {
+    this.config.output = { ...this.config.output, ...settings };
+    this.saveConfig();
+
+    if (this.isTauri) {
+      try {
+        await secureInvoke('update_audio_output_settings', { settings: this.config.output });
+      } catch (error) {
+        console.warn('Failed to update output settings:', error);
+      }
+    }
+  }
+
+  async updateInputSettings(settings: Partial<AudioInputSettings>): Promise<void> {
+    this.config.input = { ...this.config.input, ...settings };
+    this.saveConfig();
+
+    if (this.isTauri) {
+      try {
+        await secureInvoke('update_audio_input_settings', { settings: this.config.input });
+      } catch (error) {
+        console.warn('Failed to update input settings:', error);
+      }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  Audio Tests
+  // ─────────────────────────────────────────────────────────────────
+
+  async testSpeaker(testText?: string): Promise<AudioTestResult> {
+    const text = testText || 'Bonjour, je suis TITANE Infinity, votre assistante vocale.';
+    const startTime = Date.now();
+
+    try {
+      if (this.isTauri) {
+        await secureInvoke('test_tts', { text, settings: this.config.tts });
+      } else {
+        // Web Speech fallback
+        await new Promise<void>((resolve, reject) => {
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = this.config.tts.language;
+          utterance.rate = this.config.tts.rate;
+          utterance.pitch = this.config.tts.pitch;
+          utterance.volume = this.config.tts.volume;
+          utterance.onend = () => resolve();
+          utterance.onerror = (e) => reject(e);
+          window.speechSynthesis.speak(utterance);
+        });
+      }
+
+      const latencyMs = Date.now() - startTime;
+      return {
+        success: true,
+        latencyMs,
+        qualityScore: this.config.tts.engine === 'piper' ? 85 : 60,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        latencyMs: 0,
+        qualityScore: 0,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      };
+    }
+  }
+
+  async testMicrophone(durationMs: number = 3000): Promise<MicrophoneTestResult> {
+    try {
+      if (this.isTauri) {
+        const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
+          durationMs,
+          settings: this.config.input
+        });
+        return result;
+      }
+
+      // Web Audio fallback
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          deviceId: this.config.input.deviceId !== 'default' ? this.config.input.deviceId : undefined,
+          noiseSuppression: this.config.input.noiseSuppression,
+          echoCancellation: this.config.input.echoCancellation,
+          autoGainControl: this.config.input.autoGainControl,
+        }
+      });
+
+      const audioContext = new AudioContext();
+      const analyser = audioContext.createAnalyser();
+      const source = audioContext.createMediaStreamSource(stream);
+      source.connect(analyser);
+
+      analyser.fftSize = 2048;
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      let peakLevel = 0;
+      const samples: number[] = [];
+
+      return new Promise((resolve) => {
+        const interval = setInterval(() => {
+          analyser.getByteTimeDomainData(dataArray);
+
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            const value = (dataArray[i] - 128) / 128;
+            sum += value * value;
+            if (Math.abs(value) > peakLevel) {
+              peakLevel = Math.abs(value);
+            }
+          }
+
+          samples.push(Math.sqrt(sum / dataArray.length));
+        }, 100);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          stream.getTracks().forEach(t => t.stop());
+          audioContext.close();
+
+          // Calculate noise floor (average of lowest 20% of samples)
+          samples.sort((a, b) => a - b);
+          const noiseFloorSamples = samples.slice(0, Math.floor(samples.length * 0.2));
+          const noiseFloor = noiseFloorSamples.reduce((a, b) => a + b, 0) / noiseFloorSamples.length;
+
+          // Signal to noise ratio in dB
+          const snr = peakLevel > 0 && noiseFloor > 0
+            ? 20 * Math.log10(peakLevel / noiseFloor)
+            : 0;
+
+          resolve({
+            success: peakLevel > 0.01,
+            peakLevel,
+            noiseFloor,
+            signalToNoise: snr,
+            errorMessage: peakLevel <= 0.01 ? 'No audio signal detected' : undefined,
+          });
+        }, durationMs);
+      });
+    } catch (error) {
+      return {
+        success: false,
+        peakLevel: 0,
+        noiseFloor: 0,
+        signalToNoise: 0,
+        errorMessage: error instanceof Error ? error.message : 'Microphone access denied',
+      };
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────
+  //  TTS Quick Speak
+  // ─────────────────────────────────────────────────────────────────
+
+  async speak(text: string): Promise<void> {
+    if (!text || text.trim().length === 0) {
+      console.warn('[AudioService] speak() called with empty text');
+      return;
+    }
+
+    // Prevent overlapping speech
+    if (this.isSpeaking) {
+      console.log('[AudioService] Already speaking, stopping previous speech');
+      this.stop();
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    this.isSpeaking = true;
+    console.log('[AudioService] speak() called. Tauri mode:', this.isTauri, 'Text:', text.substring(0, 50) + '...');
+
+    try {
+      if (this.isTauri) {
+        try {
+          console.log('[AudioService] Invoking tts_speak via Tauri...');
+          await secureInvoke('tts_speak', {
+            text,
+            settings: this.config.tts,
+          });
+          console.log('[AudioService] tts_speak completed successfully');
+        } catch (error) {
+          console.error('[AudioService] tts_speak error:', error);
+          // Fallback to Web Speech on error
+          console.log('[AudioService] Falling back to Web Speech API...');
+          await this.speakWithWebSpeech(text);
+        }
+      } else {
+        await this.speakWithWebSpeech(text);
+      }
+    } finally {
+      this.isSpeaking = false;
+    }
+  }
+
+  private speakWithWebSpeech(text: string): Promise<void> {
+    console.log('[AudioService] Using Web Speech API');
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = this.config.tts.language;
+    utterance.rate = this.config.tts.rate;
+    utterance.pitch = this.config.tts.pitch;
+    utterance.volume = this.config.tts.volume * this.config.output.volume;
+
+    return new Promise((resolve, reject) => {
+      utterance.onend = () => {
+        console.log('[AudioService] Web Speech finished');
+        resolve();
+      };
+      utterance.onerror = (e) => {
+        console.error('[AudioService] Web Speech error:', e);
+        reject(e);
+      };
+      window.speechSynthesis.speak(utterance);
+    });
+  }
+
+  stop(): void {
+    console.log('[AudioService] stop() called');
+    this.isSpeaking = false;
+
+    // Stop Web Speech
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+
+    // Stop Tauri TTS
+    if (this.isTauri) {
+      secureInvoke('tts_stop').catch((err) => {
+        console.error('[AudioService] tts_stop error:', err);
+      });
+    }
+  }
+
+  isCurrentlySpeaking(): boolean {
+    return this.isSpeaking;
+  }
+}
+
+// Singleton export
+export const audioService = new AudioService();
+export default audioService;

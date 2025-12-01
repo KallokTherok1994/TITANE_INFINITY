@@ -1,9 +1,12 @@
-// TITANE∞ v12 - Audio Module
-// Voice Activity Detection, Recording, and Speech Recognition
+// TITANE∞ v19.2 - Audio Module
+// Voice Activity Detection, Recording, Speech Recognition, and TTS Commands
 
 pub mod asr;
+pub mod commands;
 pub mod recorder;
 pub mod vad;
+
+pub use commands::*;
 
 use serde::{Deserialize, Serialize};
 

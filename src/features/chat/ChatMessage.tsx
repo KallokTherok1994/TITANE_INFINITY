@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { Badge } from '../../ui';
 import { colors, spacing, radius, shadows, fontSizes, fontWeights, lineHeights } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
+import { useTTS } from '@/hooks/useTTS';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -82,10 +83,19 @@ export const ChatMessage = ({
   metadata,
 }: ChatMessageProps): JSX.Element => {
   const { animationConfig } = useAnimation();
+  const { speak, stop, isSpeaking } = useTTS();
   const [displayedContent, setDisplayedContent] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
   const config = roleConfig[role];
   const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleSpeak = () => {
+    if (isSpeaking) {
+      stop();
+    } else {
+      speak(content);
+    }
+  };
 
   // Streaming animation
   useEffect(() => {
@@ -150,6 +160,29 @@ export const ChatMessage = ({
           >
             ⚡
           </motion.span>
+        )}
+        {/* TTS Button - Only for assistant messages */}
+        {role === 'assistant' && !streaming && (
+          <button
+            onClick={handleSpeak}
+            title={isSpeaking ? 'Arrêter' : 'Écouter'}
+            style={{
+              background: isSpeaking ? colors.rubis.primary[600] : colors.saphir.primary[800],
+              border: 'none',
+              borderRadius: radius.full,
+              width: '24px',
+              height: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              fontSize: '12px',
+              transition: 'all 0.2s',
+              marginLeft: spacing[2],
+            }}
+          >
+            {isSpeaking ? '⏹️' : '🔊'}
+          </button>
         )}
       </div>
 

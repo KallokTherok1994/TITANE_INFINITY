@@ -125,6 +125,21 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'transcribe_audio',
 
   // ═══════════════════════════════════════════════════════════════
+  // AUDIO CENTER (v19.2+)
+  // ═══════════════════════════════════════════════════════════════
+  'tts_speak',
+  'tts_stop',
+  'test_tts',
+  'get_audio_output_devices',
+  'get_audio_input_devices',
+  'set_audio_output_device',
+  'set_audio_input_device',
+  'test_microphone',
+  'update_tts_settings',
+  'update_audio_output_settings',
+  'update_audio_input_settings',
+
+  // ═══════════════════════════════════════════════════════════════
   // SINGULARITY STATE
   // ═══════════════════════════════════════════════════════════════
   'singularity_get_state',
