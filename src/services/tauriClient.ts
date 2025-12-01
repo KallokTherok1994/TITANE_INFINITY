@@ -5,7 +5,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
+import { detectEnvironment } from '@/core/tauri/environment';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import type { SingularityState } from '../types/singularityState';
 
@@ -169,6 +170,12 @@ class TauriClient {
 
     let lastError: TAPIError | null = null;
 
+    // Guard: Vérifier environnement Tauri
+    const env = detectEnvironment();
+    if (!env.isTauri) {
+      throw this.createError('NetworkError', 'Not running in Tauri environment');
+    }
+
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
         // Check abort signal
@@ -176,9 +183,9 @@ class TauriClient {
           throw this.createError('NetworkError', 'Request aborted');
         }
 
-        // Race: invoke vs timeout
+        // Race: secureInvoke vs timeout
         const result = await Promise.race([
-          invoke<T>(command, args),
+          secureInvoke<T>(command, args),
           this.timeoutPromise<T>(timeout, command),
         ]);
 

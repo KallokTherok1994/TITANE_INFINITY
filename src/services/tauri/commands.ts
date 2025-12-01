@@ -14,7 +14,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { invoke } from '@tauri-apps/api/core';
 import { z } from 'zod';
 import type {
   InteractionRequest,
@@ -55,7 +54,7 @@ async function invokeWithValidation<T>(
   payload?: Record<string, unknown>
 ): Promise<T> {
   try {
-    const result = await invoke(cmd, payload ?? {});
+    const result = await secureInvoke(cmd, payload ?? {});
     const validated = schema.parse(result);
     return validated;
   } catch (error: unknown) {
@@ -76,7 +75,7 @@ async function invokeVoid(
   payload?: Record<string, unknown>
 ): Promise<void> {
   try {
-    await invoke(cmd, payload ?? {});
+    await secureInvoke(cmd, payload ?? {});
   } catch (error: unknown) {
     const errorMessage = error instanceof Error
       ? error.message

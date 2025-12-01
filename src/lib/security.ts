@@ -420,6 +420,14 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_save_entry',
   'memory_get_entry',
   'memory_delete_entry',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SELF-HEALING SYNC LAYER (v∞.Ω HARDENING)
+  // ═══════════════════════════════════════════════════════════════
+  'selfheal_get_vitals',
+  'selfheal_load_profile',
+  'selfheal_save_profile',
+  'selfheal_sync_with_singularity',
 ]);
 
 /**

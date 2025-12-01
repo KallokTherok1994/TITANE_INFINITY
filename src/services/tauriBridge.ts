@@ -5,7 +5,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
+import { detectEnvironment } from '@/core/tauri/environment';
 import type {
   CoreResponse,
   CoreError,
@@ -94,12 +95,22 @@ export async function invokeTauriCommand<T = unknown>(
   const startTime = Date.now();
   logCommand(command, params);
 
+  // Guard: Vérifier environnement Tauri
+  const env = detectEnvironment();
+  if (!env.isTauri) {
+    return {
+      success: false,
+      error: 'Not running in Tauri environment',
+      timestamp: Date.now(),
+    };
+  }
+
   let lastError: CoreError | null = null;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     try {
-      // Timeout race
-      const invokePromise = invoke<T>(command, params);
+      // Timeout race avec secureInvoke
+      const invokePromise = secureInvoke<T>(command, params);
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(createCoreError('timeout', `Command ${command} timed out after ${timeout}ms`)), timeout)
       );

@@ -117,7 +117,7 @@ export const VoiceConversation = ({
   const startAudioVisualization = useCallback(async () => {
     try {
       const env = detectEnvironment();
-      
+
       // En mode Tauri, vérifier d'abord le micro via backend
       if (env.isTauri) {
         const testResult = await secureInvoke<{ success: boolean }>('test_microphone');

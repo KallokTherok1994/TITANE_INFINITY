@@ -175,7 +175,7 @@ export class PerformanceOptimizer {
   private async collectMetrics(): Promise<void> {
     try {
       const env = detectEnvironment();
-      
+
       // Métriques depuis le backend (uniquement en Tauri)
       let backendMetrics: PerformanceMetrics | null = null;
       if (env.isTauri) {

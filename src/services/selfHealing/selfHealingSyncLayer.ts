@@ -17,7 +17,8 @@
  * @created 2025-01-07
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
+import { detectEnvironment } from '@/core/tauri/environment';
 import { emit, listen, type UnlistenFn } from '@tauri-apps/api/event';
 import {
   type HealingEvent,
@@ -382,11 +383,16 @@ export class SelfHealingSyncLayer {
    */
   public async updateVitals(): Promise<VitalsSnapshot> {
     try {
-      const vitals = await invoke<VitalsSnapshot>('selfheal_get_vitals');
-      this.vitals = {
-        ...vitals,
-        timestamp: Date.now(),
-      };
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        const vitals = await secureInvoke<VitalsSnapshot>('selfheal_get_vitals');
+        this.vitals = {
+          ...vitals,
+          timestamp: Date.now(),
+        };
+      } else {
+        this.vitals.timestamp = Date.now();
+      }
     } catch (error) {
       console.warn('[SelfHealingSyncLayer] Could not fetch vitals:', error);
       this.vitals.timestamp = Date.now();
@@ -410,8 +416,13 @@ export class SelfHealingSyncLayer {
 
   private async loadProfile(): Promise<void> {
     try {
-      const profile = await invoke<SelfHealingProfile>('selfheal_load_profile');
-      this.profile = { ...DEFAULT_PROFILE, ...profile };
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        const profile = await secureInvoke<SelfHealingProfile>('selfheal_load_profile');
+        this.profile = { ...DEFAULT_PROFILE, ...profile };
+      } else {
+        this.profile = { ...DEFAULT_PROFILE };
+      }
     } catch (error) {
       console.warn('[SelfHealingSyncLayer] Could not load profile:', error);
       this.profile = { ...DEFAULT_PROFILE };
@@ -420,7 +431,10 @@ export class SelfHealingSyncLayer {
 
   private async saveProfile(): Promise<void> {
     try {
-      await invoke('selfheal_save_profile', { profile: this.profile });
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        await secureInvoke('selfheal_save_profile', { profile: this.profile });
+      }
     } catch (error) {
       console.warn('[SelfHealingSyncLayer] Could not save profile:', error);
     }
@@ -514,10 +528,13 @@ export class SelfHealingSyncLayer {
    */
   public async syncWithSingularity(): Promise<void> {
     try {
-      await invoke('selfheal_sync_with_singularity', {
-        profile: this.profile,
-        vitals: this.vitals,
-      });
+      const env = detectEnvironment();
+      if (env.isTauri) {
+        await secureInvoke('selfheal_sync_with_singularity', {
+          profile: this.profile,
+          vitals: this.vitals,
+        });
+      }
     } catch (error) {
       console.warn('[SelfHealingSyncLayer] Singularity sync failed:', error);
     }
