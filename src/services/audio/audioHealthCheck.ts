@@ -495,17 +495,17 @@ class AudioHealthService {
     try {
       // Créer un nouveau contexte audio
       const ctx = new AudioContext();
-      
+
       // Petit délai pour laisser le système se réinitialiser
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       if (ctx && ctx.state !== 'closed') {
         if (ctx.state === 'suspended') {
           await ctx.resume();
         }
         action.success = true;
         action.message = `AudioContext réparé, état: ${ctx.state}`;
-        
+
         // Fermer le contexte de test (l'application en créera un nouveau si besoin)
         await ctx.close();
       } else {
@@ -532,10 +532,10 @@ class AudioHealthService {
 
     try {
       const previousState = audioStateMachine.getState();
-      
+
       // Reset la state machine
       audioStateMachine.reset();
-      
+
       const newState = audioStateMachine.getState();
       action.success = newState === 'idle';
       action.message = `État précédent: ${previousState}, nouvel état: ${newState}`;
@@ -560,15 +560,15 @@ class AudioHealthService {
 
     try {
       const env = detectEnvironment();
-      
+
       if (env.isTauri) {
         // Reset VAD via backend Rust
         await secureInvoke('vad_reset');
-        
+
         // Vérifier que ça fonctionne
         const state = await secureInvoke<{ initialized: boolean }>('vad_get_state');
         action.success = state?.initialized === true;
-        action.message = state?.initialized 
+        action.message = state?.initialized
           ? 'VAD backend réinitialisé avec succès'
           : 'VAD réinitialisé mais non disponible';
       } else {
@@ -596,11 +596,11 @@ class AudioHealthService {
 
     try {
       const { hybridTTS } = await import('@/services/tts/hybridTTS');
-      
+
       // Vérifier le statut (hybridTTS s'auto-initialise)
       const status = await hybridTTS.getStatus();
       action.success = status.available;
-      action.message = status.available 
+      action.message = status.available
         ? `TTS opérationnel avec provider: ${status.provider}`
         : 'Aucun provider TTS disponible';
     } catch (err) {
@@ -624,13 +624,13 @@ class AudioHealthService {
 
     try {
       const env = detectEnvironment();
-      
+
       if (env.isTauri) {
         // En Tauri, on ne peut pas "réparer" les permissions système
         // On peut juste re-tester
         const result = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone');
         action.success = result?.success === true;
-        action.message = result?.success 
+        action.message = result?.success
           ? 'Microphone accessible via backend Tauri'
           : `Permissions requises: ${result?.errorMessage || 'autorisez le micro dans les paramètres système'}`;
       } else {
@@ -657,19 +657,19 @@ class AudioHealthService {
    */
   async diagnoseAndRepair(): Promise<DiagnoseAndRepairResult> {
     console.log('[AudioHealth] 🔬 Diagnostic complet avec auto-repair...');
-    
+
     // Phase 1: Diagnostic initial
     const initialReport = await this.getAudioHealth();
-    
+
     // Phase 2: Auto-heal si nécessaire
     let healResult: SelfHealResult | null = null;
     if (initialReport.overallStatus !== 'healthy') {
       healResult = await this.selfHeal();
     }
-    
+
     // Phase 3: Rapport final
     const finalReport = await this.getAudioHealth();
-    
+
     return {
       initialDiagnosis: initialReport,
       healingPerformed: healResult !== null,

@@ -12,7 +12,7 @@
  * - Auto-save: chaque modification + 30min + shutdown
  */
 
-import React, { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
+import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 

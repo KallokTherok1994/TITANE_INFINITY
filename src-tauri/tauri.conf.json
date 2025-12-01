@@ -272,7 +272,15 @@
             { "command": "titan_list_snapshots" },
             { "command": "titan_recover_state" },
             { "command": "titan_get_persistence_status" },
-            { "command": "titan_verify_integrity" }
+            { "command": "titan_verify_integrity" },
+
+            { "_comment": "═══════════════════════════════════════════════════════════════" },
+            { "_comment": "SYSTEM CENTER / CLUSTER v∞.Ω" },
+            { "_comment": "═══════════════════════════════════════════════════════════════" },
+            { "command": "sc_get_cluster_status" },
+            { "command": "sc_get_cluster_peers" },
+            { "command": "sc_initialize_cluster" },
+            { "command": "sc_shutdown_cluster" }
           ]
         },
         {

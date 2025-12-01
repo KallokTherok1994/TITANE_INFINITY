@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   ClusterStatus,
   ClusterStats,
@@ -43,7 +43,11 @@ export function useNodeCluster(autoRefresh = false, refreshInterval = 5000): Use
     setError(null);
 
     try {
-      const result = await invoke<ClusterStatus>('sc_get_cluster_status');
+      const result = await secureInvoke<ClusterStatus>('sc_get_cluster_status');
+      if (!result) {
+        setError('Cluster status unavailable');
+        return;
+      }
       setStatus(result);
       setIsInitialized(result.initialized);
       setPeers(result.peers);
@@ -62,8 +66,10 @@ export function useNodeCluster(autoRefresh = false, refreshInterval = 5000): Use
 
   const refreshPeers = useCallback(async () => {
     try {
-      const result = await invoke<NodeInfo[]>('sc_get_cluster_peers');
-      setPeers(result);
+      const result = await secureInvoke<NodeInfo[]>('sc_get_cluster_peers');
+      if (result) {
+        setPeers(result);
+      }
     } catch (err) {
       console.error('[useNodeCluster] Peers refresh failed:', err);
     }
@@ -74,7 +80,7 @@ export function useNodeCluster(autoRefresh = false, refreshInterval = 5000): Use
     setError(null);
 
     try {
-      await invoke('sc_initialize_cluster', { nodeId, port });
+      await secureInvoke('sc_initialize_cluster', { nodeId, port });
       setIsInitialized(true);
       await refreshStatus();
     } catch (err) {
@@ -88,7 +94,7 @@ export function useNodeCluster(autoRefresh = false, refreshInterval = 5000): Use
 
   const shutdown = useCallback(async () => {
     try {
-      await invoke('sc_shutdown_cluster');
+      await secureInvoke('sc_shutdown_cluster');
       setIsInitialized(false);
       setStats(null);
       setPeers([]);

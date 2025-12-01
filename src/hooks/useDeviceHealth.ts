@@ -17,11 +17,11 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { 
-  deviceHealthService, 
-  type SystemHealthReport, 
+import {
+  deviceHealthService,
+  type SystemHealthReport,
   type SelfHealingReport,
-  type RepairResult 
+  type RepairResult
 } from '@/services/devices/deviceHealthService';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -34,21 +34,21 @@ export interface UseDeviceHealthReturn {
   isScanning: boolean;
   isHealing: boolean;
   lastHealingResult: SelfHealingReport | null;
-  
+
   // Statuts dérivés
   isHealthy: boolean;
   isDegraded: boolean;
   isCritical: boolean;
-  
+
   // Actions
   scan: () => Promise<SystemHealthReport>;
   selfHeal: () => Promise<SelfHealingReport>;
   repairDevice: (deviceId: string) => Promise<RepairResult>;
-  
+
   // Monitoring
   startMonitoring: (intervalMs?: number) => void;
   stopMonitoring: () => void;
-  
+
   // Historique
   repairHistory: RepairResult[];
   clearHistory: () => void;
@@ -123,7 +123,7 @@ export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDevice
       const result = await deviceHealthService.scanAll();
       if (mountedRef.current) {
         setReport(result);
-        
+
         // Auto-heal si critique et option activée
         if (autoHealOnCritical && result.overallStatus === 'critical' && !autoHealingRef.current) {
           autoHealingRef.current = true;
@@ -233,21 +233,21 @@ export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDevice
     isScanning,
     isHealing,
     lastHealingResult,
-    
+
     // Statuts
     isHealthy,
     isDegraded,
     isCritical,
-    
+
     // Actions
     scan,
     selfHeal,
     repairDevice,
-    
+
     // Monitoring
     startMonitoring,
     stopMonitoring,
-    
+
     // Historique
     repairHistory,
     clearHistory,

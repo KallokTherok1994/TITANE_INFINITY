@@ -92,14 +92,14 @@ class DeviceHealthService {
    */
   async scanAll(): Promise<SystemHealthReport> {
     console.log('[DeviceHealth] 🔍 Scanning all devices...');
-    
+
     const env = detectEnvironment();
     const devices: DeviceInfo[] = [];
     const recommendations: string[] = [];
 
     // Scan audio (délègue à audioHealthService)
     const audioReport = await audioHealthService.getAudioHealth();
-    
+
     // Ajouter les devices audio au rapport global
     if (audioReport.tests.microphone) {
       devices.push({
@@ -111,7 +111,7 @@ class DeviceHealthService {
         lastChecked: audioReport.timestamp,
       });
     }
-    
+
     if (audioReport.tests.audioContext) {
       devices.push({
         id: 'audioContext',
@@ -122,7 +122,7 @@ class DeviceHealthService {
         lastChecked: audioReport.timestamp,
       });
     }
-    
+
     if (audioReport.tests.vadBackend) {
       devices.push({
         id: 'vadBackend',
@@ -133,7 +133,7 @@ class DeviceHealthService {
         lastChecked: audioReport.timestamp,
       });
     }
-    
+
     if (audioReport.tests.ttsBackend) {
       devices.push({
         id: 'ttsBackend',
@@ -162,7 +162,7 @@ class DeviceHealthService {
     // Calculer le statut global
     const deviceStatuses = devices.map(d => d.status);
     let overallStatus: HealthStatus = 'healthy';
-    
+
     if (deviceStatuses.includes('error')) {
       const errorCount = deviceStatuses.filter(s => s === 'error').length;
       overallStatus = errorCount >= 2 ? 'critical' : 'degraded';
@@ -174,7 +174,7 @@ class DeviceHealthService {
 
     // Recommandations depuis audio + génériques
     recommendations.push(...audioReport.recommendations);
-    
+
     if (networkDevice.status !== 'ok') {
       recommendations.push('Vérifiez votre connexion réseau');
     }
@@ -194,7 +194,7 @@ class DeviceHealthService {
 
     this.lastReport = report;
     this.notifyListeners(report);
-    
+
     console.log(`[DeviceHealth] 📊 Scan complete: ${overallStatus} (${devices.length} devices)`);
     return report;
   }
@@ -214,12 +214,12 @@ class DeviceHealthService {
 
     try {
       const env = detectEnvironment();
-      
+
       if (env.isTauri) {
         // Tester le système de persistence
         const result = await secureInvoke<{ success: boolean }>('titan_get_last_snapshot');
         device.status = result !== null ? 'ok' : 'warning';
-        device.message = result !== null 
+        device.message = result !== null
           ? 'Storage backend opérationnel'
           : 'Storage backend vide (premier lancement?)';
       } else {
@@ -314,16 +314,16 @@ class DeviceHealthService {
    */
   async selfHeal(): Promise<SelfHealingReport> {
     console.log('[DeviceHealth] 🩺 Self-healing started...');
-    
+
     // Phase 1: Scan initial
     const initialReport = await this.scanAll();
     const repairs: RepairResult[] = [];
-    
+
     // Phase 2: Repair audio (délègue à audioHealthService)
     let audioHealing: AudioSelfHealResult | null = null;
     if (initialReport.audio && initialReport.audio.overallStatus !== 'healthy') {
       audioHealing = await audioHealthService.selfHeal();
-      
+
       // Convertir les réparations audio en RepairResult
       for (const action of audioHealing.actionsPerformed) {
         repairs.push({
@@ -345,7 +345,7 @@ class DeviceHealthService {
 
     // Phase 4: Scan final
     const finalReport = await this.scanAll();
-    
+
     // Calculer les stats
     const successCount = repairs.filter(r => r.success).length;
     const failureCount = repairs.length - successCount;
@@ -364,7 +364,7 @@ class DeviceHealthService {
 
     // Ajouter à l'historique
     this.repairHistory.push(...repairs);
-    
+
     console.log(`[DeviceHealth] 🩺 Self-healing complete: ${successCount}/${repairs.length} repairs succeeded`);
     return report;
   }
@@ -383,7 +383,7 @@ class DeviceHealthService {
 
     try {
       const env = detectEnvironment();
-      
+
       if (env.isTauri) {
         // Force un snapshot pour vérifier que le storage fonctionne
         await secureInvoke('titan_force_snapshot');
@@ -413,7 +413,7 @@ class DeviceHealthService {
    */
   async repairDevice(deviceId: string): Promise<RepairResult> {
     console.log(`[DeviceHealth] 🔧 Repairing device: ${deviceId}`);
-    
+
     switch (deviceId) {
       case 'microphone': {
         const micResult = await audioHealthService.repairMicrophone();
@@ -425,7 +425,7 @@ class DeviceHealthService {
           timestamp: Date.now(),
         };
       }
-        
+
       case 'audioContext': {
         // Délègue à audioHealthService via selfHeal
         const audioResult = await audioHealthService.selfHeal();
@@ -438,7 +438,7 @@ class DeviceHealthService {
           timestamp: Date.now(),
         };
       }
-        
+
       case 'vadBackend': {
         const vadResult = await audioHealthService.selfHeal();
         const vadAction = vadResult.actionsPerformed.find(a => a.target === 'vadBackend');
@@ -450,7 +450,7 @@ class DeviceHealthService {
           timestamp: Date.now(),
         };
       }
-        
+
       case 'ttsBackend': {
         const ttsResult = await audioHealthService.selfHeal();
         const ttsAction = ttsResult.actionsPerformed.find(a => a.target === 'ttsBackend');
@@ -462,10 +462,10 @@ class DeviceHealthService {
           timestamp: Date.now(),
         };
       }
-        
+
       case 'storage':
         return await this.repairStorage();
-        
+
       default:
         return {
           deviceId,
@@ -486,17 +486,17 @@ class DeviceHealthService {
    */
   startMonitoring(intervalMs: number = 60000): void {
     this.stopMonitoring();
-    
+
     this.monitoringInterval = setInterval(async () => {
       const report = await this.scanAll();
-      
+
       // Auto-heal si critique
       if (report.overallStatus === 'critical') {
         console.log('[DeviceHealth] ⚠️ Critical status detected, auto-healing...');
         await this.selfHeal();
       }
     }, intervalMs);
-    
+
     console.log(`[DeviceHealth] 🔄 Monitoring started (${intervalMs}ms interval)`);
   }
 

@@ -95,7 +95,7 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
         // Check mic - OPUS v∞.2: Tauri vs Browser
         let micAvailable = false;
         const env = detectEnvironment();
-        
+
         if (env.isTauri) {
           // En mode Tauri, utiliser test_microphone backend
           try {

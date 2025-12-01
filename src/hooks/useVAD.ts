@@ -13,6 +13,8 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
+import { detectEnvironment } from '@/core/tauri/environment';
+import { secureInvoke } from '@/lib/security';
 
 export type VADState = 'silence' | 'speech' | 'unknown';
 
@@ -203,12 +205,29 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
 
   /**
    * Start listening with Web Audio API
+   * OPUS v∞.2: Tauri vs Browser guard for microphone access
    */
   const startListening = useCallback(async () => {
     try {
       setError(null);
 
-      // Request microphone access
+      const env = detectEnvironment();
+
+      // In Tauri mode, test microphone first via backend
+      if (env.isTauri) {
+        const testResult = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone');
+        if (!testResult?.success) {
+          setError(testResult?.errorMessage || 'Microphone non disponible');
+          return;
+        }
+      }
+
+      // Request microphone access (works in both modes)
+      if (!navigator.mediaDevices?.getUserMedia) {
+        setError('API getUserMedia non disponible');
+        return;
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,

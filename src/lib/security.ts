@@ -286,6 +286,97 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'titan_recover_state',
   'titan_get_persistence_status',
   'titan_verify_integrity',
+  'titan_get_last_snapshot',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SYSTEM CENTER / CLUSTER (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'sc_get_cluster_status',
+  'sc_get_cluster_peers',
+  'sc_initialize_cluster',
+  'sc_shutdown_cluster',
+
+  // ═══════════════════════════════════════════════════════════════
+  // RUNTIME & CONFIG (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'get_runtime_config',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AVATAR & FULLBODY (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'avatar_prepare_speech',
+  'avatar_finish_speech',
+  'avatar_enable_immersion',
+  'avatar_on_wake_word',
+  'avatar_get_current_morph',
+  'avatar_advance_lip_sync',
+  'avatar_get_expression',
+  'avatar_get_state',
+  'avatar_run_selftest',
+  'fullbody_initialize',
+  'fullbody_advance_frame',
+  'fullbody_activate_gesture',
+  'fullbody_update_expression',
+  'fullbody_update_lipsync',
+  'fullbody_update_state',
+  'fullbody_on_wake_word',
+  'fullbody_export_skeleton',
+  'fullbody_update_context',
+  'fullbody_get_posture',
+  'fullbody_get_stats',
+  'fullbody_run_selftest',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ENGINE CORE (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'engine_init',
+  'engine_tick',
+  'engine_stop',
+  'meta_mode_reset',
+
+  // ═══════════════════════════════════════════════════════════════
+  // QA & AUTOFIX (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'qa_run_all',
+  'qa_run_module',
+  'qa_get_last_report',
+  'autofix_detect_rust_warnings',
+  'autofix_detect_typescript_errors',
+  'autofix_detect_react_hook_violations',
+  'autofix_detect_invalid_states',
+  'autofix_fix_issue',
+  'autofix_fix_all',
+  'autofix_get_history',
+  'autofix_get_stats',
+  'autofix_reset',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PERSONA & NARRATIVE (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'persona_initialize',
+  'persona_get_state',
+  'persona_update',
+  'persona_react',
+  'persona_reset',
+  'persona_get_multipliers',
+  'narrative_generate',
+  'narrative_get_style',
+  'narrative_set_style',
+  'narrative_get_identity',
+  'narrative_evolve',
+  'narrative_get_archetype',
+  'narrative_set_archetype',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ADAPTIVE (v∞.Ω QA)
+  // ═══════════════════════════════════════════════════════════════
+  'adaptive_get_profile',
+  'adaptive_set_mode',
+  'adaptive_learn',
+  'adaptive_run_optimization',
+  'adaptive_get_history',
+  'adaptive_capture_sample',
+  'adaptive_get_summary',
 ]);
 
 /**
