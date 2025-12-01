@@ -15,7 +15,7 @@ export function NexusMesh() {
 
   useEffect(() => {
     fetchNexus();
-    
+
     const interval = setInterval(() => {
       fetchNexus();
     }, 3000); // Update every 3s
@@ -92,13 +92,13 @@ export function NexusMesh() {
                 {status.health}
               </Badge>
             </div>
-            
+
             <div className="space-y-2 text-sm">
               <div className="flex justify-between text-gray-400">
                 <span>Dernière vérification:</span>
                 <span>{new Date(status.last_check).toLocaleTimeString()}</span>
               </div>
-              
+
               {status.error_count > 0 && (
                 <div className="flex justify-between text-red-400">
                   <span>Erreurs:</span>
@@ -117,19 +117,19 @@ export function NexusMesh() {
             <div className="text-2xl font-bold text-green-500">
               {modulesList.filter(([, s]) => s.health === 'Healthy').length}
             </div>
-            <div className="text-sm text-gray-400">Healthy</div>
+            <div className="text-sm text-gray-400">Sains</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-yellow-500">
               {modulesList.filter(([, s]) => s.health === 'Degraded').length}
             </div>
-            <div className="text-sm text-gray-400">Degraded</div>
+            <div className="text-sm text-gray-400">Dégradés</div>
           </div>
           <div>
             <div className="text-2xl font-bold text-red-500">
               {modulesList.filter(([, s]) => s.health === 'Failed').length}
             </div>
-            <div className="text-sm text-gray-400">Failed</div>
+            <div className="text-sm text-gray-400">Échoués</div>
           </div>
         </div>
       </Card>

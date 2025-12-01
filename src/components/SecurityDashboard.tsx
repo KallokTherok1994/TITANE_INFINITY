@@ -169,7 +169,7 @@ export const SecurityDashboard: React.FC = () => {
       setReport(result);
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
-      setError(`Self-test failed: ${errorMsg}`);
+      setError(`Auto-test échoué : ${errorMsg}`);
       console.error('[SecurityDashboard] Self-test error:', err);
     } finally {
       setLoading(false);
@@ -186,7 +186,7 @@ export const SecurityDashboard: React.FC = () => {
     <div style={styles.container}>
       {/* Header */}
       <div style={styles.header}>
-        <h1 style={styles.title}>🔒 Security Dashboard</h1>
+        <h1 style={styles.title}>🔒 Tableau de Bord Sécurité</h1>
         <button
           style={{
             ...styles.runButton,
@@ -195,7 +195,7 @@ export const SecurityDashboard: React.FC = () => {
           onClick={handleRunTest}
           disabled={loading}
         >
-          {loading ? '⏳ Running Tests...' : '🚀 Run Security Self-Test'}
+          {loading ? '⏳ Tests en cours...' : '🚀 Lancer l’Auto-Test Sécurité'}
         </button>
       </div>
 
@@ -205,21 +205,21 @@ export const SecurityDashboard: React.FC = () => {
       {/* Stats Grid */}
       <div style={styles.statsGrid}>
         <div style={styles.statCard}>
-          <div style={styles.statLabel}>Allowed Commands</div>
+          <div style={styles.statLabel}>Commandes Autorisées</div>
           <div style={styles.statValue}>{stats.allowed_commands}</div>
         </div>
         <div style={styles.statCard}>
-          <div style={styles.statLabel}>Max Calls/Second</div>
+          <div style={styles.statLabel}>Appels Max/Seconde</div>
           <div style={styles.statValue}>{stats.max_calls_per_second}</div>
         </div>
         <div style={styles.statCard}>
-          <div style={styles.statLabel}>Default Timeout</div>
+          <div style={styles.statLabel}>Timeout Par Défaut</div>
           <div style={styles.statValue}>
             {(stats.default_timeout_ms / 1000).toFixed(0)}s
           </div>
         </div>
         <div style={styles.statCard}>
-          <div style={styles.statLabel}>Max Payload Size</div>
+          <div style={styles.statLabel}>Taille Max Payload</div>
           <div style={styles.statValue}>
             {(stats.max_payload_size_bytes / (1024 * 1024)).toFixed(0)}MB
           </div>
@@ -229,9 +229,9 @@ export const SecurityDashboard: React.FC = () => {
       {/* Loading State */}
       {loading && (
         <div style={styles.loading}>
-          <div>⏳ Running security self-tests...</div>
+          <div>⏳ Exécution des auto-tests de sécurité...</div>
           <div style={{ fontSize: '14px', marginTop: '8px' }}>
-            This may take up to 60 seconds
+            Cela peut prendre jusqu'à 60 secondes
           </div>
         </div>
       )}
@@ -249,17 +249,17 @@ export const SecurityDashboard: React.FC = () => {
             {(report.pass_rate * 100).toFixed(1)}%
           </div>
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <strong>Pass Rate</strong> ({report.tests.filter((t) => t.passed).length}/
-            {report.tests.length} tests passed)
+            <strong>Taux de Réussite</strong> ({report.tests.filter((t) => t.passed).length}/
+            {report.tests.length} tests réussis)
           </div>
 
           {/* Tests Table */}
           <table style={styles.testsTable}>
             <thead>
               <tr>
-                <th style={styles.tableHeader}>Status</th>
-                <th style={styles.tableHeader}>Test Name</th>
-                <th style={styles.tableHeader}>Details</th>
+                <th style={styles.tableHeader}>Statut</th>
+                <th style={styles.tableHeader}>Nom du Test</th>
+                <th style={styles.tableHeader}>Détails</th>
               </tr>
             </thead>
             <tbody>
@@ -281,7 +281,7 @@ export const SecurityDashboard: React.FC = () => {
 
           {/* Timestamp */}
           <div style={styles.timestamp}>
-            Last run: {new Date(report.timestamp).toLocaleString()}
+            Dernière exécution : {new Date(report.timestamp).toLocaleString()}
           </div>
         </div>
       )}
@@ -289,9 +289,9 @@ export const SecurityDashboard: React.FC = () => {
       {/* Initial State */}
       {!report && !loading && (
         <div style={styles.loading}>
-          <div>🛡️ No security report yet</div>
+          <div>🛡️ Aucun rapport de sécurité</div>
           <div style={{ fontSize: '14px', marginTop: '8px' }}>
-            Click "Run Security Self-Test" to validate system hardening
+            Cliquez sur « Lancer l'Auto-Test Sécurité » pour valider le durcissement du système
           </div>
         </div>
       )}

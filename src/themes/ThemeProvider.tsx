@@ -3,8 +3,13 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- * TITANE∞ v∞ - Theme Provider
+ * TITANE∞ v16 - Theme Provider (Legacy)
  * ═══════════════════════════════════════════════════════════════════
+ *
+ * @deprecated Ce provider est conservé pour compatibilité.
+ * Utilisez UIThemeProvider du Design Center v16 pour les tokens dynamiques:
+ *
+ * import { UIThemeProvider, useUITheme } from '@/features/design-center';
  */
 
 import type { ReactNode } from 'react';
@@ -14,10 +19,13 @@ interface ThemeProviderProps {
 }
 
 /**
- * ThemeProvider simplifié pour TITANE∞ v∞
- * Un seul thème METAL actif, pas de switching
+ * ThemeProvider legacy pour TITANE∞
+ * @deprecated Utilisez UIThemeProvider de design-center
  */
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  // v∞ : Thème unique, pas de context nécessaire
+  // v16 : Redirige vers le nouveau système
+  // Le thème est maintenant géré par UIThemeProvider
   return children;
 };
+
+export default ThemeProvider;

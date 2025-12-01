@@ -29,6 +29,7 @@ pub enum EvolutionRiskLevel {
     Critical,
 }
 
+#[allow(clippy::derivable_impls)]
 impl Default for EvolutionRiskLevel {
     fn default() -> Self {
         Self::Low
@@ -45,6 +46,7 @@ pub enum GovernanceRole {
     System,
 }
 
+#[allow(clippy::derivable_impls)]
 impl Default for GovernanceRole {
     fn default() -> Self {
         Self::User
@@ -62,6 +64,7 @@ pub enum SuggestionStatus {
     Reverted,
 }
 
+#[allow(clippy::derivable_impls)]
 impl Default for SuggestionStatus {
     fn default() -> Self {
         Self::Pending
@@ -137,6 +140,7 @@ pub enum EvolutionPhase {
     Idle,
 }
 
+#[allow(clippy::derivable_impls)]
 impl Default for EvolutionPhase {
     fn default() -> Self {
         Self::Idle
@@ -152,6 +156,7 @@ pub enum TrendDirection {
     Stable,
 }
 
+#[allow(clippy::derivable_impls)]
 impl Default for TrendDirection {
     fn default() -> Self {
         Self::Stable

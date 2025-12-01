@@ -134,7 +134,7 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
     return (
       <div className="singularity-panel loading">
         <div className="loading-spinner" />
-        <p>Loading Singularity State...</p>
+        <p>Chargement de l'état Singularité...</p>
       </div>
     );
   }
@@ -142,9 +142,9 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
   if (error) {
     return (
       <div className="singularity-panel error">
-        <h2>❌ Error</h2>
+        <h2>❌ Erreur</h2>
         <p>{error}</p>
-        <button onClick={refreshState}>Retry</button>
+        <button onClick={refreshState}>Réessayer</button>
       </div>
     );
   }
@@ -152,8 +152,8 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
   if (!singularityState) {
     return (
       <div className="singularity-panel empty">
-        <p>No Singularity State available</p>
-        <button onClick={initEngine}>Initialize Engine</button>
+        <p>Aucun état Singularité disponible</p>
+        <button onClick={initEngine}>Initialiser le moteur</button>
       </div>
     );
   }
@@ -167,8 +167,8 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
         <div className="header-left">
           <h1>🔮 Singularity Engine</h1>
           <div className="header-meta">
-            <span className="uptime">Uptime: {uptime}</span>
-            <span className="events">Events: {singularityState.timeline_events}</span>
+            <span className="uptime">Disponibilité : {uptime}</span>
+            <span className="events">Événements : {singularityState.timeline_events}</span>
           </div>
         </div>
         <div className="header-right">
@@ -177,7 +177,7 @@ export const SingularityPanel: React.FC<SingularityPanelProps> = ({
             disabled={loading}
             className="btn-refresh"
           >
-            🔄 Refresh
+            🔄 Actualiser
           </button>
           <button
             onClick={tickEngine}

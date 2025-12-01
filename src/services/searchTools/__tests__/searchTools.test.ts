@@ -715,6 +715,8 @@ describe('SearchTools Configuration', () => {
     const { validateToolInput, BUILTIN_TOOLS } = await import('../searchTools.config');
 
     const fileReadTool = BUILTIN_TOOLS.find((t: { id: string }) => t.id === 'file_read');
+    expect(fileReadTool).toBeDefined();
+    if (!fileReadTool) throw new Error('file_read tool not found');
 
     // Valid input
     const validResult = validateToolInput(fileReadTool, { path: '/test/file.txt' });

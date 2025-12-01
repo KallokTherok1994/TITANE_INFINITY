@@ -58,7 +58,7 @@ export const DiagnosticPanel: React.FC = () => {
       setQuickDiagnostic(diagnostic);
     } catch (error) {
       console.error('Failed to run tests:', error);
-      alert(`Erreur tests: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(`Erreur tests: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
     } finally {
       setIsRunning(false);
     }
@@ -156,12 +156,12 @@ export const DiagnosticPanel: React.FC = () => {
           onClick={handleRunTests}
           disabled={isRunning}
         >
-          {isRunning ? 'Running Tests...' : 'Run All Tests'}
+          {isRunning ? 'Tests en cours...' : 'Lancer tous les tests'}
         </button>
 
         {results && (
           <button className="btn-export" onClick={handleExportJSON}>
-            Export JSON
+            Exporter JSON
           </button>
         )}
       </div>
@@ -170,18 +170,18 @@ export const DiagnosticPanel: React.FC = () => {
       {results && (
         <div className="diagnostic-results">
           <div className="results-header">
-            <h3>Test Results</h3>
+            <h3>Résultats des tests</h3>
             <span className="results-timestamp">{formatDate(results.timestamp)}</span>
           </div>
 
           {/* Summary */}
           <div className="results-summary">
             <div className="summary-item">
-              <span className="summary-label">Total Latency:</span>
+              <span className="summary-label">Latence totale :</span>
               <span className="summary-value">{results.totalLatency_ms}ms</span>
             </div>
             <div className="summary-item">
-              <span className="summary-label">Modules:</span>
+              <span className="summary-label">Modules :</span>
               <span className="summary-value">{results.modulesCount}</span>
             </div>
             <div className="summary-stats">
@@ -219,11 +219,11 @@ export const DiagnosticPanel: React.FC = () => {
                 </div>
                 <div className="module-message">{module.message}</div>
                 {module.error && (
-                  <div className="module-error">Error: {module.error}</div>
+                  <div className="module-error">Erreur : {module.error}</div>
                 )}
                 {module.details && (
                   <details className="module-details">
-                    <summary>Details</summary>
+                    <summary>Détails</summary>
                     <pre>{JSON.stringify(module.details, null, 2)}</pre>
                   </details>
                 )}
@@ -237,15 +237,15 @@ export const DiagnosticPanel: React.FC = () => {
       {isRunning && (
         <div className="diagnostic-loading">
           <div className="spinner"></div>
-          <p>Running diagnostic tests...</p>
+          <p>Exécution des tests de diagnostic...</p>
         </div>
       )}
 
       {/* No Results */}
       {!results && !isRunning && (
         <div className="diagnostic-empty">
-          <p>No test results available.</p>
-          <p>Click "Run All Tests" to start diagnostics.</p>
+          <p>Aucun résultat de test disponible.</p>
+          <p>Cliquez sur "Lancer tous les tests" pour démarrer les diagnostics.</p>
         </div>
       )}
     </div>

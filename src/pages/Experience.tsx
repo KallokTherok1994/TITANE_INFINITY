@@ -7,15 +7,20 @@
  * ═══════════════════════════════════════════════════════════════════
  *
  * Page de progression complète : XP, historique, statistiques
+ * Intègre le système XP global + les domaines de compétence
  */
 
 import { useState, useEffect, useMemo } from 'react';
 import { XP } from '../core/experience/XP_ENGINE';
+import { useExperience } from '../hooks/useExperience';
 import { motion } from 'framer-motion';
 
 export const Experience = (): JSX.Element => {
   const [state, setState] = useState(XP.state);
   const [filter, setFilter] = useState<string>('all');
+
+  // Hook pour les domaines d'expérience
+  const { domains, isLoading: domainsLoading } = useExperience();
 
   // Mettre à jour l'état toutes les secondes
   useEffect(() => {
@@ -91,6 +96,46 @@ export const Experience = (): JSX.Element => {
           />
         </div>
         <div className="exp-progress-text">{progress.toFixed(1)}%</div>
+      </motion.div>
+
+      {/* Section Domaines de Compétence */}
+      <motion.div
+        className="exp-domains-section"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.25 }}
+      >
+        <h2>🎯 Domaines de Compétence</h2>
+        {domainsLoading ? (
+          <p className="exp-loading">Chargement des domaines...</p>
+        ) : (
+          <div className="exp-domains-grid">
+            {domains.map(domain => (
+              <motion.div
+                key={domain.id}
+                className={`exp-domain-card exp-domain-card--${domain.category}`}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <div className="exp-domain-header">
+                  <span className="exp-domain-icon">{domain.icon}</span>
+                  <span className="exp-domain-label">{domain.label}</span>
+                  <span className="exp-domain-level">Nv.{domain.level}</span>
+                </div>
+                <div className="exp-domain-progress">
+                  <div
+                    className="exp-domain-progress-fill"
+                    style={{ width: `${Math.min((domain.xp % 100) / 100 * 100, 100)}%` }}
+                  />
+                </div>
+                <div className="exp-domain-stats">
+                  <span className="exp-domain-xp">{domain.xp.toLocaleString()} XP</span>
+                  <span className="exp-domain-category">{domain.category}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </motion.div>
 
       {/* Statistiques par source */}
@@ -175,11 +220,15 @@ export const Experience = (): JSX.Element => {
 function formatSource(source: string): string {
   const map: Record<string, string> = {
     'message_user': '💬 Message utilisateur',
+    'chat_message': '💬 Message chat',
     'response_ai': '🤖 Réponse IA',
     'file_import': '📁 Import fichier',
     'file_analysis': '🔍 Analyse fichier',
+    'memory_promote': '⬆️ Promotion mémoire',
+    'memory_archive': '📦 Archivage mémoire',
     'system_update': '⚙️ Mise à jour système',
     'engine_load': '🚀 Chargement moteur',
+    'system': '⚙️ Système',
   };
   return map[source] || source;
 }

@@ -17,7 +17,7 @@ export function HeliosView() {
   useEffect(() => {
     fetchHelios();
     fetchHealth();
-    
+
     const interval = setInterval(() => {
       fetchHelios();
       fetchHealth();
@@ -63,7 +63,7 @@ export function HeliosView() {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    
+
     if (days > 0) return `${days}j ${hours}h ${minutes}m`;
     if (hours > 0) return `${hours}h ${minutes}m`;
     return `${minutes}m`;
@@ -84,7 +84,7 @@ export function HeliosView() {
         {/* CPU Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">CPU Usage</span>
+            <span className="text-sm text-gray-400">Utilisation CPU</span>
             <Badge color={getCPUColor(helios.cpu_usage)} size="sm">
               {helios.cpu_usage.toFixed(1)}%
             </Badge>
@@ -106,7 +106,7 @@ export function HeliosView() {
         {/* RAM Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">RAM Usage</span>
+            <span className="text-sm text-gray-400">Utilisation RAM</span>
             <Badge color={getRAMColor(helios.ram_usage)} size="sm">
               {helios.ram_usage.toFixed(1)}%
             </Badge>
@@ -128,7 +128,7 @@ export function HeliosView() {
         {/* Disk Usage */}
         <Card className="p-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-400">Disk Usage</span>
+            <span className="text-sm text-gray-400">Utilisation disque</span>
             <Badge color="blue" size="sm">
               {helios.disk_usage[0].toFixed(1)} GB
             </Badge>
@@ -141,14 +141,14 @@ export function HeliosView() {
         {/* Uptime */}
         <Card className="p-6">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-400">Uptime</span>
+            <span className="text-sm text-gray-400">Disponibilité</span>
             <span className="text-lg font-semibold">{formatUptime(helios.uptime)}</span>
           </div>
         </Card>
 
         {/* Load Average */}
         <Card className="p-6 col-span-1 md:col-span-2">
-          <div className="text-sm text-gray-400 mb-2">Load Average</div>
+          <div className="text-sm text-gray-400 mb-2">Charge moyenne</div>
           <div className="flex items-center gap-6">
             <div>
               <div className="text-xs text-gray-500">1 min</div>

@@ -48,20 +48,20 @@ export const EngineStatusPage: React.FC = React.memo(() => {
       {/* Header */}
       <div className="engine-status-header">
         <div className="engine-status-title">
-          <h1>⚙️ Engine Status Dashboard</h1>
+          <h1>⚙️ Tableau de Bord Moteurs</h1>
           <p className="engine-status-subtitle">
             Monitoring temps réel des moteurs cognitifs TITANE∞
           </p>
         </div>
         <div className="engine-status-actions">
           <button className="titane-btn titane-btn-ghost" onClick={refreshAll}>
-            🔄 Refresh
+            🔄 Actualiser
           </button>
           <div
             className="engine-status-global-health"
             style={{ color: getHealthColor(globalHealth) }}
           >
-            <span className="engine-status-global-label">Global Health</span>
+            <span className="engine-status-global-label">Santé Globale</span>
             <span className="engine-status-global-value">
               {globalHealth.toFixed(0)}%
             </span>
@@ -72,7 +72,7 @@ export const EngineStatusPage: React.FC = React.memo(() => {
       {/* Critical Issues */}
       {criticalIssues.length > 0 && (
         <div className="engine-status-alerts">
-          <div className="engine-status-alerts-title">🚨 Critical Issues</div>
+          <div className="engine-status-alerts-title">🚨 Problèmes Critiques</div>
           <div className="engine-status-alerts-list">
             {criticalIssues.map((issue, idx) => (
               <div key={idx} className="engine-status-alert">

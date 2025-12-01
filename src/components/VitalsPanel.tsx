@@ -94,7 +94,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
       <div className="vitals-header">
         <div className="vitals-title">
           <span className="vitals-icon">⚡</span>
-          <span>System Vitals</span>
+          <span>Indicateurs Système</span>
         </div>
         <div
           className="vitals-health"
@@ -117,7 +117,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
 
       {/* System Vitals */}
       <div className="vitals-section">
-        <div className="vitals-section-title">System</div>
+        <div className="vitals-section-title">Système</div>
         <div className="vitals-grid">
           <div className="vital-item">
             <span className="vital-label">CPU</span>
@@ -148,14 +148,14 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
           </div>
 
           <div className="vital-item">
-            <span className="vital-label">Disk</span>
+            <span className="vital-label">Disque</span>
             <span className="vital-value">
               {systemVitals ? `${systemVitals.disk.toFixed(1)}%` : '-'}
             </span>
           </div>
 
           <div className="vital-item">
-            <span className="vital-label">Overload</span>
+            <span className="vital-label">Surcharge</span>
             <span
               className="vital-value"
               style={{
@@ -164,7 +164,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
                   : 'var(--color-success-500)',
               }}
             >
-              {isSystemOverloaded ? 'YES' : 'NO'}
+              {isSystemOverloaded ? 'OUI' : 'NON'}
             </span>
           </div>
         </div>
@@ -172,7 +172,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
 
       {/* Engine Vitals */}
       <div className="vitals-section">
-        <div className="vitals-section-title">Engines</div>
+        <div className="vitals-section-title">Moteurs</div>
         <div className="vitals-grid">
           <div className="vital-item">
             <span className="vital-label">Harmonia</span>
@@ -247,7 +247,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
           </div>
 
           <div className="vital-item">
-            <span className="vital-label">Tasks</span>
+            <span className="vital-label">Tâches</span>
             <span className="vital-value">
               {engineVitals
                 ? `${engineVitals.harmonia.tasksActive}`
@@ -262,7 +262,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
         <div className="vitals-section-title">Chat IA</div>
         <div className="vitals-grid">
           <div className="vital-item">
-            <span className="vital-label">Provider</span>
+            <span className="vital-label">Fournisseur</span>
             <span className="vital-value vital-value-accent">
               {activeProvider || 'auto'}
             </span>
@@ -281,7 +281,7 @@ export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(({
           </div>
 
           <div className="vital-item">
-            <span className="vital-label">Memory</span>
+            <span className="vital-label">Mémoire</span>
             <span className="vital-value">{memoryUsage} KB</span>
           </div>
         </div>

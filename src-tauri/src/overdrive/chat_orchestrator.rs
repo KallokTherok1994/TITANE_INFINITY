@@ -389,12 +389,23 @@ async fn send_to_gemini(
 
     println!("[CHAT] 🌐 Gemini API call: {} (timeout 60s)", model);
 
-    // Build request body
+    // System prompt TITANE∞ en français (toujours actif)
+    let default_system_prompt = "Tu es TITANE∞, un assistant IA avancé créé par l'équipe TITANE. \
+         Tu réponds TOUJOURS en français, de manière claire, concise et utile. \
+         Tu es amical, professionnel et tu aides l'utilisateur avec ses questions. \
+         Si on te demande du code, tu fournis des exemples bien commentés en français. \
+         Tu ne réponds JAMAIS en anglais sauf si l'utilisateur le demande explicitement.";
+
+    let system_prompt = request.system_prompt.as_deref().unwrap_or(default_system_prompt);
+
+    // Build request body avec system prompt intégré
     let body = serde_json::json!({
-        "contents": [{
-            "role": "user",
-            "parts": [{ "text": request.message }]
-        }],
+        "contents": [
+            {
+                "role": "user",
+                "parts": [{ "text": format!("{}\n\nMessage utilisateur: {}", system_prompt, request.message) }]
+            }
+        ],
         "generationConfig": {
             "temperature": 0.7,
             "maxOutputTokens": 2048,

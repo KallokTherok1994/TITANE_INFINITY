@@ -27,7 +27,7 @@ interface LayerMetrics {
   warnings: number;
 }
 
-const LAYER_NAMES = ['Physical', 'Network', 'Logic', 'Memory', 'Security'];
+const LAYER_NAMES = ['Physique', 'Réseau', 'Logique', 'Mémoire', 'Sécurité'];
 
 const HyperVisionDashboard: React.FC = () => {
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
@@ -94,7 +94,7 @@ const HyperVisionDashboard: React.FC = () => {
           <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-600">
             HyperVision
           </h1>
-          <p className="text-gray-400 mt-2">Phase 7: Real-time System Monitoring</p>
+          <p className="text-gray-400 mt-2">Phase 7 : Surveillance système en temps réel</p>
         </div>
 
         {!isMonitoring && (
@@ -102,14 +102,14 @@ const HyperVisionDashboard: React.FC = () => {
             onClick={startMonitoring}
             className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-6 py-3 rounded-lg transition-all"
           >
-            🚀 Start Monitoring
+            🚀 Démarrer la surveillance
           </button>
         )}
 
         {isMonitoring && (
           <div className="flex items-center gap-2 text-green-400">
             <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-            <span className="font-semibold">MONITORING ACTIVE</span>
+            <span className="font-semibold">SURVEILLANCE ACTIVE</span>
           </div>
         )}
       </div>
@@ -117,8 +117,8 @@ const HyperVisionDashboard: React.FC = () => {
       {!isMonitoring ? (
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-blue-500/30 text-center">
           <div className="text-6xl mb-4">📊</div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Start System Monitoring</h2>
-          <p className="text-gray-400">Click the button above to begin real-time system observation</p>
+          <h2 className="text-2xl font-semibold text-white mb-2">Démarrer la surveillance système</h2>
+          <p className="text-gray-400">Cliquez sur le bouton ci-dessus pour commencer l'observation en temps réel</p>
         </div>
       ) : (
         <>
@@ -126,28 +126,28 @@ const HyperVisionDashboard: React.FC = () => {
           {metrics && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">CPU Usage</div>
+                <div className="text-gray-400 text-sm mb-2">Utilisation CPU</div>
                 <div className={`text-3xl font-bold ${getHealthColor(100 - metrics.cpu_usage)}`}>
                   {metrics.cpu_usage.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-                <div className="text-gray-400 text-sm mb-2">Memory Usage</div>
+                <div className="text-gray-400 text-sm mb-2">Utilisation mémoire</div>
                 <div className={`text-3xl font-bold ${getHealthColor(100 - metrics.memory_usage)}`}>
                   {metrics.memory_usage.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-                <div className="text-gray-400 text-sm mb-2">Coherence</div>
+                <div className="text-gray-400 text-sm mb-2">Cohérence</div>
                 <div className={`text-3xl font-bold ${getHealthColor(metrics.coherence)}`}>
                   {metrics.coherence.toFixed(1)}%
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
-                <div className="text-gray-400 text-sm mb-2">Stability</div>
+                <div className="text-gray-400 text-sm mb-2">Stabilité</div>
                 <div className={`text-3xl font-bold ${getHealthColor(metrics.stability)}`}>
                   {metrics.stability.toFixed(1)}%
                 </div>
@@ -157,7 +157,7 @@ const HyperVisionDashboard: React.FC = () => {
 
           {/* 5-Layer Scanner */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">5-Layer System Scanner</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Scanner système 5 couches</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
               {layers.map((layer) => (
@@ -174,7 +174,7 @@ const HyperVisionDashboard: React.FC = () => {
 
                   <div className="space-y-2">
                     <div>
-                      <div className="text-gray-400 text-xs mb-1">Load</div>
+                      <div className="text-gray-400 text-xs mb-1">Charge</div>
                       <div className="bg-gray-600 rounded-full h-2">
                         <div
                           className="bg-blue-500 rounded-full h-2 transition-all"
@@ -195,7 +195,7 @@ const HyperVisionDashboard: React.FC = () => {
 
           {/* Metrics History Graph */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">Metrics History</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Historique des métriques</h2>
 
             <div className="relative h-64 bg-gray-900/50 rounded-xl p-4">
               {history.length > 1 ? (
@@ -226,7 +226,7 @@ const HyperVisionDashboard: React.FC = () => {
                 </svg>
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-500">
-                  Collecting data...
+                  Collecte des données...
                 </div>
               )}
             </div>
@@ -238,7 +238,7 @@ const HyperVisionDashboard: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-0.5 bg-purple-500" />
-                <span className="text-sm text-gray-400">Memory</span>
+                <span className="text-sm text-gray-400">Mémoire</span>
               </div>
             </div>
           </div>
@@ -247,19 +247,19 @@ const HyperVisionDashboard: React.FC = () => {
           {metrics && (
             <div className="grid grid-cols-3 gap-4 mt-6">
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Disk Usage</div>
+                <div className="text-gray-400 text-sm mb-2">Utilisation disque</div>
                 <div className="text-2xl font-bold text-white">{metrics.disk_usage.toFixed(1)}%</div>
               </div>
 
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Network RX/TX</div>
+                <div className="text-gray-400 text-sm mb-2">Réseau RX/TX</div>
                 <div className="text-lg font-bold text-white">
                   ↓{(metrics.network_rx / 1024).toFixed(1)} / ↑{(metrics.network_tx / 1024).toFixed(1)} KB/s
                 </div>
               </div>
 
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Active Processes</div>
+                <div className="text-gray-400 text-sm mb-2">Processus actifs</div>
                 <div className="text-2xl font-bold text-white">{metrics.active_processes}</div>
               </div>
             </div>

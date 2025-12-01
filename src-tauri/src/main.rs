@@ -508,7 +508,51 @@ async fn main() {
         time_commands::restore_snapshot,
         time_commands::delete_snapshot,
         // ═══════════════════════════════════════════════════════════════
-        // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U
+        // SYSTEM CENTER COMMANDS v∞ - Centre Système Unifié
+        // ═══════════════════════════════════════════════════════════════
+
+        // Diagnostics
+        titane_infinity::system_center::sc_run_quick_diagnostics,
+        titane_infinity::system_center::sc_run_full_diagnostics,
+        titane_infinity::system_center::sc_get_diagnostic_status,
+        // Logs
+        titane_infinity::system_center::sc_get_logs,
+        titane_infinity::system_center::sc_get_log_stats,
+        titane_infinity::system_center::sc_clear_logs,
+        titane_infinity::system_center::sc_add_log,
+        // Cluster
+        titane_infinity::system_center::sc_get_cluster_status,
+        titane_infinity::system_center::sc_initialize_cluster,
+        titane_infinity::system_center::sc_get_cluster_stats,
+        titane_infinity::system_center::sc_shutdown_cluster,
+        titane_infinity::system_center::sc_get_cluster_peers,
+        // Introspection
+        titane_infinity::system_center::sc_introspection_quick_scan,
+        titane_infinity::system_center::sc_introspection_full_scan,
+        titane_infinity::system_center::sc_introspection_auto_fix,
+        titane_infinity::system_center::sc_introspection_get_history,
+        // HyperVision
+        titane_infinity::system_center::sc_hypervision_start,
+        titane_infinity::system_center::sc_hypervision_stop,
+        titane_infinity::system_center::sc_hypervision_get_state,
+        titane_infinity::system_center::sc_hypervision_get_metrics,
+        titane_infinity::system_center::sc_hypervision_get_history,
+        titane_infinity::system_center::sc_hypervision_get_layers,
+        titane_infinity::system_center::sc_hypervision_get_anomalies,
+        titane_infinity::system_center::sc_hypervision_clear_anomalies,
+        titane_infinity::system_center::sc_hypervision_resolve_anomaly,
+
+        // ═══════════════════════════════════════════════════════════════
+        // DESIGN CENTER COMMANDS v16 - Centre Design & Apparence Unifié
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::design_center::load_ui_theme,
+        titane_infinity::design_center::save_ui_theme,
+        titane_infinity::design_center::reset_ui_theme,
+        titane_infinity::design_center::update_ui_token,
+        titane_infinity::design_center::export_ui_theme_css,
+
+        // ═══════════════════════════════════════════════════════════════
+        // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U (Legacy, kept for compatibility)
         // ═══════════════════════════════════════════════════════════════
 
         // Phase 5: Node-Cluster (Super-Prompt P)

@@ -61,6 +61,18 @@ pub mod introspection; // ✅ Introspection
 pub mod knowledge; // ✅ Knowledge Fusion
 
 // ═══════════════════════════════════════════════════════════════
+// SYSTEM CENTER MODULE v∞ (Unified Observability)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod system_center; // ✅ Centre Système Unifié (Diagnostics, DevTools, Cluster, Introspection, HyperVision)
+
+// ═══════════════════════════════════════════════════════════════
+// DESIGN CENTER MODULE v16 (Unified Design & Appearance)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod design_center; // ✅ Centre Design & Apparence Unifié (Design System Monochrome v16, Tokens Dynamiques)
+
+// ═══════════════════════════════════════════════════════════════
 // PHASES V-Ω MODULES (Active)
 // ═══════════════════════════════════════════════════════════════
 

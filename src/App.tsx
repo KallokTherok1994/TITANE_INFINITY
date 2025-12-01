@@ -66,8 +66,7 @@ import { Chat as ChatPage } from './ui/pages/Chat';
 import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
-import { DiagnosticPanel } from './components/DiagnosticPanel'; // ✨ v19.1.0 - System Diagnostics
-// Chat IA Diagnostic désormais intégré au DevTools
+// Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
@@ -81,20 +80,22 @@ import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
 import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
 
 // Phase 9: Lazy load heavy pages (code splitting with named exports)
-const Settings = lazy(() => import('./pages/Settings').then(m => ({ default: m.Settings })));
-const DevTools = lazy(() => import('./pages/DevTools').then(m => ({ default: m.DevTools })));
 const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage').then(m => ({ default: m.DesignSystemPage })));
 const PerformanceTest = lazy(() => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })));
 const TimeNavigator = lazy(() => import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator })));
-const SystemGovernance = lazy(() => import('./pages/SystemGovernance').then(m => ({ default: m.SystemGovernance })));
-const SecureSettings = lazy(() => import('./pages/SecureSettings').then(m => ({ default: m.SecureSettings })));
 const MultiAIDashboard = lazy(() => import('./ui/pages/MultiAIDashboard'));
-const NodeClusterDashboard = lazy(() => import('./ui/pages/NodeClusterDashboard'));
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
-const HyperVisionDashboard = lazy(() => import('./ui/pages/HyperVisionDashboard'));
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
-const IntrospectionDashboard = lazy(() => import('./ui/pages/IntrospectionDashboard'));
 const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
+
+// ✨ SYSTEM CENTER - Centre Système Unifié v∞
+const SystemCenterPage = lazy(() => import('./features/system-center').then(m => ({ default: m.SystemCenterPage })));
+
+// ✨ DESIGN CENTER - Centre Design & Apparence v16
+const DesignCenterPage = lazy(() => import('./features/design-center').then(m => ({ default: m.DesignCenterPage })));
+
+// ✨ GOVERNANCE CENTER - Centre Gouvernance & Sécurité v∞
+const GovernanceCenterPage = lazy(() => import('./features/governance-center').then(m => ({ default: m.GovernanceCenterPage })));
 
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
@@ -177,24 +178,16 @@ const AppRouter: React.FC = () => {
     { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'v15.1' },
     { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
     { id: '/progression', label: 'Progression', icon: '⚡', badge: 'NEW' },
-    { id: '/diagnostics', label: 'Diagnostics', icon: '🔬', badge: 'v19.1.0' },
-    { id: '/design-system', label: 'Design System', icon: '🎨', badge: 'v15.1' },
-    { id: '/time-navigator', label: 'Time Navigator', icon: '⏱️', badge: 'v∞' },
-    { id: '/governance', label: 'Governance', icon: '⚖️', badge: 'v∞' },
-    { id: '/multi-ai', label: 'Multi-AI System', icon: '🌌', badge: 'Phase 4' },
-    { id: '/cluster', label: 'Node Cluster', icon: '📦', badge: 'Phase 5' },
-    { id: '/knowledge', label: 'Knowledge Fusion', icon: '📚', badge: 'Phase 6' },
-    { id: '/hypervision', label: 'HyperVision', icon: '🔍', badge: 'Phase 7' },
-    { id: '/creation', label: 'Creation Studio', icon: '🎨', badge: 'Phase 8' },
-    { id: '/introspection', label: 'Introspection', icon: '🔬', badge: 'Phase 9' },
-    { id: '/evolution', label: 'Evolution', icon: '🧬', badge: 'Phase 10' },
+    { id: '/system-center', label: 'Centre Système', icon: '⚙️', badge: 'v∞' },
+    { id: '/design-center', label: 'Design & Apparence', icon: '🎨', badge: 'v16' },
+    { id: '/governance-center', label: 'Gouvernance & Sécurité', icon: '🛡️', badge: 'v∞' },
+    { id: '/time-navigator', label: 'Navigateur Temporel', icon: '⏱️', badge: 'v∞' },
+    { id: '/multi-ai', label: 'Système Multi-IA', icon: '🌌', badge: 'Phase 4' },
+    { id: '/evolution', label: 'Évolution', icon: '🧬', badge: 'Phase 10' },
     { id: '/helios', label: 'Helios', icon: '☀️' },
     { id: '/nexus', label: 'Nexus', icon: '🔗' },
     { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
-    { id: '/memory', label: 'Memory', icon: '💾' },
-    { id: '/settings', label: 'Paramètres', icon: '⚙️' },
-    { id: '/secure', label: 'Sécurité', icon: '🔐', badge: 'NEW' },
-    { id: '/devtools', label: 'DevTools', icon: '🔧' },
+    { id: '/memory', label: 'Mémoire', icon: '💾' },
   ];
 
   return (
@@ -283,12 +276,45 @@ const AppRouter: React.FC = () => {
           } />
           <Route path="/progression" element={<ProgressionPage />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-          <Route path="/design-system" element={<DesignSystemPage />} />
-          <Route path="/diagnostics" element={<DiagnosticPanel />} /> {/* ✨ v19.1.0 - System Diagnostics */}
 
-          {/* v∞ Super-Prompt N6/K8 - Time Navigation & Governance (Phase 9: lazy loaded) */}
+          {/* ✨ v16 - DESIGN CENTER UNIFIÉ (Design System + Apparence + Tokens Dynamiques) */}
+          <Route path="/design-center" element={
+            <ErrorBoundary context="DesignCenter">
+              <DesignCenterPage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers Design Center pour anciennes routes */}
+          <Route path="/design-system" element={<Navigate to="/design-center" replace />} />
+          <Route path="/settings" element={<Navigate to="/design-center" replace />} />
+
+          {/* ✨ v∞ - SYSTÈME CENTER UNIFIÉ (Diagnostic + DevTools + Cluster + Introspection + HyperVision) */}
+          <Route path="/system-center" element={
+            <ErrorBoundary context="SystemCenter">
+              <SystemCenterPage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers System Center pour anciennes routes */}
+          <Route path="/diagnostics" element={<Navigate to="/system-center" replace />} />
+          <Route path="/devtools" element={<Navigate to="/system-center" replace />} />
+          <Route path="/cluster" element={<Navigate to="/system-center" replace />} />
+          <Route path="/introspection" element={<Navigate to="/system-center" replace />} />
+          <Route path="/hypervision" element={<Navigate to="/system-center" replace />} />
+
+          {/* ✨ v∞ GOVERNANCE CENTER - Centre Gouvernance & Sécurité Unifié */}
+          <Route path="/governance-center" element={
+            <ErrorBoundary context="GovernanceCenter">
+              <GovernanceCenterPage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers Governance Center pour anciennes routes */}
+          <Route path="/governance" element={<Navigate to="/governance-center" replace />} />
+          <Route path="/secure" element={<Navigate to="/governance-center" replace />} />
+
+          {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />
-          <Route path="/governance" element={<SystemGovernance />} />
 
           {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) (Phase 9: lazy loaded) */}
           <Route path="/multi-ai" element={
@@ -297,12 +323,9 @@ const AppRouter: React.FC = () => {
             </ErrorBoundary>
           } />
 
-          {/* v∞ Phases 5-10 - Super-Prompts P-U (Phase 9: lazy loaded) */}
-          <Route path="/cluster" element={<NodeClusterDashboard />} />
+          {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
           <Route path="/knowledge" element={<KnowledgeFusionPage />} />
-          <Route path="/hypervision" element={<HyperVisionDashboard />} />
           <Route path="/creation" element={<CreationStudio />} />
-          <Route path="/introspection" element={<IntrospectionDashboard />} />
           <Route path="/evolution" element={<EvolutionMonitor />} />
 
           {/* v15: SingularityState Monitor */}
@@ -323,17 +346,6 @@ const AppRouter: React.FC = () => {
           <Route path="/memory" element={<Memory />} />
 
           {/* System Routes (Phase 9: lazy loaded) */}
-          <Route path="/settings" element={
-            <ErrorBoundary context="Settings">
-              <Settings />
-            </ErrorBoundary>
-          } />
-          <Route path="/secure" element={
-            <ErrorBoundary context="SecureSettings">
-              <SecureSettings />
-            </ErrorBoundary>
-          } />
-          <Route path="/devtools" element={<DevTools />} />
           <Route path="/performance" element={<PerformanceTest />} />
 
           {/* Catch-all - Redirection vers Dashboard */}

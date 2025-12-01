@@ -48,10 +48,10 @@ const categoryColors: Record<TalentNode['category'], string> = {
 
 const categoryLabels: Record<TalentNode['category'], string> = {
   chat: 'Chat IA',
-  voice: 'Voice',
+  voice: 'Voix',
   code: 'Code',
-  projects: 'Projects',
-  system: 'System',
+  projects: 'Projets',
+  system: 'Système',
 };
 
 // ─────────────────────────────────────────────────────────────────

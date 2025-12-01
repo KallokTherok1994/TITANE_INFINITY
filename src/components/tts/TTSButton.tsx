@@ -134,7 +134,7 @@ export function TTSButton({
       onClick={handleClick}
       disabled={isDisabled}
       title={isPlaying ? 'Arrêter la lecture' : 'Écouter'}
-      aria-label={isPlaying ? 'Stop audio' : 'Play audio'}
+      aria-label={isPlaying ? 'Arrêter l\'audio' : 'Lire l\'audio'}
       style={{
         '--tts-emotion-color': EMOTION_COLORS[currentEmotion],
       } as React.CSSProperties}

@@ -39,7 +39,7 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
   const { persona, glow, motion, depth, sound, presenceLevel, cognitiveLoad, rhythmScore, holoActive, particleCount } = state;
 
   return (
-    <div 
+    <div
       className="living-engines-card"
       style={{
         '--glow-mult': glow,
@@ -93,43 +93,43 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
 
       {/* Visual Engines Section */}
       <div className="living-engines-section">
-        <h4 className="living-engines-section__title">✨ Visual Engines</h4>
+        <h4 className="living-engines-section__title">✨ Moteurs Visuels</h4>
         <div className="living-engines-metrics">
           <div className="living-metric">
-            <span className="living-metric__label">Glow</span>
+            <span className="living-metric__label">Lueur</span>
             <span className="living-metric__value">{glow.toFixed(2)}x</span>
             <div className="living-metric__bar">
-              <div 
+              <div
                 className="living-metric__bar-fill living-metric__bar-fill--glow"
                 style={{ width: `${Math.min(glow * 50, 100)}%` }}
               />
             </div>
           </div>
           <div className="living-metric">
-            <span className="living-metric__label">Motion</span>
+            <span className="living-metric__label">Mouvement</span>
             <span className="living-metric__value">{motion.toFixed(2)}x</span>
             <div className="living-metric__bar">
-              <div 
+              <div
                 className="living-metric__bar-fill living-metric__bar-fill--motion"
                 style={{ width: `${Math.min(motion * 50, 100)}%` }}
               />
             </div>
           </div>
           <div className="living-metric">
-            <span className="living-metric__label">Depth</span>
+            <span className="living-metric__label">Profondeur</span>
             <span className="living-metric__value">{depth.toFixed(2)}</span>
             <div className="living-metric__bar">
-              <div 
+              <div
                 className="living-metric__bar-fill living-metric__bar-fill--depth"
                 style={{ width: `${depth * 100}%` }}
               />
             </div>
           </div>
           <div className="living-metric">
-            <span className="living-metric__label">Sound</span>
+            <span className="living-metric__label">Son</span>
             <span className="living-metric__value">{sound.toFixed(2)}</span>
             <div className="living-metric__bar">
-              <div 
+              <div
                 className="living-metric__bar-fill living-metric__bar-fill--sound"
                 style={{ width: `${sound * 100}%` }}
               />
@@ -140,27 +140,27 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
 
       {/* Cognitive Section */}
       <div className="living-engines-section">
-        <h4 className="living-engines-section__title">🧠 Cognitive Engines</h4>
+        <h4 className="living-engines-section__title">🧠 Moteurs Cognitifs</h4>
         <div className="living-engines-metrics">
           <div className="living-metric">
-            <span className="living-metric__label">Cognitive Load</span>
+            <span className="living-metric__label">Charge cognitive</span>
             <span className="living-metric__value">
               {(cognitiveLoad * 100).toFixed(0)}%
             </span>
             <div className="living-metric__bar">
-              <div 
+              <div
                 className="living-metric__bar-fill living-metric__bar-fill--cognitive"
                 style={{ width: `${cognitiveLoad * 100}%` }}
               />
             </div>
           </div>
           <div className="living-metric">
-            <span className="living-metric__label">Rhythm Score</span>
+            <span className="living-metric__label">Score de rythme</span>
             <span className="living-metric__value">
               {(rhythmScore * 100).toFixed(0)}%
             </span>
             <div className="living-metric__bar">
-              <div 
+              <div
                 className="living-metric__bar-fill living-metric__bar-fill--rhythm"
                 style={{ width: `${rhythmScore * 100}%` }}
               />
@@ -171,12 +171,12 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
 
       {/* Holography Section */}
       <div className="living-engines-section">
-        <h4 className="living-engines-section__title">🌐 Holography Engines</h4>
+        <h4 className="living-engines-section__title">🌐 Moteurs Holographiques</h4>
         <div className="living-engines-metrics">
           <div className="living-metric">
-            <span className="living-metric__label">Status</span>
+            <span className="living-metric__label">Statut</span>
             <span className={`living-metric__value ${holoActive ? 'living-metric__value--active' : ''}`}>
-              {holoActive ? 'Active' : 'Inactive'}
+              {holoActive ? 'Actif' : 'Inactif'}
             </span>
           </div>
           <div className="living-metric">

@@ -68,10 +68,10 @@ export const HeliosVisualization = ({
     // Draw metrics as radar chart
     const metricsArray = [
       { label: 'Stress', value: metrics.stress_level },
-      { label: 'Clarity', value: metrics.clarity_level },
-      { label: 'Energy', value: metrics.energy_level },
+      { label: 'Clarté', value: metrics.clarity_level },
+      { label: 'Énergie', value: metrics.energy_level },
       { label: 'Focus', value: metrics.focus_level },
-      { label: 'Load', value: metrics.cognitive_load },
+      { label: 'Charge', value: metrics.cognitive_load },
     ];
 
     const angleStep = (2 * Math.PI) / metricsArray.length;

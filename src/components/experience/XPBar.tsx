@@ -53,10 +53,10 @@ export const XPBar = (): JSX.Element => {
           navigate('/experience');
         }
       }}
-      title={`Level ${level} • ${xpToNext} XP vers niveau ${level + 1}`}
+      title={`Niveau ${level} • ${xpToNext} XP vers niveau ${level + 1}`}
       role="button"
       tabIndex={0}
-      aria-label={`XP Progress: Level ${level}, ${progress.toFixed(0)}% vers niveau ${level + 1}`}
+      aria-label={`Progression XP : Niveau ${level}, ${progress.toFixed(0)}% vers niveau ${level + 1}`}
     >
       <div className="xp-bar-info">
         <span className="xp-level" aria-hidden="true">Nv.{level}</span>

@@ -95,14 +95,14 @@ const IntrospectionDashboard: React.FC = () => {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-600">
           Introspection Dashboard
         </h1>
-        <p className="text-gray-400 mt-2">Phase 9: Codebase Health Scanning & Auto-Fix</p>
+        <p className="text-gray-400 mt-2">Phase 9 : Analyse de santé du code & correction auto</p>
       </div>
 
       {/* Control Panel */}
       <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="block text-sm text-gray-400 mb-2">Project Path</label>
+            <label className="block text-sm text-gray-400 mb-2">Chemin du projet</label>
             <input
               type="text"
               value={projectPath}
@@ -118,7 +118,7 @@ const IntrospectionDashboard: React.FC = () => {
               disabled={isScanning}
               className="flex-1 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-2 rounded-lg transition-all"
             >
-              {isScanning ? '⏳ Scanning...' : '🔍 Scan'}
+              {isScanning ? '⏳ Analyse...' : '🔍 Analyser'}
             </button>
 
             <button
@@ -126,7 +126,7 @@ const IntrospectionDashboard: React.FC = () => {
               disabled={!report || isFixing}
               className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-2 rounded-lg transition-all"
             >
-              {isFixing ? '⏳ Fixing...' : '🔧 Auto-Fix'}
+              {isFixing ? '⏳ Correction...' : '🔧 Auto-corriger'}
             </button>
           </div>
         </div>
@@ -137,22 +137,22 @@ const IntrospectionDashboard: React.FC = () => {
           {/* Statistics Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-              <div className="text-gray-400 text-sm mb-2">Files Scanned</div>
+              <div className="text-gray-400 text-sm mb-2">Fichiers analysés</div>
               <div className="text-3xl font-bold text-white">{report.total_files_scanned}</div>
             </div>
 
             <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
-              <div className="text-gray-400 text-sm mb-2">Total Issues</div>
+              <div className="text-gray-400 text-sm mb-2">Problèmes totaux</div>
               <div className="text-3xl font-bold text-white">{report.total_issues}</div>
             </div>
 
             <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-              <div className="text-gray-400 text-sm mb-2">Auto-Fixed</div>
+              <div className="text-gray-400 text-sm mb-2">Auto-corrigés</div>
               <div className="text-3xl font-bold text-white">{report.auto_fixes_applied}</div>
             </div>
 
             <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-              <div className="text-gray-400 text-sm mb-2">Health Score</div>
+              <div className="text-gray-400 text-sm mb-2">Score de santé</div>
               <div className="text-3xl font-bold text-white">
                 {((1 - report.total_issues / (report.total_files_scanned * 10)) * 100).toFixed(0)}%
               </div>
@@ -161,7 +161,7 @@ const IntrospectionDashboard: React.FC = () => {
 
           {/* Severity Breakdown */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30 mb-6">
-            <h2 className="text-xl font-semibold text-white mb-4">Issues by Severity</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Problèmes par sévérité</h2>
 
             <div className="flex gap-2 flex-wrap">
               <button
@@ -172,7 +172,7 @@ const IntrospectionDashboard: React.FC = () => {
                     : 'border-gray-600 bg-gray-700/30 text-gray-400'
                 }`}
               >
-                All ({report.total_issues})
+                Tout ({report.total_issues})
               </button>
 
               {Object.entries(report.issues_by_severity).map(([severity, count]) => (
@@ -194,7 +194,7 @@ const IntrospectionDashboard: React.FC = () => {
           {/* Issues List */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-red-500/30">
             <h2 className="text-xl font-semibold text-white mb-4">
-              Issues ({filteredIssues.length})
+              Problèmes ({filteredIssues.length})
             </h2>
 
             <div className="space-y-3 max-h-[600px] overflow-y-auto">
@@ -238,7 +238,7 @@ const IntrospectionDashboard: React.FC = () => {
               {filteredIssues.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
                   <div className="text-4xl mb-4">✅</div>
-                  <div>No issues found in this category</div>
+                  <div>Aucun problème trouvé dans cette catégorie</div>
                 </div>
               )}
             </div>
@@ -247,8 +247,8 @@ const IntrospectionDashboard: React.FC = () => {
       ) : (
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-red-500/30 text-center">
           <div className="text-6xl mb-4">🔍</div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Start Code Introspection</h2>
-          <p className="text-gray-400">Scan your codebase to detect issues and improve code health</p>
+          <h2 className="text-2xl font-semibold text-white mb-2">Démarrer l'introspection de code</h2>
+          <p className="text-gray-400">Analysez votre base de code pour détecter les problèmes et améliorer la santé du code</p>
         </div>
       )}
     </div>

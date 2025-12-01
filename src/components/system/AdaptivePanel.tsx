@@ -97,7 +97,7 @@ export const AdaptivePanel: React.FC = () => {
       await loadAdaptiveData();
     } catch (err) {
       console.error('[AdaptivePanel] Set mode error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to set mode');
+      setError(err instanceof Error ? err.message : 'Échec du changement de mode');
     } finally {
       setLoading(false);
     }
@@ -108,7 +108,7 @@ export const AdaptivePanel: React.FC = () => {
   // ═══════════════════════════════════════════════════════════════
 
   const renderOverview = () => {
-    if (!summary) return <div className="adaptive-empty">No data</div>;
+    if (!summary) return <div className="adaptive-empty">Aucune donnée</div>;
 
     const health = summary.avg_cpu_load < 0.8 && summary.avg_ai_latency < 5000 ? 0.85 : 0.6;
     const healthColor = AdaptiveBridgeV21.getHealthColor(health);
@@ -172,7 +172,7 @@ export const AdaptivePanel: React.FC = () => {
 
   const renderHistory = () => {
     if (history.length === 0) {
-      return <div className="adaptive-empty">No history data</div>;
+      return <div className="adaptive-empty">Aucun historique</div>;
     }
 
     return (
@@ -203,7 +203,7 @@ export const AdaptivePanel: React.FC = () => {
   };
 
   const renderRules = () => {
-    if (!summary) return <div className="adaptive-empty">No data</div>;
+    if (!summary) return <div className="adaptive-empty">Aucune donnée</div>;
 
     const defaultRules = [
       {
@@ -254,7 +254,7 @@ export const AdaptivePanel: React.FC = () => {
   };
 
   const renderSettings = () => {
-    if (!profile) return <div className="adaptive-empty">No profile data</div>;
+    if (!profile) return <div className="adaptive-empty">Aucun profil</div>;
 
     const modes: SystemBehaviorMode[] = ['Speed', 'Stability', 'Reliability', 'Adaptive'];
 

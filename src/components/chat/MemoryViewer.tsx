@@ -19,6 +19,9 @@ import {
   DEFAULT_SESSION_TTL,
   DEFAULT_INTERMEDIATE_TTL,
 } from '../../services/memory/persistentMemory.config';
+import { XP } from '../../core/experience/XP_ENGINE';
+import { awardExperience } from '../../services/experienceService';
+import { XPSource, XP_REWARDS } from '../../types/experience';
 import './MemoryViewer.css';
 
 // =============================================================================
@@ -371,7 +374,21 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
     setIsLoading(true);
     try {
       await onPromote(entry);
-      showNotification('✅ Entrée promue avec succès');
+
+      // ═══ AWARD XP FOR MEMORY PROMOTION ═══
+      try {
+        XP.gain(XP_REWARDS.MEMORY_INGESTION, 'memory_promote', `Mémoire promue: ${entry.id}`);
+        await awardExperience('memory', XP_REWARDS.MEMORY_INGESTION, XPSource.MemoryIngestion, {
+          entryId: entry.id,
+          action: 'promote',
+          fromLevel: entry.level,
+        });
+        console.log('[MemoryViewer] ✨ +15 XP awarded for memory promotion');
+      } catch (xpError) {
+        console.warn('[MemoryViewer] XP award warning:', xpError);
+      }
+
+      showNotification('✅ Entrée promue avec succès (+15 XP)');
     } catch {
       showNotification('❌ Erreur lors de la promotion');
     } finally {
@@ -384,7 +401,21 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
     setIsLoading(true);
     try {
       await onArchive(entry);
-      showNotification('✅ Entrée archivée');
+
+      // ═══ AWARD XP FOR MEMORY ARCHIVAL ═══
+      try {
+        XP.gain(20, 'memory_archive', `Mémoire archivée: ${entry.id}`);
+        await awardExperience('memory', 20, XPSource.MemoryIngestion, {
+          entryId: entry.id,
+          action: 'archive',
+          level: entry.level,
+        });
+        console.log('[MemoryViewer] ✨ +20 XP awarded for memory archival');
+      } catch (xpError) {
+        console.warn('[MemoryViewer] XP award warning:', xpError);
+      }
+
+      showNotification('✅ Entrée archivée (+20 XP)');
     } catch {
       showNotification('❌ Erreur lors de l\'archivage');
     } finally {

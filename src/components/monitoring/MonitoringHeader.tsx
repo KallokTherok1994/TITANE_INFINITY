@@ -45,10 +45,10 @@ export const MonitoringHeader: React.FC<MonitoringHeaderProps> = ({
             <button
               className={`monitoring-header__debug-btn ${debugActive ? 'monitoring-header__debug-btn--active' : ''}`}
               onClick={onDebugClick}
-              aria-label="Toggle debug mode"
+              aria-label="Activer/désactiver le mode débogage"
             >
               <span className="monitoring-header__debug-icon">🔧</span>
-              <span className="monitoring-header__debug-text">Debug Mode</span>
+              <span className="monitoring-header__debug-text">Mode débogage</span>
               {debugActive && (
                 <span className="monitoring-header__debug-indicator" />
               )}

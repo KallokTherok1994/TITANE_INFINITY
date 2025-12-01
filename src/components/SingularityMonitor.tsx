@@ -72,9 +72,9 @@ export function SingularityMonitor() {
       <div style={styles.container}>
         <div style={styles.header}>
           <h2 style={styles.title}>🌟 SingularityEngine v15</h2>
-          <span style={styles.badge}>Initializing...</span>
+          <span style={styles.badge}>Initialisation...</span>
         </div>
-        <p style={styles.loading}>Starting unified engine...</p>
+        <p style={styles.loading}>Démarrage du moteur unifié...</p>
       </div>
     );
   }
@@ -88,13 +88,13 @@ export function SingularityMonitor() {
           ...styles.badge,
           background: health === 'Healthy' ? '#10b981' : health === 'Degraded' ? '#f59e0b' : '#ef4444',
         }}>
-          {health === 'Healthy' ? '✅ HEALTHY' : health === 'Degraded' ? '⚠️ DEGRADED' : '❌ FAILING'}
+          {health === 'Healthy' ? '✅ OPTIMAL' : health === 'Degraded' ? '⚠️ DÉGRADÉ' : '❌ DÉFAILLANT'}
         </span>
       </div>
 
       {/* Global Metrics */}
       <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>🎯 Global Metrics</h3>
+        <h3 style={styles.sectionTitle}>🎯 Métriques Globales</h3>
         <div style={styles.metrics}>
           <MetricCard
             label="Ticks"
@@ -102,22 +102,22 @@ export function SingularityMonitor() {
             color="#6366f1"
           />
           <MetricCard
-            label="Stability"
+            label="Stabilité"
             value={`${(metrics.stability * 100).toFixed(1)}%`}
             color={metrics.stability > 0.8 ? '#10b981' : metrics.stability > 0.5 ? '#f59e0b' : '#ef4444'}
           />
           <MetricCard
-            label="Latency"
+            label="Latence"
             value={`${metrics.latency_ms}ms`}
             color={metrics.latency_ms < 100 ? '#10b981' : metrics.latency_ms < 500 ? '#f59e0b' : '#ef4444'}
           />
           <MetricCard
-            label="Success Rate"
+            label="Taux Réussite"
             value={`${(metrics.success_rate * 100).toFixed(1)}%`}
             color={metrics.success_rate > 0.9 ? '#10b981' : metrics.success_rate > 0.7 ? '#f59e0b' : '#ef4444'}
           />
           <MetricCard
-            label="Last Update"
+            label="Dernière MAJ"
             value={lastUpdate.toLocaleTimeString()}
             color="#6366f1"
           />
@@ -136,7 +136,7 @@ export function SingularityMonitor() {
                 ...styles.moduleStatus,
                 background: mod.initialized ? '#10b981' : '#6b7280',
               }}>
-                {mod.initialized ? '✓ Ready' : '○ Pending'}
+                {mod.initialized ? '✓ Prêt' : '○ En attente'}
               </div>
             </div>
           ))}

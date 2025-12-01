@@ -164,7 +164,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
             <button
               className={`voice-mode-toggle ${voiceModeActive ? 'active' : ''}`}
               onClick={onVoiceModeToggle}
-              title="Toggle Voice Mode"
+              title="Activer/Désactiver le Mode Vocal"
             >
               🎤
             </button>

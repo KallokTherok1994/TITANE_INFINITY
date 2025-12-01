@@ -311,5 +311,35 @@ export const transitions = {
   },
 };
 
+// ═══════════════════════════════════════════════════════════════════
+// DESIGN SYSTEM MONOCHROME v16 - Unified Export
+// ═══════════════════════════════════════════════════════════════════
+/**
+ * @deprecated Utilisez les tokens dynamiques via UIThemeProvider
+ * import { useUITheme } from '@/features/design-center';
+ *
+ * Pour la compatibilité v15, les exports rubis/saphir/emeraude/diamant
+ * sont maintenus mais remappés vers le système monochrome.
+ */
+export const designSystemV16 = {
+  palette: metalPalette,
+  colors: {
+    primary: metalPalette.primary,
+    secondary: metalPalette.secondary,
+    accent: metalPalette.accent,
+    background: metalPalette.background,
+    surface: metalPalette.surface,
+    text: metalPalette.text,
+    textMuted: metalPalette.textMuted,
+    border: metalPalette.border,
+  },
+  spacing,
+  radius,
+  shadows,
+  fontSizes,
+  lineHeights,
+  transitions,
+};
+
 // Export default pour compatibilité
 export default colors;

@@ -238,26 +238,26 @@ export const TimeNavigator: React.FC = () => {
 
     return (
       <div className="travel-stats">
-        <h3>📊 Time-Travel Statistics</h3>
+        <h3>📊 Statistiques du voyage temporel</h3>
         <div className="stats-grid">
           <div className="stat-item">
-            <span className="stat-label">Total Snapshots:</span>
+            <span className="stat-label">Total Snapshots :</span>
             <span className="stat-value">{stats.totalSnapshots}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">RAM Cache:</span>
+            <span className="stat-label">Cache RAM :</span>
             <span className="stat-value">{stats.ramCacheSize}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">Disk Usage:</span>
+            <span className="stat-label">Espace disque :</span>
             <span className="stat-value">{formatSize(stats.diskUsageBytes)}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">Oldest:</span>
+            <span className="stat-label">Plus ancien :</span>
             <span className="stat-value">{formatDate(stats.oldestSnapshot)}</span>
           </div>
           <div className="stat-item">
-            <span className="stat-label">Newest:</span>
+            <span className="stat-label">Plus récent :</span>
             <span className="stat-value">{formatDate(stats.newestSnapshot)}</span>
           </div>
         </div>
@@ -268,16 +268,16 @@ export const TimeNavigator: React.FC = () => {
   return (
     <div className="time-navigator">
       <header className="navigator-header">
-        <h1>⏱️ Time Navigator</h1>
-        <p>Navigate through TITANE∞ state history and restore previous versions</p>
+        <h1>⏱️ Navigateur Temporel</h1>
+        <p>Naviguez dans l'historique d'état de TITANE∞ et restaurez les versions précédentes</p>
       </header>
 
       {renderStats()}
 
       <div className="navigator-content">
         <div className="timeline-container">
-          <h2>📜 Timeline</h2>
-          {loading ? <div className="loading">Loading...</div> : renderTimeline()}
+          <h2>📜 Chronologie</h2>
+          {loading ? <div className="loading">Chargement...</div> : renderTimeline()}
         </div>
 
         <div className="details-container">
@@ -287,8 +287,8 @@ export const TimeNavigator: React.FC = () => {
 
       {compareMode && compareSnapshot && (
         <div className="compare-panel">
-          <h3>🔍 Compare Mode</h3>
-          <p>Compare functionality coming soon...</p>
+          <h3>🔍 Mode comparaison</h3>
+          <p>Fonctionnalité de comparaison bientôt disponible...</p>
         </div>
       )}
     </div>

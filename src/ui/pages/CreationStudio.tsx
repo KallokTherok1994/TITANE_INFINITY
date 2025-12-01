@@ -34,7 +34,7 @@ const CreationStudio: React.FC = () => {
 
   const handleGenerate = async () => {
     if (!intent.trim()) {
-      setError('Please describe what you want to create');
+      setError('Veuillez décrire ce que vous souhaitez créer');
       return;
     }
 
@@ -48,7 +48,7 @@ const CreationStudio: React.FC = () => {
       });
       setArtifact(result);
     } catch (err) {
-      setError(`Generation failed: ${err}`);
+      setError(`Échec de la génération : ${err}`);
     } finally {
       setIsGenerating(false);
     }
@@ -65,28 +65,28 @@ const CreationStudio: React.FC = () => {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
           Creation Studio
         </h1>
-        <p className="text-gray-400 mt-2">Phase 8: AI-Powered Code Generation</p>
+        <p className="text-gray-400 mt-2">Phase 8 : Génération de code par IA</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left Panel - Configuration */}
         <div className="space-y-6">
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">What do you want to create?</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Que souhaitez-vous créer ?</h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Intent Description</label>
+                <label className="block text-sm text-gray-400 mb-2">Description de l'intention</label>
                 <textarea
                   value={intent}
                   onChange={(e) => setIntent(e.target.value)}
-                  placeholder="Describe what you want to create... Example: 'Create a user authentication module with JWT tokens'"
+                  placeholder="Décrivez ce que vous voulez créer... Exemple : 'Créer un module d'authentification utilisateur avec tokens JWT'"
                   className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-3 text-white h-32 resize-none focus:border-purple-500 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-gray-400 mb-2">Target Type</label>
+                <label className="block text-sm text-gray-400 mb-2">Type de cible</label>
                 <div className="grid grid-cols-2 gap-2">
                   {TARGET_TYPES.map((type) => (
                     <button
@@ -109,7 +109,7 @@ const CreationStudio: React.FC = () => {
                 disabled={isGenerating || !intent.trim()}
                 className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
-                {isGenerating ? '⏳ Generating...' : '✨ Generate Code'}
+                {isGenerating ? '⏳ Génération...' : '✨ Générer le code'}
               </button>
 
               {error && (
@@ -122,7 +122,7 @@ const CreationStudio: React.FC = () => {
 
           {/* Templates Info */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-            <h3 className="text-lg font-semibold text-white mb-3">Available Templates</h3>
+            <h3 className="text-lg font-semibold text-white mb-3">Modèles disponibles</h3>
             <div className="space-y-2 text-sm text-gray-400">
               <div>• <span className="text-orange-400">Rust Modules</span> - Structs, traits, implementations</div>
               <div>• <span className="text-blue-400">TypeScript</span> - Classes, interfaces, functions</div>
@@ -141,12 +141,12 @@ const CreationStudio: React.FC = () => {
               {/* Code Preview */}
               <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold text-white">Generated: {artifact.name}</h2>
+                  <h2 className="text-xl font-semibold text-white">Généré : {artifact.name}</h2>
                   <button
                     onClick={() => copyToClipboard(artifact.code)}
                     className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 px-4 py-2 rounded-lg text-sm transition-all"
                   >
-                    📋 Copy
+                    📋 Copier
                   </button>
                 </div>
 
@@ -160,7 +160,7 @@ const CreationStudio: React.FC = () => {
               {/* Dependencies */}
               {artifact.dependencies.length > 0 && (
                 <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-                  <h3 className="text-lg font-semibold text-white mb-3">Dependencies</h3>
+                  <h3 className="text-lg font-semibold text-white mb-3">Dépendances</h3>
                   <div className="space-y-2">
                     {artifact.dependencies.map((dep, idx) => (
                       <div key={idx} className="bg-gray-700/30 rounded-lg p-3 font-mono text-sm text-green-400">
@@ -175,13 +175,13 @@ const CreationStudio: React.FC = () => {
               {artifact.tests && (
                 <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">Auto-Generated Tests</h3>
+                    <h3 className="text-lg font-semibold text-white">Tests auto-générés</h3>
                     <button
                       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                       onClick={() => copyToClipboard(artifact.tests!)} // Safe: checked by parent condition
                       className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 px-3 py-1 rounded-lg text-sm transition-all"
                     >
-                      📋 Copy
+                      📋 Copier
                     </button>
                   </div>
                   <div className="bg-gray-900/50 rounded-lg p-4 max-h-48 overflow-auto">
@@ -203,8 +203,8 @@ const CreationStudio: React.FC = () => {
           ) : (
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-purple-500/30 text-center">
               <div className="text-6xl mb-4">✨</div>
-              <h2 className="text-2xl font-semibold text-white mb-2">Ready to Create</h2>
-              <p className="text-gray-400">Describe your intent and select a target type to generate code</p>
+              <h2 className="text-2xl font-semibold text-white mb-2">Prêt à créer</h2>
+              <p className="text-gray-400">Décrivez votre intention et sélectionnez un type de cible pour générer le code</p>
             </div>
           )}
         </div>

@@ -70,10 +70,10 @@ export const SystemVitalsPanel: React.FC = () => {
     try {
       const stats = await secureInvoke<CompactionStats>('auto_compact_memory');
       setCompactionStats(stats);
-      alert(`Memory compacted!\nFiles: ${stats.files_processed}\nDuplicates removed: ${stats.duplicates_removed}`);
+      alert(`Mémoire compactée !\nFichiers : ${stats.files_processed}\nDoublons supprimés : ${stats.duplicates_removed}`);
     } catch (error) {
-      console.error('Failed to compact memory:', error);
-      alert('Memory compaction failed. See console for details.');
+      console.error('Échec compaction mémoire:', error);
+      alert('Échec de la compaction mémoire. Voir la console pour les détails.');
     }
   };
 
@@ -82,7 +82,7 @@ export const SystemVitalsPanel: React.FC = () => {
       <div className="p-6 bg-slate-900 rounded-lg">
         <div className="flex items-center gap-2">
           <Activity className="w-5 h-5 animate-pulse text-cyan-400" />
-          <span className="text-slate-300">Loading system vitals...</span>
+          <span className="text-slate-300">Chargement des indicateurs système...</span>
         </div>
       </div>
     );
@@ -97,7 +97,7 @@ export const SystemVitalsPanel: React.FC = () => {
       <div className="flex items-center justify-between p-4 bg-slate-900 rounded-lg border border-slate-700">
         <div className="flex items-center gap-3">
           <Activity className="w-6 h-6 text-cyan-400" />
-          <h2 className="text-xl font-bold text-white">System Vitals</h2>
+          <h2 className="text-xl font-bold text-white">Indicateurs Système</h2>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -106,13 +106,13 @@ export const SystemVitalsPanel: React.FC = () => {
               autoRefresh ? 'bg-cyan-600 text-white' : 'bg-slate-700 text-slate-300'
             }`}
           >
-            {autoRefresh ? 'Auto-refresh ON' : 'Auto-refresh OFF'}
+            {autoRefresh ? 'Auto-refresh ACTIF' : 'Auto-refresh INACTIF'}
           </button>
           <button
             onClick={fetchMetrics}
             className="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded text-sm"
           >
-            Refresh
+            Actualiser
           </button>
         </div>
       </div>
@@ -149,14 +149,14 @@ export const SystemVitalsPanel: React.FC = () => {
         {throttling.active && (
           <div className="mt-3 p-3 bg-red-900/20 border border-red-700 rounded">
             <p className="text-sm text-red-300">
-              🔥 Active throttling: watchers delay set to {throttling.watch_delay_ms}ms
+              🔥 Limitation active : délai des watchers à {throttling.watch_delay_ms}ms
             </p>
           </div>
         )}
 
         {/* Per-core usage */}
         <div className="mt-4">
-          <p className="text-xs text-slate-400 mb-2">Per-core usage:</p>
+          <p className="text-xs text-slate-400 mb-2">Utilisation par cœur :</p>
           <div className="grid grid-cols-4 gap-2">
             {cpu.per_core_usage.map((usage, index) => (
               <div key={index} className="bg-slate-800 rounded p-2">
@@ -176,15 +176,15 @@ export const SystemVitalsPanel: React.FC = () => {
           <div className="flex items-center gap-3">
             <Database className="w-8 h-8 text-purple-400" />
             <div>
-              <h3 className="text-lg font-bold text-white">Memory Compactor</h3>
-              <p className="text-sm text-slate-400">Optimize cognitive memory</p>
+              <h3 className="text-lg font-bold text-white">Compacteur Mémoire</h3>
+              <p className="text-sm text-slate-400">Optimiser la mémoire cognitive</p>
             </div>
           </div>
           <button
             onClick={handleCompactMemory}
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded font-semibold"
           >
-            Compact Now
+            Compacter
           </button>
         </div>
 
@@ -192,11 +192,11 @@ export const SystemVitalsPanel: React.FC = () => {
           <div className="mt-4 p-4 bg-slate-800 rounded border border-slate-700">
             <div className="grid grid-cols-3 gap-4 text-sm">
               <div>
-                <p className="text-slate-400">Files Processed</p>
+                <p className="text-slate-400">Fichiers traités</p>
                 <p className="text-white font-semibold">{compactionStats.files_processed}</p>
               </div>
               <div>
-                <p className="text-slate-400">Duplicates Removed</p>
+                <p className="text-slate-400">Doublons supprimés</p>
                 <p className="text-white font-semibold">{compactionStats.duplicates_removed}</p>
               </div>
               <div>
@@ -218,7 +218,7 @@ export const SystemVitalsPanel: React.FC = () => {
 
       {/* Engine Badges */}
       <div className="p-6 bg-slate-900 rounded-lg border border-slate-700">
-        <h3 className="text-lg font-bold text-white mb-4">Active Engines</h3>
+        <h3 className="text-lg font-bold text-white mb-4">Moteurs Actifs</h3>
         <div className="flex flex-wrap gap-2">
           <EngineBadge name="Helios" status="active" color="yellow" />
           <EngineBadge name="Nexus" status="active" color="blue" />

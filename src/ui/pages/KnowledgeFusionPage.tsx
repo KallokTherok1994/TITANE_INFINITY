@@ -37,7 +37,7 @@ const KnowledgeFusionPage: React.FC = () => {
   const handleFileSelect = async () => {
     try {
       // In real implementation, use Tauri file picker
-      const filePath = prompt('Enter file path:');
+      const filePath = prompt('Chemin du fichier :');
       if (!filePath) return;
 
       setSelectedFile(filePath);
@@ -47,7 +47,7 @@ const KnowledgeFusionPage: React.FC = () => {
       const format = await secureInvoke<string>('detect_file_format', { filePath });
       setDetectedFormat(format);
     } catch (err) {
-      setError(`Format detection failed: ${err}`);
+      setError(`Détection du format échouée : ${err}`);
     }
   };
 
@@ -66,7 +66,7 @@ const KnowledgeFusionPage: React.FC = () => {
       // Add to vault
       setVault(prev => [doc, ...prev].slice(0, 10));
     } catch (err) {
-      setError(`Parsing failed: ${err}`);
+      setError(`Analyse échouée : ${err}`);
     } finally {
       setIsProcessing(false);
     }
@@ -98,9 +98,9 @@ const KnowledgeFusionPage: React.FC = () => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-600">
-          Knowledge Fusion
+          Fusion des Connaissances
         </h1>
-        <p className="text-gray-400 mt-2">Phase 6: Universal Document Ingestion & Classification</p>
+        <p className="text-gray-400 mt-2">Phase 6 : Ingestion & Classification Universelle de Documents</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -108,26 +108,26 @@ const KnowledgeFusionPage: React.FC = () => {
         <div className="space-y-6">
           {/* File Selection */}
           <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
-            <h2 className="text-xl font-semibold text-white mb-4">Document Ingestion</h2>
+            <h2 className="text-xl font-semibold text-white mb-4">Ingestion de Documents</h2>
 
             <div className="space-y-4">
               <button
                 onClick={handleFileSelect}
                 className="w-full bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
-                📁 Select Document
+                📁 Sélectionner un Document
               </button>
 
               {selectedFile && (
                 <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
-                  <div className="text-gray-400 text-sm mb-1">Selected File</div>
+                  <div className="text-gray-400 text-sm mb-1">Fichier sélectionné</div>
                   <div className="text-white font-mono text-sm break-all">{selectedFile}</div>
                 </div>
               )}
 
               {detectedFormat && (
                 <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
-                  <div className="text-gray-400 text-sm mb-2">Detected Format</div>
+                  <div className="text-gray-400 text-sm mb-2">Format détecté</div>
                   <div className={`text-lg font-bold ${getFormatColor(detectedFormat)}`}>
                     {detectedFormat.toUpperCase()}
                   </div>
@@ -139,7 +139,7 @@ const KnowledgeFusionPage: React.FC = () => {
                 disabled={!selectedFile || isProcessing}
                 className="w-full bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
-                {isProcessing ? '⏳ Processing...' : '🚀 Parse & Classify'}
+                {isProcessing ? '⏳ Traitement...' : '🚀 Analyser & Classifier'}
               </button>
 
               {error && (
@@ -153,16 +153,16 @@ const KnowledgeFusionPage: React.FC = () => {
           {/* Parsed Document Preview */}
           {parsedDoc && (
             <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
-              <h2 className="text-xl font-semibold text-white mb-4">Parsed Document</h2>
+              <h2 className="text-xl font-semibold text-white mb-4">Document Analysé</h2>
 
               <div className="space-y-4">
                 <div>
-                  <div className="text-gray-400 text-sm mb-1">Title</div>
+                  <div className="text-gray-400 text-sm mb-1">Titre</div>
                   <div className="text-white font-semibold">{parsedDoc.title}</div>
                 </div>
 
                 <div>
-                  <div className="text-gray-400 text-sm mb-2">Categories</div>
+                  <div className="text-gray-400 text-sm mb-2">Catégories</div>
                   <div className="flex flex-wrap gap-2">
                     {parsedDoc.categories.map((cat, idx) => (
                       <span key={idx} className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(cat)}`}>
@@ -173,7 +173,7 @@ const KnowledgeFusionPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="text-gray-400 text-sm mb-1">Confidence</div>
+                  <div className="text-gray-400 text-sm mb-1">Confiance</div>
                   <div className="flex items-center gap-2">
                     <div className="flex-1 bg-gray-600 rounded-full h-2">
                       <div
@@ -188,7 +188,7 @@ const KnowledgeFusionPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <div className="text-gray-400 text-sm mb-2">Content Preview</div>
+                  <div className="text-gray-400 text-sm mb-2">Aperçu du contenu</div>
                   <div className="bg-gray-900/50 rounded-lg p-3 max-h-48 overflow-y-auto">
                     <pre className="text-gray-300 text-xs whitespace-pre-wrap font-mono">
                       {parsedDoc.content.slice(0, 500)}
@@ -199,7 +199,7 @@ const KnowledgeFusionPage: React.FC = () => {
 
                 {parsedDoc.metadata.keywords.length > 0 && (
                   <div>
-                    <div className="text-gray-400 text-sm mb-2">Keywords</div>
+                    <div className="text-gray-400 text-sm mb-2">Mots-clés</div>
                     <div className="flex flex-wrap gap-2">
                       {parsedDoc.metadata.keywords.map((kw, idx) => (
                         <span key={idx} className="px-2 py-1 bg-indigo-500/20 text-indigo-300 text-xs rounded">
@@ -216,13 +216,13 @@ const KnowledgeFusionPage: React.FC = () => {
 
         {/* Right Panel - Knowledge Vault */}
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-indigo-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Knowledge Vault</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">Coffre de Connaissances</h2>
 
           {vault.length === 0 ? (
             <div className="text-center py-12 text-gray-500">
               <div className="text-4xl mb-4">📚</div>
-              <div>No documents yet</div>
-              <div className="text-sm mt-2">Upload documents to build your knowledge base</div>
+              <div>Aucun document</div>
+              <div className="text-sm mt-2">Importez des documents pour construire votre base de connaissances</div>
             </div>
           ) : (
             <div className="space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto">

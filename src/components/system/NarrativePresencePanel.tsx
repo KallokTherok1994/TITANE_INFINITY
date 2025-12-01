@@ -107,7 +107,7 @@ export const NarrativePresencePanel: React.FC = () => {
   // ═══════════════════════════════════════════════════════════════
 
   const renderIdentity = () => {
-    if (!identity) return <div className="narrative-empty">No identity data</div>;
+    if (!identity) return <div className="narrative-empty">Aucune donnée d'identité</div>;
 
     return (
       <div className="narrative-identity">

@@ -130,7 +130,7 @@ export function SingularityMonitorV14() {
             color="#3b82f6"
           />
           <MetricCard
-            label="Success Rate"
+            label="Taux Réussite"
             value={`${(metrics.success_rate * 100).toFixed(1)}%`}
             color={metrics.success_rate > 0.9 ? '#10b981' : '#ef4444'}
           />
@@ -140,7 +140,7 @@ export function SingularityMonitorV14() {
             color={metrics.error_count > 0 ? '#ef4444' : '#10b981'}
           />
           <MetricCard
-            label="Last Update"
+            label="Dernière MAJ"
             value={lastUpdate.toLocaleTimeString()}
             color="#8b5cf6"
           />
@@ -150,7 +150,7 @@ export function SingularityMonitorV14() {
       {/* Active Modules */}
       {modules.length > 0 && (
         <div style={styles.section}>
-          <h3 style={styles.sectionTitle}>🔧 Active Modules</h3>
+          <h3 style={styles.sectionTitle}>🔧 Modules Actifs</h3>
           <div style={styles.modulesList}>
             {modules.map((module) => (
               <div key={module.name} style={styles.moduleCard}>
@@ -172,8 +172,8 @@ export function SingularityMonitorV14() {
 
       {/* Footer */}
       <div style={styles.footer}>
-        <p>🔄 Real-time monitoring via Tauri commands</p>
-        <p>🚀 TITANE∞ v15 - Unified Static Architecture</p>
+        <p>🔄 Monitoring temps réel via commandes Tauri</p>
+        <p>🚀 TITANE∞ v15 - Architecture Statique Unifiée</p>
       </div>
     </div>
   );

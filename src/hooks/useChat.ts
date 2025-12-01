@@ -25,6 +25,8 @@ import {
   type StreamConfig,
 } from '../services/api';
 import { XP } from '../core/experience/XP_ENGINE';
+import { awardExperience } from '../services/experienceService';
+import { XPSource, XP_REWARDS } from '../types/experience';
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
@@ -833,10 +835,27 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         saveMessage(assistantMessage);
 
         // ═══ AWARD XP FOR SUCCESSFUL MESSAGE ═══
-        // +5 XP pour l'utilisateur à chaque message envoyé avec succès
+        // Système XP global + domaines spécifiques
         try {
-          XP.gain(5, 'chat_message', `Message envoyé: ${cleanMessage.substring(0, 50)}...`);
-          console.log('[useChat OMNIS] ✨ +5 XP awarded for chat message');
+          // XP Global Engine (+5 XP pour le moteur global)
+          XP.gain(XP_REWARDS.CHAT_MESSAGE, 'chat_message', `Message envoyé: ${cleanMessage.substring(0, 50)}...`);
+
+          // XP Domaine Chat (+5 XP pour le domaine chat)
+          await awardExperience('chat', XP_REWARDS.CHAT_MESSAGE, XPSource.ChatMessage, {
+            messageLength: cleanMessage.length,
+            provider,
+            mode: currentModeState,
+          });
+
+          // XP Domaine Cognitive (+2 XP pour analyse cognitive si réponse longue)
+          if (finalContent && finalContent.length > 200) {
+            await awardExperience('cognitive', 2, XPSource.CognitiveAnalysis, {
+              responseLength: finalContent.length,
+              provider,
+            });
+          }
+
+          console.log('[useChat OMNIS] ✨ XP awarded: +5 chat, +2 cognitive (si applicable)');
         } catch (xpError) {
           console.warn('[useChat OMNIS] XP award warning:', xpError);
         }

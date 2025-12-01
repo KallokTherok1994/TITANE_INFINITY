@@ -59,19 +59,19 @@ export function DesignSystemPage() {
 
       <div className="design-system-grid">
         {/* Button Variants */}
-        <Panel title="Button Variants" className="demo-section">
+        <Panel title="Variantes de boutons" className="demo-section">
           <div className="button-grid">
-            <Button variant="primary" size="sm">Primary Small</Button>
-            <Button variant="primary" size="md">Primary Medium</Button>
-            <Button variant="primary" size="lg">Primary Large</Button>
-            
-            <Button variant="secondary" size="md">Secondary</Button>
-            <Button variant="ghost" size="md">Ghost</Button>
+            <Button variant="primary" size="sm">Primaire Petit</Button>
+            <Button variant="primary" size="md">Primaire Moyen</Button>
+            <Button variant="primary" size="lg">Primaire Grand</Button>
+
+            <Button variant="secondary" size="md">Secondaire</Button>
+            <Button variant="ghost" size="md">Fantôme</Button>
             <Button variant="danger" size="md">Danger</Button>
-            
-            <Button variant="glass" size="md">Glass</Button>
-            <Button variant="subtle" size="md">Subtle</Button>
-            <Button variant="primary" size="md" disabled>Disabled</Button>
+
+            <Button variant="glass" size="md">Verre</Button>
+            <Button variant="subtle" size="md">Subtil</Button>
+            <Button variant="primary" size="md" disabled>Désactivé</Button>
           </div>
         </Panel>
 

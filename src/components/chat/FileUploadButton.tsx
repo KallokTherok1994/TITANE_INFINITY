@@ -15,6 +15,8 @@
 import React, { useRef, useState, useCallback, memo } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { XP } from '../../core/experience/XP_ENGINE';
+import { awardExperience } from '../../services/experienceService';
+import { XPSource, XP_REWARDS } from '../../types/experience';
 import './FileUploadButton.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -303,8 +305,14 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(({
 
           isDev && console.log('[FileUpload] ✅ File ingested to memory:', result.name, memoryResult);
 
-          // +20 XP pour chaque fichier importé avec succès
-          XP.gain(20, 'file_import', `Fichier importé: ${result.name}`);
+          // +20 XP global + domaine memory pour chaque fichier importé avec succès
+          XP.gain(XP_REWARDS.FILE_IMPORT, 'file_import', `Fichier importé: ${result.name}`);
+          await awardExperience('memory', XP_REWARDS.FILE_IMPORT, XPSource.FileImport, {
+            filename: result.name,
+            category: result.category,
+            size: result.size,
+            lineCount: result.analysis?.lineCount || 0,
+          });
           isDev && console.log('[FileUpload] ✨ +20 XP awarded for file import:', result.name);
 
         } catch (memoryError) {
@@ -314,6 +322,11 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(({
           // On donne quand même +10 XP pour l'analyse locale
           try {
             XP.gain(10, 'file_analysis', `Fichier analysé localement: ${result.name}`);
+            await awardExperience('cognitive', 10, XPSource.CognitiveAnalysis, {
+              filename: result.name,
+              category: result.category,
+              localOnly: true,
+            });
             isDev && console.log('[FileUpload] ✨ +10 XP awarded for local analysis:', result.name);
           } catch (xpError) {
             console.warn('[FileUpload] XP award warning:', xpError);

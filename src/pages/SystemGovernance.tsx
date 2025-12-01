@@ -118,23 +118,23 @@ export const SystemGovernance: React.FC = () => {
               <option value="allowed">Allowed</option>
               <option value="denied">Denied</option>
             </select>
-            <button onClick={loadAuditLog}>🔄 Refresh</button>
+            <button onClick={loadAuditLog}>🔄 Actualiser</button>
           </div>
         </div>
 
         {loading ? (
-          <div className="loading">Loading...</div>
+          <div className="loading">Chargement...</div>
         ) : (
           <div className="audit-table-container">
             <table className="audit-table">
               <thead>
                 <tr>
-                  <th>Timestamp</th>
+                  <th>Horodatage</th>
                   <th>Action</th>
-                  <th>Role</th>
-                  <th>Caller</th>
-                  <th>Result</th>
-                  <th>Reason</th>
+                  <th>Rôle</th>
+                  <th>Appelant</th>
+                  <th>Résultat</th>
+                  <th>Raison</th>
                 </tr>
               </thead>
               <tbody>
@@ -165,9 +165,9 @@ export const SystemGovernance: React.FC = () => {
         )}
 
         <div className="audit-stats">
-          <p>Total entries: {filteredAuditLog.length}</p>
-          <p>Allowed: {filteredAuditLog.filter(e => e.result === 'allowed').length}</p>
-          <p>Denied: {filteredAuditLog.filter(e => e.result === 'denied').length}</p>
+          <p>Total entrées : {filteredAuditLog.length}</p>
+          <p>Autorisées : {filteredAuditLog.filter(e => e.result === 'allowed').length}</p>
+          <p>Refusées : {filteredAuditLog.filter(e => e.result === 'denied').length}</p>
         </div>
       </div>
     );
@@ -178,8 +178,8 @@ export const SystemGovernance: React.FC = () => {
 
     return (
       <div className="permission-matrix">
-        <h2>🔐 Permission Matrix</h2>
-        <p className="warning">⚠️ Modification requires ROOT permissions</p>
+        <h2>🔐 Matrice des permissions</h2>
+        <p className="warning">⚠️ La modification nécessite les permissions ROOT</p>
 
         <table className="matrix-table">
           <thead>
@@ -236,19 +236,19 @@ export const SystemGovernance: React.FC = () => {
         </table>
 
         <div className="matrix-info">
-          <h3>Role Hierarchy</h3>
+          <h3>Hiérarchie des rôles</h3>
           <div className="hierarchy">
             <div className="hierarchy-level">
-              <span style={{ color: '#ff0000' }}>●</span> ROOT - Full system access
+              <span style={{ color: '#ff0000' }}>●</span> ROOT - Accès système complet
             </div>
             <div className="hierarchy-level">
-              <span style={{ color: '#ff8800' }}>●</span> SYSTEM - Core operations
+              <span style={{ color: '#ff8800' }}>●</span> SYSTEM - Opérations principales
             </div>
             <div className="hierarchy-level">
-              <span style={{ color: '#00aaff' }}>●</span> IA - AI operations
+              <span style={{ color: '#00aaff' }}>●</span> IA - Opérations IA
             </div>
             <div className="hierarchy-level">
-              <span style={{ color: '#00ff88' }}>●</span> USER - Standard operations
+              <span style={{ color: '#00ff88' }}>●</span> USER - Opérations standard
             </div>
           </div>
         </div>
@@ -262,9 +262,9 @@ export const SystemGovernance: React.FC = () => {
 
     return (
       <div className="escalation-alerts">
-        <h2>🚨 Escalation Alerts</h2>
+        <h2>🚨 Alertes d'escalade</h2>
         {recentDenied.length === 0 ? (
-          <p className="no-alerts">No recent escalation attempts</p>
+          <p className="no-alerts">Aucune tentative d'escalade récente</p>
         ) : (
           <div className="alerts-list">
             {recentDenied.map((entry, index) => (
@@ -286,8 +286,8 @@ export const SystemGovernance: React.FC = () => {
   return (
     <div className="system-governance">
       <header className="governance-header">
-        <h1>⚖️ System Governance</h1>
-        <p>Permission management and security audit for TITANE∞</p>
+        <h1>⚖️ Gouvernance Système</h1>
+        <p>Gestion des permissions et audit de sécurité pour TITANE∞</p>
       </header>
 
       <div className="governance-grid">

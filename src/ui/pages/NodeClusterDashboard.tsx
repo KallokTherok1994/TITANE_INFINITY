@@ -98,16 +98,16 @@ const NodeClusterDashboard: React.FC = () => {
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
           Node-Cluster Dashboard
         </h1>
-        <p className="text-gray-400 mt-2">Phase 5: Distributed Mesh Networking</p>
+        <p className="text-gray-400 mt-2">Phase 5 : Réseau maillé distribué</p>
       </div>
 
       {/* Initialization Panel */}
       {!isInitialized && (
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 mb-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Initialize Mesh Layer</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">Initialiser la couche Mesh</h2>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label className="block text-sm text-gray-400 mb-2">Node ID</label>
+              <label className="block text-sm text-gray-400 mb-2">ID du nœud</label>
               <input
                 type="text"
                 value={nodeId}
@@ -131,7 +131,7 @@ const NodeClusterDashboard: React.FC = () => {
             onClick={initialize}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 rounded-lg transition-all"
           >
-            Start Mesh Networking
+            Démarrer le réseau Mesh
           </button>
           {error && (
             <div className="mt-4 bg-red-500/20 border border-red-500/50 rounded-lg p-3 text-red-400">
@@ -145,19 +145,19 @@ const NodeClusterDashboard: React.FC = () => {
       {isInitialized && stats && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-            <div className="text-gray-400 text-sm mb-2">Node ID</div>
+            <div className="text-gray-400 text-sm mb-2">ID du nœud</div>
             <div className="text-white text-xl font-bold truncate">{stats.node_id}</div>
           </div>
           <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-            <div className="text-gray-400 text-sm mb-2">Role</div>
+            <div className="text-gray-400 text-sm mb-2">Rôle</div>
             <div className={`text-xl font-bold ${getRoleColor(stats.role)}`}>{stats.role}</div>
           </div>
           <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-            <div className="text-gray-400 text-sm mb-2">Peers</div>
+            <div className="text-gray-400 text-sm mb-2">Pairs</div>
             <div className="text-white text-xl font-bold">{stats.peer_count}</div>
           </div>
           <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
-            <div className="text-gray-400 text-sm mb-2">Avg Load</div>
+            <div className="text-gray-400 text-sm mb-2">Charge moy.</div>
             <div className="text-white text-xl font-bold">{stats.avg_load.toFixed(1)}%</div>
           </div>
         </div>
@@ -166,7 +166,7 @@ const NodeClusterDashboard: React.FC = () => {
       {/* Peer List */}
       {isInitialized && (
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Active Peers</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">Pairs actifs</h2>
           <div className="space-y-3">
             {peers.map((peer) => (
               <div
@@ -185,7 +185,7 @@ const NodeClusterDashboard: React.FC = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-gray-400 text-xs mb-1">Health</div>
+                    <div className="text-gray-400 text-xs mb-1">Santé</div>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-600 rounded-full h-2">
                         <div
@@ -197,7 +197,7 @@ const NodeClusterDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <div className="text-gray-400 text-xs mb-1">Load</div>
+                    <div className="text-gray-400 text-xs mb-1">Charge</div>
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-gray-600 rounded-full h-2">
                         <div

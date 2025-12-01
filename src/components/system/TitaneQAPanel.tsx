@@ -168,21 +168,21 @@ export const TitaneQAPanel: React.FC = () => {
             onClick={runFullQA}
             disabled={loading}
           >
-            {loading ? '⏳ RUNNING...' : '▶ RUN FULL QA'}
+            {loading ? '⏳ EXÉCUTION...' : '▶ LANCER QA COMPLET'}
           </button>
           <button
             className="btn-secondary"
             onClick={loadLastReport}
             disabled={loading}
           >
-            🔄 REFRESH
+            🔄 ACTUALISER
           </button>
           <button
             className="btn-secondary"
             onClick={exportReportJSON}
             disabled={!report || loading}
           >
-            💾 EXPORT JSON
+            💾 EXPORTER JSON
           </button>
         </div>
       </div>
@@ -191,7 +191,7 @@ export const TitaneQAPanel: React.FC = () => {
       {report && (
         <div className="qa-global-status">
           <div className="status-card">
-            <h3>GLOBAL SCORE</h3>
+            <h3>SCORE GLOBAL</h3>
             <div
               className="score-display"
               style={{
@@ -211,23 +211,23 @@ export const TitaneQAPanel: React.FC = () => {
             <h3>TESTS</h3>
             <div className="stats-grid">
               <div className="stat">
-                <span className="stat-label">Total:</span>
+                <span className="stat-label">Total :</span>
                 <span className="stat-value">{report.summary.total_tests}</span>
               </div>
               <div className="stat">
-                <span className="stat-label">✓ Passed:</span>
+                <span className="stat-label">✓ Réussis :</span>
                 <span className="stat-value" style={{ color: '#00ff88' }}>
                   {report.summary.passed}
                 </span>
               </div>
               <div className="stat">
-                <span className="stat-label">⚠ Warnings:</span>
+                <span className="stat-label">⚠ Avertissements :</span>
                 <span className="stat-value" style={{ color: '#ffaa00' }}>
                   {report.summary.warnings}
                 </span>
               </div>
               <div className="stat">
-                <span className="stat-label">✗ Errors:</span>
+                <span className="stat-label">✗ Erreurs :</span>
                 <span className="stat-value" style={{ color: '#ff4444' }}>
                   {report.summary.errors}
                 </span>
@@ -239,11 +239,11 @@ export const TitaneQAPanel: React.FC = () => {
             <h3>PERFORMANCE</h3>
             <div className="stats-grid">
               <div className="stat">
-                <span className="stat-label">Duration:</span>
+                <span className="stat-label">Durée :</span>
                 <span className="stat-value">{report.duration_ms}ms</span>
               </div>
               <div className="stat">
-                <span className="stat-label">Anomalies:</span>
+                <span className="stat-label">Anomalies :</span>
                 <span className="stat-value" style={{ color: '#ffaa00' }}>
                   {report.summary.anomalies_count}
                 </span>
@@ -256,7 +256,7 @@ export const TitaneQAPanel: React.FC = () => {
       {/* Module Results */}
       {report && (
         <div className="qa-modules">
-          <h2>MODULE TESTS</h2>
+          <h2>TESTS DE MODULES</h2>
           <div className="modules-grid">
             {report.results.map((result) => (
               <div
@@ -279,19 +279,19 @@ export const TitaneQAPanel: React.FC = () => {
                     onClick={() => runModuleQA(result.module.toLowerCase())}
                     disabled={loading}
                   >
-                    🔄 RE-TEST
+                    🔄 RE-TESTER
                   </button>
                 </div>
 
                 <div className="module-stats">
                   <div className="stat-row">
-                    <span>Status:</span>
+                    <span>Statut :</span>
                     <span style={{ color: getStatusColor(result.status) }}>
                       {result.status}
                     </span>
                   </div>
                   <div className="stat-row">
-                    <span>Latency:</span>
+                    <span>Latence :</span>
                     <span
                       style={{
                         color:
@@ -315,7 +315,7 @@ export const TitaneQAPanel: React.FC = () => {
                 {/* Subtests */}
                 {result.subtests.length > 0 && (
                   <div className="subtests">
-                    <h4>Subtests:</h4>
+                    <h4>Sous-tests :</h4>
                     {result.subtests.map((subtest, idx) => (
                       <div key={idx} className="subtest-row">
                         <span
@@ -336,7 +336,7 @@ export const TitaneQAPanel: React.FC = () => {
                 {/* Anomalies */}
                 {result.anomalies_detected.length > 0 && (
                   <div className="anomalies">
-                    <h4>⚠ Anomalies:</h4>
+                    <h4>⚠ Anomalies :</h4>
                     {result.anomalies_detected.map((anomaly, idx) => (
                       <div key={idx} className="anomaly-row">
                         • {anomaly}
@@ -353,7 +353,7 @@ export const TitaneQAPanel: React.FC = () => {
       {/* Structured Logs */}
       {report && (
         <div className="qa-logs">
-          <h2>📋 STRUCTURED LOGS</h2>
+          <h2>📋 LOGS STRUCTURÉS</h2>
           <div className="logs-container">
             <pre>{JSON.stringify(report, null, 2)}</pre>
           </div>
@@ -364,10 +364,10 @@ export const TitaneQAPanel: React.FC = () => {
       {!report && !loading && (
         <div className="qa-empty-state">
           <div className="empty-icon">🧪</div>
-          <h2>No QA Report Available</h2>
-          <p>Run your first QA test to see results here</p>
+          <h2>Aucun rapport QA disponible</h2>
+          <p>Lancez votre premier test QA pour voir les résultats ici</p>
           <button className="btn-primary" onClick={runFullQA}>
-            ▶ RUN FULL QA
+            ▶ LANCER QA COMPLET
           </button>
         </div>
       )}

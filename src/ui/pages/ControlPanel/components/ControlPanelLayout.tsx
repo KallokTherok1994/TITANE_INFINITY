@@ -98,7 +98,7 @@ export const ControlPanelLayout: React.FC<ControlPanelLayoutProps> = ({
         <div className="cp-sidebar-header">
           <h1 className="cp-sidebar-title">
             <span className="cp-sidebar-icon">⚙️</span>
-            Control Panel
+            Panneau de Contrôle
           </h1>
           {systemInfo && (
             <div className="cp-sidebar-status">

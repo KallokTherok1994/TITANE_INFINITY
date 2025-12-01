@@ -88,7 +88,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
       setMetaReport(report);
       setActiveTab('meta');
     } catch (err) {
-      setError(`Meta evaluation failed: ${err}`);
+      setError(`Évaluation méta échouée : ${err}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -103,7 +103,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
       setIntegrityResult(result);
       setActiveTab('integrity');
     } catch (err) {
-      setError(`Integrity check failed: ${err}`);
+      setError(`Vérification d'intégrité échouée : ${err}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -111,7 +111,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
   };
 
   const handleRepair = async () => {
-    if (!confirm('⚠️ Execute auto-repair? This will attempt to fix corrupted state.')) {
+    if (!confirm('⚠️ Exécuter l\'auto-réparation ? Cela tentera de corriger l\'état corrompu.')) {
       return;
     }
 
@@ -120,11 +120,11 @@ export const SingularityPanelVInfinity: React.FC = () => {
       setError(null);
       const newState = await SingularityBridgeVInfinity.repair();
       setState(newState);
-      alert('✅ Auto-repair complete!');
+      alert('✅ Auto-réparation terminée !');
       // Re-vérifier intégrité
       await handleIntegrityCheck();
     } catch (err) {
-      setError(`Repair failed: ${err}`);
+      setError(`Réparation échouée : ${err}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -140,7 +140,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
       setSelfTestReport(report);
       setActiveTab('selftest');
     } catch (err) {
-      setError(`Self-test failed: ${err}`);
+      setError(`Auto-test échoué : ${err}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -151,9 +151,9 @@ export const SingularityPanelVInfinity: React.FC = () => {
     try {
       setLoading(true);
       await SingularityBridgeVInfinity.downloadStateAsFile();
-      alert('✅ State exported!');
+      alert('✅ État exporté !');
     } catch (err) {
-      setError(`Export failed: ${err}`);
+      setError(`Exportation échouée : ${err}`);
       console.error(err);
     } finally {
       setLoading(false);
@@ -203,7 +203,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
       <div className="singularity-panel-vinfinity">
         <div className="error-state">
           <p>❌ Failed to load state</p>
-          <button onClick={loadState}>Retry</button>
+          <button onClick={loadState}>Réessayer</button>
         </div>
       </div>
     );
@@ -451,7 +451,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
               <>
                 <div className="meta-scores">
                   <div className="meta-score-card">
-                    <h3>Global Coherence</h3>
+                    <h3>Cohérence Globale</h3>
                     <div
                       className="score-value"
                       style={{ color: getCoherenceColor(metaReport.global_coherence) }}
@@ -460,7 +460,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
                     </div>
                   </div>
                   <div className="meta-score-card">
-                    <h3>Alignment</h3>
+                    <h3>Alignement</h3>
                     <div
                       className="score-value"
                       style={{ color: getCoherenceColor(metaReport.alignment_score) }}
@@ -469,7 +469,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
                     </div>
                   </div>
                   <div className="meta-score-card">
-                    <h3>Self-Awareness</h3>
+                    <h3>Auto-Conscience</h3>
                     <div
                       className="score-value"
                       style={{ color: getCoherenceColor(metaReport.self_awareness) }}
@@ -481,7 +481,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
 
                 {metaReport.recommendations.length > 0 && (
                   <div className="meta-section">
-                    <h3>📋 Recommendations</h3>
+                    <h3>📋 Recommandations</h3>
                     <ul>
                       {metaReport.recommendations.map((rec, i) => (
                         <li key={i}>{rec}</li>
@@ -502,13 +502,13 @@ export const SingularityPanelVInfinity: React.FC = () => {
                 )}
 
                 <div className="meta-timestamp">
-                  Generated: {new Date(metaReport.timestamp).toLocaleString()}
+                  Généré : {new Date(metaReport.timestamp).toLocaleString()}
                 </div>
               </>
             ) : (
               <div className="empty-state">
-                <p>No meta report available</p>
-                <button onClick={handleMetaEval}>Run Meta Evaluation</button>
+                <p>Aucun rapport méta disponible</p>
+                <button onClick={handleMetaEval}>Lancer l'Évaluation Méta</button>
               </div>
             )}
           </div>
@@ -523,16 +523,16 @@ export const SingularityPanelVInfinity: React.FC = () => {
                   <div
                     className={`status-badge ${integrityResult.is_valid ? 'valid' : 'invalid'}`}
                   >
-                    {integrityResult.is_valid ? '✅ VALID' : '❌ INVALID'}
+                    {integrityResult.is_valid ? '✅ VALIDE' : '❌ INVALIDE'}
                   </div>
                   <div className={`status-badge ${integrityResult.hash_matches ? 'valid' : 'invalid'}`}>
-                    Hash: {integrityResult.hash_matches ? '✅ Match' : '❌ Mismatch'}
+                    Hash: {integrityResult.hash_matches ? '✅ Correspondance' : '❌ Non-correspondance'}
                   </div>
                 </div>
 
                 {integrityResult.corrupted_modules.length > 0 && (
                   <div className="integrity-section corrupted">
-                    <h3>⚠️ Corrupted Modules</h3>
+                    <h3>⚠️ Modules Corrompus</h3>
                     <ul>
                       {integrityResult.corrupted_modules.map((module, i) => (
                         <li key={i}>{module}</li>
@@ -543,28 +543,28 @@ export const SingularityPanelVInfinity: React.FC = () => {
 
                 {integrityResult.repair_suggestions.length > 0 && (
                   <div className="integrity-section suggestions">
-                    <h3>🔧 Repair Suggestions</h3>
+                    <h3>🔧 Suggestions de Réparation</h3>
                     <ul>
                       {integrityResult.repair_suggestions.map((suggestion, i) => (
                         <li key={i}>{suggestion}</li>
                       ))}
                     </ul>
                     <button onClick={handleRepair} className="btn-repair-inline">
-                      Execute Auto-Repair
+                      Exécuter l'Auto-Réparation
                     </button>
                   </div>
                 )}
 
                 {integrityResult.is_valid && (
                   <div className="integrity-section valid">
-                    <p>✅ System integrity verified. All modules operational.</p>
+                    <p>✅ Intégrité système vérifiée. Tous les modules sont opérationnels.</p>
                   </div>
                 )}
               </>
             ) : (
               <div className="empty-state">
-                <p>No integrity check performed</p>
-                <button onClick={handleIntegrityCheck}>Run Integrity Check</button>
+                <p>Aucune vérification d'intégrité effectuée</p>
+                <button onClick={handleIntegrityCheck}>Lancer la Vérification d'Intégrité</button>
               </div>
             )}
           </div>
@@ -577,7 +577,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
               <>
                 <div className="selftest-summary">
                   <div className="summary-card">
-                    <h3>Global Score</h3>
+                    <h3>Score Global</h3>
                     <div
                       className="score-big"
                       style={{ color: getScoreColor(selfTestReport.global_score) }}
@@ -586,13 +586,13 @@ export const SingularityPanelVInfinity: React.FC = () => {
                     </div>
                   </div>
                   <div className="summary-card">
-                    <h3>Tests Passed</h3>
+                    <h3>Tests Réussis</h3>
                     <div className="score-big" style={{ color: '#00ff88' }}>
                       {selfTestReport.passed_tests}/{selfTestReport.total_tests}
                     </div>
                   </div>
                   <div className="summary-card">
-                    <h3>Tests Failed</h3>
+                    <h3>Tests Échoués</h3>
                     <div
                       className="score-big"
                       style={{ color: selfTestReport.failed_tests > 0 ? '#ff4444' : '#00ff88' }}
@@ -604,7 +604,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
 
                 {selfTestReport.critical_issues.length > 0 && (
                   <div className="selftest-section critical">
-                    <h3>🚨 Critical Issues</h3>
+                    <h3>🚨 Problèmes Critiques</h3>
                     <ul>
                       {selfTestReport.critical_issues.map((issue, i) => (
                         <li key={i}>{issue}</li>
@@ -614,7 +614,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
                 )}
 
                 <div className="selftest-results">
-                  <h3>Test Results</h3>
+                  <h3>Résultats des Tests</h3>
                   {selfTestReport.results.map((result, i) => (
                     <div
                       key={i}
@@ -634,7 +634,7 @@ export const SingularityPanelVInfinity: React.FC = () => {
                       <div className="test-details">{result.details}</div>
                       {result.recommendations.length > 0 && (
                         <div className="test-recommendations">
-                          <strong>Recommendations:</strong>
+                          <strong>Recommandations :</strong>
                           <ul>
                             {result.recommendations.map((rec, j) => (
                               <li key={j}>{rec}</li>
@@ -647,13 +647,13 @@ export const SingularityPanelVInfinity: React.FC = () => {
                 </div>
 
                 <div className="selftest-timestamp">
-                  Test run: {new Date(selfTestReport.timestamp).toLocaleString()}
+                  Test exécuté : {new Date(selfTestReport.timestamp).toLocaleString()}
                 </div>
               </>
             ) : (
               <div className="empty-state">
-                <p>No self-test report available</p>
-                <button onClick={handleSelfTest}>Run Self-Test</button>
+                <p>Aucun rapport d'auto-test disponible</p>
+                <button onClick={handleSelfTest}>Lancer l'Auto-Test</button>
               </div>
             )}
           </div>

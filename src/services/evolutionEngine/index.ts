@@ -636,4 +636,64 @@ export function resetEvolutionEngine(): void {
   }
 }
 
+// =============================================================================
+// EXPORTS — TAURI BINDINGS vΩ∞
+// =============================================================================
+
+export {
+  // Types Tauri
+  type EvolutionRiskLevel as TauriRiskLevel,
+  type GovernanceRole as TauriGovernanceRole,
+  type SuggestionStatus as TauriSuggestionStatus,
+  type DataCategory as TauriDataCategory,
+  type PatternType as TauriPatternType,
+  type SuggestionCategory as TauriSuggestionCategory,
+  type EvolutionActionType as TauriActionType,
+  type ActionResult as TauriActionResult,
+  type EvolutionPhase as TauriPhase,
+  type TitaneModule as TauriModule,
+  type TrendDirection as TauriTrendDirection,
+
+  // Interfaces Tauri
+  type EvolutionDataPoint as TauriDataPoint,
+  type EvolutionPattern as TauriPattern,
+  type EvolutionInsight as TauriInsight,
+  type EvolutionScores as TauriScores,
+  type EvolutionFullReport as TauriFullReport,
+  type EvolutionSuggestion as TauriSuggestion,
+  type EvolutionAction as TauriAction,
+  type EvolutionHistoryEntry as TauriHistoryEntry,
+  type EvolutionEngineState as TauriEngineState,
+  type EvolutionStatistics as TauriStatistics,
+
+  // Fonctions de binding
+  getEvolutionState,
+  startEvolutionEngine,
+  stopEvolutionEngine,
+  getEvolutionScores,
+  updateEvolutionScore,
+  generateEvolutionReport,
+  addEvolutionDataPoint,
+  getEvolutionDataPoints,
+  getEvolutionPatterns,
+  getEvolutionInsights,
+  getEvolutionSuggestions,
+  approveEvolutionSuggestion,
+  rejectEvolutionSuggestion,
+  createEvolutionAction,
+  executeEvolutionAction,
+  rollbackEvolutionAction,
+  getEvolutionHistory,
+  clearOldEvolutionHistory,
+  runFullEvolutionCycle,
+  getEvolutionStatistics,
+
+  // Legacy
+  evolutionRunCycle,
+  evolutionGetStats,
+
+  // Client class
+  EvolutionEngineClient,
+} from './evolutionEngine.bindings';
+
 export default EvolutionEngine;
