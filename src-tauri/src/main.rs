@@ -312,6 +312,13 @@ async fn main() {
     let evolution_engine_state = titane_infinity::evolution::create_evolution_state();
     log::info!("✅ EVOLUTION ENGINE vΩ∞: Continuous improvement active");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE VOICE ENGINE v∞
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🎤 Initializing VOICE ENGINE v∞...");
+    let voice_engine_state = overdrive::voice_engine::init();
+    log::info!("✅ VOICE ENGINE v∞: Audio pipeline ready");
+
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .manage(cognitive_state)
@@ -328,7 +335,8 @@ async fn main() {
         .manage(autoheal_state)
         .manage(performance_state)
         .manage(crashguard_state)
-        .manage(evolution_engine_state);
+        .manage(evolution_engine_state)
+        .manage(voice_engine_state);
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     {
         builder = builder.manage(chat_engine_state.clone());
@@ -485,6 +493,25 @@ async fn main() {
         audio::commands::start_recording,
         audio::commands::stop_recording,
         audio::commands::transcribe_audio,
+        // ═══════════════════════════════════════════════════════════════
+        // VOICE ENGINE COMMANDS v∞ - Overdrive Voice System
+        // ═══════════════════════════════════════════════════════════════
+        overdrive::voice_engine::voice_start_listening,
+        overdrive::voice_engine::voice_stop_listening,
+        overdrive::voice_engine::voice_get_config,
+        overdrive::voice_engine::voice_update_config,
+        overdrive::voice_engine::voice_get_status,
+        overdrive::voice_engine::voice_calibrate_microphone,
+        overdrive::voice_engine::voice_enable_duplex,
+        overdrive::voice_engine::voice_disable_duplex,
+        overdrive::voice_engine::voice_check_interruption,
+        overdrive::voice_engine::voice_synthesize_speech,
+        overdrive::voice_engine::voice_play_audio,
+        overdrive::voice_engine::voice_stop_speaking,
+        overdrive::voice_engine::voice_transcribe_audio,
+        overdrive::voice_engine::voice_detect_wake_word,
+        overdrive::voice_engine::voice_test_pipeline,
+        overdrive::voice_engine::voice_get_available_models,
         // Memory Engine Commands (✅ Active commands only)
         overdrive::memory_engine::memory_store,
         overdrive::memory_engine::memory_store_conversation,
@@ -569,6 +596,22 @@ async fn main() {
         audio::commands::set_audio_output_device,
         audio::commands::set_audio_input_device,
         audio::commands::test_microphone,
+        // ═══════════════════════════════════════════════════════════════
+        // AUDIO CAPTURE COMMANDS v∞ - Real-time cpal capture
+        // Requires: feature "audio-capture" + libasound2-dev on Linux
+        // ═══════════════════════════════════════════════════════════════
+        #[cfg(feature = "audio-capture")]
+        audio::commands::audio_capture_start,
+        #[cfg(feature = "audio-capture")]
+        audio::commands::audio_capture_stop,
+        #[cfg(feature = "audio-capture")]
+        audio::commands::audio_capture_status,
+        #[cfg(feature = "audio-capture")]
+        audio::commands::audio_capture_get_chunk,
+        #[cfg(feature = "audio-capture")]
+        audio::commands::audio_capture_export_wav,
+        #[cfg(feature = "audio-capture")]
+        audio::commands::audio_list_devices,
 
         // ═══════════════════════════════════════════════════════════════
         // CENTRE D'ÉVOLUTION COGNITIVE v19.3 (OPUS #4)
@@ -712,6 +755,85 @@ async fn main() {
         titane_infinity::commands::qa_monitoring::qa_export_metrics_prometheus,
         #[cfg(all(not(feature = "mock"), feature = "full"))]
         titane_infinity::commands::qa_monitoring::qa_health_check,
+
+        // ═══════════════════════════════════════════════════════════════
+        // UNIFIED ENGINES v∞ - OPUS #7/#9/#10
+        // QA Engine + Monitoring Engine + Developer Mode + Build Pipeline
+        // ═══════════════════════════════════════════════════════════════
+
+        // QA Engine Commands
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_qa_get_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_qa_run_all,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_qa_run_suite,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_qa_generate_report,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_qa_get_system_info,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_qa_get_dashboard,
+
+        // Monitoring Engine Commands
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_metrics,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_heartbeats,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_anomalies,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_health,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_history,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_get_dashboard,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_monitoring_reset_alerts,
+
+        // Developer Mode Commands (OPUS #10)
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_get_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_enable,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_disable,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_validate_patch,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_apply_patch,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_preview,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_rollback,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_get_history,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_create_backup,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_restore_backup,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_analyze_file,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_devmode_changelog,
+
+        // Build Pipeline Commands (OPUS #9)
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_build_start,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_build_get_status,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_build_get_result,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_build_cancel,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_build_clean,
+
+        // Unified Dashboard
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::engines_commands::engines_get_dashboard,
 
         // ═══════════════════════════════════════════════════════════════
         // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U (Legacy, kept for compatibility)

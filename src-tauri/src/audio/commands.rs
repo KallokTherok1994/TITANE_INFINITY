@@ -714,7 +714,8 @@ pub async fn is_speaking() -> CommandResult<bool> {
 
 #[allow(dead_code)]
 pub fn get_audio_commands() -> Vec<&'static str> {
-    vec![
+    #[allow(unused_mut)]
+    let mut cmds = vec![
         "tts_speak",
         "tts_stop",
         "test_tts",
@@ -729,5 +730,141 @@ pub fn get_audio_commands() -> Vec<&'static str> {
         "speak",
         "stop_speaking",
         "is_speaking",
-    ]
+    ];
+
+    #[cfg(feature = "audio-capture")]
+    cmds.extend_from_slice(&[
+        "audio_capture_start",
+        "audio_capture_stop",
+        "audio_capture_status",
+        "audio_capture_get_chunk",
+        "audio_capture_export_wav",
+        "audio_list_devices",
+    ]);
+
+    cmds
 }
+
+// ─────────────────────────────────────────────────────────────────
+//  Real-Time Audio Capture Commands (cpal) v∞
+//  Requires feature "audio-capture" and libasound2-dev on Linux
+// ─────────────────────────────────────────────────────────────────
+
+#[cfg(feature = "audio-capture")]
+mod capture_commands {
+    use super::*;
+    use crate::audio::capture::{AudioCaptureState, list_input_devices, list_output_devices, default_input_device_name};
+    use std::sync::Mutex as StdMutex;
+
+    // Global capture state (thread-safe)
+    static CAPTURE_STATE: Lazy<StdMutex<AudioCaptureState>> = Lazy::new(|| {
+        StdMutex::new(AudioCaptureState::new())
+    });
+
+    #[derive(Debug, Clone, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct CaptureStatus {
+        pub is_capturing: bool,
+        pub duration_ms: u64,
+        pub samples_captured: usize,
+        pub device_name: Option<String>,
+    }
+
+    /// Start real-time audio capture with cpal
+    #[tauri::command]
+    pub async fn audio_capture_start() -> CommandResult<String> {
+        log::info!("[AudioCapture] Starting capture...");
+
+        let mut state = CAPTURE_STATE.lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+
+        state.start_capture()
+            .map_err(|e| format!("Capture start failed: {}", e))?;
+
+        let device = default_input_device_name().unwrap_or_else(|| "Unknown".to_string());
+        log::info!("[AudioCapture] ✅ Started on device: {}", device);
+
+        Ok(format!("Capture started on: {}", device))
+    }
+
+    /// Stop real-time audio capture
+    #[tauri::command]
+    pub async fn audio_capture_stop() -> CommandResult<CaptureStatus> {
+        log::info!("[AudioCapture] Stopping capture...");
+
+        let mut state = CAPTURE_STATE.lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+
+        let duration_ms = state.capture_duration_ms();
+        let samples = state.total_samples();
+
+        state.stop_capture()
+            .map_err(|e| format!("Capture stop failed: {}", e))?;
+
+        log::info!("[AudioCapture] ✅ Stopped - Duration: {}ms, Samples: {}", duration_ms, samples);
+
+        Ok(CaptureStatus {
+            is_capturing: false,
+            duration_ms,
+            samples_captured: samples,
+            device_name: default_input_device_name(),
+        })
+    }
+
+    /// Get current capture status
+    #[tauri::command]
+    pub async fn audio_capture_status() -> CommandResult<CaptureStatus> {
+        let state = CAPTURE_STATE.lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+
+        Ok(CaptureStatus {
+            is_capturing: state.is_capturing(),
+            duration_ms: state.capture_duration_ms(),
+            samples_captured: state.total_samples(),
+            device_name: default_input_device_name(),
+        })
+    }
+
+    /// Get captured audio chunk (last N milliseconds)
+    #[tauri::command]
+    pub async fn audio_capture_get_chunk(duration_ms: u32) -> CommandResult<Vec<f32>> {
+        let state = CAPTURE_STATE.lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+
+        state.get_audio_chunk(duration_ms)
+            .map_err(|e| format!("Get chunk failed: {}", e))
+    }
+
+    /// Export captured audio to WAV file
+    #[tauri::command]
+    pub async fn audio_capture_export_wav(path: String) -> CommandResult<String> {
+        log::info!("[AudioCapture] Exporting to: {}", path);
+
+        let state = CAPTURE_STATE.lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
+
+        let path = std::path::Path::new(&path);
+        state.export_wav(path)
+            .map_err(|e| format!("Export failed: {}", e))?;
+
+        Ok(format!("Exported to: {}", path.display()))
+    }
+
+    /// List all audio devices
+    #[tauri::command]
+    pub async fn audio_list_devices() -> CommandResult<serde_json::Value> {
+        let inputs = list_input_devices();
+        let outputs = list_output_devices();
+
+        Ok(serde_json::json!({
+            "inputs": inputs,
+            "outputs": outputs,
+            "defaultInput": default_input_device_name(),
+            "defaultOutput": crate::audio::capture::default_output_device_name(),
+        }))
+    }
+}
+
+// Re-export capture commands when feature is enabled
+#[cfg(feature = "audio-capture")]
+pub use capture_commands::*;

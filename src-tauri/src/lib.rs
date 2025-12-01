@@ -50,6 +50,12 @@ pub mod time_commands; // ✅ Time commands
 pub mod updates; // ✅ Update engine
 
 // ═══════════════════════════════════════════════════════════════
+// ENGINES MODULE v∞ (QA, Monitoring, Developer Mode)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod engines; // ✅ Engines Core (QA, Monitoring, Developer Mode)
+
+// ═══════════════════════════════════════════════════════════════
 // PHASES 5-10 MODULES (Active)
 // ═══════════════════════════════════════════════════════════════
 

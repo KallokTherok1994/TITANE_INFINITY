@@ -105,32 +105,42 @@ impl LocalTTS {
     }
 
     fn speak_piper(&self, request: &TTSRequest) -> TTSResult<()> {
-        // ✅ SECURED: Direct piper execution with French female voice
+        use std::io::Write;
+
+        // ✅ SECURED v∞: Direct piper execution via stdin (no shell interpolation)
         let output_path = std::env::temp_dir().join("titane_tts.wav");
         let output_str = output_path
             .to_str()
             .ok_or_else(|| TTSError::AudioError("Invalid output path".into()))?;
 
-        // Get piper model path from user's local share
+        // Get piper binary and model paths from user's local share
         let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
+        let piper_path = format!("{}/.local/bin/piper", home);
         let model_path = format!("{}/.local/share/piper/voices/fr_FR-siwis-medium.onnx", home);
 
-        // Execute piper via stdin (echo text | piper)
-        // Since ShellGuard doesn't allow pipe, we use --output_file and stdin workaround
-        let process = std::process::Command::new("bash")
-            .arg("-c")
-            .arg(format!(
-                "echo '{}' | {}/.local/bin/piper --model '{}' --output_file '{}'",
-                request.text.replace("'", "\\'"),
-                home,
-                model_path,
-                output_str
-            ))
-            .output()
-            .map_err(|e| TTSError::AudioError(format!("Piper execution failed: {}", e)))?;
+        // ✅ SECURED: Use stdin pipe instead of echo to avoid shell injection
+        let mut child = std::process::Command::new(&piper_path)
+            .arg("--model")
+            .arg(&model_path)
+            .arg("--output_file")
+            .arg(output_str)
+            .stdin(std::process::Stdio::piped())
+            .stdout(std::process::Stdio::null())
+            .stderr(std::process::Stdio::piped())
+            .spawn()
+            .map_err(|e| TTSError::AudioError(format!("Piper spawn failed: {}", e)))?;
 
-        if !process.status.success() {
-            let stderr = String::from_utf8_lossy(&process.stderr);
+        // Write text to stdin (safe - no shell interpretation)
+        if let Some(stdin) = child.stdin.as_mut() {
+            stdin.write_all(request.text.as_bytes())
+                .map_err(|e| TTSError::AudioError(format!("Piper stdin write failed: {}", e)))?;
+        }
+
+        let output = child.wait_with_output()
+            .map_err(|e| TTSError::AudioError(format!("Piper wait failed: {}", e)))?;
+
+        if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr);
             return Err(TTSError::AudioError(format!("Piper failed: {}", stderr)));
         }
 

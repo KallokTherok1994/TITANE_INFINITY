@@ -52,11 +52,19 @@ walkdir = "2.4" # Phase 9: Introspection filesystem traversal
 # Phase 8: Rust Allocations Optimization (v24.20)
 smallvec = "1.13" # Stack-allocated Vec for small arrays (<8 elements)
 
+# Audio Engine v∞: Real-time audio capture and playback (optional)
+# Requires: libasound2-dev on Linux (sudo apt install libasound2-dev)
+cpal  = { version = "0.15", optional = true }
+hound = "3.5"                                 # WAV file reading/writing
+
 [features]
-default         = ["custom-protocol", "mock"]
+default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]
-mock            = []                          # Mock backend mode for frontend-only development
-full            = []                          # Full backend mode with all real implementations
+mock = [] # Mock backend mode for frontend-only development
+full = [] # Full backend mode with all real implementations
+audio-capture = [
+    "cpal",
+] # Enable real-time audio capture (requires libasound2-dev)
 
 [profile.dev]
 # ═══════════════════════════════════════════════════════════════

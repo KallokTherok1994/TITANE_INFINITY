@@ -112,6 +112,9 @@ const OneCorePage = lazy(() => import('./features/one-core').then(m => ({ defaul
 // ✨ QA MONITORING CENTER - Centre QA & Monitoring v19.6 (OPUS #7)
 const QAMonitoringPage = lazy(() => import('./features/qa-monitoring').then(m => ({ default: m.QAMonitoringPage })));
 
+// ✨ DEVELOPER MODE - IA Developer Mode v∞ (OPUS #10)
+const DeveloperModePage = lazy(() => import('./features/developer-mode').then(m => ({ default: m.DeveloperModePage })));
+
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
@@ -387,6 +390,17 @@ const AppRouter: React.FC = () => {
           <Route path="/qa" element={<Navigate to="/qa-monitoring" replace />} />
           <Route path="/monitoring" element={<Navigate to="/qa-monitoring" replace />} />
           <Route path="/tests" element={<Navigate to="/qa-monitoring" replace />} />
+
+          {/* ✨ v∞ DEVELOPER MODE - IA Developer Mode (OPUS #10) */}
+          <Route path="/developer-mode" element={
+            <ErrorBoundary context="DeveloperMode">
+              <DeveloperModePage />
+            </ErrorBoundary>
+          } />
+          {/* Alias pour Developer Mode */}
+          <Route path="/dev-mode" element={<Navigate to="/developer-mode" replace />} />
+          <Route path="/devmode" element={<Navigate to="/developer-mode" replace />} />
+          <Route path="/ia-dev" element={<Navigate to="/developer-mode" replace />} />
 
           {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />

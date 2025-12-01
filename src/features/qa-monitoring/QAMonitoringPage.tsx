@@ -4,7 +4,7 @@
 // Licensed under MIT License
 // ============================================================================
 
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useQAMonitoring } from './useQAMonitoring';
 import type {
   QASystemState,
@@ -31,7 +31,7 @@ interface StatCardProps {
   variant?: 'success' | 'warning' | 'error' | 'info';
 }
 
-const StatCard = ({ label, value, icon, variant = 'info' }: StatCardProps): React.JSX.Element => (
+const StatCard = ({ label, value, icon, variant = 'info' }: StatCardProps): JSX.Element => (
   <div className={`qa-stat-card qa-stat-card--${variant}`}>
     <span className="qa-stat-icon">{icon}</span>
     <div className="qa-stat-content">
@@ -45,7 +45,7 @@ interface SeverityBadgeProps {
   severity: string;
 }
 
-const SeverityBadge = ({ severity }: SeverityBadgeProps): React.JSX.Element => (
+const SeverityBadge = ({ severity }: SeverityBadgeProps): JSX.Element => (
   <span className={`qa-severity qa-severity--${severity}`}>{severity.toUpperCase()}</span>
 );
 
@@ -53,7 +53,7 @@ interface StatusBadgeProps {
   status: string;
 }
 
-const StatusBadge = ({ status }: StatusBadgeProps): React.JSX.Element => (
+const StatusBadge = ({ status }: StatusBadgeProps): JSX.Element => (
   <span className={`qa-status qa-status--${status}`}>{status}</span>
 );
 
@@ -68,7 +68,7 @@ interface OverviewTabProps {
   onRefresh: () => void;
 }
 
-const OverviewTab = ({ state, metrics, alerts, onRefresh }: OverviewTabProps): React.JSX.Element => {
+const OverviewTab = ({ state, metrics, alerts, onRefresh }: OverviewTabProps): JSX.Element => {
   const activeAlerts = alerts.filter((a) => !a.resolved);
 
   return (
@@ -184,7 +184,7 @@ interface TestsTabProps {
   isRunning: boolean;
 }
 
-const TestsTab = ({ suites, results, onRunSuite, isRunning }: TestsTabProps): React.JSX.Element => {
+const TestsTab = ({ suites, results, onRunSuite, isRunning }: TestsTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
@@ -272,7 +272,7 @@ interface MonitorsTabProps {
   onDelete: (id: string) => void;
 }
 
-const MonitorsTab = ({ monitors, onToggle, onDelete }: MonitorsTabProps): React.JSX.Element => {
+const MonitorsTab = ({ monitors, onToggle, onDelete }: MonitorsTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
@@ -328,7 +328,7 @@ const AlertsTab = ({
   onResolve,
   showResolved,
   onToggleResolved,
-}: AlertsTabProps): React.JSX.Element => {
+}: AlertsTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
@@ -381,7 +381,7 @@ interface SecurityTabProps {
   isAuditing: boolean;
 }
 
-const SecurityTab = ({ config, auditResult, onRunAudit, isAuditing }: SecurityTabProps): React.JSX.Element => {
+const SecurityTab = ({ config, auditResult, onRunAudit, isAuditing }: SecurityTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
@@ -501,7 +501,7 @@ interface PerformanceTabProps {
   currentPeriod: string;
 }
 
-const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: PerformanceTabProps): React.JSX.Element => {
+const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: PerformanceTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
@@ -605,7 +605,7 @@ const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: Perform
 
 type TabId = 'overview' | 'tests' | 'monitors' | 'alerts' | 'security' | 'performance';
 
-export default function QAMonitoringPage(): React.JSX.Element {
+export default function QAMonitoringPage(): JSX.Element {
   const qa = useQAMonitoring();
 
   // State

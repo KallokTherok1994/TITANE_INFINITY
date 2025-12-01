@@ -1,12 +1,20 @@
-// TITANE∞ v19.2 - Audio Module
-// Voice Activity Detection, Recording, Speech Recognition, and TTS Commands
+// ═══════════════════════════════════════════════════════════════
+//   TITANE∞ v∞ — AUDIO MODULE
+//   Voice Activity Detection, Recording, Speech Recognition, TTS
+//   Real-time capture with cpal + VAD integration
+// ═══════════════════════════════════════════════════════════════
 
 pub mod asr;
+#[cfg(feature = "audio-capture")]
+pub mod capture;
 pub mod commands;
 pub mod recorder;
 pub mod vad;
 
+#[cfg(feature = "audio-capture")]
+pub use capture::{AudioCaptureState, list_input_devices, list_output_devices};
 pub use commands::*;
+pub use vad::{VoiceActivityDetector, VADState};
 
 use serde::{Deserialize, Serialize};
 

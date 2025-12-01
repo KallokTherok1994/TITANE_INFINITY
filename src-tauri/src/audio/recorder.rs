@@ -82,7 +82,7 @@ impl AudioRecorder {
         let mut recording = self
             .is_recording
             .lock()
-            .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
+            .map_err(|e| AudioError::RecordingError(format!("Lock poisoned: {}", e)))?;
         if *recording {
             return Ok(()); // Already recording
         }
@@ -100,7 +100,7 @@ impl AudioRecorder {
         let mut recording = self
             .is_recording
             .lock()
-            .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
+            .map_err(|e| AudioError::RecordingError(format!("Lock poisoned: {}", e)))?;
         *recording = false;
 
         log::info!("Audio recording stopped");
@@ -119,7 +119,7 @@ impl AudioRecorder {
         let buffer = self
             .buffer
             .lock()
-            .map_err(|e| AudioError::Internal(format!("Lock poisoned: {}", e)))?;
+            .map_err(|e| AudioError::ProcessingError(format!("Lock poisoned: {}", e)))?;
         Ok(buffer.get_last_n(samples_count))
     }
 
