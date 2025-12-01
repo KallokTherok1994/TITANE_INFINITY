@@ -26,6 +26,8 @@ export const VOID_COMMANDS = new Set<string>([
   'stop_speaking',
   'set_audio_output_device',
   'set_audio_input_device',
+  'vad_reset',
+  'vad_configure',
   // Memory commands that return ()
   'memory_delete_entry',
   'memory_clear_all',
@@ -40,6 +42,9 @@ export const VOID_COMMANDS = new Set<string>([
   'state_save',
   'singularity_save_state',
   'singularity_reset',
+  // Persistence commands that return ()
+  'titan_persist_event',
+  'titan_force_snapshot',
 ]);
 
 /**
@@ -260,6 +265,27 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // SECURITY & HARDENING
   // ═══════════════════════════════════════════════════════════════
   'run_hardening_selftest',
+
+  // ═══════════════════════════════════════════════════════════════
+  // VAD (Voice Activity Detection) v∞
+  // ═══════════════════════════════════════════════════════════════
+  'vad_get_state',
+  'vad_process_frame',
+  'vad_configure',
+  'vad_reset',
+  'vad_test',
+
+  // ═══════════════════════════════════════════════════════════════
+  // PERSISTENCE ENGINE v∞.MPE
+  // ═══════════════════════════════════════════════════════════════
+  'titan_persist_event',
+  'titan_force_snapshot',
+  'titan_load_state',
+  'titan_get_events_since',
+  'titan_list_snapshots',
+  'titan_recover_state',
+  'titan_get_persistence_status',
+  'titan_verify_integrity',
 ]);
 
 /**
