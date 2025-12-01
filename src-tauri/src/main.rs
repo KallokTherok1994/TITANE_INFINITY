@@ -1189,6 +1189,29 @@ async fn main() {
         titane_infinity::singularity_fusion::crashguard_emergency_rollback,
         titane_infinity::singularity_fusion::crashguard_get_active_threats,
         titane_infinity::singularity_fusion::crashguard_get_stats,
+        // ═══════════════════════════════════════════════════════════════
+        // DOCS ENGINE v∞ (OPUS #11) - Embedded Documentation System
+        // ═══════════════════════════════════════════════════════════════
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::devtools::titan_docs_search,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::devtools::titan_docs_get,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::devtools::titan_docs_list,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::devtools::titan_docs_list_by_module,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::devtools::titan_docs_registry,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::devtools::titan_docs_generate_markdown,
+        // ═══════════════════════════════════════════════════════════════
+        // MEMORY DOCTOR v∞ (OPUS v∞.MPE-Ω) - Memory Diagnostics & Healing
+        // ═══════════════════════════════════════════════════════════════
+        persistence::commands::titan_memory_doctor_diagnose,
+        persistence::commands::titan_memory_doctor_heal,
+        persistence::commands::titan_memory_doctor_compact,
+        persistence::commands::titan_memory_doctor_export,
+        persistence::commands::titan_memory_doctor_summary,
     ]);
 
     builder
