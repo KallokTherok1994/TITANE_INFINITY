@@ -446,23 +446,23 @@ export function useDevicePermissions(): DevicePermissionsResult {
    */
   const resetAndRecheck = useCallback(async () => {
     console.log('[DevicePermissions] 🔄 Reset cache et re-vérification...');
-    
+
     // 1. Reset état local
     setPermissions(initialState);
-    
+
     // 2. Clear localStorage cache si présent
     try {
       localStorage.removeItem('titane_device_permissions_cache');
     } catch {
       // Ignore localStorage errors
     }
-    
+
     // 3. Petit délai pour laisser les états se réinitialiser
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     // 4. Re-vérifier toutes les permissions
     await checkAll();
-    
+
     console.log('[DevicePermissions] ✅ Reset et re-vérification terminés');
   }, [checkAll]);
 
@@ -483,9 +483,9 @@ export function useDevicePermissions(): DevicePermissionsResult {
       environment: environment.isTauri ? 'tauri' : 'browser',
       details,
     };
-    
+
     console.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
-    
+
     // Stocker dans localStorage pour debugging (max 50 entrées)
     try {
       const logs = JSON.parse(localStorage.getItem('titane_device_issues') || '[]');
