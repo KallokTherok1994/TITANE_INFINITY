@@ -108,7 +108,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   const [selectedOutputDevice, setSelectedOutputDevice] = useState<string>('default');
 
   const [permissions, setPermissions] = useState<AudioPermissions>({
-    microphone: 'checking',
+    microphone: 'prompt', // Par défaut: permettre la demande
     speaker: 'granted', // Speaker permission is implicit
   });
 
@@ -190,60 +190,89 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   };
 
   // ─────────────────────────────────────────────────────────────────
-  // PERMISSIONS
+  // PERMISSIONS (Optimisé pour Tauri + Web)
   // ─────────────────────────────────────────────────────────────────
 
   const checkPermissions = useCallback(async () => {
-    // Check if Permissions API is available
-    if (!navigator.permissions) {
-      setPermissions({
-        microphone: 'unavailable',
-        speaker: 'granted',
-      });
-      return;
+    // Dans Tauri, tenter directement d'accéder au micro
+    // car l'API Permissions peut ne pas fonctionner
+    const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+
+    if (isTauri) {
+      // Pour Tauri, essayer d'accéder directement au micro
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach(track => track.stop());
+        if (mountedRef.current) {
+          setPermissions({ microphone: 'granted', speaker: 'granted' });
+        }
+        return;
+      } catch (error) {
+        // Si refusé ou erreur, mettre à prompt pour permettre retry
+        if (mountedRef.current) {
+          const isDenied = error instanceof DOMException &&
+            (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError');
+          setPermissions({
+            microphone: isDenied ? 'denied' : 'prompt',
+            speaker: 'granted',
+          });
+        }
+        return;
+      }
     }
 
-    try {
-      const result = await navigator.permissions.query({ name: 'microphone' as PermissionName });
-
-      if (mountedRef.current) {
-        setPermissions(prev => ({
-          ...prev,
-          microphone: result.state as PermissionStatus,
-        }));
-      }
-
-      // Listen for permission changes
-      result.addEventListener('change', () => {
+    // Fallback: Utiliser l'API Permissions si disponible (navigateur web)
+    if (navigator.permissions) {
+      try {
+        const result = await navigator.permissions.query({ name: 'microphone' as PermissionName });
         if (mountedRef.current) {
           setPermissions(prev => ({
             ...prev,
             microphone: result.state as PermissionStatus,
           }));
         }
-      });
-    } catch (error) {
-      console.warn('[useAudioSettings] Permission check failed:', error);
-      setPermissions(prev => ({
-        ...prev,
-        microphone: 'unavailable',
-      }));
+
+        // Écouter les changements de permission
+        result.addEventListener('change', () => {
+          if (mountedRef.current) {
+            setPermissions(prev => ({
+              ...prev,
+              microphone: result.state as PermissionStatus,
+            }));
+          }
+        });
+        return;
+      } catch {
+        // Permissions API non supportée pour microphone
+      }
+    }
+
+    // Par défaut: mettre à prompt pour permettre la demande
+    if (mountedRef.current) {
+      setPermissions({ microphone: 'prompt', speaker: 'granted' });
     }
   }, []);
 
   const requestMicrophonePermission = useCallback(async (): Promise<boolean> => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Demander l'accès au microphone avec contraintes optimisées
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        }
+      });
+
+      // Arrêter immédiatement le stream pour libérer le micro
       stream.getTracks().forEach(track => track.stop());
 
       if (mountedRef.current) {
-        setPermissions(prev => ({
-          ...prev,
-          microphone: 'granted',
-        }));
+        setPermissions({ microphone: 'granted', speaker: 'granted' });
+        setLastError(null); // Effacer les erreurs précédentes
       }
 
-      // Refresh devices after permission granted (labels will now be available)
+      // Rafraîchir les devices (les labels seront maintenant disponibles)
       await refreshDevices();
 
       return true;
@@ -251,15 +280,22 @@ export function useAudioSettings(): UseAudioSettingsReturn {
       console.error('[useAudioSettings] Permission request failed:', error);
 
       if (mountedRef.current) {
-        const isDenied = error instanceof DOMException && error.name === 'NotAllowedError';
+        const isDenied = error instanceof DOMException &&
+          (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError');
+        const isNotFound = error instanceof DOMException && error.name === 'NotFoundError';
+
         setPermissions(prev => ({
           ...prev,
-          microphone: isDenied ? 'denied' : 'unavailable',
+          microphone: isDenied ? 'denied' : 'prompt',
         }));
-        setLastError(isDenied
-          ? 'Permission microphone refusée. Veuillez l\'autoriser dans les paramètres.'
-          : 'Impossible d\'accéder au microphone.'
-        );
+
+        if (isNotFound) {
+          setLastError('Aucun microphone détecté. Vérifiez les connexions.');
+        } else if (isDenied) {
+          setLastError('Permission microphone refusée. Cliquez sur l\'icône 🔒 dans la barre d\'adresse pour autoriser.');
+        } else {
+          setLastError('Impossible d\'accéder au microphone. Vérifiez les paramètres système.');
+        }
       }
 
       return false;

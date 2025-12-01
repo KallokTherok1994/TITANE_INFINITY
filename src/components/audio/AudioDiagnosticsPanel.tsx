@@ -160,26 +160,49 @@ export const AudioDiagnosticsPanel = ({
               </div>
               <div className="adp-permission-status">
                 {permissions.microphone === 'granted' && (
-                  <span className="permission-granted">Permission accordée</span>
+                  <div className="permission-granted">
+                    <span>✅ Permission accordée</span>
+                    <p className="permission-help success">Le microphone est prêt à être utilisé.</p>
+                  </div>
                 )}
                 {permissions.microphone === 'denied' && (
                   <div className="permission-denied">
-                    <span>Permission refusée</span>
+                    <span>❌ Permission refusée</span>
                     <p className="permission-help">
-                      Ouvrez les paramètres du système pour autoriser l'accès au microphone.
+                      Pour autoriser le microphone :<br/>
+                      1. Cliquez sur l'icône 🔒 dans la barre d'adresse<br/>
+                      2. Autorisez l'accès au microphone<br/>
+                      3. Rechargez la page
                     </p>
+                    <button
+                      className="adp-btn secondary"
+                      onClick={requestMicrophonePermission}
+                    >
+                      🔄 Réessayer
+                    </button>
                   </div>
                 )}
                 {permissions.microphone === 'prompt' && (
-                  <button
-                    className="adp-btn primary"
-                    onClick={requestMicrophonePermission}
-                  >
-                    Autoriser le microphone
-                  </button>
+                  <div className="permission-prompt">
+                    <p className="permission-help">Cliquez pour autoriser l'accès au microphone.</p>
+                    <button
+                      className="adp-btn primary"
+                      onClick={requestMicrophonePermission}
+                    >
+                      🎤 Autoriser le microphone
+                    </button>
+                  </div>
                 )}
                 {(permissions.microphone === 'unavailable' || permissions.microphone === 'checking') && (
-                  <span className="permission-unknown">Vérification...</span>
+                  <div className="permission-checking">
+                    <span>⏳ Vérification en cours...</span>
+                    <button
+                      className="adp-btn secondary"
+                      onClick={requestMicrophonePermission}
+                    >
+                      Demander l'accès
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
