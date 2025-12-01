@@ -1,14 +1,21 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
-//! TITANE∞ v∞.MPE — PERSISTENCE ENGINE (100% SAVE)
+//! TITANE∞ v∞.MPE-2/3 — PERSISTENCE ENGINE (100% SAVE + SELF-HEALING)
 //! © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 //!
-//! # Architecture
+//! # Architecture v∞.MPE-2/3
 //!
 //! - Event Log (append-only, idempotent)
 //! - Snapshots (état complet périodique)
 //! - SQLite WAL mode (robustesse crash)
 //! - Auto-save triggers (data + 30min + shutdown)
+//! - Migrations versionnées (schema_version)
+//! - Compression cognitive (données anciennes)
+//! - Backup/Export/Import (archives .titane)
+//! - Crypto Store (chiffrement optionnel)
+//! - Memory Health (dashboard + self-healing)
+//! - Invariants Engine (validation + garde-fous)
 
+// Core modules
 pub mod event_log;
 pub mod snapshot;
 pub mod database;
@@ -16,11 +23,32 @@ pub mod recovery;
 pub mod types;
 pub mod commands;
 
+// v∞.MPE-2 modules
+pub mod migrations;
+pub mod compression;
+pub mod backup;
+pub mod crypto_store;
+
+// v∞.MPE-3 modules
+pub mod memory_health;
+pub mod invariants;
+
+// Re-exports - Core
 pub use event_log::EventLog;
 pub use snapshot::SnapshotManager;
 pub use database::PersistenceDB;
 pub use recovery::RecoveryEngine;
 pub use types::*;
+
+// Re-exports - MPE-2
+pub use migrations::{MigrationEngine, MigrationError, MigrationReport, CURRENT_SCHEMA_VERSION};
+pub use compression::{CognitiveCompressionEngine, CompressionReport, CognitiveSummary};
+pub use backup::{BackupEngine, ExportReport, ImportReport, ImportMode};
+pub use crypto_store::{CryptoStore, CryptoConfig, CRYPTO_STORE};
+
+// Re-exports - MPE-3
+pub use memory_health::{MemoryHealth, MemoryHealthEngine, SelfHealingReport, MEMORY_HEALTH_ENGINE};
+pub use invariants::{InvariantsEngine, ValidationResult, ValidationMode, InvariantError};
 
 use once_cell::sync::Lazy;
 use std::sync::Arc;
