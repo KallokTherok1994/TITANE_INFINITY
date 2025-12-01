@@ -1,8 +1,8 @@
 # 🔍 LOCALSTORAGE AUDIT REPORT — OPUS v∞.MPE-Ω
 
-> **Date:** 2025-01-21  
-> **Auditor:** TITAN Memory Doctor  
-> **Total bypasses:** 93 usages localStorage détectés  
+> **Date:** 2025-01-21
+> **Auditor:** TITAN Memory Doctor
+> **Total bypasses:** 93 usages localStorage détectés
 > **Priorité:** Migration progressive vers SingularityState
 
 ---
@@ -301,5 +301,5 @@ grep -rn "titane_\|singularity-" src/ --include="*.ts" | grep localStorage
 
 ---
 
-**Document généré par OPUS v∞.MPE-Ω — TITAN Memory Doctor**  
+**Document généré par OPUS v∞.MPE-Ω — TITAN Memory Doctor**
 *Prochaine mise à jour: après chaque migration*

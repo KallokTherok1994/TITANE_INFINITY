@@ -116,7 +116,7 @@ pub struct SingularityState {
     pub symbolic: SymbolicLayer,      // Persona, archetypes, visual
     pub adaptive: AdaptiveLayer,      // Evolution, learning, auto-heal
     pub meta: MetaLayer,              // UI, runtime, introspection
-    
+
     pub schema_version: Option<u32>,
     pub timestamp: u64,
     pub signature: String,

@@ -652,7 +652,7 @@ impl MemoryDoctor {
     /// Exporter un backup
     pub async fn export(&mut self, path: &str, description: &str) -> Result<(), String> {
         log::info!("[MemoryDoctor] 💾 Export vers {}...", path);
-        
+
         use std::path::Path;
         let path_buf = Path::new(path);
         let desc = if description.is_empty() { None } else { Some(description.to_string()) };
