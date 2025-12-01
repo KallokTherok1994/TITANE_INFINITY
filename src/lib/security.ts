@@ -28,6 +28,8 @@ export const VOID_COMMANDS = new Set<string>([
   'set_audio_input_device',
   'vad_reset',
   'vad_configure',
+  // Overdrive Voice Engine commands
+  'voice_stop_speaking',
   // Memory commands that return ()
   'memory_delete_entry',
   'memory_clear_all',
@@ -274,6 +276,21 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'vad_configure',
   'vad_reset',
   'vad_test',
+
+  // ═══════════════════════════════════════════════════════════════
+  // OVERDRIVE VOICE ENGINE v∞.OPUS-DIAG
+  // ═══════════════════════════════════════════════════════════════
+  'voice_start_listening',
+  'voice_stop_listening',
+  'voice_transcribe_audio',
+  'voice_detect_wake_word',
+  'voice_synthesize_speech',
+  'voice_play_audio',
+  'voice_stop_speaking',
+  'voice_get_config',
+  'voice_update_config',
+  'voice_get_status',
+  'voice_calibrate_microphone',
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE
