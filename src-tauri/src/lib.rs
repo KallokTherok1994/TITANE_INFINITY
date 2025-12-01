@@ -40,6 +40,7 @@ pub mod harmonia_engine; // ✅ Harmonia CPU monitoring
 pub mod memory_compactor; // ✅ Memory compaction
 pub mod memory_persistence; // ✅ Memory persistence
 pub mod overdrive; // ✅ Chat orchestrator (always active)
+pub mod persistence; // ✅ v∞.MPE - 100% SAVE Persistence Engine (NEW)
 pub mod runtime_config; // ✅ Runtime configuration bridge
 pub mod secure_commands; // ✅ Secure commands
 pub mod secure_engine; // ✅ Secure engine helpers
