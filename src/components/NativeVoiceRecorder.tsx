@@ -53,7 +53,8 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
   const testMicrophone = useCallback(async () => {
     try {
       setStatus('🎤 Test microphone...');
-      const result = await secureInvoke<MicrophoneTestResult>('test_microphone', { duration_ms: 2000 });
+      // Tauri 2.0: camelCase params (durationMs, not duration_ms)
+      const result = await secureInvoke<MicrophoneTestResult>('test_microphone', { durationMs: 2000 });
 
       if (result.success) {
         setStatus(`✓ Micro OK (SNR: ${result.signalToNoise.toFixed(1)}dB)`);
@@ -91,7 +92,7 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
     return `J'ai compris : "${input}". Comment puis-je vous aider ?`;
   }, []);
 
-  // Enregistrer et transcrire
+  // Enregistrer et transcrire (v19.3.0 - simplifié)
   const recordAndTranscribe = useCallback(async () => {
     if (recordingRef.current) return;
 
@@ -102,8 +103,8 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
     try {
       setStatus('🎤 Parlez maintenant (4 sec)...');
 
-      // Enregistrement via backend natif
-      const micResult = await secureInvoke<MicrophoneTestResult>('test_microphone', { duration_ms: 4000 });
+      // Enregistrement via backend natif - Tauri 2.0: camelCase
+      const micResult = await secureInvoke<MicrophoneTestResult>('test_microphone', { durationMs: 4000 });
 
       if (!micResult.success) {
         throw new Error(micResult.errorMessage || 'Échec enregistrement');
@@ -113,88 +114,31 @@ export const NativeVoiceRecorder: React.FC<NativeVoiceRecorderProps> = ({
       setState('processing');
       setStatus('🧠 Transcription...');
 
-      try {
-        // Lire le fichier audio binaire via base64
-        const { Command } = await import('@tauri-apps/plugin-shell');
-        const base64Cmd = Command.create('base64', ['-w', '0', '/tmp/titane_mic_test.wav']);
-        const base64Output = await base64Cmd.execute();
+      // v19.3.0: Envoyer un tableau vide - le backend utilisera
+      // automatiquement le fichier titane_mic_test.wav créé par test_microphone
+      const transcription = await secureInvoke<string>('transcribe_audio', {
+        audioData: []
+      });
 
-        if (base64Output.code === 0 && base64Output.stdout) {
-          // Décoder base64 en Uint8Array
-          const binaryString = atob(base64Output.stdout.trim());
-          const audioData = new Uint8Array(binaryString.length);
-          for (let i = 0; i < binaryString.length; i++) {
-            audioData[i] = binaryString.charCodeAt(i);
-          }
+      if (transcription && transcription.trim() && !transcription.includes('Aucune parole')) {
+        const text = transcription.trim();
+        setTranscript(text);
+        onTranscript?.(text);
 
-          // Envoyer au backend pour transcription
-          const transcription = await secureInvoke<string>('transcribe_audio', {
-            audio_data: Array.from(audioData)
-          });
+        // Générer et parler la réponse
+        const response = await generateResponse(text);
+        onResponse?.(response);
 
-          if (transcription && transcription.trim()) {
-            const text = transcription.trim();
-            setTranscript(text);
-            onTranscript?.(text);
+        setState('speaking');
+        setStatus('🔊 TITANE parle...');
+        await audioService.speak(response);
 
-            // Générer et parler la réponse
-            const response = await generateResponse(text);
-            onResponse?.(response);
-
-            setState('speaking');
-            setStatus('🔊 TITANE parle...');
-            await audioService.speak(response);
-
-            setState('idle');
-            setStatus('');
-          } else {
-            setStatus('⚠️ Aucune parole détectée');
-            setTimeout(() => setStatus(''), 3000);
-            setState('idle');
-          }
-        } else {
-          throw new Error('Impossible de lire le fichier audio');
-        }
-      } catch (fsError) {
-        console.error('[NativeVoiceRecorder] FS/Transcription error:', fsError);
-        // Fallback si transcribe_audio échoue
-        setStatus('⚠️ Utilisation du mode test');
-
-        // En mode mock, on utilise directement la commande transcribe_audio sans données
-        try {
-          const transcription = await secureInvoke<string>('transcribe_audio', {
-            audio_data: []
-          });
-
-          if (transcription && transcription.trim()) {
-            const text = transcription.trim();
-            setTranscript(text);
-            onTranscript?.(text);
-
-            const response = await generateResponse(text);
-            onResponse?.(response);
-
-            setState('speaking');
-            await audioService.speak(response);
-            setState('idle');
-            setStatus('');
-          } else {
-            throw new Error('Pas de transcription');
-          }
-        } catch {
-          // Dernier fallback
-          const mockText = "Test de reconnaissance vocale";
-          setTranscript(mockText);
-          onTranscript?.(mockText);
-
-          const response = await generateResponse(mockText);
-          onResponse?.(response);
-
-          setState('speaking');
-          await audioService.speak(response);
-          setState('idle');
-          setStatus('');
-        }
+        setState('idle');
+        setStatus('');
+      } else {
+        setStatus('⚠️ Aucune parole détectée');
+        setTimeout(() => setStatus(''), 3000);
+        setState('idle');
       }
     } catch (error) {
       const msg = error instanceof Error ? error.message : 'Erreur';

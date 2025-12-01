@@ -212,10 +212,10 @@ class HybridTTSService {
   async stop(): Promise<void> {
     console.log('⏹️ TTS: Stopping...');
 
-    // v19.2.0: Arrêt Tauri via commande stop_speaking
+    // v19.3.0: Arrêt Tauri via commande tts_stop (audio::commands)
     if (this.tauriAvailable) {
       try {
-        await secureInvoke('stop_speaking');
+        await secureInvoke('tts_stop');
         console.log('✅ TTS: Tauri backend stopped');
       } catch (error) {
         console.warn('⚠️ TTS: Tauri stop failed:', error);
@@ -239,16 +239,7 @@ class HybridTTSService {
     const tauriAvailable = await this.checkTauriAvailable();
     const webSpeechAvailable = this.checkWebSpeechAvailable();
 
-    // v19.2.0: Vérifier état backend si disponible
-    let backendSpeaking = false;
-    if (tauriAvailable) {
-      try {
-        backendSpeaking = await secureInvoke<boolean>('is_speaking');
-      } catch (error) {
-        console.warn('⚠️ TTS: Could not check backend speaking state:', error);
-      }
-    }
-
+    // v19.3.0: Utilise état local (backend is_speaking non implémenté)
     let provider: 'tauri' | 'webspeech' | 'none' = 'none';
     let available = false;
 
@@ -263,7 +254,7 @@ class HybridTTSService {
     return {
       provider,
       available,
-      speaking: backendSpeaking || this.speaking, // v19.2.0: Combine backend + local state
+      speaking: this.speaking,
       tauriAvailable,
       webSpeechAvailable,
     };

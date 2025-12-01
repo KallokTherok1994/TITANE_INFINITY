@@ -103,6 +103,15 @@ const AudioCenterPage = lazy(() => import('./features/audio-center').then(m => (
 // ✨ EVOLUTION CENTER - Centre d'Évolution Cognitive v19.3 (OPUS #4)
 const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage').then(m => ({ default: m.EvolutionCenterPage })));
 
+// ✨ ORCHESTRATION CENTER - Centre d'Orchestration Cognitive v19.4 (OPUS #5)
+const OrchestrationCenterPage = lazy(() => import('./pages/OrchestrationCenterPage').then(m => ({ default: m.OrchestrationCenterPage })));
+
+// ✨ ONE CORE - Centre de Commande Unifié v19.5 (OPUS #6)
+const OneCorePage = lazy(() => import('./features/one-core').then(m => ({ default: m.OneCorePage })));
+
+// ✨ QA MONITORING CENTER - Centre QA & Monitoring v19.6 (OPUS #7)
+const QAMonitoringPage = lazy(() => import('./features/qa-monitoring').then(m => ({ default: m.QAMonitoringPage })));
+
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
@@ -342,6 +351,42 @@ const AppRouter: React.FC = () => {
           {/* Redirections vers Evolution Center pour anciennes routes */}
           <Route path="/cognitive-evolution" element={<Navigate to="/evolution-center" replace />} />
           <Route path="/xp" element={<Navigate to="/evolution-center" replace />} />
+
+          {/* ✨ v19.4 ORCHESTRATION CENTER - Centre d'Orchestration Cognitive (OPUS #5) */}
+          <Route path="/orchestration-center" element={
+            <ErrorBoundary context="OrchestrationCenter">
+              <OrchestrationCenterPage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers Orchestration Center pour anciennes routes */}
+          <Route path="/multi-ai-dashboard" element={<Navigate to="/orchestration-center" replace />} />
+          <Route path="/nexus-engine" element={<Navigate to="/orchestration-center" replace />} />
+          <Route path="/harmonia-engine" element={<Navigate to="/orchestration-center" replace />} />
+          <Route path="/cognitive-state" element={<Navigate to="/orchestration-center" replace />} />
+
+          {/* ✨ v19.5 ONE CORE - Centre de Commande Unifié (OPUS #6) */}
+          <Route path="/one-core" element={
+            <ErrorBoundary context="OneCore">
+              <OneCorePage />
+            </ErrorBoundary>
+          } />
+
+          {/* Redirections vers ONE CORE pour anciennes routes */}
+          <Route path="/command-center" element={<Navigate to="/one-core" replace />} />
+          <Route path="/unified" element={<Navigate to="/one-core" replace />} />
+          <Route path="/singularity" element={<Navigate to="/one-core" replace />} />
+
+          {/* ✨ v19.6 QA MONITORING CENTER - Centre QA & Monitoring (OPUS #7) */}
+          <Route path="/qa-monitoring" element={
+            <ErrorBoundary context="QAMonitoring">
+              <QAMonitoringPage />
+            </ErrorBoundary>
+          } />
+          {/* Alias pour QA Center */}
+          <Route path="/qa" element={<Navigate to="/qa-monitoring" replace />} />
+          <Route path="/monitoring" element={<Navigate to="/qa-monitoring" replace />} />
+          <Route path="/tests" element={<Navigate to="/qa-monitoring" replace />} />
 
           {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />

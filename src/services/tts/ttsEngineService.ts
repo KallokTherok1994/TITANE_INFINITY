@@ -151,10 +151,10 @@ class TTSEngineService {
       this.currentAudio = null;
     }
 
-    // Stop backend Tauri
+    // Stop backend Tauri (v19.3.0: use tts_stop from audio::commands)
     if (this.tauriAvailable) {
       try {
-        await invoke('stop_speaking');
+        await invoke('tts_stop');
       } catch (error) {
         console.warn('⚠️ TTS: Backend stop failed:', error);
       }

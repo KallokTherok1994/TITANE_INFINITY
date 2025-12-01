@@ -477,14 +477,13 @@ async fn main() {
         secure_commands::secure_store_secret,
         overdrive::chat_orchestrator::chat_stream_message,
         // ═══════════════════════════════════════════════════════════════
-        // VOICE COMMANDS v16.2.2+ - TTS & ASR
+        // VOICE COMMANDS v19.3.0 - TTS & ASR (Real implementations)
         // ═══════════════════════════════════════════════════════════════
-        mock_commands::speak,
-        mock_commands::stop_speaking,
-        mock_commands::is_speaking,
-        mock_commands::start_recording,
-        mock_commands::stop_recording,
-        // ✅ v19.3: Utilise la vraie implémentation Vosk au lieu du mock
+        audio::commands::speak,
+        audio::commands::stop_speaking,
+        audio::commands::is_speaking,
+        audio::commands::start_recording,
+        audio::commands::stop_recording,
         audio::commands::transcribe_audio,
         // Memory Engine Commands (✅ Active commands only)
         overdrive::memory_engine::memory_store,
@@ -570,6 +569,149 @@ async fn main() {
         audio::commands::set_audio_output_device,
         audio::commands::set_audio_input_device,
         audio::commands::test_microphone,
+
+        // ═══════════════════════════════════════════════════════════════
+        // CENTRE D'ÉVOLUTION COGNITIVE v19.3 (OPUS #4)
+        // Unified: Progression + Knowledge + Evolution + Memory
+        // ═══════════════════════════════════════════════════════════════
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_get_progression,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_add_xp,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_reset_progression,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_get_knowledge_vault,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_ingest_file,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_search_knowledge,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_delete_knowledge,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_get_evolution,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_run_evolution_cycle,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_add_changelog,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_get_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_store_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_purge_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_consolidate_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_backup_memory,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::cognitive_center::cognitive_get_unified_state,
+
+        // ═══════════════════════════════════════════════════════════════
+        // CENTRE D'ORCHESTRATION COGNITIVE v19.5 (OPUS #5/6/7)
+        // Unified: Multi-AI + Nexus + Harmonia + Timeline + Cognitive State
+        // ═══════════════════════════════════════════════════════════════
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_multi_ai,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_ping_providers,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_force_provider,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_set_auto_mode,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_nexus,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_update_nexus_node,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_harmonia,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_throttle_flow,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_timeline,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_add_timeline_event,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_clear_timeline,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_cognitive_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_set_cognitive_mode,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_analyze_cognitive,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_unified_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::orchestration_center::orchestration_get_singularity_fragment,
+
+        // ═══════════════════════════════════════════════════════════════
+        // ONE CORE v∞ - UNIFIED COMMAND CENTER (OPUS #6)
+        // Point d'accès unique à l'intégralité du système TITANE∞
+        // ═══════════════════════════════════════════════════════════════
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_get_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_get_engine_status,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_list_commands,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_execute_command,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_run_diagnostic,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_get_metrics,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_force_sync,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_cleanup,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_set_mode,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_get_event_history,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::one_core::one_core_verify_integrity,
+
+        // ═══════════════════════════════════════════════════════════════
+        // QA MONITORING CENTER - OPUS #7 v∞
+        // ═══════════════════════════════════════════════════════════════
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_get_state,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_list_test_suites,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_run_test_suite,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_get_test_result,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_list_monitors,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_create_monitor,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_toggle_monitor,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_delete_monitor,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_get_system_metrics,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_list_alerts,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_acknowledge_alert,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_resolve_alert,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_get_hardening_config,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_update_hardening_config,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_run_security_audit,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_get_performance_report,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_get_logs,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_export_metrics_prometheus,
+        #[cfg(all(not(feature = "mock"), feature = "full"))]
+        titane_infinity::commands::qa_monitoring::qa_health_check,
 
         // ═══════════════════════════════════════════════════════════════
         // PHASES 5-10 COMMANDS v∞ - Super-Prompts P-U (Legacy, kept for compatibility)

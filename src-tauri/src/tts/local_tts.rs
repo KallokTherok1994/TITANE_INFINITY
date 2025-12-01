@@ -134,12 +134,19 @@ impl LocalTTS {
             return Err(TTSError::AudioError(format!("Piper failed: {}", stderr)));
         }
 
-        // Play the generated audio on Linux
+        // Play the generated audio on Linux (paplay for PipeWire, aplay fallback)
         #[cfg(target_os = "linux")]
         {
-            std::process::Command::new("aplay")
+            let play_result = std::process::Command::new("paplay")
                 .arg(output_str)
                 .output()
+                .or_else(|_| {
+                    std::process::Command::new("aplay")
+                        .arg(output_str)
+                        .output()
+                });
+
+            play_result
                 .map_err(|e| TTSError::AudioError(format!("Audio playback failed: {}", e)))?;
         }
 

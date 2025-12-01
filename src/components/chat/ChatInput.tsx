@@ -186,10 +186,20 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
   onFilesAnalyzed,
   disabled = false,
   placeholder = 'Posez votre question...',
-  voiceModeActive = false,
-  onToggleVoiceMode,
+  voiceModeActive: externalVoiceModeActive,
+  onToggleVoiceMode: externalToggleVoiceMode,
   enableFileUpload = true,
 }) => {
+  // Debug: vérifier si onToggleVoiceMode est défini
+  console.log('[ChatInput] onToggleVoiceMode:', typeof externalToggleVoiceMode, !!externalToggleVoiceMode);
+
+  // État vocal interne si pas de props externes
+  const [internalVoiceMode, setInternalVoiceMode] = useState(false);
+
+  // Utiliser les props externes si disponibles, sinon l'état interne
+  const voiceModeActive = externalVoiceModeActive ?? internalVoiceMode;
+  const onToggleVoiceMode = externalToggleVoiceMode ?? (() => setInternalVoiceMode(prev => !prev));
+
   const [value, setValue] = useState('');
   const [showFileUpload, setShowFileUpload] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<AnalyzedFile[]>([]);
@@ -532,18 +542,16 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
             </span>
           </div>
 
-          {/* Voice button with protection */}
-          {onToggleVoiceMode && (
-            <button
-              className={`chat-voice-btn ${voiceModeActive ? 'active' : ''}`}
-              onClick={handleVoiceToggle}
-              disabled={isInputDisabled}
-              title={voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'}
-              aria-label={voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'}
-            >
-              <span className="chat-voice-icon">🎤</span>
-            </button>
-          )}
+          {/* Voice button - ALWAYS VISIBLE */}
+          <button
+            className={`chat-voice-btn ${voiceModeActive ? 'active' : ''}`}
+            onClick={handleVoiceToggle}
+            disabled={isInputDisabled}
+            title={voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'}
+            aria-label={voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'}
+          >
+            <span className="chat-voice-icon">🎤</span>
+          </button>
 
           {/* Send button with protection */}
           <button
@@ -561,7 +569,7 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
           <span className="chat-hint-text">
             Entrée pour envoyer • Maj+Entrée pour nouvelle ligne
             {enableFileUpload && ' • 📎 Fichiers'}
-            {onToggleVoiceMode && ' • 🎤 Vocal'}
+            {typeof onToggleVoiceMode === 'function' && ' • 🎤 Vocal'}
             {inputState.spamCount > 0 && (
               <span className="chat-hint-spam"> • ⚠️ Spam: {inputState.spamCount}/{OMEGA_INPUT_CONFIG.maxSpam}</span>
             )}

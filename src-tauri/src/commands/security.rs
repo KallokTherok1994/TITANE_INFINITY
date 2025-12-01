@@ -143,6 +143,85 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("update_cognitive_mode");
 
     // ═══════════════════════════════════════════════════════════════
+    // CENTRE D'ÉVOLUTION COGNITIVE v19.3 (OPUS #4)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("cognitive_get_progression");
+    commands.insert("cognitive_add_xp");
+    commands.insert("cognitive_reset_progression");
+    commands.insert("cognitive_get_knowledge_vault");
+    commands.insert("cognitive_ingest_file");
+    commands.insert("cognitive_search_knowledge");
+    commands.insert("cognitive_delete_knowledge");
+    commands.insert("cognitive_get_evolution");
+    commands.insert("cognitive_run_evolution_cycle");
+    commands.insert("cognitive_add_changelog");
+    commands.insert("cognitive_get_memory");
+    commands.insert("cognitive_store_memory");
+    commands.insert("cognitive_purge_memory");
+    commands.insert("cognitive_consolidate_memory");
+    commands.insert("cognitive_backup_memory");
+    commands.insert("cognitive_get_unified_state");
+
+    // ═══════════════════════════════════════════════════════════════
+    // ORCHESTRATION CENTER COMMANDS v19.5 (OPUS #5/6/7)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("orchestration_get_multi_ai");
+    commands.insert("orchestration_ping_providers");
+    commands.insert("orchestration_force_provider");
+    commands.insert("orchestration_set_auto_mode");
+    commands.insert("orchestration_get_nexus");
+    commands.insert("orchestration_update_nexus_node");
+    commands.insert("orchestration_get_harmonia");
+    commands.insert("orchestration_throttle_flow");
+    commands.insert("orchestration_get_timeline");
+    commands.insert("orchestration_add_timeline_event");
+    commands.insert("orchestration_clear_timeline");
+    commands.insert("orchestration_get_cognitive_state");
+    commands.insert("orchestration_set_cognitive_mode");
+    commands.insert("orchestration_analyze_cognitive");
+    commands.insert("orchestration_get_unified_state");
+    commands.insert("orchestration_get_singularity_fragment");
+
+    // ═══════════════════════════════════════════════════════════════
+    // ONE CORE COMMANDS v19.6 (OPUS #6)
+    // Unified Command Center - Point d'accès unique
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("one_core_get_state");
+    commands.insert("one_core_get_engine_status");
+    commands.insert("one_core_list_commands");
+    commands.insert("one_core_execute_command");
+    commands.insert("one_core_run_diagnostic");
+    commands.insert("one_core_get_metrics");
+    commands.insert("one_core_force_sync");
+    commands.insert("one_core_cleanup");
+    commands.insert("one_core_set_mode");
+    commands.insert("one_core_get_event_history");
+    commands.insert("one_core_verify_integrity");
+
+    // ═══════════════════════════════════════════════════════════════
+    // QA MONITORING CENTER - OPUS #7 v∞
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("qa_get_state");
+    commands.insert("qa_list_test_suites");
+    commands.insert("qa_run_test_suite");
+    commands.insert("qa_get_test_result");
+    commands.insert("qa_list_monitors");
+    commands.insert("qa_create_monitor");
+    commands.insert("qa_toggle_monitor");
+    commands.insert("qa_delete_monitor");
+    commands.insert("qa_get_system_metrics");
+    commands.insert("qa_list_alerts");
+    commands.insert("qa_acknowledge_alert");
+    commands.insert("qa_resolve_alert");
+    commands.insert("qa_get_hardening_config");
+    commands.insert("qa_update_hardening_config");
+    commands.insert("qa_run_security_audit");
+    commands.insert("qa_get_performance_report");
+    commands.insert("qa_get_logs");
+    commands.insert("qa_export_metrics_prometheus");
+    commands.insert("qa_health_check");
+
+    // ═══════════════════════════════════════════════════════════════
     // VOICE COMMANDS - TTS & ASR (v16.2.2+)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("speak");
@@ -151,6 +230,18 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("start_recording");
     commands.insert("stop_recording");
     commands.insert("transcribe_audio");
+
+    // ═══════════════════════════════════════════════════════════════
+    // AUDIO CENTER COMMANDS (v19.2+)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("tts_speak");
+    commands.insert("tts_stop");
+    commands.insert("test_tts");
+    commands.insert("test_microphone");
+    commands.insert("get_audio_output_devices");
+    commands.insert("get_audio_input_devices");
+    commands.insert("set_audio_output_device");
+    commands.insert("set_audio_input_device");
 
     // ═══════════════════════════════════════════════════════════════
     // DEVTOOLS & LOGS

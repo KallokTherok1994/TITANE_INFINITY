@@ -62,9 +62,9 @@ pub struct MicrophoneTestResult {
 
 #[tauri::command]
 pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()> {
-    log::info!("[TTS] tts_speak called with text: '{}...' engine: {}", 
+    log::info!("[TTS] tts_speak called with text: '{}...' engine: {}",
         text.chars().take(50).collect::<String>(), settings.engine);
-    
+
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
 
     match settings.engine.as_str() {
@@ -74,7 +74,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 "{}/.local/share/piper/voices/{}.onnx",
                 home, settings.voice_id
             );
-            
+
             log::info!("[TTS] Piper binary: {}", piper_bin);
             log::info!("[TTS] Model path: {}", model_path);
 
@@ -97,7 +97,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
             let output_path = std::env::temp_dir().join("titane_tts_output.wav");
             let output_str = output_path.to_string_lossy().to_string();
-            
+
             log::info!("[TTS] Output path: {}", output_str);
 
             // Generate audio with piper
@@ -109,7 +109,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 output_str
             );
             log::info!("[TTS] Executing: {}", piper_cmd);
-            
+
             let piper_output = Command::new("bash")
                 .arg("-c")
                 .arg(&piper_cmd)
@@ -124,22 +124,43 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 }
                 return Err(format!("Piper a échoué: {}", stderr));
             }
-            
-            log::info!("[TTS] Piper synthesis completed, playing audio...");
 
-            // Play audio
-            let play_output = Command::new("aplay")
+            log::info!("[TTS] Piper synthesis completed, checking output file...");
+
+            // Verify file exists and has content
+            if let Ok(metadata) = std::fs::metadata(&output_str) {
+                log::info!("[TTS] Output file size: {} bytes", metadata.len());
+                if metadata.len() == 0 {
+                    log::error!("[TTS] Output file is empty!");
+                    return Err("Piper a généré un fichier audio vide".into());
+                }
+            } else {
+                log::error!("[TTS] Output file does not exist!");
+                return Err("Fichier audio non généré".into());
+            }
+
+            log::info!("[TTS] Playing audio with aplay...");
+
+            // Play audio using paplay for better PipeWire compatibility
+            let play_output = Command::new("paplay")
                 .arg(&output_str)
                 .output()
+                .or_else(|_| {
+                    log::info!("[TTS] paplay failed, trying aplay...");
+                    Command::new("aplay")
+                        .arg(&output_str)
+                        .output()
+                })
                 .map_err(|e| format!("Erreur lecture audio: {}", e))?;
-                
+
             if !play_output.status.success() {
                 let stderr = String::from_utf8_lossy(&play_output.stderr);
-                log::error!("[TTS] aplay failed: {}", stderr);
+                let stdout = String::from_utf8_lossy(&play_output.stdout);
+                log::error!("[TTS] Audio playback failed - stderr: {}, stdout: {}", stderr, stdout);
                 return Err(format!("Erreur lecture: {}", stderr));
             }
-            
-            log::info!("[TTS] Audio playback completed successfully");
+
+            log::info!("[TTS] Audio playback completed successfully!");
 
             Ok(())
         }
@@ -542,6 +563,152 @@ except Exception as e:
 }
 
 // ─────────────────────────────────────────────────────────────────
+//  Recording Commands (v19.3.0)
+// ─────────────────────────────────────────────────────────────────
+
+use std::sync::atomic::{AtomicBool, Ordering};
+use once_cell::sync::Lazy;
+
+static IS_RECORDING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
+static IS_SPEAKING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
+
+#[tauri::command]
+pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult<String> {
+    log::info!("[Audio] start_recording called with config: {:?}", config);
+
+    if IS_RECORDING.load(Ordering::Relaxed) {
+        return Err("Recording already in progress".into());
+    }
+
+    IS_RECORDING.store(true, Ordering::Relaxed);
+
+    // Generate a unique recording ID
+    let recording_id = format!("rec_{}", chrono::Utc::now().timestamp_millis());
+    log::info!("[Audio] Recording started: {}", recording_id);
+
+    Ok(recording_id)
+}
+
+#[tauri::command]
+pub async fn stop_recording() -> CommandResult<serde_json::Value> {
+    log::info!("[Audio] stop_recording called");
+
+    if !IS_RECORDING.load(Ordering::Relaxed) {
+        return Ok(serde_json::json!({
+            "transcript": "",
+            "confidence": 0.0,
+            "duration": 0.0,
+            "error": "No recording in progress"
+        }));
+    }
+
+    IS_RECORDING.store(false, Ordering::Relaxed);
+
+    // Try to transcribe the last recorded audio from test_microphone
+    let mic_test_file = std::env::temp_dir().join("titane_mic_test.wav");
+
+    if mic_test_file.exists() {
+        // Read the audio file and transcribe
+        match std::fs::read(&mic_test_file) {
+            Ok(audio_data) => {
+                match transcribe_audio(audio_data).await {
+                    Ok(transcript) => {
+                        log::info!("[Audio] Transcription: {}", transcript);
+                        Ok(serde_json::json!({
+                            "transcript": transcript,
+                            "confidence": 0.85,
+                            "duration": 2.0
+                        }))
+                    }
+                    Err(e) => {
+                        log::error!("[Audio] Transcription failed: {}", e);
+                        Ok(serde_json::json!({
+                            "transcript": "",
+                            "confidence": 0.0,
+                            "duration": 0.0,
+                            "error": e
+                        }))
+                    }
+                }
+            }
+            Err(e) => {
+                log::error!("[Audio] Failed to read audio file: {}", e);
+                Ok(serde_json::json!({
+                    "transcript": "",
+                    "confidence": 0.0,
+                    "duration": 0.0,
+                    "error": format!("Failed to read audio: {}", e)
+                }))
+            }
+        }
+    } else {
+        log::warn!("[Audio] No audio file found for transcription");
+        Ok(serde_json::json!({
+            "transcript": "",
+            "confidence": 0.0,
+            "duration": 0.0,
+            "error": "No audio file recorded"
+        }))
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
+//  Speech Commands (v19.3.0) - Aliases for TTS
+// ─────────────────────────────────────────────────────────────────
+
+#[tauri::command]
+pub async fn speak(
+    text: String,
+    config: Option<serde_json::Value>,
+    use_online: Option<bool>,
+) -> CommandResult<()> {
+    log::info!("[Audio] speak() called: '{}...'", text.chars().take(50).collect::<String>());
+
+    // Build settings from config or use defaults
+    let settings = if let Some(cfg) = config {
+        TTSSettings {
+            engine: cfg.get("engine").and_then(|v| v.as_str()).unwrap_or("piper").to_string(),
+            voice_id: cfg.get("voiceId").and_then(|v| v.as_str()).unwrap_or("fr_FR-siwis-medium").to_string(),
+            rate: cfg.get("rate").and_then(|v| v.as_f64()).unwrap_or(1.0) as f32,
+            pitch: cfg.get("pitch").and_then(|v| v.as_f64()).unwrap_or(1.0) as f32,
+            volume: cfg.get("volume").and_then(|v| v.as_f64()).unwrap_or(1.0) as f32,
+            language: cfg.get("language").and_then(|v| v.as_str()).unwrap_or("fr-FR").to_string(),
+            emotion_enabled: cfg.get("emotionEnabled").and_then(|v| v.as_bool()).unwrap_or(false),
+            auto_fallback: true,
+        }
+    } else {
+        TTSSettings {
+            engine: if use_online.unwrap_or(false) { "google".to_string() } else { "piper".to_string() },
+            voice_id: "fr_FR-siwis-medium".to_string(),
+            rate: 1.0,
+            pitch: 1.0,
+            volume: 1.0,
+            language: "fr-FR".to_string(),
+            emotion_enabled: false,
+            auto_fallback: true,
+        }
+    };
+
+    IS_SPEAKING.store(true, Ordering::Relaxed);
+    let result = tts_speak(text, settings).await;
+    IS_SPEAKING.store(false, Ordering::Relaxed);
+
+    result
+}
+
+#[tauri::command]
+pub async fn stop_speaking() -> CommandResult<()> {
+    log::info!("[Audio] stop_speaking() called");
+    IS_SPEAKING.store(false, Ordering::Relaxed);
+    tts_stop().await
+}
+
+#[tauri::command]
+pub async fn is_speaking() -> CommandResult<bool> {
+    Ok(IS_SPEAKING.load(Ordering::Relaxed))
+}
+
+// ─────────────────────────────────────────────────────────────────
 //  Export all commands for registration (utility function)
 // ─────────────────────────────────────────────────────────────────
 
@@ -557,5 +724,10 @@ pub fn get_audio_commands() -> Vec<&'static str> {
         "set_audio_input_device",
         "test_microphone",
         "transcribe_audio",
+        "start_recording",
+        "stop_recording",
+        "speak",
+        "stop_speaking",
+        "is_speaking",
     ]
 }

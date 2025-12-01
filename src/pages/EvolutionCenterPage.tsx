@@ -62,7 +62,7 @@ interface StatCardProps {
   subtitle?: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color, subtitle }) => (
+const StatCard = ({ title, value, icon, color, subtitle }: StatCardProps): JSX.Element => (
   <div style={{
     background: `linear-gradient(135deg, ${color}20, ${color}10)`,
     border: `1px solid ${color}40`,
@@ -98,7 +98,7 @@ interface ProgressBarProps {
   color: string;
 }
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ value, max, color }) => (
+const ProgressBar = ({ value, max, color }: ProgressBarProps): JSX.Element => (
   <div style={{ width: '100%', height: '8px', background: colors.neutral[800], borderRadius: '4px' }}>
     <div style={{
       width: `${Math.min((value / max) * 100, 100)}%`,
@@ -117,7 +117,7 @@ interface TabButtonProps {
   onClick: () => void;
 }
 
-const TabButton: React.FC<TabButtonProps> = ({ label, icon, active, onClick }) => (
+const TabButton = ({ label, icon, active, onClick }: TabButtonProps): JSX.Element => (
   <button
     onClick={onClick}
     style={{
@@ -796,7 +796,7 @@ export const EvolutionCenterPage: React.FC = () => {
   ), [memory]);
 
   // Tab content mapping
-  const tabContent: Record<TabId, () => JSX.Element> = {
+  const tabContent: Record<TabId, () => React.ReactElement> = {
     overview: renderOverview,
     progression: renderProgression,
     knowledge: renderKnowledge,

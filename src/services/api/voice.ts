@@ -71,9 +71,10 @@ class VoiceService {
    */
   async speak(text: string, _config?: TTSConfig, useOnline: boolean = false): Promise<void> {
     try {
+      // Tauri 2.0: camelCase params (useOnline, not use_online)
       await invokeWithRetry<void>(
         'speak',
-        { text, use_online: useOnline },
+        { text, useOnline },
         { ...LONG_COMMAND_OPTIONS, context: 'Voice' }
       );
     } catch (error) {
@@ -87,8 +88,9 @@ class VoiceService {
    */
   async stopSpeaking(): Promise<void> {
     try {
+      // Tauri 2.0: commande = stop_speaking (pas voice_stop_speech)
       await invokeWithRetry<void>(
-        'voice_stop_speech',
+        'stop_speaking',
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Voice' }
       );
@@ -102,8 +104,9 @@ class VoiceService {
    */
   async startRecording(config?: ASRConfig): Promise<string> {
     try {
+      // Tauri 2.0: commande = start_recording (pas voice_start_recording)
       this.recordingId = await invokeWithRetry<string>(
-        'voice_start_recording',
+        'start_recording',
         { config: config || {} },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
       );
@@ -122,8 +125,9 @@ class VoiceService {
       if (!this.recordingId) {
         throw new Error('Aucun enregistrement actif');
       }
+      // Tauri 2.0: commande = stop_recording (pas voice_stop_recording)
       const result = await invokeWithRetry<ASRResult>(
-        'voice_stop_recording',
+        'stop_recording',
         {},
         { ...LONG_COMMAND_OPTIONS, context: 'Voice' }
       );

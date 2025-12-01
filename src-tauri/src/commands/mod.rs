@@ -1,10 +1,11 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v16 - Tauri Commands Central Hub (Cognitive Layer)                 ║
+// ║ TITANE∞ v19.5 - Tauri Commands Central Hub (Cognitive Layer)               ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 pub mod automations;    // ✅ v19.2Ω: Automation System
 pub mod chat_modes;     // ✅ v19.2Ω: Chat Modes System
+pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
 pub mod devops; // ✅ v19: DevOps Commands for Dashboard
 pub mod devtools;
@@ -16,9 +17,13 @@ pub mod exp_fusion;
 pub mod harmonia_commands;
 pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
+pub mod one_core; // ✅ v19.6: TITANE∞ ONE CORE - Unified Command Center (OPUS #6)
+pub mod orchestration_center; // ✅ v19.5: Centre d'Orchestration Cognitive (OPUS #5/6/7)
 pub mod persistent_memory; // ✅ v19.2Ω: Persistent Memory 3-Level System
+pub mod qa_monitoring; // ✅ v19.7: QA Monitoring Center - OPUS #7
 
 // Re-export engine commands
+pub use cognitive_center::*; // ✅ v19.3: Export cognitive center commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
 pub use devops::*; // ✅ v19: Export devops commands
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
@@ -26,7 +31,10 @@ pub use engine_v14::*;
 pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands
 pub use harmonia_commands::*;
 pub use memory_compactor_commands::*;
+pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
+pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands
 pub use persistent_memory::*; // ✅ v19.2Ω: Export persistent memory commands
+pub use qa_monitoring::*; // ✅ v19.7: Export QA monitoring commands
 
 use crate::shared::types::ModuleHealth;
 use crate::TitaneCore;
