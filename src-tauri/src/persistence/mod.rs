@@ -33,6 +33,9 @@ pub mod crypto_store;
 pub mod memory_health;
 pub mod invariants;
 
+// v∞.MPE-Ω modules
+pub mod memory_doctor;
+
 // Re-exports - Core
 pub use event_log::EventLog;
 pub use snapshot::SnapshotManager;
@@ -49,6 +52,9 @@ pub use crypto_store::{CryptoStore, CryptoConfig, CRYPTO_STORE};
 // Re-exports - MPE-3
 pub use memory_health::{MemoryHealth, MemoryHealthEngine, SelfHealingReport, MEMORY_HEALTH_ENGINE};
 pub use invariants::{InvariantsEngine, ValidationResult, ValidationMode, InvariantError};
+
+// Re-exports - MPE-Ω
+pub use memory_doctor::{MemoryDoctor, DoctorReport, DoctorStatus, DoctorAction, DoctorIssue};
 
 use once_cell::sync::Lazy;
 use std::sync::Arc;
