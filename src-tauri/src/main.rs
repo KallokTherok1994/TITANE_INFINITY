@@ -321,6 +321,7 @@ async fn main() {
 
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_clipboard_manager::init())
         .manage(cognitive_state)
         .manage(qa_state)
         .manage(singularity_state)
