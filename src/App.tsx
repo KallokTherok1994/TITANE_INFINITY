@@ -20,6 +20,7 @@ import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
 import { ThemeProvider } from './themes/ThemeProvider';
 import { AnimationProvider } from './contexts/AnimationContext';
+import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, Sidebar, Header } from '@components/layout';
 import { Button } from './ui';
 import { CompactXPBar } from './components/experience/CompactXPBar';
@@ -448,18 +449,20 @@ const AppRouter: React.FC = () => {
 /**
  * ═══════════════════════════════════════════════════════════════
  * APP COMPONENT - Point d'entrée principal avec Auto-Heal
- * ThemeProvider > AnimationProvider > BrowserRouter > AutoHealErrorBoundary
+ * ThemeProvider > AnimationProvider > TitanStateProvider > BrowserRouter > AutoHealErrorBoundary
  * ═══════════════════════════════════════════════════════════════
  */
 const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
-        <BrowserRouter>
-          <AutoHealErrorBoundary>
-            <AppRouter />
-          </AutoHealErrorBoundary>
-        </BrowserRouter>
+        <TitanStateProvider>
+          <BrowserRouter>
+            <AutoHealErrorBoundary>
+              <AppRouter />
+            </AutoHealErrorBoundary>
+          </BrowserRouter>
+        </TitanStateProvider>
       </AnimationProvider>
     </ThemeProvider>
   );
