@@ -124,12 +124,25 @@ export function useAudio(): UseAudioReturn {
   }, []);
 
   const testMicrophone = useCallback(async (): Promise<MicrophoneTestResult> => {
+    console.log('[useAudio] testMicrophone starting...');
     setIsTesting(true);
     setTestResult(null);
     try {
       const result = await audioService.testMicrophone();
+      console.log('[useAudio] testMicrophone result:', result);
       setTestResult(result);
       return result;
+    } catch (error) {
+      console.error('[useAudio] testMicrophone error:', error);
+      const errorResult: MicrophoneTestResult = {
+        success: false,
+        peakLevel: 0,
+        noiseFloor: 0,
+        signalToNoise: 0,
+        errorMessage: error instanceof Error ? error.message : String(error),
+      };
+      setTestResult(errorResult);
+      return errorResult;
     } finally {
       setIsTesting(false);
     }

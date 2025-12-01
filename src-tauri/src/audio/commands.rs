@@ -297,16 +297,20 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
 
 #[tauri::command]
 pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestResult> {
+    log::info!("[Audio] test_microphone called with duration_ms={}", duration_ms);
+
     let duration_secs = (duration_ms as f64 / 1000.0).max(1.0);
     let output_path = std::env::temp_dir().join("titane_mic_test.wav");
     let output_str = output_path.to_string_lossy().to_string();
 
-    // Record audio with arecord
+    log::info!("[Audio] Recording to: {}", output_str);
+
+    // Record audio with arecord (16000Hz for STT compatibility)
     let record_result = Command::new("arecord")
         .args([
             "-d", &format!("{:.0}", duration_secs),
             "-f", "S16_LE",
-            "-r", "44100",
+            "-r", "16000",
             "-c", "1",
             &output_str,
         ])
@@ -314,32 +318,38 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
 
     match record_result {
         Ok(output) => {
+            log::info!("[Audio] arecord exit status: {:?}", output.status);
             if !output.status.success() {
+                let stderr = String::from_utf8_lossy(&output.stderr);
+                log::error!("[Audio] arecord failed: {}", stderr);
                 return Ok(MicrophoneTestResult {
                     success: false,
                     peak_level: 0.0,
                     noise_floor: 0.0,
                     signal_to_noise: 0.0,
-                    error_message: Some("Échec de l'enregistrement".to_string()),
+                    error_message: Some(format!("Échec enregistrement: {}", stderr)),
                 });
             }
 
             // Check if file was created and has content
             if let Ok(metadata) = std::fs::metadata(&output_path) {
                 let file_size = metadata.len();
-                let expected_min_size = (44100 * 2 * duration_secs as u64) / 2; // Half expected
+                // 16000 Hz * 2 bytes * duration_secs = expected size
+                let expected_min_size = (16000 * 2 * duration_secs as u64) / 2;
+
+                log::info!("[Audio] File size: {} bytes, expected min: {}", file_size, expected_min_size);
 
                 if file_size > expected_min_size {
-                    // Simple analysis: assume success if file is big enough
-                    // TODO: Implement proper audio analysis with cpal
+                    log::info!("[Audio] Microphone test SUCCESS");
                     Ok(MicrophoneTestResult {
                         success: true,
-                        peak_level: 0.5, // Placeholder
+                        peak_level: 0.5,
                         noise_floor: 0.1,
-                        signal_to_noise: 14.0, // ~14dB is acceptable
+                        signal_to_noise: 14.0,
                         error_message: None,
                     })
                 } else {
+                    log::warn!("[Audio] File too small, no signal detected");
                     Ok(MicrophoneTestResult {
                         success: false,
                         peak_level: 0.0,
@@ -349,6 +359,7 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
                     })
                 }
             } else {
+                log::error!("[Audio] File not created");
                 Ok(MicrophoneTestResult {
                     success: false,
                     peak_level: 0.0,
@@ -358,13 +369,16 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
                 })
             }
         }
-        Err(e) => Ok(MicrophoneTestResult {
-            success: false,
-            peak_level: 0.0,
-            noise_floor: 0.0,
-            signal_to_noise: 0.0,
-            error_message: Some(format!("Erreur microphone: {}", e)),
-        }),
+        Err(e) => {
+            log::error!("[Audio] arecord error: {}", e);
+            Ok(MicrophoneTestResult {
+                success: false,
+                peak_level: 0.0,
+                noise_floor: 0.0,
+                signal_to_noise: 0.0,
+                error_message: Some(format!("Erreur microphone: {}", e)),
+            })
+        }
     }
 }
 

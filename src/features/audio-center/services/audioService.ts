@@ -254,7 +254,8 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        await secureInvoke('set_audio_output_device', { device_id: deviceId });
+        // Tauri 2.0 attend camelCase pour les paramètres
+        await secureInvoke('set_audio_output_device', { deviceId });
       } catch (error) {
         console.warn('Failed to set output device:', error);
       }
@@ -267,7 +268,8 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        await secureInvoke('set_audio_input_device', { device_id: deviceId });
+        // Tauri 2.0 attend camelCase pour les paramètres
+        await secureInvoke('set_audio_input_device', { deviceId });
       } catch (error) {
         console.warn('Failed to set input device:', error);
       }
@@ -335,15 +337,16 @@ class AudioService {
 
   async testMicrophone(durationMs: number = 3000): Promise<MicrophoneTestResult> {
     console.log('[AudioService] testMicrophone called, duration:', durationMs, 'isTauri:', this.isTauri);
-    
+
     try {
       if (this.isTauri) {
         console.log('[AudioService] Calling Tauri test_microphone...');
         // Timeout = durée enregistrement + 5s de marge pour traitement
         const timeoutMs = durationMs + 5000;
+        // Tauri 2.0 attend camelCase pour les paramètres de commande
         const result = await secureInvoke<MicrophoneTestResult>(
           'test_microphone',
-          { duration_ms: durationMs },
+          { durationMs },
           { timeout: timeoutMs }
         );
         console.log('[AudioService] test_microphone result:', result);
