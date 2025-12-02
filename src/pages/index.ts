@@ -31,3 +31,6 @@ export { DevTools } from './DevTools';
 export { PerformanceTest } from './PerformanceTest';
 export { SecureSettings } from './SecureSettings';
 
+// Cloud Sync Engine
+export { CloudCenter } from './CloudCenter';
+

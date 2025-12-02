@@ -1,0 +1,31 @@
+{
+  "_schema_version": "1.0.0",
+  "_description": "TITANE∞ Memory CT (Court-Terme) Storage",
+  "_level": "CT",
+
+  "metadata": {
+    "created_at": "2025-01-01T00:00:00Z",
+    "last_updated": "2025-01-01T00:00:00Z",
+    "total_items": 0,
+    "compressed_items": 0,
+    "total_size_bytes": 0
+  },
+
+  "items": [],
+
+  "session_context": {
+    "current_session_id": null,
+    "session_start": null,
+    "active_topics": [],
+    "conversation_context": {}
+  },
+
+  "promotion_queue": [],
+
+  "stats": {
+    "items_promoted_to_mt": 0,
+    "items_merged": 0,
+    "items_pruned": 0,
+    "last_cleanup": null
+  }
+}

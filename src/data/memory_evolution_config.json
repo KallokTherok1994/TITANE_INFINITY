@@ -1,0 +1,150 @@
+{
+  "_schema_version": "1.0.0",
+  "_description": "TITANE∞ Memory Evolution Engine++ v∞ Configuration",
+
+  "evolution": {
+    "auto_evolution_interval_mins": 60,
+    "compression_threshold": 100,
+    "clustering_threshold": 50,
+    "ct_limit": 50,
+    "mt_limit": 200,
+    "lt_limit": 1000,
+    "auto_evolution_enabled": true,
+    "min_preserve_ratio": 0.85,
+    "kevin_only_full_evolution": true
+  },
+
+  "levels": {
+    "CT": {
+      "name": "Court-Terme",
+      "description": "Mémoire de session, volatile",
+      "color": "#3B82F6",
+      "max_items": 50,
+      "retention_hours": 24,
+      "auto_promote_threshold": 3
+    },
+    "MT": {
+      "name": "Moyen-Terme",
+      "description": "Mémoire consolidée, jours",
+      "color": "#8B5CF6",
+      "max_items": 200,
+      "retention_days": 30,
+      "auto_promote_threshold": 7
+    },
+    "LT": {
+      "name": "Long-Terme",
+      "description": "Mémoire permanente, distillée",
+      "color": "#EC4899",
+      "max_items": 1000,
+      "retention_days": 365,
+      "auto_promote_threshold": 30
+    },
+    "ELT": {
+      "name": "Enhanced Long-Term",
+      "description": "Mémoire essentielle, compressée",
+      "color": "#F59E0B",
+      "max_items": 500,
+      "retention": "permanent"
+    },
+    "Core": {
+      "name": "Core Memory",
+      "description": "Essence cognitive, immuable",
+      "color": "#10B981",
+      "max_items": 100,
+      "retention": "eternal",
+      "protected": true
+    }
+  },
+
+  "types": {
+    "Factual": {
+      "name": "Factuel",
+      "description": "Faits, données, informations",
+      "icon": "📊"
+    },
+    "Procedural": {
+      "name": "Procédural",
+      "description": "Comment faire, processus",
+      "icon": "⚙️"
+    },
+    "Semantic": {
+      "name": "Sémantique",
+      "description": "Concepts, significations",
+      "icon": "🔤"
+    },
+    "Episodic": {
+      "name": "Épisodique",
+      "description": "Événements, expériences",
+      "icon": "📅"
+    },
+    "Meta": {
+      "name": "Méta",
+      "description": "Réflexion sur la mémoire",
+      "icon": "🪞"
+    },
+    "Pattern": {
+      "name": "Pattern",
+      "description": "Motifs récurrents, tendances",
+      "icon": "🔄"
+    }
+  },
+
+  "parser": {
+    "anomaly_detection_enabled": true,
+    "redundancy_threshold": 0.85,
+    "max_cognitive_load": 100,
+    "semantic_similarity_threshold": 0.8
+  },
+
+  "synthesizer": {
+    "summary_max_length": 500,
+    "essence_max_length": 100,
+    "preserve_context": true,
+    "use_local_llm": true,
+    "local_model": "phi3:latest"
+  },
+
+  "clusterer": {
+    "min_cluster_size": 3,
+    "max_clusters": 20,
+    "similarity_threshold": 0.75,
+    "auto_merge_similar": true
+  },
+
+  "vectorizer": {
+    "model": "nomic-embed-text",
+    "dimension": 768,
+    "ollama_url": "http://localhost:11434",
+    "cache_enabled": true,
+    "cache_ttl_hours": 168
+  },
+
+  "compressor": {
+    "lz4_enabled": true,
+    "cognitive_compression": true,
+    "min_size_for_compression": 1000,
+    "compression_level": 6
+  },
+
+  "patterns": {
+    "min_confidence": 0.7,
+    "pattern_types": ["Behavioral", "Cognitive", "Error", "Success", "Preference", "Temporal"],
+    "auto_learn": true,
+    "max_patterns": 1000
+  },
+
+  "stability": {
+    "integrity_check_enabled": true,
+    "auto_backup": true,
+    "backup_interval_hours": 24,
+    "max_backups": 30,
+    "corruption_auto_repair": true
+  },
+
+  "growth": {
+    "promotion_cooldown_hours": 6,
+    "access_count_for_promotion": 3,
+    "importance_threshold": 0.7,
+    "core_memory_protected": true
+  }
+}

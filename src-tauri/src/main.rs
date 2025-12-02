@@ -75,6 +75,15 @@ use titane_infinity::narrative::narrative_commands::NarrativeEngineGlobal;
 // Immersive Avatar Engine v23
 use titane_infinity::avatar::AvatarEngineGlobal;
 
+// Cloud Sync Engine v∞ (OPUS #13)
+use titane_infinity::cloud::commands::CloudSyncState;
+
+// Memory Evolution Engine++ v∞ (OPUS #14)
+use titane_infinity::memory_evolution::MemoryEvolutionState;
+
+// System Identity Engine v∞ (OPUS #15)
+use titane_infinity::identity::IdentityEngineState;
+
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
     pub analysis: Arc<Mutex<AnalysisEngine>>,
@@ -320,6 +329,27 @@ async fn main() {
     let voice_engine_state = overdrive::voice_engine::init();
     log::info!("✅ VOICE ENGINE v∞: Audio pipeline ready");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE CLOUD SYNC ENGINE v∞
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("☁️ Initializing CLOUD SYNC ENGINE v∞...");
+    let cloud_sync_state = CloudSyncState::default();
+    log::info!("✅ CLOUD SYNC ENGINE v∞: Encrypted vault ready");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE MEMORY EVOLUTION ENGINE++ v∞
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🧠 Initializing MEMORY EVOLUTION ENGINE++ v∞...");
+    let memory_evolution_state = MemoryEvolutionState::default();
+    log::info!("✅ MEMORY EVOLUTION ENGINE++ v∞: Cognitive memory pipeline ready");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE SYSTEM IDENTITY ENGINE v∞
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🎭 Initializing SYSTEM IDENTITY ENGINE v∞...");
+    let identity_engine_state = IdentityEngineState::default();
+    log::info!("✅ SYSTEM IDENTITY ENGINE v∞: Personality matrix ready");
+
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -338,7 +368,10 @@ async fn main() {
         .manage(performance_state)
         .manage(crashguard_state)
         .manage(evolution_engine_state)
-        .manage(voice_engine_state);
+        .manage(voice_engine_state)
+        .manage(cloud_sync_state)
+        .manage(memory_evolution_state)
+        .manage(identity_engine_state);
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     {
         builder = builder.manage(chat_engine_state.clone());
@@ -354,6 +387,7 @@ async fn main() {
         log::info!("✅ ChatOrchestrator v16 managed");
         log::info!("✅ SecureSecretsEngine v∞ managed");
         log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
+        log::info!("✅ CLOUD SYNC ENGINE v∞ managed");
 
         #[cfg(all(not(feature = "mock"), feature = "full"))]
         log::info!("✅ ChatEngine v∞ managed");
@@ -1230,6 +1264,73 @@ async fn main() {
         titane_infinity::ai_chat::training_import_patterns,
         titane_infinity::ai_chat::training_prune_patterns,
         titane_infinity::ai_chat::training_generate_report,
+        // ═══════════════════════════════════════════════════════════════
+        // CLOUD SYNC ENGINE v∞ (OPUS #13) - Vault chiffré & Multi-device
+        // AES-256-GCM + Argon2id + Ed25519 + Compression GZIP
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::cloud::commands::cloud_init,
+        titane_infinity::cloud::commands::cloud_load_vault,
+        titane_infinity::cloud::commands::cloud_create_vault,
+        titane_infinity::cloud::commands::cloud_get_status,
+        titane_infinity::cloud::commands::cloud_sync_push,
+        titane_infinity::cloud::commands::cloud_sync_pull,
+        titane_infinity::cloud::commands::cloud_update_config,
+        titane_infinity::cloud::commands::cloud_get_devices,
+        titane_infinity::cloud::commands::cloud_remove_device,
+        titane_infinity::cloud::commands::cloud_get_sync_history,
+        titane_infinity::cloud::commands::cloud_update_vault_data,
+        titane_infinity::cloud::commands::cloud_verify_integrity,
+        titane_infinity::cloud::commands::cloud_backup_vault,
+        titane_infinity::cloud::commands::cloud_restore_vault,
+        titane_infinity::cloud::commands::cloud_auto_heal,
+        titane_infinity::cloud::commands::cloud_list_backups,
+        // ═══════════════════════════════════════════════════════════════
+        // MEMORY EVOLUTION ENGINE++ v∞ (OPUS #14) - Cognitive Memory Pipeline
+        // Parser, Synthesizer, Clusterer, Vectorizer, Compressor, Patterns, Stability, Growth
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::memory_evolution::memory_evolution_status,
+        titane_infinity::memory_evolution::memory_add_item,
+        titane_infinity::memory_evolution::memory_parse,
+        titane_infinity::memory_evolution::memory_synthesize,
+        titane_infinity::memory_evolution::memory_cluster,
+        titane_infinity::memory_evolution::memory_compress,
+        titane_infinity::memory_evolution::memory_extract_patterns,
+        titane_infinity::memory_evolution::memory_check_stability,
+        titane_infinity::memory_evolution::memory_check_and_repair,
+        titane_infinity::memory_evolution::memory_grow,
+        titane_infinity::memory_evolution::memory_hierarchy_health,
+        titane_infinity::memory_evolution::memory_evolve_full,
+        titane_infinity::memory_evolution::memory_update_config,
+        titane_infinity::memory_evolution::memory_get_clusters,
+        titane_infinity::memory_evolution::memory_get_items_by_level,
+        titane_infinity::memory_evolution::memory_create_backup,
+        titane_infinity::memory_evolution::memory_list_backups,
+        // ═══════════════════════════════════════════════════════════════
+        // SYSTEM IDENTITY ENGINE v∞ (OPUS #15) - Personality & Voice System
+        // Matrix, Voice, Tone, Mode, Rules, Personality
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::identity::identity_get_status,
+        titane_infinity::identity::identity_get_full,
+        titane_infinity::identity::identity_set_mode,
+        titane_infinity::identity::identity_set_communication_style,
+        titane_infinity::identity::identity_evolve_trait,
+        titane_infinity::identity::identity_get_response_profile,
+        titane_infinity::identity::identity_get_matrix,
+        titane_infinity::identity::identity_set_matrix_dimension,
+        titane_infinity::identity::identity_apply_matrix_profile,
+        titane_infinity::identity::identity_list_voice_profiles,
+        titane_infinity::identity::identity_get_active_voice_profile,
+        titane_infinity::identity::identity_set_active_voice_profile,
+        titane_infinity::identity::identity_get_tone,
+        titane_infinity::identity::identity_set_tone,
+        titane_infinity::identity::identity_list_modes,
+        titane_infinity::identity::identity_get_mode_history,
+        titane_infinity::identity::identity_get_rules_stats,
+        titane_infinity::identity::identity_toggle_rule,
+        titane_infinity::identity::identity_get_personality_state,
+        titane_infinity::identity::identity_get_personality_profile,
+        titane_infinity::identity::identity_set_mood,
+        titane_infinity::identity::identity_adjust_energy,
     ]);
 
     builder

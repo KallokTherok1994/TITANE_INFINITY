@@ -80,6 +80,13 @@ const MENU_SECTIONS: MenuSection[] = [
     label: 'Historique',
     description: 'Journal complet des actions et modifications',
     route: '/memory'
+  },
+  {
+    id: 'cloud',
+    icon: '☁️',
+    label: 'Cloud Sync',
+    description: 'Synchronisation chiffrée multi-appareils',
+    route: '/cloud'
   }
 ];
 

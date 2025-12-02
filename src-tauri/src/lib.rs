@@ -98,6 +98,24 @@ pub mod self_repair; // ✅ Auto-Réparation
 #[cfg(feature = "mock")]
 pub mod mock_commands;
 
+// ═══════════════════════════════════════════════════════════════
+// CLOUD SYNC ENGINE v∞ (OPUS #13)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod cloud; // ✅ Cloud Sync Engine v∞ (Vault chiffré, Multi-device, AES-256-GCM)
+
+// ═══════════════════════════════════════════════════════════════
+// MEMORY EVOLUTION ENGINE++ v∞ (OPUS #14)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod memory_evolution; // ✅ Memory Evolution Engine++ v∞ (Parser, Synthesizer, Clusterer, Vectorizer, Compressor, Patterns, Stability, Growth)
+
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM IDENTITY ENGINE v∞ (OPUS #15)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod identity; // ✅ System Identity Engine v∞ (Matrix, Voice, Tone, Mode, Rules, Personality)
+
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod commands;
 

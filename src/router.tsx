@@ -33,6 +33,7 @@ const AdaptiveEngine = lazy(() => import('./pages').then(m => ({ default: m.Adap
 const Memory = lazy(() => import('./pages').then(m => ({ default: m.Memory })));
 const Settings = lazy(() => import('./pages').then(m => ({ default: m.Settings })));
 const DevTools = lazy(() => import('./pages').then(m => ({ default: m.DevTools })));
+const CloudCenter = lazy(() => import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter })));
 
 // ═══════════════════════════════════════════════════════════════
 // LOADING FALLBACK COMPONENT
@@ -169,6 +170,11 @@ const router = createBrowserRouter([
   {
     path: '/devtools',
     element: <LayoutWrapper><DevTools /></LayoutWrapper>,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: '/cloud',
+    element: <LayoutWrapper><CloudCenter /></LayoutWrapper>,
     errorElement: <ErrorFallback />,
   },
   {
