@@ -97,20 +97,20 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
     returnType: 'string',
     active: true,
   },
-  'voice_start_recording': {
-    name: 'voice_start_recording',
+  'start_recording': {
+    name: 'start_recording',
     description: 'Start voice recording',
-    returnType: 'void',
+    returnType: 'string',
     active: true,
   },
-  'voice_stop_recording': {
-    name: 'voice_stop_recording',
+  'stop_recording': {
+    name: 'stop_recording',
     description: 'Stop voice recording',
     returnType: 'AudioData',
     active: true,
   },
-  'voice_speak': {
-    name: 'voice_speak',
+  'speak': {
+    name: 'speak',
     description: 'Speak text using TTS',
     params: { text: 'string', voice: 'string' },
     returnType: 'void',
@@ -362,13 +362,13 @@ export const TauriAPI = {
 
   // Voice
   startVoiceRecording: () =>
-    invokeTauriCommand('voice_start_recording'),
+    invokeTauriCommand<string>('start_recording'),
 
   stopVoiceRecording: () =>
-    invokeTauriCommand<VoiceRecordingResult>('voice_stop_recording'),
+    invokeTauriCommand<VoiceRecordingResult>('stop_recording'),
 
   speak: (text: string, voice = 'default') =>
-    invokeTauriCommand('voice_speak', { text, voice }),
+    invokeTauriCommand('speak', { text, voice }),
 
   // Engine
   initEngine: () =>

@@ -63,6 +63,7 @@ default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]
 mock = [] # Mock backend mode for frontend-only development
 full = [] # Full backend mode with all real implementations
+ollama = [] # Ollama integration for local LLM
 audio-capture = [
     "cpal",
 ] # Enable real-time audio capture (requires libasound2-dev)

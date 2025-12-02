@@ -1331,6 +1331,47 @@ async fn main() {
         titane_infinity::identity::identity_get_personality_profile,
         titane_infinity::identity::identity_set_mood,
         titane_infinity::identity::identity_adjust_energy,
+        // ═══════════════════════════════════════════════════════════════
+        // META ORCHESTRATOR ENGINE v∞ (OPUS #18) - System Supervisor
+        // Awareness, Resources, Priority Scheduler
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::meta_orchestrator::commands::orchestrator_init,
+        titane_infinity::meta_orchestrator::commands::orchestrator_get_state,
+        titane_infinity::meta_orchestrator::commands::orchestrator_run_cycle,
+        titane_infinity::meta_orchestrator::commands::orchestrator_set_mode,
+        titane_infinity::meta_orchestrator::commands::orchestrator_get_metrics,
+        titane_infinity::meta_orchestrator::commands::orchestrator_enqueue_task,
+        titane_infinity::meta_orchestrator::commands::orchestrator_get_queue,
+        titane_infinity::meta_orchestrator::commands::orchestrator_get_engines,
+        titane_infinity::meta_orchestrator::commands::orchestrator_get_health,
+        titane_infinity::meta_orchestrator::commands::orchestrator_get_report,
+        // ═══════════════════════════════════════════════════════════════
+        // REALITY RENDERING LAYER v∞ (OPUS #19) - Scene, Physics, Lighting
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::reality_renderer::commands::reality_init,
+        titane_infinity::reality_renderer::commands::reality_get_state,
+        titane_infinity::reality_renderer::commands::reality_render_frame,
+        titane_infinity::reality_renderer::commands::reality_create_scene,
+        titane_infinity::reality_renderer::commands::reality_load_scene,
+        titane_infinity::reality_renderer::commands::reality_add_entity,
+        titane_infinity::reality_renderer::commands::reality_remove_entity,
+        titane_infinity::reality_renderer::commands::reality_set_render_config,
+        titane_infinity::reality_renderer::commands::reality_toggle_physics,
+        titane_infinity::reality_renderer::commands::reality_get_report,
+        // ═══════════════════════════════════════════════════════════════
+        // HYPER-INTELLIGENCE ENGINE v∞ (OPUS #20) - Reasoning, Creativity, Cognition
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::hyper_intelligence::commands::hyper_init,
+        titane_infinity::hyper_intelligence::commands::hyper_get_state,
+        titane_infinity::hyper_intelligence::commands::hyper_get_metrics,
+        titane_infinity::hyper_intelligence::commands::hyper_set_mode,
+        titane_infinity::hyper_intelligence::commands::hyper_think,
+        titane_infinity::hyper_intelligence::commands::hyper_generate_insight,
+        titane_infinity::hyper_intelligence::commands::hyper_reason,
+        titane_infinity::hyper_intelligence::commands::hyper_imagine,
+        titane_infinity::hyper_intelligence::commands::hyper_get_thoughts,
+        titane_infinity::hyper_intelligence::commands::hyper_get_insights,
+        titane_infinity::hyper_intelligence::commands::hyper_get_report,
     ]);
 
     builder

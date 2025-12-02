@@ -194,15 +194,15 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
 
 // --- VOICE ---
 export async function startVoiceRecording() {
-  return invokeTauriCommand<void>('voice_start_recording');
+  return invokeTauriCommand<string>('start_recording');
 }
 
 export async function stopVoiceRecording() {
-  return invokeTauriCommand<VoiceRecordingResult>('voice_stop_recording');
+  return invokeTauriCommand<VoiceRecordingResult>('stop_recording');
 }
 
 export async function voiceSpeak(text: string, voice?: string) {
-  return invokeTauriCommand<void>('voice_speak', { text, voice });
+  return invokeTauriCommand<void>('speak', { text, voice });
 }
 
 // --- ENGINE MANAGEMENT ---
