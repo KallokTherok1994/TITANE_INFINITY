@@ -115,6 +115,19 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'memory_delete',
   'memory_import',
 
+  // Memory Engine v∞ (Super Prompt #3)
+  'memory_retrieve',
+  'memory_update',
+  'memory_search_semantic',
+  'memory_compress',
+  'memory_promote',
+  'memory_archive',
+  'memory_health',
+  'memory_maintenance',
+  'context_save',
+  'context_restore',
+  'context_clear',
+
   // ═══════════════════════════════════════════════════════════════
   // AI / CHAT COMMANDS
   // ═══════════════════════════════════════════════════════════════
@@ -445,6 +458,119 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'selfheal_load_profile',
   'selfheal_save_profile',
   'selfheal_sync_with_singularity',
+
+  // ═══════════════════════════════════════════════════════════════
+  // CONTEXT OPTIMIZER (v24.30)
+  // ═══════════════════════════════════════════════════════════════
+  'context_compress',
+  'context_semantic_grouping',
+  'context_selective_injection',
+  'context_remove_noise',
+  'context_gating',
+  'context_link_conversations',
+
+  // ═══════════════════════════════════════════════════════════════
+  // VISUAL DEVOPS ENGINE (v25.5)
+  // ═══════════════════════════════════════════════════════════════
+  'visual_devops_analyze_screen',
+  'visual_devops_detect_elements',
+  'visual_devops_extract_code',
+  'visual_devops_generate_fix',
+  'visual_devops_generate_script',
+  'visual_devops_validate_script',
+  'visual_devops_start_session',
+  'visual_devops_save_session',
+  'visual_devops_load_session',
+  'visual_devops_get_report',
+  'visual_devops_get_stats',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SINGULARITY FUSION ENGINE (v24)
+  // ═══════════════════════════════════════════════════════════════
+  'singularity_fusion_cycle',
+  'singularity_fusion_get_state',
+  'singularity_fusion_report_bottleneck',
+  'singularity_fusion_sync_media',
+  'fusion_analyze_intention',
+  'fusion_activate_modules',
+  'fusion_configure_style',
+  'fusion_generate_ia_response',
+  'fusion_adjust_styles',
+  'fusion_update_state',
+  'fusion_prepare_tts',
+  'fusion_process_lipsync',
+  'fusion_animate_avatar',
+  'fusion_auto_optimize',
+  'fusion_sync_state',
+  'fusion_report_bottleneck',
+
+  // ═══════════════════════════════════════════════════════════════
+  // COGNITIVE OPTIMIZATION ENGINE (v24)
+  // ═══════════════════════════════════════════════════════════════
+  'cognitive_analyze_intention',
+  'cognitive_check_coherence',
+  'cognitive_auto_correct',
+  'cognitive_auto_correct_response',
+  'cognitive_compress_context',
+  'cognitive_optimize_context',
+  'cognitive_memory_gating',
+  'cognitive_cluster_semantic',
+  'cognitive_cluster_messages',
+  'cognitive_inject_selective',
+  'cognitive_mini_reasoning',
+  'cognitive_maintain_continuity',
+  'cognitive_narrative_continuity',
+  'cognitive_prioritize_steps',
+
+  // ═══════════════════════════════════════════════════════════════
+  // SINGULARITY AUTONOMY ENGINE (v24)
+  // ═══════════════════════════════════════════════════════════════
+  'singularity_autonomy_scan',
+  'singularity_autonomy_fix',
+  'singularity_autonomy_heal',
+  'singularity_autonomy_optimize',
+  'singularity_autonomy_evolve',
+  'singularity_autonomy_test',
+  'singularity_autonomy_shield',
+  'singularity_autonomy_analyse',
+
+  // ═══════════════════════════════════════════════════════════════
+  // AUTOMATION + XP ENGINE (vΩ∞)
+  // ═══════════════════════════════════════════════════════════════
+  'xp_sync_state',
+  'xp_add_points',
+  'xp_get_state',
+  'xp_check_level',
+  'automation_execute_action',
+  'automation_get_list',
+  'automation_create',
+  'automation_update',
+  'automation_delete',
+  'automation_trigger',
+  'achievement_unlock',
+  'achievement_check',
+  'daily_reward_claim',
+
+  // ═══════════════════════════════════════════════════════════════
+  // REALTIME EXECUTION ENGINE (v24)
+  // ═══════════════════════════════════════════════════════════════
+  'realtime_stream_tts',
+  'realtime_generate_avatar_animations',
+  'realtime_execute_pipeline',
+  'realtime_send_network',
+  'realtime_network_task',
+
+  // ═══════════════════════════════════════════════════════════════
+  // NUMERIC TWIN ENGINE (vΩ∞)
+  // ═══════════════════════════════════════════════════════════════
+  'twin_get_state',
+  'twin_get_fusion_index',
+  'twin_submit_observation',
+  'twin_apply_evolution',
+  'twin_validate_sync',
+  'twin_get_evolution_profile',
+  'twin_get_identity',
+  'twin_recalculate_fusion',
 ]);
 
 /**

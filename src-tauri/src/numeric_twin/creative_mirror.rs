@@ -98,34 +98,32 @@ impl Default for CreativeProfile {
 
 impl CreativeMirror {
     pub fn new() -> Self {
-        let mut frameworks = Vec::new();
-
-        // Frameworks existants Kevin
-        frameworks.push(Framework {
-            name: "TITANE∞".to_string(),
-            domain: "Système IA".to_string(),
-            description: "Architecture cognitive symbiotique auto-évolutive".to_string(),
-            components: vec![
-                "Singularity Core".to_string(),
-                "Evolution Engine".to_string(),
-                "Numeric Twin".to_string(),
-                "Memory System".to_string(),
-            ],
-            created_at: Utc::now(),
-        });
-
-        frameworks.push(Framework {
-            name: "Humain Total".to_string(),
-            domain: "Développement personnel".to_string(),
-            description: "Intégration corps-émotions-esprit-âme".to_string(),
-            components: vec![
-                "Corps".to_string(),
-                "Émotions".to_string(),
-                "Mental".to_string(),
-                "Esprit".to_string(),
-            ],
-            created_at: Utc::now(),
-        });
+        let frameworks = vec![
+            Framework {
+                name: "TITANE∞".to_string(),
+                domain: "Système IA".to_string(),
+                description: "Architecture cognitive symbiotique auto-évolutive".to_string(),
+                components: vec![
+                    "Singularity Core".to_string(),
+                    "Evolution Engine".to_string(),
+                    "Numeric Twin".to_string(),
+                    "Memory System".to_string(),
+                ],
+                created_at: Utc::now(),
+            },
+            Framework {
+                name: "Humain Total".to_string(),
+                domain: "Développement personnel".to_string(),
+                description: "Intégration corps-émotions-esprit-âme".to_string(),
+                components: vec![
+                    "Corps".to_string(),
+                    "Émotions".to_string(),
+                    "Mental".to_string(),
+                    "Esprit".to_string(),
+                ],
+                created_at: Utc::now(),
+            },
+        ];
 
         let mut symbols = HashMap::new();
         symbols.insert("∞".to_string(), SymbolUsage {

@@ -99,7 +99,8 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
         if (env.isTauri) {
           // En mode Tauri, utiliser test_microphone backend
           try {
-            const result = await secureInvoke<{ success: boolean }>('test_microphone');
+            // durationMs: 1000ms minimum pour test rapide de disponibilité
+            const result = await secureInvoke<{ success: boolean }>('test_microphone', { durationMs: 1000 });
             micAvailable = result?.success === true;
           } catch {
             console.warn('[useVoiceEngine] Tauri microphone test failed');

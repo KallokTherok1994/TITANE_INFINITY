@@ -198,7 +198,7 @@ impl EvolutionSyncer {
         self.kevin_trajectory.entrepreneurial.recent_progress += impact * 0.3;
         self.kevin_trajectory.spiritual.recent_progress += impact * 0.2;
 
-        self.update_trajectory_levels(&mut self.kevin_trajectory.clone());
+        self.update_trajectory_levels(&self.kevin_trajectory.clone());
     }
 
     /// Applique une croissance TITANE
@@ -208,7 +208,7 @@ impl EvolutionSyncer {
         self.titane_trajectory.entrepreneurial.recent_progress += impact * 0.2;
         self.titane_trajectory.spiritual.recent_progress += impact * 0.2;
 
-        self.update_trajectory_levels(&mut self.titane_trajectory.clone());
+        self.update_trajectory_levels(&self.titane_trajectory.clone());
     }
 
     /// Met à jour les niveaux d'une trajectoire

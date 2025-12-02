@@ -120,7 +120,8 @@ export const VoiceConversation = ({
 
       // En mode Tauri, vérifier d'abord le micro via backend
       if (env.isTauri) {
-        const testResult = await secureInvoke<{ success: boolean }>('test_microphone');
+        // durationMs: 1000ms minimum pour test rapide de disponibilité
+        const testResult = await secureInvoke<{ success: boolean }>('test_microphone', { durationMs: 1000 });
         if (!testResult?.success) {
           console.warn('[VoiceConversation] Microphone not available in Tauri');
           return;

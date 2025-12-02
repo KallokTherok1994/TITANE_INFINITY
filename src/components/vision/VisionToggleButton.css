@@ -1,0 +1,258 @@
+/**
+ * TITANE∞ vΩ∞ — VISION TOGGLE BUTTON STYLES
+ * Super Prompt #9: Styles pour le bouton toggle vision
+ *
+ * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
+ */
+
+/* ============================================================================
+   BASE
+   ============================================================================ */
+
+.vision-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(20, 20, 35, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.vision-toggle:hover:not(:disabled) {
+  background: rgba(30, 30, 50, 0.95);
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.vision-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+.vision-toggle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================================
+   VARIANTS
+   ============================================================================ */
+
+.vision-toggle--compact {
+  padding: 8px 14px;
+  font-size: 12px;
+  gap: 8px;
+}
+
+.vision-toggle--pill {
+  padding: 10px 18px;
+  border-radius: 50px;
+}
+
+/* ============================================================================
+   STATES
+   ============================================================================ */
+
+.vision-toggle--active {
+  background: rgba(0, 255, 150, 0.1);
+  border-color: rgba(0, 255, 150, 0.3);
+  color: rgba(0, 255, 150, 0.95);
+}
+
+.vision-toggle--active:hover:not(:disabled) {
+  background: rgba(0, 255, 150, 0.15);
+  border-color: rgba(0, 255, 150, 0.5);
+}
+
+/* ============================================================================
+   ICON
+   ============================================================================ */
+
+.vision-toggle__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.vision-toggle--compact .vision-toggle__icon {
+  font-size: 14px;
+}
+
+/* ============================================================================
+   LABEL
+   ============================================================================ */
+
+.vision-toggle__label {
+  white-space: nowrap;
+}
+
+/* ============================================================================
+   DOT
+   ============================================================================ */
+
+.vision-toggle__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.vision-toggle__dot--active {
+  background: #00ff96;
+  box-shadow: 0 0 10px rgba(0, 255, 150, 0.5);
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+}
+
+/* ============================================================================
+   CONFIRMATION MODE
+   ============================================================================ */
+
+.vision-toggle--confirmation {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 20px;
+  min-width: 280px;
+  background: rgba(15, 15, 25, 0.98);
+  border-color: rgba(0, 255, 255, 0.3);
+  cursor: default;
+}
+
+.vision-toggle__confirmation-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.vision-toggle__confirmation-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.vision-toggle__confirmation-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.vision-toggle__confirmation-disclaimer {
+  font-size: 11px;
+  color: rgba(0, 255, 150, 0.7);
+  padding: 8px 16px;
+  background: rgba(0, 255, 150, 0.05);
+  border-radius: 8px;
+}
+
+.vision-toggle__confirmation-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.vision-toggle__btn {
+  flex: 1;
+  padding: 10px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vision-toggle__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.vision-toggle__btn--cancel {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vision-toggle__btn--cancel:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.vision-toggle__btn--confirm {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(0, 255, 150, 0.8), rgba(0, 200, 255, 0.8));
+  border: none;
+}
+
+.vision-toggle__btn--confirm:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(0, 255, 150, 0.9), rgba(0, 200, 255, 0.9));
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 255, 150, 0.3);
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .vision-toggle {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .vision-toggle--confirmation {
+    min-width: 240px;
+    padding: 16px;
+  }
+
+  .vision-toggle__confirmation-text {
+    font-size: 14px;
+  }
+}
+
+/* ============================================================================
+   DARK THEME GLOW
+   ============================================================================ */
+
+.vision-toggle--active::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(0, 255, 150, 0.2), rgba(0, 200, 255, 0.2));
+  opacity: 0.5;
+  z-index: -1;
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

@@ -213,9 +213,9 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
 
       const env = detectEnvironment();
 
-      // In Tauri mode, test microphone first via backend
+      // In Tauri mode, test microphone first via backend (1000ms test rapide)
       if (env.isTauri) {
-        const testResult = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone');
+        const testResult = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone', { durationMs: 1000 });
         if (!testResult?.success) {
           setError(testResult?.errorMessage || 'Microphone non disponible');
           return;

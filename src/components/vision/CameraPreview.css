@@ -1,0 +1,324 @@
+/**
+ * TITANE∞ vΩ∞ — CAMERA PREVIEW STYLES
+ * Super Prompt #9: Styles pour la prévisualisation caméra
+ *
+ * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
+ */
+
+/* ============================================================================
+   BASE
+   ============================================================================ */
+
+.camera-preview {
+  position: fixed;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 15, 25, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 12px;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    0 0 20px rgba(0, 255, 255, 0.1);
+  overflow: hidden;
+  transition:
+    width 0.3s ease,
+    height 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* ============================================================================
+   SIZES
+   ============================================================================ */
+
+.camera-preview--small {
+  width: 160px;
+}
+
+.camera-preview--small .camera-preview__video-container {
+  height: 120px;
+}
+
+.camera-preview--medium {
+  width: 240px;
+}
+
+.camera-preview--medium .camera-preview__video-container {
+  height: 180px;
+}
+
+.camera-preview--large {
+  width: 320px;
+}
+
+.camera-preview--large .camera-preview__video-container {
+  height: 240px;
+}
+
+/* ============================================================================
+   POSITIONS
+   ============================================================================ */
+
+.camera-preview--top-left {
+  top: 80px;
+  left: 20px;
+}
+
+.camera-preview--top-right {
+  top: 80px;
+  right: 20px;
+}
+
+.camera-preview--bottom-left {
+  bottom: 100px;
+  left: 20px;
+}
+
+.camera-preview--bottom-right {
+  bottom: 100px;
+  right: 20px;
+}
+
+/* ============================================================================
+   STATES
+   ============================================================================ */
+
+.camera-preview--minimized {
+  height: auto !important;
+}
+
+.camera-preview--minimized .camera-preview__video-container,
+.camera-preview--minimized .camera-preview__footer {
+  display: none;
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+.camera-preview__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+  user-select: none;
+}
+
+.camera-preview__indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.camera-preview__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color, #888);
+}
+
+.camera-preview__dot--recording {
+  --color: #ff3366;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(0.8);
+  }
+}
+
+.camera-preview__label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: rgba(0, 255, 255, 0.8);
+  text-transform: uppercase;
+}
+
+.camera-preview__controls {
+  display: flex;
+  gap: 4px;
+}
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.camera-preview__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.camera-preview__btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.camera-preview__btn--close:hover {
+  color: #ff3366;
+  background: rgba(255, 51, 102, 0.1);
+}
+
+.camera-preview__btn--stop {
+  width: auto;
+  height: auto;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 51, 102, 0.2);
+  border: 1px solid rgba(255, 51, 102, 0.3);
+  border-radius: 6px;
+}
+
+.camera-preview__btn--stop:hover {
+  color: #fff;
+  background: rgba(255, 51, 102, 0.3);
+  border-color: rgba(255, 51, 102, 0.5);
+}
+
+/* ============================================================================
+   VIDEO CONTAINER
+   ============================================================================ */
+
+.camera-preview__video-container {
+  position: relative;
+  background: #000;
+  overflow: hidden;
+}
+
+.camera-preview__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.camera-preview__video--mirrored {
+  transform: scaleX(-1);
+}
+
+.camera-preview__landmarks-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* ============================================================================
+   PRIVACY BADGE
+   ============================================================================ */
+
+.camera-preview__privacy-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  font-size: 9px;
+  font-weight: 600;
+  color: rgba(0, 255, 150, 0.9);
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+}
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
+
+.camera-preview__footer {
+  display: flex;
+  justify-content: center;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .camera-preview--small {
+    width: 120px;
+  }
+
+  .camera-preview--small .camera-preview__video-container {
+    height: 90px;
+  }
+
+  .camera-preview--medium {
+    width: 180px;
+  }
+
+  .camera-preview--medium .camera-preview__video-container {
+    height: 135px;
+  }
+
+  .camera-preview__header {
+    padding: 6px 8px;
+  }
+
+  .camera-preview__label {
+    font-size: 8px;
+  }
+}
+
+/* ============================================================================
+   DARK THEME ENHANCEMENTS
+   ============================================================================ */
+
+.camera-preview {
+  backdrop-filter: blur(10px);
+}
+
+/* Glow effect when active */
+.camera-preview::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  bottom: -1px;
+  border-radius: 12px;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 255, 255, 0.2) 0%,
+    transparent 50%,
+    rgba(255, 51, 102, 0.2) 100%
+  );
+  opacity: 0.5;
+  z-index: -1;
+  animation: glow-rotate 10s linear infinite;
+}
+
+@keyframes glow-rotate {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}

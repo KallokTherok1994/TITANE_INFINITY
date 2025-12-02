@@ -162,7 +162,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
 
     render(<ChatWindow onVoiceModeToggle={mockVoiceToggle} voiceModeActive={false} />);
 
-    const voiceButton = screen.getByTitle('Toggle Voice Mode');
+    const voiceButton = screen.getByTitle('Activer/Désactiver le Mode Vocal');
     fireEvent.click(voiceButton);
 
     expect(mockVoiceToggle).toHaveBeenCalled();

@@ -793,12 +793,10 @@ impl NumericTwinEngine {
     /// Applique une évolution (avec validation si nécessaire)
     pub fn apply_evolution(&mut self, evolution: TwinEvolutionRequest) -> Result<TwinEvolutionResult, TwinError> {
         // Vérifier si validation requise
-        if self.config.require_validation_for_deep_changes && evolution.is_deep_change {
-            if !evolution.validated_by_kevin {
-                return Err(TwinError::ValidationRequired(
-                    "Deep changes require Kevin's validation".to_string()
-                ));
-            }
+        if self.config.require_validation_for_deep_changes && evolution.is_deep_change && !evolution.validated_by_kevin {
+            return Err(TwinError::ValidationRequired(
+                "Deep changes require Kevin's validation".to_string()
+            ));
         }
 
         // Appliquer selon le type

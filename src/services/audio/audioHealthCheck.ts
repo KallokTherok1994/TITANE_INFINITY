@@ -627,8 +627,8 @@ class AudioHealthService {
 
       if (env.isTauri) {
         // En Tauri, on ne peut pas "réparer" les permissions système
-        // On peut juste re-tester
-        const result = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone');
+        // On peut juste re-tester (1000ms test rapide)
+        const result = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone', { durationMs: 1000 });
         action.success = result?.success === true;
         action.message = result?.success
           ? 'Microphone accessible via backend Tauri'
