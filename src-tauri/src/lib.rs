@@ -150,6 +150,12 @@ pub mod reality_renderer; // ✅ Reality Renderer v∞ (Scene, Physics, Lighting
 
 pub mod hyper_intelligence; // ✅ Hyper-Intelligence v∞ (Reasoning, Creativity, Cognition)
 
+// ═══════════════════════════════════════════════════════════════
+// NUMERIC TWIN ENGINE vΩ∞ (SUPER PROMPT — AVATAR TITANE∞)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod numeric_twin; // ✅ Numeric Twin vΩ∞ (Kevin ↔ TITANE Symbiosis, 6 Sub-Engines)
+
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod commands;
 
