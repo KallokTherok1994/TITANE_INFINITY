@@ -405,7 +405,7 @@ export class SelfHealingSyncLayer {
    * Met à jour un vital spécifique
    */
   public updateVital(key: keyof VitalsSnapshot, value: number | boolean): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     (this.vitals as any)[key] = value;
     this.vitals.timestamp = Date.now();
   }

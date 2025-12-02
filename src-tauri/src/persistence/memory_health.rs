@@ -412,8 +412,39 @@ impl MemoryHealthEngine {
         report
     }
 
-    /// Exécuter une commande de correction
+    /// Exécuter une commande de correction et tracer via TitanEvent
     async fn execute_fix(&self, command: &str) -> Result<(), String> {
+        use super::types::{TitanEvent, EventOrigin};
+
+        let start = std::time::Instant::now();
+        let result = self.execute_fix_internal(command).await;
+        let duration_ms = start.elapsed().as_millis() as u64;
+
+        // Tracer l'action de self-heal via un TitanEvent
+        let event = TitanEvent::with_origin(
+            "self_heal",
+            if result.is_ok() { "fix_success" } else { "fix_failed" },
+            serde_json::json!({
+                "command": command,
+                "success": result.is_ok(),
+                "error": result.as_ref().err(),
+                "duration_ms": duration_ms,
+                "timestamp": chrono::Utc::now().timestamp_millis()
+            }),
+            EventOrigin::SelfHeal,
+        );
+
+        // Persister l'événement (ne pas bloquer en cas d'erreur)
+        let mut engine = super::PERSISTENCE_ENGINE.write().await;
+        if let Err(e) = engine.persist_event(event).await {
+            log::warn!("[MemoryHealth] Impossible de tracer l'action self_heal: {}", e);
+        }
+
+        result
+    }
+
+    /// Exécution interne de la correction
+    async fn execute_fix_internal(&self, command: &str) -> Result<(), String> {
         match command {
             "titan_compact_journal" => {
                 let mut engine = super::PERSISTENCE_ENGINE.write().await;

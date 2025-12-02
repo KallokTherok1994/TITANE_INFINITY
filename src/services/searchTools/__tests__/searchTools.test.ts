@@ -11,9 +11,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('PermissionManager', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let PermissionManager: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let manager: any;
 
   beforeEach(async () => {
@@ -239,9 +239,9 @@ describe('PermissionManager', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SearchEngine', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SearchEngine: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let engine: any;
 
   beforeEach(async () => {
@@ -372,9 +372,9 @@ describe('SearchEngine', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('ToolsEngine', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let ToolsEngine: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let engine: any;
 
   beforeEach(async () => {
@@ -606,9 +606,9 @@ describe('ToolsEngine', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SearchToolsOrchestrator', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SearchToolsOrchestrator: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let orchestrator: any;
 
   beforeEach(async () => {

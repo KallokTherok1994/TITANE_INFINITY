@@ -11,9 +11,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // =============================================================================
 
 describe('IntentParser', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let IntentParser: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let parser: any;
 
   beforeEach(async () => {
@@ -158,9 +158,9 @@ describe('IntentParser', () => {
 // =============================================================================
 
 describe('ContextCollector', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let ContextCollector: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let collector: any;
 
   beforeEach(async () => {
@@ -269,9 +269,9 @@ describe('ContextCollector', () => {
 // =============================================================================
 
 describe('PromptAssembler', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let PromptAssembler: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let assembler: any;
 
   beforeEach(async () => {
@@ -419,9 +419,9 @@ describe('PromptAssembler', () => {
 // =============================================================================
 
 describe('PromptEngineOrchestrator', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let PromptEngineOrchestrator: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let engine: any;
 
   beforeEach(async () => {

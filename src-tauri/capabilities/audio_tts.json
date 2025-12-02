@@ -1,0 +1,44 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "audio-tts",
+  "description": "Capability pour le système Audio/TTS/ASR TITANE∞",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ],
+  "commands": {
+    "allow": [
+      "tts_speak",
+      "tts_stop",
+      "test_tts",
+      "speak",
+      "stop_speaking",
+      "is_speaking",
+      "get_audio_output_devices",
+      "get_audio_input_devices",
+      "set_audio_output_device",
+      "set_audio_input_device",
+      "test_microphone",
+      "start_recording",
+      "stop_recording",
+      "transcribe_audio",
+      "vad_get_state",
+      "vad_process_frame",
+      "vad_configure",
+      "vad_reset",
+      "vad_test",
+      "voice_start_listening",
+      "voice_stop_listening",
+      "voice_transcribe_audio",
+      "voice_detect_wake_word",
+      "voice_synthesize_speech",
+      "voice_play_audio",
+      "voice_stop_speaking",
+      "voice_get_config",
+      "voice_update_config",
+      "voice_get_status",
+      "voice_calibrate_microphone"
+    ],
+    "deny": []
+  }
+}

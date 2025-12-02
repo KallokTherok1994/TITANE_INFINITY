@@ -20,12 +20,63 @@ import { listen } from '@tauri-apps/api/event';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════════
 
-/** Événement TITANE pour persistence */
+/** Origine d'un événement TITANE */
+export type EventOrigin = 'user' | 'engine' | 'self_heal' | 'system' | 'migration';
+
+/** Version actuelle du schéma d'événements */
+export const CURRENT_SCHEMA_VERSION = 2;
+
+/** Événement TITANE pour persistence
+ *
+ * Conforme à l'architecture Event Sourcing v∞ avec:
+ * - ID unique (UUID v4) pour déduplication
+ * - Timestamp en millisecondes pour ordering
+ * - schema_version pour migrations
+ * - origin pour traçabilité (user, engine, self_heal, system)
+ */
 export interface TitanEvent {
+  id?: string; // Généré côté backend si non fourni
+  timestamp?: number; // Généré côté backend si non fourni
+  schema_version?: number; // Défaut: CURRENT_SCHEMA_VERSION
+  origin?: EventOrigin; // Défaut: 'user'
   module: string;
   event_type: string;
   payload: Record<string, unknown>;
   metadata?: Record<string, unknown>;
+}
+
+/** Helper pour créer un événement utilisateur */
+export function createUserEvent(
+  module: string,
+  eventType: string,
+  payload: Record<string, unknown>,
+  metadata?: Record<string, unknown>
+): TitanEvent {
+  return {
+    origin: 'user',
+    schema_version: CURRENT_SCHEMA_VERSION,
+    module,
+    event_type: eventType,
+    payload,
+    metadata,
+  };
+}
+
+/** Helper pour créer un événement système */
+export function createSystemEvent(
+  module: string,
+  eventType: string,
+  payload: Record<string, unknown>,
+  metadata?: Record<string, unknown>
+): TitanEvent {
+  return {
+    origin: 'system',
+    schema_version: CURRENT_SCHEMA_VERSION,
+    module,
+    event_type: eventType,
+    payload,
+    metadata,
+  };
 }
 
 /** Status de persistence */

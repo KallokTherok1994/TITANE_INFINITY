@@ -72,82 +72,83 @@ const HyperVisionDashboard: React.FC = () => {
     }
   };
 
+  // Design System TITANE — Couleurs monochromes pour santé
   const getHealthColor = (value: number) => {
-    if (value >= 90) return 'text-green-400';
-    if (value >= 70) return 'text-yellow-400';
-    if (value >= 50) return 'text-orange-400';
-    return 'text-red-400';
+    if (value >= 90) return 'text-[#93b399]'; // success (vert métal)
+    if (value >= 70) return 'text-[#c4c4c4]'; // secondary (argent)
+    if (value >= 50) return 'text-[#a89f91]'; // warning (beige métal)
+    return 'text-[#8f7a7a]'; // danger (rouge-gris)
   };
 
   const _getHealthBg = (value: number) => {
-    if (value >= 90) return 'bg-green-500';
-    if (value >= 70) return 'bg-yellow-500';
-    if (value >= 50) return 'bg-orange-500';
-    return 'bg-red-500';
+    if (value >= 90) return 'bg-[#93b399]'; // success
+    if (value >= 70) return 'bg-[#c4c4c4]'; // secondary
+    if (value >= 50) return 'bg-[#a89f91]'; // warning
+    return 'bg-[#8f7a7a]'; // danger
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#111416] to-[#0f0f0f] p-6">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-600">
+          <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#c4c4c4] to-[#93b399]">
             HyperVision
           </h1>
-          <p className="text-gray-400 mt-2">Phase 7 : Surveillance système en temps réel</p>
+          <p className="text-[#9ca3af] mt-2">Phase 7 : Surveillance système en temps réel</p>
         </div>
 
         {!isMonitoring && (
           <button
             onClick={startMonitoring}
-            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-semibold px-6 py-3 rounded-lg transition-all"
+            className="bg-gradient-to-r from-[#727b81] to-[#93b399] hover:from-[#93b399] hover:to-[#727b81] text-[#0a0a0a] font-semibold px-6 py-3 rounded-lg transition-all"
           >
             🚀 Démarrer la surveillance
           </button>
         )}
 
         {isMonitoring && (
-          <div className="flex items-center gap-2 text-green-400">
-            <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+          <div className="flex items-center gap-2 text-[#93b399]">
+            <div className="w-3 h-3 bg-[#93b399] rounded-full animate-pulse" />
             <span className="font-semibold">SURVEILLANCE ACTIVE</span>
           </div>
         )}
       </div>
 
       {!isMonitoring ? (
-        <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-12 border border-blue-500/30 text-center">
+        <div className="bg-[rgba(255,255,255,0.03)] backdrop-blur-xl rounded-2xl p-12 border border-[rgba(147,179,153,0.2)] text-center">
           <div className="text-6xl mb-4">📊</div>
-          <h2 className="text-2xl font-semibold text-white mb-2">Démarrer la surveillance système</h2>
-          <p className="text-gray-400">Cliquez sur le bouton ci-dessus pour commencer l'observation en temps réel</p>
+          <h2 className="text-2xl font-semibold text-[#e8e8e8] mb-2">Démarrer la surveillance système</h2>
+          <p className="text-[#9ca3af]">Cliquez sur le bouton ci-dessus pour commencer l'observation en temps réel</p>
         </div>
       ) : (
         <>
           {/* Main Metrics Grid */}
           {metrics && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
-                <div className="text-gray-400 text-sm mb-2">Utilisation CPU</div>
+              <div className="bg-gradient-to-br from-[rgba(114,123,129,0.1)] to-[rgba(147,179,153,0.1)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(114,123,129,0.2)]">
+                <div className="text-[#9ca3af] text-sm mb-2">Utilisation CPU</div>
                 <div className={`text-3xl font-bold ${getHealthColor(100 - metrics.cpu_usage)}`}>
                   {metrics.cpu_usage.toFixed(1)}%
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
-                <div className="text-gray-400 text-sm mb-2">Utilisation mémoire</div>
+              <div className="bg-gradient-to-br from-[rgba(147,179,153,0.1)] to-[rgba(114,123,129,0.1)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(147,179,153,0.2)]">
+                <div className="text-[#9ca3af] text-sm mb-2">Utilisation mémoire</div>
                 <div className={`text-3xl font-bold ${getHealthColor(100 - metrics.memory_usage)}`}>
                   {metrics.memory_usage.toFixed(1)}%
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
-                <div className="text-gray-400 text-sm mb-2">Cohérence</div>
+              <div className="bg-gradient-to-br from-[rgba(147,179,153,0.15)] to-[rgba(147,179,153,0.05)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(147,179,153,0.25)]">
+                <div className="text-[#9ca3af] text-sm mb-2">Cohérence</div>
                 <div className={`text-3xl font-bold ${getHealthColor(metrics.coherence)}`}>
                   {metrics.coherence.toFixed(1)}%
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
-                <div className="text-gray-400 text-sm mb-2">Stabilité</div>
+              <div className="bg-gradient-to-br from-[rgba(168,159,145,0.1)] to-[rgba(143,122,122,0.1)] backdrop-blur-xl rounded-2xl p-6 border border-[rgba(168,159,145,0.2)]">
+                <div className="text-[#9ca3af] text-sm mb-2">Stabilité</div>
                 <div className={`text-3xl font-bold ${getHealthColor(metrics.stability)}`}>
                   {metrics.stability.toFixed(1)}%
                 </div>

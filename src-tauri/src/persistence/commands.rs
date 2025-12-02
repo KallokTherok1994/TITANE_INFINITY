@@ -8,12 +8,21 @@ use crate::core::SingularityState;
 use serde::{Deserialize, Serialize};
 
 /// DTO pour événement frontend
+///
+/// Accepte les champs optionnels pour rétro-compatibilité
+/// Les valeurs par défaut sont appliquées dans titan_persist_event
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TitanEventDto {
     pub module: String,
     pub event_type: String,
     pub payload: serde_json::Value,
     pub metadata: Option<std::collections::HashMap<String, serde_json::Value>>,
+    /// Version du schéma (optionnel, défaut: CURRENT_SCHEMA_VERSION)
+    #[serde(default)]
+    pub schema_version: Option<u32>,
+    /// Origine de l'événement (optionnel, défaut: "user")
+    #[serde(default)]
+    pub origin: Option<String>,
 }
 
 /// DTO pour le status de persistence
@@ -54,7 +63,22 @@ pub async fn titan_persistence_init() -> Result<(), String> {
 /// Persister un événement
 #[tauri::command]
 pub async fn titan_persist_event(event: TitanEventDto) -> Result<(), String> {
-    let titan_event = TitanEvent::new(&event.module, &event.event_type, event.payload);
+    use crate::persistence::EventOrigin;
+
+    // Convertir l'origine string en enum
+    let origin = match event.origin.as_deref() {
+        Some("user") | None => EventOrigin::User,
+        Some("engine") => EventOrigin::Engine,
+        Some("self_heal") => EventOrigin::SelfHeal,
+        Some("system") => EventOrigin::System,
+        Some("migration") => EventOrigin::Migration,
+        Some(other) => {
+            log::warn!("[titan_persist_event] Origine inconnue '{}', utilisation de 'user'", other);
+            EventOrigin::User
+        }
+    };
+
+    let titan_event = TitanEvent::with_origin(&event.module, &event.event_type, event.payload, origin);
 
     let mut engine = PERSISTENCE_ENGINE.write().await;
     engine.persist_event(titan_event).await.map_err(|e| e.to_string())

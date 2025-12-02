@@ -14,12 +14,22 @@ use crate::core::SingularityState;
 // ═══════════════════════════════════════════════════════════════════════════════
 
 /// Événement TITANE persistable
+///
+/// Conforme à l'architecture Event Sourcing v∞ avec:
+/// - ID unique (UUID v4) pour déduplication
+/// - Timestamp en millisecondes pour ordering
+/// - schema_version pour migrations
+/// - origin pour traçabilité (user, engine, self_heal, system)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TitanEvent {
     /// ID unique (UUID v4)
     pub id: String,
     /// Timestamp en millisecondes
     pub timestamp: u64,
+    /// Version du schéma (pour migrations futures)
+    pub schema_version: u32,
+    /// Origine de l'événement (user, engine, self_heal, system)
+    pub origin: EventOrigin,
     /// Module source (xp, memory, progress, knowledge, settings, console, agenda)
     pub module: String,
     /// Type d'événement (add, update, delete, etc.)
@@ -30,16 +40,61 @@ pub struct TitanEvent {
     pub metadata: Option<HashMap<String, serde_json::Value>>,
 }
 
+/// Origine d'un événement TITANE
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "snake_case")]
+pub enum EventOrigin {
+    /// Action utilisateur
+    User,
+    /// Action d'un moteur automatique
+    Engine,
+    /// Action de self-healing / auto-réparation
+    SelfHeal,
+    /// Action système (boot, shutdown, etc.)
+    System,
+    /// Migration de données
+    Migration,
+}
+
+impl Default for EventOrigin {
+    fn default() -> Self {
+        Self::User
+    }
+}
+
 impl TitanEvent {
+    /// Créer un nouvel événement avec origine par défaut (User)
     pub fn new(module: &str, event_type: &str, payload: serde_json::Value) -> Self {
+        Self::with_origin(module, event_type, payload, EventOrigin::User)
+    }
+
+    /// Créer un événement avec origine spécifiée
+    pub fn with_origin(module: &str, event_type: &str, payload: serde_json::Value, origin: EventOrigin) -> Self {
         Self {
             id: uuid::Uuid::new_v4().to_string(),
             timestamp: chrono::Utc::now().timestamp_millis() as u64,
+            schema_version: super::migrations::CURRENT_SCHEMA_VERSION,
+            origin,
             module: module.to_string(),
             event_type: event_type.to_string(),
             payload,
             metadata: None,
         }
+    }
+
+    /// Créer un événement système
+    pub fn system(module: &str, event_type: &str, payload: serde_json::Value) -> Self {
+        Self::with_origin(module, event_type, payload, EventOrigin::System)
+    }
+
+    /// Créer un événement de self-healing
+    pub fn self_heal(module: &str, event_type: &str, payload: serde_json::Value) -> Self {
+        Self::with_origin(module, event_type, payload, EventOrigin::SelfHeal)
+    }
+
+    /// Créer un événement engine (automatique)
+    pub fn engine(module: &str, event_type: &str, payload: serde_json::Value) -> Self {
+        Self::with_origin(module, event_type, payload, EventOrigin::Engine)
     }
 
     /// Créer un événement avec métadonnées
@@ -51,6 +106,16 @@ impl TitanEvent {
     /// Clé d'idempotence (pour dédoublonnage)
     pub fn idempotency_key(&self) -> String {
         format!("{}:{}:{}", self.module, self.event_type, self.id)
+    }
+
+    /// Vérifier si l'événement est d'origine utilisateur
+    pub fn is_user_initiated(&self) -> bool {
+        self.origin == EventOrigin::User
+    }
+
+    /// Vérifier si l'événement est d'origine système
+    pub fn is_system_initiated(&self) -> bool {
+        matches!(self.origin, EventOrigin::System | EventOrigin::Engine | EventOrigin::SelfHeal)
     }
 }
 

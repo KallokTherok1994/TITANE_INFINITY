@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "singularity",
+  "description": "Capability pour le Singularity Engine TITANE∞ (état global unifié)",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ],
+  "commands": {
+    "allow": [
+      "singularity_get_full_state",
+      "singularity_get_physical",
+      "singularity_get_cognitive",
+      "singularity_get_global_coherence",
+      "singularity_is_critical",
+      "get_singularity_state",
+      "sync_singularity",
+      "singularity_get_symbolic",
+      "singularity_get_adaptive",
+      "singularity_get_meta",
+      "singularity_get",
+      "singularity_set",
+      "singularity_diff",
+      "singularity_hash",
+      "singularity_sync",
+      "singularity_meta",
+      "singularity_integrity",
+      "singularity_repair",
+      "singularity_export_json",
+      "singularity_snapshot",
+      "singularity_selftest_full",
+      "singularity_update_full_state",
+      "singularity_save_state",
+      "singularity_load_state",
+      "toggle_singularity"
+    ],
+    "deny": []
+  }
+}

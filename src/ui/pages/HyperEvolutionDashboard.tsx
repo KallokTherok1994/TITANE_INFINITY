@@ -78,12 +78,13 @@ export const HyperEvolutionDashboard: React.FC = () => {
     loadAcceleration();
   }, []);
 
+  // Design System TITANE — Couleurs monochromes pour sévérité
   const getSeverityColor = (severity: string) => {
     switch (severity.toLowerCase()) {
-      case 'critical': return 'text-red-400';
-      case 'high': return 'text-orange-400';
-      case 'medium': return 'text-yellow-400';
-      default: return 'text-blue-400';
+      case 'critical': return 'text-[#8f7a7a]'; // danger (rouge-gris désaturé)
+      case 'high': return 'text-[#a89f91]'; // warning (beige métal)
+      case 'medium': return 'text-[#c4c4c4]'; // secondary (argent)
+      default: return 'text-[#8899aa]'; // info (bleu-gris)
     }
   };
 

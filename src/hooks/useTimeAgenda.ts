@@ -211,12 +211,12 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
 
   const dayGrid = useMemo(() => {
     return agendaEngine.buildDayGrid(currentDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [currentDate]);
 
   const weekGrid = useMemo(() => {
     return agendaEngine.buildWeekGrid(currentDate);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [currentDate]);
 
   // ═══════════════════════════════════════════════════════════════
@@ -297,7 +297,7 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
       currentSegment: timeState?.currentSegment?.label ?? 'Inconnu',
       isWorkHours: timeState?.isWorkHours ?? false,
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [energyState, timeState]);
 
   // ═══════════════════════════════════════════════════════════════

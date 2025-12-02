@@ -265,7 +265,7 @@ export function useTrackedCallback<T extends (...args: unknown[]) => unknown>(
   callback: T,
   deps: React.DependencyList
 ): T {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   return useCallback(
     (...args: Parameters<T>) => {
       const stop = profiler.startMeasure(callbackName, 'callback');

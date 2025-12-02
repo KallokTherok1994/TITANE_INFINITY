@@ -11,9 +11,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingObserver', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SelfHealingObserver: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let observer: any;
 
   beforeEach(async () => {
@@ -122,9 +122,9 @@ describe('SelfHealingObserver', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingAnalyzer', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SelfHealingAnalyzer: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let analyzer: any;
 
   beforeEach(async () => {
@@ -370,9 +370,9 @@ describe('SelfHealingAnalyzer', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingPlaybookEngine', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SelfHealingPlaybookEngine: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let engine: any;
 
   beforeEach(async () => {
@@ -604,9 +604,9 @@ describe('SelfHealingPlaybookEngine', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingExecutor', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SelfHealingExecutor: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let executor: any;
 
   beforeEach(async () => {
@@ -756,9 +756,9 @@ describe('SelfHealingExecutor', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SelfHealingSyncLayer', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let SelfHealingSyncLayer: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   let syncLayer: any;
 
   beforeEach(async () => {

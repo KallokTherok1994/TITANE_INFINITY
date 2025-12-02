@@ -1,7 +1,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — CHAT PAGE CSS PREMIUM
- *   Design System Violet/Bleu OMEGA + Mobile-first
+ *   TITANE∞ v∞ — CHAT PAGE CSS PREMIUM
+ *   Design System Monochrome TITANE (Singularity)
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -12,16 +12,16 @@
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  background: linear-gradient(180deg, #0a0a0a 0%, #050510 100%);
-  color: var(--text-primary, #e8e8e8);
+  background: linear-gradient(180deg, var(--bg-base, #0a0a0a) 0%, var(--bg-elevated, #0f0f0f) 100%);
+  color: var(--text, #e8e8e8);
   overflow: hidden;
 }
 
 /* Header */
 .chat-header {
   flex-shrink: 0;
-  background: linear-gradient(180deg, rgba(0, 212, 255, 0.03) 0%, rgba(168, 85, 247, 0.02) 100%);
-  border-bottom: 1px solid rgba(0, 212, 255, 0.15);
+  background: linear-gradient(180deg, var(--glow-primary, rgba(114, 123, 129, 0.03)) 0%, var(--glow-accent, rgba(147, 179, 153, 0.02)) 100%);
+  border-bottom: 1px solid var(--border-accent, rgba(147, 179, 153, 0.15));
   backdrop-filter: blur(16px);
 }
 
@@ -44,14 +44,14 @@
 
 .chat-header-icon {
   font-size: 32px;
-  filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.5));
+  filter: drop-shadow(0 0 12px var(--glow-accent, rgba(147, 179, 153, 0.5)));
   flex-shrink: 0;
   animation: iconGlow 3s ease-in-out infinite;
 }
 
 @keyframes iconGlow {
-  0%, 100% { filter: drop-shadow(0 0 12px rgba(0, 212, 255, 0.5)); }
-  50% { filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.6)); }
+  0%, 100% { filter: drop-shadow(0 0 12px var(--glow-accent, rgba(147, 179, 153, 0.5))); }
+  50% { filter: drop-shadow(0 0 20px var(--glow-primary, rgba(114, 123, 129, 0.6))); }
 }
 
 .chat-header-text {
@@ -64,7 +64,7 @@
   margin: 0;
   font-size: 1.35rem;
   font-weight: var(--font-bold, 700);
-  background: linear-gradient(90deg, #00d4ff 0%, #a855f7 50%, #00d4ff 100%);
+  background: linear-gradient(90deg, var(--secondary, #c4c4c4) 0%, var(--accent, #93b399) 50%, var(--secondary, #c4c4c4) 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -83,7 +83,7 @@
 .chat-header-subtitle {
   margin: var(--spacing-xs, 4px) 0 0 0;
   font-size: var(--text-sm, 0.875rem);
-  color: var(--text-tertiary, #6b7280);
+  color: var(--text-muted, #9ca3af);
   font-weight: var(--font-normal, 400);
 }
 
@@ -114,24 +114,24 @@
   align-items: center;
   justify-content: center;
   font-size: 18px;
-  background: rgba(0, 212, 255, 0.08);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--border-accent, rgba(147, 179, 153, 0.2));
   border-radius: var(--radius-lg, 8px);
   cursor: pointer;
   transition: all 250ms ease;
-  color: rgba(0, 212, 255, 0.8);
+  color: var(--accent, #93b399);
 }
 
 .chat-action-btn:hover {
-  background: rgba(0, 212, 255, 0.15);
-  border-color: rgba(0, 212, 255, 0.4);
+  background: var(--bg-active, rgba(255, 255, 255, 0.08));
+  border-color: var(--accent, #93b399);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.25);
-  color: #00d4ff;
+  box-shadow: 0 6px 20px var(--glow-accent, rgba(147, 179, 153, 0.25));
+  color: var(--secondary, #c4c4c4);
 }
 
 .chat-action-btn:focus-visible {
-  outline: 2px solid #00d4ff;
+  outline: 2px solid var(--accent, #93b399);
   outline-offset: 2px;
 }
 
@@ -147,8 +147,8 @@
   align-items: center;
   gap: var(--spacing-xl);
   padding: var(--spacing-sm, 8px) var(--spacing-xl, 32px);
-  background: linear-gradient(90deg, rgba(0, 212, 255, 0.02) 0%, rgba(168, 85, 247, 0.02) 100%);
-  border-top: 1px solid rgba(0, 212, 255, 0.08);
+  background: linear-gradient(90deg, var(--glow-primary, rgba(114, 123, 129, 0.02)) 0%, var(--glow-accent, rgba(147, 179, 153, 0.02)) 100%);
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.04));
   font-size: var(--text-sm);
 }
 
@@ -168,9 +168,9 @@
 }
 
 .chat-status-debug .status-value {
-  color: #00d4ff;
+  color: var(--accent, #93b399);
   font-weight: var(--font-semibold);
-  text-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+  text-shadow: 0 0 8px var(--glow-accent, rgba(147, 179, 153, 0.4));
 }
 
 .status-indicator {

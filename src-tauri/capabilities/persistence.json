@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "persistence",
+  "description": "Capability pour le système de persistence TITANE∞ (Event Sourcing + Snapshots)",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ],
+  "commands": {
+    "allow": [
+      "titan_persistence_init",
+      "titan_persist_event",
+      "titan_force_snapshot",
+      "titan_load_state",
+      "titan_get_events_since",
+      "titan_list_snapshots",
+      "titan_recover_state",
+      "titan_get_persistence_status",
+      "titan_verify_integrity",
+      "titan_check_integrity",
+      "titan_compact_journal",
+      "titan_persistence_shutdown",
+      "titan_migrate_state",
+      "titan_get_schema_version",
+      "titan_export_data",
+      "titan_validate_archive",
+      "titan_import_data",
+      "titan_get_memory_health",
+      "titan_run_self_healing",
+      "titan_validate_invariants",
+      "titan_reset_module",
+      "titan_dump_raw_state",
+      "titan_run_full_integrity_check",
+      "titan_memory_doctor_diagnose",
+      "titan_memory_doctor_summary",
+      "titan_memory_doctor_heal",
+      "titan_memory_doctor_compact",
+      "titan_memory_doctor_export"
+    ],
+    "deny": []
+  }
+}

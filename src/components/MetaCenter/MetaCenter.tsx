@@ -213,7 +213,7 @@ const MetaCenter: React.FC = () => {
   const loadState = async () => {
     try {
       // Try to get state, if not initialized, init first
-      let currentState = await invoke<MetaOrchestratorState>('orchestrator_get_state').catch(
+      const currentState = await invoke<MetaOrchestratorState>('orchestrator_get_state').catch(
         async () => {
           // Initialize if not done
           return invoke<MetaOrchestratorState>('orchestrator_init');
