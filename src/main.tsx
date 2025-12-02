@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v16.2.2 — Proprietary License
+ * TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -9,7 +9,7 @@
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
 
-// TITANE∞ v16.2.2 - Main Entry Point - Cognitive Layer Active
+// TITANE∞ v∞.19.2.3Ω - Main Entry Point - Singularity Architecture Active
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)

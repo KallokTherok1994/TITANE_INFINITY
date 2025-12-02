@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
-version      = "16.2.3"
-description  = "TITANE∞ v16.2.3 - Secure Invoke Stabilized + Metrics Reliability + Cognitive Layer v16 + Gemini/Ollama + Memory Engine + Singularity"
+version      = "19.2.3"
+description  = "TITANE∞ v∞.19.2.3 - Singularity Architecture Ω + Cognitive Layer v16 + 20 Engines Unified + SingularityDashboard + PerformanceProfiler"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v∞.19.2.3Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v20 — MONITORING COMPONENTS EXPORTS
+ * TITANE∞ v∞.19.2.3Ω — MONITORING COMPONENTS EXPORTS
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -28,3 +28,13 @@ export type { ErrorsCardProps } from './ErrorsCard';
 
 export { CognitiveModuleCard } from './CognitiveModuleCard';
 export type { CognitiveModuleCardProps } from './CognitiveModuleCard';
+
+// v∞ — Singularity Dashboard
+export { SingularityDashboard, default as SingularityDashboardDefault } from './SingularityDashboard';
+
+// Anomaly & Predictive Dashboards
+export { AnomalyDashboard } from './AnomalyDashboard';
+export { PredictiveAlertsDashboard } from './PredictiveAlertsDashboard';
+
+// Living Engines
+export { LivingEnginesCard } from './LivingEnginesCard';

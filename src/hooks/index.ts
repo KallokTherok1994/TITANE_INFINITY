@@ -1,10 +1,10 @@
 /**
- * TITANE_INFINITY v15 — Proprietary License
+ * TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 // ═══════════════════════════════════════════════════════════════
-// TITANE∞ v15 - Hooks Central Export
+// TITANE∞ v∞.19.2.3Ω - Hooks Central Export
 // ═══════════════════════════════════════════════════════════════
 
 // Legacy hooks
@@ -19,7 +19,18 @@ export { useRAG } from './useRAG';
 export type { LivingEnginesState } from './useLivingEngines';
 
 // Singularity hooks
-export { useSingularity, useSingularityMetrics, useSingularityField } from './useSingularity';
+export { useSingularity, useSingularityMetrics as useSingularityMetricsLegacy, useSingularityField } from './useSingularity';
+
+// v∞ - Enhanced Singularity Metrics
+export { useSingularityMetrics, default as useSingularityMetricsDefault } from './useSingularityMetrics';
+export type {
+  SystemMetrics,
+  EngineMetrics,
+  HealthScore,
+  Alert as MetricsAlert,
+  SingularityMetricsState,
+  UseSingularityMetricsOptions
+} from './useSingularityMetrics';
 
 // ═══════════════════════════════════════════════════════════════
 // v15 - Chat IA Architecture (Composition + Isolation)
@@ -65,6 +76,16 @@ export type { UseSystemMonitorOptions, UseSystemMonitorReturn } from './useSyste
 // Performance Monitor (NOUVEAU v15 - FPS tracking)
 export { usePerformanceMonitor } from './usePerformanceMonitor';
 export type { PerformanceMetrics, UsePerformanceMonitorReturn } from './usePerformanceMonitor';
+
+// Performance Profiler (v∞ - Advanced profiling)
+export {
+  usePerformanceProfiler,
+  useComponentLifecycle,
+  useTrackedEffect,
+  useTrackedCallback,
+  default as usePerformanceProfilerDefault
+} from './usePerformanceProfiler';
+export type { UsePerformanceProfilerOptions, UsePerformanceProfilerReturn } from './usePerformanceProfiler';
 
 // Animation Context hook (re-export from contexts)
 export { useAnimation } from '../contexts/AnimationContext';

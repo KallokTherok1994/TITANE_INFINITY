@@ -1,15 +1,15 @@
-// TITANE_INFINITY v16 — Proprietary License
+// TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v16 — MAIN ENTRY POINT (Cognitive Layer)
-//   v15 Core + v16 Cognitive: Self-aware, Learning, Reasoning
+//   TITANE∞ v∞.19.2.3Ω — MAIN ENTRY POINT (Singularity Architecture)
+//   20 Engines Unified + Cognitive Layer + SingularityDashboard
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // ═══════════════════════════════════════════════════════════════
-// TITANE∞ HARDENING: Import Hygiene v19.2.0
+// TITANE∞ HARDENING: Import Hygiene v∞.19.2.3Ω
 // DO NOT REMOVE: Each import is actively used in production code
 // ═══════════════════════════════════════════════════════════════
 
