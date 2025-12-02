@@ -221,7 +221,7 @@ export const RealityCenter: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      let currentState = await invoke<RealityRendererState>('reality_get_state').catch(
+      const currentState = await invoke<RealityRendererState>('reality_get_state').catch(
         async () => invoke<RealityRendererState>('reality_init')
       );
       setState(currentState);

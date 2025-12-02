@@ -138,14 +138,24 @@ export default defineConfig({
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // 🔒 TAURI NATIVE ONLY - ASSET PROTOCOL MODE
+  // 🌐 NETWORK DEPLOYMENT - HOST MODE
   // ═══════════════════════════════════════════════════════════════════════════
-  // No HTTP server in dev or prod - Tauri loads from tauri:// protocol only
-  // All assets served via Tauri's asset protocol (tauri://localhost)
-  // Dev workflow: npm run build:watch (Vite watch) + tauri dev (beforeDevCommand)
-  // Build workflow: npm run build (Vite static) + tauri build
+  server: {
+    host: '0.0.0.0',           // Bind to all network interfaces
+    port: 5173,                // Default port
+    strictPort: true,          // Fail if port is in use
+    cors: true,                // Enable CORS for API calls
+    hmr: {
+      host: '0.0.0.0',         // HMR accessible from network
+    },
+  },
 
-  // Server config REMOVED - pure asset-only mode
+  preview: {
+    host: '0.0.0.0',           // Preview server on all interfaces
+    port: 4173,                // Preview port
+    strictPort: true,
+    cors: true,
+  },
 
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],

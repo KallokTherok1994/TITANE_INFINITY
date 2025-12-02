@@ -67,10 +67,11 @@ macro_rules! generate_titane_handlers {
 
                     // AI Chat v15 (Real Backend)
                     commands::ai_query,
-                    commands::speak,
-                    commands::start_recording,
-                    commands::stop_recording,
-                    commands::transcribe_audio,
+                    // Voice Commands - using audio::commands (stateless)
+                    $crate::audio::commands::speak,
+                    $crate::audio::commands::start_recording,
+                    $crate::audio::commands::stop_recording,
+                    $crate::audio::commands::transcribe_audio,
                     commands::create_conversation,
                     commands::load_conversation,
                     commands::list_conversations,

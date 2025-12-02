@@ -116,6 +116,24 @@ const QAMonitoringPage = lazy(() => import('./features/qa-monitoring').then(m =>
 // ✨ DEVELOPER MODE - IA Developer Mode v∞ (OPUS #10)
 const DeveloperModePage = lazy(() => import('./features/developer-mode').then(m => ({ default: m.DeveloperModePage })));
 
+// ✨ META CENTER - Meta Orchestrator v∞ (OPUS #18)
+const MetaCenter = lazy(() => import('./components/MetaCenter/MetaCenter').then(m => ({ default: m.default })));
+
+// ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19)
+const RealityCenter = lazy(() => import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default })));
+
+// ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
+const HyperCenter = lazy(() => import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default })));
+
+// ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17)
+const QuantumCenter = lazy(() => import('./components/QuantumCenter/QuantumCenter').then(m => ({ default: m.default })));
+
+// ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15)
+const IdentityCenter = lazy(() => import('./components/IdentityCenter/IdentityCenter').then(m => ({ default: m.default })));
+
+// ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
+const MemoryEvolutionCenter = lazy(() => import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({ default: m.default })));
+
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
@@ -405,6 +423,58 @@ const AppRouter: React.FC = () => {
 
           {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />
+
+          {/* ✨ META CENTER - Meta Orchestrator v∞ (OPUS #18) */}
+          <Route path="/meta-center" element={
+            <ErrorBoundary context="MetaCenter">
+              <MetaCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/meta" element={<Navigate to="/meta-center" replace />} />
+          <Route path="/orchestrator" element={<Navigate to="/meta-center" replace />} />
+
+          {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
+          <Route path="/reality-center" element={
+            <ErrorBoundary context="RealityCenter">
+              <RealityCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
+          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+
+          {/* ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20) */}
+          <Route path="/hyper-center" element={
+            <ErrorBoundary context="HyperCenter">
+              <HyperCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+
+          {/* ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17) */}
+          <Route path="/quantum-center" element={
+            <ErrorBoundary context="QuantumCenter">
+              <QuantumCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+
+          {/* ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15) */}
+          <Route path="/identity-center" element={
+            <ErrorBoundary context="IdentityCenter">
+              <IdentityCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
+          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
+
+          {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
+          <Route path="/memory-evolution" element={
+            <ErrorBoundary context="MemoryEvolution">
+              <MemoryEvolutionCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/memory-evo" element={<Navigate to="/memory-evolution" replace />} />
 
           {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) (Phase 9: lazy loaded) */}
           <Route path="/multi-ai" element={

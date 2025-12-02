@@ -98,20 +98,23 @@ impl ResourceGovernor {
 
         // Auto-scaling basé sur l'utilisation
         if self.policies.auto_scale_enabled {
-            if utilization.cpu_utilized > self.policies.scale_up_threshold {
-                if self.scale_up_cpu().await.is_ok() {
-                    adjustments += 1;
-                }
+            // Scaling CPU
+            let cpu_adjusted = if utilization.cpu_utilized > self.policies.scale_up_threshold {
+                self.scale_up_cpu().await.is_ok()
             } else if utilization.cpu_utilized < self.policies.scale_down_threshold {
-                if self.scale_down_cpu().await.is_ok() {
-                    adjustments += 1;
-                }
+                self.scale_down_cpu().await.is_ok()
+            } else {
+                false
+            };
+            if cpu_adjusted {
+                adjustments += 1;
             }
 
-            if utilization.memory_utilized > self.policies.scale_up_threshold {
-                if self.scale_up_memory().await.is_ok() {
-                    adjustments += 1;
-                }
+            // Scaling Mémoire
+            if utilization.memory_utilized > self.policies.scale_up_threshold
+                && self.scale_up_memory().await.is_ok()
+            {
+                adjustments += 1;
             }
         }
 

@@ -195,7 +195,7 @@ export const HyperCenter: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      let currentState = await invoke<HyperIntelligenceState>('hyper_get_state').catch(
+      const currentState = await invoke<HyperIntelligenceState>('hyper_get_state').catch(
         async () => invoke<HyperIntelligenceState>('hyper_init')
       );
       setState(currentState);
