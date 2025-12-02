@@ -175,18 +175,40 @@ impl Default for CpuMonitor {
 
 /// API publique pour les commandes Tauri
 pub fn get_cpu_status() -> CpuStatus {
-    let mut monitor = CPU_MONITOR.lock().unwrap();
-    monitor.get_status()
+    match CPU_MONITOR.lock() {
+        Ok(mut monitor) => monitor.get_status(),
+        Err(_) => {
+            log::warn!("[Harmonia] CPU monitor lock poisoned, returning default status");
+            CpuStatus {
+                global_usage: 0.0,
+                core_count: 1,
+                per_core_usage: vec![0.0],
+                temperature: None,
+                is_throttling: false,
+                recommendation: "Lock error - default values".to_string(),
+            }
+        }
+    }
 }
 
 pub fn should_throttle_watchers() -> bool {
-    let mut monitor = CPU_MONITOR.lock().unwrap();
-    monitor.should_throttle()
+    match CPU_MONITOR.lock() {
+        Ok(mut monitor) => monitor.should_throttle(),
+        Err(_) => {
+            log::warn!("[Harmonia] CPU monitor lock poisoned in should_throttle");
+            false // Safe default: don't throttle
+        }
+    }
 }
 
 pub fn get_watch_delay() -> u64 {
-    let mut monitor = CPU_MONITOR.lock().unwrap();
-    monitor.get_recommended_watch_delay()
+    match CPU_MONITOR.lock() {
+        Ok(mut monitor) => monitor.get_recommended_watch_delay(),
+        Err(_) => {
+            log::warn!("[Harmonia] CPU monitor lock poisoned in get_watch_delay");
+            250 // Safe default: balanced delay
+        }
+    }
 }
 
 #[cfg(test)]

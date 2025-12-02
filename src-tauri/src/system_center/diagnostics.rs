@@ -215,8 +215,8 @@ pub async fn sc_run_quick_diagnostics() -> Result<SystemDiagnostics, String> {
     let start = std::time::Instant::now();
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs();
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
 
     // Tests rapides uniquement
     let results = vec![
@@ -241,8 +241,8 @@ pub async fn sc_run_full_diagnostics() -> Result<SystemDiagnostics, String> {
     let start = std::time::Instant::now();
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs();
+        .map(|d| d.as_secs())
+        .unwrap_or(0);
 
     let mut results = Vec::new();
 

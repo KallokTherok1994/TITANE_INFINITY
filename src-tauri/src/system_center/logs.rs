@@ -79,13 +79,17 @@ static LOG_COUNTER: Lazy<Arc<Mutex<u64>>> = Lazy::new(|| Arc::new(Mutex::new(0))
 pub fn add_log_entry(level: LogLevel, source: &str, message: &str, metadata: Option<serde_json::Value>) {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_millis() as u64;
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0);
 
     let id = {
-        let mut counter = LOG_COUNTER.lock().unwrap();
-        *counter += 1;
-        format!("log_{}", *counter)
+        match LOG_COUNTER.lock() {
+            Ok(mut counter) => {
+                *counter += 1;
+                format!("log_{}", *counter)
+            }
+            Err(_) => format!("log_err_{}", timestamp)
+        }
     };
 
     let entry = LogEntry {
@@ -97,11 +101,12 @@ pub fn add_log_entry(level: LogLevel, source: &str, message: &str, metadata: Opt
         metadata,
     };
 
-    let mut buffer = LOG_BUFFER.lock().unwrap();
-    if buffer.len() >= MAX_LOG_ENTRIES {
-        buffer.pop_front();
+    if let Ok(mut buffer) = LOG_BUFFER.lock() {
+        if buffer.len() >= MAX_LOG_ENTRIES {
+            buffer.pop_front();
+        }
+        buffer.push_back(entry);
     }
-    buffer.push_back(entry);
 }
 
 /// Helper macros for logging

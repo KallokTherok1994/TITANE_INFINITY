@@ -49,8 +49,8 @@ impl IntegrityMap {
 
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
 
         let overall_health = modules.values().map(|m| m.health).sum::<f32>() / modules.len() as f32;
 

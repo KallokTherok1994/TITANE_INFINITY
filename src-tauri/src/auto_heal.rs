@@ -50,8 +50,8 @@ pub struct AutoHealState {
 fn current_timestamp() -> u64 {
     SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
+        .map(|d| d.as_secs())
+        .unwrap_or(0)
 }
 
 fn log_event(
@@ -68,7 +68,7 @@ fn log_event(
         description: description.to_string(),
         severity: severity.to_string(),
     };
-    
+
     if let Ok(mut events) = state.events.lock() {
         events.push(event.clone());
         // Garder seulement les 100 derniers événements
@@ -76,7 +76,7 @@ fn log_event(
             events.remove(0);
         }
     }
-    
+
     println!("[AUTO-HEAL] {} | {} | {}", module, event_type, description);
 }
 
@@ -94,7 +94,7 @@ fn log_action(
         result: result.to_string(),
         success,
     };
-    
+
     if let Ok(mut actions) = state.actions.lock() {
         actions.push(action_log.clone());
         // Garder seulement les 50 dernières actions
@@ -102,7 +102,7 @@ fn log_action(
             actions.remove(0);
         }
     }
-    
+
     println!("[AUTO-HEAL] Action: {} → {} ({})", action, result, if success { "✓" } else { "✗" });
 }
 
@@ -112,7 +112,7 @@ fn log_action(
 
 fn diagnose_system(state: &AutoHealState) -> Vec<String> {
     let mut issues = Vec::new();
-    
+
     // Vérifier état de la mémoire (simulation)
     log_event(
         state,
@@ -121,10 +121,10 @@ fn diagnose_system(state: &AutoHealState) -> Vec<String> {
         "Diagnostic mémoire...",
         "info",
     );
-    
+
     // Vérifier modules critiques
     let critical_modules = vec!["chat_ia", "router", "webview", "ipc"];
-    
+
     for module in critical_modules {
         // Simulation: vérification basique
         log_event(
@@ -135,12 +135,12 @@ fn diagnose_system(state: &AutoHealState) -> Vec<String> {
             "info",
         );
     }
-    
+
     // Mettre à jour timestamp du dernier scan
     if let Ok(mut last_scan) = state.last_scan.lock() {
         *last_scan = current_timestamp();
     }
-    
+
     issues
 }
 
@@ -156,7 +156,7 @@ fn repair_module(state: &AutoHealState, module: &str) -> bool {
         &format!("Démarrage réparation {}", module),
         "warning",
     );
-    
+
     // Simulation de réparation
     let success = match module {
         "chat_ia" => {
@@ -217,7 +217,7 @@ fn repair_module(state: &AutoHealState, module: &str) -> bool {
             false
         }
     };
-    
+
     if success {
         log_event(
             state,
@@ -235,14 +235,14 @@ fn repair_module(state: &AutoHealState, module: &str) -> bool {
             "error",
         );
     }
-    
+
     success
 }
 
 fn repair_all(state: &AutoHealState) -> Vec<String> {
     let modules = vec!["chat_ia", "router", "webview", "ipc"];
     let mut results = Vec::new();
-    
+
     for module in modules {
         let success = repair_module(state, module);
         results.push(format!(
@@ -251,7 +251,7 @@ fn repair_all(state: &AutoHealState) -> Vec<String> {
             if success { "✓" } else { "✗" }
         ));
     }
-    
+
     results
 }
 
@@ -268,19 +268,25 @@ pub async fn auto_heal_scan(state: State<'_, AutoHealState>) -> Result<HealRepor
         "Scan demandé via IPC",
         "info",
     );
-    
+
     let issues = diagnose_system(&state);
-    
-    let events = state.events.lock().unwrap().clone();
-    let actions = state.actions.lock().unwrap().clone();
-    let last_scan = *state.last_scan.lock().unwrap();
-    
+
+    let events = state.events.lock()
+        .map(|g| g.clone())
+        .unwrap_or_default();
+    let actions = state.actions.lock()
+        .map(|g| g.clone())
+        .unwrap_or_default();
+    let last_scan = state.last_scan.lock()
+        .map(|g| *g)
+        .unwrap_or(0);
+
     let status = if issues.is_empty() {
         "healthy".to_string()
     } else {
         format!("{} problèmes détectés", issues.len())
     };
-    
+
     Ok(HealReport {
         events,
         actions,
@@ -325,10 +331,16 @@ pub async fn auto_heal_repair(
 
 #[tauri::command]
 pub async fn auto_heal_get_logs(state: State<'_, AutoHealState>) -> Result<HealReport, String> {
-    let events = state.events.lock().unwrap().clone();
-    let actions = state.actions.lock().unwrap().clone();
-    let last_scan = *state.last_scan.lock().unwrap();
-    
+    let events = state.events.lock()
+        .map(|g| g.clone())
+        .unwrap_or_default();
+    let actions = state.actions.lock()
+        .map(|g| g.clone())
+        .unwrap_or_default();
+    let last_scan = state.last_scan.lock()
+        .map(|g| *g)
+        .unwrap_or(0);
+
     Ok(HealReport {
         events,
         actions,
@@ -344,7 +356,7 @@ pub async fn auto_heal_get_logs(state: State<'_, AutoHealState>) -> Result<HealR
 pub fn setup_panic_handler(state: AutoHealState) {
     std::panic::set_hook(Box::new(move |panic_info| {
         let msg = panic_info.to_string();
-        
+
         log_event(
             &state,
             "Panic",
@@ -352,7 +364,7 @@ pub fn setup_panic_handler(state: AutoHealState) {
             &msg,
             "critical",
         );
-        
+
         // Tentative de réparation automatique
         repair_all(&state);
     }));

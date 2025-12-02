@@ -156,6 +156,12 @@ pub mod hyper_intelligence; // ✅ Hyper-Intelligence v∞ (Reasoning, Creativit
 
 pub mod numeric_twin; // ✅ Numeric Twin vΩ∞ (Kevin ↔ TITANE Symbiosis, 6 Sub-Engines)
 
+// ═══════════════════════════════════════════════════════════════
+// AGENDA ENGINE v∞ (TIME/AGENDA SYSTEM)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod agenda; // ✅ Agenda Engine v∞ (Time, Events, Energy, Priority, ChatScheduler)
+
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod commands;
 

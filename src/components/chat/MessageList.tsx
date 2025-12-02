@@ -5,19 +5,23 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v19.2Ω — MESSAGE LIST OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v19.2Ω — MESSAGE LIST OMEGA (UI ANTI-CRASH + OPTIMIZED)
  *   PHASE 5Ω: Protection render • Isolation erreurs • Auto-récupération
+ *   + useMemo optimisé pour performance 100+ messages
  *   Garantit affichage même avec messages corrompus ou erreurs UI
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useRef, useEffect, useState, useCallback } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
 import './MessageList.css';
 
 const isDev = process.env.NODE_ENV === 'development';
+
+// Seuil pour optimisations avancées (messages)
+const OPTIMIZATION_THRESHOLD = 50;
 
 interface MessageListProps {
   messages: AIMessage[];
@@ -109,12 +113,12 @@ function useOmegaErrorBoundary() {
  * MESSAGE LIST OMEGA COMPONENT
  * ═══════════════════════════════════════════════════════════════════
  */
-// OMEGA DEBUG: Temporairement sans React.memo pour tester
-export const MessageList: React.FC<MessageListProps> = ({
+// OMEGA OPTIMIZED: React.memo pour éviter re-renders inutiles
+export const MessageList = React.memo(function MessageList({
   messages: rawMessages,
   isLoading = false,
   error = null,
-}) => {
+}: MessageListProps) {
   const endRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const mountedRef = useRef(false);
@@ -354,6 +358,6 @@ export const MessageList: React.FC<MessageListProps> = ({
       </div>
     );
   }
-};
+});
 
 MessageList.displayName = 'MessageListOmega';

@@ -138,20 +138,35 @@ export default defineConfig({
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // 🌐 NETWORK DEPLOYMENT - HOST MODE
+  // 🌐 NETWORK DEPLOYMENT - HOST MODE (OPTIMIZED FOR CPU)
   // ═══════════════════════════════════════════════════════════════════════════
   server: {
-    host: '0.0.0.0',           // Bind to all network interfaces
+    host: 'localhost',         // Only localhost (reduces network scanning CPU)
     port: 5173,                // Default port
     strictPort: true,          // Fail if port is in use
     cors: true,                // Enable CORS for API calls
     hmr: {
-      host: '0.0.0.0',         // HMR accessible from network
+      host: 'localhost',       // HMR local only
+      overlay: true,           // Show errors in overlay
+    },
+    watch: {
+      // Optimisation watchers pour réduire CPU
+      ignored: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/target/**',
+        '**/.git/**',
+        '**/src-tauri/target/**',
+        '**/*.md',
+        '**/coverage/**',
+        '**/docs/**',
+      ],
+      usePolling: false,       // Disable polling (use native FS events)
     },
   },
 
   preview: {
-    host: '0.0.0.0',           // Preview server on all interfaces
+    host: 'localhost',         // Preview server local only
     port: 4173,                // Preview port
     strictPort: true,
     cors: true,

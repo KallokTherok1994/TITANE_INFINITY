@@ -34,3 +34,6 @@ export { SecureSettings } from './SecureSettings';
 // Cloud Sync Engine
 export { CloudCenter } from './CloudCenter';
 
+// Time & Agenda Engine v∞
+export { AgendaPage } from './AgendaPage';
+

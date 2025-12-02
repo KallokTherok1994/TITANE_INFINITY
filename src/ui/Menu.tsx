@@ -40,6 +40,13 @@ const MENU_SECTIONS: MenuSection[] = [
     route: '/chat'
   },
   {
+    id: 'agenda',
+    icon: '📅',
+    label: 'Agenda',
+    description: 'Temps, énergie, planning intelligent',
+    route: '/agenda'
+  },
+  {
     id: 'system',
     icon: '⚙️',
     label: 'Système',

@@ -18,6 +18,8 @@ export type { MonitoringHeaderProps } from './MonitoringHeader';
 export { SystemStatusCard } from './SystemStatusCard';
 export type { SystemStatusCardProps, SystemStatus } from './SystemStatusCard';
 
+export { SystemHealthMonitor } from './SystemHealthMonitor';
+
 export { LogsCard } from './LogsCard';
 export type { LogsCardProps } from './LogsCard';
 

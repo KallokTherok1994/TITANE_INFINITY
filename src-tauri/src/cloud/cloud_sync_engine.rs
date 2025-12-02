@@ -572,7 +572,9 @@ impl CloudSyncEngine {
 
     /// Retourne le statut actuel
     pub fn get_status(&self) -> SyncStatus {
-        *self.status.read().unwrap()
+        self.status.read()
+            .map(|s| *s)
+            .unwrap_or(SyncStatus::Idle)
     }
 
     /// Définit le statut

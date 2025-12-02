@@ -389,6 +389,19 @@ async fn main() {
         log::info!("✅ SINGULARITY-FUSION vΩ managed (6 states)");
         log::info!("✅ CLOUD SYNC ENGINE v∞ managed");
 
+        // ═══════════════════════════════════════════════════════════════
+        // INITIALIZE AGENDA ENGINE v∞
+        // ═══════════════════════════════════════════════════════════════
+        log::info!("📅 Initializing AGENDA ENGINE v∞...");
+        let app_data_dir = _app.path().app_data_dir().unwrap_or_else(|_| std::path::PathBuf::from("."));
+        tauri::async_runtime::spawn(async move {
+            if let Err(e) = titane_infinity::agenda::storage::init_agenda_storage(app_data_dir).await {
+                log::error!("❌ Failed to initialize Agenda Storage: {}", e);
+            } else {
+                log::info!("✅ AGENDA ENGINE v∞ initialized");
+            }
+        });
+
         #[cfg(all(not(feature = "mock"), feature = "full"))]
         log::info!("✅ ChatEngine v∞ managed");
         // Auto-open DevTools in debug mode
@@ -1372,6 +1385,21 @@ async fn main() {
         titane_infinity::hyper_intelligence::commands::hyper_get_thoughts,
         titane_infinity::hyper_intelligence::commands::hyper_get_insights,
         titane_infinity::hyper_intelligence::commands::hyper_get_report,
+        // ═══════════════════════════════════════════════════════════════
+        // AGENDA ENGINE v∞ (TIME/AGENDA SYSTEM)
+        // TimeEngine, AgendaEngine, EnergyEngine, PriorityEngine, ChatScheduler
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::agenda::commands::agenda_load_events,
+        titane_infinity::agenda::commands::agenda_save_events,
+        titane_infinity::agenda::commands::agenda_create_event,
+        titane_infinity::agenda::commands::agenda_update_event,
+        titane_infinity::agenda::commands::agenda_move_event,
+        titane_infinity::agenda::commands::agenda_delete_event,
+        titane_infinity::agenda::commands::agenda_get_event,
+        titane_infinity::agenda::commands::agenda_get_events_in_range,
+        titane_infinity::agenda::commands::agenda_get_stats,
+        titane_infinity::agenda::commands::agenda_complete_event,
+        titane_infinity::agenda::commands::agenda_cancel_event,
     ]);
 
     builder

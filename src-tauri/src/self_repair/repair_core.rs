@@ -34,8 +34,8 @@ impl RepairCore {
     pub async fn repair(&self, targets: Vec<String>) -> RepairReport {
         let timestamp = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
-            .unwrap()
-            .as_secs();
+            .map(|d| d.as_secs())
+            .unwrap_or(0);
 
         let actions: Vec<RepairAction> = targets
             .iter()
