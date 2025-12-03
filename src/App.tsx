@@ -78,6 +78,9 @@ import { ChatBubble } from './components/chat/ChatBubble';
 // ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE)
 import { AIChatBubble } from './components/AIChatBubble';
 
+// ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION)
+import { HybridBubble } from './components/HybridBubble';
+
 // ✨ v∞ - Multi-Agent Engine & Agents
 import { multiAgentEngine } from './core/ai/multi_agent_engine';
 import { HeliosAgent } from './core/ai/agents/helios_agent';
@@ -571,6 +574,9 @@ const AppRouter: React.FC = () => {
 
       {/* ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE v∞) */}
       <AIChatBubble />
+
+      {/* ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION ⚡🧠) */}
+      <HybridBubble initialMode="bubble" />
     </AppShell>
   );
 };

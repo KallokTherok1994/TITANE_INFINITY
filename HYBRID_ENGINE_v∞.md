@@ -591,10 +591,10 @@ import { HybridBubble } from '@/components/HybridBubble';
 
 test('HybridBubble: mode switching', () => {
   render(<HybridBubble initialMode="bubble" />);
-  
+
   const bubble = screen.getByText(/🧠⚡/);
   fireEvent.click(bubble);
-  
+
   expect(screen.getByText(/TITANE∞ HYBRID/)).toBeInTheDocument();
   expect(screen.getByPlaceholderText(/Enter command/)).toBeInTheDocument();
 });
