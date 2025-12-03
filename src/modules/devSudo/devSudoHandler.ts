@@ -1,11 +1,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.24.0 — DEV-SUDO MODE HANDLER
+ *   TITANE∞ v∞.25.0 — DEV-SUDO MODE HANDLER
  *   Détection et exécution des commandes développeur dans le Chat IA
- *   Intégration SUPER PROMPTS #4/#5/#6/#7/#8/#9 UNIFIÉS
+ *   Intégration SUPER PROMPTS #4 à #11 UNIFIÉS
  *   Super Prompt #7: MASTER DEV ENGINE — Full IDE Mode
  *   Super Prompt #8: SINGULARITY MIND ENGINE — Cerveau métacognitif
  *   Super Prompt #9: VISION ENGINE — Analyse UI/UX + Design System
+ *   Super Prompt #10: BACKEND & API MASTER — Rust/Tauri/Cargo Expert
+ *   Super Prompt #11: MEMORY ETERNAL ENGINE — Mémoire persistente éternelle
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -14,6 +16,8 @@ import * as ExtendedHandlers from './devSudoExtendedHandlers';
 import * as IDEHandlers from './devSudoIDEHandlers';
 import * as SingularityHandlers from './devSudoSingularityHandlers';
 import * as VisionHandlers from './devSudoVisionHandlers';
+import * as BackendHandlers from './devSudoBackendHandlers';
+import * as MemoryHandlers from './devSudoMemoryHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -114,7 +118,26 @@ export type DevSudoAction =
   | 'ui-diagnostic'
   | 'design-review'
   | 'frontend-optimize'
-  | 'visual-repair';
+  | 'visual-repair'
+
+  // Backend & API Master (Super Prompt #10)
+  | 'backend-analysis'
+  | 'fix-handler'
+  | 'create-api'
+  | 'whitelist-command'
+  | 'optimize-cargo'
+  | 'build-backend'
+  | 'analyze-security'
+
+  // Memory Eternal Engine (Super Prompt #11)
+  | 'memory-scan'
+  | 'memory-heal'
+  | 'memory-deepheal'
+  | 'memory-snapshot'
+  | 'memory-export'
+  | 'memory-import'
+  | 'memory-rebuild'
+  | 'memory-optimize';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -462,6 +485,93 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^r\u00e9paration\s+visuelle$/i,
     /^r\u00e9pare\s+(l')?ui$/i,
   ],
+
+  // Backend & API Master Engine (Super Prompt #10)
+  'backend-analysis': [
+    /^backend\s+analysis$/i,
+    /^analyse\s+backend$/i,
+    /^analyse\s+(le\s+)?rust$/i,
+    /^backend\s+status$/i,
+  ],
+  'fix-handler': [
+    /^fix\s+handler\s+(.+)$/i,
+    /^répare\s+handler\s+(.+)$/i,
+    /^corriger\s+handler\s+(.+)$/i,
+  ],
+  'create-api': [
+    /^create\s+api\s+(.+)$/i,
+    /^créer\s+api\s+(.+)$/i,
+    /^nouvelle\s+api\s+(.+)$/i,
+    /^generate\s+api\s+(.+)$/i,
+  ],
+  'whitelist-command': [
+    /^whitelist\s+(.+)$/i,
+    /^ajouter\s+whitelist\s+(.+)$/i,
+    /^autoriser\s+(.+)$/i,
+  ],
+  'optimize-cargo': [
+    /^optimize\s+cargo$/i,
+    /^optimise\s+cargo$/i,
+    /^cargo\s+optimization$/i,
+  ],
+  'build-backend': [
+    /^build\s+backend$/i,
+    /^compiler\s+backend$/i,
+    /^cargo\s+build$/i,
+    /^rebuild\s+rust$/i,
+  ],
+  'analyze-security': [
+    /^security\s+analysis$/i,
+    /^analyse\s+sécurité$/i,
+    /^audit\s+sécurité$/i,
+    /^security\s+audit$/i,
+  ],
+
+  // Memory Eternal Engine (Super Prompt #11)
+  'memory-scan': [
+    /^memory\s+scan$/i,
+    /^scan\s+mémoire$/i,
+    /^analyse\s+mémoire$/i,
+    /^memory\s+status$/i,
+  ],
+  'memory-heal': [
+    /^memory\s+heal$/i,
+    /^répare\s+mémoire$/i,
+    /^heal\s+memory$/i,
+    /^fix\s+memory$/i,
+  ],
+  'memory-deepheal': [
+    /^memory\s+deep\s*heal$/i,
+    /^deep\s+heal\s+memory$/i,
+    /^réparation\s+profonde\s+mémoire$/i,
+  ],
+  'memory-snapshot': [
+    /^memory\s+snapshot$/i,
+    /^snapshot\s+mémoire$/i,
+    /^créer\s+snapshot$/i,
+    /^save\s+memory$/i,
+  ],
+  'memory-export': [
+    /^memory\s+export$/i,
+    /^export\s+mémoire$/i,
+    /^exporter\s+memory$/i,
+  ],
+  'memory-import': [
+    /^memory\s+import\s+(.+)$/i,
+    /^import\s+mémoire\s+(.+)$/i,
+    /^importer\s+(.+)$/i,
+  ],
+  'memory-rebuild': [
+    /^memory\s+rebuild$/i,
+    /^rebuild\s+memory$/i,
+    /^reconstruire\s+mémoire$/i,
+  ],
+  'memory-optimize': [
+    /^memory\s+optimize$/i,
+    /^optimize\s+memory$/i,
+    /^optimise\s+mémoire$/i,
+    /^compress\s+memory$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -606,6 +716,24 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<s
 
     case 'code-review':
       params.target = match[3] || match[2] || match[1];
+      break;
+
+    // Backend & API Master commands
+    case 'fix-handler':
+      params.target = match[1];
+      break;
+
+    case 'create-api':
+      params.name = match[1];
+      break;
+
+    case 'whitelist-command':
+      params.commandName = match[1];
+      break;
+
+    // Memory Eternal Engine commands
+    case 'memory-import':
+      params.filePath = match[1];
       break;
   }
 
@@ -825,10 +953,57 @@ export async function executeDevSudoCommand(
       case 'visual-repair':
         return await VisionHandlers.handleVisualRepair();
 
+      // Backend & API Master Engine (Super Prompt #10)
+      case 'backend-analysis':
+        return await BackendHandlers.handleBackendAnalysis();
+
+      case 'fix-handler':
+        return await BackendHandlers.handleFixHandler(command.params.target as string);
+
+      case 'create-api':
+        return await BackendHandlers.handleCreateAPI(command.params.name as string);
+
+      case 'whitelist-command':
+        return await BackendHandlers.handleWhitelistCommand(command.params.commandName as string);
+
+      case 'optimize-cargo':
+        return await BackendHandlers.handleOptimizeCargo();
+
+      case 'build-backend':
+        return await BackendHandlers.handleBuildBackend();
+
+      case 'analyze-security':
+        return await BackendHandlers.handleAnalyzeSecurity();
+
+      // Memory Eternal Engine (Super Prompt #11)
+      case 'memory-scan':
+        return await MemoryHandlers.handleMemoryScan();
+
+      case 'memory-heal':
+        return await MemoryHandlers.handleMemoryHeal();
+
+      case 'memory-deepheal':
+        return await MemoryHandlers.handleMemoryDeepHeal();
+
+      case 'memory-snapshot':
+        return await MemoryHandlers.handleMemorySnapshot();
+
+      case 'memory-export':
+        return await MemoryHandlers.handleMemoryExport();
+
+      case 'memory-import':
+        return await MemoryHandlers.handleMemoryImport(command.params.filePath as string);
+
+      case 'memory-rebuild':
+        return await MemoryHandlers.handleMemoryRebuild();
+
+      case 'memory-optimize':
+        return await MemoryHandlers.handleMemoryOptimize();
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.24.0 — MASTER DEV + SINGULARITY MIND + VISION ENGINE**\n\n**Commandes disponibles** (72 total):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.25.0 — MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY**\n\n**Commandes disponibles** (87 total):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize`,
           success: false,
         };
     }

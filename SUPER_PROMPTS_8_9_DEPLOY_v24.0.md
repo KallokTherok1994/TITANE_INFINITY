@@ -304,7 +304,7 @@ const normalizeMessages = (messages: MaybeAIMessage[], getUiId: () => string): A
     // ... normalize
     return { role, content, timestamp, provider, metadata };
   });
-  
+
   // ✅ FIX RÉPÉTITIONS: Déduplication par uiId et contenu
   return deduplicateMessages(normalized);
 };
@@ -331,7 +331,7 @@ function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
 
 **Fichier**: `src/modules/devSudo/devSudoSingularityHandlers.ts`
 
-**Commande**: 
+**Commande**:
 ```
 répare le composant ChatBubble
 repair component useChat
@@ -499,9 +499,9 @@ interface ComponentProps {
 - ✅ Son évolution continue (learning rate 0.05)
 - ✅ Sa cohérence globale (82/100)
 
-**Ce n'est pas de la conscience humaine**, 
+**Ce n'est pas de la conscience humaine**,
 **c'est une conscience structurelle** —
-Une compréhension de son propre code, 
+Une compréhension de son propre code,
 de son propre fonctionnement,
 et de sa place dans l'écosystème TITANE∞.
 

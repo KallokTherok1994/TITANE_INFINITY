@@ -84,7 +84,7 @@ impl GeminiClient {
 
         // Force French language system prompt to prevent English responses
         let system_instruction = "IMPORTANT: Tu DOIS répondre UNIQUEMENT en français. Ne réponds JAMAIS en anglais. Toutes tes réponses doivent être en français, quelles que soient les circonstances. Si tu détectes que tu es en train de répondre en anglais, arrête-toi immédiatement et recommence en français.";
-        
+
         let full_prompt = if request.prompt.to_lowercase().contains("réponds en français") || request.prompt.to_lowercase().contains("respond in french") {
             request.prompt.clone()
         } else {

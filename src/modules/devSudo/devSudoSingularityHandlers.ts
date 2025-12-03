@@ -55,7 +55,7 @@ export async function handleSingularityScan(): Promise<DevSudoResult> {
 
 🎯 **2) DIAGNOSTIC CENTRAL**
 
-**Cause racine**: 
+**Cause racine**:
 - Prioritization Engine désynchronisé avec Reasoning Engine
 - Intent Engine mapping incomplet (patterns manquants)
 - Meta-Engine manque de liens inter-couches
@@ -92,7 +92,7 @@ export async function handleSingularityScan(): Promise<DevSudoResult> {
 // src/engines/prioritization/prioritizationEngine.ts
 export class PrioritizationEngine {
   private taskQueue: PriorityQueue<Task> = [];
-  
+
   // FIX: Ajouter synchronisation avec Reasoning Engine
   async prioritize(tasks: Task[]): Promise<Task[]> {
     const reasoningContext = await this.reasoningEngine.getContext();
@@ -103,7 +103,7 @@ export class PrioritizationEngine {
 // src/engines/intent/intentEngine.ts
 export class IntentEngine {
   private patterns: Map<string, Intent> = new Map();
-  
+
   // FIX: Patterns incomplets, ajouter mappings manquants
   async detectIntent(input: string): Promise<Intent> {
     const patterns = await this.loadCompletePatterns();
@@ -120,8 +120,8 @@ export class SingularityEngine {
     const symbolicScore = await this.scanSymbolicLayer();
     const adaptativeScore = await this.scanAdaptativeLayer();
     const metaScore = await this.scanMetaLayer();
-    
-    return (physicalScore + cognitiveScore + symbolicScore + 
+
+    return (physicalScore + cognitiveScore + symbolicScore +
             adaptativeScore + metaScore) / 5;
   }
 }
@@ -500,7 +500,7 @@ export class PrioritizationEngine {
     }));
     return scoredTasks.sort((a, b) => b.weight - a.weight);
   }
-  
+
   private calculateWeight(task: Task, context: ReasoningContext): number {
     const urgency = this.getUrgency(task);
     const importance = this.getImportance(task, context);
@@ -1040,7 +1040,7 @@ export function ${componentName}({ id, onUpdate, fallback }: ${componentName}Pro
   return (
     <div className="${componentName.toLowerCase()}-container">
       {/* Render with safe data */}
-      <ComponentContent 
+      <ComponentContent
         data={store.data}
         onUpdate={handleUpdate}
       />

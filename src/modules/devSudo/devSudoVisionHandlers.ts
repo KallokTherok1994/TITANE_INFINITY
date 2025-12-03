@@ -131,7 +131,7 @@ const uniqueMessages = Array.from(
   new Map(messages.map(m => [m.metadata?.uiId || m.timestamp, m]))
 ).map(([_, msg]) => msg);
 
-// 2. Fix Gemini français (gemini.rs) 
+// 2. Fix Gemini français (gemini.rs)
 // ✅ Déjà appliqué dans correctif précédent
 
 // 3. Fix spacing tokens (tailwind.config.js)
@@ -778,7 +778,7 @@ const ChatBubble = memo(({ message, onUpdate }) => {
 function Chat() {
   const handleSend = (msg) => { /* ... */ };
   const filteredMessages = messages.filter(m => m.visible);
-  
+
   return <ChatInput onSend={handleSend} messages={filteredMessages} />;
 }
 
@@ -789,7 +789,7 @@ function Chat() {
     () => messages.filter(m => m.visible),
     [messages]
   );
-  
+
   return <ChatInput onSend={handleSend} messages={filteredMessages} />;
 }
 \`\`\`
@@ -823,7 +823,7 @@ function App() {
 <img src="/large-image.png" alt="..." />
 
 // Après ✅
-<img 
+<img
   src="/large-image.webp"
   srcSet="/large-image-sm.webp 640w,
           /large-image-md.webp 1024w,
@@ -1062,7 +1062,7 @@ export async function handleVisualRepair(): Promise<DevSudoResult> {
    \`\`\`css
    /* Avant */
    --titane-medium: #727B81; /* 2.1:1 ❌ */
-   
+
    /* Après */
    --titane-medium: #8A9299; /* 3.2:1 ✅ WCAG AA */
    \`\`\`
