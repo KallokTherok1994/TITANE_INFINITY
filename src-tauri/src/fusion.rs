@@ -128,14 +128,16 @@ impl Default for FusionEngineState {
 pub async fn fusion_collect(
     state: State<'_, FusionEngineState>,
 ) -> Result<FusionReport, String> {
-    let mut is_fusing = state.is_fusing.lock().map_err(|e| e.to_string())?;
+    // Vérifier et définir le flag de fusion dans un scope isolé
+    {
+        let mut is_fusing = state.is_fusing.lock().map_err(|e| e.to_string())?;
 
-    if *is_fusing {
-        return Err("Fusion already in progress".to_string());
-    }
+        if *is_fusing {
+            return Err("Fusion already in progress".to_string());
+        }
 
-    *is_fusing = true;
-    drop(is_fusing);
+        *is_fusing = true;
+    } // Le MutexGuard est automatiquement libéré ici
 
     let start = std::time::Instant::now();
 
@@ -155,11 +157,14 @@ pub async fn fusion_collect(
         timestamp: chrono::Utc::now().timestamp(),
     };
 
-    let mut last_report = state.last_report.lock().map_err(|e| e.to_string())?;
-    *last_report = Some(report.clone());
+    // Sauvegarder le rapport et réinitialiser le flag dans un scope isolé
+    {
+        let mut last_report = state.last_report.lock().map_err(|e| e.to_string())?;
+        *last_report = Some(report.clone());
 
-    let mut is_fusing = state.is_fusing.lock().map_err(|e| e.to_string())?;
-    *is_fusing = false;
+        let mut is_fusing = state.is_fusing.lock().map_err(|e| e.to_string())?;
+        *is_fusing = false;
+    } // Les MutexGuards sont automatiquement libérés ici
 
     Ok(report)
 }
