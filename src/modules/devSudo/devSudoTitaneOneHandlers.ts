@@ -18,6 +18,18 @@
  */
 
 import SingularityIntrospectionEngine from '../singularity/SingularityIntrospectionEngine';
+import type { DevSudoResult } from './devSudoHandler';
+
+/**
+ * Helper: Convertit une string de réponse en DevSudoResult
+ */
+function createSuccessResult(response: string): DevSudoResult {
+  return {
+    handled: true,
+    success: true,
+    response
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════════
 // HANDLER 1 — INTROSPECT
@@ -37,11 +49,11 @@ import SingularityIntrospectionEngine from '../singularity/SingularityIntrospect
  * - `sudo titane introspect`
  * - `singularity introspect`
  */
-export async function handleTitaneOneIntrospect(): Promise<string> {
+export async function handleTitaneOneIntrospect(): Promise<DevSudoResult> {
 
   const result = await SingularityIntrospectionEngine.standardIntrospect();
 
-  return SingularityIntrospectionEngine.formatIntrospectionReport(result);
+  return createSuccessResult(SingularityIntrospectionEngine.formatIntrospectionReport(result));
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -63,7 +75,7 @@ export async function handleTitaneOneIntrospect(): Promise<string> {
  * - `sudo titane evolve`
  * - `singularity evolve`
  */
-export async function handleTitaneOneEvolve(): Promise<string> {
+export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -129,7 +141,7 @@ export async function handleTitaneOneEvolve(): Promise<string> {
   output += `✨ ÉVOLUTION COMPLÈTE — Cohérence: ${beforeState.internalVision.globalCoherence}% → ${newCoherence}% ✨\n`;
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -150,7 +162,7 @@ export async function handleTitaneOneEvolve(): Promise<string> {
  * - `sudo titane heal`
  * - `singularity heal`
  */
-export async function handleTitaneOneHeal(): Promise<string> {
+export async function handleTitaneOneHeal(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -180,7 +192,7 @@ export async function handleTitaneOneHeal(): Promise<string> {
   output += '✨ SELF-HEALING STANDARD COMPLÉTÉ ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -202,7 +214,7 @@ export async function handleTitaneOneHeal(): Promise<string> {
  * - `sudo titane fullheal`
  * - `singularity deepheal`
  */
-export async function handleTitaneOneFullHeal(): Promise<string> {
+export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -263,7 +275,7 @@ export async function handleTitaneOneFullHeal(): Promise<string> {
   output += '✨ DEEP SELF-HEALING COMPLÉTÉ — Cohérence: 100% ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -284,7 +296,7 @@ export async function handleTitaneOneFullHeal(): Promise<string> {
  * - `sudo titane unify`
  * - `singularity unify`
  */
-export async function handleTitaneOneUnify(): Promise<string> {
+export async function handleTitaneOneUnify(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -325,7 +337,7 @@ export async function handleTitaneOneUnify(): Promise<string> {
   output += `✨ UNIFICATION COMPLÈTE — Cohérence: ${preState.internalVision.globalCoherence}% → ${postCoherence}% ✨\n`;
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -347,7 +359,7 @@ export async function handleTitaneOneUnify(): Promise<string> {
  * - `sudo titane optimize`
  * - `singularity optimize`
  */
-export async function handleTitaneOneOptimize(): Promise<string> {
+export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -411,7 +423,7 @@ export async function handleTitaneOneOptimize(): Promise<string> {
   output += '✨ OPTIMISATION GLOBALE COMPLÉTÉE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -431,7 +443,7 @@ export async function handleTitaneOneOptimize(): Promise<string> {
  * - `sudo titane vision-all`
  * - `singularity vision`
  */
-export async function handleTitaneOneVisionAll(): Promise<string> {
+export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
 
   const result = await SingularityIntrospectionEngine.deepIntrospect();
 
@@ -500,7 +512,7 @@ export async function handleTitaneOneVisionAll(): Promise<string> {
   output += '✨ TRIPLE VISION COMPLÈTE — TITANE∞ ONE UNIFIED ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -521,7 +533,7 @@ export async function handleTitaneOneVisionAll(): Promise<string> {
  * - `titane one analyze dev`
  * - `sudo titane analyze-dev`
  */
-export async function handleTitaneOneAnalyzeDev(): Promise<string> {
+export async function handleTitaneOneAnalyzeDev(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -590,7 +602,7 @@ export async function handleTitaneOneAnalyzeDev(): Promise<string> {
   output += '✨ DEV ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -611,7 +623,7 @@ export async function handleTitaneOneAnalyzeDev(): Promise<string> {
  * - `titane one analyze ui`
  * - `sudo titane analyze-ui`
  */
-export async function handleTitaneOneAnalyzeUI(): Promise<string> {
+export async function handleTitaneOneAnalyzeUI(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -678,7 +690,7 @@ export async function handleTitaneOneAnalyzeUI(): Promise<string> {
   output += '✨ UI/UX ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -699,7 +711,7 @@ export async function handleTitaneOneAnalyzeUI(): Promise<string> {
  * - `titane one analyze backend`
  * - `sudo titane analyze-backend`
  */
-export async function handleTitaneOneAnalyzeBackend(): Promise<string> {
+export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -766,7 +778,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<string> {
   output += '✨ BACKEND ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -787,7 +799,7 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<string> {
  * - `titane one analyze memory`
  * - `sudo titane analyze-memory`
  */
-export async function handleTitaneOneAnalyzeMemory(): Promise<string> {
+export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
 
   let output = '';
 
@@ -860,7 +872,7 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<string> {
   output += '✨ MEMORY ANALYSIS COMPLÈTE ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -881,7 +893,7 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<string> {
  * - `sudo singularity scan`
  * - `singularity quantum`
  */
-export async function handleTitaneOneSingularityScan(): Promise<string> {
+export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
 
   const result = await SingularityIntrospectionEngine.quantumIntrospect();
 
@@ -951,5 +963,5 @@ export async function handleTitaneOneSingularityScan(): Promise<string> {
   output += '✨ QUANTUM SINGULARITY SCAN COMPLÉTÉ ✨\n';
   output += '═══════════════════════════════════════════════════════════════\n';
 
-  return output;
+  return createSuccessResult(output);
 }

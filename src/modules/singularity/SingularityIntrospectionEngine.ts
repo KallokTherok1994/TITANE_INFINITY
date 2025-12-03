@@ -207,7 +207,7 @@ export class SingularityIntrospectionEngine {
 
     // 5. Micro Self-Healing (corrections automatiques immédiates)
     const selfHealingApplied = await this.applyMicroSelfHealing(diagnostic);
-    diagnostic.selfHealingApplied = selfHealingApplied;
+    diagnostic.selfHealingApplied = selfHealingApplied as string[];
 
     // 6. Calcul de confiance
     const confidenceScore = this.calculateConfidenceScore(internalVision, diagnostic);
@@ -228,7 +228,7 @@ export class SingularityIntrospectionEngine {
   // ───────────────────────────────────────────────────────────────────
 
   private static async scanInternalArchitecture(
-    level: 'quick' | 'standard' | 'deep' | 'quantum'
+    _level: 'quick' | 'standard' | 'deep' | 'quantum'
   ) {
 
     // Scan des 6 couches
@@ -582,7 +582,7 @@ export class SingularityIntrospectionEngine {
       criticalIssues,
       warnings,
       optimizations,
-      selfHealingApplied: [] // sera rempli par applyMicroSelfHealing
+      selfHealingApplied: [] as string[] // sera rempli par applyMicroSelfHealing
     };
   }
 
