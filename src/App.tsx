@@ -75,6 +75,9 @@ import { SingularityMonitor } from './components/SingularityMonitor';
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 import { ChatBubble } from './components/chat/ChatBubble';
 
+// ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE)
+import { AIChatBubble } from './components/AIChatBubble';
+
 // ✨ v∞ - Multi-Agent Engine & Agents
 import { multiAgentEngine } from './core/ai/multi_agent_engine';
 import { HeliosAgent } from './core/ai/agents/helios_agent';
@@ -565,6 +568,9 @@ const AppRouter: React.FC = () => {
 
       {/* ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3) */}
       <ChatBubble position="bottom-right" persistHistory />
+
+      {/* ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE v∞) */}
+      <AIChatBubble />
     </AppShell>
   );
 };

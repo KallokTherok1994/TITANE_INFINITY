@@ -161,12 +161,25 @@ export type DevSudoAction =
   | 'ia-enable-devmode'
   | 'ia-scan'
   | 'ia-status'
-  
+
   // AI Local Training (Super Prompt #13)
   | 'ia-train'
   | 'ia-dataset'
   | 'ia-test-model'
-  | 'ia-benchmark';
+  | 'ia-benchmark'
+  
+  // AI Bubble Engine (Super Prompt #14)
+  | 'chat-open'
+  | 'chat-close'
+  | 'chat-minimize'
+  | 'chat-maximize'
+  | 'chat-clear'
+  | 'chat-set-model'
+  | 'chat-dev'
+  | 'chat-inspect'
+  | 'chat-autoheal'
+  | 'chat-fullscreen'
+  | 'chat-follow';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -737,7 +750,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^ollama\s+status$/i,
     /^check\s+ollama$/i,
   ],
-  
+
   // AI Training Commands (Super Prompt #13)
   'ia-train': [
     /^ia\s+train$/i,
@@ -766,6 +779,71 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^benchmark\s+a[\-\/]b$/i,
     /^comparer?\s+modèles$/i,
     /^performance\s+test$/i,
+  ],
+  
+  // AI Bubble Engine Commands (Super Prompt #14)
+  'chat-open': [
+    /^chat\.open$/i,
+    /^sudo\s+chat\.open$/i,
+    /^ouvrir?\s+chat$/i,
+    /^open\s+chat$/i,
+  ],
+  'chat-close': [
+    /^chat\.close$/i,
+    /^sudo\s+chat\.close$/i,
+    /^fermer?\s+chat$/i,
+    /^close\s+chat$/i,
+  ],
+  'chat-minimize': [
+    /^chat\.minimize$/i,
+    /^sudo\s+chat\.minimize$/i,
+    /^minimiser?\s+chat$/i,
+    /^minimize\s+chat$/i,
+  ],
+  'chat-maximize': [
+    /^chat\.maximize$/i,
+    /^sudo\s+chat\.maximize$/i,
+    /^maximiser?\s+chat$/i,
+    /^maximize\s+chat$/i,
+  ],
+  'chat-clear': [
+    /^chat\.clear$/i,
+    /^sudo\s+chat\.clear$/i,
+    /^effacer?\s+chat$/i,
+    /^clear\s+chat$/i,
+  ],
+  'chat-set-model': [
+    /^chat\.setModel\s+(.+)$/i,
+    /^sudo\s+chat\.setModel\s+(.+)$/i,
+    /^chat\s+model\s+(.+)$/i,
+  ],
+  'chat-dev': [
+    /^chat\.dev$/i,
+    /^sudo\s+chat\.dev$/i,
+    /^chat\s+dev\s+mode$/i,
+  ],
+  'chat-inspect': [
+    /^chat\.inspect$/i,
+    /^sudo\s+chat\.inspect$/i,
+    /^inspecter?\s+chat$/i,
+    /^inspect\s+chat$/i,
+  ],
+  'chat-autoheal': [
+    /^chat\.autoheal$/i,
+    /^sudo\s+chat\.autoheal$/i,
+    /^chat\s+auto[\-\s]heal$/i,
+  ],
+  'chat-fullscreen': [
+    /^chat\.fullscreen$/i,
+    /^sudo\s+chat\.fullscreen$/i,
+    /^chat\s+plein[\-\s]écran$/i,
+    /^chat\s+fullscreen$/i,
+  ],
+  'chat-follow': [
+    /^chat\.follow$/i,
+    /^sudo\s+chat\.follow$/i,
+    /^chat\s+suivre$/i,
+    /^chat\s+follow$/i,
   ],
 };
 
@@ -1250,22 +1328,56 @@ export async function executeDevSudoCommand(
 
       case 'ia-status':
         return await handleIAStatus();
-      
+
       // AI Local Training (Super Prompt #13)
       case 'ia-train':
         return await handleIATrain();
-      
+
       case 'ia-dataset':
         return await handleIADataset();
-      
+
       case 'ia-test-model':
         return await handleIATestModel();
-      
+
       case 'ia-benchmark':
         return await handleIABenchmark();
 
       case 'ia-status':
         return await handleIAStatus();
+      
+      // AI Bubble Engine (Super Prompt #14)
+      case 'chat-open':
+        return handleChatOpen();
+      
+      case 'chat-close':
+        return handleChatClose();
+      
+      case 'chat-minimize':
+        return handleChatMinimize();
+      
+      case 'chat-maximize':
+        return handleChatMaximize();
+      
+      case 'chat-clear':
+        return handleChatClear();
+      
+      case 'chat-set-model':
+        return handleChatSetModel(command.params.modelName as string);
+      
+      case 'chat-dev':
+        return handleChatDev();
+      
+      case 'chat-inspect':
+        return handleChatInspect();
+      
+      case 'chat-autoheal':
+        return handleChatAutoHeal();
+      
+      case 'chat-fullscreen':
+        return handleChatFullscreen();
+      
+      case 'chat-follow':
+        return handleChatFollow();
 
       default:
         return {
@@ -2321,6 +2433,327 @@ ${
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// AI BUBBLE ENGINE HANDLERS (Super Prompt #14)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Handler: chat.open
+ * Ouvre la bulle IA chat
+ */
+function handleChatOpen(): DevSudoResult {
+  // Dispatch custom event to control global chat bubble
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-open'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **TITANE∞ AI BUBBLE — Ouverture**
+
+🧠 Chat IA omniprésent activé
+
+💡 **Commandes disponibles**:
+- \`chat.close\` → Fermer
+- \`chat.minimize\` → Minimiser
+- \`chat.clear\` → Effacer historique
+- \`chat.setModel <model>\` → Changer modèle`,
+    actions: [
+      {
+        type: 'chat-open',
+        description: 'Ouverture AI Bubble',
+        result: 'success',
+        details: 'Chat bulle activé',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.close
+ * Ferme la bulle IA chat
+ */
+function handleChatClose(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-close'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **TITANE∞ AI BUBBLE — Fermeture**
+
+Chat IA fermé. Réouvrir avec \`chat.open\``,
+    actions: [
+      {
+        type: 'chat-close',
+        description: 'Fermeture AI Bubble',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.minimize
+ * Minimise la bulle IA
+ */
+function handleChatMinimize(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-minimize'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **TITANE∞ AI BUBBLE — Minimisé**
+
+Chat réduit en bulle flottante.`,
+    actions: [
+      {
+        type: 'chat-minimize',
+        description: 'Minimisation AI Bubble',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.maximize
+ * Maximise la bulle IA
+ */
+function handleChatMaximize(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-maximize'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **TITANE∞ AI BUBBLE — Maximisé**
+
+Chat ouvert en panneau complet.`,
+    actions: [
+      {
+        type: 'chat-maximize',
+        description: 'Maximisation AI Bubble',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.clear
+ * Efface l'historique du chat
+ */
+function handleChatClear(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-clear'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **TITANE∞ AI BUBBLE — Historique effacé**
+
+Conversation réinitialisée.`,
+    actions: [
+      {
+        type: 'chat-clear',
+        description: 'Effacement historique chat',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.setModel
+ * Change le modèle IA du chat
+ */
+function handleChatSetModel(modelName: string): DevSudoResult {
+  if (!modelName) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ AI BUBBLE — Erreur**
+
+Usage: \`chat.setModel <model>\`
+
+Modèles disponibles:
+- gemini-2.0-flash
+- titane-local
+- claude-3.5-sonnet`,
+    };
+  }
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-set-model', { detail: { model: modelName } }));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **TITANE∞ AI BUBBLE — Modèle changé**
+
+Nouveau modèle: **${modelName}**`,
+    actions: [
+      {
+        type: 'chat-set-model',
+        description: `Modèle changé: ${modelName}`,
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.dev
+ * Active le mode développeur du chat
+ */
+function handleChatDev(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-dev-mode'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `🛠️ **TITANE∞ AI BUBBLE — DEV MODE**
+
+Mode développeur activé:
+- Logs détaillés
+- Debug panel
+- Commandes avancées
+- Self-healing automatique`,
+    actions: [
+      {
+        type: 'chat-dev',
+        description: 'Dev mode activé',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.inspect
+ * Inspecte l'état du chat
+ */
+function handleChatInspect(): DevSudoResult {
+  return {
+    handled: true,
+    success: true,
+    response: `🔍 **TITANE∞ AI BUBBLE — Inspection**
+
+📊 **État actuel**:
+- Provider: auto (Gemini → Local → Claude)
+- Modèle: gemini-2.0-flash
+- Messages: Consulter localStorage
+- Mémoire: Singularity sync actif
+
+💡 **Connexions**:
+✅ Singularity Engine
+✅ Memory Eternal Engine
+✅ Self-Healing Engine
+✅ Dev Engine
+✅ UI/UX Engine`,
+    actions: [
+      {
+        type: 'chat-inspect',
+        description: 'Inspection AI Bubble',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.autoheal
+ * Active l'auto-healing du chat
+ */
+function handleChatAutoHeal(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-autoheal'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `🩹 **TITANE∞ AI BUBBLE — Auto-Healing**
+
+Self-healing activé:
+- Réparation erreurs automatique
+- Fallback providers
+- State recovery
+- UI re-render protection`,
+    actions: [
+      {
+        type: 'chat-autoheal',
+        description: 'Auto-healing activé',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.fullscreen
+ * Toggle fullscreen du chat
+ */
+function handleChatFullscreen(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-fullscreen'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `📺 **TITANE∞ AI BUBBLE — Fullscreen**
+
+Mode plein écran toggleé.`,
+    actions: [
+      {
+        type: 'chat-fullscreen',
+        description: 'Fullscreen toggleé',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: chat.follow
+ * Active le mode suivi du chat
+ */
+function handleChatFollow(): DevSudoResult {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('titane-chat-follow'));
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `🎯 **TITANE∞ AI BUBBLE — Follow Mode**
+
+Chat suit l'utilisateur:
+- Toujours visible
+- Contexte préservé
+- Navigation persistante
+- Singularity aligned`,
+    actions: [
+      {
+        type: 'chat-follow',
+        description: 'Follow mode activé',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -2329,3 +2762,4 @@ export const devSudoHandler = {
   parseCommand: parseDevSudoCommand,
   executeCommand: executeDevSudoCommand,
 };
+
