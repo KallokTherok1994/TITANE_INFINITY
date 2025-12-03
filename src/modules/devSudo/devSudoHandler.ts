@@ -167,7 +167,7 @@ export type DevSudoAction =
   | 'ia-dataset'
   | 'ia-test-model'
   | 'ia-benchmark'
-  
+
   // AI Bubble Engine (Super Prompt #14)
   | 'chat-open'
   | 'chat-close'
@@ -179,7 +179,17 @@ export type DevSudoAction =
   | 'chat-inspect'
   | 'chat-autoheal'
   | 'chat-fullscreen'
-  | 'chat-follow';
+  | 'chat-follow'
+
+  // Data Collector Engine (Super Prompt #15)
+  | 'dataset-collect'
+  | 'dataset-clean'
+  | 'dataset-generate'
+  | 'dataset-training-pack'
+  | 'dataset-compress'
+  | 'dataset-add'
+  | 'dataset-sync-memory'
+  | 'dataset-export';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -780,7 +790,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^comparer?\s+modèles$/i,
     /^performance\s+test$/i,
   ],
-  
+
   // AI Bubble Engine Commands (Super Prompt #14)
   'chat-open': [
     /^chat\.open$/i,
@@ -844,6 +854,56 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^sudo\s+chat\.follow$/i,
     /^chat\s+suivre$/i,
     /^chat\s+follow$/i,
+  ],
+
+  // Data Collector Engine Commands (Super Prompt #15)
+  'dataset-collect': [
+    /^dataset\.collect$/i,
+    /^sudo\s+dataset\.collect$/i,
+    /^collecter?\s+dataset$/i,
+    /^collect\s+data$/i,
+    /^run\s+collection$/i,
+  ],
+  'dataset-clean': [
+    /^dataset\.clean$/i,
+    /^sudo\s+dataset\.clean$/i,
+    /^nettoyer?\s+dataset$/i,
+    /^clean\s+dataset$/i,
+  ],
+  'dataset-generate': [
+    /^dataset\.generate$/i,
+    /^sudo\s+dataset\.generate$/i,
+    /^générer?\s+dataset$/i,
+    /^generate\s+dataset$/i,
+  ],
+  'dataset-training-pack': [
+    /^dataset\.training[\-\s]pack$/i,
+    /^sudo\s+dataset\.training[\-\s]pack$/i,
+    /^pack\s+entraînement$/i,
+    /^training\s+pack$/i,
+  ],
+  'dataset-compress': [
+    /^dataset\.compress$/i,
+    /^sudo\s+dataset\.compress$/i,
+    /^compresser?\s+dataset$/i,
+    /^compress\s+dataset$/i,
+  ],
+  'dataset-add': [
+    /^dataset\.add\s+(.+)$/i,
+    /^sudo\s+dataset\.add\s+(.+)$/i,
+    /^ajouter?\s+à\s+dataset\s+(.+)$/i,
+  ],
+  'dataset-sync-memory': [
+    /^dataset\.sync[\-\s]memory$/i,
+    /^sudo\s+dataset\.sync[\-\s]memory$/i,
+    /^sync\s+memory$/i,
+    /^synchroniser?\s+mémoire$/i,
+  ],
+  'dataset-export': [
+    /^dataset\.export$/i,
+    /^sudo\s+dataset\.export$/i,
+    /^exporter?\s+dataset$/i,
+    /^export\s+dataset$/i,
   ],
 };
 
@@ -1344,45 +1404,70 @@ export async function executeDevSudoCommand(
 
       case 'ia-status':
         return await handleIAStatus();
-      
+
       // AI Bubble Engine (Super Prompt #14)
       case 'chat-open':
         return handleChatOpen();
-      
+
       case 'chat-close':
         return handleChatClose();
-      
+
       case 'chat-minimize':
         return handleChatMinimize();
-      
+
       case 'chat-maximize':
         return handleChatMaximize();
-      
+
       case 'chat-clear':
         return handleChatClear();
-      
+
       case 'chat-set-model':
         return handleChatSetModel(command.params.modelName as string);
-      
+
       case 'chat-dev':
         return handleChatDev();
-      
+
       case 'chat-inspect':
         return handleChatInspect();
-      
+
       case 'chat-autoheal':
         return handleChatAutoHeal();
-      
+
       case 'chat-fullscreen':
         return handleChatFullscreen();
-      
+
       case 'chat-follow':
         return handleChatFollow();
+
+      // Data Collector Engine (Super Prompt #15)
+      case 'dataset-collect':
+        return await handleDatasetCollect();
+
+      case 'dataset-clean':
+        return handleDatasetClean();
+
+      case 'dataset-generate':
+        return handleDatasetGenerate();
+
+      case 'dataset-training-pack':
+        return handleDatasetTrainingPack();
+
+      case 'dataset-compress':
+        return handleDatasetCompress();
+
+      case 'dataset-add':
+        return handleDatasetAdd(command.params.filepath as string);
+
+      case 'dataset-sync-memory':
+        return await handleDatasetSyncMemory();
+
+      case 'dataset-export':
+        return handleDatasetExport();
 
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.LOCAL — UNIFIED BRAIN + MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY + AI LOCAL**\n\n**Commandes disponibles** (104 totales):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize\n\n🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):\n- titane one introspect — Introspection totale (6 couches + 20 moteurs)\n- titane one evolve — Évolution automatique du système\n- titane one heal — Self-healing standard\n- titane one fullheal — Deep self-healing + reconstruction\n- titane one unify — Unification totale des 6 couches\n- titane one optimize — Optimisation globale complète\n- titane one vision-all — Triple vision (interne/externe/future)\n- titane one analyze dev — Analyse environnement dev\n- titane one analyze ui — Analyse UI/UX complète\n- titane one analyze backend — Analyse backend Rust/Tauri\n- titane one analyze memory — Analyse mémoire éternelle\n- titane one singularity-scan — Scan quantique Singularity\n\n🤖 **AI Local Model** (Super Prompt #12 - 6 commandes):\n- ia add — Installer TITANE∞ Local (LLama 3.1)\n- ia test — Tester le modèle local\n- ia set-default [model] — Définir modèle par défaut\n- ia enable-devmode — Activer mode développeur optimisé\n- ia scan — Lister les modèles installés\n- ia status — Vérifier statut Ollama + config IA`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.LOCAL — UNIFIED BRAIN + MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY + AI LOCAL + DATA COLLECTOR**\n\n**Commandes disponibles** (112 totales):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize\n\n🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):\n- titane one introspect — Introspection totale (6 couches + 20 moteurs)\n- titane one evolve — Évolution automatique du système\n- titane one heal — Self-healing standard\n- titane one fullheal — Deep self-healing + reconstruction\n- titane one unify — Unification totale des 6 couches\n- titane one optimize — Optimisation globale complète\n- titane one vision-all — Triple vision (interne/externe/future)\n- titane one analyze dev — Analyse environnement dev\n- titane one analyze ui — Analyse UI/UX complète\n- titane one analyze backend — Analyse backend Rust/Tauri\n- titane one analyze memory — Analyse mémoire éternelle\n- titane one singularity-scan — Scan quantique Singularity\n\n🤖 **AI Local Model** (Super Prompt #12 - 6 commandes):\n- ia add — Installer TITANE∞ Local (LLama 3.1)\n- ia test — Tester le modèle local\n- ia set-default [model] — Définir modèle par défaut\n- ia enable-devmode — Activer mode développeur optimisé\n- ia scan — Lister les modèles installés\n- ia status — Vérifier statut Ollama + config IA`,
           success: false,
         };
     }
@@ -2739,6 +2824,425 @@ function handleChatFollow(): DevSudoResult {
     response: `🎯 **TITANE∞ AI BUBBLE — Follow Mode**
 
 Chat suit l'utilisateur:
+- Toujours visible
+- Contexte préservé
+- Navigation persistante`,
+    actions: [
+      {
+        type: 'chat-follow',
+        description: 'Follow mode activé',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DATA COLLECTOR ENGINE HANDLERS (SUPER PROMPT #15)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Handler: dataset.collect
+ * Lance la collecte complète des données TITANE∞
+ */
+async function handleDatasetCollect(): Promise<DevSudoResult> {
+  try {
+    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+    
+    const report = await dataCollector.runCollectionPipeline();
+
+    if (report.success) {
+      return {
+        handled: true,
+        success: true,
+        response: `✅ **TITANE∞ DATA COLLECTOR v∞ — Collection Complete**
+
+📊 **Résultats**:
+  - Total collecté: ${report.entriesCollected} entrées
+  - Super-prompts: ${report.byCategory['super-prompt']}
+  - Interactions IA: ${report.byCategory['interaction']}
+  - Auto-heal: ${report.byCategory['auto-heal']}
+  - Introspections: ${report.byCategory['introspection']}
+  - Patches: ${report.byCategory['patch']}
+  - Style: ${report.byCategory['style']}
+
+⏱️ **Performance**:
+  - Durée: ${(report.duration / 1000).toFixed(2)}s
+
+${report.warnings.length > 0 ? `\n⚠️ **Warnings**: ${report.warnings.length}\n${report.warnings.map(w => `  - ${w}`).join('\n')}` : ''}
+
+💾 Dataset sauvegardé automatiquement.`,
+        actions: [
+          {
+            type: 'dataset-collect',
+            description: `Collecté ${report.entriesCollected} entrées`,
+            result: 'success',
+          },
+        ],
+      };
+    } else {
+      return {
+        handled: true,
+        success: false,
+        response: `❌ **DATA COLLECTOR — Erreur**
+
+Erreurs: ${report.errors.join(', ')}`,
+        error: report.errors[0],
+      };
+    }
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: dataset.clean
+ * Nettoie le dataset (supprime doublons, données de mauvaise qualité)
+ */
+function handleDatasetClean(): DevSudoResult {
+  try {
+    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
+    
+    const statsBefore = dataCollector.getStats();
+    dataCollector.cleanDataset();
+    const statsAfter = dataCollector.getStats();
+
+    const removed = statsBefore.totalEntries - statsAfter.totalEntries;
+
+    return {
+      handled: true,
+      success: true,
+      response: `🧹 **TITANE∞ DATA COLLECTOR v∞ — Nettoyage**
+
+Avant: ${statsBefore.totalEntries} entrées
+Après: ${statsAfter.totalEntries} entrées
+Supprimées: ${removed} entrées
+
+✅ Dataset nettoyé.`,
+      actions: [
+        {
+          type: 'dataset-clean',
+          description: `Nettoyé ${removed} entrées`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: dataset.generate
+ * Génère le fichier JSONL du dataset
+ */
+function handleDatasetGenerate(): DevSudoResult {
+  try {
+    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
+    
+    const jsonl = dataCollector.exportToJSONL();
+    const stats = dataCollector.getStats();
+
+    return {
+      handled: true,
+      success: true,
+      response: `📦 **TITANE∞ DATA COLLECTOR v∞ — Dataset JSONL Généré**
+
+📊 **Stats**:
+  - Entrées: ${stats.totalEntries}
+  - Tokens estimés: ${stats.totalTokens.toLocaleString()}
+  - Taille: ${stats.sizeInMB.toFixed(2)} MB
+  - Qualité moyenne: ${(stats.avgQuality * 100).toFixed(0)}%
+  - Importance moyenne: ${(stats.avgImportance * 100).toFixed(0)}%
+
+📂 **Format**: JSONL (JSON Lines)
+Chaque ligne: \`{"prompt": "...", "response": "..."}\`
+
+💡 **Utilisation**:
+\`\`\`bash
+# Télécharger via console
+copy(dataCollector.exportToJSONL())
+# Sauvegarder dans dataset.jsonl
+\`\`\``,
+      actions: [
+        {
+          type: 'dataset-generate',
+          description: `Généré ${stats.totalEntries} entrées JSONL`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: dataset.training-pack
+ * Génère le pack complet d'entraînement (dataset + Modelfile + script)
+ */
+function handleDatasetTrainingPack(): DevSudoResult {
+  try {
+    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
+    
+    const pack = dataCollector.exportTrainingPack();
+    const stats = dataCollector.getStats();
+
+    return {
+      handled: true,
+      success: true,
+      response: `📦 **TITANE∞ DATA COLLECTOR v∞ — Training Pack Complet**
+
+✅ **3 fichiers générés**:
+
+1️⃣ **dataset.jsonl** (${stats.sizeInMB.toFixed(2)} MB)
+   - ${stats.totalEntries} entrées
+   - ${stats.totalTokens.toLocaleString()} tokens
+   - Qualité: ${(stats.avgQuality * 100).toFixed(0)}%
+
+2️⃣ **Modelfile** (Configuration Ollama)
+   - Base: llama3.1
+   - System prompt TITANE∞
+   - Parameters optimisés
+
+3️⃣ **train_titane_local.sh** (Script d'entraînement)
+   - 7 étapes automatiques
+   - Vérifications + backup
+   - Benchmark + tests
+
+💡 **Prochaines étapes**:
+\`\`\`bash
+# 1. Télécharger les fichiers via console:
+copy(dataCollector.exportTrainingPack().dataset)    # dataset.jsonl
+copy(dataCollector.exportTrainingPack().modelfile)  # Modelfile
+copy(dataCollector.exportTrainingPack().script)     # train.sh
+
+# 2. Sauvegarder dans un dossier:
+mkdir titane-training
+cd titane-training
+# Coller les contenus dans dataset.jsonl, Modelfile, train.sh
+
+# 3. Lancer l'entraînement:
+chmod +x train.sh
+./train.sh
+\`\`\`
+
+🚀 **Fine-tuning Ollama** démarrera automatiquement.`,
+      actions: [
+        {
+          type: 'dataset-training-pack',
+          description: 'Pack complet généré (3 fichiers)',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: dataset.compress
+ * Compresse le dataset (optimise taille)
+ */
+function handleDatasetCompress(): DevSudoResult {
+  try {
+    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
+    
+    const statsBefore = dataCollector.getStats();
+    // Compression via cleanDataset (supprime redondances)
+    dataCollector.cleanDataset();
+    const statsAfter = dataCollector.getStats();
+
+    const reduction = ((1 - statsAfter.sizeInMB / statsBefore.sizeInMB) * 100).toFixed(1);
+
+    return {
+      handled: true,
+      success: true,
+      response: `🗜️ **TITANE∞ DATA COLLECTOR v∞ — Compression**
+
+Avant: ${statsBefore.sizeInMB.toFixed(2)} MB
+Après: ${statsAfter.sizeInMB.toFixed(2)} MB
+Réduction: ${reduction}%
+
+✅ Dataset compressé.`,
+      actions: [
+        {
+          type: 'dataset-compress',
+          description: `Compressé ${reduction}%`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: dataset.add <filepath>
+ * Ajoute un fichier externe au dataset
+ */
+function handleDatasetAdd(filepath: string): DevSudoResult {
+  if (!filepath) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Paramètre manquant: filepath
+
+**Usage**: \`dataset.add <filepath>\`
+**Exemple**: \`dataset.add ./custom-data.jsonl\``,
+      error: 'Missing filepath parameter',
+    };
+  }
+
+  return {
+    handled: true,
+    success: true,
+    response: `➕ **TITANE∞ DATA COLLECTOR v∞ — Ajout Fichier**
+
+📂 Fichier: ${filepath}
+
+⚠️ **Feature en développement**
+Cette commande permettra d'importer des données externes au dataset.
+
+💡 **Format supporté (futur)**:
+\`\`\`jsonl
+{"prompt": "Question", "response": "Réponse"}
+{"prompt": "Autre question", "response": "Autre réponse"}
+\`\`\``,
+    actions: [
+      {
+        type: 'dataset-add',
+        description: `Ajout ${filepath} (en dev)`,
+        result: 'pending',
+      },
+    ],
+  };
+}
+
+/**
+ * Handler: dataset.sync-memory
+ * Synchronise le dataset avec Memory Eternal Engine
+ */
+async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
+  try {
+    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+    
+    // Extraire uniquement les données mémoire
+    const memoryEntries = await dataCollector.extractMemoryHistory();
+    const stats = dataCollector.getStats();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔄 **TITANE∞ DATA COLLECTOR v∞ — Sync Memory**
+
+✅ Synchronisation Memory Eternal:
+  - Nouvelles entrées extraites: ${memoryEntries.length}
+  - Dataset total: ${stats.totalEntries} entrées
+
+💾 Dataset mis à jour automatiquement.`,
+      actions: [
+        {
+          type: 'dataset-sync-memory',
+          description: `Sync ${memoryEntries.length} entrées Memory`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: dataset.export
+ * Exporte le dataset complet (stats + JSONL)
+ */
+function handleDatasetExport(): DevSudoResult {
+  try {
+    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
+    
+    const stats = dataCollector.getStats();
+    const jsonl = dataCollector.exportToJSONL();
+
+    return {
+      handled: true,
+      success: true,
+      response: `📤 **TITANE∞ DATA COLLECTOR v∞ — Export Complet**
+
+📊 **Statistiques**:
+  ┌─────────────────────────────────────────────┐
+  │ Total entrées:      ${String(stats.totalEntries).padStart(8)}       │
+  │ Super-prompts:      ${String(stats.byCategory['super-prompt']).padStart(8)}       │
+  │ Interactions:       ${String(stats.byCategory['interaction']).padStart(8)}       │
+  │ Auto-heal:          ${String(stats.byCategory['auto-heal']).padStart(8)}       │
+  │ Introspections:     ${String(stats.byCategory['introspection']).padStart(8)}       │
+  │ Patches:            ${String(stats.byCategory['patch']).padStart(8)}       │
+  │ Style:              ${String(stats.byCategory['style']).padStart(8)}       │
+  ├─────────────────────────────────────────────┤
+  │ Tokens estimés:     ${String(stats.totalTokens.toLocaleString()).padStart(8)}       │
+  │ Taille:             ${(stats.sizeInMB).toFixed(2)} MB          │
+  │ Qualité moyenne:    ${(stats.avgQuality * 100).toFixed(0)}%             │
+  │ Importance moyenne: ${(stats.avgImportance * 100).toFixed(0)}%             │
+  └─────────────────────────────────────────────┘
+
+💡 **Export disponible**:
+\`\`\`javascript
+// Console browser
+const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+copy(dataCollector.exportToJSONL());
+\`\`\`
+
+📂 **Sauvegarder dans** \`dataset.jsonl\``,
+      actions: [
+        {
+          type: 'dataset-export',
+          description: `Exporté ${stats.totalEntries} entrées`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
 - Toujours visible
 - Contexte préservé
 - Navigation persistante
