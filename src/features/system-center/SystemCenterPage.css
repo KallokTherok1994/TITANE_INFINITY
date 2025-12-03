@@ -717,7 +717,7 @@
 }
 
 .sc-issue--error {
-  border-left: 3px solid #f97316;
+  border-left: 3px solid var(--warning, #a89f91);
 }
 
 .sc-issue--warning {
@@ -1074,7 +1074,7 @@
 }
 
 .sc-anomaly--high {
-  border-left: 3px solid #f97316;
+  border-left: 3px solid var(--warning, #a89f91);
 }
 
 .sc-anomaly--medium {

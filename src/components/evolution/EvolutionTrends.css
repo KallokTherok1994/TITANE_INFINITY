@@ -56,9 +56,9 @@
   border-radius: 8px;
 }
 
-.summary-item.improving { border-bottom: 2px solid #22c55e; }
+.summary-item.improving { border-bottom: 2px solid var(--success, #93b399); }
 .summary-item.stable { border-bottom: 2px solid var(--info, #8899aa); }
-.summary-item.degrading { border-bottom: 2px solid #ef4444; }
+.summary-item.degrading { border-bottom: 2px solid var(--danger, #8f7a7a); }
 .summary-item.volatile { border-bottom: 2px solid #f59e0b; }
 
 .summary-icon { font-size: 20px; }
@@ -68,9 +68,9 @@
 .anomaly-alert {
   padding: 10px 16px;
   background: rgba(239, 68, 68, 0.15);
-  border-left: 3px solid #ef4444;
+  border-left: 3px solid var(--danger, #8f7a7a);
   font-size: 13px;
-  color: #ef4444;
+  color: var(--danger, #8f7a7a);
 }
 
 .trends-grid {

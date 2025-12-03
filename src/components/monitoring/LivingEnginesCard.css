@@ -176,7 +176,7 @@
 }
 
 .living-metric__bar-fill--depth {
-  background: linear-gradient(90deg, #fb923c, #fbbf24);
+  background: linear-gradient(90deg, #fb923c, var(--warning, #a89f91));
 }
 
 .living-metric__bar-fill--sound {
@@ -188,7 +188,7 @@
 }
 
 .living-metric__bar-fill--rhythm {
-  background: linear-gradient(90deg, #10b981, #14b8a6);
+  background: linear-gradient(90deg, var(--success, #93b399), #14b8a6);
 }
 
 /* Responsive */

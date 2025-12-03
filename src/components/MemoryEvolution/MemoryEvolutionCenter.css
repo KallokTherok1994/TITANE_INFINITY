@@ -6,11 +6,11 @@
  */
 
 .memory-evolution-center {
-  --accent-ct: #3B82F6;
+  --accent-ct: var(--info, #8899aa);
   --accent-mt: #8B5CF6;
-  --accent-lt: #EC4899;
+  --accent-lt: var(--primary, #727b81);
   --accent-elt: #F59E0B;
-  --accent-core: #10B981;
+  --accent-core: var(--success, #93b399);
   --bg-primary: #0f172a;
   --bg-secondary: #1e293b;
   --bg-tertiary: #334155;
@@ -81,7 +81,7 @@
   justify-content: space-between;
   padding: 0.75rem 1rem;
   background: rgba(239, 68, 68, 0.2);
-  border: 1px solid #EF4444;
+  border: 1px solid var(--danger, #8f7a7a);
   border-radius: 8px;
   margin-bottom: 1rem;
 }
@@ -89,7 +89,7 @@
 .error-banner button {
   background: none;
   border: none;
-  color: #EF4444;
+  color: var(--danger, #8f7a7a);
   cursor: pointer;
   font-size: 1.2rem;
 }
@@ -469,7 +469,7 @@
 .control-btn.patterns:hover { border-color: var(--accent-core); }
 .control-btn.stability:hover { border-color: #6366F1; }
 .control-btn.grow:hover { border-color: #14B8A6; }
-.control-btn.backup:hover { border-color: #F97316; }
+.control-btn.backup:hover { border-color: var(--warning, #a89f91); }
 
 .full-evolution {
   margin-top: 1rem;
@@ -587,13 +587,13 @@
   margin-top: 1rem;
   padding: 0.75rem;
   background: rgba(239, 68, 68, 0.1);
-  border: 1px solid #EF4444;
+  border: 1px solid var(--danger, #8f7a7a);
   border-radius: 8px;
 }
 
 .result-errors h4 {
   font-size: 0.85rem;
-  color: #EF4444;
+  color: var(--danger, #8f7a7a);
   margin-bottom: 0.5rem;
 }
 

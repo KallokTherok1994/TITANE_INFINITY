@@ -262,12 +262,12 @@
    ============================================================================= */
 
 .tts-button[data-emotion="neutral"] { --tts-emotion-color: #6B7280; }
-.tts-button[data-emotion="calm"] { --tts-emotion-color: #3B82F6; }
+.tts-button[data-emotion="calm"] { --tts-emotion-color: var(--info, #8899aa); }
 .tts-button[data-emotion="focusing"] { --tts-emotion-color: #8B5CF6; }
 .tts-button[data-emotion="excited"] { --tts-emotion-color: #F59E0B; }
-.tts-button[data-emotion="soft"] { --tts-emotion-color: #EC4899; }
-.tts-button[data-emotion="grounded"] { --tts-emotion-color: #10B981; }
-.tts-button[data-emotion="uplifting"] { --tts-emotion-color: #EF4444; }
+.tts-button[data-emotion="soft"] { --tts-emotion-color: var(--primary, #727b81); }
+.tts-button[data-emotion="grounded"] { --tts-emotion-color: var(--success, #93b399); }
+.tts-button[data-emotion="uplifting"] { --tts-emotion-color: var(--danger, #8f7a7a); }
 .tts-button[data-emotion="empathetic"] { --tts-emotion-color: #06B6D4; }
 .tts-button[data-emotion="disciplined"] { --tts-emotion-color: #1F2937; }
-.tts-button[data-emotion="inspired"] { --tts-emotion-color: #F97316; }
+.tts-button[data-emotion="inspired"] { --tts-emotion-color: var(--warning, #a89f91); }

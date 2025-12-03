@@ -295,24 +295,24 @@
 
 .qa-severity--info,
 .qa-status--info,
-.qa-badge--info { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+.qa-badge--info { background: rgba(136, 153, 170, 0.2); color: var(--info, #8899aa); }
 .qa-severity--warning,
 .qa-status--warning,
-.qa-badge--warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.qa-badge--warning { background: rgba(245, 158, 11, 0.2); color: var(--warning, #a89f91); }
 .qa-severity--error,
 .qa-status--error,
-.qa-badge--error { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.qa-badge--error { background: rgba(239, 68, 68, 0.2); color: var(--danger, #8f7a7a); }
 .qa-severity--critical { background: rgba(220, 38, 127, 0.2); color: #f472b6; }
 .qa-badge--success,
-.qa-status--passed { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-.qa-status--failed { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.qa-status--passed { background: rgba(16, 185, 129, 0.2); color: var(--success, #93b399); }
+.qa-status--failed { background: rgba(239, 68, 68, 0.2); color: var(--danger, #8f7a7a); }
 .qa-status--skipped,
 .qa-status--pending { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
-.qa-status--active { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-.qa-status--paused { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+.qa-status--active { background: rgba(16, 185, 129, 0.2); color: var(--success, #93b399); }
+.qa-status--paused { background: rgba(245, 158, 11, 0.2); color: var(--warning, #a89f91); }
 .qa-status--unit { background: rgba(139, 92, 246, 0.2); color: var(--primary, #727b81); }
-.qa-status--integration { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-.qa-status--e2e { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+.qa-status--integration { background: rgba(136, 153, 170, 0.2); color: var(--info, #8899aa); }
+.qa-status--e2e { background: rgba(16, 185, 129, 0.2); color: var(--success, #93b399); }
 .qa-status--performance { background: rgba(236, 72, 153, 0.2); color: #f472b6; }
 
 /* ============================================================================
@@ -531,9 +531,9 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.qa-suite-stat--success .qa-suite-stat-value { color: #34d399; }
-.qa-suite-stat--error .qa-suite-stat-value { color: #f87171; }
-.qa-suite-stat--warning .qa-suite-stat-value { color: #fbbf24; }
+.qa-suite-stat--success .qa-suite-stat-value { color: var(--success, #93b399); }
+.qa-suite-stat--error .qa-suite-stat-value { color: var(--danger, #8f7a7a); }
+.qa-suite-stat--warning .qa-suite-stat-value { color: var(--warning, #a89f91); }
 
 .qa-suite-coverage {
   margin-bottom: 1rem;
@@ -704,9 +704,9 @@
   font-weight: 600;
 }
 
-.qa-hardening-value--enabled { color: #34d399; }
+.qa-hardening-value--enabled { color: var(--success, #93b399); }
 .qa-hardening-value--minimal { color: #9ca3af; }
-.qa-hardening-value--standard { color: #60a5fa; }
+.qa-hardening-value--standard { color: var(--info, #8899aa); }
 .qa-hardening-value--strict { color: var(--primary, #727b81); }
 .qa-hardening-value--paranoid { color: #f472b6; }
 
@@ -780,9 +780,9 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-.qa-audit-stat--success .qa-audit-stat-value { color: #34d399; }
-.qa-audit-stat--warning .qa-audit-stat-value { color: #fbbf24; }
-.qa-audit-stat--error .qa-audit-stat-value { color: #f87171; }
+.qa-audit-stat--success .qa-audit-stat-value { color: var(--success, #93b399); }
+.qa-audit-stat--warning .qa-audit-stat-value { color: var(--warning, #a89f91); }
+.qa-audit-stat--error .qa-audit-stat-value { color: var(--danger, #8f7a7a); }
 
 .qa-audit-checks {
   display: grid;
@@ -897,8 +897,8 @@
   font-family: monospace;
 }
 
-.qa-perf-value-num--success { color: #34d399; }
-.qa-perf-value-num--error { color: #f87171; }
+.qa-perf-value-num--success { color: var(--success, #93b399); }
+.qa-perf-value-num--error { color: var(--danger, #8f7a7a); }
 
 /* ============================================================================
  * Logs
@@ -948,9 +948,9 @@
 }
 
 .qa-log-level--debug { background: rgba(156, 163, 175, 0.2); color: #9ca3af; }
-.qa-log-level--info { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-.qa-log-level--warning { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
-.qa-log-level--error { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+.qa-log-level--info { background: rgba(136, 153, 170, 0.2); color: var(--info, #8899aa); }
+.qa-log-level--warning { background: rgba(245, 158, 11, 0.2); color: var(--warning, #a89f91); }
+.qa-log-level--error { background: rgba(239, 68, 68, 0.2); color: var(--danger, #8f7a7a); }
 
 .qa-log-source {
   color: rgba(139, 92, 246, 0.8);

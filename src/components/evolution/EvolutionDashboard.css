@@ -10,9 +10,9 @@
 .evolution-dashboard {
   --evolution-primary: var(--primary, #727b81);
   --evolution-secondary: #7c3aed;
-  --evolution-success: #22c55e;
+  --evolution-success: var(--success, #93b399);
   --evolution-warning: #f59e0b;
-  --evolution-danger: #ef4444;
+  --evolution-danger: var(--danger, #8f7a7a);
   --evolution-bg: rgba(0, 0, 0, 0.85);
   --evolution-surface: rgba(255, 255, 255, 0.05);
   --evolution-border: rgba(255, 255, 255, 0.1);
@@ -215,11 +215,11 @@
 }
 
 .gauge-grade[data-grade="S"] { color: #f59e0b; background: rgba(245, 158, 11, 0.2); }
-.gauge-grade[data-grade="A"] { color: #22c55e; background: rgba(34, 197, 94, 0.2); }
+.gauge-grade[data-grade="A"] { color: var(--success, #93b399); background: rgba(34, 197, 94, 0.2); }
 .gauge-grade[data-grade="B"] { color: var(--info, #8899aa); background: rgba(59, 130, 246, 0.2); }
 .gauge-grade[data-grade="C"] { color: var(--primary, #727b81); background: rgba(168, 85, 247, 0.2); }
 .gauge-grade[data-grade="D"] { color: #f59e0b; background: rgba(245, 158, 11, 0.2); }
-.gauge-grade[data-grade="F"] { color: #ef4444; background: rgba(239, 68, 68, 0.2); }
+.gauge-grade[data-grade="F"] { color: var(--danger, #8f7a7a); background: rgba(239, 68, 68, 0.2); }
 
 .gauge-label {
   font-size: 12px;
@@ -405,7 +405,7 @@
 
 .suggestion-card.risk-LOW { border-left: 3px solid var(--evolution-success); }
 .suggestion-card.risk-MEDIUM { border-left: 3px solid var(--evolution-warning); }
-.suggestion-card.risk-HIGH { border-left: 3px solid #f97316; }
+.suggestion-card.risk-HIGH { border-left: 3px solid var(--warning, #a89f91); }
 .suggestion-card.risk-CRITICAL { border-left: 3px solid var(--evolution-danger); }
 
 .suggestion-header {
@@ -434,7 +434,7 @@
 
 .badge-LOW { background: rgba(34, 197, 94, 0.2); color: var(--evolution-success); }
 .badge-MEDIUM { background: rgba(245, 158, 11, 0.2); color: var(--evolution-warning); }
-.badge-HIGH { background: rgba(249, 115, 22, 0.2); color: #f97316; }
+.badge-HIGH { background: rgba(249, 115, 22, 0.2); color: var(--warning, #a89f91); }
 .badge-CRITICAL { background: rgba(239, 68, 68, 0.2); color: var(--evolution-danger); }
 
 .suggestion-priority {

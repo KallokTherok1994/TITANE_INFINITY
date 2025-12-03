@@ -309,7 +309,7 @@
 
 .insight-card.info {
   background: rgba(96, 165, 250, 0.1);
-  border-left-color: #60a5fa;
+  border-left-color: var(--info, #8899aa);
 }
 
 .insight-card.warning {

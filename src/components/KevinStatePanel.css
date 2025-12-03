@@ -209,7 +209,7 @@
 }
 
 .need-indicator {
-  color: #10b981;
+  color: var(--success, #93b399);
   font-size: 16px;
   animation: blink 1.5s ease-in-out infinite;
 }
@@ -254,7 +254,7 @@
 
 .recommendation.warning {
   background: rgba(239, 68, 68, 0.1);
-  border-color: #ef4444;
+  border-color: var(--danger, #8f7a7a);
 }
 
 .recommendation.info {
@@ -264,7 +264,7 @@
 
 .recommendation.success {
   background: rgba(16, 185, 129, 0.1);
-  border-color: #10b981;
+  border-color: var(--success, #93b399);
 }
 
 /* Responsive */

@@ -184,11 +184,11 @@
 }
 
 .exp-domain-card--business {
-  border-left: 3px solid #60a5fa;
+  border-left: 3px solid var(--info, #8899aa);
 }
 
 .exp-domain-card--memory {
-  border-left: 3px solid #34d399;
+  border-left: 3px solid var(--success, #93b399);
 }
 
 .exp-domain-card--system {
@@ -196,7 +196,7 @@
 }
 
 .exp-domain-card--project {
-  border-left: 3px solid #fbbf24;
+  border-left: 3px solid var(--warning, #a89f91);
 }
 
 .exp-domain-header {

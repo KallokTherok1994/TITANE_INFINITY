@@ -111,8 +111,8 @@
 }
 
 .twin-panel__version {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+  background: rgba(136, 153, 170, 0.2);
+  color: var(--info, #8899aa);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -148,8 +148,8 @@
 }
 
 .twin-panel__tab--active {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
+  background: rgba(136, 153, 170, 0.2);
+  color: var(--info, #8899aa);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -346,9 +346,9 @@
 }
 
 .twin-value__reinforce {
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(136, 153, 170, 0.2);
   border: none;
-  color: #60a5fa;
+  color: var(--info, #8899aa);
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
@@ -357,7 +357,7 @@
 }
 
 .twin-value__reinforce:hover:not(:disabled) {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(136, 153, 170, 0.3);
 }
 
 .twin-value__reinforce:disabled {
@@ -423,14 +423,14 @@
 }
 
 .twin-evolution__phase-step--completed .twin-evolution__phase-dot {
-  background: #22c55e;
-  border-color: #22c55e;
+  background: var(--success, #93b399);
+  border-color: var(--success, #93b399);
 }
 
 .twin-evolution__phase-step--current .twin-evolution__phase-dot {
   background: var(--info, #8899aa);
   border-color: var(--info, #8899aa);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 12px rgba(136, 153, 170, 0.5);
 }
 
 .twin-evolution__phase-label {
@@ -519,7 +519,7 @@
 
 .twin-evolution__suggestion-validated {
   font-size: 11px;
-  color: #22c55e;
+  color: var(--success, #93b399);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -532,7 +532,7 @@
   border-radius: 8px;
   padding: 12px;
   font-size: 12px;
-  color: #fbbf24;
+  color: var(--warning, #a89f91);
   margin-bottom: 24px;
 }
 
@@ -544,9 +544,9 @@
 }
 
 .twin-admin__action {
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  color: #60a5fa;
+  background: rgba(136, 153, 170, 0.2);
+  border: 1px solid rgba(136, 153, 170, 0.3);
+  color: var(--info, #8899aa);
   padding: 12px 16px;
   border-radius: 8px;
   font-size: 14px;
@@ -555,13 +555,13 @@
 }
 
 .twin-admin__action:hover:not(:disabled) {
-  background: rgba(59, 130, 246, 0.3);
+  background: rgba(136, 153, 170, 0.3);
 }
 
 .twin-admin__action--danger {
   background: rgba(239, 68, 68, 0.2);
   border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
+  color: var(--danger, #8f7a7a);
 }
 
 .twin-admin__action--danger:hover:not(:disabled) {

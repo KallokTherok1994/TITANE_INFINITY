@@ -18,7 +18,7 @@
 }
 
 .status-dot.green {
-  background: #10b981;
+  background: var(--success, #93b399);
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
 
@@ -28,7 +28,7 @@
 }
 
 .status-dot.red {
-  background: #ef4444;
+  background: var(--danger, #8f7a7a);
   box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
 }
 
@@ -56,6 +56,6 @@
 
 .status-health-fill {
   height: 100%;
-  background: linear-gradient(90deg, #10b981 0%, var(--info, #8899aa) 100%);
+  background: linear-gradient(90deg, var(--success, #93b399) 0%, var(--info, #8899aa) 100%);
   transition: width 0.5s ease;
 }

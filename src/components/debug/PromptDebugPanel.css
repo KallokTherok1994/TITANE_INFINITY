@@ -21,8 +21,8 @@
   --debug-text-dim: #727b81;
   --debug-accent: #7c3aed;
   --debug-accent-light: var(--primary, #727b81);
-  --debug-success: #10b981;
-  --debug-error: #ef4444;
+  --debug-success: var(--success, #93b399);
+  --debug-error: var(--danger, #8f7a7a);
   --debug-warning: #f59e0b;
 }
 

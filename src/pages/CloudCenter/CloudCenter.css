@@ -16,8 +16,8 @@
   --cloud-text: var(--text-primary, #ffffff);
   --cloud-text-dim: var(--text-secondary, #888888);
   --cloud-accent: var(--accent-primary, var(--info, #8899aa));
-  --cloud-success: #22c55e;
-  --cloud-error: #ef4444;
+  --cloud-success: var(--success, #93b399);
+  --cloud-error: var(--danger, #8f7a7a);
   --cloud-warning: #f59e0b;
   --cloud-radius: 8px;
   --cloud-transition: 0.2s ease;
@@ -81,7 +81,7 @@
 .status-badge.status-success { background: var(--cloud-success); color: white; }
 .status-badge.status-error { background: var(--cloud-error); color: white; }
 .status-badge.status-conflict { background: var(--cloud-warning); color: black; }
-.status-badge.status-corrupted { background: #dc2626; color: white; }
+.status-badge.status-corrupted { background: var(--danger, #8f7a7a); color: white; }
 
 /* ═══════════════════════════════════════════════════════════════
    TABS
