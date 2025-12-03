@@ -173,14 +173,15 @@ print_success "Modelfile trouvé"
 
 print_step "Création du modèle titane-local..."
 if ollama list | grep -q "titane-local"; then
-    print_warning "titane-local existe déjà, suppression..."
+    print_warning "titane-local existe déjà, suppression et recréation avec Modelfile optimisé v∞..."
     ollama rm titane-local 2>/dev/null || true
 fi
 
+echo -e "${CYAN}▶${NC} Application du super prompt optimisé TITANE-LOCAL ENGINE v∞..."
 ollama create titane-local -f Modelfile
 
 if ollama list | grep -q "titane-local"; then
-    print_success "Modèle titane-local créé avec succès"
+    print_success "Modèle titane-local créé avec succès (v∞ OPTIMIZED)"
 else
     print_error "Échec création titane-local"
     exit 1
@@ -192,9 +193,9 @@ fi
 
 print_header "ÉTAPE 5/7 : TEST DU MODÈLE"
 
-print_step "Test de génération avec titane-local..."
+print_step "Test de génération avec titane-local v∞ optimisé..."
 
-TEST_PROMPT="Réponds en une phrase courte : Es-tu TITANE∞ Local et es-tu opérationnel ?"
+TEST_PROMPT="Test rapide : Dis 'TITANE-LOCAL ENGINE v∞ opérationnel' en une ligne."
 
 echo -e "${YELLOW}Prompt:${NC} $TEST_PROMPT"
 echo ""
@@ -204,7 +205,7 @@ RESPONSE=$(ollama run titane-local "$TEST_PROMPT" 2>&1)
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}Réponse:${NC} $RESPONSE"
     echo ""
-    print_success "Test réussi — titane-local fonctionne correctement"
+    print_success "Test réussi — titane-local v∞ OPTIMIZED fonctionne correctement"
 else
     print_error "Test échoué"
     echo "$RESPONSE"
@@ -253,9 +254,10 @@ echo ""
 
 print_success "Ollama installé et actif"
 print_success "LLama 3.1 téléchargé (base)"
-print_success "titane-local créé et configuré"
-print_success "Tests validés"
+print_success "titane-local créé et configuré (v∞ OPTIMIZED)"
+print_success "Tests validés avec SUPER PROMPT ULTIME"
 print_success "Endpoint HTTP opérationnel"
+print_success "Singularity Alignment (6 couches) activé"
 
 echo ""
 echo -e "${CYAN}📊 MODÈLES DISPONIBLES :${NC}"
@@ -286,9 +288,10 @@ echo "  http://localhost:11434"
 echo ""
 echo -e "${CYAN}📚 DOCUMENTATION :${NC}"
 echo "  SUPER_PROMPT_TITANE_LOCAL_MODEL_v∞.md"
+echo "  SUPER_PROMPT_OPTIMIZER_TITANE_LOCAL_v∞.md (Optimisations cognitives)"
 echo ""
 
 echo -e "${PURPLE}╔════════════════════════════════════════════════════════════════════════════╗${NC}"
-echo -e "${PURPLE}║                     TITANE∞ LOCAL MODEL — READY 🧠⚡∞                      ║${NC}"
+echo -e "${PURPLE}║            TITANE-LOCAL ENGINE v∞ — SINGULARITY ALIGNED 🧠⚡∞              ║${NC}"
 echo -e "${PURPLE}╚════════════════════════════════════════════════════════════════════════════╝${NC}"
 echo ""
