@@ -134,6 +134,9 @@ const IdentityCenter = lazy(() => import('./components/IdentityCenter/IdentityCe
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
 const MemoryEvolutionCenter = lazy(() => import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({ default: m.default })));
 
+// ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞
+const CloudCenter = lazy(() => import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter })));
+
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
   Helios,
@@ -510,6 +513,15 @@ const AppRouter: React.FC = () => {
             </ErrorBoundary>
           } />
           <Route path="/memory-evo" element={<Navigate to="/memory-evolution" replace />} />
+
+          {/* ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞ */}
+          <Route path="/cloud" element={
+            <ErrorBoundary context="CloudCenter">
+              <CloudCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+          <Route path="/vault" element={<Navigate to="/cloud" replace />} />
 
           {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) (Phase 9: lazy loaded) */}
           <Route path="/multi-ai" element={

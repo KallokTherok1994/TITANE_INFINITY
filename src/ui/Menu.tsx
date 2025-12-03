@@ -32,6 +32,14 @@ interface MenuSection {
 }
 
 const MENU_SECTIONS: MenuSection[] = [
+  // ═══ PRINCIPAL ═══
+  {
+    id: 'dashboard',
+    icon: '📊',
+    label: 'Tableau de bord',
+    description: 'Vue d\'ensemble du système',
+    route: '/'
+  },
   {
     id: 'chat',
     icon: '💬',
@@ -47,53 +55,90 @@ const MENU_SECTIONS: MenuSection[] = [
     route: '/agenda'
   },
   {
+    id: 'camera',
+    icon: '📷',
+    label: 'Vision',
+    description: 'Analyse visuelle et reconnaissance',
+    route: '/camera'
+  },
+  // ═══ CENTRES UNIFIÉS ═══
+  {
+    id: 'one-core',
+    icon: '🎯',
+    label: 'ONE CORE',
+    description: 'Centre de commande unifié',
+    route: '/one-core'
+  },
+  {
     id: 'system',
     icon: '⚙️',
-    label: 'Système',
-    description: 'Performances, modules, moteurs, diagnostics',
-    route: '/helios'
+    label: 'Centre Système',
+    description: 'Performances, diagnostics, monitoring',
+    route: '/system-center'
   },
   {
-    id: 'projects',
-    icon: '📁',
-    label: 'Projets',
-    description: 'Gestion projets, XP, catégories, progression',
-    route: '/nexus'
+    id: 'audio',
+    icon: '🔊',
+    label: 'Audio & Voix',
+    description: 'TTS, reconnaissance vocale, synthèse',
+    route: '/audio-center'
   },
   {
-    id: 'settings',
-    icon: '🎛️',
-    label: 'Paramètres',
-    description: 'Thèmes, configuration, API, préférences',
-    route: '/settings'
+    id: 'design',
+    icon: '🎨',
+    label: 'Design & Apparence',
+    description: 'Thèmes, tokens, personnalisation',
+    route: '/design-center'
   },
   {
-    id: 'admin',
-    icon: '💻',
-    label: 'Admin',
-    description: 'Terminal interne, commandes système',
-    route: '/devtools'
-  },
-  {
-    id: 'heal',
+    id: 'governance',
     icon: '🛡️',
-    label: 'Heal',
-    description: 'Auto-Heal, erreurs, corrections, watchdog',
-    route: '/selfheal'
+    label: 'Gouvernance',
+    description: 'Sécurité, auto-heal, watchdog',
+    route: '/governance-center'
   },
   {
-    id: 'history',
-    icon: '📜',
-    label: 'Historique',
-    description: 'Journal complet des actions et modifications',
-    route: '/memory'
+    id: 'qa',
+    icon: '🧪',
+    label: 'QA & Monitoring',
+    description: 'Tests, qualité, métriques',
+    route: '/qa-monitoring'
   },
   {
-    id: 'cloud',
-    icon: '☁️',
-    label: 'Cloud Sync',
-    description: 'Synchronisation chiffrée multi-appareils',
-    route: '/cloud'
+    id: 'developer',
+    icon: '💻',
+    label: 'Mode Développeur',
+    description: 'Terminal, debug, commandes système',
+    route: '/developer-mode'
+  },
+  // ═══ CENTRES COGNITIFS ═══
+  {
+    id: 'evolution',
+    icon: '🧬',
+    label: 'Évolution Cognitive',
+    description: 'Apprentissage, adaptation, XP',
+    route: '/evolution-center'
+  },
+  {
+    id: 'orchestration',
+    icon: '🎛️',
+    label: 'Orchestration',
+    description: 'Multi-IA, coordination agents',
+    route: '/orchestration-center'
+  },
+  {
+    id: 'meta',
+    icon: '🌐',
+    label: 'Meta Orchestrator',
+    description: 'Méta-cognition, supervision globale',
+    route: '/meta-center'
+  },
+  {
+    id: 'memory',
+    icon: '💾',
+    label: 'Mémoire Évolutive',
+    description: 'Historique, contexte, souvenirs',
+    route: '/memory-evolution'
   }
 ];
 
@@ -110,7 +155,7 @@ export const Menu: React.FC<MenuProps> = ({ isCollapsed, onToggle, currentRoute,
           <div className="menu-brand">
             <span className="menu-brand-icon">⚡</span>
             <span className="menu-brand-text">TITANE∞</span>
-            <span className="menu-brand-version">v15.6</span>
+            <span className="menu-brand-version">v∞.19.3Ω</span>
           </div>
         )}
         <button

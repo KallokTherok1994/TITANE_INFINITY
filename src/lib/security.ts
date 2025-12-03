@@ -571,6 +571,63 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'twin_get_evolution_profile',
   'twin_get_identity',
   'twin_recalculate_fusion',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ENGINES DEVMODE (v∞.Ω - Kevin Only)
+  // ═══════════════════════════════════════════════════════════════
+  'engines_devmode_get_state',
+  'engines_devmode_enable',
+  'engines_devmode_disable',
+  'engines_devmode_validate_patch',
+  'engines_devmode_apply_patch',
+  'engines_devmode_preview',
+  'engines_devmode_rollback',
+  'engines_devmode_get_history',
+  'engines_devmode_create_backup',
+  'engines_devmode_restore_backup',
+  'engines_devmode_analyze_file',
+  'engines_devmode_changelog',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ENGINES MONITORING (v∞.Ω)
+  // ═══════════════════════════════════════════════════════════════
+  'engines_monitoring_get_metrics',
+  'engines_monitoring_get_alerts',
+  'engines_monitoring_get_anomalies',
+  'engines_monitoring_get_health',
+  'engines_monitoring_get_history',
+  'engines_monitoring_get_dashboard',
+  'engines_monitoring_reset_alerts',
+
+  // ═══════════════════════════════════════════════════════════════
+  // ENGINES BUILD PIPELINE (v∞.Ω)
+  // ═══════════════════════════════════════════════════════════════
+  'engines_build_start',
+  'engines_build_get_status',
+  'engines_build_get_result',
+  'engines_build_cancel',
+  'engines_build_clean',
+  'engines_get_dashboard',
+
+  // ═══════════════════════════════════════════════════════════════
+  // EVOLUTION ENGINE (v∞.Ω)
+  // ═══════════════════════════════════════════════════════════════
+  'evolution_run_cycle',
+  'evolution_get_stats',
+  'evolution_get_state',
+  'evolution_start',
+  'evolution_stop',
+  'evolution_get_scores',
+  'evolution_update_score',
+  'evolution_generate_report',
+  'evolution_add_data_point',
+  'evolution_get_data_points',
+  'evolution_get_patterns',
+  'evolution_get_insights',
+  'evolution_get_suggestions',
+  'evolution_approve_suggestion',
+  'evolution_reject_suggestion',
+  'evolution_create_action',
 ]);
 
 /**
