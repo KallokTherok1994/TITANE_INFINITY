@@ -99,7 +99,7 @@ impl GeminiClient {
             }],
             generation_config: GeminiConfig {
                 temperature: request.temperature,
-                max_output_tokens: request.max_output_tokens,
+                max_output_tokens: request.max_tokens,
             },
         };
 

@@ -28,21 +28,21 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
    ├─ Compression: 65% (économie 22.8 MB)
    ├─ Dernière sauvegarde: Il y a 8 minutes
    └─ Cohérence: 98/100 ✅
-   
+
    📜 Inspection MemoryJournal:
    ├─ Events loggés: 3,421
    ├─ Taille journal: 2.1 MB
    ├─ Plus ancien event: 2024-11-15 14:23:00
    ├─ Plus récent event: Il y a 3 secondes
    └─ Événements/heure: ~45
-   
+
    📸 Inspection Snapshots:
    ├─ Snapshots actifs: 12
    ├─ Dernier snapshot: Il y a 28 minutes
    ├─ Prochain snapshot: Dans 2 minutes
    ├─ Taille totale snapshots: 18.7 MB
    └─ Rotation: Dernier 24h + 1/semaine + 1/mois
-   
+
    💾 Inspection MemoryAutosave:
    ├─ Dernier autosave: Il y a 8 minutes
    ├─ Fréquence: Toutes les 30 minutes
@@ -53,14 +53,14 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
 2) 🔍 DIAGNOSTIC MÉMOIRE
 
    État général: 🟢 OPTIMAL (98/100)
-   
+
    ✅ Cohérence schéma: 100%
    ✅ Intégrité données: 98%
    ✅ Synchronisation Singularity: 95%
    ⚠️ Fragmentation: 12% (acceptable)
    ✅ Corruption détectée: 0 entrées
    ✅ Migrations pending: 0
-   
+
    Moteurs connectés:
    ✅ SingularityState synced
    ✅ Cognitive Engine synced
@@ -71,13 +71,13 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
 3) 🛠️ AUTO-FIX (MICRO)
 
    Corrections automatiques effectuées:
-   
+
    ✅ Réindexation: 3 entrées
    ✅ Compression optimisée: 847 entrées
    ✅ Suppression doublons: 0 détectés
    ✅ Défragmentation: 12% → 8%
    ✅ Snapshots obsolètes supprimés: 2
-   
+
    Total corrections: 5 actions
    Temps écoulé: 240ms
    Coherence: 98/100 → 99/100 (+1 point)
@@ -92,7 +92,7 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
    ├─ EvolutionPatterns: 147 entrées (2.1 MB)
    ├─ CognitiveMemory: 78 entrées (1.9 MB)
    └─ SystemLogs: 26 entrées (1.5 MB)
-   
+
    Activité dernières 24h:
    ├─ Nouvelles entrées: 234
    ├─ Modifications: 89
@@ -103,14 +103,14 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
 5) 🧬 SINGULARITY STATE MIROIR
 
    Synchronisation état actuel:
-   
+
    Physical Layer: ✅ Synced (4 moteurs)
    Cognitive Layer: ✅ Synced (4 moteurs)
    Symbolic Layer: ✅ Synced (3 moteurs)
    Adaptative Layer: ⚠️ Partial sync (3/4 moteurs)
    Meta Layer: ✅ Synced (3 moteurs)
    Singularity Layer: ✅ Synced (2 moteurs)
-   
+
    Coherence globale: 95/100
    Dernière sync: Il y a 3 secondes
 
@@ -120,7 +120,7 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
    - Dans 7 jours: 15.8 MB (+27%)
    - Dans 30 jours: 24.3 MB (+96%)
    - Dans 90 jours: 48.7 MB (+292%)
-   
+
    💡 Recommandations:
    ✅ Compression fonctionne bien (65%)
    ✅ Rotation snapshots efficace
@@ -139,7 +139,7 @@ export async function handleMemoryScan(): Promise<DevSudoResult> {
    ✅ Auto-réparation si corruption
    ✅ Migration schéma automatique
    ✅ Logs persistents
-   
+
    Risque de perte de données: <0.01%
 
 ═══════════════════════════════════════════════════════════════════════════════════
@@ -186,20 +186,20 @@ export async function handleMemoryHeal(): Promise<DevSudoResult> {
    ✅ Entrée #342: Reconstruction depuis journal
       Avant: {corrupt_data}
       Après: {timestamp: 1701608400, type: "chat", content: "..."}
-      
+
    ✅ Entrée #789: Réindexation complète
       Index cassé réparé, référence restaurée
-      
+
    ✅ Index global: Reconstruction
       5 index cassés → tous réparés
-      
+
    ✅ Doublons: Suppression intelligente
       3 doublons détectés, 2 supprimés (kept most recent)
-      
+
    ✅ Défragmentation: Compactage
       12% → 4% fragmentation (-66%)
       Espace récupéré: 1.2 MB
-      
+
    ✅ Snapshots: Nettoyage
       2 snapshots obsolètes supprimés
       Espace récupéré: 3.4 MB
@@ -229,7 +229,7 @@ export async function handleMemoryHeal(): Promise<DevSudoResult> {
    - Fragmentation réduite: -66%
    - Espace récupéré: 4.6 MB
    - Coherence améliorée: +3 points
-   
+
    Durée: 680ms
    Status: ✅ SUCCÈS COMPLET
 
@@ -270,13 +270,13 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
    ├─ 2 corruptions détectées
    ├─ 5 index cassés
    └─ Schéma version: v3.2.0 → v3.3.0 (migration needed)
-   
+
    Phase 2: Scan MemoryJournal
    ├─ 3,421 events analysés
    ├─ Chaîne intacte: ✅
    ├─ 12 events orphelins (refs invalides)
    └─ Journal cohérent: 99%
-   
+
    Phase 3: Scan Snapshots
    ├─ 12 snapshots validés
    ├─ 2 obsolètes (>30j)
@@ -286,18 +286,18 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
 2) 🛠️ MIGRATIONS SCHÉMA
 
    Migration v3.2.0 → v3.3.0:
-   
+
    Changements détectés:
    - Nouveau champ: "metadata.version"
    - Type change: "timestamp" Number → String ISO8601
    - Nouveau index: "type_timestamp_idx"
-   
+
    ✅ Migration en cours... (847 entrées)
    ✅ Backup pré-migration créé
    ✅ Transformation appliquée: 847/847
    ✅ Validation post-migration: 100%
    ✅ Nouveau schéma activé: v3.3.0
-   
+
    Durée migration: 1,240ms
 
 3) 🔧 RECONSTRUCTIONS PROFONDES
@@ -306,17 +306,17 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
       - Tous les index reconstruits
       - Réorganisation optimale
       - Fragmentation: 0%
-      
+
    ✅ MemoryJournal: Nettoyage
       - 12 events orphelins supprimés
       - Chaîne reconstituée
       - Intégrité: 100%
-      
+
    ✅ Snapshots: Régénération
       - Snapshot #7 corrompu → régénéré depuis journal
       - 2 obsolètes supprimés
       - 11 snapshots valides
-      
+
    ✅ Cache: Flush et rebuild
       - Cache invalidé
       - Reconstruction depuis store
@@ -325,12 +325,12 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
 4) 🧬 RESYNC SINGULARITY TOTAL
 
    Full synchronization avec SingularityState:
-   
+
    ✅ 20 moteurs resynchronisés
    ✅ 6 couches validées
    ✅ État complet exporté vers Memory
    ✅ Coherence globale: 98/100 → 100/100 (+2 points)
-   
+
    Moteurs mis à jour:
    - Physical Layer (4): Audio, Camera, Interaction, Rendering
    - Cognitive Layer (4): Cognitive, Reasoning, Focus, Prioritization
@@ -355,11 +355,11 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
       Avant: 19.2 MB
       Après: 12.8 MB
       Économie: 6.4 MB (-33%)
-      
+
    ✅ Défragmentation totale
       Fragmentation: 0%
       Espace récupéré: 2.1 MB
-      
+
    ✅ Indexation optimisée
       Nouveaux index: 3
       Query speed: +45%
@@ -378,7 +378,7 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
    ✅ Compression optimisée (-33%)
    ✅ 20 moteurs Singularity resynchronisés
    ✅ Snapshot MASTER créé
-   
+
    Durée totale: 2,840ms
    Espace récupéré: 8.5 MB
    Coherence finale: 100/100 🟢
@@ -393,7 +393,7 @@ export async function handleMemoryDeepHeal(): Promise<DevSudoResult> {
    ✅ Snapshots valides (11)
    ✅ Singularity 100% sync
    ✅ Backup MASTER disponible
-   
+
    Prochaines actions:
    - Auto-healing monitoring: 24h
    - Next snapshot: Dans 30 minutes
@@ -464,13 +464,13 @@ Format d'export:
    ✅ Size: 12.8 MB (compressed)
    ✅ Format: Custom binary (sled + bincode)
    ✅ Checksum: SHA256
-   
+
 2) 📄 Export JSON (human-readable)
    ✅ File: titane_memory_export_20251203.json
    ✅ Size: 24.3 MB (uncompressed)
    ✅ Format: JSON structured
    ✅ Pretty-printed: Yes
-   
+
 3) 📊 Export Metadata
    ✅ File: titane_memory_metadata_20251203.json
    ✅ Contenu:
@@ -521,7 +521,7 @@ export async function handleMemoryImport(filePath: string): Promise<DevSudoResul
    Création backup de sécurité:
    ✅ Snapshot actuel sauvegardé
    ✅ Backup: memory_pre_import_20251203_144800.bin
-   
+
    En cas d'erreur, rollback automatique disponible.
 
 3) 📥 IMPORT EN COURS
@@ -530,7 +530,7 @@ export async function handleMemoryImport(filePath: string): Promise<DevSudoResul
    ✅ Décompression...
    ✅ Validation intégrité...
    ✅ Fusion avec état actuel...
-   
+
    Stratégie de fusion:
    - Nouvelles entrées → ajoutées
    - Conflits timestamp → kept most recent
@@ -583,17 +583,17 @@ export async function handleMemoryRebuild(): Promise<DevSudoResult> {
    ✅ Store vidé
    ✅ Index supprimés
    ✅ Cache invalidé
-   
+
    Phase 2: Reconstruction depuis Journal
    ✅ 3,421 events relus
    ✅ État reconstruit chronologiquement
    ✅ 847 entrées reconstituées
-   
+
    Phase 3: Validation Snapshots
    ✅ 12 snapshots analysés
    ✅ État final validé contre dernier snapshot
    ✅ Coherence: 100%
-   
+
    Phase 4: Réindexation complète
    ✅ 3 index créés
    ✅ Optimisation appliquée
@@ -650,7 +650,7 @@ export async function handleMemoryOptimize(): Promise<DevSudoResult> {
 
    ✅ Algorithme: Zstd level 19
    ✅ Entrées compressées: 847/847
-   
+
    Résultats:
    Avant: 12.8 MB
    Après: 9.2 MB
@@ -660,7 +660,7 @@ export async function handleMemoryOptimize(): Promise<DevSudoResult> {
 
    ✅ Compactage MemoryStore
    ✅ Réorganisation optimale
-   
+
    Fragmentation: 4% → 0% (-100%)
    Espace récupéré: 0.5 MB
 
@@ -670,7 +670,7 @@ export async function handleMemoryOptimize(): Promise<DevSudoResult> {
    ✅ Doublons: 0 détectés
    ✅ Snapshots obsolètes: 1 supprimé
    ✅ Cache orphelins: 12 supprimés
-   
+
    Espace récupéré: 1.2 MB
 
 5) ⚡ RÉINDEXATION
@@ -686,7 +686,7 @@ export async function handleMemoryOptimize(): Promise<DevSudoResult> {
    Fragmentation: 0%
    Compression: 78% (amélioration +13%)
    Query speed: +35%
-   
+
    Durée: 1,680ms
 
 Status: ⚡ MÉMOIRE OPTIMISÉE — -33% taille, +35% performance

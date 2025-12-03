@@ -298,7 +298,7 @@ case 'fix-handler':
 
 case 'create-api':
   return await BackendHandlers.handleCreateAPI(command.params.name as string);
-  
+
 // ... +4 cases
 
 // Memory Eternal Engine (8 cases)
@@ -307,7 +307,7 @@ case 'memory-scan':
 
 case 'memory-heal':
   return await MemoryHandlers.handleMemoryHeal();
-  
+
 // ... +6 cases
 ```
 
