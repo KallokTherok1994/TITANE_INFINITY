@@ -159,6 +159,38 @@ pub fn voice_stop_listening(state: State<VoiceEngineState>) -> Result<String, TA
     Ok("Écoute désactivée".to_string())
 }
 
+/// État global d'enregistrement pour voice_engine (indépendant de audio::commands)
+static VOICE_IS_RECORDING: once_cell::sync::Lazy<std::sync::atomic::AtomicBool> =
+    once_cell::sync::Lazy::new(|| std::sync::atomic::AtomicBool::new(false));
+
+/// ═══════════════════════════════════════════════════════════════════════════
+/// VOICE_CANCEL_RECORDING - Reset recording state
+/// ═══════════════════════════════════════════════════════════════════════════
+#[tauri::command]
+pub async fn voice_cancel_recording() -> Result<(), TAPIError> {
+    use std::sync::atomic::Ordering;
+
+    println!("[VOICE] voice_cancel_recording called - resetting recording state");
+    VOICE_IS_RECORDING.store(false, Ordering::Relaxed);
+
+    // Also try to kill any lingering arecord processes
+    let _ = std::process::Command::new("pkill")
+        .args(["-f", "arecord"])
+        .output();
+
+    Ok(())
+}
+
+/// ═══════════════════════════════════════════════════════════════════════════
+/// VOICE_IS_RECORDING - Check recording state
+/// ═══════════════════════════════════════════════════════════════════════════
+#[tauri::command]
+pub async fn voice_is_recording() -> Result<bool, TAPIError> {
+    use std::sync::atomic::Ordering;
+
+    Ok(VOICE_IS_RECORDING.load(Ordering::Relaxed))
+}
+
 #[tauri::command]
 pub async fn voice_transcribe_audio(
     audio_data: Vec<u8>,

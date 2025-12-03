@@ -170,6 +170,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'is_speaking',
   'start_recording',
   'stop_recording',
+  'cancel_recording',
+  'is_recording',
   'transcribe_audio',
 
   // ═══════════════════════════════════════════════════════════════
@@ -304,6 +306,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_update_config',
   'voice_get_status',
   'voice_calibrate_microphone',
+  'voice_cancel_recording',
+  'voice_is_recording',
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE

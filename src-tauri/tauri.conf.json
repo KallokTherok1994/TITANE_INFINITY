@@ -255,6 +255,8 @@
             { "command": "test_microphone" },
             { "command": "start_recording" },
             { "command": "stop_recording" },
+            { "command": "cancel_recording" },
+            { "command": "is_recording" },
             { "command": "transcribe_audio" },
             { "command": "vad_get_state" },
             { "command": "vad_process_frame" },
@@ -281,6 +283,8 @@
             { "command": "voice_check_interruption" },
             { "command": "voice_test_pipeline" },
             { "command": "voice_get_available_models" },
+            { "command": "voice_cancel_recording" },
+            { "command": "voice_is_recording" },
 
             { "_comment": "═══════════════════════════════════════════════════════════════" },
             { "_comment": "COGNITIVE CENTER v∞.Ω" },

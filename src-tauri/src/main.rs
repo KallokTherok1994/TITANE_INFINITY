@@ -540,6 +540,8 @@ async fn main() {
         audio::commands::is_speaking,
         audio::commands::start_recording,
         audio::commands::stop_recording,
+        audio::commands::cancel_recording,
+        audio::commands::is_recording,
         audio::commands::transcribe_audio,
         // ═══════════════════════════════════════════════════════════════
         // VOICE ENGINE COMMANDS v∞ - Overdrive Voice System
@@ -558,6 +560,8 @@ async fn main() {
         overdrive::voice_engine::voice_stop_speaking,
         overdrive::voice_engine::voice_transcribe_audio,
         overdrive::voice_engine::voice_detect_wake_word,
+        overdrive::voice_engine::voice_cancel_recording,
+        overdrive::voice_engine::voice_is_recording,
         overdrive::voice_engine::voice_test_pipeline,
         overdrive::voice_engine::voice_get_available_models,
         // Memory Engine Commands (✅ Active commands only)

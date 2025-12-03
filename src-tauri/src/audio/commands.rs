@@ -597,6 +597,20 @@ pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult
     Ok(recording_id)
 }
 
+/// Cancel recording - resets the recording state
+#[tauri::command]
+pub async fn cancel_recording() -> CommandResult<()> {
+    log::info!("[Audio] cancel_recording called - resetting state");
+    IS_RECORDING.store(false, Ordering::Relaxed);
+    Ok(())
+}
+
+/// Check if recording is in progress
+#[tauri::command]
+pub async fn is_recording() -> CommandResult<bool> {
+    Ok(IS_RECORDING.load(Ordering::Relaxed))
+}
+
 #[tauri::command]
 pub async fn stop_recording() -> CommandResult<serde_json::Value> {
     log::info!("[Audio] stop_recording called");
