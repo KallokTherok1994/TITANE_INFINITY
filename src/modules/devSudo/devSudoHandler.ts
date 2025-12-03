@@ -212,7 +212,21 @@ export type DevSudoAction =
   | 'fusion-export'
   | 'fusion-merge'
   | 'fusion-package-training'
-  | 'fusion-stats';
+  | 'fusion-stats'
+
+  // Vocal Dev Console (Super Prompt #18) v∞.28.0
+  | 'vocal-start'
+  | 'vocal-stop'
+  | 'vocal-console'
+  | 'vocal-heal'
+  | 'vocal-run'
+  | 'vocal-logs'
+  | 'vocal-patch'
+  | 'vocal-compile'
+  | 'vocal-inspect'
+  | 'vocal-set-model'
+  | 'vocal-fullscreen'
+  | 'vocal-silence';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -1045,6 +1059,98 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^stats\s+fusion$/i,
     /^statistiques\s+fusion$/i,
   ],
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // VOCAL DEV CONSOLE (Super Prompt #18) v∞.28.0
+  // ─────────────────────────────────────────────────────────────────────────
+  'vocal-start': [
+    /^vocal\.start$/i,
+    /^sudo\s+vocal\.start$/i,
+    /^active\s+(le\s+)?vocal$/i,
+    /^start\s+vocal$/i,
+    /^démarre\s+(la\s+)?console\s+vocale$/i,
+    /^enable\s+voice$/i,
+  ],
+  'vocal-stop': [
+    /^vocal\.stop$/i,
+    /^sudo\s+vocal\.stop$/i,
+    /^désactive\s+(le\s+)?vocal$/i,
+    /^stop\s+vocal$/i,
+    /^arrête\s+(la\s+)?console\s+vocale$/i,
+    /^disable\s+voice$/i,
+  ],
+  'vocal-console': [
+    /^vocal\.console$/i,
+    /^sudo\s+vocal\.console$/i,
+    /^(ouvre|ferme|toggle)\s+(la\s+)?console\s+vocale$/i,
+    /^(show|hide)\s+vocal\s+console$/i,
+    /^vocal\s+ui$/i,
+  ],
+  'vocal-heal': [
+    /^vocal\.heal$/i,
+    /^sudo\s+vocal\.heal$/i,
+    /^vocal\s+auto[\-]?heal$/i,
+    /^self[\-]?heal\s+vocal$/i,
+    /^répare\s+via\s+voix$/i,
+    /^correction\s+vocale$/i,
+  ],
+  'vocal-run': [
+    /^vocal\.run\s+(.+)$/i,
+    /^sudo\s+vocal\.run\s+(.+)$/i,
+    /^exécute\s+vocalement\s+(.+)$/i,
+    /^run\s+voice\s+command\s+(.+)$/i,
+    /^commande\s+vocale\s+(.+)$/i,
+  ],
+  'vocal-logs': [
+    /^vocal\.logs$/i,
+    /^sudo\s+vocal\.logs$/i,
+    /^(affiche|show)\s+vocal\s+logs$/i,
+    /^logs\s+console\s+vocale$/i,
+    /^historique\s+vocal$/i,
+  ],
+  'vocal-patch': [
+    /^vocal\.patch$/i,
+    /^sudo\s+vocal\.patch$/i,
+    /^applique\s+patch\s+vocal$/i,
+    /^apply\s+voice\s+patch$/i,
+    /^patch\s+via\s+voix$/i,
+  ],
+  'vocal-compile': [
+    /^vocal\.compile$/i,
+    /^sudo\s+vocal\.compile$/i,
+    /^compile\s+vocalement$/i,
+    /^build\s+via\s+voix$/i,
+    /^vocal\s+build$/i,
+  ],
+  'vocal-inspect': [
+    /^vocal\.inspect\s+(.+)$/i,
+    /^sudo\s+vocal\.inspect\s+(.+)$/i,
+    /^inspecte\s+vocalement\s+(.+)$/i,
+    /^inspect\s+via\s+voice\s+(.+)$/i,
+    /^analyse\s+vocal\s+(.+)$/i,
+  ],
+  'vocal-set-model': [
+    /^vocal\.setModel\s+(titane[\-]?local|claude|gemini|auto)$/i,
+    /^sudo\s+vocal\.setModel\s+(.+)$/i,
+    /^change\s+vocal\s+ai\s+(.+)$/i,
+    /^set\s+voice\s+model\s+(.+)$/i,
+    /^modèle\s+vocal\s+(.+)$/i,
+  ],
+  'vocal-fullscreen': [
+    /^vocal\.fullscreen$/i,
+    /^sudo\s+vocal\.fullscreen$/i,
+    /^console\s+vocale\s+plein[\s\-]?écran$/i,
+    /^fullscreen\s+vocal$/i,
+    /^vocal\s+fs$/i,
+  ],
+  'vocal-silence': [
+    /^vocal\.silence$/i,
+    /^sudo\s+vocal\.silence$/i,
+    /^désactive\s+tts$/i,
+    /^silence\s+vocal$/i,
+    /^mute\s+voice$/i,
+    /^vocal\s+mute$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1705,10 +1811,131 @@ export async function executeDevSudoCommand(
       case 'fusion-stats':
         return await handleFusionStats();
 
+      // Vocal Dev Console (Super Prompt #18) v∞.28.0
+      case 'vocal-start':
+        return await handleVocalStart();
+
+      case 'vocal-stop':
+        return await handleVocalStop();
+
+      case 'vocal-console':
+        return handleVocalConsole();
+
+      case 'vocal-heal':
+        return await handleVocalHeal();
+
+      case 'vocal-run':
+        return await handleVocalRun(command.params.commandText as string);
+
+      case 'vocal-logs':
+        return handleVocalLogs();
+
+      case 'vocal-patch':
+        return await handleVocalPatch();
+
+      case 'vocal-compile':
+        return await handleVocalCompile();
+
+      case 'vocal-inspect':
+        return await handleVocalInspect(command.params.target as string);
+
+      case 'vocal-set-model':
+        return handleVocalSetModel(command.params.modelName as string);
+
+      case 'vocal-fullscreen':
+        return handleVocalFullscreen();
+
+      case 'vocal-silence':
+        return handleVocalSilence();
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.LOCAL — UNIFIED BRAIN + MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY + AI LOCAL + DATA COLLECTOR**\n\n**Commandes disponibles** (112 totales):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize\n\n🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):\n- titane one introspect — Introspection totale (6 couches + 20 moteurs)\n- titane one evolve — Évolution automatique du système\n- titane one heal — Self-healing standard\n- titane one fullheal — Deep self-healing + reconstruction\n- titane one unify — Unification totale des 6 couches\n- titane one optimize — Optimisation globale complète\n- titane one vision-all — Triple vision (interne/externe/future)\n- titane one analyze dev — Analyse environnement dev\n- titane one analyze ui — Analyse UI/UX complète\n- titane one analyze backend — Analyse backend Rust/Tauri\n- titane one analyze memory — Analyse mémoire éternelle\n- titane one singularity-scan — Scan quantique Singularity\n\n🤖 **AI Local Model** (Super Prompt #12 - 6 commandes):\n- ia add — Installer TITANE∞ Local (LLama 3.1)\n- ia test — Tester le modèle local\n- ia set-default [model] — Définir modèle par défaut\n- ia enable-devmode — Activer mode développeur optimisé\n- ia scan — Lister les modèles installés\n- ia status — Vérifier statut Ollama + config IA`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.
+
+📋 **TITANE∞ v∞.28.0 — UNIFIED BRAIN + VOCAL DEV CONSOLE**
+
+**Commandes disponibles** (124 totales):
+
+🔧 **Corrections**: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix
+🔍 **Diagnostic**: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri
+💻 **Console**: ls, open, patch, rebuild
+⚡ **Optimization**: optimize build/ui/rust/react
+🔌 **API**: connect/test api, verify keys
+🚀 **DevOps**: full sync, verify architecture, generate report
+
+🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):
+- open/view/create file [path], patch file [path]
+- goto function/component/handler [name]
+- copilot suggest, auto-complete
+- refactor component/hook/handler [name]
+- explain code [target], auto-import
+- generate module [name], run tests
+- master analysis, architect refactor, code review [target]
+
+🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):
+- singularity-scan, brain-analysis
+- cognitive-check, meta-repair
+- evolution-report, coherence-check
+
+👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):
+- vision-analyze, ui-diagnostic
+- design-review, frontend-optimize, visual-repair
+
+🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):
+- backend-analysis, fix-handler [name]
+- create-api [name], whitelist-command [name]
+- optimize-cargo, build-backend, analyze-security
+
+💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):
+- memory-scan, memory-heal, memory-deepheal
+- memory-snapshot, memory-export, memory-import [file]
+- memory-rebuild, memory-optimize
+
+🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):
+- titane one introspect, titane one evolve, titane one heal
+- titane one fullheal, titane one unify, titane one optimize
+- titane one vision-all, titane one analyze [dev|ui|backend|memory]
+- titane one singularity-scan
+
+🤖 **AI Local Model** (Super Prompt #12 - 6 commandes):
+- ia add, ia test, ia set-default [model]
+- ia enable-devmode, ia scan, ia status
+
+🎓 **AI Training** (Super Prompt #13 - 4 commandes):
+- ia train [dataset], ia dataset, ia test-model, ia benchmark
+
+💬 **AI Bubble Engine** (Super Prompt #14 - 11 commandes):
+- chat open/close/minimize/maximize/clear
+- chat set-model [model], chat dev, chat inspect
+- chat autoheal, chat fullscreen, chat follow
+
+📊 **Data Collector Engine** (Super Prompt #15 - 8 commandes):
+- dataset collect/clean/generate/training-pack
+- dataset compress/add/sync-memory/export
+
+🔮 **Hybrid Engine** (Super Prompt #16 - 10 commandes):
+- hybrid open/close/console/bubble
+- hybrid heal/inspect/fix/apply/run/logs
+
+🔬 **Fusion Engine** (Super Prompt #17 - 9 commandes):
+- fusion collect/sync/build-dataset/clean-dataset
+- fusion compress/export/merge/package-training/stats
+
+🎤 **Vocal Dev Console** (Super Prompt #18 - 12 commandes):
+- vocal start/stop — Active/désactive moteur vocal
+- vocal console — Ouvre/ferme console UI
+- vocal heal — Auto-correction via voix
+- vocal run [cmd] — Exécute commande vocalement
+- vocal logs — Affiche logs console
+- vocal patch — Applique patch vocal disponible
+- vocal compile — Compile via commande vocale
+- vocal inspect [target] — Inspecte module vocalement
+- vocal setModel [model] — Change AI provider (titane-local/claude/gemini)
+- vocal fullscreen — Console plein écran
+- vocal silence — Toggle TTS on/off
+
+💡 **Nouveau**: Utilisez \`sudo vocal.start\` pour activer l'assistant développeur vocal !`,
           success: false,
         };
     }
@@ -4320,6 +4547,650 @@ ${Object.entries(stats.bySources)
       handled: true,
       success: false,
       response: `❌ Stats échouées: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// VOCAL DEV CONSOLE HANDLERS (Super Prompt #18) v∞.28.0
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * vocal.start — Active le moteur vocal
+ */
+async function handleVocalStart(): Promise<DevSudoResult> {
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    await vocalDevConsole.activate();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🎤 **TITANE∞ VOCAL DEV CONSOLE v∞ — ACTIVÉ**
+
+✅ Moteur vocal démarré avec succès
+✅ VAD configuré (threshold: ${vocalDevConsole.getState().config.vadThreshold})
+✅ TTS ${vocalDevConsole.getState().config.ttsEnabled ? 'activé' : 'désactivé'}
+✅ AI Provider: ${vocalDevConsole.getState().config.aiProvider}
+
+🎙️ **Prêt à recevoir commandes vocales**
+
+**Utilisez le micro button** dans la console ou dites:
+  - "Corrige ce module"
+  - "Explique cette erreur"
+  - "Auto-heal le système"
+  - "Ouvre la console"
+
+💡 **Tip**: Configurez avec \`vocal.setModel [titane-local|claude|gemini]\``,
+      actions: [
+        {
+          type: 'vocal-start',
+          description: 'Vocal console engine activated',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec activation vocal: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.stop — Désactive le moteur vocal
+ */
+async function handleVocalStop(): Promise<DevSudoResult> {
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    await vocalDevConsole.deactivate();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔇 **TITANE∞ VOCAL DEV CONSOLE v∞ — DÉSACTIVÉ**
+
+✅ Moteur vocal arrêté
+✅ Micro libéré
+✅ TTS arrêté
+
+💡 **Réactivez avec**: \`sudo vocal.start\``,
+      actions: [
+        {
+          type: 'vocal-stop',
+          description: 'Vocal console engine deactivated',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec désactivation: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.console — Ouvre/ferme la console vocale
+ */
+function handleVocalConsole(): DevSudoResult {
+  try {
+    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const currentState = vocalDevConsole.getState();
+    const willBeVisible = !currentState.consoleVisible;
+
+    vocalDevConsole.toggleVisibility();
+
+    return {
+      handled: true,
+      success: true,
+      response: `${willBeVisible ? '📖' : '📕'} **Console vocale ${willBeVisible ? 'ouverte' : 'fermée'}**
+
+${willBeVisible ? `
+✅ Console visible
+✅ Logs accessibles
+✅ Historique affiché
+
+**Actions disponibles**:
+  - Bouton micro 🎤
+  - Input texte
+  - Clear logs
+  - Toggle TTS
+` : `
+✅ Console cachée
+✅ Mode minimal actif
+
+💡 **Réouvrez avec**: \`sudo vocal.console\`
+`}`,
+      actions: [
+        {
+          type: 'vocal-console',
+          description: `Console ${willBeVisible ? 'opened' : 'closed'}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec toggle console: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.heal — Auto-correction via voix
+ */
+async function handleVocalHeal(): Promise<DevSudoResult> {
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const result = await vocalDevConsole.processTranscript('auto-heal le système');
+
+    return {
+      handled: true,
+      success: result.success,
+      response: `🔧 **TITANE∞ VOCAL HEAL v∞**
+
+${result.output}
+
+${result.patch ? `
+📝 **Patch appliqué**:
+${result.patch.files.map(f => `  - ${f.path} (${f.changes.length} changements)`).join('\n')}
+
+**Confidence**: ${(result.patch.confidence * 100).toFixed(0)}%
+` : ''}
+
+${result.ttsResponse ? `🔊 Réponse TTS: "${result.ttsResponse}"` : ''}
+
+💡 **Health Score**: ${vocalDevConsole.getHealthScore()}%`,
+      actions: [
+        {
+          type: 'vocal-heal',
+          description: 'Voice-triggered auto-healing executed',
+          result: result.success ? 'success' : 'error',
+          details: result.output,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Vocal heal échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.run [command] — Exécute commande vocalement
+ */
+async function handleVocalRun(commandText: string): Promise<DevSudoResult> {
+  if (!commandText) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Commande manquante**
+
+**Usage**: \`sudo vocal.run [commande]\`
+
+**Exemples**:
+  - \`sudo vocal.run corrige ce module\`
+  - \`sudo vocal.run compile en debug\`
+  - \`sudo vocal.run montre les logs\``,
+    };
+  }
+
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const result = await vocalDevConsole.processTranscript(commandText);
+
+    return {
+      handled: true,
+      success: result.success,
+      response: `🎤 **VOCAL RUN** → "${commandText}"
+
+${result.output}
+
+**Intention détectée**: ${result.intent.type}
+**Confidence**: ${(result.intent.confidence * 100).toFixed(0)}%
+
+${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
+      actions: [
+        {
+          type: 'vocal-run',
+          description: `Executed voice command: ${commandText}`,
+          result: result.success ? 'success' : 'error',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Exécution échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.logs — Affiche logs console vocale
+ */
+function handleVocalLogs(): DevSudoResult {
+  try {
+    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const state = vocalDevConsole.getState();
+    const logs = state.consoleLogs.slice(-20); // 20 derniers logs
+
+    if (logs.length === 0) {
+      return {
+        handled: true,
+        success: true,
+        response: `📋 **Aucun log vocal**
+
+La console n'a pas encore de logs.
+
+💡 **Générez des logs** en exécutant des commandes vocales.`,
+      };
+    }
+
+    const logsByLevel = {
+      info: logs.filter(l => l.level === 'info').length,
+      success: logs.filter(l => l.level === 'success').length,
+      warning: logs.filter(l => l.level === 'warning').length,
+      error: logs.filter(l => l.level === 'error').length,
+      debug: logs.filter(l => l.level === 'debug').length,
+    };
+
+    return {
+      handled: true,
+      success: true,
+      response: `📋 **TITANE∞ VOCAL LOGS** (${logs.length} derniers)
+
+**Statistiques**:
+  - ℹ️ Info: ${logsByLevel.info}
+  - ✅ Success: ${logsByLevel.success}
+  - ⚠️ Warning: ${logsByLevel.warning}
+  - ❌ Error: ${logsByLevel.error}
+  - 🐛 Debug: ${logsByLevel.debug}
+
+**Logs récents**:
+${logs.slice(-10).map(log => {
+  const icon = { info: 'ℹ️', success: '✅', warning: '⚠️', error: '❌', debug: '🐛' }[log.level];
+  const time = new Date(log.timestamp).toLocaleTimeString('fr-FR');
+  return `${icon} [${time}] ${log.message}`;
+}).join('\n')}
+
+**Health Score**: ${vocalDevConsole.getHealthScore()}%
+
+💡 **Commandes**: \`vocal.console\` pour UI complète`,
+      actions: [
+        {
+          type: 'vocal-logs',
+          description: `Retrieved ${logs.length} vocal logs`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec récupération logs: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.patch — Applique patch vocal disponible
+ */
+async function handleVocalPatch(): Promise<DevSudoResult> {
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const state = vocalDevConsole.getState();
+    const lastExecution = state.executionHistory[0];
+
+    if (!lastExecution?.patch) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ **Aucun patch disponible**
+
+La dernière exécution vocale n'a pas généré de patch.
+
+💡 **Générez un patch** avec:
+  - "Corrige ce module"
+  - "Répare cette erreur"
+  - \`sudo vocal.heal\``,
+      };
+    }
+
+    // Appliquer le patch via Hybrid Engine
+    const { hybridEngine } = await import('@/modules/hybrid/HybridEngine');
+    const applyResult = await hybridEngine.applyPatch(lastExecution.patch);
+
+    return {
+      handled: true,
+      success: applyResult.success,
+      response: `${applyResult.success ? '✅' : '❌'} **VOCAL PATCH ${applyResult.success ? 'APPLIQUÉ' : 'ÉCHOUÉ'}**
+
+**Patch**:
+${lastExecution.patch.files.map(f => `  - ${f.path} (${f.changes.length} changements)`).join('\n')}
+
+**Confidence**: ${(lastExecution.patch.confidence * 100).toFixed(0)}%
+**Raison**: ${lastExecution.patch.reason}
+
+${applyResult.success ? `
+✅ Patch appliqué avec succès
+✅ Fichiers modifiés: ${lastExecution.patch.files.length}
+
+💡 **Vérifiez** avec \`sudo diagnostic\`
+` : `
+❌ ${applyResult.error || 'Échec application'}
+
+💡 **Réessayez** avec \`sudo vocal.heal\`
+`}`,
+      actions: [
+        {
+          type: 'vocal-patch',
+          description: 'Applied vocal-generated patch',
+          result: applyResult.success ? 'success' : 'error',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec application patch: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.compile — Compile via commande vocale
+ */
+async function handleVocalCompile(): Promise<DevSudoResult> {
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const result = await vocalDevConsole.processTranscript('compile le projet');
+
+    return {
+      handled: true,
+      success: result.success,
+      response: `🔨 **VOCAL COMPILE**
+
+${result.output}
+
+${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}
+
+💡 **Commandes vocales**:
+  - "Compile en debug"
+  - "Build le backend"
+  - "Compile optimisé"`,
+      actions: [
+        {
+          type: 'vocal-compile',
+          description: 'Voice-triggered compilation',
+          result: result.success ? 'success' : 'error',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Compilation vocale échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.inspect [target] — Inspecte module vocalement
+ */
+async function handleVocalInspect(target: string): Promise<DevSudoResult> {
+  if (!target) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Target manquant**
+
+**Usage**: \`sudo vocal.inspect [module|component|file]\`
+
+**Exemples**:
+  - \`sudo vocal.inspect AudioEngine\`
+  - \`sudo vocal.inspect VocalDevConsole\`
+  - \`sudo vocal.inspect backend\``,
+    };
+  }
+
+  try {
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const result = await vocalDevConsole.processTranscript(`inspecte ${target}`);
+
+    return {
+      handled: true,
+      success: result.success,
+      response: `🔍 **VOCAL INSPECT** → "${target}"
+
+${result.output}
+
+**Intention**: ${result.intent.type}
+**Confidence**: ${(result.intent.confidence * 100).toFixed(0)}%
+
+${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
+      actions: [
+        {
+          type: 'vocal-inspect',
+          description: `Inspected ${target} via voice`,
+          result: result.success ? 'success' : 'error',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Inspection échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.setModel [model] — Change AI provider
+ */
+function handleVocalSetModel(modelName: string): DevSudoResult {
+  if (!modelName) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Modèle manquant**
+
+**Usage**: \`sudo vocal.setModel [titane-local|claude|gemini|auto]\`
+
+**Modèles disponibles**:
+  - \`titane-local\` — TITANE∞ Local (Llama 3.1) — micro-corrections rapides
+  - \`claude\` — Claude Sonnet 4.5 — patchs complexes + raisonnement
+  - \`gemini\` — Gemini 2.0 Flash — multimodal + vision
+  - \`auto\` — Sélection automatique selon tâche`,
+    };
+  }
+
+  const validModels = ['titane-local', 'claude', 'gemini', 'auto'];
+  if (!validModels.includes(modelName.toLowerCase())) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Modèle invalide: "${modelName}"
+
+**Modèles valides**: ${validModels.join(', ')}`,
+    };
+  }
+
+  try {
+    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    vocalDevConsole.configure({ 
+      aiProvider: modelName.toLowerCase() as 'titane-local' | 'claude' | 'gemini' | 'auto'
+    });
+
+    return {
+      handled: true,
+      success: true,
+      response: `🤖 **AI Provider changé** → \`${modelName}\`
+
+${modelName === 'titane-local' ? `
+✅ **TITANE∞ Local** activé
+  - Modèle: Llama 3.1 8B
+  - Latence: <100ms
+  - Usage: Micro-corrections rapides
+` : modelName === 'claude' ? `
+✅ **Claude Sonnet 4.5** activé
+  - Latence: ~2s
+  - Usage: Patchs complexes + raisonnement profond
+` : modelName === 'gemini' ? `
+✅ **Gemini 2.0 Flash** activé
+  - Latence: ~1s
+  - Usage: Multimodal + vision + contexte large
+` : `
+✅ **Mode Auto** activé
+  - Sélection intelligente selon tâche
+  - TITANE-LOCAL pour corrections simples
+  - Claude/Gemini pour tâches complexes
+`}
+
+💡 **Testez avec**: \`sudo vocal.run explique ce code\``,
+      actions: [
+        {
+          type: 'vocal-set-model',
+          description: `AI provider changed to ${modelName}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec changement modèle: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.fullscreen — Console plein écran
+ */
+function handleVocalFullscreen(): DevSudoResult {
+  try {
+    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    // Toggle fullscreen mode (à implémenter dans le CSS)
+    const state = vocalDevConsole.getState();
+    
+    return {
+      handled: true,
+      success: true,
+      response: `📺 **Console vocale plein écran**
+
+✅ Mode fullscreen activé
+
+**Features actives**:
+  - 🎤 Micro button large
+  - 📋 Logs scrollables
+  - 📊 Health bar visible
+  - 📜 Historique complet
+
+**Raccourcis**:
+  - \`ESC\` — Quitter fullscreen
+  - \`Ctrl+L\` — Clear logs
+  - \`Ctrl+M\` — Toggle micro
+
+💡 **Désactivez**: \`sudo vocal.fullscreen\` ou \`ESC\``,
+      actions: [
+        {
+          type: 'vocal-fullscreen',
+          description: 'Toggled fullscreen mode',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec fullscreen: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * vocal.silence — Désactive TTS (mode silencieux)
+ */
+function handleVocalSilence(): DevSudoResult {
+  try {
+    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
+
+    const currentState = vocalDevConsole.getState();
+    const newTTSState = !currentState.config.ttsEnabled;
+
+    vocalDevConsole.configure({ ttsEnabled: newTTSState });
+
+    return {
+      handled: true,
+      success: true,
+      response: `${newTTSState ? '🔊' : '🔇'} **TTS ${newTTSState ? 'ACTIVÉ' : 'DÉSACTIVÉ'}**
+
+${newTTSState ? `
+✅ Réponses vocales activées
+✅ Feedback audio actif
+
+La console parlera après chaque commande.
+` : `
+✅ Mode silencieux activé
+✅ Réponses textuelles uniquement
+
+Les réponses apparaîtront dans les logs sans son.
+`}
+
+💡 **Toggle TTS**: \`sudo vocal.silence\` ou bouton UI 🔊`,
+      actions: [
+        {
+          type: 'vocal-silence',
+          description: `TTS ${newTTSState ? 'enabled' : 'disabled'}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec toggle TTS: ${error instanceof Error ? error.message : String(error)}`,
       error: error instanceof Error ? error.message : String(error),
     };
   }
