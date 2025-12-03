@@ -193,6 +193,10 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     maximize,
     sendMessage: sendGlobalMessage,
     clear,
+    setModel,
+    setProvider,
+    toggleFullscreen,
+    enableDevMode,
   } = useGlobalAIChat();
 
   const [input, setInput] = useState('');

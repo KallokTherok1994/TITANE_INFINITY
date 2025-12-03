@@ -120,7 +120,7 @@ Le **Super Prompt #16** visait à fusionner l'AI Bubble (Super Prompt #14) avec 
 
 **Flow d'exécution** :
 ```
-User Input → detectIntent() → parseCommand() → executeCommand() 
+User Input → detectIntent() → parseCommand() → executeCommand()
 → Tauri Backend → Result → State Update → UI Update
 ```
 
