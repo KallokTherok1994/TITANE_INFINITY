@@ -6,4 +6,3 @@
  */
 
 export { XPProgressBar } from './XPProgressBar';
-export { AchievementsPanel } from './AchievementsPanel';
