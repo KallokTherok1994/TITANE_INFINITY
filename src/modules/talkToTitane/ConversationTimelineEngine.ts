@@ -18,7 +18,7 @@
  * - Visualisation timeline interactive
  */
 
-import { readFile, writeFile, readdir } from 'fs/promises';
+import { readFile, readdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import type { ConversationEntry } from './AutoSaveConversationEngine';
@@ -303,7 +303,10 @@ class ConversationTimelineEngine {
       if (!sessionMap.has(entry.sessionId)) {
         sessionMap.set(entry.sessionId, []);
       }
-      sessionMap.get(entry.sessionId)!.push(entry);
+      const sessionEntries = sessionMap.get(entry.sessionId);
+      if (sessionEntries) {
+        sessionEntries.push(entry);
+      }
     }
 
     const sessions: TimelineSession[] = [];
@@ -338,7 +341,10 @@ class ConversationTimelineEngine {
       if (!engineMap.has(entry.engineName)) {
         engineMap.set(entry.engineName, []);
       }
-      engineMap.get(entry.engineName)!.push(entry);
+      const engineEntries = engineMap.get(entry.engineName);
+      if (engineEntries) {
+        engineEntries.push(entry);
+      }
     }
 
     const segments: TimelineSegment[] = [];

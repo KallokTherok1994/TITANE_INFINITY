@@ -75,7 +75,7 @@ export interface TalkToTitaneState {
   currentIntent: TalkIntent | null;
   lastResponse: TalkResponse | null;
   conversationHistory: TalkResponse[];
-  emotionalCalibration: 'analytical' | 'calm' | 'energizing' | 'motivating';
+  emotionalCalibration: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral';
 }
 
 export interface TalkToTitaneConfig {
@@ -549,7 +549,7 @@ class TalkToTitaneEngine {
     return prefixes[intent.type] || '';
   }
 
-  private getVocalSuffix(intent: TalkIntent): string {
+  private getVocalSuffix(_intent: TalkIntent): string {
     if (this.state.currentMode === 'continuous') {
       return 'Continue.';
     }
@@ -627,7 +627,7 @@ class TalkToTitaneEngine {
     this.notifyListeners();
   }
 
-  setEmotionalCalibration(tone: 'analytical' | 'calm' | 'energizing' | 'motivating'): void {
+  setEmotionalCalibration(tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'): void {
     this.state.emotionalCalibration = tone;
     console.log(`[TalkToTitane] Emotional calibration: ${tone}`);
     this.notifyListeners();

@@ -16,7 +16,7 @@
  * - Garantie aucune perte (crash-resistant)
  */
 
-import { writeFile, appendFile, readFile, mkdir } from 'fs/promises';
+import { writeFile, appendFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
