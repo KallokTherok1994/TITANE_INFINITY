@@ -3,9 +3,9 @@
  *   TITANE∞ TALK-TO-TITANE ENGINE v∞.30.0
  *   Super Prompt #20 — Assistant Vocal Continu Omniprésent
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * Assistant vocal permanent, intelligent, adaptatif
- * 
+ *
  * Features:
  * - Wake phrase detection ("Hey TITANE", "Ok TITANE")
  * - 7 catégories d'intentions (conversation/dev/structure/action/coaching/analyse/mémoire)
@@ -22,7 +22,7 @@ import { autoSaveConversationEngine } from './AutoSaveConversationEngine';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type TalkToTitaneMode = 
+export type TalkToTitaneMode =
   | 'continuous'    // Parle en continu tant que Kevin parle
   | 'whispered'     // Réponses murmurées (TTS low voice)
   | 'direct'        // Tout traduit en action Dev avec confirmation
@@ -148,7 +148,7 @@ class TalkToTitaneEngine {
     console.log('[TalkToTitane] Deactivating Talk-To-TITANE Engine...');
 
     this.stopListening();
-    
+
     // Save session before deactivation
     if (this.config.autoSaveEnabled && this.state.conversationHistory.length > 0) {
       await autoSaveConversationEngine.saveSession({
@@ -386,13 +386,13 @@ class TalkToTitaneEngine {
   private calculatePriority(intentType: TalkIntentType, confidence: number): 'low' | 'medium' | 'high' | 'urgent' {
     // Dev bugs = urgent
     if (intentType === 'dev' && confidence > 0.8) return 'urgent';
-    
+
     // Actions = high
     if (intentType === 'action') return 'high';
-    
+
     // Coaching, analyze = medium
     if (['coaching', 'analyze'].includes(intentType)) return 'medium';
-    
+
     // Conversation, structure, memory = low/medium
     if (confidence > 0.7) return 'medium';
     return 'low';
@@ -483,25 +483,25 @@ class TalkToTitaneEngine {
     switch (intent.type) {
       case 'conversation':
         return `Conversation naturelle détectée. Ton émotionnel: ${intent.emotionalTone}. Priorité: ${intent.priority}.`;
-      
+
       case 'dev':
         return `Problème développement identifié. Keywords: ${intent.keywords.join(', ')}. Analyse modules en cours...`;
-      
+
       case 'structure':
         return `Demande d'organisation détectée. Structuration des idées nécessaire.`;
-      
+
       case 'action':
         return `Commande action identifiée. Priorité élevée. Préparation exécution...`;
-      
+
       case 'coaching':
         return `Besoin de guidance détecté. Ton émotionnel: ${intent.emotionalTone}. Mode coaching activé.`;
-      
+
       case 'analyze':
         return `Analyse système demandée. Vérification cohérence Singularity + modules...`;
-      
+
       case 'memory':
         return `Requête mémoire. Accès historique conversations + actions passées...`;
-      
+
       default:
         return `Intent: ${intent.type}. Confidence: ${(intent.confidence * 100).toFixed(0)}%`;
     }
@@ -535,7 +535,7 @@ class TalkToTitaneEngine {
   private getVocalPrefix(intent: TalkIntent): string {
     if (this.state.currentMode === 'whispered') return '';
     if (this.state.currentMode === 'focus') return 'Focus:';
-    
+
     const prefixes = {
       conversation: 'D\'accord.',
       dev: 'Analyse en cours.',
@@ -560,7 +560,7 @@ class TalkToTitaneEngine {
     // Map intents to potential SUDO commands
     if (intent.type === 'action') {
       const text = intent.text.toLowerCase();
-      
+
       if (text.includes('console')) return 'sudo dev.console';
       if (text.includes('heal')) return 'sudo auto-heal';
       if (text.includes('analyse')) return 'sudo diagnostic';

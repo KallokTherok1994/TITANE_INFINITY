@@ -1,9 +1,9 @@
 # 📋 CHANGELOG v∞.28.0 — VOCAL DEV CONSOLE ENGINE
 
-**Date**: 3 décembre 2025  
-**Version**: v∞.28.0  
-**Super Prompt**: #18  
-**Type**: MAJOR FEATURE  
+**Date**: 3 décembre 2025
+**Version**: v∞.28.0
+**Super Prompt**: #18
+**Type**: MAJOR FEATURE
 **Status**: ✅ **PRODUCTION READY**
 
 ---
@@ -464,7 +464,7 @@ Le **VOCAL DEV CONSOLE ENGINE v∞.28.0** transforme TITANE∞ en assistant dév
 
 ---
 
-**© 2025 Kevin Thibault / TITANE Team**  
+**© 2025 Kevin Thibault / TITANE Team**
 **TITANE∞ v∞.28.0 — VOCAL DEV CONSOLE PRODUCTION READY** ✅
 
 ---
@@ -505,5 +505,5 @@ feat(sudo): 🎤 12 commandes SUDO Vocal Dev Console v∞.28.0
 
 ---
 
-*Document généré automatiquement par TITANE∞*  
+*Document généré automatiquement par TITANE∞*
 *Super Prompt #18 — 3 décembre 2025*

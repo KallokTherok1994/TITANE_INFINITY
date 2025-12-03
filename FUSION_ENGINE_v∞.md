@@ -3,9 +3,9 @@
 #   Super Prompt #17 — Dataset + Memory + Logs → Unified Learning
 # ═══════════════════════════════════════════════════════════════════════════
 
-**Date**: 3 décembre 2025  
-**Version**: TITANE∞ v∞.27.0  
-**Super Prompt**: #17 — FUSION ENGINE  
+**Date**: 3 décembre 2025
+**Version**: TITANE∞ v∞.27.0
+**Super Prompt**: #17 — FUSION ENGINE
 **Auteur**: Kevin Thibault / TITANE Team
 
 ---
@@ -405,11 +405,11 @@ interface FusionEntry {
 compressText(text: string, ratio: number): string {
   const lines = text.split('\n');
   const targetLength = Math.ceil(lines.length * ratio);
-  
+
   // Garder début + fin (parties importantes)
   const startLines = Math.ceil(targetLength / 2);
   const endLines = targetLength - startLines;
-  
+
   return [
     ...lines.slice(0, startLines),
     ...(targetLength < lines.length ? ['...'] : []),
@@ -580,7 +580,7 @@ function MyComponent() {
   } = useFusionEngine();
 
   // Stats auto-refresh toutes les 5s
-  
+
   return (
     <div>
       <p>Total entries: {stats?.totalEntries}</p>

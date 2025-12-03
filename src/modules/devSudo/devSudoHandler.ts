@@ -6196,7 +6196,7 @@ ${normalizedMode === 'shadow' ? `
 async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
   try {
     const { talkToTitaneEngine } = await import('@/modules/talkToTitane/TalkToTitaneEngine');
-    
+
     const targetMode = (mode || 'continuous') as any;
     await talkToTitaneEngine.activate(targetMode);
 
@@ -6260,7 +6260,7 @@ async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
 async function handleTalkOff(): Promise<DevSudoResult> {
   try {
     const { talkToTitaneEngine } = await import('@/modules/talkToTitane/TalkToTitaneEngine');
-    
+
     await talkToTitaneEngine.deactivate();
 
     return {
@@ -6545,7 +6545,7 @@ async function handleConversationSave(): Promise<DevSudoResult> {
 async function handleConversationHeal(): Promise<DevSudoResult> {
   try {
     const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
-    
+
     const report = await selfHealingConversationEngine.heal();
 
     return {
@@ -6587,7 +6587,7 @@ ${report.issues.slice(0, 5).map(i => `  - ${i.type}: ${i.description}`).join('\n
 async function handleConversationTimeline(): Promise<DevSudoResult> {
   try {
     const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
-    
+
     await conversationTimelineEngine.show(20);
 
     const stats = await conversationTimelineEngine.getStats();
@@ -6650,7 +6650,7 @@ async function handleConversationExport(format: string): Promise<DevSudoResult> 
 
   try {
     const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
-    
+
     const exported = await conversationTimelineEngine.export(format.toLowerCase() as any);
     const fileName = `timeline-export-${Date.now()}.${format.toLowerCase()}`;
 
@@ -6689,7 +6689,7 @@ async function handleConversationExport(format: string): Promise<DevSudoResult> 
 async function handleTimelineBuild(): Promise<DevSudoResult> {
   try {
     const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
-    
+
     const timeline = await conversationTimelineEngine.build();
 
     return {
@@ -6724,7 +6724,7 @@ async function handleTimelineBuild(): Promise<DevSudoResult> {
 async function handleTimelineShow(limit?: number): Promise<DevSudoResult> {
   try {
     const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
-    
+
     await conversationTimelineEngine.show(limit || 20);
 
     return {
@@ -6764,7 +6764,7 @@ async function handleTimelineExport(format: string): Promise<DevSudoResult> {
 async function handleTimelineSessions(): Promise<DevSudoResult> {
   try {
     const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
-    
+
     const sessions = await conversationTimelineEngine.segmentBySessions();
 
     const sessionsText = sessions.slice(0, 10).map((s, i) => {
@@ -6806,7 +6806,7 @@ ${sessionsText}
 async function handleTimelineStats(): Promise<DevSudoResult> {
   try {
     const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
-    
+
     const stats = await conversationTimelineEngine.getStats();
 
     return {
@@ -6950,10 +6950,10 @@ All buffered conversations saved to disk.`,
 async function handleSelfhealScan(): Promise<DevSudoResult> {
   try {
     const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
-    
+
     const report = await selfHealingConversationEngine.scan();
 
-    const issuesSummary = report.issues.slice(0, 5).map(i => 
+    const issuesSummary = report.issues.slice(0, 5).map(i =>
       `  - ${i.type} (${i.severity}): ${i.description}`
     ).join('\n');
 
@@ -6994,7 +6994,7 @@ ${issuesSummary}
 async function handleSelfhealHeal(): Promise<DevSudoResult> {
   try {
     const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
-    
+
     const report = await selfHealingConversationEngine.heal();
 
     return {
@@ -7045,7 +7045,7 @@ async function handleSelfhealRebuild(filePath: string): Promise<DevSudoResult> {
 
   try {
     const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
-    
+
     await selfHealingConversationEngine.rebuild(filePath);
 
     return {

@@ -3,10 +3,10 @@
  *   TITANE∞ CONVERSATION TIMELINE ENGINE v∞.30.0
  *   Super Prompt #23 — Chronologie Intelligente Complète
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * Reconstruction chronologie conversationnelle complète
  * Segmentation intelligente, visualisation, analyse évolutive
- * 
+ *
  * Features:
  * - Fusion toutes conversations (chat/dev/vocal/system)
  * - Tri chronologique parfait

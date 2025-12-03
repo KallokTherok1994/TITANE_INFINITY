@@ -23,19 +23,19 @@ export interface UseTalkToTitaneReturn {
   currentMode: TalkToTitaneMode;
   lastResponse: TalkResponse | null;
   conversationHistory: TalkResponse[];
-  
+
   // Actions
   activate: (mode?: TalkToTitaneMode) => Promise<void>;
   deactivate: () => Promise<void>;
   startListening: () => void;
   stopListening: () => void;
   processInput: (text: string) => Promise<TalkResponse>;
-  
+
   // Configuration
   setMode: (mode: TalkToTitaneMode) => void;
   setEmotionalCalibration: (tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral') => void;
   configure: (config: Partial<TalkToTitaneConfig>) => void;
-  
+
   // Stats
   stats: {
     totalInteractions: number;
@@ -111,19 +111,19 @@ export function useTalkToTitane(): UseTalkToTitaneReturn {
     currentMode: state.currentMode,
     lastResponse: state.lastResponse,
     conversationHistory: state.conversationHistory,
-    
+
     // Actions
     activate,
     deactivate,
     startListening,
     stopListening,
     processInput,
-    
+
     // Configuration
     setMode,
     setEmotionalCalibration,
     configure,
-    
+
     // Stats
     stats,
   };

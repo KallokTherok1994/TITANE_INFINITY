@@ -1,7 +1,7 @@
 # 🔴 CHANGELOG v∞.29.0 - LIVE DEBUGGER VOCAL ENGINE
 
-**Date** : 3 décembre 2025  
-**Super Prompt** : #19 - LIVE DEBUGGER VOCAL ENGINE v∞  
+**Date** : 3 décembre 2025
+**Super Prompt** : #19 - LIVE DEBUGGER VOCAL ENGINE v∞
 **Version** : TITANE∞ v∞.29.0
 
 ---
@@ -44,34 +44,34 @@ class LiveDebuggerEngine {
   deactivate(): Promise<void>
   startListening(): Promise<void>
   stopListening(): void
-  
+
   // Real-time loop (300ms)
   private startSegmentTimer(): void
   private processSegment(): Promise<void>
   private analyzeSegment(segment: string): Promise<void>
-  
+
   // Intent detection (8 types)
   private detectIntent(text: string): Promise<LiveIntent>
   private calculateDevScore(text: string): number
   private calculateBugScore(text: string): number
   // ... 6 autres calculateurs
-  
+
   // Diagnostic engine
   private diagnoseIssue(intent: LiveIntent): Promise<LiveDiagnostic>
   private analyzeContext(intent: LiveIntent): string
   private identifyRootCause(intent: LiveIntent): string | null
-  
+
   // Patch generation
   private generateMicroPatch(intent, rootCause): Promise<MicroPatch | null>
   private generateMacroPatch(intent, rootCause): MacroPatch | null
-  
+
   // Auto-application
   private applyMicroPatch(patch: MicroPatch): Promise<void>
   private explainDiagnostic(diagnostic: LiveDiagnostic): Promise<void>
-  
+
   // Health scoring
   private updateHealthScore(): void
-  
+
   // Observable pattern
   subscribe(listener: (state) => void): () => void
   getState(): LiveDebuggerState
@@ -113,43 +113,43 @@ interface UseLiveDebuggerReturn {
   // Lifecycle
   activate: (mode?: LiveDebuggerMode) => Promise<void>
   deactivate: () => Promise<void>
-  
+
   // Listening
   startListening: () => Promise<void>
   stopListening: () => void
   isListening: boolean
-  
+
   // Analysis
   isAnalyzing: boolean
   isPatching: boolean
-  
+
   // Diagnostics
   diagnostics: LiveDiagnostic[]
   recentDiagnostics: LiveDiagnostic[] // 5 derniers
   lastDiagnostic: LiveDiagnostic | null
-  
+
   // Patches
   appliedPatches: MicroPatch[]
   recentPatches: MicroPatch[] // 5 derniers
-  
+
   // Modes
   mode: LiveDebuggerMode
   setMode: (mode: LiveDebuggerMode) => void
-  
+
   // Health
   healthScore: number // 0-100%
-  
+
   // Transcript
   currentTranscript: string
   segmentBuffer: string[]
-  
+
   // Stats
   sessionDuration: number
   totalSegments: number
   totalDiagnostics: number
   totalPatches: number
   averageConfidence: number
-  
+
   // Utilities
   reset: () => void
   clearDiagnostics: () => void
@@ -688,19 +688,19 @@ function isMicroPatchSafe(patch: MicroPatch): boolean {
   // 1. Type doit être safe (config, styling, simple-logic, import)
   const safeTypes = ['config', 'styling', 'simple-logic', 'import'];
   if (!safeTypes.includes(patch.type)) return false;
-  
+
   // 2. Confidence ≥ 0.8
   if (patch.confidence < 0.8) return false;
-  
+
   // 3. Changes <20 lignes
   if (patch.changes.length > 20) return false;
-  
+
   // 4. Pas d'impact architecture
   if (patch.type === 'architecture') return false;
-  
+
   // 5. Rollback simple possible
   // (vérifié par type + file existence)
-  
+
   return true;
 }
 ```
@@ -875,7 +875,7 @@ function App() {
   return (
     <div className="app">
       {/* Votre application */}
-      
+
       {/* Live Debugger Console (bottom-right, auto-visible) */}
       <LiveDebuggerConsole />
     </div>
@@ -1123,11 +1123,11 @@ Le Live Debugger révolutionne le debugging vocal avec analyse continue temps r�
 
 ---
 
-**TITANE∞ v∞.29.0 — LIVE DEBUGGER VOCAL ENGINE v∞** 🔴  
+**TITANE∞ v∞.29.0 — LIVE DEBUGGER VOCAL ENGINE v∞** 🔴
 *"Debug vocal temps réel — Analyse continue pendant que tu parles"*
 
 ---
 
-**Contributeurs** : TITANE∞ Development Team  
-**Date** : 3 décembre 2025  
+**Contributeurs** : TITANE∞ Development Team
+**Date** : 3 décembre 2025
 **Status** : ✅ PRODUCTION READY

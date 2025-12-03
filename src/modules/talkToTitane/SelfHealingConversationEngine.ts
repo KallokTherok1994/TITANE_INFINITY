@@ -3,10 +3,10 @@
  *   TITANE∞ SELF-HEALING CONVERSATION ENGINE v∞.30.0
  *   Super Prompt #22 — Réparation Auto Conversations
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * Détection + Réparation automatique conversations corrompues
  * Reconstruction intégrale, garantie cohérence absolue
- * 
+ *
  * Features:
  * - Scan intégrité JSON + structure
  * - Détection trous chronologiques

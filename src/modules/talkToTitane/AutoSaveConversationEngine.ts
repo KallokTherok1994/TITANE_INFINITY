@@ -3,10 +3,10 @@
  *   TITANE∞ AUTO-SAVE CONVERSATION ENGINE v∞.30.0
  *   Super Prompt #21 — Sauvegarde Automatique Totale
  * ═══════════════════════════════════════════════════════════════════
- * 
+ *
  * Sauvegarde 100% des conversations (chat/dev/vocal/system)
  * Aucune perte, permanence absolue, multi-source
- * 
+ *
  * Features:
  * - Capture auto input/output (texte + vocal + dev + system)
  * - Format structuré JSON avec métadonnées complètes
@@ -24,7 +24,7 @@ import { join } from 'path';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type ConversationType = 
+export type ConversationType =
   | 'chat'          // Chat IA textuel
   | 'bubble'        // Bubble IA mini chat
   | 'dev-console'   // Console Dev terminal

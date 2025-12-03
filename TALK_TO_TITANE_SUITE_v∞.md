@@ -1157,6 +1157,6 @@ const stats = await conversationTimelineEngine.getStats();
 
 ---
 
-**TITANE∞ v∞.30.0** — Talk-To-TITANE Suite Complet  
-🎤 Assistant Vocal Permanent + 💾 Mémoire Absolue  
+**TITANE∞ v∞.30.0** — Talk-To-TITANE Suite Complet
+🎤 Assistant Vocal Permanent + 💾 Mémoire Absolue
 📊 4000+ Lignes Code | 20+ Commandes SUDO | 5 Moteurs Interconnectés

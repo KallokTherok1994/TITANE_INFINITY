@@ -1,8 +1,8 @@
 # 🧬 CHANGELOG v∞.27.0 — FUSION ENGINE v∞
 
-**Date**: 3 décembre 2025  
-**Version**: v∞.27.0  
-**Super Prompt**: #17  
+**Date**: 3 décembre 2025
+**Version**: v∞.27.0
+**Super Prompt**: #17
 **Status**: ✅ **PRODUCTION READY**
 
 ---
@@ -90,7 +90,7 @@ interface UseFusionEngineReturn {
   progress: number
   stats: FusionStats | null
   errors: string[]
-  
+
   runFusion: () => Promise<void>
   exportDataset: (format: string) => Promise<string>
   clearFusion: () => void
@@ -425,12 +425,12 @@ Le **FUSION ENGINE v∞** est le système d'apprentissage le plus avancé de TIT
 
 ### Réussites Clés
 
-✅ **Unification totale** : Pipeline homogène 10 étapes  
-✅ **Performance** : 3.2s pour 3365 → 1856 entrées  
-✅ **Qualité** : 0.78 moyenne (excellent)  
-✅ **Compression** : 46% réduction taille  
-✅ **Accessibilité** : 9 commandes SUDO simples  
-✅ **Automation** : Training en 1 commande  
+✅ **Unification totale** : Pipeline homogène 10 étapes
+✅ **Performance** : 3.2s pour 3365 → 1856 entrées
+✅ **Qualité** : 0.78 moyenne (excellent)
+✅ **Compression** : 46% réduction taille
+✅ **Accessibilité** : 9 commandes SUDO simples
+✅ **Automation** : Training en 1 commande
 
 ### Impact TITANE∞
 
@@ -438,5 +438,5 @@ Le Fusion Engine permet un **apprentissage continu stable**, consolidant connais
 
 ---
 
-**© 2025 Kevin Thibault / TITANE Team**  
+**© 2025 Kevin Thibault / TITANE Team**
 **TITANE∞ v∞.27.0 — FUSION ENGINE PRODUCTION READY** ✅
