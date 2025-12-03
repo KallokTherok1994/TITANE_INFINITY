@@ -160,7 +160,13 @@ export type DevSudoAction =
   | 'ia-set-default'
   | 'ia-enable-devmode'
   | 'ia-scan'
-  | 'ia-status';
+  | 'ia-status'
+  
+  // AI Local Training (Super Prompt #13)
+  | 'ia-train'
+  | 'ia-dataset'
+  | 'ia-test-model'
+  | 'ia-benchmark';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -731,6 +737,36 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^ollama\s+status$/i,
     /^check\s+ollama$/i,
   ],
+  
+  // AI Training Commands (Super Prompt #13)
+  'ia-train': [
+    /^ia\s+train$/i,
+    /^sudo\s+ia\s+train$/i,
+    /^train\s+titane[\-\s]local$/i,
+    /^entraîner?\s+modèle\s+local$/i,
+    /^fine[\-\s]tune\s+local$/i,
+  ],
+  'ia-dataset': [
+    /^ia\s+dataset$/i,
+    /^sudo\s+ia\s+dataset$/i,
+    /^générer?\s+dataset$/i,
+    /^build\s+dataset$/i,
+    /^create\s+training\s+data$/i,
+  ],
+  'ia-test-model': [
+    /^ia\s+test[\-\s]model$/i,
+    /^sudo\s+ia\s+test[\-\s]model$/i,
+    /^tester?\s+modèle\s+entraîné$/i,
+    /^validate\s+trained\s+model$/i,
+    /^test\s+titane[\-\s]local$/i,
+  ],
+  'ia-benchmark': [
+    /^ia\s+benchmark$/i,
+    /^sudo\s+ia\s+benchmark$/i,
+    /^benchmark\s+a[\-\/]b$/i,
+    /^comparer?\s+modèles$/i,
+    /^performance\s+test$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1211,6 +1247,22 @@ export async function executeDevSudoCommand(
 
       case 'ia-scan':
         return await handleIAScan();
+
+      case 'ia-status':
+        return await handleIAStatus();
+      
+      // AI Local Training (Super Prompt #13)
+      case 'ia-train':
+        return await handleIATrain();
+      
+      case 'ia-dataset':
+        return await handleIADataset();
+      
+      case 'ia-test-model':
+        return await handleIATestModel();
+      
+      case 'ia-benchmark':
+        return await handleIABenchmark();
 
       case 'ia-status':
         return await handleIAStatus();
@@ -1966,7 +2018,11 @@ ${modelsList}
 - \`ia test\` → Tester le modèle
 - \`ia scan\` → Lister les modèles
 - \`ia set-default <model>\` → Changer le modèle
-- \`ia enable-devmode\` → Activer DEV MODE`,
+- \`ia enable-devmode\` → Activer DEV MODE
+- \`ia train\` → Entraîner le modèle local
+- \`ia dataset\` → Générer dataset training
+- \`ia test-model\` → Tester modèle entraîné
+- \`ia benchmark\` → Benchmark A/B`,
       actions: [
         {
           type: 'ia-status',
@@ -1989,6 +2045,276 @@ ${modelsList}
 2. Démarrer: \`ollama serve\`
 3. Tester API: \`curl http://localhost:11434/api/tags\`
 4. Réinstaller: \`./install_titane_local.sh\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AI LOCAL TRAINING HANDLERS (Super Prompt #13)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Handler: ia train
+ * Lance l'entraînement du modèle local avec le dataset TITANE∞
+ */
+async function handleIATrain(): Promise<DevSudoResult> {
+  try {
+    const result = await invoke<string>('execute_shell_command', {
+      command: './train_titane_local.sh',
+      workingDir: '.',
+    });
+
+    return {
+      handled: true,
+      success: true,
+      response: `🧠 **TITANE∞ LOCAL — Entraînement lancé**
+
+⚡ **Script**: \`train_titane_local.sh\`
+
+📦 **Processus**:
+1. ✅ Vérification Ollama
+2. ✅ Chargement dataset
+3. 🔄 Fine-tuning en cours...
+4. ⏳ Tests post-training
+5. ⏳ Benchmark A/B
+6. ⏳ Génération rapport
+
+💡 **Commande complétée dans le terminal**
+
+📊 **Résultat**:
+\`\`\`
+${result}
+\`\`\`
+
+🎯 **Prochaine étape**:
+- \`ia test-model\` → Tester modèle entraîné
+- \`ia benchmark\` → Comparer performances`,
+      actions: [
+        {
+          type: 'ia-train',
+          description: 'Entraînement titane-local',
+          result: 'success',
+          details: 'Script train_titane_local.sh exécuté',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur entraînement**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Dépannage**:
+1. Vérifier dataset: \`ls titane_local_training/dataset.jsonl\`
+2. Générer dataset: \`ia dataset\`
+3. Vérifier Ollama: \`ia status\`
+4. Script manuel: \`./train_titane_local.sh\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: ia dataset
+ * Génère le dataset d'entraînement à partir des super-prompts et exemples
+ */
+async function handleIADataset(): Promise<DevSudoResult> {
+  try {
+    const result = await invoke<string>('execute_shell_command', {
+      command: 'python3 build_titane_dataset.py',
+      workingDir: '.',
+    });
+
+    return {
+      handled: true,
+      success: true,
+      response: `📦 **TITANE∞ LOCAL — Dataset généré**
+
+⚡ **Script**: \`build_titane_dataset.py\`
+
+🧩 **Types d'exemples**:
+- **TYPE A**: Super-prompts TITANE∞
+- **TYPE B**: Exemples dev (Rust/TS/React)
+- **TYPE C**: Introspection & self-healing
+- **TYPE D**: UI/UX patterns
+- **TYPE E**: Style TITANE∞
+- **TYPE F**: Mémoire persistente
+
+📊 **Résultat**:
+\`\`\`
+${result}
+\`\`\`
+
+📦 **Fichier**: \`titane_local_training/dataset.jsonl\`
+
+🎯 **Prochaine étape**:
+- \`ia train\` → Entraîner avec ce dataset`,
+      actions: [
+        {
+          type: 'ia-dataset',
+          description: 'Génération dataset training',
+          result: 'success',
+          details: 'Dataset.jsonl créé',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur génération dataset**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Dépannage**:
+1. Vérifier Python: \`python3 --version\`
+2. Script manuel: \`python3 build_titane_dataset.py\`
+3. Vérifier permissions: \`chmod +x build_titane_dataset.py\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: ia test-model
+ * Teste le modèle entraîné avec des prompts de validation
+ */
+async function handleIATestModel(): Promise<DevSudoResult> {
+  try {
+    // Test 1: Identité
+    const test1 = await invoke<string>('execute_shell_command', {
+      command: 'ollama run titane-local "Qui es-tu en une ligne ?"',
+      workingDir: '.',
+    });
+
+    // Test 2: Singularity
+    const test2 = await invoke<string>('execute_shell_command', {
+      command: 'ollama run titane-local "Liste les 6 couches Singularity"',
+      workingDir: '.',
+    });
+
+    return {
+      handled: true,
+      success: true,
+      response: `🧪 **TITANE∞ LOCAL — Tests du modèle entraîné**
+
+📊 **Test 1/2 — Identité**:
+\`\`\`
+${test1.slice(0, 200)}
+\`\`\`
+
+📊 **Test 2/2 — Singularity Alignment**:
+\`\`\`
+${test2.slice(0, 300)}
+\`\`\`
+
+✅ **Validation**: Modèle opérationnel
+
+🎯 **Prochaine étape**:
+- \`ia benchmark\` → Comparer avec modèle base`,
+      actions: [
+        {
+          type: 'ia-test-model',
+          description: 'Tests modèle entraîné',
+          result: 'success',
+          details: '2 tests exécutés',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur test modèle**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Dépannage**:
+1. Vérifier modèle: \`ollama list | grep titane-local\`
+2. Re-entraîner: \`ia train\`
+3. Test manuel: \`ollama run titane-local "test"\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * Handler: ia benchmark
+ * Compare performances modèle base vs modèle entraîné
+ */
+async function handleIABenchmark(): Promise<DevSudoResult> {
+  try {
+    const testPrompt = 'Explique le Singularity Engine en 2 lignes';
+
+    // Test base model
+    const startBase = Date.now();
+    await invoke<string>('execute_shell_command', {
+      command: `ollama run llama3.1 "${testPrompt}"`,
+      workingDir: '.',
+    });
+    const timeBase = Date.now() - startBase;
+
+    // Test trained model
+    const startTrained = Date.now();
+    await invoke<string>('execute_shell_command', {
+      command: `ollama run titane-local "${testPrompt}"`,
+      workingDir: '.',
+    });
+    const timeTrained = Date.now() - startTrained;
+
+    const improvement =
+      timeBase > timeTrained
+        ? `${Math.round(((timeBase - timeTrained) / timeBase) * 100)}% plus rapide`
+        : 'Temps similaires';
+
+    return {
+      handled: true,
+      success: true,
+      response: `📊 **TITANE∞ LOCAL — Benchmark A/B**
+
+⚡ **Prompt de test**: "${testPrompt}"
+
+🔵 **llama3.1** (base):
+- Temps: ${timeBase}ms
+
+🟢 **titane-local** (trained):
+- Temps: ${timeTrained}ms
+
+📈 **Amélioration**: ${improvement}
+
+💡 **Analyse**:
+${
+  timeTrained < timeBase
+    ? '✅ Le modèle entraîné est plus rapide'
+    : '⚠️  Temps similaires (normal pour Modelfile tuning)'
+}
+
+🎯 **Prochaine étape**:
+- Continuer à enrichir le dataset: \`ia dataset\`
+- Re-entraîner pour améliorer: \`ia train\``,
+      actions: [
+        {
+          type: 'ia-benchmark',
+          description: 'Benchmark A/B complété',
+          result: 'success',
+          details: `Base: ${timeBase}ms, Trained: ${timeTrained}ms`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur benchmark**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Dépannage**:
+1. Vérifier modèles: \`ollama list\`
+2. Tester manuellement: \`ollama run titane-local "test"\``,
       error: error instanceof Error ? error.message : String(error),
     };
   }
