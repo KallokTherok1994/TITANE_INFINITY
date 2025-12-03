@@ -112,7 +112,7 @@ const OLLAMA_URL: &str = "http://localhost:11434";
 #[tauri::command]
 pub async fn ai_generate_local(prompt: String) -> Result<String, String> {
     let client = reqwest::Client::new();
-    
+
     let req = json!({
         "model": "titane-local",
         "prompt": prompt,
@@ -123,28 +123,28 @@ pub async fn ai_generate_local(prompt: String) -> Result<String, String> {
             "max_tokens": 2048
         }
     });
-    
+
     let res = client
         .post(format!("{}/api/generate", OLLAMA_URL))
         .json(&req)
         .send()
         .await
         .map_err(|e| format!("Ollama request error: {}", e))?;
-    
+
     if !res.status().is_success() {
         return Err(format!("Ollama error: {}", res.status()));
     }
-    
+
     let json: serde_json::Value = res
         .json()
         .await
         .map_err(|e| format!("Ollama parse error: {}", e))?;
-    
+
     let response = json["response"]
         .as_str()
         .unwrap_or("")
         .to_string();
-    
+
     Ok(response)
 }
 
@@ -155,13 +155,13 @@ pub async fn ai_generate_local_stream(
     window: tauri::Window,
 ) -> Result<(), String> {
     let client = reqwest::Client::new();
-    
+
     let req = json!({
         "model": "titane-local",
         "prompt": prompt,
         "stream": true
     });
-    
+
     let mut stream = client
         .post(format!("{}/api/generate", OLLAMA_URL))
         .json(&req)
@@ -169,13 +169,13 @@ pub async fn ai_generate_local_stream(
         .await
         .map_err(|e| format!("Stream error: {}", e))?
         .bytes_stream();
-    
+
     use futures_util::StreamExt;
-    
+
     while let Some(chunk) = stream.next().await {
         let bytes = chunk.map_err(|e| format!("Chunk error: {}", e))?;
         let text = String::from_utf8_lossy(&bytes);
-        
+
         // Parse JSON et emit event
         if let Ok(json) = serde_json::from_str::<serde_json::Value>(&text) {
             if let Some(response) = json["response"].as_str() {
@@ -185,11 +185,11 @@ pub async fn ai_generate_local_stream(
             }
         }
     }
-    
+
     window
         .emit("ai-stream-done", ())
         .map_err(|e| format!("Emit done error: {}", e))?;
-    
+
     Ok(())
 }
 
@@ -197,18 +197,18 @@ pub async fn ai_generate_local_stream(
 #[tauri::command]
 pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
     let client = reqwest::Client::new();
-    
+
     let res = client
         .get(format!("{}/api/tags", OLLAMA_URL))
         .send()
         .await
         .map_err(|e| format!("Scan error: {}", e))?;
-    
+
     let json: serde_json::Value = res
         .json()
         .await
         .map_err(|e| format!("Parse error: {}", e))?;
-    
+
     let models = json["models"]
         .as_array()
         .map(|arr| {
@@ -217,7 +217,7 @@ pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
                 .collect()
         })
         .unwrap_or_default();
-    
+
     Ok(models)
 }
 
@@ -226,14 +226,14 @@ pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
 pub async fn ai_set_local_model(model_name: String) -> Result<(), String> {
     // Valide que le modèle existe
     let models = ai_scan_local_models().await?;
-    
+
     if !models.contains(&model_name) {
         return Err(format!("Model '{}' not found in Ollama", model_name));
     }
-    
+
     // Sauvegarde dans config locale
     // TODO: intégrer avec SingularityState
-    
+
     Ok(())
 }
 
@@ -241,7 +241,7 @@ pub async fn ai_set_local_model(model_name: String) -> Result<(), String> {
 #[tauri::command]
 pub async fn ai_check_ollama_status() -> Result<bool, String> {
     let client = reqwest::Client::new();
-    
+
     match client
         .get(format!("{}/api/tags", OLLAMA_URL))
         .timeout(std::time::Duration::from_secs(2))
@@ -1085,9 +1085,9 @@ Avec cette intégration, TITANE∞ peut :
 
 ---
 
-**Date de création**: 3 décembre 2025  
-**Version**: v∞.LOCAL  
-**Status**: 🟢 READY FOR IMPLEMENTATION  
+**Date de création**: 3 décembre 2025
+**Version**: v∞.LOCAL
+**Status**: 🟢 READY FOR IMPLEMENTATION
 **Impact**: ⚡ TRANSFORMATIONAL
 
 🧠⚡∞

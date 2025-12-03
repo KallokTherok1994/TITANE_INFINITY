@@ -416,8 +416,14 @@ async fn main() {
     });
 
     builder = builder.invoke_handler(tauri::generate_handler![
-        // TITANE∞ Local Ollama bridge
+        // TITANE∞ Local Ollama bridge (legacy)
         ollama_query,
+        // TITANE∞ v∞.LOCAL - New AI Handlers (Super Prompt #12)
+        titane_infinity::ai::ollama::ai_generate_local,
+        titane_infinity::ai::ollama::ai_generate_local_stream,
+        titane_infinity::ai::ollama::ai_scan_local_models,
+        titane_infinity::ai::ollama::ai_set_local_model,
+        titane_infinity::ai::ollama::ai_check_ollama_status,
         // ═══════════════════════════════════════════════════════════════
         // MOCK COMMANDS - Frontend Development
         // ═══════════════════════════════════════════════════════════════

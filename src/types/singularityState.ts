@@ -127,7 +127,22 @@ export interface CognitiveLayer {
   memory: MemoryState;
   conversation: ConversationState;
   knowledge: KnowledgeState;
+  ai_config?: AIConfigState; // ✨ v∞.LOCAL - Configuration IA locale
   coherence: number;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AI CONFIG STATE (v∞.LOCAL - Super Prompt #12)
+// ═══════════════════════════════════════════════════════════════════
+
+export interface AIConfigState {
+  current_provider: 'gemini' | 'gpt' | 'titane-local' | 'anthropic';
+  ollama_available: boolean;
+  ollama_models: string[];
+  dev_mode: boolean;
+  fallback_enabled: boolean;
+  auto_switch_on_error: boolean;
+  last_ollama_check: number | null;
 }
 
 export interface MemoryState {
