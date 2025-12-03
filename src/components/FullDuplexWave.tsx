@@ -78,11 +78,11 @@ export const FullDuplexWave: React.FC<FullDuplexWaveProps> = ({
       {showLabels && (
         <div className="duplex-labels">
           <div className="duplex-label input">
-            <span className="label-dot" style={{ backgroundColor: '#06b6d4' }} />
+            <span className="label-dot" style={{ backgroundColor: '#8899aa' }} />
             Entrée (Vous)
           </div>
           <div className="duplex-label output">
-            <span className="label-dot" style={{ backgroundColor: '#8b5cf6' }} />
+            <span className="label-dot" style={{ backgroundColor: '#727b81' }} />
             Sortie (IA)
           </div>
         </div>
@@ -118,10 +118,10 @@ function drawSplitMode(
   ctx.stroke();
 
   // Entrée (haut)
-  drawWaveform(ctx, inputData, 64, width, quarterHeight, centerY / 2, '#06b6d4');
+  drawWaveform(ctx, inputData, 64, width, quarterHeight, centerY / 2, '#8899aa');
 
   // Sortie (bas)
-  drawWaveform(ctx, outputData, 64, width, quarterHeight, centerY + centerY / 2, '#8b5cf6');
+  drawWaveform(ctx, outputData, 64, width, quarterHeight, centerY + centerY / 2, '#727b81');
 }
 
 function drawOverlayMode(
@@ -208,7 +208,7 @@ function drawWaveform(
 
 function interpolateArray(data: number[], targetLength: number): number[] {
   if (data.length === 0) return new Array(targetLength).fill(0);
-  
+
   const result: number[] = [];
   const ratio = data.length / targetLength;
 

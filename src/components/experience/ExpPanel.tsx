@@ -103,7 +103,7 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: '1rem', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(59,130,246,0.03)' }}>
+        <div style={{ display: 'flex', gap: '1rem', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(114,123,129,0.03)' }}>
           {['overview', 'categories', 'projects', 'talents', 'timeline'].map((tab) => (
             <button
               key={tab}
@@ -111,9 +111,9 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               style={{
                 padding: '0.5rem 1rem',
                 borderRadius: '0.5rem',
-                background: activeTab === tab ? 'rgba(59,130,246,0.2)' : 'transparent',
-                border: activeTab === tab ? '1px solid #3b82f6' : '1px solid transparent',
-                color: activeTab === tab ? '#3b82f6' : '#9ca3af',
+                background: activeTab === tab ? 'rgba(114,123,129,0.2)' : 'transparent',
+                border: activeTab === tab ? '1px solid #727b81' : '1px solid transparent',
+                color: activeTab === tab ? '#727b81' : '#9ca3af',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
                 fontFamily: 'monospace',
@@ -143,7 +143,7 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       className="exp-mini-progress-fill"
                       style={{
                         width: `${globalState.level_progress * 100}%`,
-                        background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)',
+                        background: 'linear-gradient(90deg, #727b81, #93b399)',
                       }}
                     />
                   </div>
@@ -199,7 +199,7 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <div className="exp-mini-progress">
                       <div
                         className="exp-mini-progress-fill"
-                        style={{ width: `${proj.progress * 100}%`, background: 'linear-gradient(90deg, #10b981, #06b6d4)' }}
+                        style={{ width: `${proj.progress * 100}%`, background: 'linear-gradient(90deg, #93b399, #8899aa)' }}
                       />
                     </div>
                   </div>
@@ -250,7 +250,7 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <div className="exp-mini-progress">
                     <div
                       className="exp-mini-progress-fill"
-                      style={{ width: `${proj.progress * 100}%`, background: 'linear-gradient(90deg, #10b981, #06b6d4)' }}
+                      style={{ width: `${proj.progress * 100}%`, background: 'linear-gradient(90deg, #93b399, #8899aa)' }}
                     />
                   </div>
                   <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.875rem' }}>

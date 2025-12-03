@@ -116,13 +116,13 @@
 }
 
 .system-metric-fill.cpu {
-  background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
-  color: rgba(59, 130, 246, 0.5);
+  background: linear-gradient(90deg, var(--primary, #727b81) 0%, var(--secondary, #c4c4c4) 100%);
+  color: var(--glow-primary, rgba(114, 123, 129, 0.5));
 }
 
 .system-metric-fill.memory {
-  background: linear-gradient(90deg, #059669 0%, #10b981 100%);
-  color: rgba(5, 150, 105, 0.5);
+  background: linear-gradient(90deg, var(--accent, #93b399) 0%, var(--success, #93b399) 100%);
+  color: var(--glow-accent, rgba(147, 179, 153, 0.5));
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -260,8 +260,8 @@
 }
 
 .system-module-restart:hover {
-  border-color: var(--color-primary, #dc2626);
-  background: var(--color-surface-hover, rgba(40, 40, 40, 0.9));
+  border-color: var(--danger, #8f7a7a);
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
 }
 
 /* ═══════════════════════════════════════════════════════

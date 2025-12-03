@@ -106,10 +106,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           style={{
             padding: '2rem',
             margin: '1rem',
-            border: '2px solid #ef4444',
+            border: '2px solid #8f7a7a',
             borderRadius: '0.5rem',
             backgroundColor: '#1f1f1f',
-            color: '#ef4444',
+            color: '#8f7a7a',
           }}
         >
           <h2 style={{ margin: '0 0 1rem 0', fontSize: '1.25rem', fontWeight: 'bold' }}>
@@ -124,7 +124,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               <summary
                 style={{
                   cursor: 'pointer',
-                  color: '#60a5fa',
+                  color: '#8899aa',
                   marginBottom: '0.5rem',
                 }}
               >
@@ -150,7 +150,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             onClick={this.handleReset}
             style={{
               padding: '0.5rem 1rem',
-              backgroundColor: '#3b82f6',
+              backgroundColor: '#727b81',
               color: '#fff',
               border: 'none',
               borderRadius: '0.25rem',

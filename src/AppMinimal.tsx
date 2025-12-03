@@ -48,7 +48,7 @@ export const AppMinimal: React.FC = () => {
           style={{
             fontSize: '4rem',
             fontWeight: 'bold',
-            background: 'linear-gradient(135deg, #6366f1 0%, #d946ef 50%, #22c55e 100%)',
+            background: 'linear-gradient(135deg, #727b81 0%, #93b399 50%, #8899aa 100%)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
@@ -93,7 +93,7 @@ export const AppMinimal: React.FC = () => {
             fontSize: '1.25rem',
             fontWeight: '600',
             marginBottom: '1rem',
-            color: '#22c55e',
+            color: '#93b399',
           }}
         >
           ✅ React Mount Successful

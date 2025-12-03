@@ -51,23 +51,23 @@ const hasFallbackFlag = (value: unknown): boolean => {
 
 const statusTheme: Record<DiagnosticStatus, { background: string; border: string; icon: string }> = {
   success: {
-    background: '#10281b',
-    border: '#22c55e',
+    background: '#1a2520',
+    border: '#93b399', // TITANE success
     icon: '✅',
   },
   warning: {
-    background: '#322312',
-    border: '#fbbf24',
+    background: '#252320',
+    border: '#a89f91', // TITANE warning
     icon: '⚠️',
   },
   error: {
-    background: '#341111',
-    border: '#ef4444',
+    background: '#251a1a',
+    border: '#8f7a7a', // TITANE danger
     icon: '❌',
   },
   info: {
-    background: '#132538',
-    border: '#38bdf8',
+    background: '#1a2025',
+    border: '#8899aa', // TITANE info
     icon: 'ℹ️',
   },
 };

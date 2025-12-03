@@ -77,19 +77,19 @@ export const MetaModeStats: React.FC = () => {
 
   const getModeColor = (mode: string): string => {
     if (mode.includes('Thérapeute')) return '#4ade80';
-    if (mode.includes('Coach')) return '#60a5fa';
-    if (mode.includes('PNL')) return '#a78bfa';
-    if (mode.includes('Hypnose')) return '#f472b6';
-    if (mode.includes('Méditation')) return '#34d399';
-    if (mode.includes('Digital Twin')) return '#667eea';
-    if (mode.includes('Stratège')) return '#fb923c';
-    if (mode.includes('Architecte')) return '#fbbf24';
-    if (mode.includes('Analyste')) return '#38bdf8';
-    if (mode.includes('Autopilot')) return '#f87171';
-    if (mode.includes('Creator')) return '#c084fc';
-    if (mode.includes('Risk')) return '#ef4444';
-    if (mode.includes('Forecast')) return '#8b5cf6';
-    return '#667eea';
+    if (mode.includes('Coach')) return '#8899aa';
+    if (mode.includes('PNL')) return '#9a9ab8';
+    if (mode.includes('Hypnose')) return '#b89a9a';
+    if (mode.includes('Méditation')) return '#93b399';
+    if (mode.includes('Digital Twin')) return '#727b81';
+    if (mode.includes('Stratège')) return '#a89f91';
+    if (mode.includes('Architecte')) return '#a89f91';
+    if (mode.includes('Analyste')) return '#8899aa';
+    if (mode.includes('Autopilot')) return '#9a8a8a';
+    if (mode.includes('Creator')) return '#9a8aaa';
+    if (mode.includes('Risk')) return '#8f7a7a';
+    if (mode.includes('Forecast')) return '#727b81';
+    return '#727b81';
   };
 
   if (loading) {

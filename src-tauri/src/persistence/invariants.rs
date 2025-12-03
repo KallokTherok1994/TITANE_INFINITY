@@ -510,6 +510,8 @@ mod tests {
         let invalid_event = TitanEvent {
             id: "".to_string(), // ID vide
             timestamp: chrono::Utc::now().timestamp_millis() as u64,
+            schema_version: 1,
+            origin: crate::persistence::types::EventOrigin::System,
             module: "test".to_string(),
             event_type: "test".to_string(),
             payload: json!({}),

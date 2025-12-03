@@ -170,9 +170,9 @@ export const AudioDiagnosticsPanel = ({
                     <span>❌ Permission refusée</span>
                     <p className="permission-help">
                       Pour autoriser le microphone :<br/>
-                      1. Cliquez sur l'icône 🔒 dans la barre d'adresse<br/>
-                      2. Autorisez l'accès au microphone<br/>
-                      3. Rechargez la page
+                      1. Ouvrez les Paramètres système<br/>
+                      2. Allez dans Confidentialité → Microphone<br/>
+                      3. Autorisez TITANE∞ à accéder au microphone
                     </p>
                     <button
                       className="adp-btn secondary"

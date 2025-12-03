@@ -23,28 +23,28 @@ export const METRIC_CONFIG: Record<MetricType, {
     description: 'Valeur incrémentale',
     unit: 'count',
     icon: '📊',
-    color: '#6366F1',
+    color: '#727b81', // TITANE primary
   },
   gauge: {
     name: 'Jauge',
     description: 'Valeur instantanée',
     unit: 'value',
     icon: '📈',
-    color: '#10B981',
+    color: '#93b399', // TITANE success
   },
   histogram: {
     name: 'Histogramme',
     description: 'Distribution de valeurs',
     unit: 'ms',
     icon: '📉',
-    color: '#F59E0B',
+    color: '#a89f91', // TITANE warning
   },
   timer: {
     name: 'Timer',
     description: 'Durée en millisecondes',
     unit: 'ms',
     icon: '⏱️',
-    color: '#EC4899',
+    color: '#9a8a8a', // TITANE rose
   },
 };
 

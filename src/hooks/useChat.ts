@@ -204,6 +204,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
 
+  // FIX v19.3Ω: Guard flag pour verrouiller l'état pendant les opérations
+  const operationLockRef = useRef(false);
+
   // OMEGA FIX: Initialiser messagesRef avec les messages initiaux
   const messagesRef = useRef<AIMessage[]>(messages);
   const messageIdRef = useRef(0);
@@ -393,36 +396,53 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   }, []);
 
   // ═══ SYNC INITIAL MESSAGES ═══
+  // FIX v19.3Ω: Protection ABSOLUE contre les resets pendant loading
+  const isLoadingRef = useRef(false);
+
   useEffect(() => {
-    // OMEGA FIX v2: Protection renforcée contre les resets intempestifs
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  useEffect(() => {
+    // OMEGA FIX v3: Protection ABSOLUE contre les resets intempestifs
     if (!messagesForMode) {
+      return;
+    }
+
+    // 🛡️ PROTECTION CRITIQUE: JAMAIS sync pendant une opération en cours ou lock
+    if (isLoadingRef.current || operationLockRef.current) {
+      console.log('[useChat OMNIS] 🛡️ CRITICAL PROTECTED: Skipping sync during operation (loading:', isLoadingRef.current, 'lock:', operationLockRef.current, ')');
       return;
     }
 
     // CRITICAL: Si on a déjà des messages, JAMAIS les effacer sauf si memoryForMode a plus de contenu
     const currentCount = messagesRef.current.length;
     const memoryCount = messagesForMode.length;
+    const vaultCount = stateVaultRef.current.stable.length;
 
+    // 🛡️ Triple protection: ref, vault, et memory doivent tous être cohérents
     if (currentCount > 0 && memoryCount === 0) {
       console.log('[useChat OMNIS] 🛡️ PROTECTED: Skipping empty memory sync - preserving', currentCount, 'messages');
       return;
     }
 
     // Si mémoire et state ont des messages, prendre le plus complet
-    if (currentCount > 0 && memoryCount > 0 && currentCount >= memoryCount) {
-      console.log('[useChat OMNIS] 🛡️ PROTECTED: Current state has more messages, skipping sync');
+    // FIX v19.3Ω: Utiliser aussi le vault pour la comparaison
+    const maxExisting = Math.max(currentCount, vaultCount);
+    if (maxExisting > 0 && memoryCount > 0 && maxExisting >= memoryCount) {
+      console.log('[useChat OMNIS] 🛡️ PROTECTED: Current/vault has more messages, skipping sync');
       return;
     }
 
     if (memoryCount === 0) {
-      // Seulement reset si TOUT est vide (vault + ref + memoryForMode)
-      if (stateVaultRef.current.stable.length === 0 && currentCount === 0) {
+      // Seulement reset si TOUT est vide (vault + ref + memoryForMode) ET pas en loading
+      if (vaultCount === 0 && currentCount === 0 && !isLoadingRef.current) {
         applyMessagesSafely([], 'memory-sync-empty', { allowEmpty: true });
       }
       return;
     }
 
-    // Sync uniquement si mémoire a plus de contenu
+    // Sync uniquement si mémoire a plus de contenu ET pas en loading
     console.log('[useChat OMNIS] 📥 Syncing from memory:', memoryCount, 'messages');
     applyMessagesSafely(messagesForMode, 'memory-sync');
   }, [messagesForMode, applyMessagesSafely]);
@@ -452,6 +472,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         metadata: { status: 'input-error' }
       };
     }
+
+    // FIX v19.3Ω: Activer le verrou d'opération AVANT tout changement d'état
+    operationLockRef.current = true;
+    console.log('[useChat OMNIS] 🔒 Operation lock ACTIVATED');
 
     console.log('[useChat OMNIS] ✅ Message valide, traitement...');
     const cleanMessage = content.trim();
@@ -892,6 +916,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       setSuggestions(finalResponse.suggestions ?? []);
       setIsLoading(false);
+      // FIX v19.3Ω: Désactiver le verrou après un délai pour permettre la stabilisation
+      setTimeout(() => {
+        operationLockRef.current = false;
+        console.log('[useChat OMNIS] 🔓 Operation lock RELEASED (success)');
+      }, 100);
       setLastProviderUsed(chatServiceResponse ? normalizeProvider(chatServiceResponse.provider) : provider);
       return assistantMessage;
 
@@ -923,6 +952,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       setError('TITANE∞ a rencontré une anomalie et s\'est réparé. Tu peux réessayer immédiatement.');
       setIsLoading(false);
+      // FIX v19.3Ω: Désactiver le verrou même en cas d'erreur
+      setTimeout(() => {
+        operationLockRef.current = false;
+        console.log('[useChat OMNIS] 🔓 Operation lock RELEASED (error)');
+      }, 100);
       setInternalAnomalyCount(prev => prev + 1);
 
       setLastProviderUsed('omnis-fallback');

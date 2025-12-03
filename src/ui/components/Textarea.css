@@ -66,12 +66,12 @@
 
 /* État error */
 .textarea--error .textarea__input {
-  border-color: #ef4444;
+  border-color: var(--danger, #8f7a7a);
 }
 
 .textarea--error .textarea__input:focus {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  border-color: var(--danger, #8f7a7a);
+  box-shadow: 0 0 0 3px rgba(143, 122, 122, 0.1);
 }
 
 /* ═══════════════════════════════════
@@ -119,7 +119,7 @@
 
 .textarea__error {
   font-size: var(--font-size-small);
-  color: #ef4444;
+  color: var(--danger, #8f7a7a);
 }
 
 .textarea__count {
@@ -130,7 +130,7 @@
 }
 
 .textarea--error .textarea__count {
-  color: #ef4444;
+  color: var(--danger, #8f7a7a);
 }
 
 /* ═══════════════════════════════════

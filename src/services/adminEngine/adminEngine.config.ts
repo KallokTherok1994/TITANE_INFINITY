@@ -1151,36 +1151,36 @@ export const MODULE_ICONS: Record<TitaneModule, string> = {
 };
 
 /**
- * Couleurs des niveaux de santé
+ * Couleurs des niveaux de santé - TITANE Design System
  */
 export const HEALTH_LEVEL_COLORS: Record<HealthLevel, string> = {
-  OK: '#22c55e',      // vert
-  WARNING: '#f59e0b', // orange
-  ALERT: '#f97316',   // orange foncé
-  CRITICAL: '#ef4444', // rouge
+  OK: '#93b399',      // TITANE success
+  WARNING: '#a89f91', // TITANE warning
+  ALERT: '#9a8a82',   // TITANE warning-dark
+  CRITICAL: '#8f7a7a', // TITANE danger
 };
 
 /**
- * Couleurs des sévérités de log
+ * Couleurs des sévérités de log - TITANE Design System
  */
 export const LOG_SEVERITY_COLORS: Record<LogSeverity, string> = {
   DEBUG: '#6b7280',   // gris
-  INFO: '#3b82f6',    // bleu
-  WARN: '#f59e0b',    // orange
-  ERROR: '#ef4444',   // rouge
-  CRITICAL: '#dc2626', // rouge foncé
+  INFO: '#8899aa',    // TITANE info
+  WARN: '#a89f91',    // TITANE warning
+  ERROR: '#8f7a7a',   // TITANE danger
+  CRITICAL: '#7a6868', // TITANE danger-dark
 };
 
 /**
- * Couleurs des statuts de module
+ * Couleurs des statuts de module - TITANE Design System
  */
 export const MODULE_STATUS_COLORS: Record<ModuleHealthStatus, string> = {
-  HEALTHY: '#22c55e',
-  DEGRADED: '#f59e0b',
-  CRITICAL: '#ef4444',
-  OFFLINE: '#6b7280',
-  RECOVERING: '#8b5cf6',
-  UNKNOWN: '#9ca3af',
+  HEALTHY: '#93b399',   // TITANE success
+  DEGRADED: '#a89f91',  // TITANE warning
+  CRITICAL: '#8f7a7a',  // TITANE danger
+  OFFLINE: '#6b7280',   // gris
+  RECOVERING: '#727b81', // TITANE primary
+  UNKNOWN: '#9ca3af',   // gris clair
 };
 
 // =============================================================================

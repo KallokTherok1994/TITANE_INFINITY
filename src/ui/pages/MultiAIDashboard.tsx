@@ -60,21 +60,21 @@ const MultiAIDashboard: React.FC = () => {
   };
 
   const getHealthColor = (health: number): string => {
-    if (health >= 80) return '#10b981'; // green
-    if (health >= 50) return '#f59e0b'; // orange
-    return '#ef4444'; // red
+    if (health >= 80) return 'var(--success, #93b399)'; // success
+    if (health >= 50) return 'var(--warning, #a89f91)'; // warning
+    return 'var(--danger, #8f7a7a)'; // danger
   };
 
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'running':
-        return '#10b981';
+        return 'var(--success, #93b399)';
       case 'paused':
-        return '#f59e0b';
+        return 'var(--warning, #a89f91)';
       case 'error':
-        return '#ef4444';
+        return 'var(--danger, #8f7a7a)';
       default:
-        return '#6b7280';
+        return 'var(--neutral-50, #6b7280)';
     }
   };
 
@@ -158,7 +158,7 @@ const MultiAIDashboard: React.FC = () => {
 
         <div className="metric-card">
           <div className="metric-label">Erreurs Totales</div>
-          <div className="metric-value" style={{ color: metrics.totalErrors > 0 ? '#ef4444' : '#10b981' }}>
+          <div className="metric-value" style={{ color: metrics.totalErrors > 0 ? 'var(--danger, #8f7a7a)' : 'var(--success, #93b399)' }}>
             {metrics.totalErrors}
           </div>
         </div>
@@ -337,9 +337,9 @@ const MultiAIDashboard: React.FC = () => {
         }
 
         .status-badge.running {
-          background: rgba(16, 185, 129, 0.2);
-          color: #10b981;
-          border: 2px solid #10b981;
+          background: rgba(147, 179, 153, 0.2);
+          color: var(--success, #93b399);
+          border: 2px solid var(--success, #93b399);
         }
 
         .status-badge.stopped {
@@ -510,18 +510,18 @@ const MultiAIDashboard: React.FC = () => {
         }
 
         .control-btn.pause {
-          background: rgba(239, 68, 68, 0.2);
-          color: #ef4444;
+          background: rgba(143, 122, 122, 0.2);
+          color: var(--danger, #8f7a7a);
         }
 
         .control-btn.resume {
-          background: rgba(16, 185, 129, 0.2);
-          color: #10b981;
+          background: rgba(147, 179, 153, 0.2);
+          color: var(--success, #93b399);
         }
 
         .control-btn.restart {
-          background: rgba(245, 158, 11, 0.2);
-          color: #f59e0b;
+          background: rgba(168, 159, 145, 0.2);
+          color: var(--warning, #a89f91);
         }
 
         .control-btn:not(:disabled):hover {
@@ -608,15 +608,15 @@ const MultiAIDashboard: React.FC = () => {
         }
 
         .alert-item.success {
-          background: rgba(16, 185, 129, 0.1);
-          color: #10b981;
-          border: 1px solid rgba(16, 185, 129, 0.3);
+          background: rgba(147, 179, 153, 0.1);
+          color: var(--success, #93b399);
+          border: 1px solid rgba(147, 179, 153, 0.3);
         }
 
         .alert-item.warning {
-          background: rgba(245, 158, 11, 0.1);
-          color: #f59e0b;
-          border: 1px solid rgba(245, 158, 11, 0.3);
+          background: rgba(168, 159, 145, 0.1);
+          color: var(--warning, #a89f91);
+          border: 1px solid rgba(168, 159, 145, 0.3);
         }
       `}</style>
     </div>

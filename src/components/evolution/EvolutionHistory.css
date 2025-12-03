@@ -41,8 +41,8 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.history-stats .stat.success { color: #22c55e; }
-.history-stats .stat.failed { color: #ef4444; }
+.history-stats .stat.success { color: var(--success, #93b399); }
+.history-stats .stat.failed { color: var(--danger, #8f7a7a); }
 .history-stats .stat.rollback { color: #6b7280; }
 
 .history-filters {
@@ -115,10 +115,10 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.history-entry.result-success { border-left: 3px solid #22c55e; }
-.history-entry.result-failed { border-left: 3px solid #ef4444; }
-.history-entry.result-partial { border-left: 3px solid #f59e0b; }
-.history-entry.result-denied { border-left: 3px solid #8b5cf6; }
+.history-entry.result-success { border-left: 3px solid var(--success, #93b399); }
+.history-entry.result-failed { border-left: 3px solid var(--danger, #8f7a7a); }
+.history-entry.result-partial { border-left: 3px solid var(--warning, #a89f91); }
+.history-entry.result-denied { border-left: 3px solid var(--primary, #727b81); }
 .history-entry.result-rolled_back { border-left: 3px solid #6b7280; }
 
 .entry-timeline {

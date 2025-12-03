@@ -94,13 +94,13 @@ const styles = {
     marginBottom: '24px',
   },
   passRateGood: {
-    color: '#10b981',
+    color: '#93b399', // TITANE success
   },
   passRateWarning: {
-    color: '#f59e0b',
+    color: '#a89f91', // TITANE warning
   },
   passRateBad: {
-    color: '#ef4444',
+    color: '#8f7a7a', // TITANE danger
   },
   testsTable: {
     width: '100%',
@@ -141,10 +141,10 @@ const styles = {
   },
   error: {
     padding: '20px',
-    background: '#fef2f2',
-    border: '1px solid #fecaca',
+    background: '#2a2525',
+    border: '1px solid #8f7a7a',
     borderRadius: '8px',
-    color: '#dc2626',
+    color: '#8f7a7a', // TITANE danger
     marginBottom: '24px',
   },
 };

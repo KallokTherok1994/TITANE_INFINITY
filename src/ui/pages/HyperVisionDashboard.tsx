@@ -209,7 +209,7 @@ const HyperVisionDashboard: React.FC = () => {
                       return `${x}%,${y}%`;
                     }).join(' ')}
                     fill="none"
-                    stroke="#3b82f6"
+                    stroke="var(--info, #8899aa)"
                     strokeWidth="2"
                   />
 
@@ -221,7 +221,7 @@ const HyperVisionDashboard: React.FC = () => {
                       return `${x}%,${y}%`;
                     }).join(' ')}
                     fill="none"
-                    stroke="#a855f7"
+                    stroke="var(--accent, #93b399)"
                     strokeWidth="2"
                   />
                 </svg>

@@ -67,7 +67,7 @@ export const WaveformVisualizer: React.FC<WaveformVisualizerProps> = ({
 
   // Obtenir couleur selon fréquence (mémoïsé)
   const getFrequencyColor = React.useCallback((index: number, value: number): string => {
-    if (!dynamicColors) return '#3b82f6';
+    if (!dynamicColors) return '#8899aa'; // TITANE info
 
     const ratio = index / barCount;
     const intensity = value / 255;

@@ -84,7 +84,7 @@
 
 /* État error */
 .checkbox--error .checkbox__box {
-  border-color: #ef4444;
+  border-color: var(--danger, #8f7a7a);
 }
 
 /* ═══════════════════════════════════
@@ -170,7 +170,7 @@
 
 .checkbox__error {
   font-size: var(--font-size-small);
-  color: #ef4444;
+  color: var(--danger, #8f7a7a);
   margin-left: calc(var(--checkbox-size) + var(--space-3));
 }
 

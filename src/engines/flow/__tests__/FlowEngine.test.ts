@@ -29,6 +29,9 @@ function createMockMultimodalState(overrides?: Partial<{
     globalTension: { value: overrides?.tension ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion', timestamp: now },
     globalEngagement: { value: overrides?.engagement ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion', timestamp: now },
     globalStability: { value: overrides?.stability ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion', timestamp: now },
+    correctedEnergy: overrides?.energy ?? 0.5,
+    correctedTension: overrides?.tension ?? 0.5,
+    correctedEngagement: overrides?.engagement ?? 0.5,
   };
   return state;
 }

@@ -9,16 +9,16 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-  /* Palette principale */
-  --rubis: #e11d48;
-  --saphir: #3b82f6;
-  --emeraude: #10b981;
-  --amethyste: #8b5cf6;
+  /* Palette principale - TITANE Design System */
+  --rubis: #8f7a7a;
+  --saphir: #8899aa;
+  --emeraude: #93b399;
+  --amethyste: #727b81;
   --diamant: #f3f4f6;
-  --ambre: #f59e0b;
-  --cyan: #06b6d4;
-  --rose: #ec4899;
-  --indigo: #6366f1;
+  --ambre: #a89f91;
+  --cyan: #8899aa;
+  --rose: #9a8a8a;
+  --indigo: #727b81;
 
   /* Tons sombres (fonds) */
   --bg-dark-1: #0a0a0f;
@@ -279,9 +279,9 @@
 }
 
 .exp-panel-close {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  color: #ef4444;
+  background: rgba(143, 122, 122, 0.2);
+  border: 1px solid rgba(143, 122, 122, 0.3);
+  color: var(--danger, #8f7a7a);
   padding: var(--space-sm) var(--space-md);
   border-radius: var(--border-radius-md);
   cursor: pointer;
@@ -290,7 +290,7 @@
 }
 
 .exp-panel-close:hover {
-  background: rgba(239, 68, 68, 0.3);
+  background: rgba(143, 122, 122, 0.3);
   transform: scale(1.05);
 }
 

@@ -19,7 +19,7 @@
 
 .expand-button:hover {
   background: var(--color-surface-hover, rgba(40, 40, 40, 0.9));
-  border-color: var(--color-primary, #dc2626);
+  border-color: var(--color-primary, #727b81);
   transform: scale(1.05);
 }
 
@@ -68,5 +68,5 @@
 }
 
 .expand-button:hover .expand-button-icon {
-  color: var(--color-primary, #dc2626);
+  color: var(--color-primary, #727b81);
 }

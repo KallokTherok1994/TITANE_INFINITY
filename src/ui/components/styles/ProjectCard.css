@@ -29,10 +29,10 @@
 }
 
 .project-card:hover {
-  border-color: var(--color-primary, #dc2626);
+  border-color: var(--color-primary, #727b81);
   transform: translateY(-4px) scale(1.01);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
-              0 0 32px var(--color-primary-glow, rgba(220, 38, 38, 0.5));
+              0 0 32px var(--color-primary-glow, rgba(114, 123, 129, 0.5));
 }
 
 .project-card:hover::before {
@@ -84,19 +84,19 @@
   justify-content: center;
   min-width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, var(--color-primary, #dc2626) 0%, var(--color-primary-dark, #991b1b) 100%);
+  background: linear-gradient(135deg, var(--color-primary, #727b81) 0%, var(--color-primary-dark, #5a6167) 100%);
   border-radius: 10px;
-  box-shadow: 0 0 20px var(--color-primary-glow, rgba(220, 38, 38, 0.5));
+  box-shadow: 0 0 20px var(--color-primary-glow, rgba(114, 123, 129, 0.5));
   position: relative;
   animation: pulseLevelGlow 2s ease-in-out infinite;
 }
 
 @keyframes pulseLevelGlow {
   0%, 100% {
-    box-shadow: 0 0 20px var(--color-primary-glow, rgba(220, 38, 38, 0.5));
+    box-shadow: 0 0 20px var(--color-primary-glow, rgba(114, 123, 129, 0.5));
   }
   50% {
-    box-shadow: 0 0 32px var(--color-primary-glow, rgba(220, 38, 38, 0.8));
+    box-shadow: 0 0 32px var(--color-primary-glow, rgba(114, 123, 129, 0.8));
   }
 }
 
@@ -134,10 +134,10 @@
 
 .project-card-xp-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary, #dc2626) 0%, var(--color-primary-light, #ef4444) 100%);
+  background: linear-gradient(90deg, var(--color-primary, #727b81) 0%, var(--color-primary-light, #8899aa) 100%);
   border-radius: 9999px;
   transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 12px var(--color-primary-glow, rgba(220, 38, 38, 0.6)),
+  box-shadow: 0 0 12px var(--color-primary-glow, rgba(114, 123, 129, 0.6)),
               inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
@@ -177,7 +177,7 @@
 
 .project-card-xp-percent {
   font-size: 12px;
-  color: var(--color-primary, #dc2626);
+  color: var(--color-primary, #727b81);
   font-weight: 600;
 }
 

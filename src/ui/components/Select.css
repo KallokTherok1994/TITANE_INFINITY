@@ -58,11 +58,11 @@
 }
 
 .select--error .select__trigger {
-  border-color: #ef4444;
+  border-color: var(--danger, #8f7a7a);
 }
 
 .select--error .select__trigger:focus-visible {
-  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  box-shadow: 0 0 0 3px rgba(143, 122, 122, 0.1);
 }
 
 /* ═══════════════════════════════════
@@ -245,7 +245,7 @@
 
 .select__error {
   font-size: var(--font-size-small);
-  color: #ef4444;
+  color: var(--danger, #8f7a7a);
 }
 
 /* ═══════════════════════════════════

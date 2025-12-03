@@ -490,13 +490,13 @@ export const MEMORY_CONTENT_TYPE_LABELS: Record<MemoryContentType, { label: stri
   milestone: { label: 'Milestone', icon: '🏆' },
 };
 
-/** Couleurs des niveaux d'importance */
+/** Couleurs des niveaux d'importance - TITANE Design System */
 export const IMPORTANCE_COLORS: Record<MemoryImportance, string> = {
   1: '#9ca3af', // Gris - Trivial
-  2: '#6ee7b7', // Vert - Faible
-  3: '#93c5fd', // Bleu - Normal
-  4: '#fbbf24', // Or - Important
-  5: '#ef4444', // Rouge - Critique
+  2: '#93b399', // TITANE accent - Faible
+  3: '#8899aa', // TITANE info - Normal
+  4: '#a89f91', // TITANE warning - Important
+  5: '#8f7a7a', // TITANE danger - Critique
 };
 
 // ─────────────────────────────────────────────────────────────────────────────

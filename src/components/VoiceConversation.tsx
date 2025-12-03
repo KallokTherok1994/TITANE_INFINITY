@@ -223,15 +223,15 @@ export const VoiceConversation = ({
 
     switch (status.state) {
       case 'idle':
-        return { ...base, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)' };
+        return { ...base, background: 'linear-gradient(135deg, #727b81 0%, #5a6167 100%)', boxShadow: '0 4px 15px rgba(114, 123, 129, 0.4)' };
       case 'listening':
-        return { ...base, background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', boxShadow: `0 0 ${20 + audioLevel * 30}px rgba(16, 185, 129, 0.6)`, transform: `scale(${1 + audioLevel * 0.1})` };
+        return { ...base, background: 'linear-gradient(135deg, #93b399 0%, #7a9a80 100%)', boxShadow: `0 0 ${20 + audioLevel * 30}px rgba(147, 179, 153, 0.6)`, transform: `scale(${1 + audioLevel * 0.1})` };
       case 'processing':
-        return { ...base, background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', boxShadow: '0 4px 15px rgba(245, 158, 11, 0.4)' };
+        return { ...base, background: 'linear-gradient(135deg, #a89f91 0%, #9a8a7d 100%)', boxShadow: '0 4px 15px rgba(168, 159, 145, 0.4)' };
       case 'speaking':
-        return { ...base, background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)', boxShadow: '0 4px 20px rgba(139, 92, 246, 0.5)' };
+        return { ...base, background: 'linear-gradient(135deg, #727b81 0%, #5a6167 100%)', boxShadow: '0 4px 20px rgba(114, 123, 129, 0.5)' };
       case 'error':
-        return { ...base, background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', boxShadow: '0 4px 15px rgba(239, 68, 68, 0.4)' };
+        return { ...base, background: 'linear-gradient(135deg, #8f7a7a 0%, #7a6868 100%)', boxShadow: '0 4px 15px rgba(143, 122, 122, 0.4)' };
       default:
         return base;
     }

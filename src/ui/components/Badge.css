@@ -31,33 +31,33 @@
 }
 
 .badge--success {
-  background: rgba(34, 197, 94, 0.15);
-  color: #10b981;
-  border: 1px solid rgba(34, 197, 94, 0.3);
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+  background: var(--glow-accent, rgba(147, 179, 153, 0.15));
+  color: var(--success, #93b399);
+  border: 1px solid rgba(147, 179, 153, 0.3);
+  box-shadow: 0 0 12px var(--glow-accent, rgba(147, 179, 153, 0.2));
   backdrop-filter: blur(4px);
 }
 
 .badge--warning {
-  background: rgba(245, 158, 11, 0.15);
-  color: #f59e0b;
-  border: 1px solid rgba(245, 158, 11, 0.3);
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2);
+  background: rgba(168, 159, 145, 0.15);
+  color: var(--warning, #a89f91);
+  border: 1px solid rgba(168, 159, 145, 0.3);
+  box-shadow: 0 0 12px rgba(168, 159, 145, 0.2);
   backdrop-filter: blur(4px);
 }
 
 .badge--danger {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.2);
+  background: rgba(143, 122, 122, 0.15);
+  color: var(--danger, #8f7a7a);
+  border: 1px solid rgba(143, 122, 122, 0.3);
+  box-shadow: 0 0 12px rgba(143, 122, 122, 0.2);
   backdrop-filter: blur(4px);
 }
 
 .badge--info {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.2);
+  background: var(--glow-primary, rgba(114, 123, 129, 0.15));
+  color: var(--info, #8899aa);
+  border: 1px solid rgba(114, 123, 129, 0.3);
+  box-shadow: 0 0 12px var(--glow-primary, rgba(114, 123, 129, 0.2));
   backdrop-filter: blur(4px);
 }

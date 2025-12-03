@@ -38,7 +38,7 @@
 .menu-brand-text {
   font-size: 18px;
   font-weight: 700;
-  background: linear-gradient(135deg, var(--color-primary, #dc2626) 0%, var(--color-primary-light, #ef4444) 100%);
+  background: linear-gradient(135deg, var(--color-primary, #727b81) 0%, var(--color-primary-light, #8899aa) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -121,8 +121,8 @@
 
 .menu-item.active {
   background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
-  border-color: var(--color-primary, #dc2626);
-  box-shadow: 0 0 16px var(--color-primary-glow, rgba(220, 38, 38, 0.4));
+  border-color: var(--color-primary, #727b81);
+  box-shadow: 0 0 16px var(--color-primary-glow, rgba(114, 123, 129, 0.4));
 }
 
 .menu-item-icon {
@@ -153,7 +153,7 @@
 }
 
 .menu-item.active .menu-item-label {
-  color: var(--color-primary, #dc2626);
+  color: var(--color-primary, #727b81);
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -182,12 +182,12 @@
 }
 
 .menu-status-indicator.online {
-  background: var(--color-success, #10b981);
-  box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  background: var(--color-success, #93b399);
+  box-shadow: 0 0 8px rgba(147, 179, 153, 0.6);
 }
 
 .menu-status-indicator.offline {
-  background: var(--color-error, #ef4444);
+  background: var(--color-error, #8f7a7a);
 }
 
 .menu-status-text {

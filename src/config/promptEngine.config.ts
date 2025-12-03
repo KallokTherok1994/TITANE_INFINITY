@@ -21,37 +21,37 @@ export const CATEGORY_CONFIG: Record<PromptCategory, {
     name: 'Système',
     description: 'Prompts système de base',
     icon: '⚙️',
-    color: '#6366F1',
+    color: '#727b81', // TITANE primary
   },
   persona: {
     name: 'Persona',
     description: 'Personnalités IA',
     icon: '🎭',
-    color: '#8B5CF6',
+    color: '#727b81', // TITANE primary
   },
   task: {
     name: 'Tâche',
     description: 'Tâches spécifiques',
     icon: '📋',
-    color: '#10B981',
+    color: '#93b399', // TITANE success
   },
   context: {
     name: 'Contexte',
     description: 'Contexte additionnel',
     icon: '📚',
-    color: '#F59E0B',
+    color: '#a89f91', // TITANE warning
   },
   format: {
     name: 'Format',
     description: 'Formatage des réponses',
     icon: '📝',
-    color: '#EC4899',
+    color: '#9a8a8a', // TITANE rose
   },
   safety: {
     name: 'Sécurité',
     description: 'Consignes de sécurité',
     icon: '🛡️',
-    color: '#EF4444',
+    color: '#8f7a7a', // TITANE danger
   },
 };
 

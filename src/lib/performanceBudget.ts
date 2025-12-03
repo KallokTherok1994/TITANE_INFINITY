@@ -370,15 +370,15 @@ export class PerformanceMonitor {
   private static getGradeColor(grade: PerformanceReport['grade']): string {
     switch (grade) {
       case 'A':
-        return '#10b981';
+        return '#93b399'; // TITANE success
       case 'B':
-        return '#3b82f6';
+        return '#8899aa'; // TITANE info
       case 'C':
-        return '#f59e0b';
+        return '#a89f91'; // TITANE warning
       case 'D':
-        return '#ef4444';
+        return '#8f7a7a'; // TITANE danger
       case 'F':
-        return '#7f1d1d';
+        return '#685858'; // TITANE danger-dark
     }
   }
 

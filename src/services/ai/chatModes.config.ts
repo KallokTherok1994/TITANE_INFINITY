@@ -269,7 +269,7 @@ export const CHAT_MODES_CONFIG: Record<ChatModeId, ChatModeConfigExtended> = {
     description: 'Mode divergence créative - exploration sans filtre',
     category: 'creative',
     icon: '💡',
-    themeColor: '#f59e0b',
+    themeColor: '#a89f91', // TITANE warning/neutral
 
     defaultProvider: 'auto',
     systemPrompt: `Tu es TITANE∞ en mode BRAINSTORMING (phase DIVERGENCE).
@@ -321,7 +321,7 @@ Kevin est en phase d'exploration. Aide-le à diverger, pas à converger.`,
     description: 'Mode connexion - relier les idées entre elles',
     category: 'creative',
     icon: '🔗',
-    themeColor: '#10b981',
+    themeColor: '#93b399', // TITANE accent/success
 
     defaultProvider: 'auto',
     systemPrompt: `Tu es TITANE∞ en mode SYNTHÈSE (phase CONNEXION).
@@ -373,7 +373,7 @@ Kevin a exploré. Maintenant aide-le à connecter les points.`,
     description: 'Mode structuration - plans d\'action concrets',
     category: 'productivity',
     icon: '📋',
-    themeColor: '#3b82f6',
+    themeColor: '#8899aa', // TITANE info
 
     defaultProvider: 'auto',
     systemPrompt: `Tu es TITANE∞ en mode PLANIFICATION (phase STRUCTURATION).
@@ -477,7 +477,7 @@ Kevin se confie. Crée un espace sûr pour l'expression authentique.`,
     description: 'Mode analyse - détecter surcharge mentale',
     category: 'personal',
     icon: '🔧',
-    themeColor: '#ef4444',
+    themeColor: '#8f7a7a', // TITANE danger
 
     defaultProvider: 'auto',
     systemPrompt: `Tu es TITANE∞ en mode DEBUG COGNITIF (analyse charge mentale).

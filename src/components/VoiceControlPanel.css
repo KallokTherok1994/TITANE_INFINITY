@@ -13,8 +13,8 @@
 }
 
 .voice-control-panel.enabled {
-  border-color: var(--accent-primary, #00d4ff);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  border-color: var(--accent-primary, #93b399);
+  box-shadow: 0 0 20px rgba(147, 179, 153, 0.3);
 }
 
 .voice-header {
@@ -40,12 +40,12 @@
 
 .voice-toggle:hover {
   background: var(--glass-bg-hover, rgba(255, 255, 255, 0.1));
-  border-color: var(--accent-primary, #00d4ff);
+  border-color: var(--accent-primary, #93b399);
 }
 
 .voice-toggle.active {
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 127, 0.2));
-  border-color: var(--accent-primary, #00d4ff);
+  background: linear-gradient(135deg, rgba(147, 179, 153, 0.2), rgba(147, 179, 153, 0.1));
+  border-color: var(--accent-primary, #93b399);
 }
 
 .voice-details {
@@ -104,13 +104,13 @@
 }
 
 .voice-test-button {
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 255, 127, 0.1));
-  color: var(--accent-primary, #00d4ff);
+  background: linear-gradient(135deg, rgba(147, 179, 153, 0.1), rgba(147, 179, 153, 0.05));
+  color: var(--accent-primary, #93b399);
 }
 
 .voice-test-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 255, 127, 0.2));
-  border-color: var(--accent-primary, #00d4ff);
+  background: linear-gradient(135deg, rgba(147, 179, 153, 0.2), rgba(147, 179, 153, 0.1));
+  border-color: var(--accent-primary, #93b399);
 }
 
 .voice-test-button:disabled {
@@ -119,13 +119,13 @@
 }
 
 .voice-stop-button {
-  background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 0, 0, 0.1));
-  color: var(--error, #ff4757);
+  background: linear-gradient(135deg, rgba(143, 122, 122, 0.1), rgba(143, 122, 122, 0.05));
+  color: var(--error, #8f7a7a);
 }
 
 .voice-stop-button:hover {
-  background: linear-gradient(135deg, rgba(255, 71, 87, 0.2), rgba(255, 0, 0, 0.2));
-  border-color: var(--error, #ff4757);
+  background: linear-gradient(135deg, rgba(143, 122, 122, 0.2), rgba(143, 122, 122, 0.1));
+  border-color: var(--error, #8f7a7a);
 }
 
 .voice-help {

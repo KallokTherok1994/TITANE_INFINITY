@@ -982,10 +982,10 @@ export const CATEGORY_LABELS: Record<AutomationCategory, { label: string; icon: 
   system: { label: 'Système', icon: '⚙️' },
 };
 
-/** Labels des niveaux de sécurité */
+/** Labels des niveaux de sécurité - TITANE Design System */
 export const SECURITY_LEVEL_LABELS: Record<SecurityLevel, { label: string; color: string }> = {
-  safe: { label: 'Sûr', color: '#10b981' },
-  moderate: { label: 'Modéré', color: '#f59e0b' },
-  elevated: { label: 'Élevé', color: '#f97316' },
-  critical: { label: 'Critique', color: '#ef4444' },
+  safe: { label: 'Sûr', color: '#93b399' },        // TITANE success
+  moderate: { label: 'Modéré', color: '#a89f91' }, // TITANE warning
+  elevated: { label: 'Élevé', color: '#9a8a82' },  // TITANE warning-dark
+  critical: { label: 'Critique', color: '#8f7a7a' }, // TITANE danger
 };

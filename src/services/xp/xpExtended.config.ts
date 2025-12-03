@@ -961,11 +961,11 @@ export const CATEGORY_LABELS: Record<XPCategory, { label: string; icon: string }
   evolution: { label: 'Évolution', icon: '🌟' },
 };
 
-/** Couleurs des raretés */
+/** Couleurs des raretés - TITANE Design System monochrome */
 export const RARITY_COLORS: Record<AchievementRarity, string> = {
   common: '#9ca3af',      // Gris
-  uncommon: '#22c55e',    // Vert
-  rare: '#3b82f6',        // Bleu
-  epic: '#a855f7',        // Violet
-  legendary: '#f59e0b',   // Or
+  uncommon: '#93b399',    // TITANE accent
+  rare: '#8899aa',        // TITANE info
+  epic: '#727b81',        // TITANE primary
+  legendary: '#a89f91',   // TITANE warning (or monochrome)
 };

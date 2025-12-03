@@ -69,7 +69,7 @@ const buttonStyle = {
 // Style pour boutons de succès (réservé pour usage futur)
 const _successButtonStyle = {
   ...buttonStyle,
-  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+  background: 'linear-gradient(135deg, #93b399 0%, #7a9a80 100%)',
 };
 
 export const AudioSettings = () => {
@@ -232,7 +232,7 @@ export const AudioSettings = () => {
             </button>
 
             {testStatus === 'success' && (
-              <span style={{ color: '#10b981', fontSize: '0.9rem' }}>✅ TTS fonctionne !</span>
+              <span style={{ color: '#93b399', fontSize: '0.9rem' }}>✅ TTS fonctionne !</span>
             )}
             {testStatus === 'error' && (
               <span style={{ color: '#f87171', fontSize: '0.9rem' }}>❌ {errorMessage}</span>
@@ -317,10 +317,10 @@ export const AudioSettings = () => {
               onClick={() => handleTTSSettingChange('autoFallback', !ttsSettings.autoFallback)}
               style={{
                 padding: '0.5rem 1rem',
-                background: ttsSettings.autoFallback ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-                border: `1px solid ${ttsSettings.autoFallback ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                background: ttsSettings.autoFallback ? 'rgba(147,179,153,0.15)' : 'rgba(143,122,122,0.15)',
+                border: `1px solid ${ttsSettings.autoFallback ? 'rgba(147,179,153,0.3)' : 'rgba(143,122,122,0.3)'}`,
                 borderRadius: '8px',
-                color: ttsSettings.autoFallback ? '#10b981' : '#f87171',
+                color: ttsSettings.autoFallback ? '#93b399' : '#8f7a7a',
                 cursor: 'pointer',
                 fontSize: '0.85rem',
                 fontWeight: 600,
@@ -342,10 +342,10 @@ export const AudioSettings = () => {
               onClick={() => handleTTSSettingChange('emotionEnabled', !ttsSettings.emotionEnabled)}
               style={{
                 padding: '0.5rem 1rem',
-                background: ttsSettings.emotionEnabled ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
-                border: `1px solid ${ttsSettings.emotionEnabled ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`,
+                background: ttsSettings.emotionEnabled ? 'rgba(147,179,153,0.15)' : 'rgba(143,122,122,0.15)',
+                border: `1px solid ${ttsSettings.emotionEnabled ? 'rgba(147,179,153,0.3)' : 'rgba(143,122,122,0.3)'}`,
                 borderRadius: '8px',
-                color: ttsSettings.emotionEnabled ? '#10b981' : '#f87171',
+                color: ttsSettings.emotionEnabled ? '#93b399' : '#8f7a7a',
                 cursor: 'pointer',
                 fontSize: '0.85rem',
                 fontWeight: 600,

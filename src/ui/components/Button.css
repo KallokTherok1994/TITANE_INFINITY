@@ -6,12 +6,12 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-2);
-  
+
   /* Typography */
   font-family: var(--font-sans);
   font-weight: var(--font-weight-medium);
   white-space: nowrap;
-  
+
   /* Visual */
   border: none;
   border-radius: var(--radius-md);
@@ -19,7 +19,7 @@
   user-select: none;
   position: relative;
   overflow: hidden;
-  
+
   /* Transition fluide */
   transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -115,18 +115,18 @@
 
 /* DANGER - Action destructive */
 .button--danger {
-  background: #ef4444;
+  background: var(--danger, #8f7a7a);
   color: white;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+  box-shadow: 0 2px 8px rgba(143, 122, 122, 0.25);
 }
 
 .button--danger:hover:not(:disabled) {
-  background: #dc2626;
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
+  background: var(--danger-hover, #7a6868);
+  box-shadow: 0 4px 12px rgba(143, 122, 122, 0.35);
 }
 
 .button--danger:active:not(:disabled) {
-  background: #b91c1c;
+  background: var(--danger-active, #685858);
 }
 
 /* GLASS - Effet glassmorphism premium */
@@ -236,7 +236,7 @@
   .button {
     transition: none;
   }
-  
+
   .button__spinner {
     animation-duration: 1.5s;
   }

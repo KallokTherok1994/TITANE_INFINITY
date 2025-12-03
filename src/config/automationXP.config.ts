@@ -205,7 +205,7 @@ export const LEVEL_CONFIGS: Record<UserLevel, LevelConfig> = {
     min_xp: 500,
     max_xp: 2000,
     label: 'Apprenti',
-    color: '#10B981', // Vert
+    color: '#93b399', // TITANE success
     icon: '📚',
     perks: ['Mode Dev', 'Automations basiques', 'Historique 7j'],
     unlocks: ['dev_mode', 'basic_automations'],
@@ -215,7 +215,7 @@ export const LEVEL_CONFIGS: Record<UserLevel, LevelConfig> = {
     min_xp: 2000,
     max_xp: 5000,
     label: 'Intermédiaire',
-    color: '#3B82F6', // Bleu
+    color: '#8899aa', // TITANE info
     icon: '⚡',
     perks: ['Mode Stratégie', 'Automations avancées', 'Mémoire étendue'],
     unlocks: ['strategy_mode', 'advanced_automations', 'extended_memory'],
@@ -225,7 +225,7 @@ export const LEVEL_CONFIGS: Record<UserLevel, LevelConfig> = {
     min_xp: 5000,
     max_xp: 12000,
     label: 'Avancé',
-    color: '#8B5CF6', // Violet
+    color: '#727b81', // TITANE primary
     icon: '🔮',
     perks: ['Mode Audit', 'Mode Auteur', 'Tous les outils'],
     unlocks: ['audit_mode', 'auteur_mode', 'all_tools'],
@@ -235,7 +235,7 @@ export const LEVEL_CONFIGS: Record<UserLevel, LevelConfig> = {
     min_xp: 12000,
     max_xp: 30000,
     label: 'Expert',
-    color: '#EC4899', // Rose
+    color: '#9a8a8a', // TITANE rose
     icon: '💎',
     perks: ['Mode Analyse', 'Automations illimitées', 'API accès'],
     unlocks: ['analyse_mode', 'unlimited_automations', 'api_access'],
@@ -245,7 +245,7 @@ export const LEVEL_CONFIGS: Record<UserLevel, LevelConfig> = {
     min_xp: 30000,
     max_xp: 100000,
     label: 'Maître',
-    color: '#F59E0B', // Ambre
+    color: '#a89f91', // TITANE warning
     icon: '👑',
     perks: ['Mode Omniscient', 'Évolution IA', 'Statistiques avancées'],
     unlocks: ['omniscient_mode', 'ia_evolution', 'advanced_stats'],
@@ -255,7 +255,7 @@ export const LEVEL_CONFIGS: Record<UserLevel, LevelConfig> = {
     min_xp: 100000,
     max_xp: Infinity,
     label: 'Singularité',
-    color: '#EF4444', // Rouge
+    color: '#8f7a7a', // TITANE danger
     icon: '∞',
     perks: ['Mode Debug', 'Contrôle total', 'Accès illimité'],
     unlocks: ['debug_mode', 'full_control', 'unlimited_access'],
@@ -436,7 +436,7 @@ export const DEFAULT_AUTOMATIONS: Record<string, Automation> = {
     enabled: true,
     category: 'productivity',
     icon: '☀️',
-    color: '#F59E0B',
+    color: '#a89f91', // TITANE warning
     trigger: {
       type: 'scheduled',
       config: { cron: '0 8 * * *' }, // 8h chaque jour
@@ -474,7 +474,7 @@ export const DEFAULT_AUTOMATIONS: Record<string, Automation> = {
     enabled: true,
     category: 'workflow',
     icon: '💾',
-    color: '#3B82F6',
+    color: '#8899aa', // TITANE info
     trigger: {
       type: 'voice_command',
       config: { phrases: ['sauvegarde ça', 'retiens ça', 'important'] },

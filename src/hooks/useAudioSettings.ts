@@ -315,7 +315,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         if (isNotFound) {
           setLastError('Aucun microphone détecté. Vérifiez les connexions.');
         } else if (isDenied) {
-          setLastError('Permission microphone refusée. Cliquez sur l\'icône 🔒 dans la barre d\'adresse pour autoriser.');
+          setLastError('Permission microphone refusée. Vérifiez les paramètres de confidentialité de votre système (Paramètres > Confidentialité > Microphone).');
         } else {
           setLastError('Impossible d\'accéder au microphone. Vérifiez les paramètres système.');
         }
