@@ -54,7 +54,7 @@
 }
 
 .tts-status-indicator.active {
-  color: #10B981;
+  color: var(--success);
   animation: pulse-green 2s ease-in-out infinite;
 }
 
@@ -338,11 +338,11 @@
 }
 
 .tts-provider-status--available .tts-provider-status__dot {
-  background: #10B981;
+  background: var(--success);
 }
 
 .tts-provider-status--unavailable .tts-provider-status__dot {
-  background: #EF4444;
+  background: var(--danger);
 }
 
 .tts-provider-status--error .tts-provider-status__dot {
@@ -365,7 +365,7 @@
 }
 
 .tts-status-dot--active {
-  background: #10B981;
+  background: var(--success);
   box-shadow: 0 0 8px rgba(16,185,129,0.5);
 }
 

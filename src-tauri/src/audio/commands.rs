@@ -637,7 +637,7 @@ pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult
         }
         Err(e) => {
             log::error!("[Audio] Failed to start arecord: {}", e);
-            Err(format!("Failed to start recording: {}", e).into())
+            Err(format!("Failed to start recording: {}", e))
         }
     }
 }
