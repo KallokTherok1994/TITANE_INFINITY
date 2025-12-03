@@ -95,13 +95,13 @@
 }
 
 .meta-btn-primary:hover {
-  background: var(--accent-primary-hover, #00d4e0);
+  background: var(--accent-primary-hover, var(--primary, #727b81));
 }
 
 .meta-btn-active {
-  background: var(--success, #00ff88);
+  background: var(--success, var(--accent, #93b399));
   color: #000;
-  border-color: var(--success, #00ff88);
+  border-color: var(--success, var(--accent, #93b399));
 }
 
 /* Error */
@@ -111,9 +111,9 @@
   align-items: center;
   padding: 0.75rem 1rem;
   background: rgba(255, 0, 100, 0.1);
-  border: 1px solid var(--error, #ff0064);
+  border: 1px solid var(--error, var(--danger, #8f7a7a));
   border-radius: 6px;
-  color: var(--error, #ff0064);
+  color: var(--error, var(--danger, #8f7a7a));
 }
 
 .meta-error button {
@@ -252,10 +252,10 @@
 .meta-warning-item {
   padding: 0.5rem 0.75rem;
   background: rgba(255, 200, 0, 0.1);
-  border-left: 3px solid var(--warning, #ffc800);
+  border-left: 3px solid var(--warning, var(--warning, #a89f91));
   border-radius: 0 4px 4px 0;
   font-size: 0.875rem;
-  color: var(--warning, #ffc800);
+  color: var(--warning, var(--warning, #a89f91));
 }
 
 /* Resources Grid */

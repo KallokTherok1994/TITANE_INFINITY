@@ -8,8 +8,8 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 30%, #2a0a3e 70%, #0a1a2a 100%);
-  color: #e0e0ff;
+  background: linear-gradient(135deg, var(--bg-base, #0a0a0a) 0%, var(--bg-panel, #141414) 50%, var(--bg-surface, #1a1a1a) 100%);
+  color: var(--text, #e8e8e8);
   font-family: 'Segoe UI', system-ui, sans-serif;
   overflow: hidden;
 }
@@ -43,7 +43,7 @@
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(147, 179, 153, 0.3) 0%, transparent 70%);
   animation: pulse-expand 2s ease-in-out infinite;
 }
 
@@ -67,8 +67,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
-  background: rgba(42, 10, 62, 0.6);
-  border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+  background: var(--bg-panel, #141414);
+  border-bottom: 1px solid rgba(147, 179, 153, 0.2);
 }
 
 .header-left {
@@ -84,7 +84,7 @@
 .hyper-header h2 {
   margin: 0;
   font-size: 20px;
-  background: linear-gradient(135deg, #a855f7, #ec4899, #8b5cf6);
+  background: linear-gradient(135deg, var(--accent, #93b399), var(--primary, #727b81), var(--info, #8899aa));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -101,7 +101,7 @@
 
 .status-badge.active {
   background: rgba(168, 85, 247, 0.2);
-  color: #a855f7;
+  color: var(--primary, #727b81);
   border-color: rgba(168, 85, 247, 0.5);
   animation: glow-pulse 2s ease-in-out infinite;
 }
@@ -200,7 +200,7 @@
 .metric-value {
   font-size: 24px;
   font-weight: 700;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .metric-label {
@@ -219,7 +219,7 @@
 .mode-selector h4 {
   margin: 0 0 12px 0;
   font-size: 14px;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .mode-buttons {
@@ -250,8 +250,8 @@
 
 .mode-btn.active {
   background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(236, 72, 153, 0.2));
-  color: #a855f7;
-  border-color: #a855f7;
+  color: var(--primary, #727b81);
+  border-color: var(--primary, #727b81);
 }
 
 .mode-icon {
@@ -289,8 +289,8 @@
 }
 
 .hyper-tabs button.active {
-  color: #a855f7;
-  border-bottom-color: #a855f7;
+  color: var(--primary, #727b81);
+  border-bottom-color: var(--primary, #727b81);
   background: rgba(168, 85, 247, 0.15);
 }
 
@@ -325,7 +325,7 @@
 
 .think-actions button {
   padding: 10px 20px;
-  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  background: linear-gradient(135deg, var(--primary, #727b81), var(--primary-dark, #5a6268));
   border: none;
   border-radius: 8px;
   color: white;
@@ -346,7 +346,7 @@
 
 .thoughts-list h4 {
   margin: 0 0 16px 0;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .no-data {
@@ -375,7 +375,7 @@
   padding: 2px 8px;
   background: rgba(168, 85, 247, 0.2);
   border-radius: 4px;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .thought-confidence {
@@ -420,7 +420,7 @@
 .insight-header h5 {
   margin: 0;
   font-size: 16px;
-  color: #ec4899;
+  color: var(--accent, #93b399);
 }
 
 .insight-category {
@@ -428,7 +428,7 @@
   padding: 2px 8px;
   background: rgba(236, 72, 153, 0.2);
   border-radius: 4px;
-  color: #ec4899;
+  color: var(--accent, #93b399);
 }
 
 .insight-description {
@@ -444,13 +444,13 @@
 }
 
 .actionable-badge {
-  color: #ec4899;
+  color: var(--accent, #93b399);
 }
 
 /* Reason Tab */
 .premises-section h4 {
   margin: 0 0 16px 0;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .premise-input {
@@ -462,7 +462,7 @@
 
 .premise-label {
   font-weight: 600;
-  color: #a855f7;
+  color: var(--primary, #727b81);
   min-width: 30px;
 }
 
@@ -482,7 +482,7 @@
   background: rgba(255, 68, 68, 0.2);
   border: 1px solid rgba(255, 68, 68, 0.4);
   border-radius: 6px;
-  color: #ff6b6b;
+  color: var(--danger, #8f7a7a);
   cursor: pointer;
 }
 
@@ -497,13 +497,13 @@
   background: rgba(168, 85, 247, 0.2);
   border: 1px solid rgba(168, 85, 247, 0.4);
   border-radius: 8px;
-  color: #a855f7;
+  color: var(--primary, #727b81);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .premise-actions button:last-child {
-  background: linear-gradient(135deg, #a855f7, #8b5cf6);
+  background: linear-gradient(135deg, var(--primary, #727b81), var(--primary-dark, #5a6268));
   border: none;
   color: white;
 }
@@ -516,7 +516,7 @@
 
 .conclusion-section h4 {
   margin: 0 0 16px 0;
-  color: #ec4899;
+  color: var(--accent, #93b399);
 }
 
 .conclusion-card {
@@ -542,7 +542,7 @@
 
 .reasoning-chain h5 {
   margin: 0 0 8px 0;
-  color: #a855f7;
+  color: var(--primary, #727b81);
   font-size: 14px;
 }
 
@@ -573,7 +573,7 @@
 
 .imagine-input button {
   padding: 12px 24px;
-  background: linear-gradient(135deg, #ec4899, #a855f7);
+  background: linear-gradient(135deg, var(--accent, #93b399), var(--primary, #727b81));
   border: none;
   border-radius: 8px;
   color: white;
@@ -590,7 +590,7 @@
 
 .scenario-display h4 {
   margin: 0 0 12px 0;
-  color: #ec4899;
+  color: var(--accent, #93b399);
 }
 
 .scenario-text {
@@ -610,7 +610,7 @@
 
 .possibilities h5 {
   margin: 0 0 8px 0;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .possibilities ul {
@@ -626,7 +626,7 @@
 /* Insights Tab */
 .tab-insights h4 {
   margin: 0 0 16px 0;
-  color: #a855f7;
+  color: var(--primary, #727b81);
 }
 
 .insights-list {

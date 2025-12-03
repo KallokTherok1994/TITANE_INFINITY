@@ -63,7 +63,7 @@
 .orch-title h1 {
   margin: 0;
   font-size: 1.75rem;
-  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  background: linear-gradient(135deg, var(--primary, #727b81), var(--accent, #93b399));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -75,11 +75,11 @@
 }
 
 .orch-error {
-  color: #ff4444;
-  background: #ff444422;
+  color: var(--danger, #8f7a7a);
+  background: rgba(143, 122, 122, 0.15);
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
-  border: 1px solid #ff444444;
+  border: 1px solid rgba(143, 122, 122, 0.3);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -111,14 +111,14 @@
 }
 
 .orch-tab:hover {
-  color: #fff;
-  background: #ffffff11;
+  color: var(--text, #e8e8e8);
+  background: var(--bg-hover, rgba(255, 255, 255, 0.04));
 }
 
 .orch-tab.active {
-  color: #fff;
-  background: linear-gradient(135deg, #00aaff44, #ff00ff44);
-  box-shadow: 0 0 10px #00aaff44;
+  color: var(--text, #e8e8e8);
+  background: linear-gradient(135deg, rgba(114, 123, 129, 0.3), rgba(147, 179, 153, 0.2));
+  box-shadow: 0 0 10px rgba(147, 179, 153, 0.25);
 }
 
 .orch-tab-icon {
@@ -134,15 +134,15 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 .orch-content {
-  background: #1a1a2eaa;
+  background: var(--bg-panel, #141414);
   border-radius: 1rem;
   padding: 1.5rem;
-  border: 1px solid #333;
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.08));
 }
 
 .orch-loading {
   text-align: center;
-  color: #666;
+  color: var(--text-muted, #9ca3af);
   padding: 2rem;
 }
 
@@ -185,16 +185,16 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #00ff88;
+  background: var(--success, #93b399);
 }
 
-.orch-status-indicator.warning { background: #ffaa00; }
-.orch-status-indicator.error { background: #ff4444; }
+.orch-status-indicator.warning { background: var(--warning, #a89f91); }
+.orch-status-indicator.error { background: var(--danger, #8f7a7a); }
 
 .orch-status-value {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #fff;
+  color: var(--text, #e8e8e8);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -223,12 +223,12 @@
 }
 
 .orch-provider-card:hover {
-  border-color: #00aaff;
+  border-color: var(--primary, #727b81);
 }
 
 .orch-provider-card.selected {
-  border-color: #00ff88;
-  box-shadow: 0 0 15px #00ff8844;
+  border-color: var(--accent, #93b399);
+  box-shadow: 0 0 15px rgba(147, 179, 153, 0.25);
 }
 
 .orch-provider-header {
@@ -241,7 +241,7 @@
 .orch-provider-name {
   font-size: 1.125rem;
   font-weight: bold;
-  color: #fff;
+  color: var(--text, #e8e8e8);
 }
 
 .orch-provider-status {
@@ -251,13 +251,13 @@
 }
 
 .orch-provider-status.online {
-  background: #00ff8833;
-  color: #00ff88;
+  background: rgba(147, 179, 153, 0.2);
+  color: var(--success, #93b399);
 }
 
 .orch-provider-status.offline {
-  background: #ff444433;
-  color: #ff4444;
+  background: rgba(143, 122, 122, 0.2);
+  color: var(--danger, #8f7a7a);
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -280,7 +280,7 @@
 .orch-coherence-value {
   font-size: 3rem;
   font-weight: bold;
-  background: linear-gradient(135deg, #00ffff, #00ff88);
+  background: linear-gradient(135deg, var(--primary, #727b81), var(--accent, #93b399));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -355,7 +355,7 @@
   padding: 1rem;
   background: #0f0f1a;
   border-radius: 0.5rem;
-  border-left: 3px solid #00aaff;
+  border-left: 3px solid var(--info, #8899aa);
 }
 
 .orch-event-time {
@@ -370,7 +370,7 @@
 
 .orch-event-category {
   font-size: 0.75rem;
-  color: #00aaff;
+  color: var(--info, #8899aa);
   text-transform: uppercase;
 }
 
@@ -407,14 +407,14 @@
 }
 
 .orch-mode-btn:hover {
-  border-color: #00aaff;
+  border-color: var(--info, #8899aa);
   color: #fff;
 }
 
 .orch-mode-btn.active {
-  border-color: #ff00ff;
+  border-color: var(--accent, #93b399);
   color: #fff;
-  background: #ff00ff22;
+  background: var(--accent, #93b399)22;
 }
 
 .orch-mode-icon {

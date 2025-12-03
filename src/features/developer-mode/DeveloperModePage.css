@@ -42,7 +42,7 @@
 .devmode-title .icon {
   width: 32px;
   height: 32px;
-  color: var(--accent-orange, #ff6b00);
+  color: var(--accent-orange, var(--warning, #a89f91));
 }
 
 .devmode-badge {
@@ -57,15 +57,15 @@
 }
 
 .devmode-badge.enabled {
-  background: rgba(0, 255, 136, 0.2);
-  color: #00ff88;
-  border: 1px solid rgba(0, 255, 136, 0.3);
+  background: rgba(147, 179, 153, 0.2);
+  color: var(--success, #93b399);
+  border: 1px solid rgba(147, 179, 153, 0.3);
 }
 
 .devmode-badge.disabled {
-  background: rgba(255, 68, 68, 0.2);
-  color: #ff4444;
-  border: 1px solid rgba(255, 68, 68, 0.3);
+  background: rgba(143, 122, 122, 0.2);
+  color: var(--danger, #8f7a7a);
+  border: 1px solid rgba(143, 122, 122, 0.3);
 }
 
 .devmode-controls {
@@ -91,23 +91,23 @@
 }
 
 .devmode-btn.primary {
-  background: linear-gradient(135deg, #ff6b00, #ff8c00);
-  color: #000;
+  background: linear-gradient(135deg, var(--primary, #727b81), var(--accent, #93b399));
+  color: var(--bg-base, #0a0a0a);
 }
 
 .devmode-btn.primary:hover {
-  background: linear-gradient(135deg, #ff8c00, #ffa500);
+  background: linear-gradient(135deg, var(--accent, #93b399), var(--primary, #727b81));
   transform: translateY(-1px);
 }
 
 .devmode-btn.danger {
-  background: rgba(255, 68, 68, 0.2);
-  color: #ff4444;
-  border: 1px solid rgba(255, 68, 68, 0.3);
+  background: rgba(143, 122, 122, 0.2);
+  color: var(--danger, #8f7a7a);
+  border: 1px solid rgba(143, 122, 122, 0.3);
 }
 
 .devmode-btn.danger:hover {
-  background: rgba(255, 68, 68, 0.3);
+  background: rgba(143, 122, 122, 0.3);
 }
 
 .devmode-btn.secondary {
@@ -173,7 +173,7 @@
 .devmode-card-title .icon {
   width: 20px;
   height: 20px;
-  color: var(--accent-orange, #ff6b00);
+  color: var(--accent-orange, var(--warning, #a89f91));
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -215,7 +215,7 @@
 .patch-input select:focus,
 .patch-input textarea:focus {
   outline: none;
-  border-color: var(--accent-orange, #ff6b00);
+  border-color: var(--accent-orange, var(--warning, #a89f91));
 }
 
 .patch-input textarea {
@@ -266,12 +266,12 @@
 
 .diff-line.addition {
   background: rgba(0, 255, 136, 0.1);
-  color: #00ff88;
+  color: var(--accent, #93b399);
 }
 
 .diff-line.deletion {
   background: rgba(255, 68, 68, 0.1);
-  color: #ff4444;
+  color: var(--danger, #8f7a7a);
 }
 
 .diff-line.context {
@@ -315,15 +315,15 @@
 }
 
 .history-item.applied {
-  border-color: #00ff88;
+  border-color: var(--accent, #93b399);
 }
 
 .history-item.failed {
-  border-color: #ff4444;
+  border-color: var(--danger, #8f7a7a);
 }
 
 .history-item.rolled-back {
-  border-color: #ffaa00;
+  border-color: var(--warning, #a89f91);
 }
 
 .history-item-info {
@@ -378,7 +378,7 @@
 
 .build-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ff6b00, #ff8c00);
+  background: linear-gradient(90deg, var(--warning, #a89f91), var(--warning, #a89f91));
   transition: width 0.3s ease;
 }
 
@@ -461,13 +461,13 @@
 .security-warning .icon {
   width: 24px;
   height: 24px;
-  color: #ff4444;
+  color: var(--danger, #8f7a7a);
   flex-shrink: 0;
 }
 
 .security-warning-text {
   font-size: 0.875rem;
-  color: #ff4444;
+  color: var(--danger, #8f7a7a);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════════
@@ -488,7 +488,7 @@
   padding: 1rem;
   background: rgba(255, 68, 68, 0.1);
   border-radius: var(--radius-md, 8px);
-  color: #ff4444;
+  color: var(--danger, #8f7a7a);
   font-size: 0.875rem;
 }
 

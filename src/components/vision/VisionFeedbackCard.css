@@ -79,7 +79,7 @@
 }
 
 .vision-feedback__badge--warning {
-  color: #ffc800;
+  color: var(--warning, #a89f91);
   background: rgba(255, 200, 0, 0.15);
 }
 
@@ -194,7 +194,7 @@
 }
 
 .vision-feedback__suggestion--high {
-  border-left: 3px solid #ff6b6b;
+  border-left: 3px solid var(--danger, #8f7a7a);
 }
 
 .vision-feedback__suggestion--medium {

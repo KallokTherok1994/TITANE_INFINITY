@@ -72,7 +72,7 @@
 }
 
 .filter-tab:hover { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.8); }
-.filter-tab.active { background: rgba(255, 255, 255, 0.1); color: #00fff7; }
+.filter-tab.active { background: rgba(255, 255, 255, 0.1); color: var(--primary, #727b81); }
 
 .search-input {
   background: rgba(255, 255, 255, 0.05);
@@ -86,7 +86,7 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #00fff7;
+  border-color: var(--primary, #727b81);
 }
 
 .history-list {

@@ -576,6 +576,7 @@ async fn main() {
         // PERSISTENCE ENGINE v∞.MPE - 100% SAVE Architecture
         // Event Log + Snapshots + Recovery (OPUS v∞.MPE)
         // ═══════════════════════════════════════════════════════════════
+        persistence::commands::titan_persistence_init,
         persistence::commands::titan_persist_event,
         persistence::commands::titan_force_snapshot,
         persistence::commands::titan_load_state,

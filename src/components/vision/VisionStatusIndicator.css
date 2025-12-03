@@ -121,12 +121,12 @@
 }
 
 .vision-status__dot--active {
-  --dot-color: #00ff96;
+  --dot-color: var(--accent, #93b399);
   animation: pulse-active 1.5s ease-in-out infinite;
 }
 
 .vision-status__dot--paused {
-  --dot-color: #ffc800;
+  --dot-color: var(--warning, #a89f91);
   animation: pulse-paused 2s ease-in-out infinite;
 }
 

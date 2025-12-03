@@ -180,7 +180,7 @@
 
 /* Category colors */
 .exp-domain-card--cognitive {
-  border-left: 3px solid #a78bfa;
+  border-left: 3px solid var(--primary, #727b81);
 }
 
 .exp-domain-card--business {

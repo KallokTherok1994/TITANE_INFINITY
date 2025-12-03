@@ -15,7 +15,7 @@
   --cloud-border: var(--border-subtle, #2a2a2a);
   --cloud-text: var(--text-primary, #ffffff);
   --cloud-text-dim: var(--text-secondary, #888888);
-  --cloud-accent: var(--accent-primary, #3b82f6);
+  --cloud-accent: var(--accent-primary, var(--info, #8899aa));
   --cloud-success: #22c55e;
   --cloud-error: #ef4444;
   --cloud-warning: #f59e0b;

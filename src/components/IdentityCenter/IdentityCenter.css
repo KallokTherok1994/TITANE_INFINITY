@@ -19,10 +19,10 @@
   --identity-border: #2a2a2a;
   --identity-text: #e0e0e0;
   --identity-text-muted: #808080;
-  --identity-accent: #00ffcc;
+  --identity-accent: var(--accent, #93b399);
   --identity-accent-dim: rgba(0, 255, 204, 0.15);
-  --identity-gold: #ffd700;
-  --identity-warning: #ff6b35;
+  --identity-gold: var(--warning, #a89f91);
+  --identity-warning: var(--warning, #a89f91);
   --identity-success: #27ae60;
   --identity-error: #e74c3c;
 

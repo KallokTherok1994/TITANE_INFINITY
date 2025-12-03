@@ -60,21 +60,21 @@
 }
 
 .status-badge[data-state="listening"] {
-  background: #06b6d4;
+  background: var(--info, #8899aa);
   color: white;
-  border-color: #06b6d4;
+  border-color: var(--info, #8899aa);
 }
 
 .status-badge[data-state="thinking"] {
-  background: #8b5cf6;
+  background: var(--primary, #727b81);
   color: white;
-  border-color: #8b5cf6;
+  border-color: var(--primary, #727b81);
 }
 
 .status-badge[data-state="speaking"] {
-  background: #3b82f6;
+  background: var(--info, #8899aa);
   color: white;
-  border-color: #3b82f6;
+  border-color: var(--info, #8899aa);
 }
 
 .latency-indicator {

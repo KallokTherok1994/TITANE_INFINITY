@@ -53,7 +53,7 @@
 .error-header h1 {
   font-size: 1.8rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #00d4ff 0%, #9d00ff 100%);
+  background: linear-gradient(135deg, var(--primary, #727b81) 0%, #9d00ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -71,7 +71,7 @@
   height: 60px;
   margin: 0 auto 1.5rem;
   border: 4px solid rgba(0, 212, 255, 0.2);
-  border-top-color: #00d4ff;
+  border-top-color: var(--primary, #727b81);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -82,7 +82,7 @@
 
 .healing-text {
   font-size: 1.2rem;
-  color: #00d4ff;
+  color: var(--primary, #727b81);
   margin-bottom: 1.5rem;
   font-weight: 500;
 }
@@ -97,7 +97,7 @@
 
 .healing-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #00d4ff 0%, #9d00ff 100%);
+  background: linear-gradient(90deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
   animation: progress 2s ease-in-out infinite;
 }
 
@@ -110,26 +110,26 @@
 /* Error Details */
 .error-details h2 {
   font-size: 1.4rem;
-  color: #fff;
+  color: var(--text, #e8e8e8);
   margin-bottom: 1rem;
 }
 
 .error-message {
   background: rgba(0, 0, 0, 0.3);
-  border-left: 3px solid #ff4444;
+  border-left: 3px solid var(--danger, #8f7a7a);
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 1rem;
 }
 
 .error-message strong {
-  color: #ff4444;
+  color: var(--danger, #8f7a7a);
   display: block;
   margin-bottom: 0.5rem;
 }
 
 .error-message pre {
-  color: #fff;
+  color: var(--text, #e8e8e8);
   font-family: 'Fira Code', monospace;
   font-size: 0.9rem;
   white-space: pre-wrap;
@@ -146,14 +146,14 @@
 }
 
 .error-stack summary {
-  color: #00d4ff;
+  color: var(--info, #8899aa);
   font-weight: 500;
   outline: none;
   user-select: none;
 }
 
 .error-stack summary:hover {
-  color: #33e0ff;
+  color: var(--primary, #727b81);
 }
 
 .error-stack pre {
@@ -185,20 +185,20 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
-  color: #fff;
-  box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+  background: linear-gradient(135deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
+  color: var(--text, #e8e8e8);
+  box-shadow: 0 4px 15px rgba(114, 123, 129, 0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(147, 179, 153, 0.4);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: var(--bg-hover, rgba(255, 255, 255, 0.1));
+  color: var(--text, #e8e8e8);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.08));
 }
 
 .btn-secondary:hover {

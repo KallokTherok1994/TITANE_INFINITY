@@ -51,8 +51,8 @@
 
 .status-success {
   background: rgba(0, 255, 127, 0.2);
-  color: #00ff7f;
-  border: 1px solid #00ff7f;
+  color: var(--accent, #93b399);
+  border: 1px solid var(--accent, #93b399);
 }
 
 .status-error {
@@ -183,7 +183,7 @@
   width: 100%;
   padding: 16px;
   background: #0a0a0f;
-  color: #00ff7f;
+  color: var(--accent, #93b399);
   border: none;
   font-family: 'Fira Code', 'Courier New', monospace;
   font-size: 13px;

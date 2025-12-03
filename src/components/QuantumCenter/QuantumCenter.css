@@ -18,12 +18,12 @@
   --quantum-border: #2a2a2a;
   --quantum-text: #e0e0e0;
   --quantum-text-muted: #808080;
-  --quantum-accent: #00ffcc;
+  --quantum-accent: var(--accent, #93b399);
   --quantum-accent-dim: rgba(0, 255, 204, 0.15);
-  --quantum-excellent: #00ff88;
-  --quantum-good: #88ff00;
-  --quantum-warning: #ffaa00;
-  --quantum-critical: #ff4444;
+  --quantum-excellent: var(--accent, #93b399);
+  --quantum-good: var(--accent, #93b399);
+  --quantum-warning: var(--warning, #a89f91);
+  --quantum-critical: var(--danger, #8f7a7a);
 
   display: flex;
   flex-direction: column;
@@ -617,7 +617,7 @@
   background: rgba(255, 215, 0, 0.1);
   border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 6px;
-  color: #ffd700;
+  color: var(--warning, #a89f91);
   font-size: 0.85rem;
 }
 

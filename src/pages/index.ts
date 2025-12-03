@@ -37,3 +37,5 @@ export { CloudCenter } from './CloudCenter';
 // Time & Agenda Engine v∞
 export { AgendaPage } from './AgendaPage';
 
+// Camera & Vision Engine v∞
+export { CameraPage } from './CameraPage';

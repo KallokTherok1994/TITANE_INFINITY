@@ -21,7 +21,7 @@
 .navigator-header h1 {
   font-size: 2.5rem;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(90deg, #00f5ff, #00aaff);
+  background: linear-gradient(90deg, #00f5ff, var(--info, #8899aa));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -104,8 +104,8 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: #00aaff;
-  box-shadow: 0 0 10px #00aaff;
+  background: var(--info, #8899aa);
+  box-shadow: 0 0 10px var(--info, #8899aa);
 }
 
 .timeline-item.selected .timeline-dot {
@@ -158,7 +158,7 @@
 }
 
 .detail-section h4 {
-  color: #00aaff;
+  color: var(--info, #8899aa);
   margin-bottom: 1rem;
   font-size: 1.1rem;
 }
@@ -202,7 +202,7 @@
 }
 
 .btn-restore {
-  background: linear-gradient(135deg, #00aaff, #0088cc);
+  background: linear-gradient(135deg, var(--info, #8899aa), #0088cc);
   color: white;
 }
 
@@ -223,7 +223,7 @@
 
 .btn-delete {
   background: rgba(255, 0, 0, 0.2);
-  color: #ff6666;
+  color: var(--danger, #8f7a7a);
   border: 1px solid rgba(255, 0, 0, 0.3);
 }
 

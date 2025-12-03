@@ -172,7 +172,7 @@
 }
 
 .living-metric__bar-fill--motion {
-  background: linear-gradient(90deg, #a78bfa, #64c8ff);
+  background: linear-gradient(90deg, var(--primary, #727b81), #64c8ff);
 }
 
 .living-metric__bar-fill--depth {
@@ -180,11 +180,11 @@
 }
 
 .living-metric__bar-fill--sound {
-  background: linear-gradient(90deg, #ec4899, #a78bfa);
+  background: linear-gradient(90deg, var(--accent, #93b399), var(--primary, #727b81));
 }
 
 .living-metric__bar-fill--cognitive {
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, var(--info, #8899aa), var(--primary, #727b81));
 }
 
 .living-metric__bar-fill--rhythm {

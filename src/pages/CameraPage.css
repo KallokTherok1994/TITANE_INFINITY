@@ -1,0 +1,441 @@
+/**
+ * TITANE_INFINITY v∞.19.3Ω — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   CAMERA PAGE STYLES - Monochrome Metal Theme
+   ═══════════════════════════════════════════════════════════════ */
+
+.camera-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  min-height: 100%;
+  background: var(--titane-bg-primary, #1a1d21);
+  color: var(--titane-text-primary, #c4c4c4);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--titane-border, #2a2d31);
+}
+
+.camera-page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #727b81, #93b399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.camera-version {
+  font-size: 0.875rem;
+  color: var(--titane-text-secondary, #6c7a89);
+  font-family: monospace;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   STATUS BAR
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-status-bar {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.camera-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--titane-bg-secondary, #22252a);
+  border-radius: 8px;
+  border: 1px solid var(--titane-border, #2a2d31);
+}
+
+.camera-status-indicator.active {
+  border-color: var(--titane-accent, #93b399);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--titane-text-secondary, #6c7a89);
+  transition: background 0.3s ease;
+}
+
+.camera-status-indicator.active .status-dot {
+  background: var(--titane-accent, #93b399);
+  box-shadow: 0 0 8px var(--titane-accent, #93b399);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.status-label {
+  font-size: 0.875rem;
+  color: var(--titane-text-secondary, #6c7a89);
+}
+
+.camera-status-indicator.active .status-label {
+  color: var(--titane-text-primary, #c4c4c4);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ERROR & WARNING
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-error {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  border-radius: 8px;
+  color: #dc3545;
+}
+
+.camera-warning {
+  padding: 12px 16px;
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+  border-radius: 8px;
+  color: var(--warning, #a89f91);
+  font-size: 0.875rem;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MAIN CONTENT - 3 COLUMN LAYOUT
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-page-content {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 24px;
+  flex: 1;
+}
+
+@media (max-width: 1200px) {
+  .camera-page-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CONTROLS PANEL
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: var(--titane-bg-secondary, #22252a);
+  border-radius: 12px;
+  border: 1px solid var(--titane-border, #2a2d31);
+}
+
+.camera-controls-panel h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--titane-text-primary, #c4c4c4);
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.control-group h3 {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+  color: var(--titane-text-secondary, #6c7a89);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.camera-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--titane-bg-tertiary, #2a2d32);
+  border: 1px solid var(--titane-border, #3a3d42);
+  border-radius: 8px;
+  color: var(--titane-text-primary, #c4c4c4);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.camera-btn:hover:not(:disabled) {
+  background: var(--titane-primary, #727b81);
+  border-color: var(--titane-primary, #727b81);
+}
+
+.camera-btn.active {
+  background: var(--titane-accent, #93b399);
+  border-color: var(--titane-accent, #93b399);
+  color: var(--titane-bg-primary, #1a1d21);
+}
+
+.camera-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Config Toggles */
+.config-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.config-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--titane-accent, #93b399);
+}
+
+.config-toggle span {
+  font-size: 0.875rem;
+  color: var(--titane-text-primary, #c4c4c4);
+}
+
+/* Ethical Disclaimer */
+.camera-ethical-disclaimer {
+  margin-top: auto;
+  padding: 16px;
+  background: rgba(147, 179, 153, 0.1);
+  border: 1px solid rgba(147, 179, 153, 0.2);
+  border-radius: 8px;
+}
+
+.camera-ethical-disclaimer h4 {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  color: var(--titane-accent, #93b399);
+}
+
+.camera-ethical-disclaimer p {
+  margin: 4px 0;
+  font-size: 0.75rem;
+  color: var(--titane-text-secondary, #6c7a89);
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CAMERA PREVIEW CONTAINER
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-preview-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  background: var(--titane-bg-secondary, #22252a);
+  border-radius: 12px;
+  border: 1px solid var(--titane-border, #2a2d31);
+  overflow: hidden;
+}
+
+.camera-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  text-align: center;
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  opacity: 0.3;
+}
+
+.camera-placeholder p {
+  margin: 0;
+  color: var(--titane-text-secondary, #6c7a89);
+}
+
+.placeholder-hint {
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   ANALYSIS PANEL
+   ───────────────────────────────────────────────────────────────── */
+
+.camera-analysis-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background: var(--titane-bg-secondary, #22252a);
+  border-radius: 12px;
+  border: 1px solid var(--titane-border, #2a2d31);
+  overflow-y: auto;
+}
+
+.camera-analysis-panel h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--titane-text-primary, #c4c4c4);
+}
+
+.analysis-section {
+  padding: 16px;
+  background: var(--titane-bg-tertiary, #2a2d32);
+  border-radius: 8px;
+}
+
+.analysis-section h3 {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  margin: 0 0 12px;
+  color: var(--titane-text-primary, #c4c4c4);
+}
+
+/* Affect Meters */
+.affect-meters {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.affect-meter {
+  display: grid;
+  grid-template-columns: 80px 1fr 50px;
+  align-items: center;
+  gap: 12px;
+}
+
+.affect-meter label {
+  font-size: 0.8125rem;
+  color: var(--titane-text-secondary, #6c7a89);
+}
+
+.meter-bar {
+  height: 8px;
+  background: var(--titane-bg-primary, #1a1d21);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.affect-meter span {
+  font-size: 0.8125rem;
+  font-family: monospace;
+  color: var(--titane-text-primary, #c4c4c4);
+  text-align: right;
+}
+
+.affect-disclaimer {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--titane-border, #3a3d42);
+  font-size: 0.75rem;
+  color: var(--titane-text-secondary, #6c7a89);
+  font-style: italic;
+}
+
+/* Body Stats */
+.body-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.body-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.body-stat label {
+  font-size: 0.8125rem;
+  color: var(--titane-text-secondary, #6c7a89);
+}
+
+.body-stat span {
+  font-size: 0.8125rem;
+  color: var(--titane-text-primary, #c4c4c4);
+  font-family: monospace;
+}
+
+/* Camera Stats */
+.camera-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-item label {
+  font-size: 0.8125rem;
+  color: var(--titane-text-secondary, #6c7a89);
+}
+
+.stat-item span {
+  font-size: 0.8125rem;
+  color: var(--titane-text-primary, #c4c4c4);
+  font-family: monospace;
+}
+
+/* Analysis Placeholder */
+.analysis-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 40px;
+  text-align: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.analysis-placeholder .placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.3;
+}
+
+.analysis-placeholder p {
+  margin: 0;
+  color: var(--titane-text-secondary, #6c7a89);
+}

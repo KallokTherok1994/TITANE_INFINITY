@@ -36,7 +36,7 @@
   width: 40px;
   height: 40px;
   border: 3px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #3b82f6;
+  border-top-color: var(--info, #8899aa);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -292,7 +292,7 @@
 
 .twin-style-bar__fill {
   height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background: linear-gradient(90deg, var(--info, #8899aa), var(--primary, #727b81));
   border-radius: 3px;
   transition: width 0.5s ease;
 }
@@ -428,8 +428,8 @@
 }
 
 .twin-evolution__phase-step--current .twin-evolution__phase-dot {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: var(--info, #8899aa);
+  border-color: var(--info, #8899aa);
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
 }
 
@@ -439,7 +439,7 @@
 }
 
 .twin-evolution__phase-step--current .twin-evolution__phase-label {
-  color: #3b82f6;
+  color: var(--info, #8899aa);
   font-weight: 600;
 }
 

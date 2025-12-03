@@ -20,7 +20,7 @@
   --debug-text: #c4c4c4;
   --debug-text-dim: #727b81;
   --debug-accent: #7c3aed;
-  --debug-accent-light: #a78bfa;
+  --debug-accent-light: var(--primary, #727b81);
   --debug-success: #10b981;
   --debug-error: #ef4444;
   --debug-warning: #f59e0b;

@@ -23,11 +23,15 @@ function createMockMultimodalState(overrides?: Partial<{
   stability: number;
 }>): MultimodalState {
   const state = getDefaultMultimodalState();
+  const now = Date.now();
   state.fusedScores = {
-    globalEnergy: { value: overrides?.energy ?? 0.5, confidence: 0.8, contributors: [] },
-    globalTension: { value: overrides?.tension ?? 0.5, confidence: 0.8, contributors: [] },
-    globalEngagement: { value: overrides?.engagement ?? 0.5, confidence: 0.8, contributors: [] },
-    globalStability: { value: overrides?.stability ?? 0.5, confidence: 0.8, contributors: [] },
+    globalEnergy: { value: overrides?.energy ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion' as const, timestamp: now },
+    globalTension: { value: overrides?.tension ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion' as const, timestamp: now },
+    globalEngagement: { value: overrides?.engagement ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion' as const, timestamp: now },
+    globalStability: { value: overrides?.stability ?? 0.5, confidence: 0.8, variance: 0.1, origin: 'fusion' as const, timestamp: now },
+    correctedEnergy: overrides?.energy ?? 0.5,
+    correctedTension: overrides?.tension ?? 0.5,
+    correctedEngagement: overrides?.engagement ?? 0.5,
   };
   return state;
 }

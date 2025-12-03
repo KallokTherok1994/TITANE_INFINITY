@@ -21,7 +21,7 @@
 .governance-header h1 {
   font-size: 2.5rem;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(90deg, #ff0000, #ff8800);
+  background: linear-gradient(90deg, var(--danger, #8f7a7a), var(--warning, #a89f91));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -93,7 +93,7 @@
 .audit-table th {
   padding: 0.75rem;
   text-align: left;
-  color: #00aaff;
+  color: var(--info, #8899aa);
   border-bottom: 2px solid rgba(0, 170, 255, 0.3);
 }
 
@@ -120,11 +120,11 @@
 }
 
 .result-allowed {
-  color: #00ff88;
+  color: var(--accent, #93b399);
 }
 
 .result-denied {
-  color: #ff6666;
+  color: var(--danger, #8f7a7a);
 }
 
 .audit-stats {
@@ -148,7 +148,7 @@
 }
 
 .permission-matrix .warning {
-  color: #ff8800;
+  color: var(--warning, #a89f91);
   font-size: 0.85rem;
   margin-bottom: 1rem;
   padding: 0.5rem;
@@ -166,7 +166,7 @@
 .matrix-table th {
   padding: 0.75rem;
   background: rgba(0, 0, 0, 0.5);
-  color: #00aaff;
+  color: var(--info, #8899aa);
   text-align: center;
 }
 
@@ -182,7 +182,7 @@
 
 .matrix-table tr.selected {
   background: rgba(0, 170, 255, 0.1);
-  border-left: 3px solid #00aaff;
+  border-left: 3px solid var(--info, #8899aa);
 }
 
 .matrix-table td:first-child {
@@ -206,7 +206,7 @@
 .matrix-info h3 {
   margin: 0 0 1rem 0;
   font-size: 1rem;
-  color: #00aaff;
+  color: var(--info, #8899aa);
 }
 
 .hierarchy {
@@ -243,7 +243,7 @@
   padding: 1rem;
   margin-bottom: 0.75rem;
   background: rgba(255, 136, 0, 0.1);
-  border-left: 3px solid #ff8800;
+  border-left: 3px solid var(--warning, #a89f91);
   border-radius: 6px;
 }
 
@@ -257,7 +257,7 @@
 }
 
 .alert-content strong {
-  color: #ff8800;
+  color: var(--warning, #a89f91);
 }
 
 .alert-content small {

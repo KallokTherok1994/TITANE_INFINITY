@@ -144,6 +144,8 @@ import {
   SelfHeal,
   AdaptiveEngine,
   Memory,
+  AgendaPage,
+  CameraPage,
 } from './pages';
 
 /**
@@ -209,19 +211,38 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
-  // Sidebar items configuration
+  // Sidebar items configuration - v∞.19.3 COMPLETE
   const sidebarItems = [
+    // ═══ PRINCIPAL ═══
     { id: '/', label: 'Tableau de bord', icon: '📊' },
-    { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'v15.1' },
+    { id: '/chat', label: 'Chat IA', icon: '💬', badge: 'OMEGA' },
     { id: '/cognitive', label: 'État Cognitif', icon: '🧠' },
-    { id: '/progression', label: 'Progression', icon: '⚡', badge: 'NEW' },
+    { id: '/progression', label: 'Progression', icon: '⚡' },
+    { id: '/agenda', label: 'Agenda', icon: '📅', badge: 'v∞' },
+    { id: '/camera', label: 'Vision', icon: '📷', badge: 'v∞' },
+
+    // ═══ CENTRES UNIFIÉS ═══
+    { id: '/one-core', label: 'ONE CORE', icon: '🎯', badge: 'OPUS#6' },
+    { id: '/system-center', label: 'Centre Système', icon: '⚙️' },
+    { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.3' },
+    { id: '/design-center', label: 'Design & Apparence', icon: '🎨' },
+    { id: '/governance-center', label: 'Gouvernance', icon: '🛡️' },
+    { id: '/qa-monitoring', label: 'QA & Monitoring', icon: '🧪', badge: 'OPUS#7' },
+    { id: '/developer-mode', label: 'Mode Développeur', icon: '💻', badge: 'OPUS#10' },
+
+    // ═══ CENTRES COGNITIFS ═══
     { id: '/evolution-center', label: 'Évolution Cognitive', icon: '🧬', badge: 'OPUS#4' },
-    { id: '/system-center', label: 'Centre Système', icon: '⚙️', badge: 'v∞' },
-    { id: '/design-center', label: 'Design & Apparence', icon: '🎨', badge: 'v16' },
-    { id: '/governance-center', label: 'Gouvernance & Sécurité', icon: '🛡️', badge: 'v∞' },
-    { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.2' },
-    { id: '/time-navigator', label: 'Navigateur Temporel', icon: '⏱️', badge: 'v∞' },
-    { id: '/multi-ai', label: 'Système Multi-IA', icon: '🌌', badge: 'Phase 4' },
+    { id: '/orchestration-center', label: 'Orchestration', icon: '🎛️', badge: 'OPUS#5' },
+    { id: '/meta-center', label: 'Meta Orchestrator', icon: '🌐', badge: 'OPUS#18' },
+    { id: '/hyper-center', label: 'Hyper Intelligence', icon: '✨', badge: 'OPUS#20' },
+    { id: '/quantum-center', label: 'Quantum Layer', icon: '⚛️', badge: 'OPUS#17' },
+    { id: '/identity-center', label: 'Identité Système', icon: '🎭', badge: 'OPUS#15' },
+    { id: '/memory-evolution', label: 'Mémoire Évolutive', icon: '🧠', badge: 'OPUS#14' },
+    { id: '/reality-center', label: 'Reality Renderer', icon: '🌌', badge: 'OPUS#19' },
+
+    // ═══ MOTEURS ═══
+    { id: '/multi-ai', label: 'Système Multi-IA', icon: '🤖' },
+    { id: '/time-navigator', label: 'Navigateur Temporel', icon: '⏱️' },
     { id: '/helios', label: 'Helios', icon: '☀️' },
     { id: '/nexus', label: 'Nexus', icon: '🔗' },
     { id: '/harmonia', label: 'Harmonia', icon: '🎵' },
@@ -268,7 +289,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v16.2.2 - Chat IA + TTS Operationnel</span>
+              <span>v∞.19.3Ω — Singularity Architecture • 20 Engines • Full OPUS</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }
@@ -314,6 +335,20 @@ const AppRouter: React.FC = () => {
           } />
           <Route path="/progression" element={<ProgressionPage />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+
+          {/* ✨ v∞ AGENDA - Gestion Planning & Événements */}
+          <Route path="/agenda" element={
+            <ErrorBoundary context="AgendaPage">
+              <AgendaPage />
+            </ErrorBoundary>
+          } />
+
+          {/* ✨ v∞ CAMERA - Centre Vision & Analyse Visuelle */}
+          <Route path="/camera" element={
+            <ErrorBoundary context="CameraPage">
+              <CameraPage />
+            </ErrorBoundary>
+          } />
 
           {/* ✨ v16 - DESIGN CENTER UNIFIÉ (Design System + Apparence + Tokens Dynamiques) */}
           <Route path="/design-center" element={

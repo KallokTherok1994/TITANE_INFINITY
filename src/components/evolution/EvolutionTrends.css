@@ -57,7 +57,7 @@
 }
 
 .summary-item.improving { border-bottom: 2px solid #22c55e; }
-.summary-item.stable { border-bottom: 2px solid #3b82f6; }
+.summary-item.stable { border-bottom: 2px solid var(--info, #8899aa); }
 .summary-item.degrading { border-bottom: 2px solid #ef4444; }
 .summary-item.volatile { border-bottom: 2px solid #f59e0b; }
 

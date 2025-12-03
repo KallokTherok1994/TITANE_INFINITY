@@ -54,7 +54,7 @@
 }
 
 .errors-card--warning {
-  --error-glow: #ff8c42;
+  --error-glow: var(--warning, #a89f91);
   border-color: rgba(255, 140, 66, 0.2);
 }
 
@@ -151,7 +151,7 @@
 }
 
 .errors-card--warning .errors-card__count {
-  color: #ff8c42;
+  color: var(--warning, #a89f91);
 }
 
 .errors-card--info .errors-card__count {

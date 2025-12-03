@@ -73,7 +73,7 @@
 }
 
 .vision-debug__close:hover {
-  color: #ff6b6b;
+  color: var(--danger, #8f7a7a);
   background: rgba(255, 107, 107, 0.1);
 }
 
@@ -129,7 +129,7 @@
 }
 
 .text-red {
-  color: #ff6b6b !important;
+  color: var(--danger, #8f7a7a) !important;
 }
 
 .text-yellow {

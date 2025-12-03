@@ -104,7 +104,7 @@
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
-  color: #a78bfa;
+  color: var(--primary, #727b81);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -139,7 +139,7 @@
 
 .xp-bar__xp {
   font-size: 12px;
-  color: #a78bfa;
+  color: var(--primary, #727b81);
   font-weight: 500;
 }
 
@@ -160,7 +160,7 @@
 
 .xp-bar__fill {
   height: 100%;
-  background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+  background: linear-gradient(90deg, var(--primary, #727b81), var(--info, #8899aa));
   border-radius: 4px;
   transition: width 0.3s ease;
   box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
@@ -293,7 +293,7 @@
 
 .evolution-tracker__progress-pct {
   font-weight: 600;
-  color: #a78bfa;
+  color: var(--primary, #727b81);
 }
 
 .evolution-tracker__requirements {

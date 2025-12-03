@@ -39,19 +39,19 @@
 
 /* État enregistrement */
 .dictation-button.recording {
-  background: var(--accent-danger, #ff4444);
+  background: var(--accent-danger, var(--danger, #8f7a7a));
   color: #fff;
   animation: dictation-glow 1s ease-in-out infinite;
 }
 
 .dictation-button.recording:hover {
-  background: var(--accent-danger-hover, #ff6666);
+  background: var(--accent-danger-hover, var(--danger, #8f7a7a));
 }
 
 /* État erreur */
 .dictation-button.error {
   background: var(--surface-danger, rgba(255, 68, 68, 0.2));
-  color: var(--accent-danger, #ff4444);
+  color: var(--accent-danger, var(--danger, #8f7a7a));
 }
 
 /* Icône */
@@ -64,7 +64,7 @@
 .dictation-pulse {
   position: absolute;
   inset: -4px;
-  border: 2px solid var(--accent-danger, #ff4444);
+  border: 2px solid var(--accent-danger, var(--danger, #8f7a7a));
   border-radius: 12px;
   opacity: 0;
   animation: dictation-pulse 1.5s ease-out infinite;

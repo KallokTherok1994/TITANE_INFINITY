@@ -5,8 +5,9 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 2rem;
-  background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
-  border-radius: 16px;
+  background: linear-gradient(135deg, var(--bg-panel, #141414) 0%, var(--bg-surface, #1a1a1a) 100%);
+  border-radius: var(--radius-xl, 12px);
+  border: 1px solid var(--border-default, rgba(255, 255, 255, 0.08));
 }
 
 .voice-header {
@@ -18,15 +19,15 @@
 .voice-header h3 {
   margin: 0;
   font-size: 1.5rem;
-  color: #fff;
+  color: var(--text, #e8e8e8);
 }
 
 .voice-toggle {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%);
+  background: linear-gradient(135deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
   border: none;
-  border-radius: 12px;
-  color: #fff;
+  border-radius: var(--radius-lg, 6px);
+  color: var(--text, #e8e8e8);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -34,11 +35,11 @@
 
 .voice-toggle:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 5px 20px rgba(114, 123, 129, 0.4);
 }
 
 .voice-toggle.active {
-  background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+  background: linear-gradient(135deg, var(--danger, #8f7a7a) 0%, #7a6868 100%);
   animation: pulse 1.5s infinite;
 }
 
@@ -57,21 +58,21 @@
 }
 
 .status-badge.recording {
-  background: rgba(239, 68, 68, 0.2);
-  border: 1px solid #ef4444;
-  color: #fca5a5;
+  background: rgba(143, 122, 122, 0.2);
+  border: 1px solid var(--danger, #8f7a7a);
+  color: var(--danger, #8f7a7a);
 }
 
 .status-badge.transcribing {
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid #3b82f6;
-  color: #93c5fd;
+  background: rgba(136, 153, 170, 0.2);
+  border: 1px solid var(--info, #8899aa);
+  color: var(--info, #8899aa);
 }
 
 .status-badge.speaking {
-  background: rgba(16, 185, 129, 0.2);
-  border: 1px solid #10b981;
-  color: #6ee7b7;
+  background: rgba(147, 179, 153, 0.2);
+  border: 1px solid var(--success, #93b399);
+  color: var(--success, #93b399);
 }
 
 .voice-transcript {
@@ -83,21 +84,21 @@
 
 .voice-transcript h4 {
   margin: 0 0 1rem 0;
-  color: #a78bfa;
+  color: var(--accent, #93b399);
 }
 
 .voice-transcript p {
   margin: 0 0 1rem 0;
-  color: #fff;
+  color: var(--text, #e8e8e8);
   line-height: 1.6;
 }
 
 .voice-transcript button {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #00d4ff 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
   border: none;
-  border-radius: 8px;
-  color: #fff;
+  border-radius: var(--radius-lg, 6px);
+  color: var(--text, #e8e8e8);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -105,5 +106,5 @@
 
 .voice-transcript button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+  box-shadow: 0 5px 15px rgba(147, 179, 153, 0.3);
 }

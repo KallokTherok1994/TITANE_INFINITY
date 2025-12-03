@@ -81,12 +81,12 @@
 }
 
 .xp-streak-count {
-  color: #ff7a00;
+  color: var(--warning, #a89f91);
   font-weight: 700;
 }
 
 .xp-streak-multiplier {
-  color: #ffaa00;
+  color: var(--warning, #a89f91);
   font-weight: 600;
   font-size: 10px;
   background: rgba(255, 170, 0, 0.2);
@@ -172,7 +172,7 @@
 .xp-gain-animation {
   font-size: 11px;
   font-weight: 700;
-  color: #00ff88;
+  color: var(--accent, #93b399);
   animation: xp-gain-float 1s ease-out forwards;
 }
 
@@ -182,7 +182,7 @@
   top: -20px;
   font-size: 14px;
   font-weight: 700;
-  color: #00ff88;
+  color: var(--accent, #93b399);
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
   animation: xp-gain-popup 1.5s ease-out forwards;
 }

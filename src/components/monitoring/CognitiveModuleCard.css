@@ -288,7 +288,7 @@
 
 /* Status Variants */
 .cognitive-module-card--warning .cognitive-module-card__value {
-  color: #ff8c42;
+  color: var(--warning, #a89f91);
 }
 
 .cognitive-module-card--critical .cognitive-module-card__value {

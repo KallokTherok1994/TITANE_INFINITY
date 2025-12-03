@@ -135,7 +135,7 @@
 
 .system-status-card__badge--helios {
   background: rgba(255, 107, 53, 0.15);
-  color: #ff8c42;
+  color: var(--warning, #a89f91);
   border: 1px solid rgba(255, 107, 53, 0.3);
 }
 

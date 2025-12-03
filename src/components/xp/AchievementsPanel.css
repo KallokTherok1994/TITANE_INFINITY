@@ -69,7 +69,7 @@
 
 .achievements-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #ffd700, #ffaa00);
+  background: linear-gradient(90deg, var(--warning, #a89f91), var(--warning, #a89f91));
   border-radius: 2px;
   transition: width 0.3s ease;
 }
@@ -239,7 +239,7 @@
   right: 8px;
   font-size: 10px;
   font-weight: 700;
-  color: #ffd700;
+  color: var(--warning, #a89f91);
   background: rgba(255, 215, 0, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
@@ -295,7 +295,7 @@
   background: rgba(255, 215, 0, 0.1);
   border-radius: 12px;
   font-size: 11px;
-  color: #ffd700;
+  color: var(--warning, #a89f91);
   animation: recent-pulse 2s ease-in-out infinite;
 }
 

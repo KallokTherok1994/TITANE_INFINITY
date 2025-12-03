@@ -78,7 +78,7 @@
 }
 
 .voice-indicator.available {
-  color: var(--success, #00ff7f);
+  color: var(--success, var(--accent, #93b399));
   background: rgba(0, 255, 127, 0.1);
 }
 

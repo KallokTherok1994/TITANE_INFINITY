@@ -324,6 +324,6 @@
 }
 
 .chat-mode-selector__menu::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00d4ff 0%, #a855f7 100%);
+  background: linear-gradient(180deg, var(--primary, #727b81) 0%, var(--primary, #727b81) 100%);
   border-radius: 3px;
 }
