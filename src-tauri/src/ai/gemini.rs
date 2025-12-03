@@ -82,15 +82,24 @@ impl GeminiClient {
     pub async fn query(&self, request: &AIRequest) -> AIResult<AIResponse> {
         let url = format!("{}?key={}", GEMINI_API_URL, self.api_key);
 
+        // Force French language system prompt to prevent English responses
+        let system_instruction = "IMPORTANT: Tu DOIS répondre UNIQUEMENT en français. Ne réponds JAMAIS en anglais. Toutes tes réponses doivent être en français, quelles que soient les circonstances. Si tu détectes que tu es en train de répondre en anglais, arrête-toi immédiatement et recommence en français.";
+        
+        let full_prompt = if request.prompt.to_lowercase().contains("réponds en français") || request.prompt.to_lowercase().contains("respond in french") {
+            request.prompt.clone()
+        } else {
+            format!("{}\n\n{}", system_instruction, request.prompt)
+        };
+
         let gemini_request = GeminiRequest {
             contents: vec![GeminiContent {
                 parts: vec![GeminiPart {
-                    text: request.prompt.clone(),
+                    text: full_prompt,
                 }],
             }],
             generation_config: GeminiConfig {
                 temperature: request.temperature,
-                max_output_tokens: request.max_tokens,
+                max_output_tokens: request.max_output_tokens,
             },
         };
 

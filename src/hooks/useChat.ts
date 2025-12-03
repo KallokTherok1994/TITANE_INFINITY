@@ -86,7 +86,7 @@ const normalizeMessages = (messages: MaybeAIMessage[], getUiId: () => string): A
   }
 
   const now = Date.now();
-  return messages.map((message, index) => {
+  const normalized = messages.map((message, index) => {
     const role = message?.role === 'assistant' || message?.role === 'system' || message?.role === 'user'
       ? message.role
       : 'assistant';
@@ -111,7 +111,28 @@ const normalizeMessages = (messages: MaybeAIMessage[], getUiId: () => string): A
       metadata
     };
   });
+
+  // ✅ FIX RÉPÉTITIONS: Déduplication par uiId et contenu
+  return deduplicateMessages(normalized);
 };
+
+/**
+ * ✅ FIX CHAT RÉPÉTITIONS (Super Prompt #9 - Vision Engine)
+ * Déduplique les messages basé sur uiId ou combinaison timestamp+contenu
+ */
+function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
+  const seen = new Set<string>();
+  return messages.filter(msg => {
+    // Utiliser uiId si disponible, sinon timestamp+contenu tronqué
+    const key = msg.metadata?.uiId || `${msg.timestamp}-${msg.content.substring(0, 50)}`;
+    if (seen.has(key)) {
+      console.log('[useChat OMNIS] ⚠️ Message dupliqué détecté et filtré:', key.substring(0, 30));
+      return false; // Skip duplicate
+    }
+    seen.add(key);
+    return true;
+  });
+}
 
 interface UseChatOptions {
   mode?: ChatMode;

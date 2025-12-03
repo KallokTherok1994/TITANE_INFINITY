@@ -1,15 +1,19 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.23.0 — DEV-SUDO MODE HANDLER
+ *   TITANE∞ v∞.24.0 — DEV-SUDO MODE HANDLER
  *   Détection et exécution des commandes développeur dans le Chat IA
- *   Intégration SUPER PROMPTS #4/#5/#6/#7 UNIFIÉS
+ *   Intégration SUPER PROMPTS #4/#5/#6/#7/#8/#9 UNIFIÉS
  *   Super Prompt #7: MASTER DEV ENGINE — Full IDE Mode
+ *   Super Prompt #8: SINGULARITY MIND ENGINE — Cerveau métacognitif
+ *   Super Prompt #9: VISION ENGINE — Analyse UI/UX + Design System
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import { invoke } from '@tauri-apps/api/core';
 import * as ExtendedHandlers from './devSudoExtendedHandlers';
 import * as IDEHandlers from './devSudoIDEHandlers';
+import * as SingularityHandlers from './devSudoSingularityHandlers';
+import * as VisionHandlers from './devSudoVisionHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -95,7 +99,22 @@ export type DevSudoAction =
   | 'run-tests'
   | 'master-analysis'
   | 'architect-refactor'
-  | 'code-review';
+  | 'code-review'
+
+  // Singularity Mind Engine (Super Prompt #8)
+  | 'singularity-scan'
+  | 'brain-analysis'
+  | 'cognitive-check'
+  | 'meta-repair'
+  | 'evolution-report'
+  | 'coherence-check'
+
+  // Vision Engine (Super Prompt #9)
+  | 'vision-analyze'
+  | 'ui-diagnostic'
+  | 'design-review'
+  | 'frontend-optimize'
+  | 'visual-repair';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -381,6 +400,67 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'analyze-tauri': [
     /^analyze\s+tauri$/i,
     /^analyse\s+tauri$/i,
+  ],
+
+  // Singularity Mind Engine patterns (Super Prompt #8)
+  'singularity-scan': [
+    /^singularity\s+scan$/i,
+    /^scan\s+singularity$/i,
+    /^analyse\s+singularit\u00e9$/i,
+    /^scan\s+cerveau$/i,
+  ],
+  'brain-analysis': [
+    /^brain\s+analysis$/i,
+    /^analyse\s+(du\s+)?cerveau$/i,
+    /^comprendre\s+(le\s+)?cerveau$/i,
+  ],
+  'cognitive-check': [
+    /^cognitive\s+check$/i,
+    /^v\u00e9rification\s+cognitive$/i,
+    /^check\s+cognition$/i,
+  ],
+  'meta-repair': [
+    /^meta[- ]repair$/i,
+    /^r\u00e9paration\s+m\u00e9ta$/i,
+    /^repair\s+engines?$/i,
+  ],
+  'evolution-report': [
+    /^evolution\s+report$/i,
+    /^rapport\s+\u00e9volution$/i,
+    /^apprentissage$/i,
+  ],
+  'coherence-check': [
+    /^coherence\s+check$/i,
+    /^v\u00e9rification\s+coh\u00e9rence$/i,
+    /^check\s+coh\u00e9rence$/i,
+  ],
+
+  // Vision Engine patterns (Super Prompt #9)
+  'vision-analyze': [
+    /^vision\s+analys[ei]s?$/i,
+    /^analyse\s+vision$/i,
+    /^voir\s+(l')?interface$/i,
+    /^regarde\s+(l')?ui$/i,
+  ],
+  'ui-diagnostic': [
+    /^ui\s+diagnostic$/i,
+    /^diagnostic\s+ui$/i,
+    /^analyse\s+(l')?interface$/i,
+  ],
+  'design-review': [
+    /^design\s+review$/i,
+    /^revue\s+(de\s+)?design$/i,
+    /^analyse\s+(le\s+)?design$/i,
+  ],
+  'frontend-optimize': [
+    /^frontend\s+optimiz[ae]$/i,
+    /^optimise\s+(le\s+)?frontend$/i,
+    /^am\u00e9liore\s+(l')?ui$/i,
+  ],
+  'visual-repair': [
+    /^visual\s+repair$/i,
+    /^r\u00e9paration\s+visuelle$/i,
+    /^r\u00e9pare\s+(l')?ui$/i,
   ],
 };
 
@@ -707,10 +787,48 @@ export async function executeDevSudoCommand(
       case 'analyze-tauri':
         return await IDEHandlers.handleAnalyzeTauri();
 
+      // Singularity Mind Engine handlers (v∞.24.0 - Super Prompt #8)
+      case 'singularity-scan':
+        return await SingularityHandlers.handleSingularityScan();
+
+      case 'brain-analysis':
+        return await SingularityHandlers.handleBrainAnalysis();
+
+      case 'cognitive-check':
+        return await SingularityHandlers.handleCognitiveCheck();
+
+      case 'meta-repair':
+        return await SingularityHandlers.handleMetaRepair();
+
+      case 'evolution-report':
+        return await SingularityHandlers.handleEvolutionReport();
+
+      case 'coherence-check':
+        return await SingularityHandlers.handleCoherenceCheck();
+
+      case 'repair-component':
+        return await SingularityHandlers.handleRepairComponent(command.params.target as string);
+
+      // Vision Engine handlers (v∞.24.0 - Super Prompt #9)
+      case 'vision-analyze':
+        return await VisionHandlers.handleVisionAnalyze();
+
+      case 'ui-diagnostic':
+        return await VisionHandlers.handleUIDiagnostic();
+
+      case 'design-review':
+        return await VisionHandlers.handleDesignReview();
+
+      case 'frontend-optimize':
+        return await VisionHandlers.handleFrontendOptimize();
+
+      case 'visual-repair':
+        return await VisionHandlers.handleVisualRepair();
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.23.0 — MASTER DEV ENGINE**\n\n**Commandes disponibles** (61 total):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7):\n- open/view/create file [path]\n- patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target]\n- auto-import, generate module [name]\n- run tests, master analysis\n- architect refactor, code review [target]`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.24.0 — MASTER DEV + SINGULARITY MIND + VISION ENGINE**\n\n**Commandes disponibles** (72 total):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair`,
           success: false,
         };
     }
