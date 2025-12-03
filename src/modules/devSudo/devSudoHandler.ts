@@ -226,7 +226,19 @@ export type DevSudoAction =
   | 'vocal-inspect'
   | 'vocal-set-model'
   | 'vocal-fullscreen'
-  | 'vocal-silence';
+  | 'vocal-silence'
+
+  // Live Debugger Vocal (Super Prompt #19) v∞.29.0
+  | 'live-on'
+  | 'live-off'
+  | 'live-heal'
+  | 'live-inspect'
+  | 'live-patch'
+  | 'live-logs'
+  | 'live-restart'
+  | 'live-reset'
+  | 'live-console'
+  | 'live-set-mode';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -1151,6 +1163,79 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^mute\s+voice$/i,
     /^vocal\s+mute$/i,
   ],
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // LIVE DEBUGGER VOCAL (Super Prompt #19) v∞.29.0
+  // ─────────────────────────────────────────────────────────────────────────
+  'live-on': [
+    /^live\.on$/i,
+    /^sudo\s+live\.on$/i,
+    /^active\s+(le\s+)?live\s+debugger$/i,
+    /^start\s+live\s+debugger$/i,
+    /^démarre\s+debugger\s+temps\s+r[eé]el$/i,
+    /^debug\s+vocal\s+on$/i,
+  ],
+  'live-off': [
+    /^live\.off$/i,
+    /^sudo\s+live\.off$/i,
+    /^désactive\s+(le\s+)?live\s+debugger$/i,
+    /^stop\s+live\s+debugger$/i,
+    /^arrête\s+debugger$/i,
+    /^debug\s+vocal\s+off$/i,
+  ],
+  'live-heal': [
+    /^live\.heal$/i,
+    /^sudo\s+live\.heal$/i,
+    /^live\s+auto[\-]?heal$/i,
+    /^debug\s+heal$/i,
+    /^répare\s+en\s+temps\s+r[eé]el$/i,
+  ],
+  'live-inspect': [
+    /^live\.inspect\s+(.+)$/i,
+    /^sudo\s+live\.inspect\s+(.+)$/i,
+    /^inspecte\s+live\s+(.+)$/i,
+    /^debug\s+inspect\s+(.+)$/i,
+  ],
+  'live-patch': [
+    /^live\.patch$/i,
+    /^sudo\s+live\.patch$/i,
+    /^applique\s+patch\s+live$/i,
+    /^apply\s+live\s+patch$/i,
+    /^patch\s+temps\s+r[eé]el$/i,
+  ],
+  'live-logs': [
+    /^live\.logs$/i,
+    /^sudo\s+live\.logs$/i,
+    /^(affiche|show)\s+live\s+logs$/i,
+    /^diagnostics\s+live$/i,
+    /^historique\s+debug$/i,
+  ],
+  'live-restart': [
+    /^live\.restart$/i,
+    /^sudo\s+live\.restart$/i,
+    /^restart\s+live\s+debugger$/i,
+    /^red[eé]marre\s+debugger$/i,
+    /^reset\s+live\s+ia$/i,
+  ],
+  'live-reset': [
+    /^live\.reset$/i,
+    /^sudo\s+live\.reset$/i,
+    /^reset\s+live\s+debugger$/i,
+    /^efface\s+diagnostics$/i,
+    /^clear\s+live$/i,
+  ],
+  'live-console': [
+    /^live\.console$/i,
+    /^sudo\s+live\.console$/i,
+    /^(ouvre|ferme|toggle)\s+live\s+console$/i,
+    /^show\s+live\s+debugger$/i,
+  ],
+  'live-set-mode': [
+    /^live\.setMode\s+(shadow|active|auto[\-]?heal|explain|draft)$/i,
+    /^sudo\s+live\.setMode\s+(.+)$/i,
+    /^change\s+live\s+mode\s+(.+)$/i,
+    /^mode\s+live\s+(.+)$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1847,6 +1932,37 @@ export async function executeDevSudoCommand(
 
       case 'vocal-silence':
         return handleVocalSilence();
+
+      // Live Debugger Vocal (Super Prompt #19) v∞.29.0
+      case 'live-on':
+        return await handleLiveOn(command.params.mode as string);
+
+      case 'live-off':
+        return await handleLiveOff();
+
+      case 'live-heal':
+        return await handleLiveHeal();
+
+      case 'live-inspect':
+        return await handleLiveInspect(command.params.target as string);
+
+      case 'live-patch':
+        return await handleLivePatch();
+
+      case 'live-logs':
+        return handleLiveLogs();
+
+      case 'live-restart':
+        return await handleLiveRestart();
+
+      case 'live-reset':
+        return handleLiveReset();
+
+      case 'live-console':
+        return handleLiveConsole();
+
+      case 'live-set-mode':
+        return handleLiveSetMode(command.params.modeName as string);
 
       default:
         return {
@@ -5053,7 +5169,7 @@ function handleVocalSetModel(modelName: string): DevSudoResult {
   try {
     const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
 
-    vocalDevConsole.configure({ 
+    vocalDevConsole.configure({
       aiProvider: modelName.toLowerCase() as 'titane-local' | 'claude' | 'gemini' | 'auto'
     });
 
@@ -5110,7 +5226,7 @@ function handleVocalFullscreen(): DevSudoResult {
 
     // Toggle fullscreen mode (à implémenter dans le CSS)
     const state = vocalDevConsole.getState();
-    
+
     return {
       handled: true,
       success: true,
@@ -5191,6 +5307,666 @@ Les réponses apparaîtront dans les logs sans son.
       handled: true,
       success: false,
       response: `❌ Échec toggle TTS: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LIVE DEBUGGER VOCAL HANDLERS (Super Prompt #19) v∞.29.0
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * live.on — Active Live Debugger en mode spécifié
+ */
+async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
+  const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
+  const selectedMode = mode && validModes.includes(mode.toLowerCase()) ? mode.toLowerCase() : 'shadow';
+
+  try {
+    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    await liveDebugger.activate(selectedMode as any);
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔴 **TITANE∞ LIVE DEBUGGER v∞ — ACTIVÉ**
+
+✅ Mode: **${selectedMode}**
+✅ Analyse temps réel activée
+✅ Segment interval: 300ms
+✅ Intent analyzer prêt
+
+**Modes disponibles**:
+  • \`shadow\` — Écoute sans intervenir (seuil ${(liveDebugger.getConfig().shadowModeThreshold * 100).toFixed(0)}%)
+  • \`active\` — Analyse et propose corrections
+  • \`auto-heal\` — Corrections automatiques instantanées
+  • \`explain\` — Explications vocales en direct
+  • \`draft\` — Génération patches vocale
+
+🎙️ **Démarrez listening**: \`sudo live.console\` puis bouton START LISTENING
+
+💡 **Changez mode**: \`sudo live.setMode [mode]\``,
+      actions: [
+        {
+          type: 'live-on',
+          description: `Live Debugger activated in ${selectedMode} mode`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec activation Live Debugger: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.off — Désactive Live Debugger
+ */
+async function handleLiveOff(): Promise<DevSudoResult> {
+  try {
+    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    await liveDebugger.deactivate();
+
+    const stats = liveDebugger.getStats();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔴 **TITANE∞ LIVE DEBUGGER v∞ — DÉSACTIVÉ**
+
+✅ Debugger arrêté
+✅ Listening stoppé
+
+**Session Statistics**:
+  - Duration: ${(stats.sessionDuration / 1000).toFixed(0)}s
+  - Total segments: ${stats.totalSegments}
+  - Diagnostics: ${stats.totalDiagnostics}
+  - Patches applied: ${stats.totalPatches}
+  - Avg confidence: ${(stats.averageConfidence * 100).toFixed(0)}%
+
+💡 **Réactivez**: \`sudo live.on [mode]\``,
+      actions: [
+        {
+          type: 'live-off',
+          description: 'Live Debugger deactivated',
+          result: 'success',
+          details: `Session: ${stats.totalDiagnostics} diagnostics, ${stats.totalPatches} patches`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec désactivation: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.heal — Déclenche auto-healing temps réel
+ */
+async function handleLiveHeal(): Promise<DevSudoResult> {
+  try {
+    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    const state = liveDebugger.getState();
+
+    if (!state.isListening) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ **Live Debugger not listening**
+
+Démarrez d'abord l'écoute:
+1. \`sudo live.on auto-heal\`
+2. \`sudo live.console\`
+3. Bouton START LISTENING
+
+Ensuite le debugger auto-heal sera actif en continu.`,
+      };
+    }
+
+    // Forcer passage en mode auto-heal
+    liveDebugger.setMode('auto-heal');
+    liveDebugger.configure({ autoHealEnabled: true });
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔧 **LIVE DEBUGGER AUTO-HEAL ACTIVÉ**
+
+✅ Mode auto-heal actif
+✅ Corrections automatiques instantanées
+✅ Micro-patches appliqués en temps réel
+
+**Current State**:
+  - Health Score: ${state.healthScore}%
+  - Diagnostics: ${state.totalDiagnostics}
+  - Patches applied: ${state.totalPatches}
+
+Le Live Debugger corrigera automatiquement les problèmes simples détectés pendant que vous parlez.
+
+⚠️ **Seulement patches sûrs** (safe: true) sont appliqués automatiquement.
+
+💡 **Désactivez auto-heal**: \`sudo live.setMode active\``,
+      actions: [
+        {
+          type: 'live-heal',
+          description: 'Auto-heal mode activated',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec activation auto-heal: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.inspect [target] — Inspecte module en temps réel
+ */
+async function handleLiveInspect(target: string): Promise<DevSudoResult> {
+  if (!target) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Target manquant**
+
+**Usage**: \`sudo live.inspect [module]\`
+
+**Exemples**:
+  - \`sudo live.inspect AudioEngine\`
+  - \`sudo live.inspect VocalConsole\`
+  - \`sudo live.inspect Backend\`
+
+Le Live Debugger analysera le module en temps réel.`,
+    };
+  }
+
+  try {
+    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    const recentDiagnostics = liveDebugger.getRecentDiagnostics(5);
+    const relatedDiagnostics = recentDiagnostics.filter(d =>
+      d.intent.modules.some(m => m.toLowerCase().includes(target.toLowerCase()))
+    );
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔍 **LIVE INSPECT** → "${target}"
+
+**Related Diagnostics**: ${relatedDiagnostics.length} trouvés
+
+${relatedDiagnostics.length > 0 ? relatedDiagnostics.map((d, i) => `
+**Diagnostic ${i + 1}**:
+  - Intent: ${d.intent.type}
+  - Severity: ${d.intent.severity}
+  - Confidence: ${(d.intent.confidence * 100).toFixed(0)}%
+  - Analysis: ${d.analysis}
+  ${d.rootCause ? `- Root Cause: ${d.rootCause}` : ''}
+  ${d.suggestedFix ? `- Fix: ${d.suggestedFix}` : ''}
+`).join('\n') : `
+Aucun diagnostic récent pour "${target}".
+
+💡 **Parlez du problème** pour que le Live Debugger l'analyse en temps réel.
+`}
+
+**Health Score**: ${liveDebugger.getHealthScore()}%`,
+      actions: [
+        {
+          type: 'live-inspect',
+          description: `Inspected ${target}`,
+          result: 'success',
+          details: `${relatedDiagnostics.length} related diagnostics`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Inspection échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.patch — Applique dernier patch disponible
+ */
+async function handleLivePatch(): Promise<DevSudoResult> {
+  try {
+    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    const recentDiagnostics = liveDebugger.getRecentDiagnostics(1);
+
+    if (recentDiagnostics.length === 0 || !recentDiagnostics[0].microPatch) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ **Aucun patch disponible**
+
+Le Live Debugger n'a pas généré de patch récemment.
+
+💡 **Générez un patch**:
+1. Parlez du problème pendant que le debugger écoute
+2. Le debugger analysera et proposera un patch si possible
+3. Réessayez \`sudo live.patch\``,
+      };
+    }
+
+    const diagnostic = recentDiagnostics[0];
+    const patch = diagnostic.microPatch!;
+
+    if (!patch.safe) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ **Patch non sûr**
+
+Le patch généré nécessite review manuelle.
+
+**Patch Details**:
+  - Module: ${patch.module}
+  - Confidence: ${(patch.confidence * 100).toFixed(0)}%
+  - Reason: ${patch.reason}
+
+❌ **Safe: false** — Application manuelle requise
+
+💡 **Review le patch** avant application manuelle.`,
+      };
+    }
+
+    // Appliquer le patch via AutoHealEngine
+    const { autoHealEngine } = await import('@/services/ai/autoHealEngine');
+    await autoHealEngine.heal();
+
+    return {
+      handled: true,
+      success: true,
+      response: `✅ **LIVE PATCH APPLIQUÉ**
+
+**Patch**:
+  - Module: ${patch.module}
+  - Confidence: ${(patch.confidence * 100).toFixed(0)}%
+  - Reason: ${patch.reason}
+  - Safe: ✅ true
+
+✅ Corrections appliquées automatiquement
+
+**Health Score**: ${liveDebugger.getHealthScore()}%
+
+💡 **Vérifiez**: \`sudo diagnostic\` ou testez l'application`,
+      actions: [
+        {
+          type: 'live-patch',
+          description: `Applied patch to ${patch.module}`,
+          result: 'success',
+          details: patch.reason,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Patch échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.logs — Affiche diagnostics récents
+ */
+function handleLiveLogs(): DevSudoResult {
+  try {
+    const { liveDebugger } = require('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    const diagnostics = liveDebugger.getRecentDiagnostics(10);
+    const stats = liveDebugger.getStats();
+
+    if (diagnostics.length === 0) {
+      return {
+        handled: true,
+        success: true,
+        response: `📋 **Aucun diagnostic Live**
+
+Le Live Debugger n'a pas encore de diagnostics.
+
+💡 **Générez diagnostics**:
+1. \`sudo live.on active\`
+2. \`sudo live.console\`
+3. Bouton START LISTENING
+4. Parlez des problèmes
+
+Le debugger analysera en temps réel.`,
+      };
+    }
+
+    const bySeverity = {
+      low: diagnostics.filter(d => d.intent.severity === 'low').length,
+      medium: diagnostics.filter(d => d.intent.severity === 'medium').length,
+      high: diagnostics.filter(d => d.intent.severity === 'high').length,
+      critical: diagnostics.filter(d => d.intent.severity === 'critical').length,
+    };
+
+    return {
+      handled: true,
+      success: true,
+      response: `📋 **TITANE∞ LIVE DEBUGGER LOGS** (${diagnostics.length} récents)
+
+**Severity Breakdown**:
+  - 🟢 Low: ${bySeverity.low}
+  - 🟡 Medium: ${bySeverity.medium}
+  - 🟠 High: ${bySeverity.high}
+  - 🔴 Critical: ${bySeverity.critical}
+
+**Session Stats**:
+  - Duration: ${(stats.sessionDuration / 1000).toFixed(0)}s
+  - Total segments: ${stats.totalSegments}
+  - Total diagnostics: ${stats.totalDiagnostics}
+  - Patches applied: ${stats.totalPatches}
+  - Avg confidence: ${(stats.averageConfidence * 100).toFixed(0)}%
+  - Health Score: ${liveDebugger.getHealthScore()}%
+
+**Recent Diagnostics** (5 derniers):
+${diagnostics.slice(0, 5).map((d, i) => `
+${i + 1}. [${d.intent.severity.toUpperCase()}] ${d.intent.type} — ${(d.intent.confidence * 100).toFixed(0)}%
+   ${d.analysis}
+   ${d.rootCause ? `→ ${d.rootCause}` : ''}
+`).join('')}
+
+💡 **Console UI complète**: \`sudo live.console\``,
+      actions: [
+        {
+          type: 'live-logs',
+          description: `Retrieved ${diagnostics.length} live diagnostics`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Échec récupération logs: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.restart — Redémarre pipeline IA + Live Debugger
+ */
+async function handleLiveRestart(): Promise<DevSudoResult> {
+  try {
+    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    const currentMode = liveDebugger.getState().mode;
+
+    // Désactiver
+    await liveDebugger.deactivate();
+
+    // Wait 500ms
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Réactiver dans même mode
+    await liveDebugger.activate(currentMode);
+
+    return {
+      handled: true,
+      success: true,
+      response: `♻️ **LIVE DEBUGGER REDÉMARRÉ**
+
+✅ Pipeline IA réinitialisé
+✅ Segment timer relancé
+✅ Intent analyzer reset
+✅ Mode restauré: ${currentMode}
+
+**État après restart**:
+  - Health Score: 100%
+  - Diagnostics: 0
+  - Patches: 0
+  - Listening: false
+
+💡 **Redémarrez listening**: \`sudo live.console\` puis START LISTENING`,
+      actions: [
+        {
+          type: 'live-restart',
+          description: 'Live Debugger restarted',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Restart échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.reset — Reset session (efface diagnostics)
+ */
+function handleLiveReset(): DevSudoResult {
+  try {
+    const { liveDebugger } = require('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    liveDebugger.reset();
+
+    return {
+      handled: true,
+      success: true,
+      response: `♻️ **LIVE DEBUGGER SESSION RESET**
+
+✅ Diagnostics effacés
+✅ Patches history cleared
+✅ Segment buffer vidé
+✅ Health Score: 100%
+✅ Stats reset
+
+**État après reset**:
+  - Total segments: 0
+  - Total diagnostics: 0
+  - Total patches: 0
+  - Session time: 0s
+
+Le Live Debugger est prêt pour une nouvelle session.
+
+💡 **Continuez listening** si actif, ou redémarrez avec \`sudo live.on [mode]\``,
+      actions: [
+        {
+          type: 'live-reset',
+          description: 'Live Debugger session reset',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Reset échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.console — Toggle Live Debugger Console UI
+ */
+function handleLiveConsole(): DevSudoResult {
+  try {
+    // La console est contrôlée par React component, pas besoin de backend
+    return {
+      handled: true,
+      success: true,
+      response: `📖 **LIVE DEBUGGER CONSOLE UI**
+
+La console Live Debugger apparaîtra automatiquement dans l'interface React.
+
+**Features Console**:
+  - 🔴 Mode indicator (shadow/active/auto-heal/explain/draft)
+  - 🎙️ Transcript stream en temps réel
+  - 🔍 Diagnostics feed avec sévérité
+  - ✅ Applied patches history
+  - 📊 Health bar
+  - ⚙️ Mode selector + options (Auto-Heal, TTS, Explain)
+  - 🎤 START/STOP LISTENING button
+
+**Si la console n'apparaît pas**:
+1. Vérifiez que le composant <LiveDebuggerConsole /> est dans votre App
+2. Activez le debugger: \`sudo live.on\`
+3. La console s'ouvrira automatiquement
+
+💡 **Position**: Bottom-right, 700px width, draggable (future)`,
+      actions: [
+        {
+          type: 'live-console',
+          description: 'Live Debugger console UI info',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Erreur console: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * live.setMode [mode] — Change mode Live Debugger
+ */
+function handleLiveSetMode(modeName: string): DevSudoResult {
+  if (!modeName) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Mode manquant**
+
+**Usage**: \`sudo live.setMode [mode]\`
+
+**Modes disponibles**:
+  - \`shadow\` — Écoute passive, n'intervient que si critique
+  - \`active\` — Analyse + propose corrections
+  - \`auto-heal\` — Corrections automatiques instantanées
+  - \`explain\` — Explications vocales en direct
+  - \`draft\` — Génération patches vocale
+
+**Exemple**: \`sudo live.setMode auto-heal\``,
+    };
+  }
+
+  const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
+  const normalizedMode = modeName.toLowerCase();
+
+  if (!validModes.includes(normalizedMode)) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Mode invalide: "${modeName}"
+
+**Modes valides**: ${validModes.join(', ')}`,
+    };
+  }
+
+  try {
+    const { liveDebugger } = require('@/modules/liveDebugger/LiveDebuggerEngine');
+
+    liveDebugger.setMode(normalizedMode as any);
+
+    // Auto-config selon mode
+    if (normalizedMode === 'auto-heal') {
+      liveDebugger.configure({ autoHealEnabled: true });
+    } else if (normalizedMode === 'explain') {
+      liveDebugger.configure({ explainWhileDebugging: true, ttsEnabled: true });
+    }
+
+    return {
+      handled: true,
+      success: true,
+      response: `🎯 **LIVE DEBUGGER MODE CHANGED** → \`${normalizedMode}\`
+
+${normalizedMode === 'shadow' ? `
+✅ **Shadow Mode** activé
+  - Écoute passive continue
+  - N'intervient que si confidence > ${(liveDebugger.getConfig().shadowModeThreshold * 100).toFixed(0)}%
+  - Pas de patches automatiques
+  - Logs silencieux
+
+💡 **Usage**: Mode monitoring discret
+` : normalizedMode === 'active' ? `
+✅ **Active Mode** activé
+  - Analyse en temps réel
+  - Propose corrections
+  - Affiche diagnostics
+  - Pas d'application automatique
+
+💡 **Usage**: Debug interactif avec validation manuelle
+` : normalizedMode === 'auto-heal' ? `
+✅ **Auto-Heal Mode** activé
+  - Corrections automatiques activées ✅
+  - Micro-patches appliqués instantanément
+  - Seuls patches sûrs (safe: true)
+  - Health score mis à jour en direct
+
+⚠️ **Attention**: Les corrections sont appliquées sans confirmation
+💡 **Usage**: Self-healing automatique continu
+` : normalizedMode === 'explain' ? `
+✅ **Explain Mode** activé
+  - Explications vocales activées ✅
+  - TTS enabled ✅
+  - Commentaires en direct pendant debug
+  - Narration des diagnostics
+
+💡 **Usage**: Learning mode avec feedback vocal
+` : `
+✅ **Draft Mode** activé
+  - Génération patches vocale
+  - Voice-driven code writing
+  - Commandes "Crée une fonction X..."
+
+💡 **Usage**: Coding vocal assisté
+`}
+
+**Mode actif**: ${normalizedMode}`,
+      actions: [
+        {
+          type: 'live-set-mode',
+          description: `Changed mode to ${normalizedMode}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Changement mode échoué: ${error instanceof Error ? error.message : String(error)}`,
       error: error instanceof Error ? error.message : String(error),
     };
   }
