@@ -8,9 +8,10 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Mic, Camera } from 'lucide-react';
+import { MessageSquare, X, Send, Camera } from 'lucide-react';
 import { useChat } from '@/hooks/useChat';
 import { useVisionStore } from '@/stores/useVisionStore';
+import { DevSudoBadge } from '@/components/dev/DevSudoBadge';
 import './ChatBubble.css';
 
 interface ChatBubbleProps {
@@ -20,7 +21,7 @@ interface ChatBubbleProps {
 
 export const ChatBubble: React.FC<ChatBubbleProps> = ({
   position = 'bottom-right',
-  persistHistory = true,
+  persistHistory: _persistHistory = true,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -142,6 +143,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               <div className="chat-bubble-title">
                 <MessageSquare size={18} />
                 <span>TITANE∞ Chat</span>
+                <DevSudoBadge active={true} compact={true} />
               </div>
               <div className="chat-bubble-actions">
                 <button

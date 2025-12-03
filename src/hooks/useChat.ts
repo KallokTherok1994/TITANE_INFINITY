@@ -33,6 +33,9 @@ import { userPreferencesEngine } from '../services/userPreferencesEngine';
 import { handleCameraInChat } from '@/modules/camera/cameraChatIntegration';
 import { useVisionStore } from '@/stores/useVisionStore';
 
+// ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
+import { handleDevSudoInChat } from '@/modules/devSudo/devSudoIntegration';
+
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
 export type ProviderPreference = 'auto' | 'local' | 'ollama';
@@ -475,6 +478,45 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         timestamp: Date.now(),
         metadata: { status: 'input-error' }
       };
+    }
+
+    // ✨ v∞.21.0 - DEV-SUDO Mode Integration (Super Prompt FULL UNLOCK)
+    // Vérifier commandes développeur en PRIORITÉ ABSOLUE
+    try {
+      const devSudoResult = await handleDevSudoInChat(content.trim());
+
+      if (devSudoResult.handled) {
+        console.log('[useChat OMNIS] ⚡ DEV-SUDO command handled:', devSudoResult.success ? 'success' : 'failed');
+
+        // Ajouter le message utilisateur
+        const userMessage: AIMessage = {
+          role: 'user',
+          content: content.trim(),
+          timestamp: Date.now(),
+          metadata: withUiId({ inputLength: content.trim().length, mode: 'dev-sudo', devSudoCommand: true })
+        };
+
+        // Ajouter la réponse DEV-SUDO
+        const devSudoResponse: AIMessage = {
+          role: 'assistant',
+          content: devSudoResult.response,
+          timestamp: Date.now(),
+          metadata: withUiId({ 
+            provider: 'dev-sudo-handler', 
+            devSudoCommand: true,
+            success: devSudoResult.success,
+            actions: devSudoResult.actions
+          })
+        };
+
+        const updatedMessages = [...messagesRef.current, userMessage, devSudoResponse];
+        applyMessagesSafely(updatedMessages, 'dev-sudo-command');
+
+        return devSudoResponse;
+      }
+    } catch (devSudoError) {
+      console.warn('[useChat OMNIS] DEV-SUDO command check failed:', devSudoError);
+      // Continuer normalement si erreur
     }
 
     // ✨ v∞.20.0 - Camera Chat Integration (Super Prompt #3)
