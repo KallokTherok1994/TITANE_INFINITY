@@ -528,6 +528,7 @@ async fn main() {
         overdrive::chat_orchestrator::chat_create_conversation,
         overdrive::chat_orchestrator::chat_get_conversation,
         overdrive::chat_orchestrator::chat_delete_conversation,
+        overdrive::chat_orchestrator::chat_generate_suggestions,  // ✅ v∞
         secure_commands::chat_set_gemini_key,
         secure_commands::get_gemini_key_status,
         secure_commands::secure_store_secret,

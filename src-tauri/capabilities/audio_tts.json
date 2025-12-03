@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0/capability.json",
   "identifier": "audio-tts",
-  "description": "Capability pour le système Audio/TTS/ASR TITANE∞",
+  "description": "Capability pour le système Audio/TTS/ASR TITANE∞ v19.3",
   "windows": ["main"],
   "permissions": [
     "core:default"
@@ -21,6 +21,8 @@
       "test_microphone",
       "start_recording",
       "stop_recording",
+      "cancel_recording",
+      "is_recording",
       "transcribe_audio",
       "vad_get_state",
       "vad_process_frame",
@@ -37,7 +39,14 @@
       "voice_get_config",
       "voice_update_config",
       "voice_get_status",
-      "voice_calibrate_microphone"
+      "voice_calibrate_microphone",
+      "voice_enable_duplex",
+      "voice_disable_duplex",
+      "voice_check_interruption",
+      "voice_test_pipeline",
+      "voice_get_available_models",
+      "voice_cancel_recording",
+      "voice_is_recording"
     ],
     "deny": []
   }

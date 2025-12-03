@@ -144,10 +144,11 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'get_ai_status',
   'test_gemini',
   'test_ollama',
+  'ollama_query',  // ✅ v∞ Direct Ollama query
   'chat_generate',
   'upload_and_process_file',
 
-  // Chat Orchestrator (v18)
+  // Chat Orchestrator (v18+)
   'chat_send_message',
   'chat_get_providers_status',
   'chat_check_providers',
@@ -156,6 +157,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'chat_delete_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
+  'chat_generate_suggestions',  // ✅ v∞ Suggestions IA
   'generate_response',
   'stream_response',
   'speak_text',
@@ -313,6 +315,11 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_calibrate_microphone',
   'voice_cancel_recording',
   'voice_is_recording',
+  'voice_enable_duplex',
+  'voice_disable_duplex',
+  'voice_check_interruption',
+  'voice_test_pipeline',
+  'voice_get_available_models',
 
   // ═══════════════════════════════════════════════════════════════
   // PERSISTENCE ENGINE v∞.MPE

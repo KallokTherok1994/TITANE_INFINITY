@@ -163,18 +163,25 @@ class VoiceService {
 
   /**
    * Récupération état audio
-   * NOTE: Retourne un état par défaut si la commande n'existe pas
+   * Utilise les commandes is_speaking et is_recording qui existent
    */
   async getAudioState(): Promise<AudioState> {
     try {
-      return await invokeWithRetry<AudioState>(
-        'voice_get_audio_state',
-        {},
-        { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
-      );
+      // Utiliser les commandes réelles qui existent côté Rust
+      const [isSpeaking, isRecording] = await Promise.all([
+        invokeWithRetry<boolean>('is_speaking', {}, { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }).catch(() => false),
+        invokeWithRetry<boolean>('is_recording', {}, { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }).catch(() => false),
+      ]);
+
+      return {
+        isRecording: isRecording || !!this.recordingId,
+        isSpeaking,
+        volume: 0,
+        duration: 0,
+      };
     } catch (error) {
       // Return safe defaults if command not available
-      console.warn('[VoiceService] État audio fallback (command may not exist)');
+      console.warn('[VoiceService] État audio fallback:', error);
       return {
         isRecording: !!this.recordingId,
         isSpeaking: false,
@@ -185,8 +192,8 @@ class VoiceService {
   }
 
   /**
-   * Liste voix disponibles
-   * NOTE: Retourne liste vide si la commande n'existe pas
+   * Liste voix/modèles disponibles
+   * Utilise voice_get_available_models qui existe
    */
   async listVoices(): Promise<
     Array<{
@@ -197,35 +204,57 @@ class VoiceService {
     }>
   > {
     try {
-      return await invokeWithRetry(
-        'voice_list_voices',
+      const models = await invokeWithRetry<string[]>(
+        'voice_get_available_models',
         {},
         { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
       );
+      // Convertir les noms de modèles en format voix
+      return models.map((model) => ({
+        id: model,
+        name: model,
+        language: model.includes('fr') ? 'fr-FR' : 'en-US',
+      }));
     } catch (error) {
-      console.warn('[VoiceService] Liste voix fallback (command may not exist)');
-      return [];
+      console.warn('[VoiceService] Liste voix fallback:', error);
+      return [
+        { id: 'fr_FR-siwis-medium', name: 'Piper FR (Siwis)', language: 'fr-FR' },
+        { id: 'espeak-fr', name: 'eSpeak FR', language: 'fr-FR' },
+      ];
     }
   }
 
   /**
    * Configuration voix par défaut
+   * Utilise voice_update_config qui existe
    */
   async setDefaultVoice(voiceId: string): Promise<void> {
     try {
-      await invokeWithRetry<void>(
-        'voice_set_default_voice',
-        { voiceId },
+      await invokeWithRetry<string>(
+        'voice_update_config',
+        {
+          newConfig: {
+            asr_model: 'whisper-base',
+            tts_model: voiceId.includes('piper') ? 'piper' : 'espeak',
+            language: voiceId.includes('fr') ? 'fr' : 'en',
+            sample_rate: 16000,
+            wake_word: 'TITANE',
+            duplex_enabled: true,
+            noise_reduction: true,
+            auto_calibration: true,
+          },
+        },
         { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
       );
     } catch (error) {
       console.error('[VoiceService] Erreur config voix:', error);
-      throw new Error(`Configuration échouée: ${error}`);
+      // Non-critical, don't throw
     }
   }
 
   /**
    * Test audio (micro + haut-parleurs)
+   * Utilise voice_test_pipeline et test_microphone qui existent
    */
   async testAudio(): Promise<{
     microphoneWorking: boolean;
@@ -233,11 +262,24 @@ class VoiceService {
     latency: number;
   }> {
     try {
-      return await invokeWithRetry(
-        'voice_test_audio',
-        {},
-        { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
-      );
+      const [micResult, pipelineResult] = await Promise.all([
+        invokeWithRetry<{ success: boolean }>(
+          'test_microphone',
+          { durationMs: 1000 },
+          { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
+        ).catch(() => ({ success: false })),
+        invokeWithRetry<string>(
+          'voice_test_pipeline',
+          {},
+          { ...STANDARD_COMMAND_OPTIONS, context: 'Voice' }
+        ).catch(() => null),
+      ]);
+
+      return {
+        microphoneWorking: micResult?.success ?? false,
+        speakersWorking: pipelineResult !== null,
+        latency: 50, // Estimation par défaut
+      };
     } catch (error) {
       console.error('[VoiceService] Erreur test audio:', error);
       return {

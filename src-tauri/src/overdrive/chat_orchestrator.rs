@@ -729,6 +729,66 @@ pub async fn chat_delete_conversation(
     Ok("Conversation supprimée".to_string())
 }
 
+/// Generate contextual suggestions for chat input
+/// TITANE∞ v∞ — Smart suggestions based on context and mode
+#[tauri::command]
+pub async fn chat_generate_suggestions(
+    context: Option<String>,
+    mode: Option<String>,
+    limit: Option<u32>,
+) -> Result<Vec<String>, String> {
+    let limit = limit.unwrap_or(3) as usize;
+    let mode = mode.unwrap_or_else(|| "general".to_string());
+    let context = context.unwrap_or_default();
+
+    let suggestions = match mode.as_str() {
+        "code" => vec![
+            "Explique ce code".to_string(),
+            "Optimise cette fonction".to_string(),
+            "Trouve les bugs potentiels".to_string(),
+            "Ajoute des tests unitaires".to_string(),
+            "Documente ce code".to_string(),
+        ],
+        "creative" => vec![
+            "Génère une idée créative".to_string(),
+            "Raconte une histoire".to_string(),
+            "Écris un poème".to_string(),
+            "Propose des alternatives".to_string(),
+        ],
+        "analysis" => vec![
+            "Analyse en profondeur".to_string(),
+            "Compare les options".to_string(),
+            "Identifie les risques".to_string(),
+            "Propose une stratégie".to_string(),
+        ],
+        _ => {
+            // Mode général - suggestions contextuelles
+            if context.contains("erreur") || context.contains("error") {
+                vec![
+                    "Comment corriger cette erreur ?".to_string(),
+                    "Explique la cause du problème".to_string(),
+                    "Propose une solution".to_string(),
+                ]
+            } else if context.contains("projet") || context.contains("project") {
+                vec![
+                    "Quelles sont les prochaines étapes ?".to_string(),
+                    "Comment améliorer le projet ?".to_string(),
+                    "Génère un rapport d'avancement".to_string(),
+                ]
+            } else {
+                vec![
+                    "Comment puis-je t'aider ?".to_string(),
+                    "Que veux-tu faire aujourd'hui ?".to_string(),
+                    "Pose-moi une question".to_string(),
+                    "Lance une analyse".to_string(),
+                ]
+            }
+        }
+    };
+
+    Ok(suggestions.into_iter().take(limit).collect())
+}
+
 async fn store_message(
     state: &ChatOrchestratorState,
     conversation_id: &str,

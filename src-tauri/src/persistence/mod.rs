@@ -14,6 +14,7 @@
 //! - Crypto Store (chiffrement optionnel)
 //! - Memory Health (dashboard + self-healing)
 //! - Invariants Engine (validation + garde-fous)
+//! - Auto-Snapshot Scheduler v∞ (30min periodic snapshots)
 
 // Core modules
 pub mod event_log;
@@ -293,4 +294,72 @@ impl Default for PersistenceEngine {
     fn default() -> Self {
         Self::new()
     }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// AUTO-SNAPSHOT SCHEDULER v∞
+// Déclenche automatiquement des snapshots toutes les 30 minutes si l'état est dirty
+// ═══════════════════════════════════════════════════════════════════════════════
+
+use std::sync::atomic::{AtomicBool, Ordering};
+
+/// Flag global pour indiquer si le scheduler est actif
+static SCHEDULER_RUNNING: AtomicBool = AtomicBool::new(false);
+
+/// Démarrer le scheduler d'auto-snapshots
+/// Cette fonction est appelée une seule fois au démarrage de l'application
+pub fn start_auto_snapshot_scheduler(
+    singularity_state: Arc<RwLock<crate::core::SingularityState>>,
+) {
+    // Éviter les démarrages multiples
+    if SCHEDULER_RUNNING.swap(true, Ordering::SeqCst) {
+        log::warn!("[AutoSnapshot] Scheduler déjà actif");
+        return;
+    }
+
+    log::info!("[AutoSnapshot] 🚀 Démarrage du scheduler (intervalle: {}ms)", snapshot::SNAPSHOT_INTERVAL_MS);
+
+    let state_ref = Arc::clone(&singularity_state);
+
+    tokio::spawn(async move {
+        let mut interval = tokio::time::interval(
+            std::time::Duration::from_millis(snapshot::SNAPSHOT_INTERVAL_MS)
+        );
+
+        loop {
+            interval.tick().await;
+
+            // Vérifier si on doit faire un snapshot
+            let should_snapshot = {
+                let engine = PERSISTENCE_ENGINE.read().await;
+                engine.status.dirty
+            };
+
+            if should_snapshot {
+                log::info!("[AutoSnapshot] 📸 Déclenchement snapshot automatique...");
+
+                // Récupérer l'état actuel
+                let state = state_ref.read().await.clone();
+
+                // Forcer le snapshot
+                let result = {
+                    let mut engine = PERSISTENCE_ENGINE.write().await;
+                    engine.force_snapshot(&state).await
+                };
+
+                match result {
+                    Ok(_) => log::info!("[AutoSnapshot] ✅ Snapshot automatique réussi"),
+                    Err(e) => log::error!("[AutoSnapshot] ❌ Erreur snapshot: {:?}", e),
+                }
+            } else {
+                log::debug!("[AutoSnapshot] État propre, pas de snapshot nécessaire");
+            }
+        }
+    });
+}
+
+/// Arrêter le scheduler (optionnel, pour shutdown propre)
+pub fn stop_auto_snapshot_scheduler() {
+    SCHEDULER_RUNNING.store(false, Ordering::SeqCst);
+    log::info!("[AutoSnapshot] Scheduler arrêté");
 }
