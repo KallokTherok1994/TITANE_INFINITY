@@ -13,9 +13,8 @@
 // DO NOT REMOVE: Each import is actively used in production code
 // ═══════════════════════════════════════════════════════════════
 
-// Tauri core (Manager trait required for .get_webview_window() at line 98)
-// Only used in debug mode for DevTools auto-open
-#[cfg(debug_assertions)]
+// Tauri core (Manager trait required for .path() and .get_webview_window())
+// Required for both app_data_dir access and DevTools auto-open
 use tauri::Manager;
 
 // TITANE∞ command modules
