@@ -482,10 +482,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     try {
       const visionStore = useVisionStore.getState();
       const cameraResult = await handleCameraInChat(content.trim(), visionStore);
-      
+
       if (cameraResult.handled) {
         console.log('[useChat OMNIS] 📷 Camera command handled:', cameraResult.response);
-        
+
         // Ajouter le message utilisateur
         const userMessage: AIMessage = {
           role: 'user',
@@ -493,7 +493,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           timestamp: Date.now(),
           metadata: withUiId({ inputLength: content.trim().length, mode: currentModeState, cameraCommand: true })
         };
-        
+
         // Ajouter la réponse caméra
         const cameraResponse: AIMessage = {
           role: 'assistant',
@@ -501,10 +501,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           timestamp: Date.now(),
           metadata: withUiId({ provider: 'camera-handler', cameraCommand: true })
         };
-        
+
         const updatedMessages = [...messagesRef.current, userMessage, cameraResponse];
         applyMessagesSafely(updatedMessages, 'camera-command');
-        
+
         return cameraResponse;
       }
     } catch (cameraError) {

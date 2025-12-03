@@ -82,7 +82,7 @@ export function containsCameraKeyword(message: string): boolean {
     'caméra', 'camera', 'webcam', 'vision', 'vidéo', 'video',
     'surveillance', 'observation', 'filmer', 'recording',
   ];
-  
+
   const lowerMsg = message.toLowerCase();
   return keywords.some(keyword => lowerMsg.includes(keyword));
 }
@@ -138,10 +138,10 @@ export function generateCameraStatusResponse(isActive: boolean, hasPermission: b
   if (!hasPermission) {
     return '📷 Caméra: Permission non accordée. Utilisez "active la caméra" pour demander l\'autorisation.';
   }
-  
+
   if (isActive) {
     return '📷 Caméra: ✅ Active et en observation. Flux 100% local.';
   }
-  
+
   return '📷 Caméra: ⏸️ Disponible mais inactive. Dites "active la caméra" pour démarrer.';
 }

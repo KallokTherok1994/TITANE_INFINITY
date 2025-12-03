@@ -176,13 +176,13 @@
   .camera-overlay.compact {
     width: 220px;
   }
-  
+
   .camera-overlay.expanded {
     width: calc(100vw - 32px);
     left: 16px !important;
     right: 16px !important;
   }
-  
+
   .camera-overlay.bottom-left,
   .camera-overlay.bottom-right {
     bottom: 80px;
