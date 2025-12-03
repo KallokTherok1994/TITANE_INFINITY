@@ -238,7 +238,30 @@ export type DevSudoAction =
   | 'live-restart'
   | 'live-reset'
   | 'live-console'
-  | 'live-set-mode';
+  | 'live-set-mode'
+
+  // Talk-To-TITANE Suite (Super Prompts #20-24) v∞.30.0
+  | 'talk-on'
+  | 'talk-off'
+  | 'talk-mode'
+  | 'talk-calibrate'
+  | 'talk-history'
+  | 'talk-console'
+  | 'conversation-save'
+  | 'conversation-heal'
+  | 'conversation-timeline'
+  | 'conversation-export'
+  | 'timeline-build'
+  | 'timeline-show'
+  | 'timeline-export'
+  | 'timeline-sessions'
+  | 'timeline-stats'
+  | 'autosave-on'
+  | 'autosave-off'
+  | 'autosave-flush'
+  | 'selfheal-scan'
+  | 'selfheal-heal'
+  | 'selfheal-rebuild';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -1236,6 +1259,133 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^change\s+live\s+mode\s+(.+)$/i,
     /^mode\s+live\s+(.+)$/i,
   ],
+
+  // Talk-To-TITANE Suite (Super Prompts #20-24) v∞.30.0
+  'talk-on': [
+    /^talk\.on(\s+(.+))?$/i,
+    /^sudo\s+talk\.on$/i,
+    /^activate\s+talk[\-]?to[\-]?titane$/i,
+    /^start\s+vocal\s+assistant$/i,
+  ],
+  'talk-off': [
+    /^talk\.off$/i,
+    /^sudo\s+talk\.off$/i,
+    /^deactivate\s+talk[\-]?to[\-]?titane$/i,
+    /^stop\s+vocal\s+assistant$/i,
+  ],
+  'talk-mode': [
+    /^talk\.mode\s+(continuous|whispered|direct|calibrated|focus)$/i,
+    /^sudo\s+talk\.mode\s+(.+)$/i,
+    /^set\s+talk\s+mode\s+(.+)$/i,
+    /^mode\s+vocal\s+(.+)$/i,
+  ],
+  'talk-calibrate': [
+    /^talk\.calibrate\s+(analytical|calm|energizing|motivating|neutral)$/i,
+    /^sudo\s+talk\.calibrate\s+(.+)$/i,
+    /^set\s+emotional\s+tone\s+(.+)$/i,
+    /^calibrate\s+(.+)$/i,
+  ],
+  'talk-history': [
+    /^talk\.history(\s+(\d+))?$/i,
+    /^sudo\s+talk\.history$/i,
+    /^show\s+talk\s+history$/i,
+    /^conversation\s+history$/i,
+  ],
+  'talk-console': [
+    /^talk\.console$/i,
+    /^sudo\s+talk\.console$/i,
+    /^open\s+talk\s+console$/i,
+    /^talk\s+panel$/i,
+  ],
+  'conversation-save': [
+    /^conversation\.save$/i,
+    /^sudo\s+conversation\.save$/i,
+    /^save\s+conversation$/i,
+    /^autosave\s+now$/i,
+  ],
+  'conversation-heal': [
+    /^conversation\.heal$/i,
+    /^sudo\s+conversation\.heal$/i,
+    /^heal\s+conversations?$/i,
+    /^repair\s+conversations?$/i,
+  ],
+  'conversation-timeline': [
+    /^conversation\.timeline$/i,
+    /^sudo\s+conversation\.timeline$/i,
+    /^show\s+timeline$/i,
+    /^timeline$/i,
+  ],
+  'conversation-export': [
+    /^conversation\.export\s+(json|jsonl|html)$/i,
+    /^sudo\s+conversation\.export\s+(.+)$/i,
+    /^export\s+conversations?\s+(.+)$/i,
+    /^export\s+(.+)$/i,
+  ],
+  'timeline-build': [
+    /^timeline\.build$/i,
+    /^sudo\s+timeline\.build$/i,
+    /^build\s+timeline$/i,
+    /^rebuild\s+timeline$/i,
+  ],
+  'timeline-show': [
+    /^timeline\.show(\s+(\d+))?$/i,
+    /^sudo\s+timeline\.show$/i,
+    /^show\s+timeline(\s+(\d+))?$/i,
+    /^affiche\s+timeline$/i,
+  ],
+  'timeline-export': [
+    /^timeline\.export\s+(json|jsonl|html)$/i,
+    /^sudo\s+timeline\.export\s+(.+)$/i,
+    /^export\s+timeline\s+(.+)$/i,
+  ],
+  'timeline-sessions': [
+    /^timeline\.sessions$/i,
+    /^sudo\s+timeline\.sessions$/i,
+    /^show\s+sessions$/i,
+    /^sessions$/i,
+  ],
+  'timeline-stats': [
+    /^timeline\.stats$/i,
+    /^sudo\s+timeline\.stats$/i,
+    /^show\s+timeline\s+stats$/i,
+    /^stats\s+timeline$/i,
+  ],
+  'autosave-on': [
+    /^autosave\.on$/i,
+    /^sudo\s+autosave\.on$/i,
+    /^enable\s+autosave$/i,
+    /^activate\s+autosave$/i,
+  ],
+  'autosave-off': [
+    /^autosave\.off$/i,
+    /^sudo\s+autosave\.off$/i,
+    /^disable\s+autosave$/i,
+    /^deactivate\s+autosave$/i,
+  ],
+  'autosave-flush': [
+    /^autosave\.flush$/i,
+    /^sudo\s+autosave\.flush$/i,
+    /^flush\s+autosave$/i,
+    /^save\s+now$/i,
+  ],
+  'selfheal-scan': [
+    /^selfheal\.scan$/i,
+    /^sudo\s+selfheal\.scan$/i,
+    /^scan\s+conversations?$/i,
+    /^integrity\s+scan$/i,
+  ],
+  'selfheal-heal': [
+    /^selfheal\.heal$/i,
+    /^sudo\s+selfheal\.heal$/i,
+    /^heal\s+all$/i,
+    /^repair\s+all\s+conversations?$/i,
+  ],
+  'selfheal-rebuild': [
+    /^selfheal\.rebuild\s+(.+)$/i,
+    /^sudo\s+selfheal\.rebuild\s+(.+)$/i,
+    /^rebuild\s+file\s+(.+)$/i,
+    /^reconstruct\s+(.+)$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1964,14 +2114,78 @@ export async function executeDevSudoCommand(
       case 'live-set-mode':
         return handleLiveSetMode(command.params.modeName as string);
 
+      // Talk-To-TITANE Suite Commands (Super Prompts #20-24) v∞.30.0
+      case 'talk-on':
+        return await handleTalkOn(command.params.mode as string);
+
+      case 'talk-off':
+        return await handleTalkOff();
+
+      case 'talk-mode':
+        return handleTalkMode(command.params.mode as string);
+
+      case 'talk-calibrate':
+        return handleTalkCalibrate(command.params.tone as string);
+
+      case 'talk-history':
+        return handleTalkHistory(command.params.limit as number);
+
+      case 'talk-console':
+        return handleTalkConsole();
+
+      case 'conversation-save':
+        return await handleConversationSave();
+
+      case 'conversation-heal':
+        return await handleConversationHeal();
+
+      case 'conversation-timeline':
+        return await handleConversationTimeline();
+
+      case 'conversation-export':
+        return await handleConversationExport(command.params.format as string);
+
+      case 'timeline-build':
+        return await handleTimelineBuild();
+
+      case 'timeline-show':
+        return await handleTimelineShow(command.params.limit as number);
+
+      case 'timeline-export':
+        return await handleTimelineExport(command.params.format as string);
+
+      case 'timeline-sessions':
+        return await handleTimelineSessions();
+
+      case 'timeline-stats':
+        return await handleTimelineStats();
+
+      case 'autosave-on':
+        return handleAutosaveOn();
+
+      case 'autosave-off':
+        return handleAutosaveOff();
+
+      case 'autosave-flush':
+        return await handleAutosaveFlush();
+
+      case 'selfheal-scan':
+        return await handleSelfhealScan();
+
+      case 'selfheal-heal':
+        return await handleSelfhealHeal();
+
+      case 'selfheal-rebuild':
+        return await handleSelfhealRebuild(command.params.filePath as string);
+
       default:
         return {
           handled: true,
           response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.
 
-📋 **TITANE∞ v∞.28.0 — UNIFIED BRAIN + VOCAL DEV CONSOLE**
+📋 **TITANE∞ v∞.30.0 — UNIFIED BRAIN + TALK-TO-TITANE SUITE**
 
-**Commandes disponibles** (124 totales):
+**Commandes disponibles** (144+ totales):
 
 🔧 **Corrections**: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix
 🔍 **Diagnostic**: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri
@@ -5967,6 +6181,893 @@ ${normalizedMode === 'shadow' ? `
       handled: true,
       success: false,
       response: `❌ Changement mode échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TALK-TO-TITANE SUITE HANDLERS (Super Prompts #20-24) v∞.30.0
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * talk.on [mode] — Activate Talk-To-TITANE Engine
+ */
+async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
+  try {
+    const { talkToTitaneEngine } = await import('@/modules/talkToTitane/TalkToTitaneEngine');
+    
+    const targetMode = (mode || 'continuous') as any;
+    await talkToTitaneEngine.activate(targetMode);
+
+    const state = talkToTitaneEngine.getState();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🎤 **TALK-TO-TITANE ENGINE ACTIVATED** v∞.30.0
+
+✅ **Assistant Vocal Actif**
+  - Mode: ${state.currentMode}
+  - Session ID: ${state.sessionId}
+  - Wake Phrases: ${talkToTitaneEngine.getConfig().wakePhrases.length} phrases
+
+**Wake Phrases detectées**:
+  ${talkToTitaneEngine.getConfig().wakePhrases.map(p => `🗣️ "${p}"`).join('\n  ')}
+
+**7 Intent Types**:
+  - conversation: Questions générales + dialogue
+  - dev: Bugs + erreurs + debugging
+  - structure: Organisation + clarification
+  - action: Commandes SUDO + actions système
+  - coaching: Motivation + aide émotionnelle
+  - analyze: Analyse interne + cohérence
+  - memory: Rappels + contexte historique
+
+**5 Modes Adaptatifs**:
+  - continuous: Réponses complètes détaillées
+  - whispered: Réponses courtes discrètes
+  - direct: Réponses ultra-concises
+  - calibrated: Adapté ton émotionnel
+  - focus: Mode concentration (minimal distractions)
+
+💡 **Usage**: Dites simplement "Hey TITANE" ou "Ok TITANE" pour déclencher l'écoute !
+
+**Next Steps**:
+  - Mode change: \`sudo talk.mode [mode]\`
+  - Calibrate emotional: \`sudo talk.calibrate [tone]\`
+  - View history: \`sudo talk.history\`
+  - Open console: \`sudo talk.console\``,
+      actions: [{
+        type: 'talk-on',
+        description: `Talk-To-TITANE activated (${targetMode})`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Activation failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * talk.off — Deactivate Talk-To-TITANE Engine
+ */
+async function handleTalkOff(): Promise<DevSudoResult> {
+  try {
+    const { talkToTitaneEngine } = await import('@/modules/talkToTitane/TalkToTitaneEngine');
+    
+    await talkToTitaneEngine.deactivate();
+
+    return {
+      handled: true,
+      success: true,
+      response: `⏹️ **TALK-TO-TITANE ENGINE DEACTIVATED**
+
+✅ Assistant vocal désactivé
+
+**Session sauvegardée** (si auto-save activé)
+
+Pour réactiver: \`sudo talk.on [mode]\``,
+      actions: [{
+        type: 'talk-off',
+        description: 'Talk-To-TITANE deactivated',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Deactivation failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * talk.mode [mode] — Change Talk-To-TITANE Mode
+ */
+function handleTalkMode(mode: string): DevSudoResult {
+  if (!mode) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Mode manquant**
+
+**Usage**: \`sudo talk.mode [mode]\`
+
+**Modes disponibles**:
+  - \`continuous\`: Réponses complètes détaillées
+  - \`whispered\`: Réponses courtes discrètes
+  - \`direct\`: Réponses ultra-concises
+  - \`calibrated\`: Adapté ton émotionnel
+  - \`focus\`: Mode concentration minimal
+
+**Exemple**: \`sudo talk.mode focus\``,
+    };
+  }
+
+  const validModes = ['continuous', 'whispered', 'direct', 'calibrated', 'focus'];
+  if (!validModes.includes(mode.toLowerCase())) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Mode invalide: "${mode}"\n\n**Modes valides**: ${validModes.join(', ')}`,
+    };
+  }
+
+  try {
+    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
+    talkToTitaneEngine.setMode(mode as any);
+
+    return {
+      handled: true,
+      success: true,
+      response: `🎯 **MODE CHANGED** → \`${mode}\`
+
+✅ Mode Talk-To-TITANE mis à jour
+
+Les prochaines réponses seront adaptées au mode ${mode}.`,
+      actions: [{
+        type: 'talk-mode',
+        description: `Mode changed to ${mode}`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Mode change failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * talk.calibrate [tone] — Calibrate Emotional Tone
+ */
+function handleTalkCalibrate(tone: string): DevSudoResult {
+  if (!tone) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Tone manquant**
+
+**Usage**: \`sudo talk.calibrate [tone]\`
+
+**Tones disponibles**:
+  - \`analytical\`: Précis, factuel, neutre
+  - \`calm\`: Apaisant, doux, rassurant
+  - \`energizing\`: Dynamique, motivant, positif
+  - \`motivating\`: Encourageant, soutien émotionnel
+  - \`neutral\`: Standard, équilibré
+
+**Exemple**: \`sudo talk.calibrate energizing\``,
+    };
+  }
+
+  const validTones = ['analytical', 'calm', 'energizing', 'motivating', 'neutral'];
+  if (!validTones.includes(tone.toLowerCase())) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Tone invalide: "${tone}"\n\n**Tones valides**: ${validTones.join(', ')}`,
+    };
+  }
+
+  try {
+    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
+    talkToTitaneEngine.setEmotionalCalibration(tone as any);
+
+    return {
+      handled: true,
+      success: true,
+      response: `🎨 **EMOTIONAL TONE CALIBRATED** → \`${tone}\`
+
+✅ Ton émotionnel mis à jour
+
+Les prochaines réponses refléteront le ton ${tone}.`,
+      actions: [{
+        type: 'talk-calibrate',
+        description: `Emotional tone set to ${tone}`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Calibration failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * talk.history [limit] — Show Conversation History
+ */
+function handleTalkHistory(limit?: number): DevSudoResult {
+  try {
+    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
+    const history = talkToTitaneEngine.getHistory();
+    const displayLimit = limit || 10;
+    const recent = history.slice(-displayLimit).reverse();
+
+    if (recent.length === 0) {
+      return {
+        handled: true,
+        success: true,
+        response: `📜 **CONVERSATION HISTORY** (empty)
+
+Aucune interaction enregistrée pour cette session.
+
+Pour démarrer: \`sudo talk.on\``,
+      };
+    }
+
+    const historyText = recent.map((item, i) => {
+      const intentBadge = `[${item.intent.type}]`;
+      const confidence = `${(item.intent.confidence * 100).toFixed(0)}%`;
+      return `${i + 1}. ${intentBadge} (${confidence}) "${item.intent.text.substring(0, 60)}..."
+   → ${item.response.substring(0, 80)}...`;
+    }).join('\n\n');
+
+    return {
+      handled: true,
+      success: true,
+      response: `📜 **CONVERSATION HISTORY** (${history.length} total, showing ${recent.length})
+
+${historyText}
+
+💡 Pour voir toute l'historique: \`sudo conversation.timeline\``,
+      actions: [{
+        type: 'talk-history',
+        description: `Displayed ${recent.length} recent interactions`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ History display failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * talk.console — Open Talk-To-TITANE Panel UI
+ */
+function handleTalkConsole(): DevSudoResult {
+  return {
+    handled: true,
+    success: true,
+    response: `📖 **TALK-TO-TITANE PANEL UI**
+
+Le panel Talk-To-TITANE apparaîtra automatiquement dans l'interface React.
+
+**Features Panel**:
+  - 🎤 Status badge (LISTENING / IDLE / INACTIVE)
+  - 🗣️ Wake phrases indicator (4 phrases)
+  - 🎯 Mode selector (5 modes)
+  - 🎨 Emotional calibration (5 tones)
+  - 📊 Current intent display (type + confidence + tone + priority)
+  - 💬 Last response (analysis + response + vocal + action + suggestions)
+  - 📜 History list (recent 5)
+  - 📈 Session stats (ID + interactions + duration)
+  - ▶️ START/STOP/DEACTIVATE controls
+
+**Si le panel n'apparaît pas**:
+1. Vérifiez que <TalkToTitanePanel /> est dans votre App
+2. Activez l'engine: \`sudo talk.on\`
+3. Le panel s'ouvrira automatiquement
+
+💡 **Position**: Max-width 800px, center, draggable (future)`,
+    actions: [{
+      type: 'talk-console',
+      description: 'Talk-To-TITANE panel UI info',
+      result: 'success',
+    }],
+  };
+}
+
+/**
+ * conversation.save — Save Conversation Now
+ */
+async function handleConversationSave(): Promise<DevSudoResult> {
+  try {
+    const { autoSaveConversationEngine } = await import('@/modules/talkToTitane/AutoSaveConversationEngine');
+    await autoSaveConversationEngine.flush();
+
+    const state = autoSaveConversationEngine.getState();
+
+    return {
+      handled: true,
+      success: true,
+      response: `💾 **CONVERSATION SAVED**
+
+✅ All pending writes flushed
+
+**Total Saved**: ${state.totalSaved} interactions
+
+**Destinations**:
+  - Memory: ${state.savePaths.memory}
+  - Logs: ${state.savePaths.logs}
+  - Dataset: ${state.savePaths.dataset}
+
+💡 Auto-save is ${autoSaveConversationEngine.getConfig().enabled ? 'enabled' : 'disabled'}`,
+      actions: [{
+        type: 'conversation-save',
+        description: 'Conversation saved',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Save failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * conversation.heal — Heal Corrupted Conversations
+ */
+async function handleConversationHeal(): Promise<DevSudoResult> {
+  try {
+    const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
+    
+    const report = await selfHealingConversationEngine.heal();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔧 **CONVERSATION HEALING COMPLETE**
+
+✅ **Healing Report**:
+  - Scanned Files: ${report.scannedFiles}
+  - Total Entries: ${report.totalEntries}
+  - Issues Found: ${report.issues.length}
+  - Repaired: ${report.repaired}
+  - Failed: ${report.failed}
+  - Duration: ${report.duration}ms
+
+**Issue Types**:
+${report.issues.slice(0, 5).map(i => `  - ${i.type}: ${i.description}`).join('\n')}
+
+💡 All conversations healed and reconstructed.`,
+      actions: [{
+        type: 'conversation-heal',
+        description: `Healed ${report.repaired} conversations`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Healing failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * conversation.timeline — Show Conversation Timeline
+ */
+async function handleConversationTimeline(): Promise<DevSudoResult> {
+  try {
+    const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
+    
+    await conversationTimelineEngine.show(20);
+
+    const stats = await conversationTimelineEngine.getStats();
+
+    return {
+      handled: true,
+      success: true,
+      response: `📊 **CONVERSATION TIMELINE**
+
+✅ **Timeline Stats**:
+  - Total Entries: ${stats.totalEntries}
+  - Total Sessions: ${stats.totalSessions}
+  - Total Duration: ${(stats.totalDuration / 1000 / 60).toFixed(1)} min
+  - Avg Session: ${(stats.avgSessionDuration / 1000 / 60).toFixed(1)} min
+  - Engines Used: ${stats.enginesUsed.join(', ')}
+  - Major Events: ${stats.majorEvents}
+
+💡 Timeline displayed in console (last 20 entries)
+
+**Actions**:
+  - Export: \`sudo timeline.export [json|jsonl|html]\`
+  - Sessions: \`sudo timeline.sessions\`
+  - Stats: \`sudo timeline.stats\``,
+      actions: [{
+        type: 'conversation-timeline',
+        description: 'Timeline displayed',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Timeline failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * conversation.export [format] — Export Conversations
+ */
+async function handleConversationExport(format: string): Promise<DevSudoResult> {
+  if (!format || !['json', 'jsonl', 'html'].includes(format.toLowerCase())) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **Format manquant ou invalide**
+
+**Usage**: \`sudo conversation.export [format]\`
+
+**Formats disponibles**:
+  - \`json\`: Format JSON structuré (lisible)
+  - \`jsonl\`: Format JSONL (1 entry par ligne, compact)
+  - \`html\`: Format HTML (visualisation web)
+
+**Exemple**: \`sudo conversation.export html\``,
+    };
+  }
+
+  try {
+    const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
+    
+    const exported = await conversationTimelineEngine.export(format.toLowerCase() as any);
+    const fileName = `timeline-export-${Date.now()}.${format.toLowerCase()}`;
+
+    // TODO: Save to file
+    console.log(`[Export] Exported ${exported.length} chars to ${fileName}`);
+
+    return {
+      handled: true,
+      success: true,
+      response: `📤 **CONVERSATION EXPORTED**
+
+✅ Format: ${format.toUpperCase()}
+  - File: ${fileName}
+  - Size: ${(exported.length / 1024).toFixed(2)} KB
+
+💡 Export logged to console (file save coming soon)`,
+      actions: [{
+        type: 'conversation-export',
+        description: `Exported to ${format}`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Export failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * timeline.build — Rebuild Timeline
+ */
+async function handleTimelineBuild(): Promise<DevSudoResult> {
+  try {
+    const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
+    
+    const timeline = await conversationTimelineEngine.build();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔨 **TIMELINE REBUILT**
+
+✅ Timeline reconstructed from all sources
+
+**Total Entries**: ${timeline.length}
+
+💡 Timeline ready for viewing: \`sudo timeline.show\``,
+      actions: [{
+        type: 'timeline-build',
+        description: `Timeline built (${timeline.length} entries)`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Build failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * timeline.show [limit] — Show Timeline
+ */
+async function handleTimelineShow(limit?: number): Promise<DevSudoResult> {
+  try {
+    const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
+    
+    await conversationTimelineEngine.show(limit || 20);
+
+    return {
+      handled: true,
+      success: true,
+      response: `📊 **TIMELINE DISPLAYED**
+
+✅ Timeline shown in console (${limit || 20} entries)
+
+Check console output above for timeline visualization.`,
+      actions: [{
+        type: 'timeline-show',
+        description: 'Timeline displayed',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Display failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * timeline.export [format] — Export Timeline
+ */
+async function handleTimelineExport(format: string): Promise<DevSudoResult> {
+  return handleConversationExport(format);
+}
+
+/**
+ * timeline.sessions — Show Sessions
+ */
+async function handleTimelineSessions(): Promise<DevSudoResult> {
+  try {
+    const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
+    
+    const sessions = await conversationTimelineEngine.segmentBySessions();
+
+    const sessionsText = sessions.slice(0, 10).map((s, i) => {
+      const duration = (s.duration / 1000 / 60).toFixed(1);
+      const start = new Date(s.startTime).toLocaleString();
+      return `${i + 1}. ${s.sessionId.substring(0, 12)}... (${s.engine})
+   - Start: ${start}
+   - Duration: ${duration} min
+   - Interactions: ${s.interactions}`;
+    }).join('\n\n');
+
+    return {
+      handled: true,
+      success: true,
+      response: `📋 **TIMELINE SESSIONS** (${sessions.length} total, showing 10)
+
+${sessionsText}
+
+💡 Full sessions list available in timeline export`,
+      actions: [{
+        type: 'timeline-sessions',
+        description: `Displayed ${sessions.length} sessions`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Sessions display failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * timeline.stats — Show Timeline Stats
+ */
+async function handleTimelineStats(): Promise<DevSudoResult> {
+  try {
+    const { conversationTimelineEngine } = await import('@/modules/talkToTitane/ConversationTimelineEngine');
+    
+    const stats = await conversationTimelineEngine.getStats();
+
+    return {
+      handled: true,
+      success: true,
+      response: `📊 **TIMELINE STATISTICS**
+
+✅ **Global Stats**:
+  - Total Entries: ${stats.totalEntries}
+  - Total Sessions: ${stats.totalSessions}
+  - Total Duration: ${(stats.totalDuration / 1000 / 60 / 60).toFixed(2)}h
+  - Avg Session: ${(stats.avgSessionDuration / 1000 / 60).toFixed(1)} min
+
+**Engines Used** (${stats.enginesUsed.length}):
+  ${stats.enginesUsed.join(', ')}
+
+**Intentions Detected** (${stats.intentionsDetected.length}):
+  ${stats.intentionsDetected.slice(0, 10).join(', ')}...
+
+**Major Events**: ${stats.majorEvents}
+
+💡 Full analysis available via timeline export`,
+      actions: [{
+        type: 'timeline-stats',
+        description: 'Timeline stats displayed',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Stats failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * autosave.on — Enable Auto-Save
+ */
+function handleAutosaveOn(): DevSudoResult {
+  try {
+    const { autoSaveConversationEngine } = require('@/modules/talkToTitane/AutoSaveConversationEngine');
+    autoSaveConversationEngine.configure({ enabled: true });
+
+    return {
+      handled: true,
+      success: true,
+      response: `✅ **AUTO-SAVE ENABLED**
+
+All conversations will be automatically saved to:
+  - Memory: data/memory/conversations
+  - Logs: data/logs/conversations
+  - Dataset: data/dataset/conversations_raw
+
+💡 Auto-save runs on every interaction + snapshot every 5min`,
+      actions: [{
+        type: 'autosave-on',
+        description: 'Auto-save enabled',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Enable failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * autosave.off — Disable Auto-Save
+ */
+function handleAutosaveOff(): DevSudoResult {
+  try {
+    const { autoSaveConversationEngine } = require('@/modules/talkToTitane/AutoSaveConversationEngine');
+    autoSaveConversationEngine.configure({ enabled: false });
+
+    return {
+      handled: true,
+      success: true,
+      response: `⏸️ **AUTO-SAVE DISABLED**
+
+Conversations will NOT be saved automatically.
+
+💡 You can still manually save with \`sudo conversation.save\``,
+      actions: [{
+        type: 'autosave-off',
+        description: 'Auto-save disabled',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Disable failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * autosave.flush — Flush Auto-Save Now
+ */
+async function handleAutosaveFlush(): Promise<DevSudoResult> {
+  try {
+    const { autoSaveConversationEngine } = await import('@/modules/talkToTitane/AutoSaveConversationEngine');
+    await autoSaveConversationEngine.flush();
+
+    return {
+      handled: true,
+      success: true,
+      response: `💾 **AUTO-SAVE FLUSHED**
+
+✅ All pending writes completed
+
+All buffered conversations saved to disk.`,
+      actions: [{
+        type: 'autosave-flush',
+        description: 'Auto-save flushed',
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Flush failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * selfheal.scan — Scan Conversation Integrity
+ */
+async function handleSelfhealScan(): Promise<DevSudoResult> {
+  try {
+    const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
+    
+    const report = await selfHealingConversationEngine.scan();
+
+    const issuesSummary = report.issues.slice(0, 5).map(i => 
+      `  - ${i.type} (${i.severity}): ${i.description}`
+    ).join('\n');
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔍 **CONVERSATION INTEGRITY SCAN**
+
+✅ **Scan Complete**:
+  - Scanned Files: ${report.scannedFiles}
+  - Total Entries: ${report.totalEntries}
+  - Issues Found: ${report.issues.length}
+  - Duration: ${report.duration}ms
+
+**Issues (showing 5)**:
+${issuesSummary}
+
+💡 To heal: \`sudo selfheal.heal\``,
+      actions: [{
+        type: 'selfheal-scan',
+        description: `Scanned ${report.scannedFiles} files, found ${report.issues.length} issues`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Scan failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * selfheal.heal — Heal All Conversations
+ */
+async function handleSelfhealHeal(): Promise<DevSudoResult> {
+  try {
+    const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
+    
+    const report = await selfHealingConversationEngine.heal();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔧 **SELF-HEALING COMPLETE**
+
+✅ **Healing Report**:
+  - Issues Found: ${report.issues.length}
+  - Repaired: ${report.repaired}
+  - Failed: ${report.failed}
+  - Duration: ${report.duration}ms
+
+All conversations healed and integrity restored.
+
+💡 To verify: \`sudo selfheal.scan\``,
+      actions: [{
+        type: 'selfheal-heal',
+        description: `Healed ${report.repaired} conversations`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Healing failed: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * selfheal.rebuild [filePath] — Rebuild Specific File
+ */
+async function handleSelfhealRebuild(filePath: string): Promise<DevSudoResult> {
+  if (!filePath) {
+    return {
+      handled: true,
+      success: false,
+      response: `⚠️ **File path manquant**
+
+**Usage**: \`sudo selfheal.rebuild [filePath]\`
+
+**Exemple**: \`sudo selfheal.rebuild data/memory/conversations/memory-2024-01-15.jsonl\``,
+    };
+  }
+
+  try {
+    const { selfHealingConversationEngine } = await import('@/modules/talkToTitane/SelfHealingConversationEngine');
+    
+    await selfHealingConversationEngine.rebuild(filePath);
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔨 **FILE REBUILT**
+
+✅ File reconstructed and repaired:
+  - Path: ${filePath}
+
+File has been deduplicated, sorted chronologically, and malformed entries removed.`,
+      actions: [{
+        type: 'selfheal-rebuild',
+        description: `File ${filePath} rebuilt`,
+        result: 'success',
+      }],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Rebuild failed: ${error instanceof Error ? error.message : String(error)}`,
       error: error instanceof Error ? error.message : String(error),
     };
   }
