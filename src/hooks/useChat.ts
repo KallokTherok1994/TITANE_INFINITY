@@ -29,6 +29,10 @@ import { awardExperience } from '../services/experienceService';
 import { XPSource, XP_REWARDS } from '../types/experience';
 import { userPreferencesEngine } from '../services/userPreferencesEngine';
 
+// ✨ v∞.20.0 - Camera Chat Integration (Super Prompt #3)
+import { handleCameraInChat } from '@/modules/camera/cameraChatIntegration';
+import { useVisionStore } from '@/stores/useVisionStore';
+
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
 export type ProviderPreference = 'auto' | 'local' | 'ollama';
@@ -471,6 +475,41 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         timestamp: Date.now(),
         metadata: { status: 'input-error' }
       };
+    }
+
+    // ✨ v∞.20.0 - Camera Chat Integration (Super Prompt #3)
+    // Vérifier commande caméra AVANT envoi au provider IA
+    try {
+      const visionStore = useVisionStore.getState();
+      const cameraResult = await handleCameraInChat(content.trim(), visionStore);
+      
+      if (cameraResult.handled) {
+        console.log('[useChat OMNIS] 📷 Camera command handled:', cameraResult.response);
+        
+        // Ajouter le message utilisateur
+        const userMessage: AIMessage = {
+          role: 'user',
+          content: content.trim(),
+          timestamp: Date.now(),
+          metadata: withUiId({ inputLength: content.trim().length, mode: currentModeState, cameraCommand: true })
+        };
+        
+        // Ajouter la réponse caméra
+        const cameraResponse: AIMessage = {
+          role: 'assistant',
+          content: cameraResult.response,
+          timestamp: Date.now(),
+          metadata: withUiId({ provider: 'camera-handler', cameraCommand: true })
+        };
+        
+        const updatedMessages = [...messagesRef.current, userMessage, cameraResponse];
+        applyMessagesSafely(updatedMessages, 'camera-command');
+        
+        return cameraResponse;
+      }
+    } catch (cameraError) {
+      console.warn('[useChat OMNIS] Camera command check failed:', cameraError);
+      // Continuer normalement si erreur
     }
 
     // FIX v19.3Ω: Activer le verrou d'opération AVANT tout changement d'état

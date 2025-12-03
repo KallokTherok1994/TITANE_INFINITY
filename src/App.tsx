@@ -72,6 +72,9 @@ import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 // v15: SingularityState Monitor
 import { SingularityMonitor } from './components/SingularityMonitor';
 
+// ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
+import { ChatBubble } from './components/chat/ChatBubble';
+
 // ✨ v∞ - Multi-Agent Engine & Agents
 import { multiAgentEngine } from './core/ai/multi_agent_engine';
 import { HeliosAgent } from './core/ai/agents/helios_agent';
@@ -559,6 +562,9 @@ const AppRouter: React.FC = () => {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
+
+      {/* ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3) */}
+      <ChatBubble position="bottom-right" persistHistory />
     </AppShell>
   );
 };
