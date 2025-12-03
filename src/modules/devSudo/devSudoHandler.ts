@@ -18,6 +18,7 @@ import * as SingularityHandlers from './devSudoSingularityHandlers';
 import * as VisionHandlers from './devSudoVisionHandlers';
 import * as BackendHandlers from './devSudoBackendHandlers';
 import * as MemoryHandlers from './devSudoMemoryHandlers';
+import * as TitaneOneHandlers from './devSudoTitaneOneHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -137,7 +138,21 @@ export type DevSudoAction =
   | 'memory-export'
   | 'memory-import'
   | 'memory-rebuild'
-  | 'memory-optimize';
+  | 'memory-optimize'
+
+  // TITANE∞ ONE Unified Brain (Super Prompt #SINGULARITY)
+  | 'titane-one-introspect'
+  | 'titane-one-evolve'
+  | 'titane-one-heal'
+  | 'titane-one-fullheal'
+  | 'titane-one-unify'
+  | 'titane-one-optimize'
+  | 'titane-one-vision-all'
+  | 'titane-one-analyze-dev'
+  | 'titane-one-analyze-ui'
+  | 'titane-one-analyze-backend'
+  | 'titane-one-analyze-memory'
+  | 'titane-one-singularity-scan';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -572,6 +587,97 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^optimise\s+mémoire$/i,
     /^compress\s+memory$/i,
   ],
+
+  // TITANE∞ ONE Unified Brain
+  'titane-one-introspect': [
+    /^titane\s+one\s+introspect$/i,
+    /^sudo\s+titane\s+introspect$/i,
+    /^singularity\s+introspect$/i,
+    /^one\s+introspect$/i,
+    /^introspection\s+totale$/i,
+    /^titane\s+introspect$/i,
+  ],
+  'titane-one-evolve': [
+    /^titane\s+one\s+evolve$/i,
+    /^sudo\s+titane\s+evolve$/i,
+    /^singularity\s+evolve$/i,
+    /^one\s+evolve$/i,
+    /^évolution\s+totale$/i,
+    /^titane\s+evolve$/i,
+  ],
+  'titane-one-heal': [
+    /^titane\s+one\s+heal$/i,
+    /^sudo\s+titane\s+heal$/i,
+    /^singularity\s+heal$/i,
+    /^one\s+heal$/i,
+    /^self[\-\s]heal\s+total$/i,
+    /^titane\s+heal$/i,
+  ],
+  'titane-one-fullheal': [
+    /^titane\s+one\s+fullheal$/i,
+    /^titane\s+one\s+full[\-\s]heal$/i,
+    /^sudo\s+titane\s+fullheal$/i,
+    /^singularity\s+deepheal$/i,
+    /^one\s+fullheal$/i,
+    /^deep\s+heal\s+total$/i,
+    /^titane\s+fullheal$/i,
+  ],
+  'titane-one-unify': [
+    /^titane\s+one\s+unify$/i,
+    /^sudo\s+titane\s+unify$/i,
+    /^singularity\s+unify$/i,
+    /^one\s+unify$/i,
+    /^unification\s+totale$/i,
+    /^titane\s+unify$/i,
+  ],
+  'titane-one-optimize': [
+    /^titane\s+one\s+optimize$/i,
+    /^sudo\s+titane\s+optimize$/i,
+    /^singularity\s+optimize$/i,
+    /^one\s+optimize$/i,
+    /^optimisation\s+globale$/i,
+    /^titane\s+optimize$/i,
+  ],
+  'titane-one-vision-all': [
+    /^titane\s+one\s+vision[\-\s]all$/i,
+    /^sudo\s+titane\s+vision[\-\s]all$/i,
+    /^singularity\s+vision$/i,
+    /^one\s+vision$/i,
+    /^vision\s+triple$/i,
+    /^vision\s+totale$/i,
+  ],
+  'titane-one-analyze-dev': [
+    /^titane\s+one\s+analyze\s+dev$/i,
+    /^sudo\s+titane\s+analyze[\-\s]dev$/i,
+    /^one\s+analyze\s+dev$/i,
+    /^analyser\s+dev$/i,
+  ],
+  'titane-one-analyze-ui': [
+    /^titane\s+one\s+analyze\s+ui$/i,
+    /^sudo\s+titane\s+analyze[\-\s]ui$/i,
+    /^one\s+analyze\s+ui$/i,
+    /^analyser\s+ui$/i,
+  ],
+  'titane-one-analyze-backend': [
+    /^titane\s+one\s+analyze\s+backend$/i,
+    /^sudo\s+titane\s+analyze[\-\s]backend$/i,
+    /^one\s+analyze\s+backend$/i,
+    /^analyser\s+backend$/i,
+  ],
+  'titane-one-analyze-memory': [
+    /^titane\s+one\s+analyze\s+memory$/i,
+    /^sudo\s+titane\s+analyze[\-\s]memory$/i,
+    /^one\s+analyze\s+memory$/i,
+    /^analyser\s+mémoire$/i,
+  ],
+  'titane-one-singularity-scan': [
+    /^titane\s+one\s+singularity[\-\s]scan$/i,
+    /^sudo\s+singularity\s+scan$/i,
+    /^singularity\s+quantum$/i,
+    /^one\s+singularity[\-\s]scan$/i,
+    /^scan\s+quantique$/i,
+    /^quantum\s+scan$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1000,10 +1106,47 @@ export async function executeDevSudoCommand(
       case 'memory-optimize':
         return await MemoryHandlers.handleMemoryOptimize();
 
+      // TITANE∞ ONE Unified Brain (Super Prompt #SINGULARITY)
+      case 'titane-one-introspect':
+        return await TitaneOneHandlers.handleTitaneOneIntrospect();
+
+      case 'titane-one-evolve':
+        return await TitaneOneHandlers.handleTitaneOneEvolve();
+
+      case 'titane-one-heal':
+        return await TitaneOneHandlers.handleTitaneOneHeal();
+
+      case 'titane-one-fullheal':
+        return await TitaneOneHandlers.handleTitaneOneFullHeal();
+
+      case 'titane-one-unify':
+        return await TitaneOneHandlers.handleTitaneOneUnify();
+
+      case 'titane-one-optimize':
+        return await TitaneOneHandlers.handleTitaneOneOptimize();
+
+      case 'titane-one-vision-all':
+        return await TitaneOneHandlers.handleTitaneOneVisionAll();
+
+      case 'titane-one-analyze-dev':
+        return await TitaneOneHandlers.handleTitaneOneAnalyzeDev();
+
+      case 'titane-one-analyze-ui':
+        return await TitaneOneHandlers.handleTitaneOneAnalyzeUI();
+
+      case 'titane-one-analyze-backend':
+        return await TitaneOneHandlers.handleTitaneOneAnalyzeBackend();
+
+      case 'titane-one-analyze-memory':
+        return await TitaneOneHandlers.handleTitaneOneAnalyzeMemory();
+
+      case 'titane-one-singularity-scan':
+        return await TitaneOneHandlers.handleTitaneOneSingularityScan();
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.25.0 — MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY**\n\n**Commandes disponibles** (87 total):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.ONE — UNIFIED BRAIN + MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY**\n\n**Commandes disponibles** (98 totales):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize\n\n🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):\n- titane one introspect — Introspection totale (6 couches + 20 moteurs)\n- titane one evolve — Évolution automatique du système\n- titane one heal — Self-healing standard\n- titane one fullheal — Deep self-healing + reconstruction\n- titane one unify — Unification totale des 6 couches\n- titane one optimize — Optimisation globale complète\n- titane one vision-all — Triple vision (interne/externe/future)\n- titane one analyze dev — Analyse environnement dev\n- titane one analyze ui — Analyse UI/UX complète\n- titane one analyze backend — Analyse backend Rust/Tauri\n- titane one analyze memory — Analyse mémoire éternelle\n- titane one singularity-scan — Scan quantique Singularity`,
           success: false,
         };
     }
