@@ -55,6 +55,9 @@ mod hybrid_commands {
     include!("commands/hybrid.rs");
 }
 
+// Fusion Engine commands v∞.27.0 (Super Prompt #17)
+mod fusion;
+
 mod ollama;
 
 // Cognitive system (always available)
@@ -245,6 +248,13 @@ async fn main() {
     log::info!("✅ ImmersiveAvatarEngine v23: Voice + Lip-Sync + Expressions active");
 
     // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE FUSION ENGINE v∞.27.0 (Super Prompt #17)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🔗 Initializing FusionEngine v∞.27.0...");
+    let fusion_state = fusion::FusionEngineState::default();
+    log::info!("✅ FusionEngine v∞.27.0: Dataset + Memory + Logs unified");
+
+    // ═══════════════════════════════════════════════════════════════
     // INITIALIZE CHAT ORCHESTRATOR v16 (OVERDRIVE)
     // ═══════════════════════════════════════════════════════════════
     log::info!("💬 Initializing ChatOrchestrator v16...");
@@ -363,6 +373,7 @@ async fn main() {
         .manage(adaptive_engine)
         .manage(narrative_engine)
         .manage(avatar_engine)
+        .manage(fusion_state) // ✅ v∞.27.0 Fusion Engine
         .manage(chat_orchestrator_state)
         .manage(secrets_engine.clone())
         .manage(fusion_engine_state)
@@ -652,6 +663,19 @@ async fn main() {
         titane_infinity::system_center::sc_hypervision_get_anomalies,
         titane_infinity::system_center::sc_hypervision_clear_anomalies,
         titane_infinity::system_center::sc_hypervision_resolve_anomaly,
+
+        // ═══════════════════════════════════════════════════════════════
+        // FUSION ENGINE COMMANDS v∞.27.0 - Dataset + Memory + Logs
+        // ═══════════════════════════════════════════════════════════════
+        fusion::fusion_collect,
+        fusion::fusion_sync,
+        fusion::fusion_build_dataset,
+        fusion::fusion_export,
+        fusion::fusion_merge,
+        fusion::fusion_get_stats,
+        fusion::fusion_clear,
+        fusion::fusion_configure,
+        fusion::fusion_get_config,
 
         // ═══════════════════════════════════════════════════════════════
         // DESIGN CENTER COMMANDS v16 - Centre Design & Apparence Unifié

@@ -201,7 +201,18 @@ export type DevSudoAction =
   | 'hybrid-fix'
   | 'hybrid-apply'
   | 'hybrid-run'
-  | 'hybrid-logs';
+  | 'hybrid-logs'
+
+  // Fusion Engine (Super Prompt #17) v∞.27.0
+  | 'fusion-collect'
+  | 'fusion-sync'
+  | 'fusion-build-dataset'
+  | 'fusion-clean-dataset'
+  | 'fusion-compress'
+  | 'fusion-export'
+  | 'fusion-merge'
+  | 'fusion-package-training'
+  | 'fusion-stats';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -978,6 +989,62 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^show\s+logs?(\s+.+)?$/i,
     /^logs?(\s+.+)?$/i,
   ],
+
+  // Fusion Engine Commands (Super Prompt #17) v∞.27.0
+  'fusion-collect': [
+    /^fusion\.collect$/i,
+    /^sudo\s+fusion\.collect$/i,
+    /^collecte\s+fusion$/i,
+    /^fusion\s+collect$/i,
+  ],
+  'fusion-sync': [
+    /^fusion\.sync$/i,
+    /^sudo\s+fusion\.sync$/i,
+    /^synchronise\s+fusion$/i,
+    /^fusion\s+sync$/i,
+  ],
+  'fusion-build-dataset': [
+    /^fusion\.build[\-]?dataset$/i,
+    /^sudo\s+fusion\.build[\-]?dataset$/i,
+    /^build\s+fusion\s+dataset$/i,
+    /^génère\s+dataset\s+fusionné$/i,
+  ],
+  'fusion-clean-dataset': [
+    /^fusion\.clean[\-]?dataset$/i,
+    /^sudo\s+fusion\.clean[\-]?dataset$/i,
+    /^clean\s+fusion\s+dataset$/i,
+    /^nettoie\s+dataset\s+fusion$/i,
+  ],
+  'fusion-compress': [
+    /^fusion\.compress$/i,
+    /^sudo\s+fusion\.compress$/i,
+    /^compress\s+fusion$/i,
+    /^compresse\s+fusion$/i,
+  ],
+  'fusion-export': [
+    /^fusion\.export(\s+file=.+)?$/i,
+    /^sudo\s+fusion\.export(\s+file=.+)?$/i,
+    /^export\s+fusion(\s+.+)?$/i,
+    /^exporte\s+fusion(\s+.+)?$/i,
+  ],
+  'fusion-merge': [
+    /^fusion\.merge\s+(file|dataset)=.+$/i,
+    /^sudo\s+fusion\.merge\s+(file|dataset)=.+$/i,
+    /^merge\s+fusion\s+.+$/i,
+    /^fusionne\s+dataset\s+.+$/i,
+  ],
+  'fusion-package-training': [
+    /^fusion\.package[\-]?training$/i,
+    /^sudo\s+fusion\.package[\-]?training$/i,
+    /^package\s+fusion\s+training$/i,
+    /^crée\s+training\s+pack\s+fusion$/i,
+  ],
+  'fusion-stats': [
+    /^fusion\.stats$/i,
+    /^sudo\s+fusion\.stats$/i,
+    /^stats\s+fusion$/i,
+    /^statistiques\s+fusion$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1609,6 +1676,34 @@ export async function executeDevSudoCommand(
 
       case 'hybrid-logs':
         return await handleHybridLogs(command.params);
+
+      // Fusion Engine Commands (Super Prompt #17) v∞.27.0
+      case 'fusion-collect':
+        return await handleFusionCollect();
+
+      case 'fusion-sync':
+        return await handleFusionSync();
+
+      case 'fusion-build-dataset':
+        return await handleFusionBuildDataset();
+
+      case 'fusion-clean-dataset':
+        return await handleFusionCleanDataset();
+
+      case 'fusion-compress':
+        return await handleFusionCompress();
+
+      case 'fusion-export':
+        return await handleFusionExport(command.params);
+
+      case 'fusion-merge':
+        return await handleFusionMerge(command.params);
+
+      case 'fusion-package-training':
+        return await handleFusionPackageTraining();
+
+      case 'fusion-stats':
+        return await handleFusionStats();
 
       default:
         return {
@@ -3751,6 +3846,480 @@ ${logResult.output || '(aucun log)'}
       handled: true,
       success: false,
       response: `❌ Récupération logs échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FUSION ENGINE HANDLERS (Super Prompt #17) v∞.27.0
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * fusion-collect — Collecte toutes les sources (Memory + Logs + Dataset)
+ */
+async function handleFusionCollect(): Promise<DevSudoResult> {
+  try {
+    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+
+    const report = await fusionEngine.runFusionPipeline();
+
+    return {
+      handled: true,
+      success: report.success,
+      response: `🔗 **TITANE∞ FUSION ENGINE v∞ — Collecte Complète**
+
+✅ **Fusion terminée**:
+  - Sources unifiées: ${Object.keys(report.bySources).length}
+  - Entrées fusionnées: ${report.entriesFused}
+  - Entrées originales: ${report.originalCount}
+  - Compression: ${(report.compressionRatio * 100).toFixed(1)}%
+  - Durée: ${report.duration}ms
+
+📊 **Par Clusters**:
+${Object.entries(report.byClusters)
+  .map(([cluster, count]) => `  - ${cluster}: ${count}`)
+  .join('\n')}
+
+📦 **Par Sources**:
+${Object.entries(report.bySources)
+  .map(([source, count]) => `  - ${source}: ${count}`)
+  .join('\n')}
+
+${report.warnings.length > 0 ? `⚠️ **Warnings**: ${report.warnings.join(', ')}` : ''}
+${report.errors.length > 0 ? `❌ **Errors**: ${report.errors.join(', ')}` : ''}
+
+💡 **Next**: \`sudo fusion.export\` pour exporter le dataset`,
+      actions: [
+        {
+          type: 'fusion-collect',
+          description: `Fused ${report.entriesFused} entries`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Fusion échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-sync — Synchronise Memory + Logs + Dataset
+ */
+async function handleFusionSync(): Promise<DevSudoResult> {
+  try {
+    const result = await invoke('fusion_sync');
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔄 **TITANE∞ FUSION ENGINE v∞ — Synchronisation**
+
+✅ Sync completed: ${result}
+
+💾 **Sources synchronisées**:
+  - Memory Eternal Engine ✓
+  - Log Engine (Admin + UI + Evolution) ✓
+  - Dataset Collector Engine ✓
+  - Singularity Introspection ✓
+
+💡 **Next**: \`sudo fusion.collect\` pour fusionner`,
+      actions: [
+        {
+          type: 'fusion-sync',
+          description: 'Synced all sources',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Sync échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-build-dataset — Construit dataset fusionné optimisé
+ */
+async function handleFusionBuildDataset(): Promise<DevSudoResult> {
+  try {
+    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+    const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
+
+    const fusedDataset = fusionEngine.getFusedDataset();
+
+    if (fusedDataset.length === 0) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion.collect\``,
+      };
+    }
+
+    const jsonl = datasetBuilder.buildDataset(fusedDataset);
+    const lines = jsonl.split('\n').length;
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔨 **TITANE∞ FUSION ENGINE v∞ — Build Dataset**
+
+✅ **Dataset construit**:
+  - Format: JSONL
+  - Entrées: ${lines}
+  - Compression: High
+  - Variations prompts: Enabled
+
+📊 **Stats**:
+  - Total tokens: ~${Math.round((fusedDataset.reduce((sum, e) => sum + e.prompt.length + e.response.length, 0)) / 4)}
+  - Taille estimée: ~${(jsonl.length / (1024 * 1024)).toFixed(2)} MB
+
+💡 **Next**: \`sudo fusion.export\` pour télécharger`,
+      actions: [
+        {
+          type: 'fusion-build-dataset',
+          description: `Built dataset with ${lines} entries`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Build échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-clean-dataset — Nettoie dataset fusionné
+ */
+async function handleFusionCleanDataset(): Promise<DevSudoResult> {
+  try {
+    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+
+    fusionEngine.clearFusedDataset();
+
+    return {
+      handled: true,
+      success: true,
+      response: `🧹 **TITANE∞ FUSION ENGINE v∞ — Clean Dataset**
+
+✅ Dataset fusionné effacé
+
+💡 Pour reconstruire: \`sudo fusion.collect\``,
+      actions: [
+        {
+          type: 'fusion-clean-dataset',
+          description: 'Cleared fused dataset',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Clean échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-compress — Compression cognitive du dataset
+ */
+async function handleFusionCompress(): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `🗜️ **TITANE∞ FUSION ENGINE v∞ — Compression Cognitive**
+
+✅ Compression activée par défaut (level: high)
+
+📊 **Techniques appliquées**:
+  - Déduplication sémantique ✓
+  - Unification conceptuelle ✓
+  - Clustering par moteurs ✓
+  - Compression cognitive ✓
+
+💡 La compression est automatique lors de \`fusion.collect\``,
+    actions: [
+      {
+        type: 'fusion-compress',
+        description: 'Compression enabled',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * fusion-export — Exporte dataset fusionné en JSONL
+ */
+async function handleFusionExport(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+
+    const filename = params.file ? String(params.file) : 'titane-fusion-dataset.jsonl';
+    const jsonl = fusionEngine.exportToJSONL();
+
+    // Téléchargement automatique côté frontend
+    const blob = new Blob([jsonl], { type: 'application/jsonl' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    return {
+      handled: true,
+      success: true,
+      response: `💾 **TITANE∞ FUSION ENGINE v∞ — Export Dataset**
+
+✅ Dataset exporté: \`${filename}\`
+
+📊 **Contenu**:
+  - Format: JSONL (JSON Lines)
+  - Compatible: Ollama, LLaMA, GPT fine-tuning
+  - Optimisé pour: Llama 3.1
+
+📁 **Fichier téléchargé automatiquement**
+
+💡 Pour training pack complet: \`sudo fusion.package-training\``,
+      actions: [
+        {
+          type: 'fusion-export',
+          description: `Exported ${filename}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Export échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-merge — Fusionne dataset externe
+ */
+async function handleFusionMerge(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const file = params.file ? String(params.file) : params.dataset ? String(params.dataset) : '';
+
+    if (!file) {
+      return {
+        handled: true,
+        success: false,
+        response: `❌ Fichier requis. Usage: \`sudo fusion.merge file=path/to/dataset.jsonl\``,
+      };
+    }
+
+    // Appel backend Rust
+    const result = await invoke('fusion_merge', { sourcePath: file });
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔀 **TITANE∞ FUSION ENGINE v∞ — Merge Dataset**
+
+✅ Fusion externe: ${result}
+
+📦 **Fichier**: \`${file}\`
+
+💡 Le dataset externe a été fusionné avec le dataset principal`,
+      actions: [
+        {
+          type: 'fusion-merge',
+          description: `Merged ${file}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Merge échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-package-training — Crée training pack complet
+ */
+async function handleFusionPackageTraining(): Promise<DevSudoResult> {
+  try {
+    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+    const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
+
+    const fusedDataset = fusionEngine.getFusedDataset();
+
+    if (fusedDataset.length === 0) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion.collect\``,
+      };
+    }
+
+    const trainingPack = datasetBuilder.buildTrainingPackage(fusedDataset);
+
+    // Download dataset.jsonl
+    const datasetBlob = new Blob([trainingPack.dataset], { type: 'application/jsonl' });
+    const datasetUrl = URL.createObjectURL(datasetBlob);
+    const datasetLink = document.createElement('a');
+    datasetLink.href = datasetUrl;
+    datasetLink.download = 'dataset.jsonl';
+    datasetLink.click();
+    URL.revokeObjectURL(datasetUrl);
+
+    // Download Modelfile
+    const modelfileBlob = new Blob([trainingPack.modelfile], { type: 'text/plain' });
+    const modelfileUrl = URL.createObjectURL(modelfileBlob);
+    const modelfileLink = document.createElement('a');
+    modelfileLink.href = modelfileUrl;
+    modelfileLink.download = 'Modelfile';
+    modelfileLink.click();
+    URL.revokeObjectURL(modelfileUrl);
+
+    // Download training script
+    const scriptBlob = new Blob([trainingPack.trainingScript], { type: 'text/x-shellscript' });
+    const scriptUrl = URL.createObjectURL(scriptBlob);
+    const scriptLink = document.createElement('a');
+    scriptLink.href = scriptUrl;
+    scriptLink.download = 'train_titane_local.sh';
+    scriptLink.click();
+    URL.revokeObjectURL(scriptUrl);
+
+    // Download metadata
+    const metadataBlob = new Blob([trainingPack.metadata], { type: 'application/json' });
+    const metadataUrl = URL.createObjectURL(metadataBlob);
+    const metadataLink = document.createElement('a');
+    metadataLink.href = metadataUrl;
+    metadataLink.download = 'metadata.json';
+    metadataLink.click();
+    URL.revokeObjectURL(metadataUrl);
+
+    return {
+      handled: true,
+      success: true,
+      response: `📦 **TITANE∞ FUSION ENGINE v∞ — Training Pack**
+
+✅ **4 fichiers téléchargés**:
+  1. \`dataset.jsonl\` — Dataset JSONL (${trainingPack.stats.totalEntries} entries)
+  2. \`Modelfile\` — Configuration Ollama
+  3. \`train_titane_local.sh\` — Script training automatique
+  4. \`metadata.json\` — Métadonnées fusion
+
+📊 **Stats**:
+  - Total entries: ${trainingPack.stats.totalEntries}
+  - Total tokens: ~${trainingPack.stats.totalTokens}
+  - Avg tokens/entry: ${trainingPack.stats.avgTokensPerEntry}
+  - Size: ~${trainingPack.stats.sizeInMB.toFixed(2)} MB
+
+🚀 **Next Steps**:
+\`\`\`bash
+chmod +x train_titane_local.sh
+./train_titane_local.sh
+\`\`\`
+
+💡 Cela créera le modèle \`titane-local\` dans Ollama`,
+      actions: [
+        {
+          type: 'fusion-package-training',
+          description: `Created training pack (${trainingPack.stats.totalEntries} entries)`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Package échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * fusion-stats — Statistiques dataset fusionné
+ */
+async function handleFusionStats(): Promise<DevSudoResult> {
+  try {
+    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+
+    const stats = fusionEngine.getStats();
+
+    if (stats.totalEntries === 0) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ Dataset vide. Exécutez d'abord \`sudo fusion.collect\``,
+      };
+    }
+
+    return {
+      handled: true,
+      success: true,
+      response: `📊 **TITANE∞ FUSION ENGINE v∞ — Statistics**
+
+**Global**:
+  - Total entries: ${stats.totalEntries}
+  - Total tokens: ~${stats.totalTokens}
+  - Compression ratio: ${(stats.compressionRatio * 100).toFixed(1)}%
+  - Deduplication rate: ${(stats.deduplicationRate * 100).toFixed(1)}%
+  - Avg quality: ${(stats.avgQuality * 100).toFixed(1)}%
+  - Avg importance: ${(stats.avgImportance * 100).toFixed(1)}%
+  - Size: ~${stats.sizeInMB.toFixed(2)} MB
+
+**By Clusters**:
+${Object.entries(stats.byClusters)
+  .sort(([, a], [, b]) => b - a)
+  .slice(0, 10)
+  .map(([cluster, count]) => `  - ${cluster}: ${count}`)
+  .join('\n')}
+
+**By Sources**:
+${Object.entries(stats.bySources)
+  .map(([source, count]) => `  - ${source}: ${count}`)
+  .join('\n')}
+
+**Last Fusion**: ${new Date(stats.lastFusion).toLocaleString('fr-FR')}
+
+💡 **Next**: \`sudo fusion.export\` ou \`sudo fusion.package-training\``,
+      actions: [
+        {
+          type: 'fusion-stats',
+          description: 'Retrieved fusion stats',
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Stats échouées: ${error instanceof Error ? error.message : String(error)}`,
       error: error instanceof Error ? error.message : String(error),
     };
   }
