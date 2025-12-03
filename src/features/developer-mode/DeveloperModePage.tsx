@@ -363,7 +363,7 @@ function PatchHistoryCard(): JSX.Element {
       ) : (
         <div className="history-list">
           <AnimatePresence>
-            {history?.patches.map((item) => (
+            {(history?.patches ?? []).map((item) => (
               <motion.div
                 key={item.patch_id}
                 className={`history-item ${item.status.toLowerCase().replace(' ', '-')}`}

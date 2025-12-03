@@ -415,6 +415,9 @@
             { "command": "sc_get_cluster_peers" },
             { "command": "sc_initialize_cluster" },
             { "command": "sc_shutdown_cluster" },
+            { "command": "sc_run_full_diagnostics" },
+            { "command": "sc_run_quick_diagnostics" },
+            { "command": "sc_get_diagnostic_status" },
 
             { "_comment": "═══════════════════════════════════════════════════════════════" },
             { "_comment": "IDENTITY ENGINE v∞.Ω" },
