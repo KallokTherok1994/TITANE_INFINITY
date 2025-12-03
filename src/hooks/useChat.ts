@@ -501,8 +501,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           role: 'assistant',
           content: devSudoResult.response,
           timestamp: Date.now(),
-          metadata: withUiId({ 
-            provider: 'dev-sudo-handler', 
+          metadata: withUiId({
+            provider: 'dev-sudo-handler',
             devSudoCommand: true,
             success: devSudoResult.success,
             actions: devSudoResult.actions

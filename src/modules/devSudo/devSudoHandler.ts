@@ -1,12 +1,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.21.0 — DEV-SUDO MODE HANDLER
+ *   TITANE∞ v∞.22.0 — DEV-SUDO MODE HANDLER
  *   Détection et exécution des commandes développeur dans le Chat IA
- *   Intégration SUPER PROMPT « FULL UNLOCK SUDO DEV MODE »
+ *   Intégration SUPER PROMPTS #4/#5/#6 UNIFIÉS
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import { invoke } from '@tauri-apps/api/core';
+import * as ExtendedHandlers from './devSudoExtendedHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -20,22 +21,56 @@ export interface DevSudoCommand {
 }
 
 export type DevSudoAction =
+  // Corrections & Fixes
   | 'fix-deps'
+  | 'fix-opus'
+  | 'fix-error'
+  | 'repair-component'
+  | 'self-heal'
+  | 'deep-heal'
+  | 'auto-fix'
+  
+  // Diagnostic & Analysis
+  | 'diagnostic'
+  | 'status-full'
+  | 'introspect'
+  | 'analyze-module'
+  | 'scan-modules'
+  | 'scan-opus'
+  | 'scan-errors'
+  | 'health-check'
+  
+  // Dev Operations
   | 'restart-tauri'
   | 'test-bubble'
-  | 'fix-opus'
-  | 'status-full'
-  | 'analyze-module'
-  | 'repair-component'
+  | 'test-module'
   | 'show-code'
   | 'whitelist-tauri'
-  | 'fix-error'
-  | 'merge-opus'
   | 'create-component'
   | 'add-feature'
-  | 'diagnostic'
-  | 'introspect'
-  | 'self-heal';
+  | 'merge-opus'
+  
+  // Console Commands
+  | 'console-ls'
+  | 'console-open'
+  | 'console-patch'
+  | 'console-rebuild'
+  
+  // Optimization
+  | 'optimize-build'
+  | 'optimize-ui'
+  | 'optimize-rust'
+  | 'optimize-react'
+  
+  // API & Connections
+  | 'connect-api'
+  | 'test-api'
+  | 'verify-keys'
+  
+  // DevOps
+  | 'full-sync'
+  | 'verify-architecture'
+  | 'generate-report';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -135,6 +170,91 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^auto[- ]répare?$/i,
     /^healing\s+engine$/i,
   ],
+  'deep-heal': [
+    /^deep[- ]heal$/i,
+    /^deep\s+healing$/i,
+    /^réparation\s+profonde$/i,
+  ],
+  'auto-fix': [
+    /^auto[- ]fix$/i,
+    /^correction\s+auto(matique)?$/i,
+  ],
+  'scan-modules': [
+    /^scan\s+modules$/i,
+    /^analyse\s+(les\s+)?modules$/i,
+  ],
+  'scan-opus': [
+    /^scan\s+opus$/i,
+    /^vérifie\s+opus$/i,
+  ],
+  'scan-errors': [
+    /^scan\s+errors?$/i,
+    /^liste\s+(les\s+)?erreurs$/i,
+  ],
+  'health-check': [
+    /^health[- ]check$/i,
+    /^vérification\s+santé$/i,
+  ],
+  'test-module': [
+    /^test\s+module\s+(.+)$/i,
+    /^teste\s+(le\s+)?module\s+(.+)$/i,
+  ],
+  'console-ls': [
+    /^(sudo\s+)?titane\s+ls(\s+(.+))?$/i,
+    /^ls(\s+(.+))?$/i,
+  ],
+  'console-open': [
+    /^(sudo\s+)?titane\s+open\s+(.+)$/i,
+    /^open\s+(.+)$/i,
+  ],
+  'console-patch': [
+    /^(sudo\s+)?titane\s+patch\s+(.+)$/i,
+    /^patch\s+(.+)$/i,
+  ],
+  'console-rebuild': [
+    /^(sudo\s+)?titane\s+rebuild\s+store$/i,
+    /^rebuild\s+store$/i,
+  ],
+  'optimize-build': [
+    /^optimize\s+build$/i,
+    /^optimise\s+(le\s+)?build$/i,
+  ],
+  'optimize-ui': [
+    /^optimize\s+ui$/i,
+    /^optimise\s+(l')?ui$/i,
+  ],
+  'optimize-rust': [
+    /^optimize\s+rust$/i,
+    /^optimise\s+rust$/i,
+  ],
+  'optimize-react': [
+    /^optimize\s+react$/i,
+    /^optimise\s+react$/i,
+  ],
+  'connect-api': [
+    /^connect\s+(.+)$/i,
+    /^connecte\s+(.+)$/i,
+  ],
+  'test-api': [
+    /^test\s+api\s+(.+)$/i,
+    /^teste\s+(l')?api\s+(.+)$/i,
+  ],
+  'verify-keys': [
+    /^verify\s+keys$/i,
+    /^vérifie\s+(les\s+)?clés?$/i,
+  ],
+  'full-sync': [
+    /^full[- ]sync$/i,
+    /^sync\s+complet$/i,
+  ],
+  'verify-architecture': [
+    /^verify\s+architecture$/i,
+    /^vérifie\s+(l')?architecture$/i,
+  ],
+  'generate-report': [
+    /^generate\s+report$/i,
+    /^génère\s+(un\s+)?rapport$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -146,7 +266,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
  */
 export function containsDevSudoCommand(message: string): boolean {
   const trimmed = message.trim();
-  
+
   // Commandes simples
   for (const patterns of Object.values(DEV_SUDO_PATTERNS)) {
     for (const pattern of patterns) {
@@ -209,6 +329,27 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<s
     case 'whitelist-tauri':
       params.command = match[1] || match[2];
       break;
+
+    // Console commands
+    case 'console-ls':
+      params.path = match[3] || match[2] || '/src';
+      break;
+
+    case 'console-open':
+    case 'console-patch':
+      params.target = match[2] || match[1];
+      break;
+
+    // Test commands
+    case 'test-module':
+      params.module = match[2] || match[1];
+      break;
+
+    // API commands
+    case 'connect-api':
+    case 'test-api':
+      params.api = match[1];
+      break;
   }
 
   return params;
@@ -258,10 +399,74 @@ export async function executeDevSudoCommand(
       case 'self-heal':
         return await handleSelfHeal();
 
+      // Extended handlers (v∞.22.0)
+      case 'deep-heal':
+        return await ExtendedHandlers.handleDeepHeal();
+
+      case 'auto-fix':
+        return await ExtendedHandlers.handleAutoFix();
+
+      case 'scan-modules':
+        return await ExtendedHandlers.handleScanModules();
+
+      case 'scan-opus':
+        return await ExtendedHandlers.handleScanOpus();
+
+      case 'scan-errors':
+        return await ExtendedHandlers.handleScanErrors();
+
+      case 'health-check':
+        return await ExtendedHandlers.handleHealthCheck();
+
+      case 'console-ls':
+        return await ExtendedHandlers.handleConsoleLs(command.params.path as string);
+
+      case 'console-open':
+        return await ExtendedHandlers.handleConsoleOpen(command.params.target as string);
+
+      case 'console-patch':
+        return await ExtendedHandlers.handleConsolePatch(command.params.target as string);
+
+      case 'console-rebuild':
+        return await ExtendedHandlers.handleConsoleRebuild();
+
+      case 'optimize-build':
+        return await ExtendedHandlers.handleOptimizeBuild();
+
+      case 'optimize-ui':
+        return await ExtendedHandlers.handleOptimizeUI();
+
+      case 'optimize-rust':
+        return await ExtendedHandlers.handleOptimizeRust();
+
+      case 'optimize-react':
+        return await ExtendedHandlers.handleOptimizeReact();
+
+      case 'connect-api':
+        return await ExtendedHandlers.handleConnectAPI(command.params.api as string);
+
+      case 'test-api':
+        return await ExtendedHandlers.handleTestAPI(command.params.api as string);
+
+      case 'verify-keys':
+        return await ExtendedHandlers.handleVerifyKeys();
+
+      case 'full-sync':
+        return await ExtendedHandlers.handleFullSync();
+
+      case 'verify-architecture':
+        return await ExtendedHandlers.handleVerifyArchitecture();
+
+      case 'generate-report':
+        return await ExtendedHandlers.handleGenerateReport();
+
+      case 'test-module':
+        return await ExtendedHandlers.handleTestModule(command.params.module as string);
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\nCommandes disponibles:\n- fix deps\n- restart tauri\n- test bubble\n- fix opus\n- status full\n- analyze module [nom]\n- show code [fichier]\n- diagnostic\n- introspect\n- self-heal`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\nCommandes disponibles:\n- fix deps\n- restart tauri\n- test bubble\n- fix opus\n- status full\n- analyze module [nom]\n- show code [fichier]\n- diagnostic\n- introspect\n- self-heal\n- deep-heal\n- auto-fix\n- scan modules/opus/errors\n- health check\n- console ls/open/patch/rebuild\n- optimize build/ui/rust/react\n- connect/test api [nom]\n- verify keys\n- full sync\n- verify architecture\n- generate report\n- test module [nom]`,
           success: false,
         };
     }
