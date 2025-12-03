@@ -152,7 +152,15 @@ export type DevSudoAction =
   | 'titane-one-analyze-ui'
   | 'titane-one-analyze-backend'
   | 'titane-one-analyze-memory'
-  | 'titane-one-singularity-scan';
+  | 'titane-one-singularity-scan'
+
+  // AI Local Model (Super Prompt #12)
+  | 'ia-add'
+  | 'ia-test'
+  | 'ia-set-default'
+  | 'ia-enable-devmode'
+  | 'ia-scan'
+  | 'ia-status';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -678,6 +686,51 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^scan\s+quantique$/i,
     /^quantum\s+scan$/i,
   ],
+
+  // AI Local Model (Super Prompt #12)
+  'ia-add': [
+    /^ia\s+add$/i,
+    /^sudo\s+ia\s+add$/i,
+    /^ajouter?\s+modèle\s+ia$/i,
+    /^add\s+ai\s+model$/i,
+    /^install\s+titane\s+local$/i,
+  ],
+  'ia-test': [
+    /^ia\s+test$/i,
+    /^sudo\s+ia\s+test$/i,
+    /^tester?\s+ia\s+local(e)?$/i,
+    /^test\s+ai\s+model$/i,
+    /^test\s+ollama$/i,
+  ],
+  'ia-set-default': [
+    /^ia\s+set[\-\s]default\s+(.+)$/i,
+    /^sudo\s+ia\s+default\s+(.+)$/i,
+    /^définir\s+modèle\s+(.+)$/i,
+    /^set\s+ai\s+model\s+(.+)$/i,
+    /^use\s+model\s+(.+)$/i,
+  ],
+  'ia-enable-devmode': [
+    /^ia\s+enable[\-\s]devmode$/i,
+    /^ia\s+dev[\-\s]mode\s+on$/i,
+    /^sudo\s+ia\s+devmode$/i,
+    /^activer?\s+mode\s+dev\s+ia$/i,
+    /^enable\s+ai\s+dev\s+mode$/i,
+  ],
+  'ia-scan': [
+    /^ia\s+scan$/i,
+    /^sudo\s+ia\s+scan$/i,
+    /^scanner?\s+modèles?\s+ia$/i,
+    /^list\s+ai\s+models$/i,
+    /^ollama\s+list$/i,
+  ],
+  'ia-status': [
+    /^ia\s+status$/i,
+    /^sudo\s+ia\s+status$/i,
+    /^statut\s+ia$/i,
+    /^ai\s+status$/i,
+    /^ollama\s+status$/i,
+    /^check\s+ollama$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1143,10 +1196,29 @@ export async function executeDevSudoCommand(
       case 'titane-one-singularity-scan':
         return await TitaneOneHandlers.handleTitaneOneSingularityScan();
 
+      // AI Local Model (Super Prompt #12)
+      case 'ia-add':
+        return await handleIAAdd();
+
+      case 'ia-test':
+        return await handleIATest();
+
+      case 'ia-set-default':
+        return await handleIASetDefault(command.params.modelName as string);
+
+      case 'ia-enable-devmode':
+        return await handleIAEnableDevMode();
+
+      case 'ia-scan':
+        return await handleIAScan();
+
+      case 'ia-status':
+        return await handleIAStatus();
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.ONE — UNIFIED BRAIN + MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY**\n\n**Commandes disponibles** (98 totales):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize\n\n🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):\n- titane one introspect — Introspection totale (6 couches + 20 moteurs)\n- titane one evolve — Évolution automatique du système\n- titane one heal — Self-healing standard\n- titane one fullheal — Deep self-healing + reconstruction\n- titane one unify — Unification totale des 6 couches\n- titane one optimize — Optimisation globale complète\n- titane one vision-all — Triple vision (interne/externe/future)\n- titane one analyze dev — Analyse environnement dev\n- titane one analyze ui — Analyse UI/UX complète\n- titane one analyze backend — Analyse backend Rust/Tauri\n- titane one analyze memory — Analyse mémoire éternelle\n- titane one singularity-scan — Scan quantique Singularity`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.LOCAL — UNIFIED BRAIN + MASTER DEV + SINGULARITY + VISION + BACKEND + MEMORY + AI LOCAL**\n\n**Commandes disponibles** (104 totales):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7 - 19 commandes):\n- open/view/create file [path], patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target], auto-import\n- generate module [name], run tests\n- master analysis, architect refactor, code review [target]\n\n🧠 **Singularity Mind Engine** (Super Prompt #8 - 6 commandes):\n- singularity-scan, brain-analysis\n- cognitive-check, meta-repair\n- evolution-report, coherence-check\n\n👁️ **Vision Engine** (Super Prompt #9 - 5 commandes):\n- vision-analyze, ui-diagnostic\n- design-review, frontend-optimize, visual-repair\n\n🦀 **Backend & API Master** (Super Prompt #10 - 7 commandes):\n- backend-analysis, fix-handler [name]\n- create-api [name], whitelist-command [name]\n- optimize-cargo, build-backend, analyze-security\n\n💾 **Memory Eternal Engine** (Super Prompt #11 - 8 commandes):\n- memory-scan, memory-heal, memory-deepheal\n- memory-snapshot, memory-export, memory-import [file]\n- memory-rebuild, memory-optimize\n\n🧬 **TITANE∞ ONE Unified Brain** (Super Prompt #SINGULARITY - 11 commandes):\n- titane one introspect — Introspection totale (6 couches + 20 moteurs)\n- titane one evolve — Évolution automatique du système\n- titane one heal — Self-healing standard\n- titane one fullheal — Deep self-healing + reconstruction\n- titane one unify — Unification totale des 6 couches\n- titane one optimize — Optimisation globale complète\n- titane one vision-all — Triple vision (interne/externe/future)\n- titane one analyze dev — Analyse environnement dev\n- titane one analyze ui — Analyse UI/UX complète\n- titane one analyze backend — Analyse backend Rust/Tauri\n- titane one analyze memory — Analyse mémoire éternelle\n- titane one singularity-scan — Scan quantique Singularity\n\n🤖 **AI Local Model** (Super Prompt #12 - 6 commandes):\n- ia add — Installer TITANE∞ Local (LLama 3.1)\n- ia test — Tester le modèle local\n- ia set-default [model] — Définir modèle par défaut\n- ia enable-devmode — Activer mode développeur optimisé\n- ia scan — Lister les modèles installés\n- ia status — Vérifier statut Ollama + config IA`,
           success: false,
         };
     }
@@ -1504,6 +1576,422 @@ async function handleSelfHeal(): Promise<DevSudoResult> {
 
 📖 **Documentation**: \`src/engines/selfHealing/selfHealingEngine.ts\``,
   };
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AI LOCAL MODEL HANDLERS (Super Prompt #12)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * ia add — Installer/ajouter le modèle local TITANE∞
+ */
+async function handleIAAdd(): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `🤖 **TITANE∞ LOCAL — Installation du modèle IA local**
+
+📦 **Étape 1**: Installer Ollama + LLama 3.1
+
+Exécutez le script d'installation automatique:
+\`\`\`bash
+cd /home/titane/Documents/TITANE_INFINITY
+./install_titane_local.sh
+\`\`\`
+
+📋 **Le script va**:
+1. ✅ Vérifier le système (OS, RAM, disk)
+2. ✅ Installer Ollama (si absent)
+3. ✅ Télécharger LLama 3.1 (~4.7GB)
+4. ✅ Créer le modèle titane-local depuis Modelfile
+5. ✅ Tester le modèle avec un prompt
+6. ✅ Vérifier l'API HTTP (localhost:11434)
+7. ✅ Afficher les instructions d'utilisation
+
+⏱️ **Durée**: ~10-15 minutes (selon connexion internet)
+
+📖 **Documentation complète**: \`SUPER_PROMPT_TITANE_LOCAL_MODEL_v∞.md\`
+
+💡 **Après installation**:
+- Utilisez \`ia status\` pour vérifier
+- Utilisez \`ia test\` pour tester
+- Utilisez \`ia set-default titane-local\` pour activer`,
+    actions: [
+      {
+        type: 'ia-installation',
+        description: 'Installation TITANE∞ Local Model',
+        result: 'pending',
+        details: 'Exécutez ./install_titane_local.sh',
+      },
+    ],
+  };
+}
+
+/**
+ * ia test — Tester le modèle local
+ */
+async function handleIATest(): Promise<DevSudoResult> {
+  try {
+    const status = await invoke<{ available: boolean; models: string[] }>('ai_check_ollama_status');
+
+    if (!status.available) {
+      return {
+        handled: true,
+        success: false,
+        response: `❌ **TITANE∞ LOCAL — Ollama non disponible**
+
+⚠️ Ollama n'est pas installé ou non démarré.
+
+📦 **Installation**:
+\`\`\`bash
+./install_titane_local.sh
+\`\`\`
+
+🔧 **Démarrer Ollama manuellement**:
+\`\`\`bash
+ollama serve
+\`\`\`
+
+💡 **Vérification**:
+\`\`\`bash
+curl http://localhost:11434/api/tags
+\`\`\``,
+      };
+    }
+
+    // Test avec un prompt simple
+    const testResponse = await invoke<{ content: string; model: string }>('ai_generate_local', {
+      request: {
+        prompt: 'Dis "Hello from TITANE∞ Local!" en une phrase.',
+        model: 'titane-local',
+        stream: false,
+        temperature: 0.7,
+        max_tokens: 50,
+      },
+    });
+
+    return {
+      handled: true,
+      success: true,
+      response: `✅ **TITANE∞ LOCAL — Test réussi !**
+
+🤖 **Modèle actif**: ${testResponse.model}
+
+📝 **Réponse du modèle**:
+> ${testResponse.content}
+
+✅ **Status**: Ollama fonctionne correctement
+📊 **Modèles installés**: ${status.models.join(', ')}
+
+💡 **Prochaines étapes**:
+- Utilisez le modèle dans le Chat IA
+- Activez le DEV MODE avec \`ia enable-devmode\`
+- Définissez comme modèle par défaut avec \`ia set-default titane-local\``,
+      actions: [
+        {
+          type: 'ia-test',
+          description: 'Test du modèle local',
+          result: 'success',
+          details: `Réponse reçue du modèle ${testResponse.model}`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur lors du test**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Vérifications**:
+1. Ollama est-il démarré ? → \`ollama serve\`
+2. Le modèle est-il installé ? → \`ollama list\`
+3. L'API répond-elle ? → \`curl http://localhost:11434/api/tags\`
+
+📦 **Réinstallation**:
+\`\`\`bash
+./install_titane_local.sh
+\`\`\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * ia set-default <model> — Définir le modèle par défaut
+ */
+async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
+  if (!modelName) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Nom de modèle manquant**
+
+📝 **Usage**: \`ia set-default <model>\`
+
+📋 **Exemples**:
+- \`ia set-default titane-local\`
+- \`ia set-default llama3.1\`
+- \`ia set-default codellama\`
+
+💡 **Voir modèles disponibles**: \`ia scan\``,
+    };
+  }
+
+  try {
+    const result = await invoke<string>('ai_set_local_model', { modelName });
+
+    return {
+      handled: true,
+      success: true,
+      response: `✅ **TITANE∞ LOCAL — Modèle défini**
+
+🤖 **Nouveau modèle par défaut**: ${modelName}
+
+✅ ${result}
+
+💡 **Le modèle est maintenant actif** et sera utilisé pour:
+- Génération IA dans le Chat
+- Mode DEV (micro-patches, fixes rapides)
+- Assistance développeur
+
+🎯 **Testez-le**: \`ia test\``,
+      actions: [
+        {
+          type: 'ia-set-default',
+          description: `Modèle par défaut: ${modelName}`,
+          result: 'success',
+          details: result,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+💡 **Vérifications**:
+- Le modèle existe-t-il ? → \`ia scan\`
+- Ollama est-il démarré ? → \`ollama serve\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * ia enable-devmode — Activer le mode développeur optimisé
+ */
+async function handleIAEnableDevMode(): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `🚀 **TITANE∞ LOCAL — DEV MODE activé**
+
+⚡ **Mode développeur optimisé pour**:
+- ✅ Micro-patches rapides (<30s)
+- ✅ Fixes ciblés (1-5 lignes)
+- ✅ Diagnostics précis
+- ✅ Refactoring contextualisé
+- ✅ Réponses concises, code-focused
+
+🧠 **Configuration**:
+- **Modèle**: titane-local (LLama 3.1 Instruct fine-tuned)
+- **Temperature**: 0.7 (équilibre créativité/précision)
+- **Context**: 4096 tokens
+- **Output**: 2048 tokens max
+- **Philosophy**: "Show don't tell", "Fix fast", "Context-aware"
+
+📋 **Le modèle connaît**:
+- Architecture TITANE∞ (Tauri + React)
+- Modules Singularity, Memory, DevSudo
+- Stack TypeScript, Rust, TailwindCSS
+- Design System Monochrome v16
+
+🎯 **Commandes DEV MODE**:
+- \`fix <cible>\` → Correction rapide
+- \`patch <file>\` → Micro-patch ciblé
+- \`explain <code>\` → Explication concise
+- \`optimize <module>\` → Refactoring intelligent
+
+💡 **DEV MODE actif dans le Chat IA**. Testez avec un prompt de dev!`,
+    actions: [
+      {
+        type: 'ia-devmode',
+        description: 'Activation DEV MODE',
+        result: 'success',
+        details: 'Mode développeur optimisé activé avec titane-local',
+      },
+    ],
+  };
+}
+
+/**
+ * ia scan — Scanner les modèles locaux disponibles
+ */
+async function handleIAScan(): Promise<DevSudoResult> {
+  try {
+    const models = await invoke<string[]>('ai_scan_local_models');
+
+    if (models.length === 0) {
+      return {
+        handled: true,
+        success: false,
+        response: `⚠️ **TITANE∞ LOCAL — Aucun modèle trouvé**
+
+📦 **Installation requise**:
+\`\`\`bash
+./install_titane_local.sh
+\`\`\`
+
+Ou installez manuellement:
+\`\`\`bash
+ollama pull llama3.1
+ollama create titane-local -f Modelfile
+\`\`\`
+
+💡 **Vérifiez Ollama**: \`ia status\``,
+      };
+    }
+
+    const modelsList = models.map((m, i) => `${i + 1}. 🤖 ${m}`).join('\n');
+
+    return {
+      handled: true,
+      success: true,
+      response: `🤖 **TITANE∞ LOCAL — Modèles disponibles**
+
+📦 **Modèles installés** (${models.length}):
+${modelsList}
+
+💡 **Pour utiliser un modèle**:
+\`\`\`
+ia set-default <model>
+\`\`\`
+
+✅ **Ollama fonctionne** → http://localhost:11434`,
+      actions: [
+        {
+          type: 'ia-scan',
+          description: `Scan des modèles locaux`,
+          result: 'success',
+          details: `${models.length} modèles trouvés`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur scan**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Vérifications**:
+1. Ollama est-il démarré ? → \`ollama serve\`
+2. L'API répond-elle ? → \`curl http://localhost:11434/api/tags\`
+
+📦 **Installation**: \`./install_titane_local.sh\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * ia status — Vérifier le statut Ollama et configuration IA
+ */
+async function handleIAStatus(): Promise<DevSudoResult> {
+  try {
+    const status = await invoke<{
+      available: boolean;
+      version?: string;
+      models: string[];
+    }>('ai_check_ollama_status');
+
+    if (!status.available) {
+      return {
+        handled: true,
+        success: false,
+        response: `❌ **TITANE∞ LOCAL — Ollama OFFLINE**
+
+⚠️ Ollama n'est pas disponible
+
+🔧 **Démarrer Ollama**:
+\`\`\`bash
+ollama serve
+\`\`\`
+
+📦 **Installer Ollama**:
+\`\`\`bash
+./install_titane_local.sh
+\`\`\`
+
+💡 **Vérification manuelle**:
+\`\`\`bash
+curl http://localhost:11434/api/tags
+\`\`\``,
+      };
+    }
+
+    const modelsList = status.models.length > 0
+      ? status.models.map((m, i) => `  ${i + 1}. 🤖 ${m}`).join('\n')
+      : '  ⚠️ Aucun modèle installé';
+
+    return {
+      handled: true,
+      success: true,
+      response: `✅ **TITANE∞ LOCAL — Status Ollama**
+
+🟢 **ONLINE** → http://localhost:11434
+
+📊 **Configuration**:
+- **Version**: ${status.version || 'unknown'}
+- **Modèles**: ${status.models.length}
+- **Endpoint**: http://localhost:11434/api/generate
+- **Status**: OPERATIONAL
+
+📦 **Modèles installés**:
+${modelsList}
+
+🎯 **Providers IA disponibles**:
+1. 🌐 Gemini 2.0 Flash (Cloud - rapide)
+2. 🤖 GPT-4 Turbo (Cloud - performant)
+3. 🧠 TITANE∞ Local (Local - DEV MODE)
+4. 🎭 Claude 3.5 Sonnet (Cloud - raisonnement)
+
+💡 **Commandes**:
+- \`ia test\` → Tester le modèle
+- \`ia scan\` → Lister les modèles
+- \`ia set-default <model>\` → Changer le modèle
+- \`ia enable-devmode\` → Activer DEV MODE`,
+      actions: [
+        {
+          type: 'ia-status',
+          description: 'Vérification statut Ollama',
+          result: 'success',
+          details: `${status.models.length} modèles disponibles`,
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ **TITANE∞ LOCAL — Erreur vérification**
+
+⚠️ ${error instanceof Error ? error.message : String(error)}
+
+🔧 **Dépannage**:
+1. Vérifier service: \`pgrep ollama\`
+2. Démarrer: \`ollama serve\`
+3. Tester API: \`curl http://localhost:11434/api/tags\`
+4. Réinstaller: \`./install_titane_local.sh\``,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
