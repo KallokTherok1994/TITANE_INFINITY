@@ -207,7 +207,7 @@ export class SingularityIntrospectionEngine {
 
     // 5. Micro Self-Healing (corrections automatiques immédiates)
     const selfHealingApplied = await this.applyMicroSelfHealing(diagnostic);
-    diagnostic.selfHealingApplied = selfHealingApplied as string[];
+    diagnostic.selfHealingApplied = selfHealingApplied;
 
     // 6. Calcul de confiance
     const confidenceScore = this.calculateConfidenceScore(internalVision, diagnostic);
