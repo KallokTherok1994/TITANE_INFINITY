@@ -88,10 +88,10 @@ export class DataCollectorEngine {
   private dataset: DatasetEntry[] = [];
   private stats: DatasetStats;
   private isCollecting: boolean;
-  
+
   // Pipeline principal
   async runCollectionPipeline(): Promise<CollectionReport>
-  
+
   // 6 Extracteurs par catégorie
   private async extractSuperPrompts(): Promise<DatasetEntry[]>
   private async extractAIInteractions(): Promise<DatasetEntry[]>
@@ -99,23 +99,23 @@ export class DataCollectorEngine {
   private async extractIntrospections(): Promise<DatasetEntry[]>
   private async extractMemoryHistory(): Promise<DatasetEntry[]>
   private extractStylePatterns(): DatasetEntry[]
-  
+
   // Filtrage & Normalisation
   private filterDataset(entries: DatasetEntry[]): DatasetEntry[]
   private normalizeEntry(entry: DatasetEntry): void
   private cleanDataset(): void
-  
+
   // Génération & Export
   exportToJSONL(): string
   generateModelfile(): string
   generateTrainingScript(): string
   exportTrainingPack(): { dataset, modelfile, script }
-  
+
   // Persistance
   private saveDataset(): Promise<void>
   private loadDataset(): void
   clearDataset(): void
-  
+
   // Stats
   getStats(): DatasetStats
   getDataset(): DatasetEntry[]
@@ -243,15 +243,15 @@ Design monochrome TITANE∞:
 // Exemple: dataset.collect
 async function handleDatasetCollect(): Promise<DevSudoResult> {
   const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-  
+
   const report = await dataCollector.runCollectionPipeline();
-  
+
   if (report.success) {
     return {
       handled: true,
       success: true,
       response: `✅ Collection Complete
-        
+
 Total collecté: ${report.entriesCollected} entrées
 Super-prompts: ${report.byCategory['super-prompt']}
 Interactions: ${report.byCategory['interaction']}
@@ -279,13 +279,13 @@ Tous les handlers suivent le pattern:
 ```typescript
 private async extractMemoryHistory(): Promise<DatasetEntry[]> {
   const entries: DatasetEntry[] = [];
-  
+
   // Récupérer patches depuis Memory Engine
   const codeMemories = await MemoryEngine.recall('patch', {
     type: 'code',
     limit: 50,
   });
-  
+
   for (const memory of codeMemories) {
     entries.push({
       prompt: 'Applique ce patch de code',
@@ -300,7 +300,7 @@ private async extractMemoryHistory(): Promise<DatasetEntry[]> {
       },
     });
   }
-  
+
   return entries;
 }
 ```
@@ -326,28 +326,28 @@ Chaque extracteur suit le même pattern:
 private filterDataset(entries: DatasetEntry[]): DatasetEntry[] {
   const seen = new Set<string>();
   const filtered: DatasetEntry[] = [];
-  
+
   for (const entry of entries) {
     // Skip si qualité < 0.5
     if (entry.metadata && entry.metadata.quality < 0.5) {
       continue;
     }
-    
+
     // Skip si trop court (bruit)
     if (entry.prompt.length < 10 || entry.response.length < 20) {
       continue;
     }
-    
+
     // Détection doublons par hash
     const hash = this.hashEntry(entry);
     if (seen.has(hash)) {
       continue;
     }
-    
+
     seen.add(hash);
     filtered.push(entry);
   }
-  
+
   return filtered;
 }
 ```
@@ -359,13 +359,13 @@ private normalizeEntry(entry: DatasetEntry): void {
   // Nettoyer retours à la ligne excessifs
   entry.prompt = entry.prompt.trim().replace(/\n{3,}/g, '\n\n');
   entry.response = entry.response.trim().replace(/\n{3,}/g, '\n\n');
-  
+
   // Limiter longueur (éviter trop long)
   const MAX_LENGTH = 4000;
   if (entry.response.length > MAX_LENGTH) {
     entry.response = entry.response.substring(0, MAX_LENGTH) + '\n[...tronqué]';
   }
-  
+
   // Tags par défaut si manquants
   if (entry.metadata && entry.metadata.tags.length === 0) {
     entry.metadata.tags = ['titane', 'general'];

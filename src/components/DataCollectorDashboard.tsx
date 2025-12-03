@@ -3,16 +3,16 @@
  *   TITANE∞ DATA COLLECTOR DASHBOARD v∞
  *   Interface visuelle pour le Data Collector Engine
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Composant React pour visualiser, contrôler et exporter le dataset d'entraînement.
- * 
+ *
  * Features:
  * - Statistiques temps réel
  * - Visualisation par catégorie
  * - Contrôles de collecte/export
  * - Prévisualisation dataset
  * - Export JSONL + Training Pack
- * 
+ *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
@@ -89,7 +89,7 @@ export function DataCollectorDashboard() {
 
   const handleExportTrainingPack = () => {
     const pack = dataCollector.exportTrainingPack();
-    
+
     // Export dataset.jsonl
     const datasetBlob = new Blob([pack.dataset], { type: 'application/jsonl' });
     const datasetUrl = URL.createObjectURL(datasetBlob);
@@ -290,7 +290,7 @@ export function DataCollectorDashboard() {
       {/* Footer Info */}
       <div className="mt-8 text-center text-sm text-[#727B81]">
         <div>
-          Dernière collecte: {lastCollection > 0 
+          Dernière collecte: {lastCollection > 0
             ? new Date(lastCollection).toLocaleString('fr-FR')
             : 'Jamais'
           }

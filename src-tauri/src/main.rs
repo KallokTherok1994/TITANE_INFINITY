@@ -50,6 +50,11 @@ mod audio {
     }
 }
 
+// Hybrid Engine commands v∞.26.0
+mod hybrid_commands {
+    include!("commands/hybrid.rs");
+}
+
 mod ollama;
 
 // Cognitive system (always available)
@@ -1411,6 +1416,14 @@ async fn main() {
         titane_infinity::agenda::commands::agenda_get_stats,
         titane_infinity::agenda::commands::agenda_complete_event,
         titane_infinity::agenda::commands::agenda_cancel_event,
+        // ═══════════════════════════════════════════════════════════════
+        // HYBRID ENGINE v∞.26.0 - AI Chat + Dev Console Fusion
+        // ═══════════════════════════════════════════════════════════════
+        hybrid_commands::dev_run_command,
+        hybrid_commands::dev_inspect_file,
+        hybrid_commands::dev_apply_patch,
+        hybrid_commands::dev_get_logs,
+        hybrid_commands::hybrid_analyze_code,
     ]);
 
     builder

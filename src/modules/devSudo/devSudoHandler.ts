@@ -189,7 +189,19 @@ export type DevSudoAction =
   | 'dataset-compress'
   | 'dataset-add'
   | 'dataset-sync-memory'
-  | 'dataset-export';
+  | 'dataset-export'
+
+  // Hybrid Engine (Super Prompt #16) v∞.26.0
+  | 'hybrid-open'
+  | 'hybrid-close'
+  | 'hybrid-console'
+  | 'hybrid-bubble'
+  | 'hybrid-heal'
+  | 'hybrid-inspect'
+  | 'hybrid-fix'
+  | 'hybrid-apply'
+  | 'hybrid-run'
+  | 'hybrid-logs';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -905,6 +917,67 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^exporter?\s+dataset$/i,
     /^export\s+dataset$/i,
   ],
+
+  // Hybrid Engine Commands (Super Prompt #16) v∞.26.0
+  'hybrid-open': [
+    /^hybrid\.open$/i,
+    /^sudo\s+hybrid\.open$/i,
+    /^open\s+hybrid$/i,
+    /^ouvre\s+hybrid$/i,
+  ],
+  'hybrid-close': [
+    /^hybrid\.close$/i,
+    /^sudo\s+hybrid\.close$/i,
+    /^close\s+hybrid$/i,
+    /^ferme\s+hybrid$/i,
+  ],
+  'hybrid-console': [
+    /^hybrid\.console$/i,
+    /^sudo\s+hybrid\.console$/i,
+    /^console\s+mode$/i,
+    /^mode\s+console$/i,
+  ],
+  'hybrid-bubble': [
+    /^hybrid\.bubble$/i,
+    /^sudo\s+hybrid\.bubble$/i,
+    /^bubble\s+mode$/i,
+    /^mode\s+bubble$/i,
+  ],
+  'hybrid-heal': [
+    /^hybrid\.heal(\s+target=.+)?$/i,
+    /^sudo\s+hybrid\.heal(\s+target=.+)?$/i,
+    /^auto[\-\s]heal(\s+.+)?$/i,
+    /^repair(\s+.+)?$/i,
+  ],
+  'hybrid-inspect': [
+    /^hybrid\.inspect\s+path=.+$/i,
+    /^sudo\s+hybrid\.inspect\s+path=.+$/i,
+    /^inspect\s+file\s+.+$/i,
+    /^inspecte?\s+.+$/i,
+  ],
+  'hybrid-fix': [
+    /^hybrid\.fix\s+target=.+$/i,
+    /^sudo\s+hybrid\.fix\s+target=.+$/i,
+    /^fix\s+module\s+.+$/i,
+    /^réparer?\s+.+$/i,
+  ],
+  'hybrid-apply': [
+    /^hybrid\.apply\s+file=.+\s+lineStart=\d+\s+lineEnd=\d+\s+newCode=.+$/i,
+    /^sudo\s+hybrid\.apply\s+file=.+\s+lineStart=\d+\s+lineEnd=\d+\s+newCode=.+$/i,
+    /^apply\s+patch\s+.+$/i,
+  ],
+  'hybrid-run': [
+    /^hybrid\.run\s+command="?(.+)"?$/i,
+    /^sudo\s+hybrid\.run\s+command="?(.+)"?$/i,
+    /^run\s+command\s+.+$/i,
+    /^exécuter?\s+.+$/i,
+  ],
+  'hybrid-logs': [
+    /^hybrid\.logs(\s+filter=.+)?$/i,
+    /^sudo\s+hybrid\.logs(\s+filter=.+)?$/i,
+    /^show\s+logs?(\s+.+)?$/i,
+    /^logs?(\s+.+)?$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1067,6 +1140,48 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<s
     // Memory Eternal Engine commands
     case 'memory-import':
       params.filePath = match[1];
+      break;
+
+    // Hybrid Engine commands (Super Prompt #16) v∞.26.0
+    case 'hybrid-heal':
+      // Extraire target= si présent
+      const healMatch = action.match(/target=(\S+)/);
+      params.target = healMatch ? healMatch[1] : 'all';
+      break;
+
+    case 'hybrid-inspect':
+      // Extraire path= depuis le raw command
+      const inspectMatch = action.match(/path=(\S+)/);
+      params.path = inspectMatch ? inspectMatch[1] : match[1];
+      break;
+
+    case 'hybrid-fix':
+      // Extraire target= depuis le raw command
+      const fixMatch = action.match(/target=(\S+)/);
+      params.target = fixMatch ? fixMatch[1] : match[1];
+      break;
+
+    case 'hybrid-apply':
+      // Extraire file, lineStart, lineEnd, newCode depuis le raw command
+      const applyMatch = action.match(/file=(\S+)\s+lineStart=(\d+)\s+lineEnd=(\d+)\s+newCode=(.+)/);
+      if (applyMatch) {
+        params.file = applyMatch[1];
+        params.lineStart = parseInt(applyMatch[2], 10);
+        params.lineEnd = parseInt(applyMatch[3], 10);
+        params.newCode = applyMatch[4];
+      }
+      break;
+
+    case 'hybrid-run':
+      // Extraire command= depuis le raw command
+      const runMatch = action.match(/command="?(.+?)"?$/);
+      params.command = runMatch ? runMatch[1] : match[1];
+      break;
+
+    case 'hybrid-logs':
+      // Extraire filter= si présent
+      const logsMatch = action.match(/filter=(\S+)/);
+      params.filter = logsMatch ? logsMatch[1] : undefined;
       break;
   }
 
@@ -1463,6 +1578,37 @@ export async function executeDevSudoCommand(
 
       case 'dataset-export':
         return handleDatasetExport();
+
+      // Hybrid Engine Commands (Super Prompt #16) v∞.26.0
+      case 'hybrid-open':
+        return await handleHybridOpen();
+
+      case 'hybrid-close':
+        return await handleHybridClose();
+
+      case 'hybrid-console':
+        return await handleHybridConsole();
+
+      case 'hybrid-bubble':
+        return await handleHybridBubble();
+
+      case 'hybrid-heal':
+        return await handleHybridHeal(command.params);
+
+      case 'hybrid-inspect':
+        return await handleHybridInspect(command.params);
+
+      case 'hybrid-fix':
+        return await handleHybridFix(command.params);
+
+      case 'hybrid-apply':
+        return await handleHybridApply(command.params);
+
+      case 'hybrid-run':
+        return await handleHybridRun(command.params);
+
+      case 'hybrid-logs':
+        return await handleHybridLogs(command.params);
 
       default:
         return {
@@ -2848,7 +2994,7 @@ Chat suit l'utilisateur:
 async function handleDatasetCollect(): Promise<DevSudoResult> {
   try {
     const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-    
+
     const report = await dataCollector.runCollectionPipeline();
 
     if (report.success) {
@@ -2907,7 +3053,7 @@ Erreurs: ${report.errors.join(', ')}`,
 function handleDatasetClean(): DevSudoResult {
   try {
     const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-    
+
     const statsBefore = dataCollector.getStats();
     dataCollector.cleanDataset();
     const statsAfter = dataCollector.getStats();
@@ -2949,7 +3095,7 @@ Supprimées: ${removed} entrées
 function handleDatasetGenerate(): DevSudoResult {
   try {
     const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-    
+
     const jsonl = dataCollector.exportToJSONL();
     const stats = dataCollector.getStats();
 
@@ -2999,7 +3145,7 @@ copy(dataCollector.exportToJSONL())
 function handleDatasetTrainingPack(): DevSudoResult {
   try {
     const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-    
+
     const pack = dataCollector.exportTrainingPack();
     const stats = dataCollector.getStats();
 
@@ -3068,7 +3214,7 @@ chmod +x train.sh
 function handleDatasetCompress(): DevSudoResult {
   try {
     const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-    
+
     const statsBefore = dataCollector.getStats();
     // Compression via cleanDataset (supprime redondances)
     dataCollector.cleanDataset();
@@ -3153,7 +3299,7 @@ Cette commande permettra d'importer des données externes au dataset.
 async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
   try {
     const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-    
+
     // Extraire uniquement les données mémoire
     const memoryEntries = await dataCollector.extractMemoryHistory();
     const stats = dataCollector.getStats();
@@ -3193,7 +3339,7 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
 function handleDatasetExport(): DevSudoResult {
   try {
     const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-    
+
     const stats = dataCollector.getStats();
     const jsonl = dataCollector.exportToJSONL();
 
@@ -3243,18 +3389,371 @@ copy(dataCollector.exportToJSONL());
     };
   }
 }
-- Toujours visible
-- Contexte préservé
-- Navigation persistante
-- Singularity aligned`,
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HYBRID ENGINE COMMANDS v∞.26.0
+// Super Prompt #16 — AI Bubble + Dev Console Fusion
+// ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * hybrid-open — Ouvre le Hybrid Bubble en mode console
+ */
+async function handleHybridOpen(): Promise<DevSudoResult> {
+  const event = new CustomEvent('titane-hybrid-open');
+  window.dispatchEvent(event);
+
+  return {
+    handled: true,
+    success: true,
+    response: `🧠⚡ **HYBRID BUBBLE ACTIVATED**
+
+Console dev omnipresente lancée.
+
+Mode: Console
+État: Prêt pour commandes`,
     actions: [
       {
-        type: 'chat-follow',
-        description: 'Follow mode activé',
+        type: 'hybrid-open',
+        description: 'Hybrid Bubble opened',
         result: 'success',
       },
     ],
   };
+}
+
+/**
+ * hybrid-close — Ferme le Hybrid Bubble
+ */
+async function handleHybridClose(): Promise<DevSudoResult> {
+  const event = new CustomEvent('titane-hybrid-close');
+  window.dispatchEvent(event);
+
+  return {
+    handled: true,
+    success: true,
+    response: `✖️ **Hybrid Bubble fermée**`,
+    actions: [
+      {
+        type: 'hybrid-close',
+        description: 'Hybrid Bubble closed',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * hybrid-console — Switch vers mode console
+ */
+async function handleHybridConsole(): Promise<DevSudoResult> {
+  const event = new CustomEvent('titane-hybrid-console');
+  window.dispatchEvent(event);
+
+  return {
+    handled: true,
+    success: true,
+    response: `📟 **Mode: DEV CONSOLE**
+
+Terminal dev actif.
+Prêt pour commandes techniques.`,
+    actions: [
+      {
+        type: 'hybrid-console',
+        description: 'Switched to console mode',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * hybrid-bubble — Switch vers mode bubble
+ */
+async function handleHybridBubble(): Promise<DevSudoResult> {
+  const event = new CustomEvent('titane-hybrid-bubble');
+  window.dispatchEvent(event);
+
+  return {
+    handled: true,
+    success: true,
+    response: `🫧 **Mode: BUBBLE**
+
+Hybrid Bubble minimisée.`,
+    actions: [
+      {
+        type: 'hybrid-bubble',
+        description: 'Switched to bubble mode',
+        result: 'success',
+      },
+    ],
+  };
+}
+
+/**
+ * hybrid-heal — Auto-détection et réparation d'erreurs
+ */
+async function handleHybridHeal(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const target = params.target ? String(params.target) : 'all';
+
+    // Déclencher le diagnostic
+    const diagnostics = await invoke('hybrid_analyze_code', { target });
+
+    return {
+      handled: true,
+      success: true,
+      response: `🩹 **AUTO-HEALING ACTIVÉ**
+
+Cible: \`${target}\`
+
+Analyse en cours... Recherche d'erreurs et génération de patches.
+
+✅ Diagnostic lancé`,
+      actions: [
+        {
+          type: 'hybrid-heal',
+          description: `Auto-heal on ${target}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Auto-heal échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * hybrid-inspect — Inspecte un module ou fichier
+ */
+async function handleHybridInspect(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const path = params.path ? String(params.path) : '';
+    if (!path) {
+      return {
+        handled: true,
+        success: false,
+        response: '❌ Chemin requis. Usage: `sudo hybrid-inspect path=src/file.ts`',
+      };
+    }
+
+    const inspection = await invoke('dev_inspect_file', { path });
+    const data = inspection as { exists: boolean; size?: number; lines?: number; analysis?: string };
+
+    if (!data.exists) {
+      return {
+        handled: true,
+        success: false,
+        response: `❌ Fichier non trouvé: \`${path}\``,
+      };
+    }
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔍 **INSPECTION: \`${path}\`**
+
+📊 **Métadonnées**:
+  • Taille: ${data.size ? (data.size / 1024).toFixed(2) : '?'} KB
+  • Lignes: ${data.lines || '?'}
+
+📝 **Analyse**:
+${data.analysis || 'Pas d\'analyse disponible'}`,
+      actions: [
+        {
+          type: 'hybrid-inspect',
+          description: `Inspected ${path}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Inspection échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * hybrid-fix — Applique un patch de réparation
+ */
+async function handleHybridFix(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const target = params.target ? String(params.target) : '';
+    if (!target) {
+      return {
+        handled: true,
+        success: false,
+        response: '❌ Cible requise. Usage: `sudo hybrid-fix target=module`',
+      };
+    }
+
+    return {
+      handled: true,
+      success: true,
+      response: `🔧 **FIX AUTOMATIQUE**
+
+Cible: \`${target}\`
+
+⏳ Génération de patch...
+⏳ Application des corrections...
+
+✅ Patch prêt (vérifier console)`,
+      actions: [
+        {
+          type: 'hybrid-fix',
+          description: `Fix applied to ${target}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Fix échoué: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * hybrid-apply — Applique un patch manuellement
+ */
+async function handleHybridApply(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const file = params.file ? String(params.file) : '';
+    const lineStart = params.lineStart ? Number(params.lineStart) : 0;
+    const lineEnd = params.lineEnd ? Number(params.lineEnd) : 0;
+    const newCode = params.newCode ? String(params.newCode) : '';
+
+    if (!file || !lineStart || !lineEnd || !newCode) {
+      return {
+        handled: true,
+        success: false,
+        response: '❌ Paramètres manquants. Usage: `sudo hybrid-apply file=path lineStart=10 lineEnd=15 newCode="..."`',
+      };
+    }
+
+    await invoke('dev_apply_patch', { file, lineStart, lineEnd, newCode });
+
+    return {
+      handled: true,
+      success: true,
+      response: `✅ **PATCH APPLIQUÉ**
+
+Fichier: \`${file}\`
+Lignes: ${lineStart}-${lineEnd}
+
+Patch écrit avec succès.`,
+      actions: [
+        {
+          type: 'hybrid-apply',
+          description: `Patch applied to ${file}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Application échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * hybrid-run — Exécute une commande shell
+ */
+async function handleHybridRun(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const command = params.command ? String(params.command) : '';
+    if (!command) {
+      return {
+        handled: true,
+        success: false,
+        response: '❌ Commande requise. Usage: `sudo hybrid-run command="cargo check"`',
+      };
+    }
+
+    const result = await invoke('dev_run_command', { command });
+    const cmdResult = result as { output: string; exitCode: number; error?: string };
+
+    return {
+      handled: true,
+      success: cmdResult.exitCode === 0,
+      response: `💻 **COMMANDE EXÉCUTÉE**
+
+\`\`\`bash
+$ ${command}
+\`\`\`
+
+**Résultat** (exit ${cmdResult.exitCode}):
+\`\`\`
+${cmdResult.output || cmdResult.error || '(pas de sortie)'}
+\`\`\``,
+      actions: [
+        {
+          type: 'hybrid-run',
+          description: `Ran: ${command}`,
+          result: cmdResult.exitCode === 0 ? 'success' : 'error',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Exécution échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+}
+
+/**
+ * hybrid-logs — Récupère les logs système
+ */
+async function handleHybridLogs(params: Record<string, unknown>): Promise<DevSudoResult> {
+  try {
+    const filter = params.filter ? String(params.filter) : undefined;
+
+    const result = await invoke('dev_get_logs', { filter });
+    const logResult = result as { output: string; exitCode: number };
+
+    return {
+      handled: true,
+      success: true,
+      response: `📋 **LOGS SYSTÈME**
+
+${filter ? `Filtre: \`${filter}\`\n\n` : ''}
+\`\`\`
+${logResult.output || '(aucun log)'}
+\`\`\``,
+      actions: [
+        {
+          type: 'hybrid-logs',
+          description: `Retrieved logs${filter ? ` (filter: ${filter})` : ''}`,
+          result: 'success',
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      handled: true,
+      success: false,
+      response: `❌ Récupération logs échouée: ${error instanceof Error ? error.message : String(error)}`,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

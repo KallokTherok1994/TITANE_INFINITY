@@ -3,19 +3,19 @@
  *   TITANE∞ DATA COLLECTOR ENGINE v∞
  *   Auto-collecte des données TITANE∞ → Dataset JSONL pour TITANE-LOCAL
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Super Prompt #15 — Self-Training Engine
- * 
+ *
  * Ce moteur observe, extrait, structure et génère automatiquement
  * le dataset d'entraînement pour le modèle local TITANE-LOCAL (Llama 3.1).
- * 
+ *
  * Architecture:
  * - Collecte 6 catégories de données (A-F)
  * - Pipeline en 10 étapes
  * - Connexion Memory Eternal + Singularity
  * - Export JSONL + Modelfile Ollama
  * - 8 commandes SUDO pour contrôle total
- * 
+ *
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
@@ -772,7 +772,7 @@ echo "════════════════════════�
 - Santé: ${introspection.diagnostic.health}
 
 ### Diagnostic
-${introspection.diagnostic.issues.map((issue: any) => 
+${introspection.diagnostic.issues.map((issue: any) =>
   `- [${issue.severity}] ${issue.description}`
 ).join('\n')}
 

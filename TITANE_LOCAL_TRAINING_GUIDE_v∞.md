@@ -421,7 +421,7 @@ Tous moteurs alignés.
 ```python
 def add_custom_examples(self):
     """Ajoute exemples personnalisés"""
-    
+
     custom = [
         {
             "prompt": "Fix TypeScript error: Property 'lastCheck' missing",
@@ -429,7 +429,7 @@ def add_custom_examples(self):
         },
         # Ajouter tes propres exemples ici
     ]
-    
+
     for example in custom:
         self.examples.append(example)
 ```

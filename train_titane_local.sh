@@ -123,11 +123,11 @@ print_header "ÉTAPE 2/7 : Backup du modèle actuel"
 if ollama list | grep -q "^$MODEL_NAME"; then
     BACKUP_NAME="${MODEL_NAME}-backup-$(date +%Y%m%d-%H%M%S)"
     print_info "Sauvegarde du modèle actuel : $BACKUP_NAME"
-    
+
     # Note: Ollama ne supporte pas de rename direct, on documente juste
     echo "Modèle actuel : $MODEL_NAME" > "$TRAINING_DIR/backup_info.txt"
     echo "Date backup : $(date)" >> "$TRAINING_DIR/backup_info.txt"
-    
+
     print_success "Backup documenté"
 else
     print_info "Aucun modèle existant à sauvegarder"

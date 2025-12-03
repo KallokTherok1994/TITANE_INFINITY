@@ -69,19 +69,19 @@ Memory Eternal Engine (historique)
     - Titre + subtitle (model, message count)
     - Actions (clear, minimize, close)
   </Header>
-  
+
   <MessagesContainer>
     - Messages (MessageBubble)
     - Loading indicator
     - Auto-scroll
   </MessagesContainer>
-  
+
   <InputContainer>
     - Textarea multi-lignes
     - Bouton envoi
     - Enter to send
   </InputContainer>
-  
+
   <StatusBar>
     - Version TITANE∞
     - Model badge
@@ -129,7 +129,7 @@ const {
   messages,
   isLoading,
   currentModel,
-  
+
   open,
   close,
   minimize,
@@ -156,7 +156,7 @@ const {
       <AppRouter />
     </AutoHealErrorBoundary>
   </BrowserRouter>
-  
+
   {/* ✨ v∞.25.0 - AI Bubble Engine */}
   <AIChatBubble />
 </App>
@@ -339,8 +339,8 @@ sudo chat.inspect        // Inspecte état
 ```typescript
 // Custom events
 window.dispatchEvent(new CustomEvent('titane-chat-open'));
-window.dispatchEvent(new CustomEvent('titane-chat-set-model', { 
-  detail: { model: 'gemini-2.0-flash' } 
+window.dispatchEvent(new CustomEvent('titane-chat-set-model', {
+  detail: { model: 'gemini-2.0-flash' }
 }));
 
 // Hook programmatique
