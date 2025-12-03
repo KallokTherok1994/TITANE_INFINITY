@@ -52,7 +52,7 @@ export async function handleAutoFix(): Promise<DevSudoResult> {
 
 1. **CameraOverlay.tsx** (ligne 46)
    ❌ Avant: \`videoRef.current.srcObject = null\`
-   ✅ Après: 
+   ✅ Après:
    \`\`\`tsx
    const video = videoRef.current;
    if (video) video.srcObject = null;
@@ -67,7 +67,7 @@ export async function handleAutoFix(): Promise<DevSudoResult> {
 📊 **Résultat**:
   ✅ 3 corrections mineures appliquées
   ⚠️ 2 corrections manuelles requises
-  
+
 💡 **Prochaines actions**:
   - Relancer: \`npm run type-check\`
   - Vérifier: \`diagnostic\``,
@@ -128,7 +128,7 @@ export async function handleScanOpus(): Promise<DevSudoResult> {
   - État: Opérationnel
   - Backend: engines_qa_* commands
   - Frontend: QA Dashboard
-  
+
 ✅ **OPUS #10** (Developer Mode)
   - État: Opérationnel
   - Backend: engines_devmode_* commands
@@ -256,7 +256,7 @@ ${health.healthy ? '✅' : '❌'} Système ${health.healthy ? 'sain' : 'dégrad�
 
 export async function handleConsoleLs(path?: string): Promise<DevSudoResult> {
   const targetPath = path || '/src';
-  
+
   return {
     handled: true,
     success: true,

@@ -1,7 +1,8 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.21.0 — DEV-SUDO MODE INDICATOR
- *   Badge visuel pour indiquer le mode développeur actif dans le chat
+ *   TITANE∞ v∞.23.0 — MASTER DEV ENGINE INDICATOR
+ *   Badge visuel pour indiquer le mode IDE complet actif
+ *   Super Prompt #7: Full IDE Mode + Multi-Dev Senior
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
@@ -21,9 +22,9 @@ export const DevSudoBadge: React.FC<DevSudoBadgeProps> = ({
   if (!active) return null;
 
   return (
-    <div className={`dev-sudo-badge ${compact ? 'compact' : ''}`}>
+    <div className={`dev-sudo-badge ${compact ? 'compact' : ''}`} title="MASTER DEV ENGINE v∞ — 61 commandes IDE disponibles">
       <Terminal size={compact ? 12 : 14} className="dev-sudo-icon" />
-      {!compact && <span className="dev-sudo-label">DEV-SUDO</span>}
+      {!compact && <span className="dev-sudo-label">MASTER DEV</span>}
       <span className="dev-sudo-pulse" />
     </div>
   );

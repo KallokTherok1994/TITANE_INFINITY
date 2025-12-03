@@ -1,7 +1,7 @@
 # ⚡ TITANE∞ v∞.22.0 — DEV-SUDO SUPER PROMPTS UNIFIÉS
 
-**Date**: 15 janvier 2025  
-**Version**: v∞.22.0  
+**Date**: 15 janvier 2025
+**Version**: v∞.22.0
 **Status**: ✅ DEPLOYED — Super Prompts #4/#5/#6 INTÉGRÉS
 
 ---
@@ -328,14 +328,14 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray) {
   switch (action) {
     case 'console-ls':
       return { path: match[3] || match[2] || '/src' };
-    
+
     case 'console-open':
     case 'console-patch':
       return { target: match[2] || match[1] };
-    
+
     case 'test-module':
       return { module: match[2] || match[1] };
-    
+
     case 'connect-api':
     case 'test-api':
       return { api: match[1] };
@@ -373,7 +373,7 @@ if (devSudoResult.handled) {
       success: devSudoResult.success,
     },
   };
-  
+
   addMessage(devSudoResponse);
   return;
 }

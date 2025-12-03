@@ -1,13 +1,15 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞.22.0 — DEV-SUDO MODE HANDLER
+ *   TITANE∞ v∞.23.0 — DEV-SUDO MODE HANDLER
  *   Détection et exécution des commandes développeur dans le Chat IA
- *   Intégration SUPER PROMPTS #4/#5/#6 UNIFIÉS
+ *   Intégration SUPER PROMPTS #4/#5/#6/#7 UNIFIÉS
+ *   Super Prompt #7: MASTER DEV ENGINE — Full IDE Mode
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
 import { invoke } from '@tauri-apps/api/core';
 import * as ExtendedHandlers from './devSudoExtendedHandlers';
+import * as IDEHandlers from './devSudoIDEHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -29,7 +31,7 @@ export type DevSudoAction =
   | 'self-heal'
   | 'deep-heal'
   | 'auto-fix'
-  
+
   // Diagnostic & Analysis
   | 'diagnostic'
   | 'status-full'
@@ -39,7 +41,9 @@ export type DevSudoAction =
   | 'scan-opus'
   | 'scan-errors'
   | 'health-check'
-  
+  | 'analyze-rust'
+  | 'analyze-tauri'
+
   // Dev Operations
   | 'restart-tauri'
   | 'test-bubble'
@@ -49,28 +53,49 @@ export type DevSudoAction =
   | 'create-component'
   | 'add-feature'
   | 'merge-opus'
-  
+
   // Console Commands
   | 'console-ls'
   | 'console-open'
   | 'console-patch'
   | 'console-rebuild'
-  
+
   // Optimization
   | 'optimize-build'
   | 'optimize-ui'
   | 'optimize-rust'
   | 'optimize-react'
-  
+
   // API & Connections
   | 'connect-api'
   | 'test-api'
   | 'verify-keys'
-  
+
   // DevOps
   | 'full-sync'
   | 'verify-architecture'
-  | 'generate-report';
+  | 'generate-report'
+
+  // IDE Mode (Super Prompt #7)
+  | 'open-file'
+  | 'view-file'
+  | 'create-file'
+  | 'patch-file'
+  | 'goto-function'
+  | 'goto-component'
+  | 'goto-handler'
+  | 'copilot-suggest'
+  | 'auto-complete'
+  | 'refactor-component'
+  | 'refactor-hook'
+  | 'refactor-handler'
+  | 'explain-code'
+  | 'auto-import'
+  | 'generate-module'
+  | 'run-tests'
+  | 'master-analysis'
+  | 'architect-refactor'
+  | 'code-review';
 
 export interface DevSudoResult {
   handled: boolean;
@@ -255,6 +280,108 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^generate\s+report$/i,
     /^génère\s+(un\s+)?rapport$/i,
   ],
+
+  // IDE Mode patterns (Super Prompt #7)
+  'open-file': [
+    /^open\s+(.+)$/i,
+    /^ouvre\s+(.+)$/i,
+    /^show\s+file\s+(.+)$/i,
+  ],
+  'view-file': [
+    /^view\s+(.+)$/i,
+    /^voir\s+(.+)$/i,
+  ],
+  'create-file': [
+    /^create\s+file\s+(.+)$/i,
+    /^crée\s+(le\s+)?fichier\s+(.+)$/i,
+  ],
+  'patch-file': [
+    /^patch\s+file\s+(.+)$/i,
+    /^patch\s+(.+)$/i,
+  ],
+  'goto-function': [
+    /^go\s+to\s+function\s+(.+)$/i,
+    /^goto\s+function\s+(.+)$/i,
+    /^va\s+à\s+(la\s+)?fonction\s+(.+)$/i,
+  ],
+  'goto-component': [
+    /^go\s+to\s+component\s+(.+)$/i,
+    /^goto\s+component\s+(.+)$/i,
+    /^va\s+au\s+composant\s+(.+)$/i,
+  ],
+  'goto-handler': [
+    /^go\s+to\s+rust\s+handler\s+(.+)$/i,
+    /^goto\s+handler\s+(.+)$/i,
+    /^va\s+au\s+handler\s+(.+)$/i,
+  ],
+  'copilot-suggest': [
+    /^copilot\s+suggest$/i,
+    /^suggest\s+code$/i,
+    /^propose\s+(du\s+)?code$/i,
+    /^complète\s+(le\s+)?code$/i,
+  ],
+  'auto-complete': [
+    /^auto[- ]complete$/i,
+    /^complete$/i,
+    /^complétion$/i,
+  ],
+  'refactor-component': [
+    /^refactor\s+component\s+(.+)$/i,
+    /^refactorise\s+(le\s+)?composant\s+(.+)$/i,
+  ],
+  'refactor-hook': [
+    /^refactor\s+hook\s+(.+)$/i,
+    /^refactorise\s+(le\s+)?hook\s+(.+)$/i,
+  ],
+  'refactor-handler': [
+    /^refactor\s+handler\s+(.+)$/i,
+    /^refactor\s+rust\s+handler\s+(.+)$/i,
+    /^refactorise\s+(le\s+)?handler\s+(.+)$/i,
+  ],
+  'explain-code': [
+    /^explain\s+(.+)$/i,
+    /^explique\s+(.+)$/i,
+    /^pourquoi\s+(.+)$/i,
+  ],
+  'auto-import': [
+    /^auto[- ]import$/i,
+    /^fix\s+imports$/i,
+    /^imports$/i,
+  ],
+  'generate-module': [
+    /^generate\s+module\s+(.+)$/i,
+    /^create\s+module\s+(.+)$/i,
+    /^génère\s+(le\s+)?module\s+(.+)$/i,
+  ],
+  'run-tests': [
+    /^run\s+tests?$/i,
+    /^test$/i,
+    /^lance\s+(les\s+)?tests?$/i,
+  ],
+  'master-analysis': [
+    /^master\s+analysis$/i,
+    /^analyse\s+master$/i,
+    /^analyse\s+complète$/i,
+    /^full\s+analysis$/i,
+  ],
+  'architect-refactor': [
+    /^architect\s+refactor$/i,
+    /^refactor\s+architecture$/i,
+    /^refactorisation\s+architecturale$/i,
+  ],
+  'code-review': [
+    /^code\s+review\s+(.+)$/i,
+    /^review\s+code\s+(.+)$/i,
+    /^revue\s+(de\s+)?code\s+(.+)$/i,
+  ],
+  'analyze-rust': [
+    /^analyze\s+rust$/i,
+    /^analyse\s+rust$/i,
+  ],
+  'analyze-tauri': [
+    /^analyze\s+tauri$/i,
+    /^analyse\s+tauri$/i,
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -349,6 +476,56 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<s
     case 'connect-api':
     case 'test-api':
       params.api = match[1];
+      break;
+
+    // IDE Mode commands
+    case 'open-file':
+    case 'view-file':
+    case 'patch-file':
+    case 'explain-code':
+      params.file = match[1];
+      break;
+
+    case 'create-file':
+      params.file = match[3] || match[1];
+      params.content = '';
+      break;
+
+    case 'goto-function':
+      params.function = match[2] || match[1];
+      break;
+
+    case 'goto-component':
+      params.component = match[2] || match[1];
+      break;
+
+    case 'goto-handler':
+      params.handler = match[2] || match[1];
+      break;
+
+    case 'copilot-suggest':
+    case 'auto-complete':
+      params.context = match[1] || '';
+      break;
+
+    case 'refactor-component':
+      params.component = match[2] || match[1];
+      break;
+
+    case 'refactor-hook':
+      params.hook = match[2] || match[1];
+      break;
+
+    case 'refactor-handler':
+      params.handler = match[3] || match[2] || match[1];
+      break;
+
+    case 'generate-module':
+      params.module = match[3] || match[2] || match[1];
+      break;
+
+    case 'code-review':
+      params.target = match[3] || match[2] || match[1];
       break;
   }
 
@@ -463,10 +640,77 @@ export async function executeDevSudoCommand(
       case 'test-module':
         return await ExtendedHandlers.handleTestModule(command.params.module as string);
 
+      // IDE Mode handlers (v∞.23.0 - Super Prompt #7)
+      case 'open-file':
+        return await IDEHandlers.handleOpenFile(command.params.file as string);
+
+      case 'view-file':
+        return await IDEHandlers.handleViewFile(command.params.file as string);
+
+      case 'create-file':
+        return await IDEHandlers.handleCreateFile(
+          command.params.file as string,
+          command.params.content as string
+        );
+
+      case 'patch-file':
+        return await IDEHandlers.handlePatchFile(command.params.file as string);
+
+      case 'goto-function':
+        return await IDEHandlers.handleGoToFunction(command.params.function as string);
+
+      case 'goto-component':
+        return await IDEHandlers.handleGoToComponent(command.params.component as string);
+
+      case 'goto-handler':
+        return await IDEHandlers.handleGoToRustHandler(command.params.handler as string);
+
+      case 'copilot-suggest':
+        return await IDEHandlers.handleCopilotSuggest(command.params.context as string);
+
+      case 'auto-complete':
+        return await IDEHandlers.handleAutoComplete(command.params.context as string);
+
+      case 'refactor-component':
+        return await IDEHandlers.handleRefactorComponent(command.params.component as string);
+
+      case 'refactor-hook':
+        return await IDEHandlers.handleRefactorHook(command.params.hook as string);
+
+      case 'refactor-handler':
+        return await IDEHandlers.handleRefactorRustHandler(command.params.handler as string);
+
+      case 'explain-code':
+        return await IDEHandlers.handleExplainCode(command.params.file as string);
+
+      case 'auto-import':
+        return await IDEHandlers.handleAutoImport();
+
+      case 'generate-module':
+        return await IDEHandlers.handleGenerateModule(command.params.module as string);
+
+      case 'run-tests':
+        return await IDEHandlers.handleRunTests(command.params.target as string);
+
+      case 'master-analysis':
+        return await IDEHandlers.handleMasterAnalysis();
+
+      case 'architect-refactor':
+        return await IDEHandlers.handleArchitectRefactor();
+
+      case 'code-review':
+        return await IDEHandlers.handleCodeReview(command.params.target as string);
+
+      case 'analyze-rust':
+        return await IDEHandlers.handleAnalyzeRust();
+
+      case 'analyze-tauri':
+        return await IDEHandlers.handleAnalyzeTauri();
+
       default:
         return {
           handled: true,
-          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\nCommandes disponibles:\n- fix deps\n- restart tauri\n- test bubble\n- fix opus\n- status full\n- analyze module [nom]\n- show code [fichier]\n- diagnostic\n- introspect\n- self-heal\n- deep-heal\n- auto-fix\n- scan modules/opus/errors\n- health check\n- console ls/open/patch/rebuild\n- optimize build/ui/rust/react\n- connect/test api [nom]\n- verify keys\n- full sync\n- verify architecture\n- generate report\n- test module [nom]`,
+          response: `⚠️ Action "${command.action}" reconnue mais pas encore implémentée.\n\n📋 **TITANE∞ v∞.23.0 — MASTER DEV ENGINE**\n\n**Commandes disponibles** (61 total):\n\n🔧 Corrections: fix deps, fix opus, repair-component, self-heal, deep-heal, auto-fix\n🔍 Diagnostic: diagnostic, scan modules/opus/errors, health check, analyze rust/tauri\n💻 Console: ls, open, patch, rebuild\n⚡ Optimization: optimize build/ui/rust/react\n🔌 API: connect/test api, verify keys\n🚀 DevOps: full sync, verify architecture, generate report\n\n🎯 **IDE Mode** (Super Prompt #7):\n- open/view/create file [path]\n- patch file [path]\n- goto function/component/handler [name]\n- copilot suggest, auto-complete\n- refactor component/hook/handler [name]\n- explain code [target]\n- auto-import, generate module [name]\n- run tests, master analysis\n- architect refactor, code review [target]`,
           success: false,
         };
     }
