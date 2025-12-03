@@ -30,6 +30,11 @@ export const VOID_COMMANDS = new Set<string>([
   'vad_configure',
   // Overdrive Voice Engine commands
   'voice_stop_speaking',
+  'voice_cancel_recording',
+  'voice_stop_listening',
+  // Recording commands that return ()
+  'cancel_recording',
+  'stop_recording',
   // Memory commands that return ()
   'memory_delete_entry',
   'memory_clear_all',
