@@ -576,9 +576,11 @@ except Exception as e:
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use once_cell::sync::Lazy;
+use std::sync::Mutex;
 
 static IS_RECORDING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 static IS_SPEAKING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
+static RECORDING_PROCESS: Lazy<Mutex<Option<std::process::Child>>> = Lazy::new(|| Mutex::new(None));
 
 #[tauri::command]
 pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult<String> {
@@ -588,19 +590,77 @@ pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult
         return Err("Recording already in progress".into());
     }
 
-    IS_RECORDING.store(true, Ordering::Relaxed);
+    // Kill any existing arecord processes first
+    let _ = Command::new("pkill")
+        .args(["-f", "arecord"])
+        .output();
 
-    // Generate a unique recording ID
-    let recording_id = format!("rec_{}", chrono::Utc::now().timestamp_millis());
-    log::info!("[Audio] Recording started: {}", recording_id);
+    // Start recording to temp file
+    let output_path = std::env::temp_dir().join("titane_mic_test.wav");
 
-    Ok(recording_id)
+    // Get duration from config or use default (30 seconds max)
+    let max_duration = config
+        .as_ref()
+        .and_then(|c| c.get("maxDuration"))
+        .and_then(|v| v.as_u64())
+        .unwrap_or(30) as u32;
+
+    log::info!("[Audio] Starting arecord to {:?} (max {}s)", output_path, max_duration);
+
+    // Start arecord in background
+    let child = Command::new("arecord")
+        .args([
+            "-f", "S16_LE",      // 16-bit signed little-endian
+            "-r", "16000",       // 16kHz sample rate (good for speech)
+            "-c", "1",           // Mono
+            "-d", &max_duration.to_string(), // Max duration
+            output_path.to_str().unwrap(),
+        ])
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn();
+
+    match child {
+        Ok(process) => {
+            // Store the process handle so we can kill it later
+            if let Ok(mut proc_guard) = RECORDING_PROCESS.lock() {
+                *proc_guard = Some(process);
+            }
+
+            IS_RECORDING.store(true, Ordering::Relaxed);
+
+            // Generate a unique recording ID
+            let recording_id = format!("rec_{}", chrono::Utc::now().timestamp_millis());
+            log::info!("[Audio] Recording started: {} (PID stored)", recording_id);
+
+            Ok(recording_id)
+        }
+        Err(e) => {
+            log::error!("[Audio] Failed to start arecord: {}", e);
+            Err(format!("Failed to start recording: {}", e).into())
+        }
+    }
 }
 
-/// Cancel recording - resets the recording state
+/// Cancel recording - resets the recording state and kills arecord
 #[tauri::command]
 pub async fn cancel_recording() -> CommandResult<()> {
     log::info!("[Audio] cancel_recording called - resetting state");
+
+    // Kill the arecord process if running
+    if let Ok(mut proc_guard) = RECORDING_PROCESS.lock() {
+        if let Some(ref mut child) = *proc_guard {
+            let _ = child.kill();
+            let _ = child.wait();
+        }
+        *proc_guard = None;
+    }
+
+    // Also kill any orphaned arecord processes
+    let _ = Command::new("pkill")
+        .args(["-f", "arecord"])
+        .output();
+
     IS_RECORDING.store(false, Ordering::Relaxed);
     Ok(())
 }
@@ -624,9 +684,23 @@ pub async fn stop_recording() -> CommandResult<serde_json::Value> {
         }));
     }
 
+    // Stop the arecord process gracefully (SIGTERM allows it to finish writing)
+    if let Ok(mut proc_guard) = RECORDING_PROCESS.lock() {
+        if let Some(ref mut child) = *proc_guard {
+            // Send SIGTERM to allow graceful shutdown and file finalization
+            let _ = Command::new("kill")
+                .args(["-TERM", &child.id().to_string()])
+                .output();
+            // Wait a bit for the file to be written
+            std::thread::sleep(std::time::Duration::from_millis(200));
+            let _ = child.wait();
+        }
+        *proc_guard = None;
+    }
+
     IS_RECORDING.store(false, Ordering::Relaxed);
 
-    // Try to transcribe the last recorded audio from test_microphone
+    // Try to transcribe the recorded audio
     let mic_test_file = std::env::temp_dir().join("titane_mic_test.wav");
 
     if mic_test_file.exists() {
