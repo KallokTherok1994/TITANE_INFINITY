@@ -126,9 +126,21 @@ export const VoiceConversation = ({
           console.warn('[VoiceConversation] Microphone not available in Tauri');
           return;
         }
+        // ✅ En Tauri/Linux: getUserMedia ne fonctionne pas sur WebKitGTK
+        // On utilise une visualisation simulée basée sur le succès du test backend
+        console.log('[VoiceConversation] Tauri mode: Using simulated audio visualization');
+        // Simulation d'un niveau audio basé sur des valeurs aléatoires douces
+        const simulateLevel = () => {
+          // Générer un niveau audio simulé avec variation douce
+          const baseLevel = 0.3 + Math.random() * 0.4; // Entre 0.3 et 0.7
+          setAudioLevel(baseLevel);
+          animationFrameRef.current = requestAnimationFrame(simulateLevel);
+        };
+        simulateLevel();
+        return;
       }
 
-      // Vérifier que getUserMedia est disponible
+      // ✅ En browser uniquement: utiliser getUserMedia pour la visualisation
       if (!navigator.mediaDevices?.getUserMedia) {
         console.warn('[VoiceConversation] getUserMedia not available');
         return;

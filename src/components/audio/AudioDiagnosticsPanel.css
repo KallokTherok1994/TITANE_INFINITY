@@ -365,13 +365,24 @@
 }
 
 .permission-denied {
-  color: var(--adp-error);
+  color: var(--adp-warning);
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
 .permission-denied span {
+  font-weight: 600;
+}
+
+.permission-unavailable {
+  color: var(--adp-warning);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-unavailable span {
   font-weight: 600;
 }
 

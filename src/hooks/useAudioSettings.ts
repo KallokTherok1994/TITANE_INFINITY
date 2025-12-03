@@ -13,6 +13,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { audioService } from '@/features/audio-center/services/audioService';
+import { detectEnvironment } from '@/core/tauri/environment';
 import type { AudioDevice, MicrophoneTestResult, AudioTestResult } from '@/features/audio-center/types';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -194,10 +195,10 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   // ─────────────────────────────────────────────────────────────────
 
   const checkPermissions = useCallback(async () => {
-    // Détecter l'environnement d'exécution
-    const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+    // Détecter l'environnement d'exécution (méthode robuste)
+    const env = detectEnvironment();
 
-    if (isTauri) {
+    if (env.isTauri) {
       // ✅ En Tauri: utiliser le backend Rust (test_microphone) comme source de vérité
       // car WebKitGTK ne supporte pas bien getUserMedia sur Linux
       try {
@@ -251,9 +252,9 @@ export function useAudioSettings(): UseAudioSettingsReturn {
   }, []);
 
   const requestMicrophonePermission = useCallback(async (): Promise<boolean> => {
-    const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
+    const env = detectEnvironment();
 
-    if (isTauri) {
+    if (env.isTauri) {
       // ✅ En Tauri: le test via backend Rust EST la demande de permission
       // Pas besoin de getUserMedia car le backend utilise arecord/pactl
       try {
@@ -315,7 +316,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
         if (isNotFound) {
           setLastError('Aucun microphone détecté. Vérifiez les connexions.');
         } else if (isDenied) {
-          setLastError('Permission microphone refusée. Vérifiez les paramètres de confidentialité de votre système (Paramètres > Confidentialité > Microphone).');
+          setLastError('Permission microphone refusée par le navigateur. Cliquez sur l\'icône cadenas ou rechargez la page.');
         } else {
           setLastError('Impossible d\'accéder au microphone. Vérifiez les paramètres système.');
         }

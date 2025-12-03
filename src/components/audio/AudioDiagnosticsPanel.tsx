@@ -167,12 +167,37 @@ export const AudioDiagnosticsPanel = ({
                 )}
                 {permissions.microphone === 'denied' && (
                   <div className="permission-denied">
-                    <span>❌ Permission refusée</span>
+                    <span>⚠️ Microphone non accessible</span>
                     <p className="permission-help">
-                      Pour autoriser le microphone :<br/>
-                      1. Ouvrez les Paramètres système<br/>
-                      2. Allez dans Confidentialité → Microphone<br/>
-                      3. Autorisez TITANE∞ à accéder au microphone
+                      Vérifiez que le microphone est correctement branché et actif.<br/>
+                      Sur Linux, vérifiez les paramètres audio du système (PipeWire/PulseAudio).<br/>
+                      <code>pavucontrol</code> permet de configurer les périphériques.
+                    </p>
+                    <button
+                      className="adp-btn secondary"
+                      onClick={requestMicrophonePermission}
+                    >
+                      🔄 Réessayer le test
+                    </button>
+                  </div>
+                )}
+                {permissions.microphone === 'prompt' && (
+                  <div className="permission-prompt">
+                    <p className="permission-help">Cliquez pour tester l'accès au microphone.</p>
+                    <button
+                      className="adp-btn primary"
+                      onClick={requestMicrophonePermission}
+                    >
+                      🎤 Tester le microphone
+                    </button>
+                  </div>
+                )}
+                {permissions.microphone === 'unavailable' && (
+                  <div className="permission-unavailable">
+                    <span>⚠️ Microphone non détecté</span>
+                    <p className="permission-help">
+                      Aucun microphone actif détecté par le système.<br/>
+                      Branchez un microphone et cliquez sur Réessayer.
                     </p>
                     <button
                       className="adp-btn secondary"
@@ -182,26 +207,9 @@ export const AudioDiagnosticsPanel = ({
                     </button>
                   </div>
                 )}
-                {permissions.microphone === 'prompt' && (
-                  <div className="permission-prompt">
-                    <p className="permission-help">Cliquez pour autoriser l'accès au microphone.</p>
-                    <button
-                      className="adp-btn primary"
-                      onClick={requestMicrophonePermission}
-                    >
-                      🎤 Autoriser le microphone
-                    </button>
-                  </div>
-                )}
-                {(permissions.microphone === 'unavailable' || permissions.microphone === 'checking') && (
+                {permissions.microphone === 'checking' && (
                   <div className="permission-checking">
                     <span>⏳ Vérification en cours...</span>
-                    <button
-                      className="adp-btn secondary"
-                      onClick={requestMicrophonePermission}
-                    >
-                      Demander l'accès
-                    </button>
                   </div>
                 )}
               </div>
