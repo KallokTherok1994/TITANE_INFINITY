@@ -7,6 +7,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import { secureInvoke } from '@/lib/security';
 import './OrchestrationCenterPage.css';
 
@@ -468,11 +471,13 @@ function CognitiveTab(props: { state: CognitiveState | null; onSetMode: (m: stri
 }
 
 // Main Component
-export function OrchestrationCenterPage(): JSX.Element {
+function OrchestrationCenterPageContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [unifiedState, setUnifiedState] = useState<OrchestrationUnifiedState | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
 
   const fetchState = useCallback(async () => {
     try {
@@ -558,8 +563,8 @@ export function OrchestrationCenterPage(): JSX.Element {
     { id: 'cognitive', label: 'État Cognitif', icon: '💭' },
   ];
 
-  if (loading && !unifiedState) {
-    return <div className="orchestration-center loading"><div className="loading-spinner" /><p>Initialisation...</p></div>;
+  if ((loading && !unifiedState) || matrixLoading) {
+    return <div className="orchestration-center loading"><div className="loading-spinner" /><p>Initialisation Centre Orchestration...</p></div>;
   }
 
   if (error && !unifiedState) {
@@ -591,6 +596,15 @@ export function OrchestrationCenterPage(): JSX.Element {
         {activeTab === 'cognitive' && <CognitiveTab state={unifiedState?.cognitive ?? null} onSetMode={handleSetMode} onAnalyze={handleAnalyze} />}
       </main>
     </div>
+  );
+}
+
+// Export with ErrorBoundary
+export function OrchestrationCenterPage(): JSX.Element {
+  return (
+    <ErrorBoundary context="OrchestrationCenter">
+      <OrchestrationCenterPageContent />
+    </ErrorBoundary>
   );
 }
 

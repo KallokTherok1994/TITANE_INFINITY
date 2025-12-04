@@ -7,6 +7,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import './HyperCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -175,9 +178,11 @@ const InsightCard: React.FC<{ insight: Insight }> = ({ insight }) => (
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const HyperCenter: React.FC = () => {
+const HyperCenterContent: React.FC = () => {
   const [state, setState] = useState<HyperIntelligenceState | null>(null);
   const [thoughts, setThoughts] = useState<Thought[]>([]);
+  const { matrix, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -284,7 +289,7 @@ export const HyperCenter: React.FC = () => {
     return `${h}h ${m}m ${s}s`;
   };
 
-  if (loading) {
+  if (loading || matrixLoading) {
     return (
       <div className="hyper-center loading">
         <div className="loading-animation">
@@ -508,6 +513,15 @@ export const HyperCenter: React.FC = () => {
         )}
       </main>
     </div>
+  );
+};
+
+// Export with ErrorBoundary
+export const HyperCenter: React.FC = () => {
+  return (
+    <ErrorBoundary context="HyperCenter">
+      <HyperCenterContent />
+    </ErrorBoundary>
   );
 };
 

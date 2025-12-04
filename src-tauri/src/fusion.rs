@@ -25,6 +25,8 @@ use tauri::State;
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
+// Structure réservée pour évolutions futures
+#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FusionStats {
     pub total_entries: usize,
@@ -84,6 +86,8 @@ impl Default for FusionConfig {
     }
 }
 
+// Structures et fonctions réservées pour évolutions futures
+#[allow(dead_code)]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct FusionEntry {
     pub fusion_id: String,
@@ -276,6 +280,7 @@ pub async fn fusion_get_config(
 // ═══════════════════════════════════════════════════════════════════════════
 
 /// Valide format JSONL
+#[allow(dead_code)]
 pub fn validate_jsonl(content: &str) -> Result<usize, String> {
     let mut count = 0;
 
@@ -295,11 +300,13 @@ pub fn validate_jsonl(content: &str) -> Result<usize, String> {
 }
 
 /// Estime nombre de tokens
+#[allow(dead_code)]
 pub fn estimate_tokens(text: &str) -> usize {
     (text.len() / 4).max(1) // ~4 chars = 1 token
 }
 
 /// Calcule hash sémantique simple
+#[allow(dead_code)]
 pub fn compute_semantic_hash(text: &str) -> String {
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};

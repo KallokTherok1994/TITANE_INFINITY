@@ -5,7 +5,10 @@
 // ============================================================================
 
 import { useState, useEffect, useCallback } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useQAMonitoring } from './useQAMonitoring';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import type {
   QASystemState,
   TestSuite,
@@ -605,8 +608,10 @@ const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: Perform
 
 type TabId = 'overview' | 'tests' | 'monitors' | 'alerts' | 'security' | 'performance';
 
-export default function QAMonitoringPage(): JSX.Element {
+function QAMonitoringPageContent(): JSX.Element {
   const qa = useQAMonitoring();
+  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
 
   // State
   const [activeTab, setActiveTab] = useState<TabId>('overview');
@@ -741,7 +746,7 @@ export default function QAMonitoringPage(): JSX.Element {
   };
 
   // Render
-  if (loading) {
+  if (loading || matrixLoading) {
     return (
       <div className="qa-page qa-page--loading">
         <div className="qa-loader">
@@ -822,5 +827,14 @@ export default function QAMonitoringPage(): JSX.Element {
         )}
       </main>
     </div>
+  );
+}
+
+// Export with ErrorBoundary
+export default function QAMonitoringPage(): JSX.Element {
+  return (
+    <ErrorBoundary context="QAMonitoring">
+      <QAMonitoringPageContent />
+    </ErrorBoundary>
   );
 }

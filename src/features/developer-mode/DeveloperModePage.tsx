@@ -24,6 +24,9 @@ import {
   Loader2,
 } from 'lucide-react';
 
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import {
   useDeveloperMode,
   usePatchOperations,
@@ -39,15 +42,37 @@ import './DeveloperModePage.css';
 // MAIN PAGE COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export function DeveloperModePage(): JSX.Element {
+function DeveloperModePageContent(): JSX.Element {
   const { state, loading, error, enable, disable } = useDeveloperMode();
+  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
   const [authToken, setAuthToken] = useState('');
 
-  if (loading) {
+  // Loading state
+  if (loading || matrixLoading) {
     return (
       <div className="developer-mode-page">
         <div className="devmode-loading">
           <Loader2 className="icon animate-spin" size={32} />
+          <span className="text">Chargement du Developer Mode...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="developer-mode-page">
+        <div className="devmode-error">
+          <AlertTriangle className="icon" size={48} />
+          <h2>Erreur de chargement</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>Recharger</button>
+        </div>
+      </div>
+    );
+  }
         </div>
       </div>
     );
@@ -632,6 +657,15 @@ function StatsCard({ state }: { state: ReturnType<typeof useDeveloperMode>['stat
         </div>
       </div>
     </motion.div>
+  );
+}
+
+// Export with ErrorBoundary
+export function DeveloperModePage(): JSX.Element {
+  return (
+    <ErrorBoundary context="DeveloperMode">
+      <DeveloperModePageContent />
+    </ErrorBoundary>
   );
 }
 

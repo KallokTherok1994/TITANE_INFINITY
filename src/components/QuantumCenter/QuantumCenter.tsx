@@ -8,6 +8,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import './QuantumCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -54,8 +57,11 @@ type TabType = 'overview' | 'frames' | 'cache' | 'gpu' | 'stability' | 'rules' |
 // COMPOSANT PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════════════
 
-const QuantumCenter: React.FC = () => {
+const QuantumCenterContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const [loading, setLoading] = useState(true);
+  const { matrix, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
   const [metrics, setMetrics] = useState<QuantumMetrics>({
     fps: 120,
     frameTime: 8.33,
@@ -548,6 +554,19 @@ const QuantumCenter: React.FC = () => {
   // RENDU PRINCIPAL
   // ═══════════════════════════════════════════════════════════════════════════
 
+  // Loading initial
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
+  if (loading || matrixLoading) {
+    return (
+      <div className="quantum-center loading">
+        <div className="loading-spinner">⚛️ Initialisation Quantum...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="quantum-center">
       <header className="quantum-header">
@@ -604,6 +623,15 @@ const QuantumCenter: React.FC = () => {
         <span className="footer-version">v∞</span>
       </footer>
     </div>
+  );
+};
+
+// Export with ErrorBoundary
+const QuantumCenter: React.FC = () => {
+  return (
+    <ErrorBoundary context="QuantumCenter">
+      <QuantumCenterContent />
+    </ErrorBoundary>
   );
 };
 

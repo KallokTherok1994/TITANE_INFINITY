@@ -28,6 +28,9 @@ pub mod avatar; // ✅ ImmersiveAvatarEngine v23 (NEW)
 pub mod backend_selftest; // ✅ Backend Global Self-Test v17.7 (NEW)
 pub mod cognitive; // ✅ Cognitive Layer v16 (NEW)
 pub mod core; // ✅ SingularityEngine v16 + modules
+pub mod engine; // ✅ Auto-Evolution & Engine Diagnostics v16 (existing)
+pub mod engine_trait; // ✅ v24 - Engine trait + OrchestratorEngine (TODO #13)
+pub mod error; // ✅ v24 - Unified TitaneError enum (TODO #12)
 pub mod meta; // ✅ Meta-Cognition & Deep Sync v18 (NEW)
 pub mod narrative; // ✅ NarrativeEngine v22 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
@@ -46,6 +49,7 @@ pub mod ai; // ✅ AI Router (v15 migration in progress)
 pub mod ai_chat; // ✅ AI Chat & Training Mode v∞ (OPUS #12)
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod chat_engine; // ✅ High-performance Chat Engine v∞
+pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, Memory Map, Self-Healing)
 pub mod memory; // ✅ Memory Storage v15
 
 // ═══════════════════════════════════════════════════════════════

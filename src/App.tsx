@@ -62,15 +62,15 @@ if (typeof window !== 'undefined') {
 
 // New v15.1 pages (Phase 9: Core pages eagerly loaded)
 import { DashboardPage } from './pages/DashboardPage';
-// CORRECTION v19.1.0: Utiliser la vraie page Chat avec useChat() au lieu du mock setTimeout
-import { Chat as ChatPage } from './ui/pages/Chat';
+// ✨ v24 - Performance: Lazy load Chat (1108 lines)
+const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
 import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
 // Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
-// v15: SingularityState Monitor
-import { SingularityMonitor } from './components/SingularityMonitor';
+// ✨ v24 - Performance: Lazy load SingularityMonitor
+const SingularityMonitor = lazy(() => import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor })));
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 import { ChatBubble } from './components/chat/ChatBubble';
@@ -113,8 +113,8 @@ const AudioCenterPage = lazy(() => import('./features/audio-center').then(m => (
 // ✨ EVOLUTION CENTER - Centre d'Évolution Cognitive v19.3 (OPUS #4)
 const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage').then(m => ({ default: m.EvolutionCenterPage })));
 
-// ✨ ORCHESTRATION CENTER - Centre d'Orchestration Cognitive v19.4 (OPUS #5)
-const OrchestrationCenterPage = lazy(() => import('./pages/OrchestrationCenterPage').then(m => ({ default: m.OrchestrationCenterPage })));
+// ✨ ORCHESTRATION META CENTER - Centre Unifié v24 (TODO #9 - Fusion Meta + Orchestration)
+const OrchestrationMetaCenter = lazy(() => import('./pages/OrchestrationMetaCenter').then(m => ({ default: m.OrchestrationMetaCenter })));
 
 // ✨ ONE CORE - Centre de Commande Unifié v19.5 (OPUS #6)
 const OneCorePage = lazy(() => import('./features/one-core').then(m => ({ default: m.OneCorePage })));
@@ -124,9 +124,6 @@ const QAMonitoringPage = lazy(() => import('./features/qa-monitoring').then(m =>
 
 // ✨ DEVELOPER MODE - IA Developer Mode v∞ (OPUS #10)
 const DeveloperModePage = lazy(() => import('./features/developer-mode').then(m => ({ default: m.DeveloperModePage })));
-
-// ✨ META CENTER - Meta Orchestrator v∞ (OPUS #18)
-const MetaCenter = lazy(() => import('./components/MetaCenter/MetaCenter').then(m => ({ default: m.default })));
 
 // ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19)
 const RealityCenter = lazy(() => import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default })));
@@ -145,6 +142,12 @@ const MemoryEvolutionCenter = lazy(() => import('./components/MemoryEvolution/Me
 
 // ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞
 const CloudCenter = lazy(() => import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter })));
+
+// ✨ v24.1 - ORCHESTRATION & INTELLIGENCE CENTER (FUSION 6 modules → 1 centre)
+const OrchestrationIntelligenceCenter = lazy(() => import('./modules/OrchestrationIntelligenceCenter'));
+
+// ✨ v24.1 - IDENTITY & MEMORY EVOLUTION CENTER (FUSION 4 modules → 1 centre)
+const IdentityMemoryEvolutionCenter = lazy(() => import('./modules/IdentityMemoryEvolutionCenter'));
 
 // Engine & System pages (Phase 9: Keep core engines eagerly loaded)
 import {
@@ -244,6 +247,12 @@ const AppRouter: React.FC = () => {
 
     // ═══ CENTRES COGNITIFS ═══
     { id: '/evolution-center', label: 'Évolution Cognitive', icon: '🧬', badge: 'OPUS#4' },
+    
+    // ✨ v24.1 - NOUVEAUX CENTRES UNIFIÉS (10 modules → 2 centres)
+    { id: '/orchestration-intelligence', label: 'Orchestration & Intelligence', icon: '🔥', badge: 'v24.1' },
+    { id: '/identity-memory-evolution', label: 'Identity & Memory Evolution', icon: '🧠', badge: 'v24.1' },
+    
+    // Anciens centres (à migrer vers les nouveaux)
     { id: '/orchestration-center', label: 'Orchestration', icon: '🎛️', badge: 'OPUS#5' },
     { id: '/meta-center', label: 'Meta Orchestrator', icon: '🌐', badge: 'OPUS#18' },
     { id: '/hyper-center', label: 'Hyper Intelligence', icon: '✨', badge: 'OPUS#20' },
@@ -421,14 +430,30 @@ const AppRouter: React.FC = () => {
           <Route path="/cognitive-evolution" element={<Navigate to="/evolution-center" replace />} />
           <Route path="/xp" element={<Navigate to="/evolution-center" replace />} />
 
-          {/* ✨ v19.4 ORCHESTRATION CENTER - Centre d'Orchestration Cognitive (OPUS #5) */}
-          <Route path="/orchestration-center" element={
-            <ErrorBoundary context="OrchestrationCenter">
-              <OrchestrationCenterPage />
+          {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}
+          <Route path="/orchestration-intelligence" element={
+            <ErrorBoundary context="OrchestrationIntelligenceCenter">
+              <OrchestrationIntelligenceCenter />
             </ErrorBoundary>
           } />
 
-          {/* Redirections vers Orchestration Center pour anciennes routes */}
+          {/* ✨ v24.1 IDENTITY & MEMORY EVOLUTION CENTER - Fusion 4 modules (Identité, Mémoire, Mémoire Évolutive, Évolution Cognitive) */}
+          <Route path="/identity-memory-evolution" element={
+            <ErrorBoundary context="IdentityMemoryEvolutionCenter">
+              <IdentityMemoryEvolutionCenter />
+            </ErrorBoundary>
+          } />
+
+          {/* ✨ v24 ORCHESTRATION META CENTER - Centre Unifié (TODO #9) */}
+          <Route path="/orchestration-center" element={
+            <ErrorBoundary context="OrchestrationMetaCenter">
+              <OrchestrationMetaCenter />
+            </ErrorBoundary>
+          } />
+          <Route path="/meta-center" element={<Navigate to="/orchestration-center" replace />} />
+
+          {/* Redirections vers Orchestration Meta Center pour anciennes routes */}
+          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
           <Route path="/multi-ai-dashboard" element={<Navigate to="/orchestration-center" replace />} />
           <Route path="/nexus-engine" element={<Navigate to="/orchestration-center" replace />} />
           <Route path="/harmonia-engine" element={<Navigate to="/orchestration-center" replace />} />
@@ -470,15 +495,6 @@ const AppRouter: React.FC = () => {
 
           {/* v∞ Super-Prompt N6 - Time Navigation (Phase 9: lazy loaded) */}
           <Route path="/time-navigator" element={<TimeNavigator />} />
-
-          {/* ✨ META CENTER - Meta Orchestrator v∞ (OPUS #18) */}
-          <Route path="/meta-center" element={
-            <ErrorBoundary context="MetaCenter">
-              <MetaCenter />
-            </ErrorBoundary>
-          } />
-          <Route path="/meta" element={<Navigate to="/meta-center" replace />} />
-          <Route path="/orchestrator" element={<Navigate to="/meta-center" replace />} />
 
           {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
           <Route path="/reality-center" element={

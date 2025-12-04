@@ -11,6 +11,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import { Container, Stack } from '@components/layout';
 import { Card } from '../ui';
 import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
@@ -146,7 +149,7 @@ const TabButton = ({ label, icon, active, onClick }: TabButtonProps): JSX.Elemen
 // Main Component
 // ─────────────────────────────────────────────────────────────────
 
-export const EvolutionCenterPage: React.FC = () => {
+function EvolutionCenterPageContent(): JSX.Element {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
   const [knowledge, setKnowledge] = useState<KnowledgeVaultState | null>(null);
@@ -159,11 +162,16 @@ export const EvolutionCenterPage: React.FC = () => {
     memoriesCount: 0,
     evolutionPhase: 'Initialisation',
   });
+  const [loading, setLoading] = useState(true);
+  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
 
   // Initialize engines and fetch states
   useEffect(() => {
     const loadStates = async () => {
       try {
+        setLoading(true);
+
         // Get progression state
         const progressionState = xpEngine.getState();
         setProgression(progressionState);
@@ -192,6 +200,8 @@ export const EvolutionCenterPage: React.FC = () => {
         });
       } catch (error) {
         console.error('[EvolutionCenter] Failed to load states:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -804,6 +814,17 @@ export const EvolutionCenterPage: React.FC = () => {
     memory: renderMemory,
   };
 
+  // Loading state
+  if (loading || matrixLoading) {
+    return (
+      <Container size="xl" style={{ paddingTop: spacing[6], paddingBottom: spacing[6], textAlign: 'center' }}>
+        <div style={{ fontSize: fontSizes['2xl'], color: colors.neutral[400] }}>
+          🔄 Chargement du Centre d'Évolution...
+        </div>
+      </Container>
+    );
+  }
+
   return (
     <Container size="xl" style={{ paddingTop: spacing[6], paddingBottom: spacing[6] }}>
       <Stack gap={6}>
@@ -851,6 +872,15 @@ export const EvolutionCenterPage: React.FC = () => {
         {tabContent[activeTab]()}
       </Stack>
     </Container>
+  );
+}
+
+// Export with ErrorBoundary
+export const EvolutionCenterPage: React.FC = () => {
+  return (
+    <ErrorBoundary context="EvolutionCenter">
+      <EvolutionCenterPageContent />
+    </ErrorBoundary>
   );
 };
 

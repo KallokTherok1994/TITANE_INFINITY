@@ -247,3 +247,165 @@ impl IdentityProfiles {
         matrix
     }
 }
+
+// ═══════════════════════════════════════════════════════════════
+// LOADER ROBUSTE (Super Prompt #4 - Phase 3)
+// ═══════════════════════════════════════════════════════════════
+
+use std::fs;
+use std::path::Path;
+
+/// Charge IdentityMatrix depuis fichier avec fallback
+///
+/// Séquence:
+/// 1. Tente chargement identity.json
+/// 2. Valide structure
+/// 3. Si échec → DEFAULT
+pub fn load_identity_matrix_robust(app_data_dir: &Path) -> IdentityMatrix {
+    let identity_path = app_data_dir.join("identity.json");
+
+    match fs::read_to_string(&identity_path) {
+        Ok(content) => {
+            match serde_json::from_str::<IdentityMatrix>(&content) {
+                Ok(matrix) => {
+                    if validate_identity_matrix(&matrix) {
+                        log::info!("✅ Identity matrix loaded from {}", identity_path.display());
+                        matrix
+                    } else {
+                        log::warn!("⚠️ Identity matrix invalid structure, using default");
+                        IdentityMatrix::new()
+                    }
+                }
+                Err(e) => {
+                    log::error!("❌ Failed to parse identity.json: {}", e);
+                    log::info!("📝 Using default identity matrix");
+                    IdentityMatrix::new()
+                }
+            }
+        }
+        Err(_) => {
+            log::info!("📄 identity.json not found, creating default");
+            let default_matrix = IdentityMatrix::new();
+
+            // Tente de sauvegarder default
+            if let Err(e) = save_identity_matrix_atomic(&default_matrix, app_data_dir) {
+                log::warn!("⚠️ Failed to save default identity matrix: {}", e);
+            }
+
+            default_matrix
+        }
+    }
+}
+
+/// Valide structure IdentityMatrix
+fn validate_identity_matrix(matrix: &IdentityMatrix) -> bool {
+    if matrix.dimensions.is_empty() {
+        return false;
+    }
+
+    for dim in &matrix.dimensions {
+        if dim.name.is_empty() {
+            return false;
+        }
+        if !(-1.0..=1.0).contains(&dim.value) {
+            return false;
+        }
+        if !(0.0..=1.0).contains(&dim.volatility) {
+            return false;
+        }
+    }
+
+    true
+}
+
+/// Sauvegarde atomic IdentityMatrix
+///
+/// Pattern: backup → write temp → atomic rename
+pub fn save_identity_matrix_atomic(matrix: &IdentityMatrix, app_data_dir: &Path) -> Result<(), String> {
+    let identity_path = app_data_dir.join("identity.json");
+    let temp_path = app_data_dir.join("identity.json.tmp");
+    let backup_path = app_data_dir.join("identity.json.backup");
+
+    // Serialize
+    let content = serde_json::to_string_pretty(matrix)
+        .map_err(|e| format!("Serialization failed: {}", e))?;
+
+    // Backup existant si présent
+    if identity_path.exists() {
+        fs::copy(&identity_path, &backup_path)
+            .map_err(|e| format!("Backup failed: {}", e))?;
+    }
+
+    // Write to temp
+    fs::write(&temp_path, content)
+        .map_err(|e| format!("Write temp failed: {}", e))?;
+
+    // Atomic rename
+    fs::rename(&temp_path, &identity_path)
+        .map_err(|e| format!("Atomic rename failed: {}", e))?;
+
+    log::info!("💾 Identity matrix saved to {}", identity_path.display());
+    Ok(())
+}
+
+// ═══════════════════════════════════════════════════════════════
+// TESTS
+// ═══════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::TempDir;
+
+    #[test]
+    fn test_load_identity_matrix_missing_file() {
+        let temp_dir = TempDir::new().unwrap();
+        let matrix = load_identity_matrix_robust(temp_dir.path());
+
+        // Should return default
+        assert_eq!(matrix.dimensions.len(), 8);
+        assert!(!matrix.signature.is_empty());
+    }
+
+    #[test]
+    fn test_save_and_load_identity_matrix() {
+        let temp_dir = TempDir::new().unwrap();
+        let mut matrix = IdentityMatrix::new();
+        matrix.set_dimension("Rationalité-Émotivité", 0.5);
+
+        // Save
+        save_identity_matrix_atomic(&matrix, temp_dir.path()).unwrap();
+
+        // Load
+        let loaded = load_identity_matrix_robust(temp_dir.path());
+        assert_eq!(loaded.get_dimension("Rationalité-Émotivité").unwrap().value, 0.5);
+    }
+
+    #[test]
+    fn test_validate_identity_matrix() {
+        let mut matrix = IdentityMatrix::new();
+        assert!(validate_identity_matrix(&matrix));
+
+        // Invalid: empty dimensions
+        matrix.dimensions.clear();
+        assert!(!validate_identity_matrix(&matrix));
+    }
+
+    #[test]
+    fn test_atomic_save_creates_backup() {
+        let temp_dir = TempDir::new().unwrap();
+        let matrix1 = IdentityMatrix::new();
+        let mut matrix2 = IdentityMatrix::new();
+        matrix2.set_dimension("Rationalité-Émotivité", 0.8);
+
+        // First save
+        save_identity_matrix_atomic(&matrix1, temp_dir.path()).unwrap();
+
+        // Second save (should create backup)
+        save_identity_matrix_atomic(&matrix2, temp_dir.path()).unwrap();
+
+        // Check backup exists
+        let backup_path = temp_dir.path().join("identity.json.backup");
+        assert!(backup_path.exists());
+    }
+}

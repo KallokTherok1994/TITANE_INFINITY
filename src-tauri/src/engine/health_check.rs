@@ -32,7 +32,7 @@ impl HealthCheckEngine {
         // Check Nexus
         if matches!(
             nexus.health,
-            crate::types::ModuleHealth::Failing | crate::types::ModuleHealth::Offline
+            crate::types::nexus::ModuleHealth::Failing | crate::types::nexus::ModuleHealth::Offline
         ) {
             return Ok(HealthStatus::Critical);
         }
@@ -47,13 +47,13 @@ impl HealthCheckEngine {
             return Ok(HealthStatus::Critical);
         }
 
-        // Check for warnings
-        if helios_health == HealthStatus::Warning
-            || matches!(nexus.health, crate::types::ModuleHealth::Degraded)
+        // Check for warnings (Degraded state)
+        if helios_health == HealthStatus::Degraded
+            || matches!(nexus.health, crate::types::nexus::ModuleHealth::Degraded)
             || harmonia.balance_score < 60.0
             || sentinel.integrity_score < 80.0
         {
-            return Ok(HealthStatus::Warning);
+            return Ok(HealthStatus::Degraded);
         }
 
         Ok(HealthStatus::Healthy)

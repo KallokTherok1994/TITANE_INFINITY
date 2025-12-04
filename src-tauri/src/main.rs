@@ -1448,6 +1448,25 @@ async fn main() {
         hybrid_commands::dev_apply_patch,
         hybrid_commands::dev_get_logs,
         hybrid_commands::hybrid_analyze_code,
+        // ═══════════════════════════════════════════════════════════════
+        // CONVERSATION ENGINE v∞ - Unified Pipeline, Memory Map, Self-Healing
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::conversation_engine::commands::conversation_process_message,
+        titane_infinity::conversation_engine::commands::conversation_health_check,
+        titane_infinity::conversation_engine::commands::conversation_memory_stats,
+        titane_infinity::conversation_engine::commands::conversation_french_postprocess,
+        titane_infinity::conversation_engine::commands::conversation_realism_process,
+        titane_infinity::conversation_engine::commands::conversation_emotional_process,
+        titane_infinity::conversation_engine::commands::conversation_behavioral_check,
+        titane_infinity::conversation_engine::commands::literary_engine_process,
+        titane_infinity::conversation_engine::commands::literary_engine_update_style,
+        titane_infinity::conversation_engine::commands::literary_engine_get_style_profile,
+        titane_infinity::conversation_engine::commands::anthology_integrate_text,
+        titane_infinity::conversation_engine::commands::anthology_get_literary_dna,
+        titane_infinity::conversation_engine::commands::anthology_search_by_tag,
+        titane_infinity::conversation_engine::commands::anthology_search_by_layer,
+        titane_infinity::conversation_engine::commands::anthology_get_top_lexical_fields,
+        titane_infinity::conversation_engine::commands::anthology_get_statistics,
     ]);
 
     builder

@@ -10,7 +10,10 @@
  */
 
 import React from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useGovernance } from './hooks/useGovernance';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import { SecretsTab } from './tabs/SecretsTab';
 import { PoliciesTab } from './tabs/PoliciesTab';
 import { PermissionsTab } from './tabs/PermissionsTab';
@@ -19,8 +22,36 @@ import { GOVERNANCE_TABS, SUPER_ADMIN } from './types';
 // GovernanceTab type used implicitly via useGovernance
 import { Spinner } from '@/ui';
 
-export const GovernanceCenterPage: React.FC = () => {
+function GovernanceCenterPageContent(): JSX.Element {
   const governance = useGovernance();
+  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
+
+  // Loading état initial
+  if (governance.loading || matrixLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Spinner />
+        <span className="ml-3 text-gray-400">Chargement du Centre Gouvernance...</span>
+      </div>
+    );
+  }
+
+  // Error état (governance uniquement, matrix a fallback)
+  if (governance.error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-8">
+        <div className="text-red-400 text-xl mb-4">⚠️ Erreur de chargement</div>
+        <p className="text-gray-400 mb-6">{governance.error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-6 py-3 bg-titanium-600 hover:bg-titanium-700 rounded-lg transition-colors"
+        >
+          Recharger
+        </button>
+      </div>
+    );
+  }
 
   const renderTabContent = () => {
     switch (governance.activeTab) {
@@ -261,6 +292,15 @@ export const GovernanceCenterPage: React.FC = () => {
         </button>
       </footer>
     </div>
+  );
+}
+
+// Export wrapped in ErrorBoundary
+export const GovernanceCenterPage: React.FC = () => {
+  return (
+    <ErrorBoundary context="GovernanceCenter">
+      <GovernanceCenterPageContent />
+    </ErrorBoundary>
   );
 };
 

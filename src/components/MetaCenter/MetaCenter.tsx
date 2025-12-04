@@ -10,6 +10,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import './MetaCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -181,13 +184,15 @@ const TaskRow: React.FC<{ task: PriorityTask }> = ({ task }) => {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-const MetaCenter: React.FC = () => {
+const MetaCenterContent: React.FC = () => {
   const [state, setState] = useState<MetaOrchestratorState | null>(null);
   const [metrics, setMetrics] = useState<MetaMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<string>('balanced');
   const [autoRefresh, setAutoRefresh] = useState(true);
+  const { matrix, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
 
   const MODES = [
     { id: 'minimal', label: 'Minimal', icon: '🔋' },
@@ -264,7 +269,7 @@ const MetaCenter: React.FC = () => {
     return `${hours}h ${minutes}m ${secs}s`;
   };
 
-  if (loading) {
+  if (loading || matrixLoading) {
     return (
       <div className="meta-center meta-center-loading">
         <div className="meta-loading-spinner" />
@@ -447,6 +452,15 @@ const MetaCenter: React.FC = () => {
         )}
       </div>
     </div>
+  );
+};
+
+// Export with ErrorBoundary
+const MetaCenter: React.FC = () => {
+  return (
+    <ErrorBoundary context="MetaCenter">
+      <MetaCenterContent />
+    </ErrorBoundary>
   );
 };
 

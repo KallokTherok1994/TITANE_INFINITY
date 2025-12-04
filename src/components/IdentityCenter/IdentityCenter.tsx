@@ -11,6 +11,9 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { invoke } from '@tauri-apps/api/core';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
+import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
 import './IdentityCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -101,11 +104,13 @@ interface BehaviorRule {
 // COMPOSANT PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════════════
 
-const IdentityCenter: React.FC = () => {
+const IdentityCenterContent: React.FC = () => {
   // États principaux
   const [activeTab, setActiveTab] = useState<'overview' | 'personality' | 'voice' | 'modes' | 'rules'>('overview');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { matrix: identityMatrixHook, loading: matrixLoading } = useIdentityMatrix();
+  const singularityState = useSingularityStateSafe();
 
   // Données identité
   const [identityMatrix, setIdentityMatrix] = useState<IdentityMatrix | null>(null);
@@ -742,7 +747,7 @@ const IdentityCenter: React.FC = () => {
   // RENDU PRINCIPAL
   // ═══════════════════════════════════════════════════════════════════════════
 
-  if (isLoading) {
+  if (isLoading || matrixLoading) {
     return (
       <div className="identity-center loading">
         <div className="loading-spinner">
@@ -823,6 +828,15 @@ const IdentityCenter: React.FC = () => {
         </span>
       </footer>
     </div>
+  );
+};
+
+// Export with ErrorBoundary
+const IdentityCenter: React.FC = () => {
+  return (
+    <ErrorBoundary context="IdentityCenter">
+      <IdentityCenterContent />
+    </ErrorBoundary>
   );
 };
 
