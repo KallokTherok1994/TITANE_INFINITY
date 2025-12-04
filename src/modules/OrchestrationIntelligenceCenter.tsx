@@ -88,7 +88,7 @@ const OverviewSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Vue d'ensemble système"
-        description="État général TITANE, moteurs actifs, IA prioritaire, charge cognitive"
+        subtitle="État général TITANE, moteurs actifs, IA prioritaire, charge cognitive"
       />
 
       {/* Dashboard hiérarchique */}
@@ -96,37 +96,31 @@ const OverviewSection: React.FC = () => {
         <TMetric
           label="État Système"
           value="Stable"
-          variant="success"
           icon="✅"
         />
         <TMetric
           label="Moteurs Actifs"
           value="18/20"
-          variant="info"
           icon="⚙️"
         />
         <TMetric
           label="IA Prioritaire"
           value="Claude Sonnet 4.5"
-          variant="info"
           icon="🤖"
         />
         <TMetric
           label="Charge Cognitive"
           value="42%"
-          variant="warning"
           icon="🧪"
         />
         <TMetric
           label="Flux Interne"
           value="Optimal"
-          variant="success"
           icon="🌀"
         />
         <TMetric
           label="Dernière Action Méta"
           value="15s ago"
-          variant="info"
           icon="🧠"
         />
       </div>
@@ -192,7 +186,7 @@ const MetaOrchestrationSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Meta-Orchestration"
-        description="Priorités cognitives, moteurs dominants, décisions méta"
+        subtitle="Priorités cognitives, moteurs dominants, décisions méta"
       />
 
       <div className="bg-gray-800 rounded-lg p-6">
@@ -264,7 +258,7 @@ const OrchestrationSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Pipeline Technique"
-        description="Flux moteurs, synchronisation, états actifs"
+        subtitle="Flux moteurs, synchronisation, états actifs"
       />
 
       <div className="bg-gray-800 rounded-lg p-6">
@@ -307,13 +301,13 @@ const QuantumLayerSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Quantum Layer"
-        description="Calculs accélérés, signaux faibles, prédictions rapides"
+        subtitle="Calculs accélérés, signaux faibles, prédictions rapides"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TMetric label="Signaux Détectés" value="247" variant="info" icon="⚡" />
-        <TMetric label="Quantum Jumps" value="12" variant="warning" icon="🧪" />
-        <TMetric label="Intensité Processus" value="73%" variant="success" icon="🔥" />
+        <TMetric label="Signaux Détectés" value="247" icon="⚡" />
+        <TMetric label="Quantum Jumps" value="12" icon="🧪" />
+        <TMetric label="Intensité Processus" value="73%" icon="🔥" />
       </div>
 
       <div className="bg-gray-800 rounded-lg p-6">
@@ -347,7 +341,7 @@ const MultiIASection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Système Multi-IA"
-        description="Modèles disponibles, stratégies IA, fallback automatique"
+        subtitle="Modèles disponibles, stratégies IA, fallback automatique"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -425,7 +419,7 @@ const RealityRendererSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Reality Renderer"
-        description="Visualisation holographique du système, flows internes"
+        subtitle="Visualisation holographique du système, flows internes"
       />
 
       <div className="bg-gray-800 rounded-lg p-6 h-96 flex items-center justify-center">
@@ -455,14 +449,14 @@ const QAMonitoringSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="QA Monitoring"
-        description="Surveillance système, erreurs, santé modules"
+        subtitle="Surveillance système, erreurs, santé modules"
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <TMetric label="Erreurs (24h)" value="3" variant="success" icon="✅" />
-        <TMetric label="Warnings" value="12" variant="warning" icon="⚠️" />
-        <TMetric label="Santé Système" value="98%" variant="success" icon="💚" />
-        <TMetric label="Uptime" value="47d 12h" variant="info" icon="⏱️" />
+        <TMetric label="Erreurs (24h)" value="3" icon="✅" />
+        <TMetric label="Warnings" value="12" icon="⚠️" />
+        <TMetric label="Santé Système" value="98%" icon="💚" />
+        <TMetric label="Uptime" value="47d 12h" icon="⏱️" />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

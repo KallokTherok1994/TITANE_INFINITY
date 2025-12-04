@@ -81,7 +81,7 @@ const IdentitySection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Identité Système"
-        description="Matrice identitaire, valeurs, rôles, modes de fonctionnement"
+        subtitle="Matrice identitaire, valeurs, rôles, modes de fonctionnement"
       />
 
       {/* Matrice Identitaire */}
@@ -203,14 +203,14 @@ const MemoryMapSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Carte de Mémoire"
-        description="Architecture actuelle: court terme, moyen terme, long terme"
+        subtitle="Architecture actuelle: court terme, moyen terme, long terme"
       />
 
       {/* Vue d'ensemble */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TMetric label="Mémoire Court Terme" value="247" variant="info" icon="⚡" />
-        <TMetric label="Mémoire Moyen Terme" value="1,832" variant="info" icon="📊" />
-        <TMetric label="Mémoire Long Terme" value="4,521" variant="success" icon="🏛️" />
+        <TMetric label="Mémoire Court Terme" value="247" icon="⚡" />
+        <TMetric label="Mémoire Moyen Terme" value="1,832" icon="📊" />
+        <TMetric label="Mémoire Long Terme" value="4,521" icon="🏛️" />
       </div>
 
       {/* 3 Couches */}
@@ -313,10 +313,10 @@ const MemoryMapSection: React.FC = () => {
       <div className="bg-gray-800 rounded-lg p-6">
         <h3 className="text-xl font-bold mb-4">💚 Santé de la Mémoire</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <TMetric label="Intégrité" value="99.7%" variant="success" icon="✅" />
-          <TMetric label="Taille Totale" value="2.4 GB" variant="info" icon="💾" />
-          <TMetric label="Compression" value="73%" variant="success" icon="🗜️" />
-          <TMetric label="Doublons" value="0.3%" variant="success" icon="🔍" />
+          <TMetric label="Intégrité" value="99.7%" icon="✅" />
+          <TMetric label="Taille Totale" value="2.4 GB" icon="💾" />
+          <TMetric label="Compression" value="73%" icon="🗜️" />
+          <TMetric label="Doublons" value="0.3%" icon="🔍" />
         </div>
       </div>
     </div>
@@ -332,7 +332,7 @@ const MemoryEvolutionSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Mémoire Évolutive"
-        description="La mémoire vivante qui se réorganise, apprend et optimise"
+        subtitle="La mémoire vivante qui se réorganise, apprend et optimise"
       />
 
       {/* Opérations Automatiques */}
@@ -445,7 +445,7 @@ const CognitiveEvolutionSection: React.FC = () => {
     <div className="space-y-6">
       <TSectionHeader
         title="Évolution Cognitive"
-        description="Transformation incarnée — Comment l'identité + mémoires modifient la façon d'être"
+        subtitle="Transformation incarnée — Comment l'identité + mémoires modifient la façon d'être"
       />
 
       {/* Lignes d'Évolution */}
