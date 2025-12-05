@@ -1,0 +1,106 @@
+/**
+ * TITANE∞ v∞ — UIReadingEngine Zoom Controls
+ * Design System: Monochrome TITANE (#C4C4C4 / #727B81)
+ */
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: rgba(10, 10, 10, 0.6);
+  border: 1px solid rgba(196, 196, 196, 0.15);
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+}
+
+.zoom-controls--compact {
+  gap: 0.125rem;
+  padding: 0.125rem;
+}
+
+.zoom-controls__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #C4C4C4;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zoom-controls--compact .zoom-controls__btn {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.zoom-controls__btn:hover:not(:disabled) {
+  background: rgba(196, 196, 196, 0.1);
+  border-color: rgba(196, 196, 196, 0.2);
+  color: #F5F5F5;
+}
+
+.zoom-controls__btn:active:not(:disabled) {
+  background: rgba(196, 196, 196, 0.15);
+  transform: scale(0.95);
+}
+
+.zoom-controls__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.zoom-controls__btn--active {
+  background: rgba(196, 196, 196, 0.15);
+  border-color: rgba(196, 196, 196, 0.3);
+  color: #F5F5F5;
+}
+
+.zoom-controls__btn--fullscreen {
+  font-size: 16px;
+}
+
+.zoom-controls__btn--panel {
+  font-family: Georgia, serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.zoom-controls__level {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 28px;
+  padding: 0 0.5rem;
+  background: rgba(196, 196, 196, 0.05);
+  border: 1px solid rgba(196, 196, 196, 0.1);
+  border-radius: 4px;
+  color: #C4C4C4;
+  font-size: 11px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.zoom-controls--compact .zoom-controls__level {
+  min-width: 36px;
+  height: 24px;
+  font-size: 10px;
+}
+
+.zoom-controls__level:hover {
+  background: rgba(196, 196, 196, 0.1);
+  border-color: rgba(196, 196, 196, 0.2);
+  color: #F5F5F5;
+}

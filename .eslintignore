@@ -1,0 +1,28 @@
+# Backup files
+backups/
+backup_*/
+*.backup.*
+*.old.*
+*.new.*
+
+# Legacy and archive directories
+docs/legacy/
+docs/archive/
+src-tauri/archive/
+scripts/archive/
+
+# Build outputs
+dist/
+build/
+out/
+target/
+src-tauri/target/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Generated files
+.vite/
+*.log
+.DS_Store

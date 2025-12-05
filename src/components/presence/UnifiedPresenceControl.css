@@ -1,0 +1,547 @@
+/**
+ * ╔══════════════════════════════════════════════════════════════════════════════╗
+ * ║                                                                              ║
+ * ║   TITANE∞ - Unified Presence Control Styles                                 ║
+ * ║                                                                              ║
+ * ║   © 2025 TITANE∞ v27.0                                                       ║
+ * ║                                                                              ║
+ * ╚══════════════════════════════════════════════════════════════════════════════╝
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🏷️ BADGE FLOTTANT */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.unified-presence-badge {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9998;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 16px;
+  background: linear-gradient(135deg,
+    hsl(var(--presence-ambient-hue, 250), 70%, 50%) 0%,
+    hsl(var(--presence-ambient-hue, 250), 70%, 40%) 100%
+  );
+  border: none;
+  border-radius: 24px;
+
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.unified-presence-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.unified-presence-badge.open {
+  background: linear-gradient(135deg,
+    hsl(var(--presence-ambient-hue, 250), 70%, 60%) 0%,
+    hsl(var(--presence-ambient-hue, 250), 70%, 50%) 100%
+  );
+}
+
+.presence-badge-icon {
+  font-size: 18px;
+  animation: presence-pulse 3s ease-in-out infinite;
+}
+
+@keyframes presence-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.95); }
+}
+
+.presence-badge-label {
+  font-size: 13px;
+}
+
+.presence-badge-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📋 PANEL DE CONTRÔLE */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.unified-presence-panel {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  z-index: 9997;
+
+  width: 400px;
+  max-height: 600px;
+
+  background: rgba(17, 24, 39, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 16px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  animation: presence-panel-enter 0.3s ease-out;
+}
+
+@keyframes presence-panel-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.presence-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: linear-gradient(135deg,
+    rgba(139, 92, 246, 0.2) 0%,
+    rgba(99, 102, 241, 0.2) 100%
+  );
+  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.presence-panel-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #f3f4f6;
+}
+
+.presence-panel-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.presence-panel-close:hover {
+  background: rgba(139, 92, 246, 0.2);
+  color: #f3f4f6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📑 TABS */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-tabs {
+  display: flex;
+  padding: 8px 12px;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.presence-tabs button {
+  flex: 1;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.presence-tabs button:hover {
+  background: rgba(139, 92, 246, 0.1);
+  color: #e5e7eb;
+}
+
+.presence-tabs button.active {
+  background: rgba(139, 92, 246, 0.3);
+  color: #f3f4f6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📊 CONTENU DU PANEL */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.presence-layer-panel h4 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Métriques */
+.presence-metric {
+  margin-bottom: 16px;
+}
+
+.presence-metric label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.presence-metric-value {
+  float: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8b5cf6;
+}
+
+.presence-metric-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Barres de progression */
+.presence-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  clear: both;
+}
+
+.presence-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b5cf6, #6366f1);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.presence-progress-fill.accent {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+}
+
+.presence-progress-fill.pulse {
+  background: linear-gradient(90deg, #06b6d4, #3b82f6);
+}
+
+.presence-progress-fill.clarity {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.presence-progress-fill.complexity {
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+}
+
+.presence-progress-fill.alignment {
+  background: linear-gradient(90deg, #8b5cf6, #7c3aed);
+}
+
+.presence-progress-fill.warmth {
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+}
+
+.presence-progress-fill.proximity {
+  background: linear-gradient(90deg, #ec4899, #db2777);
+}
+
+.presence-progress-fill.intensity {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.presence-progress-fill.support {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.presence-progress-fill.continuity {
+  background: linear-gradient(90deg, #8b5cf6, #6366f1);
+}
+
+.presence-progress-fill.stability {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.presence-progress-fill.myth {
+  background: linear-gradient(90deg, #a855f7, #9333ea);
+}
+
+/* Affichage de teinte */
+.presence-hue-display {
+  width: 100%;
+  height: 24px;
+  border-radius: 4px;
+  margin-top: 4px;
+  clear: both;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 👤 CONTEXTE UTILISATEUR */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-user-context {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.presence-user-context h5 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.presence-context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.presence-context-item {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.presence-context-item span {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.presence-context-item strong {
+  font-size: 14px;
+  color: #f3f4f6;
+  font-weight: 600;
+}
+
+.presence-recommendation {
+  margin-top: 12px;
+  padding: 10px;
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🎼 PROFIL TONIQUE */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-tonic-profile {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.presence-tonic-profile h5 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.presence-tonic-profile select {
+  width: 100%;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  color: #f3f4f6;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.presence-profile-details {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.presence-profile-details span {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 🔮 SYMBOLES */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-symbols {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.presence-symbols h5 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.presence-symbols-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.presence-symbol-card {
+  padding: 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.presence-symbol-card:hover {
+  background: rgba(139, 92, 246, 0.2);
+  transform: translateY(-2px);
+}
+
+.presence-symbol-icon {
+  font-size: 24px;
+}
+
+.presence-symbol-meaning {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.presence-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #6b7280;
+  font-size: 12px;
+  font-style: italic;
+  padding: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📖 ARC NARRATIF */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-narrative-arc {
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+}
+
+.presence-narrative-arc h5 {
+  margin: 0 0 10px 0;
+  font-size: 12px;
+  color: #e5e7eb;
+  font-weight: 600;
+}
+
+.presence-arc-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.presence-arc-info span {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+.presence-arc-info strong {
+  color: #f3f4f6;
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📊 FOOTER */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+.presence-panel-footer {
+  display: flex;
+  justify-content: space-around;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.presence-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.presence-stat-label {
+  font-size: 11px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.presence-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #8b5cf6;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* 📱 RESPONSIVE */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .unified-presence-panel {
+    width: calc(100vw - 40px);
+    right: 20px;
+    left: 20px;
+    bottom: 20px;
+  }
+
+  .presence-context-grid,
+  .presence-symbols-grid {
+    grid-template-columns: 1fr;
+  }
+}

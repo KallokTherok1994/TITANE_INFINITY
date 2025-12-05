@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "self-heal",
+  "description": "Capability pour le Self-Healing et l'autonomie TITANE∞",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ],
+  "commands": {
+    "allow": [
+      "autonomy_scan_backend",
+      "autonomy_fix_states",
+      "autonomy_heal_modules",
+      "autonomy_optimize_performance",
+      "autonomy_evolve_ia",
+      "autonomy_test_ia_coherence",
+      "autonomy_ping",
+      "autonomy_shield_state",
+      "autonomy_analyse_logs",
+      "autonomy_log_report",
+      "autonomy_scan_ia",
+      "autonomy_scan_tts",
+      "autonomy_scan_avatar",
+      "autonomy_scan_memory",
+      "autonomy_scan_singularity_state",
+      "autonomy_fix_tts_sync",
+      "autonomy_resync_singularity_state",
+      "autonomy_clean_memory",
+      "get_system_health",
+      "memory_repair",
+      "system_optimize",
+      "check_system_integrity",
+      "autofix_detect_rust_warnings",
+      "autofix_detect_typescript_errors",
+      "autofix_detect_react_hook_violations",
+      "autofix_detect_invalid_states",
+      "autofix_fix_issue",
+      "autofix_fix_all",
+      "autofix_get_history",
+      "autofix_get_stats",
+      "autofix_reset"
+    ],
+    "deny": []
+  }
+}

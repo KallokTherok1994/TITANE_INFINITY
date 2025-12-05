@@ -1,0 +1,26 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "developer-mode",
+  "description": "Capability pour le Developer Mode TITANE∞ (Kevin only)",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ],
+  "commands": {
+    "allow": [
+      "engines_devmode_get_state",
+      "engines_devmode_enable",
+      "engines_devmode_disable",
+      "engines_devmode_validate_patch",
+      "engines_devmode_apply_patch",
+      "engines_devmode_preview",
+      "engines_devmode_rollback",
+      "engines_devmode_get_history",
+      "engines_devmode_create_backup",
+      "engines_devmode_restore_backup",
+      "engines_devmode_analyze_file",
+      "engines_devmode_changelog"
+    ],
+    "deny": []
+  }
+}

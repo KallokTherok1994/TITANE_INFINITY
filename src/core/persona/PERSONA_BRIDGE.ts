@@ -1,0 +1,117 @@
+/**
+ * TITANE_INFINITY v15 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * Unauthorized use, reproduction, modification, distribution or extraction
+ * of the software, its architecture, engines or components is strictly prohibited.
+ * See LICENSE.md for the full legal terms (FR/EN).
+ */
+
+/**
+ * TITANE∞ — PERSONA BRIDGE v24
+ *
+ * Pont de synchronisation entre Persona Engine et autres moteurs
+ * Propage l'état persona vers Glow, Motion, Sound, etc.
+ */
+
+import type { PersonaState } from '../ARCHITECTURE_TYPES_v24-v∞';
+import { personalityCoreManager } from './PERSONALITY_CORE';
+import { moodEngine } from './MOOD_ENGINE';
+import { behavioralLayerManager } from './BEHAVIORAL_LAYER';
+import { personaMemoryManager } from './PERSONA_MEMORY';
+
+export class PersonaBridge {
+  /**
+   * Synchronise tous les moteurs avec l'état persona
+   */
+  synchronize(): void {
+    // Obtient multiplicateurs visuels
+    const personalityMult = personalityCoreManager.getVisualMultipliers();
+    const moodMult = moodEngine.getComputedVisualEffect();
+    const behaviorMult = behavioralLayerManager.getPostureVisualEffects();
+
+    // Combine multiplicateurs (produit pondéré)
+    const combinedMultipliers = {
+      glow: personalityMult.glow * moodMult.glowMultiplier * behaviorMult.glowMultiplier,
+      motion: personalityMult.motion * moodMult.motionMultiplier * behaviorMult.motionSpeed,
+      sound: personalityMult.sound,
+      depth: moodMult.depthMultiplier,
+    };
+
+    // Applique aux CSS variables globales
+    this.applyToDOM(combinedMultipliers);
+  }
+
+  /**
+   * Applique l'état persona au DOM (CSS variables)
+   */
+  private applyToDOM(multipliers: Record<string, number>): void {
+    const root = document.documentElement;
+
+    root.style.setProperty('--persona-glow', (multipliers.glow ?? 1).toFixed(3));
+    root.style.setProperty('--persona-motion', (multipliers.motion ?? 1).toFixed(3));
+    root.style.setProperty('--persona-sound', (multipliers.sound ?? 1).toFixed(3));
+    root.style.setProperty('--persona-depth', (multipliers.depth ?? 1).toFixed(3));
+  }
+
+  /**
+   * Obtient l'état persona complet
+   */
+  getPersonaState(): PersonaState {
+    return {
+      personality: personalityCoreManager.getPersonality(),
+      mood: moodEngine.getMoodState(),
+      behavior: behavioralLayerManager.getLayer(),
+      memory: personaMemoryManager.getMemory(),
+      presenceLevel: this.calculatePresenceLevel(),
+      lastUpdate: Date.now(),
+    };
+  }
+
+  /**
+   * Calcule le niveau de présence (0-1)
+   */
+  private calculatePresenceLevel(): number {
+    const mood = moodEngine.getMoodState();
+    const personality = personalityCoreManager.getPersonality();
+
+    // Présence = intensité mood * responsive personality
+    return mood.intensity * personality.traits.responsive;
+  }
+}
+
+export const personaBridge = new PersonaBridge();
+
+// ─────────────────────────────────────────────────────────────────
+// Auto-sync interval (v24.20: with cleanup)
+// ─────────────────────────────────────────────────────────────────
+
+let autoSyncIntervalId: ReturnType<typeof setInterval> | null = null;
+
+/**
+ * Démarrer l'auto-sync (appelé automatiquement)
+ */
+function startAutoSync() {
+  if (autoSyncIntervalId !== null) return; // Already running
+
+  autoSyncIntervalId = setInterval(() => {
+    personaBridge.synchronize();
+  }, 5000); // Every 5s
+
+  console.log('[PersonaBridge] Auto-sync activé (5s)');
+}
+
+/**
+ * Arrêter l'auto-sync (cleanup)
+ */
+export function stopAutoSync() {
+  if (autoSyncIntervalId !== null) {
+    clearInterval(autoSyncIntervalId);
+    autoSyncIntervalId = null;
+    console.log('[PersonaBridge] Auto-sync désactivé');
+  }
+}
+
+// Auto-sync toutes les 5 secondes
+if (typeof window !== 'undefined') {
+  startAutoSync();
+}

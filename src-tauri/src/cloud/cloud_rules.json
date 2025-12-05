@@ -1,0 +1,122 @@
+{
+  "version": "v∞",
+  "description": "TITANE∞ Cloud Sync Rules - Règles de sécurité et gouvernance pour la synchronisation",
+  "rules": {
+    "kevin_only_sync": {
+      "enabled": true,
+      "description": "Seul Kevin peut initier une synchronisation",
+      "enforcement": "strict"
+    },
+    "no_sensitive_data": {
+      "enabled": true,
+      "description": "Aucune donnée sensible ne doit être synchronisée",
+      "enforcement": "strict",
+      "blocked_patterns": [
+        "password",
+        "secret",
+        "token",
+        "api_key",
+        "private_key",
+        "credential",
+        "auth"
+      ]
+    },
+    "pre_export_validation": {
+      "enabled": true,
+      "description": "Validation obligatoire avant export",
+      "checks": [
+        "manifest_compliance",
+        "size_limits",
+        "sensitive_data_scan",
+        "integrity_check"
+      ]
+    },
+    "sync_mode_control": {
+      "manual_allowed": true,
+      "auto_allowed": true,
+      "auto_interval_min_seconds": 60,
+      "auto_interval_max_seconds": 86400
+    },
+    "training_mode_restrictions": {
+      "enabled": true,
+      "description": "Limiter sync pendant le mode entraînement",
+      "allow_push": false,
+      "allow_pull": true,
+      "reason": "Éviter les conflits pendant l'apprentissage actif"
+    },
+    "dev_mode_restrictions": {
+      "enabled": true,
+      "description": "Limiter sync pendant le mode développeur",
+      "allow_push": true,
+      "allow_pull": false,
+      "reason": "Préserver l'état de développement local"
+    },
+    "governance_validation": {
+      "enabled": true,
+      "description": "Validation par GovernanceEngine avant chaque sync",
+      "required_permissions": [
+        "cloud_sync_read",
+        "cloud_sync_write"
+      ],
+      "audit_logging": true
+    }
+  },
+  "conflict_resolution": {
+    "default_strategy": "last_write_wins",
+    "available_strategies": [
+      {
+        "id": "last_write_wins",
+        "name": "Dernier écrit gagne",
+        "description": "La version la plus récente est conservée"
+      },
+      {
+        "id": "kevin_override",
+        "name": "Préférence Kevin",
+        "description": "La version locale (Kevin) est toujours conservée"
+      },
+      {
+        "id": "strategic_merge",
+        "name": "Fusion stratégique",
+        "description": "Fusion intelligente des données par champ"
+      }
+    ],
+    "notify_on_conflict": true,
+    "keep_conflict_history": true,
+    "max_conflict_history": 100
+  },
+  "security": {
+    "encryption": {
+      "algorithm": "AES-256-GCM",
+      "key_derivation": "Argon2id",
+      "signature": "Ed25519"
+    },
+    "integrity": {
+      "hash_algorithm": "SHA-256",
+      "verify_on_import": true,
+      "verify_on_export": true
+    },
+    "device_trust": {
+      "require_signature": true,
+      "trust_on_first_use": true,
+      "manual_approval_required": false
+    }
+  },
+  "logging": {
+    "log_sync_events": true,
+    "log_to_timeline": true,
+    "log_to_evolution": true,
+    "retention_days": 90
+  },
+  "self_healing": {
+    "enabled": true,
+    "detect_corruption": true,
+    "auto_restore": true,
+    "backup_before_sync": true,
+    "max_backups": 10
+  },
+  "metadata": {
+    "created_at": "2024-12-01T00:00:00Z",
+    "updated_at": "2024-12-01T00:00:00Z",
+    "author": "TITANE∞ Cloud Sync Engine v∞"
+  }
+}

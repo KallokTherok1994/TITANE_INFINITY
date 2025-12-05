@@ -1,0 +1,190 @@
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *   TITANE∞ v∞.20.0 — CAMERA OVERLAY STYLES
+ *   Design monochrome (#C4C4C4, #727B81)
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+.camera-overlay {
+  position: fixed;
+  background: linear-gradient(135deg, #1a1f2e 0%, #0a0e1a 100%);
+  border: 2px solid #727B81;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5),
+              0 0 40px rgba(114, 123, 129, 0.2);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+/* Positions */
+.camera-overlay.bottom-left {
+  bottom: 100px;
+  left: 24px;
+}
+
+.camera-overlay.bottom-right {
+  bottom: 100px;
+  right: 24px;
+}
+
+.camera-overlay.top-left {
+  top: 24px;
+  left: 24px;
+}
+
+.camera-overlay.top-right {
+  top: 24px;
+  right: 24px;
+}
+
+/* Tailles */
+.camera-overlay.compact {
+  width: 280px;
+  height: auto;
+}
+
+.camera-overlay.expanded {
+  width: 480px;
+  height: auto;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════ */
+
+.camera-overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: rgba(114, 123, 129, 0.1);
+  border-bottom: 1px solid rgba(196, 196, 196, 0.1);
+}
+
+.camera-overlay-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #C4C4C4;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.camera-overlay-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #93b399;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(147, 179, 153, 0.6);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 4px rgba(147, 179, 153, 0.3);
+  }
+}
+
+.camera-overlay-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.camera-overlay-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: transparent;
+  border: 1px solid rgba(196, 196, 196, 0.2);
+  color: #C4C4C4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.camera-overlay-btn:hover {
+  background: rgba(196, 196, 196, 0.1);
+  border-color: #C4C4C4;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   VIDEO
+   ═══════════════════════════════════════════════════════════════ */
+
+.camera-overlay-video-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  overflow: hidden;
+}
+
+.camera-overlay-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Erreur */
+.camera-overlay-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: rgba(196, 196, 196, 0.4);
+  font-size: 12px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+
+.camera-overlay-footer {
+  padding: 8px 12px;
+  background: rgba(114, 123, 129, 0.05);
+  border-top: 1px solid rgba(196, 196, 196, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.camera-overlay-status {
+  color: rgba(196, 196, 196, 0.6);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .camera-overlay.compact {
+    width: 220px;
+  }
+
+  .camera-overlay.expanded {
+    width: calc(100vw - 32px);
+    left: 16px !important;
+    right: 16px !important;
+  }
+
+  .camera-overlay.bottom-left,
+  .camera-overlay.bottom-right {
+    bottom: 80px;
+  }
+}

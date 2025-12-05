@@ -1,0 +1,195 @@
+/**
+ * TITANE∞ vΩ∞ — VISION STATUS INDICATOR STYLES
+ * Super Prompt #9: Styles pour l'indicateur de statut vision
+ *
+ * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
+ */
+
+/* ============================================================================
+   BASE
+   ============================================================================ */
+
+.vision-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(15, 15, 25, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.vision-status:hover {
+  background: rgba(25, 25, 40, 0.95);
+  border-color: rgba(0, 255, 255, 0.3);
+}
+
+.vision-status:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 255, 255, 0.3);
+}
+
+/* ============================================================================
+   SIZES
+   ============================================================================ */
+
+.vision-status--small {
+  padding: 4px 8px;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.vision-status--small .vision-status__icon {
+  font-size: 12px;
+}
+
+.vision-status--medium {
+  padding: 6px 12px;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.vision-status--medium .vision-status__icon {
+  font-size: 14px;
+}
+
+.vision-status--large {
+  padding: 8px 16px;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.vision-status--large .vision-status__icon {
+  font-size: 18px;
+}
+
+/* ============================================================================
+   STATES
+   ============================================================================ */
+
+.vision-status--active {
+  border-color: rgba(0, 255, 150, 0.3);
+  background: rgba(0, 255, 150, 0.05);
+}
+
+.vision-status--active:hover {
+  border-color: rgba(0, 255, 150, 0.5);
+  background: rgba(0, 255, 150, 0.1);
+}
+
+.vision-status--paused {
+  border-color: rgba(255, 200, 0, 0.3);
+  background: rgba(255, 200, 0, 0.05);
+}
+
+.vision-status--paused:hover {
+  border-color: rgba(255, 200, 0, 0.5);
+  background: rgba(255, 200, 0, 0.1);
+}
+
+.vision-status--inactive {
+  opacity: 0.6;
+}
+
+.vision-status--inactive:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================================
+   ICON
+   ============================================================================ */
+
+.vision-status__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ============================================================================
+   DOT INDICATOR
+   ============================================================================ */
+
+.vision-status__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dot-color, #888);
+}
+
+.vision-status__dot--active {
+  --dot-color: var(--accent, #93b399);
+  animation: pulse-active 1.5s ease-in-out infinite;
+}
+
+.vision-status__dot--paused {
+  --dot-color: var(--warning, #a89f91);
+  animation: pulse-paused 2s ease-in-out infinite;
+}
+
+.vision-status__dot--inactive {
+  --dot-color: #666;
+}
+
+@keyframes pulse-active {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(0, 255, 150, 0.4);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 4px rgba(0, 255, 150, 0);
+  }
+}
+
+@keyframes pulse-paused {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ============================================================================
+   ENERGY INDICATOR
+   ============================================================================ */
+
+.vision-status__energy {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* ============================================================================
+   CONFIDENCE
+   ============================================================================ */
+
+.vision-status__confidence {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(0, 255, 255, 0.8);
+  padding: 2px 6px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .vision-status--medium {
+    padding: 5px 10px;
+  }
+
+  .vision-status__confidence {
+    display: none;
+  }
+}

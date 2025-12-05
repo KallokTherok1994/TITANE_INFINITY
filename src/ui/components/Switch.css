@@ -1,0 +1,142 @@
+/* TITANE∞ v17.1 - Switch Component - Design System Optimisé */
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   TRACK - Rail du switch
+   ═══════════════════════════════════ */
+
+.switch__track {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background: var(--neutral-30);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  flex-shrink: 0;
+}
+
+.switch__track:focus-visible {
+  outline: 2px solid var(--primary-main);
+  outline-offset: 2px;
+}
+
+/* État checked */
+.switch--checked .switch__track {
+  background: var(--primary-main);
+}
+
+/* État hover */
+.switch:hover:not(.switch--disabled) .switch__track {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* État disabled */
+.switch--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch--disabled .switch__track {
+  cursor: not-allowed;
+  background: var(--neutral-20);
+}
+
+/* ═══════════════════════════════════
+   THUMB - Bouton circulaire
+   ═══════════════════════════════════ */
+
+.switch__thumb {
+  display: block;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+/* Animation du thumb */
+.switch--checked .switch__thumb {
+  transform: translateX(var(--thumb-translate));
+}
+
+/* ═══════════════════════════════════
+   SIZES - Tailles
+   ═══════════════════════════════════ */
+
+.switch--sm .switch__track {
+  width: 32px;
+  height: 18px;
+  padding: 2px;
+  --thumb-translate: 14px;
+}
+
+.switch--sm .switch__thumb {
+  width: 14px;
+  height: 14px;
+}
+
+.switch--md .switch__track {
+  width: 44px;
+  height: 24px;
+  padding: 2px;
+  --thumb-translate: 20px;
+}
+
+.switch--md .switch__thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.switch--lg .switch__track {
+  width: 56px;
+  height: 30px;
+  padding: 3px;
+  --thumb-translate: 26px;
+}
+
+.switch--lg .switch__thumb {
+  width: 24px;
+  height: 24px;
+}
+
+/* ═══════════════════════════════════
+   LABEL
+   ═══════════════════════════════════ */
+
+.switch__label {
+  font-size: var(--font-size-body);
+  color: var(--neutral-70);
+  cursor: pointer;
+}
+
+.switch--disabled .switch__label {
+  cursor: not-allowed;
+  color: var(--neutral-50);
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY - Reduced Motion
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .switch__track,
+  .switch__thumb {
+    transition: none;
+  }
+}

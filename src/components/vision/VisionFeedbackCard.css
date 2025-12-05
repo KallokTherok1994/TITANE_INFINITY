@@ -1,0 +1,300 @@
+/**
+ * TITANE∞ vΩ∞ — VISION FEEDBACK CARD STYLES
+ * Super Prompt #9: Styles pour la carte de feedback vision
+ *
+ * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
+ */
+
+/* ============================================================================
+   BASE
+   ============================================================================ */
+
+.vision-feedback {
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 15, 25, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(0, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+/* ============================================================================
+   STATES
+   ============================================================================ */
+
+.vision-feedback--inactive {
+  opacity: 0.6;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.vision-feedback--low-confidence {
+  border-color: rgba(255, 200, 0, 0.3);
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+.vision-feedback__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  background: rgba(0, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.vision-feedback__icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.vision-feedback__title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.vision-feedback__confidence {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 255, 255, 0.8);
+  padding: 4px 10px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.vision-feedback__badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.vision-feedback__badge--warning {
+  color: var(--warning, #a89f91);
+  background: rgba(255, 200, 0, 0.15);
+}
+
+/* ============================================================================
+   BODY
+   ============================================================================ */
+
+.vision-feedback__body {
+  padding: 20px;
+}
+
+.vision-feedback__message {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.vision-feedback__message:last-child {
+  margin-bottom: 0;
+}
+
+.vision-feedback__message--inactive {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* ============================================================================
+   LEVELS
+   ============================================================================ */
+
+.vision-feedback__levels {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vision-feedback__level {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.vision-feedback__level-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.vision-feedback__level-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.vision-feedback__level-value {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+/* ============================================================================
+   SUGGESTIONS
+   ============================================================================ */
+
+.vision-feedback__suggestions {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vision-feedback__suggestions-title {
+  margin: 0 0 12px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(0, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.vision-feedback__suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.vision-feedback__suggestion:last-child {
+  margin-bottom: 0;
+}
+
+.vision-feedback__suggestion:hover {
+  background: rgba(0, 255, 255, 0.05);
+  border-color: rgba(0, 255, 255, 0.2);
+}
+
+.vision-feedback__suggestion--high {
+  border-left: 3px solid var(--danger, #8f7a7a);
+}
+
+.vision-feedback__suggestion--medium {
+  border-left: 3px solid #ffd93d;
+}
+
+.vision-feedback__suggestion--low {
+  border-left: 3px solid #6bcb77;
+}
+
+.vision-feedback__suggestion-message {
+  flex: 1;
+}
+
+.vision-feedback__suggestion-action {
+  font-size: 16px;
+  color: rgba(0, 255, 255, 0.6);
+  margin-left: 12px;
+}
+
+/* ============================================================================
+   DISCLAIMER
+   ============================================================================ */
+
+.vision-feedback__disclaimer {
+  display: flex;
+  gap: 10px;
+  padding: 14px 20px;
+  background: rgba(255, 200, 0, 0.03);
+  border-top: 1px solid rgba(255, 200, 0, 0.1);
+}
+
+.vision-feedback__disclaimer-icon {
+  font-size: 14px;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.vision-feedback__disclaimer-text {
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255, 200, 0, 0.7);
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .vision-feedback {
+    border-radius: 12px;
+  }
+
+  .vision-feedback__header {
+    padding: 12px 16px;
+  }
+
+  .vision-feedback__body {
+    padding: 16px;
+  }
+
+  .vision-feedback__levels {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .vision-feedback__level {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .vision-feedback__message {
+    font-size: 13px;
+  }
+
+  .vision-feedback__suggestion {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .vision-feedback__disclaimer {
+    padding: 12px 16px;
+  }
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.vision-feedback {
+  animation: fadeIn 0.3s ease;
+}

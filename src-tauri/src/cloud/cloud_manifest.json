@@ -1,0 +1,71 @@
+{
+  "version": "v∞",
+  "description": "TITANE∞ Cloud Sync Manifest - Définit les données autorisées et bloquées pour la synchronisation",
+  "allowed": [
+    "ui_theme",
+    "layout",
+    "progression",
+    "knowledge_index",
+    "memory_lt",
+    "patterns",
+    "evolution",
+    "docs",
+    "training_history",
+    "ia_presets",
+    "dev_mode_history",
+    "user_preferences",
+    "shortcuts",
+    "workspace_settings"
+  ],
+  "blocked": [
+    "secrets",
+    "keys",
+    "api_keys",
+    "memory_ct",
+    "memory_mt",
+    "logs",
+    "raw_cache",
+    "system_config",
+    "credentials",
+    "tokens",
+    "private_keys",
+    "passphrase",
+    "encryption_keys",
+    "session_data",
+    "auth_tokens",
+    "oauth_tokens",
+    "device_private_key",
+    "internal_state",
+    "debug_logs",
+    "error_traces",
+    "core_config",
+    "runtime_state"
+  ],
+  "transformations": {
+    "memory_lt": {
+      "filter_sensitive": true,
+      "max_size_bytes": 10485760,
+      "expire_after_days": 365
+    },
+    "training_history": {
+      "filter_sensitive": true,
+      "max_size_bytes": 5242880,
+      "expire_after_days": 180
+    },
+    "evolution": {
+      "filter_sensitive": false,
+      "max_size_bytes": 2097152,
+      "expire_after_days": null
+    },
+    "docs": {
+      "filter_sensitive": true,
+      "max_size_bytes": 52428800,
+      "expire_after_days": null
+    }
+  },
+  "metadata": {
+    "created_at": "2024-12-01T00:00:00Z",
+    "updated_at": "2024-12-01T00:00:00Z",
+    "author": "TITANE∞ Cloud Sync Engine v∞"
+  }
+}

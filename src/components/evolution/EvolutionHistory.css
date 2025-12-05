@@ -1,0 +1,209 @@
+/**
+ * TITANE∞ Evolution Engine - History Styles
+ * Copyright (c) 2025 MUSIC∞AI
+ */
+
+.evolution-history {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba(0, 255, 247, 0.1), rgba(124, 58, 237, 0.1));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.history-stats {
+  display: flex;
+  gap: 12px;
+}
+
+.history-stats .stat {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.history-stats .stat.success { color: var(--success, #93b399); }
+.history-stats .stat.failed { color: var(--danger, #8f7a7a); }
+.history-stats .stat.rollback { color: #6b7280; }
+
+.history-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 12px;
+}
+
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.filter-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.filter-tab:hover { background: rgba(255, 255, 255, 0.05); color: rgba(255, 255, 255, 0.8); }
+.filter-tab.active { background: rgba(255, 255, 255, 0.1); color: var(--primary, #727b81); }
+
+.search-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  width: 200px;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary, #727b81);
+}
+
+.history-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+}
+
+.history-entry {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.history-entry:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.history-entry.result-success { border-left: 3px solid var(--success, #93b399); }
+.history-entry.result-failed { border-left: 3px solid var(--danger, #8f7a7a); }
+.history-entry.result-partial { border-left: 3px solid var(--warning, #a89f91); }
+.history-entry.result-denied { border-left: 3px solid var(--primary, #727b81); }
+.history-entry.result-rolled_back { border-left: 3px solid #6b7280; }
+
+.entry-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 24px;
+}
+
+.entry-phase-icon { font-size: 16px; }
+
+.timeline-line {
+  flex: 1;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  margin-top: 4px;
+}
+
+.entry-content { flex: 1; }
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.entry-action {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.entry-time {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.entry-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+}
+
+.entry-phase {
+  color: rgba(255, 255, 255, 0.5);
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.entry-actor { color: rgba(255, 255, 255, 0.6); }
+.entry-result { font-weight: 500; }
+
+.entry-rollback-info {
+  margin-top: 8px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+.btn-rollback {
+  margin-top: 8px;
+  padding: 4px 12px;
+  font-size: 11px;
+  background: rgba(107, 114, 128, 0.2);
+  border: 1px solid rgba(107, 114, 128, 0.4);
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-rollback:hover {
+  background: rgba(107, 114, 128, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.empty-history {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.empty-history .empty-icon { font-size: 32px; margin-bottom: 8px; }
+.empty-history p { margin: 0; font-size: 13px; }

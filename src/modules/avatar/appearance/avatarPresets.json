@@ -1,0 +1,232 @@
+{
+  "presets": [
+    {
+      "id": "Bureau_Pro_1",
+      "name": "Bureau Professionnel",
+      "category": "bureau",
+      "description": "Tenue professionnelle classique pour le bureau",
+      "outfit": {
+        "top": "chemise claire",
+        "bottom": "pantalon fonce",
+        "shoes": "escarpins classiques",
+        "outerwear": "blazer ajuste",
+        "layering": []
+      },
+      "style": {
+        "theme": "Bureau_Pro",
+        "formality": "Formal",
+        "color_palette": "neutre",
+        "vibe": "confiant",
+        "epoch": "moderne",
+        "energy": "medium"
+      },
+      "hair": {
+        "style": "queue de cheval haute",
+        "length": "Long",
+        "color": "dark",
+        "details": []
+      },
+      "accessories": {
+        "glasses": null,
+        "jewelry": [],
+        "bag": null,
+        "other": []
+      },
+      "makeup": {
+        "intensity": "Light",
+        "style": "naturel",
+        "details": []
+      }
+    },
+    {
+      "id": "Casual_Light_1",
+      "name": "Casual Léger",
+      "category": "casual",
+      "description": "Look décontracté et confortable",
+      "outfit": {
+        "top": "t-shirt simple",
+        "bottom": "jeans",
+        "shoes": "baskets",
+        "outerwear": null,
+        "layering": []
+      },
+      "style": {
+        "theme": "Casual_Light",
+        "formality": "Casual",
+        "color_palette": "pastel",
+        "vibe": "relax",
+        "epoch": "moderne",
+        "energy": "low"
+      },
+      "hair": {
+        "style": "detaches",
+        "length": "Long",
+        "color": "dark",
+        "details": []
+      },
+      "accessories": {
+        "glasses": null,
+        "jewelry": [],
+        "bag": "sac a dos",
+        "other": []
+      },
+      "makeup": {
+        "intensity": "Light",
+        "style": "naturel",
+        "details": []
+      }
+    },
+    {
+      "id": "Sport_Dynamic_1",
+      "name": "Sport Dynamique",
+      "category": "sport",
+      "description": "Tenue sportive active et énergique",
+      "outfit": {
+        "top": "top sport",
+        "bottom": "leggings",
+        "shoes": "baskets sport",
+        "outerwear": null,
+        "layering": []
+      },
+      "style": {
+        "theme": "Sport_Dynamic",
+        "formality": "Casual",
+        "color_palette": "saturee",
+        "vibe": "energetique",
+        "epoch": "moderne",
+        "energy": "high"
+      },
+      "hair": {
+        "style": "queue de cheval",
+        "length": "Long",
+        "color": "dark",
+        "details": []
+      },
+      "accessories": {
+        "glasses": null,
+        "jewelry": [],
+        "bag": "sac sport",
+        "other": []
+      },
+      "makeup": {
+        "intensity": "None",
+        "style": null,
+        "details": []
+      }
+    },
+    {
+      "id": "Montagne_Nordic_1",
+      "name": "Montagne Nordique",
+      "category": "nature",
+      "description": "Style nature inspiré des montagnes nordiques",
+      "outfit": {
+        "top": "pull laine",
+        "bottom": "pantalon outdoor",
+        "shoes": "bottes montagne",
+        "outerwear": "veste polaire",
+        "layering": ["couche thermique"]
+      },
+      "style": {
+        "theme": "Montagne_Nordic",
+        "formality": "Smart",
+        "color_palette": "terre",
+        "vibe": "calme",
+        "epoch": "intemporel",
+        "energy": "medium"
+      },
+      "hair": {
+        "style": "tresse",
+        "length": "Long",
+        "color": "dark",
+        "details": []
+      },
+      "accessories": {
+        "glasses": null,
+        "jewelry": [],
+        "bag": "sac randonnee",
+        "other": ["bonnet", "gants"]
+      },
+      "makeup": {
+        "intensity": "None",
+        "style": null,
+        "details": []
+      }
+    },
+    {
+      "id": "Creative_Studio_1",
+      "name": "Studio Créatif",
+      "category": "creatif",
+      "description": "Look créatif pour sessions artistiques",
+      "outfit": {
+        "top": "blouse ample",
+        "bottom": "pantalon large",
+        "shoes": "bottines",
+        "outerwear": null,
+        "layering": []
+      },
+      "style": {
+        "theme": "Creatif",
+        "formality": "Smart",
+        "color_palette": "saturee",
+        "vibe": "inspire",
+        "epoch": "boheme",
+        "energy": "high"
+      },
+      "hair": {
+        "style": "detaches ondules",
+        "length": "Long",
+        "color": "dark",
+        "details": ["meches colorees"]
+      },
+      "accessories": {
+        "glasses": "lunettes rondes",
+        "jewelry": ["boucles creoles", "collier long"],
+        "bag": "sac tote",
+        "other": ["foulard"]
+      },
+      "makeup": {
+        "intensity": "Medium",
+        "style": "artistique",
+        "details": ["eye-liner graphique"]
+      }
+    },
+    {
+      "id": "Soiree_Elegante_1",
+      "name": "Soirée Élégante",
+      "category": "soiree",
+      "description": "Tenue élégante pour événements",
+      "outfit": {
+        "top": "chemisier satin",
+        "bottom": "jupe midi",
+        "shoes": "escarpins hauts",
+        "outerwear": "blazer structure",
+        "layering": []
+      },
+      "style": {
+        "theme": "Soiree",
+        "formality": "Formal",
+        "color_palette": "sombre",
+        "vibe": "elegant",
+        "epoch": "classique",
+        "energy": "medium"
+      },
+      "hair": {
+        "style": "chignon bas",
+        "length": "Long",
+        "color": "dark",
+        "details": []
+      },
+      "accessories": {
+        "glasses": null,
+        "jewelry": ["boucles discrete", "bracelet fin"],
+        "bag": "pochette",
+        "other": []
+      },
+      "makeup": {
+        "intensity": "Strong",
+        "style": "soiree",
+        "details": ["rouge intense", "smokey eyes"]
+      }
+    }
+  ]
+}

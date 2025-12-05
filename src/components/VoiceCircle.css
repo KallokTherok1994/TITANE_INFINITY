@@ -1,0 +1,63 @@
+/**
+ * 🎨 VoiceCircle Styles - Premium audio-reactive circle
+ */
+
+.voice-circle-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.voice-circle-ring {
+  position: absolute;
+  border-radius: 50%;
+  border-style: solid;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.voice-circle-main {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  transition: box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.voice-circle-gradient {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.voice-circle-particles {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-particle {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.voice-circle-label {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}

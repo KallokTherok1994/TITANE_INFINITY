@@ -1,0 +1,25 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=TITANE∞ vΩ
+Comment=🏛️ Cognitive OS - Audit Complete - Production Ready
+Exec=/home/titane/Documents/TITANE_INFINITY/src-tauri/target/release/titane-infinity
+Icon=/home/titane/Documents/TITANE_INFINITY/src-tauri/icons/128x128.png
+Terminal=false
+Categories=Development;Utility;AI;
+Keywords=AI;Chat;Cognitive;System;Memory;Singularity;
+StartupWMClass=titane-infinity
+StartupNotify=true
+Actions=DevMode;Logs;Config;
+
+[Desktop Action DevMode]
+Name=🔧 Developer Mode
+Exec=/home/titane/Documents/TITANE_INFINITY/src-tauri/target/release/titane-infinity --dev
+
+[Desktop Action Logs]
+Name=📋 View Logs
+Exec=gnome-terminal -- tail -f /home/titane/.titane/logs/titane.log
+
+[Desktop Action Config]
+Name=⚙️ Configuration
+Exec=xdg-open /home/titane/.titane/

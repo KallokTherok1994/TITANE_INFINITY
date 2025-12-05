@@ -1,0 +1,167 @@
+/* TITANE∞ v17.1 - Radio Component - Design System Optimisé */
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+}
+
+.radio__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   CIRCLE - Cercle extérieur
+   ═══════════════════════════════════ */
+
+.radio__circle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--neutral-5);
+  border: 2px solid var(--neutral-30);
+  border-radius: var(--radius-full);
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.radio:hover:not(.radio--disabled) .radio__circle {
+  border-color: var(--primary-main);
+  background: var(--neutral-10);
+}
+
+.radio__input:focus-visible + .radio__circle {
+  outline: 2px solid var(--primary-main);
+  outline-offset: 2px;
+}
+
+/* État checked */
+.radio--checked .radio__circle {
+  border-color: var(--primary-main);
+  background: var(--neutral-5);
+}
+
+.radio--checked:hover:not(.radio--disabled) .radio__circle {
+  border-color: var(--primary-light);
+}
+
+/* État disabled */
+.radio--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.radio--disabled .radio__circle {
+  cursor: not-allowed;
+  background: var(--neutral-10);
+  border-color: var(--neutral-20);
+}
+
+/* ═══════════════════════════════════
+   DOT - Point intérieur
+   ═══════════════════════════════════ */
+
+.radio__dot {
+  border-radius: var(--radius-full);
+  background: var(--primary-main);
+  opacity: 0;
+  transform: scale(0);
+  transition: all 120ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.radio--checked .radio__dot {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.radio--checked:hover:not(.radio--disabled) .radio__dot {
+  background: var(--primary-light);
+}
+
+/* ═══════════════════════════════════
+   SIZES
+   ═══════════════════════════════════ */
+
+.radio--sm .radio__circle {
+  width: 16px;
+  height: 16px;
+}
+
+.radio--sm .radio__dot {
+  width: 8px;
+  height: 8px;
+}
+
+.radio--sm .radio__label {
+  font-size: var(--font-size-small);
+}
+
+.radio--md .radio__circle {
+  width: 20px;
+  height: 20px;
+}
+
+.radio--md .radio__dot {
+  width: 10px;
+  height: 10px;
+}
+
+.radio--md .radio__label {
+  font-size: var(--font-size-body);
+}
+
+.radio--lg .radio__circle {
+  width: 24px;
+  height: 24px;
+}
+
+.radio--lg .radio__dot {
+  width: 12px;
+  height: 12px;
+}
+
+.radio--lg .radio__label {
+  font-size: var(--font-size-h5);
+}
+
+/* ═══════════════════════════════════
+   LABEL
+   ═══════════════════════════════════ */
+
+.radio__label {
+  color: var(--neutral-70);
+  cursor: pointer;
+}
+
+.radio--disabled .radio__label {
+  cursor: not-allowed;
+  color: var(--neutral-50);
+}
+
+/* ═══════════════════════════════════
+   RADIO GROUP
+   ═══════════════════════════════════ */
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY - Reduced Motion
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .radio__circle,
+  .radio__dot {
+    transition: none;
+  }
+}

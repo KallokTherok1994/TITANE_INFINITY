@@ -1,0 +1,286 @@
+/**
+ * TITANE∞ vΩ∞ — VISION DEBUG OVERLAY STYLES
+ * Super Prompt #9: Styles pour l'overlay de debug vision
+ *
+ * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
+ */
+
+/* ============================================================================
+   BASE
+   ============================================================================ */
+
+.vision-debug {
+  position: fixed;
+  top: 80px;
+  z-index: 9500;
+  width: 280px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  background: rgba(10, 10, 20, 0.95);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 12px;
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(0, 255, 255, 0.05);
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+}
+
+.vision-debug--left {
+  left: 20px;
+}
+
+.vision-debug--right {
+  right: 20px;
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+
+.vision-debug__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(0, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+}
+
+.vision-debug__title {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(0, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+}
+
+.vision-debug__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.vision-debug__close:hover {
+  color: var(--danger, #8f7a7a);
+  background: rgba(255, 107, 107, 0.1);
+}
+
+/* ============================================================================
+   SECTIONS
+   ============================================================================ */
+
+.vision-debug__section {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.vision-debug__section:last-of-type {
+  border-bottom: none;
+}
+
+.vision-debug__section-title {
+  margin: 0 0 10px 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(0, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ============================================================================
+   ROWS
+   ============================================================================ */
+
+.vision-debug__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 11px;
+}
+
+.vision-debug__row span:first-child {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.vision-debug__row span:last-child {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ============================================================================
+   TEXT COLORS
+   ============================================================================ */
+
+.text-green {
+  color: #6bcb77 !important;
+}
+
+.text-red {
+  color: var(--danger, #8f7a7a) !important;
+}
+
+.text-yellow {
+  color: #ffd93d !important;
+}
+
+/* ============================================================================
+   METRICS
+   ============================================================================ */
+
+.vision-debug__metric {
+  margin-bottom: 12px;
+}
+
+.vision-debug__metric:last-child {
+  margin-bottom: 0;
+}
+
+.vision-debug__metric-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.vision-debug__metric-header span:first-child {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.vision-debug__metric-header span:last-child {
+  font-weight: 600;
+}
+
+/* ============================================================================
+   BARS
+   ============================================================================ */
+
+.vision-debug__bar {
+  position: relative;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.vision-debug__bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: var(--fill-width, 0%);
+  background: var(--fill-color, #888);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.vision-debug__confidence-bar {
+  font-family: monospace;
+  font-size: 10px;
+  color: rgba(0, 255, 255, 0.8);
+  letter-spacing: -1px;
+}
+
+.vision-debug__confidence-bar code {
+  background: transparent;
+}
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
+
+.vision-debug__footer {
+  padding: 10px 16px;
+  text-align: center;
+  background: rgba(255, 200, 0, 0.05);
+  border-top: 1px solid rgba(255, 200, 0, 0.1);
+}
+
+.vision-debug__footer small {
+  font-size: 9px;
+  color: rgba(255, 200, 0, 0.7);
+}
+
+/* ============================================================================
+   SCROLLBAR
+   ============================================================================ */
+
+.vision-debug::-webkit-scrollbar {
+  width: 6px;
+}
+
+.vision-debug::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.vision-debug::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.vision-debug::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 255, 0.3);
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.vision-debug {
+  animation: fadeIn 0.3s ease;
+}
+
+.vision-debug--left {
+  animation-name: fadeInLeft;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  .vision-debug {
+    width: 240px;
+    font-size: 10px;
+  }
+
+  .vision-debug__section {
+    padding: 10px 12px;
+  }
+}

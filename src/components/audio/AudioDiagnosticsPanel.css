@@ -1,0 +1,611 @@
+/**
+ * TITANE_INFINITY v19.3.0 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v19.3 — AUDIO DIAGNOSTICS PANEL CSS
+ *   Design System TITANE∞ Monochrome v∞
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+/* Root */
+.audio-diagnostics-panel {
+  --adp-bg: var(--titane-bg, hsl(0, 0%, 8%));
+  --adp-surface: var(--titane-surface, hsl(0, 0%, 12%));
+  --adp-surface-alt: var(--titane-surface-alt, hsl(0, 0%, 15%));
+  --adp-border: var(--titane-border, hsl(0, 0%, 20%));
+  --adp-text: var(--titane-text, hsl(0, 0%, 90%));
+  --adp-text-muted: var(--titane-text-muted, hsl(0, 0%, 60%));
+  --adp-accent: var(--titane-accent, hsl(0, 0%, 100%));
+  --adp-success: var(--titane-success, hsl(142, 70%, 45%));
+  --adp-warning: var(--titane-warning, hsl(38, 92%, 50%));
+  --adp-error: var(--titane-error, hsl(0, 70%, 50%));
+  --adp-radius: 8px;
+  --adp-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  background: var(--adp-bg);
+  border: 1px solid var(--adp-border);
+  border-radius: var(--adp-radius);
+  overflow: hidden;
+  font-family: var(--titane-font, system-ui, -apple-system, sans-serif);
+  color: var(--adp-text);
+  max-width: 480px;
+  width: 100%;
+}
+
+.audio-diagnostics-panel.compact {
+  max-width: 360px;
+}
+
+/* Header */
+.adp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--adp-surface);
+  border-bottom: 1px solid var(--adp-border);
+}
+
+.adp-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adp-icon {
+  font-size: 20px;
+}
+
+.adp-title h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.adp-health-badge {
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: var(--adp-surface-alt);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.adp-health-badge.healthy {
+  background: hsla(142, 70%, 45%, 0.15);
+  color: var(--adp-success);
+}
+
+.adp-health-badge.degraded {
+  background: hsla(38, 92%, 50%, 0.15);
+  color: var(--adp-warning);
+}
+
+.adp-health-badge.error {
+  background: hsla(0, 70%, 50%, 0.15);
+  color: var(--adp-error);
+}
+
+.adp-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--adp-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--adp-transition);
+}
+
+.adp-close:hover {
+  background: var(--adp-surface-alt);
+  color: var(--adp-text);
+  border-color: var(--adp-border);
+}
+
+/* Error Banner */
+.adp-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: hsla(0, 70%, 50%, 0.15);
+  border-bottom: 1px solid hsla(0, 70%, 50%, 0.3);
+  color: var(--adp-error);
+  font-size: 13px;
+}
+
+.adp-error-banner button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.7;
+}
+
+.adp-error-banner button:hover {
+  opacity: 1;
+}
+
+/* Tabs */
+.adp-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--adp-border);
+  background: var(--adp-surface);
+}
+
+.adp-tab {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  color: var(--adp-text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--adp-transition);
+  position: relative;
+}
+
+.adp-tab:hover {
+  color: var(--adp-text);
+  background: var(--adp-surface-alt);
+}
+
+.adp-tab.active {
+  color: var(--adp-accent);
+}
+
+.adp-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--adp-accent);
+}
+
+/* Content */
+.adp-content {
+  padding: 16px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.compact .adp-content {
+  max-height: 300px;
+}
+
+/* Section */
+.adp-section {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--adp-border);
+}
+
+.adp-section:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.adp-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.adp-section-desc {
+  font-size: 13px;
+  color: var(--adp-text-muted);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.adp-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--adp-text-muted);
+}
+
+/* Select */
+.adp-select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--adp-surface);
+  border: 1px solid var(--adp-border);
+  border-radius: 6px;
+  color: var(--adp-text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--adp-transition);
+}
+
+.adp-select:hover {
+  border-color: var(--adp-text-muted);
+}
+
+.adp-select:focus {
+  outline: none;
+  border-color: var(--adp-accent);
+}
+
+.adp-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Buttons */
+.adp-btn {
+  padding: 10px 16px;
+  background: var(--adp-surface);
+  border: 1px solid var(--adp-border);
+  border-radius: 6px;
+  color: var(--adp-text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--adp-transition);
+}
+
+.adp-btn:hover:not(:disabled) {
+  background: var(--adp-surface-alt);
+  border-color: var(--adp-text-muted);
+}
+
+.adp-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.adp-btn.primary {
+  background: var(--adp-accent);
+  color: var(--adp-bg);
+  border-color: var(--adp-accent);
+}
+
+.adp-btn.primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.adp-btn.danger {
+  border-color: var(--adp-error);
+  color: var(--adp-error);
+}
+
+.adp-btn.danger:hover:not(:disabled) {
+  background: hsla(0, 70%, 50%, 0.15);
+}
+
+.adp-btn.full-width {
+  width: 100%;
+}
+
+.adp-btn-icon {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--adp-text-muted);
+  cursor: pointer;
+  transition: var(--adp-transition);
+  border-radius: 4px;
+  margin-left: auto;
+}
+
+.adp-btn-icon:hover:not(:disabled) {
+  background: var(--adp-surface-alt);
+  color: var(--adp-text);
+}
+
+.adp-btn-icon:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Device Actions */
+.adp-device-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.adp-test-result {
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--adp-surface-alt);
+}
+
+.adp-test-result.success {
+  background: hsla(142, 70%, 45%, 0.15);
+  color: var(--adp-success);
+}
+
+.adp-test-result.error {
+  background: hsla(0, 70%, 50%, 0.15);
+  color: var(--adp-error);
+}
+
+/* Permission Status */
+.adp-permission-status {
+  padding: 8px 12px;
+  background: var(--adp-surface);
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.permission-granted {
+  color: var(--adp-success);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.permission-granted span {
+  font-weight: 600;
+}
+
+.permission-denied {
+  color: var(--adp-warning);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-denied span {
+  font-weight: 600;
+}
+
+.permission-unavailable {
+  color: var(--adp-warning);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.permission-unavailable span {
+  font-weight: 600;
+}
+
+.permission-prompt {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.permission-checking {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  color: var(--adp-text-muted);
+}
+
+.permission-help {
+  margin: 0;
+  font-size: 12px;
+  color: var(--adp-text-muted);
+  line-height: 1.5;
+}
+
+.permission-help.success {
+  color: var(--adp-success);
+}
+
+.permission-unknown {
+  color: var(--adp-text-muted);
+}
+
+/* Diagnostic Steps */
+.adp-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.adp-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: var(--adp-surface);
+  border-radius: 6px;
+  border: 1px solid var(--adp-border);
+  transition: var(--adp-transition);
+}
+
+.adp-step.running {
+  border-color: var(--adp-accent);
+}
+
+.adp-step.success {
+  border-color: var(--adp-success);
+}
+
+.adp-step.warning {
+  border-color: var(--adp-warning);
+}
+
+.adp-step.error {
+  border-color: var(--adp-error);
+}
+
+.adp-step-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.adp-step.running .adp-step-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.adp-step-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.adp-step-name {
+  font-size: 14px;
+  font-weight: 500;
+  display: block;
+}
+
+.adp-step-message {
+  font-size: 12px;
+  color: var(--adp-text-muted);
+  display: block;
+  margin-top: 2px;
+}
+
+.adp-step-details {
+  font-size: 11px;
+  color: var(--adp-text-muted);
+  margin: 6px 0 0 0;
+  opacity: 0.8;
+}
+
+/* Health Card */
+.adp-health-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--adp-surface);
+  border-radius: 8px;
+  border: 1px solid var(--adp-border);
+}
+
+.adp-health-card.healthy {
+  border-color: var(--adp-success);
+  background: hsla(142, 70%, 45%, 0.05);
+}
+
+.adp-health-card.degraded {
+  border-color: var(--adp-warning);
+  background: hsla(38, 92%, 50%, 0.05);
+}
+
+.adp-health-card.error {
+  border-color: var(--adp-error);
+  background: hsla(0, 70%, 50%, 0.05);
+}
+
+.adp-health-icon {
+  font-size: 32px;
+}
+
+.adp-health-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+  color: var(--adp-text);
+}
+
+.adp-health-time {
+  margin: 0;
+  font-size: 12px;
+  color: var(--adp-text-muted);
+}
+
+/* Status Grid */
+.adp-status-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.adp-status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: var(--adp-surface);
+  border-radius: 6px;
+  border: 1px solid var(--adp-border);
+  font-size: 12px;
+}
+
+.adp-status-item.ok {
+  border-color: var(--adp-success);
+}
+
+.adp-status-item.error {
+  border-color: var(--adp-error);
+}
+
+/* Issues List */
+.adp-issues-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.adp-issues-list li {
+  padding: 8px 10px;
+  background: hsla(0, 70%, 50%, 0.1);
+  border-radius: 4px;
+  font-size: 13px;
+  border-left: 2px solid var(--adp-warning);
+}
+
+/* Quick Actions */
+.adp-quick-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.adp-help-text {
+  margin: 8px 0 0 0;
+  font-size: 11px;
+  color: var(--adp-text-muted);
+  line-height: 1.4;
+}
+
+/* Scrollbar */
+.adp-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.adp-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.adp-content::-webkit-scrollbar-thumb {
+  background: var(--adp-border);
+  border-radius: 3px;
+}
+
+.adp-content::-webkit-scrollbar-thumb:hover {
+  background: var(--adp-text-muted);
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./src/services/tauriBridge.ts",
+    "./src/services/aiChatClient.ts",
+    "./src/hooks/index.ts"
+  ],
+  "exclude": [
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/stories/**",
+    "**/test/**",
+    "**/.storybook/**",
+    "**/e2e/**"
+  ],
+  "tsconfig": "./tsconfig.json",
+  "out": "./docs/api",
+  "plugin": ["typedoc-plugin-markdown"],
+  "readme": "./README.md",
+  "name": "TITANE∞ API Documentation",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeFolders": true
+  },
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Services",
+    "Hooks",
+    "Store",
+    "Types",
+    "*"
+  ],
+  "sort": ["source-order"],
+  "kindSortOrder": [
+    "Function",
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Variable"
+  ],
+  "jsDocCompatibility": true,
+  "excludeExternals": true
+}

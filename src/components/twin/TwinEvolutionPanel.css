@@ -1,0 +1,625 @@
+/**
+ * TITANE∞ vΩ∞ — Twin Evolution Panel CSS
+ * © 2025 TITANE∞ — Proprietary License
+ * Styles du panneau d'évolution Numeric Twin
+ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BASE PANEL
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-panel {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.twin-panel--loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+}
+
+.twin-panel__loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.twin-panel__loader-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--info, #8899aa);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPACT MODE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-panel--compact {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.twin-panel__compact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.twin-panel__compact-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.twin-panel__compact-score {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.twin-panel__compact-phase {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.twin-panel__title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.twin-panel__icon {
+  font-size: 32px;
+}
+
+.twin-panel__title h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.twin-panel__signature {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.twin-panel__version {
+  background: rgba(136, 153, 170, 0.2);
+  color: var(--info, #8899aa);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TABS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-panel__tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.twin-panel__tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.twin-panel__tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.twin-panel__tab--active {
+  background: rgba(136, 153, 170, 0.2);
+  color: var(--info, #8899aa);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONTENT
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-panel__content {
+  min-height: 300px;
+}
+
+.twin-tab h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FUSION TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-fusion__main {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 32px;
+}
+
+.twin-fusion__score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.twin-fusion__score {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--score-color) var(--score-percent),
+    rgba(255, 255, 255, 0.1) var(--score-percent)
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.twin-fusion__score::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  background: #1a1a2e;
+  border-radius: 50%;
+}
+
+.twin-fusion__score-value {
+  position: relative;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--score-color);
+}
+
+.twin-fusion__score-label {
+  position: relative;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.twin-fusion__trend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.twin-fusion__trend-icon {
+  font-size: 16px;
+}
+
+/* Alignments */
+.twin-fusion__alignments {
+  margin-bottom: 24px;
+}
+
+.twin-fusion__alignment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.twin-fusion__alignment {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.twin-fusion__alignment-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.twin-fusion__alignment-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.twin-fusion__alignment-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* Style humain */
+.twin-fusion__style-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.twin-style-bar__header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.twin-style-bar__track {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.twin-style-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--info, #8899aa), var(--primary, #727b81));
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VALUES TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-values__list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.twin-value {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.twin-value__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.twin-value__name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.twin-value__badges {
+  display: flex;
+  gap: 8px;
+}
+
+.twin-value__stability,
+.twin-value__weight {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.twin-value__description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0 0 12px;
+}
+
+.twin-value__reinforce {
+  background: rgba(136, 153, 170, 0.2);
+  border: none;
+  color: var(--info, #8899aa);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.twin-value__reinforce:hover:not(:disabled) {
+  background: rgba(136, 153, 170, 0.3);
+}
+
+.twin-value__reinforce:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   EVOLUTION TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-evolution__phase {
+  margin-bottom: 32px;
+}
+
+.twin-evolution__phase-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.twin-evolution__phase-current {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.twin-evolution__milestones {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.twin-evolution__phase-progress {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.twin-evolution__phase-progress::before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.twin-evolution__phase-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+
+.twin-evolution__phase-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.twin-evolution__phase-step--completed .twin-evolution__phase-dot {
+  background: var(--success, #93b399);
+  border-color: var(--success, #93b399);
+}
+
+.twin-evolution__phase-step--current .twin-evolution__phase-dot {
+  background: var(--info, #8899aa);
+  border-color: var(--info, #8899aa);
+  box-shadow: 0 0 12px rgba(136, 153, 170, 0.5);
+}
+
+.twin-evolution__phase-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.twin-evolution__phase-step--current .twin-evolution__phase-label {
+  color: var(--info, #8899aa);
+  font-weight: 600;
+}
+
+/* Trends */
+.twin-evolution__trends {
+  margin-bottom: 24px;
+}
+
+.twin-evolution__trends-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.twin-trend-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.twin-trend-card__icon {
+  font-size: 24px;
+}
+
+.twin-trend-card__label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.twin-trend-card__value {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Suggestions */
+.twin-evolution__suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.twin-evolution__suggestion {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.twin-evolution__suggestion--validated {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.twin-evolution__suggestion-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.twin-evolution__suggestion-domain {
+  font-weight: 600;
+}
+
+.twin-evolution__suggestion-priority {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.twin-evolution__suggestion p {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.twin-evolution__suggestion-validated {
+  font-size: 11px;
+  color: var(--success, #93b399);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ADMIN TAB
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.twin-admin__warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--warning, #a89f91);
+  margin-bottom: 24px;
+}
+
+.twin-admin__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.twin-admin__action {
+  background: rgba(136, 153, 170, 0.2);
+  border: 1px solid rgba(136, 153, 170, 0.3);
+  color: var(--info, #8899aa);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.twin-admin__action:hover:not(:disabled) {
+  background: rgba(136, 153, 170, 0.3);
+}
+
+.twin-admin__action--danger {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--danger, #8f7a7a);
+}
+
+.twin-admin__action--danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.twin-admin__action:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.twin-admin__info {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.twin-admin__info h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+
+.twin-admin__info ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.twin-admin__info li {
+  padding: 4px 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .twin-panel {
+    padding: 16px;
+  }
+
+  .twin-panel__tabs {
+    flex-wrap: wrap;
+  }
+
+  .twin-fusion__alignment-grid,
+  .twin-evolution__trends-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .twin-evolution__phase-progress {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .twin-evolution__phase-label {
+    font-size: 8px;
+  }
+}

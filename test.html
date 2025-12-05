@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>TEST TITANE</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #0f0;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        h1 { font-size: 3rem; color: #00ff88; }
+        p { font-size: 1.5rem; }
+        #info { background: #111; padding: 20px; border: 2px solid #0f0; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <h1>🟢 HTML CHARGÉ !</h1>
+        <p>Si vous voyez ceci, le HTML fonctionne.</p>
+        <p id="url"></p>
+        <p id="proto"></p>
+        <p id="tauri"></p>
+    </div>
+    <script>
+        document.getElementById('url').textContent = 'URL: ' + window.location.href;
+        document.getElementById('proto').textContent = 'Protocol: ' + window.location.protocol;
+        document.getElementById('tauri').textContent = 'Tauri: ' + ('__TAURI__' in window ? 'OUI' : 'NON');
+        console.log('🟢 TEST HTML LOADED');
+    </script>
+</body>
+</html>

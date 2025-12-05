@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "chat-ai",
+  "description": "Capability pour le Chat IA TITANE∞ (Gemini, Ollama, Local)",
+  "windows": ["main"],
+  "permissions": [
+    "core:default"
+  ],
+  "commands": {
+    "allow": [
+      "chat_generate",
+      "chat_send_message",
+      "chat_stream_message",
+      "chat_create_conversation",
+      "chat_get_conversation",
+      "chat_delete_conversation",
+      "chat_get_providers_status",
+      "chat_set_gemini_key",
+      "chat_check_providers",
+      "ai_query",
+      "cp_get_ai_config",
+      "cp_set_ai_config",
+      "validate_chat_message"
+    ],
+    "deny": []
+  },
+  "remote": {
+    "urls": [
+      "https://generativelanguage.googleapis.com/**",
+      "http://localhost:11434/**"
+    ]
+  }
+}

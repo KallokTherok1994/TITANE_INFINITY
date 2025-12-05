@@ -1,0 +1,96 @@
+/**
+ * TITANE∞ v∞ — Chat Message Styles (Design System Monochrome)
+ * Tokens hérités de titane-fusion.css
+ */
+
+/* Base message styling */
+.chat-message {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-lg);
+  max-width: 80%;
+  animation: fade-in 200ms ease-out;
+}
+
+/* User messages — Nuance argentée */
+.chat-message--user {
+  background: var(--chat-user-bg);
+  color: var(--text-primary);
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-sm) var(--radius-2xl);
+  align-self: flex-end;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--chat-user-border);
+}
+
+/* Assistant messages — Nuance sombre élevée */
+.chat-message--assistant {
+  background: var(--chat-ai-bg);
+  color: var(--text-primary);
+  border-radius: var(--radius-2xl) var(--radius-2xl) var(--radius-2xl) var(--radius-sm);
+  align-self: flex-start;
+  border: 1px solid var(--chat-ai-border);
+  backdrop-filter: blur(8px);
+}
+
+/* System messages (errors, status) — Gris chaud */
+.chat-message--system {
+  background: var(--chat-system-bg);
+  border: 1px solid var(--chat-system-border);
+  color: var(--chat-system-text);
+  border-radius: var(--radius-lg);
+  align-self: center;
+  font-size: var(--font-size-xs);
+  font-style: italic;
+}
+
+/* Processing state */
+.chat-message--processing {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+  align-self: flex-start;
+  animation: pulse-organic 2s ease-in-out infinite;
+}
+
+/* Code blocks within messages */
+.chat-message code {
+  background: var(--bg-elevated);
+  color: var(--accent);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+}
+
+.chat-message pre {
+  background: var(--bg-base);
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  border: 1px solid var(--border-subtle);
+}
+
+.chat-message pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Timestamps */
+.chat-message__timestamp {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-top: var(--space-xs);
+  opacity: 0.7;
+}
+
+/* Meta info */
+.chat-message__meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border-subtle);
+}

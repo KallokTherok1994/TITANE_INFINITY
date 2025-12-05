@@ -1,0 +1,15 @@
+{
+  "cognitive_memory": {
+    "version": "v14.0.0",
+    "last_compaction": null,
+    "total_entries": 0,
+    "max_entries": 10000
+  },
+  "conversations": [],
+  "learning_data": [],
+  "user_preferences": {
+    "theme": "metal",
+    "language": "fr",
+    "auto_save": true
+  }
+}

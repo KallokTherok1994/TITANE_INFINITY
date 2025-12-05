@@ -1,0 +1,91 @@
+/**
+ * TITANE_INFINITY v19.3.0 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ *   TITANE∞ v19.3 — DICTATION BUTTON STYLES
+ *   Style discret intégré au design system
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+.dictation-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  margin: 0 4px;
+  border: none;
+  border-radius: 8px;
+  background: var(--surface-secondary, rgba(255, 255, 255, 0.05));
+  color: var(--text-secondary, #888);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dictation-button:hover:not(:disabled) {
+  background: var(--surface-hover, rgba(255, 255, 255, 0.1));
+  color: var(--text-primary, #fff);
+}
+
+.dictation-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* État enregistrement */
+.dictation-button.recording {
+  background: var(--accent-danger, var(--danger, #8f7a7a));
+  color: #fff;
+  animation: dictation-glow 1s ease-in-out infinite;
+}
+
+.dictation-button.recording:hover {
+  background: var(--accent-danger-hover, var(--danger, #8f7a7a));
+}
+
+/* État erreur */
+.dictation-button.error {
+  background: var(--surface-danger, rgba(255, 68, 68, 0.2));
+  color: var(--accent-danger, var(--danger, #8f7a7a));
+}
+
+/* Icône */
+.dictation-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Pulse animation pendant enregistrement */
+.dictation-pulse {
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--accent-danger, var(--danger, #8f7a7a));
+  border-radius: 12px;
+  opacity: 0;
+  animation: dictation-pulse 1.5s ease-out infinite;
+}
+
+@keyframes dictation-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 0;
+  }
+}
+
+@keyframes dictation-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px rgba(255, 68, 68, 0.3);
+  }
+}

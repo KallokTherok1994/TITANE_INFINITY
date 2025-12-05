@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "name": "TITANE∞ Quantum Rules v∞",
+  "description": "Règles de configuration du Quantum Rendering Layer",
+
+  "max_reflow_per_frame": 2,
+  "allowed_transforms": ["opacity", "transform"],
+  "cache_duration_ms": 6,
+  "motion_sync_hz": 120,
+  "layout_transition_ms": 140,
+  "max_re_renders_per_second": 45,
+  "gpu_acceleration_allowed": true,
+  "strict_text_stability": true,
+
+  "frame_budget": {
+    "target_fps": 120,
+    "max_frame_time_ms": 8.33,
+    "warning_threshold_ms": 12,
+    "critical_threshold_ms": 16.67
+  },
+
+  "cache_strategy": {
+    "micro_cache_enabled": true,
+    "micro_cache_duration_frames": 3,
+    "memoization_depth": 2,
+    "invalidation_strategy": "smart"
+  },
+
+  "gpu_settings": {
+    "enable_layers": true,
+    "max_layers": 50,
+    "auto_cleanup": true,
+    "cleanup_interval_ms": 2000,
+    "prefer_compositor": true
+  },
+
+  "motion_settings": {
+    "default_easing": "standard",
+    "default_duration_ms": 200,
+    "stagger_delay_ms": 50,
+    "max_concurrent_animations": 10
+  },
+
+  "stability_settings": {
+    "anti_jitter_enabled": true,
+    "jitter_threshold_px": 2,
+    "layout_containment": true,
+    "prevent_layout_shift": true
+  },
+
+  "text_settings": {
+    "subpixel_rendering": true,
+    "font_smoothing": "antialiased",
+    "optimize_legibility": true,
+    "prevent_fout": true
+  },
+
+  "performance_targets": {
+    "min_stability_score": 0.85,
+    "min_fluidity_score": 0.90,
+    "min_premium_score": 0.88,
+    "max_jitter_level": 0.15
+  }
+}

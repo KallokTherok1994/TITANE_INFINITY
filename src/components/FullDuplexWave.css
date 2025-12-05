@@ -1,0 +1,48 @@
+/**
+ * 🌊 FullDuplexWave Styles
+ */
+
+.full-duplex-wave {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  background: var(--titane-bg-darker);
+  overflow: hidden;
+}
+
+.duplex-labels {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  right: var(--space-md);
+  display: flex;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.duplex-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--titane-text-secondary);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--titane-surface-glass);
+  backdrop-filter: var(--blur-medium);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--titane-border-light);
+}
+
+.label-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.duplex-canvas {
+  display: block;
+  transform: translateZ(0);
+  will-change: transform;
+}

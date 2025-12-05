@@ -1,0 +1,130 @@
+{
+  "_schema_version": "1.0.0",
+  "_description": "TITANE∞ Operational Modes v∞",
+
+  "current_mode": {
+    "type": "Normal",
+    "activated_at": "2025-01-01T00:00:00Z",
+    "reason": "Initialisation système"
+  },
+
+  "available_modes": [
+    {
+      "type": "Normal",
+      "name": "Mode Normal",
+      "description": "Mode opérationnel standard, équilibré",
+      "icon": "⚙️",
+      "color": "#808080",
+      "settings": {
+        "response_verbosity": "moderate",
+        "technical_depth": "adaptive",
+        "proactivity": 0.5,
+        "memory_priority": "balanced",
+        "voice_profile": "titane_standard"
+      },
+      "behaviors": {
+        "auto_suggest": true,
+        "context_loading": "standard",
+        "error_tolerance": "medium"
+      }
+    },
+    {
+      "type": "Focused",
+      "name": "Mode Concentré",
+      "description": "Mode haute productivité, minimal distractions",
+      "icon": "🎯",
+      "color": "#4169E1",
+      "settings": {
+        "response_verbosity": "concise",
+        "technical_depth": "high",
+        "proactivity": 0.3,
+        "memory_priority": "task",
+        "voice_profile": "titane_technical"
+      },
+      "behaviors": {
+        "auto_suggest": false,
+        "context_loading": "aggressive",
+        "error_tolerance": "low"
+      }
+    },
+    {
+      "type": "Creative",
+      "name": "Mode Créatif",
+      "description": "Mode exploration et génération d'idées",
+      "icon": "🎨",
+      "color": "#9B59B6",
+      "settings": {
+        "response_verbosity": "expansive",
+        "technical_depth": "variable",
+        "proactivity": 0.8,
+        "memory_priority": "associative",
+        "voice_profile": "titane_dynamic"
+      },
+      "behaviors": {
+        "auto_suggest": true,
+        "context_loading": "broad",
+        "error_tolerance": "high"
+      }
+    },
+    {
+      "type": "Relaxed",
+      "name": "Mode Détendu",
+      "description": "Mode conversation calme et décontracté",
+      "icon": "🌿",
+      "color": "#27AE60",
+      "settings": {
+        "response_verbosity": "natural",
+        "technical_depth": "low",
+        "proactivity": 0.4,
+        "memory_priority": "conversational",
+        "voice_profile": "titane_calm"
+      },
+      "behaviors": {
+        "auto_suggest": true,
+        "context_loading": "light",
+        "error_tolerance": "high"
+      }
+    },
+    {
+      "type": "Emergency",
+      "name": "Mode Urgence",
+      "description": "Mode critique, réponse rapide prioritaire",
+      "icon": "🚨",
+      "color": "#E74C3C",
+      "settings": {
+        "response_verbosity": "minimal",
+        "technical_depth": "focused",
+        "proactivity": 1.0,
+        "memory_priority": "critical",
+        "voice_profile": "titane_emergency"
+      },
+      "behaviors": {
+        "auto_suggest": true,
+        "context_loading": "critical_only",
+        "error_tolerance": "zero"
+      }
+    }
+  ],
+
+  "mode_transitions": {
+    "auto_detect": true,
+    "user_override": true,
+    "transition_notification": true,
+    "cooldown_ms": 5000,
+    "emergency_instant": true
+  },
+
+  "context_triggers": {
+    "Focused": ["code", "debug", "analysis", "review", "optimize"],
+    "Creative": ["idea", "design", "brainstorm", "explore", "imagine"],
+    "Relaxed": ["chat", "casual", "break", "relax"],
+    "Emergency": ["critical", "urgent", "error", "crash", "security"]
+  },
+
+  "mode_history": [],
+
+  "authority": {
+    "kevin_only_emergency": true,
+    "auto_exit_emergency_timeout_min": 30
+  }
+}

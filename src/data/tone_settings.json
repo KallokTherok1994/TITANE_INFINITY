@@ -1,0 +1,109 @@
+{
+  "_schema_version": "1.0.0",
+  "_description": "TITANE∞ Tone Engine Settings v∞",
+
+  "current_tone": {
+    "id": "neutral_professional",
+    "mood": "neutral",
+    "energy": 0.6,
+    "formality": 0.7,
+    "warmth": 0.5,
+    "confidence": 0.8
+  },
+
+  "available_tones": [
+    {
+      "id": "neutral_professional",
+      "name": "Neutre Professionnel",
+      "description": "Ton standard équilibré et professionnel",
+      "mood": "neutral",
+      "energy": 0.6,
+      "formality": 0.7,
+      "warmth": 0.5,
+      "confidence": 0.8,
+      "contexts": ["default", "technical", "business"]
+    },
+    {
+      "id": "supportive_calm",
+      "name": "Soutien Calme",
+      "description": "Ton apaisant et encourageant",
+      "mood": "supportive",
+      "energy": 0.4,
+      "formality": 0.5,
+      "warmth": 0.8,
+      "confidence": 0.7,
+      "contexts": ["error_recovery", "stress", "learning"]
+    },
+    {
+      "id": "focused_analytical",
+      "name": "Analytique Concentré",
+      "description": "Ton précis pour l'analyse technique",
+      "mood": "focused",
+      "energy": 0.5,
+      "formality": 0.8,
+      "warmth": 0.4,
+      "confidence": 0.9,
+      "contexts": ["debugging", "code_review", "architecture"]
+    },
+    {
+      "id": "enthusiastic_creative",
+      "name": "Enthousiaste Créatif",
+      "description": "Ton dynamique pour la créativité",
+      "mood": "enthusiastic",
+      "energy": 0.8,
+      "formality": 0.4,
+      "warmth": 0.7,
+      "confidence": 0.85,
+      "contexts": ["brainstorming", "ideation", "celebration"]
+    },
+    {
+      "id": "serious_urgent",
+      "name": "Sérieux Urgent",
+      "description": "Ton direct pour les situations critiques",
+      "mood": "serious",
+      "energy": 0.7,
+      "formality": 0.9,
+      "warmth": 0.3,
+      "confidence": 0.95,
+      "contexts": ["emergency", "security", "critical_error"]
+    },
+    {
+      "id": "pedagogical",
+      "name": "Pédagogique",
+      "description": "Ton explicatif et patient",
+      "mood": "patient",
+      "energy": 0.5,
+      "formality": 0.6,
+      "warmth": 0.7,
+      "confidence": 0.8,
+      "contexts": ["tutorial", "explanation", "onboarding"]
+    }
+  ],
+
+  "mood_transitions": {
+    "smooth_transition": true,
+    "transition_duration_ms": 500,
+    "allow_abrupt_for_emergency": true
+  },
+
+  "context_detection": {
+    "enabled": true,
+    "keyword_triggers": {
+      "error|bug|crash|fail": "supportive_calm",
+      "urgent|emergency|critical": "serious_urgent",
+      "how to|explain|what is": "pedagogical",
+      "idea|creative|brainstorm": "enthusiastic_creative",
+      "analyze|review|debug": "focused_analytical"
+    },
+    "emotion_detection": true
+  },
+
+  "tone_history": [],
+
+  "adaptation_rules": {
+    "max_formality_shift": 0.3,
+    "max_energy_shift": 0.4,
+    "preserve_core_confidence": true,
+    "minimum_warmth": 0.2
+  }
+}

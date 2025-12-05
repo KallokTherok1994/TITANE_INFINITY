@@ -1,0 +1,63 @@
+/* TITANE∞ v12 - Badge Styles */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: badgeFadeIn 300ms ease-out;
+}
+
+@keyframes badgeFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.badge--default {
+  background: rgba(20, 20, 25, 0.8);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.badge--success {
+  background: var(--glow-accent, rgba(147, 179, 153, 0.15));
+  color: var(--success, #93b399);
+  border: 1px solid rgba(147, 179, 153, 0.3);
+  box-shadow: 0 0 12px var(--glow-accent, rgba(147, 179, 153, 0.2));
+  backdrop-filter: blur(4px);
+}
+
+.badge--warning {
+  background: rgba(168, 159, 145, 0.15);
+  color: var(--warning, #a89f91);
+  border: 1px solid rgba(168, 159, 145, 0.3);
+  box-shadow: 0 0 12px rgba(168, 159, 145, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.badge--danger {
+  background: rgba(143, 122, 122, 0.15);
+  color: var(--danger, #8f7a7a);
+  border: 1px solid rgba(143, 122, 122, 0.3);
+  box-shadow: 0 0 12px rgba(143, 122, 122, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.badge--info {
+  background: var(--glow-primary, rgba(114, 123, 129, 0.15));
+  color: var(--info, #8899aa);
+  border: 1px solid rgba(114, 123, 129, 0.3);
+  box-shadow: 0 0 12px var(--glow-primary, rgba(114, 123, 129, 0.2));
+  backdrop-filter: blur(4px);
+}

@@ -1,0 +1,261 @@
+<svg
+  width="1024"
+  height="1024"
+  viewBox="0 0 1024 1024"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <!-- FOND : plus sombre, profondeur -->
+    <radialGradient id="bgRad" cx="50%" cy="40%" r="75%">
+      <stop offset="0%"   stop-color="#090C11"/>
+      <stop offset="45%"  stop-color="#05070B"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+    <linearGradient id="bgBrush" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="18%"  stop-color="#2A2E33" stop-opacity="0.20"/>
+      <stop offset="50%"  stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="82%"  stop-color="#2A2E33" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="bgVignette" cx="50%" cy="50%" r="70%">
+      <stop offset="60%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.85"/>
+    </radialGradient>
+    <filter id="reactorShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="26" flood-color="#000000" flood-opacity="0.9" />
+    </filter>
+
+    <!-- Métal / énergie / détails (gradients) -->
+    <linearGradient id="outerRing" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#E7E7E7"/>
+      <stop offset="25%"  stop-color="#C4C4C4"/>
+      <stop offset="60%"  stop-color="#9A9FA4"/>
+      <stop offset="100%" stop-color="#727B81"/>
+    </linearGradient>
+    <linearGradient id="outerEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF" stop-opacity="0.96"/>
+      <stop offset="40%"  stop-color="#D7D8D9" stop-opacity="0.82"/>
+      <stop offset="100%" stop-color="#B5BABE" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="innerEdge" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#40454B" stop-opacity="0.96"/>
+      <stop offset="50%"  stop-color="#2F353B" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#14171B" stop-opacity="1"/>
+    </linearGradient>
+    <radialGradient id="energyRing" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#F6FFFF" stop-opacity="1"/>
+      <stop offset="32%"  stop-color="#E1FBFF" stop-opacity="0.98"/>
+      <stop offset="70%"  stop-color="#8CDDFF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#1A3A4A" stop-opacity="0.08"/>
+    </radialGradient>
+    <radialGradient id="globalHalo" cx="50%" cy="50%" r="70%">
+      <stop offset="0%"   stop-color="#EFFFFF" stop-opacity="0.30"/>
+      <stop offset="45%"  stop-color="#9BE5FF" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="core" cx="50%" cy="50%" r="60%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="30%"  stop-color="#E9FCFF"/>
+      <stop offset="75%"  stop-color="#C5E4F2"/>
+      <stop offset="100%" stop-color="#7A9BAF"/>
+    </radialGradient>
+    <linearGradient id="triGlowFill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#F7FFFF"/>
+      <stop offset="50%"  stop-color="#D5F1FF"/>
+      <stop offset="100%" stop-color="#A0C7DC"/>
+    </linearGradient>
+    <linearGradient id="triGlowStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="50%"  stop-color="#E7FBFF"/>
+      <stop offset="100%" stop-color="#C3DEEE"/>
+    </linearGradient>
+    <linearGradient id="awenBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#F8FEFF"/>
+      <stop offset="40%"  stop-color="#DAEBF4"/>
+      <stop offset="100%" stop-color="#7C9BB0"/>
+    </linearGradient>
+    <radialGradient id="dotGrad" cx="50%" cy="30%" r="70%">
+      <stop offset="0%"   stop-color="#FFFFFF"/>
+      <stop offset="55%"  stop-color="#DCE5EB"/>
+      <stop offset="100%" stop-color="#8A9AA7"/>
+    </radialGradient>
+    <linearGradient id="ringSegmentLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#F5F5F5"/>
+      <stop offset="40%"  stop-color="#D3D6D9"/>
+      <stop offset="100%" stop-color="#9EA4AA"/>
+    </linearGradient>
+    <linearGradient id="ringSegmentDark" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#787F86"/>
+      <stop offset="50%"  stop-color="#4D5359"/>
+      <stop offset="100%" stop-color="#2D3237"/>
+    </linearGradient>
+    <radialGradient id="screwGrad" cx="50%" cy="35%" r="80%">
+      <stop offset="0%"   stop-color="#F4F4F4"/>
+      <stop offset="40%"  stop-color="#CBCDD0"/>
+      <stop offset="100%" stop-color="#555B61"/>
+    </radialGradient>
+    <linearGradient id="grooveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#2B3137" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#05080B" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="capGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#F2F4F6"/>
+      <stop offset="40%"  stop-color="#C8CDD1"/>
+      <stop offset="100%" stop-color="#7D858D"/>
+    </linearGradient>
+    <linearGradient id="innerTickGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#C4C4C4"/>
+      <stop offset="100%" stop-color="#636A71"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background layers -->
+  <rect width="1024" height="1024" fill="url(#bgRad)" />
+  <rect width="1024" height="1024" fill="url(#bgBrush)" />
+  <rect width="1024" height="1024" fill="url(#bgVignette)" />
+
+  <g filter="url(#reactorShadow)">
+    <!-- Global Halo -->
+    <circle cx="512" cy="512" r="450" fill="url(#globalHalo)" opacity="0.7" />
+
+    <!-- Outer Ring (Metallic) -->
+    <circle cx="512" cy="512" r="380" fill="none" stroke="url(#outerRing)" stroke-width="12" opacity="0.9" />
+    <circle cx="512" cy="512" r="380" fill="none" stroke="url(#outerEdge)" stroke-width="2" opacity="0.95" />
+
+    <!-- Energy Ring (Cyan Glow) -->
+    <circle cx="512" cy="512" r="340" fill="none" stroke="url(#energyRing)" stroke-width="24" opacity="0.85">
+      <animate attributeName="opacity" values="0.7;0.95;0.7" dur="3s" repeatCount="indefinite" />
+    </circle>
+
+    <!-- Inner Ring Segments (12 segments) -->
+    <g id="ringSegments">
+      <circle cx="512" cy="152" r="16" fill="url(#ringSegmentLight)" />
+      <circle cx="823" cy="201" r="16" fill="url(#ringSegmentDark)" />
+      <circle cx="872" cy="512" r="16" fill="url(#ringSegmentLight)" />
+      <circle cx="823" cy="823" r="16" fill="url(#ringSegmentDark)" />
+      <circle cx="512" cy="872" r="16" fill="url(#ringSegmentLight)" />
+      <circle cx="201" cy="823" r="16" fill="url(#ringSegmentDark)" />
+      <circle cx="152" cy="512" r="16" fill="url(#ringSegmentLight)" />
+      <circle cx="201" cy="201" r="16" fill="url(#ringSegmentDark)" />
+      <circle cx="667" cy="181" r="14" fill="url(#ringSegmentLight)" />
+      <circle cx="843" cy="357" r="14" fill="url(#ringSegmentDark)" />
+      <circle cx="843" cy="667" r="14" fill="url(#ringSegmentLight)" />
+      <circle cx="667" cy="843" r="14" fill="url(#ringSegmentDark)" />
+    </g>
+
+    <!-- Inner Edge (Dark Metallic) -->
+    <circle cx="512" cy="512" r="290" fill="none" stroke="url(#innerEdge)" stroke-width="10" opacity="0.92" />
+
+    <!-- Connection Capsules (4 directional) -->
+    <g id="capsules">
+      <!-- Top -->
+      <ellipse cx="512" cy="222" rx="28" ry="14" fill="url(#capGrad)" />
+      <rect x="498" y="222" width="28" height="40" fill="url(#capGrad)" />
+      <ellipse cx="512" cy="262" rx="28" ry="14" fill="url(#capGrad)" />
+
+      <!-- Right -->
+      <ellipse cx="802" cy="512" rx="14" ry="28" fill="url(#capGrad)" />
+      <rect x="762" y="498" width="40" height="28" fill="url(#capGrad)" />
+      <ellipse cx="762" cy="512" rx="14" ry="28" fill="url(#capGrad)" />
+
+      <!-- Bottom -->
+      <ellipse cx="512" cy="802" rx="28" ry="14" fill="url(#capGrad)" />
+      <rect x="498" y="762" width="28" height="40" fill="url(#capGrad)" />
+      <ellipse cx="512" cy="762" rx="28" ry="14" fill="url(#capGrad)" />
+
+      <!-- Left -->
+      <ellipse cx="222" cy="512" rx="14" ry="28" fill="url(#capGrad)" />
+      <rect x="222" y="498" width="40" height="28" fill="url(#capGrad)" />
+      <ellipse cx="262" cy="512" rx="14" ry="28" fill="url(#capGrad)" />
+    </g>
+
+    <!-- Screws on capsules (16 total) -->
+    <g id="screws">
+      <circle cx="512" cy="234" r="6" fill="url(#screwGrad)" />
+      <circle cx="512" cy="250" r="6" fill="url(#screwGrad)" />
+      <circle cx="790" cy="512" r="6" fill="url(#screwGrad)" />
+      <circle cx="774" cy="512" r="6" fill="url(#screwGrad)" />
+      <circle cx="512" cy="790" r="6" fill="url(#screwGrad)" />
+      <circle cx="512" cy="774" r="6" fill="url(#screwGrad)" />
+      <circle cx="234" cy="512" r="6" fill="url(#screwGrad)" />
+      <circle cx="250" cy="512" r="6" fill="url(#screwGrad)" />
+    </g>
+
+    <!-- Screw grooves -->
+    <g id="screwGrooves">
+      <line x1="507" y1="234" x2="517" y2="234" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="507" y1="250" x2="517" y2="250" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="790" y1="507" x2="790" y2="517" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="774" y1="507" x2="774" y2="517" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="507" y1="790" x2="517" y2="790" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="507" y1="774" x2="517" y2="774" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="234" y1="507" x2="234" y2="517" stroke="url(#grooveGrad)" stroke-width="1.5" />
+      <line x1="250" y1="507" x2="250" y2="517" stroke="url(#grooveGrad)" stroke-width="1.5" />
+    </g>
+
+    <!-- Inner ticks (24 markers) -->
+    <g id="innerTicks">
+      <line x1="512" y1="222" x2="512" y2="242" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="577" y1="229" x2="569" y2="248" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="638" y1="250" x2="625" y2="266" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="691" y1="283" x2="675" y2="295" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="735" y1="327" x2="717" y2="336" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="768" y1="379" x2="749" y2="386" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="789" y1="437" x2="770" y2="441" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="798" y1="499" x2="778" y2="500" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="792" y1="562" x2="773" y2="559" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="774" y1="623" x2="756" y2="616" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="743" y1="678" x2="728" y2="667" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="702" y1="726" x2="689" y2="713" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="512" y1="802" x2="512" y2="782" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="447" y1="795" x2="455" y2="776" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="386" y1="774" x2="399" y2="758" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="333" y1="741" x2="349" y2="729" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="289" y1="697" x2="307" y2="688" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="256" y1="645" x2="275" y2="638" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="235" y1="587" x2="254" y2="583" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="226" y1="525" x2="246" y2="524" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="232" y1="462" x2="251" y2="465" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="250" y1="401" x2="268" y2="408" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="281" y1="346" x2="296" y2="357" stroke="url(#innerTickGrad)" stroke-width="2" />
+      <line x1="322" y1="298" x2="335" y2="311" stroke="url(#innerTickGrad)" stroke-width="2" />
+    </g>
+
+    <!-- Central Core -->
+    <circle cx="512" cy="512" r="180" fill="url(#core)" opacity="0.95" />
+    <circle cx="512" cy="512" r="180" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.4" />
+
+    <!-- Core Triangle (Energy Symbol) -->
+    <g id="coreTriangle">
+      <path d="M 512 362 L 632 612 L 392 612 Z"
+            fill="url(#triGlowFill)"
+            stroke="url(#triGlowStroke)"
+            stroke-width="4"
+            opacity="0.9">
+        <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+      </path>
+    </g>
+
+    <!-- Awen Symbol (3 beams) -->
+    <g id="awenSymbol">
+      <!-- Left beam -->
+      <line x1="432" y1="562" x2="422" y2="482" stroke="url(#awenBeam)" stroke-width="6" stroke-linecap="round" opacity="0.9" />
+      <!-- Center beam -->
+      <line x1="512" y1="562" x2="512" y2="472" stroke="url(#awenBeam)" stroke-width="7" stroke-linecap="round" opacity="0.95" />
+      <!-- Right beam -->
+      <line x1="592" y1="562" x2="602" y2="482" stroke="url(#awenBeam)" stroke-width="6" stroke-linecap="round" opacity="0.9" />
+
+      <!-- Awen dots -->
+      <circle cx="422" cy="470" r="5" fill="url(#dotGrad)" />
+      <circle cx="512" cy="460" r="6" fill="url(#dotGrad)" />
+      <circle cx="602" cy="470" r="5" fill="url(#dotGrad)" />
+    </g>
+
+    <!-- Energy Pulse (animated) -->
+    <circle cx="512" cy="512" r="200" fill="none" stroke="#9BE5FF" stroke-width="2" opacity="0">
+      <animate attributeName="r" values="180;220;180" dur="2.5s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0;0.4;0" dur="2.5s" repeatCount="indefinite" />
+    </circle>
+  </g>
+</svg>

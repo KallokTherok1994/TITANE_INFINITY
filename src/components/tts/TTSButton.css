@@ -1,0 +1,273 @@
+/**
+ * TITANE∞ vΩΩΩ — TTSButton Styles
+ * © 2025 TITANE Team. All rights reserved.
+ */
+
+/* =============================================================================
+   BASE BUTTON
+   ============================================================================= */
+
+.tts-button {
+  --tts-emotion-color: #6B7280;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+  color: var(--color-text-primary, #E5E7EB);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.tts-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.tts-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+  transform: translateY(-1px);
+}
+
+.tts-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.tts-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* =============================================================================
+   SIZES
+   ============================================================================= */
+
+.tts-button--small {
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+.tts-button--small .tts-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.tts-button--medium {
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.tts-button--medium .tts-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.tts-button--large {
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 10px;
+}
+
+.tts-button--large .tts-icon {
+  width: 24px;
+  height: 24px;
+}
+
+/* =============================================================================
+   PLAYING STATE
+   ============================================================================= */
+
+.tts-button--playing {
+  background: linear-gradient(135deg, var(--tts-emotion-color), rgba(var(--tts-emotion-color), 0.7));
+  box-shadow: 0 0 20px rgba(var(--tts-emotion-color), 0.3);
+}
+
+.tts-button--playing::before {
+  border-color: var(--tts-emotion-color);
+}
+
+.tts-button--playing::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.1),
+    transparent
+  );
+  animation: tts-shimmer 1.5s infinite;
+}
+
+@keyframes tts-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* =============================================================================
+   ICON
+   ============================================================================= */
+
+.tts-button__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tts-icon {
+  fill: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.tts-icon--speaking {
+  animation: tts-pulse 1s ease-in-out infinite;
+}
+
+@keyframes tts-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* =============================================================================
+   EMOTION INDICATOR
+   ============================================================================= */
+
+.tts-button__emotion {
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.9;
+  transition: transform 0.2s ease;
+}
+
+.tts-button--small .tts-button__emotion {
+  font-size: 10px;
+}
+
+.tts-button--large .tts-button__emotion {
+  font-size: 16px;
+}
+
+.tts-button:hover .tts-button__emotion {
+  transform: scale(1.2);
+}
+
+/* =============================================================================
+   WAVE ANIMATION
+   ============================================================================= */
+
+.tts-button__wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 4px;
+}
+
+.tts-button__wave-bar {
+  width: 3px;
+  height: 12px;
+  background: currentColor;
+  border-radius: 3px;
+  animation: tts-wave 0.6s ease-in-out infinite;
+}
+
+.tts-button__wave-bar:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.tts-button__wave-bar:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.tts-button__wave-bar:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes tts-wave {
+  0%, 100% {
+    height: 6px;
+    opacity: 0.5;
+  }
+  50% {
+    height: 14px;
+    opacity: 1;
+  }
+}
+
+.tts-button--small .tts-button__wave-bar {
+  width: 2px;
+  height: 8px;
+}
+
+.tts-button--large .tts-button__wave-bar {
+  width: 4px;
+  height: 16px;
+}
+
+/* =============================================================================
+   THEME: DARK MODE (default)
+   ============================================================================= */
+
+.tts-button {
+  background: linear-gradient(135deg, rgba(30,30,35,0.9), rgba(20,20,25,0.95));
+}
+
+/* =============================================================================
+   THEME: LIGHT MODE
+   ============================================================================= */
+
+[data-theme="light"] .tts-button,
+.light .tts-button {
+  background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,240,245,0.95));
+  color: #374151;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .tts-button::before,
+.light .tts-button::before {
+  border-color: rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .tts-button:hover:not(:disabled),
+.light .tts-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(255,255,255,1), rgba(245,245,250,1));
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* =============================================================================
+   FOCUS STATES
+   ============================================================================= */
+
+.tts-button:focus {
+  outline: none;
+}
+
+.tts-button:focus-visible {
+  outline: 2px solid var(--tts-emotion-color);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+   EMOTION COLORS
+   ============================================================================= */
+
+.tts-button[data-emotion="neutral"] { --tts-emotion-color: #6B7280; }
+.tts-button[data-emotion="calm"] { --tts-emotion-color: var(--info, #8899aa); }
+.tts-button[data-emotion="focusing"] { --tts-emotion-color: #8B5CF6; }
+.tts-button[data-emotion="excited"] { --tts-emotion-color: #F59E0B; }
+.tts-button[data-emotion="soft"] { --tts-emotion-color: var(--primary, #727b81); }
+.tts-button[data-emotion="grounded"] { --tts-emotion-color: var(--success, #93b399); }
+.tts-button[data-emotion="uplifting"] { --tts-emotion-color: var(--danger, #8f7a7a); }
+.tts-button[data-emotion="empathetic"] { --tts-emotion-color: #06B6D4; }
+.tts-button[data-emotion="disciplined"] { --tts-emotion-color: #1F2937; }
+.tts-button[data-emotion="inspired"] { --tts-emotion-color: var(--warning, #a89f91); }

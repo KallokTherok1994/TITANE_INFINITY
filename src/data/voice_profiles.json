@@ -1,0 +1,152 @@
+{
+  "_schema_version": "1.0.0",
+  "_description": "TITANE∞ Voice Profiles for TTS v∞",
+
+  "profiles": [
+    {
+      "id": "titane_standard",
+      "name": "TITANE Standard",
+      "language": "fr-FR",
+      "voice_id": "fr-FR-Neural-A",
+      "is_default": true,
+      "is_active": true,
+      "parameters": {
+        "pitch": 0.0,
+        "speed": 1.0,
+        "volume": 1.0,
+        "timbre": "neutral",
+        "emphasis": "moderate",
+        "pause_ratio": 1.0
+      },
+      "prosody": {
+        "intonation_range": 0.5,
+        "stress_pattern": "natural",
+        "rhythm": "steady"
+      },
+      "emotional_mapping": {
+        "neutral": { "pitch_mod": 0, "speed_mod": 0, "intensity": 0.5 },
+        "confident": { "pitch_mod": -0.1, "speed_mod": 0.05, "intensity": 0.7 },
+        "analytical": { "pitch_mod": 0, "speed_mod": -0.1, "intensity": 0.4 }
+      }
+    },
+    {
+      "id": "titane_calm",
+      "name": "TITANE Calm",
+      "language": "fr-FR",
+      "voice_id": "fr-FR-Neural-B",
+      "is_default": false,
+      "is_active": true,
+      "parameters": {
+        "pitch": -0.2,
+        "speed": 0.9,
+        "volume": 0.9,
+        "timbre": "soft",
+        "emphasis": "low",
+        "pause_ratio": 1.2
+      },
+      "prosody": {
+        "intonation_range": 0.3,
+        "stress_pattern": "gentle",
+        "rhythm": "slow"
+      },
+      "emotional_mapping": {
+        "neutral": { "pitch_mod": 0, "speed_mod": 0, "intensity": 0.3 },
+        "supportive": { "pitch_mod": 0.1, "speed_mod": 0, "intensity": 0.4 },
+        "reassuring": { "pitch_mod": 0, "speed_mod": -0.1, "intensity": 0.35 }
+      }
+    },
+    {
+      "id": "titane_dynamic",
+      "name": "TITANE Dynamic",
+      "language": "fr-FR",
+      "voice_id": "fr-FR-Neural-C",
+      "is_default": false,
+      "is_active": true,
+      "parameters": {
+        "pitch": 0.1,
+        "speed": 1.15,
+        "volume": 1.0,
+        "timbre": "bright",
+        "emphasis": "high",
+        "pause_ratio": 0.8
+      },
+      "prosody": {
+        "intonation_range": 0.7,
+        "stress_pattern": "energetic",
+        "rhythm": "upbeat"
+      },
+      "emotional_mapping": {
+        "neutral": { "pitch_mod": 0, "speed_mod": 0, "intensity": 0.6 },
+        "enthusiastic": { "pitch_mod": 0.15, "speed_mod": 0.1, "intensity": 0.8 },
+        "encouraging": { "pitch_mod": 0.1, "speed_mod": 0.05, "intensity": 0.7 }
+      }
+    },
+    {
+      "id": "titane_technical",
+      "name": "TITANE Technical",
+      "language": "fr-FR",
+      "voice_id": "fr-FR-Neural-D",
+      "is_default": false,
+      "is_active": true,
+      "parameters": {
+        "pitch": -0.1,
+        "speed": 1.0,
+        "volume": 1.0,
+        "timbre": "clear",
+        "emphasis": "precise",
+        "pause_ratio": 1.1
+      },
+      "prosody": {
+        "intonation_range": 0.4,
+        "stress_pattern": "measured",
+        "rhythm": "methodical"
+      },
+      "emotional_mapping": {
+        "neutral": { "pitch_mod": 0, "speed_mod": 0, "intensity": 0.45 },
+        "focused": { "pitch_mod": -0.05, "speed_mod": 0, "intensity": 0.5 },
+        "explanatory": { "pitch_mod": 0.05, "speed_mod": -0.05, "intensity": 0.55 }
+      }
+    },
+    {
+      "id": "titane_emergency",
+      "name": "TITANE Emergency",
+      "language": "fr-FR",
+      "voice_id": "fr-FR-Neural-E",
+      "is_default": false,
+      "is_active": true,
+      "parameters": {
+        "pitch": 0.0,
+        "speed": 1.2,
+        "volume": 1.1,
+        "timbre": "crisp",
+        "emphasis": "high",
+        "pause_ratio": 0.7
+      },
+      "prosody": {
+        "intonation_range": 0.5,
+        "stress_pattern": "urgent",
+        "rhythm": "quick"
+      },
+      "emotional_mapping": {
+        "alert": { "pitch_mod": 0.1, "speed_mod": 0.1, "intensity": 0.9 },
+        "warning": { "pitch_mod": 0.15, "speed_mod": 0.15, "intensity": 0.95 },
+        "critical": { "pitch_mod": 0.2, "speed_mod": 0.2, "intensity": 1.0 }
+      }
+    }
+  ],
+
+  "global_settings": {
+    "auto_select": true,
+    "context_adaptation": true,
+    "fallback_profile": "titane_standard",
+    "ssml_enabled": true,
+    "audio_format": "opus",
+    "sample_rate": 48000
+  },
+
+  "language_variants": {
+    "fr-FR": { "primary": true, "profiles": ["titane_standard", "titane_calm", "titane_dynamic", "titane_technical", "titane_emergency"] },
+    "en-US": { "primary": false, "profiles": [] },
+    "en-GB": { "primary": false, "profiles": [] }
+  }
+}

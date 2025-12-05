@@ -1,0 +1,641 @@
+{
+  "description": "Mapping table for appearance styles to 3D assets (meshes, textures, materials)",
+  "version": "1.0.0",
+  "fallback": {
+    "top": {
+      "mesh": "/assets/avatar/body/torso_base.glb",
+      "texture": "/assets/avatar/textures/clothing/default_top.png",
+      "material": "fabric_cotton"
+    },
+    "bottom": {
+      "mesh": "/assets/avatar/body/legs_base.glb",
+      "texture": "/assets/avatar/textures/clothing/default_bottom.png",
+      "material": "fabric_denim"
+    },
+    "shoes": {
+      "mesh": "/assets/avatar/accessories/shoes_sneakers.glb",
+      "texture": "/assets/avatar/textures/shoes/default_sneakers.png",
+      "material": "leather_synthetic"
+    },
+    "hair": {
+      "mesh": "/assets/avatar/hair/long_loose.glb",
+      "texture": "/assets/avatar/textures/hair/brown.png",
+      "material": "hair_shader"
+    }
+  },
+  "outfits": {
+    "tops": {
+      "chemise": {
+        "variants": {
+          "claire": {
+            "mesh": "/assets/avatar/clothing/tops/shirt_formal.glb",
+            "texture": "/assets/avatar/textures/clothing/shirt_white.png",
+            "material": "fabric_silk",
+            "colors": ["white", "light_blue", "light_pink", "beige"]
+          },
+          "foncee": {
+            "mesh": "/assets/avatar/clothing/tops/shirt_formal.glb",
+            "texture": "/assets/avatar/textures/clothing/shirt_dark.png",
+            "material": "fabric_silk",
+            "colors": ["navy", "black", "dark_gray", "burgundy"]
+          },
+          "satin": {
+            "mesh": "/assets/avatar/clothing/tops/blouse_satin.glb",
+            "texture": "/assets/avatar/textures/clothing/blouse_satin.png",
+            "material": "fabric_satin",
+            "colors": ["champagne", "silver", "black", "emerald"]
+          }
+        }
+      },
+      "blouse": {
+        "variants": {
+          "ample": {
+            "mesh": "/assets/avatar/clothing/tops/blouse_loose.glb",
+            "texture": "/assets/avatar/textures/clothing/blouse_casual.png",
+            "material": "fabric_cotton",
+            "colors": ["white", "cream", "terracotta", "olive"]
+          },
+          "ajustee": {
+            "mesh": "/assets/avatar/clothing/tops/blouse_fitted.glb",
+            "texture": "/assets/avatar/textures/clothing/blouse_fitted.png",
+            "material": "fabric_silk",
+            "colors": ["black", "navy", "burgundy", "forest"]
+          }
+        }
+      },
+      "t-shirt": {
+        "variants": {
+          "basic": {
+            "mesh": "/assets/avatar/clothing/tops/tshirt_basic.glb",
+            "texture": "/assets/avatar/textures/clothing/tshirt_plain.png",
+            "material": "fabric_cotton",
+            "colors": ["white", "black", "gray", "navy", "red", "blue", "green"]
+          },
+          "graphic": {
+            "mesh": "/assets/avatar/clothing/tops/tshirt_basic.glb",
+            "texture": "/assets/avatar/textures/clothing/tshirt_graphic.png",
+            "material": "fabric_cotton",
+            "colors": ["white", "black", "gray"]
+          }
+        }
+      },
+      "pull": {
+        "variants": {
+          "laine": {
+            "mesh": "/assets/avatar/clothing/tops/sweater_wool.glb",
+            "texture": "/assets/avatar/textures/clothing/sweater_knit.png",
+            "material": "fabric_wool",
+            "colors": ["cream", "gray", "navy", "burgundy", "forest"]
+          },
+          "cachemire": {
+            "mesh": "/assets/avatar/clothing/tops/sweater_cashmere.glb",
+            "texture": "/assets/avatar/textures/clothing/sweater_soft.png",
+            "material": "fabric_cashmere",
+            "colors": ["beige", "gray", "black", "camel"]
+          }
+        }
+      },
+      "veste": {
+        "variants": {
+          "blazer": {
+            "mesh": "/assets/avatar/clothing/tops/blazer_structured.glb",
+            "texture": "/assets/avatar/textures/clothing/blazer_formal.png",
+            "material": "fabric_wool_blend",
+            "colors": ["black", "navy", "gray", "camel"]
+          },
+          "cuir": {
+            "mesh": "/assets/avatar/clothing/tops/jacket_leather.glb",
+            "texture": "/assets/avatar/textures/clothing/leather_jacket.png",
+            "material": "leather_genuine",
+            "colors": ["black", "brown", "burgundy"]
+          },
+          "jean": {
+            "mesh": "/assets/avatar/clothing/tops/jacket_denim.glb",
+            "texture": "/assets/avatar/textures/clothing/denim_jacket.png",
+            "material": "fabric_denim",
+            "colors": ["light_blue", "dark_blue", "black"]
+          }
+        }
+      },
+      "top_sport": {
+        "variants": {
+          "compression": {
+            "mesh": "/assets/avatar/clothing/tops/sport_compression.glb",
+            "texture": "/assets/avatar/textures/clothing/sport_tech.png",
+            "material": "fabric_technical",
+            "colors": ["black", "navy", "gray", "neon_green", "neon_pink"]
+          },
+          "loose": {
+            "mesh": "/assets/avatar/clothing/tops/sport_tank.glb",
+            "texture": "/assets/avatar/textures/clothing/sport_breathable.png",
+            "material": "fabric_mesh",
+            "colors": ["white", "black", "gray", "coral", "mint"]
+          }
+        }
+      }
+    },
+    "bottoms": {
+      "pantalon": {
+        "variants": {
+          "fonce": {
+            "mesh": "/assets/avatar/clothing/bottoms/trousers_formal.glb",
+            "texture": "/assets/avatar/textures/clothing/trousers_dark.png",
+            "material": "fabric_wool_blend",
+            "colors": ["black", "navy", "charcoal", "dark_gray"]
+          },
+          "clair": {
+            "mesh": "/assets/avatar/clothing/bottoms/trousers_formal.glb",
+            "texture": "/assets/avatar/textures/clothing/trousers_light.png",
+            "material": "fabric_cotton",
+            "colors": ["beige", "light_gray", "cream", "khaki"]
+          },
+          "large": {
+            "mesh": "/assets/avatar/clothing/bottoms/trousers_wide.glb",
+            "texture": "/assets/avatar/textures/clothing/trousers_relaxed.png",
+            "material": "fabric_linen",
+            "colors": ["white", "beige", "olive", "terracotta"]
+          },
+          "outdoor": {
+            "mesh": "/assets/avatar/clothing/bottoms/pants_outdoor.glb",
+            "texture": "/assets/avatar/textures/clothing/pants_technical.png",
+            "material": "fabric_nylon",
+            "colors": ["khaki", "olive", "black", "navy"]
+          }
+        }
+      },
+      "jupe": {
+        "variants": {
+          "midi": {
+            "mesh": "/assets/avatar/clothing/bottoms/skirt_midi.glb",
+            "texture": "/assets/avatar/textures/clothing/skirt_elegant.png",
+            "material": "fabric_silk",
+            "colors": ["black", "navy", "burgundy", "emerald"]
+          },
+          "courte": {
+            "mesh": "/assets/avatar/clothing/bottoms/skirt_short.glb",
+            "texture": "/assets/avatar/textures/clothing/skirt_casual.png",
+            "material": "fabric_denim",
+            "colors": ["blue", "black", "white"]
+          },
+          "longue": {
+            "mesh": "/assets/avatar/clothing/bottoms/skirt_maxi.glb",
+            "texture": "/assets/avatar/textures/clothing/skirt_flowing.png",
+            "material": "fabric_chiffon",
+            "colors": ["black", "navy", "floral", "bohemian"]
+          }
+        }
+      },
+      "jeans": {
+        "variants": {
+          "slim": {
+            "mesh": "/assets/avatar/clothing/bottoms/jeans_slim.glb",
+            "texture": "/assets/avatar/textures/clothing/jeans_modern.png",
+            "material": "fabric_denim_stretch",
+            "colors": ["light_blue", "medium_blue", "dark_blue", "black"]
+          },
+          "boyfriend": {
+            "mesh": "/assets/avatar/clothing/bottoms/jeans_relaxed.glb",
+            "texture": "/assets/avatar/textures/clothing/jeans_distressed.png",
+            "material": "fabric_denim",
+            "colors": ["light_blue", "medium_blue"]
+          }
+        }
+      },
+      "leggings": {
+        "variants": {
+          "sport": {
+            "mesh": "/assets/avatar/clothing/bottoms/leggings_sport.glb",
+            "texture": "/assets/avatar/textures/clothing/leggings_tech.png",
+            "material": "fabric_technical",
+            "colors": ["black", "navy", "gray", "purple", "teal"]
+          }
+        }
+      },
+      "short": {
+        "variants": {
+          "sport": {
+            "mesh": "/assets/avatar/clothing/bottoms/shorts_sport.glb",
+            "texture": "/assets/avatar/textures/clothing/shorts_athletic.png",
+            "material": "fabric_technical",
+            "colors": ["black", "navy", "gray", "coral"]
+          },
+          "casual": {
+            "mesh": "/assets/avatar/clothing/bottoms/shorts_casual.glb",
+            "texture": "/assets/avatar/textures/clothing/shorts_cotton.png",
+            "material": "fabric_cotton",
+            "colors": ["khaki", "navy", "white", "denim"]
+          }
+        }
+      }
+    },
+    "shoes": {
+      "escarpins": {
+        "variants": {
+          "classiques": {
+            "mesh": "/assets/avatar/accessories/shoes_pumps.glb",
+            "texture": "/assets/avatar/textures/shoes/leather_smooth.png",
+            "material": "leather_genuine",
+            "colors": ["black", "navy", "nude", "burgundy"],
+            "heel_height": "high"
+          },
+          "hauts": {
+            "mesh": "/assets/avatar/accessories/shoes_heels_high.glb",
+            "texture": "/assets/avatar/textures/shoes/leather_glossy.png",
+            "material": "leather_patent",
+            "colors": ["black", "red", "nude"],
+            "heel_height": "very_high"
+          }
+        }
+      },
+      "baskets": {
+        "variants": {
+          "casual": {
+            "mesh": "/assets/avatar/accessories/shoes_sneakers_casual.glb",
+            "texture": "/assets/avatar/textures/shoes/sneakers_canvas.png",
+            "material": "fabric_canvas",
+            "colors": ["white", "black", "navy", "gray"]
+          },
+          "sport": {
+            "mesh": "/assets/avatar/accessories/shoes_sneakers_sport.glb",
+            "texture": "/assets/avatar/textures/shoes/sneakers_technical.png",
+            "material": "fabric_mesh_technical",
+            "colors": ["black", "white", "neon", "multicolor"]
+          }
+        }
+      },
+      "bottes": {
+        "variants": {
+          "montagne": {
+            "mesh": "/assets/avatar/accessories/shoes_boots_hiking.glb",
+            "texture": "/assets/avatar/textures/shoes/boots_outdoor.png",
+            "material": "leather_waterproof",
+            "colors": ["brown", "black", "tan"]
+          },
+          "ville": {
+            "mesh": "/assets/avatar/accessories/shoes_boots_ankle.glb",
+            "texture": "/assets/avatar/textures/shoes/boots_urban.png",
+            "material": "leather_genuine",
+            "colors": ["black", "brown", "burgundy"]
+          }
+        }
+      },
+      "sandales": {
+        "variants": {
+          "plates": {
+            "mesh": "/assets/avatar/accessories/shoes_sandals_flat.glb",
+            "texture": "/assets/avatar/textures/shoes/sandals_casual.png",
+            "material": "leather_soft",
+            "colors": ["tan", "black", "white", "metallic"]
+          }
+        }
+      },
+      "bottines": {
+        "variants": {
+          "chelsea": {
+            "mesh": "/assets/avatar/accessories/shoes_boots_chelsea.glb",
+            "texture": "/assets/avatar/textures/shoes/leather_matte.png",
+            "material": "leather_genuine",
+            "colors": ["black", "brown", "navy"]
+          }
+        }
+      }
+    },
+    "outerwear": {
+      "blazer": {
+        "variants": {
+          "ajuste": {
+            "mesh": "/assets/avatar/clothing/outerwear/blazer_fitted.glb",
+            "texture": "/assets/avatar/textures/clothing/blazer_modern.png",
+            "material": "fabric_wool_blend",
+            "colors": ["black", "navy", "gray", "camel"]
+          },
+          "structure": {
+            "mesh": "/assets/avatar/clothing/outerwear/blazer_structured.glb",
+            "texture": "/assets/avatar/textures/clothing/blazer_tailored.png",
+            "material": "fabric_wool",
+            "colors": ["black", "navy", "charcoal"]
+          }
+        }
+      },
+      "veste_polaire": {
+        "variants": {
+          "outdoor": {
+            "mesh": "/assets/avatar/clothing/outerwear/fleece_outdoor.glb",
+            "texture": "/assets/avatar/textures/clothing/fleece_technical.png",
+            "material": "fabric_fleece",
+            "colors": ["navy", "forest", "gray", "black"]
+          }
+        }
+      },
+      "manteau": {
+        "variants": {
+          "laine": {
+            "mesh": "/assets/avatar/clothing/outerwear/coat_wool.glb",
+            "texture": "/assets/avatar/textures/clothing/coat_classic.png",
+            "material": "fabric_wool",
+            "colors": ["black", "navy", "camel", "gray"]
+          }
+        }
+      }
+    }
+  },
+  "hair": {
+    "styles": {
+      "queue_de_cheval": {
+        "variants": {
+          "haute": {
+            "mesh": "/assets/avatar/hair/ponytail_high.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          },
+          "basse": {
+            "mesh": "/assets/avatar/hair/ponytail_low.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          }
+        }
+      },
+      "detaches": {
+        "variants": {
+          "lisses": {
+            "mesh": "/assets/avatar/hair/long_straight.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          },
+          "ondules": {
+            "mesh": "/assets/avatar/hair/long_wavy.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          },
+          "boucles": {
+            "mesh": "/assets/avatar/hair/long_curly.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          }
+        }
+      },
+      "chignon": {
+        "variants": {
+          "haut": {
+            "mesh": "/assets/avatar/hair/bun_high.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          },
+          "bas": {
+            "mesh": "/assets/avatar/hair/bun_low.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          }
+        }
+      },
+      "tresse": {
+        "variants": {
+          "simple": {
+            "mesh": "/assets/avatar/hair/braid_single.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          },
+          "double": {
+            "mesh": "/assets/avatar/hair/braids_double.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          }
+        }
+      },
+      "courte": {
+        "variants": {
+          "pixie": {
+            "mesh": "/assets/avatar/hair/short_pixie.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          },
+          "bob": {
+            "mesh": "/assets/avatar/hair/short_bob.glb",
+            "texture": "/assets/avatar/textures/hair/default.png",
+            "material": "hair_shader"
+          }
+        }
+      }
+    },
+    "colors": {
+      "noir": { "hex": "#1a1a1a", "texture_variant": "black" },
+      "brun": { "hex": "#3d2817", "texture_variant": "brown" },
+      "chatain": { "hex": "#654321", "texture_variant": "chestnut" },
+      "blond": { "hex": "#f5deb3", "texture_variant": "blonde" },
+      "roux": { "hex": "#8b4513", "texture_variant": "red" },
+      "gris": { "hex": "#808080", "texture_variant": "gray" },
+      "blanc": { "hex": "#f5f5f5", "texture_variant": "white" },
+      "colore": { "hex": "#custom", "texture_variant": "custom" }
+    }
+  },
+  "accessories": {
+    "glasses": {
+      "lunettes_rondes": {
+        "mesh": "/assets/avatar/accessories/glasses_round.glb",
+        "texture": "/assets/avatar/textures/accessories/metal_gold.png",
+        "material": "metal_brushed",
+        "colors": ["gold", "silver", "black"]
+      },
+      "lunettes_carrees": {
+        "mesh": "/assets/avatar/accessories/glasses_square.glb",
+        "texture": "/assets/avatar/textures/accessories/acetate.png",
+        "material": "plastic_acetate",
+        "colors": ["black", "tortoise", "navy"]
+      },
+      "lunettes_soleil": {
+        "mesh": "/assets/avatar/accessories/glasses_sun.glb",
+        "texture": "/assets/avatar/textures/accessories/sunglasses.png",
+        "material": "plastic_tinted",
+        "colors": ["black", "brown", "aviator"]
+      }
+    },
+    "jewelry": {
+      "boucles_oreilles": {
+        "variants": {
+          "discretes": {
+            "mesh": "/assets/avatar/accessories/earrings_stud.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_polished.png",
+            "material": "metal_gold"
+          },
+          "creoles": {
+            "mesh": "/assets/avatar/accessories/earrings_hoop.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_polished.png",
+            "material": "metal_gold"
+          },
+          "pendantes": {
+            "mesh": "/assets/avatar/accessories/earrings_drop.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_gem.png",
+            "material": "metal_gold"
+          }
+        }
+      },
+      "collier": {
+        "variants": {
+          "chaine": {
+            "mesh": "/assets/avatar/accessories/necklace_chain.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_polished.png",
+            "material": "metal_gold"
+          },
+          "pendentif": {
+            "mesh": "/assets/avatar/accessories/necklace_pendant.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_gem.png",
+            "material": "metal_gold"
+          }
+        }
+      },
+      "bracelet": {
+        "variants": {
+          "fin": {
+            "mesh": "/assets/avatar/accessories/bracelet_thin.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_polished.png",
+            "material": "metal_gold"
+          },
+          "manchette": {
+            "mesh": "/assets/avatar/accessories/bracelet_cuff.glb",
+            "texture": "/assets/avatar/textures/accessories/metal_brushed.png",
+            "material": "metal_silver"
+          }
+        }
+      }
+    },
+    "bags": {
+      "sac_a_dos": {
+        "variants": {
+          "casual": {
+            "mesh": "/assets/avatar/accessories/backpack_casual.glb",
+            "texture": "/assets/avatar/textures/accessories/backpack_canvas.png",
+            "material": "fabric_canvas",
+            "colors": ["black", "navy", "gray", "khaki"]
+          },
+          "sport": {
+            "mesh": "/assets/avatar/accessories/backpack_sport.glb",
+            "texture": "/assets/avatar/textures/accessories/backpack_technical.png",
+            "material": "fabric_nylon",
+            "colors": ["black", "navy", "neon"]
+          },
+          "randonnee": {
+            "mesh": "/assets/avatar/accessories/backpack_hiking.glb",
+            "texture": "/assets/avatar/textures/accessories/backpack_outdoor.png",
+            "material": "fabric_cordura",
+            "colors": ["green", "gray", "orange"]
+          }
+        }
+      },
+      "sac_tote": {
+        "variants": {
+          "canvas": {
+            "mesh": "/assets/avatar/accessories/bag_tote.glb",
+            "texture": "/assets/avatar/textures/accessories/tote_canvas.png",
+            "material": "fabric_canvas",
+            "colors": ["natural", "black", "navy"]
+          }
+        }
+      },
+      "pochette": {
+        "variants": {
+          "soiree": {
+            "mesh": "/assets/avatar/accessories/bag_clutch.glb",
+            "texture": "/assets/avatar/textures/accessories/clutch_elegant.png",
+            "material": "fabric_satin",
+            "colors": ["black", "gold", "silver", "burgundy"]
+          }
+        }
+      }
+    },
+    "other": {
+      "bonnet": {
+        "mesh": "/assets/avatar/accessories/hat_beanie.glb",
+        "texture": "/assets/avatar/textures/accessories/knit_texture.png",
+        "material": "fabric_wool",
+        "colors": ["black", "gray", "navy", "burgundy"]
+      },
+      "gants": {
+        "mesh": "/assets/avatar/accessories/gloves.glb",
+        "texture": "/assets/avatar/textures/accessories/leather_texture.png",
+        "material": "leather_soft",
+        "colors": ["black", "brown", "gray"]
+      },
+      "foulard": {
+        "mesh": "/assets/avatar/accessories/scarf.glb",
+        "texture": "/assets/avatar/textures/accessories/silk_pattern.png",
+        "material": "fabric_silk",
+        "colors": ["multicolor", "black", "navy", "burgundy"]
+      }
+    }
+  },
+  "materials": {
+    "fabric_cotton": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.8,
+        "metalness": 0.0,
+        "normalScale": 0.5
+      }
+    },
+    "fabric_silk": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.2,
+        "metalness": 0.0,
+        "normalScale": 0.3,
+        "sheen": 0.8
+      }
+    },
+    "fabric_wool": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.9,
+        "metalness": 0.0,
+        "normalScale": 0.7
+      }
+    },
+    "fabric_denim": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.85,
+        "metalness": 0.0,
+        "normalScale": 0.6
+      }
+    },
+    "leather_genuine": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.4,
+        "metalness": 0.0,
+        "normalScale": 0.4
+      }
+    },
+    "hair_shader": {
+      "shader": "hair",
+      "properties": {
+        "roughness": 0.3,
+        "anisotropy": 0.8,
+        "sheen": 0.6
+      }
+    },
+    "metal_gold": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.2,
+        "metalness": 1.0,
+        "color": "#ffd700"
+      }
+    },
+    "metal_silver": {
+      "shader": "standard",
+      "properties": {
+        "roughness": 0.15,
+        "metalness": 1.0,
+        "color": "#c0c0c0"
+      }
+    }
+  },
+  "color_palettes": {
+    "neutre": ["#ffffff", "#f5f5f5", "#d3d3d3", "#a9a9a9", "#696969", "#000000", "#f5deb3", "#d2b48c"],
+    "pastel": ["#ffd1dc", "#e0bfe0", "#b0e0e6", "#fffacd", "#ffc0cb", "#e6e6fa", "#f0e68c", "#ffb6c1"],
+    "saturee": ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#ff00ff", "#00ffff", "#ff8c00", "#8b00ff"],
+    "terre": ["#8b4513", "#a0522d", "#d2691e", "#cd853f", "#deb887", "#f4a460", "#d2b48c", "#bc8f8f"],
+    "monochrome": ["#000000", "#1a1a1a", "#333333", "#4d4d4d", "#666666", "#808080", "#999999", "#b3b3b3"],
+    "sombre": ["#000000", "#1a1a1a", "#2f4f4f", "#191970", "#800020", "#4b0082", "#2c2c2c", "#1c1c1c"]
+  }
+}

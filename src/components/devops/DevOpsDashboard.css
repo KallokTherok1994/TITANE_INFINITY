@@ -1,0 +1,230 @@
+/**
+ * TITANE∞ vΩ — DevOps Dashboard Styles
+ * Design System TITANE∞ intégré
+ */
+
+.devops-dashboard {
+  padding: 24px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: var(--t-bg-primary, #0a0a0f);
+  color: var(--t-text-primary, #e0e0ff);
+  font-family: var(--t-font-mono, 'Fira Code', monospace);
+}
+
+/* HEADER */
+.devops-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.05));
+  border-radius: 16px;
+  border: 1px solid rgba(138, 43, 226, 0.3);
+  box-shadow: 0 4px 16px rgba(138, 43, 226, 0.2);
+}
+
+.devops-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #8a2be2, #4b0082);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-status {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.status-running {
+  background: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+  border: 1px solid #ffa500;
+}
+
+.status-success {
+  background: rgba(0, 255, 127, 0.2);
+  color: var(--accent, #93b399);
+  border: 1px solid var(--accent, #93b399);
+}
+
+.status-error {
+  background: rgba(255, 69, 0, 0.2);
+  color: #ff4500;
+  border: 1px solid #ff4500;
+}
+
+/* STATS */
+.devops-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.stat-card {
+  background: rgba(138, 43, 226, 0.05);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  background: rgba(138, 43, 226, 0.1);
+  border-color: rgba(138, 43, 226, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(138, 43, 226, 0.3);
+}
+
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(224, 224, 255, 0.6);
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: #8a2be2;
+}
+
+/* ACTIONS */
+.devops-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid rgba(138, 43, 226, 0.5);
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.05));
+  color: #e0e0ff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(75, 0, 130, 0.1));
+  border-color: #8a2be2;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+}
+
+.action-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* LOGS */
+.devops-logs-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(138, 43, 226, 0.03);
+  border: 1px solid rgba(138, 43, 226, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.logs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: rgba(138, 43, 226, 0.1);
+  border-bottom: 1px solid rgba(138, 43, 226, 0.2);
+}
+
+.logs-header h2 {
+  font-size: 18px;
+  margin: 0;
+  color: #8a2be2;
+}
+
+.clear-logs-btn {
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(138, 43, 226, 0.5);
+  border-radius: 6px;
+  background: rgba(138, 43, 226, 0.1);
+  color: #e0e0ff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clear-logs-btn:hover {
+  background: rgba(138, 43, 226, 0.2);
+  border-color: #8a2be2;
+}
+
+.devops-logs {
+  flex: 1;
+  width: 100%;
+  padding: 16px;
+  background: #0a0a0f;
+  color: var(--accent, #93b399);
+  border: none;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+}
+
+.devops-logs::-webkit-scrollbar {
+  width: 12px;
+}
+
+.devops-logs::-webkit-scrollbar-track {
+  background: rgba(138, 43, 226, 0.05);
+}
+
+.devops-logs::-webkit-scrollbar-thumb {
+  background: rgba(138, 43, 226, 0.3);
+  border-radius: 6px;
+}
+
+.devops-logs::-webkit-scrollbar-thumb:hover {
+  background: rgba(138, 43, 226, 0.5);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .devops-dashboard {
+    padding: 16px;
+  }
+
+  .devops-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .devops-actions {
+    flex-direction: column;
+  }
+
+  .action-btn {
+    min-width: 100%;
+  }
+}

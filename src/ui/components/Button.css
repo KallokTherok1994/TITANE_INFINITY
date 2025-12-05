@@ -1,0 +1,243 @@
+/* TITANE∞ v17.1 - Button Component - Design System Optimisé */
+
+.button {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+
+  /* Typography */
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+
+  /* Visual */
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+
+  /* Transition fluide */
+  transition: all 180ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Focus state - Accessibilité */
+.button:focus-visible {
+  outline: 2px solid var(--primary-main);
+  outline-offset: 2px;
+}
+
+/* Active state - Micro-shift */
+.button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Hover lift */
+.button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+/* ═══════════════════════════════════
+   SIZES - Hiérarchie claire
+   ═══════════════════════════════════ */
+
+.button--sm {
+  height: 32px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-size-small);
+}
+
+.button--md {
+  height: 40px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-size-body);
+}
+
+.button--lg {
+  height: 48px;
+  padding: 0 var(--space-5);
+  font-size: var(--font-size-h5);
+}
+
+/* ═══════════════════════════════════
+   VARIANTS - Design System Premium
+   ═══════════════════════════════════ */
+
+/* PRIMARY - Action principale */
+.button--primary {
+  background: var(--primary-main);
+  color: white;
+  box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.25);
+}
+
+.button--primary:hover:not(:disabled) {
+  background: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.35);
+}
+
+.button--primary:active:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+/* SECONDARY - Action secondaire */
+.button--secondary {
+  background: var(--neutral-10);
+  color: var(--neutral-80);
+  border: 1px solid var(--neutral-20);
+}
+
+.button--secondary:hover:not(:disabled) {
+  background: var(--neutral-5);
+  border-color: var(--neutral-30);
+}
+
+.button--secondary:active:not(:disabled) {
+  background: var(--neutral-20);
+}
+
+/* GHOST - Action subtile */
+.button--ghost {
+  background: transparent;
+  color: var(--neutral-70);
+}
+
+.button--ghost:hover:not(:disabled) {
+  background: var(--neutral-10);
+  color: var(--neutral-80);
+}
+
+.button--ghost:active:not(:disabled) {
+  background: var(--neutral-20);
+}
+
+/* DANGER - Action destructive */
+.button--danger {
+  background: var(--danger, #8f7a7a);
+  color: white;
+  box-shadow: 0 2px 8px rgba(143, 122, 122, 0.25);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: var(--danger-hover, #7a6868);
+  box-shadow: 0 4px 12px rgba(143, 122, 122, 0.35);
+}
+
+.button--danger:active:not(:disabled) {
+  background: var(--danger-active, #685858);
+}
+
+/* GLASS - Effet glassmorphism premium */
+.button--glass {
+  background: var(--glass-alpha);
+  backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--neutral-0);
+}
+
+.button--glass:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.button--glass:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* SUBTLE - Minimal premium */
+.button--subtle {
+  background: transparent;
+  color: var(--primary-main);
+  border: 1px solid var(--primary-main);
+}
+
+.button--subtle:hover:not(:disabled) {
+  background: var(--primary-main);
+  color: white;
+}
+
+.button--subtle:active:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+/* ═══════════════════════════════════
+   STATES & MODIFIERS
+   ═══════════════════════════════════ */
+
+/* Full width */
+.button--full-width {
+  width: 100%;
+}
+
+/* Disabled state */
+.button--disabled,
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Loading state */
+.button--loading {
+  cursor: wait;
+  position: relative;
+}
+
+.button--loading .button__content {
+  opacity: 0;
+}
+
+/* ═══════════════════════════════════
+   INTERNAL ELEMENTS
+   ═══════════════════════════════════ */
+
+.button__spinner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button__icon--left {
+  margin-right: var(--space-1);
+}
+
+.button__icon--right {
+  margin-left: var(--space-1);
+}
+
+.button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ═══════════════════════════════════
+   ACCESSIBILITY - Reduced Motion
+   ═══════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button__spinner {
+    animation-duration: 1.5s;
+  }
+}

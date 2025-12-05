@@ -1,0 +1,112 @@
+[package]
+name         = "titane-infinity"
+version      = "19.2.3"
+description  = "TITANE∞ v∞.19.2.3 - Singularity Architecture Ω + Cognitive Layer v16 + 20 Engines Unified + SingularityDashboard + PerformanceProfiler"
+authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
+license      = "SEE LICENSE.md"
+repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
+edition      = "2021"
+rust-version = "1.70"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[dependencies]
+tauri                          = { version = "2.0", features = ["tray-icon", "protocol-asset"] }
+tauri-plugin-dialog            = "2.0"
+tauri-plugin-clipboard-manager = "2.0"
+serde                          = { version = "1.0", features = ["derive"] }
+serde_json                     = "1.0"
+log                            = "0.4"
+env_logger                     = "0.11"
+rand                           = "0.8"
+chrono                         = { version = "0.4", features = ["serde"] }
+uuid                           = { version = "1.6", features = ["v4", "serde"] }
+tokio                          = { version = "1.35", features = ["full"] }
+thiserror                      = "1.0"
+sysinfo                        = "0.30"
+
+# Core dependencies (actively used)
+base64           = "0.22"
+aes-gcm          = "0.10"
+sha2             = "0.10"
+once_cell        = "1.19"
+reqwest          = { version = "0.11", features = ["json", "stream"] }
+regex            = "1.10"
+dirs             = "5.0"
+dotenv           = "0.15"
+urlencoding      = "2.1"
+argon2           = "0.5"
+url              = "2.4"
+instant-distance = "0.6.1"
+futures-util     = "0.3"
+zeroize          = "1.7"
+
+# Super-Prompts H, J, K, L - Security & Crypto
+ed25519-dalek = "2.1"
+lazy_static   = "1.4"
+flate2        = "1.0"
+
+# Super-Prompts P-U - Phases 5-10 (Node-Cluster, Knowledge, HyperVision, Création, Introspection, Évolution)
+walkdir = "2.4" # Phase 9: Introspection filesystem traversal
+
+# Phase 8: Rust Allocations Optimization (v24.20)
+smallvec = "1.13" # Stack-allocated Vec for small arrays (<8 elements)
+
+# Audio Engine v∞: Real-time audio capture and playback (optional)
+# Requires: libasound2-dev on Linux (sudo apt install libasound2-dev)
+cpal  = { version = "0.15", optional = true }
+hound = "3.5"                                 # WAV file reading/writing
+
+[features]
+default = ["custom-protocol", "mock"]
+custom-protocol = ["tauri/custom-protocol"]
+mock = [] # Mock backend mode for frontend-only development
+full = [] # Full backend mode with all real implementations
+ollama = [] # Ollama integration for local LLM
+audio-capture = [
+    "cpal",
+] # Enable real-time audio capture (requires libasound2-dev)
+
+[profile.dev]
+# ═══════════════════════════════════════════════════════════════
+# CPU OPTIMIZATION: Reduced compilation time in development
+# ═══════════════════════════════════════════════════════════════
+opt-level   = 1     # Light optimization (vs 0 default) → faster execution
+debug       = false # Disable debug symbols → 50% faster compilation
+incremental = true  # Faster rebuilds
+
+[profile.release]
+panic         = "abort"
+codegen-units = 1
+lto           = true
+opt-level     = "z"
+strip         = "none"  # Required for Tauri bundler to inject __TAURI_BUNDLE_TYPE
+
+[dev-dependencies]
+tempfile = "3.8"
+
+# Phase 9: Tests E2E & Stress
+[[test]]
+name = "agent_ia_workflow_test"
+path = "tests/integration/agent_ia_workflow_test.rs"
+
+[[test]]
+name = "fallback_chain_test"
+path = "tests/integration/fallback_chain_test.rs"
+
+[[test]]
+name = "singularity_integration_test"
+path = "tests/integration/singularity_integration_test.rs"
+
+[[test]]
+name = "metrics_stress_test"
+path = "tests/stress/metrics_stress_test.rs"
+
+[[test]]
+name = "concurrent_access_test"
+path = "tests/stress/concurrent_access_test.rs"
+
+[[test]]
+name = "permission_enforcement_test"
+path = "tests/security/permission_enforcement_test.rs"
