@@ -38,6 +38,9 @@ export interface DeviceIdentity {
   os_version: string;
   fingerprint: string;
   public_key: string;
+  first_seen: string;
+  last_seen: string;
+  trusted: boolean;
 }
 
 export interface SyncLogEntry {
@@ -46,4 +49,16 @@ export interface SyncLogEntry {
   direction: 'Push' | 'Pull' | 'Bidirectional';
   message: string;
   duration_ms: number;
+}
+
+export interface SyncHistoryEntry {
+  timestamp: string;
+  direction: 'Push' | 'Pull' | 'Bidirectional';
+  status: string;
+  remote_device_id: string | null;
+  revision: number;
+  data_size_bytes: number;
+  duration_ms: number;
+  error_message: string | null;
+  conflicts_resolved: number;
 }

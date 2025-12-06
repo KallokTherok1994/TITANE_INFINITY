@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { SyncLogEntry } from './types';
+import { SyncLogEntry, SyncHistoryEntry } from './types';
 
 interface SyncHistoryResponse {
   entries: SyncHistoryEntry[];

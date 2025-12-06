@@ -8,6 +8,17 @@
 
 use super::docs_engine::{CommandDoc, CommandCategory, DocsRegistry, DOCS_ENGINE};
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[DocsCommands] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 /// Rechercher dans la documentation
 #[tauri::command]
 pub fn titan_docs_search(query: String) -> Vec<CommandDoc> {

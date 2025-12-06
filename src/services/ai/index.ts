@@ -24,5 +24,6 @@ export { DEFAULT_AI_CONFIG } from './types';
 // New unified ChatEngine architecture
 export { chatEngine, type ChatMode, type ChatEngineConfig, type ChatEngineResponse } from './chatEngine';
 export { chatModes, type ChatModeConfig } from './chatModes';
-export { memoryIntegration, type MemoryContext, type MemoryLoadConfig } from './memoryIntegration';
+export { memoryIntegration, type MemoryLoadConfig } from './memoryIntegration';
+export type { MemoryContext } from './memoryIntegration';
 export { inputValidator, InputValidator } from './inputValidator';

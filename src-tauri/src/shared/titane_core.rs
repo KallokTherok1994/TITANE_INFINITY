@@ -7,6 +7,17 @@ use crate::core::legacy::{HarmoniaCore, HeliosCore, MemoryCore, NexusCore, Senti
 use crate::shared::types::ModuleHealth;
 use std::sync::{Arc, Mutex};
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[TitaneCore] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 /// TitaneCore - Main system core coordinating all modules
 /// This bridges v12 legacy architecture with v14 SingularityEngine
 #[derive(Clone)]
@@ -57,7 +68,7 @@ impl TitaneCore {
     }
 
     fn helios_health(&self) -> ModuleHealth {
-        let helios = self.helios.lock().unwrap();
+        let helios = lock_or_recover!(self.helios);
         ModuleHealth {
             name: "Helios".to_string(),
             status: helios.health(),
@@ -68,7 +79,7 @@ impl TitaneCore {
     }
 
     fn nexus_health(&self) -> ModuleHealth {
-        let nexus = self.nexus.lock().unwrap();
+        let nexus = lock_or_recover!(self.nexus);
         ModuleHealth {
             name: "Nexus".to_string(),
             status: nexus.health(),
@@ -79,7 +90,7 @@ impl TitaneCore {
     }
 
     fn memory_health(&self) -> ModuleHealth {
-        let memory = self.memory.lock().unwrap();
+        let memory = lock_or_recover!(self.memory);
         ModuleHealth {
             name: "Memory".to_string(),
             status: memory.health(),
@@ -90,7 +101,7 @@ impl TitaneCore {
     }
 
     fn harmonia_health(&self) -> ModuleHealth {
-        let harmonia = self.harmonia.lock().unwrap();
+        let harmonia = lock_or_recover!(self.harmonia);
         ModuleHealth {
             name: "Harmonia".to_string(),
             status: harmonia.health(),
@@ -101,7 +112,7 @@ impl TitaneCore {
     }
 
     fn sentinel_health(&self) -> ModuleHealth {
-        let sentinel = self.sentinel.lock().unwrap();
+        let sentinel = lock_or_recover!(self.sentinel);
         ModuleHealth {
             name: "Sentinel".to_string(),
             status: sentinel.health(),
@@ -117,23 +128,23 @@ impl TitaneCore {
 
         // Initialize all modules (extract guards before await to avoid holding locks)
         {
-            let mut helios = self.helios.lock().unwrap();
+            let mut helios = lock_or_recover!(self.helios);
             helios.init().await?;
         }
         {
-            let mut nexus = self.nexus.lock().unwrap();
+            let mut nexus = lock_or_recover!(self.nexus);
             nexus.init().await?;
         }
         {
-            let mut memory = self.memory.lock().unwrap();
+            let mut memory = lock_or_recover!(self.memory);
             memory.init().await?;
         }
         {
-            let mut harmonia = self.harmonia.lock().unwrap();
+            let mut harmonia = lock_or_recover!(self.harmonia);
             harmonia.init().await?;
         }
         {
-            let mut sentinel = self.sentinel.lock().unwrap();
+            let mut sentinel = lock_or_recover!(self.sentinel);
             sentinel.init().await?;
         }
 
@@ -145,23 +156,23 @@ impl TitaneCore {
     pub async fn tick(&mut self) -> Result<(), String> {
         // Each module updates independently (extract guards before await)
         {
-            let mut helios = self.helios.lock().unwrap();
+            let mut helios = lock_or_recover!(self.helios);
             helios.tick().await?;
         }
         {
-            let mut nexus = self.nexus.lock().unwrap();
+            let mut nexus = lock_or_recover!(self.nexus);
             nexus.tick().await?;
         }
         {
-            let mut memory = self.memory.lock().unwrap();
+            let mut memory = lock_or_recover!(self.memory);
             memory.tick().await?;
         }
         {
-            let mut harmonia = self.harmonia.lock().unwrap();
+            let mut harmonia = lock_or_recover!(self.harmonia);
             harmonia.tick().await?;
         }
         {
-            let mut sentinel = self.sentinel.lock().unwrap();
+            let mut sentinel = lock_or_recover!(self.sentinel);
             sentinel.tick().await?;
         }
 

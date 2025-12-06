@@ -14,6 +14,17 @@ use std::time::{Duration, Instant};
 use tauri::{AppHandle, Manager};
 use tokio::sync::mpsc;
 
+/// Macro for safe mutex locking with auto-recovery from poisoned state
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[WhisperStreaming] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 /// Whisper streaming configuration
 #[derive(Debug, Clone)]
 pub struct WhisperStreamConfig {
@@ -132,7 +143,7 @@ impl WhisperStreamingEngine {
             while let Some(chunk) = audio_rx.recv().await {
                 // Push chunk to buffer
                 {
-                    let mut buf = buffer.lock().unwrap();
+                    let mut buf = lock_or_recover!(buffer);
                     buf.push_back(chunk.clone());
                 }
 
@@ -141,7 +152,7 @@ impl WhisperStreamingEngine {
                     let now = Instant::now();
 
                     {
-                        let mut speech_start = speech_start_time.lock().unwrap();
+                        let mut speech_start = lock_or_recover!(speech_start_time);
                         if speech_start.is_none() {
                             *speech_start = Some(now);
                             println!("[WhisperStreaming] 🗣️ Speech started");
@@ -149,19 +160,19 @@ impl WhisperStreamingEngine {
                     }
 
                     {
-                        let mut last_speech = last_speech_time.lock().unwrap();
+                        let mut last_speech = lock_or_recover!(last_speech_time);
                         *last_speech = Some(now);
                     }
 
                     // Accumulate audio segment
                     {
-                        let mut segment = current_segment.lock().unwrap();
+                        let mut segment = lock_or_recover!(current_segment);
                         segment.extend_from_slice(&chunk.data);
                     }
 
                     // Change state to buffering/processing
                     {
-                        let mut s = state.lock().unwrap();
+                        let mut s = lock_or_recover!(state);
                         if *s == StreamState::Idle {
                             *s = StreamState::Buffering;
                         }
@@ -170,13 +181,13 @@ impl WhisperStreamingEngine {
 
                 // Check for partial update trigger
                 let should_update_partial = {
-                    let last_update = last_partial_update.lock().unwrap();
+                    let last_update = lock_or_recover!(last_partial_update);
                     last_update.elapsed() >= Duration::from_millis(config.partial_update_interval_ms)
                 };
 
                 if should_update_partial {
                     let segment_duration = {
-                        let segment = current_segment.lock().unwrap();
+                        let segment = lock_or_recover!(current_segment);
                         (segment.len() as f32 / chunk.sample_rate as f32 * 1000.0) as u64
                     };
 
@@ -205,13 +216,13 @@ impl WhisperStreamingEngine {
                         }
 
                         // Update last partial time
-                        *last_partial_update.lock().unwrap() = Instant::now();
+                        *lock_or_recover!(last_partial_update) = Instant::now();
                     }
                 }
 
                 // Check for final segment trigger (silence detected)
                 let should_finalize = {
-                    let last_speech = last_speech_time.lock().unwrap();
+                    let last_speech = lock_or_recover!(last_speech_time);
                     if let Some(last) = *last_speech {
                         last.elapsed() >= Duration::from_millis(config.silence_duration_ms)
                     } else {
@@ -221,7 +232,7 @@ impl WhisperStreamingEngine {
 
                 if should_finalize {
                     let segment_duration = {
-                        let segment = current_segment.lock().unwrap();
+                        let segment = lock_or_recover!(current_segment);
                         (segment.len() as f32 / chunk.sample_rate as f32 * 1000.0) as u64
                     };
 
@@ -251,23 +262,23 @@ impl WhisperStreamingEngine {
 
                         // Reset segment
                         {
-                            let mut segment = current_segment.lock().unwrap();
+                            let mut segment = lock_or_recover!(current_segment);
                             segment.clear();
                         }
                         {
-                            let mut speech_start = speech_start_time.lock().unwrap();
+                            let mut speech_start = lock_or_recover!(speech_start_time);
                             *speech_start = None;
                         }
                         {
-                            let mut last_speech = last_speech_time.lock().unwrap();
+                            let mut last_speech = lock_or_recover!(last_speech_time);
                             *last_speech = None;
                         }
                         {
-                            let mut s = state.lock().unwrap();
+                            let mut s = lock_or_recover!(state);
                             *s = StreamState::Idle;
                         }
                         {
-                            let mut buf = buffer.lock().unwrap();
+                            let mut buf = lock_or_recover!(buffer);
                             buf.clear();
                         }
                     }
@@ -275,7 +286,7 @@ impl WhisperStreamingEngine {
 
                 // Force finalization if max duration reached
                 let segment_duration = {
-                    let segment = current_segment.lock().unwrap();
+                    let segment = lock_or_recover!(current_segment);
                     (segment.len() as f32 / chunk.sample_rate as f32 * 1000.0) as u64
                 };
 
@@ -303,11 +314,11 @@ impl WhisperStreamingEngine {
                     }
 
                     // Reset
-                    current_segment.lock().unwrap().clear();
-                    *speech_start_time.lock().unwrap() = None;
-                    *last_speech_time.lock().unwrap() = None;
-                    *state.lock().unwrap() = StreamState::Idle;
-                    buffer.lock().unwrap().clear();
+                    lock_or_recover!(current_segment).clear();
+                    *lock_or_recover!(speech_start_time) = None;
+                    *lock_or_recover!(last_speech_time) = None;
+                    *lock_or_recover!(state) = StreamState::Idle;
+                    lock_or_recover!(buffer).clear();
                 }
             }
 
@@ -323,7 +334,7 @@ impl WhisperStreamingEngine {
         shell_guard: &ShellGuard,
         is_final: bool,
     ) -> AudioResult<String> {
-        let audio_data = segment.lock().unwrap().clone();
+        let audio_data = lock_or_recover!(segment).clone();
 
         if audio_data.is_empty() {
             return Ok(String::new());
@@ -333,12 +344,14 @@ impl WhisperStreamingEngine {
         let wav_data = Self::samples_to_wav(&audio_data, sample_rate)?;
 
         // Write to temp file
+        let timestamp_ms = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_millis())
+            .unwrap_or(0);
+            
         let temp_path = std::env::temp_dir().join(format!(
             "titane_whisper_stream_{}.wav",
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .unwrap()
-                .as_millis()
+            timestamp_ms
         ));
 
         std::fs::write(&temp_path, wav_data)
@@ -400,15 +413,15 @@ impl WhisperStreamingEngine {
 
     /// Get current state
     pub fn get_state(&self) -> StreamState {
-        *self.state.lock().unwrap()
+        *self.lock_or_recover!(state)
     }
 
     /// Reset streaming engine
     pub fn reset(&self) {
-        *self.state.lock().unwrap() = StreamState::Idle;
-        self.buffer.lock().unwrap().clear();
-        self.current_segment.lock().unwrap().clear();
-        *self.speech_start_time.lock().unwrap() = None;
-        *self.last_speech_time.lock().unwrap() = None;
+        *self.lock_or_recover!(state) = StreamState::Idle;
+        self.lock_or_recover!(buffer).clear();
+        self.lock_or_recover!(current_segment).clear();
+        *self.lock_or_recover!(speech_start_time) = None;
+        *self.lock_or_recover!(last_speech_time) = None;
     }
 }

@@ -9,6 +9,17 @@ use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[PersonaEngine] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & STRUCTURES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -147,11 +158,11 @@ impl PersonaEngine {
     }
 
     pub fn get_state(&self) -> PersonaState {
-        self.state.lock().unwrap().clone()
+        self.lock_or_recover!(state).clone()
     }
 
     pub fn update(&self, system_state: &str, metrics: SystemMetrics) {
-        let mut state = self.state.lock().unwrap();
+        let mut state = self.lock_or_recover!(state);
 
         // Update mood based on system state
         state.mood.current = match system_state {
@@ -217,7 +228,7 @@ impl PersonaEngine {
     }
 
     pub fn react(&self, reaction_type: &str) {
-        let mut state = self.state.lock().unwrap();
+        let mut state = self.lock_or_recover!(state);
 
         match reaction_type {
             "error" => {
@@ -251,7 +262,7 @@ impl PersonaEngine {
     }
 
     pub fn reset(&self) {
-        let mut state = self.state.lock().unwrap();
+        let mut state = self.lock_or_recover!(state);
         state.mood = MoodState {
             current: Mood::Neutre,
             intensity: 0.6,

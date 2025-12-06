@@ -173,7 +173,7 @@ export function useActiveListening(
       setState(prev => ({
         ...prev,
         attentionState: event.state,
-        lastWakeEvent: event.wakeEvent || prev.lastWakeEvent,
+        lastWakeEvent: event.wakeEvent ? event.wakeEvent : prev.lastWakeEvent,
       }));
 
       onAttentionChange?.(event.state);

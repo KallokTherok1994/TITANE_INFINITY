@@ -14,6 +14,17 @@ use std::sync::Arc;
 use tokio::fs;
 use tokio::sync::RwLock;
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[VaultEngine] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 const VAULT_DIR: &str = "vault/encrypted";
 const CHECKSUM_SUFFIX: &str = ".sha256";
 

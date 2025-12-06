@@ -12,6 +12,17 @@ use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 use once_cell::sync::Lazy;
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[Hypervision] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 // ══════════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════════
@@ -103,7 +114,7 @@ static LAYER_NAMES: [&str; 5] = ["Physical", "Network", "Logic", "Memory", "Secu
 fn collect_metrics() -> SystemMetricsSnapshot {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or(std::time::Duration::from_secs(0))
         .as_millis() as u64;
 
     // Simulated metrics (in production, use sysinfo crate)
@@ -225,7 +236,7 @@ fn detect_anomalies(metrics: &SystemMetricsSnapshot) -> Vec<Anomaly> {
 /// Start HyperVision monitoring
 #[tauri::command]
 pub async fn sc_hypervision_start() -> Result<HyperVisionState, String> {
-    let mut state = HV_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(HV_STATE);
 
     if state.is_monitoring {
         return Err("HyperVision already running".to_string());
@@ -233,7 +244,7 @@ pub async fn sc_hypervision_start() -> Result<HyperVisionState, String> {
 
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or(std::time::Duration::from_secs(0))
         .as_secs();
 
     state.is_monitoring = true;
@@ -253,7 +264,7 @@ pub async fn sc_hypervision_start() -> Result<HyperVisionState, String> {
 /// Stop HyperVision monitoring
 #[tauri::command]
 pub async fn sc_hypervision_stop() -> Result<(), String> {
-    let mut state = HV_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(HV_STATE);
     state.is_monitoring = false;
     state.started_at = None;
 
@@ -265,7 +276,7 @@ pub async fn sc_hypervision_stop() -> Result<(), String> {
 /// Get current state
 #[tauri::command]
 pub async fn sc_hypervision_get_state() -> Result<HyperVisionState, String> {
-    let state = HV_STATE.lock().unwrap();
+    let state = lock_or_recover!(HV_STATE);
 
     Ok(HyperVisionState {
         is_monitoring: state.is_monitoring,
@@ -282,7 +293,7 @@ pub async fn sc_hypervision_get_metrics() -> Result<SystemMetricsSnapshot, Strin
     let metrics = collect_metrics();
 
     // Store in history
-    let mut state = HV_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(HV_STATE);
     if state.metrics_history.len() >= MAX_METRICS_HISTORY {
         state.metrics_history.remove(0);
     }
@@ -303,7 +314,7 @@ pub async fn sc_hypervision_get_metrics() -> Result<SystemMetricsSnapshot, Strin
 /// Get metrics history
 #[tauri::command]
 pub async fn sc_hypervision_get_history(limit: Option<usize>) -> Result<Vec<SystemMetricsSnapshot>, String> {
-    let state = HV_STATE.lock().unwrap();
+    let state = lock_or_recover!(HV_STATE);
     let limit = limit.unwrap_or(100);
 
     let start = if state.metrics_history.len() > limit {
@@ -327,7 +338,7 @@ pub async fn sc_hypervision_get_layers() -> Result<Vec<LayerHealth>, String> {
 pub async fn sc_hypervision_get_anomalies(
     include_resolved: Option<bool>,
 ) -> Result<Vec<Anomaly>, String> {
-    let state = HV_STATE.lock().unwrap();
+    let state = lock_or_recover!(HV_STATE);
     let include = include_resolved.unwrap_or(false);
 
     let anomalies: Vec<Anomaly> = state.anomalies
@@ -342,7 +353,7 @@ pub async fn sc_hypervision_get_anomalies(
 /// Clear anomalies
 #[tauri::command]
 pub async fn sc_hypervision_clear_anomalies() -> Result<(), String> {
-    let mut state = HV_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(HV_STATE);
     state.anomalies.clear();
     Ok(())
 }
@@ -350,14 +361,14 @@ pub async fn sc_hypervision_clear_anomalies() -> Result<(), String> {
 /// Resolve an anomaly
 #[tauri::command]
 pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), String> {
-    let mut state = HV_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(HV_STATE);
 
     if let Some(anomaly) = state.anomalies.iter_mut().find(|a| a.id == anomaly_id) {
         anomaly.auto_resolved = true;
         anomaly.resolved_at = Some(
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
-                .unwrap()
+                .unwrap_or(std::time::Duration::from_secs(0))
                 .as_secs()
         );
         Ok(())

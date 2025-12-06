@@ -6,6 +6,17 @@ use serde::{Deserialize, Serialize};
 use std::path::Path;
 use walkdir::WalkDir;
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[Scanner] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 // ══════════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════════
@@ -105,7 +116,7 @@ impl IntrospectionScanner {
 
         for entry in WalkDir::new(&src_path).into_iter().filter_map(|e| e.ok()) {
             if entry.path().extension().and_then(|s| s.to_str()) == Some("rs") {
-                self.scan_rust_file(entry.path().to_str().unwrap()).await?;
+                self.scan_rust_file(entry.path().to_str().unwrap_or("")).await?;
                 count += 1;
             }
         }
@@ -153,7 +164,7 @@ impl IntrospectionScanner {
         for entry in WalkDir::new(&src_path).into_iter().filter_map(|e| e.ok()) {
             let ext = entry.path().extension().and_then(|s| s.to_str());
             if ext == Some("ts") || ext == Some("tsx") {
-                self.scan_typescript_file(entry.path().to_str().unwrap())
+                self.scan_typescript_file(entry.path().to_str().unwrap_or(""))
                     .await?;
                 count += 1;
             }

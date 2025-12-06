@@ -241,6 +241,11 @@ export class ExpressionEngine {
         pausePlacement: this.mapToPausePlacement(cognitive.precision, attention.cognitiveLoad),
         emotionalColoring: emotive.intensity,
       },
+      emotionalState: {
+        valence: (signature.warmth - 0.5) * 2,
+        activation: signature.energy,
+        dominance: signature.tone,
+      },
     };
 
     // Halo mapping
@@ -610,6 +615,11 @@ export class ExpressionEngine {
             rhythmicFlow: 0.6,
             pausePlacement: 0.5,
             emotionalColoring: 0.5,
+          },
+          emotionalState: {
+            valence: 0,
+            activation: 0.5,
+            dominance: 0.5,
           },
         },
         halo: {

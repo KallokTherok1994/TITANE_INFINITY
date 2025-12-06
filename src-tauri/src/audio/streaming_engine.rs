@@ -12,10 +12,20 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::time::{Duration, Instant};
 
 #[cfg(feature = "audio-capture")]
-use cpal::{
+use cpal::
     traits::{DeviceTrait, HostTrait, StreamTrait},
     Stream, StreamConfig,
 };
+
+// Helper macro for safe mutex access with recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::warn!("Mutex poisoned, recovering: {}", poisoned);
+            poisoned.into_inner()
+        })
+    };
+}
 
 /// Audio streaming state machine
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -224,7 +234,16 @@ impl StreamingAudioEngine {
 
         self.stream = Some(stream);
         self.is_active.store(true, Ordering::Release);
-        *self.state.lock().unwrap() = StreamingState::Listening;
+        
+        // Update state with error recovery
+        if let Ok(mut state) = self.state.lock() {
+            *state = StreamingState::Listening;
+        } else {
+            log::error!("[StreamingEngine] ⚠️ State mutex poisoned, recovering");
+            // Mutex poisoned but stream is still active - recover
+            let recovered = self.state.lock().unwrap_or_else(|e| e.into_inner());
+            *recovered = StreamingState::Listening;
+        }
 
         log::info!("[StreamingEngine] ✅ Stream started successfully");
         Ok(())
@@ -266,28 +285,28 @@ impl StreamingAudioEngine {
         };
 
         // State machine transitions
-        let current_state = *state.lock().unwrap();
+        let current_state = *lock_or_recover!(state);
 
         match current_state {
             StreamingState::Listening => {
                 if vad_result.has_speech && vad_result.confidence > 0.7 {
                     log::info!("[StreamingEngine] 🎤 Speech detected, start recording");
-                    *state.lock().unwrap() = StreamingState::Recording;
-                    *speech_start.lock().unwrap() = Some(Instant::now());
-                    *last_speech.lock().unwrap() = Some(Instant::now());
+                    *lock_or_recover!(state) = StreamingState::Recording;
+                    *lock_or_recover!(speech_start) = Some(Instant::now());
+                    *lock_or_recover!(last_speech) = Some(Instant::now());
                 }
             }
             StreamingState::Recording => {
                 if vad_result.has_speech {
                     // Update last speech time
-                    *last_speech.lock().unwrap() = Some(Instant::now());
+                    *lock_or_recover!(last_speech) = Some(Instant::now());
                 } else {
                     // Check silence duration
-                    if let Some(last) = *last_speech.lock().unwrap() {
+                    if let Some(last) = *lock_or_recover!(last_speech) {
                         let silence_duration = last.elapsed().as_millis() as u32;
                         if silence_duration > silence_duration_ms {
                             log::info!("[StreamingEngine] 🔇 Silence detected, processing...");
-                            *state.lock().unwrap() = StreamingState::Processing;
+                            *lock_or_recover!(state) = StreamingState::Processing;
                         }
                     }
                 }
@@ -314,14 +333,14 @@ impl StreamingAudioEngine {
 
         // Get buffered audio data
         let audio_data = {
-            let mut buf = self.buffer.lock().unwrap();
+            let mut buf = lock_or_recover!(self.buffer);
             let data = buf.read_available();
             buf.clear();
             data
         };
 
         // Calculate duration
-        let duration_ms = if let Some(start) = *self.speech_start_time.lock().unwrap() {
+        let duration_ms = if let Some(start) = *lock_or_recover!(self.speech_start_time) {
             start.elapsed().as_millis() as u64
         } else {
             0
@@ -336,9 +355,9 @@ impl StreamingAudioEngine {
         };
 
         // Reset state
-        *self.state.lock().unwrap() = StreamingState::Idle;
-        *self.speech_start_time.lock().unwrap() = None;
-        *self.last_speech_time.lock().unwrap() = None;
+        *lock_or_recover!(self.state) = StreamingState::Idle;
+        *lock_or_recover!(self.speech_start_time) = None;
+        *lock_or_recover!(self.last_speech_time) = None;
 
         log::info!("[StreamingEngine] ✅ Stream stopped - {} samples, {:.2}s",
             audio_data.len(), duration_ms as f32 / 1000.0);
@@ -354,7 +373,7 @@ impl StreamingAudioEngine {
 
     /// Get current state
     pub fn get_state(&self) -> StreamingState {
-        *self.state.lock().unwrap()
+        *lock_or_recover!(self.state)
     }
 
     /// Check if streaming is active
@@ -364,7 +383,7 @@ impl StreamingAudioEngine {
 
     /// Get buffer stats (for monitoring)
     pub fn get_buffer_stats(&self) -> (usize, usize) {
-        let buf = self.buffer.lock().unwrap();
+        let buf = lock_or_recover!(self.buffer);
         (buf.available_samples(), buf.total_written())
     }
 
@@ -378,8 +397,8 @@ impl StreamingAudioEngine {
         }
 
         self.is_active.store(false, Ordering::Release);
-        self.buffer.lock().unwrap().clear();
-        *self.state.lock().unwrap() = StreamingState::Idle;
+        lock_or_recover!(self.buffer).clear();
+        *lock_or_recover!(self.state) = StreamingState::Idle;
     }
 }
 

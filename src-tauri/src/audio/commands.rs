@@ -470,13 +470,19 @@ pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
     }
 
     // Run Whisper with French language, tiny model for speed
+    let temp_audio_path = temp_audio.to_str()
+        .ok_or_else(|| "Invalid audio path".to_string())?;
+    let output_dir_path = std::env::temp_dir();
+    let output_dir = output_dir_path.to_str()
+        .ok_or_else(|| "Invalid temp directory path".to_string())?;
+    
     let output = Command::new(&whisper_bin)
         .args([
-            temp_audio.to_str().unwrap(),
+            temp_audio_path,
             "--model", "tiny",
             "--language", "fr",
             "--output_format", "txt",
-            "--output_dir", std::env::temp_dir().to_str().unwrap(),
+            "--output_dir", output_dir,
             "--fp16", "False",  // For CPU compatibility
         ])
         .output()
@@ -723,7 +729,8 @@ pub async fn is_recording() -> CommandResult<bool> {
 #[tauri::command]
 pub async fn get_recording_status() -> CommandResult<serde_json::Value> {
     let state = RECORDING_ENGINE.get_state();
-    Ok(serde_json::to_value(state).unwrap())
+    serde_json::to_value(state)
+        .map_err(|e| format!("Failed to serialize state: {}", e))
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1393,9 +1400,16 @@ pub mod whisper_streaming_commands {
         // Start streaming worker
         engine.start_streaming(app_handle, audio_rx);
 
-        // Store engine and sender
-        *WHISPER_ENGINE.lock().unwrap() = Some(engine);
-        *AUDIO_TX.lock().unwrap() = Some(audio_tx);
+        // Store engine and sender with error recovery
+        let mut whisper_guard = WHISPER_ENGINE.lock()
+            .unwrap_or_else(|e| e.into_inner());
+        *whisper_guard = Some(engine);
+        drop(whisper_guard);
+        
+        let mut tx_guard = AUDIO_TX.lock()
+            .unwrap_or_else(|e| e.into_inner());
+        *tx_guard = Some(audio_tx);
+        drop(tx_guard);
 
         log::info!("[WhisperStreaming] ✅ Started");
         Ok(())
@@ -1409,7 +1423,8 @@ pub mod whisper_streaming_commands {
         has_speech: bool,
         vad_confidence: f32,
     ) -> CommandResult<()> {
-        let tx_guard = AUDIO_TX.lock().unwrap();
+        let tx_guard = AUDIO_TX.lock()
+            .map_err(|e| format!("Lock error: {}", e))?;
 
         if let Some(ref tx) = *tx_guard {
             let chunk = crate::audio::AudioChunk {
@@ -1435,14 +1450,21 @@ pub mod whisper_streaming_commands {
         log::info!("[WhisperStreaming] 🛑 Stopping...");
 
         // Drop sender to close channel
-        *AUDIO_TX.lock().unwrap() = None;
-
-        // Reset engine
-        if let Some(ref engine) = *WHISPER_ENGINE.lock().unwrap() {
-            engine.reset();
+        if let Ok(mut tx_guard) = AUDIO_TX.lock() {
+            *tx_guard = None;
         }
 
-        *WHISPER_ENGINE.lock().unwrap() = None;
+        // Reset engine
+        if let Ok(engine_guard) = WHISPER_ENGINE.lock() {
+            if let Some(ref engine) = *engine_guard {
+                engine.reset();
+            }
+        }
+
+        // Clear engine
+        if let Ok(mut engine_guard) = WHISPER_ENGINE.lock() {
+            *engine_guard = None;
+        }
 
         log::info!("[WhisperStreaming] ✅ Stopped");
         Ok(())

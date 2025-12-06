@@ -11,7 +11,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { MCPOrchestrator } from './MCPOrchestrator';
+import { MCPOrchestrator } from '@/services/mcp/MCPOrchestrator';
 import type {
   MCPState,
   Job,
@@ -21,7 +21,7 @@ import type {
   MemoryEntry,
   AISelection,
   ValidatedOutput
-} from './mcp.types';
+} from '@/services/mcp/mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN HOOK

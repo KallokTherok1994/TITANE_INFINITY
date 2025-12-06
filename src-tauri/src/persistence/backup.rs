@@ -6,6 +6,17 @@
 
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
+
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[Backup] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
 // Note: tokio::io traits non utilisés directement, std::io::Write utilisé
 
 // ═══════════════════════════════════════════════════════════════════════════════

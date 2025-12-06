@@ -27,9 +27,16 @@ import {
   PhaseName,
   DecisionLog,
   DebugPanel,
-  ObservabilityEvent,
   TraceExport,
-  ObservabilityConfig
+  ObservabilityConfig,
+  CognitivePhase,
+  CognitiveLogLevel,
+  type CognitiveLogEntry,
+  type CognitiveDecision,
+  type CognitiveSnapshot,
+  type ObservabilityStats,
+  type ICognitiveObservabilityEngine,
+  type ObservabilityEvent,
 } from './cognitiveObservability.types';
 
 /**
