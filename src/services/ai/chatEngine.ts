@@ -31,6 +31,7 @@ import type {
 } from '@services/tauri';
 import { semanticMemoryEngine } from '@/services/memory/semanticMemoryEngine';
 import { consistencyEngine } from '@/services/consistency/consistencyEngine';
+import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 
 type BackendStreamMetadata = {
   provider?: string;
