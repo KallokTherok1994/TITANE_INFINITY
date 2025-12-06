@@ -7,6 +7,17 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[Monitor] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 // ══════════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════════
@@ -84,7 +95,7 @@ impl HyperVisionEngine {
 
                 // Store metrics (keep last 1000)
                 {
-                    let mut history = metrics_history.lock().unwrap();
+                    let mut history = lock_or_recover!(metrics_history);
                     history.push(metrics.clone());
                     if history.len() > 1000 {
                         history.remove(0);
@@ -98,7 +109,7 @@ impl HyperVisionEngine {
                 }
 
                 {
-                    let mut layers = layer_metrics.lock().unwrap();
+                    let mut layers = lock_or_recover!(layer_metrics);
                     for (i, layer) in layer_results {
                         layers.insert(i, layer);
                     }
@@ -106,7 +117,7 @@ impl HyperVisionEngine {
 
                 // Detect anomalies
                 if let Some(anomaly) = Self::detect_anomaly(&metrics).await {
-                    anomalies.lock().unwrap().push(anomaly);
+                    lock_or_recover!(anomalies).push(anomaly);
                 }
             }
         });
@@ -175,12 +186,12 @@ impl HyperVisionEngine {
 
     /// Get current metrics
     pub fn get_current_metrics(&self) -> Option<SystemMetrics> {
-        self.metrics_history.lock().unwrap().last().cloned()
+        lock_or_recover!(self.metrics_history).last().cloned()
     }
 
     /// Get metrics history
     pub fn get_metrics_history(&self, limit: usize) -> Vec<SystemMetrics> {
-        let history = self.metrics_history.lock().unwrap();
+        let history = lock_or_recover!(self.metrics_history);
         let start = if history.len() > limit {
             history.len() - limit
         } else {
@@ -201,7 +212,7 @@ impl HyperVisionEngine {
 
     /// Get anomalies
     pub fn get_anomalies(&self, limit: usize) -> Vec<Anomaly> {
-        let anomalies = self.anomalies.lock().unwrap();
+        let anomalies = lock_or_recover!(self.anomalies);
         let start = if anomalies.len() > limit {
             anomalies.len() - limit
         } else {

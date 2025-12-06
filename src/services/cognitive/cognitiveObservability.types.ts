@@ -28,6 +28,73 @@ export enum CognitivePhase {
 }
 
 /**
+ * Pipeline phase detailed
+ */
+export interface PipelinePhase {
+  name: PhaseName;
+  start_time: number;
+  end_time?: number;
+  duration_ms?: number;
+  success: boolean;
+  error?: string;
+  data?: Record<string, any>;
+}
+
+/**
+ * Phase names
+ */
+export type PhaseName = 
+  | 'input_received'
+  | 'context_loading'
+  | 'memory_retrieval'
+  | 'goal_state_loaded'
+  | 'consistency_check_pre'
+  | 'model_invocation'
+  | 'model_raw_output'
+  | 'consistency_check_post'
+  | 'auto_correction'
+  | 'memory_update'
+  | 'final_output';
+
+/**
+ * Decision log
+ */
+export interface DecisionLog {
+  timestamp: number;
+  type: string;
+  description: string;
+  confidence?: number;
+}
+
+/**
+ * Debug panel data
+ */
+export interface DebugPanel {
+  traces: CognitiveTrace[];
+  current_trace?: CognitiveTrace;
+  snapshot: CognitiveSnapshot;
+}
+
+/**
+ * Trace export format
+ */
+export interface TraceExport {
+  version: string;
+  exported_at: string;
+  traces: CognitiveTrace[];
+}
+
+/**
+ * Observability configuration
+ */
+export interface ObservabilityConfig {
+  enabled: boolean;
+  log_level: CognitiveLogLevel;
+  max_traces: number;
+  cleanup_interval_ms: number;
+}
+
+/**
  * Niveau de log cognitif
  */
 export enum CognitiveLogLevel {
@@ -89,17 +156,28 @@ export interface CognitiveTrace {
   /** Correlation ID (groupe tous les logs) */
   correlation_id: string;
   
+  /** Conversation ID */
+  conversation_id?: string;
+  
+  /** Turn number */
+  turn_number?: number;
+  
   /** Timestamp de début */
   started_at: string;
+  start_time?: number;
   
   /** Timestamp de fin */
   ended_at?: string;
+  end_time?: number;
   
   /** Durée totale (ms) */
   total_duration_ms?: number;
   
   /** Entrées de log ordonnées */
   entries: CognitiveLogEntry[];
+  
+  /** Phases du pipeline */
+  phases?: Array<PipelinePhase>;
   
   /** Résumé des phases */
   phases_summary: Array<{
@@ -114,6 +192,9 @@ export interface CognitiveTrace {
     content: string;
     metadata?: Record<string, any>;
   };
+  
+  /** User message */
+  user_message?: string;
   
   /** Output final */
   output?: {
@@ -151,12 +232,27 @@ export interface CognitiveDecision {
   /** Description */
   description: string;
   
+  /** Decision point */
+  decision_point?: string;
+  
+  /** Chosen option */
+  chosen_option?: string;
+  
+  /** Why */
+  why?: string;
+  
+  /** Confidence */
+  confidence?: number;
+  
   /** Options considérées */
   options?: Array<{
     label: string;
     score?: number;
     selected: boolean;
   }>;
+  
+  /** Alternatives */
+  alternatives?: string[];
   
   /** Raison du choix */
   rationale?: string;

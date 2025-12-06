@@ -20,6 +20,17 @@ use std::sync::Arc;
 use tokio::sync::RwLock;
 use tauri::State;
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[AIChat] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 // Global state for AI Chat system (v15)
 // v24.20: Optimized with RwLock for async operations
 pub struct AIChatState {
@@ -101,7 +112,7 @@ pub async fn ai_query(
     // Security scan with Sentinel (v15 - via CoreCollection)
     let scan_result = {
         let sentinel_adapter = state.core_collection.sentinel();
-        let sentinel = sentinel_adapter.lock().unwrap();
+        let sentinel = lock_or_recover!(sentinel_adapter);
         sentinel.scan_input(&prompt)
     };
 
@@ -118,7 +129,7 @@ pub async fn ai_query(
     // Analyze context with Harmonia (v15 - via CoreCollection)
     let context_analysis = {
         let harmonia_adapter = state.core_collection.harmonia();
-        let harmonia = harmonia_adapter.lock().unwrap();
+        let harmonia = lock_or_recover!(harmonia_adapter);
         harmonia.analyze_context(&prompt)
     };
 
@@ -142,7 +153,7 @@ pub async fn ai_query(
     // Balance response with Harmonia (v15 - via CoreCollection)
     let balanced_response = {
         let harmonia_adapter = state.core_collection.harmonia();
-        let harmonia = harmonia_adapter.lock().unwrap();
+        let harmonia = lock_or_recover!(harmonia_adapter);
         harmonia.balance_response(&response.content, &context_analysis)
     };
 
@@ -389,7 +400,7 @@ pub async fn health_check(state: State<'_, AIChatState>) -> Result<String, Strin
 
     // Run SelfHeal diagnostic
     let diagnostic = {
-        let mut selfheal = state.selfheal.lock().unwrap();
+        let mut selfheal = state.lock_or_recover!(selfheal);
         selfheal.run_diagnostic()
     };
 
@@ -414,12 +425,12 @@ pub async fn get_vad_state(state: State<'_, AIChatState>) -> Result<bool, String
 
 #[tauri::command]
 pub fn get_module_status(state: State<'_, AIChatState>) -> Result<String, String> {
-    let helios = state.helios.lock().unwrap();
-    let nexus = state.nexus.lock().unwrap();
-    let harmonia = state.harmonia.lock().unwrap();
-    let sentinel = state.sentinel.lock().unwrap();
-    let adaptive = state.adaptive.lock().unwrap();
-    let selfheal = state.selfheal.lock().unwrap();
+    let helios = state.lock_or_recover!(helios);
+    let nexus = state.lock_or_recover!(nexus);
+    let harmonia = state.lock_or_recover!(harmonia);
+    let sentinel = state.lock_or_recover!(sentinel);
+    let adaptive = state.lock_or_recover!(adaptive);
+    let selfheal = state.lock_or_recover!(selfheal);
 
     let status = serde_json::json!({
         "modules": [

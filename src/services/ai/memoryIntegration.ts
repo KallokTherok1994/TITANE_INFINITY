@@ -105,7 +105,7 @@ export class MemoryIntegration {
     userMessage: string;
     aiResponse: string;
     mode: string;
-    emotionState?: { valence: number; intensity: number; energy: number };
+    emotionState?: { valence: number; activation: number; dominant_emotion: string };
     context?: Partial<MemoryContext>;
   }): Promise<void> {
     try {

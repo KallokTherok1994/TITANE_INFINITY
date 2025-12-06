@@ -5,6 +5,17 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::net::SocketAddr;
+
+/// Macro for safe mutex locking
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[MeshLayer] Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
 use std::sync::{Arc, Mutex};
 use tokio::net::UdpSocket;
 use tokio::time::{interval, Duration};
@@ -75,7 +86,10 @@ pub struct MeshLayer {
 
 impl MeshLayer {
     pub fn new(node_id: String, role: NodeRole, port: u16) -> Self {
-        let listen_addr = format!("0.0.0.0:{}", port).parse().unwrap();
+        let listen_addr = format!("0.0.0.0:{}", port).parse().unwrap_or_else(|e| {
+            log::error!("[MeshLayer] Parse error: {}, using default 0.0.0.0:9999", e);
+            "0.0.0.0:9999".parse().expect("Hardcoded address should always parse")
+        });
 
         Self {
             node_id,
@@ -106,7 +120,13 @@ impl MeshLayer {
 
     /// Peer discovery via mDNS/broadcast
     async fn start_discovery(&self) {
-        let socket = self.socket.as_ref().unwrap().clone();
+        let socket = match self.socket.as_ref() {
+            Some(s) => s.clone(),
+            None => {
+                log::error!("[MeshLayer] Socket not initialized for discovery");
+                return;
+            }
+        };
         let node_id = self.node_id.clone();
         let peers = self.peers.clone();
 
@@ -120,29 +140,44 @@ impl MeshLayer {
                 let msg = MeshMessage::Discover {
                     node_id: node_id.clone(),
                 };
-                let serialized = serde_json::to_vec(&msg).unwrap();
+                let serialized = match serde_json::to_vec(&msg) {
+                    Ok(s) => s,
+                    Err(e) => {
+                        log::error!("[MeshLayer] Serialization error: {}", e);
+                        continue;
+                    }
+                };
 
                 // Broadcast to local network (255.255.255.255)
-                let broadcast_addr: SocketAddr = "255.255.255.255:9999".parse().unwrap();
+                let broadcast_addr: SocketAddr = match "255.255.255.255:9999".parse() {
+                    Ok(addr) => addr,
+                    Err(e) => {
+                        log::error!("[MeshLayer] Parse error: {}", e);
+                        continue;
+                    }
+                };
                 let _ = socket.send_to(&serialized, broadcast_addr).await;
 
                 // Clean up stale peers (>30s without heartbeat)
                 let now = std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
-                    .unwrap()
-                    .as_secs();
+                    .map(|d| d.as_secs())
+                    .unwrap_or(0);
 
-                peers
-                    .lock()
-                    .unwrap()
-                    .retain(|_, node| now - node.last_seen < 30);
+                lock_or_recover!(peers).retain(|_, node| now - node.last_seen < 30);
             }
         });
     }
 
     /// Heartbeat to keep peers alive
     async fn start_heartbeat(&self) {
-        let socket = self.socket.as_ref().unwrap().clone();
+        let socket = match self.socket.as_ref() {
+            Some(s) => s.clone(),
+            None => {
+                log::error!("[MeshLayer] Socket not initialized for heartbeat");
+                return;
+            }
+        };
         let node_id = self.node_id.clone();
         let peers = self.peers.clone();
 
@@ -154,7 +189,7 @@ impl MeshLayer {
 
                 // Send heartbeat to all known peers
                 let peer_addrs: Vec<SocketAddr> =
-                    peers.lock().unwrap().values().map(|n| n.addr).collect();
+                    lock_or_recover!(peers).values().map(|n| n.addr).collect();
 
                 for addr in peer_addrs {
                     let msg = MeshMessage::Heartbeat {
@@ -162,7 +197,13 @@ impl MeshLayer {
                         health: 100,
                         load: 50,
                     };
-                    let serialized = serde_json::to_vec(&msg).unwrap();
+                    let serialized = match serde_json::to_vec(&msg) {
+                        Ok(s) => s,
+                        Err(e) => {
+                            log::error!("[MeshLayer] Serialization error: {}", e);
+                            continue;
+                        }
+                    };
                     let _ = socket.send_to(&serialized, addr).await;
                 }
             }
@@ -171,13 +212,13 @@ impl MeshLayer {
 
     /// Add peer to cluster
     pub fn add_peer(&self, node_info: NodeInfo) {
-        let mut peers = self.peers.lock().unwrap();
+        let mut peers = lock_or_recover!(self.peers);
         peers.insert(node_info.id.clone(), node_info);
     }
 
     /// Get all peers
     pub fn get_peers(&self) -> Vec<NodeInfo> {
-        self.peers.lock().unwrap().values().cloned().collect()
+        lock_or_recover!(self.peers).values().cloned().collect()
     }
 
     /// Send message to specific peer
@@ -186,7 +227,7 @@ impl MeshLayer {
 
         // Clone peer address before await (drop MutexGuard)
         let peer_addr = {
-            let peers = self.peers.lock().unwrap();
+            let peers = lock_or_recover!(self.peers);
             let peer = peers.get(peer_id).ok_or("Peer not found")?;
             peer.addr
         };
@@ -208,7 +249,7 @@ impl MeshLayer {
 
         // Clone all peer addresses before await (drop MutexGuard)
         let peer_addrs: Vec<_> = {
-            let peers = self.peers.lock().unwrap();
+            let peers = lock_or_recover!(self.peers);
             peers.values().map(|p| p.addr).collect()
         };
 
@@ -224,7 +265,7 @@ impl MeshLayer {
 
     /// Get mesh statistics
     pub fn get_stats(&self) -> MeshStats {
-        let peers = self.peers.lock().unwrap();
+        let peers = lock_or_recover!(self.peers);
 
         MeshStats {
             node_id: self.node_id.clone(),

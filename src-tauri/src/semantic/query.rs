@@ -6,6 +6,17 @@ use crate::semantic::vector_store::{VectorStore, SearchResultKNN};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[SemanticQuery] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 /// Configuration du query engine
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct QueryConfig {

@@ -16,14 +16,14 @@ import type { AIMessage, AIResponse, AIConfig, AIProviderName } from './types';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { PromptContext } from '@/core/prompts';
 import { aiOrchestrator } from './orchestrator';
-import {
-  memoryIntegration,
-  type MemoryContext,
-} from './memoryIntegration';
+import { memoryIntegration } from './memoryIntegration';
+import type { MemoryContext } from './memoryIntegration';
+import type { ProjectSummary, DecisionSummary, KnowledgeEntry, RitualInfo } from '@/services/memory/types';
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { chatValidator } from '../chatValidator';
 import { chatEngineCommands } from '@services/tauri';
+import type { ChatMode } from './chatTypes';
 import type {
   ChatEngineProviderPreference,
   ChatEngineRequestArgs,
@@ -54,14 +54,6 @@ const isDev = import.meta.env.DEV;
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ÉTENDUS + SURVEILLANCE
 // ─────────────────────────────────────────────────────────────────
-
-export type ChatMode =
-  | 'default'           // Mode standard
-  | 'brainstorming'     // Divergence créative
-  | 'synthesis'         // Connexion d'idées
-  | 'planning'          // Structuration & action
-  | 'journal'           // Réflexion personnelle
-  | 'debug_cognitive';  // Analyse charge mentale
 
 export interface ChatEngineConfig {
   mode: ChatMode;
@@ -1329,25 +1321,25 @@ Que souhaites-tu explorer ?`;
       // Projets actifs
       if (memory.activeProjects.length > 0) {
         sources.push('projets');
-        data.projects = memory.activeProjects.map((p) => `[${p.status}] ${p.name} (P${p.priority})`).join(', ');
+        data.projects = memory.activeProjects.map((p: ProjectSummary) => `[${p.status}] ${p.name} (P${p.priority})`).join(', ');
       }
 
       // Décisions récentes
       if (memory.recentDecisions.length > 0) {
         sources.push('decisions');
-        data.decisions = memory.recentDecisions.map((d) => `${d.title}: ${d.outcome}`).join('; ');
+        data.decisions = memory.recentDecisions.map((d: DecisionSummary) => `${d.title}: ${d.outcome}`).join('; ');
       }
 
       // Connaissances
       if (memory.relevantKnowledge.length > 0) {
         sources.push('knowledge');
-        data.knowledge = memory.relevantKnowledge.map((k) => k.topic).join(', ');
+        data.knowledge = memory.relevantKnowledge.map((k: KnowledgeEntry) => k.topic).join(', ');
       }
 
       // Rituels
       if (memory.activeRituals.length > 0) {
         sources.push('rituals');
-        data.rituals = memory.activeRituals.map((r) => r.name).join(', ');
+        data.rituals = memory.activeRituals.map((r: RitualInfo) => r.name).join(', ');
       }
 
       return { sources, data };

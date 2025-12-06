@@ -11,6 +11,16 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::Instant;
 
+/// Macro for safe mutex locking with auto-recovery from poisoned state
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[RecordingEngine] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
 /// Recording configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -103,9 +113,9 @@ impl RecordingEngine {
 
         // ✅ SAFETY: Force reset internal state before starting
         self.is_recording.store(false, Ordering::Release);
-        *self.recording_id.lock().unwrap() = None;
-        *self.start_time.lock().unwrap() = None;
-        *self.output_path.lock().unwrap() = None;
+        *lock_or_recover!(self.recording_id) = None;
+        *lock_or_recover!(self.start_time) = None;
+        *lock_or_recover!(self.output_path) = None;
 
         // Generate unique recording ID
         let recording_id = format!("rec_{}", chrono::Utc::now().timestamp_millis());
@@ -122,7 +132,7 @@ impl RecordingEngine {
                 "-r", &config.sample_rate.to_string(),
                 "-c", &config.channels.to_string(),
                 "-d", &config.max_duration.to_string(),
-                output_path.to_str().unwrap(),
+                output_path.to_str().ok_or("Invalid UTF-8 in output path")?,
             ])
             .stdin(std::process::Stdio::null())
             .stdout(std::process::Stdio::null())
@@ -138,11 +148,11 @@ impl RecordingEngine {
         log::info!("[RecordingEngine] arecord started with PID: {}", pid);
 
         // Update state
-        *self.process.lock().unwrap() = Some(child);
-        *self.recording_id.lock().unwrap() = Some(recording_id.clone());
-        *self.start_time.lock().unwrap() = Some(Instant::now());
-        *self.output_path.lock().unwrap() = Some(output_path);
-        *self.config.lock().unwrap() = config;
+        *lock_or_recover!(self.process) = Some(child);
+        *lock_or_recover!(self.recording_id) = Some(recording_id.clone());
+        *lock_or_recover!(self.start_time) = Some(Instant::now());
+        *lock_or_recover!(self.output_path) = Some(output_path);
+        *lock_or_recover!(self.config) = config;
         self.is_recording.store(true, Ordering::Release);
 
         Ok(recording_id)
@@ -163,13 +173,13 @@ impl RecordingEngine {
         log::info!("[RecordingEngine] Stopping recording...");
 
         // Calculate duration
-        let duration = self.start_time.lock().unwrap()
+        let duration = lock_or_recover!(self.start_time)
             .as_ref()
             .map(|t| t.elapsed().as_secs_f32())
             .unwrap_or(0.0);
 
         // Gracefully terminate arecord (SIGTERM allows file finalization)
-        let mut process_guard = self.process.lock().unwrap();
+        let mut process_guard = lock_or_recover!(self.process);
         if let Some(ref mut child) = *process_guard {
             let pid = child.id();
             log::info!("[RecordingEngine] Sending SIGTERM to PID {}", pid);
@@ -190,7 +200,7 @@ impl RecordingEngine {
         *process_guard = None;
 
         // Get output file
-        let output_path = self.output_path.lock().unwrap().clone();
+        let output_path = lock_or_recover!(self.output_path).clone();
         let file_path_str = output_path.as_ref().and_then(|p| p.to_str().map(String::from));
 
         // Verify file exists and has content
@@ -211,8 +221,8 @@ impl RecordingEngine {
 
         // ✅ SAFETY: Reset state BEFORE returning (guarantee cleanup)
         self.is_recording.store(false, Ordering::Release);
-        *self.recording_id.lock().unwrap() = None;
-        *self.start_time.lock().unwrap() = None;
+        *lock_or_recover!(self.recording_id) = None;
+        *lock_or_recover!(self.start_time) = None;
 
         // TODO: Call ASR (Whisper/Vosk) for transcription
         // For now, return placeholder
@@ -230,7 +240,7 @@ impl RecordingEngine {
         log::info!("[RecordingEngine] Cancelling recording...");
 
         // Kill the process
-        let mut process_guard = self.process.lock().unwrap();
+        let mut process_guard = lock_or_recover!(self.process);
         if let Some(ref mut child) = *process_guard {
             let _ = child.kill();
             let _ = child.wait();
@@ -243,15 +253,15 @@ impl RecordingEngine {
             .output();
 
         // Delete temp file
-        if let Some(ref path) = *self.output_path.lock().unwrap() {
+        if let Some(ref path) = *lock_or_recover!(self.output_path) {
             let _ = std::fs::remove_file(path);
         }
 
         // Reset state
         self.is_recording.store(false, Ordering::Release);
-        *self.recording_id.lock().unwrap() = None;
-        *self.start_time.lock().unwrap() = None;
-        *self.output_path.lock().unwrap() = None;
+        *lock_or_recover!(self.recording_id) = None;
+        *lock_or_recover!(self.start_time) = None;
+        *lock_or_recover!(self.output_path) = None;
 
         log::info!("[RecordingEngine] Recording cancelled successfully");
         Ok(())
@@ -259,19 +269,19 @@ impl RecordingEngine {
 
     /// Get current recording state
     pub fn get_state(&self) -> RecordingState {
-        let duration_ms = self.start_time.lock().unwrap()
+        let duration_ms = lock_or_recover!(self.start_time)
             .as_ref()
             .map(|t| t.elapsed().as_millis() as u64)
             .unwrap_or(0);
 
         RecordingState {
             is_recording: self.is_recording.load(Ordering::Acquire),
-            recording_id: self.recording_id.lock().unwrap().clone(),
-            started_at: self.start_time.lock().unwrap()
+            recording_id: lock_or_recover!(self.recording_id).clone(),
+            started_at: lock_or_recover!(self.start_time)
                 .as_ref()
                 .map(|t| t.elapsed().as_secs()),
             duration_ms,
-            file_path: self.output_path.lock().unwrap()
+            file_path: lock_or_recover!(self.output_path)
                 .as_ref()
                 .and_then(|p| p.to_str().map(String::from)),
         }
@@ -296,10 +306,10 @@ impl RecordingEngine {
 
         // Hard reset all state
         self.is_recording.store(false, Ordering::Release);
-        *self.recording_id.lock().unwrap() = None;
-        *self.start_time.lock().unwrap() = None;
-        *self.output_path.lock().unwrap() = None;
-        *self.process.lock().unwrap() = None;
+        *lock_or_recover!(self.recording_id) = None;
+        *lock_or_recover!(self.start_time) = None;
+        *lock_or_recover!(self.output_path) = None;
+        *lock_or_recover!(self.process) = None;
 
         log::info!("[RecordingEngine] ✅ Force reset complete");
     }

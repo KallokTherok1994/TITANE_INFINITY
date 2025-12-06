@@ -8,6 +8,17 @@
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[Cluster] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 // ══════════════════════════════════════════════════════════════════
 // TYPES (re-export depuis cluster existant si possible)
 // ══════════════════════════════════════════════════════════════════
@@ -76,7 +87,7 @@ static CLUSTER_STATE: Lazy<Arc<Mutex<ClusterState>>> = Lazy::new(|| {
 /// Get current cluster status
 #[tauri::command]
 pub async fn sc_get_cluster_status() -> Result<ClusterStatus, String> {
-    let state = CLUSTER_STATE.lock().unwrap();
+    let state = lock_or_recover!(CLUSTER_STATE);
 
     Ok(ClusterStatus {
         initialized: state.initialized,
@@ -85,7 +96,7 @@ pub async fn sc_get_cluster_status() -> Result<ClusterStatus, String> {
         stats: if state.initialized {
             let now = SystemTime::now()
                 .duration_since(UNIX_EPOCH)
-                .unwrap()
+                .unwrap_or(std::time::Duration::from_secs(0))
                 .as_secs();
 
             Some(ClusterStats {
@@ -106,7 +117,7 @@ pub async fn sc_get_cluster_status() -> Result<ClusterStatus, String> {
 /// Initialize cluster node
 #[tauri::command]
 pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<String, String> {
-    let mut state = CLUSTER_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(CLUSTER_STATE);
 
     if state.initialized {
         return Err("Cluster already initialized".to_string());
@@ -114,7 +125,7 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<String,
 
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or(std::time::Duration::from_secs(0))
         .as_secs();
 
     state.initialized = true;
@@ -133,7 +144,7 @@ pub async fn sc_initialize_cluster(node_id: String, port: u16) -> Result<String,
 /// Get cluster statistics
 #[tauri::command]
 pub async fn sc_get_cluster_stats() -> Result<ClusterStats, String> {
-    let state = CLUSTER_STATE.lock().unwrap();
+    let state = lock_or_recover!(CLUSTER_STATE);
 
     if !state.initialized {
         return Err("Cluster not initialized".to_string());
@@ -141,7 +152,7 @@ pub async fn sc_get_cluster_stats() -> Result<ClusterStats, String> {
 
     let now = SystemTime::now()
         .duration_since(UNIX_EPOCH)
-        .unwrap()
+        .unwrap_or(std::time::Duration::from_secs(0))
         .as_secs();
 
     Ok(ClusterStats {
@@ -158,7 +169,7 @@ pub async fn sc_get_cluster_stats() -> Result<ClusterStats, String> {
 /// Shutdown cluster
 #[tauri::command]
 pub async fn sc_shutdown_cluster() -> Result<(), String> {
-    let mut state = CLUSTER_STATE.lock().unwrap();
+    let mut state = lock_or_recover!(CLUSTER_STATE);
 
     state.initialized = false;
     state.node_id = None;
@@ -173,7 +184,7 @@ pub async fn sc_shutdown_cluster() -> Result<(), String> {
 /// Get list of peers
 #[tauri::command]
 pub async fn sc_get_cluster_peers() -> Result<Vec<NodeInfo>, String> {
-    let state = CLUSTER_STATE.lock().unwrap();
+    let state = lock_or_recover!(CLUSTER_STATE);
 
     if !state.initialized {
         return Ok(Vec::new());

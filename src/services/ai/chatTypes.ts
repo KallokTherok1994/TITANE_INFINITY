@@ -17,7 +17,12 @@ export type ChatMode =
   | 'sentinel-guardian'
   | 'artisan-creator'
   | 'visionary-philosopher'
-  | 'omega-meta';
+  | 'omega-meta'
+  | 'brainstorming'
+  | 'synthesis'
+  | 'planning'
+  | 'journal'
+  | 'debug_cognitive';
 
 export interface ValidationResult {
   isValid: boolean;

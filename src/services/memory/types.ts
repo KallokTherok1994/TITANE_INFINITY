@@ -80,6 +80,10 @@ export interface MemoryLoadConfig {
   includeKnowledge?: boolean;
   includeRituals?: boolean;
   includeTimeline?: boolean;
+  maxProjects?: number;
+  maxDecisions?: number;
+  maxKnowledge?: number;
+  timeWindow?: string;
   timeRange?: {
     start?: string; // ISO date
     end?: string; // ISO date

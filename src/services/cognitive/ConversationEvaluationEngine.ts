@@ -239,7 +239,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
     
     // Penalize overly complex language
     const words = assistant_response.split(/\s+/);
-    const avgWordLength = words.reduce((sum, w) => sum + w.length, 0) / words.length;
+    const avgWordLength = words.reduce((sum: number, w: number) => sum + w.length, 0) / words.length;
     
     // Penalize very long sentences
     const sentences = assistant_response.split(/[.!?]+/);

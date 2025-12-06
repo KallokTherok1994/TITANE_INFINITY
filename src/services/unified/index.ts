@@ -105,7 +105,7 @@ export async function createUnifiedMemory(config?: {
 export async function createCustomUnifiedMemory(
   vectorStore: InstanceType<typeof SQLiteVectorStore>,
   embeddingGenerator: InstanceType<typeof LocalEmbeddingGenerator>,
-  config?: Parameters<typeof UnifiedMemory>[2]
+  config?: UnifiedMemoryConfig
 ): Promise<UnifiedMemory> {
   const memory = new UnifiedMemory(vectorStore, embeddingGenerator, config);
   await memory.initialize();

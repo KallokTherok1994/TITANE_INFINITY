@@ -15,28 +15,19 @@ import DevicesView from './DevicesView';
 import './CloudCenter.css';
 
 // Types (re-exported from types.ts)
+import type {
+  CloudStatus,
+  SyncResult,
+  DeviceIdentity,
+  SyncLogEntry,
+} from './types';
+
 export type {
   CloudStatus,
   SyncResult,
   DeviceIdentity,
   SyncLogEntry,
 } from './types';
-  first_seen: string;
-  last_seen: string;
-  trusted: boolean;
-}
-
-export interface SyncHistoryEntry {
-  timestamp: string;
-  direction: 'Push' | 'Pull' | 'Bidirectional';
-  status: string;
-  remote_device_id: string | null;
-  revision: number;
-  data_size_bytes: number;
-  duration_ms: number;
-  error_message: string | null;
-  conflicts_resolved: number;
-}
 
 type TabId = 'vault' | 'config' | 'logs' | 'devices';
 

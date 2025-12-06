@@ -6,6 +6,17 @@ use crate::commands::ai_chat::AIChatState;
 use serde::{Deserialize, Serialize};
 use tauri::State;
 
+/// Macro for safe mutex locking with auto-recovery
+macro_rules! lock_or_recover {
+    ($mutex:expr) => {
+        $mutex.lock().unwrap_or_else(|poisoned| {
+            log::error!("[MemoryCommands] CRITICAL: Mutex poisoned, recovering...");
+            poisoned.into_inner()
+        })
+    };
+}
+
+
 /// Memory key-value entry v15
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryEntry {
@@ -22,7 +33,7 @@ pub async fn memory_get(
 ) -> Result<Option<String>, String> {
     log::info!("[Memory v15] memory_get: key={}", key);
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
 
     // Check if key exists as conversation metadata
     match storage.list_conversations() {
@@ -56,7 +67,7 @@ pub async fn memory_set(
         0,
     );
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
     storage.save_conversation(&conversation)
         .map_err(|e| format!("Failed to save memory: {}", e))
 }
@@ -68,7 +79,7 @@ pub async fn memory_get_stats(
 ) -> Result<String, String> {
     log::info!("[Memory v15] memory_get_stats");
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
 
     match storage.get_stats() {
         Ok((total_conversations, total_messages)) => {
@@ -91,7 +102,7 @@ pub async fn memory_list_all(
 ) -> Result<String, String> {
     log::info!("[Memory v14] memory_list_all");
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
 
     match storage.list_conversations() {
         Ok(conversations) => {
@@ -109,7 +120,7 @@ pub async fn memory_clear_all(
 ) -> Result<(), String> {
     log::info!("[Memory v14] memory_clear_all");
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
     storage.clear_all()
         .map_err(|e| format!("Failed to clear memory: {}", e))
 }
@@ -122,7 +133,7 @@ pub async fn memory_export_conversation(
 ) -> Result<String, String> {
     log::info!("[Memory v14] memory_export_conversation: id={}", conversation_id);
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
     storage.export_conversation(&conversation_id)
         .map_err(|e| format!("Failed to export: {}", e))
 }
@@ -134,7 +145,7 @@ pub async fn memory_compact(
 ) -> Result<String, String> {
     log::info!("[Memory v14] memory_compact");
 
-    let storage = state.memory_storage.lock().unwrap();
+    let storage = state.lock_or_recover!(memory_storage);
 
     match storage.compact_storage() {
         Ok(results) => {
