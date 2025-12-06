@@ -497,6 +497,13 @@ async fn main() {
     let identity_engine_state = IdentityEngineState::default();
     log::info!("✅ SYSTEM IDENTITY ENGINE v∞: Personality matrix ready");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE IPC PROFILER v19.5.0 (Phase A)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("📊 Initializing IPC PERFORMANCE PROFILER v19.5.0...");
+    let ipc_profiler = Arc::new(titane_infinity::profiling::IPCProfiler::default());
+    log::info!("✅ IPC PROFILER v19.5.0: Performance monitoring ready");
+
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
@@ -522,7 +529,8 @@ async fn main() {
         .manage(voice_engine_state)
         .manage(cloud_sync_state)
         .manage(memory_evolution_state)
-        .manage(identity_engine_state);
+        .manage(identity_engine_state)
+        .manage(ipc_profiler.clone()); // ✅ v19.5.0 IPC Profiler
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     {
         builder = builder.manage(chat_engine_state.clone());
@@ -837,6 +845,13 @@ async fn main() {
         titane_infinity::design_center::reset_ui_theme,
         titane_infinity::design_center::update_ui_token,
         titane_infinity::design_center::export_ui_theme_css,
+
+        // ═══════════════════════════════════════════════════════════════
+        // IPC PROFILER COMMANDS v19.5.0 - Performance Monitoring
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::profiling::ipc_profiler::get_ipc_metrics,
+        titane_infinity::profiling::ipc_profiler::get_ipc_summary,
+        titane_infinity::profiling::ipc_profiler::reset_ipc_metrics,
 
         // ═══════════════════════════════════════════════════════════════
         // AUDIO CENTER COMMANDS v19.2 - TTS, Devices, Tests
