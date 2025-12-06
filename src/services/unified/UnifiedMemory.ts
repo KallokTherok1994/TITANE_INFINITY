@@ -790,17 +790,88 @@ export class UnifiedMemory {
    * Consolidate similar memories
    * 
    * MemoryEngine logic: merge highly similar memories
+   * 
+   * Algorithm:
+   * 1. Get all memories from vector store
+   * 2. Compare each pair using cosine similarity
+   * 3. If similarity > threshold (0.9), merge:
+   *    - Keep higher importance memory
+   *    - Combine tags
+   *    - Update access counts
+   *    - Mark duplicate for deletion
+   * 4. Delete duplicates
    */
   async consolidate(): Promise<number> {
     try {
-      // TODO: Implement consolidation logic
-      // - Find highly similar memories (cosine > 0.9)
-      // - Merge into single entry
-      // - Update related references
-      
+      const threshold = this.config.consolidation.mergeSimilarThreshold;
+      let mergedCount = 0;
+
+      // Get all memories
+      const stats = await this.vectorStore.getStats();
+      if (stats.total < 2) return 0;
+
+      // Get all entries (this is inefficient for large datasets, but OK for <10k memories)
+      const allMemoriesQuery = await this.retrieveMemories({
+        limit: stats.total
+      });
+
+      // Build similarity matrix (only upper triangle)
+      const memories = allMemoriesQuery.map(r => r.entry);
+      const toDelete: string[] = [];
+
+      for (let i = 0; i < memories.length; i++) {
+        if (toDelete.includes(memories[i].id)) continue;
+        if (!memories[i].embedding) continue;
+
+        for (let j = i + 1; j < memories.length; j++) {
+          if (toDelete.includes(memories[j].id)) continue;
+          if (!memories[j].embedding) continue;
+
+          // Calculate similarity
+          const similarity = this.cosineSimilarity(
+            memories[i].embedding!,
+            memories[j].embedding!
+          );
+
+          // If highly similar, merge
+          if (similarity >= threshold) {
+            // Keep the one with higher importance
+            const [keep, discard] = memories[i].importance >= memories[j].importance
+              ? [memories[i], memories[j]]
+              : [memories[j], memories[i]];
+
+            // Update kept memory
+            const combinedTags = [...new Set([...keep.tags, ...discard.tags])];
+            const combinedAccessCount = keep.accessCount + discard.accessCount;
+            const combinedRelatedTo = [
+              ...(keep.relatedTo || []),
+              ...(discard.relatedTo || []),
+              discard.id
+            ];
+
+            await this.vectorStore.update(keep.id, {
+              tags: combinedTags,
+              accessCount: combinedAccessCount,
+              relatedTo: [...new Set(combinedRelatedTo)]
+            });
+
+            // Mark discard for deletion
+            toDelete.push(discard.id);
+            mergedCount++;
+
+            console.log(`[UnifiedMemory] Consolidated: ${discard.id} → ${keep.id} (similarity: ${similarity.toFixed(3)})`);
+          }
+        }
+      }
+
+      // Delete duplicates
+      for (const id of toDelete) {
+        await this.vectorStore.delete(id);
+      }
+
       this.perfStats.lastConsolidation = Date.now();
-      console.log('[UnifiedMemory] Consolidation: not yet implemented');
-      return 0;
+      console.log(`[UnifiedMemory] Consolidation complete: ${mergedCount} memories merged`);
+      return mergedCount;
     } catch (error) {
       console.error('[UnifiedMemory] Consolidation failed:', error);
       return 0;
@@ -808,19 +879,100 @@ export class UnifiedMemory {
   }
 
   /**
+   * Calculate cosine similarity between two vectors
+   */
+  private cosineSimilarity(a: number[], b: number[]): number {
+    if (a.length !== b.length) {
+      throw new Error('Vectors must have same dimensions');
+    }
+
+    let dotProduct = 0;
+    let normA = 0;
+    let normB = 0;
+
+    for (let i = 0; i < a.length; i++) {
+      dotProduct += a[i] * b[i];
+      normA += a[i] * a[i];
+      normB += b[i] * b[i];
+    }
+
+    normA = Math.sqrt(normA);
+    normB = Math.sqrt(normB);
+
+    if (normA === 0 || normB === 0) return 0;
+
+    return dotProduct / (normA * normB);
+  }
+
+  /**
    * Apply decay to memory strength
    * 
    * MemoryEngine logic: memories decay if not accessed
+   * 
+   * Algorithm:
+   * 1. Get all memories
+   * 2. For each memory:
+   *    - Calculate age since last access (days)
+   *    - Apply exponential decay: strength *= exp(-decayRate * ageDays)
+   *    - If strength < 0.1, mark for deletion
+   * 3. Update strengths in batch
+   * 4. Delete weak memories
    */
   async decay(): Promise<number> {
     try {
-      // TODO: Implement decay logic
-      // - Reduce strength for unaccessed memories
-      // - Delete memories with strength < 0.1
-      
-      this.perfStats.lastDecay = Date.now();
-      console.log('[UnifiedMemory] Decay: not yet implemented');
-      return 0;
+      const now = Date.now();
+      const decayRate = this.config.decay.decayRate; // 0.05 per day
+      let decayedCount = 0;
+      const toDelete: string[] = [];
+      const toUpdate: Array<{ id: string; strength: number }> = [];
+
+      // Get all memories
+      const stats = await this.vectorStore.getStats();
+      if (stats.total === 0) return 0;
+
+      const allMemories = await this.retrieveMemories({
+        limit: stats.total
+      });
+
+      // Apply decay to each memory
+      for (const { entry } of allMemories) {
+        // Skip META_MEMORY tier (never decays)
+        if (entry.tier === 'META_MEMORY') continue;
+
+        // Calculate age since last access (in days)
+        const lastAccess = entry.lastUsed || entry.accessed || entry.created;
+        const ageDays = (now - lastAccess) / (24 * 60 * 60 * 1000);
+
+        // Apply exponential decay
+        const decay = Math.exp(-decayRate * ageDays);
+        const newStrength = entry.strength * decay;
+
+        // If strength drops below threshold, mark for deletion
+        if (newStrength < 0.1) {
+          toDelete.push(entry.id);
+          decayedCount++;
+          console.log(`[UnifiedMemory] Decay: ${entry.id} marked for deletion (strength: ${newStrength.toFixed(3)})`);
+        } else if (newStrength !== entry.strength) {
+          // Update strength
+          toUpdate.push({ id: entry.id, strength: newStrength });
+        }
+      }
+
+      // Batch update strengths
+      for (const update of toUpdate) {
+        await this.vectorStore.update(update.id, {
+          strength: update.strength
+        });
+      }
+
+      // Delete weak memories
+      for (const id of toDelete) {
+        await this.vectorStore.delete(id);
+      }
+
+      this.perfStats.lastDecay = now;
+      console.log(`[UnifiedMemory] Decay complete: ${toUpdate.length} updated, ${decayedCount} deleted`);
+      return decayedCount;
     } catch (error) {
       console.error('[UnifiedMemory] Decay failed:', error);
       return 0;
