@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { DeviceIdentity } from './index';
+import { DeviceIdentity } from './types';
 
 interface DevicesResponse {
   local_device: DeviceIdentity | null;
