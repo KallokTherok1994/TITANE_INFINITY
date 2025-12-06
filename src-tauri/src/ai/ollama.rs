@@ -87,6 +87,21 @@ pub struct OllamaStatus {
 
 #[command]
 pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIResponse, String> {
+    // 🔒 SECURITY v19.3: Rate Limiting Check
+    let user_id = "local_ai_user".to_string(); // TODO: Get from session
+    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER.check(&user_id).await {
+        // Log security event
+        let event = crate::security::AuditEvent::new(
+            crate::security::AuditEventType::RateLimitExceeded,
+            user_id.clone(),
+            serde_json::json!({ "model": request.model, "prompt_length": request.prompt.len() }),
+            crate::security::AuditSeverity::Warning,
+        )
+        .with_module("ai_ollama");
+        let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
+        return Err(format!("Rate limit exceeded: {}", e));
+    }
+
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(TIMEOUT_SECONDS))
         .build()

@@ -764,6 +764,17 @@ async fn main() {
         secure_commands::validate_chat_message,
         secure_commands::check_system_integrity,
         // ═══════════════════════════════════════════════════════════════
+        // SECURITY HARDENING v19.3 - Rate Limiting & Audit Logging
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::security::commands::get_rate_limit_stats,
+        titane_infinity::security::commands::reset_rate_limit,
+        titane_infinity::security::commands::cleanup_rate_limiter,
+        titane_infinity::security::commands::test_rate_limit,
+        titane_infinity::security::commands::log_audit_event,
+        titane_infinity::security::audit::get_audit_logs,
+        titane_infinity::security::audit::search_audit_logs_by_type,
+        titane_infinity::security::audit::search_audit_logs_by_severity,
+        // ═══════════════════════════════════════════════════════════════
         // TIME-TRAVEL COMMANDS v∞ - Super-Prompt N
         // ═══════════════════════════════════════════════════════════════
         time_commands::list_snapshots,

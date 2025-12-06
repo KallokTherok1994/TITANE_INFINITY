@@ -84,6 +84,20 @@ pub async fn memory_store(
     metadata: MemoryMetadata,
     state: State<'_, MemoryEngineState>,
 ) -> Result<String, TAPIError> {
+    // 🔒 SECURITY v19.3: Rate Limiting Check
+    let user_id = "memory_user".to_string(); // TODO: Get from session context
+    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER.check(&user_id).await {
+        let event = crate::security::AuditEvent::new(
+            crate::security::AuditEventType::RateLimitExceeded,
+            user_id.clone(),
+            serde_json::json!({ "entry_type": metadata.entry_type, "content_length": content.len() }),
+            crate::security::AuditSeverity::Warning,
+        )
+        .with_module("memory_engine");
+        let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
+        return Err(TAPIError::security(format!("Memory store rate limit: {}", e)));
+    }
+
     let entry_id = uuid::Uuid::new_v4().to_string();
 
     println!(

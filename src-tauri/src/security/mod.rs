@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v17 — SECURITY MODULE
+//   TITANE∞ v19.3 — SECURITY MODULE
+//   Production-grade security: Rate Limiting, Audit Logging, Encryption
 //   Super-Prompts H, I, J, K, L integration + Global Hardening
-//   Hardening, Permissions, Encryption, Validation, Sandbox
 // ═══════════════════════════════════════════════════════════════
 
 pub mod secrets_engine;
@@ -10,15 +10,23 @@ pub mod storage_guard;
 
 // Super-Prompts H, J, K, L modules
 pub mod encryption;
-pub mod hardening; // NEW: Global hardening self-test
+pub mod hardening; // Global hardening self-test
 pub mod permission_guard;
 pub mod permissions;
 pub mod pre_boot_validation;
 pub mod sandbox;
 pub mod validation;
-pub mod vault_engine; // ✅ v∞ J3 - Memory Vault Layer
+pub mod vault_engine; // v∞ J3 - Memory Vault Layer
+
+// v19.3 Production Security
+pub mod rate_limit; // Production-grade rate limiting
+pub mod audit;      // Structured audit logging
+pub mod commands;   // Tauri commands for security
 
 pub use hardening::*; // Export hardening functions
+pub use rate_limit::{RateLimiter, RateLimitConfig, RateLimitStats, GLOBAL_RATE_LIMITER};
+pub use audit::{AuditLogger, AuditEvent, AuditEventType, AuditSeverity, GLOBAL_AUDIT_LOGGER};
+pub use commands::*; // Export security commands
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
