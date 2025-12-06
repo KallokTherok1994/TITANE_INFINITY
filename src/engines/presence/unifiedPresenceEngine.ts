@@ -355,7 +355,7 @@ class UnifiedPresenceEngine {
       coaching: 40,        // Moyen-lent
       neutral: 50          // Moyen
     };
-    return tempoMap[mode] || 50;
+    return (tempoMap[mode] as number) || 50;
   }
 
   private detectInteractionPattern(): UserContext['interactionPattern'] {
@@ -368,7 +368,7 @@ class UnifiedPresenceEngine {
       coaching: 'create',
       neutral: 'explore'
     };
-    return patternMap[mode] || 'explore';
+    return (patternMap[mode] as UserContext['interactionPattern']) || 'explore';
   }
 
   // ─────────────────────────────────────────────────────────────────────────────

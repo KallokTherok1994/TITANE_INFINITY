@@ -498,9 +498,9 @@ describe('UnifiedMemory', () => {
       expect(context.memories).toBeDefined();
       expect(context.summary).toBeDefined();
       expect(context.metadata).toBeDefined();
-      expect(context.metadata.query).toBe('relevant');
-      expect(context.metadata.totalRetrieved).toBeGreaterThanOrEqual(0);
-      expect(context.metadata.retrievalTimeMs).toBeGreaterThanOrEqual(0);
+      expect(context.metadata?.query).toBe('relevant');
+      expect(context.metadata?.totalRetrieved).toBeGreaterThanOrEqual(0);
+      expect(context.metadata?.retrievalTimeMs).toBeGreaterThanOrEqual(0);
     });
   });
   

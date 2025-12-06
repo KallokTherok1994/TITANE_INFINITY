@@ -168,14 +168,17 @@ export class UnifiedOrchestrator {
     
     if (!strategy) {
       // Try to load strategy if not yet loaded
-      strategy = await this.loadStrategy(type);
-      if (strategy) {
+      const loadedStrategy = await this.loadStrategy(type);
+      if (loadedStrategy) {
+        strategy = loadedStrategy;
         this.strategies.set(type, strategy);
+      } else {
+        return null;
       }
     }
 
     // Initialize strategy if lazy-loaded
-    if (strategy && !strategy.isInitialized()) {
+    if (strategy && !strategy.isInitialized?.()) {
       await strategy.initialize();
     }
 

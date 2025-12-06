@@ -16,23 +16,25 @@ import type {
   MCPOperations,
   MCPPersona,
   Job,
-  JobType,
-  JobStatus,
-  JobPriority,
   SystemHealthCheck,
   CoreScanResult,
-  CognitiveCore,
-  FundamentalLaw,
   LawViolation,
   MemoryEntry,
-  MemoryTier,
   MemoryOperations,
   AIModel,
-  AIModelType,
   AISelection,
   ValidatedOutput,
-  OutputCriteria,
-  MCPBehaviorTrait
+  OutputCriteria
+} from './mcp.types';
+import {
+  MCPBehaviorTrait,
+  JobStatus,
+  CognitiveCore,
+  FundamentalLaw,
+  AIModelType,
+  JobType,
+  JobPriority,
+  MemoryTier
 } from './mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -516,7 +518,7 @@ class MCPOrchestratorClass implements MCPOperations {
 
     // Check for rapid changes
     const recentJobs = this.state.jobs.completed.filter(
-      j => Date.now() - j.completedAt! < 60000 // Last minute
+      j => (j as any).completedAt && Date.now() - (j as any).completedAt < 60000 // Last minute
     );
 
     if (recentJobs.length > 20) {
@@ -1088,11 +1090,11 @@ class MCPOrchestratorClass implements MCPOperations {
     };
   }
 
-  private evaluateOutput<T>(output: T): OutputCriteria {
+  private evaluateOutput<T>(output: T): OutputCriteria & { score: number } {
     // Simplified output evaluation
     const outputStr = JSON.stringify(output);
 
-    return {
+    const criteria = {
       isSimple: outputStr.length < 5000,
       isClear: true, // TODO: Implement clarity check
       isCoherent: true, // TODO: Implement coherence check
@@ -1101,6 +1103,11 @@ class MCPOrchestratorClass implements MCPOperations {
       isUseful: true, // TODO: Implement usefulness check
       hasZeroOverload: outputStr.length < 10000
     };
+
+    // Calculate score based on criteria
+    const score = Object.values(criteria).filter(Boolean).length / Object.values(criteria).length;
+
+    return { ...criteria, score };
   }
 
   private findSimilarJobs(jobs: Job[]): Job[] {

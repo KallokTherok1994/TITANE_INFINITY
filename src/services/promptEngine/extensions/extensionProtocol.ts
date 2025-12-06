@@ -517,25 +517,25 @@ export abstract class BasePromptExtension implements IPromptExtension {
   }
 
   async initialize(): Promise<void> {
-    console.log(`[Extension:${this.metadata.id}] Initializing...`);
+    console.log(`[Extension:${this.metadata?.id}] Initializing...`);
     this.state = 'registered';
   }
 
   async activate(): Promise<void> {
     if (this.state === 'error') {
-      throw new Error(`Cannot activate extension in error state: ${this.metadata.id}`);
+      throw new Error(`Cannot activate extension in error state: ${this.metadata?.id}`);
     }
-    console.log(`[Extension:${this.metadata.id}] Activating...`);
+    console.log(`[Extension:${this.metadata?.id}] Activating...`);
     this.state = 'active';
   }
 
   async deactivate(): Promise<void> {
-    console.log(`[Extension:${this.metadata.id}] Deactivating...`);
+    console.log(`[Extension:${this.metadata?.id}] Deactivating...`);
     this.state = 'disabled';
   }
 
   async dispose(): Promise<void> {
-    console.log(`[Extension:${this.metadata.id}] Disposing...`);
+    console.log(`[Extension:${this.metadata?.id}] Disposing...`);
     this.state = 'unloaded';
   }
 
@@ -634,15 +634,15 @@ export class ExtensionRegistry implements IExtensionRegistry {
   // ─────────────────────────────────────────────────────────────────────────
 
   async register<T extends IPromptExtension>(extension: T): Promise<void> {
-    const id = extension.metadata.id;
+    const id = extension.metadata?.id;
 
     if (this.extensions.has(id)) {
       throw new Error(`Extension already registered: ${id}`);
     }
 
     // Check dependencies
-    if (extension.metadata.dependencies) {
-      for (const dep of extension.metadata.dependencies) {
+    if (extension.metadata?.dependencies) {
+      for (const dep of extension.metadata?.dependencies) {
         if (!this.extensions.has(dep)) {
           throw new Error(`Missing dependency: ${dep} for extension: ${id}`);
         }
@@ -682,7 +682,7 @@ export class ExtensionRegistry implements IExtensionRegistry {
   }
 
   getByType<T extends IPromptExtension>(type: ExtensionType): T[] {
-    return this.getAll().filter((ext) => ext.metadata.type === type) as T[];
+    return this.getAll().filter((ext) => ext.metadata?.type === type) as T[];
   }
 
   getActive(): IPromptExtension[] {
@@ -699,10 +699,10 @@ export class ExtensionRegistry implements IExtensionRegistry {
     for (const extension of sorted) {
       try {
         await extension.activate();
-        this.emit('activated', extension.metadata.id);
+        this.emit('activated', extension.metadata?.id);
       } catch (error) {
-        console.error(`[ExtensionRegistry] Failed to activate: ${extension.metadata.id}`, error);
-        this.emit('error', extension.metadata.id, { error });
+        console.error(`[ExtensionRegistry] Failed to activate: ${extension.metadata?.id}`, error);
+        this.emit('error', extension.metadata?.id, { error });
       }
     }
   }
@@ -713,10 +713,10 @@ export class ExtensionRegistry implements IExtensionRegistry {
     for (const extension of sorted) {
       try {
         await extension.deactivate();
-        this.emit('deactivated', extension.metadata.id);
+        this.emit('deactivated', extension.metadata?.id);
       } catch (error) {
         console.error(
-          `[ExtensionRegistry] Failed to deactivate: ${extension.metadata.id}`,
+          `[ExtensionRegistry] Failed to deactivate: ${extension.metadata?.id}`,
           error
         );
       }
@@ -769,9 +769,9 @@ export class ExtensionRegistry implements IExtensionRegistry {
       this.getAll().map(async (ext) => {
         try {
           const healthy = await ext.healthCheck();
-          results.set(ext.metadata.id, healthy);
+          results.set(ext.metadata?.id, healthy);
         } catch {
-          results.set(ext.metadata.id, false);
+          results.set(ext.metadata?.id, false);
         }
       })
     );
@@ -782,7 +782,7 @@ export class ExtensionRegistry implements IExtensionRegistry {
   getStats(): Map<string, ExtensionStats> {
     const stats = new Map<string, ExtensionStats>();
     this.getAll().forEach((ext) => {
-      stats.set(ext.metadata.id, ext.getStats());
+      stats.set(ext.metadata?.id, ext.getStats());
     });
     return stats;
   }

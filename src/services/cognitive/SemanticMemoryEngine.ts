@@ -137,7 +137,7 @@ export class SemanticMemoryEngine {
       source: params.source,
       tags: params.tags || [],
       embedding,
-      importance: params.importance || MemoryImportance.MEDIUM,
+      importance: params.importance || 0.5, // MemoryImportance.MEDIUM value
       created_at: new Date().toISOString(),
       access_count: 0,
       confidence: 0.9,
@@ -215,7 +215,7 @@ export class SemanticMemoryEngine {
         data: {
           query: query.text,
           count: filteredResults.length,
-          avg_score: context.metadata.avg_score
+          avg_score: context.metadata?.avg_score
         }
       });
 

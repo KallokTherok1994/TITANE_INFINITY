@@ -200,7 +200,7 @@ class ChatValidator {
     const lower = response.toLowerCase();
 
     // Patterns attendus par mode
-    const modePatterns: Record<ChatMode, string[]> = {
+    const modePatterns: Partial<Record<ChatMode, string[]>> = {
       default: ['je', 'tu', 'titane'],
       brainstorming: ['idée', 'variation', 'et si', 'imagine', 'explore'],
       synthesis: ['lien', 'connexion', 'synthèse', 'unifie', 'pattern'],
@@ -209,8 +209,8 @@ class ChatValidator {
       debug_cognitive: ['charge', 'surcharge', 'pause', 'simplifier', 'déléguer'],
     };
 
-    const patterns = modePatterns[mode] || [];
-    const foundPatterns = patterns.filter(p => lower.includes(p));
+    const patterns = (modePatterns[mode] || []) as string[];
+    const foundPatterns = patterns.filter((p: string) => lower.includes(p));
 
     return Math.min(1, foundPatterns.length / Math.max(patterns.length * 0.3, 1));
   }

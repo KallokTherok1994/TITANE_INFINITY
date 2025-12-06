@@ -300,7 +300,7 @@ export class PromptAssembler {
 
     // Boost selon les tags correspondants
     const intentKeywords = intent.parsed.keywords;
-    const nodeTags = node.metadata.tags;
+    const nodeTags = node.metadata?.tags;
     const matchingTags = nodeTags.filter(tag =>
       intentKeywords.some(kw => tag.toLowerCase().includes(kw.toLowerCase()))
     );
@@ -348,7 +348,7 @@ export class PromptAssembler {
   private buildLayer(layerId: LayerId, nodes: ContextNode[]): ContextLayer {
     const metadata = DEFAULT_LAYER_METADATA[layerId];
 
-    const totalTokens = nodes.reduce((sum, n) => sum + (n.metadata.tokens || 0), 0);
+    const totalTokens = nodes.reduce((sum, n) => sum + (n.metadata?.tokens || 0), 0);
     const avgRelevance = nodes.length > 0
       ? nodes.reduce((sum, n) => sum + n.relevance, 0) / nodes.length
       : 0;

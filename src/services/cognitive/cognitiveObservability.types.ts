@@ -35,6 +35,7 @@ export interface PipelinePhase {
   start_time: number;
   end_time?: number;
   duration_ms?: number;
+  timestamp?: number;
   success: boolean;
   error?: string;
   data?: Record<string, any>;
@@ -46,15 +47,22 @@ export interface PipelinePhase {
 export type PhaseName = 
   | 'input_received'
   | 'context_loading'
+  | 'context_built'
   | 'memory_retrieval'
+  | 'semantic_memory_retrieved'
   | 'goal_state_loaded'
+  | 'facts_loaded'
   | 'consistency_check_pre'
+  | 'consistency_check'
   | 'model_invocation'
+  | 'model_invoked'
   | 'model_raw_output'
+  | 'raw_output'
   | 'consistency_check_post'
   | 'auto_correction'
   | 'memory_update'
-  | 'final_output';
+  | 'final_output'
+  | 'output_sent';
 
 /**
  * Decision log
@@ -70,9 +78,18 @@ export interface DecisionLog {
  * Debug panel data
  */
 export interface DebugPanel {
+  conversation_id?: string;
+  current_turn?: number;
+  memory_panel?: any;
+  goals_panel?: any;
+  consistency_panel?: any;
+  metrics_panel?: any;
+  recent_decisions?: any[];
+  recent_traces?: any[];
   traces: CognitiveTrace[];
   current_trace?: CognitiveTrace;
   snapshot: CognitiveSnapshot;
+  last_updated?: string;
 }
 
 /**
@@ -92,6 +109,13 @@ export interface ObservabilityConfig {
   log_level: CognitiveLogLevel;
   max_traces: number;
   cleanup_interval_ms: number;
+  enable_tracing?: boolean;
+  enable_decision_logging?: boolean;
+  enable_debug_panel?: boolean;
+  trace_retention_hours?: number;
+  max_traces_in_memory?: number;
+  phases_to_trace?: PhaseName[];
+  export_formats?: string[];
 }
 
 /**
@@ -451,6 +475,9 @@ export interface CognitiveLogger {
   /** Nettoyer les anciennes traces */
   cleanup(): Promise<void>;
 }
+
+// Alias pour compatibilité
+export type ICognitiveObservabilityEngine = CognitiveLogger;
 
 /**
  * Événements d'observabilité

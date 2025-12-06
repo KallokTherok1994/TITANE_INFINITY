@@ -205,7 +205,7 @@ export class AdaptiveBridgeV21 {
       Reliability: 'Fiabilité',
       Adaptive: 'Adaptatif',
     };
-    return labels[mode] || mode;
+    return labels[mode] as string || mode;
   }
 
   /**

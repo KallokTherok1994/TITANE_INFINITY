@@ -207,7 +207,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
           for (let i = 0; i < uncachedTexts.length; i++) {
             const startIdx = i * this.config.dimensions;
             const endIdx = startIdx + this.config.dimensions;
-            const embedding = Array.from(output.data.slice(startIdx, endIdx));
+            const embedding = Array.from(output.data?.slice(startIdx, endIdx) || []) as number[];
             const normalizedEmbedding = this.normalizeVector(embedding);
 
             results[uncachedIndices[i]] = normalizedEmbedding;

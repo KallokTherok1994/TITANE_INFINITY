@@ -24,6 +24,8 @@ import { chatModes, type ChatModeConfig } from './chatModes';
 import { chatValidator } from '../chatValidator';
 import { chatEngineCommands } from '@services/tauri';
 import type { ChatMode } from './chatTypes';
+// Re-export for convenience
+export type { ChatMode } from './chatTypes';
 import type {
   ChatEngineProviderPreference,
   ChatEngineRequestArgs,
@@ -278,14 +280,14 @@ class ChatEngineOmega {
 
         if (traceId) {
           await cognitiveOmega.logPhase(traceId, 'context_built', {
-            memory_count: enrichment.metadata.memoryCount,
-            goal_count: enrichment.metadata.goalCount,
-            fact_count: enrichment.metadata.factCount,
+            memory_count: enrichment.metadata?.memoryCount,
+            goal_count: enrichment.metadata?.goalCount,
+            fact_count: enrichment.metadata?.factCount,
             context_length: cognitiveContext.length
           });
         }
 
-        isDev && console.log(`   ✅ Cognitive context enriched (${enrichment.metadata.memoryCount} memories, ${enrichment.metadata.goalCount} goals, ${enrichment.metadata.factCount} facts)`);
+        isDev && console.log(`   ✅ Cognitive context enriched (${enrichment.metadata?.memoryCount} memories, ${enrichment.metadata?.goalCount} goals, ${enrichment.metadata?.factCount} facts)`);
       } catch (error) {
         isDev && console.warn('   ⚠️ Cognitive context enrichment failed, continuing without');
         autoHealed = true;
@@ -434,8 +436,8 @@ class ChatEngineOmega {
               if (traceId) {
                 await cognitiveOmega.logPhase(traceId, 'auto_correction', {
                   applied: true,
-                  correction_type: correctionResult.correction?.correction_type,
-                  confidence: correctionResult.correction?.confidence
+                  correction_type: (correctionResult.correction as any)?.correction_type,
+                  confidence: (correctionResult.correction as any)?.confidence
                 });
               }
               
@@ -466,7 +468,7 @@ class ChatEngineOmega {
             mode: finalConfig.mode,
             userMessage: validatedMessage,
             aiResponse: processedResponse.content,
-            emotionState: finalConfig.emotionState,
+            emotionState: this.convertEmotionState(finalConfig.emotionState),
             context: memoryContext,
           }),
           3000,
@@ -740,7 +742,7 @@ Que souhaites-tu explorer ?`;
             mode: finalConfig.mode,
             userMessage: validatedMessage,
             aiResponse: processedResponse.content,
-            emotionState: finalConfig.emotionState,
+            emotionState: this.convertEmotionState(finalConfig.emotionState),
             context: memoryContext,
           }),
           3000,
@@ -1014,7 +1016,7 @@ Que souhaites-tu explorer ?`;
             mode: finalConfig.mode,
             userMessage: validatedMessage,
             aiResponse: processed.content,
-            emotionState: finalConfig.emotionState,
+            emotionState: this.convertEmotionState(finalConfig.emotionState),
             context: memoryContext,
           }),
           3000,
@@ -1079,9 +1081,9 @@ Que souhaites-tu explorer ?`;
       synthesis: `Synthèse autour de : "${message.substring(0, 50)}". Mode synthesis OMEGA - connexions et insights garantis.`,
 
       debug_cognitive: `Analyse cognitive : "${message.substring(0, 50)}". Mode debug OMEGA - évaluation et optimisation mentale.`
-    };
+    } as Partial<Record<ChatMode, string>>;
 
-    return responses[mode] || responses.default;
+    return responses[mode] as string || responses.default || `Message reçu : "${message.substring(0, 50)}"`;
   }
 
   /**
@@ -1215,7 +1217,7 @@ Que souhaites-tu explorer ?`;
         mode: finalConfig.mode,
         userMessage: validatedMessage,
         aiResponse: finalContent,
-        emotionState: finalConfig.emotionState,
+        emotionState: this.convertEmotionState(finalConfig.emotionState),
         context: memoryContext,
       }).catch(error => {
         isDev && console.warn('[OMEGA STREAM] Memory save failed:', error);
@@ -1321,19 +1323,19 @@ Que souhaites-tu explorer ?`;
       // Projets actifs
       if (memory.activeProjects.length > 0) {
         sources.push('projets');
-        data.projects = memory.activeProjects.map((p: ProjectSummary) => `[${p.status}] ${p.name} (P${p.priority})`).join(', ');
+        data.projects = memory.activeProjects.map((p: ProjectSummary) => `[${p.status}] ${p.title} (P: ${p.priority})`).join(', ');
       }
 
       // Décisions récentes
       if (memory.recentDecisions.length > 0) {
         sources.push('decisions');
-        data.decisions = memory.recentDecisions.map((d: DecisionSummary) => `${d.title}: ${d.outcome}`).join('; ');
+        data.decisions = memory.recentDecisions.map((d: DecisionSummary) => `${d.title} (${d.status})`).join('; ');
       }
 
       // Connaissances
       if (memory.relevantKnowledge.length > 0) {
         sources.push('knowledge');
-        data.knowledge = memory.relevantKnowledge.map((k: KnowledgeEntry) => k.topic).join(', ');
+        data.knowledge = memory.relevantKnowledge.map((k: KnowledgeEntry) => k.title).join(', ');
       }
 
       // Rituels
@@ -1348,6 +1350,35 @@ Que souhaites-tu explorer ?`;
       isDev && console.warn('[OMEGA] formatMemoryContext failed:', error);
       return { sources: [], data: {} };
     }
+  }
+
+  /**
+   * Convertit emotionState vers format Memory Core
+   */
+  private convertEmotionState(
+    emotionState?: { valence: number; intensity: number; energy: number }
+  ): { valence: number; activation: number; dominant_emotion: string } | undefined {
+    if (!emotionState) return undefined;
+    
+    // Map intensity->activation, infer dominant_emotion
+    const activation = emotionState.intensity;
+    let dominant_emotion = 'neutral';
+    
+    if (emotionState.valence > 0.5 && emotionState.energy > 0.5) {
+      dominant_emotion = 'joy';
+    } else if (emotionState.valence < -0.5 && emotionState.energy < 0.5) {
+      dominant_emotion = 'sadness';
+    } else if (emotionState.valence < -0.5 && emotionState.energy > 0.5) {
+      dominant_emotion = 'anger';
+    } else if (emotionState.valence > 0.5 && emotionState.energy < 0.5) {
+      dominant_emotion = 'contentment';
+    }
+    
+    return {
+      valence: emotionState.valence,
+      activation,
+      dominant_emotion,
+    };
   }
 
   /**
@@ -1466,7 +1497,7 @@ Que souhaites-tu explorer ?`;
    */
   private generateSuggestions(mode: ChatMode): string[] {
     try {
-      const baseSuggestions: Record<ChatMode, string[]> = {
+      const baseSuggestions: Partial<Record<ChatMode, string[]>> = {
         default: [
           'Passe en mode Brainstorming OMEGA pour explorer',
           'Active le mode Journal pour réflexion TITANE∞',
@@ -1499,7 +1530,7 @@ Que souhaites-tu explorer ?`;
         ],
       };
 
-      return baseSuggestions[mode] || baseSuggestions.default;
+      return (baseSuggestions[mode] || baseSuggestions.default) as string[];
     } catch (error) {
       // Fallback suggestions sécurisées
       return ['Continuer avec OMEGA', 'Mode sécurisé TITANE∞', 'Diagnostic système'];

@@ -50,7 +50,7 @@ export const aiOrchestrator = {
    */
   async initialize(): Promise<void> {
     const strategy = await getAIStrategy();
-    await strategy.initialize({});
+    await strategy.initialize();
   },
 
   /**
@@ -91,7 +91,7 @@ export const aiOrchestrator = {
         maxTokens: params.maxTokens,
         stream: params.stream
       }
-    }) as string;
+    }) as any;
     
     return result;
   },
@@ -157,7 +157,7 @@ export const omnisOrchestrator = {
    */
   async initialize(): Promise<void> {
     const strategy = await getAIStrategy();
-    await strategy.initialize({});
+    await strategy.initialize();
   },
 
   /**
@@ -200,7 +200,7 @@ export const omnisOrchestrator = {
         stream: params.stream,
         cognitiveMode: true
       }
-    }) as string;
+    }) as any;
     
     return result;
   },
@@ -240,7 +240,7 @@ export const omnisOrchestrator = {
       provider: 'anthropic',
       messages: params.messages,
       options: { cognitiveMode: true }
-    }) as string;
+    }) as any;
     
     return {
       response,
