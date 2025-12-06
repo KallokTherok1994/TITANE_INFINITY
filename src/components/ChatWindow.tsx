@@ -152,21 +152,25 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
             health={connectionStatus.online ? 1 : 0.3}
           />
           <button
+            type="button"
             className={`ui-shield-button ${uiIntegrity?.hasSnapshot ? 'active' : ''}`}
             onClick={handleRestoreHistory}
             disabled={!uiIntegrity?.hasSnapshot}
             title={uiIntegrity?.hasSnapshot ? 'Restaurer la dernière session stable' : 'Aucun instantané disponible'}
-            aria-label="Restaurer l\'historique sécurisé"
+            aria-label="Restaurer l'historique sécurisé"
           >
-            🛡️
+            <span aria-hidden="true">🛡️</span>
           </button>
           {onVoiceModeToggle && (
             <button
+              type="button"
               className={`voice-mode-toggle ${voiceModeActive ? 'active' : ''}`}
               onClick={onVoiceModeToggle}
-              title="Activer/Désactiver le Mode Vocal"
+              title={voiceModeActive ? 'Désactiver mode vocal' : 'Activer mode vocal'}
+              aria-label={voiceModeActive ? 'Désactiver mode vocal' : 'Activer mode vocal'}
+              aria-pressed={voiceModeActive}
             >
-              🎤
+              <span aria-hidden="true">🎤</span>
             </button>
           )}
         </div>
@@ -178,9 +182,16 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
         messagesCount={messages.length}
       />
 
-      <div className="chat-messages">
+      <div 
+        className="chat-messages"
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+        aria-relevant="additions"
+        aria-label="Historique de conversation"
+      >
         {uiIntegrity?.preventedResets ? (
-          <div className="ui-shield-banner">
+          <div className="ui-shield-banner" role="status" aria-label="UI Shield actif">
             <span className="ui-shield-label">UI Shield actif</span>
             <span className="ui-shield-value">
               {uiIntegrity.preventedResets} blocage(s) évité(s) • Version {uiIntegrity.version}
@@ -189,11 +200,12 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
         ) : null}
 
         {messages.length === 0 && (
-          <div className="chat-welcome">
+          <div className="chat-welcome" role="region" aria-label="Message de bienvenue">
             <h3>Bienvenue dans TITANE∞</h3>
             <p>
               Chat IA hybride avec Gemini & Ollama
               <br />
+              <span className="sr-only">Mode actuel: </span>
               Mode {currentMode} actif • Mémoire par mode • TTS intégré
             </p>
           </div>
@@ -215,9 +227,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
           ))}
 
         {isLoading && (
-          <div className="typing-indicator">
+          <div 
+            className="typing-indicator"
+            role="status"
+            aria-live="polite"
+            aria-label="TITANE est en train de réfléchir"
+          >
             <div className="typing-indicator-label">TITANE réfléchit...</div>
-            <div className="typing-indicator-dots">
+            <div className="typing-indicator-dots" aria-hidden="true">
               <span></span>
               <span></span>
               <span></span>
@@ -226,7 +243,11 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(({
         )}
 
         {error && (
-          <div className="chat-error">
+          <div 
+            className="chat-error"
+            role="alert"
+            aria-live="assertive"
+          >
             <strong>Erreur:</strong> {error}
           </div>
         )}
@@ -277,14 +298,21 @@ Que peux-tu en dire?`
 
       <div className="chat-input-container">
         <button
+          type="button"
           className="file-import-button"
           onClick={() => setShowFileImport(!showFileImport)}
           disabled={isLoading}
-          title="Importer un fichier"
+          title={showFileImport ? 'Fermer import fichier' : 'Importer un fichier'}
+          aria-label="Importer un fichier"
+          aria-expanded={showFileImport}
         >
-          📎
+          <span aria-hidden="true">📎</span>
         </button>
+        <label htmlFor="chat-window-textarea" className="sr-only">
+          Message à envoyer à TITANE
+        </label>
         <textarea
+          id="chat-window-textarea"
           ref={textareaRef}
           className="chat-input"
           value={input}
@@ -293,13 +321,19 @@ Que peux-tu en dire?`
           placeholder="Posez votre question... (Shift+Enter pour nouvelle ligne)"
           rows={1}
           disabled={isLoading}
+          aria-label="Message à envoyer"
+          aria-invalid={!!error}
         />
         <button
+          type="submit"
           className="send-button"
           onClick={handleSend}
           disabled={!input.trim() || isLoading}
+          aria-label={isLoading ? 'Envoi en cours' : 'Envoyer le message'}
+          aria-busy={isLoading}
+          title="Envoyer (Enter)"
         >
-          {isLoading ? '⏳' : '📨'}
+          <span aria-hidden="true">{isLoading ? '⏳' : '📨'}</span>
         </button>
       </div>
     </div>
