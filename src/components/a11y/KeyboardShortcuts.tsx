@@ -4,7 +4,7 @@
  * Gestion centralisée des raccourcis clavier pour l'accessibilité
  */
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useState, useRef } from 'react'
 
 export interface KeyboardShortcut {
   key: string
@@ -106,16 +106,15 @@ export const GLOBAL_SHORTCUTS: KeyboardShortcut[] = [
 /**
  * Component pour afficher l'aide des raccourcis clavier
  */
-import React, { useState } from 'react'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Card, CardContent } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+} from '../ui/dialog'
+import { Card, CardContent } from '../ui/card'
+import { Badge } from '../ui/badge'
 import { Keyboard } from 'lucide-react'
 
 interface ShortcutsHelpProps {
@@ -249,7 +248,7 @@ export function KeyboardShortcutsProvider({
  * Hook pour focus management (accessibilité)
  */
 export function useFocusTrap(enabled: boolean = true) {
-  const ref = React.useRef<HTMLElement>(null)
+  const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
     if (!enabled || !ref.current) return
@@ -278,11 +277,11 @@ export function useFocusTrap(enabled: boolean = true) {
       }
     }
 
-    element.addEventListener('keydown', handleTab as any)
+    element.addEventListener('keydown', handleTab as EventListener)
     firstElement?.focus()
 
     return () => {
-      element.removeEventListener('keydown', handleTab as any)
+      element.removeEventListener('keydown', handleTab as EventListener)
     }
   }, [enabled])
 

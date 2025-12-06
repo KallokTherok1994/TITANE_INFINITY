@@ -8,7 +8,7 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
 try {
-  // @ts-ignore - Import dynamique Tauri
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   invoke = require('@tauri-apps/api/tauri').invoke;
 } catch {
   invoke = async () => { throw new Error('Tauri not available'); };
