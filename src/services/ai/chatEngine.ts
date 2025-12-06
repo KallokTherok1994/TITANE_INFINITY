@@ -218,6 +218,21 @@ class ChatEngineOmega {
 
       isDev && console.log(`   ✅ Validated (${validatedMessage.length} chars)`);
 
+      // Generate or retrieve conversation ID
+      const conversation_id = this.getConversationId(finalConfig.mode) || 
+                              `conv_${finalConfig.mode}_${Date.now()}`;
+      this.setConversationId(finalConfig.mode, conversation_id);
+
+      // Start observability trace
+      const turnNumber = history.filter(m => m.role === 'user').length + 1;
+      let traceId: string | undefined;
+      try {
+        traceId = await cognitiveOmega.startTrace(conversation_id, turnNumber, validatedMessage);
+        isDev && console.log(`   🔍 Trace started: ${traceId}`);
+      } catch (error) {
+        isDev && console.warn('   ⚠️ Failed to start trace (non-blocking)');
+      }
+
       // ═══ PHASE 1.2: CONTEXTE MEMORY CORE SÉCURISÉ ═══
       pipelineSteps.push("context-loading");
       isDev && console.log('🧠 Step 1.2: Loading Memory Core context...');
@@ -251,52 +266,36 @@ class ChatEngineOmega {
       pipelineSteps.push("prompt-building");
       isDev && console.log(`🎨 Step 1.3: Building OMEGA prompt for mode "${finalConfig.mode}"...`);
 
-      // ═══ PHASE 1.3.1: RETRIEVAL MÉMOIRE SÉMANTIQUE ═══
-      pipelineSteps.push("semantic-memory-retrieval");
-      isDev && console.log('📚 Step 1.3.1: Retrieving semantic memories...');
+      // ═══ PHASE 1.3.2: COGNITIVE CONTEXT ENRICHMENT (v∞.42) ═══
+      pipelineSteps.push("cognitive-context-enrichment");
+      isDev && console.log('🧠 Step 1.3.2: Enriching context with cognitive engines v∞.42...');
 
-      let semanticContext = '';
+      let cognitiveContext = '';
       try {
-        const relevantMemories = await this.withTimeout(
-          semanticMemoryEngine.retrieve(validatedMessage, {
-            topK: 3, // Top 3 mémoires pertinentes
-            mode: finalConfig.mode,
-            minImportance: 0.4
-          }),
-          2000, // 2s timeout
-          'Semantic memory retrieval timeout'
+        const enrichment = await this.withTimeout(
+          cognitiveOmega.enrichContext(
+            validatedMessage,
+            conversation_id,
+            finalConfig.mode
+          ),
+          3000,
+          'Cognitive context enrichment timeout'
         );
 
-        if (relevantMemories.length > 0) {
-          semanticContext = semanticMemoryEngine.injectMemoriesInPrompt(relevantMemories, 800);
-          isDev && console.log(`   ✅ ${relevantMemories.length} semantic memories retrieved (avg relevance: ${(relevantMemories.reduce((sum, r) => sum + r.relevance, 0) / relevantMemories.length * 100).toFixed(0)}%)`);
-        } else {
-          isDev && console.log('   ℹ️ No relevant semantic memories found');
+        cognitiveContext = enrichment.combined;
+
+        if (traceId) {
+          await cognitiveOmega.logPhase(traceId, 'context_built', {
+            memory_count: enrichment.metadata.memoryCount,
+            goal_count: enrichment.metadata.goalCount,
+            fact_count: enrichment.metadata.factCount,
+            context_length: cognitiveContext.length
+          });
         }
+
+        isDev && console.log(`   ✅ Cognitive context enriched (${enrichment.metadata.memoryCount} memories, ${enrichment.metadata.goalCount} goals, ${enrichment.metadata.factCount} facts)`);
       } catch (error) {
-        isDev && console.warn('   ⚠️ Semantic memory retrieval failed, continuing without');
-        autoHealed = true;
-      }
-
-      // ═══ PHASE 1.3.2: CONSISTENCY CONTEXT (v∞.40) ═══
-      pipelineSteps.push("consistency-context-retrieval");
-      isDev && console.log('🔍 Step 1.3.2: Retrieving consistency context (goals & facts)...');
-
-      let consistencyContext = '';
-      try {
-        consistencyContext = await this.withTimeout(
-          Promise.resolve(consistencyEngine.generateContextPrompt(500)),
-          1000,
-          'Consistency context timeout'
-        );
-
-        if (consistencyContext.trim().length > 0) {
-          isDev && console.log(`   ✅ Consistency context retrieved (${consistencyContext.length} chars)`);
-        } else {
-          isDev && console.log('   ℹ️ No consistency context available');
-        }
-      } catch (error) {
-        isDev && console.warn('   ⚠️ Consistency context retrieval failed, continuing without');
+        isDev && console.warn('   ⚠️ Cognitive context enrichment failed, continuing without');
         autoHealed = true;
       }
 
@@ -308,12 +307,12 @@ class ChatEngineOmega {
         memory: context.sources.length > 0 ? context : undefined,
       };
 
-      // Build system prompt avec semantic + consistency context
-      let systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext, semanticContext);
+      // Build system prompt with cognitive context
+      let systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext, '');
 
-      // Inject consistency context si disponible
-      if (consistencyContext.trim().length > 0) {
-        systemPrompt = `${systemPrompt}\n\n${consistencyContext}`;
+      // Inject cognitive context (memories + goals + facts)
+      if (cognitiveContext.trim().length > 0) {
+        systemPrompt = `${systemPrompt}\n\n${cognitiveContext}`;
       }
 
       const backendResponse = await this.tryBackendPipeline({
@@ -392,36 +391,67 @@ class ChatEngineOmega {
         }
       }
 
-      // ═══ PHASE 1.5.1: CONSISTENCY CHECK (v∞.40) ═══
+      // ═══ PHASE 1.5.1: CONSISTENCY CHECK (v∞.42) ═══
       pipelineSteps.push("consistency-check");
-      isDev && console.log('🔍 Step 1.5.1: Checking consistency (goals & facts)...');
+      isDev && console.log('🔍 Step 1.5.1: Checking consistency with cognitive engine v∞.42...');
 
       try {
-        const consistencyCheck = await this.withTimeout(
-          Promise.resolve(consistencyEngine.checkResponseConsistency(response.content, finalConfig.mode)),
+        const consistencyResult = await this.withTimeout(
+          cognitiveOmega.checkConsistency(
+            conversation_id,
+            response.content,
+            {
+              userMessage: validatedMessage,
+              mode: finalConfig.mode
+            }
+          ),
           2000,
           'Consistency check timeout'
         );
 
-        if (!consistencyCheck.isConsistent) {
-          isDev && console.log(`   ⚠️ Consistency issues detected: ${consistencyCheck.contradictions.length} contradictions`);
+        if (traceId) {
+          await cognitiveOmega.logPhase(traceId, 'consistency_check', {
+            is_consistent: consistencyResult.isConsistent,
+            violations_count: consistencyResult.violations.length,
+            consistency_score: consistencyResult.consistencyScore,
+            should_correct: consistencyResult.shouldCorrect
+          });
+        }
 
-          consistencyCheck.contradictions.forEach((c, idx) => {
-            isDev && console.log(`      ${idx + 1}. [${c.severity}] ${c.explanation}`);
+        if (!consistencyResult.isConsistent) {
+          isDev && console.log(`   ⚠️ ${consistencyResult.violations.length} consistency violations detected`);
+          
+          consistencyResult.violations.forEach((v, idx) => {
+            isDev && console.log(`      ${idx + 1}. [${v.severity}] ${v.type}: ${v.description}`);
           });
 
-          // Auto-correct si activé
-          if (finalConfig.omegaConfig?.enableAutoHeal) {
-            isDev && console.log('   🔄 Auto-correcting response for consistency...');
-            const corrected = consistencyEngine.autoCorrectResponse(response.content, consistencyCheck);
-            if (corrected !== response.content) {
-              response.content = corrected;
+          // Auto-correct if high/critical violations
+          if (consistencyResult.shouldCorrect && finalConfig.omegaConfig?.enableAutoHeal) {
+            isDev && console.log('   🔄 Applying auto-correction...');
+            
+            const correctionResult = await cognitiveOmega.autoCorrect(
+              conversation_id,
+              response.content,
+              consistencyResult.violations
+            );
+
+            if (correctionResult.corrected) {
+              response.content = correctionResult.correctedResponse;
               autoHealed = true;
-              isDev && console.log('   ✅ Response corrected for consistency');
+              
+              if (traceId) {
+                await cognitiveOmega.logPhase(traceId, 'auto_correction', {
+                  applied: true,
+                  correction_type: correctionResult.correction?.correction_type,
+                  confidence: correctionResult.correction?.confidence
+                });
+              }
+              
+              isDev && console.log('   ✅ Response auto-corrected for consistency');
             }
           }
         } else {
-          isDev && console.log(`   ✅ Response consistent (confidence: ${(consistencyCheck.confidence * 100).toFixed(0)}%)`);
+          isDev && console.log(`   ✅ Response consistent (score: ${(consistencyResult.consistencyScore * 100).toFixed(0)}%)`);
         }
       } catch (error) {
         isDev && console.warn('   ⚠️ Consistency check failed (non-blocking):', error);
@@ -456,95 +486,48 @@ class ChatEngineOmega {
         autoHealed = true;
       }
 
-      // ═══ PHASE 1.7.1: SAUVEGARDE MÉMOIRE SÉMANTIQUE (v∞.39) ═══
-      pipelineSteps.push("semantic-memory-saving");
-      isDev && console.log('📚 Step 1.7.1: Saving to semantic memory...');
+      // ═══ PHASE 1.7: COGNITIVE MEMORY SAVING (v∞.42) ═══
+      pipelineSteps.push("cognitive-memory-saving");
+      isDev && console.log('💾 Step 1.7: Saving to cognitive engines v∞.42...');
 
       try {
-        const conversationMessages: AIMessage[] = [
-          {
-            role: 'user',
-            content: validatedMessage,
-            timestamp: Date.now() - 1000,
-            provider: 'user'
-          },
-          {
-            role: 'assistant',
-            content: processedResponse.content,
-            timestamp: Date.now(),
-            provider: processedResponse.provider
-          }
-        ];
-
         await this.withTimeout(
-          semanticMemoryEngine.createMemory(conversationMessages, finalConfig.mode, {
-            sessionId: this.conversationIds.get(finalConfig.mode),
-            tags: [finalConfig.mode, 'conversation'],
-            concepts: this.extractConcepts(validatedMessage, processedResponse.content)
-          }),
-          2000,
-          'Semantic memory saving timeout'
+          cognitiveOmega.saveInteraction(
+            conversation_id,
+            validatedMessage,
+            processedResponse.content,
+            finalConfig.mode,
+            {
+              provider: processedResponse.provider,
+              model: processedResponse.model,
+              processingTime: Date.now() - pipelineStartTime
+            }
+          ),
+          4000,
+          'Cognitive memory save timeout'
         );
 
-        isDev && console.log('   ✅ Semantic memory saved');
+        if (traceId) {
+          await cognitiveOmega.logPhase(traceId, 'memory_saved', {
+            conversation_id,
+            mode: finalConfig.mode
+          });
+        }
+
+        isDev && console.log('   ✅ Interaction saved to cognitive engines (memory + goals + facts + evaluation)');
       } catch (error) {
-        isDev && console.warn('   ⚠️ Semantic memory save failed (non-blocking):', error);
+        isDev && console.warn('   ⚠️ Cognitive memory save failed (continuing):', error);
         autoHealed = true;
       }
 
-      // ═══ PHASE 1.7.2: AUTO-EXTRACTION CONSISTENCY (v∞.40) ═══
-      pipelineSteps.push("consistency-extraction");
-      isDev && console.log('🔍 Step 1.7.2: Extracting goals & facts...');
-
-      try {
-        const userMessage: AIMessage = {
-          role: 'user',
-          content: validatedMessage,
-          timestamp: Date.now() - 1000,
-          provider: 'user',
-        };
-
-        const assistantMessage: AIMessage = {
-          role: 'assistant',
-          content: processedResponse.content,
-          timestamp: Date.now(),
-          provider: processedResponse.provider,
-        };
-
-        // Extract goals from user message
-        const extractedGoals = await this.withTimeout(
-          Promise.resolve(consistencyEngine.extractGoalsFromMessage(userMessage)),
-          1000,
-          'Goal extraction timeout'
-        );
-
-        if (extractedGoals.length > 0) {
-          isDev && console.log(`   ✅ ${extractedGoals.length} goals extracted`);
-          extractedGoals.forEach(goal => {
-            isDev && console.log(`      • "${goal.description}" (priority: ${goal.priority}/10)`);
-          });
+      // End observability trace
+      if (traceId) {
+        try {
+          await cognitiveOmega.endTrace(traceId, processedResponse.content, 'success');
+          isDev && console.log('   🔍 Trace ended successfully');
+        } catch (error) {
+          isDev && console.warn('   ⚠️ Failed to end trace:', error);
         }
-
-        // Extract facts from conversation
-        const extractedFacts = await this.withTimeout(
-          Promise.resolve(consistencyEngine.extractFactsFromMessages([userMessage, assistantMessage])),
-          1000,
-          'Fact extraction timeout'
-        );
-
-        if (extractedFacts.length > 0) {
-          isDev && console.log(`   ✅ ${extractedFacts.length} facts extracted`);
-          extractedFacts.forEach(fact => {
-            isDev && console.log(`      • "${fact.statement}" (confidence: ${(fact.confidence * 100).toFixed(0)}%)`);
-          });
-        }
-
-        if (extractedGoals.length === 0 && extractedFacts.length === 0) {
-          isDev && console.log('   ℹ️ No goals or facts extracted from this interaction');
-        }
-      } catch (error) {
-        isDev && console.warn('   ⚠️ Consistency extraction failed (non-blocking):', error);
-        autoHealed = true;
       }
 
       // ═══ PHASE 1.8: CONSTRUCTION RÉPONSE FINALE OMEGA ═══
