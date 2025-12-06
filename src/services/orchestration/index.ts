@@ -12,6 +12,12 @@ export { CognitiveStrategy } from './strategies/CognitiveStrategy';
 export { AIStrategy } from './strategies/AIStrategy';
 export { QuantumStrategy } from './strategies/QuantumStrategy';
 
+// Shared infrastructure
+export { HealthMonitor } from './shared/HealthMonitor';
+export { MetricsCollector } from './shared/MetricsCollector';
+export { RecoveryEngine } from './shared/RecoveryEngine';
+export { ValidationEngine } from './shared/ValidationEngine';
+
 // Types
 export type {
   // Core types
@@ -20,6 +26,7 @@ export type {
   IOrchestrationStrategy,
   UnifiedOrchestratorConfig,
   OrchestratorState,
+  StrategyConfig,
   
   // Health monitoring
   HealthStatus,
