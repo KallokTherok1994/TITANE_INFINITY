@@ -27,22 +27,15 @@ import type {
   KnowledgeEntry,
   RitualInfo,
   TimelineEntry,
-} from '../ai/memoryIntegration';
+  ChatInteraction,
+} from '../memory/types';
 
 /**
  * Interaction chat à sauvegarder
  */
-export interface ChatInteraction {
-  userMessage: string;
-  aiResponse: string;
-  mode: string;
-  emotionState?: {
-    valence: number;
-    intensity: number;
-    energy: number;
-  };
-  timestamp: string;
-}
+// export interface ChatInteraction {
+//   Moved to @/services/memory/types
+// }
 
 /**
  * Service Memory Core unifié

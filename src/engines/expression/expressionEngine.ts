@@ -22,34 +22,14 @@ import { unifiedIdentityKernel, type IdentityExpressionPackage } from '../identi
 import { auraEngine } from '../aura/auraEngine';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';
 import { voiceProsodyEngine } from '../voice/voiceProsodyEngine';
+import type { OrchestratedVoice } from '../voice/types';
 
 // ═════════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
 // ═══════════════════════════════════════════════════════════════════════════
 
-/**
- * Configuration voix orchestrée
- */
-export interface OrchestratedVoice {
-  prosody: {
-    rate: number;           // 0.5-2.0 - Speech rate
-    pitch: number;          // 0.5-2.0 - Pitch multiplier
-    volume: number;         // 0-1 - Volume
-    emphasis: number;       // 0-1 - Emphasis strength
-  };
-  timbre: {
-    warmth: number;         // 0-1 - Vocal warmth
-    breathiness: number;    // 0-1 - Breathiness
-    resonance: number;      // 0-1 - Resonance depth
-    clarity: number;        // 0-1 - Articulation clarity
-  };
-  microDynamics: {
-    intonationVariation: number;  // 0-1 - Pitch variation
-    rhythmicFlow: number;         // 0-1 - Rhythm naturalness
-    pausePlacement: number;       // 0-1 - Strategic pauses
-    emotionalColoring: number;    // 0-1 - Emotional expressiveness
-  };
-}
+// Export re-exported from voice/types for compatibility
+export type { OrchestratedVoice } from '../voice/types';
 
 /**
  * Configuration halo orchestré

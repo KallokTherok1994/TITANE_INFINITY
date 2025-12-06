@@ -6,7 +6,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type { DevSudoResult } from './devSudoHandler';
+import type { DevSudoResult } from './types';
 
 /**
  * 🦀 BACKEND ANALYSIS — Analyse complète architecture Rust/Tauri

@@ -6,7 +6,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type { DevSudoResult } from './devSudoHandler';
+import type { DevSudoResult } from './types';
 
 /**
  * SINGULARITY SCAN - Scanner tous les moteurs et détecter incohérences
