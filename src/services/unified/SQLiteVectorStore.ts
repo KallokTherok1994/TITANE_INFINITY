@@ -376,9 +376,14 @@ export class SQLiteVectorStore implements IVectorStore {
     const whereClauses: string[] = [];
     const params: any[] = [];
 
-    if (filters.score?.$lt !== undefined) {
+    if (filters.importance?.$lt !== undefined) {
       whereClauses.push('importance < ?');
-      params.push(filters.score.$lt);
+      params.push(filters.importance.$lt);
+    }
+    
+    if (filters.tier !== undefined) {
+      whereClauses.push('tier = ?');
+      params.push(filters.tier);
     }
 
     if (filters.created?.$lt !== undefined) {

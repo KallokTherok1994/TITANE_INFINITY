@@ -212,7 +212,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
    * Get model name
    */
   getModelName(): string {
-    return this.config.modelName;
+    return this.config.modelName || 'fallback-generator';
   }
 
   /**
@@ -267,11 +267,14 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
   private generateFallbackEmbedding(text: string): number[] {
     const dim = this.config.dimensions;
     const embedding = new Array(dim);
+    
+    // Handle null/undefined text
+    const safeText = text?.toString() || '';
 
     // Simple hash function to get seed
     let hash = 0;
-    for (let i = 0; i < text.length; i++) {
-      const char = text.charCodeAt(i);
+    for (let i = 0; i < safeText.length; i++) {
+      const char = safeText.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
