@@ -213,8 +213,8 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
       setStatus(prev => ({
         ...prev,
         attentionState: event.state,
-        lastWakeEvent: event.wakeEvent ? event.wakeEvent : prev.lastWakeEvent,
-      }));
+        lastWakeEvent: event.wakeEvent ? event.wakeEvent : undefined,
+      } as VoiceEngineStatus));
     });
 
     return () => {

@@ -243,7 +243,7 @@ export async function updateMemory(
   if (updates.content !== undefined) {
     memory.content = updates.content;
     changes.content = updates.content;
-    memory.metadata = extractMetadata(updates.content, memory.metadata.source);
+    memory.metadata = extractMetadata(updates.content, memory.metadata?.source);
   }
 
   if (updates.importance !== undefined) {
@@ -344,7 +344,7 @@ export async function searchMemories(
   // Extraire les topics
   const topicsFound = new Set<string>();
   for (const result of paginatedResults) {
-    result.metadata.topics.forEach(t => topicsFound.add(t));
+    result.metadata?.topics.forEach(t => topicsFound.add(t));
   }
 
   return {
@@ -643,8 +643,8 @@ export async function compressMemories(
     }
 
     // Calculer les métriques
-    const originalTokens = memories.reduce((sum, m) => sum + m.metadata.tokenCount, 0);
-    const compressedTokens = compressedMemory.metadata.tokenCount;
+    const originalTokens = memories.reduce((sum, m) => sum + m.metadata?.tokenCount, 0);
+    const compressedTokens = compressedMemory.metadata?.tokenCount;
 
     const result: CompressionResult = {
       originalMemoryIds: memoryIds,
@@ -808,7 +808,7 @@ async function checkMaintenanceNeeded(tier: MemoryTier): Promise<void> {
     .filter(m => m.tier === tier);
 
   const tierConfig = MEMORY_ENGINE_CONFIG.tierLimits[tier];
-  const totalTokens = tierMemories.reduce((sum, m) => sum + m.metadata.tokenCount, 0);
+  const totalTokens = tierMemories.reduce((sum, m) => sum + m.metadata?.tokenCount, 0);
 
   if (shouldRunMaintenance(
     { totalMemories: tierMemories.length, totalTokens },
@@ -943,7 +943,7 @@ function updateStats(): void {
   for (const memory of state.memories.values()) {
     byTier[memory.tier]++;
     byContentType[memory.contentType]++;
-    totalTokens += memory.metadata.tokenCount;
+    totalTokens += memory.metadata?.tokenCount;
     oldestAge = Math.max(oldestAge, Date.now() - memory.createdAt);
   }
 
@@ -1111,7 +1111,7 @@ function matchesFilters(memory: Memory, query: MemorySearchQuery): boolean {
       return false;
     }
   }
-  if (query.sessionId && memory.metadata.sessionId !== query.sessionId) {
+  if (query.sessionId && memory.metadata?.sessionId !== query.sessionId) {
     return false;
   }
   if (!query.includeArchived && memory.isArchived) {

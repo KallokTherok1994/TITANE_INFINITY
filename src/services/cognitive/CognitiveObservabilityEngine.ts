@@ -61,24 +61,28 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     super();
     
     this.config = {
+      enabled: config?.enabled ?? true,
+      log_level: config?.log_level ?? CognitiveLogLevel.INFO,
+      max_traces: config?.max_traces ?? 100,
+      cleanup_interval_ms: config?.cleanup_interval_ms ?? 3600000,
       enable_tracing: config?.enable_tracing ?? true,
       enable_decision_logging: config?.enable_decision_logging ?? true,
       enable_debug_panel: config?.enable_debug_panel ?? true,
       trace_retention_hours: config?.trace_retention_hours ?? 24,
       max_traces_in_memory: config?.max_traces_in_memory ?? 100,
-      phases_to_trace: config?.phases_to_trace ?? [
+      phases_to_trace: (config?.phases_to_trace ?? [
         'input_received',
-        'semantic_memory_retrieved',
+        'context_loading',
+        'memory_retrieval',
         'goal_state_loaded',
-        'facts_loaded',
-        'context_built',
-        'model_invoked',
-        'raw_output',
-        'consistency_check',
+        'consistency_check_pre',
+        'model_invocation',
+        'model_raw_output',
+        'consistency_check_post',
         'auto_correction',
-        'final_output',
-        'output_sent'
-      ],
+        'memory_update',
+        'final_output'
+      ]) as PhaseName[],
       export_formats: config?.export_formats ?? ['json', 'csv', 'markdown']
     };
 
@@ -108,14 +112,21 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     
     const trace: CognitiveTrace = {
       trace_id,
+      correlation_id: trace_id,
       conversation_id,
       turn_number,
       user_message,
       phases: [],
       decisions: [],
-      start_time: new Date().toISOString(),
-      end_time: null,
-      total_duration_ms: null,
+      started_at: new Date().toISOString(),
+      start_time: Date.now(),
+      end_time: undefined,
+      total_duration_ms: undefined,
+      entries: [],
+      phases_summary: [],
+      input: {
+        content: user_message
+      },
       errors: []
     };
 
@@ -140,7 +151,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
    */
   async logPhase(
     trace_id: string,
-    phase_name: PhaseName,
+    name: PhaseName,
     data: Record<string, any>,
     duration_ms?: number
   ): Promise<void> {
@@ -153,22 +164,27 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     }
 
     // Check if phase is enabled
-    if (!this.config.phases_to_trace.includes(phase_name)) {
+    if (!this.config.phases_to_trace?.includes(name)) {
       return;
     }
 
     const phase: PipelinePhase = {
-      phase_name,
-      data,
-      timestamp: new Date().toISOString(),
-      duration_ms: duration_ms || null
+      name: name,
+      start_time: Date.now(),
+      end_time: Date.now() + (duration_ms || 0),
+      duration_ms: duration_ms ?? undefined,
+      success: true,
+      data
     };
 
-    trace.phases.push(phase);
+    if (!trace.phases) {
+      trace.phases = [];
+    }
+    trace.phases?.push(phase);
     this.totalPhases++;
 
     this.emit('phase:logged', { trace_id, phase });
-    this.log(`Phase logged: ${phase_name} for trace ${trace_id}`, data);
+    this.log(`Phase logged: ${name} for trace ${trace_id}`, data);
   }
 
   /**
@@ -185,12 +201,17 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       return null;
     }
 
-    trace.end_time = new Date().toISOString();
-    trace.total_duration_ms = 
-      new Date(trace.end_time).getTime() - new Date(trace.start_time).getTime();
+    trace.end_time = Date.now();
+    trace.ended_at = new Date().toISOString();
+    trace.total_duration_ms = trace.end_time - (trace.start_time ?? Date.now());
+
+    // Add final output
+    trace.output = {
+      content: final_output
+    };
 
     // Add final output phase
-    await this.logPhase(trace_id, 'output_sent', {
+    await this.logPhase(trace_id, 'final_output' as PhaseName, {
       output: final_output,
       output_length: final_output.length,
       status
@@ -215,7 +236,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
   async getConversationTraces(conversation_id: string): Promise<CognitiveTrace[]> {
     return Array.from(this.traces.values())
       .filter(trace => trace.conversation_id === conversation_id)
-      .sort((a, b) => a.turn_number - b.turn_number);
+      .sort((a, b) => (a.turn_number ?? 0) - (b.turn_number ?? 0));
   }
 
   /**
@@ -227,7 +248,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
    */
   async logDecision(
     trace_id: string,
-    decision: Omit<DecisionLog, 'decision_id' | 'timestamp'>
+    decision: Omit<DecisionLog, 'timestamp'>
   ): Promise<void> {
     if (!this.config.enable_decision_logging) return;
 
@@ -237,22 +258,30 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       return;
     }
 
-    const fullDecision: DecisionLog = {
-      ...decision,
-      decision_id: `decision_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      timestamp: new Date().toISOString()
+    const cognitiveDecision: CognitiveDecision = {
+      id: `decision_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      timestamp: new Date().toISOString(),
+      phase: CognitivePhase.MODEL_INVOCATION,
+      type: 'other',
+      description: decision.description || decision.type || '',
+      confidence: (decision.confidence ?? 0)
     };
 
-    trace.decisions.push(fullDecision);
+    trace.decisions.push(cognitiveDecision);
     this.totalDecisions++;
 
     // Also store by conversation for easy retrieval
-    const conversationDecisions = this.decisions.get(trace.conversation_id) || [];
-    conversationDecisions.push(fullDecision);
-    this.decisions.set(trace.conversation_id, conversationDecisions);
+    const conversationId = trace.conversation_id ?? 'unknown';
+    const conversationDecisions = this.decisions.get(conversationId) || [];
+    const decisionWithTimestamp: DecisionLog = {
+      ...decision,
+      timestamp: Date.now()
+    };
+    conversationDecisions.push(decisionWithTimestamp);
+    this.decisions.set(conversationId, conversationDecisions);
 
-    this.emit('decision:logged', { trace_id, decision: fullDecision });
-    this.log(`Decision logged: ${fullDecision.decision_point}`, fullDecision);
+    this.emit('decision:logged', { trace_id, decision: cognitiveDecision });
+    this.log(`Decision logged: ${cognitiveDecision.decision_point}`, cognitiveDecision);
   }
 
   /**
@@ -280,46 +309,46 @@ export class CognitiveObservabilityEngine extends EventEmitter {
 
     // Extract memory info from traces
     const memoryPanelData = traces.flatMap(trace => 
-      trace.phases
-        .filter(p => p.phase_name === 'semantic_memory_retrieved')
+      (trace.phases || [])
+        .filter(p => p.name === 'semantic_memory_retrieved')
         .map(p => ({
           query: latestTrace?.user_message || '',
-          results_count: p.data.count || 0,
-          top_similarity: p.data.top_similarity || 0,
-          retrieved_at: p.timestamp
+          results_count: p.data?.count || 0,
+          top_similarity: p.data?.top_similarity || 0,
+          retrieved_at: new Date(p.start_time).toISOString()
         }))
     ).slice(-5); // Last 5 memory retrievals
 
     // Extract goal info from traces
     const goalPanelData = traces.flatMap(trace =>
-      trace.phases
-        .filter(p => p.phase_name === 'goal_state_loaded')
+      (trace.phases || [])
+        .filter(p => p.name === 'goal_state_loaded')
         .map(p => ({
-          main_goal: p.data.main_goal || '',
-          subgoals: p.data.subgoals || [],
-          progress: p.data.progress || 0,
-          loaded_at: p.timestamp
+          main_goal: p.data?.main_goal || '',
+          subgoals: p.data?.subgoals || [],
+          progress: p.data?.progress || 0,
+          loaded_at: new Date(p.start_time).toISOString()
         }))
     ).slice(-1)[0]; // Latest goal state
 
     // Extract consistency info from traces
     const consistencyPanelData = traces.flatMap(trace =>
-      trace.phases
-        .filter(p => p.phase_name === 'consistency_check')
+      (trace.phases || [])
+        .filter(p => p.name === 'consistency_check')
         .map(p => ({
-          violations: p.data.violations || [],
-          consistency_score: p.data.consistency_score || 1.0,
-          auto_corrections: p.data.corrections || [],
-          checked_at: p.timestamp
+          violations: p.data?.violations || [],
+          consistency_score: p.data?.consistency_score || 1.0,
+          auto_corrections: p.data?.corrections || [],
+          checked_at: new Date(p.start_time).toISOString()
         }))
     ).slice(-5); // Last 5 consistency checks
 
     // Extract metrics from traces
     const metricsPanelData = traces.map(trace => {
-      const evaluationPhase = trace.phases.find(p => p.phase_name === 'raw_output');
+      const evaluationPhase = trace.phases?.find(p => p.name === 'raw_output');
       return {
         turn_number: trace.turn_number,
-        metrics: evaluationPhase?.data.metrics || {},
+        metrics: evaluationPhase?.data?.metrics || {},
         timestamp: evaluationPhase?.timestamp || trace.start_time
       };
     }).slice(-10); // Last 10 turns
@@ -336,9 +365,17 @@ export class CognitiveObservabilityEngine extends EventEmitter {
         trace_id: t.trace_id,
         turn_number: t.turn_number,
         duration_ms: t.total_duration_ms,
-        status: t.errors.length > 0 ? 'error' : 'success',
-        phases_completed: t.phases.length
+        status: (t.errors?.length ?? 0) > 0 ? 'error' : 'success',
+        phases_completed: t.phases?.length ?? 0
       })),
+      traces: traces,
+      snapshot: {
+        timestamp: new Date().toISOString(),
+        semantic_memory: { total_memories: 0, retrieved_count: 0 },
+        consistency: { active_goals_count: 0, facts_count: 0, consistency_score: 1.0, recent_violations_count: 0 },
+        omega_context: { messages_count: 0 },
+        performance: { avg_latency_ms: traces.length > 0 ? traces.reduce((sum, t) => sum + (t.total_duration_ms || 0), 0) / traces.length : 0 }
+      },
       last_updated: new Date().toISOString()
     };
 
@@ -409,11 +446,11 @@ export class CognitiveObservabilityEngine extends EventEmitter {
    * Export trace as CSV
    */
   private exportTraceAsCSV(trace: CognitiveTrace): string {
-    let csv = 'trace_id,conversation_id,turn_number,phase_name,timestamp,duration_ms,data\n';
+    let csv = 'trace_id,conversation_id,turn_number,name,timestamp,duration_ms,data\n';
     
-    for (const phase of trace.phases) {
+    for (const phase of trace.phases ?? []) {
       const dataStr = JSON.stringify(phase.data).replace(/"/g, '""');
-      csv += `"${trace.trace_id}","${trace.conversation_id}",${trace.turn_number},"${phase.phase_name}","${phase.timestamp}",${phase.duration_ms || ''},"${dataStr}"\n`;
+      csv += `"${trace.trace_id}","${trace.conversation_id}",${trace.turn_number},"${phase.name}","${phase.timestamp}",${phase.duration_ms || ''},"${dataStr}"\n`;
     }
 
     return csv;
@@ -430,8 +467,8 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     md += `**Duration:** ${trace.total_duration_ms || 'N/A'} ms\n\n`;
 
     md += `## Pipeline Phases\n\n`;
-    for (const phase of trace.phases) {
-      md += `### ${phase.phase_name}\n`;
+    for (const phase of trace.phases ?? []) {
+      md += `### ${phase.name}\n`;
       md += `- **Timestamp:** ${phase.timestamp}\n`;
       if (phase.duration_ms) {
         md += `- **Duration:** ${phase.duration_ms} ms\n`;
@@ -445,7 +482,7 @@ export class CognitiveObservabilityEngine extends EventEmitter {
         md += `### ${decision.decision_point}\n`;
         md += `- **Chosen:** ${decision.chosen_option}\n`;
         md += `- **Why:** ${decision.why}\n`;
-        md += `- **Confidence:** ${(decision.confidence * 100).toFixed(0)}%\n`;
+        md += `- **Confidence:** ${(((decision.confidence ?? 0) ?? 0) * 100).toFixed(0)}%\n`;
         if (decision.alternatives && decision.alternatives.length > 0) {
           md += `- **Alternatives:** ${decision.alternatives.join(', ')}\n`;
         }
@@ -453,9 +490,9 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       }
     }
 
-    if (trace.errors.length > 0) {
+    if ((trace.errors?.length ?? 0) > 0) {
       md += `## Errors\n\n`;
-      for (const error of trace.errors) {
+      for (const error of (trace.errors ?? [])) {
         md += `- ${error}\n`;
       }
       md += `\n`;
@@ -478,18 +515,18 @@ export class CognitiveObservabilityEngine extends EventEmitter {
       md += `### Turn ${trace.turn_number}\n`;
       md += `**User:** ${trace.user_message}\n\n`;
       
-      const outputPhase = trace.phases.find(p => p.phase_name === 'output_sent');
+      const outputPhase = trace.phases?.find(p => p.name === 'output_sent');
       if (outputPhase) {
-        md += `**Assistant:** ${outputPhase.data.output || 'N/A'}\n\n`;
+        md += `**Assistant:** ${outputPhase.data?.output || 'N/A'}\n\n`;
       }
 
       md += `**Duration:** ${trace.total_duration_ms || 'N/A'} ms\n`;
-      md += `**Phases:** ${trace.phases.map(p => p.phase_name).join(' → ')}\n\n`;
+      md += `**Phases:** ${(trace.phases ?? []).map((p) => p.name).join(' → ')}\n\n`;
 
       if (trace.decisions.length > 0) {
         md += `**Decisions:**\n`;
         for (const decision of trace.decisions) {
-          md += `- ${decision.decision_point}: ${decision.chosen_option} (${(decision.confidence * 100).toFixed(0)}%)\n`;
+          md += `- ${decision.decision_point}: ${decision.chosen_option} (${(((decision.confidence ?? 0) ?? 0) * 100).toFixed(0)}%)\n`;
         }
         md += `\n`;
       }
@@ -526,16 +563,16 @@ export class CognitiveObservabilityEngine extends EventEmitter {
         traceCount++;
       }
 
-      for (const phase of trace.phases) {
-        phaseFrequencies[phase.phase_name] = (phaseFrequencies[phase.phase_name] || 0) + 1;
+      for (const phase of trace.phases ?? []) {
+        phaseFrequencies[phase.name] = (phaseFrequencies[phase.name] || 0) + 1;
       }
 
       for (const decision of trace.decisions) {
-        totalConfidence += decision.confidence;
+        totalConfidence += (decision.confidence ?? 0);
         decisionCount++;
       }
 
-      errorCount += trace.errors.length;
+      errorCount += (trace.errors?.length ?? 0);
     }
 
     return {
@@ -561,7 +598,8 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     
     let deletedCount = 0;
     
-    for (const [trace_id, trace] of this.traces.entries()) {
+    const entries: [string, any][] = Array.from(this.traces.entries());
+    for (const [trace_id, trace] of entries) {
       const traceAge = now - new Date(trace.start_time).getTime();
       
       if (traceAge > retentionMs) {
@@ -571,13 +609,13 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     }
 
     // Also limit total traces in memory
-    if (this.traces.size > this.config.max_traces_in_memory) {
-      const sorted = Array.from(this.traces.entries())
-        .sort((a, b) => 
+    const maxTracesInMemory = this.config.max_traces_in_memory ?? this.config.max_traces ?? 100;
+    if (this.traces.size > maxTracesInMemory) {
+      const sorted: [string, any][] = Array.from(this.traces.entries()).sort((a: any, b: any) => 
           new Date(b[1].start_time).getTime() - new Date(a[1].start_time).getTime()
         );
       
-      const toKeep = sorted.slice(0, this.config.max_traces_in_memory);
+      const toKeep = sorted.slice(0, maxTracesInMemory);
       this.traces.clear();
       toKeep.forEach(([id, trace]) => this.traces.set(id, trace));
       
@@ -597,6 +635,14 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     return {
       conversation_id,
       current_turn: 0,
+      traces: [],
+      snapshot: {
+        timestamp: new Date().toISOString(),
+        semantic_memory: { total_memories: 0, retrieved_count: 0 },
+        consistency: { active_goals_count: 0, facts_count: 0, consistency_score: 1.0, recent_violations_count: 0 },
+        omega_context: { messages_count: 0 },
+        performance: { avg_latency_ms: 0 }
+      },
       recent_decisions: [],
       recent_traces: [],
       last_updated: new Date().toISOString()
@@ -610,7 +656,11 @@ export class CognitiveObservabilityEngine extends EventEmitter {
     const trace = this.traces.get(trace_id);
     if (!trace) return;
 
-    trace.errors.push(error);
+    (trace.errors = trace.errors || []).push({
+      phase: CognitivePhase.INPUT_RECEIVED,
+      error,
+      recovered: false
+    });
     this.emit('trace:error', { trace_id, error });
     this.log(`Error in trace ${trace_id}`, error, 'error');
   }
@@ -662,11 +712,15 @@ export function createCognitiveObservabilityEngine(
  */
 export function getDefaultObservabilityConfig(): ObservabilityConfig {
   return {
+    enabled: true,
+    log_level: 'info' as CognitiveLogLevel,
     enable_tracing: true,
     enable_decision_logging: true,
     enable_debug_panel: true,
+    max_traces: 100,
     trace_retention_hours: 24,
     max_traces_in_memory: 100,
+    cleanup_interval_ms: 3600000,
     phases_to_trace: [
       'input_received',
       'semantic_memory_retrieved',

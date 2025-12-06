@@ -32,6 +32,8 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
 
   private initialized = false;
   private metrics: Metric[] = [];
+  private healthScores: Record<string, number> = {}; // Add missing property
+  private jobs: Map<string, any> = new Map(); // Add missing property
   
   // Reference to existing MCP Orchestrator (delegation pattern)
   private mcpOrchestrator = MCPOrchestrator;
@@ -347,7 +349,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
 
   getHealthScore(): number {
     const scores = Object.values(this.healthScores);
-    return scores.reduce((sum, s) => sum + s, 0) / scores.length;
+    return scores.reduce((sum: number, s: number) => sum + s, 0) / (scores.length || 1);
   }
 
   getStatus(): HealthStatus {

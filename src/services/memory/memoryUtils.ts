@@ -85,7 +85,7 @@ export function calculateRelevanceScore(
   maxScore += 0.15;
 
   // 4. Correspondance du projet (10% du score)
-  if (context?.currentProject && entry.metadata.projectId === context.currentProject) {
+  if (context?.currentProject && entry.metadata?.projectId === context.currentProject) {
     score += 0.1;
   }
   maxScore += 0.1;
@@ -96,7 +96,7 @@ export function calculateRelevanceScore(
   maxScore += 0.1;
 
   // 6. Récence (5% du score)
-  const ageHours = (Date.now() - entry.metadata.createdAt) / (1000 * 60 * 60);
+  const ageHours = (Date.now() - entry.metadata?.createdAt) / (1000 * 60 * 60);
   const recencyScore = Math.max(0, 1 - ageHours / (24 * 30)); // Décroît sur 30 jours
   score += recencyScore * 0.05;
   maxScore += 0.05;
@@ -468,7 +468,7 @@ export function prepareContextInjection(
 function formatEntryForContext(entry: MemoryEntry, _score: number): string {
   const topicLabel = MEMORY_TOPIC_LABELS[entry.topic].icon;
   const importance = '⭐'.repeat(entry.importance);
-  const date = new Date(entry.metadata.createdAt).toLocaleDateString('fr-FR');
+  const date = new Date(entry.metadata?.createdAt).toLocaleDateString('fr-FR');
 
   let header = `${topicLabel} [${date}] ${importance}`;
 

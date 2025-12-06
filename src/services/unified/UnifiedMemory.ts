@@ -31,10 +31,10 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import type {
+import {
   MemoryTier,
-  MemoryEntry as MCPMemoryEntry,
-  MemoryOperations
+  type MemoryEntry as MCPMemoryEntry,
+  type MemoryOperations
 } from '../mcp/mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -472,7 +472,7 @@ export class UnifiedMemory {
       }
 
       // Determine tier (default: SHORT_TERM, will auto-promote)
-      const tier = params.tier || 'SHORT_TERM';
+      const tier: MemoryTier = params.tier || MemoryTier.SHORT_TERM;
 
       // Calculate importance (MemoryEngine logic)
       const importance = params.importance ?? this.calculateImportance({
@@ -739,12 +739,12 @@ export class UnifiedMemory {
 
       let newTier: MemoryTier | null = null;
 
-      if (entry.tier === 'SHORT_TERM' && entry.accessCount >= 10) {
-        newTier = 'MEDIUM_TERM';
-      } else if (entry.tier === 'MEDIUM_TERM' && entry.accessCount >= 50) {
-        newTier = 'LONG_TERM';
-      } else if (entry.tier === 'LONG_TERM' && entry.accessCount >= 100 && entry.importance > 0.8) {
-        newTier = 'META_MEMORY';
+      if (entry.tier === MemoryTier.SHORT_TERM && entry.accessCount >= 10) {
+        newTier = MemoryTier.MEDIUM_TERM;
+      } else if (entry.tier === MemoryTier.MEDIUM_TERM && entry.accessCount >= 50) {
+        newTier = MemoryTier.LONG_TERM;
+      } else if (entry.tier === MemoryTier.LONG_TERM && entry.accessCount >= 100 && entry.importance > 0.8) {
+        newTier = MemoryTier.META_MEMORY;
       }
 
       if (newTier) {
@@ -1097,15 +1097,4 @@ export class UnifiedMemory {
 // ═══════════════════════════════════════════════════════════════════════════
 // EXPORTS
 // ═══════════════════════════════════════════════════════════════════════════
-
-export type {
-  UnifiedMemoryEntry,
-  UnifiedMemoryType,
-  UnifiedMemoryQuery,
-  UnifiedMemoryResult,
-  UnifiedMemoryContext,
-  UnifiedMemoryStats,
-  UnifiedMemoryConfig,
-  IVectorStore,
-  IEmbeddingGenerator
-};
+// Types already exported via export interface/type declarations above

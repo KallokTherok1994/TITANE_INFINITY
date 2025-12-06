@@ -58,7 +58,7 @@ export class SQLiteVectorStore implements IVectorStore {
 
     try {
       // Create/open database
-      this.db = new Database(this.config.dbPath, this.config.sqliteOptions);
+      this.db = new Database(this.config.dbPath, this.config.sqliteOptions as any);
 
       // Enable WAL mode for better performance
       this.db.pragma('journal_mode = WAL');

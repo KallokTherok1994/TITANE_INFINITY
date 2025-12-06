@@ -24,6 +24,9 @@ import type {
   TimelineEntry,
 } from '../memory/types';
 
+// Re-export for compatibility
+export type { MemoryContext } from '../memory/types';
+
 /**
  * Contexte enrichi provenant de Memory Core
  */

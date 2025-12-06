@@ -73,7 +73,7 @@ class RAGService {
     try {
       const response = await invokeTauriCommand<DocumentChunk[]>('rag_get_all_chunks', {});
       if (response.success && response.data) {
-        response.data.forEach(chunk => {
+        response.data?.forEach(chunk => {
           this.chunks.set(chunk.id, chunk);
         });
       }
@@ -132,9 +132,9 @@ class RAGService {
     for (const [_id, chunk] of this.chunks.entries()) {
       // Apply filters
       if (filters) {
-        if (filters.type && chunk.metadata.type !== filters.type) continue;
-        if (filters.source && chunk.metadata.source !== filters.source) continue;
-        if (filters.language && chunk.metadata.language !== filters.language) continue;
+        if (filters.type && chunk.metadata?.type !== filters.type) continue;
+        if (filters.source && chunk.metadata?.source !== filters.source) continue;
+        if (filters.language && chunk.metadata?.language !== filters.language) continue;
       }
 
       // Calculate cosine similarity
@@ -192,7 +192,7 @@ class RAGService {
    */
   async deleteDocument(source: string): Promise<void> {
     const toDelete = Array.from(this.chunks.values())
-      .filter(chunk => chunk.metadata.source === source)
+      .filter(chunk => chunk.metadata?.source === source)
       .map(chunk => chunk.id);
 
     toDelete.forEach(id => this.chunks.delete(id));
@@ -205,7 +205,7 @@ class RAGService {
    */
   getIndexedDocuments(): string[] {
     const sources = new Set<string>();
-    this.chunks.forEach(chunk => sources.add(chunk.metadata.source));
+    this.chunks.forEach(chunk => sources.add(chunk.metadata?.source));
     return Array.from(sources);
   }
 
@@ -270,7 +270,7 @@ class RAGService {
       });
 
       if (response.success && response.data) {
-        return response.data.embedding;
+        return response.data?.embedding;
       }
     } catch (error) {
       console.error('[RAG] Query embedding failed:', error);
@@ -310,8 +310,8 @@ class RAGService {
 
     // Find chunks from same source
     const sameSource = Array.from(this.chunks.values())
-      .filter(c => c.metadata.source === chunk.metadata.source)
-      .sort((a, b) => a.metadata.timestamp - b.metadata.timestamp);
+      .filter(c => c.metadata?.source === chunk.metadata?.source)
+      .sort((a, b) => a.metadata?.timestamp - b.metadata?.timestamp);
 
     const index = sameSource.findIndex(c => c.id === chunkId);
 

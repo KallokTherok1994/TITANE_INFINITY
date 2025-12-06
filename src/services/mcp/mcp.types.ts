@@ -378,22 +378,5 @@ export interface ValidatedOutput<T = unknown> {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// EXPORTS
+// EXPORTS (Already exported via export interface/enum declarations above)
 // ═══════════════════════════════════════════════════════════════════════════
-
-export type {
-  Job,
-  JobPermissions,
-  SystemHealthCheck,
-  CoreScanResult,
-  MemoryEntry,
-  MemoryOperations,
-  AIModel,
-  AISelection,
-  MCPState,
-  MCPOperations,
-  MCPPersona,
-  ValidatedOutput,
-  OutputCriteria,
-  LawViolation
-};

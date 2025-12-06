@@ -21,16 +21,16 @@
  */
 
 import { EventEmitter } from 'events';
-import {
-  ConversationMetrics,
-  TestScenario,
-  TestResult,
-  LiveEvaluation,
-  EvaluationReport,
-  RegressionTest,
-  QAConfig,
-  MetricName
-} from './conversationEvaluation.types';
+
+// Types manquants - utilisation any temporaire
+type ConversationMetrics = any;
+type TestScenario = any;
+type TestResult = any;
+type LiveEvaluation = any;
+type EvaluationReport = any;
+type RegressionTest = any;
+type QAConfig = any;
+type MetricName = string;
 
 /**
  * Conversation Evaluation Engine
@@ -239,7 +239,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
     
     // Penalize overly complex language
     const words = assistant_response.split(/\s+/);
-    const avgWordLength = words.reduce((sum: number, w: number) => sum + w.length, 0) / words.length;
+    const avgWordLength = words.reduce((sum: number, w: string) => sum + w.length, 0) / words.length;
     
     // Penalize very long sentences
     const sentences = assistant_response.split(/[.!?]+/);
@@ -340,7 +340,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
 
     // Split response into statements
     const statements = assistant_response.split(/[.!]/);
-    totalStatements = statements.filter(s => s.trim().length > 10).length;
+    totalStatements = statements.filter((s: string) => s.trim().length > 10).length;
 
     for (const statement of statements) {
       if (statement.trim().length < 10) continue;
@@ -348,7 +348,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
       const statementLower = statement.toLowerCase();
       
       // Check if statement is supported by any fact
-      const isSupported = context.facts.some(fact => {
+      const isSupported = context.facts.some((fact: any) => {
         const factKeywords = this.extractKeywords(fact);
         return factKeywords.some(kw => statementLower.includes(kw));
       });
@@ -736,7 +736,7 @@ export class ConversationEvaluationEngine extends EventEmitter {
     // Check minimum metric thresholds
     if (criteria.min_metrics) {
       for (const [metric, threshold] of Object.entries(criteria.min_metrics)) {
-        if (metrics[metric as MetricName] < threshold) {
+        if (metrics[metric as MetricName] < (threshold as number)) {
           return false;
         }
       }

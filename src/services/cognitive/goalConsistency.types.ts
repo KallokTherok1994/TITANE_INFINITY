@@ -182,8 +182,12 @@ export enum ConsistencyViolationType {
   CONTRADICTION = 'contradiction',           // Contredit un fait établi
   GOAL_DRIFT = 'goal_drift',                // Dévie de l'objectif
   CONSTRAINT_VIOLATION = 'constraint_violation', // Viole une contrainte
+  CONSTRAINT = 'constraint',                // Contrainte générique
   MISSING_CONTEXT = 'missing_context',      // Oublie un contexte important
-  INCONSISTENT_TONE = 'inconsistent_tone'   // Ton incohérent
+  INCONSISTENT_TONE = 'inconsistent_tone',  // Ton incohérent
+  FACT_RESPONSE = 'fact-response',          // Réponse incohérente avec un fait
+  GOAL_RESPONSE = 'goal-response',          // Réponse incohérente avec un objectif
+  TEMPORAL = 'temporal'                     // Incohérence temporelle
 }
 
 /**
@@ -198,6 +202,21 @@ export interface ConsistencyViolation {
   
   /** Description */
   description: string;
+  
+  /** ID du fait violé */
+  fact_id?: string;
+  
+  /** ID de l'objectif violé */
+  goal_id?: string;
+  
+  /** Contrainte violée */
+  constraint?: string;
+  
+  /** Extrait de la réponse */
+  response_excerpt?: string;
+  
+  /** Date de détection */
+  detected_at?: string;
   
   /** Fait ou objectif violé */
   violated_item?: {
@@ -279,6 +298,32 @@ export interface ConsistencyContext {
 export interface GoalConsistencyConfig {
   /** Activer/désactiver */
   enabled: boolean;
+  
+  /** Correction automatique activée */
+  enable_auto_correction?: boolean;
+  
+  /** Suivi des faits activé */
+  enable_fact_tracking?: boolean;
+  
+  /** Suivi des objectifs activé */
+  enable_goal_tracking?: boolean;
+  
+  /** Seuil de vérification de cohérence */
+  consistency_check_threshold?: number;
+  
+  /** Taux de dégradation de la confiance des faits */
+  fact_confidence_decay_rate?: number;
+  
+  /** Nombre max de violations avant alerte */
+  max_violations_before_alert?: number;
+  
+  /** Poids des sévérités de violation */
+  violation_severity_weights?: {
+    low: number;
+    medium: number;
+    high: number;
+    critical: number;
+  };
   
   /** Vérifications automatiques */
   auto_check: {

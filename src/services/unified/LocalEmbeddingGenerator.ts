@@ -148,7 +148,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
       if (this.config.enableCache) {
         if (this.cache.size >= (this.config.maxCacheSize || 1000)) {
           // Remove oldest entry (first in Map)
-          const firstKey = this.cache.keys().next().value;
+          const firstKey = this.cache.keys().next().value as string;
           this.cache.delete(firstKey);
         }
         this.cache.set(text, embedding);
@@ -185,7 +185,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
         for (let i = 0; i < texts.length; i++) {
           const start = i * dim;
           const end = start + dim;
-          const embedding = Array.from(output.data.slice(start, end));
+          const embedding = Array.from(output.data?.slice(start, end) || []) as number[];
           embeddings.push(this.normalizeVector(embedding));
         }
 

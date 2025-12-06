@@ -52,7 +52,7 @@ export const cognitiveOmega = {
    */
   async initialize(): Promise<void> {
     const strategy = await getCognitiveStrategy();
-    await strategy.initialize({});
+    await strategy.initialize();
   },
 
   /**
@@ -65,7 +65,7 @@ export const cognitiveOmega = {
     metadata?: Record<string, unknown>;
   }): Promise<{ id: string; stored: boolean }> {
     const strategy = await getCognitiveStrategy();
-    const memoryId = await strategy.execute('storeMemory', params) as string;
+    const memoryId = await strategy.execute('storeMemory', params) as any;
     
     return {
       id: memoryId,
@@ -88,7 +88,7 @@ export const cognitiveOmega = {
     metadata?: Record<string, unknown>;
   }>> {
     const strategy = await getCognitiveStrategy();
-    const memories = await strategy.execute('retrieveMemories', params) as Array<any>;
+    const memories = (await strategy.execute('retrieveMemories', params) as any) || [];
     
     return memories;
   },
@@ -108,16 +108,16 @@ export const cognitiveOmega = {
     const query = lastMessage?.content || '';
     
     // Retrieve memories
-    const memories = await strategy.execute('retrieveMemories', { 
+    const memories = ((await strategy.execute('retrieveMemories', { 
       query, 
       limit: 5 
-    }) as Array<any>;
+    })) as any) || [];
     
     // Build enriched context
     let context = '';
     if (memories.length > 0) {
       context += '## Relevant Memories:\n';
-      memories.forEach(mem => {
+      memories.forEach((mem: any) => {
         context += `- ${mem.content} (relevance: ${mem.relevance.toFixed(2)})\n`;
       });
       context += '\n';
@@ -159,7 +159,7 @@ export const cognitiveOmega = {
     priority?: number;
   }): Promise<{ id: string; set: boolean }> {
     const strategy = await getCognitiveStrategy();
-    const goalId = await strategy.execute('setGoal', params) as string;
+    const goalId = await strategy.execute('setGoal', params) as any;
     
     return {
       id: goalId,

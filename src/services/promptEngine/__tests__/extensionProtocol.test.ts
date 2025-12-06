@@ -83,7 +83,7 @@ class MockContextSourceExtension
       };
 
       return {
-        sourceId: this.metadata.id,
+        sourceId: this.metadata?.id,
         nodes: [mockNode],
         metadata: {
           fetchTime: 10,
@@ -161,7 +161,7 @@ describe('🔌 Extension Registry Tests', () => {
 
       await registry.register(extension);
 
-      expect(registry.get(extension.metadata.id)).toBe(extension);
+      expect(registry.get(extension.metadata?.id)).toBe(extension);
       expect(extension.state).toBe('registered');
     });
 
@@ -182,9 +182,9 @@ describe('🔌 Extension Registry Tests', () => {
       const extension = new MockContextSourceExtension();
 
       await registry.register(extension);
-      await registry.unregister(extension.metadata.id);
+      await registry.unregister(extension.metadata?.id);
 
-      expect(registry.get(extension.metadata.id)).toBeUndefined();
+      expect(registry.get(extension.metadata?.id)).toBeUndefined();
       expect(extension.state).toBe('unloaded');
     });
 
@@ -333,7 +333,7 @@ describe('🔌 Extension Registry Tests', () => {
       });
 
       const stats = registry.getStats();
-      const extStats = stats.get(ext.metadata.id);
+      const extStats = stats.get(ext.metadata?.id);
 
       expect(extStats).toBeDefined();
       expect(extStats?.totalExecutions).toBeGreaterThan(0);
@@ -353,7 +353,7 @@ describe('🔌 Extension Registry Tests', () => {
       expect(listener).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'registered',
-          extensionId: ext.metadata.id,
+          extensionId: ext.metadata?.id,
         })
       );
     });
@@ -495,7 +495,7 @@ describe('📦 Context Source Extension Tests', () => {
       timestamp: Date.now(),
     });
 
-    expect(result.sourceId).toBe(ext.metadata.id);
+    expect(result.sourceId).toBe(ext.metadata?.id);
     expect(result.nodes).toHaveLength(1);
     expect(result.nodes[0].content).toBe('Mock context content');
   });

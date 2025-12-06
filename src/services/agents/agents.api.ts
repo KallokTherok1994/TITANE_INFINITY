@@ -74,7 +74,7 @@ export class AgentsAPIService {
         throw new Error(result.error || 'Failed to create agent');
       }
 
-      console.log(`✅ [AgentsAPI] Agent created: ${result.data.name} (${result.data.id})`);
+      console.log(`✅ [AgentsAPI] Agent created: ${result.data?.name} (${result.data?.id})`);
       return result.data;
     } catch (error) {
       console.error('❌ [AgentsAPI] Error creating agent:', error);

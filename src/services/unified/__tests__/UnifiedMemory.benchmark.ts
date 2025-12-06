@@ -279,9 +279,9 @@ async function benchmarkEmbeddingGeneration(): Promise<BenchmarkResult> {
   console.log('\n[Benchmark] Embedding Generation Throughput...');
   
   const generator = new LocalEmbeddingGenerator({
-    model: 'Xenova/all-MiniLM-L6-v2',
-    dimensions: 384,
-    useFallback: true // Use fallback for consistent performance
+    modelName: 'Xenova/all-MiniLM-L6-v2',
+    dimensions: 384
+    // useFallback: true // Not in config interface
   });
   await generator.initialize();
   
@@ -435,11 +435,11 @@ async function runBenchmarks(): Promise<BenchmarkReport> {
   const dbPath = path.join(__dirname, 'benchmark.db');
   if (fs.existsSync(dbPath)) fs.unlinkSync(dbPath);
   
-  const vectorStore = new SQLiteVectorStore({ dbPath });
+  const vectorStore = new SQLiteVectorStore({ dbPath, dimensions: 384 } as any);
   const embeddingGenerator = new LocalEmbeddingGenerator({
-    model: 'Xenova/all-MiniLM-L6-v2',
-    dimensions: 384,
-    useFallback: true
+    modelName: 'Xenova/all-MiniLM-L6-v2',
+    dimensions: 384
+    // useFallback: true // Not in config interface
   });
   
   const memory = new UnifiedMemory(vectorStore, embeddingGenerator, {
