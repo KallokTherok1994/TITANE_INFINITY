@@ -42,6 +42,12 @@ pub mod utils; // ✅ Utilities (AppResult, AppError)
 pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
+// PROFILING & MONITORING v19.5 (NEW)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod profiling; // ✅ IPC Performance Profiler v19.5.0 (NEW)
+
+// ═══════════════════════════════════════════════════════════════
 // AI & MEMORY v15
 // ═══════════════════════════════════════════════════════════════
 

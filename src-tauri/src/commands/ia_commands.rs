@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
+use titane_infinity::profiling::IPCProfiler;
 use titane_infinity::security::secrets_engine::{SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI};
 use log::{error, info};
 use serde::{Deserialize, Serialize};
@@ -184,8 +185,11 @@ pub async fn test_api_key(
 #[tauri::command]
 pub async fn ia_generate(
     unified_engine: State<'_, Arc<UnifiedIAEngine>>,
+    profiler: State<'_, Arc<IPCProfiler>>,
     request: IAGenerateRequest,
 ) -> Result<CommandResult<serde_json::Value>, String> {
+    let _guard = profiler.start("ia_generate");
+    
     info!("[IACommands] Génération IA...");
 
     let preferred = request
