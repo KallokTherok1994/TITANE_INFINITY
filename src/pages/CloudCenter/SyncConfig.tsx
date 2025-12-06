@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { CloudStatus } from './index';
+import { CloudStatus } from './types';
 
 interface SyncConfigProps {
   status: CloudStatus | null;
