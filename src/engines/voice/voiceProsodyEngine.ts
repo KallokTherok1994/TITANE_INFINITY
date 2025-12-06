@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type { OrchestratedVoice } from '../expression/expressionEngine';
+import type { OrchestratedVoice } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES

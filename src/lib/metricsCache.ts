@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import type { ServiceStats, CommandStats } from './serviceMetrics';
+import type { ServiceStats, CommandStats } from './metricsTypes';
 
 // ────────────────────────────────────────────────────────────────
 // Types
