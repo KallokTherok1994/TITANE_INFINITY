@@ -1,8 +1,8 @@
 /**
- * COGNITIVE SERVICES INDEX
+ * COGNITIVE SERVICES INDEX v∞.42
  * 
  * Point d'entrée principal pour tous les services cognitifs de TITANE∞
- * Facilite l'import et l'instanciation des moteurs
+ * Facilite l'import et l'instanciation des 4 moteurs cognitifs
  */
 
 // ==================== TYPES ====================
@@ -18,6 +18,24 @@ export {
   LocalEmbeddingGenerator,
   createDefaultEmbeddingGenerator
 } from './LocalEmbeddingGenerator';
+
+export {
+  GoalConsistencyEngine,
+  createGoalConsistencyEngine,
+  getDefaultGoalConsistencyConfig
+} from './GoalConsistencyEngine';
+
+export {
+  ConversationEvaluationEngine,
+  createConversationEvaluationEngine,
+  getDefaultEvaluationConfig
+} from './ConversationEvaluationEngine';
+
+export {
+  CognitiveObservabilityEngine,
+  createCognitiveObservabilityEngine,
+  getDefaultObservabilityConfig
+} from './CognitiveObservabilityEngine';
 
 // ==================== FACTORY FUNCTIONS ====================
 
