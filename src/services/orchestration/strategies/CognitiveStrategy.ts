@@ -18,6 +18,10 @@ import type {
   CognitiveGoalOperation
 } from '../types';
 
+// Import existing Cognitive Omega Orchestrator
+import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
+import type { ChatMode } from '@/services/ai/types';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // COGNITIVE STRATEGY
 // ═══════════════════════════════════════════════════════════════════════════
@@ -31,14 +35,11 @@ export class CognitiveStrategy
   private initialized = false;
   private metrics: Metric[] = [];
   
-  // Engine references (lazy loaded)
-  private semanticMemory: any = null;
-  private goalConsistency: any = null;
-  private evaluation: any = null;
-  private observability: any = null;
+  // Reference to existing Cognitive Omega Orchestrator (delegation pattern)
+  private cognitiveOrchestrator = cognitiveOmega;
 
   constructor() {
-    this.log('CognitiveStrategy created');
+    this.log('CognitiveStrategy created (delegating to CognitiveOmegaOrchestrator)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -50,13 +51,14 @@ export class CognitiveStrategy
 
     this.log('Initializing cognitive engines...');
     
-    // TODO: Initialize semantic memory engine
-    // TODO: Initialize goal consistency engine
-    // TODO: Initialize evaluation engine
-    // TODO: Initialize observability engine
+    // Cognitive Omega Orchestrator uses lazy initialization
+    // Just verify it's available
+    if (!this.cognitiveOrchestrator) {
+      throw new Error('CognitiveOmegaOrchestrator not available');
+    }
 
     this.initialized = true;
-    this.log('Cognitive engines initialized');
+    this.log('Cognitive engines initialized (delegating to existing orchestrator)');
   }
 
   isInitialized(): boolean {
@@ -143,8 +145,13 @@ export class CognitiveStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async storeMemory(content: string, importance?: number): Promise<string> {
-    // TODO: Use semantic memory engine to store
-    const memoryId = `mem_${Date.now()}`;
+    // Use semantic memory engine to store
+    const stored = await this.cognitiveOrchestrator.storeMemory({
+      content,
+      importance: importance ?? 0.5,
+      conversationId: 'unified-orchestrator',
+      timestamp: Date.now()
+    });
     
     this.recordMetric({
       name: 'cognitive.memory.stored',
@@ -153,29 +160,49 @@ export class CognitiveStrategy
       timestamp: Date.now()
     });
 
-    this.log(`Memory stored: ${memoryId}`);
-    return memoryId;
+    this.log(`Memory stored: ${stored.id}`);
+    return stored.id;
   }
 
   async retrieveMemories(query: string, limit = 5): Promise<Array<{ content: string; score: number }>> {
-    // TODO: Use semantic memory engine to retrieve
+    // Use semantic memory engine to retrieve
+    const enrichment = await this.cognitiveOrchestrator.enrichContext(
+      query,
+      'unified-orchestrator',
+      'chat' as ChatMode
+    );
+    
     this.recordMetric({
       name: 'cognitive.memory.retrieved',
       type: 'counter',
       value: 1,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      tags: { count: enrichment.metadata.memoryCount.toString() }
     });
 
-    return [];
+    // Parse memories from enrichment (simplified)
+    const memories = enrichment.memories
+      .split('\n')
+      .filter(line => line.match(/^\d+\./))
+      .map(line => ({
+        content: line.replace(/^\d+\.\s*/, '').replace(/\(pertinence:.*\)/, '').trim(),
+        score: parseFloat(line.match(/pertinence:\s*(\d+)%/)?.[1] || '0') / 100
+      }))
+      .slice(0, limit);
+
+    return memories;
   }
 
   async processConversation(messages: unknown[]): Promise<void> {
-    // TODO: Process conversation with evaluation engine
+    // Process conversation with evaluation engine
+    await this.cognitiveOrchestrator.processConversation(messages as any);
+    
     this.recordMetric({
       name: 'cognitive.conversation.processed',
       type: 'counter',
       value: 1,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      tags: { messageCount: messages.length.toString() }
     });
   }
 
@@ -184,8 +211,12 @@ export class CognitiveStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async setGoal(description: string, context?: string): Promise<string> {
-    // TODO: Use goal consistency engine
-    const goalId = `goal_${Date.now()}`;
+    // Use goal consistency engine
+    const goalId = await this.cognitiveOrchestrator.setGoal(
+      'unified-orchestrator',
+      description,
+      context ? [context] : undefined
+    );
     
     this.recordMetric({
       name: 'cognitive.goal.set',
@@ -199,13 +230,27 @@ export class CognitiveStrategy
   }
 
   async checkGoalProgress(goalId: string): Promise<{ achieved: boolean; progress: number }> {
-    // TODO: Check goal progress with consistency engine
-    return { achieved: false, progress: 0 };
+    // Check goal progress with consistency engine
+    const status = await this.cognitiveOrchestrator.getGoalStatus('unified-orchestrator', goalId);
+    
+    return { 
+      achieved: status.achieved, 
+      progress: status.progress 
+    };
   }
 
   async validateConsistency(text: string): Promise<{ violations: string[]; score: number }> {
-    // TODO: Validate consistency with goal engine
-    return { violations: [], score: 1.0 };
+    // Validate consistency with goal engine
+    const check = await this.cognitiveOrchestrator.checkConsistency(
+      'unified-orchestrator',
+      text,
+      { userMessage: '', mode: 'chat' as ChatMode }
+    );
+    
+    return { 
+      violations: check.violations.map(v => v.description), 
+      score: check.consistencyScore 
+    };
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -222,24 +267,32 @@ export class CognitiveStrategy
       };
     }
 
-    // TODO: Check health of all cognitive engines
-    const score = 95; // Placeholder
+    // Get stats from cognitive orchestrator
+    const stats = this.cognitiveOrchestrator.getStats();
+    
+    // Compute health score from stats
+    const avgConsistency = stats.avgConsistencyScore;
+    const avgQuality = stats.avgQualityScore;
+    const score = ((avgConsistency + avgQuality) / 2) * 100;
 
     return {
       status: this.scoreToStatus(score),
       score,
       details: {
-        semanticMemory: 'healthy',
-        goalConsistency: 'healthy',
-        evaluation: 'healthy',
-        observability: 'healthy'
+        totalInteractions: stats.totalInteractions,
+        memoriesCreated: stats.totalMemoriesCreated,
+        avgConsistencyScore: avgConsistency,
+        avgQualityScore: avgQuality
       },
       timestamp: Date.now()
     };
   }
 
   getHealthScore(): number {
-    return this.initialized ? 95 : 0;
+    if (!this.initialized) return 0;
+    
+    const stats = this.cognitiveOrchestrator.getStats();
+    return ((stats.avgConsistencyScore + stats.avgQualityScore) / 2) * 100;
   }
 
   getStatus(): HealthStatus {
@@ -262,18 +315,21 @@ export class CognitiveStrategy
   }
 
   getSummary(): MetricsSummary {
+    const stats = this.cognitiveOrchestrator.getStats();
     const memoriesStored = this.metrics.filter(m => m.name === 'cognitive.memory.stored').length;
     const memoriesRetrieved = this.metrics.filter(m => m.name === 'cognitive.memory.retrieved').length;
 
     return {
-      totalRequests: memoriesStored + memoriesRetrieved,
-      successRate: 1.0,
+      totalRequests: stats.totalInteractions,
+      successRate: stats.totalViolationsDetected === 0 ? 1.0 : 0.9,
       averageLatency: 0,
       errorCount: 0,
       timestamp: Date.now(),
       details: {
-        memoriesStored,
-        memoriesRetrieved
+        memoriesStored: stats.totalMemoriesCreated,
+        memoriesRetrieved,
+        totalCorrections: stats.totalCorrectionsApplied,
+        avgConsistency: stats.avgConsistencyScore
       }
     };
   }
@@ -289,10 +345,10 @@ export class CognitiveStrategy
   async shutdown(): Promise<void> {
     this.log('Shutting down cognitive engines...');
     
-    // TODO: Cleanup cognitive engines
-
+    // Cognitive Omega Orchestrator is a singleton, preserve it
+    // Just mark this strategy as not initialized
     this.initialized = false;
-    this.log('Cognitive engines shutdown complete');
+    this.log('Cognitive engines shutdown complete (orchestrator preserved)');
   }
 
   // ───────────────────────────────────────────────────────────────────────

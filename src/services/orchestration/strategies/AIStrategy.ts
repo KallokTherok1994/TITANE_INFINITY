@@ -18,6 +18,11 @@ import type {
   AIProviderInfo
 } from '../types';
 
+// Import existing AI Orchestrators
+import { aiOrchestrator } from '@/services/ai/orchestrator';
+import { omnisOrchestrator } from '@/services/ai/orchestrator_OMNIS_v1';
+import type { AIMessage } from '@/services/ai/types';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // AI STRATEGY
 // ═══════════════════════════════════════════════════════════════════════════
@@ -29,11 +34,15 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   private initialized = false;
   private metrics: Metric[] = [];
   
-  // Provider registry (lazy loaded)
-  private providers: Map<string, AIProviderInfo> = new Map();
+  // References to existing AI Orchestrators (delegation pattern)
+  private standardOrchestrator = aiOrchestrator;
+  private cognitiveOrchestrator = omnisOrchestrator;
+  
+  // Mode selection: 'standard' (neural order) or 'cognitive' (OMNIS)
+  private mode: 'standard' | 'cognitive' = 'standard';
 
   constructor() {
-    this.log('AIStrategy created');
+    this.log('AIStrategy created (delegating to AI Orchestrators)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -45,24 +54,14 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
 
     this.log('Initializing AI providers...');
     
-    // TODO: Load provider configurations
-    // TODO: Initialize titaneLocalProvider (priority 1)
-    // TODO: Initialize tauriChatProvider
-    // TODO: Initialize geminiProvider
-    // TODO: Initialize ollamaProvider
-    // TODO: Initialize OMNIS cognitive providers
-
-    // Placeholder providers
-    this.providers.set('titane-local', {
-      id: 'titane-local',
-      name: 'TITANE Local Provider',
-      isAvailable: true,
-      healthScore: 100,
-      latency: 50
-    });
+    // AI Orchestrators are already initialized as singletons
+    // Just verify they're available
+    if (!this.standardOrchestrator || !this.cognitiveOrchestrator) {
+      throw new Error('AI Orchestrators not available');
+    }
 
     this.initialized = true;
-    this.log('AI providers initialized');
+    this.log('AI providers initialized (delegating to existing orchestrators)');
   }
 
   isInitialized(): boolean {
@@ -134,62 +133,80 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
     preferLocal?: boolean; 
     maxLatency?: number 
   }): Promise<AIProviderInfo> {
-    const available = this.getAvailableProviders();
-
+    // Determine which orchestrator to use based on criteria
+    const useCognitive = criteria?.maxLatency && criteria.maxLatency < 1000;
+    this.mode = useCognitive ? 'cognitive' : 'standard';
+    
+    const orchestrator = this.mode === 'cognitive' 
+      ? this.cognitiveOrchestrator 
+      : this.standardOrchestrator;
+    
+    // Get provider stats from orchestrator
+    const stats = orchestrator.getMetrics();
+    
     // Local-first priority
-    if (criteria?.preferLocal !== false) {
-      const local = available.find(p => p.id === 'titane-local');
-      if (local && local.isAvailable) {
-        this.recordMetric({
-          name: 'ai.provider.selected',
-          type: 'counter',
-          value: 1,
-          timestamp: Date.now(),
-          tags: { provider: local.id }
-        });
-        return local;
-      }
-    }
-
-    // Filter by latency
-    let candidates = available.filter(p => p.isAvailable);
-    if (criteria?.maxLatency) {
-      candidates = candidates.filter(p => 
-        p.latency !== undefined && p.latency <= criteria.maxLatency!
-      );
-    }
-
-    // Sort by health score
-    candidates.sort((a, b) => b.healthScore - a.healthScore);
-
-    const selected = candidates[0];
-    if (!selected) {
-      throw new Error('No available AI provider');
-    }
+    const selectedProvider: AIProviderInfo = {
+      id: 'titane-local',
+      name: 'TITANE Local Provider',
+      isAvailable: true,
+      healthScore: stats.healthScore || 95,
+      latency: stats.avgResponseTime || 100
+    };
 
     this.recordMetric({
       name: 'ai.provider.selected',
       type: 'counter',
       value: 1,
       timestamp: Date.now(),
-      tags: { provider: selected.id }
+      tags: { 
+        provider: selectedProvider.id,
+        mode: this.mode
+      }
     });
 
-    return selected;
+    return selectedProvider;
   }
 
   getAvailableProviders(): AIProviderInfo[] {
-    return Array.from(this.providers.values());
+    // Get stats from both orchestrators
+    const standardStats = this.standardOrchestrator.getMetrics();
+    const cognitiveStats = this.cognitiveOrchestrator.getMetrics();
+    
+    return [
+      {
+        id: 'titane-local',
+        name: 'TITANE Local (Standard)',
+        isAvailable: true,
+        healthScore: standardStats.healthScore || 95,
+        latency: standardStats.avgResponseTime || 100
+      },
+      {
+        id: 'titane-cognitive',
+        name: 'TITANE Cognitive (OMNIS)',
+        isAvailable: true,
+        healthScore: cognitiveStats.healthScore || 90,
+        latency: cognitiveStats.avgResponseTime || 150
+      }
+    ];
   }
 
   async executeWithProvider(providerId: string, prompt: string): Promise<{ response: string }> {
-    const provider = this.providers.get(providerId);
+    // Select orchestrator based on provider ID
+    const orchestrator = providerId.includes('cognitive')
+      ? this.cognitiveOrchestrator
+      : this.standardOrchestrator;
     
-    if (!provider || !provider.isAvailable) {
-      throw new Error(`Provider ${providerId} not available`);
-    }
-
-    // TODO: Execute actual AI request
+    // Execute chat request
+    const messages: AIMessage[] = [
+      { role: 'user', content: prompt }
+    ];
+    
+    const response = await orchestrator.chat(messages, {
+      conversationId: 'unified-orchestrator',
+      mode: 'chat',
+      enableOmegaPipeline: false
+    });
+    
     this.recordMetric({
       name: 'ai.request.executed',
       type: 'counter',
@@ -198,7 +215,7 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       tags: { provider: providerId }
     });
 
-    return { response: 'AI response placeholder' };
+    return { response: response.content };
   }
 
   // ───────────────────────────────────────────────────────────────────────
@@ -215,17 +232,28 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       };
     }
 
-    const providers = this.getAvailableProviders();
-    const availableCount = providers.filter(p => p.isAvailable).length;
-    const avgHealthScore = providers.reduce((sum, p) => sum + p.healthScore, 0) / providers.length;
+    // Get health from both orchestrators
+    const standardMetrics = this.standardOrchestrator.getMetrics();
+    const cognitiveMetrics = this.cognitiveOrchestrator.getMetrics();
+    
+    const standardHealth = standardMetrics.healthScore || 90;
+    const cognitiveHealth = cognitiveMetrics.healthScore || 85;
+    const avgScore = (standardHealth + cognitiveHealth) / 2;
 
     return {
-      status: this.scoreToStatus(avgHealthScore),
-      score: avgHealthScore,
+      status: this.scoreToStatus(avgScore),
+      score: avgScore,
       details: {
-        totalProviders: providers.length,
-        availableProviders: availableCount,
-        avgHealthScore
+        standardOrchestrator: {
+          healthScore: standardHealth,
+          totalRequests: standardMetrics.totalRequests,
+          successRate: standardMetrics.successRate
+        },
+        cognitiveOrchestrator: {
+          healthScore: cognitiveHealth,
+          totalRequests: cognitiveMetrics.totalRequests,
+          successRate: cognitiveMetrics.successRate
+        }
       },
       timestamp: Date.now()
     };
@@ -233,9 +261,11 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
 
   getHealthScore(): number {
     if (!this.initialized) return 0;
-    const providers = this.getAvailableProviders();
-    if (providers.length === 0) return 0;
-    return providers.reduce((sum, p) => sum + p.healthScore, 0) / providers.length;
+    
+    const standardMetrics = this.standardOrchestrator.getMetrics();
+    const cognitiveMetrics = this.cognitiveOrchestrator.getMetrics();
+    
+    return ((standardMetrics.healthScore || 90) + (cognitiveMetrics.healthScore || 85)) / 2;
   }
 
   getStatus(): HealthStatus {
@@ -258,18 +288,27 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   }
 
   getSummary(): MetricsSummary {
+    const standardMetrics = this.standardOrchestrator.getMetrics();
+    const cognitiveMetrics = this.cognitiveOrchestrator.getMetrics();
+    
     const selections = this.metrics.filter(m => m.name === 'ai.provider.selected').length;
     const requests = this.metrics.filter(m => m.name === 'ai.request.executed').length;
+    
+    const totalRequests = standardMetrics.totalRequests + cognitiveMetrics.totalRequests;
+    const avgSuccessRate = (standardMetrics.successRate + cognitiveMetrics.successRate) / 2;
+    const avgLatency = (standardMetrics.avgResponseTime + cognitiveMetrics.avgResponseTime) / 2;
 
     return {
-      totalRequests: requests,
-      successRate: 1.0,
-      averageLatency: 0,
-      errorCount: 0,
+      totalRequests,
+      successRate: avgSuccessRate,
+      averageLatency: avgLatency,
+      errorCount: standardMetrics.totalErrors + cognitiveMetrics.totalErrors,
       timestamp: Date.now(),
       details: {
         providerSelections: selections,
-        requestsExecuted: requests
+        requestsExecuted: requests,
+        standardRequests: standardMetrics.totalRequests,
+        cognitiveRequests: cognitiveMetrics.totalRequests
       }
     };
   }
@@ -285,11 +324,10 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   async shutdown(): Promise<void> {
     this.log('Shutting down AI providers...');
     
-    // TODO: Cleanup provider connections
-
+    // AI Orchestrators are singletons, preserve them
+    // Just mark this strategy as not initialized
     this.initialized = false;
-    this.providers.clear();
-    this.log('AI providers shutdown complete');
+    this.log('AI providers shutdown complete (orchestrators preserved)');
   }
 
   // ───────────────────────────────────────────────────────────────────────
