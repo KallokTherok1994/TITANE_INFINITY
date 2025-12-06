@@ -15,60 +15,28 @@
 
 import { memoryService } from '../api';
 import type { StructuredMemoryEntry } from '@/core/prompts';
+import type {
+  MemoryContext,
+  ProjectSummary,
+  DecisionSummary,
+  KnowledgeEntry,
+  RitualInfo,
+  TimelineEntry,
+} from '../memory/types';
 
 /**
  * Contexte enrichi provenant de Memory Core
  */
-export interface MemoryContext {
-  activeProjects: ProjectSummary[];
-  recentDecisions: DecisionSummary[];
-  relevantKnowledge: KnowledgeEntry[];
-  activeRituals: RitualInfo[];
-  timeline: TimelineEntry[];
-}
+// export interface MemoryContext {
+//   Moved to @/services/memory/types
+// }
 
-export interface ProjectSummary {
-  id: string;
-  name: string;
-  status: 'active' | 'paused' | 'completed';
-  priority: number;
-  lastActivity: string;
-  tags: string[];
-}
-
-export interface DecisionSummary {
-  id: string;
-  title: string;
-  context: string;
-  outcome: string;
-  timestamp: string;
-  impact: 'high' | 'medium' | 'low';
-}
-
-export interface KnowledgeEntry {
-  id: string;
-  topic: string;
-  content: string;
-  source: string;
-  relevance: number;
-  timestamp: string;
-}
-
-export interface RitualInfo {
-  id: string;
-  name: string;
-  frequency: string;
-  lastExecution: string;
-  nextScheduled?: string;
-  impact: string;
-}
-
-export interface TimelineEntry {
-  timestamp: string;
-  type: 'chat' | 'decision' | 'project' | 'ritual' | 'emotion';
-  content: string;
-  metadata?: Record<string, unknown>;
-}
+// Interfaces moved to @/services/memory/types:
+// - ProjectSummary
+// - DecisionSummary
+// - KnowledgeEntry
+// - RitualInfo
+// - TimelineEntry
 
 /**
  * Configuration du chargement contextuel

@@ -30,9 +30,9 @@
 // ============================================================================
 export {
   memoryService,
-  type ChatInteraction,
 } from './memory';
 export type {
+  ChatInteraction,
   MemoryContext,
   MemoryLoadConfig,
   ProjectSummary,
@@ -40,7 +40,7 @@ export type {
   KnowledgeEntry,
   RitualInfo,
   TimelineEntry,
-} from '../ai/memoryIntegration';
+} from '../memory/types';
 
 // ============================================================================
 // CHAT IA

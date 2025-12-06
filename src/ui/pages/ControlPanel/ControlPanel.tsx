@@ -22,17 +22,8 @@ import { LogsSection } from './sections/LogsSection';
 import { SecuritySection } from './sections/SecuritySection';
 import './ControlPanel.css';
 
-export type ControlPanelSection =
-  | 'system'
-  | 'appearance'
-  | 'singularity'
-  | 'ai'
-  | 'memory'
-  | 'modules'
-  | 'network'
-  | 'updates'
-  | 'logs'
-  | 'security';
+export type { ControlPanelSection } from './types';
+import type { ControlPanelSection } from './types';
 
 export const ControlPanel: React.FC = () => {
   const [activeSection, setActiveSection] = useState<ControlPanelSection>('system');

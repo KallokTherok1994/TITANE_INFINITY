@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { type AttentionState } from './attentionEngine';
+import { type AttentionState } from './attentionTypes';
 
 /**
  * Contexte environnemental
