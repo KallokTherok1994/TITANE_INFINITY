@@ -294,6 +294,26 @@ pub async fn chat_send_message(
 
     let start = crate::core::utils::now_ms();
 
+    // 🔒 SECURITY v19.3: Rate Limiting Check
+    // Utiliser user_id si fourni, sinon "anonymous"
+    let user_id = request.conversation_id.clone().unwrap_or_else(|| "anonymous".to_string());
+    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER.check(&user_id).await {
+        println!("[CHAT] ⛔ Rate limit exceeded for user {}: {}", user_id, e);
+        
+        // Log security event
+        let event = crate::security::AuditEvent::new(
+            crate::security::AuditEventType::RateLimitExceeded,
+            user_id.clone(),
+            serde_json::json!({ "provider": request.provider, "message_length": request.message.len() }),
+            crate::security::AuditSeverity::Warning,
+        )
+        .with_module("chat_orchestrator");
+        
+        let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
+        
+        return Err(format!("Rate limit exceeded: {}", e));
+    }
+
     // Validation input
     if request.message.trim().is_empty() {
         return Err(TAPIError::validation("Message cannot be empty").into());
