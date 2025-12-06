@@ -6,7 +6,7 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
-import type { DevSudoResult } from './devSudoHandler';
+import type { DevSudoResult } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // DEEP HEALING & AUTO-FIX

@@ -6,7 +6,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type { DevSudoResult } from './devSudoHandler';
+import type { DevSudoResult } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // IDE FILE OPERATIONS

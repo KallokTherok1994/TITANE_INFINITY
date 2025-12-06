@@ -18,7 +18,7 @@
  */
 
 import SingularityIntrospectionEngine from '../singularity/SingularityIntrospectionEngine';
-import type { DevSudoResult } from './devSudoHandler';
+import type { DevSudoResult } from './types';
 
 /**
  * Helper: Convertit une string de réponse en DevSudoResult
