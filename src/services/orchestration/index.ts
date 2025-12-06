@@ -61,3 +61,8 @@ export type {
   QuantumOperation,
   QuantumSignal
 } from './types';
+
+// Export compatibility wrappers (backward compatibility - Week 2 Day 3)
+export { MCPOrchestrator } from './compat/mcpCompat';
+export { cognitiveOmega, CognitiveOmegaOrchestrator } from './compat/cognitiveCompat';
+export { aiOrchestrator, omnisOrchestrator } from './compat/aiCompat';
