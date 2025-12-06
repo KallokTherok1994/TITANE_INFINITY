@@ -18,36 +18,40 @@ import React from 'react';
 
 
 export interface AudioButtonProps {
-
   text: string;
-
+  isPlaying?: boolean;
+  onToggle?: () => void;
 }
 
-
-
-export const AudioButton: React.FC<AudioButtonProps> = ({ text: _text }) => {
-
+export const AudioButton: React.FC<AudioButtonProps> = ({ 
+  text, 
+  isPlaying = false,
+  onToggle 
+}) => {
   const handleClick = () => {
-
     // TODO: Implement text-to-speech functionality
-
     // Will integrate with useVoiceMode hook for TTS
-
-    // Future use: speak(_text)
-
+    // Future use: speak(text)
+    onToggle?.();
   };
 
-
-
   return (
-
-    <button onClick={handleClick} className="audio-button" aria-label="Read aloud">
-
-      🔊
-
+    <button 
+      type="button"
+      onClick={handleClick} 
+      className={`audio-button ${isPlaying ? 'playing' : ''}`}
+      aria-label={isPlaying ? 'Arrêter la lecture' : 'Lire à voix haute'}
+      aria-pressed={isPlaying}
+      disabled={!text.trim()}
+      title={isPlaying ? 'Arrêter la lecture (Esc)' : 'Lire ce texte à voix haute'}
+    >
+      <span aria-hidden="true">{isPlaying ? '⏹️' : '🔊'}</span>
+      {isPlaying && (
+        <span role="status" aria-live="polite" className="sr-only">
+          Lecture en cours
+        </span>
+      )}
     </button>
-
   );
-
 };
 

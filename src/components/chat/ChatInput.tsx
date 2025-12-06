@@ -481,12 +481,25 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
   try {
     return (
       <div className="chat-input-container chat-input-omega" data-omega-version="v19.2Ω">
-        {/* Error indicator */}
+        {/* Error indicator with ARIA live region */}
         {inputState.inputError && (
-          <div className="chat-input-error-notice">
-            <span className="chat-input-error-icon">⚠️</span>
+          <div 
+            id="input-error-message"
+            className="chat-input-error-notice"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <span className="chat-input-error-icon" aria-hidden="true">⚠️</span>
             <span className="chat-input-error-text">{inputState.inputError}</span>
-            <button onClick={resetError} className="chat-input-error-dismiss">✕</button>
+            <button 
+              onClick={resetError} 
+              className="chat-input-error-dismiss"
+              aria-label="Fermer le message d'erreur"
+              type="button"
+            >
+              ✕
+            </button>
           </div>
         )}
 
@@ -503,11 +516,13 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
           </div>
         )}
 
-        {/* Uploaded files preview */}
+        {/* Uploaded files preview with semantic list */}
         {uploadedFiles.length > 0 && (
-          <div className="chat-uploaded-files">
+          <div className="chat-uploaded-files" role="region" aria-label="Fichiers uploadés">
+            <ul role="list" className="chat-uploaded-files-list">
             {uploadedFiles.map((file, idx) => (
-              <div key={`${file.name}-${idx}`} className={`chat-file-chip ${file.status}`}>
+              <li key={`${file.name}-${idx}`} role="listitem" className={`chat-file-chip ${file.status}`}>
+                <span className="sr-only">Fichier {idx + 1} sur {uploadedFiles.length}: </span>
                 <span className="chat-file-chip-icon">
                   {file.status === 'analyzing' ? '⏳' : file.status === 'done' ? '✅' : '❌'}
                 </span>
@@ -519,8 +534,9 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
                 >
                   ✕
                 </button>
-              </div>
+              </li>
             ))}
+            </ul>
           </div>
         )}
 
@@ -528,13 +544,16 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
           {/* File upload toggle button */}
           {enableFileUpload && (
             <button
+              type="button"
               className={`chat-file-btn ${showFileUpload ? 'active' : ''}`}
               onClick={handleToggleFileUpload}
               disabled={isInputDisabled}
-              title="Importer des fichiers à analyser"
+              title={showFileUpload ? 'Fermer import fichiers' : 'Ouvrir import fichiers'}
               aria-label="Importer des fichiers"
+              aria-expanded={showFileUpload}
+              aria-controls="chat-file-upload-zone"
             >
-              <span className="chat-file-icon">📎</span>
+              <span className="chat-file-icon" aria-hidden="true">📎</span>
             </button>
           )}
 
@@ -547,7 +566,11 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
             />
           )}
 
+          <label htmlFor="chat-input-textarea" className="sr-only">
+            Message à envoyer à TITANE
+          </label>
           <textarea
+            id="chat-input-textarea"
             ref={textareaRef}
             className={`chat-input ${inputState.inputError ? 'chat-input-error' : ''}`}
             placeholder={placeholderSafe}
@@ -558,40 +581,56 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
             rows={1}
             maxLength={OMEGA_INPUT_CONFIG.maxLength}
             aria-label="Message à envoyer"
-            aria-describedby="char-count"
+            aria-describedby={`char-count chat-input-hint${inputState.inputError ? ' input-error-message' : ''}`}
+            aria-invalid={!!inputState.inputError}
           />
 
-          {/* Character counter */}
-          <div id="char-count" className="chat-input-counter">
+          {/* Character counter with live region */}
+          <div 
+            id="char-count" 
+            className="chat-input-counter"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <span className="sr-only">Nombre de caractères: </span>
             <span className={characterCount > OMEGA_INPUT_CONFIG.maxLength * 0.9 ? 'chat-counter-warning' : ''}>
-              {characterCount}/{OMEGA_INPUT_CONFIG.maxLength}
+              {characterCount} / {OMEGA_INPUT_CONFIG.maxLength}
             </span>
+            {characterCount > OMEGA_INPUT_CONFIG.maxLength * 0.9 && (
+              <span className="sr-only"> - Limite bientôt atteinte</span>
+            )}
           </div>
 
           {/* Voice button - ALWAYS VISIBLE */}
           <button
+            type="button"
             className={`chat-voice-btn ${voiceModeActive ? 'active' : ''}`}
             onClick={handleVoiceToggle}
             disabled={isInputDisabled}
             title={voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'}
             aria-label={voiceModeActive ? 'Désactiver le mode vocal' : 'Activer le mode vocal'}
+            aria-pressed={voiceModeActive}
           >
-            <span className="chat-voice-icon">🎤</span>
+            <span className="chat-voice-icon" aria-hidden="true">🎤</span>
           </button>
 
           {/* Send button with protection */}
           <button
+            type="submit"
             className="chat-send-btn chat-send-omega"
             onClick={handleSend}
             disabled={!trimmedValue || isInputDisabled || messageSent.current}
-            aria-label="Envoyer le message"
-            title="Envoyer le message (Enter)"
+            aria-label={voiceModeActive ? 'Envoyer message vocal' : 'Envoyer message texte'}
+            aria-disabled={!trimmedValue || isInputDisabled || messageSent.current}
+            aria-busy={messageSent.current}
+            title="Envoyer le message (Enter ou Ctrl+Enter)"
           >
-            <span className="chat-send-icon">➤</span>
+            <span className="chat-send-icon" aria-hidden="true">{voiceModeActive ? '🎤' : '➤'}</span>
           </button>
         </div>
 
-        <div className="chat-input-hint">
+        <div id="chat-input-hint" className="chat-input-hint" role="region" aria-label="Aide à la saisie">
           <span className="chat-hint-text">
             Entrée pour envoyer • Maj+Entrée pour nouvelle ligne
             {enableFileUpload && ' • 📎 Fichiers'}
