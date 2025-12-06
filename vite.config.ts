@@ -135,7 +135,19 @@ export default defineConfig({
           }
         },
       },
-      // external removed - Tauri API now bundled with proper alias resolution
+      // Externaliser les modules Node.js purs (incompatibles browser)
+      external: [
+        'better-sqlite3',
+        'sqlite3',
+        'bindings',
+        'file-uri-to-path',
+        'fs',
+        'path',
+        'util',
+        'crypto',
+        'stream',
+        'os',
+      ],
     },
   },
 
