@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { ControlPanelSection } from '../ControlPanel';
+import { ControlPanelSection } from '../types';
 import { SystemInfo } from '../../../../types/tauri';
 import './ControlPanelLayout.css';
 

@@ -15,63 +15,23 @@
  */
 
 import type { WakeWordEvent } from './wakeWordEngine';
+import type {
+  AttentionState,
+  ListeningMode,
+  AttentionEvent,
+  AttentionConfig,
+  AttentionCallback,
+} from './attentionTypes';
 import { contextualAttentionV2 } from './contextualAttentionV2';
 
-/**
- * États d'attention de TITANE∞
- */
-export type AttentionState =
-  | 'inactive'          // Écoute désactivée
-  | 'armed'             // En écoute passive (attend wake word)
-  | 'wake_detected'     // Wake word détecté, transition en cours
-  | 'awaiting_command'  // Réveillé, attend la commande utilisateur
-  | 'processing'        // Traitement IA en cours
-  | 'responding'        // TTS en cours
-  | 'cooldown';         // Période de refroidissement après réponse
-
-/**
- * Mode d'écoute
- */
-export type ListeningMode =
-  | 'off'           // Désactivé
-  | 'push_to_talk'  // Manuel (bouton)
-  | 'wake_word';    // Activation vocale
-
-/**
- * Événement d'attention
- */
-export interface AttentionEvent {
-  state: AttentionState;
-  previousState: AttentionState;
-  timestamp: number;
-  wakeEvent?: WakeWordEvent;
-  reason?: string;
-}
-
-/**
- * Configuration du moteur d'attention
- */
-export interface AttentionConfig {
-  /** Mode d'écoute (défaut: 'off') */
-  mode?: ListeningMode;
-
-  /** Durée du cooldown en ms (défaut: 1000) */
-  cooldownDuration?: number;
-
-  /** Timeout pour awaiting_command en ms (défaut: 10000) */
-  commandTimeout?: number;
-
-  /** Auto-retour en armed après réponse (défaut: true) */
-  autoRearm?: boolean;
-
-  /** [v19.5.0] Enable contextual adaptation (v2.0 features) */
-  useContextualAdaptation?: boolean;
-}
-
-/**
- * Callback d'événement
- */
-export type AttentionCallback = (event: AttentionEvent) => void;
+// Re-export types for external consumers
+export type {
+  AttentionState,
+  ListeningMode,
+  AttentionEvent,
+  AttentionConfig,
+  AttentionCallback,
+};
 
 /**
  * ═══════════════════════════════════════════════════════════════════
