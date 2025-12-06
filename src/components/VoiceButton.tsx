@@ -43,6 +43,11 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  
+  // P2: Respect prefers-reduced-motion (WCAG 2.3.3 AAA)
+  const prefersReducedMotion = typeof window !== 'undefined' 
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false;
 
   const handlePress = () => {
     if (disabled) return;
@@ -73,8 +78,8 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
       className="voice-button-container"
       style={{ width: size + 60, height: size + 60 }}
     >
-      {/* Anneaux concentriques animés */}
-      {isActive && (
+      {/* Anneaux concentriques animés (skip if prefers-reduced-motion) */}
+      {isActive && !prefersReducedMotion && (
         <>
           {[0, 1, 2].map((i) => (
             <motion.div
@@ -131,25 +136,25 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
             handleRelease();
           }
         }}
-        whileHover={{ scale: disabled ? 1 : 1.05 }}
-        whileTap={{ scale: disabled ? 1 : 0.95 }}
+        whileHover={{ scale: disabled || prefersReducedMotion ? 1 : 1.05 }}
+        whileTap={{ scale: disabled || prefersReducedMotion ? 1 : 0.95 }}
         animate={{
           boxShadow: isActive
             ? [
                 '0 0 20px rgba(59, 130, 246, 0.4)',
-                '0 0 40px rgba(59, 130, 246, 0.6)',
+                prefersReducedMotion ? '0 0 20px rgba(59, 130, 246, 0.4)' : '0 0 40px rgba(59, 130, 246, 0.6)',
                 '0 0 20px rgba(59, 130, 246, 0.4)',
               ]
             : '0 4px 24px rgba(0, 0, 0, 0.12)',
         }}
         transition={{
           boxShadow: {
-            duration: 1.5,
-            repeat: isActive ? Infinity : 0,
+            duration: prefersReducedMotion ? 0 : 1.5,
+            repeat: isActive && !prefersReducedMotion ? Infinity : 0,
             ease: 'easeInOut',
           },
           scale: {
-            duration: 0.2,
+            duration: prefersReducedMotion ? 0 : 0.2,
           },
         }}
         disabled={disabled}
@@ -162,8 +167,8 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         {/* Gradient background */}
         <div className="voice-button-gradient" />
 
-        {/* Shimmer effect */}
-        {isHovered && !disabled && (
+        {/* Shimmer effect (skip if prefers-reduced-motion) */}
+        {isHovered && !disabled && !prefersReducedMotion && (
           <motion.div
             className="voice-button-shimmer"
             animate={{
@@ -206,8 +211,8 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           )}
         </svg>
 
-        {/* Pulse central */}
-        {isActive && (
+        {/* Pulse central (skip if prefers-reduced-motion) */}
+        {isActive && !prefersReducedMotion && (
           <motion.div
             className="voice-button-pulse"
             animate={{
