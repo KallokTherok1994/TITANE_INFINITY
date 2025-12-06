@@ -102,6 +102,7 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
 
       {/* Bouton principal */}
       <motion.button
+        type="button"
         className={`voice-button ${isActive ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
         style={{
           width: size,
@@ -116,6 +117,20 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         }}
         onTouchStart={handlePress}
         onTouchEnd={handleRelease}
+        onKeyDown={(e) => {
+          if (disabled) return;
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            handlePress();
+          }
+        }}
+        onKeyUp={(e) => {
+          if (disabled) return;
+          if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            handleRelease();
+          }
+        }}
         whileHover={{ scale: disabled ? 1 : 1.05 }}
         whileTap={{ scale: disabled ? 1 : 0.95 }}
         animate={{
@@ -138,6 +153,11 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
           },
         }}
         disabled={disabled}
+        aria-label={isActive ? 'Arrêter l\'enregistrement vocal' : 'Démarrer l\'enregistrement vocal'}
+        aria-pressed={isActive}
+        aria-disabled={disabled}
+        tabIndex={disabled ? -1 : 0}
+        title={mode === 'push-to-talk' ? 'Maintenir pour parler (Espace)' : 'Cliquer pour activer/désactiver (Entrée)'}
       >
         {/* Gradient background */}
         <div className="voice-button-gradient" />
@@ -216,9 +236,23 @@ export const VoiceButton: React.FC<VoiceButtonProps> = ({
         </div>
       )}
 
-      {/* Mode indicator */}
-      <div className="voice-button-mode">
-        {mode === 'push-to-talk' ? '🎙️ Push to Talk' : '🤖 VAD Auto'}
+      {/* Mode indicator with live region */}
+      <div 
+        className="voice-button-mode"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <span className="sr-only">Mode actuel: </span>
+        {mode === 'push-to-talk' ? (
+          <>
+            <span aria-hidden="true">🎙️</span> Push to Talk
+          </>
+        ) : (
+          <>
+            <span aria-hidden="true">🤖</span> VAD Auto
+          </>
+        )}
       </div>
     </div>
   );

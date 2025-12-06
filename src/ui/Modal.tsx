@@ -13,9 +13,10 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { type HTMLAttributes, useEffect, forwardRef } from 'react';
+import { type HTMLAttributes, useEffect, forwardRef, useRef } from 'react';
 import { clsx } from 'clsx';
 import { colors, spacing, radius, shadows } from '@themes/tokens';
+import { trapFocus } from '@/lib/accessibility';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -128,6 +129,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
     },
     ref
   ) => {
+    const modalRef = useRef<HTMLDivElement>(null);
+    const triggerRef = useRef<HTMLElement | null>(null);
+
     // Gérer la touche Escape
     useEffect(() => {
       if (!isOpen || !closeOnEscape) {
@@ -159,6 +163,33 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       };
     }, [isOpen]);
 
+    // Focus trap et focus initial
+    useEffect(() => {
+      if (!isOpen || !modalRef.current) return;
+
+      // Sauvegarder l'élément qui avait le focus
+      triggerRef.current = document.activeElement as HTMLElement;
+
+      // Implémenter focus trap
+      const cleanup = trapFocus(modalRef.current);
+
+      // Focus sur le premier élément focusable
+      requestAnimationFrame(() => {
+        const firstFocusable = modalRef.current?.querySelector<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        firstFocusable?.focus();
+      });
+
+      // Restaurer focus à la fermeture
+      return () => {
+        cleanup();
+        requestAnimationFrame(() => {
+          triggerRef.current?.focus();
+        });
+      };
+    }, [isOpen]);
+
     if (!isOpen) {
       return null;
     }
@@ -179,7 +210,15 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         }}
       >
         <div
-          ref={ref}
+          ref={(node) => {
+            if (typeof ref === 'function') ref(node);
+            else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? 'modal-title' : undefined}
+          aria-describedby={title ? undefined : 'modal-content'}
           className={clsx('titane-modal', className)}
           style={modalStyles}
           onClick={e => e.stopPropagation()}
@@ -187,6 +226,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         >
           {showCloseButton && (
             <button
+              type="button"
               style={closeButtonStyles}
               onClick={onClose}
               onMouseEnter={e => {
@@ -197,17 +237,18 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 e.currentTarget.style.background = 'transparent';
                 e.currentTarget.style.color = colors.neutral[400];
               }}
-              aria-label="Fermer"
+              aria-label="Fermer la fenêtre modale"
+              title="Fermer (Esc)"
             >
-              ×
+              <span aria-hidden="true">×</span>
             </button>
           )}
           {title && (
             <div style={headerStyles}>
-              <h2 style={titleStyles}>{title}</h2>
+              <h2 id="modal-title" style={titleStyles}>{title}</h2>
             </div>
           )}
-          <div style={contentStyles}>{children}</div>
+          <div id="modal-content" style={contentStyles}>{children}</div>
         </div>
       </div>
     );
