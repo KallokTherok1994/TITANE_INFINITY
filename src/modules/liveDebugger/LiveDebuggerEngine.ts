@@ -11,7 +11,6 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { vocalDevConsole } from '@/modules/vocalDev/VocalDevConsoleEngine';
 import type { VocalDevState as _VocalDevState } from '@/modules/vocalDev/VocalDevConsoleEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -19,36 +18,36 @@ import type { VocalDevState as _VocalDevState } from '@/modules/vocalDev/VocalDe
 // ═══════════════════════════════════════════════════════════════════
 
 export type LiveDebuggerMode =
-  | 'shadow'          // Écoute sans intervenir
-  | 'active'          // Analyse et propose
-  | 'auto-heal'       // Corrections automatiques
-  | 'explain'         // Explications en direct
-  | 'draft';          // Génération patch vocale
+  | 'shadow' // Écoute sans intervenir
+  | 'active' // Analyse et propose
+  | 'auto-heal' // Corrections automatiques
+  | 'explain' // Explications en direct
+  | 'draft'; // Génération patch vocale
 
 export type LiveIntentType =
-  | 'dev'             // Code/patch/fix
-  | 'bug'             // Report bug
-  | 'ui'              // UI problem
-  | 'backend'         // Backend issue
-  | 'heal'            // Self-heal request
-  | 'diagnostic'      // System check
-  | 'question'        // Explanation request
-  | 'command';        // SUDO command
+  | 'dev' // Code/patch/fix
+  | 'bug' // Report bug
+  | 'ui' // UI problem
+  | 'backend' // Backend issue
+  | 'heal' // Self-heal request
+  | 'diagnostic' // System check
+  | 'question' // Explanation request
+  | 'command'; // SUDO command
 
 export interface LiveIntent {
   type: LiveIntentType;
   text: string;
   confidence: number;
   keywords: string[];
-  modules: string[];      // Modules impactés
+  modules: string[]; // Modules impactés
   severity: 'low' | 'medium' | 'high' | 'critical';
-  actionable: boolean;    // Peut-on agir immédiatement?
+  actionable: boolean; // Peut-on agir immédiatement?
 }
 
 export interface LiveDiagnostic {
   timestamp: number;
   intent: LiveIntent;
-  analysis: string;       // Ce qui a été détecté
+  analysis: string; // Ce qui a été détecté
   rootCause: string | null; // Cause probable
   affectedModules: string[];
   suggestedFix: string | null;
@@ -68,7 +67,7 @@ export interface MicroPatch {
   }>;
   reason: string;
   confidence: number;
-  safe: boolean;          // Non destructif?
+  safe: boolean; // Non destructif?
   autoApplicable: boolean; // Peut être appliqué automatiquement?
 }
 
@@ -87,7 +86,7 @@ export interface LiveDebuggerState {
   isAnalyzing: boolean;
   isPatching: boolean;
   currentTranscript: string;
-  segmentBuffer: string[];  // Segments de 300ms
+  segmentBuffer: string[]; // Segments de 300ms
   diagnostics: LiveDiagnostic[];
   appliedPatches: MicroPatch[];
   healthScore: number;
@@ -100,11 +99,11 @@ export interface LiveDebuggerState {
 export interface LiveDebuggerConfig {
   enabled: boolean;
   mode: LiveDebuggerMode;
-  segmentIntervalMs: number;      // 300ms par défaut
+  segmentIntervalMs: number; // 300ms par défaut
   autoHealEnabled: boolean;
   explainWhileDebugging: boolean;
   ttsEnabled: boolean;
-  shadowModeThreshold: number;    // Confidence pour intervenir en shadow
+  shadowModeThreshold: number; // Confidence pour intervenir en shadow
   maxSegmentBufferSize: number;
   continuousAnalysis: boolean;
 }
@@ -176,6 +175,7 @@ export class LiveDebuggerEngine {
     this.state.healthScore = 100;
 
     // Activer le Vocal Dev Console sous-jacent
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
     await vocalDevConsole.activate();
 
     // Démarrer le segment timer
@@ -212,6 +212,8 @@ export class LiveDebuggerEngine {
 
     try {
       // Démarrer recording via Vocal Dev Console
+      const { vocalDevConsole } =
+        await import('@/modules/vocalDev/VocalDevConsoleEngine');
       await vocalDevConsole.startRecording();
 
       this.state.isListening = true;
@@ -259,7 +261,9 @@ export class LiveDebuggerEngine {
       this.processSegment();
     }, this.config.segmentIntervalMs);
 
-    console.log(`[LiveDebugger] Segment timer started (${this.config.segmentIntervalMs}ms)`);
+    console.log(
+      `[LiveDebugger] Segment timer started (${this.config.segmentIntervalMs}ms)`
+    );
   }
 
   /**
@@ -281,6 +285,8 @@ export class LiveDebuggerEngine {
 
     try {
       // Récupérer la transcription actuelle (via VocalDevConsole state)
+      const { vocalDevConsole } =
+        await import('@/modules/vocalDev/VocalDevConsoleEngine');
       const vocalState = vocalDevConsole.getState();
       // Note: VocalDevState doesn't have direct transcript, need to implement retrieval
       // For now, use lastCommand as placeholder
@@ -346,7 +352,10 @@ export class LiveDebuggerEngine {
         }
 
         // 5. En mode shadow, n'intervenir que si critique
-        if (this.state.mode === 'shadow' && intent.confidence >= this.config.shadowModeThreshold) {
+        if (
+          this.state.mode === 'shadow' &&
+          intent.confidence >= this.config.shadowModeThreshold
+        ) {
           console.log('[LiveDebugger] Shadow mode intervention:', intent.type);
         }
 
@@ -407,10 +416,7 @@ export class LiveDebuggerEngine {
         /explique|explain/i,
         /aide|help/i,
       ],
-      command: [
-        /sudo|command|exec|exécute/i,
-        /run|lance|démarre|start/i,
-      ],
+      command: [/sudo|command|exec|exécute/i, /run|lance|démarre|start/i],
     };
 
     // Calculer confidence pour chaque type
@@ -491,7 +497,10 @@ export class LiveDebuggerEngine {
   /**
    * Calculer sévérité du problème
    */
-  private calculateSeverity(text: string, _confidence: number): 'low' | 'medium' | 'high' | 'critical' {
+  private calculateSeverity(
+    text: string,
+    _confidence: number
+  ): 'low' | 'medium' | 'high' | 'critical' {
     const criticalWords = ['crash', 'plante', 'bloque', 'figé', 'freeze'];
     const highWords = ['erreur', 'error', 'bug', 'problème'];
     const mediumWords = ['bizarre', 'étrange', 'lent', 'slow'];
@@ -531,8 +540,8 @@ export class LiveDebuggerEngine {
     const suggestedFix = microPatch
       ? `Apply micro-patch to ${microPatch.module}`
       : macroPatch
-      ? `Review and apply macro-patch`
-      : 'Manual investigation required';
+        ? `Review and apply macro-patch`
+        : 'Manual investigation required';
 
     return {
       timestamp: Date.now(),
@@ -592,7 +601,10 @@ export class LiveDebuggerEngine {
   /**
    * Générer micro-patch automatique (corrections simples)
    */
-  private async generateMicroPatch(intent: LiveIntent, rootCause: string | null): Promise<MicroPatch | null> {
+  private async generateMicroPatch(
+    intent: LiveIntent,
+    rootCause: string | null
+  ): Promise<MicroPatch | null> {
     // Seules les corrections simples et sûres
     if (intent.type === 'heal' && intent.confidence >= 0.8) {
       return {
@@ -613,13 +625,17 @@ export class LiveDebuggerEngine {
   /**
    * Générer macro-patch (corrections complexes)
    */
-  private generateMacroPatch(intent: LiveIntent, rootCause: string | null): MacroPatch | null {
+  private generateMacroPatch(
+    intent: LiveIntent,
+    rootCause: string | null
+  ): MacroPatch | null {
     if (intent.actionable && intent.confidence >= 0.7) {
       return {
         type: 'macro',
         modules: intent.modules,
         files: [],
-        description: rootCause || `Fix ${intent.type} issue in ${intent.modules.join(', ')}`,
+        description:
+          rootCause || `Fix ${intent.type} issue in ${intent.modules.join(', ')}`,
         requiresReview: true,
         estimatedTime: '5-10 minutes',
       };
@@ -631,7 +647,11 @@ export class LiveDebuggerEngine {
   /**
    * Créer plan d'exécution
    */
-  private createExecutionPlan(intent: LiveIntent, microPatch: MicroPatch | null, macroPatch: MacroPatch | null): string[] {
+  private createExecutionPlan(
+    intent: LiveIntent,
+    microPatch: MicroPatch | null,
+    macroPatch: MacroPatch | null
+  ): string[] {
     const plan: string[] = [];
 
     if (microPatch) {
@@ -725,7 +745,9 @@ export class LiveDebuggerEngine {
       return;
     }
 
-    const criticalCount = recentDiagnostics.filter(d => d.intent.severity === 'critical').length;
+    const criticalCount = recentDiagnostics.filter(
+      d => d.intent.severity === 'critical'
+    ).length;
     const highCount = recentDiagnostics.filter(d => d.intent.severity === 'high').length;
 
     let score = 100;
@@ -838,9 +860,11 @@ export class LiveDebuggerEngine {
       totalDiagnostics: this.state.totalDiagnostics,
       totalPatches: this.state.totalPatches,
       healthScore: this.state.healthScore,
-      averageConfidence: this.state.diagnostics.length > 0
-        ? this.state.diagnostics.reduce((sum, d) => sum + d.intent.confidence, 0) / this.state.diagnostics.length
-        : 0,
+      averageConfidence:
+        this.state.diagnostics.length > 0
+          ? this.state.diagnostics.reduce((sum, d) => sum + d.intent.confidence, 0) /
+            this.state.diagnostics.length
+          : 0,
     };
   }
 }

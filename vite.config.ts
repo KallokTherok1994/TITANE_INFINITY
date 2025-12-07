@@ -82,6 +82,17 @@ export default defineConfig({
     target: 'esnext',
     chunkSizeWarningLimit: 1000, // Increased for large dashboards
     rollupOptions: {
+      // Supprimer warning eval() pour onnxruntime-web (WebAssembly loader)
+      onwarn(warning, warn) {
+        // Ignorer warning eval() de onnxruntime-web (nécessaire pour WASM)
+        if (
+          warning.code === 'EVAL' &&
+          warning.id?.includes('onnxruntime-web')
+        ) {
+          return;
+        }
+        warn(warning);
+      },
       input: {
         main: resolve(__dirname, 'index.html')
       },

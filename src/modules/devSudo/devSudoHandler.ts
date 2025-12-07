@@ -12,11 +12,8 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
-import { dataCollector } from '@/modules/dataCollector/DataCollectorEngine';
-import { liveDebugger } from '@/modules/liveDebugger/LiveDebuggerEngine';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
-import { vocalDevConsole } from '@/modules/vocalDev/VocalDevConsoleEngine';
 import * as ExtendedHandlers from './devSudoExtendedHandlers';
 import * as IDEHandlers from './devSudoIDEHandlers';
 import * as SingularityHandlers from './devSudoSingularityHandlers';
@@ -1866,10 +1863,10 @@ export async function executeDevSudoCommand(
         return await handleDatasetCollect();
 
       case 'dataset-clean':
-        return handleDatasetClean();
+        return await handleDatasetClean();
 
       case 'dataset-generate':
-        return handleDatasetGenerate();
+        return await handleDatasetGenerate();
 
       case 'dataset-training-pack':
         return handleDatasetTrainingPack();
@@ -3612,8 +3609,9 @@ Erreurs: ${report.errors.join(', ')}`,
  * Handler: dataset.clean
  * Nettoie le dataset (supprime doublons, données de mauvaise qualité)
  */
-function handleDatasetClean(): DevSudoResult {
+async function handleDatasetClean(): Promise<DevSudoResult> {
   try {
+    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
     const statsBefore = dataCollector.getStats();
     dataCollector.cleanDataset();
     const statsAfter = dataCollector.getStats();
@@ -3652,8 +3650,9 @@ Supprimées: ${removed} entrées
  * Handler: dataset.generate
  * Génère le fichier JSONL du dataset
  */
-function handleDatasetGenerate(): DevSudoResult {
+async function handleDatasetGenerate(): Promise<DevSudoResult> {
   try {
+    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
     const stats = dataCollector.getStats();
 
     return {

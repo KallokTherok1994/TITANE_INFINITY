@@ -24,7 +24,6 @@
 
 import {
   SemanticMemoryEngine,
-  SQLiteVectorStore,
   LocalEmbeddingGenerator,
   GoalConsistencyEngine,
   ConversationEvaluationEngine,
@@ -98,7 +97,8 @@ class CognitiveOmegaOrchestrator {
       try {
         this.log('Initializing cognitive engines...');
 
-        // 1. Semantic Memory Engine
+        // 1. Semantic Memory Engine - Dynamic import pour éviter bundling Node.js
+        const { SQLiteVectorStore } = await import('./SQLiteVectorStore');
         const vectorStore = new SQLiteVectorStore({
           dbPath: './data/cognitive/semantic_memory.db',
           collectionName: 'memories',
