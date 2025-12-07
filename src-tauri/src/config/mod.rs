@@ -9,6 +9,7 @@
  */
 
 pub mod update;
+pub mod io;
 
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};

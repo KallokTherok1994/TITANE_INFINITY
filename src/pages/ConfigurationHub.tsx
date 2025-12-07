@@ -175,6 +175,46 @@ export const ConfigurationHub: React.FC = () => {
     }
   };
 
+  const handleExport = async () => {
+    try {
+      const filename = `config-${new Date().toISOString().replace(/[:.]/g, '-')}`;
+      console.log('📤 [ConfigHub] Exporting configuration to:', filename);
+
+      const filePath = await invoke<string>('export_config', { filename });
+      console.log('✅ [ConfigHub] Configuration exported to:', filePath);
+
+      alert(`✅ Configuration exportée vers:\n${filePath}`);
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to export configuration:', err);
+      alert(`❌ Échec de l'export: ${err}`);
+    }
+  };
+
+  const handleImport = async () => {
+    // For now, we'll use a prompt to get the file path
+    // In a real app, you'd use a file picker dialog
+    const filePath = prompt('Entrez le chemin du fichier JSON à importer:');
+
+    if (!filePath) {
+      return;
+    }
+
+    try {
+      console.log('📥 [ConfigHub] Importing configuration from:', filePath);
+
+      const importedConfig = await invoke<ConfigSnapshot>('import_config', { filePath });
+      console.log('✅ [ConfigHub] Configuration imported:', importedConfig);
+
+      // Reload config to show imported values
+      await loadConfig();
+
+      alert('✅ Configuration importée avec succès!');
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to import configuration:', err);
+      alert(`❌ Échec de l'import: ${err}`);
+    }
+  };
+
   const tabStyle = (isActive: boolean) => ({
     padding: '0.75rem 1.5rem',
     background: isActive ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'rgba(255,255,255,0.05)',
@@ -309,6 +349,36 @@ export const ConfigurationHub: React.FC = () => {
                 }}
               >
                 {loading ? '⏳ Actualisation...' : '🔄 Actualiser'}
+              </button>
+              <button
+                onClick={handleExport}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  borderRadius: '8px',
+                  color: '#10b981',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                📤 Exporter
+              </button>
+              <button
+                onClick={handleImport}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(59, 130, 246, 0.15)',
+                  border: '1px solid rgba(59, 130, 246, 0.3)',
+                  borderRadius: '8px',
+                  color: '#3b82f6',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                📥 Importer
               </button>
               <button
                 onClick={handleEditToggle}

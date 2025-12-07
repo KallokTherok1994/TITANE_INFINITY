@@ -1768,6 +1768,9 @@ async fn main() {
         config::get_all_configs,
         config::update::update_runtime_config,
         config::update::update_chat_engine_config,
+        config::io::export_config,
+        config::io::import_config,
+        config::io::list_config_exports,
     ]);
 
     builder
