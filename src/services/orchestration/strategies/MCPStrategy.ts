@@ -251,7 +251,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
     return jobs.map(j => ({
       id: j.id,
       type: j.type,
-      status: j.status
+      status: j.status.toLowerCase()
     }));
   }
 

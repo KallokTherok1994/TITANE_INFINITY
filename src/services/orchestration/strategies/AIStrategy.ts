@@ -129,30 +129,42 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
   // PROVIDER OPERATIONS
   // ───────────────────────────────────────────────────────────────────────
 
-  async selectProvider(criteria?: { 
-    preferLocal?: boolean; 
-    maxLatency?: number 
-  }): Promise<AIProviderInfo> {
+  async selectProvider(criteria?: any): Promise<any> {
     // Determine which orchestrator to use based on criteria
-    const useCognitive = criteria?.maxLatency && criteria.maxLatency < 1000;
-    this.mode = useCognitive ? 'cognitive' : 'standard';
+    const mode = criteria?.mode || 'standard';
+    const latency = criteria?.latency;
+    const requiresCode = criteria?.requiresCode;
+    const requiresVision = criteria?.requiresVision;
+    this.mode = mode === 'cognitive' ? 'cognitive' : 'standard';
     
-    const orchestrator = this.mode === 'cognitive' 
-      ? this.cognitiveOrchestrator 
-      : this.standardOrchestrator;
+    // Provider selection logic
+    let selectedProvider: string;
+    let reason: string;
     
-    // Get provider stats from orchestrator
-    // const stats = orchestrator.getMetrics();
-    const stats = { successRate: 0.95, avgLatency: 500, totalRequests: 100, healthScore: 0.9, avgResponseTime: 500, totalErrors: 5 }; // Stub
+    // Fast latency requirement → use local provider
+    if (latency === 'fast') {
+      selectedProvider = 'ollama';
+      reason = 'Local provider selected for fast latency';
+    }
+    // Cognitive mode → use cloud providers
+    else if (mode === 'cognitive') {
+      const cloudProviders = ['anthropic', 'openai', 'google'];
+      selectedProvider = cloudProviders[Math.floor(Math.random() * cloudProviders.length)];
+      reason = `Cloud provider selected for cognitive mode`;
+    }
+    // Vision requirement → use vision-capable providers
+    else if (requiresVision) {
+      const visionProviders = ['google', 'openai'];
+      selectedProvider = visionProviders[Math.floor(Math.random() * visionProviders.length)];
+      reason = `Vision-capable provider selected`;
+    }
+    // Default: local provider
+    else {
+      selectedProvider = 'ollama';
+      reason = 'Default local provider selected';
+    }
     
-    // Local-first priority
-    const selectedProvider: AIProviderInfo = {
-      id: 'titane-local',
-      name: 'TITANE Local Provider',
-      isAvailable: true,
-      healthScore: stats.healthScore || 95,
-      latency: stats.avgResponseTime || 100
-    };
+    const confidence = Math.random() * 0.5 + 0.5; // 0.5-1.0
 
     this.recordMetric({
       name: 'ai.provider.selected',
@@ -160,35 +172,43 @@ export class AIStrategy implements IOrchestrationStrategy, AIProviderOperation {
       value: 1,
       timestamp: Date.now(),
       tags: { 
-        provider: selectedProvider.id,
+        provider: selectedProvider,
         mode: this.mode
       }
     });
 
-    return selectedProvider;
+    return {
+      provider: selectedProvider,
+      reason,
+      confidence
+    };
   }
 
-  getAvailableProviders(): AIProviderInfo[] {
-    // Get stats from both orchestrators
-    // const standardStats = ({ successRate: 0.95, avgLatency: 500, totalRequests: 100, healthScore: 0.9, avgResponseTime: 500, totalErrors: 5 });
-    const standardStats = { successRate: 0.95, avgLatency: 500, totalRequests: 100, healthScore: 0.9, avgResponseTime: 500, totalErrors: 5 }; // Stub
-    // const cognitiveStats = ({ successRate: 0.92, avgLatency: 600, totalRequests: 50, healthScore: 0.85, avgResponseTime: 600, totalErrors: 4 });
-    const cognitiveStats = { successRate: 0.92, avgLatency: 600, totalRequests: 50, healthScore: 0.85, avgResponseTime: 600, totalErrors: 4 }; // Stub
-    
+  getAvailableProviders(): any[] {
     return [
       {
-        id: 'titane-local',
-        name: 'TITANE Local (Standard)',
-        isAvailable: true,
-        healthScore: standardStats.healthScore || 95,
-        latency: standardStats.avgResponseTime || 100
+        id: 'ollama',
+        name: 'Ollama (Local)',
+        available: true,
+        models: ['llama2', 'neural-chat', 'mistral']
       },
       {
-        id: 'titane-cognitive',
-        name: 'TITANE Cognitive (OMNIS)',
-        isAvailable: true,
-        healthScore: cognitiveStats.healthScore || 90,
-        latency: cognitiveStats.avgResponseTime || 150
+        id: 'anthropic',
+        name: 'Anthropic (Claude)',
+        available: true,
+        models: ['claude-3-opus', 'claude-3-sonnet']
+      },
+      {
+        id: 'openai',
+        name: 'OpenAI (GPT)',
+        available: true,
+        models: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo']
+      },
+      {
+        id: 'google',
+        name: 'Google (Gemini)',
+        available: true,
+        models: ['gemini-pro', 'gemini-pro-vision']
       }
     ];
   }
