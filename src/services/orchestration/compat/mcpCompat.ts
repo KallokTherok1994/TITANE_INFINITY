@@ -40,7 +40,7 @@ import {
 /**
  * Compatibility wrapper state (mirroring original MCPOrchestrator)
  */
-let cachedState: MCPState | null = null;
+const cachedState: MCPState | null = null;
 let stateSubscribers: Array<(state: MCPState) => void> = [];
 
 /**

@@ -1,303 +1,270 @@
----
-name: TITANE Project Roadmap
-version: 19.4.3+
-updated: 2025-12-06
-status: Phase 2 Complete, Phase 3 In Progress
----
+metadata:
+  project: TITANE_INFINITY
+  version: 1.0.0
+  total_phases: 3
+  total_tasks: 18
+  estimated_duration: "3-4 weeks"
 
-# 🗺️ TITANE_INFINITY Roadmap — 50+ Task Master Plan
+state:
+  current_phase: 0
+  current_task: P0-1
+  last_updated: "2025-12-06T00:00:00Z"
+  completed_tasks: []
+  failed_tasks: []
 
-## 📊 Overview
+phase_0:
+  title: "Audit & Baseline Establishment"
+  description: "Établir état actuel et baseline"
+  estimated_duration: "3-4 days"
+  
+  tasks:
+    - id: P0-1
+      title: "Analyse structure complète"
+      description: |
+        Générer analyse exhaustive projet
+      files:
+        - "src/"
+        - "src-tauri/"
+      tests:
+        - "test -f PROJECT_STRUCTURE_ANALYZED.md"
+      estimated_time: "30min"
+      priority: critical
+      dependencies: []
+      status: pending
+    
+    - id: P0-2
+      title: "Audit qualité complet"
+      description: |
+        Audit TypeScript + Rust
+      files: []
+      tests:
+        - "test -f AUDIT_REPORT_COMPLETE.md"
+      estimated_time: "45min"
+      priority: critical
+      dependencies: [P0-1]
+      status: pending
+    
+    - id: P0-3
+      title: "Baseline tests & metrics"
+      description: |
+        Établir baseline performance
+      files: []
+      tests:
+        - "test -f BASELINE_METRICS.md"
+      estimated_time: "30min"
+      priority: important
+      dependencies: [P0-2]
+      status: pending
 
-```
-PHASE 0: Audit & Baseline (Complete ✅)
-├── [✅] Architecture audit
-├── [✅] Code quality baseline
-├── [✅] Testing strategy
-└── [✅] Documentation framework
+phase_1:
+  title: "Simplification (14→9 moteurs)"
+  description: "Consolider architecture"
+  estimated_duration: "1.5-2 weeks"
+  
+  tasks:
+    - id: P1-1
+      title: "CoherenceEngine unifié"
+      description: |
+        Fusionner Nexus + moteur #2
+      files:
+        - "src-tauri/src/engines/coherence_engine.rs"
+      tests:
+        - "cd src-tauri && cargo test coherence_engine"
+      estimated_time: "2-3h"
+      priority: critical
+      dependencies: [P0-3]
+      status: pending
+    
+    - id: P1-2
+      title: "UnifiedMemory (STM/MTM/LTM)"
+      description: |
+        Fusionner systèmes mémoire
+      files:
+        - "src-tauri/src/memory/unified_memory.rs"
+      tests:
+        - "cd src-tauri && cargo test unified_memory"
+      estimated_time: "3-4h"
+      priority: critical
+      dependencies: [P1-1]
+      status: pending
+    
+    - id: P1-3
+      title: "SystemHealth Engine"
+      description: |
+        Fusionner Helios + Harmonia + Sentinel
+      files:
+        - "src-tauri/src/health/system_health.rs"
+      tests:
+        - "cd src-tauri && cargo test system_health"
+      estimated_time: "3-4h"
+      priority: critical
+      dependencies: [P1-2]
+      status: pending
+    
+    - id: P1-4
+      title: "Migrer UI vers 9 moteurs"
+      description: |
+        Adapter composants React
+      files:
+        - "src/stores/engines.ts"
+        - "src/components/DevTools/"
+      tests:
+        - "npm test"
+      estimated_time: "2-3h"
+      priority: critical
+      dependencies: [P1-3]
+      status: pending
+    
+    - id: P1-5
+      title: "Cleanup code mort"
+      description: |
+        Supprimer anciens 14 composants
+      files: []
+      tests:
+        - "npm test"
+        - "cd src-tauri && cargo test"
+      estimated_time: "1-2h"
+      priority: important
+      dependencies: [P1-4]
+      status: pending
 
-PHASE 1: Simplification (Complete ✅)
-├── [✅] Component reduction 14→11
-├── [✅] Architecture cleanup
-├── [✅] Documentation updates
-└── [✅] Initial testing
+phase_2:
+  title: "Optimisation Performance"
+  description: "IPC, cache, parallélisation"
+  estimated_duration: "1 week"
+  
+  tasks:
+    - id: P2-1
+      title: "Optimiser IPC (< 200ms)"
+      description: |
+        Parallélisation + cache
+      files:
+        - "src-tauri/src/ipc/mod.rs"
+      tests:
+        - "cd src-tauri && cargo bench ipc"
+      estimated_time: "3-4h"
+      priority: critical
+      dependencies: [P1-5]
+      status: pending
+    
+    - id: P2-2
+      title: "Caching intelligent"
+      description: |
+        Cache LRU + persistent
+      files:
+        - "src-tauri/src/cache/"
+      tests:
+        - "cd src-tauri && cargo test cache"
+      estimated_time: "2-3h"
+      priority: important
+      dependencies: [P2-1]
+      status: pending
+    
+    - id: P2-3
+      title: "Paralléliser OMEGA Pipeline"
+      description: |
+        Exécution parallèle moteurs
+      files:
+        - "src-tauri/src/pipeline/omega.rs"
+      tests:
+        - "cd src-tauri && cargo bench pipeline"
+      estimated_time: "3-4h"
+      priority: critical
+      dependencies: [P2-2]
+      status: pending
+    
+    - id: P2-4
+      title: "Optimiser mémoire UnifiedMemory"
+      description: |
+        Compression + garbage collection
+      files:
+        - "src-tauri/src/memory/unified_memory.rs"
+      tests:
+        - "cd src-tauri && cargo test memory"
+      estimated_time: "2-3h"
+      priority: important
+      dependencies: [P2-3]
+      status: pending
+    
+    - id: P2-5
+      title: "Profiling complet système"
+      description: |
+        Identifier derniers bottlenecks
+      files: []
+      tests:
+        - "cd src-tauri && cargo flamegraph"
+      estimated_time: "2h"
+      priority: important
+      dependencies: [P2-4]
+      status: pending
 
-PHASE 2: Fusion Implementation (Complete ✅)
-├── [✅] Fusion #1: CoherenceEngine (Nexus + Consistency)
-├── [✅] Fusion #2: UnifiedMemory (Memory #5 + MemoryModule + Singularity)
-├── [✅] Fusion #3: SystemHealth (Helios + Sentinel + Self-Heal)
-├── [✅] State integration
-├── [✅] Command registration
-├── [✅] 21/21 tests passing
-└── [✅] Documentation complete
-
-PHASE 3: Orchestration & Remaining Motors (In Progress 🔄)
-├── [✅] Copilot agents setup (titane-conductor, 3 subagents)
-├── [✅] Global instructions
-├── [✅] Roadmap definition
-├── [🔄] Implement Orchestrator motor (#0)
-├── [⏳] Implement Style Engine motor (#1)
-├── [⏳] Implement Reflection Engine motor (#3)
-├── [⏳] Implement Emotion Engine motor (#4)
-├── [⏳] Implement Behavior Engine motor (#6)
-├── [⏳] Implement Adaptation Engine motor (#7)
-├── [⏳] Testing for all motors
-├── [⏳] Integration & state management
-└── [⏳] Documentation updates
-
-PHASE 4: Frontend Modernization
-├── [⏳] React components refactor
-├── [⏳] State management optimization
-├── [⏳] TypeScript strict compliance
-├── [⏳] Error boundary implementation
-├── [⏳] Testing framework upgrade
-└── [⏳] Performance optimization
-
-PHASE 5: Advanced Features
-├── [⏳] Distributed memory sync
-├── [⏳] Advanced analytics
-├── [⏳] Machine learning integration
-├── [⏳] Plugin system
-└── [⏳] Extensibility framework
-
-PHASE 6: Deployment & Production
-├── [⏳] Production build optimization
-├── [⏳] Security hardening
-├── [⏳] Performance benchmarking
-├── [⏳] Documentation finalization
-└── [⏳] Release preparation
-```
-
-## 🎯 Detailed Task Breakdown
-
-### PHASE 0: Audit & Baseline (COMPLETE ✅)
-
-| ID | Task | Priority | Status | Files | Tests | Est. Time |
-|---|---|---|---|---|---|---|
-| P0-1 | Architecture audit complete | P0 | ✅ | - | - | - |
-| P0-2 | Code quality baseline | P0 | ✅ | - | - | - |
-| P0-3 | Testing framework setup | P0 | ✅ | - | - | - |
-| P0-4 | Documentation framework | P0 | ✅ | - | - | - |
-
-### PHASE 1: Simplification (COMPLETE ✅)
-
-| ID | Task | Priority | Status | Files | Tests | Est. Time |
-|---|---|---|---|---|---|---|
-| P1-1 | Remove old 14 components | P0 | ✅ | 14 | 0 | 2h |
-| P1-2 | Define 9-motor architecture | P0 | ✅ | 1 | 0 | 1h |
-| P1-3 | Update documentation | P0 | ✅ | 5 | 0 | 1h |
-| P1-4 | Architecture validation | P0 | ✅ | 0 | 5 | 1h |
-
-### PHASE 2: Fusion Implementation (COMPLETE ✅)
-
-| ID | Task | Priority | Status | Files | Tests | Est. Time | Notes |
-|---|---|---|---|---|---|---|---|
-| P2-1 | Fusion #1: CoherenceEngine | P0 | ✅ | 5 | 9 | 3h | Nexus + ConsistencyEngine → 450 LOC |
-| P2-2 | Fusion #2: UnifiedMemory | P0 | ✅ | 5 | 6 | 4h | Memory #5 + MemoryModule + Singularity → 610 LOC |
-| P2-3 | Fusion #3: SystemHealth | P0 | ✅ | 5 | 6 | 3h | Helios + Sentinel + Self-Heal → 580 LOC |
-| P2-4 | State integration | P0 | ✅ | 3 | 0 | 2h | Arc<RwLock<SingularityState>> |
-| P2-5 | Command registration | P0 | ✅ | 3 | 0 | 1h | 17 total Tauri commands |
-| P2-6 | Documentation | P0 | ✅ | 5 | 0 | 1h | 5 comprehensive docs |
-
-**Summary** : Phase 2 = 3 fusions, 1620 LOC, 21 tests, 100% complete ✅
-
-### PHASE 3: Orchestration & Motors (IN PROGRESS 🔄)
-
-#### P3-0: Copilot Orchestration Setup (IN PROGRESS 🔄)
-
-| ID | Task | Priority | Status | Files | Est. Time | Notes |
-|---|---|---|---|---|---|---|
-| P3-0-1 | Create 4 Copilot agents | P0 | ✅ | 4 | 1h | titane-conductor, 3 subagents |
-| P3-0-2 | Global instructions | P0 | ✅ | 1 | 30m | Architecture, standards, conventions |
-| P3-0-3 | Roadmap definition | P0 | 🔄 | 1 | 30m | This file (18 tasks across phases) |
-| P3-0-4 | Helper scripts setup | P0 | ⏳ | 3 | 1h | TS scripts for prompt generation |
-| P3-0-5 | CI/CD integration | P1 | ⏳ | 2 | 2h | GitHub Actions workflows |
-
-#### P3-1: Motor #0 — Orchestrator (NEXT 🎯)
-
-| ID | Task | Priority | Status | Files | Tests | Est. Time | Dependencies |
-|---|---|---|---|---|---|---|---|
-| P3-1-1 | Design Orchestrator motor | P0 | ⏳ | 0 | 0 | 30m | - |
-| P3-1-2 | Implement Orchestrator engine | P0 | ⏳ | 2 | 3 | 3h | P3-1-1 |
-| P3-1-3 | Create Orchestrator commands | P0 | ⏳ | 1 | 0 | 1h | P3-1-2 |
-| P3-1-4 | State integration | P0 | ⏳ | 1 | 0 | 30m | P3-1-3 |
-| P3-1-5 | Testing & validation | P0 | ⏳ | 1 | 3 | 1h | P3-1-4 |
-
-**Spec** : Orchestrator coordinates workflow between other motors, manages execution phases (PLANNING → IMPLEMENTATION → REVIEW → COMMIT → ITERATION).
-
-#### P3-2: Motor #1 — Style Engine (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Tests | Dependencies |
-|---|---|---|---|---|---|---|
-| P3-2-1 | Design Style Engine | P1 | ⏳ | 30m | 0 | P3-1-5 |
-| P3-2-2 | Implement Style Engine | P1 | ⏳ | 3h | 4 | P3-2-1 |
-| P3-2-3 | Commands + State | P1 | ⏳ | 1.5h | 0 | P3-2-2 |
-| P3-2-4 | Testing | P1 | ⏳ | 1h | 4 | P3-2-3 |
-
-**Spec** : Ensures conversational consistency (tone, style, terminology) across all engine outputs.
-
-#### P3-3: Motor #3 — Reflection Engine (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Tests | Dependencies |
-|---|---|---|---|---|---|---|
-| P3-3-1 | Design Reflection Engine | P1 | ⏳ | 30m | 0 | P3-1-5 |
-| P3-3-2 | Implement Reflection Engine | P1 | ⏳ | 3h | 4 | P3-3-1 |
-| P3-3-3 | Commands + State | P1 | ⏳ | 1.5h | 0 | P3-3-2 |
-| P3-3-4 | Testing | P1 | ⏳ | 1h | 4 | P3-3-3 |
-
-**Spec** : Self-analysis capabilities — reflects on decisions, validates logic, identifies issues.
-
-#### P3-4: Motor #4 — Emotion Engine (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Tests | Dependencies |
-|---|---|---|---|---|---|---|
-| P3-4-1 | Design Emotion Engine | P1 | ⏳ | 30m | 0 | P3-1-5 |
-| P3-4-2 | Implement Emotion Engine | P1 | ⏳ | 3h | 4 | P3-4-1 |
-| P3-4-3 | Commands + State | P1 | ⏳ | 1.5h | 0 | P3-4-2 |
-| P3-4-4 | Testing | P1 | ⏳ | 1h | 4 | P3-4-3 |
-
-**Spec** : Emotional intelligence layer — sentiment analysis, empathy, user satisfaction tracking.
-
-#### P3-5: Motor #6 — Behavior Engine (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Tests | Dependencies |
-|---|---|---|---|---|---|---|
-| P3-5-1 | Design Behavior Engine | P1 | ⏳ | 30m | 0 | P3-1-5 |
-| P3-5-2 | Implement Behavior Engine | P1 | ⏳ | 3h | 4 | P3-5-1 |
-| P3-5-3 | Commands + State | P1 | ⏳ | 1.5h | 0 | P3-5-2 |
-| P3-5-4 | Testing | P1 | ⏳ | 1h | 4 | P3-5-3 |
-
-**Spec** : Behavioral patterns tracking — habit formation, learning curves, optimization.
-
-#### P3-6: Motor #7 — Adaptation Engine (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Tests | Dependencies |
-|---|---|---|---|---|---|---|
-| P3-6-1 | Design Adaptation Engine | P1 | ⏳ | 30m | 0 | P3-1-5 |
-| P3-6-2 | Implement Adaptation Engine | P1 | ⏳ | 3h | 4 | P3-6-1 |
-| P3-6-3 | Commands + State | P1 | ⏳ | 1.5h | 0 | P3-6-2 |
-| P3-6-4 | Testing | P1 | ⏳ | 1h | 4 | P3-6-3 |
-
-**Spec** : Context-aware adaptation — learns user patterns, adjusts parameters, personalization.
-
-#### P3-7: Integration & Testing (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Tests | Dependencies |
-|---|---|---|---|---|---|---|
-| P3-7-1 | All motors integration test | P0 | ⏳ | 2h | 10 | P3-6-4 |
-| P3-7-2 | State consistency validation | P0 | ⏳ | 1h | 5 | P3-7-1 |
-| P3-7-3 | Performance benchmark | P1 | ⏳ | 1h | 0 | P3-7-2 |
-| P3-7-4 | Documentation | P1 | ⏳ | 1h | 0 | P3-7-3 |
-
-### PHASE 4: Frontend Modernization (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Notes |
-|---|---|---|---|---|---|
-| P4-1 | React components audit | P1 | ⏳ | 2h | Identify refactor targets |
-| P4-2 | Refactor critical components | P1 | ⏳ | 5h | TypeScript strict + hooks |
-| P4-3 | State management cleanup | P1 | ⏳ | 3h | Redux/Context optimization |
-| P4-4 | Error boundary implementation | P1 | ⏳ | 2h | Catch React errors |
-| P4-5 | Testing framework upgrade | P1 | ⏳ | 2h | Jest/Vitest + coverage |
-| P4-6 | Performance optimization | P1 | ⏳ | 3h | Code splitting, lazy loading |
-
-### PHASE 5: Advanced Features (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Notes |
-|---|---|---|---|---|---|
-| P5-1 | Distributed memory sync | P2 | ⏳ | 4h | Multi-device memory sync |
-| P5-2 | Advanced analytics | P2 | ⏳ | 3h | Usage patterns, insights |
-| P5-3 | ML integration | P2 | ⏳ | 6h | TensorFlow.js integration |
-| P5-4 | Plugin system | P2 | ⏳ | 4h | Plugin architecture |
-| P5-5 | Extensibility API | P2 | ⏳ | 3h | Public API for extensions |
-
-### PHASE 6: Deployment & Production (PLANNED)
-
-| ID | Task | Priority | Status | Est. Time | Notes |
-|---|---|---|---|---|---|
-| P6-1 | Production build setup | P2 | ⏳ | 2h | Optimization, minification |
-| P6-2 | Security hardening | P2 | ⏳ | 3h | Vulnerabilities, best practices |
-| P6-3 | Performance testing | P2 | ⏳ | 2h | Load tests, benchmarks |
-| P6-4 | Documentation finalization | P2 | ⏳ | 2h | User guide, API docs |
-| P6-5 | Release preparation | P2 | ⏳ | 1h | Version bumps, release notes |
-
-## 📊 Metrics & Tracking
-
-### Current Status
-```
-Phase 0 : ✅✅✅✅ (4/4 complete)
-Phase 1 : ✅✅✅✅ (4/4 complete)
-Phase 2 : ✅✅✅✅✅✅ (6/6 complete)
-Phase 3 : 🔄⏳⏳⏳⏳⏳⏳ (1/7 started)
-Phase 4 : ⏳⏳⏳⏳⏳⏳ (0/6 planned)
-Phase 5 : ⏳⏳⏳⏳⏳ (0/5 planned)
-Phase 6 : ⏳⏳⏳⏳⏳ (0/5 planned)
-
-Overall : 14/39 tasks complete (36%)
-```
-
-### Phase 3 Estimation (Critical Path)
-- Orchestration setup : ✅ 1.5h
-- Motor #0 (Orchestrator) : ⏳ 6.5h → **NEXT TARGET**
-- Motors #1,3,4,6,7 : ⏳ ~30h (6 motors × 5h each)
-- Integration & testing : ⏳ 4h
-- **Phase 3 Total** : ~45h (1 week intensive)
-
-### Phase 4-6 Estimation
-- Frontend modernization : ~20h
-- Advanced features : ~20h
-- Deployment & production : ~10h
-- **Total remaining** : ~70h (2-3 weeks)
-
-## 🎯 Next Immediate Steps
-
-### NOW (Next 30 minutes)
-1. ✅ Create Copilot agents (titane-conductor + 3 subagents)
-2. ✅ Create global instructions
-3. ✅ Create roadmap (this file)
-4. ⏳ Create helper scripts
-
-### TODAY (Next 4 hours)
-1. Implement Motor #0 (Orchestrator) : 6.5h
-   - Design document
-   - Rust implementation
-   - Commands registration
-   - Tests (3/3)
-   - State integration
-
-### THIS WEEK
-1. Motors #1, #3, #4 : 15h (3 × 5h)
-2. Motors #6, #7 : 10h (2 × 5h)
-3. Integration testing : 4h
-4. Documentation : 2h
-
-### BY END OF MONTH
-- ✅ Phase 2 complete (3 fusions)
-- ✅ Phase 3 complete (6 motors)
-- 🔄 Phase 4 in progress (frontend)
-
-## 🔧 Using This Roadmap
-
-### For Copilot Conductor
-```
-Check orchestration/roadmap.yaml for current phase and task.
-Delegate to subagents based on task type (audit/implement/review).
-Update status after each task completion.
-```
-
-### For Manual Development
-```
-1. Find your task in the roadmap
-2. Check dependencies in "Dependencies" column
-3. Create implementation plan in plans/
-4. Use TDD workflow (tests → code → refactor)
-5. Run full test suite before commit
-6. Update roadmap status
-```
-
-### For Progress Tracking
-```
-cd orchestration
-npm run status              # Show overall progress
-npm run next               # Find next task
-npm run update -- P3-1-1   # Mark task complete
-```
+phase_3:
+  title: "Tests & Documentation"
+  description: "Couverture tests + docs"
+  estimated_duration: "4-5 days"
+  
+  tasks:
+    - id: P3-1
+      title: "Tests intégration 9 moteurs"
+      description: |
+        Tests end-to-end pipeline OMEGA
+      files:
+        - "src-tauri/tests/integration/"
+      tests:
+        - "cd src-tauri && cargo test --test integration"
+      estimated_time: "3-4h"
+      priority: critical
+      dependencies: [P2-5]
+      status: pending
+    
+    - id: P3-2
+      title: "Coverage tests > 80%"
+      description: |
+        Ajouter tests manquants
+      files: []
+      tests:
+        - "npm run coverage"
+        - "cd src-tauri && cargo tarpaulin"
+      estimated_time: "2-3h"
+      priority: important
+      dependencies: [P3-1]
+      status: pending
+    
+    - id: P3-3
+      title: "Documentation architecture"
+      description: |
+        Diagrammes + guides
+      files:
+        - "docs/architecture/"
+      tests:
+        - "test -f docs/architecture/9-engines.md"
+      estimated_time: "2h"
+      priority: important
+      dependencies: [P3-2]
+      status: pending
+    
+    - id: P3-4
+      title: "Migration guide users"
+      description: |
+        Guide migration 14→9 moteurs
+      files:
+        - "MIGRATION_GUIDE.md"
+      tests:
+        - "test -f MIGRATION_GUIDE.md"
+      estimated_time: "1h"
+      priority: normal
+      dependencies: [P3-3]
+      status: pending
+    
+    - id: P3-5
+      title: "Release notes v19.6.0"
+      description: |
+        Changelog complet refactoring
+      files:
+        - "CHANGELOG.md"
+      tests:
+        - "test -f CHANGELOG.md"
+      estimated_time: "1h"
+      priority: normal
+      dependencies: [P3-4]
+      status: pending

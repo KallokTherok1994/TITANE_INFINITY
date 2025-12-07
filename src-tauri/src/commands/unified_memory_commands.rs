@@ -5,7 +5,7 @@
 
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::unified_memory::{
-    MemoryStats, MemoryItem, MemoryType, MemoryTier,
+    MemoryStats, MemoryItem, MemoryType,
 };
 use serde::{Deserialize, Serialize};
 use tauri::State;

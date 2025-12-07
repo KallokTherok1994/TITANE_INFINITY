@@ -691,7 +691,7 @@ class PhaseSpaceEngine {
     const dt = horizon / numSteps;
 
     // Extrapolation linéaire simple
-    let predictedPoint = { ...this.state.currentPoint.coordinates };
+    const predictedPoint = { ...this.state.currentPoint.coordinates };
     const velocity = this.state.currentPoint.velocity;
 
     const trajectory: PhasePoint[] = [];
