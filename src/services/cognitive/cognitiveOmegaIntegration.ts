@@ -105,6 +105,9 @@ class CognitiveOmegaOrchestrator {
           dimensions: 384
         });
 
+        // Initialize vector store BEFORE using it
+        await vectorStore.initialize();
+
         const embeddingGenerator = new LocalEmbeddingGenerator({
           modelName: 'all-MiniLM-L6-v2',
           dimensions: 384,

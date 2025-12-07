@@ -20,6 +20,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { Modal } from '@/ui/Modal';
 import {
   getAIConfig,
   enableCloudMode,
@@ -90,199 +91,187 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="settings-modal-overlay" onClick={onClose}>
-      <div className="settings-modal-content" onClick={(e) => e.stopPropagation()}>
-        {/* Header */}
-        <div className="settings-header">
-          <h2>⚙️ Configuration AI</h2>
-          <button className="close-btn" onClick={onClose}>✕</button>
-        </div>
-
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose}
+      title="⚙️ Configuration AI"
+      size="lg"
+      closeOnOverlayClick={true}
+      closeOnEscape={true}
+    >
+      <div className="settings-modal-inner">
         {/* Status Internet */}
-        <div className="settings-section">
-          <h3>📡 Status Internet</h3>
+        <section className="settings-section" aria-labelledby="status-heading">
+          <h3 id="status-heading">📡 Status Internet</h3>
           <div className="status-row">
-            <span className={`status-indicator ${isOnline ? 'online' : 'offline'}`}>
+            <div 
+              className={`status-indicator ${isOnline ? 'online' : 'offline'}`}
+              role="status"
+              aria-live="polite"
+            >
               {isOnline ? '🟢 En ligne' : '🔴 Hors ligne'}
-            </span>
+            </div>
             <button
+              type="button"
               className="btn-secondary"
               onClick={handleCheckInternet}
               disabled={checking}
+              aria-label={checking ? 'Vérification en cours' : 'Vérifier la connexion internet'}
             >
               {checking ? '⏳ Vérification...' : '🔄 Vérifier'}
             </button>
           </div>
-        </div>
+        </section>
 
-        {/* Mode AI */}
-        <div className="settings-section">
-          <h3>🤖 Mode AI</h3>
-          <div className="mode-selector">
-            <button
-              className={`mode-btn ${config.mode === 'local' ? 'active' : ''}`}
-              onClick={() => handleModeChange('local')}
-            >
-              <div className="mode-icon">🏠</div>
-              <div className="mode-label">Local</div>
-              <div className="mode-desc">100% offline</div>
-            </button>
+        {/* Mode AI with proper radio buttons */}
+        <section className="settings-section" aria-labelledby="mode-heading">
+          <h3 id="mode-heading">🤖 Mode AI</h3>
+          <fieldset className="mode-selector">
+            <legend className="sr-only">Choisir le mode AI</legend>
+            
+            <label className="mode-btn">
+              <input 
+                type="radio" 
+                name="ai-mode" 
+                value="local" 
+                checked={config.mode === 'local'}
+                onChange={() => handleModeChange('local')}
+                className="mode-radio sr-only"
+              />
+              <div className={`mode-visual ${config.mode === 'local' ? 'active' : ''}`}>
+                <div className="mode-icon" aria-hidden="true">🏠</div>
+                <div className="mode-label">Local</div>
+                <div className="mode-desc">100% offline</div>
+              </div>
+            </label>
 
-            <button
-              className={`mode-btn ${config.mode === 'cloud' ? 'active' : ''}`}
-              onClick={() => handleModeChange('cloud')}
-            >
-              <div className="mode-icon">🌐</div>
-              <div className="mode-label">Cloud</div>
-              <div className="mode-desc">APIs externes</div>
-            </button>
+            <label className="mode-btn">
+              <input 
+                type="radio" 
+                name="ai-mode" 
+                value="cloud" 
+                checked={config.mode === 'cloud'}
+                onChange={() => handleModeChange('cloud')}
+                className="mode-radio sr-only"
+              />
+              <div className={`mode-visual ${config.mode === 'cloud' ? 'active' : ''}`}>
+                <div className="mode-icon" aria-hidden="true">🌐</div>
+                <div className="mode-label">Cloud</div>
+                <div className="mode-desc">APIs externes</div>
+              </div>
+            </label>
 
-            <button
-              className={`mode-btn ${config.mode === 'hybrid' ? 'active' : ''}`}
-              onClick={() => handleModeChange('hybrid')}
-            >
-              <div className="mode-icon">⚡</div>
-              <div className="mode-label">Hybrid</div>
-              <div className="mode-desc">Local + Cloud</div>
-            </button>
-          </div>
-        </div>
+            <label className="mode-btn">
+              <input 
+                type="radio" 
+                name="ai-mode" 
+                value="hybrid" 
+                checked={config.mode === 'hybrid'}
+                onChange={() => handleModeChange('hybrid')}
+                className="mode-radio sr-only"
+              />
+              <div className={`mode-visual ${config.mode === 'hybrid' ? 'active' : ''}`}>
+                <div className="mode-icon" aria-hidden="true">⚡</div>
+                <div className="mode-label">Hybrid</div>
+                <div className="mode-desc">Local + Cloud</div>
+              </div>
+            </label>
+          </fieldset>
+        </section>
 
         {/* Provider Selection */}
         {config.mode !== 'local' && (
-          <div className="settings-section">
-            <h3>🔌 Provider Cloud</h3>
+          <section className="settings-section" aria-labelledby="provider-heading">
+            <h3 id="provider-heading">🔌 Provider Cloud</h3>
+            <label htmlFor="provider-select" className="sr-only">
+              Sélectionner le provider cloud
+            </label>
             <select
+              id="provider-select"
               className="provider-select"
               value={config.provider}
               onChange={(e) => handleProviderChange(e.target.value as 'gemini' | 'openai' | 'ollama')}
+              aria-labelledby="provider-heading"
             >
               <option value="gemini">Google Gemini</option>
               <option value="openai">OpenAI GPT</option>
               <option value="ollama">Ollama (Local)</option>
             </select>
-          </div>
+          </section>
         )}
 
         {/* Confirmations */}
-        <div className="settings-section">
-          <h3>🔐 Confirmations Cloud</h3>
-          <label className="checkbox-label">
+        <section className="settings-section" aria-labelledby="confirmations-heading">
+          <h3 id="confirmations-heading">🔐 Confirmations Cloud</h3>
+          <label htmlFor="require-confirmation" className="checkbox-label">
             <input
+              id="require-confirmation"
               type="checkbox"
               checked={config.requireOnlineConfirmation}
               onChange={() => {
                 // Toggle sera implémenté via config update
                 console.log('Toggle confirmation');
               }}
+              aria-describedby="confirmation-hint"
             />
             <span>Demander confirmation avant chaque appel API cloud</span>
           </label>
-        </div>
+          <div id="confirmation-hint" className="sr-only">
+            Active ou désactive la confirmation avant d'utiliser les APIs cloud externes
+          </div>
+        </section>
 
         {/* Approbations */}
         {(approvals.session.length > 0 || approvals.permanent.length > 0) && (
-          <div className="settings-section">
-            <h3>✅ Approbations Actives</h3>
+          <section className="settings-section" aria-labelledby="approvals-heading">
+            <h3 id="approvals-heading">✅ Approbations Actives</h3>
 
             {approvals.permanent.length > 0 && (
-              <div className="approvals-list">
+              <div className="approvals-list" role="region" aria-label="Approbations permanentes">
                 <div className="approvals-label">⭐ Permanentes:</div>
-                {approvals.permanent.map(p => (
-                  <span key={p} className="approval-tag permanent">{p}</span>
-                ))}
+                <div role="list">
+                  {approvals.permanent.map(p => (
+                    <span key={p} role="listitem" className="approval-tag permanent">{p}</span>
+                  ))}
+                </div>
               </div>
             )}
 
             {approvals.session.length > 0 && (
-              <div className="approvals-list">
+              <div className="approvals-list" role="region" aria-label="Approbations de session">
                 <div className="approvals-label">🔄 Session:</div>
-                {approvals.session.map(p => (
-                  <span key={p} className="approval-tag session">{p}</span>
-                ))}
+                <div role="list">
+                  {approvals.session.map(p => (
+                    <span key={p} role="listitem" className="approval-tag session">{p}</span>
+                  ))}
+                </div>
               </div>
             )}
 
             <button
+              type="button"
               className="btn-danger"
               onClick={handleResetApprovals}
+              aria-label="Réinitialiser toutes les approbations cloud"
             >
               🗑️ Réinitialiser toutes les approbations
             </button>
-          </div>
+          </section>
         )}
 
         {/* Footer */}
-        <div className="settings-footer">
-          <p className="settings-info">
+        <footer className="settings-footer">
+          <p className="settings-info" role="status">
             🛡️ Mode OFFLINE FIRST activé - Vos données restent locales par défaut
           </p>
-          <button className="btn-primary" onClick={onClose}>
-            ✅ Fermer
-          </button>
-        </div>
+        </footer>
       </div>
 
       <style>{`
-        .settings-modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.85);
+        .settings-modal-inner {
           display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          backdrop-filter: blur(8px);
-        }
-
-        .settings-modal-content {
-          background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-          border: 2px solid #00d9ff;
-          border-radius: 20px;
-          padding: 32px;
-          max-width: 600px;
-          width: 90%;
-          max-height: 90vh;
-          overflow-y: auto;
-          box-shadow: 0 20px 80px rgba(0, 217, 255, 0.4);
-        }
-
-        .settings-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 24px;
-          padding-bottom: 16px;
-          border-bottom: 2px solid rgba(0, 217, 255, 0.3);
-        }
-
-        .settings-header h2 {
-          color: #00d9ff;
-          margin: 0;
-          font-size: 28px;
-        }
-
-        .close-btn {
-          background: transparent;
-          border: none;
-          color: #ffffff;
-          font-size: 32px;
-          cursor: pointer;
-          padding: 0;
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s;
-        }
-
-        .close-btn:hover {
-          color: #ff3366;
-          transform: rotate(90deg);
+          flex-direction: column;
+          gap: 24px;
         }
 
         .settings-section {
@@ -326,9 +315,23 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 16px;
+          border: none;
+          padding: 0;
+          margin: 0;
         }
 
         .mode-btn {
+          cursor: pointer;
+          display: block;
+          position: relative;
+        }
+
+        .mode-radio {
+          position: absolute;
+          opacity: 0;
+        }
+
+        .mode-visual {
           background: rgba(255, 255, 255, 0.05);
           border: 2px solid rgba(255, 255, 255, 0.1);
           border-radius: 12px;
@@ -338,13 +341,13 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           text-align: center;
         }
 
-        .mode-btn:hover {
+        .mode-btn:hover .mode-visual {
           background: rgba(255, 255, 255, 0.1);
           border-color: rgba(0, 217, 255, 0.5);
           transform: translateY(-2px);
         }
 
-        .mode-btn.active {
+        .mode-visual.active {
           background: rgba(0, 217, 255, 0.2);
           border-color: #00d9ff;
           box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
@@ -439,17 +442,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           transition: all 0.3s;
         }
 
-        .btn-primary {
-          background: #00d9ff;
-          color: #1a1a2e;
-          width: 100%;
-        }
-
-        .btn-primary:hover {
-          background: #00b8dd;
-          transform: scale(1.02);
-        }
-
         .btn-secondary {
           background: rgba(255, 255, 255, 0.1);
           color: #ffffff;
@@ -475,18 +467,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         }
 
         .settings-footer {
-          margin-top: 32px;
-          padding-top: 24px;
-          border-top: 2px solid rgba(0, 217, 255, 0.3);
+          margin-top: 16px;
+          padding-top: 16px;
+          border-top: 1px solid rgba(0, 217, 255, 0.2);
         }
 
         .settings-info {
           color: #ffaa00;
           font-size: 14px;
           text-align: center;
-          margin-bottom: 16px;
+          margin: 0;
         }
       `}</style>
-    </div>
+    </Modal>
   );
 }

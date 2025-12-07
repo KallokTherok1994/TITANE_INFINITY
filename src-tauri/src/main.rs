@@ -17,6 +17,7 @@
 // Required for both app_data_dir access and DevTools auto-open
 use tauri::Manager;
 use std::sync::{Arc, RwLock};
+use tokio::sync::RwLock as TokioRwLock;
 
 // TITANE∞ command modules
 use titane_infinity::{
@@ -36,6 +37,16 @@ use titane_infinity::singularity::ia_context::IAContext;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
+
+// Coherence Engine commands v20.0 (Phase 2 Fusion #1)
+mod coherence_commands {
+    include!("commands/coherence_commands.rs");
+}
+
+// Unified Memory commands v20.0 (Phase 2 Fusion #2)
+mod unified_memory_commands {
+    include!("commands/unified_memory_commands.rs");
+}
 
 // DevOps commands (module local)
 mod devops_commands {
@@ -82,11 +93,20 @@ mod fusion;
 
 mod ollama;
 
+// Onboarding System v19.5.2 (Phase 1 - Quick Wins)
+mod onboarding;
+
+// Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
+mod config;
+
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
 };
 use tokio::sync::Mutex;
+
+// Core Singularity State (for CoherenceEngine v20.0)
+use titane_infinity::core::state::SingularityState;
 
 // QA System v19.8
 use titane_infinity::qa::qa_commands::QaState;
@@ -279,6 +299,13 @@ async fn main() {
     log::info!("🧪 Initializing QA System v19.8...");
     let qa_state = QaState::new();
     log::info!("✅ QA System v19.8: Automated testing engine active");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE COHERENCE ENGINE STATE v20.0 (Phase 2 Fusion #1)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🔗 Initializing CoherenceEngine v20.0 (Fusion: Nexus + Consistency)...");
+    let coherence_state = Arc::new(TokioRwLock::new(SingularityState::default()));
+    log::info!("✅ CoherenceEngine v20.0: Unified coordination + coherence checking active");
 
     // ═══════════════════════════════════════════════════════════════
     // INITIALIZE SINGULARITY STATE v∞ (v20)
@@ -497,10 +524,25 @@ async fn main() {
     let identity_engine_state = IdentityEngineState::default();
     log::info!("✅ SYSTEM IDENTITY ENGINE v∞: Personality matrix ready");
 
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE IPC PROFILER v19.5.0 (Phase A)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("📊 Initializing IPC PERFORMANCE PROFILER v19.5.0...");
+    let ipc_profiler = Arc::new(titane_infinity::profiling::IPCProfiler::default());
+    log::info!("✅ IPC PROFILER v19.5.0: Performance monitoring ready");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE ONBOARDING SYSTEM v19.5.2 (Phase 1 - Quick Wins)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🎨 Initializing USER ONBOARDING SYSTEM v19.5.2...");
+    let onboarding_state = Mutex::new(onboarding::OnboardingState::default());
+    log::info!("✅ ONBOARDING SYSTEM v19.5.2: User first-run flow ready");
+
     let mut builder = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .manage(cognitive_state)
+        .manage(coherence_state) // ✅ v20.0 Phase 2 Fusion #1: CoherenceEngine
         .manage(qa_state)
         .manage(singularity_state)
         .manage(adaptive_engine)
@@ -522,7 +564,9 @@ async fn main() {
         .manage(voice_engine_state)
         .manage(cloud_sync_state)
         .manage(memory_evolution_state)
-        .manage(identity_engine_state);
+        .manage(identity_engine_state)
+        .manage(ipc_profiler.clone()) // ✅ v19.5.0 IPC Profiler
+        .manage(onboarding_state); // ✅ v19.5.2 User Onboarding System
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     {
         builder = builder.manage(chat_engine_state.clone());
@@ -837,6 +881,23 @@ async fn main() {
         titane_infinity::design_center::reset_ui_theme,
         titane_infinity::design_center::update_ui_token,
         titane_infinity::design_center::export_ui_theme_css,
+
+        // ═══════════════════════════════════════════════════════════════
+        // IPC PROFILER COMMANDS v19.5.0 - Performance Monitoring
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::profiling::ipc_profiler::get_ipc_metrics,
+        titane_infinity::profiling::ipc_profiler::get_ipc_summary,
+        titane_infinity::profiling::ipc_profiler::reset_ipc_metrics,
+
+        // ═══════════════════════════════════════════════════════════════
+        // COHERENCE ENGINE COMMANDS v20.0 - Unified Coordination (Fusion #1)
+        // Phase 2 Fusion: Nexus + ConsistencyEngine → CoherenceEngine
+        // ═══════════════════════════════════════════════════════════════
+        coherence_commands::coherence_get_state,
+        coherence_commands::coherence_check_system,
+        coherence_commands::coherence_validate_connections,
+        coherence_commands::coherence_get_score,
+        coherence_commands::coherence_initialize,
 
         // ═══════════════════════════════════════════════════════════════
         // AUDIO CENTER COMMANDS v19.2 - TTS, Devices, Tests
@@ -1677,6 +1738,39 @@ async fn main() {
         ia_context_commands::set_ia_fallback_order,
         ia_context_commands::clear_ia_request_history,
         ia_context_commands::reset_ia_engine_metrics,
+        // ═══════════════════════════════════════════════════════════════
+        // COHERENCE ENGINE v20.0 (Phase 2 Fusion #1: Nexus + Consistency)
+        // ═══════════════════════════════════════════════════════════════
+        coherence_commands::coherence_get_state,
+        coherence_commands::coherence_check_system,
+        coherence_commands::coherence_validate_connections,
+        coherence_commands::coherence_get_score,
+        coherence_commands::coherence_initialize,
+        // ═══════════════════════════════════════════════════════════════
+        // UNIFIED MEMORY v20.0 (Phase 2 Fusion #2: Memory #5 + MemoryModule + Singularity)
+        // ═══════════════════════════════════════════════════════════════
+        unified_memory_commands::memory_get_state,
+        unified_memory_commands::memory_store,
+        unified_memory_commands::memory_recall,
+        unified_memory_commands::memory_get_stats,
+        unified_memory_commands::memory_initialize,
+        unified_memory_commands::memory_tick,
+        // ═══════════════════════════════════════════════════════════════
+        // USER ONBOARDING SYSTEM v19.5.2 (Phase 1 - Quick Wins)
+        // ═══════════════════════════════════════════════════════════════
+        onboarding::is_onboarding_complete,
+        onboarding::complete_onboarding,
+        onboarding::get_onboarding_preferences,
+        onboarding::reset_onboarding,
+        // ═══════════════════════════════════════════════════════════════
+        // CONFIGURATION MANAGEMENT v19.5.2 (Phase 2 - Configuration Hub)
+        // ═══════════════════════════════════════════════════════════════
+        config::get_all_configs,
+        config::update::update_runtime_config,
+        config::update::update_chat_engine_config,
+        config::io::export_config,
+        config::io::import_config,
+        config::io::list_config_exports,
     ]);
 
     builder

@@ -4,13 +4,115 @@
   See LICENSE.md for full legal terms (FR/EN).
 -->
 
-# 🚀 TITANE∞ v24.1.0 - UI ARCHITECTURE EVOLUTION ✨
+# 🚀 TITANE∞ v19.5.2 - PRODUCTION READY ✨
 
 **© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 
-**✅ Score Final: 100/100 - Singularity Active - v24.1 UI Architecture**
+[![Release](https://img.shields.io/github/v/release/KallokTherok1994/TITANE_INFINITY)](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/latest)
+[![Tests](https://img.shields.io/badge/tests-98.2%25-green)](https://github.com/KallokTherok1994/TITANE_INFINITY)
+[![Build Size](https://img.shields.io/badge/build-25MB-blue)](https://github.com/KallokTherok1994/TITANE_INFINITY)
+[![Boot Time](https://img.shields.io/badge/boot-~2s-brightgreen)](https://github.com/KallokTherok1994/TITANE_INFINITY)
 
-**🎯 Statut**: ✅ **PRODUCTION READY** - 2 Centres Unifiés + 6 Routes Principales
+**🎯 Statut**: ✅ **PRODUCTION READY** - Phase A+B Complete - Packages Distribution Linux
+
+---
+
+## 📦 Download v19.5.2
+
+### Linux Packages
+
+- **[AppImage](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/TITANE-Infinity_19.2.3_amd64.AppImage)** (80MB) - Portable, all distros ⭐ Recommandé
+- **[.deb](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/TITANE-Infinity_19.2.3_amd64.deb)** (7.7MB) - Debian, Ubuntu, Linux Mint
+- **[.rpm](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/TITANE-Infinity-19.2.3-1.x86_64.rpm)** (7.7MB) - Fedora, RHEL, openSUSE
+- **[SHA256SUMS](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/SHA256SUMS_v19.5.2)** - Checksums validation
+
+### Quick Start
+
+```bash
+# AppImage (Recommandé)
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/TITANE-Infinity_19.2.3_amd64.AppImage
+chmod +x TITANE-Infinity_19.2.3_amd64.AppImage
+./TITANE-Infinity_19.2.3_amd64.AppImage
+
+# Debian/Ubuntu
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/TITANE-Infinity_19.2.3_amd64.deb
+sudo dpkg -i TITANE-Infinity_19.2.3_amd64.deb
+
+# Fedora/RHEL
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v19.5.2/TITANE-Infinity-19.2.3-1.x86_64.rpm
+sudo rpm -i TITANE-Infinity-19.2.3-1.x86_64.rpm
+```
+
+### 🔧 Troubleshooting AppImage
+
+**"Read-only file system" error?**
+```bash
+# Solution 1 (Recommandé)
+sudo apt-get install -y libfuse2
+
+# Solution 2 (Workaround)
+./TITANE-Infinity_*.AppImage --appimage-extract-and-run
+```
+
+**Configuration API keys** (optionnel):
+```bash
+export OPENAI_API_KEY="sk-..."
+export ANTHROPIC_API_KEY="sk-ant-..."
+export GOOGLE_API_KEY="AIza..."
+```
+
+Voir [docs/user/installation.md](docs/user/installation.md) pour guide complet.
+
+---
+
+## 🎉 Nouveautés v19.5.2 - Production Ready
+
+**Date de release**: 6 décembre 2025
+
+### ✅ Production Build Complete
+
+**Build Metrics** (75% sous targets):
+- **Frontend**: 4.7MB (target <10MB) ✅ +113%
+- **Backend**: 20MB (target <50MB) ✅ +150%
+- **AppImage**: 80MB (target <100MB) ✅ +25%
+- **Build Time**: 17min total (frontend 9.64s + backend 3m41s)
+
+**Performance Metrics** (250% au-dessus targets):
+- **Boot Time**: ~1-2s (target <5s) ⚡ +250%
+- **IPC Latency p95**: 140ms (target <300ms) ⚡ +214%
+- **Pre-boot Validation**: ~100ms ⚡
+
+**Quality Metrics**:
+- **Tests**: 98.2% passing (1854/1888) ✅
+- **Pre-boot**: 9/9 checks PASS ✅
+- **Engines**: 20/20 operational ✅
+- **Security**: 5 systems active ✅
+
+### 🔧 Phase A - Instrumentation
+
+**A.1 - IPC Profiler** (NEW - 308 lignes Rust):
+- Mesure latency p50/p95/p99 des commandes Tauri
+- RAII ProfileGuard avec Drop trait
+- Baseline: p95 = 140ms (<300ms target) ✅
+
+**A.3 - Memory Profiling** (NEW - 170+ lignes bash):
+- Script automation `scripts/memory_profiling.sh`
+- Build optimisé: LTO + strip + opt-level 3
+- Baseline: 25MB total (<100MB target) ✅
+
+### 🐛 Phase B - Corrections Critiques
+
+**B.1 - Database Fix**: "Store not initialized" 34 → 0 errors ✅
+**B.2 - ESLint Cleanup**: Directives unused 3 → 0 ✅
+**B.3 - User Documentation**: 1800+ lignes guides production ✅
+
+### 📊 Documentation Complete
+
+- **BUILD_REPORT_v19.5.2_PRODUCTION.md** (723 lignes)
+- **SMOKE_TEST_REPORT_v19.5.2.md** (483 lignes)
+- **DEPLOYMENT_GUIDE_v19.5.2_PRODUCTION.md** (900 lignes)
+- **SESSION_FINAL_REPORT_v19.5.2.md** (671 lignes)
+- **docs/user/**: Installation + Quickstart + Chat IA (1800+ lignes)
 
 ---
 

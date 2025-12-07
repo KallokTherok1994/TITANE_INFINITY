@@ -307,10 +307,12 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(({
       onSend(sanitized);
       setValue('');
 
-      // Reset height et état
+      // Reset height et état + restore focus
       setTimeout(() => {
         if (textareaRef.current && mountedRef.current) {
           textareaRef.current.style.height = 'auto';
+          // P2: Restore focus to textarea after send (accessibility)
+          textareaRef.current.focus();
         }
         messageSent.current = false;
       }, 100);

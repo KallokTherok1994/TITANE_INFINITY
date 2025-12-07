@@ -40,9 +40,18 @@ export {
 // ==================== FACTORY FUNCTIONS ====================
 
 import { SemanticMemoryEngine } from './SemanticMemoryEngine';
-import { SQLiteVectorStore } from './SQLiteVectorStore';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
 import type { SemanticMemoryConfig } from './semanticMemory.types';
+
+// Import conditionnel de SQLiteVectorStore (Node.js only)
+let SQLiteVectorStore: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  SQLiteVectorStore = require('./SQLiteVectorStore').SQLiteVectorStore;
+} catch {
+  // SQLite non disponible en mode browser, utiliser un fallback
+  console.warn('[Cognitive] SQLiteVectorStore not available (browser mode)');
+}
 
 /**
  * Créer une instance complète de Semantic Memory Engine
@@ -53,6 +62,11 @@ export async function createSemanticMemoryEngine(options?: {
   modelName?: 'all-MiniLM-L6-v2' | 'all-mpnet-base-v2' | 'multilingual-e5-small';
   config?: Partial<SemanticMemoryConfig>;
 }): Promise<SemanticMemoryEngine> {
+  // Vérifier si SQLite est disponible
+  if (!SQLiteVectorStore) {
+    throw new Error('SQLiteVectorStore not available. This feature requires Node.js environment (Tauri mode).');
+  }
+  
   // Configuration par défaut
   const dbPath = options?.dbPath || './data/semantic_memory.db';
   const modelName = options?.modelName || 'all-MiniLM-L6-v2';

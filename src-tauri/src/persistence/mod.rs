@@ -192,8 +192,8 @@ impl PersistenceEngine {
             }
             "memory" => {
                 // Incrémenter compteur mémoire dans le module memory
-                state.memory.memory_count += 1;
-                state.memory.last_operation_ms = event.timestamp;
+                state.memory.total_memories += 1;
+                state.memory.last_update_ms = event.timestamp;
             }
             "progress" => {
                 // Mettre à jour progression dans cognition (depth comme proxy)
@@ -203,7 +203,7 @@ impl PersistenceEngine {
             }
             "knowledge" => {
                 // Les connaissances incrémentent le compteur mémoire
-                state.memory.memory_count += 1;
+                state.memory.total_memories += 1;
                 state.cognition.active_thoughts += 1;
             }
             "settings" => {
