@@ -57,10 +57,10 @@ impl SingularityEngine {
             return Ok(());
         }
 
-        println!("🚀 SingularityEngine v16 initializing...");
+        println!("🚀 SingularityEngine v20 initializing...");
 
-        // Initialize v15 core modules (clean sync init - no borrow issues)
-        self.state.nexus.init()?;
+        // Initialize v20 core modules (Phase 2 Fusion #1)
+        self.state.coherence.init()?;
         self.state.memory.init()?;
         self.state.harmonia.init()?;
         self.state.sentinel.init()?;
@@ -156,7 +156,7 @@ impl SingularityEngine {
     /// Get module info for all modules
     pub fn module_info(&self) -> Vec<ModuleInfo> {
         vec![
-            self.state.nexus.info(),
+            self.state.coherence.info(),
             self.state.memory.info(),
             self.state.harmonia.info(),
             self.state.sentinel.info(),
@@ -188,9 +188,9 @@ impl SingularityEngine {
         &mut self.state
     }
 
-    /// Get reference to Nexus module
-    pub fn nexus(&self) -> &crate::core::modules::NexusModule {
-        &self.state.nexus
+    /// Get reference to Coherence engine (v20.0 - Fusion #1)
+    pub fn coherence(&self) -> &crate::core::modules::CoherenceEngine {
+        &self.state.coherence
     }
 
     /// Get reference to Memory module

@@ -1,11 +1,12 @@
 // ╔══════════════════════════════════════════════════════════════════════════════╗
-// ║ TITANE∞ v19.5 - Tauri Commands Central Hub (Cognitive Layer)               ║
+// ║ TITANE∞ v20.0 - Tauri Commands Central Hub (Phase 2 Fusion #1)             ║
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
 pub mod ai_chat;        // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIChatState>)
 pub mod automations;    // ✅ v19.2Ω: Automation System
 pub mod chat_modes;     // ✅ v19.2Ω: Chat Modes System
+pub mod coherence_commands; // ✅ NEW v20.0: Unified Coherence Engine (Nexus + Consistency fusion)
 pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
 pub mod devops; // ✅ v19: DevOps Commands for Dashboard
@@ -28,6 +29,7 @@ pub mod qa_monitoring; // ✅ v19.7: QA Monitoring Center - OPUS #7
 // Re-export engine commands
 // NOTE: ai_chat NOT re-exported because it requires State<AIChatState>
 // Voice commands come from audio::commands instead
+pub use coherence_commands::*; // ✅ v20.0: Export coherence commands (Fusion #1)
 pub use cognitive_center::*; // ✅ v19.3: Export cognitive center commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
 pub use devops::*; // ✅ v19: Export devops commands
