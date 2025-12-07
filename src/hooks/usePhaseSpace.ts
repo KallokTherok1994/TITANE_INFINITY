@@ -2,11 +2,18 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.38 — PHASE-SPACE HOOKS
  *   React Hooks for Phase-Space Engine
- * ═══════════════════════════════════════════════════════════════════════════
+ * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import { useEffect, useState } from 'react';
-import { phaseSpaceEngine, type PhaseSpaceState, type PhasePoint, type PhaseTrajectory, type Attractor, type StatePrediction } from '@/engines/phasespace/phaseSpaceEngine';
+import {
+  phaseSpaceEngine,
+  type PhaseSpaceState,
+  type PhasePoint,
+  type PhaseTrajectory as _PhaseTrajectory,
+  type Attractor,
+  type StatePrediction,
+} from '@/engines/phasespace/phaseSpaceEngine';
 
 /**
  * Hook principal: état complet Phase-Space
@@ -25,7 +32,9 @@ export function usePhaseSpace() {
  * Hook: current point dans l'espace de phase
  */
 export function useCurrentPoint() {
-  const [point, setPoint] = useState<PhasePoint | null>(phaseSpaceEngine.getCurrentPoint());
+  const [point, setPoint] = useState<PhasePoint | null>(
+    phaseSpaceEngine.getCurrentPoint()
+  );
 
   useEffect(() => {
     const update = (state: PhaseSpaceState) => setPoint(state.currentPoint);
@@ -47,7 +56,9 @@ export function usePhaseTrajectory() {
  * Hook: attractors
  */
 export function useAttractors() {
-  const [attractors, setAttractors] = useState<Attractor[]>(phaseSpaceEngine.getAttractors());
+  const [attractors, setAttractors] = useState<Attractor[]>(
+    phaseSpaceEngine.getAttractors()
+  );
 
   useEffect(() => {
     const update = () => {
@@ -73,7 +84,9 @@ export function useCurrentAttractor() {
  * Hook: latest prediction
  */
 export function useLatestPrediction() {
-  const [prediction, setPrediction] = useState<StatePrediction | null>(phaseSpaceEngine.getLatestPrediction());
+  const [prediction, setPrediction] = useState<StatePrediction | null>(
+    phaseSpaceEngine.getLatestPrediction()
+  );
 
   useEffect(() => {
     const update = () => {

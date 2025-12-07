@@ -17,16 +17,13 @@
 import type {
   AffectEstimationState,
   VisualCoachingEvent,
-  VisualEventType,
+  VisualEventType as _VisualEventType,
   CoachingSuggestion,
   SuggestionType,
   VisualLevel,
 } from '@/types/visionAffect';
 
-import {
-  COACHING_CONFIG,
-  SUGGESTION_MESSAGES,
-} from '@/config/visionAffect.config';
+import { COACHING_CONFIG, SUGGESTION_MESSAGES } from '@/config/visionAffect.config';
 
 // ============================================================================
 // TYPES INTERNES
@@ -232,7 +229,7 @@ export class VisualCoachingBridge {
       this.eventListeners.forEach(listener => listener(event));
 
       if (event.suggestion) {
-        this.suggestionListeners.forEach(listener => listener(event.suggestion!));
+        this.suggestionListeners.forEach(listener => listener(event.suggestion));
       }
     });
 
@@ -357,9 +354,7 @@ export class VisualCoachingBridge {
     if (recentHistory.length < 30) return null;
 
     // Vérifier si tous les niveaux sont "low" ou "medium" pour l'énergie
-    const allCalm = recentHistory.every(h =>
-      h.energy === 'low' || h.energy === 'medium'
-    );
+    const allCalm = recentHistory.every(h => h.energy === 'low' || h.energy === 'medium');
 
     const duration = now - this.lastActivityTimestamp;
 
@@ -392,18 +387,10 @@ export class VisualCoachingBridge {
     const now = Date.now();
 
     // Energy
-    this.updateSingleStreak(
-      this.streakTracker.energy,
-      state.visualEnergyLevel,
-      now
-    );
+    this.updateSingleStreak(this.streakTracker.energy, state.visualEnergyLevel, now);
 
     // Tension
-    this.updateSingleStreak(
-      this.streakTracker.tension,
-      state.visualTensionLevel,
-      now
-    );
+    this.updateSingleStreak(this.streakTracker.tension, state.visualTensionLevel, now);
 
     // Engagement
     this.updateSingleStreak(
@@ -438,8 +425,8 @@ export class VisualCoachingBridge {
     // Nettoyer les anciennes séquences d'autres niveaux
     // (garder seulement les 5 dernières minutes)
     const cutoff = now - 5 * 60 * 1000;
-    const toRemove = streaks.filter(s =>
-      s.level !== currentLevel && s.startedAt < cutoff
+    const toRemove = streaks.filter(
+      s => s.level !== currentLevel && s.startedAt < cutoff
     );
 
     toRemove.forEach(s => {
@@ -499,10 +486,7 @@ export class VisualCoachingBridge {
   private syncWithExternalEngines(state: AffectEstimationState): void {
     // EnergyEngine - fusionner l'énergie visuelle
     if (this.energyAdapter) {
-      this.energyAdapter.mergeVisualEnergy(
-        state.visualEnergyLevel,
-        state.confidence
-      );
+      this.energyAdapter.mergeVisualEnergy(state.visualEnergyLevel, state.confidence);
     }
 
     // AgendaEngine - suggérer pause si conditions réunies
@@ -617,8 +601,6 @@ export function getVisualCoachingBridge(): VisualCoachingBridge | null {
 /**
  * Traite un état d'affect (raccourci)
  */
-export function processVisualAffect(
-  state: AffectEstimationState
-): VisualCoachingEvent[] {
+export function processVisualAffect(state: AffectEstimationState): VisualCoachingEvent[] {
   return bridgeInstance?.processAffectState(state) ?? [];
 }

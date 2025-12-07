@@ -12,6 +12,7 @@ use std::sync::{Arc, RwLock};
 use crate::error::TitaneError;
 
 /// Macro for safe mutex locking with auto-recovery
+#[allow(unused_macros)]
 macro_rules! lock_or_recover {
     ($mutex:expr) => {
         $mutex.lock().unwrap_or_else(|poisoned| {

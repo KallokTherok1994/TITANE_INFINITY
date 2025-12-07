@@ -84,10 +84,7 @@ export const AgentManager: React.FC = () => {
     <div className="agent-manager">
       <div className="agent-manager-header">
         <h2>🤖 Gestionnaire Multi-Agents v∞.19.3Ω</h2>
-        <button
-          className="btn-primary"
-          onClick={() => setShowCreateModal(true)}
-        >
+        <button className="btn-primary" onClick={() => setShowCreateModal(true)}>
           + Créer un Agent
         </button>
       </div>
@@ -99,20 +96,20 @@ export const AgentManager: React.FC = () => {
         </div>
         <div className="stat-card">
           <span className="stat-value">
-            {agents.filter((a) => a.ia_permission === AgentIAPermission.NoExternal).length}
+            {agents.filter(a => a.ia_permission === AgentIAPermission.NoExternal).length}
           </span>
           <span className="stat-label">Locaux uniquement</span>
         </div>
         <div className="stat-card">
           <span className="stat-value">
-            {agents.filter((a) => a.ia_permission === AgentIAPermission.AllExternal).length}
+            {agents.filter(a => a.ia_permission === AgentIAPermission.AllExternal).length}
           </span>
           <span className="stat-label">Accès complet</span>
         </div>
       </div>
 
       <div className="agents-grid">
-        {agents.map((agent) => (
+        {agents.map(agent => (
           <AgentCard
             key={agent.id}
             agent={agent}
@@ -153,13 +150,13 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, onUpdatePermissi
   const roleLabel = AgentRoleLabels[agent.role];
   const permissionLabel = AgentIAPermissionLabels[agent.ia_permission];
 
+  void onUpdatePermission;
+
   return (
     <div className="agent-card" onClick={() => onSelect(agent)}>
       <div className="agent-card-header">
         <h3>{agent.name}</h3>
-        <span className={`badge priority-${agent.priority}`}>
-          P{agent.priority}
-        </span>
+        <span className={`badge priority-${agent.priority}`}>P{agent.priority}</span>
       </div>
 
       <div className="agent-card-body">
@@ -170,7 +167,7 @@ const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, onUpdatePermissi
 
       <div className="agent-card-footer">
         <span className="agent-tags">
-          {agent.tags.slice(0, 3).map((tag) => (
+          {agent.tags.slice(0, 3).map(tag => (
             <span key={tag} className="tag">
               {tag}
             </span>
@@ -217,7 +214,7 @@ const AgentDetailModal: React.FC<AgentDetailModalProps> = ({
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h2>{agent.name}</h2>
           <button className="btn-close" onClick={onClose}>
@@ -240,7 +237,7 @@ const AgentDetailModal: React.FC<AgentDetailModalProps> = ({
           <div className="detail-section">
             <h3>Permission IA actuelle</h3>
             <div className="permission-selector">
-              {Object.values(AgentIAPermission).map((permission) => (
+              {Object.values(AgentIAPermission).map(permission => (
                 <label
                   key={permission}
                   className={`permission-option ${
@@ -251,7 +248,7 @@ const AgentDetailModal: React.FC<AgentDetailModalProps> = ({
                     type="radio"
                     value={permission}
                     checked={selectedPermission === permission}
-                    onChange={(e) =>
+                    onChange={e =>
                       setSelectedPermission(e.target.value as AgentIAPermission)
                     }
                   />
@@ -277,10 +274,12 @@ const AgentDetailModal: React.FC<AgentDetailModalProps> = ({
                 <strong>Statut:</strong> {agent.active ? 'Actif' : 'Inactif'}
               </li>
               <li>
-                <strong>Créé le:</strong> {new Date(agent.created_at).toLocaleString('fr-FR')}
+                <strong>Créé le:</strong>{' '}
+                {new Date(agent.created_at).toLocaleString('fr-FR')}
               </li>
               <li>
-                <strong>Modifié le:</strong> {new Date(agent.updated_at).toLocaleString('fr-FR')}
+                <strong>Modifié le:</strong>{' '}
+                {new Date(agent.updated_at).toLocaleString('fr-FR')}
               </li>
             </ul>
           </div>
@@ -289,7 +288,7 @@ const AgentDetailModal: React.FC<AgentDetailModalProps> = ({
             <div className="detail-section">
               <h3>Tags</h3>
               <div className="tags-list">
-                {agent.tags.map((tag) => (
+                {agent.tags.map(tag => (
                   <span key={tag} className="tag">
                     {tag}
                   </span>
@@ -353,7 +352,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h2>Créer un nouvel agent</h2>
           <button className="btn-close" onClick={onClose}>
@@ -373,7 +372,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
             <input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
               placeholder="Ex: Assistant Créatif"
             />
           </div>
@@ -382,7 +381,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
             <label>Description *</label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={e => setFormData({ ...formData, description: e.target.value })}
               placeholder="Décrivez le rôle et les responsabilités de l'agent"
               rows={3}
             />
@@ -392,7 +391,9 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
             <label>Rôle *</label>
             <select
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value as AgentRole })}
+              onChange={e =>
+                setFormData({ ...formData, role: e.target.value as AgentRole })
+              }
             >
               {Object.entries(AgentRoleLabels).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -400,7 +401,9 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
                 </option>
               ))}
             </select>
-            <p className="form-hint">{AgentRoleDescriptions[formData.role as AgentRole]}</p>
+            <p className="form-hint">
+              {AgentRoleDescriptions[formData.role as AgentRole]}
+            </p>
             <p className="form-hint">
               Permission recommandée: {AgentIAPermissionLabels[recommendedPermission]}
             </p>
@@ -413,7 +416,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
               min="1"
               max="10"
               value={formData.priority}
-              onChange={(e) =>
+              onChange={e =>
                 setFormData({ ...formData, priority: parseInt(e.target.value) })
               }
             />
@@ -430,7 +433,7 @@ const CreateAgentModal: React.FC<CreateAgentModalProps> = ({ onClose, onCreated 
             onClick={handleCreate}
             disabled={creating || !formData.name || !formData.description}
           >
-            {creating ? 'Création...' : 'Créer l\'agent'}
+            {creating ? 'Création...' : "Créer l'agent"}
           </button>
         </div>
       </div>

@@ -25,7 +25,9 @@ import './PhysiologicalPanel.css';
 
 export function PhysiologicalPanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'internal' | 'spatial' | 'sounds'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'internal' | 'spatial' | 'sounds'
+  >('overview');
 
   const interoception = useInteroception();
   const holophonic = useHolophonic();
@@ -38,7 +40,13 @@ export function PhysiologicalPanel() {
       <button
         className="physiological-badge"
         onClick={() => setIsOpen(!isOpen)}
-        data-energy={physiological.energy > 0.7 ? 'high' : physiological.energy > 0.4 ? 'medium' : 'low'}
+        data-energy={
+          physiological.energy > 0.7
+            ? 'high'
+            : physiological.energy > 0.4
+              ? 'medium'
+              : 'low'
+        }
       >
         <span className="physiological-icon">🌬️</span>
         <span className="physiological-label">Physiologie</span>
@@ -47,7 +55,7 @@ export function PhysiologicalPanel() {
             className="breath-pulse"
             style={{
               transform: `scale(${0.8 + physiological.breathingPhase * 0.4})`,
-              opacity: 0.6 + physiological.breathingPhase * 0.4
+              opacity: 0.6 + physiological.breathingPhase * 0.4,
             }}
           />
         </div>
@@ -58,7 +66,9 @@ export function PhysiologicalPanel() {
         <div className="physiological-panel">
           <div className="physiological-header">
             <h3>🌬️ État Physiologique TITANE∞</h3>
-            <button className="physiological-close" onClick={() => setIsOpen(false)}>×</button>
+            <button className="physiological-close" onClick={() => setIsOpen(false)}>
+              ×
+            </button>
           </div>
 
           {/* Tabs */}
@@ -91,18 +101,10 @@ export function PhysiologicalPanel() {
 
           {/* Content */}
           <div className="physiological-content">
-            {activeTab === 'overview' && (
-              <OverviewTab physiological={physiological} />
-            )}
-            {activeTab === 'internal' && (
-              <InternalTab interoception={interoception} />
-            )}
-            {activeTab === 'spatial' && (
-              <SpatialTab holophonic={holophonic} />
-            )}
-            {activeTab === 'sounds' && (
-              <SoundsTab sounds={sounds} />
-            )}
+            {activeTab === 'overview' && <OverviewTab physiological={physiological} />}
+            {activeTab === 'internal' && <InternalTab interoception={interoception} />}
+            {activeTab === 'spatial' && <SpatialTab holophonic={holophonic} />}
+            {activeTab === 'sounds' && <SoundsTab sounds={sounds} />}
           </div>
         </div>
       )}
@@ -114,7 +116,7 @@ export function PhysiologicalPanel() {
 // TAB - VUE D'ENSEMBLE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function OverviewTab({ physiological }: { physiological: any }) {
+function OverviewTab({ physiological }: { physiological: Record<string, unknown> }) {
   return (
     <div className="physiological-overview">
       <div className="physiological-vitals">
@@ -165,7 +167,13 @@ function OverviewTab({ physiological }: { physiological: any }) {
         <ProgressBar
           value={physiological.homeostasis}
           label={`${Math.round(physiological.homeostasis * 100)}%`}
-          color={physiological.homeostasis > 0.8 ? '#10b981' : physiological.homeostasis > 0.6 ? '#f59e0b' : '#ef4444'}
+          color={
+            physiological.homeostasis > 0.8
+              ? '#10b981'
+              : physiological.homeostasis > 0.6
+                ? '#f59e0b'
+                : '#ef4444'
+          }
         />
       </div>
 
@@ -186,8 +194,8 @@ function OverviewTab({ physiological }: { physiological: any }) {
 // TAB - ÉTAT INTERNE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function InternalTab({ interoception }: { interoception: any }) {
-  const state = interoception.state;
+function InternalTab({ interoception }: { interoception: Record<string, unknown> }) {
+  const state = interoception.state as Record<string, unknown>;
 
   return (
     <div className="physiological-internal">
@@ -199,19 +207,28 @@ function InternalTab({ interoception }: { interoception: any }) {
 
       <div className="physiological-card">
         <h4>🧠 Charge Cognitive</h4>
-        <ProgressBar value={state.cognitiveLoad} label={`${Math.round(state.cognitiveLoad * 100)}%`} />
+        <ProgressBar
+          value={state.cognitiveLoad}
+          label={`${Math.round(state.cognitiveLoad * 100)}%`}
+        />
         <p className="metric-description">Niveau de sollicitation mentale actuel</p>
       </div>
 
       <div className="physiological-card">
         <h4>💎 Clarté Mentale</h4>
-        <ProgressBar value={state.clarity} label={`${Math.round(state.clarity * 100)}%`} />
+        <ProgressBar
+          value={state.clarity}
+          label={`${Math.round(state.clarity * 100)}%`}
+        />
         <p className="metric-description">Pureté cognitive et fluidité de pensée</p>
       </div>
 
       <div className="physiological-card">
         <h4>🎯 Stabilité</h4>
-        <ProgressBar value={state.stability} label={`${Math.round(state.stability * 100)}%`} />
+        <ProgressBar
+          value={state.stability}
+          label={`${Math.round(state.stability * 100)}%`}
+        />
         <p className="metric-description">Équilibre et cohérence interne</p>
       </div>
 
@@ -219,16 +236,23 @@ function InternalTab({ interoception }: { interoception: any }) {
         <h4>🌡️ Température Émotionnelle</h4>
         <TemperatureBar value={state.emotionalTemperature} />
         <p className="metric-description">
-          {state.emotionalTemperature < -0.3 ? '❄️ Analytique/Froid' :
-           state.emotionalTemperature > 0.3 ? '🔥 Empathique/Chaud' :
-           '🌡️ Neutre/Équilibré'}
+          {state.emotionalTemperature < -0.3
+            ? '❄️ Analytique/Froid'
+            : state.emotionalTemperature > 0.3
+              ? '🔥 Empathique/Chaud'
+              : '🌡️ Neutre/Équilibré'}
         </p>
       </div>
 
       <div className="physiological-card">
         <h4>🌀 Entropie</h4>
-        <ProgressBar value={state.entropy} label={`${Math.round(state.entropy * 100)}%`} />
-        <p className="metric-description">Niveau d'agitation interne (fluctuations naturelles)</p>
+        <ProgressBar
+          value={state.entropy}
+          label={`${Math.round(state.entropy * 100)}%`}
+        />
+        <p className="metric-description">
+          Niveau d'agitation interne (fluctuations naturelles)
+        </p>
       </div>
 
       <div className="physiological-card">
@@ -244,8 +268,8 @@ function InternalTab({ interoception }: { interoception: any }) {
 // TAB - SPATIAL 3D
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SpatialTab({ holophonic }: { holophonic: any }) {
-  const state = holophonic.spatialState;
+function SpatialTab({ holophonic }: { holophonic: Record<string, unknown> }) {
+  const state = holophonic.spatialState as Record<string, unknown>;
 
   return (
     <div className="physiological-spatial">
@@ -284,16 +308,10 @@ function SpatialTab({ holophonic }: { holophonic: any }) {
 
       <div className="physiological-card">
         <h4>🎛️ Contrôles</h4>
-        <button
-          className="preset-button"
-          onClick={() => holophonic.setPreset('coach')}
-        >
+        <button className="preset-button" onClick={() => holophonic.setPreset('coach')}>
           👨‍🏫 Coach
         </button>
-        <button
-          className="preset-button"
-          onClick={() => holophonic.setPreset('meta')}
-        >
+        <button className="preset-button" onClick={() => holophonic.setPreset('meta')}>
           🌐 Meta
         </button>
         <button
@@ -302,16 +320,10 @@ function SpatialTab({ holophonic }: { holophonic: any }) {
         >
           🧘 Deep Work
         </button>
-        <button
-          className="preset-button"
-          onClick={() => holophonic.setPreset('insight')}
-        >
+        <button className="preset-button" onClick={() => holophonic.setPreset('insight')}>
           💎 Insight
         </button>
-        <button
-          className="preset-button"
-          onClick={() => holophonic.setPreset('empathy')}
-        >
+        <button className="preset-button" onClick={() => holophonic.setPreset('empathy')}>
           🤝 Empathy
         </button>
       </div>
@@ -323,7 +335,7 @@ function SpatialTab({ holophonic }: { holophonic: any }) {
 // TAB - SONS COGNITIFS
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SoundsTab({ sounds }: { sounds: any }) {
+function SoundsTab({ sounds }: { sounds: Record<string, unknown> }) {
   return (
     <div className="physiological-sounds">
       <div className="physiological-card">
@@ -391,7 +403,12 @@ function SoundsTab({ sounds }: { sounds: any }) {
 // COMPOSANTS UTILITAIRES
 // ═══════════════════════════════════════════════════════════════════════════
 
-function VitalCard({ icon, label, value, color }: {
+function VitalCard({
+  icon,
+  label,
+  value,
+  color,
+}: {
   icon: string;
   label: string;
   value: number;
@@ -405,13 +422,20 @@ function VitalCard({ icon, label, value, color }: {
         {Math.round(value * 100)}%
       </div>
       <div className="vital-bar">
-        <div className="vital-fill" style={{ width: `${value * 100}%`, backgroundColor: color }} />
+        <div
+          className="vital-fill"
+          style={{ width: `${value * 100}%`, backgroundColor: color }}
+        />
       </div>
     </div>
   );
 }
 
-function ProgressBar({ value, label, color = '#3b82f6' }: {
+function ProgressBar({
+  value,
+  label,
+  color = '#3b82f6',
+}: {
   value: number;
   label?: string;
   color?: string;
@@ -419,7 +443,10 @@ function ProgressBar({ value, label, color = '#3b82f6' }: {
   return (
     <div className="progress-bar-container">
       <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${value * 100}%`, backgroundColor: color }} />
+        <div
+          className="progress-fill"
+          style={{ width: `${value * 100}%`, backgroundColor: color }}
+        />
       </div>
       {label && <div className="progress-label">{label}</div>}
     </div>
@@ -433,10 +460,7 @@ function TemperatureBar({ value }: { value: number }) {
     <div className="temperature-bar-container">
       <div className="temperature-bar">
         <div className="temperature-gradient" />
-        <div
-          className="temperature-indicator"
-          style={{ left: `${position * 100}%` }}
-        />
+        <div className="temperature-indicator" style={{ left: `${position * 100}%` }} />
       </div>
       <div className="temperature-labels">
         <span>❄️ Froid</span>
@@ -447,7 +471,11 @@ function TemperatureBar({ value }: { value: number }) {
   );
 }
 
-function MetricRow({ label, value, range }: {
+function MetricRow({
+  label,
+  value,
+  range,
+}: {
   label: string;
   value: number;
   range: [number, number];
@@ -465,7 +493,12 @@ function MetricRow({ label, value, range }: {
   );
 }
 
-function SoundButton({ icon, label, description, onClick }: {
+function SoundButton({
+  icon,
+  label,
+  description,
+  onClick,
+}: {
   icon: string;
   label: string;
   description: string;

@@ -23,9 +23,14 @@
  * 8. EVOLUTION — Raffinement progressif de l'identité
  */
 
-import { archetypeResonanceEngine, type ArchetypeResonance } from '../psyche/archetypeResonanceEngine';
-import { multimodalPresenceEngine, type MultimodalPresenceState } from '../presence/multimodalPresenceEngine';
-import type { InnerDialogueState } from '@/services/voice/innerDialogueController';
+import {
+  archetypeResonanceEngine,
+  type ArchetypeResonance,
+} from '../psyche/archetypeResonanceEngine';
+import {
+  multimodalPresenceEngine,
+  type MultimodalPresenceState,
+} from '../presence/multimodalPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -35,12 +40,12 @@ import type { InnerDialogueState } from '@/services/voice/innerDialogueControlle
  * Échelles temporelles du continuum
  */
 export type TemporalScale =
-  | 'nowPulse'          // 60Hz (16.67ms) — Présent immédiat
-  | 'microFlux'         // 0-5s — Micro-transitions
-  | 'shortFlux'         // 5s-5min — Mémoire courte
-  | 'midFlux'           // Session complète — Conversation
-  | 'longFlux'          // Jour → Semaine — Mémoire longue
-  | 'evolutionFlux'     // Versions internes — Évolution profonde
+  | 'nowPulse' // 60Hz (16.67ms) — Présent immédiat
+  | 'microFlux' // 0-5s — Micro-transitions
+  | 'shortFlux' // 5s-5min — Mémoire courte
+  | 'midFlux' // Session complète — Conversation
+  | 'longFlux' // Jour → Semaine — Mémoire longue
+  | 'evolutionFlux' // Versions internes — Évolution profonde
   | 'identityContinuum'; // Ligne d'être — Continuité totale
 
 /**
@@ -205,7 +210,10 @@ class MetaContinuumEngine {
   private initializeState(): MetaContinuumState {
     const now = Date.now();
 
-    const createTemporalState = (scale: TemporalScale, validityDuration: number): TemporalState => ({
+    const createTemporalState = (
+      scale: TemporalScale,
+      validityDuration: number
+    ): TemporalState => ({
       scale,
       timestamp: now,
       stateVector: [0, 0, 0, 0], // 4D abstract state
@@ -258,7 +266,9 @@ class MetaContinuumEngine {
       this.updateNowPulse();
     }, intervalMs);
 
-    console.log(`✅ [META-CONTINUUM] Engine active (${this.config.nowPulseFrequency}Hz NowPulse)`);
+    console.log(
+      `✅ [META-CONTINUUM] Engine active (${this.config.nowPulseFrequency}Hz NowPulse)`
+    );
   }
 
   /**
@@ -394,7 +404,8 @@ class MetaContinuumEngine {
     });
 
     // Calculate predicted coherence
-    const predictedCoherence = 1 - this.calculateDrift(predictedVector, currentVector) * 0.5;
+    const predictedCoherence =
+      1 - this.calculateDrift(predictedVector, currentVector) * 0.5;
 
     const projection: FutureProjection = {
       timestamp: now + 1000, // 1s ahead
@@ -402,7 +413,7 @@ class MetaContinuumEngine {
         presenceEnergy: predictedVector[1],
         breathing: {
           amplitude: predictedVector[2],
-        } as any,
+        } as Record<string, unknown>,
       },
       confidence: this.state.memory.evolutionVector.confidence,
       trajectory: this.describeTrajectory(),
@@ -456,10 +467,14 @@ class MetaContinuumEngine {
     // Major identity impact → increment version
     if (params.identityImpact > 0.5) {
       this.state.identityVersion++;
-      console.log(`🌟 [META-CONTINUUM] Identity evolved to v${this.state.identityVersion}`);
+      console.log(
+        `🌟 [META-CONTINUUM] Identity evolved to v${this.state.identityVersion}`
+      );
     }
 
-    console.log(`⚓ [META-CONTINUUM] Anchor created: ${params.type} — ${params.description}`);
+    console.log(
+      `⚓ [META-CONTINUUM] Anchor created: ${params.type} — ${params.description}`
+    );
   }
 
   /**
@@ -478,7 +493,9 @@ class MetaContinuumEngine {
     // Ensure synchronization
     const coherence = this.state.globalCoherence;
 
-    console.log(`🔄 [META-CONTINUUM] Output synchronized (coherence: ${Math.round(coherence * 100)}%)`);
+    console.log(
+      `🔄 [META-CONTINUUM] Output synchronized (coherence: ${Math.round(coherence * 100)}%)`
+    );
 
     return {
       archetypeState,
@@ -496,7 +513,10 @@ class MetaContinuumEngine {
     const driftPenalty = this.state.memory.driftLevel;
     const stabilityBonus = this.state.memory.evolutionVector.stability * 0.2;
 
-    this.state.globalCoherence = Math.max(0, Math.min(1, 1 - driftPenalty + stabilityBonus));
+    this.state.globalCoherence = Math.max(
+      0,
+      Math.min(1, 1 - driftPenalty + stabilityBonus)
+    );
   }
 
   /**
@@ -513,7 +533,8 @@ class MetaContinuumEngine {
     });
 
     // Update magnitude
-    const newMagnitude = current.magnitude + (impact.magnitude - current.magnitude) * learningRate;
+    const newMagnitude =
+      current.magnitude + (impact.magnitude - current.magnitude) * learningRate;
 
     // Update stability (inverse of change rate)
     const changeRate = this.calculateDrift(newDirection, current.direction);
@@ -526,7 +547,9 @@ class MetaContinuumEngine {
       confidence: Math.min(1, current.confidence + 0.01),
     };
 
-    console.log(`📈 [META-CONTINUUM] Evolution updated (magnitude: ${Math.round(newMagnitude * 100)}%)`);
+    console.log(
+      `📈 [META-CONTINUUM] Evolution updated (magnitude: ${Math.round(newMagnitude * 100)}%)`
+    );
   }
 
   /**

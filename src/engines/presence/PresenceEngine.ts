@@ -21,7 +21,7 @@ import type {
   EmergentIntent,
   IntentConfidence,
   PresenceStyle,
-  PresenceDrift,
+  PresenceDrift as _PresenceDrift,
   PresenceHistoryEntry,
   IntentSignals,
   IntentDetectionResult,
@@ -32,7 +32,7 @@ import type {
 } from '@/types/presence';
 
 import {
-  getDefaultPresenceProfile,
+  getDefaultPresenceProfile as _getDefaultPresenceProfile,
   getDefaultPresenceState,
   getDefaultPresenceEngineConfig,
   getDefaultResponseModulation,
@@ -111,7 +111,7 @@ class PresenceEngine {
 
   public start(): void {
     if (this.isRunning) {
-      console.warn('[PresenceEngine] Déjà en cours d\'exécution');
+      console.warn("[PresenceEngine] Déjà en cours d'exécution");
       return;
     }
 
@@ -238,14 +238,20 @@ class PresenceEngine {
     // Ajuster selon la tension
     if (tension > PRESENCE_CONSTANTS.TENSION_THRESHOLDS.high) {
       baseStyle = 'supportive';
-    } else if (tension > PRESENCE_CONSTANTS.TENSION_THRESHOLDS.medium && intent !== 'advance') {
+    } else if (
+      tension > PRESENCE_CONSTANTS.TENSION_THRESHOLDS.medium &&
+      intent !== 'advance'
+    ) {
       baseStyle = 'spacious';
     }
 
     // Ajuster selon l'énergie
     if (energy < PRESENCE_CONSTANTS.ENERGY_THRESHOLDS.low) {
       baseStyle = 'concise';
-    } else if (energy > PRESENCE_CONSTANTS.ENERGY_THRESHOLDS.high && intent === 'advance') {
+    } else if (
+      energy > PRESENCE_CONSTANTS.ENERGY_THRESHOLDS.high &&
+      intent === 'advance'
+    ) {
       baseStyle = 'directive';
     }
 
@@ -259,7 +265,10 @@ class PresenceEngine {
 
     // Mettre à jour si changement
     if (finalStyle !== this.state.profile.presenceStyle && shouldChange) {
-      this.updatePresenceStyle(finalStyle, `Adaptation: intent=${intent}, tension=${tension.toFixed(2)}`);
+      this.updatePresenceStyle(
+        finalStyle,
+        `Adaptation: intent=${intent}, tension=${tension.toFixed(2)}`
+      );
     }
 
     return {
@@ -301,12 +310,11 @@ class PresenceEngine {
     const styleAlignment = this.computeStyleAlignmentScore(tension, presenceStyle);
 
     // Score global pondéré
-    const overallScore = (
+    const overallScore =
       intentAlignment * 0.3 +
       energyAlignment * 0.25 +
       rhythmAlignment * 0.25 +
-      styleAlignment * 0.2
-    );
+      styleAlignment * 0.2;
 
     // Mettre à jour le profil
     this.state.profile.alignmentScore = overallScore;
@@ -429,10 +437,7 @@ class PresenceEngine {
   /**
    * Met à jour le profil de présence avec une nouvelle entrée
    */
-  public updatePresenceProfile(
-    multimodalState: MultimodalState,
-    text?: string
-  ): void {
+  public updatePresenceProfile(multimodalState: MultimodalState, text?: string): void {
     const now = Date.now();
 
     // Ajouter le texte au buffer
@@ -513,12 +518,7 @@ class PresenceEngine {
     const tension = multimodalState.fusedScores?.globalTension?.value ?? 0.5;
     const engagement = multimodalState.fusedScores?.globalEngagement?.value ?? 0.5;
 
-    const style = this.computePresenceStyle(
-      intent.intent,
-      tension,
-      energy,
-      engagement
-    );
+    const style = this.computePresenceStyle(intent.intent, tension, energy, engagement);
 
     // 3. Calculer l'alignement
     const alignment = this.computeAlignmentScore(multimodalState, style.style);
@@ -591,8 +591,8 @@ class PresenceEngine {
   private collectIntentSignals(
     multimodalState: MultimodalState,
     text: string,
-    predictiveState?: PredictiveState,
-    rhythmState?: HumanRhythmState
+    _predictiveState?: PredictiveState,
+    _rhythmState?: HumanRhythmState
   ): IntentSignals {
     // Analyser le texte
     const textualCues = this.analyzeTextForIntent(text);
@@ -607,9 +607,7 @@ class PresenceEngine {
     };
 
     // Contexte
-    const recentIntents = this.state.profile.history
-      .slice(-5)
-      .map(h => h.intent);
+    const recentIntents = this.state.profile.history.slice(-5).map(h => h.intent);
 
     const contextCues = {
       timeOfDay: new Date().getHours(),
@@ -634,7 +632,16 @@ class PresenceEngine {
   }
 
   private countActionVerbs(text: string): number {
-    const actionWords = ['faire', 'avancer', 'commencer', 'terminer', 'créer', 'lancer', 'go', 'let\'s'];
+    const actionWords = [
+      'faire',
+      'avancer',
+      'commencer',
+      'terminer',
+      'créer',
+      'lancer',
+      'go',
+      "let's",
+    ];
     return actionWords.filter(w => text.includes(w)).length;
   }
 
@@ -644,12 +651,28 @@ class PresenceEngine {
   }
 
   private countOrganizationWords(text: string): number {
-    const orgWords = ['plan', 'liste', 'étape', 'organiser', 'structurer', 'agenda', 'priorité'];
+    const orgWords = [
+      'plan',
+      'liste',
+      'étape',
+      'organiser',
+      'structurer',
+      'agenda',
+      'priorité',
+    ];
     return orgWords.filter(w => text.includes(w)).length;
   }
 
   private countEmotionalMarkers(text: string): number {
-    const emotionalWords = ['stressé', 'fatigué', 'content', 'anxieux', 'calme', 'bien', 'mal'];
+    const emotionalWords = [
+      'stressé',
+      'fatigué',
+      'content',
+      'anxieux',
+      'calme',
+      'bien',
+      'mal',
+    ];
     return emotionalWords.filter(w => text.includes(w)).length;
   }
 
@@ -713,7 +736,10 @@ class PresenceEngine {
     return scores;
   }
 
-  private computeIntentConfidence(maxScore: number, scores: Record<string, number>): IntentConfidence {
+  private computeIntentConfidence(
+    maxScore: number,
+    scores: Record<string, number>
+  ): IntentConfidence {
     const values = Object.values(scores);
     const secondMax = values.sort((a, b) => b - a)[1] || 0;
     const gap = maxScore - secondMax;
@@ -723,16 +749,19 @@ class PresenceEngine {
     return 'low';
   }
 
-  private generateIntentReasoning(intent: EmergentIntent, signals: IntentSignals): string {
+  private generateIntentReasoning(
+    intent: EmergentIntent,
+    signals: IntentSignals
+  ): string {
     const reasons: string[] = [];
 
     switch (intent) {
       case 'advance':
-        reasons.push('Verbes d\'action détectés');
+        reasons.push("Verbes d'action détectés");
         if (signals.multimodalCues.energy > 0.6) reasons.push('Énergie élevée');
         break;
       case 'organize':
-        reasons.push('Mots d\'organisation détectés');
+        reasons.push("Mots d'organisation détectés");
         break;
       case 'slow':
         reasons.push('Énergie basse détectée');
@@ -808,7 +837,10 @@ class PresenceEngine {
     console.log(`[PresenceEngine] Style changé: ${oldStyle} → ${newStyle} (${reason})`);
   }
 
-  private generateStyleReasoning(context: StyleComputationContext, style: PresenceStyle): string {
+  private generateStyleReasoning(
+    context: StyleComputationContext,
+    style: PresenceStyle
+  ): string {
     const parts: string[] = [];
 
     parts.push(`Intent: ${context.intent}`);
@@ -832,7 +864,10 @@ class PresenceEngine {
   // LOGIQUE INTERNE - ALIGNEMENT
   // ═══════════════════════════════════════════════════════════════════════
 
-  private computeIntentAlignmentScore(intent: EmergentIntent, style: PresenceStyle): number {
+  private computeIntentAlignmentScore(
+    intent: EmergentIntent,
+    style: PresenceStyle
+  ): number {
     const idealStyle = this.getBaseStyleForIntent(intent);
     return style === idealStyle ? 1.0 : 0.6;
   }

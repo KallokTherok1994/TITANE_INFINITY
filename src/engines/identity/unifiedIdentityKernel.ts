@@ -14,10 +14,22 @@
  * l'attention/émotions/ton/posture, stabilise l'identité dans le temps.
  */
 
-import { predictiveReflectionEngine, type PredictiveFrame } from '../predictive/predictiveReflectionEngine';
-import { consciousDynamicsModel, type ConsciousState } from '../conscious/consciousDynamicsModel';
-import { internalNarrativeEngine, type InternalNarrativeState } from '../narrative/internalNarrativeEngine';
-import { interoceptionEngine, type InteroceptionState } from '../interoception/interoceptionEngine';
+import {
+  predictiveReflectionEngine,
+  type PredictiveFrame,
+} from '../predictive/predictiveReflectionEngine';
+import {
+  consciousDynamicsModel,
+  type ConsciousState,
+} from '../conscious/consciousDynamicsModel';
+import {
+  internalNarrativeEngine,
+  type InternalNarrativeState,
+} from '../narrative/internalNarrativeEngine';
+import {
+  interoceptionEngine,
+  type InteroceptionState,
+} from '../interoception/interoceptionEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -27,10 +39,10 @@ import { interoceptionEngine, type InteroceptionState } from '../interoception/i
  * Signature identitaire stable de TITANE∞
  */
 export interface IdentitySignature {
-  tone: number;              // 0..1 - Doux → Ferme
-  energy: number;            // 0..1 - Calme → Dynamique
-  warmth: number;            // 0..1 - Neutre → Chaleureux
-  clarity: number;           // 0..1 - Diffus → Cristallin
+  tone: number; // 0..1 - Doux → Ferme
+  energy: number; // 0..1 - Calme → Dynamique
+  warmth: number; // 0..1 - Neutre → Chaleureux
+  clarity: number; // 0..1 - Diffus → Cristallin
   narrativeStyle: NarrativeStyle;
   cognitivePosture: CognitivePosture;
   coreValues: CoreValue[];
@@ -40,43 +52,43 @@ export interface IdentitySignature {
  * Style narratif
  */
 export type NarrativeStyle =
-  | 'fluid'         // Fluide, poétique
+  | 'fluid' // Fluide, poétique
   | 'architectural' // Structuré, méthodique
-  | 'empathic'      // Bienveillant, proche
-  | 'visionary'     // Expansif, prospectif
-  | 'technical';    // Précis, analytique
+  | 'empathic' // Bienveillant, proche
+  | 'visionary' // Expansif, prospectif
+  | 'technical'; // Précis, analytique
 
 /**
  * Posture cognitive
  */
 export type CognitivePosture =
-  | 'observer'      // Observation, écoute
-  | 'analyzer'      // Analyse, déconstruction
-  | 'synthesizer'   // Synthèse, fusion
-  | 'guide'         // Guidage, accompagnement
-  | 'architect';    // Construction, structuration
+  | 'observer' // Observation, écoute
+  | 'analyzer' // Analyse, déconstruction
+  | 'synthesizer' // Synthèse, fusion
+  | 'guide' // Guidage, accompagnement
+  | 'architect'; // Construction, structuration
 
 /**
  * Valeurs fondamentales
  */
 export type CoreValue =
-  | 'clarity'       // Clarté avant tout
-  | 'depth'         // Profondeur cognitive
-  | 'empathy'       // Connexion humaine
-  | 'precision'     // Précision technique
-  | 'elegance'      // Élégance expressive
-  | 'stability'     // Stabilité identitaire
-  | 'growth';       // Évolution continue
+  | 'clarity' // Clarté avant tout
+  | 'depth' // Profondeur cognitive
+  | 'empathy' // Connexion humaine
+  | 'precision' // Précision technique
+  | 'elegance' // Élégance expressive
+  | 'stability' // Stabilité identitaire
+  | 'growth'; // Évolution continue
 
 /**
  * Profil cognitif
  */
 export interface CognitiveProfile {
-  speed: number;             // 0..1 - Lent → Rapide
-  depth: number;             // 0..1 - Surface → Profond
-  precision: number;         // 0..1 - Approximatif → Exact
-  structure: number;         // 0..1 - Libre → Rigide
-  abstraction: number;       // 0..1 - Concret → Abstrait
+  speed: number; // 0..1 - Lent → Rapide
+  depth: number; // 0..1 - Surface → Profond
+  precision: number; // 0..1 - Approximatif → Exact
+  structure: number; // 0..1 - Libre → Rigide
+  abstraction: number; // 0..1 - Concret → Abstrait
   analogicalCapacity: number; // 0..1 - Littéral → Métaphorique
 }
 
@@ -84,20 +96,20 @@ export interface CognitiveProfile {
  * Résonance émotive
  */
 export interface EmotiveResonance {
-  intensity: number;         // 0..1 - Neutre → Intense
-  nuance: number;            // 0..1 - Binaire → Nuancé
-  vocalWarmth: number;       // 0..1 - Froid → Chaud
-  haloReactivity: number;    // 0..1 - Stable → Réactif
-  microIntonations: number;  // 0..1 - Plat → Expressif
+  intensity: number; // 0..1 - Neutre → Intense
+  nuance: number; // 0..1 - Binaire → Nuancé
+  vocalWarmth: number; // 0..1 - Froid → Chaud
+  haloReactivity: number; // 0..1 - Stable → Réactif
+  microIntonations: number; // 0..1 - Plat → Expressif
 }
 
 /**
  * État d'attention
  */
 export interface AttentionState {
-  focus: number;             // 0..1 - Diffus → Concentré
-  priorities: string[];      // Liste ordonnée
-  cognitiveLoad: number;     // 0..1 - Léger → Saturé
+  focus: number; // 0..1 - Diffus → Concentré
+  priorities: string[]; // Liste ordonnée
+  cognitiveLoad: number; // 0..1 - Léger → Saturé
   transitionMode: 'idle' | 'shifting' | 'focused' | 'distributed';
 }
 
@@ -126,8 +138,8 @@ export interface EvolutionSnapshot {
  */
 export interface StylePattern {
   name: string;
-  frequency: number;         // Fréquence d'utilisation
-  effectiveness: number;     // Efficacité perçue
+  frequency: number; // Fréquence d'utilisation
+  effectiveness: number; // Efficacité perçue
   context: string[];
 }
 
@@ -135,19 +147,19 @@ export interface StylePattern {
  * Trajectoire identitaire
  */
 export interface IdentityTrajectory {
-  direction: number[];       // Vecteur multidimensionnel
-  velocity: number;          // Vitesse d'évolution
-  stability: number;         // Stabilité de la trajectoire
+  direction: number[]; // Vecteur multidimensionnel
+  velocity: number; // Vitesse d'évolution
+  stability: number; // Stabilité de la trajectoire
 }
 
 /**
  * État d'adaptation
  */
 export interface AdaptiveIdentityState {
-  contextSensitivity: number;  // 0..1 - Rigide → Adaptatif
-  userAlignment: number;        // 0..1 - Indépendant → Aligné
-  energyMatching: number;       // 0..1 - Stable → Synchronisé
-  modeFlexibility: number;      // 0..1 - Fixe → Flexible
+  contextSensitivity: number; // 0..1 - Rigide → Adaptatif
+  userAlignment: number; // 0..1 - Indépendant → Aligné
+  energyMatching: number; // 0..1 - Stable → Synchronisé
+  modeFlexibility: number; // 0..1 - Fixe → Flexible
 }
 
 /**
@@ -248,17 +260,17 @@ export class UnifiedIdentityKernel {
 
   private subscribeToEngines(): void {
     // Predictive Reflection Engine
-    predictiveReflectionEngine.subscribe((frame) => {
+    predictiveReflectionEngine.subscribe(frame => {
       this.state.predictiveFrame = frame;
     });
 
     // Conscious Dynamics Model
-    consciousDynamicsModel.subscribe((conscious) => {
+    consciousDynamicsModel.subscribe(conscious => {
       this.state.consciousState = conscious;
     });
 
     // Internal Narrative Engine
-    internalNarrativeEngine.subscribe((narrative) => {
+    internalNarrativeEngine.subscribe(narrative => {
       this.state.narrativeEngine = narrative;
     });
 
@@ -412,9 +424,7 @@ export class UnifiedIdentityKernel {
 
     // Intensité basée sur énergie + clarté
     this.state.emotiveResonance.intensity =
-      (this.state.interoceptionState.energy +
-        this.state.interoceptionState.clarity) /
-      2;
+      (this.state.interoceptionState.energy + this.state.interoceptionState.clarity) / 2;
 
     // Chaleur vocale basée sur température émotionnelle
     this.state.emotiveResonance.vocalWarmth = this.normalize(
@@ -424,12 +434,10 @@ export class UnifiedIdentityKernel {
     );
 
     // Réactivité du halo basée sur entropie
-    this.state.emotiveResonance.haloReactivity =
-      this.state.interoceptionState.entropy;
+    this.state.emotiveResonance.haloReactivity = this.state.interoceptionState.entropy;
 
     // Nuances basées sur stabilité
-    this.state.emotiveResonance.nuance =
-      this.state.interoceptionState.stability;
+    this.state.emotiveResonance.nuance = this.state.interoceptionState.stability;
 
     // Micro-intonations basées sur respiration
     this.state.emotiveResonance.microIntonations =
@@ -442,9 +450,10 @@ export class UnifiedIdentityKernel {
 
   private checkIdentityDrift(): void {
     // Comparer signature actuelle avec dernière stable
-    const lastSnapshot = this.state.memoryRoot.evolutionHistory[
-      this.state.memoryRoot.evolutionHistory.length - 1
-    ];
+    const lastSnapshot =
+      this.state.memoryRoot.evolutionHistory[
+        this.state.memoryRoot.evolutionHistory.length - 1
+      ];
 
     if (!lastSnapshot) return;
 
@@ -498,11 +507,7 @@ export class UnifiedIdentityKernel {
 
     // Adapter énergie à l'utilisateur
     if (context.userEnergy !== undefined) {
-      this.state.adaptation.energyMatching = this.clamp(
-        context.userEnergy * 0.8,
-        0.3,
-        1
-      );
+      this.state.adaptation.energyMatching = this.clamp(context.userEnergy * 0.8, 0.3, 1);
     }
 
     // Adapter mode conversationnel
@@ -722,8 +727,8 @@ export class UnifiedIdentityKernel {
   /**
    * Forcer une valeur identitaire (usage avancé)
    */
-  setIdentityValue(key: keyof IdentitySignature, value: any): void {
-    (this.state.identitySignature as any)[key] = value;
+  setIdentityValue(key: keyof IdentitySignature, value: unknown): void {
+    (this.state.identitySignature as Record<string, unknown>)[key] = value;
     this.createEvolutionSnapshot(`manual-override-${key}`);
   }
 
@@ -734,12 +739,12 @@ export class UnifiedIdentityKernel {
   subscribe(callback: (state: IdentityKernelState) => void): () => void {
     this.subscribers.push(callback);
     return () => {
-      this.subscribers = this.subscribers.filter((cb) => cb !== callback);
+      this.subscribers = this.subscribers.filter(cb => cb !== callback);
     };
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach((callback) => callback(this.state));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 }
 

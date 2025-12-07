@@ -27,7 +27,10 @@
  */
 
 import { haloEngine, type HaloState } from '@/services/voice/haloEngine';
-import type { ThinkingState, InnerDialogueState } from '@/services/voice/innerDialogueController';
+import type {
+  ThinkingState,
+  InnerDialogueState,
+} from '@/services/voice/innerDialogueController';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -37,14 +40,14 @@ import type { ThinkingState, InnerDialogueState } from '@/services/voice/innerDi
  * État de présence global de TITANE∞
  */
 export type PresenceMode =
-  | 'idle'              // Repos calme
-  | 'listening'         // Écoute active (post-wakeword)
-  | 'thinking'          // Réflexion interne
-  | 'speaking'          // Parole active (TTS)
-  | 'healing'           // Mode auto-réparation
-  | 'storytelling'      // Mode narratif
-  | 'deep_reflection'   // Méditation profonde
-  | 'empathic_sync';    // Synchronisation empathique
+  | 'idle' // Repos calme
+  | 'listening' // Écoute active (post-wakeword)
+  | 'thinking' // Réflexion interne
+  | 'speaking' // Parole active (TTS)
+  | 'healing' // Mode auto-réparation
+  | 'storytelling' // Mode narratif
+  | 'deep_reflection' // Méditation profonde
+  | 'empathic_sync'; // Synchronisation empathique
 
 /**
  * Configuration cycle respiratoire
@@ -212,7 +215,11 @@ export const EXPRESSIVE_INTENTIONS: Record<
     modalities: {
       halo: { hue: 200, saturation: 70, lightness: 55, intention: 'focused analysis' },
       breath: { amplitude: 0.6, cycleDuration: 3500 },
-      avatar: { microExpression: 'focus', facialGlow: 0.7, headTilt: { pitch: -5, yaw: 0, roll: 0 } },
+      avatar: {
+        microExpression: 'focus',
+        facialGlow: 0.7,
+        headTilt: { pitch: -5, yaw: 0, roll: 0 },
+      },
     },
   },
   inspiration: {
@@ -272,7 +279,7 @@ export function calculateBreathingPhase(
   const inhaleEnd = inhaleRatio;
   const holdEnd = inhaleEnd + holdRatio;
   const exhaleEnd = holdEnd + exhaleRatio;
-  const restEnd = exhaleEnd + restRatio;
+  const _restEnd = exhaleEnd + restRatio;
 
   if (cycleProgress < inhaleEnd) {
     return { phase: 'inhale', progress: cycleProgress / inhaleRatio };
@@ -316,7 +323,9 @@ export function generateBreathingCurve(
 /**
  * Convertit ThinkingState → HaloColorExpression
  */
-export function mentalStateToHaloColor(thinkingState: ThinkingState | null): HaloColorExpression {
+export function mentalStateToHaloColor(
+  thinkingState: ThinkingState | null
+): HaloColorExpression {
   switch (thinkingState) {
     case 'fast_thinking':
       return { hue: 210, saturation: 85, lightness: 60, intention: 'rapid thought' };
@@ -325,9 +334,19 @@ export function mentalStateToHaloColor(thinkingState: ThinkingState | null): Hal
     case 'planning':
       return { hue: 180, saturation: 75, lightness: 58, intention: 'strategic planning' };
     case 'evaluating':
-      return { hue: 200, saturation: 80, lightness: 60, intention: 'critical evaluation' };
+      return {
+        hue: 200,
+        saturation: 80,
+        lightness: 60,
+        intention: 'critical evaluation',
+      };
     case 'emotional_sense':
-      return { hue: 330, saturation: 65, lightness: 65, intention: 'emotional resonance' };
+      return {
+        hue: 330,
+        saturation: 65,
+        lightness: 65,
+        intention: 'emotional resonance',
+      };
     case 'validating':
       return { hue: 120, saturation: 70, lightness: 55, intention: 'validation check' };
     case 'self_correcting':
@@ -335,7 +354,12 @@ export function mentalStateToHaloColor(thinkingState: ThinkingState | null): Hal
     case 'narrative_alignment':
       return { hue: 280, saturation: 75, lightness: 60, intention: 'identity alignment' };
     case 'deep_reflection':
-      return { hue: 260, saturation: 65, lightness: 50, intention: 'profound meditation' };
+      return {
+        hue: 260,
+        saturation: 65,
+        lightness: 50,
+        intention: 'profound meditation',
+      };
     case 'silent':
     case 'perceiving':
     default:
@@ -370,7 +394,7 @@ export function lerpHaloColor(
 export function updateAvatarMicroMimics(
   current: AvatarMicroMimics,
   mode: PresenceMode,
-  delta: number
+  _delta: number
 ): AvatarMicroMimics {
   const now = Date.now();
 
@@ -563,7 +587,11 @@ class MultimodalPresenceEngine {
   /**
    * Applique une intention expressive
    */
-  applyIntention(type: ExpressiveIntention['type'], intensity = 1.0, duration = 3000): void {
+  applyIntention(
+    type: ExpressiveIntention['type'],
+    intensity = 1.0,
+    duration = 3000
+  ): void {
     const preset = EXPRESSIVE_INTENTIONS[type];
     if (!preset) {
       console.warn(`[MultimodalPresenceEngine] Unknown intention: ${type}`);
@@ -588,7 +616,9 @@ class MultimodalPresenceEngine {
       Object.assign(this.state.avatar, preset.modalities.avatar);
     }
 
-    console.log(`[MultimodalPresenceEngine] Applied intention: ${type} (intensity ${intensity})`);
+    console.log(
+      `[MultimodalPresenceEngine] Applied intention: ${type} (intensity ${intensity})`
+    );
     this.notifyCallbacks();
   }
 
@@ -614,14 +644,23 @@ class MultimodalPresenceEngine {
     this.setMode('healing');
 
     // Séquence: rouge → violet → bleu
-    this.transitionHaloColor({ hue: 0, saturation: 80, lightness: 55, intention: 'healing start' }, 500);
+    this.transitionHaloColor(
+      { hue: 0, saturation: 80, lightness: 55, intention: 'healing start' },
+      500
+    );
 
     setTimeout(() => {
-      this.transitionHaloColor({ hue: 270, saturation: 70, lightness: 60, intention: 'healing process' }, 1000);
+      this.transitionHaloColor(
+        { hue: 270, saturation: 70, lightness: 60, intention: 'healing process' },
+        1000
+      );
     }, 1500);
 
     setTimeout(() => {
-      this.transitionHaloColor({ hue: 210, saturation: 60, lightness: 65, intention: 'healing complete' }, 1000);
+      this.transitionHaloColor(
+        { hue: 210, saturation: 60, lightness: 65, intention: 'healing complete' },
+        1000
+      );
       this.setMode('idle');
     }, 4000);
 
@@ -684,7 +723,11 @@ class MultimodalPresenceEngine {
 
     // 3. Update avatar micro-mimics
     if (this.config.enableMicroMimics) {
-      this.state.avatar = updateAvatarMicroMimics(this.state.avatar, this.state.mode, delta);
+      this.state.avatar = updateAvatarMicroMimics(
+        this.state.avatar,
+        this.state.mode,
+        delta
+      );
     }
 
     // 4. User mirroring (si activé)
@@ -699,13 +742,17 @@ class MultimodalPresenceEngine {
   /**
    * Met à jour le cycle respiratoire
    */
-  private updateBreathing(delta: number): void {
+  private updateBreathing(_delta: number): void {
     const elapsed = Date.now();
     const { phase, progress } = calculateBreathingPhase(this.state.breathing, elapsed);
     this.state.breathing.phase = phase;
 
     // Calculer amplitude respiratoire actuelle
-    const breathingValue = generateBreathingCurve(phase, progress, this.state.breathing.amplitude);
+    const breathingValue = generateBreathingCurve(
+      phase,
+      progress,
+      this.state.breathing.amplitude
+    );
 
     // Influence halo (expansion/contraction subtile)
     this.state.halo.pulsation = breathingValue * 0.2; // Max 20% variation
@@ -737,7 +784,10 @@ class MultimodalPresenceEngine {
     const detectedState = this.state.userMirroring.detectedUserState;
     if (!detectedState) return;
 
-    const mirrorRatio = Math.min(this.state.userMirroring.mirrorRatio, this.config.maxMirrorRatio);
+    const _mirrorRatio = Math.min(
+      this.state.userMirroring.mirrorRatio,
+      this.config.maxMirrorRatio
+    );
 
     // Adapter respiration (exemple)
     if (detectedState === 'stressed') {
@@ -799,15 +849,30 @@ class MultimodalPresenceEngine {
         haloEngine.reset();
         break;
       case 'listening':
-        targetColor = { hue: 45, saturation: 85, lightness: 70, intention: 'active listening' };
+        targetColor = {
+          hue: 45,
+          saturation: 85,
+          lightness: 70,
+          intention: 'active listening',
+        };
         haloEngine.startBreathing();
         break;
       case 'thinking':
-        targetColor = { hue: 270, saturation: 70, lightness: 55, intention: 'deep thought' };
+        targetColor = {
+          hue: 270,
+          saturation: 70,
+          lightness: 55,
+          intention: 'deep thought',
+        };
         haloEngine.startPulsing();
         break;
       case 'speaking':
-        targetColor = { hue: 50, saturation: 80, lightness: 65, intention: 'vocal expression' };
+        targetColor = {
+          hue: 50,
+          saturation: 80,
+          lightness: 65,
+          intention: 'vocal expression',
+        };
         haloEngine.startShimmer();
         break;
       case 'healing':
@@ -815,10 +880,20 @@ class MultimodalPresenceEngine {
         haloEngine.setError(); // Temporaire, puis transition
         break;
       case 'storytelling':
-        targetColor = { hue: 280, saturation: 65, lightness: 60, intention: 'narrative mode' };
+        targetColor = {
+          hue: 280,
+          saturation: 65,
+          lightness: 60,
+          intention: 'narrative mode',
+        };
         break;
       case 'deep_reflection':
-        targetColor = { hue: 260, saturation: 65, lightness: 50, intention: 'meditation' };
+        targetColor = {
+          hue: 260,
+          saturation: 65,
+          lightness: 50,
+          intention: 'meditation',
+        };
         break;
       case 'empathic_sync':
         targetColor = { hue: 330, saturation: 60, lightness: 70, intention: 'empathy' };
@@ -843,7 +918,7 @@ class MultimodalPresenceEngine {
    * Notifie tous les callbacks
    */
   private notifyCallbacks(): void {
-    this.callbacks.forEach((callback) => {
+    this.callbacks.forEach(callback => {
       try {
         callback(this.getState());
       } catch (error) {

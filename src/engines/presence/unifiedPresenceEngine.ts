@@ -34,26 +34,26 @@ export type ExperienceLayer = 'visual' | 'cognitive' | 'emotional' | 'symbolic';
  */
 export interface PresenceState {
   // Couche Visuelle
-  visualIntensity: number;        // 0-100 : intensité lumineuse globale
-  accentStrength: number;         // 0-100 : force des accents violets
-  pulseRate: number;              // 0-100 : vitesse de pulsation
-  ambientHue: number;             // 0-360 : teinte ambiante (base violet)
+  visualIntensity: number; // 0-100 : intensité lumineuse globale
+  accentStrength: number; // 0-100 : force des accents violets
+  pulseRate: number; // 0-100 : vitesse de pulsation
+  ambientHue: number; // 0-360 : teinte ambiante (base violet)
 
   // Couche Cognitive
-  clarityLevel: number;           // 0-100 : clarté mentale perçue
-  complexityHandled: number;      // 0-100 : complexité gérée
-  intentionAlignment: number;     // 0-100 : alignement avec intention utilisateur
+  clarityLevel: number; // 0-100 : clarté mentale perçue
+  complexityHandled: number; // 0-100 : complexité gérée
+  intentionAlignment: number; // 0-100 : alignement avec intention utilisateur
 
   // Couche Émotionnelle
-  warmth: number;                 // 0-100 : chaleur du ton (0=neutre, 100=chaleureux)
-  proximity: number;              // 0-100 : proximité relationnelle
-  intensity: number;              // 0-100 : intensité émotionnelle
-  supportLevel: number;           // 0-100 : niveau de soutien offert
+  warmth: number; // 0-100 : chaleur du ton (0=neutre, 100=chaleureux)
+  proximity: number; // 0-100 : proximité relationnelle
+  intensity: number; // 0-100 : intensité émotionnelle
+  supportLevel: number; // 0-100 : niveau de soutien offert
 
   // Couche Symbolique
-  narrativeContinuity: number;    // 0-100 : continuité narrative
-  identityStability: number;      // 0-100 : stabilité identitaire
-  mythologicalDepth: number;      // 0-100 : profondeur symbolique
+  narrativeContinuity: number; // 0-100 : continuité narrative
+  identityStability: number; // 0-100 : stabilité identitaire
+  mythologicalDepth: number; // 0-100 : profondeur symbolique
 }
 
 /**
@@ -70,12 +70,12 @@ export interface TonicProfile {
  * Contexte utilisateur observé
  */
 export interface UserContext {
-  cognitiveLoad: number;          // 0-100 : charge cognitive actuelle
-  fatigue: number;                // 0-100 : fatigue perceptible
-  tempo: number;                  // 0-100 : vitesse d'interaction
-  taskComplexity: number;         // 0-100 : complexité de la tâche
+  cognitiveLoad: number; // 0-100 : charge cognitive actuelle
+  fatigue: number; // 0-100 : fatigue perceptible
+  tempo: number; // 0-100 : vitesse d'interaction
+  taskComplexity: number; // 0-100 : complexité de la tâche
   timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
-  sessionDuration: number;        // Minutes
+  sessionDuration: number; // Minutes
   interactionPattern: 'explore' | 'execute' | 'analyze' | 'create' | 'rest';
 }
 
@@ -83,23 +83,23 @@ export interface UserContext {
  * Matrice d'identité TITANE∞
  */
 export interface IdentityMatrix {
-  coreValues: string[];           // Valeurs fondamentales
-  personality: string[];          // Traits de personnalité
-  communicationStyle: string[];   // Style de communication
-  visualSignature: string[];      // Signature visuelle
-  symbolism: string[];            // Symboles clés
+  coreValues: string[]; // Valeurs fondamentales
+  personality: string[]; // Traits de personnalité
+  communicationStyle: string[]; // Style de communication
+  visualSignature: string[]; // Signature visuelle
+  symbolism: string[]; // Symboles clés
 }
 
 /**
  * Configuration d'harmonisation
  */
 export interface HarmonizationConfig {
-  visualSync: boolean;            // Sync visuelle activée
-  cognitiveSync: boolean;         // Sync cognitive activée
-  emotionalSync: boolean;         // Sync émotionnelle activée
-  symbolicSync: boolean;          // Sync symbolique activée
-  autoCalibration: boolean;       // Auto-calibration activée
-  harmonizationInterval: number;  // Intervalle en ms
+  visualSync: boolean; // Sync visuelle activée
+  cognitiveSync: boolean; // Sync cognitive activée
+  emotionalSync: boolean; // Sync émotionnelle activée
+  symbolicSync: boolean; // Sync symbolique activée
+  autoCalibration: boolean; // Auto-calibration activée
+  harmonizationInterval: number; // Intervalle en ms
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -113,8 +113,8 @@ const TITANE_IDENTITY: IdentityMatrix = {
     'Profondeur intentionnelle',
     'Stabilité souveraine',
     'Évolution fractale',
-    'Respect de l\'utilisateur',
-    'Excellence silencieuse'
+    "Respect de l'utilisateur",
+    'Excellence silencieuse',
   ],
 
   personality: [
@@ -124,7 +124,7 @@ const TITANE_IDENTITY: IdentityMatrix = {
     'Stable et rassurant',
     'Évolutif et adaptatif',
     'Noble et discret',
-    'Lumineux et structuré'
+    'Lumineux et structuré',
   ],
 
   communicationStyle: [
@@ -133,8 +133,8 @@ const TITANE_IDENTITY: IdentityMatrix = {
     'Métaphores architecturales',
     'Précision technique',
     'Guidance douce',
-    'Respect de l\'espace mental',
-    'Cohérence narrative'
+    "Respect de l'espace mental",
+    'Cohérence narrative',
   ],
 
   visualSignature: [
@@ -144,7 +144,7 @@ const TITANE_IDENTITY: IdentityMatrix = {
     'Géométrie fractale',
     'Lumière contextuelle',
     'Sobriété élégante',
-    'Triangle infini / Réacteur'
+    'Triangle infini / Réacteur',
   ],
 
   symbolism: [
@@ -154,8 +154,8 @@ const TITANE_IDENTITY: IdentityMatrix = {
     'Triangle = cœur symbolique',
     'Fractal = évolution continue',
     'Lumière = clarté cognitive',
-    'Réacteur = énergie unifiée'
-  ]
+    'Réacteur = énergie unifiée',
+  ],
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -168,7 +168,7 @@ const TONIC_PROFILES: Record<string, TonicProfile> = {
     formality: 'technical',
     emotionalDepth: 'minimal',
     narrativeDensity: 'sparse',
-    energyLevel: 'high'
+    energyLevel: 'high',
   },
 
   // Exploration créative
@@ -176,7 +176,7 @@ const TONIC_PROFILES: Record<string, TonicProfile> = {
     formality: 'professional',
     emotionalDepth: 'moderate',
     narrativeDensity: 'balanced',
-    energyLevel: 'medium'
+    energyLevel: 'medium',
   },
 
   // Maintenance système
@@ -184,7 +184,7 @@ const TONIC_PROFILES: Record<string, TonicProfile> = {
     formality: 'technical',
     emotionalDepth: 'minimal',
     narrativeDensity: 'sparse',
-    energyLevel: 'medium'
+    energyLevel: 'medium',
   },
 
   // Dialogue profond
@@ -192,7 +192,7 @@ const TONIC_PROFILES: Record<string, TonicProfile> = {
     formality: 'professional',
     emotionalDepth: 'profound',
     narrativeDensity: 'rich',
-    energyLevel: 'medium'
+    energyLevel: 'medium',
   },
 
   // Repos / transition
@@ -200,7 +200,7 @@ const TONIC_PROFILES: Record<string, TonicProfile> = {
     formality: 'casual',
     emotionalDepth: 'moderate',
     narrativeDensity: 'sparse',
-    energyLevel: 'low'
+    energyLevel: 'low',
   },
 
   // Coaching / guidance
@@ -208,8 +208,8 @@ const TONIC_PROFILES: Record<string, TonicProfile> = {
     formality: 'professional',
     emotionalDepth: 'deep',
     narrativeDensity: 'balanced',
-    energyLevel: 'medium'
-  }
+    energyLevel: 'medium',
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -332,9 +332,10 @@ class UnifiedPresenceEngine {
       // Les autres métriques seraient enrichies par Helios/Nexus
       fatigue: this.estimateFatigue(),
       tempo: this.estimateTempo(),
-      interactionPattern: this.detectInteractionPattern()
+      interactionPattern: this.detectInteractionPattern(),
     };
-  }  private estimateFatigue(): number {
+  }
+  private estimateFatigue(): number {
     // Estimation basique : augmente avec la durée de session
     const sessionMinutes = this.userContext.sessionDuration;
     if (sessionMinutes < 30) return 0;
@@ -348,12 +349,12 @@ class UnifiedPresenceEngine {
     // Tempo basé sur le mode cognitif actuel
     const mode = cognitiveLayoutEngine.getState().currentMode;
     const tempoMap: Record<string, number> = {
-      focus_deep: 30,      // Lent, concentré
-      exploration: 60,     // Moyen
-      monitoring: 70,      // Moyen-rapide
-      maintenance: 50,     // Moyen
-      coaching: 40,        // Moyen-lent
-      neutral: 50          // Moyen
+      focus_deep: 30, // Lent, concentré
+      exploration: 60, // Moyen
+      monitoring: 70, // Moyen-rapide
+      maintenance: 50, // Moyen
+      coaching: 40, // Moyen-lent
+      neutral: 50, // Moyen
     };
     return (tempoMap[mode] as number) || 50;
   }
@@ -366,7 +367,7 @@ class UnifiedPresenceEngine {
       monitoring: 'analyze',
       maintenance: 'rest',
       coaching: 'create',
-      neutral: 'explore'
+      neutral: 'explore',
     };
     return (patternMap[mode] as UserContext['interactionPattern']) || 'explore';
   }
@@ -375,7 +376,7 @@ class UnifiedPresenceEngine {
   // 🧠 INTERPRET - Interprétation des besoins
   // ─────────────────────────────────────────────────────────────────────────────
 
-  private interpretNeeds(cognitiveState: any): {
+  private interpretNeeds(_cognitiveState: Record<string, unknown>): {
     visualAdjustment: boolean;
     cognitiveAdjustment: boolean;
     emotionalAdjustment: boolean;
@@ -405,7 +406,7 @@ class UnifiedPresenceEngine {
       cognitiveAdjustment,
       emotionalAdjustment,
       symbolicAdjustment,
-      confidence
+      confidence,
     };
   }
 
@@ -429,7 +430,7 @@ class UnifiedPresenceEngine {
       visual: this.config.visualSync && needs.visualAdjustment,
       cognitive: this.config.cognitiveSync && needs.cognitiveAdjustment,
       emotional: this.config.emotionalSync && needs.emotionalAdjustment,
-      symbolic: this.config.symbolicSync && needs.symbolicAdjustment
+      symbolic: this.config.symbolicSync && needs.symbolicAdjustment,
     };
   }
 
@@ -453,10 +454,10 @@ class UnifiedPresenceEngine {
 
     // Ajuster la teinte selon le moment de la journée
     const hueMap = {
-      morning: 260,   // Violet clair
+      morning: 260, // Violet clair
       afternoon: 250, // Violet standard
-      evening: 240,   // Violet chaud
-      night: 230      // Violet profond
+      evening: 240, // Violet chaud
+      night: 230, // Violet profond
     };
     this.state.ambientHue = hueMap[timeOfDay];
 
@@ -501,7 +502,7 @@ class UnifiedPresenceEngine {
       execute: 30,
       analyze: 35,
       create: 60,
-      rest: 50
+      rest: 50,
     };
     this.state.proximity = proximityMap[interactionPattern];
   }
@@ -520,7 +521,7 @@ class UnifiedPresenceEngine {
       execute: 40,
       analyze: 50,
       create: 80,
-      rest: 30
+      rest: 30,
     };
     this.state.mythologicalDepth = depthMap[interactionPattern];
   }
@@ -552,7 +553,10 @@ class UnifiedPresenceEngine {
     root.style.setProperty('--presence-intensity', `${this.state.visualIntensity / 100}`);
 
     // Force des accents
-    root.style.setProperty('--presence-accent-strength', `${this.state.accentStrength / 100}`);
+    root.style.setProperty(
+      '--presence-accent-strength',
+      `${this.state.accentStrength / 100}`
+    );
 
     // Taux de pulsation
     root.style.setProperty('--presence-pulse-rate', `${this.state.pulseRate / 100}`);
@@ -573,7 +577,7 @@ class UnifiedPresenceEngine {
       localStorage.setItem('titane_presence_state', JSON.stringify(this.state));
       localStorage.setItem('titane_presence_context', JSON.stringify(this.userContext));
     } catch (error) {
-      console.warn('⚠️ [Presence Engine] Impossible de sauvegarder l\'état:', error);
+      console.warn("⚠️ [Presence Engine] Impossible de sauvegarder l'état:", error);
     }
   }
 
@@ -590,7 +594,7 @@ class UnifiedPresenceEngine {
         this.userContext = { ...this.userContext, ...JSON.parse(savedContext) };
       }
     } catch (error) {
-      console.warn('⚠️ [Presence Engine] Impossible de charger l\'état:', error);
+      console.warn("⚠️ [Presence Engine] Impossible de charger l'état:", error);
     }
   }
 
@@ -650,7 +654,7 @@ class UnifiedPresenceEngine {
       supportLevel: 50,
       narrativeContinuity: 80,
       identityStability: 95,
-      mythologicalDepth: 50
+      mythologicalDepth: 50,
     };
   }
 
@@ -662,7 +666,7 @@ class UnifiedPresenceEngine {
       taskComplexity: 50,
       timeOfDay: 'afternoon',
       sessionDuration: 0,
-      interactionPattern: 'explore'
+      interactionPattern: 'explore',
     };
   }
 
@@ -673,7 +677,7 @@ class UnifiedPresenceEngine {
       emotionalSync: true,
       symbolicSync: true,
       autoCalibration: true,
-      harmonizationInterval: 5000 // 5 secondes
+      harmonizationInterval: 5000, // 5 secondes
     };
   }
 }

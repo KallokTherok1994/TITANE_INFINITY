@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { SyncLogEntry, SyncHistoryEntry } from './types';
+import { SyncHistoryEntry } from './types';
 
 interface SyncHistoryResponse {
   entries: SyncHistoryEntry[];
@@ -39,7 +39,7 @@ const SyncLogs: React.FC = () => {
     loadLogs();
   }, []);
 
-  const filteredLogs = logs.filter((log) => {
+  const filteredLogs = logs.filter(log => {
     if (filter === 'all') return true;
     if (filter === 'push') return log.direction === 'Push';
     if (filter === 'pull') return log.direction === 'Pull';
@@ -153,13 +153,12 @@ const SyncLogs: React.FC = () => {
       ) : (
         <div className="logs-list">
           {filteredLogs.map((log, index) => (
-            <div
-              key={index}
-              className={`log-entry status-${log.status.toLowerCase()}`}
-            >
+            <div key={index} className={`log-entry status-${log.status.toLowerCase()}`}>
               <div className="log-main">
                 <div className="log-icons">
-                  <span className="direction-icon">{getDirectionIcon(log.direction)}</span>
+                  <span className="direction-icon">
+                    {getDirectionIcon(log.direction)}
+                  </span>
                   <span className="status-icon">{getStatusIcon(log.status)}</span>
                 </div>
                 <div className="log-details">

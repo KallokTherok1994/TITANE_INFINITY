@@ -5,8 +5,9 @@
 
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::unified_memory::{
-    MemoryStats, MemoryItem, MemoryType, MemoryTier,
+    MemoryStats, MemoryItem, MemoryType,
 };
+use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use std::sync::Arc;
@@ -39,24 +40,33 @@ pub struct StoreMemoryRequest {
 //   COMMANDS — Tauri-invokable functions
 // ═══════════════════════════════════════════════════════════════
 
-/// Get unified memory state
+/// Get unified memory state (CACHED - 5s TTL)
 /// Replaces: engine_get_memory_state() + cognitive_get_memory()
 #[tauri::command]
 pub async fn memory_get_state(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<UnifiedMemoryStateResponse, String> {
-    let state = singularity.read().await;
-    let stats = state.memory.stats();
+    // Cache memory state for 5s (standard refresh rate)
+    cached_invoke(
+        "memory_get_state",
+        serde_json::json!({}),
+        CacheStrategy::Standard,
+        || async {
+            let state = singularity.read().await;
+            let stats = state.memory.stats();
 
-    Ok(UnifiedMemoryStateResponse {
-        stm_count: stats.stm_count,
-        mtm_count: stats.mtm_count,
-        ltm_count: stats.ltm_count,
-        total_memories: stats.total_memories,
-        capacity_usage: stats.capacity_usage,
-        compression_ratio: stats.compression_ratio,
-        initialized: state.memory.is_initialized(),
-    })
+            Ok(UnifiedMemoryStateResponse {
+                stm_count: stats.stm_count,
+                mtm_count: stats.mtm_count,
+                ltm_count: stats.ltm_count,
+                total_memories: stats.total_memories,
+                capacity_usage: stats.capacity_usage,
+                compression_ratio: stats.compression_ratio,
+                initialized: state.memory.is_initialized(),
+            })
+        },
+    )
+    .await
 }
 
 /// Store new memory

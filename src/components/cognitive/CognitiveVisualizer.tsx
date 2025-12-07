@@ -14,12 +14,14 @@ import './CognitiveVisualizer.css';
  */
 export function CognitiveVisualizer() {
   const { state, signals, currentMode } = useCognitiveLayout();
-  const [history, setHistory] = useState<Array<{
-    timestamp: number;
-    energy: number;
-    focus: number;
-    load: number;
-  }>>([]);
+  const [history, setHistory] = useState<
+    Array<{
+      timestamp: number;
+      energy: number;
+      focus: number;
+      load: number;
+    }>
+  >([]);
 
   // Enregistrer historique toutes les 10 secondes
   useEffect(() => {
@@ -134,8 +136,16 @@ export function CognitiveVisualizer() {
         </div>
         <div className="cv-stat">
           <div className="cv-stat-value">
-            {((state.preferences.acceptedSuggestions /
-               Math.max(state.preferences.acceptedSuggestions + state.preferences.manualOverrides, 1)) * 100).toFixed(0)}%
+            {(
+              (state.preferences.acceptedSuggestions /
+                Math.max(
+                  state.preferences.acceptedSuggestions +
+                    state.preferences.manualOverrides,
+                  1
+                )) *
+              100
+            ).toFixed(0)}
+            %
           </div>
           <div className="cv-stat-label">Acceptation suggestions</div>
         </div>
@@ -166,6 +176,7 @@ function SignalGauge({
   icon: string;
   inverted?: boolean;
 }) {
+  void color;
   const percentage = value * 100;
   const displayValue = inverted ? 1 - value : value;
   const displayPercentage = displayValue * 100;
@@ -205,8 +216,12 @@ function SignalGauge({
 /**
  * Mini graphique historique
  */
-function MiniChart({ data }: { data: Array<{ timestamp: number; energy: number; focus: number; load: number }> }) {
-  const maxValue = 1;
+function MiniChart({
+  data,
+}: {
+  data: Array<{ timestamp: number; energy: number; focus: number; load: number }>;
+}) {
+  const _maxValue = 1;
   const height = 100;
   const width = 400;
   const points = data.length;
@@ -230,7 +245,14 @@ function MiniChart({ data }: { data: Array<{ timestamp: number; energy: number; 
     <div className="mini-chart">
       <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
         {/* Grille */}
-        <line x1="0" y1={height / 2} x2={width} y2={height / 2} stroke="rgba(255,255,255,0.1)" strokeDasharray="2,2" />
+        <line
+          x1="0"
+          y1={height / 2}
+          x2={width}
+          y2={height / 2}
+          stroke="rgba(255,255,255,0.1)"
+          strokeDasharray="2,2"
+        />
 
         {/* Lignes de données */}
         <polyline

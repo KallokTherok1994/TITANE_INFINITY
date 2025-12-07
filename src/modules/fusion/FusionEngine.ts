@@ -21,12 +21,16 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { DataCollectorEngine, type DatasetEntry, type DataCategory } from '@/modules/dataCollector/DataCollectorEngine';
+import {
+  DataCollectorEngine,
+  type DatasetEntry,
+  type DataCategory,
+} from '@/modules/dataCollector/DataCollectorEngine';
 import { MemoryEngine } from '@/cognitive/memory/memoryEngine';
-import type { MemoryEntry, MemoryType } from '@/cognitive/types';
+import type { MemoryEntry, MemoryType as _MemoryType } from '@/cognitive/types';
 import { getLogEngine } from '@/services/adminEngine/logEngine';
-import { SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
-import type { LogEntry } from '@/lib/UILogger';
+import { SingularityIntrospectionEngine as _SingularityIntrospectionEngine } from '@/modules/singularity/SingularityIntrospectionEngine';
+import type { LogEntry as _LogEntry } from '@/lib/UILogger';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES — FUSION STRUCTURE
@@ -35,43 +39,43 @@ import type { LogEntry } from '@/lib/UILogger';
 export type FusionSource = 'dataset' | 'memory' | 'logs' | 'singularity';
 
 export type TitaneEngineCluster =
-  | 'cognitive'          // Cognitive Engine, Memory, Learning
-  | 'meta'               // Self-Healing, Auto-Improvement, Singularity
-  | 'dev'                // Dev tools, Patches, Debug
-  | 'audio'              // TTS, Voice, Audio
-  | 'ui'                 // UI patterns, Components, Styles
-  | 'data'               // Data collection, Training, Dataset
-  | 'backend'            // Rust, Tauri commands, System
-  | 'security'           // Security, Privacy, Encryption
-  | 'performance'        // Optimization, Caching, Speed
-  | 'integration'        // APIs, External services
-  | 'prompt'             // Super Prompts, Interactions
-  | 'evolution'          // Evolution metrics, Self-learning
-  | 'sudo'               // SUDO commands, Admin
-  | 'hybrid'             // Hybrid Engine (Dev + Chat)
-  | 'governance'         // Governance, Rules, Policies
-  | 'kernel'             // Core kernel, Foundation
-  | 'persona'            // Persona, Identity
-  | 'xp'                 // XP system, Achievements
-  | 'admin'              // Admin tools, Logs
-  | 'uncategorized';     // Autres
+  | 'cognitive' // Cognitive Engine, Memory, Learning
+  | 'meta' // Self-Healing, Auto-Improvement, Singularity
+  | 'dev' // Dev tools, Patches, Debug
+  | 'audio' // TTS, Voice, Audio
+  | 'ui' // UI patterns, Components, Styles
+  | 'data' // Data collection, Training, Dataset
+  | 'backend' // Rust, Tauri commands, System
+  | 'security' // Security, Privacy, Encryption
+  | 'performance' // Optimization, Caching, Speed
+  | 'integration' // APIs, External services
+  | 'prompt' // Super Prompts, Interactions
+  | 'evolution' // Evolution metrics, Self-learning
+  | 'sudo' // SUDO commands, Admin
+  | 'hybrid' // Hybrid Engine (Dev + Chat)
+  | 'governance' // Governance, Rules, Policies
+  | 'kernel' // Core kernel, Foundation
+  | 'persona' // Persona, Identity
+  | 'xp' // XP system, Achievements
+  | 'admin' // Admin tools, Logs
+  | 'uncategorized'; // Autres
 
 export interface FusionEntry extends DatasetEntry {
-  fusionId: string;           // ID unique fusion
-  sources: FusionSource[];    // Sources combinées
+  fusionId: string; // ID unique fusion
+  sources: FusionSource[]; // Sources combinées
   cluster: TitaneEngineCluster; // Cluster moteur
-  compressionRatio: number;   // Ratio compression cognitive
-  semanticHash: string;       // Hash sémantique (dédupe)
-  fusionTimestamp: number;    // Timestamp fusion
-  originalCount: number;      // Nombre d'entrées originales fusionnées
+  compressionRatio: number; // Ratio compression cognitive
+  semanticHash: string; // Hash sémantique (dédupe)
+  fusionTimestamp: number; // Timestamp fusion
+  originalCount: number; // Nombre d'entrées originales fusionnées
 }
 
 export interface FusionStats {
   totalEntries: number;
   byClusters: Record<TitaneEngineCluster, number>;
   bySources: Record<FusionSource, number>;
-  compressionRatio: number;   // Ratio global compression
-  deduplicationRate: number;  // % entrées dédupliquées
+  compressionRatio: number; // Ratio global compression
+  deduplicationRate: number; // % entrées dédupliquées
   avgQuality: number;
   avgImportance: number;
   totalTokens: number;
@@ -110,8 +114,8 @@ export interface FusionConfig {
   enableSingularitySync: boolean;
   compressionLevel: 'low' | 'medium' | 'high';
   deduplicationThreshold: number; // 0-1 (similarité sémantique)
-  minQuality: number;             // 0-1
-  minImportance: number;          // 0-1
+  minQuality: number; // 0-1
+  minImportance: number; // 0-1
   maxEntriesPerCluster: number;
   clusteringEnabled: boolean;
 }
@@ -265,7 +269,9 @@ export class FusionEngine {
       await this.executeStep(steps[4], async () => {
         for (const [source, entries] of originalDataMap.entries()) {
           for (const entry of entries) {
-            const fusionEntry = this.convertToFusionEntry(entry, [source as FusionSource]);
+            const fusionEntry = this.convertToFusionEntry(entry, [
+              source as FusionSource,
+            ]);
             tempDataset.push(fusionEntry);
           }
         }
@@ -307,7 +313,7 @@ export class FusionEngine {
       // ─────────────────────────────────────────────────────────────────────
       await this.executeStep(steps[7], async () => {
         const compressed = await this.compressDataset(tempDataset);
-        const compressionRatio = 1 - (compressed.length / tempDataset.length);
+        const compressionRatio = 1 - compressed.length / tempDataset.length;
         tempDataset.length = 0;
         tempDataset.push(...compressed);
         steps[7].itemsProcessed = Math.round(compressionRatio * 100);
@@ -357,7 +363,7 @@ export class FusionEngine {
         success: true,
         entriesFused: this.fusedDataset.length,
         originalCount,
-        compressionRatio: 1 - (this.fusedDataset.length / originalCount),
+        compressionRatio: 1 - this.fusedDataset.length / originalCount,
         byClusters: this.countByClusters(this.fusedDataset),
         bySources: this.countBySources(this.fusedDataset),
         errors,
@@ -465,7 +471,7 @@ export class FusionEngine {
   // ═══════════════════════════════════════════════════════════════════════
 
   private async compressDataset(entries: FusionEntry[]): Promise<FusionEntry[]> {
-    const compressionLevel = this.config.compressionLevel;
+    const _compressionLevel = this.config.compressionLevel;
 
     // Pour chaque cluster, grouper les entrées similaires
     const clusterMap = new Map<TitaneEngineCluster, FusionEntry[]>();
@@ -475,12 +481,15 @@ export class FusionEngine {
       if (!clusterMap.has(cluster)) {
         clusterMap.set(cluster, []);
       }
-      clusterMap.get(cluster)!.push(entry);
+      const clusterArray = clusterMap.get(cluster);
+      if (clusterArray) {
+        clusterArray.push(entry);
+      }
     }
 
     const compressed: FusionEntry[] = [];
 
-    for (const [cluster, clusterEntries] of clusterMap.entries()) {
+    for (const [_cluster, clusterEntries] of clusterMap.entries()) {
       // Regrouper par similarité sémantique
       const groups = this.groupBySimilarity(clusterEntries);
 
@@ -511,7 +520,9 @@ export class FusionEngine {
       // Trouver entrées similaires
       for (const other of entries) {
         if (used.has(other.fusionId)) continue;
-        if (this.calculateSimilarity(entry, other) >= this.config.deduplicationThreshold) {
+        if (
+          this.calculateSimilarity(entry, other) >= this.config.deduplicationThreshold
+        ) {
           group.push(other);
           used.add(other.fusionId);
         }
@@ -550,7 +561,9 @@ export class FusionEngine {
         source: first.metadata?.source || 'fusion',
         timestamp: first.metadata?.timestamp || Date.now(),
         importance: Math.max(...entries.map(e => e.metadata?.importance || 0)),
-        quality: entries.reduce((sum, e) => sum + (e.metadata?.quality || 0), 0) / entries.length,
+        quality:
+          entries.reduce((sum, e) => sum + (e.metadata?.quality || 0), 0) /
+          entries.length,
         tags: first.metadata?.tags || [],
       },
     };
@@ -584,12 +597,14 @@ export class FusionEngine {
         seen.set(hash, entry);
       } else {
         // Fusionner sources
-        const existing = seen.get(hash)!;
-        const mergedSources = Array.from(
-          new Set([...existing.sources, ...entry.sources])
-        );
-        existing.sources = mergedSources;
-        existing.originalCount += entry.originalCount;
+        const existing = seen.get(hash);
+        if (existing) {
+          const mergedSources = Array.from(
+            new Set([...existing.sources, ...entry.sources])
+          );
+          existing.sources = mergedSources;
+          existing.originalCount += entry.originalCount;
+        }
       }
     }
 
@@ -633,50 +648,52 @@ export class FusionEngine {
     if (content.includes('tts') || content.includes('audio') || content.includes('voice'))
       return 'audio';
 
-    if (content.includes('ui') || content.includes('component') || content.includes('style'))
+    if (
+      content.includes('ui') ||
+      content.includes('component') ||
+      content.includes('style')
+    )
       return 'ui';
 
-    if (content.includes('dataset') || content.includes('training') || content.includes('data'))
+    if (
+      content.includes('dataset') ||
+      content.includes('training') ||
+      content.includes('data')
+    )
       return 'data';
 
-    if (content.includes('rust') || content.includes('tauri') || content.includes('backend'))
+    if (
+      content.includes('rust') ||
+      content.includes('tauri') ||
+      content.includes('backend')
+    )
       return 'backend';
 
-    if (content.includes('security') || content.includes('encryption'))
-      return 'security';
+    if (content.includes('security') || content.includes('encryption')) return 'security';
 
     if (content.includes('performance') || content.includes('optimization'))
       return 'performance';
 
-    if (content.includes('api') || content.includes('integration'))
-      return 'integration';
+    if (content.includes('api') || content.includes('integration')) return 'integration';
 
     if (content.includes('super prompt') || content.includes('interaction'))
       return 'prompt';
 
-    if (content.includes('evolution') || content.includes('learning'))
-      return 'evolution';
+    if (content.includes('evolution') || content.includes('learning')) return 'evolution';
 
-    if (content.includes('sudo') || tags.includes('sudo'))
-      return 'sudo';
+    if (content.includes('sudo') || tags.includes('sudo')) return 'sudo';
 
-    if (content.includes('hybrid') || originEngine.includes('Hybrid'))
-      return 'hybrid';
+    if (content.includes('hybrid') || originEngine.includes('Hybrid')) return 'hybrid';
 
-    if (content.includes('governance') || content.includes('policy'))
-      return 'governance';
+    if (content.includes('governance') || content.includes('policy')) return 'governance';
 
-    if (content.includes('kernel') || content.includes('core'))
-      return 'kernel';
+    if (content.includes('kernel') || content.includes('core')) return 'kernel';
 
-    if (content.includes('persona') || content.includes('identity'))
-      return 'persona';
+    if (content.includes('persona') || content.includes('identity')) return 'persona';
 
-    if (content.includes('xp') || content.includes('achievement'))
-      return 'xp';
+    if (content.includes('xp') || content.includes('achievement')) return 'xp';
 
-    if (content.includes('admin') || content.includes('log'))
-      return 'admin';
+    if (content.includes('admin') || content.includes('log')) return 'admin';
 
     return 'uncategorized';
   }
@@ -689,13 +706,16 @@ export class FusionEngine {
       if (!clusterMap.has(entry.cluster)) {
         clusterMap.set(entry.cluster, []);
       }
-      clusterMap.get(entry.cluster)!.push(entry);
+      const clusterArray = clusterMap.get(entry.cluster);
+      if (clusterArray) {
+        clusterArray.push(entry);
+      }
     }
 
     const limited: FusionEntry[] = [];
 
     // Limiter chaque cluster
-    for (const [cluster, clusterEntries] of clusterMap.entries()) {
+    for (const [_cluster, clusterEntries] of clusterMap.entries()) {
       // Trier par importance
       const sorted = clusterEntries.sort(
         (a, b) => (b.metadata?.importance || 0) - (a.metadata?.importance || 0)
@@ -748,7 +768,10 @@ export class FusionEngine {
   // HELPERS
   // ═══════════════════════════════════════════════════════════════════════
 
-  private convertToFusionEntry(entry: DatasetEntry, sources: FusionSource[]): FusionEntry {
+  private convertToFusionEntry(
+    entry: DatasetEntry,
+    sources: FusionSource[]
+  ): FusionEntry {
     return {
       ...entry,
       fusionId: this.generateFusionId(),
@@ -779,12 +802,8 @@ export class FusionEngine {
 
   private calculateSimilarity(a: FusionEntry, b: FusionEntry): number {
     // Similarité basique (Jaccard sur tokens)
-    const tokensA = new Set(
-      (a.prompt + ' ' + a.response).toLowerCase().split(/\s+/)
-    );
-    const tokensB = new Set(
-      (b.prompt + ' ' + b.response).toLowerCase().split(/\s+/)
-    );
+    const tokensA = new Set((a.prompt + ' ' + a.response).toLowerCase().split(/\s+/));
+    const tokensB = new Set((b.prompt + ' ' + b.response).toLowerCase().split(/\s+/));
 
     const intersection = new Set([...tokensA].filter(x => tokensB.has(x)));
     const union = new Set([...tokensA, ...tokensB]);
@@ -821,14 +840,32 @@ export class FusionEngine {
 
   private createPipelineSteps(): FusionPipelineStep[] {
     return [
-      { id: 1, name: 'Charger Memory Eternal', status: 'pending', progress: 0, message: '' },
+      {
+        id: 1,
+        name: 'Charger Memory Eternal',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
       { id: 2, name: 'Collecter Logs', status: 'pending', progress: 0, message: '' },
       { id: 3, name: 'Extraire Dataset', status: 'pending', progress: 0, message: '' },
-      { id: 4, name: 'Collecter Singularity', status: 'pending', progress: 0, message: '' },
+      {
+        id: 4,
+        name: 'Collecter Singularity',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
       { id: 5, name: 'Fusionner Sources', status: 'pending', progress: 0, message: '' },
       { id: 6, name: 'Nettoyer Dataset', status: 'pending', progress: 0, message: '' },
       { id: 7, name: 'Dédupliquer', status: 'pending', progress: 0, message: '' },
-      { id: 8, name: 'Compresser Cognitivement', status: 'pending', progress: 0, message: '' },
+      {
+        id: 8,
+        name: 'Compresser Cognitivement',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
       { id: 9, name: 'Clustering Moteurs', status: 'pending', progress: 0, message: '' },
       { id: 10, name: 'Exporter Final', status: 'pending', progress: 0, message: '' },
     ];

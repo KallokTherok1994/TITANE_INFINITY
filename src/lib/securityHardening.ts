@@ -1,16 +1,19 @@
 /**
  * TITANE∞ v19.3 — Security Hardening Module (Frontend)
- * 
+ *
  * TypeScript wrapper pour Rate Limiting & Audit Logging
  */
+
+import { invoke as tauriInvoke } from '@tauri-apps/api/core';
 
 // Import conditionnel pour éviter l'erreur si Tauri n'est pas disponible
 let invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  invoke = require('@tauri-apps/api/tauri').invoke;
+  invoke = tauriInvoke;
 } catch {
-  invoke = async () => { throw new Error('Tauri not available'); };
+  invoke = async () => {
+    throw new Error('Tauri not available');
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -18,23 +21,23 @@ try {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface RateLimitStats {
-  count: number
-  limit: number
-  remaining: number
-  reset_at: string // ISO 8601 timestamp
+  count: number;
+  limit: number;
+  remaining: number;
+  reset_at: string; // ISO 8601 timestamp
 }
 
 export interface AuditEvent {
-  timestamp: string // ISO 8601 timestamp
-  event_type: AuditEventType
-  user_id: string
-  details: Record<string, unknown>
-  severity: AuditSeverity
-  ip_address?: string
-  module?: string
+  timestamp: string; // ISO 8601 timestamp
+  event_type: AuditEventType;
+  user_id: string;
+  details: Record<string, unknown>;
+  severity: AuditSeverity;
+  ip_address?: string;
+  module?: string;
 }
 
-export type AuditEventType = 
+export type AuditEventType =
   | 'LoginAttempt'
   | 'ConfigChange'
   | 'DataAccess'
@@ -43,9 +46,9 @@ export type AuditEventType =
   | 'PrivilegedAction'
   | 'RateLimitExceeded'
   | 'SystemError'
-  | { Custom: string }
+  | { Custom: string };
 
-export type AuditSeverity = 'Info' | 'Warning' | 'Critical'
+export type AuditSeverity = 'Info' | 'Warning' | 'Critical';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // RATE LIMITING API
@@ -57,9 +60,9 @@ export type AuditSeverity = 'Info' | 'Warning' | 'Critical'
  * @returns Statistiques actuelles (count, limit, remaining, reset_at)
  */
 export async function getRateLimitStats(userId?: string): Promise<RateLimitStats> {
-  return await invoke<RateLimitStats>('get_rate_limit_stats', { 
-    userId 
-  })
+  return await invoke<RateLimitStats>('get_rate_limit_stats', {
+    userId,
+  });
 }
 
 /**
@@ -67,14 +70,14 @@ export async function getRateLimitStats(userId?: string): Promise<RateLimitStats
  * @param userId - ID utilisateur à réinitialiser
  */
 export async function resetRateLimit(userId: string): Promise<void> {
-  await invoke<void>('reset_rate_limit', { userId })
+  await invoke<void>('reset_rate_limit', { userId });
 }
 
 /**
  * Nettoyer les anciennes entrées de rate limiting (maintenance)
  */
 export async function cleanupRateLimiter(): Promise<void> {
-  await invoke<void>('cleanup_rate_limiter')
+  await invoke<void>('cleanup_rate_limiter');
 }
 
 /**
@@ -82,7 +85,7 @@ export async function cleanupRateLimiter(): Promise<void> {
  * @returns Résultats des tests (60 requêtes)
  */
 export async function testRateLimit(): Promise<string> {
-  return await invoke<string>('test_rate_limit')
+  return await invoke<string>('test_rate_limit');
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -106,8 +109,8 @@ export async function logAuditEvent(
     eventType,
     userId,
     details,
-    severity
-  })
+    severity,
+  });
 }
 
 /**
@@ -116,7 +119,7 @@ export async function logAuditEvent(
  * @returns Liste des événements d'audit
  */
 export async function getAuditLogs(date: string): Promise<AuditEvent[]> {
-  return await invoke<AuditEvent[]>('get_audit_logs', { date })
+  return await invoke<AuditEvent[]>('get_audit_logs', { date });
 }
 
 /**
@@ -131,8 +134,8 @@ export async function searchAuditLogsByType(
 ): Promise<AuditEvent[]> {
   return await invoke<AuditEvent[]>('search_audit_logs_by_type', {
     date,
-    eventType
-  })
+    eventType,
+  });
 }
 
 /**
@@ -147,8 +150,8 @@ export async function searchAuditLogsBySeverity(
 ): Promise<AuditEvent[]> {
   return await invoke<AuditEvent[]>('search_audit_logs_by_severity', {
     date,
-    minSeverity
-  })
+    minSeverity,
+  });
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -159,7 +162,7 @@ export async function searchAuditLogsBySeverity(
  * Obtenir la date actuelle au format YYYY-MM-DD (pour audit logs)
  */
 export function getCurrentDate(): string {
-  return new Date().toISOString().split('T')[0]
+  return new Date().toISOString().split('T')[0];
 }
 
 /**
@@ -172,7 +175,7 @@ export function shouldShowRateLimitWarning(
   stats: RateLimitStats,
   warningThreshold: number = 5
 ): boolean {
-  return stats.remaining <= warningThreshold
+  return stats.remaining <= warningThreshold;
 }
 
 /**
@@ -181,9 +184,9 @@ export function shouldShowRateLimitWarning(
  * @returns Nombre de secondes avant reset
  */
 export function getSecondsUntilReset(resetAt: string): number {
-  const now = Date.now()
-  const reset = new Date(resetAt).getTime()
-  return Math.max(0, Math.ceil((reset - now) / 1000))
+  const now = Date.now();
+  const reset = new Date(resetAt).getTime();
+  return Math.max(0, Math.ceil((reset - now) / 1000));
 }
 
 /**
@@ -192,15 +195,15 @@ export function getSecondsUntilReset(resetAt: string): number {
  * @returns Message d'erreur formaté
  */
 export function formatRateLimitError(stats: RateLimitStats): string {
-  const seconds = getSecondsUntilReset(stats.reset_at)
-  const minutes = Math.ceil(seconds / 60)
-  
+  const seconds = getSecondsUntilReset(stats.reset_at);
+  const minutes = Math.ceil(seconds / 60);
+
   if (minutes > 1) {
-    return `Rate limit atteint. Réessayez dans ${minutes} minutes.`
+    return `Rate limit atteint. Réessayez dans ${minutes} minutes.`;
   } else if (seconds > 0) {
-    return `Rate limit atteint. Réessayez dans ${seconds} secondes.`
+    return `Rate limit atteint. Réessayez dans ${seconds} secondes.`;
   } else {
-    return 'Rate limit atteint. Réessayez dans quelques instants.'
+    return 'Rate limit atteint. Réessayez dans quelques instants.';
   }
 }
 
@@ -215,12 +218,15 @@ export function formatRateLimitError(stats: RateLimitStats): string {
  */
 export function isRateLimitError(error: unknown): boolean {
   if (typeof error === 'string') {
-    return error.includes('Rate limit exceeded') || error.includes('Too many requests')
+    return error.includes('Rate limit exceeded') || error.includes('Too many requests');
   }
   if (error instanceof Error) {
-    return error.message.includes('Rate limit exceeded') || error.message.includes('Too many requests')
+    return (
+      error.message.includes('Rate limit exceeded') ||
+      error.message.includes('Too many requests')
+    );
   }
-  return false
+  return false;
 }
 
 /**
@@ -229,9 +235,9 @@ export function isRateLimitError(error: unknown): boolean {
  * @returns Temps d'attente en secondes (ou null si non trouvé)
  */
 export function extractWaitTimeFromError(error: unknown): number | null {
-  const errorStr = typeof error === 'string' ? error : (error as Error).message
-  const match = errorStr.match(/Try again in (\d+) seconds/)
-  return match ? parseInt(match[1]) : null
+  const errorStr = typeof error === 'string' ? error : (error as Error).message;
+  const match = errorStr.match(/Try again in (\d+) seconds/);
+  return match ? parseInt(match[1]) : null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -244,13 +250,13 @@ export default {
   resetRateLimit,
   cleanupRateLimiter,
   testRateLimit,
-  
+
   // Audit Logging
   logAuditEvent,
   getAuditLogs,
   searchAuditLogsByType,
   searchAuditLogsBySeverity,
-  
+
   // Utilities
   getCurrentDate,
   shouldShowRateLimitWarning,
@@ -258,4 +264,4 @@ export default {
   formatRateLimitError,
   isRateLimitError,
   extractWaitTimeFromError,
-}
+};

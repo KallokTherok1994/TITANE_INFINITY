@@ -33,7 +33,7 @@ import {
   getLevelProgress,
   getXPToNextLevel,
   calculateXP,
-  isStreakActive,
+  isStreakActive as _isStreakActive,
   getStreakMultiplier,
   getNextDailyReset,
 } from '@/config/automationXP.config';
@@ -45,7 +45,7 @@ import { secureInvoke } from '@/lib/security';
 // ═══════════════════════════════════════════════════════════════════════════
 
 const STORAGE_KEY_XP = 'titane_user_xp_state';
-const STORAGE_KEY_AUTOMATIONS = 'titane_automations_state';
+const _STORAGE_KEY_AUTOMATIONS = 'titane_automations_state';
 const STORAGE_KEY_REWARDS = 'titane_rewards_state';
 const STORAGE_KEY_ACTION_LOG = 'titane_xp_action_log';
 
@@ -158,11 +158,15 @@ class AutomationXPService {
   private saveState(): void {
     try {
       localStorage.setItem(STORAGE_KEY_XP, JSON.stringify(this.xpState));
-      localStorage.setItem(STORAGE_KEY_REWARDS, JSON.stringify({
-        ...this.rewardsState,
-        achievements: Object.fromEntries(this.rewardsState.achievements),
-      }));
-      localStorage.setItem(STORAGE_KEY_ACTION_LOG,
+      localStorage.setItem(
+        STORAGE_KEY_REWARDS,
+        JSON.stringify({
+          ...this.rewardsState,
+          achievements: Object.fromEntries(this.rewardsState.achievements),
+        })
+      );
+      localStorage.setItem(
+        STORAGE_KEY_ACTION_LOG,
         JSON.stringify(Object.fromEntries(this.actionLog))
       );
     } catch (error) {
@@ -189,7 +193,7 @@ class AutomationXPService {
   /**
    * Ajouter de l'XP pour une action
    */
-  public addXP(actionId: XPActionId, metadata?: Record<string, unknown>): number {
+  public addXP(actionId: XPActionId, _metadata?: Record<string, unknown>): number {
     const action = XP_ACTIONS[actionId];
     if (!action) {
       console.warn(`[AutomationXPService] Unknown action: ${actionId}`);
@@ -253,7 +257,7 @@ class AutomationXPService {
     if (logs.length === 0) return true;
 
     const lastAction = logs[logs.length - 1];
-    return (Date.now() - lastAction) >= action.cooldown_ms;
+    return Date.now() - lastAction >= action.cooldown_ms;
   }
 
   private checkDailyLimit(actionId: XPActionId): boolean {
@@ -272,7 +276,7 @@ class AutomationXPService {
     logs.push(Date.now());
 
     // Garder seulement les dernières 24h
-    const cutoff = Date.now() - (24 * 60 * 60 * 1000);
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
     const recentLogs = logs.filter(ts => ts > cutoff);
 
     this.actionLog.set(actionId, recentLogs);
@@ -335,11 +339,11 @@ class AutomationXPService {
     this.saveState();
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════════════
   // GESTION ACHIEVEMENTS
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  private checkAchievements(actionId: XPActionId): void {
+  private checkAchievements(_actionId: XPActionId): void {
     this.rewardsState.achievements.forEach((achievement, id) => {
       if (achievement.unlocked) return;
 
@@ -428,9 +432,12 @@ class AutomationXPService {
     this.rewardsState.next_daily_reset = getNextDailyReset();
 
     // Nettoyer l'action log (garder seulement 24h)
-    const cutoff = Date.now() - (24 * 60 * 60 * 1000);
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
     this.actionLog.forEach((logs, actionId) => {
-      this.actionLog.set(actionId, logs.filter(ts => ts > cutoff));
+      this.actionLog.set(
+        actionId,
+        logs.filter(ts => ts > cutoff)
+      );
     });
 
     this.saveState();
@@ -455,10 +462,13 @@ class AutomationXPService {
       case 'multiplier':
         this.xpState.multiplier = reward.reward.value as number;
         // Le multiplicateur expire après 24h - géré par setTimeout
-        setTimeout(() => {
-          this.xpState.multiplier = 1.0;
-          this.saveState();
-        }, 24 * 60 * 60 * 1000);
+        setTimeout(
+          () => {
+            this.xpState.multiplier = 1.0;
+            this.saveState();
+          },
+          24 * 60 * 60 * 1000
+        );
         break;
     }
 
@@ -484,7 +494,7 @@ class AutomationXPService {
   private async processScheduledAutomations(): Promise<void> {
     if (this.automationState.is_paused) return;
 
-    const now = new Date();
+    const _now = new Date();
 
     for (const [id, automation] of this.automationState.automations) {
       if (!automation.enabled) continue;
@@ -516,7 +526,9 @@ class AutomationXPService {
 
     // Vérifier niveau requis
     const userLevelIndex = Object.keys(LEVEL_CONFIGS).indexOf(this.xpState.level);
-    const requiredLevelIndex = Object.keys(LEVEL_CONFIGS).indexOf(automation.requires_level);
+    const requiredLevelIndex = Object.keys(LEVEL_CONFIGS).indexOf(
+      automation.requires_level
+    );
 
     if (userLevelIndex < requiredLevelIndex) {
       return {
@@ -700,19 +712,31 @@ class AutomationXPService {
 
   private notifyXPEvent(event: XPEvent): void {
     this.xpListeners.forEach(cb => {
-      try { cb(event); } catch (e) { console.error(e); }
+      try {
+        cb(event);
+      } catch (e) {
+        console.error(e);
+      }
     });
   }
 
   private notifyAutomationEvent(event: AutomationEvent): void {
     this.automationListeners.forEach(cb => {
-      try { cb(event); } catch (e) { console.error(e); }
+      try {
+        cb(event);
+      } catch (e) {
+        console.error(e);
+      }
     });
   }
 
   private notifyAchievementEvent(event: AchievementEvent): void {
     this.achievementListeners.forEach(cb => {
-      try { cb(event); } catch (e) { console.error(e); }
+      try {
+        cb(event);
+      } catch (e) {
+        console.error(e);
+      }
     });
   }
 

@@ -19,8 +19,9 @@ import {
   useEmotionalPresence,
   useSymbolicPresence,
   useUserContextPresence,
-  useTonicProfile
+  useTonicProfile,
 } from '@/hooks/useUnifiedPresence';
+import type { TonicProfile } from '@/engines/presence/unifiedPresenceEngine';
 import './UnifiedPresenceControl.css';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -29,9 +30,11 @@ import './UnifiedPresenceControl.css';
 
 export function UnifiedPresenceControl() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'visual' | 'cognitive' | 'emotional' | 'symbolic'>('visual');
+  const [activeTab, setActiveTab] = useState<
+    'visual' | 'cognitive' | 'emotional' | 'symbolic'
+  >('visual');
 
-  const { state } = useUnifiedPresence();
+  useUnifiedPresence();
   const visual = useVisualPresence();
   const cognitive = useCognitivePresence();
   const emotional = useEmotionalPresence();
@@ -54,10 +57,7 @@ export function UnifiedPresenceControl() {
         <div className="unified-presence-panel">
           <div className="presence-panel-header">
             <h3>🌌 Présence Unifiée TITANE∞</h3>
-            <button
-              className="presence-panel-close"
-              onClick={() => setIsOpen(false)}
-            >
+            <button className="presence-panel-close" onClick={() => setIsOpen(false)}>
               ×
             </button>
           </div>
@@ -92,14 +92,16 @@ export function UnifiedPresenceControl() {
 
           {/* Contenu selon tab active */}
           <div className="presence-panel-content">
-            {activeTab === 'visual' && (
-              <VisualLayerPanel visual={visual} />
-            )}
+            {activeTab === 'visual' && <VisualLayerPanel visual={visual} />}
             {activeTab === 'cognitive' && (
               <CognitiveLayerPanel cognitive={cognitive} userContext={userContext} />
             )}
             {activeTab === 'emotional' && (
-              <EmotionalLayerPanel emotional={emotional} profile={profile} changeProfile={changeProfile} />
+              <EmotionalLayerPanel
+                emotional={emotional}
+                profile={profile}
+                changeProfile={changeProfile}
+              />
             )}
             {activeTab === 'symbolic' && (
               <SymbolicLayerPanel symbolic={symbolic} symbols={symbols} arc={arc} />
@@ -118,7 +120,9 @@ export function UnifiedPresenceControl() {
             </div>
             <div className="presence-stat">
               <span className="presence-stat-label">Session</span>
-              <span className="presence-stat-value">{Math.floor(userContext.sessionDuration)}min</span>
+              <span className="presence-stat-value">
+                {Math.floor(userContext.sessionDuration)}min
+              </span>
             </div>
           </div>
         </div>
@@ -149,7 +153,8 @@ function UnifiedPresenceBadge({ onClick, isOpen, stability }: UnifiedPresenceBad
       <span
         className="presence-badge-indicator"
         style={{
-          backgroundColor: stability > 90 ? '#10b981' : stability > 70 ? '#f59e0b' : '#ef4444'
+          backgroundColor:
+            stability > 90 ? '#10b981' : stability > 70 ? '#f59e0b' : '#ef4444',
         }}
       />
     </button>
@@ -207,7 +212,7 @@ function VisualLayerPanel({ visual }: { visual: ReturnType<typeof useVisualPrese
               hsl(230, 80%, 60%),
               hsl(${visual.hue}, 80%, 60%),
               hsl(270, 80%, 60%)
-            )`
+            )`,
           }}
         />
         <span className="presence-metric-value">{visual.hue}°</span>
@@ -222,7 +227,7 @@ function VisualLayerPanel({ visual }: { visual: ReturnType<typeof useVisualPrese
 
 function CognitiveLayerPanel({
   cognitive,
-  userContext
+  userContext,
 }: {
   cognitive: ReturnType<typeof useCognitivePresence>;
   userContext: ReturnType<typeof useUserContextPresence>;
@@ -303,12 +308,60 @@ function CognitiveLayerPanel({
 function EmotionalLayerPanel({
   emotional,
   profile,
-  changeProfile
+  changeProfile,
 }: {
   emotional: ReturnType<typeof useEmotionalPresence>;
-  profile: any;
+  profile: TonicProfile;
   changeProfile: (name: string) => void;
 }) {
+  const profileOptions: Record<string, TonicProfile> = {
+    deep_focus: {
+      formality: 'technical',
+      emotionalDepth: 'minimal',
+      narrativeDensity: 'sparse',
+      energyLevel: 'high',
+    },
+    exploration: {
+      formality: 'professional',
+      emotionalDepth: 'moderate',
+      narrativeDensity: 'balanced',
+      energyLevel: 'medium',
+    },
+    maintenance: {
+      formality: 'technical',
+      emotionalDepth: 'minimal',
+      narrativeDensity: 'sparse',
+      energyLevel: 'medium',
+    },
+    deep_dialogue: {
+      formality: 'professional',
+      emotionalDepth: 'profound',
+      narrativeDensity: 'rich',
+      energyLevel: 'medium',
+    },
+    rest: {
+      formality: 'casual',
+      emotionalDepth: 'moderate',
+      narrativeDensity: 'sparse',
+      energyLevel: 'low',
+    },
+    coaching: {
+      formality: 'professional',
+      emotionalDepth: 'deep',
+      narrativeDensity: 'balanced',
+      energyLevel: 'medium',
+    },
+  };
+
+  const currentProfileKey =
+    Object.entries(profileOptions).find(
+      ([, option]) =>
+        option.formality === profile.formality &&
+        option.emotionalDepth === profile.emotionalDepth &&
+        option.narrativeDensity === profile.narrativeDensity &&
+        option.energyLevel === profile.energyLevel
+    )?.[0] ?? 'exploration';
+
   return (
     <div className="presence-layer-panel">
       <h4>Couche Émotionnelle</h4>
@@ -363,11 +416,18 @@ function EmotionalLayerPanel({
       <div className="presence-tonic-profile">
         <h5>Profil Tonique</h5>
         <select
-          value={JSON.stringify(profile)}
-          onChange={(e) => {
-            const profiles = ['deep_focus', 'exploration', 'maintenance', 'deep_dialogue', 'rest', 'coaching'];
-            const idx = profiles.findIndex(p => JSON.stringify(profile).includes(p));
-            if (idx !== -1) changeProfile(profiles[idx]);
+          value={currentProfileKey}
+          onChange={e => {
+            const profiles = [
+              'deep_focus',
+              'exploration',
+              'maintenance',
+              'deep_dialogue',
+              'rest',
+              'coaching',
+            ] as const;
+            const selected = e.target.value as (typeof profiles)[number];
+            changeProfile(selected);
           }}
         >
           <option value="deep_focus">Focus Profond</option>
@@ -396,11 +456,11 @@ function EmotionalLayerPanel({
 function SymbolicLayerPanel({
   symbolic,
   symbols,
-  arc
+  arc,
 }: {
   symbolic: ReturnType<typeof useSymbolicPresence>;
-  symbols: any[];
-  arc: any;
+  symbols: unknown[];
+  arc: unknown;
 }) {
   return (
     <div className="presence-layer-panel">
@@ -446,7 +506,7 @@ function SymbolicLayerPanel({
           {symbols.length === 0 ? (
             <p className="presence-empty">Aucun symbole actif</p>
           ) : (
-            symbols.map((symbol) => (
+            symbols.map(symbol => (
               <div
                 key={symbol.symbol}
                 className="presence-symbol-card"
@@ -465,9 +525,15 @@ function SymbolicLayerPanel({
         <div className="presence-narrative-arc">
           <h5>Arc Narratif</h5>
           <div className="presence-arc-info">
-            <span>Phase: <strong>{arc.currentPhase}</strong></span>
-            <span>Moments clés: <strong>{arc.keyMoments?.length || 0}</strong></span>
-            <span>Score: <strong>{arc.continuityScore}%</strong></span>
+            <span>
+              Phase: <strong>{arc.currentPhase}</strong>
+            </span>
+            <span>
+              Moments clés: <strong>{arc.keyMoments?.length || 0}</strong>
+            </span>
+            <span>
+              Score: <strong>{arc.continuityScore}%</strong>
+            </span>
           </div>
         </div>
       )}

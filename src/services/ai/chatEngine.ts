@@ -18,7 +18,12 @@ import type { PromptContext } from '@/core/prompts';
 import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
-import type { ProjectSummary, DecisionSummary, KnowledgeEntry, RitualInfo } from '@/services/memory/types';
+import type {
+  ProjectSummary,
+  DecisionSummary,
+  KnowledgeEntry,
+  RitualInfo,
+} from '@/services/memory/types';
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
 import { chatValidator } from '../chatValidator';
@@ -31,8 +36,8 @@ import type {
   ChatEngineRequestArgs,
   ChatEngineCompletion,
 } from '@services/tauri';
-import { semanticMemoryEngine } from '@/services/memory/semanticMemoryEngine';
-import { consistencyEngine } from '@/services/consistency/consistencyEngine';
+import { semanticMemoryEngine as _semanticMemoryEngine } from '@/services/memory/semanticMemoryEngine';
+import { consistencyEngine as _consistencyEngine } from '@/services/consistency/consistencyEngine';
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 
 type BackendStreamMetadata = {
@@ -60,9 +65,9 @@ const isDev = import.meta.env.DEV;
 export interface ChatEngineConfig {
   mode: ChatMode;
   emotionState?: {
-    valence: number;    // -1.0 (négatif) → 1.0 (positif)
-    intensity: number;  // 0.0 (calme) → 1.0 (intense)
-    energy: number;     // 0.0 (épuisé) → 1.0 (énergisé)
+    valence: number; // -1.0 (négatif) → 1.0 (positif)
+    intensity: number; // 0.0 (calme) → 1.0 (intense)
+    energy: number; // 0.0 (épuisé) → 1.0 (énergisé)
   };
   contextSources?: {
     includeProjects?: boolean;
@@ -129,13 +134,13 @@ class ChatEngineOmega {
           maxRetries: 3,
           enableSanitizer: true,
           enableAutoHeal: true,
-          ...config?.omegaConfig
+          ...config?.omegaConfig,
         },
         ...config,
       };
 
-      isDev && console.log(`⚙️ OMEGA Mode configuré: ${mode} (${Date.now() - startTime}ms)`);
-
+      isDev &&
+        console.log(`⚙️ OMEGA Mode configuré: ${mode} (${Date.now() - startTime}ms)`);
     } catch (error) {
       // Fallback configuration sécurisée
       isDev && console.error('[OMEGA ENGINE] Erreur setMode (récupérée):', error);
@@ -190,15 +195,21 @@ class ChatEngineOmega {
     const failureHandled = false;
 
     try {
-      isDev && console.log('\n╔══════════════════════════════════════════════════════════════╗');
-      isDev && console.log('║  🟣 CHAT ENGINE OMEGA v19.2Ω: Pipeline Starting            ║');
-      isDev && console.log('╚══════════════════════════════════════════════════════════════╝');
+      isDev &&
+        console.log('\n╔══════════════════════════════════════════════════════════════╗');
+      isDev &&
+        console.log('║  🟣 CHAT ENGINE OMEGA v19.2Ω: Pipeline Starting            ║');
+      isDev &&
+        console.log('╚══════════════════════════════════════════════════════════════╝');
 
       const finalConfig = { ...this.config, ...config };
-      isDev && console.log(`🎯 Mode: ${finalConfig.mode} | AutoHeal: ${finalConfig.omegaConfig?.enableAutoHeal}`);
+      isDev &&
+        console.log(
+          `🎯 Mode: ${finalConfig.mode} | AutoHeal: ${finalConfig.omegaConfig?.enableAutoHeal}`
+        );
 
       // ═══ PHASE 1.1: VALIDATION ENTRÉE SÉCURISÉE ═══
-      pipelineSteps.push("input-validation");
+      pipelineSteps.push('input-validation');
       isDev && console.log('🔒 Step 1.1: OMEGA Input Validation...');
 
       if (!message || typeof message !== 'string') {
@@ -213,22 +224,27 @@ class ChatEngineOmega {
       isDev && console.log(`   ✅ Validated (${validatedMessage.length} chars)`);
 
       // Generate or retrieve conversation ID
-      const conversation_id = this.getConversationId(finalConfig.mode) || 
-                              `conv_${finalConfig.mode}_${Date.now()}`;
+      const conversation_id =
+        this.getConversationId(finalConfig.mode) ||
+        `conv_${finalConfig.mode}_${Date.now()}`;
       this.setConversationId(finalConfig.mode, conversation_id);
 
       // Start observability trace
       const turnNumber = history.filter(m => m.role === 'user').length + 1;
       let traceId: string | undefined;
       try {
-        traceId = await cognitiveOmega.startTrace(conversation_id, turnNumber, validatedMessage);
+        traceId = await cognitiveOmega.startTrace(
+          conversation_id,
+          turnNumber,
+          validatedMessage
+        );
         isDev && console.log(`   🔍 Trace started: ${traceId}`);
       } catch (error) {
         isDev && console.warn('   ⚠️ Failed to start trace (non-blocking)');
       }
 
       // ═══ PHASE 1.2: CONTEXTE MEMORY CORE SÉCURISÉ ═══
-      pipelineSteps.push("context-loading");
+      pipelineSteps.push('context-loading');
       isDev && console.log('🧠 Step 1.2: Loading Memory Core context...');
 
       let memoryContext: MemoryContext;
@@ -250,19 +266,23 @@ class ChatEngineOmega {
           recentDecisions: [],
           relevantKnowledge: [],
           activeRituals: [],
-          timeline: []
+          timeline: [],
         };
         context = { sources: [], data: {} };
         autoHealed = true;
       }
 
       // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
-      pipelineSteps.push("prompt-building");
-      isDev && console.log(`🎨 Step 1.3: Building OMEGA prompt for mode "${finalConfig.mode}"...`);
+      pipelineSteps.push('prompt-building');
+      isDev &&
+        console.log(
+          `🎨 Step 1.3: Building OMEGA prompt for mode "${finalConfig.mode}"...`
+        );
 
       // ═══ PHASE 1.3.2: COGNITIVE CONTEXT ENRICHMENT (v∞.42) ═══
-      pipelineSteps.push("cognitive-context-enrichment");
-      isDev && console.log('🧠 Step 1.3.2: Enriching context with cognitive engines v∞.42...');
+      pipelineSteps.push('cognitive-context-enrichment');
+      isDev &&
+        console.log('🧠 Step 1.3.2: Enriching context with cognitive engines v∞.42...');
 
       let cognitiveContext = '';
       try {
@@ -283,17 +303,22 @@ class ChatEngineOmega {
             memory_count: enrichment.metadata?.memoryCount,
             goal_count: enrichment.metadata?.goalCount,
             fact_count: enrichment.metadata?.factCount,
-            context_length: cognitiveContext.length
+            context_length: cognitiveContext.length,
           });
         }
 
-        isDev && console.log(`   ✅ Cognitive context enriched (${enrichment.metadata?.memoryCount} memories, ${enrichment.metadata?.goalCount} goals, ${enrichment.metadata?.factCount} facts)`);
+        isDev &&
+          console.log(
+            `   ✅ Cognitive context enriched (${enrichment.metadata?.memoryCount} memories, ${enrichment.metadata?.goalCount} goals, ${enrichment.metadata?.factCount} facts)`
+          );
       } catch (error) {
-        isDev && console.warn('   ⚠️ Cognitive context enrichment failed, continuing without');
+        isDev &&
+          console.warn('   ⚠️ Cognitive context enrichment failed, continuing without');
         autoHealed = true;
       }
 
-      const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
+      const modeConfig = (chatModes[finalConfig.mode] ??
+        chatModes.default) as ChatModeConfig;
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,
@@ -331,17 +356,21 @@ class ChatEngineOmega {
         promptContext,
         systemPrompt
       );
-      isDev && console.log(`   ✅ Enriched history built (${enrichedHistory.length} messages)`);
+      isDev &&
+        console.log(`   ✅ Enriched history built (${enrichedHistory.length} messages)`);
 
       // ═══ PHASE 1.4: APPEL ORCHESTRATOR OMEGA ═══
-      pipelineSteps.push("orchestrator-call");
+      pipelineSteps.push('orchestrator-call');
       isDev && console.log('🚀 Step 1.4: Calling OMEGA orchestrator...');
 
       // Timeout adaptatif selon le mode (plus long pour modes complexes)
       const baseTimeout = finalConfig.omegaConfig?.timeoutMs || 30000;
-      const timeoutMs = finalConfig.mode === 'brainstorming' ? baseTimeout * 1.5
-                      : finalConfig.mode === 'synthesis' ? baseTimeout * 1.3
-                      : baseTimeout;
+      const timeoutMs =
+        finalConfig.mode === 'brainstorming'
+          ? baseTimeout * 1.5
+          : finalConfig.mode === 'synthesis'
+            ? baseTimeout * 1.3
+            : baseTimeout;
       const response = await this.withTimeout(
         aiOrchestrator.generate(validatedMessage, enrichedHistory, {
           ...(finalConfig.aiConfig || {}),
@@ -359,16 +388,24 @@ class ChatEngineOmega {
       isDev && console.log('   ✅ Orchestrator response received');
 
       // ═══ PHASE 1.5: VALIDATION NEXUS & SENTINEL ═══
-      pipelineSteps.push("nexus-sentinel-validation");
+      pipelineSteps.push('nexus-sentinel-validation');
       isDev && console.log('🛡️  Step 1.5: Validating response with Nexus/Sentinel...');
 
-      const validation = chatValidator.validate(response.content, finalConfig.mode, validatedMessage);
-      isDev && console.log(`   ✅ Validation score: ${(validation.score * 100).toFixed(0)}% (coherence: ${(validation.coherenceScore * 100).toFixed(0)}%, anomaly: ${(validation.anomalyScore * 100).toFixed(0)}%)`);
+      const validation = chatValidator.validate(
+        response.content,
+        finalConfig.mode,
+        validatedMessage
+      );
+      isDev &&
+        console.log(
+          `   ✅ Validation score: ${(validation.score * 100).toFixed(0)}% (coherence: ${(validation.coherenceScore * 100).toFixed(0)}%, anomaly: ${(validation.anomalyScore * 100).toFixed(0)}%)`
+        );
 
       if (validation.issues.length > 0) {
         isDev && console.log(`   ⚠️ Issues detected: ${validation.issues.length}`);
         validation.issues.forEach(issue => {
-          isDev && console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+          isDev &&
+            console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
         });
       }
 
@@ -380,25 +417,25 @@ class ChatEngineOmega {
           autoHealed = true;
         } else if (finalConfig.omegaConfig?.enableAutoHeal) {
           isDev && console.log('   🔄 Auto-healing invalid response');
-          response.content = this.generateEmergencyResponse(validatedMessage, finalConfig.mode);
+          response.content = this.generateEmergencyResponse(
+            validatedMessage,
+            finalConfig.mode
+          );
           autoHealed = true;
         }
       }
 
       // ═══ PHASE 1.5.1: CONSISTENCY CHECK (v∞.42) ═══
-      pipelineSteps.push("consistency-check");
-      isDev && console.log('🔍 Step 1.5.1: Checking consistency with cognitive engine v∞.42...');
+      pipelineSteps.push('consistency-check');
+      isDev &&
+        console.log('🔍 Step 1.5.1: Checking consistency with cognitive engine v∞.42...');
 
       try {
         const consistencyResult = await this.withTimeout(
-          cognitiveOmega.checkConsistency(
-            conversation_id,
-            response.content,
-            {
-              userMessage: validatedMessage,
-              mode: finalConfig.mode
-            }
-          ),
+          cognitiveOmega.checkConsistency(conversation_id, response.content, {
+            userMessage: validatedMessage,
+            mode: finalConfig.mode,
+          }),
           2000,
           'Consistency check timeout'
         );
@@ -408,21 +445,30 @@ class ChatEngineOmega {
             is_consistent: consistencyResult.isConsistent,
             violations_count: consistencyResult.violations.length,
             consistency_score: consistencyResult.consistencyScore,
-            should_correct: consistencyResult.shouldCorrect
+            should_correct: consistencyResult.shouldCorrect,
           });
         }
 
         if (!consistencyResult.isConsistent) {
-          isDev && console.log(`   ⚠️ ${consistencyResult.violations.length} consistency violations detected`);
-          
+          isDev &&
+            console.log(
+              `   ⚠️ ${consistencyResult.violations.length} consistency violations detected`
+            );
+
           consistencyResult.violations.forEach((v, idx) => {
-            isDev && console.log(`      ${idx + 1}. [${v.severity}] ${v.type}: ${v.description}`);
+            isDev &&
+              console.log(
+                `      ${idx + 1}. [${v.severity}] ${v.type}: ${v.description}`
+              );
           });
 
           // Auto-correct if high/critical violations
-          if (consistencyResult.shouldCorrect && finalConfig.omegaConfig?.enableAutoHeal) {
+          if (
+            consistencyResult.shouldCorrect &&
+            finalConfig.omegaConfig?.enableAutoHeal
+          ) {
             isDev && console.log('   🔄 Applying auto-correction...');
-            
+
             const correctionResult = await cognitiveOmega.autoCorrect(
               conversation_id,
               response.content,
@@ -432,20 +478,23 @@ class ChatEngineOmega {
             if (correctionResult.corrected) {
               response.content = correctionResult.correctedResponse;
               autoHealed = true;
-              
+
               if (traceId) {
                 await cognitiveOmega.logPhase(traceId, 'auto_correction', {
                   applied: true,
                   correction_type: (correctionResult.correction as any)?.correction_type,
-                  confidence: (correctionResult.correction as any)?.confidence
+                  confidence: (correctionResult.correction as any)?.confidence,
                 });
               }
-              
+
               isDev && console.log('   ✅ Response auto-corrected for consistency');
             }
           }
         } else {
-          isDev && console.log(`   ✅ Response consistent (score: ${(consistencyResult.consistencyScore * 100).toFixed(0)}%)`);
+          isDev &&
+            console.log(
+              `   ✅ Response consistent (score: ${(consistencyResult.consistencyScore * 100).toFixed(0)}%)`
+            );
         }
       } catch (error) {
         isDev && console.warn('   ⚠️ Consistency check failed (non-blocking):', error);
@@ -453,13 +502,13 @@ class ChatEngineOmega {
       }
 
       // ═══ PHASE 1.6: POST-TRAITEMENT SELON MODE ═══
-      pipelineSteps.push("post-processing");
+      pipelineSteps.push('post-processing');
       isDev && console.log('⚙️ Step 1.6: Post-processing...');
       const processedResponse = this.postProcess(response, finalConfig);
       isDev && console.log('   ✅ Response processed');
 
       // ═══ PHASE 1.7: SAUVEGARDE MEMORY CORE ═══
-      pipelineSteps.push("memory-saving");
+      pipelineSteps.push('memory-saving');
       isDev && console.log('💾 Step 1.7: Saving to Memory Core...');
 
       try {
@@ -481,7 +530,7 @@ class ChatEngineOmega {
       }
 
       // ═══ PHASE 1.7: COGNITIVE MEMORY SAVING (v∞.42) ═══
-      pipelineSteps.push("cognitive-memory-saving");
+      pipelineSteps.push('cognitive-memory-saving');
       isDev && console.log('💾 Step 1.7: Saving to cognitive engines v∞.42...');
 
       try {
@@ -494,7 +543,7 @@ class ChatEngineOmega {
             {
               provider: processedResponse.provider,
               model: processedResponse.model,
-              processingTime: Date.now() - pipelineStartTime
+              processingTime: Date.now() - pipelineStartTime,
             }
           ),
           4000,
@@ -504,11 +553,14 @@ class ChatEngineOmega {
         if (traceId) {
           await cognitiveOmega.logPhase(traceId, 'memory_saved', {
             conversation_id,
-            mode: finalConfig.mode
+            mode: finalConfig.mode,
           });
         }
 
-        isDev && console.log('   ✅ Interaction saved to cognitive engines (memory + goals + facts + evaluation)');
+        isDev &&
+          console.log(
+            '   ✅ Interaction saved to cognitive engines (memory + goals + facts + evaluation)'
+          );
       } catch (error) {
         isDev && console.warn('   ⚠️ Cognitive memory save failed (continuing):', error);
         autoHealed = true;
@@ -525,7 +577,7 @@ class ChatEngineOmega {
       }
 
       // ═══ PHASE 1.8: CONSTRUCTION RÉPONSE FINALE OMEGA ═══
-      pipelineSteps.push("response-building");
+      pipelineSteps.push('response-building');
       const processingTime = Date.now() - pipelineStartTime;
 
       const finalResponse: ChatEngineResponse = {
@@ -538,22 +590,33 @@ class ChatEngineOmega {
           validationScore: validation.score,
           autoHealed,
           failureHandled,
-          processingTime
-        }
+          processingTime,
+        },
       };
 
       // Reset compteur failures si succès
       this.pipelineFailures = 0;
 
-      isDev && console.log('\n╔══════════════════════════════════════════════════════════════╗');
-      isDev && console.log(`║  🟣 CHAT ENGINE OMEGA: Pipeline complete! (${processingTime}ms)     ║`);
-      isDev && console.log('╚══════════════════════════════════════════════════════════════╝\n');
+      isDev &&
+        console.log('\n╔══════════════════════════════════════════════════════════════╗');
+      isDev &&
+        console.log(
+          `║  🟣 CHAT ENGINE OMEGA: Pipeline complete! (${processingTime}ms)     ║`
+        );
+      isDev &&
+        console.log('╚══════════════════════════════════════════════════════════════╝\n');
 
       return finalResponse;
-
     } catch (error) {
       // ═══ AUTO-HEAL PIPELINE OMEGA - RÉCUPÉRATION TOTALE ═══
-      return this.handlePipelineFailure(error, message, history, config, pipelineSteps, pipelineStartTime);
+      return this.handlePipelineFailure(
+        error,
+        message,
+        history,
+        config,
+        pipelineSteps,
+        pipelineStartTime
+      );
     }
   }
 
@@ -578,7 +641,7 @@ class ChatEngineOmega {
 
     // Emergency response selon niveau de failure
     let emergencyContent: string;
-    let emergencyMode = "omega-emergency";
+    let emergencyMode = 'omega-emergency';
 
     if (this.pipelineFailures <= 2) {
       emergencyContent = `🔄 **Auto-réparation OMEGA engagée** (Incident #${this.pipelineFailures})
@@ -589,7 +652,7 @@ Le système cognitif TITANE∞ v19.2Ω s'est automatiquement restauré. Je reste
 
 Je peux continuer notre conversation normalement. Le pipeline OMEGA garantit une récupération totale.`;
     } else {
-      emergencyMode = "omega-survival";
+      emergencyMode = 'omega-survival';
       emergencyContent = `⚡ **Mode survie OMEGA activé**
 
 Multiple incidents détectés (${this.pipelineFailures}). Basculement vers noyau autonome TITANE∞.
@@ -615,14 +678,14 @@ Que souhaites-tu explorer ?`;
       suggestions: [
         'Continuer la conversation normalement',
         'Demander un diagnostic système',
-        'Redémarrer en mode sécurisé'
+        'Redémarrer en mode sécurisé',
       ],
       omegaMetadata: {
         pipelineSteps,
         validationScore: 0,
         autoHealed: true,
         failureHandled: true,
-        processingTime
+        processingTime,
       },
       metadata: {
         emergency: true,
@@ -630,8 +693,8 @@ Que souhaites-tu explorer ?`;
         failure_count: this.pipelineFailures,
         error_type: error?.toString()?.substring(0, 100) || 'unknown',
         mode: emergencyMode,
-        omega_version: "v19.2Ω"
-      }
+        omega_version: 'v19.2Ω',
+      },
     };
   }
 
@@ -668,18 +731,15 @@ Que souhaites-tu explorer ?`;
         userMessage: validatedMessage,
         systemPrompt,
         temperature:
-          finalConfig.aiConfig?.temperature ??
-          DEFAULT_AI_CONFIG.temperature ??
-          0.7,
+          finalConfig.aiConfig?.temperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
         maxOutputTokens:
-          finalConfig.aiConfig?.maxTokens ??
-          DEFAULT_AI_CONFIG.maxTokens ??
-          1024,
+          finalConfig.aiConfig?.maxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 1024,
         provider: this.providerPreference,
         enableStreaming: false,
       };
 
-      const completion: ChatEngineCompletion = await chatEngineCommands.generateResponse(payload);
+      const completion: ChatEngineCompletion =
+        await chatEngineCommands.generateResponse(payload);
       this.setConversationId(finalConfig.mode, completion.conversationId);
       pipelineSteps.push('backend-response');
 
@@ -701,12 +761,20 @@ Que souhaites-tu explorer ?`;
       };
 
       pipelineSteps.push('nexus-sentinel-validation');
-      const validation = chatValidator.validate(response.content, finalConfig.mode, validatedMessage);
-      isDev && console.log(`   ✅ Backend validation score: ${(validation.score * 100).toFixed(0)}%`);
+      const validation = chatValidator.validate(
+        response.content,
+        finalConfig.mode,
+        validatedMessage
+      );
+      isDev &&
+        console.log(
+          `   ✅ Backend validation score: ${(validation.score * 100).toFixed(0)}%`
+        );
 
       if (validation.issues.length > 0) {
         validation.issues.forEach(issue => {
-          isDev && console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+          isDev &&
+            console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
         });
       }
 
@@ -772,7 +840,9 @@ Que souhaites-tu explorer ?`;
 
       if (isDev) {
         console.log('\n╔══════════════════════════════════════════════════════════════╗');
-        console.log(`║  🟣 CHAT ENGINE OMEGA: Backend pipeline complete! (${processingTime}ms) ║`);
+        console.log(
+          `║  🟣 CHAT ENGINE OMEGA: Backend pipeline complete! (${processingTime}ms) ║`
+        );
         console.log('╚══════════════════════════════════════════════════════════════╝\n');
       }
 
@@ -780,7 +850,11 @@ Que souhaites-tu explorer ?`;
       return finalResponse;
     } catch (error) {
       pipelineSteps.push('backend-error');
-      isDev && console.warn('[OMEGA ENGINE] Backend pipeline failed, falling back to orchestrator:', error);
+      isDev &&
+        console.warn(
+          '[OMEGA ENGINE] Backend pipeline failed, falling back to orchestrator:',
+          error
+        );
       return null;
     }
   }
@@ -848,13 +922,9 @@ Que souhaites-tu explorer ?`;
       userMessage: validatedMessage,
       systemPrompt,
       temperature:
-        finalConfig.aiConfig?.temperature ??
-        DEFAULT_AI_CONFIG.temperature ??
-        0.7,
+        finalConfig.aiConfig?.temperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
       maxOutputTokens:
-        finalConfig.aiConfig?.maxTokens ??
-        DEFAULT_AI_CONFIG.maxTokens ??
-        1024,
+        finalConfig.aiConfig?.maxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 1024,
       provider: this.providerPreference,
       enableStreaming: true,
     };
@@ -888,7 +958,8 @@ Que souhaites-tu explorer ?`;
           try {
             metadata = JSON.parse(chunk.content) as BackendStreamMetadata;
           } catch (parseError) {
-            const message = parseError instanceof Error ? parseError.message : String(parseError);
+            const message =
+              parseError instanceof Error ? parseError.message : String(parseError);
             metadata = { parseError: message };
             autoHealed = true;
           }
@@ -945,15 +1016,20 @@ Que souhaites-tu explorer ?`;
       }
 
       const meta: BackendStreamMetadata = metadata ?? {};
-      const backendProvider = typeof meta.provider === 'string' ? meta.provider : 'tauri-backend';
+      const backendProvider =
+        typeof meta.provider === 'string' ? meta.provider : 'tauri-backend';
       const provider = this.normalizeBackendProvider(backendProvider);
       const timestamp = typeof meta.timestamp === 'number' ? meta.timestamp : Date.now();
       const latencyMs = typeof meta.latency_ms === 'number' ? meta.latency_ms : 0;
       const tokenCount = typeof meta.tokens === 'number' ? meta.tokens : undefined;
-      const promptTokenCount = typeof meta.prompt_tokens === 'number' ? meta.prompt_tokens : undefined;
-      const chunkCount = typeof meta.chunk_count === 'number' ? meta.chunk_count : undefined;
-      const totalDuration = typeof meta.total_duration === 'number' ? meta.total_duration : undefined;
-      const loadDuration = typeof meta.load_duration === 'number' ? meta.load_duration : undefined;
+      const promptTokenCount =
+        typeof meta.prompt_tokens === 'number' ? meta.prompt_tokens : undefined;
+      const chunkCount =
+        typeof meta.chunk_count === 'number' ? meta.chunk_count : undefined;
+      const totalDuration =
+        typeof meta.total_duration === 'number' ? meta.total_duration : undefined;
+      const loadDuration =
+        typeof meta.load_duration === 'number' ? meta.load_duration : undefined;
 
       let response: AIResponse = {
         content: aggregatedContent,
@@ -975,12 +1051,20 @@ Que souhaites-tu explorer ?`;
       };
 
       pipelineSteps.push('nexus-sentinel-validation');
-      const validation = chatValidator.validate(response.content, finalConfig.mode, validatedMessage);
-      isDev && console.log(`   ✅ Backend stream validation score: ${(validation.score * 100).toFixed(0)}%`);
+      const validation = chatValidator.validate(
+        response.content,
+        finalConfig.mode,
+        validatedMessage
+      );
+      isDev &&
+        console.log(
+          `   ✅ Backend stream validation score: ${(validation.score * 100).toFixed(0)}%`
+        );
 
       if (validation.issues.length > 0) {
         validation.issues.forEach(issue => {
-          isDev && console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
+          isDev &&
+            console.log(`      - [${issue.severity}] ${issue.type}: ${issue.message}`);
         });
       }
 
@@ -1046,7 +1130,9 @@ Que souhaites-tu explorer ?`;
 
       if (isDev) {
         console.log('\n╔══════════════════════════════════════════════════════════════╗');
-        console.log(`║  🟣 CHAT ENGINE OMEGA: Backend stream complete! (${processingTime}ms) ║`);
+        console.log(
+          `║  🟣 CHAT ENGINE OMEGA: Backend stream complete! (${processingTime}ms) ║`
+        );
         console.log('╚══════════════════════════════════════════════════════════════╝\n');
       }
 
@@ -1080,10 +1166,14 @@ Que souhaites-tu explorer ?`;
 
       synthesis: `Synthèse autour de : "${message.substring(0, 50)}". Mode synthesis OMEGA - connexions et insights garantis.`,
 
-      debug_cognitive: `Analyse cognitive : "${message.substring(0, 50)}". Mode debug OMEGA - évaluation et optimisation mentale.`
+      debug_cognitive: `Analyse cognitive : "${message.substring(0, 50)}". Mode debug OMEGA - évaluation et optimisation mentale.`,
     } as Partial<Record<ChatMode, string>>;
 
-    return responses[mode] as string || responses.default || `Message reçu : "${message.substring(0, 50)}"`;
+    return (
+      (responses[mode] as string) ||
+      responses.default ||
+      `Message reçu : "${message.substring(0, 50)}"`
+    );
   }
 
   /**
@@ -1100,7 +1190,7 @@ Que souhaites-tu explorer ?`;
       promise,
       new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error(errorMessage)), timeoutMs)
-      )
+      ),
     ]);
   }
 
@@ -1123,15 +1213,15 @@ Que souhaites-tu explorer ?`;
       const finalConfig = { ...this.config, ...config };
 
       // Validation rapide
-      pipelineSteps.push("stream-validation");
-      const validatedMessage = inputValidator.validate(message?.trim() || "");
+      pipelineSteps.push('stream-validation');
+      const validatedMessage = inputValidator.validate(message?.trim() || '');
       if (!validatedMessage) {
-        yield "⚠️ Message invalide détecté...";
+        yield '⚠️ Message invalide détecté...';
         throw new Error('Invalid message for streaming');
       }
 
       // Contexte Memory Core (optionnel pour streaming)
-      pipelineSteps.push("stream-context");
+      pipelineSteps.push('stream-context');
       let memoryContext: MemoryContext;
       let context: { sources: string[]; data: Record<string, unknown> };
 
@@ -1149,15 +1239,16 @@ Que souhaites-tu explorer ?`;
           recentDecisions: [],
           relevantKnowledge: [],
           activeRituals: [],
-          timeline: []
+          timeline: [],
         };
         context = { sources: [], data: {} };
         autoHealed = true;
       }
 
       // Prompt selon mode
-      pipelineSteps.push("stream-prompt");
-      const modeConfig = (chatModes[finalConfig.mode] ?? chatModes.default) as ChatModeConfig;
+      pipelineSteps.push('stream-prompt');
+      const modeConfig = (chatModes[finalConfig.mode] ??
+        chatModes.default) as ChatModeConfig;
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,
@@ -1182,7 +1273,11 @@ Que souhaites-tu explorer ?`;
           return yield* backendStream;
         } catch (error) {
           pipelineSteps.push('backend-error');
-          isDev && console.warn('[OMEGA STREAM] Backend pipeline failed, falling back to orchestrator:', error);
+          isDev &&
+            console.warn(
+              '[OMEGA STREAM] Backend pipeline failed, falling back to orchestrator:',
+              error
+            );
         }
       }
 
@@ -1195,33 +1290,46 @@ Que souhaites-tu explorer ?`;
       );
 
       // Stream orchestrateur
-      pipelineSteps.push("stream-orchestrator");
-      for await (const chunk of aiOrchestrator.stream(validatedMessage, enrichedHistory)) {
+      pipelineSteps.push('stream-orchestrator');
+      for await (const chunk of aiOrchestrator.stream(
+        validatedMessage,
+        enrichedHistory
+      )) {
         fullContent += chunk;
         yield chunk;
       }
 
       // Post-validation streaming
-      pipelineSteps.push("stream-validation-post");
+      pipelineSteps.push('stream-validation-post');
       let finalContent = fullContent;
-      const validation = chatValidator.validate(fullContent, finalConfig.mode, validatedMessage);
-      if (!validation.isValid && validation.cleaned && finalConfig.omegaConfig?.enableSanitizer) {
+      const validation = chatValidator.validate(
+        fullContent,
+        finalConfig.mode,
+        validatedMessage
+      );
+      if (
+        !validation.isValid &&
+        validation.cleaned &&
+        finalConfig.omegaConfig?.enableSanitizer
+      ) {
         finalContent = validation.cleaned;
-        yield "\n\n🧹 *[Réponse optimisée automatiquement]*";
+        yield '\n\n🧹 *[Réponse optimisée automatiquement]*';
         autoHealed = true;
       }
 
       // Sauvegarde (async, non-bloquante pour streaming)
-      pipelineSteps.push("stream-save");
-      memoryIntegration.saveInteraction({
-        mode: finalConfig.mode,
-        userMessage: validatedMessage,
-        aiResponse: finalContent,
-        emotionState: this.convertEmotionState(finalConfig.emotionState),
-        context: memoryContext,
-      }).catch(error => {
-        isDev && console.warn('[OMEGA STREAM] Memory save failed:', error);
-      });
+      pipelineSteps.push('stream-save');
+      memoryIntegration
+        .saveInteraction({
+          mode: finalConfig.mode,
+          userMessage: validatedMessage,
+          aiResponse: finalContent,
+          emotionState: this.convertEmotionState(finalConfig.emotionState),
+          context: memoryContext,
+        })
+        .catch(error => {
+          isDev && console.warn('[OMEGA STREAM] Memory save failed:', error);
+        });
 
       // Retour final
       return {
@@ -1237,17 +1345,18 @@ Que souhaites-tu explorer ?`;
           validationScore: validation.score,
           autoHealed,
           failureHandled: false,
-          processingTime: Date.now() - startTime
-        }
+          processingTime: Date.now() - startTime,
+        },
       };
-
     } catch (error) {
       // Fallback streaming
       isDev && console.error('[OMEGA STREAM] Error:', error);
-      yield "\n\n🔄 *Auto-réparation OMEGA en cours...*";
+      yield '\n\n🔄 *Auto-réparation OMEGA en cours...*';
 
       return {
-        content: fullContent || `Erreur streaming récupérée. Message traité : "${message.substring(0, 50)}"`,
+        content:
+          fullContent ||
+          `Erreur streaming récupérée. Message traité : "${message.substring(0, 50)}"`,
         provider: 'omnis-emergency',
         model: 'omega-stream-emergency-v19.2Ω',
         timestamp: Date.now(),
@@ -1259,8 +1368,8 @@ Que souhaites-tu explorer ?`;
           validationScore: 0,
           autoHealed: true,
           failureHandled: true,
-          processingTime: Date.now() - startTime
-        }
+          processingTime: Date.now() - startTime,
+        },
       };
     }
   }
@@ -1285,7 +1394,8 @@ Que souhaites-tu explorer ?`;
       const enrichedHistory: AIMessage[] = [];
 
       // Message système avec mode & contexte OMEGA
-      const systemContent = systemPrompt ?? this.buildSystemPrompt(modeConfig, context, promptContext);
+      const systemContent =
+        systemPrompt ?? this.buildSystemPrompt(modeConfig, context, promptContext);
       enrichedHistory.push({
         role: 'system',
         content: systemContent,
@@ -1307,7 +1417,7 @@ Que souhaites-tu explorer ?`;
           content: systemPrompt || `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency)`,
           timestamp: Date.now(),
         },
-        ...history.slice(-3) // Minimal history
+        ...history.slice(-3), // Minimal history
       ];
     }
   }
@@ -1315,7 +1425,10 @@ Que souhaites-tu explorer ?`;
   /**
    * Convertit MemoryContext en format compatible
    */
-  private formatMemoryContext(memory: MemoryContext): { sources: string[]; data: Record<string, unknown> } {
+  private formatMemoryContext(memory: MemoryContext): {
+    sources: string[];
+    data: Record<string, unknown>;
+  } {
     try {
       const sources: string[] = [];
       const data: Record<string, unknown> = {};
@@ -1323,19 +1436,25 @@ Que souhaites-tu explorer ?`;
       // Projets actifs
       if (memory.activeProjects.length > 0) {
         sources.push('projets');
-        data.projects = memory.activeProjects.map((p: ProjectSummary) => `[${p.status}] ${p.title} (P: ${p.priority})`).join(', ');
+        data.projects = memory.activeProjects
+          .map((p: ProjectSummary) => `[${p.status}] ${p.title} (P: ${p.priority})`)
+          .join(', ');
       }
 
       // Décisions récentes
       if (memory.recentDecisions.length > 0) {
         sources.push('decisions');
-        data.decisions = memory.recentDecisions.map((d: DecisionSummary) => `${d.title} (${d.status})`).join('; ');
+        data.decisions = memory.recentDecisions
+          .map((d: DecisionSummary) => `${d.title} (${d.status})`)
+          .join('; ');
       }
 
       // Connaissances
       if (memory.relevantKnowledge.length > 0) {
         sources.push('knowledge');
-        data.knowledge = memory.relevantKnowledge.map((k: KnowledgeEntry) => k.title).join(', ');
+        data.knowledge = memory.relevantKnowledge
+          .map((k: KnowledgeEntry) => k.title)
+          .join(', ');
       }
 
       // Rituels
@@ -1355,15 +1474,17 @@ Que souhaites-tu explorer ?`;
   /**
    * Convertit emotionState vers format Memory Core
    */
-  private convertEmotionState(
-    emotionState?: { valence: number; intensity: number; energy: number }
-  ): { valence: number; activation: number; dominant_emotion: string } | undefined {
+  private convertEmotionState(emotionState?: {
+    valence: number;
+    intensity: number;
+    energy: number;
+  }): { valence: number; activation: number; dominant_emotion: string } | undefined {
     if (!emotionState) return undefined;
-    
+
     // Map intensity->activation, infer dominant_emotion
     const activation = emotionState.intensity;
     let dominant_emotion = 'neutral';
-    
+
     if (emotionState.valence > 0.5 && emotionState.energy > 0.5) {
       dominant_emotion = 'joy';
     } else if (emotionState.valence < -0.5 && emotionState.energy < 0.5) {
@@ -1373,7 +1494,7 @@ Que souhaites-tu explorer ?`;
     } else if (emotionState.valence > 0.5 && emotionState.energy < 0.5) {
       dominant_emotion = 'contentment';
     }
-    
+
     return {
       valence: emotionState.valence,
       activation,
@@ -1391,15 +1512,18 @@ Que souhaites-tu explorer ?`;
     semanticContext?: string
   ): string {
     try {
-      const contextPayload: PromptContext =
-        promptContext || {
-          modeName: modeConfig.name,
-          modeIcon: modeConfig.icon,
-          emotionState: this.config.emotionState,
-          memory: context.sources.length > 0 ? context : undefined,
-        };
+      const contextPayload: PromptContext = promptContext || {
+        modeName: modeConfig.name,
+        modeIcon: modeConfig.icon,
+        emotionState: this.config.emotionState,
+        memory: context.sources.length > 0 ? context : undefined,
+      };
 
-      const basePrompt = buildTitanePrompt(modeConfig.profileId, undefined, contextPayload);
+      const basePrompt = buildTitanePrompt(
+        modeConfig.profileId,
+        undefined,
+        contextPayload
+      );
 
       // Inject semantic context if available
       if (semanticContext && semanticContext.trim().length > 0) {
@@ -1416,10 +1540,7 @@ Que souhaites-tu explorer ?`;
   /**
    * Post-traitement selon mode OMEGA
    */
-  private postProcess(
-    response: AIResponse,
-    config: ChatEngineConfig
-  ): AIResponse {
+  private postProcess(response: AIResponse, config: ChatEngineConfig): AIResponse {
     try {
       let content = response.content;
 
@@ -1441,7 +1562,10 @@ Que souhaites-tu explorer ?`;
 
         case 'synthesis':
           // Assure résumé en début
-          if (!content.toLowerCase().includes('résumé') && !content.toLowerCase().includes('synthèse')) {
+          if (
+            !content.toLowerCase().includes('résumé') &&
+            !content.toLowerCase().includes('synthèse')
+          ) {
             content = `**Synthèse OMEGA**: ${content.split('.')[0]}.\n\n${content}`;
           }
           break;
@@ -1469,7 +1593,7 @@ Que souhaites-tu explorer ?`;
     const techPatterns = [
       /\b(api|sdk|database|server|client|frontend|backend|architecture|framework|library)\b/g,
       /\b(react|typescript|javascript|python|rust|nodejs|tauri|vite)\b/g,
-      /\b(algorithm|function|class|interface|type|component|service|engine)\b/g
+      /\b(algorithm|function|class|interface|type|component|service|engine)\b/g,
     ];
 
     // Domain concepts
@@ -1477,7 +1601,7 @@ Que souhaites-tu explorer ?`;
       /\b(ai|intelligence artificielle|machine learning|llm|gpt|claude|gemini)\b/g,
       /\b(chat|conversation|dialogue|interaction|message|prompt)\b/g,
       /\b(mémoire|memory|stockage|storage|database|persistence)\b/g,
-      /\b(voice|voix|audio|tts|stt|speech|parole)\b/g
+      /\b(voice|voix|audio|tts|stt|speech|parole)\b/g,
     ];
 
     const allPatterns = [...techPatterns, ...domainPatterns];
@@ -1520,12 +1644,12 @@ Que souhaites-tu explorer ?`;
         ],
         journal: [
           'Comment te sens-tu vraiment avec TITANE∞ ?',
-          'Qu\'as-tu appris aujourd\'hui (mode OMEGA) ?',
+          "Qu'as-tu appris aujourd'hui (mode OMEGA) ?",
           'Quel est ton besoin principal maintenant ?',
         ],
         debug_cognitive: [
           'Quelle est ta charge cognitive actuelle (0-10) ?',
-          'Quel projet draine le plus d\'énergie TITANE∞ ?',
+          "Quel projet draine le plus d'énergie TITANE∞ ?",
           'As-tu pris une pause récemment (mode OMEGA) ?',
         ],
       };

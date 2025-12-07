@@ -51,28 +51,31 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
-  const [customPosition, setCustomPosition] = useState<{ x: number; y: number } | null>(null);
+  const [customPosition, setCustomPosition] = useState<{ x: number; y: number } | null>(
+    null
+  );
 
   // Store
   const isCameraActive = useVisionStore(selectIsCameraActive);
-  const toggleCameraPreview = useVisionStore((s) => s.toggleCameraPreview);
-  const stopCamera = useVisionStore((s) => s.stopCamera);
+  const toggleCameraPreview = useVisionStore(s => s.toggleCameraPreview);
+  const stopCamera = useVisionStore(s => s.stopCamera);
 
-  // Connecter le stream vidéo au ref
+  // Set up video stream
   useEffect(() => {
-    if (!videoRef.current || !isCameraActive) return;
+    if (!isCameraActive) return;
 
-    const stream = (
-      window as unknown as { __titaneVisionStream?: MediaStream }
-    ).__titaneVisionStream;
+    const stream = (window as unknown as { __titaneVisionStream?: MediaStream })
+      .__titaneVisionStream;
 
-    if (stream && videoRef.current) {
-      videoRef.current.srcObject = stream;
+    const video = videoRef.current;
+
+    if (stream && video) {
+      video.srcObject = stream;
     }
 
     return () => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      if (video) {
+        video.srcObject = null;
       }
     };
   }, [isCameraActive]);

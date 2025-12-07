@@ -20,17 +20,11 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type {
-  IdentityExpressionPackage
-} from '../identity/unifiedIdentityKernel';
+import type { IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
 
-import type {
-  UnifiedExpression
-} from '../expression/expressionEngine';
+import type { UnifiedExpression } from '../expression/expressionEngine';
 
-import type {
-  HoloPresenceState
-} from '../holopresence/holoPresenceEngine';
+import type { HoloPresenceState } from '../holopresence/holoPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES
@@ -64,23 +58,23 @@ export interface EffectivePattern {
 
   // Résultats obtenus
   outcomes: {
-    syncScore: number;         // Score synchronisation global
-    userEngagement: number;     // Engagement utilisateur (0-1)
-    taskCompletion: number;     // Succès de la tâche (0-1)
+    syncScore: number; // Score synchronisation global
+    userEngagement: number; // Engagement utilisateur (0-1)
+    taskCompletion: number; // Succès de la tâche (0-1)
     emotionalResonance: number; // Résonance émotive (0-1)
   };
 
   // Métadonnées
   context: {
-    taskType: string;          // 'conversation' | 'analysis' | 'creation' | 'meditation'
-    userMood: string;          // 'calm' | 'excited' | 'focused' | 'relaxed'
+    taskType: string; // 'conversation' | 'analysis' | 'creation' | 'meditation'
+    userMood: string; // 'calm' | 'excited' | 'focused' | 'relaxed'
     timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
   };
 
   // Efficacité calculée
-  effectiveness: number;       // 0-1 - Score global d'efficacité
-  usageCount: number;          // Nombre de fois utilisé
-  successRate: number;         // % de succès
+  effectiveness: number; // 0-1 - Score global d'efficacité
+  usageCount: number; // Nombre de fois utilisé
+  successRate: number; // % de succès
 }
 
 /**
@@ -88,8 +82,8 @@ export interface EffectivePattern {
  */
 export interface EvolutionRule {
   id: string;
-  priority: number;            // 0-1 - Priorité de la règle
-  confidence: number;          // 0-1 - Confiance statistique
+  priority: number; // 0-1 - Priorité de la règle
+  confidence: number; // 0-1 - Confiance statistique
 
   // Condition
   condition: {
@@ -101,7 +95,7 @@ export interface EvolutionRule {
   action: {
     targetEngine: 'identity' | 'expression' | 'holopresence';
     parameter: string;
-    adjustment: number;        // Delta à appliquer (-1 to +1)
+    adjustment: number; // Delta à appliquer (-1 to +1)
     reason: string;
   };
 
@@ -121,8 +115,8 @@ export interface OptimizationStrategy {
 
   // Paramètres
   targetMetric: 'sync' | 'engagement' | 'resonance' | 'completion';
-  threshold: number;           // Seuil de déclenchement
-  adjustmentRate: number;      // Vitesse d'ajustement (0-1)
+  threshold: number; // Seuil de déclenchement
+  adjustmentRate: number; // Vitesse d'ajustement (0-1)
 
   // Statistiques
   timesTriggered: number;
@@ -158,14 +152,14 @@ export interface AutopoiesisState {
 
   // Performance
   performance: {
-    averageEffectiveness: number;  // Moyenne globale
+    averageEffectiveness: number; // Moyenne globale
     trendDirection: 'improving' | 'stable' | 'declining';
-    improvementRate: number;       // % par heure
+    improvementRate: number; // % par heure
   };
 
   // Métriques temps réel
   currentMetrics: {
-    observationWindow: number;    // Millisecondes
+    observationWindow: number; // Millisecondes
     recentEffectiveness: number;
     syncScoreAvg: number;
     engagementAvg: number;
@@ -215,7 +209,7 @@ class AutopoiesisEngine {
       description: 'Ajuste intensité pour maximiser engagement',
       enabled: true,
       targetMetric: 'engagement',
-      threshold: 0.70,
+      threshold: 0.7,
       adjustmentRate: 0.03,
       timesTriggered: 0,
       successRate: 0,
@@ -331,11 +325,15 @@ class AutopoiesisEngine {
     if (recentObs.length === 0) return;
 
     // Calculer moyennes
-    const avgSync = recentObs.reduce((sum, obs) => sum + obs.outcomes.syncScore, 0) / recentObs.length;
-    const avgEngagement = recentObs.reduce((sum, obs) => sum + obs.outcomes.userEngagement, 0) / recentObs.length;
-    const avgEffectiveness = recentObs.reduce((sum, obs) => {
-      return sum + this.calculateEffectiveness(obs.outcomes);
-    }, 0) / recentObs.length;
+    const avgSync =
+      recentObs.reduce((sum, obs) => sum + obs.outcomes.syncScore, 0) / recentObs.length;
+    const avgEngagement =
+      recentObs.reduce((sum, obs) => sum + obs.outcomes.userEngagement, 0) /
+      recentObs.length;
+    const avgEffectiveness =
+      recentObs.reduce((sum, obs) => {
+        return sum + this.calculateEffectiveness(obs.outcomes);
+      }, 0) / recentObs.length;
 
     this.state.currentMetrics.syncScoreAvg = avgSync;
     this.state.currentMetrics.engagementAvg = avgEngagement;
@@ -386,7 +384,10 @@ class AutopoiesisEngine {
       if (!groups.has(key)) {
         groups.set(key, []);
       }
-      groups.get(key)!.push(obs);
+      const group = groups.get(key);
+      if (group) {
+        group.push(obs);
+      }
     });
 
     return Array.from(groups.values());
@@ -401,23 +402,34 @@ class AutopoiesisEngine {
       energy: observations.reduce((s, o) => s + o.identity.signature.energy, 0) / count,
       warmth: observations.reduce((s, o) => s + o.identity.signature.warmth, 0) / count,
       narrativeStyle: observations[0].identity.signature.narrativeStyle,
-      cognitiveSpeed: observations.reduce((s, o) => s + o.identity.cognitive.speed, 0) / count,
-      intensity: observations.reduce((s, o) => s + o.identity.emotive.intensity, 0) / count,
+      cognitiveSpeed:
+        observations.reduce((s, o) => s + o.identity.cognitive.speed, 0) / count,
+      intensity:
+        observations.reduce((s, o) => s + o.identity.emotive.intensity, 0) / count,
     };
 
     const avgExpression = {
-      voiceRate: observations.reduce((s, o) => s + o.expression.voice.prosody.rate, 0) / count,
-      voicePitch: observations.reduce((s, o) => s + o.expression.voice.prosody.pitch, 0) / count,
+      voiceRate:
+        observations.reduce((s, o) => s + o.expression.voice.prosody.rate, 0) / count,
+      voicePitch:
+        observations.reduce((s, o) => s + o.expression.voice.prosody.pitch, 0) / count,
       haloPattern: observations[0].expression.halo.pattern,
-      haloIntensity: observations.reduce((s, o) => s + o.expression.halo.dynamics.intensity, 0) / count,
-      narrativeDensity: observations.reduce((s, o) => s + o.expression.narrative.style.density, 0) / count,
+      haloIntensity:
+        observations.reduce((s, o) => s + o.expression.halo.dynamics.intensity, 0) /
+        count,
+      narrativeDensity:
+        observations.reduce((s, o) => s + o.expression.narrative.style.density, 0) /
+        count,
     };
 
     const avgOutcomes = {
       syncScore: observations.reduce((s, o) => s + o.outcomes.syncScore, 0) / count,
-      userEngagement: observations.reduce((s, o) => s + o.outcomes.userEngagement, 0) / count,
-      taskCompletion: observations.reduce((s, o) => s + o.outcomes.taskCompletion, 0) / count,
-      emotionalResonance: observations.reduce((s, o) => s + o.outcomes.emotionalResonance, 0) / count,
+      userEngagement:
+        observations.reduce((s, o) => s + o.outcomes.userEngagement, 0) / count,
+      taskCompletion:
+        observations.reduce((s, o) => s + o.outcomes.taskCompletion, 0) / count,
+      emotionalResonance:
+        observations.reduce((s, o) => s + o.outcomes.emotionalResonance, 0) / count,
     };
 
     const effectiveness = this.calculateEffectiveness(avgOutcomes);
@@ -468,9 +480,10 @@ class AutopoiesisEngine {
     if (p1.context.userMood !== p2.context.userMood) return false;
 
     // Identity snapshot similaire (tolérance 15%)
-    const identityDiff = Math.abs(p1.identitySnapshot.tone - p2.identitySnapshot.tone) +
-                         Math.abs(p1.identitySnapshot.energy - p2.identitySnapshot.energy) +
-                         Math.abs(p1.identitySnapshot.warmth - p2.identitySnapshot.warmth);
+    const identityDiff =
+      Math.abs(p1.identitySnapshot.tone - p2.identitySnapshot.tone) +
+      Math.abs(p1.identitySnapshot.energy - p2.identitySnapshot.energy) +
+      Math.abs(p1.identitySnapshot.warmth - p2.identitySnapshot.warmth);
 
     return identityDiff < 0.45; // 15% * 3
   }
@@ -552,9 +565,10 @@ class AutopoiesisEngine {
 
   private addOrUpdateRule(rule: EvolutionRule): void {
     // Chercher règle similaire
-    const existingIndex = this.state.evolutionRules.findIndex(r =>
-      r.condition.context.taskType === rule.condition.context.taskType &&
-      r.action.parameter === rule.action.parameter
+    const existingIndex = this.state.evolutionRules.findIndex(
+      r =>
+        r.condition.context.taskType === rule.condition.context.taskType &&
+        r.action.parameter === rule.action.parameter
     );
 
     if (existingIndex >= 0) {
@@ -619,14 +633,17 @@ class AutopoiesisEngine {
     console.log(`[AutopoiesisEngine] Triggering strategy: ${strategy.name}`);
 
     // Simuler succès (70% du temps)
-    const successCount = (strategy as any).successCount || 0;
+    const successCount =
+      ((strategy as Record<string, unknown>).successCount as number) || 0;
     if (Math.random() > 0.3) {
-      (strategy as any).successCount = successCount + 1;
+      (strategy as Record<string, unknown>).successCount = successCount + 1;
       this.state.optimization.successfulAdjustments++;
     }
 
     // Mettre à jour success rate
-    strategy.successRate = ((strategy as any).successCount || 0) / strategy.timesTriggered;
+    strategy.successRate =
+      (((strategy as Record<string, unknown>).successCount as number) || 0) /
+      strategy.timesTriggered;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -637,20 +654,26 @@ class AutopoiesisEngine {
     if (this.state.effectivePatterns.length === 0) return;
 
     // Moyenne efficacité globale
-    const avgEffectiveness = this.state.effectivePatterns.reduce((sum, p) =>
-      sum + p.effectiveness, 0
-    ) / this.state.effectivePatterns.length;
+    const avgEffectiveness =
+      this.state.effectivePatterns.reduce((sum, p) => sum + p.effectiveness, 0) /
+      this.state.effectivePatterns.length;
 
     this.state.performance.averageEffectiveness = avgEffectiveness;
 
     // Tendance (comparer avec patterns anciens vs récents)
     const oneHourAgo = Date.now() - 3600000;
-    const recentPatterns = this.state.effectivePatterns.filter(p => p.timestamp > oneHourAgo);
-    const oldPatterns = this.state.effectivePatterns.filter(p => p.timestamp <= oneHourAgo);
+    const recentPatterns = this.state.effectivePatterns.filter(
+      p => p.timestamp > oneHourAgo
+    );
+    const oldPatterns = this.state.effectivePatterns.filter(
+      p => p.timestamp <= oneHourAgo
+    );
 
     if (recentPatterns.length > 0 && oldPatterns.length > 0) {
-      const recentAvg = recentPatterns.reduce((s, p) => s + p.effectiveness, 0) / recentPatterns.length;
-      const oldAvg = oldPatterns.reduce((s, p) => s + p.effectiveness, 0) / oldPatterns.length;
+      const recentAvg =
+        recentPatterns.reduce((s, p) => s + p.effectiveness, 0) / recentPatterns.length;
+      const oldAvg =
+        oldPatterns.reduce((s, p) => s + p.effectiveness, 0) / oldPatterns.length;
 
       const diff = recentAvg - oldAvg;
 
@@ -704,11 +727,13 @@ class AutopoiesisEngine {
   /**
    * Suggérer une configuration optimale pour un contexte donné
    */
-  suggestOptimalConfig(context: EffectivePattern['context']): Partial<EffectivePattern['expressionConfig']> | null {
+  suggestOptimalConfig(
+    context: EffectivePattern['context']
+  ): Partial<EffectivePattern['expressionConfig']> | null {
     // Trouver patterns correspondants
-    const matchingPatterns = this.state.effectivePatterns.filter(p =>
-      p.context.taskType === context.taskType &&
-      p.context.userMood === context.userMood
+    const matchingPatterns = this.state.effectivePatterns.filter(
+      p =>
+        p.context.taskType === context.taskType && p.context.userMood === context.userMood
     );
 
     if (matchingPatterns.length === 0) return null;

@@ -190,35 +190,32 @@
  * @copyright 2025 — Humain Total
  */
 
+import { voiceFingerprintEngine } from './voiceFingerprint';
+import { antiEchoShield } from './antiEchoShield';
+import { contextualAttentionV2 } from './contextualAttentionV2';
+import { wakeWordEngineV2 } from './wakeWordEngineV2';
+
 // ========================================
 // MOTEURS COGNITIFS
 // ========================================
 
-export { voiceFingerprintEngine } from './voiceFingerprint';
-export { antiEchoShield } from './antiEchoShield';
-export { contextualAttentionV2 } from './contextualAttentionV2';
+export { voiceFingerprintEngine, antiEchoShield, contextualAttentionV2 };
 
 // ========================================
 // ENGINE V2.0
 // ========================================
 
-export { wakeWordEngineV2 } from './wakeWordEngineV2';
+export { wakeWordEngineV2 };
 
 // ========================================
 // TYPES & INTERFACES
 // ========================================
 
 // Voice Fingerprint
-export type {
-  VoiceFingerprint,
-  VoiceFingerprintConfig,
-} from './voiceFingerprint';
+export type { VoiceFingerprint, VoiceFingerprintConfig } from './voiceFingerprint';
 
 // Anti-Echo Shield
-export type {
-  TTSFingerprint,
-  EchoAnalysis,
-} from './antiEchoShield';
+export type { TTSFingerprint, EchoAnalysis } from './antiEchoShield';
 
 // Contextual Attention
 export type {
@@ -230,7 +227,7 @@ export type {
 
 // Wake Word Engine v2.0
 export type {
-  WakeWordEvent,        // Extended v2.0
+  WakeWordEvent, // Extended v2.0
   WakeWordMode,
 } from './wakeWordEngineV2';
 
@@ -242,7 +239,7 @@ export { wakeWordEngine } from './wakeWordEngine';
 export { attentionEngine } from './attentionEngine';
 
 export type {
-  WakeWordEvent as WakeWordEventV1,  // v1 version
+  WakeWordEvent as WakeWordEventV1, // v1 version
 } from './wakeWordEngine';
 
 // ========================================
@@ -269,10 +266,6 @@ export type {
  * ```
  */
 export function getCognitiveStatus() {
-  const { voiceFingerprintEngine } = require('./voiceFingerprint');
-  const { antiEchoShield } = require('./antiEchoShield');
-  const { contextualAttentionV2 } = require('./contextualAttentionV2');
-
   return {
     voiceFingerprint: {
       ready: voiceFingerprintEngine.isReady(),
@@ -311,10 +304,6 @@ export function getCognitiveStatus() {
  * ```
  */
 export function resetAllCognitiveSystems(): void {
-  const { voiceFingerprintEngine } = require('./voiceFingerprint');
-  const { antiEchoShield } = require('./antiEchoShield');
-  const { contextualAttentionV2 } = require('./contextualAttentionV2');
-
   voiceFingerprintEngine.clearModel();
   antiEchoShield.forceUnmute();
   contextualAttentionV2.setBaseConfig({
@@ -348,8 +337,6 @@ export function configureCognitiveFeatures(features: {
   antiEcho?: boolean;
   contextualAdaptation?: boolean;
 }): void {
-  const { wakeWordEngineV2 } = require('./wakeWordEngineV2');
-
   wakeWordEngineV2.setConfig({
     useVoiceFingerprint: features.voiceFingerprint ?? true,
     useAntiEcho: features.antiEcho ?? true,

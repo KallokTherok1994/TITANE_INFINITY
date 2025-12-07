@@ -1,73 +1,73 @@
 /**
  * TITANE∞ v19.3 — Rate Limit Monitor Component
- * 
+ *
  * Composant React pour afficher les statistiques de rate limiting
  */
 
-import { useEffect, useState } from 'react'
-import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
-import { Badge } from '../ui/badge'
-import { Button } from '../ui/button'
-import { 
-  getRateLimitStats, 
+import { useEffect, useState, useCallback } from 'react';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import {
+  getRateLimitStats,
   resetRateLimit,
   shouldShowRateLimitWarning,
   getSecondsUntilReset,
   formatRateLimitError,
-  type RateLimitStats 
-} from '@/lib/securityHardening'
-import { AlertTriangle, CheckCircle, XCircle, RefreshCw } from 'lucide-react'
+  type RateLimitStats,
+} from '@/lib/securityHardening';
+import { AlertTriangle, CheckCircle, XCircle, RefreshCw } from 'lucide-react';
 
 interface RateLimitMonitorProps {
-  userId?: string
-  refreshIntervalMs?: number
-  showResetButton?: boolean // Admin only
+  userId?: string;
+  refreshIntervalMs?: number;
+  showResetButton?: boolean; // Admin only
 }
 
-export function RateLimitMonitor({ 
-  userId, 
+export function RateLimitMonitor({
+  userId,
   refreshIntervalMs = 5000,
-  showResetButton = false 
+  showResetButton = false,
 }: RateLimitMonitorProps) {
-  const [stats, setStats] = useState<RateLimitStats | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [resetting, setResetting] = useState(false)
+  const [stats, setStats] = useState<RateLimitStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [resetting, setResetting] = useState(false);
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
-      setError(null)
-      const newStats = await getRateLimitStats(userId)
-      setStats(newStats)
+      setError(null);
+      const newStats = await getRateLimitStats(userId);
+      setStats(newStats);
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  }, [userId]);
 
   const handleReset = async () => {
     if (!userId) {
-      setError('User ID required for reset')
-      return
+      setError('User ID required for reset');
+      return;
     }
 
     try {
-      setResetting(true)
-      await resetRateLimit(userId)
-      await fetchStats() // Refresh stats
+      setResetting(true);
+      await resetRateLimit(userId);
+      await fetchStats(); // Refresh stats
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err))
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
-      setResetting(false)
+      setResetting(false);
     }
-  }
+  };
 
   useEffect(() => {
-    fetchStats()
-    const interval = setInterval(fetchStats, refreshIntervalMs)
-    return () => clearInterval(interval)
-  }, [userId, refreshIntervalMs])
+    fetchStats();
+    const interval = setInterval(fetchStats, refreshIntervalMs);
+    return () => clearInterval(interval);
+  }, [userId, refreshIntervalMs, fetchStats]);
 
   if (loading) {
     return (
@@ -75,7 +75,7 @@ export function RateLimitMonitor({
         <RefreshCw className="h-4 w-4 animate-spin" />
         Chargement des stats...
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -85,15 +85,15 @@ export function RateLimitMonitor({
         <AlertTitle>Erreur</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
       </Alert>
-    )
+    );
   }
 
-  if (!stats) return null
+  if (!stats) return null;
 
-  const isWarning = shouldShowRateLimitWarning(stats)
-  const isExceeded = stats.remaining === 0
-  const secondsUntilReset = getSecondsUntilReset(stats.reset_at)
-  const percentUsed = (stats.count / stats.limit) * 100
+  const isWarning = shouldShowRateLimitWarning(stats);
+  const isExceeded = stats.remaining === 0;
+  const secondsUntilReset = getSecondsUntilReset(stats.reset_at);
+  const percentUsed = (stats.count / stats.limit) * 100;
 
   return (
     <div className="space-y-3">
@@ -102,9 +102,7 @@ export function RateLimitMonitor({
         <Alert variant="destructive">
           <XCircle className="h-4 w-4" />
           <AlertTitle>Rate Limit Dépassé</AlertTitle>
-          <AlertDescription>
-            {formatRateLimitError(stats)}
-          </AlertDescription>
+          <AlertDescription>{formatRateLimitError(stats)}</AlertDescription>
         </Alert>
       )}
 
@@ -138,15 +136,15 @@ export function RateLimitMonitor({
           {/* Barre de progression */}
           <div className="space-y-1">
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>{stats.count} / {stats.limit} requêtes</span>
+              <span>
+                {stats.count} / {stats.limit} requêtes
+              </span>
               <span>{stats.remaining} restantes</span>
             </div>
             <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-              <div 
+              <div
                 className={`h-full transition-all duration-300 ${
-                  isExceeded ? 'bg-red-500' :
-                  isWarning ? 'bg-yellow-500' :
-                  'bg-green-500'
+                  isExceeded ? 'bg-red-500' : isWarning ? 'bg-yellow-500' : 'bg-green-500'
                 }`}
                 style={{ width: `${percentUsed}%` }}
               />
@@ -156,15 +154,16 @@ export function RateLimitMonitor({
           {/* Reset countdown */}
           {secondsUntilReset > 0 && (
             <div className="text-xs text-muted-foreground">
-              Reset dans {Math.floor(secondsUntilReset / 60)}:{String(secondsUntilReset % 60).padStart(2, '0')}
+              Reset dans {Math.floor(secondsUntilReset / 60)}:
+              {String(secondsUntilReset % 60).padStart(2, '0')}
             </div>
           )}
 
           {/* Admin reset button */}
           {showResetButton && (
-            <Button 
-              size="sm" 
-              variant="outline" 
+            <Button
+              size="sm"
+              variant="outline"
               onClick={handleReset}
               disabled={resetting}
               className="w-full mt-2"
@@ -185,37 +184,37 @@ export function RateLimitMonitor({
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 /**
  * Version compacte pour affichage dans la barre de statut
  */
 export function RateLimitBadge({ userId }: { userId?: string }) {
-  const [stats, setStats] = useState<RateLimitStats | null>(null)
+  const [stats, setStats] = useState<RateLimitStats | null>(null);
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const newStats = await getRateLimitStats(userId)
-        setStats(newStats)
+        const newStats = await getRateLimitStats(userId);
+        setStats(newStats);
       } catch (err) {
-        console.error('Failed to fetch rate limit stats:', err)
+        console.error('Failed to fetch rate limit stats:', err);
       }
-    }
+    };
 
-    fetchStats()
-    const interval = setInterval(fetchStats, 10000) // Refresh every 10s
-    return () => clearInterval(interval)
-  }, [userId])
+    fetchStats();
+    const interval = setInterval(fetchStats, 10000); // Refresh every 10s
+    return () => clearInterval(interval);
+  }, [userId]);
 
-  if (!stats) return null
+  if (!stats) return null;
 
-  const isWarning = shouldShowRateLimitWarning(stats)
-  const isExceeded = stats.remaining === 0
+  const isWarning = shouldShowRateLimitWarning(stats);
+  const isExceeded = stats.remaining === 0;
 
   return (
-    <Badge 
+    <Badge
       variant={isExceeded ? 'destructive' : isWarning ? 'warning' : 'secondary'}
       className="text-xs"
     >
@@ -228,5 +227,5 @@ export function RateLimitBadge({ userId }: { userId?: string }) {
       )}
       {stats.remaining}/{stats.limit}
     </Badge>
-  )
+  );
 }

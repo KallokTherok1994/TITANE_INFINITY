@@ -152,7 +152,9 @@ export class BodyLanguageEngine {
       const Holistic = window.Holistic;
 
       if (!Holistic) {
-        console.warn('[BodyLanguageEngine] MediaPipe Holistic not loaded. Loading from CDN...');
+        console.warn(
+          '[BodyLanguageEngine] MediaPipe Holistic not loaded. Loading from CDN...'
+        );
 
         // Charger dynamiquement MediaPipe
         await this.loadMediaPipeScript();
@@ -163,7 +165,11 @@ export class BodyLanguageEngine {
       }
 
       // Créer l'instance Holistic
-      this.holistic = new window.Holistic!({
+      const HolisticClass = window.Holistic;
+      if (!HolisticClass) {
+        throw new Error('Holistic not available');
+      }
+      this.holistic = new HolisticClass({
         locateFile: MEDIAPIPE_CONFIG.locateFile,
       });
 
@@ -383,7 +389,8 @@ export class BodyLanguageEngine {
       return 0.5;
     }
 
-    const previous = this.landmarkBuffer.landmarks[this.landmarkBuffer.landmarks.length - 2];
+    const previous =
+      this.landmarkBuffer.landmarks[this.landmarkBuffer.landmarks.length - 2];
 
     if (!landmarks.pose || !previous.pose) {
       return 0.5;
@@ -548,9 +555,9 @@ export class BodyLanguageEngine {
 
     // Qualité des landmarks pose
     if (landmarks.pose && landmarks.pose.length > 20) {
-      const avgVisibility = landmarks.pose
-        .slice(0, 25)
-        .reduce((sum, lm) => sum + (lm.visibility || 0), 0) / 25;
+      const avgVisibility =
+        landmarks.pose.slice(0, 25).reduce((sum, lm) => sum + (lm.visibility || 0), 0) /
+        25;
       confidence += avgVisibility * CONFIDENCE_CONFIG.weights.landmarkQuality;
     }
 

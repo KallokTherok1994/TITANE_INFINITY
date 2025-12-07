@@ -23,9 +23,11 @@
  * 8. SELF-EVOLUTION — Raffinement signature corporelle
  */
 
-import { archetypeResonanceEngine, type ArchetypeType } from '../psyche/archetypeResonanceEngine';
-import { multimodalPresenceEngine, type PresenceMode } from '../presence/multimodalPresenceEngine';
-import { metaContinuumEngine } from '../continuum/metaContinuumEngine';
+import {
+  archetypeResonanceEngine,
+  type ArchetypeType,
+} from '../psyche/archetypeResonanceEngine';
+import { multimodalPresenceEngine } from '../presence/multimodalPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -72,10 +74,10 @@ export interface MicroMotion {
  * Posture computationnelle
  */
 export type PostureType =
-  | 'open'      // Connexion, chaleur, soutien
-  | 'centered'  // Neutralité, calme
-  | 'forward'   // Focus, résolution
-  | 'recede'    // Introspection
+  | 'open' // Connexion, chaleur, soutien
+  | 'centered' // Neutralité, calme
+  | 'forward' // Focus, résolution
+  | 'recede' // Introspection
   | 'expansive'; // Inspiration, émerveillement
 
 /**
@@ -303,7 +305,7 @@ class EmbodiedPresenceEngine {
     const inhale = cycleDuration * 0.4;
     const hold1 = cycleDuration * 0.1;
     const exhale = cycleDuration * 0.4;
-    const rest = cycleDuration * 0.1;
+    const _rest = cycleDuration * 0.1;
 
     if (elapsed < inhale) {
       this.state.breath.phase = 'inhale';
@@ -518,7 +520,8 @@ class EmbodiedPresenceEngine {
       const blendFactor = this.config.syncSensitivity * 0.01;
       this.state.breath.cycleDuration = this.lerp(currentCycle, targetCycle, blendFactor);
 
-      this.state.userSync.syncRatio = 1 - Math.abs(currentCycle - targetCycle) / targetCycle;
+      this.state.userSync.syncRatio =
+        1 - Math.abs(currentCycle - targetCycle) / targetCycle;
     }
   }
 
@@ -526,7 +529,9 @@ class EmbodiedPresenceEngine {
    * Appliquer émotion forte (créer inertie)
    */
   applyStrongEmotion(emotion: string, intensity: number, duration: number = 2500): void {
-    console.log(`💫 [EMBODIED] Strong emotion applied: ${emotion} (${Math.round(intensity * 100)}%)`);
+    console.log(
+      `💫 [EMBODIED] Strong emotion applied: ${emotion} (${Math.round(intensity * 100)}%)`
+    );
 
     this.state.bodyInertia.residualEmotion = emotion;
     this.state.bodyInertia.residualIntensity = intensity;

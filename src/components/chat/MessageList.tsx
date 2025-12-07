@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
@@ -21,7 +21,7 @@ import './MessageList.css';
 const isDev = process.env.NODE_ENV === 'development';
 
 // Seuil pour optimisations avancées (messages)
-const OPTIMIZATION_THRESHOLD = 50;
+const _OPTIMIZATION_THRESHOLD = 50;
 
 interface MessageListProps {
   messages: AIMessage[];
@@ -48,62 +48,65 @@ function useOmegaErrorBoundary() {
     recoveryCount: 0,
     lastRecovery: 0,
     safeMessages: [],
-    hasCorruption: false
+    hasCorruption: false,
   });
 
   const resetError = useCallback(() => {
     setState(prev => ({
       ...prev,
       renderError: null,
-      hasCorruption: false
+      hasCorruption: false,
     }));
   }, []);
 
-  const handleError = useCallback((error: Error, context: string, messages?: AIMessage[]) => {
-    const now = Date.now();
+  const handleError = useCallback(
+    (error: Error, context: string, messages?: AIMessage[]) => {
+      const now = Date.now();
 
-    // Auto-heal trigger
-    autoHealEngine.heal('message-list', error, 'validation', {
-      context,
-      messageCount: messages?.length || 0,
-      timestamp: now
-    });
+      // Auto-heal trigger
+      autoHealEngine.heal('message-list', error, 'validation', {
+        context,
+        messageCount: messages?.length || 0,
+        timestamp: now,
+      });
 
-    setState(prev => {
-      const newRecoveryCount = prev.recoveryCount + 1;
+      setState(prev => {
+        const newRecoveryCount = prev.recoveryCount + 1;
 
-      // Safe message filtering
-      let safeMessages: AIMessage[] = [];
-      if (messages) {
-        safeMessages = messages.filter(msg => {
-          try {
-            // Validate message structure
-            return (
-              msg &&
-              typeof msg === 'object' &&
-              typeof msg.role === 'string' &&
-              typeof msg.content === 'string' &&
-              typeof msg.timestamp === 'number' &&
-              msg.content.length > 0 &&
-              msg.content.length < 100000 // Max 100k chars per message
-            );
-          } catch (filterError) {
-            return false;
-          }
-        });
-      }
+        // Safe message filtering
+        let safeMessages: AIMessage[] = [];
+        if (messages) {
+          safeMessages = messages.filter(msg => {
+            try {
+              // Validate message structure
+              return (
+                msg &&
+                typeof msg === 'object' &&
+                typeof msg.role === 'string' &&
+                typeof msg.content === 'string' &&
+                typeof msg.timestamp === 'number' &&
+                msg.content.length > 0 &&
+                msg.content.length < 100000 // Max 100k chars per message
+              );
+            } catch (filterError) {
+              return false;
+            }
+          });
+        }
 
-      return {
-        renderError: error.message,
-        recoveryCount: newRecoveryCount,
-        lastRecovery: now,
-        safeMessages,
-        hasCorruption: safeMessages.length !== (messages?.length || 0)
-      };
-    });
+        return {
+          renderError: error.message,
+          recoveryCount: newRecoveryCount,
+          lastRecovery: now,
+          safeMessages,
+          hasCorruption: safeMessages.length !== (messages?.length || 0),
+        };
+      });
 
-    isDev && console.error('[OMEGA MESSAGE LIST] Error handled:', error, context);
-  }, []);
+      isDev && console.error('[OMEGA MESSAGE LIST] Error handled:', error, context);
+    },
+    []
+  );
 
   return { state, resetError, handleError };
 }
@@ -129,14 +132,19 @@ export const MessageList = React.memo(function MessageList({
 
   // OMEGA DEBUG LOG - TRACE MESSAGES
   useEffect(() => {
-    console.log('[OMEGA MESSAGE LIST DEBUG] rawMessages:', rawMessages?.length, 'messages:', messages?.length);
+    console.log(
+      '[OMEGA MESSAGE LIST DEBUG] rawMessages:',
+      rawMessages?.length,
+      'messages:',
+      messages?.length
+    );
     if (rawMessages?.length > 0) {
       rawMessages.forEach((msg, idx) => {
         console.log(`[OMEGA MESSAGE LIST DEBUG] Message ${idx}:`, {
           role: msg?.role,
           contentLength: msg?.content?.length,
           contentPreview: msg?.content?.substring?.(0, 50),
-          hasMetadata: !!msg?.metadata
+          hasMetadata: !!msg?.metadata,
         });
       });
     }
@@ -161,7 +169,10 @@ export const MessageList = React.memo(function MessageList({
     try {
       endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
     } catch (scrollError) {
-      handleError(scrollError instanceof Error ? scrollError : new Error(String(scrollError)), 'auto-scroll');
+      handleError(
+        scrollError instanceof Error ? scrollError : new Error(String(scrollError)),
+        'auto-scroll'
+      );
     }
   }, [messages, isLoading, handleError]);
 
@@ -190,10 +201,7 @@ export const MessageList = React.memo(function MessageList({
             <span>Messages récupérés : {errorState.safeMessages.length}</span>
             <span>Tentative #{errorState.recoveryCount}</span>
           </div>
-          <button
-            onClick={resetError}
-            className="message-list-recovery-button"
-          >
+          <button onClick={resetError} className="message-list-recovery-button">
             Reprendre l'affichage
           </button>
         </div>
@@ -210,9 +218,7 @@ export const MessageList = React.memo(function MessageList({
         <div className="message-list-container" ref={containerRef}>
           <div className="message-list-empty">
             <div className="message-list-empty-icon">🟣</div>
-            <h3 className="message-list-empty-title">
-              TITANE∞ Chat IA OMEGA v19.2Ω
-            </h3>
+            <h3 className="message-list-empty-title">TITANE∞ Chat IA OMEGA v19.2Ω</h3>
             <p className="message-list-empty-text">
               Système cognitif avec architecture anti-crash. Providers intelligents
               sélectionnés automatiquement pour une fiabilité maximale.
@@ -224,7 +230,10 @@ export const MessageList = React.memo(function MessageList({
             </div>
             {errorState.hasCorruption && (
               <div className="message-list-corruption-notice">
-                <span>🛡️ Protection activée : {rawMessages.length - messages.length} messages corrompus filtrés</span>
+                <span>
+                  🛡️ Protection activée : {rawMessages.length - messages.length} messages
+                  corrompus filtrés
+                </span>
               </div>
             )}
           </div>
@@ -241,11 +250,27 @@ export const MessageList = React.memo(function MessageList({
         <div className="message-list">
           {/* Messages avec protection individuelle */}
           {messages.map((message, index) => {
-            console.log('[OMEGA MESSAGE LIST RENDER] 📝 Rendering message', index, ':', message?.role, message?.content?.substring(0, 30));
+            console.log(
+              '[OMEGA MESSAGE LIST RENDER] 📝 Rendering message',
+              index,
+              ':',
+              message?.role,
+              message?.content?.substring(0, 30)
+            );
             try {
               // Validation message avant render - OMEGA FIX: permet content vide pour streaming placeholder
-              if (!message || typeof message !== 'object' || typeof message.content !== 'string') {
-                isDev && console.warn('[OMEGA MESSAGE LIST] Skipping invalid message at index', index, 'message:', message);
+              if (
+                !message ||
+                typeof message !== 'object' ||
+                typeof message.content !== 'string'
+              ) {
+                isDev &&
+                  console.warn(
+                    '[OMEGA MESSAGE LIST] Skipping invalid message at index',
+                    index,
+                    'message:',
+                    message
+                  );
                 return null;
               }
 
@@ -261,14 +286,19 @@ export const MessageList = React.memo(function MessageList({
             } catch (bubbleError) {
               // Isolation : une bulle qui plante n'affecte pas les autres
               handleError(
-                bubbleError instanceof Error ? bubbleError : new Error(String(bubbleError)),
+                bubbleError instanceof Error
+                  ? bubbleError
+                  : new Error(String(bubbleError)),
                 `message-bubble-${index}`,
                 messages
               );
 
               // Render fallback bubble
               return (
-                <div key={`fallback-${index}`} className="message-bubble message-bubble-error">
+                <div
+                  key={`fallback-${index}`}
+                  className="message-bubble message-bubble-error"
+                >
                   <div className="message-bubble-content">
                     <span className="message-error-icon">⚠️</span>
                     Message #{index + 1} récupéré automatiquement
@@ -280,7 +310,12 @@ export const MessageList = React.memo(function MessageList({
 
           {/* Loading indicator avec protection */}
           {isLoading && (
-            <div className="message-loading" role="status" aria-live="polite" aria-label="TITANE∞ OMEGA génère une réponse">
+            <div
+              className="message-loading"
+              role="status"
+              aria-live="polite"
+              aria-label="TITANE∞ OMEGA génère une réponse"
+            >
               <div className="message-loading-avatar">
                 <div className="message-avatar-ai">
                   <span className="message-avatar-icon">🟣</span>
@@ -316,7 +351,8 @@ export const MessageList = React.memo(function MessageList({
           {/* Corruption notice */}
           {errorState.hasCorruption && (
             <div className="message-corruption-notice">
-              🛡️ {rawMessages.length - messages.length} message(s) corrompu(s) filtré(s) automatiquement
+              🛡️ {rawMessages.length - messages.length} message(s) corrompu(s) filtré(s)
+              automatiquement
             </div>
           )}
 
@@ -324,7 +360,6 @@ export const MessageList = React.memo(function MessageList({
         </div>
       </div>
     );
-
   } catch (renderError) {
     // ═══ ULTIMATE FALLBACK RENDER ═══
     handleError(
@@ -334,12 +369,13 @@ export const MessageList = React.memo(function MessageList({
     );
 
     return (
-      <div className="message-list-container message-list-critical-error" ref={containerRef}>
+      <div
+        className="message-list-container message-list-critical-error"
+        ref={containerRef}
+      >
         <div className="message-list-critical">
           <div className="message-list-critical-icon">🆘</div>
-          <h3 className="message-list-critical-title">
-            Récupération critique OMEGA
-          </h3>
+          <h3 className="message-list-critical-title">Récupération critique OMEGA</h3>
           <p className="message-list-critical-text">
             Erreur de rendu majeure interceptée et corrigée. Le système reste stable.
           </p>

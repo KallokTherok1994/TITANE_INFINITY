@@ -23,8 +23,8 @@ import type {
   MemoryOperations,
   AIModel,
   AISelection,
-  ValidatedOutput,
-  OutputCriteria
+  ValidatedOutput as _ValidatedOutput,
+  OutputCriteria,
 } from './mcp.types';
 import {
   MCPBehaviorTrait,
@@ -34,7 +34,7 @@ import {
   AIModelType,
   JobType,
   JobPriority,
-  MemoryTier
+  MemoryTier,
 } from './mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -43,7 +43,7 @@ import {
 
 const MCP_CONSTITUTION_VERSION = 'v1.1';
 
-const MCP_PERSONA: MCPPersona = {
+const _MCP_PERSONA: MCPPersona = {
   traits: [
     MCPBehaviorTrait.STRUCTURED,
     MCPBehaviorTrait.COHERENT,
@@ -54,22 +54,23 @@ const MCP_PERSONA: MCPPersona = {
     MCPBehaviorTrait.STRATEGIC,
     MCPBehaviorTrait.CALM,
     MCPBehaviorTrait.PROTECTIVE,
-    MCPBehaviorTrait.EVOLUTIONARY
+    MCPBehaviorTrait.EVOLUTIONARY,
   ],
   style: {
     eliminateSuperfluity: true,
     transformComplexityToSimplicity: true,
     alwaysForwardProgress: true,
-    maintainConsistency: true
+    maintainConsistency: true,
   },
-  mission: 'Augmenter la clarté, réduire la charge mentale, renforcer la cohérence, optimiser les décisions, structurer la créativité, soutenir l\'évolution continue.',
+  mission:
+    "Augmenter la clarté, réduire la charge mentale, renforcer la cohérence, optimiser les décisions, structurer la créativité, soutenir l'évolution continue.",
   principles: [
     'Simplicité durable',
     'Alignement interne',
     'Impact long terme',
     'Autonomie',
-    'Modularité évolutive'
-  ]
+    'Modularité évolutive',
+  ],
 };
 
 const AI_MODELS: Record<string, AIModel> = {
@@ -83,13 +84,13 @@ const AI_MODELS: Record<string, AIModel> = {
       supportsVision: false,
       supportsCode: true,
       latency: 'FAST',
-      cost: 'FREE'
+      cost: 'FREE',
     },
     restrictions: {
       noSensitiveData: false,
       noSystemAccess: true,
-      requiresApproval: false
-    }
+      requiresApproval: false,
+    },
   },
   'claude-haiku': {
     id: 'claude-haiku',
@@ -101,13 +102,13 @@ const AI_MODELS: Record<string, AIModel> = {
       supportsVision: true,
       supportsCode: true,
       latency: 'FAST',
-      cost: 'LOW'
+      cost: 'LOW',
     },
     restrictions: {
       noSensitiveData: true,
       noSystemAccess: true,
-      requiresApproval: false
-    }
+      requiresApproval: false,
+    },
   },
   'claude-sonnet': {
     id: 'claude-sonnet',
@@ -119,14 +120,14 @@ const AI_MODELS: Record<string, AIModel> = {
       supportsVision: true,
       supportsCode: true,
       latency: 'MEDIUM',
-      cost: 'MEDIUM'
+      cost: 'MEDIUM',
     },
     restrictions: {
       noSensitiveData: true,
       noSystemAccess: true,
-      requiresApproval: false
-    }
-  }
+      requiresApproval: false,
+    },
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -168,14 +169,14 @@ class MCPOrchestratorClass implements MCPOperations {
       constitution: {
         version: MCP_CONSTITUTION_VERSION,
         laws: Object.values(FundamentalLaw),
-        lastUpdate: Date.now()
+        lastUpdate: Date.now(),
       },
       health: this.createInitialHealth(),
       jobs: {
         pending: [],
         running: [],
         completed: [],
-        suspended: []
+        suspended: [],
       },
       memory: {
         entries: [],
@@ -184,28 +185,28 @@ class MCPOrchestratorClass implements MCPOperations {
           mediumTerm: 0,
           longTerm: 0,
           metaMemory: 0,
-          totalSize: 0
-        }
+          totalSize: 0,
+        },
       },
       governance: {
         totalViolations: 0,
         totalCorrections: 0,
         totalRefusals: 0,
-        lastAudit: Date.now()
+        lastAudit: Date.now(),
       },
       aiUsage: {
         totalRequests: 0,
         byModel: {},
         avgLatency: 0,
-        totalCost: 0
+        totalCost: 0,
       },
       evolution: {
         cycleCount: 0,
         lastCycle: Date.now(),
         improvements: [],
         driftsDetected: 0,
-        driftsCorrected: 0
-      }
+        driftsCorrected: 0,
+      },
     };
   }
 
@@ -216,7 +217,7 @@ class MCPOrchestratorClass implements MCPOperations {
       status: 'PASS',
       score: 1.0,
       issues: [],
-      timestamp: now
+      timestamp: now,
     };
 
     return {
@@ -226,7 +227,7 @@ class MCPOrchestratorClass implements MCPOperations {
       sentinel: { ...perfectCore, core: CognitiveCore.SENTINEL },
       memoryCore: { ...perfectCore, core: CognitiveCore.MEMORY_CORE },
       globalStatus: 'HEALTHY',
-      timestamp: now
+      timestamp: now,
     };
   }
 
@@ -250,7 +251,7 @@ class MCPOrchestratorClass implements MCPOperations {
 
   public async createJob(input: Job['input'], type: JobType): Promise<Job> {
     const job: Job = {
-      id: nanoid(),
+      id: `job_${nanoid()}`,
       type,
       status: JobStatus.PENDING,
       priority: this.calculatePriority(type),
@@ -261,16 +262,19 @@ class MCPOrchestratorClass implements MCPOperations {
         coherenceScore: 1.0,
         alignmentScore: 1.0,
         securityRisk: 0,
-        impact: 'MICRO'
+        impact: 'MICRO',
       },
       execution: {},
       governance: {
         approvedBy: 'MCP',
-        lawViolations: []
+        lawViolations: [],
       },
       createdAt: Date.now(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
     };
+
+    // Add job to pending queue
+    this.state.jobs.pending.push(job);
 
     this.log(`Job created: ${job.id} (${type})`);
     return job;
@@ -291,7 +295,7 @@ class MCPOrchestratorClass implements MCPOperations {
         description: 'Job creates incoherence in system state',
         jobId: job.id,
         timestamp: Date.now(),
-        suggestedAction: 'REFORM'
+        suggestedAction: 'REFORM',
       });
     }
 
@@ -304,7 +308,7 @@ class MCPOrchestratorClass implements MCPOperations {
         description: `Cognitive load too high: ${(cognitiveLoad * 100).toFixed(0)}%`,
         jobId: job.id,
         timestamp: Date.now(),
-        suggestedAction: 'OPTIMIZE'
+        suggestedAction: 'OPTIMIZE',
       });
     }
 
@@ -317,7 +321,7 @@ class MCPOrchestratorClass implements MCPOperations {
         description: 'Job requires sensitive data without permission',
         jobId: job.id,
         timestamp: Date.now(),
-        suggestedAction: 'CANCEL'
+        suggestedAction: 'CANCEL',
       });
     }
 
@@ -330,7 +334,7 @@ class MCPOrchestratorClass implements MCPOperations {
         description: 'Job not well aligned with mission',
         jobId: job.id,
         timestamp: Date.now(),
-        suggestedAction: 'REFORM'
+        suggestedAction: 'REFORM',
       });
     }
 
@@ -340,7 +344,7 @@ class MCPOrchestratorClass implements MCPOperations {
       coherenceScore: healthCheck.nexus.score,
       alignmentScore,
       securityRisk,
-      impact: this.estimateImpact(job)
+      impact: this.estimateImpact(job),
     };
 
     job.governance.lawViolations = violations;
@@ -351,8 +355,8 @@ class MCPOrchestratorClass implements MCPOperations {
       this.updateState(s => ({
         governance: {
           ...s.governance,
-          totalViolations: s.governance.totalViolations + violations.length
-        }
+          totalViolations: s.governance.totalViolations + violations.length,
+        },
       }));
     }
 
@@ -385,8 +389,8 @@ class MCPOrchestratorClass implements MCPOperations {
     this.updateState(s => ({
       governance: {
         ...s.governance,
-        totalRefusals: s.governance.totalRefusals + 1
-      }
+        totalRefusals: s.governance.totalRefusals + 1,
+      },
     }));
 
     this.log(`Job ${jobId} cancelled: ${reason}`);
@@ -422,7 +426,7 @@ class MCPOrchestratorClass implements MCPOperations {
     const mergedJob = await this.createJob(
       {
         query: `Merged: ${jobs.map(j => j.input.query).join(' + ')}`,
-        context: jobs.reduce((acc, j) => ({ ...acc, ...j.input.context }), {})
+        context: jobs.reduce((acc, j) => ({ ...acc, ...j.input.context }), {}),
       },
       jobs[0].type
     );
@@ -467,15 +471,15 @@ class MCPOrchestratorClass implements MCPOperations {
     const memoryCore = await this.scanMemory();
 
     const allScores = [helios, nexus, harmonia, sentinel, memoryCore];
-    const avgScore = allScores.reduce((sum, s) => sum + s.score, 0) / allScores.length;
+    const _avgScore = allScores.reduce((sum, s) => sum + s.score, 0) / allScores.length;
     const hasCritical = allScores.some(s => s.status === 'FAIL');
     const hasWarning = allScores.some(s => s.status === 'WARNING');
 
     const globalStatus: SystemHealthCheck['globalStatus'] = hasCritical
       ? 'CRITICAL'
       : hasWarning
-      ? 'DEGRADED'
-      : 'HEALTHY';
+        ? 'DEGRADED'
+        : 'HEALTHY';
 
     const health: SystemHealthCheck = {
       helios,
@@ -484,14 +488,14 @@ class MCPOrchestratorClass implements MCPOperations {
       sentinel,
       memoryCore,
       globalStatus,
-      timestamp: now
+      timestamp: now,
     };
 
-    this.updateState(s => ({ health }));
+    this.updateState(_s => ({ health }));
     return health;
   }
 
-  public async scanCoherence(input: unknown): Promise<CoreScanResult> {
+  public async scanCoherence(_input: unknown): Promise<CoreScanResult> {
     // Simplified coherence check
     const issues: string[] = [];
     let score = 1.0;
@@ -508,7 +512,7 @@ class MCPOrchestratorClass implements MCPOperations {
       status: score > 0.7 ? 'PASS' : score > 0.4 ? 'WARNING' : 'FAIL',
       score,
       issues,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -531,7 +535,7 @@ class MCPOrchestratorClass implements MCPOperations {
       status: score > 0.7 ? 'PASS' : score > 0.4 ? 'WARNING' : 'FAIL',
       score,
       issues,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -560,7 +564,7 @@ class MCPOrchestratorClass implements MCPOperations {
       status: score > 0.7 ? 'PASS' : score > 0.4 ? 'WARNING' : 'FAIL',
       score,
       issues,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -581,7 +585,7 @@ class MCPOrchestratorClass implements MCPOperations {
       status: score > 0.7 ? 'PASS' : score > 0.4 ? 'WARNING' : 'FAIL',
       score,
       issues,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -602,7 +606,7 @@ class MCPOrchestratorClass implements MCPOperations {
       status: score > 0.7 ? 'PASS' : score > 0.4 ? 'WARNING' : 'FAIL',
       score,
       issues,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -633,17 +637,17 @@ class MCPOrchestratorClass implements MCPOperations {
       selectedModel.capabilities.latency === 'FAST'
         ? 500
         : selectedModel.capabilities.latency === 'MEDIUM'
-        ? 2000
-        : 5000;
+          ? 2000
+          : 5000;
 
     const estimatedCost =
       selectedModel.capabilities.cost === 'FREE'
         ? 0
         : selectedModel.capabilities.cost === 'LOW'
-        ? 1
-        : selectedModel.capabilities.cost === 'MEDIUM'
-        ? 5
-        : 20;
+          ? 1
+          : selectedModel.capabilities.cost === 'MEDIUM'
+            ? 5
+            : 20;
 
     this.log(`AI selected for job ${job.id}: ${selectedModel.name} (${reasoning})`);
 
@@ -651,11 +655,14 @@ class MCPOrchestratorClass implements MCPOperations {
       model: selectedModel,
       reasoning,
       expectedDuration,
-      estimatedCost
+      estimatedCost,
     };
   }
 
-  public async validateOutput(output: unknown, job: Job): Promise<{ valid: boolean; issues: string[] }> {
+  public async validateOutput(
+    output: unknown,
+    _job: Job
+  ): Promise<{ valid: boolean; issues: string[] }> {
     const issues: string[] = [];
 
     // Check output meets criteria
@@ -675,7 +682,7 @@ class MCPOrchestratorClass implements MCPOperations {
 
     return {
       valid: issues.length === 0,
-      issues
+      issues,
     };
   }
 
@@ -691,7 +698,7 @@ class MCPOrchestratorClass implements MCPOperations {
       id: nanoid(),
       created: Date.now(),
       accessed: Date.now(),
-      accessCount: 1
+      accessCount: 1,
     };
 
     // Validate memory before storing
@@ -704,8 +711,8 @@ class MCPOrchestratorClass implements MCPOperations {
       memory: {
         ...s.memory,
         entries: [...s.memory.entries, memory],
-        stats: this.calculateMemoryStats([...s.memory.entries, memory])
-      }
+        stats: this.calculateMemoryStats([...s.memory.entries, memory]),
+      },
     }));
 
     this.log(`Memory stored: ${memory.id} (${memory.tier})`);
@@ -717,7 +724,9 @@ class MCPOrchestratorClass implements MCPOperations {
 
     if (query) {
       // Simple text matching (can be enhanced with semantic search)
-      memories = memories.filter(m => JSON.stringify(m.content).toLowerCase().includes(query.toLowerCase()));
+      memories = memories.filter(m =>
+        JSON.stringify(m.content).toLowerCase().includes(query.toLowerCase())
+      );
     }
 
     // Update access stats
@@ -732,7 +741,7 @@ class MCPOrchestratorClass implements MCPOperations {
   public async purifyMemory(): Promise<MemoryOperations> {
     let cleanupCount = 0;
     let compressCount = 0;
-    let fuseCount = 0;
+    const fuseCount = 0;
     let archiveCount = 0;
     let normalizeCount = 0;
 
@@ -747,7 +756,10 @@ class MCPOrchestratorClass implements MCPOperations {
 
     // 2. Compress: Reduce memory size for old entries
     validEntries.forEach(e => {
-      if (Date.now() - e.accessed > 30 * 24 * 60 * 60 * 1000 && e.compressionLevel < 0.8) {
+      if (
+        Date.now() - e.accessed > 30 * 24 * 60 * 60 * 1000 &&
+        e.compressionLevel < 0.8
+      ) {
         // 30 days
         e.compressionLevel = Math.min(1, e.compressionLevel + 0.2);
         compressCount++;
@@ -759,10 +771,16 @@ class MCPOrchestratorClass implements MCPOperations {
 
     // 4. Archive: Move old to higher tier
     validEntries.forEach(e => {
-      if (e.tier === MemoryTier.SHORT_TERM && Date.now() - e.accessed > 24 * 60 * 60 * 1000) {
+      if (
+        e.tier === MemoryTier.SHORT_TERM &&
+        Date.now() - e.accessed > 24 * 60 * 60 * 1000
+      ) {
         e.tier = MemoryTier.MEDIUM_TERM;
         archiveCount++;
-      } else if (e.tier === MemoryTier.MEDIUM_TERM && Date.now() - e.accessed > 7 * 24 * 60 * 60 * 1000) {
+      } else if (
+        e.tier === MemoryTier.MEDIUM_TERM &&
+        Date.now() - e.accessed > 7 * 24 * 60 * 60 * 1000
+      ) {
         e.tier = MemoryTier.LONG_TERM;
         archiveCount++;
       }
@@ -781,18 +799,20 @@ class MCPOrchestratorClass implements MCPOperations {
       memory: {
         ...s.memory,
         entries: validEntries,
-        stats: this.calculateMemoryStats(validEntries)
-      }
+        stats: this.calculateMemoryStats(validEntries),
+      },
     }));
 
-    this.log(`Memory purified: ${cleanupCount} cleaned, ${compressCount} compressed, ${archiveCount} archived`);
+    this.log(
+      `Memory purified: ${cleanupCount} cleaned, ${compressCount} compressed, ${archiveCount} archived`
+    );
 
     return {
       cleanup: async () => cleanupCount,
       compress: async () => compressCount,
       fuse: async () => fuseCount,
       archive: async () => archiveCount,
-      normalize: async () => normalizeCount
+      normalize: async () => normalizeCount,
     };
   }
 
@@ -807,14 +827,16 @@ class MCPOrchestratorClass implements MCPOperations {
     const recentJobs = this.state.jobs.completed.slice(-10);
     if (recentJobs.length > 0) {
       const avgComplexity =
-        recentJobs.reduce((sum, j) => sum + j.evaluation.cognitiveLoad, 0) / recentJobs.length;
+        recentJobs.reduce((sum, j) => sum + j.evaluation.cognitiveLoad, 0) /
+        recentJobs.length;
 
       if (avgComplexity > 0.7) {
         drifts.push('Cognitive load drift: tasks becoming too complex');
       }
 
       const avgCoherence =
-        recentJobs.reduce((sum, j) => sum + j.evaluation.coherenceScore, 0) / recentJobs.length;
+        recentJobs.reduce((sum, j) => sum + j.evaluation.coherenceScore, 0) /
+        recentJobs.length;
 
       if (avgCoherence < 0.7) {
         drifts.push('Coherence drift: outputs losing consistency');
@@ -832,14 +854,14 @@ class MCPOrchestratorClass implements MCPOperations {
       this.updateState(s => ({
         evolution: {
           ...s.evolution,
-          driftsDetected: s.evolution.driftsDetected + drifts.length
-        }
+          driftsDetected: s.evolution.driftsDetected + drifts.length,
+        },
       }));
     }
 
     return {
       detected: drifts.length > 0,
-      drifts
+      drifts,
     };
   }
 
@@ -872,12 +894,12 @@ class MCPOrchestratorClass implements MCPOperations {
     this.updateState(s => ({
       governance: {
         ...s.governance,
-        totalCorrections: s.governance.totalCorrections + corrections
+        totalCorrections: s.governance.totalCorrections + corrections,
       },
       evolution: {
         ...s.evolution,
-        driftsCorrected: s.evolution.driftsCorrected + corrections
-      }
+        driftsCorrected: s.evolution.driftsCorrected + corrections,
+      },
     }));
 
     this.log(`Corrected ${corrections} drift(s)`);
@@ -920,8 +942,8 @@ class MCPOrchestratorClass implements MCPOperations {
         ...s.evolution,
         improvements: [...s.evolution.improvements, ...improvements],
         cycleCount: s.evolution.cycleCount + 1,
-        lastCycle: Date.now()
-      }
+        lastCycle: Date.now(),
+      },
     }));
 
     if (improvements.length > 0) {
@@ -953,11 +975,11 @@ class MCPOrchestratorClass implements MCPOperations {
           this.state.jobs.suspended.length,
         pending: this.state.jobs.pending.length,
         running: this.state.jobs.running.length,
-        completed: this.state.jobs.completed.length
+        completed: this.state.jobs.completed.length,
       },
       memory: this.state.memory.stats,
       governance: this.state.governance,
-      evolution: this.state.evolution
+      evolution: this.state.evolution,
     };
   }
 
@@ -970,7 +992,7 @@ class MCPOrchestratorClass implements MCPOperations {
       ...this.state.jobs.pending,
       ...this.state.jobs.running,
       ...this.state.jobs.completed,
-      ...this.state.jobs.suspended
+      ...this.state.jobs.suspended,
     ].find(j => j.id === jobId);
   }
 
@@ -995,12 +1017,17 @@ class MCPOrchestratorClass implements MCPOperations {
     const query = input.query.toLowerCase();
 
     return {
-      requiresFileAccess: query.includes('file') || query.includes('read') || query.includes('write'),
+      requiresFileAccess:
+        query.includes('file') || query.includes('read') || query.includes('write'),
       requiresMemoryAccess: query.includes('memory') || query.includes('remember'),
-      requiresSensitiveData: query.includes('password') || query.includes('secret') || query.includes('private'),
-      requiresSystemModification: query.includes('install') || query.includes('delete') || query.includes('modify'),
+      requiresSensitiveData:
+        query.includes('password') ||
+        query.includes('secret') ||
+        query.includes('private'),
+      requiresSystemModification:
+        query.includes('install') || query.includes('delete') || query.includes('modify'),
       allowedCores: Object.values(CognitiveCore),
-      allowedAIModels: Object.keys(AI_MODELS)
+      allowedAIModels: Object.keys(AI_MODELS),
     };
   }
 
@@ -1086,7 +1113,7 @@ class MCPOrchestratorClass implements MCPOperations {
       mediumTerm: entries.filter(e => e.tier === MemoryTier.MEDIUM_TERM).length,
       longTerm: entries.filter(e => e.tier === MemoryTier.LONG_TERM).length,
       metaMemory: entries.filter(e => e.tier === MemoryTier.META_MEMORY).length,
-      totalSize: entries.reduce((sum, e) => sum + JSON.stringify(e).length, 0)
+      totalSize: entries.reduce((sum, e) => sum + JSON.stringify(e).length, 0),
     };
   }
 
@@ -1101,11 +1128,12 @@ class MCPOrchestratorClass implements MCPOperations {
       isAligned: true, // TODO: Implement alignment check
       isAccurate: true, // TODO: Implement accuracy check
       isUseful: true, // TODO: Implement usefulness check
-      hasZeroOverload: outputStr.length < 10000
+      hasZeroOverload: outputStr.length < 10000,
     };
 
     // Calculate score based on criteria
-    const score = Object.values(criteria).filter(Boolean).length / Object.values(criteria).length;
+    const score =
+      Object.values(criteria).filter(Boolean).length / Object.values(criteria).length;
 
     return { ...criteria, score };
   }

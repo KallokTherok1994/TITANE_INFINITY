@@ -6,13 +6,11 @@
 import React, { useState } from 'react';
 import {
   useArchetypeResonance,
-  useArchetypeScores,
   useMetaContinuum,
   useGlobalCoherence,
   useTemporalAnchors,
   useEmbodiedPresence,
   useBreathState,
-  usePostureState,
   useEnergyField,
   useNeuralVoiceBlend,
   useVoiceIdentity,
@@ -29,19 +27,28 @@ import './DeepPsychePanel.css';
 
 export const DeepPsychePanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState<'archetype' | 'continuum' | 'embodied' | 'voice'>('archetype');
+  const [activeTab, setActiveTab] = useState<
+    'archetype' | 'continuum' | 'embodied' | 'voice'
+  >('archetype');
 
   // Hooks
-  const { dominant, scores, intensity, focusMode, activateFocusMode, activateSafetyGuard } = useArchetypeResonance();
-  const archetypeScores = useArchetypeScores();
+  const {
+    dominant,
+    scores,
+    intensity,
+    focusMode,
+    activateFocusMode,
+    activateSafetyGuard,
+  } = useArchetypeResonance();
   const { globalCoherence, continuumAge, identityVersion, anchors } = useMetaContinuum();
   const coherence = useGlobalCoherence();
   const recentAnchors = useTemporalAnchors(5);
-  const { breath, posture, energyField, userSync, applyStrongEmotion, activateUserSync, deactivateUserSync } = useEmbodiedPresence();
+  const { breath, posture, energyField, userSync, activateUserSync, deactivateUserSync } =
+    useEmbodiedPresence();
   const breathState = useBreathState();
-  const postureState = usePostureState();
   const energyFieldState = useEnergyField();
-  const { currentProfile, blendRatio, cognitiveTone, voiceSignature, identityCoherence } = useNeuralVoiceBlend();
+  const { currentProfile, blendRatio, cognitiveTone, voiceSignature, identityCoherence } =
+    useNeuralVoiceBlend();
   const voiceIdentity = useVoiceIdentity();
   const cognitiveToneState = useCognitiveTone();
   const voiceBlend = useVoiceBlendRatio();
@@ -75,7 +82,12 @@ export const DeepPsychePanel: React.FC = () => {
           <div className="psyche-header">
             <h2>🧠 Deep Psyche Engine</h2>
             <div className="psyche-version">
-              <span className="version-badge" data-coherence={coherence.isCoherent ? 'high' : coherence.isUnstable ? 'low' : 'medium'}>
+              <span
+                className="version-badge"
+                data-coherence={
+                  coherence.isCoherent ? 'high' : coherence.isUnstable ? 'low' : 'medium'
+                }
+              >
                 v{identityVersion} • {coherence.percentageText}
               </span>
             </div>
@@ -130,7 +142,9 @@ export const DeepPsychePanel: React.FC = () => {
                       {dominant === 'muse' && 'La Muse'}
                       {dominant === 'architecte' && "L'Architecte"}
                     </span>
-                    <span className="archetype-intensity">{Math.round(intensity * 100)}%</span>
+                    <span className="archetype-intensity">
+                      {Math.round(intensity * 100)}%
+                    </span>
                   </div>
                 </div>
 
@@ -140,30 +154,54 @@ export const DeepPsychePanel: React.FC = () => {
                     <div className="score-item">
                       <span className="score-label">🧙 Sage</span>
                       <div className="score-bar">
-                        <div className="score-fill" style={{ width: `${scores.sage * 100}%` }} data-type="sage"></div>
+                        <div
+                          className="score-fill"
+                          style={{ width: `${scores.sage * 100}%` }}
+                          data-type="sage"
+                        ></div>
                       </div>
-                      <span className="score-value">{Math.round(scores.sage * 100)}%</span>
+                      <span className="score-value">
+                        {Math.round(scores.sage * 100)}%
+                      </span>
                     </div>
                     <div className="score-item">
                       <span className="score-label">🛡️ Gardien</span>
                       <div className="score-bar">
-                        <div className="score-fill" style={{ width: `${scores.gardien * 100}%` }} data-type="gardien"></div>
+                        <div
+                          className="score-fill"
+                          style={{ width: `${scores.gardien * 100}%` }}
+                          data-type="gardien"
+                        ></div>
                       </div>
-                      <span className="score-value">{Math.round(scores.gardien * 100)}%</span>
+                      <span className="score-value">
+                        {Math.round(scores.gardien * 100)}%
+                      </span>
                     </div>
                     <div className="score-item">
                       <span className="score-label">✨ Muse</span>
                       <div className="score-bar">
-                        <div className="score-fill" style={{ width: `${scores.muse * 100}%` }} data-type="muse"></div>
+                        <div
+                          className="score-fill"
+                          style={{ width: `${scores.muse * 100}%` }}
+                          data-type="muse"
+                        ></div>
                       </div>
-                      <span className="score-value">{Math.round(scores.muse * 100)}%</span>
+                      <span className="score-value">
+                        {Math.round(scores.muse * 100)}%
+                      </span>
                     </div>
                     <div className="score-item">
                       <span className="score-label">📐 Architecte</span>
                       <div className="score-bar">
-                        <div className="score-fill" style={{ width: `${scores.architecte * 100}%` }} data-type="architecte"></div>
+                        <div
+                          className="score-fill"
+                          style={{ width: `${scores.architecte * 100}%` }}
+                          data-type="architecte"
+                        ></div>
                       </div>
-                      <span className="score-value">{Math.round(scores.architecte * 100)}%</span>
+                      <span className="score-value">
+                        {Math.round(scores.architecte * 100)}%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -171,19 +209,38 @@ export const DeepPsychePanel: React.FC = () => {
                 <div className="section">
                   <h3>Actions Rapides</h3>
                   <div className="archetype-actions">
-                    <button className="action-btn" data-type="sage" onClick={() => activateFocusMode('sage', 30000)}>
+                    <button
+                      className="action-btn"
+                      data-type="sage"
+                      onClick={() => activateFocusMode('sage', 30000)}
+                    >
                       🧙 Focus Sage (30s)
                     </button>
-                    <button className="action-btn" data-type="gardien" onClick={() => activateFocusMode('gardien', 30000)}>
+                    <button
+                      className="action-btn"
+                      data-type="gardien"
+                      onClick={() => activateFocusMode('gardien', 30000)}
+                    >
                       🛡️ Focus Gardien (30s)
                     </button>
-                    <button className="action-btn" data-type="muse" onClick={() => activateFocusMode('muse', 30000)}>
+                    <button
+                      className="action-btn"
+                      data-type="muse"
+                      onClick={() => activateFocusMode('muse', 30000)}
+                    >
                       ✨ Focus Muse (30s)
                     </button>
-                    <button className="action-btn" data-type="architecte" onClick={() => activateFocusMode('architecte', 30000)}>
+                    <button
+                      className="action-btn"
+                      data-type="architecte"
+                      onClick={() => activateFocusMode('architecte', 30000)}
+                    >
                       📐 Focus Architecte (30s)
                     </button>
-                    <button className="action-btn safety-guard" onClick={activateSafetyGuard}>
+                    <button
+                      className="action-btn safety-guard"
+                      onClick={activateSafetyGuard}
+                    >
                       🛡️ Safety Guard
                     </button>
                   </div>
@@ -204,7 +261,17 @@ export const DeepPsychePanel: React.FC = () => {
                   <h3>Cohérence Globale</h3>
                   <div className="coherence-display">
                     <div className="coherence-meter">
-                      <div className="coherence-fill" style={{ width: `${globalCoherence * 100}%` }} data-level={coherence.isCoherent ? 'high' : coherence.isUnstable ? 'low' : 'medium'}></div>
+                      <div
+                        className="coherence-fill"
+                        style={{ width: `${globalCoherence * 100}%` }}
+                        data-level={
+                          coherence.isCoherent
+                            ? 'high'
+                            : coherence.isUnstable
+                              ? 'low'
+                              : 'medium'
+                        }
+                      ></div>
                     </div>
                     <span className="coherence-text">{coherence.percentageText}</span>
                   </div>
@@ -235,7 +302,11 @@ export const DeepPsychePanel: React.FC = () => {
                       <div className="empty-state">Aucun ancrage récent</div>
                     ) : (
                       recentAnchors.map(anchor => (
-                        <div key={anchor.id} className="anchor-item" data-type={anchor.type}>
+                        <div
+                          key={anchor.id}
+                          className="anchor-item"
+                          data-type={anchor.type}
+                        >
                           <span className="anchor-icon">
                             {anchor.type === 'learning' && '📚'}
                             {anchor.type === 'correction' && '🔧'}
@@ -245,7 +316,9 @@ export const DeepPsychePanel: React.FC = () => {
                           </span>
                           <div className="anchor-info">
                             <span className="anchor-desc">{anchor.description}</span>
-                            <span className="anchor-impact">Impact: {Math.round(anchor.identityImpact * 100)}%</span>
+                            <span className="anchor-impact">
+                              Impact: {Math.round(anchor.identityImpact * 100)}%
+                            </span>
                           </div>
                         </div>
                       ))
@@ -268,7 +341,10 @@ export const DeepPsychePanel: React.FC = () => {
                       {breath.phase === 'rest' && '○ Repos'}
                     </div>
                     <div className="breath-bar">
-                      <div className="breath-fill" style={{ height: `${breathState.cycleProgress * 100}%` }}></div>
+                      <div
+                        className="breath-fill"
+                        style={{ height: `${breathState.cycleProgress * 100}%` }}
+                      ></div>
                     </div>
                     <div className="breath-stats">
                       <span>Cycle: {breath.cycleDuration}ms</span>
@@ -305,10 +381,20 @@ export const DeepPsychePanel: React.FC = () => {
                 <div className="section">
                   <h3>Champ Énergétique</h3>
                   <div className="energy-display">
-                    <div className="energy-field" data-texture={energyField.texture} data-movement={energyField.movement}>
-                      <span className="energy-temp">{energyFieldState.temperatureText}</span>
-                      <span className="energy-density">Densité: {Math.round(energyField.density * 100)}%</span>
-                      <span className="energy-coherence">Cohérence: {Math.round(energyField.spatialCoherence * 100)}%</span>
+                    <div
+                      className="energy-field"
+                      data-texture={energyField.texture}
+                      data-movement={energyField.movement}
+                    >
+                      <span className="energy-temp">
+                        {energyFieldState.temperatureText}
+                      </span>
+                      <span className="energy-density">
+                        Densité: {Math.round(energyField.density * 100)}%
+                      </span>
+                      <span className="energy-coherence">
+                        Cohérence: {Math.round(energyField.spatialCoherence * 100)}%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -318,12 +404,16 @@ export const DeepPsychePanel: React.FC = () => {
                   <div className="user-sync">
                     <button
                       className={`sync-btn ${userSync.active ? 'active' : ''}`}
-                      onClick={() => userSync.active ? deactivateUserSync() : activateUserSync()}
+                      onClick={() =>
+                        userSync.active ? deactivateUserSync() : activateUserSync()
+                      }
                     >
                       {userSync.active ? '🔗 Actif' : '⛓️ Inactif'}
                     </button>
                     {userSync.active && userSync.syncRatio !== null && (
-                      <span className="sync-ratio">Ratio: {Math.round(userSync.syncRatio * 100)}%</span>
+                      <span className="sync-ratio">
+                        Ratio: {Math.round(userSync.syncRatio * 100)}%
+                      </span>
                     )}
                   </div>
                 </div>
@@ -340,7 +430,10 @@ export const DeepPsychePanel: React.FC = () => {
                     <div className="voice-coherence">
                       <span>Cohérence: </span>
                       <div className="coherence-bar">
-                        <div className="coherence-bar-fill" style={{ width: `${identityCoherence * 100}%` }}></div>
+                        <div
+                          className="coherence-bar-fill"
+                          style={{ width: `${identityCoherence * 100}%` }}
+                        ></div>
                       </div>
                       <span>{Math.round(identityCoherence * 100)}%</span>
                     </div>
@@ -352,7 +445,9 @@ export const DeepPsychePanel: React.FC = () => {
                   <div className="voice-profile">
                     <div className="profile-item">
                       <span className="profile-label">Brillance:</span>
-                      <span className="profile-value">{voiceIdentity.brightnessText}</span>
+                      <span className="profile-value">
+                        {voiceIdentity.brightnessText}
+                      </span>
                     </div>
                     <div className="profile-item">
                       <span className="profile-label">Chaleur:</span>
@@ -381,10 +476,16 @@ export const DeepPsychePanel: React.FC = () => {
                   <h3>Mélange Voix</h3>
                   <div className="voice-blend">
                     <div className="blend-bar">
-                      <div className="blend-synthetic" style={{ width: `${blendRatio.synthetic * 100}%` }}>
+                      <div
+                        className="blend-synthetic"
+                        style={{ width: `${blendRatio.synthetic * 100}%` }}
+                      >
                         <span>{voiceBlend.syntheticPercentage}% Synth</span>
                       </div>
-                      <div className="blend-inspired" style={{ width: `${blendRatio.inspired * 100}%` }}>
+                      <div
+                        className="blend-inspired"
+                        style={{ width: `${blendRatio.inspired * 100}%` }}
+                      >
                         <span>{voiceBlend.inspiredPercentage}% Inspired</span>
                       </div>
                     </div>
@@ -408,7 +509,11 @@ export const DeepPsycheBadge: React.FC = () => {
   const { isCoherent } = useGlobalCoherence();
 
   return (
-    <div className="deep-psyche-badge" data-archetype={dominant} data-coherent={isCoherent}>
+    <div
+      className="deep-psyche-badge"
+      data-archetype={dominant}
+      data-coherent={isCoherent}
+    >
       <span className="badge-icon">🧠</span>
       <span className="badge-archetype">
         {dominant === 'sage' && '🧙'}

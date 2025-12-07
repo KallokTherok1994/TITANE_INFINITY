@@ -12,19 +12,17 @@
  * - Recommandations contextuelles
  */
 
-import type {
-  EnergyState,
-  EnergyPoint,
-  EnergyHistoryEntry,
-  Chronotype,
-} from './types';
+import type { EnergyState, EnergyPoint, EnergyHistoryEntry, Chronotype } from './types';
 import { TimeEngineUtils } from './TimeEngine';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTES — Profils énergétiques par chronotype
 // ═══════════════════════════════════════════════════════════════════
 
-const CHRONOTYPE_PROFILES: Record<Chronotype, { peaks: EnergyPoint[]; dips: EnergyPoint[] }> = {
+const CHRONOTYPE_PROFILES: Record<
+  Chronotype,
+  { peaks: EnergyPoint[]; dips: EnergyPoint[] }
+> = {
   early_bird: {
     peaks: [
       { time: '06:00', level: 0.85, label: 'Premier pic matinal' },
@@ -96,7 +94,8 @@ function interpolateEnergy(time: string, points: EnergyPoint[]): number {
 
   // Trier les points par heure
   const sortedPoints = [...points].sort(
-    (a, b) => TimeEngineUtils.timeToMinutes(a.time) - TimeEngineUtils.timeToMinutes(b.time)
+    (a, b) =>
+      TimeEngineUtils.timeToMinutes(a.time) - TimeEngineUtils.timeToMinutes(b.time)
   );
 
   // Trouver les deux points les plus proches
@@ -310,7 +309,7 @@ export class EnergyEngine {
   /**
    * Obtient le niveau d'énergie pour une journée complète
    */
-  getEnergyForDay(date: Date): EnergyPoint[] {
+  getEnergyForDay(_date: Date): EnergyPoint[] {
     const points: EnergyPoint[] = [];
 
     for (let hour = 0; hour < 24; hour++) {
@@ -454,9 +453,10 @@ export class EnergyEngine {
    */
   recommendHighEnergySlot(): string {
     const forecast = this.state.forecast;
-    const bestSlot = forecast.reduce((best, point) =>
-      point.level > best.level ? point : best
-    , forecast[0] || { time: '10:00', level: 0.5, label: '' });
+    const bestSlot = forecast.reduce(
+      (best, point) => (point.level > best.level ? point : best),
+      forecast[0] || { time: '10:00', level: 0.5, label: '' }
+    );
 
     return bestSlot.time;
   }

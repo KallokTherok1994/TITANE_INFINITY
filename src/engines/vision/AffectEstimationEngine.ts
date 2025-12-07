@@ -41,8 +41,8 @@ import {
 // ============================================================================
 
 interface TimeContext {
-  hourOfDay: number;        // 0-23
-  dayOfWeek: number;        // 0-6
+  hourOfDay: number; // 0-23
+  dayOfWeek: number; // 0-6
   sessionDurationMs: number;
 }
 
@@ -158,7 +158,10 @@ export class AffectEstimationEngine {
     const timestamp = Date.now();
 
     // Si pas de landmarks détectés, retourner état par défaut avec faible confiance
-    if (!bodyState.landmarksDetected || bodyState.confidence < CONFIDENCE_CONFIG.minAcceptableConfidence) {
+    if (
+      !bodyState.landmarksDetected ||
+      bodyState.confidence < CONFIDENCE_CONFIG.minAcceptableConfidence
+    ) {
       return this.createLowConfidenceState(timestamp);
     }
 
@@ -199,8 +202,9 @@ export class AffectEstimationEngine {
     };
 
     // Mettre à jour l'historique (limité)
-    const newHistory = [...this.state.history, historyEntry]
-      .slice(-PERFORMANCE_BUDGETS.maxHistoryEntries);
+    const newHistory = [...this.state.history, historyEntry].slice(
+      -PERFORMANCE_BUDGETS.maxHistoryEntries
+    );
 
     // Créer le nouvel état
     const newState: AffectEstimationState = {
@@ -297,7 +301,10 @@ export class AffectEstimationEngine {
     return {
       energy: this.applySignatureToScore(scores.energy, this.baseline.energySignature),
       tension: this.applySignatureToScore(scores.tension, this.baseline.tensionSignature),
-      engagement: this.applySignatureToScore(scores.engagement, this.baseline.engagementSignature),
+      engagement: this.applySignatureToScore(
+        scores.engagement,
+        this.baseline.engagementSignature
+      ),
     };
   }
 
@@ -483,7 +490,7 @@ export class AffectEstimationEngine {
    */
   private computeOverallConfidence(
     factors: ConfidenceFactors,
-    bodyState: BodyLanguageState
+    _bodyState: BodyLanguageState
   ): number {
     const weights = CONFIDENCE_CONFIG.weights;
 

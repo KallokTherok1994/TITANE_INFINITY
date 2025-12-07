@@ -16,7 +16,9 @@ import { useState } from 'react';
 import { useWhisperStream } from '@/hooks/useWhisperStream';
 
 export const WhisperStreamingDemo = () => {
-  const [model, setModel] = useState<'tiny' | 'base' | 'small' | 'medium' | 'large'>('base');
+  const [model, setModel] = useState<'tiny' | 'base' | 'small' | 'medium' | 'large'>(
+    'base'
+  );
   const [language, setLanguage] = useState('fr');
 
   const {
@@ -39,33 +41,35 @@ export const WhisperStreamingDemo = () => {
     onFinal: (text, conf) => {
       console.log('[Demo] Final:', text, 'Confidence:', conf);
     },
-    onError: (err) => {
+    onError: err => {
       console.error('[Demo] Error:', err);
     },
   });
 
   return (
-    <div style={{
-      padding: '2rem',
-      maxWidth: '800px',
-      margin: '0 auto',
-      fontFamily: 'system-ui, sans-serif',
-    }}>
-      <h1 style={{ marginBottom: '1rem' }}>
-        🎙️ TITANE∞ Real-Time Whisper Streaming
-      </h1>
+    <div
+      style={{
+        padding: '2rem',
+        maxWidth: '800px',
+        margin: '0 auto',
+        fontFamily: 'system-ui, sans-serif',
+      }}
+    >
+      <h1 style={{ marginBottom: '1rem' }}>🎙️ TITANE∞ Real-Time Whisper Streaming</h1>
 
       {/* Controls */}
-      <div style={{
-        display: 'flex',
-        gap: '1rem',
-        marginBottom: '2rem',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: '1rem',
+          marginBottom: '2rem',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
         <select
           value={model}
-          onChange={(e) => setModel(e.target.value as any)}
+          onChange={e => setModel(e.target.value)}
           disabled={isStreaming}
           style={{
             padding: '0.5rem',
@@ -83,7 +87,7 @@ export const WhisperStreamingDemo = () => {
 
         <select
           value={language}
-          onChange={(e) => setLanguage(e.target.value)}
+          onChange={e => setLanguage(e.target.value)}
           disabled={isStreaming}
           style={{
             padding: '0.5rem',
@@ -134,13 +138,15 @@ export const WhisperStreamingDemo = () => {
       </div>
 
       {/* Status */}
-      <div style={{
-        padding: '1rem',
-        marginBottom: '1rem',
-        borderRadius: '8px',
-        background: isStreaming ? '#dcfce7' : '#f3f4f6',
-        border: `2px solid ${isStreaming ? '#10b981' : '#e5e7eb'}`,
-      }}>
+      <div
+        style={{
+          padding: '1rem',
+          marginBottom: '1rem',
+          borderRadius: '8px',
+          background: isStreaming ? '#dcfce7' : '#f3f4f6',
+          border: `2px solid ${isStreaming ? '#10b981' : '#e5e7eb'}`,
+        }}
+      >
         <strong>Status:</strong>{' '}
         {isStreaming ? (
           <span style={{ color: '#10b981' }}>🟢 Streaming Active</span>
@@ -156,89 +162,109 @@ export const WhisperStreamingDemo = () => {
 
       {/* Error */}
       {error && (
-        <div style={{
-          padding: '1rem',
-          marginBottom: '1rem',
-          borderRadius: '8px',
-          background: '#fee2e2',
-          border: '2px solid #dc2626',
-          color: '#991b1b',
-        }}>
+        <div
+          style={{
+            padding: '1rem',
+            marginBottom: '1rem',
+            borderRadius: '8px',
+            background: '#fee2e2',
+            border: '2px solid #dc2626',
+            color: '#991b1b',
+          }}
+        >
           <strong>❌ Error:</strong> {error}
         </div>
       )}
 
       {/* Partial Transcription (In Progress) */}
-      <div style={{
-        marginBottom: '1rem',
-        padding: '1.5rem',
-        borderRadius: '8px',
-        background: '#fef3c7',
-        border: '2px dashed #f59e0b',
-        minHeight: '80px',
-      }}>
-        <div style={{
-          fontSize: '0.875rem',
-          fontWeight: 'bold',
-          color: '#92400e',
-          marginBottom: '0.5rem',
-        }}>
+      <div
+        style={{
+          marginBottom: '1rem',
+          padding: '1.5rem',
+          borderRadius: '8px',
+          background: '#fef3c7',
+          border: '2px dashed #f59e0b',
+          minHeight: '80px',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: 'bold',
+            color: '#92400e',
+            marginBottom: '0.5rem',
+          }}
+        >
           📝 PARTIAL (in progress)
         </div>
-        <div style={{
-          fontSize: '1.125rem',
-          color: '#78350f',
-          fontStyle: partial ? 'normal' : 'italic',
-        }}>
+        <div
+          style={{
+            fontSize: '1.125rem',
+            color: '#78350f',
+            fontStyle: partial ? 'normal' : 'italic',
+          }}
+        >
           {partial || '(waiting for speech...)'}
         </div>
       </div>
 
       {/* Final Segment (Last Confirmed) */}
-      <div style={{
-        marginBottom: '1rem',
-        padding: '1.5rem',
-        borderRadius: '8px',
-        background: '#dbeafe',
-        border: '2px solid #3b82f6',
-        minHeight: '80px',
-      }}>
-        <div style={{
-          fontSize: '0.875rem',
-          fontWeight: 'bold',
-          color: '#1e40af',
-          marginBottom: '0.5rem',
-        }}>
+      <div
+        style={{
+          marginBottom: '1rem',
+          padding: '1.5rem',
+          borderRadius: '8px',
+          background: '#dbeafe',
+          border: '2px solid #3b82f6',
+          minHeight: '80px',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '0.875rem',
+            fontWeight: 'bold',
+            color: '#1e40af',
+            marginBottom: '0.5rem',
+          }}
+        >
           ✅ FINAL (last segment)
         </div>
-        <div style={{
-          fontSize: '1.125rem',
-          color: '#1e3a8a',
-          fontWeight: '500',
-        }}>
+        <div
+          style={{
+            fontSize: '1.125rem',
+            color: '#1e3a8a',
+            fontWeight: '500',
+          }}
+        >
           {final || '(no segment finalized yet)'}
         </div>
       </div>
 
       {/* Full Transcript History */}
-      <div style={{
-        padding: '1.5rem',
-        borderRadius: '8px',
-        background: '#f3f4f6',
-        border: '2px solid #9ca3af',
-        minHeight: '120px',
-      }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '0.5rem',
-        }}>
-          <div style={{
-            fontSize: '0.875rem',
-            fontWeight: 'bold',
-            color: '#374151',
-          }}>
+      <div
+        style={{
+          padding: '1.5rem',
+          borderRadius: '8px',
+          background: '#f3f4f6',
+          border: '2px solid #9ca3af',
+          minHeight: '120px',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.5rem',
+          }}
+        >
+          <div
+            style={{
+              fontSize: '0.875rem',
+              fontWeight: 'bold',
+              color: '#374151',
+            }}
+          >
             📜 FULL TRANSCRIPT ({segments.length} segments)
           </div>
           {segments.length > 0 && (
@@ -257,13 +283,15 @@ export const WhisperStreamingDemo = () => {
             </button>
           )}
         </div>
-        <div style={{
-          fontSize: '1rem',
-          color: '#1f2937',
-          lineHeight: '1.6',
-          whiteSpace: 'pre-wrap',
-          fontStyle: fullTranscript ? 'normal' : 'italic',
-        }}>
+        <div
+          style={{
+            fontSize: '1rem',
+            color: '#1f2937',
+            lineHeight: '1.6',
+            whiteSpace: 'pre-wrap',
+            fontStyle: fullTranscript ? 'normal' : 'italic',
+          }}
+        >
           {fullTranscript || '(no transcript yet)'}
         </div>
       </div>
@@ -297,15 +325,17 @@ export const WhisperStreamingDemo = () => {
       )}
 
       {/* Info */}
-      <div style={{
-        marginTop: '2rem',
-        padding: '1rem',
-        borderRadius: '8px',
-        background: '#eff6ff',
-        border: '1px solid #3b82f6',
-        fontSize: '0.875rem',
-        color: '#1e40af',
-      }}>
+      <div
+        style={{
+          marginTop: '2rem',
+          padding: '1rem',
+          borderRadius: '8px',
+          background: '#eff6ff',
+          border: '1px solid #3b82f6',
+          fontSize: '0.875rem',
+          color: '#1e40af',
+        }}
+      >
         <strong>ℹ️ How it works:</strong>
         <ul style={{ marginTop: '0.5rem', paddingLeft: '1.5rem' }}>
           <li>Click Start to begin real-time streaming</li>

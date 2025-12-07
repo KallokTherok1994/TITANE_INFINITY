@@ -67,7 +67,7 @@ export interface UseVADReturn {
 const DEFAULT_CONFIG: VADConfig = {
   threshold: 0.02,
   minSpeechFrames: 10,
-  minSilenceFrames: 20
+  minSilenceFrames: 20,
 };
 
 // Anti-echo delay after TTS stops (ms)
@@ -107,7 +107,6 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
   const animationFrameRef = useRef<number | null>(null);
   const suspendedRef = useRef<boolean>(false);
   const bargeInEnabledRef = useRef<boolean>(false);
-  const resumeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize config on mount
   useEffect(() => {
@@ -138,42 +137,49 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * [P1.1] Émet événements vers audioStateMachine
    * [P1.2] Barge-in: continue detection even during TTS if enabled
    */
-  const processAudioData = useCallback(async (audioData: Float32Array) => {
-    // Skip processing if suspended (TTS playing - anti-echo)
-    // UNLESS barge-in is enabled - then we keep detecting to allow interruption
-    if (suspendedRef.current && !bargeInEnabledRef.current) {
-      return;
-    }
-
-    try {
-      const result = await audioService.processVADFrame(audioData);
-      const previousSpeaking = isSpeaking;
-      const newSpeaking = result.isSpeaking;
-
-      setVadState(result.state as VADState);
-      setIsSpeaking(newSpeaking);
-      setError(null);
-
-      // [P1.2] BARGE-IN: Si on détecte parole pendant que l'AI parle → BARGE_IN
-      if (newSpeaking && audioStateMachine.isAISpeaking() && bargeInEnabledRef.current) {
-        console.log('[useVAD] 🎤⚡ BARGE-IN detected! User interrupting AI');
-        audioStateMachine.transition('BARGE_IN');
-        // Le TTS sera arrêté par le listener de la state machine
+  const processAudioData = useCallback(
+    async (audioData: Float32Array) => {
+      // Skip processing if suspended (TTS playing - anti-echo)
+      // UNLESS barge-in is enabled - then we keep detecting to allow interruption
+      if (suspendedRef.current && !bargeInEnabledRef.current) {
         return;
       }
 
-      // [P1.1] Émettre événements state machine sur transitions normales
-      if (newSpeaking && !previousSpeaking) {
-        // Transition silence → parole
-        audioStateMachine.transition('VAD_SPEECH_START');
-      } else if (!newSpeaking && previousSpeaking) {
-        // Transition parole → silence
-        audioStateMachine.transition('VAD_SPEECH_END');
+      try {
+        const result = await audioService.processVADFrame(audioData);
+        const previousSpeaking = isSpeaking;
+        const newSpeaking = result.isSpeaking;
+
+        setVadState(result.state as VADState);
+        setIsSpeaking(newSpeaking);
+        setError(null);
+
+        // [P1.2] BARGE-IN: Si on détecte parole pendant que l'AI parle → BARGE_IN
+        if (
+          newSpeaking &&
+          audioStateMachine.isAISpeaking() &&
+          bargeInEnabledRef.current
+        ) {
+          console.log('[useVAD] 🎤⚡ BARGE-IN detected! User interrupting AI');
+          audioStateMachine.transition('BARGE_IN');
+          // Le TTS sera arrêté par le listener de la state machine
+          return;
+        }
+
+        // [P1.1] Émettre événements state machine sur transitions normales
+        if (newSpeaking && !previousSpeaking) {
+          // Transition silence → parole
+          audioStateMachine.transition('VAD_SPEECH_START');
+        } else if (!newSpeaking && previousSpeaking) {
+          // Transition parole → silence
+          audioStateMachine.transition('VAD_SPEECH_END');
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'VAD processing error');
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'VAD processing error');
-    }
-  }, [isSpeaking]);
+    },
+    [isSpeaking]
+  );
 
   /**
    * Process audio frame from Web Audio API
@@ -216,7 +222,10 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
 
       // In Tauri mode, test microphone first via backend (1000ms test rapide)
       if (env.isTauri) {
-        const testResult = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone', { durationMs: 1000 });
+        const testResult = await secureInvoke<{
+          success: boolean;
+          errorMessage?: string;
+        }>('test_microphone', { durationMs: 1000 });
         if (!testResult?.success) {
           setError(testResult?.errorMessage || 'Microphone non disponible');
           return;
@@ -233,8 +242,8 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
         audio: {
           echoCancellation: true,
           noiseSuppression: true,
-          sampleRate: 16000
-        }
+          sampleRate: 16000,
+        },
       });
       mediaStreamRef.current = stream;
 
@@ -262,7 +271,8 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
 
       console.log('[useVAD] Started listening');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to start listening';
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to start listening';
       setError(errorMessage);
       console.error('[useVAD] Start error:', err);
     }
@@ -344,9 +354,9 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
           silenceDetection: false,
           speechDetection: false,
           speechTransition: false,
-          silenceTransition: false
+          silenceTransition: false,
         },
-        message: errorMessage
+        message: errorMessage,
       };
     }
   }, []);
@@ -414,7 +424,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
     suspendForTTS,
     resumeAfterTTS,
     enableBargeIn,
-    disableBargeIn
+    disableBargeIn,
   };
 }
 
@@ -430,7 +440,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
  */
 export function useVADWithTTS(vad: UseVADReturn): void {
   useEffect(() => {
-    const unsubscribe = hybridTTS.onTTSEvent((event) => {
+    const unsubscribe = hybridTTS.onTTSEvent(event => {
       if (event === 'start') {
         console.log('[useVADWithTTS] 🔇 TTS started, suspending VAD');
         vad.suspendForTTS();

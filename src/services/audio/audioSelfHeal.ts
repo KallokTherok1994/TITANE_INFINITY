@@ -77,7 +77,7 @@ class AudioSelfHeal {
     try {
       // 1. Check if backend is responsive
       try {
-        const isRecording = await secureInvoke<boolean>('is_recording', {});
+        const _isRecording = await secureInvoke<boolean>('is_recording', {});
         this.healthStatus.backendUnresponsive = false;
       } catch (error) {
         this.healthStatus.backendUnresponsive = true;
@@ -97,7 +97,9 @@ class AudioSelfHeal {
       const stateMachineStatus = this.checkStateMachineHealth();
       if (stateMachineStatus.isStuck) {
         this.healthStatus.stateMachineStuck = true;
-        issues.push(`State machine stuck in ${stateMachineStatus.state} for ${stateMachineStatus.duration}ms`);
+        issues.push(
+          `State machine stuck in ${stateMachineStatus.state} for ${stateMachineStatus.duration}ms`
+        );
       } else {
         this.healthStatus.stateMachineStuck = false;
       }
@@ -108,11 +110,13 @@ class AudioSelfHeal {
       this.healthStatus.lastCheck = now;
 
       // 5. Auto-heal if issues detected
-      if (!this.healthStatus.isHealthy && this.healthStatus.healAttempts < this.MAX_HEAL_ATTEMPTS) {
+      if (
+        !this.healthStatus.isHealthy &&
+        this.healthStatus.healAttempts < this.MAX_HEAL_ATTEMPTS
+      ) {
         console.warn('[AudioSelfHeal] 🚨 Issues detected:', issues);
         await this.performAutoHeal();
       }
-
     } catch (error) {
       console.error('[AudioSelfHeal] Health check error:', error);
     }
@@ -142,7 +146,11 @@ class AudioSelfHeal {
   /**
    * Check state machine health
    */
-  private checkStateMachineHealth(): { isStuck: boolean; state?: string; duration?: number } {
+  private checkStateMachineHealth(): {
+    isStuck: boolean;
+    state?: string;
+    duration?: number;
+  } {
     const history = audioStateMachine.getHistory();
     if (history.length === 0) {
       return { isStuck: false };
@@ -199,7 +207,10 @@ class AudioSelfHeal {
         }
       }
 
-      console.log('[AudioSelfHeal] ✅ Auto-heal completed, attempt', this.healthStatus.healAttempts);
+      console.log(
+        '[AudioSelfHeal] ✅ Auto-heal completed, attempt',
+        this.healthStatus.healAttempts
+      );
 
       // Reset heal attempts after successful recovery
       setTimeout(() => {
@@ -207,7 +218,6 @@ class AudioSelfHeal {
           this.healthStatus.healAttempts = 0;
         }
       }, 10000);
-
     } catch (error) {
       console.error('[AudioSelfHeal] Auto-heal error:', error);
     }

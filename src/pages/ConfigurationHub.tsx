@@ -53,6 +53,12 @@ export const ConfigurationHub: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
+  // Presets state
+  const [presets, setPresets] = useState<Array<{ name: string; description: string }>>(
+    []
+  );
+  const [_showPresetDialog, _setShowPresetDialog] = useState(false);
+
   const loadConfig = async () => {
     setLoading(true);
     setError(null);
@@ -89,26 +95,32 @@ export const ConfigurationHub: React.FC = () => {
     setEditMode(!editMode);
   };
 
-  const handleRuntimeFieldChange = (field: keyof RuntimeConfig, value: string | number | boolean) => {
-    setEditedRuntime((prev) => ({
+  const handleRuntimeFieldChange = (
+    field: keyof RuntimeConfig,
+    value: string | number | boolean
+  ) => {
+    setEditedRuntime(prev => ({
       ...prev,
       [field]: value,
     }));
     // Clear validation error for this field
-    setValidationErrors((prev) => {
+    setValidationErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[`runtime.${field}`];
       return newErrors;
     });
   };
 
-  const handleChatEngineFieldChange = (field: keyof ChatEngineConfig, value: string | number | boolean) => {
-    setEditedChatEngine((prev) => ({
+  const handleChatEngineFieldChange = (
+    field: keyof ChatEngineConfig,
+    value: string | number | boolean
+  ) => {
+    setEditedChatEngine(prev => ({
       ...prev,
       [field]: value,
     }));
     // Clear validation error for this field
-    setValidationErrors((prev) => {
+    setValidationErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[`chat_engine.${field}`];
       return newErrors;
@@ -215,9 +227,74 @@ export const ConfigurationHub: React.FC = () => {
     }
   };
 
+  // Load presets on mount
+  useEffect(() => {
+    loadPresets();
+  }, []);
+
+  const loadPresets = async () => {
+    try {
+      const presetsList =
+        await invoke<Array<{ name: string; description: string }>>('list_config_presets');
+      setPresets(presetsList);
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to load presets:', err);
+    }
+  };
+
+  const handleSavePreset = async () => {
+    const name = prompt('Nom du preset:');
+    if (!name) return;
+
+    const description = prompt('Description (optionnel):') || '';
+
+    try {
+      await invoke('save_config_preset', { name, description });
+      alert(`✅ Preset "${name}" sauvegardé!`);
+      await loadPresets();
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to save preset:', err);
+      alert(`❌ Échec de sauvegarde: ${err}`);
+    }
+  };
+
+  const handleLoadPreset = async (name: string) => {
+    if (
+      !confirm(`Charger le preset "${name}"?\nCela remplacera la configuration actuelle.`)
+    ) {
+      return;
+    }
+
+    try {
+      await invoke('load_config_preset', { name });
+      await loadConfig();
+      alert(`✅ Preset "${name}" chargé!`);
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to load preset:', err);
+      alert(`❌ Échec de chargement: ${err}`);
+    }
+  };
+
+  const _handleDeletePreset = async (name: string) => {
+    if (!confirm(`Supprimer le preset "${name}"?\nCette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      await invoke('delete_config_preset', { name });
+      alert(`✅ Preset "${name}" supprimé!`);
+      await loadPresets();
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to delete preset:', err);
+      alert(`❌ Échec de suppression: ${err}`);
+    }
+  };
+
   const tabStyle = (isActive: boolean) => ({
     padding: '0.75rem 1.5rem',
-    background: isActive ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'rgba(255,255,255,0.05)',
+    background: isActive
+      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      : 'rgba(255,255,255,0.05)',
     border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
     borderRadius: '8px',
     color: 'white',
@@ -236,7 +313,13 @@ export const ConfigurationHub: React.FC = () => {
             Configuration Hub
           </h1>
         </div>
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-secondary)' }}>
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '3rem',
+            color: 'var(--color-text-secondary)',
+          }}
+        >
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
           <div>Chargement de la configuration...</div>
         </div>
@@ -254,11 +337,25 @@ export const ConfigurationHub: React.FC = () => {
           </h1>
         </div>
         <div style={{ textAlign: 'center', padding: '3rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--color-error)' }}>❌</div>
+          <div
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--color-error)',
+            }}
+          >
+            ❌
+          </div>
           <div style={{ color: 'var(--color-error)', marginBottom: '1rem' }}>
             Erreur de chargement de la configuration
           </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
+          <div
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-text-secondary)',
+              marginBottom: '2rem',
+            }}
+          >
             {error}
           </div>
           <button
@@ -299,7 +396,8 @@ export const ConfigurationHub: React.FC = () => {
     temperature: editedChatEngine.temperature ?? config.chat_engine.temperature,
   };
 
-  const hasChanges = Object.keys(editedRuntime).length > 0 || Object.keys(editedChatEngine).length > 0;
+  const hasChanges =
+    Object.keys(editedRuntime).length > 0 || Object.keys(editedChatEngine).length > 0;
 
   return (
     <div className="module-page">
@@ -381,6 +479,48 @@ export const ConfigurationHub: React.FC = () => {
                 📥 Importer
               </button>
               <button
+                onClick={handleSavePreset}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(168, 85, 247, 0.15)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  borderRadius: '8px',
+                  color: '#a855f7',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                💾 Sauver Preset
+              </button>
+              {presets.length > 0 && (
+                <select
+                  onChange={e => {
+                    if (e.target.value) {
+                      handleLoadPreset(e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
+                  style={{
+                    padding: '0.75rem 1rem',
+                    background: 'rgba(168, 85, 247, 0.15)',
+                    border: '1px solid rgba(168, 85, 247, 0.3)',
+                    borderRadius: '8px',
+                    color: '#a855f7',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                  }}
+                >
+                  <option value="">📋 Charger Preset...</option>
+                  {presets.map(preset => (
+                    <option key={preset.name} value={preset.name}>
+                      {preset.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <button
                 onClick={handleEditToggle}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -421,9 +561,10 @@ export const ConfigurationHub: React.FC = () => {
                 disabled={saving || !hasChanges}
                 style={{
                   padding: '0.75rem 1.5rem',
-                  background: saving || !hasChanges
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  background:
+                    saving || !hasChanges
+                      ? 'rgba(255, 255, 255, 0.1)'
+                      : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
                   border: 'none',
                   borderRadius: '8px',
                   color: 'white',
@@ -455,19 +596,37 @@ export const ConfigurationHub: React.FC = () => {
         }}
       >
         <div>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>Version: </span>
-          <span style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>{config.version}</span>
+          <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
+            Version:{' '}
+          </span>
+          <span style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+            {config.version}
+          </span>
         </div>
-        <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.2)', paddingLeft: '1rem' }}>
+        <div
+          style={{
+            borderLeft: '1px solid rgba(255, 255, 255, 0.2)',
+            paddingLeft: '1rem',
+          }}
+        >
           <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
             Dernière actualisation:{' '}
           </span>
-          <span style={{ fontWeight: 600 }}>{lastRefresh.toLocaleTimeString('fr-FR')}</span>
+          <span style={{ fontWeight: 600 }}>
+            {lastRefresh.toLocaleTimeString('fr-FR')}
+          </span>
         </div>
         {hasChanges && (
-          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.2)', paddingLeft: '1rem' }}>
+          <div
+            style={{
+              borderLeft: '1px solid rgba(255, 255, 255, 0.2)',
+              paddingLeft: '1rem',
+            }}
+          >
             <span style={{ fontSize: '0.85rem', color: '#667eea' }}>
-              ✏️ {Object.keys(editedRuntime).length + Object.keys(editedChatEngine).length} modification(s)
+              ✏️{' '}
+              {Object.keys(editedRuntime).length + Object.keys(editedChatEngine).length}{' '}
+              modification(s)
             </span>
           </div>
         )}
@@ -475,13 +634,19 @@ export const ConfigurationHub: React.FC = () => {
 
       {/* Tabs Navigation */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-        <button style={tabStyle(activeTab === 'system')} onClick={() => setActiveTab('system')}>
+        <button
+          style={tabStyle(activeTab === 'system')}
+          onClick={() => setActiveTab('system')}
+        >
           💻 Système
         </button>
         <button style={tabStyle(activeTab === 'ai')} onClick={() => setActiveTab('ai')}>
           🤖 Intelligence Artificielle
         </button>
-        <button style={tabStyle(activeTab === 'performance')} onClick={() => setActiveTab('performance')}>
+        <button
+          style={tabStyle(activeTab === 'performance')}
+          onClick={() => setActiveTab('performance')}
+        >
           ⚡ Performance
         </button>
       </div>
@@ -503,7 +668,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🌐"
                 valueType="url"
                 editable={editMode}
-                onChange={(value) => handleRuntimeFieldChange('ollama_url', value)}
+                onChange={value => handleRuntimeFieldChange('ollama_url', value)}
                 validationError={validationErrors['runtime.ollama_url']}
               />
               <ConfigFieldEditable
@@ -512,7 +677,7 @@ export const ConfigurationHub: React.FC = () => {
                 description="Modèle LLM utilisé par défaut"
                 icon="🧠"
                 editable={editMode}
-                onChange={(value) => handleRuntimeFieldChange('ollama_model', value)}
+                onChange={value => handleRuntimeFieldChange('ollama_model', value)}
                 validationError={validationErrors['runtime.ollama_model']}
               />
               <ConfigFieldEditable
@@ -549,7 +714,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="⏱️"
                 valueType="duration"
                 editable={editMode}
-                onChange={(value) => handleChatEngineFieldChange('timeout_ms', value)}
+                onChange={value => handleChatEngineFieldChange('timeout_ms', value)}
                 validationError={validationErrors['chat_engine.timeout_ms']}
               />
               <ConfigFieldEditable
@@ -559,7 +724,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="📦"
                 valueType="number"
                 editable={editMode}
-                onChange={(value) => handleChatEngineFieldChange('chunk_size', value)}
+                onChange={value => handleChatEngineFieldChange('chunk_size', value)}
                 validationError={validationErrors['chat_engine.chunk_size']}
               />
               <ConfigFieldEditable
@@ -569,7 +734,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🎯"
                 valueType="number"
                 editable={editMode}
-                onChange={(value) => handleChatEngineFieldChange('max_tokens', value)}
+                onChange={value => handleChatEngineFieldChange('max_tokens', value)}
                 validationError={validationErrors['chat_engine.max_tokens']}
               />
               <ConfigFieldEditable
@@ -579,7 +744,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🌡️"
                 valueType="number"
                 editable={editMode}
-                onChange={(value) => handleChatEngineFieldChange('temperature', value)}
+                onChange={value => handleChatEngineFieldChange('temperature', value)}
                 validationError={validationErrors['chat_engine.temperature']}
               />
             </ConfigSection>

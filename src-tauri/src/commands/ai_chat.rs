@@ -15,6 +15,7 @@ use crate::security::secrets_engine::SecureSecretsEngine;
 use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
 use crate::tts::TTSRequest;
+use dashmap::DashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -32,20 +33,40 @@ macro_rules! lock_or_recover {
 
 
 // Global state for AI Chat system (v15)
-// v24.20: Optimized with RwLock for async operations
+// v19.5.2 P2-1: Optimized with DashMap for concurrent access (Phase 2)
+// DashMap provides lock-free concurrent HashMap (proven 5x improvement)
 pub struct AIChatState {
-    pub ai_router: Arc<RwLock<AIRouter>>,
+    /// AIRouter stored in DashMap for lock-free access
+    /// Key: "default" for main router
+    pub ai_router: Arc<DashMap<String, AIRouter>>,
+    /// MemoryStorage - keeping RwLock as single-writer pattern fits
     pub memory_storage: Arc<RwLock<MemoryStorage>>,
-    pub current_conversation: Arc<RwLock<Option<Conversation>>>,
-    pub online_tts: Arc<RwLock<OnlineTTS>>,
-    pub local_tts: Arc<RwLock<LocalTTS>>,
-    pub audio_recorder: Arc<RwLock<AudioRecorder>>,
-    pub asr_engine: Arc<RwLock<ASREngine>>,
-    pub vad: Arc<RwLock<VoiceActivityDetector>>,
+    /// Current conversation - DashMap for concurrent session management
+    /// Key: conversation_id or "current" for active session
+    pub conversations: Arc<DashMap<String, Conversation>>,
+    /// TTS engines in DashMap for concurrent voice operations
+    pub tts_engines: Arc<DashMap<String, TTSEngine>>,
+    /// Audio devices in DashMap for concurrent capture
+    pub audio_devices: Arc<DashMap<String, AudioDevice>>,
     /// v15 Unified Core Collection (Clean architecture)
     pub core_collection: Arc<CoreCollection>,
-    /// v24.20: RwLock for async-safe TTS state
-    pub is_speaking: Arc<RwLock<bool>>,
+    /// v19.5.2: DashMap for atomic state management
+    pub state_flags: Arc<DashMap<String, bool>>,
+}
+
+/// TTS engine enum for DashMap storage
+#[derive(Clone)]
+pub enum TTSEngine {
+    Online(OnlineTTS),
+    Local(LocalTTS),
+}
+
+/// Audio device enum for DashMap storage
+#[derive(Clone)]
+pub enum AudioDevice {
+    Recorder(AudioRecorder),
+    ASR(ASREngine),
+    VAD(VoiceActivityDetector),
 }
 
 impl AIChatState {
@@ -60,7 +81,9 @@ impl AIChatState {
             .or_else(|| std::env::var("GEMINI_API_KEY").ok());
         let ollama_model = std::env::var("OLLAMA_MODEL").ok();
 
-        let ai_router = Arc::new(RwLock::new(AIRouter::new(gemini_key.clone(), ollama_model)));
+        // v19.5.2 P2-1: DashMap for lock-free concurrent access
+        let ai_router = Arc::new(DashMap::new());
+        ai_router.insert("default".to_string(), AIRouter::new(gemini_key.clone(), ollama_model));
 
         // Memory storage location
         let storage_dir = dirs::data_local_dir()
@@ -73,29 +96,35 @@ impl AIChatState {
                 .expect("Failed to initialize memory storage"),
         ));
 
-        let online_tts = Arc::new(RwLock::new(OnlineTTS::new(gemini_key)));
-        let local_tts = Arc::new(RwLock::new(LocalTTS::new()));
-        let audio_recorder = Arc::new(RwLock::new(AudioRecorder::new(AudioConfig::default())));
-        let asr_engine = Arc::new(RwLock::new(ASREngine::auto()));
-        let vad = Arc::new(RwLock::new(VoiceActivityDetector::new()));
+        // v19.5.2: TTS engines in DashMap
+        let tts_engines = Arc::new(DashMap::new());
+        tts_engines.insert("online".to_string(), TTSEngine::Online(OnlineTTS::new(gemini_key)));
+        tts_engines.insert("local".to_string(), TTSEngine::Local(LocalTTS::new()));
+
+        // v19.5.2: Audio devices in DashMap
+        let audio_devices = Arc::new(DashMap::new());
+        audio_devices.insert("recorder".to_string(), AudioDevice::Recorder(AudioRecorder::new(AudioConfig::default())));
+        audio_devices.insert("asr".to_string(), AudioDevice::ASR(ASREngine::auto()));
+        audio_devices.insert("vad".to_string(), AudioDevice::VAD(VoiceActivityDetector::new()));
+
+        // v19.5.2: Conversations in DashMap (empty initially)
+        let conversations = Arc::new(DashMap::new());
 
         // v15 Unified Core Collection (Clean architecture)
         let core_collection = Arc::new(CoreCollection::default());
 
-        // v24.20: RwLock for async-safe TTS state
-        let is_speaking = Arc::new(RwLock::new(false));
+        // v19.5.2: State flags in DashMap
+        let state_flags = Arc::new(DashMap::new());
+        state_flags.insert("is_speaking".to_string(), false);
 
         Self {
             ai_router,
             memory_storage,
-            current_conversation: Arc::new(Mutex::new(None)),
-            online_tts,
-            local_tts,
-            audio_recorder,
-            asr_engine,
-            vad,
+            conversations,
+            tts_engines,
+            audio_devices,
             core_collection,
-            is_speaking,
+            state_flags,
         }
     }
 }
@@ -142,11 +171,12 @@ pub async fn ai_query(
     };
 
     // Query AI through router (cascade Gemini → Ollama → Local)
-    let router = state.ai_router.read().await;
-    let response = router
-        .query(request)
-        .await
-        .map_err(|e| e.to_string())?;;
+    // v19.5.2 P2-1: DashMap lock-free access (no .read().await needed!)
+    let response = {
+        let router_ref = state.ai_router.get("default")
+            .ok_or_else(|| "AI Router not initialized".to_string())?;
+        router_ref.query(request).await.map_err(|e| e.to_string())?
+    };
 
     log::info!("[AI Router v15] Response from {:?} ({} tokens)", response.provider, response.tokens);
 

@@ -24,8 +24,8 @@ import { contextualAttentionV2 } from './contextualAttentionV2';
  * Mode de détection du wake word
  */
 export type WakeWordMode =
-  | 'wake_only'   // "Titane ?" → réveil, attend la commande suivante
-  | 'one_shot';   // "Titane, ouvre X" → réveil + commande immédiate
+  | 'wake_only' // "Titane ?" → réveil, attend la commande suivante
+  | 'one_shot'; // "Titane, ouvre X" → réveil + commande immédiate
 
 /**
  * Événement de détection du wake word
@@ -33,10 +33,10 @@ export type WakeWordMode =
 export interface WakeWordEvent {
   detected: boolean;
   mode: WakeWordMode;
-  cleanedText: string;      // Texte sans le wake word
-  confidence: number;       // 0-1
-  matchedVariant: string;   // Variante détectée ("titane", "titan", etc.)
-  position: number;         // Position dans le texte (0 = début)
+  cleanedText: string; // Texte sans le wake word
+  confidence: number; // 0-1
+  matchedVariant: string; // Variante détectée ("titane", "titan", etc.)
+  position: number; // Position dans le texte (0 = début)
 }
 
 /**
@@ -91,14 +91,7 @@ export class WakeWordEngine {
   ];
 
   // Préfixes courants
-  private readonly prefixes = [
-    'hey',
-    'salut',
-    'ok',
-    'dis',
-    'écoute',
-    'alors',
-  ];
+  private readonly prefixes = ['hey', 'salut', 'ok', 'dis', 'écoute', 'alors'];
 
   constructor(config: WakeWordConfig = {}) {
     this.config = {
@@ -127,7 +120,9 @@ export class WakeWordEngine {
     console.log('[WakeWordEngine] 🧠 Enabling cognitive mode...');
 
     // Configure cognitive features (v2 engine auto-enabled)
-    console.log('[WakeWordEngine] Cognitive features: voice fingerprint, anti-echo, contextual adaptation');
+    console.log(
+      '[WakeWordEngine] Cognitive features: voice fingerprint, anti-echo, contextual adaptation'
+    );
 
     console.log('[WakeWordEngine] ✅ Cognitive mode enabled');
   }
@@ -215,7 +210,9 @@ export class WakeWordEngine {
     if (this.config.usePhoneticMatching) {
       const phoneticMatch = this.detectPhonetic(normalized);
       if (phoneticMatch) {
-        console.log(`[WakeWordEngine] ✅ Phonetic match: ${phoneticMatch.variant} (distance: ${phoneticMatch.distance})`);
+        console.log(
+          `[WakeWordEngine] ✅ Phonetic match: ${phoneticMatch.variant} (distance: ${phoneticMatch.distance})`
+        );
         return this.createEvent(text, normalized, phoneticMatch);
       }
     }
@@ -249,17 +246,19 @@ export class WakeWordEngine {
     return text
       .toLowerCase()
       .trim()
-      .replace(/[.,!?;:]/g, ' ')  // Ponctuation → espaces
-      .replace(/\s+/g, ' ')        // Multi-espaces → simple
-      .replace(/['']/g, ' ')       // Apostrophes
-      .normalize('NFD')            // Décomposer les accents
+      .replace(/[.,!?;:]/g, ' ') // Ponctuation → espaces
+      .replace(/\s+/g, ' ') // Multi-espaces → simple
+      .replace(/['']/g, ' ') // Apostrophes
+      .normalize('NFD') // Décomposer les accents
       .replace(/[\u0300-\u036f]/g, ''); // Supprimer diacritiques
   }
 
   /**
    * Détection exacte (avec préfixes)
    */
-  private detectExact(normalized: string): { variant: string; position: number; hasPrefix: boolean } | null {
+  private detectExact(
+    normalized: string
+  ): { variant: string; position: number; hasPrefix: boolean } | null {
     const allVariants = [...this.baseVariants, ...this.config.customVariants];
 
     // Test direct
@@ -289,7 +288,9 @@ export class WakeWordEngine {
   /**
    * Détection phonétique (Levenshtein)
    */
-  private detectPhonetic(normalized: string): { variant: string; distance: number; position: number } | null {
+  private detectPhonetic(
+    normalized: string
+  ): { variant: string; distance: number; position: number } | null {
     const words = normalized.split(/\s+/);
 
     // Chercher dans les 3 premiers mots
@@ -334,8 +335,8 @@ export class WakeWordEngine {
         } else {
           matrix[i][j] = Math.min(
             matrix[i - 1][j - 1] + 1, // substitution
-            matrix[i][j - 1] + 1,     // insertion
-            matrix[i - 1][j] + 1      // deletion
+            matrix[i][j - 1] + 1, // insertion
+            matrix[i - 1][j] + 1 // deletion
           );
         }
       }
@@ -388,7 +389,10 @@ export class WakeWordEngine {
   /**
    * Déterminer le mode (wake_only vs one_shot)
    */
-  private determineMode(normalized: string, match: { variant: string; position: number }): WakeWordMode {
+  private determineMode(
+    normalized: string,
+    match: { variant: string; position: number }
+  ): WakeWordMode {
     const afterWake = normalized.substring(match.position + match.variant.length).trim();
 
     // Si rien après le wake word → wake_only
@@ -408,7 +412,10 @@ export class WakeWordEngine {
   /**
    * Nettoyer le texte (enlever le wake word)
    */
-  private cleanText(originalText: string, match: { variant: string; position: number }): string {
+  private cleanText(
+    originalText: string,
+    match: { variant: string; position: number }
+  ): string {
     const normalized = this.normalizeText(originalText);
 
     // Trouver la position dans le texte original
@@ -416,11 +423,14 @@ export class WakeWordEngine {
     let endIdx = originalText.length;
 
     // Détection approximative de la position
-    const words = normalized.split(/\s+/);
+    const _words = normalized.split(/\s+/);
     const originalWords = originalText.trim().split(/\s+/);
 
     // Compter les mots avant le wake word
-    const wordsBefore = normalized.substring(0, match.position).split(/\s+/).filter(w => w).length;
+    const wordsBefore = normalized
+      .substring(0, match.position)
+      .split(/\s+/)
+      .filter(w => w).length;
 
     // Trouver l'index du wake word dans le texte original
     if (wordsBefore < originalWords.length) {
@@ -434,7 +444,7 @@ export class WakeWordEngine {
     }
 
     // Enlever le wake word + éventuel espace/ponctuation qui suit
-    let cleaned = (originalText.substring(0, startIdx) + originalText.substring(endIdx))
+    const cleaned = (originalText.substring(0, startIdx) + originalText.substring(endIdx))
       .trim()
       .replace(/^[,;:!?\s]+/, ''); // Supprimer ponctuation initiale
 
@@ -452,7 +462,7 @@ export class WakeWordEngine {
 
     // Pénalité pour distance phonétique
     if (match.distance !== undefined && match.distance > 0) {
-      confidence -= (match.distance / 5); // -20% par distance
+      confidence -= match.distance / 5; // -20% par distance
     }
 
     // Bonus pour préfixe
@@ -493,7 +503,10 @@ export class WakeWordEngine {
         enabled: false,
         voiceFingerprint: { ready: false, accuracy: 0, samples: 0 },
         antiEcho: { active: false, muted: false },
-        contextualAttention: { threshold: this.config.confidenceThreshold, activeRules: [] },
+        contextualAttention: {
+          threshold: this.config.confidenceThreshold,
+          activeRules: [],
+        },
       };
     }
 

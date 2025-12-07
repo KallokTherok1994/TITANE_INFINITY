@@ -116,14 +116,19 @@ class HybridTTSService {
 
       if (this.parlerTTSAvailable) {
         console.log('✅ TTS: Parler-TTS local available');
-        console.log(`   Device: ${health.device}${health.gpuName ? ` (${health.gpuName})` : ''}`);
+        console.log(
+          `   Device: ${health.device}${health.gpuName ? ` (${health.gpuName})` : ''}`
+        );
         console.log(`   Cache: ${health.cacheSizeMb.toFixed(1)} MB`);
       } else {
         console.warn('⚠️ TTS: Parler-TTS local unavailable or initializing');
       }
     } catch (error) {
       this.parlerTTSAvailable = false;
-      console.warn('⚠️ TTS: Parler-TTS connection failed, falling back to other providers', error);
+      console.warn(
+        '⚠️ TTS: Parler-TTS connection failed, falling back to other providers',
+        error
+      );
     }
 
     return this.parlerTTSAvailable;
@@ -154,7 +159,10 @@ class HybridTTSService {
       console.log('✅ TTS: Tauri backend available');
     } catch (error) {
       this.tauriAvailable = false;
-      console.warn('⚠️ TTS: Tauri backend unavailable, using Web Speech API fallback', error);
+      console.warn(
+        '⚠️ TTS: Tauri backend unavailable, using Web Speech API fallback',
+        error
+      );
     }
 
     return this.tauriAvailable;
@@ -187,7 +195,9 @@ class HybridTTSService {
       // Synthétiser
       const result = await parlerTTSBridge.synthesize(text, parlerConfig);
 
-      console.log(`✅ TTS (Parler-TTS): Generated ${result.durationSeconds.toFixed(2)}s audio`);
+      console.log(
+        `✅ TTS (Parler-TTS): Generated ${result.durationSeconds.toFixed(2)}s audio`
+      );
       console.log(`   Generation time: ${result.generationTimeMs}ms`);
       console.log(`   Cached: ${result.cached}`);
       console.log(`   Device: ${result.device}`);
@@ -197,8 +207,8 @@ class HybridTTSService {
       const audioContext = new AudioContext();
       const arrayBuffer = await result.audioBlob.arrayBuffer();
       const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-      const audioData = audioBuffer.getChannelData(0); // Mono channel
-      const sampleRate = audioBuffer.sampleRate;
+      const _audioData = audioBuffer.getChannelData(0); // Mono channel
+      const _sampleRate = audioBuffer.sampleRate;
 
       const ttsId = antiEchoShield.startTTS(text, result.durationSeconds * 1000);
 
@@ -222,11 +232,19 @@ class HybridTTSService {
   /**
    * Synthétise texte via Tauri Backend
    */
-  private async speakTauri(text: string, config: TTSConfig = {}, useOnline: boolean = false): Promise<void> {
+  private async speakTauri(
+    text: string,
+    config: TTSConfig = {},
+    useOnline: boolean = false
+  ): Promise<void> {
     try {
       console.log('🎤 TTS (Tauri): Synthesizing...');
-      console.log(`📡 Mode: ${useOnline ? 'Online (Google TTS)' : 'Local (espeak/piper)'}`);
-      console.log(`⚙️  Config: rate=${config.rate || 1.0}, pitch=${config.pitch || 1.0}, voice=${config.voice || 'default'}`);
+      console.log(
+        `📡 Mode: ${useOnline ? 'Online (Google TTS)' : 'Local (espeak/piper)'}`
+      );
+      console.log(
+        `⚙️  Config: rate=${config.rate || 1.0}, pitch=${config.pitch || 1.0}, voice=${config.voice || 'default'}`
+      );
       this.speaking = true;
 
       const mode: ChatEngineSpeechMode = useOnline ? 'online' : 'auto';
@@ -286,7 +304,7 @@ class HybridTTSService {
       if (config.voice) {
         const voices = window.speechSynthesis.getVoices();
         const selectedVoice = voices.find(
-          (v) => v.name === config.voice || v.lang === config.lang
+          v => v.name === config.voice || v.lang === config.lang
         );
         if (selectedVoice) {
           utterance.voice = selectedVoice;
@@ -307,7 +325,7 @@ class HybridTTSService {
         resolve();
       };
 
-      utterance.onerror = (event) => {
+      utterance.onerror = event => {
         console.error('❌ TTS (Web Speech API): Error:', event.error);
         this.speaking = false;
         this.currentUtterance = null;
@@ -326,7 +344,11 @@ class HybridTTSService {
    * [P0.4 ANTI-ECHO] Émet events start/end/error pour synchronisation VAD
    * [v24.1] Priorité: Parler-TTS → Tauri → Web Speech API
    */
-  async speak(text: string, config: TTSConfig = {}, useOnline: boolean = false): Promise<void> {
+  async speak(
+    text: string,
+    config: TTSConfig = {},
+    useOnline: boolean = false
+  ): Promise<void> {
     if (!text.trim()) {
       console.warn('⚠️ TTS: Empty text, skipping');
       return;
@@ -471,7 +493,9 @@ class HybridTTSService {
         this.queue.push(item);
       }
 
-      console.log(`[HybridTTS] 📥 Queued: "${text.substring(0, 30)}..." (queue size: ${this.queue.length})`);
+      console.log(
+        `[HybridTTS] 📥 Queued: "${text.substring(0, 30)}..." (queue size: ${this.queue.length})`
+      );
 
       // Démarrer le traitement si pas en cours
       if (!this.isProcessingQueue) {
@@ -491,7 +515,8 @@ class HybridTTSService {
     this.isProcessingQueue = true;
 
     while (this.queue.length > 0) {
-      const item = this.queue.shift()!;
+      const item = this.queue.shift();
+      if (!item) break;
       this.currentItemId = item.id;
 
       try {
@@ -579,7 +604,7 @@ class HybridTTSService {
     // Web Speech API (plus fiable que backend Tauri pour liste voix)
     if (this.checkWebSpeechAvailable()) {
       const voices = window.speechSynthesis.getVoices();
-      return voices.map((v) => ({
+      return voices.map(v => ({
         name: v.name,
         lang: v.lang,
       }));
@@ -600,7 +625,10 @@ class HybridTTSService {
    * [v24.1] Modifier style vocal Parler-TTS via TITANE IA
    * Permet au chat IA de corriger/améliorer/optimiser la voix
    */
-  async updateVoiceStyle(newStyleDescription: string, saveAsDefault: boolean = true): Promise<void> {
+  async updateVoiceStyle(
+    newStyleDescription: string,
+    saveAsDefault: boolean = true
+  ): Promise<void> {
     console.log('[HybridTTS] 🎨 Updating voice style...');
     console.log(`   New style: ${newStyleDescription.substring(0, 60)}...`);
     console.log(`   Save as default: ${saveAsDefault}`);

@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { type AttentionState } from './attentionTypes';
+import { type AttentionState as _AttentionState } from './attentionTypes';
 
 /**
  * Contexte environnemental
@@ -112,7 +112,6 @@ export interface ContextRule {
  * ═══════════════════════════════════════════════════════════════════
  */
 class ContextualAttentionEngineV2 {
-
   private currentContext: ContextProfile;
   private rules: ContextRule[] = [];
   private baseConfig: AdaptiveConfig;
@@ -268,7 +267,9 @@ class ContextualAttentionEngineV2 {
 
     // Variance des énergies par bande
     const mean = bandEnergies.reduce((a, b) => a + b, 0) / bandEnergies.length;
-    const variance = bandEnergies.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / bandEnergies.length;
+    const variance =
+      bandEnergies.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) /
+      bandEnergies.length;
 
     return Math.min(1, variance * 10); // Normalize
   }
@@ -280,16 +281,15 @@ class ContextualAttentionEngineV2 {
    */
   private initializeRules(): void {
     this.rules = [
-
       // Règle 1: Environnement bruyant
       {
         id: 'noisy_environment',
         priority: 10,
-        condition: (profile) => profile.environment.ambientNoiseLevel > 0.5,
+        condition: profile => profile.environment.ambientNoiseLevel > 0.5,
         config: {
-          wakeThreshold: 0.7,          // Plus strict
+          wakeThreshold: 0.7, // Plus strict
           attentionThreshold: 0.75,
-          minActivationDuration: 500,  // Plus long
+          minActivationDuration: 500, // Plus long
           reason: 'noisy_environment',
         },
       },
@@ -298,11 +298,11 @@ class ContextualAttentionEngineV2 {
       {
         id: 'far_microphone',
         priority: 9,
-        condition: (profile) => profile.environment.microphoneDistance === 'far',
+        condition: profile => profile.environment.microphoneDistance === 'far',
         config: {
-          wakeThreshold: 0.4,          // Plus permissif
+          wakeThreshold: 0.4, // Plus permissif
           attentionThreshold: 0.5,
-          listeningWindow: 7000,       // Plus long
+          listeningWindow: 7000, // Plus long
           reason: 'far_microphone',
         },
       },
@@ -311,10 +311,10 @@ class ContextualAttentionEngineV2 {
       {
         id: 'near_microphone',
         priority: 8,
-        condition: (profile) => profile.environment.microphoneDistance === 'near',
+        condition: profile => profile.environment.microphoneDistance === 'near',
         config: {
           wakeThreshold: 0.6,
-          minActivationDuration: 200,  // Plus court
+          minActivationDuration: 200, // Plus court
           reason: 'near_microphone',
         },
       },
@@ -323,9 +323,9 @@ class ContextualAttentionEngineV2 {
       {
         id: 'multiple_voices',
         priority: 11,
-        condition: (profile) => profile.environment.multipleVoices,
+        condition: profile => profile.environment.multipleVoices,
         config: {
-          wakeThreshold: 0.8,          // Très strict
+          wakeThreshold: 0.8, // Très strict
           attentionThreshold: 0.85,
           reason: 'multiple_voices',
         },
@@ -335,10 +335,10 @@ class ContextualAttentionEngineV2 {
       {
         id: 'critical_task',
         priority: 12,
-        condition: (profile) => profile.application.criticalTask,
+        condition: profile => profile.application.criticalTask,
         config: {
-          wakeThreshold: 0.9,          // Quasi-désactivé
-          bargeInPriority: 0.2,        // Peu prioritaire
+          wakeThreshold: 0.9, // Quasi-désactivé
+          bargeInPriority: 0.2, // Peu prioritaire
           reason: 'critical_task',
         },
       },
@@ -347,7 +347,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'focus_mode',
         priority: 11,
-        condition: (profile) => profile.application.mode === 'focus',
+        condition: profile => profile.application.mode === 'focus',
         config: {
           wakeThreshold: 0.75,
           bargeInPriority: 0.3,
@@ -359,9 +359,9 @@ class ContextualAttentionEngineV2 {
       {
         id: 'background_mode',
         priority: 7,
-        condition: (profile) => profile.application.mode === 'background',
+        condition: profile => profile.application.mode === 'background',
         config: {
-          wakeThreshold: 0.3,          // Très permissif
+          wakeThreshold: 0.3, // Très permissif
           reason: 'background_mode',
         },
       },
@@ -370,7 +370,7 @@ class ContextualAttentionEngineV2 {
       {
         id: 'night_time',
         priority: 9,
-        condition: (profile) => profile.application.timeOfDay === 'night',
+        condition: profile => profile.application.timeOfDay === 'night',
         config: {
           wakeThreshold: 0.65,
           attentionThreshold: 0.7,
@@ -382,13 +382,13 @@ class ContextualAttentionEngineV2 {
       {
         id: 'high_false_positives',
         priority: 13,
-        condition: (profile) => {
+        condition: profile => {
           const recent = profile.recentActivations.slice(-10);
           const falsePositives = recent.filter(a => a.falsePositive).length;
           return falsePositives > 3;
         },
         config: {
-          wakeThreshold: 0.8,          // Augmenter seuil
+          wakeThreshold: 0.8, // Augmenter seuil
           reason: 'high_false_positives',
         },
       },
@@ -397,14 +397,13 @@ class ContextualAttentionEngineV2 {
       {
         id: 'low_signal_quality',
         priority: 10,
-        condition: (profile) => profile.environment.signalQuality < 0.5,
+        condition: profile => profile.environment.signalQuality < 0.5,
         config: {
           wakeThreshold: 0.7,
           attentionThreshold: 0.75,
           reason: 'low_signal_quality',
         },
       },
-
     ];
 
     console.log(`[ContextualAttention] 📋 Loaded ${this.rules.length} rules`);
@@ -435,7 +434,9 @@ class ContextualAttentionEngineV2 {
 
     this.adaptedConfig = config;
 
-    console.log(`[ContextualAttention] ✅ Config: threshold=${config.wakeThreshold.toFixed(2)}, reason="${config.reason}"`);
+    console.log(
+      `[ContextualAttention] ✅ Config: threshold=${config.wakeThreshold.toFixed(2)}, reason="${config.reason}"`
+    );
   }
 
   // ═══ PUBLIC API ═══
@@ -525,12 +526,10 @@ class ContextualAttentionEngineV2 {
    */
   getStatistics(): Record<string, unknown> {
     const recent = this.currentContext.recentActivations;
-    const successRate = recent.length > 0
-      ? recent.filter(a => a.success).length / recent.length
-      : 0;
-    const falsePositiveRate = recent.length > 0
-      ? recent.filter(a => a.falsePositive).length / recent.length
-      : 0;
+    const successRate =
+      recent.length > 0 ? recent.filter(a => a.success).length / recent.length : 0;
+    const falsePositiveRate =
+      recent.length > 0 ? recent.filter(a => a.falsePositive).length / recent.length : 0;
 
     return {
       context: {

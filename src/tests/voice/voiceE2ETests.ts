@@ -76,7 +76,7 @@ class MockVoiceBackend {
     return this.config.sttResult || 'Mock transcript';
   }
 
-  async speak(text: string): Promise<void> {
+  async speak(_text: string): Promise<void> {
     if (this.speaking) {
       throw new Error('Already speaking');
     }
@@ -103,7 +103,9 @@ class MockVoiceBackend {
     };
   }
 
-  async processVADFrame(_audioData: Float32Array): Promise<{ state: string; isSpeaking: boolean }> {
+  async processVADFrame(
+    _audioData: Float32Array
+  ): Promise<{ state: string; isSpeaking: boolean }> {
     return this.getVADState();
   }
 
@@ -143,28 +145,34 @@ describe('Voice E2E Tests — Phase 8', () => {
     mockBackend = new MockVoiceBackend();
 
     // Mock secureInvoke to route to mockBackend
-    (secureInvoke as ReturnType<typeof vi.fn>).mockImplementation(async (command: string, args?: unknown) => {
-      switch (command) {
-        case 'start_recording':
-          return mockBackend.startRecording();
-        case 'stop_recording':
-          return mockBackend.stopRecording();
-        case 'tts_speak':
-          return mockBackend.speak((args as { text: string }).text);
-        case 'tts_stop':
-          return mockBackend.stopSpeaking();
-        case 'vad_get_state':
-          return mockBackend.getVADState();
-        case 'vad_process_frame':
-          return mockBackend.processVADFrame((args as { audioData: Float32Array }).audioData);
-        case 'vad_configure':
-          return mockBackend.configureVAD((args as { config: { threshold?: number } }).config);
-        case 'vad_reset':
-          return mockBackend.resetVAD();
-        default:
-          throw new Error(`Unknown command: ${command}`);
+    (secureInvoke as ReturnType<typeof vi.fn>).mockImplementation(
+      async (command: string, args?: unknown) => {
+        switch (command) {
+          case 'start_recording':
+            return mockBackend.startRecording();
+          case 'stop_recording':
+            return mockBackend.stopRecording();
+          case 'tts_speak':
+            return mockBackend.speak((args as { text: string }).text);
+          case 'tts_stop':
+            return mockBackend.stopSpeaking();
+          case 'vad_get_state':
+            return mockBackend.getVADState();
+          case 'vad_process_frame':
+            return mockBackend.processVADFrame(
+              (args as { audioData: Float32Array }).audioData
+            );
+          case 'vad_configure':
+            return mockBackend.configureVAD(
+              (args as { config: { threshold?: number } }).config
+            );
+          case 'vad_reset':
+            return mockBackend.resetVAD();
+          default:
+            throw new Error(`Unknown command: ${command}`);
+        }
       }
-    });
+    );
 
     // Reset engines
     audioStateMachine.reset();
@@ -198,7 +206,9 @@ describe('Voice E2E Tests — Phase 8', () => {
     await secureInvoke('start_recording');
     expect(mockBackend.isRecording()).toBe(true);
 
-    await expect(secureInvoke('start_recording')).rejects.toThrow('Recording already in progress');
+    await expect(secureInvoke('start_recording')).rejects.toThrow(
+      'Recording already in progress'
+    );
   });
 
   /**
@@ -210,7 +220,9 @@ describe('Voice E2E Tests — Phase 8', () => {
     mockBackend.setConfig({ sttError: true });
 
     await secureInvoke('start_recording');
-    await expect(secureInvoke('stop_recording')).rejects.toThrow('STT transcription failed');
+    await expect(secureInvoke('stop_recording')).rejects.toThrow(
+      'STT transcription failed'
+    );
     expect(mockBackend.isRecording()).toBe(false);
   });
 
@@ -248,7 +260,9 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should handle TTS playback errors', async () => {
     mockBackend.setConfig({ ttsError: true });
-    await expect(secureInvoke('tts_speak', { text: 'Error test' })).rejects.toThrow('TTS playback failed');
+    await expect(secureInvoke('tts_speak', { text: 'Error test' })).rejects.toThrow(
+      'TTS playback failed'
+    );
   });
 
   /**
@@ -279,7 +293,7 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should configure VAD parameters', async () => {
     const result = await secureInvoke('vad_configure', {
-      config: { threshold: 0.03 }
+      config: { threshold: 0.03 },
     });
     expect(result).toBe('VAD configured');
   });
@@ -379,7 +393,9 @@ describe('Voice E2E Tests — Phase 8', () => {
     await secureInvoke('start_recording');
 
     // Try to start another session
-    await expect(secureInvoke('start_recording')).rejects.toThrow('Recording already in progress');
+    await expect(secureInvoke('start_recording')).rejects.toThrow(
+      'Recording already in progress'
+    );
 
     // Cleanup
     await secureInvoke('stop_recording');
@@ -396,7 +412,9 @@ describe('Voice E2E Tests — Phase 8', () => {
 
     // Simulate STT error
     mockBackend.setConfig({ sttError: true });
-    await expect(secureInvoke('stop_recording')).rejects.toThrow('STT transcription failed');
+    await expect(secureInvoke('stop_recording')).rejects.toThrow(
+      'STT transcription failed'
+    );
     expect(mockBackend.isRecording()).toBe(false);
 
     // Reset error

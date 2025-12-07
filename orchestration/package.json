@@ -1,0 +1,19 @@
+{
+  "name": "titane-orchestration",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Scripts orchestration TITANE_INFINITY",
+  "scripts": {
+    "next": "ts-node scripts/generate-next-prompt.ts",
+    "update": "ts-node scripts/update-state.ts",
+    "status": "ts-node scripts/batch-progress.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "chalk": "^4.1.2",
+    "clipboardy": "^3.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.0",
+    "yaml": "^2.3.4"
+  }
+}
