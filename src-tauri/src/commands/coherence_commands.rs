@@ -4,8 +4,8 @@
 //   Fusion: Nexus + ConsistencyEngine
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::ai_chat::AIChatState;
-use crate::core::modules::coherence::{CoherenceReport, ConnectionReport};
+use titane_infinity::ai_chat::AIChatState;
+use titane_infinity::core::modules::coherence::{CoherenceReport, ConnectionReport};
 use serde::{Deserialize, Serialize};
 use tauri::State;
 

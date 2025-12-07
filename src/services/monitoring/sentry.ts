@@ -75,14 +75,8 @@ export function initSentry(): void {
     integrations: [
       // Tracing automatique des performances
       Sentry.browserTracingIntegration({
-        // Tracer les navigations React Router
-        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-          React.useEffect,
-          useLocation,
-          useNavigationType,
-          createRoutesFromChildren,
-          matchRoutes
-        ),
+        // Tracer les navigations automatiquement via l'API Navigation
+        enableInp: true, // Activer Interaction to Next Paint
       }),
 
       // Session Replay pour voir les replays vidéo
@@ -323,12 +317,13 @@ export function setContext(name: string, context: Record<string, unknown>): void
 export function startTransaction(
   name: string,
   op: string
-): Sentry.Transaction | undefined {
+): Sentry.Span | undefined {
   if (!getSentryConfig().enabled) {
     return undefined;
   }
 
-  return Sentry.startTransaction({
+  // Utiliser startSpan au lieu de startTransaction (API moderne)
+  return Sentry.startInactiveSpan({
     name,
     op,
   });

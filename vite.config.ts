@@ -102,6 +102,29 @@ export default defineConfig({
             return 'vendor-tauri';
           }
 
+          // Sentry & Monitoring (Phase 1)
+          if (id.includes('node_modules/@sentry/') || id.includes('node_modules/web-vitals')) {
+            return 'vendor-monitoring';
+          }
+
+          // UI Libraries (Heavy)
+          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
+            return 'vendor-charts';
+          }
+          if (id.includes('node_modules/@radix-ui/') || id.includes('node_modules/class-variance-authority')) {
+            return 'vendor-ui-primitives';
+          }
+
+          // State Management
+          if (id.includes('node_modules/zustand') || id.includes('node_modules/immer')) {
+            return 'vendor-state';
+          }
+
+          // AI/ML Libraries (Heavy)
+          if (id.includes('node_modules/onnxruntime-') || id.includes('node_modules/@tensorflow/') || id.includes('node_modules/@huggingface/')) {
+            return 'vendor-ai-ml';
+          }
+
           // Core IA agents (Heavy computational logic)
           if (id.includes('src/core/ai/agents/')) {
             return 'agents-core';
@@ -129,7 +152,7 @@ export default defineConfig({
             return 'ui-components';
           }
 
-          // Other node_modules
+          // Other node_modules (remaining small libs)
           if (id.includes('node_modules')) {
             return 'vendor-misc';
           }
