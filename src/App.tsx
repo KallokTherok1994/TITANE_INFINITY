@@ -71,6 +71,7 @@ const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Ch
 import { CognitivePage } from './pages/CognitivePage';
 import { ProgressionPage } from './pages/ProgressionPage';
 import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
+import { ConfigurationHub } from './pages/ConfigurationHub'; // 🎯 v19.5.2 - Configuration Management (Phase 2)
 // Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
@@ -433,6 +434,7 @@ const AppRouter: React.FC = () => {
     // ═══ CENTRES UNIFIÉS ═══
     { id: '/one-core', label: 'ONE CORE', icon: '🎯', badge: 'OPUS#6' },
     { id: '/system-center', label: 'Centre Système', icon: '⚙️' },
+    { id: '/configuration', label: 'Configuration Hub', icon: '🎛️', badge: 'v19.5.2' },
     { id: '/audio-center', label: 'Audio & Voix', icon: '🔊', badge: 'v19.3' },
     { id: '/design-center', label: 'Design & Apparence', icon: '🎨' },
     { id: '/governance-center', label: 'Gouvernance', icon: '🛡️' },
@@ -570,6 +572,7 @@ const AppRouter: React.FC = () => {
           } />
           <Route path="/progression" element={<ProgressionPage />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+          <Route path="/configuration" element={<ConfigurationHub />} /> {/* 🎯 v19.5.2 - Configuration Hub (Phase 2) */}
 
           {/* ✨ v24.2 TEMPORAL FLOW & AGENDA CENTER - Fusion Agenda + Navigation Temporelle */}
           <Route path="/temporal-center" element={

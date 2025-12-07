@@ -17,6 +17,7 @@
 // Required for both app_data_dir access and DevTools auto-open
 use tauri::Manager;
 use std::sync::{Arc, RwLock};
+use tokio::sync::RwLock as TokioRwLock;
 
 // TITANE∞ command modules
 use titane_infinity::{
@@ -90,11 +91,17 @@ mod ollama;
 // Onboarding System v19.5.2 (Phase 1 - Quick Wins)
 mod onboarding;
 
+// Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
+mod config;
+
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
 };
 use tokio::sync::Mutex;
+
+// Core Singularity State (for CoherenceEngine v20.0)
+use titane_infinity::core::state::SingularityState;
 
 // QA System v19.8
 use titane_infinity::qa::qa_commands::QaState;
@@ -287,6 +294,13 @@ async fn main() {
     log::info!("🧪 Initializing QA System v19.8...");
     let qa_state = QaState::new();
     log::info!("✅ QA System v19.8: Automated testing engine active");
+
+    // ═══════════════════════════════════════════════════════════════
+    // INITIALIZE COHERENCE ENGINE STATE v20.0 (Phase 2 Fusion #1)
+    // ═══════════════════════════════════════════════════════════════
+    log::info!("🔗 Initializing CoherenceEngine v20.0 (Fusion: Nexus + Consistency)...");
+    let coherence_state = Arc::new(TokioRwLock::new(SingularityState::default()));
+    log::info!("✅ CoherenceEngine v20.0: Unified coordination + coherence checking active");
 
     // ═══════════════════════════════════════════════════════════════
     // INITIALIZE SINGULARITY STATE v∞ (v20)
@@ -523,6 +537,7 @@ async fn main() {
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .manage(cognitive_state)
+        .manage(coherence_state) // ✅ v20.0 Phase 2 Fusion #1: CoherenceEngine
         .manage(qa_state)
         .manage(singularity_state)
         .manage(adaptive_engine)
@@ -1719,12 +1734,24 @@ async fn main() {
         ia_context_commands::clear_ia_request_history,
         ia_context_commands::reset_ia_engine_metrics,
         // ═══════════════════════════════════════════════════════════════
+        // COHERENCE ENGINE v20.0 (Phase 2 Fusion #1: Nexus + Consistency)
+        // ═══════════════════════════════════════════════════════════════
+        coherence_commands::coherence_get_state,
+        coherence_commands::coherence_check_system,
+        coherence_commands::coherence_validate_connections,
+        coherence_commands::coherence_get_score,
+        coherence_commands::coherence_initialize,
+        // ═══════════════════════════════════════════════════════════════
         // USER ONBOARDING SYSTEM v19.5.2 (Phase 1 - Quick Wins)
         // ═══════════════════════════════════════════════════════════════
         onboarding::is_onboarding_complete,
         onboarding::complete_onboarding,
         onboarding::get_onboarding_preferences,
         onboarding::reset_onboarding,
+        // ═══════════════════════════════════════════════════════════════
+        // CONFIGURATION MANAGEMENT v19.5.2 (Phase 2 - Configuration Hub)
+        // ═══════════════════════════════════════════════════════════════
+        config::get_all_configs,
     ]);
 
     builder
