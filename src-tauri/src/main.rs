@@ -48,6 +48,11 @@ mod unified_memory_commands {
     include!("commands/unified_memory_commands.rs");
 }
 
+// System Health commands v20.0 (Phase 2 Fusion #3)
+mod system_health_commands {
+    include!("commands/system_health_commands.rs");
+}
+
 // DevOps commands (module local)
 mod devops_commands {
     include!("commands/devops.rs");
@@ -1756,6 +1761,15 @@ async fn main() {
         unified_memory_commands::memory_initialize,
         unified_memory_commands::memory_tick,
         // ═══════════════════════════════════════════════════════════════
+        // SYSTEM HEALTH v20.0 (Phase 2 Fusion #3: Helios + Sentinel + Self-Heal)
+        // ═══════════════════════════════════════════════════════════════
+        system_health_commands::health_get_state,
+        system_health_commands::health_get_report,
+        system_health_commands::health_check_system,
+        system_health_commands::health_initialize,
+        system_health_commands::health_set_auto_heal,
+        system_health_commands::health_get_metrics,
+        // ═══════════════════════════════════════════════════════════════
         // USER ONBOARDING SYSTEM v19.5.2 (Phase 1 - Quick Wins)
         // ═══════════════════════════════════════════════════════════════
         onboarding::is_onboarding_complete,
@@ -1771,6 +1785,10 @@ async fn main() {
         config::io::export_config,
         config::io::import_config,
         config::io::list_config_exports,
+        config::presets::save_config_preset,
+        config::presets::load_config_preset,
+        config::presets::list_config_presets,
+        config::presets::delete_config_preset,
     ]);
 
     builder

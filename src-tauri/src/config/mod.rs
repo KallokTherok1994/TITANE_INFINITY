@@ -10,6 +10,7 @@
 
 pub mod update;
 pub mod io;
+pub mod presets;
 
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
