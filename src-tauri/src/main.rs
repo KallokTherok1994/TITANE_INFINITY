@@ -37,6 +37,11 @@ use titane_infinity::singularity::ia_context::IAContext;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
 
+// Coherence Engine commands v20.0 (Phase 2 Fusion #1)
+mod coherence_commands {
+    include!("commands/coherence_commands.rs");
+}
+
 // DevOps commands (module local)
 mod devops_commands {
     include!("commands/devops.rs");
@@ -863,6 +868,16 @@ async fn main() {
         titane_infinity::profiling::ipc_profiler::get_ipc_metrics,
         titane_infinity::profiling::ipc_profiler::get_ipc_summary,
         titane_infinity::profiling::ipc_profiler::reset_ipc_metrics,
+
+        // ═══════════════════════════════════════════════════════════════
+        // COHERENCE ENGINE COMMANDS v20.0 - Unified Coordination (Fusion #1)
+        // Phase 2 Fusion: Nexus + ConsistencyEngine → CoherenceEngine
+        // ═══════════════════════════════════════════════════════════════
+        coherence_commands::coherence_get_state,
+        coherence_commands::coherence_check_system,
+        coherence_commands::coherence_validate_connections,
+        coherence_commands::coherence_get_score,
+        coherence_commands::coherence_initialize,
 
         // ═══════════════════════════════════════════════════════════════
         // AUDIO CENTER COMMANDS v19.2 - TTS, Devices, Tests
