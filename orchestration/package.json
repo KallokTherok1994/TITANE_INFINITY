@@ -1,0 +1,35 @@
+{
+  "name": "titane-orchestration",
+  "version": "19.4.3",
+  "description": "TITANE_INFINITY Copilot Agent Orchestration System",
+  "main": "scripts/index.ts",
+  "scripts": {
+    "next": "ts-node scripts/generate-next-prompt.ts",
+    "update": "ts-node scripts/update-state.ts",
+    "status": "ts-node scripts/batch-progress.ts",
+    "setup": "npm install && npm run status",
+    "check": "npm run status && npm run next"
+  },
+  "keywords": [
+    "titane",
+    "orchestration",
+    "copilot",
+    "agents",
+    "automation"
+  ],
+  "author": "TITANE Team",
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^2.3.4",
+    "chalk": "^5.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.4.2",
+    "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
