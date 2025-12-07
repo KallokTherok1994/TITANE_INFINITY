@@ -3,6 +3,7 @@
 //   Phase 2 Fusion #2: Memory #5 + MemoryModule + Singularity Memory
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::unified_memory::{
     MemoryStats, MemoryItem, MemoryType,

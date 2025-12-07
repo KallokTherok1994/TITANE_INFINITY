@@ -3,6 +3,7 @@
 //   Commandes Tauri pour Audio Center (TTS, devices, tests, VAD)
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 use std::sync::atomic::{AtomicBool, Ordering};

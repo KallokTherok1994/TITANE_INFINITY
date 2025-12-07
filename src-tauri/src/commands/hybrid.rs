@@ -6,6 +6,7 @@
 //   Rust Tauri handlers for dev operations
 // ═══════════════════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use std::process::{Command as ProcessCommand, Stdio};
 use std::io::{BufRead, BufReader};
 use std::fs;

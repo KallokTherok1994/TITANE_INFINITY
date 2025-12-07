@@ -4,6 +4,7 @@
 //   Phase 8: Singularity Integration
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use tauri::State;
 use std::sync::Arc;
 use tokio::sync::RwLock;

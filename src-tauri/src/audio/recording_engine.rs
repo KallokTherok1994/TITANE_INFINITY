@@ -4,6 +4,7 @@
 //   Backend: CPAL (optional) + ALSA fallback (arecord)
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use std::process::{Child, Command};
