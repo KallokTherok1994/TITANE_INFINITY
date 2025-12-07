@@ -20,8 +20,8 @@ function showProgress() {
     if (!phase) continue;
     
     const tasks = phase.tasks;
-    const done = tasks.filter((t: any) => t.status === 'completed').length;
-    const pending = tasks.filter((t: any) => t.status === 'pending').length;
+    const done = tasks.filter((t: Record<string, unknown>) => t.status === 'completed').length;
+    const pending = tasks.filter((t: Record<string, unknown>) => t.status === 'pending').length;
     
     console.log(chalk.bold(`Phase ${i} — ${phase.title}`));
     console.log(chalk.green(`  ✅ Completed : ${done}`));

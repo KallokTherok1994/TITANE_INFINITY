@@ -17,12 +17,16 @@ import type {
   RecommendationCategory,
   RecommendationImpact,
   SeverityLevel,
-  TitaneModule,
-  IssueType,
+  TitaneModule as _TitaneModule,
+  IssueType as _IssueType,
   PerformanceEvent,
   PerformanceEventListener,
 } from './performanceEngine.config';
-import type { AnalysisResult, TrendAnalysis, TrendDirection } from './analyzerEngine';
+import type {
+  AnalysisResult,
+  TrendAnalysis,
+  TrendDirection as _TrendDirection,
+} from './analyzerEngine';
 
 // ════════════════════════════════════════════════════════════════════════════════
 // TYPES SPÉCIFIQUES À L'ADVISOR
@@ -199,7 +203,7 @@ export class PerformanceAdvisor {
 
     // Identifier les actions prioritaires
     const priorityActions = finalRecs.filter(
-      (r) => r.priority >= this.config.priorityThreshold,
+      r => r.priority >= this.config.priorityThreshold
     );
 
     // Auto-apply si configuré
@@ -225,14 +229,18 @@ export class PerformanceAdvisor {
    * Applique une recommandation spécifique
    */
   async applyRecommendation(recommendationId: string): Promise<boolean> {
-    const rec = this.state.recommendations.find((r) => r.id === recommendationId);
+    const rec = this.state.recommendations.find(r => r.id === recommendationId);
     if (!rec) {
-      console.warn(`[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`);
+      console.warn(
+        `[PerformanceAdvisor] Recommandation non trouvée: ${recommendationId}`
+      );
       return false;
     }
 
     if (!rec.autoApplicable) {
-      console.warn(`[PerformanceAdvisor] Recommandation non auto-applicable: ${recommendationId}`);
+      console.warn(
+        `[PerformanceAdvisor] Recommandation non auto-applicable: ${recommendationId}`
+      );
       return false;
     }
 
@@ -310,14 +318,14 @@ export class PerformanceAdvisor {
    * Récupère les recommandations par catégorie
    */
   getRecommendationsByCategory(category: RecommendationCategory): Recommendation[] {
-    return this.state.recommendations.filter((r) => r.category === category);
+    return this.state.recommendations.filter(r => r.category === category);
   }
 
   /**
    * Récupère les recommandations par impact
    */
   getRecommendationsByImpact(impact: RecommendationImpact): Recommendation[] {
-    return this.state.recommendations.filter((r) => r.impact === impact);
+    return this.state.recommendations.filter(r => r.impact === impact);
   }
 
   /**
@@ -412,7 +420,7 @@ export class PerformanceAdvisor {
 
   private createRecommendationsForIssue(
     issue: PerformanceIssue,
-    context: AdvisorContext,
+    context: AdvisorContext
   ): Recommendation[] {
     const recommendations: Recommendation[] = [];
     const template = RECOMMENDATION_TEMPLATES[issue.type];
@@ -429,7 +437,7 @@ export class PerformanceAdvisor {
       template.description,
       issue.severity,
       template.suggestions,
-      [issue.id],
+      [issue.id]
     );
     recommendations.push(mainRec);
 
@@ -442,7 +450,7 @@ export class PerformanceAdvisor {
 
   private createSpecificRecommendations(
     issue: PerformanceIssue,
-    context: AdvisorContext,
+    _context: AdvisorContext
   ): Recommendation[] {
     const recs: Recommendation[] = [];
 
@@ -461,8 +469,8 @@ export class PerformanceAdvisor {
                 'Analyser le fichier flamegraph.svg généré',
               ],
               [issue.id],
-              true,
-            ),
+              true
+            )
           );
         }
         break;
@@ -480,8 +488,8 @@ export class PerformanceAdvisor {
               'Identifier les objets non libérés',
             ],
             [issue.id],
-            false,
-          ),
+            false
+          )
         );
         break;
 
@@ -499,8 +507,8 @@ export class PerformanceAdvisor {
               'Utiliser useMemo/useCallback pour les valeurs stables',
             ],
             [issue.id],
-            true,
-          ),
+            true
+          )
         );
         break;
 
@@ -518,8 +526,8 @@ export class PerformanceAdvisor {
               'Profiler avec #[instrument] de tracing',
             ],
             [issue.id],
-            false,
-          ),
+            false
+          )
         );
         break;
 
@@ -537,8 +545,8 @@ export class PerformanceAdvisor {
               'Ajouter un cache de réponses',
             ],
             [issue.id],
-            false,
-          ),
+            false
+          )
         );
         break;
 
@@ -556,8 +564,8 @@ export class PerformanceAdvisor {
               'Éviter les objets/arrays créés dans le JSX',
             ],
             [issue.id],
-            true,
-          ),
+            true
+          )
         );
         break;
 
@@ -574,8 +582,8 @@ export class PerformanceAdvisor {
               'Vérifier les dépendances du module',
             ],
             [issue.id],
-            true,
-          ),
+            true
+          )
         );
         break;
     }
@@ -593,15 +601,15 @@ export class PerformanceAdvisor {
         this.createRecommendation(
           'general',
           'Tendance CPU dégradante détectée',
-          'L\'utilisation CPU augmente progressivement',
+          "L'utilisation CPU augmente progressivement",
           'warning',
           [
             'Surveiller les processus en arrière-plan',
             'Vérifier les fuites de goroutines/threads',
             'Analyser les patterns de charge',
           ],
-          [],
-        ),
+          []
+        )
       );
     }
 
@@ -618,8 +626,8 @@ export class PerformanceAdvisor {
             'Vérifier les caches non limités',
             'Analyser la croissance de la heap',
           ],
-          [],
-        ),
+          []
+        )
       );
     }
 
@@ -636,8 +644,8 @@ export class PerformanceAdvisor {
             'Vérifier les animations continues',
             'Auditer les composants récemment modifiés',
           ],
-          [],
-        ),
+          []
+        )
       );
     }
 
@@ -652,10 +660,10 @@ export class PerformanceAdvisor {
           [
             'Vérifier la charge du serveur IA',
             'Analyser la taille des prompts envoyés',
-            'Vérifier la file d\'attente IA',
+            "Vérifier la file d'attente IA",
           ],
-          [],
-        ),
+          []
+        )
       );
     }
 
@@ -672,8 +680,8 @@ export class PerformanceAdvisor {
             'Traiter les problèmes critiques en priorité',
             'Considérer un redémarrage si le problème persiste',
           ],
-          [],
-        ),
+          []
+        )
       );
     }
 
@@ -687,7 +695,7 @@ export class PerformanceAdvisor {
     severity: SeverityLevel,
     suggestions: string[],
     relatedIssues: string[],
-    autoApplicable: boolean = false,
+    autoApplicable: boolean = false
   ): Recommendation {
     const id = generateRecommendationId(category);
     const impact = SEVERITY_TO_IMPACT[severity];
@@ -714,7 +722,7 @@ export class PerformanceAdvisor {
   private calculatePriority(
     severity: SeverityLevel,
     impact: RecommendationImpact,
-    effort: Recommendation['effort'],
+    effort: Recommendation['effort']
   ): number {
     let priority = 5;
 
@@ -764,7 +772,9 @@ export class PerformanceAdvisor {
   // MÉTHODES PRIVÉES - DÉDUPLICATION & PRIORISATION
   // ══════════════════════════════════════════════════════════════════════════════
 
-  private deduplicateRecommendations(recommendations: Recommendation[]): Recommendation[] {
+  private deduplicateRecommendations(
+    recommendations: Recommendation[]
+  ): Recommendation[] {
     const seen = new Map<string, Recommendation>();
 
     for (const rec of recommendations) {
@@ -812,14 +822,16 @@ export class PerformanceAdvisor {
   // MÉTHODES PRIVÉES - AUTO-APPLY
   // ══════════════════════════════════════════════════════════════════════════════
 
-  private async autoApplyRecommendations(recommendations: Recommendation[]): Promise<void> {
+  private async autoApplyRecommendations(
+    recommendations: Recommendation[]
+  ): Promise<void> {
     const autoApplicable = recommendations.filter(
-      (r) =>
+      r =>
         r.autoApplicable &&
-        this.config.autoApplySeverity.some((sev) => {
+        this.config.autoApplySeverity.some(sev => {
           const impact = SEVERITY_TO_IMPACT[sev];
           return r.impact === impact || this.isHigherImpact(r.impact, impact);
-        }),
+        })
     );
 
     for (const rec of autoApplicable) {
@@ -861,7 +873,7 @@ export class PerformanceAdvisor {
         } catch (error) {
           console.error(
             `[PerformanceAdvisor] Erreur dans listener pour ${eventType}:`,
-            error,
+            error
           );
         }
       }

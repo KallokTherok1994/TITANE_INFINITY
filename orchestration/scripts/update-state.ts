@@ -11,7 +11,7 @@ function updateTaskStatus(taskId: string, status: 'completed' | 'failed') {
     const phase = roadmap[`phase_${i}`];
     if (!phase) continue;
     
-    const task = phase.tasks.find((t: any) => t.id === taskId);
+    const task = phase.tasks.find((t: Record<string, unknown>) => t.id === taskId);
     if (task) {
       task.status = status;
       
@@ -40,4 +40,4 @@ if (!taskId || !status) {
   process.exit(1);
 }
 
-updateTaskStatus(taskId, status as any);
+updateTaskStatus(taskId, status as 'completed' | 'failed');

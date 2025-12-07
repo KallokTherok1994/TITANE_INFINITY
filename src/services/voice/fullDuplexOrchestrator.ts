@@ -15,18 +15,18 @@ import { bargeInDetector, type BargeInEvent } from './bargeInDetector';
 import { ttsDuckingEngine } from './ttsDuckingEngine';
 import { hybridTTS } from '../tts/hybridTTS';
 import { audioStreamingService } from '../audio/audioStreaming';
-import { antiEchoShield } from './antiEchoShield';
+import { antiEchoShield as _antiEchoShield } from './antiEchoShield';
 
 /**
  * États du mode full duplex
  */
 export type FullDuplexState =
-  | 'idle'                  // Rien n'est actif
-  | 'listening'             // Écoute seule
-  | 'speaking'              // TTS seul
-  | 'full_duplex'           // TTS + Écoute simultanés
-  | 'interruption'          // Interruption détectée, transition en cours
-  | 'error';                // Erreur
+  | 'idle' // Rien n'est actif
+  | 'listening' // Écoute seule
+  | 'speaking' // TTS seul
+  | 'full_duplex' // TTS + Écoute simultanés
+  | 'interruption' // Interruption détectée, transition en cours
+  | 'error'; // Erreur
 
 /**
  * Configuration du Full Duplex
@@ -320,7 +320,9 @@ export class FullDuplexOrchestrator {
       return;
     }
 
-    console.log(`[FullDuplexOrchestrator] Barge-in: ${event.type} (${event.confidence.toFixed(2)})`);
+    console.log(
+      `[FullDuplexOrchestrator] Barge-in: ${event.type} (${event.confidence.toFixed(2)})`
+    );
 
     switch (event.type) {
       case 'USER_INTERRUPT':

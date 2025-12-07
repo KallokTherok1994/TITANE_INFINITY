@@ -178,8 +178,8 @@ const styles = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
-  _initialPosition = { x: 24, y: 24 },
-  _devMode = false,
+  initialPosition = { x: 24, y: 24 },
+  devMode = false,
 }) => {
   const {
     isOpen,
@@ -194,10 +194,13 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     sendMessage: sendGlobalMessage,
     clear,
     setModel,
-    _setProvider,
     toggleFullscreen,
     enableDevMode,
   } = useGlobalAIChat();
+
+  // Props currently unused but kept for API compatibility
+  void initialPosition;
+  void devMode;
 
   const [input, setInput] = useState('');
   const [isHovering, setIsHovering] = useState(false);
@@ -333,25 +336,13 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
             </div>
           </div>
           <div style={styles.headerActions}>
-            <button
-              style={styles.iconButton}
-              onClick={handleClear}
-              title="Effacer"
-            >
+            <button style={styles.iconButton} onClick={handleClear} title="Effacer">
               🗑️
             </button>
-            <button
-              style={styles.iconButton}
-              onClick={handleMinimize}
-              title="Minimiser"
-            >
+            <button style={styles.iconButton} onClick={handleMinimize} title="Minimiser">
               —
             </button>
-            <button
-              style={styles.iconButton}
-              onClick={handleClose}
-              title="Fermer"
-            >
+            <button style={styles.iconButton} onClick={handleClose} title="Fermer">
               ✕
             </button>
           </div>
@@ -401,7 +392,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
           <textarea
             style={styles.input}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Message TITANE∞..."
             rows={2}

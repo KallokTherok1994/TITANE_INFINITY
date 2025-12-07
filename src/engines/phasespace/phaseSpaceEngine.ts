@@ -79,17 +79,17 @@ export interface PhaseTrajectory {
   points: PhasePoint[];
 
   // Caractéristiques
-  length: number;              // Longueur euclidienne
-  smoothness: number;          // 0-1 - Régularité
-  curvature: number;           // Courbure moyenne
+  length: number; // Longueur euclidienne
+  smoothness: number; // 0-1 - Régularité
+  curvature: number; // Courbure moyenne
 
   // Stabilité
-  convergent: boolean;         // Converge vers un attracteur
+  convergent: boolean; // Converge vers un attracteur
   attractorId?: string;
 
   // Prédiction
   predictedNext?: PhasePoint;
-  confidence: number;          // 0-1
+  confidence: number; // 0-1
 }
 
 /**
@@ -101,15 +101,15 @@ export interface Attractor {
 
   // Position dans l'espace de phase
   center: PhasePoint['coordinates'];
-  radius: number;              // Rayon du bassin
+  radius: number; // Rayon du bassin
 
   // Caractéristiques
-  stability: number;           // 0-1 - Stabilité de l'attracteur
-  strength: number;            // 0-1 - Force d'attraction
+  stability: number; // 0-1 - Stabilité de l'attracteur
+  strength: number; // 0-1 - Force d'attraction
 
   // Statistiques
-  visitCount: number;          // Nombre de passages
-  averageDuration: number;     // Durée moyenne de séjour (ms)
+  visitCount: number; // Nombre de passages
+  averageDuration: number; // Durée moyenne de séjour (ms)
   lastVisit: number;
 
   // Description sémantique
@@ -137,8 +137,8 @@ export interface Bifurcation {
   criticalValue: number;
 
   // Impact
-  severityIndex: number;       // 0-1
-  predictability: number;      // 0-1
+  severityIndex: number; // 0-1
+  predictability: number; // 0-1
 }
 
 /**
@@ -146,14 +146,14 @@ export interface Bifurcation {
  */
 export interface StatePrediction {
   timestamp: number;
-  horizon: number;             // Millisecondes dans le futur
+  horizon: number; // Millisecondes dans le futur
 
   // État prédit
   predictedState: PhasePoint['coordinates'];
 
   // Confiance
-  confidence: number;          // 0-1
-  uncertainty: number;         // Écart-type
+  confidence: number; // 0-1
+  uncertainty: number; // Écart-type
 
   // Alternatives
   alternativeStates: Array<{
@@ -197,15 +197,15 @@ export interface PhaseSpaceState {
     totalPoints: number;
     totalTrajectories: number;
     averageVelocity: number;
-    dimensionality: number;      // Dimension effective
-    lyapunovExponent: number;    // Stabilité chaotique
+    dimensionality: number; // Dimension effective
+    lyapunovExponent: number; // Stabilité chaotique
   };
 
   // Métriques temps réel
   metrics: {
     currentVelocity: number;
     distanceToNearestAttractor: number;
-    entropyRate: number;         // Taux de création d'information
+    entropyRate: number; // Taux de création d'information
     predictabilityHorizon: number; // Millisecondes prévisibles
   };
 }
@@ -221,7 +221,7 @@ class PhaseSpaceEngine {
   private subscribers: Set<(state: PhaseSpaceState) => void> = new Set();
 
   // Référence au Meta-Singularity Kernel
-  private metaKernel: any = null;
+  private metaKernel: unknown = null;
 
   constructor() {
     this.state = {
@@ -284,7 +284,7 @@ class PhaseSpaceEngine {
   /**
    * Injecter référence au Meta-Singularity Kernel
    */
-  injectMetaKernel(kernel: any): void {
+  injectMetaKernel(kernel: unknown): void {
     this.metaKernel = kernel;
   }
 
@@ -397,13 +397,18 @@ class PhaseSpaceEngine {
     // Calculer longueur euclidienne
     let length = 0;
     for (let i = 1; i < recentPoints.length; i++) {
-      length += this.distance(recentPoints[i - 1].coordinates, recentPoints[i].coordinates);
+      length += this.distance(
+        recentPoints[i - 1].coordinates,
+        recentPoints[i].coordinates
+      );
     }
 
     // Calculer smoothness (variation de vitesse)
     const velocities = recentPoints.map(p => this.velocityMagnitude(p.velocity));
     const avgVelocity = velocities.reduce((s, v) => s + v, 0) / velocities.length;
-    const velocityVariance = velocities.reduce((s, v) => s + Math.pow(v - avgVelocity, 2), 0) / velocities.length;
+    const velocityVariance =
+      velocities.reduce((s, v) => s + Math.pow(v - avgVelocity, 2), 0) /
+      velocities.length;
     const smoothness = 1 / (1 + velocityVariance);
 
     // Calculer courbure (changement de direction)
@@ -415,12 +420,15 @@ class PhaseSpaceEngine {
       );
       curvature += Math.abs(angle);
     }
-    curvature /= (recentPoints.length - 2);
+    curvature /= recentPoints.length - 2;
 
     // Vérifier convergence vers attracteur
-    const nearestAttractor = this.findNearestAttractor(this.state.currentPoint!);
-    const convergent = nearestAttractor !== null &&
-                       this.state.metrics.distanceToNearestAttractor < nearestAttractor.radius;
+    const nearestAttractor = this.state.currentPoint
+      ? this.findNearestAttractor(this.state.currentPoint)
+      : null;
+    const convergent =
+      nearestAttractor !== null &&
+      this.state.metrics.distanceToNearestAttractor < nearestAttractor.radius;
 
     const trajectory: PhaseTrajectory = {
       id: `trajectory-${Date.now()}`,
@@ -459,8 +467,8 @@ class PhaseSpaceEngine {
       const radius = this.calculateClusterRadius(cluster, center);
 
       // Chercher attracteur existant proche
-      const existing = this.state.attractors.find(a =>
-        this.distance(a.center, center) < 0.1
+      const existing = this.state.attractors.find(
+        a => this.distance(a.center, center) < 0.1
       );
 
       if (existing) {
@@ -536,7 +544,7 @@ class PhaseSpaceEngine {
   }
 
   private calculateCentroid(points: PhasePoint[]): PhasePoint['coordinates'] {
-    const sum: any = {};
+    const sum: Record<string, number> = {};
 
     Object.keys(points[0].coordinates).forEach(key => {
       sum[key] = 0;
@@ -555,7 +563,10 @@ class PhaseSpaceEngine {
     return sum;
   }
 
-  private calculateClusterRadius(points: PhasePoint[], center: PhasePoint['coordinates']): number {
+  private calculateClusterRadius(
+    points: PhasePoint[],
+    center: PhasePoint['coordinates']
+  ): number {
     const distances = points.map(p => this.distance(p.coordinates, center));
     return Math.max(...distances);
   }
@@ -647,17 +658,19 @@ class PhaseSpaceEngine {
           convergent: false,
           confidence: 0.5,
         },
-        postBranches: [{
-          id: 'post',
-          startTime: after[0].timestamp,
-          endTime: after[after.length - 1].timestamp,
-          points: after,
-          length: 0,
-          smoothness: 0,
-          curvature: 0,
-          convergent: false,
-          confidence: 0.5,
-        }],
+        postBranches: [
+          {
+            id: 'post',
+            startTime: after[0].timestamp,
+            endTime: after[after.length - 1].timestamp,
+            points: after,
+            length: 0,
+            smoothness: 0,
+            curvature: 0,
+            convergent: false,
+            confidence: 0.5,
+          },
+        ],
         criticalParameter: 'coherence',
         criticalValue: recent[midpoint].coordinates.coherence,
         severityIndex: Math.min(1, Math.abs(angle) / Math.PI),
@@ -666,7 +679,9 @@ class PhaseSpaceEngine {
 
       this.state.bifurcations.push(bifurcation);
 
-      console.log(`[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation.criticalValue.toFixed(2)}`);
+      console.log(
+        `[PhaseSpaceEngine] Bifurcation detected at coherence=${bifurcation.criticalValue.toFixed(2)}`
+      );
 
       // Limiter à 20 bifurcations
       if (this.state.bifurcations.length > 20) {
@@ -676,7 +691,9 @@ class PhaseSpaceEngine {
 
     // Compter récentes (dernière minute)
     const oneMinuteAgo = Date.now() - 60000;
-    this.state.recentBifurcations = this.state.bifurcations.filter(b => b.timestamp > oneMinuteAgo).length;
+    this.state.recentBifurcations = this.state.bifurcations.filter(
+      b => b.timestamp > oneMinuteAgo
+    ).length;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -701,7 +718,10 @@ class PhaseSpaceEngine {
       Object.keys(velocity).forEach(key => {
         const k = key as keyof PhasePoint['coordinates'];
         const vel = velocity[k] || 0;
-        predictedPoint[k] = Math.max(0, Math.min(1, predictedPoint[k] + vel * (dt / 1000)));
+        predictedPoint[k] = Math.max(
+          0,
+          Math.min(1, predictedPoint[k] + vel * (dt / 1000))
+        );
       });
 
       trajectory.push({
@@ -758,7 +778,8 @@ class PhaseSpaceEngine {
       const recent = this.state.history.slice(-50);
       const velocities = recent.map(p => this.velocityMagnitude(p.velocity));
       const avgVel = velocities.reduce((s, v) => s + v, 0) / velocities.length;
-      const variance = velocities.reduce((s, v) => s + Math.pow(v - avgVel, 2), 0) / velocities.length;
+      const variance =
+        velocities.reduce((s, v) => s + Math.pow(v - avgVel, 2), 0) / velocities.length;
 
       // Lyapunov positif = chaos, négatif = stabilité
       this.state.statistics.lyapunovExponent = (variance - 0.01) * 10; // Normaliser
@@ -773,7 +794,8 @@ class PhaseSpaceEngine {
       })
     ).size;
 
-    this.state.metrics.entropyRate = uniqueAttractors / Math.min(this.state.attractors.length, 10);
+    this.state.metrics.entropyRate =
+      uniqueAttractors / Math.min(this.state.attractors.length, 10);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -827,8 +849,10 @@ class PhaseSpaceEngine {
     return Math.acos(Math.max(-1, Math.min(1, dot / (mag1 * mag2))));
   }
 
-  private averageVelocityVector(points: PhasePoint[]): Partial<PhasePoint['coordinates']> {
-    const avg: any = {};
+  private averageVelocityVector(
+    points: PhasePoint[]
+  ): Partial<PhasePoint['coordinates']> {
+    const avg: Record<string, number> = {};
 
     const firstVelocity = points[0].velocity;
     Object.keys(firstVelocity).forEach(key => {

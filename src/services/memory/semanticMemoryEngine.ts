@@ -76,7 +76,7 @@ class SemanticMemoryEngine {
       embeddingDimensions: 384,
       compressionEnabled: true,
       autoSaveEnabled: true,
-      ...config
+      ...config,
     };
 
     this.loadFromStorage();
@@ -115,13 +115,15 @@ class SemanticMemoryEngine {
       summary,
       embedding,
       importance,
-      metadata: metadata || {}
+      metadata: metadata || {},
     };
 
     // 5. Stocker
     await this.store(memory);
 
-    console.log(`[SemanticMemory] ✅ Memory created: ${memory.summary.title} (importance: ${importance.toFixed(2)})`);
+    console.log(
+      `[SemanticMemory] ✅ Memory created: ${memory.summary.title} (importance: ${importance.toFixed(2)})`
+    );
 
     return memory;
   }
@@ -167,23 +169,18 @@ class SemanticMemoryEngine {
       results.push({
         memory,
         similarity,
-        relevance
+        relevance,
       });
     }
 
     // 3. Trier par relevance et retourner top K
-    return results
-      .sort((a, b) => b.relevance - a.relevance)
-      .slice(0, topK);
+    return results.sort((a, b) => b.relevance - a.relevance).slice(0, topK);
   }
 
   /**
    * Injecte les mémoires pertinentes dans le prompt
    */
-  injectMemoriesInPrompt(
-    memories: RetrievalResult[],
-    maxLength: number = 1000
-  ): string {
+  injectMemoriesInPrompt(memories: RetrievalResult[], maxLength: number = 1000): string {
     if (memories.length === 0) {
       return '';
     }
@@ -195,7 +192,8 @@ class SemanticMemoryEngine {
       const memoryText = `• ${memory.summary.title}\n  ${memory.summary.content}\n  (Pertinence: ${(relevance * 100).toFixed(0)}%)\n\n`;
 
       if (currentLength + memoryText.length > maxLength) {
-        contextText += '• [...] (mémoires supplémentaires disponibles mais limitées par la longueur)\n';
+        contextText +=
+          '• [...] (mémoires supplémentaires disponibles mais limitées par la longueur)\n';
         break;
       }
 
@@ -292,11 +290,14 @@ class SemanticMemoryEngine {
 
     return {
       totalMemories: memories.length,
-      averageImportance: memories.reduce((sum, m) => sum + m.importance, 0) / memories.length || 0,
-      oldestMemory: memories.length > 0 ? Math.min(...memories.map(m => m.timestamp)) : null,
-      newestMemory: memories.length > 0 ? Math.max(...memories.map(m => m.timestamp)) : null,
+      averageImportance:
+        memories.reduce((sum, m) => sum + m.importance, 0) / memories.length || 0,
+      oldestMemory:
+        memories.length > 0 ? Math.min(...memories.map(m => m.timestamp)) : null,
+      newestMemory:
+        memories.length > 0 ? Math.max(...memories.map(m => m.timestamp)) : null,
       byMode: this.groupByMode(memories),
-      storageSizeMB: this.estimateStorageSize() / (1024 * 1024)
+      storageSizeMB: this.estimateStorageSize() / (1024 * 1024),
     };
   }
 
@@ -315,7 +316,7 @@ class SemanticMemoryEngine {
 
     // Analyse simple pour extraire entités et concepts
     const entities = this.extractEntities(conversationText);
-    const concepts = this.extractConcepts(conversationText);
+    const _concepts = this.extractConcepts(conversationText);
     const actions = this.extractActions(conversationText);
     const facts = this.extractFacts(conversationText);
 
@@ -335,7 +336,7 @@ class SemanticMemoryEngine {
       entities,
       emotions,
       actions,
-      facts
+      facts,
     };
   }
 
@@ -440,7 +441,7 @@ class SemanticMemoryEngine {
 
     if (age >= maxAge) return 0;
 
-    return 1 - (age / maxAge);
+    return 1 - age / maxAge;
   }
 
   /**
@@ -454,7 +455,7 @@ class SemanticMemoryEngine {
 
     const topIndices = new Set(sorted.slice(0, embedding.length / 2).map(x => x.idx));
 
-    return embedding.map((val, idx) => topIndices.has(idx) ? val : 0);
+    return embedding.map((val, idx) => (topIndices.has(idx) ? val : 0));
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -470,7 +471,17 @@ class SemanticMemoryEngine {
     capitalizedWords.forEach(word => entities.add(word));
 
     // Pattern 2: Noms communs précédés de "je", "tu", "il", etc.
-    const pronouns = ['je ', 'tu ', 'il ', 'elle ', 'on ', 'nous ', 'vous ', 'ils ', 'elles '];
+    const pronouns = [
+      'je ',
+      'tu ',
+      'il ',
+      'elle ',
+      'on ',
+      'nous ',
+      'vous ',
+      'ils ',
+      'elles ',
+    ];
     pronouns.forEach(pronoun => {
       const regex = new RegExp(pronoun + '([a-zéèêàâùû]+)', 'gi');
       const matches = text.match(regex);
@@ -489,7 +500,7 @@ class SemanticMemoryEngine {
     // Mots-clés techniques et concepts
     const conceptPatterns = [
       /\b(api|code|fonction|algorithme|data|intelligence|artificielle|machine learning|neural|système|architecture)\b/gi,
-      /\b(projet|développement|implémentation|design|optimisation|performance|sécurité)\b/gi
+      /\b(projet|développement|implémentation|design|optimisation|performance|sécurité)\b/gi,
     ];
 
     const concepts = new Set<string>();
@@ -508,7 +519,7 @@ class SemanticMemoryEngine {
     // Verbes d'action + compléments
     const actionPatterns = [
       /\b(créer|développer|implémenter|corriger|améliorer|tester|déployer|analyser)\s+([a-zéèêàâùû\s]+)/gi,
-      /\b(faire|vais faire|dois faire|va faire)\s+([a-zéèêàâùû\s]+)/gi
+      /\b(faire|vais faire|dois faire|va faire)\s+([a-zéèêàâùû\s]+)/gi,
     ];
 
     const actions: string[] = [];
@@ -516,7 +527,8 @@ class SemanticMemoryEngine {
     actionPatterns.forEach(pattern => {
       const matches = text.matchAll(pattern);
       for (const match of matches) {
-        if (match[0].length > 10) { // Actions significatives
+        if (match[0].length > 10) {
+          // Actions significatives
           actions.push(match[0].trim());
         }
       }
@@ -568,10 +580,7 @@ class SemanticMemoryEngine {
     }
 
     // Tronquer et nettoyer
-    const title = firstUserMsg.content
-      .trim()
-      .split('\n')[0]
-      .substring(0, 60);
+    const title = firstUserMsg.content.trim().split('\n')[0].substring(0, 60);
 
     return title + (firstUserMsg.content.length > 60 ? '...' : '');
   }
@@ -592,9 +601,33 @@ class SemanticMemoryEngine {
 
   private analyzeEmotions(text: string): { valence: number; intensity: number } {
     // Analyse simple basée sur mots-clés émotionnels
-    const positiveWords = ['bien', 'super', 'excellent', 'génial', 'merci', 'parfait', 'bravo', 'content'];
-    const negativeWords = ['problème', 'erreur', 'bug', 'frustré', 'difficile', 'échec', 'inquiet'];
-    const intenseWords = ['très', 'vraiment', 'extrêmement', 'incroyablement', '!!!', 'urgent'];
+    const positiveWords = [
+      'bien',
+      'super',
+      'excellent',
+      'génial',
+      'merci',
+      'parfait',
+      'bravo',
+      'content',
+    ];
+    const negativeWords = [
+      'problème',
+      'erreur',
+      'bug',
+      'frustré',
+      'difficile',
+      'échec',
+      'inquiet',
+    ];
+    const intenseWords = [
+      'très',
+      'vraiment',
+      'extrêmement',
+      'incroyablement',
+      '!!!',
+      'urgent',
+    ];
 
     const lowerText = text.toLowerCase();
     let valence = 0;
@@ -614,7 +647,7 @@ class SemanticMemoryEngine {
 
     return {
       valence: Math.max(-1, Math.min(1, valence)),
-      intensity: Math.max(0, Math.min(1, intensity))
+      intensity: Math.max(0, Math.min(1, intensity)),
     };
   }
 
@@ -634,7 +667,9 @@ class SemanticMemoryEngine {
         parsed.forEach((memory: SemanticMemory) => {
           this.memories.set(memory.id, memory);
         });
-        console.log(`[SemanticMemory] 📂 Loaded ${this.memories.size} memories from storage`);
+        console.log(
+          `[SemanticMemory] 📂 Loaded ${this.memories.size} memories from storage`
+        );
       }
     } catch (error) {
       console.error('[SemanticMemory] Failed to load from storage:', error);
@@ -664,7 +699,7 @@ class SemanticMemoryEngine {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32bit integer
     }
     return Math.abs(hash);
@@ -695,5 +730,5 @@ export const semanticMemoryEngine = new SemanticMemoryEngine({
   similarityThreshold: 0.7,
   embeddingDimensions: 384,
   compressionEnabled: true,
-  autoSaveEnabled: true
+  autoSaveEnabled: true,
 });

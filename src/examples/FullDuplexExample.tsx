@@ -6,7 +6,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
-import { fullDuplexOrchestrator, type FullDuplexEvent } from '@/services/voice/fullDuplexOrchestrator';
+import {
+  fullDuplexOrchestrator,
+  type FullDuplexEvent,
+} from '@/services/voice/fullDuplexOrchestrator';
 import { chatInterruptionHandler } from '@/services/chat/chatInterruptionHandler';
 
 /**
@@ -25,7 +28,9 @@ export function FullDuplexExample() {
   });
 
   const [events, setEvents] = useState<FullDuplexEvent[]>([]);
-  const [interruptionHistory, setInterruptionHistory] = useState<any[]>([]);
+  const [interruptionHistory, setInterruptionHistory] = useState<
+    Array<Record<string, unknown>>
+  >([]);
 
   // Enable full duplex on mount
   useEffect(() => {
@@ -41,11 +46,11 @@ export function FullDuplexExample() {
       voice.disableFullDuplex();
       chatInterruptionHandler.disable();
     };
-  }, []);
+  }, [voice]);
 
   // Subscribe to full duplex events
   useEffect(() => {
-    const unsubscribe = fullDuplexOrchestrator.onEvent((event) => {
+    const unsubscribe = fullDuplexOrchestrator.onEvent(event => {
       console.log('Full Duplex Event:', event);
       setEvents(prev => [...prev.slice(-9), event]); // Keep last 10 events
 
@@ -66,7 +71,6 @@ export function FullDuplexExample() {
 
       // User speaks: "Titane, quelle heure est-il ?"
       // (handled by voice engine automatically)
-
     } catch (error) {
       console.error('Conversation error:', error);
     }
@@ -99,16 +103,21 @@ export function FullDuplexExample() {
   };
 
   return (
-    <div className="full-duplex-example" style={{ padding: '20px', fontFamily: 'monospace' }}>
+    <div
+      className="full-duplex-example"
+      style={{ padding: '20px', fontFamily: 'monospace' }}
+    >
       <h1>🔥 Full Duplex Voice Assistant</h1>
 
       {/* Status Panel */}
-      <div style={{
-        background: '#1e1e1e',
-        padding: '15px',
-        borderRadius: '8px',
-        marginBottom: '20px'
-      }}>
+      <div
+        style={{
+          background: '#1e1e1e',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+        }}
+      >
         <h3>📊 Status</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           <div>
@@ -222,19 +231,23 @@ export function FullDuplexExample() {
       </div>
 
       {/* Event Log */}
-      <div style={{
-        background: '#1e1e1e',
-        padding: '15px',
-        borderRadius: '8px',
-        marginBottom: '20px'
-      }}>
+      <div
+        style={{
+          background: '#1e1e1e',
+          padding: '15px',
+          borderRadius: '8px',
+          marginBottom: '20px',
+        }}
+      >
         <h3>📜 Event Log (Last 10)</h3>
-        <div style={{
-          maxHeight: '200px',
-          overflow: 'auto',
-          fontSize: '12px',
-          fontFamily: 'monospace'
-        }}>
+        <div
+          style={{
+            maxHeight: '200px',
+            overflow: 'auto',
+            fontSize: '12px',
+            fontFamily: 'monospace',
+          }}
+        >
           {events.length === 0 ? (
             <div style={{ color: '#6b7280' }}>No events yet...</div>
           ) : (
@@ -247,11 +260,14 @@ export function FullDuplexExample() {
                   background: '#2d2d2d',
                   borderRadius: '4px',
                   borderLeft: `3px solid ${
-                    event.type === 'interrupt' ? '#ef4444' :
-                    event.type === 'state_change' ? '#3b82f6' :
-                    event.type === 'resume' ? '#10b981' :
-                    '#f59e0b'
-                  }`
+                    event.type === 'interrupt'
+                      ? '#ef4444'
+                      : event.type === 'state_change'
+                        ? '#3b82f6'
+                        : event.type === 'resume'
+                          ? '#10b981'
+                          : '#f59e0b'
+                  }`,
                 }}
               >
                 <div>
@@ -275,18 +291,22 @@ export function FullDuplexExample() {
       </div>
 
       {/* Interruption History */}
-      <div style={{
-        background: '#1e1e1e',
-        padding: '15px',
-        borderRadius: '8px'
-      }}>
+      <div
+        style={{
+          background: '#1e1e1e',
+          padding: '15px',
+          borderRadius: '8px',
+        }}
+      >
         <h3>🧠 Interruption History</h3>
-        <div style={{
-          maxHeight: '200px',
-          overflow: 'auto',
-          fontSize: '12px',
-          fontFamily: 'monospace'
-        }}>
+        <div
+          style={{
+            maxHeight: '200px',
+            overflow: 'auto',
+            fontSize: '12px',
+            fontFamily: 'monospace',
+          }}
+        >
           {interruptionHistory.length === 0 ? (
             <div style={{ color: '#6b7280' }}>No interruptions yet...</div>
           ) : (
@@ -299,12 +319,16 @@ export function FullDuplexExample() {
                   background: '#2d2d2d',
                   borderRadius: '4px',
                   borderLeft: `3px solid ${
-                    ctx.type === 'hard_stop' ? '#ef4444' :
-                    ctx.type === 'redirect' ? '#f59e0b' :
-                    ctx.type === 'clarification' ? '#3b82f6' :
-                    ctx.type === 'correction' ? '#ec4899' :
-                    '#10b981'
-                  }`
+                    ctx.type === 'hard_stop'
+                      ? '#ef4444'
+                      : ctx.type === 'redirect'
+                        ? '#f59e0b'
+                        : ctx.type === 'clarification'
+                          ? '#3b82f6'
+                          : ctx.type === 'correction'
+                            ? '#ec4899'
+                            : '#10b981'
+                  }`,
                 }}
               >
                 <div>
@@ -316,8 +340,7 @@ export function FullDuplexExample() {
                   User: "{ctx.userText}"
                 </div>
                 <div style={{ color: '#9ca3af', fontSize: '11px', marginTop: '4px' }}>
-                  Interrupted at: {(ctx.interruptedAt * 100).toFixed(0)}%
-                  {' | '}
+                  Interrupted at: {(ctx.interruptedAt * 100).toFixed(0)}%{' | '}
                   Confidence: {ctx.confidence.toFixed(2)}
                 </div>
                 <div style={{ color: '#6b7280', fontSize: '10px', marginTop: '4px' }}>
@@ -330,13 +353,15 @@ export function FullDuplexExample() {
       </div>
 
       {/* Instructions */}
-      <div style={{
-        marginTop: '20px',
-        padding: '15px',
-        background: '#1e293b',
-        borderRadius: '8px',
-        fontSize: '14px'
-      }}>
+      <div
+        style={{
+          marginTop: '20px',
+          padding: '15px',
+          background: '#1e293b',
+          borderRadius: '8px',
+          fontSize: '14px',
+        }}
+      >
         <h3 style={{ color: '#60a5fa' }}>📖 Instructions</h3>
         <ol style={{ color: '#d1d5db', lineHeight: '1.8' }}>
           <li>Click "Speak Long Message" to start TTS</li>
@@ -345,11 +370,19 @@ export function FullDuplexExample() {
           <li>Watch the event log for real-time updates</li>
           <li>Check interruption history for AI context</li>
         </ol>
-        <div style={{ marginTop: '10px', padding: '10px', background: '#0f172a', borderRadius: '4px' }}>
+        <div
+          style={{
+            marginTop: '10px',
+            padding: '10px',
+            background: '#0f172a',
+            borderRadius: '4px',
+          }}
+        >
           <strong style={{ color: '#fbbf24' }}>💡 Tip:</strong>
           <span style={{ color: '#9ca3af' }}>
-            {' '}Try interrupting mid-sentence by saying "Stop!" or "Attends!"
-            to test hard interrupt detection.
+            {' '}
+            Try interrupting mid-sentence by saying "Stop!" or "Attends!" to test hard
+            interrupt detection.
           </span>
         </div>
       </div>

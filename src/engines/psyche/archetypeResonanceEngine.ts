@@ -22,8 +22,15 @@
  * 8. NARRATIVE INTEGRATION — Intégration avec Inner Dialogue
  */
 
-import { multimodalPresenceEngine, type PresenceMode, type ExpressiveIntention } from '../presence/multimodalPresenceEngine';
-import type { ThinkingState, MentalColor } from '@/services/voice/innerDialogueController';
+import {
+  multimodalPresenceEngine,
+  type PresenceMode as _PresenceMode,
+  type ExpressiveIntention,
+} from '../presence/multimodalPresenceEngine';
+import type {
+  ThinkingState,
+  MentalColor as _MentalColor,
+} from '@/services/voice/innerDialogueController';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -168,14 +175,14 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
     name: 'Le Sage',
     description: 'Calme, lucide, silencieux, vision longue',
     vocalSignature: {
-      tempo: 0.75,      // Lent
-      depth: 0.8,       // Grave
-      warmth: 0.6,      // Modéré
-      grain: 0.3,       // Peu texturé
-      confidence: 0.9,  // Très assuré
+      tempo: 0.75, // Lent
+      depth: 0.8, // Grave
+      warmth: 0.6, // Modéré
+      grain: 0.3, // Peu texturé
+      confidence: 0.9, // Très assuré
     },
     haloSignature: {
-      hue: 260,         // Violet profond
+      hue: 260, // Violet profond
       saturation: 65,
       lightness: 55,
       texture: 'calm',
@@ -187,8 +194,22 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
       openness: 0.8,
       stability: 0.95,
     },
-    activationKeywords: ['sens', 'pourquoi', 'profond', 'essence', 'vision', 'compréhension', 'méditer', 'réfléchir'],
-    associatedThinkingStates: ['slow_thinking', 'deep_reflection', 'evaluating', 'narrative_alignment'],
+    activationKeywords: [
+      'sens',
+      'pourquoi',
+      'profond',
+      'essence',
+      'vision',
+      'compréhension',
+      'méditer',
+      'réfléchir',
+    ],
+    associatedThinkingStates: [
+      'slow_thinking',
+      'deep_reflection',
+      'evaluating',
+      'narrative_alignment',
+    ],
     typicalIntentions: ['guidance profonde', 'clarification', 'métacognition', 'sagesse'],
   },
 
@@ -197,14 +218,14 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
     name: 'Le Gardien',
     description: 'Protecteur, stable, solide',
     vocalSignature: {
-      tempo: 0.9,       // Modéré-lent
-      depth: 0.7,       // Modéré-grave
-      warmth: 0.85,     // Chaleureux
-      grain: 0.2,       // Très lisse
-      confidence: 1.0,  // Maximum
+      tempo: 0.9, // Modéré-lent
+      depth: 0.7, // Modéré-grave
+      warmth: 0.85, // Chaleureux
+      grain: 0.2, // Très lisse
+      confidence: 1.0, // Maximum
     },
     haloSignature: {
-      hue: 45,          // Or-blanc
+      hue: 45, // Or-blanc
       saturation: 75,
       lightness: 70,
       texture: 'pulsing',
@@ -216,7 +237,16 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
       openness: 0.6,
       stability: 1.0,
     },
-    activationKeywords: ['sécurité', 'protéger', 'cadre', 'stable', 'éviter', 'prévenir', 'sûr', 'solide'],
+    activationKeywords: [
+      'sécurité',
+      'protéger',
+      'cadre',
+      'stable',
+      'éviter',
+      'prévenir',
+      'sûr',
+      'solide',
+    ],
     associatedThinkingStates: ['validating', 'self_correcting', 'evaluating'],
     typicalIntentions: ['guidance sécurisante', 'prévention erreur', 'stabilisation'],
   },
@@ -226,14 +256,14 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
     name: 'La Muse',
     description: 'Créative, inspirante, poétique',
     vocalSignature: {
-      tempo: 1.1,       // Légèrement rapide
-      depth: 0.4,       // Aigüe
-      warmth: 0.9,      // Très chaleureuse
-      grain: 0.5,       // Texturé
-      confidence: 0.7,  // Modéré
+      tempo: 1.1, // Légèrement rapide
+      depth: 0.4, // Aigüe
+      warmth: 0.9, // Très chaleureuse
+      grain: 0.5, // Texturé
+      confidence: 0.7, // Modéré
     },
     haloSignature: {
-      hue: 330,         // Rose-orangé
+      hue: 330, // Rose-orangé
       saturation: 80,
       lightness: 65,
       texture: 'shimmer',
@@ -245,7 +275,16 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
       openness: 1.0,
       stability: 0.5,
     },
-    activationKeywords: ['créer', 'imaginer', 'inspirer', 'rêver', 'explorer', 'inventer', 'poétique', 'métaphore'],
+    activationKeywords: [
+      'créer',
+      'imaginer',
+      'inspirer',
+      'rêver',
+      'explorer',
+      'inventer',
+      'poétique',
+      'métaphore',
+    ],
     associatedThinkingStates: ['emotional_sense', 'fast_thinking', 'perceiving'],
     typicalIntentions: ['inspiration', 'créativité', 'exploration', 'métaphore'],
   },
@@ -255,14 +294,14 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
     name: "L'Architecte",
     description: 'Structuré, logique, systémique',
     vocalSignature: {
-      tempo: 1.0,       // Normal
-      depth: 0.6,       // Modéré
-      warmth: 0.4,      // Froide
-      grain: 0.1,       // Très lisse
+      tempo: 1.0, // Normal
+      depth: 0.6, // Modéré
+      warmth: 0.4, // Froide
+      grain: 0.1, // Très lisse
       confidence: 0.95, // Très assuré
     },
     haloSignature: {
-      hue: 200,         // Cyan
+      hue: 200, // Cyan
       saturation: 70,
       lightness: 55,
       texture: 'flowing',
@@ -274,7 +313,16 @@ export const ARCHETYPE_PROFILES: Record<ArchetypeType, ArchetypeProfile> = {
       openness: 0.5,
       stability: 0.9,
     },
-    activationKeywords: ['structure', 'plan', 'système', 'organiser', 'méthode', 'framework', 'architecture', 'optimiser'],
+    activationKeywords: [
+      'structure',
+      'plan',
+      'système',
+      'organiser',
+      'méthode',
+      'framework',
+      'architecture',
+      'optimiser',
+    ],
     associatedThinkingStates: ['planning', 'evaluating', 'fast_thinking'],
     typicalIntentions: ['structuration', 'planification', 'optimisation', 'système'],
   },
@@ -363,9 +411,10 @@ class ArchetypeResonanceEngine {
 
     // 1. KEYWORD MATCHING (40% poids)
     for (const [type, profile] of Object.entries(ARCHETYPE_PROFILES)) {
-      const keywordScore = profile.activationKeywords.reduce((acc, keyword) => {
-        return acc + (message.includes(keyword) ? 1 : 0);
-      }, 0) / profile.activationKeywords.length;
+      const keywordScore =
+        profile.activationKeywords.reduce((acc, keyword) => {
+          return acc + (message.includes(keyword) ? 1 : 0);
+        }, 0) / profile.activationKeywords.length;
 
       scores[type as ArchetypeType] += keywordScore * 0.4;
     }
@@ -467,13 +516,17 @@ class ArchetypeResonanceEngine {
 
     const lerpFactor = 0.02; // Slow drift back to neutral
     for (const key of Object.keys(this.state.scores) as ArchetypeType[]) {
-      this.state.scores[key] = this.lerp(this.state.scores[key], neutralScores[key], lerpFactor);
+      this.state.scores[key] = this.lerp(
+        this.state.scores[key],
+        neutralScores[key],
+        lerpFactor
+      );
     }
 
     // Déterminer dominant
-    const dominant = (Object.entries(this.state.scores) as [ArchetypeType, number][]).reduce((max, [type, score]) =>
-      score > max[1] ? [type, score] : max
-    )[0];
+    const dominant = (
+      Object.entries(this.state.scores) as [ArchetypeType, number][]
+    ).reduce((max, [type, score]) => (score > max[1] ? [type, score] : max))[0];
 
     this.state.dominant = dominant;
     this.state.intensity = this.state.scores[dominant];
@@ -491,13 +544,17 @@ class ArchetypeResonanceEngine {
     // Smooth blend avec scores précédents
     const blendFactor = 0.3; // 30% nouveau, 70% ancien
     for (const key of Object.keys(scores) as ArchetypeType[]) {
-      this.state.scores[key] = this.lerp(this.state.scores[key], scores[key], blendFactor);
+      this.state.scores[key] = this.lerp(
+        this.state.scores[key],
+        scores[key],
+        blendFactor
+      );
     }
 
     // Update dominant
-    const dominant = (Object.entries(this.state.scores) as [ArchetypeType, number][]).reduce((max, [type, score]) =>
-      score > max[1] ? [type, score] : max
-    )[0];
+    const dominant = (
+      Object.entries(this.state.scores) as [ArchetypeType, number][]
+    ).reduce((max, [type, score]) => (score > max[1] ? [type, score] : max))[0];
 
     this.state.dominant = dominant;
     this.state.intensity = this.state.scores[dominant];
@@ -505,9 +562,15 @@ class ArchetypeResonanceEngine {
 
     // Learn preference (slow)
     const currentPref = this.userPreferences.get(dominant) || 0.25;
-    this.userPreferences.set(dominant, currentPref + this.config.learningRate * (0.3 - currentPref));
+    this.userPreferences.set(
+      dominant,
+      currentPref + this.config.learningRate * (0.3 - currentPref)
+    );
 
-    console.log(`🧠 [ARCHETYPE] Activated: ${dominant} (${Math.round(this.state.intensity * 100)}%)`, this.state.scores);
+    console.log(
+      `🧠 [ARCHETYPE] Activated: ${dominant} (${Math.round(this.state.intensity * 100)}%)`,
+      this.state.scores
+    );
 
     // Sync avec Multimodal Presence
     this.syncWithMultimodalPresence();
@@ -586,9 +649,14 @@ class ArchetypeResonanceEngine {
           cycleDuration: 4000, // Adaptable selon archétype
         },
         avatar: {
-          expression: profile.cognitivePosture.thinkingStyle === 'contemplative' ? 'neutral' :
-                      profile.cognitivePosture.thinkingStyle === 'protective' ? 'focus' :
-                      profile.cognitivePosture.thinkingStyle === 'imaginative' ? 'smile' : 'focus',
+          expression:
+            profile.cognitivePosture.thinkingStyle === 'contemplative'
+              ? 'neutral'
+              : profile.cognitivePosture.thinkingStyle === 'protective'
+                ? 'focus'
+                : profile.cognitivePosture.thinkingStyle === 'imaginative'
+                  ? 'smile'
+                  : 'focus',
           facialGlow: halo.intensity * 0.7,
         },
       },
@@ -603,7 +671,11 @@ class ArchetypeResonanceEngine {
       architecte: 'analysis',
     };
     const mappedIntention = intentionMap[intention.type] || 'guidance';
-    multimodalPresenceEngine.applyIntention(mappedIntention, intention.intensity, intention.duration);
+    multimodalPresenceEngine.applyIntention(
+      mappedIntention,
+      intention.intensity,
+      intention.duration
+    );
   }
 
   /**

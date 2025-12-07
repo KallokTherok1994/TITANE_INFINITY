@@ -1,4 +1,6 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
-npm run lint:staged
+# Ensure Node.js binaries are in PATH
+export PATH="/home/titane/.nvm/versions/node/v24.11.1/bin:$PATH"
+
+npx lint-staged

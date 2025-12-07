@@ -20,15 +20,13 @@ import {
   ChatInput,
   ChatContextPanel,
   type ChatSuggestion,
-  type ChatMessageProps
+  type ChatMessageProps,
 } from '@features/chat';
 import { ChatModeSelector } from '../components/chat/ChatModeSelector';
 import { colors, spacing } from '@themes/tokens';
 import { XP } from '../core/experience/XP_ENGINE'; // ✨ v∞.D3 - XP Engine
 import { chatEngineCommands } from '../services/tauri/chatEngine.commands';
-import type {
-  OmegaResponse,
-} from '../services/tauri/chatEngine.commands';
+import type { OmegaResponse } from '../services/tauri/chatEngine.commands';
 
 // Types legacy conservés pour compatibilité temporaire
 type BackendChatMessage = {
@@ -37,7 +35,7 @@ type BackendChatMessage = {
   timestamp: string;
 };
 type ChatResponse = OmegaResponse;
-type StreamConfig = { provider?: string; mode?: string; };
+type StreamConfig = { provider?: string; mode?: string };
 import { useChatModeStore } from '../stores/useChatModeStore'; // Import du store de modes
 
 type ProviderChoice = 'local' | 'ollama';
@@ -108,7 +106,7 @@ const ChatDebugPanel = ({
   );
 
   const handlePointerDown = useCallback<PointerEventHandler<HTMLDivElement>>(
-    (event) => {
+    event => {
       const header = event.currentTarget;
       dragRef.current = {
         pointerId: event.pointerId,
@@ -121,7 +119,7 @@ const ChatDebugPanel = ({
   );
 
   const handlePointerMove = useCallback<PointerEventHandler<HTMLDivElement>>(
-    (event) => {
+    event => {
       const dragState = dragRef.current;
       if (!dragState || dragState.pointerId !== event.pointerId) {
         return;
@@ -142,7 +140,7 @@ const ChatDebugPanel = ({
     [clampPosition, collapsed, onPositionChange]
   );
 
-  const handlePointerUp = useCallback<PointerEventHandler<HTMLDivElement>>((event) => {
+  const handlePointerUp = useCallback<PointerEventHandler<HTMLDivElement>>(event => {
     if (dragRef.current?.pointerId === event.pointerId) {
       event.currentTarget.releasePointerCapture(event.pointerId);
       dragRef.current = null;
@@ -216,7 +214,9 @@ const ChatDebugPanel = ({
           <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Debug Chat IA</span>
           {!collapsed && (
             <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>
-              {lastEntry ? new Date(lastEntry.timestamp).toLocaleTimeString() : 'Aucun échange'}
+              {lastEntry
+                ? new Date(lastEntry.timestamp).toLocaleTimeString()
+                : 'Aucun échange'}
             </span>
           )}
         </div>
@@ -270,11 +270,14 @@ const ChatDebugPanel = ({
               <div style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
                 <strong>Provider demandé :</strong> {lastEntry.requestedProvider}
                 <br />
-                <strong>Statut :</strong> {lastEntry.status === 'success' ? '✅ Succès' : '⚠️ Échec'}
+                <strong>Statut :</strong>{' '}
+                {lastEntry.status === 'success' ? '✅ Succès' : '⚠️ Échec'}
               </div>
 
               <div>
-                <div style={{ fontSize: '0.75rem', opacity: 0.7, marginBottom: 4 }}>Tentatives</div>
+                <div style={{ fontSize: '0.75rem', opacity: 0.7, marginBottom: 4 }}>
+                  Tentatives
+                </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                   {lastEntry.attempts.map((attempt, index) => (
                     <div
@@ -283,11 +286,16 @@ const ChatDebugPanel = ({
                         fontSize: '0.75rem',
                         padding: '6px 8px',
                         borderRadius: '8px',
-                        background: attempt.success ? 'rgba(34,197,94,0.12)' : 'rgba(248,113,113,0.12)',
+                        background: attempt.success
+                          ? 'rgba(34,197,94,0.12)'
+                          : 'rgba(248,113,113,0.12)',
                         border: `1px solid ${attempt.success ? 'rgba(34,197,94,0.35)' : 'rgba(248,113,113,0.35)'}`,
                       }}
                     >
-                      <strong>{attempt.provider}</strong> — {attempt.success ? 'Succès' : `Erreur : ${attempt.error ?? 'inconnue'}`}
+                      <strong>{attempt.provider}</strong> —{' '}
+                      {attempt.success
+                        ? 'Succès'
+                        : `Erreur : ${attempt.error ?? 'inconnue'}`}
                     </div>
                   ))}
                 </div>
@@ -318,11 +326,17 @@ const ChatDebugPanel = ({
                   fontSize: '0.7rem',
                 }}
               >
-                {JSON.stringify(lastEntry.response ?? { error: lastEntry.error ?? 'Aucune donnée' }, null, 2)}
+                {JSON.stringify(
+                  lastEntry.response ?? { error: lastEntry.error ?? 'Aucune donnée' },
+                  null,
+                  2
+                )}
               </pre>
             </>
           ) : (
-            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>Aucun échange enregistré pour le moment.</div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.7 }}>
+              Aucun échange enregistré pour le moment.
+            </div>
           )}
         </div>
       )}
@@ -337,7 +351,11 @@ const initialSystemPrompt = `Tu es TITANE∞, un assistant cognitif avancé de K
 Tu assures la sécurité des données et proposes des actions concrètes. Tu es direct, incarné, responsabilisant.`;
 
 export const ChatPage = (): JSX.Element => {
-  const { currentModeId, changeMode, initialize: initializeModeStore } = useChatModeStore();
+  const {
+    currentModeId,
+    changeMode,
+    initialize: initializeModeStore,
+  } = useChatModeStore();
 
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [lastLatency, setLastLatency] = useState<number | null>(null);
@@ -349,13 +367,15 @@ export const ChatPage = (): JSX.Element => {
       timestamp: new Date(),
     },
   ]);
-  const [conversationHistory, _setConversationHistory] = useState<BackendChatMessage[]>(() => [
-    {
-      role: 'system',
-      content: initialSystemPrompt,
-      timestamp: new Date().toISOString(),
-    },
-  ]);
+  const [conversationHistory, _setConversationHistory] = useState<BackendChatMessage[]>(
+    () => [
+      {
+        role: 'system',
+        content: initialSystemPrompt,
+        timestamp: new Date().toISOString(),
+      },
+    ]
+  );
   const historyRef = useRef(conversationHistory);
 
   useEffect(() => {
@@ -378,15 +398,21 @@ export const ChatPage = (): JSX.Element => {
 
         if (savedConversationId) {
           conversationIdToUse = savedConversationId;
-          console.log('[ChatPage-OMEGA] 🔄 Réutilisation conversation existante:', conversationIdToUse);
+          console.log(
+            '[ChatPage-OMEGA] 🔄 Réutilisation conversation existante:',
+            conversationIdToUse
+          );
         } else {
           conversationIdToUse = await chatEngineCommands.createNewConversation();
           localStorage.setItem('titane_conversation_id', conversationIdToUse);
-          console.log('[ChatPage-OMEGA] 🆕 Nouvelle conversation créée (OMEGA):', conversationIdToUse);
+          console.log(
+            '[ChatPage-OMEGA] 🆕 Nouvelle conversation créée (OMEGA):',
+            conversationIdToUse
+          );
         }
 
         setConversationId(conversationIdToUse);
-        setMessages((prev) => [
+        setMessages(prev => [
           ...prev,
           {
             role: 'system',
@@ -397,7 +423,7 @@ export const ChatPage = (): JSX.Element => {
           },
         ]);
       } catch (error) {
-        setMessages((prev) => [
+        setMessages(prev => [
           ...prev,
           {
             role: 'assistant',
@@ -417,18 +443,21 @@ export const ChatPage = (): JSX.Element => {
   const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(null);
   const [lastError, setLastError] = useState<string | null>(null);
   const [_debugEntries, _setDebugEntries] = useState<DebugEntry[]>([]);
-  const [debugPanelPosition, setDebugPanelPosition] = useState<PanelPosition>({ x: 24, y: 120 });
+  const [debugPanelPosition, setDebugPanelPosition] = useState<PanelPosition>({
+    x: 24,
+    y: 120,
+  });
   const [debugPanelVisible, setDebugPanelVisible] = useState(true);
   const [debugPanelCollapsed, setDebugPanelCollapsed] = useState(false);
 
-  const suggestions: ChatSuggestion[] = useMemo(
-    () => [],
-    []
-  );
+  const suggestions: ChatSuggestion[] = useMemo(() => [], []);
 
   const handleSendMessage = useCallback(
     async (content: string) => {
-      console.log('[ChatPage-OMEGA] 🎯 handleSendMessage appelé avec:', content?.substring(0, 50));
+      console.log(
+        '[ChatPage-OMEGA] 🎯 handleSendMessage appelé avec:',
+        content?.substring(0, 50)
+      );
 
       if (!conversationId) {
         console.error('[ChatPage-OMEGA] ❌ ID de conversation manquant. Envoi annulé.');
@@ -449,7 +478,7 @@ export const ChatPage = (): JSX.Element => {
         content: trimmed,
         timestamp: userTimestamp,
       };
-      setMessages((prev) => [...prev, userMessage]);
+      setMessages(prev => [...prev, userMessage]);
 
       setIsSending(true);
       setLastError(null);
@@ -495,7 +524,10 @@ export const ChatPage = (): JSX.Element => {
             ? finalResponse.content
             : 'Réponse vide du moteur IA OMEGA.';
 
-        console.log('[ChatPage-OMEGA] 📝 Contenu à afficher:', contentToDisplay.substring(0, 100));
+        console.log(
+          '[ChatPage-OMEGA] 📝 Contenu à afficher:',
+          contentToDisplay.substring(0, 100)
+        );
 
         const assistantMessage: ChatMessageProps = {
           role: 'assistant',
@@ -507,11 +539,11 @@ export const ChatPage = (): JSX.Element => {
               }
             : undefined,
         };
-        setMessages((prev) => [...prev, assistantMessage]);
+        setMessages(prev => [...prev, assistantMessage]);
         setLastResponseProvider(provider);
       } else {
         const message = failureMessage ?? 'Aucune réponse disponible.';
-        setMessages((prev) => [
+        setMessages(prev => [
           ...prev,
           {
             role: 'assistant',
@@ -571,13 +603,9 @@ export const ChatPage = (): JSX.Element => {
                 style={{
                   padding: '6px 10px',
                   borderRadius: '8px',
-                  border: 'OMEGA' === 'OMEGA'
-                    ? '1px solid rgba(134,239,172,0.3)'
-                    : '1px solid rgba(252,165,165,0.3)',
-                  background: 'OMEGA' === 'OMEGA'
-                    ? 'rgba(34,197,94,0.08)'
-                    : 'rgba(248,113,113,0.08)',
-                  color: 'OMEGA' === 'OMEGA' ? '#86efac' : '#fca5a5',
+                  border: '1px solid rgba(134,239,172,0.3)',
+                  background: 'rgba(34,197,94,0.08)',
+                  color: '#86efac',
                   fontSize: '0.75rem',
                   fontWeight: 600,
                 }}
@@ -640,19 +668,24 @@ export const ChatPage = (): JSX.Element => {
             </div>
 
             <ChatModeSelector
-              currentMode={currentModeId as import('@/services/ai/chatModes.config').ChatModeId}
+              currentMode={
+                currentModeId as import('@/services/ai/chatModes.config').ChatModeId
+              }
               onModeChange={changeMode}
               disabled={isSending}
             />
 
             <div style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}>
-              <label htmlFor="chat-provider" style={{ fontSize: '0.85rem', opacity: 0.8 }}>
+              <label
+                htmlFor="chat-provider"
+                style={{ fontSize: '0.85rem', opacity: 0.8 }}
+              >
                 Provider IA (OMEGA)
               </label>
               <select
                 id="chat-provider"
                 value={provider}
-                onChange={(event) => setProvider(event.target.value as ProviderChoice)}
+                onChange={event => setProvider(event.target.value as ProviderChoice)}
                 style={{
                   padding: '6px 10px',
                   borderRadius: '8px',
@@ -666,12 +699,25 @@ export const ChatPage = (): JSX.Element => {
               </select>
             </div>
 
-            <div style={{ display: 'flex', gap: spacing[3], alignItems: 'center', flexWrap: 'wrap' }}>
+            <div
+              style={{
+                display: 'flex',
+                gap: spacing[3],
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
               <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>
-                {isSending ? '⚙️ Génération OMEGA...' : lastResponseProvider ? `Dernière réponse : ${lastResponseProvider}` : 'En attente'}
+                {isSending
+                  ? '⚙️ Génération OMEGA...'
+                  : lastResponseProvider
+                    ? `Dernière réponse : ${lastResponseProvider}`
+                    : 'En attente'}
               </span>
               {lastError && (
-                <span style={{ color: '#f87171', fontSize: '0.8rem' }}>⚠️ {lastError}</span>
+                <span style={{ color: '#f87171', fontSize: '0.8rem' }}>
+                  ⚠️ {lastError}
+                </span>
               )}
               <button
                 type="button"
@@ -680,11 +726,13 @@ export const ChatPage = (): JSX.Element => {
                   const newConvId = await chatEngineCommands.createNewConversation();
                   localStorage.setItem('titane_conversation_id', newConvId);
                   setConversationId(newConvId);
-                  setMessages([{
-                    role: 'system',
-                    content: `Nouvelle conversation OMEGA démarrée. ID: ${newConvId}`,
-                    timestamp: new Date(),
-                  }]);
+                  setMessages([
+                    {
+                      role: 'system',
+                      content: `Nouvelle conversation OMEGA démarrée. ID: ${newConvId}`,
+                      timestamp: new Date(),
+                    },
+                  ]);
                 }}
                 disabled={isSending}
                 style={{
@@ -702,7 +750,7 @@ export const ChatPage = (): JSX.Element => {
               </button>
               <button
                 type="button"
-                onClick={() => setDebugPanelVisible((prev) => !prev)}
+                onClick={() => setDebugPanelVisible(prev => !prev)}
                 style={{
                   padding: '6px 10px',
                   borderRadius: '8px',
@@ -727,7 +775,10 @@ export const ChatPage = (): JSX.Element => {
             }}
           >
             {messages.map((message, index) => (
-              <ChatMessage key={`${message.role}-${message.timestamp.getTime()}-${index}`} {...message} />
+              <ChatMessage
+                key={`${message.role}-${message.timestamp.getTime()}-${index}`}
+                {...message}
+              />
             ))}
           </div>
 
@@ -770,7 +821,7 @@ export const ChatPage = (): JSX.Element => {
             {
               id: 'm2',
               type: 'fact',
-              content: "Préférence utilisateur : mode local prioritaire",
+              content: 'Préférence utilisateur : mode local prioritaire',
               relevance: 0.76,
               timestamp: new Date(Date.now() - 86400000),
             },
@@ -781,15 +832,15 @@ export const ChatPage = (): JSX.Element => {
             'Optimiser la gestion du temps',
           ]}
           isCollapsed={contextCollapsed}
-          onToggle={() => setContextCollapsed((prev) => !prev)}
+          onToggle={() => setContextCollapsed(prev => !prev)}
         />
       </div>
 
       <ChatDebugPanel
         visible={debugPanelVisible}
         collapsed={debugPanelCollapsed}
-        onToggleCollapsed={() => setDebugPanelCollapsed((prev) => !prev)}
-        onToggleVisible={() => setDebugPanelVisible((prev) => !prev)}
+        onToggleCollapsed={() => setDebugPanelCollapsed(prev => !prev)}
+        onToggleVisible={() => setDebugPanelVisible(prev => !prev)}
         position={debugPanelPosition}
         onPositionChange={setDebugPanelPosition}
         entries={_debugEntries}

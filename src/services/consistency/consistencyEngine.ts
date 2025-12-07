@@ -131,12 +131,15 @@ export class ConsistencyEngine {
   /**
    * Ajouter un objectif à tracker
    */
-  addGoal(description: string, options?: {
-    priority?: number;
-    deadline?: number;
-    parentGoalId?: string;
-    metadata?: Record<string, unknown>;
-  }): ConversationGoal {
+  addGoal(
+    description: string,
+    options?: {
+      priority?: number;
+      deadline?: number;
+      parentGoalId?: string;
+      metadata?: Record<string, unknown>;
+    }
+  ): ConversationGoal {
     const goal: ConversationGoal = {
       id: `goal_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       description,
@@ -207,13 +210,16 @@ export class ConsistencyEngine {
   /**
    * Ajouter un fait établi
    */
-  addFact(statement: string, options?: {
-    confidence?: number;
-    source?: ConversationFact['source'];
-    tags?: string[];
-    supersedes?: string; // Remplace ancien fait
-    metadata?: Record<string, unknown>;
-  }): ConversationFact {
+  addFact(
+    statement: string,
+    options?: {
+      confidence?: number;
+      source?: ConversationFact['source'];
+      tags?: string[];
+      supersedes?: string; // Remplace ancien fait
+      metadata?: Record<string, unknown>;
+    }
+  ): ConversationFact {
     const fact: ConversationFact = {
       id: `fact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       statement,
@@ -313,7 +319,9 @@ export class ConsistencyEngine {
 
     for (const fact of validFacts) {
       // Vérifier si déclarations se contredisent
-      const factHasNegation = negationWords.some(w => fact.statement.toLowerCase().includes(w));
+      const factHasNegation = negationWords.some(w =>
+        fact.statement.toLowerCase().includes(w)
+      );
 
       // Heuristique simple: si même sujet mais une négation différente
       const statementWords = this.extractKeywords(statement);
@@ -345,7 +353,7 @@ export class ConsistencyEngine {
 
     // Check 1: Vérifier contradictions avec faits établis
     if (this.config.checkFacts) {
-      const validFacts = this.getValidFacts();
+      const _validFacts = this.getValidFacts();
 
       for (const sentence of sentences) {
         const contradictingFacts = this.findContradictingFacts(sentence);
@@ -391,7 +399,7 @@ export class ConsistencyEngine {
 
         if (!mentionsGoal && mode !== 'journal') {
           result.suggestions.push(
-            'La réponse pourrait mieux s\'aligner avec les objectifs actifs.'
+            "La réponse pourrait mieux s'aligner avec les objectifs actifs."
           );
           result.confidence *= 0.9;
         }
@@ -419,16 +427,17 @@ export class ConsistencyEngine {
 
     // Pour chaque contradiction fact-response, tenter de corriger
     for (const contradiction of checkResult.contradictions) {
-      if (contradiction.type === 'fact-response' && contradiction.fact1 && contradiction.responseSegment) {
+      if (
+        contradiction.type === 'fact-response' &&
+        contradiction.fact1 &&
+        contradiction.responseSegment
+      ) {
         // Remplacer segment contradictoire par reformulation alignée sur fait
         const segment = contradiction.responseSegment.trim();
         const fact = contradiction.fact1.statement;
 
         // Simple: remplacer phrase contradictoire par rappel du fait
-        corrected = corrected.replace(
-          segment,
-          `Pour rappel: ${fact}`
-        );
+        corrected = corrected.replace(segment, `Pour rappel: ${fact}`);
       }
     }
 
@@ -557,10 +566,48 @@ export class ConsistencyEngine {
   private extractKeywords(text: string): string[] {
     // Stopwords français basiques
     const stopwords = new Set([
-      'le', 'la', 'les', 'un', 'une', 'des', 'de', 'du', 'à', 'au', 'aux',
-      'et', 'ou', 'mais', 'donc', 'car', 'ni', 'pour', 'dans', 'sur', 'avec',
-      'est', 'sont', 'être', 'avoir', 'je', 'tu', 'il', 'elle', 'nous', 'vous', 'ils',
-      'ce', 'cet', 'cette', 'ces', 'mon', 'ton', 'son', 'ma', 'ta', 'sa',
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'des',
+      'de',
+      'du',
+      'à',
+      'au',
+      'aux',
+      'et',
+      'ou',
+      'mais',
+      'donc',
+      'car',
+      'ni',
+      'pour',
+      'dans',
+      'sur',
+      'avec',
+      'est',
+      'sont',
+      'être',
+      'avoir',
+      'je',
+      'tu',
+      'il',
+      'elle',
+      'nous',
+      'vous',
+      'ils',
+      'ce',
+      'cet',
+      'cette',
+      'ces',
+      'mon',
+      'ton',
+      'son',
+      'ma',
+      'ta',
+      'sa',
     ]);
 
     return text
@@ -581,7 +628,9 @@ export class ConsistencyEngine {
       totalFacts: this.facts.size,
       validFacts: this.getValidFacts().length,
       contradictions: this.contradictions.filter(c => !c.resolved).length,
-      averageFactConfidence: this.getValidFacts().reduce((sum, f) => sum + f.confidence, 0) / this.getValidFacts().length || 0,
+      averageFactConfidence:
+        this.getValidFacts().reduce((sum, f) => sum + f.confidence, 0) /
+          this.getValidFacts().length || 0,
     };
   }
 

@@ -35,7 +35,7 @@ export function useIdentityKernel(): IdentityKernelState {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((newState) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(newState => {
       setState(newState);
     });
     return unsubscribe;
@@ -57,7 +57,7 @@ export function useIdentitySignature(): IdentitySignature {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setSignature(state.identitySignature);
     });
     return unsubscribe;
@@ -70,12 +70,10 @@ export function useIdentitySignature(): IdentitySignature {
  * Hook: Tone identitaire (0..1)
  */
 export function useIdentityTone(): number {
-  const [tone, setTone] = useState<number>(
-    unifiedIdentityKernel.getSignature().tone
-  );
+  const [tone, setTone] = useState<number>(unifiedIdentityKernel.getSignature().tone);
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setTone(state.identitySignature.tone);
     });
     return unsubscribe;
@@ -93,7 +91,7 @@ export function useIdentityEnergy(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setEnergy(state.identitySignature.energy);
     });
     return unsubscribe;
@@ -111,7 +109,7 @@ export function useIdentityWarmth(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setWarmth(state.identitySignature.warmth);
     });
     return unsubscribe;
@@ -129,7 +127,7 @@ export function useIdentityClarity(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setClarity(state.identitySignature.clarity);
     });
     return unsubscribe;
@@ -147,7 +145,7 @@ export function useNarrativeStyle(): string {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setStyle(state.identitySignature.narrativeStyle);
     });
     return unsubscribe;
@@ -165,7 +163,7 @@ export function useCognitivePosture(): string {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setPosture(state.identitySignature.cognitivePosture);
     });
     return unsubscribe;
@@ -187,7 +185,7 @@ export function useCognitiveProfile(): CognitiveProfile {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setProfile(state.cognitiveProfile);
     });
     return unsubscribe;
@@ -205,7 +203,7 @@ export function useCognitiveSpeed(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setSpeed(state.cognitiveProfile.speed);
     });
     return unsubscribe;
@@ -223,7 +221,7 @@ export function useCognitiveDepth(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setDepth(state.cognitiveProfile.depth);
     });
     return unsubscribe;
@@ -241,7 +239,7 @@ export function useCognitivePrecision(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setPrecision(state.cognitiveProfile.precision);
     });
     return unsubscribe;
@@ -263,7 +261,7 @@ export function useEmotiveResonance(): EmotiveResonance {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setResonance(state.emotiveResonance);
     });
     return unsubscribe;
@@ -281,7 +279,7 @@ export function useEmotiveIntensity(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setIntensity(state.emotiveResonance.intensity);
     });
     return unsubscribe;
@@ -299,7 +297,7 @@ export function useVocalWarmth(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setWarmth(state.emotiveResonance.vocalWarmth);
     });
     return unsubscribe;
@@ -317,7 +315,7 @@ export function useHaloReactivity(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setReactivity(state.emotiveResonance.haloReactivity);
     });
     return unsubscribe;
@@ -339,7 +337,7 @@ export function useAttentionState(): AttentionState {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setAttention(state.attention);
     });
     return unsubscribe;
@@ -357,7 +355,7 @@ export function useAttentionFocus(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setFocus(state.attention.focus);
     });
     return unsubscribe;
@@ -375,7 +373,7 @@ export function useCognitiveLoad(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setLoad(state.attention.cognitiveLoad);
     });
     return unsubscribe;
@@ -393,7 +391,7 @@ export function useAttentionPriorities(): string[] {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setPriorities(state.attention.priorities);
     });
     return unsubscribe;
@@ -415,7 +413,7 @@ export function useAdaptiveState(): AdaptiveIdentityState {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setAdaptive(state.adaptation);
     });
     return unsubscribe;
@@ -433,7 +431,7 @@ export function useContextSensitivity(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setSensitivity(state.adaptation.contextSensitivity);
     });
     return unsubscribe;
@@ -451,7 +449,7 @@ export function useUserAlignment(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setAlignment(state.adaptation.userAlignment);
     });
     return unsubscribe;
@@ -473,7 +471,7 @@ export function useGlobalCoherence(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setCoherence(state.globalCoherence);
     });
     return unsubscribe;
@@ -491,7 +489,7 @@ export function useIdentityStability(): number {
   );
 
   useEffect(() => {
-    const unsubscribe = unifiedIdentityKernel.subscribe((state) => {
+    const unsubscribe = unifiedIdentityKernel.subscribe(state => {
       setStability(state.identityStability);
     });
     return unsubscribe;
@@ -548,7 +546,7 @@ export function useIdentityActions() {
     /**
      * Forcer une valeur identitaire
      */
-    setIdentityValue: (key: keyof IdentitySignature, value: any) => {
+    setIdentityValue: (key: keyof IdentitySignature, value: unknown) => {
       unifiedIdentityKernel.setIdentityValue(key, value);
     },
   };

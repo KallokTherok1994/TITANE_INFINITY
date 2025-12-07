@@ -16,7 +16,14 @@
  */
 
 import React, { useEffect, useState, Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { invoke } from '@tauri-apps/api/core';
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
@@ -29,7 +36,11 @@ import { CompactXPBar } from './components/experience/CompactXPBar';
 import { XPBar } from './components/experience/XPBar'; // ✨ v∞.D4 - Barre XP
 import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
 import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
-import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
+import {
+  detectEnvironment,
+  shouldBlockLoading,
+  logEnvironmentWarnings,
+} from './core/tauri/environment';
 import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
@@ -75,7 +86,9 @@ import { ConfigurationHub } from './pages/ConfigurationHub'; // 🎯 v19.5.2 - C
 // Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
-const SingularityMonitor = lazy(() => import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor })));
+const SingularityMonitor = lazy(() =>
+  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor }))
+);
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 import { ChatBubble } from './components/chat/ChatBubble';
@@ -106,7 +119,7 @@ import { DeepPsychePanel } from './components/psyche/DeepPsychePanel';
 import { archetypeResonanceEngine } from './engines/psyche/archetypeResonanceEngine';
 import { metaContinuumEngine } from './engines/continuum/metaContinuumEngine';
 import { embodiedPresenceEngine } from './engines/embodiment/embodiedPresenceEngine';
-import { _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
+import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
 import { PresenceOSPanel } from './components/presence/PresenceOSPanel';
@@ -134,64 +147,108 @@ import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
 import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
 
 // Phase 9: Lazy load heavy pages (code splitting with named exports)
-const _DesignSystemPage = lazy(() => import('./pages/_DesignSystemPage').then(m => ({ default: m._DesignSystemPage })));
-const PerformanceTest = lazy(() => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })));
-const _TimeNavigator = lazy(() => import('./pages/_TimeNavigator').then(m => ({ default: m._TimeNavigator })));
+const _DesignSystemPage = lazy(() =>
+  import('./pages/DesignSystemPage').then(m => ({ default: m.DesignSystemPage }))
+);
+const PerformanceTest = lazy(() =>
+  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
+);
+const _TimeNavigator = lazy(() =>
+  import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator }))
+);
 const MultiAIDashboard = lazy(() => import('./ui/pages/MultiAIDashboard'));
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
 const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
 
 // ✨ SYSTEM CENTER - Centre Système Unifié v∞
-const SystemCenterPage = lazy(() => import('./features/system-center').then(m => ({ default: m.SystemCenterPage })));
+const SystemCenterPage = lazy(() =>
+  import('./features/system-center').then(m => ({ default: m.SystemCenterPage }))
+);
 
 // ✨ DESIGN CENTER - Centre Design & Apparence v16
-const DesignCenterPage = lazy(() => import('./features/design-center').then(m => ({ default: m.DesignCenterPage })));
+const DesignCenterPage = lazy(() =>
+  import('./features/design-center').then(m => ({ default: m.DesignCenterPage }))
+);
 
 // ✨ GOVERNANCE CENTER - Centre Gouvernance & Sécurité v∞
-const GovernanceCenterPage = lazy(() => import('./features/governance-center').then(m => ({ default: m.GovernanceCenterPage })));
+const GovernanceCenterPage = lazy(() =>
+  import('./features/governance-center').then(m => ({ default: m.GovernanceCenterPage }))
+);
 
 // ✨ AUDIO CENTER - Centre Audio & Voix v19.2
-const AudioCenterPage = lazy(() => import('./features/audio-center').then(m => ({ default: m.AudioCenterPage })));
+const AudioCenterPage = lazy(() =>
+  import('./features/audio-center').then(m => ({ default: m.AudioCenterPage }))
+);
 
 // ✨ EVOLUTION CENTER - Centre d'Évolution Cognitive v19.3 (OPUS #4)
-const EvolutionCenterPage = lazy(() => import('./pages/EvolutionCenterPage').then(m => ({ default: m.EvolutionCenterPage })));
+const EvolutionCenterPage = lazy(() =>
+  import('./pages/EvolutionCenterPage').then(m => ({ default: m.EvolutionCenterPage }))
+);
 
 // ✨ ORCHESTRATION META CENTER - Centre Unifié v24 (TODO #9 - Fusion Meta + Orchestration)
-const OrchestrationMetaCenter = lazy(() => import('./pages/OrchestrationMetaCenter').then(m => ({ default: m.OrchestrationMetaCenter })));
+const OrchestrationMetaCenter = lazy(() =>
+  import('./pages/OrchestrationMetaCenter').then(m => ({
+    default: m.OrchestrationMetaCenter,
+  }))
+);
 
 // ✨ ONE CORE - Centre de Commande Unifié v19.5 (OPUS #6)
-const OneCorePage = lazy(() => import('./features/one-core').then(m => ({ default: m.OneCorePage })));
+const OneCorePage = lazy(() =>
+  import('./features/one-core').then(m => ({ default: m.OneCorePage }))
+);
 
 // ✨ QA MONITORING CENTER - Centre QA & Monitoring v19.6 (OPUS #7)
-const QAMonitoringPage = lazy(() => import('./features/qa-monitoring').then(m => ({ default: m.QAMonitoringPage })));
+const QAMonitoringPage = lazy(() =>
+  import('./features/qa-monitoring').then(m => ({ default: m.QAMonitoringPage }))
+);
 
 // ✨ DEVELOPER MODE - IA Developer Mode v∞ (OPUS #10)
-const DeveloperModePage = lazy(() => import('./features/developer-mode').then(m => ({ default: m.DeveloperModePage })));
+const DeveloperModePage = lazy(() =>
+  import('./features/developer-mode').then(m => ({ default: m.DeveloperModePage }))
+);
 
 // ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19)
-const RealityCenter = lazy(() => import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default })));
+const RealityCenter = lazy(() =>
+  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default }))
+);
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
-const HyperCenter = lazy(() => import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default })));
+const HyperCenter = lazy(() =>
+  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default }))
+);
 
 // ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17)
-const QuantumCenter = lazy(() => import('./components/QuantumCenter/QuantumCenter').then(m => ({ default: m.default })));
+const QuantumCenter = lazy(() =>
+  import('./components/QuantumCenter/QuantumCenter').then(m => ({ default: m.default }))
+);
 
 // ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15)
-const IdentityCenter = lazy(() => import('./components/IdentityCenter/IdentityCenter').then(m => ({ default: m.default })));
+const IdentityCenter = lazy(() =>
+  import('./components/IdentityCenter/IdentityCenter').then(m => ({ default: m.default }))
+);
 
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
-const MemoryEvolutionCenter = lazy(() => import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({ default: m.default })));
+const MemoryEvolutionCenter = lazy(() =>
+  import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({
+    default: m.default,
+  }))
+);
 
 // ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞
-const CloudCenter = lazy(() => import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter })));
+const CloudCenter = lazy(() =>
+  import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter }))
+);
 
 // ✨ v24.1 - ORCHESTRATION & INTELLIGENCE CENTER (FUSION 6 modules → 1 centre)
-const OrchestrationIntelligenceCenter = lazy(() => import('./modules/OrchestrationIntelligenceCenter'));
+const OrchestrationIntelligenceCenter = lazy(
+  () => import('./modules/OrchestrationIntelligenceCenter')
+);
 
 // ✨ v24.1 - IDENTITY & MEMORY EVOLUTION CENTER (FUSION 4 modules → 1 centre)
-const IdentityMemoryEvolutionCenter = lazy(() => import('./modules/IdentityMemoryEvolutionCenter'));
+const IdentityMemoryEvolutionCenter = lazy(
+  () => import('./modules/IdentityMemoryEvolutionCenter')
+);
 
 // ✨ v24.2 - TEMPORAL FLOW & AGENDA CENTER (FUSION 2 modules → 1 centre)
 const TemporalFlowCenter = lazy(() => import('./modules/TemporalFlowCenter'));
@@ -206,7 +263,7 @@ import {
   SelfHeal,
   AdaptiveEngine,
   Memory,
-  _AgendaPage,
+  AgendaPage as _AgendaPage,
   CameraPage,
 } from './pages';
 
@@ -220,8 +277,8 @@ const AppRouter: React.FC = () => {
   const navigate = useNavigate();
 
   // Use Singularity State instead of local state
-  const sidebarCollapsed = useSingularityState((s) => s.context.sidebarCollapsed);
-  const toggleSidebar = useSingularityState((s) => s.toggleSidebar);
+  const sidebarCollapsed = useSingularityState(s => s.context.sidebarCollapsed);
+  const toggleSidebar = useSingularityState(s => s.toggleSidebar);
 
   // ✨ v19.5.2 - User Onboarding State
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
@@ -393,7 +450,9 @@ const AppRouter: React.FC = () => {
 
     presenceOS.start();
     console.log('  ✅ Presence OS active (30Hz, 8 signature modes)');
-    console.log('  ✅ 7 layers: Cognitive, Affective, Expression, Aura, Spatial, Autonomic, Evolution');
+    console.log(
+      '  ✅ 7 layers: Cognitive, Affective, Expression, Aura, Spatial, Autonomic, Evolution'
+    );
     console.log('  ✅ Unified identity orchestration across 6 engines');
 
     return () => {
@@ -425,7 +484,12 @@ const AppRouter: React.FC = () => {
     { id: '/progression', label: 'Progression', icon: '⚡' },
 
     // ✨ v24.2 - NOUVEAU CENTRE TEMPS UNIFIÉ
-    { id: '/temporal-center', label: 'Centre Temps & Navigation', icon: '⏳', badge: 'v24.2' },
+    {
+      id: '/temporal-center',
+      label: 'Centre Temps & Navigation',
+      icon: '⏳',
+      badge: 'v24.2',
+    },
 
     // Anciens (à migrer vers Centre Temps)
     { id: '/agenda', label: 'Agenda', icon: '📅', badge: 'legacy' },
@@ -442,11 +506,26 @@ const AppRouter: React.FC = () => {
     { id: '/developer-mode', label: 'Mode Développeur', icon: '💻', badge: 'OPUS#10' },
 
     // ═══ CENTRES COGNITIFS ═══
-    { id: '/evolution-center', label: 'Évolution Cognitive', icon: '🧬', badge: 'OPUS#4' },
+    {
+      id: '/evolution-center',
+      label: 'Évolution Cognitive',
+      icon: '🧬',
+      badge: 'OPUS#4',
+    },
 
     // ✨ v24.1 - NOUVEAUX CENTRES UNIFIÉS (10 modules → 2 centres)
-    { id: '/orchestration-intelligence', label: 'Orchestration & Intelligence', icon: '🔥', badge: 'v24.1' },
-    { id: '/identity-memory-evolution', label: 'Identity & Memory Evolution', icon: '🧠', badge: 'v24.1' },
+    {
+      id: '/orchestration-intelligence',
+      label: 'Orchestration & Intelligence',
+      icon: '🔥',
+      badge: 'v24.1',
+    },
+    {
+      id: '/identity-memory-evolution',
+      label: 'Identity & Memory Evolution',
+      icon: '🧠',
+      badge: 'v24.1',
+    },
 
     // Anciens centres (à migrer vers les nouveaux)
     { id: '/orchestration-center', label: 'Orchestration', icon: '🎛️', badge: 'OPUS#5' },
@@ -474,14 +553,16 @@ const AppRouter: React.FC = () => {
   // ✨ v19.5.2 - Show loading while checking onboarding status
   if (checkingOnboarding) {
     return (
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        fontSize: '1.2rem',
-        color: '#727b81'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          height: '100vh',
+          fontSize: '1.2rem',
+          color: '#727b81',
+        }}
+      >
         ⚡ Chargement...
       </div>
     );
@@ -499,9 +580,11 @@ const AppRouter: React.FC = () => {
         <Sidebar
           items={sidebarItems.map(item => ({
             ...item,
-            active: item.id === location.pathname
+            active: item.id === location.pathname,
           }))}
-          onItemClick={(item) => { navigate(item.id); }}
+          onItemClick={item => {
+            navigate(item.id);
+          }}
           collapsed={sidebarCollapsed}
           header={
             <>
@@ -515,7 +598,11 @@ const AppRouter: React.FC = () => {
               </div>
               {/* Compact XP Bar */}
               {!sidebarCollapsed && (
-                <CompactXPBar onClick={() => { navigate('/progression'); }} />
+                <CompactXPBar
+                  onClick={() => {
+                    navigate('/progression');
+                  }}
+                />
               )}
             </>
           }
@@ -545,246 +632,322 @@ const AppRouter: React.FC = () => {
       sidebarCollapsed={sidebarCollapsed}
     >
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
-      <Suspense fallback={
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          fontSize: '1.2rem',
-          color: '#727b81'
-        }}>
-          ⚡ Chargement...
-        </div>
-      }>
+      <Suspense
+        fallback={
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100vh',
+              fontSize: '1.2rem',
+              color: '#727b81',
+            }}
+          >
+            ⚡ Chargement...
+          </div>
+        }
+      >
         <Routes>
           {/* Main Routes v15.2+ */}
           <Route path="/" element={<DashboardPage />} />
-          <Route path="/chat" element={
-            <ErrorBoundary context="ChatPage">
-              <ChatPage />
-            </ErrorBoundary>
-          } />
-          <Route path="/cognitive" element={
-            <ErrorBoundary context="CognitivePage">
-              <CognitivePage />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/chat"
+            element={
+              <ErrorBoundary context="ChatPage">
+                <ChatPage />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/cognitive"
+            element={
+              <ErrorBoundary context="CognitivePage">
+                <CognitivePage />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/progression" element={<ProgressionPage />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
-          <Route path="/configuration" element={<ConfigurationHub />} /> {/* 🎯 v19.5.2 - Configuration Hub (Phase 2) */}
-
+          <Route path="/configuration" element={<ConfigurationHub />} />{' '}
+          {/* 🎯 v19.5.2 - Configuration Hub (Phase 2) */}
           {/* ✨ v24.2 TEMPORAL FLOW & AGENDA CENTER - Fusion Agenda + Navigation Temporelle */}
-          <Route path="/temporal-center" element={
-            <ErrorBoundary context="TemporalFlowCenter">
-              <TemporalFlowCenter />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/temporal-center"
+            element={
+              <ErrorBoundary context="TemporalFlowCenter">
+                <TemporalFlowCenter />
+              </ErrorBoundary>
+            }
+          />
           {/* ✨ v∞ AGENDA - Gestion Planning & Événements (Legacy - redirige vers temporal-center) */}
           <Route path="/agenda" element={<Navigate to="/temporal-center" replace />} />
-          <Route path="/time-navigator" element={<Navigate to="/temporal-center" replace />} />
-
+          <Route
+            path="/time-navigator"
+            element={<Navigate to="/temporal-center" replace />}
+          />
           {/* ✨ v∞ CAMERA - Centre Vision & Analyse Visuelle */}
-          <Route path="/camera" element={
-            <ErrorBoundary context="CameraPage">
-              <CameraPage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/camera"
+            element={
+              <ErrorBoundary context="CameraPage">
+                <CameraPage />
+              </ErrorBoundary>
+            }
+          />
           {/* ✨ v16 - DESIGN CENTER UNIFIÉ (Design System + Apparence + Tokens Dynamiques) */}
-          <Route path="/design-center" element={
-            <ErrorBoundary context="DesignCenter">
-              <DesignCenterPage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/design-center"
+            element={
+              <ErrorBoundary context="DesignCenter">
+                <DesignCenterPage />
+              </ErrorBoundary>
+            }
+          />
           {/* Redirections vers Design Center pour anciennes routes */}
-          <Route path="/design-system" element={<Navigate to="/design-center" replace />} />
+          <Route
+            path="/design-system"
+            element={<Navigate to="/design-center" replace />}
+          />
           <Route path="/settings" element={<Navigate to="/design-center" replace />} />
-
           {/* ✨ v∞ - SYSTÈME CENTER UNIFIÉ (Diagnostic + DevTools + Cluster + Introspection + HyperVision) */}
-          <Route path="/system-center" element={
-            <ErrorBoundary context="SystemCenter">
-              <SystemCenterPage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/system-center"
+            element={
+              <ErrorBoundary context="SystemCenter">
+                <SystemCenterPage />
+              </ErrorBoundary>
+            }
+          />
           {/* Redirections vers System Center pour anciennes routes */}
           <Route path="/diagnostics" element={<Navigate to="/system-center" replace />} />
           <Route path="/devtools" element={<Navigate to="/system-center" replace />} />
           <Route path="/cluster" element={<Navigate to="/system-center" replace />} />
-          <Route path="/introspection" element={<Navigate to="/system-center" replace />} />
+          <Route
+            path="/introspection"
+            element={<Navigate to="/system-center" replace />}
+          />
           <Route path="/hypervision" element={<Navigate to="/system-center" replace />} />
-
           {/* ✨ v∞ GOVERNANCE CENTER - Centre Gouvernance & Sécurité Unifié */}
-          <Route path="/governance-center" element={
-            <ErrorBoundary context="GovernanceCenter">
-              <GovernanceCenterPage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/governance-center"
+            element={
+              <ErrorBoundary context="GovernanceCenter">
+                <GovernanceCenterPage />
+              </ErrorBoundary>
+            }
+          />
           {/* Redirections vers Governance Center pour anciennes routes */}
-          <Route path="/governance" element={<Navigate to="/governance-center" replace />} />
+          <Route
+            path="/governance"
+            element={<Navigate to="/governance-center" replace />}
+          />
           <Route path="/secure" element={<Navigate to="/governance-center" replace />} />
-
           {/* ✨ v19.2 AUDIO CENTER - Centre Audio & Voix */}
-          <Route path="/audio-center" element={
-            <ErrorBoundary context="AudioCenter">
-              <AudioCenterPage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/audio-center"
+            element={
+              <ErrorBoundary context="AudioCenter">
+                <AudioCenterPage />
+              </ErrorBoundary>
+            }
+          />
           {/* Redirections vers Audio Center pour anciennes routes */}
           <Route path="/audio" element={<Navigate to="/audio-center" replace />} />
           <Route path="/voice" element={<Navigate to="/audio-center" replace />} />
           <Route path="/tts" element={<Navigate to="/audio-center" replace />} />
-
           {/* ✨ v19.3 EVOLUTION CENTER - Centre d'Évolution Cognitive (OPUS #4) */}
-          <Route path="/evolution-center" element={
-            <ErrorBoundary context="EvolutionCenter">
-              <EvolutionCenterPage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/evolution-center"
+            element={
+              <ErrorBoundary context="EvolutionCenter">
+                <EvolutionCenterPage />
+              </ErrorBoundary>
+            }
+          />
           {/* Redirections vers Evolution Center pour anciennes routes */}
-          <Route path="/cognitive-evolution" element={<Navigate to="/evolution-center" replace />} />
+          <Route
+            path="/cognitive-evolution"
+            element={<Navigate to="/evolution-center" replace />}
+          />
           <Route path="/xp" element={<Navigate to="/evolution-center" replace />} />
-
           {/* ✨ v24.1 ORCHESTRATION & INTELLIGENCE CENTER - Fusion 6 modules (QA, Meta, Orchestration, Quantum, Multi-IA, Reality) */}
-          <Route path="/orchestration-intelligence" element={
-            <ErrorBoundary context="OrchestrationIntelligenceCenter">
-              <OrchestrationIntelligenceCenter />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/orchestration-intelligence"
+            element={
+              <ErrorBoundary context="OrchestrationIntelligenceCenter">
+                <OrchestrationIntelligenceCenter />
+              </ErrorBoundary>
+            }
+          />
           {/* ✨ v24.1 IDENTITY & MEMORY EVOLUTION CENTER - Fusion 4 modules (Identité, Mémoire, Mémoire Évolutive, Évolution Cognitive) */}
-          <Route path="/identity-memory-evolution" element={
-            <ErrorBoundary context="IdentityMemoryEvolutionCenter">
-              <IdentityMemoryEvolutionCenter />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/identity-memory-evolution"
+            element={
+              <ErrorBoundary context="IdentityMemoryEvolutionCenter">
+                <IdentityMemoryEvolutionCenter />
+              </ErrorBoundary>
+            }
+          />
           {/* ✨ v24 ORCHESTRATION META CENTER - Centre Unifié (TODO #9) */}
-          <Route path="/orchestration-center" element={
-            <ErrorBoundary context="OrchestrationMetaCenter">
-              <OrchestrationMetaCenter />
-            </ErrorBoundary>
-          } />
-          <Route path="/meta-center" element={<Navigate to="/orchestration-center" replace />} />
-
+          <Route
+            path="/orchestration-center"
+            element={
+              <ErrorBoundary context="OrchestrationMetaCenter">
+                <OrchestrationMetaCenter />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/meta-center"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
           {/* Redirections vers Orchestration Meta Center pour anciennes routes */}
           <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
-          <Route path="/multi-ai-dashboard" element={<Navigate to="/orchestration-center" replace />} />
-          <Route path="/nexus-engine" element={<Navigate to="/orchestration-center" replace />} />
-          <Route path="/harmonia-engine" element={<Navigate to="/orchestration-center" replace />} />
-          <Route path="/cognitive-state" element={<Navigate to="/orchestration-center" replace />} />
-
+          <Route
+            path="/multi-ai-dashboard"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
+          <Route
+            path="/nexus-engine"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
+          <Route
+            path="/harmonia-engine"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
+          <Route
+            path="/cognitive-state"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
           {/* ✨ v19.5 ONE CORE - Centre de Commande Unifié (OPUS #6) */}
-          <Route path="/one-core" element={
-            <ErrorBoundary context="OneCore">
-              <OneCorePage />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/one-core"
+            element={
+              <ErrorBoundary context="OneCore">
+                <OneCorePage />
+              </ErrorBoundary>
+            }
+          />
           {/* Redirections vers ONE CORE pour anciennes routes */}
           <Route path="/command-center" element={<Navigate to="/one-core" replace />} />
           <Route path="/unified" element={<Navigate to="/one-core" replace />} />
           <Route path="/singularity" element={<Navigate to="/one-core" replace />} />
-
           {/* ✨ v19.6 QA MONITORING CENTER - Centre QA & Monitoring (OPUS #7) */}
-          <Route path="/qa-monitoring" element={
-            <ErrorBoundary context="QAMonitoring">
-              <QAMonitoringPage />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/qa-monitoring"
+            element={
+              <ErrorBoundary context="QAMonitoring">
+                <QAMonitoringPage />
+              </ErrorBoundary>
+            }
+          />
           {/* Alias pour QA Center */}
           <Route path="/qa" element={<Navigate to="/qa-monitoring" replace />} />
           <Route path="/monitoring" element={<Navigate to="/qa-monitoring" replace />} />
           <Route path="/tests" element={<Navigate to="/qa-monitoring" replace />} />
-
           {/* ✨ v∞ DEVELOPER MODE - IA Developer Mode (OPUS #10) */}
-          <Route path="/developer-mode" element={
-            <ErrorBoundary context="DeveloperMode">
-              <DeveloperModePage />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/developer-mode"
+            element={
+              <ErrorBoundary context="DeveloperMode">
+                <DeveloperModePage />
+              </ErrorBoundary>
+            }
+          />
           {/* Alias pour Developer Mode */}
           <Route path="/dev-mode" element={<Navigate to="/developer-mode" replace />} />
           <Route path="/devmode" element={<Navigate to="/developer-mode" replace />} />
           <Route path="/ia-dev" element={<Navigate to="/developer-mode" replace />} />
-
           {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
-          <Route path="/reality-center" element={
-            <ErrorBoundary context="RealityCenter">
-              <RealityCenter />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/reality-center"
+            element={
+              <ErrorBoundary context="RealityCenter">
+                <RealityCenter />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
           <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
-
           {/* ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20) */}
-          <Route path="/hyper-center" element={
-            <ErrorBoundary context="HyperCenter">
-              <HyperCenter />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/hyper-center"
+            element={
+              <ErrorBoundary context="HyperCenter">
+                <HyperCenter />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
           <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
-
           {/* ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17) */}
-          <Route path="/quantum-center" element={
-            <ErrorBoundary context="QuantumCenter">
-              <QuantumCenter />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/quantum-center"
+            element={
+              <ErrorBoundary context="QuantumCenter">
+                <QuantumCenter />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
-
           {/* ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15) */}
-          <Route path="/identity-center" element={
-            <ErrorBoundary context="IdentityCenter">
-              <IdentityCenter />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/identity-center"
+            element={
+              <ErrorBoundary context="IdentityCenter">
+                <IdentityCenter />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
           <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
-
           {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
-          <Route path="/memory-evolution" element={
-            <ErrorBoundary context="MemoryEvolution">
-              <MemoryEvolutionCenter />
-            </ErrorBoundary>
-          } />
-          <Route path="/memory-evo" element={<Navigate to="/memory-evolution" replace />} />
-
+          <Route
+            path="/memory-evolution"
+            element={
+              <ErrorBoundary context="MemoryEvolution">
+                <MemoryEvolutionCenter />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/memory-evo"
+            element={<Navigate to="/memory-evolution" replace />}
+          />
           {/* ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞ */}
-          <Route path="/cloud" element={
-            <ErrorBoundary context="CloudCenter">
-              <CloudCenter />
-            </ErrorBoundary>
-          } />
+          <Route
+            path="/cloud"
+            element={
+              <ErrorBoundary context="CloudCenter">
+                <CloudCenter />
+              </ErrorBoundary>
+            }
+          />
           <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
           <Route path="/vault" element={<Navigate to="/cloud" replace />} />
-
           {/* v∞ Phase 4 - Multi-Agent System (Super-Prompt O) (Phase 9: lazy loaded) */}
-          <Route path="/multi-ai" element={
-            <ErrorBoundary context="MultiAIDashboard">
-              <MultiAIDashboard />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/multi-ai"
+            element={
+              <ErrorBoundary context="MultiAIDashboard">
+                <MultiAIDashboard />
+              </ErrorBoundary>
+            }
+          />
           {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
           <Route path="/knowledge" element={<KnowledgeFusionPage />} />
           <Route path="/creation" element={<CreationStudio />} />
           <Route path="/evolution" element={<EvolutionMonitor />} />
-
           {/* v15: SingularityState Monitor */}
-          <Route path="/singularity" element={
-            <ErrorBoundary context="SingularityMonitor">
-              <SingularityMonitor />
-            </ErrorBoundary>
-          } />
-
+          <Route
+            path="/singularity"
+            element={
+              <ErrorBoundary context="SingularityMonitor">
+                <SingularityMonitor />
+              </ErrorBoundary>
+            }
+          />
           {/* Engine Routes */}
           <Route path="/helios" element={<Helios />} />
           <Route path="/nexus" element={<Nexus />} />
@@ -794,10 +957,8 @@ const AppRouter: React.FC = () => {
           <Route path="/selfheal" element={<SelfHeal />} />
           <Route path="/adaptive" element={<AdaptiveEngine />} />
           <Route path="/memory" element={<Memory />} />
-
           {/* System Routes (Phase 9: lazy loaded) */}
           <Route path="/performance" element={<PerformanceTest />} />
-
           {/* Catch-all - Redirection vers Dashboard */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

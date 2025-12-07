@@ -21,7 +21,7 @@ import type {
 import {
   processMessage,
   healthCheck,
-  getMemoryStats,
+  getMemoryStats as _getMemoryStats,
 } from '@/services/conversationEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -79,7 +79,6 @@ export interface UseConversationEngineReturn {
 export function useConversationEngine(
   options: UseConversationEngineOptions = {}
 ): UseConversationEngineReturn {
-
   // ═══ ÉTAT ═══
   const [messages, setMessages] = useState<ConversationMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -106,7 +105,9 @@ export function useConversationEngine(
 
           // Auto-repair si critique
           if (report.status === 'Critical') {
-            console.warn('[ConversationEngine] État critique détecté, auto-réparation en cours...');
+            console.warn(
+              '[ConversationEngine] État critique détecté, auto-réparation en cours...'
+            );
           }
         } catch (err) {
           console.error('[ConversationEngine] Health check failed:', err);
@@ -195,7 +196,6 @@ export function useConversationEngine(
         });
 
         return response;
-
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Erreur inconnue';
         setError(errorMessage);
@@ -203,7 +203,6 @@ export function useConversationEngine(
 
         console.error('[ConversationEngine] Erreur:', err);
         return null;
-
       } finally {
         setIsLoading(false);
         isProcessingRef.current = false;

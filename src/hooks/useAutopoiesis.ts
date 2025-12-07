@@ -2,11 +2,17 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.38 — AUTOPOIESIS HOOKS
  *   React Hooks for Autopoiesis Engine
- * ═══════════════════════════════════════════════════════════════════════════
+ * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import { useEffect, useState } from 'react';
-import { autopoiesisEngine, type AutopoiesisState, type EffectivePattern, type EvolutionRule, type OptimizationStrategy } from '@/engines/autopoiesis/autopoiesisEngine';
+import {
+  autopoiesisEngine,
+  type AutopoiesisState,
+  type EffectivePattern,
+  type EvolutionRule,
+  type OptimizationStrategy as _OptimizationStrategy,
+} from '@/engines/autopoiesis/autopoiesisEngine';
 
 /**
  * Hook principal: état complet Autopoiesis
@@ -134,7 +140,7 @@ export function useAutopoiesisActions() {
     resetLearning: () => {
       autopoiesisEngine.resetLearning();
     },
-    suggestOptimalConfig: (context: any) => {
+    suggestOptimalConfig: (context: Record<string, unknown>) => {
       return autopoiesisEngine.suggestOptimalConfig(context);
     },
   };

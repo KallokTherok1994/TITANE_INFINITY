@@ -79,12 +79,12 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
     messages: chatMessages,
     isLoading: chatIsLoading,
     sendMessage: chatSendMessage,
-    currentMode,
+    currentMode: _currentMode,
   } = chatHook;
 
   // ═══ SINGULARITY STATE ═══
-  const setAIStatus = useSingularityState((state) => state.setAIStatus);
-  const setAIError = useSingularityState((state) => state.setAIError);
+  const setAIStatus = useSingularityState(state => state.setAIStatus);
+  const setAIError = useSingularityState(state => state.setAIError);
 
   // ═══ LOCAL STATE ═══
   const [isOpen, setIsOpen] = useState(false);
@@ -92,7 +92,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   const [position, setPosition] = useState(DEFAULT_POSITION);
   const [currentModel, setCurrentModel] = useState('gemini-2.0-flash');
   const [currentProvider, setCurrentProvider] = useState('auto');
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [_isFullscreen, setIsFullscreen] = useState(false);
 
   const mountedRef = useRef(false);
 
@@ -191,7 +191,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   }, []);
 
   const toggleFullscreen = useCallback(() => {
-    setIsFullscreen((prev) => !prev);
+    setIsFullscreen(prev => !prev);
   }, []);
 
   const enableDevMode = useCallback(() => {

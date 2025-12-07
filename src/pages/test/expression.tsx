@@ -29,9 +29,18 @@ export default function ExpressionMonitorTestPage() {
   const signature = useIdentitySignature();
   const { setIdentityValue } = useIdentityActions();
 
-  const adjustTone = (value: number) => setIdentityValue('tone', value);
-  const adjustEnergy = (value: number) => setIdentityValue('energy', value);
-  const adjustWarmth = (value: number) => setIdentityValue('warmth', value);
+  const adjustTone = useCallback(
+    (value: number) => setIdentityValue('tone', value),
+    [setIdentityValue]
+  );
+  const adjustEnergy = useCallback(
+    (value: number) => setIdentityValue('energy', value),
+    [setIdentityValue]
+  );
+  const adjustWarmth = useCallback(
+    (value: number) => setIdentityValue('warmth', value),
+    [setIdentityValue]
+  );
 
   const [isEngineRunning, setIsEngineRunning] = useState(false);
   const [autoMode, setAutoMode] = useState(false);
@@ -40,8 +49,10 @@ export default function ExpressionMonitorTestPage() {
     // Démarrer les moteurs
     const startEngines = async () => {
       try {
-        const { unifiedIdentityKernel } = await import('@/engines/identity/unifiedIdentityKernel');
-        const { expressionEngine } = await import('@/engines/expression/expressionEngine');
+        const { unifiedIdentityKernel } =
+          await import('@/engines/identity/unifiedIdentityKernel');
+        const { expressionEngine } =
+          await import('@/engines/expression/expressionEngine');
 
         unifiedIdentityKernel.start();
         expressionEngine.start();
@@ -56,9 +67,11 @@ export default function ExpressionMonitorTestPage() {
     startEngines();
 
     return () => {
-      import('@/engines/identity/unifiedIdentityKernel').then(({ unifiedIdentityKernel }) => {
-        unifiedIdentityKernel.stop();
-      });
+      import('@/engines/identity/unifiedIdentityKernel').then(
+        ({ unifiedIdentityKernel }) => {
+          unifiedIdentityKernel.stop();
+        }
+      );
       import('@/engines/expression/expressionEngine').then(({ expressionEngine }) => {
         expressionEngine.stop();
       });
@@ -112,7 +125,7 @@ export default function ExpressionMonitorTestPage() {
 
   const getSyncColor = (score: number) => {
     if (score > 0.85) return 'text-green-400';
-    if (score > 0.70) return 'text-yellow-400';
+    if (score > 0.7) return 'text-yellow-400';
     return 'text-red-400';
   };
 
@@ -128,10 +141,14 @@ export default function ExpressionMonitorTestPage() {
             Test de la synchronisation expressive multimodale
           </p>
           <div className="mt-2 flex gap-2">
-            <span className={`px-3 py-1 rounded-full text-sm ${isEngineRunning ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+            <span
+              className={`px-3 py-1 rounded-full text-sm ${isEngineRunning ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}
+            >
               {isEngineRunning ? '● Engines Running' : '○ Engines Stopped'}
             </span>
-            <span className={`px-3 py-1 rounded-full text-sm ${sync > 0.85 ? 'bg-green-500/20 text-green-400' : sync > 0.70 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400'}`}>
+            <span
+              className={`px-3 py-1 rounded-full text-sm ${sync > 0.85 ? 'bg-green-500/20 text-green-400' : sync > 0.7 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-red-500/20 text-red-400'}`}
+            >
               Sync: {(sync * 100).toFixed(1)}%
             </span>
           </div>
@@ -195,7 +212,7 @@ export default function ExpressionMonitorTestPage() {
                     max="1"
                     step="0.01"
                     value={signature?.tone ?? 0.5}
-                    onChange={(e) => adjustTone(parseFloat(e.target.value))}
+                    onChange={e => adjustTone(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
@@ -210,7 +227,7 @@ export default function ExpressionMonitorTestPage() {
                     max="1"
                     step="0.01"
                     value={signature?.energy ?? 0.5}
-                    onChange={(e) => adjustEnergy(parseFloat(e.target.value))}
+                    onChange={e => adjustEnergy(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
@@ -225,7 +242,7 @@ export default function ExpressionMonitorTestPage() {
                     max="1"
                     step="0.01"
                     value={signature?.warmth ?? 0.5}
-                    onChange={(e) => adjustWarmth(parseFloat(e.target.value))}
+                    onChange={e => adjustWarmth(parseFloat(e.target.value))}
                     className="w-full"
                   />
                 </div>
@@ -263,8 +280,12 @@ export default function ExpressionMonitorTestPage() {
                 <div>
                   <div className="text-gray-400 mb-1">Halo Dynamics</div>
                   <div className="pl-3 space-y-1 font-mono">
-                    <div>Intensity: {(halo?.dynamics?.intensity * 100)?.toFixed(0) ?? 50}%</div>
-                    <div>Pulsation: {(halo?.dynamics?.pulsation * 100)?.toFixed(0) ?? 50}%</div>
+                    <div>
+                      Intensity: {(halo?.dynamics?.intensity * 100)?.toFixed(0) ?? 50}%
+                    </div>
+                    <div>
+                      Pulsation: {(halo?.dynamics?.pulsation * 100)?.toFixed(0) ?? 50}%
+                    </div>
                     <div>Pattern: {halo?.pattern ?? 'none'}</div>
                   </div>
                 </div>
@@ -273,8 +294,12 @@ export default function ExpressionMonitorTestPage() {
                   <div className="text-gray-400 mb-1">Narrative Style</div>
                   <div className="pl-3 space-y-1 font-mono">
                     <div>Primary: {narrative?.style?.primary ?? 'fluid'}</div>
-                    <div>Density: {(narrative?.style?.density * 100)?.toFixed(0) ?? 50}%</div>
-                    <div>Tonality: {(narrative?.style?.tonality * 100)?.toFixed(0) ?? 50}%</div>
+                    <div>
+                      Density: {(narrative?.style?.density * 100)?.toFixed(0) ?? 50}%
+                    </div>
+                    <div>
+                      Tonality: {(narrative?.style?.tonality * 100)?.toFixed(0) ?? 50}%
+                    </div>
                   </div>
                 </div>
               </div>
@@ -287,9 +312,7 @@ export default function ExpressionMonitorTestPage() {
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-400">Global Sync:</span>
-                  <span className={getSyncColor(sync)}>
-                    {(sync * 100).toFixed(1)}%
-                  </span>
+                  <span className={getSyncColor(sync)}>{(sync * 100).toFixed(1)}%</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-400">Coherence:</span>
@@ -305,10 +328,20 @@ export default function ExpressionMonitorTestPage() {
           <h3 className="text-xl font-semibold mb-2">💡 Instructions</h3>
           <ul className="space-y-2 text-sm text-gray-300">
             <li>• Utilisez les presets pour tester différents états émotionnels</li>
-            <li>• Ajustez Tone/Energy/Warmth avec les sliders pour voir l'impact en temps réel</li>
-            <li>• Le mode Auto fait varier l'identité aléatoirement toutes les 2 secondes</li>
-            <li>• Le Expression Monitor montre la synchronisation Voice↔Halo↔Narrative</li>
-            <li>• Un score de sync &gt; 85% est optimal (vert), 70-85% est acceptable (jaune)</li>
+            <li>
+              • Ajustez Tone/Energy/Warmth avec les sliders pour voir l'impact en temps
+              réel
+            </li>
+            <li>
+              • Le mode Auto fait varier l'identité aléatoirement toutes les 2 secondes
+            </li>
+            <li>
+              • Le Expression Monitor montre la synchronisation Voice↔Halo↔Narrative
+            </li>
+            <li>
+              • Un score de sync &gt; 85% est optimal (vert), 70-85% est acceptable
+              (jaune)
+            </li>
           </ul>
         </div>
       </div>

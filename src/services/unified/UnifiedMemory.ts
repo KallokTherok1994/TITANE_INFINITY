@@ -6,23 +6,23 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *   UNIFIED MEMORY SYSTEM v1.0 — Week 1 Transformation
- *   Consolidation: SemanticMemory + MemoryEngine + OmnisMemory + 
+ *   Consolidation: SemanticMemory + MemoryEngine + OmnisMemory +
  *                  MemoryModule + CognitiveOptimization → UnifiedMemory
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * OBJECTIVE:
  * - Consolidate 5 memory systems (28,000 lines) → 1 UnifiedMemory (~12,000 lines)
  * - Preserve all capabilities (vector search, consolidation, persistence, optimization)
  * - Use MCP 4-tier system as foundation (SHORT_TERM, MEDIUM_TERM, LONG_TERM, META_MEMORY)
  * - Target: -60% memory consumption, -67% sync latency, -30% vector search latency
- * 
+ *
  * ARCHITECTURE:
  * - MCP MemoryTier as foundation (4 tiers with auto-promotion)
  * - SemanticMemory embeddings + vector search + BM25 hybrid retrieval
  * - MemoryEngine importance scoring + decay + consolidation
  * - OmnisMemory backend persistence + sync
  * - CognitiveOptimization pruning + compression + deduplication
- * 
+ *
  * PERFORMANCE TARGETS:
  * - Memory: 500MB → 200MB (-60%)
  * - Sync Latency: 3s → 1s (-67%)
@@ -33,8 +33,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import {
   MemoryTier,
-  type MemoryEntry as MCPMemoryEntry,
-  type MemoryOperations
+  type MemoryEntry as _MCPMemoryEntry,
+  type MemoryOperations as _MemoryOperations,
 } from '../mcp/mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -46,68 +46,68 @@ import {
  */
 export interface UnifiedMemoryEntry {
   // Identity
-  id: string;                        // UUID v4
-  tier: MemoryTier;                  // MCP 4-tier system
-  type: UnifiedMemoryType;           // Memory category
-  
+  id: string; // UUID v4
+  tier: MemoryTier; // MCP 4-tier system
+  type: UnifiedMemoryType; // Memory category
+
   // Content
-  summary: string;                   // Short summary (max 200 chars)
-  details?: string;                  // Full content (optional)
-  embedding?: number[];              // 384D vector (for semantic search)
-  
+  summary: string; // Short summary (max 200 chars)
+  details?: string; // Full content (optional)
+  embedding?: number[]; // 384D vector (for semantic search)
+
   // Metadata
-  owner: string;                     // User/conversation ID
-  tags: string[];                    // Categorization tags
-  source: MemorySource;              // Origin tracking
-  
+  owner: string; // User/conversation ID
+  tags: string[]; // Categorization tags
+  source: MemorySource; // Origin tracking
+
   // Importance & Quality (MemoryEngine logic)
-  importance: number;                // 0-1 score
-  confidence: number;                // 0-1 confidence
-  strength: number;                  // 0-1 strength (decays over time)
-  isUseful: boolean;                 // MCP metadata
-  isTrue: boolean;                   // MCP metadata
-  isStructuring: boolean;            // MCP metadata
-  isStable: boolean;                 // MCP metadata
-  isReusable: boolean;               // MCP metadata
-  
+  importance: number; // 0-1 score
+  confidence: number; // 0-1 confidence
+  strength: number; // 0-1 strength (decays over time)
+  isUseful: boolean; // MCP metadata
+  isTrue: boolean; // MCP metadata
+  isStructuring: boolean; // MCP metadata
+  isStable: boolean; // MCP metadata
+  isReusable: boolean; // MCP metadata
+
   // Temporal
-  created: number;                   // Unix timestamp (ms)
-  accessed: number;                  // Last access timestamp
-  accessCount: number;               // Access frequency
-  lastUsed?: number;                 // Last retrieval timestamp
-  validUntil?: number;               // Expiration (optional)
-  
+  created: number; // Unix timestamp (ms)
+  accessed: number; // Last access timestamp
+  accessCount: number; // Access frequency
+  lastUsed?: number; // Last retrieval timestamp
+  validUntil?: number; // Expiration (optional)
+
   // Relations
-  relatedTo?: string[];              // Related memory IDs
-  supersedes?: string;               // Obsolete memory ID
-  
+  relatedTo?: string[]; // Related memory IDs
+  supersedes?: string; // Obsolete memory ID
+
   // Optimization (CognitiveOptimization logic)
-  compressionLevel: number;          // 0-1 (0=raw, 1=highly compressed)
-  isDuplicate?: boolean;             // Deduplication flag
+  compressionLevel: number; // 0-1 (0=raw, 1=highly compressed)
+  isDuplicate?: boolean; // Deduplication flag
 }
 
 /**
  * Memory types (unified from all systems)
  */
 export type UnifiedMemoryType =
-  | 'fact'           // Established fact (SemanticMemory)
-  | 'preference'     // User preference (SemanticMemory)
-  | 'decision'       // Decision made (SemanticMemory)
-  | 'milestone'      // Important milestone (SemanticMemory)
-  | 'pattern'        // Recurring pattern (SemanticMemory)
-  | 'context'        // Work context (SemanticMemory)
-  | 'conversation'   // Conversation memory (MemoryEngine)
-  | 'system'         // System state (OmnisMemory)
-  | 'cognitive';     // Cognitive state (CognitiveOptimization)
+  | 'fact' // Established fact (SemanticMemory)
+  | 'preference' // User preference (SemanticMemory)
+  | 'decision' // Decision made (SemanticMemory)
+  | 'milestone' // Important milestone (SemanticMemory)
+  | 'pattern' // Recurring pattern (SemanticMemory)
+  | 'context' // Work context (SemanticMemory)
+  | 'conversation' // Conversation memory (MemoryEngine)
+  | 'system' // System state (OmnisMemory)
+  | 'cognitive'; // Cognitive state (CognitiveOptimization)
 
 /**
  * Memory source tracking
  */
 export interface MemorySource {
   type: 'conversation' | 'manual' | 'system' | 'cognitive';
-  id?: string;               // Source ID (conversation_id, etc.)
-  timestamp: number;         // Unix timestamp (ms)
-  context?: string;          // Additional context
+  id?: string; // Source ID (conversation_id, etc.)
+  timestamp: number; // Unix timestamp (ms)
+  context?: string; // Additional context
 }
 
 /**
@@ -116,7 +116,7 @@ export interface MemorySource {
 export interface UnifiedMemoryQuery {
   // Query text (will be vectorized for semantic search)
   text?: string;
-  
+
   // Filters
   tiers?: MemoryTier[];
   types?: UnifiedMemoryType[];
@@ -125,16 +125,16 @@ export interface UnifiedMemoryQuery {
   minImportance?: number;
   maxAgeDays?: number;
   conversationId?: string;
-  
+
   // Limits
-  limit?: number;                    // Default: 5
-  similarityThreshold?: number;      // Default: 0.7
-  
+  limit?: number; // Default: 5
+  similarityThreshold?: number; // Default: 0.7
+
   // Scoring weights
   weights?: {
-    similarity: number;              // Default: 0.7
-    importance: number;              // Default: 0.2
-    recency: number;                 // Default: 0.1
+    similarity: number; // Default: 0.7
+    importance: number; // Default: 0.2
+    recency: number; // Default: 0.1
   };
 }
 
@@ -143,9 +143,9 @@ export interface UnifiedMemoryQuery {
  */
 export interface UnifiedMemoryResult {
   entry: UnifiedMemoryEntry;
-  score: number;                     // Global score 0-1
-  similarity?: number;               // Cosine similarity 0-1
-  relevanceReason?: string;          // Debug info
+  score: number; // Global score 0-1
+  similarity?: number; // Cosine similarity 0-1
+  relevanceReason?: string; // Debug info
 }
 
 /**
@@ -153,7 +153,7 @@ export interface UnifiedMemoryResult {
  */
 export interface UnifiedMemoryContext {
   memories: UnifiedMemoryResult[];
-  summary: string;                   // Text summary for prompt
+  summary: string; // Text summary for prompt
   metadata: {
     query: string;
     totalRetrieved: number;
@@ -170,16 +170,16 @@ export interface UnifiedMemoryStats {
   byTier: Record<MemoryTier, number>;
   byType: Record<UnifiedMemoryType, number>;
   byImportance: {
-    low: number;      // <0.4
-    medium: number;   // 0.4-0.7
-    high: number;     // 0.7-0.9
+    low: number; // <0.4
+    medium: number; // 0.4-0.7
+    high: number; // 0.7-0.9
     critical: number; // >0.9
   };
   avgEmbeddingTimeMs: number;
   avgRetrievalTimeMs: number;
   storageSizeMB: number;
-  oldestMemory: number;              // Unix timestamp
-  newestMemory: number;              // Unix timestamp
+  oldestMemory: number; // Unix timestamp
+  newestMemory: number; // Unix timestamp
 }
 
 /**
@@ -187,60 +187,60 @@ export interface UnifiedMemoryStats {
  */
 export interface UnifiedMemoryConfig {
   enabled: boolean;
-  
+
   // Embedding model
   embedding: {
     type: 'local' | 'api';
     modelName: string;
     dimensions: number;
   };
-  
+
   // Storage
   storage: {
     type: 'sqlite' | 'indexeddb';
     path?: string;
     maxSizeMB?: number;
   };
-  
+
   // Limits
   limits: {
-    maxMemoriesTotal: number;        // Default: 10,000
+    maxMemoriesTotal: number; // Default: 10,000
     maxMemoriesPerTier: {
-      SHORT_TERM: number;            // Default: 100
-      MEDIUM_TERM: number;           // Default: 1,000
-      LONG_TERM: number;             // Default: 5,000
-      META_MEMORY: number;           // Default: 500
+      SHORT_TERM: number; // Default: 100
+      MEDIUM_TERM: number; // Default: 1,000
+      LONG_TERM: number; // Default: 5,000
+      META_MEMORY: number; // Default: 500
     };
-    maxMemoriesPerQuery: number;     // Default: 5
-    maxAgeDays: number;              // Default: 365
+    maxMemoriesPerQuery: number; // Default: 5
+    maxAgeDays: number; // Default: 365
   };
-  
+
   // Scoring
   scoring: {
-    similarityThreshold: number;     // Default: 0.7
-    importanceWeight: number;        // Default: 0.2
-    recencyWeight: number;           // Default: 0.1
+    similarityThreshold: number; // Default: 0.7
+    importanceWeight: number; // Default: 0.2
+    recencyWeight: number; // Default: 0.1
   };
-  
+
   // Auto-cleanup (every 60s by default)
   cleanup: {
     enabled: boolean;
-    intervalMs: number;              // Default: 60000 (1 minute)
-    removeBelowScore: number;        // Default: 0.3
+    intervalMs: number; // Default: 60000 (1 minute)
+    removeBelowScore: number; // Default: 0.3
   };
-  
+
   // Consolidation (MemoryEngine logic)
   consolidation: {
     enabled: boolean;
-    intervalMs: number;              // Default: 300000 (5 minutes)
-    mergeSimilarThreshold: number;   // Default: 0.9
+    intervalMs: number; // Default: 300000 (5 minutes)
+    mergeSimilarThreshold: number; // Default: 0.9
   };
-  
+
   // Decay (MemoryEngine logic)
   decay: {
     enabled: boolean;
-    intervalMs: number;              // Default: 3600000 (1 hour)
-    decayRate: number;               // Default: 0.05 per day
+    intervalMs: number; // Default: 3600000 (1 hour)
+    decayRate: number; // Default: 0.05 per day
   };
 }
 
@@ -251,7 +251,11 @@ export interface IVectorStore {
   initialize(): Promise<void>;
   add(entry: UnifiedMemoryEntry): Promise<void>;
   addBatch(entries: UnifiedMemoryEntry[]): Promise<void>;
-  search(embedding: number[], limit: number, filters?: Record<string, any>): Promise<UnifiedMemoryResult[]>;
+  search(
+    embedding: number[],
+    limit: number,
+    filters?: Record<string, any>
+  ): Promise<UnifiedMemoryResult[]>;
   get(id: string): Promise<UnifiedMemoryEntry | null>;
   update(id: string, updates: Partial<UnifiedMemoryEntry>): Promise<void>;
   delete(id: string): Promise<void>;
@@ -284,12 +288,12 @@ const DEFAULT_CONFIG: UnifiedMemoryConfig = {
   embedding: {
     type: 'local',
     modelName: 'all-MiniLM-L6-v2',
-    dimensions: 384
+    dimensions: 384,
   },
   storage: {
     type: 'sqlite',
     path: './data/unified_memory.db',
-    maxSizeMB: 500
+    maxSizeMB: 500,
   },
   limits: {
     maxMemoriesTotal: 10000,
@@ -297,43 +301,43 @@ const DEFAULT_CONFIG: UnifiedMemoryConfig = {
       SHORT_TERM: 100,
       MEDIUM_TERM: 1000,
       LONG_TERM: 5000,
-      META_MEMORY: 500
+      META_MEMORY: 500,
     },
     maxMemoriesPerQuery: 5,
-    maxAgeDays: 365
+    maxAgeDays: 365,
   },
   scoring: {
     similarityThreshold: 0.7,
     importanceWeight: 0.2,
-    recencyWeight: 0.1
+    recencyWeight: 0.1,
   },
   cleanup: {
     enabled: true,
-    intervalMs: 60000,        // 1 minute
-    removeBelowScore: 0.3
+    intervalMs: 60000, // 1 minute
+    removeBelowScore: 0.3,
   },
   consolidation: {
     enabled: true,
-    intervalMs: 300000,       // 5 minutes
-    mergeSimilarThreshold: 0.9
+    intervalMs: 300000, // 5 minutes
+    mergeSimilarThreshold: 0.9,
   },
   decay: {
     enabled: true,
-    intervalMs: 3600000,      // 1 hour
-    decayRate: 0.05
-  }
+    intervalMs: 3600000, // 1 hour
+    decayRate: 0.05,
+  },
 };
 
 /**
  * Unified Memory Engine
- * 
+ *
  * Consolidates:
  * - SemanticMemoryEngine (18,800 lines) → Vector search + embeddings
  * - MemoryEngine (8,000 lines) → Consolidation + decay + importance
  * - OmnisMemory (7,000 lines) → Backend persistence + sync
  * - MemoryModule (6,000 lines) → Context management
  * - CognitiveOptimization (3,000 lines) → Pruning + compression + deduplication
- * 
+ *
  * Total: 28,000 lines → ~12,000 lines (-57%)
  */
 export class UnifiedMemory {
@@ -341,19 +345,19 @@ export class UnifiedMemory {
   private vectorStore: IVectorStore;
   private embeddingGenerator: IEmbeddingGenerator;
   private isInitialized = false;
-  
+
   // Schedulers
   private cleanupScheduler?: NodeJS.Timeout;
   private consolidationScheduler?: NodeJS.Timeout;
   private decayScheduler?: NodeJS.Timeout;
-  
+
   // Performance tracking
   private perfStats = {
     embeddingTimeMs: [] as number[],
     retrievalTimeMs: [] as number[],
     lastCleanup: 0,
     lastConsolidation: 0,
-    lastDecay: 0
+    lastDecay: 0,
   };
 
   constructor(
@@ -437,7 +441,7 @@ export class UnifiedMemory {
 
   /**
    * Create a new memory entry
-   * 
+   *
    * Combines:
    * - SemanticMemory: embeddings, vector storage
    * - MemoryEngine: importance scoring
@@ -464,7 +468,7 @@ export class UnifiedMemory {
       // Generate embedding (SemanticMemory logic)
       const text = params.details || params.summary;
       const embedding = await this.embeddingGenerator.generate(text);
-      
+
       const embeddingTime = performance.now() - startTime;
       this.perfStats.embeddingTimeMs.push(embeddingTime);
       if (this.perfStats.embeddingTimeMs.length > 100) {
@@ -475,12 +479,14 @@ export class UnifiedMemory {
       const tier: MemoryTier = params.tier || MemoryTier.SHORT_TERM;
 
       // Calculate importance (MemoryEngine logic)
-      const importance = params.importance ?? this.calculateImportance({
-        type: params.type,
-        summary: params.summary,
-        details: params.details,
-        tags: params.tags || []
-      });
+      const importance =
+        params.importance ??
+        this.calculateImportance({
+          type: params.type,
+          summary: params.summary,
+          details: params.details,
+          tags: params.tags || [],
+        });
 
       // Create entry
       const now = Date.now();
@@ -497,7 +503,7 @@ export class UnifiedMemory {
           type: params.source?.type || 'manual',
           id: params.source?.id,
           timestamp: params.source?.timestamp || now,
-          context: params.source?.context
+          context: params.source?.context,
         },
         importance,
         confidence: 0.9,
@@ -512,13 +518,15 @@ export class UnifiedMemory {
         accessCount: 0,
         lastUsed: now,
         relatedTo: params.relatedTo,
-        compressionLevel: 0
+        compressionLevel: 0,
       };
 
       // Store in vector store
       await this.vectorStore.add(entry);
 
-      console.log(`[UnifiedMemory] Memory created: ${entry.id} (${entry.type}, tier: ${entry.tier})`);
+      console.log(
+        `[UnifiedMemory] Memory created: ${entry.id} (${entry.type}, tier: ${entry.tier})`
+      );
       return entry;
     } catch (error) {
       console.error('[UnifiedMemory] Failed to create memory:', error);
@@ -528,7 +536,7 @@ export class UnifiedMemory {
 
   /**
    * Retrieve memories (semantic search + hybrid scoring)
-   * 
+   *
    * Combines:
    * - SemanticMemory: vector search, cosine similarity
    * - MemoryEngine: importance + recency scoring
@@ -547,7 +555,7 @@ export class UnifiedMemory {
       // If text query provided, do semantic search
       if (query.text) {
         const embedding = await this.embeddingGenerator.generate(query.text);
-        
+
         const filters: Record<string, any> = {};
         if (query.tiers) filters.tiers = query.tiers;
         if (query.types) filters.types = query.types;
@@ -555,7 +563,7 @@ export class UnifiedMemory {
         if (query.owner) filters.owner = query.owner;
         if (query.minImportance) filters.minImportance = query.minImportance;
         if (query.maxAgeDays) {
-          const maxAge = Date.now() - (query.maxAgeDays * 24 * 60 * 60 * 1000);
+          const maxAge = Date.now() - query.maxAgeDays * 24 * 60 * 60 * 1000;
           filters.minCreated = maxAge;
         }
 
@@ -567,7 +575,7 @@ export class UnifiedMemory {
       const weights = query.weights || {
         similarity: 0.7,
         importance: 0.2,
-        recency: 0.1
+        recency: 0.1,
       };
 
       const now = Date.now();
@@ -576,19 +584,20 @@ export class UnifiedMemory {
         const ageDays = age / (24 * 60 * 60 * 1000);
         const recencyScore = Math.exp(-ageDays / 30); // Decay over 30 days
 
-        const score = 
+        const score =
           (result.similarity || 0) * weights.similarity +
           result.entry.importance * weights.importance +
           recencyScore * weights.recency;
 
         return {
           ...result,
-          score
+          score,
         };
       });
 
       // Sort by score and apply threshold
-      const threshold = query.similarityThreshold || this.config.scoring.similarityThreshold;
+      const threshold =
+        query.similarityThreshold || this.config.scoring.similarityThreshold;
       results = results
         .filter(r => r.score >= threshold)
         .sort((a, b) => b.score - a.score)
@@ -599,7 +608,7 @@ export class UnifiedMemory {
         await this.vectorStore.update(result.entry.id, {
           accessed: now,
           accessCount: result.entry.accessCount + 1,
-          lastUsed: now
+          lastUsed: now,
         });
       }
 
@@ -609,7 +618,9 @@ export class UnifiedMemory {
         this.perfStats.retrievalTimeMs.shift();
       }
 
-      console.log(`[UnifiedMemory] Retrieved ${results.length} memories (${retrievalTime.toFixed(2)}ms)`);
+      console.log(
+        `[UnifiedMemory] Retrieved ${results.length} memories (${retrievalTime.toFixed(2)}ms)`
+      );
       return results;
     } catch (error) {
       console.error('[UnifiedMemory] Failed to retrieve memories:', error);
@@ -659,13 +670,13 @@ export class UnifiedMemory {
       // Create new memory
       const newEntry = await this.createMemory({
         ...newMemory,
-        relatedTo: [...(newMemory.relatedTo || []), oldId]
+        relatedTo: [...(newMemory.relatedTo || []), oldId],
       });
 
       // Mark old as superseded
       await this.vectorStore.update(oldId, {
         supersedes: newEntry.id,
-        strength: 0.1 // Almost forgotten
+        strength: 0.1, // Almost forgotten
       });
 
       console.log(`[UnifiedMemory] Memory superseded: ${oldId} → ${newEntry.id}`);
@@ -682,31 +693,39 @@ export class UnifiedMemory {
 
   /**
    * Build memory context for OMEGA injection
-   * 
+   *
    * Combines:
    * - SemanticMemory: retrieval
    * - MemoryModule: context formatting
    */
-  async buildContext(query: string, options?: UnifiedMemoryQuery): Promise<UnifiedMemoryContext> {
+  async buildContext(
+    query: string,
+    options?: UnifiedMemoryQuery
+  ): Promise<UnifiedMemoryContext> {
     const startTime = performance.now();
 
     const memories = await this.retrieveMemories({
       text: query,
-      ...options
+      ...options,
     });
 
     // Build summary text
-    const summary = memories.length > 0
-      ? `Relevant memories (${memories.length}):\n` +
-        memories.map((m, i) => 
-          `${i + 1}. [${m.entry.type}] ${m.entry.summary} (score: ${m.score.toFixed(2)})`
-        ).join('\n')
-      : 'No relevant memories found.';
+    const summary =
+      memories.length > 0
+        ? `Relevant memories (${memories.length}):\n` +
+          memories
+            .map(
+              (m, i) =>
+                `${i + 1}. [${m.entry.type}] ${m.entry.summary} (score: ${m.score.toFixed(2)})`
+            )
+            .join('\n')
+        : 'No relevant memories found.';
 
     const retrievalTime = performance.now() - startTime;
-    const avgScore = memories.length > 0
-      ? memories.reduce((sum, m) => sum + m.score, 0) / memories.length
-      : 0;
+    const avgScore =
+      memories.length > 0
+        ? memories.reduce((sum, m) => sum + m.score, 0) / memories.length
+        : 0;
 
     return {
       memories,
@@ -715,8 +734,8 @@ export class UnifiedMemory {
         query,
         totalRetrieved: memories.length,
         avgScore,
-        retrievalTimeMs: retrievalTime
-      }
+        retrievalTimeMs: retrievalTime,
+      },
     };
   }
 
@@ -726,7 +745,7 @@ export class UnifiedMemory {
 
   /**
    * Promote memory to higher tier based on usage
-   * 
+   *
    * MCP 4-tier logic:
    * - SHORT_TERM (0-10 accesses) → MEDIUM_TERM
    * - MEDIUM_TERM (10-50 accesses) → LONG_TERM
@@ -743,13 +762,19 @@ export class UnifiedMemory {
         newTier = MemoryTier.MEDIUM_TERM;
       } else if (entry.tier === MemoryTier.MEDIUM_TERM && entry.accessCount >= 50) {
         newTier = MemoryTier.LONG_TERM;
-      } else if (entry.tier === MemoryTier.LONG_TERM && entry.accessCount >= 100 && entry.importance > 0.8) {
+      } else if (
+        entry.tier === MemoryTier.LONG_TERM &&
+        entry.accessCount >= 100 &&
+        entry.importance > 0.8
+      ) {
         newTier = MemoryTier.META_MEMORY;
       }
 
       if (newTier) {
         await this.vectorStore.update(id, { tier: newTier });
-        console.log(`[UnifiedMemory] Memory promoted: ${id} (${entry.tier} → ${newTier})`);
+        console.log(
+          `[UnifiedMemory] Memory promoted: ${id} (${entry.tier} → ${newTier})`
+        );
       }
     } catch (error) {
       console.error('[UnifiedMemory] Failed to promote memory:', error);
@@ -762,7 +787,7 @@ export class UnifiedMemory {
 
   /**
    * Cleanup low-quality memories
-   * 
+   *
    * CognitiveOptimization logic: prune memories with low score
    */
   async cleanup(): Promise<number> {
@@ -774,7 +799,7 @@ export class UnifiedMemory {
       // Delete old + low-score memories
       const deleted = await this.vectorStore.deleteWhere({
         score: { $lt: minScore },
-        created: { $lt: now - maxAge }
+        created: { $lt: now - maxAge },
       });
 
       this.perfStats.lastCleanup = now;
@@ -788,9 +813,9 @@ export class UnifiedMemory {
 
   /**
    * Consolidate similar memories
-   * 
+   *
    * MemoryEngine logic: merge highly similar memories
-   * 
+   *
    * Algorithm:
    * 1. Get all memories from vector store
    * 2. Compare each pair using cosine similarity
@@ -812,7 +837,7 @@ export class UnifiedMemory {
 
       // Get all entries (this is inefficient for large datasets, but OK for <10k memories)
       const allMemoriesQuery = await this.retrieveMemories({
-        limit: stats.total
+        limit: stats.total,
       });
 
       // Build similarity matrix (only upper triangle)
@@ -828,38 +853,43 @@ export class UnifiedMemory {
           if (!memories[j].embedding) continue;
 
           // Calculate similarity
-          const similarity = this.cosineSimilarity(
-            memories[i].embedding!,
-            memories[j].embedding!
-          );
+          if (memories[i].embedding && memories[j].embedding) {
+            const similarity = this.cosineSimilarity(
+              memories[i].embedding,
+              memories[j].embedding
+            );
 
-          // If highly similar, merge
-          if (similarity >= threshold) {
-            // Keep the one with higher importance
-            const [keep, discard] = memories[i].importance >= memories[j].importance
-              ? [memories[i], memories[j]]
-              : [memories[j], memories[i]];
+            // If highly similar, merge
+            if (similarity >= threshold) {
+              // Keep the one with higher importance
+              const [keep, discard] =
+                memories[i].importance >= memories[j].importance
+                  ? [memories[i], memories[j]]
+                  : [memories[j], memories[i]];
 
-            // Update kept memory
-            const combinedTags = [...new Set([...keep.tags, ...discard.tags])];
-            const combinedAccessCount = keep.accessCount + discard.accessCount;
-            const combinedRelatedTo = [
-              ...(keep.relatedTo || []),
-              ...(discard.relatedTo || []),
-              discard.id
-            ];
+              // Update kept memory
+              const combinedTags = [...new Set([...keep.tags, ...discard.tags])];
+              const combinedAccessCount = keep.accessCount + discard.accessCount;
+              const combinedRelatedTo = [
+                ...(keep.relatedTo || []),
+                ...(discard.relatedTo || []),
+                discard.id,
+              ];
 
-            await this.vectorStore.update(keep.id, {
-              tags: combinedTags,
-              accessCount: combinedAccessCount,
-              relatedTo: [...new Set(combinedRelatedTo)]
-            });
+              await this.vectorStore.update(keep.id, {
+                tags: combinedTags,
+                accessCount: combinedAccessCount,
+                relatedTo: [...new Set(combinedRelatedTo)],
+              });
 
-            // Mark discard for deletion
-            toDelete.push(discard.id);
-            mergedCount++;
+              // Mark discard for deletion
+              toDelete.push(discard.id);
+              mergedCount++;
 
-            console.log(`[UnifiedMemory] Consolidated: ${discard.id} → ${keep.id} (similarity: ${similarity.toFixed(3)})`);
+              console.log(
+                `[UnifiedMemory] Consolidated: ${discard.id} → ${keep.id} (similarity: ${similarity.toFixed(3)})`
+              );
+            }
           }
         }
       }
@@ -870,7 +900,9 @@ export class UnifiedMemory {
       }
 
       this.perfStats.lastConsolidation = Date.now();
-      console.log(`[UnifiedMemory] Consolidation complete: ${mergedCount} memories merged`);
+      console.log(
+        `[UnifiedMemory] Consolidation complete: ${mergedCount} memories merged`
+      );
       return mergedCount;
     } catch (error) {
       console.error('[UnifiedMemory] Consolidation failed:', error);
@@ -906,9 +938,9 @@ export class UnifiedMemory {
 
   /**
    * Apply decay to memory strength
-   * 
+   *
    * MemoryEngine logic: memories decay if not accessed
-   * 
+   *
    * Algorithm:
    * 1. Get all memories
    * 2. For each memory:
@@ -931,7 +963,7 @@ export class UnifiedMemory {
       if (stats.total === 0) return 0;
 
       const allMemories = await this.retrieveMemories({
-        limit: stats.total
+        limit: stats.total,
       });
 
       // Apply decay to each memory
@@ -951,7 +983,9 @@ export class UnifiedMemory {
         if (newStrength < 0.1) {
           toDelete.push(entry.id);
           decayedCount++;
-          console.log(`[UnifiedMemory] Decay: ${entry.id} marked for deletion (strength: ${newStrength.toFixed(3)})`);
+          console.log(
+            `[UnifiedMemory] Decay: ${entry.id} marked for deletion (strength: ${newStrength.toFixed(3)})`
+          );
         } else if (newStrength !== entry.strength) {
           // Update strength
           toUpdate.push({ id: entry.id, strength: newStrength });
@@ -961,7 +995,7 @@ export class UnifiedMemory {
       // Batch update strengths
       for (const update of toUpdate) {
         await this.vectorStore.update(update.id, {
-          strength: update.strength
+          strength: update.strength,
         });
       }
 
@@ -971,7 +1005,9 @@ export class UnifiedMemory {
       }
 
       this.perfStats.lastDecay = now;
-      console.log(`[UnifiedMemory] Decay complete: ${toUpdate.length} updated, ${decayedCount} deleted`);
+      console.log(
+        `[UnifiedMemory] Decay complete: ${toUpdate.length} updated, ${decayedCount} deleted`
+      );
       return decayedCount;
     } catch (error) {
       console.error('[UnifiedMemory] Decay failed:', error);
@@ -987,7 +1023,9 @@ export class UnifiedMemory {
       () => this.cleanup(),
       this.config.cleanup.intervalMs
     );
-    console.log(`[UnifiedMemory] Cleanup scheduler started (${this.config.cleanup.intervalMs}ms)`);
+    console.log(
+      `[UnifiedMemory] Cleanup scheduler started (${this.config.cleanup.intervalMs}ms)`
+    );
   }
 
   /**
@@ -998,18 +1036,19 @@ export class UnifiedMemory {
       () => this.consolidate(),
       this.config.consolidation.intervalMs
     );
-    console.log(`[UnifiedMemory] Consolidation scheduler started (${this.config.consolidation.intervalMs}ms)`);
+    console.log(
+      `[UnifiedMemory] Consolidation scheduler started (${this.config.consolidation.intervalMs}ms)`
+    );
   }
 
   /**
    * Start decay scheduler
    */
   private startDecayScheduler(): void {
-    this.decayScheduler = setInterval(
-      () => this.decay(),
-      this.config.decay.intervalMs
+    this.decayScheduler = setInterval(() => this.decay(), this.config.decay.intervalMs);
+    console.log(
+      `[UnifiedMemory] Decay scheduler started (${this.config.decay.intervalMs}ms)`
     );
-    console.log(`[UnifiedMemory] Decay scheduler started (${this.config.decay.intervalMs}ms)`);
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1038,20 +1077,24 @@ export class UnifiedMemory {
     lastConsolidation: number;
     lastDecay: number;
   } {
-    const avgEmbedding = this.perfStats.embeddingTimeMs.length > 0
-      ? this.perfStats.embeddingTimeMs.reduce((a, b) => a + b, 0) / this.perfStats.embeddingTimeMs.length
-      : 0;
-    
-    const avgRetrieval = this.perfStats.retrievalTimeMs.length > 0
-      ? this.perfStats.retrievalTimeMs.reduce((a, b) => a + b, 0) / this.perfStats.retrievalTimeMs.length
-      : 0;
+    const avgEmbedding =
+      this.perfStats.embeddingTimeMs.length > 0
+        ? this.perfStats.embeddingTimeMs.reduce((a, b) => a + b, 0) /
+          this.perfStats.embeddingTimeMs.length
+        : 0;
+
+    const avgRetrieval =
+      this.perfStats.retrievalTimeMs.length > 0
+        ? this.perfStats.retrievalTimeMs.reduce((a, b) => a + b, 0) /
+          this.perfStats.retrievalTimeMs.length
+        : 0;
 
     return {
       avgEmbeddingTimeMs: avgEmbedding,
       avgRetrievalTimeMs: avgRetrieval,
       lastCleanup: this.perfStats.lastCleanup,
       lastConsolidation: this.perfStats.lastConsolidation,
-      lastDecay: this.perfStats.lastDecay
+      lastDecay: this.perfStats.lastDecay,
     };
   }
 
@@ -1061,7 +1104,7 @@ export class UnifiedMemory {
 
   /**
    * Calculate importance score
-   * 
+   *
    * MemoryEngine logic:
    * - milestone/decision → HIGH
    * - fact → MEDIUM

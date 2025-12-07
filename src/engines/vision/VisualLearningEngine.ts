@@ -247,7 +247,10 @@ export class VisualLearningEngine {
    * Termine la calibration et met à jour la baseline
    */
   private finishCalibration(): void {
-    if (!this.currentSession || this.calibrationSamples.length < CALIBRATION_CONFIG.minSamplesRequired) {
+    if (
+      !this.currentSession ||
+      this.calibrationSamples.length < CALIBRATION_CONFIG.minSamplesRequired
+    ) {
       console.warn('[VisualLearningEngine] Pas assez de samples pour calibration');
       this.cancelCalibration();
       return;
@@ -371,11 +374,16 @@ export class VisualLearningEngine {
   /**
    * Met à jour la signature d'énergie
    */
-  private updateEnergySignature(samples: CalibrationSample[], level: 'high' | 'low'): void {
+  private updateEnergySignature(
+    samples: CalibrationSample[],
+    level: 'high' | 'low'
+  ): void {
     if (!this.baseline) return;
 
     // Score combiné pour l'énergie
-    const scores = samples.map(s => s.postureScore * 0.5 + s.movementScore * 0.3 + s.gazeScore * 0.2);
+    const scores = samples.map(
+      s => s.postureScore * 0.5 + s.movementScore * 0.3 + s.gazeScore * 0.2
+    );
     const avg = this.average(scores);
     const std = this.standardDeviation(scores);
 
@@ -403,7 +411,10 @@ export class VisualLearningEngine {
   /**
    * Met à jour la signature de tension
    */
-  private updateTensionSignature(samples: CalibrationSample[], level: 'high' | 'low'): void {
+  private updateTensionSignature(
+    samples: CalibrationSample[],
+    level: 'high' | 'low'
+  ): void {
     if (!this.baseline) return;
 
     // Score de tension (mouvement + posture inversée)
@@ -433,7 +444,10 @@ export class VisualLearningEngine {
   /**
    * Met à jour la signature d'engagement
    */
-  private updateEngagementSignature(samples: CalibrationSample[], level: 'high' | 'low'): void {
+  private updateEngagementSignature(
+    samples: CalibrationSample[],
+    level: 'high' | 'low'
+  ): void {
     if (!this.baseline) return;
 
     // Score d'engagement (stabilité regard + posture)
@@ -475,8 +489,8 @@ export class VisualLearningEngine {
 
     // Analyser la distribution des niveaux
     const energyDist = this.analyzeDistribution(history.map(h => h.energy));
-    const tensionDist = this.analyzeDistribution(history.map(h => h.tension));
-    const engagementDist = this.analyzeDistribution(history.map(h => h.engagement));
+    const _tensionDist = this.analyzeDistribution(history.map(h => h.tension));
+    const _engagementDist = this.analyzeDistribution(history.map(h => h.engagement));
 
     // Si les distributions sont déséquilibrées, ajuster légèrement les seuils
     // Ceci permet une adaptation graduelle au comportement de l'utilisateur
@@ -501,7 +515,11 @@ export class VisualLearningEngine {
   /**
    * Analyse la distribution des niveaux
    */
-  private analyzeDistribution(levels: string[]): { low: number; medium: number; high: number } {
+  private analyzeDistribution(levels: string[]): {
+    low: number;
+    medium: number;
+    high: number;
+  } {
     const total = levels.length;
     if (total === 0) return { low: 0.33, medium: 0.34, high: 0.33 };
 

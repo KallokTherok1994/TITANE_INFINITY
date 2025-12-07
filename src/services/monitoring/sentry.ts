@@ -11,7 +11,11 @@
  */
 
 import * as Sentry from '@sentry/react';
-import type { ErrorContext, ClassifiedError, ErrorSeverity } from '@/lib/errorHandler';
+import type {
+  ErrorContext as _ErrorContext,
+  ClassifiedError,
+  ErrorSeverity,
+} from '@/lib/errorHandler';
 
 /**
  * Configuration Sentry par environnement
@@ -31,7 +35,8 @@ interface SentryConfig {
  */
 function getSentryConfig(): SentryConfig {
   const isDev = import.meta.env.DEV;
-  const environment = import.meta.env.VITE_SENTRY_ENVIRONMENT || (isDev ? 'development' : 'production');
+  const environment =
+    import.meta.env.VITE_SENTRY_ENVIRONMENT || (isDev ? 'development' : 'production');
   const version = import.meta.env.VITE_APP_VERSION || 'v19.5.2';
 
   return {
@@ -64,7 +69,9 @@ export function initSentry(): void {
     return;
   }
 
-  console.log(`🔍 [SENTRY] Initialisation - Environment: ${config.environment}, Release: ${config.release}`);
+  console.log(
+    `🔍 [SENTRY] Initialisation - Environment: ${config.environment}, Release: ${config.release}`
+  );
 
   Sentry.init({
     dsn: config.dsn,
@@ -314,10 +321,7 @@ export function setContext(name: string, context: Record<string, unknown>): void
 /**
  * Démarre une transaction de performance
  */
-export function startTransaction(
-  name: string,
-  op: string
-): Sentry.Span | undefined {
+export function startTransaction(name: string, op: string): Sentry.Span | undefined {
   if (!getSentryConfig().enabled) {
     return undefined;
   }
@@ -332,12 +336,9 @@ export function startTransaction(
 /**
  * Wrapper pour profiler une fonction asynchrone
  */
-export async function profileAsync<T>(
-  name: string,
-  fn: () => Promise<T>
-): Promise<T> {
+export async function profileAsync<T>(name: string, fn: () => Promise<T>): Promise<T> {
   const startTime = performance.now();
-  
+
   try {
     const result = await fn();
     Sentry.captureMessage(`✅ Function ${name} completed`, 'info');
@@ -359,12 +360,9 @@ export async function profileAsync<T>(
 /**
  * Wrapper pour profiler une fonction synchrone
  */
-export function profileSync<T>(
-  name: string,
-  fn: () => T
-): T {
+export function profileSync<T>(name: string, fn: () => T): T {
   const startTime = performance.now();
-  
+
   try {
     const result = fn();
     Sentry.captureMessage(`✅ Function ${name} completed`, 'info');
@@ -392,39 +390,43 @@ export function captureWebVitals(): void {
   }
 
   // Importer dynamiquement web-vitals
-  import('web-vitals').then(({ onCLS, onCLS: onFID, onFCP, onLCP, onTTFB }) => {
-    onCLS((metric: any) => {
-      Sentry.setMeasurement('CLS', metric.value, 'none');
-    });
+  import('web-vitals')
+    .then(({ onCLS, onCLS: onFID, onFCP, onLCP, onTTFB }) => {
+      onCLS((metric: any) => {
+        Sentry.setMeasurement('CLS', metric.value, 'none');
+      });
 
-    onFID((metric: any) => {
-      Sentry.setMeasurement('FID', metric.value, 'millisecond');
-    });
+      onFID((metric: any) => {
+        Sentry.setMeasurement('FID', metric.value, 'millisecond');
+      });
 
-    onFCP((metric: any) => {
-      Sentry.setMeasurement('FCP', metric.value, 'millisecond');
-    });
+      onFCP((metric: any) => {
+        Sentry.setMeasurement('FCP', metric.value, 'millisecond');
+      });
 
-    onLCP((metric: any) => {
-      Sentry.setMeasurement('LCP', metric.value, 'millisecond');
-    });
+      onLCP((metric: any) => {
+        Sentry.setMeasurement('LCP', metric.value, 'millisecond');
+      });
 
-    onTTFB((metric: any) => {
-      Sentry.setMeasurement('TTFB', metric.value, 'millisecond');
+      onTTFB((metric: any) => {
+        Sentry.setMeasurement('TTFB', metric.value, 'millisecond');
+      });
+    })
+    .catch(() => {
+      // web-vitals non disponible, ignorer
     });
-  }).catch(() => {
-    // web-vitals non disponible, ignorer
-  });
 }
 
 /**
  * Test de l'envoi d'erreur à Sentry (pour debug)
  */
 export function testSentry(): void {
-  console.log('🧪 [SENTRY] Test d\'envoi d\'erreur...');
+  console.log("🧪 [SENTRY] Test d'envoi d'erreur...");
 
   try {
-    throw new Error('Test Sentry - Cette erreur est volontaire pour tester le monitoring');
+    throw new Error(
+      'Test Sentry - Cette erreur est volontaire pour tester le monitoring'
+    );
   } catch (error) {
     captureClassifiedError(
       {
@@ -463,10 +465,4 @@ import {
   matchRoutes,
 } from 'react-router-dom';
 
-export {
-  React,
-  useLocation,
-  useNavigationType,
-  createRoutesFromChildren,
-  matchRoutes,
-};
+export { React, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes };

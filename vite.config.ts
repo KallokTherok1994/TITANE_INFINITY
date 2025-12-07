@@ -43,6 +43,8 @@ export default defineConfig({
     // En mode dev browser, on peut inclure @tauri-apps/api
     // En mode Tauri, il sera automatiquement géré
     include: ['react', 'react-dom', 'react/jsx-runtime'],
+    // Exclure modules Node.js purs incompatibles browser
+    exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
     esbuildOptions: {
       target: 'esnext',
     }
@@ -158,7 +160,7 @@ export default defineConfig({
           }
         },
       },
-      // Externaliser les modules Node.js purs (incompatibles browser)
+      // Externaliser les modules Node.js purs (incompatibles browser) + Tauri v2 plugins (chargés dynamiquement)
       external: [
         'better-sqlite3',
         'sqlite3',
@@ -170,6 +172,7 @@ export default defineConfig({
         'crypto',
         'stream',
         'os',
+        '@tauri-apps/plugin-fs',
       ],
     },
   },

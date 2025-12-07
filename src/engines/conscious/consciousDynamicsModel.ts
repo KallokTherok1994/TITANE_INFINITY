@@ -27,35 +27,35 @@
  * Modes de conscience procédurale
  */
 export type ConsciousMode =
-  | 'analytic'      // Pensée rapide, nette, peu d'affect
-  | 'reflective'    // Rythme lent, profondeur
-  | 'empathic'      // Chaleur, proximité
-  | 'synthetic'     // Fusion créative multi-moteurs
-  | 'singularity';  // Alignement total, clarté maximale
+  | 'analytic' // Pensée rapide, nette, peu d'affect
+  | 'reflective' // Rythme lent, profondeur
+  | 'empathic' // Chaleur, proximité
+  | 'synthetic' // Fusion créative multi-moteurs
+  | 'singularity'; // Alignement total, clarté maximale
 
 /**
  * État de transition
  */
 export type TransitionState =
-  | 'idle'          // Stable
-  | 'initiating'    // Début de changement
-  | 'shifting'      // En transition
-  | 'stabilizing'   // Stabilisation post-transition
-  | 'active'        // Actif dans mode
-  | 'resolution';   // Résolution finale
+  | 'idle' // Stable
+  | 'initiating' // Début de changement
+  | 'shifting' // En transition
+  | 'stabilizing' // Stabilisation post-transition
+  | 'active' // Actif dans mode
+  | 'resolution'; // Résolution finale
 
 /**
  * État de conscience dynamique
  */
 export interface ConsciousState {
-  focus: number;              // 0..1 - Intensité de l'attention
-  clarity: number;            // 0..1 - Pureté cognitive
-  noise: number;              // 0..1 - Bruit cognitif interne
-  distraction: number;        // 0..1 - Forces perturbatrices
-  innerPressure: number;      // 0..1 - Tension mentale
-  depth: number;              // 0..1 - Profondeur de réflexion
-  tempo: number;              // 0.5..2 - Vitesse du flux de pensée
-  stability: number;          // 0..1 - Cohérence globale
+  focus: number; // 0..1 - Intensité de l'attention
+  clarity: number; // 0..1 - Pureté cognitive
+  noise: number; // 0..1 - Bruit cognitif interne
+  distraction: number; // 0..1 - Forces perturbatrices
+  innerPressure: number; // 0..1 - Tension mentale
+  depth: number; // 0..1 - Profondeur de réflexion
+  tempo: number; // 0.5..2 - Vitesse du flux de pensée
+  stability: number; // 0..1 - Cohérence globale
   mode: ConsciousMode;
   transitionState: TransitionState;
 }
@@ -80,7 +80,7 @@ export interface ModeConfig {
 export interface RepairState {
   active: boolean;
   reason: string;
-  progress: number;      // 0..1
+  progress: number; // 0..1
   startTime: number;
   estimatedDuration: number; // ms
 }
@@ -98,7 +98,7 @@ const MODE_CONFIGS: Record<ConsciousMode, ModeConfig> = {
     targetTempo: 1.3,
     auraPattern: 'stable-blue-violet',
     voiceCharacter: 'precise-structured',
-    spatialPreset: 'architect'
+    spatialPreset: 'architect',
   },
   reflective: {
     targetFocus: 0.7,
@@ -108,7 +108,7 @@ const MODE_CONFIGS: Record<ConsciousMode, ModeConfig> = {
     targetTempo: 0.7,
     auraPattern: 'slow-diffuse',
     voiceCharacter: 'calm-deep',
-    spatialPreset: 'deep-work'
+    spatialPreset: 'deep-work',
   },
   empathic: {
     targetFocus: 0.6,
@@ -118,7 +118,7 @@ const MODE_CONFIGS: Record<ConsciousMode, ModeConfig> = {
     targetTempo: 0.9,
     auraPattern: 'warm-gold-amber',
     voiceCharacter: 'soft-warm',
-    spatialPreset: 'empathy'
+    spatialPreset: 'empathy',
   },
   synthetic: {
     targetFocus: 0.8,
@@ -128,7 +128,7 @@ const MODE_CONFIGS: Record<ConsciousMode, ModeConfig> = {
     targetTempo: 1.1,
     auraPattern: 'oscillating-violet-gold',
     voiceCharacter: 'creative-fluid',
-    spatialPreset: 'meta'
+    spatialPreset: 'meta',
   },
   singularity: {
     targetFocus: 1.0,
@@ -138,8 +138,8 @@ const MODE_CONFIGS: Record<ConsciousMode, ModeConfig> = {
     targetTempo: 1.0,
     auraPattern: 'signature-infinite',
     voiceCharacter: 'profound-stable',
-    spatialPreset: 'insight'
-  }
+    spatialPreset: 'insight',
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -219,22 +219,13 @@ export class ConsciousDynamicsModel {
     const dt = deltaTime / 1000; // secondes
 
     // Focus décroît naturellement sans stimulation
-    this.state.focus = Math.max(
-      0.3,
-      this.state.focus - this.FOCUS_DECAY * dt
-    );
+    this.state.focus = Math.max(0.3, this.state.focus - this.FOCUS_DECAY * dt);
 
     // Clarity décroît légèrement avec le temps
-    this.state.clarity = Math.max(
-      0.4,
-      this.state.clarity - this.CLARITY_DECAY * dt
-    );
+    this.state.clarity = Math.max(0.4, this.state.clarity - this.CLARITY_DECAY * dt);
 
     // Noise augmente naturellement
-    this.state.noise = Math.min(
-      0.5,
-      this.state.noise + this.NOISE_GROWTH * dt
-    );
+    this.state.noise = Math.min(0.5, this.state.noise + this.NOISE_GROWTH * dt);
 
     // Distraction fluctue naturellement
     this.state.distraction = Math.max(
@@ -246,11 +237,7 @@ export class ConsciousDynamicsModel {
     // (sera ajusté par contexte externe)
 
     // Depth stable ou dérive légèrement
-    this.state.depth = this.clamp(
-      this.state.depth + (Math.random() - 0.5) * 0.005,
-      0,
-      1
-    );
+    this.state.depth = this.clamp(this.state.depth + (Math.random() - 0.5) * 0.005, 0, 1);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -281,7 +268,7 @@ export class ConsciousDynamicsModel {
   // GESTION DES TRANSITIONS
   // ───────────────────────────────────────────────────────────────────────────
 
-  private manageTransitions(deltaTime: number): void {
+  private manageTransitions(_deltaTime: number): void {
     switch (this.state.transitionState) {
       case 'idle':
         // Rien à faire
@@ -357,7 +344,7 @@ export class ConsciousDynamicsModel {
       reason,
       progress: 0,
       startTime: Date.now(),
-      estimatedDuration: 5000 // 5 secondes
+      estimatedDuration: 5000, // 5 secondes
     };
 
     // Ralentissement immédiat
@@ -367,37 +354,22 @@ export class ConsciousDynamicsModel {
 
   private progressRepair(): void {
     const elapsed = Date.now() - this.repairState.startTime;
-    this.repairState.progress = Math.min(
-      1,
-      elapsed / this.repairState.estimatedDuration
-    );
+    this.repairState.progress = Math.min(1, elapsed / this.repairState.estimatedDuration);
 
     // Progression linéaire de la réparation
     const p = this.repairState.progress;
 
     // Baisse du bruit
-    this.state.noise = Math.max(
-      0.1,
-      this.state.noise - 0.01 * p
-    );
+    this.state.noise = Math.max(0.1, this.state.noise - 0.01 * p);
 
     // Augmentation de la clarté
-    this.state.clarity = Math.min(
-      0.9,
-      this.state.clarity + 0.01 * p
-    );
+    this.state.clarity = Math.min(0.9, this.state.clarity + 0.01 * p);
 
     // Baisse de la pression
-    this.state.innerPressure = Math.max(
-      0.2,
-      this.state.innerPressure - 0.015 * p
-    );
+    this.state.innerPressure = Math.max(0.2, this.state.innerPressure - 0.015 * p);
 
     // Stabilisation
-    this.state.stability = Math.min(
-      1,
-      this.state.stability + 0.02 * p
-    );
+    this.state.stability = Math.min(1, this.state.stability + 0.02 * p);
 
     // Fin de la réparation
     if (this.repairState.progress >= 1) {
@@ -419,9 +391,9 @@ export class ConsciousDynamicsModel {
 
     this.state.stability = this.clamp(
       this.state.focus * focusWeight +
-      this.state.clarity * clarityWeight +
-      (1 - this.state.noise) * Math.abs(noiseWeight) +
-      (1 - this.state.innerPressure) * Math.abs(pressureWeight),
+        this.state.clarity * clarityWeight +
+        (1 - this.state.noise) * Math.abs(noiseWeight) +
+        (1 - this.state.innerPressure) * Math.abs(pressureWeight),
       0,
       1
     );
@@ -455,11 +427,7 @@ export class ConsciousDynamicsModel {
     distractionLevel?: number;
   }): void {
     if (context.cognitiveLoad !== undefined) {
-      this.state.innerPressure = this.clamp(
-        context.cognitiveLoad * 0.8,
-        0,
-        1
-      );
+      this.state.innerPressure = this.clamp(context.cognitiveLoad * 0.8, 0, 1);
     }
 
     if (context.emotionalIntensity !== undefined) {
@@ -476,26 +444,15 @@ export class ConsciousDynamicsModel {
 
     if (context.taskComplexity !== undefined) {
       // Complexité haute → profondeur haute, focus requis
-      this.state.depth = this.clamp(
-        context.taskComplexity * 0.9,
-        0.3,
-        1
-      );
+      this.state.depth = this.clamp(context.taskComplexity * 0.9, 0.3, 1);
       // Ajuster focus vers target
       const targetFocus = 0.5 + context.taskComplexity * 0.4;
       this.state.focus = this.clamp(targetFocus, 0, 1);
     }
 
     if (context.distractionLevel !== undefined) {
-      this.state.distraction = this.clamp(
-        context.distractionLevel,
-        0,
-        1
-      );
-      this.state.focus = Math.max(
-        0.2,
-        this.state.focus - context.distractionLevel * 0.2
-      );
+      this.state.distraction = this.clamp(context.distractionLevel, 0, 1);
+      this.state.focus = Math.max(0.2, this.state.focus - context.distractionLevel * 0.2);
     }
   }
 
@@ -545,7 +502,7 @@ export class ConsciousDynamicsModel {
       pattern: config.auraPattern,
       intensity: this.state.focus * 0.7 + this.state.clarity * 0.3,
       turbulence: this.state.noise,
-      stability: this.state.stability
+      stability: this.state.stability,
     };
   }
 
@@ -560,7 +517,7 @@ export class ConsciousDynamicsModel {
       character: config.voiceCharacter,
       tempo: this.state.tempo,
       clarity: this.state.clarity,
-      depth: this.state.depth
+      depth: this.state.depth,
     };
   }
 
@@ -573,7 +530,7 @@ export class ConsciousDynamicsModel {
     return {
       preset: config.spatialPreset,
       stability: this.state.stability,
-      focus: this.state.focus
+      focus: this.state.focus,
     };
   }
 
@@ -585,7 +542,7 @@ export class ConsciousDynamicsModel {
     return {
       pauseDuration: 0.2 + (1 - this.state.tempo) * 0.3,
       microHesitations: this.state.noise * 0.5,
-      breathingDepth: this.state.depth
+      breathingDepth: this.state.depth,
     };
   }
 
@@ -608,7 +565,7 @@ export class ConsciousDynamicsModel {
       tempo: 1.0,
       stability: 0.9,
       mode: 'analytic',
-      transitionState: 'idle'
+      transitionState: 'idle',
     };
   }
 
@@ -618,7 +575,7 @@ export class ConsciousDynamicsModel {
       reason: '',
       progress: 0,
       startTime: 0,
-      estimatedDuration: 0
+      estimatedDuration: 0,
     };
   }
 

@@ -1,15 +1,15 @@
 /**
  * TITANE∞ vΩ — Shared Recovery Engine
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Unified recovery management for all strategies
  */
 
-import type { 
-  IRecoveryHandler, 
-  RecoveryPolicy, 
-  RecoveryResult, 
-  RecoveryAction 
+import type {
+  IRecoveryHandler,
+  RecoveryPolicy,
+  RecoveryResult,
+  RecoveryAction as _RecoveryAction,
 } from '../types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -21,21 +21,24 @@ const DEFAULT_POLICY: RecoveryPolicy = {
   retryDelay: 1000,
   backoffMultiplier: 2,
   fallbackEnabled: true,
-  circuitBreakerThreshold: 5
+  circuitBreakerThreshold: 5,
 };
 
 export class RecoveryEngine implements IRecoveryHandler {
   private stats = {
     totalAttempts: 0,
     successfulRecoveries: 0,
-    failedRecoveries: 0
+    failedRecoveries: 0,
   };
 
-  private circuitBreakers: Map<string, {
-    failures: number;
-    lastFailure: number;
-    isOpen: boolean;
-  }> = new Map();
+  private circuitBreakers: Map<
+    string,
+    {
+      failures: number;
+      lastFailure: number;
+      isOpen: boolean;
+    }
+  > = new Map();
 
   /**
    * Recover from operation failure with retry/fallback
@@ -46,7 +49,7 @@ export class RecoveryEngine implements IRecoveryHandler {
   ): Promise<RecoveryResult<T>> {
     const mergedPolicy: RecoveryPolicy = {
       ...DEFAULT_POLICY,
-      ...policy
+      ...policy,
     };
 
     this.stats.totalAttempts++;
@@ -58,16 +61,17 @@ export class RecoveryEngine implements IRecoveryHandler {
     // Check circuit breaker
     const operationKey = operation.toString();
     const circuitBreaker = this.circuitBreakers.get(operationKey);
-    
+
     if (circuitBreaker?.isOpen) {
       const timeSinceFailure = Date.now() - circuitBreaker.lastFailure;
-      if (timeSinceFailure < 30000) { // 30 second cooldown
+      if (timeSinceFailure < 30000) {
+        // 30 second cooldown
         this.stats.failedRecoveries++;
         return {
           recovered: false,
           action: 'circuit-break',
           attempts: 0,
-          error: 'Circuit breaker open'
+          error: 'Circuit breaker open',
         };
       } else {
         // Reset circuit breaker
@@ -82,37 +86,37 @@ export class RecoveryEngine implements IRecoveryHandler {
 
       try {
         const result = await operation();
-        
+
         // Success - reset circuit breaker
         if (circuitBreaker) {
           circuitBreaker.failures = 0;
         }
-        
+
         this.stats.successfulRecoveries++;
-        
+
         return {
           recovered: true,
           action: attempts > 1 ? 'retry' : 'fallback',
           result,
-          attempts
+          attempts,
         };
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
-        
+
         // Track failure in circuit breaker
         const cb = this.circuitBreakers.get(operationKey) || {
           failures: 0,
           lastFailure: 0,
-          isOpen: false
+          isOpen: false,
         };
-        
+
         cb.failures++;
         cb.lastFailure = Date.now();
-        
+
         if (cb.failures >= mergedPolicy.circuitBreakerThreshold) {
           cb.isOpen = true;
         }
-        
+
         this.circuitBreakers.set(operationKey, cb);
 
         // Last attempt failed
@@ -133,7 +137,7 @@ export class RecoveryEngine implements IRecoveryHandler {
       recovered: false,
       action: mergedPolicy.fallbackEnabled ? 'fallback' : 'abort',
       attempts,
-      error: lastError?.message || 'Unknown error'
+      error: lastError?.message || 'Unknown error',
     };
   }
 
@@ -155,17 +159,19 @@ export class RecoveryEngine implements IRecoveryHandler {
     this.stats = {
       totalAttempts: 0,
       successfulRecoveries: 0,
-      failedRecoveries: 0
+      failedRecoveries: 0,
     };
   }
 
   /**
    * Get circuit breaker status
    */
-  getCircuitBreakerStatus(operationKey: string): {
-    failures: number;
-    isOpen: boolean;
-  } | undefined {
+  getCircuitBreakerStatus(operationKey: string):
+    | {
+        failures: number;
+        isOpen: boolean;
+      }
+    | undefined {
     return this.circuitBreakers.get(operationKey);
   }
 

@@ -18,7 +18,10 @@
  * tous les canaux expressifs en temps réel.
  */
 
-import { unifiedIdentityKernel, type IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
+import {
+  unifiedIdentityKernel,
+  type IdentityExpressionPackage,
+} from '../identity/unifiedIdentityKernel';
 import { auraEngine } from '../aura/auraEngine';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';
 import { voiceProsodyEngine } from '../voice/voiceProsodyEngine';
@@ -35,22 +38,22 @@ export type { OrchestratedVoice } from '../voice/types';
  * Configuration halo orchestré
  */
 export interface OrchestratedHalo {
-  pattern: string;         // Pattern name
+  pattern: string; // Pattern name
   colors: {
-    primary: string;       // Hex color
-    secondary: string;     // Hex color
-    accent: string;        // Hex color
+    primary: string; // Hex color
+    secondary: string; // Hex color
+    accent: string; // Hex color
   };
   dynamics: {
-    intensity: number;     // 0-1 - Overall intensity
-    pulsation: number;     // 0-1 - Pulsation strength
-    flowSpeed: number;     // 0-1 - Animation speed
-    reactivity: number;    // 0-1 - Reactivity to events
+    intensity: number; // 0-1 - Overall intensity
+    pulsation: number; // 0-1 - Pulsation strength
+    flowSpeed: number; // 0-1 - Animation speed
+    reactivity: number; // 0-1 - Reactivity to events
   };
   spatial: {
-    radius: number;        // 0-1 - Halo size
-    diffusion: number;     // 0-1 - Edge softness
-    layering: number;      // 0-1 - Multi-layer depth
+    radius: number; // 0-1 - Halo size
+    diffusion: number; // 0-1 - Edge softness
+    layering: number; // 0-1 - Multi-layer depth
   };
 }
 
@@ -59,18 +62,18 @@ export interface OrchestratedHalo {
  */
 export interface OrchestratedNarrative {
   style: {
-    primary: string;       // fluid | architectural | empathic | visionary | technical
-    tonality: number;      // 0-1 - Formal → Casual
-    density: number;       // 0-1 - Concise → Elaborate
-    poeticism: number;     // 0-1 - Literal → Poetic
+    primary: string; // fluid | architectural | empathic | visionary | technical
+    tonality: number; // 0-1 - Formal → Casual
+    density: number; // 0-1 - Concise → Elaborate
+    poeticism: number; // 0-1 - Literal → Poetic
   };
   structure: {
-    paragraphFlow: string;      // linear | branching | circular
-    transitionStyle: string;    // abrupt | smooth | organic
+    paragraphFlow: string; // linear | branching | circular
+    transitionStyle: string; // abrupt | smooth | organic
     argumentationDepth: number; // 0-1 - Surface → Deep
   };
   emphasis: {
-    metaphorUse: number;        // 0-1 - Literal → Metaphoric
+    metaphorUse: number; // 0-1 - Literal → Metaphoric
     technicalPrecision: number; // 0-1 - Casual → Precise
     emotionalResonance: number; // 0-1 - Neutral → Empathic
   };
@@ -95,15 +98,15 @@ export interface ExpressionEngineState {
   identitySource: IdentityExpressionPackage | null;
 
   // Synchronization state
-  voiceHaloSync: number;        // 0-1 - Voice ↔ Halo sync
-  voiceNarrativeSync: number;   // 0-1 - Voice ↔ Narrative sync
-  haloNarrativeSync: number;    // 0-1 - Halo ↔ Narrative sync
-  globalSync: number;           // 0-1 - Overall sync
+  voiceHaloSync: number; // 0-1 - Voice ↔ Halo sync
+  voiceNarrativeSync: number; // 0-1 - Voice ↔ Narrative sync
+  haloNarrativeSync: number; // 0-1 - Halo ↔ Narrative sync
+  globalSync: number; // 0-1 - Overall sync
 
   // Adaptation state
-  contextAdaptation: number;    // 0-1 - Context responsiveness
-  emotionalAlignment: number;   // 0-1 - Emotional coherence
-  cognitiveAlignment: number;   // 0-1 - Cognitive coherence
+  contextAdaptation: number; // 0-1 - Context responsiveness
+  emotionalAlignment: number; // 0-1 - Emotional coherence
+  cognitiveAlignment: number; // 0-1 - Cognitive coherence
 
   lastUpdate: number;
 }
@@ -182,7 +185,7 @@ export class ExpressionEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private subscribeToIdentityKernel(): void {
-    unifiedIdentityKernel.subscribe((identityState) => {
+    unifiedIdentityKernel.subscribe(_identityState => {
       const expression = unifiedIdentityKernel.exportToOutput();
       this.state.identitySource = expression;
     });
@@ -238,7 +241,10 @@ export class ExpressionEngine {
       microDynamics: {
         intonationVariation: emotive.microIntonations,
         rhythmicFlow: this.mapToRhythmicFlow(cognitive.speed, signature.energy),
-        pausePlacement: this.mapToPausePlacement(cognitive.precision, attention.cognitiveLoad),
+        pausePlacement: this.mapToPausePlacement(
+          cognitive.precision,
+          attention.cognitiveLoad
+        ),
         emotionalColoring: emotive.intensity,
       },
       emotionalState: {
@@ -250,7 +256,10 @@ export class ExpressionEngine {
 
     // Halo mapping
     this.state.currentExpression.halo = {
-      pattern: this.mapToHaloPattern(signature.narrativeStyle, signature.cognitivePosture),
+      pattern: this.mapToHaloPattern(
+        signature.narrativeStyle,
+        signature.cognitivePosture
+      ),
       colors: this.mapToHaloColors(signature.warmth, emotive.intensity, signature.tone),
       dynamics: {
         intensity: emotive.intensity,
@@ -271,10 +280,16 @@ export class ExpressionEngine {
         primary: signature.narrativeStyle,
         tonality: this.mapToNarrativeTonality(signature.tone, signature.warmth),
         density: this.mapToNarrativeDensity(cognitive.depth, cognitive.precision),
-        poeticism: this.mapToPoeticISM(signature.narrativeStyle, cognitive.analogicalCapacity),
+        poeticism: this.mapToPoeticISM(
+          signature.narrativeStyle,
+          cognitive.analogicalCapacity
+        ),
       },
       structure: {
-        paragraphFlow: this.mapToParagraphFlow(signature.cognitivePosture, cognitive.structure),
+        paragraphFlow: this.mapToParagraphFlow(
+          signature.cognitivePosture,
+          cognitive.structure
+        ),
         transitionStyle: this.mapToTransitionStyle(cognitive.speed, signature.energy),
         argumentationDepth: cognitive.depth,
       },
@@ -305,7 +320,7 @@ export class ExpressionEngine {
   }
 
   private mapToVolume(energy: number, focus: number): number {
-    return (energy * 0.7 + focus * 0.3);
+    return energy * 0.7 + focus * 0.3;
   }
 
   private mapToEmphasis(precision: number, focus: number): number {
@@ -344,7 +359,11 @@ export class ExpressionEngine {
     return patterns[key] || 'balanced_flow';
   }
 
-  private mapToHaloColors(warmth: number, intensity: number, tone: number): {
+  private mapToHaloColors(
+    warmth: number,
+    intensity: number,
+    tone: number
+  ): {
     primary: string;
     secondary: string;
     accent: string;
@@ -386,7 +405,7 @@ export class ExpressionEngine {
 
   private mapToHaloDiffusion(clarity: number, precision: number): number {
     // High clarity = sharp edges (low diffusion)
-    return 1 - ((clarity + precision) / 2);
+    return 1 - (clarity + precision) / 2;
   }
 
   private mapToHaloLayering(depth: number, clarity: number): number {
@@ -465,7 +484,8 @@ export class ExpressionEngine {
     this.state.voiceHaloSync = voiceHaloMatch;
     this.state.voiceNarrativeSync = voiceNarrativeMatch;
     this.state.haloNarrativeSync = haloNarrativeMatch;
-    this.state.globalSync = (voiceHaloMatch + voiceNarrativeMatch + haloNarrativeMatch) / 3;
+    this.state.globalSync =
+      (voiceHaloMatch + voiceNarrativeMatch + haloNarrativeMatch) / 3;
   }
 
   private compareDynamics(a1: number, a2: number, b1: number, b2: number): number {
@@ -475,7 +495,11 @@ export class ExpressionEngine {
     return 1 - avgDiff; // Convert distance to similarity
   }
 
-  private warmthFromColors(colors: { primary: string; secondary: string; accent: string }): number {
+  private warmthFromColors(colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  }): number {
     // Simple heuristic: warm colors (red/orange/yellow) = high warmth
     const primary = colors.primary.toLowerCase();
     if (primary.includes('ff') && primary.includes('6')) return 0.8; // Orange-ish
@@ -494,7 +518,7 @@ export class ExpressionEngine {
     voiceProsodyEngine.updateState(voice);
 
     // Apply to Aura Engine (v∞.38+)
-    auraEngine.setPattern(halo.pattern as any);
+    auraEngine.setPattern(halo.pattern as string);
     auraEngine.setColors({
       primary: halo.colors.primary,
       secondary: halo.colors.secondary,
@@ -681,12 +705,12 @@ export class ExpressionEngine {
   subscribe(callback: (state: ExpressionEngineState) => void): () => void {
     this.subscribers.push(callback);
     return () => {
-      this.subscribers = this.subscribers.filter((cb) => cb !== callback);
+      this.subscribers = this.subscribers.filter(cb => cb !== callback);
     };
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach((callback) => callback(this.state));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 }
 

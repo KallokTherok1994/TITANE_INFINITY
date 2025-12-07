@@ -11,7 +11,7 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { invoke as _invoke } from '@tauri-apps/api/core';
 import { secureInvoke } from '@/lib/security';
 import {
   MEMORY_ENGINE_CONFIG,
@@ -31,7 +31,7 @@ import type {
   Memory,
   MemoryTier,
   MemoryContentType,
-  MemoryImportance,
+  MemoryImportance as _MemoryImportance,
   MemorySource,
   MemoryMetadata,
   MemoryAssociation,
@@ -39,7 +39,7 @@ import type {
   ContextMessage,
   ContextSummary,
   WorkingMemorySlot,
-  EmotionalTone,
+  EmotionalTone as _EmotionalTone,
   CompressionResult,
   CompressionStrategy,
   MemorySearchQuery,
@@ -49,8 +49,8 @@ import type {
   MaintenanceEvent,
   MemoryEventCallbacks,
   MemoryEngineState,
-  MemoryError,
-  MemoryResponse,
+  MemoryError as _MemoryError,
+  MemoryResponse as _MemoryResponse,
 } from '@/types/memoryEngine';
 
 // ============================================================================
@@ -384,7 +384,7 @@ export async function searchSemantic(
       text,
       limit: options.limit ?? SEARCH_CONFIG.defaultLimit,
       sortBy: options.sortBy ?? 'relevance',
-      sortOrder: options.sortOrder ?? 'desc' as const,
+      sortOrder: options.sortOrder ?? ('desc' as const),
       tiers: options.tiers,
       contentTypes: options.contentTypes,
       importanceMin: options.importanceMin,
@@ -477,7 +477,7 @@ export async function addMessageToContext(
   }
 
   // Stocker comme mémoire
-  const memory = await storeMemory(message.content, {
+  const _memory = await storeMemory(message.content, {
     contentType: 'message',
     tier: 'short',
     source: message.role === 'user' ? 'user_input' : 'ai_inference',
@@ -558,7 +558,9 @@ export async function saveContext(): Promise<void> {
 /**
  * Restaure un contexte précédent
  */
-export async function restoreContext(sessionId: string): Promise<ConversationContext | null> {
+export async function restoreContext(
+  sessionId: string
+): Promise<ConversationContext | null> {
   try {
     const response = await secureInvoke<ConversationContext | null>(
       MEMORY_COMMANDS.contextRestore,
@@ -702,7 +704,6 @@ async function compressContextMessages(): Promise<void> {
     state.context.summaries.push(summary);
     state.context.recentMessages = state.context.recentMessages.slice(-5);
     state.context.stats.compressionEvents++;
-
   } catch (error) {
     console.error('[MemoryEngine] Erreur compression contexte:', error);
   }
@@ -762,7 +763,8 @@ export async function runMaintenance(): Promise<MaintenanceEvent> {
       .sort((a, b) => a.importanceScore - b.importanceScore);
 
     while (tierMemories.length > limit.maxMemories) {
-      const toRemove = tierMemories.shift()!;
+      const toRemove = tierMemories.shift();
+      if (!toRemove) break;
       affectedMemories.push(toRemove.id);
 
       // Archiver au lieu de supprimer
@@ -804,16 +806,14 @@ function startMaintenanceTimer(): void {
  * Vérifie si maintenance nécessaire
  */
 async function checkMaintenanceNeeded(tier: MemoryTier): Promise<void> {
-  const tierMemories = Array.from(state.memories.values())
-    .filter(m => m.tier === tier);
+  const tierMemories = Array.from(state.memories.values()).filter(m => m.tier === tier);
 
   const tierConfig = MEMORY_ENGINE_CONFIG.tierLimits[tier];
   const totalTokens = tierMemories.reduce((sum, m) => sum + m.metadata?.tokenCount, 0);
 
-  if (shouldRunMaintenance(
-    { totalMemories: tierMemories.length, totalTokens },
-    tierConfig
-  )) {
+  if (
+    shouldRunMaintenance({ totalMemories: tierMemories.length, totalTokens }, tierConfig)
+  ) {
     await runMaintenance();
   }
 }
@@ -877,10 +877,7 @@ async function restoreFromBackend(): Promise<number> {
  * Démarre le timer de sync
  */
 function startSyncTimer(): void {
-  state.syncTimer = setInterval(
-    () => syncToBackend(),
-    SYNC_CONFIG.intervalMs
-  );
+  state.syncTimer = setInterval(() => syncToBackend(), SYNC_CONFIG.intervalMs);
 }
 
 // ============================================================================
@@ -1063,7 +1060,8 @@ function extractTopics(content: string): string[] {
 
 function extractKeywords(content: string): string[] {
   // Simple extraction de mots-clés
-  const words = content.toLowerCase()
+  const words = content
+    .toLowerCase()
     .split(/\s+/)
     .filter(w => w.length > 4)
     .slice(0, 10);
@@ -1135,7 +1133,8 @@ function calculateRelevanceScore(memory: Memory, query: MemorySearchQuery): numb
       // Score partiel pour mots individuels
       const queryWords = queryLower.split(/\s+/);
       const matchedWords = queryWords.filter(w => lower.includes(w));
-      score += (matchedWords.length / queryWords.length) * SEARCH_CONFIG.weights.textMatch * 0.5;
+      score +=
+        (matchedWords.length / queryWords.length) * SEARCH_CONFIG.weights.textMatch * 0.5;
     }
   }
 

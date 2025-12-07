@@ -26,63 +26,63 @@
  * Besoin prédit de l'utilisateur
  */
 export type PredictedNeed =
-  | 'clarity'       // Clarté, structure
-  | 'support'       // Soutien émotionnel
-  | 'focus'         // Concentration, guidage
-  | 'silence'       // Espace, respiration
-  | 'exploration'   // Ouverture, créativité
-  | 'calm'          // Apaisement, ralentissement
-  | 'invitation';   // Engagement, interaction
+  | 'clarity' // Clarté, structure
+  | 'support' // Soutien émotionnel
+  | 'focus' // Concentration, guidage
+  | 'silence' // Espace, respiration
+  | 'exploration' // Ouverture, créativité
+  | 'calm' // Apaisement, ralentissement
+  | 'invitation'; // Engagement, interaction
 
 /**
  * Direction prédite de la conversation
  */
 export type ConversationDirection =
-  | 'neutral'       // Maintien du cours
-  | 'deepening'     // Approfondissement
-  | 'pivoting'      // Changement de direction
-  | 'concluding'    // Conclusion
-  | 'exploring';    // Exploration ouverte
+  | 'neutral' // Maintien du cours
+  | 'deepening' // Approfondissement
+  | 'pivoting' // Changement de direction
+  | 'concluding' // Conclusion
+  | 'exploring'; // Exploration ouverte
 
 /**
  * Intention prédite de l'utilisateur
  */
 export type PredictedIntent =
-  | 'none'          // Pas d'intention claire
-  | 'express'       // Besoin d'expression
-  | 'support'       // Besoin de soutien
-  | 'engage'        // Besoin d'engagement
-  | 'continue'      // Continue la discussion
-  | 'question'      // Pose une question
-  | 'reflect';      // Réflexion partagée
+  | 'none' // Pas d'intention claire
+  | 'express' // Besoin d'expression
+  | 'support' // Besoin de soutien
+  | 'engage' // Besoin d'engagement
+  | 'continue' // Continue la discussion
+  | 'question' // Pose une question
+  | 'reflect'; // Réflexion partagée
 
 /**
  * État émotionnel prédit
  */
 export interface PredictedEmotion {
-  valence: number;   // -1 (négatif) → 0 (neutre) → 1 (positif)
-  arousal: number;   // 0 (calme) → 1 (excité)
+  valence: number; // -1 (négatif) → 0 (neutre) → 1 (positif)
+  arousal: number; // 0 (calme) → 1 (excité)
 }
 
 /**
  * Prédictions sur l'état interne de TITANE∞
  */
 export interface TitaneSelfPrediction {
-  internalCoherenceDrift: number;  // 0..1 - Dérive de cohérence
+  internalCoherenceDrift: number; // 0..1 - Dérive de cohérence
   cognitiveLoadTrajectory: number; // -1..1 - Tendance de charge cognitive
-  emotionalTrajectory: number;     // -1..1 - Tendance émotionnelle
-  stabilityForecast: number;       // 0..1 - Prévision de stabilité
+  emotionalTrajectory: number; // -1..1 - Tendance émotionnelle
+  stabilityForecast: number; // 0..1 - Prévision de stabilité
 }
 
 /**
  * Ajustements recommandés pour les autres moteurs
  */
 export interface RecommendedAdjustments {
-  toneShift: number;      // -1..1 - Changement de ton vocal
-  auraShift: number;      // -1..1 - Changement d'intensité aura
-  haloShift: number;      // -1..1 - Changement d'intensité halo
+  toneShift: number; // -1..1 - Changement de ton vocal
+  auraShift: number; // -1..1 - Changement d'intensité aura
+  haloShift: number; // -1..1 - Changement d'intensité halo
   narrativeShift: number; // -1..1 - Changement de style narratif
-  rhythmShift: number;    // -1..1 - Changement de tempo
+  rhythmShift: number; // -1..1 - Changement de tempo
 }
 
 /**
@@ -92,7 +92,7 @@ export interface PredictiveFrame {
   // Prédictions utilisateur
   predictedUserIntent: PredictedIntent;
   predictedUserEmotion: PredictedEmotion;
-  predictedEngagement: number;              // 0..1
+  predictedEngagement: number; // 0..1
   predictedConversationDirection: ConversationDirection;
   predictedNeed: PredictedNeed;
 
@@ -104,23 +104,23 @@ export interface PredictiveFrame {
 
   // Métadonnées
   timestamp: number;
-  confidence: number;  // 0..1 - Confiance dans les prédictions
+  confidence: number; // 0..1 - Confiance dans les prédictions
 }
 
 /**
  * Contexte perceptuel simplifié (pour éviter dépendances circulaires)
  */
 export interface PerceptualContext {
-  userPresence: number;              // 0..1
+  userPresence: number; // 0..1
   userEmotionalEstimate: {
     valence: number;
     arousal: number;
   };
   attentionFocus: 'user' | 'content' | 'none';
-  voiceEnergy: number;               // 0..1
-  voicePitch: number;                // Hz
-  voiceTempo: number;                // Multiplier 0.5..2
-  silenceDuration: number;           // ms
+  voiceEnergy: number; // 0..1
+  voicePitch: number; // Hz
+  voiceTempo: number; // Multiplier 0.5..2
+  silenceDuration: number; // ms
 }
 
 /**
@@ -128,8 +128,8 @@ export interface PerceptualContext {
  */
 export interface NervousContext {
   tensionMap: Record<string, number>;
-  cognitiveDrift: number;            // -1..1
-  noiseLevel: number;                // 0..1
+  cognitiveDrift: number; // -1..1
+  noiseLevel: number; // 0..1
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -228,7 +228,7 @@ export class PredictiveReflectionEngine {
       titaneSelfPrediction,
       recommendedAdjustments,
       timestamp: Date.now(),
-      confidence
+      confidence,
     };
   }
 
@@ -248,14 +248,14 @@ export class PredictiveReflectionEngine {
 
       return {
         valence: this.clamp(current.valence + valenceTrend * 0.3, -1, 1),
-        arousal: this.clamp(current.arousal + arousalTrend * 0.3, 0, 1)
+        arousal: this.clamp(current.arousal + arousalTrend * 0.3, 0, 1),
       };
     }
 
     // Sinon, légère atténuation vers neutre
     return {
       valence: current.valence * 0.9,
-      arousal: current.arousal * 0.95
+      arousal: current.arousal * 0.95,
     };
   }
 
@@ -294,7 +294,7 @@ export class PredictiveReflectionEngine {
       this.engagementHistory.shift();
     }
 
-    const current = percept.userPresence;
+    const _current = percept.userPresence;
     const avg = this.average(this.engagementHistory);
     const trend = this.calculateTrend(this.engagementHistory.slice(-10));
 
@@ -326,7 +326,8 @@ export class PredictiveReflectionEngine {
     if (percept.voiceEnergy > 0.7 && emotion.valence > 0.3) return 'exploration';
 
     // Focus intense → guidage
-    if (percept.attentionFocus === 'content' && percept.userPresence > 0.7) return 'focus';
+    if (percept.attentionFocus === 'content' && percept.userPresence > 0.7)
+      return 'focus';
 
     // Défaut → clarté
     return 'clarity';
@@ -378,7 +379,7 @@ export class PredictiveReflectionEngine {
       internalCoherenceDrift,
       cognitiveLoadTrajectory,
       emotionalTrajectory,
-      stabilityForecast
+      stabilityForecast,
     };
   }
 
@@ -394,7 +395,7 @@ export class PredictiveReflectionEngine {
           auraShift: -0.3,
           haloShift: -0.2,
           narrativeShift: -0.2,
-          rhythmShift: -0.5
+          rhythmShift: -0.5,
         };
 
       case 'support':
@@ -403,7 +404,7 @@ export class PredictiveReflectionEngine {
           auraShift: 0.2,
           haloShift: 0.1,
           narrativeShift: 0.3,
-          rhythmShift: -0.2
+          rhythmShift: -0.2,
         };
 
       case 'invitation':
@@ -412,7 +413,7 @@ export class PredictiveReflectionEngine {
           auraShift: 0.3,
           haloShift: 0.2,
           narrativeShift: 0.4,
-          rhythmShift: 0.3
+          rhythmShift: 0.3,
         };
 
       case 'clarity':
@@ -421,7 +422,7 @@ export class PredictiveReflectionEngine {
           auraShift: 0.1,
           haloShift: 0.3,
           narrativeShift: 0.5,
-          rhythmShift: 0
+          rhythmShift: 0,
         };
 
       case 'focus':
@@ -430,7 +431,7 @@ export class PredictiveReflectionEngine {
           auraShift: 0.2,
           haloShift: 0.4,
           narrativeShift: 0.3,
-          rhythmShift: 0.1
+          rhythmShift: 0.1,
         };
 
       case 'silence':
@@ -439,7 +440,7 @@ export class PredictiveReflectionEngine {
           auraShift: -0.4,
           haloShift: -0.3,
           narrativeShift: -0.6,
-          rhythmShift: -0.7
+          rhythmShift: -0.7,
         };
 
       case 'exploration':
@@ -448,7 +449,7 @@ export class PredictiveReflectionEngine {
           auraShift: 0.4,
           haloShift: 0.2,
           narrativeShift: 0.5,
-          rhythmShift: 0.2
+          rhythmShift: 0.2,
         };
 
       default:
@@ -457,7 +458,7 @@ export class PredictiveReflectionEngine {
           auraShift: 0,
           haloShift: 0,
           narrativeShift: 0,
-          rhythmShift: 0
+          rhythmShift: 0,
         };
     }
   }
@@ -526,13 +527,13 @@ export class PredictiveReflectionEngine {
       userPresence: 0.7 + Math.random() * 0.2,
       userEmotionalEstimate: {
         valence: (Math.random() - 0.5) * 0.4,
-        arousal: 0.3 + Math.random() * 0.3
+        arousal: 0.3 + Math.random() * 0.3,
       },
       attentionFocus: Math.random() > 0.5 ? 'user' : 'content',
       voiceEnergy: 0.4 + Math.random() * 0.3,
       voicePitch: 150 + Math.random() * 50,
       voiceTempo: 0.9 + Math.random() * 0.2,
-      silenceDuration: Math.random() * 2000
+      silenceDuration: Math.random() * 2000,
     };
   }
 
@@ -541,10 +542,10 @@ export class PredictiveReflectionEngine {
       tensionMap: {
         cognitive: Math.random() * 0.2,
         emotional: Math.random() * 0.2,
-        motor: Math.random() * 0.1
+        motor: Math.random() * 0.1,
       },
       cognitiveDrift: (Math.random() - 0.5) * 0.2,
-      noiseLevel: 0.1 + Math.random() * 0.1
+      noiseLevel: 0.1 + Math.random() * 0.1,
     };
   }
 
@@ -563,17 +564,17 @@ export class PredictiveReflectionEngine {
         internalCoherenceDrift: 0,
         cognitiveLoadTrajectory: 0,
         emotionalTrajectory: 0,
-        stabilityForecast: 1
+        stabilityForecast: 1,
       },
       recommendedAdjustments: {
         toneShift: 0,
         auraShift: 0,
         haloShift: 0,
         narrativeShift: 0,
-        rhythmShift: 0
+        rhythmShift: 0,
       },
       timestamp: Date.now(),
-      confidence: 0.5
+      confidence: 0.5,
     };
   }
 

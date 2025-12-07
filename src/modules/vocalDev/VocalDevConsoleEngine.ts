@@ -29,12 +29,12 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { invoke as _invoke } from '@tauri-apps/api/core';
 import { secureInvoke } from '@/lib/security';
-import { voiceService } from '@/services/api';
+import { voiceService as _voiceService } from '@/services/api';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { autoHealEngine } from '@/services/ai/autoHealEngine';
-import type { AutoHealError } from '@/services/ai/autoHealEngine';
+import type { AutoHealError as _AutoHealError } from '@/services/ai/autoHealEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -374,13 +374,18 @@ export class VocalDevConsoleEngine {
       this.notifyListeners();
 
       // Stop backend recording + transcribe
-      const result = await secureInvoke<{ text: string; confidence: number }>('voice_stop_recording');
+      const result = await secureInvoke<{ text: string; confidence: number }>(
+        'voice_stop_recording'
+      );
 
       const transcript = result.text || '';
       this.state.recordingState.isTranscribing = false;
       this.state.recordingState.duration = 0;
 
-      this.log('success', `🎤 Transcription: "${transcript}" (confidence: ${result.confidence.toFixed(2)})`);
+      this.log(
+        'success',
+        `🎤 Transcription: "${transcript}" (confidence: ${result.confidence.toFixed(2)})`
+      );
       this.notifyListeners();
 
       return transcript;
@@ -432,7 +437,10 @@ export class VocalDevConsoleEngine {
       this.state.mode = intent.type;
       this.notifyListeners();
 
-      this.log('info', `Intent detected: ${intent.type} (confidence: ${intent.confidence.toFixed(2)})`);
+      this.log(
+        'info',
+        `Intent detected: ${intent.type} (confidence: ${intent.confidence.toFixed(2)})`
+      );
 
       // 2. Route to appropriate handler
       let output = '';
@@ -556,23 +564,37 @@ export class VocalDevConsoleEngine {
     ];
 
     // Calculate confidence scores
-    const devScore = devPatterns.filter((p) => p.test(lower)).length / devPatterns.length;
-    const chatScore = chatPatterns.filter((p) => p.test(lower)).length / chatPatterns.length;
-    const healScore = healPatterns.filter((p) => p.test(lower)).length / healPatterns.length;
-    const systemScore = systemPatterns.filter((p) => p.test(lower)).length / systemPatterns.length;
+    const devScore = devPatterns.filter(p => p.test(lower)).length / devPatterns.length;
+    const chatScore =
+      chatPatterns.filter(p => p.test(lower)).length / chatPatterns.length;
+    const healScore =
+      healPatterns.filter(p => p.test(lower)).length / healPatterns.length;
+    const systemScore =
+      systemPatterns.filter(p => p.test(lower)).length / systemPatterns.length;
 
     // Determine intent type
-    const scores = { dev: devScore, chat: chatScore, heal: healScore, system: systemScore };
+    const scores = {
+      dev: devScore,
+      chat: chatScore,
+      heal: healScore,
+      system: systemScore,
+    };
     const maxScore = Math.max(...Object.values(scores));
-    const intentType = (Object.keys(scores) as Array<'dev' | 'chat' | 'heal' | 'system'>).find(
-      (key) => scores[key] === maxScore
-    )!;
+    const intentType =
+      (Object.keys(scores) as Array<'dev' | 'chat' | 'heal' | 'system'>).find(
+        key => scores[key] === maxScore
+      ) || 'chat';
 
     // Extract keywords
-    const allPatterns = [...devPatterns, ...chatPatterns, ...healPatterns, ...systemPatterns];
+    const allPatterns = [
+      ...devPatterns,
+      ...chatPatterns,
+      ...healPatterns,
+      ...systemPatterns,
+    ];
     const keywords = allPatterns
-      .filter((p) => p.test(lower))
-      .map((p) => {
+      .filter(p => p.test(lower))
+      .map(p => {
         const match = lower.match(p);
         return match ? match[0] : '';
       })
@@ -600,9 +622,12 @@ export class VocalDevConsoleEngine {
       const command = intent.rawCommand;
 
       // Route to Tauri backend dev command
-      const result = await secureInvoke<{ output: string; exitCode: number }>('dev_run_command', {
-        command,
-      });
+      const result = await secureInvoke<{ output: string; exitCode: number }>(
+        'dev_run_command',
+        {
+          command,
+        }
+      );
 
       return {
         output: result.output,
@@ -656,23 +681,30 @@ export class VocalDevConsoleEngine {
   /**
    * Handler pour intention HEAL
    */
-  private async handleHealIntent(intent: VocalIntent): Promise<{ output: string; patch?: VocalPatch }> {
+  private async handleHealIntent(
+    intent: VocalIntent
+  ): Promise<{ output: string; patch?: VocalPatch }> {
     try {
       // Trigger auto-heal engine
       const target = intent.target || 'all';
 
       // Run diagnostic first
-      const diagnostics = await secureInvoke<{ issues: string[] }>('dev_diagnostic', { target });
+      const diagnostics = await secureInvoke<{ issues: string[] }>('dev_diagnostic', {
+        target,
+      });
 
       if (diagnostics.issues.length === 0) {
         return { output: '✅ No issues detected. System healthy.' };
       }
 
       // Trigger self-healing
-      const healResult = await autoHealEngine.heal('vocal-dev', new Error(`Issues: ${diagnostics.issues.join(', ')}`));
+      const healResult = await autoHealEngine.heal(
+        'vocal-dev',
+        new Error(`Issues: ${diagnostics.issues.join(', ')}`)
+      );
 
       return {
-        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map((i) => `- ${i}`).join('\n')}\n\nHealing ID: ${healResult.id}`,
+        output: `🩹 Auto-healing triggered:\n${diagnostics.issues.map(i => `- ${i}`).join('\n')}\n\nHealing ID: ${healResult.id}`,
       };
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error);
@@ -722,7 +754,9 @@ export class VocalDevConsoleEngine {
    */
   private async queryClaude(prompt: string): Promise<string> {
     try {
-      const result = await secureInvoke<{ response: string }>('ai_query_claude', { prompt });
+      const result = await secureInvoke<{ response: string }>('ai_query_claude', {
+        prompt,
+      });
       return result.response;
     } catch (error) {
       throw new Error(`Claude query failed: ${error}`);
@@ -734,7 +768,9 @@ export class VocalDevConsoleEngine {
    */
   private async queryGemini(prompt: string): Promise<string> {
     try {
-      const result = await secureInvoke<{ response: string }>('ai_query_gemini', { prompt });
+      const result = await secureInvoke<{ response: string }>('ai_query_gemini', {
+        prompt,
+      });
       return result.response;
     } catch (error) {
       throw new Error(`Gemini query failed: ${error}`);
@@ -853,7 +889,11 @@ export class VocalDevConsoleEngine {
   /**
    * Log message to console
    */
-  private log(level: VocalConsoleLog['level'], message: string, metadata?: Record<string, unknown>): void {
+  private log(
+    level: VocalConsoleLog['level'],
+    message: string,
+    metadata?: Record<string, unknown>
+  ): void {
     const logEntry: VocalConsoleLog = {
       id: `log-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
       timestamp: Date.now(),
@@ -897,7 +937,7 @@ export class VocalDevConsoleEngine {
     const recentExecutions = this.state.executionHistory.slice(0, 10);
     if (recentExecutions.length === 0) return 100;
 
-    const successCount = recentExecutions.filter((e) => e.exitCode === 0).length;
+    const successCount = recentExecutions.filter(e => e.exitCode === 0).length;
     return Math.round((successCount / recentExecutions.length) * 100);
   }
 
@@ -918,7 +958,7 @@ export class VocalDevConsoleEngine {
    */
   private notifyListeners(): void {
     const stateCopy = this.getState();
-    this.listeners.forEach((listener) => listener(stateCopy));
+    this.listeners.forEach(listener => listener(stateCopy));
   }
 }
 

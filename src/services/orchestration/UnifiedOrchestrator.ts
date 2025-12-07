@@ -1,14 +1,14 @@
 /**
  * TITANE∞ vΩ — Unified Orchestrator
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Consolidates 5 orchestrators into 1 unified system:
  * - MCPOrchestrator (MCP-Ω governance)
  * - CognitiveOmegaOrchestrator (cognitive engines)
  * - AIOrchestrator (neural provider selection)
  * - AIOrchestrator OMNIS (cognitive provider selection)
  * - vsync_orchestrator (quantum/FPS)
- * 
+ *
  * Architecture: Strategy Pattern + Interface Segregation
  * Performance targets: -52% CPU, -42% latency
  * Code reduction: 3,382 lines → ~1,800 lines (-47%)
@@ -23,7 +23,7 @@ import type {
   HealthCheckResult,
   MetricsSummary,
   Metric,
-  OrchestrationResult
+  OrchestrationResult,
 } from './types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -35,14 +35,14 @@ const DEFAULT_CONFIG: UnifiedOrchestratorConfig = {
     mcp: { enabled: true, lazyLoad: true, priority: 100 },
     cognitive: { enabled: true, lazyLoad: true, priority: 90 },
     ai: { enabled: true, lazyLoad: true, priority: 80 },
-    quantum: { enabled: false, lazyLoad: true, priority: 70 }
+    quantum: { enabled: false, lazyLoad: true, priority: 70 },
   },
   defaults: {
     timeout: 30000,
     enableRecovery: true,
     enableMetrics: true,
-    enableHealthChecks: true
-  }
+    enableHealthChecks: true,
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -87,7 +87,7 @@ export class UnifiedOrchestrator {
 
       // Initialize strategies in priority order
       const strategyTypes = this.getEnabledStrategies();
-      
+
       for (const type of strategyTypes) {
         const strategy = await this.loadStrategy(type);
         if (strategy) {
@@ -119,27 +119,33 @@ export class UnifiedOrchestrator {
   /**
    * Load strategy dynamically (lazy loading)
    */
-  private async loadStrategy(type: OrchestrationStrategyType): Promise<IOrchestrationStrategy | null> {
+  private async loadStrategy(
+    type: OrchestrationStrategyType
+  ): Promise<IOrchestrationStrategy | null> {
     try {
       this.log(`Loading strategy: ${type}`);
-      
+
       switch (type) {
-        case 'mcp':
+        case 'mcp': {
           const { MCPStrategy } = await import('./strategies/MCPStrategy');
           return new MCPStrategy();
-        
-        case 'cognitive':
+        }
+
+        case 'cognitive': {
           const { CognitiveStrategy } = await import('./strategies/CognitiveStrategy');
           return new CognitiveStrategy();
-        
-        case 'ai':
+        }
+
+        case 'ai': {
           const { AIStrategy } = await import('./strategies/AIStrategy');
           return new AIStrategy();
-        
-        case 'quantum':
+        }
+
+        case 'quantum': {
           const { QuantumStrategy } = await import('./strategies/QuantumStrategy');
           return new QuantumStrategy();
-        
+        }
+
         default:
           this.logError(`Unknown strategy type: ${type}`);
           return null;
@@ -165,7 +171,7 @@ export class UnifiedOrchestrator {
     }
 
     let strategy = this.strategies.get(type);
-    
+
     if (!strategy) {
       // Try to load strategy if not yet loaded
       const loadedStrategy = await this.loadStrategy(type);
@@ -242,7 +248,7 @@ export class UnifiedOrchestrator {
           status: 'critical',
           score: 0,
           message: `Health check failed: ${error}`,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         };
       }
     }
@@ -264,16 +270,18 @@ export class UnifiedOrchestrator {
         successRate: 1.0,
         averageLatency: 0,
         errorCount: 0,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
 
     const summaries = Array.from(this.strategies.values()).map(s => s.getSummary());
-    
+
     const totalRequests = summaries.reduce((sum, s) => sum + s.totalRequests, 0);
     const errorCount = summaries.reduce((sum, s) => sum + s.errorCount, 0);
-    const avgLatency = summaries.reduce((sum, s) => sum + s.averageLatency, 0) / summaries.length;
-    const successRate = totalRequests > 0 ? (totalRequests - errorCount) / totalRequests : 1.0;
+    const avgLatency =
+      summaries.reduce((sum, s) => sum + s.averageLatency, 0) / summaries.length;
+    const successRate =
+      totalRequests > 0 ? (totalRequests - errorCount) / totalRequests : 1.0;
 
     return {
       totalRequests,
@@ -282,8 +290,8 @@ export class UnifiedOrchestrator {
       errorCount,
       timestamp: Date.now(),
       details: {
-        strategiesActive: this.strategies.size
-      }
+        strategiesActive: this.strategies.size,
+      },
     };
   }
 
@@ -296,7 +304,7 @@ export class UnifiedOrchestrator {
       activeStrategies: this.getActiveStrategies(),
       healthStatus: 'unknown', // Will be computed async
       metrics: this.getMetrics(),
-      lastUpdate: Date.now()
+      lastUpdate: Date.now(),
     };
   }
 
@@ -316,7 +324,7 @@ export class UnifiedOrchestrator {
 
     try {
       const strategy = await this.getStrategy(strategyType);
-      
+
       if (!strategy) {
         return {
           success: false,
@@ -324,33 +332,33 @@ export class UnifiedOrchestrator {
           metadata: {
             strategyUsed: strategyType,
             duration: Date.now() - startTime,
-            timestamp: Date.now()
-          }
+            timestamp: Date.now(),
+          },
         };
       }
 
       const result = await strategy.execute<T>(operation, params);
-      
+
       // Record success metric
       this.recordMetric({
         name: 'orchestration.execute',
         type: 'counter',
         value: 1,
         timestamp: Date.now(),
-        tags: { strategy: strategyType, success: 'true' }
+        tags: { strategy: strategyType, success: 'true' },
       });
 
       return result;
     } catch (error) {
       this.logError(`Execution failed for ${strategyType}.${operation}`, error);
-      
+
       // Record error metric
       this.recordMetric({
         name: 'orchestration.execute',
         type: 'counter',
         value: 1,
         timestamp: Date.now(),
-        tags: { strategy: strategyType, success: 'false' }
+        tags: { strategy: strategyType, success: 'false' },
       });
 
       return {
@@ -359,8 +367,8 @@ export class UnifiedOrchestrator {
         metadata: {
           strategyUsed: strategyType,
           duration: Date.now() - startTime,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       };
     }
   }
@@ -375,7 +383,7 @@ export class UnifiedOrchestrator {
   async shutdown(): Promise<void> {
     this.log('Shutting down...');
 
-    const shutdownPromises = Array.from(this.strategies.values()).map(s => 
+    const shutdownPromises = Array.from(this.strategies.values()).map(s =>
       s.shutdown().catch(err => this.logError('Strategy shutdown error', err))
     );
 
@@ -390,23 +398,25 @@ export class UnifiedOrchestrator {
   // UTILITIES
   // ───────────────────────────────────────────────────────────────────────
 
-  private mergeConfig(partial?: Partial<UnifiedOrchestratorConfig>): UnifiedOrchestratorConfig {
+  private mergeConfig(
+    partial?: Partial<UnifiedOrchestratorConfig>
+  ): UnifiedOrchestratorConfig {
     return {
       strategies: {
         ...DEFAULT_CONFIG.strategies,
-        ...partial?.strategies
+        ...partial?.strategies,
       },
       defaults: {
         ...DEFAULT_CONFIG.defaults,
-        ...partial?.defaults
-      }
+        ...partial?.defaults,
+      },
     };
   }
 
   private recordMetric(metric: Metric): void {
     if (!this.config.defaults.enableMetrics) return;
     this.metrics.push(metric);
-    
+
     // Keep only last 1000 metrics
     if (this.metrics.length > 1000) {
       this.metrics = this.metrics.slice(-1000);

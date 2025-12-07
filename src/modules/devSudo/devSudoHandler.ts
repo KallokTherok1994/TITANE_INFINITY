@@ -12,6 +12,11 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
+import { dataCollector } from '@/modules/dataCollector/DataCollectorEngine';
+import { liveDebugger } from '@/modules/liveDebugger/LiveDebuggerEngine';
+import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
+import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
+import { vocalDevConsole } from '@/modules/vocalDev/VocalDevConsoleEngine';
 import * as ExtendedHandlers from './devSudoExtendedHandlers';
 import * as IDEHandlers from './devSudoIDEHandlers';
 import * as SingularityHandlers from './devSudoSingularityHandlers';
@@ -283,11 +288,7 @@ export interface DevSudoExecutedAction {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
-  'fix-deps': [
-    /^fix\s+deps?$/i,
-    /^install\s+(dependencies|deps)$/i,
-    /^npm\s+install$/i,
-  ],
+  'fix-deps': [/^fix\s+deps?$/i, /^install\s+(dependencies|deps)$/i, /^npm\s+install$/i],
   'restart-tauri': [
     /^restart\s+tauri$/i,
     /^relance\s+(l')?app(lication)?$/i,
@@ -346,125 +347,40 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^impl[ée]mente\s+(.+)$/i,
     /^add\s+feature\s+(.+)$/i,
   ],
-  'diagnostic': [
-    /^diagnostic$/i,
-    /^analyse\s+système$/i,
-    /^check\s+system$/i,
-  ],
-  'introspect': [
+  diagnostic: [/^diagnostic$/i, /^analyse\s+système$/i, /^check\s+system$/i],
+  introspect: [
     /^introspect(ion)?$/i,
     /^inspect\s+state$/i,
     /^show\s+singularity(state)?$/i,
   ],
-  'self-heal': [
-    /^self[-s]heal$/i,
-    /^auto[-s]répare?$/i,
-    /^healing\s+engine$/i,
-  ],
-  'deep-heal': [
-    /^deep[-s]heal$/i,
-    /^deep\s+healing$/i,
-    /^réparation\s+profonde$/i,
-  ],
-  'auto-fix': [
-    /^auto[-s]fix$/i,
-    /^correction\s+auto(matique)?$/i,
-  ],
-  'scan-modules': [
-    /^scan\s+modules$/i,
-    /^analyse\s+(les\s+)?modules$/i,
-  ],
-  'scan-opus': [
-    /^scan\s+opus$/i,
-    /^vérifie\s+opus$/i,
-  ],
-  'scan-errors': [
-    /^scan\s+errors?$/i,
-    /^liste\s+(les\s+)?erreurs$/i,
-  ],
-  'health-check': [
-    /^health[-s]check$/i,
-    /^vérification\s+santé$/i,
-  ],
-  'test-module': [
-    /^test\s+module\s+(.+)$/i,
-    /^teste\s+(le\s+)?module\s+(.+)$/i,
-  ],
-  'console-ls': [
-    /^(sudo\s+)?titane\s+ls(\s+(.+))?$/i,
-    /^ls(\s+(.+))?$/i,
-  ],
-  'console-open': [
-    /^(sudo\s+)?titane\s+open\s+(.+)$/i,
-    /^open\s+(.+)$/i,
-  ],
-  'console-patch': [
-    /^(sudo\s+)?titane\s+patch\s+(.+)$/i,
-    /^patch\s+(.+)$/i,
-  ],
-  'console-rebuild': [
-    /^(sudo\s+)?titane\s+rebuild\s+store$/i,
-    /^rebuild\s+store$/i,
-  ],
-  'optimize-build': [
-    /^optimize\s+build$/i,
-    /^optimise\s+(le\s+)?build$/i,
-  ],
-  'optimize-ui': [
-    /^optimize\s+ui$/i,
-    /^optimise\s+(l')?ui$/i,
-  ],
-  'optimize-rust': [
-    /^optimize\s+rust$/i,
-    /^optimise\s+rust$/i,
-  ],
-  'optimize-react': [
-    /^optimize\s+react$/i,
-    /^optimise\s+react$/i,
-  ],
-  'connect-api': [
-    /^connect\s+(.+)$/i,
-    /^connecte\s+(.+)$/i,
-  ],
-  'test-api': [
-    /^test\s+api\s+(.+)$/i,
-    /^teste\s+(l')?api\s+(.+)$/i,
-  ],
-  'verify-keys': [
-    /^verify\s+keys$/i,
-    /^vérifie\s+(les\s+)?clés?$/i,
-  ],
-  'full-sync': [
-    /^full[-s]sync$/i,
-    /^sync\s+complet$/i,
-  ],
-  'verify-architecture': [
-    /^verify\s+architecture$/i,
-    /^vérifie\s+(l')?architecture$/i,
-  ],
-  'generate-report': [
-    /^generate\s+report$/i,
-    /^génère\s+(un\s+)?rapport$/i,
-  ],
+  'self-heal': [/^self[-s]heal$/i, /^auto[-s]répare?$/i, /^healing\s+engine$/i],
+  'deep-heal': [/^deep[-s]heal$/i, /^deep\s+healing$/i, /^réparation\s+profonde$/i],
+  'auto-fix': [/^auto[-s]fix$/i, /^correction\s+auto(matique)?$/i],
+  'scan-modules': [/^scan\s+modules$/i, /^analyse\s+(les\s+)?modules$/i],
+  'scan-opus': [/^scan\s+opus$/i, /^vérifie\s+opus$/i],
+  'scan-errors': [/^scan\s+errors?$/i, /^liste\s+(les\s+)?erreurs$/i],
+  'health-check': [/^health[-s]check$/i, /^vérification\s+santé$/i],
+  'test-module': [/^test\s+module\s+(.+)$/i, /^teste\s+(le\s+)?module\s+(.+)$/i],
+  'console-ls': [/^(sudo\s+)?titane\s+ls(\s+(.+))?$/i, /^ls(\s+(.+))?$/i],
+  'console-open': [/^(sudo\s+)?titane\s+open\s+(.+)$/i, /^open\s+(.+)$/i],
+  'console-patch': [/^(sudo\s+)?titane\s+patch\s+(.+)$/i, /^patch\s+(.+)$/i],
+  'console-rebuild': [/^(sudo\s+)?titane\s+rebuild\s+store$/i, /^rebuild\s+store$/i],
+  'optimize-build': [/^optimize\s+build$/i, /^optimise\s+(le\s+)?build$/i],
+  'optimize-ui': [/^optimize\s+ui$/i, /^optimise\s+(l')?ui$/i],
+  'optimize-rust': [/^optimize\s+rust$/i, /^optimise\s+rust$/i],
+  'optimize-react': [/^optimize\s+react$/i, /^optimise\s+react$/i],
+  'connect-api': [/^connect\s+(.+)$/i, /^connecte\s+(.+)$/i],
+  'test-api': [/^test\s+api\s+(.+)$/i, /^teste\s+(l')?api\s+(.+)$/i],
+  'verify-keys': [/^verify\s+keys$/i, /^vérifie\s+(les\s+)?clés?$/i],
+  'full-sync': [/^full[-s]sync$/i, /^sync\s+complet$/i],
+  'verify-architecture': [/^verify\s+architecture$/i, /^vérifie\s+(l')?architecture$/i],
+  'generate-report': [/^generate\s+report$/i, /^génère\s+(un\s+)?rapport$/i],
 
   // IDE Mode patterns (Super Prompt #7)
-  'open-file': [
-    /^open\s+(.+)$/i,
-    /^ouvre\s+(.+)$/i,
-    /^show\s+file\s+(.+)$/i,
-  ],
-  'view-file': [
-    /^view\s+(.+)$/i,
-    /^voir\s+(.+)$/i,
-  ],
-  'create-file': [
-    /^create\s+file\s+(.+)$/i,
-    /^crée\s+(le\s+)?fichier\s+(.+)$/i,
-  ],
-  'patch-file': [
-    /^patch\s+file\s+(.+)$/i,
-    /^patch\s+(.+)$/i,
-  ],
+  'open-file': [/^open\s+(.+)$/i, /^ouvre\s+(.+)$/i, /^show\s+file\s+(.+)$/i],
+  'view-file': [/^view\s+(.+)$/i, /^voir\s+(.+)$/i],
+  'create-file': [/^create\s+file\s+(.+)$/i, /^crée\s+(le\s+)?fichier\s+(.+)$/i],
+  'patch-file': [/^patch\s+file\s+(.+)$/i, /^patch\s+(.+)$/i],
   'goto-function': [
     /^go\s+to\s+function\s+(.+)$/i,
     /^goto\s+function\s+(.+)$/i,
@@ -486,44 +402,25 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^propose\s+(du\s+)?code$/i,
     /^complète\s+(le\s+)?code$/i,
   ],
-  'auto-complete': [
-    /^auto[-s]complete$/i,
-    /^complete$/i,
-    /^complétion$/i,
-  ],
+  'auto-complete': [/^auto[-s]complete$/i, /^complete$/i, /^complétion$/i],
   'refactor-component': [
     /^refactor\s+component\s+(.+)$/i,
     /^refactorise\s+(le\s+)?composant\s+(.+)$/i,
   ],
-  'refactor-hook': [
-    /^refactor\s+hook\s+(.+)$/i,
-    /^refactorise\s+(le\s+)?hook\s+(.+)$/i,
-  ],
+  'refactor-hook': [/^refactor\s+hook\s+(.+)$/i, /^refactorise\s+(le\s+)?hook\s+(.+)$/i],
   'refactor-handler': [
     /^refactor\s+handler\s+(.+)$/i,
     /^refactor\s+rust\s+handler\s+(.+)$/i,
     /^refactorise\s+(le\s+)?handler\s+(.+)$/i,
   ],
-  'explain-code': [
-    /^explain\s+(.+)$/i,
-    /^explique\s+(.+)$/i,
-    /^pourquoi\s+(.+)$/i,
-  ],
-  'auto-import': [
-    /^auto[-s]import$/i,
-    /^fix\s+imports$/i,
-    /^imports$/i,
-  ],
+  'explain-code': [/^explain\s+(.+)$/i, /^explique\s+(.+)$/i, /^pourquoi\s+(.+)$/i],
+  'auto-import': [/^auto[-s]import$/i, /^fix\s+imports$/i, /^imports$/i],
   'generate-module': [
     /^generate\s+module\s+(.+)$/i,
     /^create\s+module\s+(.+)$/i,
     /^génère\s+(le\s+)?module\s+(.+)$/i,
   ],
-  'run-tests': [
-    /^run\s+tests?$/i,
-    /^test$/i,
-    /^lance\s+(les\s+)?tests?$/i,
-  ],
+  'run-tests': [/^run\s+tests?$/i, /^test$/i, /^lance\s+(les\s+)?tests?$/i],
   'master-analysis': [
     /^master\s+analysis$/i,
     /^analyse\s+master$/i,
@@ -540,14 +437,8 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^review\s+code\s+(.+)$/i,
     /^revue\s+(de\s+)?code\s+(.+)$/i,
   ],
-  'analyze-rust': [
-    /^analyze\s+rust$/i,
-    /^analyse\s+rust$/i,
-  ],
-  'analyze-tauri': [
-    /^analyze\s+tauri$/i,
-    /^analyse\s+tauri$/i,
-  ],
+  'analyze-rust': [/^analyze\s+rust$/i, /^analyse\s+rust$/i],
+  'analyze-tauri': [/^analyze\s+tauri$/i, /^analyse\s+tauri$/i],
 
   // Singularity Mind Engine patterns (Super Prompt #8)
   'singularity-scan': [
@@ -675,11 +566,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^créer\s+snapshot$/i,
     /^save\s+memory$/i,
   ],
-  'memory-export': [
-    /^memory\s+export$/i,
-    /^export\s+mémoire$/i,
-    /^exporter\s+memory$/i,
-  ],
+  'memory-export': [/^memory\s+export$/i, /^export\s+mémoire$/i, /^exporter\s+memory$/i],
   'memory-import': [
     /^memory\s+import\s+(.+)$/i,
     /^import\s+mémoire\s+(.+)$/i,
@@ -719,12 +606,12 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^sudo\s+titane\s+heal$/i,
     /^singularity\s+heal$/i,
     /^one\s+heal$/i,
-    /^self[\-\s]heal\s+total$/i,
+    /^self[-\s]heal\s+total$/i,
     /^titane\s+heal$/i,
   ],
   'titane-one-fullheal': [
     /^titane\s+one\s+fullheal$/i,
-    /^titane\s+one\s+full[\-\s]heal$/i,
+    /^titane\s+one\s+full[-\s]heal$/i,
     /^sudo\s+titane\s+fullheal$/i,
     /^singularity\s+deepheal$/i,
     /^one\s+fullheal$/i,
@@ -748,8 +635,8 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^titane\s+optimize$/i,
   ],
   'titane-one-vision-all': [
-    /^titane\s+one\s+vision[\-\s]all$/i,
-    /^sudo\s+titane\s+vision[\-\s]all$/i,
+    /^titane\s+one\s+vision[-\s]all$/i,
+    /^sudo\s+titane\s+vision[-\s]all$/i,
     /^singularity\s+vision$/i,
     /^one\s+vision$/i,
     /^vision\s+triple$/i,
@@ -757,33 +644,33 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   ],
   'titane-one-analyze-dev': [
     /^titane\s+one\s+analyze\s+dev$/i,
-    /^sudo\s+titane\s+analyze[\-\s]dev$/i,
+    /^sudo\s+titane\s+analyze[-\s]dev$/i,
     /^one\s+analyze\s+dev$/i,
     /^analyser\s+dev$/i,
   ],
   'titane-one-analyze-ui': [
     /^titane\s+one\s+analyze\s+ui$/i,
-    /^sudo\s+titane\s+analyze[\-\s]ui$/i,
+    /^sudo\s+titane\s+analyze[-\s]ui$/i,
     /^one\s+analyze\s+ui$/i,
     /^analyser\s+ui$/i,
   ],
   'titane-one-analyze-backend': [
     /^titane\s+one\s+analyze\s+backend$/i,
-    /^sudo\s+titane\s+analyze[\-\s]backend$/i,
+    /^sudo\s+titane\s+analyze[-\s]backend$/i,
     /^one\s+analyze\s+backend$/i,
     /^analyser\s+backend$/i,
   ],
   'titane-one-analyze-memory': [
     /^titane\s+one\s+analyze\s+memory$/i,
-    /^sudo\s+titane\s+analyze[\-\s]memory$/i,
+    /^sudo\s+titane\s+analyze[-\s]memory$/i,
     /^one\s+analyze\s+memory$/i,
     /^analyser\s+mémoire$/i,
   ],
   'titane-one-singularity-scan': [
-    /^titane\s+one\s+singularity[\-\s]scan$/i,
+    /^titane\s+one\s+singularity[-\s]scan$/i,
     /^sudo\s+singularity\s+scan$/i,
     /^singularity\s+quantum$/i,
-    /^one\s+singularity[\-\s]scan$/i,
+    /^one\s+singularity[-\s]scan$/i,
     /^scan\s+quantique$/i,
     /^quantum\s+scan$/i,
   ],
@@ -804,15 +691,15 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^test\s+ollama$/i,
   ],
   'ia-set-default': [
-    /^ia\s+set[\-\s]default\s+(.+)$/i,
+    /^ia\s+set[-\s]default\s+(.+)$/i,
     /^sudo\s+ia\s+default\s+(.+)$/i,
     /^définir\s+modèle\s+(.+)$/i,
     /^set\s+ai\s+model\s+(.+)$/i,
     /^use\s+model\s+(.+)$/i,
   ],
   'ia-enable-devmode': [
-    /^ia\s+enable[\-\s]devmode$/i,
-    /^ia\s+dev[\-\s]mode\s+on$/i,
+    /^ia\s+enable[-\s]devmode$/i,
+    /^ia\s+dev[-\s]mode\s+on$/i,
     /^sudo\s+ia\s+devmode$/i,
     /^activer?\s+mode\s+dev\s+ia$/i,
     /^enable\s+ai\s+dev\s+mode$/i,
@@ -837,9 +724,9 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'ia-train': [
     /^ia\s+train$/i,
     /^sudo\s+ia\s+train$/i,
-    /^train\s+titane[\-\s]local$/i,
+    /^train\s+titane[-\s]local$/i,
     /^entraîner?\s+modèle\s+local$/i,
-    /^fine[\-\s]tune\s+local$/i,
+    /^fine[-\s]tune\s+local$/i,
   ],
   'ia-dataset': [
     /^ia\s+dataset$/i,
@@ -849,16 +736,16 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^create\s+training\s+data$/i,
   ],
   'ia-test-model': [
-    /^ia\s+test[\-\s]model$/i,
-    /^sudo\s+ia\s+test[\-\s]model$/i,
+    /^ia\s+test[-\s]model$/i,
+    /^sudo\s+ia\s+test[-\s]model$/i,
     /^tester?\s+modèle\s+entraîné$/i,
     /^validate\s+trained\s+model$/i,
-    /^test\s+titane[\-\s]local$/i,
+    /^test\s+titane[-\s]local$/i,
   ],
   'ia-benchmark': [
     /^ia\s+benchmark$/i,
     /^sudo\s+ia\s+benchmark$/i,
-    /^benchmark\s+a[\-\/]b$/i,
+    /^benchmark\s+a[-/]b$/i,
     /^comparer?\s+modèles$/i,
     /^performance\s+test$/i,
   ],
@@ -899,11 +786,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^sudo\s+chat\.setModel\s+(.+)$/i,
     /^chat\s+model\s+(.+)$/i,
   ],
-  'chat-dev': [
-    /^chat\.dev$/i,
-    /^sudo\s+chat\.dev$/i,
-    /^chat\s+dev\s+mode$/i,
-  ],
+  'chat-dev': [/^chat\.dev$/i, /^sudo\s+chat\.dev$/i, /^chat\s+dev\s+mode$/i],
   'chat-inspect': [
     /^chat\.inspect$/i,
     /^sudo\s+chat\.inspect$/i,
@@ -913,12 +796,12 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'chat-autoheal': [
     /^chat\.autoheal$/i,
     /^sudo\s+chat\.autoheal$/i,
-    /^chat\s+auto[\-\s]heal$/i,
+    /^chat\s+auto[-\s]heal$/i,
   ],
   'chat-fullscreen': [
     /^chat\.fullscreen$/i,
     /^sudo\s+chat\.fullscreen$/i,
-    /^chat\s+plein[\-\s]écran$/i,
+    /^chat\s+plein[-\s]écran$/i,
     /^chat\s+fullscreen$/i,
   ],
   'chat-follow': [
@@ -949,8 +832,8 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^generate\s+dataset$/i,
   ],
   'dataset-training-pack': [
-    /^dataset\.training[\-\s]pack$/i,
-    /^sudo\s+dataset\.training[\-\s]pack$/i,
+    /^dataset\.training[-\s]pack$/i,
+    /^sudo\s+dataset\.training[-\s]pack$/i,
     /^pack\s+entraînement$/i,
     /^training\s+pack$/i,
   ],
@@ -966,8 +849,8 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^ajouter?\s+à\s+dataset\s+(.+)$/i,
   ],
   'dataset-sync-memory': [
-    /^dataset\.sync[\-\s]memory$/i,
-    /^sudo\s+dataset\.sync[\-\s]memory$/i,
+    /^dataset\.sync[-\s]memory$/i,
+    /^sudo\s+dataset\.sync[-\s]memory$/i,
     /^sync\s+memory$/i,
     /^synchroniser?\s+mémoire$/i,
   ],
@@ -1006,7 +889,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'hybrid-heal': [
     /^hybrid\.heal(\s+target=.+)?$/i,
     /^sudo\s+hybrid\.heal(\s+target=.+)?$/i,
-    /^auto[\-\s]heal(\s+.+)?$/i,
+    /^auto[-\s]heal(\s+.+)?$/i,
     /^repair(\s+.+)?$/i,
   ],
   'hybrid-inspect': [
@@ -1053,14 +936,14 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^fusion\s+sync$/i,
   ],
   'fusion-build-dataset': [
-    /^fusion\.build[\-]?dataset$/i,
-    /^sudo\s+fusion\.build[\-]?dataset$/i,
+    /^fusion\.build-?dataset$/i,
+    /^sudo\s+fusion\.build-?dataset$/i,
     /^build\s+fusion\s+dataset$/i,
     /^génère\s+dataset\s+fusionné$/i,
   ],
   'fusion-clean-dataset': [
-    /^fusion\.clean[\-]?dataset$/i,
-    /^sudo\s+fusion\.clean[\-]?dataset$/i,
+    /^fusion\.clean-?dataset$/i,
+    /^sudo\s+fusion\.clean-?dataset$/i,
     /^clean\s+fusion\s+dataset$/i,
     /^nettoie\s+dataset\s+fusion$/i,
   ],
@@ -1083,8 +966,8 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^fusionne\s+dataset\s+.+$/i,
   ],
   'fusion-package-training': [
-    /^fusion\.package[\-]?training$/i,
-    /^sudo\s+fusion\.package[\-]?training$/i,
+    /^fusion\.package-?training$/i,
+    /^sudo\s+fusion\.package-?training$/i,
     /^package\s+fusion\s+training$/i,
     /^crée\s+training\s+pack\s+fusion$/i,
   ],
@@ -1124,8 +1007,8 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'vocal-heal': [
     /^vocal\.heal$/i,
     /^sudo\s+vocal\.heal$/i,
-    /^vocal\s+auto[\-]?heal$/i,
-    /^self[\-]?heal\s+vocal$/i,
+    /^vocal\s+auto-?heal$/i,
+    /^self-?heal\s+vocal$/i,
     /^répare\s+via\s+voix$/i,
     /^correction\s+vocale$/i,
   ],
@@ -1165,7 +1048,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^analyse\s+vocal\s+(.+)$/i,
   ],
   'vocal-set-model': [
-    /^vocal\.setModel\s+(titane[\-]?local|claude|gemini|auto)$/i,
+    /^vocal\.setModel\s+(titane-?local|claude|gemini|auto)$/i,
     /^sudo\s+vocal\.setModel\s+(.+)$/i,
     /^change\s+vocal\s+ai\s+(.+)$/i,
     /^set\s+voice\s+model\s+(.+)$/i,
@@ -1174,7 +1057,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'vocal-fullscreen': [
     /^vocal\.fullscreen$/i,
     /^sudo\s+vocal\.fullscreen$/i,
-    /^console\s+vocale\s+plein[\s\-]?écran$/i,
+    /^console\s+vocale\s+plein[\s-]?écran$/i,
     /^fullscreen\s+vocal$/i,
     /^vocal\s+fs$/i,
   ],
@@ -1209,7 +1092,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'live-heal': [
     /^live\.heal$/i,
     /^sudo\s+live\.heal$/i,
-    /^live\s+auto[\-]?heal$/i,
+    /^live\s+auto-?heal$/i,
     /^debug\s+heal$/i,
     /^répare\s+en\s+temps\s+r[eé]el$/i,
   ],
@@ -1254,7 +1137,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^show\s+live\s+debugger$/i,
   ],
   'live-set-mode': [
-    /^live\.setMode\s+(shadow|active|auto[\-]?heal|explain|draft)$/i,
+    /^live\.setMode\s+(shadow|active|auto-?heal|explain|draft)$/i,
     /^sudo\s+live\.setMode\s+(.+)$/i,
     /^change\s+live\s+mode\s+(.+)$/i,
     /^mode\s+live\s+(.+)$/i,
@@ -1264,13 +1147,13 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
   'talk-on': [
     /^talk\.on(\s+(.+))?$/i,
     /^sudo\s+talk\.on$/i,
-    /^activate\s+talk[\-]?to[\-]?titane$/i,
+    /^activate\s+talk-?to-?titane$/i,
     /^start\s+vocal\s+assistant$/i,
   ],
   'talk-off': [
     /^talk\.off$/i,
     /^sudo\s+talk\.off$/i,
-    /^deactivate\s+talk[\-]?to[\-]?titane$/i,
+    /^deactivate\s+talk-?to-?titane$/i,
     /^stop\s+vocal\s+assistant$/i,
   ],
   'talk-mode': [
@@ -1433,7 +1316,10 @@ export function parseDevSudoCommand(message: string): DevSudoCommand | null {
   return null;
 }
 
-function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<string, unknown> {
+function extractParams(
+  action: DevSudoAction,
+  match: RegExpMatchArray
+): Record<string, unknown> {
   const params: Record<string, unknown> = {};
 
   switch (action) {
@@ -1551,27 +1437,32 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<s
       break;
 
     // Hybrid Engine commands (Super Prompt #16) v∞.26.0
-    case 'hybrid-heal':
+    case 'hybrid-heal': {
       // Extraire target= si présent
       const healMatch = action.match(/target=(\S+)/);
       params.target = healMatch ? healMatch[1] : 'all';
       break;
+    }
 
-    case 'hybrid-inspect':
+    case 'hybrid-inspect': {
       // Extraire path= depuis le raw command
       const inspectMatch = action.match(/path=(\S+)/);
       params.path = inspectMatch ? inspectMatch[1] : match[1];
       break;
+    }
 
-    case 'hybrid-fix':
+    case 'hybrid-fix': {
       // Extraire target= depuis le raw command
       const fixMatch = action.match(/target=(\S+)/);
       params.target = fixMatch ? fixMatch[1] : match[1];
       break;
+    }
 
-    case 'hybrid-apply':
+    case 'hybrid-apply': {
       // Extraire file, lineStart, lineEnd, newCode depuis le raw command
-      const applyMatch = action.match(/file=(\S+)\s+lineStart=(\d+)\s+lineEnd=(\d+)\s+newCode=(.+)/);
+      const applyMatch = action.match(
+        /file=(\S+)\s+lineStart=(\d+)\s+lineEnd=(\d+)\s+newCode=(.+)/
+      );
       if (applyMatch) {
         params.file = applyMatch[1];
         params.lineStart = parseInt(applyMatch[2], 10);
@@ -1579,18 +1470,21 @@ function extractParams(action: DevSudoAction, match: RegExpMatchArray): Record<s
         params.newCode = applyMatch[4];
       }
       break;
+    }
 
-    case 'hybrid-run':
+    case 'hybrid-run': {
       // Extraire command= depuis le raw command
       const runMatch = action.match(/command="?(.+?)"?$/);
       params.command = runMatch ? runMatch[1] : match[1];
       break;
+    }
 
-    case 'hybrid-logs':
+    case 'hybrid-logs': {
       // Extraire filter= si présent
       const logsMatch = action.match(/filter=(\S+)/);
       params.filter = logsMatch ? logsMatch[1] : undefined;
       break;
+    }
   }
 
   return params;
@@ -1736,13 +1630,17 @@ export async function executeDevSudoCommand(
         return await IDEHandlers.handleAutoComplete(command.params.context as string);
 
       case 'refactor-component':
-        return await IDEHandlers.handleRefactorComponent(command.params.component as string);
+        return await IDEHandlers.handleRefactorComponent(
+          command.params.component as string
+        );
 
       case 'refactor-hook':
         return await IDEHandlers.handleRefactorHook(command.params.hook as string);
 
       case 'refactor-handler':
-        return await IDEHandlers.handleRefactorRustHandler(command.params.handler as string);
+        return await IDEHandlers.handleRefactorRustHandler(
+          command.params.handler as string
+        );
 
       case 'explain-code':
         return await IDEHandlers.handleExplainCode(command.params.file as string);
@@ -1791,7 +1689,9 @@ export async function executeDevSudoCommand(
         return await SingularityHandlers.handleCoherenceCheck();
 
       case 'repair-component':
-        return await SingularityHandlers.handleRepairComponent(command.params.target as string);
+        return await SingularityHandlers.handleRepairComponent(
+          command.params.target as string
+        );
 
       // Vision Engine handlers (v∞.24.0 - Super Prompt #9)
       case 'vision-analyze':
@@ -1820,7 +1720,9 @@ export async function executeDevSudoCommand(
         return await BackendHandlers.handleCreateAPI(command.params.name as string);
 
       case 'whitelist-command':
-        return await BackendHandlers.handleWhitelistCommand(command.params.commandName as string);
+        return await BackendHandlers.handleWhitelistCommand(
+          command.params.commandName as string
+        );
 
       case 'optimize-cargo':
         return await BackendHandlers.handleOptimizeCargo();
@@ -2437,7 +2339,7 @@ async function handleStatusFull(): Promise<DevSudoResult> {
     }>('sc_diagnostics_run_quick');
 
     const modulesStatus = diagnostic.modules
-      .map((m) => `  ${m.status === 'healthy' ? '✅' : '⚠️'} ${m.name}`)
+      .map(m => `  ${m.status === 'healthy' ? '✅' : '⚠️'} ${m.name}`)
       .join('\n');
 
     return {
@@ -2451,7 +2353,7 @@ async function handleStatusFull(): Promise<DevSudoResult> {
 ${modulesStatus}
 
 🔍 **Erreurs détectées**: ${diagnostic.errors.length}
-${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map((e) => `  ❌ ${e}`).join('\n') : '  ✅ Aucune erreur'}
+${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`).join('\n') : '  ✅ Aucune erreur'}
 
 🚀 **Application**:
   ✅ Vite dev server: Port 5173 actif
@@ -2559,7 +2461,7 @@ async function handleIntrospect(): Promise<DevSudoResult> {
 
 🎯 **Modules présents**:
 ${Object.keys(state)
-  .map((key) => `  - ${key}`)
+  .map(key => `  - ${key}`)
   .join('\n')}
 
 💡 **Analyse détaillée**:
@@ -2679,7 +2581,9 @@ cd /home/titane/Documents/TITANE_INFINITY
  */
 async function handleIATest(): Promise<DevSudoResult> {
   try {
-    const status = await invoke<{ available: boolean; models: string[] }>('ai_check_ollama_status');
+    const status = await invoke<{ available: boolean; models: string[] }>(
+      'ai_check_ollama_status'
+    );
 
     if (!status.available) {
       return {
@@ -2707,15 +2611,18 @@ curl http://localhost:11434/api/tags
     }
 
     // Test avec un prompt simple
-    const testResponse = await invoke<{ content: string; model: string }>('ai_generate_local', {
-      request: {
-        prompt: 'Dis "Hello from TITANE∞ Local!" en une phrase.',
-        model: 'titane-local',
-        stream: false,
-        temperature: 0.7,
-        max_tokens: 50,
-      },
-    });
+    const testResponse = await invoke<{ content: string; model: string }>(
+      'ai_generate_local',
+      {
+        request: {
+          prompt: 'Dis "Hello from TITANE∞ Local!" en une phrase.',
+          model: 'titane-local',
+          stream: false,
+          temperature: 0.7,
+          max_tokens: 50,
+        },
+      }
+    );
 
     return {
       handled: true,
@@ -2983,9 +2890,10 @@ curl http://localhost:11434/api/tags
       };
     }
 
-    const modelsList = status.models.length > 0
-      ? status.models.map((m, i) => `  ${i + 1}. 🤖 ${m}`).join('\n')
-      : '  ⚠️ Aucun modèle installé';
+    const modelsList =
+      status.models.length > 0
+        ? status.models.map((m, i) => `  ${i + 1}. 🤖 ${m}`).join('\n')
+        : '  ⚠️ Aucun modèle installé';
 
     return {
       handled: true,
@@ -3473,7 +3381,9 @@ Modèles disponibles:
   }
 
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-set-model', { detail: { model: modelName } }));
+    window.dispatchEvent(
+      new CustomEvent('titane-chat-set-model', { detail: { model: modelName } })
+    );
   }
 
   return {
@@ -3704,8 +3614,6 @@ Erreurs: ${report.errors.join(', ')}`,
  */
 function handleDatasetClean(): DevSudoResult {
   try {
-    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-
     const statsBefore = dataCollector.getStats();
     dataCollector.cleanDataset();
     const statsAfter = dataCollector.getStats();
@@ -3746,9 +3654,6 @@ Supprimées: ${removed} entrées
  */
 function handleDatasetGenerate(): DevSudoResult {
   try {
-    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-
-    const jsonl = dataCollector.exportToJSONL();
     const stats = dataCollector.getStats();
 
     return {
@@ -3796,9 +3701,6 @@ copy(dataCollector.exportToJSONL())
  */
 function handleDatasetTrainingPack(): DevSudoResult {
   try {
-    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-
-    const pack = dataCollector.exportTrainingPack();
     const stats = dataCollector.getStats();
 
     return {
@@ -3865,8 +3767,6 @@ chmod +x train.sh
  */
 function handleDatasetCompress(): DevSudoResult {
   try {
-    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-
     const statsBefore = dataCollector.getStats();
     // Compression via cleanDataset (supprime redondances)
     dataCollector.cleanDataset();
@@ -3991,10 +3891,7 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
  */
 function handleDatasetExport(): DevSudoResult {
   try {
-    const { dataCollector } = require('@/modules/dataCollector/DataCollectorEngine');
-
     const stats = dataCollector.getStats();
-    const jsonl = dataCollector.exportToJSONL();
 
     return {
       handled: true,
@@ -4012,7 +3909,7 @@ function handleDatasetExport(): DevSudoResult {
   │ Style:              ${String(stats.byCategory['style']).padStart(8)}       │
   ├─────────────────────────────────────────────┤
   │ Tokens estimés:     ${String(stats.totalTokens.toLocaleString()).padStart(8)}       │
-  │ Taille:             ${(stats.sizeInMB).toFixed(2)} MB          │
+  │ Taille:             ${stats.sizeInMB.toFixed(2)} MB          │
   │ Qualité moyenne:    ${(stats.avgQuality * 100).toFixed(0)}%             │
   │ Importance moyenne: ${(stats.avgImportance * 100).toFixed(0)}%             │
   └─────────────────────────────────────────────┘
@@ -4150,7 +4047,7 @@ async function handleHybridHeal(params: Record<string, unknown>): Promise<DevSud
     const target = params.target ? String(params.target) : 'all';
 
     // Déclencher le diagnostic
-    const diagnostics = await invoke('hybrid_analyze_code', { target });
+    const _diagnostics = await invoke('hybrid_analyze_code', { target });
 
     return {
       handled: true,
@@ -4183,7 +4080,9 @@ Analyse en cours... Recherche d'erreurs et génération de patches.
 /**
  * hybrid-inspect — Inspecte un module ou fichier
  */
-async function handleHybridInspect(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleHybridInspect(
+  params: Record<string, unknown>
+): Promise<DevSudoResult> {
   try {
     const path = params.path ? String(params.path) : '';
     if (!path) {
@@ -4195,7 +4094,12 @@ async function handleHybridInspect(params: Record<string, unknown>): Promise<Dev
     }
 
     const inspection = await invoke('dev_inspect_file', { path });
-    const data = inspection as { exists: boolean; size?: number; lines?: number; analysis?: string };
+    const data = inspection as {
+      exists: boolean;
+      size?: number;
+      lines?: number;
+      analysis?: string;
+    };
 
     if (!data.exists) {
       return {
@@ -4215,7 +4119,7 @@ async function handleHybridInspect(params: Record<string, unknown>): Promise<Dev
   • Lignes: ${data.lines || '?'}
 
 📝 **Analyse**:
-${data.analysis || 'Pas d\'analyse disponible'}`,
+${data.analysis || "Pas d'analyse disponible"}`,
       actions: [
         {
           type: 'hybrid-inspect',
@@ -4280,7 +4184,9 @@ Cible: \`${target}\`
 /**
  * hybrid-apply — Applique un patch manuellement
  */
-async function handleHybridApply(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleHybridApply(
+  params: Record<string, unknown>
+): Promise<DevSudoResult> {
   try {
     const file = params.file ? String(params.file) : '';
     const lineStart = params.lineStart ? Number(params.lineStart) : 0;
@@ -4291,7 +4197,8 @@ async function handleHybridApply(params: Record<string, unknown>): Promise<DevSu
       return {
         handled: true,
         success: false,
-        response: '❌ Paramètres manquants. Usage: `sudo hybrid-apply file=path lineStart=10 lineEnd=15 newCode="..."`',
+        response:
+          '❌ Paramètres manquants. Usage: `sudo hybrid-apply file=path lineStart=10 lineEnd=15 newCode="..."`',
       };
     }
 
@@ -4538,7 +4445,7 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
   - Variations prompts: Enabled
 
 📊 **Stats**:
-  - Total tokens: ~${Math.round((fusedDataset.reduce((sum, e) => sum + e.prompt.length + e.response.length, 0)) / 4)}
+  - Total tokens: ~${Math.round(fusedDataset.reduce((sum, e) => sum + e.prompt.length + e.response.length, 0) / 4)}
   - Taille estimée: ~${(jsonl.length / (1024 * 1024)).toFixed(2)} MB
 
 💡 **Next**: \`sudo fusion.export\` pour télécharger`,
@@ -4626,7 +4533,9 @@ async function handleFusionCompress(): Promise<DevSudoResult> {
 /**
  * fusion-export — Exporte dataset fusionné en JSONL
  */
-async function handleFusionExport(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleFusionExport(
+  params: Record<string, unknown>
+): Promise<DevSudoResult> {
   try {
     const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
 
@@ -4678,9 +4587,15 @@ async function handleFusionExport(params: Record<string, unknown>): Promise<DevS
 /**
  * fusion-merge — Fusionne dataset externe
  */
-async function handleFusionMerge(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleFusionMerge(
+  params: Record<string, unknown>
+): Promise<DevSudoResult> {
   try {
-    const file = params.file ? String(params.file) : params.dataset ? String(params.dataset) : '';
+    const file = params.file
+      ? String(params.file)
+      : params.dataset
+        ? String(params.dataset)
+        : '';
 
     if (!file) {
       return {
@@ -4760,7 +4675,9 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
     URL.revokeObjectURL(modelfileUrl);
 
     // Download training script
-    const scriptBlob = new Blob([trainingPack.trainingScript], { type: 'text/x-shellscript' });
+    const scriptBlob = new Blob([trainingPack.trainingScript], {
+      type: 'text/x-shellscript',
+    });
     const scriptUrl = URL.createObjectURL(scriptBlob);
     const scriptLink = document.createElement('a');
     scriptLink.href = scriptUrl;
@@ -4977,8 +4894,6 @@ async function handleVocalStop(): Promise<DevSudoResult> {
  */
 function handleVocalConsole(): DevSudoResult {
   try {
-    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
-
     const currentState = vocalDevConsole.getState();
     const willBeVisible = !currentState.consoleVisible;
 
@@ -4989,7 +4904,9 @@ function handleVocalConsole(): DevSudoResult {
       success: true,
       response: `${willBeVisible ? '📖' : '📕'} **Console vocale ${willBeVisible ? 'ouverte' : 'fermée'}**
 
-${willBeVisible ? `
+${
+  willBeVisible
+    ? `
 ✅ Console visible
 ✅ Logs accessibles
 ✅ Historique affiché
@@ -4999,12 +4916,14 @@ ${willBeVisible ? `
   - Input texte
   - Clear logs
   - Toggle TTS
-` : `
+`
+    : `
 ✅ Console cachée
 ✅ Mode minimal actif
 
 💡 **Réouvrez avec**: \`sudo vocal.console\`
-`}`,
+`
+}`,
       actions: [
         {
           type: 'vocal-console',
@@ -5039,11 +4958,15 @@ async function handleVocalHeal(): Promise<DevSudoResult> {
 
 ${result.output}
 
-${result.patch ? `
+${
+  result.patch
+    ? `
 📝 **Patch appliqué**:
   - ${result.patch.file} (lignes ${result.patch.lineStart}-${result.patch.lineEnd})
   - ${result.patch.description}
-` : ''}
+`
+    : ''
+}
 
 ${result.ttsResponse ? `🔊 Réponse TTS: "${result.ttsResponse}"` : ''}
 
@@ -5125,8 +5048,6 @@ ${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
  */
 function handleVocalLogs(): DevSudoResult {
   try {
-    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
-
     const state = vocalDevConsole.getState();
     const logs = state.consoleLogs.slice(-20); // 20 derniers logs
 
@@ -5143,11 +5064,11 @@ La console n'a pas encore de logs.
     }
 
     const logsByLevel = {
-      info: logs.filter((l: any) => l.level === 'info').length,
-      success: logs.filter((l: any) => l.level === 'success').length,
-      warning: logs.filter((l: any) => l.level === 'warning').length,
-      error: logs.filter((l: any) => l.level === 'error').length,
-      debug: logs.filter((l: any) => l.level === 'debug').length,
+      info: logs.filter((l: Record<string, unknown>) => l.level === 'info').length,
+      success: logs.filter((l: Record<string, unknown>) => l.level === 'success').length,
+      warning: logs.filter((l: Record<string, unknown>) => l.level === 'warning').length,
+      error: logs.filter((l: Record<string, unknown>) => l.level === 'error').length,
+      debug: logs.filter((l: Record<string, unknown>) => l.level === 'debug').length,
     };
 
     return {
@@ -5163,12 +5084,21 @@ La console n'a pas encore de logs.
   - 🐛 Debug: ${logsByLevel.debug}
 
 **Logs récents**:
-${logs.slice(-10).map((log: any) => {
-  const levelIcons: Record<string, string> = { info: 'ℹ️', success: '✅', warning: '⚠️', error: '❌', debug: '🐛' };
-  const icon = levelIcons[log.level] || 'ℹ️';
-  const time = new Date(log.timestamp).toLocaleTimeString('fr-FR');
-  return `${icon} [${time}] ${log.message}`;
-}).join('\n')}
+${logs
+  .slice(-10)
+  .map((log: Record<string, unknown>) => {
+    const levelIcons: Record<string, string> = {
+      info: 'ℹ️',
+      success: '✅',
+      warning: '⚠️',
+      error: '❌',
+      debug: '🐛',
+    };
+    const icon = levelIcons[log.level as string] || 'ℹ️';
+    const time = new Date(log.timestamp as number).toLocaleTimeString('fr-FR');
+    return `${icon} [${time}] ${log.message}`;
+  })
+  .join('\n')}
 
 **Health Score**: ${vocalDevConsole.getHealthScore()}%
 
@@ -5227,15 +5157,19 @@ La dernière exécution vocale n'a pas généré de patch.
 
 **Description**: ${lastExecution.patch.description}
 
-${lastExecution.patch.applied ? `
+${
+  lastExecution.patch.applied
+    ? `
 ✅ Patch appliqué avec succès
 
 💡 **Vérifiez** avec \`sudo diagnostic\`
-` : `
+`
+    : `
 ❌ Échec application du patch
 
 💡 **Réessayez** avec \`sudo vocal.heal\`
-`}`,
+`
+}`,
       actions: [
         {
           type: 'vocal-patch',
@@ -5379,10 +5313,12 @@ function handleVocalSetModel(modelName: string): DevSudoResult {
   }
 
   try {
-    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
-
     vocalDevConsole.configure({
-      aiProvider: modelName.toLowerCase() as 'titane-local' | 'claude' | 'gemini' | 'auto'
+      aiProvider: modelName.toLowerCase() as
+        | 'titane-local'
+        | 'claude'
+        | 'gemini'
+        | 'auto',
     });
 
     return {
@@ -5390,25 +5326,33 @@ function handleVocalSetModel(modelName: string): DevSudoResult {
       success: true,
       response: `🤖 **AI Provider changé** → \`${modelName}\`
 
-${modelName === 'titane-local' ? `
+${
+  modelName === 'titane-local'
+    ? `
 ✅ **TITANE∞ Local** activé
   - Modèle: Llama 3.1 8B
   - Latence: <100ms
   - Usage: Micro-corrections rapides
-` : modelName === 'claude' ? `
+`
+    : modelName === 'claude'
+      ? `
 ✅ **Claude Sonnet 4.5** activé
   - Latence: ~2s
   - Usage: Patchs complexes + raisonnement profond
-` : modelName === 'gemini' ? `
+`
+      : modelName === 'gemini'
+        ? `
 ✅ **Gemini 2.0 Flash** activé
   - Latence: ~1s
   - Usage: Multimodal + vision + contexte large
-` : `
+`
+        : `
 ✅ **Mode Auto** activé
   - Sélection intelligente selon tâche
   - TITANE-LOCAL pour corrections simples
   - Claude/Gemini pour tâches complexes
-`}
+`
+}
 
 💡 **Testez avec**: \`sudo vocal.run explique ce code\``,
       actions: [
@@ -5434,10 +5378,8 @@ ${modelName === 'titane-local' ? `
  */
 function handleVocalFullscreen(): DevSudoResult {
   try {
-    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
-
     // Toggle fullscreen mode (à implémenter dans le CSS)
-    const state = vocalDevConsole.getState();
+    const _state = vocalDevConsole.getState();
 
     return {
       handled: true,
@@ -5481,8 +5423,6 @@ function handleVocalFullscreen(): DevSudoResult {
  */
 function handleVocalSilence(): DevSudoResult {
   try {
-    const { vocalDevConsole } = require('@/modules/vocalDev/VocalDevConsoleEngine');
-
     const currentState = vocalDevConsole.getState();
     const newTTSState = !currentState.config.ttsEnabled;
 
@@ -5493,17 +5433,21 @@ function handleVocalSilence(): DevSudoResult {
       success: true,
       response: `${newTTSState ? '🔊' : '🔇'} **TTS ${newTTSState ? 'ACTIVÉ' : 'DÉSACTIVÉ'}**
 
-${newTTSState ? `
+${
+  newTTSState
+    ? `
 ✅ Réponses vocales activées
 ✅ Feedback audio actif
 
 La console parlera après chaque commande.
-` : `
+`
+    : `
 ✅ Mode silencieux activé
 ✅ Réponses textuelles uniquement
 
 Les réponses apparaîtront dans les logs sans son.
-`}
+`
+}
 
 💡 **Toggle TTS**: \`sudo vocal.silence\` ou bouton UI 🔊`,
       actions: [
@@ -5533,12 +5477,13 @@ Les réponses apparaîtront dans les logs sans son.
  */
 async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
   const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
-  const selectedMode = mode && validModes.includes(mode.toLowerCase()) ? mode.toLowerCase() : 'shadow';
+  const selectedMode =
+    mode && validModes.includes(mode.toLowerCase()) ? mode.toLowerCase() : 'shadow';
 
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    await liveDebugger.activate(selectedMode as any);
+    await liveDebugger.activate(selectedMode as unknown);
 
     return {
       handled: true,
@@ -5725,7 +5670,11 @@ Le Live Debugger analysera le module en temps réel.`,
 
 **Related Diagnostics**: ${relatedDiagnostics.length} trouvés
 
-${relatedDiagnostics.length > 0 ? relatedDiagnostics.map((d, i) => `
+${
+  relatedDiagnostics.length > 0
+    ? relatedDiagnostics
+        .map(
+          (d, i) => `
 **Diagnostic ${i + 1}**:
   - Intent: ${d.intent.type}
   - Severity: ${d.intent.severity}
@@ -5733,11 +5682,15 @@ ${relatedDiagnostics.length > 0 ? relatedDiagnostics.map((d, i) => `
   - Analysis: ${d.analysis}
   ${d.rootCause ? `- Root Cause: ${d.rootCause}` : ''}
   ${d.suggestedFix ? `- Fix: ${d.suggestedFix}` : ''}
-`).join('\n') : `
+`
+        )
+        .join('\n')
+    : `
 Aucun diagnostic récent pour "${target}".
 
 💡 **Parlez du problème** pour que le Live Debugger l'analyse en temps réel.
-`}
+`
+}
 
 **Health Score**: ${liveDebugger.getHealthScore()}%`,
       actions: [
@@ -5784,7 +5737,14 @@ Le Live Debugger n'a pas généré de patch récemment.
     }
 
     const diagnostic = recentDiagnostics[0];
-    const patch = diagnostic.microPatch!;
+    const patch = diagnostic.microPatch;
+    if (!patch) {
+      return {
+        handled: true,
+        success: false,
+        response: '⚠️ **Patch non disponible**',
+      };
+    }
 
     if (!patch.safe) {
       return {
@@ -5854,8 +5814,6 @@ Le patch généré nécessite review manuelle.
  */
 function handleLiveLogs(): DevSudoResult {
   try {
-    const { liveDebugger } = require('@/modules/liveDebugger/LiveDebuggerEngine');
-
     const diagnostics = liveDebugger.getRecentDiagnostics(10);
     const stats = liveDebugger.getStats();
 
@@ -5878,10 +5836,22 @@ Le debugger analysera en temps réel.`,
     }
 
     const bySeverity = {
-      low: diagnostics.filter((d: any) => d.intent.severity === 'low').length,
-      medium: diagnostics.filter((d: any) => d.intent.severity === 'medium').length,
-      high: diagnostics.filter((d: any) => d.intent.severity === 'high').length,
-      critical: diagnostics.filter((d: any) => d.intent.severity === 'critical').length,
+      low: diagnostics.filter(
+        (d: Record<string, unknown>) =>
+          (d.intent as Record<string, unknown>).severity === 'low'
+      ).length,
+      medium: diagnostics.filter(
+        (d: Record<string, unknown>) =>
+          (d.intent as Record<string, unknown>).severity === 'medium'
+      ).length,
+      high: diagnostics.filter(
+        (d: Record<string, unknown>) =>
+          (d.intent as Record<string, unknown>).severity === 'high'
+      ).length,
+      critical: diagnostics.filter(
+        (d: Record<string, unknown>) =>
+          (d.intent as Record<string, unknown>).severity === 'critical'
+      ).length,
     };
 
     return {
@@ -5904,11 +5874,17 @@ Le debugger analysera en temps réel.`,
   - Health Score: ${liveDebugger.getHealthScore()}%
 
 **Recent Diagnostics** (5 derniers):
-${diagnostics.slice(0, 5).map((d: any, i: number) => `
-${i + 1}. [${d.intent.severity.toUpperCase()}] ${d.intent.type} — ${(d.intent.confidence * 100).toFixed(0)}%
+${diagnostics
+  .slice(0, 5)
+  .map((d: Record<string, unknown>, i: number) => {
+    const intent = d.intent as Record<string, unknown>;
+    return `
+${i + 1}. [${(intent.severity as string).toUpperCase()}] ${intent.type} — ${((intent.confidence as number) * 100).toFixed(0)}%
    ${d.analysis}
    ${d.rootCause ? `→ ${d.rootCause}` : ''}
-`).join('')}
+`;
+  })
+  .join('')}
 
 💡 **Console UI complète**: \`sudo live.console\``,
       actions: [
@@ -5987,8 +5963,6 @@ async function handleLiveRestart(): Promise<DevSudoResult> {
  */
 function handleLiveReset(): DevSudoResult {
   try {
-    const { liveDebugger } = require('@/modules/liveDebugger/LiveDebuggerEngine');
-
     liveDebugger.reset();
 
     return {
@@ -6112,9 +6086,7 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
   }
 
   try {
-    const { liveDebugger } = require('@/modules/liveDebugger/LiveDebuggerEngine');
-
-    liveDebugger.setMode(normalizedMode as any);
+    liveDebugger.setMode(normalizedMode as unknown);
 
     // Auto-config selon mode
     if (normalizedMode === 'auto-heal') {
@@ -6128,7 +6100,9 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
       success: true,
       response: `🎯 **LIVE DEBUGGER MODE CHANGED** → \`${normalizedMode}\`
 
-${normalizedMode === 'shadow' ? `
+${
+  normalizedMode === 'shadow'
+    ? `
 ✅ **Shadow Mode** activé
   - Écoute passive continue
   - N'intervient que si confidence > ${(liveDebugger.getConfig().shadowModeThreshold * 100).toFixed(0)}%
@@ -6136,7 +6110,9 @@ ${normalizedMode === 'shadow' ? `
   - Logs silencieux
 
 💡 **Usage**: Mode monitoring discret
-` : normalizedMode === 'active' ? `
+`
+    : normalizedMode === 'active'
+      ? `
 ✅ **Active Mode** activé
   - Analyse en temps réel
   - Propose corrections
@@ -6144,7 +6120,9 @@ ${normalizedMode === 'shadow' ? `
   - Pas d'application automatique
 
 💡 **Usage**: Debug interactif avec validation manuelle
-` : normalizedMode === 'auto-heal' ? `
+`
+      : normalizedMode === 'auto-heal'
+        ? `
 ✅ **Auto-Heal Mode** activé
   - Corrections automatiques activées ✅
   - Micro-patches appliqués instantanément
@@ -6153,7 +6131,9 @@ ${normalizedMode === 'shadow' ? `
 
 ⚠️ **Attention**: Les corrections sont appliquées sans confirmation
 💡 **Usage**: Self-healing automatique continu
-` : normalizedMode === 'explain' ? `
+`
+        : normalizedMode === 'explain'
+          ? `
 ✅ **Explain Mode** activé
   - Explications vocales activées ✅
   - TTS enabled ✅
@@ -6161,14 +6141,16 @@ ${normalizedMode === 'shadow' ? `
   - Narration des diagnostics
 
 💡 **Usage**: Learning mode avec feedback vocal
-` : `
+`
+          : `
 ✅ **Draft Mode** activé
   - Génération patches vocale
   - Voice-driven code writing
   - Commandes "Crée une fonction X..."
 
 💡 **Usage**: Coding vocal assisté
-`}
+`
+}
 
 **Mode actif**: ${normalizedMode}`,
       actions: [
@@ -6198,7 +6180,6 @@ ${normalizedMode === 'shadow' ? `
  */
 async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
   try {
-    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
     await talkToTitaneEngine.start(mode || 'continuous');
 
     return {
@@ -6221,7 +6202,6 @@ async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
  */
 async function handleTalkOff(): Promise<DevSudoResult> {
   try {
-    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
     await talkToTitaneEngine.stop();
 
     return {
@@ -6272,8 +6252,7 @@ function handleTalkMode(mode: string): DevSudoResult {
   }
 
   try {
-    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
-    talkToTitaneEngine.setMode(mode as any);
+    talkToTitaneEngine.setMode(mode as unknown);
 
     return {
       handled: true,
@@ -6283,11 +6262,13 @@ function handleTalkMode(mode: string): DevSudoResult {
 ✅ Mode Talk-To-TITANE mis à jour
 
 Les prochaines réponses seront adaptées au mode ${mode}.`,
-      actions: [{
-        type: 'talk-mode',
-        description: `Mode changed to ${mode}`,
-        result: 'success',
-      }],
+      actions: [
+        {
+          type: 'talk-mode',
+          description: `Mode changed to ${mode}`,
+          result: 'success',
+        },
+      ],
     };
   } catch (error) {
     return {
@@ -6332,8 +6313,7 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
   }
 
   try {
-    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
-    talkToTitaneEngine.setEmotionalCalibration(tone as any);
+    talkToTitaneEngine.setEmotionalCalibration(tone as unknown);
 
     return {
       handled: true,
@@ -6343,11 +6323,13 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
 ✅ Ton émotionnel mis à jour
 
 Les prochaines réponses refléteront le ton ${tone}.`,
-      actions: [{
-        type: 'talk-calibrate',
-        description: `Emotional tone set to ${tone}`,
-        result: 'success',
-      }],
+      actions: [
+        {
+          type: 'talk-calibrate',
+          description: `Emotional tone set to ${tone}`,
+          result: 'success',
+        },
+      ],
     };
   } catch (error) {
     return {
@@ -6364,7 +6346,6 @@ Les prochaines réponses refléteront le ton ${tone}.`,
  */
 function handleTalkHistory(limit?: number): DevSudoResult {
   try {
-    const { talkToTitaneEngine } = require('@/modules/talkToTitane/TalkToTitaneEngine');
     const history = talkToTitaneEngine.getHistory();
     const displayLimit = limit || 10;
     const recent = history.slice(-displayLimit).reverse();
@@ -6381,12 +6362,17 @@ Pour démarrer: \`sudo talk.on\``,
       };
     }
 
-    const historyText = recent.map((item: any, i: number) => {
-      const intentBadge = `[${item.intent.type}]`;
-      const confidence = `${(item.intent.confidence * 100).toFixed(0)}%`;
-      return `${i + 1}. ${intentBadge} (${confidence}) "${item.intent.text.substring(0, 60)}..."
-   → ${item.response.substring(0, 80)}...`;
-    }).join('\n\n');
+    const historyText = recent
+      .map((item: Record<string, unknown>, i: number) => {
+        const intent = item.intent as Record<string, unknown>;
+        const intentBadge = `[${intent.type}]`;
+        const confidence = `${((intent.confidence as number) * 100).toFixed(0)}%`;
+        const text = (intent.text as string).substring(0, 60);
+        const response = (item.response as string).substring(0, 80);
+        return `${i + 1}. ${intentBadge} (${confidence}) "${text}..."
+   → ${response}...`;
+      })
+      .join('\n\n');
 
     return {
       handled: true,
@@ -6396,11 +6382,13 @@ Pour démarrer: \`sudo talk.on\``,
 ${historyText}
 
 💡 Pour voir toute l'historique: \`sudo conversation.timeline\``,
-      actions: [{
-        type: 'talk-history',
-        description: `Displayed ${recent.length} recent interactions`,
-        result: 'success',
-      }],
+      actions: [
+        {
+          type: 'talk-history',
+          description: `Displayed ${recent.length} recent interactions`,
+          result: 'success',
+        },
+      ],
     };
   } catch (error) {
     return {
@@ -6440,11 +6428,13 @@ Le panel Talk-To-TITANE apparaîtra automatiquement dans l'interface React.
 3. Le panel s'ouvrira automatiquement
 
 💡 **Position**: Max-width 800px, center, draggable (future)`,
-    actions: [{
-      type: 'talk-console',
-      description: 'Talk-To-TITANE panel UI info',
-      result: 'success',
-    }],
+    actions: [
+      {
+        type: 'talk-console',
+        description: 'Talk-To-TITANE panel UI info',
+        result: 'success',
+      },
+    ],
   };
 }
 
@@ -6489,7 +6479,6 @@ Le panel Talk-To-TITANE apparaîtra automatiquement dans l'interface React.
  */
 function handleAutosaveOn(): DevSudoResult {
   try {
-    const { autoSaveConversationEngine } = require('@/modules/talkToTitane/AutoSaveConversationEngine');
     autoSaveConversationEngine.configure({ enabled: true });
 
     return {
@@ -6503,11 +6492,13 @@ All conversations will be automatically saved to:
   - Dataset: data/dataset/conversations_raw
 
 💡 Auto-save runs on every interaction + snapshot every 5min`,
-      actions: [{
-        type: 'autosave-on',
-        description: 'Auto-save enabled',
-        result: 'success',
-      }],
+      actions: [
+        {
+          type: 'autosave-on',
+          description: 'Auto-save enabled',
+          result: 'success',
+        },
+      ],
     };
   } catch (error) {
     return {
@@ -6524,7 +6515,6 @@ All conversations will be automatically saved to:
  */
 function handleAutosaveOff(): DevSudoResult {
   try {
-    const { autoSaveConversationEngine } = require('@/modules/talkToTitane/AutoSaveConversationEngine');
     autoSaveConversationEngine.configure({ enabled: false });
 
     return {
@@ -6535,11 +6525,13 @@ function handleAutosaveOff(): DevSudoResult {
 Conversations will NOT be saved automatically.
 
 💡 You can still manually save with \`sudo conversation.save\``,
-      actions: [{
-        type: 'autosave-off',
-        description: 'Auto-save disabled',
-        result: 'success',
-      }],
+      actions: [
+        {
+          type: 'autosave-off',
+          description: 'Auto-save disabled',
+          result: 'success',
+        },
+      ],
     };
   } catch (error) {
     return {
@@ -6576,7 +6568,11 @@ async function handleConversationSave(): Promise<DevSudoResult> {
 }
 
 async function handleConversationHeal(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Réparation conversations terminée**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Réparation conversations terminée**`,
+  };
 }
 
 async function handleConversationTimeline(): Promise<DevSudoResult> {
@@ -6584,7 +6580,11 @@ async function handleConversationTimeline(): Promise<DevSudoResult> {
 }
 
 async function handleConversationExport(format?: string): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📤 **Export conversations** (${format || 'JSON'})` };
+  return {
+    handled: true,
+    success: true,
+    response: `📤 **Export conversations** (${format || 'JSON'})`,
+  };
 }
 
 async function handleTimelineBuild(): Promise<DevSudoResult> {
@@ -6596,7 +6596,11 @@ async function handleTimelineShow(limit?: number): Promise<DevSudoResult> {
 }
 
 async function handleTimelineExport(format?: string): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📤 **Export timeline** (${format || 'JSON'})` };
+  return {
+    handled: true,
+    success: true,
+    response: `📤 **Export timeline** (${format || 'JSON'})`,
+  };
 }
 
 async function handleTimelineSessions(): Promise<DevSudoResult> {
@@ -6620,7 +6624,11 @@ async function handleSelfhealHeal(): Promise<DevSudoResult> {
 }
 
 async function handleSelfhealRebuild(filePath?: string): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Rebuild ${filePath || 'complet'}**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Rebuild ${filePath || 'complet'}**`,
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -6632,4 +6640,3 @@ export const devSudoHandler = {
   parseCommand: parseDevSudoCommand,
   executeCommand: executeDevSudoCommand,
 };
-
