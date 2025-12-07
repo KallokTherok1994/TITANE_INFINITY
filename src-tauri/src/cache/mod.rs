@@ -3,6 +3,8 @@
 //   P2-2: Cache LRU + Persistent - FULL IMPLEMENTATION
 // ═══════════════════════════════════════════════════════════════
 
+pub mod middleware;
+
 use dashmap::DashMap;
 use serde::de::DeserializeOwned;
 use std::collections::hash_map::DefaultHasher;

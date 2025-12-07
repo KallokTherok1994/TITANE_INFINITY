@@ -6,6 +6,7 @@
 
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::coherence::{CoherenceReport, ConnectionReport};
+use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use std::sync::Arc;
@@ -30,23 +31,32 @@ pub struct CoherenceStateResponse {
 //   COMMANDS — Tauri-invokable functions
 // ═══════════════════════════════════════════════════════════════
 
-/// Get unified coherence engine state
+/// Get unified coherence engine state (CACHED - 2s TTL)
 /// Replaces: engine_get_nexus_state() + cognitive_check_coherence()
 #[tauri::command]
 pub async fn coherence_get_state(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<CoherenceStateResponse, String> {
-    let state = singularity.read().await;
+    // Cache coherence state for 2s (fast refresh for real-time coordination)
+    cached_invoke(
+        "coherence_get_state",
+        serde_json::json!({}),
+        CacheStrategy::Fast,
+        || async {
+            let state = singularity.read().await;
 
-    Ok(CoherenceStateResponse {
-        health: format!("{:?}", state.coherence.health()),
-        coordination_count: state.coherence.coordination_count,
-        coherence_checks: state.coherence.coherence_checks,
-        global_coherence: state.coherence.global_coherence,
-        active_connections: state.coherence.active_connections,
-        last_update_ms: state.coherence.last_coordination_ms,
-        initialized: state.coherence.is_initialized(),
-    })
+            Ok(CoherenceStateResponse {
+                health: format!("{:?}", state.coherence.health()),
+                coordination_count: state.coherence.coordination_count,
+                coherence_checks: state.coherence.coherence_checks,
+                global_coherence: state.coherence.global_coherence,
+                active_connections: state.coherence.active_connections,
+                last_update_ms: state.coherence.last_coordination_ms,
+                initialized: state.coherence.is_initialized(),
+            })
+        },
+    )
+    .await
 }
 
 /// Run full system coherence check

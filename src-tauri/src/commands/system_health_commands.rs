@@ -5,6 +5,7 @@
 
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::system_health::HealthReport;
+use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use std::sync::Arc;
@@ -31,25 +32,34 @@ pub struct SystemHealthStateResponse {
 //   COMMANDS — Tauri-invokable functions
 // ═══════════════════════════════════════════════════════════════
 
-/// Get system health state
+/// Get system health state (CACHED - 2s TTL)
 /// Replaces: get_helios_state() + engine_get_sentinel_state()
 #[tauri::command]
 pub async fn health_get_state(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<SystemHealthStateResponse, String> {
-    let state = singularity.read().await;
+    // Cache health state for 2s (fast refresh for monitoring UI)
+    cached_invoke(
+        "health_get_state",
+        serde_json::json!({}),
+        CacheStrategy::Fast,
+        || async {
+            let state = singularity.read().await;
 
-    Ok(SystemHealthStateResponse {
-        global_health: state.system_health.global_health,
-        cpu_usage: state.system_health.cpu_usage,
-        memory_usage: state.system_health.memory_usage,
-        disk_usage: state.system_health.disk_usage,
-        network_latency_ms: state.system_health.network_latency_ms,
-        alert_count: state.system_health.alert_count,
-        repairs_performed: state.system_health.repairs_performed,
-        success_rate: state.system_health.success_rate,
-        initialized: state.system_health.is_initialized(),
-    })
+            Ok(SystemHealthStateResponse {
+                global_health: state.system_health.global_health,
+                cpu_usage: state.system_health.cpu_usage,
+                memory_usage: state.system_health.memory_usage,
+                disk_usage: state.system_health.disk_usage,
+                network_latency_ms: state.system_health.network_latency_ms,
+                alert_count: state.system_health.alert_count,
+                repairs_performed: state.system_health.repairs_performed,
+                success_rate: state.system_health.success_rate,
+                initialized: state.system_health.is_initialized(),
+            })
+        },
+    )
+    .await
 }
 
 /// Get full health report

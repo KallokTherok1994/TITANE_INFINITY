@@ -1784,6 +1784,13 @@ async fn main() {
         config::presets::load_config_preset,
         config::presets::list_config_presets,
         config::presets::delete_config_preset,
+        // ═══════════════════════════════════════════════════════════════
+        // CACHE MANAGEMENT COMMANDS v19.5.2 P2-2
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::cache::middleware::cache_invalidate_pattern,
+        titane_infinity::cache::middleware::cache_clear,
+        titane_infinity::cache::middleware::cache_get_metrics,
+        titane_infinity::cache::middleware::cache_cleanup,
     ]);
 
     builder
