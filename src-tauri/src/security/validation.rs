@@ -6,11 +6,24 @@
 //   Validation stricte de tous les payloads entrants
 // ═══════════════════════════════════════════════════════════════
 
+use crate::error::{TitaneError, TitaneResult};
+use regex::Regex;
 use serde::{Deserialize, Serialize};
+use once_cell::sync::Lazy;
 
 const MAX_STRING_LENGTH: usize = 1_000_000; // 1 MB
 const MAX_ARRAY_LENGTH: usize = 10_000;
 const MAX_OBJECT_DEPTH: usize = 32;
+
+static DANGEROUS_PATTERNS: Lazy<Vec<Regex>> = Lazy::new(|| {
+    vec![
+        Regex::new(r"<script[^>]*>.*?</script>").unwrap(),
+        Regex::new(r"javascript:").unwrap(),
+        Regex::new(r"on\w+\s*=").unwrap(),
+        Regex::new(r"eval\s*\(").unwrap(),
+        Regex::new(r"(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\s+").unwrap(),
+    ]
+});
 
 /// Erreurs de validation
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -278,6 +291,57 @@ macro_rules! validate {
     };
 }
 
+pub struct InputValidator {
+    max_length: usize,
+}
+
+impl Default for InputValidator {
+    fn default() -> Self {
+        Self { max_length: 0 }
+    }
+}
+
+impl InputValidator {
+    pub fn new(max_length: usize) -> Self {
+        Self { max_length }
+    }
+
+    pub fn validate_message(&self, message: &str) -> TitaneResult<()> {
+        if message.is_empty() {
+            return Err(TitaneError::ValidationError {
+                message: "Message cannot be empty".to_string(),
+            });
+        }
+
+        let max = if self.max_length == 0 { 100_000 } else { self.max_length };
+        if message.len() > max {
+            return Err(TitaneError::ValidationError {
+                message: format!("Message too long (max {} chars)", max),
+            });
+        }
+
+        for pattern in DANGEROUS_PATTERNS.iter() {
+            if pattern.is_match(message) {
+                return Err(TitaneError::ValidationError {
+                    message: "Suspicious content detected".to_string(),
+                });
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn sanitize_filename(filename: &str) -> String {
+        filename
+            .replace("..", "")
+            .replace("/", "")
+            .replace("\\", "")
+            .chars()
+            .filter(|c| c.is_alphanumeric() || *c == '.' || *c == '_' || *c == '-')
+            .collect()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -319,5 +383,40 @@ mod tests {
         let dirty = "<script>alert('XSS')</script>";
         let clean = PayloadValidator::sanitize_html(dirty);
         assert!(!clean.contains("<script>"));
+    }
+
+    #[test]
+    fn test_validate_message() {
+        assert!(InputValidator::validate_message("Hello, world!").is_ok());
+        assert!(InputValidator::validate_message("").is_err());
+        assert!(InputValidator::validate_message(&"a".repeat(100_001)).is_err());
+        assert!(InputValidator::validate_message("<script>alert('XSS')</script>").is_err());
+    }
+
+    #[test]
+    fn test_sanitize_filename() {
+        let dirty = "../etc/passwd";
+        let clean = InputValidator::sanitize_filename(dirty);
+        assert!(!clean.contains(".."));
+        assert!(!clean.contains("/"));
+        assert!(!clean.contains("\\"));
+    }
+
+    #[test]
+    fn test_validate_empty_message() {
+        let validator = InputValidator::default();
+        assert!(validator.validate_message("").is_err());
+    }
+
+    #[test]
+    fn test_validate_xss_attack() {
+        let validator = InputValidator::default();
+        assert!(validator.validate_message("<script>alert('xss')</script>").is_err());
+    }
+
+    #[test]
+    fn test_sanitize_filename() {
+        assert_eq!(InputValidator::sanitize_filename("../../etc/passwd"), "etcpasswd");
+        assert_eq!(InputValidator::sanitize_filename("file<>.txt"), "file.txt");
     }
 }

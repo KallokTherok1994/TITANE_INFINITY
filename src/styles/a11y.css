@@ -1,0 +1,136 @@
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--focus-color, #0056b3);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 8px;
+  text-decoration: none;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Color contrast WCAG AA */
+:root {
+  --text-primary: #1a1a1a;
+  --bg-primary: #ffffff;
+  --text-secondary: #4a4a4a;
+  --bg-secondary: #f5f5f5;
+  --link-color: #0056b3;
+  --link-visited: #551a8b;
+  --success-text: #0f5132;
+  --success-bg: #d1e7dd;
+  --error-text: #842029;
+  --error-bg: #f8d7da;
+  --warning-text: #664d03;
+  --warning-bg: #fff3cd;
+  --focus-color: #0056b3;
+}
+
+[data-theme='dark'] {
+  --text-primary: #e0e0e0;
+  --bg-primary: #1a1a1a;
+  --text-secondary: #b0b0b0;
+  --bg-secondary: #2a2a2a;
+  --link-color: #66b3ff;
+  --link-visited: #b366ff;
+  --success-text: #a3e4b5;
+  --success-bg: #1a3d2a;
+  --error-text: #f8b4b4;
+  --error-bg: #3d1a1a;
+  --warning-text: #ffd966;
+  --warning-bg: #3d3d1a;
+  --focus-color: #66b3ff;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  :root {
+    --text-primary: #000000;
+    --bg-primary: #ffffff;
+    --link-color: #0000ee;
+  }
+
+  [data-theme='dark'] {
+    --text-primary: #ffffff;
+    --bg-primary: #000000;
+    --link-color: #00ffff;
+  }
+}
+
+/* Responsive font sizes */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+body {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 2rem;
+}
+h2 {
+  font-size: 1.5rem;
+}
+h3 {
+  font-size: 1.25rem;
+}
+h4 {
+  font-size: 1rem;
+}
+
+/* Minimum touch target size (44x44px) */
+button,
+a,
+[role='button'] {
+  min-height: 44px;
+  min-width: 44px;
+}

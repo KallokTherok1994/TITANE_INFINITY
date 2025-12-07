@@ -44,6 +44,7 @@ import {
 import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
+import './i18n';
 
 /**
  * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT

@@ -1,0 +1,15 @@
+[environment]
+mode = "development"
+debug = true
+
+[server]
+host = "localhost"
+port = 1420
+
+[logging]
+level = "debug"
+format = "pretty"
+
+[security]
+rate_limit_enabled = false
+audit_enabled = true

@@ -1,0 +1,91 @@
+{
+  "app": {
+    "name": "TITANE",
+    "tagline": "Votre assistant IA personnel et local"
+  },
+  "chat": {
+    "input_placeholder": "Tapez votre message...",
+    "input_hint": "Tapez votre message et appuyez sur Entrée pour envoyer",
+    "send_button": "Envoyer",
+    "sending": "Envoi en cours...",
+    "sent_success": "Message envoyé avec succès",
+    "new_conversation": "Nouvelle conversation",
+    "clear_history": "Effacer l'historique",
+    "export_conversation": "Exporter la conversation",
+    "messages_label": "Messages de conversation",
+    "send_message": "Envoyer un message"
+  },
+  "onboarding": {
+    "welcome": {
+      "title": "Bienvenue dans TITANE",
+      "description": "Votre assistant IA personnel qui fonctionne entièrement sur votre machine."
+    },
+    "privacy": {
+      "title": "Votre Vie Privée d'Abord",
+      "guarantee_local": "Toutes vos conversations sont stockées localement",
+      "guarantee_no_cloud": "Aucune donnée n'est envoyée à des serveurs externes"
+    },
+    "features": {
+      "title": "Ce que TITANE peut faire",
+      "conversation": "Conversations Naturelles",
+      "writing": "Assistance à l'Écriture",
+      "brainstorming": "Brainstorming",
+      "code": "Aide au Code"
+    },
+    "ready": {
+      "title": "Vous êtes prêt !",
+      "start_button": "Commencer"
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "general": "Général",
+    "appearance": "Apparence",
+    "language": "Langue",
+    "theme": "Thème",
+    "theme_light": "Clair",
+    "theme_dark": "Sombre",
+    "theme_auto": "Auto",
+    "engines": "Moteurs",
+    "memory": "Mémoire",
+    "performance": "Performance",
+    "security": "Sécurité",
+    "privacy": "Confidentialité"
+  },
+  "errors": {
+    "network_error": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "server_error": "Erreur serveur. Veuillez réessayer plus tard.",
+    "unknown_error": "Une erreur inattendue s'est produite.",
+    "message_too_long": "Message trop long (maximum {{max}} caractères).",
+    "rate_limit": "Trop de requêtes. Veuillez patienter {{seconds}} secondes.",
+    "validation_error": "Erreur de validation : {{message}}",
+    "encryption_error": "Erreur de chiffrement"
+  },
+  "devtools": {
+    "title": "Outils de Développement",
+    "performance": "Performance",
+    "logs": "Logs",
+    "memory": "Mémoire",
+    "network": "Réseau",
+    "security": "Sécurité"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "warning": "Attention",
+    "confirm": "Confirmer"
+  },
+  "keyboard": {
+    "shortcuts": "Raccourcis clavier",
+    "search": "Ctrl+K : Rechercher",
+    "new_conversation": "Ctrl+N : Nouvelle conversation",
+    "show_shortcuts": "Ctrl+/ : Afficher les raccourcis",
+    "close": "Escape : Fermer"
+  }
+}

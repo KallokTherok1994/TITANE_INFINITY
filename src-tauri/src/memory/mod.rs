@@ -5,9 +5,16 @@
 
 pub mod encryption;
 pub mod model;
+pub mod pool; // NEW: SP-PERF-004 Memory Pool Optimization
 pub mod security; // NEW: Security hardening module
 pub mod storage;
 pub mod telemetry;
+
+// Re-export pool types
+pub use pool::{
+    BufferPool, EmbeddingPool, MemoryPoolManager, MemoryPoolMetrics, PoolConfig, PoolMetrics,
+    PoolMetricsSnapshot, PooledBuffer, PooledEmbedding, PooledString, StringPool,
+};
 
 use serde::{Deserialize, Serialize};
 

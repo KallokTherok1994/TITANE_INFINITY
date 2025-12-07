@@ -22,6 +22,9 @@ pub mod commands;
 pub mod security;
 pub mod selftest;
 
+// SP-COGN-002: Context Graph Builder
+pub mod context_graph;
+
 // Re-exports v15
 pub use body::*;
 pub use heart::*;
@@ -37,3 +40,9 @@ pub use integration::IntegrationEngine;
 
 // Re-exports v17 (commands for Tauri)
 pub use commands::*;
+
+// Re-exports SP-COGN-002
+pub use context_graph::{
+    ContextGraph, ContextGraphConfig, EntityType, GraphEdge, GraphMetrics, GraphNode, GraphStats,
+    RelationType,
+};

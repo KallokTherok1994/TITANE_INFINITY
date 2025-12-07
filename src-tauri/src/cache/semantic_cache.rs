@@ -519,9 +519,7 @@ impl SemanticCache {
     fn detect_fragment_type(&self, text: &str) -> FragmentType {
         let lower = text.to_lowercase();
 
-        if lower.starts_with("bonjour")
-            || lower.starts_with("salut")
-            || lower.starts_with("hello")
+        if lower.starts_with("bonjour") || lower.starts_with("salut") || lower.starts_with("hello")
         {
             FragmentType::Greeting
         } else if lower.starts_with("par exemple") || lower.starts_with("exemple:") {
@@ -699,17 +697,13 @@ mod tests {
             .await;
 
         // Recherche exacte
-        let hit = cache
-            .lookup("Comment fonctionne Rust?", &embedding)
-            .await;
+        let hit = cache.lookup("Comment fonctionne Rust?", &embedding).await;
         assert!(hit.is_some());
         assert!(!hit.unwrap().needs_adaptation);
 
         // Recherche différente (pas de hit car embedding différent)
         let different_embedding = vec![0.0, 1.0, 0.0, 0.0];
-        let miss = cache
-            .lookup("Autre question", &different_embedding)
-            .await;
+        let miss = cache.lookup("Autre question", &different_embedding).await;
         assert!(miss.is_none());
     }
 
@@ -719,7 +713,12 @@ mod tests {
 
         let embedding = vec![1.0, 0.0, 0.0];
         cache
-            .store("test", embedding.clone(), "response", ResponseMetadata::default())
+            .store(
+                "test",
+                embedding.clone(),
+                "response",
+                ResponseMetadata::default(),
+            )
             .await;
 
         // Lookup hit
