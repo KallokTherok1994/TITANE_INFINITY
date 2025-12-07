@@ -4,10 +4,12 @@
 //   Fusion: Nexus + ConsistencyEngine
 // ═══════════════════════════════════════════════════════════════
 
-use titane_infinity::ai_chat::AIChatState;
+use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::coherence::{CoherenceReport, ConnectionReport};
 use serde::{Deserialize, Serialize};
 use tauri::State;
+use std::sync::Arc;
+use tokio::sync::RwLock;
 
 // ═══════════════════════════════════════════════════════════════
 //   TYPES — Serializable response structures
@@ -32,9 +34,9 @@ pub struct CoherenceStateResponse {
 /// Replaces: engine_get_nexus_state() + cognitive_check_coherence()
 #[tauri::command]
 pub async fn coherence_get_state(
-    ai_chat: State<'_, AIChatState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<CoherenceStateResponse, String> {
-    let state = ai_chat.singularity_state.read().await;
+    let state = singularity.read().await;
 
     Ok(CoherenceStateResponse {
         health: format!("{:?}", state.coherence.health()),
@@ -51,9 +53,9 @@ pub async fn coherence_get_state(
 /// Replaces: cognitive_check_coherence()
 #[tauri::command]
 pub async fn coherence_check_system(
-    ai_chat: State<'_, AIChatState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<CoherenceReport, String> {
-    let mut state = ai_chat.singularity_state.write().await;
+    let mut state = singularity.write().await;
 
     // Clone state for coherence check (avoids borrow issues)
     let state_snapshot = state.clone();
@@ -66,9 +68,9 @@ pub async fn coherence_check_system(
 /// Replaces: Part of engine_get_nexus_state()
 #[tauri::command]
 pub async fn coherence_validate_connections(
-    ai_chat: State<'_, AIChatState>,
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<ConnectionReport, String> {
-    let mut state = ai_chat.singularity_state.write().await;
+    let mut state = singularity.write().await;
 
     // Clone state for validation
     let state_snapshot = state.clone();
@@ -79,15 +81,15 @@ pub async fn coherence_validate_connections(
 
 /// Get global coherence score (quick check)
 #[tauri::command]
-pub async fn coherence_get_score(ai_chat: State<'_, AIChatState>) -> Result<f64, String> {
-    let state = ai_chat.singularity_state.read().await;
+pub async fn coherence_get_score(singularity: State<'_, Arc<RwLock<SingularityState>>>) -> Result<f64, String> {
+    let state = singularity.read().await;
     Ok(state.coherence.global_coherence())
 }
 
 /// Initialize coherence engine (if not already initialized)
 #[tauri::command]
-pub async fn coherence_initialize(ai_chat: State<'_, AIChatState>) -> Result<String, String> {
-    let mut state = ai_chat.singularity_state.write().await;
+pub async fn coherence_initialize(singularity: State<'_, Arc<RwLock<SingularityState>>>) -> Result<String, String> {
+    let mut state = singularity.write().await;
 
     match state.coherence.init() {
         Ok(_) => Ok("CoherenceEngine initialized ✅".to_string()),
