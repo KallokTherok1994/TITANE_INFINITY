@@ -3,6 +3,7 @@
 //   Secure commands for AI key management and generation
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
 use titane_infinity::profiling::IPCProfiler;
 use titane_infinity::security::secrets_engine::{SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI};

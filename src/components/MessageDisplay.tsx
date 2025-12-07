@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sanitizer } from '@/security/sanitizer';
+import { Sanitizer } from '@/security/Sanitizer';
 
 interface MessageDisplayProps {
   content: string;

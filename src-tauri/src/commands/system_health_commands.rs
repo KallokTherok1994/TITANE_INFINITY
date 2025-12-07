@@ -3,6 +3,7 @@
 //   Phase 2 Fusion #3: Helios + Sentinel + Self-Heal
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::system_health::HealthReport;
 use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};

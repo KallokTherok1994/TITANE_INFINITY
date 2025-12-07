@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 /**
  * TITANE_INFINITY v∞.19.5.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.

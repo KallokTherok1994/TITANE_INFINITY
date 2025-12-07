@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useFocusTrap } from './FocusManager';
+import { useFocusTrap } from './useFocusTrap';
 
 interface ModalProps {
   children: React.ReactNode;

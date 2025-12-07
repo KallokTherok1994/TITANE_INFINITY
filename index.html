@@ -17,9 +17,34 @@
     <meta name="version" content="19.5.2" />
     <meta name="status" content="Production Ready - Phase A+B Complete" />
     <meta name="license" content="Proprietary - See LICENSE.md" />
-    <title>TITANE∞ v19.5.2 - Production Ready ✅</title>
+    <title>TITANE∞ v19.5.2 - Production Ready</title>
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#0a0a0a" />
+    <!-- Skip link styles (inline for immediate availability) -->
+    <style>
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        padding: 8px 16px;
+        background: #93b399;
+        color: #0a0a0a;
+        font-weight: 600;
+        z-index: 1000;
+        text-decoration: none;
+        border-radius: 0 0 6px 0;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 0;
+        outline: 3px solid #727b81;
+        outline-offset: 2px;
+      }
+    </style>
   </head>
   <body>
+    <!-- Skip link for keyboard navigation (WCAG 2.1 compliance) -->
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

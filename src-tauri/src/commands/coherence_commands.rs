@@ -4,6 +4,7 @@
 //   Fusion: Nexus + ConsistencyEngine
 // ═══════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use titane_infinity::core::state::SingularityState;
 use titane_infinity::core::modules::coherence::{CoherenceReport, ConnectionReport};
 use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};

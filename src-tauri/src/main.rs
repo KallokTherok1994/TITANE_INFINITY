@@ -17,7 +17,7 @@
 // Required for both app_data_dir access and DevTools auto-open
 
 // TITANE∞ command modules
-use titane_infinity::{};
+use std::sync::Arc;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
@@ -137,9 +137,9 @@ async fn ollama_query(prompt: String) -> Result<String, String> {
     ollama::query_ollama(prompt).await
 }
 
-mod security;
+// mod security; // DISABLED: Using library instead
 
-use security::{SecurityManager, AuditEvent, AuditEventType};
+use titane_infinity::security::{SecurityManager, AuditEvent, AuditEventType};
 
 pub struct AppState {
     // ...existing code...
@@ -158,7 +158,7 @@ async fn send_message(
         .map_err(|e| e.to_string())?;
     
     // Audit log
-    let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(AuditEvent {
+    let _ = titane_infinity::security::audit::GLOBAL_AUDIT_LOGGER.log(AuditEvent {
         timestamp: chrono::Utc::now(),
         event_type: AuditEventType::DataAccess,
         user_id: "default_user".to_string(),

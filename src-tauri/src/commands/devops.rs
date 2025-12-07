@@ -5,6 +5,7 @@
 // Permettent l'exécution de commandes système et la récupération de statistiques
 // ══════════════════════════════════════════════════════════════════════════════
 
+#[allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
