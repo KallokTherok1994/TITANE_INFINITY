@@ -16,10 +16,14 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { dataCollector } from '@/modules/dataCollector/DataCollectorEngine';
-import type { DatasetStats, DataCategory, DatasetEntry } from '@/modules/dataCollector/DataCollectorEngine';
+import type {
+  DatasetStats,
+  DataCategory,
+  DatasetEntry,
+} from '@/modules/dataCollector/DataCollectorEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // COMPONENT
@@ -45,18 +49,19 @@ export function DataCollectorDashboard() {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [loadStats]);
 
-  const loadStats = () => {
+  const loadStats = useCallback(() => {
     const currentStats = dataCollector.getStats();
     setStats(currentStats);
 
     // Charger preview (10 premières entrées)
-    const dataset = selectedCategory === 'all'
-      ? dataCollector.getDataset().slice(0, 10)
-      : dataCollector.getDatasetByCategory(selectedCategory).slice(0, 10);
+    const dataset =
+      selectedCategory === 'all'
+        ? dataCollector.getDataset().slice(0, 10)
+        : dataCollector.getDatasetByCategory(selectedCategory).slice(0, 10);
     setPreviewEntries(dataset);
-  };
+  }, [selectedCategory]);
 
   const handleCollect = async () => {
     setIsCollecting(true);
@@ -117,11 +122,15 @@ export function DataCollectorDashboard() {
     scriptLink.click();
     URL.revokeObjectURL(scriptUrl);
 
-    alert('✅ Training Pack exporté!\n3 fichiers téléchargés:\n- dataset.jsonl\n- Modelfile\n- train_titane_local.sh');
+    alert(
+      '✅ Training Pack exporté!\n3 fichiers téléchargés:\n- dataset.jsonl\n- Modelfile\n- train_titane_local.sh'
+    );
   };
 
   const handleClean = () => {
-    if (confirm('Nettoyer le dataset (supprimer doublons et données de mauvaise qualité) ?')) {
+    if (
+      confirm('Nettoyer le dataset (supprimer doublons et données de mauvaise qualité) ?')
+    ) {
       dataCollector.cleanDataset();
       loadStats();
       alert('✅ Dataset nettoyé!');
@@ -129,7 +138,9 @@ export function DataCollectorDashboard() {
   };
 
   const handleClear = () => {
-    if (confirm('⚠️ ATTENTION: Effacer tout le dataset ?\nCette action est irréversible.')) {
+    if (
+      confirm('⚠️ ATTENTION: Effacer tout le dataset ?\nCette action est irréversible.')
+    ) {
       dataCollector.clearDataset();
       loadStats();
       alert('✅ Dataset effacé.');
@@ -149,11 +160,11 @@ export function DataCollectorDashboard() {
 
   const categoryColors: Record<DataCategory, string> = {
     'super-prompt': '#6366f1',
-    'interaction': '#8b5cf6',
+    interaction: '#8b5cf6',
     'auto-heal': '#ec4899',
-    'introspection': '#f59e0b',
-    'patch': '#10b981',
-    'style': '#06b6d4',
+    introspection: '#f59e0b',
+    patch: '#10b981',
+    style: '#06b6d4',
   };
 
   return (
@@ -290,15 +301,13 @@ export function DataCollectorDashboard() {
       {/* Footer Info */}
       <div className="mt-8 text-center text-sm text-[#727B81]">
         <div>
-          Dernière collecte: {lastCollection > 0
+          Dernière collecte:{' '}
+          {lastCollection > 0
             ? new Date(lastCollection).toLocaleString('fr-FR')
-            : 'Jamais'
-          }
+            : 'Jamais'}
         </div>
         <div className="mt-2">
-          {isCollecting && (
-            <span className="animate-pulse">🔄 Collecte en cours...</span>
-          )}
+          {isCollecting && <span className="animate-pulse">🔄 Collecte en cours...</span>}
         </div>
       </div>
     </div>
@@ -341,14 +350,20 @@ interface CategoryCardProps {
   isSelected: boolean;
 }
 
-function CategoryCard({ category, count, color, onClick, isSelected }: CategoryCardProps) {
+function CategoryCard({
+  category,
+  count,
+  color,
+  onClick,
+  isSelected,
+}: CategoryCardProps) {
   const categoryLabels: Record<DataCategory, string> = {
     'super-prompt': 'Super Prompts',
-    'interaction': 'Interactions IA',
+    interaction: 'Interactions IA',
     'auto-heal': 'Auto-Heal',
-    'introspection': 'Introspections',
-    'patch': 'Patches Dev',
-    'style': 'Style TITANE∞',
+    introspection: 'Introspections',
+    patch: 'Patches Dev',
+    style: 'Style TITANE∞',
   };
 
   return (
@@ -362,10 +377,7 @@ function CategoryCard({ category, count, color, onClick, isSelected }: CategoryC
           : 'border-[#727B81]/30 bg-[#0a0e1a]/50 hover:border-[#727B81]'
       }`}
     >
-      <div
-        className="w-full h-2 rounded-full mb-3"
-        style={{ backgroundColor: color }}
-      />
+      <div className="w-full h-2 rounded-full mb-3" style={{ backgroundColor: color }} />
       <div className="text-lg font-semibold text-[#C4C4C4]">{count}</div>
       <div className="text-sm text-[#727B81]">{categoryLabels[category]}</div>
     </motion.button>
@@ -391,7 +403,8 @@ function ActionButton({
 }: ActionButtonProps) {
   const variantStyles = {
     primary: 'bg-gradient-to-r from-[#727B81] to-[#C4C4C4] text-[#0a0e1a]',
-    secondary: 'bg-[#0a0e1a] border border-[#727B81]/30 text-[#C4C4C4] hover:border-[#727B81]',
+    secondary:
+      'bg-[#0a0e1a] border border-[#727B81]/30 text-[#C4C4C4] hover:border-[#727B81]',
     danger: 'bg-red-500/20 border border-red-500/30 text-red-400 hover:border-red-500',
   };
 

@@ -7,13 +7,13 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.42 — COGNITIVE OMEGA INTEGRATION
  *   Integration of 4 cognitive engines into OMEGA pipeline
- *   
+ *
  *   Architecture:
  *   - Semantic Memory Engine v∞.42: Long-term memory with vector search
  *   - Goal & Consistency Engine v∞.42: Multi-turn coherence & goal tracking
  *   - Conversation Evaluation Engine v∞.42: Quality metrics & testing
  *   - Cognitive Observability Engine v∞.42: Introspection & tracing
- *   
+ *
  *   OMEGA Pipeline Integration Points:
  *   - Phase 1.3.2: Inject semantic memories + goals + facts into context
  *   - Phase 1.5.1: Check consistency of raw output
@@ -33,13 +33,13 @@ import {
   createConversationEvaluationEngine,
   createCognitiveObservabilityEngine,
   type ConversationGoal,
-  type ConversationFact,
+  type ConversationFact as _ConversationFact,
   type ConsistencyViolation,
-  type CognitiveTrace,
-  type DecisionLog
+  type CognitiveTrace as _CognitiveTrace,
+  type DecisionLog as _DecisionLog,
 } from '@/services/cognitive';
 
-import type { AIMessage } from '@/services/ai/types';
+import type { AIMessage as _AIMessage } from '@/services/ai/types';
 import type { ChatMode } from '@/services/ai/chatEngine';
 
 // Stub types for missing interfaces
@@ -79,7 +79,7 @@ class CognitiveOmegaOrchestrator {
     totalCorrectionsApplied: 0,
     totalEvaluations: 0,
     avgConsistencyScore: 1.0,
-    avgQualityScore: 0.8
+    avgQualityScore: 0.8,
   };
 
   constructor() {
@@ -102,7 +102,7 @@ class CognitiveOmegaOrchestrator {
         const vectorStore = new SQLiteVectorStore({
           dbPath: './data/cognitive/semantic_memory.db',
           collectionName: 'memories',
-          dimensions: 384
+          dimensions: 384,
         });
 
         // Initialize vector store BEFORE using it
@@ -113,44 +113,40 @@ class CognitiveOmegaOrchestrator {
           dimensions: 384,
           pipelineOptions: { quantized: true },
           enableCache: true,
-          maxCacheSize: 1000
+          maxCacheSize: 1000,
         });
 
         // Wait for embedding generator to initialize
         await embeddingGenerator.initialize();
 
-        this.semanticMemory = new SemanticMemoryEngine(
-          vectorStore,
-          embeddingGenerator,
-          {
+        this.semanticMemory = new SemanticMemoryEngine(vectorStore, embeddingGenerator, {
+          enabled: true,
+          embedding_model: {
+            type: 'local',
+            model_name: 'all-MiniLM-L6-v2',
+            dimensions: 384,
+          },
+          storage: {
+            type: 'sqlite',
+            path: './data/semantic_memory.db',
+            collection_name: 'memories',
+          },
+          limits: {
+            max_memories_total: 10000,
+            max_memories_per_query: 5,
+            max_age_days: 365,
+          },
+          scoring: {
+            similarity_threshold: 0.7,
+            importance_weight: 0.2,
+            recency_weight: 0.1,
+          },
+          auto_cleanup: {
             enabled: true,
-            embedding_model: {
-              type: 'local',
-              model_name: 'all-MiniLM-L6-v2',
-              dimensions: 384
-            },
-            storage: {
-              type: 'sqlite',
-              path: './data/semantic_memory.db',
-              collection_name: 'memories'
-            },
-            limits: {
-              max_memories_total: 10000,
-              max_memories_per_query: 5,
-              max_age_days: 365
-            },
-            scoring: {
-              similarity_threshold: 0.7,
-              importance_weight: 0.2,
-              recency_weight: 0.1
-            },
-            auto_cleanup: {
-              enabled: true,
-              interval_hours: 24,
-              remove_below_score: 0.3
-            }
-          }
-        );
+            interval_hours: 24,
+            remove_below_score: 0.3,
+          },
+        });
 
         // 2. Goal & Consistency Engine
         this.goalConsistency = createGoalConsistencyEngine({
@@ -159,7 +155,7 @@ class CognitiveOmegaOrchestrator {
           enable_goal_tracking: true,
           consistency_check_threshold: 0.7,
           fact_confidence_decay_rate: 0.01,
-          max_violations_before_alert: 3
+          max_violations_before_alert: 3,
         });
 
         // 3. Conversation Evaluation Engine
@@ -168,7 +164,7 @@ class CognitiveOmegaOrchestrator {
           enable_regression_detection: true,
           evaluation_sample_rate: 1.0,
           regression_threshold: 0.1,
-          min_baseline_samples: 10
+          min_baseline_samples: 10,
         });
 
         // 4. Cognitive Observability Engine
@@ -177,7 +173,7 @@ class CognitiveOmegaOrchestrator {
           enable_decision_logging: true,
           enable_debug_panel: true,
           trace_retention_hours: 24,
-          max_traces_in_memory: 100
+          max_traces_in_memory: 100,
         });
 
         this.isInitialized = true;
@@ -228,9 +224,9 @@ class CognitiveOmegaOrchestrator {
       const relevantMemories = await this.semanticMemory.retrieve({
         text: userMessage,
         filters: {
-          tags: [mode]
+          tags: [mode],
         },
-        limit: 5
+        limit: 5,
       });
 
       let memoriesContext = '';
@@ -243,27 +239,32 @@ class CognitiveOmegaOrchestrator {
       }
 
       // 2. Get goals and facts context
-      const goalsFactsContext = await this.goalConsistency.generateOmegaContext(conversationId);
+      const goalsFactsContext =
+        await this.goalConsistency.generateOmegaContext(conversationId);
 
       // 3. Combine contexts
       const combined = `${memoriesContext}\n${goalsFactsContext}`.trim();
 
       // Extract goal/fact counts from context
-      const goalCount = (goalsFactsContext.match(/sous-objectifs actifs:/i) ? 1 : 0) +
-                       (goalsFactsContext.match(/progression:/i) ? 1 : 0);
-      const factCount = (goalsFactsContext.match(/\[faits connus\]/i) ? 
-                        (goalsFactsContext.match(/•/g) || []).length : 0);
+      const goalCount =
+        (goalsFactsContext.match(/sous-objectifs actifs:/i) ? 1 : 0) +
+        (goalsFactsContext.match(/progression:/i) ? 1 : 0);
+      const factCount = goalsFactsContext.match(/\[faits connus\]/i)
+        ? (goalsFactsContext.match(/•/g) || []).length
+        : 0;
 
       return {
         memories: memoriesContext,
-        goals: goalsFactsContext.includes('[OBJECTIF CONVERSATION]') ? goalsFactsContext : '',
+        goals: goalsFactsContext.includes('[OBJECTIF CONVERSATION]')
+          ? goalsFactsContext
+          : '',
         facts: goalsFactsContext.includes('[FAITS CONNUS]') ? goalsFactsContext : '',
         combined,
         metadata: {
           memoryCount: Array.isArray(relevantMemories) ? relevantMemories.length : 0,
           goalCount,
-          factCount
-        }
+          factCount,
+        },
       };
     } catch (error) {
       this.log('Error enriching context', error, 'error');
@@ -272,7 +273,7 @@ class CognitiveOmegaOrchestrator {
         goals: '',
         facts: '',
         combined: '',
-        metadata: { memoryCount: 0, goalCount: 0, factCount: 0 }
+        metadata: { memoryCount: 0, goalCount: 0, factCount: 0 },
       };
     }
   }
@@ -303,11 +304,12 @@ class CognitiveOmegaOrchestrator {
         conversationId,
         response,
         {
-          user_message: context.userMessage
+          user_message: context.userMessage,
         }
       );
 
-      const consistencyScore = await this.goalConsistency.calculateConsistencyScore(conversationId);
+      const consistencyScore =
+        await this.goalConsistency.calculateConsistencyScore(conversationId);
 
       // Should correct if high/critical violations
       const shouldCorrect = violations.some(
@@ -320,7 +322,7 @@ class CognitiveOmegaOrchestrator {
         isConsistent: violations.length === 0,
         violations,
         consistencyScore,
-        shouldCorrect
+        shouldCorrect,
       };
     } catch (error) {
       this.log('Error checking consistency', error, 'error');
@@ -328,7 +330,7 @@ class CognitiveOmegaOrchestrator {
         isConsistent: true,
         violations: [],
         consistencyScore: 1.0,
-        shouldCorrect: false
+        shouldCorrect: false,
       };
     }
   }
@@ -364,7 +366,7 @@ class CognitiveOmegaOrchestrator {
           corrected: true,
           originalResponse: response,
           correctedResponse: correction.corrected_response,
-          correction
+          correction,
         };
       }
 
@@ -372,7 +374,7 @@ class CognitiveOmegaOrchestrator {
         corrected: false,
         originalResponse: response,
         correctedResponse: response,
-        correction: null
+        correction: null,
       };
     } catch (error) {
       this.log('Error auto-correcting', error, 'error');
@@ -380,7 +382,7 @@ class CognitiveOmegaOrchestrator {
         corrected: false,
         originalResponse: response,
         correctedResponse: response,
-        correction: null
+        correction: null,
       };
     }
   }
@@ -396,7 +398,7 @@ class CognitiveOmegaOrchestrator {
     userMessage: string,
     assistantResponse: string,
     mode: ChatMode,
-    metadata?: {
+    _metadata?: {
       provider?: string;
       model?: string;
       processingTime?: number;
@@ -431,7 +433,7 @@ class CognitiveOmegaOrchestrator {
       try {
         // Simple fact extraction (can be improved with LLM)
         const facts = this.extractFactsFromText(userMessage, assistantResponse);
-        
+
         for (const fact of facts) {
           await this.goalConsistency.addFact(conversationId, {
             type: 'user_info',
@@ -439,10 +441,10 @@ class CognitiveOmegaOrchestrator {
             confidence: fact.confidence,
             source: {
               type: 'inferred',
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
             },
             valid_from: new Date().toISOString(),
-            tags: [mode]
+            tags: [mode],
           });
         }
 
@@ -471,19 +473,24 @@ class CognitiveOmegaOrchestrator {
           assistant_response: assistantResponse,
           context: {
             goal: (await this.goalConsistency.loadGoalState(conversationId))?.main_goal,
-            facts: (await this.goalConsistency.getActiveFacts(conversationId)).map(f => f.statement)
-          }
+            facts: (await this.goalConsistency.getActiveFacts(conversationId)).map(
+              f => f.statement
+            ),
+          },
         });
 
         this.stats.totalEvaluations++;
-        this.stats.avgQualityScore = (this.stats.avgQualityScore * (this.stats.totalEvaluations - 1) + 
-                                      this.calculateOverallScore(metrics)) / this.stats.totalEvaluations;
+        this.stats.avgQualityScore =
+          (this.stats.avgQualityScore * (this.stats.totalEvaluations - 1) +
+            this.calculateOverallScore(metrics)) /
+          this.stats.totalEvaluations;
 
-        this.log(`Evaluated turn: overall score ${(this.calculateOverallScore(metrics) * 100).toFixed(0)}%`);
+        this.log(
+          `Evaluated turn: overall score ${(this.calculateOverallScore(metrics) * 100).toFixed(0)}%`
+        );
       } catch (error) {
         this.log('Error evaluating conversation', error, 'warn');
       }
-
     } catch (error) {
       this.log('Error saving interaction', error, 'error');
     }
@@ -539,7 +546,7 @@ class CognitiveOmegaOrchestrator {
       chosen_option: decision.chosen_option,
       alternatives: decision.alternatives || [],
       rationale: decision.why,
-      confidence: decision.confidence
+      confidence: decision.confidence,
     } as any); // Type mismatch with Omit<DecisionLog>
   }
 
@@ -607,7 +614,14 @@ class CognitiveOmegaOrchestrator {
     conversationId: string,
     statement: string,
     confidence: number,
-    type: 'user_info' | 'system_info' | 'project_info' | 'decision' | 'constraint' | 'preference' | 'technical' = 'user_info'
+    type:
+      | 'user_info'
+      | 'system_info'
+      | 'project_info'
+      | 'decision'
+      | 'constraint'
+      | 'preference'
+      | 'technical' = 'user_info'
   ): Promise<void> {
     await this.ensureInitialized();
     await this.goalConsistency.addFact(conversationId, {
@@ -616,10 +630,10 @@ class CognitiveOmegaOrchestrator {
       confidence,
       source: {
         type: 'user_stated',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       },
       valid_from: new Date().toISOString(),
-      tags: []
+      tags: [],
     });
   }
 
@@ -643,7 +657,7 @@ class CognitiveOmegaOrchestrator {
       /I am (a |an )?([^.!?]+)/gi,
       /I have ([^.!?]+)/gi,
       /I work (at |for |as )?([^.!?]+)/gi,
-      /My name is ([^.!?]+)/gi
+      /My name is ([^.!?]+)/gi,
     ];
 
     for (const pattern of userPatterns) {
@@ -653,7 +667,7 @@ class CognitiveOmegaOrchestrator {
         if (statement.length > 10 && statement.length < 200) {
           facts.push({
             statement,
-            confidence: 0.7
+            confidence: 0.7,
           });
         }
       }
@@ -662,7 +676,7 @@ class CognitiveOmegaOrchestrator {
     // Pattern 2: Assistant confirmations
     const assistantPatterns = [
       /You (are|have|work) ([^.!?]+)/gi,
-      /Your ([^.!?]+) is ([^.!?]+)/gi
+      /Your ([^.!?]+) is ([^.!?]+)/gi,
     ];
 
     for (const pattern of assistantPatterns) {
@@ -672,7 +686,7 @@ class CognitiveOmegaOrchestrator {
         if (statement.length > 10 && statement.length < 200) {
           facts.push({
             statement,
-            confidence: 0.6
+            confidence: 0.6,
           });
         }
       }
@@ -694,7 +708,7 @@ class CognitiveOmegaOrchestrator {
       relevance: 0.15,
       factual_accuracy: 0.15,
       user_satisfaction: 0.1,
-      technical_correctness: 0.05
+      technical_correctness: 0.05,
     };
 
     let totalScore = 0;
@@ -715,17 +729,21 @@ class CognitiveOmegaOrchestrator {
       semanticMemoryStats: this.isInitialized ? this.semanticMemory.getStats() : null,
       goalConsistencyStats: this.isInitialized ? this.goalConsistency.getStats() : null,
       evaluationStats: this.isInitialized ? this.evaluation.getStats() : null,
-      observabilityStats: this.isInitialized ? this.observability.getStats() : null
+      observabilityStats: this.isInitialized ? this.observability.getStats() : null,
     };
   }
 
   /**
    * Logging
    */
-  private log(message: string, data?: any, level: 'info' | 'warn' | 'error' = 'info'): void {
+  private log(
+    message: string,
+    data?: any,
+    level: 'info' | 'warn' | 'error' = 'info'
+  ): void {
     const timestamp = new Date().toISOString();
     const prefix = '[CognitiveOmegaOrchestrator]';
-    
+
     if (level === 'error') {
       console.error(`${prefix} ${timestamp} ${message}`, data || '');
     } else if (level === 'warn') {

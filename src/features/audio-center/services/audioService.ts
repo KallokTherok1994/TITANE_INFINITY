@@ -119,14 +119,21 @@ class AudioService {
   // ─────────────────────────────────────────────────────────────────
 
   private isCacheValid(): boolean {
-    return this.deviceCache !== null &&
-           (Date.now() - this.deviceCache.timestamp) < DEVICE_CACHE_TTL;
+    return (
+      this.deviceCache !== null &&
+      Date.now() - this.deviceCache.timestamp < DEVICE_CACHE_TTL
+    );
   }
 
   async getOutputDevices(forceRefresh = false): Promise<AudioDevice[]> {
     // Return cached devices if valid
-    if (!forceRefresh && this.isCacheValid() && this.deviceCache!.output.length > 0) {
-      return this.deviceCache!.output;
+    if (
+      !forceRefresh &&
+      this.isCacheValid() &&
+      this.deviceCache &&
+      this.deviceCache.output.length > 0
+    ) {
+      return this.deviceCache.output;
     }
 
     let devices: AudioDevice[] = [];
@@ -140,7 +147,11 @@ class AudioService {
     }
 
     // Fallback: Use Web Audio API if no devices from Tauri
-    if (devices.length === 0 && typeof navigator !== 'undefined' && navigator.mediaDevices) {
+    if (
+      devices.length === 0 &&
+      typeof navigator !== 'undefined' &&
+      navigator.mediaDevices
+    ) {
       try {
         const webDeviceList = await navigator.mediaDevices.enumerateDevices();
         const webDevices = webDeviceList
@@ -161,14 +172,16 @@ class AudioService {
 
     // Default fallback
     if (devices.length === 0) {
-      devices = [{
-        id: 'default',
-        name: 'Default Speaker',
-        type: 'output',
-        isDefault: true,
-        isActive: true,
-        driver: 'unknown',
-      }];
+      devices = [
+        {
+          id: 'default',
+          name: 'Default Speaker',
+          type: 'output',
+          isDefault: true,
+          isActive: true,
+          driver: 'unknown',
+        },
+      ];
     }
 
     // Update cache
@@ -184,8 +197,13 @@ class AudioService {
 
   async getInputDevices(forceRefresh = false): Promise<AudioDevice[]> {
     // Return cached devices if valid
-    if (!forceRefresh && this.isCacheValid() && this.deviceCache!.input.length > 0) {
-      return this.deviceCache!.input;
+    if (
+      !forceRefresh &&
+      this.isCacheValid() &&
+      this.deviceCache &&
+      this.deviceCache.input.length > 0
+    ) {
+      return this.deviceCache.input;
     }
 
     let devices: AudioDevice[] = [];
@@ -199,7 +217,11 @@ class AudioService {
     }
 
     // Fallback: Use Web Audio API if no devices from Tauri
-    if (devices.length === 0 && typeof navigator !== 'undefined' && navigator.mediaDevices) {
+    if (
+      devices.length === 0 &&
+      typeof navigator !== 'undefined' &&
+      navigator.mediaDevices
+    ) {
       try {
         // Request permission first
         await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -221,14 +243,16 @@ class AudioService {
 
     // Default fallback
     if (devices.length === 0) {
-      devices = [{
-        id: 'default',
-        name: 'Default Microphone',
-        type: 'input',
-        isDefault: true,
-        isActive: false,
-        driver: 'unknown',
-      }];
+      devices = [
+        {
+          id: 'default',
+          name: 'Default Microphone',
+          type: 'input',
+          isDefault: true,
+          isActive: false,
+          driver: 'unknown',
+        },
+      ];
     }
 
     // Update cache
@@ -312,11 +336,13 @@ class AudioService {
           utterance.pitch = this.config.tts.pitch;
           utterance.volume = this.config.tts.volume;
           utterance.onend = () => resolve();
-          utterance.onerror = (e) => reject(e);
+          utterance.onerror = e => reject(e);
           window.speechSynthesis.speak(utterance);
         });
       } else {
-        throw new Error('No TTS engine available (Web Speech API not supported in WebKitGTK)');
+        throw new Error(
+          'No TTS engine available (Web Speech API not supported in WebKitGTK)'
+        );
       }
 
       const latencyMs = Date.now() - startTime;
@@ -336,7 +362,12 @@ class AudioService {
   }
 
   async testMicrophone(durationMs: number = 3000): Promise<MicrophoneTestResult> {
-    console.log('[AudioService] testMicrophone called, duration:', durationMs, 'isTauri:', this.isTauri);
+    console.log(
+      '[AudioService] testMicrophone called, duration:',
+      durationMs,
+      'isTauri:',
+      this.isTauri
+    );
 
     try {
       if (this.isTauri) {
@@ -357,11 +388,14 @@ class AudioService {
       console.log('[AudioService] Using Web Audio API fallback...');
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          deviceId: this.config.input.deviceId !== 'default' ? this.config.input.deviceId : undefined,
+          deviceId:
+            this.config.input.deviceId !== 'default'
+              ? this.config.input.deviceId
+              : undefined,
           noiseSuppression: this.config.input.noiseSuppression,
           echoCancellation: this.config.input.echoCancellation,
           autoGainControl: this.config.input.autoGainControl,
-        }
+        },
       });
 
       const audioContext = new AudioContext();
@@ -375,7 +409,7 @@ class AudioService {
       let peakLevel = 0;
       const samples: number[] = [];
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         const interval = setInterval(() => {
           analyser.getByteTimeDomainData(dataArray);
 
@@ -399,12 +433,12 @@ class AudioService {
           // Calculate noise floor (average of lowest 20% of samples)
           samples.sort((a, b) => a - b);
           const noiseFloorSamples = samples.slice(0, Math.floor(samples.length * 0.2));
-          const noiseFloor = noiseFloorSamples.reduce((a, b) => a + b, 0) / noiseFloorSamples.length;
+          const noiseFloor =
+            noiseFloorSamples.reduce((a, b) => a + b, 0) / noiseFloorSamples.length;
 
           // Signal to noise ratio in dB
-          const snr = peakLevel > 0 && noiseFloor > 0
-            ? 20 * Math.log10(peakLevel / noiseFloor)
-            : 0;
+          const snr =
+            peakLevel > 0 && noiseFloor > 0 ? 20 * Math.log10(peakLevel / noiseFloor) : 0;
 
           resolve({
             success: peakLevel > 0.01,
@@ -445,7 +479,12 @@ class AudioService {
     }
 
     this.isSpeaking = true;
-    console.log('[AudioService] speak() called. Tauri mode:', this.isTauri, 'Text:', text.substring(0, 50) + '...');
+    console.log(
+      '[AudioService] speak() called. Tauri mode:',
+      this.isTauri,
+      'Text:',
+      text.substring(0, 50) + '...'
+    );
 
     try {
       if (this.isTauri) {
@@ -463,7 +502,9 @@ class AudioService {
             console.log('[AudioService] Falling back to Web Speech API...');
             await this.speakWithWebSpeech(text);
           } else {
-            console.warn('[AudioService] No TTS available (Tauri failed, Web Speech not supported)');
+            console.warn(
+              '[AudioService] No TTS available (Tauri failed, Web Speech not supported)'
+            );
             throw error;
           }
         }
@@ -483,9 +524,11 @@ class AudioService {
    * Check if Web Speech API is available
    */
   private isWebSpeechAvailable(): boolean {
-    return typeof window !== 'undefined' &&
-           'speechSynthesis' in window &&
-           typeof SpeechSynthesisUtterance !== 'undefined';
+    return (
+      typeof window !== 'undefined' &&
+      'speechSynthesis' in window &&
+      typeof SpeechSynthesisUtterance !== 'undefined'
+    );
   }
 
   private speakWithWebSpeech(text: string): Promise<void> {
@@ -505,7 +548,7 @@ class AudioService {
         console.log('[AudioService] Web Speech finished');
         resolve();
       };
-      utterance.onerror = (e) => {
+      utterance.onerror = e => {
         console.error('[AudioService] Web Speech error:', e);
         reject(e);
       };
@@ -524,7 +567,7 @@ class AudioService {
 
     // Stop Tauri TTS
     if (this.isTauri) {
-      secureInvoke('tts_stop').catch((err) => {
+      secureInvoke('tts_stop').catch(err => {
         console.error('[AudioService] tts_stop error:', err);
       });
     }
@@ -546,7 +589,9 @@ class AudioService {
       return { state: 'silence', isSpeaking: false };
     }
     try {
-      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>('vad_get_state');
+      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>(
+        'vad_get_state'
+      );
       return result;
     } catch (error) {
       console.error('[AudioService] VAD get state error:', error);
@@ -558,15 +603,20 @@ class AudioService {
    * Process audio frame through VAD
    * @param audioData Float32Array of audio samples
    */
-  async processVADFrame(audioData: Float32Array | number[]): Promise<{ state: string; isSpeaking: boolean }> {
+  async processVADFrame(
+    audioData: Float32Array | number[]
+  ): Promise<{ state: string; isSpeaking: boolean }> {
     if (!this.isTauri) {
       return { state: 'silence', isSpeaking: false };
     }
     try {
       const samples = Array.from(audioData);
-      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>('vad_process_frame', {
-        audioData: samples
-      });
+      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>(
+        'vad_process_frame',
+        {
+          audioData: samples,
+        }
+      );
       return result;
     } catch (error) {
       console.error('[AudioService] VAD process frame error:', error);
@@ -590,8 +640,8 @@ class AudioService {
         config: {
           threshold: config.threshold ?? 0.02,
           minSpeechFrames: config.minSpeechFrames ?? 10,
-          minSilenceFrames: config.minSilenceFrames ?? 20
-        }
+          minSilenceFrames: config.minSilenceFrames ?? 20,
+        },
       });
       console.log('[AudioService] VAD configured:', result);
       return result;
@@ -638,9 +688,9 @@ class AudioService {
           silenceDetection: false,
           speechDetection: false,
           speechTransition: false,
-          silenceTransition: false
+          silenceTransition: false,
         },
-        message: 'VAD test not available (browser mode)'
+        message: 'VAD test not available (browser mode)',
       };
     }
     try {
@@ -663,9 +713,9 @@ class AudioService {
           silenceDetection: result.tests.silence_detection,
           speechDetection: result.tests.speech_detection,
           speechTransition: result.tests.speech_transition,
-          silenceTransition: result.tests.silence_transition
+          silenceTransition: result.tests.silence_transition,
         },
-        message: result.message
+        message: result.message,
       };
     } catch (error) {
       console.error('[AudioService] VAD test error:', error);
@@ -675,9 +725,9 @@ class AudioService {
           silenceDetection: false,
           speechDetection: false,
           speechTransition: false,
-          silenceTransition: false
+          silenceTransition: false,
         },
-        message: `VAD test error: ${error}`
+        message: `VAD test error: ${error}`,
       };
     }
   }

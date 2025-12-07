@@ -34,7 +34,12 @@ interface StatCardProps {
   variant?: 'success' | 'warning' | 'error' | 'info';
 }
 
-const StatCard = ({ label, value, icon, variant = 'info' }: StatCardProps): JSX.Element => (
+const StatCard = ({
+  label,
+  value,
+  icon,
+  variant = 'info',
+}: StatCardProps): JSX.Element => (
   <div className={`qa-stat-card qa-stat-card--${variant}`}>
     <span className="qa-stat-icon">{icon}</span>
     <div className="qa-stat-content">
@@ -71,8 +76,13 @@ interface OverviewTabProps {
   onRefresh: () => void;
 }
 
-const OverviewTab = ({ state, metrics, alerts, onRefresh }: OverviewTabProps): JSX.Element => {
-  const activeAlerts = alerts.filter((a) => !a.resolved);
+const OverviewTab = ({
+  state,
+  metrics,
+  alerts,
+  onRefresh,
+}: OverviewTabProps): JSX.Element => {
+  const activeAlerts = alerts.filter(a => !a.resolved);
 
   return (
     <div className="qa-tab-content">
@@ -89,13 +99,25 @@ const OverviewTab = ({ state, metrics, alerts, onRefresh }: OverviewTabProps): J
             label="Score Santé"
             value={`${state.health_score.toFixed(1)}%`}
             icon="💚"
-            variant={state.health_score >= 90 ? 'success' : state.health_score >= 70 ? 'warning' : 'error'}
+            variant={
+              state.health_score >= 90
+                ? 'success'
+                : state.health_score >= 70
+                  ? 'warning'
+                  : 'error'
+            }
           />
           <StatCard
             label="Couverture Tests"
             value={`${state.test_coverage.toFixed(1)}%`}
             icon="🧪"
-            variant={state.test_coverage >= 80 ? 'success' : state.test_coverage >= 60 ? 'warning' : 'error'}
+            variant={
+              state.test_coverage >= 80
+                ? 'success'
+                : state.test_coverage >= 60
+                  ? 'warning'
+                  : 'error'
+            }
           />
           <StatCard
             label="Moniteurs Actifs"
@@ -107,7 +129,13 @@ const OverviewTab = ({ state, metrics, alerts, onRefresh }: OverviewTabProps): J
             label="Alertes Actives"
             value={activeAlerts.length}
             icon="🔔"
-            variant={activeAlerts.length === 0 ? 'success' : activeAlerts.some((a) => a.severity === 'critical') ? 'error' : 'warning'}
+            variant={
+              activeAlerts.length === 0
+                ? 'success'
+                : activeAlerts.some(a => a.severity === 'critical')
+                  ? 'error'
+                  : 'warning'
+            }
           />
           <StatCard
             label="Niveau Hardening"
@@ -166,8 +194,11 @@ const OverviewTab = ({ state, metrics, alerts, onRefresh }: OverviewTabProps): J
         <div className="qa-alerts-section">
           <h3>⚠️ Alertes Actives</h3>
           <div className="qa-alert-list">
-            {activeAlerts.slice(0, 5).map((alert) => (
-              <div key={alert.id} className={`qa-alert-item qa-alert-item--${alert.severity}`}>
+            {activeAlerts.slice(0, 5).map(alert => (
+              <div
+                key={alert.id}
+                className={`qa-alert-item qa-alert-item--${alert.severity}`}
+              >
                 <SeverityBadge severity={alert.severity} />
                 <span className="qa-alert-message">{alert.message}</span>
                 <span className="qa-alert-source">{alert.source}</span>
@@ -187,7 +218,12 @@ interface TestsTabProps {
   isRunning: boolean;
 }
 
-const TestsTab = ({ suites, results, onRunSuite, isRunning }: TestsTabProps): JSX.Element => {
+const TestsTab = ({
+  suites,
+  results,
+  onRunSuite,
+  isRunning,
+}: TestsTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
@@ -195,7 +231,7 @@ const TestsTab = ({ suites, results, onRunSuite, isRunning }: TestsTabProps): JS
       </div>
 
       <div className="qa-suites-grid">
-        {suites.map((suite) => (
+        {suites.map(suite => (
           <div key={suite.id} className="qa-suite-card">
             <div className="qa-suite-header">
               <h3>{suite.name}</h3>
@@ -222,7 +258,10 @@ const TestsTab = ({ suites, results, onRunSuite, isRunning }: TestsTabProps): JS
             <div className="qa-suite-coverage">
               <span>Couverture: {suite.coverage.toFixed(1)}%</span>
               <div className="qa-progress-bar">
-                <div className="qa-progress-fill qa-progress-fill--info" style={{ width: `${suite.coverage}%` }} />
+                <div
+                  className="qa-progress-fill qa-progress-fill--info"
+                  style={{ width: `${suite.coverage}%` }}
+                />
               </div>
             </div>
             <button
@@ -250,7 +289,7 @@ const TestsTab = ({ suites, results, onRunSuite, isRunning }: TestsTabProps): JS
               </tr>
             </thead>
             <tbody>
-              {results.map((result) => (
+              {results.map(result => (
                 <tr key={result.id} className={`qa-row--${result.status}`}>
                   <td>{result.name}</td>
                   <td>{result.suite}</td>
@@ -283,8 +322,11 @@ const MonitorsTab = ({ monitors, onToggle, onDelete }: MonitorsTabProps): JSX.El
       </div>
 
       <div className="qa-monitors-grid">
-        {monitors.map((monitor) => (
-          <div key={monitor.id} className={`qa-monitor-card qa-monitor-card--${monitor.status}`}>
+        {monitors.map(monitor => (
+          <div
+            key={monitor.id}
+            className={`qa-monitor-card qa-monitor-card--${monitor.status}`}
+          >
             <div className="qa-monitor-header">
               <h3>{monitor.name}</h3>
               <StatusBadge status={monitor.status} />
@@ -293,7 +335,9 @@ const MonitorsTab = ({ monitors, onToggle, onDelete }: MonitorsTabProps): JSX.El
               <code>{monitor.target}</code>
             </div>
             <div className="qa-monitor-value">
-              <span className="qa-monitor-value-current">{monitor.last_value.toFixed(1)}</span>
+              <span className="qa-monitor-value-current">
+                {monitor.last_value.toFixed(1)}
+              </span>
               <span className="qa-monitor-value-thresholds">
                 ⚠️ {monitor.threshold_warning} | 🚨 {monitor.threshold_critical}
               </span>
@@ -306,7 +350,10 @@ const MonitorsTab = ({ monitors, onToggle, onDelete }: MonitorsTabProps): JSX.El
               >
                 {monitor.status === 'active' ? '⏸️ Pause' : '▶️ Activer'}
               </button>
-              <button className="qa-btn qa-btn--error qa-btn--small" onClick={() => onDelete(monitor.id)}>
+              <button
+                className="qa-btn qa-btn--error qa-btn--small"
+                onClick={() => onDelete(monitor.id)}
+              >
                 🗑️ Supprimer
               </button>
             </div>
@@ -343,28 +390,43 @@ const AlertsTab = ({
       </div>
 
       <div className="qa-alerts-list">
-        {alerts.map((alert) => (
-          <div key={alert.id} className={`qa-alert-card qa-alert-card--${alert.severity} ${alert.resolved ? 'qa-alert-card--resolved' : ''}`}>
+        {alerts.map(alert => (
+          <div
+            key={alert.id}
+            className={`qa-alert-card qa-alert-card--${alert.severity} ${alert.resolved ? 'qa-alert-card--resolved' : ''}`}
+          >
             <div className="qa-alert-header">
               <SeverityBadge severity={alert.severity} />
-              <span className="qa-alert-time">{new Date(alert.timestamp).toLocaleString()}</span>
+              <span className="qa-alert-time">
+                {new Date(alert.timestamp).toLocaleString()}
+              </span>
             </div>
             <div className="qa-alert-body">
               <p className="qa-alert-message">{alert.message}</p>
               <span className="qa-alert-source">Source: {alert.source}</span>
             </div>
             <div className="qa-alert-status">
-              {alert.acknowledged && <span className="qa-badge qa-badge--info">✓ Acquitté</span>}
-              {alert.resolved && <span className="qa-badge qa-badge--success">✓ Résolu</span>}
+              {alert.acknowledged && (
+                <span className="qa-badge qa-badge--info">✓ Acquitté</span>
+              )}
+              {alert.resolved && (
+                <span className="qa-badge qa-badge--success">✓ Résolu</span>
+              )}
             </div>
             {!alert.resolved && (
               <div className="qa-alert-actions">
                 {!alert.acknowledged && (
-                  <button className="qa-btn qa-btn--secondary qa-btn--small" onClick={() => onAcknowledge(alert.id)}>
+                  <button
+                    className="qa-btn qa-btn--secondary qa-btn--small"
+                    onClick={() => onAcknowledge(alert.id)}
+                  >
                     ✓ Acquitter
                   </button>
                 )}
-                <button className="qa-btn qa-btn--success qa-btn--small" onClick={() => onResolve(alert.id)}>
+                <button
+                  className="qa-btn qa-btn--success qa-btn--small"
+                  onClick={() => onResolve(alert.id)}
+                >
                   ✅ Résoudre
                 </button>
               </div>
@@ -384,12 +446,21 @@ interface SecurityTabProps {
   isAuditing: boolean;
 }
 
-const SecurityTab = ({ config, auditResult, onRunAudit, isAuditing }: SecurityTabProps): JSX.Element => {
+const SecurityTab = ({
+  config,
+  auditResult,
+  onRunAudit,
+  isAuditing,
+}: SecurityTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
         <h2>🛡️ Sécurité & Hardening</h2>
-        <button className="qa-btn qa-btn--primary" onClick={onRunAudit} disabled={isAuditing}>
+        <button
+          className="qa-btn qa-btn--primary"
+          onClick={onRunAudit}
+          disabled={isAuditing}
+        >
           {isAuditing ? '⏳ Audit en cours...' : '🔍 Lancer Audit'}
         </button>
       </div>
@@ -400,35 +471,47 @@ const SecurityTab = ({ config, auditResult, onRunAudit, isAuditing }: SecurityTa
           <div className="qa-hardening-grid">
             <div className="qa-hardening-item">
               <span className="qa-hardening-label">Niveau</span>
-              <span className={`qa-hardening-value qa-hardening-value--${config.level}`}>{config.level.toUpperCase()}</span>
+              <span className={`qa-hardening-value qa-hardening-value--${config.level}`}>
+                {config.level.toUpperCase()}
+              </span>
             </div>
             <div className="qa-hardening-item">
               <span className="qa-hardening-label">CSP</span>
-              <span className={`qa-hardening-value ${config.csp_enabled ? 'qa-hardening-value--enabled' : ''}`}>
+              <span
+                className={`qa-hardening-value ${config.csp_enabled ? 'qa-hardening-value--enabled' : ''}`}
+              >
                 {config.csp_enabled ? '✓ Activé' : '✗ Désactivé'}
               </span>
             </div>
             <div className="qa-hardening-item">
               <span className="qa-hardening-label">Sandbox</span>
-              <span className={`qa-hardening-value ${config.sandbox_enabled ? 'qa-hardening-value--enabled' : ''}`}>
+              <span
+                className={`qa-hardening-value ${config.sandbox_enabled ? 'qa-hardening-value--enabled' : ''}`}
+              >
                 {config.sandbox_enabled ? '✓ Activé' : '✗ Désactivé'}
               </span>
             </div>
             <div className="qa-hardening-item">
               <span className="qa-hardening-label">Audit Logging</span>
-              <span className={`qa-hardening-value ${config.audit_logging ? 'qa-hardening-value--enabled' : ''}`}>
+              <span
+                className={`qa-hardening-value ${config.audit_logging ? 'qa-hardening-value--enabled' : ''}`}
+              >
                 {config.audit_logging ? '✓ Activé' : '✗ Désactivé'}
               </span>
             </div>
             <div className="qa-hardening-item">
               <span className="qa-hardening-label">Encryption at Rest</span>
-              <span className={`qa-hardening-value ${config.encryption_at_rest ? 'qa-hardening-value--enabled' : ''}`}>
+              <span
+                className={`qa-hardening-value ${config.encryption_at_rest ? 'qa-hardening-value--enabled' : ''}`}
+              >
                 {config.encryption_at_rest ? '✓ Activé' : '✗ Désactivé'}
               </span>
             </div>
             <div className="qa-hardening-item">
               <span className="qa-hardening-label">Rate Limiting</span>
-              <span className={`qa-hardening-value ${config.rate_limiting ? 'qa-hardening-value--enabled' : ''}`}>
+              <span
+                className={`qa-hardening-value ${config.rate_limiting ? 'qa-hardening-value--enabled' : ''}`}
+              >
                 {config.rate_limiting ? '✓ Activé' : '✗ Désactivé'}
               </span>
             </div>
@@ -440,7 +523,9 @@ const SecurityTab = ({ config, auditResult, onRunAudit, isAuditing }: SecurityTa
         <div className="qa-audit-section">
           <h3>Résultat de l'Audit</h3>
           <div className="qa-audit-score">
-            <div className={`qa-audit-score-circle qa-audit-score-circle--${auditResult.score >= 90 ? 'success' : auditResult.score >= 70 ? 'warning' : 'error'}`}>
+            <div
+              className={`qa-audit-score-circle qa-audit-score-circle--${auditResult.score >= 90 ? 'success' : auditResult.score >= 70 ? 'warning' : 'error'}`}
+            >
               <span className="qa-audit-score-value">{auditResult.score.toFixed(0)}</span>
               <span className="qa-audit-score-label">/ 100</span>
             </div>
@@ -455,7 +540,9 @@ const SecurityTab = ({ config, auditResult, onRunAudit, isAuditing }: SecurityTa
               <span className="qa-audit-stat-label">Avertissements</span>
             </div>
             <div className="qa-audit-stat qa-audit-stat--success">
-              <span className="qa-audit-stat-value">{auditResult.passed_checks.length}</span>
+              <span className="qa-audit-stat-value">
+                {auditResult.passed_checks.length}
+              </span>
               <span className="qa-audit-stat-label">Vérifications OK</span>
             </div>
           </div>
@@ -504,12 +591,21 @@ interface PerformanceTabProps {
   currentPeriod: string;
 }
 
-const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: PerformanceTabProps): JSX.Element => {
+const PerformanceTab = ({
+  report,
+  logs,
+  onPeriodChange,
+  currentPeriod,
+}: PerformanceTabProps): JSX.Element => {
   return (
     <div className="qa-tab-content">
       <div className="qa-section-header">
         <h2>📈 Performance</h2>
-        <select className="qa-select" value={currentPeriod} onChange={(e) => onPeriodChange(e.target.value)}>
+        <select
+          className="qa-select"
+          value={currentPeriod}
+          onChange={e => onPeriodChange(e.target.value)}
+        >
           <option value="1h">Dernière heure</option>
           <option value="24h">24 heures</option>
           <option value="7d">7 jours</option>
@@ -538,11 +634,15 @@ const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: Perform
               <div className="qa-perf-values">
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">Moyenne</span>
-                  <span className="qa-perf-value-num">{report.avg_memory.toFixed(1)}%</span>
+                  <span className="qa-perf-value-num">
+                    {report.avg_memory.toFixed(1)}%
+                  </span>
                 </div>
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">Max</span>
-                  <span className="qa-perf-value-num">{report.max_memory.toFixed(1)}%</span>
+                  <span className="qa-perf-value-num">
+                    {report.max_memory.toFixed(1)}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -551,15 +651,21 @@ const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: Perform
               <div className="qa-perf-values">
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">Moyenne</span>
-                  <span className="qa-perf-value-num">{report.avg_response_ms.toFixed(0)}ms</span>
+                  <span className="qa-perf-value-num">
+                    {report.avg_response_ms.toFixed(0)}ms
+                  </span>
                 </div>
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">P95</span>
-                  <span className="qa-perf-value-num">{report.p95_response_ms.toFixed(0)}ms</span>
+                  <span className="qa-perf-value-num">
+                    {report.p95_response_ms.toFixed(0)}ms
+                  </span>
                 </div>
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">P99</span>
-                  <span className="qa-perf-value-num">{report.p99_response_ms.toFixed(0)}ms</span>
+                  <span className="qa-perf-value-num">
+                    {report.p99_response_ms.toFixed(0)}ms
+                  </span>
                 </div>
               </div>
             </div>
@@ -568,15 +674,21 @@ const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: Perform
               <div className="qa-perf-values">
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">Total</span>
-                  <span className="qa-perf-value-num">{report.total_requests.toLocaleString()}</span>
+                  <span className="qa-perf-value-num">
+                    {report.total_requests.toLocaleString()}
+                  </span>
                 </div>
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">Erreurs</span>
-                  <span className="qa-perf-value-num qa-perf-value-num--error">{report.error_count}</span>
+                  <span className="qa-perf-value-num qa-perf-value-num--error">
+                    {report.error_count}
+                  </span>
                 </div>
                 <div className="qa-perf-value">
                   <span className="qa-perf-value-label">Uptime</span>
-                  <span className="qa-perf-value-num qa-perf-value-num--success">{report.uptime_percent.toFixed(2)}%</span>
+                  <span className="qa-perf-value-num qa-perf-value-num--success">
+                    {report.uptime_percent.toFixed(2)}%
+                  </span>
                 </div>
               </div>
             </div>
@@ -589,8 +701,12 @@ const PerformanceTab = ({ report, logs, onPeriodChange, currentPeriod }: Perform
         <div className="qa-logs-list">
           {logs.map((log, i) => (
             <div key={i} className={`qa-log-entry qa-log-entry--${log.level}`}>
-              <span className="qa-log-time">{new Date(log.timestamp).toLocaleTimeString()}</span>
-              <span className={`qa-log-level qa-log-level--${log.level}`}>{log.level.toUpperCase()}</span>
+              <span className="qa-log-time">
+                {new Date(log.timestamp).toLocaleTimeString()}
+              </span>
+              <span className={`qa-log-level qa-log-level--${log.level}`}>
+                {log.level.toUpperCase()}
+              </span>
               <span className="qa-log-source">[{log.source}]</span>
               <span className="qa-log-message">{log.message}</span>
             </div>
@@ -610,8 +726,12 @@ type TabId = 'overview' | 'tests' | 'monitors' | 'alerts' | 'security' | 'perfor
 
 function QAMonitoringPageContent(): JSX.Element {
   const qa = useQAMonitoring();
-  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const {
+    matrix: _matrix,
+    isLoaded: _isLoaded,
+    loading: matrixLoading,
+  } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
 
   // State
   const [activeTab, setActiveTab] = useState<TabId>('overview');
@@ -638,17 +758,25 @@ function QAMonitoringPageContent(): JSX.Element {
       setLoading(true);
       setError(null);
 
-      const [stateData, metricsData, suitesData, monitorsData, alertsData, configData, reportData, logsData] =
-        await Promise.all([
-          qa.getState(),
-          qa.getSystemMetrics(),
-          qa.listTestSuites(),
-          qa.listMonitors(),
-          qa.listAlerts(showResolvedAlerts),
-          qa.getHardeningConfig(),
-          qa.getPerformanceReport(perfPeriod),
-          qa.getLogs(undefined, undefined, 50),
-        ]);
+      const [
+        stateData,
+        metricsData,
+        suitesData,
+        monitorsData,
+        alertsData,
+        configData,
+        reportData,
+        logsData,
+      ] = await Promise.all([
+        qa.getState(),
+        qa.getSystemMetrics(),
+        qa.listTestSuites(),
+        qa.listMonitors(),
+        qa.listAlerts(showResolvedAlerts),
+        qa.getHardeningConfig(),
+        qa.getPerformanceReport(perfPeriod),
+        qa.getLogs(undefined, undefined, 50),
+      ]);
 
       setState(stateData);
       setMetrics(metricsData);
@@ -772,7 +900,7 @@ function QAMonitoringPageContent(): JSX.Element {
   }
 
   const tabs: { id: TabId; label: string; icon: string }[] = [
-    { id: 'overview', label: 'Vue d\'ensemble', icon: '🎯' },
+    { id: 'overview', label: "Vue d'ensemble", icon: '🎯' },
     { id: 'tests', label: 'Tests', icon: '🧪' },
     { id: 'monitors', label: 'Moniteurs', icon: '📊' },
     { id: 'alerts', label: 'Alertes', icon: '🔔' },
@@ -788,7 +916,7 @@ function QAMonitoringPageContent(): JSX.Element {
       </header>
 
       <nav className="qa-tabs">
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <button
             key={tab.id}
             className={`qa-tab ${activeTab === tab.id ? 'qa-tab--active' : ''}`}
@@ -802,13 +930,27 @@ function QAMonitoringPageContent(): JSX.Element {
 
       <main className="qa-main">
         {activeTab === 'overview' && (
-          <OverviewTab state={state} metrics={metrics} alerts={alerts} onRefresh={loadData} />
+          <OverviewTab
+            state={state}
+            metrics={metrics}
+            alerts={alerts}
+            onRefresh={loadData}
+          />
         )}
         {activeTab === 'tests' && (
-          <TestsTab suites={suites} results={testResults} onRunSuite={handleRunSuite} isRunning={isRunningTests} />
+          <TestsTab
+            suites={suites}
+            results={testResults}
+            onRunSuite={handleRunSuite}
+            isRunning={isRunningTests}
+          />
         )}
         {activeTab === 'monitors' && (
-          <MonitorsTab monitors={monitors} onToggle={handleToggleMonitor} onDelete={handleDeleteMonitor} />
+          <MonitorsTab
+            monitors={monitors}
+            onToggle={handleToggleMonitor}
+            onDelete={handleDeleteMonitor}
+          />
         )}
         {activeTab === 'alerts' && (
           <AlertsTab
@@ -820,10 +962,20 @@ function QAMonitoringPageContent(): JSX.Element {
           />
         )}
         {activeTab === 'security' && (
-          <SecurityTab config={hardeningConfig} auditResult={auditResult} onRunAudit={handleRunAudit} isAuditing={isAuditing} />
+          <SecurityTab
+            config={hardeningConfig}
+            auditResult={auditResult}
+            onRunAudit={handleRunAudit}
+            isAuditing={isAuditing}
+          />
         )}
         {activeTab === 'performance' && (
-          <PerformanceTab report={perfReport} logs={logs} onPeriodChange={handlePeriodChange} currentPeriod={perfPeriod} />
+          <PerformanceTab
+            report={perfReport}
+            logs={logs}
+            onPeriodChange={handlePeriodChange}
+            currentPeriod={perfPeriod}
+          />
         )}
       </main>
     </div>

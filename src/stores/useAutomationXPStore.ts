@@ -9,7 +9,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
   UserXPState,
-  UserLevel,
+  UserLevel as _UserLevel,
   XPActionId,
   Achievement,
   DailyReward,
@@ -114,7 +114,9 @@ export const useAutomationXPStore = create<AutomationXPState>()(
           const result = await automationXPService.triggerAutomation(automationId);
 
           set(state => ({
-            runningAutomations: state.runningAutomations.filter(id => id !== automationId),
+            runningAutomations: state.runningAutomations.filter(
+              id => id !== automationId
+            ),
             lastRunResults: [...state.lastRunResults.slice(-9), result],
             xp: automationXPService.getXPState(),
           }));
@@ -122,7 +124,9 @@ export const useAutomationXPStore = create<AutomationXPState>()(
           return result;
         } catch (error) {
           set(state => ({
-            runningAutomations: state.runningAutomations.filter(id => id !== automationId),
+            runningAutomations: state.runningAutomations.filter(
+              id => id !== automationId
+            ),
           }));
           throw error;
         }
@@ -165,7 +169,8 @@ export const useAutomationXPStore = create<AutomationXPState>()(
           lastRunResults: automationState.last_run_results,
           achievements: Array.from(rewardsState.achievements.values()),
           dailyRewards: rewardsState.daily_rewards,
-          canClaimDaily: !rewardsState.daily_rewards[rewardsState.current_day_streak % 7]?.claimed,
+          canClaimDaily:
+            !rewardsState.daily_rewards[rewardsState.current_day_streak % 7]?.claimed,
         });
       },
 
@@ -189,7 +194,7 @@ export const useAutomationXPStore = create<AutomationXPState>()(
     }),
     {
       name: 'titane-automation-xp',
-      partialize: (state) => ({
+      partialize: state => ({
         // Ne pas persister les états UI temporaires
         xp: state.xp,
       }),
@@ -300,14 +305,14 @@ if (typeof window !== 'undefined') {
     useAutomationXPStore.getState().refreshState();
 
     // Écouter les événements XP
-    automationXPService.onXPEvent((event) => {
+    automationXPService.onXPEvent(event => {
       if (event.type === 'level_up') {
         useAutomationXPStore.setState({ showLevelUpModal: true });
       }
     });
 
     // Écouter les événements d'achievements
-    automationXPService.onAchievementEvent((event) => {
+    automationXPService.onAchievementEvent(event => {
       if (event.type === 'unlocked') {
         useAutomationXPStore.setState({
           showAchievementToast: true,

@@ -1,16 +1,16 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.3 — FILESYSTEM ADAPTER (Tauri APIs Implementation)
+ * TITANE∞ v25.4 — FILESYSTEM ADAPTER (Tauri v2 Plugin Architecture)
  * ═══════════════════════════════════════════════════════════════════════════
  *
  * Adaptateur compatible Node.js fs pour environnement Tauri/Browser
  *
- * STRATÉGIE v25.3:
- * - Runtime Tauri: Utilise @tauri-apps/api/fs pour vraies opérations filesystem
+ * STRATÉGIE v25.4:
+ * - Runtime Tauri: Utilise @tauri-apps/plugin-fs (Tauri v2) pour vraies opérations filesystem
  * - Fallback Browser: localStorage pour développement sans Tauri
  * - API compatible Node.js fs/promises pour migration transparente
  *
- * v25.2 → v25.3: Remplacement stubs console.log par vraies APIs Tauri
+ * v25.3 → v25.4: Migration vers architecture plugin Tauri v2
  */
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -23,20 +23,19 @@ const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
 // TAURI IMPORTS (Lazy loaded to avoid errors in browser-only builds)
 // ═══════════════════════════════════════════════════════════════════════════
 
-let tauriFs: any = null;
-let tauriPath: any = null;
+let tauriFs: unknown = null;
 
 async function ensureTauriApis() {
   if (!isTauriContext) return;
-  if (tauriFs && tauriPath) return;
+  if (tauriFs) return;
 
   try {
-    // @ts-ignore - Dynamic import for Tauri context only
-    tauriFs = await import('@tauri-apps/api/fs');
-    // @ts-ignore - Dynamic import for Tauri context only
-    tauriPath = await import('@tauri-apps/api/path');
+    // Lazy dynamic imports - Tauri v2 uses plugin architecture
+    tauriFs = await import('@tauri-apps/plugin-fs');
   } catch (error) {
-    console.warn('[tauriFsAdapter] Tauri APIs not available, using localStorage fallback');
+    console.warn(
+      '[tauriFsAdapter] Tauri APIs not available, using localStorage fallback'
+    );
   }
 }
 
@@ -92,10 +91,7 @@ function localStorageList(path: string): string[] {
  * Join path segments (simple concatenation, compatible Node.js path.join)
  */
 export function join(...segments: string[]): string {
-  return segments
-    .filter(Boolean)
-    .join('/')
-    .replace(/\/+/g, '/'); // Remove duplicate slashes
+  return segments.filter(Boolean).join('/').replace(/\/+/g, '/'); // Remove duplicate slashes
 }
 
 /**
@@ -152,7 +148,9 @@ export async function readFileSync(path: string, _encoding?: string): Promise<st
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
-        return await tauriFs.readTextFile(fullPath, { dir: tauriFs.BaseDirectory.AppData });
+        return await tauriFs.readTextFile(fullPath, {
+          dir: tauriFs.BaseDirectory.AppData,
+        });
       }
     }
     return localStorageRead(path);
@@ -174,7 +172,9 @@ export async function writeFileSync(path: string, data: string): Promise<void> {
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
-        await tauriFs.writeTextFile(fullPath, data, { dir: tauriFs.BaseDirectory.AppData });
+        await tauriFs.writeTextFile(fullPath, data, {
+          dir: tauriFs.BaseDirectory.AppData,
+        });
         return;
       }
     }
@@ -237,7 +237,10 @@ export const promises = {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);
-          await tauriFs.createDir(fullPath, { dir: tauriFs.BaseDirectory.AppData, recursive: options?.recursive });
+          await tauriFs.createDir(fullPath, {
+            dir: tauriFs.BaseDirectory.AppData,
+            recursive: options?.recursive,
+          });
         }
       }
       // Browser: no-op, localStorage doesn't need directories
@@ -261,7 +264,9 @@ export const promises = {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);
-          const entries = await tauriFs.readDir(fullPath, { dir: tauriFs.BaseDirectory.AppData });
+          const entries = await tauriFs.readDir(fullPath, {
+            dir: tauriFs.BaseDirectory.AppData,
+          });
           return entries.map((entry: { name?: string }) => entry.name || '');
         }
       }

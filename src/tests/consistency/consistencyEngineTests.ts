@@ -12,7 +12,11 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { ConsistencyEngine } from '@/services/consistency/consistencyEngine';
-import type { Goal, Fact, Contradiction } from '@/services/consistency/consistencyEngine';
+import type {
+  Goal as _Goal,
+  Fact as _Fact,
+  Contradiction as _Contradiction,
+} from '@/services/consistency/consistencyEngine';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -111,9 +115,21 @@ describe('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle all priority levels', () => {
-    const goalLow = engine.addGoal({ description: 'Low priority', priority: 'low', status: 'active' });
-    const goalMedium = engine.addGoal({ description: 'Medium priority', priority: 'medium', status: 'active' });
-    const goalHigh = engine.addGoal({ description: 'High priority', priority: 'high', status: 'active' });
+    const _goalLow = engine.addGoal({
+      description: 'Low priority',
+      priority: 'low',
+      status: 'active',
+    });
+    const _goalMedium = engine.addGoal({
+      description: 'Medium priority',
+      priority: 'medium',
+      status: 'active',
+    });
+    const _goalHigh = engine.addGoal({
+      description: 'High priority',
+      priority: 'high',
+      status: 'active',
+    });
 
     const goals = engine.getGoals();
     expect(goals).toHaveLength(3);
@@ -130,7 +146,11 @@ describe('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle goal status lifecycle', () => {
-    const goalId = engine.addGoal({ description: 'Test goal', priority: 'medium', status: 'active' });
+    const goalId = engine.addGoal({
+      description: 'Test goal',
+      priority: 'medium',
+      status: 'active',
+    });
 
     // Active → In Progress
     engine.updateGoalStatus(goalId, 'in-progress');
@@ -342,9 +362,21 @@ describe('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle fact confidence levels', () => {
-    const lowConfidence = engine.addFact({ content: 'Low confidence fact', confidence: 0.3, source: 'inference' });
-    const mediumConfidence = engine.addFact({ content: 'Medium confidence fact', confidence: 0.6, source: 'conversation' });
-    const highConfidence = engine.addFact({ content: 'High confidence fact', confidence: 0.95, source: 'explicit' });
+    const lowConfidence = engine.addFact({
+      content: 'Low confidence fact',
+      confidence: 0.3,
+      source: 'inference',
+    });
+    const mediumConfidence = engine.addFact({
+      content: 'Medium confidence fact',
+      confidence: 0.6,
+      source: 'conversation',
+    });
+    const highConfidence = engine.addFact({
+      content: 'High confidence fact',
+      confidence: 0.95,
+      source: 'explicit',
+    });
 
     const facts = engine.getFacts();
     expect(facts).toHaveLength(3);
@@ -364,9 +396,21 @@ describe('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should track fact sources', () => {
-    const conversationFact = engine.addFact({ content: 'From conversation', confidence: 0.8, source: 'conversation' });
-    const inferenceFact = engine.addFact({ content: 'From inference', confidence: 0.6, source: 'inference' });
-    const explicitFact = engine.addFact({ content: 'From explicit', confidence: 1.0, source: 'explicit' });
+    const _conversationFact = engine.addFact({
+      content: 'From conversation',
+      confidence: 0.8,
+      source: 'conversation',
+    });
+    const _inferenceFact = engine.addFact({
+      content: 'From inference',
+      confidence: 0.6,
+      source: 'inference',
+    });
+    const _explicitFact = engine.addFact({
+      content: 'From explicit',
+      confidence: 1.0,
+      source: 'explicit',
+    });
 
     const facts = engine.getFacts();
 
@@ -414,8 +458,16 @@ describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect fact-fact contradiction', () => {
-    const fact1Id = engine.addFact({ content: 'User prefers dark mode', confidence: 0.9, source: 'conversation' });
-    const fact2Id = engine.addFact({ content: 'User prefers light mode', confidence: 0.8, source: 'conversation' });
+    const _fact1Id = engine.addFact({
+      content: 'User prefers dark mode',
+      confidence: 0.9,
+      source: 'conversation',
+    });
+    const _fact2Id = engine.addFact({
+      content: 'User prefers light mode',
+      confidence: 0.8,
+      source: 'conversation',
+    });
 
     const contradictions = engine.detectContradictions();
 
@@ -429,7 +481,11 @@ describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect fact-response contradiction', () => {
-    engine.addFact({ content: 'User is a frontend developer', confidence: 0.9, source: 'conversation' });
+    engine.addFact({
+      content: 'User is a frontend developer',
+      confidence: 0.9,
+      source: 'conversation',
+    });
 
     const response = 'As a backend developer, you should focus on databases';
     const contradictions = engine.checkResponseConsistency(response);
@@ -444,9 +500,13 @@ describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect goal-response contradiction', () => {
-    engine.addGoal({ description: 'Build a mobile app', priority: 'high', status: 'active' });
+    engine.addGoal({
+      description: 'Build a mobile app',
+      priority: 'high',
+      status: 'active',
+    });
 
-    const response = 'Let\'s focus on building a desktop application instead';
+    const response = "Let's focus on building a desktop application instead";
     const contradictions = engine.checkResponseConsistency(response);
 
     expect(contradictions.length).toBeGreaterThan(0);
@@ -459,10 +519,18 @@ describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should not detect contradictions when consistent', () => {
-    engine.addFact({ content: 'User prefers React', confidence: 0.9, source: 'conversation' });
-    engine.addGoal({ description: 'Build a React app', priority: 'high', status: 'active' });
+    engine.addFact({
+      content: 'User prefers React',
+      confidence: 0.9,
+      source: 'conversation',
+    });
+    engine.addGoal({
+      description: 'Build a React app',
+      priority: 'high',
+      status: 'active',
+    });
 
-    const response = 'Let\'s create a React application with TypeScript';
+    const response = "Let's create a React application with TypeScript";
     const contradictions = engine.checkResponseConsistency(response);
 
     expect(contradictions).toHaveLength(0);
@@ -490,10 +558,18 @@ describe('Consistency Engine — Contradiction Detection (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect multiple contradictions', () => {
-    engine.addFact({ content: 'User prefers TypeScript', confidence: 0.9, source: 'conversation' });
-    engine.addFact({ content: 'User works with React', confidence: 0.9, source: 'conversation' });
+    engine.addFact({
+      content: 'User prefers TypeScript',
+      confidence: 0.9,
+      source: 'conversation',
+    });
+    engine.addFact({
+      content: 'User works with React',
+      confidence: 0.9,
+      source: 'conversation',
+    });
 
-    const response = 'Let\'s use JavaScript and Vue for this project';
+    const response = "Let's use JavaScript and Vue for this project";
     const contradictions = engine.checkResponseConsistency(response);
 
     expect(contradictions.length).toBeGreaterThanOrEqual(1);
@@ -524,7 +600,11 @@ describe('Consistency Engine — Auto-Correction (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should auto-correct contradictory response', () => {
-    engine.addFact({ content: 'User prefers React', confidence: 0.9, source: 'conversation' });
+    engine.addFact({
+      content: 'User prefers React',
+      confidence: 0.9,
+      source: 'conversation',
+    });
 
     const response = 'You should use Vue for this project';
     const corrected = engine.autoCorrectResponse(response);
@@ -539,9 +619,13 @@ describe('Consistency Engine — Auto-Correction (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should not modify consistent response', () => {
-    engine.addFact({ content: 'User prefers React', confidence: 0.9, source: 'conversation' });
+    engine.addFact({
+      content: 'User prefers React',
+      confidence: 0.9,
+      source: 'conversation',
+    });
 
-    const response = 'Let\'s build with React';
+    const response = "Let's build with React";
     const corrected = engine.autoCorrectResponse(response);
 
     expect(corrected).toBe(response);
@@ -553,9 +637,13 @@ describe('Consistency Engine — Auto-Correction (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should provide correction context', () => {
-    engine.addFact({ content: 'User is building a TODO app', confidence: 0.9, source: 'conversation' });
+    engine.addFact({
+      content: 'User is building a TODO app',
+      confidence: 0.9,
+      source: 'conversation',
+    });
 
-    const response = 'Let\'s work on the e-commerce features';
+    const response = "Let's work on the e-commerce features";
     const contradictions = engine.checkResponseConsistency(response);
 
     expect(contradictions.length).toBeGreaterThan(0);
@@ -587,8 +675,16 @@ describe('Consistency Engine — Context Generation (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should generate context with goals and facts', () => {
-    engine.addGoal({ description: 'Build a chat app', priority: 'high', status: 'active' });
-    engine.addFact({ content: 'User prefers TypeScript', confidence: 0.9, source: 'conversation' });
+    engine.addGoal({
+      description: 'Build a chat app',
+      priority: 'high',
+      status: 'active',
+    });
+    engine.addFact({
+      content: 'User prefers TypeScript',
+      confidence: 0.9,
+      source: 'conversation',
+    });
 
     const context = engine.generateContextPrompt();
 

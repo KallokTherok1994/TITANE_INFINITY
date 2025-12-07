@@ -20,8 +20,8 @@ function loadRoadmap() {
   return YAML.parse(content);
 }
 
-function getNextTask(roadmap: any): Task | null {
-  const completed = new Set(roadmap.state.completed_tasks);
+function getNextTask(roadmap: Record<string, unknown>): Task | null {
+  const completed = new Set((roadmap.state as Record<string, unknown>).completed_tasks as string[]);
   
   for (let i = 0; i <= 3; i++) {
     const phase = roadmap[`phase_${i}`];

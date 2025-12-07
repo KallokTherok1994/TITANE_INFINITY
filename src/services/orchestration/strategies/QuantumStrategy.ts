@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ — Quantum Strategy
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Quantum/VSync Orchestration Strategy
  * Extracted from vsync_orchestrator.ts
  */
@@ -15,7 +15,7 @@ import type {
   MetricsSummary,
   Metric,
   QuantumOperation,
-  QuantumSignal
+  QuantumSignal,
 } from '../types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -28,7 +28,7 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
 
   private initialized = false;
   private metrics: Metric[] = [];
-  
+
   // VSync state
   private syncInterval: NodeJS.Timeout | null = null;
   private currentFPS = 60;
@@ -45,7 +45,7 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
     if (this.initialized) return;
 
     this.log('Initializing quantum layer...');
-    
+
     // TODO: Initialize quantum prediction models
     // TODO: Initialize VSync orchestrator
 
@@ -61,7 +61,10 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
   // EXECUTION
   // ───────────────────────────────────────────────────────────────────────
 
-  async execute<T = unknown>(operation: string, params?: unknown): Promise<OrchestrationResult<T>> {
+  async execute<T = unknown>(
+    operation: string,
+    params?: unknown
+  ): Promise<OrchestrationResult<T>> {
     if (!this.initialized) {
       await this.initialize();
     }
@@ -90,8 +93,8 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
         metadata: {
           strategyUsed: this.type,
           duration: Date.now() - startTime,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       };
     } catch (error) {
       this.logError(`Quantum operation ${operation} failed`, error);
@@ -101,43 +104,43 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
         metadata: {
           strategyUsed: this.type,
           duration: Date.now() - startTime,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       };
     }
   }
 
-  // ───────────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
   // QUANTUM OPERATIONS
-  // ───────────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────────────────────────
 
-  async predictNextState(context: unknown): Promise<QuantumSignal> {
+  async predictNextState(_context: unknown): Promise<QuantumSignal> {
     // TODO: Implement quantum prediction
     this.recordMetric({
       name: 'quantum.prediction',
       type: 'counter',
       value: 1,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     return {
       type: 'weak',
       confidence: 0.7,
       prediction: 'next_state_placeholder',
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
   async syncRealtime(fps = 60): Promise<{ synced: boolean; drift: number }> {
     this.currentFPS = fps;
-    
+
     // TODO: Implement VSync synchronization
     this.recordMetric({
       name: 'quantum.sync',
       type: 'counter',
       value: 1,
       timestamp: Date.now(),
-      tags: { fps: fps.toString() }
+      tags: { fps: fps.toString() },
     });
 
     return { synced: true, drift: 0 };
@@ -153,7 +156,7 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
         status: 'unknown',
         score: 0,
         message: 'Strategy not initialized',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
 
@@ -164,9 +167,9 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
       score,
       details: {
         currentFPS: this.currentFPS,
-        syncActive: this.syncInterval !== null
+        syncActive: this.syncInterval !== null,
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -205,8 +208,8 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
       timestamp: Date.now(),
       details: {
         predictions,
-        syncs
-      }
+        syncs,
+      },
     };
   }
 
@@ -220,7 +223,7 @@ export class QuantumStrategy implements IOrchestrationStrategy, QuantumOperation
 
   async shutdown(): Promise<void> {
     this.log('Shutting down quantum layer...');
-    
+
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;

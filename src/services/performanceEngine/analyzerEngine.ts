@@ -226,16 +226,16 @@ export class PerformanceAnalyzer {
    * Récupère les problèmes par sévérité
    */
   getIssuesBySeverity(severity: SeverityLevel): PerformanceIssue[] {
-    return this.state.issues.filter((issue) => issue.severity === severity);
+    return this.state.issues.filter(issue => issue.severity === severity);
   }
 
   /**
    * Récupère les problèmes par module
    */
   getIssuesByModule(
-    module: TitaneModule | 'system' | 'frontend' | 'ia',
+    module: TitaneModule | 'system' | 'frontend' | 'ia'
   ): PerformanceIssue[] {
-    return this.state.issues.filter((issue) => issue.module === module);
+    return this.state.issues.filter(issue => issue.module === module);
   }
 
   /**
@@ -281,7 +281,10 @@ export class PerformanceAnalyzer {
     if (!this.eventListeners.has(event)) {
       this.eventListeners.set(event, new Set());
     }
-    this.eventListeners.get(event)!.add(listener);
+    const listeners = this.eventListeners.get(event);
+    if (listeners) {
+      listeners.add(listener);
+    }
 
     return () => {
       this.eventListeners.get(event)?.delete(listener);
@@ -358,8 +361,8 @@ export class PerformanceAnalyzer {
           thresholds.system.cpuGlobalWarning,
           thresholds.system.cpuGlobalCritical,
           'cpu_global',
-          `CPU global: ${system.cpu.global.toFixed(1)}%`,
-        ),
+          `CPU global: ${system.cpu.global.toFixed(1)}%`
+        )
       );
     }
 
@@ -373,8 +376,8 @@ export class PerformanceAnalyzer {
           thresholds.system.cpuProcessWarning,
           thresholds.system.cpuProcessCritical,
           'cpu_process',
-          `CPU processus: ${system.cpu.process.toFixed(1)}%`,
-        ),
+          `CPU processus: ${system.cpu.process.toFixed(1)}%`
+        )
       );
     }
 
@@ -389,8 +392,8 @@ export class PerformanceAnalyzer {
           thresholds.system.ramProcessWarning,
           thresholds.system.ramProcessCritical,
           'ram_process',
-          `RAM processus: ${formatBytes(system.ram.process.resident)}`,
-        ),
+          `RAM processus: ${formatBytes(system.ram.process.resident)}`
+        )
       );
     }
 
@@ -404,8 +407,8 @@ export class PerformanceAnalyzer {
           thresholds.system.ramSystemWarning,
           thresholds.system.ramSystemCritical,
           'ram_system',
-          `RAM système: ${system.ram.system.percent.toFixed(1)}%`,
-        ),
+          `RAM système: ${system.ram.system.percent.toFixed(1)}%`
+        )
       );
     }
 
@@ -420,8 +423,8 @@ export class PerformanceAnalyzer {
           thresholds.system.ioReadWarning,
           thresholds.system.ioReadWarning * 2,
           'io_read',
-          `Lecture I/O: ${formatBytes(system.io.readBytes)}/s`,
-        ),
+          `Lecture I/O: ${formatBytes(system.io.readBytes)}/s`
+        )
       );
     }
 
@@ -436,8 +439,8 @@ export class PerformanceAnalyzer {
           thresholds.system.ioWriteWarning,
           thresholds.system.ioWriteWarning * 2,
           'io_write',
-          `Écriture I/O: ${formatBytes(system.io.writeBytes)}/s`,
-        ),
+          `Écriture I/O: ${formatBytes(system.io.writeBytes)}/s`
+        )
       );
     }
 
@@ -457,7 +460,7 @@ export class PerformanceAnalyzer {
       const severity = this.calculateFPSSeverity(
         frontend.fps.current,
         thresholds.frontend.fpsWarning,
-        thresholds.frontend.fpsCritical,
+        thresholds.frontend.fpsCritical
       );
       issues.push({
         id: generateIssueId('fps_drop'),
@@ -493,8 +496,8 @@ export class PerformanceAnalyzer {
           thresholds.frontend.renderTimeWarning,
           thresholds.frontend.renderTimeCritical,
           'render_time',
-          `Temps de rendu: ${formatDuration(frontend.render.averageTime)}`,
-        ),
+          `Temps de rendu: ${formatDuration(frontend.render.averageTime)}`
+        )
       );
     }
 
@@ -508,8 +511,8 @@ export class PerformanceAnalyzer {
           thresholds.frontend.rerenderWarning,
           thresholds.frontend.rerenderCritical,
           'rerender_count',
-          `Re-renders: ${frontend.render.rerenderCount}/s`,
-        ),
+          `Re-renders: ${frontend.render.rerenderCount}/s`
+        )
       );
     }
 
@@ -523,8 +526,8 @@ export class PerformanceAnalyzer {
           thresholds.frontend.invokeLatencyWarning,
           thresholds.frontend.invokeLatencyCritical,
           'invoke_latency',
-          `Latence Tauri: ${formatDuration(frontend.tauri.invokeLatency)}`,
-        ),
+          `Latence Tauri: ${formatDuration(frontend.tauri.invokeLatency)}`
+        )
       );
     }
 
@@ -549,8 +552,8 @@ export class PerformanceAnalyzer {
           thresholds.ia.latencyWarning,
           thresholds.ia.latencyCritical,
           'ia_latency_ollama',
-          `Latence Ollama: ${formatDuration(ia.ollama.latency)}`,
-        ),
+          `Latence Ollama: ${formatDuration(ia.ollama.latency)}`
+        )
       );
     }
 
@@ -564,15 +567,14 @@ export class PerformanceAnalyzer {
           thresholds.ia.latencyWarning,
           thresholds.ia.latencyCritical,
           'ia_latency_gemini',
-          `Latence Gemini: ${formatDuration(ia.gemini.latency)}`,
-        ),
+          `Latence Gemini: ${formatDuration(ia.gemini.latency)}`
+        )
       );
     }
 
     // Taux d'erreur Ollama
     if (ia.ollama.requestCount > 0) {
-      const ollamaErrorRate =
-        (ia.ollama.errorCount / ia.ollama.requestCount) * 100;
+      const ollamaErrorRate = (ia.ollama.errorCount / ia.ollama.requestCount) * 100;
       if (ollamaErrorRate >= thresholds.ia.errorRateWarning) {
         issues.push(
           this.createIssue(
@@ -582,8 +584,8 @@ export class PerformanceAnalyzer {
             thresholds.ia.errorRateWarning,
             thresholds.ia.errorRateCritical,
             'ia_error_rate',
-            `Taux d'erreur Ollama: ${ollamaErrorRate.toFixed(1)}%`,
-          ),
+            `Taux d'erreur Ollama: ${ollamaErrorRate.toFixed(1)}%`
+          )
         );
       }
     }
@@ -598,8 +600,8 @@ export class PerformanceAnalyzer {
           thresholds.ia.queueSizeWarning,
           thresholds.ia.queueSizeCritical,
           'ia_queue_size',
-          `File Ollama: ${ia.ollama.queueSize} requêtes en attente`,
-        ),
+          `File Ollama: ${ia.ollama.queueSize} requêtes en attente`
+        )
       );
     }
 
@@ -659,8 +661,7 @@ export class PerformanceAnalyzer {
             exceeded: moduleState.errorRate - 10,
             percentage: ((moduleState.errorRate - 10) / 10) * 100,
           },
-          recommendations:
-            RECOMMENDATION_TEMPLATES.performance_degradation.suggestions,
+          recommendations: RECOMMENDATION_TEMPLATES.performance_degradation.suggestions,
           autoFixable: false,
         });
       }
@@ -684,8 +685,7 @@ export class PerformanceAnalyzer {
             exceeded: moduleState.responseTime - 1000,
             percentage: ((moduleState.responseTime - 1000) / 1000) * 100,
           },
-          recommendations:
-            RECOMMENDATION_TEMPLATES.performance_degradation.suggestions,
+          recommendations: RECOMMENDATION_TEMPLATES.performance_degradation.suggestions,
           autoFixable: false,
         });
       }
@@ -711,11 +711,11 @@ export class PerformanceAnalyzer {
       };
     }
 
-    const cpuValues = history.map((s) => s.system.cpu.global);
-    const ramValues = history.map((s) => s.system.ram.system.percent);
-    const fpsValues = history.map((s) => s.frontend.fps.current);
-    const iaLatencyValues = history.map((s) =>
-      s.ia.ollama.available ? s.ia.ollama.latency : s.ia.gemini.latency,
+    const cpuValues = history.map(s => s.system.cpu.global);
+    const ramValues = history.map(s => s.system.ram.system.percent);
+    const fpsValues = history.map(s => s.frontend.fps.current);
+    const iaLatencyValues = history.map(s =>
+      s.ia.ollama.available ? s.ia.ollama.latency : s.ia.gemini.latency
     );
 
     const cpuTrend = this.calculateTrend(cpuValues, 'above');
@@ -725,8 +725,8 @@ export class PerformanceAnalyzer {
 
     // Trend global basé sur la majorité
     const trends = [cpuTrend, ramTrend, fpsTrend, iaLatencyTrend];
-    const degradingCount = trends.filter((t) => t === 'degrading').length;
-    const improvingCount = trends.filter((t) => t === 'improving').length;
+    const degradingCount = trends.filter(t => t === 'degrading').length;
+    const improvingCount = trends.filter(t => t === 'improving').length;
 
     let overall: TrendDirection = 'stable';
     if (degradingCount >= 2) overall = 'degrading';
@@ -743,7 +743,7 @@ export class PerformanceAnalyzer {
 
   private calculateTrend(
     values: number[],
-    warningDirection: 'above' | 'below',
+    warningDirection: 'above' | 'below'
   ): TrendDirection {
     if (values.length < 2) return 'unknown';
 
@@ -777,7 +777,7 @@ export class PerformanceAnalyzer {
 
   private calculateHealthScore(
     snapshot: MetricsSnapshot,
-    issues: PerformanceIssue[],
+    issues: PerformanceIssue[]
   ): number {
     let score = 100;
 
@@ -804,8 +804,7 @@ export class PerformanceAnalyzer {
     const { thresholds } = this.config;
 
     if (system.cpu.global < thresholds.system.cpuGlobalWarning * 0.5) score += 2;
-    if (system.ram.system.percent < thresholds.system.ramSystemWarning * 0.5)
-      score += 2;
+    if (system.ram.system.percent < thresholds.system.ramSystemWarning * 0.5) score += 2;
     if (frontend.fps.current > thresholds.frontend.fpsWarning * 1.5) score += 3;
     if (frontend.tauri.invokeLatency < thresholds.frontend.invokeLatencyWarning * 0.5)
       score += 2;
@@ -816,7 +815,7 @@ export class PerformanceAnalyzer {
   private calculateFPSSeverity(
     fps: number,
     warning: number,
-    critical: number,
+    critical: number
   ): SeverityLevel {
     if (fps <= critical) return 'critical';
     if (fps <= warning * 0.6) return 'major';
@@ -831,7 +830,7 @@ export class PerformanceAnalyzer {
     warningThreshold: number,
     criticalThreshold: number,
     metricType: MetricType,
-    description: string,
+    description: string
   ): PerformanceIssue {
     const severity = determineSeverity(value, warningThreshold, criticalThreshold);
     const template = RECOMMENDATION_TEMPLATES[type];
@@ -865,9 +864,7 @@ export class PerformanceAnalyzer {
       info: 3,
     };
 
-    return issues.sort(
-      (a, b) => severityOrder[a.severity] - severityOrder[b.severity],
-    );
+    return issues.sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
   }
 
   // ══════════════════════════════════════════════════════════════════════════════
@@ -890,7 +887,7 @@ export class PerformanceAnalyzer {
         } catch (error) {
           console.error(
             `[PerformanceAnalyzer] Erreur dans listener pour ${eventType}:`,
-            error,
+            error
           );
         }
       }

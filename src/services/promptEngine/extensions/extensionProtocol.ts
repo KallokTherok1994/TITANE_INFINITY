@@ -635,17 +635,16 @@ export class ExtensionRegistry implements IExtensionRegistry {
 
   async register<T extends IPromptExtension>(extension: T): Promise<void> {
     const id = extension.metadata?.id;
+    const dependencies = extension.metadata?.dependencies ?? [];
 
     if (this.extensions.has(id)) {
       throw new Error(`Extension already registered: ${id}`);
     }
 
     // Check dependencies
-    if (extension.metadata?.dependencies) {
-      for (const dep of extension.metadata?.dependencies) {
-        if (!this.extensions.has(dep)) {
-          throw new Error(`Missing dependency: ${dep} for extension: ${id}`);
-        }
+    for (const dep of dependencies) {
+      if (!this.extensions.has(dep)) {
+        throw new Error(`Missing dependency: ${dep} for extension: ${id}`);
       }
     }
 
@@ -682,11 +681,11 @@ export class ExtensionRegistry implements IExtensionRegistry {
   }
 
   getByType<T extends IPromptExtension>(type: ExtensionType): T[] {
-    return this.getAll().filter((ext) => ext.metadata?.type === type) as T[];
+    return this.getAll().filter(ext => ext.metadata?.type === type) as T[];
   }
 
   getActive(): IPromptExtension[] {
-    return this.getAll().filter((ext) => ext.state === 'active' && ext.config.enabled);
+    return this.getAll().filter(ext => ext.state === 'active' && ext.config.enabled);
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -701,7 +700,10 @@ export class ExtensionRegistry implements IExtensionRegistry {
         await extension.activate();
         this.emit('activated', extension.metadata?.id);
       } catch (error) {
-        console.error(`[ExtensionRegistry] Failed to activate: ${extension.metadata?.id}`, error);
+        console.error(
+          `[ExtensionRegistry] Failed to activate: ${extension.metadata?.id}`,
+          error
+        );
         this.emit('error', extension.metadata?.id, { error });
       }
     }
@@ -741,7 +743,11 @@ export class ExtensionRegistry implements IExtensionRegistry {
     this.listeners.get(event)?.delete(listener);
   }
 
-  private emit(type: RegistryEvent['type'], extensionId: string, details?: unknown): void {
+  private emit(
+    type: RegistryEvent['type'],
+    extensionId: string,
+    details?: unknown
+  ): void {
     const event: RegistryEvent = {
       type,
       extensionId,
@@ -749,7 +755,7 @@ export class ExtensionRegistry implements IExtensionRegistry {
       details,
     };
 
-    this.listeners.get(type)?.forEach((listener) => {
+    this.listeners.get(type)?.forEach(listener => {
       try {
         listener(event);
       } catch (error) {
@@ -766,7 +772,7 @@ export class ExtensionRegistry implements IExtensionRegistry {
     const results = new Map<string, boolean>();
 
     await Promise.all(
-      this.getAll().map(async (ext) => {
+      this.getAll().map(async ext => {
         try {
           const healthy = await ext.healthCheck();
           results.set(ext.metadata?.id, healthy);
@@ -781,7 +787,7 @@ export class ExtensionRegistry implements IExtensionRegistry {
 
   getStats(): Map<string, ExtensionStats> {
     const stats = new Map<string, ExtensionStats>();
-    this.getAll().forEach((ext) => {
+    this.getAll().forEach(ext => {
       stats.set(ext.metadata?.id, ext.getStats());
     });
     return stats;

@@ -2,17 +2,26 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   TITANE∞ v∞.38 — META-SINGULARITY HOOKS
  *   React Hooks for Meta-Singularity Kernel
- * ═══════════════════════════════════════════════════════════════════════════
+ * ═══════════════════════════════════════════════════════════════════════════════
  */
 
 import { useEffect, useState } from 'react';
-import { metaSingularityKernel, type MetaSingularityState, type MetaCoherence, type EmergentPhenomenon, type EngineConflict, type MetaInsight } from '@/engines/metasingularity/metaSingularityKernel';
+import {
+  metaSingularityKernel,
+  type MetaSingularityState,
+  type MetaCoherence,
+  type EmergentPhenomenon,
+  type EngineConflict as _EngineConflict,
+  type MetaInsight,
+} from '@/engines/metasingularity/metaSingularityKernel';
 
 /**
  * Hook principal: état complet Meta-Singularity
  */
 export function useMetaSingularity() {
-  const [state, setState] = useState<MetaSingularityState>(metaSingularityKernel.getState());
+  const [state, setState] = useState<MetaSingularityState>(
+    metaSingularityKernel.getState()
+  );
 
   useEffect(() => {
     return metaSingularityKernel.subscribe(setState);
@@ -25,7 +34,9 @@ export function useMetaSingularity() {
  * Hook: meta-coherence
  */
 export function useMetaCoherence() {
-  const [coherence, setCoherence] = useState<MetaCoherence>(metaSingularityKernel.getCoherence());
+  const [coherence, setCoherence] = useState<MetaCoherence>(
+    metaSingularityKernel.getCoherence()
+  );
 
   useEffect(() => {
     const update = (state: MetaSingularityState) => setCoherence(state.coherence);
@@ -164,7 +175,7 @@ export function useAverageCoherence() {
  */
 export function useMetaSingularityActions() {
   return {
-    initiateTransition: (toState: any, duration: number, strategy: any) => {
+    initiateTransition: (toState: unknown, duration: number, strategy: unknown) => {
       metaSingularityKernel.initiateTransition(toState, duration, strategy);
     },
   };

@@ -7,7 +7,6 @@
  */
 
 import { cognitiveLayoutEngine } from '@/engines/cognitive/cognitiveLayoutEngine';
-import type { UserRole, TaskType } from '@/engines/cognitive/cognitiveLayoutEngine';
 
 // ═══════════════════════════════════════════════════════════════════
 // HELIOS INTEGRATION (Énergie & Régulation)
@@ -77,13 +76,14 @@ export class HeliosConnector {
 
       if (heliosData) {
         // Calculer score d'énergie basé sur les métriques système
-        const cpuScore = Math.max(0, 1 - (heliosData.cpu_usage / 100));
-        const ramScore = Math.max(0, 1 - (heliosData.ram_usage / 100));
-        const energyScore = (cpuScore * 0.6 + ramScore * 0.4);
+        const cpuScore = Math.max(0, 1 - heliosData.cpu_usage / 100);
+        const ramScore = Math.max(0, 1 - heliosData.ram_usage / 100);
+        const energyScore = cpuScore * 0.6 + ramScore * 0.4;
 
         // Fatigue si uptime > 4h et CPU/RAM élevé
         const uptimeHours = heliosData.uptime_seconds / 3600;
-        const fatigueDetected = uptimeHours > 4 && (heliosData.cpu_usage > 70 || heliosData.ram_usage > 80);
+        const fatigueDetected =
+          uptimeHours > 4 && (heliosData.cpu_usage > 70 || heliosData.ram_usage > 80);
 
         return {
           energyScore,
@@ -183,14 +183,21 @@ export class NexusConnector {
 
       if (nexusData) {
         // Déterminer priorité basée sur health et modules actifs
-        const priority = nexusData.health < 0.5 ? 'critical-task' :
-                        nexusData.health < 0.7 ? 'important' : 'normal';
+        const priority =
+          nexusData.health < 0.5
+            ? 'critical-task'
+            : nexusData.health < 0.7
+              ? 'important'
+              : 'normal';
 
         // Déterminer état système basé sur modules
         let systemState = 'idle';
         if (nexusData.active_modules.includes('diagnostics')) {
           systemState = 'debugging';
-        } else if (nexusData.active_modules.includes('chat') && nexusData.active_modules.length > 2) {
+        } else if (
+          nexusData.active_modules.includes('chat') &&
+          nexusData.active_modules.length > 2
+        ) {
           systemState = 'exploring';
         }
 

@@ -16,7 +16,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { voiceFingerprintEngine, type VoiceAnalysis } from './voiceFingerprint';
+import {
+  voiceFingerprintEngine,
+  type VoiceAnalysis as _VoiceAnalysis,
+} from './voiceFingerprint';
 import { antiEchoShield, type EchoAnalysis } from './antiEchoShield';
 import { contextualAttentionV2 } from './contextualAttentionV2';
 
@@ -31,10 +34,10 @@ export interface WakeWordEvent {
   position: number;
 
   // v2.0 additions
-  voiceSimilarity?: number;      // Similarité avec empreinte vocale
-  echoAnalysis?: EchoAnalysis;   // Analyse anti-écho
-  adaptiveThreshold?: number;    // Seuil utilisé
-  spectralMatch?: boolean;       // Match spectral MFCC
+  voiceSimilarity?: number; // Similarité avec empreinte vocale
+  echoAnalysis?: EchoAnalysis; // Analyse anti-écho
+  adaptiveThreshold?: number; // Seuil utilisé
+  spectralMatch?: boolean; // Match spectral MFCC
 }
 
 export interface WakeWordConfig {
@@ -45,8 +48,8 @@ export interface WakeWordConfig {
   customVariants?: string[];
 
   // v2.0 additions
-  useVoiceFingerprint?: boolean;   // Activer learning vocal
-  useAntiEcho?: boolean;           // Activer anti-écho
+  useVoiceFingerprint?: boolean; // Activer learning vocal
+  useAntiEcho?: boolean; // Activer anti-écho
   useContextualAdaptation?: boolean; // Activer seuils adaptatifs
 }
 
@@ -56,17 +59,21 @@ export interface WakeWordConfig {
  * ═══════════════════════════════════════════════════════════════════
  */
 export class WakeWordEngineV2 {
-
   private config: Required<WakeWordConfig>;
 
   private readonly baseVariants = [
-    'titane', 'titan', 'titanne', 'tytane', 'tytann',
-    'ti-tane', 'ti tane', 'tithane', 'tythan',
+    'titane',
+    'titan',
+    'titanne',
+    'tytane',
+    'tytann',
+    'ti-tane',
+    'ti tane',
+    'tithane',
+    'tythan',
   ];
 
-  private readonly prefixes = [
-    'hey', 'salut', 'ok', 'dis', 'écoute', 'alors',
-  ];
+  private readonly prefixes = ['hey', 'salut', 'ok', 'dis', 'écoute', 'alors'];
 
   constructor(config: WakeWordConfig = {}) {
     this.config = {
@@ -93,7 +100,6 @@ export class WakeWordEngineV2 {
     audioBuffer?: Float32Array,
     sampleRate: number = 16000
   ): Promise<WakeWordEvent> {
-
     console.log('[WakeWordV2] 🔍 Detecting with audio analysis...');
 
     // 1. Anti-Echo Check
@@ -142,10 +148,13 @@ export class WakeWordEngineV2 {
 
     if (this.config.useVoiceFingerprint && audioBuffer) {
       if (voiceFingerprintEngine.isReady()) {
-        voiceSimilarity = voiceFingerprintEngine.calculateSimilarity(audioBuffer, sampleRate);
+        voiceSimilarity = voiceFingerprintEngine.calculateSimilarity(
+          audioBuffer,
+          sampleRate
+        );
 
         // Boost confidence if voice matches
-        phoneticResult.confidence *= (0.7 + voiceSimilarity * 0.3);
+        phoneticResult.confidence *= 0.7 + voiceSimilarity * 0.3;
         spectralMatch = voiceSimilarity > 0.75;
 
         console.log(`[WakeWordV2] 🎯 Voice similarity: ${voiceSimilarity.toFixed(2)}`);
@@ -159,7 +168,7 @@ export class WakeWordEngineV2 {
 
     console.log(
       `[WakeWordV2] ${finalDetected ? '✅ DETECTED' : '❌ REJECTED'} ` +
-      `(conf: ${phoneticResult.confidence.toFixed(2)}, threshold: ${threshold.toFixed(2)})`
+        `(conf: ${phoneticResult.confidence.toFixed(2)}, threshold: ${threshold.toFixed(2)})`
     );
 
     return {
@@ -232,7 +241,11 @@ export class WakeWordEngineV2 {
       .trim();
   }
 
-  private matchVariant(normalized: string, variant: string, originalText: string): WakeWordEvent {
+  private matchVariant(
+    normalized: string,
+    variant: string,
+    originalText: string
+  ): WakeWordEvent {
     const words = normalized.split(' ');
 
     for (let i = 0; i < words.length; i++) {
@@ -242,9 +255,8 @@ export class WakeWordEngineV2 {
         const hasCommandAfter = i < words.length - 1;
 
         const mode: WakeWordMode = hasCommandAfter && isStart ? 'one_shot' : 'wake_only';
-        const cleanedText = mode === 'one_shot'
-          ? words.slice(i + 1).join(' ')
-          : originalText;
+        const cleanedText =
+          mode === 'one_shot' ? words.slice(i + 1).join(' ') : originalText;
 
         return {
           detected: true,
@@ -260,7 +272,11 @@ export class WakeWordEngineV2 {
     return this.createNegativeResult(originalText);
   }
 
-  private matchPhonetic(normalized: string, variant: string, originalText: string): WakeWordEvent {
+  private matchPhonetic(
+    normalized: string,
+    variant: string,
+    originalText: string
+  ): WakeWordEvent {
     const words = normalized.split(' ');
 
     for (let i = 0; i < words.length; i++) {
@@ -272,11 +288,10 @@ export class WakeWordEngineV2 {
         const hasCommandAfter = i < words.length - 1;
 
         const mode: WakeWordMode = hasCommandAfter && isStart ? 'one_shot' : 'wake_only';
-        const cleanedText = mode === 'one_shot'
-          ? words.slice(i + 1).join(' ')
-          : originalText;
+        const cleanedText =
+          mode === 'one_shot' ? words.slice(i + 1).join(' ') : originalText;
 
-        const confidence = 1 - (distance / Math.max(words[i].length, variant.length));
+        const confidence = 1 - distance / Math.max(words[i].length, variant.length);
 
         return {
           detected: confidence >= this.config.confidenceThreshold,

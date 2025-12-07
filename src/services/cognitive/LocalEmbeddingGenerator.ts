@@ -1,14 +1,14 @@
 /**
  * LOCAL EMBEDDING GENERATOR v∞
- * 
+ *
  * Génère des embeddings vectoriels en local en utilisant Transformers.js
  * Pas besoin d'API externe, tout fonctionne dans le navigateur/Tauri
- * 
+ *
  * Models supportés:
  * - all-MiniLM-L6-v2 (384D) - Rapide, léger, excellent pour la similarité
  * - all-mpnet-base-v2 (768D) - Plus précis mais plus lent
  * - multilingual-e5-small (384D) - Multilingue
- * 
+ *
  * Features:
  * - Génération locale (privacy-first)
  * - Batch processing pour efficacité
@@ -30,16 +30,16 @@ interface Pipeline {
 export interface LocalEmbeddingGeneratorConfig {
   /** Modèle à utiliser */
   modelName: string;
-  
+
   /** Dimensions du vecteur */
   dimensions: number;
-  
+
   /** Options du pipeline */
   pipelineOptions?: {
     quantized?: boolean;
     progress_callback?: (progress: any) => void;
   };
-  
+
   /** Cache des embeddings */
   enableCache?: boolean;
   maxCacheSize?: number;
@@ -47,7 +47,7 @@ export interface LocalEmbeddingGeneratorConfig {
 
 /**
  * Local Embedding Generator
- * 
+ *
  * Utilise Transformers.js pour générer des embeddings localement
  * Sans dépendance à des services externes
  */
@@ -62,25 +62,25 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
     'all-MiniLM-L6-v2': {
       id: 'Xenova/all-MiniLM-L6-v2',
       dimensions: 384,
-      description: 'Rapide et léger, excellent pour similarité sémantique'
+      description: 'Rapide et léger, excellent pour similarité sémantique',
     },
     'all-mpnet-base-v2': {
       id: 'Xenova/all-mpnet-base-v2',
       dimensions: 768,
-      description: 'Plus précis mais plus lent'
+      description: 'Plus précis mais plus lent',
     },
     'multilingual-e5-small': {
       id: 'Xenova/multilingual-e5-small',
       dimensions: 384,
-      description: 'Support multilingue (100+ langues)'
-    }
+      description: 'Support multilingue (100+ langues)',
+    },
   };
 
   constructor(config: LocalEmbeddingGeneratorConfig) {
     this.config = {
       enableCache: true,
       maxCacheSize: 1000,
-      ...config
+      ...config,
     };
   }
 
@@ -97,7 +97,10 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
       const { pipeline } = await import('@xenova/transformers');
 
       // Obtenir l'ID du modèle
-      const modelInfo = LocalEmbeddingGenerator.MODELS[this.config.modelName as keyof typeof LocalEmbeddingGenerator.MODELS];
+      const modelInfo =
+        LocalEmbeddingGenerator.MODELS[
+          this.config.modelName as keyof typeof LocalEmbeddingGenerator.MODELS
+        ];
       if (!modelInfo) {
         throw new Error(`Unknown model: ${this.config.modelName}`);
       }
@@ -139,7 +142,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
         // Générer avec Transformers.js
         const output = await this.pipeline(text, {
           pooling: 'mean',
-          normalize: true
+          normalize: true,
         });
 
         // Extraire le vecteur
@@ -200,14 +203,16 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
           // Batch processing avec Transformers.js
           const output = await this.pipeline(uncachedTexts, {
             pooling: 'mean',
-            normalize: true
+            normalize: true,
           });
 
           // Extraire les vecteurs
           for (let i = 0; i < uncachedTexts.length; i++) {
             const startIdx = i * this.config.dimensions;
             const endIdx = startIdx + this.config.dimensions;
-            const embedding = Array.from(output.data?.slice(startIdx, endIdx) || []) as number[];
+            const embedding = Array.from(
+              output.data?.slice(startIdx, endIdx) || []
+            ) as number[];
             const normalizedEmbedding = this.normalizeVector(embedding);
 
             results[uncachedIndices[i]] = normalizedEmbedding;
@@ -233,7 +238,9 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
         // Fallback pour les manquants
         for (let i = 0; i < uncachedTexts.length; i++) {
           if (!results[uncachedIndices[i]]) {
-            results[uncachedIndices[i]] = this.generateFallbackEmbedding(uncachedTexts[i]);
+            results[uncachedIndices[i]] = this.generateFallbackEmbedding(
+              uncachedTexts[i]
+            );
           }
         }
       }
@@ -270,7 +277,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
     return {
       size: this.cache.size,
       maxSize: this.config.maxCacheSize || 1000,
-      hitRate: 0 // À implémenter avec compteurs
+      hitRate: 0, // À implémenter avec compteurs
     };
   }
 
@@ -324,7 +331,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
 
   /**
    * Générateur d'embeddings fallback (déterministe)
-   * 
+   *
    * Utilise un hash simple pour créer un vecteur cohérent
    * Pas aussi bon qu'un vrai modèle, mais permet au système de fonctionner
    */
@@ -341,7 +348,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
 
     // Ajouter des composantes basées sur les n-grams
     const ngrams = this.extractNgrams(text, 2);
-    ngrams.forEach((ngram, idx) => {
+    ngrams.forEach((ngram, _idx) => {
       const hash = this.simpleHash(ngram);
       const index = hash % dimensions;
       embedding[index] += 0.5;
@@ -373,7 +380,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32bit integer
     }
     return Math.abs(hash);
@@ -390,7 +397,7 @@ export class LocalEmbeddingGenerator implements EmbeddingGenerator {
     return Object.entries(LocalEmbeddingGenerator.MODELS).map(([name, info]) => ({
       name,
       dimensions: info.dimensions,
-      description: info.description
+      description: info.description,
     }));
   }
 }
@@ -403,9 +410,9 @@ export function createDefaultEmbeddingGenerator(): LocalEmbeddingGenerator {
     modelName: 'all-MiniLM-L6-v2',
     dimensions: 384,
     pipelineOptions: {
-      quantized: true // Utiliser version quantized pour rapidité
+      quantized: true, // Utiliser version quantized pour rapidité
     },
     enableCache: true,
-    maxCacheSize: 1000
+    maxCacheSize: 1000,
   });
 }

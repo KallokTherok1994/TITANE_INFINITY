@@ -44,8 +44,12 @@ import './DeveloperModePage.css';
 
 function DeveloperModePageContent(): JSX.Element {
   const { state, loading, error, enable, disable } = useDeveloperMode();
-  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const {
+    matrix: _matrix,
+    isLoaded: _isLoaded,
+    loading: matrixLoading,
+  } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
   const [authToken, setAuthToken] = useState('');
 
   // Loading state
@@ -106,9 +110,15 @@ function DeveloperModePageContent(): JSX.Element {
                 type="password"
                 placeholder="Token d'autorisation..."
                 value={authToken}
-                onChange={(e) => setAuthToken(e.target.value)}
+                onChange={e => setAuthToken(e.target.value)}
                 className="patch-input"
-                style={{ padding: '0.5rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', color: '#fff' }}
+                style={{
+                  padding: '0.5rem',
+                  background: 'rgba(0,0,0,0.3)',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '6px',
+                  color: '#fff',
+                }}
               />
               <button
                 className="devmode-btn primary"
@@ -132,9 +142,9 @@ function DeveloperModePageContent(): JSX.Element {
       <div className="security-warning">
         <AlertTriangle className="icon" />
         <div className="security-warning-text">
-          <strong>⚠️ Mode Développeur</strong> - Accès réservé à Kevin Thibault uniquement.
-          Toutes les modifications sont enregistrées et auditées.
-          Les patches non autorisés seront automatiquement rejetés.
+          <strong>⚠️ Mode Développeur</strong> - Accès réservé à Kevin Thibault
+          uniquement. Toutes les modifications sont enregistrées et auditées. Les patches
+          non autorisés seront automatiquement rejetés.
         </div>
       </div>
 
@@ -167,7 +177,8 @@ function DeveloperModePageContent(): JSX.Element {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function PatchEditorCard({ enabled }: { enabled: boolean }): JSX.Element {
-  const { loading, error, validatePatch, applyPatch, previewChanges } = usePatchOperations();
+  const { loading, error, validatePatch, applyPatch, previewChanges } =
+    usePatchOperations();
   const [patch, setPatch] = useState<Partial<PatchAction>>({
     patch_type: 'Replace',
     file_path: '',
@@ -233,7 +244,9 @@ function PatchEditorCard({ enabled }: { enabled: boolean }): JSX.Element {
           <label>Type de Patch</label>
           <select
             value={patch.patch_type}
-            onChange={(e) => setPatch({ ...patch, patch_type: e.target.value as PatchType })}
+            onChange={e =>
+              setPatch({ ...patch, patch_type: e.target.value as PatchType })
+            }
             disabled={!enabled}
           >
             <option value="Replace">Replace</option>
@@ -251,7 +264,7 @@ function PatchEditorCard({ enabled }: { enabled: boolean }): JSX.Element {
             type="text"
             placeholder="src/path/to/file.ts"
             value={patch.file_path}
-            onChange={(e) => setPatch({ ...patch, file_path: e.target.value })}
+            onChange={e => setPatch({ ...patch, file_path: e.target.value })}
             disabled={!enabled}
           />
         </div>
@@ -261,7 +274,7 @@ function PatchEditorCard({ enabled }: { enabled: boolean }): JSX.Element {
           <textarea
             placeholder="Description des modifications..."
             value={patch.description}
-            onChange={(e) => setPatch({ ...patch, description: e.target.value })}
+            onChange={e => setPatch({ ...patch, description: e.target.value })}
             disabled={!enabled}
           />
         </div>
@@ -270,7 +283,9 @@ function PatchEditorCard({ enabled }: { enabled: boolean }): JSX.Element {
           <label>Sévérité</label>
           <select
             value={patch.severity}
-            onChange={(e) => setPatch({ ...patch, severity: e.target.value as ChangeSeverity })}
+            onChange={e =>
+              setPatch({ ...patch, severity: e.target.value as ChangeSeverity })
+            }
             disabled={!enabled}
           >
             <option value="Low">Low</option>
@@ -321,7 +336,11 @@ function PatchEditorCard({ enabled }: { enabled: boolean }): JSX.Element {
             onClick={handleApply}
             disabled={!enabled || loading || !patch.file_path}
           >
-            {loading ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <Play size={16} />
+            )}
             Appliquer
           </button>
         </div>
@@ -373,7 +392,7 @@ function PatchHistoryCard(): JSX.Element {
       ) : (
         <div className="history-list">
           <AnimatePresence>
-            {(history?.patches ?? []).map((item) => (
+            {(history?.patches ?? []).map(item => (
               <motion.div
                 key={item.patch_id}
                 className={`history-item ${item.status.toLowerCase().replace(' ', '-')}`}
@@ -385,7 +404,8 @@ function PatchHistoryCard(): JSX.Element {
                   <span className="history-item-id">{item.patch_id}</span>
                   <span className="history-item-desc">{item.description}</span>
                   <span className="history-item-meta">
-                    {item.applied_at} • {item.author} • {item.affected_files.length} fichiers
+                    {item.applied_at} • {item.author} • {item.affected_files.length}{' '}
+                    fichiers
                   </span>
                 </div>
                 <div className="history-item-actions">
@@ -404,7 +424,13 @@ function PatchHistoryCard(): JSX.Element {
           </AnimatePresence>
 
           {(!history?.patches || history.patches.length === 0) && (
-            <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '2rem' }}>
+            <div
+              style={{
+                textAlign: 'center',
+                color: 'var(--text-secondary)',
+                padding: '2rem',
+              }}
+            >
               Aucun patch dans l'historique
             </div>
           )}
@@ -419,7 +445,8 @@ function PatchHistoryCard(): JSX.Element {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 function BuildPipelineCard(): JSX.Element {
-  const { status, result, loading, startBuild, cancelBuild, cleanArtifacts } = useBuildPipeline();
+  const { status, result, loading, startBuild, cancelBuild, cleanArtifacts } =
+    useBuildPipeline();
   const [buildId, setBuildId] = useState<string | null>(null);
 
   const handleStartBuild = async () => {
@@ -497,7 +524,11 @@ function BuildPipelineCard(): JSX.Element {
               onClick={handleStartBuild}
               disabled={loading}
             >
-              {loading ? <Loader2 size={16} className="animate-spin" /> : <Play size={16} />}
+              {loading ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <Play size={16} />
+              )}
               Build
             </button>
           )}
@@ -545,7 +576,7 @@ function BackupCard({ enabled }: { enabled: boolean }): JSX.Element {
             type="text"
             placeholder="pre-refactor-v1"
             value={backupName}
-            onChange={(e) => setBackupName(e.target.value)}
+            onChange={e => setBackupName(e.target.value)}
             disabled={!enabled}
           />
         </div>
@@ -556,7 +587,11 @@ function BackupCard({ enabled }: { enabled: boolean }): JSX.Element {
             onClick={handleCreate}
             disabled={!enabled || loading || !backupName}
           >
-            {loading ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <Save size={16} />
+            )}
             Créer Backup
           </button>
         </div>
@@ -589,7 +624,11 @@ function ChangelogCard(): JSX.Element {
           onClick={() => generateChangelog()}
           disabled={loading}
         >
-          {loading ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+          {loading ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <RotateCcw size={14} />
+          )}
         </button>
       </div>
 
@@ -608,7 +647,11 @@ function ChangelogCard(): JSX.Element {
 // STATS CARD
 // ═══════════════════════════════════════════════════════════════════════════════
 
-function StatsCard({ state }: { state: ReturnType<typeof useDeveloperMode>['state'] }): JSX.Element {
+function StatsCard({
+  state,
+}: {
+  state: ReturnType<typeof useDeveloperMode>['state'];
+}): JSX.Element {
   return (
     <motion.div
       className="devmode-card"

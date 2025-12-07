@@ -40,10 +40,10 @@ export interface JSONLEntry {
 }
 
 export interface DatasetPackage {
-  dataset: string;          // JSONL content
-  modelfile: string;        // Ollama Modelfile
-  trainingScript: string;   // Shell script
-  metadata: string;         // JSON metadata
+  dataset: string; // JSONL content
+  modelfile: string; // Ollama Modelfile
+  trainingScript: string; // Shell script
+  metadata: string; // JSON metadata
   stats: {
     totalEntries: number;
     totalTokens: number;
@@ -85,7 +85,10 @@ export class DatasetBuilder {
       // Vérifier tokens
       const tokens = this.estimateTokens(entry.prompt + entry.response);
 
-      if (tokens < this.config.minTokensPerEntry || tokens > this.config.maxTokensPerEntry) {
+      if (
+        tokens < this.config.minTokensPerEntry ||
+        tokens > this.config.maxTokensPerEntry
+      ) {
         continue; // Skip
       }
 
@@ -136,7 +139,11 @@ export class DatasetBuilder {
     formatted = formatted.replace(/^(Question:|Prompt:|User:)\s*/i, '');
 
     // Normaliser ponctuation
-    if (!formatted.endsWith('?') && !formatted.endsWith('.') && !formatted.endsWith(':')) {
+    if (
+      !formatted.endsWith('?') &&
+      !formatted.endsWith('.') &&
+      !formatted.endsWith(':')
+    ) {
       formatted += '.';
     }
 
@@ -151,7 +158,10 @@ export class DatasetBuilder {
     formatted = formatted.replace(/^(Réponse:|Answer:|Assistant:)\s*/i, '');
 
     // Retirer emojis excessifs (garder structure)
-    formatted = formatted.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]{3,}/gu, '');
+    formatted = formatted.replace(
+      /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E0}-\u{1F1FF}]{3,}/gu,
+      ''
+    );
 
     // Normaliser espaces
     formatted = formatted.replace(/\n{3,}/g, '\n\n');
@@ -336,7 +346,7 @@ if [ ! -f "dataset.jsonl" ]; then
     echo "❌ dataset.jsonl not found"
     exit 1
 fi
-echo "✅ Dataset found (\$(wc -l < dataset.jsonl) entries)"
+echo "✅ Dataset found ($(wc -l < dataset.jsonl) entries)"
 
 if [ ! -f "Modelfile" ]; then
     echo "❌ Modelfile not found"
@@ -365,8 +375,8 @@ echo ""
 echo "Stats:"
 echo "  Model: titane-local"
 echo "  Base: llama3.1"
-echo "  Dataset: \$(wc -l < dataset.jsonl) entries"
-echo "  Size: \$(du -h Modelfile | cut -f1)"
+echo "  Dataset: $(wc -l < dataset.jsonl) entries"
+echo "  Size: $(du -h Modelfile | cut -f1)"
 echo ""
 `;
   }

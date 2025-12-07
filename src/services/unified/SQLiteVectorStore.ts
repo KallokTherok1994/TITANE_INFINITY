@@ -16,7 +16,7 @@ import type {
   UnifiedMemoryResult,
   UnifiedMemoryStats,
   UnifiedMemoryType,
-  IVectorStore
+  IVectorStore,
 } from './UnifiedMemory';
 import type { MemoryTier } from '../mcp/mcp.types';
 
@@ -37,7 +37,7 @@ export interface SQLiteVectorStoreConfig {
 
 /**
  * SQLite Vector Store for UnifiedMemory
- * 
+ *
  * Storage layer for unified memory system using SQLite
  * Handles persistence, search, and indexing
  */
@@ -248,7 +248,8 @@ export class SQLiteVectorStore implements IVectorStore {
     }
 
     // Query all entries matching filters
-    const whereClause = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
+    const whereClause =
+      whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
     const stmt = this.db.prepare(`
       SELECT * FROM ${this.config.tableName}
       ${whereClause}
@@ -264,17 +265,17 @@ export class SQLiteVectorStore implements IVectorStore {
       if (!entry.embedding) continue;
 
       const similarity = this.cosineSimilarity(embedding, entry.embedding);
-      
+
       results.push({
         entry,
         score: similarity,
-        similarity
+        similarity,
       });
     }
 
     // Sort by similarity and take top N
     return results
-      .sort((a, b) => b.similarity! - a.similarity!)
+      .sort((a, b) => (b.similarity ?? 0) - (a.similarity ?? 0))
       .slice(0, limit);
   }
 
@@ -380,7 +381,7 @@ export class SQLiteVectorStore implements IVectorStore {
       whereClauses.push('importance < ?');
       params.push(filters.importance.$lt);
     }
-    
+
     if (filters.tier !== undefined) {
       whereClauses.push('tier = ?');
       params.push(filters.tier);
@@ -409,7 +410,9 @@ export class SQLiteVectorStore implements IVectorStore {
     if (!this.db) throw new Error('Store not initialized');
 
     // Total count
-    const totalStmt = this.db.prepare(`SELECT COUNT(*) as count FROM ${this.config.tableName}`);
+    const totalStmt = this.db.prepare(
+      `SELECT COUNT(*) as count FROM ${this.config.tableName}`
+    );
     const total = (totalStmt.get() as any).count;
 
     // By tier
@@ -423,7 +426,7 @@ export class SQLiteVectorStore implements IVectorStore {
       SHORT_TERM: 0,
       MEDIUM_TERM: 0,
       LONG_TERM: 0,
-      META_MEMORY: 0
+      META_MEMORY: 0,
     };
     tierRows.forEach(row => {
       byTier[row.tier as MemoryTier] = row.count;
@@ -467,13 +470,13 @@ export class SQLiteVectorStore implements IVectorStore {
         low: importanceRow.low || 0,
         medium: importanceRow.medium || 0,
         high: importanceRow.high || 0,
-        critical: importanceRow.critical || 0
+        critical: importanceRow.critical || 0,
       },
       avgEmbeddingTimeMs: 0, // Tracked by UnifiedMemory
       avgRetrievalTimeMs: 0, // Tracked by UnifiedMemory
       storageSizeMB: 0, // TODO: Calculate from file size
       oldestMemory: temporalRow.oldest || 0,
-      newestMemory: temporalRow.newest || 0
+      newestMemory: temporalRow.newest || 0,
     };
   }
 
@@ -538,7 +541,7 @@ export class SQLiteVectorStore implements IVectorStore {
         type: row.source_type,
         id: row.source_id || undefined,
         timestamp: row.source_timestamp,
-        context: row.source_context || undefined
+        context: row.source_context || undefined,
       },
       importance: row.importance,
       confidence: row.confidence,
@@ -556,7 +559,7 @@ export class SQLiteVectorStore implements IVectorStore {
       relatedTo: row.related_to ? JSON.parse(row.related_to) : undefined,
       supersedes: row.supersedes || undefined,
       compressionLevel: row.compression_level,
-      isDuplicate: row.is_duplicate === 1
+      isDuplicate: row.is_duplicate === 1,
     };
   }
 

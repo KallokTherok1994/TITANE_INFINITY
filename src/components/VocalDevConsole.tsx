@@ -26,7 +26,7 @@ export interface VocalDevConsoleProps {
 export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps) {
   const {
     state,
-    _config,
+    config,
     activate,
     deactivate,
     open,
@@ -34,7 +34,7 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
     startRecording,
     stopRecording,
     executeCommand,
-    _speak,
+    speak,
     stopSpeaking,
     clearLogs,
     clearHistory,
@@ -44,6 +44,9 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
     executionHistory,
     healthScore,
   } = useVocalDevConsole();
+
+  void config;
+  void speak;
 
   const [inputText, setInputText] = useState('');
   const [isExecuting, setIsExecuting] = useState(false);
@@ -99,7 +102,11 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
 
   if (!state.isVisible) {
     return (
-      <button className="vocal-dev-console-toggle" onClick={open} title="Open Vocal Dev Console">
+      <button
+        className="vocal-dev-console-toggle"
+        onClick={open}
+        title="Open Vocal Dev Console"
+      >
         🎤 Console
       </button>
     );
@@ -112,7 +119,9 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
         <div className="vocal-dev-console__title">
           <span className="vocal-dev-console__icon">🎤</span>
           <span className="vocal-dev-console__text">TITANE∞ Vocal Dev Console</span>
-          <span className={`vocal-dev-console__status vocal-dev-console__status--${state.mode}`}>
+          <span
+            className={`vocal-dev-console__status vocal-dev-console__status--${state.mode}`}
+          >
             {state.mode.toUpperCase()}
           </span>
         </div>
@@ -151,7 +160,8 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
             className="vocal-dev-console__health-fill"
             style={{
               width: `${healthScore}%`,
-              backgroundColor: healthScore > 80 ? '#4caf50' : healthScore > 50 ? '#ff9800' : '#f44336',
+              backgroundColor:
+                healthScore > 80 ? '#4caf50' : healthScore > 50 ? '#ff9800' : '#f44336',
             }}
           />
         </div>
@@ -165,9 +175,7 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
             No logs yet. Start by recording a voice command or typing below.
           </div>
         ) : (
-          consoleLogs.map((log) => (
-            <LogEntry key={log.id} log={log} />
-          ))
+          consoleLogs.map(log => <LogEntry key={log.id} log={log} />)
         )}
         <div ref={logsEndRef} />
       </div>
@@ -197,9 +205,7 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
                 <span className="vocal-dev-console__history-command">
                   {exec.intent.rawCommand}
                 </span>
-                <span className="vocal-dev-console__history-time">
-                  {exec.duration}ms
-                </span>
+                <span className="vocal-dev-console__history-time">{exec.duration}ms</span>
               </div>
             ))}
           </div>
@@ -212,9 +218,7 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
         <button
           className={`vocal-dev-console__mic ${
             isRecording ? 'vocal-dev-console__mic--recording' : ''
-          } ${
-            isSpeaking ? 'vocal-dev-console__mic--speaking' : ''
-          }`}
+          } ${isSpeaking ? 'vocal-dev-console__mic--speaking' : ''}`}
           onClick={handleMicrophoneClick}
           disabled={!state.isActive || isExecuting || isSpeaking}
           title={isRecording ? 'Stop recording' : 'Start recording'}
@@ -251,13 +255,13 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
             type="text"
             className="vocal-dev-console__input"
             value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
+            onChange={e => setInputText(e.target.value)}
             placeholder={
               isRecording
                 ? 'Recording...'
                 : state.isActive
-                ? 'Type command or use microphone...'
-                : 'Activate vocal mode first'
+                  ? 'Type command or use microphone...'
+                  : 'Activate vocal mode first'
             }
             disabled={isRecording || isExecuting || !state.isActive}
           />

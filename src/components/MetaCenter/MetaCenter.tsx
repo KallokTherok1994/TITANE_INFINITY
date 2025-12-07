@@ -108,7 +108,8 @@ const HealthBar: React.FC<{ value: number; label: string; color?: string }> = ({
         className="meta-health-bar-fill"
         style={{
           width: `${Math.min(value, 100)}%`,
-          backgroundColor: value > 80 ? 'var(--error)' : value > 60 ? 'var(--warning)' : color,
+          backgroundColor:
+            value > 80 ? 'var(--error)' : value > 60 ? 'var(--warning)' : color,
         }}
       />
     </div>
@@ -120,8 +121,8 @@ const EngineCard: React.FC<{ engine: EngineStatus }> = ({ engine }) => {
     engine.status === 'Running'
       ? 'var(--success)'
       : engine.status === 'Error'
-      ? 'var(--error)'
-      : 'var(--text-secondary)';
+        ? 'var(--error)'
+        : 'var(--text-secondary)';
 
   return (
     <div className="meta-engine-card">
@@ -191,7 +192,7 @@ const MetaCenterContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<string>('balanced');
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const { _matrix, loading: matrixLoading } = useIdentityMatrix();
+  const { loading: matrixLoading } = useIdentityMatrix();
   const _singularityState = useSingularityStateSafe();
 
   const MODES = [
@@ -218,12 +219,12 @@ const MetaCenterContent: React.FC = () => {
   const loadState = async () => {
     try {
       // Try to get state, if not initialized, init first
-      const currentState = await invoke<MetaOrchestratorState>('orchestrator_get_state').catch(
-        async () => {
-          // Initialize if not done
-          return invoke<MetaOrchestratorState>('orchestrator_init');
-        }
-      );
+      const currentState = await invoke<MetaOrchestratorState>(
+        'orchestrator_get_state'
+      ).catch(async () => {
+        // Initialize if not done
+        return invoke<MetaOrchestratorState>('orchestrator_init');
+      });
 
       setState(currentState);
 
@@ -341,7 +342,7 @@ const MetaCenterContent: React.FC = () => {
       <div className="meta-section">
         <h2>Orchestration Mode</h2>
         <div className="meta-mode-selector">
-          {MODES.map((mode) => (
+          {MODES.map(mode => (
             <button
               key={mode.id}
               className={`meta-mode-btn ${selectedMode === mode.id ? 'active' : ''}`}
@@ -443,7 +444,7 @@ const MetaCenterContent: React.FC = () => {
               <span>Status</span>
               <span>Progress</span>
             </div>
-            {state.priority_queue.map((task) => (
+            {state.priority_queue.map(task => (
               <TaskRow key={task.id} task={task} />
             ))}
           </div>

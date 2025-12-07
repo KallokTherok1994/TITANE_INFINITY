@@ -1,9 +1,9 @@
 /**
  * SQLITE VECTOR STORE v∞
- * 
+ *
  * Implémentation du VectorStore utilisant SQLite avec sqlite-vec
  * pour le stockage des embeddings et la recherche par similarité
- * 
+ *
  * Features:
  * - Stockage persistant local
  * - Recherche par similarité cosine
@@ -18,7 +18,7 @@ import type {
   SemanticMemoryResult,
   SemanticMemoryStats,
   VectorStore,
-  SemanticMemoryType
+  SemanticMemoryType,
 } from './semanticMemory.types';
 import { cosineSimilarity } from './SemanticMemoryEngine';
 
@@ -28,13 +28,13 @@ import { cosineSimilarity } from './SemanticMemoryEngine';
 export interface SQLiteVectorStoreConfig {
   /** Chemin vers la base de données */
   dbPath: string;
-  
+
   /** Nom de la collection */
   collectionName: string;
-  
+
   /** Dimensions des vecteurs */
   dimensions: number;
-  
+
   /** Options SQLite */
   sqliteOptions?: {
     readonly?: boolean;
@@ -46,7 +46,7 @@ export interface SQLiteVectorStoreConfig {
 
 /**
  * SQLite Vector Store
- * 
+ *
  * Utilise SQLite avec une table pour les métadonnées et une table pour les vecteurs
  * Recherche par similarité calculée en JavaScript (cosine similarity)
  */
@@ -66,11 +66,11 @@ export class SQLiteVectorStore implements VectorStore {
     if (this.isInitialized) return;
 
     try {
-      // Créer le dossier parent si nécessaire  
+      // Créer le dossier parent si nécessaire
       const pathParts = this.config.dbPath.split('/');
       pathParts.pop(); // Retirer le nom du fichier
       const dbDir = pathParts.join('/');
-      
+
       if (dbDir) {
         try {
           const fs = await import('fs');
@@ -141,7 +141,7 @@ export class SQLiteVectorStore implements VectorStore {
       supersedes: entry.supersedes || null,
       valid_until: entry.valid_until || null,
       confidence: entry.confidence,
-      embedding: this.serializeEmbedding(entry.embedding)
+      embedding: this.serializeEmbedding(entry.embedding),
     });
   }
 
@@ -197,7 +197,7 @@ export class SQLiteVectorStore implements VectorStore {
       results.push({
         entry,
         score: similarity,
-        similarity
+        similarity,
       });
     }
 
@@ -328,14 +328,17 @@ export class SQLiteVectorStore implements VectorStore {
       FROM ${this.config.collectionName}
       GROUP BY type
     `);
-    const typeResults = typeStmt.all() as Array<{ type: SemanticMemoryType; count: number }>;
+    const typeResults = typeStmt.all() as Array<{
+      type: SemanticMemoryType;
+      count: number;
+    }>;
     const by_type: Record<SemanticMemoryType, number> = {
       fact: 0,
       preference: 0,
       decision: 0,
       milestone: 0,
       pattern: 0,
-      context: 0
+      context: 0,
     };
     typeResults.forEach(r => {
       by_type[r.type] = r.count;
@@ -367,7 +370,9 @@ export class SQLiteVectorStore implements VectorStore {
     const datesResult = datesStmt.get() as { oldest: string; newest: string };
 
     // Storage size (approximation)
-    const sizeStmt = this.db.prepare(`SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()`);
+    const sizeStmt = this.db.prepare(
+      `SELECT page_count * page_size as size FROM pragma_page_count(), pragma_page_size()`
+    );
     const sizeResult = sizeStmt.get() as { size: number };
     const storage_size_mb = sizeResult.size / (1024 * 1024);
 
@@ -379,7 +384,7 @@ export class SQLiteVectorStore implements VectorStore {
       avg_retrieval_time_ms: 0, // Pas mesuré ici
       storage_size_mb,
       oldest_memory: datesResult.oldest,
-      newest_memory: datesResult.newest
+      newest_memory: datesResult.newest,
     };
   }
 
@@ -501,7 +506,7 @@ export class SQLiteVectorStore implements VectorStore {
         type: row.source_type,
         id: row.source_id || undefined,
         timestamp: row.source_timestamp,
-        context: row.source_context || undefined
+        context: row.source_context || undefined,
       },
       tags: JSON.parse(row.tags),
       embedding: this.deserializeEmbedding(row.embedding),
@@ -512,7 +517,7 @@ export class SQLiteVectorStore implements VectorStore {
       related_to: row.related_to ? JSON.parse(row.related_to) : undefined,
       supersedes: row.supersedes || undefined,
       valid_until: row.valid_until || undefined,
-      confidence: row.confidence
+      confidence: row.confidence,
     };
   }
 
@@ -530,7 +535,7 @@ export class SQLiteVectorStore implements VectorStore {
       // Opérateurs MongoDB-like
       if (key === '$or') {
         const orClauses: string[] = [];
-        (value as Array<Record<string, any>>).forEach((orFilter, index) => {
+        (value as Array<Record<string, any>>).forEach((orFilter, _index) => {
           const subWhereClauses: string[] = [];
           const subParams: any = {};
           this.buildWhereClause(orFilter, subWhereClauses, subParams);
@@ -554,7 +559,9 @@ export class SQLiteVectorStore implements VectorStore {
 
           switch (op) {
             case '$in':
-              whereClauses.push(`${columnName} IN (${value[op].map((_: any, i: number) => `@${paramName}_${i}`).join(', ')})`);
+              whereClauses.push(
+                `${columnName} IN (${value[op].map((_: any, i: number) => `@${paramName}_${i}`).join(', ')})`
+              );
               value[op].forEach((v: any, i: number) => {
                 params[`${paramName}_${i}`] = v;
               });

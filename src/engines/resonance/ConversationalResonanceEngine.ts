@@ -114,7 +114,7 @@ class ConversationalResonanceEngine {
 
   public start(): void {
     if (this.isRunning) {
-      console.warn('[ResonanceEngine] Déjà en cours d\'exécution');
+      console.warn("[ResonanceEngine] Déjà en cours d'exécution");
       return;
     }
 
@@ -289,7 +289,10 @@ class ConversationalResonanceEngine {
 
     // Adapter la longueur des phrases
     sync.sentenceLength.target = Math.round(userAnalysis.averageSentenceLength);
-    sync.sentenceLength.variance = Math.max(3, Math.round(userAnalysis.averageSentenceLength * 0.3));
+    sync.sentenceLength.variance = Math.max(
+      3,
+      Math.round(userAnalysis.averageSentenceLength * 0.3)
+    );
 
     // Ajuster selon l'énergie
     const energy = multimodalState?.fusedScores?.globalEnergy?.value ?? 0.5;
@@ -330,7 +333,8 @@ class ConversationalResonanceEngine {
     presenceState?: PresenceState
   ): ResponseParametersResult {
     // Analyser le message
-    const analysis = this.state.currentUserAnalysis ?? this.analyzeLinguistics(userMessage);
+    const analysis =
+      this.state.currentUserAnalysis ?? this.analyzeLinguistics(userMessage);
 
     // Calculer l'adaptation
     const adaptation = this.computeAdaptation(analysis, multimodalState, presenceState);
@@ -500,7 +504,8 @@ class ConversationalResonanceEngine {
     analysis.wordCount = words.length;
     analysis.sentenceCount = Math.max(1, sentences.length);
     analysis.averageSentenceLength = analysis.wordCount / analysis.sentenceCount;
-    analysis.averageWordLength = words.reduce((sum, w) => sum + w.length, 0) / Math.max(1, words.length);
+    analysis.averageWordLength =
+      words.reduce((sum, w) => sum + w.length, 0) / Math.max(1, words.length);
 
     // Marqueurs
     analysis.questionCount = (text.match(/\?/g) || []).length;
@@ -531,28 +536,46 @@ class ConversationalResonanceEngine {
   }
 
   private countHesitationMarkers(text: string): number {
-    const hesitations = ['euh', 'hmm', 'hum', 'bof', 'ben', 'enfin', 'bon', 'genre', 'voilà', '...'];
+    const hesitations = [
+      'euh',
+      'hmm',
+      'hum',
+      'bof',
+      'ben',
+      'enfin',
+      'bon',
+      'genre',
+      'voilà',
+      '...',
+    ];
     const lower = text.toLowerCase();
     return hesitations.filter(h => lower.includes(h)).length;
   }
 
   private countEmphasisMarkers(text: string): number {
-    const emphases = ['vraiment', 'absolument', 'totalement', 'complètement', 'incroyable', 'énorme'];
+    const emphases = [
+      'vraiment',
+      'absolument',
+      'totalement',
+      'complètement',
+      'incroyable',
+      'énorme',
+    ];
     const lower = text.toLowerCase();
-    return emphases.filter(e => lower.includes(e)).length + (text.match(/!/g) || []).length;
+    return (
+      emphases.filter(e => lower.includes(e)).length + (text.match(/!/g) || []).length
+    );
   }
 
   private computeComplexityScore(text: string, words: string[]): number {
     // Facteurs de complexité
-    const avgWordLength = words.reduce((s, w) => s + w.length, 0) / Math.max(1, words.length);
+    const avgWordLength =
+      words.reduce((s, w) => s + w.length, 0) / Math.max(1, words.length);
     const longWords = words.filter(w => w.length > 8).length / Math.max(1, words.length);
     const hasSubordinates = /qui|que|dont|où|lequel|laquelle/i.test(text);
 
-    const score = (
-      (avgWordLength / 10) * 0.4 +
-      longWords * 0.3 +
-      (hasSubordinates ? 0.3 : 0)
-    );
+    const score =
+      (avgWordLength / 10) * 0.4 + longWords * 0.3 + (hasSubordinates ? 0.3 : 0);
 
     return Math.min(1, Math.max(0, score));
   }
@@ -570,8 +593,11 @@ class ConversationalResonanceEngine {
     return Math.max(0, 1 - deviation / 20);
   }
 
-  private detectStyle(text: string, analysis: LinguisticAnalysis): { style: LinguisticStyle; confidence: number } {
-    const lower = text.toLowerCase();
+  private detectStyle(
+    text: string,
+    analysis: LinguisticAnalysis
+  ): { style: LinguisticStyle; confidence: number } {
+    const _lower = text.toLowerCase();
     const scores: Partial<Record<LinguisticStyle, number>> = {
       formal: 0,
       casual: 0,
@@ -582,22 +608,27 @@ class ConversationalResonanceEngine {
     };
 
     // Formel
-    if (/veuillez|cordialement|je vous prie/i.test(text)) scores.formal = (scores.formal ?? 0) + 0.5;
+    if (/veuillez|cordialement|je vous prie/i.test(text))
+      scores.formal = (scores.formal ?? 0) + 0.5;
     if (analysis.complexityScore > 0.6) scores.formal = (scores.formal ?? 0) + 0.2;
 
     // Casual
-    if (/salut|coucou|cool|super|génial/i.test(text)) scores.casual = (scores.casual ?? 0) + 0.4;
+    if (/salut|coucou|cool|super|génial/i.test(text))
+      scores.casual = (scores.casual ?? 0) + 0.4;
     if (analysis.hesitationMarkers > 1) scores.casual = (scores.casual ?? 0) + 0.2;
 
     // Technique
-    if (/fonction|variable|algorithme|processus|système/i.test(text)) scores.technical = (scores.technical ?? 0) + 0.4;
+    if (/fonction|variable|algorithme|processus|système/i.test(text))
+      scores.technical = (scores.technical ?? 0) + 0.4;
 
     // Direct
     if (analysis.averageSentenceLength < 10) scores.direct = (scores.direct ?? 0) + 0.3;
-    if (analysis.questionCount === 0 && analysis.sentenceCount < 3) scores.direct = (scores.direct ?? 0) + 0.2;
+    if (analysis.questionCount === 0 && analysis.sentenceCount < 3)
+      scores.direct = (scores.direct ?? 0) + 0.2;
 
     // Empathique
-    if (/merci|s'il te plaît|j'apprécie|comprends/i.test(text)) scores.empathetic = (scores.empathetic ?? 0) + 0.3;
+    if (/merci|s'il te plaît|j'apprécie|comprends/i.test(text))
+      scores.empathetic = (scores.empathetic ?? 0) + 0.3;
 
     // Trouver le style dominant
     let maxScore = 0;
@@ -613,8 +644,11 @@ class ConversationalResonanceEngine {
     return { style: dominantStyle, confidence: Math.min(1, maxScore) };
   }
 
-  private detectTone(text: string, analysis: LinguisticAnalysis): { tone: EmotionalTone; intensity: number } {
-    const lower = text.toLowerCase();
+  private detectTone(
+    text: string,
+    analysis: LinguisticAnalysis
+  ): { tone: EmotionalTone; intensity: number } {
+    const _lower = text.toLowerCase();
     const scores: Partial<Record<EmotionalTone, number>> = {
       neutral: 0.3,
     };
@@ -694,7 +728,11 @@ class ConversationalResonanceEngine {
     }
 
     // Adapter le ton
-    adaptation.targetTone = this.computeTargetTone(userAnalysis, multimodalState, presenceState);
+    adaptation.targetTone = this.computeTargetTone(
+      userAnalysis,
+      multimodalState,
+      presenceState
+    );
 
     // Adapter la complexité
     adaptation.targetComplexity = this.computeTargetComplexity(userAnalysis);
@@ -703,7 +741,10 @@ class ConversationalResonanceEngine {
     adaptation.targetRhythm = userAnalysis.rhythm;
 
     // Calculer les ajustements fins
-    adaptation.adjustments = this.computeDetailedAdjustments(userAnalysis, multimodalState);
+    adaptation.adjustments = this.computeDetailedAdjustments(
+      userAnalysis,
+      multimodalState
+    );
 
     // Lisser avec l'adaptation précédente
     if (this.config.smoothingFactor > 0) {
@@ -734,7 +775,10 @@ class ConversationalResonanceEngine {
     }
 
     // Si beaucoup d'interactions, guider
-    if (this.state.profile.totalInteractions > 10 && this.state.profile.preferences.confidence > 0.6) {
+    if (
+      this.state.profile.totalInteractions > 10 &&
+      this.state.profile.preferences.confidence > 0.6
+    ) {
       return 'leading';
     }
 
@@ -793,8 +837,12 @@ class ConversationalResonanceEngine {
 
     return {
       verbosity: energy > 0.6 ? 0.2 : energy < 0.4 ? -0.3 : 0,
-      formality: userAnalysis.detectedStyle === 'formal' ? 0.3 :
-                 userAnalysis.detectedStyle === 'casual' ? -0.3 : 0,
+      formality:
+        userAnalysis.detectedStyle === 'formal'
+          ? 0.3
+          : userAnalysis.detectedStyle === 'casual'
+            ? -0.3
+            : 0,
       warmth: tension > 0.5 ? 0.4 : 0.2,
       precision: userAnalysis.detectedStyle === 'technical' ? 0.6 : 0.3,
       creativity: userAnalysis.detectedStyle === 'poetic' ? 0.6 : 0.3,
@@ -812,16 +860,26 @@ class ConversationalResonanceEngine {
     const scores = getDefaultResonanceScores();
 
     // Résonance lexicale (correspondance du vocabulaire)
-    scores.lexical = adaptation.syncType === 'mirroring' ? 0.8 :
-                    adaptation.syncType === 'complementing' ? 0.6 : 0.5;
+    scores.lexical =
+      adaptation.syncType === 'mirroring'
+        ? 0.8
+        : adaptation.syncType === 'complementing'
+          ? 0.6
+          : 0.5;
 
     // Résonance syntaxique (correspondance de la structure)
-    const complexityMatch = 1 - Math.abs(
-      userAnalysis.complexityScore -
-      (adaptation.targetComplexity === 'simple' ? 0.2 :
-       adaptation.targetComplexity === 'standard' ? 0.5 :
-       adaptation.targetComplexity === 'elevated' ? 0.7 : 0.9)
-    );
+    const complexityMatch =
+      1 -
+      Math.abs(
+        userAnalysis.complexityScore -
+          (adaptation.targetComplexity === 'simple'
+            ? 0.2
+            : adaptation.targetComplexity === 'standard'
+              ? 0.5
+              : adaptation.targetComplexity === 'elevated'
+                ? 0.7
+                : 0.9)
+      );
     scores.syntactic = complexityMatch;
 
     // Résonance sémantique (correspondance du sens)
@@ -836,13 +894,12 @@ class ConversationalResonanceEngine {
 
     // Score global pondéré
     const weights = RESONANCE_CONSTANTS.DIMENSION_WEIGHTS;
-    scores.overall = (
+    scores.overall =
       scores.lexical * weights.lexical +
       scores.syntactic * weights.syntactic +
       scores.semantic * weights.semantic +
       scores.prosodic * weights.prosodic +
-      scores.pragmatic * weights.pragmatic
-    );
+      scores.pragmatic * weights.pragmatic;
 
     return scores;
   }
@@ -867,9 +924,13 @@ class ConversationalResonanceEngine {
 
     // Mettre à jour la complexité préférée
     const newComplexity: ComplexityLevel =
-      analysis.complexityScore < 0.3 ? 'simple' :
-      analysis.complexityScore < 0.5 ? 'standard' :
-      analysis.complexityScore < 0.7 ? 'elevated' : 'expert';
+      analysis.complexityScore < 0.3
+        ? 'simple'
+        : analysis.complexityScore < 0.5
+          ? 'standard'
+          : analysis.complexityScore < 0.7
+            ? 'elevated'
+            : 'expert';
     prefs.preferredComplexity = newComplexity;
 
     // Mettre à jour le rythme préféré
@@ -939,7 +1000,8 @@ class ConversationalResonanceEngine {
     // Mettre à jour les statistiques
     this.state.profile.totalInteractions++;
     this.state.profile.averageResonance =
-      (this.state.profile.averageResonance * (this.state.profile.totalInteractions - 1) + scores.overall) /
+      (this.state.profile.averageResonance * (this.state.profile.totalInteractions - 1) +
+        scores.overall) /
       this.state.profile.totalInteractions;
 
     if (scores.overall > this.state.profile.bestResonanceScore) {
@@ -966,7 +1028,10 @@ class ConversationalResonanceEngine {
     return result.join('\n');
   }
 
-  private generateStyleSummary(adaptation: LinguisticAdaptation, tone: ToneModulation): string {
+  private generateStyleSummary(
+    adaptation: LinguisticAdaptation,
+    tone: ToneModulation
+  ): string {
     const styleLabel = RESONANCE_CONSTANTS.STYLE_LABELS[adaptation.targetStyle];
     const toneLabel = RESONANCE_CONSTANTS.TONE_LABELS[tone.baseTone];
     const rhythmLabel = RESONANCE_CONSTANTS.RHYTHM_LABELS[adaptation.targetRhythm];

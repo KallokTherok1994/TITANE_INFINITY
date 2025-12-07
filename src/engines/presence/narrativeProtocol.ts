@@ -13,7 +13,11 @@
  * ╚══════════════════════════════════════════════════════════════════════════════╝
  */
 
-import type { PresenceState, TonicProfile, UserContext } from './unifiedPresenceEngine';
+import type {
+  PresenceState as _PresenceState,
+  TonicProfile as _TonicProfile,
+  UserContext,
+} from './unifiedPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // 🎭 TYPES
@@ -28,7 +32,7 @@ export interface NarrativeArc {
   currentPhase: 'beginning' | 'exploration' | 'deepwork' | 'synthesis' | 'closure';
   keyMoments: NarrativeMoment[];
   emotionalCurve: number[]; // Courbe émotionnelle 0-100
-  continuityScore: number;  // 0-100
+  continuityScore: number; // 0-100
 }
 
 /**
@@ -76,7 +80,7 @@ export const SYMBOLIC_LIBRARY: Record<string, SymbolicElement> = {
     meaning: 'Évolution fractale continue',
     context: ['croissance', 'transformation', 'stabilité dynamique'],
     visualRepresentation: 'triangle-pulse-infinite',
-    emotionalResonance: 85
+    emotionalResonance: 85,
   },
 
   reacteur: {
@@ -84,16 +88,16 @@ export const SYMBOLIC_LIBRARY: Record<string, SymbolicElement> = {
     meaning: 'Cœur énergétique unifié',
     context: ['énergie', 'unité', 'source'],
     visualRepresentation: 'reactor-core-glow',
-    emotionalResonance: 90
+    emotionalResonance: 90,
   },
 
   // Symboles de processus
   ooda_loop: {
     symbol: '↻',
-    meaning: 'Cycle d\'adaptation continue',
+    meaning: "Cycle d'adaptation continue",
     context: ['observation', 'adaptation', 'intelligence'],
     visualRepresentation: 'cycle-arrows',
-    emotionalResonance: 70
+    emotionalResonance: 70,
   },
 
   // Symboles d'état
@@ -102,7 +106,7 @@ export const SYMBOLIC_LIBRARY: Record<string, SymbolicElement> = {
     meaning: 'Clarté cognitive',
     context: ['compréhension', 'illumination', 'guidance'],
     visualRepresentation: 'light-diamond',
-    emotionalResonance: 75
+    emotionalResonance: 75,
   },
 
   ancre: {
@@ -110,7 +114,7 @@ export const SYMBOLIC_LIBRARY: Record<string, SymbolicElement> = {
     meaning: 'Stabilité et ancrage',
     context: ['confiance', 'solidité', 'présence'],
     visualRepresentation: 'anchor-stable',
-    emotionalResonance: 80
+    emotionalResonance: 80,
   },
 
   // Symboles de transition
@@ -119,7 +123,7 @@ export const SYMBOLIC_LIBRARY: Record<string, SymbolicElement> = {
     meaning: 'Transition fluide',
     context: ['changement', 'fluidité', 'évolution'],
     visualRepresentation: 'double-arrow-flow',
-    emotionalResonance: 60
+    emotionalResonance: 60,
   },
 
   // Symboles d'harmonie
@@ -128,8 +132,8 @@ export const SYMBOLIC_LIBRARY: Record<string, SymbolicElement> = {
     meaning: 'Résonance harmonieuse',
     context: ['synchronisation', 'harmonie', 'cohérence'],
     visualRepresentation: 'wave-sync',
-    emotionalResonance: 85
-  }
+    emotionalResonance: 85,
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -152,14 +156,14 @@ export class NarrativeProtocol {
       currentPhase: 'beginning',
       keyMoments: [],
       emotionalCurve: [50], // Commence neutre
-      continuityScore: 100
+      continuityScore: 100,
     };
 
     this.addNarrativeMoment({
       type: 'transition',
       description: 'Démarrage de la session TITANE∞',
       emotionalImpact: 20,
-      contextTags: ['début', 'initialisation', 'éveil']
+      contextTags: ['début', 'initialisation', 'éveil'],
     });
 
     return this.currentArc;
@@ -170,14 +174,18 @@ export class NarrativeProtocol {
 
     const fullMoment: NarrativeMoment = {
       ...moment,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
     this.currentArc.keyMoments.push(fullMoment);
 
     // Mettre à jour la courbe émotionnelle
-    const lastEmotion = this.currentArc.emotionalCurve[this.currentArc.emotionalCurve.length - 1];
-    const newEmotion = Math.max(0, Math.min(100, lastEmotion + moment.emotionalImpact / 2));
+    const lastEmotion =
+      this.currentArc.emotionalCurve[this.currentArc.emotionalCurve.length - 1];
+    const newEmotion = Math.max(
+      0,
+      Math.min(100, lastEmotion + moment.emotionalImpact / 2)
+    );
     this.currentArc.emotionalCurve.push(newEmotion);
   }
 
@@ -191,7 +199,7 @@ export class NarrativeProtocol {
       type: 'transition',
       description: `Transition: ${oldPhase} → ${newPhase}`,
       emotionalImpact: 10,
-      contextTags: ['transition', oldPhase, newPhase]
+      contextTags: ['transition', oldPhase, newPhase],
     });
   }
 
@@ -216,7 +224,7 @@ export class NarrativeProtocol {
       smooth: 300,
       gradual: 800,
       abrupt: 150,
-      ceremonial: 1500
+      ceremonial: 1500,
     };
 
     const protocol: TransitionProtocol = {
@@ -225,7 +233,7 @@ export class NarrativeProtocol {
       transitionType,
       duration: durationMap[transitionType],
       narrative: this.generateTransitionNarrative(from, to, transitionType),
-      visualCues: this.selectVisualCues(transitionType)
+      visualCues: this.selectVisualCues(transitionType),
     };
 
     this.transitionHistory.push(protocol);
@@ -259,23 +267,19 @@ export class NarrativeProtocol {
       smooth: [
         `Glissement fluide vers ${to}`,
         `Adaptation naturelle à ${to}`,
-        `Évolution harmonieuse`
+        `Évolution harmonieuse`,
       ],
       gradual: [
         `Transition progressive vers ${to}`,
         `Adaptation douce en cours`,
-        `Évolution mesurée`
+        `Évolution mesurée`,
       ],
-      abrupt: [
-        `Passage direct à ${to}`,
-        `Changement immédiat`,
-        `Ajustement rapide`
-      ],
+      abrupt: [`Passage direct à ${to}`, `Changement immédiat`, `Ajustement rapide`],
       ceremonial: [
         `Entrée en ${to} - Préparation complète`,
         `Rituel de transition vers ${to}`,
-        `Cérémonie d'adaptation`
-      ]
+        `Cérémonie d'adaptation`,
+      ],
     };
 
     const options = narratives[type];
@@ -287,7 +291,7 @@ export class NarrativeProtocol {
       smooth: ['fade-cross', 'blur-transition', 'color-morph'],
       gradual: ['progressive-reveal', 'cascade-in', 'wave-transition'],
       abrupt: ['cut-direct', 'flash-switch', 'instant-change'],
-      ceremonial: ['curtain-rise', 'spiral-unfold', 'radial-expand', 'glow-intensify']
+      ceremonial: ['curtain-rise', 'spiral-unfold', 'radial-expand', 'glow-intensify'],
     };
 
     return cuesMap[type];
@@ -357,10 +361,11 @@ export class NarrativeProtocol {
     // Pénalité pour transitions trop fréquentes
     const recentTransitions = this.transitionHistory.slice(-5);
     if (recentTransitions.length >= 5) {
-      const avgTime = recentTransitions.reduce((sum, t, i, arr) => {
-        if (i === 0) return 0;
-        return sum + (new Date().getTime() - new Date(arr[i - 1].from).getTime());
-      }, 0) / 4;
+      const avgTime =
+        recentTransitions.reduce((sum, t, i, arr) => {
+          if (i === 0) return 0;
+          return sum + (new Date().getTime() - new Date(arr[i - 1].from).getTime());
+        }, 0) / 4;
 
       if (avgTime < 30000) score -= 20; // Transitions trop rapides
     }
@@ -399,7 +404,10 @@ export class NarrativeProtocol {
       if (this.currentArc) {
         localStorage.setItem('titane_narrative_arc', JSON.stringify(this.currentArc));
       }
-      localStorage.setItem('titane_symbolic_context', JSON.stringify(this.symbolicContext));
+      localStorage.setItem(
+        'titane_symbolic_context',
+        JSON.stringify(this.symbolicContext)
+      );
     } catch (error) {
       console.warn('⚠️ [Narrative Protocol] Impossible de sauvegarder:', error);
     }

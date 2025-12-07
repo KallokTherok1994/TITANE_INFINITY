@@ -32,8 +32,8 @@ const quantumRules = {
     target_fps: 120,
     max_frame_time_ms: 8.33,
     warning_threshold_ms: 12,
-    critical_threshold_ms: 16.67
-  }
+    critical_threshold_ms: 16.67,
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -200,7 +200,7 @@ export class QuantumRenderer {
 
   private startQuantumLoop(): void {
     let lastTime = performance.now();
-    let frameCount = 0;
+    const _frameCount = 0;
     let reRenderCounter = 0;
     const reRenderWindow = 1000; // 1 seconde
     let reRenderWindowStart = performance.now();
@@ -312,11 +312,11 @@ export class QuantumRenderer {
     this.textStabilityEngine.stabilizeText(container);
   }
 
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════════════
   // MÉTRIQUES
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════════════
 
-  private updateMetrics(deltaTime: number, currentTime: number): void {
+  private updateMetrics(deltaTime: number, _currentTime: number): void {
     // Calculer frame time moyen (exponential moving average)
     const alpha = 0.1;
     this.state.avgFrameTime = alpha * deltaTime + (1 - alpha) * this.state.avgFrameTime;
@@ -334,7 +334,8 @@ export class QuantumRenderer {
 
   private calculateStabilityScore(): number {
     const targetFrameTime = 1000 / this.config.motionSyncHz;
-    const frameDeviation = Math.abs(this.state.avgFrameTime - targetFrameTime) / targetFrameTime;
+    const frameDeviation =
+      Math.abs(this.state.avgFrameTime - targetFrameTime) / targetFrameTime;
     const frameScore = Math.max(0, 1 - frameDeviation);
 
     const jitterScore = 1 - this.state.jitterLevel;
@@ -342,12 +343,7 @@ export class QuantumRenderer {
     const textScore = this.state.textClarity;
 
     // Score pondéré
-    return (
-      frameScore * 0.3 +
-      jitterScore * 0.25 +
-      cacheScore * 0.2 +
-      textScore * 0.25
-    );
+    return frameScore * 0.3 + jitterScore * 0.25 + cacheScore * 0.2 + textScore * 0.25;
   }
 
   getMetrics(): QuantumMetrics {
@@ -388,7 +384,7 @@ export class QuantumRenderer {
       this.calculatePerformanceScore() * 0.25 +
       this.calculateFluidityScore() * 0.25 +
       (1 - this.state.jitterLevel) * 0.15 +
-      this.state.textClarity * 0.10
+      this.state.textClarity * 0.1
     );
   }
 
@@ -413,7 +409,8 @@ export class QuantumRenderer {
         return {
           onRender: () => this.componentCache.touch(componentId),
           onUnmount: () => this.componentCache.remove(componentId),
-          shouldUpdate: () => !this.componentCache.has(componentId) ||
+          shouldUpdate: () =>
+            !this.componentCache.has(componentId) ||
             this.componentCache.get(componentId)?.needsUpdate,
         };
       },
@@ -422,15 +419,13 @@ export class QuantumRenderer {
         return {
           prepareTransition: (el: HTMLElement, props: string[]) =>
             this.optimizeTransition(el, props),
-          scheduleAnimation: (fn: () => void) =>
-            this.frameHarmonizer.scheduleRender(fn),
+          scheduleAnimation: (fn: () => void) => this.frameHarmonizer.scheduleRender(fn),
         };
       },
 
       useQuantumStability: () => {
         return {
-          stabilize: (container: HTMLElement) =>
-            this.stabilizeLayout(container),
+          stabilize: (container: HTMLElement) => this.stabilizeLayout(container),
           getJitterLevel: () => this.state.jitterLevel,
           getTextClarity: () => this.state.textClarity,
         };

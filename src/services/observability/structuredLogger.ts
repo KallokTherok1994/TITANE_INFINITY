@@ -280,15 +280,17 @@ class StructuredLogger {
     }
 
     if (filters?.correlationId) {
-      filtered = filtered.filter(log => log.context.correlationId === filters.correlationId);
+      filtered = filtered.filter(
+        log => log.context.correlationId === filters.correlationId
+      );
     }
 
     if (filters?.startTime) {
-      filtered = filtered.filter(log => log.timestamp >= filters.startTime!);
+      filtered = filtered.filter(log => log.timestamp >= (filters.startTime ?? 0));
     }
 
     if (filters?.endTime) {
-      filtered = filtered.filter(log => log.timestamp <= filters.endTime!);
+      filtered = filtered.filter(log => log.timestamp <= (filters.endTime ?? Infinity));
     }
 
     return filtered;

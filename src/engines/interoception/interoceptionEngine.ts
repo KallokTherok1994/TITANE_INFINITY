@@ -196,10 +196,11 @@ class InteroceptionEngine {
     this.notifySubscribers();
   }
 
-  private updateBreathing(deltaTime: number): void {
+  private updateBreathing(_deltaTime: number): void {
     // Cycle de respiration sinusoïdal
     const breathingSpeed = BREATHING_RATE * (1 - this.state.cognitiveLoad * 0.3);
-    this.state.breathingPhase = (Math.sin(this.state.cycleTime * 0.001 * breathingSpeed * 2 * Math.PI) + 1) / 2;
+    this.state.breathingPhase =
+      (Math.sin(this.state.cycleTime * 0.001 * breathingSpeed * 2 * Math.PI) + 1) / 2;
   }
 
   private updateEnergy(deltaTime: number): void {
@@ -209,13 +210,19 @@ class InteroceptionEngine {
     // Régénération basée sur la clarté
     const energyRegen = this.state.clarity * ENERGY_REGEN_FACTOR * deltaTime;
 
-    this.state.energy = Math.max(0, Math.min(1, this.state.energy - energyDecay + energyRegen));
+    this.state.energy = Math.max(
+      0,
+      Math.min(1, this.state.energy - energyDecay + energyRegen)
+    );
   }
 
   private updateEntropy(): void {
     // Bruit naturel modulé par la stabilité
     const noise = (Math.random() - 0.5) * 2 * ENTROPY_NOISE_AMPLITUDE;
-    this.state.entropy = Math.max(0, Math.min(1, this.state.entropy + noise * (1 - this.state.stability)));
+    this.state.entropy = Math.max(
+      0,
+      Math.min(1, this.state.entropy + noise * (1 - this.state.stability))
+    );
   }
 
   private regulate(): void {
@@ -228,9 +235,11 @@ class InteroceptionEngine {
 
     this.state.energy += (targetEnergy - this.state.energy) * HOMEOSTASIS_STRENGTH;
     this.state.clarity += (targetClarity - this.state.clarity) * HOMEOSTASIS_STRENGTH;
-    this.state.stability += (targetStability - this.state.stability) * HOMEOSTASIS_STRENGTH;
+    this.state.stability +=
+      (targetStability - this.state.stability) * HOMEOSTASIS_STRENGTH;
     this.state.entropy += (targetEntropy - this.state.entropy) * HOMEOSTASIS_STRENGTH;
-    this.state.emotionalTemperature += (targetTemperature - this.state.emotionalTemperature) * HOMEOSTASIS_STRENGTH;
+    this.state.emotionalTemperature +=
+      (targetTemperature - this.state.emotionalTemperature) * HOMEOSTASIS_STRENGTH;
 
     // Mise à jour de l'indicateur d'homeostasie
     const deviations = [
@@ -250,16 +259,18 @@ class InteroceptionEngine {
   public applyContext(context: InteroceptionContext): void {
     // Charge cognitive
     if (context.taskComplexity !== undefined) {
-      this.state.cognitiveLoad = Math.max(0, Math.min(1,
-        this.state.cognitiveLoad + context.taskComplexity * 0.3
-      ));
+      this.state.cognitiveLoad = Math.max(
+        0,
+        Math.min(1, this.state.cognitiveLoad + context.taskComplexity * 0.3)
+      );
     }
 
     // Température émotionnelle
     if (context.emotionalIntensity !== undefined) {
-      this.state.emotionalTemperature = Math.max(-1, Math.min(1,
-        this.state.emotionalTemperature + context.emotionalIntensity * 0.5
-      ));
+      this.state.emotionalTemperature = Math.max(
+        -1,
+        Math.min(1, this.state.emotionalTemperature + context.emotionalIntensity * 0.5)
+      );
     }
 
     // Clarté (baisse si pas de présence utilisateur)

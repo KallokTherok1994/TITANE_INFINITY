@@ -60,7 +60,7 @@ type TabType = 'overview' | 'frames' | 'cache' | 'gpu' | 'stability' | 'rules' |
 const QuantumCenterContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [loading, setLoading] = useState(true);
-  const { _matrix, loading: matrixLoading } = useIdentityMatrix();
+  const { loading: matrixLoading } = useIdentityMatrix();
   const _singularityState = useSingularityStateSafe();
   const [metrics, setMetrics] = useState<QuantumMetrics>({
     fps: 120,
@@ -101,7 +101,10 @@ const QuantumCenterContent: React.FC = () => {
       }));
 
       setFrameHistory(prev => {
-        const newHistory = [...prev, { timestamp: now, frameTime: newFrameTime, fps: newFps }];
+        const newHistory = [
+          ...prev,
+          { timestamp: now, frameTime: newFrameTime, fps: newFps },
+        ];
         return newHistory.slice(-60); // Garder 60 dernières frames
       });
     }, 1000 / 30); // 30 Hz pour la mise à jour UI
@@ -144,15 +147,27 @@ const QuantumCenterContent: React.FC = () => {
     <div className="quantum-overview">
       {/* Score global */}
       <div className="quantum-global-score">
-        <div className="score-ring" style={{ '--score': metrics.overallScore } as React.CSSProperties}>
+        <div
+          className="score-ring"
+          style={{ '--score': metrics.overallScore } as React.CSSProperties}
+        >
           <div className="score-inner">
             <span className="score-value">{Math.round(metrics.overallScore * 100)}</span>
             <span className="score-label">Quantum Score</span>
           </div>
         </div>
         <div className="score-status">
-          <span className="status-indicator" style={{ background: getScoreColor(metrics.overallScore) }}></span>
-          <span>{metrics.overallScore >= 0.9 ? 'Excellent' : metrics.overallScore >= 0.7 ? 'Bon' : 'À optimiser'}</span>
+          <span
+            className="status-indicator"
+            style={{ background: getScoreColor(metrics.overallScore) }}
+          ></span>
+          <span>
+            {metrics.overallScore >= 0.9
+              ? 'Excellent'
+              : metrics.overallScore >= 0.7
+                ? 'Bon'
+                : 'À optimiser'}
+          </span>
         </div>
       </div>
 
@@ -165,7 +180,13 @@ const QuantumCenterContent: React.FC = () => {
             <span className="metric-label">FPS</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${(metrics.fps / 120) * 100}%`, background: getScoreColor(metrics.fps / 120) }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${(metrics.fps / 120) * 100}%`,
+                background: getScoreColor(metrics.fps / 120),
+              }}
+            ></div>
           </div>
         </div>
 
@@ -176,18 +197,32 @@ const QuantumCenterContent: React.FC = () => {
             <span className="metric-label">Frame Time</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${Math.max(0, 100 - (metrics.frameTime / 16.67) * 100)}%`, background: getScoreColor(1 - metrics.frameTime / 16.67) }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${Math.max(0, 100 - (metrics.frameTime / 16.67) * 100)}%`,
+                background: getScoreColor(1 - metrics.frameTime / 16.67),
+              }}
+            ></div>
           </div>
         </div>
 
         <div className="metric-card">
           <div className="metric-icon">💾</div>
           <div className="metric-info">
-            <span className="metric-value">{Math.round(metrics.cacheHitRate * 100)}%</span>
+            <span className="metric-value">
+              {Math.round(metrics.cacheHitRate * 100)}%
+            </span>
             <span className="metric-label">Cache Hit</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${metrics.cacheHitRate * 100}%`, background: getScoreColor(metrics.cacheHitRate) }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${metrics.cacheHitRate * 100}%`,
+                background: getScoreColor(metrics.cacheHitRate),
+              }}
+            ></div>
           </div>
         </div>
 
@@ -198,7 +233,13 @@ const QuantumCenterContent: React.FC = () => {
             <span className="metric-label">GPU Layers</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${(metrics.gpuLayers / 50) * 100}%`, background: 'var(--quantum-accent)' }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${(metrics.gpuLayers / 50) * 100}%`,
+                background: 'var(--quantum-accent)',
+              }}
+            ></div>
           </div>
         </div>
 
@@ -209,7 +250,13 @@ const QuantumCenterContent: React.FC = () => {
             <span className="metric-label">Anti-Jitter</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${metrics.jitterScore * 100}%`, background: getScoreColor(metrics.jitterScore) }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${metrics.jitterScore * 100}%`,
+                background: getScoreColor(metrics.jitterScore),
+              }}
+            ></div>
           </div>
         </div>
 
@@ -220,18 +267,32 @@ const QuantumCenterContent: React.FC = () => {
             <span className="metric-label">Text Clarity</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${metrics.textClarity * 100}%`, background: getScoreColor(metrics.textClarity) }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${metrics.textClarity * 100}%`,
+                background: getScoreColor(metrics.textClarity),
+              }}
+            ></div>
           </div>
         </div>
 
         <div className="metric-card">
           <div className="metric-icon">🌊</div>
           <div className="metric-info">
-            <span className="metric-value">{Math.round(metrics.motionFluidity * 100)}%</span>
+            <span className="metric-value">
+              {Math.round(metrics.motionFluidity * 100)}%
+            </span>
             <span className="metric-label">Fluidity</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: `${metrics.motionFluidity * 100}%`, background: getScoreColor(metrics.motionFluidity) }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: `${metrics.motionFluidity * 100}%`,
+                background: getScoreColor(metrics.motionFluidity),
+              }}
+            ></div>
           </div>
         </div>
 
@@ -242,7 +303,13 @@ const QuantumCenterContent: React.FC = () => {
             <span className="metric-label">VSync</span>
           </div>
           <div className="metric-bar">
-            <div className="metric-fill" style={{ width: metrics.vsyncAligned ? '100%' : '0%', background: 'var(--quantum-excellent)' }}></div>
+            <div
+              className="metric-fill"
+              style={{
+                width: metrics.vsyncAligned ? '100%' : '0%',
+                background: 'var(--quantum-excellent)',
+              }}
+            ></div>
           </div>
         </div>
       </div>
@@ -270,7 +337,10 @@ const QuantumCenterContent: React.FC = () => {
               className="frame-bar"
               style={{
                 height: `${Math.min(100, (frame.frameTime / 16.67) * 100)}%`,
-                background: frame.frameTime > 16.67 ? 'var(--quantum-warning)' : 'var(--quantum-accent)',
+                background:
+                  frame.frameTime > 16.67
+                    ? 'var(--quantum-warning)'
+                    : 'var(--quantum-accent)',
               }}
               title={`${formatMs(frame.frameTime)} @ ${frame.fps} FPS`}
             />
@@ -290,12 +360,17 @@ const QuantumCenterContent: React.FC = () => {
         <div className="stat">
           <span className="stat-label">Avg Frame Time</span>
           <span className="stat-value">
-            {formatMs(frameHistory.reduce((a, b) => a + b.frameTime, 0) / Math.max(1, frameHistory.length))}
+            {formatMs(
+              frameHistory.reduce((a, b) => a + b.frameTime, 0) /
+                Math.max(1, frameHistory.length)
+            )}
           </span>
         </div>
         <div className="stat">
           <span className="stat-label">Dropped Frames</span>
-          <span className="stat-value">{frameHistory.filter(f => f.frameTime > 16.67).length}</span>
+          <span className="stat-value">
+            {frameHistory.filter(f => f.frameTime > 16.67).length}
+          </span>
         </div>
         <div className="stat">
           <span className="stat-label">Target</span>
@@ -322,7 +397,9 @@ const QuantumCenterContent: React.FC = () => {
           <span className="stat-label">Entries</span>
         </div>
         <div className="cache-stat">
-          <span className="stat-value">{cacheEntries.reduce((a, e) => a + e.hits, 0)}</span>
+          <span className="stat-value">
+            {cacheEntries.reduce((a, e) => a + e.hits, 0)}
+          </span>
           <span className="stat-label">Total Hits</span>
         </div>
       </div>
@@ -366,7 +443,9 @@ const QuantumCenterContent: React.FC = () => {
         <div className="gpu-stat">
           <div className="gpu-icon">💾</div>
           <div className="gpu-info">
-            <span className="gpu-value">{gpuLayers.reduce((a, l) => a + l.memoryMB, 0).toFixed(1)} MB</span>
+            <span className="gpu-value">
+              {gpuLayers.reduce((a, l) => a + l.memoryMB, 0).toFixed(1)} MB
+            </span>
             <span className="gpu-label">VRAM Usage</span>
           </div>
         </div>
@@ -404,7 +483,10 @@ const QuantumCenterContent: React.FC = () => {
           <div className="stability-icon">📐</div>
           <div className="stability-info">
             <h4>Anti-Jitter</h4>
-            <div className="stability-score" style={{ color: getScoreColor(metrics.jitterScore) }}>
+            <div
+              className="stability-score"
+              style={{ color: getScoreColor(metrics.jitterScore) }}
+            >
               {Math.round(metrics.jitterScore * 100)}%
             </div>
             <p>Layout trembles eliminated</p>
@@ -415,7 +497,10 @@ const QuantumCenterContent: React.FC = () => {
           <div className="stability-icon">📝</div>
           <div className="stability-info">
             <h4>Text Stability</h4>
-            <div className="stability-score" style={{ color: getScoreColor(metrics.textClarity) }}>
+            <div
+              className="stability-score"
+              style={{ color: getScoreColor(metrics.textClarity) }}
+            >
               {Math.round(metrics.textClarity * 100)}%
             </div>
             <p>Subpixel rendering optimized</p>
@@ -426,7 +511,14 @@ const QuantumCenterContent: React.FC = () => {
           <div className="stability-icon">🔄</div>
           <div className="stability-info">
             <h4>VSync Alignment</h4>
-            <div className="stability-score" style={{ color: metrics.vsyncAligned ? 'var(--quantum-excellent)' : 'var(--quantum-warning)' }}>
+            <div
+              className="stability-score"
+              style={{
+                color: metrics.vsyncAligned
+                  ? 'var(--quantum-excellent)'
+                  : 'var(--quantum-warning)',
+              }}
+            >
               {metrics.vsyncAligned ? 'Aligned' : 'Misaligned'}
             </div>
             <p>Frame pacing synchronized</p>
@@ -437,7 +529,10 @@ const QuantumCenterContent: React.FC = () => {
           <div className="stability-icon">🌊</div>
           <div className="stability-info">
             <h4>Motion Fluidity</h4>
-            <div className="stability-score" style={{ color: getScoreColor(metrics.motionFluidity) }}>
+            <div
+              className="stability-score"
+              style={{ color: getScoreColor(metrics.motionFluidity) }}
+            >
               {Math.round(metrics.motionFluidity * 100)}%
             </div>
             <p>Animation curves harmonized</p>

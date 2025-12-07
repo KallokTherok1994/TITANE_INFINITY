@@ -88,10 +88,13 @@ const ConsciousnessDisplay: React.FC<{
 
   return (
     <div className="consciousness-display">
-      <div className="consciousness-orb" style={{
-        background: `radial-gradient(circle, ${levelColors[level] || '#888'} 0%, transparent 70%)`,
-        boxShadow: `0 0 ${score * 40}px ${levelColors[level] || '#888'}`,
-      }}>
+      <div
+        className="consciousness-orb"
+        style={{
+          background: `radial-gradient(circle, ${levelColors[level] || '#888'} 0%, transparent 70%)`,
+          boxShadow: `0 0 ${score * 40}px ${levelColors[level] || '#888'}`,
+        }}
+      >
         <span className="consciousness-icon">🧠</span>
       </div>
       <div className="consciousness-info">
@@ -125,7 +128,7 @@ const ModeSelector: React.FC<{
     <div className="mode-selector">
       <h4>Intelligence Mode</h4>
       <div className="mode-buttons">
-        {modes.map((mode) => (
+        {modes.map(mode => (
           <button
             key={mode.id}
             className={`mode-btn ${currentMode.toLowerCase() === mode.id ? 'active' : ''}`}
@@ -181,14 +184,16 @@ const InsightCard: React.FC<{ insight: Insight }> = ({ insight }) => (
 const HyperCenterContent: React.FC = () => {
   const [state, setState] = useState<HyperIntelligenceState | null>(null);
   const [thoughts, setThoughts] = useState<Thought[]>([]);
-  const { _matrix, loading: matrixLoading } = useIdentityMatrix();
+  const { loading: matrixLoading } = useIdentityMatrix();
   const _singularityState = useSingularityStateSafe();
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [thinkPrompt, setThinkPrompt] = useState('');
   const [thinking, setThinking] = useState(false);
-  const [activeTab, setActiveTab] = useState<'think' | 'reason' | 'imagine' | 'insights'>('think');
+  const [activeTab, setActiveTab] = useState<'think' | 'reason' | 'imagine' | 'insights'>(
+    'think'
+  );
 
   // Reasoning state
   const [premises, setPremises] = useState<string[]>(['']);
@@ -239,7 +244,7 @@ const HyperCenterContent: React.FC = () => {
     setThinking(true);
     try {
       const thought = await invoke<Thought>('hyper_think', { prompt: thinkPrompt });
-      setThoughts((prev) => [thought, ...prev].slice(0, 10));
+      setThoughts(prev => [thought, ...prev].slice(0, 10));
       setThinkPrompt('');
       await loadState();
     } catch (err) {
@@ -250,13 +255,15 @@ const HyperCenterContent: React.FC = () => {
   };
 
   const handleReason = async () => {
-    const validPremises = premises.filter((p) => p.trim());
+    const validPremises = premises.filter(p => p.trim());
     if (validPremises.length < 2) {
       setError('At least 2 premises required');
       return;
     }
     try {
-      const result = await invoke<Conclusion>('hyper_reason', { premises: validPremises });
+      const result = await invoke<Conclusion>('hyper_reason', {
+        premises: validPremises,
+      });
       setConclusion(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -275,7 +282,9 @@ const HyperCenterContent: React.FC = () => {
 
   const handleGenerateInsight = async () => {
     try {
-      await invoke<Insight>('hyper_generate_insight', { context: thinkPrompt || 'current context' });
+      await invoke<Insight>('hyper_generate_insight', {
+        context: thinkPrompt || 'current context',
+      });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -306,7 +315,14 @@ const HyperCenterContent: React.FC = () => {
       <div className="hyper-center error">
         <span className="error-icon">⚠️</span>
         <p>{error}</p>
-        <button onClick={() => { setError(null); loadState(); }}>🔄 Retry</button>
+        <button
+          onClick={() => {
+            setError(null);
+            loadState();
+          }}
+        >
+          🔄 Retry
+        </button>
       </div>
     );
   }
@@ -331,7 +347,10 @@ const HyperCenterContent: React.FC = () => {
 
       {/* Consciousness Display */}
       <section className="consciousness-section">
-        <ConsciousnessDisplay level={state.consciousness_level} score={state.consciousness_score} />
+        <ConsciousnessDisplay
+          level={state.consciousness_level}
+          score={state.consciousness_score}
+        />
         <div className="metrics-grid">
           <div className="metric">
             <span className="metric-value">{state.thought_count}</span>
@@ -346,11 +365,15 @@ const HyperCenterContent: React.FC = () => {
             <span className="metric-label">Depth</span>
           </div>
           <div className="metric">
-            <span className="metric-value">{(state.creativity_index * 100).toFixed(0)}%</span>
+            <span className="metric-value">
+              {(state.creativity_index * 100).toFixed(0)}%
+            </span>
             <span className="metric-label">Creativity</span>
           </div>
           <div className="metric">
-            <span className="metric-value">{(state.coherence_score * 100).toFixed(0)}%</span>
+            <span className="metric-value">
+              {(state.coherence_score * 100).toFixed(0)}%
+            </span>
             <span className="metric-label">Coherence</span>
           </div>
         </div>
@@ -361,7 +384,7 @@ const HyperCenterContent: React.FC = () => {
 
       {/* Tabs */}
       <nav className="hyper-tabs">
-        {(['think', 'reason', 'imagine', 'insights'] as const).map((tab) => (
+        {(['think', 'reason', 'imagine', 'insights'] as const).map(tab => (
           <button
             key={tab}
             className={activeTab === tab ? 'active' : ''}
@@ -382,7 +405,7 @@ const HyperCenterContent: React.FC = () => {
             <div className="think-input">
               <textarea
                 value={thinkPrompt}
-                onChange={(e) => setThinkPrompt(e.target.value)}
+                onChange={e => setThinkPrompt(e.target.value)}
                 placeholder="Enter a thought or question..."
                 rows={3}
               />
@@ -398,7 +421,9 @@ const HyperCenterContent: React.FC = () => {
               {thoughts.length === 0 ? (
                 <p className="no-data">No thoughts yet. Start thinking!</p>
               ) : (
-                thoughts.map((thought) => <ThoughtCard key={thought.id} thought={thought} />)
+                thoughts.map(thought => (
+                  <ThoughtCard key={thought.id} thought={thought} />
+                ))
               )}
             </div>
           </div>
@@ -414,7 +439,7 @@ const HyperCenterContent: React.FC = () => {
                   <input
                     type="text"
                     value={premise}
-                    onChange={(e) => {
+                    onChange={e => {
                       const newPremises = [...premises];
                       newPremises[idx] = e.target.value;
                       setPremises(newPremises);
@@ -432,8 +457,13 @@ const HyperCenterContent: React.FC = () => {
                 </div>
               ))}
               <div className="premise-actions">
-                <button onClick={() => setPremises([...premises, ''])}>+ Add Premise</button>
-                <button onClick={handleReason} disabled={premises.filter(p => p.trim()).length < 2}>
+                <button onClick={() => setPremises([...premises, ''])}>
+                  + Add Premise
+                </button>
+                <button
+                  onClick={handleReason}
+                  disabled={premises.filter(p => p.trim()).length < 2}
+                >
                   🔗 Deduce
                 </button>
               </div>
@@ -451,7 +481,9 @@ const HyperCenterContent: React.FC = () => {
                   <div className="reasoning-chain">
                     <h5>Reasoning Chain:</h5>
                     {conclusion.reasoning_chain.map((step, idx) => (
-                      <div key={idx} className="chain-step">{step}</div>
+                      <div key={idx} className="chain-step">
+                        {step}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -466,7 +498,7 @@ const HyperCenterContent: React.FC = () => {
               <input
                 type="text"
                 value={imagineSeed}
-                onChange={(e) => setImagineSeed(e.target.value)}
+                onChange={e => setImagineSeed(e.target.value)}
                 placeholder="Enter a seed for imagination..."
               />
               <button onClick={handleImagine} disabled={!imagineSeed.trim()}>
@@ -501,10 +533,12 @@ const HyperCenterContent: React.FC = () => {
           <div className="tab-insights">
             <h4>Generated Insights</h4>
             {insights.length === 0 ? (
-              <p className="no-data">No insights yet. Generate some from the Think tab!</p>
+              <p className="no-data">
+                No insights yet. Generate some from the Think tab!
+              </p>
             ) : (
               <div className="insights-list">
-                {insights.map((insight) => (
+                {insights.map(insight => (
                   <InsightCard key={insight.id} insight={insight} />
                 ))}
               </div>

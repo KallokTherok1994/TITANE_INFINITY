@@ -15,19 +15,9 @@ import DevicesView from './DevicesView';
 import './CloudCenter.css';
 
 // Types (re-exported from types.ts)
-import type {
-  CloudStatus,
-  SyncResult,
-  DeviceIdentity,
-  SyncLogEntry,
-} from './types';
+import type { CloudStatus, SyncResult } from './types';
 
-export type {
-  CloudStatus,
-  SyncResult,
-  DeviceIdentity,
-  SyncLogEntry,
-} from './types';
+export type { CloudStatus, SyncResult, DeviceIdentity, SyncLogEntry } from './types';
 
 type TabId = 'vault' | 'config' | 'logs' | 'devices';
 
@@ -62,7 +52,7 @@ const CloudCenter: React.FC = () => {
   // Initialiser le Cloud Sync
   const handleInitialize = async () => {
     if (!passphrase || !deviceName) {
-      setError('Veuillez entrer un mot de passe et un nom d\'appareil');
+      setError("Veuillez entrer un mot de passe et un nom d'appareil");
       return;
     }
 
@@ -123,9 +113,9 @@ const CloudCenter: React.FC = () => {
     try {
       const isValid = await invoke<boolean>('cloud_verify_integrity');
       if (isValid) {
-        alert('✅ L\'intégrité du vault est validée');
+        alert("✅ L'intégrité du vault est validée");
       } else {
-        setError('⚠️ Le vault présente des problèmes d\'intégrité');
+        setError("⚠️ Le vault présente des problèmes d'intégrité");
       }
     } catch (err: any) {
       setError(err.toString());
@@ -175,10 +165,7 @@ const CloudCenter: React.FC = () => {
                 <br />
                 Chiffrement AES-256-GCM + signatures Ed25519.
               </p>
-              <button
-                className="btn-primary"
-                onClick={() => setShowInitForm(true)}
-              >
+              <button className="btn-primary" onClick={() => setShowInitForm(true)}>
                 Initialiser le Cloud Sync
               </button>
             </div>
@@ -192,7 +179,7 @@ const CloudCenter: React.FC = () => {
                   id="deviceName"
                   type="text"
                   value={deviceName}
-                  onChange={(e) => setDeviceName(e.target.value)}
+                  onChange={e => setDeviceName(e.target.value)}
                   placeholder="Ex: Pop!_OS Laptop"
                 />
               </div>
@@ -203,7 +190,7 @@ const CloudCenter: React.FC = () => {
                   id="passphrase"
                   type="password"
                   value={passphrase}
-                  onChange={(e) => setPassphrase(e.target.value)}
+                  onChange={e => setPassphrase(e.target.value)}
                   placeholder="Mot de passe fort..."
                 />
                 <small>
@@ -243,7 +230,9 @@ const CloudCenter: React.FC = () => {
       <header className="cloud-header">
         <div className="header-left">
           <h1>☁️ TITANE∞ Cloud Center</h1>
-          <span className={`status-badge status-${status?.status?.toLowerCase() || 'idle'}`}>
+          <span
+            className={`status-badge status-${status?.status?.toLowerCase() || 'idle'}`}
+          >
             {status?.status || 'Idle'}
           </span>
         </div>
@@ -289,7 +278,7 @@ const CloudCenter: React.FC = () => {
       )}
 
       <nav className="cloud-tabs">
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <button
             key={tab.id}
             className={`tab-button ${activeTab === tab.id ? 'active' : ''}`}
@@ -302,12 +291,8 @@ const CloudCenter: React.FC = () => {
       </nav>
 
       <main className="cloud-content">
-        {activeTab === 'vault' && (
-          <VaultStatus status={status} onRefresh={loadStatus} />
-        )}
-        {activeTab === 'config' && (
-          <SyncConfig status={status} onUpdate={loadStatus} />
-        )}
+        {activeTab === 'vault' && <VaultStatus status={status} onRefresh={loadStatus} />}
+        {activeTab === 'config' && <SyncConfig status={status} onUpdate={loadStatus} />}
         {activeTab === 'logs' && <SyncLogs />}
         {activeTab === 'devices' && <DevicesView />}
       </main>

@@ -17,21 +17,21 @@ import { antiEchoShield } from './antiEchoShield';
  * Types d'événements d'interruption
  */
 export type BargeInType =
-  | 'USER_INTERRUPT'      // Interruption forte (voix forte)
-  | 'USER_SOFT_BARGE'     // Interruption douce (voix basse) → ducking
-  | 'USER_OVERLAP'        // Utilisateur parle pendant début TTS
-  | 'FALSE_POSITIVE';     // Bruit ambiant, pas une voix
+  | 'USER_INTERRUPT' // Interruption forte (voix forte)
+  | 'USER_SOFT_BARGE' // Interruption douce (voix basse) → ducking
+  | 'USER_OVERLAP' // Utilisateur parle pendant début TTS
+  | 'FALSE_POSITIVE'; // Bruit ambiant, pas une voix
 
 /**
  * Événement d'interruption détecté
  */
 export interface BargeInEvent {
   type: BargeInType;
-  confidence: number;        // 0-1
-  amplitude: number;         // RMS level
+  confidence: number; // 0-1
+  amplitude: number; // RMS level
   timestamp: number;
-  isSpeech: boolean;         // VAD output
-  spectralMatch: number;     // 0-1 (similarity with TTS)
+  isSpeech: boolean; // VAD output
+  spectralMatch: number; // 0-1 (similarity with TTS)
 }
 
 /**
@@ -249,7 +249,9 @@ export class BargeInDetector {
       return;
     }
 
-    console.log(`[BargeInDetector] 🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`);
+    console.log(
+      `[BargeInDetector] 🚨 ${event.type} detected (confidence: ${event.confidence.toFixed(2)})`
+    );
 
     this.listeners.forEach(listener => {
       try {
@@ -274,7 +276,10 @@ export class BargeInDetector {
     // Zero-crossing rate
     let zeroCrossings = 0;
     for (let i = 1; i < audioChunk.length; i++) {
-      if ((audioChunk[i] >= 0 && audioChunk[i - 1] < 0) || (audioChunk[i] < 0 && audioChunk[i - 1] >= 0)) {
+      if (
+        (audioChunk[i] >= 0 && audioChunk[i - 1] < 0) ||
+        (audioChunk[i] < 0 && audioChunk[i - 1] >= 0)
+      ) {
         zeroCrossings++;
       }
     }
@@ -314,7 +319,7 @@ export class BargeInDetector {
   /**
    * Extrait le spectre fréquentiel d'un signal
    */
-  private extractSpectrum(audioData: Float32Array): Float32Array {
+  private extractSpectrum(_audioData: Float32Array): Float32Array {
     if (!this.analyser) {
       return new Float32Array(0);
     }
@@ -327,7 +332,10 @@ export class BargeInDetector {
   /**
    * Calcule la similarité spectrale entre deux signaux (0-1)
    */
-  private computeSpectralSimilarity(spectrum1: Float32Array, spectrum2: Float32Array): number {
+  private computeSpectralSimilarity(
+    spectrum1: Float32Array,
+    spectrum2: Float32Array
+  ): number {
     const minLength = Math.min(spectrum1.length, spectrum2.length);
     let dotProduct = 0;
     let mag1 = 0;
@@ -348,11 +356,10 @@ export class BargeInDetector {
    */
   private simpleVAD(analysis: AudioAnalysis): boolean {
     const speechThreshold = 0.02; // RMS minimum pour la parole
-    const zcrThreshold = 0.05;    // ZCR minimum pour la parole
+    const zcrThreshold = 0.05; // ZCR minimum pour la parole
 
     return (
-      analysis.rmsAmplitude > speechThreshold &&
-      analysis.zeroCrossingRate > zcrThreshold
+      analysis.rmsAmplitude > speechThreshold && analysis.zeroCrossingRate > zcrThreshold
     );
   }
 

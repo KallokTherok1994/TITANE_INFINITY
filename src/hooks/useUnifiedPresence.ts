@@ -16,12 +16,12 @@ import {
   type PresenceState,
   type TonicProfile,
   type UserContext,
-  type IdentityMatrix
+  type IdentityMatrix,
 } from '@/engines/presence/unifiedPresenceEngine';
 import {
   narrativeProtocol,
   type NarrativeArc,
-  type SymbolicElement
+  type SymbolicElement,
 } from '@/engines/presence/narrativeProtocol';
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -53,7 +53,7 @@ export function useUnifiedPresence() {
 
   useEffect(() => {
     // S'abonner aux changements d'état
-    const unsubscribe = unifiedPresenceEngine.subscribe((newState) => {
+    const unsubscribe = unifiedPresenceEngine.subscribe(newState => {
       setState(newState);
       setUserContext(unifiedPresenceEngine.getUserContext());
       setProfile(unifiedPresenceEngine.getCurrentProfile());
@@ -62,8 +62,8 @@ export function useUnifiedPresence() {
     return unsubscribe;
   }, []);
 
-  const setTonicProfile = useCallback((profileName: string) => {
-    unifiedPresenceEngine.setProfile(profileName as any);
+  const setTonicProfile = useCallback((profileName: TonicProfile['name']) => {
+    unifiedPresenceEngine.setProfile(profileName);
   }, []);
 
   const getIdentity = useCallback(() => {
@@ -75,7 +75,7 @@ export function useUnifiedPresence() {
     userContext,
     profile,
     setTonicProfile,
-    getIdentity
+    getIdentity,
   };
 }
 
@@ -100,9 +100,7 @@ export function useUnifiedPresence() {
  * ```
  */
 export function useNarrativeArc() {
-  const [arc, setArc] = useState<NarrativeArc | null>(
-    narrativeProtocol.getCurrentArc()
-  );
+  const [arc, setArc] = useState<NarrativeArc | null>(narrativeProtocol.getCurrentArc());
   const [symbols, setSymbols] = useState<SymbolicElement[]>(
     narrativeProtocol.getActiveSymbols()
   );
@@ -117,25 +115,29 @@ export function useNarrativeArc() {
     return () => clearInterval(interval);
   }, []);
 
-  const addMoment = useCallback((moment: {
-    type: 'transition' | 'achievement' | 'challenge' | 'insight' | 'rest';
-    description: string;
-    emotionalImpact: number;
-    contextTags: string[];
-  }) => {
-    narrativeProtocol.addNarrativeMoment(moment);
-    setArc(narrativeProtocol.getCurrentArc());
-  }, []);
+  const addMoment = useCallback(
+    (moment: {
+      type: 'transition' | 'achievement' | 'challenge' | 'insight' | 'rest';
+      description: string;
+      emotionalImpact: number;
+      contextTags: string[];
+    }) => {
+      narrativeProtocol.addNarrativeMoment(moment);
+      setArc(narrativeProtocol.getCurrentArc());
+    },
+    []
+  );
 
-  const transitionPhase = useCallback((
-    phase: 'beginning' | 'exploration' | 'deepwork' | 'synthesis' | 'closure'
-  ) => {
-    narrativeProtocol.transitionPhase(phase);
-    setArc(narrativeProtocol.getCurrentArc());
-  }, []);
+  const transitionPhase = useCallback(
+    (phase: 'beginning' | 'exploration' | 'deepwork' | 'synthesis' | 'closure') => {
+      narrativeProtocol.transitionPhase(phase);
+      setArc(narrativeProtocol.getCurrentArc());
+    },
+    []
+  );
 
-  const activateSymbol = useCallback((symbolKey: string) => {
-    narrativeProtocol.activateSymbol(symbolKey as any);
+  const activateSymbol = useCallback((symbolKey: SymbolicElement['key']) => {
+    narrativeProtocol.activateSymbol(symbolKey);
     setSymbols(narrativeProtocol.getActiveSymbols());
   }, []);
 
@@ -147,7 +149,7 @@ export function useNarrativeArc() {
     addMoment,
     transitionPhase,
     activateSymbol,
-    continuityScore
+    continuityScore,
   };
 }
 
@@ -188,15 +190,15 @@ export function useVisualPresence() {
       '--presence-intensity': state.visualIntensity / 100,
       '--presence-accent': state.accentStrength / 100,
       '--presence-pulse': state.pulseRate / 100,
-      '--presence-hue': state.ambientHue
+      '--presence-hue': state.ambientHue,
     }),
 
     // Style inline complet
     getInlineStyle: () => ({
       opacity: state.visualIntensity / 100,
       filter: `hue-rotate(${state.ambientHue - 250}deg)`,
-      transition: 'all 0.3s ease'
-    })
+      transition: 'all 0.3s ease',
+    }),
   };
 }
 
@@ -227,7 +229,7 @@ export function useCognitivePresence() {
     // Helpers
     isHighClarity: state.clarityLevel > 70,
     isHighComplexity: state.complexityHandled > 70,
-    isAligned: state.intentionAlignment > 80
+    isAligned: state.intentionAlignment > 80,
   };
 }
 
@@ -269,7 +271,7 @@ export function useEmotionalPresence() {
       if (state.proximity < 50) return 'professional';
       if (state.proximity < 70) return 'friendly';
       return 'intimate';
-    }
+    },
   };
 }
 
@@ -307,7 +309,7 @@ export function useSymbolicPresence() {
     // Helpers
     isStable: state.identityStability > 90,
     hasContinuity: continuityScore > 80,
-    isDeep: state.mythologicalDepth > 60
+    isDeep: state.mythologicalDepth > 60,
   };
 }
 
@@ -350,7 +352,7 @@ export function useUserContextPresence() {
       if (userContext.cognitiveLoad > 80) return 'Réduire la complexité';
       if (userContext.tempo > 80) return 'Ralentir le rythme';
       return 'Rythme optimal';
-    }
+    },
   };
 }
 
@@ -376,9 +378,12 @@ export function useUserContextPresence() {
 export function useTonicProfile() {
   const { profile, setTonicProfile } = useUnifiedPresence();
 
-  const changeProfile = useCallback((profileName: string) => {
-    setTonicProfile(profileName);
-  }, [setTonicProfile]);
+  const changeProfile = useCallback(
+    (profileName: string) => {
+      setTonicProfile(profileName);
+    },
+    [setTonicProfile]
+  );
 
   return {
     profile,
@@ -393,7 +398,7 @@ export function useTonicProfile() {
     isFormal: profile.formality === 'technical' || profile.formality === 'professional',
     isDeep: profile.emotionalDepth === 'deep' || profile.emotionalDepth === 'profound',
     isDense: profile.narrativeDensity === 'rich' || profile.narrativeDensity === 'dense',
-    isHighEnergy: profile.energyLevel === 'high' || profile.energyLevel === 'peak'
+    isHighEnergy: profile.energyLevel === 'high' || profile.energyLevel === 'peak',
   };
 }
 

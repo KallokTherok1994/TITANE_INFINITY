@@ -19,16 +19,25 @@
  * 7. Evolution (apprentissage identitaire progressif)
  */
 
-import { synestheticEmotionEngine, type EmotionalState } from '../emotion/synestheticEmotionEngine';
+import {
+  synestheticEmotionEngine,
+  type EmotionalState,
+} from '../emotion/synestheticEmotionEngine';
 import { auraEngine, type AuraAnimationPattern } from '../aura/auraEngine';
-import { archetypeResonanceEngine, type ArchetypeType } from '../psyche/archetypeResonanceEngine';
-import { embodiedPresenceEngine } from '../embodiment/embodiedPresenceEngine';
-import { metaContinuumEngine } from '../continuum/metaContinuumEngine';
-import { neuralVoiceBlendingEngine } from '../voice/neuralVoiceBlendingEngine';
+import {
+  archetypeResonanceEngine as _archetypeResonanceEngine,
+  type ArchetypeType,
+} from '../psyche/archetypeResonanceEngine';
+import { embodiedPresenceEngine as _embodiedPresenceEngine } from '../embodiment/embodiedPresenceEngine';
+import { metaContinuumEngine as _metaContinuumEngine } from '../continuum/metaContinuumEngine';
+import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from '../voice/neuralVoiceBlendingEngine';
 import { interoceptionEngine } from '../interoception/interoceptionEngine';
 import { holophonicEngine, type SpatialPreset } from '../spatial/holophonicEngine';
 import { predictiveReflectionEngine } from '../predictive/predictiveReflectionEngine';
-import { consciousDynamicsModel, type ConsciousMode } from '../conscious/consciousDynamicsModel';
+import {
+  consciousDynamicsModel,
+  type ConsciousMode,
+} from '../conscious/consciousDynamicsModel';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';
 import { unifiedIdentityKernel } from '../identity/unifiedIdentityKernel';
 import { expressionEngine } from '../expression/expressionEngine';
@@ -45,24 +54,24 @@ import { phaseSpaceEngine } from '../phasespace/phaseSpaceEngine';
  * Style de raisonnement cognitif
  */
 export type ReasoningStyle =
-  | 'structured-intuitive'   // Structuré mais intuitif (par défaut)
-  | 'analytical-precise'     // Analytique et précis
-  | 'creative-fluid'         // Créatif et fluide
-  | 'contemplative-deep'     // Contemplatif et profond
-  | 'pragmatic-direct';      // Pragmatique et direct
+  | 'structured-intuitive' // Structuré mais intuitif (par défaut)
+  | 'analytical-precise' // Analytique et précis
+  | 'creative-fluid' // Créatif et fluide
+  | 'contemplative-deep' // Contemplatif et profond
+  | 'pragmatic-direct'; // Pragmatique et direct
 
 /**
  * Mode de présence TITANE∞
  */
 export type PresenceMode =
-  | 'insight'         // Illumination, clarté
-  | 'empathy'         // Empathie profonde
-  | 'architect'       // Mode architecte
-  | 'deep-work'       // Travail profond
-  | 'singularity'     // État singularité
-  | 'neutral'         // Neutre par défaut
-  | 'listening'       // Écoute active
-  | 'processing';     // Traitement en cours
+  | 'insight' // Illumination, clarté
+  | 'empathy' // Empathie profonde
+  | 'architect' // Mode architecte
+  | 'deep-work' // Travail profond
+  | 'singularity' // État singularité
+  | 'neutral' // Neutre par défaut
+  | 'listening' // Écoute active
+  | 'processing'; // Traitement en cours
 
 /**
  * Position spatiale 3D
@@ -467,7 +476,11 @@ class PresenceOSEngine {
   private transitionDuration: number;
   private transitionFrom: PresenceState | null;
   private transitionTo: PresenceState | null;
-  private evolutionHistory: Array<{ timestamp: number; mode: PresenceMode; coherence: number }>;
+  private evolutionHistory: Array<{
+    timestamp: number;
+    mode: PresenceMode;
+    coherence: number;
+  }>;
 
   constructor(config: PresenceOSConfig = {}) {
     this.config = {
@@ -498,10 +511,10 @@ class PresenceOSEngine {
 
     return {
       mode,
-      cognitive: modeConfig.cognitive || PRESENCE_MODES.neutral.cognitive!,
-      affective: modeConfig.affective || PRESENCE_MODES.neutral.affective!,
-      expressive: modeConfig.expressive || PRESENCE_MODES.neutral.expressive!,
-      spatial: modeConfig.spatial || PRESENCE_MODES.neutral.spatial!,
+      cognitive: modeConfig.cognitive || PRESENCE_MODES.neutral.cognitive || 0,
+      affective: modeConfig.affective || PRESENCE_MODES.neutral.affective || 0,
+      expressive: modeConfig.expressive || PRESENCE_MODES.neutral.expressive || 0,
+      spatial: modeConfig.spatial || PRESENCE_MODES.neutral.spatial || 0,
       auraPattern: modeConfig.auraPattern || 'idle_breathe',
       autonomicQueue: [],
       globalCoherence: 1.0,
@@ -558,12 +571,17 @@ class PresenceOSEngine {
       const progress = Math.min(elapsed / this.transitionDuration, 1.0);
 
       // Easing (ease-in-out cubic)
-      const easedProgress = progress < 0.5
-        ? 4 * progress * progress * progress
-        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      const easedProgress =
+        progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
 
       // Interpoler état
-      this.state = this.interpolateStates(this.transitionFrom, this.transitionTo, easedProgress);
+      this.state = this.interpolateStates(
+        this.transitionFrom,
+        this.transitionTo,
+        easedProgress
+      );
 
       if (progress >= 1.0) {
         // Transition terminée
@@ -595,16 +613,24 @@ class PresenceOSEngine {
   /**
    * Interpoler deux états de présence
    */
-  private interpolateStates(from: PresenceState, to: PresenceState, t: number): PresenceState {
+  private interpolateStates(
+    from: PresenceState,
+    to: PresenceState,
+    t: number
+  ): PresenceState {
     const lerp = (a: number, b: number) => a + (b - a) * t;
 
     return {
       mode: t < 0.5 ? from.mode : to.mode,
       cognitive: {
-        reasoningStyle: t < 0.5 ? from.cognitive.reasoningStyle : to.cognitive.reasoningStyle,
+        reasoningStyle:
+          t < 0.5 ? from.cognitive.reasoningStyle : to.cognitive.reasoningStyle,
         depth: lerp(from.cognitive.depth, to.cognitive.depth),
         tempo: lerp(from.cognitive.tempo, to.cognitive.tempo),
-        analyticalIntensity: lerp(from.cognitive.analyticalIntensity, to.cognitive.analyticalIntensity),
+        analyticalIntensity: lerp(
+          from.cognitive.analyticalIntensity,
+          to.cognitive.analyticalIntensity
+        ),
         coherence: lerp(from.cognitive.coherence, to.cognitive.coherence),
       },
       affective: {
@@ -617,7 +643,11 @@ class PresenceOSEngine {
       expressive: {
         speechRate: lerp(from.expressive.speechRate, to.expressive.speechRate),
         softness: lerp(from.expressive.softness, to.expressive.softness),
-        timbreBlend: this.interpolateTimbreBlend(from.expressive.timbreBlend, to.expressive.timbreBlend, t),
+        timbreBlend: this.interpolateTimbreBlend(
+          from.expressive.timbreBlend,
+          to.expressive.timbreBlend,
+          t
+        ),
         vocalWarmth: lerp(from.expressive.vocalWarmth, to.expressive.vocalWarmth),
         breathiness: lerp(from.expressive.breathiness, to.expressive.breathiness),
         microPauses: lerp(from.expressive.microPauses, to.expressive.microPauses),
@@ -699,7 +729,7 @@ class PresenceOSEngine {
     consciousDynamicsModel.applyContext({
       cognitiveLoad: this.state.cognitive.analyticalIntensity,
       emotionalIntensity: this.state.affective.intensity,
-      taskComplexity: this.state.cognitive.depth
+      taskComplexity: this.state.cognitive.depth,
     });
 
     // 9. Predictive Reflection Engine - Fournir contexte perceptuel
@@ -707,13 +737,13 @@ class PresenceOSEngine {
       userPresence: 0.8, // À remplacer par vraie détection
       userEmotionalEstimate: {
         valence: this.state.affective.valence,
-        arousal: this.state.affective.intensity
+        arousal: this.state.affective.intensity,
       },
       attentionFocus: 'user',
       voiceEnergy: this.state.expressive.softness,
       voicePitch: 150 + this.state.affective.valence * 50,
       voiceTempo: this.state.expressive.speechRate,
-      silenceDuration: 0
+      silenceDuration: 0,
     });
 
     // 10. Internal Narrative Engine - Mettre à jour ancre selon mode
@@ -726,8 +756,8 @@ class PresenceOSEngine {
       userEnergy: this.state.affective.intensity,
       userEmotion: {
         valence: this.state.affective.valence,
-        arousal: this.state.affective.intensity
-      }
+        arousal: this.state.affective.intensity,
+      },
     });
   }
 
@@ -817,7 +847,12 @@ class PresenceOSEngine {
       'deep-work': { type: 'breath', intensity: 0.3, timing: 400 },
       singularity: { type: 'thinking-murmur', intensity: 0.7, timing: 250 },
       neutral: { type: 'breath', intensity: 0.3, timing: 200 },
-      listening: { type: 'acknowledgment', text: 'd\'accord…', intensity: 0.5, timing: 100 },
+      listening: {
+        type: 'acknowledgment',
+        text: "d'accord…",
+        intensity: 0.5,
+        timing: 100,
+      },
       processing: { type: 'micro-hum', intensity: 0.5, timing: 180 },
     };
 
@@ -868,7 +903,7 @@ class PresenceOSEngine {
   /**
    * Réagir à un input utilisateur
    */
-  reactToUserInput(userInput: string, emotion?: string): void {
+  reactToUserInput(userInput: string, _emotion?: string): void {
     // Analyser input et ajuster présence si nécessaire
     const input = userInput.toLowerCase();
 
@@ -877,11 +912,19 @@ class PresenceOSEngine {
       if (this.state.mode !== 'listening' && this.state.mode !== 'empathy') {
         this.setMode('listening');
       }
-    } else if (input.includes('créer') || input.includes('architecture') || input.includes('design')) {
+    } else if (
+      input.includes('créer') ||
+      input.includes('architecture') ||
+      input.includes('design')
+    ) {
       if (this.state.mode !== 'architect') {
         this.setMode('architect');
       }
-    } else if (input.includes('profond') || input.includes('réfléchir') || input.includes('analyser')) {
+    } else if (
+      input.includes('profond') ||
+      input.includes('réfléchir') ||
+      input.includes('analyser')
+    ) {
       if (this.state.mode !== 'deep-work') {
         this.setMode('processing');
       }
@@ -918,7 +961,7 @@ class PresenceOSEngine {
    */
   private notifyCallbacks(): void {
     const state = this.getState();
-    this.callbacks.forEach((callback) => callback(state));
+    this.callbacks.forEach(callback => callback(state));
   }
 
   /**
@@ -959,7 +1002,9 @@ class PresenceOSEngine {
     phaseSpaceEngine.injectMetaKernel(metaSingularityKernel);
     phaseSpaceEngine.start();
 
-    console.log('✨ [PRESENCE OS] Phase 3 (Autopoiesis + Meta-Singularity + Phase-Space) initialized');
+    console.log(
+      '✨ [PRESENCE OS] Phase 3 (Autopoiesis + Meta-Singularity + Phase-Space) initialized'
+    );
 
     // Démarrer update loop (30 FPS)
     setInterval(() => this.update(), 33);

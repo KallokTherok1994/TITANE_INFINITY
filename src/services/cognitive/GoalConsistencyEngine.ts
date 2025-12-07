@@ -1,20 +1,20 @@
 /**
  * GOAL & CONSISTENCY ENGINE v∞.42 — Core Implementation
- * 
+ *
  * Gère les objectifs explicites et la cohérence multi-tour
  * Maintient une base de faits stable et détecte les contradictions
- * 
+ *
  * Architecture:
  * 1. Goal State Management — Track conversation objectives
  * 2. Facts Database — Maintain stable facts
  * 3. Consistency Checker — Detect violations
  * 4. Auto-Correction — Fix inconsistencies automatically
- * 
+ *
  * Integration avec OMEGA:
  * - Phase 1.3.2: Inject goal state + facts into context
  * - Phase 1.5.1: Check consistency of raw output
  * - Phase 1.7.2: Apply auto-corrections if needed
- * 
+ *
  * @module GoalConsistencyEngine
  * @author TITANE∞ Development Team
  * @version ∞.42
@@ -28,26 +28,26 @@ import {
   SubGoal,
   ConversationFact,
   FactType,
-  FactConfidence,
+  FactConfidence as _FactConfidence,
   ConsistencyViolation,
   ConsistencyViolationType,
   GoalConsistencyConfig,
-  ConsistencyStats
+  ConsistencyStats,
 } from './goalConsistency.types';
 
 /**
  * Goal & Consistency Engine
- * 
+ *
  * Manages conversation goals, facts database, and consistency checking
  */
 export class GoalConsistencyEngine extends EventEmitter {
   private config: Required<GoalConsistencyConfig>;
-  
+
   // In-memory storage (can be replaced with persistent storage)
   private goals: Map<string, ConversationGoal> = new Map();
   private facts: Map<string, ConversationFact[]> = new Map();
   private violations: Map<string, ConsistencyViolation[]> = new Map();
-  
+
   // Statistics
   private stats: ConsistencyStats = {
     total_goals_created: 0,
@@ -58,12 +58,12 @@ export class GoalConsistencyEngine extends EventEmitter {
     avg_consistency_score: 1.0,
     total_conversations_tracked: 0,
     most_common_violation_type: ConsistencyViolationType.GOAL_RESPONSE,
-    avg_check_duration_ms: 0
+    avg_check_duration_ms: 0,
   };
 
   constructor(config?: Partial<GoalConsistencyConfig>) {
     super();
-    
+
     this.config = {
       enabled: config?.enabled ?? true,
       enable_auto_correction: config?.enable_auto_correction ?? true,
@@ -76,32 +76,32 @@ export class GoalConsistencyEngine extends EventEmitter {
         low: 0.1,
         medium: 0.3,
         high: 0.6,
-        critical: 1.0
+        critical: 1.0,
       },
       auto_check: config?.auto_check ?? {
         enabled: true,
         check_every_n_messages: 1,
-        min_severity_to_flag: 0.6
+        min_severity_to_flag: 0.6,
       },
       auto_correct: config?.auto_correct ?? {
         enabled: true,
-        max_severity_to_auto_correct: 0.7
+        max_severity_to_auto_correct: 0.7,
       },
       facts: config?.facts ?? {
         max_facts_per_conversation: 100,
         min_confidence_to_use: 0.6,
-        auto_supersede_old_facts: true
+        auto_supersede_old_facts: true,
       },
       goals: config?.goals ?? {
         max_subgoals: 20,
-        auto_complete_subgoals: false
+        auto_complete_subgoals: false,
       },
       omega_injection: config?.omega_injection ?? {
         inject_goals: true,
         inject_facts: true,
         max_facts_injected: 10,
-        inject_constraints: true
-      }
+        inject_constraints: true,
+      },
     };
 
     this.log('GoalConsistencyEngine initialized', this.config);
@@ -116,12 +116,12 @@ export class GoalConsistencyEngine extends EventEmitter {
    */
   async loadGoalState(conversation_id: string): Promise<ConversationGoal | null> {
     const goal = this.goals.get(conversation_id);
-    
+
     if (goal) {
       this.emit('goal:loaded', { conversation_id, goal });
       this.log(`Goal loaded for conversation ${conversation_id}`, goal);
     }
-    
+
     return goal || null;
   }
 
@@ -140,7 +140,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     }
   ): Promise<ConversationGoal> {
     const now = new Date().toISOString();
-    
+
     const goal: ConversationGoal = {
       conversation_id,
       main_goal,
@@ -149,13 +149,13 @@ export class GoalConsistencyEngine extends EventEmitter {
         ...sg,
         id: `${conversation_id}_subgoal_${index + 1}`,
         created_at: now,
-        status: sg.status || GoalStatus.PENDING
+        status: sg.status || GoalStatus.PENDING,
       })),
       constraints: options?.constraints || [],
       context_keys: options?.context_keys,
       priority: options?.priority || GoalPriority.MEDIUM,
       created_at: now,
-      updated_at: now
+      updated_at: now,
     };
 
     this.goals.set(conversation_id, goal);
@@ -207,7 +207,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         ...sg,
         id: `${conversation_id}_subgoal_${goal.subgoals.length + index + 1}`,
         created_at: now,
-        status: sg.status || GoalStatus.PENDING
+        status: sg.status || GoalStatus.PENDING,
       }));
       goal.subgoals.push(...newSubgoals);
       this.stats.total_goals_created += newSubgoals.length;
@@ -219,9 +219,12 @@ export class GoalConsistencyEngine extends EventEmitter {
         const subgoal = goal.subgoals.find(sg => sg.id === update.id);
         if (subgoal) {
           Object.assign(subgoal, update);
-          
+
           // Mark completion timestamp
-          if ((update as any).status === GoalStatus.COMPLETED && !(subgoal as any).completed_at) {
+          if (
+            (update as any).status === GoalStatus.COMPLETED &&
+            !(subgoal as any).completed_at
+          ) {
             (subgoal as any).completed_at = now;
           }
         }
@@ -234,7 +237,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     }
     if (updates.remove_constraints) {
       goal.constraints = goal.constraints.filter(
-        c => !updates.remove_constraints!.includes(c)
+        c => !updates.remove_constraints?.includes(c)
       );
     }
 
@@ -249,9 +252,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     }
 
     // Check if all subgoals completed
-    const allCompleted = goal.subgoals.every(
-      sg => sg.status === GoalStatus.COMPLETED
-    );
+    const allCompleted = goal.subgoals.every(sg => sg.status === GoalStatus.COMPLETED);
     if (allCompleted && !goal.actual_completion) {
       goal.actual_completion = now;
       this.emit('goal:completed', { conversation_id, goal });
@@ -294,24 +295,26 @@ export class GoalConsistencyEngine extends EventEmitter {
     fact: Omit<ConversationFact, 'id' | 'created_at'>
   ): Promise<ConversationFact> {
     const now = new Date().toISOString();
-    
+
     const fullFact: ConversationFact = {
       ...fact,
       id: `${conversation_id}_fact_${Date.now()}`,
-      created_at: now
+      created_at: now,
     };
 
     // Store fact
     const conversationFacts = this.facts.get(conversation_id) || [];
-    
+
     // Handle superseding
     if (fullFact.supersedes) {
-      const supersededIndex = conversationFacts.findIndex(f => f.id === fullFact.supersedes);
+      const supersededIndex = conversationFacts.findIndex(
+        f => f.id === fullFact.supersedes
+      );
       if (supersededIndex >= 0) {
         conversationFacts[supersededIndex].valid_until = now;
       }
     }
-    
+
     conversationFacts.push(fullFact);
     this.facts.set(conversation_id, conversationFacts);
     this.stats.total_facts_recorded++;
@@ -332,14 +335,16 @@ export class GoalConsistencyEngine extends EventEmitter {
     return allFacts.filter(fact => {
       // Check temporal validity
       if (fact.valid_until && fact.valid_until < now) return false;
-      
+
       // Apply confidence decay
       const age = Date.now() - new Date(fact.created_at).getTime();
       const daysSinceCreation = age / (1000 * 60 * 60 * 24);
-      const decayedConfidence = typeof fact.confidence === 'number'
-        ? fact.confidence * Math.exp(-this.config.fact_confidence_decay_rate * daysSinceCreation)
-        : fact.confidence;
-      
+      const decayedConfidence =
+        typeof fact.confidence === 'number'
+          ? fact.confidence *
+            Math.exp(-this.config.fact_confidence_decay_rate * daysSinceCreation)
+          : fact.confidence;
+
       // Filter low confidence facts
       return decayedConfidence >= 0.3;
     });
@@ -359,16 +364,14 @@ export class GoalConsistencyEngine extends EventEmitter {
   /**
    * Search facts by content
    */
-  async searchFacts(
-    conversation_id: string,
-    query: string
-  ): Promise<ConversationFact[]> {
+  async searchFacts(conversation_id: string, query: string): Promise<ConversationFact[]> {
     const activeFacts = await this.getActiveFacts(conversation_id);
     const lowerQuery = query.toLowerCase();
-    
-    return activeFacts.filter(fact => 
-      fact.statement.toLowerCase().includes(lowerQuery) ||
-      fact.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
+
+    return activeFacts.filter(
+      fact =>
+        fact.statement.toLowerCase().includes(lowerQuery) ||
+        fact.tags?.some(tag => tag.toLowerCase().includes(lowerQuery))
     );
   }
 
@@ -426,10 +429,10 @@ export class GoalConsistencyEngine extends EventEmitter {
 
       // Alert if threshold exceeded
       if (violations.length >= this.config.max_violations_before_alert) {
-        this.emit('violations:threshold_exceeded', { 
-          conversation_id, 
+        this.emit('violations:threshold_exceeded', {
+          conversation_id,
           count: violations.length,
-          violations 
+          violations,
         });
       }
     }
@@ -451,7 +454,9 @@ export class GoalConsistencyEngine extends EventEmitter {
       // Simple keyword-based contradiction detection
       // In production, use semantic similarity or LLM-based checking
       const factKeywords = this.extractKeywords(fact.statement);
-      const hasFactMention = factKeywords.some(kw => responseLower.includes(kw.toLowerCase()));
+      const hasFactMention = factKeywords.some(kw =>
+        responseLower.includes(kw.toLowerCase())
+      );
 
       if (hasFactMention) {
         // Check for negation or contradiction patterns
@@ -460,19 +465,19 @@ export class GoalConsistencyEngine extends EventEmitter {
           /never\s+/i,
           /impossible\s+/i,
           /can't\s+/i,
-          /won't\s+/i
+          /won't\s+/i,
         ];
 
         const hasContradiction = contradictionPatterns.some(pattern => {
           const match = response.match(pattern);
           if (!match) return false;
-          
+
           const contextWindow = response.substring(
-            Math.max(0, match.index! - 20),
-            Math.min(response.length, match.index! + match[0].length + 20)
+            Math.max(0, match.index ?? 0 - 20),
+            Math.min(response.length, (match.index ?? 0) + match[0].length + 20)
           );
-          
-          return factKeywords.some(kw => 
+
+          return factKeywords.some(kw =>
             contextWindow.toLowerCase().includes(kw.toLowerCase())
           );
         });
@@ -484,7 +489,7 @@ export class GoalConsistencyEngine extends EventEmitter {
             description: `Response contradicts known fact: "${fact.statement}"`,
             fact_id: fact.id,
             response_excerpt: response.substring(0, 200),
-            detected_at: new Date().toISOString()
+            detected_at: new Date().toISOString(),
           });
         }
       }
@@ -505,7 +510,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     const goalKeywords = this.extractKeywords(goal.main_goal);
 
     // Check if response is moving towards goal
-    const hasGoalMention = goalKeywords.some(kw => 
+    const hasGoalMention = goalKeywords.some(kw =>
       responseLower.includes(kw.toLowerCase())
     );
 
@@ -514,12 +519,10 @@ export class GoalConsistencyEngine extends EventEmitter {
       /by the way/i,
       /changing the subject/i,
       /let me tell you about/i,
-      /instead/i
+      /instead/i,
     ];
 
-    const seemsOffTopic = offTopicPatterns.some(pattern => 
-      pattern.test(response)
-    );
+    const seemsOffTopic = offTopicPatterns.some(pattern => pattern.test(response));
 
     if (seemsOffTopic && !hasGoalMention) {
       violations.push({
@@ -528,7 +531,7 @@ export class GoalConsistencyEngine extends EventEmitter {
         description: `Response diverges from main goal: "${goal.main_goal}"`,
         goal_id: goal.conversation_id,
         response_excerpt: response.substring(0, 200),
-        detected_at: new Date().toISOString()
+        detected_at: new Date().toISOString(),
       });
     }
 
@@ -547,9 +550,9 @@ export class GoalConsistencyEngine extends EventEmitter {
 
     for (const constraint of goal.constraints) {
       const constraintLower = constraint.toLowerCase();
-      
+
       // Check for explicit violations
-      if (constraintLower.startsWith('never') || constraintLower.startsWith('don\'t')) {
+      if (constraintLower.startsWith('never') || constraintLower.startsWith("don't")) {
         const prohibitedAction = constraintLower.replace(/^(never|don't)\s+/, '');
         if (responseLower.includes(prohibitedAction)) {
           violations.push({
@@ -558,11 +561,11 @@ export class GoalConsistencyEngine extends EventEmitter {
             description: `Response violates constraint: "${constraint}"`,
             constraint,
             response_excerpt: response.substring(0, 200),
-            detected_at: new Date().toISOString()
+            detected_at: new Date().toISOString(),
           });
         }
       }
-      
+
       // Check for required actions
       if (constraintLower.startsWith('always') || constraintLower.startsWith('must')) {
         const requiredAction = constraintLower.replace(/^(always|must)\s+/, '');
@@ -573,7 +576,7 @@ export class GoalConsistencyEngine extends EventEmitter {
             description: `Response missing required constraint: "${constraint}"`,
             constraint,
             response_excerpt: response.substring(0, 200),
-            detected_at: new Date().toISOString()
+            detected_at: new Date().toISOString(),
           });
         }
       }
@@ -588,10 +591,10 @@ export class GoalConsistencyEngine extends EventEmitter {
   private checkTemporalConsistency(
     response: string,
     facts: ConversationFact[],
-    context: any
+    _context: any
   ): ConsistencyViolation[] {
     const violations: ConsistencyViolation[] = [];
-    
+
     // Check for temporal contradictions
     const timePatterns = [
       /yesterday/i,
@@ -599,14 +602,14 @@ export class GoalConsistencyEngine extends EventEmitter {
       /recently/i,
       /earlier/i,
       /before/i,
-      /after/i
+      /after/i,
     ];
 
     const hasTemporalReference = timePatterns.some(pattern => pattern.test(response));
 
     if (hasTemporalReference) {
       // Check if temporal reference contradicts known facts
-      const temporalFacts = facts.filter(f => 
+      const temporalFacts = facts.filter(f =>
         /yesterday|last week|recently|earlier|before|after/i.test(f.statement)
       );
 
@@ -623,7 +626,7 @@ export class GoalConsistencyEngine extends EventEmitter {
             description: `Temporal inconsistency detected`,
             fact_id: fact.id,
             response_excerpt: response.substring(0, 200),
-            detected_at: new Date().toISOString()
+            detected_at: new Date().toISOString(),
           });
         }
       }
@@ -661,7 +664,7 @@ export class GoalConsistencyEngine extends EventEmitter {
 
     // Determine correction strategy
     switch (topViolation.type) {
-      case 'fact-response':
+      case 'fact-response': {
         correctionType = 'fact_injection';
         const fact = (await this.getActiveFacts(conversation_id)).find(
           f => f.id === topViolation.fact_id
@@ -675,8 +678,9 @@ export class GoalConsistencyEngine extends EventEmitter {
           reasoning = 'Reformulated response to avoid fact contradiction';
         }
         break;
+      }
 
-      case 'goal-response':
+      case 'goal-response': {
         correctionType = 'goal_reminder';
         const goal = await this.loadGoalState(conversation_id);
         if (goal) {
@@ -688,14 +692,17 @@ export class GoalConsistencyEngine extends EventEmitter {
           reasoning = 'No goal found for reminder';
         }
         break;
+      }
 
       case 'constraint':
         correctionType = 'reformulation';
-        correctedResponse = this.reformulateToRespectConstraint(
-          response,
-          topViolation.constraint!
-        );
-        reasoning = `Reformulated to respect constraint: "${topViolation.constraint}"`;
+        if (topViolation.constraint) {
+          correctedResponse = this.reformulateToRespectConstraint(
+            response,
+            topViolation.constraint
+          );
+          reasoning = `Reformulated to respect constraint: "${topViolation.constraint}"`;
+        }
         break;
 
       case 'temporal':
@@ -717,7 +724,7 @@ export class GoalConsistencyEngine extends EventEmitter {
       violations_addressed: violations.map(v => v.type),
       reasoning,
       confidence: this.calculateCorrectionConfidence(violations),
-      applied_at: new Date().toISOString()
+      applied_at: new Date().toISOString(),
     };
 
     this.stats.auto_corrections_applied++;
@@ -752,10 +759,11 @@ export class GoalConsistencyEngine extends EventEmitter {
       'Je me demande si',
       'Il se pourrait que',
       'À vérifier:',
-      'Sous réserve de confirmation:'
+      'Sous réserve de confirmation:',
     ];
-    
-    const marker = uncertaintyMarkers[Math.floor(Math.random() * uncertaintyMarkers.length)];
+
+    const marker =
+      uncertaintyMarkers[Math.floor(Math.random() * uncertaintyMarkers.length)];
     return `${marker} ${response}`;
   }
 
@@ -781,11 +789,14 @@ export class GoalConsistencyEngine extends EventEmitter {
    */
   private calculateCorrectionConfidence(violations: ConsistencyViolation[]): number {
     if (violations.length === 0) return 1.0;
-    
+
     const weights = this.config.violation_severity_weights;
-    const totalWeight = violations.reduce((sum, v) => sum + (weights as any)[v.severity], 0);
+    const totalWeight = violations.reduce(
+      (sum, v) => sum + (weights as any)[v.severity],
+      0
+    );
     const avgWeight = totalWeight / violations.length;
-    
+
     // Higher severity = lower confidence in simple correction
     return Math.max(0.3, 1.0 - avgWeight);
   }
@@ -800,9 +811,36 @@ export class GoalConsistencyEngine extends EventEmitter {
   private extractKeywords(text: string): string[] {
     // Simple keyword extraction (remove stopwords)
     const stopwords = new Set([
-      'le', 'la', 'les', 'un', 'une', 'des', 'de', 'du', 'et', 'ou', 'mais',
-      'donc', 'car', 'ni', 'que', 'qui', 'quoi', 'dont', 'où',
-      'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for'
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'des',
+      'de',
+      'du',
+      'et',
+      'ou',
+      'mais',
+      'donc',
+      'car',
+      'ni',
+      'que',
+      'qui',
+      'quoi',
+      'dont',
+      'où',
+      'the',
+      'a',
+      'an',
+      'and',
+      'or',
+      'but',
+      'in',
+      'on',
+      'at',
+      'to',
+      'for',
     ]);
 
     return text
@@ -823,7 +861,7 @@ export class GoalConsistencyEngine extends EventEmitter {
       { pattern: /earlier/i, value: 'earlier' },
       { pattern: /hier/i, value: 'yesterday' },
       { pattern: /la semaine dernière/i, value: 'last_week' },
-      { pattern: /récemment/i, value: 'recent' }
+      { pattern: /récemment/i, value: 'recent' },
     ];
 
     for (const { pattern, value } of patterns) {
@@ -838,11 +876,10 @@ export class GoalConsistencyEngine extends EventEmitter {
    */
   async calculateConsistencyScore(conversation_id: string): Promise<number> {
     const allViolations: any[] = Array.from(this.violations.get(conversation_id) || []);
-    const recentViolations = allViolations
-      .filter(v => {
-        const age = Date.now() - new Date(v.detected_at).getTime();
-        return age < 24 * 60 * 60 * 1000; // Last 24 hours
-      });
+    const recentViolations = allViolations.filter(v => {
+      const age = Date.now() - new Date(v.detected_at).getTime();
+      return age < 24 * 60 * 60 * 1000; // Last 24 hours
+    });
 
     if (recentViolations.length === 0) return 1.0;
 
@@ -852,7 +889,7 @@ export class GoalConsistencyEngine extends EventEmitter {
       0
     );
 
-    return Math.max(0, 1.0 - (totalPenalty / 10));
+    return Math.max(0, 1.0 - totalPenalty / 10);
   }
 
   /**
@@ -876,7 +913,7 @@ export class GoalConsistencyEngine extends EventEmitter {
     if (goal) {
       context += `[OBJECTIF CONVERSATION]\n`;
       context += `Principal: ${goal.main_goal}\n`;
-      
+
       if (goal.description) {
         context += `Description: ${goal.description}\n`;
       }
@@ -907,20 +944,24 @@ export class GoalConsistencyEngine extends EventEmitter {
     // Facts context
     if (facts.length > 0) {
       context += `[FAITS CONNUS]\n`;
-      
+
       // Group by type
-      const factsByType = facts.reduce((acc, fact) => {
-        if (!acc[fact.type]) acc[fact.type] = [];
-        acc[fact.type].push(fact);
-        return acc;
-      }, {} as Record<FactType, ConversationFact[]>);
+      const factsByType = facts.reduce(
+        (acc, fact) => {
+          if (!acc[fact.type]) acc[fact.type] = [];
+          acc[fact.type].push(fact);
+          return acc;
+        },
+        {} as Record<FactType, ConversationFact[]>
+      );
 
       for (const [type, typeFacts] of Object.entries(factsByType)) {
         context += `${type}:\n`;
         typeFacts.slice(0, 5).forEach(fact => {
-          const confidence = typeof fact.confidence === 'number' 
-            ? (fact.confidence * 100).toFixed(0) 
-            : '90';
+          const confidence =
+            typeof fact.confidence === 'number'
+              ? (fact.confidence * 100).toFixed(0)
+              : '90';
           context += `  - ${fact.statement} (confiance: ${confidence}%)\n`;
         });
       }
@@ -930,13 +971,12 @@ export class GoalConsistencyEngine extends EventEmitter {
     // Consistency status
     context += `[COHÉRENCE]\n`;
     context += `Score: ${(consistencyScore * 100).toFixed(0)}%\n`;
-    
+
     const allViolations: any[] = Array.from(this.violations.get(conversation_id) || []);
-    const recentViolations = allViolations
-      .filter((v: any) => {
-        const age = Date.now() - new Date(v.detected_at).getTime();
-        return age < 60 * 60 * 1000; // Last hour
-      });
+    const recentViolations = allViolations.filter((v: any) => {
+      const age = Date.now() - new Date(v.detected_at).getTime();
+      return age < 60 * 60 * 1000; // Last hour
+    });
 
     if (recentViolations.length > 0) {
       context += `Violations récentes: ${recentViolations.length}\n`;
@@ -949,13 +989,17 @@ export class GoalConsistencyEngine extends EventEmitter {
   /**
    * Logging helper
    */
-  private log(message: string, data?: any, level: 'info' | 'warn' | 'error' = 'info'): void {
+  private log(
+    message: string,
+    data?: any,
+    level: 'info' | 'warn' | 'error' = 'info'
+  ): void {
     const timestamp = new Date().toISOString();
     const logEntry = {
       timestamp,
       level,
       message,
-      data
+      data,
     };
 
     if (level === 'error') {
@@ -1007,31 +1051,31 @@ export function getDefaultGoalConsistencyConfig(): GoalConsistencyConfig {
       low: 0.1,
       medium: 0.3,
       high: 0.6,
-      critical: 1.0
+      critical: 1.0,
     },
     auto_check: {
       enabled: true,
       check_every_n_messages: 1,
-      min_severity_to_flag: 0.6
+      min_severity_to_flag: 0.6,
     },
     auto_correct: {
       enabled: true,
-      max_severity_to_auto_correct: 0.7
+      max_severity_to_auto_correct: 0.7,
     },
     facts: {
       max_facts_per_conversation: 100,
       min_confidence_to_use: 0.6,
-      auto_supersede_old_facts: true
+      auto_supersede_old_facts: true,
     },
     goals: {
       max_subgoals: 20,
-      auto_complete_subgoals: false
+      auto_complete_subgoals: false,
     },
     omega_injection: {
       inject_goals: true,
       inject_facts: true,
       max_facts_injected: 10,
-      inject_constraints: true
-    }
+      inject_constraints: true,
+    },
   };
 }

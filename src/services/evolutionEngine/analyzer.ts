@@ -19,13 +19,13 @@ import type {
   EvolutionScores,
   EvolutionReport,
   PatternType,
-  DataCategory,
+  DataCategory as _DataCategory,
   TitaneModule,
   RiskLevel,
-  TrendDirection,
+  TrendDirection as _TrendDirection,
   PerformanceTrend,
   AnalyzerConfig,
-  IAUsageStats,
+  IAUsageStats as _IAUsageStats,
   EngineUsageStats,
   SelfHealingMetrics,
   PromptMemoryMetrics,
@@ -160,7 +160,7 @@ export class Analyzer {
       this.state.lastAnalysis = Date.now();
 
       // Notifier les listeners
-      this.reportListeners.forEach((listener) => {
+      this.reportListeners.forEach(listener => {
         try {
           listener(report);
         } catch (e) {
@@ -214,7 +214,7 @@ export class Analyzer {
 
     // Limiter le nombre de patterns
     return patterns
-      .filter((p) => p.confidence >= this.config.patternConfidenceThreshold)
+      .filter(p => p.confidence >= this.config.patternConfidenceThreshold)
       .slice(0, this.config.maxPatternsPerCycle);
   }
 
@@ -241,10 +241,10 @@ export class Analyzer {
 
     // Analyser les latences élevées
     const latencyPoints = points.filter(
-      (p) => p.metric === 'avg_latency' && typeof p.value === 'number'
+      p => p.metric === 'avg_latency' && typeof p.value === 'number'
     );
     if (latencyPoints.length > 10) {
-      const values = latencyPoints.map((p) => p.value as number);
+      const values = latencyPoints.map(p => p.value as number);
       const stats = calculateTimeSeriesStats(values);
 
       if (stats.average > 500) {
@@ -266,7 +266,7 @@ export class Analyzer {
     }
 
     // Analyser les erreurs fréquentes
-    const errorPoints = points.filter((p) => p.metric === 'error_count');
+    const errorPoints = points.filter(p => p.metric === 'error_count');
     if (errorPoints.length > 5) {
       const totalErrors = errorPoints.reduce(
         (sum, p) => sum + (typeof p.value === 'number' ? p.value : 0),
@@ -302,7 +302,7 @@ export class Analyzer {
     const patterns: EvolutionPattern[] = [];
 
     // Détecter les appels répétitifs dans un court laps de temps
-    const callPoints = points.filter((p) => p.metric === 'total_calls');
+    const callPoints = points.filter(p => p.metric === 'total_calls');
     if (callPoints.length > 20) {
       const intervals: number[] = [];
       for (let i = 1; i < callPoints.length; i++) {
@@ -342,10 +342,10 @@ export class Analyzer {
 
     // CPU élevé
     const cpuPoints = points.filter(
-      (p) => p.metric === 'cpu' && typeof p.value === 'number'
+      p => p.metric === 'cpu' && typeof p.value === 'number'
     );
     if (cpuPoints.length > 5) {
-      const highCpuCount = cpuPoints.filter((p) => (p.value as number) > 80).length;
+      const highCpuCount = cpuPoints.filter(p => (p.value as number) > 80).length;
       if (highCpuCount > cpuPoints.length * 0.3) {
         patterns.push({
           id: generateEvolutionId('pat'),
@@ -365,10 +365,10 @@ export class Analyzer {
 
     // RAM élevée
     const ramPoints = points.filter(
-      (p) => p.metric === 'ram' && typeof p.value === 'number'
+      p => p.metric === 'ram' && typeof p.value === 'number'
     );
     if (ramPoints.length > 5) {
-      const highRamCount = ramPoints.filter((p) => (p.value as number) > 85).length;
+      const highRamCount = ramPoints.filter(p => (p.value as number) > 85).length;
       if (highRamCount > ramPoints.length * 0.3) {
         patterns.push({
           id: generateEvolutionId('pat'),
@@ -399,13 +399,13 @@ export class Analyzer {
     const patterns: EvolutionPattern[] = [];
 
     const latencyPoints = points.filter(
-      (p) =>
+      p =>
         (p.metric === 'latency' || p.metric === 'avg_latency') &&
         typeof p.value === 'number'
     );
 
     if (latencyPoints.length > 10) {
-      const values = latencyPoints.map((p) => p.value as number);
+      const values = latencyPoints.map(p => p.value as number);
       const anomalies = detectAnomalies(values, this.config.anomalyDetectionSensitivity);
 
       if (anomalies.length > 3) {
@@ -439,9 +439,9 @@ export class Analyzer {
 
     // Stabilité du module
     const errorPoints = points.filter(
-      (p) => p.metric === 'error_count' && typeof p.value === 'number'
+      p => p.metric === 'error_count' && typeof p.value === 'number'
     );
-    const totalCalls = points.filter((p) => p.metric === 'total_calls').length;
+    const totalCalls = points.filter(p => p.metric === 'total_calls').length;
 
     if (totalCalls > 50 && errorPoints.length > 0) {
       const totalErrors = errorPoints.reduce((sum, p) => sum + (p.value as number), 0);
@@ -472,7 +472,7 @@ export class Analyzer {
   private mergePatterns(newPatterns: EvolutionPattern[]): void {
     for (const newPattern of newPatterns) {
       const existing = this.state.patterns.find(
-        (p) =>
+        p =>
           p.type === newPattern.type &&
           p.moduleId === newPattern.moduleId &&
           p.description === newPattern.description
@@ -481,12 +481,15 @@ export class Analyzer {
       if (existing) {
         existing.occurrences += newPattern.occurrences;
         existing.lastSeen = newPattern.lastSeen;
-        existing.confidence = Math.min(100, (existing.confidence + newPattern.confidence) / 2);
+        existing.confidence = Math.min(
+          100,
+          (existing.confidence + newPattern.confidence) / 2
+        );
       } else {
         this.state.patterns.push(newPattern);
 
         // Notifier les listeners
-        this.patternListeners.forEach((listener) => {
+        this.patternListeners.forEach(listener => {
           try {
             listener(newPattern);
           } catch (e) {
@@ -513,7 +516,7 @@ export class Analyzer {
    */
   private extractInsights(
     patterns: EvolutionPattern[],
-    dataPoints: EvolutionDataPoint[]
+    _dataPoints: EvolutionDataPoint[]
   ): EvolutionInsight[] {
     const insights: EvolutionInsight[] = [];
 
@@ -535,7 +538,7 @@ export class Analyzer {
         category: 'PERFORMANCE',
         title: 'Problèmes de performance détectés',
         description: `${inefficiencies.length + overloads.length} patterns de performance négatifs identifiés`,
-        patterns: [...inefficiencies, ...overloads].map((p) => p.id),
+        patterns: [...inefficiencies, ...overloads].map(p => p.id),
         severity: 'MEDIUM',
         actionable: true,
         recommendedActions: [
@@ -543,7 +546,9 @@ export class Analyzer {
           'Vérifier les ressources système',
           'Activer le mode performance',
         ],
-        affectedModules: [...new Set([...inefficiencies, ...overloads].map((p) => p.moduleId))],
+        affectedModules: [
+          ...new Set([...inefficiencies, ...overloads].map(p => p.moduleId)),
+        ],
         validUntil: Date.now() + 86400000,
       });
     }
@@ -557,11 +562,11 @@ export class Analyzer {
         category: 'SYSTEM_METRICS',
         title: 'Système stable',
         description: `${successes.length} modules fonctionnent avec un excellent taux de succès`,
-        patterns: successes.map((p) => p.id),
+        patterns: successes.map(p => p.id),
         severity: 'LOW',
         actionable: false,
         recommendedActions: [],
-        affectedModules: [...new Set(successes.map((p) => p.moduleId))],
+        affectedModules: [...new Set(successes.map(p => p.moduleId))],
         validUntil: Date.now() + 86400000,
       });
     }
@@ -575,7 +580,7 @@ export class Analyzer {
         category: 'ENGINE_USAGE',
         title: 'Appels redondants détectés',
         description: 'Plusieurs modules effectuent des appels trop fréquents',
-        patterns: repetitions.map((p) => p.id),
+        patterns: repetitions.map(p => p.id),
         severity: 'MEDIUM',
         actionable: true,
         recommendedActions: [
@@ -583,13 +588,15 @@ export class Analyzer {
           'Utiliser le batching',
           'Optimiser les fréquences de polling',
         ],
-        affectedModules: [...new Set(repetitions.map((p) => p.moduleId))],
+        affectedModules: [...new Set(repetitions.map(p => p.moduleId))],
         validUntil: Date.now() + 86400000,
       });
     }
 
     return insights
-      .filter((i) => this.calculateInsightRelevance(i) >= this.config.insightRelevanceThreshold)
+      .filter(
+        i => this.calculateInsightRelevance(i) >= this.config.insightRelevanceThreshold
+      )
       .slice(0, this.config.maxInsightsPerCycle);
   }
 
@@ -614,7 +621,7 @@ export class Analyzer {
   private mergeInsights(newInsights: EvolutionInsight[]): void {
     for (const newInsight of newInsights) {
       const existing = this.state.insights.find(
-        (i) => i.title === newInsight.title && i.category === newInsight.category
+        i => i.title === newInsight.title && i.category === newInsight.category
       );
 
       if (existing) {
@@ -624,7 +631,7 @@ export class Analyzer {
       } else {
         this.state.insights.push(newInsight);
 
-        this.insightListeners.forEach((listener) => {
+        this.insightListeners.forEach(listener => {
           try {
             listener(newInsight);
           } catch (e) {
@@ -636,7 +643,7 @@ export class Analyzer {
 
     // Nettoyer les insights expirés
     const now = Date.now();
-    this.state.insights = this.state.insights.filter((i) => i.validUntil > now);
+    this.state.insights = this.state.insights.filter(i => i.validUntil > now);
   }
 
   // ===========================================================================
@@ -654,21 +661,21 @@ export class Analyzer {
 
     // Stability Index: basé sur les erreurs et anomalies
     const errorPatterns = this.state.patterns.filter(
-      (p) => p.type === 'INEFFICIENCY' || p.type === 'OVERLOAD'
+      p => p.type === 'INEFFICIENCY' || p.type === 'OVERLOAD'
     );
     const stabilityIndex = Math.max(0, 100 - errorPatterns.length * 5);
 
     // Cognitive Efficiency: basé sur les latences et répétitions
     const latencyPatterns = this.state.patterns.filter(
-      (p) => p.type === 'LATENCY' || p.type === 'REPETITION'
+      p => p.type === 'LATENCY' || p.type === 'REPETITION'
     );
     const cognitiveEfficiency = Math.max(0, 100 - latencyPatterns.length * 4);
 
     // Context Relevance: basé sur les métriques prompt/memory
-    const contextPoints = dataPoints.filter((p) => p.category === 'PROMPT_MEMORY');
+    const contextPoints = dataPoints.filter(p => p.category === 'PROMPT_MEMORY');
     const relevanceScores = contextPoints
-      .filter((p) => p.metric === 'relevance_score' && typeof p.value === 'number')
-      .map((p) => p.value as number);
+      .filter(p => p.metric === 'relevance_score' && typeof p.value === 'number')
+      .map(p => p.value as number);
     const contextRelevance =
       relevanceScores.length > 0
         ? relevanceScores.reduce((a, b) => a + b, 0) / relevanceScores.length
@@ -676,8 +683,8 @@ export class Analyzer {
 
     // Engine Reliability: basé sur les success rates
     const successRates = engineStats
-      .filter((s) => s.totalCalls > 0)
-      .map((s) => s.successRate);
+      .filter(s => s.totalCalls > 0)
+      .map(s => s.successRate);
     const engineReliability =
       successRates.length > 0
         ? successRates.reduce((a, b) => a + b, 0) / successRates.length
@@ -724,7 +731,8 @@ export class Analyzer {
     const engineStats = collector.getEngineStats();
 
     // Générer les tendances de performance
-    const performanceTrends: PerformanceTrend[] = this.generatePerformanceTrends(collector);
+    const performanceTrends: PerformanceTrend[] =
+      this.generatePerformanceTrends(collector);
 
     // Métriques Self-Healing (simulées si non disponibles)
     const selfHealingMetrics: SelfHealingMetrics = {
@@ -788,12 +796,19 @@ export class Analyzer {
     const metrics = ['cpu', 'ram', 'fps', 'latency'];
 
     for (const metric of metrics) {
-      const series = collector.getTimeSeries('performance', metric, this.config.trendWindowMs);
+      const series = collector.getTimeSeries(
+        'performance',
+        metric,
+        this.config.trendWindowMs
+      );
 
       if (series.length > 5) {
-        const values = series.map((s) => s.value);
+        const values = series.map(s => s.value);
         const stats = calculateTimeSeriesStats(values);
-        const anomalies = detectAnomalies(values, this.config.anomalyDetectionSensitivity);
+        const anomalies = detectAnomalies(
+          values,
+          this.config.anomalyDetectionSensitivity
+        );
 
         trends.push({
           metric,
@@ -817,8 +832,10 @@ export class Analyzer {
   }
 
   private assessOverallRisk(): RiskLevel {
-    const criticalPatterns = this.state.patterns.filter((p) => p.impact === 'CRITICAL').length;
-    const highPatterns = this.state.patterns.filter((p) => p.impact === 'HIGH').length;
+    const criticalPatterns = this.state.patterns.filter(
+      p => p.impact === 'CRITICAL'
+    ).length;
+    const highPatterns = this.state.patterns.filter(p => p.impact === 'HIGH').length;
 
     if (criticalPatterns > 0) return 'CRITICAL';
     if (highPatterns > 2) return 'HIGH';
@@ -834,7 +851,7 @@ export class Analyzer {
     summary += `${patterns.length} patterns détectés, ${insights.length} insights actifs. `;
 
     const criticalIssues = patterns.filter(
-      (p) => p.impact === 'HIGH' || p.impact === 'CRITICAL'
+      p => p.impact === 'HIGH' || p.impact === 'CRITICAL'
     ).length;
     if (criticalIssues > 0) {
       summary += `⚠️ ${criticalIssues} problèmes critiques nécessitent attention.`;
@@ -862,20 +879,20 @@ export class Analyzer {
   }
 
   getPatternsByType(type: PatternType): EvolutionPattern[] {
-    return this.state.patterns.filter((p) => p.type === type);
+    return this.state.patterns.filter(p => p.type === type);
   }
 
   getPatternsByModule(moduleId: TitaneModule): EvolutionPattern[] {
-    return this.state.patterns.filter((p) => p.moduleId === moduleId);
+    return this.state.patterns.filter(p => p.moduleId === moduleId);
   }
 
   getActiveInsights(): EvolutionInsight[] {
     const now = Date.now();
-    return this.state.insights.filter((i) => i.validUntil > now);
+    return this.state.insights.filter(i => i.validUntil > now);
   }
 
   getActionableInsights(): EvolutionInsight[] {
-    return this.getActiveInsights().filter((i) => i.actionable);
+    return this.getActiveInsights().filter(i => i.actionable);
   }
 
   // ===========================================================================

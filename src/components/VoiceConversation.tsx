@@ -16,7 +16,6 @@ import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAudioStreaming } from '@/hooks/useAudioStreaming'; // ✅ v∞.8: Real audio streaming
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 import { detectEnvironment } from '@/core/tauri/environment';
-import { _secureInvoke } from '@/lib/security';
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
@@ -28,9 +27,9 @@ interface VoiceConversationProps {
 
 export const VoiceConversation = ({
   onTranscript,
-  _onResponse,
+  onResponse,
   className = '',
-  _autoContinue = true,
+  autoContinue = true,
 }: VoiceConversationProps) => {
   const [audioLevel, setAudioLevel] = useState(0);
   const [lastTranscript, setLastTranscript] = useState('');
@@ -47,7 +46,7 @@ export const VoiceConversation = ({
     startStreaming,
     stopStreaming,
   } = useAudioStreaming({
-    onAudioChunk: (chunk) => {
+    onAudioChunk: chunk => {
       // Calculate audio level from real audio data
       if (chunk.length === 0) return;
       const sum = chunk.reduce((acc, val) => acc + Math.abs(val), 0);
@@ -58,12 +57,15 @@ export const VoiceConversation = ({
     },
   });
 
+  void onResponse;
+  void autoContinue;
+
   // Réponses locales de fallback
   const generateLocalResponse = useCallback((input: string): string => {
     const lower = input.toLowerCase();
 
     if (lower.includes('bonjour') || lower.includes('salut')) {
-      return "Bonjour ! Je suis TITANE, votre assistant intelligent. Comment puis-je vous aider ?";
+      return 'Bonjour ! Je suis TITANE, votre assistant intelligent. Comment puis-je vous aider ?';
     }
     if (lower.includes('heure')) {
       return `Il est ${new Date().toLocaleTimeString('fr-FR')}.`;
@@ -72,41 +74,44 @@ export const VoiceConversation = ({
       return `Nous sommes le ${new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.`;
     }
     if (lower.includes('merci')) {
-      return "Je vous en prie !";
+      return 'Je vous en prie !';
     }
     if (lower.includes('au revoir')) {
-      return "Au revoir ! À bientôt.";
+      return 'Au revoir ! À bientôt.';
     }
 
-    return "Je comprends. Je suis en mode conversation vocale et prêt à vous aider.";
+    return 'Je comprends. Je suis en mode conversation vocale et prêt à vous aider.';
   }, []);
 
   // Générer réponse IA via OMEGA
-  const _generateAIResponse = useCallback(async (input: string): Promise<string> => {
-    try {
-      // Récupérer ou créer conversation_id
-      let conversationId = localStorage.getItem('titane_voice_conversation_id');
-      if (!conversationId) {
-        conversationId = await chatEngineCommands.createNewConversation();
-        if (conversationId) {
-          localStorage.setItem('titane_voice_conversation_id', conversationId);
-        } else {
-          throw new Error('Failed to create conversation ID');
+  const _generateAIResponse = useCallback(
+    async (input: string): Promise<string> => {
+      try {
+        // Récupérer ou créer conversation_id
+        let conversationId = localStorage.getItem('titane_voice_conversation_id');
+        if (!conversationId) {
+          conversationId = await chatEngineCommands.createNewConversation();
+          if (conversationId) {
+            localStorage.setItem('titane_voice_conversation_id', conversationId);
+          } else {
+            throw new Error('Failed to create conversation ID');
+          }
         }
-      }
 
-      const response = await chatEngineCommands.generate({
-        message: input,
-        conversationId,
-        mode: 'default',
-        provider: 'ollama',
-      });
-      return response.content || "Je n'ai pas pu générer de réponse.";
-    } catch (error) {
-      console.error('[VoiceConversation] OMEGA error:', error);
-      return generateLocalResponse(input);
-    }
-  }, [generateLocalResponse]);
+        const response = await chatEngineCommands.generate({
+          message: input,
+          conversationId,
+          mode: 'default',
+          provider: 'ollama',
+        });
+        return response.content || "Je n'ai pas pu générer de réponse.";
+      } catch (error) {
+        console.error('[VoiceConversation] OMEGA error:', error);
+        return generateLocalResponse(input);
+      }
+    },
+    [generateLocalResponse]
+  );
 
   // Hook unifié pour la voix
   const {
@@ -114,19 +119,21 @@ export const VoiceConversation = ({
     startTurn,
     completeTurn, // ✅ NOUVEAU : pipeline complet IA + TTS
     cancelTurn,
-    _speak,
+    speak,
     clearError,
   } = useVoiceEngine({
-    onTranscript: (text) => {
+    onTranscript: text => {
       // Juste notifier la transcription (le pipeline IA+TTS est dans completeTurn)
       if (!text.trim()) return;
       setLastTranscript(text);
       onTranscript?.(text);
     },
-    onError: (error) => {
+    onError: error => {
       console.error('[VoiceConversation] Error:', error);
     },
   });
+
+  void speak;
 
   // ✅ NOUVEAU : Auto-complete turn when recording stops
   const prevStateRef = useRef<string>(status.state);
@@ -229,7 +236,7 @@ export const VoiceConversation = ({
       stopAudioVisualization();
       cancelTurn();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleConversation = () => {
@@ -259,15 +266,36 @@ export const VoiceConversation = ({
 
     switch (status.state) {
       case 'idle':
-        return { ...base, background: 'linear-gradient(135deg, #727b81 0%, #5a6167 100%)', boxShadow: '0 4px 15px rgba(114, 123, 129, 0.4)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #727b81 0%, #5a6167 100%)',
+          boxShadow: '0 4px 15px rgba(114, 123, 129, 0.4)',
+        };
       case 'listening':
-        return { ...base, background: 'linear-gradient(135deg, #93b399 0%, #7a9a80 100%)', boxShadow: `0 0 ${20 + audioLevel * 30}px rgba(147, 179, 153, 0.6)`, transform: `scale(${1 + audioLevel * 0.1})` };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #93b399 0%, #7a9a80 100%)',
+          boxShadow: `0 0 ${20 + audioLevel * 30}px rgba(147, 179, 153, 0.6)`,
+          transform: `scale(${1 + audioLevel * 0.1})`,
+        };
       case 'processing':
-        return { ...base, background: 'linear-gradient(135deg, #a89f91 0%, #9a8a7d 100%)', boxShadow: '0 4px 15px rgba(168, 159, 145, 0.4)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #a89f91 0%, #9a8a7d 100%)',
+          boxShadow: '0 4px 15px rgba(168, 159, 145, 0.4)',
+        };
       case 'speaking':
-        return { ...base, background: 'linear-gradient(135deg, #727b81 0%, #5a6167 100%)', boxShadow: '0 4px 20px rgba(114, 123, 129, 0.5)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #727b81 0%, #5a6167 100%)',
+          boxShadow: '0 4px 20px rgba(114, 123, 129, 0.5)',
+        };
       case 'error':
-        return { ...base, background: 'linear-gradient(135deg, #8f7a7a 0%, #7a6868 100%)', boxShadow: '0 4px 15px rgba(143, 122, 122, 0.4)' };
+        return {
+          ...base,
+          background: 'linear-gradient(135deg, #8f7a7a 0%, #7a6868 100%)',
+          boxShadow: '0 4px 15px rgba(143, 122, 122, 0.4)',
+        };
       default:
         return base;
     }
@@ -277,28 +305,52 @@ export const VoiceConversation = ({
     if (status.lastError) return `⚠️ ${status.lastError}`;
 
     switch (status.state) {
-      case 'idle': return status.isMicAvailable ? 'Cliquez pour parler' : 'Microphone non disponible';
-      case 'listening': return status.interimTranscript || lastTranscript || 'Je vous écoute...';
-      case 'processing': return 'Réflexion...';
-      case 'speaking': return lastResponse ? `TITANE: "${lastResponse.substring(0, 50)}..."` : 'TITANE parle...';
-      case 'error': return 'Erreur - Réessayez';
-      default: return '';
+      case 'idle':
+        return status.isMicAvailable
+          ? 'Cliquez pour parler'
+          : 'Microphone non disponible';
+      case 'listening':
+        return status.interimTranscript || lastTranscript || 'Je vous écoute...';
+      case 'processing':
+        return 'Réflexion...';
+      case 'speaking':
+        return lastResponse
+          ? `TITANE: "${lastResponse.substring(0, 50)}..."`
+          : 'TITANE parle...';
+      case 'error':
+        return 'Erreur - Réessayez';
+      default:
+        return '';
     }
   };
 
   const getIcon = () => {
     switch (status.state) {
-      case 'idle': return '🎤';
-      case 'listening': return '👂';
-      case 'processing': return '🧠';
-      case 'speaking': return '🔊';
-      case 'error': return '⚠️';
-      default: return '🎤';
+      case 'idle':
+        return '🎤';
+      case 'listening':
+        return '👂';
+      case 'processing':
+        return '🧠';
+      case 'speaking':
+        return '🔊';
+      case 'error':
+        return '⚠️';
+      default:
+        return '🎤';
     }
   };
 
   return (
-    <div className={`voice-conversation ${className}`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.75rem' }}>
+    <div
+      className={`voice-conversation ${className}`}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '0.75rem',
+      }}
+    >
       <button
         onClick={toggleConversation}
         style={getButtonStyle()}
@@ -309,12 +361,34 @@ export const VoiceConversation = ({
       </button>
 
       {status.isRecording && (
-        <div style={{ width: '100px', height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
-          <div style={{ width: `${audioLevel * 100}%`, height: '100%', background: 'linear-gradient(90deg, #10b981, #34d399)', transition: 'width 0.1s ease' }} />
+        <div
+          style={{
+            width: '100px',
+            height: '4px',
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '2px',
+            overflow: 'hidden',
+          }}
+        >
+          <div
+            style={{
+              width: `${audioLevel * 100}%`,
+              height: '100%',
+              background: 'linear-gradient(90deg, #10b981, #34d399)',
+              transition: 'width 0.1s ease',
+            }}
+          />
         </div>
       )}
 
-      <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', textAlign: 'center', maxWidth: '200px' }}>
+      <span
+        style={{
+          fontSize: '0.75rem',
+          color: 'rgba(255,255,255,0.6)',
+          textAlign: 'center',
+          maxWidth: '200px',
+        }}
+      >
         {getStatusText()}
       </span>
 
