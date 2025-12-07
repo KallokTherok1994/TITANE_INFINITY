@@ -7,9 +7,17 @@ metadata:
 state:
   current_phase: 0
   current_task: P0-1
-  last_updated: 2025-12-07T05:07:46.091Z
+  last_updated: 2025-12-07T06:57:45.418Z
   completed_tasks:
     - P0-1
+    - P0-2
+    - P0-3
+    - P1-1
+    - P1-2
+    - P1-3
+    - P1-4
+    - P1-5
+    - P2-1
   failed_tasks: []
 phase_0:
   title: Audit & Baseline Establishment
@@ -40,7 +48,7 @@ phase_0:
       priority: critical
       dependencies:
         - P0-1
-      status: pending
+      status: completed
     - id: P0-3
       title: Baseline tests & metrics
       description: |
@@ -52,7 +60,7 @@ phase_0:
       priority: important
       dependencies:
         - P0-2
-      status: pending
+      status: completed
 phase_1:
   title: Simplification (14→9 moteurs)
   description: Consolider architecture
@@ -70,7 +78,7 @@ phase_1:
       priority: critical
       dependencies:
         - P0-3
-      status: pending
+      status: completed
     - id: P1-2
       title: UnifiedMemory (STM/MTM/LTM)
       description: |
@@ -83,7 +91,7 @@ phase_1:
       priority: critical
       dependencies:
         - P1-1
-      status: pending
+      status: completed
     - id: P1-3
       title: SystemHealth Engine
       description: |
@@ -96,7 +104,7 @@ phase_1:
       priority: critical
       dependencies:
         - P1-2
-      status: pending
+      status: completed
     - id: P1-4
       title: Migrer UI vers 9 moteurs
       description: |
@@ -110,7 +118,7 @@ phase_1:
       priority: critical
       dependencies:
         - P1-3
-      status: pending
+      status: completed
     - id: P1-5
       title: Cleanup code mort
       description: |
@@ -123,7 +131,7 @@ phase_1:
       priority: important
       dependencies:
         - P1-4
-      status: pending
+      status: completed
 phase_2:
   title: Optimisation Performance
   description: IPC, cache, parallélisation
@@ -141,7 +149,7 @@ phase_2:
       priority: critical
       dependencies:
         - P1-5
-      status: pending
+      status: completed
     - id: P2-2
       title: Caching intelligent
       description: |
