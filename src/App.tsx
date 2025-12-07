@@ -104,29 +104,29 @@ import { CognitiveLayoutControl } from './components/cognitive/CognitiveLayoutCo
 import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine';
 
 // ✨ v∞.27.0 - Unified Presence Engine (Super Prompt #3 - EXPERIENTIAL IDENTITY)
-import { UnifiedPresenceControl } from './components/presence/UnifiedPresenceControl';
+import { UnifiedPresenceControl as _UnifiedPresenceControl } from './components/presence/UnifiedPresenceControl';
 import { unifiedPresenceEngine } from './engines/presence/unifiedPresenceEngine';
 import { presenceIntegrations } from './engines/presence/presenceIntegrations';
 import { narrativeProtocol } from './engines/presence/narrativeProtocol';
 
 // ✨ v∞.28.0 - Multimodal Presence Engine (Super Prompt XXVIII - LIVING PRESENCE)
-import { MultimodalPresencePanel } from './components/presence/MultimodalPresencePanel';
+import { MultimodalPresencePanel as _MultimodalPresencePanel } from './components/presence/MultimodalPresencePanel';
 import { multimodalPresenceEngine } from './engines/presence/multimodalPresenceEngine';
 import './components/presence/MultimodalPresencePanel.css';
 
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
-import { DeepPsychePanel } from './components/psyche/DeepPsychePanel';
+import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
 import { archetypeResonanceEngine } from './engines/psyche/archetypeResonanceEngine';
 import { metaContinuumEngine } from './engines/continuum/metaContinuumEngine';
 import { embodiedPresenceEngine } from './engines/embodiment/embodiedPresenceEngine';
 import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
-import { PresenceOSPanel } from './components/presence/PresenceOSPanel';
+import { PresenceOSPanel as _PresenceOSPanel } from './components/presence/PresenceOSPanel';
 import './components/presence/PresenceOSPanel.css';
 
 // ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - HOLOPHONIC + INTEROCEPTION 🌬️)
-import { PhysiologicalPanel } from './components/physiological/PhysiologicalPanel';
+import { PhysiologicalPanel as _PhysiologicalPanel } from './components/physiological/PhysiologicalPanel';
 import './components/physiological/PhysiologicalPanel.css';
 
 // ✨ v∞.31-33 - Expression Engines (SUPER PROMPTS XXXI-XXXIII + Aura Ultra)
@@ -977,19 +977,24 @@ const AppRouter: React.FC = () => {
       <CognitiveLayoutControl />
 
       {/* ✨ v∞.27.0 - Unified Presence Control (Super Prompt #3 - EXPERIENTIAL IDENTITY 🌌) */}
-      <UnifiedPresenceControl />
+      {/* MASQUÉ - Analyse UI */}
+      {/* <UnifiedPresenceControl /> */}
 
       {/* ✨ v∞.28.0 - Multimodal Presence Panel (Super Prompt XXVIII - LIVING PRESENCE 🎭) */}
-      <MultimodalPresencePanel />
+      {/* MASQUÉ - Analyse UI */}
+      {/* <MultimodalPresencePanel /> */}
 
       {/* ✨ v∞.29-32 - Deep Psyche Panel (Super Prompts XXIX-XXXII - PSYCHOLOGICAL DEPTH 🧠) */}
-      <DeepPsychePanel />
+      {/* MASQUÉ - Analyse UI */}
+      {/* <DeepPsychePanel /> */}
 
       {/* ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌) */}
-      <PresenceOSPanel />
+      {/* MASQUÉ - Analyse UI */}
+      {/* <PresenceOSPanel /> */}
 
       {/* ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - HOLOPHONIC + INTEROCEPTION 🌬️) */}
-      <PhysiologicalPanel />
+      {/* MASQUÉ - Analyse UI */}
+      {/* <PhysiologicalPanel /> */}
     </AppShell>
   );
 };

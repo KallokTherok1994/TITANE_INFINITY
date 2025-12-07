@@ -13,7 +13,6 @@ export * from './cognitiveObservability.types';
 
 // ==================== ENGINES ====================
 export { SemanticMemoryEngine, cosineSimilarity } from './SemanticMemoryEngine';
-export { SQLiteVectorStore } from './SQLiteVectorStore';
 export {
   LocalEmbeddingGenerator,
   createDefaultEmbeddingGenerator,
