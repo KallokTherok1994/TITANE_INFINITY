@@ -1791,6 +1791,12 @@ async fn main() {
         titane_infinity::cache::middleware::cache_clear,
         titane_infinity::cache::middleware::cache_get_metrics,
         titane_infinity::cache::middleware::cache_cleanup,
+        // ═══════════════════════════════════════════════════════════════
+        // BATCH REQUEST SYSTEM v19.5.2 P2-3
+        // ═══════════════════════════════════════════════════════════════
+        titane_infinity::batch::batch_execute,
+        titane_infinity::batch::batch_get_dashboard_state,
+        titane_infinity::batch::batch_get_monitoring_overview,
     ]);
 
     builder
