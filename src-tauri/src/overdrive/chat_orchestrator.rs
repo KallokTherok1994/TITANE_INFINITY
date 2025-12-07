@@ -305,9 +305,8 @@ pub async fn chat_send_message(
             crate::security::AuditEventType::RateLimitExceeded,
             user_id.clone(),
             serde_json::json!({ "provider": request.provider, "message_length": request.message.len() }),
-            crate::security::AuditSeverity::Warning,
-        )
-        .with_module("chat_orchestrator");
+            crate::security::AuditSeverity::Warning.into(),
+        );
         
         let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
         

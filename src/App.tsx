@@ -44,6 +44,7 @@ import {
 import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
+import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
 import './i18n';
 
 /**
@@ -654,22 +655,7 @@ const AppRouter: React.FC = () => {
       sidebarCollapsed={sidebarCollapsed}
     >
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
-      <Suspense
-        fallback={
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100vh',
-              fontSize: '1.2rem',
-              color: '#727b81',
-            }}
-          >
-            ⚡ Chargement...
-          </div>
-        }
-      >
+      <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
           {/* Main Routes v15.2+ */}
           <Route path="/" element={<DashboardPage />} />

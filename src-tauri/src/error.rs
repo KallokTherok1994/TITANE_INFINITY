@@ -1,13 +1,3 @@
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v24 — UNIFIED IPC ERROR TYPES
- * Enum TitaneError commun pour toutes les commands Tauri
- * TODO #12
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-use serde::{Serialize, Deserialize};
-use thiserror::Error;
 
 #[derive(Debug, thiserror::Error)]
 pub enum TitaneError {
@@ -113,3 +103,10 @@ impl From<TitaneError> for String {
         err.to_string()
     }
 }
+
+// ═══════════════════════════════════════════════════════════════
+// Type alias for Result
+// ═══════════════════════════════════════════════════════════════
+
+/// Result type alias using TitaneError
+pub type TitaneResult<T> = Result<T, TitaneError>;

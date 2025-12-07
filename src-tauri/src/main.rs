@@ -15,25 +15,9 @@
 
 // Tauri core (Manager trait required for .path() and .get_webview_window())
 // Required for both app_data_dir access and DevTools auto-open
-use tauri::Manager;
-use std::sync::{Arc, RwLock};
-use tokio::sync::RwLock as TokioRwLock;
 
 // TITANE∞ command modules
-use titane_infinity::{
-    control_panel_commands,
-    mock_commands,
-    overdrive, // ✅ v16.1 CHAT ORCHESTRATOR
-    persistence, // ✅ v∞.MPE PERSISTENCE ENGINE
-    runtime_config,
-    secure_commands,
-    time_commands,
-};
-
-use titane_infinity::security::secrets_engine::SecureSecretsEngine;
-use titane_infinity::ia::UnifiedIAEngine;
-use titane_infinity::multi_agents::AgentPermissionManager;
-use titane_infinity::singularity::ia_context::IAContext;
+use titane_infinity::{};
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
@@ -106,31 +90,22 @@ use titane_infinity::cognitive::{
 use tokio::sync::Mutex;
 
 // Core Singularity State (for CoherenceEngine v20.0)
-use titane_infinity::core::state::SingularityState;
 
 // QA System v19.8
-use titane_infinity::qa::qa_commands::QaState;
 
 // Singularity State v∞ (v20)
-use titane_infinity::singularity::singularity_commands::SingularityStateGlobal;
 
 // Adaptive Engine v21
-use titane_infinity::adaptive::adaptive_commands::AdaptiveEngineGlobal;
 
 // Narrative Engine v22
-use titane_infinity::narrative::narrative_commands::NarrativeEngineGlobal;
 
 // Immersive Avatar Engine v23
-use titane_infinity::avatar::AvatarEngineGlobal;
 
 // Cloud Sync Engine v∞ (OPUS #13)
-use titane_infinity::cloud::commands::CloudSyncState;
 
 // Memory Evolution Engine++ v∞ (OPUS #14)
-use titane_infinity::memory_evolution::MemoryEvolutionState;
 
 // System Identity Engine v∞ (OPUS #15)
-use titane_infinity::identity::IdentityEngineState;
 
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
@@ -183,7 +158,7 @@ async fn send_message(
         .map_err(|e| e.to_string())?;
     
     // Audit log
-    let _ = state.security_manager.audit_logger.log(AuditEvent {
+    let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(AuditEvent {
         timestamp: chrono::Utc::now(),
         event_type: AuditEventType::DataAccess,
         user_id: "default_user".to_string(),
@@ -192,6 +167,7 @@ async fn send_message(
             "message_length": message.len()
         }),
         ip_address: None,
+        severity: 1,
     }).await;
     
     // ...existing code...

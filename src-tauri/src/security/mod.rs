@@ -24,10 +24,9 @@ pub mod audit;      // Structured audit logging
 pub mod commands;   // Tauri commands for security
 pub mod csp;        // Content Security Policy
 
-pub use hardening::*; // Export hardening functions
-pub use rate_limit::{RateLimiter, RateLimitConfig, RateLimitStats, GLOBAL_RATE_LIMITER};
-pub use audit::{AuditLogger, AuditEvent, AuditEventType, AuditSeverity, GLOBAL_AUDIT_LOGGER};
-pub use commands::*; // Export security commands
+use encryption::Encryptor;
+pub use rate_limit::{RateLimiter, RateLimitStats};
+pub use audit::{AuditLogger, AuditEvent, AuditEventType, AuditSeverity};
 
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -180,18 +179,8 @@ fn get_timestamp() -> u64 {
         .as_secs()
 }
 
-pub mod validation;
-pub mod rate_limit;
-pub mod audit;
-pub mod encryption;
-pub mod csp;
 
 pub use validation::InputValidator;
-pub use rate_limit::RateLimiter;
-pub use audit::{AuditLogger, AuditEvent, AuditEventType};
-pub use encryption::Encryptor;
-pub use csp::get_csp_headers;
-
 use crate::error::TitaneResult;
 
 pub struct SecurityManager {

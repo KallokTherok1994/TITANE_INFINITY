@@ -95,9 +95,8 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
             crate::security::AuditEventType::RateLimitExceeded,
             user_id.clone(),
             serde_json::json!({ "model": request.model, "prompt_length": request.prompt.len() }),
-            crate::security::AuditSeverity::Warning,
-        )
-        .with_module("ai_ollama");
+            crate::security::AuditSeverity::Warning.into(),
+        );
         let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
         return Err(format!("Rate limit exceeded: {}", e));
     }

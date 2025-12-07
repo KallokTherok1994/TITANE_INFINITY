@@ -10,7 +10,12 @@
       "Bash(timeout 90 npx vite build:*)",
       "Bash(npm ls:*)",
       "Bash(timeout 120 npx vite build:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(wc:*)",
+      "Bash(done)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

@@ -77,7 +77,7 @@ pub async fn log_audit_event(
 
     let details_json = json!({ "message": details });
 
-    let event = AuditEvent::new(event_type, user_id, details_json, severity);
+    let event = AuditEvent::new(event_type, user_id, details_json, severity.into());
 
     crate::security::audit::GLOBAL_AUDIT_LOGGER
         .log(event)
