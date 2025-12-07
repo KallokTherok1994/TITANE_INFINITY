@@ -1155,7 +1155,7 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Complete Chat Flow', () => {
     render(<Chat />);
 
     const inputElement = screen.getByPlaceholderText(/posez votre question/i);
-    const sendButton = screen.getByRole('button', { name: /envoyer le message/i });
+    const sendButton = screen.getByRole('button', { name: /Envoyer message texte/i });
 
     expect(inputElement).toBeInTheDocument();
     expect(sendButton).toBeInTheDocument();

@@ -87,7 +87,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
     render(<ChatWindow />);
 
     const input = screen.getByPlaceholderText(/Posez votre question/i);
-    const sendButton = screen.getByRole('button', { name: /📨/ });
+    const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
 
     expect(input).toBeInTheDocument();
     expect(sendButton).toBeInTheDocument();
@@ -97,7 +97,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
     render(<ChatWindow />);
 
     const input = screen.getByPlaceholderText(/Posez votre question/i);
-    const sendButton = screen.getByRole('button', { name: /📨/ });
+    const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
 
     // Saisir un message
     fireEvent.change(input, { target: { value: 'Test message Chat IA' } });
@@ -120,7 +120,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
     render(<ChatWindow />);
 
     expect(screen.getByText('TITANE réfléchit...')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /⏳/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Envoi en cours/ })).toBeDisabled();
   });
 
   test('5️⃣ Messages affichés dans la liste', async () => {
@@ -162,7 +162,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
 
     render(<ChatWindow onVoiceModeToggle={mockVoiceToggle} voiceModeActive={false} />);
 
-    const voiceButton = screen.getByTitle('Activer/Désactiver le Mode Vocal');
+    const voiceButton = screen.getByRole('button', { name: /Activer mode vocal/ });
     fireEvent.click(voiceButton);
 
     expect(mockVoiceToggle).toHaveBeenCalled();
@@ -196,7 +196,7 @@ describe('🧪 CHAT IA INTERFACE - VERIFICATION COMPLÈTE', () => {
   test('🔟 Message vide ne peut pas être envoyé', async () => {
     render(<ChatWindow />);
 
-    const sendButton = screen.getByRole('button', { name: /📨/ });
+    const sendButton = screen.getByRole('button', { name: /Envoyer le message/ });
 
     // Bouton désactivé quand input vide
     expect(sendButton).toBeDisabled();

@@ -1,72 +1,130 @@
 #!/bin/bash
-# TITANE_INFINITY — Complete System Verification
 
-echo "╔═══════════════════════════════════════════════════════════════════════════╗"
-echo "║                   TITANE_INFINITY System Verification                     ║"
-echo "║                    Phase 3-0 Orchestration Complete ✅                    ║"
-echo "╚═══════════════════════════════════════════════════════════════════════════╝"
+echo "🔍 TITANE Orchestration — System Verification"
+echo "============================================="
 echo ""
 
-# Test each component
-echo "📦 Checking Components..."
-echo ""
+# Colors
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
 
-# 1. Check agents exist
-echo "✅ Copilot Agents:"
-test -f .github/agents/titane-conductor.agent.md && echo "  ✓ titane-conductor.agent.md (138 lines)"
-test -f .github/agents/audit-subagent.agent.md && echo "  ✓ audit-subagent.agent.md (177 lines)"
-test -f .github/agents/implement-subagent.agent.md && echo "  ✓ implement-subagent.agent.md (222 lines)"
-test -f .github/agents/review-subagent.agent.md && echo "  ✓ review-subagent.agent.md (290 lines)"
-echo ""
-
-# 2. Check instructions
-echo "✅ Global Instructions:"
-test -f .github/instructions/titane.instructions.md && echo "  ✓ titane.instructions.md (435 lines)"
-echo ""
-
-# 3. Check orchestration
-echo "✅ Orchestration System:"
-test -f orchestration/README.md && echo "  ✓ README.md (324 lines)"
-test -f orchestration/ORCHESTRATION.md && echo "  ✓ ORCHESTRATION.md (405 lines)"
-test -f orchestration/COMPLETION_REPORT.md && echo "  ✓ COMPLETION_REPORT.md (396 lines)"
-test -f orchestration/package.json && echo "  ✓ package.json (35 lines)"
-test -f orchestration/roadmap-data.yaml && echo "  ✓ roadmap-data.yaml (219 lines)"
-echo ""
-
-# 4. Check scripts
-echo "✅ Helper Scripts:"
-test -f orchestration/scripts/batch-progress.ts && echo "  ✓ batch-progress.ts (139 lines)"
-test -f orchestration/scripts/generate-next-prompt.ts && echo "  ✓ generate-next-prompt.ts (174 lines)"
-test -f orchestration/scripts/update-state.ts && echo "  ✓ update-state.ts (138 lines)"
-echo ""
-
-# 5. Check npm installation
-echo "✅ Dependencies:"
-if [ -d "orchestration/node_modules" ]; then
-    echo "  ✓ npm packages installed (22 packages)"
-    echo "  ✓ No vulnerabilities"
+# Check 1: Directory structure
+echo "📁 Checking directory structure..."
+if [ -d ".github/agents" ] && [ -d "orchestration/scripts" ] && [ -d "plans" ]; then
+    echo -e "${GREEN}✅ Directory structure correct${NC}"
 else
-    echo "  ⚠ npm packages not installed - run: cd orchestration && npm install"
+    echo -e "${RED}❌ Missing directories${NC}"
+    exit 1
 fi
-echo ""
 
-# 6. Test scripts
-echo "✅ CLI Scripts Working:"
+# Check 2: Agent files
+echo ""
+echo "🎭 Checking Copilot agents..."
+AGENT_COUNT=$(find .github/agents -name "*.agent.md" 2>/dev/null | wc -l)
+if [ "$AGENT_COUNT" -eq 4 ]; then
+    echo -e "${GREEN}✅ 4 agents found${NC}"
+    ls .github/agents/*.agent.md | sed 's/^/  - /'
+else
+    echo -e "${RED}❌ Expected 4 agents, found $AGENT_COUNT${NC}"
+    exit 1
+fi
+
+# Check 3: Scripts
+echo ""
+echo "📜 Checking TypeScript scripts..."
+SCRIPT_COUNT=$(find orchestration/scripts -name "*.ts" 2>/dev/null | wc -l)
+if [ "$SCRIPT_COUNT" -eq 3 ]; then
+    echo -e "${GREEN}✅ 3 scripts found${NC}"
+    ls orchestration/scripts/*.ts | sed 's/^/  - /'
+else
+    echo -e "${RED}❌ Expected 3 scripts, found $SCRIPT_COUNT${NC}"
+    exit 1
+fi
+
+# Check 4: Roadmap
+echo ""
+echo "🗺️  Checking roadmap..."
+if [ -f "orchestration/roadmap.yaml" ]; then
+    TASK_COUNT=$(grep -c "^  - id:" orchestration/roadmap.yaml)
+    echo -e "${GREEN}✅ Roadmap found with $TASK_COUNT tasks${NC}"
+else
+    echo -e "${RED}❌ Roadmap not found${NC}"
+    exit 1
+fi
+
+# Check 5: Dependencies
+echo ""
+echo "📦 Checking npm dependencies..."
 cd orchestration
-npm run status 2>&1 | grep "Overall Status" > /dev/null && echo "  ✓ npm run status"
-npm run next 2>&1 | grep "Next Task" > /dev/null && echo "  ✓ npm run next"
-echo ""
+if [ -d "node_modules" ] && [ -f "package-lock.json" ]; then
+    PACKAGE_COUNT=$(npm list --depth=0 2>/dev/null | grep -c "├──\|└──")
+    echo -e "${GREEN}✅ Dependencies installed ($PACKAGE_COUNT packages)${NC}"
+else
+    echo -e "${RED}❌ Dependencies not installed${NC}"
+    echo -e "${YELLOW}💡 Run: cd orchestration && npm install${NC}"
+    exit 1
+fi
 
-echo "═══════════════════════════════════════════════════════════════════════════"
+# Check 6: NPM scripts
 echo ""
-echo "📊 System Status: READY TO AUTOMATE ✅"
+echo "🛠️  Testing NPM scripts..."
+npm run status > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✅ npm run status — working${NC}"
+else
+    echo -e "${RED}❌ npm run status — failed${NC}"
+    exit 1
+fi
+
+npm run next > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✅ npm run next — working${NC}"
+else
+    echo -e "${RED}❌ npm run next — failed${NC}"
+    exit 1
+fi
+
+# Check 7: YAML validation
 echo ""
-echo "🚀 Quick Start:"
+echo "✅ Validating YAML syntax..."
+cd ..
+npx js-yaml orchestration/roadmap.yaml > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✅ YAML syntax valid${NC}"
+else
+    echo -e "${RED}❌ YAML syntax invalid${NC}"
+    exit 1
+fi
+
+# Check 8: Documentation
 echo ""
-echo "  $ cd orchestration"
-echo "  $ npm run status    # Check overall progress (49% complete)"
-echo "  $ npm run next      # Get next task"
+echo "📚 Checking documentation..."
+DOC_COUNT=0
+[ -f "ORCHESTRATION_MANIFEST.md" ] && ((DOC_COUNT++))
+[ -f "SETUP_GUIDE.md" ] && ((DOC_COUNT++))
+[ -f "orchestration/architecture.md" ] && ((DOC_COUNT++))
+
+if [ "$DOC_COUNT" -eq 3 ]; then
+    echo -e "${GREEN}✅ All documentation present${NC}"
+    echo "  - ORCHESTRATION_MANIFEST.md"
+    echo "  - SETUP_GUIDE.md"
+    echo "  - orchestration/architecture.md"
+else
+    echo -e "${YELLOW}⚠️  Only $DOC_COUNT/3 docs found${NC}"
+fi
+
+# Summary
 echo ""
-echo "  Then paste output into Copilot Chat with @titane-conductor"
+echo "============================================="
+echo -e "${GREEN}✅ System Verification Complete${NC}"
 echo ""
-echo "═══════════════════════════════════════════════════════════════════════════"
+echo "Next steps:"
+echo "  1. cd orchestration"
+echo "  2. npm run status"
+echo "  3. npm run next"
+echo "  4. Start with @titane-conductor in GitHub Copilot"
+echo ""
+echo "First task: P0-1 (Analyse structure complète)"
+echo "============================================="

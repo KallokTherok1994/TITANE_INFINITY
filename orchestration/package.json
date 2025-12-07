@@ -1,6 +1,7 @@
 {
   "name": "titane-orchestration",
   "version": "1.0.0",
+  "type": "module",
   "description": "Scripts orchestration TITANE_INFINITY",
   "scripts": {
     "next": "ts-node scripts/generate-next-prompt.ts",

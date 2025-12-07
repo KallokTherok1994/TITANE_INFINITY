@@ -323,15 +323,24 @@ export class CognitiveStrategy
     const stats = this.cognitiveOrchestrator.getStats();
     const memoriesStored = this.metrics.filter(m => m.name === 'cognitive.memory.stored').length;
     const memoriesRetrieved = this.metrics.filter(m => m.name === 'cognitive.memory.retrieved').length;
+    const operationExecuted = this.metrics.filter(m => m.name.startsWith('cognitive.operation')).length;
+    const consistencyChecks = this.metrics.filter(m => m.name === 'cognitive.consistency.checked').length;
+    const totalMetricsRecorded = this.metrics.length;
+
+    // Use local metrics if cognitiveOrchestrator stats are empty
+    const totalRequests = Math.max(
+      stats.totalInteractions,
+      memoriesStored + memoriesRetrieved + operationExecuted + consistencyChecks
+    );
 
     return {
-      totalRequests: stats.totalInteractions,
+      totalRequests,
       successRate: stats.totalViolationsDetected === 0 ? 1.0 : 0.9,
       averageLatency: 0,
       errorCount: 0,
       timestamp: Date.now(),
       details: {
-        memoriesStored: stats.totalMemoriesCreated,
+        memoriesStored: Math.max(stats.totalMemoriesCreated, memoriesStored),
         memoriesRetrieved,
         totalCorrections: stats.totalCorrectionsApplied,
         avgConsistency: stats.avgConsistencyScore

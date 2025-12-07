@@ -250,7 +250,7 @@ class MCPOrchestratorClass implements MCPOperations {
 
   public async createJob(input: Job['input'], type: JobType): Promise<Job> {
     const job: Job = {
-      id: nanoid(),
+      id: `job_${nanoid()}`,
       type,
       status: JobStatus.PENDING,
       priority: this.calculatePriority(type),
@@ -271,6 +271,9 @@ class MCPOrchestratorClass implements MCPOperations {
       createdAt: Date.now(),
       updatedAt: Date.now()
     };
+
+    // Add job to pending queue
+    this.state.jobs.pending.push(job);
 
     this.log(`Job created: ${job.id} (${type})`);
     return job;
