@@ -5,14 +5,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   CONFIGURATION HUB - Unified Configuration Dashboard
- *   Phase 2: Configuration Management UI (Day 1-2: Read-Only)
+ *   CONFIGURATION HUB v2 - Unified Configuration Dashboard with EDIT MODE
+ *   Phase 2: Configuration Management UI (Day 3-4: Edit Mode)
  * ═══════════════════════════════════════════════════════════════
  */
 
 import React, { useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/core';
-import { ConfigSection, ConfigField } from '../components/config';
+import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import './ModulePages.css';
 
 interface RuntimeConfig {
@@ -46,6 +46,13 @@ export const ConfigurationHub: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ConfigTab>('system');
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
+  // Edit mode state
+  const [editMode, setEditMode] = useState(false);
+  const [editedRuntime, setEditedRuntime] = useState<Partial<RuntimeConfig>>({});
+  const [editedChatEngine, setEditedChatEngine] = useState<Partial<ChatEngineConfig>>({});
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [saving, setSaving] = useState(false);
+
   const loadConfig = async () => {
     setLoading(true);
     setError(null);
@@ -56,6 +63,10 @@ export const ConfigurationHub: React.FC = () => {
       console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
       setConfig(snapshot);
       setLastRefresh(new Date());
+      // Reset edit state when reloading
+      setEditedRuntime({});
+      setEditedChatEngine({});
+      setValidationErrors({});
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to load configuration:', err);
       setError(err instanceof Error ? err.message : String(err));
@@ -67,6 +78,102 @@ export const ConfigurationHub: React.FC = () => {
   useEffect(() => {
     loadConfig();
   }, []);
+
+  const handleEditToggle = () => {
+    if (editMode) {
+      // Cancel edit - reset changes
+      setEditedRuntime({});
+      setEditedChatEngine({});
+      setValidationErrors({});
+    }
+    setEditMode(!editMode);
+  };
+
+  const handleRuntimeFieldChange = (field: keyof RuntimeConfig, value: string | number | boolean) => {
+    setEditedRuntime((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+    // Clear validation error for this field
+    setValidationErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[`runtime.${field}`];
+      return newErrors;
+    });
+  };
+
+  const handleChatEngineFieldChange = (field: keyof ChatEngineConfig, value: string | number | boolean) => {
+    setEditedChatEngine((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+    // Clear validation error for this field
+    setValidationErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[`chat_engine.${field}`];
+      return newErrors;
+    });
+  };
+
+  const handleSave = async () => {
+    if (!config) return;
+
+    setSaving(true);
+    setValidationErrors({});
+
+    try {
+      console.log('💾 [ConfigHub] Saving configuration...');
+
+      // Save runtime config if changed
+      if (Object.keys(editedRuntime).length > 0) {
+        console.log('📤 [ConfigHub] Updating runtime config:', editedRuntime);
+        await invoke('update_runtime_config', {
+          update: {
+            ollama_url: editedRuntime.ollama_url,
+            ollama_model: editedRuntime.ollama_model,
+          },
+        });
+        console.log('✅ [ConfigHub] Runtime config updated');
+      }
+
+      // Save chat engine config if changed
+      if (Object.keys(editedChatEngine).length > 0) {
+        console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
+        await invoke('update_chat_engine_config', {
+          update: editedChatEngine,
+        });
+        console.log('✅ [ConfigHub] Chat engine config updated');
+      }
+
+      // Reload config after successful save
+      await loadConfig();
+      setEditMode(false);
+      console.log('✅ [ConfigHub] Configuration saved successfully');
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to save configuration:', err);
+      const errorMsg = err instanceof Error ? err.message : String(err);
+
+      // Try to parse validation errors from backend
+      // Format: "field: error message"
+      if (errorMsg.includes('URL Ollama')) {
+        setValidationErrors({ 'runtime.ollama_url': errorMsg });
+      } else if (errorMsg.includes('modèle')) {
+        setValidationErrors({ 'runtime.ollama_model': errorMsg });
+      } else if (errorMsg.includes('Timeout')) {
+        setValidationErrors({ 'chat_engine.timeout_ms': errorMsg });
+      } else if (errorMsg.includes('Chunk size')) {
+        setValidationErrors({ 'chat_engine.chunk_size': errorMsg });
+      } else if (errorMsg.includes('Max tokens')) {
+        setValidationErrors({ 'chat_engine.max_tokens': errorMsg });
+      } else if (errorMsg.includes('Temperature')) {
+        setValidationErrors({ 'chat_engine.temperature': errorMsg });
+      } else {
+        setError(errorMsg);
+      }
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const tabStyle = (isActive: boolean) => ({
     padding: '0.75rem 1.5rem',
@@ -97,7 +204,7 @@ export const ConfigurationHub: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error && !config) {
     return (
       <div className="module-page">
         <div className="module-page__header">
@@ -137,6 +244,23 @@ export const ConfigurationHub: React.FC = () => {
     return null;
   }
 
+  // Get current values (edited or original)
+  const currentRuntime = {
+    ollama_url: editedRuntime.ollama_url ?? config.runtime.ollama_url,
+    ollama_model: editedRuntime.ollama_model ?? config.runtime.ollama_model,
+    secrets_mode: config.runtime.secrets_mode, // Not editable
+    gemini_configured: config.runtime.gemini_configured, // Not editable
+  };
+
+  const currentChatEngine = {
+    timeout_ms: editedChatEngine.timeout_ms ?? config.chat_engine.timeout_ms,
+    chunk_size: editedChatEngine.chunk_size ?? config.chat_engine.chunk_size,
+    max_tokens: editedChatEngine.max_tokens ?? config.chat_engine.max_tokens,
+    temperature: editedChatEngine.temperature ?? config.chat_engine.temperature,
+  };
+
+  const hasChanges = Object.keys(editedRuntime).length > 0 || Object.keys(editedChatEngine).length > 0;
+
   return (
     <div className="module-page">
       {/* Header */}
@@ -145,30 +269,105 @@ export const ConfigurationHub: React.FC = () => {
           <h1 className="module-page__title">
             <span className="module-page__icon">🎯</span>
             Configuration Hub
+            {editMode && (
+              <span
+                style={{
+                  marginLeft: '1rem',
+                  fontSize: '0.8rem',
+                  padding: '0.25rem 0.75rem',
+                  background: 'rgba(102, 126, 234, 0.2)',
+                  borderRadius: '6px',
+                  color: '#667eea',
+                }}
+              >
+                MODE ÉDITION
+              </span>
+            )}
           </h1>
           <p className="module-page__subtitle">
-            Visualisation complète de toutes les configurations système
+            Visualisation et modification de toutes les configurations système
           </p>
         </div>
-        <button
-          onClick={loadConfig}
-          disabled={loading}
-          style={{
-            padding: '0.75rem 1.5rem',
-            background: loading
-              ? 'rgba(255, 255, 255, 0.1)'
-              : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            border: 'none',
-            borderRadius: '8px',
-            color: 'white',
-            cursor: loading ? 'not-allowed' : 'pointer',
-            fontWeight: 600,
-            transition: 'all 0.2s ease',
-            opacity: loading ? 0.6 : 1,
-          }}
-        >
-          {loading ? '⏳ Actualisation...' : '🔄 Actualiser'}
-        </button>
+        <div style={{ display: 'flex', gap: '0.75rem' }}>
+          {!editMode && (
+            <>
+              <button
+                onClick={loadConfig}
+                disabled={loading}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: loading
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '8px',
+                  color: 'white',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                  opacity: loading ? 0.6 : 1,
+                }}
+              >
+                {loading ? '⏳ Actualisation...' : '🔄 Actualiser'}
+              </button>
+              <button
+                onClick={handleEditToggle}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                ✏️ Modifier
+              </button>
+            </>
+          )}
+          {editMode && (
+            <>
+              <button
+                onClick={handleEditToggle}
+                disabled={saving}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(255, 68, 68, 0.2)',
+                  border: '1px solid rgba(255, 68, 68, 0.4)',
+                  borderRadius: '8px',
+                  color: '#ff4444',
+                  cursor: saving ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                  opacity: saving ? 0.6 : 1,
+                }}
+              >
+                ❌ Annuler
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving || !hasChanges}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: saving || !hasChanges
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  color: 'white',
+                  cursor: saving || !hasChanges ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                  opacity: saving || !hasChanges ? 0.6 : 1,
+                }}
+              >
+                {saving ? '💾 Enregistrement...' : '✅ Enregistrer'}
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Version & Timestamp Info */}
@@ -177,9 +376,11 @@ export const ConfigurationHub: React.FC = () => {
           display: 'flex',
           gap: '1rem',
           padding: '1rem 1.5rem',
-          background: 'rgba(102, 126, 234, 0.1)',
+          background: editMode ? 'rgba(102, 126, 234, 0.15)' : 'rgba(102, 126, 234, 0.1)',
           borderRadius: '8px',
-          border: '1px solid rgba(102, 126, 234, 0.3)',
+          border: editMode
+            ? '1px solid rgba(102, 126, 234, 0.5)'
+            : '1px solid rgba(102, 126, 234, 0.3)',
           marginBottom: '1.5rem',
         }}
       >
@@ -193,6 +394,13 @@ export const ConfigurationHub: React.FC = () => {
           </span>
           <span style={{ fontWeight: 600 }}>{lastRefresh.toLocaleTimeString('fr-FR')}</span>
         </div>
+        {hasChanges && (
+          <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.2)', paddingLeft: '1rem' }}>
+            <span style={{ fontSize: '0.85rem', color: '#667eea' }}>
+              ✏️ {Object.keys(editedRuntime).length + Object.keys(editedChatEngine).length} modification(s)
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Tabs Navigation */}
@@ -218,31 +426,39 @@ export const ConfigurationHub: React.FC = () => {
               description="Configuration d'exécution du système"
               defaultOpen={true}
             >
-              <ConfigField
+              <ConfigFieldEditable
                 label="Ollama URL"
-                value={config.runtime.ollama_url}
+                value={currentRuntime.ollama_url}
                 description="Endpoint du serveur Ollama local"
                 icon="🌐"
                 valueType="url"
+                editable={editMode}
+                onChange={(value) => handleRuntimeFieldChange('ollama_url', value)}
+                validationError={validationErrors['runtime.ollama_url']}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Ollama Model"
-                value={config.runtime.ollama_model}
+                value={currentRuntime.ollama_model}
                 description="Modèle LLM utilisé par défaut"
                 icon="🧠"
+                editable={editMode}
+                onChange={(value) => handleRuntimeFieldChange('ollama_model', value)}
+                validationError={validationErrors['runtime.ollama_model']}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Secrets Mode"
-                value={config.runtime.secrets_mode}
-                description="Mode de gestion des secrets (ephemeral/encrypted)"
+                value={currentRuntime.secrets_mode}
+                description="Mode de gestion des secrets (lecture seule)"
                 icon="🔐"
+                editable={false}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Gemini Configuré"
-                value={config.runtime.gemini_configured}
-                description="API Gemini active ou non"
+                value={currentRuntime.gemini_configured}
+                description="API Gemini active ou non (lecture seule)"
                 icon="✨"
                 valueType="boolean"
+                editable={false}
               />
             </ConfigSection>
           </>
@@ -256,33 +472,45 @@ export const ConfigurationHub: React.FC = () => {
               description="Paramètres du moteur de chat IA"
               defaultOpen={true}
             >
-              <ConfigField
+              <ConfigFieldEditable
                 label="Timeout"
-                value={config.chat_engine.timeout_ms}
-                description="Délai maximum d'attente pour une réponse"
+                value={currentChatEngine.timeout_ms}
+                description="Délai maximum d'attente pour une réponse (1000-300000ms)"
                 icon="⏱️"
                 valueType="duration"
+                editable={editMode}
+                onChange={(value) => handleChatEngineFieldChange('timeout_ms', value)}
+                validationError={validationErrors['chat_engine.timeout_ms']}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Chunk Size"
-                value={config.chat_engine.chunk_size}
-                description="Taille des chunks de streaming"
+                value={currentChatEngine.chunk_size}
+                description="Taille des chunks de streaming (100-10000)"
                 icon="📦"
                 valueType="number"
+                editable={editMode}
+                onChange={(value) => handleChatEngineFieldChange('chunk_size', value)}
+                validationError={validationErrors['chat_engine.chunk_size']}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Max Tokens"
-                value={config.chat_engine.max_tokens}
-                description="Nombre maximum de tokens par requête"
+                value={currentChatEngine.max_tokens}
+                description="Nombre maximum de tokens par requête (100-100000)"
                 icon="🎯"
                 valueType="number"
+                editable={editMode}
+                onChange={(value) => handleChatEngineFieldChange('max_tokens', value)}
+                validationError={validationErrors['chat_engine.max_tokens']}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Temperature"
-                value={config.chat_engine.temperature}
-                description="Créativité du modèle (0.0 = déterministe, 1.0 = créatif)"
+                value={currentChatEngine.temperature}
+                description="Créativité du modèle (0.0 = déterministe, 2.0 = créatif)"
                 icon="🌡️"
                 valueType="number"
+                editable={editMode}
+                onChange={(value) => handleChatEngineFieldChange('temperature', value)}
+                validationError={validationErrors['chat_engine.temperature']}
               />
             </ConfigSection>
           </>
@@ -296,25 +524,28 @@ export const ConfigurationHub: React.FC = () => {
               description="Indicateurs de performance système"
               defaultOpen={true}
             >
-              <ConfigField
+              <ConfigFieldEditable
                 label="Config Load Time"
                 value={`${Date.now() - config.timestamp}ms`}
                 description="Temps écoulé depuis le chargement de la config"
                 icon="⏱️"
+                editable={false}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Streaming Enabled"
-                value={config.chat_engine.chunk_size > 0}
+                value={currentChatEngine.chunk_size > 0}
                 description="Mode streaming activé pour les réponses"
                 icon="📡"
                 valueType="boolean"
+                editable={false}
               />
-              <ConfigField
+              <ConfigFieldEditable
                 label="Timeout Configuré"
-                value={config.chat_engine.timeout_ms > 0}
+                value={currentChatEngine.timeout_ms > 0}
                 description="Timeout défini pour éviter les blocages"
                 icon="⏰"
                 valueType="boolean"
+                editable={false}
               />
             </ConfigSection>
           </>

@@ -43,6 +43,11 @@ mod coherence_commands {
     include!("commands/coherence_commands.rs");
 }
 
+// Unified Memory commands v20.0 (Phase 2 Fusion #2)
+mod unified_memory_commands {
+    include!("commands/unified_memory_commands.rs");
+}
+
 // DevOps commands (module local)
 mod devops_commands {
     include!("commands/devops.rs");
@@ -1742,6 +1747,15 @@ async fn main() {
         coherence_commands::coherence_get_score,
         coherence_commands::coherence_initialize,
         // ═══════════════════════════════════════════════════════════════
+        // UNIFIED MEMORY v20.0 (Phase 2 Fusion #2: Memory #5 + MemoryModule + Singularity)
+        // ═══════════════════════════════════════════════════════════════
+        unified_memory_commands::memory_get_state,
+        unified_memory_commands::memory_store,
+        unified_memory_commands::memory_recall,
+        unified_memory_commands::memory_get_stats,
+        unified_memory_commands::memory_initialize,
+        unified_memory_commands::memory_tick,
+        // ═══════════════════════════════════════════════════════════════
         // USER ONBOARDING SYSTEM v19.5.2 (Phase 1 - Quick Wins)
         // ═══════════════════════════════════════════════════════════════
         onboarding::is_onboarding_complete,
@@ -1752,6 +1766,8 @@ async fn main() {
         // CONFIGURATION MANAGEMENT v19.5.2 (Phase 2 - Configuration Hub)
         // ═══════════════════════════════════════════════════════════════
         config::get_all_configs,
+        config::update::update_runtime_config,
+        config::update::update_chat_engine_config,
     ]);
 
     builder

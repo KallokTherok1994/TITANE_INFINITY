@@ -4,6 +4,8 @@
  */
 
 export { ConfigField } from './ConfigField';
+export { ConfigFieldEditable } from './ConfigFieldEditable';
 export { ConfigSection } from './ConfigSection';
 export type { ConfigFieldProps } from './ConfigField';
+export type { ConfigFieldEditableProps } from './ConfigFieldEditable';
 export type { ConfigSectionProps } from './ConfigSection';

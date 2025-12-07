@@ -8,15 +8,45 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-pub mod snapshot;
+pub mod update;
 
 use serde::{Deserialize, Serialize};
-use tauri::State;
-use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::runtime_config::RuntimeConfig;
-use crate::chat_engine::config::ChatEngineConfig;
+/**
+ * Runtime Configuration (serializable version)
+ */
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RuntimeConfig {
+    pub ollama_url: String,
+    pub ollama_model: String,
+    pub secrets_mode: String,
+    pub gemini_configured: bool,
+    pub timestamp: u64,
+}
+
+/**
+ * Chat Engine Configuration (serializable version)
+ */
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ChatEngineConfig {
+    pub timeout_ms: u64,
+    pub chunk_size: usize,
+    pub max_tokens: usize,
+    pub temperature: f32,
+}
+
+impl Default for ChatEngineConfig {
+    fn default() -> Self {
+        Self {
+            timeout_ms: 45000,
+            chunk_size: 480,
+            max_tokens: 2048,
+            temperature: 0.7,
+        }
+    }
+}
 
 /**
  * Configuration Snapshot
