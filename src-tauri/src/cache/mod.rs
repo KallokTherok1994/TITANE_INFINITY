@@ -147,7 +147,14 @@ impl IntelligentCache {
     /// Get cached value if valid (not expired)
     pub fn get<T: DeserializeOwned>(&self, key: &CacheKey) -> Option<T> {
         // Try to get entry
-        let entry_ref = self.data.get(key)?;
+        let entry_ref = match self.data.get(key) {
+            Some(entry) => entry,
+            None => {
+                // Key doesn't exist - record miss
+                self.metrics.record_miss();
+                return None;
+            }
+        };
 
         // Check if expired
         if entry_ref.is_expired() {
