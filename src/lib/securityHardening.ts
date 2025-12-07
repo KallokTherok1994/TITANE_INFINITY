@@ -4,7 +4,14 @@
  * TypeScript wrapper pour Rate Limiting & Audit Logging
  */
 
-import { invoke } from '@tauri-apps/api/tauri'
+// Import conditionnel pour éviter l'erreur si Tauri n'est pas disponible
+let invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  invoke = require('@tauri-apps/api/tauri').invoke;
+} catch {
+  invoke = async () => { throw new Error('Tauri not available'); };
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -21,7 +28,7 @@ export interface AuditEvent {
   timestamp: string // ISO 8601 timestamp
   event_type: AuditEventType
   user_id: string
-  details: Record<string, any>
+  details: Record<string, unknown>
   severity: AuditSeverity
   ip_address?: string
   module?: string

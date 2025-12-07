@@ -56,8 +56,16 @@ export {
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { UnifiedMemory } from './UnifiedMemory';
-import { SQLiteVectorStore } from './SQLiteVectorStore';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
+
+// Import conditionnel de SQLiteVectorStore (Node.js only)
+let SQLiteVectorStore: any = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  SQLiteVectorStore = require('./SQLiteVectorStore').SQLiteVectorStore;
+} catch {
+  console.warn('[Unified] SQLiteVectorStore not available (browser mode)');
+}
 
 /**
  * Create default UnifiedMemory instance with SQLite + local embeddings
@@ -70,6 +78,11 @@ export async function createUnifiedMemory(config?: {
   modelName?: string;
   enableCache?: boolean;
 }): Promise<UnifiedMemory> {
+  // Vérifier si SQLite est disponible
+  if (!SQLiteVectorStore) {
+    throw new Error('SQLiteVectorStore not available. This feature requires Node.js environment (Tauri mode).');
+  }
+  
   // Create vector store
   const vectorStore = new SQLiteVectorStore({
     dbPath: config?.dbPath || './data/unified_memory.db',

@@ -66,6 +66,24 @@ export class SQLiteVectorStore implements VectorStore {
     if (this.isInitialized) return;
 
     try {
+      // Créer le dossier parent si nécessaire  
+      const pathParts = this.config.dbPath.split('/');
+      pathParts.pop(); // Retirer le nom du fichier
+      const dbDir = pathParts.join('/');
+      
+      if (dbDir) {
+        try {
+          const fs = await import('fs');
+          await fs.promises.mkdir(dbDir, { recursive: true });
+          console.log('[SQLiteVectorStore] Created directory:', dbDir);
+        } catch (mkdirError) {
+          // Ignorer si le dossier existe déjà
+          if ((mkdirError as any).code !== 'EEXIST') {
+            console.warn('[SQLiteVectorStore] mkdir warning:', mkdirError);
+          }
+        }
+      }
+
       // Créer/ouvrir la base de données
       this.db = new Database(this.config.dbPath, this.config.sqliteOptions as any);
 

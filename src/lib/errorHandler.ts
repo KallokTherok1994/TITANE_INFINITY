@@ -7,6 +7,7 @@
 
 import { useUIStore } from '../stores/uiStore';
 import { TimeoutError, RetryError, ValidationError } from './serviceInvoker';
+import { captureClassifiedError } from '../services/monitoring';
 
 // ────────────────────────────────────────────────────────────────
 // Custom Error Types
@@ -269,6 +270,23 @@ export class ErrorHandler {
     // Limiter taille log
     if (this.errorLog.length > this.MAX_LOG_SIZE) {
       this.errorLog = this.errorLog.slice(-this.MAX_LOG_SIZE);
+    }
+
+    // ✨ Envoyer à Sentry si erreur sévère
+    if (
+      classified.severity === ErrorSeverity.ERROR ||
+      classified.severity === ErrorSeverity.CRITICAL
+    ) {
+      try {
+        // Reconstruire l'erreur originale si possible
+        const originalError = new Error(classified.message);
+        originalError.name = classified.type;
+
+        captureClassifiedError(classified, originalError);
+      } catch (sentryError) {
+        // Ne pas bloquer si Sentry fail
+        console.warn('[ErrorHandler] Failed to send to Sentry:', sentryError);
+      }
     }
   }
 
