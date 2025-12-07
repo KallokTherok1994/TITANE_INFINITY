@@ -21,15 +21,19 @@ function loadRoadmap() {
 }
 
 function getNextTask(roadmap: Record<string, unknown>): Task | null {
-  const completed = new Set((roadmap.state as Record<string, unknown>).completed_tasks as string[]);
-  
+  const completed = new Set(
+    (roadmap.state as Record<string, unknown>).completed_tasks as string[]
+  );
+
   for (let i = 0; i <= 3; i++) {
-    const phase = roadmap[`phase_${i}`];
+    const phase = roadmap[`phase_${i}`] as Record<string, unknown>;
     if (!phase) continue;
-    
-    for (const task of phase.tasks) {
-      if (task.status === 'pending' && 
-          task.dependencies.every((d: string) => completed.has(d))) {
+
+    for (const task of phase.tasks as Task[]) {
+      if (
+        task.status === 'pending' &&
+        task.dependencies.every((d: string) => completed.has(d))
+      ) {
         return task;
       }
     }
@@ -59,17 +63,17 @@ Suis le workflow TDD du Conductor.
 
 function main() {
   console.log(chalk.cyan('\n🎯 TITANE — Next Prompt\n'));
-  
+
   const roadmap = loadRoadmap();
   const task = getNextTask(roadmap);
-  
+
   if (!task) {
     console.log(chalk.green('✅ Toutes tâches complétées !\n'));
     return;
   }
-  
+
   const prompt = generatePrompt(task);
-  
+
   try {
     clipboardy.writeSync(prompt);
     console.log(chalk.green(`✅ Prompt généré : ${task.id}`));
@@ -77,7 +81,7 @@ function main() {
   } catch {
     console.log(chalk.yellow('⚠️  Clipboard unavailable'));
   }
-  
+
   console.log(chalk.gray('─'.repeat(60)));
   console.log(prompt);
   console.log(chalk.gray('─'.repeat(60) + '\n'));

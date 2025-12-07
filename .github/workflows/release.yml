@@ -1,17 +1,12 @@
 # Configuration CI/CD GitHub Actions - TITANE∞ v17.3.0
 # Déploiement automatisé multi-plateformes (Linux, Windows, macOS)
 
-name: 🚀 Production Release (Simplifié)
+name: Release
 
 on:
   push:
     tags:
-      - 'v*'  # Tout tag version (vX.Y.Z)
-  workflow_dispatch: {}
-
-env:
-  CARGO_TERM_COLOR: always
-  RUST_BACKTRACE: 1
+      - 'v*'
 
 jobs:
   # ============================================================================

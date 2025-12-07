@@ -1,0 +1,16 @@
+[environment]
+mode = "production"
+debug = false
+
+[server]
+host = "0.0.0.0"
+port = 8080
+
+[logging]
+level = "info"
+format = "json"
+
+[security]
+rate_limit_enabled = true
+audit_enabled = true
+encryption_enabled = true

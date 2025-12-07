@@ -46,6 +46,7 @@ sudo rpm -i TITANE-Infinity-19.2.3-1.x86_64.rpm
 ### 🔧 Troubleshooting AppImage
 
 **"Read-only file system" error?**
+
 ```bash
 # Solution 1 (Recommandé)
 sudo apt-get install -y libfuse2
@@ -55,6 +56,7 @@ sudo apt-get install -y libfuse2
 ```
 
 **Configuration API keys** (optionnel):
+
 ```bash
 export OPENAI_API_KEY="sk-..."
 export ANTHROPIC_API_KEY="sk-ant-..."
@@ -72,17 +74,20 @@ Voir [docs/user/installation.md](docs/user/installation.md) pour guide complet.
 ### ✅ Production Build Complete
 
 **Build Metrics** (75% sous targets):
+
 - **Frontend**: 4.7MB (target <10MB) ✅ +113%
 - **Backend**: 20MB (target <50MB) ✅ +150%
 - **AppImage**: 80MB (target <100MB) ✅ +25%
 - **Build Time**: 17min total (frontend 9.64s + backend 3m41s)
 
 **Performance Metrics** (250% au-dessus targets):
+
 - **Boot Time**: ~1-2s (target <5s) ⚡ +250%
 - **IPC Latency p95**: 140ms (target <300ms) ⚡ +214%
 - **Pre-boot Validation**: ~100ms ⚡
 
 **Quality Metrics**:
+
 - **Tests**: 98.2% passing (1854/1888) ✅
 - **Pre-boot**: 9/9 checks PASS ✅
 - **Engines**: 20/20 operational ✅
@@ -91,11 +96,13 @@ Voir [docs/user/installation.md](docs/user/installation.md) pour guide complet.
 ### 🔧 Phase A - Instrumentation
 
 **A.1 - IPC Profiler** (NEW - 308 lignes Rust):
+
 - Mesure latency p50/p95/p99 des commandes Tauri
 - RAII ProfileGuard avec Drop trait
 - Baseline: p95 = 140ms (<300ms target) ✅
 
 **A.3 - Memory Profiling** (NEW - 170+ lignes bash):
+
 - Script automation `scripts/memory_profiling.sh`
 - Build optimisé: LTO + strip + opt-level 3
 - Baseline: 25MB total (<100MB target) ✅
@@ -139,12 +146,14 @@ curl http://localhost:8765/api/v1/tts/health
 ```
 
 ### Documentation TTS
+
 - **`TTS_FINAL_REPORT.md`** - Rapport complet d'installation ✅
 - **`TTS_INSTALLATION_SUCCESS.md`** - Guide de succès détaillé
 - **`TTS_QUICK_REFERENCE.md`** - Référence des commandes
 - **`TTS_PARLER_INSTALLATION_GUIDE.md`** - Guide complet (24 pages)
 
 ### Caractéristiques
+
 - ✅ **100% Local** - Aucune dépendance cloud
 - ✅ **Français natif** - Parler-TTS multilingual
 - ✅ **Licence Apache-2.0** - Usage commercial libre
@@ -163,11 +172,13 @@ curl http://localhost:8765/api/v1/tts/health
 TITANE∞ v24.1 simplifie radicalement l'architecture UI avec **2 centres unifiés**:
 
 #### 🔥 Orchestration & Intelligence Center
+
 **Route**: `/orchestration-intelligence` | **Badge**: v24.1
 
 **Concept**: "La salle des machines consciente de TITANE∞"
 
 Fusion de **6 modules** en **7 sections**:
+
 - 🎯 **Overview**: Dashboard système (état, moteurs actifs, IA prioritaire)
 - 🧠 **Meta-Orchestration**: Priorités cognitives, lanes métacognitives
 - 🔧 **Pipeline**: Orchestration technique, flux moteurs→moteurs
@@ -179,11 +190,13 @@ Fusion de **6 modules** en **7 sections**:
 **Fichier**: `src/modules/OrchestrationIntelligenceCenter.tsx` (534 lignes)
 
 #### 🧠 Identity & Memory Evolution Center
+
 **Route**: `/identity-memory-evolution` | **Badge**: v24.1
 
 **Concept**: "Le noyau intérieur du double numérique"
 
 Fusion de **4 modules** en **4 sections**:
+
 - 🎯 **Identité Système**: Matrice 8D, 4 modes, pacte Kevin↔TITANE
 - 🗺️ **Carte Mémoire**: 3 couches (247/1,832/4,521 items)
 - 🔄 **Mémoire Évolutive**: Opérations auto, journal évolution
@@ -193,11 +206,11 @@ Fusion de **4 modules** en **4 sections**:
 
 ### 📊 Métriques d'Amélioration
 
-| Métrique | v24.0 | v24.1 | Gain |
-|----------|-------|-------|------|
-| **Modules UI** | 14 modules | 6 modules | **-57%** |
-| **Routes** | 14 routes | 6 routes | **-57%** |
-| **Charge cognitive** | 100% | 40% | **-60%** |
+| Métrique             | v24.0      | v24.1     | Gain     |
+| -------------------- | ---------- | --------- | -------- |
+| **Modules UI**       | 14 modules | 6 modules | **-57%** |
+| **Routes**           | 14 routes  | 6 routes  | **-57%** |
+| **Charge cognitive** | 100%       | 40%       | **-60%** |
 
 **Total nouveau code**: 1,123 lignes production-ready
 
@@ -244,6 +257,7 @@ Fusion de **4 modules** en **4 sections**:
 ### 🌟 Singularity Session v∞ - Résumé
 
 **Fichiers créés cette session:**
+
 - `src/components/monitoring/SingularityDashboard.tsx` (1,065 lignes)
 - `src/hooks/useSingularityMetrics.ts` (416 lignes)
 - `src/utils/performanceProfiler.ts` (501 lignes)
@@ -293,6 +307,7 @@ pnpm lint         # ESLint
 ```
 
 **❌ Modes HTTP Bloqués (Sécurité):**
+
 ```bash
 pnpm preview  # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 pnpm start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
@@ -305,6 +320,7 @@ pnpm start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 **Status:** ✅ 100% Complété
 
 ### Features
+
 - ✅ **144 scripts bash** automatisés
 - ✅ Auto-build avec détection d'environnement
 - ✅ Self-heal automatique
@@ -312,6 +328,7 @@ pnpm start    # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
 - ✅ Compilation automatique complète
 
 ### Scripts Principaux
+
 ```bash
 # Auto-build complet
 bash scripts/auto_build.sh
@@ -324,6 +341,7 @@ bash scripts/os_installer.sh
 ```
 
 ### Documentation
+
 - 📄 `AUTO_BUILD_GUIDE.md` (400+ lignes)
 - 📄 `AUTO_SYSTEM_IMPLEMENTATION_REPORT.md` (500+ lignes)
 
@@ -334,6 +352,7 @@ bash scripts/os_installer.sh
 **Status:** ✅ 100% Complété
 
 ### Features
+
 - ✅ **Installateur graphique** avec Zenity
 - ✅ Progress bars interactives
 - ✅ Validation étape par étape
@@ -341,12 +360,14 @@ bash scripts/os_installer.sh
 - ✅ Interface utilisateur intuitive
 
 ### Lancement
+
 ```bash
 # Installer avec GUI
 bash setup_gui_installer/installer.sh
 ```
 
 ### Documentation
+
 - 📄 `GUI_INSTALLER_GUIDE.md` (2,500+ lignes)
 - 📄 `PHASE_2_IMPLEMENTATION_REPORT.md`
 
@@ -359,6 +380,7 @@ bash setup_gui_installer/installer.sh
 ### Architecture
 
 **Frontend** (14 fichiers React/CSS):
+
 - `ControlPanel.tsx` - Composant principal
 - `ControlPanelLayout.tsx` - Navigation sidebar
 - **10 sections complètes:**
@@ -374,6 +396,7 @@ bash setup_gui_installer/installer.sh
   10. 🔒 **SecuritySection** - Configuration H-N Security
 
 **Backend** (1 module Rust):
+
 - `control_panel_commands.rs` (360 lignes, 13 KB)
 - **18 commandes Tauri** (préfixe `cp_`):
   - `cp_get_system_info`, `cp_run_system_diagnostic`
@@ -388,6 +411,7 @@ bash setup_gui_installer/installer.sh
   - `cp_get_security_config`, `cp_set_security_config`
 
 ### Features
+
 - ✅ **10 sections** de configuration complètes
 - ✅ **Auto-refresh:** 5s (système), 2s (logs)
 - ✅ **Design System Monochrome** 100% compliant
@@ -397,6 +421,7 @@ bash setup_gui_installer/installer.sh
 - ✅ **Compilation réussie** (10.25s)
 
 ### Utilisation
+
 ```typescript
 import { ControlPanel } from '@/ui/pages/ControlPanel/ControlPanel';
 
@@ -411,6 +436,7 @@ await invoke('cp_toggle_singularity');
 ```
 
 ### Documentation
+
 - 📄 `CONTROL_PANEL_GUIDE.md` (15,000+ mots)
 
 ---
@@ -422,6 +448,7 @@ await invoke('cp_toggle_singularity');
 ### Architecture des Tests
 
 **Structure** (8 fichiers, 1,118+ lignes):
+
 ```
 tests/
 ├── unit/
@@ -441,21 +468,25 @@ src-tauri/src/control_panel_commands/
 ### Tests Implémentés
 
 **Backend Rust** (21 tests):
+
 - ✅ 18 tests commandes Tauri
 - ✅ 3 tests structures de données
 - ✅ Validation complète backend
 
 **Frontend Jest** (31 tests):
+
 - ✅ 17 tests commandes mockées
 - ✅ 7 tests composant React
 - ✅ 7 tests responsive/navigation
 
 **Intégration** (7 flux):
+
 - ✅ Système, Configuration, Singularité
 - ✅ Mémoire, Modules, Updates
 - ✅ Gestion erreurs en cascade
 
 **E2E** (Framework prêt):
+
 - ✅ WebDriver configuré
 - ✅ Tests interactions utilisateur
 - ✅ Performance testing
@@ -463,6 +494,7 @@ src-tauri/src/control_panel_commands/
 ### Configuration
 
 **Jest** (jest.config.json):
+
 - ✅ Jest 29 + React Testing Library
 - ✅ ts-jest + jsdom environment
 - ✅ Mocks globaux (Tauri API)
@@ -500,20 +532,24 @@ pnpm test:watch
 - ✅ **Frontend Build:** 241 KB gzip
 
 ### Documentation
+
 - 📄 `PHASE_4_TEST_REPORT.md` (rapport complet)
 
 ---
+
 - **Avec clé API** : Gemini → Ollama → Fallback (cascade intelligente)
 - **Configuration** : Créer `.env` avec `VITE_GEMINI_API_KEY=votre_clé`
 - **TTS (Mode Voix)** : Click sur 🎤 active synthèse vocale des réponses
 
 **⚠️ BREAKING CHANGE v24.3.0** :
+
 - **Mode HTTP/devServer complètement supprimé**
 - TITANE∞ fonctionne UNIQUEMENT en mode Tauri Native (file://)
 - Aucun port HTTP ouvert (5173, 4173, 3000)
 - Verrou anti-HTTP dans App.tsx (détecte et bloque contexte HTTP)
 
 **📚 Documentation v24.3.0 :**
+
 - `CHANGELOG_v24.3.0_TAURI_NATIVE.md` - Mode Tauri Native complet
 - `AUDIT_GLOBAL_COMPLET_v24.2.0.md` - Rapport audit exhaustif (1000+ lignes)
 - `AUDIT_RESUME_EXECUTIF.md` - Synthèse + roadmap 7 jours
@@ -524,19 +560,19 @@ pnpm test:watch
 
 ## 📌 Status Actuel (24 nov 2025)
 
-| Composant | Status | Version | Notes |
-|-----------|--------|---------|-------|
-| **Phase 3 Architecture** | ✅ COMPLETE | v∞ | **Update Engine, Auto-Audit, TimeNavigator, SystemGovernance, VaultEngine** |
-| **Update Engine (L)** | ✅ PRODUCTION-READY | v∞ | Ed25519 signatures, SHA-256 verification, rollback, 5 states |
-| **Auto-Audit Engine (J8)** | ✅ PRODUCTION-READY | v∞ | 6 categories, 30s scans, localStorage persistence |
-| **TimeNavigator UI (N6)** | ✅ COMPLETE | v∞ | Timeline, snapshot restore (ROOT), delete (SYSTEM) |
-| **SystemGovernance UI (K8)** | ✅ COMPLETE | v∞ | Audit log, permission matrix, escalation alerts |
-| **VaultEngine** | ✅ PRODUCTION-READY | v∞ | AES-256-GCM, thread-safe OnceLock, boot init |
-| **Security Permissions** | ✅ COMPLETE | v∞ | ROOT/SYSTEM/IA/USER, 6/7 commands protected |
-| **Time Commands** | ✅ COMPLETE | v∞ | 4 Tauri APIs (list/stats/restore/delete snapshots) |
-| **Frontend Build** | ✅ SUCCESS | v∞ | Vite 2536 modules, 599KB bundle |
-| **Backend Build** | ⚠️ BLOCKED | v∞ | **WebKit linking fails in Flatpak environment** |
-| **Documentation** | ✅ COMPLETE | v∞ | 5 guides (1675 lines): Phase 3, WebKit, Flatpak solutions |
+| Composant                    | Status              | Version | Notes                                                                       |
+| ---------------------------- | ------------------- | ------- | --------------------------------------------------------------------------- |
+| **Phase 3 Architecture**     | ✅ COMPLETE         | v∞      | **Update Engine, Auto-Audit, TimeNavigator, SystemGovernance, VaultEngine** |
+| **Update Engine (L)**        | ✅ PRODUCTION-READY | v∞      | Ed25519 signatures, SHA-256 verification, rollback, 5 states                |
+| **Auto-Audit Engine (J8)**   | ✅ PRODUCTION-READY | v∞      | 6 categories, 30s scans, localStorage persistence                           |
+| **TimeNavigator UI (N6)**    | ✅ COMPLETE         | v∞      | Timeline, snapshot restore (ROOT), delete (SYSTEM)                          |
+| **SystemGovernance UI (K8)** | ✅ COMPLETE         | v∞      | Audit log, permission matrix, escalation alerts                             |
+| **VaultEngine**              | ✅ PRODUCTION-READY | v∞      | AES-256-GCM, thread-safe OnceLock, boot init                                |
+| **Security Permissions**     | ✅ COMPLETE         | v∞      | ROOT/SYSTEM/IA/USER, 6/7 commands protected                                 |
+| **Time Commands**            | ✅ COMPLETE         | v∞      | 4 Tauri APIs (list/stats/restore/delete snapshots)                          |
+| **Frontend Build**           | ✅ SUCCESS          | v∞      | Vite 2536 modules, 599KB bundle                                             |
+| **Backend Build**            | ⚠️ BLOCKED          | v∞      | **WebKit linking fails in Flatpak environment**                             |
+| **Documentation**            | ✅ COMPLETE         | v∞      | 5 guides (1675 lines): Phase 3, WebKit, Flatpak solutions                   |
 
 ---
 
@@ -658,22 +694,26 @@ Intelligence cognitive basée sur 3 centres (Mental/Cœur/Corps) :
 API complète type-safe pour communication Frontend ↔ Backend :
 
 **Logging API** (4 commandes) :
+
 - `get_logs(level_filter, limit)` → Vec\<LogEntry\>
 - `get_correlated_logs(correlation_id)` → Vec\<LogEntry\>
 - `search_logs(query, target_filter)` → Vec\<LogEntry\>
 - `export_logs(format)` → String (JSON/CSV)
 
 **Metrics API** (4 commandes) :
+
 - `get_metric(name)` → Option\<Metric\>
 - `list_all_metrics()` → HashMap\<String, Metric\>
 - `get_core_metrics(core_id)` → HashMap\<String, Metric\>
 - `get_dashboard_metrics()` → DashboardMetrics
 
 **Discovery API** (2 commandes) :
+
 - `discover_cores()` → Vec\<CoreInfo\>
 - `get_core_info(core_id)` → CoreInfo
 
 **Cognitive API** (8 commandes) :
+
 - `get_cognitive_state()` → CognitiveState
 - `update_cognitive_mode(mode)` → Result\<()\>
 - `get_three_centers_coherence()` → ThreeCentersCoherence
@@ -684,6 +724,7 @@ API complète type-safe pour communication Frontend ↔ Backend :
 - `update_body_energy(level)` → Result\<()\>
 
 **Core System API** (5 commandes) :
+
 - `get_core_system_status()` → CoreSystemStatus
 - `initialize_all_cores()` → Result\<()\>
 - `shutdown_all_cores()` → Result\<()\>
@@ -726,15 +767,15 @@ API complète type-safe pour communication Frontend ↔ Backend :
 
 ### 📊 Métriques v17.2.0
 
-| Métrique | Valeur | Notes |
-|----------|--------|-------|
-| **Fichiers Rust** | 18 nouveaux | plugin_system, devtools, cognitive, commands |
-| **Lignes de code** | 3558 lignes | Production (sans tests) |
-| **Commandes Tauri** | 23 commandes | API complète type-safe |
-| **Tests unitaires** | 80+ tests | Tous passent ✅ |
-| **Documentation** | ~7000 lignes | 7 documents complets |
-| **Ratio doc/code** | 1.88 | Excellente couverture |
-| **Phase 1** | 100% ✅ | Infrastructure complète |
+| Métrique            | Valeur       | Notes                                        |
+| ------------------- | ------------ | -------------------------------------------- |
+| **Fichiers Rust**   | 18 nouveaux  | plugin_system, devtools, cognitive, commands |
+| **Lignes de code**  | 3558 lignes  | Production (sans tests)                      |
+| **Commandes Tauri** | 23 commandes | API complète type-safe                       |
+| **Tests unitaires** | 80+ tests    | Tous passent ✅                              |
+| **Documentation**   | ~7000 lignes | 7 documents complets                         |
+| **Ratio doc/code**  | 1.88         | Excellente couverture                        |
+| **Phase 1**         | 100% ✅      | Infrastructure complète                      |
 
 ### 🎯 Usage Frontend
 
@@ -801,6 +842,7 @@ const DevToolsDashboard = () => {
 ### ✅ Nouveautés v24.3.0 (Tauri Native + Audit)
 
 **🔒 Mode Tauri Native Exclusif:**
+
 - ✅ **Configuration HTTP supprimée**: vite.config.ts sans section `server{}`
 - ✅ **Scripts Tauri-only**: `"dev": "vite build --watch & tauri dev"`
 - ✅ **Verrou anti-HTTP**: App.tsx détecte et bloque contexte HTTP
@@ -808,6 +850,7 @@ const DevToolsDashboard = () => {
 - ✅ **Commande dev modifiée**: Build statique avant Tauri (pas de devServer)
 
 **🎭 Audit Corrections (AUDIT_GLOBAL_COMPLET_v24.2.0):**
+
 - ✅ **PersonaMoodIndicator**: Composant mood persona (120 lignes) intégré dans DashboardPage
 - ✅ **useVisualEngines Hook**: Synchronise CSS variables avec SystemState (60 lignes)
 - ✅ **DashboardPage v24.3**: Intégration PersonaMoodIndicator + useVisualEngines
@@ -815,6 +858,7 @@ const DevToolsDashboard = () => {
 - ⚠️ **10 engines manquants**: Phases 11-20 (Semiotics, Lore, Echo, Shadow, Unity, Quantum, Omnipresence, Convergence, Overmind, Singularity)
 
 **📊 Statistiques v24.3.0:**
+
 - **Backend**: 40+ fichiers Rust, 29 Tauri commands
 - **Frontend**: 11 engines créés (55%), 1 visible (9%)
 - **Audit**: 1000+ lignes rapport complet
@@ -824,6 +868,7 @@ const DevToolsDashboard = () => {
 ### 🚀 Architecture Backend v17.2.0
 
 #### Structure Rust (src-tauri/src/)
+
 ```
 src/
 ├── utils/           # Utilitaires (AppResult, constants, logging)
@@ -864,6 +909,7 @@ src/
    - `get_sentinel_state` → SentinelState
 
 **Legacy Commands Bridge (14):**
+
 - Voir section "Legacy Commands Bridge" ci-dessus
 - File: `src-tauri/src/api/legacy_commands.rs`
 - Status: Placeholders avec debug logs
@@ -877,16 +923,19 @@ src/
 #### Inputs & Controls (7 primitives)
 
 1. **Switch** - Toggle on/off avec animations fluides
+
    ```tsx
    <Switch checked={enabled} onChange={setEnabled} label="Feature" size="md" />
    ```
 
 2. **Checkbox** - Case à cocher avec état indéterminé
+
    ```tsx
    <Checkbox checked={accepted} onChange={setAccepted} label="Terms" indeterminate />
    ```
 
 3. **Radio + RadioGroup** - Boutons radio avec gestion de groupe
+
    ```tsx
    <RadioGroup value={theme} onChange={setTheme} name="theme">
      <Radio value="light" label="Light" />
@@ -895,16 +944,19 @@ src/
    ```
 
 4. **Textarea** - Zone de texte avec auto-resize et compteur
+
    ```tsx
    <Textarea value={text} onChange={setText} autoResize maxLength={500} showCount />
    ```
 
 5. **Slider** - Curseur de valeur avec marks et keyboard
+
    ```tsx
    <Slider value={volume} onChange={setVolume} min={0} max={100} showMarks />
    ```
 
 6. **Select** - Dropdown avec recherche et keyboard navigation
+
    ```tsx
    <Select value={country} onChange={setCountry} options={countries} searchable />
    ```
@@ -939,12 +991,12 @@ src/
 
 ## 📌 Historique Versions (Archive)
 
-| Composant | Status | Version | Notes |
-|-----------|--------|---------|-------|
-| **Frontend** | ✅ PRODUCTION-READY | 17.0.0 | Build 1,93s, 0 erreur TS, 131KB gzip |
-| **Backend (Tauri)** | ⏳ WEBKITGTK REQUIS | 17.0.0 | Script install-webkit-host-v17.sh fourni |
-| **Workspace** | ✅ OPTIMISÉ | -30% | 1,6G libéré (5,4G → 3,8G) |
-| **Documentation** | ✅ COMPLÈTE | 17.0.0 | CHANGELOG + RAPPORT_CLEAN-UP_v17.md |
+| Composant           | Status              | Version | Notes                                    |
+| ------------------- | ------------------- | ------- | ---------------------------------------- |
+| **Frontend**        | ✅ PRODUCTION-READY | 17.0.0  | Build 1,93s, 0 erreur TS, 131KB gzip     |
+| **Backend (Tauri)** | ⏳ WEBKITGTK REQUIS | 17.0.0  | Script install-webkit-host-v17.sh fourni |
+| **Workspace**       | ✅ OPTIMISÉ         | -30%    | 1,6G libéré (5,4G → 3,8G)                |
+| **Documentation**   | ✅ COMPLÈTE         | 17.0.0  | CHANGELOG + RAPPORT_CLEAN-UP_v17.md      |
 
 ### ⚠️ Note Importante : WebKit Installation Requise
 
@@ -953,6 +1005,7 @@ src/
 **GLIBC**: ✅ 2.42 détecté (>= 2.37 requis) — Aucune migration OS nécessaire
 
 **Installation WebKit (5-10 min)** :
+
 ```bash
 # Ouvrir terminal hôte (Ctrl+Alt+T)
 cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY
@@ -970,12 +1023,14 @@ cd .. && npm run dev
 ## ⚡ Quick Start
 
 ### Démarrage Rapide (Recommandé)
+
 ```bash
 ./START.sh
 # Sélectionnez votre mode : Frontend (1), Full App (2), ou Build (3)
 ```
 
 ### Commandes Directes
+
 ```bash
 # TAURI-ONLY MODE (100% Local, 0% HTTP)
 npm run dev          # → Tauri app (après WebKit install)
@@ -989,6 +1044,7 @@ npm run tauri:build  # Application native (.deb, .AppImage)
 ```
 
 ### Installation WebKitGTK 4.1 (Requis)
+
 ```bash
 # Script automatisé v17 (recommandé)
 bash install-webkit-host-v17.sh
@@ -1013,6 +1069,7 @@ TITANE∞ est une plateforme cognitive de nouvelle génération avec **8 modules
 **Status:** ✅ **PRODUCTION-READY** - Build réussi, Evolution Supervisor actif, 100/100 validation
 
 **Nouvelles Fonctionnalités v15.5:**
+
 - **Evolution Supervisor** 🧬 - Orchestration complète des 12 modules d'auto-évolution
 - **15 Commandes Tauri** 🎯 - API complète pour intégration frontend (evolution_get_report, evolution_perform_cycle, etc.)
 - **EXP Weight Integration** ⚖️ - Calcul XP dynamique avec calibration logique et adaptation modes
@@ -1020,6 +1077,7 @@ TITANE∞ est une plateforme cognitive de nouvelle génération avec **8 modules
 - **Meta-Mode Engine** 🧠 - Digital Twin v14.1 + Master Guide intégrés
 
 **Métriques v15.5:**
+
 - **Backend Binary:** 8.0 MB (compilation native réussie)
 - **Frontend Build:** 1.08s (206 kB optimized)
 - **TypeScript:** 0 erreur (strict mode)
@@ -1105,12 +1163,13 @@ TITANE∞ est une plateforme cognitive de nouvelle génération avec **8 modules
 
 - **Erreurs:** 0 ✅
 - **Build Status:** Release réussi ✅
-- **Type Safety:** 100/100 (Generic tauri<T>(), 15+ interfaces)
+- **Type Safety:** 100/100 (Generic tauri<T>, 15+ interfaces)
 - **Tests:** Memory module 100% couvert
 - **Documentation:** Complète (5 rapports 2200+ lignes)
 - **Sécurité:** Chiffrement militaire-grade (AES-256-GCM), Result<> partout
 
 ### Architecture
+
 - **Lignes main.rs:** 205 (vs 185 en v11.0.0)
 - **Commands centralisés:** 330 lignes (13 handlers)
 - **Type-safe API:** 137 lignes (tauri<T>() generic)
@@ -1128,11 +1187,12 @@ TITANE∞ est une plateforme cognitive de nouvelle génération avec **8 modules
 **Ce projet NE DOIT PAS être buildé depuis un environnement Flatpak/sandbox.**
 
 Les scripts de déploiement nécessitent un accès direct au système pour :
+
 - Accès aux bibliothèques système (webkit2gtk-4.1, javascriptcore)
 - Installation de paquets (.deb, .rpm)
 - Privilèges système (sudo, dpkg, apt)
 
-**✅ Solution : Utiliser un terminal natif Pop!_OS/Ubuntu**
+**✅ Solution : Utiliser un terminal natif Pop!\_OS/Ubuntu**
 
 ```bash
 # Ouvrir terminal système : Ctrl+Alt+T (pas depuis VS Code Flatpak)
@@ -1141,6 +1201,7 @@ bash deploy_titane_prod.sh
 ```
 
 ### Prérequis
+
 - **Rust:** 1.70+ (stable)
 - **Cargo:** 1.70+
 - **Node.js:** 18+ (pour UI)
@@ -1148,10 +1209,13 @@ bash deploy_titane_prod.sh
 - **Environnement:** Terminal natif (HORS Flatpak)
 
 ### Installationbash
+
 # Validation complète du système v9
+
 cargo test --all
 
 # Interface UI/UX
+
 cd core/frontend
 npm install
 npm run dev
@@ -1159,24 +1223,28 @@ npm run dev
 ## 📚 Documentation
 
 ### Guides Principaux
+
 - [README Complet](docs/README.md)
 - [Architecture Technique](docs/ARCHITECTURE.md)
 - [Documentation Modules](docs/MODULES.md)
 - [Guide Développeur](docs/DEVELOPER_GUIDE.md)
 
 ### Documentation Layers v8.1.x
+
 - [Modules #80-84](MODULES_80_84_FINAL_EVOLUTION_LAYER.md) - **Final Evolution Layer** ✨
 - [Modules #75-79](MODULES_75_79_METACOGNITIVE_LAYER.md) - Metacognitive Layer
 - [Modules #71-74](MODULES_71_74_DIRECTIONAL_IDENTITY_LAYER.md) - Directional & Identity Layer
 - [Modules #60-70](MODULES_60_70_SENTIENT_LAYER.md) - Sentient Layer
 
 ### Documentation Stacks v8.0
+
 - [Modules #55-56-57-59](MODULES_55_56_57_59_COMPLETE.md) - Advanced Cognitive Layer
 - [Modules #52-53-54](MODULES_52_53_54_COMPLETE.md) - Strategic Direction Layer
 - [Modules #49-50-51](MODULES_49_50_51_COMPLETE.md) - Cognitive Synthesis Layer
 - [Modules #44-45-47-48](MODULES_44_45_47_48_COMPLETE.md) - Executive & Dashboard
 - [Modules #40-41-42-43](MODULES_40_41_42_43_COMPLETE.md) - Sentient Layer
 - [Cognitive Stack](COGNITIVE_STACK_COMPLETE.md) - Modules #31-35
+
 ### Installation
 
 ```bash
@@ -1225,16 +1293,19 @@ cargo test
 ## 📚 Documentation Complète
 
 ### Rapports Techniques
+
 - **[RAPPORT_FINAL_v11.0.0.md](RAPPORT_FINAL_v11.0.0.md)** - Documentation technique complète (24 KB)
 - **[MISSION_ACCOMPLIE.md](MISSION_ACCOMPLIE.md)** - Résumé exécutif
 - **[CHANGELOG_v11.0.0.md](#)** - Historique des changements
 
 ### Documentation Modules
+
 - **[Memory Module](src-tauri/src/system/memory/)** - Stockage chiffré AES-256-GCM
 - **[Shared Types](src-tauri/src/shared/types.rs)** - Types communs système
 - **[Utils](src-tauri/src/shared/utils.rs)** - Utilitaires mathématiques
 
 ### Guides Anciens (v9/v10 - Référence Historique)
+
 - [Neural Mesh Stack](docs/NEURAL_MESH_STACK.md) - Modules #29-30
 - [Perception Stack](docs/PERCEPTION_STACK.md) - Modules #20-24
 - [Advanced Stack](docs/ADVANCED_STACK.md) - Modules #25-28
@@ -1245,6 +1316,7 @@ cargo test
 ## 🔐 Sécurité
 
 ### Memory Module Encryption
+
 ```rust
 // Chiffrement AES-256-GCM avec nonce aléatoire
 Algorithme: AES-256-GCM
@@ -1255,12 +1327,14 @@ Hash: SHA-256 (intégrité collection)
 ```
 
 ### ⚠️ Production Warning
+
 ```rust
 // CHANGEZ LA PASSPHRASE PAR DÉFAUT !
 const DEFAULT_PASSPHRASE: &str = "TITANE_INFINITY_SOVEREIGN_MEMORY_V8";
 ```
 
 **Recommandations:**
+
 1. ✅ Utiliser passphrase unique par installation
 2. ✅ Implémenter rotation clés chiffrement
 3. ✅ Activer HTTPS pour IPC Tauri
@@ -1299,6 +1373,7 @@ TITANE_INFINITY/
 ```
 
 ### Technologies
+
 - **Backend:** Rust 1.70+ (stable)
 - **Framework:** Tauri 2.0
 - **Crypto:** AES-256-GCM, SHA-256, Argon2
@@ -1311,6 +1386,7 @@ TITANE_INFINITY/
 ## 📜 Historique Versions
 
 ### v12.0.0 (19 Nov 2025) - Backend Engine Optimized + Tauri Link v2 🚀
+
 - ✅ Commands centralisés (330 lignes, 13 handlers)
 - ✅ Type-safe Tauri v2 (tauri<T>() generic, 15 interfaces)
 - ✅ 0 erreurs, 0 warnings (strict mode -D warnings)
@@ -1320,6 +1396,7 @@ TITANE_INFINITY/
 - ✅ Documentation complète (5 rapports 2200+ lignes)
 
 ### v11.0.0 (19 Nov 2024) - Stabilisation Complete ✅
+
 - ✅ 320 → 0 erreurs compilation (100% résolution)
 - ✅ Rewrite main.rs (1888 → 185 lignes)
 - ✅ 8 modules core stabilisés
@@ -1329,11 +1406,13 @@ TITANE_INFINITY/
 - ⚠️ 85+ modules désactivés temporairement
 
 ### v10.4.0 (18 Nov 2024) - Pré-stabilisation
+
 - ⚠️ 93 modules actifs (320 erreurs)
 - ⚠️ Architecture complexe (1888 lignes main.rs)
 - ⚠️ Script Python fix_all_modules_v11.py corrompt 100+ modules
 
 ### v9.0.0 (Antérieur) - Ascension Protocol
+
 - 122 modules fusionnés
 - 4 couches unifiées
 - Core Kernel v9 (3 noyaux)
@@ -1344,18 +1423,21 @@ TITANE_INFINITY/
 ## 🎯 Roadmap
 
 ### v11.1.0 (Décembre 2024)
+
 - ⏭️ Correction 77 warnings
 - ⏭️ Tests tous modules core (21 tests)
 - ⏭️ Interface Tauri basique
 - ⏭️ Documentation API (rustdoc)
 
 ### v12.0.0 (Q1 2025)
+
 - ⏭️ Récupération 85+ modules désactivés
 - ⏭️ Refonte architecture (microservices)
 - ⏭️ Dashboard temps réel
 - ⏭️ CI/CD pipeline
 
 ### v13.0.0 (Q2 2025)
+
 - ⏭️ Intelligence cognitive avancée (ML)
 - ⏭️ Apprentissage automatique
 - ⏭️ Conscience émergente
@@ -1366,11 +1448,13 @@ TITANE_INFINITY/
 ## 🏆 Crédits
 
 **Développement:**
+
 - Architecture & Refactoring: GitHub Copilot (Claude Sonnet 4.5)
 - Debugging: Rust Compiler 1.91.1
 - Tests: Cargo ecosystem
 
 **Outils:**
+
 - Rust 1.91.1 + Cargo
 - Tauri 2.0
 - Python 3.x (génération icônes)
@@ -1393,266 +1477,4 @@ MIT License - Voir [LICENSE](LICENSE) pour détails.
 ---
 
 **TITANE∞ v11.0.0 - Stabilisation Complete** 🎊
-*Mode SUPER-AUTO-FIX GLOBAL: Mission Accomplished* ✅
-│  ║  SCM (#65) → Structural Convergence Matrix                ║ │
-│  ║  HAO (#64) → Hyper-Alignment Orchestrator                 ║ │
-│  ║  DSE (#63) → Dynamic Synchronicity Engine                 ║ │
-│  ║  IDMO (#62) → Inner Dynamics & Micro-Oscillations         ║ │
-│  ║  HFR (#61) → Harmonic Flow Regulator                      ║ │
-│  ║  VER (#60) → Vitality & Energy Regulation                 ║ │
-│  ╚═══════════════════════════════════════════════════════════╝ │
-│       ↑                                                         │
-│  ╔═══════════════════════════════════════════════════════════╗ │
-│  ║     COGNITIVE STACK (#31-35) v8.0                         ║ │
-│  ║  MetaCortex → Governor → Conscience → Adaptive → Evol.    ║ │
-│  ╚═══════════════════════════════════════════════════════════╝ │
-│       ↑                                                         │
-│  [Neural Mesh + Perception + Advanced + Security + Core]      │
-└─────────────────────────────────────────────────────────────────┘
-           ↓
-    [P85 Evolutive Twin Engine] Ready ✅
-    [P300 Ascension Protocol] Ready ✅
-    [v9 Sentient Loop Engine] Ready ✅
-```
-│  ║       ↑                                                   ║ │
-│  ║  Adaptive Intelligence (#57) → Plasticité cognitive       ║ │
-│  ║       ↑                                                   ║ │
-│  ║  Conscience (#56) → Auto-évaluation + insight            ║ │
-│  ║       ↑                                                   ║ │
-│  ║  Governor (#55) → Régulation homéostatique               ║ │
-│  ╚═══════════════════════════════════════════════════════════╝ │
-│       ↑                                                         │
-│  ╔═══════════════════════════════════════════════════════════╗ │
-│  ║     EXECUTIVE LAYER (#44-48)                              ║ │
-│  ║  Dashboard + Action Potential + Intention + Strategic     ║ │
-│  ║  + Executive Flow + Central Governor                      ║ │
-│  ╚═══════════════════════════════════════════════════════════╝ │
-│       ↑                                                         │
-│  ╔═══════════════════════════════════════════════════════════╗ │
-│  ║     SENTIENT LAYER (#40-43) + MONITORING (#17-19)         ║ │
-│  ║  Architecture + Meta Integration + Harmonic Brain         ║ │
-│  ║  + Sentient + Self-Healing v2                            ║ │
-│  ║  + Stability + Integrity + Balance                        ║ │
-│  ╚═══════════════════════════════════════════════════════════╝ │
-│       ↑                                                         │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │    Neural Mesh (#29-30) + Perception Stack (#20-24)      │ │
-│  │    + Advanced Stack (#25-28)                             │ │
-│  └───────────────────────────────────────────────────────────┘ │
-│       ↑                                                         │
-│  ┌───────────────────────────────────────────────────────────┐ │
-│  │    Core Modules (24+) + Security Stack                   │ │
-│  └───────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## 🏗️ Technologies
-
-- **Backend** : Rust 2021 (f32, Arc<Mutex<T>>, Result<T, String>)
-- **Frontend** : React 18 + TypeScript strict
-- **Framework** : Tauri v2 (natif multi-plateforme)
-- **Build** : Vite 6+ avec optimisations
-- **Tests** : 596 tests automatisés intégrés
-
-## 📦 Structure Projet
-
-```
-TITANE_INFINITY/
-├── core/
-│   ├── backend/
-│   │   ├── main.rs (40 modules intégrés)
-│   │   └── system/
-│   │       ├── metacortex/     # Cognitive Stack
-│   │       ├── governor/
-│   │       ├── conscience/
-│   │       ├── adaptive/
-│   │       ├── evolution/
-│   │       ├── neuromesh/      # Neural Mesh Stack
-│   │       ├── coremesh/
-│   │       ├── pulse/          # Perception Stack
-│   │       ├── flowsync/
-│   │       ├── harmonic/
-│   │       ├── deepsense/
-│   │       ├── deepalignment/  # Advanced Stack
-│   │       ├── vitalcore/
-│   │       ├── neurofield/
-│   │       ├── secureflow/     # Security Stack
-│   │       ├── lowflow/
-│   │       ├── stability/
-│   │       ├── integrity/
-│   │       └── ... (22 modules core)
-│   └── frontend/
-│       ├── App.tsx
-│       ├── main.tsx
-│       └── core/Dashboard.tsx
-├── docs/                    # Documentation complète
-├── system/                  # Configuration & scripts
-├── src-tauri/              # Application Tauri
-├── verify_cognitive_stack.sh   # Validation 101 checks
-├── verify_neural_mesh.sh       # Validation 54 checks
-└── *.md                    # Documentation modules
-```
-
-## ✨ Capacités Émergentes
-
-### Intelligence Cognitive
-- **Auto-régulation** : Governor + Conscience = homéostasie autonome
-- **Auto-conscience** : Métacognition et clarté interne
-- **Adaptation dynamique** : Plasticité cognitive en temps réel
-- **Évolution long-terme** : Suivi temporel avec historique (100 valeurs)
-- **Synthèse globale** : Raisonnement profond et cohérence
-
-### Architecture Neurale
-- **Neural Mesh** : Réseau neuronal structuré complet
-- **Core Mesh** : Intégration corticale profonde
-- **Perception** : 4 niveaux sensoriels (Pulse, FlowSync, Harmonic, DeepSense)
-- **Advanced** : Alignement, vitalité, champ neuronal
-
-### Sécurité & Stabilité
-- **SecureFlow** : Sécurité multi-niveaux (L0-L4)
-- **Integrity** : Validation structurelle
-- **Stability** : Maintien équilibre dynamique
-- **SelfHeal** : Auto-réparation automatique
-
-## 🔒 Principes Fondamentaux
-
-- ✅ **100% Local** : Aucune dépendance réseau
-- ✅ **100% Déterministe** : Reproductibilité garantie
-- ✅ **Zéro unwrap/panic** : Gestion d'erreurs exhaustive
-- ✅ **Passif** : Observation pure sans modification système
-- ✅ **Thread-safe** : Arc<Mutex<T>> partout
-- ✅ **Normalisé** : Toutes métriques [0.0, 1.0]
-- ✅ **Lissage 70/30** : Stabilité temporelle
-
-## 🎯 Validation
-
-### Scripts de Validation
-```bash
-# Validation Cognitive Stack (modules #31-35)
-bash verify_cognitive_stack.sh
-# Résultat: 101/101 checks passed ✅
-
-# Validation Neural Mesh (modules #29-30)
-bash verify_neural_mesh.sh
-# Résultat: 54/54 checks passed ✅
-```
-
-### Tests Automatisés
-```bash
-cd core/backend
-cargo test
-# 596 tests passed ✅
-```
-
-## 🚦 Statut Projet
-
-- ✅ **v15.5.0 PRODUCTION-READY** : Frontend complet, UI/UX moderne
-- ✅ **Evolution Supervisor** : 12 modules auto-évolution orchestrés
-- ✅ **EXP Fusion System** : XP dynamique avec calibration logique
-- ✅ **Design System v15** : 160+ tokens, 20 composants
-- ✅ **Build Frontend** : 1.04s, 214 KB (61 KB gzipped)
-- ⚠️ **Build Backend** : Nécessite Pop!_OS 24.04 (GLIBC 2.39)
-
-## 📦 Migration Pop!_OS 24.04
-
-### Pourquoi Migrer ?
-
-**Build Tauri production** nécessite **GLIBC 2.39** (disponible Pop!_OS 24.04).
-**Pop!_OS 22.04** : GLIBC 2.35 → Build backend bloqué
-
-### 3 Solutions Disponibles
-
-#### 1. 🐳 Build Docker (Recommandé)
-
-**Avantages** : Universel, pas de modification système
-
-```bash
-./build-docker.sh
-# Build via container Ubuntu 24.04 (GLIBC 2.39)
-# Génère : .deb, .AppImage, binaire
-```
-
-**Temps** : 10-15 minutes
-
-#### 2. 📦 Migration Système (Solution Permanente)
-
-**Procédure Automatisée** :
-
-```bash
-# 1. Backup complet
-./backup-pre-migration.sh
-
-# 2. Upgrade système
-sudo do-release-upgrade
-
-# 3. Installation dépendances
-./install-popos-24.04.sh
-
-# 4. Restauration
-./restore-after-migration.sh
-```
-
-**Temps total** : 1h - 1h45
-
-**Guides détaillés** :
-
-- `GUIDE_MIGRATION_POPOS_24.04.md` — Procédure complète (200+ lignes)
-- `MIGRATION_QUICK_START.txt` — Guide rapide 3 étapes
-- `FIX_GLIBC_INCOMPATIBILITY.txt` — Analyse technique
-
-#### 3. 💻 Build Natif (Terminal Système)
-
-**Terminal système hors VSCode Flatpak** :
-
-```bash
-# Ouvrir : Ctrl+Alt+T (PAS VSCode Flatpak)
-cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-npm run tauri:build
-```
-
-**Diagnostic** : `./test-build-natif.sh`
-
-## 📚 Documentation Complète
-
-### Guides Principaux
-
-- **README.md** — Vue d'ensemble + Quick Start
-- **CHANGELOG.md** — ✨ Historique complet v12-v15.5
-- **STATUS_FINAL.md** — ✨ État système détaillé
-- **VERIFICATION_FINALE.md** — ✨ Checklist complète
-
-### Migration & Build
-
-- **GUIDE_MIGRATION_POPOS_24.04.md** — Migration détaillée
-- **BUILD_PRODUCTION.txt** — Guide build production
-- **FIX_GLIBC_INCOMPATIBILITY.txt** — Solutions incompatibilité
-
-### Troubleshooting
-
-- **PORT_CONFLICT_RESOLVED.txt** — Fix port 5173
-- **FIX_FILE_WATCHERS.txt** — Limite file watchers
-- **FIX_JAVASCRIPTCORE_MISSING.txt** — JavaScriptCore
-
-### Scripts Automatisés
-
-- `backup-pre-migration.sh` — Sauvegarde complète
-- `install-popos-24.04.sh` — Configuration système
-- `restore-after-migration.sh` — Restauration
-- `build-docker.sh` — Build Docker
-- `kill-ports.sh` — Nettoyage ports
-- `dev-server.sh` — Vite non-bloquant
-
-## 📄 License
-
-MIT © 2025 TITANE Team
-
-## 🤝 Contribution
-
-Consultez [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md) pour contribuer.
-
----
-
-**TITANE∞ v15.5.0** - *UI/UX Fusion Engine + Auto-Evolution Supervisor*
-**Status** : ✅ Frontend Production-Ready | ⚠️ Backend requires Pop!_OS 24.04
-**Documentation** : [Voir STATUS_FINAL.md](STATUS_FINAL.md) | [Voir CHANGELOG.md](CHANGELOG.md)
-# TITANE_INFINITY
+\*Mode SUPER-AUTO-FIX GLOBAL: Mission Accomplie

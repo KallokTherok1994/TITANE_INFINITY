@@ -22,6 +22,7 @@ pub mod vault_engine; // v∞ J3 - Memory Vault Layer
 pub mod rate_limit; // Production-grade rate limiting
 pub mod audit;      // Structured audit logging
 pub mod commands;   // Tauri commands for security
+pub mod csp;        // Content Security Policy
 
 pub use hardening::*; // Export hardening functions
 pub use rate_limit::{RateLimiter, RateLimitConfig, RateLimitStats, GLOBAL_RATE_LIMITER};
@@ -177,4 +178,42 @@ fn get_timestamp() -> u64 {
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap_or_else(|_| std::time::Duration::from_secs(0))
         .as_secs()
+}
+
+pub mod validation;
+pub mod rate_limit;
+pub mod audit;
+pub mod encryption;
+pub mod csp;
+
+pub use validation::InputValidator;
+pub use rate_limit::RateLimiter;
+pub use audit::{AuditLogger, AuditEvent, AuditEventType};
+pub use encryption::Encryptor;
+pub use csp::get_csp_headers;
+
+use crate::error::TitaneResult;
+
+pub struct SecurityManager {
+    validator: InputValidator,
+    rate_limiter: RateLimiter,
+    audit_logger: AuditLogger,
+    encryptor: Option<Encryptor>,
+}
+
+impl SecurityManager {
+    pub fn new(audit_log_path: std::path::PathBuf) -> Self {
+        Self {
+            validator: InputValidator::default(),
+            rate_limiter: RateLimiter::new(100, 60),
+            audit_logger: AuditLogger::new(audit_log_path),
+            encryptor: None,
+        }
+    }
+    
+    pub async fn validate_and_rate_limit(&self, user_id: &str, message: &str) -> TitaneResult<()> {
+        self.rate_limiter.check(user_id).await?;
+        self.validator.validate_message(message)?;
+        Ok(())
+    }
 }

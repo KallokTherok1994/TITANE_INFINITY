@@ -150,9 +150,11 @@ pub async fn import_config(
     super::update::validate_temperature(config.chat_engine.temperature)?;
 
     // Apply runtime config
-    std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
-    std::env::set_var("OLLAMA_DEFAULT_MODEL", &config.runtime.ollama_model);
-
+    unsafe {
+        std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
+        std::env::set_var("OLLAMA_DEFAULT_MODEL", &config.runtime.ollama_model);
+    }
+ 
     log::info!("✅ [CONFIG] Configuration imported successfully");
     log::warn!("⚠️  [CONFIG] Chat engine config imported but not persisted (state management needed)");
 
@@ -214,8 +216,6 @@ pub async fn list_config_exports(
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_filename_validation() {
         // Valid filenames

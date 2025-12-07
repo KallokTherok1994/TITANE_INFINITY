@@ -511,10 +511,10 @@ class PresenceOSEngine {
 
     return {
       mode,
-      cognitive: modeConfig.cognitive || PRESENCE_MODES.neutral.cognitive || 0,
-      affective: modeConfig.affective || PRESENCE_MODES.neutral.affective || 0,
-      expressive: modeConfig.expressive || PRESENCE_MODES.neutral.expressive || 0,
-      spatial: modeConfig.spatial || PRESENCE_MODES.neutral.spatial || 0,
+      cognitive: modeConfig.cognitive!,
+      affective: modeConfig.affective!,
+      expressive: modeConfig.expressive!,
+      spatial: modeConfig.spatial!,
       auraPattern: modeConfig.auraPattern || 'idle_breathe',
       autonomicQueue: [],
       globalCoherence: 1.0,

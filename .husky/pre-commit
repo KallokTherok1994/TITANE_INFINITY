@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
 
 # Ensure Node.js binaries are in PATH
 export PATH="/home/titane/.nvm/versions/node/v24.11.1/bin:$PATH"

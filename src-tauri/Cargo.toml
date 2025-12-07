@@ -56,6 +56,9 @@ smallvec = "1.13" # Stack-allocated Vec for small arrays (<8 elements)
 # Phase 2: P2-1 IPC Optimization - Lock-free concurrent HashMap
 dashmap = "6.0" # Concurrent HashMap (replaces RwLock<HashMap>)
 
+# SP-PERF-004: Memory Pool Optimization
+parking_lot = "0.12" # Fast synchronization primitives (Mutex, RwLock)
+
 # Audio Engine v∞: Real-time audio capture and playback (optional)
 # Requires: libasound2-dev on Linux (sudo apt install libasound2-dev)
 cpal  = { version = "0.15", optional = true }
@@ -89,6 +92,7 @@ strip         = "none"  # Required for Tauri bundler to inject __TAURI_BUNDLE_TY
 [dev-dependencies]
 tempfile = "3.8"
 criterion = { version = "0.5", features = ["html_reports"] }  # P2-1: IPC Benchmarks
+mockall = "0.12"
 
 # Phase 9: Tests E2E & Stress
 [[test]]

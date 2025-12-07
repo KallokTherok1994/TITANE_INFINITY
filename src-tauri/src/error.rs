@@ -9,8 +9,7 @@
 use serde::{Serialize, Deserialize};
 use thiserror::Error;
 
-#[derive(Debug, Error, Serialize, Deserialize)]
-#[serde(tag = "type", content = "message")]
+#[derive(Debug, thiserror::Error)]
 pub enum TitaneError {
     // Identity errors
     #[error("Identity not initialized")]
@@ -82,6 +81,18 @@ pub enum TitaneError {
 
     #[error("Timeout: {0}")]
     Timeout(String),
+
+    #[error("Validation error: {message}")]
+    ValidationError { message: String },
+
+    #[error("Rate limit exceeded: {message}")]
+    RateLimitExceeded { message: String },
+
+    #[error("Encryption error: {message}")]
+    EncryptionError { message: String },
+
+    #[error("Audit error: {message}")]
+    AuditError { message: String },
 }
 
 impl From<std::io::Error> for TitaneError {

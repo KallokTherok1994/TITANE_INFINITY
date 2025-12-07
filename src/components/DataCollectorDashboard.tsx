@@ -36,6 +36,18 @@ export function DataCollectorDashboard() {
   const [previewEntries, setPreviewEntries] = useState<DatasetEntry[]>([]);
   const [lastCollection, setLastCollection] = useState<number>(0);
 
+  const loadStats = useCallback(() => {
+    const currentStats = dataCollector.getStats();
+    setStats(currentStats);
+
+    // Charger preview (10 premières entrées)
+    const dataset =
+      selectedCategory === 'all'
+        ? dataCollector.getDataset().slice(0, 10)
+        : dataCollector.getDatasetByCategory(selectedCategory).slice(0, 10);
+    setPreviewEntries(dataset);
+  }, [selectedCategory]);
+
   // Charger les stats au montage
   useEffect(() => {
     loadStats();
@@ -50,18 +62,6 @@ export function DataCollectorDashboard() {
 
     return () => clearInterval(interval);
   }, [loadStats]);
-
-  const loadStats = useCallback(() => {
-    const currentStats = dataCollector.getStats();
-    setStats(currentStats);
-
-    // Charger preview (10 premières entrées)
-    const dataset =
-      selectedCategory === 'all'
-        ? dataCollector.getDataset().slice(0, 10)
-        : dataCollector.getDatasetByCategory(selectedCategory).slice(0, 10);
-    setPreviewEntries(dataset);
-  }, [selectedCategory]);
 
   const handleCollect = async () => {
     setIsCollecting(true);

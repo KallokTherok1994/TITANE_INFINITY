@@ -221,7 +221,7 @@ class PhaseSpaceEngine {
   private subscribers: Set<(state: PhaseSpaceState) => void> = new Set();
 
   // Référence au Meta-Singularity Kernel
-  private metaKernel: unknown = null;
+  private metaKernel: any = null;
 
   constructor() {
     this.state = {
@@ -544,19 +544,31 @@ class PhaseSpaceEngine {
   }
 
   private calculateCentroid(points: PhasePoint[]): PhasePoint['coordinates'] {
-    const sum: Record<string, number> = {};
-
-    Object.keys(points[0].coordinates).forEach(key => {
-      sum[key] = 0;
-    });
+    const sum: PhasePoint['coordinates'] = {
+      identityTone: 0,
+      identityEnergy: 0,
+      identityWarmth: 0,
+      identityClarity: 0,
+      voiceRate: 0,
+      voicePitch: 0,
+      haloIntensity: 0,
+      narrativeDensity: 0,
+      visualSize: 0,
+      visualGlow: 0,
+      particleCount: 0,
+      coherence: 0,
+      complexity: 0,
+      stability: 0,
+    };
 
     points.forEach(point => {
       Object.keys(point.coordinates).forEach(key => {
-        sum[key] += point.coordinates[key as keyof PhasePoint['coordinates']];
+        sum[key as keyof PhasePoint['coordinates']] +=
+          point.coordinates[key as keyof PhasePoint['coordinates']];
       });
     });
 
-    Object.keys(sum).forEach(key => {
+    (Object.keys(sum) as Array<keyof PhasePoint['coordinates']>).forEach(key => {
       sum[key] /= points.length;
     });
 

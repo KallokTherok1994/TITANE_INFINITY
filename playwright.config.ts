@@ -8,23 +8,23 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/e2e',
-  fullyParallel: false, // Tauri apps should run sequentially
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: 1, // One Tauri instance at a time
+  workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
   },
-
   projects: [
     {
-      name: 'tauri',
+      name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-
-  // Global timeout
-  timeout: 60000, // 60s for Tauri app operations
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://localhost:1420',
+    reuseExistingServer: !process.env.CI,
+  },
 });

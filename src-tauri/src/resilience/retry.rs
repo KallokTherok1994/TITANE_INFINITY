@@ -137,7 +137,9 @@ impl<T> RetryResult<T> {
     pub fn into_result(self) -> Result<T, String> {
         match self.value {
             Some(v) => Ok(v),
-            None => Err(self.last_error.unwrap_or_else(|| "Unknown error".to_string())),
+            None => Err(self
+                .last_error
+                .unwrap_or_else(|| "Unknown error".to_string())),
         }
     }
 }
@@ -612,11 +614,7 @@ impl ResilientExecutor {
         // Vérifier le circuit breaker
         if !self.circuit_breaker.allow().await {
             self.circuit_breaker.record_rejection().await;
-            return RetryResult::failure(
-                "Circuit breaker is open".to_string(),
-                0,
-                0,
-            );
+            return RetryResult::failure("Circuit breaker is open".to_string(), 0, 0);
         }
 
         // Exécuter avec retry
@@ -674,9 +672,7 @@ mod tests {
         let config = presets::fast();
         let executor = RetryExecutor::new(config);
 
-        let result = executor
-            .execute(|| async { Ok::<_, TestError>(42) })
-            .await;
+        let result = executor.execute(|| async { Ok::<_, TestError>(42) }).await;
 
         assert!(result.success);
         assert_eq!(result.attempts, 1);

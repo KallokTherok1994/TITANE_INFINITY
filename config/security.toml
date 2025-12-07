@@ -1,0 +1,23 @@
+[rate_limiting]
+max_requests = 100
+window_seconds = 60
+
+[validation]
+max_message_length = 100000
+dangerous_patterns = [
+    "<script[^>]*>.*?</script>",
+    "javascript:",
+    "on\\w+\\s*=",
+    "eval\\s*\\(",
+    "(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\\s+"
+]
+
+[encryption]
+algorithm = "AES256-GCM"
+key_derivation = "PBKDF2"
+iterations = 100000
+
+[audit]
+enabled = true
+log_level = "info"
+retention_days = 90
