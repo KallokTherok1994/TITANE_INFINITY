@@ -7,6 +7,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+#![allow(dead_code)]
 
 // ═══════════════════════════════════════════════════════════════
 // TITANE∞ HARDENING: Import Hygiene v∞.19.2.3Ω

@@ -5,6 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "typeRoots": ["./node_modules/@types"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -23,7 +24,10 @@
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
       "@a11y/*": ["src/a11y/*"],
-      "@apps/*": ["src/apps/*"]
+      "@apps/*": ["src/apps/*"],
+      "@themes/*": ["src/themes/*"],
+      "@services/*": ["src/services/*"],
+      "@stores/*": ["src/stores/*"]
     },
 
     /* Linting - Relaxed for P0 */
@@ -36,5 +40,12 @@
     "esModuleInterop": true
   },
   "include": ["src", "src/types"],
+  "exclude": [
+    "src/__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
