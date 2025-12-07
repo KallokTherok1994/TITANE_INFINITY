@@ -9,7 +9,7 @@
 // 🛡️ TAURI INVOKE PROTECTION - Applied first
 import './tauri-protection-patch';
 
-// TITANE∞ v∞.19.2.3Ω - Main Entry Point - Singularity Architecture Active
+// TITANE∞ v19.5.2 - Main Entry Point - Production Ready: Phase A+B Complete
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
