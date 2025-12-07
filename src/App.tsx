@@ -75,14 +75,23 @@ if (typeof window !== 'undefined') {
   }
 }
 
-// New v15.1 pages (Phase 9: Core pages eagerly loaded)
-import { DashboardPage } from './pages/DashboardPage';
-// ✨ v24 - Performance: Lazy load Chat (1108 lines)
+// ✨ v24 P2-4 - Performance: Lazy load ALL pages except Dashboard
+import { DashboardPage } from './pages/DashboardPage'; // Dashboard stays eager (critical path)
+
+// ✨ v24 P2-4 - Lazy loaded pages (code splitting)
 const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
-import { CognitivePage } from './pages/CognitivePage';
-import { ProgressionPage } from './pages/ProgressionPage';
-import { Experience } from './pages/Experience'; // ✨ v∞.D5 - Page XP
-import { ConfigurationHub } from './pages/ConfigurationHub'; // 🎯 v19.5.2 - Configuration Management (Phase 2)
+const CognitivePage = lazy(() =>
+  import('./pages/CognitivePage').then(m => ({ default: m.CognitivePage }))
+);
+const ProgressionPage = lazy(() =>
+  import('./pages/ProgressionPage').then(m => ({ default: m.ProgressionPage }))
+);
+const Experience = lazy(() =>
+  import('./pages/Experience').then(m => ({ default: m.Experience }))
+);
+const ConfigurationHub = lazy(() =>
+  import('./pages/ConfigurationHub').then(m => ({ default: m.ConfigurationHub }))
+);
 // Diagnostics, DevTools, Cluster, Introspection, HyperVision → System Center
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
@@ -253,19 +262,31 @@ const IdentityMemoryEvolutionCenter = lazy(
 // ✨ v24.2 - TEMPORAL FLOW & AGENDA CENTER (FUSION 2 modules → 1 centre)
 const TemporalFlowCenter = lazy(() => import('./modules/TemporalFlowCenter'));
 
-// Engine & System pages (Phase 9: Keep core engines eagerly loaded)
-import {
-  Helios,
-  Nexus,
-  Harmonia,
-  Sentinel,
-  Watchdog,
-  SelfHeal,
-  AdaptiveEngine,
-  Memory,
-  AgendaPage as _AgendaPage,
-  CameraPage,
-} from './pages';
+// ✨ v24 P2-4 - Engine & System pages (lazy loaded for code splitting)
+const Helios = lazy(() => import('./pages/Helios').then(m => ({ default: m.Helios })));
+const Nexus = lazy(() => import('./pages/Nexus').then(m => ({ default: m.Nexus })));
+const Harmonia = lazy(() =>
+  import('./pages/Harmonia').then(m => ({ default: m.Harmonia }))
+);
+const Sentinel = lazy(() =>
+  import('./pages/Sentinel').then(m => ({ default: m.Sentinel }))
+);
+const Watchdog = lazy(() =>
+  import('./pages/Watchdog').then(m => ({ default: m.Watchdog }))
+);
+const SelfHeal = lazy(() =>
+  import('./pages/SelfHeal').then(m => ({ default: m.SelfHeal }))
+);
+const AdaptiveEngine = lazy(() =>
+  import('./pages/AdaptiveEngine').then(m => ({ default: m.AdaptiveEngine }))
+);
+const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
+const _AgendaPage = lazy(() =>
+  import('./pages/AgendaPage').then(m => ({ default: m.AgendaPage }))
+);
+const CameraPage = lazy(() =>
+  import('./pages/CameraPage').then(m => ({ default: m.CameraPage }))
+);
 
 /**
  * ═══════════════════════════════════════════════════════════════
