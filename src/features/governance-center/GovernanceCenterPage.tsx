@@ -24,8 +24,12 @@ import { Spinner } from '@/ui';
 
 function GovernanceCenterPageContent(): JSX.Element {
   const governance = useGovernance();
-  const { matrix, isLoaded, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const {
+    matrix: _matrix,
+    isLoaded: _isLoaded,
+    loading: matrixLoading,
+  } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
 
   // Loading état initial
   if (governance.loading || matrixLoading) {
@@ -125,7 +129,14 @@ function GovernanceCenterPageContent(): JSX.Element {
     >
       {/* Header */}
       <header>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            marginBottom: '8px',
+          }}
+        >
           <h1
             style={{
               margin: 0,
@@ -152,8 +163,15 @@ function GovernanceCenterPageContent(): JSX.Element {
             TITANE∞
           </span>
         </div>
-        <p style={{ margin: 0, color: 'var(--color-text-muted, #8193a7)', fontSize: '0.95rem' }}>
-          Gestion centralisée des secrets, politiques IA, permissions et journal de sécurité
+        <p
+          style={{
+            margin: 0,
+            color: 'var(--color-text-muted, #8193a7)',
+            fontSize: '0.95rem',
+          }}
+        >
+          Gestion centralisée des secrets, politiques IA, permissions et journal de
+          sécurité
         </p>
         <div
           style={{
@@ -168,7 +186,9 @@ function GovernanceCenterPageContent(): JSX.Element {
           }}
         >
           <span>👑</span>
-          <span>SuperAdmin: <strong>{SUPER_ADMIN.name}</strong></span>
+          <span>
+            SuperAdmin: <strong>{SUPER_ADMIN.name}</strong>
+          </span>
         </div>
       </header>
 
@@ -183,7 +203,7 @@ function GovernanceCenterPageContent(): JSX.Element {
           width: 'fit-content',
         }}
       >
-        {GOVERNANCE_TABS.map((tab) => (
+        {GOVERNANCE_TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => governance.setActiveTab(tab.id)}
@@ -241,7 +261,9 @@ function GovernanceCenterPageContent(): JSX.Element {
 
       {/* Contenu de l'onglet */}
       <main style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
-        {governance.loading && governance.activeTab === 'secrets' && !governance.geminiStatus ? (
+        {governance.loading &&
+        governance.activeTab === 'secrets' &&
+        !governance.geminiStatus ? (
           <div
             style={{
               display: 'flex',
@@ -275,7 +297,9 @@ function GovernanceCenterPageContent(): JSX.Element {
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <span>🔐 Chiffrement: AES-256-GCM + Argon2id</span>
           <span>|</span>
-          <span>🛡️ Permissions: {Object.keys(governance.permissionMatrix).length} actions</span>
+          <span>
+            🛡️ Permissions: {Object.keys(governance.permissionMatrix).length} actions
+          </span>
           <span>|</span>
           <span>📋 Politiques: {governance.policies.length} actives</span>
         </div>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Écran Blanc</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: monospace; background: #0a0a0a; color: #00ff00; }
+        #status { padding: 10px; border: 1px solid #00ff00; margin: 10px 0; }
+        .error { color: #ff4444; }
+        .success { color: #00ff00; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Diagnostic Écran Blanc TITANE∞</h1>
+    <div id="status"></div>
+    <div id="console-output"></div>
+    
+    <script>
+        const status = document.getElementById('status');
+        const consoleOutput = document.getElementById('console-output');
+        
+        function log(msg, isError = false) {
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'success';
+            div.textContent = `[${new Date().toISOString()}] ${msg}`;
+            consoleOutput.appendChild(div);
+            console.log(msg);
+        }
+        
+        // Test 1: Window __TAURI__
+        log(`Window.__TAURI__: ${typeof window.__TAURI__}`);
+        
+        // Test 2: Chargement React
+        log('Tentative de chargement depuis localhost:5173...');
+        
+        fetch('http://localhost:5173/src/main.tsx')
+            .then(r => r.text())
+            .then(content => {
+                log(`✅ main.tsx chargé (${content.length} chars)`);
+                log(`Premier import: ${content.split('\n').find(l => l.includes('import'))}`);
+            })
+            .catch(err => {
+                log(`❌ Erreur chargement main.tsx: ${err}`, true);
+            });
+        
+        // Test 3: Console errors
+        const originalError = console.error;
+        console.error = function(...args) {
+            log(`❌ CONSOLE ERROR: ${args.join(' ')}`, true);
+            originalError.apply(console, args);
+        };
+        
+        // Test 4: Essai de montage React simple
+        setTimeout(() => {
+            const testDiv = document.createElement('div');
+            testDiv.id = 'test-root';
+            testDiv.innerHTML = '<h2>Test React Mount</h2>';
+            document.body.appendChild(testDiv);
+            log('✅ DOM manipulation fonctionne');
+        }, 1000);
+        
+        status.innerHTML = '<strong>Tests en cours...</strong>';
+    </script>
+</body>
+</html>

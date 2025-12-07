@@ -19,13 +19,13 @@ import type {
   TitaneModule,
   IAUsageStats,
   EngineUsageStats,
-  PerformanceTrend,
-  SelfHealingMetrics,
-  PromptMemoryMetrics,
+  PerformanceTrend as _PerformanceTrend,
+  SelfHealingMetrics as _SelfHealingMetrics,
+  PromptMemoryMetrics as _PromptMemoryMetrics,
   CollectorConfig,
 } from './evolutionEngine.config';
 import {
-  generateEvolutionId,
+  generateEvolutionId as _generateEvolutionId,
   createDataPoint,
   DEFAULT_COLLECTOR_CONFIG,
 } from './evolutionEngine.config';
@@ -326,7 +326,12 @@ export class Collector {
         stability_score: number;
       }>('get_self_healing_metrics');
 
-      this.addDataPoint('SELF_HEALING', 'selfHealing', 'total_repairs', metrics.total_repairs);
+      this.addDataPoint(
+        'SELF_HEALING',
+        'selfHealing',
+        'total_repairs',
+        metrics.total_repairs
+      );
       this.addDataPoint(
         'SELF_HEALING',
         'selfHealing',
@@ -404,8 +409,18 @@ export class Collector {
       }>('get_system_metrics');
 
       this.addDataPoint('SYSTEM_METRICS', 'global', 'uptime', metrics.uptime);
-      this.addDataPoint('SYSTEM_METRICS', 'global', 'active_modules', metrics.active_modules);
-      this.addDataPoint('SYSTEM_METRICS', 'global', 'pending_tasks', metrics.pending_tasks);
+      this.addDataPoint(
+        'SYSTEM_METRICS',
+        'global',
+        'active_modules',
+        metrics.active_modules
+      );
+      this.addDataPoint(
+        'SYSTEM_METRICS',
+        'global',
+        'pending_tasks',
+        metrics.pending_tasks
+      );
       this.addDataPoint('SYSTEM_METRICS', 'global', 'memory_heap', metrics.memory_heap);
     } catch {
       // System metrics non disponibles
@@ -439,7 +454,7 @@ export class Collector {
     }
 
     // Notifier les listeners
-    this.dataPointListeners.forEach((listener) => {
+    this.dataPointListeners.forEach(listener => {
       try {
         listener(dataPoint);
       } catch (e) {
@@ -477,20 +492,20 @@ export class Collector {
     message: string,
     context?: Record<string, unknown>
   ): void {
-    this.record(
-      'ERROR_PATTERNS',
-      moduleId,
+    this.record('ERROR_PATTERNS', moduleId, 'error', errorType, { message, ...context }, [
       'error',
       errorType,
-      { message, ...context },
-      ['error', errorType]
-    );
+    ]);
   }
 
   /**
    * Enregistre un pattern utilisateur
    */
-  recordUserPattern(pattern: string, success: boolean, context?: Record<string, unknown>): void {
+  recordUserPattern(
+    pattern: string,
+    success: boolean,
+    context?: Record<string, unknown>
+  ): void {
     this.record(
       'USER_PATTERNS',
       'chat',
@@ -518,7 +533,7 @@ export class Collector {
       await secureInvoke('submit_evolution_data', { dataPoints: batch });
 
       // Notifier les listeners de batch
-      this.batchListeners.forEach((listener) => {
+      this.batchListeners.forEach(listener => {
         try {
           listener(batch);
         } catch (e) {
@@ -553,15 +568,21 @@ export class Collector {
   /**
    * Récupère les data points par catégorie
    */
-  getDataPointsByCategory(category: DataCategory, count: number = 100): EvolutionDataPoint[] {
-    return this.state.dataPoints.filter((dp) => dp.category === category).slice(-count);
+  getDataPointsByCategory(
+    category: DataCategory,
+    count: number = 100
+  ): EvolutionDataPoint[] {
+    return this.state.dataPoints.filter(dp => dp.category === category).slice(-count);
   }
 
   /**
    * Récupère les data points par module
    */
-  getDataPointsByModule(moduleId: TitaneModule, count: number = 100): EvolutionDataPoint[] {
-    return this.state.dataPoints.filter((dp) => dp.moduleId === moduleId).slice(-count);
+  getDataPointsByModule(
+    moduleId: TitaneModule,
+    count: number = 100
+  ): EvolutionDataPoint[] {
+    return this.state.dataPoints.filter(dp => dp.moduleId === moduleId).slice(-count);
   }
 
   /**
@@ -596,13 +617,13 @@ export class Collector {
     const cutoff = Date.now() - windowMs;
     return this.state.dataPoints
       .filter(
-        (dp) =>
+        dp =>
           dp.moduleId === moduleId &&
           dp.metric === metric &&
           dp.timestamp >= cutoff &&
           typeof dp.value === 'number'
       )
-      .map((dp) => ({ timestamp: dp.timestamp, value: dp.value as number }));
+      .map(dp => ({ timestamp: dp.timestamp, value: dp.value as number }));
   }
 
   /**
@@ -610,7 +631,7 @@ export class Collector {
    */
   countDataPoints(windowMs: number = 86400000): number {
     const cutoff = Date.now() - windowMs;
-    return this.state.dataPoints.filter((dp) => dp.timestamp >= cutoff).length;
+    return this.state.dataPoints.filter(dp => dp.timestamp >= cutoff).length;
   }
 
   // ===========================================================================
@@ -645,7 +666,7 @@ export class Collector {
     const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
 
     const before = this.state.dataPoints.length;
-    this.state.dataPoints = this.state.dataPoints.filter((dp) => dp.timestamp >= cutoff);
+    this.state.dataPoints = this.state.dataPoints.filter(dp => dp.timestamp >= cutoff);
 
     return before - this.state.dataPoints.length;
   }

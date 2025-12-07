@@ -5,7 +5,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 use std::collections::HashMap;
 
 /// IPC Command performance metrics

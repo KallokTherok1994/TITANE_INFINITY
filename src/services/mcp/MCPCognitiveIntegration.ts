@@ -12,7 +12,7 @@
 
 import { MCPOrchestrator } from './MCPOrchestrator';
 import { CognitiveOmegaOrchestrator } from '@/services/cognitive/cognitiveOmegaIntegration';
-import type { Job } from './mcp.types';
+import type { Job as _Job } from './mcp.types';
 import { JobType, MemoryTier } from './mcp.types';
 
 // Stub Message interface
@@ -63,8 +63,8 @@ class MCPCognitiveIntegrationClass {
         context: {
           messageCount: messages.length,
           systemPrompt: options?.systemPrompt,
-          temperature: options?.temperature
-        }
+          temperature: options?.temperature,
+        },
       },
       JobType.COGNITIVE
     );
@@ -76,7 +76,9 @@ class MCPCognitiveIntegrationClass {
       const evaluatedJob = await MCPOrchestrator.evaluateJob(job);
 
       // 3. Check for critical violations
-      const criticalViolations = evaluatedJob.governance.lawViolations.filter(v => v.severity === 'CRITICAL');
+      const criticalViolations = evaluatedJob.governance.lawViolations.filter(
+        v => v.severity === 'CRITICAL'
+      );
 
       if (criticalViolations.length > 0) {
         await MCPOrchestrator.cancelJob(job.id, 'Critical law violations detected');
@@ -120,24 +122,27 @@ class MCPCognitiveIntegrationClass {
           messages,
           response,
           aiModel: aiSelection.model.id,
-          evaluation: evaluatedJob.evaluation
+          evaluation: evaluatedJob.evaluation,
         },
         metadata: {
           isUseful: true,
           isTrue: true,
           isStructuring: false,
           isStable: true,
-          isReusable: true
+          isReusable: true,
         },
         strength: 0.8,
-        compressionLevel: 0
+        compressionLevel: 0,
       });
 
       this.log(`Job ${job.id} completed successfully`);
       return response;
     } catch (error) {
       this.warn(`Job ${job.id} failed:`, error);
-      await MCPOrchestrator.cancelJob(job.id, error instanceof Error ? error.message : 'Unknown error');
+      await MCPOrchestrator.cancelJob(
+        job.id,
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       throw error;
     }
   }
@@ -152,8 +157,8 @@ class MCPCognitiveIntegrationClass {
         query: `Store memory: ${message.content.substring(0, 50)}...`,
         context: {
           role: message.role,
-          importance
-        }
+          importance,
+        },
       },
       JobType.STRUCTURAL
     );
@@ -168,8 +173,8 @@ class MCPCognitiveIntegrationClass {
         importance > 0.8
           ? MemoryTier.LONG_TERM
           : importance > 0.5
-          ? MemoryTier.MEDIUM_TERM
-          : MemoryTier.SHORT_TERM;
+            ? MemoryTier.MEDIUM_TERM
+            : MemoryTier.SHORT_TERM;
 
       // 4. Store in MCP memory
       await MCPOrchestrator.storeMemory({
@@ -180,10 +185,10 @@ class MCPCognitiveIntegrationClass {
           isTrue: true,
           isStructuring: importance > 0.6,
           isStable: true,
-          isReusable: importance > 0.5
+          isReusable: importance > 0.5,
         },
         strength: importance,
-        compressionLevel: 0
+        compressionLevel: 0,
       });
 
       // 5. Also store in Semantic Memory Engine
@@ -193,7 +198,10 @@ class MCPCognitiveIntegrationClass {
       this.log(`Memory stored with importance ${importance} in tier ${tier}`);
     } catch (error) {
       this.warn('Failed to store memory:', error);
-      await MCPOrchestrator.cancelJob(job.id, error instanceof Error ? error.message : 'Unknown error');
+      await MCPOrchestrator.cancelJob(
+        job.id,
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       throw error;
     }
   }
@@ -206,7 +214,7 @@ class MCPCognitiveIntegrationClass {
     const job = await MCPOrchestrator.createJob(
       {
         query: `Retrieve memories: ${query}`,
-        context: { topK }
+        context: { topK },
       },
       JobType.COGNITIVE
     );
@@ -224,7 +232,10 @@ class MCPCognitiveIntegrationClass {
       return memories;
     } catch (error) {
       this.warn('Failed to retrieve memories:', error);
-      await MCPOrchestrator.cancelJob(job.id, error instanceof Error ? error.message : 'Unknown error');
+      await MCPOrchestrator.cancelJob(
+        job.id,
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       return [];
     }
   }
@@ -241,7 +252,7 @@ class MCPCognitiveIntegrationClass {
     const job = await MCPOrchestrator.createJob(
       {
         query: 'Evaluate conversation quality',
-        context: { messageCount: messages.length }
+        context: { messageCount: messages.length },
       },
       JobType.COGNITIVE
     );
@@ -262,24 +273,29 @@ class MCPCognitiveIntegrationClass {
           jobId: job.id,
           evaluation,
           messageCount: messages.length,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         },
         metadata: {
           isUseful: true,
           isTrue: true,
           isStructuring: true,
           isStable: true,
-          isReusable: true
+          isReusable: true,
         },
         strength: 0.9,
-        compressionLevel: 0
+        compressionLevel: 0,
       });
 
-      this.log(`Conversation evaluated: quality score ${evaluation.qualityScore.toFixed(2)}`);
+      this.log(
+        `Conversation evaluated: quality score ${evaluation.qualityScore.toFixed(2)}`
+      );
       return evaluation;
     } catch (error) {
       this.warn('Failed to evaluate conversation:', error);
-      await MCPOrchestrator.cancelJob(job.id, error instanceof Error ? error.message : 'Unknown error');
+      await MCPOrchestrator.cancelJob(
+        job.id,
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       throw error;
     }
   }
@@ -296,7 +312,7 @@ class MCPCognitiveIntegrationClass {
     const job = await MCPOrchestrator.createJob(
       {
         query: 'Check goal consistency',
-        context: { messageCount: messages.length }
+        context: { messageCount: messages.length },
       },
       JobType.COGNITIVE
     );
@@ -317,24 +333,29 @@ class MCPCognitiveIntegrationClass {
           jobId: job.id,
           consistency: result,
           messageCount: messages.length,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         },
         metadata: {
           isUseful: true,
           isTrue: true,
           isStructuring: true,
           isStable: true,
-          isReusable: true
+          isReusable: true,
         },
         strength: 0.9,
-        compressionLevel: 0
+        compressionLevel: 0,
       });
 
-      this.log(`Goal consistency checked: ${result.isConsistent ? 'consistent' : 'violations detected'}`);
+      this.log(
+        `Goal consistency checked: ${result.isConsistent ? 'consistent' : 'violations detected'}`
+      );
       return result;
     } catch (error) {
       this.warn('Failed to check goal consistency:', error);
-      await MCPOrchestrator.cancelJob(job.id, error instanceof Error ? error.message : 'Unknown error');
+      await MCPOrchestrator.cancelJob(
+        job.id,
+        error instanceof Error ? error.message : 'Unknown error'
+      );
       throw error;
     }
   }
@@ -372,7 +393,7 @@ class MCPCognitiveIntegrationClass {
       semanticMemory: { totalMemories: 0, lastUpdate: 0 },
       goalConsistency: { isEnabled: false },
       conversationEvaluation: { isEnabled: false },
-      observability: { isEnabled: false }
+      observability: { isEnabled: false },
     }; // Stub: getCognitiveState not implemented
 
     return {
@@ -383,14 +404,15 @@ class MCPCognitiveIntegrationClass {
         nexus: { score: health.nexus.score, status: health.nexus.status },
         harmonia: { score: health.harmonia.score, status: health.harmonia.status },
         sentinel: { score: health.sentinel.score, status: health.sentinel.status },
-        memoryCore: { score: health.memoryCore.score, status: health.memoryCore.status }
+        memoryCore: { score: health.memoryCore.score, status: health.memoryCore.status },
       },
       stats: {
         totalJobs: stats.jobs.total,
-        totalMemories: stats.memory.shortTerm + stats.memory.mediumTerm + stats.memory.longTerm,
+        totalMemories:
+          stats.memory.shortTerm + stats.memory.mediumTerm + stats.memory.longTerm,
         totalViolations: stats.governance.totalViolations,
-        totalCorrections: stats.governance.totalCorrections
-      }
+        totalCorrections: stats.governance.totalCorrections,
+      },
     };
   }
 
@@ -431,13 +453,13 @@ class MCPCognitiveIntegrationClass {
       archived,
       driftsDetected: drifts.length,
       driftsCorrected: corrected,
-      improvements: improvements.length
+      improvements: improvements.length,
     });
 
     return {
       memoryPurification: { cleaned, compressed, archived },
       driftCorrection: { detected, drifts, corrected },
-      improvements
+      improvements,
     };
   }
 }

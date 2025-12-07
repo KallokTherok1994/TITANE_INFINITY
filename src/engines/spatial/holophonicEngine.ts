@@ -16,40 +16,40 @@
 
 export type TitanSpatialState = {
   // Position 3D
-  x: number;    // -1 (gauche) → 1 (droite)
-  y: number;    // -1 (bas) → 1 (haut)
-  z: number;    // 0 (proche) → 1 (loin)
+  x: number; // -1 (gauche) → 1 (droite)
+  y: number; // -1 (bas) → 1 (haut)
+  z: number; // 0 (proche) → 1 (loin)
 
   // Caractéristiques spatiales
-  width: number;   // 0 (point) → 1 (diffus)
-  focus: number;   // 0 (ambient) → 1 (ciblé)
+  width: number; // 0 (point) → 1 (diffus)
+  focus: number; // 0 (ambient) → 1 (ciblé)
 
   // Profondeur perceptuelle
   distance: number; // 0 (intime) → 1 (distant)
 };
 
 export type SpatialPreset =
-  | 'coach'           // Devant, proche, focus moyen
-  | 'meta'            // Au-dessus, large, ambiant
-  | 'deep-work'       // Arrière, loin, diffus
-  | 'insight'         // Proche, haut, halo
-  | 'empathy'         // Très proche, centré, intime
-  | 'architect'       // Devant-haut, précis
-  | 'neutral';        // Centré, équilibré
+  | 'coach' // Devant, proche, focus moyen
+  | 'meta' // Au-dessus, large, ambiant
+  | 'deep-work' // Arrière, loin, diffus
+  | 'insight' // Proche, haut, halo
+  | 'empathy' // Très proche, centré, intime
+  | 'architect' // Devant-haut, précis
+  | 'neutral'; // Centré, équilibré
 
 export type CognitiveSound =
-  | 'thinking'        // Réflexion
-  | 'insight'         // Éclair de clarté
-  | 'mode_switch'     // Changement de mode
-  | 'error_soft'      // Erreur douce
-  | 'heal_complete'   // Auto-guérison terminée
-  | 'wake_word'       // Wake word détecté
-  | 'listening'       // Écoute active
-  | 'processing';     // Traitement en cours
+  | 'thinking' // Réflexion
+  | 'insight' // Éclair de clarté
+  | 'mode_switch' // Changement de mode
+  | 'error_soft' // Erreur douce
+  | 'heal_complete' // Auto-guérison terminée
+  | 'wake_word' // Wake word détecté
+  | 'listening' // Écoute active
+  | 'processing'; // Traitement en cours
 
 export type SpatialOptions = {
-  fadeIn?: number;    // ms
-  fadeOut?: number;   // ms
+  fadeIn?: number; // ms
+  fadeOut?: number; // ms
   spatialize?: boolean; // Activer la spatialisation
   priority?: 'low' | 'normal' | 'high';
 };
@@ -149,7 +149,7 @@ const COGNITIVE_SOUNDS: Record<CognitiveSound, SoundConfig> = {
     duration: 0.4,
     volume: 0.1,
     waveform: 'triangle',
-    description: 'Variation d\'intervalle - changement de mode',
+    description: "Variation d'intervalle - changement de mode",
   },
   error_soft: {
     frequency: 150,
@@ -224,7 +224,19 @@ class HolophonicEngine {
       console.log('🎧 [HOLOPHONIC] Initializing spatial audio engine...');
 
       // Créer le contexte audio
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const AudioContextClass =
+        (
+          window as Window &
+            typeof globalThis & { webkitAudioContext?: typeof AudioContext }
+        ).AudioContext ||
+        (
+          window as Window &
+            typeof globalThis & { webkitAudioContext?: typeof AudioContext }
+        ).webkitAudioContext;
+      if (!AudioContextClass) {
+        throw new Error('AudioContext not supported');
+      }
+      this.audioContext = new AudioContextClass();
 
       // Créer le gain node (volume principal)
       this.gainNode = this.audioContext.createGain();
@@ -310,7 +322,10 @@ class HolophonicEngine {
   // VOICE PLAYBACK (spatialisation)
   // ═══════════════════════════════════════════════════════════════════════════
 
-  public async playVoice(audioBuffer: AudioBuffer, options: SpatialOptions = {}): Promise<void> {
+  public async playVoice(
+    audioBuffer: AudioBuffer,
+    options: SpatialOptions = {}
+  ): Promise<void> {
     if (!this.audioContext || !this.panner) {
       console.warn('🎧 [HOLOPHONIC] Audio context not initialized');
       return;
@@ -321,8 +336,8 @@ class HolophonicEngine {
 
     if (options.spatialize !== false) {
       source.connect(this.panner);
-    } else {
-      source.connect(this.gainNode!);
+    } else if (this.gainNode) {
+      source.connect(this.gainNode);
     }
 
     // Fade in
@@ -362,7 +377,7 @@ class HolophonicEngine {
     const attack = 0.01;
     const decay = 0.05;
     const sustain = config.duration - attack - decay - 0.05;
-    const release = 0.05;
+    const _release = 0.05;
 
     gain.gain.setValueAtTime(0, now);
     gain.gain.linearRampToValueAtTime(volume, now + attack);
@@ -396,7 +411,9 @@ class HolophonicEngine {
   public setOutputDevice(deviceId?: string): void {
     // Web Audio API ne supporte pas directement la sélection de device
     // Nécessiterait MediaDevices.getUserMedia ou Web Audio API extensions
-    console.log(`🎧 [HOLOPHONIC] Output device change requested: ${deviceId || 'default'}`);
+    console.log(
+      `🎧 [HOLOPHONIC] Output device change requested: ${deviceId || 'default'}`
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

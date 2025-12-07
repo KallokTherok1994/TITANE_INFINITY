@@ -29,7 +29,9 @@ import './PresenceOSPanel.css';
 
 export function PresenceOSPanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'cognitive' | 'affective' | 'expressive' | 'spatial'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'cognitive' | 'affective' | 'expressive' | 'spatial'
+  >('overview');
 
   const { state } = usePresenceOS();
   const mode = usePresenceMode();
@@ -59,7 +61,9 @@ export function PresenceOSPanel() {
         <div className="presence-os-panel">
           <div className="presence-os-header">
             <h3>🌌 TITANE∞ Presence OS v∞.1</h3>
-            <button className="presence-os-close" onClick={() => setIsOpen(false)}>×</button>
+            <button className="presence-os-close" onClick={() => setIsOpen(false)}>
+              ×
+            </button>
           </div>
 
           {/* Mode selector */}
@@ -140,18 +144,10 @@ export function PresenceOSPanel() {
             {activeTab === 'overview' && (
               <OverviewTab state={state} coherence={coherence} />
             )}
-            {activeTab === 'cognitive' && (
-              <CognitiveTab cognitive={cognitive} />
-            )}
-            {activeTab === 'affective' && (
-              <AffectiveTab affective={affective} />
-            )}
-            {activeTab === 'expressive' && (
-              <ExpressiveTab expressive={expressive} />
-            )}
-            {activeTab === 'spatial' && (
-              <SpatialTab spatial={spatial} />
-            )}
+            {activeTab === 'cognitive' && <CognitiveTab cognitive={cognitive} />}
+            {activeTab === 'affective' && <AffectiveTab affective={affective} />}
+            {activeTab === 'expressive' && <ExpressiveTab expressive={expressive} />}
+            {activeTab === 'spatial' && <SpatialTab spatial={spatial} />}
           </div>
         </div>
       )}
@@ -163,7 +159,13 @@ export function PresenceOSPanel() {
 // 📊 TAB - OVERVIEW
 // ═══════════════════════════════════════════════════════════════════════════
 
-function OverviewTab({ state, coherence }: { state: any; coherence: number }) {
+function OverviewTab({
+  state,
+  coherence,
+}: {
+  state: Record<string, unknown>;
+  coherence: number;
+}) {
   return (
     <div className="presence-os-overview">
       <div className="presence-os-card">
@@ -212,13 +214,17 @@ function OverviewTab({ state, coherence }: { state: any; coherence: number }) {
 // 🧠 TAB - COGNITIVE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function CognitiveTab({ cognitive }: { cognitive: any }) {
+function CognitiveTab({ cognitive }: { cognitive: Record<string, unknown> }) {
   return (
     <div className="presence-os-cognitive">
       <MetricCard label="Reasoning Style" value={cognitive.reasoningStyle} />
       <MetricCard label="Depth" value={cognitive.depth} type="progress" />
       <MetricCard label="Tempo" value={cognitive.tempo} type="progress" />
-      <MetricCard label="Analytical Intensity" value={cognitive.analyticalIntensity} type="progress" />
+      <MetricCard
+        label="Analytical Intensity"
+        value={cognitive.analyticalIntensity}
+        type="progress"
+      />
       <MetricCard label="Coherence" value={cognitive.coherence} type="progress" />
     </div>
   );
@@ -228,7 +234,7 @@ function CognitiveTab({ cognitive }: { cognitive: any }) {
 // 💗 TAB - AFFECTIVE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function AffectiveTab({ affective }: { affective: any }) {
+function AffectiveTab({ affective }: { affective: Record<string, unknown> }) {
   return (
     <div className="presence-os-affective">
       <MetricCard label="Emotion" value={affective.emotion} />
@@ -244,7 +250,7 @@ function AffectiveTab({ affective }: { affective: any }) {
 // 🎭 TAB - EXPRESSIVE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function ExpressiveTab({ expressive }: { expressive: any }) {
+function ExpressiveTab({ expressive }: { expressive: Record<string, unknown> }) {
   return (
     <div className="presence-os-expressive">
       <div className="presence-os-card">
@@ -258,11 +264,18 @@ function ExpressiveTab({ expressive }: { expressive: any }) {
         <h4>🎵 Prosodie</h4>
         <MetricCard label="Speed" value={expressive.prosodie.speed} type="progress" />
         <MetricCard label="Rhythm" value={expressive.prosodie.rhythm} />
-        <MetricCard label="Pauses" value={expressive.prosodie.pauseDuration} type="progress" />
+        <MetricCard
+          label="Pauses"
+          value={expressive.prosodie.pauseDuration}
+          type="progress"
+        />
       </div>
 
       <MetricCard label="Timbre Blend" value={expressive.timbreBlend} type="progress" />
-      <MetricCard label="Micro Expressions" value={expressive.microExpressions.join(', ')} />
+      <MetricCard
+        label="Micro Expressions"
+        value={expressive.microExpressions.join(', ')}
+      />
     </div>
   );
 }
@@ -271,7 +284,7 @@ function ExpressiveTab({ expressive }: { expressive: any }) {
 // 📍 TAB - SPATIAL
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SpatialTab({ spatial }: { spatial: any }) {
+function SpatialTab({ spatial }: { spatial: Record<string, unknown> }) {
   return (
     <div className="presence-os-spatial">
       <MetricCard label="Proximity" value={spatial.proximity} type="progress" />
@@ -317,7 +330,7 @@ function MetricCard({
   type = 'text',
 }: {
   label: string;
-  value: any;
+  value: unknown;
   type?: 'text' | 'progress';
 }) {
   return (

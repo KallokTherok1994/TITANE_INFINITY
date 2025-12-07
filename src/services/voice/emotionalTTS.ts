@@ -13,18 +13,18 @@
  */
 
 import type { EmotionalIntent } from './emotionalIntent';
-import { prosodyEngine, type ProsodyProfile } from './prosodyEngine';
+import { prosodyEngine, type ProsodyProfile as _ProsodyProfile } from './prosodyEngine';
 import { hybridTTS } from '../tts/hybridTTS';
 
 /**
  * Options de rendu émotionnel
  */
 export interface EmotionalRenderOptions {
-  useSSML?: boolean;        // Utiliser SSML si supporté (défaut: true)
-  fallbackToRaw?: boolean;  // Fallback sur paramètres bruts (défaut: true)
-  voice?: string;           // Voix spécifique (optionnel)
-  lang?: string;            // Langue (optionnel)
-  cache?: boolean;          // Utiliser le cache (défaut: true)
+  useSSML?: boolean; // Utiliser SSML si supporté (défaut: true)
+  fallbackToRaw?: boolean; // Fallback sur paramètres bruts (défaut: true)
+  voice?: string; // Voix spécifique (optionnel)
+  lang?: string; // Langue (optionnel)
+  cache?: boolean; // Utiliser le cache (défaut: true)
 }
 
 /**
@@ -44,16 +44,12 @@ export class EmotionalTTSRenderer {
     intent: EmotionalIntent,
     options: EmotionalRenderOptions = {}
   ): Promise<void> {
-    const {
-      useSSML = true,
-      fallbackToRaw = true,
-      voice,
-      lang,
-      cache = true,
-    } = options;
+    const { useSSML = true, fallbackToRaw = true, voice, lang, cache = true } = options;
 
     console.log(`[EmotionalTTS] 🎤 Speaking with emotion: ${intent.emotion}`);
-    console.log(`[EmotionalTTS] 📊 Intensity: ${intent.intensity.toFixed(2)}, Warmth: ${intent.warmth.toFixed(2)}`);
+    console.log(
+      `[EmotionalTTS] 📊 Intensity: ${intent.intensity.toFixed(2)}, Warmth: ${intent.warmth.toFixed(2)}`
+    );
 
     // 1. Générer le profil prosodique
     const prosody = prosodyEngine.mapProsody(intent);
@@ -105,7 +101,10 @@ export class EmotionalTTSRenderer {
     const cacheKey = 'ssml_support';
 
     if (useCache && this.ssmlSupportCache.has(cacheKey)) {
-      return this.ssmlSupportCache.get(cacheKey)!;
+      const cached = this.ssmlSupportCache.get(cacheKey);
+      if (cached !== undefined) {
+        return cached;
+      }
     }
 
     // Détection du support SSML

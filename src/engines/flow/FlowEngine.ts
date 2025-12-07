@@ -20,7 +20,6 @@ import type {
   FlowEngineConfig,
   FlowZone,
   FlowPhase,
-  FlowTransition,
   FlowConditions,
   FlowMetrics,
   FlowDriftIndicators,
@@ -117,7 +116,7 @@ class FlowEngine {
 
   public start(): void {
     if (this.isRunning) {
-      console.warn('[FlowEngine] Déjà en cours d\'exécution');
+      console.warn("[FlowEngine] Déjà en cours d'exécution");
       return;
     }
 
@@ -198,10 +197,7 @@ class FlowEngine {
     const blockers = this.identifyBlockers(conditions);
 
     // Générer les recommandations
-    const recommendations = this.generateReadinessRecommendations(
-      conditions,
-      blockers
-    );
+    const recommendations = this.generateReadinessRecommendations(conditions, blockers);
 
     // Estimer le temps pour être prêt
     const estimatedTimeToReady = this.estimateTimeToReady(conditions, blockers);
@@ -228,7 +224,7 @@ class FlowEngine {
    */
   public enterFlow(
     multimodalState: MultimodalState,
-    taskContext?: {
+    _taskContext?: {
       taskType?: string;
       estimatedDuration?: number;
       challengeLevel?: number;
@@ -328,18 +324,10 @@ class FlowEngine {
     const timeInFlow = now - this.state.flowStartTime;
 
     // Mettre à jour les métriques
-    const metrics = this.updateFlowMetrics(
-      multimodalState,
-      timeInFlow,
-      predictiveState
-    );
+    const metrics = this.updateFlowMetrics(multimodalState, timeInFlow, predictiveState);
 
     // Détecter les dérives
-    const drift = this.detectFlowDrift(
-      multimodalState,
-      metrics,
-      stressState
-    );
+    const drift = this.detectFlowDrift(multimodalState, metrics, stressState);
 
     // Progresser dans les phases si nécessaire
     this.updateFlowPhase(timeInFlow, metrics);
@@ -407,9 +395,15 @@ class FlowEngine {
     indicators.primaryDisruptor = disruptors[0] || 'none';
 
     // Déterminer le type de dérive
-    if (disruptors.includes('anxiety_spike') || disruptors.includes('complexity_overflow')) {
+    if (
+      disruptors.includes('anxiety_spike') ||
+      disruptors.includes('complexity_overflow')
+    ) {
       indicators.driftType = 'toward_anxiety';
-    } else if (disruptors.includes('boredom_drift') || disruptors.includes('motivation_loss')) {
+    } else if (
+      disruptors.includes('boredom_drift') ||
+      disruptors.includes('motivation_loss')
+    ) {
       indicators.driftType = 'toward_boredom';
     } else if (
       disruptors.includes('fatigue') ||
@@ -450,13 +444,9 @@ class FlowEngine {
   /**
    * Sort du flow de manière contrôlée
    */
-  public exitFlow(
-    exitType: FlowExitState['exitType'] = 'graceful'
-  ): FlowExitResult {
+  public exitFlow(exitType: FlowExitState['exitType'] = 'graceful'): FlowExitResult {
     const now = Date.now();
-    const flowDuration = this.state.flowStartTime
-      ? now - this.state.flowStartTime
-      : 0;
+    const flowDuration = this.state.flowStartTime ? now - this.state.flowStartTime : 0;
 
     // Créer l'état de sortie
     const exitState: FlowExitState = {
@@ -593,7 +583,9 @@ class FlowEngine {
       lines.push(`Profondeur: ${(this.state.metrics.flowDepth * 100).toFixed(0)}%`);
       lines.push(`Durée: ${Math.floor(this.state.metrics.timeInFlow / 60000)} min`);
     } else {
-      lines.push(`Préparation: ${(this.state.conditions.overallReadiness * 100).toFixed(0)}%`);
+      lines.push(
+        `Préparation: ${(this.state.conditions.overallReadiness * 100).toFixed(0)}%`
+      );
     }
 
     return lines.join('\n');
@@ -633,9 +625,16 @@ class FlowEngine {
 
     // Stress
     if (stressState) {
-      const stressImpact = stressState.currentLevel === 'high' ? 0.5 :
-                          stressState.currentLevel === 'medium' ? 0.25 : 0;
-      conditions.distractionLevel = Math.min(1, conditions.distractionLevel + stressImpact);
+      const stressImpact =
+        stressState.currentLevel === 'high'
+          ? 0.5
+          : stressState.currentLevel === 'medium'
+            ? 0.25
+            : 0;
+      conditions.distractionLevel = Math.min(
+        1,
+        conditions.distractionLevel + stressImpact
+      );
       conditions.senseOfControl = Math.max(0, conditions.senseOfControl - stressImpact);
     }
 
@@ -648,7 +647,10 @@ class FlowEngine {
       );
       if (isOptimalTime) {
         conditions.energyLevel = Math.min(1, conditions.energyLevel + 0.1);
-        conditions.intrinsicMotivation = Math.min(1, conditions.intrinsicMotivation + 0.1);
+        conditions.intrinsicMotivation = Math.min(
+          1,
+          conditions.intrinsicMotivation + 0.1
+        );
       }
     }
 
@@ -658,7 +660,8 @@ class FlowEngine {
         conditions.clearGoals = Math.min(1, conditions.clearGoals + 0.2);
       }
       if (contextualFactors.taskComplexity !== undefined) {
-        conditions.challengeSkillBalance = 1 - Math.abs(contextualFactors.taskComplexity - 0.6);
+        conditions.challengeSkillBalance =
+          1 - Math.abs(contextualFactors.taskComplexity - 0.6);
       }
       if (contextualFactors.interruptionRisk !== undefined) {
         conditions.distractionLevel = contextualFactors.interruptionRisk;
@@ -679,13 +682,13 @@ class FlowEngine {
     // Pondération des conditions
     const weights = {
       clearGoals: 0.12,
-      immediateFeedback: 0.10,
+      immediateFeedback: 0.1,
       challengeSkillBalance: 0.15,
       distractionLevel: 0.15, // Inverse
       timeAvailable: 0.08,
       energyLevel: 0.12,
-      senseOfControl: 0.10,
-      intrinsicMotivation: 0.10,
+      senseOfControl: 0.1,
+      intrinsicMotivation: 0.1,
       confidenceLevel: 0.08,
     };
 
@@ -718,7 +721,7 @@ class FlowEngine {
     const threshold = FLOW_CONSTANTS.CONDITION_THRESHOLDS.poor;
 
     if (conditions.energyLevel < threshold) {
-      blockers.push('Niveau d\'énergie insuffisant');
+      blockers.push("Niveau d'énergie insuffisant");
     }
     if (conditions.distractionLevel > 1 - threshold) {
       blockers.push('Niveau de distraction trop élevé');
@@ -738,7 +741,7 @@ class FlowEngine {
 
   private generateReadinessRecommendations(
     conditions: FlowConditions,
-    blockers: string[]
+    _blockers: string[]
   ): FlowSuggestion[] {
     const suggestions: FlowSuggestion[] = [];
 
@@ -798,27 +801,38 @@ class FlowEngine {
   // LOGIQUE INTERNE - ZONE ET PHASE
   // ═══════════════════════════════════════════════════════════════════════
 
-  private determineCurrentZone(multimodalState: MultimodalState): FlowZone {
+  private determineCurrentZone(_multimodalState: MultimodalState): FlowZone {
     const challenge = this.state.conditions.challengeSkillBalance;
     const skill = this.state.conditions.confidenceLevel;
     const thresholds = FLOW_CONSTANTS.ZONE_THRESHOLDS;
 
     // Logique simplifiée basée sur le modèle de Csikszentmihalyi
-    if (challenge >= thresholds.flow.challengeMin &&
-        challenge <= thresholds.flow.challengeMax &&
-        skill >= thresholds.flow.skillMin) {
+    if (
+      challenge >= thresholds.flow.challengeMin &&
+      challenge <= thresholds.flow.challengeMax &&
+      skill >= thresholds.flow.skillMin
+    ) {
       return 'flow';
     }
 
-    if (challenge >= thresholds.anxiety.challengeMin && skill <= thresholds.anxiety.skillMax) {
+    if (
+      challenge >= thresholds.anxiety.challengeMin &&
+      skill <= thresholds.anxiety.skillMax
+    ) {
       return 'anxiety';
     }
 
-    if (challenge <= thresholds.boredom.challengeMax && skill >= thresholds.boredom.skillMin) {
+    if (
+      challenge <= thresholds.boredom.challengeMax &&
+      skill >= thresholds.boredom.skillMin
+    ) {
       return 'boredom';
     }
 
-    if (challenge <= thresholds.apathy.challengeMax && skill <= thresholds.apathy.skillMax) {
+    if (
+      challenge <= thresholds.apathy.challengeMax &&
+      skill <= thresholds.apathy.skillMax
+    ) {
       return 'apathy';
     }
 
@@ -839,7 +853,10 @@ class FlowEngine {
     if (this.state.currentPhase === 'preparation' && timeInFlow > phases.preparation) {
       this.state.currentPhase = 'struggle';
       this.state.currentTransition = 'entering';
-    } else if (this.state.currentPhase === 'struggle' && timeInFlow > phases.preparation + phases.struggle) {
+    } else if (
+      this.state.currentPhase === 'struggle' &&
+      timeInFlow > phases.preparation + phases.struggle
+    ) {
       if (metrics.flowIntensity > 0.5) {
         this.state.currentPhase = 'release';
         this.state.currentTransition = 'entering';
@@ -857,8 +874,12 @@ class FlowEngine {
       }
     }
 
-    this.state.currentZone = metrics.flowIntensity > 0.5 ? 'flow' :
-                             metrics.flowIntensity > 0.3 ? 'arousal' : 'control';
+    this.state.currentZone =
+      metrics.flowIntensity > 0.5
+        ? 'flow'
+        : metrics.flowIntensity > 0.3
+          ? 'arousal'
+          : 'control';
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -873,7 +894,7 @@ class FlowEngine {
   private updateFlowMetrics(
     multimodalState: MultimodalState,
     timeInFlow: number,
-    predictiveState?: PredictiveState
+    _predictiveState?: PredictiveState
   ): FlowMetrics {
     const metrics = { ...this.state.metrics };
     const prevIntensity = metrics.flowIntensity;
@@ -884,7 +905,7 @@ class FlowEngine {
     const tension = multimodalState.fusedScores?.globalTension?.value ?? 0.5;
 
     // Calculer l'intensité
-    const baseIntensity = (energy * 0.3 + engagement * 0.4 + (1 - tension) * 0.3);
+    const baseIntensity = energy * 0.3 + engagement * 0.4 + (1 - tension) * 0.3;
     metrics.flowIntensity = baseIntensity * 0.3 + prevIntensity * 0.7; // Lissage
 
     // Calculer la profondeur (augmente avec le temps)
@@ -915,12 +936,12 @@ class FlowEngine {
 
     // Tendances
     const intensityDiff = metrics.flowIntensity - prevIntensity;
-    metrics.intensityTrend = intensityDiff > 0.02 ? 'rising' :
-                            intensityDiff < -0.02 ? 'falling' : 'stable';
+    metrics.intensityTrend =
+      intensityDiff > 0.02 ? 'rising' : intensityDiff < -0.02 ? 'falling' : 'stable';
 
     const depthDiff = metrics.flowDepth - this.state.metrics.flowDepth;
-    metrics.depthTrend = depthDiff > 0.01 ? 'deepening' :
-                        depthDiff < -0.01 ? 'surfacing' : 'stable';
+    metrics.depthTrend =
+      depthDiff > 0.01 ? 'deepening' : depthDiff < -0.01 ? 'surfacing' : 'stable';
 
     return metrics;
   }
@@ -956,7 +977,10 @@ class FlowEngine {
     }
 
     // Perte de motivation
-    if (metrics.intensityTrend === 'falling' && metrics.timeSinceLastPeak > 10 * 60 * 1000) {
+    if (
+      metrics.intensityTrend === 'falling' &&
+      metrics.timeSinceLastPeak > 10 * 60 * 1000
+    ) {
       disruptors.push('motivation_loss');
     }
 
@@ -1133,10 +1157,17 @@ class FlowEngine {
       distracted: 'distrait',
     }[exitState.exitType];
 
-    return `Session de flow de ${minutes} minutes (${exitLabel}). ` +
-           `Intensité maximale: ${(exitState.peakIntensity * 100).toFixed(0)}%. ` +
-           `Récupération ${exitState.recoveryNeeded === 'minimal' ? 'légère' :
-                          exitState.recoveryNeeded === 'moderate' ? 'modérée' : 'importante'} recommandée.`;
+    return (
+      `Session de flow de ${minutes} minutes (${exitLabel}). ` +
+      `Intensité maximale: ${(exitState.peakIntensity * 100).toFixed(0)}%. ` +
+      `Récupération ${
+        exitState.recoveryNeeded === 'minimal'
+          ? 'légère'
+          : exitState.recoveryNeeded === 'moderate'
+            ? 'modérée'
+            : 'importante'
+      } recommandée.`
+    );
   }
 
   private generatePostFlowSuggestions(exitState: FlowExitState): FlowSuggestion[] {
@@ -1173,7 +1204,10 @@ class FlowEngine {
     }
   }
 
-  private notifyFlowEvent(event: 'entry' | 'exit' | 'drift' | 'peak', data: unknown): void {
+  private notifyFlowEvent(
+    event: 'entry' | 'exit' | 'drift' | 'peak',
+    data: unknown
+  ): void {
     if (this.flowEventCallback) {
       this.flowEventCallback(event, data);
     }

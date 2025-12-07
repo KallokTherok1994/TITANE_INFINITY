@@ -30,20 +30,22 @@ export const CameraOverlay: React.FC<CameraOverlayProps> = ({
   useEffect(() => {
     if (!videoRef.current || !stream) return;
 
+    const video = videoRef.current;
+
     try {
-      videoRef.current.srcObject = stream;
-      videoRef.current.play().catch((err) => {
+      video.srcObject = stream;
+      video.play().catch(err => {
         console.error('[CameraOverlay] Play error:', err);
         setError('Impossible de démarrer le flux vidéo');
       });
     } catch (err) {
       console.error('[CameraOverlay] Stream attach error:', err);
-      setError('Erreur lors de l\'attachement du flux');
+      setError("Erreur lors de l'attachement du flux");
     }
 
     return () => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      if (video) {
+        video.srcObject = null;
       }
     };
   }, [stream]);
@@ -76,11 +78,7 @@ export const CameraOverlay: React.FC<CameraOverlayProps> = ({
             >
               {isExpanded ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
             </button>
-            <button
-              className="camera-overlay-btn"
-              onClick={onClose}
-              title="Fermer"
-            >
+            <button className="camera-overlay-btn" onClick={onClose} title="Fermer">
               <X size={14} />
             </button>
           </div>
@@ -106,9 +104,7 @@ export const CameraOverlay: React.FC<CameraOverlayProps> = ({
 
         {/* Footer */}
         <div className="camera-overlay-footer">
-          <span className="camera-overlay-status">
-            🔒 Flux 100% local
-          </span>
+          <span className="camera-overlay-status">🔒 Flux 100% local</span>
         </div>
       </motion.div>
     </AnimatePresence>

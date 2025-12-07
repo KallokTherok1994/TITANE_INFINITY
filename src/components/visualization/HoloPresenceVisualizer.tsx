@@ -36,7 +36,7 @@ export const HoloPresenceVisualizer: React.FC<HoloPresenceVisualizerProps> = ({
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const { visuals, particles, animation } = holoState;
+    const { visuals, particles } = holoState;
 
     const animate = () => {
       // Clear canvas
@@ -111,12 +111,7 @@ export const HoloPresenceVisualizer: React.FC<HoloPresenceVisualizerProps> = ({
 
   return (
     <div className={`holo-presence-visualizer ${className}`}>
-      <canvas
-        ref={canvasRef}
-        width={width}
-        height={height}
-        className="holo-canvas"
-      />
+      <canvas ref={canvasRef} width={width} height={height} className="holo-canvas" />
       <div className="holo-controls">
         <button onClick={() => actions.flash()}>Flash</button>
         <button onClick={() => actions.pulse()}>Pulse</button>

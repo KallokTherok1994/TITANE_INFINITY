@@ -12,7 +12,10 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { MemorySelfHealEngine } from '@/services/memory/memorySelfHealEngine';
-import type { MemoryCorruption, MemoryHealthReport } from '@/services/memory/memorySelfHealEngine';
+import type {
+  MemoryCorruption as _MemoryCorruption,
+  MemoryHealthReport as _MemoryHealthReport,
+} from '@/services/memory/memorySelfHealEngine';
 
 // Mock localStorage
 const localStorageMock = (() => {
@@ -296,8 +299,10 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
     const backup = sessionStorage.getItem('__titane_memory_backup__');
     expect(backup).not.toBeNull();
 
-    const backupData = JSON.parse(backup!);
-    expect(backupData.data['titane_data']).toBeDefined();
+    if (backup) {
+      const backupData = JSON.parse(backup);
+      expect(backupData.data['titane_data']).toBeDefined();
+    }
   });
 
   /**
@@ -323,7 +328,9 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
 
     if (quotaCorruption) {
       const results = await engine.repair();
-      expect(results.some(r => r.actionsPerformed.some(a => a.includes('old entries')))).toBe(true);
+      expect(
+        results.some(r => r.actionsPerformed.some(a => a.includes('old entries')))
+      ).toBe(true);
     }
   });
 
@@ -342,7 +349,10 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
       ],
     };
 
-    localStorage.setItem('chat_memory_compactor_default', JSON.stringify(invalidCompactorData));
+    localStorage.setItem(
+      'chat_memory_compactor_default',
+      JSON.stringify(invalidCompactorData)
+    );
 
     const report = await engine.checkHealth();
     const compactorCorruptions = report.corruptions.filter(c => c.layer === 'compactor');
@@ -398,7 +408,10 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
     const invalidCompactorData = {
       messages: [{ role: 'user' }], // Missing content
     };
-    localStorage.setItem('chat_memory_compactor_default', JSON.stringify(invalidCompactorData));
+    localStorage.setItem(
+      'chat_memory_compactor_default',
+      JSON.stringify(invalidCompactorData)
+    );
 
     const results = await engine.repair();
 

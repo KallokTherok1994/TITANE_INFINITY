@@ -126,8 +126,8 @@ export class TTSDuckingEngine {
     }
 
     // Apply ducking via Web Audio API
-    if (this.gainNode) {
-      const currentTime = this.audioContext!.currentTime;
+    if (this.gainNode && this.audioContext) {
+      const currentTime = this.audioContext.currentTime;
       this.gainNode.gain.cancelScheduledValues(currentTime);
       this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, currentTime);
       this.gainNode.gain.linearRampToValueAtTime(
@@ -167,8 +167,8 @@ export class TTSDuckingEngine {
     }
 
     // Restore via Web Audio API
-    if (this.gainNode) {
-      const currentTime = this.audioContext!.currentTime;
+    if (this.gainNode && this.audioContext) {
+      const currentTime = this.audioContext.currentTime;
       this.gainNode.gain.cancelScheduledValues(currentTime);
       this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, currentTime);
       this.gainNode.gain.linearRampToValueAtTime(
@@ -201,8 +201,8 @@ export class TTSDuckingEngine {
     }
 
     // Stop via Web Audio API
-    if (this.gainNode) {
-      this.gainNode.gain.cancelScheduledValues(this.audioContext!.currentTime);
+    if (this.gainNode && this.audioContext) {
+      this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
       this.gainNode.gain.value = 0;
     }
 

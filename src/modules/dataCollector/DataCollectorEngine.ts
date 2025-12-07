@@ -35,20 +35,20 @@ export interface DatasetEntry {
 }
 
 export type DataCategory =
-  | 'super-prompt'      // A - Super Prompts TITANE∞
-  | 'interaction'       // B - Interactions IA internes
-  | 'auto-heal'         // C - Auto-Heal / Self-Healing
-  | 'introspection'     // D - Introspection Singularity
-  | 'patch'             // E - Patches Dev (Rust/TSX/etc)
-  | 'style';            // F - Style, logique, structure TITANE∞
+  | 'super-prompt' // A - Super Prompts TITANE∞
+  | 'interaction' // B - Interactions IA internes
+  | 'auto-heal' // C - Auto-Heal / Self-Healing
+  | 'introspection' // D - Introspection Singularity
+  | 'patch' // E - Patches Dev (Rust/TSX/etc)
+  | 'style'; // F - Style, logique, structure TITANE∞
 
 export interface DataMetadata {
   source: string;
   timestamp: number;
-  quality: number;           // 0-1 (qualité de la donnée)
-  importance: number;        // 0-1 (importance pour l'entraînement)
+  quality: number; // 0-1 (qualité de la donnée)
+  importance: number; // 0-1 (importance pour l'entraînement)
   tags: string[];
-  originEngine?: string;     // Moteur source
+  originEngine?: string; // Moteur source
 }
 
 export interface DatasetStats {
@@ -193,7 +193,6 @@ export class DataCollectorEngine {
         duration,
         timestamp: Date.now(),
       };
-
     } catch (error) {
       errors.push(error instanceof Error ? error.message : String(error));
       return {
@@ -320,7 +319,8 @@ export class DataCollectorEngine {
 
     try {
       // Effectuer une introspection quick pour obtenir l'état actuel
-      const introspection = await SingularityIntrospectionEngine.performFullIntrospection('quick');
+      const introspection =
+        await SingularityIntrospectionEngine.performFullIntrospection('quick');
 
       // Convertir en entrée dataset
       const prompt = 'Effectue une introspection complète du système TITANE∞';
@@ -459,10 +459,12 @@ export class DataCollectorEngine {
    */
   exportToJSONL(): string {
     return this.dataset
-      .map(entry => JSON.stringify({
-        prompt: entry.prompt,
-        response: entry.response,
-      }))
+      .map(entry =>
+        JSON.stringify({
+          prompt: entry.prompt,
+          response: entry.response,
+        })
+      )
       .join('\n');
   }
 
@@ -700,24 +702,72 @@ echo "════════════════════════�
   private createEmptyCategoryCount(): Record<DataCategory, number> {
     return {
       'super-prompt': 0,
-      'interaction': 0,
+      interaction: 0,
       'auto-heal': 0,
-      'introspection': 0,
-      'patch': 0,
-      'style': 0,
+      introspection: 0,
+      patch: 0,
+      style: 0,
     };
   }
 
   private createPipelineSteps(): PipelineStep[] {
     return [
-      { id: 1, name: 'Récupérer Memory Eternal', status: 'pending', progress: 0, message: '' },
-      { id: 2, name: 'Récupérer super prompts', status: 'pending', progress: 0, message: '' },
-      { id: 3, name: 'Extraire corrections dev', status: 'pending', progress: 0, message: '' },
-      { id: 4, name: 'Extraire introspections Singularity', status: 'pending', progress: 0, message: '' },
-      { id: 5, name: 'Extraire interactions IA', status: 'pending', progress: 0, message: '' },
-      { id: 6, name: 'Filtrer bruit / doublons', status: 'pending', progress: 0, message: '' },
-      { id: 7, name: 'Normaliser (input/output)', status: 'pending', progress: 0, message: '' },
-      { id: 8, name: 'Structurer dataset JSONL', status: 'pending', progress: 0, message: '' },
+      {
+        id: 1,
+        name: 'Récupérer Memory Eternal',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 2,
+        name: 'Récupérer super prompts',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 3,
+        name: 'Extraire corrections dev',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 4,
+        name: 'Extraire introspections Singularity',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 5,
+        name: 'Extraire interactions IA',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 6,
+        name: 'Filtrer bruit / doublons',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 7,
+        name: 'Normaliser (input/output)',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
+      {
+        id: 8,
+        name: 'Structurer dataset JSONL',
+        status: 'pending',
+        progress: 0,
+        message: '',
+      },
       { id: 9, name: 'Nettoyer', status: 'pending', progress: 0, message: '' },
       { id: 10, name: 'Export', status: 'pending', progress: 0, message: '' },
     ];
@@ -747,7 +797,7 @@ echo "════════════════════════�
     const str = entry.prompt + '|' + entry.response;
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
-      hash = ((hash << 5) - hash) + str.charCodeAt(i);
+      hash = (hash << 5) - hash + str.charCodeAt(i);
       hash |= 0;
     }
     return hash.toString(36);
@@ -768,21 +818,27 @@ echo "════════════════════════�
     return null;
   }
 
-  private formatIntrospectionResponse(introspection: any): string {
+  private formatIntrospectionResponse(introspection: Record<string, unknown>): string {
+    const internalVision = introspection.internalVision as Record<string, unknown>;
+    const diagnostic = introspection.diagnostic as Record<string, unknown>;
+    const futureVision = introspection.futureVision as Record<string, unknown>;
+    const issues = diagnostic.issues as Array<Record<string, unknown>>;
+    const improvements = futureVision.priorityImprovements as string[];
+
     return `## INTROSPECTION SINGULARITY
 
 ### Vision Interne
-- Cohérence globale: ${introspection.internalVision.globalCoherence}%
-- Moteurs actifs: ${introspection.internalVision.activeEngines}/${introspection.internalVision.totalEngines}
-- Santé: ${introspection.diagnostic.health}
+- Cohérence globale: ${internalVision.globalCoherence}%
+- Moteurs actifs: ${internalVision.activeEngines}/${internalVision.totalEngines}
+- Santé: ${diagnostic.health}
 
 ### Diagnostic
-${introspection.diagnostic.issues.map((issue: any) =>
-  `- [${issue.severity}] ${issue.description}`
-).join('\n')}
+${issues
+  .map((issue: Record<string, unknown>) => `- [${issue.severity}] ${issue.description}`)
+  .join('\n')}
 
 ### Recommandations
-${introspection.futureVision.priorityImprovements.map((imp: string) => `- ${imp}`).join('\n')}
+${improvements.map((imp: string) => `- ${imp}`).join('\n')}
 `;
   }
 
@@ -815,7 +871,7 @@ ${introspection.futureVision.priorityImprovements.map((imp: string) => `- ${imp}
     return sum / entries.length;
   }
 
-  private estimateSizeInMB(entries: DatasetEntry[]): number {
+  private estimateSizeInMB(_entries: DatasetEntry[]): number {
     const jsonl = this.exportToJSONL();
     return jsonl.length / (1024 * 1024);
   }

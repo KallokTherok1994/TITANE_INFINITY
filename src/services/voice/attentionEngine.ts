@@ -81,7 +81,9 @@ export class AttentionEngine {
    */
   setContextualAdaptation(enabled: boolean): void {
     this.config.useContextualAdaptation = enabled;
-    console.log(`[AttentionEngine] ${enabled ? '✅' : '🔇'} Contextual adaptation ${enabled ? 'enabled' : 'disabled'}`);
+    console.log(
+      `[AttentionEngine] ${enabled ? '✅' : '🔇'} Contextual adaptation ${enabled ? 'enabled' : 'disabled'}`
+    );
   }
 
   /**
@@ -100,9 +102,14 @@ export class AttentionEngine {
     contextualAttentionV2.updateEnvironment({
       ambientNoiseLevel: context.noiseLevel,
       microphoneDistance: context.voiceDistance || 'unknown',
-      signalQuality: context.signalQuality === 'excellent' ? 1.0 :
-                     context.signalQuality === 'good' ? 0.75 :
-                     context.signalQuality === 'fair' ? 0.5 : 0.25,
+      signalQuality:
+        context.signalQuality === 'excellent'
+          ? 1.0
+          : context.signalQuality === 'good'
+            ? 0.75
+            : context.signalQuality === 'fair'
+              ? 0.5
+              : 0.25,
       multipleVoices: context.multipleVoices || false,
       lastMeasured: Date.now(),
     });
@@ -145,7 +152,7 @@ export class AttentionEngine {
     }
 
     // Get triggered rules from contextual attention
-    const config = contextualAttentionV2.getAdaptedConfig();
+    const _config = contextualAttentionV2.getAdaptedConfig();
     // Return empty array for now (rules not directly exposed)
     return [];
   }
@@ -198,7 +205,10 @@ export class AttentionEngine {
    */
   handleWakeWord(wakeEvent: WakeWordEvent): void {
     if (this.state !== 'armed') {
-      console.warn('[AttentionEngine] ⚠️ Wake word detected but not in armed state:', this.state);
+      console.warn(
+        '[AttentionEngine] ⚠️ Wake word detected but not in armed state:',
+        this.state
+      );
       return;
     }
 
@@ -206,7 +216,11 @@ export class AttentionEngine {
     this.lastWakeEvent = wakeEvent;
 
     // Transition vers wake_detected
-    this.transitionTo('wake_detected', `Wake word: ${wakeEvent.matchedVariant}`, wakeEvent);
+    this.transitionTo(
+      'wake_detected',
+      `Wake word: ${wakeEvent.matchedVariant}`,
+      wakeEvent
+    );
 
     // Selon le mode
     if (wakeEvent.mode === 'wake_only') {
@@ -321,7 +335,11 @@ export class AttentionEngine {
   /**
    * Transition interne
    */
-  private transitionTo(newState: AttentionState, reason?: string, wakeEvent?: WakeWordEvent): void {
+  private transitionTo(
+    newState: AttentionState,
+    reason?: string,
+    wakeEvent?: WakeWordEvent
+  ): void {
     if (this.state === newState) return;
 
     const previousState = this.state;
@@ -335,7 +353,9 @@ export class AttentionEngine {
       reason,
     };
 
-    console.log(`[AttentionEngine] 🔄 ${previousState} → ${newState}${reason ? ` (${reason})` : ''}`);
+    console.log(
+      `[AttentionEngine] 🔄 ${previousState} → ${newState}${reason ? ` (${reason})` : ''}`
+    );
 
     // Notifier les callbacks
     this.callbacks.forEach(cb => {

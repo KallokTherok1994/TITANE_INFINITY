@@ -35,7 +35,7 @@ import type { AIMessage } from '@/services/ai/types';
 import { emotionalAnalyzer } from './emotionalAnalyzer';
 import { emotionalTTS } from './emotionalTTS';
 import type { EmotionalContext, EmotionType } from './emotionalIntent';
-import { wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
+import { wakeWordEngine as _wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
 import { attentionEngine } from './attentionEngine';
 import { interruptionController } from './interruptionController';
 import { haloEngine } from './haloEngine'; // ✅ v∞.7 Halo sync
@@ -85,11 +85,11 @@ export interface VoiceTurnConfig {
  * États du VoiceRouter
  */
 export type VoiceRouterState =
-  | 'idle'           // Prêt
-  | 'processing'     // Traitement IA en cours
-  | 'speaking'       // TTS en cours
-  | 'done'           // Tour complété
-  | 'error';         // Erreur
+  | 'idle' // Prêt
+  | 'processing' // Traitement IA en cours
+  | 'speaking' // TTS en cours
+  | 'done' // Tour complété
+  | 'error'; // Erreur
 
 /**
  * Erreurs du VoiceRouter
@@ -145,7 +145,9 @@ class VoiceRouterService {
     const startTime = Date.now();
 
     console.log('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
-    console.log(`📝 Transcript: "${transcript.substring(0, 60)}${transcript.length > 60 ? '...' : ''}"`);
+    console.log(
+      `📝 Transcript: "${transcript.substring(0, 60)}${transcript.length > 60 ? '...' : ''}"`
+    );
 
     // Synchroniser avec AttentionEngine
     attentionEngine.startProcessing();
@@ -181,7 +183,10 @@ class VoiceRouterService {
         config.aiTimeout || 30000
       );
 
-      console.log('[VoiceRouter] ✅ AI response received:', aiResponse.content.substring(0, 60));
+      console.log(
+        '[VoiceRouter] ✅ AI response received:',
+        aiResponse.content.substring(0, 60)
+      );
       config.onAIResponse?.(aiResponse);
 
       // ═══ PHASE 2 : EMOTIONAL ANALYSIS ═══
@@ -195,8 +200,13 @@ class VoiceRouterService {
           config.emotionalContext
         );
 
-        console.log(`[VoiceRouter] ✅ Emotion detected: ${analysisResult.intent.emotion} (intensity: ${analysisResult.intent.intensity.toFixed(2)})`);
-        config.onEmotionDetected?.(analysisResult.intent.emotion, analysisResult.intent.intensity);
+        console.log(
+          `[VoiceRouter] ✅ Emotion detected: ${analysisResult.intent.emotion} (intensity: ${analysisResult.intent.intensity.toFixed(2)})`
+        );
+        config.onEmotionDetected?.(
+          analysisResult.intent.emotion,
+          analysisResult.intent.intensity
+        );
 
         // ═══ PHASE 3 : EMOTIONAL TTS ═══
         this.setState('speaking', config.onStateChange);
@@ -246,7 +256,7 @@ class VoiceRouterService {
         interruptionController.stopMonitoring();
       }
 
-      config.onTTSEnd?.();      // ═══ PHASE 4 : COMPLETION ═══
+      config.onTTSEnd?.(); // ═══ PHASE 4 : COMPLETION ═══
       this.setState('done', config.onStateChange);
       audioStateMachine.transition('TTS_END');
       audioStateMachine.reset();
@@ -271,14 +281,17 @@ class VoiceRouterService {
         aiResponse,
         duration,
       };
-
     } catch (error) {
       console.error('[VoiceRouter] ❌ Voice turn failed:', error);
       haloEngine.setError(); // ✅ v∞.7 Show error state in halo
 
       const routerError: VoiceRouterError = {
-        stage: this.currentState === 'processing' ? 'ai' :
-               this.currentState === 'speaking' ? 'tts' : 'unknown',
+        stage:
+          this.currentState === 'processing'
+            ? 'ai'
+            : this.currentState === 'speaking'
+              ? 'tts'
+              : 'unknown',
         message: error instanceof Error ? error.message : String(error),
         originalError: error instanceof Error ? error : undefined,
       };
@@ -357,7 +370,10 @@ class VoiceRouterService {
   /**
    * Changer l'état et notifier
    */
-  private setState(state: VoiceRouterState, callback?: (state: VoiceRouterState) => void): void {
+  private setState(
+    state: VoiceRouterState,
+    callback?: (state: VoiceRouterState) => void
+  ): void {
     const prevState = this.currentState;
     this.currentState = state;
 

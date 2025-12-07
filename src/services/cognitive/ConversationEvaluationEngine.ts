@@ -246,8 +246,8 @@ export class ConversationEvaluationEngine extends EventEmitter {
     const avgSentenceLength = words.length / sentences.length;
     
     // Ideal: avg word length 4-6, avg sentence length 15-20 words
-    let wordScore = 1.0 - Math.abs(avgWordLength - 5) * 0.1;
-    let sentenceScore = 1.0 - Math.abs(avgSentenceLength - 17) * 0.02;
+    const wordScore = 1.0 - Math.abs(avgWordLength - 5) * 0.1;
+    const sentenceScore = 1.0 - Math.abs(avgSentenceLength - 17) * 0.02;
     
     // Check for clarity enhancers
     const hasExamples = /\b(for example|such as|like|e\.g\.|par exemple|comme)\b/i.test(assistant_response);

@@ -1,8 +1,8 @@
 /**
  * SEMANTIC MEMORY ENGINE v∞ — Core Implementation
- * 
+ *
  * Moteur de mémoire longue durée sémantique pour TITANE∞
- * 
+ *
  * Features:
  * - Embeddings vectoriels (local ou API)
  * - Retrieval par similarité cosine
@@ -24,7 +24,7 @@ import type {
   MemoryEvent,
   MemoryEventHandler,
   SemanticMemoryType,
-  MemoryImportance
+  MemoryImportance as _MemoryImportance,
 } from './semanticMemory.types';
 
 /**
@@ -35,28 +35,28 @@ const DEFAULT_CONFIG: SemanticMemoryConfig = {
   embedding_model: {
     type: 'local',
     model_name: 'all-MiniLM-L6-v2',
-    dimensions: 384
+    dimensions: 384,
   },
   storage: {
     type: 'sqlite',
     path: './data/semantic_memory.db',
-    collection_name: 'memories'
+    collection_name: 'memories',
   },
   limits: {
     max_memories_total: 10000,
     max_memories_per_query: 5,
-    max_age_days: 365
+    max_age_days: 365,
   },
   scoring: {
     similarity_threshold: 0.7,
     importance_weight: 0.2,
-    recency_weight: 0.1
+    recency_weight: 0.1,
   },
   auto_cleanup: {
     enabled: true,
     interval_hours: 24,
-    remove_below_score: 0.3
-  }
+    remove_below_score: 0.3,
+  },
 };
 
 /**
@@ -141,7 +141,7 @@ export class SemanticMemoryEngine {
       created_at: new Date().toISOString(),
       access_count: 0,
       confidence: 0.9,
-      related_to: params.related_to
+      related_to: params.related_to,
     };
 
     // Stocker
@@ -151,7 +151,7 @@ export class SemanticMemoryEngine {
     this.emitEvent({
       type: 'memory_added',
       timestamp: new Date().toISOString(),
-      data: { memory_id: entry.id, type: entry.type }
+      data: { memory_id: entry.id, type: entry.type },
     });
 
     return entry;
@@ -188,12 +188,13 @@ export class SemanticMemoryEngine {
         query.scoring_weights || {
           similarity: 0.7,
           importance: 0.2,
-          recency: 0.1
+          recency: 0.1,
         }
       );
 
       // Filtrer par seuil
-      const threshold = query.similarity_threshold || this.config.scoring.similarity_threshold;
+      const threshold =
+        query.similarity_threshold || this.config.scoring.similarity_threshold;
       const filteredResults = scoredResults
         .filter(r => r.score >= threshold)
         .slice(0, limit);
@@ -215,8 +216,8 @@ export class SemanticMemoryEngine {
         data: {
           query: query.text,
           count: filteredResults.length,
-          avg_score: context.metadata?.avg_score
-        }
+          avg_score: context.metadata?.avg_score,
+        },
       });
 
       return context;
@@ -249,7 +250,7 @@ export class SemanticMemoryEngine {
     this.emitEvent({
       type: 'memory_updated',
       timestamp: new Date().toISOString(),
-      data: { memory_id: id, updates }
+      data: { memory_id: id, updates },
     });
   }
 
@@ -262,17 +263,23 @@ export class SemanticMemoryEngine {
     this.emitEvent({
       type: 'memory_deleted',
       timestamp: new Date().toISOString(),
-      data: { memory_id: id }
+      data: { memory_id: id },
     });
   }
 
   /**
    * Supersede: remplacer une ancienne mémoire par une nouvelle
    */
-  async supersedeMemory(oldId: string, newMemory: Parameters<typeof this.createMemory>[0]): Promise<SemanticMemoryEntry> {
+  async supersedeMemory(
+    oldId: string,
+    newMemory: Parameters<typeof this.createMemory>[0]
+  ): Promise<SemanticMemoryEntry> {
     const entry = await this.createMemory(newMemory);
     await this.updateMemory(entry.id, { supersedes: oldId });
-    await this.updateMemory(oldId, { valid_until: new Date().toISOString(), confidence: 0.3 });
+    await this.updateMemory(oldId, {
+      valid_until: new Date().toISOString(),
+      confidence: 0.3,
+    });
     return entry;
   }
 
@@ -298,14 +305,14 @@ export class SemanticMemoryEngine {
       $or: [
         { importance: { $lt: threshold } },
         { created_at: { $lt: cutoffDate.toISOString() } },
-        { valid_until: { $lt: new Date().toISOString() } }
-      ]
+        { valid_until: { $lt: new Date().toISOString() } },
+      ],
     });
 
     this.emitEvent({
       type: 'cleanup_performed',
       timestamp: new Date().toISOString(),
-      data: { threshold, maxAgeDays }
+      data: { threshold, maxAgeDays },
     });
   }
 
@@ -377,24 +384,26 @@ export class SemanticMemoryEngine {
     const now = Date.now();
     const maxAge = 365 * 24 * 60 * 60 * 1000; // 1 an en ms
 
-    return results.map(result => {
-      const { entry, similarity } = result;
+    return results
+      .map(result => {
+        const { entry, similarity } = result;
 
-      // Score de récence (1.0 = aujourd'hui, 0.0 = 1 an ou plus)
-      const ageMs = now - new Date(entry.last_used_at || entry.created_at).getTime();
-      const recencyScore = Math.max(0, 1 - ageMs / maxAge);
+        // Score de récence (1.0 = aujourd'hui, 0.0 = 1 an ou plus)
+        const ageMs = now - new Date(entry.last_used_at || entry.created_at).getTime();
+        const recencyScore = Math.max(0, 1 - ageMs / maxAge);
 
-      // Score hybride
-      const hybridScore =
-        weights.similarity * similarity +
-        weights.importance * entry.importance +
-        weights.recency * recencyScore;
+        // Score hybride
+        const hybridScore =
+          weights.similarity * similarity +
+          weights.importance * entry.importance +
+          weights.recency * recencyScore;
 
-      return {
-        ...result,
-        score: Math.min(1, Math.max(0, hybridScore))
-      };
-    }).sort((a, b) => b.score - a.score);
+        return {
+          ...result,
+          score: Math.min(1, Math.max(0, hybridScore)),
+        };
+      })
+      .sort((a, b) => b.score - a.score);
   }
 
   /**
@@ -408,9 +417,10 @@ export class SemanticMemoryEngine {
     // Créer le résumé textuel
     const summary = this.createTextualSummary(results);
 
-    const avgScore = results.length > 0
-      ? results.reduce((sum, r) => sum + r.score, 0) / results.length
-      : 0;
+    const avgScore =
+      results.length > 0
+        ? results.reduce((sum, r) => sum + r.score, 0) / results.length
+        : 0;
 
     return {
       memories: results,
@@ -419,8 +429,8 @@ export class SemanticMemoryEngine {
         query,
         total_retrieved: results.length,
         avg_score: avgScore,
-        retrieval_time_ms: retrievalTimeMs
-      }
+        retrieval_time_ms: retrievalTimeMs,
+      },
     };
   }
 
@@ -456,7 +466,7 @@ export class SemanticMemoryEngine {
       decision: '✅',
       milestone: '🎯',
       pattern: '🔄',
-      context: '📍'
+      context: '📍',
     };
     return icons[type] || '•';
   }
@@ -472,8 +482,8 @@ export class SemanticMemoryEngine {
         query,
         total_retrieved: 0,
         avg_score: 0,
-        retrieval_time_ms: 0
-      }
+        retrieval_time_ms: 0,
+      },
     };
   }
 
@@ -488,7 +498,7 @@ export class SemanticMemoryEngine {
       if (entry) {
         await this.vectorStore.update(id, {
           last_used_at: now,
-          access_count: entry.access_count + 1
+          access_count: entry.access_count + 1,
         });
       }
     }

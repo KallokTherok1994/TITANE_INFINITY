@@ -12,7 +12,10 @@ import {
   useConditionalVisibility,
   useDensityLevel,
 } from '@/hooks/useCognitiveLayout';
-import { CognitiveLayoutControl, CognitiveLayoutBadge } from '@/components/cognitive/CognitiveLayoutControl';
+import {
+  CognitiveLayoutControl,
+  CognitiveLayoutBadge,
+} from '@/components/cognitive/CognitiveLayoutControl';
 
 /**
  * Exemple 1: Layout Principal avec Contrôle Cognitif
@@ -27,7 +30,7 @@ export function AdaptiveLayout({ children }: { children: React.ReactNode }) {
       currentModule: 'main-layout',
       currentProject: 'titane-infinity',
     });
-  }, []);
+  }, [setRole, updateContext]);
 
   return (
     <div className="adaptive-layout" data-ui-mode={currentMode}>
@@ -87,7 +90,7 @@ export function AdaptiveStatsPanel() {
  * Exemple 3: Module qui notifie son contexte
  */
 export function ChatOmegaModule() {
-  const { setTaskType, updateContext } = useCognitiveLayout();
+  const { setTaskType, updateContext: _updateContext } = useCognitiveLayout();
 
   // Notifier automatiquement le contexte
   useModuleContext('chat-omega');
@@ -98,7 +101,7 @@ export function ChatOmegaModule() {
     if (isWriting) {
       setTaskType('writing');
     }
-  }, []);
+  }, [setTaskType]);
 
   return (
     <div className="chat-omega-module">
@@ -122,7 +125,7 @@ export function QuickModeSelector() {
 
   return (
     <div className="quick-mode-selector">
-      {modes.map((mode) => (
+      {modes.map(mode => (
         <button
           key={mode.id}
           className={`mode-btn ${currentMode === mode.id ? 'active' : ''}`}
@@ -164,7 +167,13 @@ export function CognitiveSuggestionToast() {
 /**
  * Exemple 6: Composant qui change selon la densité
  */
-export function AdaptiveButton({ children, onClick }: { children: React.ReactNode; onClick: () => void }) {
+export function AdaptiveButton({
+  children,
+  onClick,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+}) {
   const density = useDensityLevel();
 
   const sizes = {
@@ -203,7 +212,13 @@ export function useAdaptiveStyle() {
 /**
  * Exemple 8: Utilisation du hook de style adaptatif
  */
-export function AdaptiveCard({ title, children }: { title: string; children: React.ReactNode }) {
+export function AdaptiveCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   const style = useAdaptiveStyle();
 
   return (

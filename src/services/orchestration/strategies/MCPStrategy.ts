@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ — MCP Strategy
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * MCP-Ω Governance Strategy
  * Extracted from MCPOrchestrator (1,156 lines)
  */
@@ -15,18 +15,25 @@ import type {
   MetricsSummary,
   Metric,
   MCPJobOperation,
-  MCPHealthOperation
+  MCPHealthOperation,
 } from '../types';
 
 // Import existing MCP Orchestrator
 import { MCPOrchestrator } from '@/services/mcp/MCPOrchestrator';
-import type { Job, JobType, JobPriority, SystemHealthCheck } from '@/services/mcp/mcp.types';
+import type {
+  Job,
+  JobType,
+  JobPriority,
+  SystemHealthCheck as _SystemHealthCheck,
+} from '@/services/mcp/mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MCP STRATEGY
 // ═══════════════════════════════════════════════════════════════════════════
 
-export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCPHealthOperation {
+export class MCPStrategy
+  implements IOrchestrationStrategy, MCPJobOperation, MCPHealthOperation
+{
   readonly type: OrchestrationStrategyType = 'mcp';
   readonly name = 'MCP-Ω Governance Strategy';
 
@@ -34,7 +41,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
   private metrics: Metric[] = [];
   private healthScores: Record<string, number> = {}; // Add missing property
   private jobs: Map<string, any> = new Map(); // Add missing property
-  
+
   // Reference to existing MCP Orchestrator (delegation pattern)
   private mcpOrchestrator = MCPOrchestrator;
 
@@ -50,7 +57,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
     if (this.initialized) return;
 
     this.log('Initializing MCP-Ω governance...');
-    
+
     // MCP Orchestrator is already initialized as singleton
     // Just verify it's available
     if (!this.mcpOrchestrator) {
@@ -69,7 +76,10 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
   // EXECUTION
   // ───────────────────────────────────────────────────────────────────────
 
-  async execute<T = unknown>(operation: string, params?: unknown): Promise<OrchestrationResult<T>> {
+  async execute<T = unknown>(
+    operation: string,
+    params?: unknown
+  ): Promise<OrchestrationResult<T>> {
     if (!this.initialized) {
       await this.initialize();
     }
@@ -125,8 +135,8 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
         metadata: {
           strategyUsed: this.type,
           duration: Date.now() - startTime,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       };
     } catch (error) {
       this.logError(`MCP operation ${operation} failed`, error);
@@ -136,8 +146,8 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
         metadata: {
           strategyUsed: this.type,
           duration: Date.now() - startTime,
-          timestamp: Date.now()
-        }
+          timestamp: Date.now(),
+        },
       };
     }
   }
@@ -146,24 +156,27 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
   // MCP JOB OPERATIONS
   // ───────────────────────────────────────────────────────────────────────
 
-  async createJob(type: string, priority: 'low' | 'medium' | 'high' | 'critical'): Promise<string> {
+  async createJob(
+    type: string,
+    priority: 'low' | 'medium' | 'high' | 'critical'
+  ): Promise<string> {
     // Map priority string to JobPriority enum
-    const priorityMap: Record<string, JobPriority> = {
-      'low': 1,
-      'medium': 2,
-      'high': 3,
-      'critical': 4
+    const _priorityMap: Record<string, JobPriority> = {
+      low: 1,
+      medium: 2,
+      high: 3,
+      critical: 4,
     };
 
     // Map type string to JobType enum
     const typeMap: Record<string, JobType> = {
-      'reactive': 'REACTIVE' as JobType,
-      'structural': 'STRUCTURAL' as JobType,
-      'cognitive': 'COGNITIVE' as JobType,
-      'creative': 'CREATIVE' as JobType,
-      'strategic': 'STRATEGIC' as JobType,
-      'evolutionary': 'EVOLUTIONARY' as JobType,
-      'generic': 'REACTIVE' as JobType
+      reactive: 'REACTIVE' as JobType,
+      structural: 'STRUCTURAL' as JobType,
+      cognitive: 'COGNITIVE' as JobType,
+      creative: 'CREATIVE' as JobType,
+      strategic: 'STRATEGIC' as JobType,
+      evolutionary: 'EVOLUTIONARY' as JobType,
+      generic: 'REACTIVE' as JobType,
     };
 
     const job = await this.mcpOrchestrator.createJob(
@@ -176,7 +189,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
       type: 'counter',
       value: 1,
       timestamp: Date.now(),
-      tags: { type, priority }
+      tags: { type, priority },
     });
 
     this.log(`Job created via MCPOrchestrator: ${job.id}`);
@@ -185,17 +198,17 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
 
   async evaluateJob(jobId: string): Promise<{ status: string; result?: unknown }> {
     const state = this.mcpOrchestrator.getState();
-    
+
     // Find job in state
     const allJobs = [
       ...state.jobs.pending,
       ...state.jobs.running,
       ...state.jobs.completed,
-      ...state.jobs.suspended
+      ...state.jobs.suspended,
     ];
-    
+
     const job = allJobs.find(j => j.id === jobId);
-    
+
     if (!job) {
       throw new Error(`Job not found: ${jobId}`);
     }
@@ -203,37 +216,37 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
     // Evaluate if needed
     if (job.status === 'PENDING') {
       const evaluatedJob = await this.mcpOrchestrator.evaluateJob(job);
-      
+
       this.recordMetric({
         name: 'mcp.job.evaluated',
         type: 'counter',
         value: 1,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
-      
-      return { 
+
+      return {
         status: evaluatedJob.status,
-        result: evaluatedJob.evaluation
+        result: evaluatedJob.evaluation,
       };
     }
 
-    return { 
+    return {
       status: job.status,
-      result: job.execution.result
+      result: job.execution.result,
     };
   }
 
   listJobs(filter?: { status?: string }): { id: string; type: string; status: string }[] {
     const state = this.mcpOrchestrator.getState();
-    
+
     let jobs: Job[] = [];
-    
+
     if (filter?.status) {
       const statusMap: Record<string, keyof typeof state.jobs> = {
-        'pending': 'pending',
-        'running': 'running',
-        'completed': 'completed',
-        'suspended': 'suspended'
+        pending: 'pending',
+        running: 'running',
+        completed: 'completed',
+        suspended: 'suspended',
       };
       const key = statusMap[filter.status.toLowerCase()];
       if (key) {
@@ -244,14 +257,14 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
         ...state.jobs.pending,
         ...state.jobs.running,
         ...state.jobs.completed,
-        ...state.jobs.suspended
+        ...state.jobs.suspended,
       ];
     }
 
     return jobs.map(j => ({
       id: j.id,
       type: j.type,
-      status: j.status
+      status: j.status.toLowerCase(),
     }));
   }
 
@@ -262,50 +275,50 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
   async scanStability(): Promise<{ score: number; status: string }> {
     const health = await this.mcpOrchestrator.runHealthCheck();
     const helios = health.helios;
-    
-    return { 
-      score: helios.score * 100, 
-      status: helios.status === 'PASS' ? 'stable' : 'unstable' 
+
+    return {
+      score: helios.score * 100,
+      status: helios.status === 'PASS' ? 'stable' : 'unstable',
     };
   }
 
   async scanCoherence(): Promise<{ score: number; status: string }> {
     const health = await this.mcpOrchestrator.runHealthCheck();
     const nexus = health.nexus;
-    
-    return { 
-      score: nexus.score * 100, 
-      status: nexus.status === 'PASS' ? 'coherent' : 'incoherent' 
+
+    return {
+      score: nexus.score * 100,
+      status: nexus.status === 'PASS' ? 'coherent' : 'incoherent',
     };
   }
 
   async scanCognitiveLoad(): Promise<{ score: number; status: string }> {
     const health = await this.mcpOrchestrator.runHealthCheck();
     const harmonia = health.harmonia;
-    
-    return { 
-      score: harmonia.score * 100, 
-      status: harmonia.score > 0.7 ? 'high' : 'low' 
+
+    return {
+      score: harmonia.score * 100,
+      status: harmonia.score > 0.7 ? 'high' : 'low',
     };
   }
 
   async scanSecurity(): Promise<{ score: number; status: string }> {
     const health = await this.mcpOrchestrator.runHealthCheck();
     const sentinel = health.sentinel;
-    
-    return { 
-      score: sentinel.score * 100, 
-      status: sentinel.status === 'PASS' ? 'secure' : 'at-risk' 
+
+    return {
+      score: sentinel.score * 100,
+      status: sentinel.status === 'PASS' ? 'secure' : 'at-risk',
     };
   }
 
   async scanMemory(): Promise<{ score: number; status: string }> {
     const health = await this.mcpOrchestrator.runHealthCheck();
     const memoryCore = health.memoryCore;
-    
-    return { 
-      score: memoryCore.score * 100, 
-      status: memoryCore.status === 'PASS' ? 'healthy' : 'degraded' 
+
+    return {
+      score: memoryCore.score * 100,
+      status: memoryCore.status === 'PASS' ? 'healthy' : 'degraded',
     };
   }
 
@@ -319,7 +332,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
         status: 'unknown',
         score: 0,
         message: 'Strategy not initialized',
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
     }
 
@@ -328,7 +341,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
       this.scanCoherence(),
       this.scanCognitiveLoad(),
       this.scanSecurity(),
-      this.scanMemory()
+      this.scanMemory(),
     ]);
 
     const avgScore = scans.reduce((sum, s) => sum + s.score, 0) / scans.length;
@@ -341,9 +354,9 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
         coherence: scans[1].score,
         cognitiveLoad: scans[2].score,
         security: scans[3].score,
-        memory: scans[4].score
+        memory: scans[4].score,
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
   }
 
@@ -384,8 +397,8 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
       details: {
         jobsCreated,
         jobsEvaluated,
-        jobsPending: this.jobs.size
-      }
+        jobsPending: this.jobs.size,
+      },
     };
   }
 
@@ -399,7 +412,7 @@ export class MCPStrategy implements IOrchestrationStrategy, MCPJobOperation, MCP
 
   async shutdown(): Promise<void> {
     this.log('Shutting down MCP-Ω governance...');
-    
+
     // MCP Orchestrator is a singleton, don't shut it down
     // Just mark this strategy as not initialized
     this.initialized = false;

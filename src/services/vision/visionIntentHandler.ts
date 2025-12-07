@@ -20,14 +20,11 @@
 import { useVisionStore } from '@/stores/useVisionStore';
 import type {
   VisionIntent,
-  VisionFeedbackResponse,
+  VisionFeedbackResponse as _VisionFeedbackResponse,
   CalibrationCommand,
   VisualLevel,
 } from '@/types/visionAffect';
-import {
-  VISION_ETHICAL_DISCLAIMER,
-  PRUDENT_FORMULATIONS,
-} from '@/types/visionAffect';
+import { VISION_ETHICAL_DISCLAIMER, PRUDENT_FORMULATIONS } from '@/types/visionAffect';
 
 // ============================================================================
 // TYPES
@@ -198,8 +195,10 @@ export function detectVisionIntent(text: string): VisionIntent | null {
 /**
  * Handler principal pour exécuter un intent Vision
  */
-export async function handleVisionIntent(intent: VisionIntent): Promise<VisionIntentResult> {
-  const store = useVisionStore.getState();
+export async function handleVisionIntent(
+  intent: VisionIntent
+): Promise<VisionIntentResult> {
+  const _store = useVisionStore.getState();
 
   switch (intent.type) {
     case 'VISION_ENABLE':
@@ -221,7 +220,7 @@ export async function handleVisionIntent(intent: VisionIntent): Promise<VisionIn
       return {
         success: false,
         intent: 'UNKNOWN',
-        message: "Intent Vision non reconnu.",
+        message: 'Intent Vision non reconnu.',
       };
   }
 }
@@ -237,7 +236,8 @@ async function handleVisionEnable(durationMs?: number): Promise<VisionIntentResu
     return {
       success: true,
       intent: 'VISION_ENABLE',
-      message: "Le mode observation est déjà actif. Je continue de percevoir les indices visuels.",
+      message:
+        'Le mode observation est déjà actif. Je continue de percevoir les indices visuels.',
       disclaimer: VISION_ETHICAL_DISCLAIMER,
     };
   }
@@ -259,7 +259,8 @@ async function handleVisionEnable(durationMs?: number): Promise<VisionIntentResu
     const error = store.lastError;
     let errorMsg = "Je n'ai pas pu activer le mode observation.";
     if (error?.code === 'PERMISSION_DENIED') {
-      errorMsg += " L'accès à la caméra a été refusé. Tu peux l'autoriser dans les paramètres système.";
+      errorMsg +=
+        " L'accès à la caméra a été refusé. Tu peux l'autoriser dans les paramètres système.";
     } else if (error?.code === 'DEVICE_NOT_FOUND') {
       errorMsg += " Aucune caméra n'a été détectée.";
     }
@@ -290,7 +291,8 @@ function handleVisionDisable(): VisionIntentResult {
   return {
     success: true,
     intent: 'VISION_DISABLE',
-    message: "Mode observation désactivé. La caméra est arrêtée et aucune donnée visuelle n'est plus traitée.",
+    message:
+      "Mode observation désactivé. La caméra est arrêtée et aucune donnée visuelle n'est plus traitée.",
   };
 }
 
@@ -314,11 +316,13 @@ function handleVisionStatus(): VisionIntentResult {
   let message: string;
 
   if (!status.isActive) {
-    message = "Le mode observation n'est pas actif. Tu peux l'activer si tu veux que je perçoive des indices visuels.";
+    message =
+      "Le mode observation n'est pas actif. Tu peux l'activer si tu veux que je perçoive des indices visuels.";
   } else if (!status.isCameraOn) {
-    message = "Le mode observation est actif mais la caméra est en pause.";
+    message = 'Le mode observation est actif mais la caméra est en pause.';
   } else if (status.confidence < 0.3) {
-    message = "Le mode observation est actif, mais la confiance dans les indices visuels est faible. Assure-toi d'être bien visible.";
+    message =
+      "Le mode observation est actif, mais la confiance dans les indices visuels est faible. Assure-toi d'être bien visible.";
   } else {
     const sessionMin = Math.round(status.sessionDurationMs / 60000);
     message = `Mode observation actif depuis ${sessionMin} minutes. Confiance: ${(status.confidence * 100).toFixed(0)}%.`;
@@ -343,7 +347,8 @@ function handleVisionFeedback(): VisionIntentResult {
     return {
       success: false,
       intent: 'VISION_FEEDBACK',
-      message: "Le mode observation n'est pas actif. Active-le d'abord si tu veux un feedback visuel.",
+      message:
+        "Le mode observation n'est pas actif. Active-le d'abord si tu veux un feedback visuel.",
     };
   }
 
@@ -351,7 +356,8 @@ function handleVisionFeedback(): VisionIntentResult {
     return {
       success: true,
       intent: 'VISION_FEEDBACK',
-      message: "La confiance dans les indices visuels est trop faible pour donner un feedback fiable. Assure-toi d'être bien visible par la caméra.",
+      message:
+        "La confiance dans les indices visuels est trop faible pour donner un feedback fiable. Assure-toi d'être bien visible par la caméra.",
       disclaimer: VISION_ETHICAL_DISCLAIMER,
     };
   }
@@ -371,10 +377,16 @@ function handleVisionFeedback(): VisionIntentResult {
     const tensionMsg = PRUDENT_FORMULATIONS.tension[feedback.tensionLevel];
 
     // Ne pas répéter le message principal
-    if (!feedback.prudentMessage.includes('énergie') && feedback.energyLevel !== 'medium') {
+    if (
+      !feedback.prudentMessage.includes('énergie') &&
+      feedback.energyLevel !== 'medium'
+    ) {
       parts.push(energyMsg);
     }
-    if (!feedback.prudentMessage.includes('tension') && feedback.tensionLevel !== 'medium') {
+    if (
+      !feedback.prudentMessage.includes('tension') &&
+      feedback.tensionLevel !== 'medium'
+    ) {
       parts.push(tensionMsg);
     }
   }
@@ -413,7 +425,7 @@ function handleVisionCalibrate(command: CalibrationCommand): VisionIntentResult 
     return {
       success: true,
       intent: 'VISION_CALIBRATE',
-      message: "Baseline réinitialisée. Les seuils sont revenus aux valeurs par défaut.",
+      message: 'Baseline réinitialisée. Les seuils sont revenus aux valeurs par défaut.',
     };
   }
 
@@ -421,11 +433,11 @@ function handleVisionCalibrate(command: CalibrationCommand): VisionIntentResult 
   store.startCalibration(command);
 
   const commandLabels: Record<CalibrationCommand, string> = {
-    MARK_HIGH_ENERGY: "haute énergie",
-    MARK_LOW_ENERGY: "basse énergie",
-    MARK_RELAXED: "état relaxé",
-    MARK_FOCUSED: "concentration",
-    RESET_BASELINE: "reset",
+    MARK_HIGH_ENERGY: 'haute énergie',
+    MARK_LOW_ENERGY: 'basse énergie',
+    MARK_RELAXED: 'état relaxé',
+    MARK_FOCUSED: 'concentration',
+    RESET_BASELINE: 'reset',
   };
 
   return {
@@ -453,41 +465,37 @@ export function containsVisionIntent(text: string): boolean {
 export const VISION_INTENT_HELP = {
   enable: {
     examples: [
-      "Active le mode observation",
-      "Regarde-moi",
-      "Active la vision pour 10 minutes",
+      'Active le mode observation',
+      'Regarde-moi',
+      'Active la vision pour 10 minutes',
     ],
-    description: "Active la caméra pour percevoir des indices visuels approximatifs.",
+    description: 'Active la caméra pour percevoir des indices visuels approximatifs.',
   },
   disable: {
-    examples: [
-      "Désactive la vision",
-      "Arrête la caméra",
-      "Ne me regarde plus",
-    ],
-    description: "Désactive la caméra et arrête le traitement visuel.",
+    examples: ['Désactive la vision', 'Arrête la caméra', 'Ne me regarde plus'],
+    description: 'Désactive la caméra et arrête le traitement visuel.',
   },
   status: {
     examples: [
-      "Quel est le statut de la vision ?",
-      "Tu me vois ?",
-      "La vision est active ?",
+      'Quel est le statut de la vision ?',
+      'Tu me vois ?',
+      'La vision est active ?',
     ],
-    description: "Vérifie si le mode observation est actif.",
+    description: 'Vérifie si le mode observation est actif.',
   },
   feedback: {
     examples: [
-      "Comment tu me vois ?",
+      'Comment tu me vois ?',
       "Qu'est-ce que tu perçois ?",
       "Comment ai-je l'air ?",
     ],
-    description: "Obtient un feedback prudent basé sur les indices visuels.",
+    description: 'Obtient un feedback prudent basé sur les indices visuels.',
   },
   calibrate: {
     examples: [
-      "Je suis très énergique là",
-      "Marque mon état actuel comme fatigué",
-      "Calibre la vision",
+      'Je suis très énergique là',
+      'Marque mon état actuel comme fatigué',
+      'Calibre la vision',
     ],
     description: "Enregistre l'état actuel comme référence pour la baseline.",
   },

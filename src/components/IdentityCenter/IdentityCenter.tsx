@@ -109,8 +109,8 @@ const IdentityCenterContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'personality' | 'voice' | 'modes' | 'rules'>('overview');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { matrix: identityMatrixHook, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const { matrix: _identityMatrixHook, loading: matrixLoading } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
 
   // Données identité
   const [identityMatrix, setIdentityMatrix] = useState<IdentityMatrix | null>(null);

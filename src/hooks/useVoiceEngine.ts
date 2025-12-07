@@ -19,14 +19,24 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { voiceService } from '@/services/api';
 import { hybridTTS } from '@/services/tts/hybridTTS';
-import { audioStateMachine, type AudioConversationState } from '@/services/audio/audioStateMachine';
+import {
+  audioStateMachine,
+  type AudioConversationState,
+} from '@/services/audio/audioStateMachine';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
 import { useChat } from '@/hooks/useChat';
 import { voiceRouter } from '@/services/voice/voiceRouter';
-import { wakeWordEngine, type WakeWordEvent } from '@/services/voice/wakeWordEngine';
-import { attentionEngine, type AttentionState, type ListeningMode } from '@/services/voice/attentionEngine';
-import { fullDuplexOrchestrator, type FullDuplexEvent, type FullDuplexState } from '@/services/voice/fullDuplexOrchestrator';
+import {
+  attentionEngine,
+  type AttentionState,
+  type ListeningMode,
+} from '@/services/voice/attentionEngine';
+import {
+  fullDuplexOrchestrator,
+  type FullDuplexEvent,
+  type FullDuplexState,
+} from '@/services/voice/fullDuplexOrchestrator';
 import { haloEngine } from '@/services/voice/haloEngine'; // ✅ v∞.7 Halo sync
 
 // ═══ TYPES ═══
@@ -112,7 +122,9 @@ export interface UseVoiceEngineReturn {
 
 // ═══ MAIN HOOK ═══
 
-export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEngineReturn {
+export function useVoiceEngine(
+  options: UseVoiceEngineOptions = {}
+): UseVoiceEngineReturn {
   const { language = 'fr-FR', onTranscript, onError } = options;
 
   // ✅ Chat IA integration for voice turns
@@ -155,7 +167,9 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
           // En mode Tauri, utiliser test_microphone backend
           try {
             // durationMs: 1000ms minimum pour test rapide de disponibilité
-            const result = await secureInvoke<{ success: boolean }>('test_microphone', { durationMs: 1000 });
+            const result = await secureInvoke<{ success: boolean }>('test_microphone', {
+              durationMs: 1000,
+            });
             micAvailable = result?.success === true;
           } catch {
             console.warn('[useVoiceEngine] Tauri microphone test failed');
@@ -188,7 +202,7 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
     checkCapabilities();
 
     // Subscribe to audio state machine
-    const unsubscribe = audioStateMachine.onStateChange((newState) => {
+    const unsubscribe = audioStateMachine.onStateChange(newState => {
       if (!mountedRef.current) return;
 
       const stateMap: Record<AudioConversationState, VoiceEngineState> = {
@@ -207,14 +221,17 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
     });
 
     // Subscribe to attention engine
-    const unsubscribeAttention = attentionEngine.onStateChange((event) => {
+    const unsubscribeAttention = attentionEngine.onStateChange(event => {
       if (!mountedRef.current) return;
 
-      setStatus(prev => ({
-        ...prev,
-        attentionState: event.state,
-        lastWakeEvent: event.wakeEvent ? event.wakeEvent : undefined,
-      } as VoiceEngineStatus));
+      setStatus(
+        prev =>
+          ({
+            ...prev,
+            attentionState: event.state,
+            lastWakeEvent: event.wakeEvent ? event.wakeEvent : undefined,
+          }) as VoiceEngineStatus
+      );
     });
 
     return () => {
@@ -226,22 +243,25 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
 
   // ═══ ERROR HANDLING ═══
 
-  const handleError = useCallback((error: Error | string, context: string) => {
-    const message = error instanceof Error ? error.message : error;
-    console.error(`[useVoiceEngine] ${context}:`, message);
+  const handleError = useCallback(
+    (error: Error | string, context: string) => {
+      const message = error instanceof Error ? error.message : error;
+      console.error(`[useVoiceEngine] ${context}:`, message);
 
-    if (mountedRef.current) {
-      setStatus(prev => ({
-        ...prev,
-        state: 'error',
-        lastError: message,
-        isRecording: false,
-      }));
-    }
+      if (mountedRef.current) {
+        setStatus(prev => ({
+          ...prev,
+          state: 'error',
+          lastError: message,
+          isRecording: false,
+        }));
+      }
 
-    onError?.(message);
-    audioStateMachine.transition('ERROR');
-  }, [onError]);
+      onError?.(message);
+      audioStateMachine.transition('ERROR');
+    },
+    [onError]
+  );
 
   // ═══ RECORDING (STT) ═══
 
@@ -270,7 +290,10 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
       const errorMsg = err instanceof Error ? err.message : String(err);
 
       // ✅ v∞.8 FIX: Detect "Recording already in progress" and force reset
-      if (errorMsg.includes('Recording already in progress') || errorMsg.includes('AlreadyRecording')) {
+      if (
+        errorMsg.includes('Recording already in progress') ||
+        errorMsg.includes('AlreadyRecording')
+      ) {
         console.error('[useVoiceEngine] 🔥 Backend stuck, applying force reset...');
 
         try {
@@ -287,10 +310,15 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
             lastError: 'Voice engine was reset due to stuck state',
           }));
 
-          console.log('[useVoiceEngine] ✅ Force reset complete, ready to retry manually');
+          console.log(
+            '[useVoiceEngine] ✅ Force reset complete, ready to retry manually'
+          );
         } catch (resetErr) {
           console.error('[useVoiceEngine] ❌ Force reset failed:', resetErr);
-          handleError(resetErr instanceof Error ? resetErr : new Error(String(resetErr)), 'forceReset');
+          handleError(
+            resetErr instanceof Error ? resetErr : new Error(String(resetErr)),
+            'forceReset'
+          );
 
           // Fallback: reset to idle anyway
           setStatus(prev => ({
@@ -301,7 +329,10 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
         }
       } else {
         // Other errors: standard error handling
-        handleError(err instanceof Error ? err : new Error(String(err)), 'startRecording');
+        handleError(
+          err instanceof Error ? err : new Error(String(err)),
+          'startRecording'
+        );
 
         // ✅ Reset to idle (not error state to avoid loop)
         setStatus(prev => ({
@@ -366,19 +397,17 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
    * ✅ REFACTORÉ v19.3.1 : Pipeline complet IA + TTS via VoiceRouter
    * Le VoiceRouter orchestre : Transcription → IA → TTS → Done
    */
-  const processTurnWithAI = useCallback(async (transcript: string) => {
-    try {
-      console.log('[useVoiceEngine] 🎙️ Processing turn with VoiceRouter...');
+  const processTurnWithAI = useCallback(
+    async (transcript: string) => {
+      try {
+        console.log('[useVoiceEngine] 🎙️ Processing turn with VoiceRouter...');
 
-      // Déléguer au VoiceRouter pour orchestration complète
-      const result = await voiceRouter.processVoiceTurn(
-        transcript,
-        chat.sendMessage,
-        {
+        // Déléguer au VoiceRouter pour orchestration complète
+        const result = await voiceRouter.processVoiceTurn(transcript, chat.sendMessage, {
           useOnlineTTS: false, // Priorité offline
           aiTimeout: 30000,
           ttsTimeout: 60000,
-          onStateChange: (routerState) => {
+          onStateChange: routerState => {
             // Synchroniser l'état du hook avec le router
             if (routerState === 'processing') {
               setStatus(prev => ({ ...prev, state: 'processing' }));
@@ -390,8 +419,11 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
               setStatus(prev => ({ ...prev, state: 'error' }));
             }
           },
-          onAIResponse: (aiResponse) => {
-            console.log('[useVoiceEngine] ✅ AI response:', aiResponse.content.substring(0, 50));
+          onAIResponse: aiResponse => {
+            console.log(
+              '[useVoiceEngine] ✅ AI response:',
+              aiResponse.content.substring(0, 50)
+            );
           },
           onTTSStart: () => {
             console.log('[useVoiceEngine] 🔊 TTS started');
@@ -399,27 +431,30 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
           onTTSEnd: () => {
             console.log('[useVoiceEngine] ✅ TTS completed');
           },
-          onError: (error) => {
+          onError: error => {
             console.error('[useVoiceEngine] ❌ VoiceRouter error:', error);
             handleError(
               new Error(`${error.stage} error: ${error.message}`),
               'processTurnWithAI'
             );
           },
+        });
+
+        if (result.success) {
+          console.log(`[useVoiceEngine] 🎉 Voice turn completed in ${result.duration}ms`);
+        } else {
+          console.error('[useVoiceEngine] ❌ Voice turn failed:', result.error);
         }
-      );
-
-      if (result.success) {
-        console.log(`[useVoiceEngine] 🎉 Voice turn completed in ${result.duration}ms`);
-      } else {
-        console.error('[useVoiceEngine] ❌ Voice turn failed:', result.error);
+      } catch (error) {
+        console.error('[useVoiceEngine] ❌ processTurnWithAI error:', error);
+        handleError(
+          error instanceof Error ? error : new Error(String(error)),
+          'processTurnWithAI'
+        );
       }
-
-    } catch (error) {
-      console.error('[useVoiceEngine] ❌ processTurnWithAI error:', error);
-      handleError(error instanceof Error ? error : new Error(String(error)), 'processTurnWithAI');
-    }
-  }, [chat, handleError]);
+    },
+    [chat, handleError]
+  );
 
   /**
    * ✅ Start voice turn (recording only)
@@ -467,10 +502,12 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
 
       // Traiter avec IA + TTS
       await processTurnWithAI(transcript);
-
     } catch (error) {
       console.error('[useVoiceEngine] ❌ completeTurn error:', error);
-      handleError(error instanceof Error ? error : new Error(String(error)), 'completeTurn');
+      handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'completeTurn'
+      );
     }
   }, [stopRecordingInternal, processTurnWithAI, handleError]);
 
@@ -478,37 +515,41 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
    * ✅ NOUVEAU v19.4 : Complete turn with pre-transcribed text (one-shot)
    * Used for wake word one-shot mode: "Titane, ouvre X" → direct to IA
    */
-  const completeTurnWithText = useCallback(async (text: string) => {
-    try {
-      console.log('[useVoiceEngine] 📝 Completing turn with text:', text);
+  const completeTurnWithText = useCallback(
+    async (text: string) => {
+      try {
+        console.log('[useVoiceEngine] 📝 Completing turn with text:', text);
 
-      if (!text || !text.trim()) {
-        console.warn('[useVoiceEngine] Empty text, cancelling turn');
-        if (mountedRef.current) {
-          setStatus(prev => ({ ...prev, state: 'idle' }));
+        if (!text || !text.trim()) {
+          console.warn('[useVoiceEngine] Empty text, cancelling turn');
+          if (mountedRef.current) {
+            setStatus(prev => ({ ...prev, state: 'idle' }));
+          }
+          audioStateMachine.reset();
+          return;
         }
-        audioStateMachine.reset();
-        return;
+
+        // Update transcript in status
+        if (mountedRef.current) {
+          setStatus(prev => ({
+            ...prev,
+            transcript: text,
+            state: 'processing',
+          }));
+        }
+
+        // Traiter avec IA + TTS
+        await processTurnWithAI(text);
+      } catch (error) {
+        console.error('[useVoiceEngine] ❌ completeTurnWithText error:', error);
+        handleError(
+          error instanceof Error ? error : new Error(String(error)),
+          'completeTurnWithText'
+        );
       }
-
-      // Update transcript in status
-      if (mountedRef.current) {
-        setStatus(prev => ({
-          ...prev,
-          transcript: text,
-          state: 'processing',
-        }));
-      }
-
-      // Traiter avec IA + TTS
-      await processTurnWithAI(text);
-
-    } catch (error) {
-      console.error('[useVoiceEngine] ❌ completeTurnWithText error:', error);
-      handleError(error instanceof Error ? error : new Error(String(error)), 'completeTurnWithText');
-    }
-  }, [processTurnWithAI, handleError]);
-
+    },
+    [processTurnWithAI, handleError]
+  );
 
   /**
    * ✅ REFACTORÉ v19.3.1 : Cancel avec VoiceRouter
@@ -603,30 +644,33 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
 
   // ═══ TTS ═══
 
-  const speak = useCallback(async (text: string) => {
-    if (!text.trim()) {
-      console.warn('[useVoiceEngine] Empty text, skipping TTS');
-      return;
-    }
+  const speak = useCallback(
+    async (text: string) => {
+      if (!text.trim()) {
+        console.warn('[useVoiceEngine] Empty text, skipping TTS');
+        return;
+      }
 
-    try {
-      setStatus(prev => ({
-        ...prev,
-        state: 'speaking',
-      }));
-
-      await hybridTTS.speak(text);
-
-      if (mountedRef.current) {
+      try {
         setStatus(prev => ({
           ...prev,
-          state: 'idle',
+          state: 'speaking',
         }));
+
+        await hybridTTS.speak(text);
+
+        if (mountedRef.current) {
+          setStatus(prev => ({
+            ...prev,
+            state: 'idle',
+          }));
+        }
+      } catch (err) {
+        handleError(err instanceof Error ? err : new Error(String(err)), 'speak');
       }
-    } catch (err) {
-      handleError(err instanceof Error ? err : new Error(String(err)), 'speak');
-    }
-  }, [handleError]);
+    },
+    [handleError]
+  );
 
   const stopSpeaking = useCallback(async () => {
     try {
@@ -732,16 +776,19 @@ export function useVoiceEngine(options: UseVoiceEngineOptions = {}): UseVoiceEng
     await fullDuplexOrchestrator.interrupt();
   }, []);
 
-  const injectInterruption = useCallback(async (text: string) => {
-    console.log('[useVoiceEngine] 💬 Inject interruption:', text);
-    await fullDuplexOrchestrator.injectInterruption(text);
+  const injectInterruption = useCallback(
+    async (text: string) => {
+      console.log('[useVoiceEngine] 💬 Inject interruption:', text);
+      await fullDuplexOrchestrator.injectInterruption(text);
 
-    // Process interruption text via chat engine
-    if (chat.sendMessage) {
-      // Mark as interruption for context-aware response
-      await chat.sendMessage(`[INTERRUPTED] ${text}`);
-    }
-  }, [chat]);
+      // Process interruption text via chat engine
+      if (chat.sendMessage) {
+        // Mark as interruption for context-aware response
+        await chat.sendMessage(`[INTERRUPTED] ${text}`);
+      }
+    },
+    [chat]
+  );
 
   // ═══ EMERGENCY RESET (v∞.7) ═══
 

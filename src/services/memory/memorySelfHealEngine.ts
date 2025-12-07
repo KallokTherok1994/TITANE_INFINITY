@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { AIMessage } from '@/services/ai/types';
+import type { AIMessage as _AIMessage } from '@/services/ai/types';
 import type { ChatMode } from '@/services/ai/chatEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -127,7 +127,9 @@ export class MemorySelfHealEngine {
     ];
     const overallScore = layerScores.reduce((sum, s) => sum + s, 0) / layerScores.length;
 
-    const healthy = overallScore >= 70 && corruptions.filter(c => c.severity === 'critical').length === 0;
+    const healthy =
+      overallScore >= 70 &&
+      corruptions.filter(c => c.severity === 'critical').length === 0;
 
     // Generate recommendations
     const recommendations = this.generateRecommendations(corruptions, overallScore);
@@ -152,7 +154,9 @@ export class MemorySelfHealEngine {
   /**
    * Vérifier santé localStorage
    */
-  private async checkLocalStorageHealth(): Promise<LayerHealth & { corruptions: MemoryCorruption[] }> {
+  private async checkLocalStorageHealth(): Promise<
+    LayerHealth & { corruptions: MemoryCorruption[] }
+  > {
     const corruptions: MemoryCorruption[] = [];
     const issues: string[] = [];
     let score = 100;
@@ -168,15 +172,17 @@ export class MemorySelfHealEngine {
         size: 0,
         itemCount: 0,
         lastAccess: null,
-        corruptions: [{
-          layer: 'localStorage',
-          type: 'missing-data',
-          severity: 'critical',
-          description: 'localStorage API unavailable',
-          affectedKeys: [],
-          detectedAt: Date.now(),
-          autoFixable: false,
-        }],
+        corruptions: [
+          {
+            layer: 'localStorage',
+            type: 'missing-data',
+            severity: 'critical',
+            description: 'localStorage API unavailable',
+            affectedKeys: [],
+            detectedAt: Date.now(),
+            autoFixable: false,
+          },
+        ],
       };
     }
 
@@ -264,7 +270,6 @@ export class MemorySelfHealEngine {
         });
         score -= 20;
       }
-
     } catch (error) {
       issues.push(`Critical localStorage error: ${error}`);
       score = 0;
@@ -293,7 +298,9 @@ export class MemorySelfHealEngine {
   /**
    * Vérifier santé Compactor
    */
-  private async checkCompactorHealth(): Promise<LayerHealth & { corruptions: MemoryCorruption[] }> {
+  private async checkCompactorHealth(): Promise<
+    LayerHealth & { corruptions: MemoryCorruption[] }
+  > {
     const corruptions: MemoryCorruption[] = [];
     const issues: string[] = [];
     let score = 100;
@@ -305,7 +312,13 @@ export class MemorySelfHealEngine {
       const { chatMemoryCompactor } = await import('@/services/chatMemoryCompactor');
 
       // Vérifier stats pour chaque mode
-      const modes: ChatMode[] = ['default', 'brainstorming', 'synthesis', 'planning', 'journal'];
+      const modes: ChatMode[] = [
+        'default',
+        'brainstorming',
+        'synthesis',
+        'planning',
+        'journal',
+      ];
       let totalMessages = 0;
 
       for (const mode of modes) {
@@ -368,7 +381,6 @@ export class MemorySelfHealEngine {
           score -= 5;
         }
       }
-
     } catch (error) {
       issues.push(`Fatal compactor error: ${error}`);
       score = 0;
@@ -397,7 +409,9 @@ export class MemorySelfHealEngine {
   /**
    * Vérifier santé Backend (SQLite)
    */
-  private async checkBackendHealth(): Promise<LayerHealth & { corruptions: MemoryCorruption[] }> {
+  private async checkBackendHealth(): Promise<
+    LayerHealth & { corruptions: MemoryCorruption[] }
+  > {
     const corruptions: MemoryCorruption[] = [];
     const issues: string[] = [];
     let score = 100;
@@ -407,7 +421,10 @@ export class MemorySelfHealEngine {
       const { memoryIntegration } = await import('@/services/ai/memoryIntegration');
 
       // Test basique: charger contexte pour vérifier backend
-      const context = await memoryIntegration.loadContext({ maxDecisions: 5, timeWindow: '7d' });
+      const context = await memoryIntegration.loadContext({
+        maxDecisions: 5,
+        timeWindow: '7d',
+      });
       const recentEntries = context.recentDecisions;
 
       if (!recentEntries || recentEntries.length === 0) {
@@ -430,7 +447,6 @@ export class MemorySelfHealEngine {
           score -= 10;
         }
       }
-
     } catch (error) {
       issues.push(`Backend unavailable: ${error}`);
       // Backend indisponible n'est pas critique (mode browser)
@@ -477,11 +493,14 @@ export class MemorySelfHealEngine {
     console.log(`[MemorySelfHeal] 🔧 Repairing ${toRepair.length} corruptions...`);
 
     // Group by layer
-    const byLayer = toRepair.reduce((acc, c) => {
-      if (!acc[c.layer]) acc[c.layer] = [];
-      acc[c.layer].push(c);
-      return acc;
-    }, {} as Record<string, MemoryCorruption[]>);
+    const byLayer = toRepair.reduce(
+      (acc, c) => {
+        if (!acc[c.layer]) acc[c.layer] = [];
+        acc[c.layer].push(c);
+        return acc;
+      },
+      {} as Record<string, MemoryCorruption[]>
+    );
 
     // Repair localStorage
     if (byLayer.localStorage) {
@@ -501,7 +520,9 @@ export class MemorySelfHealEngine {
       results.push(result);
     }
 
-    console.log(`[MemorySelfHeal] ✅ Repair complete: ${results.filter(r => r.success).length}/${results.length} successful`);
+    console.log(
+      `[MemorySelfHeal] ✅ Repair complete: ${results.filter(r => r.success).length}/${results.length} successful`
+    );
 
     return results;
   }
@@ -509,7 +530,9 @@ export class MemorySelfHealEngine {
   /**
    * Réparer localStorage
    */
-  private async repairLocalStorage(corruptions: MemoryCorruption[]): Promise<RepairResult> {
+  private async repairLocalStorage(
+    corruptions: MemoryCorruption[]
+  ): Promise<RepairResult> {
     const result: RepairResult = {
       success: false,
       layer: 'localStorage',
@@ -553,12 +576,13 @@ export class MemorySelfHealEngine {
             }
             break;
 
-          case 'quota-exceeded':
+          case 'quota-exceeded': {
             // Nettoyer anciennes données
             const cleaned = await this.cleanupOldData();
             result.actionsPerformed.push(`Cleaned ${cleaned} old entries to free quota`);
             result.corruptionsFixed++;
             break;
+          }
 
           default:
             result.actionsPerformed.push(`Unknown corruption type: ${corruption.type}`);
@@ -598,8 +622,8 @@ export class MemorySelfHealEngine {
             const history = chatMemoryCompactor.loadForMode(modeKey as ChatMode);
 
             // Filter invalid messages
-            const validMessages = history.filter(msg =>
-              msg.role && msg.content && msg.timestamp
+            const validMessages = history.filter(
+              msg => msg.role && msg.content && msg.timestamp
             );
 
             if (validMessages.length < history.length) {
@@ -621,7 +645,8 @@ export class MemorySelfHealEngine {
         }
       }
 
-      result.success = result.corruptionsFixed > 0 || corruptions.every(c => !c.autoFixable);
+      result.success =
+        result.corruptionsFixed > 0 || corruptions.every(c => !c.autoFixable);
     } catch (error) {
       result.actionsPerformed.push(`Compactor repair failed: ${error}`);
     }
@@ -632,7 +657,7 @@ export class MemorySelfHealEngine {
   /**
    * Réparer backend (limité sans Rust)
    */
-  private async repairBackend(corruptions: MemoryCorruption[]): Promise<RepairResult> {
+  private async repairBackend(_corruptions: MemoryCorruption[]): Promise<RepairResult> {
     const result: RepairResult = {
       success: true, // Non-blocking
       layer: 'backend',
@@ -644,7 +669,9 @@ export class MemorySelfHealEngine {
 
     // Backend repair nécessite appel Tauri command (hors scope ici)
     // Pour l'instant, juste logger
-    console.warn('[MemorySelfHeal] Backend corruptions detected but cannot auto-repair from frontend');
+    console.warn(
+      '[MemorySelfHeal] Backend corruptions detected but cannot auto-repair from frontend'
+    );
 
     return result;
   }
@@ -733,28 +760,39 @@ export class MemorySelfHealEngine {
   /**
    * Générer recommandations
    */
-  private generateRecommendations(corruptions: MemoryCorruption[], score: number): string[] {
+  private generateRecommendations(
+    corruptions: MemoryCorruption[],
+    score: number
+  ): string[] {
     const recommendations: string[] = [];
 
     if (score < 50) {
-      recommendations.push('URGENT: Santé mémoire critique - exécuter réparation complète');
+      recommendations.push(
+        'URGENT: Santé mémoire critique - exécuter réparation complète'
+      );
     } else if (score < 70) {
       recommendations.push('Santé mémoire dégradée - réparation recommandée');
     }
 
     const criticalCorruptions = corruptions.filter(c => c.severity === 'critical');
     if (criticalCorruptions.length > 0) {
-      recommendations.push(`${criticalCorruptions.length} corruptions critiques détectées`);
+      recommendations.push(
+        `${criticalCorruptions.length} corruptions critiques détectées`
+      );
     }
 
     const quotaIssues = corruptions.filter(c => c.type === 'quota-exceeded');
     if (quotaIssues.length > 0) {
-      recommendations.push('localStorage proche de la limite - nettoyer anciennes données');
+      recommendations.push(
+        'localStorage proche de la limite - nettoyer anciennes données'
+      );
     }
 
     const parseErrors = corruptions.filter(c => c.type === 'parse-error');
     if (parseErrors.length > 0) {
-      recommendations.push(`${parseErrors.length} clés corrompues détectées - suppression recommandée`);
+      recommendations.push(
+        `${parseErrors.length} clés corrompues détectées - suppression recommandée`
+      );
     }
 
     if (recommendations.length === 0) {
@@ -784,7 +822,9 @@ export class MemorySelfHealEngine {
 
         // Si auto-repair activé et corruptions critiques
         if (this.config.autoRepairEnabled) {
-          const critical = report.corruptions.filter(c => c.severity === 'critical' || c.severity === 'high');
+          const critical = report.corruptions.filter(
+            c => c.severity === 'critical' || c.severity === 'high'
+          );
           if (critical.length > 0) {
             console.log('[MemorySelfHeal] 🔧 Triggering auto-repair...');
             await this.repair(critical);

@@ -7,18 +7,18 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *   UNIFIED MEMORY SYSTEM — Public Exports
  * ═══════════════════════════════════════════════════════════════════════════
- * 
+ *
  * Week 1 Transformation: 5 Memory Systems → 1 UnifiedMemory
- * 
+ *
  * Consolidated systems:
  * - SemanticMemoryEngine (18,800 lines) → Vector search + embeddings
  * - MemoryEngine (8,000 lines) → Consolidation + decay + importance
  * - OmnisMemory (7,000 lines) → Backend persistence + sync
  * - MemoryModule (6,000 lines) → Context management
  * - CognitiveOptimization (3,000 lines) → Pruning + compression
- * 
+ *
  * Total: 28,000 lines → ~1,843 lines (-93.4%)
- * 
+ *
  * Target metrics:
  * - Memory consumption: -60% (500MB → 200MB)
  * - Sync latency: -67% (3s → 1s)
@@ -37,39 +37,48 @@ export {
   type UnifiedMemoryConfig,
   type IVectorStore,
   type IEmbeddingGenerator,
-  type MemorySource
+  type MemorySource,
 } from './UnifiedMemory';
 
 // Implementations
-export {
-  SQLiteVectorStore,
-  type SQLiteVectorStoreConfig
-} from './SQLiteVectorStore';
+export { SQLiteVectorStore, type SQLiteVectorStoreConfig } from './SQLiteVectorStore';
 
 export {
   LocalEmbeddingGenerator,
-  type LocalEmbeddingGeneratorConfig
+  type LocalEmbeddingGeneratorConfig,
 } from './LocalEmbeddingGenerator';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FACTORY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { UnifiedMemory } from './UnifiedMemory';
+import { UnifiedMemory, type UnifiedMemoryConfig } from './UnifiedMemory';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
 
-// Import conditionnel de SQLiteVectorStore (Node.js only)
-let SQLiteVectorStore: any = null;
-try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  SQLiteVectorStore = require('./SQLiteVectorStore').SQLiteVectorStore;
-} catch {
-  console.warn('[Unified] SQLiteVectorStore not available (browser mode)');
+type SQLiteVectorStoreCtor = typeof import('./SQLiteVectorStore').SQLiteVectorStore;
+
+let SQLiteVectorStore: SQLiteVectorStoreCtor | null = null;
+
+async function loadSQLiteVectorStore(): Promise<SQLiteVectorStoreCtor> {
+  if (SQLiteVectorStore) {
+    return SQLiteVectorStore;
+  }
+
+  try {
+    const module = await import('./SQLiteVectorStore');
+    SQLiteVectorStore = module.SQLiteVectorStore;
+    return SQLiteVectorStore;
+  } catch (error) {
+    console.warn('[Unified] SQLiteVectorStore not available (browser mode)', error);
+    throw new Error(
+      'SQLiteVectorStore not available. This feature requires Node.js environment (Tauri mode).'
+    );
+  }
 }
 
 /**
  * Create default UnifiedMemory instance with SQLite + local embeddings
- * 
+ *
  * @param config Optional configuration overrides
  * @returns Initialized UnifiedMemory instance
  */
@@ -78,16 +87,13 @@ export async function createUnifiedMemory(config?: {
   modelName?: string;
   enableCache?: boolean;
 }): Promise<UnifiedMemory> {
+  const SQLiteStore = await loadSQLiteVectorStore();
   // Vérifier si SQLite est disponible
-  if (!SQLiteVectorStore) {
-    throw new Error('SQLiteVectorStore not available. This feature requires Node.js environment (Tauri mode).');
-  }
-  
   // Create vector store
-  const vectorStore = new SQLiteVectorStore({
+  const vectorStore = new SQLiteStore({
     dbPath: config?.dbPath || './data/unified_memory.db',
     tableName: 'unified_memories',
-    dimensions: 384
+    dimensions: 384,
   });
 
   // Create embedding generator
@@ -95,7 +101,7 @@ export async function createUnifiedMemory(config?: {
     modelName: config?.modelName || 'all-MiniLM-L6-v2',
     dimensions: 384,
     enableCache: config?.enableCache ?? true,
-    maxCacheSize: 1000
+    maxCacheSize: 1000,
   });
 
   // Create UnifiedMemory
@@ -109,16 +115,16 @@ export async function createUnifiedMemory(config?: {
 
 /**
  * Create UnifiedMemory with custom implementations
- * 
+ *
  * @param vectorStore Custom vector store implementation
  * @param embeddingGenerator Custom embedding generator implementation
  * @param config Optional configuration
  * @returns Initialized UnifiedMemory instance
  */
 export async function createCustomUnifiedMemory(
-  vectorStore: InstanceType<typeof SQLiteVectorStore>,
+  vectorStore: InstanceType<SQLiteVectorStoreCtor>,
   embeddingGenerator: InstanceType<typeof LocalEmbeddingGenerator>,
-  config?: any // UnifiedMemoryConfig type not exported
+  config?: UnifiedMemoryConfig
 ): Promise<UnifiedMemory> {
   const memory = new UnifiedMemory(vectorStore, embeddingGenerator, config);
   await memory.initialize();

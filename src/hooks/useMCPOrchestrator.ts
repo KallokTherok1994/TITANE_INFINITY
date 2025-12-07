@@ -16,11 +16,11 @@ import type {
   MCPState,
   Job,
   JobType,
-  SystemHealthCheck,
+  SystemHealthCheck as _SystemHealthCheck,
   MemoryTier,
   MemoryEntry,
-  AISelection,
-  ValidatedOutput
+  AISelection as _AISelection,
+  ValidatedOutput as _ValidatedOutput,
 } from '@/services/mcp/mcp.types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -39,9 +39,12 @@ export function useMCPOrchestrator() {
   }, []);
 
   // Job Management
-  const createJob = useCallback(async (query: string, type: JobType, context?: Record<string, unknown>) => {
-    return MCPOrchestrator.createJob({ query, context }, type);
-  }, []);
+  const createJob = useCallback(
+    async (query: string, type: JobType, context?: Record<string, unknown>) => {
+      return MCPOrchestrator.createJob({ query, context }, type);
+    },
+    []
+  );
 
   const evaluateJob = useCallback(async (job: Job) => {
     return MCPOrchestrator.evaluateJob(job);
@@ -152,7 +155,7 @@ export function useMCPOrchestrator() {
     correctDrift,
     autoImprove,
     startEvolutionCycle,
-    stopEvolutionCycle
+    stopEvolutionCycle,
   };
 }
 
@@ -182,7 +185,7 @@ export function useMCPHealth() {
     refresh,
     isHealthy: health.globalStatus === 'HEALTHY',
     isDegraded: health.globalStatus === 'DEGRADED',
-    isCritical: health.globalStatus === 'CRITICAL'
+    isCritical: health.globalStatus === 'CRITICAL',
   };
 }
 
@@ -209,9 +212,13 @@ export function useMCPJobQueue() {
     running: jobs.running,
     completed: jobs.completed,
     suspended: jobs.suspended,
-    totalJobs: jobs.pending.length + jobs.running.length + jobs.completed.length + jobs.suspended.length,
+    totalJobs:
+      jobs.pending.length +
+      jobs.running.length +
+      jobs.completed.length +
+      jobs.suspended.length,
     queueJob,
-    cancelJob
+    cancelJob,
   };
 }
 
@@ -239,7 +246,7 @@ export function useMCPMemory() {
     isPurifying,
     storeMemory,
     retrieveMemory,
-    runPurification
+    runPurification,
   };
 }
 
@@ -271,7 +278,7 @@ export function useMCPGovernance() {
     lastAudit: governance.lastAudit,
     isHealing,
     runSelfHeal,
-    autoImprove
+    autoImprove,
   };
 }
 
@@ -312,7 +319,7 @@ export function useMCPEvolution() {
     driftsCorrected: evolution.driftsCorrected,
     lastCycle: evolution.lastCycle,
     start,
-    stop
+    stop,
   };
 }
 

@@ -67,7 +67,11 @@ export interface UseTTSReturn {
  * Hook for TTS control with emotional adaptation
  */
 export function useTTS(options: UseTTSOptions = {}): UseTTSReturn {
-  const { autoSpeak = false, defaultEmotion = 'neutral', emotionalAdaptation = true } = options;
+  const {
+    autoSpeak: _autoSpeak = false,
+    defaultEmotion = 'neutral',
+    emotionalAdaptation = true,
+  } = options;
 
   const [state, setState] = useState<TTSState>(createInitialTTSState);
   const [preferences, setPreferencesState] = useState<TTSPreferences | null>(null);
@@ -87,13 +91,13 @@ export function useTTS(options: UseTTSOptions = {}): UseTTSReturn {
     // Load preferences on mount
     setPreferencesState(engine.getPreferences());
 
-    const unsubscribeState = engine.onStateChange((newState) => {
+    const unsubscribeState = engine.onStateChange(newState => {
       if (mountedRef.current) {
         setState(newState);
       }
     });
 
-    const unsubscribeError = engine.onError((error) => {
+    const unsubscribeError = engine.onError(error => {
       if (mountedRef.current) {
         console.error('🔴 TTS Error:', error);
       }
@@ -115,16 +119,19 @@ export function useTTS(options: UseTTSOptions = {}): UseTTSReturn {
   // ACTIONS
   // ===========================================================================
 
-  const speak = useCallback(async (text: string, emotion?: TTSEmotion): Promise<void> => {
-    const engine = engineRef.current;
-    if (!engine) return;
+  const speak = useCallback(
+    async (text: string, emotion?: TTSEmotion): Promise<void> => {
+      const engine = engineRef.current;
+      if (!engine) return;
 
-    // Detect emotion if auto and not provided
-    const finalEmotion = emotion ??
-      (emotionalAdaptation ? detectEmotion(text) : defaultEmotion);
+      // Detect emotion if auto and not provided
+      const finalEmotion =
+        emotion ?? (emotionalAdaptation ? detectEmotion(text) : defaultEmotion);
 
-    await engine.speak(text, { emotion: finalEmotion });
-  }, [emotionalAdaptation, defaultEmotion]);
+      await engine.speak(text, { emotion: finalEmotion });
+    },
+    [emotionalAdaptation, defaultEmotion]
+  );
 
   const stop = useCallback(async (): Promise<void> => {
     if (!engineRef.current) return;
@@ -145,17 +152,17 @@ export function useTTS(options: UseTTSOptions = {}): UseTTSReturn {
 
   const setVolume = useCallback((volume: number): void => {
     engineRef.current?.setVolume(volume);
-    setPreferencesState(prev => prev ? { ...prev, globalVolume: volume } : prev);
+    setPreferencesState(prev => (prev ? { ...prev, globalVolume: volume } : prev));
   }, []);
 
   const setSpeed = useCallback((speed: number): void => {
     engineRef.current?.setSpeed(speed);
-    setPreferencesState(prev => prev ? { ...prev, globalSpeed: speed } : prev);
+    setPreferencesState(prev => (prev ? { ...prev, globalSpeed: speed } : prev));
   }, []);
 
   const setPreferences = useCallback((prefs: Partial<TTSPreferences>): void => {
     engineRef.current?.setPreferences(prefs);
-    setPreferencesState(prev => prev ? { ...prev, ...prefs } : prev);
+    setPreferencesState(prev => (prev ? { ...prev, ...prefs } : prev));
   }, []);
 
   // ===========================================================================
@@ -175,9 +182,7 @@ export function useTTS(options: UseTTSOptions = {}): UseTTSReturn {
   // COMPUTED
   // ===========================================================================
 
-  const isAvailable = Object.values(state.providerStatus).some(
-    s => s === 'available'
-  );
+  const isAvailable = Object.values(state.providerStatus).some(s => s === 'available');
 
   // ===========================================================================
   // RETURN
@@ -233,11 +238,7 @@ export interface TTSProviderProps {
 export function TTSProvider({ children, options }: TTSProviderProps): JSX.Element {
   const tts = useTTS(options);
 
-  return (
-    <TTSContext.Provider value={tts}>
-      {children}
-    </TTSContext.Provider>
-  );
+  return <TTSContext.Provider value={tts}>{children}</TTSContext.Provider>;
 }
 
 /**

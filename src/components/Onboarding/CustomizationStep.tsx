@@ -18,23 +18,35 @@ interface ThemeOptionProps {
   onClick: () => void;
 }
 
-const ThemeOption: React.FC<ThemeOptionProps> = ({ value, label, icon, selected, onClick }) => (
-  <motion.div
-    className={`theme-option ${selected ? 'selected' : ''}`}
-    onClick={onClick}
-    whileHover={{ scale: 1.05 }}
-    whileTap={{ scale: 0.95 }}
-  >
-    <div className="theme-option-icon">{icon}</div>
-    <div className="theme-option-label">{label}</div>
-    {selected && <div className="theme-option-check">✓</div>}
-  </motion.div>
-);
+const ThemeOption: React.FC<ThemeOptionProps> = ({
+  value,
+  label,
+  icon,
+  selected,
+  onClick,
+}) => {
+  void value;
+  return (
+    <motion.div
+      className={`theme-option ${selected ? 'selected' : ''}`}
+      onClick={onClick}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <div className="theme-option-icon">{icon}</div>
+      <div className="theme-option-label">{label}</div>
+      {selected && <div className="theme-option-check">✓</div>}
+    </motion.div>
+  );
+};
 
 /**
  * CustomizationStep - Quatrième step : personnalisation
  */
-export const CustomizationStep: React.FC<CustomizationStepProps> = ({ preferences, onChange }) => {
+export const CustomizationStep: React.FC<CustomizationStepProps> = ({
+  preferences,
+  onChange,
+}) => {
   return (
     <div className="customization-step">
       <motion.h2
@@ -91,7 +103,7 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({ preference
           id="language-select"
           className="preference-select"
           value={preferences.language}
-          onChange={(e) =>
+          onChange={e =>
             onChange({ ...preferences, language: e.target.value as 'fr' | 'en' })
           }
         >
@@ -102,15 +114,12 @@ export const CustomizationStep: React.FC<CustomizationStepProps> = ({ preference
 
       {/* Analytics opt-in */}
       <div className="preference-section">
-        <motion.label
-          className="preference-checkbox-label"
-          whileHover={{ x: 5 }}
-        >
+        <motion.label className="preference-checkbox-label" whileHover={{ x: 5 }}>
           <input
             type="checkbox"
             className="preference-checkbox"
             checked={preferences.enableAnalytics}
-            onChange={(e) =>
+            onChange={e =>
               onChange({ ...preferences, enableAnalytics: e.target.checked })
             }
           />

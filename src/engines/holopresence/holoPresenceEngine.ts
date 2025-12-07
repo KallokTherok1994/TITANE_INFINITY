@@ -14,7 +14,6 @@
  * en forme visuelle animée en temps réel.
  */
 
-import { unifiedIdentityKernel } from '../identity/unifiedIdentityKernel';
 import { expressionEngine, type UnifiedExpression } from '../expression/expressionEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -25,46 +24,46 @@ import { expressionEngine, type UnifiedExpression } from '../expression/expressi
  * Forme holographique
  */
 export type HoloShape =
-  | 'sphere'        // Sphère (empathie, écoute)
-  | 'torus'         // Tore (flux, cycle)
-  | 'helix'         // Hélice (évolution, dynamique)
-  | 'crystal'       // Crystal (clarté, précision)
-  | 'nebula'        // Nébuleuse (créativité, vision)
-  | 'mandala'       // Mandala (profondeur, complexité)
-  | 'wave';         // Onde (fluidité, adaptation)
+  | 'sphere' // Sphère (empathie, écoute)
+  | 'torus' // Tore (flux, cycle)
+  | 'helix' // Hélice (évolution, dynamique)
+  | 'crystal' // Crystal (clarté, précision)
+  | 'nebula' // Nébuleuse (créativité, vision)
+  | 'mandala' // Mandala (profondeur, complexité)
+  | 'wave'; // Onde (fluidité, adaptation)
 
 /**
  * Configuration visuelle holographique
  */
 export interface HoloVisuals {
   shape: HoloShape;
-  size: number;              // 0-1 - Relative size
+  size: number; // 0-1 - Relative size
   rotation: {
-    x: number;               // Degrees/s
+    x: number; // Degrees/s
     y: number;
     z: number;
   };
   colors: {
-    primary: string;         // Hex color
+    primary: string; // Hex color
     secondary: string;
     accent: string;
     glow: string;
   };
-  opacity: number;           // 0-1
-  blur: number;              // 0-1 - Gaussian blur
-  glow: number;              // 0-1 - Glow intensity
+  opacity: number; // 0-1
+  blur: number; // 0-1 - Gaussian blur
+  glow: number; // 0-1 - Glow intensity
 }
 
 /**
  * Particules d'aura
  */
 export interface AuraParticles {
-  count: number;             // Number of particles
-  size: number;              // 0-1 - Particle size
-  speed: number;             // 0-1 - Movement speed
-  spread: number;            // 0-1 - Distribution radius
-  lifetime: number;          // Seconds
-  color: string;             // Hex color
+  count: number; // Number of particles
+  size: number; // 0-1 - Particle size
+  speed: number; // 0-1 - Movement speed
+  spread: number; // 0-1 - Distribution radius
+  lifetime: number; // Seconds
+  color: string; // Hex color
   behavior: 'orbit' | 'flow' | 'pulse' | 'scatter';
 }
 
@@ -74,22 +73,22 @@ export interface AuraParticles {
 export interface HoloAnimation {
   breathe: {
     enabled: boolean;
-    rate: number;            // Breaths per minute
-    depth: number;           // 0-1 - Intensity
+    rate: number; // Breaths per minute
+    depth: number; // 0-1 - Intensity
   };
   pulse: {
     enabled: boolean;
-    rate: number;            // Pulses per minute
-    intensity: number;       // 0-1
+    rate: number; // Pulses per minute
+    intensity: number; // 0-1
   };
   flow: {
     enabled: boolean;
-    direction: number;       // Degrees
-    speed: number;           // 0-1
+    direction: number; // Degrees
+    speed: number; // 0-1
   };
   react: {
-    sensitivity: number;     // 0-1 - Reactivity to events
-    decay: number;           // Seconds to return to baseline
+    sensitivity: number; // 0-1 - Reactivity to events
+    decay: number; // Seconds to return to baseline
   };
 }
 
@@ -102,9 +101,9 @@ export interface HoloPresenceState {
   animation: HoloAnimation;
 
   // Reactive state
-  currentIntensity: number;  // 0-1 - Current visual intensity
+  currentIntensity: number; // 0-1 - Current visual intensity
   focusPoint: { x: number; y: number };
-  energyLevel: number;       // 0-1 - Energy visualization
+  energyLevel: number; // 0-1 - Energy visualization
 
   // Source data
   identityExpression: UnifiedExpression | null;
@@ -119,9 +118,9 @@ export interface HoloPresenceState {
  */
 export interface HoloEvent {
   type: 'pulse' | 'flash' | 'ripple' | 'burst' | 'shimmer';
-  intensity: number;         // 0-1
-  duration: number;          // Milliseconds
-  color?: string;            // Optional color override
+  intensity: number; // 0-1
+  duration: number; // Milliseconds
+  color?: string; // Optional color override
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -176,7 +175,7 @@ export class HoloPresenceEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private subscribeToExpressionEngine(): void {
-    expressionEngine.subscribe((expressionState) => {
+    expressionEngine.subscribe(expressionState => {
       this.state.identityExpression = expressionState.currentExpression;
     });
   }
@@ -196,7 +195,8 @@ export class HoloPresenceEngine {
 
     // 3. Update particles (less frequent)
     this.particleCounter++;
-    if (this.particleCounter >= 2) { // Every 2 ticks = 15Hz
+    if (this.particleCounter >= 2) {
+      // Every 2 ticks = 15Hz
       this.updateParticles();
       this.particleCounter = 0;
     }
@@ -339,7 +339,7 @@ export class HoloPresenceEngine {
   private updateParticles(): void {
     if (!this.state.identityExpression) return;
 
-    const { halo, voice } = this.state.identityExpression;
+    const { halo } = this.state.identityExpression;
 
     // Particle count based on intensity and layering
     this.state.particles.count = Math.floor(
@@ -383,14 +383,8 @@ export class HoloPresenceEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private processEvents(): void {
-    const now = Date.now();
-
-    // Process and remove expired events
-    this.eventQueue = this.eventQueue.filter((event) => {
-      // Event processing would happen here
-      // For now, just basic duration check
-      return true; // Keep all for now, real implementation would track start time
-    });
+    // Process and remove expired events (placeholder implementation)
+    this.eventQueue = this.eventQueue.filter(() => true);
   }
 
   /**
@@ -520,12 +514,12 @@ export class HoloPresenceEngine {
   subscribe(callback: (state: HoloPresenceState) => void): () => void {
     this.subscribers.push(callback);
     return () => {
-      this.subscribers = this.subscribers.filter((cb) => cb !== callback);
+      this.subscribers = this.subscribers.filter(cb => cb !== callback);
     };
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach((callback) => callback(this.state));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 }
 

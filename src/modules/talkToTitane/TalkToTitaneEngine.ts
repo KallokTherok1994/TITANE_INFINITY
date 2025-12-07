@@ -15,7 +15,6 @@
  * - Session longue durée
  */
 
-import { vocalDevConsole } from '@/modules/vocalDev/VocalDevConsoleEngine';
 import { autoSaveConversationEngine } from './AutoSaveConversationEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -23,20 +22,20 @@ import { autoSaveConversationEngine } from './AutoSaveConversationEngine';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export type TalkToTitaneMode =
-  | 'continuous'    // Parle en continu tant que Kevin parle
-  | 'whispered'     // Réponses murmurées (TTS low voice)
-  | 'direct'        // Tout traduit en action Dev avec confirmation
-  | 'calibrated'    // Adapté au ton émotionnel
-  | 'focus';        // Simplifié pour recentrer
+  | 'continuous' // Parle en continu tant que Kevin parle
+  | 'whispered' // Réponses murmurées (TTS low voice)
+  | 'direct' // Tout traduit en action Dev avec confirmation
+  | 'calibrated' // Adapté au ton émotionnel
+  | 'focus'; // Simplifié pour recentrer
 
 export type TalkIntentType =
-  | 'conversation'  // Conversation naturelle
-  | 'dev'          // Débogage / Dev
-  | 'structure'    // Structuration / Organisation
-  | 'action'       // Action / Commande
-  | 'coaching'     // Coaching / Guidance
-  | 'analyze'      // Analyse interne système
-  | 'memory';      // Mémoire / Historique
+  | 'conversation' // Conversation naturelle
+  | 'dev' // Débogage / Dev
+  | 'structure' // Structuration / Organisation
+  | 'action' // Action / Commande
+  | 'coaching' // Coaching / Guidance
+  | 'analyze' // Analyse interne système
+  | 'memory'; // Mémoire / Historique
 
 export interface WakePhrase {
   phrase: string;
@@ -176,6 +175,9 @@ class TalkToTitaneEngine {
   private async startWakePhraseDetection(): Promise<void> {
     console.log('[TalkToTitane] Wake phrase detection active...');
 
+    // Dynamic import pour éviter bundling
+    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+
     // Listen to VocalDevConsole transcription
     const checkInterval = setInterval(() => {
       if (!this.state.isActive) {
@@ -253,8 +255,7 @@ class TalkToTitaneEngine {
       memory: this.calculateMemoryScore(text),
     };
 
-    const topIntent = Object.entries(intentScores)
-      .sort((a, b) => b[1] - a[1])[0];
+    const topIntent = Object.entries(intentScores).sort((a, b) => b[1] - a[1])[0];
 
     const emotionalTone = this.detectEmotionalTone(text);
     const priority = this.calculatePriority(topIntent[0] as TalkIntentType, topIntent[1]);
@@ -271,8 +272,16 @@ class TalkToTitaneEngine {
 
   private calculateConversationScore(text: string): number {
     const conversationKeywords = [
-      'je suis', 'explique', 'c\'est quoi', 'pourquoi', 'comment',
-      'dis-moi', 'parle', 'raconte', 'penses-tu', 'idée'
+      'je suis',
+      'explique',
+      "c'est quoi",
+      'pourquoi',
+      'comment',
+      'dis-moi',
+      'parle',
+      'raconte',
+      'penses-tu',
+      'idée',
     ];
     let score = 0;
     conversationKeywords.forEach(kw => {
@@ -283,8 +292,18 @@ class TalkToTitaneEngine {
 
   private calculateDevScore(text: string): number {
     const devKeywords = [
-      'bug', 'erreur', 'plante', 'corrige', 'analyse', 'module',
-      'backend', 'frontend', 'code', 'fonction', 'patch', 'debug'
+      'bug',
+      'erreur',
+      'plante',
+      'corrige',
+      'analyse',
+      'module',
+      'backend',
+      'frontend',
+      'code',
+      'fonction',
+      'patch',
+      'debug',
     ];
     let score = 0;
     devKeywords.forEach(kw => {
@@ -295,8 +314,15 @@ class TalkToTitaneEngine {
 
   private calculateStructureScore(text: string): number {
     const structureKeywords = [
-      'organise', 'structure', 'clarifier', 'plan', 'checklist',
-      'aide-moi à', 'ordonne', 'arrange', 'classe'
+      'organise',
+      'structure',
+      'clarifier',
+      'plan',
+      'checklist',
+      'aide-moi à',
+      'ordonne',
+      'arrange',
+      'classe',
     ];
     let score = 0;
     structureKeywords.forEach(kw => {
@@ -307,8 +333,16 @@ class TalkToTitaneEngine {
 
   private calculateActionScore(text: string): number {
     const actionKeywords = [
-      'ouvre', 'active', 'change', 'lance', 'exécute', 'commande',
-      'sudo', 'fait', 'démarre', 'arrête'
+      'ouvre',
+      'active',
+      'change',
+      'lance',
+      'exécute',
+      'commande',
+      'sudo',
+      'fait',
+      'démarre',
+      'arrête',
     ];
     let score = 0;
     actionKeywords.forEach(kw => {
@@ -319,8 +353,15 @@ class TalkToTitaneEngine {
 
   private calculateCoachingScore(text: string): number {
     const coachingKeywords = [
-      'fatigué', 'dispersé', 'rassure', 'aide', 'guidance',
-      'perdu', 'motivé', 'conseil', 'soutien'
+      'fatigué',
+      'dispersé',
+      'rassure',
+      'aide',
+      'guidance',
+      'perdu',
+      'motivé',
+      'conseil',
+      'soutien',
     ];
     let score = 0;
     coachingKeywords.forEach(kw => {
@@ -331,8 +372,13 @@ class TalkToTitaneEngine {
 
   private calculateAnalyzeScore(text: string): number {
     const analyzeKeywords = [
-      'vérifie', 'analyse interne', 'cohérence', 'synchronise',
-      'singularity', 'état système', 'moteur'
+      'vérifie',
+      'analyse interne',
+      'cohérence',
+      'synchronise',
+      'singularity',
+      'état système',
+      'moteur',
     ];
     let score = 0;
     analyzeKeywords.forEach(kw => {
@@ -343,8 +389,15 @@ class TalkToTitaneEngine {
 
   private calculateMemoryScore(text: string): number {
     const memoryKeywords = [
-      'rappelle', 'souviens', 'hier', 'dernier', 'historique',
-      'avant', 'précédent', 'mémoire', 'passé'
+      'rappelle',
+      'souviens',
+      'hier',
+      'dernier',
+      'historique',
+      'avant',
+      'précédent',
+      'mémoire',
+      'passé',
     ];
     let score = 0;
     memoryKeywords.forEach(kw => {
@@ -357,7 +410,9 @@ class TalkToTitaneEngine {
   // EMOTIONAL TONE DETECTION
   // ───────────────────────────────────────────────────────────────────────────
 
-  private detectEmotionalTone(text: string): 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral' {
+  private detectEmotionalTone(
+    text: string
+  ): 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral' {
     const lowerText = text.toLowerCase();
 
     // Analytical
@@ -383,7 +438,10 @@ class TalkToTitaneEngine {
     return 'neutral';
   }
 
-  private calculatePriority(intentType: TalkIntentType, confidence: number): 'low' | 'medium' | 'high' | 'urgent' {
+  private calculatePriority(
+    intentType: TalkIntentType,
+    confidence: number
+  ): 'low' | 'medium' | 'high' | 'urgent' {
     // Dev bugs = urgent
     if (intentType === 'dev' && confidence > 0.8) return 'urgent';
 
@@ -400,10 +458,22 @@ class TalkToTitaneEngine {
 
   private extractKeywords(text: string): string[] {
     const words = text.toLowerCase().split(/\s+/);
-    const stopWords = ['le', 'la', 'les', 'un', 'une', 'de', 'du', 'des', 'et', 'ou', 'je', 'tu', 'il'];
-    return words
-      .filter(w => w.length > 3 && !stopWords.includes(w))
-      .slice(0, 5);
+    const stopWords = [
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'de',
+      'du',
+      'des',
+      'et',
+      'ou',
+      'je',
+      'tu',
+      'il',
+    ];
+    return words.filter(w => w.length > 3 && !stopWords.includes(w)).slice(0, 5);
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -537,11 +607,11 @@ class TalkToTitaneEngine {
     if (this.state.currentMode === 'focus') return 'Focus:';
 
     const prefixes = {
-      conversation: 'D\'accord.',
+      conversation: "D'accord.",
       dev: 'Analyse en cours.',
       structure: 'Organisons.',
       action: 'Exécution.',
-      coaching: 'Je t\'écoute.',
+      coaching: "Je t'écoute.",
       analyze: 'Vérification système.',
       memory: 'Consultation mémoire.',
     };
@@ -627,7 +697,9 @@ class TalkToTitaneEngine {
     this.notifyListeners();
   }
 
-  setEmotionalCalibration(tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'): void {
+  setEmotionalCalibration(
+    tone: 'analytical' | 'calm' | 'energizing' | 'motivating' | 'neutral'
+  ): void {
     this.state.emotionalCalibration = tone;
     console.log(`[TalkToTitane] Emotional calibration: ${tone}`);
     this.notifyListeners();

@@ -43,6 +43,8 @@ export default defineConfig({
     // En mode dev browser, on peut inclure @tauri-apps/api
     // En mode Tauri, il sera automatiquement géré
     include: ['react', 'react-dom', 'react/jsx-runtime'],
+    // Exclure modules Node.js purs incompatibles browser
+    exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
     esbuildOptions: {
       target: 'esnext',
     }
@@ -73,105 +75,22 @@ export default defineConfig({
   },
 
   build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-    sourcemap: false,
-    minify: 'terser',
-    target: 'esnext',
-    chunkSizeWarningLimit: 1000, // Increased for large dashboards
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
-      },
       output: {
-        manualChunks: (id) => {
-          // Vendor libs (React ecosystem)
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'vendor-react';
-          }
-          if (id.includes('node_modules/react-router-dom')) {
-            return 'vendor-router';
-          }
-          if (id.includes('node_modules/framer-motion')) {
-            return 'vendor-motion';
-          }
-          if (id.includes('node_modules/lucide-react')) {
-            return 'vendor-icons';
-          }
-          if (id.includes('node_modules/@tauri-apps')) {
-            return 'vendor-tauri';
-          }
-
-          // Sentry & Monitoring (Phase 1)
-          if (id.includes('node_modules/@sentry/') || id.includes('node_modules/web-vitals')) {
-            return 'vendor-monitoring';
-          }
-
-          // UI Libraries (Heavy)
-          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) {
-            return 'vendor-charts';
-          }
-          if (id.includes('node_modules/@radix-ui/') || id.includes('node_modules/class-variance-authority')) {
-            return 'vendor-ui-primitives';
-          }
-
-          // State Management
-          if (id.includes('node_modules/zustand') || id.includes('node_modules/immer')) {
-            return 'vendor-state';
-          }
-
-          // AI/ML Libraries (Heavy)
-          if (id.includes('node_modules/onnxruntime-') || id.includes('node_modules/@tensorflow/') || id.includes('node_modules/@huggingface/')) {
-            return 'vendor-ai-ml';
-          }
-
-          // Core IA agents (Heavy computational logic)
-          if (id.includes('src/core/ai/agents/')) {
-            return 'agents-core';
-          }
-
-          // Phases V-Ω dashboards (Lazy loaded)
-          if (id.includes('src/ui/pages/NodeClusterDashboard') ||
-              id.includes('src/ui/pages/KnowledgeFusionPage') ||
-              id.includes('src/ui/pages/HyperVisionDashboard')) {
-            return 'dashboards-vomega-1';
-          }
-          if (id.includes('src/ui/pages/QuantumEngineDashboard') ||
-              id.includes('src/ui/pages/EvolutionMonitor') ||
-              id.includes('src/ui/pages/CreationStudio')) {
-            return 'dashboards-vomega-2';
-          }
-
-          // Services (Business logic)
-          if (id.includes('src/services/')) {
-            return 'services';
-          }
-
-          // UI components
-          if (id.includes('src/ui/') || id.includes('src/components/')) {
-            return 'ui-components';
-          }
-
-          // Other node_modules (remaining small libs)
-          if (id.includes('node_modules')) {
-            return 'vendor-misc';
-          }
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'tauri-vendor': ['@tauri-apps/api', '@tauri-apps/plugin-shell'],
         },
       },
-      // Externaliser les modules Node.js purs (incompatibles browser)
-      external: [
-        'better-sqlite3',
-        'sqlite3',
-        'bindings',
-        'file-uri-to-path',
-        'fs',
-        'path',
-        'util',
-        'crypto',
-        'stream',
-        'os',
-      ],
     },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    chunkSizeWarningLimit: 500,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

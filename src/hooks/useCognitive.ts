@@ -11,9 +11,21 @@
  */
 
 import { useState, useEffect } from 'react';
-import { predictiveReflectionEngine, type PredictiveFrame } from '@/engines/predictive/predictiveReflectionEngine';
-import { consciousDynamicsModel, type ConsciousState, type ConsciousMode } from '@/engines/conscious/consciousDynamicsModel';
-import { internalNarrativeEngine, type InternalNarrativeState, type IntentDirection, type InnerThought } from '@/engines/narrative/internalNarrativeEngine';
+import {
+  predictiveReflectionEngine,
+  type PredictiveFrame,
+} from '@/engines/predictive/predictiveReflectionEngine';
+import {
+  consciousDynamicsModel,
+  type ConsciousState,
+  type ConsciousMode,
+} from '@/engines/conscious/consciousDynamicsModel';
+import {
+  internalNarrativeEngine,
+  type InternalNarrativeState,
+  type IntentDirection,
+  type InnerThought,
+} from '@/engines/narrative/internalNarrativeEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PREDICTIVE REFLECTION HOOKS
@@ -23,10 +35,12 @@ import { internalNarrativeEngine, type InternalNarrativeState, type IntentDirect
  * Hook principal pour l'état prédictif complet
  */
 export function usePredictive(): PredictiveFrame & {
-  applyPerceptualContext: (context: any) => void;
-  applyNervousContext: (context: any) => void;
+  applyPerceptualContext: (context: Record<string, unknown>) => void;
+  applyNervousContext: (context: Record<string, unknown>) => void;
 } {
-  const [state, setState] = useState<PredictiveFrame>(predictiveReflectionEngine.getState());
+  const [state, setState] = useState<PredictiveFrame>(
+    predictiveReflectionEngine.getState()
+  );
 
   useEffect(() => {
     const unsubscribe = predictiveReflectionEngine.subscribe(setState);
@@ -35,8 +49,12 @@ export function usePredictive(): PredictiveFrame & {
 
   return {
     ...state,
-    applyPerceptualContext: predictiveReflectionEngine.applyPerceptualContext.bind(predictiveReflectionEngine),
-    applyNervousContext: predictiveReflectionEngine.applyNervousContext.bind(predictiveReflectionEngine)
+    applyPerceptualContext: predictiveReflectionEngine.applyPerceptualContext.bind(
+      predictiveReflectionEngine
+    ),
+    applyNervousContext: predictiveReflectionEngine.applyNervousContext.bind(
+      predictiveReflectionEngine
+    ),
   };
 }
 
@@ -44,7 +62,9 @@ export function usePredictive(): PredictiveFrame & {
  * Hook pour l'intention prédite de l'utilisateur
  */
 export function usePredictedIntent() {
-  const [intent, setIntent] = useState(predictiveReflectionEngine.getState().predictedUserIntent);
+  const [intent, setIntent] = useState(
+    predictiveReflectionEngine.getState().predictedUserIntent
+  );
 
   useEffect(() => {
     const unsubscribe = predictiveReflectionEngine.subscribe(state => {
@@ -60,7 +80,9 @@ export function usePredictedIntent() {
  * Hook pour l'émotion prédite de l'utilisateur
  */
 export function usePredictedEmotion() {
-  const [emotion, setEmotion] = useState(predictiveReflectionEngine.getState().predictedUserEmotion);
+  const [emotion, setEmotion] = useState(
+    predictiveReflectionEngine.getState().predictedUserEmotion
+  );
 
   useEffect(() => {
     const unsubscribe = predictiveReflectionEngine.subscribe(state => {
@@ -92,7 +114,9 @@ export function usePredictedNeed() {
  * Hook pour les ajustements recommandés
  */
 export function useRecommendedAdjustments() {
-  const [adjustments, setAdjustments] = useState(predictiveReflectionEngine.getState().recommendedAdjustments);
+  const [adjustments, setAdjustments] = useState(
+    predictiveReflectionEngine.getState().recommendedAdjustments
+  );
 
   useEffect(() => {
     const unsubscribe = predictiveReflectionEngine.subscribe(state => {
@@ -108,7 +132,9 @@ export function useRecommendedAdjustments() {
  * Hook pour l'auto-prédiction de TITANE∞
  */
 export function useTitaneSelfPrediction() {
-  const [prediction, setPrediction] = useState(predictiveReflectionEngine.getState().titaneSelfPrediction);
+  const [prediction, setPrediction] = useState(
+    predictiveReflectionEngine.getState().titaneSelfPrediction
+  );
 
   useEffect(() => {
     const unsubscribe = predictiveReflectionEngine.subscribe(state => {
@@ -132,7 +158,7 @@ export function useConsciousDynamics(): ConsciousState & {
   boostFocus: (amount?: number) => void;
   boostClarity: (amount?: number) => void;
   pauseReflective: (duration?: number) => void;
-  applyContext: (context: any) => void;
+  applyContext: (context: Record<string, unknown>) => void;
 } {
   const [state, setState] = useState<ConsciousState>(consciousDynamicsModel.getState());
 
@@ -147,7 +173,7 @@ export function useConsciousDynamics(): ConsciousState & {
     boostFocus: consciousDynamicsModel.boostFocus.bind(consciousDynamicsModel),
     boostClarity: consciousDynamicsModel.boostClarity.bind(consciousDynamicsModel),
     pauseReflective: consciousDynamicsModel.pauseReflective.bind(consciousDynamicsModel),
-    applyContext: consciousDynamicsModel.applyContext.bind(consciousDynamicsModel)
+    applyContext: consciousDynamicsModel.applyContext.bind(consciousDynamicsModel),
   };
 }
 
@@ -166,7 +192,7 @@ export function useConsciousFocus() {
 
   return {
     focus,
-    boost: consciousDynamicsModel.boostFocus.bind(consciousDynamicsModel)
+    boost: consciousDynamicsModel.boostFocus.bind(consciousDynamicsModel),
   };
 }
 
@@ -185,7 +211,7 @@ export function useConsciousClarity() {
 
   return {
     clarity,
-    boost: consciousDynamicsModel.boostClarity.bind(consciousDynamicsModel)
+    boost: consciousDynamicsModel.boostClarity.bind(consciousDynamicsModel),
   };
 }
 
@@ -282,13 +308,15 @@ export function useConsciousRepair() {
  * Hook principal pour l'état narratif
  */
 export function useInternalNarrative(): InternalNarrativeState & {
-  generateMonologue: (context: any) => void;
+  generateMonologue: (context: Record<string, unknown>) => void;
   setNarrativeAnchor: (anchor: string) => void;
   setIntentDirection: (direction: IntentDirection) => void;
   stimulateCuriosity: (amount?: number) => void;
   clearMonologue: () => void;
 } {
-  const [state, setState] = useState<InternalNarrativeState>(internalNarrativeEngine.getState());
+  const [state, setState] = useState<InternalNarrativeState>(
+    internalNarrativeEngine.getState()
+  );
 
   useEffect(() => {
     const unsubscribe = internalNarrativeEngine.subscribe(setState);
@@ -297,11 +325,19 @@ export function useInternalNarrative(): InternalNarrativeState & {
 
   return {
     ...state,
-    generateMonologue: internalNarrativeEngine.generateInnerMonologue.bind(internalNarrativeEngine),
-    setNarrativeAnchor: internalNarrativeEngine.setNarrativeAnchor.bind(internalNarrativeEngine),
-    setIntentDirection: internalNarrativeEngine.setIntentDirection.bind(internalNarrativeEngine),
-    stimulateCuriosity: internalNarrativeEngine.stimulateCuriosity.bind(internalNarrativeEngine),
-    clearMonologue: internalNarrativeEngine.clearMonologue.bind(internalNarrativeEngine)
+    generateMonologue: internalNarrativeEngine.generateInnerMonologue.bind(
+      internalNarrativeEngine
+    ),
+    setNarrativeAnchor: internalNarrativeEngine.setNarrativeAnchor.bind(
+      internalNarrativeEngine
+    ),
+    setIntentDirection: internalNarrativeEngine.setIntentDirection.bind(
+      internalNarrativeEngine
+    ),
+    stimulateCuriosity: internalNarrativeEngine.stimulateCuriosity.bind(
+      internalNarrativeEngine
+    ),
+    clearMonologue: internalNarrativeEngine.clearMonologue.bind(internalNarrativeEngine),
   };
 }
 
@@ -309,7 +345,9 @@ export function useInternalNarrative(): InternalNarrativeState & {
  * Hook pour le monologue récent
  */
 export function useInnerMonologue(count: number = 5) {
-  const [monologue, setMonologue] = useState<InnerThought[]>(internalNarrativeEngine.getRecentMonologue(count));
+  const [monologue, setMonologue] = useState<InnerThought[]>(
+    internalNarrativeEngine.getRecentMonologue(count)
+  );
 
   useEffect(() => {
     const unsubscribe = internalNarrativeEngine.subscribe(() => {
@@ -325,7 +363,9 @@ export function useInnerMonologue(count: number = 5) {
  * Hook pour l'ancre narrative
  */
 export function useNarrativeAnchor() {
-  const [anchor, setAnchor] = useState(internalNarrativeEngine.getState().narrativeAnchor);
+  const [anchor, setAnchor] = useState(
+    internalNarrativeEngine.getState().narrativeAnchor
+  );
 
   useEffect(() => {
     const unsubscribe = internalNarrativeEngine.subscribe(state => {
@@ -345,7 +385,9 @@ export function useNarrativeAnchor() {
  * Hook pour la cohérence narrative
  */
 export function useNarrativeCoherence() {
-  const [coherence, setCoherence] = useState(internalNarrativeEngine.getState().coherenceScore);
+  const [coherence, setCoherence] = useState(
+    internalNarrativeEngine.getState().coherenceScore
+  );
 
   useEffect(() => {
     const unsubscribe = internalNarrativeEngine.subscribe(state => {
@@ -361,7 +403,9 @@ export function useNarrativeCoherence() {
  * Hook pour la curiosité cognitive
  */
 export function useNarrativeCuriosity() {
-  const [curiosity, setCuriosity] = useState(internalNarrativeEngine.getState().curiosity);
+  const [curiosity, setCuriosity] = useState(
+    internalNarrativeEngine.getState().curiosity
+  );
 
   useEffect(() => {
     const unsubscribe = internalNarrativeEngine.subscribe(state => {
@@ -381,7 +425,9 @@ export function useNarrativeCuriosity() {
  * Hook pour la pensée active
  */
 export function useActiveThought() {
-  const [thought, setThought] = useState<InnerThought | null>(internalNarrativeEngine.getActiveThought());
+  const [thought, setThought] = useState<InnerThought | null>(
+    internalNarrativeEngine.getActiveThought()
+  );
 
   useEffect(() => {
     const unsubscribe = internalNarrativeEngine.subscribe(state => {
@@ -408,6 +454,6 @@ export function useCognitiveDynamicsState() {
   return {
     predictive,
     conscious,
-    narrative
+    narrative,
   };
 }
