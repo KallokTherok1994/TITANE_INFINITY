@@ -105,7 +105,10 @@ export class EmotionalTTSRenderer {
     const cacheKey = 'ssml_support';
 
     if (useCache && this.ssmlSupportCache.has(cacheKey)) {
-      return this.ssmlSupportCache.get(cacheKey)!;
+      const cached = this.ssmlSupportCache.get(cacheKey);
+      if (cached !== undefined) {
+        return cached;
+      }
     }
 
     // Détection du support SSML

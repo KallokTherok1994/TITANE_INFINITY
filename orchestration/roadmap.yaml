@@ -3,268 +3,263 @@ metadata:
   version: 1.0.0
   total_phases: 3
   total_tasks: 18
-  estimated_duration: "3-4 weeks"
-
+  estimated_duration: 3-4 weeks
 state:
   current_phase: 0
   current_task: P0-1
-  last_updated: "2025-12-06T00:00:00Z"
-  completed_tasks: []
+  last_updated: 2025-12-07T05:07:46.091Z
+  completed_tasks:
+    - P0-1
   failed_tasks: []
-
 phase_0:
-  title: "Audit & Baseline Establishment"
-  description: "Établir état actuel et baseline"
-  estimated_duration: "3-4 days"
-  
+  title: Audit & Baseline Establishment
+  description: Établir état actuel et baseline
+  estimated_duration: 3-4 days
   tasks:
     - id: P0-1
-      title: "Analyse structure complète"
+      title: Analyse structure complète
       description: |
         Générer analyse exhaustive projet
       files:
-        - "src/"
-        - "src-tauri/"
+        - src/
+        - src-tauri/
       tests:
-        - "test -f PROJECT_STRUCTURE_ANALYZED.md"
-      estimated_time: "30min"
+        - test -f PROJECT_STRUCTURE_ANALYZED.md
+      estimated_time: 30min
       priority: critical
       dependencies: []
-      status: pending
-    
+      status: completed
     - id: P0-2
-      title: "Audit qualité complet"
+      title: Audit qualité complet
       description: |
         Audit TypeScript + Rust
       files: []
       tests:
-        - "test -f AUDIT_REPORT_COMPLETE.md"
-      estimated_time: "45min"
+        - test -f AUDIT_REPORT_COMPLETE.md
+      estimated_time: 45min
       priority: critical
-      dependencies: [P0-1]
+      dependencies:
+        - P0-1
       status: pending
-    
     - id: P0-3
-      title: "Baseline tests & metrics"
+      title: Baseline tests & metrics
       description: |
         Établir baseline performance
       files: []
       tests:
-        - "test -f BASELINE_METRICS.md"
-      estimated_time: "30min"
+        - test -f BASELINE_METRICS.md
+      estimated_time: 30min
       priority: important
-      dependencies: [P0-2]
+      dependencies:
+        - P0-2
       status: pending
-
 phase_1:
-  title: "Simplification (14→9 moteurs)"
-  description: "Consolider architecture"
-  estimated_duration: "1.5-2 weeks"
-  
+  title: Simplification (14→9 moteurs)
+  description: Consolider architecture
+  estimated_duration: 1.5-2 weeks
   tasks:
     - id: P1-1
-      title: "CoherenceEngine unifié"
+      title: CoherenceEngine unifié
       description: |
         Fusionner Nexus + moteur #2
       files:
-        - "src-tauri/src/engines/coherence_engine.rs"
+        - src-tauri/src/engines/coherence_engine.rs
       tests:
-        - "cd src-tauri && cargo test coherence_engine"
-      estimated_time: "2-3h"
+        - cd src-tauri && cargo test coherence_engine
+      estimated_time: 2-3h
       priority: critical
-      dependencies: [P0-3]
+      dependencies:
+        - P0-3
       status: pending
-    
     - id: P1-2
-      title: "UnifiedMemory (STM/MTM/LTM)"
+      title: UnifiedMemory (STM/MTM/LTM)
       description: |
         Fusionner systèmes mémoire
       files:
-        - "src-tauri/src/memory/unified_memory.rs"
+        - src-tauri/src/memory/unified_memory.rs
       tests:
-        - "cd src-tauri && cargo test unified_memory"
-      estimated_time: "3-4h"
+        - cd src-tauri && cargo test unified_memory
+      estimated_time: 3-4h
       priority: critical
-      dependencies: [P1-1]
+      dependencies:
+        - P1-1
       status: pending
-    
     - id: P1-3
-      title: "SystemHealth Engine"
+      title: SystemHealth Engine
       description: |
         Fusionner Helios + Harmonia + Sentinel
       files:
-        - "src-tauri/src/health/system_health.rs"
+        - src-tauri/src/health/system_health.rs
       tests:
-        - "cd src-tauri && cargo test system_health"
-      estimated_time: "3-4h"
+        - cd src-tauri && cargo test system_health
+      estimated_time: 3-4h
       priority: critical
-      dependencies: [P1-2]
+      dependencies:
+        - P1-2
       status: pending
-    
     - id: P1-4
-      title: "Migrer UI vers 9 moteurs"
+      title: Migrer UI vers 9 moteurs
       description: |
         Adapter composants React
       files:
-        - "src/stores/engines.ts"
-        - "src/components/DevTools/"
+        - src/stores/engines.ts
+        - src/components/DevTools/
       tests:
-        - "npm test"
-      estimated_time: "2-3h"
+        - npm test
+      estimated_time: 2-3h
       priority: critical
-      dependencies: [P1-3]
+      dependencies:
+        - P1-3
       status: pending
-    
     - id: P1-5
-      title: "Cleanup code mort"
+      title: Cleanup code mort
       description: |
         Supprimer anciens 14 composants
       files: []
       tests:
-        - "npm test"
-        - "cd src-tauri && cargo test"
-      estimated_time: "1-2h"
+        - npm test
+        - cd src-tauri && cargo test
+      estimated_time: 1-2h
       priority: important
-      dependencies: [P1-4]
+      dependencies:
+        - P1-4
       status: pending
-
 phase_2:
-  title: "Optimisation Performance"
-  description: "IPC, cache, parallélisation"
-  estimated_duration: "1 week"
-  
+  title: Optimisation Performance
+  description: IPC, cache, parallélisation
+  estimated_duration: 1 week
   tasks:
     - id: P2-1
-      title: "Optimiser IPC (< 200ms)"
+      title: Optimiser IPC (< 200ms)
       description: |
         Parallélisation + cache
       files:
-        - "src-tauri/src/ipc/mod.rs"
+        - src-tauri/src/ipc/mod.rs
       tests:
-        - "cd src-tauri && cargo bench ipc"
-      estimated_time: "3-4h"
+        - cd src-tauri && cargo bench ipc
+      estimated_time: 3-4h
       priority: critical
-      dependencies: [P1-5]
+      dependencies:
+        - P1-5
       status: pending
-    
     - id: P2-2
-      title: "Caching intelligent"
+      title: Caching intelligent
       description: |
         Cache LRU + persistent
       files:
-        - "src-tauri/src/cache/"
+        - src-tauri/src/cache/
       tests:
-        - "cd src-tauri && cargo test cache"
-      estimated_time: "2-3h"
+        - cd src-tauri && cargo test cache
+      estimated_time: 2-3h
       priority: important
-      dependencies: [P2-1]
+      dependencies:
+        - P2-1
       status: pending
-    
     - id: P2-3
-      title: "Paralléliser OMEGA Pipeline"
+      title: Paralléliser OMEGA Pipeline
       description: |
         Exécution parallèle moteurs
       files:
-        - "src-tauri/src/pipeline/omega.rs"
+        - src-tauri/src/pipeline/omega.rs
       tests:
-        - "cd src-tauri && cargo bench pipeline"
-      estimated_time: "3-4h"
+        - cd src-tauri && cargo bench pipeline
+      estimated_time: 3-4h
       priority: critical
-      dependencies: [P2-2]
+      dependencies:
+        - P2-2
       status: pending
-    
     - id: P2-4
-      title: "Optimiser mémoire UnifiedMemory"
+      title: Optimiser mémoire UnifiedMemory
       description: |
         Compression + garbage collection
       files:
-        - "src-tauri/src/memory/unified_memory.rs"
+        - src-tauri/src/memory/unified_memory.rs
       tests:
-        - "cd src-tauri && cargo test memory"
-      estimated_time: "2-3h"
+        - cd src-tauri && cargo test memory
+      estimated_time: 2-3h
       priority: important
-      dependencies: [P2-3]
+      dependencies:
+        - P2-3
       status: pending
-    
     - id: P2-5
-      title: "Profiling complet système"
+      title: Profiling complet système
       description: |
         Identifier derniers bottlenecks
       files: []
       tests:
-        - "cd src-tauri && cargo flamegraph"
-      estimated_time: "2h"
+        - cd src-tauri && cargo flamegraph
+      estimated_time: 2h
       priority: important
-      dependencies: [P2-4]
+      dependencies:
+        - P2-4
       status: pending
-
 phase_3:
-  title: "Tests & Documentation"
-  description: "Couverture tests + docs"
-  estimated_duration: "4-5 days"
-  
+  title: Tests & Documentation
+  description: Couverture tests + docs
+  estimated_duration: 4-5 days
   tasks:
     - id: P3-1
-      title: "Tests intégration 9 moteurs"
+      title: Tests intégration 9 moteurs
       description: |
         Tests end-to-end pipeline OMEGA
       files:
-        - "src-tauri/tests/integration/"
+        - src-tauri/tests/integration/
       tests:
-        - "cd src-tauri && cargo test --test integration"
-      estimated_time: "3-4h"
+        - cd src-tauri && cargo test --test integration
+      estimated_time: 3-4h
       priority: critical
-      dependencies: [P2-5]
+      dependencies:
+        - P2-5
       status: pending
-    
     - id: P3-2
-      title: "Coverage tests > 80%"
+      title: Coverage tests > 80%
       description: |
         Ajouter tests manquants
       files: []
       tests:
-        - "npm run coverage"
-        - "cd src-tauri && cargo tarpaulin"
-      estimated_time: "2-3h"
+        - npm run coverage
+        - cd src-tauri && cargo tarpaulin
+      estimated_time: 2-3h
       priority: important
-      dependencies: [P3-1]
+      dependencies:
+        - P3-1
       status: pending
-    
     - id: P3-3
-      title: "Documentation architecture"
+      title: Documentation architecture
       description: |
         Diagrammes + guides
       files:
-        - "docs/architecture/"
+        - docs/architecture/
       tests:
-        - "test -f docs/architecture/9-engines.md"
-      estimated_time: "2h"
+        - test -f docs/architecture/9-engines.md
+      estimated_time: 2h
       priority: important
-      dependencies: [P3-2]
+      dependencies:
+        - P3-2
       status: pending
-    
     - id: P3-4
-      title: "Migration guide users"
+      title: Migration guide users
       description: |
         Guide migration 14→9 moteurs
       files:
-        - "MIGRATION_GUIDE.md"
+        - MIGRATION_GUIDE.md
       tests:
-        - "test -f MIGRATION_GUIDE.md"
-      estimated_time: "1h"
+        - test -f MIGRATION_GUIDE.md
+      estimated_time: 1h
       priority: normal
-      dependencies: [P3-3]
+      dependencies:
+        - P3-3
       status: pending
-    
     - id: P3-5
-      title: "Release notes v19.6.0"
+      title: Release notes v19.6.0
       description: |
         Changelog complet refactoring
       files:
-        - "CHANGELOG.md"
+        - CHANGELOG.md
       tests:
-        - "test -f CHANGELOG.md"
-      estimated_time: "1h"
+        - test -f CHANGELOG.md
+      estimated_time: 1h
       priority: normal
-      dependencies: [P3-4]
+      dependencies:
+        - P3-4
       status: pending

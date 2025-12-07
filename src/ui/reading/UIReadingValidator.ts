@@ -148,37 +148,37 @@ export function validateSettings(settings: Partial<UIReadingSettings>): {
 
   if (settings.zoomLevel !== undefined) {
     const result = validateZoom(settings.zoomLevel);
-    if (!result.valid) errors.push(result.error!);
+    if (!result.valid && result.error) errors.push(result.error);
     sanitized.zoomLevel = (result.clampedValue ?? settings.zoomLevel) as UIScale;
   }
 
   if (settings.fontSizeBase !== undefined) {
     const result = validateFontSize(settings.fontSizeBase);
-    if (!result.valid) errors.push(result.error!);
+    if (!result.valid && result.error) errors.push(result.error);
     sanitized.fontSizeBase = result.clampedValue ?? settings.fontSizeBase;
   }
 
   if (settings.lineHeight !== undefined) {
     const result = validateLineHeight(settings.lineHeight);
-    if (!result.valid) errors.push(result.error!);
+    if (!result.valid && result.error) errors.push(result.error);
     sanitized.lineHeight = result.clampedValue ?? settings.lineHeight;
   }
 
   if (settings.letterSpacing !== undefined) {
     const result = validateLetterSpacing(settings.letterSpacing);
-    if (!result.valid) errors.push(result.error!);
+    if (!result.valid && result.error) errors.push(result.error);
     sanitized.letterSpacing = result.clampedValue ?? settings.letterSpacing;
   }
 
   if (settings.maxContentWidth !== undefined) {
     const result = validateMaxContentWidth(settings.maxContentWidth);
-    if (!result.valid) errors.push(result.error!);
+    if (!result.valid && result.error) errors.push(result.error);
     sanitized.maxContentWidth = result.clampedValue ?? settings.maxContentWidth;
   }
 
   if (settings.fontFamily !== undefined) {
     const result = validateFontFamily(settings.fontFamily);
-    if (!result.valid) errors.push(result.error!);
+    if (!result.valid && result.error) errors.push(result.error);
     else sanitized.fontFamily = settings.fontFamily;
   }
 

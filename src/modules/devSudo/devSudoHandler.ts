@@ -357,17 +357,17 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^show\s+singularity(state)?$/i,
   ],
   'self-heal': [
-    /^self[- ]heal$/i,
-    /^auto[- ]répare?$/i,
+    /^self[-s]heal$/i,
+    /^auto[-s]répare?$/i,
     /^healing\s+engine$/i,
   ],
   'deep-heal': [
-    /^deep[- ]heal$/i,
+    /^deep[-s]heal$/i,
     /^deep\s+healing$/i,
     /^réparation\s+profonde$/i,
   ],
   'auto-fix': [
-    /^auto[- ]fix$/i,
+    /^auto[-s]fix$/i,
     /^correction\s+auto(matique)?$/i,
   ],
   'scan-modules': [
@@ -383,7 +383,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^liste\s+(les\s+)?erreurs$/i,
   ],
   'health-check': [
-    /^health[- ]check$/i,
+    /^health[-s]check$/i,
     /^vérification\s+santé$/i,
   ],
   'test-module': [
@@ -435,7 +435,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^vérifie\s+(les\s+)?clés?$/i,
   ],
   'full-sync': [
-    /^full[- ]sync$/i,
+    /^full[-s]sync$/i,
     /^sync\s+complet$/i,
   ],
   'verify-architecture': [
@@ -487,7 +487,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^complète\s+(le\s+)?code$/i,
   ],
   'auto-complete': [
-    /^auto[- ]complete$/i,
+    /^auto[-s]complete$/i,
     /^complete$/i,
     /^complétion$/i,
   ],
@@ -510,7 +510,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^pourquoi\s+(.+)$/i,
   ],
   'auto-import': [
-    /^auto[- ]import$/i,
+    /^auto[-s]import$/i,
     /^fix\s+imports$/i,
     /^imports$/i,
   ],
@@ -567,7 +567,7 @@ const DEV_SUDO_PATTERNS: Record<DevSudoAction, RegExp[]> = {
     /^check\s+cognition$/i,
   ],
   'meta-repair': [
-    /^meta[- ]repair$/i,
+    /^meta[-s]repair$/i,
     /^r\u00e9paration\s+m\u00e9ta$/i,
     /^repair\s+engines?$/i,
   ],
