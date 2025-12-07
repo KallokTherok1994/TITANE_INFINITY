@@ -16,7 +16,7 @@ import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAudioStreaming } from '@/hooks/useAudioStreaming'; // ✅ v∞.8: Real audio streaming
 import { chatEngineCommands } from '@/services/tauri/chatEngine.commands';
 import { detectEnvironment } from '@/core/tauri/environment';
-import { secureInvoke } from '@/lib/security';
+import { _secureInvoke } from '@/lib/security';
 
 interface VoiceConversationProps {
   onTranscript?: (text: string) => void;
@@ -28,13 +28,13 @@ interface VoiceConversationProps {
 
 export const VoiceConversation = ({
   onTranscript,
-  onResponse,
+  _onResponse,
   className = '',
-  autoContinue = true,
+  _autoContinue = true,
 }: VoiceConversationProps) => {
   const [audioLevel, setAudioLevel] = useState(0);
   const [lastTranscript, setLastTranscript] = useState('');
-  const [lastResponse, setLastResponse] = useState('');
+  const [lastResponse, _setLastResponse] = useState('');
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -43,7 +43,7 @@ export const VoiceConversation = ({
   // ✅ v∞.8: Real-time audio streaming hook (CPAL backend)
   const {
     isStreaming,
-    stats: audioStats,
+    stats: _audioStats,
     startStreaming,
     stopStreaming,
   } = useAudioStreaming({
@@ -82,7 +82,7 @@ export const VoiceConversation = ({
   }, []);
 
   // Générer réponse IA via OMEGA
-  const generateAIResponse = useCallback(async (input: string): Promise<string> => {
+  const _generateAIResponse = useCallback(async (input: string): Promise<string> => {
     try {
       // Récupérer ou créer conversation_id
       let conversationId = localStorage.getItem('titane_voice_conversation_id');
@@ -114,7 +114,7 @@ export const VoiceConversation = ({
     startTurn,
     completeTurn, // ✅ NOUVEAU : pipeline complet IA + TTS
     cancelTurn,
-    speak,
+    _speak,
     clearError,
   } = useVoiceEngine({
     onTranscript: (text) => {

@@ -18,7 +18,7 @@ interface ThemeOptionProps {
   onClick: () => void;
 }
 
-const ThemeOption: React.FC<ThemeOptionProps> = ({ value, label, icon, selected, onClick }) => (
+const ThemeOption: React.FC<ThemeOptionProps> = ({ _value, label, icon, selected, onClick }) => (
   <motion.div
     className={`theme-option ${selected ? 'selected' : ''}`}
     onClick={onClick}

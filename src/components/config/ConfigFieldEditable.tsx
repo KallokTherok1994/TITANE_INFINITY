@@ -34,7 +34,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
   validationError,
 }) => {
   const [localValue, setLocalValue] = useState(value);
-  const [isEditing, setIsEditing] = useState(false);
+  const [_isEditing, _setIsEditing] = useState(false);
 
   // Sync local value when parent value changes
   useEffect(() => {

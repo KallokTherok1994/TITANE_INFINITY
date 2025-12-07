@@ -12,7 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useRef, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useCallback, _useMemo } from 'react';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
@@ -21,7 +21,7 @@ import './MessageList.css';
 const isDev = process.env.NODE_ENV === 'development';
 
 // Seuil pour optimisations avancées (messages)
-const OPTIMIZATION_THRESHOLD = 50;
+const _OPTIMIZATION_THRESHOLD = 50;
 
 interface MessageListProps {
   messages: AIMessage[];

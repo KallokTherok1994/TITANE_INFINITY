@@ -106,7 +106,7 @@ import { DeepPsychePanel } from './components/psyche/DeepPsychePanel';
 import { archetypeResonanceEngine } from './engines/psyche/archetypeResonanceEngine';
 import { metaContinuumEngine } from './engines/continuum/metaContinuumEngine';
 import { embodiedPresenceEngine } from './engines/embodiment/embodiedPresenceEngine';
-import { neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
+import { _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
 import { PresenceOSPanel } from './components/presence/PresenceOSPanel';
@@ -134,9 +134,9 @@ import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
 import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
 
 // Phase 9: Lazy load heavy pages (code splitting with named exports)
-const DesignSystemPage = lazy(() => import('./pages/DesignSystemPage').then(m => ({ default: m.DesignSystemPage })));
+const _DesignSystemPage = lazy(() => import('./pages/_DesignSystemPage').then(m => ({ default: m._DesignSystemPage })));
 const PerformanceTest = lazy(() => import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest })));
-const TimeNavigator = lazy(() => import('./pages/TimeNavigator').then(m => ({ default: m.TimeNavigator })));
+const _TimeNavigator = lazy(() => import('./pages/_TimeNavigator').then(m => ({ default: m._TimeNavigator })));
 const MultiAIDashboard = lazy(() => import('./ui/pages/MultiAIDashboard'));
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
@@ -206,7 +206,7 @@ import {
   SelfHeal,
   AdaptiveEngine,
   Memory,
-  AgendaPage,
+  _AgendaPage,
   CameraPage,
 } from './pages';
 

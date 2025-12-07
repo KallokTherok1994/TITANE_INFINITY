@@ -156,7 +156,7 @@ export function CognitiveVisualizer() {
 function SignalGauge({
   label,
   value,
-  color,
+  _color,
   icon,
   inverted = false,
 }: {
@@ -206,7 +206,7 @@ function SignalGauge({
  * Mini graphique historique
  */
 function MiniChart({ data }: { data: Array<{ timestamp: number; energy: number; focus: number; load: number }> }) {
-  const maxValue = 1;
+  const _maxValue = 1;
   const height = 100;
   const width = 400;
   const points = data.length;

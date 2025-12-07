@@ -60,8 +60,8 @@ type TabType = 'overview' | 'frames' | 'cache' | 'gpu' | 'stability' | 'rules' |
 const QuantumCenterContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('overview');
   const [loading, setLoading] = useState(true);
-  const { matrix, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const { _matrix, loading: matrixLoading } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
   const [metrics, setMetrics] = useState<QuantumMetrics>({
     fps: 120,
     frameTime: 8.33,
