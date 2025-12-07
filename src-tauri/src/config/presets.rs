@@ -9,9 +9,8 @@
  */
 
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
 use std::fs;
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 
 use super::ConfigSnapshot;
 
