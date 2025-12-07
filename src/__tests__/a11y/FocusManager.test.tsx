@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useFocusTrap } from '@/a11y/FocusManager';
+import { useFocusTrap } from '@/a11y';
 
 describe('useFocusTrap', () => {
   it('devrait piéger le focus dans le container', () => {

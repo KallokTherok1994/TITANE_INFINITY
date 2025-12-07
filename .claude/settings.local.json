@@ -15,7 +15,10 @@
       "Bash(grep:*)",
       "Bash(wc:*)",
       "Bash(done)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(cat:*)",
+      "Bash(npm run check:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []
