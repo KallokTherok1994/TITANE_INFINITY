@@ -121,7 +121,9 @@ impl StorageEngine {
     
     fn encrypt_data(&self, data: &[u8]) -> Result<Vec<u8>> {
         // Génération d'une clé à partir d'un master password (devrait être fourni par l'utilisateur)
-        let password = b"titane_infinity_master_key_v13"; // TODO: Utiliser une vraie clé utilisateur
+        // TODO: Use SecureSecretsEngine
+        // // TODO: Use SecureSecretsEngine
+        // let password = b"titane_infinity_master_key_v13"; // TODO: Utiliser une vraie clé utilisateur
         let salt = SaltString::generate(&mut OsRng);
         
         let argon2 = Argon2::default();
@@ -145,7 +147,9 @@ impl StorageEngine {
     }
     
     fn decrypt_data(&self, encrypted_data: &[u8]) -> Result<Vec<u8>> {
-        let password = b"titane_infinity_master_key_v13";
+        // TODO: Use SecureSecretsEngine
+        // // TODO: Use SecureSecretsEngine
+        // let password = b"titane_infinity_master_key_v13";
         let salt = SaltString::generate(&mut OsRng);
         
         let argon2 = Argon2::default();

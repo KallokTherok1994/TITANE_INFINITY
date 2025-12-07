@@ -1,0 +1,13 @@
+# ═══════════════════════════════════════════════════════════════
+# TITANE∞ RUST STRICT MODE CONFIGURATION v∞
+# Transforme tous les warnings en erreurs de compilation
+# ═══════════════════════════════════════════════════════════════
+
+[target.'cfg(all())']
+rustflags = ["-Dwarnings"]
+
+# Alternative: Configuration au niveau workspace
+# À ajouter dans Cargo.toml:
+# [workspace.lints.rust]
+# warnings = "deny"
+

@@ -15,7 +15,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
-use crate::error::TitaneError;
+use titane_infinity::error::TitaneError;
 
 const SECURITY_FILE: &str = "security_vault.enc";
 const NONCE_SIZE: usize = 12;

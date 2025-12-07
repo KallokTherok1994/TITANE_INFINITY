@@ -91,9 +91,8 @@ pub async fn memory_store(
             crate::security::AuditEventType::RateLimitExceeded,
             user_id.clone(),
             serde_json::json!({ "entry_type": metadata.entry_type, "content_length": content.len() }),
-            crate::security::AuditSeverity::Warning,
-        )
-        .with_module("memory_engine");
+            crate::security::AuditSeverity::Warning.into(),
+        );
         let _ = crate::security::audit::GLOBAL_AUDIT_LOGGER.log(event).await;
         return Err(TAPIError::security(format!("Memory store rate limit: {}", e)));
     }

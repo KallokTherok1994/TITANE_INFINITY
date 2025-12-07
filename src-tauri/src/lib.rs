@@ -235,3 +235,4 @@ pub mod services;
 
 pub use core::{EngineHealth, EngineMetrics, SingularityEngine, SingularityState};
 pub use utils::{AppError, AppResult};
+pub mod error_handling;

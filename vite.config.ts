@@ -24,8 +24,8 @@ export default defineConfig({
       // Optimisation React Fast Refresh
       babel: {
         compact: true,
-        plugins: []
-      }
+        plugins: [],
+      },
     }),
     tsconfigPaths(), // Auto-sync avec tsconfig.json paths
     visualizer({
@@ -47,7 +47,7 @@ export default defineConfig({
     exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
     esbuildOptions: {
       target: 'esnext',
-    }
+    },
   },
 
   resolve: {
@@ -67,10 +67,16 @@ export default defineConfig({
       '@assets': resolve(__dirname, './src/assets'),
       '@styles': resolve(__dirname, './src/styles'),
       // Fix Tauri v2 API imports resolution
-      '@tauri-apps/api/core': resolve(__dirname, './node_modules/@tauri-apps/api/core.js'),
-      '@tauri-apps/api/event': resolve(__dirname, './node_modules/@tauri-apps/api/event.js'),
+      '@tauri-apps/api/core': resolve(
+        __dirname,
+        './node_modules/@tauri-apps/api/core.js'
+      ),
+      '@tauri-apps/api/event': resolve(
+        __dirname,
+        './node_modules/@tauri-apps/api/event.js'
+      ),
       // Polyfills for Node.js modules in browser
-      'events': 'eventemitter3',
+      events: 'eventemitter3',
     },
   },
 
@@ -78,8 +84,20 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
+          // Core React ecosystem
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          // Tauri desktop integration
           'tauri-vendor': ['@tauri-apps/api', '@tauri-apps/plugin-shell'],
+          // Animation library (large)
+          motion: ['framer-motion'],
+          // Internationalization
+          i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          // Schema validation
+          validation: ['zod'],
+          // State management
+          state: ['zustand'],
+          // Utilities
+          utils: ['clsx', 'date-fns', 'dompurify'],
         },
       },
     },
@@ -97,13 +115,13 @@ export default defineConfig({
   // 🌐 NETWORK DEPLOYMENT - HOST MODE (OPTIMIZED FOR CPU)
   // ═══════════════════════════════════════════════════════════════════════════
   server: {
-    host: 'localhost',         // Only localhost (reduces network scanning CPU)
-    port: 5173,                // Default port
-    strictPort: true,          // Fail if port is in use
-    cors: true,                // Enable CORS for API calls
+    host: 'localhost', // Only localhost (reduces network scanning CPU)
+    port: 5173, // Default port
+    strictPort: true, // Fail if port is in use
+    cors: true, // Enable CORS for API calls
     hmr: {
-      host: 'localhost',       // HMR local only
-      overlay: true,           // Show errors in overlay
+      host: 'localhost', // HMR local only
+      overlay: true, // Show errors in overlay
     },
     watch: {
       // Optimisation watchers pour réduire CPU
@@ -117,13 +135,13 @@ export default defineConfig({
         '**/coverage/**',
         '**/docs/**',
       ],
-      usePolling: false,       // Disable polling (use native FS events)
+      usePolling: false, // Disable polling (use native FS events)
     },
   },
 
   preview: {
-    host: 'localhost',         // Preview server local only
-    port: 4173,                // Preview port
+    host: 'localhost', // Preview server local only
+    port: 4173, // Preview port
     strictPort: true,
     cors: true,
   },

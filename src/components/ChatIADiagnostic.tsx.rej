@@ -1,0 +1,13 @@
+--- src/components/ChatIADiagnostic.tsx
++++ src/components/ChatIADiagnostic.tsx
+@@ -178,8 +178,8 @@
+ 
+       {results.length > 0 && !running && (
+         <div style={styles['summary']}>
+-          <h3 style={styles['summary']Title}>📊 Résumé</h3>
+-          <div style={styles['summary']Stats}>
++          <h3 style={styles['summaryTitle']}>📊 Résumé</h3>
++          <div style={styles['summaryStats']}>
+             <div>
+               ✅ Réussis:{' '}
+               {results.filter((r) => r.status === 'success').length}

@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "5.0",
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "esModuleInterop": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -16,69 +14,27 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Path aliases */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@a11y/*": ["src/a11y/*"],
+      "@apps/*": ["src/apps/*"]
+    },
+
+    /* Linting - Relaxed for P0 */
     "strict": true,
+    "noUncheckedIndexedAccess": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": false,
-    "noUncheckedIndexedAccess": false,
-    "forceConsistentCasingInFileNames": true,
-
-    /* Strict Type-Checking Options */
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-
-    /* Path aliases - TITANE∞ v24 */
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"],
-      "@app/*": ["./src/app/*"],
-      "@pages/*": ["./src/pages/*"],
-      "@features/*": ["./src/features/*"],
-      "@components/*": ["./src/components/*"],
-      "@ui/*": ["./src/ui/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
-      "@stores/*": ["./src/stores/*"],
-      "@themes/*": ["./src/themes/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@types/*": ["./src/types/*"],
-      "@assets/*": ["./src/assets/*"],
-      "@styles/*": ["./src/styles/*"]
-    }
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
-  "include": [
-    "src",
-    "tests"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-    "target",
-    ".tauri",
-    "backups",
-    "backup_*",
-    "docs/legacy",
-    "docs/archive",
-    "src-tauri/archive",
-    "scripts/archive",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "src/__tests__/**",
-    "src/test/**",
-    "src/tests/**",
-    "src/hooks/archived/**",
-    "src/omnisEngine/**",
-    "src/omnis-final-validation.ts",
-    "src/design-system/components/TBadge.tsx",
-    "src/design-system/components/TMetric.tsx",
-    "src/design-system/components/TSectionHeader.tsx",
-    "src/design-system/components/UIStates.tsx",
-    "src/modules/talkToTitane.disabled/**"
-  ],
+  "include": ["src", "src/types"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

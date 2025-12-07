@@ -19,22 +19,22 @@
 
 :root {
   /* ═══ Palette Principale (Métal Brossé) ═══ */
-  --primary: #727b81;          /* Gris métal principal */
-  --secondary: #c4c4c4;        /* Argent brossé */
-  --accent: #93b399;           /* Vert-gris métallique (subtil) */
-  --background: #0f0f0f;       /* Noir profond */
-  --surface: #161616;          /* Surface élevée */
-  --text: #e8e8e8;             /* Texte principal (AAA contrast) */
-  --text-muted: #9ca3af;       /* Texte secondaire */
-  --border: #3a3a3a;           /* Bordures */
-  --hover: #aaaaaa33;          /* Hover (20% opacity) */
-  --active: #c4c4c455;         /* Active (33% opacity) */
+  --primary: #727b81; /* Gris métal principal */
+  --secondary: #c4c4c4; /* Argent brossé */
+  --accent: #93b399; /* Vert-gris métallique (subtil) */
+  --background: #0f0f0f; /* Noir profond */
+  --surface: #161616; /* Surface élevée */
+  --text: #e8e8e8; /* Texte principal (AAA contrast) */
+  --text-muted: #9ca3af; /* Texte secondaire */
+  --border: #3a3a3a; /* Bordures */
+  --hover: #aaaaaa33; /* Hover (20% opacity) */
+  --active: #c4c4c455; /* Active (33% opacity) */
 
   /* ═══ États Sémantiques (Monochromes) ═══ */
-  --success: #93b399;          /* Succès (vert métal) */
-  --warning: #a89f91;          /* Avertissement (beige métal) */
-  --danger: #8f7a7a;           /* Erreur (rouge-gris désaturé) */
-  --info: #8899aa;             /* Information (bleu-gris) */
+  --success: #93b399; /* Succès (vert métal) */
+  --warning: #a89f91; /* Avertissement (beige métal) */
+  --danger: #8f7a7a; /* Erreur (rouge-gris désaturé) */
+  --info: #8899aa; /* Information (bleu-gris) */
 
   /* ═══ États Sémantiques (Alias) ═══ */
   --state-success: var(--success);
@@ -44,13 +44,13 @@
 
   /* ═══ Migration Palette Legacy → Monochrome ═══ */
   /* Ces alias permettent une migration douce des anciens thèmes */
-  --legacy-green: var(--accent);           /* #00ff88 → #93b399 */
-  --legacy-cyan: var(--primary);           /* #00ffff, #00d4ff → #727b81 */
-  --legacy-magenta: var(--info);           /* #ff00ff → #8899aa */
-  --legacy-red: var(--danger);             /* #ff4444 → #8f7a7a */
-  --legacy-blue: var(--info);              /* #00aaff, var(--info, #8899aa) → #8899aa */
-  --legacy-violet: var(--primary);         /* #7c3aed, #a855f7 → #727b81 */
-  --legacy-orange: var(--warning);         /* var(--warning, #a89f91), #ffaa00 → #a89f91 */
+  --legacy-green: var(--accent); /* #00ff88 → #93b399 */
+  --legacy-cyan: var(--primary); /* #00ffff, #00d4ff → #727b81 */
+  --legacy-magenta: var(--info); /* #ff00ff → #8899aa */
+  --legacy-red: var(--danger); /* #ff4444 → #8f7a7a */
+  --legacy-blue: var(--info); /* #00aaff, var(--info, #8899aa) → #8899aa */
+  --legacy-violet: var(--primary); /* #7c3aed, #a855f7 → #727b81 */
+  --legacy-orange: var(--warning); /* var(--warning, #a89f91), #ffaa00 → #a89f91 */
 
   /* ═══ Glows & Shadows (Directionnels) ═══ */
   --glow-primary: rgba(114, 123, 129, 0.15);
@@ -64,11 +64,11 @@
   --shadow-directional: 2px 4px 12px rgba(0, 0, 0, 0.75);
 
   /* ═══ Backgrounds — Hiérarchie Organique ═══ */
-  --bg-base: #0a0a0a;          /* Fond de page */
-  --bg-elevated: #0f0f0f;      /* Élévation 1 */
-  --bg-panel: #141414;         /* Panneaux */
-  --bg-card: #161616;          /* Cartes */
-  --bg-surface: #1a1a1a;       /* Surfaces */
+  --bg-base: #0a0a0a; /* Fond de page */
+  --bg-elevated: #0f0f0f; /* Élévation 1 */
+  --bg-panel: #141414; /* Panneaux */
+  --bg-card: #161616; /* Cartes */
+  --bg-surface: #1a1a1a; /* Surfaces */
   --bg-hover: rgba(255, 255, 255, 0.04);
   --bg-active: rgba(255, 255, 255, 0.08);
   --bg-glass: rgba(22, 22, 22, 0.7); /* Glass effect */
@@ -89,17 +89,18 @@
   --space-3xl: 64px;
 
   /* ═══ Typography ═══ */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
-  --font-mono: "Fira Code", "JetBrains Mono", "Consolas", monospace;
+  --font-sans:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  --font-mono: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
 
-  --font-size-xs: 0.75rem;     /* 12px */
-  --font-size-sm: 0.875rem;    /* 14px */
-  --font-size-base: 1rem;      /* 16px */
-  --font-size-lg: 1.125rem;    /* 18px */
-  --font-size-xl: 1.25rem;     /* 20px */
-  --font-size-2xl: 1.5rem;     /* 24px */
-  --font-size-3xl: 1.875rem;   /* 30px */
-  --font-size-4xl: 2.25rem;    /* 36px */
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -187,7 +188,7 @@
   --text-primary: rgba(255, 255, 255, 0.96);
   --text-secondary: rgba(255, 255, 255, 0.72);
   --text-tertiary: rgba(255, 255, 255, 0.48);
-  --text-disabled: rgba(255, 255, 255, 0.30);
+  --text-disabled: rgba(255, 255, 255, 0.3);
 
   /* ═══ State Colors (Monochrome Semantic) ═══ */
   --state-success: #93b399;
@@ -195,6 +196,22 @@
   --state-danger: #8f7a7a;
   --state-info: #8899aa;
   --state-active: #c4c4c4;
+
+  /* ═══ Breakpoints (Documentation Reference) ═══ */
+  /* NOTE: CSS custom properties can't be used in media queries directly.
+   * These values document the standardized breakpoints used in media queries.
+   * Use these exact values for consistency across all CSS files:
+   * --breakpoint-xs: 375px   Mobile small
+   * --breakpoint-sm: 640px   Mobile large
+   * --breakpoint-md: 768px   Tablet
+   * --breakpoint-lg: 1024px  Desktop small
+   * --breakpoint-xl: 1280px  Desktop medium
+   * --breakpoint-2xl: 1536px Desktop large
+   *
+   * Example max-width queries (mobile-first):
+   * @media (max-width: 767px)  → Below tablet
+   * @media (max-width: 1023px) → Below desktop
+   */
 }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -386,51 +403,105 @@ body {
   color: var(--accent);
 }
 
-.text-xs { font-size: var(--font-size-xs); }
-.text-sm { font-size: var(--font-size-sm); }
-.text-base { font-size: var(--font-size-base); }
-.text-lg { font-size: var(--font-size-lg); }
-.text-xl { font-size: var(--font-size-xl); }
-.text-2xl { font-size: var(--font-size-2xl); }
-.text-3xl { font-size: var(--font-size-3xl); }
+.text-xs {
+  font-size: var(--font-size-xs);
+}
+.text-sm {
+  font-size: var(--font-size-sm);
+}
+.text-base {
+  font-size: var(--font-size-base);
+}
+.text-lg {
+  font-size: var(--font-size-lg);
+}
+.text-xl {
+  font-size: var(--font-size-xl);
+}
+.text-2xl {
+  font-size: var(--font-size-2xl);
+}
+.text-3xl {
+  font-size: var(--font-size-3xl);
+}
 
-.font-normal { font-weight: var(--font-weight-normal); }
-.font-medium { font-weight: var(--font-weight-medium); }
-.font-semibold { font-weight: var(--font-weight-semibold); }
-.font-bold { font-weight: var(--font-weight-bold); }
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+.font-semibold {
+  font-weight: var(--font-weight-semibold);
+}
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
    ✨ ANIMATIONS ORGANIQUES
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 @keyframes pulse-organic {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.02); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
 }
 
 @keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 8px var(--glow-primary); }
-  50% { box-shadow: 0 0 16px var(--glow-accent); }
+  0%,
+  100% {
+    box-shadow: 0 0 8px var(--glow-primary);
+  }
+  50% {
+    box-shadow: 0 0 16px var(--glow-accent);
+  }
 }
 
 @keyframes slide-in-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-in-down {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* Utility classes pour animations */
@@ -500,48 +571,118 @@ body {
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
 /* Spacing */
-.m-auto { margin: auto; }
-.mx-auto { margin-left: auto; margin-right: auto; }
-.my-auto { margin-top: auto; margin-bottom: auto; }
+.m-auto {
+  margin: auto;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
 
-.p-0 { padding: 0; }
-.p-xs { padding: var(--space-xs); }
-.p-sm { padding: var(--space-sm); }
-.p-md { padding: var(--space-md); }
-.p-lg { padding: var(--space-lg); }
-.p-xl { padding: var(--space-xl); }
+.p-0 {
+  padding: 0;
+}
+.p-xs {
+  padding: var(--space-xs);
+}
+.p-sm {
+  padding: var(--space-sm);
+}
+.p-md {
+  padding: var(--space-md);
+}
+.p-lg {
+  padding: var(--space-lg);
+}
+.p-xl {
+  padding: var(--space-xl);
+}
 
-.gap-xs { gap: var(--space-xs); }
-.gap-sm { gap: var(--space-sm); }
-.gap-md { gap: var(--space-md); }
-.gap-lg { gap: var(--space-lg); }
-.gap-xl { gap: var(--space-xl); }
+.gap-xs {
+  gap: var(--space-xs);
+}
+.gap-sm {
+  gap: var(--space-sm);
+}
+.gap-md {
+  gap: var(--space-md);
+}
+.gap-lg {
+  gap: var(--space-lg);
+}
+.gap-xl {
+  gap: var(--space-xl);
+}
 
 /* Flexbox */
-.flex { display: flex; }
-.inline-flex { display: inline-flex; }
-.flex-col { flex-direction: column; }
-.flex-row { flex-direction: row; }
-.flex-wrap { flex-wrap: wrap; }
-.items-center { align-items: center; }
-.items-start { align-items: flex-start; }
-.items-end { align-items: flex-end; }
-.justify-center { justify-content: center; }
-.justify-between { justify-content: space-between; }
-.justify-around { justify-content: space-around; }
-.justify-start { justify-content: flex-start; }
-.justify-end { justify-content: flex-end; }
+.flex {
+  display: flex;
+}
+.inline-flex {
+  display: inline-flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.items-center {
+  align-items: center;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-end {
+  align-items: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
+}
 
 /* Grid */
-.grid { display: grid; }
-.grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+.grid {
+  display: grid;
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
 
 /* Misc */
-.w-full { width: 100%; }
-.h-full { height: 100%; }
-.hidden { display: none; }
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.hidden {
+  display: none;
+}
 .sr-only {
   position: absolute;
   width: 1px;
@@ -801,11 +942,21 @@ body {
   display: inline-block;
 }
 
-.status-dot-success { background: var(--state-success); }
-.status-dot-warning { background: var(--state-warning); }
-.status-dot-danger { background: var(--state-danger); }
-.status-dot-info { background: var(--state-info); }
-.status-dot-neutral { background: var(--primary); }
+.status-dot-success {
+  background: var(--state-success);
+}
+.status-dot-warning {
+  background: var(--state-warning);
+}
+.status-dot-danger {
+  background: var(--state-danger);
+}
+.status-dot-info {
+  background: var(--state-info);
+}
+.status-dot-neutral {
+  background: var(--primary);
+}
 
 /* Contraste élevé pour faible vision */
 @media (prefers-contrast: high) {
