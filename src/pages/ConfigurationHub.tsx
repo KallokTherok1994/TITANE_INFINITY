@@ -53,6 +53,10 @@ export const ConfigurationHub: React.FC = () => {
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
+  // Presets state
+  const [presets, setPresets] = useState<Array<{ name: string; description: string }>>([]);
+  const [showPresetDialog, setShowPresetDialog] = useState(false);
+
   const loadConfig = async () => {
     setLoading(true);
     setError(null);
@@ -212,6 +216,66 @@ export const ConfigurationHub: React.FC = () => {
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to import configuration:', err);
       alert(`❌ Échec de l'import: ${err}`);
+    }
+  };
+
+  // Load presets on mount
+  useEffect(() => {
+    loadPresets();
+  }, []);
+
+  const loadPresets = async () => {
+    try {
+      const presetsList = await invoke<Array<{ name: string; description: string }>>('list_config_presets');
+      setPresets(presetsList);
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to load presets:', err);
+    }
+  };
+
+  const handleSavePreset = async () => {
+    const name = prompt('Nom du preset:');
+    if (!name) return;
+
+    const description = prompt('Description (optionnel):') || '';
+
+    try {
+      await invoke('save_config_preset', { name, description });
+      alert(`✅ Preset "${name}" sauvegardé!`);
+      await loadPresets();
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to save preset:', err);
+      alert(`❌ Échec de sauvegarde: ${err}`);
+    }
+  };
+
+  const handleLoadPreset = async (name: string) => {
+    if (!confirm(`Charger le preset "${name}"?\nCela remplacera la configuration actuelle.`)) {
+      return;
+    }
+
+    try {
+      await invoke('load_config_preset', { name });
+      await loadConfig();
+      alert(`✅ Preset "${name}" chargé!`);
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to load preset:', err);
+      alert(`❌ Échec de chargement: ${err}`);
+    }
+  };
+
+  const handleDeletePreset = async (name: string) => {
+    if (!confirm(`Supprimer le preset "${name}"?\nCette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      await invoke('delete_config_preset', { name });
+      alert(`✅ Preset "${name}" supprimé!`);
+      await loadPresets();
+    } catch (err) {
+      console.error('❌ [ConfigHub] Failed to delete preset:', err);
+      alert(`❌ Échec de suppression: ${err}`);
     }
   };
 
@@ -380,6 +444,48 @@ export const ConfigurationHub: React.FC = () => {
               >
                 📥 Importer
               </button>
+              <button
+                onClick={handleSavePreset}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: 'rgba(168, 85, 247, 0.15)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  borderRadius: '8px',
+                  color: '#a855f7',
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                💾 Sauver Preset
+              </button>
+              {presets.length > 0 && (
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      handleLoadPreset(e.target.value);
+                      e.target.value = '';
+                    }
+                  }}
+                  style={{
+                    padding: '0.75rem 1rem',
+                    background: 'rgba(168, 85, 247, 0.15)',
+                    border: '1px solid rgba(168, 85, 247, 0.3)',
+                    borderRadius: '8px',
+                    color: '#a855f7',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                  }}
+                >
+                  <option value="">📋 Charger Preset...</option>
+                  {presets.map((preset) => (
+                    <option key={preset.name} value={preset.name}>
+                      {preset.name}
+                    </option>
+                  ))}
+                </select>
+              )}
               <button
                 onClick={handleEditToggle}
                 style={{

@@ -58,11 +58,6 @@ mod devops_commands {
     include!("commands/devops.rs");
 }
 
-// System Health commands (module local)
-mod system_health_commands {
-    include!("commands/system_health.rs");
-}
-
 // Audio commands v19.2
 mod audio {
     pub mod recording_engine {
