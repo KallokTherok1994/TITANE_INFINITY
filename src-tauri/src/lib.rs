@@ -127,6 +127,18 @@ pub mod self_repair; // ✅ Auto-Réparation
                      // pub mod singularity;        // ⚠️ Deprecated - Use top-level singularity v∞ (v20)
 
 // ═══════════════════════════════════════════════════════════════
+// SELF-HEALING SYSTEM v∞ (SP-GAP-001 to SP-GAP-006)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod healing; // ✅ Self-Healing System (Memory Validation, Engine Recalibration, Health Scheduler)
+
+// ═══════════════════════════════════════════════════════════════
+// RESILIENCE SYSTEM v∞ (SP-RES-002)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod resilience; // ✅ Intelligent Retry + Circuit Breaker
+
+// ═══════════════════════════════════════════════════════════════
 // BACKEND MODE SELECTION (Mock vs Full)
 // ═══════════════════════════════════════════════════════════════
 
