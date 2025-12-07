@@ -3,7 +3,7 @@
 //   Global unified state for SingularityEngine
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::modules::{HarmoniaModule, MemoryModule, NexusModule, SentinelModule};
+use crate::core::modules::{CoherenceEngine, HarmoniaModule, MemoryModule, SentinelModule};
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
@@ -386,8 +386,9 @@ impl TimelineState {
 /// Main SingularityState - global unified state
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingularityState {
-    /// Nexus module - central coordinator
-    pub nexus: NexusModule,
+    /// Coherence engine - unified coordination & coherence (v20.0)
+    /// Fusion: Nexus + ConsistencyEngine
+    pub coherence: CoherenceEngine,
 
     /// Memory module - persistent memory
     pub memory: MemoryModule,
@@ -424,7 +425,7 @@ impl Default for SingularityState {
     fn default() -> Self {
         let now = chrono::Utc::now().timestamp_millis() as u64;
         Self {
-            nexus: NexusModule::new(),
+            coherence: CoherenceEngine::new(),
             memory: MemoryModule::new(),
             harmonia: HarmoniaModule::new(),
             sentinel: SentinelModule::new(),
@@ -449,7 +450,7 @@ impl SingularityState {
     pub fn health(&self) -> EngineHealth {
         // Aggregate health from all modules
         let healths = [
-            self.nexus.health(),
+            self.coherence.health(),
             self.memory.health(),
             self.harmonia.health(),
             self.sentinel.health(),

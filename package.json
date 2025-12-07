@@ -53,6 +53,7 @@
     "docs:serve": "npx http-server ./docs/api -p 8080"
   },
   "dependencies": {
+    "@sentry/react": "^10.29.0",
     "@tauri-apps/api": "^2.9.0",
     "@tauri-apps/plugin-dialog": "^2.0.0",
     "@tauri-apps/plugin-http": "^2.5.4",
@@ -72,6 +73,7 @@
     "recharts": "^3.4.1",
     "remark-gfm": "^4.0.1",
     "three": "^0.181.2",
+    "web-vitals": "^5.1.0",
     "zod": "^4.1.12",
     "zustand": "^5.0.8"
   },

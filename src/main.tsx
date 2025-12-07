@@ -15,6 +15,9 @@ import ReactDOM from 'react-dom/client';
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app (valide le rendu)
 import App from './App'; // ✅ v16.2.2: App principal activé
 
+// ✨ v19.5.2 - Sentry Error Monitoring & Performance Tracking (Phase 1 - Quick Wins)
+import { initSentry, captureWebVitals } from './services/monitoring';
+
 // ✅ v17 DESIGN SYSTEM FUSION - Un seul fichier CSS unifié
 import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)
@@ -159,6 +162,12 @@ console.log('║  🌌 TITANE∞ v19 - BOOT SEQUENCE                            
 console.log('║  Timestamp: ' + new Date().toISOString() + '                  ║');
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
+// ✨ v19.5.2 - Initialize Sentry Error Monitoring (Phase 1 - Quick Wins)
+console.log('[1/7] 🔍 Sentry: Initializing error monitoring...');
+initSentry();
+captureWebVitals();
+console.log('      ✅ Sentry: Ready for error tracking and performance monitoring');
+
 // Initialize UILogger (overrides console.* in production)
 logInfo('🔒 UILogger initialized', {
   mode: import.meta.env.PROD ? 'production' : 'development',
@@ -167,12 +176,12 @@ logInfo('🔒 UILogger initialized', {
   maxStoredLogs: 1000,
 });
 
-console.log('[1/6] 🔒 UILogger: Activated (console override in production)');
-console.log('[2/6] 🦀 Backend: 40+ Rust modules | 29 Tauri Commands');
-console.log('[3/6] ✨ Frontend: 20 Unified Engines | SingularityState Active');
-console.log('[4/6] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
-console.log('[5/6] 📦 Loading React 18 + TypeScript 5...');
-console.log('[6/6] 🎯 Mounting root component...');
+console.log('[2/7] 🔒 UILogger: Activated (console override in production)');
+console.log('[3/7] 🦀 Backend: 40+ Rust modules | 33 Tauri Commands');
+console.log('[4/7] ✨ Frontend: 20 Unified Engines | SingularityState Active');
+console.log('[5/7] 🔒 Tauri v2.0 100% | Rust + React + TypeScript');
+console.log('[6/7] 📦 Loading React 18 + TypeScript 5...');
+console.log('[7/7] 🎯 Mounting root component...');
 
 // Initialize Singularity Engine - DÉSACTIVÉ pour debug écran blanc
 /*

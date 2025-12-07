@@ -15,8 +15,9 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, Suspense, lazy } from 'react';
+import React, { useEffect, useState, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { invoke } from '@tauri-apps/api/core';
 import { useLivingEngines } from './hooks';
 import { useSingularityState } from './core/state/SingularityState';
 import { ThemeProvider } from './themes/ThemeProvider';
@@ -31,6 +32,7 @@ import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Securit
 import { detectEnvironment, shouldBlockLoading, logEnvironmentWarnings } from './core/tauri/environment';
 import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto-Audit Engine
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
+import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
 
 /**
  * 🔒 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT
@@ -219,6 +221,28 @@ const AppRouter: React.FC = () => {
   // Use Singularity State instead of local state
   const sidebarCollapsed = useSingularityState((s) => s.context.sidebarCollapsed);
   const toggleSidebar = useSingularityState((s) => s.toggleSidebar);
+
+  // ✨ v19.5.2 - User Onboarding State
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
+  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(true);
+
+  // ✨ v19.5.2 - Check if onboarding is complete (first-run detection)
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      try {
+        const isComplete = await invoke<boolean>('is_onboarding_complete');
+        console.log('🎨 [ONBOARDING] Status:', isComplete ? 'Complete' : 'Not started');
+        setOnboardingComplete(isComplete);
+      } catch (error) {
+        console.warn('⚠️ [ONBOARDING] Failed to check status, assuming complete:', error);
+        setOnboardingComplete(true); // Fallback to main app
+      } finally {
+        setCheckingOnboarding(false);
+      }
+    };
+
+    checkOnboarding();
+  }, []);
 
   // ✨ v∞ - Démarrer Auto-Audit Engine au chargement
   useEffect(() => {
@@ -439,6 +463,34 @@ const AppRouter: React.FC = () => {
     { id: '/memory', label: 'Mémoire', icon: '💾' },
   ];
 
+  // ✨ v19.5.2 - Handler onboarding completion
+  const handleOnboardingComplete = async () => {
+    console.log('✅ [ONBOARDING] User completed onboarding flow');
+    setOnboardingComplete(true);
+  };
+
+  // ✨ v19.5.2 - Show loading while checking onboarding status
+  if (checkingOnboarding) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        fontSize: '1.2rem',
+        color: '#727b81'
+      }}>
+        ⚡ Chargement...
+      </div>
+    );
+  }
+
+  // ✨ v19.5.2 - Show onboarding if not complete
+  if (!onboardingComplete) {
+    return <OnboardingFlow onComplete={handleOnboardingComplete} />;
+  }
+
+  // ✨ v19.5.2 - Main app (onboarding completed)
   return (
     <AppShell
       sidebar={
