@@ -322,8 +322,8 @@ impl CoherenceEngine {
             count += 1;
         }
 
-        // Check sentinel module
-        if state.sentinel.is_initialized() {
+        // Check system_health module
+        if state.system_health.is_initialized() {
             count += 1;
         }
 
@@ -348,8 +348,8 @@ impl CoherenceEngine {
                     0
                 }
             }
-            "sentinel" => {
-                if state.sentinel.health() == EngineHealth::Failing {
+            "system_health" => {
+                if state.system_health.health() == EngineHealth::Failing {
                     1
                 } else {
                     0
@@ -396,11 +396,18 @@ mod tests {
         state.coherence.init().unwrap();
         state.memory.init().unwrap();
         state.harmonia.init().unwrap();
-        state.sentinel.init().unwrap();
+        state.system_health.init().unwrap();
 
-        let result = state.coherence.tick(&mut state).await;
+        // Clone state to avoid borrow issues in test
+        let coherence_before = state.coherence.coordination_count;
+        
+        // Simulate tick by calling methods individually (test workaround for &mut self + &mut state)
+        let mut temp_coherence = state.coherence.clone();
+        let result = temp_coherence.tick(&mut state).await;
+        state.coherence = temp_coherence;
+        
         assert!(result.is_ok());
-        assert!(state.coherence.coordination_count > 0);
+        assert!(state.coherence.coordination_count > coherence_before);
         assert!(state.coherence.coherence_checks > 0);
         assert_eq!(state.coherence.active_connections, 3);
     }

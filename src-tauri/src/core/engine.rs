@@ -63,7 +63,7 @@ impl SingularityEngine {
         self.state.coherence.init()?;
         self.state.memory.init()?;
         self.state.harmonia.init()?;
-        self.state.sentinel.init()?;
+        self.state.system_health.init()?;
 
         // Activate cognitive layer v16
         self.cognitive_active = true;
@@ -159,7 +159,7 @@ impl SingularityEngine {
             self.state.coherence.info(),
             self.state.memory.info(),
             self.state.harmonia.info(),
-            self.state.sentinel.info(),
+            self.state.system_health.info(),
         ]
     }
 
@@ -193,8 +193,8 @@ impl SingularityEngine {
         &self.state.coherence
     }
 
-    /// Get reference to Memory module
-    pub fn memory(&self) -> &crate::core::modules::MemoryModule {
+    /// Get reference to memory module (v20.0 - UnifiedMemory)
+    pub fn memory(&self) -> &crate::core::modules::UnifiedMemory {
         &self.state.memory
     }
 
@@ -203,9 +203,9 @@ impl SingularityEngine {
         &self.state.harmonia
     }
 
-    /// Get reference to Sentinel module
-    pub fn sentinel(&self) -> &crate::core::modules::SentinelModule {
-        &self.state.sentinel
+    /// Get reference to SystemHealth module (v20.0 - Fusion #3)
+    pub fn system_health(&self) -> &crate::core::modules::SystemHealth {
+        &self.state.system_health
     }
 }
 

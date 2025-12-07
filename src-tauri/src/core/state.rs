@@ -1,9 +1,9 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v14 — SINGULARITY STATE
-//   Global unified state for SingularityEngine
+//   TITANE∞ v20.0 — SINGULARITY STATE
+//   Global unified state for SingularityEngine (Phase 2 Fusions)
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::modules::{CoherenceEngine, HarmoniaModule, MemoryModule, SentinelModule};
+use crate::core::modules::{CoherenceEngine, UnifiedMemory, HarmoniaModule, SystemHealth};
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
@@ -387,17 +387,19 @@ impl TimelineState {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SingularityState {
     /// Coherence engine - unified coordination & coherence (v20.0)
-    /// Fusion: Nexus + ConsistencyEngine
+    /// Fusion #1: Nexus + ConsistencyEngine
     pub coherence: CoherenceEngine,
 
-    /// Memory module - persistent memory
-    pub memory: MemoryModule,
+    /// Unified Memory - STM/MTM/LTM with auto-promotion (v20.0)
+    /// Fusion #2: Memory #5 + MemoryModule + Singularity Memory
+    pub memory: UnifiedMemory,
 
     /// Harmonia module - harmony & balance
     pub harmonia: HarmoniaModule,
 
-    /// Sentinel module - monitoring & protection
-    pub sentinel: SentinelModule,
+    /// System Health - unified monitoring + auto-healing (v20.0)
+    /// Fusion #3: Helios + Sentinel + Self-Heal
+    pub system_health: SystemHealth,
 
     /// Cognition state
     pub cognition: CognitionState,
@@ -426,9 +428,9 @@ impl Default for SingularityState {
         let now = chrono::Utc::now().timestamp_millis() as u64;
         Self {
             coherence: CoherenceEngine::new(),
-            memory: MemoryModule::new(),
+            memory: UnifiedMemory::new(),
             harmonia: HarmoniaModule::new(),
-            sentinel: SentinelModule::new(),
+            system_health: SystemHealth::new(),
             cognition: CognitionState::new(),
             timeline: TimelineState::new(),
             autonomy: None, // v24.30 - Optional, initialized when autonomy enabled
@@ -449,11 +451,11 @@ impl SingularityState {
     /// Get overall system health
     pub fn health(&self) -> EngineHealth {
         // Aggregate health from all modules
-        let healths = [
+        let healths = vec![
             self.coherence.health(),
             self.memory.health(),
             self.harmonia.health(),
-            self.sentinel.health(),
+            self.system_health.health(),
         ];
 
         // Find worst health status
