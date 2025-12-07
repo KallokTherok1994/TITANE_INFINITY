@@ -26,7 +26,7 @@ export interface VocalDevConsoleProps {
 export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps) {
   const {
     state,
-    config,
+    _config,
     activate,
     deactivate,
     open,
@@ -34,7 +34,7 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
     startRecording,
     stopRecording,
     executeCommand,
-    speak,
+    _speak,
     stopSpeaking,
     clearLogs,
     clearHistory,
@@ -186,7 +186,7 @@ export function VocalDevConsole({ className = '', style }: VocalDevConsoleProps)
             </button>
           </div>
           <div className="vocal-dev-console__history-list">
-            {executionHistory.slice(0, 5).map((exec, idx) => (
+            {executionHistory.slice(0, 5).map((exec, _idx) => (
               <div
                 key={exec.timestamp}
                 className={`vocal-dev-console__history-item vocal-dev-console__history-item--${exec.intent.type}`}

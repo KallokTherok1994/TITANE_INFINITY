@@ -181,8 +181,8 @@ const InsightCard: React.FC<{ insight: Insight }> = ({ insight }) => (
 const HyperCenterContent: React.FC = () => {
   const [state, setState] = useState<HyperIntelligenceState | null>(null);
   const [thoughts, setThoughts] = useState<Thought[]>([]);
-  const { matrix, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const { _matrix, loading: matrixLoading } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
   const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

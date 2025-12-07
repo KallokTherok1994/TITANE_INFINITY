@@ -149,7 +149,7 @@ interface AgentCardProps {
   onUpdatePermission: (agentId: string, permission: AgentIAPermission) => Promise<void>;
 }
 
-const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, onUpdatePermission }) => {
+const AgentCard: React.FC<AgentCardProps> = ({ agent, onSelect, _onUpdatePermission }) => {
   const roleLabel = AgentRoleLabels[agent.role];
   const permissionLabel = AgentIAPermissionLabels[agent.ia_permission];
 

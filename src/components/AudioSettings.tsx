@@ -96,10 +96,10 @@ export const AudioSettings = () => {
     }
   };
 
-  const handleTTSSettingChange = async (key: keyof TTSSettings, value: TTSSettings[keyof TTSSettings]) => {
-    const newSettings = { ...ttsSettings, [key]: value };
+  const handleTTSSettingChange = async (key: keyof TTSSettings, _value: TTSSettings[keyof TTSSettings]) => {
+    const newSettings = { ...ttsSettings, [key]: _value };
     setTTSSettings(newSettings);
-    await audioService.updateTTSSettings({ [key]: value });
+    await audioService.updateTTSSettings({ [key]: _value });
   };
 
   const handleTestTTS = async () => {

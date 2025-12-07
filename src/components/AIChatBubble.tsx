@@ -178,8 +178,8 @@ const styles = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
-  initialPosition = { x: 24, y: 24 },
-  devMode = false,
+  _initialPosition = { x: 24, y: 24 },
+  _devMode = false,
 }) => {
   const {
     isOpen,
@@ -194,7 +194,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     sendMessage: sendGlobalMessage,
     clear,
     setModel,
-    setProvider,
+    _setProvider,
     toggleFullscreen,
     enableDevMode,
   } = useGlobalAIChat();

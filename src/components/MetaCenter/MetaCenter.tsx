@@ -191,8 +191,8 @@ const MetaCenterContent: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedMode, setSelectedMode] = useState<string>('balanced');
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const { matrix, loading: matrixLoading } = useIdentityMatrix();
-  const singularityState = useSingularityStateSafe();
+  const { _matrix, loading: matrixLoading } = useIdentityMatrix();
+  const _singularityState = useSingularityStateSafe();
 
   const MODES = [
     { id: 'minimal', label: 'Minimal', icon: '🔋' },
