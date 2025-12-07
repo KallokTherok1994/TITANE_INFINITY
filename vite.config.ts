@@ -81,6 +81,19 @@ export default defineConfig({
     minify: 'terser',
     target: 'esnext',
     chunkSizeWarningLimit: 1000, // Increased for large dashboards
+    cssCodeSplit: true, // ✨ P2-5: Split CSS per chunk
+    cssMinify: true, // ✨ P2-5: Minify CSS
+    reportCompressedSize: false, // ✨ P2-5: Faster build (skip gzip calc)
+    terserOptions: {
+      compress: {
+        drop_console: true, // ✨ P2-5: Remove console.log in production
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.info', 'console.debug'],
+      },
+      mangle: {
+        safari10: true,
+      },
+    },
     rollupOptions: {
       // Supprimer warning eval() pour onnxruntime-web (WebAssembly loader)
       onwarn(warning, warn) {
@@ -143,6 +156,35 @@ export default defineConfig({
             return 'agents-core';
           }
 
+          // ✨ P2-5: Engine pages (lazy loaded separately)
+          if (id.includes('src/pages/Helios') || id.includes('src/pages/Nexus') ||
+              id.includes('src/pages/Harmonia') || id.includes('src/pages/Sentinel')) {
+            return 'pages-engines-monitoring';
+          }
+          if (id.includes('src/pages/Watchdog') || id.includes('src/pages/SelfHeal') ||
+              id.includes('src/pages/AdaptiveEngine') || id.includes('src/pages/Memory')) {
+            return 'pages-engines-system';
+          }
+
+          // ✨ P2-5: Feature centers (lazy loaded separately)
+          if (id.includes('src/features/system-center') || id.includes('src/features/design-center')) {
+            return 'features-centers-1';
+          }
+          if (id.includes('src/features/governance-center') || id.includes('src/features/audio-center')) {
+            return 'features-centers-2';
+          }
+          if (id.includes('src/features/one-core') || id.includes('src/features/qa-monitoring')) {
+            return 'features-centers-3';
+          }
+
+          // ✨ P2-5: Presence & Psyche engines (heavy computation)
+          if (id.includes('src/engines/presence/') || id.includes('src/engines/psyche/')) {
+            return 'engines-presence-psyche';
+          }
+          if (id.includes('src/engines/')) {
+            return 'engines-misc';
+          }
+
           // Phases V-Ω dashboards (Lazy loaded)
           if (id.includes('src/ui/pages/NodeClusterDashboard') ||
               id.includes('src/ui/pages/KnowledgeFusionPage') ||
@@ -160,7 +202,10 @@ export default defineConfig({
             return 'services';
           }
 
-          // UI components
+          // UI components (split by type)
+          if (id.includes('src/components/chat/') || id.includes('src/components/AIChatBubble')) {
+            return 'ui-chat';
+          }
           if (id.includes('src/ui/') || id.includes('src/components/')) {
             return 'ui-components';
           }
