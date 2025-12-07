@@ -5,7 +5,6 @@
  */
 
 // Import conditionnel pour éviter l'erreur si Tauri n'est pas disponible
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let invoke: <T>(cmd: string, args?: Record<string, unknown>) => Promise<T>;
 try {
   // eslint-disable-next-line @typescript-eslint/no-var-requires

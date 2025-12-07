@@ -23,9 +23,7 @@ const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
 // TAURI IMPORTS (Lazy loaded to avoid errors in browser-only builds)
 // ═══════════════════════════════════════════════════════════════════════════
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let tauriFs: any = null;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let tauriPath: any = null;
 
 async function ensureTauriApis() {
