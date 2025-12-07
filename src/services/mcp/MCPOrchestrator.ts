@@ -732,7 +732,7 @@ class MCPOrchestratorClass implements MCPOperations {
   public async purifyMemory(): Promise<MemoryOperations> {
     let cleanupCount = 0;
     let compressCount = 0;
-    let fuseCount = 0;
+    const fuseCount = 0;
     let archiveCount = 0;
     let normalizeCount = 0;
 

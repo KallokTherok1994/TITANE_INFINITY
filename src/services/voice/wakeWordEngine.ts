@@ -434,7 +434,7 @@ export class WakeWordEngine {
     }
 
     // Enlever le wake word + éventuel espace/ponctuation qui suit
-    let cleaned = (originalText.substring(0, startIdx) + originalText.substring(endIdx))
+    const cleaned = (originalText.substring(0, startIdx) + originalText.substring(endIdx))
       .trim()
       .replace(/^[,;:!?\s]+/, ''); // Supprimer ponctuation initiale
 

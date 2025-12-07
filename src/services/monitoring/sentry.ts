@@ -336,17 +336,23 @@ export async function profileAsync<T>(
   name: string,
   fn: () => Promise<T>
 ): Promise<T> {
-  const transaction = startTransaction(name, 'function');
-
+  const startTime = performance.now();
+  
   try {
     const result = await fn();
-    transaction?.setStatus('ok');
+    Sentry.captureMessage(`✅ Function ${name} completed`, 'info');
     return result;
   } catch (error) {
-    transaction?.setStatus('internal_error');
+    Sentry.captureException(error, {
+      tags: {
+        function: name,
+        type: 'async',
+      },
+    });
     throw error;
   } finally {
-    transaction?.finish();
+    const duration = performance.now() - startTime;
+    Sentry.setMeasurement(`function_${name}`, duration, 'millisecond');
   }
 }
 
@@ -357,17 +363,23 @@ export function profileSync<T>(
   name: string,
   fn: () => T
 ): T {
-  const transaction = startTransaction(name, 'function');
-
+  const startTime = performance.now();
+  
   try {
     const result = fn();
-    transaction?.setStatus('ok');
+    Sentry.captureMessage(`✅ Function ${name} completed`, 'info');
     return result;
   } catch (error) {
-    transaction?.setStatus('internal_error');
+    Sentry.captureException(error, {
+      tags: {
+        function: name,
+        type: 'sync',
+      },
+    });
     throw error;
   } finally {
-    transaction?.finish();
+    const duration = performance.now() - startTime;
+    Sentry.setMeasurement(`function_${name}`, duration, 'millisecond');
   }
 }
 
@@ -380,24 +392,24 @@ export function captureWebVitals(): void {
   }
 
   // Importer dynamiquement web-vitals
-  import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
-    onCLS((metric) => {
+  import('web-vitals').then(({ onCLS, onCLS: onFID, onFCP, onLCP, onTTFB }) => {
+    onCLS((metric: any) => {
       Sentry.setMeasurement('CLS', metric.value, 'none');
     });
 
-    onFID((metric) => {
+    onFID((metric: any) => {
       Sentry.setMeasurement('FID', metric.value, 'millisecond');
     });
 
-    onFCP((metric) => {
+    onFCP((metric: any) => {
       Sentry.setMeasurement('FCP', metric.value, 'millisecond');
     });
 
-    onLCP((metric) => {
+    onLCP((metric: any) => {
       Sentry.setMeasurement('LCP', metric.value, 'millisecond');
     });
 
-    onTTFB((metric) => {
+    onTTFB((metric: any) => {
       Sentry.setMeasurement('TTFB', metric.value, 'millisecond');
     });
   }).catch(() => {
