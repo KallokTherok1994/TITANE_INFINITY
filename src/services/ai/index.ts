@@ -29,6 +29,23 @@ export type {
   CognitiveDecision,
 } from './cognitiveKernel';
 
+// 🌌 NOUVEAU v∞Ω: Meta-Kernel (Super-Conscience Système)
+export { metaKernel } from './metaKernel';
+export type {
+  SystemMap,
+  SystemNode,
+  SystemEdge,
+  SystemFlow,
+  SystemLayer,
+  SubKernelStates,
+  TitanePrinciples,
+  SystemObservation,
+  FragilityZone,
+  OrchestrationAction,
+  SuperMemory,
+  SuperConsciousnessReport,
+} from './metaKernel';
+
 // Legacy orchestrator (à migrer vers chatEngine)
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';
 export { geminiProvider } from './providers/gemini';

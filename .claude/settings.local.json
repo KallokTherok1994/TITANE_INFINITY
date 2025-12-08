@@ -25,7 +25,11 @@
       "Bash(cargo build:*)",
       "Bash(cargo test:*)",
       "Bash(timeout 180 cargo test:*)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(chmod:*)",
+      "Bash(./docs/00_SYSTEME/reset_docs.sh)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []
