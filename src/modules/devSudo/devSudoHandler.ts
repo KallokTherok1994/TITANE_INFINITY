@@ -12,6 +12,7 @@
  */
 
 import { invoke } from '@tauri-apps/api/core';
+import { autoHealEngine } from '@/services/ai/autoHealEngine';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import * as ExtendedHandlers from './devSudoExtendedHandlers';
@@ -5764,8 +5765,7 @@ Le patch généré nécessite review manuelle.
       };
     }
 
-    // Appliquer le patch via AutoHealEngine
-    const { autoHealEngine } = await import('@/services/ai/autoHealEngine');
+    // Appliquer le patch via AutoHealEngine (import statique en haut du fichier)
     await autoHealEngine.heal(
       'live-debugger',
       new Error(`Applying patch for ${patch.module}: ${patch.reason}`),

@@ -429,8 +429,11 @@ pub fn autopilot_run(state: State<ProjectAutoPilotState>) -> Result<AutoPilotRep
         }
     }
 
-    // Stocker suggestions
-    let mut state_suggestions = state.suggestions.lock().unwrap();
+    // Stocker suggestions avec récupération en cas de poison
+    let mut state_suggestions = state.suggestions.lock().unwrap_or_else(|poisoned| {
+        eprintln!("[AUTOPILOT] suggestions lock poisoned, recovering");
+        poisoned.into_inner()
+    });
     *state_suggestions = suggestions.clone();
 
     let execution_time = crate::core::utils::elapsed_ms(start) / 1000;

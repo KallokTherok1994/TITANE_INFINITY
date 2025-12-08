@@ -63,6 +63,8 @@ parking_lot = "0.12" # Fast synchronization primitives (Mutex, RwLock)
 # Requires: libasound2-dev on Linux (sudo apt install libasound2-dev)
 cpal  = { version = "0.15", optional = true }
 hound = "3.5"                                 # WAV file reading/writing
+rusqlite = { version = "0.37.0", features = ["bundled"] }
+ndarray = "0.17.1"
 
 [features]
 default = ["custom-protocol", "mock"]

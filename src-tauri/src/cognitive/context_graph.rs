@@ -37,7 +37,8 @@ pub enum EntityType {
 }
 
 impl EntityType {
-    pub fn from_str(s: &str) -> Self {
+    /// Parse entity type from string (case-insensitive)
+    pub fn parse(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "person" | "user" | "name" => EntityType::Person,
             "organization" | "company" | "org" => EntityType::Organization,
@@ -340,7 +341,7 @@ impl ContextGraph {
     ) {
         let mut edges = self.edges.write();
 
-        let node_edges = edges.entry(from).or_insert_with(Vec::new);
+        let node_edges = edges.entry(from).or_default();
 
         // Check if edge already exists
         if let Some(existing) = node_edges
@@ -670,7 +671,7 @@ impl ContextGraph {
         {
             let mut edges = graph.edges.write();
             for edge in import.edges {
-                edges.entry(edge.from).or_insert_with(Vec::new).push(edge);
+                edges.entry(edge.from).or_default().push(edge);
             }
         }
 

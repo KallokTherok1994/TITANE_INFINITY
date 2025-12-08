@@ -177,12 +177,13 @@ async fn send_message(
 }
 
 fn main() {
+    // Safe fallback for log directory if data_local_dir() fails
     let log_dir = dirs::data_local_dir()
-        .unwrap()
+        .unwrap_or_else(|| std::path::PathBuf::from("/tmp"))
         .join("titane")
         .join("logs");
     std::fs::create_dir_all(&log_dir).ok();
-    
+
     let security_manager = Arc::new(SecurityManager::new(
         log_dir.join("audit.log")
     ));

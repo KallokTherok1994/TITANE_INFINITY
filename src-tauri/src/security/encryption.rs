@@ -61,7 +61,7 @@ impl Encryptor {
     
     fn generate_nonce() -> GenericArray<u8, aes_gcm::aead::consts::U12> {
         let mut rng = rand::thread_rng();
-        let nonce_bytes: [u8; 32] = rng.gen();
+        let nonce_bytes: [u8; 12] = rng.gen();
         *GenericArray::from_slice(&nonce_bytes)
     }
 }

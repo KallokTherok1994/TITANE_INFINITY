@@ -48,6 +48,7 @@ pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ 
 pub mod profiling; // ✅ IPC Performance Profiler v19.5.0 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
+pub mod ipc; // ✅ IPC Cache Layer v19.5.2 P2-1 Phase 4 (NEW)
 // CACHING SYSTEM v19.5.2 P2-2 (NEW)
 // ═══════════════════════════════════════════════════════════════
 

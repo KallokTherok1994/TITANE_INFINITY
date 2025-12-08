@@ -18,7 +18,10 @@
       "Bash(xargs:*)",
       "Bash(cat:*)",
       "Bash(npm run check:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(cargo check:*)",
+      "Bash(npm run lint:*)",
+      "Bash(cargo clippy:*)"
     ],
     "deny": [],
     "ask": []
