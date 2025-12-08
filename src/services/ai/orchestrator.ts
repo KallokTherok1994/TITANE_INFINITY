@@ -18,6 +18,8 @@ import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
 import { tauriChatProvider } from './providers/tauriChat';
 import { geminiProvider } from './providers/gemini';
+import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
+import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
 import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
 
@@ -68,7 +70,9 @@ class AIOrchestrator {
   private providers = [
     titaneLocalProvider,   // ← NOYAU INFAILLIBLE (toujours en premier)
     tauriChatProvider,     // Backend Rust (cascade interne)
-    geminiProvider,        // Cloud API (performant mais dépendant réseau)
+    openaiProvider,        // OpenAI GPT-4 (puissant, cloud)
+    claudeProvider,        // Anthropic Claude (intelligent, cloud)
+    geminiProvider,        // Google Gemini (performant, cloud)
     ollamaProvider,        // Local LLM (privé mais plus lent)
   ];
 
@@ -255,6 +259,18 @@ class AIOrchestrator {
         case 'tauri-backend':
           score += isComplexQuery ? 20 : 10; // Bonus complexité
           score -= contextLength > 10000 ? 15 : 0; // Malus gros contexte
+          break;
+
+        case 'openai':
+          score += isComplexQuery ? 30 : 20; // Excellent sur complexité
+          score += messageLength > 1000 ? 15 : 0; // Bon sur longs messages
+          score -= stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+          break;
+
+        case 'claude':
+          score += isComplexQuery ? 28 : 18; // Très bon sur raisonnement
+          score += contextLength > 5000 ? 20 : 0; // Excellent contexte long
+          score -= stats.status === 'offline' ? 50 : 0; // Malus hors ligne
           break;
 
         case 'gemini':

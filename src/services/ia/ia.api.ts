@@ -148,52 +148,83 @@ export class IAService {
    */
   static maskAPIKey(key: string): string {
     if (key.length <= 10) return '****';
-    return `${key.slice(0, 8)}****${key.slice(-4)}`;
+    return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
   }
 
   /**
-   * Valider le format d'une clé API
+   * Valider le format d'une clé API (client-side, avant appel backend)
    */
-  static validateKeyFormat(service: IAProvider, key: string): { valid: boolean; error?: string } {
-    if (!key || key.trim().length === 0) {
-      return { valid: false, error: 'Clé vide' };
+  static validateKeyFormat(service: IAProvider, key: string): {
+    valid: boolean;
+    error?: string;
+  } {
+    const trimmed = key.trim();
+
+    // Validation longueur minimale
+    if (trimmed.length < 16) {
+      return {
+        valid: false,
+        error: 'Clé trop courte (minimum 16 caractères)',
+      };
     }
 
+    // Validation maximale (éviter surcharge)
+    if (trimmed.length > 512) {
+      return {
+        valid: false,
+        error: 'Clé trop longue (maximum 512 caractères)',
+      };
+    }
+
+    // Validation spécifique par provider
     switch (service) {
-      case 'openai':
-        if (!key.startsWith('sk-') || key.length < 40) {
+      case 'gemini':
+        // Gemini: commence généralement par "AI" ou similaire
+        if (!/^[A-Za-z0-9_-]+$/.test(trimmed)) {
           return {
             valid: false,
-            error: 'Clé OpenAI invalide (doit commencer par "sk-" et avoir min. 40 caractères)',
+            error: 'Format Gemini invalide (caractères alphanumériques uniquement)',
+          };
+        }
+        break;
+
+      case 'openai':
+        // OpenAI: commence par "sk-" (clé secrète) ou "sk-proj-" (projet)
+        if (!trimmed.startsWith('sk-')) {
+          return {
+            valid: false,
+            error: 'Clé OpenAI doit commencer par "sk-"',
           };
         }
         break;
 
       case 'claude':
-        if (!key.startsWith('sk-ant-') || key.length < 50) {
+        // Anthropic: commence par "sk-ant-"
+        if (!trimmed.startsWith('sk-ant-')) {
           return {
             valid: false,
-            error: 'Clé Claude invalide (doit commencer par "sk-ant-" et avoir min. 50 caractères)',
-          };
-        }
-        break;
-
-      case 'gemini':
-        if (key.length < 30) {
-          return {
-            valid: false,
-            error: 'Clé Gemini invalide (min. 30 caractères)',
+            error: 'Clé Anthropic doit commencer par "sk-ant-"',
           };
         }
         break;
 
       case 'ollama':
+        // Ollama: pas de clé API (URL uniquement)
+        return {
+          valid: true,
+        };
+
       case 'local':
-        // Pas de validation spécifique
-        break;
+        // Local: pas de validation spécifique
+        return {
+          valid: true,
+        };
 
       default:
-        return { valid: false, error: 'Provider inconnu' };
+        return {
+          valid: false,
+          error: `Provider inconnu: ${service}`,
+        };
     }
 
     return { valid: true };
