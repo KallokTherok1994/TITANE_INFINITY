@@ -20,6 +20,17 @@
 // MODULES - Core Engines
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/// Unified Memory Engine v2 - Advanced STM/MTM/LTM architecture
+///
+/// Fonctionnalités:
+/// - Short-Term Memory (FIFO bounded, 100 entries)
+/// - Mid-Term Memory (rolling summaries, 300 entries)
+/// - Long-Term Memory (Tantivy-ready, 10k+ entries)
+/// - Vector Store (384D embeddings, kNN search)
+/// - Semantic recall (hybrid lexical + vector)
+/// - Auto-promotion (STM → MTM → LTM)
+pub mod unified_memory;
+
 /// QA Engine - Pipeline de tests et validation intégrale
 ///
 /// Fonctionnalités:
