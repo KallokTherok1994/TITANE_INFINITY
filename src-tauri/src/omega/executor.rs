@@ -13,7 +13,7 @@ use serde::{Deserialize, Serialize};
 
 use super::{
     OmegaError, OmegaResult, PipelineStage,
-    StageInput, StageOutput, StageProcessor, StageContext,
+    StageInput, StageOutput, StageProcessor,
     router::{Intent, ExecutionMode, RoutingResult},
 };
 
@@ -543,7 +543,14 @@ impl ParallelExecutor {
 
         // Execute with global timeout
         let global_timeout = Duration::from_millis(self.global_timeout_ms);
-        match timeout(global_timeout, futures::future::join_all(futures)).await {
+        let all_futures = async {
+            let mut results = Vec::with_capacity(futures.len());
+            for future in futures {
+                results.push(future.await);
+            }
+            results
+        };
+        match timeout(global_timeout, all_futures).await {
             Ok(results) => Ok(results),
             Err(_) => Err(OmegaError::Timeout(self.global_timeout_ms)),
         }

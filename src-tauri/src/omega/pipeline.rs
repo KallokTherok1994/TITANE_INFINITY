@@ -14,9 +14,9 @@ use serde::{Deserialize, Serialize};
 use super::{
     OmegaConfig, OmegaError, OmegaResult,
     PipelineInput, PipelineOutput, PipelineStage, OutputMetadata,
-    StageInput, StageOutput, StageContext, StageProcessor,
+    StageInput, StageContext, StageProcessor,
     router::{Router, RoutingResult},
-    executor::{Executor, ExecutionResult},
+    executor::Executor,
     merger::{Merger, MergeResult},
     guardrails::{Guardrails, GuardrailResult, GuardrailConfig},
     diagnostics::DiagnosticsEngine,

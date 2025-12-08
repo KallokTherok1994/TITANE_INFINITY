@@ -1,36 +1,12 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ — AI Message Types
+//   TITANE∞ — AI Message Types (Re-exports from canonical source)
+//   AUTOFIX v19.3Ω: Unified type consolidation
 // ═══════════════════════════════════════════════════════════════
 
-export interface AIMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  timestamp: number;
-  provider?: string;
-  metadata?: Record<string, unknown>;
-}
+// Re-export canonical types from services/ai/types.ts
+export type { AIMessage, AIResponse, AIConfig, AIProvider, AIProviderName } from '@/services/ai/types';
 
-export interface AIResponse {
-  content: string;
-  provider: string;
-  timestamp: number;
-  metadata?: {
-    historyLength?: number;
-    historyCount?: number;
-    deterministic?: boolean;
-    [key: string]: unknown;
-  };
-}
-
-export interface AIConfig {
-  maxTokens?: number;
-  temperature?: number;
-  topP?: number;
-  timeout?: number;
-  model?: string;
-  [key: string]: unknown;
-}
-
+// Additional types specific to this module (not in canonical types)
 export type ModalityOrigin = 'voice' | 'text' | 'gesture' | 'visual' | 'multimodal';
 
 export interface UseChatOptions {

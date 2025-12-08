@@ -8,10 +8,26 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — AI SERVICES INDEX
- *   Export centralisé des services IA
+ *   TITANE∞ v20Ω+ — AI SERVICES INDEX
+ *   Export centralisé des services IA avec Health Monitoring
  * ═══════════════════════════════════════════════════════════════════
  */
+
+// ─────────────────────────────────────────────────────────────────
+// 🎯 SYSTÈME COMPLET v20Ω+ / v22Ω COGNITIVE KERNEL
+// ─────────────────────────────────────────────────────────────────
+export * from './system';
+
+// 🧠 NOUVEAU v22Ω: Cognitive Kernel
+export { cognitiveKernel } from './cognitiveKernel';
+export type {
+  CognitivePrinciples,
+  EnvironmentState,
+  IntentionState,
+  EphemeralMemory,
+  CognitiveProcess,
+  CognitiveDecision,
+} from './cognitiveKernel';
 
 // Legacy orchestrator (à migrer vers chatEngine)
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';

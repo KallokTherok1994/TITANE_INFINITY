@@ -24,7 +24,8 @@
       "Bash(cargo clippy:*)",
       "Bash(cargo build:*)",
       "Bash(cargo test:*)",
-      "Bash(timeout 180 cargo test:*)"
+      "Bash(timeout 180 cargo test:*)",
+      "Bash(npx vitest:*)"
     ],
     "deny": [],
     "ask": []

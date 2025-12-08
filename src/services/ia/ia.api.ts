@@ -26,8 +26,26 @@ export class IAService {
    */
   static async setAPIKey(service: IAProvider, key: string): Promise<CommandResult<string>> {
     try {
+      // 🔒 Validation client-side AVANT envoi backend
+      const validation = this.validateKeyFormat(service, key);
+      if (!validation.valid) {
+        return {
+          success: false,
+          error: validation.error || 'Format de clé invalide',
+        };
+      }
+
       const request: SetAPIKeyRequest = { service, key };
       const result = await invoke<CommandResult<string>>('set_api_key', { request });
+      
+      // ✅ Auto-test après configuration réussie
+      if (result.success) {
+        // Test en arrière-plan (non-bloquant)
+        this.testAPIKey(service).catch(() => {
+          // Silent fail, juste pour refresh le statut
+        });
+      }
+
       return result;
     } catch (error) {
       return {
@@ -114,9 +132,10 @@ export class IAService {
 
   /**
    * Obtenir le statut de tous les providers
+   * AUTOFIX v19.3Ω: Added 'local' provider to the list
    */
   static async getProvidersStatus(): Promise<ProviderStatus[]> {
-    const providers: IAProvider[] = ['gemini', 'openai', 'claude', 'ollama'];
+    const providers: IAProvider[] = ['gemini', 'openai', 'claude', 'ollama', 'local'];
     const listResult = await this.listProviders();
     const configuredProviders = listResult.success ? listResult.data || [] : [];
 
@@ -145,10 +164,12 @@ export class IAService {
 
   /**
    * Masquer une clé API (afficher seulement début et fin)
+   * AUTOFIX v19.3Ω: Fixed duplicate function definition
    */
   static maskAPIKey(key: string): string {
     if (key.length <= 10) return '****';
-    return `${key.substring(0, 4)}...${key.substring(key.length - 4)}`;
+    // 🔒 Sécurité renforcée : seulement 3 premiers + 3 derniers caractères
+    return `${key.substring(0, 3)}${'*'.repeat(Math.min(key.length - 6, 30))}${key.substring(key.length - 3)}`;
   }
 
   /**

@@ -16,18 +16,9 @@
 
 import { tauriClient } from './tauriClient';
 import type { ChatRequest } from './tauriClient';
-
-export interface AIMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  timestamp: number;
-}
-
-export interface AIResponse {
-  content: string;
-  provider: 'gemini' | 'ollama' | 'fallback';
-  timestamp: number;
-}
+// AUTOFIX v19.3Ω: Re-export canonical types for backward compatibility
+import type { AIMessage, AIResponse } from './ai/types';
+export type { AIMessage, AIResponse } from './ai/types';
 
 /**
  * @deprecated Utilisez tauriClient.chatSendMessage() à la place

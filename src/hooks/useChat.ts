@@ -29,6 +29,9 @@ import { awardExperience } from '../services/experienceService';
 import { XPSource, XP_REWARDS } from '../types/experience';
 import { userPreferencesEngine } from '../services/userPreferencesEngine';
 
+// ✨ v22Ω - Cognitive Kernel Integration
+import { cognitiveKernel } from '@/services/ai/cognitiveKernel';
+
 // ✨ v∞.20.0 - Camera Chat Integration (Super Prompt #3)
 import { handleCameraInChat } from '@/modules/camera/cameraChatIntegration';
 import { useVisionStore } from '@/stores/useVisionStore';
@@ -218,7 +221,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         const memory = JSON.parse(stored);
         if (memory && Array.isArray(memory.messages)) {
           console.log('[useChat OMNIS] 📂 Initial load from localStorage:', memory.messages.length, 'messages');
-          return memory.messages;
+          
+          // 🧠 NOUVEAU v22Ω: Harmoniser messages avec Cognitive Kernel
+          const harmonized = cognitiveKernel.harmonizeChatMessages(memory.messages);
+          return harmonized;
         }
       }
     } catch (e) {
@@ -366,6 +372,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     const normalized = normalizeMessages(nextMessages, getNextUiId);
     const hasMessages = normalized.length > 0;
 
+    // 🧠 NOUVEAU v22Ω: Harmoniser les messages avec Cognitive Kernel
+    const harmonizedNormalized = hasMessages ? cognitiveKernel.harmonizeChatMessages(normalized) : normalized;
+
     if (!allowEmpty && !hasMessages && stateVaultRef.current.stable.length > 0) {
       const restored = stateVaultRef.current.stable.map(message => ({ ...message }));
       setMessages(restored);
@@ -383,14 +392,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     }
 
     if (hasMessages) {
-      stateVaultRef.current.stable = normalized;
+      stateVaultRef.current.stable = harmonizedNormalized;
       stateVaultRef.current.lastContext = context;
     } else if (allowEmpty) {
       stateVaultRef.current.stable = [];
       stateVaultRef.current.lastContext = context;
     }
 
-    const applied = hasMessages ? normalized : [];
+    const applied = hasMessages ? harmonizedNormalized : [];
     const emitted = applied.map(message => ({ ...message }));
 
     setMessages(emitted);
@@ -1029,15 +1038,27 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     } catch (error) {
       console.error('[Chat] Engine pipeline error:', error);
 
+      // 🧠 NOUVEAU v22Ω: Harmoniser l'erreur avec Cognitive Kernel
+      const harmonizedError = cognitiveKernel.harmonizeError(error);
+
       const fallbackResponse: AIMessage = {
         role: 'assistant',
-        content: '⚠️ Erreur détectée — TITANE∞ reste présent. Une légère turbulence a été détectée mais l\'espace de discussion est stable. Reformule ou continue quand tu veux.',
+        content: `🟣 **TITANE∞ Auto-Récupération Cognitive v22Ω**
+
+${harmonizedError.message}
+
+**Type d'erreur** : ${harmonizedError.type}
+**Stratégie de récupération** : ${harmonizedError.recovery}
+
+Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation immédiatement.`,
         timestamp: Date.now(),
         provider: 'omnis-fallback',
         metadata: withUiId({
           status: 'error',
           duration: Date.now() - startTime,
-          error: error instanceof Error ? error.message : String(error)
+          error: error instanceof Error ? error.message : String(error),
+          cognitiveHarmonized: true,
+          errorType: harmonizedError.type,
         })
       };
 
