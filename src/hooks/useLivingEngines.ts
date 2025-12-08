@@ -14,6 +14,18 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
+
+// REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
+// Stubs temporaires pour compatibilité
+type SystemState = any;
+type PersonaState = any;
+const personaEngine = {
+  getState: () => ({} as PersonaState),
+  start: () => {},
+  stop: () => {},
+};
+
+/*
 import {
   // Phase 10 - Persona
   personaEngine,
@@ -22,6 +34,8 @@ import {
   type SystemState,
   type PersonaState,
 } from '../core';
+*/
+
 import { personaTauriBridge } from '../services/personaTauriBridge';
 
 export interface LivingEnginesState {

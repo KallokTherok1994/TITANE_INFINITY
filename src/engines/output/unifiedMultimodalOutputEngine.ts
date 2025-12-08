@@ -26,7 +26,8 @@ import { synestheticEmotionEngine, type SynestheticProfile } from '../emotion/sy
 import { embodiedPresenceEngine, type EmbodiedPresenceState } from '../embodiment/embodiedPresenceEngine';
 import { metaContinuumEngine } from '../continuum/metaContinuumEngine';
 import { archetypeResonanceEngine, type ArchetypeResonance } from '../psyche/archetypeResonanceEngine';
-import { multimodalPresenceEngine, type MultimodalPresenceState } from '../presence/multimodalPresenceEngine';
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import { multimodalPresenceEngine, type MultimodalPresenceState } from '../presence/_stubs';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

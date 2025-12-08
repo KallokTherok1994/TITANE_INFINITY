@@ -11,7 +11,8 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 // OPUS v∞.4 - PREDICTIVE STATE ENGINE TESTS
 // ============================================================================
 
-import { PredictiveStateEngine } from '../engines/predictive/PredictiveStateEngine';
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
+import { PredictiveStateEngine } from '../engines/predictive/_stubs';
 import {
   getDefaultPredictiveState,
   getDefaultPredictiveEngineConfig,
@@ -144,7 +145,8 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
 // OPUS v∞.5 - STRESS REGULATION ENGINE TESTS
 // ============================================================================
 
-import { StressRegulationEngine } from '../engines/stress/StressRegulationEngine';
+// REMOVED: engines/stress supprimé en PHASE 1 (OPTION B)
+import { StressRegulationEngine } from '../engines/stress/_stubs';
 import {
   getDefaultStressRegulationState,
   getDefaultStressRegulationConfig,
@@ -332,7 +334,8 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
 // OPUS v∞.6 - HUMAN RHYTHM ENGINE TESTS
 // ============================================================================
 
-import { HumanRhythmEngine } from '../engines/rhythm/HumanRhythmEngine';
+// REMOVED: engines/rhythm supprimé en PHASE 1 (OPTION B)
+import { HumanRhythmEngine } from '../engines/rhythm/_stubs';
 import {
   getDefaultHumanRhythmState,
   getDefaultHumanRhythmConfig,

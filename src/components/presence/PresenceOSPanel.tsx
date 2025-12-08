@@ -21,6 +21,16 @@ import {
   usePresenceCoherence,
   usePresenceModeControl,
 } from '@/hooks';
+
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+// Définir types localement pour éviter l'import manquant
+type PresenceState = any;
+type CognitiveState = any;
+type AffectiveState = any;
+type ExpressiveState = any;
+type SpatialPosition = any;
+
+/*
 import type {
   PresenceState,
   CognitiveState,
@@ -28,6 +38,7 @@ import type {
   ExpressiveState,
   SpatialPosition,
 } from '@/engines/presence/presenceOS';
+*/
 import './PresenceOSPanel.css';
 
 // ═══════════════════════════════════════════════════════════════════════════

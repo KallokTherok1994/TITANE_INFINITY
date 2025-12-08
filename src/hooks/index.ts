@@ -192,6 +192,8 @@ export {
   useTitaneIdentity
 } from './useUnifiedPresence';
 
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+/*
 export type {
   PresenceState as UnifiedPresenceState,
   TonicProfile,
@@ -204,6 +206,7 @@ export type {
   SymbolicElement,
   TransitionProtocol
 } from '../engines/presence/narrativeProtocol';
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // v28.0 - Multimodal Presence Engine (Super Prompt XXVIII)
@@ -221,6 +224,8 @@ export {
   useExpressiveActions
 } from './useMultimodalPresence';
 
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+/*
 export type {
   PresenceMode as MultimodalPresenceMode,
   BreathingCycle,
@@ -230,6 +235,7 @@ export type {
   MultimodalPresenceState,
   MultimodalPresenceConfig
 } from '../engines/presence/multimodalPresenceEngine';
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // v29-32 - Deep Psyche Engines (Super Prompts XXIX-XXXII)
@@ -353,6 +359,8 @@ export {
   usePresenceModeControl
 } from './usePresenceOS';
 
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+/*
 export type {
   PresenceState as PresenceOSState,
   PresenceMode as PresenceOSMode,
@@ -363,6 +371,7 @@ export type {
   ReasoningStyle,
   AutonomicReaction
 } from '../engines/presence/presenceOS';
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // v∞.13 - Physiological State (Interoception + Holophonic)
@@ -422,6 +431,9 @@ export {
   useCognitiveDynamicsState
 } from './useCognitive';
 
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
+// Types commentés car non disponibles après suppression
+/*
 export type {
   PredictiveFrame,
   PredictedNeed,
@@ -431,6 +443,7 @@ export type {
   TitaneSelfPrediction,
   RecommendedAdjustments
 } from '../engines/predictive/predictiveReflectionEngine';
+*/
 
 export type {
   ConsciousState,

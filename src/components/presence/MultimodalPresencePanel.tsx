@@ -13,7 +13,13 @@ import {
   usePresenceEnergy,
   useExpressiveActions,
 } from '@/hooks/useMultimodalPresence';
+
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+type PresenceMode = string;
+/*
 import type { PresenceMode } from '@/engines/presence/multimodalPresenceEngine';
+*/
+
 import './MultimodalPresencePanel.css';
 
 /**

@@ -18,6 +18,10 @@ import type { PromptContext } from '@/core/prompts';
 import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
+
+// PHASE 2: Unified Memory System Integration
+import { unifiedMemory } from '@/core/services/unifiedMemory';
+
 import type {
   ProjectSummary,
   DecisionSummary,
@@ -507,11 +511,12 @@ class ChatEngineOmega {
       const processedResponse = this.postProcess(response, finalConfig);
       isDev && console.log('   ✅ Response processed');
 
-      // ═══ PHASE 1.7: SAUVEGARDE MEMORY CORE ═══
+      // ═══ PHASE 1.7: SAUVEGARDE MEMORY CORE + UNIFIED MEMORY ═══
       pipelineSteps.push('memory-saving');
-      isDev && console.log('💾 Step 1.7: Saving to Memory Core...');
+      isDev && console.log('💾 Step 1.7: Saving to Memory Core + Unified Memory...');
 
       try {
+        // Sauvegarde legacy (memoryIntegration)
         await this.withTimeout(
           memoryIntegration.saveInteraction({
             mode: finalConfig.mode,
@@ -523,9 +528,21 @@ class ChatEngineOmega {
           3000,
           'Memory save timeout'
         );
-        isDev && console.log('   ✅ Interaction saved to core memory');
+        
+        // NOUVEAU: Sauvegarde dans Unified Memory (PHASE 2)
+        // Importance calculée selon le mode
+        const importance = this.calculateImportance(finalConfig.mode, validatedMessage);
+        await unifiedMemory.store(
+          `${validatedMessage}\n\n${processedResponse.content}`,
+          'assistant',
+          importance,
+          finalConfig.conversationId,
+          [finalConfig.mode, 'conversation']
+        );
+        
+        isDev && console.log('   ✅ Interaction saved to core memory + unified memory');
       } catch (error) {
-        isDev && console.warn('   ⚠️ Memory save failed (continuing)');
+        isDev && console.warn('   ⚠️ Memory save failed (non-blocking):', error);
         autoHealed = true;
       }
 
@@ -1681,6 +1698,22 @@ Que souhaites-tu explorer ?`;
       return text;
     }
   }
+
+  /**
+   * PHASE 2: Calcule l'importance d'un message pour Unified Memory
+   * Retourne un score 0.0-1.0 basé sur le mode et le contenu
+   */
+  private calculateImportance(mode: ChatMode, message: string): number {
+    const modeImportance: Record<ChatMode, number> = {
+      reflection: 0.8, creation: 0.7, strategy: 0.7, emergency: 0.9,
+      debug_cognitive: 0.6, standard: 0.4, quick: 0.2, omega: 0.5, default: 0.3,
+    };
+    let importance = modeImportance[mode] || 0.3;
+    const lowerMessage = message.toLowerCase();
+    if (lowerMessage.match(/décision|important|urgent|critique|projet|objectif/)) importance += 0.1;
+    if (message.length > 200) importance += 0.05;
+    return Math.min(importance, 1.0);
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -1690,3 +1723,4 @@ Que souhaites-tu explorer ?`;
 export const chatEngine = new ChatEngineOmega();
 
 export default chatEngine;
+

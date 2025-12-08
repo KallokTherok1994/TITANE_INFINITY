@@ -115,15 +115,17 @@ import { CognitiveLayoutControl } from './components/cognitive/CognitiveLayoutCo
 import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine';
 
 // ✨ v∞.27.0 - Unified Presence Engine (Super Prompt #3 - EXPERIENTIAL IDENTITY)
-import { UnifiedPresenceControl as _UnifiedPresenceControl } from './components/presence/UnifiedPresenceControl';
-import { unifiedPresenceEngine } from './engines/presence/unifiedPresenceEngine';
-import { presenceIntegrations } from './engines/presence/presenceIntegrations';
-import { narrativeProtocol } from './engines/presence/narrativeProtocol';
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+// import { UnifiedPresenceControl as _UnifiedPresenceControl } from './components/presence/UnifiedPresenceControl';
+// import { unifiedPresenceEngine } from './engines/presence/unifiedPresenceEngine';
+// import { presenceIntegrations } from './engines/presence/presenceIntegrations';
+// import { narrativeProtocol } from './engines/presence/narrativeProtocol';
 
 // ✨ v∞.28.0 - Multimodal Presence Engine (Super Prompt XXVIII - LIVING PRESENCE)
-import { MultimodalPresencePanel as _MultimodalPresencePanel } from './components/presence/MultimodalPresencePanel';
-import { multimodalPresenceEngine } from './engines/presence/multimodalPresenceEngine';
-import './components/presence/MultimodalPresencePanel.css';
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+// import { MultimodalPresencePanel as _MultimodalPresencePanel } from './components/presence/MultimodalPresencePanel';
+// import { multimodalPresenceEngine } from './engines/presence/multimodalPresenceEngine';
+// import './components/presence/MultimodalPresencePanel.css';
 
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
 import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
@@ -147,10 +149,12 @@ import { auraEngine } from './engines/aura/auraEngine';
 import './components/psyche/DeepPsychePanel.css';
 
 // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
-import { presenceOS } from './engines/presence/presenceOS';
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+// import { presenceOS } from './engines/presence/presenceOS';
 
 // ✨ v∞ - Multi-Agent Engine & Agents
-import { multiAgentEngine } from './core/ai/multi_agent_engine';
+// REMOVED: core/ai/multi_agent_engine supprimé en PHASE 1 (OPTION B)
+// import { multiAgentEngine } from './core/ai/multi_agent_engine';
 import { HeliosAgent } from './core/ai/agents/helios_agent';
 import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
 import { PersonaAgent } from './core/ai/agents/persona_agent';
@@ -337,6 +341,8 @@ const AppRouter: React.FC = () => {
   }, []);
 
   // ✨ v∞ Phase 4 - Initialiser Multi-Agent System
+  // REMOVED: core/ai/multi_agent_engine supprimé en PHASE 1 (OPTION B)
+  /*
   useEffect(() => {
     const initAgents = async () => {
       console.log('🌌 [MULTI-AGENT] Initializing 5-agent system...');
@@ -360,6 +366,7 @@ const AppRouter: React.FC = () => {
       multiAgentEngine.shutdown();
     };
   }, []);
+  */
 
   // ✨ v∞.27.0 - Initialiser Cognitive Layout Engine
   useEffect(() => {
@@ -373,6 +380,8 @@ const AppRouter: React.FC = () => {
   }, []);
 
   // ✨ v∞.27.0 - Initialiser Unified Presence Engine (Super Prompt #3)
+  // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+  /*
   useEffect(() => {
     console.log('🌌 [PRESENCE] Starting Unified Presence Engine...');
 
@@ -394,8 +403,11 @@ const AppRouter: React.FC = () => {
       unifiedPresenceEngine.stop();
     };
   }, []);
+  */
 
   // ✨ v∞.28.0 - Initialiser Multimodal Presence Engine (Super Prompt XXVIII)
+  // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+  /*
   useEffect(() => {
     console.log('🎭 [MULTIMODAL] Starting Multimodal Presence Engine...');
 
@@ -409,6 +421,7 @@ const AppRouter: React.FC = () => {
       multimodalPresenceEngine.stop();
     };
   }, []);
+  */
 
   // ✨ v∞.29-32 - Initialiser Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
   useEffect(() => {

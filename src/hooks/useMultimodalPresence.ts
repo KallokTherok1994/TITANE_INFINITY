@@ -4,6 +4,21 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
+
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import {
+  multimodalPresenceEngine,
+  type MultimodalPresenceState,
+  type PresenceMode,
+} from '@/engines/presence/_stubs';
+
+// Types locaux pour types manquants dans stubs
+type ExpressiveIntention = any;
+type BreathingCycle = any;
+type HaloColorExpression = any;
+type AvatarMicroMimics = any;
+
+/*
 import {
   multimodalPresenceEngine,
   type MultimodalPresenceState,
@@ -13,6 +28,8 @@ import {
   type HaloColorExpression,
   type AvatarMicroMimics,
 } from '@/engines/presence/multimodalPresenceEngine';
+*/
+
 import type { InnerDialogueState } from '@/services/voice/innerDialogueController';
 
 // ═══════════════════════════════════════════════════════════════════════════

@@ -13,7 +13,8 @@ import type {
   TrainingSession,
   TrainingBaselineProfile,
 } from '@/types/trainingBaseline';
-import { TrainingBaselineEngine, TRAINING_CONFIG } from '@/engines/training/TrainingBaselineEngine';
+// REMOVED: engines/training supprimé en PHASE 1 (OPTION B)
+import { TrainingBaselineEngine, TRAINING_CONFIG } from '@/engines/training/_stubs';
 
 // ============================================================================
 // TYPES

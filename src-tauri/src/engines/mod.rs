@@ -31,6 +31,34 @@
 /// - Auto-promotion (STM → MTM → LTM)
 pub mod unified_memory;
 
+/// Behavior Engine vΩ - Comportements Cognitifs Unifiés (Super Prompt #16)
+///
+/// Fonctionnalités:
+/// - BehaviorProfile (modes: Coach, Meta, Analyst, Creative, Neutral)
+/// - BehaviorRules (règles dynamiques)
+/// - BehaviorState (état interne)
+/// - Intent detection & Emotion signals
+pub mod behavior;
+
+/// Quantum Predictive Engine vΩ - Prédiction et anticipation (Super Prompt #20)
+///
+/// Fonctionnalités:
+/// - PredictionModel (n-grams, transitions)
+/// - PatternAnalyzer (détection de patterns comportementaux)
+/// - ProbabilityEngine (inférence bayésienne)
+/// - QuantumState (superposition de prédictions)
+/// - IntentionDetector (détection d'intentions)
+pub mod quantum;
+
+/// Temporal Engine vΩ - Gestion temporelle et undo/redo (Super Prompt #22)
+///
+/// Fonctionnalités:
+/// - SnapshotManager (LRU cache de snapshots)
+/// - Timeline (historique linéaire)
+/// - TemporalDiff (calcul des différences)
+/// - Branches (timeline branching)
+pub mod temporal;
+
 /// QA Engine - Pipeline de tests et validation intégrale
 ///
 /// Fonctionnalités:
@@ -105,6 +133,39 @@ pub use developer_mode::{
     PatchHistory,
     SecurityValidation,
     DiffPreview,
+};
+
+// Behavior Engine exports (Super Prompt #16)
+pub use behavior::{
+    BehaviorEngine,
+    BehaviorProfile,
+    BehaviorMode,
+    BehaviorRules,
+    BehaviorState,
+    Intent,
+    EmotionSignal,
+};
+
+// Quantum Predictive Engine exports (Super Prompt #20)
+pub use quantum::{
+    QuantumPredictiveEngine,
+    QuantumConfig,
+    Prediction,
+    PredictedAction,
+    UserEvent,
+    QuantumStats,
+};
+
+// Temporal Engine exports (Super Prompt #22)
+pub use temporal::{
+    TemporalEngine,
+    TemporalConfig,
+    TemporalResult,
+    StateSnapshot,
+    SnapshotInfo,
+    TemporalStats,
+    Timeline,
+    TemporalDiff,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════

@@ -17,7 +17,13 @@ import type { UserSpeed } from '../core/ARCHITECTURE_TYPES_v24-v∞';
 
 import { secureInvoke } from '@/lib/security';
 import { personaService } from './api';
+// REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
+type PersonaState = any;
+type SystemState = any;
+
+/*
 import type { PersonaState, SystemState } from '../core';
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // RUST RESPONSE TYPES (matching Rust structs)

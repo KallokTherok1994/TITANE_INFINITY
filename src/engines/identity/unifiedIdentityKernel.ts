@@ -14,10 +14,18 @@
  * l'attention/émotions/ton/posture, stabilise l'identité dans le temps.
  */
 
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import {
+  predictiveReflectionEngine,
+  type PredictiveFrame,
+} from '../predictive/_stubs';
+
+/*
 import {
   predictiveReflectionEngine,
   type PredictiveFrame,
 } from '../predictive/predictiveReflectionEngine';
+*/
 import {
   consciousDynamicsModel,
   type ConsciousState,

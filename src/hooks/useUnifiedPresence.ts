@@ -11,6 +11,19 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
+
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import {
+  unifiedPresenceEngine,
+} from '@/engines/presence/_stubs';
+
+// Types locaux pour éviter imports manquants
+type PresenceState = any;
+type TonicProfile = any;
+type UserContext = any;
+type IdentityMatrix = any;
+
+/*
 import {
   unifiedPresenceEngine,
   type PresenceState,
@@ -18,11 +31,23 @@ import {
   type UserContext,
   type IdentityMatrix,
 } from '@/engines/presence/unifiedPresenceEngine';
+*/
+
+import {
+  narrativeProtocol,
+} from '@/engines/presence/_stubs';
+
+// Types locaux pour éviter imports manquants
+type NarrativeArc = any;
+type SymbolicElement = any;
+
+/*
 import {
   narrativeProtocol,
   type NarrativeArc,
   type SymbolicElement,
 } from '@/engines/presence/narrativeProtocol';
+*/
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // 🎨 HOOK PRINCIPAL - Unified Presence
