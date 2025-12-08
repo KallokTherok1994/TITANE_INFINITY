@@ -21,6 +21,7 @@ pub mod harmonia_commands;
 pub mod ia_commands; // ✅ v∞.19.3Ω: IA Commands (OpenAI + Claude + Unified)
 pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
+pub mod multi_ai; // ✅ v∞: Multi-IA Orchestrator (SUPER PROMPT #8)
 pub mod one_core; // ✅ v19.6: TITANE∞ ONE CORE - Unified Command Center (OPUS #6)
 pub mod orchestration_center; // ✅ v19.5: Centre d'Orchestration Cognitive (OPUS #5/6/7)
 pub mod persistent_memory; // ✅ v19.2Ω: Persistent Memory 3-Level System
@@ -40,6 +41,7 @@ pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands
 pub use harmonia_commands::*;
 pub use ia_commands::*; // ✅ v∞.19.3Ω: Export IA commands
 pub use memory_compactor_commands::*;
+pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
 pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
 pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands
 pub use persistent_memory::*; // ✅ v19.2Ω: Export persistent memory commands

@@ -93,6 +93,9 @@ use tokio::sync::Mutex;
 // Singularity Cortex OS v∞ (SUPER PROMPT #7)
 use titane_infinity::singularity_cortex::api::SingularityCortexState;
 
+// Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
+use titane_infinity::ai::orchestrator_multi::OrchestratorState;
+
 // Core Singularity State (for CoherenceEngine v20.0)
 
 // QA System v19.8
@@ -199,9 +202,13 @@ fn main() {
     // Initialize Singularity Cortex OS v∞ (SUPER PROMPT #7)
     let singularity_cortex = SingularityCortexState::new();
 
+    // Initialize Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
+    let multi_ai_orchestrator = OrchestratorState::new();
+
     tauri::Builder::default()
         .manage(app_state)
         .manage(singularity_cortex)
+        .manage(multi_ai_orchestrator)
         // ...existing code...
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

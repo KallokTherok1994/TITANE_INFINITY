@@ -1,16 +1,95 @@
-// TITANE∞ v20.1 - AI Module with Security Hardening + Performance Cache
-// Multi-provider AI system with automatic fallback (Gemini → Ollama) + security validation
-// Architecture v20.1: Clean, documented, production-ready, security hardened, cache-optimized
+// ═══════════════════════════════════════════════════════════════
+//   TITANE∞ — Multi-IA Orchestrator vΩ.5
+//   SUPER PROMPT #8 — AI Module Root
+//   Enhanced with Claude, OpenAI, Local, TITANE Engine
+// ═══════════════════════════════════════════════════════════════
 
-pub mod cache;    // NEW v20.1: LRU cache for AI responses and provider status
+// Legacy modules (v20.1)
+pub mod cache;
 pub mod gemini;
 pub mod ollama;
-pub mod router;
-pub mod security; // Security hardening module
+pub mod router; // Legacy AIRouter (Gemini/Ollama)
+pub mod security;
+
+// NEW: Multi-IA Orchestrator modules (SUPER PROMPT #8)
+pub mod providers;
+pub mod orchestrator_multi;
+pub mod router_intelligent; // NEW: Intelligent AI Router (Multi-provider)
+pub mod fusion;
+pub mod evaluator;
+pub mod config_multi;
+pub mod api;
 
 use serde::{Deserialize, Serialize};
 
-/// AI Request structure v15
+// ═══════════════════════════════════════════════════════════════
+// TYPES FONDAMENTAUX (SUPER PROMPT #8)
+// ═══════════════════════════════════════════════════════════════
+
+/// Requête IA universelle (nouvelle version Multi-IA)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AiRequest {
+    pub prompt: String,
+    pub mode: AiMode,
+    pub user_id: String,
+    pub session_id: String,
+    pub max_tokens: Option<u32>,
+    pub temperature: Option<f32>,
+    pub context: Option<String>,
+}
+
+/// Mode de génération IA
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum AiMode {
+    Fast,      // Vitesse maximale (Haiku, GPT-3.5, Local rapide)
+    Quality,   // Qualité optimale (Sonnet, GPT-4.1)
+    Deep,      // Réflexion profonde (Opus, GPT-4.1)
+    Creative,  // Créativité (température élevée)
+    Analysis,  // Analyse technique (température basse)
+}
+
+impl std::fmt::Display for AiMode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            AiMode::Fast => write!(f, "fast"),
+            AiMode::Quality => write!(f, "quality"),
+            AiMode::Deep => write!(f, "deep"),
+            AiMode::Creative => write!(f, "creative"),
+            AiMode::Analysis => write!(f, "analysis"),
+        }
+    }
+}
+
+/// Réponse IA avec métadonnées complètes
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct AiResponse {
+    pub output: String,
+    pub provider: String,
+    pub model: String,
+    pub tokens_in: u32,
+    pub tokens_out: u32,
+    pub latency_ms: u128,
+    pub confidence: f32,
+    pub metadata: AiMetadata,
+}
+
+/// Métadonnées de génération
+#[derive(Debug, Clone, Serialize, Deserialize, Default)]
+pub struct AiMetadata {
+    pub mode: String,
+    pub temperature_used: Option<f32>,
+    pub finish_reason: Option<String>,
+    pub cached: bool,
+    pub fallback_triggered: bool,
+    pub evaluation_score: Option<f32>,
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LEGACY TYPES (v20.1) - Rétro-compatibilité
+// ═══════════════════════════════════════════════════════════════
+
+/// AI Request structure v15 (legacy)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIRequest {
     pub prompt: String,
@@ -19,7 +98,7 @@ pub struct AIRequest {
     pub stream: bool,
 }
 
-/// AI Response structure v15
+/// AI Response structure v15 (legacy)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AIResponse {
     pub content: String,
@@ -28,7 +107,7 @@ pub struct AIResponse {
     pub tokens: usize,
 }
 
-/// AI Provider enum v15
+/// AI Provider enum v15 (legacy)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AIProvider {
     Gemini,  // Google Gemini API
@@ -36,14 +115,21 @@ pub enum AIProvider {
     Offline, // Fallback mode (basic responses)
 }
 
-/// AI Error types v15
-#[derive(Debug)]
+/// AI Error types (unified)
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AIError {
     NetworkError(String),
     APIError(String),
     TimeoutError,
     InvalidResponse(String),
     NoProviderAvailable,
+    // NEW: Multi-IA errors
+    ProviderUnavailable { provider: String, reason: String },
+    RateLimitExceeded { provider: String, retry_after: Option<u64> },
+    AuthenticationFailed { provider: String },
+    ConfigurationError { message: String },
+    AllProvidersFailed { attempts: Vec<String> },
+    InvalidRequest { message: String },
 }
 
 impl std::fmt::Display for AIError {
@@ -54,6 +140,22 @@ impl std::fmt::Display for AIError {
             AIError::TimeoutError => write!(f, "Request timeout"),
             AIError::InvalidResponse(e) => write!(f, "Invalid response: {}", e),
             AIError::NoProviderAvailable => write!(f, "No AI provider available"),
+            AIError::ProviderUnavailable { provider, reason } => {
+                write!(f, "Provider {} unavailable: {}", provider, reason)
+            }
+            AIError::RateLimitExceeded { provider, retry_after } => {
+                write!(f, "Rate limit exceeded for {}: retry after {:?}s", provider, retry_after)
+            }
+            AIError::AuthenticationFailed { provider } => {
+                write!(f, "Authentication failed for {}", provider)
+            }
+            AIError::ConfigurationError { message } => {
+                write!(f, "Configuration error: {}", message)
+            }
+            AIError::AllProvidersFailed { attempts } => {
+                write!(f, "All providers failed. Tried: {:?}", attempts)
+            }
+            AIError::InvalidRequest { message } => write!(f, "Invalid request: {}", message),
         }
     }
 }
