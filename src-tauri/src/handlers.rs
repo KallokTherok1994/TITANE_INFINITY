@@ -73,6 +73,17 @@ macro_rules! generate_titane_handlers {
                     $crate::audio::commands::stop_recording,
                     $crate::audio::commands::transcribe_audio,
                     $crate::audio::commands::force_reset_voice,
+
+                    // Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
+                    commands::multi_ai_generate,
+                    commands::multi_ai_generate_dual,
+                    commands::multi_ai_generate_fused,
+                    commands::multi_ai_providers,
+                    commands::multi_ai_best_provider,
+                    commands::multi_ai_evaluate,
+                    commands::multi_ai_set_fallback,
+                    commands::multi_ai_configure_keys,
+
                     commands::create_conversation,
                     commands::load_conversation,
                     commands::list_conversations,
