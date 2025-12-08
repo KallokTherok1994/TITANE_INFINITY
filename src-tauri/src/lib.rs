@@ -36,6 +36,7 @@ pub mod narrative; // ✅ NarrativeEngine v22 (NEW)
 pub mod qa; // ✅ QA Engine v19.8 (NEW)
 pub mod shared; // ✅ Shared types and utilities
 pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
+pub mod singularity_cortex; // ✅ Singularity Cortex OS v∞ — SUPER PROMPT #7 (NEW)
 pub mod singularity_fusion;
 pub mod types; // ✅ Type definitions
 pub mod utils; // ✅ Utilities (AppResult, AppError)
