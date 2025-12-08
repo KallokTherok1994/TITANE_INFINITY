@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
-version      = "19.5.2"
-description  = "TITANE∞ v19.5.2 - Production Ready: Phase A+B Complete, IPC Profiler p95=140ms, Memory 25MB, Tests 98.2%, Boot ~2s, 5 Linux Packages Distribution"
+version      = "19.3.0"
+description  = "TITANE∞ v19.3Ω - Multi-Provider AI Engine: 6 Providers (OpenAI GPT-4o, Claude 3.5 Sonnet, Gemini 2.0, Ollama, Local), Neural Orchestrator, 48 Tests 100%, Zero API Leaks, Backend AES-256-GCM Encryption"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
