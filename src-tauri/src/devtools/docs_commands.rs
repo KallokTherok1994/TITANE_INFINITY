@@ -8,11 +8,11 @@
 
 use super::docs_engine::{CommandDoc, CommandCategory, DocsRegistry, DOCS_ENGINE};
 
-/// Macro for safe mutex locking with auto-recovery
-macro_rules! lock_or_recover {
-    ($mutex:expr) => {
-        $mutex.lock().unwrap_or_else(|poisoned| {
-            log::error!("[DocsCommands] CRITICAL: Mutex poisoned, recovering...");
+/// Macro for safe RwLock read access with auto-recovery
+macro_rules! read_or_recover {
+    ($rwlock:expr) => {
+        $rwlock.read().unwrap_or_else(|poisoned| {
+            log::error!("[DocsCommands] CRITICAL: RwLock poisoned, recovering...");
             poisoned.into_inner()
         })
     };
@@ -22,21 +22,21 @@ macro_rules! lock_or_recover {
 /// Rechercher dans la documentation
 #[tauri::command]
 pub fn titan_docs_search(query: String) -> Vec<CommandDoc> {
-    let engine = DOCS_ENGINE.read().unwrap();
+    let engine = read_or_recover!(DOCS_ENGINE);
     engine.search(&query).into_iter().cloned().collect()
 }
 
 /// Obtenir la documentation d'une commande
 #[tauri::command]
 pub fn titan_docs_get(command_name: String) -> Option<CommandDoc> {
-    let engine = DOCS_ENGINE.read().unwrap();
+    let engine = read_or_recover!(DOCS_ENGINE);
     engine.get(&command_name).cloned()
 }
 
 /// Lister toutes les commandes
 #[tauri::command]
 pub fn titan_docs_list(category: Option<String>) -> Vec<CommandDoc> {
-    let engine = DOCS_ENGINE.read().unwrap();
+    let engine = read_or_recover!(DOCS_ENGINE);
 
     let cat = category.and_then(|c| {
         match c.to_lowercase().as_str() {
@@ -60,20 +60,20 @@ pub fn titan_docs_list(category: Option<String>) -> Vec<CommandDoc> {
 /// Lister les commandes d'un module
 #[tauri::command]
 pub fn titan_docs_list_by_module(module: String) -> Vec<CommandDoc> {
-    let engine = DOCS_ENGINE.read().unwrap();
+    let engine = read_or_recover!(DOCS_ENGINE);
     engine.list_by_module(&module).into_iter().cloned().collect()
 }
 
 /// Obtenir le registre complet
 #[tauri::command]
 pub fn titan_docs_registry() -> DocsRegistry {
-    let engine = DOCS_ENGINE.read().unwrap();
+    let engine = read_or_recover!(DOCS_ENGINE);
     engine.get_registry().clone()
 }
 
 /// Générer la documentation Markdown
 #[tauri::command]
 pub fn titan_docs_generate_markdown() -> String {
-    let engine = DOCS_ENGINE.read().unwrap();
+    let engine = read_or_recover!(DOCS_ENGINE);
     engine.generate_markdown()
 }

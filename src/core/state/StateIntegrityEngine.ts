@@ -33,8 +33,8 @@ export interface IntegrityCheckResult {
 export interface IntegrityIssue {
   layer: string;
   field: string;
-  expected: any;
-  actual: any;
+  expected: string | number | boolean;
+  actual: unknown;
   severity: 'low' | 'medium' | 'high';
   fixable: boolean;
 }
@@ -100,7 +100,11 @@ export class StateIntegrityEngine {
   /**
    * Vérifie une couche spécifique
    */
-  private checkLayer(layer: any, layerName: string, issues: IntegrityIssue[]): void {
+  private checkLayer(
+    layer: Record<string, unknown>,
+    layerName: string,
+    issues: IntegrityIssue[]
+  ): void {
     for (const [field, value] of Object.entries(layer)) {
       if (typeof value === 'number') {
         // Vérifier limites 0-1
@@ -137,8 +141,8 @@ export class StateIntegrityEngine {
   /**
    * Corrige une couche
    */
-  private fixLayer(layer: any): any {
-    const fixed = { ...layer };
+  private fixLayer<T extends Record<string, unknown>>(layer: T): T {
+    const fixed = { ...layer } as Record<string, unknown>;
 
     for (const key of Object.keys(fixed)) {
       if (typeof fixed[key] === 'number') {
@@ -146,7 +150,7 @@ export class StateIntegrityEngine {
       }
     }
 
-    return fixed;
+    return fixed as T;
   }
 
   /**
@@ -189,9 +193,7 @@ export class StateIntegrityEngine {
    * Obtient le dernier snapshot
    */
   public getLatestSnapshot(): StateSnapshot | null {
-    return this.snapshots.length > 0
-      ? this.snapshots[this.snapshots.length - 1]
-      : null;
+    return this.snapshots.length > 0 ? this.snapshots[this.snapshots.length - 1] : null;
   }
 
   /**
@@ -211,8 +213,8 @@ export class StateIntegrityEngine {
   /**
    * Compresse une couche
    */
-  private compressLayer(layer: any): any {
-    const compressed: any = {};
+  private compressLayer<T extends Record<string, unknown>>(layer: T): T {
+    const compressed: Record<string, unknown> = {};
 
     for (const [key, value] of Object.entries(layer)) {
       if (typeof value === 'number') {
@@ -222,7 +224,7 @@ export class StateIntegrityEngine {
       }
     }
 
-    return compressed;
+    return compressed as T;
   }
 
   /**

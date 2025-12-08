@@ -221,7 +221,7 @@ class PhaseSpaceEngine {
   private subscribers: Set<(state: PhaseSpaceState) => void> = new Set();
 
   // Référence au Meta-Singularity Kernel
-  private metaKernel: any = null;
+  private metaKernel: unknown = null;
 
   constructor() {
     this.state = {

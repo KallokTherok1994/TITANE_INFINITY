@@ -23,25 +23,27 @@ const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
 // TAURI IMPORTS (Lazy loaded to avoid errors in browser-only builds)
 // ═══════════════════════════════════════════════════════════════════════════
 
-let tauriFs: unknown = null;
+let tauriFs: any = null;
+let tauriPath: any = null;
 
 async function ensureTauriApis() {
   if (!isTauriContext) return;
-  if (tauriFs) return;
+  if (tauriFs && tauriPath) return;
 
   try {
     // Lazy dynamic imports - Tauri v2 uses plugin architecture
-    tauriFs = await import('@tauri-apps/plugin-fs');
+    if (!tauriFs) {
+      tauriFs = await import('@tauri-apps/plugin-fs');
+    }
+    if (!tauriPath) {
+      tauriPath = await import('@tauri-apps/api/path');
+    }
   } catch (error) {
     console.warn(
       '[tauriFsAdapter] Tauri APIs not available, using localStorage fallback'
     );
   }
 }
-
-// ═══════════════════════════════════════════════════════════════════════════
-// LOCALSTORAGE FALLBACK (Browser Development)
-// ═══════════════════════════════════════════════════════════════════════════
 
 const STORAGE_PREFIX = 'titane_fs_';
 

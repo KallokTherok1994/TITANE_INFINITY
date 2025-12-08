@@ -38,10 +38,42 @@ export interface RealtimeTask {
   id: string;
   type: 'audio' | 'avatar' | 'ui' | 'network';
   priority: Priority;
-  payload: any;
+  payload: AudioBuffer | AvatarAnimationPayload | UIEventPayload | NetworkPayload;
   timestamp: number;
   deadline?: number;
   cancellable: boolean;
+}
+
+/** Payload pour animation avatar */
+export interface AvatarAnimationPayload {
+  keyframes?: AvatarKeyframe[];
+  duration?: number;
+  blendMode?: 'replace' | 'additive';
+}
+
+/** Keyframe d'animation avatar */
+export interface AvatarKeyframe {
+  time: number;
+  position?: { x: number; y: number; z: number };
+  rotation?: { x: number; y: number; z: number; w: number };
+  scale?: { x: number; y: number; z: number };
+  morphTargets?: Record<string, number>;
+}
+
+/** Payload pour événement UI */
+export interface UIEventPayload {
+  type: string;
+  data?: Record<string, unknown>;
+  text?: string;
+  pipelineId?: string;
+}
+
+/** Payload pour tâche réseau */
+export interface NetworkPayload {
+  url?: string;
+  method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  body?: Record<string, unknown>;
+  headers?: Record<string, string>;
 }
 
 export interface PriorityQueue<T> {
@@ -76,7 +108,7 @@ export interface AvatarSchedule {
 
 export interface AvatarAnimation {
   id: string;
-  keyframes: any[];
+  keyframes: AvatarKeyframe[];
   startTime: number;
   duration: number;
   priority: Priority;
@@ -85,7 +117,7 @@ export interface AvatarAnimation {
 export interface UIEvent {
   id: string;
   type: string;
-  data: any;
+  data: UIEventPayload;
   timestamp: number;
   processed: boolean;
 }
@@ -94,7 +126,7 @@ export interface RenderTask {
   id: string;
   component: 'voice' | 'mouth' | 'face' | 'body' | 'ui';
   priority: Priority;
-  data: any;
+  data: Record<string, unknown>;
   estimatedMs: number;
 }
 
@@ -125,7 +157,9 @@ class SimplePriorityQueue<T extends { priority: Priority }> implements PriorityQ
   enqueue(item: T, priority: Priority): void {
     item.priority = priority;
     this.items.push(item);
-    this.items.sort((a, b) => this.priorityValues[a.priority] - this.priorityValues[b.priority]);
+    this.items.sort(
+      (a, b) => this.priorityValues[a.priority] - this.priorityValues[b.priority]
+    );
   }
 
   dequeue(): T | undefined {
@@ -255,7 +289,7 @@ export class RealTimeExecutionEngine {
       this.uiEventBatcher.flush();
 
       // Mettre à jour métriques
-      this.metrics.avgFrameTime = (this.metrics.avgFrameTime * 0.9) + (deltaTime * 0.1);
+      this.metrics.avgFrameTime = this.metrics.avgFrameTime * 0.9 + deltaTime * 0.1;
     } catch (error) {
       console.error('[RealtimeEngine] Execution loop error:', error);
     }
@@ -314,7 +348,7 @@ export class RealTimeExecutionEngine {
   /**
    * Exécuter tâche réseau
    */
-  private async executeNetworkTask(payload: any): Promise<void> {
+  private async executeNetworkTask(payload: NetworkPayload): Promise<void> {
     try {
       await secureInvoke('realtime_network_task', { payload });
     } catch (error) {
@@ -329,7 +363,10 @@ export class RealTimeExecutionEngine {
   /**
    * Ajouter tâche audio (priorité critical)
    */
-  enqueueAudio(audioBuffer: AudioBuffer, options: { id?: string; deadline?: number } = {}): void {
+  enqueueAudio(
+    audioBuffer: AudioBuffer,
+    options: { id?: string; deadline?: number } = {}
+  ): void {
     const task: RealtimeTask = {
       id: options.id || `audio_${Date.now()}`,
       type: 'audio',
@@ -347,7 +384,10 @@ export class RealTimeExecutionEngine {
   /**
    * Ajouter tâche avatar (priorité high)
    */
-  enqueueAvatar(animation: any, options: { id?: string; priority?: Priority } = {}): void {
+  enqueueAvatar(
+    animation: AvatarAnimationPayload,
+    options: { id?: string; priority?: Priority } = {}
+  ): void {
     const task: RealtimeTask = {
       id: options.id || `avatar_${Date.now()}`,
       type: 'avatar',
@@ -364,7 +404,10 @@ export class RealTimeExecutionEngine {
   /**
    * Ajouter événement UI (priorité normal, batching)
    */
-  enqueueUIEvent(event: any, options: { id?: string; priority?: Priority } = {}): void {
+  enqueueUIEvent(
+    event: UIEventPayload,
+    options: { id?: string; priority?: Priority } = {}
+  ): void {
     const task: RealtimeTask = {
       id: options.id || `ui_${Date.now()}`,
       type: 'ui',
@@ -381,7 +424,10 @@ export class RealTimeExecutionEngine {
   /**
    * Ajouter tâche réseau (priorité low)
    */
-  enqueueNetwork(payload: any, options: { id?: string; priority?: Priority } = {}): void {
+  enqueueNetwork(
+    payload: NetworkPayload,
+    options: { id?: string; priority?: Priority } = {}
+  ): void {
     const task: RealtimeTask = {
       id: options.id || `network_${Date.now()}`,
       type: 'network',
@@ -437,7 +483,6 @@ export class RealTimeExecutionEngine {
         text: input.iaResponse,
         pipelineId,
       });
-
     } catch (error) {
       console.error('[RealtimeEngine] Pipeline error:', error);
     }
@@ -453,7 +498,7 @@ export class RealTimeExecutionEngine {
       // Convertir ArrayBuffer en AudioBuffer
       const audioContext = new AudioContext();
       const audioBuffers = await Promise.all(
-        chunks.map((chunk) => audioContext.decodeAudioData(chunk))
+        chunks.map(chunk => audioContext.decodeAudioData(chunk))
       );
 
       return audioBuffers;
@@ -466,9 +511,14 @@ export class RealTimeExecutionEngine {
   /**
    * Générer animations avatar
    */
-  private async generateAvatarAnimations(text: string): Promise<any[]> {
+  private async generateAvatarAnimations(
+    text: string
+  ): Promise<AvatarAnimationPayload[]> {
     try {
-      const animations = await secureInvoke<any[]>('realtime_generate_avatar_animations', { text });
+      const animations = await secureInvoke<AvatarAnimationPayload[]>(
+        'realtime_generate_avatar_animations',
+        { text }
+      );
       return animations;
     } catch (error) {
       console.error('[RealtimeEngine] Avatar animation generation error:', error);
@@ -584,7 +634,7 @@ class AvatarScheduler {
     fps: 60,
   };
 
-  scheduleAnimation(animation: any): void {
+  scheduleAnimation(animation: AvatarAnimationPayload): void {
     const anim: AvatarAnimation = {
       id: `anim_${Date.now()}`,
       keyframes: animation.keyframes || [],
@@ -629,7 +679,7 @@ class UIEventBatcher {
   private batchDelay: number = 16; // 16ms (1 frame @60fps)
   private lastFlush: number = 0;
 
-  addEvent(event: any): void {
+  addEvent(event: UIEventPayload): void {
     const uiEvent: UIEvent = {
       id: `event_${Date.now()}_${Math.random()}`,
       type: event.type || 'generic',
@@ -647,11 +697,13 @@ class UIEventBatcher {
 
     if (this.events.length > 0) {
       // Traiter tous les événements en batch
-      this.events.forEach((event) => {
+      this.events.forEach(event => {
         event.processed = true;
         // Dispatcher événement
         if (typeof window !== 'undefined') {
-          window.dispatchEvent(new CustomEvent(`titane:${event.type}`, { detail: event.data }));
+          window.dispatchEvent(
+            new CustomEvent(`titane:${event.type}`, { detail: event.data })
+          );
         }
       });
 

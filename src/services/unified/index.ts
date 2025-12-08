@@ -40,8 +40,13 @@ export {
   type MemorySource,
 } from './UnifiedMemory';
 
-// Implementations
-export { SQLiteVectorStore, type SQLiteVectorStoreConfig } from './SQLiteVectorStore';
+// Implementations - VectorStoreClient replaces SQLiteVectorStore for browser compatibility
+export {
+  VectorStoreClient,
+  createVectorStoreClient,
+  type VectorStoreClientConfig,
+  type VectorSearchOptions,
+} from './VectorStoreClient';
 
 export {
   LocalEmbeddingGenerator,
@@ -52,32 +57,19 @@ export {
 // FACTORY FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { UnifiedMemory, type UnifiedMemoryConfig } from './UnifiedMemory';
+import {
+  UnifiedMemory,
+  type UnifiedMemoryConfig,
+  type IVectorStore,
+} from './UnifiedMemory';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
-
-type SQLiteVectorStoreCtor = typeof import('./SQLiteVectorStore').SQLiteVectorStore;
-
-let SQLiteVectorStore: SQLiteVectorStoreCtor | null = null;
-
-async function loadSQLiteVectorStore(): Promise<SQLiteVectorStoreCtor> {
-  if (SQLiteVectorStore) {
-    return SQLiteVectorStore;
-  }
-
-  try {
-    const module = await import('./SQLiteVectorStore');
-    SQLiteVectorStore = module.SQLiteVectorStore;
-    return SQLiteVectorStore;
-  } catch (error) {
-    console.warn('[Unified] SQLiteVectorStore not available (browser mode)', error);
-    throw new Error(
-      'SQLiteVectorStore not available. This feature requires Node.js environment (Tauri mode).'
-    );
-  }
-}
+import { VectorStoreClient } from './VectorStoreClient';
 
 /**
- * Create default UnifiedMemory instance with SQLite + local embeddings
+ * Create default UnifiedMemory instance with Tauri backend + local embeddings
+ *
+ * Uses VectorStoreClient (Tauri backend) instead of SQLiteVectorStore (Node.js)
+ * for browser compatibility.
  *
  * @param config Optional configuration overrides
  * @returns Initialized UnifiedMemory instance
@@ -87,14 +79,15 @@ export async function createUnifiedMemory(config?: {
   modelName?: string;
   enableCache?: boolean;
 }): Promise<UnifiedMemory> {
-  const SQLiteStore = await loadSQLiteVectorStore();
-  // Vérifier si SQLite est disponible
-  // Create vector store
-  const vectorStore = new SQLiteStore({
+  // Create vector store using Tauri backend
+  const vectorStore = new VectorStoreClient({
     dbPath: config?.dbPath || './data/unified_memory.db',
     tableName: 'unified_memories',
     dimensions: 384,
   });
+
+  // Initialize vector store
+  await vectorStore.initialize();
 
   // Create embedding generator
   const embeddingGenerator = new LocalEmbeddingGenerator({
@@ -122,7 +115,7 @@ export async function createUnifiedMemory(config?: {
  * @returns Initialized UnifiedMemory instance
  */
 export async function createCustomUnifiedMemory(
-  vectorStore: InstanceType<SQLiteVectorStoreCtor>,
+  vectorStore: IVectorStore,
   embeddingGenerator: InstanceType<typeof LocalEmbeddingGenerator>,
   config?: UnifiedMemoryConfig
 ): Promise<UnifiedMemory> {

@@ -120,53 +120,62 @@ impl StorageEngine {
     }
     
     fn encrypt_data(&self, data: &[u8]) -> Result<Vec<u8>> {
-        // Génération d'une clé à partir d'un master password (devrait être fourni par l'utilisateur)
-        // TODO: Use SecureSecretsEngine
-        // // TODO: Use SecureSecretsEngine
-        // let password = b"titane_infinity_master_key_v13"; // TODO: Utiliser une vraie clé utilisateur
+        // TODO: Use SecureSecretsEngine for proper key management
+        let password = b"titane_infinity_master_key_v13"; // Temporary default key
         let salt = SaltString::generate(&mut OsRng);
-        
+
         let argon2 = Argon2::default();
         let password_hash = argon2.hash_password(password, &salt)
             .map_err(|e| DocEngineError::StorageError(format!("Erreur de dérivation de clé: {}", e)))?;
-        
-        // Extraction des 32 premiers octets pour AES-256
-        let key_bytes = password_hash.hash.unwrap().as_bytes();
+
+        // Extraction des 32 premiers octets pour AES-256 avec gestion d'erreur
+        let key_bytes = password_hash.hash
+            .ok_or_else(|| DocEngineError::StorageError("Hash non disponible après dérivation".to_string()))?
+            .as_bytes();
+        if key_bytes.len() < 32 {
+            return Err(DocEngineError::StorageError("Clé dérivée trop courte".to_string()));
+        }
         let key = &key_bytes[..32];
-        
+
         // Chiffrement AES-256-GCM
         let cipher = Aes256Gcm::new_from_slice(key)
             .map_err(|e| DocEngineError::StorageError(format!("Erreur de création du cipher: {}", e)))?;
-        
-        let nonce = Nonce::from_slice(b"unique_nonce"); // TODO: Générer un nonce unique par document
-        
+
+        // TODO: Générer un nonce unique par document et le stocker
+        let nonce = Nonce::from_slice(b"unique_nonce");
+
         let ciphertext = cipher.encrypt(nonce, data)
             .map_err(|e| DocEngineError::StorageError(format!("Erreur de chiffrement: {}", e)))?;
-        
+
         Ok(ciphertext)
     }
-    
+
     fn decrypt_data(&self, encrypted_data: &[u8]) -> Result<Vec<u8>> {
-        // TODO: Use SecureSecretsEngine
-        // // TODO: Use SecureSecretsEngine
-        // let password = b"titane_infinity_master_key_v13";
+        // TODO: Use SecureSecretsEngine for proper key management
+        let password = b"titane_infinity_master_key_v13"; // Temporary default key
         let salt = SaltString::generate(&mut OsRng);
-        
+
         let argon2 = Argon2::default();
         let password_hash = argon2.hash_password(password, &salt)
             .map_err(|e| DocEngineError::StorageError(format!("Erreur de dérivation de clé: {}", e)))?;
-        
-        let key_bytes = password_hash.hash.unwrap().as_bytes();
+
+        // Extraction des 32 premiers octets pour AES-256 avec gestion d'erreur
+        let key_bytes = password_hash.hash
+            .ok_or_else(|| DocEngineError::StorageError("Hash non disponible après dérivation".to_string()))?
+            .as_bytes();
+        if key_bytes.len() < 32 {
+            return Err(DocEngineError::StorageError("Clé dérivée trop courte".to_string()));
+        }
         let key = &key_bytes[..32];
-        
+
         let cipher = Aes256Gcm::new_from_slice(key)
             .map_err(|e| DocEngineError::StorageError(format!("Erreur de création du cipher: {}", e)))?;
-        
+
         let nonce = Nonce::from_slice(b"unique_nonce");
-        
+
         let plaintext = cipher.decrypt(nonce, encrypted_data)
             .map_err(|e| DocEngineError::StorageError(format!("Erreur de déchiffrement: {}", e)))?;
-        
+
         Ok(plaintext)
     }
     

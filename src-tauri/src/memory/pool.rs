@@ -227,7 +227,7 @@ pub struct PooledString {
 
 impl PooledString {
     pub fn as_str(&self) -> &str {
-        self.inner.as_ref().map(|s| s.as_str()).unwrap_or("")
+        self.inner.as_deref().unwrap_or("")
     }
 
     pub fn as_mut_string(&mut self) -> &mut String {
@@ -393,14 +393,11 @@ pub struct PooledBuffer {
 
 impl PooledBuffer {
     pub fn as_slice(&self) -> &[u8] {
-        self.inner.as_ref().map(|v| v.as_slice()).unwrap_or(&[])
+        self.inner.as_deref().unwrap_or(&[])
     }
 
     pub fn as_mut_slice(&mut self) -> &mut [u8] {
-        self.inner
-            .as_mut()
-            .map(|v| v.as_mut_slice())
-            .unwrap_or(&mut [])
+        self.inner.as_deref_mut().unwrap_or(&mut [])
     }
 
     pub fn len(&self) -> usize {
@@ -512,14 +509,11 @@ pub struct PooledEmbedding {
 
 impl PooledEmbedding {
     pub fn as_slice(&self) -> &[f32] {
-        self.inner.as_ref().map(|v| v.as_slice()).unwrap_or(&[])
+        self.inner.as_deref().unwrap_or(&[])
     }
 
     pub fn as_mut_slice(&mut self) -> &mut [f32] {
-        self.inner
-            .as_mut()
-            .map(|v| v.as_mut_slice())
-            .unwrap_or(&mut [])
+        self.inner.as_deref_mut().unwrap_or(&mut [])
     }
 
     pub fn dimension(&self) -> usize {

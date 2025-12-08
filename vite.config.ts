@@ -82,6 +82,8 @@ export default defineConfig({
 
   build: {
     rollupOptions: {
+      // Externaliser les modules Node.js qui ne doivent pas être bundlés pour le browser
+      external: ['better-sqlite3', 'sqlite3', 'bindings', 'file-uri-to-path'],
       output: {
         manualChunks: {
           // Core React ecosystem
@@ -98,6 +100,13 @@ export default defineConfig({
           state: ['zustand'],
           // Utilities
           utils: ['clsx', 'date-fns', 'dompurify'],
+          // AI Libraries (large chunks - separated for better caching)
+          'ai-transformers': ['@xenova/transformers'],
+          'ai-onnx': ['onnxruntime-web'],
+          // Charts
+          charts: ['recharts'],
+          // Markdown
+          markdown: ['react-markdown', 'remark-gfm'],
         },
       },
     },
@@ -108,7 +117,8 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
-    chunkSizeWarningLimit: 500,
+    // Augmenté de 500 à 1200 pour les gros chunks AI
+    chunkSizeWarningLimit: 1200,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

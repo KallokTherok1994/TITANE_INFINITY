@@ -44,6 +44,29 @@ export interface SQLiteVectorStoreConfig {
   };
 }
 
+/** Type pour les rows SQLite */
+interface SQLiteRow {
+  id: string;
+  type: string;
+  owner: string;
+  summary: string;
+  details: string | null;
+  source_type: string;
+  source_id: string | null;
+  source_timestamp: string;
+  source_context: string | null;
+  tags: string;
+  importance: number;
+  created_at: string;
+  last_used_at: string | null;
+  access_count: number;
+  related_to: string | null;
+  supersedes: string | null;
+  valid_until: string | null;
+  confidence: number;
+  embedding: Buffer;
+}
+
 /**
  * SQLite Vector Store
  *
@@ -166,14 +189,14 @@ export class SQLiteVectorStore implements VectorStore {
   async search(
     embedding: number[],
     limit: number,
-    filters?: Record<string, any>
+    filters?: Record<string, unknown>
   ): Promise<SemanticMemoryResult[]> {
     if (!this.db) throw new Error('Store not initialized');
 
     // Construire la requête avec filtres
     let query = `SELECT * FROM ${this.config.collectionName}`;
     const whereClauses: string[] = [];
-    const params: any = {};
+    const params: Record<string, unknown> = {};
 
     if (filters) {
       this.buildWhereClause(filters, whereClauses, params);
@@ -229,7 +252,7 @@ export class SQLiteVectorStore implements VectorStore {
     if (!this.db) throw new Error('Store not initialized');
 
     const setClauses: string[] = [];
-    const params: any = { id };
+    const params: Record<string, unknown> = { id };
 
     // Construire les SET clauses
     Object.entries(updates).forEach(([key, value]) => {
@@ -286,11 +309,11 @@ export class SQLiteVectorStore implements VectorStore {
   /**
    * Supprimer par filtre
    */
-  async deleteWhere(filters: Record<string, any>): Promise<number> {
+  async deleteWhere(filters: Record<string, unknown>): Promise<number> {
     if (!this.db) throw new Error('Store not initialized');
 
     const whereClauses: string[] = [];
-    const params: any = {};
+    const params: Record<string, unknown> = {};
 
     this.buildWhereClause(filters, whereClauses, params);
 
@@ -495,7 +518,7 @@ export class SQLiteVectorStore implements VectorStore {
   /**
    * Convertir une row DB en SemanticMemoryEntry
    */
-  private rowToEntry(row: any): SemanticMemoryEntry {
+  private rowToEntry(row: SQLiteRow): SemanticMemoryEntry {
     return {
       id: row.id,
       type: row.type as SemanticMemoryType,
@@ -525,9 +548,9 @@ export class SQLiteVectorStore implements VectorStore {
    * Construire les WHERE clauses
    */
   private buildWhereClause(
-    filters: Record<string, any>,
+    filters: Record<string, unknown>,
     whereClauses: string[],
-    params: any
+    params: Record<string, unknown>
   ): void {
     Object.entries(filters).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
@@ -535,9 +558,10 @@ export class SQLiteVectorStore implements VectorStore {
       // Opérateurs MongoDB-like
       if (key === '$or') {
         const orClauses: string[] = [];
-        (value as Array<Record<string, any>>).forEach((orFilter, _index) => {
+        const orFilters = value as Array<Record<string, unknown>>;
+        orFilters.forEach(orFilter => {
           const subWhereClauses: string[] = [];
-          const subParams: any = {};
+          const subParams: Record<string, unknown> = {};
           this.buildWhereClause(orFilter, subWhereClauses, subParams);
           if (subWhereClauses.length > 0) {
             orClauses.push(`(${subWhereClauses.join(' AND ')})`);
@@ -552,46 +576,50 @@ export class SQLiteVectorStore implements VectorStore {
 
       // Opérateurs de comparaison
       if (typeof value === 'object' && !Array.isArray(value)) {
-        const operators = Object.keys(value);
+        const valueObj = value as Record<string, unknown>;
+        const operators = Object.keys(valueObj);
         operators.forEach(op => {
           const columnName = this.camelToSnake(key);
           const paramName = `${key}_${op}`;
+          const opValue = valueObj[op];
 
           switch (op) {
             case '$in':
-              whereClauses.push(
-                `${columnName} IN (${value[op].map((_: any, i: number) => `@${paramName}_${i}`).join(', ')})`
-              );
-              value[op].forEach((v: any, i: number) => {
-                params[`${paramName}_${i}`] = v;
-              });
+              if (Array.isArray(opValue)) {
+                whereClauses.push(
+                  `${columnName} IN (${opValue.map((_, i: number) => `@${paramName}_${i}`).join(', ')})`
+                );
+                opValue.forEach((v: unknown, i: number) => {
+                  params[`${paramName}_${i}`] = v;
+                });
+              }
               break;
             case '$gte':
               whereClauses.push(`${columnName} >= @${paramName}`);
-              params[paramName] = value[op];
+              params[paramName] = opValue;
               break;
             case '$lte':
               whereClauses.push(`${columnName} <= @${paramName}`);
-              params[paramName] = value[op];
+              params[paramName] = opValue;
               break;
             case '$gt':
               whereClauses.push(`${columnName} > @${paramName}`);
-              params[paramName] = value[op];
+              params[paramName] = opValue;
               break;
             case '$lt':
               whereClauses.push(`${columnName} < @${paramName}`);
-              params[paramName] = value[op];
+              params[paramName] = opValue;
               break;
             case '$neq':
               whereClauses.push(`${columnName} != @${paramName}`);
-              params[paramName] = value[op];
+              params[paramName] = opValue;
               break;
             case '$contains':
               // Pour tags (JSON array)
-              if (key === 'tags') {
-                value[op].forEach((tag: string, i: number) => {
+              if (key === 'tags' && Array.isArray(opValue)) {
+                opValue.forEach((tag: unknown, i: number) => {
                   whereClauses.push(`json_extract(tags, '$') LIKE @${paramName}_${i}`);
-                  params[`${paramName}_${i}`] = `%"${tag}"%`;
+                  params[`${paramName}_${i}`] = `%"${String(tag)}"%`;
                 });
               }
               break;

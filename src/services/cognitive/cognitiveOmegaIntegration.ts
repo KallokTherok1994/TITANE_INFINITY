@@ -97,16 +97,13 @@ class CognitiveOmegaOrchestrator {
       try {
         this.log('Initializing cognitive engines...');
 
-        // 1. Semantic Memory Engine - Dynamic import pour éviter bundling Node.js
-        const { SQLiteVectorStore } = await import('./SQLiteVectorStore');
-        const vectorStore = new SQLiteVectorStore({
+        // 1. Semantic Memory Engine - Utiliser TauriVectorStore (backend Rust)
+        const { createVectorStore } = await import('./TauriVectorStore');
+        const vectorStore = await createVectorStore({
           dbPath: './data/cognitive/semantic_memory.db',
           collectionName: 'memories',
           dimensions: 384,
         });
-
-        // Initialize vector store BEFORE using it
-        await vectorStore.initialize();
 
         const embeddingGenerator = new LocalEmbeddingGenerator({
           modelName: 'all-MiniLM-L6-v2',
