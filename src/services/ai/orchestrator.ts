@@ -22,6 +22,8 @@ import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
 import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
 import { ollamaProvider } from './providers/ollama';
 import { autoHealEngine } from './autoHealEngine'; // ← NOUVEAU: Auto-heal intégré
+import { metricsEngine } from './metricsEngine'; // ← NOUVEAU: Metrics Engine v20Ω
+import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 
 const isDev = process.env.NODE_ENV === 'development';
 const NULL_BYTE = String.fromCharCode(0);
@@ -94,9 +96,43 @@ class AIOrchestrator {
   private consecutiveLocalResponses = 0;
   private readonly diversityThreshold = 2;
 
+  // AUTOFIX v19.3Ω: Quick-fail cache for providers that failed very recently
+  private readonly QUICK_FAIL_COOLDOWN_MS = 5000; // 5 seconds
+  private quickFailCache: Map<string, number> = new Map(); // provider -> failedAt timestamp
+
+  // EVOLUTION v21Ω: TTL cleanup interval for quick-fail cache
+  private quickFailCleanupInterval: ReturnType<typeof setInterval> | null = null;
+
   constructor() {
     this.initializeProviderStats();
     this.startWarmup();
+    this.startQuickFailCleanup();
+  }
+
+  /**
+   * EVOLUTION v21Ω: Periodic cleanup of expired quick-fail cache entries
+   * Prevents memory leaks from stale entries when no requests are made
+   */
+  private startQuickFailCleanup(): void {
+    // Cleanup every 30 seconds
+    this.quickFailCleanupInterval = setInterval(() => {
+      const now = Date.now();
+      for (const [provider, failedAt] of this.quickFailCache.entries()) {
+        if (now - failedAt >= this.QUICK_FAIL_COOLDOWN_MS) {
+          this.quickFailCache.delete(provider);
+        }
+      }
+    }, 30000);
+  }
+
+  /**
+   * EVOLUTION v21Ω: Stop cleanup interval (for testing/shutdown)
+   */
+  stopQuickFailCleanup(): void {
+    if (this.quickFailCleanupInterval) {
+      clearInterval(this.quickFailCleanupInterval);
+      this.quickFailCleanupInterval = null;
+    }
   }
 
   /**
@@ -240,6 +276,9 @@ class AIOrchestrator {
     const isComplexQuery = messageLength > 200 || contextLength > 5000;
     const requiresRealtime = message.toLowerCase().includes('temps réel') || message.toLowerCase().includes('maintenant');
 
+    // 📊 NOUVEAU v20Ω: Obtenir métriques en temps réel pour ajuster le scoring
+    const realtimeMetrics = metricsEngine.getAggregatedMetrics();
+
     // Scoring neuronal des providers
     const providerScores = new Map<string, number>();
 
@@ -248,6 +287,35 @@ class AIOrchestrator {
       if (!stats) return;
 
       let score = stats.reliability; // Base score (0-100)
+
+      // 📊 NOUVEAU: Ajustement basé sur métriques réelles
+      const providerMetrics = realtimeMetrics.providers.find(p => p.provider === provider.name);
+      if (providerMetrics) {
+        // Bonus si provider très performant récemment
+        if (providerMetrics.successRate > 95 && providerMetrics.avgLatency < 3000) {
+          score += 15; // ✅ Boost performance récente
+        }
+        // Malus si latence élevée récemment
+        if (providerMetrics.avgLatency > 10000) {
+          score -= 20; // ⚠️ Pénaliser lenteur
+        }
+        // Malus si taux d'échec élevé (but with recovery mechanism)
+        if (providerMetrics.successRate < 70) {
+          score -= 30; // ❌ Pénaliser instabilité
+        }
+      }
+
+      // EVOLUTION v21Ω: Recovery boost for providers that haven't been tried recently
+      // Prevents "rich get richer" feedback loops by giving idle providers a chance
+      const timeSinceLastUsed = Date.now() - stats.lastUsed;
+      const timeSinceLastFailure = Date.now() - stats.lastFailure;
+
+      // If provider hasn't been used in 60s and hasn't failed in 30s, give recovery boost
+      if (timeSinceLastUsed > 60000 && timeSinceLastFailure > 30000 && stats.reliability < 80) {
+        const recoveryBoost = Math.min(15, (timeSinceLastUsed - 60000) / 10000); // +1 per 10s idle, max +15
+        score += recoveryBoost;
+        isDev && console.log(`   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`);
+      }
 
       // Bonus selon le type de provider
       switch (provider.name) {
@@ -321,15 +389,10 @@ class AIOrchestrator {
       }
     }
 
-    const messageLower = message.toLowerCase();
-    if (messageLower.includes('auto-heal') || messageLower.includes('autoheal')) {
-      const geminiStats = this.providerStats.get('gemini');
-      if (geminiStats) {
-        bestProvider = 'gemini';
-        bestScore = providerScores.get('gemini') ?? geminiStats.reliability;
-        reason = 'recovery';
-      }
-    }
+    // EVOLUTION v21Ω: Removed user-input-based provider selection override
+    // SECURITY: User message content should NOT influence provider selection
+    // Previous code allowed "auto-heal" keyword to force Gemini selection
+    // Now provider selection is purely based on scoring algorithm
 
     // Alternates (top 3 autres)
     const alternates = sortedProviders
@@ -381,18 +444,50 @@ class AIOrchestrator {
         console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
       }
 
-      // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION ═══
+      // ═══ PHASE 3.4.2: NEURAL PROVIDER SELECTION + COGNITIVE KERNEL v22Ω ═══
+      
+      // 🧠 NOUVEAU v22Ω: Mise à jour état environnement du Cognitive Kernel
+      const realtimeMetrics = metricsEngine.getAggregatedMetrics();
+      cognitiveKernel.updateEnvironmentState({
+        providerHealth: new Map(
+          this.providers.map(p => {
+            const stats = this.providerStats.get(p.name);
+            return [p.name, stats?.reliability || 0];
+          })
+        ),
+        averageLatency: realtimeMetrics.avgResponseTime,
+        responseQuality: realtimeMetrics.successRate,
+        errorFrequency: realtimeMetrics.totalErrors / Math.max(1, realtimeMetrics.uptime / (60 * 60 * 1000)),
+        chatStability: 100 - (realtimeMetrics.totalErrors / Math.max(1, realtimeMetrics.totalRequests) * 100),
+        governanceStatus: 'partial', // TODO: Déterminer dynamiquement
+      });
+
+      // 🧠 Exécuter le processus cognitif complet
+      const cognitiveDecision = cognitiveKernel.executeCognitiveProcess({
+        message: sanitized,
+        providers: this.providers.map(p => p.name),
+        metrics: realtimeMetrics,
+      });
+
+      // Sélection neurale standard
       const selection = this.selectOptimalProvider(sanitized, history);
 
+      // 🧠 Fusionner décision cognitive et sélection neurale
+      const finalProvider = cognitiveDecision.confidence > 70 ? cognitiveDecision.provider : selection.selectedProvider;
+
       if (isDev) {
+        console.log(`🧠 Cognitive Decision: ${cognitiveDecision.provider} (confidence: ${cognitiveDecision.confidence}%, coherence: ${cognitiveDecision.coherenceScore}%)`);
+        console.log(`   Reason: ${cognitiveDecision.reason}`);
+        console.log(`   Adaptations: ${cognitiveDecision.adaptations.join(', ') || 'None'}`);
         console.log(`🧠 Neural Selection: ${selection.selectedProvider} (${selection.reason}, ${selection.confidence}% confidence)`);
+        console.log(`🎯 Final Provider: ${finalProvider}`);
         console.log(`🔄 Alternates: ${selection.alternates.join(', ')}`);
       }
 
       // ═══ PHASE 3.4.3: ISOLATED PROVIDER EXECUTION ═══
       const providersToTry = [
-        selection.selectedProvider,
-        ...selection.alternates.slice(0, 2), // Max 2 alternates
+        finalProvider, // 🧠 Provider choisi par Cognitive Kernel
+        ...cognitiveDecision.alternatives.slice(0, 2), // Alternatives cognitives
         'titane-local' // Fallback garanti
       ].filter((name, index, arr) => arr.indexOf(name) === index); // Deduplicate
 
@@ -406,6 +501,22 @@ class AIOrchestrator {
 
         const stats = this.providerStats.get(providerName);
         if (!stats) continue;
+
+        // AUTOFIX v19.3Ω: Quick-fail skip for recently failed providers (except titane-local)
+        const quickFailTime = this.quickFailCache.get(providerName);
+        if (quickFailTime && providerName !== 'titane-local') {
+          const timeSinceFailure = Date.now() - quickFailTime;
+          if (timeSinceFailure < this.QUICK_FAIL_COOLDOWN_MS) {
+            isDev && console.log(`⏭️ Skipping ${providerName} (failed ${timeSinceFailure}ms ago, cooldown: ${this.QUICK_FAIL_COOLDOWN_MS}ms)`);
+            continue;
+          } else {
+            // Clear stale cache entry
+            this.quickFailCache.delete(providerName);
+          }
+        }
+
+        // EVOLUTION v21Ω: Track per-provider latency separately from total request time
+        const providerStartTime = Date.now();
 
         try {
           if (isDev) {
@@ -433,17 +544,37 @@ class AIOrchestrator {
             requestId
           );
 
-          // ═══ SUCCESS PATH ═══
-          const responseTime = Date.now() - requestStartTime;
-          this.updateProviderStats(providerName, true, responseTime);
+          // ═══ SUCCESS PATH + COGNITIVE KERNEL UPDATE ═══
+          // EVOLUTION v21Ω: Use provider-specific timing for accurate stats
+          const providerLatency = Date.now() - providerStartTime;
+          const totalResponseTime = Date.now() - requestStartTime;
+          this.updateProviderStats(providerName, true, providerLatency); // Use provider-specific latency
           this.orchestratorMetrics.totalSuccesses++;
 
-          // Update avg response time
-          const totalTime = this.orchestratorMetrics.avgResponseTime * (this.orchestratorMetrics.totalSuccesses - 1) + responseTime;
+          // 🧠 NOUVEAU v22Ω: Enregistrer succès dans Cognitive Kernel
+          cognitiveKernel.recordInMemory('provider', { provider: providerName });
+          cognitiveKernel.updateProviderPreferences(providerName, true, providerLatency);
+
+          // AUTOFIX v19.3Ω: Clear quick-fail cache on success
+          this.quickFailCache.delete(providerName);
+
+          // 📊 METRICS: Enregistrer succès
+          metricsEngine.recordEvent({
+            type: 'response',
+            provider: providerName,
+            latencyMs: providerLatency, // Use provider-specific latency
+            success: true,
+            model: response.model,
+            tokensUsed: response.tokens,
+            messageLength: sanitized.length,
+          });
+
+          // Update avg response time using total response time for user-facing metrics
+          const totalTime = this.orchestratorMetrics.avgResponseTime * (this.orchestratorMetrics.totalSuccesses - 1) + totalResponseTime;
           this.orchestratorMetrics.avgResponseTime = totalTime / this.orchestratorMetrics.totalSuccesses;
 
           if (isDev) {
-            console.log(`   ✅ SUCCESS in ${responseTime}ms`);
+            console.log(`   ✅ SUCCESS in ${providerLatency}ms (total: ${totalResponseTime}ms)`);
             console.log(`   📦 Response: ${response.content.length} chars`);
             console.log(`   🏷️ Provider: ${response.provider || providerName}`);
             console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -459,30 +590,51 @@ class AIOrchestrator {
               selectedProvider: providerName,
               neuralSelection: selection,
               attempts,
-              responseTime,
-              omegaVersion: "v19.2Ω"
+              providerLatency, // EVOLUTION v21Ω: Accurate provider-specific latency
+              totalResponseTime, // EVOLUTION v21Ω: Total time including fallbacks
+              omegaVersion: "v21Ω"
             }
           };
 
         } catch (error) {
           lastError = error instanceof Error ? error : new Error(String(error));
-          const responseTime = Date.now() - requestStartTime;
+          // EVOLUTION v21Ω: Use provider-specific latency for failure stats
+          const providerFailureLatency = Date.now() - providerStartTime;
 
-          // ═══ FAILURE PATH + AUTO-HEAL ═══
-          this.updateProviderStats(providerName, false, responseTime);
+          // ═══ FAILURE PATH + AUTO-HEAL + COGNITIVE KERNEL ═══
+          this.updateProviderStats(providerName, false, providerFailureLatency);
+
+          // 🧠 NOUVEAU v22Ω: Enregistrer échec dans Cognitive Kernel
+          cognitiveKernel.recordInMemory('error', { pattern: lastError.message.substring(0, 50) });
+          cognitiveKernel.updateProviderPreferences(providerName, false, providerFailureLatency);
+
+          // AUTOFIX v19.3Ω: Add to quick-fail cache (except titane-local)
+          if (providerName !== 'titane-local') {
+            this.quickFailCache.set(providerName, Date.now());
+          }
+
+          // 📊 METRICS: Enregistrer erreur with provider-specific latency
+          metricsEngine.recordEvent({
+            type: 'error',
+            provider: providerName,
+            latencyMs: providerFailureLatency, // EVOLUTION v21Ω: Use provider-specific latency
+            success: false,
+            errorType: lastError.message.substring(0, 50),
+            messageLength: sanitized.length,
+          });
 
           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
           if (providerName !== 'titane-local') {
             autoHealEngine.heal(providerName, lastError, 'provider', {
               requestId,
               attempt: attempts,
-              responseTime
+              providerLatency: providerFailureLatency // EVOLUTION v21Ω: Accurate latency
             });
             this.orchestratorMetrics.autoHealTriggers++;
           }
 
           if (isDev) {
-            console.error(`   ❌ FAILED: ${lastError.message} (${responseTime}ms)`);
+            console.error(`   ❌ FAILED: ${lastError.message} (${providerFailureLatency}ms)`);
           }
 
           // Si c'est titane-local qui échoue, c'est critique
@@ -872,11 +1024,13 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
   /**
    * Status complet des providers avec métriques OMEGA
+   * AUTOFIX v19.3Ω: Added metrics to return type
    */
   async getProvidersStatus(): Promise<{
     providers: ProviderStats[];
     orchestrator: OrchestratorMetrics;
     autoHeal: any;
+    metrics?: ReturnType<typeof metricsEngine.getAggregatedMetrics>;
     timestamp: number;
   }> {
     try {
@@ -909,6 +1063,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
         autoHeal: autoHealEngine.getStats(),
+        metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU: Métriques détaillées
         timestamp: Date.now()
       };
     } catch (error) {
@@ -916,13 +1071,27 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         providers: Array.from(this.providerStats.values()),
         orchestrator: { ...this.orchestratorMetrics },
         autoHeal: { error: 'Auto-heal stats unavailable' },
+        metrics: metricsEngine.getAggregatedMetrics(), // 📊 NOUVEAU
         timestamp: Date.now()
       };
     }
   }
 
   /**
+   * 📊 NOUVEAU v20Ω: Obtenir métriques détaillées
+   */
+  getDetailedMetrics() {
+    return {
+      aggregated: metricsEngine.getAggregatedMetrics(),
+      health: metricsEngine.getHealthStats(),
+      autoHeal: autoHealEngine.getStats(),
+      orchestrator: { ...this.orchestratorMetrics },
+    };
+  }
+
+  /**
    * Force reset de tous les providers
+   * EVOLUTION v21Ω: Now clears ALL state including quick-fail cache
    */
   async resetAllProviders(): Promise<void> {
     isDev && console.log('[OMEGA ORCHESTRATOR] Force reset all providers...');
@@ -937,6 +1106,12 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       autoHealTriggers: 0,
       lastActivity: 0
     };
+
+    // EVOLUTION v21Ω: Clear all state variables
+    this.quickFailCache.clear();
+    this.lastProviderUsed = null;
+    this.consecutiveLocalResponses = 0;
+    this.currentRequests = 0;
 
     autoHealEngine.resetStats();
     await this.startWarmup();

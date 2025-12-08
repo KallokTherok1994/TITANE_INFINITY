@@ -4,10 +4,10 @@
 //   Priority-based scheduling with rate limiting and backpressure
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::{BinaryHeap, HashMap, VecDeque};
+use std::collections::{BinaryHeap, HashMap};
 use std::cmp::Ordering;
 use std::sync::Arc;
-use tokio::sync::{mpsc, RwLock, Semaphore};
+use tokio::sync::{RwLock, Semaphore};
 use tokio::time::{Duration, Instant};
 use serde::{Deserialize, Serialize};
 

@@ -49,6 +49,10 @@ export interface AIResponse {
   model?: string;
   tokens?: number;
   metadata?: {
+    latencyMs?: number;          // ✅ Latence mesurée
+    fallbackUsed?: boolean;      // ✅ Si fallback activé
+    retriesCount?: number;       // ✅ Nombre de tentatives
+    errorDetails?: string;       // ✅ Détails erreur si échec partiel
     [key: string]: any;
   };
 }
@@ -61,6 +65,8 @@ export interface AIProvider {
   resetErrors?: () => void;
   getStats?: () => Record<string, unknown>;
   description?: string;
+  // AUTOFIX v19.3Ω: Added testConnection method
+  testConnection?: () => Promise<{ success: boolean; message: string }>;
 }
 
 export interface AIConfig {

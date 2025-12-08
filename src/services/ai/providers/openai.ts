@@ -11,6 +11,8 @@
 
 import { invoke } from '@tauri-apps/api/core';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
+import { autoHealEngine } from '../autoHealEngine';
+// AUTOFIX v19.3Ω: Removed duplicate import
 
 /**
  * Modèles OpenAI supportés par TITANE∞
@@ -156,6 +158,13 @@ export const openaiProvider: AIProvider = {
       };
     } catch (error) {
       const latency = Date.now() - startTime;
+
+      // 🔧 AUTOHEAL: Signaler l'erreur pour auto-réparation
+      autoHealEngine.detectError('openai-provider', error instanceof Error ? error : new Error(String(error)), 'provider', {
+        latency,
+        message: message.substring(0, 100), // Premier 100 chars seulement
+        historyLength: history.length,
+      });
 
       // Re-throw erreurs typées
       if (error instanceof Error) {

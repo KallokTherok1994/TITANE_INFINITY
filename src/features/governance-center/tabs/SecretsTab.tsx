@@ -64,8 +64,13 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
 
     try {
       await onSetGeminiKey(trimmed);
-      setGeminiKey('');
+      setGeminiKey(''); // 🔒 Vider le champ immédiatement pour sécurité
       setMessage({ type: 'success', text: 'Clé Gemini sécurisée avec succès ✅' });
+      
+      // ✅ Refresh automatique après 500ms
+      setTimeout(() => {
+        onRefresh();
+      }, 500);
     } catch {
       setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde' });
     }
@@ -89,8 +94,13 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
 
     try {
       await onSetOpenAIKey(trimmed);
-      setOpenaiKey('');
+      setOpenaiKey(''); // 🔒 Vider le champ immédiatement
       setMessage({ type: 'success', text: 'Clé OpenAI sécurisée avec succès ✅' });
+      
+      // ✅ Refresh automatique
+      setTimeout(() => {
+        onRefresh();
+      }, 500);
     } catch {
       setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde OpenAI' });
     }
@@ -114,8 +124,13 @@ export const SecretsTab: React.FC<SecretsTabProps> = ({
 
     try {
       await onSetAnthropicKey(trimmed);
-      setAnthropicKey('');
+      setAnthropicKey(''); // 🔒 Vider le champ immédiatement
       setMessage({ type: 'success', text: 'Clé Anthropic sécurisée avec succès ✅' });
+      
+      // ✅ Refresh automatique
+      setTimeout(() => {
+        onRefresh();
+      }, 500);
     } catch {
       setMessage({ type: 'error', text: 'Erreur lors de la sauvegarde Anthropic' });
     }

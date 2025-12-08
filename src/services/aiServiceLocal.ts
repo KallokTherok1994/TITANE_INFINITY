@@ -7,17 +7,13 @@
  */
 
 import { FEATURE_FLAGS, isAIProviderEnabled } from '../config/featureFlags';
+// AUTOFIX v19.3Ω: Re-export canonical types for backward compatibility
+import type { AIMessage, AIResponse as BaseAIResponse } from './ai/types';
+export type { AIMessage } from './ai/types';
 
-export interface AIMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-  timestamp: number;
-}
-
-export interface AIResponse {
-  content: string;
+// Extended AIResponse for local-only providers
+export interface AIResponse extends Omit<BaseAIResponse, 'provider'> {
   provider: 'ollama' | 'builtin' | 'disabled';
-  timestamp: number;
 }
 
 /**

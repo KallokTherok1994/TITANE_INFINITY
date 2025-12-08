@@ -10,8 +10,8 @@ use tokio::sync::RwLock;
 use serde::{Deserialize, Serialize};
 
 use super::{
-    OmegaError, OmegaResult, PipelineInput, PipelineStage,
-    StageInput, StageOutput, StageProcessor, StageContext,
+    OmegaResult, PipelineInput, PipelineStage,
+    StageInput, StageOutput, StageProcessor,
 };
 
 // ═══════════════════════════════════════════════════════════════

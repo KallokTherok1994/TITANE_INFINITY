@@ -324,7 +324,7 @@ impl SafetyChecker {
     /// Check ethical compliance
     pub fn check_ethics(&self, text: &str) -> GuardrailCheck {
         let text_lower = text.to_lowercase();
-        let mut score = 0.95;
+        let mut score: f32 = 0.95;
         let mut details = Vec::new();
 
         // Check for deceptive patterns
