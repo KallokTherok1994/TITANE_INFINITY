@@ -83,6 +83,25 @@ pub enum TitaneError {
 
     #[error("Audit error: {message}")]
     AuditError { message: String },
+
+    // Kernel errors (Super Prompt #11)
+    #[error("Kernel not initialized")]
+    KernelNotInitialized,
+
+    #[error("Engine timeout after {0}ms")]
+    EngineTimeout(u64),
+
+    #[error("Scheduler overload: {0}")]
+    SchedulerOverload(String),
+
+    #[error("Watchdog triggered: {0}")]
+    WatchdogTriggered(String),
+
+    #[error("Resource limit exceeded: {0}")]
+    ResourceLimitExceeded(String),
+
+    #[error("Policy violation: {0}")]
+    PolicyViolation(String),
 }
 
 impl From<std::io::Error> for TitaneError {

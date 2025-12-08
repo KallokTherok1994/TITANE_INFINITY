@@ -232,6 +232,12 @@ pub mod devtools;
 pub mod services;
 
 // ═══════════════════════════════════════════════════════════════
+// MEMORY OS vΩ (SUPER PROMPT #12)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod memory_os; // ✅ Memory OS vΩ (Neural Memory System: STM → MTM → LTM, Vector Search, Consolidation, Forgetting)
+
+// ═══════════════════════════════════════════════════════════════
 // RE-EXPORTS v15
 // ═══════════════════════════════════════════════════════════════
 
