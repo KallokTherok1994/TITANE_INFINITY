@@ -1,0 +1,159 @@
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  ⚠️  DÉPENDANCE MANQUANTE POUR BUILD PRODUCTION              ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+┌───────────────────────────────────────────────────────────────┐
+│  🔍 PROBLÈME DÉTECTÉ                                          │
+└───────────────────────────────────────────────────────────────┘
+
+  Lors du build production Tauri, erreur détectée :
+  
+    ❌ The system library `javascriptcoregtk-4.1` required by 
+       crate `javascriptcore-rs-sys` was not found.
+    
+    ❌ The file `javascriptcoregtk-4.1.pc` needs to be installed
+
+  Cause :
+    → libjavascriptcoregtk-4.1-dev n'est pas installé
+    → Nécessaire pour compiler WebKitGTK Tauri
+
+┌───────────────────────────────────────────────────────────────┐
+│  ✅ SOLUTION RAPIDE                                           │
+└───────────────────────────────────────────────────────────────┘
+
+  Ouvre un TERMINAL SYSTÈME (pas VSCode) :
+  
+    GNOME Terminal, Konsole, ou autre terminal Pop!_OS
+  
+  Puis exécute ces commandes :
+  
+    cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
+    ./INSTALL_JAVASCRIPTCORE.sh
+  
+  Ou manuellement :
+  
+    sudo apt-get update
+    sudo apt-get install -y libjavascriptcoregtk-4.1-dev
+
+┌───────────────────────────────────────────────────────────────┐
+│  📋 DÉPENDANCES TAURI COMPLÈTES                               │
+└───────────────────────────────────────────────────────────────┘
+
+  Liste complète des dépendances pour build production :
+  
+    ✅ libwebkit2gtk-4.1-dev          (installé)
+    ✅ libgtk-3-dev                   (installé)
+    ✅ libayatana-appindicator3-dev   (installé)
+    ✅ librsvg2-dev                   (installé)
+    ✅ patchelf                       (installé)
+    ❌ libjavascriptcoregtk-4.1-dev   (manquant) ⬅️ À installer
+
+  Installation complète en une commande :
+  
+    sudo apt-get install -y \
+      libwebkit2gtk-4.1-dev \
+      libgtk-3-dev \
+      libayatana-appindicator3-dev \
+      librsvg2-dev \
+      patchelf \
+      libjavascriptcoregtk-4.1-dev
+
+┌───────────────────────────────────────────────────────────────┐
+│  🚀 APRÈS INSTALLATION                                        │
+└───────────────────────────────────────────────────────────────┘
+
+  Retour dans VSCode, terminal intégré :
+  
+    npm run tauri:build
+  
+  Ou directement avec Cargo :
+  
+    cargo build --release --manifest-path=src-tauri/Cargo.toml
+  
+  Temps estimé : 2-5 minutes (compilation Rust)
+
+┌───────────────────────────────────────────────────────────────┐
+│  📊 BUILD PRODUCTION - ÉTAPES                                 │
+└───────────────────────────────────────────────────────────────┘
+
+  1. Frontend Build       (✅ Complété - 1.04s)
+     → vite build
+     → dist/index.html, dist/assets/*.js/.css
+     → Taille : 214 KB (61 KB gzipped)
+  
+  2. Rust Compilation     (⏳ En attente de dépendance)
+     → cargo build --release
+     → Compile ~400 crates
+     → Génère binaire optimisé
+  
+  3. Packaging            (⏳ À venir)
+     → Création AppImage/Deb
+     → Icônes et métadonnées
+     → Bundle final
+
+┌───────────────────────────────────────────────────────────────┐
+│  🔍 VÉRIFICATION POST-INSTALLATION                            │
+└───────────────────────────────────────────────────────────────┘
+
+  Vérifier que JavaScriptCore est bien installé :
+  
+    pkg-config --exists javascriptcoregtk-4.1 && echo "✅ OK"
+  
+  Afficher la version :
+  
+    pkg-config --modversion javascriptcoregtk-4.1
+  
+  Afficher les flags de compilation :
+  
+    pkg-config --cflags --libs javascriptcoregtk-4.1
+
+┌───────────────────────────────────────────────────────────────┐
+│  ⚙️  POURQUOI CETTE DÉPENDANCE ?                              │
+└───────────────────────────────────────────────────────────────┘
+
+  JavaScriptCore GTK :
+    → Moteur JavaScript de WebKit
+    → Permet interaction Rust ↔️ JavaScript
+    → Nécessaire pour API Tauri
+    → Bridge entre frontend React et backend Rust
+  
+  Tauri utilise :
+    WebKitGTK → Rendu HTML/CSS
+    JavaScriptCore → Exécution JavaScript
+    GTK3 → Interface native Linux
+    Ayatana → Système tray
+
+┌───────────────────────────────────────────────────────────────┐
+│  🎯 OBJECTIF FINAL                                            │
+└───────────────────────────────────────────────────────────────┘
+
+  Build production réussi :
+  
+    src-tauri/target/release/titane-infinity
+    → Binaire Linux exécutable standalone
+    → Taille : ~50-80 MB
+    → Optimisé (release mode)
+  
+  Package distribution :
+  
+    src-tauri/target/release/bundle/
+      ├── deb/
+      │   └── titane-infinity_15.5.0_amd64.deb
+      └── appimage/
+          └── titane-infinity_15.5.0_amd64.AppImage
+
+╔═══════════════════════════════════════════════════════════════╗
+║                                                               ║
+║  📝 RÉSUMÉ                                                    ║
+║                                                               ║
+║  1. Ouvre terminal système (GNOME Terminal)                  ║
+║  2. cd ~/Documents/TITANE_NEWGEN/TITANE_INFINITY             ║
+║  3. ./INSTALL_JAVASCRIPTCORE.sh                              ║
+║  4. Retour VSCode                                            ║
+║  5. npm run tauri:build                                      ║
+║                                                               ║
+║  ⏱️  Temps total estimé : 5-7 minutes                         ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
