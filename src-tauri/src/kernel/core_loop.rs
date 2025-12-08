@@ -11,10 +11,9 @@ use tokio::time::{interval, Duration};
 
 use super::events::KernelEvent;
 use super::governance::GovernanceEngine;
-use super::kernel_state::KernelState;
-use super::priorities::CognitivePriority;
+use super::kernel_state::{KernelState, Intent};
 use super::resources::ResourceManager;
-use super::scheduler::{CognitiveScheduler, SchedulerJob};
+use super::scheduler::CognitiveScheduler;
 use super::signals::{KernelSignal, SignalBus};
 use super::watchdog::KernelWatchdog;
 
@@ -92,6 +91,7 @@ impl CoreLoop {
     pub async fn run(&mut self) -> TitaneResult<()> {
         // Broadcast kernel start
         let _ = self.event_tx.send(KernelEvent::KernelStarted {
+            version: "v20Ω.0".to_string(),
             timestamp: chrono::Utc::now().timestamp_millis(),
         });
 
@@ -128,6 +128,7 @@ impl CoreLoop {
 
         // Broadcast kernel stop
         let _ = self.event_tx.send(KernelEvent::KernelStopped {
+            reason: "shutdown_requested".to_string(),
             timestamp: chrono::Utc::now().timestamp_millis(),
         });
 
@@ -161,32 +162,27 @@ impl CoreLoop {
             KernelSignal::Overload {
                 level,
                 cpu_usage,
-                queue_depth,
             } => {
-                self.handle_overload(level, cpu_usage, queue_depth).await?;
+                self.handle_overload(level, cpu_usage.into(), 0).await?;
             }
 
-            KernelSignal::Heartbeat { component } => {
-                self.handle_heartbeat(component).await?;
+            KernelSignal::Heartbeat { timestamp } => {
+                self.handle_heartbeat(timestamp).await?;
             }
 
-            KernelSignal::ErrorOccurred { component, error } => {
-                self.handle_error(component, error).await?;
-            }
-
-            KernelSignal::SafeModeToggled { enabled } => {
+            KernelSignal::SafeMode { enabled } => {
                 self.handle_safe_mode_toggle(enabled).await?;
             }
 
-            KernelSignal::DevToolsQuery { query_id, query } => {
-                self.handle_devtools_query(query_id, query).await?;
+            KernelSignal::LoadShedding { priority_threshold } => {
+                self.handle_load_shedding(priority_threshold).await?;
             }
 
-            KernelSignal::ResourceAlert { resource, usage } => {
-                self.handle_resource_alert(resource, usage).await?;
+            KernelSignal::RequestSnapshot => {
+                self.handle_snapshot_request().await?;
             }
 
-            KernelSignal::Shutdown => {
+            KernelSignal::Shutdown { reason: _ } => {
                 let mut shutdown = self.shutdown.write().await;
                 *shutdown = true;
             }
@@ -200,7 +196,7 @@ impl CoreLoop {
         // Update watchdog
         if let Some(watchdog) = &self.watchdog {
             let mut wd = watchdog.write().await;
-            wd.tick()?;
+            wd.tick().await;
         }
 
         // Check resources
@@ -224,7 +220,11 @@ impl CoreLoop {
         // Increment intent in state
         {
             let mut state = self.state.write().await;
-            state.current_intent = Some("processing_message".to_string());
+            state.last_intent = Some(Intent {
+                intent_type: "processing_message".to_string(),
+                confidence: 1.0,
+                entities: vec![],
+            });
         }
 
         Ok(())
@@ -257,13 +257,19 @@ impl CoreLoop {
         &self,
         level: u8,
         cpu_usage: f64,
-        queue_depth: usize,
+        _queue_depth: usize,
     ) -> TitaneResult<()> {
         // Update state
         {
             let mut state = self.state.write().await;
             state.overload_level = level;
         }
+
+        // Emit overload event
+        let _ = self.event_tx.send(KernelEvent::OverloadDetected {
+            level,
+            cpu_usage: cpu_usage as f32,
+        });
 
         // Check if safe mode should trigger
         let should_enable_safe_mode = {
@@ -272,62 +278,55 @@ impl CoreLoop {
         };
 
         if should_enable_safe_mode {
-            let _ = self.event_tx.send(KernelEvent::SafeModeEnabled {
-                reason: format!("Overload level {} detected", level),
+            let _ = self.event_tx.send(KernelEvent::WatchdogAlert {
+                alert_type: "safe_mode".to_string(),
+                message: format!("Overload level {} detected", level),
             });
         }
 
         let _ = self.event_tx.send(KernelEvent::OverloadDetected {
             level,
-            cpu: cpu_usage,
-            queue: queue_depth,
+            cpu_usage: cpu_usage as f32,
         });
 
         Ok(())
     }
 
     /// Handle heartbeat
-    async fn handle_heartbeat(&self, component: String) -> TitaneResult<()> {
-        let _ = self.event_tx.send(KernelEvent::Heartbeat {
-            component,
-            timestamp: chrono::Utc::now().timestamp_millis(),
+    async fn handle_heartbeat(&self, timestamp: i64) -> TitaneResult<()> {
+        let _ = self.event_tx.send(KernelEvent::WatchdogHeartbeat {
+            timestamp,
         });
-        Ok(())
-    }
-
-    /// Handle error
-    async fn handle_error(&self, component: String, error: String) -> TitaneResult<()> {
-        // Update state error rate
-        {
-            let mut state = self.state.write().await;
-            state.load.failed_tasks += 1;
-        }
-
-        let _ = self.event_tx.send(KernelEvent::ErrorOccurred { component, error });
         Ok(())
     }
 
     /// Handle safe mode toggle
     async fn handle_safe_mode_toggle(&self, enabled: bool) -> TitaneResult<()> {
-        if enabled {
-            let _ = self
-                .event_tx
-                .send(KernelEvent::SafeModeEnabled { reason: "Manual toggle".to_string() });
-        } else {
-            let _ = self.event_tx.send(KernelEvent::SafeModeDisabled);
-        }
+        let _ = self.event_tx.send(KernelEvent::WatchdogAlert {
+            alert_type: "safe_mode".to_string(),
+            message: if enabled { "Safe mode enabled" } else { "Safe mode disabled" }.to_string(),
+        });
         Ok(())
     }
 
-    /// Handle DevTools query
-    async fn handle_devtools_query(&self, _query_id: String, _query: String) -> TitaneResult<()> {
-        // Placeholder for DevTools integration
+    /// Handle load shedding
+    async fn handle_load_shedding(&self, priority_threshold: u8) -> TitaneResult<()> {
+        let _ = self.event_tx.send(KernelEvent::LoadShedding {
+            tasks_dropped: 0,
+            reason: format!("Priority threshold {}", priority_threshold),
+        });
         Ok(())
     }
 
-    /// Handle resource alert
-    async fn handle_resource_alert(&self, resource: String, usage: f64) -> TitaneResult<()> {
-        let _ = self.event_tx.send(KernelEvent::ResourceAlert { resource, usage });
+    /// Handle snapshot request
+    async fn handle_snapshot_request(&self) -> TitaneResult<()> {
+        let state = self.state.read().await;
+        let snapshot = state.clone();
+        let _ = self.event_tx.send(KernelEvent::StateSnapshot {
+            snapshot_id: format!("snapshot_{}", chrono::Utc::now().timestamp()),
+            timestamp: chrono::Utc::now().timestamp_millis(),
+        });
+        drop(snapshot);
         Ok(())
     }
 
@@ -336,27 +335,27 @@ impl CoreLoop {
         let resources = self.resources.read().await;
 
         // Check CPU
-        if resources.usage.cpu_usage > resources.limits.max_cpu_usage {
+        if resources.usage().cpu_usage > resources.limits().max_cpu_usage {
             return Err(TitaneError::ResourceLimitExceeded(format!(
                 "CPU usage {:.2} exceeds limit {:.2}",
-                resources.usage.cpu_usage, resources.limits.max_cpu_usage
+                resources.usage().cpu_usage, resources.limits().max_cpu_usage
             )));
         }
 
         // Check memory
-        let memory_mb = resources.usage.memory_bytes / (1024 * 1024);
-        if memory_mb > resources.limits.max_memory_mb as u64 {
+        let memory_mb = resources.usage().memory_mb;
+        if memory_mb > resources.limits().max_memory_mb as f32 {
             return Err(TitaneError::ResourceLimitExceeded(format!(
                 "Memory usage {}MB exceeds limit {}MB",
-                memory_mb, resources.limits.max_memory_mb
+                memory_mb, resources.limits().max_memory_mb
             )));
         }
 
         // Check queue
-        if resources.usage.queue_depth > resources.limits.max_queue_depth {
+        if resources.usage().queue_depth > resources.limits().max_queue_depth {
             return Err(TitaneError::SchedulerOverload(format!(
                 "Queue depth {} exceeds limit {}",
-                resources.usage.queue_depth, resources.limits.max_queue_depth
+                resources.usage().queue_depth, resources.limits().max_queue_depth
             )));
         }
 
@@ -372,8 +371,7 @@ impl CoreLoop {
         if level >= 7 {
             let _ = self.event_tx.send(KernelEvent::OverloadDetected {
                 level,
-                cpu: state.load.cpu_usage,
-                queue: state.load.queued_tasks,
+                cpu_usage: state.load.cpu_usage,
             });
         }
 
@@ -394,10 +392,8 @@ impl CoreLoop {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use super::super::governance::KernelPolicy;
     use super::super::resources::{ResourceLimits, ResourceManager};
     use super::super::runtime::KernelRuntime;
-    use super::super::watchdog::{KernelWatchdog, WatchdogConfig};
 
     async fn create_test_components() -> (
         SignalBus,
@@ -407,7 +403,7 @@ mod tests {
         Arc<RwLock<GovernanceEngine>>,
         Arc<RwLock<ResourceManager>>,
     ) {
-        let signal_bus = SignalBus::new();
+        let signal_bus = SignalBus::new(1000);
         let (event_tx, _) = broadcast::channel(100);
         let state = Arc::new(RwLock::new(KernelState::new()));
         let runtime = Arc::new(KernelRuntime::new(event_tx.clone(), Arc::clone(&state)));
@@ -418,7 +414,7 @@ mod tests {
             4,
         ));
 
-        let governance = Arc::new(RwLock::new(GovernanceEngine::with_defaults()));
+        let governance = Arc::new(RwLock::new(GovernanceEngine::new()));
         let resources = Arc::new(RwLock::new(ResourceManager::with_limits(
             ResourceLimits::default(),
         )));

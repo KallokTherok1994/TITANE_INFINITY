@@ -43,6 +43,12 @@ pub mod utils; // ✅ Utilities (AppResult, AppError)
 pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
+// KERNEL v20Ω.0 (Super Prompt #11)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod kernel; // ✅ Cognitive OS Kernel v20Ω.0 (NEW)
+
+// ═══════════════════════════════════════════════════════════════
 // PROFILING & MONITORING v19.5 (NEW)
 // ═══════════════════════════════════════════════════════════════
 

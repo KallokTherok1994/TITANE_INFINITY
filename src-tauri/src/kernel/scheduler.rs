@@ -4,7 +4,7 @@
 //   Super Prompt #11 — Phase 3
 // ═══════════════════════════════════════════════════════════════
 
-use crate::error::{TitaneError, TitaneResult};
+use crate::error::TitaneResult;
 use std::collections::{BinaryHeap, HashMap};
 use std::future::Future;
 use std::pin::Pin;
@@ -14,7 +14,7 @@ use uuid::Uuid;
 
 use super::events::KernelEvent;
 use super::kernel_state::KernelState;
-use super::priorities::CognitivePriority;
+pub use super::priorities::CognitivePriority;
 use super::runtime::KernelRuntime;
 
 /// Type alias for boxed futures
@@ -285,7 +285,6 @@ impl CognitiveScheduler {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use super::super::runtime::RuntimeConfig;
 
     async fn create_test_scheduler() -> CognitiveScheduler {
         let (event_tx, _) = broadcast::channel(100);

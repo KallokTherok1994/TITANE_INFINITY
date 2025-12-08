@@ -15,15 +15,17 @@ pub mod kernel_state;
 pub mod watchdog;
 pub mod governance;
 pub mod events;
+pub mod integrations;
 
 // Re-exports — Runtime
 pub use runtime::{KernelRuntime, RuntimeConfig};
 
 // Re-exports — Scheduler
-pub use scheduler::{CognitiveScheduler, SchedulerJob, CognitivePriority};
+pub use scheduler::{CognitiveScheduler, SchedulerJob, EngineOutput};
+pub use priorities::CognitivePriority;
 
 // Re-exports — Core Loop
-pub use core_loop::{CoreLoop, CoreLoopHandle};
+pub use core_loop::{CoreLoop, CoreLoopConfig};
 
 // Re-exports — Signals
 pub use signals::{KernelSignal, SignalBus};
@@ -42,6 +44,12 @@ pub use events::{KernelEvent, EventPriority};
 
 // Re-exports — Resources
 pub use resources::{ResourceManager, ResourceLimits};
+
+// Re-exports — Integrations
+pub use integrations::{
+    OmegaKernelBridge, OmegaRequest, OmegaResponse, OmegaStats,
+    MemoryKernelBridge, MemoryOperation, MemoryResult, MemoryHealthSnapshot, MemoryStats,
+};
 
 // ═══════════════════════════════════════════════════════════════
 // VERSION

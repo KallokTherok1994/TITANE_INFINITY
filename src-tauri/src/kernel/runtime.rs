@@ -301,7 +301,8 @@ mod tests {
             state.load.cpu_usage = 0.5;
         }).await;
 
-        let state = runtime.state().read().await;
+        let state_arc = runtime.state();
+        let state = state_arc.read().await;
         assert_eq!(state.load.cpu_usage, 0.5);
     }
 }
