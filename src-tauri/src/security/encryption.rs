@@ -118,6 +118,21 @@ impl SigningKeypair {
 /// Master encryption key (32 bytes)
 pub type MasterKey = [u8; 32];
 
+/// Helper trait to generate random MasterKey
+pub trait MasterKeyGenerator {
+    fn generate() -> Self;
+}
+
+impl MasterKeyGenerator for MasterKey {
+    /// Generate a cryptographically secure random master key
+    fn generate() -> Self {
+        use rand::RngCore;
+        let mut key = [0u8; 32];
+        rand::thread_rng().fill_bytes(&mut key);
+        key
+    }
+}
+
 /// Alias for encryption engine
 pub type CryptoEngine = Encryptor;
 

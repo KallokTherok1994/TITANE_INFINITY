@@ -1,11 +1,12 @@
-// TITANE∞ v17 - AI Module with Security Hardening
+// TITANE∞ v20.1 - AI Module with Security Hardening + Performance Cache
 // Multi-provider AI system with automatic fallback (Gemini → Ollama) + security validation
-// Architecture v17: Clean, documented, production-ready, security hardened
+// Architecture v20.1: Clean, documented, production-ready, security hardened, cache-optimized
 
+pub mod cache;    // NEW v20.1: LRU cache for AI responses and provider status
 pub mod gemini;
 pub mod ollama;
 pub mod router;
-pub mod security; // NEW: Security hardening module
+pub mod security; // Security hardening module
 
 use serde::{Deserialize, Serialize};
 

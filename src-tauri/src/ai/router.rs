@@ -1,12 +1,14 @@
-// TITANE∞ v15 - AI Router
+// TITANE∞ v20.1 - AI Router with Performance Cache
 // Intelligent routing with automatic fallback (Gemini → Ollama → Offline)
-// Clean architecture v15: simplified, maintainable, documented
+// Architecture v20.1: simplified, maintainable, documented, CACHE-OPTIMIZED
 
+use super::cache::{AIRouterCache, CachedAIResponse};
 use super::gemini::GeminiClient;
 use super::ollama::OllamaClient;
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use log::{info, warn};
 use std::sync::Arc;
+use std::time::Instant;
 use tokio::sync::RwLock;
 use crate::ia::{UnifiedIAEngine, UnifiedIARequest, IAEngine};
 
@@ -17,21 +19,26 @@ pub enum AIRouterStatus {
     Degraded, // Only Ollama available
 }
 
-/// AIRouter v15 - Central AI request coordinator
+/// AIRouter v20.1 - Central AI request coordinator with CACHE
 ///
 /// Cascade strategy:
-/// 1. Try Gemini API (if internet + API key)
-/// 2. Fallback to Ollama (localhost:11434)
-/// 3. Return error if both fail
+/// 1. Check cache first (instant response)
+/// 2. Try UnifiedIA (Claude → OpenAI)
+/// 3. Fallback to Gemini API (if internet + API key)
+/// 4. Fallback to Ollama (localhost:11434)
+/// 5. Return error if all fail
+///
+/// Cache: LRU avec TTL 5min pour réponses, 30s pour statuts provider
 pub struct AIRouter {
     gemini_client: Option<Arc<GeminiClient>>,
     ollama_client: Arc<OllamaClient>,
     unified_ia: Option<Arc<UnifiedIAEngine>>,  // 🟢🟣 Unified IA Engine (OpenAI + Claude)
     status: Arc<RwLock<AIRouterStatus>>,
+    cache: Arc<AIRouterCache>,  // NEW v20.1: LRU cache
 }
 
 impl AIRouter {
-    /// Create new AIRouter v15 with UnifiedIA support
+    /// Create new AIRouter v20.1 with UnifiedIA support + Cache
     pub fn new(gemini_api_key: Option<String>, ollama_model: Option<String>) -> Self {
         let gemini_client = gemini_api_key.map(|key| Arc::new(GeminiClient::new(key)));
         let ollama_client = Arc::new(OllamaClient::new(ollama_model));
@@ -41,6 +48,7 @@ impl AIRouter {
             ollama_client,
             unified_ia: None,  // Set via set_unified_ia()
             status: Arc::new(RwLock::new(AIRouterStatus::Online)),
+            cache: Arc::new(AIRouterCache::default_cache()),  // NEW v20.1
         }
     }
 
@@ -86,17 +94,93 @@ impl AIRouter {
         *self.status.write().await = new_status;
     }
 
-    /// Execute AI query with automatic cascade fallback v15
-    /// Fallback chain: UnifiedIA (Claude→OpenAI) → Gemini → Ollama
+    /// Update status with cache (v20.1 optimization)
+    /// Évite les checks réseau répétitifs via cache 30s
+    async fn update_status_cached(&self) {
+        // Check internet avec cache
+        let has_internet = if let Some(cached) = self.cache.get_provider_status("internet").await {
+            cached
+        } else {
+            let result = self.check_internet().await;
+            self.cache.set_provider_status("internet", result).await;
+            result
+        };
+
+        // Check Gemini
+        let has_gemini = self.gemini_client.is_some() && has_internet;
+
+        // Check Ollama avec cache
+        let has_ollama = if let Some(cached) = self.cache.get_provider_status("ollama").await {
+            cached
+        } else {
+            let result = self.ollama_client.is_available().await;
+            self.cache.set_provider_status("ollama", result).await;
+            result
+        };
+
+        let new_status = if has_internet && has_gemini {
+            AIRouterStatus::Online
+        } else if has_ollama {
+            AIRouterStatus::Degraded
+        } else {
+            AIRouterStatus::Offline
+        };
+
+        *self.status.write().await = new_status;
+    }
+
+    /// Cache une réponse AI pour réutilisation future
+    async fn cache_response(&self, request: &AIRequest, response: &AIResponse) {
+        self.cache.set_response(
+            &request.prompt,
+            request.temperature,
+            request.max_tokens as u32,
+            CachedAIResponse {
+                content: response.content.clone(),
+                tokens: response.tokens as u32,
+                provider: format!("{:?}", response.provider),
+            },
+        ).await;
+    }
+
+    /// Execute AI query with automatic cascade fallback v20.1
+    /// Fallback chain: Cache → UnifiedIA (Claude→OpenAI) → Gemini → Ollama
     pub async fn query(&self, request: AIRequest) -> AIResult<AIResponse> {
-        self.update_status().await;
+        let query_start = Instant::now();
 
         log::info!(
-            "[AI Router v15] Query: prompt_len={}, temp={}, max_tokens={}",
+            "[AI Router v20.1] Query: prompt_len={}, temp={}, max_tokens={}",
             request.prompt.len(),
             request.temperature,
             request.max_tokens
         );
+
+        // ═══════════════════════════════════════════════════════════════
+        // STEP 0: CHECK CACHE FIRST (instant response, ~0ms)
+        // ═══════════════════════════════════════════════════════════════
+        if let Some(cached) = self.cache.get_response(
+            &request.prompt,
+            request.temperature,
+            request.max_tokens as u32,
+        ).await {
+            log::info!(
+                "[AI Router v20.1] ✓ CACHE HIT: {} tokens, {}ms",
+                cached.tokens,
+                query_start.elapsed().as_millis()
+            );
+            return Ok(AIResponse {
+                content: cached.content,
+                tokens: cached.tokens as usize,
+                provider: AIProvider::Gemini,  // Cached provider
+                timestamp: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs() as i64,
+            });
+        }
+
+        // Update status (with cached provider checks)
+        self.update_status_cached().await;
 
         // 1. Try UnifiedIA (Claude → OpenAI) if available
         if let Some(unified_ia) = &self.unified_ia {
@@ -113,11 +197,12 @@ impl AIRouter {
             match unified_ia.generate(unified_request).await {
                 Ok(unified_response) => {
                     log::info!(
-                        "[AI Router v15] ✓ UnifiedIA success: {:?} engine, {} tokens",
+                        "[AI Router v20.1] ✓ UnifiedIA success: {:?} engine, {} tokens, {}ms",
                         unified_response.engine_used,
-                        unified_response.tokens_used
+                        unified_response.tokens_used,
+                        query_start.elapsed().as_millis()
                     );
-                    return Ok(AIResponse {
+                    let response = AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
                         provider: AIProvider::Gemini,  // TODO: Add OpenAI/Claude to AIProvider enum
@@ -125,7 +210,10 @@ impl AIRouter {
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap()
                             .as_secs() as i64,
-                    });
+                    };
+                    // Cache the response for future use
+                    self.cache_response(&request, &response).await;
+                    return Ok(response);
                 }
                 Err(e) => {
                     warn!("[AI Router v15] ✗ UnifiedIA failed: {}, fallback to Gemini", e);
@@ -136,17 +224,20 @@ impl AIRouter {
         // 2. Try Gemini if available
         if let Some(gemini) = &self.gemini_client {
             if self.check_internet().await {
-                info!("[AI Router v15] Trying Gemini API (secondary)");
+                info!("[AI Router v20.1] Trying Gemini API (secondary)");
                 match gemini.query(&request).await {
                     Ok(response) => {
                         log::info!(
-                            "[AI Router v15] ✓ Gemini success: {} tokens",
-                            response.tokens
+                            "[AI Router v20.1] ✓ Gemini success: {} tokens, {}ms",
+                            response.tokens,
+                            query_start.elapsed().as_millis()
                         );
+                        // Cache the response
+                        self.cache_response(&request, &response).await;
                         return Ok(response);
                     }
                     Err(e) => {
-                        warn!("[AI Router v15] ✗ Gemini failed: {}, fallback to Ollama", e);
+                        warn!("[AI Router v20.1] ✗ Gemini failed: {}, fallback to Ollama", e);
                     }
                 }
             }
@@ -154,13 +245,16 @@ impl AIRouter {
 
         // 3. Fallback to Ollama
         if self.ollama_client.is_available().await {
-            info!("[AI Router v15] Routing to Ollama (local fallback)");
+            info!("[AI Router v20.1] Routing to Ollama (local fallback)");
             match self.ollama_client.query(&request).await {
                 Ok(response) => {
                     log::info!(
-                        "[AI Router v15] ✓ Ollama success: {} tokens",
-                        response.tokens
+                        "[AI Router v20.1] ✓ Ollama success: {} tokens, {}ms",
+                        response.tokens,
+                        query_start.elapsed().as_millis()
                     );
+                    // Cache the response
+                    self.cache_response(&request, &response).await;
                     return Ok(response);
                 }
                 Err(e) => {

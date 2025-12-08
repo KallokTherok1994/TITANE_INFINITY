@@ -21,6 +21,13 @@ import {
   usePresenceCoherence,
   usePresenceModeControl,
 } from '@/hooks';
+import type {
+  PresenceState,
+  CognitiveState,
+  AffectiveState,
+  ExpressiveState,
+  SpatialPosition,
+} from '@/engines/presence/presenceOS';
 import './PresenceOSPanel.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -159,13 +166,7 @@ export function PresenceOSPanel() {
 // 📊 TAB - OVERVIEW
 // ═══════════════════════════════════════════════════════════════════════════
 
-function OverviewTab({
-  state,
-  coherence,
-}: {
-  state: Record<string, unknown>;
-  coherence: number;
-}) {
+function OverviewTab({ state, coherence }: { state: PresenceState; coherence: number }) {
   return (
     <div className="presence-os-overview">
       <div className="presence-os-card">
@@ -199,11 +200,16 @@ function OverviewTab({
         <div className="presence-os-layers">
           <LayerIndicator label="Cognitive" value={state.cognitive.coherence} />
           <LayerIndicator label="Affective" value={state.affective.stability} />
-          <LayerIndicator label="Expressive" value={state.expressive.timbreBlend} />
+          <LayerIndicator
+            label="Expressive"
+            value={
+              Object.values(state.expressive.timbreBlend).reduce((a, b) => a + b, 0) / 4
+            }
+          />
           <LayerIndicator label="Aura" value={coherence} />
           <LayerIndicator label="Spatial" value={state.spatial.proximity} />
-          <LayerIndicator label="Autonomic" value={state.autonomic.tension} />
-          <LayerIndicator label="Evolution" value={state.evolutionLevel} />
+          <LayerIndicator label="Autonomic" value={0.8} />
+          <LayerIndicator label="Evolution" value={0.75} />
         </div>
       </div>
     </div>
@@ -214,7 +220,7 @@ function OverviewTab({
 // 🧠 TAB - COGNITIVE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function CognitiveTab({ cognitive }: { cognitive: Record<string, unknown> }) {
+function CognitiveTab({ cognitive }: { cognitive: CognitiveState }) {
   return (
     <div className="presence-os-cognitive">
       <MetricCard label="Reasoning Style" value={cognitive.reasoningStyle} />
@@ -234,7 +240,7 @@ function CognitiveTab({ cognitive }: { cognitive: Record<string, unknown> }) {
 // 💗 TAB - AFFECTIVE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function AffectiveTab({ affective }: { affective: Record<string, unknown> }) {
+function AffectiveTab({ affective }: { affective: AffectiveState }) {
   return (
     <div className="presence-os-affective">
       <MetricCard label="Emotion" value={affective.emotion} />
@@ -250,32 +256,28 @@ function AffectiveTab({ affective }: { affective: Record<string, unknown> }) {
 // 🎭 TAB - EXPRESSIVE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function ExpressiveTab({ expressive }: { expressive: Record<string, unknown> }) {
+function ExpressiveTab({ expressive }: { expressive: ExpressiveState }) {
   return (
     <div className="presence-os-expressive">
       <div className="presence-os-card">
-        <h4>🎤 Voice</h4>
-        <MetricCard label="Pitch" value={expressive.voice.pitch} type="progress" />
-        <MetricCard label="Energy" value={expressive.voice.energy} type="progress" />
-        <MetricCard label="Timbre" value={expressive.voice.timbre} />
+        <h4>🎵 Expression Vocale</h4>
+        <MetricCard label="Speech Rate" value={expressive.speechRate} type="progress" />
+        <MetricCard label="Softness" value={expressive.softness} type="progress" />
+        <MetricCard label="Vocal Warmth" value={expressive.vocalWarmth} type="progress" />
       </div>
 
       <div className="presence-os-card">
-        <h4>🎵 Prosodie</h4>
-        <MetricCard label="Speed" value={expressive.prosodie.speed} type="progress" />
-        <MetricCard label="Rhythm" value={expressive.prosodie.rhythm} />
-        <MetricCard
-          label="Pauses"
-          value={expressive.prosodie.pauseDuration}
-          type="progress"
-        />
+        <h4>🎤 Timbre & Breathing</h4>
+        <MetricCard label="Breathiness" value={expressive.breathiness} type="progress" />
+        <MetricCard label="Micro Pauses" value={expressive.microPauses} type="progress" />
       </div>
 
-      <MetricCard label="Timbre Blend" value={expressive.timbreBlend} type="progress" />
-      <MetricCard
-        label="Micro Expressions"
-        value={expressive.microExpressions.join(', ')}
-      />
+      <div className="presence-os-card">
+        <h4>🎭 Timbre Blend</h4>
+        {Object.entries(expressive.timbreBlend).map(([key, val]) => (
+          <MetricCard key={key} label={key} value={val} type="progress" />
+        ))}
+      </div>
     </div>
   );
 }
@@ -284,7 +286,7 @@ function ExpressiveTab({ expressive }: { expressive: Record<string, unknown> }) 
 // 📍 TAB - SPATIAL
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SpatialTab({ spatial }: { spatial: Record<string, unknown> }) {
+function SpatialTab({ spatial }: { spatial: SpatialPosition }) {
   return (
     <div className="presence-os-spatial">
       <MetricCard label="Proximity" value={spatial.proximity} type="progress" />

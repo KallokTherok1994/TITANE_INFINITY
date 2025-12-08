@@ -506,14 +506,14 @@ function SymbolicLayerPanel({
           {symbols.length === 0 ? (
             <p className="presence-empty">Aucun symbole actif</p>
           ) : (
-            symbols.map(symbol => (
+            symbols.map((symbol: any) => (
               <div
-                key={symbol.symbol}
+                key={String(symbol.symbol)}
                 className="presence-symbol-card"
-                title={symbol.meaning}
+                title={String(symbol.meaning || '')}
               >
-                <span className="presence-symbol-icon">{symbol.symbol}</span>
-                <span className="presence-symbol-meaning">{symbol.meaning}</span>
+                <span className="presence-symbol-icon">{String(symbol.symbol)}</span>
+                <span className="presence-symbol-meaning">{String(symbol.meaning)}</span>
               </div>
             ))
           )}
@@ -521,18 +521,18 @@ function SymbolicLayerPanel({
       </div>
 
       {/* Arc narratif */}
-      {arc && (
+      {arc && typeof arc === 'object' && (
         <div className="presence-narrative-arc">
           <h5>Arc Narratif</h5>
           <div className="presence-arc-info">
             <span>
-              Phase: <strong>{arc.currentPhase}</strong>
+              Phase: <strong>{(arc as any).currentPhase || 'N/A'}</strong>
             </span>
             <span>
-              Moments clés: <strong>{arc.keyMoments?.length || 0}</strong>
+              Moments clés: <strong>{(arc as any).keyMoments?.length || 0}</strong>
             </span>
             <span>
-              Score: <strong>{arc.continuityScore}%</strong>
+              Score: <strong>{(arc as any).continuityScore || 0}%</strong>
             </span>
           </div>
         </div>

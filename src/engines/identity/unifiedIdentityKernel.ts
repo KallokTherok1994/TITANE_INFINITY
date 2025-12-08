@@ -728,7 +728,7 @@ export class UnifiedIdentityKernel {
    * Forcer une valeur identitaire (usage avancé)
    */
   setIdentityValue(key: keyof IdentitySignature, value: unknown): void {
-    (this.state.identitySignature as Record<string, unknown>)[key] = value;
+    (this.state.identitySignature as any)[key] = value;
     this.createEvolutionSnapshot(`manual-override-${key}`);
   }
 

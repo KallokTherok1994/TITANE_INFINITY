@@ -84,29 +84,98 @@ export default defineConfig({
     rollupOptions: {
       // Externaliser les modules Node.js qui ne doivent pas être bundlés pour le browser
       external: ['better-sqlite3', 'sqlite3', 'bindings', 'file-uri-to-path'],
+      onwarn(warning, warn) {
+        // Ignorer le warning d'eval pour onnxruntime-web (nécessaire pour WASM)
+        if (warning.code === 'EVAL' && warning.id?.includes('onnxruntime-web')) {
+          return;
+        }
+        warn(warning);
+      },
       output: {
-        manualChunks: {
-          // Core React ecosystem
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          // Tauri desktop integration
-          'tauri-vendor': ['@tauri-apps/api', '@tauri-apps/plugin-shell'],
-          // Animation library (large)
-          motion: ['framer-motion'],
-          // Internationalization
-          i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
-          // Schema validation
-          validation: ['zod'],
-          // State management
-          state: ['zustand'],
-          // Utilities
-          utils: ['clsx', 'date-fns', 'dompurify'],
-          // AI Libraries (large chunks - separated for better caching)
-          'ai-transformers': ['@xenova/transformers'],
-          'ai-onnx': ['onnxruntime-web'],
-          // Charts
-          charts: ['recharts'],
-          // Markdown
-          markdown: ['react-markdown', 'remark-gfm'],
+        manualChunks: id => {
+          // Vendors
+          if (id.includes('node_modules')) {
+            if (
+              id.includes('react') ||
+              id.includes('react-dom') ||
+              id.includes('react-router')
+            ) {
+              return 'react-vendor';
+            }
+            if (id.includes('@tauri-apps')) {
+              return 'tauri-vendor';
+            }
+            if (id.includes('framer-motion')) {
+              return 'motion';
+            }
+            if (id.includes('i18n')) {
+              return 'i18n';
+            }
+            if (id.includes('zod')) {
+              return 'validation';
+            }
+            if (id.includes('zustand')) {
+              return 'state';
+            }
+            if (id.includes('recharts')) {
+              return 'charts';
+            }
+            if (id.includes('markdown') || id.includes('remark')) {
+              return 'markdown';
+            }
+            if (id.includes('@xenova/transformers')) {
+              return 'ai-transformers';
+            }
+            if (id.includes('onnxruntime-web')) {
+              return 'ai-onnx';
+            }
+            // Web vitals
+            if (id.includes('web-vitals')) {
+              return 'web-vitals';
+            }
+            // Autres vendors groupés
+            return 'vendor-utils';
+          }
+
+          // Application code splitting
+          if (id.includes('/src/')) {
+            // Pages principales
+            if (id.includes('/pages/Chat') || id.includes('/features/chat')) {
+              return 'page-chat';
+            }
+            if (id.includes('/pages/Agenda') || id.includes('/features/agenda')) {
+              return 'page-agenda';
+            }
+            if (id.includes('/pages/Camera') || id.includes('/features/camera')) {
+              return 'page-camera';
+            }
+
+            // Centers (gros modules)
+            if (id.includes('/pages/centers/') || id.includes('/features/centers/')) {
+              if (id.includes('Identity')) return 'center-identity';
+              if (id.includes('Reality')) return 'center-reality';
+              if (id.includes('Quantum')) return 'center-quantum';
+              if (id.includes('Hyper')) return 'center-hyper';
+              if (id.includes('Memory')) return 'center-memory';
+              if (id.includes('Temporal')) return 'center-temporal';
+              if (id.includes('Orchestration')) return 'center-orchestration';
+              return 'centers-common';
+            }
+
+            // Services (engines)
+            if (id.includes('/services/')) {
+              if (id.includes('cognitive')) return 'service-cognitive';
+              if (id.includes('audio') || id.includes('voice')) return 'service-audio';
+              if (id.includes('memory')) return 'service-memory';
+              if (id.includes('fusion')) return 'service-fusion';
+              return 'services-common';
+            }
+
+            // Components UI
+            if (id.includes('/components/') || id.includes('/ui/')) {
+              return 'ui-components';
+            }
+          }
         },
       },
     },
@@ -117,8 +186,12 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
-    // Augmenté de 500 à 1200 pour les gros chunks AI
-    chunkSizeWarningLimit: 1200,
+    // Réduit à 800KB pour forcer plus de découpage
+    chunkSizeWarningLimit: 800,
+    // Optimisations supplémentaires
+    target: 'esnext',
+    cssCodeSplit: true,
+    sourcemap: false,
   },
 
   // ═══════════════════════════════════════════════════════════════════════════

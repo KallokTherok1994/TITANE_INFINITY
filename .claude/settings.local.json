@@ -21,7 +21,10 @@
       "Bash(npm run build:*)",
       "Bash(cargo check:*)",
       "Bash(npm run lint:*)",
-      "Bash(cargo clippy:*)"
+      "Bash(cargo clippy:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo test:*)",
+      "Bash(timeout 180 cargo test:*)"
     ],
     "deny": [],
     "ask": []
