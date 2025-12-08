@@ -1,8 +1,9 @@
 #!/bin/sh
-# TITANE∞ — Husky v10 Universal Pre-commit Hook
-# Correction PATH pour environnements limités (GitHub Desktop, Pop!_OS, Flatpak…)
+. "$(dirname "$0")/_/husky.sh"
 
-. "$(dirname "$0")/_env"
+echo "🔧 Pre-commit TITANE_INFINITY lancé..."
 
-# Exécution lint-staged via npm exec (plus fiable que npx)
-npm exec lint-staged
+npm exec lint-staged || {
+  echo "❌ Erreur lint-staged"
+  exit 1
+}

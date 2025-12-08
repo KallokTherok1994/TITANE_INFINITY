@@ -41,7 +41,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "docs": "typedoc",
-    "docs:serve": "npx http-server ./docs/api -p 8080",
+    "docs:serve": "npm exec http-server ./docs/api -p 8080",
     "prepare": "husky",
     "test:a11y": "jest --testPathPattern=a11y",
     "lint:a11y": "eslint --plugin jsx-a11y"
@@ -127,11 +127,10 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
-      "eslint --fix --max-warnings=0 || true",
-      "prettier --write"
+      "npm exec eslint --fix"
     ],
     "*.{json,md,css,scss}": [
-      "prettier --write"
+      "npm exec prettier --write"
     ]
   },
   "engines": {

@@ -1,0 +1,44 @@
+node_modules
+dist
+build
+target
+*.log
+*.lock
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.svg
+*.webp
+*.gif
+*.woff
+*.woff2
+*.ttf
+*.eot
+.git
+.husky
+.vscode
+.idea
+
+# Fichiers Markdown trop lourds (éviter SIGKILL Prettier)
+TITANE_MEMORY_OS*.md
+TITANE_DEVTOOLS_OS_REPORT.md
+TITANE_KERNEL_v20Ω_REPORT.md
+docs/**/*.md
+**/AUDIT_*.md
+**/ARCHITECTURE_*.md
+**/ANALYSE_*.md
+
+# Fichiers générés
+src-tauri/target
+src-tauri/Cargo.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build artifacts
+.next
+.nuxt
+.output
+.vercel
+.netlify
