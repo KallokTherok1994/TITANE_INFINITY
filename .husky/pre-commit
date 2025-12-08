@@ -1,5 +1,7 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+
+# Source environment variables (PATH avec node/npm)
+. "$(dirname "$0")/_env"
 
 echo "🔧 Pre-commit TITANE_INFINITY lancé..."
 
