@@ -1,0 +1,3 @@
+#!/bin/sh
+# Correction PATH pour environnements limités (GitHub Desktop, Pop!_OS, Flatpak…)
+export PATH="/usr/local/bin:/usr/bin:/bin:$HOME/.nvm/versions/node/v24.11.1/bin:$PATH"

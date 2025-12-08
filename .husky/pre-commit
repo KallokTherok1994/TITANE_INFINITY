@@ -1,3 +1,8 @@
 #!/bin/sh
-# Husky v9+ clean script
-npx --no-install lint-staged
+# TITANE∞ — Husky v10 Universal Pre-commit Hook
+# Correction PATH pour environnements limités (GitHub Desktop, Pop!_OS, Flatpak…)
+
+. "$(dirname "$0")/_env"
+
+# Exécution lint-staged via npm exec (plus fiable que npx)
+npm exec lint-staged
