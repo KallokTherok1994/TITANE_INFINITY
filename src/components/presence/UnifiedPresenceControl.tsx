@@ -21,7 +21,13 @@ import {
   useUserContextPresence,
   useTonicProfile,
 } from '@/hooks/useUnifiedPresence';
+
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+type TonicProfile = any;
+/*
 import type { TonicProfile } from '@/engines/presence/unifiedPresenceEngine';
+*/
+
 import './UnifiedPresenceControl.css';
 
 // ═══════════════════════════════════════════════════════════════════════════════

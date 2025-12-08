@@ -16,7 +16,8 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import MultimodalFusionEngine from '@/engines/multimodal/MultimodalFusionEngine';
+// REMOVED: engines/multimodal supprimé en PHASE 1 (OPTION B)
+import MultimodalFusionEngine from '@/engines/multimodal/_stubs';
 import type {
   MultimodalState,
   ModalityWeights,

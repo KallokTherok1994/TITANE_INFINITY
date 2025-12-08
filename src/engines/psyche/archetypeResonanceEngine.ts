@@ -22,11 +22,22 @@
  * 8. NARRATIVE INTEGRATION — Intégration avec Inner Dialogue
  */
 
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import {
+  multimodalPresenceEngine,
+  type PresenceMode as _PresenceMode,
+} from '../presence/_stubs';
+
+// Type stub local pour ExpressiveIntention (non présent dans _stubs)
+type ExpressiveIntention = any;
+
+/*
 import {
   multimodalPresenceEngine,
   type PresenceMode as _PresenceMode,
   type ExpressiveIntention,
 } from '../presence/multimodalPresenceEngine';
+*/
 import type {
   ThinkingState,
   MentalColor as _MentalColor,

@@ -17,7 +17,8 @@ import type {
   StateSignature,
 } from '@/types/trainingBaseline';
 import { getDefaultTrainingBaselineProfile } from '@/types/trainingBaseline';
-import { TrainingBaselineEngine, TRAINING_CONFIG } from '@/engines/training/TrainingBaselineEngine';
+// REMOVED: engines/training supprimé en PHASE 1 (OPTION B)
+import { TrainingBaselineEngine, TRAINING_CONFIG } from '@/engines/training/_stubs';
 
 // ============================================================================
 // TYPES DU STORE

@@ -27,10 +27,19 @@ import {
   archetypeResonanceEngine,
   type ArchetypeResonance,
 } from '../psyche/archetypeResonanceEngine';
+
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
+// Type stub pour éviter erreurs de compilation
+type MultimodalPresenceState = any;
+const multimodalPresenceEngine = {
+  getState: () => ({} as MultimodalPresenceState),
+};
+/*
 import {
   multimodalPresenceEngine,
   type MultimodalPresenceState,
 } from '../presence/multimodalPresenceEngine';
+*/
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

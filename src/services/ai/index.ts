@@ -8,54 +8,45 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v20Ω+ — AI SERVICES INDEX
- *   Export centralisé des services IA avec Health Monitoring
+ *   TITANE∞ v1.0 — AI SERVICES INDEX
+ *   Export centralisé - NOUVELLE ARCHITECTURE OPTION B
  * ═══════════════════════════════════════════════════════════════════
  */
 
 // ─────────────────────────────────────────────────────────────────
-// 🎯 SYSTÈME COMPLET v20Ω+ / v22Ω COGNITIVE KERNEL
+// 🎯 NOUVELLE ARCHITECTURE v1.0 — CORE EXPORTS
+// ─────────────────────────────────────────────────────────────────
+
+// Re-export from new core structure
+export * from '@/core/kernels';
+export * from '@/core/services';
+
+// ─────────────────────────────────────────────────────────────────
+// 🔄 LEGACY EXPORTS (backward compatibility)
 // ─────────────────────────────────────────────────────────────────
 export * from './system';
 
-// 🧠 NOUVEAU v22Ω: Cognitive Kernel
+// Kernels (kept in services/ai for backward compatibility)
 export { cognitiveKernel } from './cognitiveKernel';
-export type {
-  CognitivePrinciples,
-  EnvironmentState,
-  IntentionState,
-  EphemeralMemory,
-  CognitiveProcess,
-  CognitiveDecision,
-} from './cognitiveKernel';
-
-// 🌌 NOUVEAU v∞Ω: Meta-Kernel (Super-Conscience Système)
 export { metaKernel } from './metaKernel';
-export type {
-  SystemMap,
-  SystemNode,
-  SystemEdge,
-  SystemFlow,
-  SystemLayer,
-  SubKernelStates,
-  TitanePrinciples,
-  SystemObservation,
-  FragilityZone,
-  OrchestrationAction,
-  SuperMemory,
-  SuperConsciousnessReport,
-} from './metaKernel';
+export { singularityKernel } from './singularityKernel';
 
-// Legacy orchestrator (à migrer vers chatEngine)
+// Services (kept in services/ai for backward compatibility)
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';
+export { chatEngine, type ChatMode, type ChatEngineConfig, type ChatEngineResponse } from './chatEngine';
+export { autoHealEngine } from './autoHealEngine';
+export { metricsEngine } from './metricsEngine';
+
+// Providers
 export { geminiProvider } from './providers/gemini';
 export { ollamaProvider } from './providers/ollama';
 export { fallbackProvider } from './providers/fallback';
+
+// Types
 export type { AIMessage, AIResponse, AIProvider, AIConfig } from './types';
 export { DEFAULT_AI_CONFIG } from './types';
 
-// New unified ChatEngine architecture
-export { chatEngine, type ChatMode, type ChatEngineConfig, type ChatEngineResponse } from './chatEngine';
+// Modes & Memory
 export { chatModes, type ChatModeConfig } from './chatModes';
 export { memoryIntegration, type MemoryLoadConfig } from './memoryIntegration';
 export type { MemoryContext } from './memoryIntegration';

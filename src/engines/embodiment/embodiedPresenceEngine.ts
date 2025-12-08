@@ -27,7 +27,8 @@ import {
   archetypeResonanceEngine,
   type ArchetypeType,
 } from '../psyche/archetypeResonanceEngine';
-import { multimodalPresenceEngine } from '../presence/multimodalPresenceEngine';
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import { multimodalPresenceEngine } from '../presence/_stubs';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES

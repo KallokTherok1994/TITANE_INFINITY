@@ -11,10 +11,22 @@
  */
 
 import { useState, useEffect } from 'react';
+
+// REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
+// Stub local pour maintenir compatibilité
+type PredictiveFrame = any;
+const predictiveReflectionEngine = {
+  getState: () => ({} as PredictiveFrame),
+  start: () => {},
+  stop: () => {},
+};
+
+/*
 import {
   predictiveReflectionEngine,
   type PredictiveFrame,
 } from '@/engines/predictive/predictiveReflectionEngine';
+*/
 import {
   consciousDynamicsModel,
   type ConsciousState,

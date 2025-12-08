@@ -16,7 +16,13 @@
  */
 
 import { useEffect } from 'react';
+
+// REMOVED: core/visual supprimé en PHASE 1 (OPTION B)
+type SystemState = any;
+
+/*
 import type { SystemState } from '../core';
+*/
 
 /**
  * Hook pour synchroniser variables CSS avec état système

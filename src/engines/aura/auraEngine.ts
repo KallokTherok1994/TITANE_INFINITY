@@ -23,7 +23,8 @@
 
 import { synestheticEmotionEngine, type EmotionalState } from '../emotion/synestheticEmotionEngine';
 import { embodiedPresenceEngine } from '../embodiment/embodiedPresenceEngine';
-import { multimodalPresenceEngine, type PresenceMode } from '../presence/multimodalPresenceEngine';
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import { multimodalPresenceEngine, type PresenceMode } from '../presence/_stubs';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
