@@ -372,7 +372,7 @@ pub struct BackupStats {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::security::encryption::{MasterKey, SigningKeypair};
+    use crate::security::encryption::{MasterKey, MasterKeyGenerator, SigningKeypair};
 
     #[tokio::test]
     async fn test_backup_engine() {

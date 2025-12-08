@@ -18,6 +18,7 @@
 import { audioStateMachine, AudioConversationState } from './audioStateMachine';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+import { audioService } from '@/features/audio-center/services/audioService';
 import { hybridTTS } from '@/services/tts/hybridTTS';
 
 /**
@@ -69,7 +70,13 @@ export function logDeviceIssue(
   // Stocker dans localStorage pour debugging
   try {
     const logs = JSON.parse(localStorage.getItem('titane_device_health_logs') || '[]');
-    logs.push({ timestamp, scope, message, details, environment: env.isTauri ? 'tauri' : 'browser' });
+    logs.push({
+      timestamp,
+      scope,
+      message,
+      details,
+      environment: env.isTauri ? 'tauri' : 'browser',
+    });
     // Garder seulement les 100 derniers logs
     if (logs.length > 100) logs.shift();
     localStorage.setItem('titane_device_health_logs', JSON.stringify(logs));
@@ -96,7 +103,6 @@ class AudioHealthService {
     // ═══ MODE TAURI: Utiliser le backend Rust ═══
     if (env.isTauri) {
       try {
-        const { audioService } = await import('@/features/audio-center/services/audioService');
         const result = await audioService.testMicrophone();
 
         if (result.success) {
@@ -108,7 +114,9 @@ class AudioHealthService {
             environment: 'tauri',
           };
         } else {
-          logDeviceIssue('microphone', 'Test microphone échoué', { error: result.errorMessage });
+          logDeviceIssue('microphone', 'Test microphone échoué', {
+            error: result.errorMessage,
+          });
           return {
             name: 'Microphone',
             status: 'error',
@@ -147,13 +155,15 @@ class AudioHealthService {
       // Vérifier si navigator.permissions existe (pas disponible partout)
       if (typeof navigator !== 'undefined' && navigator.permissions) {
         try {
-          const permissions = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+          const permissions = await navigator.permissions.query({
+            name: 'microphone' as PermissionName,
+          });
 
           if (permissions.state === 'denied') {
             return {
               name: 'Microphone',
               status: 'error',
-              message: 'Permission microphone refusée par l\'utilisateur',
+              message: "Permission microphone refusée par l'utilisateur",
               environment: 'browser',
             };
           }
@@ -242,9 +252,6 @@ class AudioHealthService {
   private async checkVADBackend(): Promise<HealthTestResult> {
     const start = performance.now();
     try {
-      // Import dynamique pour éviter les erreurs en mode browser
-      const { audioService } = await import('@/features/audio-center/services/audioService');
-
       // Tester avec un frame silence
       const silentFrame = new Float32Array(512);
       const result = await audioService.processVADFrame(silentFrame);
@@ -357,7 +364,8 @@ class AudioHealthService {
     let overallStatus: AudioHealthReport['overallStatus'] = 'healthy';
 
     if (statuses.includes('error')) {
-      overallStatus = statuses.filter(s => s === 'error').length >= 2 ? 'critical' : 'degraded';
+      overallStatus =
+        statuses.filter(s => s === 'error').length >= 2 ? 'critical' : 'degraded';
     } else if (statuses.includes('warning')) {
       overallStatus = 'degraded';
     } else if (statuses.includes('unknown')) {
@@ -368,16 +376,20 @@ class AudioHealthService {
     const recommendations: string[] = [];
 
     if (microphone.status === 'error') {
-      recommendations.push('Vérifiez les permissions microphone dans les paramètres du navigateur');
+      recommendations.push(
+        'Vérifiez les permissions microphone dans les paramètres du navigateur'
+      );
     }
     if (microphone.status === 'warning') {
-      recommendations.push('Cliquez sur le bouton micro pour autoriser l\'accès');
+      recommendations.push("Cliquez sur le bouton micro pour autoriser l'accès");
     }
     if (vadBackend.status === 'error') {
-      recommendations.push('Relancez l\'application pour réinitialiser le backend audio');
+      recommendations.push("Relancez l'application pour réinitialiser le backend audio");
     }
     if (ttsBackend.status !== 'ok') {
-      recommendations.push('Vérifiez que espeak ou piper est installé pour la synthèse vocale');
+      recommendations.push(
+        'Vérifiez que espeak ou piper est installé pour la synthèse vocale'
+      );
     }
     if (stateMachine.status !== 'ok') {
       recommendations.push('Réinitialisez le mode conversation');
@@ -477,7 +489,9 @@ class AudioHealthService {
       fullRecovery: postRepairReport.overallStatus === 'healthy',
     };
 
-    console.log(`[AudioHealth] 🩺 Self-healing terminé: ${successCount}/${repairs.length} réparations réussies`);
+    console.log(
+      `[AudioHealth] 🩺 Self-healing terminé: ${successCount}/${repairs.length} réparations réussies`
+    );
     return result;
   }
 
@@ -515,7 +529,9 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    console.log(
+      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    );
     return action;
   }
 
@@ -543,7 +559,9 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    console.log(
+      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    );
     return action;
   }
 
@@ -579,7 +597,9 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    console.log(
+      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    );
     return action;
   }
 
@@ -605,7 +625,9 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    console.log(
+      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    );
     return action;
   }
 
@@ -626,7 +648,10 @@ class AudioHealthService {
       if (env.isTauri) {
         // En Tauri, on ne peut pas "réparer" les permissions système
         // On peut juste re-tester (1000ms test rapide)
-        const result = await secureInvoke<{ success: boolean; errorMessage?: string }>('test_microphone', { durationMs: 1000 });
+        const result = await secureInvoke<{ success: boolean; errorMessage?: string }>(
+          'test_microphone',
+          { durationMs: 1000 }
+        );
         action.success = result?.success === true;
         action.message = result?.success
           ? 'Microphone accessible via backend Tauri'
@@ -646,7 +671,9 @@ class AudioHealthService {
       action.message = `Erreur: ${err instanceof Error ? err.message : 'inconnu'}`;
     }
 
-    console.log(`[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`);
+    console.log(
+      `[AudioHealth] ${action.success ? '✅' : '❌'} ${action.name}: ${action.message}`
+    );
     return action;
   }
 

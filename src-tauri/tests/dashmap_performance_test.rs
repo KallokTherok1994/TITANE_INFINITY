@@ -8,6 +8,7 @@ use std::sync::Arc;
 use std::time::Instant;
 
 #[derive(Clone, Debug)]
+#[allow(dead_code)]
 struct MockConversation {
     id: String,
     messages: Vec<String>,

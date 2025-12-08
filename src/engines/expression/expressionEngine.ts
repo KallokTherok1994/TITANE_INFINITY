@@ -518,7 +518,7 @@ export class ExpressionEngine {
     voiceProsodyEngine.updateState(voice);
 
     // Apply to Aura Engine (v∞.38+)
-    auraEngine.setPattern(halo.pattern as string);
+    auraEngine.setPattern(halo.pattern as any);
     auraEngine.setColors({
       primary: halo.colors.primary,
       secondary: halo.colors.secondary,

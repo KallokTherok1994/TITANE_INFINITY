@@ -6,6 +6,8 @@
 //   Auto-chiffrement transparent de toute la persistence
 // ═══════════════════════════════════════════════════════════════
 
+#[cfg(test)]
+use super::encryption::MasterKeyGenerator;
 use super::encryption::{CryptoEngine, MasterKey};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};

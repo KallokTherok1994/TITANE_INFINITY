@@ -633,17 +633,15 @@ class AutopoiesisEngine {
     console.log(`[AutopoiesisEngine] Triggering strategy: ${strategy.name}`);
 
     // Simuler succès (70% du temps)
-    const successCount =
-      ((strategy as Record<string, unknown>).successCount as number) || 0;
+    const strategyAny = strategy as any;
+    const successCount = strategyAny.successCount || 0;
     if (Math.random() > 0.3) {
-      (strategy as Record<string, unknown>).successCount = successCount + 1;
+      strategyAny.successCount = successCount + 1;
       this.state.optimization.successfulAdjustments++;
     }
 
     // Mettre à jour success rate
-    strategy.successRate =
-      (((strategy as Record<string, unknown>).successCount as number) || 0) /
-      strategy.timesTriggered;
+    strategy.successRate = (strategyAny.successCount || 0) / strategy.timesTriggered;
   }
 
   // ─────────────────────────────────────────────────────────────────────────

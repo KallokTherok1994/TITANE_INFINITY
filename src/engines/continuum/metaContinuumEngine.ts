@@ -413,7 +413,7 @@ class MetaContinuumEngine {
         presenceEnergy: predictedVector[1],
         breathing: {
           amplitude: predictedVector[2],
-        } as Record<string, unknown>,
+        } as any,
       },
       confidence: this.state.memory.evolutionVector.confidence,
       trajectory: this.describeTrajectory(),

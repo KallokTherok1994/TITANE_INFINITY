@@ -339,7 +339,7 @@ pub struct TravelStats {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::security::encryption::MasterKey;
+    use crate::security::encryption::{MasterKey, MasterKeyGenerator};
 
     #[tokio::test]
     async fn test_travel_engine() {

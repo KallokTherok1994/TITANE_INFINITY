@@ -19,6 +19,60 @@ import {
 } from '@/hooks';
 import './PhysiologicalPanel.css';
 
+interface PhysiologicalState {
+  energy: number;
+  cognitiveLoad: number;
+  clarity: number;
+  stability: number;
+  breathingPhase: number;
+  homeostasis: number;
+  position: { x: number; y: number; z: number };
+  distance: number;
+}
+
+interface InteroceptionHookReturn {
+  state: {
+    energy: number;
+    cognitiveLoad: number;
+    clarity: number;
+    stability: number;
+    emotionalTemperature: number;
+    entropy: number;
+    depth: number;
+  };
+  setEnergy: (value: number) => void;
+  setCognitiveLoad: (value: number) => void;
+  setClarity: (value: number) => void;
+  setStability: (value: number) => void;
+  setEmotionalTemperature: (value: number) => void;
+}
+
+interface HolophonicHookReturn {
+  spatialState: {
+    x: number;
+    y: number;
+    z: number;
+    width: number;
+    focus: number;
+    distance: number;
+  };
+  setSpatialState: (state: any) => void;
+  setPreset: (preset: any) => void;
+  playCue?: (cue: any, options?: any) => void;
+  setSoundIntensity?: (intensity: any) => void;
+}
+
+interface CognitiveSoundsReturn {
+  playThinking: () => void;
+  playInsight: () => void;
+  playModeSwitch: () => void;
+  playErrorSoft: () => void;
+  playHealComplete: () => void;
+  playWakeWord: () => void;
+  playListening: () => void;
+  playProcessing: () => void;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // COMPOSANT PRINCIPAL
 // ═══════════════════════════════════════════════════════════════════════════
@@ -116,7 +170,7 @@ export function PhysiologicalPanel() {
 // TAB - VUE D'ENSEMBLE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function OverviewTab({ physiological }: { physiological: Record<string, unknown> }) {
+function OverviewTab({ physiological }: { physiological: PhysiologicalState }) {
   return (
     <div className="physiological-overview">
       <div className="physiological-vitals">
@@ -194,8 +248,8 @@ function OverviewTab({ physiological }: { physiological: Record<string, unknown>
 // TAB - ÉTAT INTERNE
 // ═══════════════════════════════════════════════════════════════════════════
 
-function InternalTab({ interoception }: { interoception: Record<string, unknown> }) {
-  const state = interoception.state as Record<string, unknown>;
+function InternalTab({ interoception }: { interoception: InteroceptionHookReturn }) {
+  const state = interoception.state;
 
   return (
     <div className="physiological-internal">
@@ -268,8 +322,8 @@ function InternalTab({ interoception }: { interoception: Record<string, unknown>
 // TAB - SPATIAL 3D
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SpatialTab({ holophonic }: { holophonic: Record<string, unknown> }) {
-  const state = holophonic.spatialState as Record<string, unknown>;
+function SpatialTab({ holophonic }: { holophonic: HolophonicHookReturn }) {
+  const state = holophonic.spatialState;
 
   return (
     <div className="physiological-spatial">
@@ -335,7 +389,7 @@ function SpatialTab({ holophonic }: { holophonic: Record<string, unknown> }) {
 // TAB - SONS COGNITIFS
 // ═══════════════════════════════════════════════════════════════════════════
 
-function SoundsTab({ sounds }: { sounds: Record<string, unknown> }) {
+function SoundsTab({ sounds }: { sounds: CognitiveSoundsReturn }) {
   return (
     <div className="physiological-sounds">
       <div className="physiological-card">

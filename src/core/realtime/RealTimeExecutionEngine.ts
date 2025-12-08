@@ -328,16 +328,16 @@ export class RealTimeExecutionEngine {
     try {
       switch (task.type) {
         case 'audio':
-          this.audioScheduler.scheduleChunk(task.payload);
+          this.audioScheduler.scheduleChunk(task.payload as AudioBuffer);
           break;
         case 'avatar':
-          this.avatarScheduler.scheduleAnimation(task.payload);
+          this.avatarScheduler.scheduleAnimation(task.payload as AvatarAnimationPayload);
           break;
         case 'ui':
-          this.uiEventBatcher.addEvent(task.payload);
+          this.uiEventBatcher.addEvent(task.payload as UIEventPayload);
           break;
         case 'network':
-          this.executeNetworkTask(task.payload);
+          this.executeNetworkTask(task.payload as NetworkPayload);
           break;
       }
     } catch (error) {

@@ -72,19 +72,19 @@ export class StateIntegrityEngine {
     const issues: IntegrityIssue[] = [];
 
     // Vérifier physical layer
-    this.checkLayer(state.physical, 'physical', issues);
+    this.checkLayer(state.physical as any, 'physical', issues);
 
     // Vérifier cognitive layer
-    this.checkLayer(state.cognitive, 'cognitive', issues);
+    this.checkLayer(state.cognitive as any, 'cognitive', issues);
 
     // Vérifier symbolic layer
-    this.checkLayer(state.symbolic, 'symbolic', issues);
+    this.checkLayer(state.symbolic as any, 'symbolic', issues);
 
     // Vérifier adaptive layer
-    this.checkLayer(state.adaptive, 'adaptive', issues);
+    this.checkLayer(state.adaptive as any, 'adaptive', issues);
 
     // Vérifier meta layer
-    this.checkLayer(state.meta, 'meta', issues);
+    this.checkLayer(state.meta as any, 'meta', issues);
 
     // Calculer score
     const score = Math.max(0, 1 - issues.length * 0.1);
@@ -129,11 +129,11 @@ export class StateIntegrityEngine {
     const fixed = { ...state };
 
     // Fixer les couches
-    fixed.physical = this.fixLayer(fixed.physical);
-    fixed.cognitive = this.fixLayer(fixed.cognitive);
-    fixed.symbolic = this.fixLayer(fixed.symbolic);
-    fixed.adaptive = this.fixLayer(fixed.adaptive);
-    fixed.meta = this.fixLayer(fixed.meta);
+    fixed.physical = this.fixLayer(fixed.physical as any) as any;
+    fixed.cognitive = this.fixLayer(fixed.cognitive as any) as any;
+    fixed.symbolic = this.fixLayer(fixed.symbolic as any) as any;
+    fixed.adaptive = this.fixLayer(fixed.adaptive as any) as any;
+    fixed.meta = this.fixLayer(fixed.meta as any) as any;
 
     return fixed;
   }
@@ -202,11 +202,11 @@ export class StateIntegrityEngine {
   private compressState(state: SingularityState): SingularityState {
     return {
       ...state,
-      physical: this.compressLayer(state.physical),
-      cognitive: this.compressLayer(state.cognitive),
-      symbolic: this.compressLayer(state.symbolic),
-      adaptive: this.compressLayer(state.adaptive),
-      meta: this.compressLayer(state.meta),
+      physical: this.compressLayer(state.physical as any) as any,
+      cognitive: this.compressLayer(state.cognitive as any) as any,
+      symbolic: this.compressLayer(state.symbolic as any) as any,
+      adaptive: this.compressLayer(state.adaptive as any) as any,
+      meta: this.compressLayer(state.meta as any) as any,
     };
   }
 

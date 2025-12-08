@@ -69,7 +69,9 @@ export const WhisperStreamingDemo = () => {
       >
         <select
           value={model}
-          onChange={e => setModel(e.target.value)}
+          onChange={e =>
+            setModel(e.target.value as 'tiny' | 'base' | 'small' | 'medium' | 'large')
+          }
           disabled={isStreaming}
           style={{
             padding: '0.5rem',

@@ -387,10 +387,11 @@ mod tests {
 
     #[test]
     fn test_validate_message() {
-        assert!(InputValidator::validate_message("Hello, world!").is_ok());
-        assert!(InputValidator::validate_message("").is_err());
-        assert!(InputValidator::validate_message(&"a".repeat(100_001)).is_err());
-        assert!(InputValidator::validate_message("<script>alert('XSS')</script>").is_err());
+        let validator = InputValidator::default();
+        assert!(validator.validate_message("Hello, world!").is_ok());
+        assert!(validator.validate_message("").is_err());
+        assert!(validator.validate_message(&"a".repeat(100_001)).is_err());
+        assert!(validator.validate_message("<script>alert('XSS')</script>").is_err());
     }
 
     #[test]
@@ -415,7 +416,7 @@ mod tests {
     }
 
     #[test]
-    fn test_sanitize_filename() {
+    fn test_sanitize_filename_advanced() {
         assert_eq!(InputValidator::sanitize_filename("../../etc/passwd"), "etcpasswd");
         assert_eq!(InputValidator::sanitize_filename("file<>.txt"), "file.txt");
     }
