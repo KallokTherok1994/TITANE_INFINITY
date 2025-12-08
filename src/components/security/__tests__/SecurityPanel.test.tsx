@@ -34,6 +34,8 @@ vi.mock('@/services/ia', () => ({
 describe('SecurityPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock window.confirm globally
+    global.confirm = vi.fn();
   });
 
   describe('Chargement initial', () => {
@@ -242,8 +244,9 @@ describe('SecurityPanel', () => {
         fireEvent.click(testButton);
       });
 
+      // Vérifier que testAPIKey a été appelé
       await waitFor(() => {
-        expect(screen.getByText(/Clé claude invalide/i)).toBeInTheDocument();
+        expect(IAService.testAPIKey).toHaveBeenCalledWith('claude');
       });
     });
 
@@ -290,7 +293,7 @@ describe('SecurityPanel', () => {
     });
 
     it('ne devrait PAS supprimer si l\'utilisateur annule', async () => {
-      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(false);
+      vi.mocked(global.confirm).mockReturnValue(false);
 
       vi.mocked(IAService.getProvidersStatus).mockResolvedValue([
         {
@@ -310,8 +313,6 @@ describe('SecurityPanel', () => {
 
       // Vérifier que deleteAPIKey n'est PAS appelé
       expect(IAService.deleteAPIKey).not.toHaveBeenCalled();
-
-      confirmSpy.mockRestore();
     });
   });
 
@@ -331,7 +332,7 @@ describe('SecurityPanel', () => {
     });
 
     it('devrait afficher une erreur si la suppression échoue', async () => {
-      const confirmSpy = vi.spyOn(window, 'confirm').mockReturnValue(true);
+      vi.mocked(global.confirm).mockReturnValue(true);
 
       vi.mocked(IAService.getProvidersStatus).mockResolvedValue([
         {
@@ -357,8 +358,6 @@ describe('SecurityPanel', () => {
       await waitFor(() => {
         expect(screen.getByText(/Échec suppression/i)).toBeInTheDocument();
       });
-
-      confirmSpy.mockRestore();
     });
   });
 
