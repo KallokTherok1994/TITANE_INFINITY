@@ -49,6 +49,12 @@ pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ 
 pub mod kernel; // ✅ Cognitive OS Kernel v20Ω.0 (NEW)
 
 // ═══════════════════════════════════════════════════════════════
+// OMEGA PIPELINE v20Ω (Super Prompt #15)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod omega; // ✅ Omega Pipeline v20Ω (NEW)
+
+// ═══════════════════════════════════════════════════════════════
 // PROFILING & MONITORING v19.5 (NEW)
 // ═══════════════════════════════════════════════════════════════
 
