@@ -34,6 +34,16 @@ pub fn get_handlers() -> impl Fn(tauri::Invoke) + Send + Sync + 'static {
         crate::commands::evolution_v14::get_evolution_state,
         crate::commands::evolution_v14::evolution_health_check,
         // ═══════════════════════════════════════════════════════════════
+        // SINGULARITY CORTEX v∞ (Super Prompt #7 - Meta-Cognitive Layer)
+        // ═══════════════════════════════════════════════════════════════
+        crate::singularity_cortex::api::singularity_cortex_get_state,
+        crate::singularity_cortex::api::singularity_cortex_get_stats,
+        crate::singularity_cortex::api::singularity_cortex_get_context,
+        crate::singularity_cortex::api::singularity_cortex_set_mode,
+        crate::singularity_cortex::api::singularity_cortex_record_interaction,
+        crate::singularity_cortex::api::singularity_cortex_push_context,
+        crate::singularity_cortex::api::singularity_cortex_reset,
+        // ═══════════════════════════════════════════════════════════════
         // DIAGNOSTIC v14 (Backend Self-Check + Validation)
         // ═══════════════════════════════════════════════════════════════
         crate::commands::diagnostic::backend_self_check,
