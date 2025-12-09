@@ -15,6 +15,7 @@ pub mod reasoning;
 pub mod abstraction;
 pub mod transfer;
 pub mod diagnostics;
+pub mod multimodal_perception; // SUPER PROMPT #15 - Phase 7
 
 pub use introspection::{IntrospectionEngine, IntrospectionReport, CognitiveState};
 pub use meta_learning::{MetaLearningEngine, LearningStrategy, LearningMetrics};
@@ -25,6 +26,7 @@ pub use reasoning::{ReasoningEngine, ReasoningChain, ReasoningStep};
 pub use abstraction::{AbstractionEngine, Concept, AbstractionLevel};
 pub use transfer::{TransferEngine, TransferContext, TransferResult};
 pub use diagnostics::{AGIDiagnostics, AGIEvent, AGIHealth};
+pub use multimodal_perception::{MultimodalAGIContext, MultimodalPerceptionEngine, PerceptiveIntrospection, MultimodalPerceptionStats};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;

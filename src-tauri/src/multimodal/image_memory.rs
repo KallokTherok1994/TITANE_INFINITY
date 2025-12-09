@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 // ═══════════════════════════════════════════════════════════════
 //   IMAGE MEMORY — Multimodal Memory Storage & Cross-Modal Search
-//   SUPER PROMPT #15
+//   SUPER PROMPT #15 — PHASE 3 COMPLETE
 // ═══════════════════════════════════════════════════════════════
 
 use crate::multimodal::config::{MultimodalError, MultimodalResult};
@@ -107,6 +107,39 @@ impl ImageMemoryStore {
         let entries = self.entries.read().await;
         (entries.len(), self.max_entries)
     }
+
+    /// Get all entries
+    pub async fn get_all(&self) -> Vec<ImageMemoryEntry> {
+        let entries = self.entries.read().await;
+        entries.clone()
+    }
+
+    /// Search by tags
+    pub async fn search_by_tags(&self, tags: &[String]) -> Vec<ImageMemoryEntry> {
+        let entries = self.entries.read().await;
+        entries
+            .iter()
+            .filter(|e| tags.iter().any(|tag| e.metadata.tags.contains(tag)))
+            .cloned()
+            .collect()
+    }
+
+    /// Update importance score
+    pub async fn update_importance(&self, id: &str, importance: f32) -> MultimodalResult<()> {
+        let mut entries = self.entries.write().await;
+        if let Some(entry) = entries.iter_mut().find(|e| e.id == id) {
+            entry.importance = importance.clamp(0.0, 1.0);
+            Ok(())
+        } else {
+            Err(MultimodalError::VisionError(format!("Image {} not found", id)))
+        }
+    }
+
+    /// Clear all entries
+    pub async fn clear(&self) {
+        let mut entries = self.entries.write().await;
+        entries.clear();
+    }
 }
 
 /// Helper: Cosine similarity
@@ -129,33 +162,138 @@ fn cosine_similarity(a: &[f32], b: &[f32]) -> f32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
-    #[tokio::test]
-    async fn test_image_memory_store() {
-        let store = ImageMemoryStore::new(100);
-        let entry = ImageMemoryEntry {
-            id: "test".to_string(),
+
+    fn create_test_entry(id: &str, embedding: Vec<f32>, tags: Vec<String>) -> ImageMemoryEntry {
+        ImageMemoryEntry {
+            id: id.to_string(),
             image_path: None,
             image_data: None,
-            embedding: vec![1.0, 0.0, 0.0],
+            embedding,
             metadata: ImageMetadata {
-                title: Some("Test".to_string()),
+                title: Some(format!("Image {}", id)),
                 description: None,
-                tags: vec![],
+                tags,
                 width: 100,
                 height: 100,
                 format: "PNG".to_string(),
                 source: "test".to_string(),
             },
             linked_text: vec![],
-            timestamp: 0,
-            importance: 1.0,
-        };
-        
-        let result = store.store_image(entry).await;
-        assert!(result.is_ok());
-        
+            timestamp: chrono::Utc::now().timestamp(),
+            importance: 0.5,
+        }
+    }
+
+    #[tokio::test]
+    async fn test_store_and_retrieve() {
+        let store = ImageMemoryStore::new(100);
+        let entry = create_test_entry("test1", vec![1.0, 0.0, 0.0], vec![]);
+
+        store.store_image(entry).await.unwrap();
+
+        let retrieved = store.get("test1").await;
+        assert!(retrieved.is_some());
+        assert_eq!(retrieved.unwrap().id, "test1");
+    }
+
+    #[tokio::test]
+    async fn test_similarity_search() {
+        let store = ImageMemoryStore::new(100);
+
+        // Store 3 images with different embeddings
+        store.store_image(create_test_entry("img1", vec![1.0, 0.0, 0.0], vec![])).await.unwrap();
+        store.store_image(create_test_entry("img2", vec![0.9, 0.1, 0.0], vec![])).await.unwrap();
+        store.store_image(create_test_entry("img3", vec![0.0, 1.0, 0.0], vec![])).await.unwrap();
+
+        // Search with query similar to img1
+        let query = vec![1.0, 0.0, 0.0];
+        let results = store.search_by_image_embedding(&query, 2).await.unwrap();
+
+        assert_eq!(results.len(), 2);
+        assert_eq!(results[0].id, "img1"); // Most similar
+        assert_eq!(results[1].id, "img2"); // Second most similar
+    }
+
+    #[tokio::test]
+    async fn test_cosine_similarity() {
+        let a = vec![1.0, 0.0, 0.0];
+        let b = vec![1.0, 0.0, 0.0];
+        let sim = cosine_similarity(&a, &b);
+        assert!((sim - 1.0).abs() < 0.01);
+
+        let c = vec![0.0, 1.0, 0.0];
+        let sim2 = cosine_similarity(&a, &c);
+        assert!((sim2 - 0.0).abs() < 0.01);
+    }
+
+    #[tokio::test]
+    async fn test_eviction() {
+        let store = ImageMemoryStore::new(3); // Small capacity
+
+        // Store 4 images
+        for i in 0..4 {
+            let mut entry = create_test_entry(&format!("img{}", i), vec![0.0; 512], vec![]);
+            entry.importance = i as f32 / 10.0; // Increasing importance
+            store.store_image(entry).await.unwrap();
+        }
+
         let (count, _) = store.stats().await;
-        assert_eq!(count, 1);
+        assert_eq!(count, 3); // Should evict lowest importance
+
+        // img0 (lowest importance) should be gone
+        assert!(store.get("img0").await.is_none());
+        assert!(store.get("img3").await.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_tag_search() {
+        let store = ImageMemoryStore::new(100);
+
+        store.store_image(create_test_entry("img1", vec![0.0; 512], vec!["cat".to_string()])).await.unwrap();
+        store.store_image(create_test_entry("img2", vec![0.0; 512], vec!["dog".to_string()])).await.unwrap();
+        store.store_image(create_test_entry("img3", vec![0.0; 512], vec!["cat".to_string(), "cute".to_string()])).await.unwrap();
+
+        let results = store.search_by_tags(&["cat".to_string()]).await;
+        assert_eq!(results.len(), 2); // img1 and img3
+    }
+
+    #[tokio::test]
+    async fn test_update_importance() {
+        let store = ImageMemoryStore::new(100);
+        store.store_image(create_test_entry("img1", vec![0.0; 512], vec![])).await.unwrap();
+
+        store.update_importance("img1", 0.9).await.unwrap();
+        let entry = store.get("img1").await.unwrap();
+        assert_eq!(entry.importance, 0.9);
+
+        // Test clamping
+        store.update_importance("img1", 1.5).await.unwrap();
+        let entry = store.get("img1").await.unwrap();
+        assert_eq!(entry.importance, 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_remove() {
+        let store = ImageMemoryStore::new(100);
+        store.store_image(create_test_entry("img1", vec![0.0; 512], vec![])).await.unwrap();
+
+        assert!(store.get("img1").await.is_some());
+        store.remove("img1").await.unwrap();
+        assert!(store.get("img1").await.is_none());
+    }
+
+    #[tokio::test]
+    async fn test_clear() {
+        let store = ImageMemoryStore::new(100);
+        for i in 0..5 {
+            store.store_image(create_test_entry(&format!("img{}", i), vec![0.0; 512], vec![])).await.unwrap();
+        }
+
+        let (count, _) = store.stats().await;
+        assert_eq!(count, 5);
+
+        store.clear().await;
+        let (count, _) = store.stats().await;
+        assert_eq!(count, 0);
     }
 }
