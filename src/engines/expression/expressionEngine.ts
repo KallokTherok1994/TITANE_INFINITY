@@ -22,7 +22,8 @@ import {
   unifiedIdentityKernel,
   type IdentityExpressionPackage,
 } from '../identity/unifiedIdentityKernel';
-import { auraEngine, type AuraAnimationPattern } from '../aura/auraEngine';
+// ✨ PHASE 4.2 - Lazy load auraEngine to reduce bundle size
+import { getAuraEngine, type AuraAnimationPattern } from '../aura/lazyAuraEngine';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';
 import { voiceProsodyEngine } from '../voice/voiceProsodyEngine';
 import type { OrchestratedVoice } from '../voice/types';
@@ -195,7 +196,7 @@ export class ExpressionEngine {
   // UPDATE LOOP
   // ───────────────────────────────────────────────────────────────────────────
 
-  private tick(): void {
+  private async tick(): Promise<void> {
     if (!this.state.identitySource) return;
 
     // 1. Map identity to expression
@@ -204,8 +205,8 @@ export class ExpressionEngine {
     // 2. Calculate synchronization scores
     this.calculateSynchronization();
 
-    // 3. Apply expression to engines
-    this.applyExpressionToEngines();
+    // 3. Apply expression to engines (now async)
+    await this.applyExpressionToEngines();
 
     // 4. Verify coherence
     this.verifyCoherence();
@@ -511,13 +512,14 @@ export class ExpressionEngine {
   // APPLY TO ENGINES
   // ───────────────────────────────────────────────────────────────────────────
 
-  private applyExpressionToEngines(): void {
+  private async applyExpressionToEngines(): Promise<void> {
     const { voice, halo, narrative } = this.state.currentExpression;
 
     // Apply to Voice Prosody Engine (v∞.38+)
     voiceProsodyEngine.updateState(voice);
 
-    // Apply to Aura Engine (v∞.38+)
+    // Apply to Aura Engine (v∞.38+ - lazy loaded)
+    const auraEngine = await getAuraEngine();
     auraEngine.setPattern(halo.pattern as AuraAnimationPattern);
     auraEngine.setColors({
       primary: halo.colors.primary,

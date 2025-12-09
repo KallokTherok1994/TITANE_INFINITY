@@ -44,9 +44,7 @@ export type {
 // 5. METRICS ENGINE (depuis services/ai)
 export { metricsEngine } from '../../services/ai/metricsEngine';
 export type {
-  MetricsSnapshot,
-  ProviderMetrics,
-  PerformanceMetrics
+  ProviderMetrics
 } from '../../services/ai/metricsEngine';
 
 // 6. PROVIDER LAYER (Re-export from services/ai/providers)

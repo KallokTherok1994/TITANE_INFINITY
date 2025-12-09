@@ -322,6 +322,8 @@ export {
   useExpression
 } from './useExpression';
 
+// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (réduire bundle)
+/*
 export type {
   EmotionalState,
   SynestheticProfile,
@@ -343,6 +345,7 @@ export type {
   AffectiveVisualProfile,
   AuraAnimationPattern
 } from '../engines/aura/auraEngine';
+*/
 
 // ═══════════════════════════════════════════════════════════════
 // v∞.12 - Presence OS
@@ -523,6 +526,8 @@ export type {
 // ═══════════════════════════════════════════════════════════════
 
 // Expression Orchestration Hooks
+// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading (réduire bundle)
+/*
 export {
   useExpressionEngineOrchestration,
   useUnifiedExpression,
@@ -543,6 +548,7 @@ export {
   useExpressionSyncDetails,
   useExpressionActions
 } from './useExpressionOrchestration';
+*/
 
 // HoloPresence Hooks
 export {
@@ -569,6 +575,8 @@ export {
 } from './useHoloPresence';
 
 // Types
+// ✨ PHASE 4.2 - Temporairement commenté pour lazy loading
+/*
 export type {
   ExpressionEngineState,
   UnifiedExpression,
@@ -576,6 +584,7 @@ export type {
   OrchestratedHalo,
   OrchestratedNarrative
 } from '../engines/expression/expressionEngine';
+*/
 
 export type {
   HoloPresenceState,

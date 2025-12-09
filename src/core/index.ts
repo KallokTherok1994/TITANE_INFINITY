@@ -76,3 +76,8 @@ export { personaBridge } from './persona/PERSONA_BRIDGE';
 export * from './kernels';
 export * from './services';
 
+// ══════════════════════════════════════════════════════════════
+// TYPES - Architecture Types (v24-v∞)
+// ══════════════════════════════════════════════════════════════
+export type { MoodType, MoodState } from './ARCHITECTURE_TYPES_v24-v∞';
+

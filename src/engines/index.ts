@@ -32,32 +32,33 @@ export {
 
 export type { CommandExecutionResult } from './time';
 
+// REMOVED: engines supprimés en PHASE 1 (OPTION B) - commentés
 // Knowledge Engine
-export * from './knowledge';
+// export * from './knowledge';
 
 // Multimodal Fusion Engine
-export * from './multimodal';
+// export * from './multimodal';
 
-// Presence Engine
-export * from './presence';
+// Presence Engine (stub disponible dans presence/_stubs.ts)
+export * from './presence/_stubs';
 
 // Reflection Engine
-export * from './reflection';
+// export * from './reflection';
 
 // Resonance Engine
-export * from './resonance';
+// export * from './resonance';
 
 // Human Rhythm Engine (contient Chronotype, EnergyHistoryEntry)
-export * from './rhythm';
+// export * from './rhythm';
 
 // Stress Engine
-export * from './stress';
+// export * from './stress';
 
 // Training Engine
-export * from './training';
+// export * from './training';
 
 // Vision Engine
-export * from './vision';
+// export * from './vision';
 
 // Predictive Engine
-export * from './predictive';
+// export * from './predictive';
