@@ -170,7 +170,7 @@ impl TemporalConversationBridge {
             (1, 6..=12) => "Début de semaine — planification et énergie",
             (5, 16..=23) => "Fin de semaine — célébration des accomplissements",
             (_, 6..=9) => "Matinée — préparation et concentration",
-            (_, 10..=16) => "Journée productive — focus et action",
+            (_, 10..=15) => "Journée productive — focus et action",
             (_, 17..=21) => "Soirée — réflexion et consolidation",
             (_, 22..=23 | 0..=5) => "Nuit — repos et régénération",
             _ => "Continuité temporelle",
