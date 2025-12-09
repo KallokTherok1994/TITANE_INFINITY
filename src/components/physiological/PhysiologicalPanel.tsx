@@ -56,10 +56,10 @@ interface HolophonicHookReturn {
     focus: number;
     distance: number;
   };
-  setSpatialState: (state: any) => void;
-  setPreset: (preset: any) => void;
-  playCue?: (cue: any, options?: any) => void;
-  setSoundIntensity?: (intensity: any) => void;
+  setSpatialState: (state: SpatialAudioState['spatialState']) => void;
+  setPreset: (preset: string) => void;
+  playCue?: (cue: string, options?: Record<string, unknown>) => void;
+  setSoundIntensity?: (intensity: number) => void;
 }
 
 interface CognitiveSoundsReturn {

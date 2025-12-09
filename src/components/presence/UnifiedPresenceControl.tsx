@@ -23,7 +23,7 @@ import {
 } from '@/hooks/useUnifiedPresence';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-import type { TonicProfile } from '@/engines/presence/_stubs';
+import type { TonicProfile, NarrativeArc } from '@/engines/presence/_stubs';
 interface SymbolInfo {
   symbol: string;
   meaning: string;
@@ -513,7 +513,7 @@ function SymbolicLayerPanel({
           {symbols.length === 0 ? (
             <p className="presence-empty">Aucun symbole actif</p>
           ) : (
-            symbols.map((symbol: any) => (
+            symbols.map((symbol: SymbolInfo) => (
               <div
                 key={String(symbol.symbol)}
                 className="presence-symbol-card"
@@ -533,13 +533,13 @@ function SymbolicLayerPanel({
           <h5>Arc Narratif</h5>
           <div className="presence-arc-info">
             <span>
-              Phase: <strong>{(arc as any).currentPhase || 'N/A'}</strong>
+              Phase: <strong>{(arc as NarrativeArc).phase || 'N/A'}</strong>
             </span>
             <span>
-              Moments clés: <strong>{(arc as any).keyMoments?.length || 0}</strong>
+              Moments clés: <strong>{(arc as NarrativeArc).moments?.length || 0}</strong>
             </span>
             <span>
-              Score: <strong>{(arc as any).continuityScore || 0}%</strong>
+              Score: <strong>{(arc as NarrativeArc).continuityScore || 0}%</strong>
             </span>
           </div>
         </div>

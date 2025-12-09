@@ -31,7 +31,10 @@ export class MessageBus {
       this.channels.set(channel, new Set());
     }
 
-    this.channels.get(channel)!.add(handler as MessageHandler);
+    const channelHandlers = this.channels.get(channel);
+    if (channelHandlers) {
+      channelHandlers.add(handler as MessageHandler);
+    }
 
     return () => {
       const handlers = this.channels.get(channel);

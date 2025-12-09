@@ -18,11 +18,12 @@
 import { useEffect } from 'react';
 
 // REMOVED: core/visual supprimé en PHASE 1 (OPTION B)
-type SystemState = any;
-
-/*
-import type { SystemState } from '../core';
-*/
+interface SystemState {
+  engines: Record<string, boolean>;
+  health: number;
+  mode?: string;
+  energy?: number;
+}
 
 /**
  * Hook pour synchroniser variables CSS avec état système

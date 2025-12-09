@@ -46,7 +46,16 @@ export type MetricType =
   | 'ia_latency_gemini'
   | 'ia_tokens_per_sec'
   | 'ia_error_rate'
-  | 'ia_queue_size';
+  | 'ia_queue_size'
+  // Voice (ASR/TTS/OMEGA)
+  | 'voice_asr_latency'
+  | 'voice_tts_latency'
+  | 'voice_omega_latency'
+  | 'voice_asr_success_rate'
+  | 'voice_tts_success_rate'
+  | 'voice_omega_success_rate'
+  | 'voice_feedback_detections'
+  | 'voice_vad_suspensions';
 
 /**
  * Source de la métrique
@@ -60,12 +69,15 @@ export type MetricSource =
   | 'js_observer'
   | 'ia_ollama'
   | 'ia_gemini'
-  | 'ia_internal';
+  | 'ia_internal'
+  | 'voice_asr'
+  | 'voice_tts'
+  | 'voice_omega';
 
 /**
  * Catégorie de métrique
  */
-export type MetricCategory = 'system' | 'frontend' | 'ia' | 'network' | 'storage';
+export type MetricCategory = 'system' | 'frontend' | 'ia' | 'network' | 'storage' | 'voice';
 
 /**
  * Unité de mesure
@@ -127,6 +139,9 @@ export interface MetricsSnapshot {
 
   // Métriques IA
   ia: IAMetrics;
+
+  // Métriques vocales (ASR/TTS/OMEGA)
+  voice: VoiceMetrics;
 
   // Métriques par module TITANE∞
   modules: ModuleMetricsMap;
@@ -232,6 +247,44 @@ export interface IAMetrics {
 }
 
 /**
+ * Métriques Vocales (ASR/TTS/OMEGA)
+ */
+export interface VoiceMetrics {
+  asr: {
+    latency: number; // ms moyen (target: <2000ms)
+    requestCount: number;
+    errorCount: number;
+    successRate: number; // 0-1 (target: >0.95)
+    averageConfidence: number; // 0-1
+    available: boolean;
+  };
+  tts: {
+    latency: number; // ms moyen (target: <3000ms)
+    requestCount: number;
+    errorCount: number;
+    successRate: number; // 0-1 (target: >0.95)
+    provider: string; // "parler-tts" | "google" | "webspeech"
+    available: boolean;
+  };
+  omega: {
+    latency: number; // ms moyen pipeline ASR+IA+TTS (target: <6000ms)
+    requestCount: number;
+    errorCount: number;
+    successRate: number; // 0-1 (target: >0.95)
+    breakdown: {
+      asrMs: number;
+      iaMs: number;
+      ttsMs: number;
+    };
+  };
+  feedback: {
+    detectionCount: number; // Nombre de feedbacks détectés (Layer 3)
+    suspensionCount: number; // Nombre de suspensions VAD (Layer 2)
+    falsePositiveRate: number; // 0-1 (target: <0.05)
+  };
+}
+
+/**
  * Map des métriques par module TITANE∞
  */
 export type ModuleMetricsMap = Record<TitaneModule, ModulePerformanceState>;
@@ -314,6 +367,13 @@ export type IssueType =
   | 'ia_queue_overflow'
   | 'ia_error_spike'
   | 'prompt_too_large'
+  // Voice (ASR/TTS/OMEGA)
+  | 'voice_asr_timeout'
+  | 'voice_tts_timeout'
+  | 'voice_omega_timeout'
+  | 'voice_low_success_rate'
+  | 'voice_feedback_excessive'
+  | 'voice_provider_unavailable'
   // Général
   | 'module_unresponsive'
   | 'performance_degradation'
@@ -448,6 +508,20 @@ export interface ThresholdConfig {
     queueSizeWarning: number;
     queueSizeCritical: number;
   };
+
+  // Seuils Voice (ASR/TTS/OMEGA)
+  voice: {
+    asrLatencyWarning: number; // ms (target: <2000ms)
+    asrLatencyCritical: number; // ms
+    ttsLatencyWarning: number; // ms (target: <3000ms)
+    ttsLatencyCritical: number; // ms
+    omegaLatencyWarning: number; // ms (target: <6000ms)
+    omegaLatencyCritical: number; // ms
+    successRateWarning: number; // ratio 0-1 (target: >0.95)
+    successRateCritical: number; // ratio 0-1
+    feedbackRateWarning: number; // ratio 0-1 (target: <0.05)
+    feedbackRateCritical: number; // ratio 0-1
+  };
 }
 
 /**
@@ -535,6 +609,18 @@ export const DEVELOPMENT_THRESHOLDS: ThresholdConfig = {
     queueSizeWarning: 5,
     queueSizeCritical: 20,
   },
+  voice: {
+    asrLatencyWarning: 2000,
+    asrLatencyCritical: 5000,
+    ttsLatencyWarning: 3000,
+    ttsLatencyCritical: 10000,
+    omegaLatencyWarning: 6000,
+    omegaLatencyCritical: 15000,
+    successRateWarning: 0.9,
+    successRateCritical: 0.8,
+    feedbackRateWarning: 0.05,
+    feedbackRateCritical: 0.1,
+  },
 };
 
 /**
@@ -573,6 +659,18 @@ export const PRODUCTION_THRESHOLDS: ThresholdConfig = {
     queueSizeWarning: 3,
     queueSizeCritical: 10,
   },
+  voice: {
+    asrLatencyWarning: 1500,
+    asrLatencyCritical: 3000,
+    ttsLatencyWarning: 2000,
+    ttsLatencyCritical: 5000,
+    omegaLatencyWarning: 4000,
+    omegaLatencyCritical: 8000,
+    successRateWarning: 0.95,
+    successRateCritical: 0.9,
+    feedbackRateWarning: 0.03,
+    feedbackRateCritical: 0.05,
+  },
 };
 
 /**
@@ -610,6 +708,18 @@ export const BENCHMARK_THRESHOLDS: ThresholdConfig = {
     errorRateCritical: 5,
     queueSizeWarning: 2,
     queueSizeCritical: 5,
+  },
+  voice: {
+    asrLatencyWarning: 1000,
+    asrLatencyCritical: 2000,
+    ttsLatencyWarning: 1500,
+    ttsLatencyCritical: 3000,
+    omegaLatencyWarning: 3000,
+    omegaLatencyCritical: 5000,
+    successRateWarning: 0.98,
+    successRateCritical: 0.95,
+    feedbackRateWarning: 0.02,
+    feedbackRateCritical: 0.03,
   },
 };
 
@@ -867,6 +977,64 @@ export const METRIC_DEFINITIONS: Record<
     source: 'ia_internal',
     warningDirection: 'above',
   },
+
+  // Voice (ASR/TTS/OMEGA)
+  voice_asr_latency: {
+    category: 'voice',
+    unit: 'milliseconds',
+    description: 'Latence reconnaissance vocale (ASR)',
+    source: 'voice_asr',
+    warningDirection: 'above',
+  },
+  voice_tts_latency: {
+    category: 'voice',
+    unit: 'milliseconds',
+    description: 'Latence synthèse vocale (TTS)',
+    source: 'voice_tts',
+    warningDirection: 'above',
+  },
+  voice_omega_latency: {
+    category: 'voice',
+    unit: 'milliseconds',
+    description: 'Latence pipeline OMEGA (ASR+IA+TTS)',
+    source: 'voice_omega',
+    warningDirection: 'above',
+  },
+  voice_asr_success_rate: {
+    category: 'voice',
+    unit: 'ratio',
+    description: 'Taux de succès ASR',
+    source: 'voice_asr',
+    warningDirection: 'below',
+  },
+  voice_tts_success_rate: {
+    category: 'voice',
+    unit: 'ratio',
+    description: 'Taux de succès TTS',
+    source: 'voice_tts',
+    warningDirection: 'below',
+  },
+  voice_omega_success_rate: {
+    category: 'voice',
+    unit: 'ratio',
+    description: 'Taux de succès pipeline OMEGA',
+    source: 'voice_omega',
+    warningDirection: 'below',
+  },
+  voice_feedback_detections: {
+    category: 'voice',
+    unit: 'count',
+    description: 'Nombre de feedbacks détectés (Layer 3)',
+    source: 'voice_omega',
+    warningDirection: 'above',
+  },
+  voice_vad_suspensions: {
+    category: 'voice',
+    unit: 'count',
+    description: 'Nombre de suspensions VAD (Layer 2)',
+    source: 'voice_omega',
+    warningDirection: 'above',
+  },
 };
 
 // =============================================================================
@@ -1032,6 +1200,72 @@ export const RECOMMENDATION_TEMPLATES: Record<
       'Compresser le contexte',
       'Utiliser la summarization',
       'Filtrer les informations non pertinentes',
+    ],
+  },
+  voice_asr_timeout: {
+    title: 'Timeout ASR (reconnaissance vocale)',
+    description: 'Latence ASR excessive (> cible 2s)',
+    category: 'ia_optimization',
+    suggestions: [
+      'Vérifier la disponibilité du service ASR',
+      'Optimiser la taille des chunks audio',
+      'Passer à un modèle ASR plus rapide',
+      'Vérifier la bande passante réseau',
+    ],
+  },
+  voice_tts_timeout: {
+    title: 'Timeout TTS (synthèse vocale)',
+    description: 'Latence TTS excessive (> cible 3s)',
+    category: 'ia_optimization',
+    suggestions: [
+      'Vérifier la disponibilité du backend Parler-TTS',
+      'Activer le GPU (ROCm/CUDA) si disponible',
+      'Réduire la longueur du texte à synthétiser',
+      'Utiliser le cache TTS pour les phrases répétées',
+    ],
+  },
+  voice_omega_timeout: {
+    title: 'Timeout OMEGA (pipeline complet)',
+    description: 'Latence OMEGA excessive (ASR+IA+TTS > cible 6s)',
+    category: 'ia_optimization',
+    suggestions: [
+      'Analyser la décomposition (breakdown.asrMs/iaMs/ttsMs)',
+      'Optimiser le composant le plus lent',
+      'Activer le streaming ASR/TTS si possible',
+      'Réduire la complexité du prompt IA',
+    ],
+  },
+  voice_low_success_rate: {
+    title: 'Taux de succès vocal bas',
+    description: 'Taux de succès ASR/TTS < cible 95%',
+    category: 'ia_optimization',
+    suggestions: [
+      'Vérifier les permissions microphone',
+      'Tester la qualité audio entrée',
+      'Vérifier les erreurs réseau',
+      'Consulter les logs ASR/TTS pour erreurs détectées',
+    ],
+  },
+  voice_feedback_excessive: {
+    title: 'Détections feedback excessives',
+    description: 'Trop de feedbacks audio détectés (Layer 3)',
+    category: 'general',
+    suggestions: [
+      'Réduire le volume des haut-parleurs',
+      'Utiliser un casque au lieu de haut-parleurs',
+      'Calibrer la voix TITANE (Layer 3 voice fingerprinting)',
+      'Vérifier les paramètres VAD (Layer 2)',
+    ],
+  },
+  voice_provider_unavailable: {
+    title: 'Provider vocal indisponible',
+    description: 'Service ASR/TTS non disponible',
+    category: 'general',
+    suggestions: [
+      'Vérifier la connectivité réseau',
+      'Redémarrer le backend Parler-TTS (./start_tts_service.sh)',
+      'Vérifier les logs du service TTS (tts-service/)',
+      'Tester le fallback Web Speech API',
     ],
   },
   module_unresponsive: {
@@ -1269,6 +1503,40 @@ export function createEmptySnapshot(): MetricsSnapshot {
         promptEngineTime: 0,
         contextCollectionTime: 0,
         totalProcessingTime: 0,
+      },
+    },
+    voice: {
+      asr: {
+        latency: 0,
+        requestCount: 0,
+        errorCount: 0,
+        successRate: 1.0,
+        averageConfidence: 0,
+        available: false,
+      },
+      tts: {
+        latency: 0,
+        requestCount: 0,
+        errorCount: 0,
+        successRate: 1.0,
+        provider: 'none',
+        available: false,
+      },
+      omega: {
+        latency: 0,
+        requestCount: 0,
+        errorCount: 0,
+        successRate: 1.0,
+        breakdown: {
+          asrMs: 0,
+          iaMs: 0,
+          ttsMs: 0,
+        },
+      },
+      feedback: {
+        detectionCount: 0,
+        suspensionCount: 0,
+        falsePositiveRate: 0,
       },
     },
     modules,
