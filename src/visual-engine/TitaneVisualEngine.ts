@@ -1,18 +1,35 @@
 /**
- * TITANE_INFINITY v19.3.0 — Visual Engine
+ * TITANE∞ v21 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * Unauthorized use, reproduction, modification, distribution or extraction
+ * of the software, its architecture, engines or components is strictly prohibited.
+ * See LICENSE.md for the full legal terms (FR/EN).
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * TITANE∞ v21 - Visual Engine (Upgraded)
  * Central orchestrator for all visual effects and state management
  *
- * Features:
- * - Centralized visual state management
- * - WebSocket integration for real-time updates
- * - Performance monitoring (60fps target)
- * - Particle system coordination
- * - Effect scheduling and management
+ * v21 Features:
+ * - ✅ Centralized visual state management
+ * - ✅ Effects orchestration integration (v21)
+ * - ✅ OS integration bridge (v21)
+ * - ✅ Performance monitoring (60fps target)
+ * - ✅ Adaptive FPS throttling
+ * - ✅ GPU load tracking
+ * - ✅ Debug mode
+ * - ✅ Particle system coordination
+ * - ✅ Effect scheduling and management
+ * ═══════════════════════════════════════════════════════════════
  */
 
 import EventEmitter from 'eventemitter3';
 import { StateManager } from './StateManager';
 import type { VisualState, StateVisualConfig } from '@/design-system/visual-states';
+import { effectsOrchestrator } from './EffectsOrchestrator';
+import { osIntegrationBridge } from './OSIntegrationBridge';
+import type { EffectsMetrics } from './EffectsOrchestrator';
 
 export interface VisualEngineConfig {
   enableParticles: boolean;
@@ -21,6 +38,10 @@ export interface VisualEngineConfig {
   performanceMode: 'high' | 'medium' | 'low';
   enableWebSocket: boolean;
   websocketUrl?: string;
+  enableOrchestration?: boolean; // v21: Enable effects orchestrator
+  enableOSIntegration?: boolean; // v21: Enable OS bridge
+  adaptiveFPS?: boolean; // v21: Auto-throttle on low FPS
+  debug?: boolean; // v21: Debug mode
 }
 
 export interface PerformanceMetrics {
@@ -29,6 +50,8 @@ export interface PerformanceMetrics {
   particleCount: number;
   effectsActive: number;
   memoryUsage: number;
+  gpuLoad: number; // v21: GPU load estimation (0-1)
+  throttleActive: boolean; // v21: Is throttling active
 }
 
 export class TitaneVisualEngine extends EventEmitter {
@@ -47,21 +70,31 @@ export class TitaneVisualEngine extends EventEmitter {
     particleCount: 0,
     effectsActive: 0,
     memoryUsage: 0,
+    gpuLoad: 0,
+    throttleActive: false,
   };
 
   // Animation frame ID
   private rafId: number | null = null;
 
+  // v21: FPS throttling state
+  private throttleLevel = 0; // 0 = none, 1 = light, 2 = medium, 3 = heavy
+  private lowFPSFrames = 0; // Count of consecutive low FPS frames
+
   constructor(config: Partial<VisualEngineConfig> = {}) {
     super();
 
-    // Initialize configuration with defaults
+    // Initialize configuration with defaults (v21 enhanced)
     this.config = {
       enableParticles: true,
       enableEffects: true,
       targetFPS: 60,
       performanceMode: 'high',
       enableWebSocket: false,
+      enableOrchestration: true, // v21: Auto-enabled
+      enableOSIntegration: true, // v21: Auto-enabled
+      adaptiveFPS: true, // v21: Auto-throttle
+      debug: false,
       ...config,
     };
 
@@ -71,6 +104,15 @@ export class TitaneVisualEngine extends EventEmitter {
     // Subscribe to state changes
     this.stateManager.on('stateChange', (state: VisualState) => {
       this.emit('visualStateChange', state);
+
+      // v21: Update effects orchestrator with new state
+      if (this.config.enableOrchestration) {
+        effectsOrchestrator.updateVisualState({
+          current: state,
+          intensity: 0.8,
+          transition: 0.3,
+        });
+      }
     });
 
     this.stateManager.on('transitionStart', (data) => {
@@ -80,6 +122,15 @@ export class TitaneVisualEngine extends EventEmitter {
     this.stateManager.on('transitionComplete', (data) => {
       this.emit('transitionComplete', data);
     });
+
+    // v21: Initialize OS integration bridge
+    if (this.config.enableOSIntegration) {
+      osIntegrationBridge.initialize(this, effectsOrchestrator);
+    }
+
+    if (this.config.debug) {
+      console.log('[TitaneVisualEngine] v21 initialized with config:', this.config);
+    }
   }
 
   /**
@@ -162,7 +213,7 @@ export class TitaneVisualEngine extends EventEmitter {
   }
 
   /**
-   * Update FPS calculation
+   * Update FPS calculation (v21 enhanced with adaptive throttling)
    */
   private updateFPS(deltaTime: number): void {
     this.frameCount++;
@@ -174,8 +225,23 @@ export class TitaneVisualEngine extends EventEmitter {
       this.performanceMetrics.frameTime = deltaTime;
       this.frameCount = 0;
 
+      // v21: Get effects orchestrator metrics
+      if (this.config.enableOrchestration) {
+        const effectsMetrics = effectsOrchestrator.getMetrics();
+        this.performanceMetrics.effectsActive = effectsMetrics.activeCount;
+        this.performanceMetrics.gpuLoad = effectsMetrics.gpuLoad;
+
+        // Update orchestrator with performance data
+        effectsOrchestrator.updateMetrics(deltaTime, effectsMetrics.gpuLoad);
+      }
+
       // Emit performance metrics
       this.emit('performanceUpdate', this.performanceMetrics);
+
+      // v21: Adaptive FPS throttling
+      if (this.config.adaptiveFPS) {
+        this.applyAdaptiveThrottling();
+      }
 
       // Check if performance is degraded
       if (this.fps < this.config.targetFPS * 0.8) {
@@ -185,6 +251,97 @@ export class TitaneVisualEngine extends EventEmitter {
         });
       }
     }
+  }
+
+  /**
+   * v21: Apply adaptive throttling based on FPS
+   */
+  private applyAdaptiveThrottling(): void {
+    const targetFPS = this.config.targetFPS;
+    const threshold = targetFPS * 0.9; // 90% of target (54 FPS for 60 FPS target)
+
+    if (this.fps < threshold) {
+      this.lowFPSFrames++;
+
+      // Only throttle if low FPS persists for 3+ seconds
+      if (this.lowFPSFrames >= 3) {
+        this.increaseThrottling();
+      }
+    } else {
+      // Good FPS, decrease throttling
+      if (this.lowFPSFrames > 0) {
+        this.lowFPSFrames--;
+      }
+      if (this.throttleLevel > 0 && this.fps >= targetFPS) {
+        this.decreaseThrottling();
+      }
+    }
+  }
+
+  /**
+   * v21: Increase throttling level
+   */
+  private increaseThrottling(): void {
+    if (this.throttleLevel >= 3) return;
+
+    this.throttleLevel++;
+    this.performanceMetrics.throttleActive = true;
+
+    if (this.config.debug) {
+      console.log(`[TitaneVisualEngine] Throttling increased to level ${this.throttleLevel}`);
+    }
+
+    switch (this.throttleLevel) {
+      case 1: // Light throttling
+        // Reduce max concurrent effects slightly
+        break;
+      case 2: // Medium throttling
+        // Stop low-priority effects
+        if (this.config.enableOrchestration) {
+          effectsOrchestrator.stopEffectsByType('auraGlow');
+          effectsOrchestrator.stopEffectsByType('audioWaveform');
+        }
+        break;
+      case 3: // Heavy throttling
+        // Stop all non-critical effects
+        if (this.config.enableOrchestration) {
+          effectsOrchestrator.stopEffectsByType('auraGlow');
+          effectsOrchestrator.stopEffectsByType('audioWaveform');
+          effectsOrchestrator.stopEffectsByType('healingWaves');
+        }
+        this.config.enableParticles = false;
+        break;
+    }
+
+    this.emit('throttleChange', { level: this.throttleLevel, active: true });
+  }
+
+  /**
+   * v21: Decrease throttling level
+   */
+  private decreaseThrottling(): void {
+    if (this.throttleLevel <= 0) return;
+
+    this.throttleLevel--;
+
+    if (this.config.debug) {
+      console.log(`[TitaneVisualEngine] Throttling decreased to level ${this.throttleLevel}`);
+    }
+
+    switch (this.throttleLevel) {
+      case 0: // No throttling
+        this.performanceMetrics.throttleActive = false;
+        this.config.enableParticles = true;
+        break;
+      case 1: // Light throttling
+        this.config.enableParticles = true;
+        break;
+      case 2: // Medium throttling
+        // Still keep particles disabled from level 3
+        break;
+    }
+
+    this.emit('throttleChange', { level: this.throttleLevel, active: this.throttleLevel > 0 });
   }
 
   /**

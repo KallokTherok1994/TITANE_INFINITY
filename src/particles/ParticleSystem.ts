@@ -1,14 +1,27 @@
 /**
- * TITANE_INFINITY v19.3.0 — Particle System
+ * TITANE∞ v21 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ * Unauthorized use, reproduction, modification, distribution or extraction
+ * of the software, its architecture, engines or components is strictly prohibited.
+ * See LICENSE.md for the full legal terms (FR/EN).
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * TITANE∞ v21 - Particle System (Upgraded)
  * Advanced particle system with physics and contextual patterns
  *
- * Features:
- * - Support for 600 particles at 60fps
- * - 4 contextual patterns (spiral, focused, dispersed, chaotic)
- * - Adaptive density and velocity
- * - Multiple color support
- * - Pool-based particle management for performance
- * - Canvas-based rendering with GPU acceleration
+ * v21 Features:
+ * - ✅ Support for 600 particles at 60fps
+ * - ✅ 4 contextual patterns (spiral, focused, dispersed, chaotic)
+ * - ✅ Adaptive density and velocity
+ * - ✅ Dynamic multi-color support
+ * - ✅ Enhanced pool-based particle management
+ * - ✅ Adaptive FPS throttling
+ * - ✅ Auto-throttle when FPS < 55
+ * - ✅ Canvas-based rendering with GPU acceleration
+ * - ✅ Debug mode with metrics
+ * ═══════════════════════════════════════════════════════════════
  */
 
 import EventEmitter from 'eventemitter3';
@@ -27,6 +40,18 @@ export interface ParticleSystemConfig {
   lifespan: number;
   lifespanVariation: number;
   opacity: number;
+  adaptiveFPS?: boolean; // v21: Auto-throttle on low FPS
+  fpsThreshold?: number; // v21: FPS threshold for throttling (default: 55)
+  debug?: boolean; // v21: Debug mode
+}
+
+export interface ParticleSystemMetrics {
+  activeParticles: number;
+  poolSize: number;
+  emissionRate: number;
+  fps: number;
+  throttleLevel: number; // 0 = none, 1 = light, 2 = medium, 3 = heavy
+  averageLifetime: number; // ms
 }
 
 export class ParticleSystem extends EventEmitter {
@@ -43,6 +68,25 @@ export class ParticleSystem extends EventEmitter {
   private isRunning = false;
   private angleOffset = 0; // For spiral pattern
 
+  // v21: FPS tracking and adaptive throttling
+  private lastFrameTime = 0;
+  private frameCount = 0;
+  private fps = 60;
+  private throttleLevel = 0; // 0 = none, 1 = light, 2 = medium, 3 = heavy
+  private lowFPSFrames = 0;
+  private metrics: ParticleSystemMetrics = {
+    activeParticles: 0,
+    poolSize: 0,
+    emissionRate: 10,
+    fps: 60,
+    throttleLevel: 0,
+    averageLifetime: 0,
+  };
+
+  // v21: Color cycling for dynamic effects
+  private colorIndex = 0;
+  private colorCycleSpeed = 0.1;
+
   constructor(config: Partial<ParticleSystemConfig> = {}) {
     super();
 
@@ -58,11 +102,18 @@ export class ParticleSystem extends EventEmitter {
       lifespan: 3000,
       lifespanVariation: 1000,
       opacity: 0.6,
+      adaptiveFPS: true, // v21: Auto-enabled
+      fpsThreshold: 55, // v21: Throttle if FPS < 55
+      debug: false,
       ...config,
     };
 
     // Pre-allocate particle pool
     this.initializeParticlePool();
+
+    if (this.config.debug) {
+      console.log('[ParticleSystem] v21 initialized with config:', this.config);
+    }
   }
 
   /**
@@ -128,17 +179,28 @@ export class ParticleSystem extends EventEmitter {
   }
 
   /**
-   * Update particle system
+   * Update particle system (v21 enhanced with adaptive FPS)
    */
   update(deltaTime: number): void {
     if (!this.isRunning) return;
+
+    // v21: Track FPS
+    this.updateFPS(deltaTime);
+
+    // v21: Apply adaptive throttling
+    if (this.config.adaptiveFPS) {
+      this.applyAdaptiveThrottling();
+    }
+
+    // v21: Dynamic emission rate based on throttle level
+    const effectiveEmissionRate = this.getEffectiveEmissionRate();
 
     // Emit new particles
     this.timeSinceLastEmit += deltaTime;
     const emitInterval = 1000 / 60; // Emit at 60fps rate
 
     if (this.timeSinceLastEmit >= emitInterval) {
-      this.emitParticles(this.config.emissionRate);
+      this.emitParticles(effectiveEmissionRate);
       this.timeSinceLastEmit = 0;
     }
 
@@ -162,10 +224,122 @@ export class ParticleSystem extends EventEmitter {
       this.angleOffset += deltaTime * 0.001;
     }
 
+    // v21: Update color cycling
+    this.colorIndex = (this.colorIndex + this.colorCycleSpeed * deltaTime * 0.001) % this.config.colors.length;
+
+    // v21: Update metrics
+    this.updateMetrics();
+
     this.emit('update', {
       particleCount: this.particles.length,
       poolSize: this.particlePool.length,
+      fps: this.fps,
+      throttleLevel: this.throttleLevel,
     });
+  }
+
+  /**
+   * v21: Update FPS calculation
+   */
+  private updateFPS(deltaTime: number): void {
+    this.frameCount++;
+
+    if (this.frameCount >= 60) {
+      this.fps = Math.round(1000 / deltaTime);
+      this.frameCount = 0;
+    }
+  }
+
+  /**
+   * v21: Apply adaptive throttling based on FPS
+   */
+  private applyAdaptiveThrottling(): void {
+    const threshold = this.config.fpsThreshold || 55;
+
+    if (this.fps < threshold) {
+      this.lowFPSFrames++;
+
+      // Throttle if low FPS persists for 3+ seconds (180 frames at 60fps)
+      if (this.lowFPSFrames >= 180) {
+        this.increaseThrottle();
+        this.lowFPSFrames = 0;
+      }
+    } else {
+      // Good FPS, try to recover
+      if (this.lowFPSFrames > 0) {
+        this.lowFPSFrames = Math.max(0, this.lowFPSFrames - 10);
+      }
+      if (this.throttleLevel > 0 && this.fps >= 60) {
+        this.decreaseThrottle();
+      }
+    }
+  }
+
+  /**
+   * v21: Increase throttle level
+   */
+  private increaseThrottle(): void {
+    if (this.throttleLevel >= 3) return;
+
+    this.throttleLevel++;
+
+    if (this.config.debug) {
+      console.log(`[ParticleSystem] Throttle increased to level ${this.throttleLevel}`);
+    }
+
+    this.emit('throttleChange', { level: this.throttleLevel });
+  }
+
+  /**
+   * v21: Decrease throttle level
+   */
+  private decreaseThrottle(): void {
+    if (this.throttleLevel <= 0) return;
+
+    this.throttleLevel--;
+
+    if (this.config.debug) {
+      console.log(`[ParticleSystem] Throttle decreased to level ${this.throttleLevel}`);
+    }
+
+    this.emit('throttleChange', { level: this.throttleLevel });
+  }
+
+  /**
+   * v21: Get effective emission rate based on throttle level
+   */
+  private getEffectiveEmissionRate(): number {
+    const baseRate = this.config.emissionRate;
+
+    switch (this.throttleLevel) {
+      case 0:
+        return baseRate;
+      case 1:
+        return Math.floor(baseRate * 0.75); // 75% emission
+      case 2:
+        return Math.floor(baseRate * 0.5); // 50% emission
+      case 3:
+        return Math.floor(baseRate * 0.25); // 25% emission
+      default:
+        return baseRate;
+    }
+  }
+
+  /**
+   * v21: Update metrics
+   */
+  private updateMetrics(): void {
+    this.metrics.activeParticles = this.particles.length;
+    this.metrics.poolSize = this.particlePool.length;
+    this.metrics.emissionRate = this.getEffectiveEmissionRate();
+    this.metrics.fps = this.fps;
+    this.metrics.throttleLevel = this.throttleLevel;
+
+    // Calculate average lifetime
+    if (this.particles.length > 0) {
+      const totalAge = this.particles.reduce((sum, p) => sum + p.age, 0);
+      this.metrics.averageLifetime = totalAge / this.particles.length;
+    }
   }
 
   /**
@@ -206,10 +380,25 @@ export class ParticleSystem extends EventEmitter {
   }
 
   /**
-   * Create particle configuration based on pattern
+   * Create particle configuration based on pattern (v21 enhanced with dynamic colors)
    */
   private createParticleConfig(): ParticleConfig {
-    const color = this.config.colors[Math.floor(Math.random() * this.config.colors.length)];
+    // v21: Dynamic color selection - cycle through colors or random
+    let color: string;
+    if (this.config.colors.length > 1) {
+      // Blend between current color index and next
+      const currentIndex = Math.floor(this.colorIndex);
+      const nextIndex = (currentIndex + 1) % this.config.colors.length;
+      const blend = this.colorIndex - currentIndex;
+
+      // Randomly choose current or next for smooth color transitions
+      color = blend > Math.random()
+        ? this.config.colors[nextIndex]
+        : this.config.colors[currentIndex];
+    } else {
+      color = this.config.colors[0];
+    }
+
     const size =
       this.config.baseSize + (Math.random() - 0.5) * 2 * this.config.sizeVariation;
     const lifespan =
@@ -372,6 +561,39 @@ export class ParticleSystem extends EventEmitter {
    */
   getParticleCount(): number {
     return this.particles.length;
+  }
+
+  /**
+   * v21: Get particle system metrics
+   */
+  getMetrics(): ParticleSystemMetrics {
+    return { ...this.metrics };
+  }
+
+  /**
+   * v21: Set color cycle speed (0 = static, 1 = fast)
+   */
+  setColorCycleSpeed(speed: number): void {
+    this.colorCycleSpeed = Math.max(0, Math.min(1, speed));
+  }
+
+  /**
+   * v21: Set FPS threshold for adaptive throttling
+   */
+  setFPSThreshold(threshold: number): void {
+    this.config.fpsThreshold = Math.max(30, Math.min(60, threshold));
+  }
+
+  /**
+   * v21: Enable/disable adaptive FPS
+   */
+  setAdaptiveFPS(enabled: boolean): void {
+    this.config.adaptiveFPS = enabled;
+    if (!enabled) {
+      // Reset throttling when disabled
+      this.throttleLevel = 0;
+      this.lowFPSFrames = 0;
+    }
   }
 
   /**
