@@ -34,7 +34,12 @@
       "Bash(npm run test:unit:*)",
       "Bash(timeout 60 npm run build:*)",
       "Bash(./TITANE_PRE_MIGRATION_BACKUP.sh:*)",
-      "Bash(rsync:*)"
+      "Bash(rsync:*)",
+      "Bash(code --list-extensions)",
+      "Bash(rustup show:*)",
+      "Bash(node --version:*)",
+      "Bash(pnpm --version:*)",
+      "Bash(tar:*)"
     ],
     "deny": [],
     "ask": []
