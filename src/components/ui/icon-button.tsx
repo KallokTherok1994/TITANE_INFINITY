@@ -86,8 +86,8 @@ export function IconButton({
         inline-flex items-center justify-center
         rounded-full
         transition-all duration-150
-        focus:outline-none focus:ring-2 focus:ring-offset-0
-        focus:ring-blue-500
+        focus:outline-none focus:ring-[3px] focus:ring-offset-0
+        focus:ring-[rgba(114,123,129,0.6)]
         disabled:cursor-not-allowed disabled:opacity-50
         ${className}
       `}

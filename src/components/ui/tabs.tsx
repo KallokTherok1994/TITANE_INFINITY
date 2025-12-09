@@ -102,8 +102,8 @@ export function Tabs({ tabs, defaultTab, onTabChange, children }: TabsProps) {
               className={`
                 relative px-4 py-2.5 text-sm font-medium
                 transition-all duration-150
-                focus:outline-none focus:ring-2 focus:ring-inset
-                focus:ring-blue-500
+                focus:outline-none focus:ring-[3px] focus:ring-inset
+                focus:ring-[rgba(114,123,129,0.6)]
                 disabled:cursor-not-allowed disabled:opacity-50
                 ${isActive ? 'border-b-2' : ''}
               `}
