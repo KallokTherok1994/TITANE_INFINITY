@@ -214,7 +214,30 @@ export const typography = {
 } as const;
 
 /**
+ * Motion System
+ * Synchronisé avec motion.ts pour cohérence
+ */
+export const motion = {
+  duration: {
+    instant: 50, // 50ms
+    fast: 120, // 120ms
+    normal: 200, // 200ms
+    slow: 300, // 300ms
+    slower: 500, // 500ms
+  },
+  easing: {
+    default: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    in: 'cubic-bezier(0.4, 0, 1, 1)',
+    out: 'cubic-bezier(0, 0, 0.2, 1)',
+    inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+    spring: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    smooth: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
+  },
+} as const;
+
+/**
  * Transitions & Animations
+ * @deprecated Utilisez `motion` à la place pour cohérence
  */
 export const transitions = {
   duration: {
@@ -313,7 +336,8 @@ export const tokens = {
   spacing,
   radius,
   typography,
-  transitions,
+  motion,
+  transitions, // @deprecated: Use motion instead
   zIndex,
   blur,
   opacity,
