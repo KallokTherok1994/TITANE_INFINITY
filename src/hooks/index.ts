@@ -596,6 +596,34 @@ export type {
 } from '../engines/holopresence/holoPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════
+// v21 - Visual Engine & Effects Orchestration Hooks (Session 4)
+// ═══════════════════════════════════════════════════════════════
+
+// Visual Engine v21
+export { useVisualEngine } from './useVisualEngine';
+export type { UseVisualEngineOptions, UseVisualEngineReturn } from './useVisualEngine';
+
+// Effects Orchestration v21
+export { useEffects } from './useEffects';
+export type { UseEffectsReturn } from './useEffects';
+
+// Panel State Management v21
+export { usePanelState } from './usePanelState';
+export type {
+  PanelState,
+  UsePanelStateOptions,
+  UsePanelStateReturn,
+} from './usePanelState';
+
+// Adaptive FPS Monitoring v21
+export { useAdaptiveFPS } from './useAdaptiveFPS';
+export type {
+  FPSMetrics,
+  PerformanceWarning,
+  UseAdaptiveFPSReturn,
+} from './useAdaptiveFPS';
+
+// ═══════════════════════════════════════════════════════════════
 // v∞.38 - Phase 3 Hooks (Autopoiesis + Meta-Singularity + Phase-Space)
 // ═══════════════════════════════════════════════════════════════
 
