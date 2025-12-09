@@ -23,6 +23,13 @@ pub mod safety_bridge;
 pub mod vault_bridge;
 pub mod diagnostics;
 pub mod config;
+pub mod temporal_adapter;
+pub mod temporal_rate_limiter;
+pub mod temporal_cache;
+pub mod temporal_circuit_breaker;
+
+#[cfg(test)]
+mod temporal_integration_tests;
 
 pub use provider_registry::{ProviderRegistry, ProviderProfile, ProviderCapability};
 pub use openai::OpenAIProvider;
@@ -35,6 +42,10 @@ pub use safety_bridge::SafetyBridge;
 pub use vault_bridge::VaultBridge;
 pub use diagnostics::{APIHubDiagnostics, APIHubEvent};
 pub use config::APIHubConfig;
+pub use temporal_adapter::{TemporalApiAdapter, ApiTemporalAdjustments, ProviderSuggestion};
+pub use temporal_rate_limiter::{TemporalRateLimiter, RateLimitError};
+pub use temporal_cache::{TemporalCache, CacheStats};
+pub use temporal_circuit_breaker::{TemporalCircuitBreaker, CircuitState, CircuitBreakerError, BreakerStats};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
