@@ -21,6 +21,7 @@ pub mod temporal_metrics;
 pub mod temporal_events;
 pub mod diagnostics;
 pub mod config;
+pub mod integrations;
 
 pub use time_model::{TimeModel, TemporalContext, TimeScale, Moment};
 pub use temporal_memory::{TemporalMemory, TemporalTrace, MemoryDecay};
@@ -32,6 +33,16 @@ pub use temporal_metrics::{TemporalMetrics, TemporalHealth};
 pub use temporal_events::{TemporalEvent, TemporalEventType};
 pub use diagnostics::TemporalDiagnostics;
 pub use config::TemporalConfig;
+
+// Exposer les intégrations système
+pub use integrations::{
+    IntegrationConfig,
+    TemporalKernelBridge, SchedulerAdjustments, ResourceLimits, MaintenanceAdvice,
+    TemporalOmegaBridge, OmegaTemporalAdjustments, RoutingStrategy,
+    TemporalMemoryBridge, MemoryTemporalAdjustments, PreloadingStrategy, ConsolidationRecommendation,
+    TemporalAgiBridge, AgiTemporalAdjustments, HeuristicTuningStrategy, AlignmentRecommendation,
+    TemporalConversationBridge, ConversationTemporalAdjustments, ConversationTone, TemporalNarrative,
+};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
