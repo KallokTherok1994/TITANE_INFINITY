@@ -55,7 +55,7 @@ pub use sandbox::{AgentSandbox, SandboxConfig, SandboxViolation};
 pub use collaboration::{CollaborationProtocol, CollaborationPattern, CollaborationResult};
 // Made public for Phase 1 compilation
 pub use diagnostics::{AgentDiagnostics, AgentEvent};
-pub use diagnostics::AgentMetrics; // Now public
+pub use agent::AgentMetrics; // Export from agent.rs instead
 pub use config::AgentSystemConfig;
 
 // Version info

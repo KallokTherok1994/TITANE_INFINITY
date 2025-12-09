@@ -29,7 +29,7 @@ impl TemporalApiAdapter {
     pub async fn get_api_adjustments(&self) -> ApiTemporalAdjustments {
         if let Some(engine) = &self.temporal_engine {
             let engine_guard = engine.read().await;
-            let context = engine_guard.current_context();
+            let context = engine_guard.current_context().await;
             Self::calculate_adjustments(&context)
         } else {
             ApiTemporalAdjustments::default()
