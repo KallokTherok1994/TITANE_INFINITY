@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v8.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,14 +8,15 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - AppShell Layout
+ * TITANE∞ v8.0 - AppShell Layout (Tailwind CSS)
  * Layout principal avec sidebar, header, et contenu
+ * Migration: Inline styles → Tailwind classes
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { type ReactNode, useState } from 'react';
+import { type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { colors, spacing, shadows } from '@themes/tokens';
+import { cn } from '@/utils/cn'; // Utility for conditional classes
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -28,6 +29,7 @@ export interface AppShellProps {
   footer?: ReactNode;
   sidebarCollapsed?: boolean;
   onSidebarToggle?: () => void;
+  className?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -36,75 +38,6 @@ export interface AppShellProps {
 
 const SIDEBAR_WIDTH = 280;
 const SIDEBAR_WIDTH_COLLAPSED = 64;
-const HEADER_HEIGHT = 64;
-
-// ─────────────────────────────────────────────────────────────────
-// STYLES
-// ─────────────────────────────────────────────────────────────────
-
-const shellStyles: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-  height: '100vh',
-  width: '100vw',
-  overflow: 'hidden',
-  background: colors.neutral[950],
-};
-
-const headerStyles: React.CSSProperties = {
-  height: `${HEADER_HEIGHT}px`,
-  background: colors.rubis.surface.glass,
-  backdropFilter: 'blur(20px)',
-  borderBottom: `1px solid ${colors.rubis.primary[900]}`,
-  boxShadow: shadows.md,
-  display: 'flex',
-  alignItems: 'center',
-  padding: `0 ${spacing[6]}`,
-  zIndex: 100,
-};
-
-const bodyStyles: React.CSSProperties = {
-  display: 'flex',
-  flex: 1,
-  overflow: 'hidden',
-};
-
-const sidebarStyles: React.CSSProperties = {
-  background: colors.rubis.surface.solid,
-  borderRight: `1px solid ${colors.rubis.primary[900]}`,
-  boxShadow: shadows.lg,
-  display: 'flex',
-  flexDirection: 'column',
-  overflow: 'hidden',
-  zIndex: 90,
-};
-
-const mainStyles: React.CSSProperties = {
-  flex: 1,
-  overflow: 'hidden',
-  position: 'relative',
-  display: 'flex',
-  flexDirection: 'column',
-};
-
-const contentStyles: React.CSSProperties = {
-  padding: spacing[6],
-  flex: 1,
-  overflow: 'auto',
-};
-
-const footerStyles: React.CSSProperties = {
-  height: '48px',
-  background: colors.rubis.surface.glass,
-  backdropFilter: 'blur(20px)',
-  borderTop: `1px solid ${colors.rubis.primary[900]}`,
-  display: 'flex',
-  alignItems: 'center',
-  padding: `0 ${spacing[6]}`,
-  fontSize: '0.875rem',
-  color: colors.neutral[400],
-  zIndex: 100,
-};
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -115,20 +48,23 @@ export const AppShell = ({
   header,
   sidebar,
   footer,
-  sidebarCollapsed: controlledCollapsed,
+  sidebarCollapsed = false,
+  className,
 }: AppShellProps): JSX.Element => {
-  const [internalCollapsed] = useState(false);
-
-  const collapsed = controlledCollapsed ?? internalCollapsed;
-  const sidebarWidth = collapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH;
+  const sidebarWidth = sidebarCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH;
 
   return (
-    <div style={shellStyles}>
+    <div
+      className={cn(
+        'flex flex-col h-screen w-screen overflow-hidden bg-bg-primary',
+        className
+      )}
+    >
       {/* Header */}
       {header && (
         <motion.header
-          style={headerStyles}
-          initial={{ y: -HEADER_HEIGHT }}
+          className="h-header glass-strong border-b border-border-default shadow-md flex items-center px-6 z-fixed"
+          initial={{ y: -64 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
@@ -137,12 +73,13 @@ export const AppShell = ({
       )}
 
       {/* Body: Sidebar + Main */}
-      <div style={bodyStyles}>
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
         {sidebar && (
           <AnimatePresence mode="wait">
             <motion.aside
-              style={sidebarStyles}
+              className="bg-bg-secondary border-r border-border-default shadow-lg flex flex-col overflow-hidden z-sticky"
+              style={{ width: sidebarWidth }}
               initial={{ x: -sidebarWidth }}
               animate={{
                 x: 0,
@@ -159,15 +96,17 @@ export const AppShell = ({
         )}
 
         {/* Main Content */}
-        <main style={mainStyles}>
-          <div style={contentStyles}>{children}</div>
+        <main className="flex-1 overflow-hidden relative flex flex-col">
+          <div className="p-6 flex-1 overflow-auto scrollbar-custom">
+            {children}
+          </div>
         </main>
       </div>
 
       {/* Footer */}
       {footer && (
         <motion.footer
-          style={footerStyles}
+          className="h-footer glass-strong border-t border-border-default flex items-center px-6 text-sm text-text-muted z-fixed"
           initial={{ y: 48 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
