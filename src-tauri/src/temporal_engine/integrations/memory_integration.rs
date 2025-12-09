@@ -4,7 +4,6 @@
 
 use crate::temporal_engine::TemporalContext;
 use serde::{Deserialize, Serialize};
-use chrono::Timelike;
 
 /// Bridge entre Temporal Engine et Memory Subsystem
 pub struct TemporalMemoryBridge;
