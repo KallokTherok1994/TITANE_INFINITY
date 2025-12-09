@@ -97,7 +97,7 @@ export class ContextDetector {
 
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const hasMouse = window.matchMedia('(pointer: fine)').matches;
-    const hasKeyboard = true; // Toujours disponible
+    const _hasKeyboard = true; // Toujours disponible (unused)
 
     if (hasTouch && hasMouse) return 'hybrid';
     if (hasTouch) return 'touch';

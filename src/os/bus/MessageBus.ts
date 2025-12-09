@@ -222,7 +222,7 @@ export class MessageBus {
    * Annule toutes les requêtes en attente
    */
   cancelAllPending(): void {
-    for (const [id, pending] of this.pendingRequests) {
+    for (const [_id, pending] of this.pendingRequests) {
       clearTimeout(pending.timeout);
       pending.reject(new Error('Request cancelled'));
     }

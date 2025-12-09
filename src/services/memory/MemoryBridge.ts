@@ -91,7 +91,7 @@ export class MemoryBridge {
    * Détecte l'intention mémoire dans un message utilisateur
    */
   detectIntent(message: string): IntentDetectionResult {
-    const lowerMessage = message.toLowerCase();
+    const _lowerMessage = message.toLowerCase();
 
     // Extraire les mots-clés significatifs (> 3 caractères, pas stopwords)
     const stopwords = new Set(['que', 'qui', 'quoi', 'est', 'sont', 'les', 'des', 'une', 'pour', 'dans', 'avec', 'sur', 'par', 'plus', 'mais', 'comme', 'tout', 'peut', 'cette', 'fait', 'être', 'avoir', 'faire', 'dire']);

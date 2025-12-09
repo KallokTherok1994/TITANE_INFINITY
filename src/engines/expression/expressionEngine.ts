@@ -22,7 +22,7 @@ import {
   unifiedIdentityKernel,
   type IdentityExpressionPackage,
 } from '../identity/unifiedIdentityKernel';
-import { auraEngine } from '../aura/auraEngine';
+import { auraEngine, type AuraAnimationPattern } from '../aura/auraEngine';
 import { internalNarrativeEngine } from '../narrative/internalNarrativeEngine';
 import { voiceProsodyEngine } from '../voice/voiceProsodyEngine';
 import type { OrchestratedVoice } from '../voice/types';
@@ -518,7 +518,7 @@ export class ExpressionEngine {
     voiceProsodyEngine.updateState(voice);
 
     // Apply to Aura Engine (v∞.38+)
-    auraEngine.setPattern(halo.pattern as any);
+    auraEngine.setPattern(halo.pattern as AuraAnimationPattern);
     auraEngine.setColors({
       primary: halo.colors.primary,
       secondary: halo.colors.secondary,

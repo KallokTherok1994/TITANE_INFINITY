@@ -114,7 +114,7 @@ export function useStreamingChat(): UseStreamingChatReturn {
         );
 
         unlistenDoneRef.current = await chatEngineCommands.onStreamDone(
-          (chunk: StreamChunkPayload) => {
+          (_chunk: StreamChunkPayload) => {
             const latency = Math.round(performance.now() - startTime);
             setState(prev => ({
               ...prev,

@@ -170,7 +170,7 @@ export interface LifecycleHooks {
 // BRIDGE TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export interface TauriCommand<T = unknown, R = unknown> {
+export interface TauriCommand<T = unknown, _R = unknown> {
   name: string;
   args?: T;
 }

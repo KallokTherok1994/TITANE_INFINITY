@@ -120,6 +120,7 @@ export interface OptimizationStrategy {
 
   // Statistiques
   timesTriggered: number;
+  successCount: number;
   successRate: number;
   averageImprovement: number;
 }
@@ -633,15 +634,14 @@ class AutopoiesisEngine {
     console.log(`[AutopoiesisEngine] Triggering strategy: ${strategy.name}`);
 
     // Simuler succès (70% du temps)
-    const strategyAny = strategy as any;
-    const successCount = strategyAny.successCount || 0;
+    strategy.successCount = strategy.successCount || 0;
     if (Math.random() > 0.3) {
-      strategyAny.successCount = successCount + 1;
+      strategy.successCount++;
       this.state.optimization.successfulAdjustments++;
     }
 
     // Mettre à jour success rate
-    strategy.successRate = (strategyAny.successCount || 0) / strategy.timesTriggered;
+    strategy.successRate = strategy.successCount / strategy.timesTriggered;
   }
 
   // ─────────────────────────────────────────────────────────────────────────
