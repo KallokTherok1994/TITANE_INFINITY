@@ -2,7 +2,7 @@
 //! TEMPORAL ENGINE ↔ KERNEL OS INTEGRATION
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::temporal_engine::{TemporalContext, PlanningHorizon, TaskPriority};
+use crate::temporal_engine::TemporalContext;
 use serde::{Deserialize, Serialize};
 
 /// Bridge entre Temporal Engine et Kernel OS

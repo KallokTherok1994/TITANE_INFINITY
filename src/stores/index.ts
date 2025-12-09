@@ -74,3 +74,50 @@ export {
   selectSuggestions,
   selectIsMonitoring,
 } from './usePerformanceStore';
+
+// ═══════════════════════════════════════════════════════════════
+// v21 STORES - Session 4.5 (Zustand Stores)
+// ═══════════════════════════════════════════════════════════════
+
+// Visual Store v21 (Global Visual Engine State)
+export { useVisualStore, visualSelectors } from './visualStore';
+export {
+  useVisualState,
+  useVisualMetrics,
+  useVisualFPS,
+  useVisualGPULoad,
+  useVisualActions,
+} from './visualStore';
+export type {
+  VisualEngineState,
+  VisualStoreActions,
+  VisualStore,
+} from './visualStore';
+
+// Panels Store v21 (Global Panels State Management)
+export { usePanelsStore, panelsSelectors } from './panelsStore';
+export { usePanel, useVisiblePanels, useFocusedPanel } from './panelsStore';
+export type {
+  PanelConfig,
+  PanelId,
+  PanelsState,
+  PanelsStoreActions,
+  PanelsStore,
+} from './panelsStore';
+
+// Effects Store v21 (Global Effects State Management)
+export { useEffectsStore, effectsSelectors } from './effectsStore';
+export {
+  useActiveEffects,
+  useEffectsMetrics,
+  useEffectsPreferences,
+  useEffectsStats,
+  useIsEffectActive,
+} from './effectsStore';
+export type {
+  EffectHistoryEntry,
+  EffectsPreferences,
+  EffectsState,
+  EffectsStoreActions,
+  EffectsStore,
+} from './effectsStore';
