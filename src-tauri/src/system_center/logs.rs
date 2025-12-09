@@ -150,7 +150,14 @@ macro_rules! sc_error {
 /// Get recent logs with optional filtering
 #[tauri::command]
 pub async fn sc_get_logs(filter: Option<LogFilter>) -> Result<Vec<LogEntry>, String> {
-    let buffer = LOG_BUFFER.lock().unwrap();
+    // Phase 1 Stabilisation: Gérer lock poison
+    let buffer = match LOG_BUFFER.lock() {
+        Ok(buf) => buf,
+        Err(e) => {
+            eprintln!("Warning: LOG_BUFFER lock poisoned in get_logs, recovering: {}", e);
+            e.into_inner()
+        }
+    };
     let mut logs: Vec<LogEntry> = buffer.iter().cloned().collect();
 
     // Apply filters if provided
