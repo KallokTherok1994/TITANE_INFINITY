@@ -132,10 +132,11 @@ import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine
 
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
 import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
-// ✨ PHASE 4.2 - Lazy load psyche engines (defer ~300KB)
-const archetypeResonanceEngine = { start: () => {}, stop: () => {} } as any; // Stub for now
-const metaContinuumEngine = { start: () => {}, stop: () => {} } as any;
-const embodiedPresenceEngine = { start: () => {}, stop: () => {} } as any;
+// ✨ PHASE 4.2 - Lazy load psyche engines (defer ~300KB) - Typed stubs
+interface EngineStub { start: () => void; stop: () => void }
+const _archetypeResonanceEngine: EngineStub = { start: () => {}, stop: () => {} };
+const _metaContinuumEngine: EngineStub = { start: () => {}, stop: () => {} };
+const _embodiedPresenceEngine: EngineStub = { start: () => {}, stop: () => {} };
 import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
@@ -147,10 +148,10 @@ import { PhysiologicalPanel as _PhysiologicalPanel } from './components/physiolo
 import './components/physiological/PhysiologicalPanel.css';
 
 // ✨ v∞.31-33 - Expression Engines (SUPER PROMPTS XXXI-XXXIII + Aura Ultra)
-// ✨ PHASE 4.2 - Lazy load expression engines (defer ~500KB)
-const synestheticEmotionEngine = { start: () => {}, stop: () => {} } as any;
-const unifiedMultimodalOutputEngine = { start: () => {}, stop: () => {} } as any;
-const auraEngine = { start: () => {}, stop: () => {} } as any;
+// ✨ PHASE 4.2 - Lazy load expression engines (defer ~500KB) - Typed stubs
+const _synestheticEmotionEngine: EngineStub = { start: () => {}, stop: () => {} };
+const _unifiedMultimodalOutputEngine: EngineStub = { start: () => {}, stop: () => {} };
+const _auraEngine: EngineStub = { start: () => {}, stop: () => {} };
 import './components/psyche/DeepPsychePanel.css';
 
 // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)

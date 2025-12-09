@@ -115,8 +115,8 @@
   to { opacity: 1; }
 }
 
-/* Tablet et mobile */
-@media (max-width: 768px) {
+/* Tablet et mobile (standardized: max-width: 767px = below 768px tablet breakpoint) */
+@media (max-width: 767px) {
   .app-sidebar {
     position: fixed;
     left: 0;
@@ -150,8 +150,8 @@
   }
 }
 
-/* Mobile petit */
-@media (max-width: 480px) {
+/* Mobile petit (standardized: max-width: 479px = below 480px small mobile breakpoint) */
+@media (max-width: 479px) {
   .app-sidebar {
     width: 100%;
     max-width: 320px;

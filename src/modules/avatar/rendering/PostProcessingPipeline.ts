@@ -5,15 +5,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import * as THREE from 'three';
-// @ts-expect-error - Three.js postprocessing types manquants (installer three-stdlib)
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
-// @ts-expect-error - Three.js postprocessing types manquants
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
-// @ts-expect-error - Three.js postprocessing types manquants
 import { TAARenderPass } from 'three/examples/jsm/postprocessing/TAARenderPass';
-// @ts-expect-error - Three.js postprocessing types manquants
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-// @ts-expect-error - Three.js postprocessing types manquants
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 
 // ═══════════════════════════════════════════════════════════════════════════

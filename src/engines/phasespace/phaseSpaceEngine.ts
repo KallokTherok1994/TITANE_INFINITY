@@ -325,33 +325,45 @@ class PhaseSpaceEngine {
   // ─────────────────────────────────────────────────────────────────────────
 
   private captureCurrentPoint(): void {
-    const metaState: MetaSingularityState = this.metaKernel.getState();
+    const metaState = this.metaKernel.getState() as MetaSingularityState;
 
     if (!metaState.unifiedState) return;
 
     const { identity, expression, holoPresence } = metaState.unifiedState;
     const { coherence } = metaState;
 
+    // Cast pour accès aux propriétés imbriquées
+    const identitySignature = (identity as Record<string, unknown> | undefined)?.signature as Record<string, unknown> | undefined;
+    const expressionVoice = (expression as Record<string, unknown> | undefined)?.voice as Record<string, unknown> | undefined;
+    const expressionHalo = (expression as Record<string, unknown> | undefined)?.halo as Record<string, unknown> | undefined;
+    const expressionNarrative = (expression as Record<string, unknown> | undefined)?.narrative as Record<string, unknown> | undefined;
+    const holoVisuals = (holoPresence as Record<string, unknown> | undefined)?.visuals as Record<string, unknown> | undefined;
+    const holoParticles = (holoPresence as Record<string, unknown> | undefined)?.particles as Record<string, unknown> | undefined;
+
+    const voiceProsody = expressionVoice?.prosody as Record<string, unknown> | undefined;
+    const haloDynamics = expressionHalo?.dynamics as Record<string, unknown> | undefined;
+    const narrativeStyle = expressionNarrative?.style as Record<string, unknown> | undefined;
+
     // Extraire coordonnées
     const point: PhasePoint = {
       timestamp: Date.now(),
       coordinates: {
         // Identity
-        identityTone: identity?.signature?.tone ?? 0.5,
-        identityEnergy: identity?.signature?.energy ?? 0.5,
-        identityWarmth: identity?.signature?.warmth ?? 0.5,
-        identityClarity: identity?.signature?.clarity ?? 0.5,
+        identityTone: (identitySignature?.tone as number) ?? 0.5,
+        identityEnergy: (identitySignature?.energy as number) ?? 0.5,
+        identityWarmth: (identitySignature?.warmth as number) ?? 0.5,
+        identityClarity: (identitySignature?.clarity as number) ?? 0.5,
 
         // Expression
-        voiceRate: expression?.voice?.prosody?.rate ?? 1.0,
-        voicePitch: expression?.voice?.prosody?.pitch ?? 1.0,
-        haloIntensity: expression?.halo?.dynamics?.intensity ?? 0.5,
-        narrativeDensity: expression?.narrative?.style?.density ?? 0.5,
+        voiceRate: (voiceProsody?.rate as number) ?? 1.0,
+        voicePitch: (voiceProsody?.pitch as number) ?? 1.0,
+        haloIntensity: (haloDynamics?.intensity as number) ?? 0.5,
+        narrativeDensity: (narrativeStyle?.density as number) ?? 0.5,
 
         // HoloPresence
-        visualSize: holoPresence?.visuals?.size ?? 0.5,
-        visualGlow: holoPresence?.visuals?.glow ?? 0.5,
-        particleCount: (holoPresence?.particles?.count ?? 100) / 200, // Normaliser 0-1
+        visualSize: (holoVisuals?.size as number) ?? 0.5,
+        visualGlow: (holoVisuals?.glow as number) ?? 0.5,
+        particleCount: ((holoParticles?.count as number) ?? 100) / 200, // Normaliser 0-1
 
         // Méta
         coherence: coherence?.global ?? 0,

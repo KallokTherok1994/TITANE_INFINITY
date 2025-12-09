@@ -38,7 +38,8 @@ export class MetricsHub {
     if (!this.latencies.has(engineId)) {
       this.latencies.set(engineId, []);
     }
-    const records = this.latencies.get(engineId)!;
+    const records = this.latencies.get(engineId);
+    if (!records) return;
     records.push(latencyMs);
 
     // Garder les 50 dernières valeurs

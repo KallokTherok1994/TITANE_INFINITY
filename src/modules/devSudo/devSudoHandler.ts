@@ -24,6 +24,67 @@ import * as MemoryHandlers from './devSudoMemoryHandlers';
 import * as TitaneOneHandlers from './devSudoTitaneOneHandlers';
 
 // ═══════════════════════════════════════════════════════════════════════════
+// STUBS - Modules supprimés en PHASE 1 (OPTION B)
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Stub pour dataCollector
+const dataCollector = {
+  getStats: () => ({
+    totalEntries: 0,
+    sizeInMB: 0,
+    categories: {} as Record<string, number>,
+    totalTokens: 0,
+    avgQuality: 0.8,
+    avgImportance: 0.7,
+    byCategory: {
+      conversation: 0,
+      action: 0,
+      coaching: 0,
+      analysis: 0,
+      memory: 0,
+      error: 0,
+    },
+  }),
+  exportToFile: async () => {},
+  clear: () => {},
+  addEntry: (_entry: unknown) => {},
+  cleanDataset: () => ({ removed: 0, remaining: 0 }),
+};
+
+// Stub pour vocalDevConsole
+const vocalDevConsole = {
+  isActive: () => false,
+  start: () => {},
+  stop: () => {},
+  speak: (_text: string) => {},
+  listen: () => Promise.resolve(''),
+  getMode: () => 'default' as const,
+  setMode: (_mode: string) => {},
+  getState: () => ({ isActive: false, isListening: false, lastCommand: '' }),
+  toggleVisibility: () => {},
+  getHealthScore: () => 100,
+  configure: (_config: Record<string, unknown>) => {},
+};
+
+// Stub pour liveDebugger
+export type LiveDebuggerMode = 'off' | 'minimal' | 'verbose' | 'full';
+const liveDebugger = {
+  isActive: () => false,
+  start: () => {},
+  stop: () => {},
+  setMode: (_mode: LiveDebuggerMode) => {},
+  getMode: (): LiveDebuggerMode => 'off',
+  log: (_message: string, _level?: string) => {},
+  getMetrics: () => ({ logs: 0, errors: 0, warnings: 0 }),
+  getRecentDiagnostics: () => [] as Array<{ timestamp: number; message: string; level: string }>,
+  getStats: () => ({ totalLogs: 0, errorsCount: 0, warningsCount: 0 }),
+  getHealthScore: () => 100,
+  reset: () => {},
+  configure: (_config: Record<string, unknown>) => {},
+  getConfig: () => ({ mode: 'off' as LiveDebuggerMode, verbose: false }),
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -5483,7 +5544,7 @@ async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
   try {
     const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
 
-    await liveDebugger.activate(selectedMode as unknown);
+    await liveDebugger.activate(selectedMode as LiveDebuggerMode);
 
     return {
       handled: true,
@@ -6085,7 +6146,7 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
   }
 
   try {
-    liveDebugger.setMode(normalizedMode as unknown);
+    liveDebugger.setMode(normalizedMode as LiveDebuggerMode);
 
     // Auto-config selon mode
     if (normalizedMode === 'auto-heal') {
@@ -6179,7 +6240,7 @@ ${
  */
 async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
   try {
-    await talkToTitaneEngine.start(mode || 'continuous');
+    await talkToTitaneEngine.activate((mode || 'continuous') as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode);
 
     return {
       handled: true,
@@ -6201,7 +6262,7 @@ async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
  */
 async function handleTalkOff(): Promise<DevSudoResult> {
   try {
-    await talkToTitaneEngine.stop();
+    await talkToTitaneEngine.deactivate();
 
     return {
       handled: true,
@@ -6251,7 +6312,7 @@ function handleTalkMode(mode: string): DevSudoResult {
   }
 
   try {
-    talkToTitaneEngine.setMode(mode as unknown);
+    talkToTitaneEngine.setMode(mode as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode);
 
     return {
       handled: true,
@@ -6312,7 +6373,7 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
   }
 
   try {
-    talkToTitaneEngine.setEmotionalCalibration(tone as unknown);
+    talkToTitaneEngine.setEmotionalCalibration(tone as 'neutral' | 'analytical' | 'calm' | 'energizing' | 'motivating');
 
     return {
       handled: true,
@@ -6362,12 +6423,12 @@ Pour démarrer: \`sudo talk.on\``,
     }
 
     const historyText = recent
-      .map((item: Record<string, unknown>, i: number) => {
-        const intent = item.intent as Record<string, unknown>;
+      .map((item, i: number) => {
+        const intent = item.intent;
         const intentBadge = `[${intent.type}]`;
-        const confidence = `${((intent.confidence as number) * 100).toFixed(0)}%`;
-        const text = (intent.text as string).substring(0, 60);
-        const response = (item.response as string).substring(0, 80);
+        const confidence = `${(intent.confidence * 100).toFixed(0)}%`;
+        const text = intent.text.substring(0, 60);
+        const response = item.response.substring(0, 80);
         return `${i + 1}. ${intentBadge} (${confidence}) "${text}..."
    → ${response}...`;
       })

@@ -67,7 +67,9 @@ export class PipelineInspector {
       status: 'running',
     };
 
-    this.currentTrace!.stages.push(stage);
+    if (this.currentTrace) {
+      this.currentTrace.stages.push(stage);
+    }
   }
 
   /**

@@ -415,8 +415,9 @@ class AuraEngine {
    * Mettre à jour pattern d'animation
    */
   private updateAnimationPattern(mode: PresenceMode): void {
-    const patternMap: Record<PresenceMode, AuraAnimationPattern> = {
+    const patternMap: Partial<Record<PresenceMode, AuraAnimationPattern>> = {
       idle: 'idle_breathe',
+      default: 'idle_breathe',
       listening: 'listening_pulse',
       thinking: 'thinking_shimmer',
       speaking: 'speaking_flow',
@@ -424,9 +425,16 @@ class AuraEngine {
       storytelling: 'speaking_flow',
       deep_reflection: 'thinking_shimmer',
       empathic_sync: 'empathy_warm',
+      learning: 'thinking_shimmer',
+      creating: 'speaking_flow',
+      insight: 'thinking_shimmer',
+      empathy: 'empathy_warm',
+      architect: 'speaking_flow',
+      'deep-work': 'thinking_shimmer',
+      singularity: 'transform_morph',
     };
 
-    this.state.pattern = patternMap[mode];
+    this.state.pattern = patternMap[mode] ?? 'idle_breathe';
     this.state.presenceMode = mode;
   }
 

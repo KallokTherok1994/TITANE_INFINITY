@@ -16,6 +16,7 @@ import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
 import { hybridTTS } from '@/services/tts/hybridTTS';
+import { voiceFingerprintTauri } from '@/services/voice/voiceFingerprintTauri';
 
 export type VADState = 'silence' | 'speech' | 'unknown';
 
@@ -62,6 +63,10 @@ export interface UseVADReturn {
   enableBargeIn: () => void;
   disableBargeIn: () => void;
   isBargeInEnabled: boolean;
+
+  // [P0-2] Voice Fingerprinting (Layer 3 anti-feedback)
+  calibrateTITANEVoice: (samplesList: Float32Array[]) => Promise<void>;
+  isTitaneCalibrated: () => boolean;
 }
 
 const DEFAULT_CONFIG: VADConfig = {
@@ -136,16 +141,30 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * Respects suspension state for anti-echo (unless barge-in enabled)
    * [P1.1] Émet événements vers audioStateMachine
    * [P1.2] Barge-in: continue detection even during TTS if enabled
+   * [P0-2] Layer 3 anti-feedback: Voice fingerprinting check (TITANE vs User)
    */
   const processAudioData = useCallback(
     async (audioData: Float32Array) => {
-      // Skip processing if suspended (TTS playing - anti-echo)
+      // Skip processing if suspended (TTS playing - anti-echo Layer 2)
       // UNLESS barge-in is enabled - then we keep detecting to allow interruption
       if (suspendedRef.current && !bargeInEnabledRef.current) {
         return;
       }
 
       try {
+        // [P0-2] Layer 3 anti-feedback: Check if audio is TITANE voice
+        // If TITANE detected → skip VAD processing (prevent feedback loop)
+        if (voiceFingerprintTauri.isTitaneCalibrated()) {
+          const fingerprintResult = await voiceFingerprintTauri.checkIsTitaneSpeaking(audioData);
+          
+          if (fingerprintResult.isTitane) {
+            console.log(
+              `[useVAD] 🎯 TITANE voice detected (Layer 3 anti-feedback), skipping VAD (similarity: ${fingerprintResult.similarity.toFixed(2)})`
+            );
+            return; // Skip VAD processing - this is TITANE's voice, not user
+          }
+        }
+
         const result = await audioService.processVADFrame(audioData);
         const previousSpeaking = isSpeaking;
         const newSpeaking = result.isSpeaking;
@@ -408,6 +427,31 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
     setIsBargeInEnabled(false);
   }, []);
 
+  /**
+   * [P0-2 VOICE FINGERPRINTING] Calibrate TITANE voice profile (Layer 3 anti-feedback)
+   * Should be called once at startup or when TTS voice changes
+   * Requires 5-10 seconds of TITANE TTS samples (various phrases)
+   *
+   * @param samplesList Multiple audio samples (16kHz mono Float32Array)
+   */
+  const calibrateTITANEVoice = useCallback(async (samplesList: Float32Array[]) => {
+    console.log('[useVAD] 🎯 Calibrating TITANE voice (Layer 3 anti-feedback)');
+    try {
+      await voiceFingerprintTauri.calibrateTitaneVoice(samplesList);
+      console.log('[useVAD] ✅ TITANE voice calibrated - Layer 3 anti-feedback active');
+    } catch (err) {
+      console.error('[useVAD] ❌ TITANE calibration failed:', err);
+      setError(err instanceof Error ? err.message : 'TITANE calibration failed');
+    }
+  }, []);
+
+  /**
+   * [P0-2 VOICE FINGERPRINTING] Check if TITANE profile is calibrated
+   */
+  const isTitaneCalibrated = useCallback(() => {
+    return voiceFingerprintTauri.isTitaneCalibrated();
+  }, []);
+
   return {
     vadState,
     isSpeaking,
@@ -425,6 +469,8 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
     resumeAfterTTS,
     enableBargeIn,
     disableBargeIn,
+    calibrateTITANEVoice,
+    isTitaneCalibrated,
   };
 }
 

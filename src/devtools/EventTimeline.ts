@@ -63,16 +63,18 @@ export class EventTimeline {
   filter(filter: TimelineFilter): TimelineEvent[] {
     let result = [...this.events];
 
-    if (filter.types && filter.types.length > 0) {
-      result = result.filter(e => filter.types!.includes(e.type));
+    const { types, startTime, endTime } = filter;
+
+    if (types && types.length > 0) {
+      result = result.filter(e => types.includes(e.type));
     }
 
-    if (filter.startTime) {
-      result = result.filter(e => e.timestamp >= filter.startTime!);
+    if (startTime !== undefined) {
+      result = result.filter(e => e.timestamp >= startTime);
     }
 
-    if (filter.endTime) {
-      result = result.filter(e => e.timestamp <= filter.endTime!);
+    if (endTime !== undefined) {
+      result = result.filter(e => e.timestamp <= endTime);
     }
 
     if (filter.search) {

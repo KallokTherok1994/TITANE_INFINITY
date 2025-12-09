@@ -14,11 +14,49 @@ import { useState, useEffect } from 'react';
 
 // REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B)
 // Stub local pour maintenir compatibilité
-type PredictiveFrame = any;
+type PredictiveFrame = {
+  prediction: { confidence: number; nextAction: string };
+  perceptualContext: Record<string, unknown>;
+  nervousContext: Record<string, unknown>;
+  predictedUserIntent: { type: string; confidence: number } | null;
+  predictedUserEmotion: { emotion: string; intensity: number } | null;
+  predictedNeed: { need: string; urgency: number } | null;
+  recommendedAdjustments: string[];
+  titaneSelfPrediction: { nextAction: string; confidence: number } | null;
+};
+const defaultPredictiveFrame: PredictiveFrame = {
+  prediction: { confidence: 0.5, nextAction: 'idle' },
+  perceptualContext: {},
+  nervousContext: {},
+  predictedUserIntent: null,
+  predictedUserEmotion: null,
+  predictedNeed: null,
+  recommendedAdjustments: [],
+  titaneSelfPrediction: null,
+};
+type PredictiveSubscriber = (state: PredictiveFrame) => void;
+const predictiveSubscribers: PredictiveSubscriber[] = [];
+let predictiveState = { ...defaultPredictiveFrame };
+
 const predictiveReflectionEngine = {
-  getState: () => ({} as PredictiveFrame),
+  getState: () => predictiveState,
   start: () => {},
   stop: () => {},
+  subscribe: (callback: PredictiveSubscriber) => {
+    predictiveSubscribers.push(callback);
+    return () => {
+      const idx = predictiveSubscribers.indexOf(callback);
+      if (idx > -1) predictiveSubscribers.splice(idx, 1);
+    };
+  },
+  applyPerceptualContext: (context: Record<string, unknown>) => {
+    predictiveState = { ...predictiveState, perceptualContext: context };
+    predictiveSubscribers.forEach(cb => cb(predictiveState));
+  },
+  applyNervousContext: (context: Record<string, unknown>) => {
+    predictiveState = { ...predictiveState, nervousContext: context };
+    predictiveSubscribers.forEach(cb => cb(predictiveState));
+  },
 };
 
 /*

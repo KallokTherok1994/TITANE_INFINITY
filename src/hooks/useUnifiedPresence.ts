@@ -17,11 +17,13 @@ import {
   unifiedPresenceEngine,
 } from '@/engines/presence/_stubs';
 
-// Types locaux pour éviter imports manquants
-type PresenceState = any;
-type TonicProfile = any;
-type UserContext = any;
-type IdentityMatrix = any;
+// Types importés depuis stubs
+import type {
+  UnifiedPresenceState as PresenceState,
+  TonicProfile,
+  UserContext,
+  IdentityMatrix,
+} from '@/engines/presence/_stubs';
 
 /*
 import {
@@ -37,9 +39,11 @@ import {
   narrativeProtocol,
 } from '@/engines/presence/_stubs';
 
-// Types locaux pour éviter imports manquants
-type NarrativeArc = any;
-type SymbolicElement = any;
+// Types importés depuis stubs
+import type {
+  NarrativeArc,
+  SymbolicElement,
+} from '@/engines/presence/_stubs';
 
 /*
 import {

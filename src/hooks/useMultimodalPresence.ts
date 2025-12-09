@@ -10,13 +10,14 @@ import {
   multimodalPresenceEngine,
   type MultimodalPresenceState,
   type PresenceMode,
+  type ExpressiveIntention,
+  type BreathingState,
+  type HaloColorExpression,
+  type AvatarMicroMimics,
 } from '@/engines/presence/_stubs';
 
-// Types locaux pour types manquants dans stubs
-type ExpressiveIntention = any;
-type BreathingCycle = any;
-type HaloColorExpression = any;
-type AvatarMicroMimics = any;
+// Alias pour compatibilité
+type BreathingCycle = BreathingState;
 
 /*
 import {
@@ -99,12 +100,11 @@ export function useMultimodalPresence() {
  * Hook pour accéder uniquement au cycle respiratoire
  */
 export function useBreathingCycle(): {
-  breathing: BreathingCycle;
+  breathing: BreathingCycle | number;
   breathingValue: number;
 } {
-  const [breathing, setBreathing] = useState<BreathingCycle>(
-    multimodalPresenceEngine.getState().breathing
-  );
+  const initialBreathing = multimodalPresenceEngine.getState().breathing;
+  const [breathing, setBreathing] = useState<BreathingCycle | number>(initialBreathing);
   const [breathingValue, setBreathingValue] = useState(0);
 
   useEffect(() => {
@@ -112,8 +112,13 @@ export function useBreathingCycle(): {
       setBreathing(state.breathing);
       // Calculer la valeur respiratoire actuelle (0-1)
       const elapsed = Date.now();
-      const cycleProgress = (elapsed % state.breathing.cycleDuration) / state.breathing.cycleDuration;
-      setBreathingValue(Math.sin(cycleProgress * Math.PI * 2) * state.breathing.amplitude);
+      // Type guard pour BreathingState
+      if (typeof state.breathing === 'object' && 'cycleDuration' in state.breathing) {
+        const cycleProgress = (elapsed % state.breathing.cycleDuration) / state.breathing.cycleDuration;
+        setBreathingValue(Math.sin(cycleProgress * Math.PI * 2) * state.breathing.amplitude);
+      } else {
+        setBreathingValue(typeof state.breathing === 'number' ? state.breathing : 0);
+      }
     });
 
     return unsubscribe;

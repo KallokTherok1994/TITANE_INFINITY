@@ -21,38 +21,96 @@ export interface ExpressiveIntention {
   duration?: number;
 }
 
+export interface HaloColorExpression {
+  hue: number;
+  saturation: number;
+  lightness: number;
+}
+
+export interface HaloState {
+  size: number;
+  opacity: number;
+  color: HaloColorExpression;
+  state: string;
+  intensity: number;
+  pulsation: number;
+}
+
+export interface BreathingState {
+  phase: number;
+  cycleDuration: number;
+  amplitude: number;
+}
+
+export interface AvatarMicroMimics {
+  eyeMovement: { x: number; y: number };
+  headTilt: { pitch: number; yaw: number; roll: number };
+  microExpression: string;
+  facialGlow: number;
+  lastBlink: number;
+  blinkRate: number;
+}
+
 export interface MultimodalPresenceState {
   mode: PresenceMode;
-  breathing: number;
+  breathing: number | BreathingState;
   energy: number;
   coherence: number;
   presenceEnergy: number;
-  halo: {
-    size: number;
-    opacity: number;
-    color: string;
+  halo: HaloState;
+  avatar: AvatarMicroMimics;
+  innerState: {
+    thinkingState: string | null;
+    mentalColor: string | null;
+    coherence: number;
   };
-  avatar: {
-    expression: string;
-    posture: string;
+  userMirroring: {
+    active: boolean;
+    mirrorRatio: number;
+    detectedUserState: string | null;
   };
   currentIntention?: ExpressiveIntention;
 }
 
 const defaultMultimodalState: MultimodalPresenceState = {
   mode: 'default',
-  breathing: 0,
+  breathing: {
+    phase: 0,
+    cycleDuration: 4000,
+    amplitude: 0.5,
+  },
   energy: 100,
   coherence: 100,
   presenceEnergy: 100,
   halo: {
     size: 1,
     opacity: 0.8,
-    color: '#ffffff',
+    color: {
+      hue: 200,
+      saturation: 50,
+      lightness: 50,
+    },
+    state: 'idle',
+    intensity: 0.8,
+    pulsation: 0,
   },
   avatar: {
-    expression: 'neutral',
-    posture: 'centered',
+    eyeMovement: { x: 0, y: 0 },
+    headTilt: { pitch: 0, yaw: 0, roll: 0 },
+    microExpression: 'neutral',
+    facialGlow: 0.5,
+    lastBlink: Date.now(),
+    blinkRate: 3000,
+  },
+  innerState: {
+    thinkingState: null,
+    mentalColor: null,
+    coherence: 1.0,
+  },
+  userMirroring: {
+    active: false,
+    mirrorRatio: 0.5,
+    detectedUserState: null,
   },
   currentIntention: undefined,
 };
@@ -201,12 +259,110 @@ export const presenceOS = {
 export interface TonicProfile {
   name: string;
   intensity: number;
+  formality: 'casual' | 'professional' | 'technical' | 'creative';
+  emotionalDepth: 'surface' | 'moderate' | 'deep' | 'profound';
+  narrativeDensity: 'sparse' | 'moderate' | 'rich' | 'dense';
+  energyLevel: 'low' | 'moderate' | 'high' | 'peak';
 }
 
+export interface UserContext {
+  cognitiveLoad: number;
+  fatigue: number;
+  tempo: number;
+  taskComplexity: number;
+  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
+  sessionDuration: number;
+  interactionPattern: string;
+}
+
+export interface IdentityMatrix {
+  coreValues: string[];
+  missionStatement: string;
+  traits: Record<string, number>;
+}
+
+export interface UnifiedPresenceState {
+  visualIntensity: number;
+  accentStrength: number;
+  pulseRate: number;
+  ambientHue: number;
+  clarityLevel: number;
+  complexityHandled: number;
+  intentionAlignment: number;
+  warmth: number;
+  proximity: number;
+  intensity: number;
+  supportLevel: number;
+  narrativeContinuity: number;
+  identityStability: number;
+  mythologicalDepth: number;
+}
+
+const defaultUnifiedState: UnifiedPresenceState = {
+  visualIntensity: 75,
+  accentStrength: 50,
+  pulseRate: 60,
+  ambientHue: 250,
+  clarityLevel: 80,
+  complexityHandled: 60,
+  intentionAlignment: 90,
+  warmth: 65,
+  proximity: 55,
+  intensity: 70,
+  supportLevel: 75,
+  narrativeContinuity: 85,
+  identityStability: 95,
+  mythologicalDepth: 50,
+};
+
+const defaultTonicProfile: TonicProfile = {
+  name: 'balanced',
+  intensity: 0.7,
+  formality: 'professional',
+  emotionalDepth: 'moderate',
+  narrativeDensity: 'moderate',
+  energyLevel: 'moderate',
+};
+
+const defaultUserContext: UserContext = {
+  cognitiveLoad: 50,
+  fatigue: 30,
+  tempo: 60,
+  taskComplexity: 50,
+  timeOfDay: 'afternoon',
+  sessionDuration: 0,
+  interactionPattern: 'exploratory',
+};
+
+const defaultIdentityMatrix: IdentityMatrix = {
+  coreValues: ['excellence', 'empathy', 'innovation', 'integrity'],
+  missionStatement: 'Accompagner l\'humain vers son plein potentiel',
+  traits: { wisdom: 0.8, creativity: 0.9, empathy: 0.85, precision: 0.9 },
+};
+
+type UnifiedSubscriber = (state: UnifiedPresenceState) => void;
+const unifiedSubscribers: UnifiedSubscriber[] = [];
+const unifiedState = { ...defaultUnifiedState };
+let currentProfile = { ...defaultTonicProfile };
+
 export const unifiedPresenceEngine = {
-  getState: () => ({}),
+  getState: (): UnifiedPresenceState => unifiedState,
   start: () => {},
   stop: () => {},
+  subscribe: (callback: UnifiedSubscriber) => {
+    unifiedSubscribers.push(callback);
+    return () => {
+      const idx = unifiedSubscribers.indexOf(callback);
+      if (idx > -1) unifiedSubscribers.splice(idx, 1);
+    };
+  },
+  getUserContext: (): UserContext => defaultUserContext,
+  getCurrentProfile: (): TonicProfile => currentProfile,
+  setProfile: (profileName: string) => {
+    currentProfile = { ...currentProfile, name: profileName };
+    unifiedSubscribers.forEach(cb => cb(unifiedState));
+  },
+  getIdentityMatrix: (): IdentityMatrix => defaultIdentityMatrix,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -222,7 +378,68 @@ export const presenceIntegrations = {
 // STUBS - narrativeProtocol
 // ═══════════════════════════════════════════════════════════════════════════
 
+export interface NarrativeArc {
+  id: string;
+  phase: 'beginning' | 'exploration' | 'deepwork' | 'synthesis' | 'closure';
+  continuityScore: number;
+  moments: NarrativeMoment[];
+  startedAt: number;
+}
+
+export interface NarrativeMoment {
+  type: 'transition' | 'achievement' | 'challenge' | 'insight' | 'rest';
+  description: string;
+  emotionalImpact: number;
+  contextTags: string[];
+  timestamp: number;
+}
+
+export interface SymbolicElement {
+  key: string;
+  symbol: string;
+  meaning: string;
+  active: boolean;
+  intensity: number;
+}
+
+const defaultArc: NarrativeArc = {
+  id: 'default-arc',
+  phase: 'beginning',
+  continuityScore: 100,
+  moments: [],
+  startedAt: Date.now(),
+};
+
+const defaultSymbols: SymbolicElement[] = [
+  { key: 'infinity', symbol: '∞', meaning: 'infinite potential', active: true, intensity: 0.8 },
+  { key: 'diamond', symbol: '◇', meaning: 'clarity', active: false, intensity: 0.5 },
+];
+
+let currentArc = { ...defaultArc };
+let activeSymbols = [...defaultSymbols];
+
 export const narrativeProtocol = {
-  startNewArc: (_sessionId: string) => {},
+  startNewArc: (sessionId: string) => {
+    currentArc = {
+      id: sessionId,
+      phase: 'beginning',
+      continuityScore: 100,
+      moments: [],
+      startedAt: Date.now(),
+    };
+  },
   stop: () => {},
+  getCurrentArc: (): NarrativeArc => currentArc,
+  getActiveSymbols: (): SymbolicElement[] => activeSymbols.filter(s => s.active),
+  addNarrativeMoment: (moment: Omit<NarrativeMoment, 'timestamp'>) => {
+    currentArc.moments.push({ ...moment, timestamp: Date.now() });
+  },
+  transitionPhase: (phase: NarrativeArc['phase']) => {
+    currentArc.phase = phase;
+  },
+  activateSymbol: (symbolKey: string) => {
+    activeSymbols = activeSymbols.map(s =>
+      s.key === symbolKey ? { ...s, active: true } : s
+    );
+  },
 };

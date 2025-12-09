@@ -160,6 +160,24 @@ impl VoiceFingerprint {
         (is_titane, similarity)
     }
 
+    /**
+     * Check if TITANE profile is calibrated
+     */
+    pub fn is_calibrated(&self) -> bool {
+        let titane = self.titane_profile.lock().unwrap();
+        titane.is_some()
+    }
+
+    /**
+     * Get TITANE profile info (if calibrated)
+     */
+    pub fn get_profile_info(&self) -> Option<(usize, f32)> {
+        let titane = self.titane_profile.lock().unwrap();
+        titane.as_ref().map(|profile| {
+            (profile.sample_count, self.similarity_threshold)
+        })
+    }
+
     // ========== INTERNAL METHODS ==========
 
     fn detect_pitch(&self, samples: &[f32]) -> f32 {

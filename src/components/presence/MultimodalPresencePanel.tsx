@@ -34,6 +34,14 @@ export function MultimodalPresencePanel() {
 
   const [isExpanded, setIsExpanded] = React.useState(false);
 
+  // Type guards pour breathing
+  const isBreathingState = (b: typeof breathing): b is { phase: number; cycleDuration: number; amplitude: number } =>
+    typeof b === 'object' && 'cycleDuration' in b;
+
+  const breathingPhase = isBreathingState(breathing) ? breathing.phase : 0;
+  const breathingCycleDuration = isBreathingState(breathing) ? breathing.cycleDuration : 4000;
+  const breathingAmplitude = isBreathingState(breathing) ? breathing.amplitude : 0.5;
+
   // Modes disponibles
   const modes: PresenceMode[] = [
     'idle',
@@ -81,7 +89,7 @@ export function MultimodalPresencePanel() {
                 HSL({haloColor.hue.toFixed(0)}, {haloColor.saturation.toFixed(0)}%,{' '}
                 {haloColor.lightness.toFixed(0)}%)
               </span>
-              <span className="halo-intention">{haloColor.intention}</span>
+              <span className="halo-intention">{state.currentIntention?.type ?? 'none'}</span>
             </div>
           </div>
 
@@ -89,18 +97,18 @@ export function MultimodalPresencePanel() {
           <div className="presence-section">
             <h4>Respiration</h4>
             <div className="breathing-visualizer">
-              <div className="breathing-phase">{breathing.phase}</div>
+              <div className="breathing-phase">{breathingPhase}</div>
               <div className="breathing-bar">
                 <div
                   className="breathing-fill"
                   style={{
-                    height: `${(breathingValue + breathing.amplitude) * 50}%`,
+                    height: `${(breathingValue + breathingAmplitude) * 50}%`,
                   }}
                 />
               </div>
               <div className="breathing-stats">
-                <span>Cycle: {(breathing.cycleDuration / 1000).toFixed(1)}s</span>
-                <span>Amplitude: {(breathing.amplitude * 100).toFixed(0)}%</span>
+                <span>Cycle: {(breathingCycleDuration / 1000).toFixed(1)}s</span>
+                <span>Amplitude: {(breathingAmplitude * 100).toFixed(0)}%</span>
               </div>
             </div>
           </div>
