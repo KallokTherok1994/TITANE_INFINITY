@@ -29,7 +29,7 @@ impl TemporalApiAdapter {
     pub async fn get_api_adjustments(&self) -> ApiTemporalAdjustments {
         if let Some(engine) = &self.temporal_engine {
             let engine_guard = engine.read().await;
-            let context = engine_guard.get_context();
+            let context = engine_guard.current_context();
             Self::calculate_adjustments(&context)
         } else {
             ApiTemporalAdjustments::default()
@@ -56,7 +56,7 @@ impl TemporalApiAdapter {
         let base = match hour {
             10..=11 => 1.5,   // Peak: allow more requests
             12..=13 => 1.0,   // Midday: normal
-            22..=5 => 0.5,    // Night: conserve
+            22..=23 | 0..=5 => 0.5,    // Night: conserve
             _ => 1.0,
         };
 
@@ -71,7 +71,7 @@ impl TemporalApiAdapter {
     fn calculate_cache_ttl(hour: u8) -> u64 {
         match hour {
             10..=11 => 300,    // Peak: 5min (fresh data)
-            22..=5 => 1800,    // Night: 30min (stable)
+            22..=23 | 0..=5 => 1800,    // Night: 30min (stable)
             _ => 600,          // Default: 10min
         }
     }
@@ -80,14 +80,14 @@ impl TemporalApiAdapter {
     fn calculate_timeout_multiplier(hour: u8) -> f32 {
         match hour {
             10..=11 => 1.0,    // Peak: normal timeout
-            22..=5 => 2.0,     // Night: longer timeout OK
+            22..=23 | 0..=5 => 2.0,     // Night: longer timeout OK
             _ => 1.2,
         }
     }
 
     /// Devrait-on batcher les requêtes
     fn should_batch_requests(hour: u8) -> bool {
-        matches!(hour, 22..=5)  // Night: batch for efficiency
+        matches!(hour, 22..=23 | 0..=5)  // Night: batch for efficiency
     }
 
     /// Préférer qualité sur vitesse
@@ -99,7 +99,7 @@ impl TemporalApiAdapter {
     fn calculate_cost_sensitivity(hour: u8, is_weekend: bool) -> f32 {
         let base = match hour {
             10..=11 => 0.3,    // Peak: less cost-sensitive
-            22..=5 => 0.8,     // Night: more cost-sensitive
+            22..=23 | 0..=5 => 0.8,     // Night: more cost-sensitive
             _ => 0.5,
         };
 

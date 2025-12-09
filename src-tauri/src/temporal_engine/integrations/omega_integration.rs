@@ -49,7 +49,7 @@ impl TemporalOmegaBridge {
     fn calculate_reflection_intensity(hour: u8, season: &crate::temporal_engine::time_model::Season) -> f32 {
         let base = match hour {
             10..=11 => 0.9,
-            22..=5 => 0.4,
+            22..=23 | 0..=5 => 0.4,
             _ => 0.7,
         };
 
@@ -69,7 +69,7 @@ impl TemporalOmegaBridge {
     fn calculate_coherence_threshold(hour: u8) -> f32 {
         match hour {
             10..=11 => 0.95,  // Peak: high standards
-            22..=5 => 0.6,    // Night: lower
+            22..=23 | 0..=5 => 0.6,    // Night: lower
             _ => 0.8,
         }
     }
@@ -88,7 +88,7 @@ impl TemporalOmegaBridge {
     fn calculate_context_window(hour: u8) -> usize {
         match hour {
             10..=11 => 16384,  // Peak: max context
-            22..=5 => 2048,    // Night: minimal
+            22..=23 | 0..=5 => 2048,    // Night: minimal
             _ => 8192,         // Default: 8K
         }
     }
@@ -121,7 +121,7 @@ impl TemporalOmegaBridge {
         match hour {
             10..=11 => 0.3,   // Peak: less cache, more fresh
             12..=13 => 0.8,   // Midday: more cache
-            22..=5 => 0.9,    // Night: aggressive cache
+            22..=23 | 0..=5 => 0.9,    // Night: aggressive cache
             _ => 0.6,
         }
     }
@@ -146,7 +146,7 @@ impl TemporalOmegaBridge {
 
         match hour {
             10..=11 => vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9], // All engines
-            22..=5 => vec![0, 5, 8],                        // Minimal: orchestrator, memory, health
+            22..=23 | 0..=5 => vec![0, 5, 8],                        // Minimal: orchestrator, memory, health
             _ => vec![0, 1, 2, 3, 5, 7],                    // Core engines
         }
     }
