@@ -214,7 +214,7 @@ function OverviewTab({ state, coherence }: { state: PresenceState; coherence: nu
           <LayerIndicator
             label="Expressive"
             value={
-              Object.values(state.expressive.timbreBlend).reduce((a, b) => a + b, 0) / 4
+              (Object.values(state.expressive.timbreBlend) as number[]).reduce((a, b) => a + b, 0) / 4
             }
           />
           <LayerIndicator label="Aura" value={coherence} />
@@ -286,7 +286,7 @@ function ExpressiveTab({ expressive }: { expressive: ExpressiveState }) {
       <div className="presence-os-card">
         <h4>🎭 Timbre Blend</h4>
         {Object.entries(expressive.timbreBlend).map(([key, val]) => (
-          <MetricCard key={key} label={key} value={val} type="progress" />
+          <MetricCard key={key} label={key} value={val as number} type="progress" />
         ))}
       </div>
     </div>
@@ -343,14 +343,14 @@ function MetricCard({
   type = 'text',
 }: {
   label: string;
-  value: unknown;
+  value: string | number;
   type?: 'text' | 'progress';
 }) {
   return (
     <div className="metric-card">
       <div className="metric-label">{label}</div>
       {type === 'text' ? (
-        <div className="metric-value">{value}</div>
+        <div className="metric-value">{String(value)}</div>
       ) : (
         <div className="metric-progress">
           <div

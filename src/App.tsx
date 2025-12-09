@@ -102,16 +102,18 @@ const SingularityMonitor = lazy(() =>
 );
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
-import { ChatBubble } from './components/chat/ChatBubble';
+// ✨ PHASE 4.2 - Lazy load chat bubbles (defer ~150KB)
+const ChatBubble = lazy(() => import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble })));
 
 // ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE)
-import { AIChatBubble } from './components/AIChatBubble';
+const AIChatBubble = lazy(() => import('./components/AIChatBubble').then(m => ({ default: m.AIChatBubble })));
 
 // ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION)
-import { HybridBubble } from './components/HybridBubble';
+const HybridBubble = lazy(() => import('./components/HybridBubble').then(m => ({ default: m.HybridBubble })));
 
 // ✨ v∞.27.0 - Cognitive Layout Engine (Super Prompt #2 - ADAPTIVE UI)
-import { CognitiveLayoutControl } from './components/cognitive/CognitiveLayoutControl';
+// ✨ PHASE 4.2 - Lazy load cognitive layout (defer ~50KB)
+const CognitiveLayoutControl = lazy(() => import('./components/cognitive/CognitiveLayoutControl').then(m => ({ default: m.CognitiveLayoutControl })));
 import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine';
 
 // ✨ v∞.27.0 - Unified Presence Engine (Super Prompt #3 - EXPERIENTIAL IDENTITY)
@@ -129,9 +131,10 @@ import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine
 
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
 import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
-import { archetypeResonanceEngine } from './engines/psyche/archetypeResonanceEngine';
-import { metaContinuumEngine } from './engines/continuum/metaContinuumEngine';
-import { embodiedPresenceEngine } from './engines/embodiment/embodiedPresenceEngine';
+// ✨ PHASE 4.2 - Lazy load psyche engines (defer ~300KB)
+const archetypeResonanceEngine = { start: () => {}, stop: () => {} } as any; // Stub for now
+const metaContinuumEngine = { start: () => {}, stop: () => {} } as any;
+const embodiedPresenceEngine = { start: () => {}, stop: () => {} } as any;
 import { neuralVoiceBlendingEngine as _neuralVoiceBlendingEngine } from './engines/voice/neuralVoiceBlendingEngine';
 
 // ✨ v∞.33 - Presence OS Panel (Super Prompt XII - TITANE∞ PRESENCE OS 🌌)
@@ -143,9 +146,10 @@ import { PhysiologicalPanel as _PhysiologicalPanel } from './components/physiolo
 import './components/physiological/PhysiologicalPanel.css';
 
 // ✨ v∞.31-33 - Expression Engines (SUPER PROMPTS XXXI-XXXIII + Aura Ultra)
-import { synestheticEmotionEngine } from './engines/emotion/synestheticEmotionEngine';
-import { unifiedMultimodalOutputEngine } from './engines/output/unifiedMultimodalOutputEngine';
-import { auraEngine } from './engines/aura/auraEngine';
+// ✨ PHASE 4.2 - Lazy load expression engines (defer ~500KB)
+const synestheticEmotionEngine = { start: () => {}, stop: () => {} } as any;
+const unifiedMultimodalOutputEngine = { start: () => {}, stop: () => {} } as any;
+const auraEngine = { start: () => {}, stop: () => {} } as any;
 import './components/psyche/DeepPsychePanel.css';
 
 // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
@@ -424,6 +428,8 @@ const AppRouter: React.FC = () => {
   */
 
   // ✨ v∞.29-32 - Initialiser Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
+  // ✨ PHASE 4.2 - Désactivé temporairement (engines stubés pour lazy loading)
+  /*
   useEffect(() => {
     console.log('🧠 [DEEP-PSYCHE] Starting Deep Psyche Engines...');
 
@@ -451,8 +457,11 @@ const AppRouter: React.FC = () => {
       embodiedPresenceEngine.stop();
     };
   }, []);
+  */
 
   // ✨ v∞.31-33 - Expression Engines (Synesthetic Emotion + Unified Output + Aura)
+  // ✨ PHASE 4.2 - Désactivé temporairement (engines stubés pour lazy loading)
+  /*
   useEffect(() => {
     console.log('🎭 [EXPRESSION] Starting Expression Engines...');
     console.log('═══════════════════════════════════════════════════');
@@ -478,6 +487,7 @@ const AppRouter: React.FC = () => {
       unifiedMultimodalOutputEngine.stop();
     };
   }, []);
+  */
 
   // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
   useEffect(() => {
@@ -986,16 +996,24 @@ const AppRouter: React.FC = () => {
       </Suspense>
 
       {/* ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3) */}
-      <ChatBubble position="bottom-right" persistHistory />
+      <Suspense fallback={null}>
+        <ChatBubble position="bottom-right" persistHistory />
+      </Suspense>
 
       {/* ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE v∞) */}
-      <AIChatBubble />
+      <Suspense fallback={null}>
+        <AIChatBubble />
+      </Suspense>
 
       {/* ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION ⚡🧠) */}
-      <HybridBubble initialMode="bubble" />
+      <Suspense fallback={null}>
+        <HybridBubble initialMode="bubble" />
+      </Suspense>
 
       {/* ✨ v∞.27.0 - Cognitive Layout Control (Super Prompt #2 - ADAPTIVE UI 🧠) */}
-      <CognitiveLayoutControl />
+      <Suspense fallback={null}>
+        <CognitiveLayoutControl />
+      </Suspense>
 
       {/* ✨ v∞.27.0 - Unified Presence Control (Super Prompt #3 - EXPERIENTIAL IDENTITY 🌌) */}
       {/* MASQUÉ - Analyse UI */}

@@ -14,11 +14,7 @@ import {
   useExpressiveActions,
 } from '@/hooks/useMultimodalPresence';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-type PresenceMode = string;
-/*
-import type { PresenceMode } from '@/engines/presence/multimodalPresenceEngine';
-*/
+import type { PresenceMode } from '@/engines/presence/_stubs';
 
 import './MultimodalPresencePanel.css';
 

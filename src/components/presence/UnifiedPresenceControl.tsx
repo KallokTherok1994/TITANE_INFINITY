@@ -24,6 +24,10 @@ import {
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
 type TonicProfile = any;
+interface SymbolInfo {
+  symbol: string;
+  meaning: string;
+}
 /*
 import type { TonicProfile } from '@/engines/presence/unifiedPresenceEngine';
 */
@@ -47,7 +51,7 @@ export function UnifiedPresenceControl() {
   const symbolic = useSymbolicPresence();
   const userContext = useUserContextPresence();
   const { profile, changeProfile } = useTonicProfile();
-  const { arc, symbols } = useNarrativeArc();
+  const { arc, symbols } = useNarrativeArc() as { arc: unknown; symbols: SymbolInfo[] };
 
   return (
     <>
@@ -465,7 +469,7 @@ function SymbolicLayerPanel({
   arc,
 }: {
   symbolic: ReturnType<typeof useSymbolicPresence>;
-  symbols: unknown[];
+  symbols: SymbolInfo[];
   arc: unknown;
 }) {
   return (

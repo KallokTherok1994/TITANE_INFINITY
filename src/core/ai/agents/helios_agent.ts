@@ -77,7 +77,7 @@ export class HeliosAgent implements Agent {
 
       this.state.metrics = { ...this.metrics };
     } catch (error) {
-      this.state.errors.push(`Metrics update failed: ${error}`);
+      (this.state.errors ??= []).push(`Metrics update failed: ${error}`);
     }
   }
 
