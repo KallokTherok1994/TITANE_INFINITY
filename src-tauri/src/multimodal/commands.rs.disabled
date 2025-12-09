@@ -1,0 +1,243 @@
+// ═══════════════════════════════════════════════════════════════
+//   MULTIMODAL COMMANDS — Tauri API
+//   SUPER PROMPT #15
+// ═══════════════════════════════════════════════════════════════
+
+use crate::multimodal::{
+    MultimodalConfig, MultimodalFusionEngine, VisionEngine, Audio3DEngine,
+    ImageEmbeddingEngine, ImageMemoryStore, VisionModel,
+};
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+use tauri::State;
+use tokio::sync::RwLock;
+
+/// Multimodal State
+pub struct MultimodalState {
+    pub vision_engine: Arc<VisionEngine>,
+    pub audio3d_engine: Arc<Audio3DEngine>,
+    pub image_embedding: Arc<RwLock<ImageEmbeddingEngine>>,
+    pub image_memory: Arc<RwLock<ImageMemoryStore>>,
+    pub fusion_engine: Arc<MultimodalFusionEngine>,
+}
+
+impl MultimodalState {
+    pub fn new(config: MultimodalConfig) -> Self {
+        let vision_engine = Arc::new(VisionEngine::new(
+            VisionModel::from_string(&config.default_vision_model),
+            config.gpu_enabled,
+        ));
+        
+        let audio3d_engine = Arc::new(Audio3DEngine::new(
+            config.audio_sample_rate,
+            config.audio_frame_size,
+        ));
+        
+        let image_embedding = Arc::new(RwLock::new(ImageEmbeddingEngine::new(
+            VisionModel::from_string(&config.default_vision_model),
+            config.cache_size,
+        )));
+        
+        let image_memory = Arc::new(RwLock::new(ImageMemoryStore::new(config.memory_capacity)));
+        
+        // Clone without RwLock for fusion engine
+        let image_memory_for_fusion = Arc::new(ImageMemoryStore::new(config.memory_capacity));
+        
+        let fusion_engine = Arc::new(MultimodalFusionEngine::new(
+            vision_engine.clone(),
+            audio3d_engine.clone(),
+            image_memory_for_fusion,
+        ));
+        
+        Self {
+            vision_engine,
+            audio3d_engine,
+            image_embedding,
+            image_memory,
+            fusion_engine,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AnalyzeImageRequest {
+    pub image_path: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AnalyzeImageResponse {
+    pub success: bool,
+    pub image_id: String,
+    pub width: u32,
+    pub height: u32,
+    pub features: Vec<f32>,
+    pub objects_detected: usize,
+    pub ocr_text: Option<String>,
+    pub dominant_colors: Vec<String>,
+    pub error: Option<String>,
+}
+
+/// Analyze image (vision + embedding)
+#[tauri::command]
+pub async fn multimodal_analyze_image(
+    request: AnalyzeImageRequest,
+    state: State<'_, Arc<RwLock<MultimodalState>>>,
+) -> Result<AnalyzeImageResponse, String> {
+    let state = state.read().await;
+    
+    // Analyze with vision engine
+    match state.vision_engine.analyze_image(&request.image_path).await {
+        Ok(analysis) => {
+            Ok(AnalyzeImageResponse {
+                success: true,
+                image_id: analysis.image_id,
+                width: analysis.width,
+                height: analysis.height,
+                features: analysis.features,
+                objects_detected: analysis.objects_detected,
+                ocr_text: analysis.ocr_text,
+                dominant_colors: analysis.dominant_colors,
+                error: None,
+            })
+        }
+        Err(e) => {
+            Ok(AnalyzeImageResponse {
+                success: false,
+                image_id: String::new(),
+                width: 0,
+                height: 0,
+                features: vec![],
+                objects_detected: 0,
+                ocr_text: None,
+                dominant_colors: vec![],
+                error: Some(format!("{:?}", e)),
+            })
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SearchCrossModalRequest {
+    pub text_query: Option<String>,
+    pub image_path: Option<String>,
+    pub k: usize,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SearchCrossModalResponse {
+    pub success: bool,
+    pub results: Vec<ImageSearchResult>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct ImageSearchResult {
+    pub image_id: String,
+    pub similarity: f32,
+    pub metadata: serde_json::Value,
+}
+
+/// Cross-modal search (text → image or image → image)
+#[tauri::command]
+pub async fn multimodal_search_cross_modal(
+    request: SearchCrossModalRequest,
+    state: State<'_, Arc<RwLock<MultimodalState>>>,
+) -> Result<SearchCrossModalResponse, String> {
+    let state = state.read().await;
+    let memory = state.image_memory.read().await;
+    
+    // For now, return placeholder
+    // TODO: Implement text→image and image→image search with proper embeddings
+    Ok(SearchCrossModalResponse {
+        success: true,
+        results: vec![],
+        error: Some("Cross-modal search not yet fully implemented".to_string()),
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AnalyzeAudioRequest {
+    pub audio_frame: Vec<f32>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AnalyzeAudioResponse {
+    pub success: bool,
+    pub intensity: f32,
+    pub frequency_bands: Vec<f32>,
+    pub direction: Option<AudioDirectionData>,
+    pub error: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AudioDirectionData {
+    pub azimuth: f32,
+    pub elevation: f32,
+    pub distance: f32,
+}
+
+/// Analyze audio frame (3D spatial analysis)
+#[tauri::command]
+pub async fn multimodal_audio_analyze(
+    request: AnalyzeAudioRequest,
+    state: State<'_, Arc<RwLock<MultimodalState>>>,
+) -> Result<AnalyzeAudioResponse, String> {
+    let state = state.read().await;
+    
+    match state.audio3d_engine.analyze_audio_frame(&request.audio_frame).await {
+        Ok(analysis) => {
+            Ok(AnalyzeAudioResponse {
+                success: true,
+                intensity: analysis.intensity,
+                frequency_bands: analysis.frequency_bands,
+                direction: analysis.direction.map(|d| AudioDirectionData {
+                    azimuth: d.azimuth,
+                    elevation: d.elevation,
+                    distance: d.distance,
+                }),
+                error: None,
+            })
+        }
+        Err(e) => {
+            Ok(AnalyzeAudioResponse {
+                success: false,
+                intensity: 0.0,
+                frequency_bands: vec![],
+                direction: None,
+                error: Some(format!("{:?}", e)),
+            })
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MultimodalDiagnosticsResponse {
+    pub vision_enabled: bool,
+    pub audio3d_enabled: bool,
+    pub current_model: String,
+    pub gpu_available: bool,
+    pub cache_size: usize,
+    pub cache_hits: u64,
+    pub cache_misses: u64,
+    pub memory_stored_images: usize,
+}
+
+/// Get multimodal diagnostics
+#[tauri::command]
+pub async fn multimodal_get_diagnostics(
+    state: State<'_, Arc<RwLock<MultimodalState>>>,
+) -> Result<MultimodalDiagnosticsResponse, String> {
+    let state = state.read().await;
+    let memory = state.image_memory.read().await;
+    
+    Ok(MultimodalDiagnosticsResponse {
+        vision_enabled: true,
+        audio3d_enabled: true,
+        current_model: "CLIP".to_string(),
+        gpu_available: false,
+        cache_size: 0,
+        cache_hits: 0,
+        cache_misses: 0,
+        memory_stored_images: memory.entries.len(),
+    })
+}

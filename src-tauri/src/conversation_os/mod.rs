@@ -183,7 +183,7 @@ impl ConversationOS {
         let formatted = self.formatter.format(&output_context).await;
 
         // 12. Application du style
-        let styled = self.style_engine.apply(&formatted, &persona).await;
+        let styled = self.style_engine.apply(&formatted.content, &output_context.persona).await;
 
         // 13. Adaptation au canal
         let adapted = self.adapter.adapt(&styled, context.channel.clone()).await;

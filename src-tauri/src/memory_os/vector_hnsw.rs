@@ -12,7 +12,7 @@ use std::path::Path;
 /// HNSW-based Vector Index
 pub struct HnswVectorIndex {
     /// HNSW index (f32, cosine distance)
-    hnsw: Hnsw<f32, DistCosine>,
+    hnsw: Hnsw<'static, f32, DistCosine>,
     
     /// ID to internal index mapping
     id_map: HashMap<String, usize>,
@@ -50,11 +50,6 @@ impl HnswVectorIndex {
             next_idx: 0,
         }
     }
-    
-    /// Set search ef parameter (higher = more accurate but slower)
-    pub fn set_ef(&mut self, ef: usize) {
-        self.hnsw.set_ef(ef);
-    }
 }
 
 impl VectorIndex for HnswVectorIndex {
@@ -82,9 +77,7 @@ impl VectorIndex for HnswVectorIndex {
         let internal_idx = self.next_idx;
         
         // Insert into HNSW
-        self.hnsw
-            .insert((&vector, internal_idx))
-            .map_err(|e| MemoryOSError::VectorIndexError(format!("HNSW insert error: {:?}", e)))?;
+        self.hnsw.insert((&vector, internal_idx));
         
         // Update mappings
         self.id_map.insert(id.clone(), internal_idx);
@@ -166,16 +159,7 @@ impl VectorIndex for HnswVectorIndex {
     fn save(&self, path: &str) -> MemoryOSResult<()> {
         let path = Path::new(path);
         
-        // Save HNSW index
-        let hnsw_path = path.with_extension("hnsw");
-        self.hnsw
-            .file_dump(&hnsw_path)
-            .map_err(|e| MemoryOSError::IoError(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("HNSW save error: {:?}", e)
-            )))?;
-        
-        // Save metadata (mappings + vectors)
+        // Save metadata only (HNSW binary dump not supported in this version)
         let metadata = HnswMetadata {
             id_map: self.id_map.clone(),
             reverse_map: self.reverse_map.clone(),
@@ -199,16 +183,24 @@ impl VectorIndex for HnswVectorIndex {
         let metadata_json = std::fs::read_to_string(metadata_path)?;
         let metadata: HnswMetadata = serde_json::from_str(&metadata_json)?;
         
-        // Load HNSW index
-        let hnsw_path = path.with_extension("hnsw");
-        let loaded_hnsw: Hnsw<f32, DistCosine> = Hnsw::file_load(&hnsw_path)
-            .map_err(|e| MemoryOSError::IoError(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("HNSW load error: {:?}", e)
-            )))?;
+        // Rebuild HNSW index from vectors (binary load not supported in this version)
+        let new_hnsw = Hnsw::<'static, f32, DistCosine>::new(
+            metadata.config.m,
+            metadata.config.max_elements,
+            metadata.config.ef_construction,
+            metadata.config.ef_construction,
+            DistCosine {},
+        );
+        
+        // Re-insert all vectors
+        for (idx, id) in &metadata.reverse_map {
+            if let Some(vector) = metadata.vectors.get(id) {
+                new_hnsw.insert((vector.as_slice(), *idx));
+            }
+        }
         
         // Update state
-        self.hnsw = loaded_hnsw;
+        self.hnsw = new_hnsw;
         self.id_map = metadata.id_map;
         self.reverse_map = metadata.reverse_map;
         self.vectors = metadata.vectors;

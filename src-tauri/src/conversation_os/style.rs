@@ -320,7 +320,6 @@ impl Default for StyleEngine {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::conversation_os::persona::PersonaConfig;
 
     #[tokio::test]
     async fn test_style_engine_basic() {

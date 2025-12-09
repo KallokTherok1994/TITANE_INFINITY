@@ -143,7 +143,7 @@ impl CoherenceEngine {
         narrative: &NarrativeState,
         issues: &mut Vec<CoherenceIssue>,
     ) -> f32 {
-        let mut score = 1.0;
+        let mut score: f32 = 1.0;
 
         // Vérifier la profondeur vs contenu
         if narrative.depth > 5 && narrative.key_points.is_empty() {
@@ -232,7 +232,7 @@ impl CoherenceEngine {
         context: &ConversationContext,
         issues: &mut Vec<CoherenceIssue>,
     ) -> f32 {
-        let mut score = 1.0;
+        let mut score: f32 = 1.0;
 
         // Vérifier la longueur des réponses (si historique disponible)
         if context.history_length > 3 {
@@ -337,12 +337,11 @@ impl CoherenceEngine {
 
     /// Calcule la similarité textuelle (simplifiée)
     fn text_similarity(&self, text1: &str, text2: &str) -> f32 {
-        let words1: std::collections::HashSet<_> = text1.to_lowercase()
-            .split_whitespace()
-            .collect();
-        let words2: std::collections::HashSet<_> = text2.to_lowercase()
-            .split_whitespace()
-            .collect();
+        let text1_lower = text1.to_lowercase();
+        let text2_lower = text2.to_lowercase();
+
+        let words1: std::collections::HashSet<&str> = text1_lower.split_whitespace().collect();
+        let words2: std::collections::HashSet<&str> = text2_lower.split_whitespace().collect();
 
         if words1.is_empty() || words2.is_empty() {
             return 0.0;
@@ -356,7 +355,7 @@ impl CoherenceEngine {
 
     /// Corrige automatiquement les problèmes mineurs
     pub async fn auto_correct(&self, text: &str, report: &CoherenceReport) -> String {
-        let mut corrected = text.to_string();
+        let corrected = text.to_string();
 
         for issue in &report.issues {
             if issue.severity == CoherenceSeverity::Minor {

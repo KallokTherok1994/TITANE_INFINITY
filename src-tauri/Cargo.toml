@@ -78,6 +78,10 @@ rustfft = "6.2"                               # FFT for spectral analysis (voice
 hnsw_rs = "0.3"     # HNSW vector index (cross-platform)
 # faiss = { version = "0.12", optional = true }  # FAISS (Linux AVX only)
 
+# SUPER PROMPT #15: Multimodal Expansion vΩ
+image = "0.25"           # Image loading and processing
+ort = { version = "2.0.0-rc.10", optional = true }  # ONNX Runtime (optional, requires system libs)
+
 [features]
 default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]
@@ -87,6 +91,7 @@ ollama = [] # Ollama integration for local LLM
 audio-capture = [
     "cpal",
 ] # Enable real-time audio capture (requires libasound2-dev)
+onnx = ["ort"] # Enable ONNX Runtime for vision models (optional)
 
 [profile.dev]
 # ═══════════════════════════════════════════════════════════════

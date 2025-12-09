@@ -85,7 +85,7 @@ pub async fn memory_get_by_tier(
 
 /// Cluster memories
 #[tauri::command]
-pub async fn memory_cluster(
+pub async fn memory_os_cluster(
     state: State<'_, Arc<RwLock<MemoryOSState>>>,
 ) -> Result<ClusterResult, String> {
     let state = state.read().await;
@@ -117,9 +117,9 @@ pub async fn memory_get_vector(
     Ok(Vec::new())
 }
 
-/// Store memory
+/// Store memory (simplified version for backward compatibility)
 #[tauri::command]
-pub async fn memory_store(
+pub async fn memory_os_store_simple(
     content: String,
     memory_type: String,
     importance: f32,

@@ -2,7 +2,8 @@
 //   CLUSTERING — K-Means Implementation
 // ═══════════════════════════════════════════════════════════════
 
-use crate::memory_os::{similarity::*, Cluster, ClusterResult, MemoryOSError, MemoryOSResult};
+use crate::memory_os::types::{Cluster, ClusterResult, MemoryOSError, MemoryOSResult};
+use crate::memory_os::similarity::*;
 use rand::Rng;
 use std::collections::HashMap;
 
@@ -64,7 +65,7 @@ impl KMeansClustering {
         let dimension = vectors.values().next().unwrap().len();
         
         // Convert to matrix format
-        let mut data: Vec<(String, Vec<f32>)> = vectors
+        let data: Vec<(String, Vec<f32>)> = vectors
             .iter()
             .map(|(id, vec)| (id.clone(), vec.clone()))
             .collect();
@@ -126,14 +127,14 @@ impl KMeansClustering {
             .map(|i| Cluster {
                 id: i,
                 centroid: centroids[i].clone(),
-                item_ids: Vec::new(),
+                member_ids: Vec::new(),
                 size: 0,
             })
             .collect();
         
         for (i, (id, _)) in data.iter().enumerate() {
             let cluster_id = assignments[i];
-            clusters[cluster_id].item_ids.push(id.clone());
+            clusters[cluster_id].member_ids.push(id.clone());
             clusters[cluster_id].size += 1;
         }
         
