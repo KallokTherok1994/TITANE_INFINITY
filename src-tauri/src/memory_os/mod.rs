@@ -30,6 +30,7 @@ pub mod forgetting;
 pub mod memory_signals;
 pub mod memory_os;
 pub mod api;
+pub mod multimodal_memory; // SUPER PROMPT #15 - Phase 6
 
 // NEW: SUPER PROMPTS #6-7-8 modules
 pub mod types; // Shared types (must be first)
@@ -51,6 +52,7 @@ pub use clustering::{KMeansClustering, KMeansConfig, InitMethod};
 pub use semantic_search::SemanticSearchEngine;
 pub use memory_os_bridge::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSBridgeStats};
 pub use config::MemoryOSConfigV2;
+pub use multimodal_memory::{MultimodalMemoryEntry, MultimodalMemoryStore, MultimodalMemoryStats, MultimodalContent};
 
 // Re-exports for convenient access (original)
 pub use memory_state::{MemoryEntry, MemoryTier, MemoryType, MemorySnapshot};

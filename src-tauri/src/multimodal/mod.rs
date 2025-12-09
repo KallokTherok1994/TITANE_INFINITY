@@ -15,7 +15,7 @@ pub mod multimodal_context;
 pub mod multimodal_events;
 pub mod diagnostics;
 pub mod config;
-// pub mod commands; // TODO: Fix type issues
+pub mod commands; // SUPER PROMPT #15 - Phase 8
 
 // Re-exports
 pub use vision::*;
@@ -27,4 +27,4 @@ pub use multimodal_fusion::*;
 pub use multimodal_context::*;
 pub use multimodal_events::*;
 pub use config::*;
-// pub use commands::*;
+pub use commands::*;
