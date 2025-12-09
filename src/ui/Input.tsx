@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v8.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,14 +8,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Input Component
+ * TITANE∞ v8.0 - Input Component (Tailwind CSS)
  * Champ de saisie avec validation states
+ * Migration: Inline styles → Tailwind classes
  * ═══════════════════════════════════════════════════════════════
  */
 
 import { type InputHTMLAttributes, forwardRef } from 'react';
-import { clsx } from 'clsx';
-import { colors, spacing, radius, fontSizes, shadows } from '@themes/tokens';
+import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -36,81 +36,27 @@ export interface InputProps
 }
 
 // ─────────────────────────────────────────────────────────────────
-// STYLES
+// VARIANT CLASSES
 // ─────────────────────────────────────────────────────────────────
 
-const baseInputStyles: React.CSSProperties = {
-  width: '100%',
-  background: colors.rubis.surface.translucent,
-  border: `1px solid ${colors.neutral[700]}`,
-  color: colors.neutral[100],
-  outline: 'none',
-  transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-  fontFamily: 'inherit',
+const sizeClasses: Record<InputSize, string> = {
+  sm: 'h-8 px-3 text-sm rounded',
+  md: 'h-10 px-4 text-base rounded-md',
+  lg: 'h-12 px-5 text-lg rounded-lg',
 };
 
-const sizeStyles: Record<InputSize, React.CSSProperties> = {
-  sm: {
-    height: '32px',
-    padding: `0 ${spacing[3]}`,
-    fontSize: fontSizes.sm,
-    borderRadius: radius.base,
-  },
-  md: {
-    height: '40px',
-    padding: `0 ${spacing[4]}`,
-    fontSize: fontSizes.base,
-    borderRadius: radius.md,
-  },
-  lg: {
-    height: '48px',
-    padding: `0 ${spacing[5]}`,
-    fontSize: fontSizes.lg,
-    borderRadius: radius.lg,
-  },
+const stateClasses: Record<InputState, string> = {
+  default: 'border-border-default focus:border-violet-500 focus:ring-2 focus:ring-violet-500/30',
+  error: 'border-error-500 ring-2 ring-error-500/20 focus:border-error-500 focus:ring-error-500/30',
+  success: 'border-success-500 ring-2 ring-success-500/20 focus:border-success-500 focus:ring-success-500/30',
+  warning: 'border-warning-500 ring-2 ring-warning-500/20 focus:border-warning-500 focus:ring-warning-500/30',
 };
 
-const stateStyles: Record<InputState, React.CSSProperties> = {
-  default: {
-    borderColor: colors.neutral[700],
-  },
-  error: {
-    borderColor: colors.semantic.error[500],
-    boxShadow: `0 0 0 3px ${colors.semantic.error[500]}33`,
-  },
-  success: {
-    borderColor: colors.semantic.success[500],
-    boxShadow: `0 0 0 3px ${colors.semantic.success[500]}33`,
-  },
-  warning: {
-    borderColor: colors.semantic.warning[500],
-    boxShadow: `0 0 0 3px ${colors.semantic.warning[500]}33`,
-  },
-};
-
-const focusStyles: React.CSSProperties = {
-  borderColor: colors.rubis.primary[500],
-  boxShadow: shadows.focusRubis,
-};
-
-const disabledStyles: React.CSSProperties = {
-  opacity: 0.5,
-  cursor: 'not-allowed',
-  pointerEvents: 'none',
-};
-
-const labelStyles: React.CSSProperties = {
-  display: 'block',
-  marginBottom: spacing[2],
-  fontSize: fontSizes.sm,
-  fontWeight: 500,
-  color: colors.neutral[300],
-};
-
-const helperTextStyles: React.CSSProperties = {
-  marginTop: spacing[1],
-  fontSize: fontSizes.xs,
-  color: colors.neutral[400],
+const helperTextColors: Record<InputState, string> = {
+  default: 'text-text-muted',
+  error: 'text-error-400',
+  success: 'text-success-400',
+  warning: 'text-warning-400',
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -129,77 +75,62 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       fullWidth = true,
       disabled = false,
       className,
-      style,
       ...props
     },
     ref
   ) => {
-    const inputStyles: React.CSSProperties = {
-      ...baseInputStyles,
-      ...sizeStyles[size],
-      ...stateStyles[state],
-      ...(leftIcon && { paddingLeft: spacing[10] }),
-      ...(rightIcon && { paddingRight: spacing[10] }),
-      ...(disabled && disabledStyles),
-      ...style,
-    };
-
-    const containerStyles: React.CSSProperties = {
-      width: fullWidth ? '100%' : 'auto',
-      position: 'relative',
-    };
-
-    const iconContainerStyles: React.CSSProperties = {
-      position: 'absolute',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      display: 'flex',
-      alignItems: 'center',
-      color: colors.neutral[400],
-      pointerEvents: 'none',
-    };
-
     return (
-      <div style={containerStyles}>
-        {label && <label style={labelStyles}>{label}</label>}
-        <div style={{ position: 'relative' }}>
+      <div className={cn('relative', fullWidth ? 'w-full' : 'w-auto')}>
+        {/* Label */}
+        {label && (
+          <label className="block mb-2 text-sm font-medium text-text-secondary">
+            {label}
+          </label>
+        )}
+
+        {/* Input Container */}
+        <div className="relative">
+          {/* Left Icon */}
           {leftIcon && (
-            <div style={{ ...iconContainerStyles, left: spacing[3] }}>
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center text-text-muted pointer-events-none">
               {leftIcon}
             </div>
           )}
+
+          {/* Input */}
           <input
             ref={ref}
             disabled={disabled}
-            className={clsx('titane-input', className)}
-            style={inputStyles}
-            onFocus={e => {
-              if (!disabled) {
-                Object.assign(e.currentTarget.style, focusStyles);
-              }
-            }}
-            onBlur={e => {
-              if (!disabled) {
-                Object.assign(e.currentTarget.style, stateStyles[state]);
-              }
-            }}
+            className={cn(
+              // Base styles
+              'w-full bg-bg-secondary/50 border text-text-primary',
+              'outline-none transition-all duration-250 ease-out font-inherit',
+              // Size styles
+              sizeClasses[size],
+              // State styles
+              stateClasses[state],
+              // Icon padding
+              leftIcon && 'pl-10',
+              rightIcon && 'pr-10',
+              // Disabled state
+              disabled && 'opacity-50 cursor-not-allowed pointer-events-none',
+              // Custom className
+              className
+            )}
             {...props}
           />
+
+          {/* Right Icon */}
           {rightIcon && (
-            <div style={{ ...iconContainerStyles, right: spacing[3] }}>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center text-text-muted pointer-events-none">
               {rightIcon}
             </div>
           )}
         </div>
+
+        {/* Helper Text */}
         {helperText && (
-          <div
-            style={{
-              ...helperTextStyles,
-              ...(state === 'error' && { color: colors.semantic.error[400] }),
-              ...(state === 'success' && { color: colors.semantic.success[400] }),
-              ...(state === 'warning' && { color: colors.semantic.warning[400] }),
-            }}
-          >
+          <div className={cn('mt-1 text-xs', helperTextColors[state])}>
             {helperText}
           </div>
         )}
