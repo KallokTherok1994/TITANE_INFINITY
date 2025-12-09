@@ -7,7 +7,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::memory_os::memory_state::{MemoryEntry, MemoryTier, MemoryType};
-use crate::multimodal::image_memory::ImageMemoryEntry;
+// COMMENTED: multimodal module disabled (Phase 1 Stabilisation)
+// use crate::multimodal::image_memory::ImageMemoryEntry;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;

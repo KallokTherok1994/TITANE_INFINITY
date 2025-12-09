@@ -39,7 +39,13 @@
       "Bash(rustup show:*)",
       "Bash(node --version:*)",
       "Bash(pnpm --version:*)",
-      "Bash(tar:*)"
+      "Bash(tar:*)",
+      "Bash(dpkg:*)",
+      "Bash(pkg-config:*)",
+      "Bash(cargo clean:*)",
+      "Bash(export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH:*)",
+      "Bash(PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH cargo build:*)",
+      "Bash(/tmp/analyze_unwrap_titane.sh)"
     ],
     "deny": [],
     "ask": []

@@ -254,7 +254,8 @@ pub mod memory_os; // ✅ Memory OS vΩ (Neural Memory System: STM → MTM → L
 // MULTIMODAL ENGINE vΩ (SUPER PROMPT #15)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux)
+// TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
+// pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux)
 pub mod agents; // ✅ Agent System vΩ — Super Prompt #19 (Multi-Agents Cognitifs)
 
 // ═══════════════════════════════════════════════════════════════
@@ -297,7 +298,8 @@ pub mod conversation_os; // ✅ Conversation OS #∞ (Intent, Narrative, Persona
 // AGI CORE (SUPER PROMPT #11)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod agi_core; // ✅ AGI Core v20Ω (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning)
+// TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
+// pub mod agi_core; // ✅ AGI Core v20Ω (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning)
 
 // ═══════════════════════════════════════════════════════════════
 // CONSTITUTION (SUPER PROMPT #13)
@@ -327,7 +329,8 @@ pub mod agent_system; // ✅ Agent System vΩ (Multi-Agents, Roles, Capabilities
 // META-ENERGY ENGINE vΩ (SUPER PROMPT #20)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction)
+// TEMPORARILY COMMENTED: API incomplete (Phase 1 Stabilisation)
+// pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction)
 
 // ═══════════════════════════════════════════════════════════════
 // RE-EXPORTS v15

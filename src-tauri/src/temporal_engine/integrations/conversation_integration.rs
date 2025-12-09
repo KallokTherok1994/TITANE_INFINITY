@@ -46,7 +46,7 @@ impl TemporalConversationBridge {
         match hour {
             10..=11 => 0.7,   // Peak: moderate detail
             12..=13 => 0.4,   // Midday: concise
-            22..=5 => 0.5,    // Night: moderate
+            22..=23 | 0..=5 => 0.5,    // Night: moderate
             _ => 0.6,
         }
     }
@@ -56,7 +56,7 @@ impl TemporalConversationBridge {
         let base = match hour {
             9..=17 => 0.7,    // Work hours: formal
             18..=21 => 0.4,   // Evening: casual
-            22..=5 => 0.3,    // Night: very casual
+            22..=23 | 0..=5 => 0.3,    // Night: very casual
             _ => 0.5,
         };
 
@@ -81,7 +81,7 @@ impl TemporalConversationBridge {
     fn calculate_recall_depth(hour: u8) -> usize {
         match hour {
             10..=11 => 10,    // Peak: deep context
-            22..=5 => 3,      // Night: shallow
+            22..=23 | 0..=5 => 3,      // Night: shallow
             _ => 6,
         }
     }

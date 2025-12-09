@@ -107,7 +107,7 @@ impl TemporalMemoryBridge {
     fn calculate_cache_retention(hour: u8) -> u8 {
         match hour {
             10..=16 => 24,    // Day: long retention
-            22..=5 => 4,      // Night: short retention
+            22..=23 | 0..=5 => 4,      // Night: short retention
             _ => 12,          // Default
         }
     }
@@ -226,7 +226,7 @@ pub struct ConsolidationRecommendation {
 }
 
 /// Patterns de préchargement
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub enum PreloadPattern {
     RecentWorkContext { days: u32 },
     FrequentlyAccessed { threshold: f32 },

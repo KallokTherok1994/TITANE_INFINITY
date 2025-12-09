@@ -23,8 +23,9 @@ pub enum AppError {
     #[error("JSON serialization error: {0}")]
     Json(#[from] serde_json::Error),
 
-    #[error("TOML serialization error: {0}")]
-    Toml(#[from] toml::de::Error),
+    // COMMENTED: toml crate not in dependencies
+    // #[error("TOML serialization error: {0}")]
+    // Toml(#[from] toml::de::Error),
 
     // === Database & Storage ===
     #[error("Database error: {0}")]

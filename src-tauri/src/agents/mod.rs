@@ -53,7 +53,9 @@ pub use messaging::{AgentMessage, MessageChannel, MessageBus};
 pub use supervisor::{AgentSupervisor, SupervisorStats, AgentHealth};
 pub use sandbox::{AgentSandbox, SandboxConfig, SandboxViolation};
 pub use collaboration::{CollaborationProtocol, CollaborationPattern, CollaborationResult};
-pub use diagnostics::{AgentDiagnostics, AgentEvent, AgentMetrics};
+// Made public for Phase 1 compilation
+pub use diagnostics::{AgentDiagnostics, AgentEvent};
+pub use diagnostics::AgentMetrics; // Now public
 pub use config::AgentSystemConfig;
 
 // Version info

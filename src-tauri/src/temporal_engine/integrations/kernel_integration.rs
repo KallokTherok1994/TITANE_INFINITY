@@ -69,7 +69,7 @@ impl TemporalKernelBridge {
     fn calculate_idle_threshold(hour: u8) -> u64 {
         match hour {
             10..=11 => 100,   // Peak: low idle time
-            22..=5 => 5000,   // Night: high idle time
+            22..=23 | 0..=5 => 5000,   // Night: high idle time
             _ => 1000,
         }
     }
@@ -89,7 +89,7 @@ impl TemporalKernelBridge {
     fn calculate_max_cpu(hour: u8) -> f32 {
         match hour {
             10..=11 => 0.95,  // Peak: max CPU
-            22..=5 => 0.3,    // Night: reduced
+            22..=23 | 0..=5 => 0.3,    // Night: reduced
             _ => 0.7,
         }
     }
@@ -97,7 +97,7 @@ impl TemporalKernelBridge {
     fn calculate_max_memory(hour: u8) -> usize {
         match hour {
             10..=11 => 8192,  // Peak: 8GB
-            22..=5 => 2048,   // Night: 2GB
+            22..=23 | 0..=5 => 2048,   // Night: 2GB
             _ => 4096,        // Default: 4GB
         }
     }
@@ -105,14 +105,14 @@ impl TemporalKernelBridge {
     fn calculate_max_disk_io(hour: u8) -> usize {
         match hour {
             10..=11 => 500,   // Peak: 500 MB/s
-            22..=5 => 100,    // Night: 100 MB/s
+            22..=23 | 0..=5 => 100,    // Night: 100 MB/s
             _ => 250,         // Default: 250 MB/s
         }
     }
 
     fn calculate_gc_threshold(hour: u8) -> f32 {
         match hour {
-            22..=5 => 0.9,    // Night: aggressive GC
+            22..=23 | 0..=5 => 0.9,    // Night: aggressive GC
             10..=11 => 0.5,   // Peak: minimal GC
             _ => 0.7,
         }
