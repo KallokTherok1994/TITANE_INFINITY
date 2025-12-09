@@ -31,6 +31,8 @@ import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
 import type { ChatModeId } from '../../services/ai/chatModes.config';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
+// Phase 1.9: Audio Feedback - VAD + TTS integration
+import useVAD, { useVADWithTTS, useBargeInHandler } from '../../hooks/useVAD';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -525,6 +527,26 @@ export const Chat: React.FC = () => {
     lastProvider,
     debugEntries
   } = chatHookResult;
+
+  // Phase 1.9: Audio Feedback - VAD integration with anti-echo + barge-in
+  const vad = useVAD();
+  useVADWithTTS(vad); // Auto-suspend VAD during TTS playback (anti-echo)
+  useBargeInHandler(); // Auto-stop TTS when user interrupts
+
+  // Start/stop VAD when voice mode is toggled
+  useEffect(() => {
+    if (voiceModeActive) {
+      vad.enableBargeIn(); // Allow user to interrupt AI
+      vad.startListening().catch((err) => {
+        console.error('[Chat] Failed to start VAD:', err);
+      });
+      console.log('[Chat] 🎤 Voice mode enabled: VAD started, barge-in enabled');
+    } else {
+      vad.stopListening();
+      vad.disableBargeIn();
+      console.log('[Chat] 🔇 Voice mode disabled: VAD stopped');
+    }
+  }, [voiceModeActive, vad]);
 
   // OMEGA DEBUG: Trace messages dans Chat.tsx
   useEffect(() => {
