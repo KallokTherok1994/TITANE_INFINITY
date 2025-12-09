@@ -71,7 +71,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("memory_import");
 
     // ═══════════════════════════════════════════════════════════════
-    // AI / CHAT COMMANDS
+    // AI / CHAT COMMANDS (v21 - CHAT PIPELINE SELF-REPAIR)
     // ═══════════════════════════════════════════════════════════════
     commands.insert("query_ai");
     commands.insert("get_ai_status");
@@ -79,15 +79,16 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("test_ollama");
     commands.insert("chat_generate");
     commands.insert("upload_and_process_file");
-    // Chat Orchestrator (v18)
+    // Chat Orchestrator (v21 - Complete Pipeline)
     commands.insert("chat_send_message");
+    commands.insert("chat_stream_message");
     commands.insert("chat_get_providers_status");
     commands.insert("chat_check_providers");
     commands.insert("chat_create_conversation");
     commands.insert("chat_get_conversation");
     commands.insert("chat_delete_conversation");
+    commands.insert("chat_generate_suggestions");
     commands.insert("chat_set_gemini_key");
-    commands.insert("chat_stream_message");
     commands.insert("generate_response");
     commands.insert("stream_response");
     commands.insert("speak_text");
