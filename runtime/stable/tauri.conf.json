@@ -1,0 +1,52 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0",
+  "productName": "Titan-Stable",
+  "version": "24.2.0",
+  "identifier": "com.titane.infinity.stable",
+  "build": {
+    "beforeDevCommand": "",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["appimage", "deb"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": [],
+    "copyright": "© 2025 TITANE∞",
+    "category": "Productivity",
+    "shortDescription": "TITANE∞ - Cognitive Operating System (Stable Runtime)",
+    "longDescription": "TITANE∞ Stable Runtime - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use."
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Titan-Stable — TITANE∞ Cognitive OS",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 1200,
+        "minHeight": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false,
+        "center": true,
+        "devtools": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' ws://localhost:* http://localhost:* https://*"
+    },
+    "trayIcon": {
+      "id": "main-tray",
+      "iconPath": "icons/icon.png"
+    }
+  }
+}
