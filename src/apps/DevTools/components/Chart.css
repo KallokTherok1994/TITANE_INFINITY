@@ -1,0 +1,45 @@
+.sparkline {
+  display: block;
+}
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bar-chart-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bar-chart-label {
+  min-width: 100px;
+  font-size: 12px;
+  color: #d4d4d4;
+}
+
+.bar-chart-bar-container {
+  position: relative;
+  flex: 1;
+  height: 20px;
+  background: #3e3e42;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.bar-chart-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.bar-chart-value {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: white;
+  font-weight: 600;
+}

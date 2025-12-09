@@ -1,0 +1,131 @@
+.console-panel {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  padding: 16px;
+}
+
+.console-help {
+  padding: 12px;
+  background: #2d2d30;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 12px;
+}
+
+.console-help strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #e0e0e0;
+}
+
+.console-help code {
+  display: inline-block;
+  margin: 4px;
+  padding: 4px 8px;
+  background: #1e1e1e;
+  border-radius: 4px;
+  color: #4ec9b0;
+  font-family: 'Consolas', monospace;
+}
+
+.console-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  background: #1e1e1e;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 12px;
+  font-family: 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.console-entry {
+  border-bottom: 1px solid #3e3e42;
+  padding-bottom: 12px;
+}
+
+.console-command {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.console-prompt {
+  color: #4ec9b0;
+  font-weight: 600;
+}
+
+.console-command-text {
+  color: #d4d4d4;
+  font-weight: 500;
+}
+
+.console-timestamp {
+  margin-left: auto;
+  font-size: 11px;
+  color: #888;
+}
+
+.console-result {
+  margin-left: 24px;
+  padding: 8px;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.console-result.success {
+  background: #1e3a1e;
+  color: #a3e6c0;
+}
+
+.console-result.error {
+  background: #3a2121;
+  color: #fecaca;
+}
+
+.console-result pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.console-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.console-input-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #2d2d30;
+  border-radius: 6px;
+}
+
+.console-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #1e1e1e;
+  border: 1px solid #3e3e42;
+  border-radius: 4px;
+  color: #d4d4d4;
+  font-family: 'Consolas', monospace;
+  font-size: 13px;
+}
+
+.console-input:focus {
+  outline: none;
+  border-color: #0e639c;
+}
+
+.console-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
