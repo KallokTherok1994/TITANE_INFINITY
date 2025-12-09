@@ -30,7 +30,8 @@
       "Bash(./docs/00_SYSTEME/reset_docs.sh)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(cut:*)"
+      "Bash(cut:*)",
+      "Bash(npm run test:unit:*)"
     ],
     "deny": [],
     "ask": []
