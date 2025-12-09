@@ -45,7 +45,8 @@
       "Bash(cargo clean:*)",
       "Bash(export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH:*)",
       "Bash(PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH cargo build:*)",
-      "Bash(/tmp/analyze_unwrap_titane.sh)"
+      "Bash(/tmp/analyze_unwrap_titane.sh)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []
