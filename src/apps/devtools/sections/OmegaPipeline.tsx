@@ -110,8 +110,8 @@ export function OmegaPipeline() {
                     style={{
                       background: colors.bg,
                       borderColor: colors.border,
-                      ringColor: isActive ? colors.border : undefined,
-                    }}
+                      '--tw-ring-color': isActive ? colors.border : undefined,
+                    } as React.CSSProperties}
                   >
                     <div className="flex items-start gap-4">
                       {/* Icon */}

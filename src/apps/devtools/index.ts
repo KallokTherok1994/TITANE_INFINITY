@@ -25,3 +25,9 @@ export * from './sections';
 
 // Re-export components for customization
 export * from './components';
+
+// Re-export hooks for event handling
+export * from './hooks';
+
+// Re-export utils for mock events
+export * from './utils';

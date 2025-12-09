@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { Tabs } from '../../components/ui/tabs';
+import { useAllDevToolsEvents } from './hooks';
 import {
   Dashboard,
   Metrics,
@@ -37,6 +38,7 @@ const tabs = [
  * DevToolsApp - Shell principal des DevTools TITANE∞
  * 
  * Intègre toutes les sections de monitoring, diagnostics et contrôle
+ * Active automatiquement tous les listeners Tauri events
  * 
  * @example
  * ```tsx
@@ -44,6 +46,9 @@ const tabs = [
  * ```
  */
 export function DevToolsApp({ defaultSection = 'dashboard', className = '' }: DevToolsAppProps) {
+  // Activer tous les listeners Tauri events
+  useAllDevToolsEvents();
+
   return (
     <div
       className={`h-full flex flex-col ${className}`}
