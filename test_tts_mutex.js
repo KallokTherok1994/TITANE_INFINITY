@@ -252,7 +252,7 @@ async function testStopCommand() {
     console.log('\n🧪 [Test 5/5] Commande stop_speaking...');
 
     // Lancer synthèse
-    const speakPromise = mockSecureInvoke('speak', {
+    const _speakPromise = mockSecureInvoke('speak', {
       text: 'Synthèse qui sera interrompue.',
       use_online: false,
     });

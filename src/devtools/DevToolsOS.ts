@@ -5,7 +5,7 @@
 
 import { MetricsHub, type MetricsSnapshot } from './MetricsHub';
 import { Debugger, type DebugBreakpoint } from './Debugger';
-import { PipelineInspector, type PipelineTrace } from './PipelineInspector';
+import { PipelineInspector } from './PipelineInspector';
 import { MemoryExplorer, type MemorySnapshot } from './MemoryExplorer';
 import { EngineProfiler, type EngineProfile } from './EngineProfiler';
 import { EventTimeline, type TimelineEvent } from './EventTimeline';

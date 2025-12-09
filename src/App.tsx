@@ -149,17 +149,17 @@ import { auraEngine } from './engines/aura/auraEngine';
 import './components/psyche/DeepPsychePanel.css';
 
 // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
-// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-// import { presenceOS } from './engines/presence/presenceOS';
+// STUB: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
+import { presenceOS } from './engines/presence/_stubs';
 
 // ✨ v∞ - Multi-Agent Engine & Agents
-// REMOVED: core/ai/multi_agent_engine supprimé en PHASE 1 (OPTION B)
+// REMOVED: core/ai/multi_agent_engine + agents supprimés en PHASE 1 (OPTION B)
 // import { multiAgentEngine } from './core/ai/multi_agent_engine';
-import { HeliosAgent } from './core/ai/agents/helios_agent';
-import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
-import { PersonaAgent } from './core/ai/agents/persona_agent';
-import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
-import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
+// import { HeliosAgent } from './core/ai/agents/helios_agent';
+// import { HarmoniaAgent } from './core/ai/agents/harmonia_agent';
+// import { PersonaAgent } from './core/ai/agents/persona_agent';
+// import { MemoryCoreAgent } from './core/ai/agents/memory_core_agent';
+// import { WatchdogAgent } from './core/ai/agents/watchdog_agent';
 
 // Phase 9: Lazy load heavy pages (code splitting with named exports)
 const _DesignSystemPage = lazy(() =>

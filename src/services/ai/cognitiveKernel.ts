@@ -373,7 +373,7 @@ class CognitiveKernel {
    */
   private project(
     evaluation: CognitiveProcess['evaluation'],
-    _context: any
+    context: any
   ): CognitiveProcess['projection'] {
     const nextStep = evaluation.adaptationNeeded ? 'optimize-fallback' : 'execute-normal';
 
@@ -402,7 +402,7 @@ class CognitiveKernel {
    */
   private decide(
     projection: CognitiveProcess['projection'],
-    context: any
+    _context: any
   ): {
     provider: string;
     reason: string;

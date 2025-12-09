@@ -5,7 +5,6 @@
 
 import type {
   UIContext,
-  UserBehavior,
   CognitiveLoad,
   UserMode,
   UserProfile,

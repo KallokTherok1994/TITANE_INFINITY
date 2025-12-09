@@ -18,16 +18,16 @@
 
 import { metaKernel } from './metaKernel';
 import { cognitiveKernel } from './cognitiveKernel';
-import { metricsEngine } from './metricsEngine';
-import { autoHealEngine } from './autoHealEngine';
+import { metricsEngine as _metricsEngine } from './metricsEngine';
+import { autoHealEngine as _autoHealEngine } from './autoHealEngine';
 import type {
-  SystemMap,
+  SystemMap as _SystemMap,
   SubKernelStates,
   TitanePrinciples,
-  SystemObservation,
-  FragilityZone,
+  SystemObservation as _SystemObservation,
+  FragilityZone as _FragilityZone,
 } from './metaKernel';
-import type { CognitiveProcess } from './cognitiveKernel';
+import type { CognitiveProcess as _CognitiveProcess } from './cognitiveKernel';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -760,7 +760,7 @@ class SingularityKernel {
 
   private unifyAllCognitiveFields(): void {
     // Fusionner Meta-Kernel + Cognitive Kernel
-    const metaReport = metaKernel.getSuperConsciousnessReport();
+    const _metaReport = metaKernel.getSuperConsciousnessReport();
     const cognitiveReport = cognitiveKernel.getCognitiveReport();
 
     // Mettre à jour matrice d'harmonie

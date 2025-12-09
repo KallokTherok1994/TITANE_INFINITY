@@ -3,7 +3,7 @@
  * Registre des moteurs cognitifs
  */
 
-import type { EngineId, Engine, EngineMetadata, EngineState, EngineStatus, EngineMetrics } from '../types';
+import type { EngineId, Engine, EngineMetadata as _EngineMetadata, EngineState as _EngineState, EngineStatus, EngineMetrics } from '../types';
 
 /**
  * Registre des moteurs

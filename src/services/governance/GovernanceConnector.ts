@@ -34,7 +34,7 @@ export interface GovernanceConfig {
 
 // Storage keys
 const STORAGE_KEY_CONFIG = 'titane_governance_config';
-const STORAGE_KEY_ACTIVE_PROVIDERS = 'titane_active_providers';
+const _STORAGE_KEY_ACTIVE_PROVIDERS = 'titane_active_providers';
 
 // Providers configuration par défaut
 const DEFAULT_PROVIDERS: Record<ProviderId, Omit<ProviderStatus, 'isConfigured' | 'isHealthy' | 'lastChecked'>> = {

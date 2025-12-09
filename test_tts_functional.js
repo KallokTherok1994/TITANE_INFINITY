@@ -35,7 +35,7 @@ const mockHybridTTS = {
     return typeof window !== 'undefined' && window.speechSynthesis !== undefined;
   },
 
-  async speak(text, config = {}, useOnline = false) {
+  async speak(text, _config = {}, useOnline = false) {
     if (!text.trim()) {
       console.warn('⚠️  TTS: Empty text, skipping');
       return;
