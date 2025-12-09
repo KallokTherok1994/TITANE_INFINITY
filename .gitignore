@@ -49,6 +49,20 @@ Thumbs.db
 /src-tauri/target
 /src-tauri/WixTools
 
+# TITANE∞ Dual-Runtime Directories
+runtime/stable/build/
+runtime/stable/dist/
+runtime/stable/node_modules/
+runtime/stable/*.AppImage
+runtime/stable/*.exe
+runtime/stable/*.dmg
+runtime/stable/*.deb
+runtime/dev/build/
+runtime/dev/dist/
+runtime/dev/node_modules/
+runtime/dev/logs/
+runtime/dev/*.log
+
 # Deploy artifacts
 deploy/
 *.tar.gz

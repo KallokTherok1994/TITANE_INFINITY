@@ -48,11 +48,15 @@ const VoiceCard: React.FC<VoiceCardProps> = ({ voice, isSelected, onSelect, onTe
     </div>
 
     <div className="flex items-center gap-2 mt-3">
-      <span className={`px-2 py-0.5 text-xs rounded ${
-        voice.engine === 'piper' ? 'bg-purple-500/20 text-purple-400' :
-        voice.engine === 'elevenlabs' ? 'bg-amber-500/20 text-amber-400' :
-        'bg-neutral-600/50 text-neutral-400'
-      }`}>
+      <span
+        className={`px-2 py-0.5 text-xs rounded ${
+          voice.engine === 'piper'
+            ? 'bg-purple-500/20 text-purple-400'
+            : voice.engine === 'elevenlabs'
+              ? 'bg-amber-500/20 text-amber-400'
+              : 'bg-neutral-600/50 text-neutral-400'
+        }`}
+      >
         {voice.engine.toUpperCase()}
       </span>
       <span className="text-xs text-neutral-500">{voice.language}</span>
@@ -60,7 +64,10 @@ const VoiceCard: React.FC<VoiceCardProps> = ({ voice, isSelected, onSelect, onTe
       <span className="text-xs text-neutral-500 capitalize">{voice.gender}</span>
 
       <button
-        onClick={(e) => { e.stopPropagation(); onTest(); }}
+        onClick={e => {
+          e.stopPropagation();
+          onTest();
+        }}
         className="ml-auto px-3 py-1 text-xs bg-cyan-600 hover:bg-cyan-500 text-white rounded transition-colors"
       >
         🔊 Test
@@ -83,11 +90,22 @@ interface SliderProps {
   onChange: (value: number) => void;
 }
 
-const Slider: React.FC<SliderProps> = ({ label, value, min, max, step = 0.1, unit = '', onChange }) => (
+const Slider: React.FC<SliderProps> = ({
+  label,
+  value,
+  min,
+  max,
+  step = 0.1,
+  unit = '',
+  onChange,
+}) => (
   <div className="space-y-2">
     <div className="flex justify-between text-sm">
       <span className="text-neutral-300">{label}</span>
-      <span className="text-cyan-400 font-mono">{value.toFixed(1)}{unit}</span>
+      <span className="text-cyan-400 font-mono">
+        {value.toFixed(1)}
+        {unit}
+      </span>
     </div>
     <input
       type="range"
@@ -95,7 +113,7 @@ const Slider: React.FC<SliderProps> = ({ label, value, min, max, step = 0.1, uni
       max={max}
       step={step}
       value={value}
-      onChange={(e) => onChange(parseFloat(e.target.value))}
+      onChange={e => onChange(parseFloat(e.target.value))}
       className="w-full h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer accent-cyan-500"
     />
   </div>
@@ -115,27 +133,41 @@ interface DeviceSelectorProps {
 }
 
 const DeviceSelector: React.FC<DeviceSelectorProps> = ({
-  label, icon, devices, selectedId, onSelect, isLoading
-}) => (
-  <div className="space-y-2">
-    <label className="text-sm text-neutral-300 flex items-center gap-2">
-      <span>{icon}</span> {label}
-    </label>
-    <select
-      value={selectedId}
-      onChange={(e) => onSelect(e.target.value)}
-      disabled={isLoading}
-      className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white
-                 focus:border-cyan-500 focus:outline-none disabled:opacity-50"
-    >
-      {devices.map((device) => (
-        <option key={device.id} value={device.id}>
-          {device.name} {device.isActive ? '(Actif)' : ''}
-        </option>
-      ))}
-    </select>
-  </div>
-);
+  label,
+  icon,
+  devices,
+  selectedId,
+  onSelect,
+  isLoading,
+}) => {
+  // Sécurité: S'assurer que devices est toujours un tableau
+  const safeDevices = Array.isArray(devices) ? devices : [];
+
+  return (
+    <div className="space-y-2">
+      <label className="text-sm text-neutral-300 flex items-center gap-2">
+        <span>{icon}</span> {label}
+      </label>
+      <select
+        value={selectedId}
+        onChange={e => onSelect(e.target.value)}
+        disabled={isLoading || safeDevices.length === 0}
+        className="w-full px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-white
+                   focus:border-cyan-500 focus:outline-none disabled:opacity-50"
+      >
+        {safeDevices.length === 0 ? (
+          <option value="">Aucun appareil disponible</option>
+        ) : (
+          safeDevices.map(device => (
+            <option key={device.id} value={device.id}>
+              {device.name} {device.isActive ? '(Actif)' : ''}
+            </option>
+          ))
+        )}
+      </select>
+    </div>
+  );
+};
 
 // ─────────────────────────────────────────────────────────────────
 //  Test Result Component
@@ -150,16 +182,19 @@ const TestResult: React.FC<TestResultProps> = ({ result, type }) => {
   if (!result) return null;
 
   return (
-    <div className={`p-3 rounded-lg mt-3 ${
-      result.success ? 'bg-emerald-500/10 border border-emerald-500/30' : 'bg-red-500/10 border border-red-500/30'
-    }`}>
+    <div
+      className={`p-3 rounded-lg mt-3 ${
+        result.success
+          ? 'bg-emerald-500/10 border border-emerald-500/30'
+          : 'bg-red-500/10 border border-red-500/30'
+      }`}
+    >
       <div className="flex items-center gap-2">
         <span>{result.success ? '✅' : '❌'}</span>
         <span className={result.success ? 'text-emerald-400' : 'text-red-400'}>
           {result.success
             ? `Test ${type === 'speaker' ? 'haut-parleur' : 'microphone'} réussi !`
-            : result.errorMessage || 'Échec du test'
-          }
+            : result.errorMessage || 'Échec du test'}
         </span>
       </div>
     </div>
@@ -190,7 +225,9 @@ export const AudioCenterPage: React.FC = () => {
     refreshDevices,
   } = useAudio();
 
-  const [activeTab, setActiveTab] = useState<'voice' | 'devices' | 'diagnostics' | 'advanced'>('voice');
+  const [activeTab, setActiveTab] = useState<
+    'voice' | 'devices' | 'diagnostics' | 'advanced'
+  >('voice');
   const [testType, setTestType] = useState<'speaker' | 'microphone'>('speaker');
 
   const handleVoiceSelect = async (voice: VoiceProfile) => {
@@ -241,7 +278,7 @@ export const AudioCenterPage: React.FC = () => {
             { id: 'devices', label: '🔊 Appareils', icon: '🔊' },
             { id: 'diagnostics', label: '🔧 Diagnostic', icon: '🔧' },
             { id: 'advanced', label: '⚙️ Avancé', icon: '⚙️' },
-          ].map((tab) => (
+          ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
@@ -296,33 +333,38 @@ export const AudioCenterPage: React.FC = () => {
                   value={config.tts.rate}
                   min={0.5}
                   max={2.0}
-                  onChange={(rate) => updateTTSSettings({ rate })}
+                  onChange={rate => updateTTSSettings({ rate })}
                 />
                 <Slider
                   label="Hauteur"
                   value={config.tts.pitch}
                   min={0.5}
                   max={2.0}
-                  onChange={(pitch) => updateTTSSettings({ pitch })}
+                  onChange={pitch => updateTTSSettings({ pitch })}
                 />
                 <Slider
                   label="Volume"
                   value={config.tts.volume}
                   min={0}
                   max={1}
-                  onChange={(volume) => updateTTSSettings({ volume })}
+                  onChange={volume => updateTTSSettings({ volume })}
                 />
               </div>
 
               {/* Test Button */}
               <div className="mt-6 flex items-center gap-4">
                 <button
-                  onClick={() => { setTestType('speaker'); testSpeaker(); }}
+                  onClick={() => {
+                    setTestType('speaker');
+                    testSpeaker();
+                  }}
                   disabled={isTesting}
                   className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
                            hover:to-purple-500 rounded-lg font-medium transition-all disabled:opacity-50"
                 >
-                  {isTesting && testType === 'speaker' ? '🔊 Test en cours...' : '🔊 Tester la Voix'}
+                  {isTesting && testType === 'speaker'
+                    ? '🔊 Test en cours...'
+                    : '🔊 Tester la Voix'}
                 </button>
 
                 <div className="flex items-center gap-2">
@@ -330,7 +372,9 @@ export const AudioCenterPage: React.FC = () => {
                     type="checkbox"
                     id="emotions"
                     checked={config.tts.emotionEnabled}
-                    onChange={(e) => updateTTSSettings({ emotionEnabled: e.target.checked })}
+                    onChange={e =>
+                      updateTTSSettings({ emotionEnabled: e.target.checked })
+                    }
                     className="w-4 h-4 accent-cyan-500"
                   />
                   <label htmlFor="emotions" className="text-sm text-neutral-300">
@@ -339,7 +383,9 @@ export const AudioCenterPage: React.FC = () => {
                 </div>
               </div>
 
-              {testType === 'speaker' && <TestResult result={testResult} type="speaker" />}
+              {testType === 'speaker' && (
+                <TestResult result={testResult} type="speaker" />
+              )}
             </section>
           </>
         )}
@@ -375,19 +421,28 @@ export const AudioCenterPage: React.FC = () => {
                   value={config.output.balance}
                   min={-1}
                   max={1}
-                  onChange={(_balance) => {/* TODO */}}
+                  onChange={_balance => {
+                    /* TODO */
+                  }}
                 />
               </div>
 
               <button
-                onClick={() => { setTestType('speaker'); testSpeaker('Test du haut-parleur. Un, deux, trois.'); }}
+                onClick={() => {
+                  setTestType('speaker');
+                  testSpeaker('Test du haut-parleur. Un, deux, trois.');
+                }}
                 disabled={isTesting}
                 className="mt-4 px-4 py-2 bg-neutral-700 hover:bg-neutral-600 rounded-lg transition-colors disabled:opacity-50"
               >
-                {isTesting && testType === 'speaker' ? '🔊 Test...' : '🔊 Tester le haut-parleur'}
+                {isTesting && testType === 'speaker'
+                  ? '🔊 Test...'
+                  : '🔊 Tester le haut-parleur'}
               </button>
 
-              {testType === 'speaker' && <TestResult result={testResult} type="speaker" />}
+              {testType === 'speaker' && (
+                <TestResult result={testResult} type="speaker" />
+              )}
             </section>
 
             {/* Input Devices */}
@@ -418,14 +473,19 @@ export const AudioCenterPage: React.FC = () => {
               <div className="mt-4 flex flex-wrap gap-4">
                 {[
                   { key: 'noiseSuppression', label: 'Réduction du bruit' },
-                  { key: 'echoCancellation', label: 'Annulation de l\'écho' },
+                  { key: 'echoCancellation', label: "Annulation de l'écho" },
                   { key: 'autoGainControl', label: 'Gain automatique' },
                 ].map(({ key, label }) => (
-                  <label key={key} className="flex items-center gap-2 text-sm text-neutral-300">
+                  <label
+                    key={key}
+                    className="flex items-center gap-2 text-sm text-neutral-300"
+                  >
                     <input
                       type="checkbox"
                       checked={config.input[key as keyof typeof config.input] as boolean}
-                      onChange={() => {/* TODO */}}
+                      onChange={() => {
+                        /* TODO */
+                      }}
                       className="w-4 h-4 accent-cyan-500"
                     />
                     {label}
@@ -434,14 +494,21 @@ export const AudioCenterPage: React.FC = () => {
               </div>
 
               <button
-                onClick={() => { setTestType('microphone'); testMicrophone(); }}
+                onClick={() => {
+                  setTestType('microphone');
+                  testMicrophone();
+                }}
                 disabled={isTesting}
                 className="mt-4 px-4 py-2 bg-neutral-700 hover:bg-neutral-600 rounded-lg transition-colors disabled:opacity-50"
               >
-                {isTesting && testType === 'microphone' ? '🎙️ Enregistrement...' : '🎙️ Tester le microphone'}
+                {isTesting && testType === 'microphone'
+                  ? '🎙️ Enregistrement...'
+                  : '🎙️ Tester le microphone'}
               </button>
 
-              {testType === 'microphone' && <TestResult result={testResult} type="microphone" />}
+              {testType === 'microphone' && (
+                <TestResult result={testResult} type="microphone" />
+              )}
             </section>
           </>
         )}
@@ -491,7 +558,7 @@ export const AudioCenterPage: React.FC = () => {
                 </label>
                 <select
                   value={config.tts.language}
-                  onChange={(e) => updateTTSSettings({ language: e.target.value })}
+                  onChange={e => updateTTSSettings({ language: e.target.value })}
                   className="w-full md:w-64 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
                            text-white focus:border-cyan-500 focus:outline-none"
                 >
@@ -509,7 +576,7 @@ export const AudioCenterPage: React.FC = () => {
                   type="checkbox"
                   id="autoFallback"
                   checked={config.tts.autoFallback}
-                  onChange={(e) => updateTTSSettings({ autoFallback: e.target.checked })}
+                  onChange={e => updateTTSSettings({ autoFallback: e.target.checked })}
                   className="w-4 h-4 accent-cyan-500"
                 />
                 <label htmlFor="autoFallback" className="text-sm text-neutral-300">
@@ -519,12 +586,26 @@ export const AudioCenterPage: React.FC = () => {
 
               {/* Engine Info */}
               <div className="p-4 bg-neutral-900/50 rounded-lg border border-neutral-700">
-                <h3 className="font-medium text-white mb-2">ℹ️ Moteurs TTS disponibles</h3>
+                <h3 className="font-medium text-white mb-2">
+                  ℹ️ Moteurs TTS disponibles
+                </h3>
                 <ul className="space-y-1 text-sm text-neutral-400">
-                  <li>• <strong className="text-purple-400">Piper</strong> - Voix locale réaliste (fr_FR-siwis)</li>
-                  <li>• <strong className="text-neutral-300">eSpeak</strong> - Voix synthétique locale (fallback)</li>
-                  <li>• <strong className="text-amber-400">ElevenLabs</strong> - Voix cloud premium (API requise)</li>
-                  <li>• <strong className="text-blue-400">Web Speech</strong> - Voix navigateur (dernier recours)</li>
+                  <li>
+                    • <strong className="text-purple-400">Piper</strong> - Voix locale
+                    réaliste (fr_FR-siwis)
+                  </li>
+                  <li>
+                    • <strong className="text-neutral-300">eSpeak</strong> - Voix
+                    synthétique locale (fallback)
+                  </li>
+                  <li>
+                    • <strong className="text-amber-400">ElevenLabs</strong> - Voix cloud
+                    premium (API requise)
+                  </li>
+                  <li>
+                    • <strong className="text-blue-400">Web Speech</strong> - Voix
+                    navigateur (dernier recours)
+                  </li>
                 </ul>
               </div>
             </div>

@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v8.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,14 +8,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Badge Component
+ * TITANE∞ v8.0 - Badge Component (Tailwind CSS)
  * Badge de statut avec variants et tailles
+ * Migration: Inline styles → Tailwind classes
  * ═══════════════════════════════════════════════════════════════
  */
 
 import { type HTMLAttributes, forwardRef } from 'react';
-import { clsx } from 'clsx';
-import { colors, spacing, radius, fontSizes } from '@themes/tokens';
+import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -37,72 +37,28 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// STYLES
+// VARIANT CLASSES
 // ─────────────────────────────────────────────────────────────────
 
-const baseStyles: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  fontWeight: 500,
-  borderRadius: radius.full,
-  whiteSpace: 'nowrap',
+const variantClasses: Record<BadgeVariant, string> = {
+  primary: 'bg-violet-500/20 text-violet-300 border border-violet-600/30',
+  success: 'bg-success-500/20 text-success-300 border border-success-600/30',
+  warning: 'bg-warning-500/20 text-warning-300 border border-warning-600/30',
+  error: 'bg-error-500/20 text-error-300 border border-error-600/30',
+  info: 'bg-info-500/20 text-info-300 border border-info-600/30',
+  neutral: 'bg-bg-elevated text-text-muted border border-border-default',
 };
 
-const variantStyles: Record<BadgeVariant, React.CSSProperties> = {
-  primary: {
-    background: `${colors.rubis.primary[500]}33`,
-    color: colors.rubis.primary[300],
-    border: `1px solid ${colors.rubis.primary[600]}`,
-  },
-  success: {
-    background: `${colors.semantic.success[500]}33`,
-    color: colors.semantic.success[300],
-    border: `1px solid ${colors.semantic.success[600]}`,
-  },
-  warning: {
-    background: `${colors.semantic.warning[500]}33`,
-    color: colors.semantic.warning[300],
-    border: `1px solid ${colors.semantic.warning[600]}`,
-  },
-  error: {
-    background: `${colors.semantic.error[500]}33`,
-    color: colors.semantic.error[300],
-    border: `1px solid ${colors.semantic.error[600]}`,
-  },
-  info: {
-    background: `${colors.semantic.info[500]}33`,
-    color: colors.semantic.info[300],
-    border: `1px solid ${colors.semantic.info[600]}`,
-  },
-  neutral: {
-    background: `${colors.neutral[700]}`,
-    color: colors.neutral[300],
-    border: `1px solid ${colors.neutral[600]}`,
-  },
-};
-
-const sizeStyles: Record<BadgeSize, React.CSSProperties> = {
-  sm: {
-    padding: `${spacing[1]} ${spacing[2]}`,
-    fontSize: fontSizes.xs,
-    gap: spacing[1],
-  },
-  md: {
-    padding: `${spacing[1]} ${spacing[3]}`,
-    fontSize: fontSizes.sm,
-    gap: spacing[2],
-  },
-  lg: {
-    padding: `${spacing[2]} ${spacing[4]}`,
-    fontSize: fontSizes.base,
-    gap: spacing[2],
-  },
+const sizeClasses: Record<BadgeSize, string> = {
+  sm: 'px-2 py-1 text-xs gap-1',
+  md: 'px-3 py-1 text-sm gap-2',
+  lg: 'px-4 py-2 text-base gap-2',
 };
 
 const dotSizes: Record<BadgeSize, string> = {
-  sm: '6px',
-  md: '8px',
-  lg: '10px',
+  sm: 'w-1.5 h-1.5',
+  md: 'w-2 h-2',
+  lg: 'w-2.5 h-2.5',
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -111,31 +67,41 @@ const dotSizes: Record<BadgeSize, string> = {
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   (
-    { variant = 'primary', size = 'md', dot = false, className, style, children, ...props },
+    {
+      variant = 'primary',
+      size = 'md',
+      dot = false,
+      className,
+      children,
+      ...props
+    },
     ref
   ) => {
-    const badgeStyles: React.CSSProperties = {
-      ...baseStyles,
-      ...variantStyles[variant],
-      ...sizeStyles[size],
-      ...style,
-    };
-
-    const dotStyle: React.CSSProperties = {
-      width: dotSizes[size],
-      height: dotSizes[size],
-      borderRadius: '50%',
-      background: 'currentColor',
-    };
-
     return (
       <span
         ref={ref}
-        className={clsx('titane-badge', className)}
-        style={badgeStyles}
+        className={cn(
+          // Base styles
+          'inline-flex items-center font-medium rounded-full whitespace-nowrap',
+          // Variant styles
+          variantClasses[variant],
+          // Size styles
+          sizeClasses[size],
+          // Custom className
+          className
+        )}
         {...props}
       >
-        {dot && <span style={dotStyle} />}
+        {/* Dot Indicator */}
+        {dot && (
+          <span
+            className={cn(
+              'rounded-full bg-current',
+              dotSizes[size]
+            )}
+          />
+        )}
+
         {children}
       </span>
     );
