@@ -2,7 +2,7 @@
 //! TEMPORAL ENGINE ↔ OMEGA PIPELINE INTEGRATION
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::temporal_engine::{TemporalContext, PlanningHorizon};
+use crate::temporal_engine::TemporalContext;
 use serde::{Deserialize, Serialize};
 
 /// Bridge entre Temporal Engine et OMEGA Pipeline
