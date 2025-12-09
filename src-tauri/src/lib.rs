@@ -254,6 +254,7 @@ pub mod memory_os; // ✅ Memory OS vΩ (Neural Memory System: STM → MTM → L
 // ═══════════════════════════════════════════════════════════════
 
 pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux)
+pub mod agents; // ✅ Agent System vΩ — Super Prompt #19 (Multi-Agents Cognitifs)
 
 // ═══════════════════════════════════════════════════════════════
 // CYCLE & CONTINUITY ENGINE v2 (SUPER PROMPT #16)
