@@ -32,7 +32,9 @@
       "Bash(git commit:*)",
       "Bash(cut:*)",
       "Bash(npm run test:unit:*)",
-      "Bash(timeout 60 npm run build:*)"
+      "Bash(timeout 60 npm run build:*)",
+      "Bash(./TITANE_PRE_MIGRATION_BACKUP.sh:*)",
+      "Bash(rsync:*)"
     ],
     "deny": [],
     "ask": []
