@@ -80,7 +80,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             w-full px-3 py-2.5 rounded-md
             text-sm font-normal leading-relaxed
             transition-all duration-150
-            focus:outline-none focus:ring-2 focus:ring-offset-0
+            focus:outline-none focus:ring-[3px] focus:ring-[rgba(114,123,129,0.6)] focus:ring-offset-0
             disabled:cursor-not-allowed disabled:opacity-50
             resize-${autoResize ? 'none' : 'vertical'}
             ${className}

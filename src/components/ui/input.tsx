@@ -69,7 +69,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               w-full h-10 px-3 rounded-md
               text-sm font-normal
               transition-all duration-150
-              focus:outline-none focus:ring-2 focus:ring-offset-0
+              focus:outline-none focus:ring-[3px] focus:ring-[rgba(114,123,129,0.6)] focus:ring-offset-0
               disabled:cursor-not-allowed disabled:opacity-50
               ${leftIcon ? 'pl-10' : ''}
               ${rightIcon ? 'pr-10' : ''}

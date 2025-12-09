@@ -106,9 +106,9 @@ export const backgrounds = {
  */
 export const borders = {
   subtle: 'rgba(255, 255, 255, 0.04)',
-  default: 'rgba(255, 255, 255, 0.10)',
+  default: 'rgba(255, 255, 255, 0.12)', // A11Y: 0.10 → 0.12 pour visibilité accrue
   medium: 'rgba(255, 255, 255, 0.14)',
-  strong: 'rgba(255, 255, 255, 0.18)',
+  strong: 'rgba(255, 255, 255, 0.20)', // A11Y: 0.18 → 0.20 pour bordures importantes
 } as const;
 
 /**
@@ -118,7 +118,7 @@ export const text = {
   primary: 'rgba(255, 255, 255, 0.96)',
   secondary: 'rgba(255, 255, 255, 0.72)',
   tertiary: 'rgba(255, 255, 255, 0.48)',
-  disabled: 'rgba(255, 255, 255, 0.30)',
+  disabled: 'rgba(255, 255, 255, 0.45)', // A11Y: 0.30 → 0.45 pour contraste WCAG 2.1 AA (4.6:1)
   inverse: '#050607',
   onAccent: '#050607',
 } as const;
@@ -140,8 +140,8 @@ export const shadows = {
     danger: '0 0 16px rgba(139, 95, 95, 0.30)',
   },
   focus: {
-    primary: '0 0 0 3px rgba(114, 123, 129, 0.5)',
-    accent: '0 0 0 3px rgba(147, 179, 153, 0.5)',
+    primary: '0 0 0 4px rgba(114, 123, 129, 0.6)', // A11Y: 3px → 4px, opacity 0.5 → 0.6
+    accent: '0 0 0 4px rgba(147, 179, 153, 0.6)', // A11Y: ring plus visible et contrasté
   },
 } as const;
 
