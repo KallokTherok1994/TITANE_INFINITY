@@ -1,0 +1,22 @@
+# TITANE∞ TTS Backend — Requirements
+# Parler-TTS Mini Multilingual v1.1 + FastAPI
+# Python 3.10+ required
+
+# Core TTS
+parler-tts>=0.2.0
+transformers>=4.43.0
+torch>=2.1.0
+accelerate>=0.26.0
+soundfile>=0.12.1
+
+# API Server
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.10.0
+
+# Audio processing
+scipy>=1.11.0
+numpy>=1.24.0
+
+# Optional: GPU support (AMD ROCm)
+# torch_rocm (install separately via: pip install torch --index-url https://download.pytorch.org/whl/rocm5.7)
