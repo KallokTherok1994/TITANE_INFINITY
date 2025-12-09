@@ -27,7 +27,9 @@
       "@apps/*": ["src/apps/*"],
       "@themes/*": ["src/themes/*"],
       "@services/*": ["src/services/*"],
-      "@stores/*": ["src/stores/*"]
+      "@stores/*": ["src/stores/*"],
+      "@features/*": ["src/features/*"],
+      "@cognitive/*": ["src/cognitive/*"]
     },
 
     /* Linting - Relaxed for P0 */
