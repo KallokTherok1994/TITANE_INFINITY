@@ -88,9 +88,10 @@ lighthouse http://localhost:4173 \
   --chrome-flags="--headless" \
   --preset=perf \
   --throttling-method=devtools \
-  --quiet 2>/dev/null
+  --no-enable-error-reporting \
+  --quiet 2>&1 | grep -v "We're constantly trying"
 
-if [ $? -eq 0 ]; then
+if [ ${PIPESTATUS[0]} -eq 0 ]; then
   echo -e "${GREEN}✅ Lighthouse mobile report: $REPORTS_DIR/lighthouse-mobile.html${NC}"
 else
   echo -e "${YELLOW}⚠️  Lighthouse mobile audit failed${NC}"
@@ -104,9 +105,10 @@ lighthouse http://localhost:4173 \
   --chrome-flags="--headless" \
   --preset=desktop \
   --throttling-method=devtools \
-  --quiet 2>/dev/null
+  --no-enable-error-reporting \
+  --quiet 2>&1 | grep -v "We're constantly trying"
 
-if [ $? -eq 0 ]; then
+if [ ${PIPESTATUS[0]} -eq 0 ]; then
   echo -e "${GREEN}✅ Lighthouse desktop report: $REPORTS_DIR/lighthouse-desktop.html${NC}"
 else
   echo -e "${YELLOW}⚠️  Lighthouse desktop audit failed${NC}"

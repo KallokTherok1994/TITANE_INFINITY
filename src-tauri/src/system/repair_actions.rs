@@ -6,7 +6,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Actions de réparation disponibles
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub enum RepairAction {
     /// Redémarrer le pipeline OMEGA
     RestartOmega,
@@ -28,21 +28,52 @@ pub enum RepairAction {
     ForceGC,
     /// Log détaillé pour diagnostic
     EnableDetailedLogging,
+    /// ═══ SUPER PROMPT #4 Additions ═══
+    /// Activer le Safe Mode (fonctionnalités minimales)
+    EnableSafeMode,
+    /// Désactiver le Safe Mode
+    DisableSafeMode,
+    /// Redémarrer un moteur spécifique
+    RestartEngine(String),
+    /// Isoler un moteur défaillant
+    IsolateEngine(String),
+    /// Restaurer un moteur isolé
+    RestoreEngine(String),
+    /// Circuit breaker sur les appels LLM
+    EnableCircuitBreaker,
+    /// Désactiver circuit breaker
+    DisableCircuitBreaker,
+    /// Réduire la limite de tokens
+    ReduceTokenLimit(u32),
+    /// Restaurer la limite de tokens
+    RestoreTokenLimit,
+    /// Purger les providers défaillants
+    PurgeFailedProviders,
 }
 
 impl RepairAction {
     /// Priorité de l'action (plus élevé = plus urgent)
     pub fn priority(&self) -> u8 {
         match self {
+            RepairAction::EnableSafeMode => 12,
             RepairAction::RestartOmega => 10,
+            RepairAction::IsolateEngine(_) => 9,
+            RepairAction::EnableCircuitBreaker => 9,
             RepairAction::ClearMemoryCache => 8,
+            RepairAction::PurgeFailedProviders => 8,
             RepairAction::TrimMemory => 7,
+            RepairAction::RestartEngine(_) => 7,
             RepairAction::RebalanceEngines => 6,
+            RepairAction::ReduceTokenLimit(_) => 6,
             RepairAction::ForceGC => 5,
             RepairAction::RebuildIndexes => 4,
             RepairAction::ResetConversationContext => 3,
             RepairAction::ReduceParallelism => 3,
             RepairAction::EnableDegradedMode => 2,
+            RepairAction::RestoreEngine(_) => 2,
+            RepairAction::RestoreTokenLimit => 2,
+            RepairAction::DisableSafeMode => 2,
+            RepairAction::DisableCircuitBreaker => 2,
             RepairAction::EnableDetailedLogging => 1,
         }
     }
@@ -60,6 +91,16 @@ impl RepairAction {
             RepairAction::EnableDegradedMode => "Activation du mode dégradé",
             RepairAction::ForceGC => "Garbage collection forcé",
             RepairAction::EnableDetailedLogging => "Activation des logs détaillés",
+            RepairAction::EnableSafeMode => "Activation du Safe Mode TITANE∞",
+            RepairAction::DisableSafeMode => "Désactivation du Safe Mode",
+            RepairAction::RestartEngine(_) => "Redémarrage d'un moteur spécifique",
+            RepairAction::IsolateEngine(_) => "Isolation d'un moteur défaillant",
+            RepairAction::RestoreEngine(_) => "Restauration d'un moteur isolé",
+            RepairAction::EnableCircuitBreaker => "Activation du circuit breaker LLM",
+            RepairAction::DisableCircuitBreaker => "Désactivation du circuit breaker",
+            RepairAction::ReduceTokenLimit(_) => "Réduction de la limite de tokens",
+            RepairAction::RestoreTokenLimit => "Restauration de la limite de tokens",
+            RepairAction::PurgeFailedProviders => "Purge des providers défaillants",
         }
     }
 
@@ -67,15 +108,25 @@ impl RepairAction {
     pub fn risk_level(&self) -> u8 {
         match self {
             RepairAction::EnableDetailedLogging => 0,
+            RepairAction::DisableCircuitBreaker => 1,
             RepairAction::ForceGC => 1,
+            RepairAction::ReduceTokenLimit(_) => 1,
+            RepairAction::RestoreTokenLimit => 1,
             RepairAction::TrimMemory => 2,
-            RepairAction::ClearMemoryCache => 3,
             RepairAction::ReduceParallelism => 2,
+            RepairAction::EnableCircuitBreaker => 2,
+            RepairAction::ClearMemoryCache => 3,
             RepairAction::RebalanceEngines => 4,
-            RepairAction::RebuildIndexes => 5,
-            RepairAction::ResetConversationContext => 6,
             RepairAction::EnableDegradedMode => 4,
+            RepairAction::PurgeFailedProviders => 4,
+            RepairAction::RebuildIndexes => 5,
+            RepairAction::RestoreEngine(_) => 5,
+            RepairAction::ResetConversationContext => 6,
+            RepairAction::RestartEngine(_) => 6,
+            RepairAction::IsolateEngine(_) => 7,
             RepairAction::RestartOmega => 8,
+            RepairAction::EnableSafeMode => 7,
+            RepairAction::DisableSafeMode => 5,
         }
     }
 
@@ -83,16 +134,52 @@ impl RepairAction {
     pub fn estimated_duration_ms(&self) -> u64 {
         match self {
             RepairAction::EnableDetailedLogging => 10,
+            RepairAction::EnableCircuitBreaker => 10,
+            RepairAction::DisableCircuitBreaker => 10,
+            RepairAction::ReduceTokenLimit(_) => 10,
+            RepairAction::RestoreTokenLimit => 10,
             RepairAction::ForceGC => 50,
-            RepairAction::ClearMemoryCache => 100,
-            RepairAction::TrimMemory => 200,
             RepairAction::ReduceParallelism => 50,
-            RepairAction::RebalanceEngines => 300,
-            RepairAction::ResetConversationContext => 100,
             RepairAction::EnableDegradedMode => 50,
-            RepairAction::RebuildIndexes => 1000,
+            RepairAction::EnableSafeMode => 100,
+            RepairAction::DisableSafeMode => 100,
+            RepairAction::ClearMemoryCache => 100,
+            RepairAction::ResetConversationContext => 100,
+            RepairAction::PurgeFailedProviders => 100,
+            RepairAction::TrimMemory => 200,
+            RepairAction::RebalanceEngines => 300,
+            RepairAction::RestartEngine(_) => 300,
+            RepairAction::IsolateEngine(_) => 50,
+            RepairAction::RestoreEngine(_) => 200,
             RepairAction::RestartOmega => 500,
+            RepairAction::RebuildIndexes => 1000,
         }
+    }
+
+    /// Catégorie de l'action pour le dashboard
+    pub fn category(&self) -> &'static str {
+        match self {
+            RepairAction::EnableSafeMode | RepairAction::DisableSafeMode => "safety",
+            RepairAction::RestartOmega | RepairAction::RestartEngine(_) => "restart",
+            RepairAction::IsolateEngine(_) | RepairAction::RestoreEngine(_) => "isolation",
+            RepairAction::EnableCircuitBreaker | RepairAction::DisableCircuitBreaker => "circuit",
+            RepairAction::ClearMemoryCache | RepairAction::TrimMemory | RepairAction::ForceGC => "memory",
+            RepairAction::RebalanceEngines | RepairAction::ReduceParallelism => "performance",
+            RepairAction::ReduceTokenLimit(_) | RepairAction::RestoreTokenLimit => "limits",
+            RepairAction::PurgeFailedProviders => "providers",
+            _ => "general",
+        }
+    }
+
+    /// Indique si l'action nécessite une confirmation utilisateur
+    pub fn requires_confirmation(&self) -> bool {
+        matches!(
+            self,
+            RepairAction::EnableSafeMode
+                | RepairAction::RestartOmega
+                | RepairAction::IsolateEngine(_)
+                | RepairAction::ResetConversationContext
+        )
     }
 }
 
