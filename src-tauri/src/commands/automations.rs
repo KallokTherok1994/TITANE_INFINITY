@@ -840,7 +840,14 @@ mod tests {
     #[test]
     fn test_init_creates_all_automations() {
         let state = init();
-        let configs = state.configs.lock().unwrap();
+        // Phase 1 Stabilisation: Gérer lock poison
+        let configs = match state.configs.lock() {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("Warning: Automations configs lock poisoned, recovering: {}", e);
+                e.into_inner()
+            }
+        };
         assert_eq!(configs.len(), 16);
     }
 

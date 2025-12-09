@@ -96,7 +96,14 @@ pub async fn run_auto_evolution(
 
     // Update state
     {
-        let mut evolution_state = state.state.lock().unwrap();
+        // Phase 1 Stabilisation: Gérer lock poison
+        let mut evolution_state = match state.state.lock() {
+            Ok(s) => s,
+            Err(e) => {
+                eprintln!("Warning: EvolutionState lock poisoned, recovering: {}", e);
+                e.into_inner()
+            }
+        };
         evolution_state.reports_generated += 1;
         evolution_state.last_diagnosis = Some(chrono::Utc::now().timestamp());
     }
@@ -125,7 +132,14 @@ pub async fn get_evolution_state(
 ) -> Result<EvolutionStateData, String> {
     log::info!("[Evolution v14] Getting evolution state");
 
-    let evolution_state = state.state.lock().unwrap();
+    // Phase 1 Stabilisation: Gérer lock poison
+    let evolution_state = match state.state.lock() {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Warning: EvolutionState lock poisoned, recovering: {}", e);
+            e.into_inner()
+        }
+    };
     Ok(evolution_state.clone())
 }
 

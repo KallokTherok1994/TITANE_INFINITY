@@ -43,5 +43,13 @@ fn main() {
         })
         .invoke_handler(api::get_handlers())
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        // Phase 1 Stabilisation: Logging détaillé avant exit
+        .unwrap_or_else(|e| {
+            eprintln!("FATAL: Tauri application failed to start: {}", e);
+            eprintln!("This is a critical error. Please check:");
+            eprintln!("  - Tauri configuration (tauri.conf.json)");
+            eprintln!("  - System dependencies (WebKit, etc.)");
+            eprintln!("  - Permissions and file system access");
+            std::process::exit(1);
+        });
 }
