@@ -8,14 +8,19 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Layout Components Index
+ * TITANE∞ v8.0 - Layout Components Index (Tailwind CSS)
  * Export centralisé de tous les composants de layout
  * ═══════════════════════════════════════════════════════════════
  */
 
+// Main Layout Components (Tailwind migrated)
 export { AppShell, type AppShellProps } from './AppShell';
+export { AppShellWithDevTools, type AppShellWithDevToolsProps } from './AppShellWithDevTools';
+export { Sidebar, type SidebarProps, type SidebarItem } from './Sidebar';
+export { Header, type HeaderProps } from './Header';
+export { MobileNav, type MobileNavProps } from './MobileNav';
+
+// Utility Layout Components (original)
 export { Grid, Col, type GridProps, type ColProps, type GridColumns, type ColSpan } from './Grid';
 export { Container, type ContainerProps, type ContainerSize } from './Container';
 export { Stack, type StackProps, type StackDirection, type StackAlign, type StackJustify } from './Stack';
-export { Sidebar, type SidebarProps, type SidebarItem } from './Sidebar';
-export { Header, type HeaderProps } from './Header';

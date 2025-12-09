@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v16.2.2 — Proprietary License
+ * TITANE∞ v8.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,15 +8,16 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v16.2.2 - Header Component
- * Validation Finale 100% ✅ - Chat IA + Cognitive Layer + Real APIs
+ * TITANE∞ v8.0 - Header Component (Tailwind CSS)
+ * Header principal avec logo, navigation et actions
+ * Migration: Inline styles → Tailwind classes
  * ═══════════════════════════════════════════════════════════════
  */
 
 import { type ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { colors, spacing, fontSizes } from '@themes/tokens';
 import { useAnimation } from '../../contexts/AnimationContext';
+import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -25,61 +26,11 @@ import { useAnimation } from '../../contexts/AnimationContext';
 export interface HeaderProps {
   logo?: ReactNode;
   title?: string;
-  subtitle?: ReactNode; // ✨ v∞.D4 - Support ReactNode pour barre XP
+  subtitle?: ReactNode; // Support ReactNode pour barre XP
   navigation?: ReactNode;
   actions?: ReactNode;
+  className?: string;
 }
-
-// ─────────────────────────────────────────────────────────────────
-// STYLES
-// ─────────────────────────────────────────────────────────────────
-
-const headerStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: spacing[6],
-  width: '100%',
-};
-
-const logoStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: spacing[3],
-};
-
-const titleContainerStyles: React.CSSProperties = {
-  display: 'flex',
-  flexDirection: 'column',
-};
-
-const titleStyles: React.CSSProperties = {
-  fontSize: fontSizes['2xl'],
-  fontWeight: 700,
-  color: colors.neutral[100],
-  margin: 0,
-  lineHeight: 1.2,
-};
-
-const subtitleStyles: React.CSSProperties = {
-  fontSize: fontSizes.sm,
-  color: colors.neutral[400],
-  margin: 0,
-};
-
-const navStyles: React.CSSProperties = {
-  flex: 1,
-  display: 'flex',
-  alignItems: 'center',
-  gap: spacing[4],
-  marginLeft: spacing[8],
-};
-
-const actionsStyles: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  gap: spacing[3],
-  marginLeft: 'auto',
-};
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -91,45 +42,56 @@ export const Header = ({
   subtitle,
   navigation,
   actions,
+  className,
 }: HeaderProps): JSX.Element => {
   const { animationConfig } = useAnimation();
 
   return (
     <motion.div
-      style={headerStyles}
+      className={cn('flex items-center gap-6 w-full', className)}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: animationConfig.duration }}
     >
       {/* Logo */}
       {logo && (
-        <div style={logoStyles}>
+        <div className="flex items-center gap-3">
           {logo}
         </div>
       )}
 
       {/* Title & Subtitle */}
       {(title || subtitle) && (
-        <div style={titleContainerStyles}>
-          {title && <h1 style={titleStyles}>{title}</h1>}
+        <div className="flex flex-col">
+          {title && (
+            <h1 className="text-2xl font-bold text-text-primary m-0 leading-tight">
+              {title}
+            </h1>
+          )}
           {subtitle && (
-            typeof subtitle === 'string'
-              ? <p style={subtitleStyles}>{subtitle}</p>
-              : <div style={subtitleStyles}>{subtitle}</div>
+            typeof subtitle === 'string' ? (
+              <p className="text-sm text-text-muted m-0">
+                {subtitle}
+              </p>
+            ) : (
+              <div className="text-sm text-text-muted">
+                {subtitle}
+              </div>
+            )
           )}
         </div>
       )}
 
       {/* Navigation */}
       {navigation && (
-        <nav style={navStyles}>
+        <nav className="flex-1 flex items-center gap-4 ml-8">
           {navigation}
         </nav>
       )}
 
       {/* Actions */}
       {actions && (
-        <div style={actionsStyles}>
+        <div className="flex items-center gap-3 ml-auto">
           {actions}
         </div>
       )}

@@ -48,7 +48,8 @@
       "Bash(/tmp/analyze_unwrap_titane.sh)",
       "Bash(mkdir:*)",
       "Bash(tree:*)",
-      "Bash(while read file)"
+      "Bash(while read file)",
+      "Bash(wait)"
     ],
     "deny": [],
     "ask": []
