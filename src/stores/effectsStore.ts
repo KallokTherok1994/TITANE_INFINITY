@@ -474,10 +474,11 @@ export const useEffectsStore = create<EffectsStore>()(
           },
           removeItem: (name) => sessionStorage.removeItem(name),
         },
-        // Ne persister que preferences et stats
+        // Ne persister que preferences et stats (pas activeEffects/metrics/history)
         partialize: (state) => ({
-          preferences: state.preferences,
-          stats: state.stats,
+          ...state,
+          activeEffects: [], // Reset active effects on reload
+          history: [], // Reset history on reload
         }),
       }
     ),

@@ -22,7 +22,8 @@
 
 import { create } from 'zustand';
 import { persist, devtools } from 'zustand/middleware';
-import type { VisualState, PerformanceMetrics } from '@/visual-engine/TitaneVisualEngine';
+import type { VisualState } from '@/visual-engine/StateManager';
+import type { PerformanceMetrics } from '@/visual-engine/TitaneVisualEngine';
 
 /**
  * Interface pour l'état du Visual Engine
@@ -40,7 +41,10 @@ export interface VisualEngineState {
   isPaused: boolean;
 
   // Performance Metrics
-  metrics: PerformanceMetrics;
+  metrics: PerformanceMetrics & {
+    gpuLoad?: number; // v21: GPU load estimation
+    throttleActive?: boolean; // v21: Is throttling active
+  };
 
   // Configuration
   enableOrchestration: boolean;
@@ -111,9 +115,10 @@ const initialState: VisualEngineState = {
     fps: 60,
     frameTime: 16.67,
     particleCount: 0,
-    activeEffects: 0,
-    gpuLoad: 0,
-    throttleActive: false,
+    effectsActive: 0, // Utiliser effectsActive au lieu de activeEffects
+    memoryUsage: 0,
+    gpuLoad: 0, // v21: GPU load
+    throttleActive: false, // v21: Throttling status
   },
 
   // Configuration
