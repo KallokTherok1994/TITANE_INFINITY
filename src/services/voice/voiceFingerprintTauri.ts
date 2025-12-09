@@ -12,7 +12,15 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { invoke } from '@tauri-apps/api/tauri';
+// Conditional import for Tauri environment only
+let invoke: ((cmd: string, args?: Record<string, unknown>) => Promise<unknown>) | undefined;
+
+if (typeof window !== 'undefined' && '__TAURI__' in window) {
+  // Dynamic import only in Tauri environment
+  import('@tauri-apps/api/tauri').then(module => {
+    invoke = module.invoke;
+  });
+}
 
 /**
  * Voice fingerprinting result from Rust backend
@@ -50,6 +58,11 @@ class VoiceFingerprintTauriService {
    * @returns Success/failure
    */
   async calibrateTitaneVoice(samplesList: Float32Array[]): Promise<void> {
+    if (!invoke) {
+      console.warn('[VoiceFingerprintTauri] ⚠️ Not in Tauri environment, skipping calibration');
+      return;
+    }
+
     if (this.calibrationInProgress) {
       console.warn('[VoiceFingerprintTauri] ⚠️ Calibration already in progress');
       return;
@@ -95,6 +108,11 @@ class VoiceFingerprintTauriService {
    * @returns VoiceFingerprintResult
    */
   async checkIsTitaneSpeaking(samples: Float32Array): Promise<VoiceFingerprintResult> {
+    if (!invoke) {
+      // Web-only mode: Layer 3 not available, rely on Layer 1+2
+      return { isTitane: false, similarity: 0.0 };
+    }
+
     if (!this.isCalibrated) {
       console.warn('[VoiceFingerprintTauri] ⚠️ TITANE profile not calibrated, returning false');
       return { isTitane: false, similarity: 0.0 };
@@ -125,6 +143,10 @@ class VoiceFingerprintTauriService {
    * Get TITANE voice profile status
    */
   async getTitaneVoiceStatus(): Promise<TitaneVoiceStatus> {
+    if (!invoke) {
+      return { calibrated: false, sampleCount: 0, threshold: 0.75 };
+    }
+
     try {
       const status = await invoke<TitaneVoiceStatus>('get_titane_voice_status');
       this.isCalibrated = status.calibrated;

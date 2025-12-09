@@ -83,7 +83,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       // Externaliser les modules Node.js qui ne doivent pas être bundlés pour le browser
-      external: ['better-sqlite3', 'sqlite3', 'bindings', 'file-uri-to-path'],
+      // + Tauri API qui n'est disponible qu'en environnement Tauri (pas en mode web-only)
+      external: [
+        'better-sqlite3',
+        'sqlite3',
+        'bindings',
+        'file-uri-to-path',
+        '@tauri-apps/api/tauri',
+        '@tauri-apps/api/core',
+        '@tauri-apps/api/event',
+      ],
       onwarn(warning, warn) {
         // Ignorer le warning d'eval pour onnxruntime-web (nécessaire pour WASM)
         if (warning.code === 'EVAL' && warning.id?.includes('onnxruntime-web')) {
