@@ -198,8 +198,8 @@ export function Errors() {
                     style={{
                       background: colors.bg,
                       borderColor: colors.border,
-                      ringColor: colors.border,
-                    }}
+                      '--tw-ring-color': colors.border,
+                    } as React.CSSProperties}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
