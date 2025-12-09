@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v19.3.0 — Adaptive Panels Exports
+ * TITANE∞ v21 — Adaptive Panels Exports
  * Central export for all adaptive panel components
  */
 
@@ -14,3 +14,7 @@ export type { DevToolsPanelProps, EngineStatus } from './DevToolsPanel';
 
 export { SelfHealingPanel } from './SelfHealingPanel';
 export type { SelfHealingPanelProps, HealingPhase } from './SelfHealingPanel';
+
+// v21: Governance Panel (Session 5)
+export { GovernancePanel } from './GovernancePanel';
+export type { GovernancePanelProps } from './GovernancePanel';
