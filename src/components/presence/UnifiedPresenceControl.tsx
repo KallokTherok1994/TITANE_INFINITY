@@ -23,14 +23,11 @@ import {
 } from '@/hooks/useUnifiedPresence';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-type TonicProfile = any;
+import type { TonicProfile } from '@/engines/presence/_stubs';
 interface SymbolInfo {
   symbol: string;
   meaning: string;
 }
-/*
-import type { TonicProfile } from '@/engines/presence/unifiedPresenceEngine';
-*/
 
 import './UnifiedPresenceControl.css';
 

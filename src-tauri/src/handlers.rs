@@ -74,6 +74,11 @@ macro_rules! generate_titane_handlers {
                     $crate::audio::commands::transcribe_audio,
                     $crate::audio::commands::force_reset_voice,
 
+                    // Voice Fingerprinting (P0-2: Layer 3 Anti-Feedback)
+                    $crate::audio::commands::calibrate_titane_voice,
+                    $crate::audio::commands::check_is_titane_speaking,
+                    $crate::audio::commands::get_titane_voice_status,
+
                     // Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
                     commands::multi_ai_generate,
                     commands::multi_ai_generate_dual,
@@ -300,6 +305,11 @@ macro_rules! generate_titane_handlers {
                     $crate::audio::commands::stop_recording,
                     $crate::audio::commands::transcribe_audio,
                     $crate::audio::commands::force_reset_voice,
+
+                    // Voice Fingerprinting (P0-2: Layer 3 Anti-Feedback)
+                    $crate::audio::commands::calibrate_titane_voice,
+                    $crate::audio::commands::check_is_titane_speaking,
+                    $crate::audio::commands::get_titane_voice_status,
                 ]
             }
         }

@@ -20,9 +20,23 @@ import { useEffect, useState, useCallback } from 'react';
 type SystemState = any;
 type PersonaState = any;
 const personaEngine = {
-  getState: () => ({} as PersonaState),
+  getState: () => ({
+    mood: { current: 'neutre', intensity: 0.5 },
+    energy: 100,
+    coherence: 100,
+  } as PersonaState),
   start: () => {},
   stop: () => {},
+  initialize: async () => {},
+  destroy: () => {},
+  getVisualMultipliers: () => ({
+    glow: 1.0,
+    motion: 1.0,
+    depth: 1.0,
+    sound: 1.0,
+  }),
+  update: (_state: any, _options?: any) => {},
+  react: (_reaction: any) => {},
 };
 
 /*

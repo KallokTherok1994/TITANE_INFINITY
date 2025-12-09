@@ -45,7 +45,10 @@
     "**/*.test.ts",
     "**/*.test.tsx",
     "**/*.spec.ts",
-    "**/*.spec.tsx"
+    "**/*.spec.tsx",
+    "src/hooks/archived/**",
+    "src/examples/**",
+    "src/tests/**"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

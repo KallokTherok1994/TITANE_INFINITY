@@ -21,10 +21,11 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import type { AutopoiesisState } from '../autopoiesis/autopoiesisEngine';
-import type { IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
-import type { UnifiedExpression } from '../expression/expressionEngine';
-import type { HoloPresenceState } from '../holopresence/holoPresenceEngine';
+// Types importés pour référence de documentation (utilisés dans design, pas runtime)
+import type { AutopoiesisState as _AutopoiesisState } from '../autopoiesis/autopoiesisEngine';
+import type { IdentityExpressionPackage as _IdentityExpressionPackage } from '../identity/unifiedIdentityKernel';
+import type { UnifiedExpression as _UnifiedExpression } from '../expression/expressionEngine';
+import type { HoloPresenceState as _HoloPresenceState } from '../holopresence/holoPresenceEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES
@@ -34,10 +35,10 @@ import type { HoloPresenceState } from '../holopresence/holoPresenceEngine';
  * État unifié de tous les moteurs
  */
 export interface UnifiedKernelState {
-  identity: IdentityExpressionPackage;
-  expression: UnifiedExpression;
-  holoPresence: HoloPresenceState;
-  autopoiesis: AutopoiesisState;
+  identity: Record<string, unknown> | undefined;
+  expression: Record<string, unknown> | undefined;
+  holoPresence: Record<string, unknown> | undefined;
+  autopoiesis: Record<string, unknown> | undefined;
 }
 
 /**
@@ -231,10 +232,20 @@ class MetaSingularityKernel {
 
   // Références aux moteurs (à injecter)
   private engines: {
-    identity: unknown;
-    expression: unknown;
-    holoPresence: unknown;
-    autopoiesis: unknown;
+    identity: {
+      exportToOutput?: () => Record<string, unknown>;
+      getState?: () => Record<string, unknown>;
+    };
+    expression: {
+      getCurrentExpression?: () => Record<string, unknown>;
+      getState?: () => Record<string, unknown>;
+    };
+    holoPresence: {
+      getState?: () => Record<string, unknown>;
+    };
+    autopoiesis: {
+      getState?: () => Record<string, unknown>;
+    };
   } | null = null;
 
   constructor() {
@@ -307,10 +318,20 @@ class MetaSingularityKernel {
    * Injecter les références aux moteurs
    */
   injectEngines(engines: {
-    identity: unknown;
-    expression: unknown;
-    holoPresence: unknown;
-    autopoiesis: unknown;
+    identity: {
+      exportToOutput?: () => Record<string, unknown>;
+      getState?: () => Record<string, unknown>;
+    };
+    expression: {
+      getCurrentExpression?: () => Record<string, unknown>;
+      getState?: () => Record<string, unknown>;
+    };
+    holoPresence: {
+      getState?: () => Record<string, unknown>;
+    };
+    autopoiesis: {
+      getState?: () => Record<string, unknown>;
+    };
   }): void {
     this.engines = engines;
   }
@@ -359,14 +380,16 @@ class MetaSingularityKernel {
   private unifyEngineStates(): void {
     if (!this.engines) return;
 
-    // Récupérer l'état de chaque moteur
-    const identityState =
-      this.engines.identity.exportToOutput?.() || this.engines.identity.getState?.();
-    const expressionState =
+    // Récupérer l'état de chaque moteur (cast to Record for flexibility)
+    const identityState = (
+      this.engines.identity.exportToOutput?.() || this.engines.identity.getState?.()
+    ) as Record<string, unknown> | undefined;
+    const expressionState = (
       this.engines.expression.getCurrentExpression?.() ||
-      this.engines.expression.getState?.();
-    const holoPresenceState = this.engines.holoPresence.getState?.();
-    const autopoiesisState = this.engines.autopoiesis.getState?.();
+      this.engines.expression.getState?.()
+    ) as Record<string, unknown> | undefined;
+    const holoPresenceState = this.engines.holoPresence.getState?.() as Record<string, unknown> | undefined;
+    const autopoiesisState = this.engines.autopoiesis.getState?.() as Record<string, unknown> | undefined;
 
     this.state.unifiedState = {
       identity: identityState,
@@ -450,8 +473,8 @@ class MetaSingularityKernel {
   }
 
   private calculateIdentityExpressionCoherence(
-    identity: Record<string, unknown>,
-    expression: Record<string, unknown>
+    identity: Record<string, unknown> | undefined,
+    expression: Record<string, unknown> | undefined
   ): number {
     if (!identity || !expression) return 0;
 
@@ -487,8 +510,8 @@ class MetaSingularityKernel {
   }
 
   private calculateExpressionPresenceCoherence(
-    expression: Record<string, unknown>,
-    holoPresence: Record<string, unknown>
+    expression: Record<string, unknown> | undefined,
+    holoPresence: Record<string, unknown> | undefined
   ): number {
     if (!expression || !holoPresence) return 0;
 
@@ -510,8 +533,8 @@ class MetaSingularityKernel {
   }
 
   private calculatePresenceAutopoiesisCoherence(
-    holoPresence: Record<string, unknown>,
-    autopoiesis: Record<string, unknown>
+    holoPresence: Record<string, unknown> | undefined,
+    autopoiesis: Record<string, unknown> | undefined
   ): number {
     if (!holoPresence || !autopoiesis) return 0.5;
 
@@ -526,8 +549,8 @@ class MetaSingularityKernel {
   }
 
   private calculateAutopoiesisIdentityCoherence(
-    autopoiesis: Record<string, unknown>,
-    identity: Record<string, unknown>
+    autopoiesis: Record<string, unknown> | undefined,
+    identity: Record<string, unknown> | undefined
   ): number {
     if (!autopoiesis || !identity) return 0.5;
 
@@ -601,10 +624,9 @@ class MetaSingularityKernel {
 
     // Synchronicity (patterns alignés)
     const autopoiesis = this.state.unifiedState.autopoiesis;
-    if (
-      autopoiesis?.learning?.patternsLearned &&
-      autopoiesis.learning.patternsLearned > 50
-    ) {
+    const autopoiesisLearning = autopoiesis?.learning as Record<string, unknown> | undefined;
+    const patternsLearned = (autopoiesisLearning?.patternsLearned as number) ?? 0;
+    if (patternsLearned > 50) {
       this.createEmergence(
         'synchronicity',
         'Pattern Synchronicity',
@@ -730,9 +752,10 @@ class MetaSingularityKernel {
     }
 
     // Conflit: Autopoiesis learning rate élevé mais system stability requise
-    const autopoiesis = this.state.unifiedState.autopoiesis;
-    if (autopoiesis) {
-      const learningRate = autopoiesis.learning?.currentLearningRate || 0.1;
+    const autopoiesisConflict = this.state.unifiedState.autopoiesis;
+    if (autopoiesisConflict) {
+      const autoLearning = autopoiesisConflict.learning as Record<string, unknown> | undefined;
+      const learningRate = (autoLearning?.currentLearningRate as number) || 0.1;
       if (learningRate > 0.3 && this.state.systemStability > 0.9) {
         this.createConflict(
           ['autopoiesis'],
@@ -823,12 +846,14 @@ class MetaSingularityKernel {
     }
 
     // Pattern recognition
-    const autopoiesis = this.state.unifiedState?.autopoiesis;
-    if (autopoiesis && autopoiesis.learning?.patternsLearned > 30) {
+    const autopoiesisInsight = this.state.unifiedState?.autopoiesis;
+    const learningInsight = autopoiesisInsight?.learning as Record<string, unknown> | undefined;
+    const patternsLearnedInsight = (learningInsight?.patternsLearned as number) ?? 0;
+    if (autopoiesisInsight && patternsLearnedInsight > 30) {
       this.createInsight(
         'pattern-recognition',
         'Pattern Library Growing',
-        `${autopoiesis.learning.patternsLearned} effective patterns learned. System intelligence increasing.`,
+        `${patternsLearnedInsight} effective patterns learned. System intelligence increasing.`,
         0.8
       );
     }

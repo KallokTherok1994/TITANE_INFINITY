@@ -14,15 +14,18 @@ import { useState, useEffect } from 'react';
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import {
   presenceOS,
+  type PresenceState,
+  type PresenceOSMode,
+  type CognitiveState,
+  type AffectiveState,
+  type ExpressiveOSState,
+  type SpatialState,
 } from '@/engines/presence/_stubs';
 
-// Types locaux pour éviter imports manquants
-type PresenceState = any;
-type PresenceMode = string;
-type CognitiveState = any;
-type AffectiveState = any;
-type ExpressiveState = any;
-type SpatialPosition = any;
+// Alias pour compatibilité
+type PresenceMode = PresenceOSMode;
+type ExpressiveState = ExpressiveOSState;
+type SpatialPosition = SpatialState;
 
 /*
 import {

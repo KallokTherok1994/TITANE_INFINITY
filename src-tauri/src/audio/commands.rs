@@ -1474,3 +1474,100 @@ pub mod whisper_streaming_commands {
 
 #[cfg(feature = "audio-capture")]
 pub use whisper_streaming_commands::*;
+
+// ─────────────────────────────────────────────────────────────────
+//  Voice Fingerprinting Commands (P0-2: Layer 3 Anti-Feedback)
+// ─────────────────────────────────────────────────────────────────
+
+use std::sync::Mutex;
+
+// Import from sibling module in audio/
+mod voice_fingerprint_local {
+    include!("voice_fingerprint.rs");
+}
+
+use voice_fingerprint_local::VoiceFingerprint;
+
+/// Global voice fingerprint engine instance
+static VOICE_FINGERPRINT_ENGINE: Lazy<Mutex<VoiceFingerprint>> = Lazy::new(|| {
+    Mutex::new(VoiceFingerprint::new())
+});
+
+/// Calibrate TITANE voice profile with TTS samples
+///
+/// Should be called once at startup or when TTS voice changes.
+/// Requires 5-10 seconds of TITANE TTS samples (various phrases).
+///
+/// # Arguments
+/// * `samples_list` - Multiple audio samples (16kHz mono Float32Array)
+///
+/// # Example
+/// ```typescript
+/// const samples = [
+///   await generateTTSSample("Bonjour, je suis TITANE"),
+///   await generateTTSSample("Comment puis-je vous aider ?"),
+///   await generateTTSSample("Je suis là pour vous assister")
+/// ];
+/// await invoke('calibrate_titane_voice', { samplesList: samples });
+/// ```
+#[tauri::command]
+pub async fn calibrate_titane_voice(samples_list: Vec<Vec<f32>>) -> CommandResult<()> {
+    log::info!("[VoiceFingerprint] 🎯 Calibrating TITANE voice with {} samples", samples_list.len());
+
+    let engine = VOICE_FINGERPRINT_ENGINE.lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
+
+    engine.calibrate_titane(samples_list)
+        .map_err(|e| format!("Calibration failed: {}", e))?;
+
+    log::info!("[VoiceFingerprint] ✅ TITANE voice profile calibrated");
+    Ok(())
+}
+
+/// Check if audio is TITANE speaking (Layer 3 anti-feedback detection)
+///
+/// Returns (is_titane, similarity_score)
+/// - is_titane: true if audio matches TITANE voice profile (similarity >= threshold)
+/// - similarity_score: 0.0 (different) to 1.0 (identical)
+///
+/// # Arguments
+/// * `samples` - Audio samples (16kHz mono Float32Array)
+///
+/// # Example
+/// ```typescript
+/// const result = await invoke('check_is_titane_speaking', { samples: audioBuffer });
+/// if (result.isTitane) {
+///   console.log('🎯 TITANE detected, skipping ASR (anti-feedback Layer 3)');
+///   return; // Skip ASR processing
+/// }
+/// ```
+#[tauri::command]
+pub async fn check_is_titane_speaking(samples: Vec<f32>) -> CommandResult<serde_json::Value> {
+    let engine = VOICE_FINGERPRINT_ENGINE.lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
+
+    let (is_titane, similarity) = engine.is_titane_speaking(&samples);
+
+    Ok(serde_json::json!({
+        "isTitane": is_titane,
+        "similarity": similarity,
+    }))
+}
+
+/// Get TITANE voice profile status
+///
+/// Returns calibration status and profile info
+#[tauri::command]
+pub async fn get_titane_voice_status() -> CommandResult<serde_json::Value> {
+    let engine = VOICE_FINGERPRINT_ENGINE.lock()
+        .map_err(|e| format!("Lock error: {}", e))?;
+
+    let calibrated = engine.is_calibrated();
+    let profile_info = engine.get_profile_info();
+
+    Ok(serde_json::json!({
+        "calibrated": calibrated,
+        "sampleCount": profile_info.map(|(count, _)| count).unwrap_or(0),
+        "threshold": profile_info.map(|(_, threshold)| threshold).unwrap_or(0.75),
+    }))
+}

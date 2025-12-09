@@ -43,6 +43,12 @@ import { haloEngine } from '@/services/voice/haloEngine'; // ✅ v∞.7 Halo syn
 
 export type VoiceEngineState = 'idle' | 'listening' | 'processing' | 'speaking' | 'error';
 
+export interface WakeWordEvent {
+  word: string;
+  confidence: number;
+  timestamp: number;
+}
+
 export interface VoiceEngineStatus {
   state: VoiceEngineState;
   transcript: string;

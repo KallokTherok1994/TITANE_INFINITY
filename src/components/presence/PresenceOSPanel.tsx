@@ -23,12 +23,14 @@ import {
 } from '@/hooks';
 
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-// Définir types localement pour éviter l'import manquant
-type PresenceState = any;
-type CognitiveState = any;
-type AffectiveState = any;
-type ExpressiveState = any;
-type SpatialPosition = any;
+// Types locaux pour éviter l'import manquant
+import type {
+  PresenceState,
+  CognitiveState,
+  AffectiveState,
+  ExpressiveOSState as ExpressiveState,
+  SpatialState as SpatialPosition,
+} from '@/engines/presence/_stubs';
 
 /*
 import type {
