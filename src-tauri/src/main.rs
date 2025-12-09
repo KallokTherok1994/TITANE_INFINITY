@@ -58,11 +58,19 @@ mod secure_commands {
     include!("secure_commands.rs");
 }
 
-// Overdrive Chat Orchestrator v14
+// Overdrive Chat Orchestrator v14 + Voice Engine
 mod overdrive {
     pub mod chat_orchestrator {
         include!("overdrive/chat_orchestrator.rs");
     }
+    pub mod voice_engine {
+        include!("overdrive/voice_engine.rs");
+    }
+}
+
+// Singularity State v∞ (5-layer unified state)
+mod singularity_state {
+    include!("singularity_state/mod.rs");
 }
 
 // Security modules
@@ -85,9 +93,12 @@ mod security {
     pub mod rate_limit {
         include!("security/rate_limit.rs");
     }
+    pub mod shell_guard {
+        include!("security/shell_guard.rs");
+    }
     
-    // Re-export from titane_infinity library for crate::security::* usage
-    pub use titane_infinity::security::{AuditEvent, AuditEventType, AuditSeverity, audit};
+    // Re-export from titane_infinity library for crate::security::* usage + SecurityPolicy for shell_guard
+    pub use titane_infinity::security::{AuditEvent, AuditEventType, AuditSeverity, audit, SecurityPolicy};
 }
 
 mod core {
@@ -284,6 +295,54 @@ fn main() {
             // Core messaging
             send_message,
             ollama_query,
+            
+            // Chat Orchestrator Commands (CHAT PIPELINE v21)
+            overdrive::chat_orchestrator::chat_send_message,
+            overdrive::chat_orchestrator::chat_stream_message,
+            overdrive::chat_orchestrator::chat_get_providers_status,
+            overdrive::chat_orchestrator::chat_check_providers,
+            overdrive::chat_orchestrator::chat_get_conversation,
+            overdrive::chat_orchestrator::chat_create_conversation,
+            overdrive::chat_orchestrator::chat_delete_conversation,
+            overdrive::chat_orchestrator::chat_generate_suggestions,
+            
+            // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)
+            overdrive::voice_engine::voice_start_listening,
+            overdrive::voice_engine::voice_stop_listening,
+            overdrive::voice_engine::voice_cancel_recording,
+            overdrive::voice_engine::voice_is_recording,
+            overdrive::voice_engine::voice_transcribe_audio,
+            overdrive::voice_engine::voice_get_status,
+            overdrive::voice_engine::voice_get_config,
+            overdrive::voice_engine::voice_update_config,
+            // voice_synthesize_speech deprecated - use speak() in ai_chat.rs instead
+            overdrive::voice_engine::voice_play_audio,
+            overdrive::voice_engine::voice_stop_speaking,
+            overdrive::voice_engine::voice_test_pipeline,
+            overdrive::voice_engine::voice_calibrate_microphone,
+            overdrive::voice_engine::voice_detect_wake_word,
+            overdrive::voice_engine::voice_get_available_models,
+            overdrive::voice_engine::voice_enable_duplex,
+            overdrive::voice_engine::voice_disable_duplex,
+            overdrive::voice_engine::voice_check_interruption,
+            
+            // Singularity State Commands (SINGULARITY API v21 REPAIR - 17 commands)
+            singularity_state::commands::singularity_get_full_state,
+            singularity_state::commands::singularity_get_physical,
+            singularity_state::commands::singularity_get_cognitive,
+            singularity_state::commands::singularity_get_symbolic,
+            singularity_state::commands::singularity_get_adaptive,
+            singularity_state::commands::singularity_get_meta,
+            singularity_state::commands::singularity_get_global_coherence,
+            singularity_state::commands::singularity_is_critical,
+            singularity_state::commands::singularity_update_physical,
+            singularity_state::commands::singularity_update_cognitive,
+            singularity_state::commands::singularity_update_symbolic,
+            singularity_state::commands::singularity_update_adaptive,
+            singularity_state::commands::singularity_update_meta,
+            singularity_state::commands::singularity_update_full_state,
+            singularity_state::commands::singularity_save_state,
+            singularity_state::commands::singularity_load_state,
             
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
             secure_commands::chat_set_gemini_key,
