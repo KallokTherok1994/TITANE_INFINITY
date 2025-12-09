@@ -1,0 +1,114 @@
+.metrics-panel {
+  padding: 16px;
+}
+
+.panel-loading,
+.panel-error {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+.panel-error {
+  color: #c73838;
+}
+
+.last-updated {
+  font-size: 11px;
+  color: #888;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.metric-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.metric-value-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-bar {
+  width: 100%;
+  height: 6px;
+  background: #3e3e42;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.metric-bar-fill {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.latency-highlight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.latency-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #0e639c;
+}
+
+.latency-label {
+  font-size: 12px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.engine-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.engine-stat-item {
+  padding: 12px;
+  background: #1e1e1e;
+  border-radius: 6px;
+}
+
+.engine-stat-header {
+  margin-bottom: 8px;
+  color: #e0e0e0;
+}
+
+.engine-stat-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: #888;
+}
+
+.engine-stat-metrics span {
+  padding: 4px 8px;
+  background: #2d2d30;
+  border-radius: 4px;
+}

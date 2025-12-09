@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ v20.1Ω — OMEGA PIPELINE v20Ω
-//   Super Prompt #15: Final optimized cognitive pipeline
-//   Router → Executor → Merger → Guardrails → Output
+//   Super Prompt #4 + #15: Final optimized cognitive pipeline
+//   Router → Executor → Merger → Guardrails → Output + Self-Healing
 // ═══════════════════════════════════════════════════════════════
 
 pub mod router;
@@ -11,6 +11,7 @@ pub mod guardrails;
 pub mod diagnostics;
 pub mod scheduler;
 pub mod pipeline;
+pub mod self_healing_hook;
 
 pub use router::*;
 pub use executor::*;
@@ -19,6 +20,7 @@ pub use guardrails::*;
 pub use diagnostics::*;
 pub use scheduler::*;
 pub use pipeline::*;
+pub use self_healing_hook::{SelfHealingHook, SelfHealingHookConfig, HealingReport, RequestContext};
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
