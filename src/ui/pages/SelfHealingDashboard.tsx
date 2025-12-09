@@ -42,12 +42,13 @@ interface AnomalyPrediction {
   trend: 'Improving' | 'Stable' | 'Degrading' | 'CriticalDegradation';
 }
 
-interface RepairAction {
-  type: string;
-  description: string;
-  priority: number;
-  risk_level: number;
-}
+// RepairAction type kept for future use when backend provides full action details
+// interface RepairAction {
+//   type: string;
+//   description: string;
+//   priority: number;
+//   risk_level: number;
+// }
 
 interface HealingReport {
   timestamp: number;
