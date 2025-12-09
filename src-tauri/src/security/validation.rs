@@ -15,13 +15,16 @@ const MAX_STRING_LENGTH: usize = 1_000_000; // 1 MB
 const MAX_ARRAY_LENGTH: usize = 10_000;
 const MAX_OBJECT_DEPTH: usize = 32;
 
+// Phase 1 Stabilisation: Regex statiques dans lazy_static
+// Safe: unwrap() acceptable car regex hard-codées, validées à la compilation
+// Panic au démarrage si regex invalide (comportement souhaité)
 static DANGEROUS_PATTERNS: Lazy<Vec<Regex>> = Lazy::new(|| {
     vec![
-        Regex::new(r"<script[^>]*>.*?</script>").unwrap(),
-        Regex::new(r"javascript:").unwrap(),
-        Regex::new(r"on\w+\s*=").unwrap(),
-        Regex::new(r"eval\s*\(").unwrap(),
-        Regex::new(r"(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\s+").unwrap(),
+        Regex::new(r"<script[^>]*>.*?</script>").unwrap(), // Safe: static regex
+        Regex::new(r"javascript:").unwrap(),                // Safe: static regex
+        Regex::new(r"on\w+\s*=").unwrap(),                  // Safe: static regex
+        Regex::new(r"eval\s*\(").unwrap(),                  // Safe: static regex
+        Regex::new(r"(?i)(UNION|SELECT|INSERT|UPDATE|DELETE|DROP)\s+").unwrap(), // Safe: static regex
     ]
 });
 
