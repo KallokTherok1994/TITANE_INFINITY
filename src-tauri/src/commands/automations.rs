@@ -240,7 +240,15 @@ pub fn init() -> AutomationEngineState {
         running: Arc::new(Mutex::new(HashSet::new())),
     };
 
-    println!("[AUTOMATION] Engine initialized with {} automations", state.configs.lock().unwrap().len());
+    // Phase 1 Stabilisation: Gérer lock poison
+    let configs_len = match state.configs.lock() {
+        Ok(c) => c.len(),
+        Err(e) => {
+            eprintln!("Warning: Automations configs lock poisoned in init, recovering: {}", e);
+            e.into_inner().len()
+        }
+    };
+    println!("[AUTOMATION] Engine initialized with {} automations", configs_len);
 
     state
 }

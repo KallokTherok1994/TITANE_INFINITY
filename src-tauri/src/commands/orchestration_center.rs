@@ -141,7 +141,8 @@ async fn ping_gemini_internal(secrets: Option<&SecureSecretsEngine>) -> Provider
         };
     }
 
-    let api_key = api_key.unwrap();
+    // Phase 1 Stabilisation: Safe unwrap après check has_key
+    let api_key = api_key.expect("API key checked above");
 
     // Try to ping Gemini API (simplified check)
     let client = reqwest::Client::builder()
