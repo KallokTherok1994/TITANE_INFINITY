@@ -187,16 +187,16 @@ impl MemoryContextEngine {
     pub async fn search_similar(&self, query: &str, limit: usize) -> Vec<RelevantFact> {
         // En production: utiliser la recherche vectorielle du Memory OS
         // Version simplifiée: recherche par mots-clés
-        let query_words: std::collections::HashSet<_> = query.to_lowercase()
-            .split_whitespace()
-            .collect();
+        let query_lower = query.to_lowercase();
+        let query_words: std::collections::HashSet<&str> = query_lower.split_whitespace().collect();
 
         let mut results: Vec<_> = self.recent_facts_cache.iter()
             .map(|fact| {
-                let fact_words: std::collections::HashSet<_> = fact.content.to_lowercase()
-                    .split_whitespace()
-                    .collect();
-                let intersection = query_words.intersection(&fact_words).count();
+                let fact_lower = fact.content.to_lowercase();
+                let fact_words: std::collections::HashSet<&str> = fact_lower.split_whitespace().collect();
+                let intersection = query_words.iter()
+                    .filter(|w| fact_words.contains(*w))
+                    .count();
                 let score = if fact_words.is_empty() {
                     0.0
                 } else {

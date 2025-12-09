@@ -1,0 +1,281 @@
+// ═══════════════════════════════════════════════════════════════
+//   CYCLE ENGINE COMMANDS — Tauri API
+//   SUPER PROMPT #16
+// ═══════════════════════════════════════════════════════════════
+
+use crate::cycle_engine::{
+    AlignmentEngine, ClockEngine, CognitiveRhythmParams, CycleEngineConfig, CycleState,
+    LoadRegulator, PredictiveTemporalModel, SeasonalParameters,
+};
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+use tauri::State;
+use tokio::sync::RwLock;
+
+/// Cycle Engine State
+pub struct CycleEngineState {
+    pub clock: Arc<RwLock<ClockEngine>>,
+    pub load_regulator: Arc<LoadRegulator>,
+    pub predictive_model: Arc<PredictiveTemporalModel>,
+    pub alignment_engine: Arc<AlignmentEngine>,
+}
+
+impl CycleEngineState {
+    pub fn new(config: CycleEngineConfig) -> Self {
+        let clock = Arc::new(RwLock::new(ClockEngine::new(config.tick_interval_seconds)));
+        let load_regulator = Arc::new(LoadRegulator::new());
+        let predictive_model = Arc::new(PredictiveTemporalModel::new());
+        let alignment_engine = Arc::new(AlignmentEngine::new());
+        
+        Self {
+            clock,
+            load_regulator,
+            predictive_model,
+            alignment_engine,
+        }
+    }
+    
+    pub async fn start(&self) -> Result<(), String> {
+        let mut clock = self.clock.write().await;
+        clock.start().await.map_err(|e| format!("{:?}", e))
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CycleStateResponse {
+    pub daily_phase: String,
+    pub weekly_phase: String,
+    pub monthly_phase: String,
+    pub seasonal_phase: String,
+    pub cognitive_mode: String,
+    pub timestamp: i64,
+}
+
+/// Get current cycle state
+#[tauri::command]
+pub async fn cycle_get_state(
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<CycleStateResponse, String> {
+    let state = state.read().await;
+    let clock = state.clock.read().await;
+    
+    let cycle_state = CycleState::current();
+    
+    Ok(CycleStateResponse {
+        daily_phase: format!("{:?}", cycle_state.daily_phase),
+        weekly_phase: format!("{:?}", cycle_state.weekly_phase),
+        monthly_phase: format!("{:?}", cycle_state.monthly_phase),
+        seasonal_phase: format!("{:?}", cycle_state.seasonal_phase),
+        cognitive_mode: format!("{:?}", cycle_state.daily_phase.cognitive_mode()),
+        timestamp: cycle_state.timestamp,
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CognitiveRhythmResponse {
+    pub omega_depth: f32,
+    pub analysis_intensity: f32,
+    pub speed_vs_quality: f32,
+    pub memory_consolidation: f32,
+    pub creative_temperature: f32,
+    pub engine_weights: Vec<f32>,
+}
+
+/// Get current cognitive rhythm parameters
+#[tauri::command]
+pub async fn cycle_get_rhythm(
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<CognitiveRhythmResponse, String> {
+    let state = state.read().await;
+    let clock = state.clock.read().await;
+    
+    let cycle_state = CycleState::current();
+    let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+    
+    Ok(CognitiveRhythmResponse {
+        omega_depth: rhythm.omega_depth,
+        analysis_intensity: rhythm.analysis_intensity,
+        speed_vs_quality: rhythm.speed_vs_quality,
+        memory_consolidation: rhythm.memory_consolidation,
+        creative_temperature: rhythm.creative_temperature,
+        engine_weights: rhythm.omega_engine_weights(),
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoadRegulationRequest {
+    pub cpu_usage: f32,
+    pub memory_usage: f32,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct LoadRegulationResponse {
+    pub omega_intensity: f32,
+    pub self_healing_frequency: f32,
+    pub vector_search_k: usize,
+    pub kernel_priority: f32,
+    pub memory_gc_frequency: f32,
+    pub agi_introspection_depth: f32,
+}
+
+/// Get adaptive load regulation parameters
+#[tauri::command]
+pub async fn cycle_get_load_params(
+    request: LoadRegulationRequest,
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<LoadRegulationResponse, String> {
+    let state = state.read().await;
+    let clock = state.clock.read().await;
+    
+    let cycle_state = CycleState::current();
+    let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+    let load_params = state.load_regulator.adjust(
+        &cycle_state,
+        &rhythm,
+        request.cpu_usage,
+        request.memory_usage,
+    );
+    
+    Ok(LoadRegulationResponse {
+        omega_intensity: load_params.omega_intensity,
+        self_healing_frequency: load_params.self_healing_frequency,
+        vector_search_k: load_params.vector_search_k,
+        kernel_priority: load_params.kernel_priority,
+        memory_gc_frequency: load_params.memory_gc_frequency,
+        agi_introspection_depth: load_params.agi_introspection_depth,
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PredictiveEvent {
+    pub event_type: String,
+    pub predicted_time: i64,
+    pub confidence: f32,
+    pub suggested_action: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct PredictiveResponse {
+    pub events: Vec<PredictiveEvent>,
+}
+
+/// Get predictive temporal events
+#[tauri::command]
+pub async fn cycle_predict_events(
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<PredictiveResponse, String> {
+    let state = state.read().await;
+    let clock = state.clock.read().await;
+    
+    let cycle_state = CycleState::current();
+    let events = state.predictive_model.predict_next_cycle_change(&cycle_state);
+    
+    Ok(PredictiveResponse {
+        events: events.into_iter().map(|e| PredictiveEvent {
+            event_type: e.event_type,
+            predicted_time: e.predicted_time,
+            confidence: e.confidence,
+            suggested_action: e.suggested_action,
+        }).collect(),
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SuggestOptimalTimeRequest {
+    pub task_type: String, // "creative", "analytical", "consolidation", etc.
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SuggestOptimalTimeResponse {
+    pub optimal_phase: Option<String>,
+    pub reason: String,
+}
+
+/// Suggest optimal time for a task type
+#[tauri::command]
+pub async fn cycle_suggest_optimal_time(
+    request: SuggestOptimalTimeRequest,
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<SuggestOptimalTimeResponse, String> {
+    let state = state.read().await;
+    
+    let optimal_phase = state.predictive_model.suggest_optimal_time(&request.task_type);
+    
+    Ok(SuggestOptimalTimeResponse {
+        optimal_phase: optimal_phase.map(|p| format!("{:?}", p)),
+        reason: format!("Task '{}' aligns best with {:?} phase", request.task_type, optimal_phase),
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AlignmentResponse {
+    pub kernel_aligned: bool,
+    pub omega_aligned: bool,
+    pub memory_os_aligned: bool,
+    pub agi_core_aligned: bool,
+    pub self_healing_aligned: bool,
+    pub alignment_score: f32,
+    pub is_well_aligned: bool,
+}
+
+/// Get system alignment status
+#[tauri::command]
+pub async fn cycle_get_alignment(
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<AlignmentResponse, String> {
+    let state = state.read().await;
+    let clock = state.clock.read().await;
+    
+    let cycle_state = CycleState::current();
+    let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+    
+    // Get CPU/memory from system (simplified)
+    let cpu_usage = 50.0;
+    let memory_usage = 60.0;
+    let load_params = state.load_regulator.adjust(&cycle_state, &rhythm, cpu_usage, memory_usage);
+    
+    let alignment = state.alignment_engine.align_system(&cycle_state, &rhythm, &load_params);
+    
+    Ok(AlignmentResponse {
+        kernel_aligned: alignment.kernel_aligned,
+        omega_aligned: alignment.omega_aligned,
+        memory_os_aligned: alignment.memory_os_aligned,
+        agi_core_aligned: alignment.agi_core_aligned,
+        self_healing_aligned: alignment.self_healing_aligned,
+        alignment_score: alignment.alignment_score,
+        is_well_aligned: alignment.is_well_aligned(),
+    })
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CycleDiagnosticsResponse {
+    pub clock_running: bool,
+    pub current_hour: u32,
+    pub uptime_seconds: i64,
+    pub daily_phase: String,
+    pub cognitive_mode: String,
+    pub omega_intensity: f32,
+    pub alignment_score: f32,
+}
+
+/// Get cycle engine diagnostics
+#[tauri::command]
+pub async fn cycle_get_diagnostics(
+    state: State<'_, Arc<RwLock<CycleEngineState>>>,
+) -> Result<CycleDiagnosticsResponse, String> {
+    let state = state.read().await;
+    let clock = state.clock.read().await;
+    
+    let cycle_state = CycleState::current();
+    let rhythm = CognitiveRhythmParams::from_cycle_state(&cycle_state);
+    
+    Ok(CycleDiagnosticsResponse {
+        clock_running: clock.is_running(),
+        current_hour: clock.current_hour(),
+        uptime_seconds: 0, // TODO: track uptime
+        daily_phase: format!("{:?}", cycle_state.daily_phase),
+        cognitive_mode: format!("{:?}", cycle_state.daily_phase.cognitive_mode()),
+        omega_intensity: rhythm.omega_depth,
+        alignment_score: 0.85, // TODO: calculate real alignment
+    })
+}

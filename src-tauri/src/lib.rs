@@ -250,6 +250,84 @@ pub mod services;
 pub mod memory_os; // ✅ Memory OS vΩ (Neural Memory System: STM → MTM → LTM, Vector Search, Consolidation, Forgetting)
 
 // ═══════════════════════════════════════════════════════════════
+// MULTIMODAL ENGINE vΩ (SUPER PROMPT #15)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod multimodal; // ✅ Multimodal Engine vΩ (Vision, Images, Audio 3D, Embeddings Multimodaux)
+
+// ═══════════════════════════════════════════════════════════════
+// CYCLE & CONTINUITY ENGINE v2 (SUPER PROMPT #16)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod cycle_engine; // ✅ Cycle Engine v2 (Rythmes, Saisons, Temporalité, Évolution Cognitive)
+
+// ═══════════════════════════════════════════════════════════════
+// PERFORMANCE & PARALLELISM ENGINE vΩ (SUPER PROMPT #21)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod performance; // ✅ Performance & Parallelism Engine vΩ (Scheduler, Thread Pools, OMEGA Parallèle)
+
+// ═══════════════════════════════════════════════════════════════
+// HARMONIC COGNITIVE OS vΩ (SUPER PROMPT #22)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod harmonic_os; // ✅ Harmonic OS vΩ (Synchronisation Globale, H-Field, Régulation Auto)
+
+// ═══════════════════════════════════════════════════════════════
+// COGNITIVE GRAVITY ENGINE vΩ (SUPER PROMPT #24)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod cognitive_gravity; // ✅ Cognitive Gravity vΩ (Attracteurs, Anti-Attracteurs, Champ Gravitationnel)
+
+// ═══════════════════════════════════════════════════════════════
+// HARMONIC + GRAVITY INTEGRATION vΩ
+// ═══════════════════════════════════════════════════════════════
+
+pub mod harmonic_gravity_integration; // ✅ Integration Harmonic OS + Cognitive Gravity
+
+// ═══════════════════════════════════════════════════════════════
+// CONVERSATION OS #∞ (SUPER PROMPT #9)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod conversation_os; // ✅ Conversation OS #∞ (Intent, Narrative, Persona, Style, Emotion, Safety)
+
+// ═══════════════════════════════════════════════════════════════
+// AGI CORE (SUPER PROMPT #11)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod agi_core; // ✅ AGI Core v20Ω (Introspection, Meta-Learning, Self-Model, Strategy, Evolution, Reasoning)
+
+// ═══════════════════════════════════════════════════════════════
+// CONSTITUTION (SUPER PROMPT #13)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod constitution; // ✅ Constitution v∞ (Principles, Values, Limits, Rights, Governance, Enforcement, Evolution)
+
+// ═══════════════════════════════════════════════════════════════
+// API INTEGRATIONS HUB (SUPER PROMPT #17)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod api_hub; // ✅ API Hub vΩ (OpenAI, Gemini, Anthropic, Router, Multimodal, Harmonizer, Safety)
+
+// ═══════════════════════════════════════════════════════════════
+// TEMPORAL INTELLIGENCE ENGINE v2 (SUPER PROMPT #18)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod temporal_engine; // ✅ Temporal Engine v2 (Time Model, Memory, Routines, Planner, Anticipator, Alignment)
+
+// ═══════════════════════════════════════════════════════════════
+// AGENT SYSTEM vΩ (SUPER PROMPT #19)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod agent_system; // ✅ Agent System vΩ (Multi-Agents, Roles, Capabilities, Supervisor, Sandbox, Collaboration)
+
+// ═══════════════════════════════════════════════════════════════
+// META-ENERGY ENGINE vΩ (SUPER PROMPT #20)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod meta_energy; // ✅ Meta-Energy Engine vΩ (Homéostasie, Énergie, Fatigue, Récupération, Load Balancing, Prédiction)
+
+// ═══════════════════════════════════════════════════════════════
 // RE-EXPORTS v15
 // ═══════════════════════════════════════════════════════════════
 

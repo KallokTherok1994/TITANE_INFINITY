@@ -4,10 +4,17 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::core::modules::unified_memory::MemoryItem;
-use crate::core::types::SystemHealthSnapshot;
-use crate::memory_os::VectorSearchResult;
+use crate::memory_os::types::VectorSearchResult;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+/// System health snapshot (simplified)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct SystemHealthSnapshot {
+    pub cpu_usage: f32,
+    pub memory_usage: f32,
+    pub timestamp: i64,
+}
 
 /// OMEGA Context v2 (Enhanced)
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -227,7 +234,8 @@ impl OmegaContextV2 {
     /// Check if system is under pressure
     pub fn is_system_under_pressure(&self) -> bool {
         if let Some(state) = &self.system_state {
-            state.is_degraded()
+            // Consider system degraded if CPU or memory > 75%
+            state.cpu_usage > 75.0 || state.memory_usage > 75.0
         } else {
             false
         }

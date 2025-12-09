@@ -32,6 +32,7 @@ pub mod memory_os;
 pub mod api;
 
 // NEW: SUPER PROMPTS #6-7-8 modules
+pub mod types; // Shared types (must be first)
 pub mod vector_index;
 pub mod vector_hnsw;
 pub mod embeddings;
@@ -41,6 +42,15 @@ pub mod semantic_search;
 pub mod memory_os_bridge;
 pub mod config;
 pub mod commands; // Tauri commands
+
+// Re-export public types (selective)
+pub use types::*;
+pub use vector_index::{SearchResult, VectorIndex, VectorIndexConfig};
+pub use embeddings::{EmbeddingEngine, EmbeddingSource, EmbeddingConfig};
+pub use clustering::{KMeansClustering, KMeansConfig, InitMethod};
+pub use semantic_search::SemanticSearchEngine;
+pub use memory_os_bridge::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSBridgeStats};
+pub use config::MemoryOSConfigV2;
 
 // Re-exports for convenient access (original)
 pub use memory_state::{MemoryEntry, MemoryTier, MemoryType, MemorySnapshot};
@@ -56,11 +66,8 @@ pub use memory_os::MemoryOS;
 // NEW: Re-exports for SUPER PROMPTs #6-7-8
 pub use vector_index::*;
 pub use vector_hnsw::*;
-pub use embeddings::*;
 pub use similarity::*;
-pub use clustering::*;
 pub use semantic_search::*;
-pub use memory_os_bridge::*;
 pub use config::*;
 
 // Version info

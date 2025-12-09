@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::core::modules::unified_memory::UnifiedMemory;
-use crate::memory_os::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSError, MemoryOSResult};
+use crate::memory_os::{MemoryOSBridge, MemoryOSBridgeConfig, MemoryOSResult};
 use crate::omega::context_v2::OmegaContextV2;
 use std::sync::Arc;
 use tokio::sync::RwLock;

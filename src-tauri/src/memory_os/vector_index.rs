@@ -2,7 +2,7 @@
 //   VECTOR INDEX TRAIT — Abstraction for HNSW/FAISS
 // ═══════════════════════════════════════════════════════════════
 
-use crate::memory_os::{MemoryOSError, MemoryOSResult};
+use crate::memory_os::types::MemoryOSResult;
 use serde::{Deserialize, Serialize};
 
 /// Vector Index Trait (HNSW / FAISS abstraction)

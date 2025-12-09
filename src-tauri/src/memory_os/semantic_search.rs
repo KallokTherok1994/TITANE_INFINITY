@@ -3,8 +3,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::memory_os::{
-    Cluster, ClusterResult, EmbeddingEngine, HnswVectorIndex, KMeansClustering, KMeansConfig,
-    MemoryOSError, MemoryOSResult, SearchResult, VectorIndex, VectorIndexConfig,
+    ClusterResult, EmbeddingEngine, HnswVectorIndex, KMeansClustering, KMeansConfig,
+    MemoryOSError, MemoryOSResult, VectorIndex, VectorIndexConfig,
     VectorSearchResult,
 };
 use std::collections::HashMap;

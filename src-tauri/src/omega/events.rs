@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter};
 
 /// OMEGA Event Types
 #[derive(Debug, Clone, Serialize, Deserialize)]

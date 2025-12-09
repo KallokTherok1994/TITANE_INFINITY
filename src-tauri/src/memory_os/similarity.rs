@@ -2,7 +2,7 @@
 //   SIMILARITY FUNCTIONS — Cosine, Euclidean, Dot Product
 // ═══════════════════════════════════════════════════════════════
 
-use crate::memory_os::{MemoryOSError, MemoryOSResult};
+use crate::memory_os::types::{MemoryOSError, MemoryOSResult};
 
 /// Similarity metric
 #[derive(Debug, Clone, Copy)]

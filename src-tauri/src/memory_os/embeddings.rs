@@ -2,7 +2,7 @@
 //   EMBEDDINGS ENGINE — OpenAI / Gemini / Local
 // ═══════════════════════════════════════════════════════════════
 
-use crate::memory_os::{MemoryOSError, MemoryOSResult};
+use crate::memory_os::types::{MemoryOSError, MemoryOSResult};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;

@@ -171,6 +171,33 @@ impl UnifiedMemory {
     const STM_CAPACITY: usize = 100;
     const MTM_CAPACITY: usize = 500;
     const TIMELINE_MAX_EVENTS: usize = 1000;
+    
+    // === PUBLIC GETTERS (for Memory OS Bridge) ===
+    
+    /// Get STM items (for Memory OS integration)
+    pub fn get_stm_items(&self) -> &VecDeque<MemoryItem> {
+        &self.stm.items
+    }
+    
+    /// Get MTM items (for Memory OS integration)
+    pub fn get_mtm_items(&self) -> &Vec<MemoryItem> {
+        &self.mtm.items
+    }
+    
+    /// Get LTM items (for Memory OS integration)
+    /// Note: LTM is disk-based, returns empty Vec (use index for metadata)
+    pub fn get_ltm_items(&self) -> Vec<MemoryItem> {
+        // LTM is disk-based, would need to load from files
+        // For now, return empty vec as items are not kept in memory
+        Vec::new()
+    }
+    
+    /// Get LTM metadata index (for Memory OS integration)
+    pub fn get_ltm_index(&self) -> &HashMap<MemoryId, MemoryMetadata> {
+        &self.ltm.index
+    }
+    
+    // === CORE METHODS ===
 
     pub fn new() -> Self {
         Self {

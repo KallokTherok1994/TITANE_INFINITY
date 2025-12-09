@@ -114,7 +114,7 @@ impl ConversationSafety {
     pub async fn check(&self, input: &str, intent: &UserIntent) -> SafetyCheck {
         let input_lower = input.to_lowercase();
         let mut risk_categories = Vec::new();
-        let mut risk_level = 0.0;
+        let mut risk_level: f32 = 0.0;
         let mut suggestions = Vec::new();
 
         // 1. Vérifier les patterns bloqués

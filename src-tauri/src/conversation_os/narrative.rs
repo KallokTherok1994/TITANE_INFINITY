@@ -84,7 +84,7 @@ pub struct NarrativeState {
 }
 
 /// Position dans le discours
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum DiscoursePosition {
     Opening,
     Development,

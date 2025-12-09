@@ -4,9 +4,9 @@
 //   and new semantic search capabilities
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::modules::unified_memory::{MemoryItem, MemoryTier, UnifiedMemory};
+use crate::core::modules::unified_memory::{MemoryItem, UnifiedMemory};
 use crate::memory_os::{
-    EmbeddingConfig, EmbeddingEngine, EmbeddingSource, HnswVectorIndex, MemoryOSError,
+    EmbeddingConfig, EmbeddingEngine, EmbeddingSource, MemoryOSError,
     MemoryOSResult, SemanticSearchConfig, SemanticSearchEngine, VectorIndexConfig,
     VectorSearchResult,
 };
@@ -192,7 +192,7 @@ impl MemoryOSBridge {
     
     /// Promote memory tier
     pub async fn promote(&self, id: &str) -> MemoryOSResult<()> {
-        let mut memory = self.unified_memory.write().await;
+        let memory = self.unified_memory.write().await;
         
         // Find and promote
         // TODO: Implement promotion logic in UnifiedMemory
@@ -291,33 +291,24 @@ impl MemoryOSBridge {
     /// Helper: Find memory by ID in UnifiedMemory
     fn find_memory_by_id(&self, memory: &UnifiedMemory, id: &str) -> Option<MemoryItem> {
         // Search in STM
-        for item in &memory.stm.items {
+        for item in memory.get_stm_items() {
             if item.id == id {
                 return Some(item.clone());
             }
         }
         
         // Search in MTM
-        for item in &memory.mtm.items {
+        for item in memory.get_mtm_items() {
             if item.id == id {
                 return Some(item.clone());
             }
         }
         
-        // Search in LTM
-        if let Some(metadata) = memory.ltm.index.get(id) {
-            // Reconstruct MemoryItem from metadata
-            return Some(MemoryItem {
-                id: metadata.id.clone(),
-                content: String::new(), // Would need to load from disk
-                memory_type: metadata.memory_type,
-                importance: metadata.importance,
-                tags: metadata.tags.iter().cloned().collect(),
-                created_at: metadata.created_at,
-                accessed_count: 0,
-                last_accessed: 0,
-                tier: MemoryTier::LongTerm,
-            });
+        // Search in LTM (disk-based, use index)
+        if let Some(_metadata) = memory.get_ltm_index().get(id) {
+            // LTM is disk-based, would need to load content from file
+            // For now, return None as full reconstruction needs disk I/O
+            return None;
         }
         
         None
