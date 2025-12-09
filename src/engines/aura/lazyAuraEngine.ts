@@ -1,13 +1,17 @@
 /**
  * TITANE_INFINITY v∞.PHASE4.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * LAZY AURA ENGINE FACADE
  * Permet lazy loading du moteur aura pour réduire bundle initial
  */
 
-let engineInstance: any = null;
-let enginePromise: Promise<any> | null = null;
+// Type for the aura engine instance
+type AuraEngineModule = typeof import('./auraEngine');
+type AuraEngineInstance = AuraEngineModule['auraEngine'];
+
+let engineInstance: AuraEngineInstance | null = null;
+let enginePromise: Promise<AuraEngineInstance> | null = null;
 
 /**
  * Lazy load aura engine

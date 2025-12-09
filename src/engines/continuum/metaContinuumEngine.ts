@@ -28,18 +28,11 @@ import {
   type ArchetypeResonance,
 } from '../psyche/archetypeResonanceEngine';
 
-// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-// Type stub pour éviter erreurs de compilation
-type MultimodalPresenceState = any;
-const multimodalPresenceEngine = {
-  getState: () => ({} as MultimodalPresenceState),
-};
-/*
+// REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stubs
 import {
   multimodalPresenceEngine,
   type MultimodalPresenceState,
-} from '../presence/multimodalPresenceEngine';
-*/
+} from '../presence/_stubs';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -421,8 +414,10 @@ class MetaContinuumEngine {
       predictedState: {
         presenceEnergy: predictedVector[1],
         breathing: {
+          phase: 0,
+          cycleDuration: 4000,
           amplitude: predictedVector[2],
-        } as any,
+        },
       },
       confidence: this.state.memory.evolutionVector.confidence,
       trajectory: this.describeTrajectory(),

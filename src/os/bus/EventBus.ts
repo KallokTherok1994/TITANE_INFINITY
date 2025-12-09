@@ -35,7 +35,10 @@ export class EventBus {
       this.subscribers.set(type, new Map());
     }
 
-    this.subscribers.get(type)!.set(subscriptionId, handler as EventHandler);
+    const typeSubscribers = this.subscribers.get(type);
+    if (typeSubscribers) {
+      typeSubscribers.set(subscriptionId, handler as EventHandler);
+    }
 
     return {
       id: subscriptionId,

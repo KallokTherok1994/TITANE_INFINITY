@@ -26,10 +26,8 @@
 import {
   multimodalPresenceEngine,
   type PresenceMode as _PresenceMode,
+  type ExpressiveIntention,
 } from '../presence/_stubs';
-
-// Type stub local pour ExpressiveIntention (non présent dans _stubs)
-type ExpressiveIntention = any;
 
 /*
 import {

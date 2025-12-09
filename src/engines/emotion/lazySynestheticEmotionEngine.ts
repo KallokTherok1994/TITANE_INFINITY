@@ -1,13 +1,17 @@
 /**
  * TITANE_INFINITY v∞.PHASE4.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * LAZY SYNESTHETIC EMOTION ENGINE FACADE
  * Permet lazy loading du moteur émotionnel pour réduire bundle initial
  */
 
-let engineInstance: any = null;
-let enginePromise: Promise<any> | null = null;
+// Type for the engine instance
+type EngineModule = typeof import('./synestheticEmotionEngine');
+type EngineInstance = EngineModule['synestheticEmotionEngine'];
+
+let engineInstance: EngineInstance | null = null;
+let enginePromise: Promise<EngineInstance> | null = null;
 
 /**
  * Lazy load synesthetic emotion engine

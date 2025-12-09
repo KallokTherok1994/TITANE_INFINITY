@@ -143,7 +143,10 @@ export class ConfigManager {
       this.watchers.set(key, new Set());
     }
 
-    this.watchers.get(key)!.add(handler as (value: unknown) => void);
+    const keyWatchers = this.watchers.get(key);
+    if (keyWatchers) {
+      keyWatchers.add(handler as (value: unknown) => void);
+    }
 
     // Appeler avec la valeur actuelle
     handler(this.config[key]);

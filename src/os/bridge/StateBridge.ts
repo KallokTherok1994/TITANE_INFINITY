@@ -127,7 +127,10 @@ export class StateBridge {
       this.subscribers.set(key, new Set());
     }
 
-    this.subscribers.get(key)!.add(handler as (value: unknown) => void);
+    const keySubs = this.subscribers.get(key);
+    if (keySubs) {
+      keySubs.add(handler as (value: unknown) => void);
+    }
 
     // Appeler avec la valeur actuelle
     const currentValue = this.get<T>(key);

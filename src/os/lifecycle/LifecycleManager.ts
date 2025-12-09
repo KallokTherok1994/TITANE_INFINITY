@@ -24,7 +24,10 @@ export class LifecycleManager {
       this.hooks.set(phase, new Set());
     }
 
-    this.hooks.get(phase)!.add(hook);
+    const phaseHooks = this.hooks.get(phase);
+    if (phaseHooks) {
+      phaseHooks.add(hook);
+    }
 
     return () => {
       this.hooks.get(phase)?.delete(hook);

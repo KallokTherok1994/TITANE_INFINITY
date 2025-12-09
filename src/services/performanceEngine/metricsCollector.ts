@@ -28,6 +28,7 @@ import type {
   SystemMetrics,
   FrontendMetrics,
   IAMetrics,
+  VoiceMetrics,
   ModuleMetricsMap,
   ModulePerformanceState,
   TitaneModule,
@@ -325,6 +326,142 @@ class IAMetricsTracker {
 }
 
 // =============================================================================
+// VOICE METRICS TRACKER
+// =============================================================================
+
+class VoiceMetricsTracker {
+  private asrLatencies: number[] = [];
+  private ttsLatencies: number[] = [];
+  private omegaLatencies: number[] = [];
+  private asrConfidences: number[] = [];
+  private asrErrors = 0;
+  private ttsErrors = 0;
+  private omegaErrors = 0;
+  private asrRequests = 0;
+  private ttsRequests = 0;
+  private omegaRequests = 0;
+  private feedbackDetections = 0;
+  private feedbackFalsePositives = 0;
+  private vadSuspensions = 0;
+  private ttsProvider = 'none';
+  private asrAvailable = false;
+  private ttsAvailable = false;
+  private omegaBreakdowns: Array<{ asrMs: number; iaMs: number; ttsMs: number }> = [];
+
+  recordASRRequest(latency: number, confidence: number, success: boolean): void {
+    this.asrLatencies.push(latency);
+    this.asrConfidences.push(confidence);
+    this.asrRequests++;
+    if (!success) this.asrErrors++;
+    this.asrAvailable = success;
+
+    if (this.asrLatencies.length > 50) this.asrLatencies.shift();
+    if (this.asrConfidences.length > 50) this.asrConfidences.shift();
+  }
+
+  recordTTSRequest(latency: number, provider: string, success: boolean): void {
+    this.ttsLatencies.push(latency);
+    this.ttsRequests++;
+    this.ttsProvider = provider;
+    if (!success) this.ttsErrors++;
+    this.ttsAvailable = success;
+
+    if (this.ttsLatencies.length > 50) this.ttsLatencies.shift();
+  }
+
+  recordOmegaRequest(
+    totalLatency: number,
+    breakdown: { asrMs: number; iaMs: number; ttsMs: number },
+    success: boolean
+  ): void {
+    this.omegaLatencies.push(totalLatency);
+    this.omegaBreakdowns.push(breakdown);
+    this.omegaRequests++;
+    if (!success) this.omegaErrors++;
+
+    if (this.omegaLatencies.length > 50) this.omegaLatencies.shift();
+    if (this.omegaBreakdowns.length > 50) this.omegaBreakdowns.shift();
+  }
+
+  recordFeedbackDetection(isFalsePositive: boolean): void {
+    this.feedbackDetections++;
+    if (isFalsePositive) this.feedbackFalsePositives++;
+  }
+
+  recordVADSuspension(): void {
+    this.vadSuspensions++;
+  }
+
+  setAvailability(asr: boolean, tts: boolean): void {
+    this.asrAvailable = asr;
+    this.ttsAvailable = tts;
+  }
+
+  getMetrics(): VoiceMetrics {
+    const avgArray = (arr: number[]) =>
+      arr.length > 0 ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+
+    const avgBreakdown =
+      this.omegaBreakdowns.length > 0
+        ? {
+            asrMs: avgArray(this.omegaBreakdowns.map(b => b.asrMs)),
+            iaMs: avgArray(this.omegaBreakdowns.map(b => b.iaMs)),
+            ttsMs: avgArray(this.omegaBreakdowns.map(b => b.ttsMs)),
+          }
+        : { asrMs: 0, iaMs: 0, ttsMs: 0 };
+
+    return {
+      asr: {
+        latency: avgArray(this.asrLatencies),
+        requestCount: this.asrRequests,
+        errorCount: this.asrErrors,
+        successRate: this.asrRequests > 0 ? (this.asrRequests - this.asrErrors) / this.asrRequests : 1.0,
+        averageConfidence: avgArray(this.asrConfidences),
+        available: this.asrAvailable,
+      },
+      tts: {
+        latency: avgArray(this.ttsLatencies),
+        requestCount: this.ttsRequests,
+        errorCount: this.ttsErrors,
+        successRate: this.ttsRequests > 0 ? (this.ttsRequests - this.ttsErrors) / this.ttsRequests : 1.0,
+        provider: this.ttsProvider,
+        available: this.ttsAvailable,
+      },
+      omega: {
+        latency: avgArray(this.omegaLatencies),
+        requestCount: this.omegaRequests,
+        errorCount: this.omegaErrors,
+        successRate: this.omegaRequests > 0 ? (this.omegaRequests - this.omegaErrors) / this.omegaRequests : 1.0,
+        breakdown: avgBreakdown,
+      },
+      feedback: {
+        detectionCount: this.feedbackDetections,
+        suspensionCount: this.vadSuspensions,
+        falsePositiveRate:
+          this.feedbackDetections > 0 ? this.feedbackFalsePositives / this.feedbackDetections : 0,
+      },
+    };
+  }
+
+  reset(): void {
+    this.asrLatencies = [];
+    this.ttsLatencies = [];
+    this.omegaLatencies = [];
+    this.asrConfidences = [];
+    this.asrErrors = 0;
+    this.ttsErrors = 0;
+    this.omegaErrors = 0;
+    this.asrRequests = 0;
+    this.ttsRequests = 0;
+    this.omegaRequests = 0;
+    this.feedbackDetections = 0;
+    this.feedbackFalsePositives = 0;
+    this.vadSuspensions = 0;
+    this.omegaBreakdowns = [];
+  }
+}
+
+// =============================================================================
 // METRICS COLLECTOR — SINGLETON
 // =============================================================================
 
@@ -346,6 +483,7 @@ export class MetricsCollector {
   private renderTracker = new RenderTimeTracker();
   private invokeTracker = new InvokeLatencyTracker();
   private iaTracker = new IAMetricsTracker();
+  private voiceTracker = new VoiceMetricsTracker();
 
   // Module metrics cache
   private moduleMetrics: Map<TitaneModule, ModulePerformanceState> = new Map();
@@ -472,10 +610,11 @@ export class MetricsCollector {
     const startTime = performance.now();
 
     // Collecter en parallèle
-    const [system, frontend, ia, modules] = await Promise.all([
+    const [system, frontend, ia, voice, modules] = await Promise.all([
       this.config.systemEnabled ? this.collectSystemMetrics() : null,
       this.config.frontendEnabled ? this.collectFrontendMetrics() : null,
       this.config.iaEnabled ? this.collectIAMetrics() : null,
+      this.collectVoiceMetrics(), // Toujours collecté
       this.config.modulesEnabled ? this.collectModuleMetrics() : null,
     ]);
 
@@ -489,6 +628,7 @@ export class MetricsCollector {
       system: system || createEmptySnapshot().system,
       frontend: frontend || createEmptySnapshot().frontend,
       ia: ia || createEmptySnapshot().ia,
+      voice: voice || createEmptySnapshot().voice,
       modules: modules || createEmptySnapshot().modules,
       summary: this.calculateSummary(system, frontend, ia),
     };
@@ -655,6 +795,14 @@ export class MetricsCollector {
 
   private async collectIAMetrics(): Promise<IAMetrics> {
     return this.iaTracker.getMetrics();
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // COLLECTE VOICE (ASR/TTS/OMEGA)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  private async collectVoiceMetrics(): Promise<VoiceMetrics> {
+    return this.voiceTracker.getMetrics();
   }
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -826,6 +974,52 @@ export class MetricsCollector {
   }
 
   /**
+   * Enregistre une requête ASR (reconnaissance vocale)
+   */
+  recordASRRequest(latency: number, confidence: number, success: boolean): void {
+    this.voiceTracker.recordASRRequest(latency, confidence, success);
+  }
+
+  /**
+   * Enregistre une requête TTS (synthèse vocale)
+   */
+  recordTTSRequest(latency: number, provider: string, success: boolean): void {
+    this.voiceTracker.recordTTSRequest(latency, provider, success);
+  }
+
+  /**
+   * Enregistre une requête OMEGA complète (ASR+IA+TTS)
+   */
+  recordOmegaRequest(
+    totalLatency: number,
+    breakdown: { asrMs: number; iaMs: number; ttsMs: number },
+    success: boolean
+  ): void {
+    this.voiceTracker.recordOmegaRequest(totalLatency, breakdown, success);
+  }
+
+  /**
+   * Enregistre une détection de feedback audio (Layer 3)
+   */
+  recordFeedbackDetection(isFalsePositive: boolean = false): void {
+    this.voiceTracker.recordFeedbackDetection(isFalsePositive);
+  }
+
+  /**
+   * Enregistre une suspension VAD (Layer 2)
+   */
+  recordVADSuspension(): void {
+    this.voiceTracker.recordVADSuspension();
+  }
+
+  /**
+   * Définit la disponibilité des services vocaux
+   */
+  setVoiceAvailability(asr: boolean, tts: boolean): void {
+    this.voiceTracker.setAvailability(asr, tts);
+  }
+
+  /**
    * Met à jour les métriques d'un module
    */
   updateModuleMetrics(
@@ -960,6 +1154,7 @@ export class MetricsCollector {
     this.renderTracker.reset();
     this.invokeTracker.reset();
     this.iaTracker.reset();
+    this.voiceTracker.reset();
   }
 }
 

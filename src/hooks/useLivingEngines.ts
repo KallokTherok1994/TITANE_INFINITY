@@ -17,26 +17,42 @@ import { useEffect, useState, useCallback } from 'react';
 
 // REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
 // Stubs temporaires pour compatibilité
-type SystemState = any;
-type PersonaState = any;
+interface SystemState {
+  engines: Record<string, boolean>;
+  health: number;
+}
+
+interface PersonaState {
+  mood: { current: string; intensity: number };
+  energy: number;
+  coherence: number;
+}
+
+interface VisualMultipliers {
+  glow: number;
+  motion: number;
+  depth: number;
+  sound: number;
+}
+
 const personaEngine = {
-  getState: () => ({
+  getState: (): PersonaState => ({
     mood: { current: 'neutre', intensity: 0.5 },
     energy: 100,
     coherence: 100,
-  } as PersonaState),
+  }),
   start: () => {},
   stop: () => {},
   initialize: async () => {},
   destroy: () => {},
-  getVisualMultipliers: () => ({
+  getVisualMultipliers: (): VisualMultipliers => ({
     glow: 1.0,
     motion: 1.0,
     depth: 1.0,
     sound: 1.0,
   }),
-  update: (_state: any, _options?: any) => {},
-  react: (_reaction: any) => {},
+  update: (_state: Partial<PersonaState>, _options?: Record<string, unknown>) => {},
+  react: (_reaction: string) => {},
 };
 
 /*

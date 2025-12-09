@@ -9,10 +9,16 @@
  * de compilation. Les modules dépendants devront être refactorisés.
  */
 
+export interface Prediction {
+  type: string;
+  confidence: number;
+  value: unknown;
+}
+
 export interface PredictiveFrame {
   confidence: number;
   timestamp: number;
-  predictions: any[];
+  predictions: Prediction[];
 }
 
 export const predictiveReflectionEngine = {
