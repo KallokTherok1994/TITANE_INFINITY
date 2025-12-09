@@ -1,12 +1,15 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
 //! TITANE∞ v20Ω — API ROUTER
 //! Super Prompt #17 — Routage intelligent vers le meilleur provider
+//! Intégration Temporelle — Temporal Intelligence v2
 //! ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use super::{
     Provider, Modality, APIRequest,
     provider_registry::{ProviderRegistry, ProviderCapability, ScoreWeights},
+    temporal_adapter::TemporalApiAdapter,
 };
 
 /// Stratégie de choix de modèle
@@ -40,16 +43,23 @@ pub struct RouteDecision {
     pub alternatives: Vec<(Provider, f32)>,
 }
 
-/// Routeur API
+/// Routeur API avec intelligence temporelle
 pub struct APIRouter {
     default_strategy: ModelChoiceStrategy,
+    temporal_adapter: Option<Arc<TemporalApiAdapter>>,
 }
 
 impl APIRouter {
     pub fn new() -> Self {
         Self {
             default_strategy: ModelChoiceStrategy::Balanced,
+            temporal_adapter: None,
         }
+    }
+
+    pub fn with_temporal_adapter(mut self, adapter: Arc<TemporalApiAdapter>) -> Self {
+        self.temporal_adapter = Some(adapter);
+        self
     }
 
     pub fn with_default_strategy(mut self, strategy: ModelChoiceStrategy) -> Self {
@@ -57,8 +67,15 @@ impl APIRouter {
         self
     }
 
-    /// Route une requête vers le meilleur provider
+    /// Route une requête vers le meilleur provider avec adaptation temporelle
     pub async fn route(&self, request: &APIRequest, registry: &ProviderRegistry) -> RouteDecision {
+        // Obtenir ajustements temporels si disponibles
+        let temporal_adjustments = if let Some(adapter) = &self.temporal_adapter {
+            Some(adapter.get_api_adjustments().await)
+        } else {
+            None
+        };
+
         // Si un provider préféré est spécifié et disponible, l'utiliser
         if let Some(preferred) = request.preferred_provider {
             if let Some(profile) = registry.get_profile(preferred) {
@@ -74,8 +91,14 @@ impl APIRouter {
             }
         }
 
-        // Sinon, utiliser la stratégie
-        let strategy = request.strategy;
+        // Sinon, utiliser la stratégie avec ajustements temporels
+        let mut strategy = request.strategy;
+
+        // Adapter stratégie selon temporalité
+        if let Some(adj) = &temporal_adjustments {
+            strategy = self.adapt_strategy_to_temporal(strategy, adj);
+        }
+
         let weights = self.strategy_to_weights(strategy);
 
         // Filtrer les providers qui supportent la modalité
@@ -92,10 +115,21 @@ impl APIRouter {
             };
         }
 
-        // Scorer les candidats
+        // Scorer les candidats avec bonus temporels
         let mut scored: Vec<(Provider, f32, String)> = candidates.iter()
             .map(|p| {
-                let score = self.score_provider(p, request, &weights);
+                let mut score = self.score_provider(p, request, &weights);
+
+                // Appliquer bonus temporel si adapter disponible
+                if let Some(adj) = &temporal_adjustments {
+                    if adj.prefer_quality && p.provider == Provider::Anthropic {
+                        score += 1.0; // Claude meilleur pour qualité
+                    }
+                    if adj.cost_sensitivity > 0.6 && p.provider == Provider::Gemini {
+                        score += 0.8; // Gemini meilleur rapport qualité/prix
+                    }
+                }
+
                 let reason = self.explain_score(p, request, &weights);
                 (p.provider, score, reason)
             })
@@ -123,6 +157,34 @@ impl APIRouter {
             reason,
             confidence: best_score / 10.0,
             alternatives,
+        }
+    }
+
+    /// Adapter stratégie selon contexte temporel
+    fn adapt_strategy_to_temporal(
+        &self,
+        strategy: ModelChoiceStrategy,
+        adjustments: &super::temporal_adapter::ApiTemporalAdjustments,
+    ) -> ModelChoiceStrategy {
+        // Heures de pointe: privilégier qualité
+        if adjustments.prefer_quality {
+            match strategy {
+                ModelChoiceStrategy::CostEfficient => ModelChoiceStrategy::Balanced,
+                ModelChoiceStrategy::Speed => ModelChoiceStrategy::Quality,
+                _ => strategy,
+            }
+        }
+        // Nuit: privilégier coût
+        else if adjustments.cost_sensitivity > 0.7 {
+            match strategy {
+                ModelChoiceStrategy::Quality => ModelChoiceStrategy::Balanced,
+                ModelChoiceStrategy::Speed => ModelChoiceStrategy::CostEfficient,
+                _ => strategy,
+            }
+        }
+        // Sinon garder stratégie originale
+        else {
+            strategy
         }
     }
 
