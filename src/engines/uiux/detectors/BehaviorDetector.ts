@@ -21,6 +21,15 @@ export class BehaviorDetector {
   private lastMouseMove = 0;
   private keypressTimestamps: number[] = [];
   private clickPositions: Array<{ x: number; y: number; t: number }> = [];
+  
+  // ✨ PHASE 4.4 - Store handlers for cleanup
+  private clickHandler = this.handleClick.bind(this);
+  private scrollHandler = this.handleScroll.bind(this);
+  private keypressHandler = this.handleKeypress.bind(this);
+  private mousemoveHandler = this.handleMouseMove.bind(this);
+  private focusHandler = this.handleFocus.bind(this);
+  private blurHandler = this.handleBlur.bind(this);
+  private visibilityHandler = this.handleVisibilityChange.bind(this);
 
   /**
    * Initialise le détecteur
@@ -29,23 +38,38 @@ export class BehaviorDetector {
     if (typeof window === 'undefined') return;
 
     // Tracking des clics
-    window.addEventListener('click', this.handleClick.bind(this));
+    window.addEventListener('click', this.clickHandler);
 
     // Tracking du scroll
-    window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
+    window.addEventListener('scroll', this.scrollHandler, { passive: true });
 
     // Tracking des touches clavier
-    window.addEventListener('keypress', this.handleKeypress.bind(this));
+    window.addEventListener('keypress', this.keypressHandler);
 
     // Tracking des mouvements souris
-    window.addEventListener('mousemove', this.handleMouseMove.bind(this), { passive: true });
+    window.addEventListener('mousemove', this.mousemoveHandler, { passive: true });
 
     // Tracking du focus
-    window.addEventListener('focus', this.handleFocus.bind(this), true);
-    window.addEventListener('blur', this.handleBlur.bind(this), true);
+    window.addEventListener('focus', this.focusHandler, true);
+    window.addEventListener('blur', this.blurHandler, true);
 
     // Tracking de la visibilité
-    document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+    document.addEventListener('visibilitychange', this.visibilityHandler);
+  }
+
+  /**
+   * ✨ PHASE 4.4 - Cleanup event listeners
+   */
+  destroy(): void {
+    if (typeof window === 'undefined') return;
+
+    window.removeEventListener('click', this.clickHandler);
+    window.removeEventListener('scroll', this.scrollHandler);
+    window.removeEventListener('keypress', this.keypressHandler);
+    window.removeEventListener('mousemove', this.mousemoveHandler);
+    window.removeEventListener('focus', this.focusHandler, true);
+    window.removeEventListener('blur', this.blurHandler, true);
+    document.removeEventListener('visibilitychange', this.visibilityHandler);
   }
 
   /**
