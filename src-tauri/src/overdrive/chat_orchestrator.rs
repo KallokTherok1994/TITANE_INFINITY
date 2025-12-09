@@ -99,6 +99,7 @@ pub struct ConversationMemory {
     pub last_updated: u64,
 }
 
+#[derive(Clone)]
 pub struct ChatOrchestratorState {
     conversations: Arc<RwLock<Vec<ConversationMemory>>>,
     provider_status: Arc<RwLock<Vec<ProviderStatus>>>,

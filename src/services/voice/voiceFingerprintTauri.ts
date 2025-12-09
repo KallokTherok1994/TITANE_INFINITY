@@ -12,15 +12,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Conditional import for Tauri environment only
-let invoke: ((cmd: string, args?: Record<string, unknown>) => Promise<unknown>) | undefined;
-
-if (typeof window !== 'undefined' && '__TAURI__' in window) {
-  // Dynamic import only in Tauri environment
-  import('@tauri-apps/api/tauri').then(module => {
-    invoke = module.invoke;
-  });
-}
+import { secureInvoke } from '@/lib/security';
 
 /**
  * Voice fingerprinting result from Rust backend
@@ -58,11 +50,6 @@ class VoiceFingerprintTauriService {
    * @returns Success/failure
    */
   async calibrateTitaneVoice(samplesList: Float32Array[]): Promise<void> {
-    if (!invoke) {
-      console.warn('[VoiceFingerprintTauri] ⚠️ Not in Tauri environment, skipping calibration');
-      return;
-    }
-
     if (this.calibrationInProgress) {
       console.warn('[VoiceFingerprintTauri] ⚠️ Calibration already in progress');
       return;
@@ -80,9 +67,9 @@ class VoiceFingerprintTauriService {
 
     try {
       // Convert Float32Array to regular arrays for JSON serialization
-      const samplesListArrays = samplesList.map((samples) => Array.from(samples));
+      const samplesListArrays = samplesList.map(samples => Array.from(samples));
 
-      await invoke('calibrate_titane_voice', {
+      await secureInvoke('calibrate_titane_voice', {
         samplesList: samplesListArrays,
       });
 
@@ -108,13 +95,10 @@ class VoiceFingerprintTauriService {
    * @returns VoiceFingerprintResult
    */
   async checkIsTitaneSpeaking(samples: Float32Array): Promise<VoiceFingerprintResult> {
-    if (!invoke) {
-      // Web-only mode: Layer 3 not available, rely on Layer 1+2
-      return { isTitane: false, similarity: 0.0 };
-    }
-
     if (!this.isCalibrated) {
-      console.warn('[VoiceFingerprintTauri] ⚠️ TITANE profile not calibrated, returning false');
+      console.warn(
+        '[VoiceFingerprintTauri] ⚠️ TITANE profile not calibrated, returning false'
+      );
       return { isTitane: false, similarity: 0.0 };
     }
 
@@ -122,9 +106,12 @@ class VoiceFingerprintTauriService {
       // Convert Float32Array to array for JSON serialization
       const samplesArray = Array.from(samples);
 
-      const result = await invoke<VoiceFingerprintResult>('check_is_titane_speaking', {
-        samples: samplesArray,
-      });
+      const result = await secureInvoke<VoiceFingerprintResult>(
+        'check_is_titane_speaking',
+        {
+          samples: samplesArray,
+        }
+      );
 
       if (result.isTitane) {
         console.log(
@@ -143,12 +130,8 @@ class VoiceFingerprintTauriService {
    * Get TITANE voice profile status
    */
   async getTitaneVoiceStatus(): Promise<TitaneVoiceStatus> {
-    if (!invoke) {
-      return { calibrated: false, sampleCount: 0, threshold: 0.75 };
-    }
-
     try {
-      const status = await invoke<TitaneVoiceStatus>('get_titane_voice_status');
+      const status = await secureInvoke<TitaneVoiceStatus>('get_titane_voice_status');
       this.isCalibrated = status.calibrated;
       return status;
     } catch (error) {
