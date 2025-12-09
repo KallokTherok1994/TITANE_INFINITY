@@ -1,7 +1,8 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v20.1Ω — OMEGA PIPELINE v20Ω
-//   Super Prompt #4 + #15: Final optimized cognitive pipeline
+//   TITANE∞ v20.1Ω — OMEGA PIPELINE v20Ω + vFinal Extensions
+//   Super Prompt #4 + #15 + #8: Final optimized cognitive pipeline
 //   Router → Executor → Merger → Guardrails → Output + Self-Healing
+//   NEW: Context v2, Memory Bridge, Adaptive Router, Events
 // ═══════════════════════════════════════════════════════════════
 
 pub mod router;
@@ -13,6 +14,12 @@ pub mod scheduler;
 pub mod pipeline;
 pub mod self_healing_hook;
 
+// NEW: SUPER PROMPT #8 extensions
+pub mod context_v2;
+pub mod memory_bridge;
+pub mod adaptive_router;
+pub mod events;
+
 pub use router::*;
 pub use executor::*;
 pub use merger::*;
@@ -21,6 +28,12 @@ pub use diagnostics::*;
 pub use scheduler::*;
 pub use pipeline::*;
 pub use self_healing_hook::{SelfHealingHook, SelfHealingHookConfig, HealingReport, RequestContext};
+
+// NEW: Export v2 extensions
+pub use context_v2::*;
+pub use memory_bridge::*;
+pub use adaptive_router::*;
+pub use events::*;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

@@ -74,6 +74,10 @@ rusqlite = { version = "0.37.0", features = ["bundled"] }
 ndarray = "0.17.1"
 rustfft = "6.2"                               # FFT for spectral analysis (voice fingerprinting)
 
+# SUPER PROMPTS #6-7-8: Memory OS + Vector Database
+hnsw_rs = "0.3"     # HNSW vector index (cross-platform)
+# faiss = { version = "0.12", optional = true }  # FAISS (Linux AVX only)
+
 [features]
 default = ["custom-protocol", "mock"]
 custom-protocol = ["tauri/custom-protocol"]

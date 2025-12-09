@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ v20.1 — MEMORY OS vΩ (Neural Memory System)
-//   Super Prompt #12: Hierarchical, Vectorized, Auto-Evolutionary
-//   Architecture: STM → MTM → LTM with Neural Consolidation
+//   Super Prompt #12 + #6-7-8: Hierarchical, Vectorized, Auto-Evolutionary
+//   Architecture: STM → MTM → LTM with Neural Consolidation + Vector Search
 // ═══════════════════════════════════════════════════════════════
 
 //! # Memory OS vΩ
@@ -12,6 +12,12 @@
 //! - **Auto-Consolidation**: Intelligent memory promotion
 //! - **Forgetting Engine**: Decay-based memory management
 //! - **Performance Targets**: <20ms recall, <5ms store, <300MB RAM
+//!
+//! NEW (SUPER PROMPTs #6-7-8):
+//! - **Vector Index**: HNSW-based semantic search
+//! - **Embeddings Engine**: OpenAI/Gemini/Local support
+//! - **Clustering**: K-means clustering for memory organization
+//! - **Memory OS Bridge**: Integration with UnifiedMemory
 
 pub mod memory_state;
 pub mod stm;
@@ -25,7 +31,18 @@ pub mod memory_signals;
 pub mod memory_os;
 pub mod api;
 
-// Re-exports for convenient access
+// NEW: SUPER PROMPTS #6-7-8 modules
+pub mod vector_index;
+pub mod vector_hnsw;
+pub mod embeddings;
+pub mod similarity;
+pub mod clustering;
+pub mod semantic_search;
+pub mod memory_os_bridge;
+pub mod config;
+pub mod commands; // Tauri commands
+
+// Re-exports for convenient access (original)
 pub use memory_state::{MemoryEntry, MemoryTier, MemoryType, MemorySnapshot};
 pub use stm::ShortTermMemory;
 pub use mtm::MidTermMemory;
@@ -35,6 +52,16 @@ pub use consolidator::Consolidator;
 pub use forgetting::ForgettingEngine;
 pub use memory_signals::MemorySignal;
 pub use memory_os::MemoryOS;
+
+// NEW: Re-exports for SUPER PROMPTs #6-7-8
+pub use vector_index::*;
+pub use vector_hnsw::*;
+pub use embeddings::*;
+pub use similarity::*;
+pub use clustering::*;
+pub use semantic_search::*;
+pub use memory_os_bridge::*;
+pub use config::*;
 
 // Version info
 pub const MEMORY_OS_VERSION: &str = "v20.1-Ω";

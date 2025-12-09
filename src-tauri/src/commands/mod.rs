@@ -20,6 +20,7 @@ pub mod exp_fusion;
 pub mod harmonia_commands;
 pub mod ia_commands; // ✅ v∞.19.3Ω: IA Commands (OpenAI + Claude + Unified)
 pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
+pub mod memory_os; // ✅ NEW v∞: Memory OS + Vector Database (SUPER PROMPTs #6-7-8)
 pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
 pub mod multi_ai; // ✅ v∞: Multi-IA Orchestrator (SUPER PROMPT #8)
 pub mod one_core; // ✅ v19.6: TITANE∞ ONE CORE - Unified Command Center (OPUS #6)
@@ -41,6 +42,7 @@ pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands
 pub use harmonia_commands::*;
 pub use ia_commands::*; // ✅ v∞.19.3Ω: Export IA commands
 pub use memory_compactor_commands::*;
+pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7-8)
 pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
 pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
 pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands
