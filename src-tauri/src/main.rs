@@ -53,6 +53,60 @@ mod audio {
     }
 }
 
+// Secure Commands v∞ (Super-Prompts H, I, J, K) - API Key Management
+mod secure_commands {
+    include!("secure_commands.rs");
+}
+
+// Overdrive Chat Orchestrator v14
+mod overdrive {
+    pub mod chat_orchestrator {
+        include!("overdrive/chat_orchestrator.rs");
+    }
+}
+
+// Security modules
+mod security {
+    pub mod secrets_engine {
+        include!("security/secrets_engine.rs");
+    }
+    pub mod permission_guard {
+        include!("security/permission_guard.rs");
+    }
+    pub mod permissions {
+        include!("security/permissions.rs");
+    }
+    pub mod sandbox {
+        include!("security/sandbox.rs");
+    }
+    pub mod validation {
+        include!("security/validation.rs");
+    }
+    pub mod rate_limit {
+        include!("security/rate_limit.rs");
+    }
+    
+    // Re-export from titane_infinity library for crate::security::* usage
+    pub use titane_infinity::security::{AuditEvent, AuditEventType, AuditSeverity, audit};
+}
+
+mod core {
+    pub mod tapi_error {
+        include!("core/tapi_error.rs");
+    }
+    pub mod utils {
+        include!("core/utils.rs");
+    }
+}
+
+mod error {
+    include!("error.rs");
+}
+
+mod secure_engine {
+    include!("secure_engine.rs");
+}
+
 // Hybrid Engine commands v∞.26.0
 mod hybrid_commands {
     include!("commands/hybrid.rs");
@@ -194,6 +248,21 @@ fn main() {
         log_dir.join("audit.log")
     ));
 
+    // Initialize Secure Secrets Engine (AES-256-GCM encrypted storage)
+    let secrets_passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
+        .ok()
+        .or_else(|| Some("default-dev-passphrase-change-in-production".to_string()));
+    
+    let secrets_engine = titane_infinity::security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase)
+        .expect("Failed to initialize Secure Secrets Engine");
+    
+    // Initialize Chat Orchestrator with provider management
+    let chat_orchestrator = overdrive::chat_orchestrator::init();
+    let chat_orch_clone = chat_orchestrator.clone();
+    tokio::spawn(async move {
+        overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
+    });
+
     let app_state = AppState {
         // ...existing code...
         security_manager,
@@ -209,7 +278,21 @@ fn main() {
         .manage(app_state)
         .manage(singularity_cortex)
         .manage(multi_ai_orchestrator)
-        // ...existing code...
+        .manage(secrets_engine)
+        .manage(chat_orchestrator)
+        .invoke_handler(tauri::generate_handler![
+            // Core messaging
+            send_message,
+            ollama_query,
+            
+            // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
+            secure_commands::chat_set_gemini_key,
+            secure_commands::get_gemini_key_status,
+            secure_commands::chat_set_openai_key,
+            secure_commands::get_openai_key_status,
+            secure_commands::chat_set_anthropic_key,
+            secure_commands::get_anthropic_key_status,
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
