@@ -1,0 +1,68 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0",
+  "productName": "Titan-Dev",
+  "version": "24.2.0-dev",
+  "identifier": "com.titane.infinity.dev",
+  "build": {
+    "beforeDevCommand": "npm run vite:dev",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173"
+  },
+  "bundle": {
+    "active": false,
+    "targets": [],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": [],
+    "copyright": "© 2025 TITANE∞",
+    "category": "Development",
+    "shortDescription": "TITANE∞ - Cognitive OS (Dev Runtime)",
+    "longDescription": "TITANE∞ Dev Runtime - Development environment with full debugging, monitoring, and experimental features."
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Titan-Dev [DEV] — TITANE∞ Development",
+        "width": 1600,
+        "height": 1000,
+        "minWidth": 1200,
+        "minHeight": 800,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false,
+        "center": true,
+        "devtools": true
+      },
+      {
+        "label": "dev-monitor",
+        "title": "TITANE∞ Dev Monitor",
+        "width": 800,
+        "height": 600,
+        "minWidth": 600,
+        "minHeight": 400,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true,
+        "transparent": false,
+        "center": false,
+        "devtools": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": null
+    },
+    "trayIcon": {
+      "id": "dev-tray",
+      "iconPath": "icons/icon.png"
+    }
+  }
+}
