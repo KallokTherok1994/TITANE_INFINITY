@@ -366,9 +366,10 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn test_vault_save_load() {
+    async fn test_vault_save_load() -> Result<(), Box<dyn std::error::Error>> {
+        // Phase 1 Stabilisation: Tests avec ? au lieu de unwrap()
         let master_key = MasterKey::generate();
-        let vault = VaultEngine::new(&master_key).await.unwrap();
+        let vault = VaultEngine::new(&master_key).await?;
 
         #[derive(Serialize, Deserialize, Debug, PartialEq)]
         struct TestData {
@@ -382,28 +383,31 @@ mod tests {
         };
 
         // Save
-        let metadata = vault.save("test_data", &data).await.unwrap();
+        let metadata = vault.save("test_data", &data).await?;
         assert_eq!(metadata.file_id, "test_data");
         assert!(metadata.encrypted_size > 0);
 
         // Load
-        let loaded: TestData = vault.load("test_data").await.unwrap();
+        let loaded: TestData = vault.load("test_data").await?;
         assert_eq!(loaded, data);
+        
+        Ok(())
     }
 
     #[tokio::test]
-    async fn test_vault_corruption_detection() {
+    async fn test_vault_corruption_detection() -> Result<(), Box<dyn std::error::Error>> {
+        // Phase 1 Stabilisation: Tests avec ? au lieu de unwrap()
         let master_key = MasterKey::generate();
-        let vault = VaultEngine::new(&master_key).await.unwrap();
+        let vault = VaultEngine::new(&master_key).await?;
 
         let data = vec!["test", "data"];
-        vault.save("corrupt_test", &data).await.unwrap();
+        vault.save("corrupt_test", &data).await?;
 
         // Corrompre le fichier
         let file_path = vault.get_file_path("corrupt_test");
-        let mut content = fs::read(&file_path).await.unwrap();
+        let mut content = fs::read(&file_path).await?;
         content[0] ^= 0xFF; // Flip bits
-        fs::write(&file_path, content).await.unwrap();
+        fs::write(&file_path, content).await?;
 
         // Doit détecter corruption
         let result: Result<Vec<String>, _> = vault.load("corrupt_test").await;
@@ -412,17 +416,22 @@ mod tests {
             result.unwrap_err(),
             VaultError::CorruptionDetected(_)
         ));
+        
+        Ok(())
     }
 
     #[tokio::test]
-    async fn test_vault_integrity_check() {
+    async fn test_vault_integrity_check() -> Result<(), Box<dyn std::error::Error>> {
+        // Phase 1 Stabilisation: Tests avec ? au lieu de unwrap()
         let master_key = MasterKey::generate();
-        let vault = VaultEngine::new(&master_key).await.unwrap();
+        let vault = VaultEngine::new(&master_key).await?;
 
-        vault.save("file1", &"data1").await.unwrap();
-        vault.save("file2", &"data2").await.unwrap();
+        vault.save("file1", &"data1").await?;
+        vault.save("file2", &"data2").await?;
 
-        let corrupted = vault.verify_integrity().await.unwrap();
+        let corrupted = vault.verify_integrity().await?;
         assert_eq!(corrupted.len(), 0);
+        
+        Ok(())
     }
 }
