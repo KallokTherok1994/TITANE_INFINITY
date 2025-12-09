@@ -305,26 +305,53 @@ pub fn voice_detect_wake_word(
 // COMMANDES TAURI — TTS (Text-to-Speech)
 // ─────────────────────────────────────────────────────────────────────────────
 
-/// ⚠️ DEPRECATED: Cette fonction est un STUB et ne produit que de l'audio vide.
+/// ⚠️ DEPRECATED (v20.0): Cette fonction est un STUB et ne produit que de l'audio vide.
 ///
-/// UTILISER À LA PLACE: La commande `speak()` dans `src-tauri/src/commands/ai_chat.rs`
-/// qui implémente un TTS complet avec:
+/// 🚫 NE PAS UTILISER EN PRODUCTION
+///
+/// ✅ UTILISER À LA PLACE: `speak()` dans `src-tauri/src/commands/ai_chat.rs`
+///
+/// Migration guide: `docs/VOCAL_MIGRATION_GUIDE.md`
+///
+/// La commande `speak()` implémente un TTS complet avec:
 /// - Support local (espeak, piper, festival, coqui)
 /// - Support online (Google TTS API)
 /// - Protection ShellGuard contre injection de commandes
-/// - Gestion erreurs complète
+/// - Gestion erreurs robuste
+/// - Logs structurés
 ///
-/// Cette fonction restera pour compatibilité legacy mais ne sera pas implémentée.
+/// # Exemple migration
+/// ```typescript
+/// // ❌ Ancien code (DEPRECATED)
+/// await invoke('voice_synthesize_speech', { 
+///   request: { text, voice, speed, pitch } 
+/// });
+///
+/// // ✅ Nouveau code (PRODUCTION)
+/// await invoke('speak', { 
+///   text: 'Hello world',
+///   useOnline: false // Local TTS (espeak/piper)
+/// });
+/// ```
+#[deprecated(since = "v20.0", note = "Use speak() in commands/ai_chat.rs instead - see docs/VOCAL_MIGRATION_GUIDE.md")]
 #[tauri::command]
 pub fn voice_synthesize_speech(
     request: SynthesisRequest,
     state: State<VoiceEngineState>,
 ) -> Result<Vec<u8>, TAPIError> {
+    // Log deprecation warning
+    log::warn!(
+        "[DEPRECATED] voice_synthesize_speech() called with text: '{}' - Use speak() instead",
+        request.text
+    );
+    log::warn!("[DEPRECATED] Migration guide: docs/VOCAL_MIGRATION_GUIDE.md");
+
     let config = lock_or_recover!(state.config);
     let model = &config.tts_model;
 
     println!("[VOICE] ⚠️ DEPRECATED: voice_synthesize_speech called");
     println!("[VOICE] ℹ️ Use 'speak' command in ai_chat.rs instead");
+    println!("[VOICE] 📖 Migration guide: docs/VOCAL_MIGRATION_GUIDE.md");
     println!("[VOICE] Synthèse avec {} : '{}'", model, request.text);
 
     let mut is_speaking = lock_or_recover!(state.is_speaking);
@@ -333,9 +360,9 @@ pub fn voice_synthesize_speech(
     let mut status = lock_or_recover!(state.status);
     status.tts_active = true;
 
-    // TODO: Soit supprimer cette fonction, soit implémenter réellement
-    // Pour l'instant, retourne audio vide (STUB)
-    let audio_data = vec![0u8; 16000]; // 1 seconde d'audio vide
+    // ⚠️ STUB: Retourne audio vide (16000 bytes = 1 seconde silence)
+    // Ce STUB sera supprimé en v21.0
+    let audio_data = vec![0u8; 16000];
 
     *is_speaking = false;
     status.tts_active = false;
