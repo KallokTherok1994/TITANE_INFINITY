@@ -72,6 +72,7 @@ cpal  = { version = "0.15", optional = true }
 hound = "3.5"                                 # WAV file reading/writing
 rusqlite = { version = "0.37.0", features = ["bundled"] }
 ndarray = "0.17.1"
+rustfft = "6.2"                               # FFT for spectral analysis (voice fingerprinting)
 
 [features]
 default = ["custom-protocol", "mock"]
