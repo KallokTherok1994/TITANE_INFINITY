@@ -9,6 +9,7 @@
 //! - Régulation automatique
 //! - Fatigue et récupération
 //! - Distribution de charge
+//! - Stabilisation long terme
 
 pub mod energy_model;
 pub mod cost_model;
@@ -16,9 +17,15 @@ pub mod regulator;
 pub mod fatigue;
 pub mod recovery;
 pub mod load_balancer;
+pub mod distributor;
+pub mod stabilization;
 pub mod predictive;
 pub mod diagnostics;
 pub mod config;
+pub mod integration_bridges;
+
+#[cfg(test)]
+mod integration_tests;
 
 pub use energy_model::{EnergyModel, EnergyState, EnergyDimension, EnergyLevel, EnergyTrend};
 pub use cost_model::{CostModel, OperationCost, CostEstimate};
@@ -26,9 +33,12 @@ pub use regulator::{EnergyRegulator, RegulationAction, RegulationMode};
 pub use fatigue::{FatigueTracker, FatigueLevel, FatigueSource, FatigueState};
 pub use recovery::{RecoveryManager, RecoveryStrategy, RecoveryPlan};
 pub use load_balancer::{LoadBalancer, LoadDistribution, LoadMetrics};
+pub use distributor::{TaskDistributor, CognitiveTask, TaskPriority, AgentCapacity, DistributionDecision};
+pub use stabilization::{StabilizationLayer, StabilizationMode, StabilityMetrics, StabilizationDecision};
 pub use predictive::{EnergyPredictor, EnergyForecast};
 pub use diagnostics::{EnergyDiagnostics, EnergyEventType};
 pub use config::MetaEnergyConfig;
+pub use integration_bridges::{TemporalEnergyBridge, CycleEnergyBridge, KernelEnergyBridge, OmegaEnergyBridge};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
