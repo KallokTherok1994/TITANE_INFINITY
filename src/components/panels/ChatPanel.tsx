@@ -1,18 +1,24 @@
 /**
- * TITANE_INFINITY v19.3.0 — Adaptive Chat Panel
+ * TITANE∞ v21 — Adaptive Chat Panel
  * Chat interface with visual state adaptation
  *
- * Features:
- * - Adapts to visual states (idle, listening, thinking, speaking)
- * - Smooth 500ms transitions
- * - Particle background integration
- * - Responsive design
+ * Features v21:
+ * - ✅ Adapts to visual states (idle, listening, thinking, speaking)
+ * - ✅ Smooth 500ms transitions
+ * - ✅ Particle background integration
+ * - ✅ Responsive design
+ * - ✅ Panel state management (collapsed/expanded)
+ * - ✅ Z-index auto-management (bring-to-front)
+ * - ✅ LocalStorage persistence
+ * - ✅ Mobile responsive
  */
 
 import React, { useEffect, useRef } from 'react';
 import { useVisualState } from '@/hooks/useVisualState';
 import { useParticles } from '@/hooks/useParticles';
 import { useVisualStateStore } from '@/stores/visualStateStore';
+import { usePanelState } from '@/hooks/usePanelState';
+import { usePanelsStore } from '@/stores/panelsStore';
 import '@/styles/animations.css';
 
 export interface ChatPanelProps {
@@ -28,6 +34,38 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
     pattern: 'dispersed',
     emissionRate: 5,
   });
+
+  // v21: Panel state management
+  const {
+    isCollapsed,
+    isVisible,
+    zIndex,
+    toggle,
+    bringToFront,
+  } = usePanelState({
+    panelId: 'chat',
+    defaultCollapsed: false,
+    defaultVisible: true,
+    defaultZIndex: 100,
+    persistState: true,
+  });
+
+  // v21: Register panel in global store
+  const registerPanel = usePanelsStore((state) => state.registerPanel);
+  useEffect(() => {
+    registerPanel({
+      id: 'chat',
+      title: 'Chat',
+      isVisible: true,
+      isCollapsed: false,
+      isPinned: false,
+      zIndex: 100,
+      position: { x: null, y: null },
+      size: { width: null, height: null },
+      hiddenOnMobile: false,
+      collapsedOnMobile: false,
+    });
+  }, [registerPanel]);
 
   const panelRef = useRef<HTMLDivElement>(null);
 

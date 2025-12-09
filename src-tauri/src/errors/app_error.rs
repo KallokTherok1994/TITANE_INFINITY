@@ -2,7 +2,6 @@
 // Super Prompt Phase 1: Stabilisation Critique v20.0
 // Replaces all unwrap()/expect() with proper error handling
 
-use std::fmt;
 use thiserror::Error;
 
 /// Unified application error type for TITANE∞

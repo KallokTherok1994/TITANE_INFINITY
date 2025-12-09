@@ -2,7 +2,7 @@
 //! TEMPORAL ENGINE ↔ CONVERSATION OS INTEGRATION
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::temporal_engine::{TemporalContext, PlanningHorizon};
+use crate::temporal_engine::TemporalContext;
 use serde::{Deserialize, Serialize};
 
 /// Bridge entre Temporal Engine et Conversation OS
