@@ -1,5 +1,5 @@
 /**
- * TITANE∞ v15 — Proprietary License
+ * TITANE∞ v8.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,20 +8,20 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v15 - Button Component
+ * TITANE∞ v8.0 - Button Component (Tailwind CSS)
  * Primitive UI avec variants, sizes, states
+ * Migration: Inline styles → Tailwind classes
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { type ButtonHTMLAttributes, forwardRef } from 'react';
-import { clsx } from 'clsx';
-import { colors, spacing, radius, shadows, transitions } from '@themes/tokens';
+import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from 'react';
+import { cn } from '@/utils/cn';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'outline';
 export type ButtonSize = 'sm' | 'md' | 'lg';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -29,96 +29,31 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize;
   fullWidth?: boolean;
   loading?: boolean;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
 }
 
 // ─────────────────────────────────────────────────────────────────
-// STYLES
+// VARIANT CLASSES
 // ─────────────────────────────────────────────────────────────────
 
-const baseStyles = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontWeight: 500,
-  transition: transitions.preset.all,
-  cursor: 'pointer',
-  border: 'none',
-  outline: 'none',
-  fontFamily: 'inherit',
-  userSelect: 'none' as const,
-  position: 'relative' as const,
+const variantClasses: Record<ButtonVariant, string> = {
+  primary:
+    'bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-md hover:shadow-glow-violet hover:-translate-y-0.5',
+  secondary:
+    'bg-bg-tertiary/50 text-violet-400 border border-violet-700 backdrop-blur-md hover:bg-bg-tertiary hover:border-violet-500',
+  ghost:
+    'bg-transparent text-text-secondary border border-transparent hover:bg-bg-tertiary hover:border-border-default',
+  danger:
+    'bg-gradient-to-br from-error-500 to-error-600 text-white shadow-md hover:shadow-error hover:-translate-y-0.5',
+  outline:
+    'bg-transparent text-text-primary border border-border-default hover:bg-bg-tertiary hover:border-border-strong',
 };
 
-const variantStyles: Record<ButtonVariant, React.CSSProperties> = {
-  primary: {
-    background: `linear-gradient(135deg, ${colors.rubis.primary[500]}, ${colors.rubis.primary[600]})`,
-    color: colors.neutral[50],
-    boxShadow: shadows.md,
-  },
-  secondary: {
-    background: colors.rubis.surface.translucent,
-    color: colors.rubis.primary[400],
-    border: `1px solid ${colors.rubis.primary[700]}`,
-    backdropFilter: 'blur(10px)',
-  },
-  ghost: {
-    background: 'transparent',
-    color: colors.neutral[300],
-    border: '1px solid transparent',
-  },
-  danger: {
-    background: `linear-gradient(135deg, ${colors.semantic.error[500]}, ${colors.semantic.error[600]})`,
-    color: colors.neutral[50],
-    boxShadow: shadows.md,
-  },
-};
-
-const sizeStyles: Record<ButtonSize, React.CSSProperties> = {
-  sm: {
-    height: '32px',
-    padding: `0 ${spacing[4]}`,
-    fontSize: '0.875rem',
-    borderRadius: radius.md,
-  },
-  md: {
-    height: '40px',
-    padding: `0 ${spacing[6]}`,
-    fontSize: '1rem',
-    borderRadius: radius.md,
-  },
-  lg: {
-    height: '48px',
-    padding: `0 ${spacing[8]}`,
-    fontSize: '1.125rem',
-    borderRadius: radius.lg,
-  },
-};
-
-const hoverStyles: Record<ButtonVariant, React.CSSProperties> = {
-  primary: {
-    boxShadow: shadows.glowRubis,
-    transform: 'translateY(-2px)',
-  },
-  secondary: {
-    background: colors.rubis.surface.glass,
-    borderColor: colors.rubis.primary[500],
-  },
-  ghost: {
-    background: colors.neutral[900],
-    borderColor: colors.neutral[700],
-  },
-  danger: {
-    boxShadow: `0 0 20px rgba(239, 68, 68, 0.5)`,
-    transform: 'translateY(-2px)',
-  },
-};
-
-const disabledStyles: React.CSSProperties = {
-  opacity: 0.5,
-  cursor: 'not-allowed',
-  pointerEvents: 'none',
+const sizeClasses: Record<ButtonSize, string> = {
+  sm: 'h-8 px-4 text-sm rounded-md',
+  md: 'h-10 px-6 text-base rounded-md',
+  lg: 'h-12 px-8 text-lg rounded-lg',
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -137,62 +72,49 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       rightIcon,
       children,
       className,
-      style,
       ...props
     },
     ref
   ) => {
-    const buttonStyles: React.CSSProperties = {
-      ...baseStyles,
-      ...variantStyles[variant],
-      ...sizeStyles[size],
-      ...(fullWidth && { width: '100%' }),
-      ...(disabled && disabledStyles),
-      ...style,
-    };
-
     return (
       <button
         ref={ref}
         disabled={disabled || loading}
-        className={clsx('titane-button', className)}
-        style={buttonStyles}
-        onMouseEnter={e => {
-          if (!disabled && !loading) {
-            Object.assign(e.currentTarget.style, hoverStyles[variant]);
-          }
-        }}
-        onMouseLeave={e => {
-          if (!disabled && !loading) {
-            Object.assign(e.currentTarget.style, variantStyles[variant]);
-          }
-        }}
+        className={cn(
+          // Base styles
+          'inline-flex items-center justify-center font-medium',
+          'transition-all duration-200 ease-in-out',
+          'cursor-pointer select-none relative',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2',
+          // Variant styles
+          variantClasses[variant],
+          // Size styles
+          sizeClasses[size],
+          // Full width
+          fullWidth && 'w-full',
+          // Disabled state
+          (disabled || loading) && 'opacity-50 cursor-not-allowed pointer-events-none',
+          // Custom className
+          className
+        )}
         {...props}
       >
+        {/* Loading Spinner */}
         {loading && (
-          <span
-            style={{
-              marginRight: spacing[2],
-              display: 'inline-block',
-              width: '16px',
-              height: '16px',
-              border: `2px solid ${colors.neutral[300]}`,
-              borderTopColor: 'transparent',
-              borderRadius: '50%',
-              animation: 'spin 0.6s linear infinite',
-            }}
-          />
+          <span className="inline-block mr-2 w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
         )}
+
+        {/* Left Icon */}
         {!loading && leftIcon && (
-          <span style={{ marginRight: spacing[2], display: 'flex' }}>
-            {leftIcon}
-          </span>
+          <span className="mr-2 flex items-center">{leftIcon}</span>
         )}
+
+        {/* Content */}
         {children}
+
+        {/* Right Icon */}
         {!loading && rightIcon && (
-          <span style={{ marginLeft: spacing[2], display: 'flex' }}>
-            {rightIcon}
-          </span>
+          <span className="ml-2 flex items-center">{rightIcon}</span>
         )}
       </button>
     );
@@ -200,16 +122,3 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 Button.displayName = 'Button';
-
-// Ajouter l'animation spin au document
-if (typeof document !== 'undefined') {
-  const styleSheet = document.styleSheets[0];
-  const keyframes = `
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-  `;
-  if (styleSheet) {
-    styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
-  }
-}

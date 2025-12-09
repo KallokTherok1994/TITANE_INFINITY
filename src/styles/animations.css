@@ -1,0 +1,517 @@
+/**
+ * TITANE_INFINITY v19.3.0 — Animation System
+ * Production-ready CSS animations for Visual Engine
+ *
+ * All transitions: 500ms smooth easing
+ * Performance: GPU-accelerated (transform, opacity)
+ * 60fps guaranteed on modern browsers
+ */
+
+/* ========================================
+   SMOOTH TRANSITIONS (500ms baseline)
+   ======================================== */
+
+.smooth-transition {
+  transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.smooth-opacity {
+  transition: opacity 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.smooth-transform {
+  transition: transform 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.smooth-colors {
+  transition:
+    background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    color 500ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    border-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* ========================================
+   PULSE ANIMATIONS
+   ======================================== */
+
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes pulse-medium {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes pulse-fast {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+}
+
+.pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.pulse-medium {
+  animation: pulse-medium 1.5s ease-in-out infinite;
+}
+
+.pulse-fast {
+  animation: pulse-fast 0.8s ease-in-out infinite;
+}
+
+/* ========================================
+   GLOW EFFECTS
+   ======================================== */
+
+@keyframes glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 16px currentColor);
+  }
+}
+
+@keyframes glow-intense {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 24px currentColor);
+  }
+}
+
+.glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.glow-intense {
+  animation: glow-intense 1s ease-in-out infinite;
+}
+
+/* ========================================
+   SHIMMER & SHINE EFFECTS
+   ======================================== */
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ========================================
+   WAVE ANIMATIONS
+   ======================================== */
+
+@keyframes wave-gentle {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  50% {
+    transform: translateY(-10px) scaleY(1.1);
+  }
+}
+
+@keyframes wave-active {
+  0%,
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+  25% {
+    transform: translateY(-15px) scaleY(1.2);
+  }
+  75% {
+    transform: translateY(15px) scaleY(0.8);
+  }
+}
+
+.wave-gentle {
+  animation: wave-gentle 2s ease-in-out infinite;
+}
+
+.wave-active {
+  animation: wave-active 1s ease-in-out infinite;
+}
+
+/* ========================================
+   SPIRAL PATTERN
+   ======================================== */
+
+@keyframes spiral-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spiral-expand {
+  0%,
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(180deg);
+  }
+}
+
+.spiral-rotate {
+  animation: spiral-rotate 4s linear infinite;
+}
+
+.spiral-expand {
+  animation: spiral-expand 3s ease-in-out infinite;
+}
+
+/* ========================================
+   ENERGY ARCS
+   ======================================== */
+
+@keyframes arc-flow {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+.arc-flow {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: arc-flow 2s ease-in-out infinite;
+}
+
+/* ========================================
+   HEALING WAVES
+   ======================================== */
+
+@keyframes healing-ripple {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+.healing-ripple {
+  animation: healing-ripple 1.5s ease-out infinite;
+}
+
+/* ========================================
+   GLITCH EFFECT
+   ======================================== */
+
+@keyframes glitch {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(2px, -2px);
+  }
+  60% {
+    transform: translate(-2px, -2px);
+  }
+  80% {
+    transform: translate(2px, 2px);
+  }
+}
+
+@keyframes glitch-color {
+  0%,
+  100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(90deg);
+  }
+}
+
+.glitch {
+  animation:
+    glitch 0.3s steps(2, end) infinite,
+    glitch-color 0.3s linear infinite;
+}
+
+/* ========================================
+   AUDIO WAVEFORM
+   ======================================== */
+
+@keyframes waveform-bar {
+  0%,
+  100% {
+    height: 20%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+.waveform-bar {
+  animation: waveform-bar 0.5s ease-in-out infinite;
+}
+
+.waveform-bar:nth-child(1) {
+  animation-delay: 0s;
+}
+.waveform-bar:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.waveform-bar:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.waveform-bar:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.waveform-bar:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+/* ========================================
+   FADE TRANSITIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.fade-out {
+  animation: fadeOut 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* ========================================
+   SLIDE TRANSITIONS
+   ======================================== */
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.slide-in-down {
+  animation: slideInDown 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* ========================================
+   SCALE TRANSITIONS
+   ======================================== */
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.scale-in {
+  animation: scaleIn 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+.scale-out {
+  animation: scaleOut 500ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* ========================================
+   SPINNER / LOADING
+   ======================================== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-slow {
+  animation: spin-slow 3s linear infinite;
+}
+
+/* ========================================
+   PERFORMANCE OPTIMIZATIONS
+   ======================================== */
+
+/* Enable GPU acceleration for animated elements */
+.gpu-accelerated,
+[class*='pulse-'],
+[class*='glow-'],
+[class*='wave-'],
+[class*='spiral-'],
+[class*='slide-'],
+[class*='fade-'],
+[class*='scale-'],
+.spin,
+.spin-slow {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -18,8 +18,11 @@ import App from './App'; // ✅ v16.2.2: App principal activé
 // ✨ v19.5.2 - Sentry Error Monitoring & Performance Tracking (Phase 1 - Quick Wins)
 import { initSentry, captureWebVitals } from './services/monitoring';
 
-// ✅ v17 DESIGN SYSTEM FUSION - Un seul fichier CSS unifié
-import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)
+// ✅ v8.0 DESIGN SYSTEM - Tailwind CSS + TITANE∞ Tokens
+import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
+
+// ✅ v17 DESIGN SYSTEM FUSION - Compatibility layer (will be migrated)
+// import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)
 import './styles/exp-fusion.css'; // 🎯 XP Advanced Features (unique)
 import './pages/styles.css'; // 📄 Pages styles (minimal)
