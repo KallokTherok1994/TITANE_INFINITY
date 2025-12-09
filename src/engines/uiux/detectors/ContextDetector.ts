@@ -12,6 +12,15 @@ export class ContextDetector {
   private lastContext: UIContext | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private listeners: Set<(context: UIContext) => void> = new Set();
+  
+  // ✨ PHASE 4.4 - Store media queries and handlers for cleanup
+  private darkModeQuery: MediaQueryList | null = null;
+  private reducedMotionQuery: MediaQueryList | null = null;
+  private contrastQuery: MediaQueryList | null = null;
+  private darkModeHandler = () => this.detectAndNotify();
+  private reducedMotionHandler = () => this.detectAndNotify();
+  private contrastHandler = () => this.detectAndNotify();
+  private orientationHandler = () => this.detectAndNotify();
 
   /**
    * Initialise le détecteur
@@ -26,29 +35,37 @@ export class ContextDetector {
     this.resizeObserver.observe(document.documentElement);
 
     // Écouter les changements de media queries
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      this.detectAndNotify();
-    });
+    this.darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.darkModeQuery.addEventListener('change', this.darkModeHandler);
 
-    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => {
-      this.detectAndNotify();
-    });
+    this.reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.reducedMotionQuery.addEventListener('change', this.reducedMotionHandler);
 
-    window.matchMedia('(prefers-contrast: more)').addEventListener('change', () => {
-      this.detectAndNotify();
-    });
+    this.contrastQuery = window.matchMedia('(prefers-contrast: more)');
+    this.contrastQuery.addEventListener('change', this.contrastHandler);
 
     // Détecter les changements d'orientation
-    window.addEventListener('orientationchange', () => {
-      this.detectAndNotify();
-    });
+    window.addEventListener('orientationchange', this.orientationHandler);
   }
 
   /**
-   * Détruit le détecteur
+   * Détruit le détecteur (✨ PHASE 4.4 - Enhanced cleanup)
    */
   destroy(): void {
+    // Disconnect ResizeObserver
     this.resizeObserver?.disconnect();
+    
+    // Remove MediaQuery listeners
+    this.darkModeQuery?.removeEventListener('change', this.darkModeHandler);
+    this.reducedMotionQuery?.removeEventListener('change', this.reducedMotionHandler);
+    this.contrastQuery?.removeEventListener('change', this.contrastHandler);
+    
+    // Remove orientation listener
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('orientationchange', this.orientationHandler);
+    }
+    
+    // Clear listeners
     this.listeners.clear();
   }
 

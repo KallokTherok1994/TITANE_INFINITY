@@ -44,6 +44,12 @@ export class OverloadDetector {
   private lastActivityTime = Date.now();
   private navigationHistory: string[] = [];
   private inputHistory: Array<{ correct: boolean; timestamp: number }> = [];
+  
+  // ✨ PHASE 4.4 - Store handlers and interval for cleanup
+  private clickHandler = this.handleClick.bind(this);
+  private scrollHandler = this.handleScroll.bind(this);
+  private activityHandler = this.handleActivity.bind(this);
+  private idleCheckInterval: ReturnType<typeof setInterval> | null = null;
 
   /**
    * Initialise le détecteur
@@ -52,18 +58,39 @@ export class OverloadDetector {
     if (typeof window === 'undefined') return;
 
     // Détection des clics rapides
-    window.addEventListener('click', this.handleClick.bind(this));
+    window.addEventListener('click', this.clickHandler);
 
     // Détection du scroll erratique
-    window.addEventListener('scroll', this.handleScroll.bind(this), { passive: true });
+    window.addEventListener('scroll', this.scrollHandler, { passive: true });
 
     // Détection de l'inactivité
     ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
-      window.addEventListener(event, this.handleActivity.bind(this), { passive: true });
+      window.addEventListener(event, this.activityHandler, { passive: true });
     });
 
     // Vérification périodique de l'inactivité
-    setInterval(() => this.checkIdleTime(), 5000);
+    this.idleCheckInterval = setInterval(() => this.checkIdleTime(), 5000);
+  }
+
+  /**
+   * ✨ PHASE 4.4 - Cleanup event listeners et intervals
+   */
+  destroy(): void {
+    if (typeof window === 'undefined') return;
+
+    // Remove event listeners
+    window.removeEventListener('click', this.clickHandler);
+    window.removeEventListener('scroll', this.scrollHandler);
+    
+    ['mousemove', 'keydown', 'scroll', 'click'].forEach(event => {
+      window.removeEventListener(event, this.activityHandler);
+    });
+
+    // Clear interval
+    if (this.idleCheckInterval) {
+      clearInterval(this.idleCheckInterval);
+      this.idleCheckInterval = null;
+    }
   }
 
   /**
