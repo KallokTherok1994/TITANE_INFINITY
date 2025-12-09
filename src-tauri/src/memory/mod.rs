@@ -10,6 +10,10 @@ pub mod security; // NEW: Security hardening module
 pub mod storage;
 pub mod telemetry;
 
+// Tests — Phase 1 Stabilisation v20.0
+#[cfg(test)]
+mod tests_storage;
+
 // Re-export pool types
 pub use pool::{
     BufferPool, EmbeddingPool, MemoryPoolManager, MemoryPoolMetrics, PoolConfig, PoolMetrics,

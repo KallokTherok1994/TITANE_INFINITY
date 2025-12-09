@@ -12,6 +12,10 @@ pub mod tapi_error;
 pub mod types;
 pub mod utils; // Unified utilities (timestamps, helpers) // Standard error type for all APIs
 
+// Phase 1.5: Tests unitaires core engine
+#[cfg(test)]
+mod tests_engine;
+
 // Re-export main types
 pub use boot_orchestrator::*;
 pub use engine::*;

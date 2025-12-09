@@ -20,6 +20,10 @@ pub mod memory_bridge;
 pub mod adaptive_router;
 pub mod events;
 
+// Tests — Phase 1 Stabilisation v20.0
+#[cfg(test)]
+mod tests_pipeline;
+
 pub use router::*;
 pub use executor::*;
 pub use merger::*;

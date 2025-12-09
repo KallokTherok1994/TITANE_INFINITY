@@ -5,6 +5,10 @@
 
 pub mod ai_chat;        // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIChatState>)
 pub mod automations;    // ✅ v19.2Ω: Automation System
+
+// Tests — Phase 1 Stabilisation v20.0
+#[cfg(test)]
+mod tests_ai_chat;
 pub mod chat_modes;     // ✅ v19.2Ω: Chat Modes System
 pub mod coherence_commands; // ✅ NEW v20.0: Unified Coherence Engine (Nexus + Consistency fusion)
 pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
