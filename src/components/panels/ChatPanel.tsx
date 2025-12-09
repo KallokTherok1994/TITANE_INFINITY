@@ -100,6 +100,9 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
     setColors([visuals.particleColor, visuals.accent, visuals.secondary]);
   }, [state, visuals, setPattern, setColors, setEmissionRate]);
 
+  // v21: Don't render if not visible
+  if (!isVisible) return null;
+
   return (
     <div
       ref={panelRef}
@@ -107,14 +110,17 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
       style={{
         position: 'relative',
         width: '100%',
-        height: '100%',
+        height: isCollapsed ? '56px' : '100%', // v21: Collapsed height
         backgroundColor: visuals.background,
         borderRadius: '12px',
         overflow: 'hidden',
-        transition: 'background-color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+        transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)', // v21: Transition height too
+        zIndex, // v21: Dynamic z-index
       }}
       data-state={state}
       data-transitioning={isTransitioning}
+      data-panel-id="chat" // v21: For z-index queries
+      onClick={bringToFront} // v21: Bring to front on click
     >
       {/* Particle background */}
       <canvas
@@ -147,77 +153,106 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
           className="smooth-colors"
           style={{
             padding: '16px',
-            borderBottom: `1px solid rgba(255, 255, 255, 0.1)`,
+            borderBottom: isCollapsed ? 'none' : `1px solid rgba(255, 255, 255, 0.1)`,
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
+            justifyContent: 'space-between', // v21: Space for collapse button
           }}
         >
-          {/* State indicator glow */}
-          <div
-            className={isTransitioning ? 'pulse-medium' : 'pulse-slow'}
-            style={{
-              width: '12px',
-              height: '12px',
-              borderRadius: '50%',
-              backgroundColor: visuals.primary,
-              boxShadow: visuals.glow,
-              transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-            }}
-          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* State indicator glow */}
+            <div
+              className={isTransitioning ? 'pulse-medium' : 'pulse-slow'}
+              style={{
+                width: '12px',
+                height: '12px',
+                borderRadius: '50%',
+                backgroundColor: visuals.primary,
+                boxShadow: visuals.glow,
+                transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+              }}
+            />
 
-          {/* State label */}
-          <span
-            className="smooth-colors"
+            {/* State label */}
+            <span
+              className="smooth-colors"
+              style={{
+                color: visuals.primary,
+                fontSize: '14px',
+                fontWeight: 600,
+                textTransform: 'capitalize',
+                transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+              }}
+            >
+              {state}
+            </span>
+          </div>
+
+          {/* v21: Collapse/Expand button */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation(); // Don't trigger bring-to-front
+              toggle();
+            }}
             style={{
+              background: 'transparent',
+              border: 'none',
               color: visuals.primary,
-              fontSize: '14px',
-              fontWeight: 600,
-              textTransform: 'capitalize',
-              transition: 'color 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+              cursor: 'pointer',
+              fontSize: '16px',
+              padding: '4px 8px',
+              borderRadius: '4px',
+              transition: 'all 200ms',
             }}
+            aria-label={isCollapsed ? 'Expand panel' : 'Collapse panel'}
+            title={isCollapsed ? 'Expand' : 'Collapse'}
           >
-            {state}
-          </span>
+            {isCollapsed ? '▼' : '▲'}
+          </button>
         </div>
 
-        {/* Main content area */}
-        <div
-          style={{
-            flex: 1,
-            padding: '16px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '12px',
-          }}
-        >
-          {children}
-        </div>
+        {/* Main content area - v21: Hide when collapsed */}
+        {!isCollapsed && (
+          <>
+            <div
+              style={{
+                flex: 1,
+                padding: '16px',
+                overflowY: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+              }}
+            >
+              {children}
+            </div>
 
-        {/* Footer with visual accent */}
-        <div
-          className="smooth-colors"
-          style={{
-            padding: '12px 16px',
-            borderTop: `1px solid rgba(255, 255, 255, 0.1)`,
-            background: `linear-gradient(to top, ${visuals.background}, transparent)`,
-            transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-          }}
-        >
-          <div
-            className="smooth-transform"
-            style={{
-              height: '4px',
-              borderRadius: '2px',
-              backgroundColor: visuals.accent,
-              opacity: 0.5,
-              transform: isTransitioning ? 'scaleX(1)' : 'scaleX(0.3)',
-              transformOrigin: 'left',
-              transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
-            }}
-          />
-        </div>
+            {/* Footer with visual accent */}
+            <div
+              className="smooth-colors"
+              style={{
+                padding: '12px 16px',
+                borderTop: `1px solid rgba(255, 255, 255, 0.1)`,
+                background: `linear-gradient(to top, ${visuals.background}, transparent)`,
+                transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+              }}
+            >
+              <div
+                className="smooth-transform"
+                style={{
+                  height: '4px',
+                  borderRadius: '2px',
+                  backgroundColor: visuals.accent,
+                  opacity: 0.5,
+                  transform: isTransitioning ? 'scaleX(1)' : 'scaleX(0.3)',
+                  transformOrigin: 'left',
+                  transition: 'all 500ms cubic-bezier(0.25, 0.1, 0.25, 1)',
+                }}
+              />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
