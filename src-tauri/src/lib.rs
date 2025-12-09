@@ -40,7 +40,8 @@ pub mod singularity_cortex; // ✅ Singularity Cortex OS v∞ — SUPER PROMPT #
 pub mod singularity_fusion;
 pub mod types; // ✅ Type definitions
 pub mod utils; // ✅ Utilities (AppResult, AppError)
-pub mod watchdog; // ✅ Watchdog Engine v17 (NEW) // ✅ SingularityFusion vΩ (NEW)
+pub mod watchdog; // ✅ Watchdog Engine v17 (NEW)
+pub mod errors; // ✅ Phase 1 Stabilisation v20.0: Unified AppError (NEW) // ✅ SingularityFusion vΩ (NEW)
 
 // ═══════════════════════════════════════════════════════════════
 // KERNEL v20Ω.0 (Super Prompt #11)

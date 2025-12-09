@@ -91,9 +91,13 @@ impl AIChatState {
             .join("titane")
             .join("memory");
 
+        // Phase 1 Stabilisation: Fallback à mémoire in-memory si storage échoue
         let memory_storage = Arc::new(RwLock::new(
             MemoryStorage::new(storage_dir, "titane-infinity".to_string())
-                .expect("Failed to initialize memory storage"),
+                .unwrap_or_else(|e| {
+                    eprintln!("Warning: Failed to initialize persistent memory storage ({}), using in-memory fallback", e);
+                    MemoryStorage::new_in_memory("titane-infinity".to_string())
+                }),
         ));
 
         // v19.5.2: TTS engines in DashMap

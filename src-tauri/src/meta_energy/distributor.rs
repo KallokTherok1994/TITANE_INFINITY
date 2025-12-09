@@ -209,7 +209,18 @@ impl TaskDistributor {
         // Trier par score décroissant
         candidates.sort_by(|a, b| b.2.partial_cmp(&a.2).unwrap_or(std::cmp::Ordering::Equal));
 
-        let (best_agent_id, _, _) = candidates.first().unwrap();
+        // Phase 1 Stabilisation: Gérer cas où aucun candidat disponible
+        let (best_agent_id, _, _) = match candidates.first() {
+            Some(candidate) => candidate,
+            None => {
+                return DistributionDecision {
+                    task_id: task.id.clone(),
+                    assigned_agent: None,
+                    action: DistributionAction::Queue,
+                    reason: "No available agents".to_string(),
+                };
+            }
+        };
 
         DistributionDecision {
             task_id: task.id.clone(),
@@ -370,6 +381,7 @@ mod tests {
 
         // High priority should be first
         let pending = distributor.pending_tasks.read().await;
-        assert_eq!(pending.front().unwrap().id, "task_high");
+        assert!(!pending.is_empty(), "Pending tasks should not be empty");
+        assert_eq!(pending.front().expect("First task should exist").id, "task_high");
     }
 }

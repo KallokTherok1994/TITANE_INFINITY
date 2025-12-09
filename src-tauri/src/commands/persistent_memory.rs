@@ -235,10 +235,14 @@ pub struct PersistentMemoryState {
 
 impl PersistentMemoryState {
     pub fn new(app_handle: &AppHandle) -> Self {
+        // Phase 1 Stabilisation: Fallback si app_data_dir() échoue
         let app_data_dir = app_handle
             .path()
             .app_data_dir()
-            .expect("Failed to get app data dir");
+            .unwrap_or_else(|e| {
+                eprintln!("Warning: Failed to get app data dir ({}), using current directory", e);
+                PathBuf::from(".").join("titane-data")
+            });
 
         let base_path = app_data_dir.join("persistent_memory");
 

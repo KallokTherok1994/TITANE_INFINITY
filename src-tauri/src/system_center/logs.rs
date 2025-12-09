@@ -182,7 +182,14 @@ pub async fn sc_get_logs(filter: Option<LogFilter>) -> Result<Vec<LogEntry>, Str
 /// Get log statistics
 #[tauri::command]
 pub async fn sc_get_log_stats() -> Result<LogStats, String> {
-    let buffer = LOG_BUFFER.lock().unwrap();
+    // Phase 1 Stabilisation: Gérer lock poison
+    let buffer = match LOG_BUFFER.lock() {
+        Ok(buf) => buf,
+        Err(e) => {
+            eprintln!("Warning: LOG_BUFFER lock poisoned in stats, recovering: {}", e);
+            e.into_inner()
+        }
+    };
 
     let mut by_level: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
     let mut by_source: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
@@ -202,7 +209,14 @@ pub async fn sc_get_log_stats() -> Result<LogStats, String> {
 /// Clear all logs
 #[tauri::command]
 pub async fn sc_clear_logs() -> Result<(), String> {
-    let mut buffer = LOG_BUFFER.lock().unwrap();
+    // Phase 1 Stabilisation: Gérer lock poison
+    let mut buffer = match LOG_BUFFER.lock() {
+        Ok(buf) => buf,
+        Err(e) => {
+            eprintln!("Warning: LOG_BUFFER lock poisoned, recovering: {}", e);
+            e.into_inner()
+        }
+    };
     buffer.clear();
     Ok(())
 }
