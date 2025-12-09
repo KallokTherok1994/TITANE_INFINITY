@@ -164,11 +164,33 @@ Stockage persistant et gestion mémoire.
 
 ## 📚 Documentation
 
-- [Architecture Complète](docs/ARCHITECTURE.md)
-- [Guide des Modules](docs/MODULES.md)
-- [Sécurité](docs/SECURITY.md)
-- [Guide Développeur](docs/DEVELOPER_GUIDE.md)
-- [Changelog](docs/CHANGELOG.md)
+### Documentation Principale
+
+- [Architecture Complète](ARCHITECTURE.md)
+- [Guide des Modules](MODULES.md)
+- [Sécurité](SECURITY.md)
+- [Guide Développeur](DEVELOPER_GUIDE.md)
+- [Changelog](CHANGELOG.md)
+
+### 🧬 Super Prompts (Chirurgie Frontend/Backend)
+
+**NOUVEAU** : Collection de Super Prompts pour GitHub Copilot Chat, optimisés pour finaliser rapidement TITANE∞.
+
+- **[📚 Index Super Prompts](super-prompts/README.md)** - Vue d'ensemble + Roadmap
+- **[⚡ Quick Start](super-prompts/QUICK_START.md)** - Démarrage en 5 étapes
+- **[🎨 Guide Visuel](super-prompts/VISUAL_GUIDE.md)** - Diagrammes + Workflows
+- **[⚡ Cheat Sheet](super-prompts/CHEAT_SHEET.md)** - Aide-mémoire rapide
+
+**Prompts disponibles** (7/7 - Collection complète ✅) :
+- ✅ [#1 - Frontend Final Form](super-prompts/frontend/SUPER_PROMPT_01_FRONTEND_FINAL_FORM.md) — UI/UX + Design System
+- ✅ [#2 - Rust Backend Cleanup](super-prompts/backend/SUPER_PROMPT_02_RUST_BACKEND_CLEANUP.md) — Code quality + Error handling
+- ✅ [#3 - API Consolidation](super-prompts/backend/SUPER_PROMPT_03_API_CONSOLIDATION.md) — API standardization
+- ✅ [#4 - Cognitive Optimization](super-prompts/cognitive/SUPER_PROMPT_04_COGNITIVE_OPTIMIZATION.md) — Engine performance
+- ✅ [#5 - Memory Refinement](super-prompts/cognitive/SUPER_PROMPT_05_MEMORY_REFINEMENT.md) — Memory system
+- ✅ [#6 - Security Hardening](super-prompts/security/SUPER_PROMPT_06_SECURITY_HARDENING.md) — OWASP + Encryption
+- ✅ [#7 - Performance Audit](super-prompts/performance/SUPER_PROMPT_07_PERFORMANCE_AUDIT.md) — Profiling + Optimization
+
+**ROI estimé global** : ~90% de réduction du temps (135-270h gagnées sur 150-300h)
 
 ## 🛠️ Développement
 
