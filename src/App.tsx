@@ -78,7 +78,8 @@ if (typeof window !== 'undefined') {
 }
 
 // ✨ v24 P2-4 - Performance: Lazy load ALL pages except Dashboard
-import { DashboardPage } from './pages/DashboardPage'; // Dashboard stays eager (critical path)
+// ✨ PHASE 4.3 - Lazy load Dashboard pour réduire FCP de ~400ms
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
 
 // ✨ v24 P2-4 - Lazy loaded pages (code splitting)
 const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
