@@ -10,20 +10,35 @@ Collection de **Super Prompts** optimisés pour GitHub Copilot Chat (VS Code) de
   Correction complète + Finalisation UI/UX + Design System + Responsive + Performance
   *Status: ✅ Prêt à l'emploi*
 
-### 🔧 Backend & Architecture (À venir)
+### 🔧 Backend & Architecture
 
-- **#2 - RUST BACKEND CLEANUP** (Prévu)
-- **#3 - API LAYER CONSOLIDATION** (Prévu)
+- **[#2 - RUST BACKEND CLEANUP](./backend/SUPER_PROMPT_02_RUST_BACKEND_CLEANUP.md)**
+  Nettoyage complet + Optimisation + Robustesse du backend Rust
+  *Status: ✅ Prêt à l'emploi*
 
-### 🧠 Cognitive Layer (À venir)
+- **[#3 - API LAYER CONSOLIDATION](./backend/SUPER_PROMPT_03_API_CONSOLIDATION.md)**
+  Consolidation + Standardisation + Sécurisation de la couche API
+  *Status: ✅ Prêt à l'emploi*
 
-- **#4 - COGNITIVE ENGINES OPTIMIZATION** (Prévu)
-- **#5 - MEMORY SYSTEM REFINEMENT** (Prévu)
+### 🧠 Cognitive Layer
 
-### 🔐 Security & Performance (À venir)
+- **[#4 - COGNITIVE ENGINES OPTIMIZATION](./cognitive/SUPER_PROMPT_04_COGNITIVE_OPTIMIZATION.md)**
+  Optimisation des moteurs cognitifs (ANS, MAI, Cortex, Resonance, etc.)
+  *Status: ✅ Prêt à l'emploi*
 
-- **#6 - SECURITY HARDENING** (Prévu)
-- **#7 - PERFORMANCE AUDIT & FIX** (Prévu)
+- **[#5 - MEMORY SYSTEM REFINEMENT](./cognitive/SUPER_PROMPT_05_MEMORY_REFINEMENT.md)**
+  Raffinement du système de mémoire (episodic, semantic, working)
+  *Status: ✅ Prêt à l'emploi*
+
+### 🔐 Security & Performance
+
+- **[#6 - SECURITY HARDENING](./security/SUPER_PROMPT_06_SECURITY_HARDENING.md)**
+  Durcissement de la sécurité (OWASP, CSP, CORS, chiffrement)
+  *Status: ✅ Prêt à l'emploi*
+
+- **[#7 - PERFORMANCE AUDIT & FIX](./performance/SUPER_PROMPT_07_PERFORMANCE_AUDIT.md)**
+  Audit complet de performance + optimisations
+  *Status: ✅ Prêt à l'emploi*
 
 ## 🎯 Comment utiliser ces Super Prompts
 
@@ -48,12 +63,12 @@ Collection de **Super Prompts** optimisés pour GitHub Copilot Chat (VS Code) de
 | Super Prompt | Status | Priorité | Complexité |
 |--------------|--------|----------|------------|
 | #1 Frontend Final Form | ✅ Prêt | 🔥 P0 | ⭐⭐⭐⭐ |
-| #2 Rust Backend Cleanup | 📝 Planifié | 🔥 P0 | ⭐⭐⭐⭐⭐ |
-| #3 API Layer Consolidation | 📝 Planifié | 🔥 P1 | ⭐⭐⭐ |
-| #4 Cognitive Engines Opt. | 📝 Planifié | 🔶 P2 | ⭐⭐⭐⭐ |
-| #5 Memory System Refine | 📝 Planifié | 🔶 P2 | ⭐⭐⭐ |
-| #6 Security Hardening | 📝 Planifié | 🔥 P1 | ⭐⭐⭐⭐ |
-| #7 Performance Audit & Fix | 📝 Planifié | 🔶 P2 | ⭐⭐⭐⭐ |
+| #2 Rust Backend Cleanup | ✅ Prêt | 🔥 P0 | ⭐⭐⭐⭐⭐ |
+| #3 API Layer Consolidation | ✅ Prêt | 🔶 P1 | ⭐⭐⭐ |
+| #4 Cognitive Engines Opt. | ✅ Prêt | 🟡 P2 | ⭐⭐⭐⭐ |
+| #5 Memory System Refine | ✅ Prêt | 🟡 P2 | ⭐⭐⭐ |
+| #6 Security Hardening | ✅ Prêt | 🔶 P1 | ⭐⭐⭐⭐ |
+| #7 Performance Audit & Fix | ✅ Prêt | 🟡 P2 | ⭐⭐⭐⭐ |
 
 ## 🏗️ Architecture de chirurgie
 
