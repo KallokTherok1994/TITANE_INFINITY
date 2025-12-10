@@ -11,8 +11,8 @@ use std::sync::Arc;
 use uuid::Uuid;
 
 use super::consolidator::ConsolidationResult;
+use super::core::{MemoryOS, MemoryOSConfig, MemoryOSStats, RecallResult};
 use super::forgetting::ForgettingResult;
-use super::memory_os::{MemoryOS, MemoryOSConfig, MemoryOSStats, RecallResult};
 use super::memory_signals::SignalStats;
 use super::memory_state::{MemoryEntry, MemorySnapshot, MemoryType, TierSnapshot};
 

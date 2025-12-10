@@ -21,10 +21,10 @@
 
 pub mod api;
 pub mod consolidator;
+pub mod core;
 pub mod forgetting;
 pub mod indexer;
 pub mod ltm;
-pub mod memory_os;
 pub mod memory_signals;
 pub mod memory_state;
 pub mod mtm;
@@ -58,9 +58,9 @@ pub use vector_index::{SearchResult, VectorIndex, VectorIndexConfig};
 
 // Re-exports for convenient access (original)
 pub use consolidator::Consolidator;
+pub use core::MemoryOS;
 pub use forgetting::ForgettingEngine;
 pub use ltm::LongTermMemory;
-pub use memory_os::MemoryOS;
 pub use memory_signals::MemorySignal;
 pub use memory_state::{MemoryEntry, MemorySnapshot, MemoryTier, MemoryType};
 pub use mtm::MidTermMemory;
