@@ -98,11 +98,11 @@ export const ChatIA: React.FC = () => {
 
   const loadProviderStatus = async () => {
     try {
-      // Vérifier Gemini
-      const geminiStatus = await invoke<{ ok: boolean; data?: { configured: boolean } }>(
-        'get_gemini_key_status'
-      );
-      const geminiConfigured = geminiStatus?.data?.configured || false;
+      // Gemini désactivé - Ne pas utiliser
+      // const geminiStatus = await invoke<{ ok: boolean; data?: { configured: boolean } }>(
+      //   'get_gemini_key_status'
+      // );
+      const geminiConfigured = false; // GEMINI DÉSACTIVÉ
 
       // Vérifier Ollama (via HTTP) et charger modèles
       let ollamaAvailable = false;
@@ -256,9 +256,10 @@ export const ChatIA: React.FC = () => {
               <option value="auto">🤖 Auto (Intelligent)</option>
               <option value="openai">🔵 OpenAI GPT-4o</option>
               <option value="anthropic">🧠 Claude 3.5 Sonnet</option>
-              <option value="gemini" disabled={!providerStatus.gemini_configured}>
+              {/* GEMINI DÉSACTIVÉ - Ne pas utiliser */}
+              {/* <option value="gemini" disabled={!providerStatus.gemini_configured}>
                 🔵 Gemini {!providerStatus.gemini_configured && '(⚠️ Non configuré)'}
-              </option>
+              </option> */}
               <option value="ollama" disabled={!providerStatus.ollama_available}>
                 🟢 Ollama {!providerStatus.ollama_available && '(⚠️ Non détecté)'}
               </option>
@@ -280,7 +281,8 @@ export const ChatIA: React.FC = () => {
               </select>
             </div>
           )}
-          {provider === 'gemini' && (
+          {/* GEMINI DÉSACTIVÉ */}
+          {/* {provider === 'gemini' && (
             <div className="model-selector">
               <label>Modèle:</label>
               <select
@@ -292,7 +294,7 @@ export const ChatIA: React.FC = () => {
                 <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
               </select>
             </div>
-          )}
+          )} */}
           {provider === 'openai' && (
             <div className="model-selector">
               <label>Modèle:</label>
