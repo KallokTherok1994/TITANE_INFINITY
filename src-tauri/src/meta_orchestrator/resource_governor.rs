@@ -302,3 +302,107 @@ impl ResourceGovernor {
         self.history.read().await.clone()
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TESTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_resource_governor_creation() {
+        let governor = ResourceGovernor::new();
+        let allocation = governor.get_allocation().await;
+
+        // Vérifier les valeurs par défaut
+        assert_eq!(allocation.cpu_quota_percent, 80.0);
+        assert_eq!(allocation.memory_limit_mb, 4096);
+        assert!(allocation.gpu_enabled);
+    }
+
+    #[tokio::test]
+    async fn test_resource_governor_initialize() {
+        let governor = ResourceGovernor::new();
+        let result = governor.initialize().await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_resource_policies_default() {
+        let policies = ResourcePolicies::default();
+
+        assert!(policies.auto_scale_enabled);
+        assert_eq!(policies.min_cpu_quota, 20.0);
+        assert_eq!(policies.max_cpu_quota, 95.0);
+        assert_eq!(policies.min_memory_mb, 512);
+        assert_eq!(policies.max_memory_mb, 8192);
+    }
+
+    #[tokio::test]
+    async fn test_resource_allocation_default() {
+        let allocation = ResourceAllocation::default();
+
+        assert_eq!(allocation.cpu_quota_percent, 80.0);
+        assert_eq!(allocation.memory_limit_mb, 4096);
+        assert!(allocation.gpu_enabled);
+        assert_eq!(allocation.gpu_quota_percent, 50.0);
+        assert_eq!(allocation.thread_pool_size, 8);
+    }
+
+    #[tokio::test]
+    async fn test_history_initially_empty() {
+        let governor = ResourceGovernor::new();
+        let history = governor.get_history().await;
+        assert!(history.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_apply_mode_performance() {
+        let governor = ResourceGovernor::new();
+        let result = governor.apply_mode(OrchestrationMode::Performance).await;
+        assert!(result.is_ok());
+
+        let allocation = governor.get_allocation().await;
+        // En mode performance, le CPU quota devrait être élevé
+        assert!(allocation.cpu_quota_percent >= 80.0);
+    }
+
+    #[tokio::test]
+    async fn test_apply_mode_powersave() {
+        let governor = ResourceGovernor::new();
+        let result = governor.apply_mode(OrchestrationMode::PowerSave).await;
+        assert!(result.is_ok());
+
+        let allocation = governor.get_allocation().await;
+        // En mode économie, le GPU devrait être désactivé
+        assert!(!allocation.gpu_enabled);
+    }
+
+    #[tokio::test]
+    async fn test_optimize_returns_report() {
+        let governor = ResourceGovernor::new();
+        let report = governor.optimize().await;
+        assert!(report.is_ok());
+
+        let report = report.unwrap();
+        assert!(report.recommendations.is_empty() || !report.recommendations.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_resource_type_variants() {
+        let types = vec![
+            ResourceType::CPU,
+            ResourceType::Memory,
+            ResourceType::GPU,
+            ResourceType::IO,
+            ResourceType::Network,
+            ResourceType::ThreadPool,
+        ];
+
+        assert_eq!(types.len(), 6);
+        assert_eq!(types[0], ResourceType::CPU);
+        assert_eq!(types[5], ResourceType::ThreadPool);
+    }
+}

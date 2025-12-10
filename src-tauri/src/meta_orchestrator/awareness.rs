@@ -307,3 +307,112 @@ fn rand_simple() -> f64 {
         .subsec_nanos();
     (nanos as f64 % 1000.0) / 1000.0
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TESTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_system_awareness_creation() {
+        let awareness = SystemAwareness::new();
+        // Vérifie que l'instance est créée sans erreur
+        // Le niveau initial est Dormant par défaut
+        assert!(awareness.initialize().await.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_system_awareness_initialize() {
+        let awareness = SystemAwareness::new();
+        let result = awareness.initialize().await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_alert_thresholds_default() {
+        let thresholds = AlertThresholds::default();
+
+        assert_eq!(thresholds.cpu_warning, 70.0);
+        assert_eq!(thresholds.cpu_critical, 90.0);
+        assert_eq!(thresholds.memory_warning, 75.0);
+        assert_eq!(thresholds.memory_critical, 95.0);
+    }
+
+    #[tokio::test]
+    async fn test_awareness_level_variants() {
+        let levels = vec![
+            AwarenessLevel::Dormant,
+            AwarenessLevel::Minimal,
+            AwarenessLevel::Standard,
+            AwarenessLevel::Elevated,
+            AwarenessLevel::HyperAware,
+            AwarenessLevel::Transcendent,
+        ];
+
+        assert_eq!(levels.len(), 6);
+        assert_eq!(levels[0], AwarenessLevel::Dormant);
+        assert_eq!(levels[5], AwarenessLevel::Transcendent);
+    }
+
+    #[tokio::test]
+    async fn test_alert_severity_variants() {
+        let severities = vec![
+            AlertSeverity::Info,
+            AlertSeverity::Warning,
+            AlertSeverity::Critical,
+            AlertSeverity::Emergency,
+        ];
+
+        assert_eq!(severities.len(), 4);
+    }
+
+    #[tokio::test]
+    async fn test_trend_direction_variants() {
+        let trends = vec![
+            TrendDirection::Improving,
+            TrendDirection::Stable,
+            TrendDirection::Degrading,
+            TrendDirection::Critical,
+        ];
+
+        assert_eq!(trends.len(), 4);
+        assert_eq!(trends[0], TrendDirection::Improving);
+    }
+
+    #[tokio::test]
+    async fn test_alert_category_variants() {
+        let categories = vec![
+            AlertCategory::CPU,
+            AlertCategory::Memory,
+            AlertCategory::GPU,
+            AlertCategory::DiskIO,
+            AlertCategory::Network,
+            AlertCategory::ErrorRate,
+            AlertCategory::EngineHealth,
+        ];
+
+        assert_eq!(categories.len(), 7);
+    }
+
+    #[tokio::test]
+    async fn test_analyze_returns_report() {
+        let awareness = SystemAwareness::new();
+        let report = awareness.analyze().await;
+        assert!(report.is_ok());
+
+        let report = report.unwrap();
+        // Le rapport devrait avoir des recommandations
+        assert!(!report.recommendations.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_system_health_default() {
+        let health = SystemHealth::default();
+        assert_eq!(health.overall_score, 1.0);
+        assert_eq!(health.cpu_usage, 0.0);
+        assert_eq!(health.memory_usage, 0.0);
+    }
+}
