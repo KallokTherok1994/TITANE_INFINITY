@@ -214,3 +214,227 @@ pub async fn create_module(
 
     engine.create_from_intent(request).await
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_creation_engine_new() {
+        let engine = CreationEngine::new();
+        assert!(!engine.templates.is_empty());
+    }
+
+    #[test]
+    fn test_creation_engine_default() {
+        let engine = CreationEngine::default();
+        assert!(!engine.templates.is_empty());
+    }
+
+    #[test]
+    fn test_target_type_variants() {
+        let types = vec![
+            TargetType::RustModule,
+            TargetType::TypeScriptComponent,
+            TargetType::ReactPage,
+            TargetType::TauriCommand,
+            TargetType::UIWidget,
+            TargetType::DataModel,
+        ];
+
+        for t in types {
+            // Ensure all variants are hashable and cloneable
+            let cloned = t.clone();
+            assert_eq!(t, cloned);
+        }
+    }
+
+    #[test]
+    fn test_creation_request_structure() {
+        let mut params = HashMap::new();
+        params.insert("NAME".to_string(), "TestModule".to_string());
+
+        let request = CreationRequest {
+            id: "test-123".to_string(),
+            intent: "Create a test module".to_string(),
+            target_type: TargetType::RustModule,
+            parameters: params,
+        };
+
+        assert_eq!(request.id, "test-123");
+        assert_eq!(request.intent, "Create a test module");
+        assert_eq!(request.target_type, TargetType::RustModule);
+        assert!(request.parameters.contains_key("NAME"));
+    }
+
+    #[test]
+    fn test_generated_artifact_structure() {
+        let artifact = GeneratedArtifact {
+            id: "artifact-1".to_string(),
+            name: "TestArtifact".to_string(),
+            target_type: TargetType::TypeScriptComponent,
+            code: "const x = 1;".to_string(),
+            dependencies: vec!["react".to_string()],
+            tests: Some("test code".to_string()),
+            documentation: "docs".to_string(),
+        };
+
+        assert_eq!(artifact.id, "artifact-1");
+        assert_eq!(artifact.name, "TestArtifact");
+        assert_eq!(artifact.dependencies.len(), 1);
+        assert!(artifact.tests.is_some());
+    }
+
+    #[test]
+    fn test_infer_dependencies_serde() {
+        let engine = CreationEngine::new();
+        let code = "use serde::{Deserialize, Serialize};";
+
+        let deps = engine.infer_dependencies(code);
+        assert!(deps.iter().any(|d| d.contains("serde")));
+    }
+
+    #[test]
+    fn test_infer_dependencies_uuid() {
+        let engine = CreationEngine::new();
+        let code = "let id = uuid::Uuid::new_v4();";
+
+        let deps = engine.infer_dependencies(code);
+        assert!(deps.iter().any(|d| d.contains("uuid")));
+    }
+
+    #[test]
+    fn test_infer_dependencies_tokio() {
+        let engine = CreationEngine::new();
+        let code = "tokio::spawn(async {});";
+
+        let deps = engine.infer_dependencies(code);
+        assert!(deps.iter().any(|d| d.contains("tokio")));
+    }
+
+    #[test]
+    fn test_infer_dependencies_none() {
+        let engine = CreationEngine::new();
+        let code = "fn main() {}";
+
+        let deps = engine.infer_dependencies(code);
+        assert!(deps.is_empty());
+    }
+
+    #[test]
+    fn test_generate_tests() {
+        let engine = CreationEngine::new();
+        let tests = engine.generate_tests("any code");
+
+        assert!(tests.contains("#[cfg(test)]"));
+        assert!(tests.contains("mod tests"));
+        assert!(tests.contains("#[test]"));
+    }
+
+    #[test]
+    fn test_generate_docs() {
+        let engine = CreationEngine::new();
+        let docs = engine.generate_docs("Create a user module");
+
+        assert!(docs.contains("Create a user module"));
+        assert!(docs.contains("TITANE∞"));
+    }
+
+    #[test]
+    fn test_templates_contain_rust_module() {
+        let engine = CreationEngine::new();
+        assert!(engine.templates.contains_key(&TargetType::RustModule));
+    }
+
+    #[test]
+    fn test_templates_contain_typescript() {
+        let engine = CreationEngine::new();
+        assert!(engine.templates.contains_key(&TargetType::TypeScriptComponent));
+    }
+
+    #[tokio::test]
+    async fn test_create_from_intent_rust() {
+        let engine = CreationEngine::new();
+
+        let mut params = HashMap::new();
+        params.insert("NAME".to_string(), "MyModule".to_string());
+        params.insert("FIELDS".to_string(), "value: i32,".to_string());
+        params.insert("PARAMS".to_string(), "value: i32".to_string());
+        params.insert("INIT".to_string(), "value".to_string());
+        params.insert("METHODS".to_string(), "".to_string());
+
+        let request = CreationRequest {
+            id: "req-1".to_string(),
+            intent: "Create MyModule".to_string(),
+            target_type: TargetType::RustModule,
+            parameters: params,
+        };
+
+        let result = engine.create_from_intent(request).await;
+        assert!(result.is_ok());
+
+        let artifact = result.unwrap();
+        assert_eq!(artifact.name, "MyModule");
+        assert!(artifact.code.contains("MyModule"));
+    }
+
+    #[tokio::test]
+    async fn test_create_from_intent_typescript() {
+        let engine = CreationEngine::new();
+
+        let mut params = HashMap::new();
+        params.insert("NAME".to_string(), "MyComponent".to_string());
+        params.insert("PROPS".to_string(), "title: string;".to_string());
+        params.insert("PROP_NAMES".to_string(), "{ title }".to_string());
+        params.insert("STATE".to_string(), "".to_string());
+        params.insert("CLASS_NAME".to_string(), "my-component".to_string());
+        params.insert("CONTENT".to_string(), "{title}".to_string());
+
+        let request = CreationRequest {
+            id: "req-2".to_string(),
+            intent: "Create React component".to_string(),
+            target_type: TargetType::TypeScriptComponent,
+            parameters: params,
+        };
+
+        let result = engine.create_from_intent(request).await;
+        assert!(result.is_ok());
+
+        let artifact = result.unwrap();
+        assert!(artifact.code.contains("React"));
+        assert!(artifact.code.contains("MyComponent"));
+    }
+
+    #[tokio::test]
+    async fn test_create_from_intent_missing_template() {
+        let engine = CreationEngine::new();
+
+        let request = CreationRequest {
+            id: "req-3".to_string(),
+            intent: "Create widget".to_string(),
+            target_type: TargetType::UIWidget, // No template defined
+            parameters: HashMap::new(),
+        };
+
+        let result = engine.create_from_intent(request).await;
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Template not found"));
+    }
+
+    #[test]
+    fn test_artifact_clone() {
+        let artifact = GeneratedArtifact {
+            id: "id".to_string(),
+            name: "name".to_string(),
+            target_type: TargetType::DataModel,
+            code: "code".to_string(),
+            dependencies: vec!["dep".to_string()],
+            tests: None,
+            documentation: "doc".to_string(),
+        };
+
+        let cloned = artifact.clone();
+        assert_eq!(cloned.id, artifact.id);
+        assert_eq!(cloned.name, artifact.name);
+    }
+}

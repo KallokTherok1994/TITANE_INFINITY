@@ -168,7 +168,7 @@ mod tests {
     fn test_push_samples() {
         let mut engine = WakewordEngine::new(16000);
         let samples = vec![0.1, 0.2, 0.3];
-        
+
         engine.push_samples(&samples);
         assert_eq!(engine.buffer.len(), 3);
     }
@@ -176,12 +176,12 @@ mod tests {
     #[test]
     fn test_vad_detection() {
         let mut engine = WakewordEngine::new(16000);
-        
+
         // Silence
         let silence = vec![0.001; 8000];
         engine.push_samples(&silence);
         assert!(!engine.has_voice_activity());
-        
+
         // Voix
         engine.reset();
         let voice = vec![0.1; 8000];
@@ -193,9 +193,138 @@ mod tests {
     fn test_normalize() {
         let signal = vec![1.0, 2.0, 3.0, 4.0, 5.0];
         let normalized = WakewordEngine::normalize(&signal);
-        
+
         // Moyenne devrait être proche de 0
         let mean = normalized.iter().sum::<f32>() / normalized.len() as f32;
         assert!(mean.abs() < 0.001);
+    }
+
+    #[test]
+    fn test_engine_different_sample_rates() {
+        let engine_8k = WakewordEngine::new(8000);
+        let engine_44k = WakewordEngine::new(44100);
+
+        // Buffer size proportionnel au sample rate (500ms)
+        assert_eq!(engine_8k.buffer_size, 4000);  // 8000 * 0.5
+        assert_eq!(engine_44k.buffer_size, 22050); // 44100 * 0.5
+    }
+
+    #[test]
+    fn test_reset() {
+        let mut engine = WakewordEngine::new(16000);
+        engine.push_samples(&[0.1; 1000]);
+
+        assert_eq!(engine.buffer.len(), 1000);
+        engine.reset();
+        assert_eq!(engine.buffer.len(), 0);
+    }
+
+    #[test]
+    fn test_set_vad_threshold() {
+        let mut engine = WakewordEngine::new(16000);
+
+        engine.set_vad_threshold(0.05);
+        assert_eq!(engine.vad_threshold, 0.05);
+
+        // Test clamping - too low
+        engine.set_vad_threshold(0.0001);
+        assert_eq!(engine.vad_threshold, 0.001);
+
+        // Test clamping - too high
+        engine.set_vad_threshold(0.5);
+        assert_eq!(engine.vad_threshold, 0.1);
+    }
+
+    #[test]
+    fn test_buffer_overflow_handling() {
+        let mut engine = WakewordEngine::new(16000);
+        // Buffer size is 8000 samples (500ms @ 16kHz)
+
+        // Push more than buffer can hold
+        engine.push_samples(&[0.5; 10000]);
+
+        // Buffer should be capped at max size
+        assert_eq!(engine.buffer.len(), engine.buffer_size);
+    }
+
+    #[test]
+    fn test_detect_with_insufficient_buffer() {
+        let mut engine = WakewordEngine::new(16000);
+
+        // Push less than required for detection
+        engine.push_samples(&[0.1; 100]);
+
+        // Should return None due to insufficient data
+        assert!(engine.detect().is_none());
+    }
+
+    #[test]
+    fn test_detect_with_silence() {
+        let mut engine = WakewordEngine::new(16000);
+
+        // Fill buffer with silence
+        let silence = vec![0.001; 8000];
+        engine.push_samples(&silence);
+
+        // Should return None (no voice activity)
+        assert!(engine.detect().is_none());
+    }
+
+    #[test]
+    fn test_cross_correlation() {
+        let signal1 = vec![1.0, 2.0, 3.0, 4.0];
+        let signal2 = vec![1.0, 2.0, 3.0, 4.0];
+
+        let correlation = WakewordEngine::cross_correlation(&signal1, &signal2);
+
+        // Same signal should have high correlation
+        assert!(correlation > 0.0);
+    }
+
+    #[test]
+    fn test_cross_correlation_different_lengths() {
+        let short = vec![1.0, 2.0];
+        let long = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+
+        // Should not panic and use minimum length
+        let correlation = WakewordEngine::cross_correlation(&short, &long);
+        assert!(correlation.is_finite());
+    }
+
+    #[test]
+    fn test_normalize_zero_variance() {
+        let constant = vec![5.0; 10]; // No variance
+
+        let normalized = WakewordEngine::normalize(&constant);
+
+        // With zero variance, should return original
+        assert_eq!(normalized.len(), 10);
+    }
+
+    #[test]
+    fn test_pattern_generation() {
+        let pattern = WakewordEngine::generate_titane_pattern();
+
+        // Pattern should have expected length (800 + 600 + 600 = 2000)
+        assert_eq!(pattern.len(), 2000);
+
+        // All values should be in reasonable range
+        for &val in &pattern {
+            assert!(val >= -1.0 && val <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_normalize_produces_unit_variance() {
+        let signal = vec![2.0, 4.0, 6.0, 8.0, 10.0];
+        let normalized = WakewordEngine::normalize(&signal);
+
+        // Variance should be close to 1
+        let mean = normalized.iter().sum::<f32>() / normalized.len() as f32;
+        let variance = normalized.iter()
+            .map(|&x| (x - mean).powi(2))
+            .sum::<f32>() / normalized.len() as f32;
+
+        assert!((variance - 1.0).abs() < 0.01);
     }
 }

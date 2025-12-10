@@ -321,4 +321,234 @@ mod tests {
         assert_eq!(due.len(), 1);
         assert_eq!(due[0], "test");
     }
+
+    #[test]
+    fn test_unregister_check() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "to_remove".to_string(),
+            name: "Check to Remove".to_string(),
+            priority: HealthCheckPriority::Low,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 1,
+            enabled: true,
+        });
+
+        assert_eq!(scheduler.stats().registered_checks, 1);
+        assert!(scheduler.unregister_check("to_remove"));
+        assert_eq!(scheduler.stats().registered_checks, 0);
+        assert!(!scheduler.unregister_check("nonexistent"));
+    }
+
+    #[test]
+    fn test_disabled_check_not_due() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "disabled".to_string(),
+            name: "Disabled Check".to_string(),
+            priority: HealthCheckPriority::Medium,
+            interval_ms: 0,
+            timeout_ms: 500,
+            retry_count: 3,
+            enabled: false, // Disabled
+        });
+
+        let due = scheduler.get_due_checks();
+        assert!(due.is_empty());
+    }
+
+    #[test]
+    fn test_record_healthy_result() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "health_check".to_string(),
+            name: "Health Check".to_string(),
+            priority: HealthCheckPriority::High,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 3,
+            enabled: true,
+        });
+
+        let result = HealthCheckResult {
+            check_id: "health_check".to_string(),
+            status: HealthStatus::Healthy,
+            message: Some("All good".to_string()),
+            duration_ms: 50,
+            timestamp: 12345,
+            retry_count: 0,
+            details: HashMap::new(),
+        };
+
+        scheduler.record_result(result);
+
+        let stats = scheduler.stats();
+        assert_eq!(stats.checks_completed, 1);
+        assert_eq!(stats.checks_failed, 0);
+    }
+
+    #[test]
+    fn test_record_unhealthy_result() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "failing_check".to_string(),
+            name: "Failing Check".to_string(),
+            priority: HealthCheckPriority::Critical,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 3,
+            enabled: true,
+        });
+
+        let result = HealthCheckResult {
+            check_id: "failing_check".to_string(),
+            status: HealthStatus::Unhealthy,
+            message: Some("Connection failed".to_string()),
+            duration_ms: 100,
+            timestamp: 12345,
+            retry_count: 1,
+            details: HashMap::new(),
+        };
+
+        scheduler.record_result(result);
+
+        let stats = scheduler.stats();
+        assert_eq!(stats.checks_failed, 1);
+    }
+
+    #[test]
+    fn test_health_summary_all_healthy() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "check1".to_string(),
+            name: "Check 1".to_string(),
+            priority: HealthCheckPriority::High,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 3,
+            enabled: true,
+        });
+
+        scheduler.record_result(HealthCheckResult {
+            check_id: "check1".to_string(),
+            status: HealthStatus::Healthy,
+            message: None,
+            duration_ms: 10,
+            timestamp: 12345,
+            retry_count: 0,
+            details: HashMap::new(),
+        });
+
+        let summary = scheduler.get_health_summary();
+        assert_eq!(summary.overall_status, HealthStatus::Healthy);
+        assert_eq!(summary.healthy_count, 1);
+    }
+
+    #[test]
+    fn test_health_summary_with_unhealthy() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "check1".to_string(),
+            name: "Check 1".to_string(),
+            priority: HealthCheckPriority::High,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 3,
+            enabled: true,
+        });
+
+        scheduler.record_result(HealthCheckResult {
+            check_id: "check1".to_string(),
+            status: HealthStatus::Unhealthy,
+            message: None,
+            duration_ms: 10,
+            timestamp: 12345,
+            retry_count: 0,
+            details: HashMap::new(),
+        });
+
+        let summary = scheduler.get_health_summary();
+        assert_eq!(summary.overall_status, HealthStatus::Unhealthy);
+        assert_eq!(summary.unhealthy_count, 1);
+    }
+
+    #[test]
+    fn test_start_stop_scheduler() {
+        let scheduler = HealthScheduler::new(100);
+
+        assert!(!scheduler.is_running());
+        scheduler.start();
+        assert!(scheduler.is_running());
+        scheduler.stop();
+        assert!(!scheduler.is_running());
+    }
+
+    #[test]
+    fn test_mark_running() {
+        let scheduler = HealthScheduler::new(100);
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "concurrent".to_string(),
+            name: "Concurrent Check".to_string(),
+            priority: HealthCheckPriority::High,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 3,
+            enabled: true,
+        });
+
+        // First mark should succeed
+        assert!(scheduler.mark_running("concurrent"));
+        // Second mark should fail (already running)
+        assert!(!scheduler.mark_running("concurrent"));
+        // Nonexistent check should fail
+        assert!(!scheduler.mark_running("nonexistent"));
+    }
+
+    #[test]
+    fn test_priority_ordering() {
+        assert!(HealthCheckPriority::Critical < HealthCheckPriority::High);
+        assert!(HealthCheckPriority::High < HealthCheckPriority::Medium);
+        assert!(HealthCheckPriority::Medium < HealthCheckPriority::Low);
+    }
+
+    #[test]
+    fn test_recent_results() {
+        let scheduler = HealthScheduler::new(5); // Small history
+
+        scheduler.register_check(HealthCheckConfig {
+            id: "history_test".to_string(),
+            name: "History Test".to_string(),
+            priority: HealthCheckPriority::Low,
+            interval_ms: 1000,
+            timeout_ms: 500,
+            retry_count: 1,
+            enabled: true,
+        });
+
+        // Add multiple results
+        for i in 0..7 {
+            scheduler.record_result(HealthCheckResult {
+                check_id: "history_test".to_string(),
+                status: HealthStatus::Healthy,
+                message: Some(format!("Result {}", i)),
+                duration_ms: 10,
+                timestamp: i as u64,
+                retry_count: 0,
+                details: HashMap::new(),
+            });
+        }
+
+        let recent = scheduler.get_recent_results(3);
+        assert_eq!(recent.len(), 3);
+        // Should be most recent first
+        assert_eq!(recent[0].timestamp, 6);
+    }
 }
