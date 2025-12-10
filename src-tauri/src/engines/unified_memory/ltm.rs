@@ -356,12 +356,25 @@ mod tests {
     fn test_ltm_semantic_search() {
         let mut ltm = LongTermMemory::new(10);
 
-        let query_emb = vec![0.5; 384];
+        // Query vector: mostly in first dimension
+        let mut query_emb = vec![0.0; 384];
+        query_emb[0] = 1.0;
+        query_emb[1] = 0.1;
+
+        // Entry 1: Similar to query (high in first dimension)
+        let mut emb1 = vec![0.0; 384];
+        emb1[0] = 0.95;
+        emb1[1] = 0.15;
+
+        // Entry 2: Different from query (high in second dimension)
+        let mut emb2 = vec![0.0; 384];
+        emb2[0] = 0.1;
+        emb2[1] = 0.95;
 
         ltm.insert(MemoryEntry {
             id: "1".to_string(),
             content: "Similar vector".to_string(),
-            embedding: Some(vec![0.48; 384]),
+            embedding: Some(emb1),
             ..Default::default()
         })
         .unwrap();
@@ -369,7 +382,7 @@ mod tests {
         ltm.insert(MemoryEntry {
             id: "2".to_string(),
             content: "Different vector".to_string(),
-            embedding: Some(vec![0.1; 384]),
+            embedding: Some(emb2),
             ..Default::default()
         })
         .unwrap();

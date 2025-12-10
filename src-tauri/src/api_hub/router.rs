@@ -494,4 +494,54 @@ mod tests {
         assert_eq!(decision.provider, Provider::Anthropic);
         assert_eq!(decision.reason, "User preferred provider");
     }
+
+    #[test]
+    fn test_model_choice_strategy_variants() {
+        let strategies = vec![
+            ModelChoiceStrategy::Speed,
+            ModelChoiceStrategy::Quality,
+            ModelChoiceStrategy::Balanced,
+            ModelChoiceStrategy::VisionDominant,
+            ModelChoiceStrategy::Secure,
+            ModelChoiceStrategy::CostEfficient,
+            ModelChoiceStrategy::DeepReasoning,
+            ModelChoiceStrategy::LongContext,
+        ];
+        assert_eq!(strategies.len(), 8);
+    }
+
+    #[test]
+    fn test_router_default_strategy() {
+        let router = APIRouter::new();
+        assert_eq!(router.default_strategy, ModelChoiceStrategy::Balanced);
+    }
+
+    #[test]
+    fn test_router_with_strategy() {
+        let router = APIRouter::new().with_default_strategy(ModelChoiceStrategy::Speed);
+        assert_eq!(router.default_strategy, ModelChoiceStrategy::Speed);
+    }
+
+    #[test]
+    fn test_route_decision_structure() {
+        let decision = RouteDecision {
+            provider: Provider::OpenAI,
+            model: Some("gpt-4".to_string()),
+            reason: "Best for quality".to_string(),
+            confidence: 0.95,
+            alternatives: vec![(Provider::Anthropic, 0.85)],
+        };
+
+        assert_eq!(decision.provider, Provider::OpenAI);
+        assert_eq!(decision.model, Some("gpt-4".to_string()));
+        assert!(decision.confidence > 0.9);
+        assert_eq!(decision.alternatives.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn test_router_with_temporal_adapter() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+        let router = APIRouter::new().with_temporal_adapter(adapter);
+        assert!(router.temporal_adapter.is_some());
+    }
 }
