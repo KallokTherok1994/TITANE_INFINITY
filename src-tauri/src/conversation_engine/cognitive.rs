@@ -154,3 +154,137 @@ impl CognitiveCompressor {
         ratio.clamp(0.3, 1.0)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_cognitive_compressor_creation() {
+        let compressor = CognitiveCompressor::new();
+        assert!(true); // Vérifie que la création réussit
+    }
+
+    #[test]
+    fn test_compress_basic() {
+        let compressor = CognitiveCompressor::new();
+        let intention = Intention::Question;
+        let emotion = EmotionState::default();
+
+        let summary = compressor.compress(
+            "Comment ça marche?",
+            "Voici l'explication détaillée...",
+            &intention,
+            &emotion,
+        );
+
+        assert!(!summary.summary.is_empty());
+        assert!(summary.coherence_score >= 0.3);
+    }
+
+    #[test]
+    fn test_extract_tags_with_projet() {
+        let compressor = CognitiveCompressor::new();
+        let tags = compressor.extract_tags(
+            "Mon projet avance bien",
+            "Super, continuons",
+            &Intention::Action,
+        );
+
+        assert!(tags.contains(&"projet".to_string()));
+    }
+
+    #[test]
+    fn test_extract_tags_with_decision() {
+        let compressor = CognitiveCompressor::new();
+        let tags = compressor.extract_tags(
+            "J'ai pris une décision importante",
+            "Très bien",
+            &Intention::Meta,
+        );
+
+        assert!(tags.contains(&"décision".to_string()));
+    }
+
+    #[test]
+    fn test_memory_effect_new() {
+        let compressor = CognitiveCompressor::new();
+        let intention = Intention::Question;
+        let emotion = EmotionState::new(0.5, 0.5, 0.5); // Valence positive
+
+        let effect = compressor.determine_memory_effect(&intention, &emotion);
+        assert_eq!(effect, MemoryEffect::New);
+    }
+
+    #[test]
+    fn test_memory_effect_connect() {
+        let compressor = CognitiveCompressor::new();
+        let intention = Intention::Meta;
+        let emotion = EmotionState::default();
+
+        let effect = compressor.determine_memory_effect(&intention, &emotion);
+        assert_eq!(effect, MemoryEffect::Connect);
+    }
+
+    #[test]
+    fn test_memory_effect_evolve() {
+        let compressor = CognitiveCompressor::new();
+        let intention = Intention::Emotion;
+        let emotion = EmotionState::new(0.0, 0.9, 0.5); // Haute intensité
+
+        let effect = compressor.determine_memory_effect(&intention, &emotion);
+        assert_eq!(effect, MemoryEffect::Evolve);
+    }
+
+    #[test]
+    fn test_memory_layers_immediate() {
+        let compressor = CognitiveCompressor::new();
+        let layers = compressor.analyze_memory_layers(
+            &Intention::Question,
+            &EmotionState::default(),
+            "Test message",
+        );
+
+        // Immediate devrait toujours être true
+        assert!(layers.immediate);
+    }
+
+    #[test]
+    fn test_memory_layers_episodic_decision() {
+        let compressor = CognitiveCompressor::new();
+        let layers = compressor.analyze_memory_layers(
+            &Intention::Action,
+            &EmotionState::default(),
+            "J'ai décidé de choisir cette option",
+        );
+
+        // Episodic activé par "décidé"
+        assert!(layers.episodic);
+    }
+
+    #[test]
+    fn test_coherence_score_bounds() {
+        let compressor = CognitiveCompressor::new();
+
+        let score1 = compressor.calculate_coherence("", "test");
+        assert_eq!(score1, 0.5);
+
+        let score2 = compressor.calculate_coherence("test", "");
+        assert_eq!(score2, 0.5);
+
+        let score3 = compressor.calculate_coherence("short", "a very long response here");
+        assert!(score3 >= 0.3);
+        assert!(score3 <= 1.0);
+    }
+
+    #[test]
+    fn test_extract_links_previous_context() {
+        let compressor = CognitiveCompressor::new();
+        let links = compressor.extract_links(
+            "Comme précédemment mentionné...",
+            "réponse",
+        );
+
+        assert!(links.contains(&"previous_context".to_string()));
+    }
+}

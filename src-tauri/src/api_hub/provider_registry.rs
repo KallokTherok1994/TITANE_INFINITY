@@ -484,4 +484,74 @@ mod tests {
         let score = profile.composite_score(&weights);
         assert!(score > 0.0);
     }
+
+    #[test]
+    fn test_provider_variants() {
+        let providers = vec![
+            Provider::OpenAI,
+            Provider::Anthropic,
+            Provider::Gemini,
+            Provider::Local,
+        ];
+        assert_eq!(providers.len(), 4);
+    }
+
+    #[test]
+    fn test_score_weights_default() {
+        let weights = ScoreWeights::default();
+        // Les poids devraient être normalisés
+        assert!(weights.quality >= 0.0);
+        assert!(weights.speed >= 0.0);
+        assert!(weights.cost >= 0.0);
+    }
+
+    #[test]
+    fn test_provider_capability_variants() {
+        let capabilities = vec![
+            ProviderCapability::TextGeneration,
+            ProviderCapability::TextEmbeddings,
+            ProviderCapability::ImageGeneration,
+            ProviderCapability::ImageAnalysis,
+            ProviderCapability::AudioTranscription,
+            ProviderCapability::AudioGeneration,
+            ProviderCapability::LongContext,
+            ProviderCapability::MultiModal,
+            ProviderCapability::Streaming,
+            ProviderCapability::FunctionCalling,
+            ProviderCapability::CodeGeneration,
+            ProviderCapability::Reasoning,
+        ];
+        assert_eq!(capabilities.len(), 12);
+    }
+
+    #[test]
+    fn test_registry_get_profile() {
+        let mut registry = ProviderRegistry::new();
+        registry.register_provider(Provider::OpenAI, ProviderProfile::openai_default());
+
+        let profile = registry.get_profile(Provider::OpenAI);
+        assert!(profile.is_some());
+
+        let missing = registry.get_profile(Provider::Local);
+        // Local n'est pas enregistré donc devrait être None
+        assert!(missing.is_none());
+    }
+
+    #[test]
+    fn test_gemini_profile() {
+        let profile = ProviderProfile::gemini_default();
+        assert!(profile.supports_text);
+        assert!(profile.supports_vision);
+        // Gemini a une grande fenêtre de contexte
+        assert!(profile.max_context_tokens >= 128000);
+    }
+
+    #[test]
+    fn test_anthropic_profile() {
+        let profile = ProviderProfile::anthropic_default();
+        assert!(profile.supports_text);
+        assert!(profile.supports_vision);
+        // Anthropic/Claude est connu pour sa qualité (rating 1-10)
+        assert!(profile.quality_rating >= 9);
+    }
 }

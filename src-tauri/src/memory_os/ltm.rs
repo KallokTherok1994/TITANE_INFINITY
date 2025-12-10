@@ -560,4 +560,174 @@ mod tests {
         assert_eq!(stored, 5);
         assert_eq!(ltm.len().await, 5);
     }
+
+    #[tokio::test]
+    async fn test_ltm_is_empty() {
+        let (ltm, _temp) = create_test_ltm().await;
+        assert!(ltm.is_empty().await);
+
+        let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
+        ltm.store(entry).await.unwrap();
+
+        assert!(!ltm.is_empty().await);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_total_size() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        let entry = MemoryEntry::new("Test content here".to_string(), 0.5, MemoryType::Knowledge);
+        ltm.store(entry).await.unwrap();
+
+        let size = ltm.total_size().await;
+        assert!(size > 0);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_list() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        for i in 0..3 {
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
+            ltm.store(entry).await.unwrap();
+        }
+
+        let all = ltm.list(None).await;
+        assert_eq!(all.len(), 3);
+
+        let limited = ltm.list(Some(2)).await;
+        assert_eq!(limited.len(), 2);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_top_important() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        let entry1 = MemoryEntry::new("Low importance".to_string(), 0.2, MemoryType::Knowledge);
+        let entry2 = MemoryEntry::new("High importance".to_string(), 0.9, MemoryType::Knowledge);
+        let entry3 = MemoryEntry::new("Medium importance".to_string(), 0.5, MemoryType::Knowledge);
+
+        ltm.store(entry1).await.unwrap();
+        ltm.store(entry2).await.unwrap();
+        ltm.store(entry3).await.unwrap();
+
+        let top = ltm.top_important(2).await;
+        assert_eq!(top.len(), 2);
+        assert!(top[0].importance >= top[1].importance);
+        assert!(top[0].importance >= 0.9);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_search_by_type() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        let entry1 = MemoryEntry::new("Knowledge entry".to_string(), 0.5, MemoryType::Knowledge);
+        let entry2 = MemoryEntry::new("Conversation entry".to_string(), 0.5, MemoryType::Conversation);
+
+        ltm.store(entry1).await.unwrap();
+        ltm.store(entry2).await.unwrap();
+
+        let knowledge = ltm.search_by_type(MemoryType::Knowledge, 10).await;
+        assert_eq!(knowledge.len(), 1);
+
+        let conversation = ltm.search_by_type(MemoryType::Conversation, 10).await;
+        assert_eq!(conversation.len(), 1);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_load_and_access() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
+        let id = entry.id;
+        let initial_count = entry.access_count;
+
+        ltm.store(entry).await.unwrap();
+
+        let loaded = ltm.load_and_access(&id).await.unwrap();
+        assert!(loaded.access_count > initial_count);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_remove() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
+        let id = entry.id;
+
+        ltm.store(entry).await.unwrap();
+
+        let removed = ltm.remove(&id).await;
+        assert!(removed.is_some());
+        assert!(!ltm.exists(&id).await);
+
+        // Try to remove again
+        let removed2 = ltm.remove(&id).await;
+        assert!(removed2.is_none());
+    }
+
+    #[tokio::test]
+    async fn test_ltm_clear() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        for i in 0..3 {
+            let entry = MemoryEntry::new(format!("Entry {}", i), 0.5, MemoryType::Conversation);
+            ltm.store(entry).await.unwrap();
+        }
+
+        assert_eq!(ltm.len().await, 3);
+
+        ltm.clear().await;
+        assert_eq!(ltm.len().await, 0);
+        assert!(ltm.is_empty().await);
+    }
+
+    #[tokio::test]
+    async fn test_ltm_flush() {
+        let (ltm, _temp) = create_test_ltm().await;
+
+        let entry = MemoryEntry::new("Test".to_string(), 0.5, MemoryType::Knowledge);
+        ltm.store(entry).await.unwrap();
+
+        // Flush should succeed
+        let result = ltm.flush().await;
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_ltm_error_display() {
+        let storage_err = LTMError::Storage("test error".to_string());
+        assert!(storage_err.to_string().contains("Storage Error"));
+
+        let not_found = LTMError::NotFound("id123".to_string());
+        assert!(not_found.to_string().contains("Not Found"));
+
+        let serialization = LTMError::Serialization("parse failed".to_string());
+        assert!(serialization.to_string().contains("Serialization Error"));
+
+        let compression = LTMError::Compression("zstd error".to_string());
+        assert!(compression.to_string().contains("Compression Error"));
+    }
+
+    #[test]
+    fn test_ltm_metadata_from_entry() {
+        let entry = MemoryEntry::new("Test content for metadata".to_string(), 0.75, MemoryType::Knowledge)
+            .with_tags(vec!["tag1".to_string(), "tag2".to_string()]);
+
+        let metadata = LTMMetadata::from_entry(&entry, "test.json".to_string());
+
+        assert_eq!(metadata.id, entry.id);
+        assert_eq!(metadata.importance, 0.75);
+        assert_eq!(metadata.memory_type, MemoryType::Knowledge);
+        assert_eq!(metadata.tags.len(), 2);
+        assert_eq!(metadata.file_path, "test.json");
+        assert!(!metadata.content_preview.is_empty());
+    }
+
+    #[test]
+    fn test_constants() {
+        assert_eq!(LTM_BATCH_SIZE, 100);
+        assert_eq!(INDEX_FILE, "ltm_index.json");
+        assert_eq!(DATA_DIR, "entries");
+    }
 }
