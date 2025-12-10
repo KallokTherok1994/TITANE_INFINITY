@@ -354,3 +354,684 @@ impl ImmediateMemory {
         self.messages.iter().rev().take(count).cloned().collect()
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TESTS UNITAIRES
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests MultiLayerMemoryManager création
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_multilayer_memory_manager_new() {
+        let manager = MultiLayerMemoryManager::new();
+        let context = manager.get_immediate_context();
+        assert!(context.is_empty());
+    }
+
+    #[test]
+    fn test_multilayer_manager_initial_state() {
+        let manager = MultiLayerMemoryManager::new();
+        assert!(manager.episodic.is_empty());
+        assert!(manager.semantic.is_empty());
+        assert!(manager.procedural.is_empty());
+        assert!(manager.reflective.is_empty());
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests analyze_memory_layers
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_analyze_layers_immediate_always_true() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &EmotionState::default(),
+            "Test message",
+        );
+        assert!(layers.immediate);
+    }
+
+    #[test]
+    fn test_analyze_layers_episodic_on_decision() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Action,
+            &EmotionState::default(),
+            "J'ai décidé de faire cela",
+        );
+        assert!(layers.episodic);
+    }
+
+    #[test]
+    fn test_analyze_layers_episodic_on_choisir() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Action,
+            &EmotionState::default(),
+            "Je vais choisir cette option",
+        );
+        assert!(layers.episodic);
+    }
+
+    #[test]
+    fn test_analyze_layers_episodic_on_high_emotion() {
+        let manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::new(0.0, 0.9, 0.5); // Haute intensité
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &emotion,
+            "Message normal",
+        );
+        assert!(layers.episodic);
+    }
+
+    #[test]
+    fn test_analyze_layers_episodic_on_high_valence() {
+        let manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::new(0.9, 0.5, 0.5); // Haute valence
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &emotion,
+            "Message normal",
+        );
+        assert!(layers.episodic);
+    }
+
+    #[test]
+    fn test_analyze_layers_semantic_singularity() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &EmotionState::default(),
+            "Le SingularityState est important",
+        );
+        assert!(layers.semantic.contains(&"SingularityState".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_layers_semantic_humain_total() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &EmotionState::default(),
+            "Humain Total concept",
+        );
+        assert!(layers.semantic.contains(&"Humain Total".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_layers_semantic_charge_mentale() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &EmotionState::default(),
+            "Ma charge mentale est élevée",
+        );
+        assert!(layers.semantic.contains(&"Charge mentale".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_layers_procedural_lists() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Action,
+            &EmotionState::default(),
+            "Fais-moi une liste de choses",
+        );
+        assert!(layers.procedural.contains(&"prefers_lists".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_layers_procedural_summary() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Action,
+            &EmotionState::default(),
+            "Fais une synthèse du document",
+        );
+        assert!(layers.procedural.contains(&"prefers_summary".to_string()));
+    }
+
+    #[test]
+    fn test_analyze_layers_reflective_on_meta() {
+        let manager = MultiLayerMemoryManager::new();
+        let layers = manager.analyze_memory_layers(
+            &Intention::Meta,
+            &EmotionState::default(),
+            "Parlons de notre conversation",
+        );
+        assert!(layers.reflective);
+    }
+
+    #[test]
+    fn test_analyze_layers_reflective_on_negative_valence() {
+        let manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::new(-0.6, 0.5, 0.5); // Valence négative
+        let layers = manager.analyze_memory_layers(
+            &Intention::Question,
+            &emotion,
+            "Je ne suis pas satisfait",
+        );
+        assert!(layers.reflective);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Immediate Memory
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_add_to_immediate() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.add_to_immediate("User 1".to_string(), "Assistant 1".to_string());
+
+        let context = manager.get_immediate_context();
+        assert_eq!(context.len(), 1);
+        assert_eq!(context[0].0, "User 1");
+        assert_eq!(context[0].1, "Assistant 1");
+    }
+
+    #[test]
+    fn test_immediate_context_order() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.add_to_immediate("User 1".to_string(), "Assistant 1".to_string());
+        manager.add_to_immediate("User 2".to_string(), "Assistant 2".to_string());
+        manager.add_to_immediate("User 3".to_string(), "Assistant 3".to_string());
+
+        let context = manager.get_immediate_context();
+        // get_recent retourne les plus récents en premier
+        assert_eq!(context[0].0, "User 3");
+        assert_eq!(context[1].0, "User 2");
+        assert_eq!(context[2].0, "User 1");
+    }
+
+    #[test]
+    fn test_immediate_context_limit() {
+        let mut manager = MultiLayerMemoryManager::new();
+        for i in 0..10 {
+            manager.add_to_immediate(format!("User {}", i), format!("Asst {}", i));
+        }
+
+        let context = manager.get_immediate_context();
+        // Par défaut, get_immediate_context retourne 5
+        assert_eq!(context.len(), 5);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Episodic Memory
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_save_episode() {
+        let mut manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::new(0.5, 0.5, 0.5);
+
+        manager.save_episode(
+            "Test Episode".to_string(),
+            "Description".to_string(),
+            EpisodeType::Milestone,
+            &emotion,
+            0.8,
+            vec!["tag1".to_string()],
+        );
+
+        assert_eq!(manager.episodic.len(), 1);
+    }
+
+    #[test]
+    fn test_save_episode_fields() {
+        let mut manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::new(0.7, 0.5, 0.5);
+
+        manager.save_episode(
+            "Test Title".to_string(),
+            "Test Summary".to_string(),
+            EpisodeType::Decision,
+            &emotion,
+            0.9,
+            vec!["decision".to_string(), "important".to_string()],
+        );
+
+        let episodes = manager.get_recent_episodes(1);
+        assert_eq!(episodes.len(), 1);
+        let ep = episodes[0];
+        assert_eq!(ep.title, "Test Title");
+        assert_eq!(ep.summary, "Test Summary");
+        assert_eq!(ep.importance, 0.9);
+        assert!(matches!(ep.event_type, EpisodeType::Decision));
+    }
+
+    #[test]
+    fn test_get_recent_episodes() {
+        let mut manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::default();
+
+        for i in 0..5 {
+            manager.save_episode(
+                format!("Episode {}", i),
+                "Summary".to_string(),
+                EpisodeType::Milestone,
+                &emotion,
+                0.5,
+                vec![],
+            );
+        }
+
+        let recent = manager.get_recent_episodes(3);
+        assert_eq!(recent.len(), 3);
+        // Plus récent en premier
+        assert_eq!(recent[0].title, "Episode 4");
+    }
+
+    #[test]
+    fn test_episodic_limit_100() {
+        let mut manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::default();
+
+        // Ajouter 110 épisodes
+        for i in 0..110 {
+            manager.save_episode(
+                format!("Episode {}", i),
+                "Summary".to_string(),
+                EpisodeType::Milestone,
+                &emotion,
+                0.5,
+                vec![],
+            );
+        }
+
+        // Devrait être limité à 100
+        assert_eq!(manager.episodic.len(), 100);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Semantic Memory
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_update_concept_new() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.update_concept(
+            "TestConcept".to_string(),
+            "A test concept".to_string(),
+            "Example usage".to_string(),
+        );
+
+        let concept = manager.get_concept("TestConcept");
+        assert!(concept.is_some());
+        let c = concept.unwrap();
+        assert_eq!(c.name, "TestConcept");
+        assert_eq!(c.definition, "A test concept");
+        assert_eq!(c.usage_count, 1);
+    }
+
+    #[test]
+    fn test_update_concept_existing() {
+        let mut manager = MultiLayerMemoryManager::new();
+
+        // Premier ajout
+        manager.update_concept(
+            "Concept".to_string(),
+            "Definition".to_string(),
+            "Example 1".to_string(),
+        );
+
+        // Deuxième ajout (même concept)
+        manager.update_concept(
+            "Concept".to_string(),
+            "New Definition".to_string(),
+            "Example 2".to_string(),
+        );
+
+        let concept = manager.get_concept("Concept").unwrap();
+        assert_eq!(concept.usage_count, 2);
+        assert!(concept.examples.contains(&"Example 1".to_string()));
+        assert!(concept.examples.contains(&"Example 2".to_string()));
+    }
+
+    #[test]
+    fn test_get_concept_nonexistent() {
+        let manager = MultiLayerMemoryManager::new();
+        assert!(manager.get_concept("NonExistent").is_none());
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Procedural Memory
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_learn_preference_new() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.learn_preference(
+            PreferenceCategory::Format,
+            "prefers_lists".to_string(),
+            0.8,
+        );
+
+        let prefs = manager.get_preferences(&PreferenceCategory::Format);
+        assert_eq!(prefs.len(), 1);
+        assert_eq!(prefs[0].rule, "prefers_lists");
+        assert_eq!(prefs[0].confidence, 0.8);
+    }
+
+    #[test]
+    fn test_learn_preference_update() {
+        let mut manager = MultiLayerMemoryManager::new();
+
+        // Premier apprentissage
+        manager.learn_preference(
+            PreferenceCategory::Format,
+            "prefers_lists".to_string(),
+            0.6,
+        );
+
+        // Deuxième apprentissage (même règle)
+        manager.learn_preference(
+            PreferenceCategory::Format,
+            "prefers_lists".to_string(),
+            1.0,
+        );
+
+        let prefs = manager.get_preferences(&PreferenceCategory::Format);
+        assert_eq!(prefs.len(), 1);
+        // Confidence = (0.6 + 1.0) / 2 = 0.8
+        assert_eq!(prefs[0].confidence, 0.8);
+        assert_eq!(prefs[0].evidence_count, 2);
+    }
+
+    #[test]
+    fn test_get_preferences_by_category() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.learn_preference(
+            PreferenceCategory::Format,
+            "format_rule".to_string(),
+            0.7,
+        );
+        manager.learn_preference(
+            PreferenceCategory::Depth,
+            "depth_rule".to_string(),
+            0.8,
+        );
+        manager.learn_preference(
+            PreferenceCategory::Style,
+            "style_rule".to_string(),
+            0.9,
+        );
+
+        let format_prefs = manager.get_preferences(&PreferenceCategory::Format);
+        assert_eq!(format_prefs.len(), 1);
+        assert_eq!(format_prefs[0].rule, "format_rule");
+
+        let depth_prefs = manager.get_preferences(&PreferenceCategory::Depth);
+        assert_eq!(depth_prefs.len(), 1);
+    }
+
+    #[test]
+    fn test_procedural_limit_50() {
+        let mut manager = MultiLayerMemoryManager::new();
+
+        // Ajouter 60 préférences différentes
+        for i in 0..60 {
+            manager.learn_preference(
+                PreferenceCategory::Format,
+                format!("rule_{}", i),
+                0.5,
+            );
+        }
+
+        // Devrait être limité à 50
+        assert_eq!(manager.procedural.len(), 50);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Reflective Memory
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_add_evaluation() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.add_evaluation(
+            EvaluationDimension::Clarity,
+            0.9,
+            "Clear response".to_string(),
+            "No action needed".to_string(),
+        );
+
+        assert_eq!(manager.reflective.len(), 1);
+    }
+
+    #[test]
+    fn test_evaluation_average_single() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.add_evaluation(
+            EvaluationDimension::Clarity,
+            0.8,
+            "Evidence".to_string(),
+            "Action".to_string(),
+        );
+
+        let avg = manager.get_evaluation_average(&EvaluationDimension::Clarity);
+        assert_eq!(avg, 0.8);
+    }
+
+    #[test]
+    fn test_evaluation_average_multiple() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.add_evaluation(
+            EvaluationDimension::Utility,
+            0.6,
+            "E1".to_string(),
+            "A1".to_string(),
+        );
+        manager.add_evaluation(
+            EvaluationDimension::Utility,
+            0.8,
+            "E2".to_string(),
+            "A2".to_string(),
+        );
+        manager.add_evaluation(
+            EvaluationDimension::Utility,
+            1.0,
+            "E3".to_string(),
+            "A3".to_string(),
+        );
+
+        let avg = manager.get_evaluation_average(&EvaluationDimension::Utility);
+        // (0.6 + 0.8 + 1.0) / 3 = 0.8
+        assert!((avg - 0.8).abs() < 0.001);
+    }
+
+    #[test]
+    fn test_evaluation_average_none() {
+        let manager = MultiLayerMemoryManager::new();
+        let avg = manager.get_evaluation_average(&EvaluationDimension::Clarity);
+        // Par défaut neutre
+        assert_eq!(avg, 0.5);
+    }
+
+    #[test]
+    fn test_evaluation_average_by_dimension() {
+        let mut manager = MultiLayerMemoryManager::new();
+        manager.add_evaluation(
+            EvaluationDimension::Clarity,
+            0.9,
+            "E".to_string(),
+            "A".to_string(),
+        );
+        manager.add_evaluation(
+            EvaluationDimension::Depth,
+            0.5,
+            "E".to_string(),
+            "A".to_string(),
+        );
+
+        let clarity_avg = manager.get_evaluation_average(&EvaluationDimension::Clarity);
+        let depth_avg = manager.get_evaluation_average(&EvaluationDimension::Depth);
+
+        assert_eq!(clarity_avg, 0.9);
+        assert_eq!(depth_avg, 0.5);
+    }
+
+    #[test]
+    fn test_reflective_limit_100() {
+        let mut manager = MultiLayerMemoryManager::new();
+
+        for _ in 0..110 {
+            manager.add_evaluation(
+                EvaluationDimension::Clarity,
+                0.7,
+                "E".to_string(),
+                "A".to_string(),
+            );
+        }
+
+        assert_eq!(manager.reflective.len(), 100);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Consolidation
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_consolidate_session_extracts_concepts() {
+        let mut manager = MultiLayerMemoryManager::new();
+
+        // Ajouter messages avec concepts TITANE
+        manager.add_to_immediate(
+            "Le SingularityState est important".to_string(),
+            "Réponse".to_string(),
+        );
+
+        manager.consolidate_session();
+
+        // Devrait avoir extrait le concept
+        let concept = manager.get_concept("SingularityState");
+        assert!(concept.is_some());
+    }
+
+    #[test]
+    fn test_consolidate_session_multiple_concepts() {
+        let mut manager = MultiLayerMemoryManager::new();
+
+        manager.add_to_immediate(
+            "Humain Total et charge mentale".to_string(),
+            "Réponse".to_string(),
+        );
+
+        manager.consolidate_session();
+
+        assert!(manager.get_concept("Humain Total").is_some());
+        assert!(manager.get_concept("Charge mentale").is_some());
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests ImmediateMemory interne
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_immediate_memory_new() {
+        let mem = ImmediateMemory::new();
+        assert!(mem.messages.is_empty());
+        assert_eq!(mem.max_size, 10);
+    }
+
+    #[test]
+    fn test_immediate_memory_add() {
+        let mut mem = ImmediateMemory::new();
+        mem.add("user".to_string(), "assistant".to_string());
+        assert_eq!(mem.messages.len(), 1);
+    }
+
+    #[test]
+    fn test_immediate_memory_fifo() {
+        let mut mem = ImmediateMemory::new();
+
+        // Ajouter 15 messages (max est 10)
+        for i in 0..15 {
+            mem.add(format!("user {}", i), format!("asst {}", i));
+        }
+
+        // Devrait garder seulement les 10 derniers
+        assert_eq!(mem.messages.len(), 10);
+        // Le premier message devrait être "user 5"
+        assert_eq!(mem.messages[0].0, "user 5");
+    }
+
+    #[test]
+    fn test_immediate_memory_get_recent() {
+        let mut mem = ImmediateMemory::new();
+        mem.add("user 1".to_string(), "asst 1".to_string());
+        mem.add("user 2".to_string(), "asst 2".to_string());
+        mem.add("user 3".to_string(), "asst 3".to_string());
+
+        let recent = mem.get_recent(2);
+        assert_eq!(recent.len(), 2);
+        // Plus récent d'abord
+        assert_eq!(recent[0].0, "user 3");
+        assert_eq!(recent[1].0, "user 2");
+    }
+
+    #[test]
+    fn test_immediate_memory_get_recent_more_than_exists() {
+        let mut mem = ImmediateMemory::new();
+        mem.add("user".to_string(), "asst".to_string());
+
+        let recent = mem.get_recent(100);
+        // Ne peut retourner que 1 car c'est tout ce qu'on a
+        assert_eq!(recent.len(), 1);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests d'intégration
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_full_workflow() {
+        let mut manager = MultiLayerMemoryManager::new();
+        let emotion = EmotionState::new(0.7, 0.6, 0.8);
+
+        // 1. Ajouter des messages
+        manager.add_to_immediate("Question sur SingularityState".to_string(), "Réponse".to_string());
+
+        // 2. Sauvegarder un épisode
+        manager.save_episode(
+            "Découverte importante".to_string(),
+            "L'utilisateur découvre SingularityState".to_string(),
+            EpisodeType::Milestone,
+            &emotion,
+            0.9,
+            vec!["discovery".to_string()],
+        );
+
+        // 3. Apprendre une préférence
+        manager.learn_preference(
+            PreferenceCategory::Depth,
+            "prefers_deep_analysis".to_string(),
+            0.85,
+        );
+
+        // 4. Ajouter une évaluation
+        manager.add_evaluation(
+            EvaluationDimension::Clarity,
+            0.9,
+            "Clear explanation".to_string(),
+            "Continue this approach".to_string(),
+        );
+
+        // 5. Consolider
+        manager.consolidate_session();
+
+        // Vérifications
+        assert!(!manager.get_immediate_context().is_empty());
+        assert_eq!(manager.episodic.len(), 1);
+        assert!(manager.get_concept("SingularityState").is_some());
+        assert!(!manager.get_preferences(&PreferenceCategory::Depth).is_empty());
+        assert_eq!(manager.get_evaluation_average(&EvaluationDimension::Clarity), 0.9);
+    }
+}

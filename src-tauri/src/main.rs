@@ -25,6 +25,9 @@ use std::sync::Arc;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
 
+// OMEGA Conversation Engine v19.5.2
+use titane_infinity::conversation_engine;
+
 // Coherence Engine commands v20.0 (Phase 2 Fusion #1)
 mod coherence_commands {
     include!("commands/coherence_commands.rs");
@@ -312,6 +315,12 @@ fn main() {
             // Core messaging
             send_message,
             ollama_query,
+            // OMEGA Conversation Engine Commands (v19.5.2)
+            conversation_engine::commands::create_new_conversation,
+            conversation_engine::commands::conversation_generate,
+            conversation_engine::commands::conversation_process_message,
+            conversation_engine::commands::conversation_health_check,
+            conversation_engine::commands::conversation_memory_stats,
             // Chat Orchestrator Commands (CHAT PIPELINE v21)
             overdrive::chat_orchestrator::chat_send_message,
             overdrive::chat_orchestrator::chat_stream_message,
