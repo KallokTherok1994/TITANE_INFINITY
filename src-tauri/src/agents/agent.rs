@@ -351,6 +351,318 @@ mod tests {
         Agent::new(role, capabilities, contract)
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests AgentId
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_agent_id_new() {
+        let id1 = AgentId::new();
+        let id2 = AgentId::new();
+        assert_ne!(id1.0, id2.0); // UUIDs should be unique
+    }
+
+    #[test]
+    fn test_agent_id_from_string() {
+        let id = AgentId::from_string("test-agent".to_string());
+        assert_eq!(id.0, "test-agent");
+    }
+
+    #[test]
+    fn test_agent_id_default() {
+        let id = AgentId::default();
+        assert!(!id.0.is_empty());
+    }
+
+    #[test]
+    fn test_agent_id_clone() {
+        let id = AgentId::from_string("clone-test".to_string());
+        let cloned = id.clone();
+        assert_eq!(id.0, cloned.0);
+    }
+
+    #[test]
+    fn test_agent_id_eq() {
+        let id1 = AgentId::from_string("same".to_string());
+        let id2 = AgentId::from_string("same".to_string());
+        assert_eq!(id1, id2);
+    }
+
+    #[test]
+    fn test_agent_id_ne() {
+        let id1 = AgentId::from_string("one".to_string());
+        let id2 = AgentId::from_string("two".to_string());
+        assert_ne!(id1, id2);
+    }
+
+    #[test]
+    fn test_agent_id_debug() {
+        let id = AgentId::from_string("debug-test".to_string());
+        let debug_str = format!("{:?}", id);
+        assert!(debug_str.contains("debug-test"));
+    }
+
+    #[test]
+    fn test_agent_id_serialize() {
+        let id = AgentId::from_string("serialize-test".to_string());
+        let json = serde_json::to_string(&id).unwrap();
+        assert!(json.contains("serialize-test"));
+    }
+
+    #[test]
+    fn test_agent_id_deserialize() {
+        let json = r#""my-agent-id""#;
+        let id: AgentId = serde_json::from_str(json).unwrap();
+        assert_eq!(id.0, "my-agent-id");
+    }
+
+    #[test]
+    fn test_agent_id_hash() {
+        use std::collections::HashSet;
+        let mut set = HashSet::new();
+        set.insert(AgentId::from_string("a".to_string()));
+        set.insert(AgentId::from_string("b".to_string()));
+        set.insert(AgentId::from_string("a".to_string())); // duplicate
+        assert_eq!(set.len(), 2);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests AgentState
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_agent_state_initialized() {
+        let state = AgentState::Initialized;
+        assert!(matches!(state, AgentState::Initialized));
+    }
+
+    #[test]
+    fn test_agent_state_running() {
+        let state = AgentState::Running;
+        assert!(matches!(state, AgentState::Running));
+    }
+
+    #[test]
+    fn test_agent_state_paused() {
+        let state = AgentState::Paused;
+        assert!(matches!(state, AgentState::Paused));
+    }
+
+    #[test]
+    fn test_agent_state_error() {
+        let state = AgentState::Error;
+        assert!(matches!(state, AgentState::Error));
+    }
+
+    #[test]
+    fn test_agent_state_stopped() {
+        let state = AgentState::Stopped;
+        assert!(matches!(state, AgentState::Stopped));
+    }
+
+    #[test]
+    fn test_agent_state_killed() {
+        let state = AgentState::Killed;
+        assert!(matches!(state, AgentState::Killed));
+    }
+
+    #[test]
+    fn test_agent_state_clone() {
+        let state = AgentState::Running;
+        let cloned = state.clone();
+        assert_eq!(state, cloned);
+    }
+
+    #[test]
+    fn test_agent_state_copy() {
+        let state = AgentState::Paused;
+        let copied: AgentState = state;
+        assert_eq!(state, copied);
+    }
+
+    #[test]
+    fn test_agent_state_debug() {
+        let state = AgentState::Running;
+        let debug_str = format!("{:?}", state);
+        assert!(debug_str.contains("Running"));
+    }
+
+    #[test]
+    fn test_agent_state_serialize() {
+        let state = AgentState::Error;
+        let json = serde_json::to_string(&state).unwrap();
+        assert!(json.contains("Error"));
+    }
+
+    #[test]
+    fn test_agent_state_deserialize() {
+        let json = r#""Killed""#;
+        let state: AgentState = serde_json::from_str(json).unwrap();
+        assert_eq!(state, AgentState::Killed);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests AgentError
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_agent_error_initialization() {
+        let err = AgentError::InitializationError("init failed".to_string());
+        assert!(matches!(err, AgentError::InitializationError(_)));
+    }
+
+    #[test]
+    fn test_agent_error_execution() {
+        let err = AgentError::ExecutionError("exec failed".to_string());
+        assert!(matches!(err, AgentError::ExecutionError(_)));
+    }
+
+    #[test]
+    fn test_agent_error_contract_violation() {
+        let err = AgentError::ContractViolation("breach".to_string());
+        assert!(matches!(err, AgentError::ContractViolation(_)));
+    }
+
+    #[test]
+    fn test_agent_error_sandbox_violation() {
+        let err = AgentError::SandboxViolation("memory".to_string());
+        assert!(matches!(err, AgentError::SandboxViolation(_)));
+    }
+
+    #[test]
+    fn test_agent_error_timeout() {
+        let err = AgentError::Timeout("30s".to_string());
+        assert!(matches!(err, AgentError::Timeout(_)));
+    }
+
+    #[test]
+    fn test_agent_error_missing_capability() {
+        let err = AgentError::MissingCapability("network".to_string());
+        assert!(matches!(err, AgentError::MissingCapability(_)));
+    }
+
+    #[test]
+    fn test_agent_error_communication() {
+        let err = AgentError::CommunicationError("channel closed".to_string());
+        assert!(matches!(err, AgentError::CommunicationError(_)));
+    }
+
+    #[test]
+    fn test_agent_error_display() {
+        let err = AgentError::InitializationError("test".to_string());
+        let display = format!("{}", err);
+        assert!(display.contains("Initialization error"));
+        assert!(display.contains("test"));
+    }
+
+    #[test]
+    fn test_agent_error_display_all_variants() {
+        let errors = vec![
+            AgentError::InitializationError("a".to_string()),
+            AgentError::ExecutionError("b".to_string()),
+            AgentError::ContractViolation("c".to_string()),
+            AgentError::SandboxViolation("d".to_string()),
+            AgentError::Timeout("e".to_string()),
+            AgentError::MissingCapability("f".to_string()),
+            AgentError::CommunicationError("g".to_string()),
+        ];
+        for err in errors {
+            let _ = format!("{}", err);
+        }
+    }
+
+    #[test]
+    fn test_agent_error_clone() {
+        let err = AgentError::Timeout("clone test".to_string());
+        let cloned = err.clone();
+        assert!(matches!(cloned, AgentError::Timeout(_)));
+    }
+
+    #[test]
+    fn test_agent_error_debug() {
+        let err = AgentError::ExecutionError("debug".to_string());
+        let debug_str = format!("{:?}", err);
+        assert!(debug_str.contains("ExecutionError"));
+    }
+
+    #[test]
+    fn test_agent_error_serialize() {
+        let err = AgentError::ContractViolation("breach".to_string());
+        let json = serde_json::to_string(&err).unwrap();
+        assert!(json.contains("ContractViolation"));
+    }
+
+    #[test]
+    fn test_agent_error_deserialize() {
+        let json = r#"{"Timeout":"expired"}"#;
+        let err: AgentError = serde_json::from_str(json).unwrap();
+        assert!(matches!(err, AgentError::Timeout(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests AgentMetrics
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_agent_metrics_default() {
+        let metrics = AgentMetrics::default();
+        assert_eq!(metrics.tasks_executed, 0);
+        assert_eq!(metrics.tasks_succeeded, 0);
+        assert_eq!(metrics.tasks_failed, 0);
+        assert_eq!(metrics.total_execution_time_ms, 0);
+        assert_eq!(metrics.messages_sent, 0);
+        assert_eq!(metrics.messages_received, 0);
+    }
+
+    #[test]
+    fn test_agent_metrics_custom() {
+        let metrics = AgentMetrics {
+            tasks_executed: 100,
+            tasks_succeeded: 90,
+            tasks_failed: 10,
+            total_execution_time_ms: 5000,
+            messages_sent: 50,
+            messages_received: 45,
+            memory_usage_bytes: 1024,
+            last_activity_timestamp: 12345,
+        };
+        assert_eq!(metrics.tasks_executed, 100);
+        assert_eq!(metrics.tasks_succeeded, 90);
+    }
+
+    #[test]
+    fn test_agent_metrics_clone() {
+        let metrics = AgentMetrics::default();
+        let cloned = metrics.clone();
+        assert_eq!(cloned.tasks_executed, metrics.tasks_executed);
+    }
+
+    #[test]
+    fn test_agent_metrics_debug() {
+        let metrics = AgentMetrics::default();
+        let debug_str = format!("{:?}", metrics);
+        assert!(debug_str.contains("AgentMetrics"));
+    }
+
+    #[test]
+    fn test_agent_metrics_serialize() {
+        let metrics = AgentMetrics::default();
+        let json = serde_json::to_string(&metrics).unwrap();
+        assert!(json.contains("tasks_executed"));
+    }
+
+    #[test]
+    fn test_agent_metrics_deserialize() {
+        let json = r#"{"tasks_executed":5,"tasks_succeeded":4,"tasks_failed":1,"total_execution_time_ms":100,"messages_sent":2,"messages_received":3,"memory_usage_bytes":512,"last_activity_timestamp":0}"#;
+        let metrics: AgentMetrics = serde_json::from_str(json).unwrap();
+        assert_eq!(metrics.tasks_executed, 5);
+        assert_eq!(metrics.tasks_succeeded, 4);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests Agent core (existing + new)
+    // ─────────────────────────────────────────────────────────────────────
+
     #[tokio::test]
     async fn test_agent_creation() {
         let agent = create_test_agent();
@@ -409,5 +721,113 @@ mod tests {
 
         assert!(agent.start().await.is_ok());
         assert_eq!(agent.get_state().await, AgentState::Running);
+    }
+
+    #[tokio::test]
+    async fn test_agent_with_id() {
+        let custom_id = AgentId::from_string("custom-agent".to_string());
+        let role = AgentRole::Executor;
+        let capabilities = CapabilitySet::new();
+        let contract = AgentContract::default_for_role(&role);
+        let agent = Agent::with_id(custom_id.clone(), role, capabilities, contract);
+        assert_eq!(agent.id.0, "custom-agent");
+    }
+
+    #[tokio::test]
+    async fn test_agent_set_state() {
+        let agent = create_test_agent();
+        agent.set_state(AgentState::Running).await;
+        assert_eq!(agent.get_state().await, AgentState::Running);
+    }
+
+    #[tokio::test]
+    async fn test_agent_set_error() {
+        let agent = create_test_agent();
+        agent.set_error().await;
+        assert_eq!(agent.get_state().await, AgentState::Error);
+    }
+
+    #[tokio::test]
+    async fn test_agent_kill() {
+        let agent = create_test_agent();
+        agent.kill().await;
+        assert_eq!(agent.get_state().await, AgentState::Killed);
+    }
+
+    #[tokio::test]
+    async fn test_agent_record_message_sent() {
+        let agent = create_test_agent();
+        agent.record_message_sent().await;
+        agent.record_message_sent().await;
+        let metrics = agent.get_metrics().await;
+        assert_eq!(metrics.messages_sent, 2);
+    }
+
+    #[tokio::test]
+    async fn test_agent_record_message_received() {
+        let agent = create_test_agent();
+        agent.record_message_received().await;
+        let metrics = agent.get_metrics().await;
+        assert_eq!(metrics.messages_received, 1);
+    }
+
+    #[tokio::test]
+    async fn test_agent_success_rate_no_tasks() {
+        let agent = create_test_agent();
+        let rate = agent.success_rate().await;
+        assert_eq!(rate, 1.0); // Default to 100% when no tasks
+    }
+
+    #[tokio::test]
+    async fn test_agent_can_execute_initialized() {
+        let agent = create_test_agent();
+        let result = agent.can_execute(&[Capability::MemoryRead]).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_agent_can_execute_missing_capability() {
+        let agent = create_test_agent();
+        let result = agent.can_execute(&[Capability::NetworkAccess]).await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_agent_can_execute_stopped() {
+        let agent = create_test_agent();
+        agent.stop().await.unwrap();
+        let result = agent.can_execute(&[Capability::MemoryRead]).await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_agent_pause_when_not_running() {
+        let agent = create_test_agent();
+        // Agent is Initialized, not Running
+        let result = agent.pause().await;
+        assert!(result.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_agent_start_when_stopped() {
+        let agent = create_test_agent();
+        agent.stop().await.unwrap();
+        let result = agent.start().await;
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_agent_age_seconds() {
+        let agent = create_test_agent();
+        let age = agent.age_seconds();
+        assert!(age >= 0);
+    }
+
+    #[test]
+    fn test_agent_debug() {
+        let agent = create_test_agent();
+        let debug_str = format!("{:?}", agent);
+        assert!(debug_str.contains("Agent"));
+        assert!(debug_str.contains("role"));
     }
 }

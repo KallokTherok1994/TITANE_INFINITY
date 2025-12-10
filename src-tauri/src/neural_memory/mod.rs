@@ -37,6 +37,9 @@ pub mod mtm;
 pub mod stm;
 pub mod vector;
 
+#[cfg(test)]
+mod tests; // Phase 2.4: Unit tests
+
 pub use consolidation::Consolidator;
 pub use ltm::LongTermMemory;
 pub use mtm::MidTermMemory;

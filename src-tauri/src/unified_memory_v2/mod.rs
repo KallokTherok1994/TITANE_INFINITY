@@ -44,6 +44,9 @@ pub mod encryption;
 pub mod persistence;
 pub mod types;
 
+#[cfg(test)]
+mod tests_simple; // Phase 2.4: Integration tests (simplified)
+
 // Re-exports pour interface publique
 pub use api::{UnifiedMemoryV2, MemoryAPI};
 pub use compat::{MemoryBridge, MemoryVectorSearchResult}; // Compatibility exports

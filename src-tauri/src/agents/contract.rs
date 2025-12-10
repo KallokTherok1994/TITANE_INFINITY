@@ -426,6 +426,171 @@ impl AgentContract {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests ContractViolation
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_contract_violation_timeout() {
+        let v = ContractViolation::TimeoutExceeded {
+            allowed_seconds: 60,
+            actual_seconds: 120,
+        };
+        assert!(matches!(v, ContractViolation::TimeoutExceeded { .. }));
+    }
+
+    #[test]
+    fn test_contract_violation_memory() {
+        let v = ContractViolation::MemoryExceeded {
+            allowed_mb: 50,
+            actual_mb: 100,
+        };
+        assert!(matches!(v, ContractViolation::MemoryExceeded { .. }));
+    }
+
+    #[test]
+    fn test_contract_violation_too_many_failures() {
+        let v = ContractViolation::TooManyFailures {
+            max_failures: 5,
+            actual_failures: 10,
+        };
+        assert!(matches!(v, ContractViolation::TooManyFailures { .. }));
+    }
+
+    #[test]
+    fn test_contract_violation_insufficient_success_rate() {
+        let v = ContractViolation::InsufficientSuccessRate {
+            required_rate: 0.95,
+            actual_rate: 0.80,
+        };
+        assert!(matches!(v, ContractViolation::InsufficientSuccessRate { .. }));
+    }
+
+    #[test]
+    fn test_contract_violation_invariant() {
+        let v = ContractViolation::InvariantViolation("test invariant".to_string());
+        assert!(matches!(v, ContractViolation::InvariantViolation(_)));
+    }
+
+    #[test]
+    fn test_contract_violation_message_quota() {
+        let v = ContractViolation::MessageQuotaExceeded {
+            max_messages: 100,
+            actual_messages: 150,
+        };
+        assert!(matches!(v, ContractViolation::MessageQuotaExceeded { .. }));
+    }
+
+    #[test]
+    fn test_contract_violation_forbidden_action() {
+        let v = ContractViolation::ForbiddenAction("delete all".to_string());
+        assert!(matches!(v, ContractViolation::ForbiddenAction(_)));
+    }
+
+    #[test]
+    fn test_contract_violation_display_timeout() {
+        let v = ContractViolation::TimeoutExceeded {
+            allowed_seconds: 60,
+            actual_seconds: 120,
+        };
+        let s = format!("{}", v);
+        assert!(s.contains("Timeout exceeded"));
+        assert!(s.contains("60"));
+        assert!(s.contains("120"));
+    }
+
+    #[test]
+    fn test_contract_violation_display_memory() {
+        let v = ContractViolation::MemoryExceeded {
+            allowed_mb: 50,
+            actual_mb: 100,
+        };
+        let s = format!("{}", v);
+        assert!(s.contains("Memory exceeded"));
+    }
+
+    #[test]
+    fn test_contract_violation_display_failures() {
+        let v = ContractViolation::TooManyFailures {
+            max_failures: 5,
+            actual_failures: 10,
+        };
+        let s = format!("{}", v);
+        assert!(s.contains("Too many failures"));
+    }
+
+    #[test]
+    fn test_contract_violation_display_success_rate() {
+        let v = ContractViolation::InsufficientSuccessRate {
+            required_rate: 0.95,
+            actual_rate: 0.80,
+        };
+        let s = format!("{}", v);
+        assert!(s.contains("Insufficient success rate"));
+    }
+
+    #[test]
+    fn test_contract_violation_display_invariant() {
+        let v = ContractViolation::InvariantViolation("test".to_string());
+        let s = format!("{}", v);
+        assert!(s.contains("Invariant violation"));
+    }
+
+    #[test]
+    fn test_contract_violation_display_message_quota() {
+        let v = ContractViolation::MessageQuotaExceeded {
+            max_messages: 100,
+            actual_messages: 200,
+        };
+        let s = format!("{}", v);
+        assert!(s.contains("Message quota exceeded"));
+    }
+
+    #[test]
+    fn test_contract_violation_display_forbidden() {
+        let v = ContractViolation::ForbiddenAction("hack".to_string());
+        let s = format!("{}", v);
+        assert!(s.contains("Forbidden action"));
+    }
+
+    #[test]
+    fn test_contract_violation_clone() {
+        let v = ContractViolation::TimeoutExceeded {
+            allowed_seconds: 60,
+            actual_seconds: 90,
+        };
+        let cloned = v.clone();
+        assert!(matches!(cloned, ContractViolation::TimeoutExceeded { allowed_seconds: 60, .. }));
+    }
+
+    #[test]
+    fn test_contract_violation_debug() {
+        let v = ContractViolation::MemoryExceeded {
+            allowed_mb: 50,
+            actual_mb: 75,
+        };
+        let debug = format!("{:?}", v);
+        assert!(debug.contains("MemoryExceeded"));
+    }
+
+    #[test]
+    fn test_contract_violation_serialize() {
+        let v = ContractViolation::ForbiddenAction("test".to_string());
+        let json = serde_json::to_string(&v).unwrap();
+        assert!(json.contains("ForbiddenAction"));
+    }
+
+    #[test]
+    fn test_contract_violation_deserialize() {
+        let json = r#"{"InvariantViolation":"broken"}"#;
+        let v: ContractViolation = serde_json::from_str(json).unwrap();
+        assert!(matches!(v, ContractViolation::InvariantViolation(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests AgentContract existing
+    // ─────────────────────────────────────────────────────────────────────
+
     #[test]
     fn test_contract_defaults() {
         for role in AgentRole::all() {
@@ -463,5 +628,138 @@ mod tests {
         assert_eq!(contract.max_consecutive_failures, 1);
         assert_eq!(contract.required_success_rate, 0.99);
         assert!(!contract.sandboxed); // Privilèges élevés
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests AgentContract additional
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_contract_observer() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        assert_eq!(contract.role, AgentRole::Observer);
+        assert!(contract.sandboxed);
+        assert!(contract.can_collaborate);
+    }
+
+    #[test]
+    fn test_contract_memory() {
+        let contract = AgentContract::default_for_role(&AgentRole::Memory);
+        assert_eq!(contract.role, AgentRole::Memory);
+        assert_eq!(contract.required_success_rate, 0.98);
+    }
+
+    #[test]
+    fn test_contract_synthesizer() {
+        let contract = AgentContract::default_for_role(&AgentRole::Synthesizer);
+        assert!(contract.invariants.len() > 0);
+    }
+
+    #[test]
+    fn test_contract_analyzer() {
+        let contract = AgentContract::default_for_role(&AgentRole::Analyzer);
+        assert_eq!(contract.max_execution_time_seconds, 180);
+    }
+
+    #[test]
+    fn test_contract_temporal() {
+        let contract = AgentContract::default_for_role(&AgentRole::Temporal);
+        assert!(contract.invariants.len() > 0);
+    }
+
+    #[test]
+    fn test_contract_api() {
+        let contract = AgentContract::default_for_role(&AgentRole::API);
+        assert!(!contract.can_collaborate);
+        assert_eq!(contract.message_quota_per_minute, 500);
+    }
+
+    #[test]
+    fn test_contract_vision() {
+        let contract = AgentContract::default_for_role(&AgentRole::Vision);
+        assert_eq!(contract.max_memory_mb, 100); // High memory for images
+    }
+
+    #[test]
+    fn test_contract_audio() {
+        let contract = AgentContract::default_for_role(&AgentRole::Audio);
+        assert_eq!(contract.max_memory_mb, 80);
+    }
+
+    #[test]
+    fn test_contract_devtools() {
+        let contract = AgentContract::default_for_role(&AgentRole::DevTools);
+        assert!(!contract.can_collaborate);
+    }
+
+    #[test]
+    fn test_contract_evolution() {
+        let contract = AgentContract::default_for_role(&AgentRole::Evolution);
+        assert_eq!(contract.required_success_rate, 0.70); // Experimental
+        assert_eq!(contract.max_execution_time_seconds, 300);
+    }
+
+    #[test]
+    fn test_check_consecutive_failures_ok() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        assert!(contract.check_consecutive_failures(3).is_ok());
+    }
+
+    #[test]
+    fn test_check_consecutive_failures_exceeded() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        assert!(contract.check_consecutive_failures(10).is_err());
+    }
+
+    #[test]
+    fn test_check_execution_time_at_limit() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        assert!(contract.check_execution_time(60).is_ok()); // At limit
+        assert!(contract.check_execution_time(61).is_err()); // Over
+    }
+
+    #[test]
+    fn test_check_memory_at_limit() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        assert!(contract.check_memory_usage(30).is_ok()); // At limit
+        assert!(contract.check_memory_usage(31).is_err()); // Over
+    }
+
+    #[test]
+    fn test_check_success_rate_at_limit() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        assert!(contract.check_success_rate(0.95).is_ok()); // At limit
+        assert!(contract.check_success_rate(0.94).is_err()); // Under
+    }
+
+    #[test]
+    fn test_contract_clone() {
+        let contract = AgentContract::default_for_role(&AgentRole::Observer);
+        let cloned = contract.clone();
+        assert_eq!(cloned.role, contract.role);
+        assert_eq!(cloned.max_execution_time_seconds, contract.max_execution_time_seconds);
+    }
+
+    #[test]
+    fn test_contract_debug() {
+        let contract = AgentContract::default_for_role(&AgentRole::Memory);
+        let debug = format!("{:?}", contract);
+        assert!(debug.contains("AgentContract"));
+    }
+
+    #[test]
+    fn test_contract_serialize() {
+        let contract = AgentContract::default_for_role(&AgentRole::Security);
+        let json = serde_json::to_string(&contract).unwrap();
+        assert!(json.contains("Security"));
+        assert!(json.contains("max_execution_time_seconds"));
+    }
+
+    #[test]
+    fn test_contract_deserialize() {
+        let contract = AgentContract::default_for_role(&AgentRole::API);
+        let json = serde_json::to_string(&contract).unwrap();
+        let restored: AgentContract = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.role, AgentRole::API);
     }
 }
