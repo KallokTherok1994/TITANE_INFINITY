@@ -362,12 +362,13 @@ impl JobScheduler {
         // Skip expired jobs
         while let Some(job) = queue.peek() {
             if job.is_expired() {
-                let expired_job = queue.pop().unwrap();
-                let mut jobs = self.jobs.write().await;
-                jobs.insert(expired_job.id.clone(), JobStatus::Expired);
+                if let Some(expired_job) = queue.pop() {
+                    let mut jobs = self.jobs.write().await;
+                    jobs.insert(expired_job.id.clone(), JobStatus::Expired);
 
-                let mut stats = self.stats.write().await;
-                stats.total_expired += 1;
+                    let mut stats = self.stats.write().await;
+                    stats.total_expired += 1;
+                }
             } else {
                 break;
             }
