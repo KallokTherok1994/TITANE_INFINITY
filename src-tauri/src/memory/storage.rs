@@ -38,6 +38,11 @@ impl MemoryStorage {
         })
     }
 
+    /// Retourne le chemin du répertoire de stockage (pour tests)
+    pub fn storage_dir(&self) -> &PathBuf {
+        &self.storage_dir
+    }
+
     fn get_conversation_path(&self, conversation_id: &str) -> PathBuf {
         self.storage_dir
             .join(format!("{}.json.enc", conversation_id))

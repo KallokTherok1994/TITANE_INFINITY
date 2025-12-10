@@ -349,6 +349,9 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // SYSTEM CENTER / CLUSTER (v∞.Ω QA)
   // ═══════════════════════════════════════════════════════════════
+  'sc_run_quick_diagnostics',
+  'sc_run_full_diagnostics',
+  'sc_get_diagnostic_status',
   'sc_get_cluster_status',
   'sc_get_cluster_peers',
   'sc_initialize_cluster',

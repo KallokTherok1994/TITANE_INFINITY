@@ -15,12 +15,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { invoke } from '@tauri-apps/api/core';
+import { LogViewer } from '@/components/devtools/LogViewer';
+import { MetricsDisplay } from '@/components/devtools/MetricsDisplay';
+import { CoreHealthMonitor } from '@/components/devtools/CoreHealthMonitor';
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES
 // ══════════════════════════════════════════════════════════════════
 
-type DevToolsSubTab = 'debugger' | 'memory' | 'metrics' | 'analyzer' | 'logs';
+type DevToolsSubTab = 'debugger' | 'memory' | 'metrics' | 'cores' | 'analyzer' | 'logs';
 
 interface DebuggerEvent {
   id: string;
@@ -135,6 +138,7 @@ const DEVTOOLS_SUBTABS: Array<{
   { id: 'debugger', label: 'Debugger', icon: '🐛', description: 'Live event debugging' },
   { id: 'memory', label: 'Memory', icon: '🧠', description: 'Memory inspection' },
   { id: 'metrics', label: 'Metrics', icon: '📊', description: 'System metrics' },
+  { id: 'cores', label: 'Cores', icon: '⚙️', description: 'Engine health monitor' },
   { id: 'analyzer', label: 'Analyzer', icon: '🔍', description: 'System analysis' },
   { id: 'logs', label: 'Logs', icon: '📋', description: 'System logs' },
 ];
@@ -514,103 +518,11 @@ const MemoryPanel: React.FC = () => {
 };
 
 // ══════════════════════════════════════════════════════════════════
-// METRICS PANEL
+// METRICS PANEL (Integrated MetricsDisplay Component)
 // ══════════════════════════════════════════════════════════════════
 
 const MetricsPanel: React.FC = () => {
-  const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
-  const [autoRefresh, setAutoRefresh] = useState(true);
-
-  const fetchMetrics = useCallback(async () => {
-    try {
-      const res = await invoke<DevToolsResponse<SystemMetrics>>('devtools_metrics');
-      if (res.success && res.data) setMetrics(res.data);
-    } catch {
-      // Silently fail
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchMetrics();
-    if (autoRefresh) {
-      const interval = setInterval(fetchMetrics, 1000);
-      return () => clearInterval(interval);
-    }
-  }, [autoRefresh, fetchMetrics]);
-
-  const formatUptime = (ms: number): string => {
-    const seconds = Math.floor(ms / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    if (hours > 0) return `${hours}h ${minutes % 60}m`;
-    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
-    return `${seconds}s`;
-  };
-
-  return (
-    <div className="dt-panel dt-metrics">
-      <div className="dt-controls">
-        <label className="dt-toggle">
-          <input
-            type="checkbox"
-            checked={autoRefresh}
-            onChange={e => setAutoRefresh(e.target.checked)}
-          />
-          <span>Live refresh (1s)</span>
-        </label>
-      </div>
-
-      {metrics && (
-        <div className="dt-metrics-grid">
-          <div className="dt-metric-card">
-            <div className="dt-metric-icon">⏱️</div>
-            <div className="dt-metric-value">{formatDuration(metrics.latency_ms)}</div>
-            <div className="dt-metric-label">Pipeline Latency</div>
-          </div>
-
-          <div className="dt-metric-card">
-            <div className="dt-metric-icon">🚀</div>
-            <div className="dt-metric-value">{formatDuration(metrics.ttft_ms)}</div>
-            <div className="dt-metric-label">TTFT</div>
-          </div>
-
-          <div className="dt-metric-card">
-            <div className="dt-metric-icon">💻</div>
-            <div className="dt-metric-value">{metrics.cpu_pct.toFixed(1)}%</div>
-            <div className="dt-metric-label">CPU Usage</div>
-          </div>
-
-          <div className="dt-metric-card">
-            <div className="dt-metric-icon">🧠</div>
-            <div className="dt-metric-value">{metrics.ram_mb.toFixed(0)}MB</div>
-            <div className="dt-metric-label">RAM Usage</div>
-          </div>
-
-          <div className="dt-metric-card">
-            <div className="dt-metric-icon">⏰</div>
-            <div className="dt-metric-value">{formatUptime(metrics.uptime_ms)}</div>
-            <div className="dt-metric-label">Uptime</div>
-          </div>
-
-          <div className="dt-metric-card">
-            <div className="dt-metric-icon">❤️</div>
-            <div
-              className="dt-metric-value"
-              style={{
-                color:
-                  metrics.engine_health === 'Healthy'
-                    ? 'var(--color-success)'
-                    : 'var(--color-warning)',
-              }}
-            >
-              {metrics.engine_health}
-            </div>
-            <div className="dt-metric-label">Engine Health</div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  return <MetricsDisplay />;
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -799,20 +711,11 @@ const AnalyzerPanel: React.FC = () => {
 };
 
 // ══════════════════════════════════════════════════════════════════
-// LOGS PANEL (Legacy)
+// LOGS PANEL (Integrated LogViewer Component)
 // ══════════════════════════════════════════════════════════════════
 
 const LogsPanel: React.FC = () => {
-  // Placeholder for existing logs functionality
-  return (
-    <div className="dt-panel dt-logs">
-      <div className="dt-empty">
-        <span>📋</span>
-        <p>System logs integration</p>
-        <p className="dt-empty-sub">Use the existing logging infrastructure</p>
-      </div>
-    </div>
-  );
+  return <LogViewer />;
 };
 
 // ══════════════════════════════════════════════════════════════════
@@ -857,6 +760,8 @@ export const DevToolsTab: React.FC = () => {
         return <MemoryPanel />;
       case 'metrics':
         return <MetricsPanel />;
+      case 'cores':
+        return <CoreHealthMonitor />;
       case 'analyzer':
         return <AnalyzerPanel />;
       case 'logs':

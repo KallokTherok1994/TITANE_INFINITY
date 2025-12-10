@@ -1,0 +1,248 @@
+/**
+ * EventStream Styles
+ */
+
+.event-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  height: 100%;
+  overflow: hidden;
+}
+
+.event-stats {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.event-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.event-stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.event-stat-label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.event-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.event-select,
+.event-search {
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.875rem;
+}
+
+.event-select {
+  min-width: 120px;
+}
+
+.event-search {
+  flex: 1;
+  min-width: 200px;
+}
+
+.event-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.event-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 4px;
+  color: #3b82f6;
+  font-family: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.event-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.event-btn-paused {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.3);
+  color: #fbbf24;
+}
+
+.event-btn-paused:hover {
+  background: rgba(251, 191, 36, 0.3);
+  border-color: rgba(251, 191, 36, 0.5);
+}
+
+.event-btn-danger {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.event-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.3);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+.event-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.event-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  opacity: 0.5;
+}
+
+.event-empty span {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.event-empty-sub {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #f59e0b;
+}
+
+.event-item {
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid transparent;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  transition: background 0.2s;
+}
+
+.event-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.event-info {
+  border-left-color: #3b82f6;
+}
+
+.event-warning {
+  border-left-color: #f59e0b;
+}
+
+.event-error {
+  border-left-color: #ef4444;
+}
+
+.event-critical {
+  border-left-color: #dc2626;
+  background: rgba(220, 38, 38, 0.1);
+}
+
+.event-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.event-time {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.event-type-icon {
+  font-size: 1rem;
+}
+
+.event-type {
+  padding: 0.125rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.event-severity {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.event-source {
+  font-weight: 500;
+  color: #3b82f6;
+}
+
+.event-correlation {
+  margin-left: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.event-message {
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.event-details {
+  margin-top: 0.5rem;
+}
+
+.event-details summary {
+  cursor: pointer;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  user-select: none;
+}
+
+.event-details summary:hover {
+  opacity: 1;
+}
+
+.event-details pre {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  overflow-x: auto;
+  color: #9ca3af;
+}
