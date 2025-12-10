@@ -238,4 +238,181 @@ mod tests {
         let stats = bridge.stats().await;
         assert_eq!(stats.stm_count, 0); // Empty initially
     }
+
+    #[test]
+    fn test_omega_memory_bridge_config_default() {
+        let config = OmegaMemoryBridgeConfig::default();
+
+        assert_eq!(config.stm_limit, 10);
+        assert_eq!(config.mtm_limit, 5);
+        assert_eq!(config.ltm_limit, 3);
+        assert_eq!(config.vector_limit, 8);
+        assert!(config.enable_semantic);
+        assert!((config.similarity_threshold - 0.7).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_omega_memory_bridge_config_clone() {
+        let config = OmegaMemoryBridgeConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.stm_limit, config.stm_limit);
+        assert_eq!(cloned.mtm_limit, config.mtm_limit);
+        assert_eq!(cloned.vector_limit, config.vector_limit);
+    }
+
+    #[test]
+    fn test_memory_bridge_stats_structure() {
+        let stats = MemoryBridgeStats {
+            stm_count: 10,
+            mtm_count: 20,
+            ltm_count: 30,
+            total_memories: 60,
+            vector_entries: 100,
+            last_query_latency_ms: 5,
+        };
+
+        assert_eq!(stats.stm_count, 10);
+        assert_eq!(stats.mtm_count, 20);
+        assert_eq!(stats.ltm_count, 30);
+        assert_eq!(stats.total_memories, 60);
+        assert_eq!(stats.vector_entries, 100);
+    }
+
+    #[test]
+    fn test_memory_bridge_stats_clone() {
+        let stats = MemoryBridgeStats {
+            stm_count: 5,
+            mtm_count: 10,
+            ltm_count: 15,
+            total_memories: 30,
+            vector_entries: 50,
+            last_query_latency_ms: 2,
+        };
+
+        let cloned = stats.clone();
+        assert_eq!(cloned.stm_count, 5);
+        assert_eq!(cloned.total_memories, 30);
+    }
+
+    #[tokio::test]
+    async fn test_memory_bridge_stats() {
+        let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
+        let config = OmegaMemoryBridgeConfig::default();
+        let bridge = OmegaMemoryBridge::new(unified_memory, config);
+
+        let stats = bridge.stats().await;
+
+        assert_eq!(stats.stm_count, 0);
+        assert_eq!(stats.mtm_count, 0);
+        assert_eq!(stats.ltm_count, 0);
+    }
+
+    #[tokio::test]
+    async fn test_memory_bridge_consolidate() {
+        let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
+        let config = OmegaMemoryBridgeConfig::default();
+        let bridge = OmegaMemoryBridge::new(unified_memory, config);
+
+        let result = bridge.consolidate().await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_memory_bridge_gc() {
+        let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
+        let config = OmegaMemoryBridgeConfig::default();
+        let bridge = OmegaMemoryBridge::new(unified_memory, config);
+
+        let result = bridge.gc().await;
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_config_custom_values() {
+        let config = OmegaMemoryBridgeConfig {
+            stm_limit: 20,
+            mtm_limit: 10,
+            ltm_limit: 5,
+            vector_limit: 15,
+            enable_semantic: false,
+            similarity_threshold: 0.8,
+        };
+
+        assert_eq!(config.stm_limit, 20);
+        assert_eq!(config.mtm_limit, 10);
+        assert!(!config.enable_semantic);
+        assert_eq!(config.similarity_threshold, 0.8);
+    }
+
+    #[tokio::test]
+    async fn test_memory_bridge_enrich_context_empty() {
+        let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
+        let config = OmegaMemoryBridgeConfig::default();
+        let bridge = OmegaMemoryBridge::new(unified_memory, config);
+
+        let input = OmegaInput::Text("What is Rust?".to_string());
+        let mut ctx = OmegaContextV2::new(input);
+
+        let result = bridge.enrich_context(&mut ctx).await;
+        assert!(result.is_ok());
+
+        // All memory vectors should be empty initially
+        assert!(ctx.memory_stm.is_empty());
+        assert!(ctx.memory_mtm.is_empty());
+        assert!(ctx.memory_ltm.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_memory_bridge_with_disabled_semantic() {
+        let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
+        let config = OmegaMemoryBridgeConfig {
+            enable_semantic: false,
+            ..Default::default()
+        };
+        let bridge = OmegaMemoryBridge::new(unified_memory, config);
+
+        let input = OmegaInput::Text("Test without semantic".to_string());
+        let mut ctx = OmegaContextV2::new(input);
+
+        let result = bridge.enrich_context(&mut ctx).await;
+        assert!(result.is_ok());
+        // Vector search should be skipped
+        assert!(ctx.memory_vector.is_empty());
+    }
+
+    #[test]
+    fn test_memory_bridge_stats_debug() {
+        let stats = MemoryBridgeStats {
+            stm_count: 1,
+            mtm_count: 2,
+            ltm_count: 3,
+            total_memories: 6,
+            vector_entries: 10,
+            last_query_latency_ms: 1,
+        };
+
+        let debug_str = format!("{:?}", stats);
+        assert!(debug_str.contains("stm_count"));
+        assert!(debug_str.contains("mtm_count"));
+    }
+
+    #[tokio::test]
+    async fn test_memory_bridge_store_output() {
+        let unified_memory = Arc::new(RwLock::new(UnifiedMemory::new()));
+        let config = OmegaMemoryBridgeConfig::default();
+        let bridge = OmegaMemoryBridge::new(unified_memory, config);
+
+        let result = bridge
+            .store_output(
+                "User question".to_string(),
+                "Assistant answer".to_string(),
+                0.8,
+            )
+            .await;
+
+        assert!(result.is_ok());
+        let memory_id = result.unwrap();
+        assert!(!memory_id.is_empty());
+    }
 }

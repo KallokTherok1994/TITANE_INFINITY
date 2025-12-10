@@ -584,4 +584,315 @@ mod tests {
         assert_eq!(metadata.failed_tasks, 0);
         assert!(metadata.safety.is_some());
     }
+
+    #[test]
+    fn test_merge_strategy_all_variants() {
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Fast),
+            MergeStrategy::SelectBest
+        );
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Balanced),
+            MergeStrategy::WeightedMerge
+        );
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Thorough),
+            MergeStrategy::Consensus
+        );
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Explorative),
+            MergeStrategy::Concatenate
+        );
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Empathetic),
+            MergeStrategy::PriorityBased
+        );
+    }
+
+    #[test]
+    fn test_merge_strategy_equality() {
+        assert_eq!(MergeStrategy::Concatenate, MergeStrategy::Concatenate);
+        assert_ne!(MergeStrategy::Concatenate, MergeStrategy::SelectBest);
+    }
+
+    #[test]
+    fn test_merger_with_strategy() {
+        let merger = ResultMerger::with_strategy(MergeStrategy::Consensus);
+        assert_eq!(merger.default_strategy, MergeStrategy::Consensus);
+    }
+
+    #[test]
+    fn test_merger_new() {
+        let merger = ResultMerger::new();
+        assert_eq!(merger.default_strategy, MergeStrategy::WeightedMerge);
+    }
+
+    #[test]
+    fn test_merger_default() {
+        let merger = ResultMerger::default();
+        assert!(!merger.weights.is_empty());
+        assert!(merger.weights.contains_key(&TaskType::TextGen));
+    }
+
+    #[test]
+    fn test_merger_weights() {
+        let merger = ResultMerger::new();
+        assert_eq!(merger.weights.get(&TaskType::TextGen), Some(&1.0));
+        assert_eq!(merger.weights.get(&TaskType::CodeGen), Some(&0.9));
+        assert_eq!(merger.weights.get(&TaskType::Reasoning), Some(&0.8));
+    }
+
+    #[test]
+    fn test_merge_weighted() {
+        let merger = ResultMerger::new();
+        let results = mock_results();
+        let (text, confidence) = merger.merge_weighted(&results);
+
+        assert!(!text.is_empty());
+        assert!(confidence > 0.0 && confidence <= 1.0);
+    }
+
+    #[test]
+    fn test_merge_priority() {
+        let merger = ResultMerger::new();
+        let results = mock_results();
+        let (text, confidence) = merger.merge_priority(&results);
+
+        assert!(!text.is_empty());
+        assert!(confidence > 0.0);
+    }
+
+    #[test]
+    fn test_merge_consensus() {
+        let merger = ResultMerger::new();
+        let results = mock_results();
+        let (text, confidence) = merger.merge_consensus(&results);
+
+        assert!(!text.is_empty());
+        assert!(confidence > 0.0);
+    }
+
+    #[test]
+    fn test_extract_text() {
+        let merger = ResultMerger::new();
+
+        let data1 = serde_json::json!({"text": "Hello"});
+        assert_eq!(merger.extract_text(&data1), Some("Hello".to_string()));
+
+        let data2 = serde_json::json!({"response": "World"});
+        assert_eq!(merger.extract_text(&data2), Some("World".to_string()));
+
+        let data3 = serde_json::json!({"code": "fn main() {}"});
+        assert_eq!(merger.extract_text(&data3), Some("fn main() {}".to_string()));
+
+        let data4 = serde_json::json!({"analysis": "Result"});
+        assert_eq!(merger.extract_text(&data4), Some("Result".to_string()));
+
+        let data5 = serde_json::json!({"other": "data"});
+        assert!(merger.extract_text(&data5).is_none());
+    }
+
+    #[test]
+    fn test_extract_confidence() {
+        let merger = ResultMerger::new();
+
+        let data1 = serde_json::json!({"confidence": 0.85});
+        assert!((merger.extract_confidence(&data1) - 0.85).abs() < 0.01);
+
+        let data2 = serde_json::json!({"other": "data"});
+        assert!((merger.extract_confidence(&data2) - 0.7).abs() < 0.01); // default
+    }
+
+    #[test]
+    fn test_infer_task_type() {
+        let merger = ResultMerger::new();
+
+        assert_eq!(merger.infer_task_type("safety"), TaskType::Safety);
+        assert_eq!(merger.infer_task_type("identity"), TaskType::Identity);
+        assert_eq!(merger.infer_task_type("memory"), TaskType::Memory);
+        assert_eq!(merger.infer_task_type("knowledge"), TaskType::Knowledge);
+        assert_eq!(merger.infer_task_type("reasoning"), TaskType::Reasoning);
+        assert_eq!(merger.infer_task_type("codegen"), TaskType::CodeGen);
+        assert_eq!(merger.infer_task_type("textgen"), TaskType::TextGen);
+        assert_eq!(merger.infer_task_type("context"), TaskType::Context);
+        assert_eq!(merger.infer_task_type("unknown"), TaskType::TextGen); // default
+    }
+
+    #[test]
+    fn test_calculate_quality() {
+        let merger = ResultMerger::new();
+        let results = mock_results();
+        let quality = merger.calculate_quality(&results, 0.9);
+
+        assert!(quality > 0.5);
+        assert!(quality <= 1.0);
+    }
+
+    #[test]
+    fn test_calculate_quality_with_unsafe() {
+        let merger = ResultMerger::new();
+        let results = vec![
+            TaskResult {
+                task_id: "safety".to_string(),
+                success: true,
+                data: serde_json::json!({ "safe": false }),
+                execution_ms: 10,
+                error: None,
+                cached: false,
+            },
+        ];
+
+        let quality = merger.calculate_quality(&results, 0.9);
+        assert!(quality < 0.5); // Should be penalized
+    }
+
+    #[test]
+    fn test_build_sources() {
+        let merger = ResultMerger::new();
+        let results = mock_results();
+        let sources = merger.build_sources(&results);
+
+        assert_eq!(sources.len(), 3);
+        assert!(sources.iter().all(|s| s.weight > 0.0));
+    }
+
+    #[test]
+    fn test_merge_source_structure() {
+        let source = MergeSource {
+            task_id: "test".to_string(),
+            task_type: "TextGen".to_string(),
+            weight: 0.9,
+            success: true,
+        };
+
+        assert_eq!(source.task_id, "test");
+        assert_eq!(source.weight, 0.9);
+        assert!(source.success);
+    }
+
+    #[test]
+    fn test_merge_metadata_default() {
+        let metadata = MergeMetadata::default();
+
+        assert_eq!(metadata.successful_tasks, 0);
+        assert_eq!(metadata.failed_tasks, 0);
+        assert_eq!(metadata.total_task_time_ms, 0);
+        assert!(metadata.identity.is_none());
+    }
+
+    #[test]
+    fn test_merge_result_structure() {
+        let result = MergeResult {
+            request_id: "req-123".to_string(),
+            response: "Hello".to_string(),
+            confidence: 0.9,
+            sources: vec![],
+            strategy: MergeStrategy::SelectBest,
+            latency_ms: 10,
+            quality_score: 0.85,
+            metadata: MergeMetadata::default(),
+        };
+
+        assert_eq!(result.request_id, "req-123");
+        assert_eq!(result.confidence, 0.9);
+        assert_eq!(result.strategy, MergeStrategy::SelectBest);
+    }
+
+    #[test]
+    fn test_merger_stage_new() {
+        let merger = Merger::new();
+        assert_eq!(merger.name(), "Merger");
+    }
+
+    #[test]
+    fn test_merger_stage_default() {
+        let merger = Merger::default();
+        assert_eq!(merger.stage(), PipelineStage::Merger);
+    }
+
+    #[test]
+    fn test_merge_empty_results() {
+        let merger = ResultMerger::new();
+        let (text, confidence) = merger.merge_concatenate(&[]);
+
+        assert!(text.is_empty());
+        assert!((confidence - 0.5).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_merge_select_best_empty() {
+        let merger = ResultMerger::new();
+        let (text, confidence) = merger.merge_select_best(&[]);
+
+        assert_eq!(text, "Unable to generate response");
+        assert!((confidence - 0.3).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_merge_weighted_empty() {
+        let merger = ResultMerger::new();
+        let (text, confidence) = merger.merge_weighted(&[]);
+
+        assert_eq!(text, "Unable to generate response");
+        assert!((confidence - 0.3).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_merge_result_clone() {
+        let result = MergeResult {
+            request_id: "clone-test".to_string(),
+            response: "Response".to_string(),
+            confidence: 0.8,
+            sources: vec![],
+            strategy: MergeStrategy::Consensus,
+            latency_ms: 5,
+            quality_score: 0.9,
+            metadata: MergeMetadata::default(),
+        };
+
+        let cloned = result.clone();
+        assert_eq!(cloned.request_id, "clone-test");
+        assert_eq!(cloned.strategy, MergeStrategy::Consensus);
+    }
+
+    #[test]
+    fn test_merge_source_clone() {
+        let source = MergeSource {
+            task_id: "src".to_string(),
+            task_type: "Test".to_string(),
+            weight: 0.5,
+            success: false,
+        };
+
+        let cloned = source.clone();
+        assert_eq!(cloned.task_id, "src");
+        assert!(!cloned.success);
+    }
+
+    #[test]
+    fn test_merge_metadata_clone() {
+        let mut metadata = MergeMetadata::default();
+        metadata.successful_tasks = 5;
+
+        let cloned = metadata.clone();
+        assert_eq!(cloned.successful_tasks, 5);
+    }
+
+    #[test]
+    fn test_all_failed_results() {
+        let merger = ResultMerger::new();
+        let results = vec![
+            TaskResult {
+                task_id: "test".to_string(),
+                success: false,
+                data: serde_json::json!({}),
+                execution_ms: 10,
+                error: Some("Error".to_string()),
+                cached: false,
+            },
+        ];
+
+        let (_, confidence) = merger.merge_concatenate(&results);
+        assert!((confidence - 0.5).abs() < 0.01);
+    }
 }

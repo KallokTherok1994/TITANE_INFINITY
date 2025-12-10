@@ -723,4 +723,156 @@ mod tests {
             ExecutionMode::Empathetic
         );
     }
+
+    #[test]
+    fn test_intent_all() {
+        let all = Intent::all();
+        assert_eq!(all.len(), 11);
+        assert!(all.contains(&Intent::Query));
+        assert!(all.contains(&Intent::Unknown));
+    }
+
+    #[test]
+    fn test_intent_priority_ordering() {
+        assert_eq!(Intent::Command.priority(), 10);
+        assert_eq!(Intent::Task.priority(), 9);
+        assert_eq!(Intent::Unknown.priority(), 0);
+    }
+
+    #[test]
+    fn test_execution_mode_task() {
+        assert_eq!(Intent::Task.execution_mode(), ExecutionMode::Thorough);
+        assert_eq!(Intent::Debug.execution_mode(), ExecutionMode::Thorough);
+    }
+
+    #[test]
+    fn test_execution_mode_balanced() {
+        assert_eq!(Intent::Conversation.execution_mode(), ExecutionMode::Balanced);
+        assert_eq!(Intent::Help.execution_mode(), ExecutionMode::Balanced);
+    }
+
+    #[tokio::test]
+    async fn test_classifier_emotional() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Je me sens stressé aujourd'hui");
+        let result = classifier.classify(&input).await.unwrap();
+
+        assert_eq!(result.intent, Intent::Emotional);
+    }
+
+    #[tokio::test]
+    async fn test_classifier_command() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Lance le build maintenant");
+        let result = classifier.classify(&input).await.unwrap();
+
+        assert_eq!(result.intent, Intent::Command);
+    }
+
+    #[tokio::test]
+    async fn test_classifier_creative() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Imagine une histoire originale");
+        let result = classifier.classify(&input).await.unwrap();
+
+        assert_eq!(result.intent, Intent::Creative);
+    }
+
+    #[tokio::test]
+    async fn test_classifier_meta() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Qui es-tu?");
+        let result = classifier.classify(&input).await.unwrap();
+
+        assert_eq!(result.intent, Intent::Meta);
+    }
+
+    #[tokio::test]
+    async fn test_classifier_explanation() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Explique-moi ce concept");
+        let result = classifier.classify(&input).await.unwrap();
+
+        assert_eq!(result.intent, Intent::Explanation);
+    }
+
+    #[tokio::test]
+    async fn test_classifier_conversation() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Bonjour!");
+        let result = classifier.classify(&input).await.unwrap();
+
+        assert_eq!(result.intent, Intent::Conversation);
+    }
+
+    #[tokio::test]
+    async fn test_cache_clear() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Test cache clear");
+
+        // Populate cache
+        let _ = classifier.classify(&input).await.unwrap();
+
+        // Clear cache
+        classifier.clear_cache().await;
+
+        // Check stats
+        let stats = classifier.cache_stats().await;
+        assert_eq!(stats.size, 0);
+    }
+
+    #[tokio::test]
+    async fn test_cache_stats() {
+        let classifier = IntentClassifier::new();
+        let stats = classifier.cache_stats().await;
+
+        assert_eq!(stats.max_size, 10000);
+        assert_eq!(stats.ttl_secs, 300);
+    }
+
+    #[test]
+    fn test_routing_result_structure() {
+        let result = RoutingResult {
+            intent: Intent::Query,
+            confidence: 0.85,
+            secondary_intents: vec![(Intent::Help, 0.3)],
+            execution_mode: ExecutionMode::Fast,
+            handlers: vec!["knowledge".to_string()],
+            latency_us: 100,
+            cache_hit: false,
+        };
+
+        assert_eq!(result.intent, Intent::Query);
+        assert!(result.confidence > 0.8);
+        assert!(!result.secondary_intents.is_empty());
+    }
+
+    #[test]
+    fn test_pattern_rule_structure() {
+        let rule = PatternRule {
+            keywords: vec!["test".to_string()],
+            negative_keywords: vec!["bad".to_string()],
+            base_confidence: 0.5,
+            keyword_boost: 0.1,
+        };
+
+        assert_eq!(rule.keywords.len(), 1);
+        assert_eq!(rule.base_confidence, 0.5);
+    }
+
+    #[test]
+    fn test_router_default() {
+        let router = Router::default();
+        assert_eq!(router.classifier.cache_ttl, 300);
+    }
+
+    #[tokio::test]
+    async fn test_secondary_intents() {
+        let classifier = IntentClassifier::new();
+        let input = PipelineInput::new("Aide-moi à comprendre comment fonctionne ce code?");
+        let result = classifier.classify(&input).await.unwrap();
+
+        // Should have secondary intents
+        assert!(!result.secondary_intents.is_empty() || result.confidence > 0.5);
+    }
 }

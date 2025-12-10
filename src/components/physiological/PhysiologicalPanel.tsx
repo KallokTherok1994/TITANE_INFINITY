@@ -17,6 +17,12 @@ import {
   useCognitiveSounds,
   usePhysiologicalState,
 } from '@/hooks';
+import type {
+  TitanSpatialState,
+  SpatialPreset,
+  CognitiveSound,
+  SpatialOptions,
+} from '@/engines/spatial/holophonicEngine';
 import './PhysiologicalPanel.css';
 
 interface SpatialState {
@@ -59,18 +65,11 @@ interface InteroceptionHookReturn {
 }
 
 interface HolophonicHookReturn {
-  spatialState: {
-    x: number;
-    y: number;
-    z: number;
-    width: number;
-    focus: number;
-    distance: number;
-  };
-  setSpatialState: (state: SpatialState['spatialState']) => void;
-  setPreset: (preset: string) => void;
-  playCue?: (cue: string, options?: Record<string, unknown>) => void;
-  setSoundIntensity?: (intensity: number) => void;
+  spatialState: TitanSpatialState;
+  setSpatialState: (state: Partial<TitanSpatialState>) => void;
+  setPreset: (preset: SpatialPreset) => void;
+  playCue?: (cue: CognitiveSound, options?: SpatialOptions) => void;
+  setSoundIntensity?: (intensity: 'off' | 'minimal' | 'normal' | 'rich') => void;
 }
 
 // Alias for compatibility

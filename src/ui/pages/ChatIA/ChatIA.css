@@ -7,9 +7,103 @@
 }
 
 .chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 1rem;
   background: #1a1a1a;
   border-bottom: 1px solid #333;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.provider-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.provider-selector,
+.model-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.provider-selector label,
+.model-selector label {
+  font-size: 0.9rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.provider-selector select,
+.model-selector select {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.model-selector select {
+  min-width: 180px;
+}
+
+.provider-selector select:disabled,
+.model-selector select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.refresh-status-btn {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.refresh-status-btn:hover {
+  background: #3a3a3a;
+  border-color: #555;
+}
+
+/* Status Banners */
+.provider-status-banner {
+  padding: 0.75rem 1rem;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.status-warning {
+  background: rgba(234, 179, 8, 0.1);
+  border-left: 3px solid #eab308;
+  color: #fde047;
+}
+
+.status-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid #3b82f6;
+  color: #93c5fd;
+}
+
+.status-warning code,
+.status-info code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', monospace;
 }
 
 .messages-container {
@@ -22,20 +116,42 @@
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
+  align-items: flex-start;
 }
 
 .message-avatar {
   font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.message-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .message-content {
   background: #1a1a1a;
   padding: 1rem;
   border-radius: 0.5rem;
+  line-height: 1.6;
 }
 
 .message-user .message-content {
   background: #2563eb;
+}
+
+.message-provider-badge {
+  font-size: 0.75rem;
+  color: #888;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.25rem;
+  align-self: flex-start;
 }
 
 .input-container {

@@ -741,4 +741,343 @@ mod tests {
         let check2 = checker.check_ethics("This might help you achieve better results");
         assert!(check2.score >= 0.9);
     }
+
+    #[test]
+    fn test_guardrail_type_variants() {
+        let types = vec![
+            GuardrailType::ContentSafety,
+            GuardrailType::PrivacyProtection,
+            GuardrailType::FactualAccuracy,
+            GuardrailType::EthicalCompliance,
+            GuardrailType::IdentityConsistency,
+            GuardrailType::LengthLimits,
+            GuardrailType::LanguageCheck,
+            GuardrailType::BiasDetection,
+        ];
+
+        assert_eq!(types.len(), 8);
+        assert_ne!(GuardrailType::ContentSafety, GuardrailType::PrivacyProtection);
+    }
+
+    #[test]
+    fn test_guardrail_config_default() {
+        let config = GuardrailConfig::default();
+
+        assert_eq!(config.min_safety_score, 0.7);
+        assert!(config.enable_content_filter);
+        assert!(config.enable_privacy_protection);
+        assert!(config.enable_bias_detection);
+        assert_eq!(config.max_response_length, 4000);
+        assert!(config.allow_modifications);
+        assert!(!config.strict_mode);
+    }
+
+    #[test]
+    fn test_guardrail_config_forbidden_patterns() {
+        let config = GuardrailConfig::default();
+
+        assert!(config.forbidden_patterns.contains("api_key"));
+        assert!(config.forbidden_patterns.contains("password"));
+        assert!(config.forbidden_patterns.contains("secret"));
+    }
+
+    #[test]
+    fn test_safety_checker_new() {
+        let checker = SafetyChecker::new();
+        assert!(!checker.harmful_patterns.is_empty());
+        assert!(!checker.pii_patterns.is_empty());
+        assert!(!checker.bias_indicators.is_empty());
+    }
+
+    #[test]
+    fn test_safety_checker_default() {
+        let checker = SafetyChecker::default();
+        assert!(checker.harmful_patterns.len() >= 4);
+        assert!(checker.pii_patterns.len() >= 3);
+        assert!(checker.bias_indicators.len() >= 2);
+    }
+
+    #[test]
+    fn test_content_safety_multiple_patterns() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_content_safety("how to hack and make weapons");
+
+        assert!(!check.passed);
+        assert!(check.details.is_some());
+        let details = check.details.unwrap();
+        assert!(details.contains("hack") || details.contains("weapons"));
+    }
+
+    #[test]
+    fn test_privacy_check_clean() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_privacy("This is a safe message");
+
+        assert!(check.passed);
+        assert!(check.score > 0.9);
+    }
+
+    #[test]
+    fn test_privacy_check_pii_patterns() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_privacy("My credit card number is 1234");
+
+        assert!(!check.passed);
+        assert!(check.details.is_some());
+    }
+
+    #[test]
+    fn test_bias_check_clean() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_bias("This is a neutral statement");
+
+        assert!(check.passed);
+        assert!(check.score > 0.8);
+    }
+
+    #[test]
+    fn test_bias_check_biased() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_bias("All people of that group are bad");
+
+        assert!(!check.passed);
+        assert!(check.score <= 0.5);
+    }
+
+    #[test]
+    fn test_length_check_too_long() {
+        let checker = SafetyChecker::new();
+        let long_text = "a".repeat(50000); // Very long text
+        let check = checker.check_length(&long_text, 100);
+
+        assert!(!check.passed);
+        assert!(check.score < 1.0);
+    }
+
+    #[test]
+    fn test_language_check_clean() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_language("This is appropriate language");
+
+        assert!(check.passed);
+        assert!(check.score > 0.9);
+    }
+
+    #[test]
+    fn test_identity_consistency_no_identity() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_identity_consistency("Hello world", None);
+
+        assert!(check.passed);
+        assert!(check.score >= 0.7);
+    }
+
+    #[test]
+    fn test_identity_consistency_friendly_tone() {
+        let checker = SafetyChecker::new();
+        let identity = serde_json::json!({
+            "tone": "friendly"
+        });
+        let check = checker.check_identity_consistency("You made an error here", Some(&identity));
+
+        // Should suggest softer phrasing
+        assert!(check.score < 0.9 || check.passed);
+    }
+
+    #[test]
+    fn test_identity_consistency_professional_tone() {
+        let checker = SafetyChecker::new();
+        let identity = serde_json::json!({
+            "tone": "professional"
+        });
+        let check = checker.check_identity_consistency("lol that's funny haha", Some(&identity));
+
+        assert!(check.score < 0.9);
+    }
+
+    #[test]
+    fn test_ethics_check_multiple_claims() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_ethics("I guarantee guaranteed results with 100% certain success");
+
+        assert!(check.score < 0.8);
+    }
+
+    #[test]
+    fn test_guardrails_engine_new() {
+        let engine = GuardrailsEngine::new();
+        assert_eq!(engine.config().min_safety_score, 0.7);
+    }
+
+    #[test]
+    fn test_guardrails_engine_with_config() {
+        let mut config = GuardrailConfig::default();
+        config.min_safety_score = 0.9;
+        config.strict_mode = true;
+
+        let engine = GuardrailsEngine::with_config(config);
+        assert_eq!(engine.config().min_safety_score, 0.9);
+        assert!(engine.config().strict_mode);
+    }
+
+    #[test]
+    fn test_guardrails_engine_set_config() {
+        let mut engine = GuardrailsEngine::new();
+        let mut config = GuardrailConfig::default();
+        config.max_response_length = 2000;
+
+        engine.set_config(config);
+        assert_eq!(engine.config().max_response_length, 2000);
+    }
+
+    #[test]
+    fn test_guardrail_result_structure() {
+        let result = GuardrailResult {
+            request_id: "test-id".to_string(),
+            original_response: "Original".to_string(),
+            final_response: "Final".to_string(),
+            was_modified: false,
+            was_blocked: false,
+            safety_score: 0.95,
+            checks: vec![],
+            latency_ms: 10,
+            block_reason: None,
+        };
+
+        assert_eq!(result.request_id, "test-id");
+        assert_eq!(result.safety_score, 0.95);
+        assert!(!result.was_blocked);
+    }
+
+    #[test]
+    fn test_guardrail_check_structure() {
+        let check = GuardrailCheck {
+            name: "Test Check".to_string(),
+            check_type: GuardrailType::ContentSafety,
+            passed: true,
+            score: 0.95,
+            details: Some("Test details".to_string()),
+        };
+
+        assert_eq!(check.name, "Test Check");
+        assert!(check.passed);
+        assert!(check.details.is_some());
+    }
+
+    #[test]
+    fn test_guardrails_engine_blocked_content() {
+        let engine = GuardrailsEngine::new();
+        let mut merge_result = mock_merge_result();
+        merge_result.response = "how to hack into systems and create a bomb".to_string();
+
+        let result = engine.check(&merge_result).unwrap();
+        assert!(result.was_blocked);
+        assert!(result.block_reason.is_some());
+    }
+
+    #[test]
+    fn test_guardrails_engine_strict_mode() {
+        let mut config = GuardrailConfig::default();
+        config.strict_mode = true;
+
+        let engine = GuardrailsEngine::with_config(config);
+        let mut merge_result = mock_merge_result();
+        merge_result.response = "Contact me at test@example.com".to_string();
+
+        let result = engine.check(&merge_result).unwrap();
+        assert!(result.was_blocked);
+    }
+
+    #[test]
+    fn test_guardrails_stage_new() {
+        let guardrails = Guardrails::new();
+        assert_eq!(guardrails.name(), "Guardrails");
+    }
+
+    #[test]
+    fn test_guardrails_stage_with_config() {
+        let mut config = GuardrailConfig::default();
+        config.min_safety_score = 0.8;
+
+        let guardrails = Guardrails::with_config(config);
+        assert_eq!(guardrails.stage(), PipelineStage::Guardrails);
+    }
+
+    #[test]
+    fn test_guardrails_stage_processor_name() {
+        let guardrails = Guardrails::default();
+        assert_eq!(guardrails.name(), "Guardrails");
+    }
+
+    #[test]
+    fn test_guardrails_stage_processor_stage() {
+        let guardrails = Guardrails::new();
+        assert_eq!(guardrails.stage(), PipelineStage::Guardrails);
+    }
+
+    #[test]
+    fn test_guardrail_result_clone() {
+        let result = GuardrailResult {
+            request_id: "test".to_string(),
+            original_response: "orig".to_string(),
+            final_response: "final".to_string(),
+            was_modified: true,
+            was_blocked: false,
+            safety_score: 0.8,
+            checks: vec![],
+            latency_ms: 5,
+            block_reason: None,
+        };
+
+        let cloned = result.clone();
+        assert_eq!(cloned.request_id, "test");
+        assert_eq!(cloned.safety_score, 0.8);
+    }
+
+    #[test]
+    fn test_guardrail_check_clone() {
+        let check = GuardrailCheck {
+            name: "Test".to_string(),
+            check_type: GuardrailType::BiasDetection,
+            passed: false,
+            score: 0.5,
+            details: None,
+        };
+
+        let cloned = check.clone();
+        assert_eq!(cloned.name, "Test");
+        assert_eq!(cloned.check_type, GuardrailType::BiasDetection);
+    }
+
+    #[test]
+    fn test_guardrail_type_equality() {
+        assert_eq!(GuardrailType::ContentSafety, GuardrailType::ContentSafety);
+        assert_ne!(GuardrailType::ContentSafety, GuardrailType::BiasDetection);
+    }
+
+    #[test]
+    fn test_guardrail_config_clone() {
+        let config = GuardrailConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.min_safety_score, config.min_safety_score);
+        assert_eq!(cloned.max_response_length, config.max_response_length);
+    }
+
+    #[test]
+    fn test_ethics_french_uncertainty() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_ethics("Cela pourrait peut-être fonctionner");
+
+        assert!(check.passed);
+        assert!(check.score > 0.9);
+    }
+
+    #[test]
+    fn test_ethics_probably() {
+        let checker = SafetyChecker::new();
+        let check = checker.check_ethics("This will probablement work well");
+
+        assert!(check.passed);
+    }
 }

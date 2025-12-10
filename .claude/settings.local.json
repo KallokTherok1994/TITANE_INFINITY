@@ -71,7 +71,10 @@
       "Bash(src-tauri/src/healing/memory_validator.rs )",
       "Bash(src-tauri/src/wakeword/engine.rs )",
       "Bash(src-tauri/src/wakeword/listener.rs )",
-      "Bash(src-tauri/src/creation/generator.rs)"
+      "Bash(src-tauri/src/creation/generator.rs)",
+      "Bash(src-tauri/src/singularity/evolution_engine.rs )",
+      "Bash(src-tauri/src/singularity/emotion_controller.rs )",
+      "Bash(src-tauri/src/identity/identity_matrix.rs)"
     ],
     "deny": [],
     "ask": []

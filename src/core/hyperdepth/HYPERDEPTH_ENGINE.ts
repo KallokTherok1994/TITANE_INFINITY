@@ -160,8 +160,8 @@ export class HyperDepthEngine {
   generateBackgroundCSS(state: SystemState = 'stable'): Record<string, string> {
     const stateConfig = stateEngine.getStateConfig(state);
     const variants = DS_COLORS.diamant.variants as Record<string, string>;
-    const color1 = variants['950'] || DS_COLORS.diamant.light;
-    const color2 = variants['900'] || DS_COLORS.diamant.dark;
+    const color1 = variants['950'] || DS_COLORS.diamant.variants.light;
+    const color2 = variants['900'] || DS_COLORS.diamant.variants.dark;
 
     return {
       background: `
