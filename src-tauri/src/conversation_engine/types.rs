@@ -26,6 +26,10 @@ pub struct ConversationRequest {
 
     /// Contexte émotionnel initial
     pub emotion_context: Option<EmotionState>,
+
+    /// System prompt personnalisé (depuis InstructionMode frontend)
+    #[serde(default)]
+    pub custom_system_prompt: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1107,6 +1111,7 @@ mod tests {
             mode: ConversationMode::Default,
             ai_config: None,
             emotion_context: None,
+            custom_system_prompt: None,
         };
         assert_eq!(request.user_message, "Hello");
         assert!(request.conversation_id.is_none());
@@ -1120,6 +1125,7 @@ mod tests {
             mode: ConversationMode::Brainstorming,
             ai_config: Some(AIConfig::default()),
             emotion_context: Some(EmotionState::default()),
+            custom_system_prompt: None,
         };
         assert!(request.conversation_id.is_some());
         assert!(request.ai_config.is_some());

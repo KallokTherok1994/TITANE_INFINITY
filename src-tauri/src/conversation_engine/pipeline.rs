@@ -87,7 +87,7 @@ impl ConversationPipeline {
         // Capture des valeurs pour les closures async
         let msg_for_intent = validated_message.clone();
         let msg_for_emotion = validated_message.clone();
-        let emotion_ctx = request.emotion_context;
+        let emotion_ctx = request.emotion_context.clone(); // 🎯 Clone au lieu de move
         let conv_id_opt = request.conversation_id.clone();
 
         // Exécution parallèle
@@ -115,7 +115,7 @@ impl ConversationPipeline {
         // ÉTAPE 5: Construction du prompt enrichi
         let enriched_prompt = self.build_prompt(
             &validated_message,
-            &request.mode,
+            &request, // 🎯 Pass request complet pour accès custom_system_prompt
             &intention,
             &emotion,
             &memory_context,
@@ -246,13 +246,21 @@ impl ConversationPipeline {
     fn build_prompt(
         &self,
         message: &str,
-        mode: &ConversationMode,
+        request: &ConversationRequest, // 🎯 Request complet pour custom_system_prompt
         intention: &Intention,
         emotion: &EmotionState,
         memory_context: &str,
     ) -> String {
-        // 🎭 SYSTEM PROMPT ADAPTATIF PAR MODE (CRITIQUE POUR MODES RÉELS)
-        let (system_identity, mode_instruction) = match mode {
+        // 🎯 PRIORITÉ: Custom System Prompt depuis InstructionMode frontend
+        let (system_identity, mode_instruction) = if let Some(custom_prompt) = &request.custom_system_prompt {
+            // ✨ Si custom_system_prompt fourni, on l'utilise en priorité
+            (
+                custom_prompt.as_str(),
+                "Suis les instructions fournies dans le prompt système personnalisé."
+            )
+        } else {
+            // 🎭 Sinon, fallback sur SYSTEM PROMPT ADAPTATIF PAR MODE (CRITIQUE POUR MODES RÉELS)
+            match &request.mode {
             ConversationMode::Default => (
                 "Tu es TITANE∞, assistant cognitif français, direct et incarné. \
                  Tu réponds TOUJOURS et UNIQUEMENT en FRANÇAIS. Style conversationnel naturel.",
@@ -288,7 +296,8 @@ impl ConversationPipeline {
                 "Analyse la charge cognitive, identifie les boucles de pensée, propose des sorties claires. \
                  Technique mais accessible, méthodique, rassurant."
             ),
-        };
+        }
+        }; // 🎯 Fermeture du if/else custom_system_prompt
 
         let intention_context = match intention {
             Intention::Question => "L'utilisateur pose une question et attend une réponse claire.",
@@ -317,7 +326,7 @@ impl ConversationPipeline {
             # MESSAGE UTILISATEUR\n\
             {}",
             system_identity,
-            mode,
+            request.mode, // 🎯 Correction: utiliser request.mode
             mode_instruction,
             if memory_context.is_empty() {
                 "Nouvelle conversation"
