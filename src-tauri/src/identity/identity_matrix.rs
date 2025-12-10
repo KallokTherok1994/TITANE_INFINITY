@@ -407,4 +407,160 @@ mod tests {
         let backup_path = temp_dir.path().join("identity.json.backup");
         assert!(backup_path.exists());
     }
+
+    #[test]
+    fn test_identity_matrix_default() {
+        let matrix = IdentityMatrix::default();
+        assert_eq!(matrix.dimensions.len(), 8);
+        assert_eq!(matrix.coherence_score, 1.0);
+        assert_eq!(matrix.stability_score, 1.0);
+    }
+
+    #[test]
+    fn test_to_vector() {
+        let matrix = IdentityMatrix::new();
+        let vector = matrix.to_vector();
+
+        assert_eq!(vector.len(), 8);
+        for val in &vector {
+            assert!(*val >= -1.0 && *val <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_distance_to_same() {
+        let matrix1 = IdentityMatrix::new();
+        let matrix2 = IdentityMatrix::new();
+
+        let distance = matrix1.distance_to(&matrix2);
+        assert_eq!(distance, 0.0);
+    }
+
+    #[test]
+    fn test_distance_to_different() {
+        let matrix1 = IdentityProfiles::professional();
+        let matrix2 = IdentityProfiles::creative();
+
+        let distance = matrix1.distance_to(&matrix2);
+        assert!(distance > 0.0);
+    }
+
+    #[test]
+    fn test_interpolate() {
+        let matrix1 = IdentityProfiles::professional();
+        let matrix2 = IdentityProfiles::creative();
+
+        // Midpoint interpolation
+        let mid = matrix1.interpolate(&matrix2, 0.5);
+
+        for (i, dim) in mid.dimensions.iter().enumerate() {
+            let m1_val = matrix1.dimensions[i].value;
+            let m2_val = matrix2.dimensions[i].value;
+            let expected = (m1_val + m2_val) / 2.0;
+            assert!((dim.value - expected).abs() < 0.01);
+        }
+    }
+
+    #[test]
+    fn test_interpolate_bounds() {
+        let matrix1 = IdentityMatrix::new();
+        let matrix2 = IdentityProfiles::technical();
+
+        // t=0 should return original
+        let at_zero = matrix1.interpolate(&matrix2, 0.0);
+        assert_eq!(at_zero.to_vector(), matrix1.to_vector());
+
+        // t=1 should return target
+        let at_one = matrix1.interpolate(&matrix2, 1.0);
+        for (i, dim) in at_one.dimensions.iter().enumerate() {
+            assert!((dim.value - matrix2.dimensions[i].value).abs() < 0.01);
+        }
+    }
+
+    #[test]
+    fn test_set_dimension_invalid() {
+        let mut matrix = IdentityMatrix::new();
+        let result = matrix.set_dimension("NonexistentDimension", 0.5);
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_set_dimension_clamping() {
+        let mut matrix = IdentityMatrix::new();
+
+        matrix.set_dimension("Rationalité-Émotivité", 5.0);
+        assert_eq!(matrix.get_dimension("Rationalité-Émotivité").unwrap().value, 1.0);
+
+        matrix.set_dimension("Rationalité-Émotivité", -5.0);
+        assert_eq!(matrix.get_dimension("Rationalité-Émotivité").unwrap().value, -1.0);
+    }
+
+    #[test]
+    fn test_evolve() {
+        let mut matrix = IdentityMatrix::new();
+        let initial = matrix.get_dimension("Prudence-Audace").unwrap().value;
+
+        let mut deltas = HashMap::new();
+        deltas.insert("Prudence-Audace".to_string(), 0.5);
+
+        matrix.evolve(&deltas);
+
+        let evolved = matrix.get_dimension("Prudence-Audace").unwrap().value;
+        assert!(evolved != initial);
+    }
+
+    #[test]
+    fn test_profiles_professional() {
+        let profile = IdentityProfiles::professional();
+        // Professional should be formal and serious
+        assert!(profile.get_dimension("Formalité-Familiarité").unwrap().value < 0.0);
+        assert!(profile.get_dimension("Sérieux-Ludique").unwrap().value < 0.0);
+    }
+
+    #[test]
+    fn test_profiles_mentor() {
+        let profile = IdentityProfiles::mentor();
+        // Mentor should be proactive
+        assert!(profile.get_dimension("Réactif-Proactif").unwrap().value > 0.0);
+    }
+
+    #[test]
+    fn test_profiles_creative() {
+        let profile = IdentityProfiles::creative();
+        // Creative should be audacious
+        assert!(profile.get_dimension("Prudence-Audace").unwrap().value > 0.5);
+    }
+
+    #[test]
+    fn test_profiles_technical() {
+        let profile = IdentityProfiles::technical();
+        // Technical should be specialist and rational
+        assert!(profile.get_dimension("Généraliste-Spécialiste").unwrap().value > 0.5);
+        assert!(profile.get_dimension("Rationalité-Émotivité").unwrap().value < 0.0);
+    }
+
+    #[test]
+    fn test_signature_uniqueness() {
+        let matrix1 = IdentityProfiles::professional();
+        let matrix2 = IdentityProfiles::creative();
+
+        assert_ne!(matrix1.signature, matrix2.signature);
+    }
+
+    #[test]
+    fn test_validate_out_of_range_value() {
+        let mut matrix = IdentityMatrix::new();
+        // Force an invalid value
+        matrix.dimensions[0].value = 2.0; // Out of range
+
+        assert!(!validate_identity_matrix(&matrix));
+    }
+
+    #[test]
+    fn test_validate_empty_name() {
+        let mut matrix = IdentityMatrix::new();
+        matrix.dimensions[0].name = String::new();
+
+        assert!(!validate_identity_matrix(&matrix));
+    }
 }

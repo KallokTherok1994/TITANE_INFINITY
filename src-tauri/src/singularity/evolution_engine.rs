@@ -453,4 +453,144 @@ mod tests {
         let rate = engine.success_rate();
         assert!(rate > 0.0 && rate < 1.0);
     }
+
+    #[test]
+    fn test_avg_latency() {
+        let mut engine = EvolutionEngine::new();
+        let state = ConversationBrainState::default();
+
+        engine.update(&state, 10);
+        engine.update(&state, 20);
+        engine.update(&state, 30);
+
+        let avg = engine.avg_latency();
+        assert_eq!(avg, 20);
+    }
+
+    #[test]
+    fn test_avg_latency_empty() {
+        let engine = EvolutionEngine::new();
+        assert_eq!(engine.avg_latency(), 0);
+    }
+
+    #[test]
+    fn test_soft_reset() {
+        let mut engine = EvolutionEngine::new();
+        let state = ConversationBrainState::default();
+
+        engine.update(&state, 15);
+        engine.update(&state, 20);
+
+        assert!(engine.metrics().total_interactions > 0);
+
+        engine.soft_reset();
+
+        assert_eq!(engine.metrics().total_interactions, 0);
+        assert!(engine.level() > 1.0); // Level preserved
+    }
+
+    #[test]
+    fn test_hard_reset() {
+        let mut engine = EvolutionEngine::at_level(5.0);
+        let state = ConversationBrainState::default();
+
+        engine.update(&state, 15);
+
+        engine.hard_reset();
+
+        assert_eq!(engine.level(), 1.0);
+        assert_eq!(engine.xp(), 0.0);
+        assert_eq!(engine.metrics().total_interactions, 0);
+    }
+
+    #[test]
+    fn test_set_evolution_rate() {
+        let mut engine = EvolutionEngine::new();
+
+        engine.set_evolution_rate(0.05);
+        assert_eq!(engine.evolution_rate, 0.05);
+
+        // Test clamping
+        engine.set_evolution_rate(0.5);
+        assert_eq!(engine.evolution_rate, 0.1);
+
+        engine.set_evolution_rate(0.00001);
+        assert_eq!(engine.evolution_rate, 0.0001);
+    }
+
+    #[test]
+    fn test_level_clamping() {
+        let engine = EvolutionEngine::at_level(100.0);
+        assert_eq!(engine.level(), 10.0); // Max level is 10.0
+
+        let engine2 = EvolutionEngine::at_level(-5.0);
+        assert_eq!(engine2.level(), 1.0); // Min level is 1.0
+    }
+
+    #[test]
+    fn test_evolution_metrics_default() {
+        let metrics = EvolutionMetrics::default();
+
+        assert_eq!(metrics.total_interactions, 0);
+        assert_eq!(metrics.successful_interactions, 0);
+        assert_eq!(metrics.avg_coherence, 0.0);
+        assert!(metrics.mode_effectiveness.is_empty());
+    }
+
+    #[test]
+    fn test_pattern_history_limit() {
+        let mut engine = EvolutionEngine::new();
+        engine.patterns.max_patterns = 5;
+
+        let mut state = ConversationBrainState::default();
+        state.coherence_score = 0.95;
+
+        // Add more patterns than max
+        for _ in 0..10 {
+            engine.update(&state, 15);
+        }
+
+        assert!(engine.patterns.successful.len() <= 5);
+    }
+
+    #[test]
+    fn test_mode_effectiveness_tracking() {
+        let mut engine = EvolutionEngine::new();
+        let mut state = ConversationBrainState::default();
+        state.mode = ConversationMode::Expert;
+        state.coherence_score = 0.9;
+
+        engine.update(&state, 20);
+
+        let mode_key = format!("{:?}", ConversationMode::Expert);
+        assert!(engine.metrics().mode_effectiveness.contains_key(&mode_key));
+    }
+
+    #[test]
+    fn test_cognitive_drift_update() {
+        let mut engine = EvolutionEngine::new();
+
+        // High coherence should lower drift
+        let mut state = ConversationBrainState::default();
+        state.coherence_score = 0.99;
+        engine.update(&state, 10);
+
+        let drift1 = engine.metrics().cognitive_drift;
+
+        // Low coherence should increase drift
+        state.coherence_score = 0.5;
+        engine.update(&state, 10);
+
+        let drift2 = engine.metrics().cognitive_drift;
+        assert!(drift2 > drift1);
+    }
+
+    #[test]
+    fn test_empty_learnings() {
+        let engine = EvolutionEngine::new();
+        let insights = engine.apply_learnings();
+
+        assert!(insights.recommended_mode.is_none());
+        assert_eq!(insights.avg_success_coherence, 0.0);
+    }
 }
