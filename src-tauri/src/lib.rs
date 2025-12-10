@@ -84,13 +84,16 @@ pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, 
 pub mod ia; // ✅ v∞.19.3Ω: Unified IA Engine (OpenAI + Claude + Gemini + Local)
 pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
 
-// ═══════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════
 // MEMORY SYSTEM v24.2 (Phase 2 Simplification)
-// ═══════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════
 
 mod neural_memory; // ✅ v24.2: Private neural implementation
 pub mod unified_memory_v2; // ✅ v24.2: Unified Memory API (consolidation 5→2 modules)
-pub mod memory; // ⚠️ DEPRECATED v24.2: Use unified_memory_v2 (kept for compatibility)
+
+// TODO Phase 2.4: Add #[deprecated] attributes after full migration
+// Conversation types (Conversation, MessageRole) will remain for chat history
+pub mod memory; // ⚠️ Phase 2.4: Partial deprecation (system memory → unified_memory_v2, chat types stay)
 
 // ═══════════════════════════════════════════════════════════════
 // PRODUCTION MODULES (Active)
@@ -98,8 +101,9 @@ pub mod memory; // ⚠️ DEPRECATED v24.2: Use unified_memory_v2 (kept for comp
 
 pub mod control_panel_commands; // ✅ Control Panel
 pub mod harmonia_engine; // ✅ Harmonia CPU monitoring
-pub mod memory_compactor; // ✅ Memory compaction
-pub mod memory_persistence; // ✅ Memory persistence
+// TODO Phase 2.4: Add #[deprecated] after migration complete
+pub mod memory_compactor; // ⚠️ Phase 2.4: → unified_memory_v2::consolidate()
+pub mod memory_persistence; // ⚠️ Phase 2.4: → unified_memory_v2::persistence
 pub mod overdrive; // ✅ Chat orchestrator (always active)
 pub mod persistence; // ✅ v∞.MPE - 100% SAVE Persistence Engine (NEW)
 pub mod runtime_config; // ✅ Runtime configuration bridge
@@ -180,7 +184,8 @@ pub mod cloud; // ✅ Cloud Sync Engine v∞ (Vault chiffré, Multi-device, AES-
 // MEMORY EVOLUTION ENGINE++ v∞ (OPUS #14)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod memory_evolution; // ✅ Memory Evolution Engine++ v∞ (Parser, Synthesizer, Clusterer, Vectorizer, Compressor, Patterns, Stability, Growth)
+// TODO Phase 2.4: Add #[deprecated] after migration complete
+pub mod memory_evolution; // ⚠️ Phase 2.4: → neural_memory::evolution (via unified_memory_v2)
 
 // ═══════════════════════════════════════════════════════════════
 // SYSTEM IDENTITY ENGINE v∞ (OPUS #15)
@@ -258,7 +263,8 @@ pub mod services;
 // MEMORY OS vΩ (SUPER PROMPT #12)
 // ═══════════════════════════════════════════════════════════════
 
-pub mod memory_os; // ✅ Memory OS vΩ (Neural Memory System: STM → MTM → LTM, Vector Search, Consolidation, Forgetting)
+// TODO Phase 2.4: Add #[deprecated] after migration complete
+pub mod memory_os; // ⚠️ Phase 2.4: → unified_memory_v2 (neural_memory/ is private)
 
 // ═══════════════════════════════════════════════════════════════
 // MULTIMODAL ENGINE vΩ (SUPER PROMPT #15)
