@@ -82,8 +82,14 @@ pub mod ai_chat; // ✅ AI Chat & Training Mode v∞ (OPUS #12)
 pub mod chat_engine; // ✅ High-performance Chat Engine v∞
 pub mod conversation_engine; // ✅ Conversation Engine v∞ (Unified Pipeline, Memory Map, Self-Healing)
 pub mod ia; // ✅ v∞.19.3Ω: Unified IA Engine (OpenAI + Claude + Gemini + Local)
-pub mod memory; // ✅ Memory Storage v15
 pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
+
+// ═══════════════════════════════════════════════════════════════
+// MEMORY SYSTEM v24.2 (Phase 2 Simplification)
+// ═══════════════════════════════════════════════════════════════
+
+pub mod unified_memory_v2; // ✅ v24.2: Unified Memory API (consolidation 5→2 modules)
+pub mod memory; // ⚠️ DEPRECATED v24.2: Use unified_memory_v2 (kept for compatibility)
 
 // ═══════════════════════════════════════════════════════════════
 // PRODUCTION MODULES (Active)
