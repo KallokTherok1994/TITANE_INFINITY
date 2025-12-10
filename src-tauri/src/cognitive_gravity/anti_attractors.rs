@@ -79,3 +79,132 @@ impl Default for AntiAttractorState {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_anti_attractor_state_new() {
+        let state = AntiAttractorState::new();
+        assert_eq!(state.noise, 0.0);
+        assert_eq!(state.confusion, 0.0);
+        assert_eq!(state.overload, 0.0);
+        assert_eq!(state.dissonance, 0.0);
+        assert_eq!(state.drift, 0.0);
+    }
+
+    #[test]
+    fn test_anti_attractor_state_default() {
+        let state = AntiAttractorState::default();
+        assert_eq!(state.noise, 0.0);
+        assert_eq!(state.confusion, 0.0);
+    }
+
+    #[test]
+    fn test_anti_attractor_get() {
+        let mut state = AntiAttractorState::new();
+        state.noise = 0.3;
+        state.confusion = 0.4;
+
+        assert_eq!(state.get(AntiAttractor::Noise), 0.3);
+        assert_eq!(state.get(AntiAttractor::Confusion), 0.4);
+        assert_eq!(state.get(AntiAttractor::Overload), 0.0);
+        assert_eq!(state.get(AntiAttractor::Dissonance), 0.0);
+        assert_eq!(state.get(AntiAttractor::Drift), 0.0);
+    }
+
+    #[test]
+    fn test_anti_attractor_set() {
+        let mut state = AntiAttractorState::new();
+
+        state.set(AntiAttractor::Noise, 0.5);
+        assert_eq!(state.noise, 0.5);
+
+        state.set(AntiAttractor::Confusion, 0.6);
+        assert_eq!(state.confusion, 0.6);
+
+        state.set(AntiAttractor::Overload, 0.7);
+        assert_eq!(state.overload, 0.7);
+
+        state.set(AntiAttractor::Dissonance, 0.8);
+        assert_eq!(state.dissonance, 0.8);
+
+        state.set(AntiAttractor::Drift, 0.9);
+        assert_eq!(state.drift, 0.9);
+    }
+
+    #[test]
+    fn test_anti_attractor_set_clamping() {
+        let mut state = AntiAttractorState::new();
+
+        state.set(AntiAttractor::Noise, 1.5);
+        assert_eq!(state.noise, 1.0);
+
+        state.set(AntiAttractor::Confusion, -0.5);
+        assert_eq!(state.confusion, 0.0);
+    }
+
+    #[test]
+    fn test_compute_total_repulsion() {
+        let mut state = AntiAttractorState::new();
+        state.noise = 0.5;
+        state.confusion = 0.5;
+        state.overload = 0.5;
+        state.dissonance = 0.5;
+        state.drift = 0.5;
+
+        let weights = [1.0, 1.0, 1.0, 1.0, 1.0];
+        let repulsion = state.compute_total_repulsion(&weights);
+        assert_eq!(repulsion, 0.5);
+    }
+
+    #[test]
+    fn test_compute_repulsion_zero_weights() {
+        let state = AntiAttractorState::new();
+        let weights = [0.0, 0.0, 0.0, 0.0, 0.0];
+        let repulsion = state.compute_total_repulsion(&weights);
+        assert_eq!(repulsion, 0.0);
+    }
+
+    #[test]
+    fn test_compute_repulsion_all_high() {
+        let mut state = AntiAttractorState::new();
+        state.noise = 1.0;
+        state.confusion = 1.0;
+        state.overload = 1.0;
+        state.dissonance = 1.0;
+        state.drift = 1.0;
+
+        let weights = [1.0, 1.0, 1.0, 1.0, 1.0];
+        let repulsion = state.compute_total_repulsion(&weights);
+        assert_eq!(repulsion, 1.0);
+    }
+
+    #[test]
+    fn test_anti_attractor_enum_variants() {
+        let anti_attractors = [
+            AntiAttractor::Noise,
+            AntiAttractor::Confusion,
+            AntiAttractor::Overload,
+            AntiAttractor::Dissonance,
+            AntiAttractor::Drift,
+        ];
+
+        for a in anti_attractors {
+            let cloned = a;
+            assert_eq!(a, cloned);
+        }
+    }
+
+    #[test]
+    fn test_anti_attractor_state_clone() {
+        let mut state = AntiAttractorState::new();
+        state.noise = 0.3;
+        state.overload = 0.7;
+
+        let cloned = state.clone();
+        assert_eq!(cloned.noise, 0.3);
+        assert_eq!(cloned.overload, 0.7);
+    }
+}

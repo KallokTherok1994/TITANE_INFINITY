@@ -137,4 +137,102 @@ mod tests {
         assert_eq!(config.attractor_weights().len(), 6);
         assert_eq!(config.anti_attractor_weights().len(), 5);
     }
+
+    #[test]
+    fn test_gravity_config_default_values() {
+        let config = GravityConfig::new_default();
+        assert_eq!(config.max_entropy, 0.4);
+        assert_eq!(config.stability_threshold, 0.7);
+        assert_eq!(config.loop_interval_ms, 1000);
+        assert!(config.enable_auto_stabilization);
+    }
+
+    #[test]
+    fn test_gravity_config_attractor_weights() {
+        let config = GravityConfig::new_default();
+        let weights = config.attractor_weights();
+
+        assert_eq!(weights[0], config.weight_clarity);
+        assert_eq!(weights[1], config.weight_coherence);
+        assert_eq!(weights[2], config.weight_alignment);
+        assert_eq!(weights[3], config.weight_simplicity);
+        assert_eq!(weights[4], config.weight_focus);
+        assert_eq!(weights[5], config.weight_truth);
+    }
+
+    #[test]
+    fn test_gravity_config_anti_attractor_weights() {
+        let config = GravityConfig::new_default();
+        let weights = config.anti_attractor_weights();
+
+        assert_eq!(weights[0], config.weight_noise);
+        assert_eq!(weights[1], config.weight_confusion);
+        assert_eq!(weights[2], config.weight_overload);
+        assert_eq!(weights[3], config.weight_dissonance);
+        assert_eq!(weights[4], config.weight_drift);
+    }
+
+    #[test]
+    fn test_high_stability_config() {
+        let config = GravityConfig::high_stability();
+
+        assert_eq!(config.stability_threshold, 0.85);
+        assert_eq!(config.min_cognitive_mass, 0.7);
+        assert_eq!(config.max_entropy, 0.25);
+        assert_eq!(config.loop_interval_ms, 500);
+        assert_eq!(config.weight_clarity, 2.0);
+        assert_eq!(config.weight_coherence, 2.0);
+        assert_eq!(config.weight_truth, 2.0);
+    }
+
+    #[test]
+    fn test_low_power_config() {
+        let config = GravityConfig::low_power();
+
+        assert_eq!(config.loop_interval_ms, 2000);
+        assert!(!config.enable_auto_stabilization);
+        assert_eq!(config.weight_clarity, 1.0);
+        assert_eq!(config.weight_coherence, 1.0);
+        assert_eq!(config.weight_alignment, 1.0);
+    }
+
+    #[test]
+    fn test_propagation_flags_default() {
+        let config = GravityConfig::new_default();
+
+        assert!(config.enable_kernel_propagation);
+        assert!(config.enable_omega_propagation);
+        assert!(config.enable_memory_propagation);
+        assert!(config.enable_agents_propagation);
+        assert!(config.enable_harmonic_propagation);
+    }
+
+    #[test]
+    fn test_config_clone() {
+        let config = GravityConfig::new_default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.min_cognitive_mass, config.min_cognitive_mass);
+        assert_eq!(cloned.stability_threshold, config.stability_threshold);
+    }
+
+    #[test]
+    fn test_default_attractor_weights_positive() {
+        let config = GravityConfig::new_default();
+        let weights = config.attractor_weights();
+
+        for w in weights {
+            assert!(w > 0.0);
+        }
+    }
+
+    #[test]
+    fn test_default_anti_attractor_weights_positive() {
+        let config = GravityConfig::new_default();
+        let weights = config.anti_attractor_weights();
+
+        for w in weights {
+            assert!(w > 0.0);
+        }
+    }
 }

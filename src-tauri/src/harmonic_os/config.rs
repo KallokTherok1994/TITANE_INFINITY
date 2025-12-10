@@ -108,4 +108,102 @@ mod tests {
         let config = HarmonicConfig::default();
         assert!(config.validate().is_ok());
     }
+
+    #[test]
+    fn test_default_values() {
+        let config = HarmonicConfig::default();
+        assert_eq!(config.min_resonance, 0.6);
+        assert_eq!(config.max_dissonance, 0.3);
+        assert_eq!(config.stability_threshold, 0.7);
+        assert_eq!(config.loop_interval_ms, 1000);
+        assert!(config.enable_auto_regulation);
+    }
+
+    #[test]
+    fn test_high_sensitivity_config() {
+        let config = HarmonicConfig::high_sensitivity();
+        assert_eq!(config.min_resonance, 0.75);
+        assert_eq!(config.max_dissonance, 0.2);
+        assert_eq!(config.stability_threshold, 0.8);
+        assert_eq!(config.loop_interval_ms, 500);
+    }
+
+    #[test]
+    fn test_low_power_config() {
+        let config = HarmonicConfig::low_power();
+        assert_eq!(config.min_resonance, 0.5);
+        assert_eq!(config.max_dissonance, 0.4);
+        assert_eq!(config.stability_threshold, 0.6);
+        assert_eq!(config.loop_interval_ms, 2000);
+        assert!(!config.enable_auto_regulation);
+    }
+
+    #[test]
+    fn test_normalized_weights() {
+        let config = HarmonicConfig::default();
+        let weights = config.normalized_weights();
+
+        assert_eq!(weights.len(), 7);
+
+        // Sum should be approximately 1.0
+        let sum: f32 = weights.iter().sum();
+        assert!((sum - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_validate_invalid_resonance() {
+        let mut config = HarmonicConfig::default();
+        config.min_resonance = 1.5;
+        assert!(config.validate().is_err());
+
+        config.min_resonance = -0.5;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_zero_interval() {
+        let mut config = HarmonicConfig::default();
+        config.loop_interval_ms = 0;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_detection_flags() {
+        let config = HarmonicConfig::default();
+        assert!(config.detect_contradictions);
+        assert!(config.detect_instability);
+        assert!(config.detect_drifts);
+    }
+
+    #[test]
+    fn test_weight_values() {
+        let config = HarmonicConfig::default();
+        assert_eq!(config.weight_cognitive, 1.5);
+        assert_eq!(config.weight_emotional, 1.0);
+        assert_eq!(config.weight_logical, 1.5);
+        assert_eq!(config.weight_memory, 1.2);
+        assert_eq!(config.weight_energy, 1.0);
+        assert_eq!(config.weight_temporal, 0.8);
+        assert_eq!(config.weight_agent, 1.0);
+    }
+
+    #[test]
+    fn test_config_clone() {
+        let config = HarmonicConfig::default();
+        let cloned = config.clone();
+        assert_eq!(cloned.min_resonance, config.min_resonance);
+        assert_eq!(cloned.loop_interval_ms, config.loop_interval_ms);
+    }
+
+    #[test]
+    fn test_high_sensitivity_validates() {
+        let config = HarmonicConfig::high_sensitivity();
+        assert!(config.validate().is_ok());
+    }
+
+    #[test]
+    fn test_low_power_validates() {
+        let config = HarmonicConfig::low_power();
+        assert!(config.validate().is_ok());
+    }
 }
