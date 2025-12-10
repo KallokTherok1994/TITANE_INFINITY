@@ -303,6 +303,54 @@ impl BodyPostureAI {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // PostureType Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_posture_type_equality() {
+        assert_eq!(PostureType::Professional, PostureType::Professional);
+        assert_ne!(PostureType::Professional, PostureType::Engaged);
+    }
+
+    #[test]
+    fn test_posture_type_clone() {
+        let posture = PostureType::Creative;
+        let cloned = posture.clone();
+        assert_eq!(cloned, PostureType::Creative);
+    }
+
+    #[test]
+    fn test_posture_type_debug() {
+        let posture = PostureType::Welcoming;
+        let debug_str = format!("{:?}", posture);
+        assert!(debug_str.contains("Welcoming"));
+    }
+
+    #[test]
+    fn test_posture_type_serialization() {
+        let posture = PostureType::Calm;
+        let json = serde_json::to_string(&posture).unwrap();
+        let restored: PostureType = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored, PostureType::Calm);
+    }
+
+    #[test]
+    fn test_posture_type_all_variants() {
+        let postures = vec![
+            PostureType::Professional,
+            PostureType::Engaged,
+            PostureType::Calm,
+            PostureType::Creative,
+            PostureType::Welcoming,
+        ];
+        assert_eq!(postures.len(), 5);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PostureConfiguration Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_posture_configurations() {
         let pro = PostureConfiguration::professional();
@@ -313,6 +361,174 @@ mod tests {
         let engaged = PostureConfiguration::engaged();
         assert_eq!(engaged.posture_type, PostureType::Engaged);
         assert!(engaged.energy_level > 0.8);
+    }
+
+    #[test]
+    fn test_posture_professional() {
+        let pro = PostureConfiguration::professional();
+        assert_eq!(pro.posture_type, PostureType::Professional);
+        assert_eq!(pro.spine_alignment, 0.0);
+        assert_eq!(pro.shoulder_openness, 0.8);
+        assert_eq!(pro.arm_activity, 0.3);
+        assert_eq!(pro.energy_level, 0.6);
+        assert_eq!(pro.breathing_rate, 1.0);
+    }
+
+    #[test]
+    fn test_posture_engaged() {
+        let engaged = PostureConfiguration::engaged();
+        assert_eq!(engaged.posture_type, PostureType::Engaged);
+        assert_eq!(engaged.spine_alignment, 0.2);
+        assert_eq!(engaged.shoulder_openness, 0.9);
+        assert_eq!(engaged.arm_activity, 0.7);
+        assert_eq!(engaged.energy_level, 0.85);
+        assert_eq!(engaged.breathing_rate, 1.2);
+    }
+
+    #[test]
+    fn test_posture_calm() {
+        let calm = PostureConfiguration::calm();
+        assert_eq!(calm.posture_type, PostureType::Calm);
+        assert_eq!(calm.spine_alignment, -0.05);
+        assert_eq!(calm.shoulder_openness, 0.6);
+        assert_eq!(calm.arm_activity, 0.2);
+        assert_eq!(calm.energy_level, 0.4);
+        assert_eq!(calm.breathing_rate, 0.7);
+    }
+
+    #[test]
+    fn test_posture_creative() {
+        let creative = PostureConfiguration::creative();
+        assert_eq!(creative.posture_type, PostureType::Creative);
+        assert_eq!(creative.spine_alignment, 0.1);
+        assert_eq!(creative.shoulder_openness, 0.85);
+        assert_eq!(creative.arm_activity, 0.9);
+        assert_eq!(creative.energy_level, 0.75);
+        assert_eq!(creative.breathing_rate, 1.1);
+    }
+
+    #[test]
+    fn test_posture_welcoming() {
+        let welcoming = PostureConfiguration::welcoming();
+        assert_eq!(welcoming.posture_type, PostureType::Welcoming);
+        assert_eq!(welcoming.spine_alignment, 0.05);
+        assert_eq!(welcoming.shoulder_openness, 1.0);
+        assert_eq!(welcoming.arm_activity, 0.5);
+        assert_eq!(welcoming.energy_level, 0.7);
+        assert_eq!(welcoming.breathing_rate, 1.0);
+    }
+
+    #[test]
+    fn test_posture_configuration_clone() {
+        let config = PostureConfiguration::professional();
+        let cloned = config.clone();
+        assert_eq!(cloned.posture_type, PostureType::Professional);
+    }
+
+    #[test]
+    fn test_posture_configuration_debug() {
+        let config = PostureConfiguration::calm();
+        let debug_str = format!("{:?}", config);
+        assert!(debug_str.contains("PostureConfiguration"));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ConversationalContext Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_conversational_context_default() {
+        let ctx = ConversationalContext::default();
+        assert_eq!(ctx.user_engagement, 0.5);
+        assert_eq!(ctx.topic_complexity, 0.3);
+        assert_eq!(ctx.emotional_valence, 0.0);
+        assert_eq!(ctx.conversation_phase, "opening");
+        assert!(ctx.recent_gestures.is_empty());
+    }
+
+    #[test]
+    fn test_conversational_context_update_engagement() {
+        let mut ctx = ConversationalContext::default();
+        ctx.update_engagement(0.9);
+        assert_eq!(ctx.user_engagement, 0.9);
+    }
+
+    #[test]
+    fn test_conversational_context_update_engagement_clamped() {
+        let mut ctx = ConversationalContext::default();
+        ctx.update_engagement(1.5);
+        assert_eq!(ctx.user_engagement, 1.0);
+
+        ctx.update_engagement(-0.5);
+        assert_eq!(ctx.user_engagement, 0.0);
+    }
+
+    #[test]
+    fn test_conversational_context_update_complexity() {
+        let mut ctx = ConversationalContext::default();
+        ctx.update_complexity(0.7);
+        assert_eq!(ctx.topic_complexity, 0.7);
+    }
+
+    #[test]
+    fn test_conversational_context_update_complexity_clamped() {
+        let mut ctx = ConversationalContext::default();
+        ctx.update_complexity(2.0);
+        assert_eq!(ctx.topic_complexity, 1.0);
+    }
+
+    #[test]
+    fn test_gesture_history() {
+        let mut ctx = ConversationalContext::default();
+        ctx.record_gesture("listening".to_string());
+        ctx.record_gesture("explaining".to_string());
+
+        assert!(ctx.is_gesture_recent("listening"));
+        assert!(!ctx.is_gesture_recent("thinking"));
+    }
+
+    #[test]
+    fn test_gesture_history_limit() {
+        let mut ctx = ConversationalContext::default();
+        for i in 0..15 {
+            ctx.record_gesture(format!("gesture_{}", i));
+        }
+        // Should only keep last 10
+        assert!(!ctx.is_gesture_recent("gesture_0"));
+        assert!(!ctx.is_gesture_recent("gesture_4"));
+        assert!(ctx.is_gesture_recent("gesture_14"));
+    }
+
+    #[test]
+    fn test_conversational_context_clone() {
+        let ctx = ConversationalContext::default();
+        let cloned = ctx.clone();
+        assert_eq!(cloned.user_engagement, ctx.user_engagement);
+    }
+
+    #[test]
+    fn test_conversational_context_serialization() {
+        let ctx = ConversationalContext::default();
+        let json = serde_json::to_string(&ctx).unwrap();
+        let restored: ConversationalContext = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.user_engagement, 0.5);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // BodyPostureAI Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_body_posture_ai_new() {
+        let ai = BodyPostureAI::new();
+        assert_eq!(ai.current_posture.posture_type, PostureType::Professional);
+        assert_eq!(ai.stability_counter, 0);
+    }
+
+    #[test]
+    fn test_body_posture_ai_default() {
+        let ai = BodyPostureAI::default();
+        assert_eq!(ai.current_posture.posture_type, PostureType::Professional);
     }
 
     #[test]
@@ -333,12 +549,140 @@ mod tests {
     }
 
     #[test]
-    fn test_gesture_history() {
-        let mut ctx = ConversationalContext::default();
-        ctx.record_gesture("listening".to_string());
-        ctx.record_gesture("explaining".to_string());
+    fn test_posture_ai_selection_brainstorm() {
+        let mut ai = BodyPostureAI::new();
+        let ctx = ConversationalContext {
+            conversation_phase: "brainstorm".to_string(),
+            ..Default::default()
+        };
+        ai.update_context(ctx);
+        ai.stability_counter = 200;
 
-        assert!(ctx.is_gesture_recent("listening"));
-        assert!(!ctx.is_gesture_recent("thinking"));
+        let posture = ai.select_optimal_posture();
+        assert_eq!(posture.posture_type, PostureType::Creative);
+    }
+
+    #[test]
+    fn test_posture_ai_selection_engaged() {
+        let mut ai = BodyPostureAI::new();
+        let ctx = ConversationalContext {
+            user_engagement: 0.8,
+            emotional_valence: 0.5,
+            ..Default::default()
+        };
+        ai.update_context(ctx);
+        ai.stability_counter = 200;
+
+        let posture = ai.select_optimal_posture();
+        assert_eq!(posture.posture_type, PostureType::Engaged);
+    }
+
+    #[test]
+    fn test_posture_ai_selection_calm() {
+        let mut ai = BodyPostureAI::new();
+        let ctx = ConversationalContext {
+            user_engagement: 0.3,
+            topic_complexity: 0.6,
+            conversation_phase: "middle".to_string(),
+            ..Default::default()
+        };
+        ai.update_context(ctx);
+        ai.stability_counter = 200;
+
+        let posture = ai.select_optimal_posture();
+        assert_eq!(posture.posture_type, PostureType::Calm);
+    }
+
+    #[test]
+    fn test_posture_ai_selection_welcoming_opening() {
+        let mut ai = BodyPostureAI::new();
+        let ctx = ConversationalContext {
+            conversation_phase: "opening".to_string(),
+            ..Default::default()
+        };
+        ai.update_context(ctx);
+        ai.stability_counter = 200;
+
+        let posture = ai.select_optimal_posture();
+        assert_eq!(posture.posture_type, PostureType::Welcoming);
+    }
+
+    #[test]
+    fn test_posture_ai_selection_welcoming_closing() {
+        let mut ai = BodyPostureAI::new();
+        let ctx = ConversationalContext {
+            conversation_phase: "closing".to_string(),
+            ..Default::default()
+        };
+        ai.update_context(ctx);
+        ai.stability_counter = 200;
+
+        let posture = ai.select_optimal_posture();
+        assert_eq!(posture.posture_type, PostureType::Welcoming);
+    }
+
+    #[test]
+    fn test_posture_ai_stability() {
+        let mut ai = BodyPostureAI::new();
+        ai.stability_counter = 0;
+
+        // Should not change posture immediately due to stability
+        let posture = ai.select_optimal_posture();
+        assert_eq!(posture.posture_type, PostureType::Professional);
+        assert_eq!(ai.stability_counter, 1);
+    }
+
+    #[test]
+    fn test_posture_ai_update_context() {
+        let mut ai = BodyPostureAI::new();
+        let ctx = ConversationalContext {
+            user_engagement: 0.95,
+            topic_complexity: 0.1,
+            emotional_valence: 0.8,
+            conversation_phase: "middle".to_string(),
+            recent_gestures: Default::default(),
+        };
+        ai.update_context(ctx);
+        assert_eq!(ai.context.user_engagement, 0.95);
+        assert_eq!(ai.context.topic_complexity, 0.1);
+    }
+
+    #[test]
+    fn test_posture_ai_suggest_gesture_professional() {
+        let ai = BodyPostureAI::new();
+        let gesture = ai.suggest_gesture();
+        assert_eq!(gesture, Some("listening".to_string()));
+    }
+
+    #[test]
+    fn test_posture_ai_suggest_gesture_engaged() {
+        let mut ai = BodyPostureAI::new();
+        ai.current_posture = PostureConfiguration::engaged();
+        let gesture = ai.suggest_gesture();
+        assert_eq!(gesture, Some("explaining".to_string()));
+    }
+
+    #[test]
+    fn test_posture_ai_suggest_gesture_calm() {
+        let mut ai = BodyPostureAI::new();
+        ai.current_posture = PostureConfiguration::calm();
+        let gesture = ai.suggest_gesture();
+        assert_eq!(gesture, Some("idle_cycle".to_string()));
+    }
+
+    #[test]
+    fn test_posture_ai_suggest_gesture_creative() {
+        let mut ai = BodyPostureAI::new();
+        ai.current_posture = PostureConfiguration::creative();
+        let gesture = ai.suggest_gesture();
+        assert_eq!(gesture, Some("explaining".to_string()));
+    }
+
+    #[test]
+    fn test_posture_ai_suggest_gesture_welcoming() {
+        let mut ai = BodyPostureAI::new();
+        ai.current_posture = PostureConfiguration::welcoming();
+        let gesture = ai.suggest_gesture();
+        assert_eq!(gesture, Some("smiling_warm".to_string()));
     }
 }
