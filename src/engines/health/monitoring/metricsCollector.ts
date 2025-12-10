@@ -51,7 +51,7 @@ export class MetricsCollector {
     // In browser, we estimate based on performance
     if (typeof performance !== 'undefined' && performance.now) {
       // Use a simple heuristic based on event loop lag
-      const start = performance.now();
+      const _start = performance.now();
       // This is a rough estimate
       return Math.min(100, Math.random() * 30 + 10); // Placeholder
     }

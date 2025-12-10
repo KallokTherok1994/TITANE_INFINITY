@@ -6,16 +6,25 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDebuggerLiveOS } from '../hooks/useDebuggerLiveOS';
 import type { DebuggerMode, RiskLevel } from '../types/debuggerLiveOS.types';
+
+interface SnapshotDiff {
+  changes: Array<{
+    type: 'added' | 'modified' | 'removed';
+    path: string;
+    oldValue?: unknown;
+    newValue?: unknown;
+  }>;
+}
 
 export function DebuggerLiveOSTab() {
   const debugPanel = useDebuggerLiveOS();
   const [selectedMode, setSelectedMode] = useState<DebuggerMode>('LiveMonitor');
   const [selectedSnapshotA, setSelectedSnapshotA] = useState<string>('');
   const [selectedSnapshotB, setSelectedSnapshotB] = useState<string>('');
-  const [snapshotDiff, setSnapshotDiff] = useState<any>(null);
+  const [snapshotDiff, setSnapshotDiff] = useState<SnapshotDiff | null>(null);
   const [exportFormat, setExportFormat] = useState<'json' | 'csv' | 'html'>('json');
 
   // ═══════════════════════════════════════════════════════════════
@@ -460,9 +469,9 @@ export function DebuggerLiveOSTab() {
             </div>
 
             <div className="dbg-diff-changes">
-              {snapshotDiff.changes.map((change: any, i: number) => (
+              {snapshotDiff.changes.map((change, _i) => (
                 <div
-                  key={i}
+                  key={_i}
                   className="dbg-diff-change"
                   style={{
                     borderLeft: `4px solid ${

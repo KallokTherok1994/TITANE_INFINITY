@@ -175,9 +175,11 @@ class SystemHealthImpl {
 
     // Update provider latency if operation is a provider ID
     if (this.providers.has(operation)) {
-      const provider = this.providers.get(operation)!;
-      // Running average
-      provider.latency = provider.latency * 0.9 + ms * 0.1;
+      const provider = this.providers.get(operation);
+      if (provider) {
+        // Running average
+        provider.latency = provider.latency * 0.9 + ms * 0.1;
+      }
     }
   }
 

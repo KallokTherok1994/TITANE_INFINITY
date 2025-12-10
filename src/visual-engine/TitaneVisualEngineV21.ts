@@ -26,10 +26,7 @@ import {
 } from '@/design-system/visual-states';
 import { IdentityPulse, type PulseWaveform } from './signature/IdentityPulse';
 import { OrbitalSignature, type OrbitalSnapshot } from './signature/OrbitalSignature';
-import {
-  ParticleSignature,
-  type ParticleEmissionEvent,
-} from './signature/ParticleSignature';
+import { ParticleSignature } from './signature/ParticleSignature';
 
 export interface VisualEngineV21Config {
   enableParticles: boolean;
