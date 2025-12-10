@@ -41,4 +41,4 @@ pub use consolidation::Consolidator;
 pub use ltm::LongTermMemory;
 pub use mtm::MidTermMemory;
 pub use stm::ShortTermMemory;
-pub use vector::VectorStore;
+pub use vector::{VectorStore, VectorSearchResult}; // Export VectorSearchResult for compat layer

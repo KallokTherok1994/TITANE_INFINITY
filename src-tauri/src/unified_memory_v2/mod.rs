@@ -38,6 +38,7 @@
 
 pub mod api;
 pub mod bridge;
+pub mod compat; // Phase 2.3: Compatibility layer
 pub mod config;
 pub mod encryption;
 pub mod persistence;
@@ -45,6 +46,7 @@ pub mod types;
 
 // Re-exports pour interface publique
 pub use api::{UnifiedMemoryV2, MemoryAPI};
+pub use compat::{MemoryBridge, MemoryVectorSearchResult}; // Compatibility exports
 pub use config::{MemoryConfig, PerformanceTargets, CapacityLimits};
 pub use types::{
     MemoryEntry, MemoryTier, MemoryType, MemoryId,
