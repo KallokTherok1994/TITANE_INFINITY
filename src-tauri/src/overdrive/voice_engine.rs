@@ -333,7 +333,7 @@ pub fn voice_detect_wake_word(
 ///   useOnline: false // Local TTS (espeak/piper)
 /// });
 /// ```
-#[deprecated(since = "v20.0", note = "Use speak() in commands/ai_chat.rs instead - see docs/VOCAL_MIGRATION_GUIDE.md")]
+#[deprecated(since = "20.0.0", note = "Use speak() in commands/ai_chat.rs instead - see docs/VOCAL_MIGRATION_GUIDE.md")]
 #[tauri::command]
 pub fn voice_synthesize_speech(
     request: SynthesisRequest,
