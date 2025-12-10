@@ -97,4 +97,115 @@ mod tests {
         let influence = state.compute_total_influence(&weights);
         assert!(influence >= 0.0 && influence <= 1.0);
     }
+
+    #[test]
+    fn test_attractor_state_default() {
+        let state = AttractorState::default();
+        assert_eq!(state.clarity, 0.5);
+        assert_eq!(state.coherence, 0.5);
+        assert_eq!(state.alignment, 0.5);
+        assert_eq!(state.simplicity, 0.5);
+        assert_eq!(state.focus, 0.5);
+        assert_eq!(state.truth, 0.5);
+    }
+
+    #[test]
+    fn test_attractor_get() {
+        let state = AttractorState::new();
+        assert_eq!(state.get(Attractor::Clarity), 0.5);
+        assert_eq!(state.get(Attractor::Coherence), 0.5);
+        assert_eq!(state.get(Attractor::Alignment), 0.5);
+        assert_eq!(state.get(Attractor::Simplicity), 0.5);
+        assert_eq!(state.get(Attractor::Focus), 0.5);
+        assert_eq!(state.get(Attractor::Truth), 0.5);
+    }
+
+    #[test]
+    fn test_attractor_set() {
+        let mut state = AttractorState::new();
+
+        state.set(Attractor::Clarity, 0.8);
+        assert_eq!(state.clarity, 0.8);
+
+        state.set(Attractor::Coherence, 0.9);
+        assert_eq!(state.coherence, 0.9);
+    }
+
+    #[test]
+    fn test_attractor_set_clamping() {
+        let mut state = AttractorState::new();
+
+        state.set(Attractor::Clarity, 1.5);
+        assert_eq!(state.clarity, 1.0);
+
+        state.set(Attractor::Truth, -0.5);
+        assert_eq!(state.truth, 0.0);
+    }
+
+    #[test]
+    fn test_compute_influence_with_zero_weights() {
+        let state = AttractorState::new();
+        let weights = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
+        let influence = state.compute_total_influence(&weights);
+        assert_eq!(influence, 0.5);
+    }
+
+    #[test]
+    fn test_compute_influence_all_high() {
+        let mut state = AttractorState::new();
+        state.clarity = 1.0;
+        state.coherence = 1.0;
+        state.alignment = 1.0;
+        state.simplicity = 1.0;
+        state.focus = 1.0;
+        state.truth = 1.0;
+
+        let weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+        let influence = state.compute_total_influence(&weights);
+        assert_eq!(influence, 1.0);
+    }
+
+    #[test]
+    fn test_attractor_enum_variants() {
+        let attractors = [
+            Attractor::Clarity,
+            Attractor::Coherence,
+            Attractor::Alignment,
+            Attractor::Simplicity,
+            Attractor::Focus,
+            Attractor::Truth,
+        ];
+
+        for a in attractors {
+            let cloned = a;
+            assert_eq!(a, cloned);
+        }
+    }
+
+    #[test]
+    fn test_attractor_state_clone() {
+        let state = AttractorState::new();
+        let cloned = state.clone();
+        assert_eq!(cloned.clarity, state.clarity);
+        assert_eq!(cloned.coherence, state.coherence);
+    }
+
+    #[test]
+    fn test_set_all_attractors() {
+        let mut state = AttractorState::new();
+
+        state.set(Attractor::Clarity, 0.1);
+        state.set(Attractor::Coherence, 0.2);
+        state.set(Attractor::Alignment, 0.3);
+        state.set(Attractor::Simplicity, 0.4);
+        state.set(Attractor::Focus, 0.5);
+        state.set(Attractor::Truth, 0.6);
+
+        assert_eq!(state.get(Attractor::Clarity), 0.1);
+        assert_eq!(state.get(Attractor::Coherence), 0.2);
+        assert_eq!(state.get(Attractor::Alignment), 0.3);
+        assert_eq!(state.get(Attractor::Simplicity), 0.4);
+        assert_eq!(state.get(Attractor::Focus), 0.5);
+        assert_eq!(state.get(Attractor::Truth), 0.6);
+    }
 }

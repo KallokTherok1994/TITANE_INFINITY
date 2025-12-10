@@ -118,4 +118,158 @@ mod tests {
         let state = HarmonicState::new();
         assert_eq!(state.harmony_level, HarmonyLevel::Moderate);
     }
+
+    #[test]
+    fn test_harmonic_state_default() {
+        let state = HarmonicState::default();
+        assert_eq!(state.cognitive_resonance, 0.5);
+        assert_eq!(state.emotional_coherence, 0.5);
+        assert_eq!(state.logical_alignment, 0.5);
+        assert_eq!(state.memory_alignment, 0.5);
+        assert_eq!(state.energy_alignment, 0.5);
+        assert_eq!(state.temporal_alignment, 0.5);
+        assert_eq!(state.agent_sync, 0.5);
+        assert_eq!(state.global_score, 0.5);
+        assert_eq!(state.cycle_count, 0);
+    }
+
+    #[test]
+    fn test_calculate_global_score() {
+        let mut state = HarmonicState::new();
+        state.cognitive_resonance = 0.8;
+        state.emotional_coherence = 0.7;
+        state.logical_alignment = 0.9;
+
+        let weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+        state.calculate_global_score(&weights);
+
+        assert!(state.global_score >= 0.0 && state.global_score <= 1.0);
+    }
+
+    #[test]
+    fn test_harmony_level_critical() {
+        let mut state = HarmonicState::new();
+        state.cognitive_resonance = 0.1;
+        state.emotional_coherence = 0.1;
+        state.logical_alignment = 0.1;
+        state.memory_alignment = 0.1;
+        state.energy_alignment = 0.1;
+        state.temporal_alignment = 0.1;
+        state.agent_sync = 0.1;
+
+        let weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+        state.calculate_global_score(&weights);
+
+        assert_eq!(state.harmony_level, HarmonyLevel::Critical);
+    }
+
+    #[test]
+    fn test_harmony_level_excellent() {
+        let mut state = HarmonicState::new();
+        state.cognitive_resonance = 0.95;
+        state.emotional_coherence = 0.95;
+        state.logical_alignment = 0.95;
+        state.memory_alignment = 0.95;
+        state.energy_alignment = 0.95;
+        state.temporal_alignment = 0.95;
+        state.agent_sync = 0.95;
+
+        let weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0];
+        state.calculate_global_score(&weights);
+
+        assert_eq!(state.harmony_level, HarmonyLevel::Excellent);
+    }
+
+    #[test]
+    fn test_calculate_stability() {
+        let mut state = HarmonicState::new();
+        // All values equal = high stability
+        state.calculate_stability();
+        assert!(state.stability > 0.9);
+
+        // Vary values = lower stability
+        state.cognitive_resonance = 0.1;
+        state.emotional_coherence = 0.9;
+        state.calculate_stability();
+        assert!(state.stability < 0.9);
+    }
+
+    #[test]
+    fn test_is_critical() {
+        let mut state = HarmonicState::new();
+        state.harmony_level = HarmonyLevel::Critical;
+        assert!(state.is_critical());
+
+        state.harmony_level = HarmonyLevel::High;
+        assert!(!state.is_critical());
+    }
+
+    #[test]
+    fn test_is_stable() {
+        let mut state = HarmonicState::new();
+
+        state.stability = 0.8;
+        assert!(state.is_stable(0.7));
+        assert!(state.is_stable(0.8));
+        assert!(!state.is_stable(0.9));
+    }
+
+    #[test]
+    fn test_increment_cycle() {
+        let mut state = HarmonicState::new();
+        assert_eq!(state.cycle_count, 0);
+
+        state.increment_cycle();
+        assert_eq!(state.cycle_count, 1);
+
+        state.increment_cycle();
+        assert_eq!(state.cycle_count, 2);
+    }
+
+    #[test]
+    fn test_harmony_level_enum() {
+        assert_ne!(HarmonyLevel::Critical, HarmonyLevel::Low);
+        assert_ne!(HarmonyLevel::Low, HarmonyLevel::Moderate);
+        assert_ne!(HarmonyLevel::Moderate, HarmonyLevel::High);
+        assert_ne!(HarmonyLevel::High, HarmonyLevel::Excellent);
+    }
+
+    #[test]
+    fn test_state_clone() {
+        let mut state = HarmonicState::new();
+        state.cognitive_resonance = 0.8;
+        state.harmony_level = HarmonyLevel::High;
+
+        let cloned = state.clone();
+        assert_eq!(cloned.cognitive_resonance, 0.8);
+        assert_eq!(cloned.harmony_level, HarmonyLevel::High);
+    }
+
+    #[test]
+    fn test_harmony_level_thresholds() {
+        let mut state = HarmonicState::new();
+        let weights = [1.0; 7];
+
+        // Test Low threshold (0.3-0.5)
+        state.cognitive_resonance = 0.4;
+        state.emotional_coherence = 0.4;
+        state.logical_alignment = 0.4;
+        state.memory_alignment = 0.4;
+        state.energy_alignment = 0.4;
+        state.temporal_alignment = 0.4;
+        state.agent_sync = 0.4;
+        state.calculate_global_score(&weights);
+        assert_eq!(state.harmony_level, HarmonyLevel::Low);
+
+        // Test High threshold (0.7-0.9)
+        state.cognitive_resonance = 0.8;
+        state.emotional_coherence = 0.8;
+        state.logical_alignment = 0.8;
+        state.memory_alignment = 0.8;
+        state.energy_alignment = 0.8;
+        state.temporal_alignment = 0.8;
+        state.agent_sync = 0.8;
+        state.calculate_global_score(&weights);
+        assert_eq!(state.harmony_level, HarmonyLevel::High);
+    }
 }

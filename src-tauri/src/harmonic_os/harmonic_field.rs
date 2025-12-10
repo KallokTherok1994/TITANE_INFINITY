@@ -104,4 +104,148 @@ mod tests {
         let field = HarmonicField::new();
         assert_eq!(field.compute_unified_resonance(), 0.5);
     }
+
+    #[test]
+    fn test_harmonic_field_default() {
+        let field = HarmonicField::default();
+        assert_eq!(field.compute_unified_resonance(), 0.5);
+    }
+
+    #[test]
+    fn test_update_signal() {
+        let mut field = HarmonicField::new();
+        let signal = HarmonicSignal {
+            resonance: 0.8,
+            corrections: HarmonicCorrections::default(),
+            timestamp: 12345,
+        };
+
+        field.update_signal(SignalSource::Kernel, signal);
+        assert!(field.compute_unified_resonance() != 0.5);
+    }
+
+    #[test]
+    fn test_unified_resonance_single_signal() {
+        let mut field = HarmonicField::new();
+        let signal = HarmonicSignal {
+            resonance: 1.0,
+            corrections: HarmonicCorrections::default(),
+            timestamp: 0,
+        };
+
+        field.update_signal(SignalSource::Omega, signal);
+        let resonance = field.compute_unified_resonance();
+        assert_eq!(resonance, 1.0);
+    }
+
+    #[test]
+    fn test_unified_resonance_multiple_signals() {
+        let mut field = HarmonicField::new();
+
+        field.update_signal(
+            SignalSource::Kernel,
+            HarmonicSignal {
+                resonance: 0.8,
+                corrections: HarmonicCorrections::default(),
+                timestamp: 0,
+            },
+        );
+
+        field.update_signal(
+            SignalSource::Memory,
+            HarmonicSignal {
+                resonance: 0.6,
+                corrections: HarmonicCorrections::default(),
+                timestamp: 0,
+            },
+        );
+
+        let resonance = field.compute_unified_resonance();
+        assert!(resonance >= 0.0 && resonance <= 1.0);
+    }
+
+    #[test]
+    fn test_signal_source_variants() {
+        let sources = [
+            SignalSource::Kernel,
+            SignalSource::Omega,
+            SignalSource::Memory,
+            SignalSource::AgiCore,
+            SignalSource::Agents,
+            SignalSource::Multimodal,
+            SignalSource::Temporal,
+            SignalSource::Energy,
+        ];
+
+        for s in sources {
+            let cloned = s;
+            assert_eq!(s, cloned);
+        }
+    }
+
+    #[test]
+    fn test_harmonic_corrections_default() {
+        let corrections = HarmonicCorrections::default();
+        assert!(!corrections.recalibrate_memory);
+        assert!(!corrections.adjust_omega_depth);
+        assert!(!corrections.reprioritize_agents);
+        assert!(!corrections.redistribute_energy);
+        assert!(corrections.new_omega_depth.is_none());
+    }
+
+    #[test]
+    fn test_harmonic_signal_clone() {
+        let signal = HarmonicSignal {
+            resonance: 0.75,
+            corrections: HarmonicCorrections {
+                recalibrate_memory: true,
+                ..Default::default()
+            },
+            timestamp: 1000,
+        };
+
+        let cloned = signal.clone();
+        assert_eq!(cloned.resonance, 0.75);
+        assert!(cloned.corrections.recalibrate_memory);
+    }
+
+    #[test]
+    fn test_weights_applied_correctly() {
+        let field = HarmonicField::new();
+
+        // Kernel has weight 2.0
+        assert_eq!(*field.weights.get(&SignalSource::Kernel).unwrap(), 2.0);
+        // Omega has weight 1.5
+        assert_eq!(*field.weights.get(&SignalSource::Omega).unwrap(), 1.5);
+        // Temporal has lower weight 0.9
+        assert_eq!(*field.weights.get(&SignalSource::Temporal).unwrap(), 0.9);
+    }
+
+    #[test]
+    fn test_update_overwrites_signal() {
+        let mut field = HarmonicField::new();
+
+        field.update_signal(
+            SignalSource::Kernel,
+            HarmonicSignal {
+                resonance: 0.3,
+                corrections: HarmonicCorrections::default(),
+                timestamp: 0,
+            },
+        );
+
+        let r1 = field.compute_unified_resonance();
+
+        field.update_signal(
+            SignalSource::Kernel,
+            HarmonicSignal {
+                resonance: 0.9,
+                corrections: HarmonicCorrections::default(),
+                timestamp: 0,
+            },
+        );
+
+        let r2 = field.compute_unified_resonance();
+        assert!(r2 > r1);
+    }
 }

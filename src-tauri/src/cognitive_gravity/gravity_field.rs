@@ -88,4 +88,116 @@ mod tests {
         assert!(field.cognitive_mass > 0.5);
         assert!(field.stability < 1.0);
     }
+
+    #[test]
+    fn test_gravity_field_default() {
+        let field = GravityField::default();
+        assert_eq!(field.cognitive_mass, 0.5);
+        assert_eq!(field.resonance, 0.5);
+        assert_eq!(field.coherence_force, 0.0);
+        assert_eq!(field.alignment_force, 0.0);
+        assert_eq!(field.entropy, 0.5);
+        assert_eq!(field.stability, 0.5);
+        assert_eq!(field.cycle_count, 0);
+    }
+
+    #[test]
+    fn test_calculate_net_force() {
+        let field = GravityField::new();
+
+        let net = field.calculate_net_force(0.8, 0.3);
+        assert_eq!(net, 0.5);
+
+        let net2 = field.calculate_net_force(0.3, 0.8);
+        assert_eq!(net2, -0.5);
+    }
+
+    #[test]
+    fn test_calculate_net_force_clamping() {
+        let field = GravityField::new();
+
+        let net = field.calculate_net_force(1.0, -1.0);
+        assert_eq!(net, 1.0);
+
+        let net2 = field.calculate_net_force(-1.0, 1.0);
+        assert_eq!(net2, -1.0);
+    }
+
+    #[test]
+    fn test_is_stable() {
+        let mut field = GravityField::new();
+
+        field.stability = 0.8;
+        assert!(field.is_stable(0.7));
+        assert!(field.is_stable(0.8));
+        assert!(!field.is_stable(0.9));
+    }
+
+    #[test]
+    fn test_is_critical_high_entropy() {
+        let mut field = GravityField::new();
+        field.entropy = 0.75;
+        assert!(field.is_critical());
+    }
+
+    #[test]
+    fn test_is_critical_low_mass() {
+        let mut field = GravityField::new();
+        field.cognitive_mass = 0.2;
+        assert!(field.is_critical());
+    }
+
+    #[test]
+    fn test_not_critical() {
+        let field = GravityField::new();
+        assert!(!field.is_critical());
+    }
+
+    #[test]
+    fn test_update_from_forces_cycle_count() {
+        let mut field = GravityField::new();
+        assert_eq!(field.cycle_count, 0);
+
+        field.update_from_forces(0.5, 0.2);
+        assert_eq!(field.cycle_count, 1);
+
+        field.update_from_forces(0.3, 0.1);
+        assert_eq!(field.cycle_count, 2);
+    }
+
+    #[test]
+    fn test_update_from_forces_coherence() {
+        let mut field = GravityField::new();
+        field.update_from_forces(0.8, 0.2);
+        assert_eq!(field.coherence_force, 0.6);
+    }
+
+    #[test]
+    fn test_update_stability_inverse_entropy() {
+        let mut field = GravityField::new();
+        field.entropy = 0.3;
+        field.update_from_forces(0.0, 0.0);
+        // stability = 1.0 - entropy
+        assert!((field.stability - 0.7).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_field_clone() {
+        let mut field = GravityField::new();
+        field.cognitive_mass = 0.8;
+        field.entropy = 0.2;
+
+        let cloned = field.clone();
+        assert_eq!(cloned.cognitive_mass, 0.8);
+        assert_eq!(cloned.entropy, 0.2);
+    }
+
+    #[test]
+    fn test_resonance_calculation() {
+        let mut field = GravityField::new();
+        field.cognitive_mass = 0.8;
+        field.stability = 0.6;
+        field.update_from_forces(0.0, 0.0);
+        assert!(field.resonance >= 0.0 && field.resonance <= 1.0);
+    }
 }

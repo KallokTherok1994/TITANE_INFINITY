@@ -276,4 +276,175 @@ mod tests {
         assert!(attractors.clarity >= 0.0 && attractors.clarity <= 1.0);
         assert!(anti_attractors.overload >= 0.0 && anti_attractors.overload <= 1.0);
     }
+
+    #[test]
+    fn test_kernel_feedback_default() {
+        let feedback = KernelFeedback::default();
+        assert_eq!(feedback.system_health, 0.8);
+        assert_eq!(feedback.cpu_usage, 0.3);
+        assert_eq!(feedback.memory_usage, 0.4);
+        assert_eq!(feedback.uptime_stability, 0.9);
+    }
+
+    #[test]
+    fn test_kernel_feedback_apply_attractors() {
+        let feedback = KernelFeedback::default();
+        let mut attractors = AttractorState::new();
+
+        feedback.apply_to_attractors(&mut attractors);
+        assert_eq!(attractors.clarity, feedback.system_health);
+    }
+
+    #[test]
+    fn test_kernel_feedback_apply_anti_attractors() {
+        let feedback = KernelFeedback {
+            cpu_usage: 0.8,
+            memory_usage: 0.6,
+            ..Default::default()
+        };
+        let mut anti_attractors = AntiAttractorState::new();
+
+        feedback.apply_to_anti_attractors(&mut anti_attractors);
+        assert_eq!(anti_attractors.overload, 0.7); // (0.8 + 0.6) / 2
+    }
+
+    #[test]
+    fn test_omega_feedback_default() {
+        let feedback = OmegaFeedback::default();
+        assert_eq!(feedback.reflection_depth, 3.0);
+        assert_eq!(feedback.coherence_score, 0.7);
+        assert_eq!(feedback.contradiction_count, 0);
+        assert_eq!(feedback.complexity, 0.5);
+    }
+
+    #[test]
+    fn test_omega_feedback_apply_attractors() {
+        let feedback = OmegaFeedback::default();
+        let mut attractors = AttractorState::new();
+
+        feedback.apply_to_attractors(&mut attractors);
+        assert!(attractors.coherence >= 0.0 && attractors.coherence <= 1.0);
+    }
+
+    #[test]
+    fn test_omega_feedback_apply_anti_attractors() {
+        let feedback = OmegaFeedback {
+            contradiction_count: 5,
+            ..Default::default()
+        };
+        let mut anti_attractors = AntiAttractorState::new();
+
+        feedback.apply_to_anti_attractors(&mut anti_attractors);
+        assert_eq!(anti_attractors.confusion, 0.5);
+    }
+
+    #[test]
+    fn test_memory_feedback_default() {
+        let feedback = MemoryFeedback::default();
+        assert_eq!(feedback.vector_alignment, 0.75);
+        assert_eq!(feedback.search_accuracy, 0.8);
+        assert_eq!(feedback.noise_level, 0.2);
+        assert_eq!(feedback.memory_coherence, 0.7);
+    }
+
+    #[test]
+    fn test_memory_feedback_apply_attractors() {
+        let feedback = MemoryFeedback::default();
+        let mut attractors = AttractorState::new();
+
+        feedback.apply_to_attractors(&mut attractors);
+        // alignment = (0.75 + 0.8) / 2 = 0.775
+        assert!((attractors.alignment - 0.775).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_memory_feedback_apply_anti_attractors() {
+        let feedback = MemoryFeedback::default();
+        let mut anti_attractors = AntiAttractorState::new();
+
+        feedback.apply_to_anti_attractors(&mut anti_attractors);
+        assert_eq!(anti_attractors.noise, 0.2);
+    }
+
+    #[test]
+    fn test_agents_feedback_default() {
+        let feedback = AgentsFeedback::default();
+        assert_eq!(feedback.consensus_score, 0.8);
+        assert_eq!(feedback.active_agents, 3);
+        assert_eq!(feedback.conflict_count, 0);
+        assert_eq!(feedback.coordination, 0.75);
+    }
+
+    #[test]
+    fn test_agents_feedback_apply_attractors() {
+        let feedback = AgentsFeedback::default();
+        let mut attractors = AttractorState::new();
+
+        feedback.apply_to_attractors(&mut attractors);
+        // focus = (0.8 + 0.75) / 2 = 0.775
+        assert!((attractors.focus - 0.775).abs() < 0.01);
+    }
+
+    #[test]
+    fn test_agents_feedback_apply_anti_attractors() {
+        let feedback = AgentsFeedback {
+            conflict_count: 3,
+            ..Default::default()
+        };
+        let mut anti_attractors = AntiAttractorState::new();
+
+        feedback.apply_to_anti_attractors(&mut anti_attractors);
+        assert_eq!(anti_attractors.dissonance, 0.6); // 3 / 5 = 0.6
+    }
+
+    #[test]
+    fn test_harmonic_feedback_default() {
+        let feedback = HarmonicFeedback::default();
+        assert_eq!(feedback.global_harmony, 0.7);
+        assert_eq!(feedback.resonance_score, 0.75);
+        assert_eq!(feedback.dissonance_count, 0);
+        assert_eq!(feedback.stability, 0.8);
+    }
+
+    #[test]
+    fn test_harmonic_feedback_apply_attractors() {
+        let feedback = HarmonicFeedback::default();
+        let mut attractors = AttractorState::new();
+
+        feedback.apply_to_attractors(&mut attractors);
+        // truth = (0.7 + 0.75) / 2 = 0.725
+        assert!((attractors.truth - 0.725).abs() < 0.01);
+        assert_eq!(attractors.simplicity, 0.8);
+    }
+
+    #[test]
+    fn test_performance_feedback_default() {
+        let feedback = PerformanceFeedback::default();
+        assert_eq!(feedback.load_balance, 0.7);
+        assert_eq!(feedback.queue_sizes, 0.3);
+        assert_eq!(feedback.thread_utilization, 0.6);
+        assert_eq!(feedback.task_completion_rate, 0.85);
+    }
+
+    #[test]
+    fn test_performance_feedback_apply_anti_attractors() {
+        let feedback = PerformanceFeedback::default();
+        let mut anti_attractors = AntiAttractorState::new();
+
+        feedback.apply_to_anti_attractors(&mut anti_attractors);
+        assert_eq!(anti_attractors.overload, 0.3);
+    }
+
+    #[test]
+    fn test_complete_feedback_default() {
+        let feedback = CompleteFeedback::default();
+        assert!(feedback.timestamp > 0);
+    }
+
+    #[test]
+    fn test_complete_feedback_clone() {
+        let feedback = CompleteFeedback::new();
+        let cloned = feedback.clone();
+        assert_eq!(cloned.kernel.system_health, feedback.kernel.system_health);
+    }
 }
