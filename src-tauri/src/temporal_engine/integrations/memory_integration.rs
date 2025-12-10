@@ -129,7 +129,7 @@ impl TemporalMemoryBridge {
             ConsolidationOperation::PatternExtraction,
         ];
 
-        let extended_ops = if hour >= 2 && hour <= 4 {
+        let extended_ops = if (2..=4).contains(&hour) {
             vec![
                 ConsolidationOperation::VectorReorganization,
                 ConsolidationOperation::CompressionPass,
