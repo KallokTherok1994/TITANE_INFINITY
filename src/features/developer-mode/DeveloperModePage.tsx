@@ -22,11 +22,13 @@ import {
   Download,
   Eye,
   Loader2,
+  Copy,
 } from 'lucide-react';
 
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
+import { useAuth } from '@/core/auth';
 import {
   useDeveloperMode,
   usePatchOperations,
@@ -50,10 +52,51 @@ function DeveloperModePageContent(): JSX.Element {
     loading: matrixLoading,
   } = useIdentityMatrix();
   const _singularityState = useSingularityStateSafe();
-  const [authToken, setAuthToken] = useState('');
+
+  // 🔐 AUTH OS Integration
+  const {
+    status: authStatus,
+    loading: authLoading,
+    error: authError,
+    devToken,
+    generateDevToken,
+    validateDevToken,
+    refresh: refreshAuthStatus,
+  } = useAuth();
+
+  const [authTokenInput, setAuthTokenInput] = useState('');
+  const [tokenCopied, setTokenCopied] = useState(false);
+
+  // Rafraîchir auth status au chargement
+  useState(() => {
+    refreshAuthStatus();
+  });
+
+  // Copy token to clipboard
+  const handleCopyToken = async () => {
+    if (devToken) {
+      await navigator.clipboard.writeText(devToken);
+      setTokenCopied(true);
+      setTimeout(() => setTokenCopied(false), 2000);
+    }
+  };
+
+  // Activer Dev Mode avec validation token
+  const handleActivate = async () => {
+    try {
+      const isValid = await validateDevToken(authTokenInput);
+      if (isValid) {
+        enable(authTokenInput);
+      } else {
+        alert('❌ Token invalide. Générez un nouveau token.');
+      }
+    } catch (err) {
+      alert(`❌ Erreur de validation: ${err}`);
+    }
+  };
 
   // Loading state
-  if (loading || matrixLoading) {
+  if (loading || matrixLoading || authLoading) {
     return (
       <div className="developer-mode-page">
         <div className="devmode-loading">
@@ -65,13 +108,13 @@ function DeveloperModePageContent(): JSX.Element {
   }
 
   // Error state
-  if (error) {
+  if (error || authError) {
     return (
       <div className="developer-mode-page">
         <div className="devmode-error">
           <AlertTriangle className="icon" size={48} />
           <h2>Erreur de chargement</h2>
-          <p>{error}</p>
+          <p>{error || authError}</p>
           <button onClick={() => window.location.reload()}>Recharger</button>
         </div>
       </div>
@@ -106,11 +149,51 @@ function DeveloperModePageContent(): JSX.Element {
         <div className="devmode-controls">
           {!state?.enabled ? (
             <>
+              {/* Section: Générer Token */}
+              {!devToken && (
+                <button
+                  className="devmode-btn primary"
+                  onClick={() => generateDevToken()}
+                >
+                  <Shield size={16} />
+                  Générer Dev Token
+                </button>
+              )}
+
+              {/* Section: Afficher Token généré */}
+              {devToken && (
+                <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  <code
+                    style={{
+                      padding: '0.5rem',
+                      background: 'rgba(0,255,0,0.1)',
+                      border: '1px solid rgba(0,255,0,0.3)',
+                      borderRadius: '6px',
+                      fontSize: '0.85rem',
+                      color: '#0f0',
+                      maxWidth: '300px',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {devToken.slice(0, 24)}...
+                  </code>
+                  <button
+                    className="devmode-btn"
+                    onClick={handleCopyToken}
+                    title="Copier token"
+                  >
+                    {tokenCopied ? <Check size={16} /> : <Copy size={16} />}
+                  </button>
+                </div>
+              )}
+
+              {/* Section: Activer avec Token */}
               <input
                 type="password"
-                placeholder="Token d'autorisation..."
-                value={authToken}
-                onChange={e => setAuthToken(e.target.value)}
+                placeholder="Collez votre token..."
+                value={authTokenInput}
+                onChange={e => setAuthTokenInput(e.target.value)}
                 className="patch-input"
                 style={{
                   padding: '0.5rem',
@@ -122,18 +205,23 @@ function DeveloperModePageContent(): JSX.Element {
               />
               <button
                 className="devmode-btn primary"
-                onClick={() => enable(authToken)}
-                disabled={!authToken}
+                onClick={handleActivate}
+                disabled={!authTokenInput}
               >
                 <Shield size={16} />
                 Activer
               </button>
             </>
           ) : (
-            <button className="devmode-btn danger" onClick={disable}>
-              <X size={16} />
-              Désactiver
-            </button>
+            <>
+              <span style={{ color: '#0f0', marginRight: '1rem' }}>
+                ✓ Dev Mode Actif (Owner: Kevin Thibault)
+              </span>
+              <button className="devmode-btn danger" onClick={disable}>
+                <X size={16} />
+                Désactiver
+              </button>
+            </>
           )}
         </div>
       </motion.div>

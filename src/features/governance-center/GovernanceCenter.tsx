@@ -9,8 +9,9 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { Brain, Settings, Shield, Zap, TestTube } from 'lucide-react';
+import { Brain, Settings, Shield, Zap, TestTube, Check, X } from 'lucide-react';
 import { useGovernance } from './hooks/useGovernance';
+import { useAuth } from '@/core/auth';
 import { APIProviderCard } from './components/APIProviderCard';
 import { AIProvidersTester } from './components/AIProvidersTester';
 
@@ -30,6 +31,13 @@ export const GovernanceCenter: React.FC = () => {
     setOpenAIKey,
     setAnthropicKey,
   } = useGovernance();
+
+  // 🔐 AUTH OS Integration
+  const { status: authStatus, refresh: refreshAuthStatus } = useAuth();
+
+  useEffect(() => {
+    refreshAuthStatus();
+  }, [refreshAuthStatus]);
 
   // Load statuses on mount
   useEffect(() => {
@@ -101,6 +109,51 @@ export const GovernanceCenter: React.FC = () => {
             </div>
           </div>
 
+          {/* 🔐 AUTH OS Status Indicator */}
+          <div
+            style={{
+              display: 'flex',
+              gap: '1rem',
+              alignItems: 'center',
+              padding: '0.75rem 1rem',
+              background: 'rgba(0,0,0,0.3)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '12px',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Shield
+                size={18}
+                style={{ color: authStatus?.hasOwnerRole ? '#0f0' : '#888' }}
+              />
+              <span
+                style={{
+                  fontSize: '0.875rem',
+                  color: authStatus?.hasOwnerRole ? '#0f0' : '#888',
+                }}
+              >
+                {authStatus?.hasOwnerRole ? 'Owner' : 'User'}
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              {authStatus?.apiKeysConfigured ? (
+                <Check size={18} style={{ color: '#0f0' }} />
+              ) : (
+                <X size={18} style={{ color: '#f00' }} />
+              )}
+              <span
+                style={{
+                  fontSize: '0.875rem',
+                  color: authStatus?.apiKeysConfigured ? '#0f0' : '#f00',
+                }}
+              >
+                {authStatus?.apiKeysConfigured ? 'API Keys OK' : 'API Keys Manquantes'}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-4">
           {/* Stats Badge */}
           <div className="rounded-xl border border-gray-700/50 bg-gray-800/50 p-4 backdrop-blur-sm">
             <div className="flex items-center gap-3">

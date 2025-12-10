@@ -63,6 +63,9 @@ mod secure_commands {
     include!("secure_commands.rs");
 }
 
+// Auth OS v∞ - Unified Authentication System
+mod auth;
+
 // Overdrive Chat Orchestrator v14 + Voice Engine
 mod overdrive {
     pub mod chat_orchestrator {
@@ -300,6 +303,13 @@ fn main() {
         .manage(secrets_engine)
         .manage(chat_orchestrator.clone())
         .setup(move |app| {
+            // 🔐 Initialize Auth OS v∞ (Unified Authentication System)
+            if let Err(e) = auth::init_auth() {
+                log::error!("❌ AUTH OS initialization failed: {}", e);
+            } else {
+                log::info!("✅ AUTH OS v∞ initialized successfully");
+            }
+            
             // Initialize SingularityEngine with app_handle
             let singularity_engine = Arc::new(singularity_state::SingularityEngine::new(app.handle().clone()));
             app.manage(singularity_engine.clone());
@@ -407,6 +417,16 @@ fn main() {
             secure_commands::get_anthropic_key_status,
             // Ollama AI Provider Status Check
             titane_infinity::ai::ollama::ai_check_ollama_status,
+            // Auth OS Commands v∞ (Unified Authentication System)
+            auth::commands::auth_get_status,
+            auth::commands::auth_generate_dev_token,
+            auth::commands::auth_validate_dev_token,
+            auth::commands::auth_revoke_dev_token,
+            auth::commands::auth_save_api_keys,
+            auth::commands::auth_get_api_keys,
+            auth::commands::auth_delete_api_key,
+            auth::commands::auth_grant_role,
+            auth::commands::auth_revoke_role,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
