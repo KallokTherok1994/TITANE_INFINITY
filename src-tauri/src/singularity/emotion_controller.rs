@@ -334,4 +334,134 @@ mod tests {
 
         assert!(state.valence > 0.0);
     }
+
+    #[test]
+    fn test_reset() {
+        let mut controller = EmotionController::new();
+
+        // Make some adjustments
+        controller.adjust(ConversationMode::Coach);
+        controller.adjust(ConversationMode::Creative);
+
+        assert!(!controller.history.is_empty());
+
+        controller.reset();
+
+        assert!(controller.history.is_empty());
+        assert_eq!(controller.current().valence, 0.0);
+    }
+
+    #[test]
+    fn test_set_empathy() {
+        let mut controller = EmotionController::new();
+
+        controller.set_empathy(0.9);
+        assert_eq!(controller.empathy_level, 0.9);
+
+        // Test clamping
+        controller.set_empathy(1.5);
+        assert_eq!(controller.empathy_level, 1.0);
+
+        controller.set_empathy(-0.5);
+        assert_eq!(controller.empathy_level, 0.0);
+    }
+
+    #[test]
+    fn test_set_inertia() {
+        let mut controller = EmotionController::new();
+
+        controller.set_inertia(0.8);
+        assert_eq!(controller.inertia, 0.8);
+
+        // Test clamping
+        controller.set_inertia(2.0);
+        assert_eq!(controller.inertia, 1.0);
+
+        controller.set_inertia(-1.0);
+        assert_eq!(controller.inertia, 0.0);
+    }
+
+    #[test]
+    fn test_average_state_empty() {
+        let controller = EmotionController::new();
+        let avg = controller.average_state();
+
+        assert_eq!(avg.valence, 0.0);
+        assert_eq!(avg.arousal, 0.0);
+    }
+
+    #[test]
+    fn test_average_state_with_history() {
+        let mut controller = EmotionController::new();
+
+        controller.adjust(ConversationMode::Coach);
+        controller.adjust(ConversationMode::Logic);
+        controller.adjust(ConversationMode::Creative);
+
+        let avg = controller.average_state();
+        // Average should be reasonable values
+        assert!(avg.valence >= -1.0 && avg.valence <= 1.0);
+        assert!(avg.arousal >= 0.0 && avg.arousal <= 1.0);
+    }
+
+    #[test]
+    fn test_stability_with_single_entry() {
+        let mut controller = EmotionController::new();
+        controller.adjust(ConversationMode::Expert);
+
+        // Single entry should give high stability
+        let score = controller.stability_score();
+        assert_eq!(score, 1.0);
+    }
+
+    #[test]
+    fn test_full_adjust_without_sentiment() {
+        let mut controller = EmotionController::new();
+
+        let state = controller.full_adjust(
+            ConversationMode::Logic,
+            &IntentClass::Debug,
+            None, // No user sentiment
+        );
+
+        // Should still produce valid state
+        assert!(state.valence >= -1.0 && state.valence <= 1.0);
+    }
+
+    #[test]
+    fn test_history_limit() {
+        let mut controller = EmotionController::new();
+        controller.max_history = 5;
+
+        // Make more adjustments than max history
+        for _ in 0..10 {
+            controller.adjust(ConversationMode::Coach);
+        }
+
+        assert!(controller.history.len() <= 5);
+    }
+
+    #[test]
+    fn test_with_empathy_constructor() {
+        let controller = EmotionController::with_empathy(0.5);
+        assert_eq!(controller.empathy_level, 0.5);
+    }
+
+    #[test]
+    fn test_variance_calculation() {
+        let values = vec![1.0, 2.0, 3.0, 4.0, 5.0];
+        let variance = calculate_variance(&values);
+        assert!(variance > 0.0);
+
+        let constant = vec![5.0, 5.0, 5.0];
+        let zero_var = calculate_variance(&constant);
+        assert_eq!(zero_var, 0.0);
+    }
+
+    #[test]
+    fn test_variance_single_value() {
+        let single = vec![1.0];
+        let variance = calculate_variance(&single);
+        assert_eq!(variance, 0.0);
+    }
 }
