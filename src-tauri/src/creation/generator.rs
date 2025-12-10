@@ -437,4 +437,284 @@ mod tests {
         assert_eq!(cloned.id, artifact.id);
         assert_eq!(cloned.name, artifact.name);
     }
+
+    #[test]
+    fn test_artifact_debug() {
+        let artifact = GeneratedArtifact {
+            id: "debug-test".to_string(),
+            name: "DebugArtifact".to_string(),
+            target_type: TargetType::RustModule,
+            code: "fn main() {}".to_string(),
+            dependencies: vec![],
+            tests: None,
+            documentation: "".to_string(),
+        };
+        let debug_str = format!("{:?}", artifact);
+        assert!(debug_str.contains("GeneratedArtifact"));
+    }
+
+    #[test]
+    fn test_creation_request_debug() {
+        let request = CreationRequest {
+            id: "req-debug".to_string(),
+            intent: "Debug test".to_string(),
+            target_type: TargetType::ReactPage,
+            parameters: HashMap::new(),
+        };
+        let debug_str = format!("{:?}", request);
+        assert!(debug_str.contains("CreationRequest"));
+    }
+
+    #[test]
+    fn test_creation_request_clone() {
+        let mut params = HashMap::new();
+        params.insert("KEY".to_string(), "VALUE".to_string());
+
+        let request = CreationRequest {
+            id: "clone-test".to_string(),
+            intent: "Test clone".to_string(),
+            target_type: TargetType::TauriCommand,
+            parameters: params,
+        };
+
+        let cloned = request.clone();
+        assert_eq!(cloned.id, request.id);
+        assert_eq!(cloned.parameters.get("KEY"), request.parameters.get("KEY"));
+    }
+
+    #[test]
+    fn test_target_type_debug() {
+        let target = TargetType::UIWidget;
+        let debug_str = format!("{:?}", target);
+        assert!(debug_str.contains("UIWidget"));
+    }
+
+    #[test]
+    fn test_target_type_serialization() {
+        let target = TargetType::RustModule;
+        let json = serde_json::to_string(&target).unwrap();
+        let restored: TargetType = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored, target);
+    }
+
+    #[test]
+    fn test_all_target_types_serialization() {
+        let types = vec![
+            TargetType::RustModule,
+            TargetType::TypeScriptComponent,
+            TargetType::ReactPage,
+            TargetType::TauriCommand,
+            TargetType::UIWidget,
+            TargetType::DataModel,
+        ];
+
+        for t in types {
+            let json = serde_json::to_string(&t).unwrap();
+            let restored: TargetType = serde_json::from_str(&json).unwrap();
+            assert_eq!(restored, t);
+        }
+    }
+
+    #[test]
+    fn test_infer_dependencies_multiple() {
+        let engine = CreationEngine::new();
+        let code = "use serde::{Deserialize, Serialize};\nlet id = uuid::Uuid::new_v4();\ntokio::spawn(async {});";
+
+        let deps = engine.infer_dependencies(code);
+        assert_eq!(deps.len(), 3);
+        assert!(deps.iter().any(|d| d.contains("serde")));
+        assert!(deps.iter().any(|d| d.contains("uuid")));
+        assert!(deps.iter().any(|d| d.contains("tokio")));
+    }
+
+    #[test]
+    fn test_generate_docs_format() {
+        let engine = CreationEngine::new();
+        let docs = engine.generate_docs("Create a user authentication module");
+
+        assert!(docs.contains("Create a user authentication module"));
+        assert!(docs.contains("TITANE"));
+        assert!(docs.contains("Generated"));
+    }
+
+    #[test]
+    fn test_generate_tests_structure() {
+        let engine = CreationEngine::new();
+        let tests = engine.generate_tests("sample code");
+
+        assert!(tests.contains("#[cfg(test)]"));
+        assert!(tests.contains("mod tests"));
+        assert!(tests.contains("use super::*"));
+        assert!(tests.contains("fn test_creation"));
+    }
+
+    #[test]
+    fn test_creation_engine_templates_initialized() {
+        let engine = CreationEngine::new();
+        // At least 2 templates should be loaded
+        assert!(engine.templates.len() >= 2);
+    }
+
+    #[test]
+    fn test_rust_template_contains_markers() {
+        let engine = CreationEngine::new();
+        let template = engine.templates.get(&TargetType::RustModule).unwrap();
+
+        assert!(template.contains("{{NAME}}"));
+        assert!(template.contains("{{FIELDS}}"));
+        assert!(template.contains("{{PARAMS}}"));
+    }
+
+    #[test]
+    fn test_typescript_template_contains_markers() {
+        let engine = CreationEngine::new();
+        let template = engine.templates.get(&TargetType::TypeScriptComponent).unwrap();
+
+        assert!(template.contains("{{NAME}}"));
+        assert!(template.contains("{{PROPS}}"));
+        assert!(template.contains("React"));
+    }
+
+    #[tokio::test]
+    async fn test_create_from_intent_default_name() {
+        let engine = CreationEngine::new();
+
+        let request = CreationRequest {
+            id: "default-name-test".to_string(),
+            intent: "Test default naming".to_string(),
+            target_type: TargetType::RustModule,
+            parameters: HashMap::new(), // No NAME parameter
+        };
+
+        let result = engine.create_from_intent(request).await;
+        assert!(result.is_ok());
+
+        let artifact = result.unwrap();
+        assert_eq!(artifact.name, "Generated");
+    }
+
+    #[test]
+    fn test_artifact_with_tests_some() {
+        let artifact = GeneratedArtifact {
+            id: "with-tests".to_string(),
+            name: "TestModule".to_string(),
+            target_type: TargetType::RustModule,
+            code: "code".to_string(),
+            dependencies: vec![],
+            tests: Some("test code".to_string()),
+            documentation: "docs".to_string(),
+        };
+
+        assert!(artifact.tests.is_some());
+        assert_eq!(artifact.tests.unwrap(), "test code");
+    }
+
+    #[test]
+    fn test_artifact_with_tests_none() {
+        let artifact = GeneratedArtifact {
+            id: "no-tests".to_string(),
+            name: "NoTestModule".to_string(),
+            target_type: TargetType::DataModel,
+            code: "code".to_string(),
+            dependencies: vec![],
+            tests: None,
+            documentation: "docs".to_string(),
+        };
+
+        assert!(artifact.tests.is_none());
+    }
+
+    #[test]
+    fn test_request_serialization_roundtrip() {
+        let mut params = HashMap::new();
+        params.insert("NAME".to_string(), "TestModule".to_string());
+
+        let request = CreationRequest {
+            id: "serial-test".to_string(),
+            intent: "Test serialization".to_string(),
+            target_type: TargetType::TypeScriptComponent,
+            parameters: params,
+        };
+
+        let json = serde_json::to_string(&request).unwrap();
+        let restored: CreationRequest = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(restored.id, request.id);
+        assert_eq!(restored.intent, request.intent);
+    }
+
+    #[test]
+    fn test_artifact_serialization_roundtrip() {
+        let artifact = GeneratedArtifact {
+            id: "serial-artifact".to_string(),
+            name: "SerialModule".to_string(),
+            target_type: TargetType::ReactPage,
+            code: "export default function Page() {}".to_string(),
+            dependencies: vec!["react".to_string(), "next".to_string()],
+            tests: Some("test".to_string()),
+            documentation: "Page component".to_string(),
+        };
+
+        let json = serde_json::to_string(&artifact).unwrap();
+        let restored: GeneratedArtifact = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(restored.id, artifact.id);
+        assert_eq!(restored.dependencies.len(), 2);
+    }
+
+    #[test]
+    fn test_target_type_hash() {
+        use std::collections::HashSet;
+
+        let mut set = HashSet::new();
+        set.insert(TargetType::RustModule);
+        set.insert(TargetType::TypeScriptComponent);
+        set.insert(TargetType::RustModule); // Duplicate
+
+        assert_eq!(set.len(), 2);
+    }
+
+    #[test]
+    fn test_empty_parameters_handling() {
+        let engine = CreationEngine::new();
+        let template = engine.templates.get(&TargetType::RustModule).unwrap();
+
+        // Template with no substitutions should remain with placeholders
+        let code = template.clone();
+        assert!(code.contains("{{"));
+    }
+
+    #[tokio::test]
+    async fn test_create_module_tauri_command_rust() {
+        let result = create_module("Test intent".to_string(), "rust".to_string()).await;
+        assert!(result.is_ok());
+
+        let artifact = result.unwrap();
+        assert_eq!(artifact.target_type, TargetType::RustModule);
+    }
+
+    #[tokio::test]
+    async fn test_create_module_tauri_command_typescript() {
+        let result = create_module("Create component".to_string(), "typescript".to_string()).await;
+        assert!(result.is_ok());
+
+        let artifact = result.unwrap();
+        assert_eq!(artifact.target_type, TargetType::TypeScriptComponent);
+    }
+
+    #[tokio::test]
+    async fn test_create_module_tauri_command_react() {
+        let result = create_module("Create page".to_string(), "react".to_string()).await;
+        assert!(result.is_ok());
+
+        let artifact = result.unwrap();
+        assert_eq!(artifact.target_type, TargetType::ReactPage);
+    }
+
+    #[tokio::test]
+    async fn test_create_module_tauri_command_unknown() {
+        let result = create_module("Test".to_string(), "unknown_type".to_string()).await;
+        assert!(result.is_err());
+        assert!(result.unwrap_err().contains("Unknown target type"));
+    }
 }

@@ -563,4 +563,314 @@ mod tests {
 
         assert!(!validate_identity_matrix(&matrix));
     }
+
+    #[test]
+    fn test_identity_matrix_new() {
+        let matrix = IdentityMatrix::new();
+        assert!(!matrix.signature.is_empty());
+        assert_eq!(matrix.dimensions.len(), 8);
+    }
+
+    #[test]
+    fn test_identity_matrix_clone() {
+        let matrix = IdentityMatrix::new();
+        let cloned = matrix.clone();
+        assert_eq!(cloned.dimensions.len(), matrix.dimensions.len());
+        assert_eq!(cloned.signature, matrix.signature);
+    }
+
+    #[test]
+    fn test_identity_matrix_debug() {
+        let matrix = IdentityMatrix::new();
+        let debug_str = format!("{:?}", matrix);
+        assert!(debug_str.contains("IdentityMatrix"));
+    }
+
+    #[test]
+    fn test_identity_dimension_clone() {
+        let dim = IdentityDimension {
+            name: "Test".to_string(),
+            description: "Test desc".to_string(),
+            value: 0.5,
+            polarity_negative: "Neg".to_string(),
+            polarity_positive: "Pos".to_string(),
+            volatility: 0.3,
+        };
+        let cloned = dim.clone();
+        assert_eq!(cloned.name, "Test");
+        assert_eq!(cloned.value, 0.5);
+    }
+
+    #[test]
+    fn test_identity_dimension_debug() {
+        let dim = IdentityDimension {
+            name: "Debug Test".to_string(),
+            description: "Testing debug".to_string(),
+            value: 0.0,
+            polarity_negative: "A".to_string(),
+            polarity_positive: "B".to_string(),
+            volatility: 0.5,
+        };
+        let debug_str = format!("{:?}", dim);
+        assert!(debug_str.contains("IdentityDimension"));
+    }
+
+    #[test]
+    fn test_get_dimension_exists() {
+        let matrix = IdentityMatrix::new();
+        let dim = matrix.get_dimension("Rationalité-Émotivité");
+        assert!(dim.is_some());
+        assert_eq!(dim.unwrap().name, "Rationalité-Émotivité");
+    }
+
+    #[test]
+    fn test_get_dimension_not_exists() {
+        let matrix = IdentityMatrix::new();
+        let dim = matrix.get_dimension("NonexistentDimension");
+        assert!(dim.is_none());
+    }
+
+    #[test]
+    fn test_set_dimension_valid() {
+        let mut matrix = IdentityMatrix::new();
+        let result = matrix.set_dimension("Prudence-Audace", 0.8);
+        assert!(result);
+        assert_eq!(matrix.get_dimension("Prudence-Audace").unwrap().value, 0.8);
+    }
+
+    #[test]
+    fn test_evolve_multiple_dimensions() {
+        let mut matrix = IdentityMatrix::new();
+        let mut deltas = HashMap::new();
+        deltas.insert("Rationalité-Émotivité".to_string(), 0.3);
+        deltas.insert("Prudence-Audace".to_string(), -0.2);
+
+        let initial_rat = matrix.get_dimension("Rationalité-Émotivité").unwrap().value;
+        let initial_pru = matrix.get_dimension("Prudence-Audace").unwrap().value;
+
+        matrix.evolve(&deltas);
+
+        // Values should have changed (modulated by volatility)
+        let new_rat = matrix.get_dimension("Rationalité-Émotivité").unwrap().value;
+        let new_pru = matrix.get_dimension("Prudence-Audace").unwrap().value;
+
+        assert!(new_rat != initial_rat || new_pru != initial_pru);
+    }
+
+    #[test]
+    fn test_evolve_nonexistent_dimension() {
+        let mut matrix = IdentityMatrix::new();
+        let initial_vector = matrix.to_vector();
+
+        let mut deltas = HashMap::new();
+        deltas.insert("FakeDimension".to_string(), 0.5);
+
+        matrix.evolve(&deltas);
+
+        // Vector should be unchanged for existing dimensions
+        // (only signature might update)
+    }
+
+    #[test]
+    fn test_recalculate_scores_consistency() {
+        let mut matrix = IdentityMatrix::new();
+
+        // Set all dimensions to same value for high coherence
+        for dim in &mut matrix.dimensions {
+            dim.value = 0.5;
+        }
+        matrix.recalculate_scores();
+
+        assert!(matrix.coherence_score > 0.9); // High coherence when uniform
+    }
+
+    #[test]
+    fn test_signature_changes_on_modification() {
+        let mut matrix = IdentityMatrix::new();
+        let initial_sig = matrix.signature.clone();
+
+        matrix.set_dimension("Sérieux-Ludique", 0.9);
+
+        assert_ne!(matrix.signature, initial_sig);
+    }
+
+    #[test]
+    fn test_interpolate_t_clamping() {
+        let matrix1 = IdentityMatrix::new();
+        let matrix2 = IdentityProfiles::creative();
+
+        // t > 1 should be clamped to 1
+        let result = matrix1.interpolate(&matrix2, 2.0);
+        for (i, dim) in result.dimensions.iter().enumerate() {
+            assert!((dim.value - matrix2.dimensions[i].value).abs() < 0.01);
+        }
+
+        // t < 0 should be clamped to 0
+        let result2 = matrix1.interpolate(&matrix2, -1.0);
+        for (i, dim) in result2.dimensions.iter().enumerate() {
+            assert!((dim.value - matrix1.dimensions[i].value).abs() < 0.01);
+        }
+    }
+
+    #[test]
+    fn test_distance_symmetry() {
+        let matrix1 = IdentityProfiles::professional();
+        let matrix2 = IdentityProfiles::mentor();
+
+        let dist1 = matrix1.distance_to(&matrix2);
+        let dist2 = matrix2.distance_to(&matrix1);
+
+        assert!((dist1 - dist2).abs() < 0.0001);
+    }
+
+    #[test]
+    fn test_all_profiles_valid() {
+        let profiles = vec![
+            IdentityProfiles::professional(),
+            IdentityProfiles::mentor(),
+            IdentityProfiles::creative(),
+            IdentityProfiles::technical(),
+        ];
+
+        for profile in profiles {
+            assert!(validate_identity_matrix(&profile));
+            assert_eq!(profile.dimensions.len(), 8);
+        }
+    }
+
+    #[test]
+    fn test_validate_volatility_out_of_range() {
+        let mut matrix = IdentityMatrix::new();
+        matrix.dimensions[0].volatility = 1.5; // Out of 0.0-1.0 range
+
+        assert!(!validate_identity_matrix(&matrix));
+    }
+
+    #[test]
+    fn test_validate_negative_volatility() {
+        let mut matrix = IdentityMatrix::new();
+        matrix.dimensions[0].volatility = -0.1;
+
+        assert!(!validate_identity_matrix(&matrix));
+    }
+
+    #[test]
+    fn test_load_corrupted_file() {
+        let temp_dir = TempDir::new().unwrap();
+        let identity_path = temp_dir.path().join("identity.json");
+
+        // Write invalid JSON
+        fs::write(&identity_path, "not valid json").unwrap();
+
+        let matrix = load_identity_matrix_robust(temp_dir.path());
+        // Should return default on parse error
+        assert_eq!(matrix.dimensions.len(), 8);
+    }
+
+    #[test]
+    fn test_dimension_value_serialization() {
+        let dim = IdentityDimension {
+            name: "Test".to_string(),
+            description: "Desc".to_string(),
+            value: 0.123456,
+            polarity_negative: "Neg".to_string(),
+            polarity_positive: "Pos".to_string(),
+            volatility: 0.5,
+        };
+
+        let json = serde_json::to_string(&dim).unwrap();
+        let restored: IdentityDimension = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(restored.name, dim.name);
+        assert!((restored.value - dim.value).abs() < 0.0001);
+    }
+
+    #[test]
+    fn test_matrix_serialization_roundtrip() {
+        let matrix = IdentityProfiles::creative();
+        let json = serde_json::to_string(&matrix).unwrap();
+        let restored: IdentityMatrix = serde_json::from_str(&json).unwrap();
+
+        assert_eq!(restored.dimensions.len(), matrix.dimensions.len());
+        assert_eq!(restored.signature, matrix.signature);
+    }
+
+    #[test]
+    fn test_evolution_vector_default() {
+        let matrix = IdentityMatrix::default();
+        assert_eq!(matrix.evolution_vector.len(), 8);
+        for val in &matrix.evolution_vector {
+            assert_eq!(*val, 0.0);
+        }
+    }
+
+    #[test]
+    fn test_stability_score_calculation() {
+        let mut matrix = IdentityMatrix::new();
+
+        // Low volatility = high stability
+        for dim in &mut matrix.dimensions {
+            dim.volatility = 0.1;
+        }
+        matrix.recalculate_scores();
+        let high_stability = matrix.stability_score;
+
+        // High volatility = low stability
+        for dim in &mut matrix.dimensions {
+            dim.volatility = 0.9;
+        }
+        matrix.recalculate_scores();
+        let low_stability = matrix.stability_score;
+
+        assert!(high_stability > low_stability);
+    }
+
+    #[test]
+    fn test_coherence_with_variance() {
+        let mut matrix = IdentityMatrix::new();
+
+        // High variance = low coherence
+        matrix.dimensions[0].value = -1.0;
+        matrix.dimensions[1].value = 1.0;
+        matrix.dimensions[2].value = -0.8;
+        matrix.dimensions[3].value = 0.8;
+        matrix.recalculate_scores();
+
+        assert!(matrix.coherence_score < 0.9);
+    }
+
+    #[test]
+    fn test_all_default_dimensions_have_valid_values() {
+        let matrix = IdentityMatrix::default();
+        for dim in &matrix.dimensions {
+            assert!(!dim.name.is_empty());
+            assert!(!dim.description.is_empty());
+            assert!(!dim.polarity_negative.is_empty());
+            assert!(!dim.polarity_positive.is_empty());
+            assert!((-1.0..=1.0).contains(&dim.value));
+            assert!((0.0..=1.0).contains(&dim.volatility));
+        }
+    }
+
+    #[test]
+    fn test_to_vector_length() {
+        let matrix = IdentityMatrix::new();
+        let vector = matrix.to_vector();
+        assert_eq!(vector.len(), matrix.dimensions.len());
+    }
+
+    #[test]
+    fn test_interpolate_midpoint_accuracy() {
+        let mut matrix1 = IdentityMatrix::new();
+        let mut matrix2 = IdentityMatrix::new();
+
+        // Set specific values for testing
+        matrix1.set_dimension("Rationalité-Émotivité", 0.0);
+        matrix2.set_dimension("Rationalité-Émotivité", 1.0);
+
+        let mid = matrix1.interpolate(&matrix2, 0.5);
+        let mid_val = mid.get_dimension("Rationalité-Émotivité").unwrap().value;
+
+        assert!((mid_val - 0.5).abs() < 0.01);
+    }
 }

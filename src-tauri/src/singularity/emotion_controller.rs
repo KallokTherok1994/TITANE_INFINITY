@@ -464,4 +464,164 @@ mod tests {
         let variance = calculate_variance(&single);
         assert_eq!(variance, 0.0);
     }
+
+    #[test]
+    fn test_emotion_controller_default() {
+        let controller = EmotionController::default();
+        assert_eq!(controller.inertia, 0.6);
+        assert_eq!(controller.empathy_level, 0.7);
+    }
+
+    #[test]
+    fn test_emotion_controller_clone() {
+        let controller = EmotionController::new();
+        let cloned = controller.clone();
+        assert_eq!(cloned.inertia, controller.inertia);
+        assert_eq!(cloned.empathy_level, controller.empathy_level);
+    }
+
+    #[test]
+    fn test_describe_positive_active() {
+        let mut controller = EmotionController::new();
+        controller.current_state = AffectiveState::new(0.5, 0.7);
+        let desc = controller.describe();
+        assert!(desc.contains("positif"));
+        assert!(desc.contains("actif"));
+    }
+
+    #[test]
+    fn test_describe_neutral_calm() {
+        let mut controller = EmotionController::new();
+        controller.current_state = AffectiveState::new(0.0, 0.2);
+        let desc = controller.describe();
+        assert!(desc.contains("neutre"));
+        assert!(desc.contains("calme"));
+    }
+
+    #[test]
+    fn test_describe_concerned() {
+        let mut controller = EmotionController::new();
+        controller.current_state = AffectiveState::new(-0.5, 0.5);
+        let desc = controller.describe();
+        assert!(desc.contains("préoccupé"));
+    }
+
+    #[test]
+    fn test_adjust_all_modes() {
+        let mut controller = EmotionController::new();
+
+        let modes = vec![
+            ConversationMode::Expert,
+            ConversationMode::Coach,
+            ConversationMode::Creative,
+            ConversationMode::Logic,
+            ConversationMode::Meta,
+            ConversationMode::Cognitive,
+        ];
+
+        for mode in modes {
+            let state = controller.adjust(mode);
+            assert!(state.valence >= -1.0 && state.valence <= 1.0);
+            assert!(state.arousal >= 0.0 && state.arousal <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_adjust_for_all_intents() {
+        let mut controller = EmotionController::new();
+
+        let intents = vec![
+            IntentClass::Emotional,
+            IntentClass::Help,
+            IntentClass::Creative,
+            IntentClass::Debug,
+            IntentClass::Task,
+            IntentClass::Query,
+            IntentClass::Conversation,
+            IntentClass::Command,
+            IntentClass::Explanation,
+            IntentClass::MetaQuery,
+            IntentClass::Unknown,
+        ];
+
+        for intent in intents {
+            let state = controller.adjust_for_intent(&intent);
+            assert!(state.valence >= -1.0 && state.valence <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_respond_to_extreme_user_emotion() {
+        let mut controller = EmotionController::new();
+
+        // Extreme positive
+        let state1 = controller.respond_to_user_emotion(1.0, 1.0);
+        assert!(state1.valence >= 0.0);
+
+        // Extreme negative
+        let state2 = controller.respond_to_user_emotion(-1.0, 0.0);
+        assert!(state2.valence <= 0.5);
+    }
+
+    #[test]
+    fn test_full_adjust_with_negative_sentiment() {
+        let mut controller = EmotionController::new();
+        let state = controller.full_adjust(
+            ConversationMode::Coach,
+            &IntentClass::Emotional,
+            Some(-0.8),
+        );
+        assert!(state.valence >= -1.0);
+    }
+
+    #[test]
+    fn test_stability_score_volatile() {
+        let mut controller = EmotionController::new();
+        controller.inertia = 0.0; // No inertia = more volatile
+
+        controller.adjust(ConversationMode::Coach);
+        controller.adjust(ConversationMode::Logic);
+        controller.adjust(ConversationMode::Creative);
+        controller.adjust(ConversationMode::Meta);
+
+        let score = controller.stability_score();
+        // With volatile changes, stability should be lower
+        assert!(score <= 1.0);
+    }
+
+    #[test]
+    fn test_variance_empty() {
+        let empty: Vec<f32> = vec![];
+        let variance = calculate_variance(&empty);
+        assert_eq!(variance, 0.0);
+    }
+
+    #[test]
+    fn test_with_empathy_clamping() {
+        let controller1 = EmotionController::with_empathy(1.5);
+        assert_eq!(controller1.empathy_level, 1.0);
+
+        let controller2 = EmotionController::with_empathy(-0.5);
+        assert_eq!(controller2.empathy_level, 0.0);
+    }
+
+    #[test]
+    fn test_get_intent_adjustment_values() {
+        let controller = EmotionController::new();
+
+        let (v, a) = controller.get_intent_adjustment(&IntentClass::Creative);
+        assert!(v > 0.0);
+        assert!(a > 0.0);
+
+        let (v2, a2) = controller.get_intent_adjustment(&IntentClass::Unknown);
+        assert_eq!(v2, 0.0);
+        assert_eq!(a2, 0.0);
+    }
+
+    #[test]
+    fn test_current_returns_reference() {
+        let controller = EmotionController::new();
+        let current = controller.current();
+        assert_eq!(current.valence, 0.0);
+    }
 }

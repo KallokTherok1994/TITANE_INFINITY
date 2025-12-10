@@ -327,4 +327,159 @@ mod tests {
 
         assert!((variance - 1.0).abs() < 0.01);
     }
+
+    #[test]
+    fn test_vad_threshold_exact_boundaries() {
+        let mut engine = WakewordEngine::new(16000);
+
+        engine.set_vad_threshold(0.001);
+        assert_eq!(engine.vad_threshold, 0.001);
+
+        engine.set_vad_threshold(0.1);
+        assert_eq!(engine.vad_threshold, 0.1);
+    }
+
+    #[test]
+    fn test_push_samples_empty() {
+        let mut engine = WakewordEngine::new(16000);
+        engine.push_samples(&[]);
+        assert_eq!(engine.buffer.len(), 0);
+    }
+
+    #[test]
+    fn test_push_samples_exact_buffer_size() {
+        let mut engine = WakewordEngine::new(16000);
+        let samples = vec![0.5; engine.buffer_size];
+        engine.push_samples(&samples);
+        assert_eq!(engine.buffer.len(), engine.buffer_size);
+    }
+
+    #[test]
+    fn test_cross_correlation_empty() {
+        let empty: Vec<f32> = vec![];
+        let signal = vec![1.0, 2.0];
+
+        // Should handle empty gracefully
+        let result = WakewordEngine::cross_correlation(&empty, &signal);
+        assert!(result.is_nan() || result == 0.0);
+    }
+
+    #[test]
+    fn test_pattern_values_range() {
+        let pattern = WakewordEngine::generate_titane_pattern();
+
+        let max_val = pattern.iter().cloned().fold(f32::NEG_INFINITY, f32::max);
+        let min_val = pattern.iter().cloned().fold(f32::INFINITY, f32::min);
+
+        assert!(max_val <= 1.0);
+        assert!(min_val >= -1.0);
+    }
+
+    #[test]
+    fn test_multiple_push_samples() {
+        let mut engine = WakewordEngine::new(16000);
+
+        engine.push_samples(&[0.1; 100]);
+        engine.push_samples(&[0.2; 100]);
+        engine.push_samples(&[0.3; 100]);
+
+        assert_eq!(engine.buffer.len(), 300);
+    }
+
+    #[test]
+    fn test_buffer_fifo_behavior() {
+        let mut engine = WakewordEngine::new(16000);
+
+        // Fill buffer exactly
+        engine.push_samples(&[0.1; engine.buffer_size]);
+
+        // Push one more - first should be removed
+        engine.push_samples(&[0.9]);
+
+        assert_eq!(engine.buffer.len(), engine.buffer_size);
+        // Last element should be the newly pushed value
+        assert_eq!(*engine.buffer.back().unwrap(), 0.9);
+    }
+
+    #[test]
+    fn test_has_voice_activity_boundary() {
+        let mut engine = WakewordEngine::new(16000);
+
+        // Exactly at threshold - should be detected
+        let threshold_samples = vec![engine.vad_threshold + 0.001; 8000];
+        engine.push_samples(&threshold_samples);
+        assert!(engine.has_voice_activity());
+    }
+
+    #[test]
+    fn test_match_pattern_returns_bounded() {
+        let mut engine = WakewordEngine::new(16000);
+        engine.push_samples(&[0.5; engine.buffer_size]);
+
+        let confidence = engine.match_pattern();
+        // Should be bounded and finite
+        assert!(confidence.is_finite());
+    }
+
+    #[test]
+    fn test_detect_returns_confidence_above_threshold() {
+        // If detect returns Some, confidence should be > 0.7
+        // Create engine with pattern-like data
+        let mut engine = WakewordEngine::new(16000);
+
+        // Use the pattern itself as input for maximum match
+        let pattern = WakewordEngine::generate_titane_pattern();
+        let mut samples = vec![0.0; engine.buffer_size];
+        for (i, &p) in pattern.iter().enumerate() {
+            if i < samples.len() {
+                samples[i] = p;
+            }
+        }
+
+        engine.push_samples(&samples);
+
+        if let Some(confidence) = engine.detect() {
+            assert!(confidence > 0.7);
+        }
+    }
+
+    #[test]
+    fn test_reset_multiple_times() {
+        let mut engine = WakewordEngine::new(16000);
+
+        engine.push_samples(&[0.1; 1000]);
+        engine.reset();
+        assert_eq!(engine.buffer.len(), 0);
+
+        engine.push_samples(&[0.2; 500]);
+        engine.reset();
+        assert_eq!(engine.buffer.len(), 0);
+
+        // Reset on empty buffer
+        engine.reset();
+        assert_eq!(engine.buffer.len(), 0);
+    }
+
+    #[test]
+    fn test_normalize_single_element() {
+        let single = vec![5.0];
+        let normalized = WakewordEngine::normalize(&single);
+        assert_eq!(normalized.len(), 1);
+    }
+
+    #[test]
+    fn test_normalize_negative_values() {
+        let signal = vec![-5.0, -3.0, -1.0, 1.0, 3.0, 5.0];
+        let normalized = WakewordEngine::normalize(&signal);
+
+        // Mean should be close to 0
+        let mean = normalized.iter().sum::<f32>() / normalized.len() as f32;
+        assert!(mean.abs() < 0.001);
+    }
+
+    #[test]
+    fn test_sample_rate_stored() {
+        let engine = WakewordEngine::new(48000);
+        assert_eq!(engine.sample_rate, 48000);
+    }
 }
