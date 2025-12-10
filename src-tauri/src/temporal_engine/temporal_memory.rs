@@ -379,4 +379,46 @@ mod tests {
         let stats = memory.stats().await;
         assert_eq!(stats.total_recorded, 1);
     }
+
+    #[test]
+    fn test_memory_decay_over_time() {
+        let decay = MemoryDecay::default();
+        // Decay devrait diminuer avec le temps
+        let factor_0 = decay.calculate(0);
+        let factor_1h = decay.calculate(3_600_000); // 1 heure
+        assert!(factor_0 > factor_1h);
+    }
+
+    #[test]
+    fn test_memory_stats_default() {
+        let stats = MemoryStats::default();
+        assert_eq!(stats.total_traces, 0);
+        assert_eq!(stats.consolidated_memories, 0);
+        assert_eq!(stats.total_recorded, 0);
+    }
+
+    #[tokio::test]
+    async fn test_temporal_memory_multiple_traces() {
+        let memory = TemporalMemory::default();
+
+        for i in 0..5 {
+            let trace = TemporalTrace::new(
+                &format!("event_{}", i),
+                "test_context",
+                serde_json::json!({"index": i}),
+            );
+            memory.record(trace).await;
+        }
+
+        let stats = memory.stats().await;
+        assert_eq!(stats.total_recorded, 5);
+    }
+
+    #[test]
+    fn test_temporal_trace_creation() {
+        let trace = TemporalTrace::new("event", "context", serde_json::json!({"key": "value"}));
+        assert_eq!(trace.event_type, "event");
+        assert_eq!(trace.context, "context");
+        assert!(trace.timestamp_ms > 0);
+    }
 }
