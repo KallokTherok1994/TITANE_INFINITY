@@ -123,13 +123,13 @@ impl TemporalConversationBridge {
         let mut strategies = vec![];
 
         // Morning: energize and plan
-        if hour >= 7 && hour <= 9 {
+        if (7..=9).contains(&hour) {
             strategies.push(ConversationStrategy::DailyPlanning);
             strategies.push(ConversationStrategy::MotivationalTone);
         }
 
         // Peak hours: efficiency
-        if hour >= 10 && hour <= 11 {
+        if (10..=11).contains(&hour) {
             strategies.push(ConversationStrategy::ConciseResponses);
             strategies.push(ConversationStrategy::ActionOriented);
         }
@@ -140,7 +140,7 @@ impl TemporalConversationBridge {
         }
 
         // Evening: reflection
-        if hour >= 19 && hour <= 21 {
+        if (19..=21).contains(&hour) {
             strategies.push(ConversationStrategy::ReflectiveMode);
         }
 
