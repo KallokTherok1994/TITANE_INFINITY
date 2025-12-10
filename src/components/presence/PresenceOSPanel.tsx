@@ -262,7 +262,7 @@ function AffectiveTab({ affective }: { affective: AffectiveState }) {
       <MetricCard label="Emotion" value={affective.emotion} />
       <MetricCard label="Intensity" value={affective.intensity} type="progress" />
       <MetricCard label="Valence" value={affective.valence} type="progress" />
-      <MetricCard label="Warmth" value={affective.warmth} type="progress" />
+      <MetricCard label="Warmth" value={affective.warmth ?? 0.5} type="progress" />
       <MetricCard label="Stability" value={affective.stability} type="progress" />
     </div>
   );
@@ -322,8 +322,8 @@ function SpatialTab({ spatial }: { spatial: SpatialPosition }) {
   return (
     <div className="presence-os-spatial">
       <MetricCard label="Proximity" value={spatial.proximity} type="progress" />
-      <MetricCard label="Elevation" value={spatial.elevation} type="progress" />
-      <MetricCard label="Width" value={spatial.width} type="progress" />
+      <MetricCard label="Elevation" value={spatial.elevation ?? 0.5} type="progress" />
+      <MetricCard label="Width" value={spatial.width ?? 0.5} type="progress" />
 
       <div className="presence-os-spatial-viz">
         <div className="spatial-grid">
@@ -331,8 +331,8 @@ function SpatialTab({ spatial }: { spatial: SpatialPosition }) {
             className="spatial-point"
             style={{
               left: `${(spatial.proximity + 1) * 50}%`,
-              top: `${(1 - spatial.elevation) * 50}%`,
-              width: `${spatial.width * 50}px`,
+              top: `${(1 - (spatial.elevation ?? 0.5)) * 50}%`,
+              width: `${(spatial.width ?? 0.5) * 50}px`,
               height: `${spatial.width * 50}px`,
             }}
           />

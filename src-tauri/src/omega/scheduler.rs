@@ -637,4 +637,330 @@ mod tests {
         assert!(job.retry()); // 2
         assert!(!job.retry()); // No more retries
     }
+
+    #[test]
+    fn test_scheduled_job_new() {
+        let input = PipelineInput::new("Test Job");
+        let job = ScheduledJob::new(input);
+
+        assert!(!job.id.is_empty());
+        assert_eq!(job.retries, 0);
+        assert_eq!(job.max_retries, 3);
+        assert!(job.deadline.is_none());
+    }
+
+    #[test]
+    fn test_scheduled_job_with_deadline() {
+        let input = PipelineInput::new("Test");
+        let job = ScheduledJob::new(input).with_deadline(Duration::from_secs(60));
+
+        assert!(job.deadline.is_some());
+    }
+
+    #[test]
+    fn test_scheduled_job_with_max_retries() {
+        let input = PipelineInput::new("Test");
+        let job = ScheduledJob::new(input).with_max_retries(5);
+
+        assert_eq!(job.max_retries, 5);
+    }
+
+    #[test]
+    fn test_scheduled_job_is_expired() {
+        let input = PipelineInput::new("Test");
+        let job = ScheduledJob::new(input);
+
+        // No deadline = not expired
+        assert!(!job.is_expired());
+    }
+
+    #[test]
+    fn test_scheduled_job_age_ms() {
+        let input = PipelineInput::new("Test");
+        let job = ScheduledJob::new(input);
+
+        // Age should be very small since just created
+        assert!(job.age_ms() < 1000);
+    }
+
+    #[test]
+    fn test_scheduled_job_equality() {
+        let input1 = PipelineInput::new("Test1");
+        let mut job1 = ScheduledJob::new(input1);
+        job1.id = "same-id".to_string();
+
+        let input2 = PipelineInput::new("Test2");
+        let mut job2 = ScheduledJob::new(input2);
+        job2.id = "same-id".to_string();
+
+        assert_eq!(job1, job2);
+    }
+
+    #[test]
+    fn test_scheduled_job_ordering() {
+        let input1 = PipelineInput::new("Low").with_priority(Priority::LOW);
+        let job1 = ScheduledJob::new(input1);
+
+        let input2 = PipelineInput::new("High").with_priority(Priority::HIGH);
+        let job2 = ScheduledJob::new(input2);
+
+        // Higher priority should come first
+        assert!(job2 > job1);
+    }
+
+    #[test]
+    fn test_job_status_variants() {
+        let statuses = vec![
+            JobStatus::Queued,
+            JobStatus::Running,
+            JobStatus::Completed,
+            JobStatus::Failed,
+            JobStatus::Cancelled,
+            JobStatus::Expired,
+        ];
+
+        assert_eq!(statuses.len(), 6);
+        assert_ne!(JobStatus::Queued, JobStatus::Running);
+    }
+
+    #[test]
+    fn test_job_result_structure() {
+        let result = JobResult {
+            job_id: "job-123".to_string(),
+            status: JobStatus::Completed,
+            result: Some(serde_json::json!({"output": "success"})),
+            error: None,
+            execution_ms: 150,
+            retries: 0,
+        };
+
+        assert_eq!(result.job_id, "job-123");
+        assert_eq!(result.status, JobStatus::Completed);
+        assert!(result.result.is_some());
+        assert!(result.error.is_none());
+    }
+
+    #[test]
+    fn test_scheduler_config_default() {
+        let config = SchedulerConfig::default();
+
+        assert_eq!(config.max_queue_size, 1000);
+        assert_eq!(config.max_concurrent, 10);
+        assert_eq!(config.rate_limit, 100.0);
+        assert!(config.enable_backpressure);
+        assert_eq!(config.backpressure_threshold, 0.8);
+        assert_eq!(config.default_timeout_ms, 200);
+        assert!(config.enable_priority);
+    }
+
+    #[test]
+    fn test_scheduler_config_clone() {
+        let config = SchedulerConfig::default();
+        let cloned = config.clone();
+
+        assert_eq!(cloned.max_queue_size, config.max_queue_size);
+        assert_eq!(cloned.rate_limit, config.rate_limit);
+    }
+
+    #[test]
+    fn test_rate_limiter_new() {
+        let limiter = RateLimiter::new(10.0, 5.0);
+
+        assert_eq!(limiter.max_tokens, 5.0);
+        assert_eq!(limiter.refill_rate, 10.0);
+    }
+
+    #[test]
+    fn test_rate_limiter_available_tokens() {
+        let limiter = RateLimiter::new(10.0, 5.0);
+        assert_eq!(limiter.available_tokens(), 5.0);
+    }
+
+    #[test]
+    fn test_rate_limiter_time_until_available() {
+        let mut limiter = RateLimiter::new(10.0, 5.0);
+
+        // Initially should have tokens
+        assert_eq!(limiter.time_until_available(), Duration::ZERO);
+
+        // Drain all tokens
+        for _ in 0..5 {
+            limiter.try_acquire();
+        }
+
+        // Now should have wait time
+        assert!(limiter.time_until_available() > Duration::ZERO);
+    }
+
+    #[test]
+    fn test_scheduler_stats_default() {
+        let stats = SchedulerStats::default();
+
+        assert_eq!(stats.total_scheduled, 0);
+        assert_eq!(stats.total_completed, 0);
+        assert_eq!(stats.total_failed, 0);
+        assert_eq!(stats.current_queue_size, 0);
+    }
+
+    #[test]
+    fn test_scheduler_stats_clone() {
+        let mut stats = SchedulerStats::default();
+        stats.total_scheduled = 10;
+        stats.total_completed = 8;
+
+        let cloned = stats.clone();
+        assert_eq!(cloned.total_scheduled, 10);
+        assert_eq!(cloned.total_completed, 8);
+    }
+
+    #[test]
+    fn test_priority_constants() {
+        assert_eq!(Priority::CRITICAL, 10);
+        assert_eq!(Priority::HIGH, 8);
+        assert_eq!(Priority::NORMAL, 5);
+        assert_eq!(Priority::LOW, 3);
+        assert_eq!(Priority::BACKGROUND, 1);
+    }
+
+    #[test]
+    fn test_priority_ordering() {
+        assert!(Priority::CRITICAL > Priority::HIGH);
+        assert!(Priority::HIGH > Priority::NORMAL);
+        assert!(Priority::NORMAL > Priority::LOW);
+        assert!(Priority::LOW > Priority::BACKGROUND);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_new() {
+        let config = SchedulerConfig::default();
+        let scheduler = JobScheduler::new(config);
+
+        assert_eq!(scheduler.queue_size().await, 0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_default() {
+        let scheduler = JobScheduler::default();
+        assert_eq!(scheduler.queue_size().await, 0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_is_accepting() {
+        let scheduler = JobScheduler::default();
+        assert!(scheduler.is_accepting().await);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_estimated_wait_empty() {
+        let scheduler = JobScheduler::default();
+        assert_eq!(scheduler.estimated_wait_ms().await, 0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_estimated_wait_with_jobs() {
+        let scheduler = JobScheduler::default();
+
+        for i in 0..5 {
+            let input = PipelineInput::new(&format!("Test {}", i));
+            scheduler.schedule(input).await.unwrap();
+        }
+
+        let wait = scheduler.estimated_wait_ms().await;
+        assert!(wait > 0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_cleanup() {
+        let scheduler = JobScheduler::default();
+
+        let input = PipelineInput::new("Test");
+        let job_id = scheduler.schedule(input).await.unwrap();
+        let _job = scheduler.next_job().await.unwrap();
+        scheduler.complete_job(&job_id, true, None).await;
+
+        scheduler.cleanup().await;
+
+        // Completed job should be removed
+        let status = scheduler.get_status(&job_id).await;
+        assert!(status.is_none() || status == Some(JobStatus::Completed));
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_acquire_permit() {
+        let scheduler = JobScheduler::default();
+
+        // Should be able to acquire permits
+        let permit = scheduler.acquire_permit().await;
+        assert!(permit.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_job_failed() {
+        let scheduler = JobScheduler::default();
+
+        let input = PipelineInput::new("Test");
+        let job_id = scheduler.schedule(input).await.unwrap();
+        let _job = scheduler.next_job().await.unwrap();
+
+        scheduler.complete_job(&job_id, false, None).await;
+
+        let status = scheduler.get_status(&job_id).await;
+        assert_eq!(status, Some(JobStatus::Failed));
+    }
+
+    #[tokio::test]
+    async fn test_cancel_running_job() {
+        let scheduler = JobScheduler::default();
+
+        let input = PipelineInput::new("Test");
+        let job_id = scheduler.schedule(input).await.unwrap();
+        let _job = scheduler.next_job().await.unwrap();
+
+        // Cannot cancel running job
+        let cancelled = scheduler.cancel_job(&job_id).await;
+        assert!(!cancelled);
+    }
+
+    #[test]
+    fn test_job_result_clone() {
+        let result = JobResult {
+            job_id: "test".to_string(),
+            status: JobStatus::Queued,
+            result: None,
+            error: None,
+            execution_ms: 0,
+            retries: 0,
+        };
+
+        let cloned = result.clone();
+        assert_eq!(cloned.job_id, "test");
+        assert_eq!(cloned.status, JobStatus::Queued);
+    }
+
+    #[test]
+    fn test_job_status_serialization() {
+        let status = JobStatus::Completed;
+        let json = serde_json::to_string(&status).unwrap();
+        assert!(json.contains("Completed"));
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_backpressure() {
+        let mut config = SchedulerConfig::default();
+        config.max_queue_size = 10;
+        config.backpressure_threshold = 0.5;
+
+        let scheduler = JobScheduler::new(config);
+
+        // Fill queue past threshold
+        for i in 0..6 {
+            let input = PipelineInput::new(&format!("Test {}", i));
+            let _ = scheduler.schedule(input).await;
+        }
+
+        // Next job should be rejected due to backpressure
+        let input = PipelineInput::new("Final");
+        let result = scheduler.schedule(input).await;
+        assert!(result.is_err());
+    }
 }

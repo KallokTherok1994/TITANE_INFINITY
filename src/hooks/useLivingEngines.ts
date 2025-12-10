@@ -14,6 +14,7 @@
  */
 
 import { useEffect, useState, useCallback } from 'react';
+import type { PersonaState } from '@/types/singularityState';
 
 // REMOVED: core/persona supprimé en PHASE 1 (OPTION B)
 // Stubs temporaires pour compatibilité
@@ -22,7 +23,7 @@ interface SystemState {
   health: number;
 }
 
-interface PersonaState {
+interface LocalPersonaState {
   mood: { current: string; intensity: number };
   energy: number;
   coherence: number;
@@ -36,7 +37,7 @@ interface VisualMultipliers {
 }
 
 const personaEngine = {
-  getState: (): PersonaState => ({
+  getState: (): LocalPersonaState => ({
     mood: { current: 'neutre', intensity: 0.5 },
     energy: 100,
     coherence: 100,

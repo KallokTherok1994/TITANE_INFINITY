@@ -756,4 +756,380 @@ mod tests {
         let result = executor.execute(&plan).await.unwrap();
         assert!(result.success);
     }
+
+    #[test]
+    fn test_task_type_all_default_timeouts() {
+        assert!(TaskType::Knowledge.default_timeout_ms() > 0);
+        assert!(TaskType::Memory.default_timeout_ms() > 0);
+        assert!(TaskType::Reasoning.default_timeout_ms() > 0);
+        assert!(TaskType::CodeGen.default_timeout_ms() > 0);
+        assert!(TaskType::TextGen.default_timeout_ms() > 0);
+        assert!(TaskType::Identity.default_timeout_ms() > 0);
+        assert!(TaskType::Safety.default_timeout_ms() > 0);
+        assert!(TaskType::Context.default_timeout_ms() > 0);
+    }
+
+    #[test]
+    fn test_task_type_parallel_safe() {
+        assert!(TaskType::Safety.parallel_safe());
+        assert!(TaskType::Identity.parallel_safe());
+        assert!(TaskType::Memory.parallel_safe());
+        assert!(TaskType::Knowledge.parallel_safe());
+        assert!(TaskType::Context.parallel_safe());
+        assert!(TaskType::Reasoning.parallel_safe());
+        assert!(TaskType::CodeGen.parallel_safe());
+        assert!(!TaskType::TextGen.parallel_safe());
+    }
+
+    #[test]
+    fn test_task_type_equality() {
+        assert_eq!(TaskType::Safety, TaskType::Safety);
+        assert_ne!(TaskType::Safety, TaskType::Memory);
+    }
+
+    #[test]
+    fn test_executable_task_structure() {
+        let task = ExecutableTask {
+            id: "test-task".to_string(),
+            task_type: TaskType::Reasoning,
+            input: serde_json::json!({"text": "test"}),
+            priority: 8,
+            timeout_ms: 100,
+            dependencies: vec!["dep1".to_string()],
+        };
+
+        assert_eq!(task.id, "test-task");
+        assert_eq!(task.task_type, TaskType::Reasoning);
+        assert_eq!(task.priority, 8);
+        assert_eq!(task.dependencies.len(), 1);
+    }
+
+    #[test]
+    fn test_task_result_structure() {
+        let result = TaskResult {
+            task_id: "task-123".to_string(),
+            success: true,
+            data: serde_json::json!({"output": "result"}),
+            execution_ms: 50,
+            error: None,
+            cached: false,
+        };
+
+        assert_eq!(result.task_id, "task-123");
+        assert!(result.success);
+        assert!(result.error.is_none());
+        assert!(!result.cached);
+    }
+
+    #[test]
+    fn test_task_result_failed() {
+        let result = TaskResult {
+            task_id: "failed-task".to_string(),
+            success: false,
+            data: serde_json::Value::Null,
+            execution_ms: 100,
+            error: Some("Timeout".to_string()),
+            cached: false,
+        };
+
+        assert!(!result.success);
+        assert!(result.error.is_some());
+        assert!(result.error.unwrap().contains("Timeout"));
+    }
+
+    #[test]
+    fn test_execution_context_default() {
+        let context = ExecutionContext::default();
+
+        assert!(context.results.is_empty());
+        assert!(context.metadata.is_empty());
+    }
+
+    #[test]
+    fn test_executor_stats_default() {
+        let stats = ExecutorStats::default();
+
+        assert_eq!(stats.total_executions, 0);
+        assert_eq!(stats.successful_executions, 0);
+        assert_eq!(stats.failed_executions, 0);
+        assert_eq!(stats.timeout_count, 0);
+    }
+
+    #[test]
+    fn test_executor_stats_clone() {
+        let mut stats = ExecutorStats::default();
+        stats.total_executions = 100;
+        stats.successful_executions = 95;
+
+        let cloned = stats.clone();
+        assert_eq!(cloned.total_executions, 100);
+        assert_eq!(cloned.successful_executions, 95);
+    }
+
+    #[test]
+    fn test_default_task_handler_new() {
+        let handler = DefaultTaskHandler::new(TaskType::Safety);
+        assert_eq!(handler.task_type(), TaskType::Safety);
+    }
+
+    #[tokio::test]
+    async fn test_default_task_handler_execute() {
+        let handler = DefaultTaskHandler::new(TaskType::Safety);
+        let task = ExecutableTask {
+            id: "safety-check".to_string(),
+            task_type: TaskType::Safety,
+            input: serde_json::json!({"text": "test"}),
+            priority: 10,
+            timeout_ms: 50,
+            dependencies: vec![],
+        };
+
+        let context = ExecutionContext::default();
+        let result = handler.execute(&task, &context).await;
+
+        assert!(result.success);
+        assert!(result.data.get("safe").is_some());
+    }
+
+    #[tokio::test]
+    async fn test_default_task_handler_identity() {
+        let handler = DefaultTaskHandler::new(TaskType::Identity);
+        let task = ExecutableTask {
+            id: "identity".to_string(),
+            task_type: TaskType::Identity,
+            input: serde_json::json!({}),
+            priority: 8,
+            timeout_ms: 20,
+            dependencies: vec![],
+        };
+
+        let context = ExecutionContext::default();
+        let result = handler.execute(&task, &context).await;
+
+        assert!(result.success);
+        assert!(result.data.get("archetype").is_some());
+    }
+
+    #[test]
+    fn test_parallel_executor_new() {
+        let executor = ParallelExecutor::new();
+        assert_eq!(executor.max_parallel, 4);
+    }
+
+    #[test]
+    fn test_parallel_executor_with_config() {
+        let executor = ParallelExecutor::with_config(8, 500);
+        assert_eq!(executor.max_parallel, 8);
+        assert_eq!(executor.global_timeout_ms, 500);
+    }
+
+    #[test]
+    fn test_parallel_executor_default() {
+        let executor = ParallelExecutor::default();
+        assert!(!executor.handlers.is_empty());
+        assert!(executor.handlers.contains_key(&TaskType::Safety));
+    }
+
+    #[tokio::test]
+    async fn test_parallel_executor_get_stats() {
+        let executor = ParallelExecutor::new();
+        let stats = executor.get_stats().await;
+
+        assert_eq!(stats.total_executions, 0);
+    }
+
+    #[test]
+    fn test_execution_plan_tasks_include_safety() {
+        let routing = RoutingResult {
+            intent: Intent::Query,
+            confidence: 0.9,
+            secondary_intents: vec![],
+            execution_mode: ExecutionMode::Fast,
+            handlers: vec![],
+            latency_us: 50,
+            cache_hit: false,
+        };
+
+        let plan = ExecutionPlan::from_routing("test".to_string(), &routing, "test query");
+
+        // Safety should always be included
+        assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::Safety));
+        // Identity should always be included
+        assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::Identity));
+    }
+
+    #[test]
+    fn test_execution_plan_for_task_intent() {
+        let routing = RoutingResult {
+            intent: Intent::Task,
+            confidence: 0.85,
+            secondary_intents: vec![],
+            execution_mode: ExecutionMode::Balanced,
+            handlers: vec![],
+            latency_us: 100,
+            cache_hit: false,
+        };
+
+        let plan = ExecutionPlan::from_routing("task-test".to_string(), &routing, "Do something");
+
+        // Should include Reasoning and CodeGen for Task intent
+        assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::Reasoning));
+        assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::CodeGen));
+    }
+
+    #[test]
+    fn test_execution_plan_for_creative_intent() {
+        let routing = RoutingResult {
+            intent: Intent::Creative,
+            confidence: 0.9,
+            secondary_intents: vec![],
+            execution_mode: ExecutionMode::Explorative,
+            handlers: vec![],
+            latency_us: 80,
+            cache_hit: false,
+        };
+
+        let plan = ExecutionPlan::from_routing("creative".to_string(), &routing, "Write a poem");
+
+        // Should include TextGen for Creative intent
+        assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::TextGen));
+    }
+
+    #[test]
+    fn test_execution_result_structure() {
+        let result = ExecutionResult {
+            request_id: "result-123".to_string(),
+            results: vec![],
+            total_time_ms: 100,
+            success: true,
+            mode: ExecutionMode::Fast,
+        };
+
+        assert_eq!(result.request_id, "result-123");
+        assert!(result.success);
+        assert_eq!(result.mode, ExecutionMode::Fast);
+    }
+
+    #[test]
+    fn test_execution_result_clone() {
+        let result = ExecutionResult {
+            request_id: "clone-test".to_string(),
+            results: vec![],
+            total_time_ms: 50,
+            success: false,
+            mode: ExecutionMode::Thorough,
+        };
+
+        let cloned = result.clone();
+        assert_eq!(cloned.request_id, "clone-test");
+        assert!(!cloned.success);
+    }
+
+    #[test]
+    fn test_executor_stage_new() {
+        let executor = Executor::new();
+        assert_eq!(executor.name(), "Executor");
+    }
+
+    #[test]
+    fn test_executor_stage_default() {
+        let executor = Executor::default();
+        assert_eq!(executor.stage(), PipelineStage::Executor);
+    }
+
+    #[test]
+    fn test_executor_with_executor() {
+        let parallel = ParallelExecutor::with_config(6, 300);
+        let executor = Executor::with_executor(parallel);
+        assert_eq!(executor.stage(), PipelineStage::Executor);
+    }
+
+    #[test]
+    fn test_task_result_clone() {
+        let result = TaskResult {
+            task_id: "clone".to_string(),
+            success: true,
+            data: serde_json::json!({"test": true}),
+            execution_ms: 25,
+            error: None,
+            cached: true,
+        };
+
+        let cloned = result.clone();
+        assert_eq!(cloned.task_id, "clone");
+        assert!(cloned.cached);
+    }
+
+    #[test]
+    fn test_executable_task_clone() {
+        let task = ExecutableTask {
+            id: "clone-task".to_string(),
+            task_type: TaskType::Memory,
+            input: serde_json::json!({}),
+            priority: 5,
+            timeout_ms: 30,
+            dependencies: vec!["other".to_string()],
+        };
+
+        let cloned = task.clone();
+        assert_eq!(cloned.id, "clone-task");
+        assert_eq!(cloned.task_type, TaskType::Memory);
+    }
+
+    #[test]
+    fn test_execution_plan_timeout_adjustment() {
+        let routing_fast = RoutingResult {
+            intent: Intent::Query,
+            confidence: 0.9,
+            secondary_intents: vec![],
+            execution_mode: ExecutionMode::Fast,
+            handlers: vec![],
+            latency_us: 50,
+            cache_hit: false,
+        };
+
+        let routing_thorough = RoutingResult {
+            intent: Intent::Query,
+            confidence: 0.9,
+            secondary_intents: vec![],
+            execution_mode: ExecutionMode::Thorough,
+            handlers: vec![],
+            latency_us: 50,
+            cache_hit: false,
+        };
+
+        let plan_fast = ExecutionPlan::from_routing("fast".to_string(), &routing_fast, "test");
+        let plan_thorough = ExecutionPlan::from_routing("thorough".to_string(), &routing_thorough, "test");
+
+        // Thorough mode should have longer timeouts
+        assert!(plan_thorough.estimated_time_ms >= plan_fast.estimated_time_ms);
+    }
+
+    #[test]
+    fn test_execution_plan_parallel_batch() {
+        let tasks = vec![
+            ExecutableTask {
+                id: "a".to_string(),
+                task_type: TaskType::Safety,
+                input: serde_json::Value::Null,
+                priority: 10,
+                timeout_ms: 30,
+                dependencies: vec![],
+            },
+            ExecutableTask {
+                id: "b".to_string(),
+                task_type: TaskType::Identity,
+                input: serde_json::Value::Null,
+                priority: 8,
+                timeout_ms: 20,
+                dependencies: vec![],
+            },
+        ];
+
+        let order = ExecutionPlan::compute_execution_order(&tasks);
+
+        // Both tasks have no deps, should be in first batch
+        assert_eq!(order.len(), 1);
+        assert_eq!(order[0].len(), 2);
+    }
 }
