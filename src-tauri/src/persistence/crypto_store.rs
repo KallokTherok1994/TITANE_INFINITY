@@ -377,7 +377,7 @@ impl CryptoStore {
         // Implémentation simplifiée - utiliser getrandom en production
         let seed = SystemTime::now()
             .duration_since(UNIX_EPOCH)
-            .unwrap()
+            .unwrap_or_else(|_| std::time::Duration::from_secs(0))
             .as_nanos();
 
         let mut bytes = Vec::with_capacity(len);

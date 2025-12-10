@@ -20,12 +20,16 @@ import {
   VisualConfig,
   CognitiveState,
   EmotionalTone,
-  SystemLoadLevel,
   ConversationContext,
   calculateVisualConfig,
   interpolateVisualConfig,
-  cubicEasing,
 } from '@/design-system/visual-states';
+import { IdentityPulse, type PulseWaveform } from './signature/IdentityPulse';
+import { OrbitalSignature, type OrbitalSnapshot } from './signature/OrbitalSignature';
+import {
+  ParticleSignature,
+  type ParticleEmissionEvent,
+} from './signature/ParticleSignature';
 
 export interface VisualEngineV21Config {
   enableParticles: boolean;
@@ -86,6 +90,11 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   private stateChangeCallbacks: Set<StateChangeCallback> = new Set();
   private configChangeCallbacks: Set<ConfigChangeCallback> = new Set();
 
+  // ✨ v21 SIGNATURE VISUELLE — TITANE∞ Polish Phase
+  private identityPulse: IdentityPulse;
+  private orbitalSignature: OrbitalSignature;
+  private particleSignature: ParticleSignature;
+
   constructor(initialState: TitaneState, config: Partial<VisualEngineV21Config> = {}) {
     super();
 
@@ -103,6 +112,14 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     // Initialize state
     this.currentState = { ...initialState };
     this.currentConfig = calculateVisualConfig(this.currentState);
+
+    // ✨ Initialize TITANE∞ signature systems
+    this.identityPulse = new IdentityPulse();
+    this.orbitalSignature = new OrbitalSignature();
+    this.particleSignature = new ParticleSignature();
+
+    // Sync signature systems with initial state
+    this.syncSignatureSystems(this.currentState);
   }
 
   /**
@@ -179,6 +196,11 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         this.updateTransition(timestamp);
       }
 
+      // ✨ Update TITANE∞ signature systems
+      const pulseWaveform = this.identityPulse.update(timestamp);
+      const orbitalSnapshot = this.orbitalSignature.update(deltaTime / 1000);
+      const particleEvents = this.particleSignature.emit(timestamp, deltaTime / 1000);
+
       // Emit render event for subscribers (particle systems, effects, etc.)
       this.emit('render', {
         timestamp,
@@ -186,6 +208,12 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         state: this.currentState,
         config: this.currentConfig,
         isTransitioning: this.isTransitioningState,
+        // ✨ Include signature data
+        signature: {
+          pulse: pulseWaveform,
+          orbital: orbitalSnapshot,
+          particles: particleEvents,
+        },
       });
 
       // Continue loop
@@ -311,7 +339,8 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Clear custom config override
    */
   clearCustomConfig(duration?: number): void {
-    const { customOverride, ...stateWithoutOverride } = this.currentState;
+    const { customOverride: _customOverride, ...stateWithoutOverride } =
+      this.currentState;
     this.setState(stateWithoutOverride, duration);
   }
 
@@ -345,6 +374,9 @@ export class TitaneVisualEngineV21 extends EventEmitter {
     this.transitionDuration = duration;
     this.isTransitioningState = true;
 
+    // ✨ Sync signature systems with new state
+    this.syncSignatureSystems(newState);
+
     this.notifyStateChange(this.currentState);
 
     this.emit('transitionStart', {
@@ -352,6 +384,25 @@ export class TitaneVisualEngineV21 extends EventEmitter {
       to: this.targetConfig,
       duration,
     });
+  }
+
+  /**
+   * ✨ v21 SIGNATURE — Synchronize signature systems with TitaneState
+   */
+  private syncSignatureSystems(state: TitaneState): void {
+    // Update Identity Pulse based on cognitive state
+    this.identityPulse.updateState(
+      state.cognitive,
+      state.emotional,
+      Math.max(0.3, this.currentConfig.intensity || 0.5)
+    );
+
+    // Update Particle Signature based on cognitive state
+    this.particleSignature.updateState(
+      state.cognitive,
+      state.emotional,
+      Math.max(0.3, this.currentConfig.intensity || 0.5)
+    );
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -427,6 +478,31 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    */
   getPerformanceMetrics(): PerformanceMetrics {
     return { ...this.performanceMetrics };
+  }
+
+  /**
+   * ✨ v21 SIGNATURE — Get current pulse waveform for external sync
+   */
+  getPulseWaveform(): PulseWaveform {
+    return this.identityPulse.getCurrentWaveform();
+  }
+
+  /**
+   * ✨ v21 SIGNATURE — Get current orbital snapshot
+   */
+  getOrbitalSnapshot(): OrbitalSnapshot {
+    return this.orbitalSignature.getSnapshot();
+  }
+
+  /**
+   * ✨ v21 SIGNATURE — Get signature systems (for advanced integrations)
+   */
+  getSignatureSystems() {
+    return {
+      identityPulse: this.identityPulse,
+      orbitalSignature: this.orbitalSignature,
+      particleSignature: this.particleSignature,
+    };
   }
 
   /**
