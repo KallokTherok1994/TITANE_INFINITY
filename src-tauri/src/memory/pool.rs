@@ -636,6 +636,226 @@ pub struct MemoryPoolMetrics {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // PoolConfig Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_pool_config_default() {
+        let config = PoolConfig::default();
+        assert_eq!(config.initial_capacity, 64);
+        assert_eq!(config.max_capacity, 1024);
+        assert!(config.auto_grow);
+        assert_eq!(config.growth_factor, 1.5);
+        assert!(config.enable_metrics);
+    }
+
+    #[test]
+    fn test_pool_config_clone() {
+        let config = PoolConfig::default();
+        let cloned = config.clone();
+        assert_eq!(cloned.initial_capacity, config.initial_capacity);
+        assert_eq!(cloned.max_capacity, config.max_capacity);
+    }
+
+    #[test]
+    fn test_pool_config_debug() {
+        let config = PoolConfig::default();
+        let debug_str = format!("{:?}", config);
+        assert!(debug_str.contains("PoolConfig"));
+    }
+
+    #[test]
+    fn test_pool_config_custom() {
+        let config = PoolConfig {
+            initial_capacity: 32,
+            max_capacity: 512,
+            auto_grow: false,
+            growth_factor: 2.0,
+            enable_metrics: false,
+        };
+
+        assert_eq!(config.initial_capacity, 32);
+        assert!(!config.auto_grow);
+        assert_eq!(config.growth_factor, 2.0);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PoolMetrics Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_pool_metrics_new() {
+        let metrics = PoolMetrics::new();
+        assert_eq!(metrics.allocations.load(Ordering::Relaxed), 0);
+        assert_eq!(metrics.deallocations.load(Ordering::Relaxed), 0);
+    }
+
+    #[test]
+    fn test_pool_metrics_default() {
+        let metrics = PoolMetrics::default();
+        assert_eq!(metrics.pool_hits.load(Ordering::Relaxed), 0);
+        assert_eq!(metrics.pool_misses.load(Ordering::Relaxed), 0);
+    }
+
+    #[test]
+    fn test_pool_metrics_record_allocation() {
+        let metrics = PoolMetrics::new();
+        metrics.record_allocation(1024);
+
+        assert_eq!(metrics.allocations.load(Ordering::Relaxed), 1);
+        assert_eq!(metrics.total_bytes_allocated.load(Ordering::Relaxed), 1024);
+    }
+
+    #[test]
+    fn test_pool_metrics_record_deallocation() {
+        let metrics = PoolMetrics::new();
+        metrics.record_deallocation();
+
+        assert_eq!(metrics.deallocations.load(Ordering::Relaxed), 1);
+    }
+
+    #[test]
+    fn test_pool_metrics_record_hit() {
+        let metrics = PoolMetrics::new();
+        metrics.record_hit();
+        metrics.record_hit();
+
+        assert_eq!(metrics.pool_hits.load(Ordering::Relaxed), 2);
+    }
+
+    #[test]
+    fn test_pool_metrics_record_miss() {
+        let metrics = PoolMetrics::new();
+        metrics.record_miss();
+
+        assert_eq!(metrics.pool_misses.load(Ordering::Relaxed), 1);
+    }
+
+    #[test]
+    fn test_pool_metrics_update_size() {
+        let metrics = PoolMetrics::new();
+        metrics.update_size(50);
+
+        assert_eq!(metrics.current_size.load(Ordering::Relaxed), 50);
+        assert_eq!(metrics.peak_size.load(Ordering::Relaxed), 50);
+    }
+
+    #[test]
+    fn test_pool_metrics_update_size_peak() {
+        let metrics = PoolMetrics::new();
+        metrics.update_size(100);
+        metrics.update_size(50);
+
+        assert_eq!(metrics.current_size.load(Ordering::Relaxed), 50);
+        assert_eq!(metrics.peak_size.load(Ordering::Relaxed), 100);
+    }
+
+    #[test]
+    fn test_pool_metrics_hit_rate_empty() {
+        let metrics = PoolMetrics::new();
+        assert_eq!(metrics.hit_rate(), 0.0);
+    }
+
+    #[test]
+    fn test_pool_metrics_hit_rate_all_hits() {
+        let metrics = PoolMetrics::new();
+        metrics.record_hit();
+        metrics.record_hit();
+        metrics.record_hit();
+
+        assert_eq!(metrics.hit_rate(), 1.0);
+    }
+
+    #[test]
+    fn test_pool_metrics_hit_rate_mixed() {
+        let metrics = PoolMetrics::new();
+        metrics.record_hit();
+        metrics.record_miss();
+
+        assert_eq!(metrics.hit_rate(), 0.5);
+    }
+
+    #[test]
+    fn test_pool_metrics_snapshot() {
+        let metrics = PoolMetrics::new();
+        metrics.record_allocation(512);
+        metrics.record_hit();
+        metrics.update_size(10);
+
+        let snapshot = metrics.snapshot();
+        assert_eq!(snapshot.allocations, 1);
+        assert_eq!(snapshot.pool_hits, 1);
+        assert_eq!(snapshot.current_size, 10);
+        assert_eq!(snapshot.total_bytes_allocated, 512);
+    }
+
+    #[test]
+    fn test_pool_metrics_debug() {
+        let metrics = PoolMetrics::new();
+        let debug_str = format!("{:?}", metrics);
+        assert!(debug_str.contains("PoolMetrics"));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PoolMetricsSnapshot Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_pool_metrics_snapshot_debug() {
+        let snapshot = PoolMetricsSnapshot {
+            allocations: 10,
+            deallocations: 5,
+            pool_hits: 100,
+            pool_misses: 20,
+            current_size: 50,
+            peak_size: 100,
+            total_bytes_allocated: 50000,
+            hit_rate: 0.833,
+        };
+        let debug_str = format!("{:?}", snapshot);
+        assert!(debug_str.contains("PoolMetricsSnapshot"));
+    }
+
+    #[test]
+    fn test_pool_metrics_snapshot_clone() {
+        let snapshot = PoolMetricsSnapshot {
+            allocations: 5,
+            deallocations: 2,
+            pool_hits: 10,
+            pool_misses: 3,
+            current_size: 20,
+            peak_size: 25,
+            total_bytes_allocated: 10000,
+            hit_rate: 0.77,
+        };
+        let cloned = snapshot.clone();
+        assert_eq!(cloned.allocations, 5);
+        assert_eq!(cloned.hit_rate, 0.77);
+    }
+
+    #[test]
+    fn test_pool_metrics_snapshot_serialization() {
+        let snapshot = PoolMetricsSnapshot {
+            allocations: 1,
+            deallocations: 0,
+            pool_hits: 5,
+            pool_misses: 1,
+            current_size: 10,
+            peak_size: 10,
+            total_bytes_allocated: 4096,
+            hit_rate: 0.833,
+        };
+
+        let json = serde_json::to_string(&snapshot).unwrap();
+        assert!(json.contains("allocations"));
+        assert!(json.contains("hit_rate"));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // StringPool Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_string_pool_acquire_release() {
         let pool = StringPool::new(PoolConfig::default());
@@ -647,6 +867,105 @@ mod tests {
         let metrics = pool.metrics();
         assert!(metrics.pool_hits > 0 || metrics.pool_misses > 0);
     }
+
+    #[test]
+    fn test_string_pool_warm() {
+        let config = PoolConfig {
+            initial_capacity: 10,
+            max_capacity: 100,
+            ..Default::default()
+        };
+        let pool = StringPool::new(config);
+
+        pool.warm(20);
+
+        let metrics = pool.metrics();
+        assert!(metrics.current_size > 10);
+    }
+
+    #[test]
+    fn test_string_pool_metrics() {
+        let pool = StringPool::new(PoolConfig::default());
+        let _ = pool.acquire();
+
+        let metrics = pool.metrics();
+        // Should have recorded either a hit or miss
+        assert!(metrics.pool_hits + metrics.pool_misses >= 1);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PooledString Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_pooled_string_as_str() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        s.push_str("test");
+        assert_eq!(s.as_str(), "test");
+    }
+
+    #[test]
+    fn test_pooled_string_as_mut_string() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        s.as_mut_string().push_str("hello");
+        assert_eq!(s.as_str(), "hello");
+    }
+
+    #[test]
+    fn test_pooled_string_push_str() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        s.push_str("foo");
+        s.push_str("bar");
+        assert_eq!(s.as_str(), "foobar");
+    }
+
+    #[test]
+    fn test_pooled_string_len() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        assert_eq!(s.len(), 0);
+
+        s.push_str("12345");
+        assert_eq!(s.len(), 5);
+    }
+
+    #[test]
+    fn test_pooled_string_is_empty() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        assert!(s.is_empty());
+
+        s.push_str("x");
+        assert!(!s.is_empty());
+    }
+
+    #[test]
+    fn test_pooled_string_into_string() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        s.push_str("convert me");
+
+        let owned = s.into_string();
+        assert_eq!(owned, "convert me");
+    }
+
+    #[test]
+    fn test_pooled_string_deref() {
+        let pool = StringPool::new(PoolConfig::default());
+        let mut s = pool.acquire();
+        s.push_str("deref test");
+
+        // Using Deref
+        let slice: &str = &s;
+        assert_eq!(slice, "deref test");
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // BufferPool Tests
+    // ─────────────────────────────────────────────────────────────
 
     #[test]
     fn test_buffer_pool_sizes() {
@@ -669,6 +988,113 @@ mod tests {
     }
 
     #[test]
+    fn test_buffer_pool_oversized() {
+        let pool = BufferPool::new(PoolConfig::default());
+
+        let oversized = pool.acquire(100_000);
+        assert!(oversized.len() >= 100_000);
+        assert_eq!(oversized.size_class(), 100_000);
+    }
+
+    #[test]
+    fn test_buffer_pool_return() {
+        let pool = BufferPool::new(PoolConfig::default());
+
+        let buffer = pool.acquire(512);
+        let size_class = buffer.size_class();
+        let vec = buffer.into_vec();
+
+        pool.return_buffer(vec, size_class);
+
+        let metrics = pool.metrics();
+        assert!(metrics.deallocations >= 1);
+    }
+
+    #[test]
+    fn test_buffer_pool_metrics() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let _ = pool.acquire(100);
+
+        let metrics = pool.metrics();
+        assert!(metrics.pool_hits + metrics.pool_misses >= 1);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PooledBuffer Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_pooled_buffer_as_slice() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let buffer = pool.acquire(100);
+
+        let slice = buffer.as_slice();
+        assert!(slice.len() >= 100);
+    }
+
+    #[test]
+    fn test_pooled_buffer_as_mut_slice() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let mut buffer = pool.acquire(100);
+
+        let slice = buffer.as_mut_slice();
+        slice[0] = 42;
+        assert_eq!(buffer.as_slice()[0], 42);
+    }
+
+    #[test]
+    fn test_pooled_buffer_len() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let buffer = pool.acquire(512);
+        assert!(buffer.len() >= 512);
+    }
+
+    #[test]
+    fn test_pooled_buffer_is_empty() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let buffer = pool.acquire(100);
+        assert!(!buffer.is_empty());
+    }
+
+    #[test]
+    fn test_pooled_buffer_size_class() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let buffer = pool.acquire(500);
+        assert_eq!(buffer.size_class(), BufferPool::SMALL_SIZE);
+    }
+
+    #[test]
+    fn test_pooled_buffer_into_vec() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let buffer = pool.acquire(100);
+        let vec = buffer.into_vec();
+        assert!(vec.len() >= 100);
+    }
+
+    #[test]
+    fn test_pooled_buffer_deref() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let buffer = pool.acquire(100);
+
+        let slice: &[u8] = &buffer;
+        assert!(!slice.is_empty());
+    }
+
+    #[test]
+    fn test_pooled_buffer_deref_mut() {
+        let pool = BufferPool::new(PoolConfig::default());
+        let mut buffer = pool.acquire(100);
+
+        let slice: &mut [u8] = &mut buffer;
+        slice[0] = 99;
+        assert_eq!(buffer[0], 99);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // EmbeddingPool Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
     fn test_embedding_pool_operations() {
         let pool = EmbeddingPool::new(128, PoolConfig::default());
 
@@ -685,6 +1111,136 @@ mod tests {
     }
 
     #[test]
+    fn test_embedding_pool_dimension() {
+        let pool = EmbeddingPool::new(256, PoolConfig::default());
+        assert_eq!(pool.dimension(), 256);
+    }
+
+    #[test]
+    fn test_embedding_pool_metrics() {
+        let pool = EmbeddingPool::new(64, PoolConfig::default());
+        let _ = pool.acquire();
+
+        let metrics = pool.metrics();
+        assert!(metrics.pool_hits + metrics.pool_misses >= 1);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PooledEmbedding Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_pooled_embedding_as_slice() {
+        let pool = EmbeddingPool::new(64, PoolConfig::default());
+        let emb = pool.acquire();
+        assert_eq!(emb.as_slice().len(), 64);
+    }
+
+    #[test]
+    fn test_pooled_embedding_as_mut_slice() {
+        let pool = EmbeddingPool::new(64, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        let slice = emb.as_mut_slice();
+        slice[0] = 1.0;
+        assert_eq!(emb.as_slice()[0], 1.0);
+    }
+
+    #[test]
+    fn test_pooled_embedding_dimension() {
+        let pool = EmbeddingPool::new(128, PoolConfig::default());
+        let emb = pool.acquire();
+        assert_eq!(emb.dimension(), 128);
+    }
+
+    #[test]
+    fn test_pooled_embedding_set() {
+        let pool = EmbeddingPool::new(4, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        emb.set(&[1.0, 2.0, 3.0, 4.0]);
+        assert_eq!(emb.as_slice(), &[1.0, 2.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn test_pooled_embedding_set_partial() {
+        let pool = EmbeddingPool::new(4, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        emb.set(&[1.0, 2.0]); // Shorter than dimension
+        assert_eq!(emb.as_slice()[0], 1.0);
+        assert_eq!(emb.as_slice()[1], 2.0);
+    }
+
+    #[test]
+    fn test_pooled_embedding_dot_product() {
+        let pool = EmbeddingPool::new(3, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        emb.set(&[1.0, 2.0, 3.0]);
+        let other = [1.0, 1.0, 1.0];
+
+        let dot = emb.dot_product(&other);
+        assert_eq!(dot, 6.0); // 1*1 + 2*1 + 3*1 = 6
+    }
+
+    #[test]
+    fn test_pooled_embedding_cosine_similarity_same() {
+        let pool = EmbeddingPool::new(3, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        emb.set(&[1.0, 0.0, 0.0]);
+        let similarity = emb.cosine_similarity(&[1.0, 0.0, 0.0]);
+
+        assert!((similarity - 1.0).abs() < 0.0001);
+    }
+
+    #[test]
+    fn test_pooled_embedding_cosine_similarity_orthogonal() {
+        let pool = EmbeddingPool::new(3, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        emb.set(&[1.0, 0.0, 0.0]);
+        let similarity = emb.cosine_similarity(&[0.0, 1.0, 0.0]);
+
+        assert!(similarity.abs() < 0.0001);
+    }
+
+    #[test]
+    fn test_pooled_embedding_cosine_similarity_zero_vector() {
+        let pool = EmbeddingPool::new(3, PoolConfig::default());
+        let mut emb = pool.acquire();
+
+        emb.set(&[0.0, 0.0, 0.0]);
+        let similarity = emb.cosine_similarity(&[1.0, 0.0, 0.0]);
+
+        assert_eq!(similarity, 0.0);
+    }
+
+    #[test]
+    fn test_pooled_embedding_into_vec() {
+        let pool = EmbeddingPool::new(4, PoolConfig::default());
+        let mut emb = pool.acquire();
+        emb.set(&[1.0, 2.0, 3.0, 4.0]);
+
+        let vec = emb.into_vec();
+        assert_eq!(vec, vec![1.0, 2.0, 3.0, 4.0]);
+    }
+
+    #[test]
+    fn test_pooled_embedding_deref() {
+        let pool = EmbeddingPool::new(4, PoolConfig::default());
+        let emb = pool.acquire();
+
+        let slice: &[f32] = &emb;
+        assert_eq!(slice.len(), 4);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // MemoryPoolManager Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
     fn test_pool_manager() {
         let manager = MemoryPoolManager::new();
 
@@ -696,5 +1252,80 @@ mod tests {
 
         let metrics = manager.metrics();
         assert!(metrics.strings.current_size > 0);
+    }
+
+    #[test]
+    fn test_pool_manager_default() {
+        let manager = MemoryPoolManager::default();
+        let _ = manager.metrics();
+    }
+
+    #[test]
+    fn test_pool_manager_with_config() {
+        let config = PoolConfig {
+            initial_capacity: 16,
+            max_capacity: 128,
+            ..Default::default()
+        };
+
+        let manager = MemoryPoolManager::with_config(config, 768);
+        let _ = manager.metrics();
+    }
+
+    #[test]
+    fn test_pool_manager_acquire_string() {
+        let manager = MemoryPoolManager::new();
+        let pool = manager.strings.read();
+        let mut s = pool.acquire();
+        s.push_str("test");
+        assert_eq!(s.as_str(), "test");
+    }
+
+    #[test]
+    fn test_pool_manager_acquire_buffer() {
+        let manager = MemoryPoolManager::new();
+        let pool = manager.buffers.read();
+        let buffer = pool.acquire(100);
+        assert!(buffer.len() >= 100);
+    }
+
+    #[test]
+    fn test_pool_manager_acquire_embedding() {
+        let manager = MemoryPoolManager::new();
+        let pool = manager.embeddings.read();
+        let emb = pool.acquire();
+        assert_eq!(emb.dimension(), 1536); // OpenAI default
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // MemoryPoolMetrics Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_memory_pool_metrics_debug() {
+        let manager = MemoryPoolManager::new();
+        let metrics = manager.metrics();
+        let debug_str = format!("{:?}", metrics);
+        assert!(debug_str.contains("MemoryPoolMetrics"));
+    }
+
+    #[test]
+    fn test_memory_pool_metrics_clone() {
+        let manager = MemoryPoolManager::new();
+        let metrics = manager.metrics();
+        let cloned = metrics.clone();
+
+        assert_eq!(cloned.strings.allocations, metrics.strings.allocations);
+    }
+
+    #[test]
+    fn test_memory_pool_metrics_serialization() {
+        let manager = MemoryPoolManager::new();
+        let metrics = manager.metrics();
+
+        let json = serde_json::to_string(&metrics).unwrap();
+        assert!(json.contains("strings"));
+        assert!(json.contains("buffers"));
+        assert!(json.contains("embeddings"));
     }
 }
