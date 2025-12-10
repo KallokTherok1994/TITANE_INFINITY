@@ -27,7 +27,7 @@ mod tests {
                 season,
                 time_of_day: TimeOfDay::from_hour(hour),
             },
-            session_start: 0,
+            session_start: Moment::default(),
             session_duration_ms: 0,
             day_progress: hour as f32 / 24.0,
             week_progress: day_of_week as f32 / 7.0,
@@ -78,7 +78,7 @@ mod tests {
         let limits = TemporalKernelBridge::get_resource_limits(&context);
 
         assert!(
-            limits.max_cpu_percent > 70,
+            limits.max_cpu_percent > 70.0,
             "Peak hours should allow high CPU"
         );
         assert!(

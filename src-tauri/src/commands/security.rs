@@ -280,6 +280,13 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("get_session_info");
     commands.insert("get_runtime_config");
 
+    // ═══════════════════════════════════════════════════════════════
+    // SYSTEM CENTER DIAGNOSTICS (v∞)
+    // ═══════════════════════════════════════════════════════════════
+    commands.insert("sc_run_quick_diagnostics");
+    commands.insert("sc_run_full_diagnostics");
+    commands.insert("sc_get_diagnostic_status");
+
     commands
 }
 

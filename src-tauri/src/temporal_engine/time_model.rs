@@ -159,6 +159,22 @@ pub enum TimeOfDay {
     LateNight,
 }
 
+impl TimeOfDay {
+    /// Convertit une heure (0-23) en période de la journée appropriée
+    pub fn from_hour(hour: u8) -> Self {
+        match hour {
+            0..=5 => Self::LateNight,    // 00:00-05:59
+            6..=8 => Self::EarlyMorning, // 06:00-08:59
+            9..=11 => Self::Morning,     // 09:00-11:59
+            12..=13 => Self::Midday,     // 12:00-13:59
+            14..=17 => Self::Afternoon,  // 14:00-17:59
+            18..=20 => Self::Evening,    // 18:00-20:59
+            21..=22 => Self::Night,      // 21:00-22:59
+            _ => Self::LateNight,        // 23:00
+        }
+    }
+}
+
 /// Contexte temporel complet
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct TemporalContext {

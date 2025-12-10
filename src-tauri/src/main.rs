@@ -16,6 +16,7 @@
 
 // Tauri core (Manager trait required for .path() and .get_webview_window())
 // Required for both app_data_dir access and DevTools auto-open
+use tauri::Manager;
 
 // TITANE∞ command modules
 use std::sync::Arc;
@@ -151,6 +152,9 @@ mod onboarding;
 // Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
 mod config;
 
+// System Center v∞ (Diagnostics, DevTools, Cluster)
+use titane_infinity::system_center;
+
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
     AnalysisEngine, ConsistencyEngine, EvolutionCognitiveEngine, IntegrationEngine,
@@ -268,15 +272,11 @@ fn main() {
         .or_else(|| Some("default-dev-passphrase-change-in-production".to_string()));
 
     let secrets_engine =
-        titane_infinity::security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase)
+        security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase)
             .expect("Failed to initialize Secure Secrets Engine");
 
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
-    let chat_orch_clone = chat_orchestrator.clone();
-    tokio::spawn(async move {
-        overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
-    });
 
     let app_state = AppState {
         // ...existing code...
@@ -294,7 +294,19 @@ fn main() {
         .manage(singularity_cortex)
         .manage(multi_ai_orchestrator)
         .manage(secrets_engine)
-        .manage(chat_orchestrator)
+        .manage(chat_orchestrator.clone())
+        .setup(move |app| {
+            // Initialize SingularityEngine with app_handle
+            let singularity_engine = Arc::new(singularity_state::SingularityEngine::new(app.handle().clone()));
+            app.manage(singularity_engine);
+            
+            // Initialize providers asynchronously within Tauri's async runtime
+            let chat_orch_clone = chat_orchestrator.clone();
+            tauri::async_runtime::spawn(async move {
+                overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
+            });
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             // Core messaging
             send_message,
@@ -344,6 +356,10 @@ fn main() {
             singularity_state::commands::singularity_update_full_state,
             singularity_state::commands::singularity_save_state,
             singularity_state::commands::singularity_load_state,
+            // System Center Diagnostics (v∞)
+            system_center::diagnostics::sc_run_quick_diagnostics,
+            system_center::diagnostics::sc_run_full_diagnostics,
+            system_center::diagnostics::sc_get_diagnostic_status,
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
             secure_commands::chat_set_gemini_key,
             secure_commands::get_gemini_key_status,
