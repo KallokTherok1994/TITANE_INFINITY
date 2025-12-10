@@ -115,7 +115,7 @@ impl SelfHealingConversation {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SelfHealingStats {
     pub total_processed: usize,
     pub total_anomalies: usize,
@@ -127,4 +127,434 @@ fn current_timestamp() -> u64 {
         .duration_since(UNIX_EPOCH)
         .unwrap()
         .as_secs()
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TESTS UNITAIRES
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests SelfHealingStats
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_self_healing_stats_new() {
+        let stats = SelfHealingStats {
+            total_processed: 0,
+            total_anomalies: 0,
+            last_scan: 0,
+        };
+        assert_eq!(stats.total_processed, 0);
+        assert_eq!(stats.total_anomalies, 0);
+        assert_eq!(stats.last_scan, 0);
+    }
+
+    #[test]
+    fn test_self_healing_stats_with_values() {
+        let stats = SelfHealingStats {
+            total_processed: 100,
+            total_anomalies: 5,
+            last_scan: 1234567890,
+        };
+        assert_eq!(stats.total_processed, 100);
+        assert_eq!(stats.total_anomalies, 5);
+        assert_eq!(stats.last_scan, 1234567890);
+    }
+
+    #[test]
+    fn test_self_healing_stats_debug() {
+        let stats = SelfHealingStats {
+            total_processed: 42,
+            total_anomalies: 3,
+            last_scan: 999,
+        };
+        let debug_str = format!("{:?}", stats);
+        assert!(debug_str.contains("42"));
+        assert!(debug_str.contains("3"));
+        assert!(debug_str.contains("999"));
+    }
+
+    #[test]
+    fn test_self_healing_stats_clone() {
+        let stats = SelfHealingStats {
+            total_processed: 50,
+            total_anomalies: 2,
+            last_scan: 12345,
+        };
+        let cloned = stats.clone();
+        assert_eq!(stats, cloned);
+    }
+
+    #[test]
+    fn test_self_healing_stats_eq() {
+        let stats1 = SelfHealingStats {
+            total_processed: 10,
+            total_anomalies: 1,
+            last_scan: 100,
+        };
+        let stats2 = SelfHealingStats {
+            total_processed: 10,
+            total_anomalies: 1,
+            last_scan: 100,
+        };
+        assert_eq!(stats1, stats2);
+    }
+
+    #[test]
+    fn test_self_healing_stats_ne() {
+        let stats1 = SelfHealingStats {
+            total_processed: 10,
+            total_anomalies: 1,
+            last_scan: 100,
+        };
+        let stats2 = SelfHealingStats {
+            total_processed: 20,
+            total_anomalies: 1,
+            last_scan: 100,
+        };
+        assert_ne!(stats1, stats2);
+    }
+
+    #[test]
+    fn test_self_healing_stats_max_values() {
+        let stats = SelfHealingStats {
+            total_processed: usize::MAX,
+            total_anomalies: usize::MAX,
+            last_scan: u64::MAX,
+        };
+        assert_eq!(stats.total_processed, usize::MAX);
+        assert_eq!(stats.total_anomalies, usize::MAX);
+        assert_eq!(stats.last_scan, u64::MAX);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests SelfHealingConversation création
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_self_healing_conversation_new() {
+        let healing = SelfHealingConversation::new();
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 0);
+        assert_eq!(stats.total_anomalies, 0);
+        assert!(stats.last_scan > 0); // Devrait être timestamp actuel
+    }
+
+    #[test]
+    fn test_self_healing_initial_state() {
+        let healing = SelfHealingConversation::new();
+        let stats = healing.stats();
+        // État initial propre
+        assert_eq!(stats.total_processed, 0);
+        assert_eq!(stats.total_anomalies, 0);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests SelfHealingConversation verify_state
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn test_verify_state_first_call() {
+        let mut healing = SelfHealingConversation::new();
+        let result = healing.verify_state("conv-1").await;
+        assert!(result.is_ok());
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 1);
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_duplicate() {
+        let mut healing = SelfHealingConversation::new();
+
+        // Premier appel OK
+        let result1 = healing.verify_state("conv-1").await;
+        assert!(result1.is_ok());
+
+        // Deuxième appel avec même ID = erreur
+        let result2 = healing.verify_state("conv-1").await;
+        assert!(result2.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_different_ids() {
+        let mut healing = SelfHealingConversation::new();
+
+        let result1 = healing.verify_state("conv-1").await;
+        let result2 = healing.verify_state("conv-2").await;
+        let result3 = healing.verify_state("conv-3").await;
+
+        assert!(result1.is_ok());
+        assert!(result2.is_ok());
+        assert!(result3.is_ok());
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 3);
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_empty_id() {
+        let mut healing = SelfHealingConversation::new();
+        let result = healing.verify_state("").await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_unicode_id() {
+        let mut healing = SelfHealingConversation::new();
+        let result = healing.verify_state("conv-émojis-🎉").await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_verify_state_many_conversations() {
+        let mut healing = SelfHealingConversation::new();
+
+        for i in 0..100 {
+            let id = format!("conv-{}", i);
+            let result = healing.verify_state(&id).await;
+            assert!(result.is_ok());
+        }
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 100);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests SelfHealingConversation record_anomaly
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_record_anomaly_message_loss() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::MessageLoss);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 1);
+    }
+
+    #[test]
+    fn test_record_anomaly_state_drift() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::StateDrift);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 1);
+    }
+
+    #[test]
+    fn test_record_anomaly_memory_corruption() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::MemoryCorruption);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 1);
+    }
+
+    #[test]
+    fn test_record_anomaly_sync_failure() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::SyncFailure);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 1);
+    }
+
+    #[test]
+    fn test_record_multiple_same_anomaly() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::MessageLoss);
+        healing.record_anomaly(AnomalyType::MessageLoss);
+        healing.record_anomaly(AnomalyType::MessageLoss);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 3);
+    }
+
+    #[test]
+    fn test_record_multiple_different_anomalies() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::MessageLoss);
+        healing.record_anomaly(AnomalyType::StateDrift);
+        healing.record_anomaly(AnomalyType::MemoryCorruption);
+        healing.record_anomaly(AnomalyType::SyncFailure);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 4);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests SelfHealingConversation scan_and_repair
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn test_scan_and_repair_healthy() {
+        let mut healing = SelfHealingConversation::new();
+        let report = healing.scan_and_repair().await;
+
+        assert!(report.is_ok());
+        let report = report.unwrap();
+        assert!(matches!(report.status, HealthStatus::Healthy));
+        assert!(report.anomalies_detected.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_scan_and_repair_updates_timestamp() {
+        let mut healing = SelfHealingConversation::new();
+        let before = healing.stats().last_scan;
+
+        // Petit délai pour s'assurer que le timestamp change
+        tokio::time::sleep(tokio::time::Duration::from_millis(10)).await;
+
+        let _report = healing.scan_and_repair().await;
+        let after = healing.stats().last_scan;
+
+        assert!(after >= before);
+    }
+
+    #[tokio::test]
+    async fn test_scan_and_repair_coherence_score() {
+        let mut healing = SelfHealingConversation::new();
+        let report = healing.scan_and_repair().await.unwrap();
+
+        assert_eq!(report.coherence_score, 0.95);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests SelfHealingConversation stats
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_stats_initial() {
+        let healing = SelfHealingConversation::new();
+        let stats = healing.stats();
+
+        assert_eq!(stats.total_processed, 0);
+        assert_eq!(stats.total_anomalies, 0);
+        assert!(stats.last_scan > 0);
+    }
+
+    #[tokio::test]
+    async fn test_stats_after_verify() {
+        let mut healing = SelfHealingConversation::new();
+        healing.verify_state("conv-1").await.unwrap();
+        healing.verify_state("conv-2").await.unwrap();
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 2);
+    }
+
+    #[test]
+    fn test_stats_after_anomaly() {
+        let mut healing = SelfHealingConversation::new();
+        healing.record_anomaly(AnomalyType::MessageLoss);
+        healing.record_anomaly(AnomalyType::StateDrift);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 2);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests current_timestamp
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_current_timestamp_reasonable() {
+        let ts = current_timestamp();
+        // Le timestamp devrait être après 2020 (1577836800)
+        assert!(ts > 1577836800);
+    }
+
+    #[test]
+    fn test_current_timestamp_increasing() {
+        let ts1 = current_timestamp();
+        let ts2 = current_timestamp();
+        // Les timestamps devraient être non-décroissants
+        assert!(ts2 >= ts1);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────
+    // Tests d'intégration
+    // ─────────────────────────────────────────────────────────────────────
+
+    #[tokio::test]
+    async fn test_full_workflow() {
+        let mut healing = SelfHealingConversation::new();
+
+        // Vérifier quelques conversations
+        healing.verify_state("conv-1").await.unwrap();
+        healing.verify_state("conv-2").await.unwrap();
+
+        // Enregistrer des anomalies
+        healing.record_anomaly(AnomalyType::MessageLoss);
+
+        // Scanner
+        let report = healing.scan_and_repair().await.unwrap();
+
+        // Vérifier stats
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 2);
+        assert_eq!(stats.total_anomalies, 1);
+        assert!(matches!(report.status, HealthStatus::Healthy));
+    }
+
+    #[tokio::test]
+    async fn test_duplicate_detection_workflow() {
+        let mut healing = SelfHealingConversation::new();
+
+        // Premier appel OK
+        assert!(healing.verify_state("important-conv").await.is_ok());
+
+        // Deuxième appel = erreur (duplicate)
+        let err = healing.verify_state("important-conv").await;
+        assert!(err.is_err());
+
+        // Mais un ID différent fonctionne
+        assert!(healing.verify_state("important-conv-2").await.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_multiple_scans() {
+        let mut healing = SelfHealingConversation::new();
+
+        for _ in 0..5 {
+            let report = healing.scan_and_repair().await;
+            assert!(report.is_ok());
+        }
+    }
+
+    #[test]
+    fn test_anomaly_counting_by_type() {
+        let mut healing = SelfHealingConversation::new();
+
+        // Enregistrer plusieurs anomalies de différents types
+        for _ in 0..3 {
+            healing.record_anomaly(AnomalyType::MessageLoss);
+        }
+        for _ in 0..2 {
+            healing.record_anomaly(AnomalyType::StateDrift);
+        }
+        healing.record_anomaly(AnomalyType::SyncFailure);
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_anomalies, 6);
+    }
+
+    #[tokio::test]
+    async fn test_large_scale_verification() {
+        let mut healing = SelfHealingConversation::new();
+
+        // Vérifier 500 conversations
+        for i in 0..500 {
+            let id = format!("large-conv-{}", i);
+            healing.verify_state(&id).await.unwrap();
+        }
+
+        let stats = healing.stats();
+        assert_eq!(stats.total_processed, 500);
+    }
 }
