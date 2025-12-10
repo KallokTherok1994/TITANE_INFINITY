@@ -209,4 +209,49 @@ mod tests {
             Err(RateLimitError::MinutelyLimitExceeded { .. })
         ));
     }
+
+    #[tokio::test]
+    async fn test_multiple_permits_tracking() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+        let limiter = TemporalRateLimiter::new("multi_test".to_string(), 50, 500, adapter);
+
+        // Acquérir plusieurs permits
+        for _ in 0..5 {
+            limiter.acquire_permit().await.unwrap();
+        }
+
+        let stats = limiter.get_stats().await;
+        assert_eq!(stats.minute_count, 5);
+        assert_eq!(stats.hour_count, 5);
+    }
+
+    #[tokio::test]
+    async fn test_stats_include_limits() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+        let limiter = TemporalRateLimiter::new("stats_test".to_string(), 100, 1000, adapter);
+
+        let stats = limiter.get_stats().await;
+        // Les limites ajustées dépendent du multiplicateur temporel
+        assert!(stats.minute_limit > 0);
+        assert!(stats.hour_limit > 0);
+        assert!(stats.temporal_multiplier > 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_different_providers() {
+        let adapter = Arc::new(TemporalApiAdapter::new());
+
+        let limiter1 = TemporalRateLimiter::new("provider_a".to_string(), 100, 1000, adapter.clone());
+        let limiter2 = TemporalRateLimiter::new("provider_b".to_string(), 50, 500, adapter);
+
+        limiter1.acquire_permit().await.unwrap();
+
+        let stats1 = limiter1.get_stats().await;
+        let stats2 = limiter2.get_stats().await;
+
+        assert_eq!(stats1.provider, "provider_a");
+        assert_eq!(stats2.provider, "provider_b");
+        assert_eq!(stats1.minute_count, 1);
+        assert_eq!(stats2.minute_count, 0); // Indépendant
+    }
 }

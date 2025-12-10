@@ -300,3 +300,117 @@ impl PriorityScheduler {
         None
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TESTS
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::HashMap;
+
+    fn create_test_task(id: &str, priority: TaskPriority) -> PriorityTask {
+        PriorityTask {
+            id: id.to_string(),
+            name: format!("Test task {}", id),
+            priority,
+            engine: "test_engine".to_string(),
+            status: TaskStatus::Queued,
+            created_at: chrono::Utc::now().timestamp_millis() as u64,
+            started_at: None,
+            deadline_ms: None,
+            progress_percent: 0.0,
+            metadata: HashMap::new(),
+        }
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_creation() {
+        let scheduler = PriorityScheduler::new();
+        let stats = scheduler.get_stats().await;
+
+        assert_eq!(stats.total_enqueued, 0);
+        assert_eq!(stats.current_queue_depth, 0);
+        assert_eq!(stats.current_running, 0);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_enqueue_single_task() {
+        let scheduler = PriorityScheduler::new();
+        let task = create_test_task("task_1", TaskPriority::Normal);
+
+        let result = scheduler.enqueue(task).await;
+        assert!(result.is_ok());
+
+        let stats = scheduler.get_stats().await;
+        assert_eq!(stats.total_enqueued, 1);
+        assert_eq!(stats.current_queue_depth, 1);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_priority_ordering() {
+        let scheduler = PriorityScheduler::new();
+
+        // Ajouter des tâches dans l'ordre inverse de priorité
+        scheduler.enqueue(create_test_task("low", TaskPriority::Low)).await.unwrap();
+        scheduler.enqueue(create_test_task("critical", TaskPriority::Critical)).await.unwrap();
+        scheduler.enqueue(create_test_task("normal", TaskPriority::Normal)).await.unwrap();
+
+        // Vérifier que la queue est triée par priorité
+        let queue = scheduler.get_queue().await;
+        assert_eq!(queue.len(), 3);
+        // Critical devrait être en premier (plus haute priorité)
+        assert_eq!(queue[0].id, "critical");
+        assert_eq!(queue[1].id, "normal");
+        assert_eq!(queue[2].id, "low");
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_get_queue() {
+        let scheduler = PriorityScheduler::new();
+
+        scheduler.enqueue(create_test_task("task_1", TaskPriority::Normal)).await.unwrap();
+        scheduler.enqueue(create_test_task("task_2", TaskPriority::High)).await.unwrap();
+
+        let queue = scheduler.get_queue().await;
+        assert_eq!(queue.len(), 2);
+        // High priority devrait être en premier
+        assert_eq!(queue[0].id, "task_2");
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_task_status() {
+        let scheduler = PriorityScheduler::new();
+        let task = create_test_task("status_test", TaskPriority::Normal);
+
+        scheduler.enqueue(task).await.unwrap();
+
+        let status = scheduler.get_task_status("status_test").await;
+        assert!(status.is_some());
+        assert_eq!(status.unwrap(), TaskStatus::Queued);
+
+        // Tâche inexistante
+        let unknown = scheduler.get_task_status("unknown").await;
+        assert!(unknown.is_none());
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_cancel_task() {
+        let scheduler = PriorityScheduler::new();
+        scheduler.enqueue(create_test_task("to_cancel", TaskPriority::Normal)).await.unwrap();
+
+        let result = scheduler.cancel_task("to_cancel").await;
+        assert!(result.is_ok());
+
+        let stats = scheduler.get_stats().await;
+        assert_eq!(stats.total_cancelled, 1);
+    }
+
+    #[tokio::test]
+    async fn test_scheduler_initialize() {
+        let scheduler = PriorityScheduler::new();
+        let result = scheduler.initialize().await;
+        assert!(result.is_ok());
+    }
+}
