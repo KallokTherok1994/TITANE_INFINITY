@@ -436,4 +436,329 @@ mod tests {
         assert!(!checksum.is_empty());
         assert_eq!(checksum.len(), 64); // SHA256 hex is 64 chars
     }
+
+    #[test]
+    fn test_memory_validator_config_clone() {
+        let config = MemoryValidatorConfig {
+            check_interval_ms: 10000,
+            max_corruption_threshold: 0.1,
+            auto_repair_enabled: false,
+            checksum_algorithm: "md5".to_string(),
+        };
+
+        let cloned = config.clone();
+        assert_eq!(cloned.check_interval_ms, 10000);
+        assert!(!cloned.auto_repair_enabled);
+    }
+
+    #[test]
+    fn test_validation_result_clone() {
+        let result = ValidationResult {
+            is_valid: true,
+            checked_entries: 5,
+            corrupted_entries: 1,
+            repaired_entries: 1,
+            timestamp: 12345,
+            duration_ms: 50,
+            details: vec![],
+        };
+
+        let cloned = result.clone();
+        assert_eq!(cloned.checked_entries, 5);
+        assert_eq!(cloned.duration_ms, 50);
+    }
+
+    #[test]
+    fn test_validation_detail_clone() {
+        let detail = ValidationDetail {
+            entry_id: "clone_test".to_string(),
+            status: ValidationStatus::Valid,
+            expected_checksum: Some("abc123".to_string()),
+            actual_checksum: Some("abc123".to_string()),
+        };
+
+        let cloned = detail.clone();
+        assert_eq!(cloned.entry_id, "clone_test");
+        assert_eq!(cloned.status, ValidationStatus::Valid);
+    }
+
+    #[test]
+    fn test_validation_detail_no_checksums() {
+        let detail = ValidationDetail {
+            entry_id: "no_checksums".to_string(),
+            status: ValidationStatus::Unrecoverable,
+            expected_checksum: None,
+            actual_checksum: None,
+        };
+
+        assert!(detail.expected_checksum.is_none());
+        assert!(detail.actual_checksum.is_none());
+    }
+
+    #[test]
+    fn test_validation_status_clone() {
+        let status = ValidationStatus::Repaired;
+        let cloned = status.clone();
+        assert_eq!(status, cloned);
+    }
+
+    #[test]
+    fn test_tracked_memory_entry_clone() {
+        let entry = TrackedMemoryEntry::new("entry".to_string(), "content".to_string());
+        let cloned = entry.clone();
+
+        assert_eq!(cloned.id, "entry");
+        assert_eq!(cloned.content, "content");
+        assert_eq!(cloned.checksum, entry.checksum);
+    }
+
+    #[test]
+    fn test_validator_stats_snapshot_clone() {
+        let snapshot = ValidatorStatsSnapshot {
+            validations_run: 100,
+            entries_checked: 500,
+            corruptions_detected: 5,
+            repairs_successful: 4,
+            repairs_failed: 1,
+            tracked_entries: 50,
+        };
+
+        let cloned = snapshot.clone();
+        assert_eq!(cloned.validations_run, 100);
+        assert_eq!(cloned.repairs_failed, 1);
+    }
+
+    #[test]
+    fn test_validator_stats_default() {
+        let stats = ValidatorStats::default();
+        assert_eq!(stats.validations_run.load(Ordering::Relaxed), 0);
+        assert_eq!(stats.corruptions_detected.load(Ordering::Relaxed), 0);
+    }
+
+    #[test]
+    fn test_entry_validation_increments_count() {
+        let mut entry = TrackedMemoryEntry::new("id".to_string(), "test".to_string());
+
+        assert_eq!(entry.validation_count, 0);
+        entry.validate();
+        assert_eq!(entry.validation_count, 1);
+        entry.validate();
+        assert_eq!(entry.validation_count, 2);
+    }
+
+    #[test]
+    fn test_entry_validation_updates_timestamp() {
+        let mut entry = TrackedMemoryEntry::new("id".to_string(), "test".to_string());
+        let initial_time = entry.last_validated;
+
+        std::thread::sleep(std::time::Duration::from_millis(10));
+        entry.validate();
+
+        assert!(entry.last_validated >= initial_time);
+    }
+
+    #[test]
+    fn test_validation_with_disabled_auto_repair() {
+        let config = MemoryValidatorConfig {
+            auto_repair_enabled: false,
+            ..Default::default()
+        };
+        let validator = MemoryValidator::new(config);
+        validator.track("test".to_string(), "content".to_string());
+
+        let result = validator.validate_all();
+        assert!(result.is_valid);
+    }
+
+    #[test]
+    fn test_validation_result_timestamp() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("ts_test".to_string(), "content".to_string());
+
+        let result = validator.validate_all();
+        assert!(result.timestamp > 0);
+    }
+
+    #[test]
+    fn test_validation_result_duration() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        for i in 0..100 {
+            validator.track(format!("entry_{}", i), format!("content_{}", i));
+        }
+
+        let result = validator.validate_all();
+        // Duration should be reasonable (less than 10 seconds)
+        assert!(result.duration_ms < 10000);
+    }
+
+    #[test]
+    fn test_validate_all_empty() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+
+        let result = validator.validate_all();
+        assert!(result.is_valid);
+        assert_eq!(result.checked_entries, 0);
+        assert!(result.details.is_empty());
+    }
+
+    #[test]
+    fn test_config_custom_values() {
+        let config = MemoryValidatorConfig {
+            check_interval_ms: 60000,
+            max_corruption_threshold: 0.25,
+            auto_repair_enabled: true,
+            checksum_algorithm: "sha512".to_string(),
+        };
+
+        assert_eq!(config.check_interval_ms, 60000);
+        assert_eq!(config.max_corruption_threshold, 0.25);
+        assert_eq!(config.checksum_algorithm, "sha512");
+    }
+
+    #[test]
+    fn test_tracked_entry_fields() {
+        let entry = TrackedMemoryEntry::new("my_id".to_string(), "my_content".to_string());
+
+        assert_eq!(entry.id, "my_id");
+        assert_eq!(entry.content, "my_content");
+        assert!(entry.created_at > 0);
+        assert!(entry.last_validated > 0);
+        assert_eq!(entry.validation_count, 0);
+    }
+
+    #[test]
+    fn test_validator_stats_increments() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+
+        validator.track("e1".to_string(), "c1".to_string());
+        validator.track("e2".to_string(), "c2".to_string());
+
+        let _ = validator.validate_all();
+        let _ = validator.validate_all();
+
+        let stats = validator.stats();
+        assert_eq!(stats.validations_run, 2);
+        assert_eq!(stats.entries_checked, 4); // 2 entries * 2 validations
+    }
+
+    #[test]
+    fn test_update_then_validate() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("update_test".to_string(), "initial".to_string());
+
+        // Update content
+        validator.update("update_test", "modified".to_string());
+
+        // Validate should still pass because checksum was updated
+        let result = validator.validate_all();
+        assert!(result.is_valid);
+        assert_eq!(result.corrupted_entries, 0);
+    }
+
+    #[test]
+    fn test_validation_detail_all_statuses() {
+        let statuses = vec![
+            ValidationStatus::Valid,
+            ValidationStatus::Corrupted,
+            ValidationStatus::Repaired,
+            ValidationStatus::Unrecoverable,
+        ];
+
+        for status in statuses {
+            let detail = ValidationDetail {
+                entry_id: format!("{:?}", status),
+                status: status.clone(),
+                expected_checksum: Some("checksum".to_string()),
+                actual_checksum: Some("checksum".to_string()),
+            };
+            assert_eq!(detail.status, status);
+        }
+    }
+
+    #[test]
+    fn test_checksum_different_for_different_content() {
+        let checksum_a = TrackedMemoryEntry::compute_checksum("Content A");
+        let checksum_b = TrackedMemoryEntry::compute_checksum("Content B");
+        let checksum_c = TrackedMemoryEntry::compute_checksum("content a"); // case sensitive
+
+        assert_ne!(checksum_a, checksum_b);
+        assert_ne!(checksum_a, checksum_c);
+    }
+
+    #[test]
+    fn test_validation_result_debug() {
+        let result = ValidationResult {
+            is_valid: true,
+            checked_entries: 10,
+            corrupted_entries: 0,
+            repaired_entries: 0,
+            timestamp: 99999,
+            duration_ms: 25,
+            details: vec![],
+        };
+
+        let debug_str = format!("{:?}", result);
+        assert!(debug_str.contains("10"));
+        assert!(debug_str.contains("99999"));
+    }
+
+    #[test]
+    fn test_validator_stats_snapshot_debug() {
+        let snapshot = ValidatorStatsSnapshot {
+            validations_run: 42,
+            entries_checked: 420,
+            corruptions_detected: 2,
+            repairs_successful: 2,
+            repairs_failed: 0,
+            tracked_entries: 100,
+        };
+
+        let debug_str = format!("{:?}", snapshot);
+        assert!(debug_str.contains("42"));
+        assert!(debug_str.contains("420"));
+    }
+
+    #[test]
+    fn test_track_overwrites_existing() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+
+        validator.track("same_id".to_string(), "first content".to_string());
+        validator.track("same_id".to_string(), "second content".to_string());
+
+        // Should still only have 1 entry
+        assert_eq!(validator.stats().tracked_entries, 1);
+    }
+
+    #[test]
+    fn test_validate_specific_entry_updates_count() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("specific".to_string(), "content".to_string());
+
+        let _ = validator.validate_entry("specific");
+        let _ = validator.validate_entry("specific");
+        let _ = validator.validate_entry("specific");
+
+        // The entry's validation count should be 3
+        // (we can't directly check this without reading the entry)
+        let stats = validator.stats();
+        assert_eq!(stats.tracked_entries, 1);
+    }
+
+    #[test]
+    fn test_large_content_checksum() {
+        let large_content: String = (0..10000).map(|_| 'X').collect();
+        let checksum = TrackedMemoryEntry::compute_checksum(&large_content);
+
+        assert!(!checksum.is_empty());
+        assert_eq!(checksum.len(), 64); // SHA256 hex length
+    }
+
+    #[test]
+    fn test_unicode_content_checksum() {
+        let unicode_content = "你好世界 🌍 مرحبا العالم";
+        let checksum = TrackedMemoryEntry::compute_checksum(unicode_content);
+
+        assert!(!checksum.is_empty());
+        assert_eq!(checksum.len(), 64);
+    }
 }

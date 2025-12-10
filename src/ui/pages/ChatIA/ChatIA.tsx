@@ -29,6 +29,8 @@ interface ChatResponse {
 interface ProviderStatus {
   gemini_configured: boolean;
   ollama_available: boolean;
+  openai_configured?: boolean;
+  anthropic_configured?: boolean;
 }
 
 interface OllamaModel {
@@ -51,15 +53,33 @@ export const ChatIA: React.FC = () => {
     ollama_available: false,
   });
 
+  // Catégoriser les modèles Ollama par type
+  const categorizeModel = (modelName: string): string => {
+    const lower = modelName.toLowerCase();
+    if (lower.includes('code') || lower.includes('deepseek')) return '💻';
+    if (lower.includes('vision') || lower.includes('llava')) return '👁️';
+    if (lower.includes('aya')) return '🌍';
+    if (
+      lower.includes('llama3.2:1b') ||
+      lower.includes('gemma2:2b') ||
+      lower.includes('phi3.5')
+    )
+      return '⚡';
+    return '🤖';
+  };
+
   // Charger le statut des providers au démarrage
   useEffect(() => {
     loadProviderStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadProviderStatus = async () => {
     try {
       // Vérifier Gemini
-      const geminiStatus = await invoke<any>('get_gemini_key_status');
+      const geminiStatus = await invoke<{ ok: boolean; data?: { configured: boolean } }>(
+        'get_gemini_key_status'
+      );
       const geminiConfigured = geminiStatus?.data?.configured || false;
 
       // Vérifier Ollama (via HTTP) et charger modèles
@@ -138,16 +158,17 @@ export const ChatIA: React.FC = () => {
       } else {
         throw new Error(response.error || 'Erreur inconnue');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('❌ Erreur ChatIA:', err);
 
       let errorMessage = '❌ Erreur: ';
-      if (err.message?.includes('Rate limit')) {
+      const error = err as { message?: string };
+      if (error.message?.includes('Rate limit')) {
         errorMessage += 'Trop de requêtes. Veuillez patienter quelques secondes.';
-      } else if (err.message?.includes('not available')) {
+      } else if (error.message?.includes('not available')) {
         errorMessage += `Provider ${provider} non disponible. Configuration requise.`;
       } else {
-        errorMessage += err.message || 'Erreur inconnue';
+        errorMessage += error.message || 'Erreur inconnue';
       }
 
       setMessages(prev => [
@@ -170,7 +191,10 @@ export const ChatIA: React.FC = () => {
         <div className="provider-controls">
           <div className="provider-selector">
             <label>Provider:</label>
-            <select value={provider} onChange={e => setProvider(e.target.value as any)}>
+            <select
+              value={provider}
+              onChange={e => setProvider(e.target.value as typeof provider)}
+            >
               <option value="auto">🤖 Auto (Intelligent)</option>
               <option value="openai">🔵 OpenAI GPT-4o</option>
               <option value="anthropic">🧠 Claude 3.5 Sonnet</option>
@@ -192,7 +216,7 @@ export const ChatIA: React.FC = () => {
               >
                 {availableModels.map(model => (
                   <option key={model} value={model}>
-                    {model}
+                    {categorizeModel(model)} {model}
                   </option>
                 ))}
               </select>
