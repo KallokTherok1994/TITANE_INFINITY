@@ -68,7 +68,7 @@ const getSeverityIcon = (severity: Anomaly['severity']) => {
 
 export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = '' }) => {
   const engine = useVisualStateStore(state => state.engine);
-  const { visuals, isTransitioning } = useVisualState(engine);
+  const { visuals, isTransitioning: _isTransitioning } = useVisualState(engine);
 
   // v21: Panel state management
   const { isCollapsed, isVisible, zIndex, toggle, bringToFront } = usePanelState({

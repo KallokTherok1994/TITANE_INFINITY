@@ -18,8 +18,8 @@ export const MemoryInspector: React.FC = () => {
     'STM' | 'MTM' | 'LTM' | 'Vector' | 'Clusters'
   >('STM');
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
-  const [tierMemories, setTierMemories] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Record<string, unknown>[]>([]);
+  const [tierMemories, setTierMemories] = useState<Record<string, unknown>[]>([]);
 
   const handleSemanticSearch = async () => {
     if (!searchQuery.trim()) return;

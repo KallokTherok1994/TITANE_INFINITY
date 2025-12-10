@@ -44,7 +44,7 @@ export const SelfHealingPanel: React.FC<SelfHealingPanelProps> = ({
   isHealing,
 }) => {
   const engine = useVisualStateStore(state => state.engine);
-  const { visuals, isTransitioning } = useVisualState(engine);
+  const { visuals, isTransitioning: _isTransitioning } = useVisualState(engine);
 
   return (
     <div

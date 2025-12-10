@@ -17,8 +17,8 @@ import { TauriBridge } from './bridge/tauriBridge';
 
 import type {
   MemoryEntry,
-  MemoryTier,
-  MemoryType,
+  MemoryTier as _MemoryTier,
+  MemoryType as _MemoryType,
   StoreOptions,
   RecallOptions,
   SearchResult,
@@ -405,7 +405,8 @@ class UnifiedMemoryImpl {
 
     // Filter by importance
     if (options.minImportance !== undefined) {
-      results = results.filter(e => e.importance >= options.minImportance!);
+      const minImportance = options.minImportance;
+      results = results.filter(e => e.importance >= minImportance);
     }
 
     // Filter by age
