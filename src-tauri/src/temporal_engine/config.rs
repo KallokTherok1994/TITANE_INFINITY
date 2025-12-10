@@ -316,4 +316,231 @@ mod tests {
         config.tick_interval_ms = 500; // Too small
         assert!(config.validate().is_err());
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // Additional TemporalConfig Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_default_config_values() {
+        let config = TemporalConfig::default();
+        assert_eq!(config.name, "default");
+        assert!(config.enabled);
+        assert_eq!(config.tick_interval_ms, 60000);
+        assert_eq!(config.max_tick_duration_ms, 5000);
+        assert!(config.routines_enabled);
+        assert!(config.anticipation_enabled);
+        assert!(config.alignment_enabled);
+        assert_eq!(config.prediction_confidence_threshold, 0.5);
+        assert_eq!(config.max_predictions_per_tick, 20);
+        assert!(config.persist_state);
+    }
+
+    #[test]
+    fn test_minimal_config_values() {
+        let config = TemporalConfig::minimal();
+        assert_eq!(config.name, "minimal");
+        assert_eq!(config.tick_interval_ms, 1000);
+        assert!(!config.routines_enabled);
+        assert!(!config.anticipation_enabled);
+        assert!(!config.alignment_enabled);
+        assert!(!config.persist_state);
+    }
+
+    #[test]
+    fn test_high_performance_config() {
+        let config = TemporalConfig::high_performance();
+        assert_eq!(config.name, "high_performance");
+        assert_eq!(config.tick_interval_ms, 30000);
+        assert_eq!(config.max_tick_duration_ms, 10000);
+        assert!(config.routines_enabled);
+        assert_eq!(config.max_predictions_per_tick, 50);
+        assert!(config.state_file_path.is_some());
+        assert!(config.validate().is_ok());
+    }
+
+    #[test]
+    fn test_development_config() {
+        let config = TemporalConfig::development();
+        assert_eq!(config.name, "development");
+        assert_eq!(config.tick_interval_ms, 5000);
+        assert_eq!(config.prediction_confidence_threshold, 0.3);
+        assert!(!config.persist_state);
+        assert!(config.validate().is_ok());
+    }
+
+    #[test]
+    fn test_validate_tick_duration_too_high() {
+        let mut config = TemporalConfig::default();
+        config.max_tick_duration_ms = 70000; // >= tick_interval_ms
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_confidence_threshold_negative() {
+        let mut config = TemporalConfig::default();
+        config.prediction_confidence_threshold = -0.1;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_confidence_threshold_over_one() {
+        let mut config = TemporalConfig::default();
+        config.prediction_confidence_threshold = 1.5;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_alignment_threshold_negative() {
+        let mut config = TemporalConfig::default();
+        config.alignment_warning_threshold = -0.5;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_validate_alignment_threshold_over_one() {
+        let mut config = TemporalConfig::default();
+        config.alignment_warning_threshold = 2.0;
+        assert!(config.validate().is_err());
+    }
+
+    #[test]
+    fn test_config_clone() {
+        let config = TemporalConfig::default();
+        let cloned = config.clone();
+        assert_eq!(cloned.name, config.name);
+        assert_eq!(cloned.tick_interval_ms, config.tick_interval_ms);
+    }
+
+    #[test]
+    fn test_config_debug() {
+        let config = TemporalConfig::default();
+        let debug_str = format!("{:?}", config);
+        assert!(debug_str.contains("TemporalConfig"));
+    }
+
+    #[test]
+    fn test_config_serialization() {
+        let config = TemporalConfig::default();
+        let json = serde_json::to_string(&config).unwrap();
+        let restored: TemporalConfig = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.name, config.name);
+        assert_eq!(restored.tick_interval_ms, config.tick_interval_ms);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Builder Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_builder_all_options() {
+        let config = TemporalConfig::builder()
+            .name("custom")
+            .tick_interval(120000)
+            .max_tick_duration(10000)
+            .routines_enabled(true)
+            .anticipation_enabled(true)
+            .alignment_enabled(false)
+            .persist_state(true, Some("custom_state.json".to_string()))
+            .build()
+            .unwrap();
+
+        assert_eq!(config.name, "custom");
+        assert_eq!(config.tick_interval_ms, 120000);
+        assert!(config.routines_enabled);
+        assert!(config.anticipation_enabled);
+        assert!(!config.alignment_enabled);
+        assert!(config.persist_state);
+        assert_eq!(config.state_file_path, Some("custom_state.json".to_string()));
+    }
+
+    #[test]
+    fn test_builder_invalid_tick_interval() {
+        let result = TemporalConfig::builder()
+            .tick_interval(500) // Too small
+            .build();
+
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_builder_memory_config() {
+        let mem_config = TemporalMemoryConfig {
+            max_traces: 5000,
+            decay_rate: 0.01,
+            consolidation_threshold: 0.9,
+            min_significance: 0.1,
+        };
+
+        let config = TemporalConfig::builder()
+            .memory_config(mem_config)
+            .build()
+            .unwrap();
+
+        assert_eq!(config.memory_config.max_traces, 5000);
+    }
+
+    #[test]
+    fn test_builder_planner_config() {
+        let planner_config = PlannerConfig {
+            max_tasks: 1000,
+            auto_prioritize: true,
+            respect_energy_levels: false,
+            default_task_duration_ms: 900000,
+        };
+
+        let config = TemporalConfig::builder()
+            .planner_config(planner_config)
+            .build()
+            .unwrap();
+
+        assert_eq!(config.planner_config.max_tasks, 1000);
+        assert!(config.planner_config.auto_prioritize);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ConfigError Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_config_error_display_invalid_value() {
+        let error = ConfigError::InvalidValue("test error".to_string());
+        let display = format!("{}", error);
+        assert!(display.contains("Invalid config value"));
+        assert!(display.contains("test error"));
+    }
+
+    #[test]
+    fn test_config_error_display_io() {
+        let error = ConfigError::IoError("file not found".to_string());
+        let display = format!("{}", error);
+        assert!(display.contains("IO error"));
+    }
+
+    #[test]
+    fn test_config_error_display_parse() {
+        let error = ConfigError::ParseError("invalid json".to_string());
+        let display = format!("{}", error);
+        assert!(display.contains("Parse error"));
+    }
+
+    #[test]
+    fn test_config_error_debug() {
+        let error = ConfigError::InvalidValue("test".to_string());
+        let debug_str = format!("{:?}", error);
+        assert!(debug_str.contains("InvalidValue"));
+    }
+
+    #[test]
+    fn test_config_error_clone() {
+        let error = ConfigError::IoError("error".to_string());
+        let cloned = error.clone();
+        assert!(format!("{}", cloned).contains("IO error"));
+    }
+
+    #[test]
+    fn test_load_from_nonexistent_file() {
+        let result = TemporalConfig::load_from_file("/nonexistent/path/config.json");
+        assert!(result.is_err());
+    }
 }
