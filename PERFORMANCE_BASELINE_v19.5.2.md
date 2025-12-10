@@ -18,8 +18,8 @@ $ cargo build --release
 - Status: ✅ SUCCESS
 - Binaire: `src-tauri/target/release/titane-infinity`
 - Taille: **11 MB** (release optimized)
-- Temps: ~2-3 minutes (full rebuild)
-- Profil: `release` (optimizations enabled)
+- Temps: **6m 26s** (full rebuild measured)
+- Profil: `release` (opt-level=3, lto=true, strip=true)
 
 **Optimizations Cargo.toml**:
 
