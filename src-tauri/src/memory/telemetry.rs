@@ -122,3 +122,234 @@ fn system_time_to_millis(time: SystemTime) -> Option<i64> {
         .map(|d| d.as_millis() as i64)
         .ok()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_resolve_memory_dir_default() {
+        // Clear env var to test default behavior
+        std::env::remove_var("TITANE_MEMORY_DIR");
+
+        let dir = resolve_memory_dir();
+        assert!(dir.to_string_lossy().contains("memory"));
+    }
+
+    #[test]
+    fn test_resolve_memory_dir_custom() {
+        std::env::set_var("TITANE_MEMORY_DIR", "/custom/memory/path");
+        let dir = resolve_memory_dir();
+        assert_eq!(dir.to_string_lossy(), "/custom/memory/path");
+
+        // Clean up
+        std::env::remove_var("TITANE_MEMORY_DIR");
+    }
+
+    #[test]
+    fn test_resolve_memory_dir_empty_env() {
+        std::env::set_var("TITANE_MEMORY_DIR", "   ");
+        let dir = resolve_memory_dir();
+        // Should fall back to default
+        assert!(dir.to_string_lossy().contains("memory"));
+
+        // Clean up
+        std::env::remove_var("TITANE_MEMORY_DIR");
+    }
+
+    #[test]
+    fn test_scan_memory_directory_missing() {
+        std::env::set_var("TITANE_MEMORY_DIR", "/nonexistent/path/that/does/not/exist");
+        let report = scan_memory_directory();
+
+        assert!(report.missing);
+        assert_eq!(report.total_size_bytes, 0);
+        assert!(report.files.is_empty());
+
+        // Clean up
+        std::env::remove_var("TITANE_MEMORY_DIR");
+    }
+
+    #[test]
+    fn test_detect_disk_mode_disabled() {
+        let report = MemoryDirectoryReport {
+            base_path: "/nonexistent".to_string(),
+            missing: true,
+            total_size_bytes: 0,
+            files: vec![],
+        };
+
+        let mode = detect_disk_mode(&report);
+        assert!(matches!(mode, DiskMode::Disabled));
+    }
+
+    #[test]
+    fn test_detect_disk_mode_readonly() {
+        let report = MemoryDirectoryReport {
+            base_path: "/some/path".to_string(),
+            missing: false,
+            total_size_bytes: 0,
+            files: vec![],
+        };
+
+        let mode = detect_disk_mode(&report);
+        assert!(matches!(mode, DiskMode::ReadOnly));
+    }
+
+    #[test]
+    fn test_detect_disk_mode_readwrite() {
+        let report = MemoryDirectoryReport {
+            base_path: "/some/path".to_string(),
+            missing: false,
+            total_size_bytes: 1000,
+            files: vec![MemoryFileReport {
+                name: "test.json".to_string(),
+                size_bytes: 1000,
+                modified_ts: 12345,
+                version: Some("1.0".to_string()),
+            }],
+        };
+
+        let mode = detect_disk_mode(&report);
+        assert!(matches!(mode, DiskMode::ReadWrite));
+    }
+
+    #[test]
+    fn test_memory_file_report_creation() {
+        let report = MemoryFileReport {
+            name: "memory.json".to_string(),
+            size_bytes: 2048,
+            modified_ts: 1234567890000,
+            version: Some("2.0".to_string()),
+        };
+
+        assert_eq!(report.name, "memory.json");
+        assert_eq!(report.size_bytes, 2048);
+        assert!(report.version.is_some());
+    }
+
+    #[test]
+    fn test_memory_file_report_no_version() {
+        let report = MemoryFileReport {
+            name: "data.bin".to_string(),
+            size_bytes: 512,
+            modified_ts: 999,
+            version: None,
+        };
+
+        assert!(report.version.is_none());
+    }
+
+    #[test]
+    fn test_memory_directory_report_creation() {
+        let report = MemoryDirectoryReport {
+            base_path: "/path/to/memory".to_string(),
+            missing: false,
+            total_size_bytes: 4096,
+            files: vec![],
+        };
+
+        assert_eq!(report.base_path, "/path/to/memory");
+        assert!(!report.missing);
+        assert_eq!(report.total_size_bytes, 4096);
+    }
+
+    #[test]
+    fn test_memory_directory_report_with_files() {
+        let file1 = MemoryFileReport {
+            name: "file1.json".to_string(),
+            size_bytes: 100,
+            modified_ts: 1000,
+            version: None,
+        };
+
+        let file2 = MemoryFileReport {
+            name: "file2.json".to_string(),
+            size_bytes: 200,
+            modified_ts: 2000,
+            version: Some("1.0".to_string()),
+        };
+
+        let report = MemoryDirectoryReport {
+            base_path: "/memory".to_string(),
+            missing: false,
+            total_size_bytes: 300,
+            files: vec![file1, file2],
+        };
+
+        assert_eq!(report.files.len(), 2);
+        assert_eq!(report.total_size_bytes, 300);
+    }
+
+    #[test]
+    fn test_system_time_to_millis() {
+        let now = SystemTime::now();
+        let millis = system_time_to_millis(now);
+
+        assert!(millis.is_some());
+        assert!(millis.unwrap() > 0);
+    }
+
+    #[test]
+    fn test_system_time_to_millis_epoch() {
+        let epoch = UNIX_EPOCH;
+        let millis = system_time_to_millis(epoch);
+
+        assert!(millis.is_some());
+        assert_eq!(millis.unwrap(), 0);
+    }
+
+    #[test]
+    fn test_extract_version_non_json() {
+        let path = Path::new("/some/file.txt");
+        let result = extract_version(path);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_scan_version_with_version() {
+        let json_value: Value = serde_json::json!({
+            "version": "3.0.0",
+            "data": {}
+        });
+
+        let version = scan_version(&json_value);
+        assert_eq!(version, Some("3.0.0".to_string()));
+    }
+
+    #[test]
+    fn test_scan_version_without_version() {
+        let json_value: Value = serde_json::json!({
+            "data": {},
+            "count": 42
+        });
+
+        let version = scan_version(&json_value);
+        assert!(version.is_none());
+    }
+
+    #[test]
+    fn test_scan_version_nested() {
+        let json_value: Value = serde_json::json!({
+            "outer": {
+                "inner": {
+                    "version": "nested-version"
+                }
+            }
+        });
+
+        let version = scan_version(&json_value);
+        assert_eq!(version, Some("nested-version".to_string()));
+    }
+
+    #[test]
+    fn test_scan_version_non_string() {
+        let json_value: Value = serde_json::json!({
+            "version": 123
+        });
+
+        let version = scan_version(&json_value);
+        // version is not a string, so should be None
+        assert!(version.is_none());
+    }
+}
