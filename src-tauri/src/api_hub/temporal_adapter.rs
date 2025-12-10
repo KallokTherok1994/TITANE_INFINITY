@@ -215,7 +215,7 @@ mod tests {
                 season: Season::Winter,
                 time_of_day: TimeOfDay::from_hour(hour),
             },
-            session_start: std::time::Instant::now(),
+            session_start: Moment::default(),
             session_duration_ms: 0,
             day_progress: 0.5,
             week_progress: 0.5,
