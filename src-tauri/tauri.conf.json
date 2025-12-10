@@ -151,8 +151,6 @@
             { "command": "chat_get_conversation" },
             { "command": "chat_delete_conversation" },
             { "command": "chat_get_providers_status" },
-            // GEMINI DÉSACTIVÉ
-            // { "command": "chat_set_gemini_key" },
             { "command": "chat_check_providers" },
             { "command": "ai_query" },
             { "command": "persona_initialize" },

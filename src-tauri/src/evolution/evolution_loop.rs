@@ -255,3 +255,582 @@ pub async fn evolution_get_stats() -> Result<HashMap<String, serde_json::Value>,
     let engine = EvolutionEngine::new();
     Ok(engine.get_stats())
 }
+
+// ══════════════════════════════════════════════════════════════════
+// TESTS UNITAIRES
+// ══════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ──────────────────────────────────────────────────────────────────
+    // Tests MutationType
+    // ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_mutation_type_optimize() {
+        let mt = MutationType::Optimize;
+        assert!(matches!(mt, MutationType::Optimize));
+    }
+
+    #[test]
+    fn test_mutation_type_refactor() {
+        let mt = MutationType::Refactor;
+        assert!(matches!(mt, MutationType::Refactor));
+    }
+
+    #[test]
+    fn test_mutation_type_simplify() {
+        let mt = MutationType::Simplify;
+        assert!(matches!(mt, MutationType::Simplify));
+    }
+
+    #[test]
+    fn test_mutation_type_enhance() {
+        let mt = MutationType::Enhance;
+        assert!(matches!(mt, MutationType::Enhance));
+    }
+
+    #[test]
+    fn test_mutation_type_fix() {
+        let mt = MutationType::Fix;
+        assert!(matches!(mt, MutationType::Fix));
+    }
+
+    #[test]
+    fn test_mutation_type_eq() {
+        let mt1 = MutationType::Optimize;
+        let mt2 = MutationType::Optimize;
+        let mt3 = MutationType::Fix;
+        assert_eq!(mt1, mt2);
+        assert_ne!(mt1, mt3);
+    }
+
+    #[test]
+    fn test_mutation_type_debug() {
+        let mt = MutationType::Refactor;
+        let debug = format!("{:?}", mt);
+        assert!(debug.contains("Refactor"));
+    }
+
+    #[test]
+    fn test_mutation_type_clone() {
+        let mt = MutationType::Enhance;
+        let cloned = mt.clone();
+        assert!(matches!(cloned, MutationType::Enhance));
+    }
+
+    #[test]
+    fn test_mutation_type_serialize() {
+        let mt = MutationType::Simplify;
+        let json = serde_json::to_string(&mt).unwrap();
+        assert!(json.contains("Simplify"));
+    }
+
+    #[test]
+    fn test_mutation_type_deserialize() {
+        let json = r#""Fix""#;
+        let mt: MutationType = serde_json::from_str(json).unwrap();
+        assert!(matches!(mt, MutationType::Fix));
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // Tests RiskLevel
+    // ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_risk_level_p0() {
+        let rl = RiskLevel::P0;
+        assert!(matches!(rl, RiskLevel::P0));
+    }
+
+    #[test]
+    fn test_risk_level_p1() {
+        let rl = RiskLevel::P1;
+        assert!(matches!(rl, RiskLevel::P1));
+    }
+
+    #[test]
+    fn test_risk_level_p2() {
+        let rl = RiskLevel::P2;
+        assert!(matches!(rl, RiskLevel::P2));
+    }
+
+    #[test]
+    fn test_risk_level_p3() {
+        let rl = RiskLevel::P3;
+        assert!(matches!(rl, RiskLevel::P3));
+    }
+
+    #[test]
+    fn test_risk_level_eq() {
+        let rl1 = RiskLevel::P1;
+        let rl2 = RiskLevel::P1;
+        let rl3 = RiskLevel::P2;
+        assert_eq!(rl1, rl2);
+        assert_ne!(rl1, rl3);
+    }
+
+    #[test]
+    fn test_risk_level_debug() {
+        let rl = RiskLevel::P0;
+        let debug = format!("{:?}", rl);
+        assert!(debug.contains("P0"));
+    }
+
+    #[test]
+    fn test_risk_level_clone() {
+        let rl = RiskLevel::P3;
+        let cloned = rl.clone();
+        assert!(matches!(cloned, RiskLevel::P3));
+    }
+
+    #[test]
+    fn test_risk_level_serialize() {
+        let rl = RiskLevel::P2;
+        let json = serde_json::to_string(&rl).unwrap();
+        assert!(json.contains("P2"));
+    }
+
+    #[test]
+    fn test_risk_level_deserialize() {
+        let json = r#""P1""#;
+        let rl: RiskLevel = serde_json::from_str(json).unwrap();
+        assert!(matches!(rl, RiskLevel::P1));
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // Tests EvolutionMetrics
+    // ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_evolution_metrics_creation() {
+        let metrics = EvolutionMetrics {
+            stability: 95.0,
+            coherence: 98.0,
+            performance: 90.0,
+            cognitive_depth: 85.0,
+        };
+        assert_eq!(metrics.stability, 95.0);
+        assert_eq!(metrics.coherence, 98.0);
+    }
+
+    #[test]
+    fn test_evolution_metrics_perfect() {
+        let metrics = EvolutionMetrics {
+            stability: 100.0,
+            coherence: 100.0,
+            performance: 100.0,
+            cognitive_depth: 100.0,
+        };
+        assert!(metrics.stability >= 100.0);
+    }
+
+    #[test]
+    fn test_evolution_metrics_low() {
+        let metrics = EvolutionMetrics {
+            stability: 50.0,
+            coherence: 60.0,
+            performance: 40.0,
+            cognitive_depth: 30.0,
+        };
+        assert!(metrics.performance < 50.0);
+    }
+
+    #[test]
+    fn test_evolution_metrics_debug() {
+        let metrics = EvolutionMetrics {
+            stability: 75.0,
+            coherence: 80.0,
+            performance: 70.0,
+            cognitive_depth: 65.0,
+        };
+        let debug = format!("{:?}", metrics);
+        assert!(debug.contains("EvolutionMetrics"));
+    }
+
+    #[test]
+    fn test_evolution_metrics_clone() {
+        let metrics = EvolutionMetrics {
+            stability: 90.0,
+            coherence: 92.0,
+            performance: 88.0,
+            cognitive_depth: 80.0,
+        };
+        let cloned = metrics.clone();
+        assert_eq!(cloned.stability, 90.0);
+    }
+
+    #[test]
+    fn test_evolution_metrics_serialize() {
+        let metrics = EvolutionMetrics {
+            stability: 95.5,
+            coherence: 97.3,
+            performance: 91.2,
+            cognitive_depth: 88.8,
+        };
+        let json = serde_json::to_string(&metrics).unwrap();
+        assert!(json.contains("stability"));
+        assert!(json.contains("cognitive_depth"));
+    }
+
+    #[test]
+    fn test_evolution_metrics_deserialize() {
+        let json = r#"{"stability":85.0,"coherence":90.0,"performance":80.0,"cognitive_depth":75.0}"#;
+        let metrics: EvolutionMetrics = serde_json::from_str(json).unwrap();
+        assert_eq!(metrics.stability, 85.0);
+        assert_eq!(metrics.cognitive_depth, 75.0);
+    }
+
+    #[test]
+    fn test_evolution_metrics_roundtrip() {
+        let original = EvolutionMetrics {
+            stability: 93.7,
+            coherence: 96.4,
+            performance: 89.1,
+            cognitive_depth: 82.3,
+        };
+        let json = serde_json::to_string(&original).unwrap();
+        let restored: EvolutionMetrics = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.stability, 93.7);
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // Tests Mutation
+    // ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_mutation_creation() {
+        let mutation = Mutation {
+            id: "mut-001".to_string(),
+            mutation_type: MutationType::Optimize,
+            target: "performance".to_string(),
+            description: "Improve performance".to_string(),
+            expected_improvement: 5.0,
+            risk_level: RiskLevel::P1,
+        };
+        assert_eq!(mutation.id, "mut-001");
+        assert_eq!(mutation.expected_improvement, 5.0);
+    }
+
+    #[test]
+    fn test_mutation_high_risk() {
+        let mutation = Mutation {
+            id: "mut-002".to_string(),
+            mutation_type: MutationType::Refactor,
+            target: "core".to_string(),
+            description: "Refactor core module".to_string(),
+            expected_improvement: 15.0,
+            risk_level: RiskLevel::P3,
+        };
+        assert!(matches!(mutation.risk_level, RiskLevel::P3));
+    }
+
+    #[test]
+    fn test_mutation_debug() {
+        let mutation = Mutation {
+            id: "dbg-mut".to_string(),
+            mutation_type: MutationType::Fix,
+            target: "bug".to_string(),
+            description: "Fix bug".to_string(),
+            expected_improvement: 3.0,
+            risk_level: RiskLevel::P0,
+        };
+        let debug = format!("{:?}", mutation);
+        assert!(debug.contains("Mutation"));
+    }
+
+    #[test]
+    fn test_mutation_clone() {
+        let mutation = Mutation {
+            id: "clone-mut".to_string(),
+            mutation_type: MutationType::Simplify,
+            target: "code".to_string(),
+            description: "Simplify code".to_string(),
+            expected_improvement: 2.5,
+            risk_level: RiskLevel::P2,
+        };
+        let cloned = mutation.clone();
+        assert_eq!(cloned.id, "clone-mut");
+    }
+
+    #[test]
+    fn test_mutation_serialize() {
+        let mutation = Mutation {
+            id: "ser-mut".to_string(),
+            mutation_type: MutationType::Enhance,
+            target: "feature".to_string(),
+            description: "Enhance feature".to_string(),
+            expected_improvement: 8.0,
+            risk_level: RiskLevel::P1,
+        };
+        let json = serde_json::to_string(&mutation).unwrap();
+        assert!(json.contains("ser-mut"));
+        assert!(json.contains("Enhance"));
+    }
+
+    #[test]
+    fn test_mutation_deserialize() {
+        let json = r#"{"id":"deser-mut","mutation_type":"Fix","target":"error","description":"Fix error","expected_improvement":4.5,"risk_level":"P0"}"#;
+        let mutation: Mutation = serde_json::from_str(json).unwrap();
+        assert_eq!(mutation.id, "deser-mut");
+        assert!(matches!(mutation.mutation_type, MutationType::Fix));
+    }
+
+    #[test]
+    fn test_mutation_roundtrip() {
+        let original = Mutation {
+            id: "roundtrip-mut".to_string(),
+            mutation_type: MutationType::Optimize,
+            target: "memory".to_string(),
+            description: "Optimize memory usage".to_string(),
+            expected_improvement: 12.0,
+            risk_level: RiskLevel::P2,
+        };
+        let json = serde_json::to_string(&original).unwrap();
+        let restored: Mutation = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.id, "roundtrip-mut");
+        assert_eq!(restored.expected_improvement, 12.0);
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // Tests EvolutionReport
+    // ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_evolution_report_creation() {
+        let report = EvolutionReport {
+            cycle: 1,
+            timestamp: 1234567890,
+            metrics: EvolutionMetrics {
+                stability: 95.0,
+                coherence: 97.0,
+                performance: 90.0,
+                cognitive_depth: 85.0,
+            },
+            mutations_proposed: vec![],
+            mutations_applied: 0,
+            improvements: HashMap::new(),
+        };
+        assert_eq!(report.cycle, 1);
+        assert_eq!(report.mutations_applied, 0);
+    }
+
+    #[test]
+    fn test_evolution_report_with_mutations() {
+        let mutations = vec![Mutation {
+            id: "mut-1".to_string(),
+            mutation_type: MutationType::Optimize,
+            target: "perf".to_string(),
+            description: "Optimize".to_string(),
+            expected_improvement: 5.0,
+            risk_level: RiskLevel::P1,
+        }];
+        let report = EvolutionReport {
+            cycle: 5,
+            timestamp: 9999,
+            metrics: EvolutionMetrics {
+                stability: 90.0,
+                coherence: 92.0,
+                performance: 85.0,
+                cognitive_depth: 80.0,
+            },
+            mutations_proposed: mutations,
+            mutations_applied: 1,
+            improvements: HashMap::new(),
+        };
+        assert_eq!(report.mutations_proposed.len(), 1);
+        assert_eq!(report.mutations_applied, 1);
+    }
+
+    #[test]
+    fn test_evolution_report_with_improvements() {
+        let mut improvements = HashMap::new();
+        improvements.insert("stability".to_string(), 2.5);
+        improvements.insert("performance".to_string(), 5.0);
+
+        let report = EvolutionReport {
+            cycle: 10,
+            timestamp: 12345,
+            metrics: EvolutionMetrics {
+                stability: 97.5,
+                coherence: 98.0,
+                performance: 95.0,
+                cognitive_depth: 90.0,
+            },
+            mutations_proposed: vec![],
+            mutations_applied: 3,
+            improvements,
+        };
+        assert_eq!(report.improvements.len(), 2);
+    }
+
+    #[test]
+    fn test_evolution_report_debug() {
+        let report = EvolutionReport {
+            cycle: 1,
+            timestamp: 0,
+            metrics: EvolutionMetrics {
+                stability: 90.0,
+                coherence: 90.0,
+                performance: 90.0,
+                cognitive_depth: 90.0,
+            },
+            mutations_proposed: vec![],
+            mutations_applied: 0,
+            improvements: HashMap::new(),
+        };
+        let debug = format!("{:?}", report);
+        assert!(debug.contains("EvolutionReport"));
+    }
+
+    #[test]
+    fn test_evolution_report_clone() {
+        let report = EvolutionReport {
+            cycle: 3,
+            timestamp: 5555,
+            metrics: EvolutionMetrics {
+                stability: 88.0,
+                coherence: 91.0,
+                performance: 84.0,
+                cognitive_depth: 79.0,
+            },
+            mutations_proposed: vec![],
+            mutations_applied: 2,
+            improvements: HashMap::new(),
+        };
+        let cloned = report.clone();
+        assert_eq!(cloned.cycle, 3);
+    }
+
+    #[test]
+    fn test_evolution_report_serialize() {
+        let report = EvolutionReport {
+            cycle: 7,
+            timestamp: 77777,
+            metrics: EvolutionMetrics {
+                stability: 93.0,
+                coherence: 95.0,
+                performance: 89.0,
+                cognitive_depth: 83.0,
+            },
+            mutations_proposed: vec![],
+            mutations_applied: 5,
+            improvements: HashMap::new(),
+        };
+        let json = serde_json::to_string(&report).unwrap();
+        assert!(json.contains("cycle"));
+        assert!(json.contains("mutations_applied"));
+    }
+
+    // ──────────────────────────────────────────────────────────────────
+    // Tests EvolutionEngine
+    // ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_evolution_engine_new() {
+        let engine = EvolutionEngine::new();
+        assert_eq!(engine.cycle_count, 0);
+        assert!(engine.metrics_history.is_empty());
+        assert!(engine.mutations.is_empty());
+    }
+
+    #[test]
+    fn test_evolution_engine_default() {
+        let engine = EvolutionEngine::default();
+        assert_eq!(engine.cycle_count, 0);
+    }
+
+    #[test]
+    fn test_evolution_engine_get_stats_initial() {
+        let engine = EvolutionEngine::new();
+        let stats = engine.get_stats();
+        assert!(stats.contains_key("total_cycles"));
+        assert!(stats.contains_key("pending_mutations"));
+    }
+
+    #[test]
+    fn test_evolution_engine_analyze_heuristics_good() {
+        let engine = EvolutionEngine::new();
+        let metrics = EvolutionMetrics {
+            stability: 95.0,
+            coherence: 98.0,
+            performance: 92.0,
+            cognitive_depth: 88.0,
+        };
+        let analysis = engine.analyze_heuristics(&metrics);
+        // Good metrics should not trigger many issues
+        assert!(analysis.len() <= 2);
+    }
+
+    #[test]
+    fn test_evolution_engine_analyze_heuristics_poor() {
+        let engine = EvolutionEngine::new();
+        let metrics = EvolutionMetrics {
+            stability: 80.0,
+            coherence: 90.0,
+            performance: 70.0,
+            cognitive_depth: 60.0,
+        };
+        let analysis = engine.analyze_heuristics(&metrics);
+        // Poor metrics should trigger issues
+        assert!(!analysis.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_evolution_engine_evolve() {
+        let mut engine = EvolutionEngine::new();
+        let result = engine.evolve().await;
+        assert!(result.is_ok());
+        let report = result.unwrap();
+        assert_eq!(report.cycle, 1);
+        assert_eq!(engine.cycle_count, 1);
+    }
+
+    #[tokio::test]
+    async fn test_evolution_engine_multiple_cycles() {
+        let mut engine = EvolutionEngine::new();
+        for _ in 0..3 {
+            let _ = engine.evolve().await;
+        }
+        assert_eq!(engine.cycle_count, 3);
+        assert_eq!(engine.metrics_history.len(), 3);
+    }
+
+    #[tokio::test]
+    async fn test_evolution_engine_measure_system() {
+        let engine = EvolutionEngine::new();
+        let metrics = engine.measure_system().await;
+        // Metrics should be in reasonable ranges
+        assert!(metrics.stability >= 0.0 && metrics.stability <= 100.0);
+        assert!(metrics.coherence >= 0.0 && metrics.coherence <= 100.0);
+    }
+
+    #[tokio::test]
+    async fn test_evolution_engine_propose_mutations() {
+        let engine = EvolutionEngine::new();
+        let mut analysis = HashMap::new();
+        analysis.insert("performance".to_string(), "needs_improvement".to_string());
+        let mutations = engine.propose_mutations(&analysis).await;
+        assert!(!mutations.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_evolution_engine_propose_mutations_empty_analysis() {
+        let engine = EvolutionEngine::new();
+        let analysis = HashMap::new();
+        let mutations = engine.propose_mutations(&analysis).await;
+        // Should still propose at least one enhancement
+        assert!(!mutations.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_evolution_engine_stats_after_evolve() {
+        let mut engine = EvolutionEngine::new();
+        let _ = engine.evolve().await;
+        let stats = engine.get_stats();
+        let cycles = stats.get("total_cycles").unwrap();
+        assert_eq!(*cycles, serde_json::json!(1));
+    }
+}
