@@ -32,6 +32,10 @@ pub mod multimodal_memory;
 pub mod stm;
 pub mod vector_store; // SUPER PROMPT #15 - Phase 6
 
+// Tests
+#[cfg(test)]
+pub mod tests_memory_system;
+
 // NEW: SUPER PROMPTS #6-7-8 modules
 pub mod clustering;
 pub mod commands;
