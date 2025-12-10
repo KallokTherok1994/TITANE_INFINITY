@@ -399,3 +399,573 @@ pub struct RulesStats {
     pub total_violations: u64,
     pub rules_by_type: HashMap<String, usize>,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ========== RuleType Tests ==========
+
+    #[test]
+    fn test_rule_type_behavioral() {
+        let rt = RuleType::Behavioral;
+        assert_eq!(rt, RuleType::Behavioral);
+    }
+
+    #[test]
+    fn test_rule_type_security() {
+        let rt = RuleType::Security;
+        assert_eq!(rt, RuleType::Security);
+    }
+
+    #[test]
+    fn test_rule_type_quality() {
+        let rt = RuleType::Quality;
+        assert_eq!(rt, RuleType::Quality);
+    }
+
+    #[test]
+    fn test_rule_type_style() {
+        let rt = RuleType::Style;
+        assert_eq!(rt, RuleType::Style);
+    }
+
+    #[test]
+    fn test_rule_type_ethics() {
+        let rt = RuleType::Ethics;
+        assert_eq!(rt, RuleType::Ethics);
+    }
+
+    #[test]
+    fn test_rule_type_performance() {
+        let rt = RuleType::Performance;
+        assert_eq!(rt, RuleType::Performance);
+    }
+
+    #[test]
+    fn test_rule_type_clone() {
+        let rt = RuleType::Behavioral;
+        let cloned = rt.clone();
+        assert_eq!(rt, cloned);
+    }
+
+    #[test]
+    fn test_rule_type_copy() {
+        let rt = RuleType::Security;
+        let copied = rt;
+        assert_eq!(rt, copied);
+    }
+
+    #[test]
+    fn test_rule_type_debug() {
+        let rt = RuleType::Quality;
+        let debug = format!("{:?}", rt);
+        assert!(debug.contains("Quality"));
+    }
+
+    #[test]
+    fn test_rule_type_serialize() {
+        let rt = RuleType::Ethics;
+        let json = serde_json::to_string(&rt).unwrap();
+        assert!(json.contains("Ethics"));
+    }
+
+    #[test]
+    fn test_rule_type_deserialize() {
+        let json = "\"Performance\"";
+        let rt: RuleType = serde_json::from_str(json).unwrap();
+        assert_eq!(rt, RuleType::Performance);
+    }
+
+    // ========== ViolationSeverity Tests ==========
+
+    #[test]
+    fn test_violation_severity_info() {
+        let vs = ViolationSeverity::Info;
+        assert_eq!(vs, ViolationSeverity::Info);
+    }
+
+    #[test]
+    fn test_violation_severity_warning() {
+        let vs = ViolationSeverity::Warning;
+        assert_eq!(vs, ViolationSeverity::Warning);
+    }
+
+    #[test]
+    fn test_violation_severity_error() {
+        let vs = ViolationSeverity::Error;
+        assert_eq!(vs, ViolationSeverity::Error);
+    }
+
+    #[test]
+    fn test_violation_severity_critical() {
+        let vs = ViolationSeverity::Critical;
+        assert_eq!(vs, ViolationSeverity::Critical);
+    }
+
+    #[test]
+    fn test_violation_severity_clone() {
+        let vs = ViolationSeverity::Warning;
+        let cloned = vs.clone();
+        assert_eq!(vs, cloned);
+    }
+
+    #[test]
+    fn test_violation_severity_copy() {
+        let vs = ViolationSeverity::Error;
+        let copied = vs;
+        assert_eq!(vs, copied);
+    }
+
+    #[test]
+    fn test_violation_severity_debug() {
+        let vs = ViolationSeverity::Critical;
+        let debug = format!("{:?}", vs);
+        assert!(debug.contains("Critical"));
+    }
+
+    #[test]
+    fn test_violation_severity_serialize() {
+        let vs = ViolationSeverity::Warning;
+        let json = serde_json::to_string(&vs).unwrap();
+        assert!(json.contains("Warning"));
+    }
+
+    // ========== RuleViolation Tests ==========
+
+    #[test]
+    fn test_rule_violation_creation() {
+        let violation = RuleViolation {
+            rule_id: "TEST-001".to_string(),
+            rule_name: "Test Rule".to_string(),
+            severity: ViolationSeverity::Warning,
+            message: "Test message".to_string(),
+            context: "Test context".to_string(),
+            timestamp: "2024-01-01T00:00:00Z".to_string(),
+            auto_corrected: false,
+        };
+        assert_eq!(violation.rule_id, "TEST-001");
+        assert!(!violation.auto_corrected);
+    }
+
+    #[test]
+    fn test_rule_violation_clone() {
+        let violation = RuleViolation {
+            rule_id: "TEST-002".to_string(),
+            rule_name: "Test Rule 2".to_string(),
+            severity: ViolationSeverity::Error,
+            message: "Error message".to_string(),
+            context: "Error context".to_string(),
+            timestamp: "2024-01-01T00:00:00Z".to_string(),
+            auto_corrected: true,
+        };
+        let cloned = violation.clone();
+        assert_eq!(cloned.rule_id, violation.rule_id);
+    }
+
+    #[test]
+    fn test_rule_violation_debug() {
+        let violation = RuleViolation {
+            rule_id: "TEST-003".to_string(),
+            rule_name: "Test Rule 3".to_string(),
+            severity: ViolationSeverity::Critical,
+            message: "Critical message".to_string(),
+            context: "Critical context".to_string(),
+            timestamp: "2024-01-01T00:00:00Z".to_string(),
+            auto_corrected: false,
+        };
+        let debug = format!("{:?}", violation);
+        assert!(debug.contains("TEST-003"));
+    }
+
+    #[test]
+    fn test_rule_violation_serialize() {
+        let violation = RuleViolation {
+            rule_id: "TEST-004".to_string(),
+            rule_name: "Test Rule 4".to_string(),
+            severity: ViolationSeverity::Info,
+            message: "Info message".to_string(),
+            context: "Info context".to_string(),
+            timestamp: "2024-01-01T00:00:00Z".to_string(),
+            auto_corrected: false,
+        };
+        let json = serde_json::to_string(&violation).unwrap();
+        assert!(json.contains("TEST-004"));
+    }
+
+    // ========== RuleEvaluation Tests ==========
+
+    #[test]
+    fn test_rule_evaluation_passed() {
+        let eval = RuleEvaluation {
+            rule_id: "EVAL-001".to_string(),
+            passed: true,
+            violation: None,
+            duration_ms: 5,
+        };
+        assert!(eval.passed);
+        assert!(eval.violation.is_none());
+    }
+
+    #[test]
+    fn test_rule_evaluation_failed() {
+        let eval = RuleEvaluation {
+            rule_id: "EVAL-002".to_string(),
+            passed: false,
+            violation: Some(RuleViolation {
+                rule_id: "EVAL-002".to_string(),
+                rule_name: "Test".to_string(),
+                severity: ViolationSeverity::Error,
+                message: "Failed".to_string(),
+                context: "Test".to_string(),
+                timestamp: "2024-01-01T00:00:00Z".to_string(),
+                auto_corrected: false,
+            }),
+            duration_ms: 10,
+        };
+        assert!(!eval.passed);
+        assert!(eval.violation.is_some());
+    }
+
+    #[test]
+    fn test_rule_evaluation_clone() {
+        let eval = RuleEvaluation {
+            rule_id: "EVAL-003".to_string(),
+            passed: true,
+            violation: None,
+            duration_ms: 3,
+        };
+        let cloned = eval.clone();
+        assert_eq!(cloned.rule_id, eval.rule_id);
+    }
+
+    #[test]
+    fn test_rule_evaluation_serialize() {
+        let eval = RuleEvaluation {
+            rule_id: "EVAL-004".to_string(),
+            passed: true,
+            violation: None,
+            duration_ms: 1,
+        };
+        let json = serde_json::to_string(&eval).unwrap();
+        assert!(json.contains("EVAL-004"));
+    }
+
+    // ========== RuleContext Tests ==========
+
+    #[test]
+    fn test_rule_context_creation() {
+        let ctx = RuleContext {
+            content: "Test content".to_string(),
+            description: "Test description".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        assert_eq!(ctx.content, "Test content");
+        assert!(!ctx.safe_mode);
+    }
+
+    #[test]
+    fn test_rule_context_safe_mode() {
+        let ctx = RuleContext {
+            content: "Safe content".to_string(),
+            description: "Safe description".to_string(),
+            safe_mode: true,
+            metadata: HashMap::new(),
+        };
+        assert!(ctx.safe_mode);
+    }
+
+    #[test]
+    fn test_rule_context_with_metadata() {
+        let mut metadata = HashMap::new();
+        metadata.insert("key".to_string(), "value".to_string());
+        let ctx = RuleContext {
+            content: "Content".to_string(),
+            description: "Description".to_string(),
+            safe_mode: false,
+            metadata,
+        };
+        assert_eq!(ctx.metadata.get("key"), Some(&"value".to_string()));
+    }
+
+    #[test]
+    fn test_rule_context_clone() {
+        let ctx = RuleContext {
+            content: "Clone test".to_string(),
+            description: "Clone description".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        let cloned = ctx.clone();
+        assert_eq!(cloned.content, ctx.content);
+    }
+
+    // ========== RulesStats Tests ==========
+
+    #[test]
+    fn test_rules_stats_creation() {
+        let stats = RulesStats {
+            total_rules: 10,
+            active_rules: 8,
+            total_violations: 5,
+            rules_by_type: HashMap::new(),
+        };
+        assert_eq!(stats.total_rules, 10);
+        assert_eq!(stats.active_rules, 8);
+    }
+
+    #[test]
+    fn test_rules_stats_clone() {
+        let stats = RulesStats {
+            total_rules: 5,
+            active_rules: 5,
+            total_violations: 0,
+            rules_by_type: HashMap::new(),
+        };
+        let cloned = stats.clone();
+        assert_eq!(cloned.total_rules, stats.total_rules);
+    }
+
+    #[test]
+    fn test_rules_stats_debug() {
+        let stats = RulesStats {
+            total_rules: 3,
+            active_rules: 2,
+            total_violations: 1,
+            rules_by_type: HashMap::new(),
+        };
+        let debug = format!("{:?}", stats);
+        assert!(debug.contains("total_rules"));
+    }
+
+    #[test]
+    fn test_rules_stats_serialize() {
+        let stats = RulesStats {
+            total_rules: 7,
+            active_rules: 6,
+            total_violations: 2,
+            rules_by_type: HashMap::new(),
+        };
+        let json = serde_json::to_string(&stats).unwrap();
+        assert!(json.contains("total_rules"));
+    }
+
+    // ========== RulesEngine Tests ==========
+
+    #[test]
+    fn test_rules_engine_default() {
+        let engine = RulesEngine::default();
+        assert!(engine.enabled);
+        assert!(!engine.rules.is_empty());
+    }
+
+    #[test]
+    fn test_rules_engine_default_rules() {
+        let engine = RulesEngine::default();
+        assert!(engine.rules.contains_key("ETHICS-001"));
+        assert!(engine.rules.contains_key("ETHICS-002"));
+        assert!(engine.rules.contains_key("SECURITY-001"));
+        assert!(engine.rules.contains_key("QUALITY-001"));
+        assert!(engine.rules.contains_key("STYLE-001"));
+        assert!(engine.rules.contains_key("PERFORMANCE-001"));
+        assert!(engine.rules.contains_key("BEHAVIORAL-001"));
+    }
+
+    #[test]
+    fn test_rules_engine_list_rules() {
+        let engine = RulesEngine::default();
+        let rules = engine.list_rules();
+        assert!(rules.len() >= 7);
+    }
+
+    #[test]
+    fn test_rules_engine_toggle_rule_enable() {
+        let mut engine = RulesEngine::default();
+        engine.toggle_rule("ETHICS-001", false);
+        assert!(!engine.rules.get("ETHICS-001").unwrap().base.enabled);
+    }
+
+    #[test]
+    fn test_rules_engine_toggle_rule_disable() {
+        let mut engine = RulesEngine::default();
+        engine.toggle_rule("ETHICS-001", false);
+        engine.toggle_rule("ETHICS-001", true);
+        assert!(engine.rules.get("ETHICS-001").unwrap().base.enabled);
+    }
+
+    #[test]
+    fn test_rules_engine_toggle_nonexistent() {
+        let mut engine = RulesEngine::default();
+        let result = engine.toggle_rule("NONEXISTENT", false);
+        assert!(!result);
+    }
+
+    #[test]
+    fn test_rules_engine_remove_rule() {
+        let mut engine = RulesEngine::default();
+        let removed = engine.remove_rule("STYLE-001");
+        assert!(removed);
+        assert!(!engine.rules.contains_key("STYLE-001"));
+    }
+
+    #[test]
+    fn test_rules_engine_remove_nonexistent() {
+        let mut engine = RulesEngine::default();
+        let removed = engine.remove_rule("NONEXISTENT");
+        assert!(!removed);
+    }
+
+    #[test]
+    fn test_rules_engine_get_stats() {
+        let engine = RulesEngine::default();
+        let stats = engine.get_stats();
+        assert!(stats.total_rules >= 7);
+        assert!(stats.active_rules >= 7);
+        assert_eq!(stats.total_violations, 0);
+    }
+
+    #[test]
+    fn test_rules_engine_get_recent_violations_empty() {
+        let engine = RulesEngine::default();
+        let violations = engine.get_recent_violations(10);
+        assert!(violations.is_empty());
+    }
+
+    #[test]
+    fn test_rules_engine_evaluate_rule_disabled() {
+        let mut engine = RulesEngine::default();
+        engine.toggle_rule("ETHICS-001", false);
+        let ctx = RuleContext {
+            content: "test".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        let result = engine.evaluate_rule("ETHICS-001", &ctx);
+        assert!(result.is_some());
+        assert!(result.unwrap().passed);
+    }
+
+    #[test]
+    fn test_rules_engine_evaluate_rule_safe_mode() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "mensonge".to_string(), // Would normally fail
+            description: "test".to_string(),
+            safe_mode: true,
+            metadata: HashMap::new(),
+        };
+        let result = engine.evaluate_rule("ETHICS-001", &ctx);
+        assert!(result.is_some());
+        assert!(result.unwrap().passed);
+    }
+
+    #[test]
+    fn test_rules_engine_evaluate_rule_violation() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "contenu avec mensonge".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        let result = engine.evaluate_rule("ETHICS-001", &ctx);
+        assert!(result.is_some());
+        let eval = result.unwrap();
+        assert!(!eval.passed);
+        assert!(eval.violation.is_some());
+    }
+
+    #[test]
+    fn test_rules_engine_evaluate_all() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "normal content".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        let results = engine.evaluate_all(&ctx);
+        assert!(!results.is_empty());
+    }
+
+    #[test]
+    fn test_rules_engine_evaluate_all_safe_mode() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "mensonge irrespect".to_string(),
+            description: "test".to_string(),
+            safe_mode: true,
+            metadata: HashMap::new(),
+        };
+        let results = engine.evaluate_all(&ctx);
+        for result in results {
+            assert!(result.passed);
+        }
+    }
+
+    #[test]
+    fn test_rules_engine_violation_history() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "contenu avec mensonge".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        engine.evaluate_rule("ETHICS-001", &ctx);
+        let violations = engine.get_recent_violations(10);
+        assert!(!violations.is_empty());
+    }
+
+    #[test]
+    fn test_rules_engine_violation_count_increment() {
+        let mut engine = RulesEngine::default();
+        let initial = engine.rules.get("ETHICS-001").unwrap().base.violations;
+        let ctx = RuleContext {
+            content: "contenu avec mensonge".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        engine.evaluate_rule("ETHICS-001", &ctx);
+        let after = engine.rules.get("ETHICS-001").unwrap().base.violations;
+        assert_eq!(after, initial + 1);
+    }
+
+    #[test]
+    fn test_rules_engine_evaluate_nonexistent() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "test".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        let result = engine.evaluate_rule("NONEXISTENT", &ctx);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_rules_engine_irrespect_violation() {
+        let mut engine = RulesEngine::default();
+        let ctx = RuleContext {
+            content: "contenu irrespect".to_string(),
+            description: "test".to_string(),
+            safe_mode: false,
+            metadata: HashMap::new(),
+        };
+        let result = engine.evaluate_rule("ETHICS-002", &ctx);
+        assert!(result.is_some());
+        assert!(!result.unwrap().passed);
+    }
+
+    #[test]
+    fn test_rules_engine_stats_by_type() {
+        let engine = RulesEngine::default();
+        let stats = engine.get_stats();
+        assert!(stats.rules_by_type.contains_key("Ethics"));
+        assert!(stats.rules_by_type.contains_key("Security"));
+    }
+}

@@ -409,3 +409,646 @@ impl ToneEngine {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ========== Tone Tests ==========
+
+    #[test]
+    fn test_tone_neutral() {
+        let tone = Tone::Neutral;
+        assert_eq!(tone, Tone::Neutral);
+    }
+
+    #[test]
+    fn test_tone_friendly() {
+        let tone = Tone::Friendly;
+        assert_eq!(tone, Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_professional() {
+        let tone = Tone::Professional;
+        assert_eq!(tone, Tone::Professional);
+    }
+
+    #[test]
+    fn test_tone_empathetic() {
+        let tone = Tone::Empathetic;
+        assert_eq!(tone, Tone::Empathetic);
+    }
+
+    #[test]
+    fn test_tone_encouraging() {
+        let tone = Tone::Encouraging;
+        assert_eq!(tone, Tone::Encouraging);
+    }
+
+    #[test]
+    fn test_tone_instructive() {
+        let tone = Tone::Instructive;
+        assert_eq!(tone, Tone::Instructive);
+    }
+
+    #[test]
+    fn test_tone_playful() {
+        let tone = Tone::Playful;
+        assert_eq!(tone, Tone::Playful);
+    }
+
+    #[test]
+    fn test_tone_serious() {
+        let tone = Tone::Serious;
+        assert_eq!(tone, Tone::Serious);
+    }
+
+    #[test]
+    fn test_tone_curious() {
+        let tone = Tone::Curious;
+        assert_eq!(tone, Tone::Curious);
+    }
+
+    #[test]
+    fn test_tone_celebratory() {
+        let tone = Tone::Celebratory;
+        assert_eq!(tone, Tone::Celebratory);
+    }
+
+    #[test]
+    fn test_tone_apologetic() {
+        let tone = Tone::Apologetic;
+        assert_eq!(tone, Tone::Apologetic);
+    }
+
+    #[test]
+    fn test_tone_urgent() {
+        let tone = Tone::Urgent;
+        assert_eq!(tone, Tone::Urgent);
+    }
+
+    #[test]
+    fn test_tone_calm() {
+        let tone = Tone::Calm;
+        assert_eq!(tone, Tone::Calm);
+    }
+
+    #[test]
+    fn test_tone_enthusiastic() {
+        let tone = Tone::Enthusiastic;
+        assert_eq!(tone, Tone::Enthusiastic);
+    }
+
+    #[test]
+    fn test_tone_clone() {
+        let tone = Tone::Friendly;
+        let cloned = tone.clone();
+        assert_eq!(tone, cloned);
+    }
+
+    #[test]
+    fn test_tone_copy() {
+        let tone = Tone::Professional;
+        let copied = tone;
+        assert_eq!(tone, copied);
+    }
+
+    #[test]
+    fn test_tone_debug() {
+        let tone = Tone::Empathetic;
+        let debug = format!("{:?}", tone);
+        assert!(debug.contains("Empathetic"));
+    }
+
+    #[test]
+    fn test_tone_serialize() {
+        let tone = Tone::Encouraging;
+        let json = serde_json::to_string(&tone).unwrap();
+        assert!(json.contains("Encouraging"));
+    }
+
+    #[test]
+    fn test_tone_deserialize() {
+        let json = "\"Instructive\"";
+        let tone: Tone = serde_json::from_str(json).unwrap();
+        assert_eq!(tone, Tone::Instructive);
+    }
+
+    #[test]
+    fn test_tone_hash() {
+        let mut map: HashMap<Tone, i32> = HashMap::new();
+        map.insert(Tone::Friendly, 1);
+        map.insert(Tone::Professional, 2);
+        assert_eq!(map.get(&Tone::Friendly), Some(&1));
+        assert_eq!(map.get(&Tone::Professional), Some(&2));
+    }
+
+    // ========== ToneParameters Tests ==========
+
+    #[test]
+    fn test_tone_parameters_default() {
+        let params = ToneParameters::default();
+        assert_eq!(params.formality, 0.4);
+        assert_eq!(params.warmth, 0.7);
+        assert_eq!(params.energy, 0.5);
+        assert_eq!(params.directness, 0.5);
+        assert_eq!(params.complexity, 0.4);
+        assert_eq!(params.humor, 0.2);
+        assert_eq!(params.empathy, 0.6);
+    }
+
+    #[test]
+    fn test_tone_parameters_clone() {
+        let params = ToneParameters::default();
+        let cloned = params.clone();
+        assert_eq!(cloned.formality, params.formality);
+        assert_eq!(cloned.warmth, params.warmth);
+    }
+
+    #[test]
+    fn test_tone_parameters_debug() {
+        let params = ToneParameters::default();
+        let debug = format!("{:?}", params);
+        assert!(debug.contains("formality"));
+        assert!(debug.contains("warmth"));
+    }
+
+    #[test]
+    fn test_tone_parameters_serialize() {
+        let params = ToneParameters::default();
+        let json = serde_json::to_string(&params).unwrap();
+        assert!(json.contains("formality"));
+        assert!(json.contains("warmth"));
+    }
+
+    #[test]
+    fn test_tone_parameters_custom() {
+        let params = ToneParameters {
+            formality: 0.9,
+            warmth: 0.1,
+            energy: 0.2,
+            directness: 0.8,
+            complexity: 0.7,
+            humor: 0.0,
+            empathy: 0.3,
+        };
+        assert_eq!(params.formality, 0.9);
+        assert_eq!(params.humor, 0.0);
+    }
+
+    // ========== ToneTextMarkers Tests ==========
+
+    #[test]
+    fn test_tone_text_markers_default() {
+        let markers = ToneTextMarkers::default();
+        assert!(markers.prefixes.is_empty());
+        assert!(markers.suffixes.is_empty());
+        assert!(markers.interjections.is_empty());
+        assert!(markers.emojis.is_empty());
+        assert!(markers.expressions.is_empty());
+    }
+
+    #[test]
+    fn test_tone_text_markers_clone() {
+        let mut markers = ToneTextMarkers::default();
+        markers.prefixes.push("Hello".to_string());
+        let cloned = markers.clone();
+        assert_eq!(cloned.prefixes, markers.prefixes);
+    }
+
+    #[test]
+    fn test_tone_text_markers_debug() {
+        let markers = ToneTextMarkers::default();
+        let debug = format!("{:?}", markers);
+        assert!(debug.contains("prefixes"));
+    }
+
+    #[test]
+    fn test_tone_text_markers_serialize() {
+        let markers = ToneTextMarkers::default();
+        let json = serde_json::to_string(&markers).unwrap();
+        assert!(json.contains("prefixes"));
+    }
+
+    #[test]
+    fn test_tone_text_markers_with_content() {
+        let markers = ToneTextMarkers {
+            prefixes: vec!["Hi!".to_string()],
+            suffixes: vec!["Bye!".to_string()],
+            interjections: vec!["Wow!".to_string()],
+            emojis: vec!["😊".to_string()],
+            expressions: vec!["Indeed".to_string()],
+        };
+        assert_eq!(markers.prefixes.len(), 1);
+        assert_eq!(markers.emojis[0], "😊");
+    }
+
+    // ========== ToneConfig Tests ==========
+
+    #[test]
+    fn test_tone_config_creation() {
+        let config = ToneConfig {
+            primary_tone: Tone::Friendly,
+            secondary_tone: Some(Tone::Warm),
+            parameters: ToneParameters::default(),
+            text_markers: ToneTextMarkers::default(),
+        };
+        assert_eq!(config.primary_tone, Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_config_clone() {
+        let config = ToneConfig {
+            primary_tone: Tone::Professional,
+            secondary_tone: None,
+            parameters: ToneParameters::default(),
+            text_markers: ToneTextMarkers::default(),
+        };
+        let cloned = config.clone();
+        assert_eq!(cloned.primary_tone, config.primary_tone);
+    }
+
+    #[test]
+    fn test_tone_config_debug() {
+        let config = ToneConfig {
+            primary_tone: Tone::Serious,
+            secondary_tone: None,
+            parameters: ToneParameters::default(),
+            text_markers: ToneTextMarkers::default(),
+        };
+        let debug = format!("{:?}", config);
+        assert!(debug.contains("Serious"));
+    }
+
+    #[test]
+    fn test_tone_config_serialize() {
+        let config = ToneConfig {
+            primary_tone: Tone::Calm,
+            secondary_tone: None,
+            parameters: ToneParameters::default(),
+            text_markers: ToneTextMarkers::default(),
+        };
+        let json = serde_json::to_string(&config).unwrap();
+        assert!(json.contains("Calm"));
+    }
+
+    // ========== ToneEngine Tests ==========
+
+    #[test]
+    fn test_tone_engine_default() {
+        let engine = ToneEngine::default();
+        assert_eq!(engine.current(), Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_engine_current() {
+        let engine = ToneEngine::default();
+        let current = engine.current();
+        assert_eq!(current, Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_engine_parameters() {
+        let engine = ToneEngine::default();
+        let params = engine.parameters();
+        assert!(params.warmth > 0.0);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_professional() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Professional);
+        assert_eq!(engine.current(), Tone::Professional);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_empathetic() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Empathetic);
+        assert_eq!(engine.current(), Tone::Empathetic);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_encouraging() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Encouraging);
+        assert_eq!(engine.current(), Tone::Encouraging);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_instructive() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Instructive);
+        assert_eq!(engine.current(), Tone::Instructive);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_playful() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Playful);
+        assert_eq!(engine.current(), Tone::Playful);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_serious() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Serious);
+        assert_eq!(engine.current(), Tone::Serious);
+    }
+
+    #[test]
+    fn test_tone_engine_set_tone_urgent() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Urgent);
+        assert_eq!(engine.current(), Tone::Urgent);
+    }
+
+    #[test]
+    fn test_tone_engine_restore_tone() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Professional);
+        engine.restore_tone();
+        assert_eq!(engine.current(), Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_engine_restore_tone_multiple() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Professional);
+        engine.set_tone(Tone::Serious);
+        engine.restore_tone();
+        assert_eq!(engine.current(), Tone::Professional);
+        engine.restore_tone();
+        assert_eq!(engine.current(), Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_engine_restore_tone_empty_stack() {
+        let mut engine = ToneEngine::default();
+        engine.restore_tone(); // Should not panic
+        assert_eq!(engine.current(), Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_friendly() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Friendly);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_professional() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Professional);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_empathetic() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Empathetic);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_encouraging() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Encouraging);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_instructive() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Instructive);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_playful() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Playful);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_serious() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Serious);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_urgent() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Urgent);
+        assert!(config.is_some());
+    }
+
+    #[test]
+    fn test_tone_engine_get_config_none() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Apologetic);
+        assert!(config.is_none());
+    }
+
+    #[test]
+    fn test_tone_engine_adapt_text_no_config() {
+        let mut engine = ToneEngine::default();
+        engine.set_tone(Tone::Neutral);
+        let text = engine.adapt_text("Hello world");
+        assert!(text.contains("Hello world"));
+    }
+
+    #[test]
+    fn test_tone_engine_adapt_text_basic() {
+        let engine = ToneEngine::default();
+        let text = engine.adapt_text("Test message");
+        assert!(text.contains("Test message"));
+    }
+
+    #[test]
+    fn test_tone_engine_detect_urgent() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("C'est urgent!");
+        assert_eq!(tone, Tone::Urgent);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_critique() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Situation critique");
+        assert_eq!(tone, Tone::Urgent);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_erreur() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("J'ai une erreur");
+        assert_eq!(tone, Tone::Empathetic);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_probleme() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("J'ai un problème");
+        assert_eq!(tone, Tone::Empathetic);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_bravo() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Bravo pour le travail!");
+        assert_eq!(tone, Tone::Celebratory);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_reussi() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("J'ai réussi l'examen");
+        assert_eq!(tone, Tone::Celebratory);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_comment() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Comment faire cela?");
+        assert_eq!(tone, Tone::Instructive);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_expliquer() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Peux-tu m'expliquer?");
+        assert_eq!(tone, Tone::Instructive);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_aide() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("J'ai besoin d'aide");
+        assert_eq!(tone, Tone::Encouraging);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_support() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Je cherche du support");
+        assert_eq!(tone, Tone::Encouraging);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_professionnel() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Contexte professionnel");
+        assert_eq!(tone, Tone::Professional);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_formel() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Communication formelle");
+        assert_eq!(tone, Tone::Professional);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_default() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("Bonjour!");
+        assert_eq!(tone, Tone::Friendly);
+    }
+
+    #[test]
+    fn test_tone_engine_detect_case_insensitive() {
+        let engine = ToneEngine::default();
+        let tone = engine.detect_appropriate_tone("URGENT!");
+        assert_eq!(tone, Tone::Urgent);
+    }
+
+    // ========== Preset Config Tests ==========
+
+    #[test]
+    fn test_friendly_config_warmth() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Friendly).unwrap();
+        assert_eq!(config.parameters.warmth, 0.8);
+    }
+
+    #[test]
+    fn test_professional_config_formality() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Professional).unwrap();
+        assert_eq!(config.parameters.formality, 0.8);
+    }
+
+    #[test]
+    fn test_empathetic_config_empathy() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Empathetic).unwrap();
+        assert_eq!(config.parameters.empathy, 1.0);
+    }
+
+    #[test]
+    fn test_encouraging_config_energy() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Encouraging).unwrap();
+        assert_eq!(config.parameters.energy, 0.8);
+    }
+
+    #[test]
+    fn test_playful_config_humor() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Playful).unwrap();
+        assert_eq!(config.parameters.humor, 0.8);
+    }
+
+    #[test]
+    fn test_urgent_config_directness() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Urgent).unwrap();
+        assert_eq!(config.parameters.directness, 1.0);
+    }
+
+    #[test]
+    fn test_serious_config_humor() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Serious).unwrap();
+        assert_eq!(config.parameters.humor, 0.0);
+    }
+
+    #[test]
+    fn test_friendly_has_emojis() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Friendly).unwrap();
+        assert!(!config.text_markers.emojis.is_empty());
+    }
+
+    #[test]
+    fn test_professional_no_emojis() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Professional).unwrap();
+        assert!(config.text_markers.emojis.is_empty());
+    }
+
+    #[test]
+    fn test_empathetic_secondary_tone() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Empathetic).unwrap();
+        assert_eq!(config.secondary_tone, Some(Tone::Calm));
+    }
+
+    #[test]
+    fn test_encouraging_secondary_tone() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Encouraging).unwrap();
+        assert_eq!(config.secondary_tone, Some(Tone::Enthusiastic));
+    }
+
+    #[test]
+    fn test_professional_no_secondary_tone() {
+        let engine = ToneEngine::default();
+        let config = engine.get_config(Tone::Professional).unwrap();
+        assert_eq!(config.secondary_tone, None);
+    }
+}
