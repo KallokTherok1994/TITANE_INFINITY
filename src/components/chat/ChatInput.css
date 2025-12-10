@@ -31,9 +31,13 @@
   border-radius: var(--radius-2xl, 12px);
   padding: 1px;
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: exclude;
   opacity: 0;
   transition: opacity var(--transition-fast);
@@ -47,7 +51,9 @@
 .chat-input-wrapper:focus-within {
   background: rgba(147, 179, 153, 0.06);
   border-color: var(--chat-input-focus-border);
-  box-shadow: var(--chat-input-focus-glow), inset 0 0 20px rgba(147, 179, 153, 0.03);
+  box-shadow:
+    var(--chat-input-focus-glow),
+    inset 0 0 20px rgba(147, 179, 153, 0.03);
 }
 
 .chat-input {
@@ -139,7 +145,8 @@
 }
 
 @keyframes voicePulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(147, 179, 153, 0.7);
   }
@@ -229,14 +236,15 @@
 }
 
 /* States */
-.chat-input-wrapper[data-disabled="true"] {
+.chat-input-wrapper[data-disabled='true'] {
   opacity: 0.5;
   pointer-events: none;
 }
 
 /* Animations */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -244,7 +252,7 @@
   }
 }
 
-.chat-send-btn[data-loading="true"] {
+.chat-send-btn[data-loading='true'] {
   animation: pulse 1.5s ease-in-out infinite;
   pointer-events: none;
 }

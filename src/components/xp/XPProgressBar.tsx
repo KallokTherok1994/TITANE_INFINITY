@@ -6,7 +6,11 @@
  */
 
 import React, { useMemo } from 'react';
-import { useLevelInfo, useStreak, useAutomationXPStore } from '@/stores/useAutomationXPStore';
+import {
+  useLevelInfo,
+  useStreak,
+  useAutomationXPStore,
+} from '@/stores/useAutomationXPStore';
 import './XPProgressBar.css';
 
 interface XPProgressBarProps {
@@ -55,10 +59,12 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
         <div className="xp-progress-track">
           <div
             className="xp-progress-fill"
-            style={{
-              width: `${levelInfo.progress}%`,
-              '--fill-color': levelInfo.color,
-            } as React.CSSProperties}
+            style={
+              {
+                width: `${levelInfo.progress}%`,
+                '--fill-color': levelInfo.color,
+              } as React.CSSProperties
+            }
           />
         </div>
         {xpAnimationQueue.length > 0 && (
@@ -84,7 +90,9 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
             <span className="xp-streak-icon">🔥</span>
             <span className="xp-streak-count">{streak.current}</span>
             {streak.multiplier > 1 && (
-              <span className="xp-streak-multiplier">×{streak.multiplier.toFixed(1)}</span>
+              <span className="xp-streak-multiplier">
+                ×{streak.multiplier.toFixed(1)}
+              </span>
             )}
           </div>
         )}
@@ -94,17 +102,21 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
         <div className="xp-progress-track">
           <div
             className="xp-progress-fill"
-            style={{
-              width: `${levelInfo.progress}%`,
-              '--fill-color': levelInfo.color,
-            } as React.CSSProperties}
+            style={
+              {
+                width: `${levelInfo.progress}%`,
+                '--fill-color': levelInfo.color,
+              } as React.CSSProperties
+            }
           />
           <div
             className="xp-progress-glow"
-            style={{
-              width: `${levelInfo.progress}%`,
-              '--glow-color': levelInfo.color,
-            } as React.CSSProperties}
+            style={
+              {
+                width: `${levelInfo.progress}%`,
+                '--glow-color': levelInfo.color,
+              } as React.CSSProperties
+            }
           />
         </div>
 
@@ -118,9 +130,7 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
       </div>
 
       {xpAnimationQueue.length > 0 && (
-        <div className="xp-gain-popup">
-          +{xpAnimationQueue[0]} XP
-        </div>
+        <div className="xp-gain-popup">+{xpAnimationQueue[0]} XP</div>
       )}
     </div>
   );

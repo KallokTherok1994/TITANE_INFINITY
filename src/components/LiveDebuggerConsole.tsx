@@ -134,7 +134,11 @@ export function LiveDebuggerConsole() {
               <button className="btn-deactivate" onClick={handleDeactivate}>
                 ⏹️ STOP
               </button>
-              <button className="btn-clear" onClick={clearDiagnostics} title="Clear diagnostics">
+              <button
+                className="btn-clear"
+                onClick={clearDiagnostics}
+                title="Clear diagnostics"
+              >
                 🗑️
               </button>
               <button className="btn-reset" onClick={reset} title="Reset session">
@@ -157,7 +161,8 @@ export function LiveDebuggerConsole() {
             <div className="health-label">
               <span>System Health: {healthScore}%</span>
               <span className="stats-summary">
-                {stats.totalDiagnostics} diagnostics · {stats.totalPatches} patches · {(stats.sessionDuration / 1000).toFixed(0)}s
+                {stats.totalDiagnostics} diagnostics · {stats.totalPatches} patches ·{' '}
+                {(stats.sessionDuration / 1000).toFixed(0)}s
               </span>
             </div>
             <div className="health-bar-container">
@@ -174,7 +179,7 @@ export function LiveDebuggerConsole() {
           <div className="mode-selector-section">
             <label>Mode:</label>
             <div className="mode-buttons">
-              {(['shadow', 'active', 'auto-heal', 'explain', 'draft'] as const).map((m) => (
+              {(['shadow', 'active', 'auto-heal', 'explain', 'draft'] as const).map(m => (
                 <button
                   key={m}
                   className={`mode-btn ${mode === m ? 'active' : ''}`}
@@ -248,9 +253,14 @@ export function LiveDebuggerConsole() {
                   <p className="hint">Start listening to analyze voice input</p>
                 </div>
               ) : (
-                diagnostics.slice(-10).map((diagnostic, index) => (
-                  <DiagnosticItem key={`${diagnostic.timestamp}-${index}`} diagnostic={diagnostic} />
-                ))
+                diagnostics
+                  .slice(-10)
+                  .map((diagnostic, index) => (
+                    <DiagnosticItem
+                      key={`${diagnostic.timestamp}-${index}`}
+                      diagnostic={diagnostic}
+                    />
+                  ))
               )}
               <div ref={diagnosticsEndRef} />
             </div>
@@ -269,7 +279,9 @@ export function LiveDebuggerConsole() {
                   <div key={index} className="patch-item">
                     <span className="patch-module">{patch.module}</span>
                     <span className="patch-reason">{patch.reason}</span>
-                    <span className={`patch-confidence confidence-${Math.round(patch.confidence * 100)}`}>
+                    <span
+                      className={`patch-confidence confidence-${Math.round(patch.confidence * 100)}`}
+                    >
                       {(patch.confidence * 100).toFixed(0)}%
                     </span>
                   </div>
@@ -319,23 +331,25 @@ interface DiagnosticItemProps {
 function DiagnosticItem({ diagnostic }: DiagnosticItemProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const severityIcon = {
-    low: '🟢',
-    medium: '🟡',
-    high: '🟠',
-    critical: '🔴',
-  }[diagnostic.intent.severity] || '⚪';
+  const severityIcon =
+    {
+      low: '🟢',
+      medium: '🟡',
+      high: '🟠',
+      critical: '🔴',
+    }[diagnostic.intent.severity] || '⚪';
 
-  const intentIcon = {
-    dev: '💻',
-    bug: '🐛',
-    ui: '🎨',
-    backend: '🦀',
-    heal: '🔧',
-    diagnostic: '🔍',
-    question: '❓',
-    command: '⚡',
-  }[diagnostic.intent.type] || '📋';
+  const intentIcon =
+    {
+      dev: '💻',
+      bug: '🐛',
+      ui: '🎨',
+      backend: '🦀',
+      heal: '🔧',
+      diagnostic: '🔍',
+      question: '❓',
+      command: '⚡',
+    }[diagnostic.intent.type] || '📋';
 
   const time = new Date(diagnostic.timestamp).toLocaleTimeString('fr-FR');
 
@@ -343,7 +357,9 @@ function DiagnosticItem({ diagnostic }: DiagnosticItemProps) {
     <div className={`diagnostic-item severity-${diagnostic.intent.severity}`}>
       <div className="diagnostic-header" onClick={() => setIsExpanded(!isExpanded)}>
         <span className="diagnostic-time">{time}</span>
-        <span className="diagnostic-icon">{severityIcon} {intentIcon}</span>
+        <span className="diagnostic-icon">
+          {severityIcon} {intentIcon}
+        </span>
         <span className="diagnostic-type">{diagnostic.intent.type}</span>
         <span className="diagnostic-confidence">
           {(diagnostic.intent.confidence * 100).toFixed(0)}%
@@ -379,7 +395,9 @@ function DiagnosticItem({ diagnostic }: DiagnosticItemProps) {
           {diagnostic.macroPatch && (
             <div className="diagnostic-patch macro-patch">
               <strong>📦 Macro Patch:</strong> {diagnostic.macroPatch.description}
-              {diagnostic.macroPatch.requiresReview && <span className="patch-review">⚠️ REQUIRES REVIEW</span>}
+              {diagnostic.macroPatch.requiresReview && (
+                <span className="patch-review">⚠️ REQUIRES REVIEW</span>
+              )}
             </div>
           )}
         </div>

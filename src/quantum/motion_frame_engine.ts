@@ -208,36 +208,52 @@ export class MotionFrameEngine {
    * Animation de fade in
    */
   fadeIn(element: HTMLElement, duration?: number): string {
-    return this.animate(element, [
-      { opacity: 0, transform: 'translateY(8px)' },
-      { opacity: 1, transform: 'translateY(0)' },
-    ], { duration, easing: 'decelerate' });
+    return this.animate(
+      element,
+      [
+        { opacity: 0, transform: 'translateY(8px)' },
+        { opacity: 1, transform: 'translateY(0)' },
+      ],
+      { duration, easing: 'decelerate' }
+    );
   }
 
   /**
    * Animation de fade out
    */
   fadeOut(element: HTMLElement, duration?: number): string {
-    return this.animate(element, [
-      { opacity: 1, transform: 'translateY(0)' },
-      { opacity: 0, transform: 'translateY(-8px)' },
-    ], { duration: duration ?? TITANE_DURATIONS.fast, easing: 'accelerate' });
+    return this.animate(
+      element,
+      [
+        { opacity: 1, transform: 'translateY(0)' },
+        { opacity: 0, transform: 'translateY(-8px)' },
+      ],
+      { duration: duration ?? TITANE_DURATIONS.fast, easing: 'accelerate' }
+    );
   }
 
   /**
    * Animation de scale
    */
   scaleIn(element: HTMLElement, duration?: number): string {
-    return this.animate(element, [
-      { opacity: 0, transform: 'scale(0.95)' },
-      { opacity: 1, transform: 'scale(1)' },
-    ], { duration, easing: 'decelerate' });
+    return this.animate(
+      element,
+      [
+        { opacity: 0, transform: 'scale(0.95)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      { duration, easing: 'decelerate' }
+    );
   }
 
   /**
    * Animation de slide
    */
-  slideIn(element: HTMLElement, direction: 'left' | 'right' | 'up' | 'down', duration?: number): string {
+  slideIn(
+    element: HTMLElement,
+    direction: 'left' | 'right' | 'up' | 'down',
+    duration?: number
+  ): string {
     const transforms: Record<string, { from: string; to: string }> = {
       left: { from: 'translateX(-20px)', to: 'translateX(0)' },
       right: { from: 'translateX(20px)', to: 'translateX(0)' },
@@ -246,10 +262,14 @@ export class MotionFrameEngine {
     };
 
     const { from, to } = transforms[direction];
-    return this.animate(element, [
-      { opacity: 0, transform: from },
-      { opacity: 1, transform: to },
-    ], { duration, easing: 'decelerate' });
+    return this.animate(
+      element,
+      [
+        { opacity: 0, transform: from },
+        { opacity: 1, transform: to },
+      ],
+      { duration, easing: 'decelerate' }
+    );
   }
 
   /**
@@ -298,9 +318,10 @@ export class MotionFrameEngine {
       durations.push(anim.duration);
     }
 
-    const avgDuration = durations.length > 0
-      ? durations.reduce((a, b) => a + b, 0) / durations.length
-      : this.defaultDuration;
+    const avgDuration =
+      durations.length > 0
+        ? durations.reduce((a, b) => a + b, 0) / durations.length
+        : this.defaultDuration;
 
     return {
       activeAnimations: this.animations.size,

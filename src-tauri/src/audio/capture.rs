@@ -6,7 +6,10 @@
 
 use super::{AudioConfig, AudioError, AudioResult};
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
-use std::sync::{Arc, Mutex, atomic::{AtomicBool, Ordering}};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Arc, Mutex,
+};
 use std::time::Duration;
 
 /// Audio capture state shared between threads
@@ -107,31 +110,58 @@ impl AudioCaptureState {
 
         let host = cpal::default_host();
 
-        let device = host.default_input_device()
+        let device = host
+            .default_input_device()
             .ok_or_else(|| AudioError::DeviceError("No input device available".into()))?;
 
-        log::info!("[AudioCapture] Using device: {}", device.name().unwrap_or_default());
+        log::info!(
+            "[AudioCapture] Using device: {}",
+            device.name().unwrap_or_default()
+        );
 
         // Get supported config
-        let supported_config = device.default_input_config()
+        let supported_config = device
+            .default_input_config()
             .map_err(|e| AudioError::DeviceError(format!("No supported config: {}", e)))?;
 
-        log::info!("[AudioCapture] Sample rate: {}, Channels: {}",
+        log::info!(
+            "[AudioCapture] Sample rate: {}, Channels: {}",
             supported_config.sample_rate().0,
-            supported_config.channels());
+            supported_config.channels()
+        );
 
         let buffer = self.buffer.clone();
         let is_capturing = self.is_capturing.clone();
 
         // Build stream based on sample format
         let stream = match supported_config.sample_format() {
-            cpal::SampleFormat::F32 => self.build_stream::<f32>(&device, &supported_config.into(), buffer, is_capturing.clone()),
-            cpal::SampleFormat::I16 => self.build_stream::<i16>(&device, &supported_config.into(), buffer, is_capturing.clone()),
-            cpal::SampleFormat::U16 => self.build_stream::<u16>(&device, &supported_config.into(), buffer, is_capturing.clone()),
-            format => Err(AudioError::DeviceError(format!("Unsupported format: {:?}", format))),
+            cpal::SampleFormat::F32 => self.build_stream::<f32>(
+                &device,
+                &supported_config.into(),
+                buffer,
+                is_capturing.clone(),
+            ),
+            cpal::SampleFormat::I16 => self.build_stream::<i16>(
+                &device,
+                &supported_config.into(),
+                buffer,
+                is_capturing.clone(),
+            ),
+            cpal::SampleFormat::U16 => self.build_stream::<u16>(
+                &device,
+                &supported_config.into(),
+                buffer,
+                is_capturing.clone(),
+            ),
+            format => Err(AudioError::DeviceError(format!(
+                "Unsupported format: {:?}",
+                format
+            ))),
         }?;
 
-        stream.play().map_err(|e| AudioError::RecordingError(format!("Failed to start stream: {}", e)))?;
+        stream
+            .play()
+            .map_err(|e| AudioError::RecordingError(format!("Failed to start stream: {}", e)))?;
 
         self.stream = Some(stream);
         self.is_capturing.store(true, Ordering::SeqCst);
@@ -153,25 +183,26 @@ impl AudioCaptureState {
     {
         let err_fn = |err| log::error!("[AudioCapture] Stream error: {}", err);
 
-        let stream = device.build_input_stream(
-            config,
-            move |data: &[T], _: &cpal::InputCallbackInfo| {
-                if !is_capturing.load(Ordering::SeqCst) {
-                    return;
-                }
+        let stream = device
+            .build_input_stream(
+                config,
+                move |data: &[T], _: &cpal::InputCallbackInfo| {
+                    if !is_capturing.load(Ordering::SeqCst) {
+                        return;
+                    }
 
-                // Convert samples to f32 and write to buffer
-                let samples: Vec<f32> = data.iter()
-                    .map(|&s| cpal::Sample::from_sample(s))
-                    .collect();
+                    // Convert samples to f32 and write to buffer
+                    let samples: Vec<f32> =
+                        data.iter().map(|&s| cpal::Sample::from_sample(s)).collect();
 
-                if let Ok(mut buf) = buffer.lock() {
-                    buf.write(&samples);
-                }
-            },
-            err_fn,
-            None, // No timeout
-        ).map_err(|e| AudioError::RecordingError(format!("Failed to build stream: {}", e)))?;
+                    if let Ok(mut buf) = buffer.lock() {
+                        buf.write(&samples);
+                    }
+                },
+                err_fn,
+                None, // No timeout
+            )
+            .map_err(|e| AudioError::RecordingError(format!("Failed to build stream: {}", e)))?;
 
         Ok(stream)
     }
@@ -200,7 +231,9 @@ impl AudioCaptureState {
     pub fn get_audio_chunk(&self, duration_ms: u32) -> AudioResult<Vec<f32>> {
         let samples_count = (self.config.sample_rate * duration_ms / 1000) as usize;
 
-        let buffer = self.buffer.lock()
+        let buffer = self
+            .buffer
+            .lock()
             .map_err(|e| AudioError::ProcessingError(format!("Buffer lock failed: {}", e)))?;
 
         Ok(buffer.get_last_n(samples_count))
@@ -208,7 +241,9 @@ impl AudioCaptureState {
 
     /// Get all captured audio data
     pub fn get_all_audio(&self) -> AudioResult<Vec<f32>> {
-        let buffer = self.buffer.lock()
+        let buffer = self
+            .buffer
+            .lock()
             .map_err(|e| AudioError::ProcessingError(format!("Buffer lock failed: {}", e)))?;
 
         let total = buffer.total_samples().min(buffer.capacity);
@@ -227,7 +262,9 @@ impl AudioCaptureState {
         let samples = self.get_all_audio()?;
 
         if samples.is_empty() {
-            return Err(AudioError::ProcessingError("No audio data to export".into()));
+            return Err(AudioError::ProcessingError(
+                "No audio data to export".into(),
+            ));
         }
 
         let spec = hound::WavSpec {
@@ -243,11 +280,13 @@ impl AudioCaptureState {
         for sample in samples {
             // Convert f32 [-1.0, 1.0] to i16
             let sample_i16 = (sample * 32767.0).clamp(-32768.0, 32767.0) as i16;
-            writer.write_sample(sample_i16)
-                .map_err(|e| AudioError::ProcessingError(format!("Failed to write sample: {}", e)))?;
+            writer.write_sample(sample_i16).map_err(|e| {
+                AudioError::ProcessingError(format!("Failed to write sample: {}", e))
+            })?;
         }
 
-        writer.finalize()
+        writer
+            .finalize()
             .map_err(|e| AudioError::ProcessingError(format!("Failed to finalize WAV: {}", e)))?;
 
         log::info!("[AudioCapture] ✅ Exported WAV to {:?}", path);
@@ -275,7 +314,8 @@ impl AudioCaptureState {
 
     /// Get total samples captured
     pub fn total_samples(&self) -> usize {
-        self.buffer.lock()
+        self.buffer
+            .lock()
             .map(|buf| buf.total_samples())
             .unwrap_or(0)
     }
@@ -308,11 +348,7 @@ pub fn list_input_devices() -> Vec<String> {
     let host = cpal::default_host();
 
     host.input_devices()
-        .map(|devices| {
-            devices
-                .filter_map(|d| d.name().ok())
-                .collect()
-        })
+        .map(|devices| devices.filter_map(|d| d.name().ok()).collect())
         .unwrap_or_default()
 }
 
@@ -321,26 +357,20 @@ pub fn list_output_devices() -> Vec<String> {
     let host = cpal::default_host();
 
     host.output_devices()
-        .map(|devices| {
-            devices
-                .filter_map(|d| d.name().ok())
-                .collect()
-        })
+        .map(|devices| devices.filter_map(|d| d.name().ok()).collect())
         .unwrap_or_default()
 }
 
 /// Get default input device name
 pub fn default_input_device_name() -> Option<String> {
     let host = cpal::default_host();
-    host.default_input_device()
-        .and_then(|d| d.name().ok())
+    host.default_input_device().and_then(|d| d.name().ok())
 }
 
 /// Get default output device name
 pub fn default_output_device_name() -> Option<String> {
     let host = cpal::default_host();
-    host.default_output_device()
-        .and_then(|d| d.name().ok())
+    host.default_output_device().and_then(|d| d.name().ok())
 }
 
 // ─────────────────────────────────────────────────────────────────

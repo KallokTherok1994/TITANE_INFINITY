@@ -4,9 +4,6 @@
  * Système multi-agents avec permissions IA
  * ═══════════════════════════════════════════════════════════════════
  */
-
 pub mod permissions;
 
-pub use permissions::{
-    AgentConfig, AgentIAPermission, AgentPermissionManager, AgentRole,
-};
+pub use permissions::{AgentConfig, AgentIAPermission, AgentPermissionManager, AgentRole};

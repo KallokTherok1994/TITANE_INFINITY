@@ -11,24 +11,24 @@ use serde::{Deserialize, Serialize};
 /// Les 7 lois de cohérence comportementale
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum BehavioralLaw {
-    ConstantTone,         // Ton calme, clair, posé
-    StableStyle,          // Style professionnel, humain, structuré
-    RegularRhythm,        // Ni trop lent, ni trop rapide
-    InvariablePosture,    // Copilote stratégique
-    GlobalAlignment,      // Alignement avec valeurs TITANE
-    SelfRegulation,       // Auto-correction automatique
-    IdentityPersistence,  // Voix constante dans le temps
+    ConstantTone,        // Ton calme, clair, posé
+    StableStyle,         // Style professionnel, humain, structuré
+    RegularRhythm,       // Ni trop lent, ni trop rapide
+    InvariablePosture,   // Copilote stratégique
+    GlobalAlignment,     // Alignement avec valeurs TITANE
+    SelfRegulation,      // Auto-correction automatique
+    IdentityPersistence, // Voix constante dans le temps
 }
 
 /// Déviation comportementale détectée
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum BehavioralDeviation {
-    ToneExcess,           // Trop enthousiaste, agressif, condescendant
-    StyleInconsistency,   // Trop familier ou trop mécanique
-    RhythmIssue,          // Trop dense ou trop léger
-    PostureShift,         // Sortie du rôle (thérapeute, comédien)
-    ValueMisalignment,    // Contraire aux valeurs TITANE
-    None,                 // Aucune déviation
+    ToneExcess,         // Trop enthousiaste, agressif, condescendant
+    StyleInconsistency, // Trop familier ou trop mécanique
+    RhythmIssue,        // Trop dense ou trop léger
+    PostureShift,       // Sortie du rôle (thérapeute, comédien)
+    ValueMisalignment,  // Contraire aux valeurs TITANE
+    None,               // Aucune déviation
 }
 
 /// Demande de vérification comportementale
@@ -43,7 +43,7 @@ pub struct BehavioralRequest {
 /// Réponse avec cohérence comportementale garantie
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BehavioralResponse {
-    pub finalized_response: String,      // Réponse corrigée et stabilisée
+    pub finalized_response: String, // Réponse corrigée et stabilisée
     pub deviations_detected: Vec<BehavioralDeviation>,
     pub corrections_applied: Vec<String>,
     pub consistency_score: ConsistencyScore,
@@ -52,13 +52,13 @@ pub struct BehavioralResponse {
 /// Score de cohérence comportementale
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ConsistencyScore {
-    pub tone_stability: f32,      // 0-1: stabilité du ton
-    pub style_coherence: f32,     // 0-1: cohérence stylistique
-    pub rhythm_balance: f32,      // 0-1: équilibre du rythme
-    pub posture_alignment: f32,   // 0-1: alignement de posture
-    pub value_match: f32,         // 0-1: correspondance valeurs
+    pub tone_stability: f32,       // 0-1: stabilité du ton
+    pub style_coherence: f32,      // 0-1: cohérence stylistique
+    pub rhythm_balance: f32,       // 0-1: équilibre du rythme
+    pub posture_alignment: f32,    // 0-1: alignement de posture
+    pub value_match: f32,          // 0-1: correspondance valeurs
     pub temporal_consistency: f32, // 0-1: continuité dans le temps
-    pub overall: f32,             // 0-1: score global
+    pub overall: f32,              // 0-1: score global
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -164,7 +164,8 @@ impl BehavioralConsistencyProcessor {
         }
 
         // 3️⃣ CALCUL SCORE DE COHÉRENCE
-        let consistency_score = self.calculate_consistency_score(&response, &request.previous_responses);
+        let consistency_score =
+            self.calculate_consistency_score(&response, &request.previous_responses);
 
         BehavioralResponse {
             finalized_response: response,
@@ -188,10 +189,14 @@ impl BehavioralConsistencyProcessor {
 
     fn verify_alignment(&self, response: &str) -> bool {
         // Vérifier cohérence avec rôle, style, posture, valeurs
-        let has_professional_markers = self.expected_professional.iter()
+        let has_professional_markers = self
+            .expected_professional
+            .iter()
             .any(|word| response.to_lowercase().contains(word));
 
-        let no_forbidden = !self.forbidden_familiar.iter()
+        let no_forbidden = !self
+            .forbidden_familiar
+            .iter()
             .any(|word| response.to_lowercase().contains(word));
 
         has_professional_markers || no_forbidden
@@ -205,9 +210,11 @@ impl BehavioralConsistencyProcessor {
 
         // Comparer densité moyenne
         let current_density = response.split_whitespace().count();
-        let avg_previous: usize = previous.iter()
+        let avg_previous: usize = previous
+            .iter()
             .map(|r| r.split_whitespace().count())
-            .sum::<usize>() / previous.len().max(1);
+            .sum::<usize>()
+            / previous.len().max(1);
 
         // Accepter variation de ±30%
         let ratio = current_density as f32 / avg_previous.max(1) as f32;
@@ -278,7 +285,8 @@ impl BehavioralConsistencyProcessor {
 
         // Posture de thérapeute
         if lower.contains("je comprends ce que tu ressens")
-            || lower.contains("c'est normal de ressentir") {
+            || lower.contains("c'est normal de ressentir")
+        {
             return Some(BehavioralDeviation::PostureShift);
         }
 
@@ -297,8 +305,10 @@ impl BehavioralConsistencyProcessor {
 
     fn check_global_alignment(&self, response: &str) -> bool {
         // Vérifier alignement avec valeurs TITANE: simplicité, clarté, structure
-        let has_structure = response.contains("1.") || response.contains("2.")
-            || response.contains("trois") || response.contains("Reprenons");
+        let has_structure = response.contains("1.")
+            || response.contains("2.")
+            || response.contains("trois")
+            || response.contains("Reprenons");
 
         let is_clear = !response.contains("peut-être que possiblement");
 
@@ -314,7 +324,8 @@ impl BehavioralConsistencyProcessor {
 
         if *deviation == BehavioralDeviation::ToneExcess {
             // Enlever excès enthousiastes
-            corrected = corrected.replace("!!!", ".")
+            corrected = corrected
+                .replace("!!!", ".")
                 .replace("!!", ".")
                 .replace("Wow", "")
                 .replace("Super génial", "Solide")
@@ -332,7 +343,8 @@ impl BehavioralConsistencyProcessor {
 
         if *deviation == BehavioralDeviation::StyleInconsistency {
             // Enlever familiarités
-            corrected = corrected.replace("tu vois", "")
+            corrected = corrected
+                .replace("tu vois", "")
                 .replace("genre", "")
                 .replace("franchement", "")
                 .replace("grave", "important");
@@ -353,7 +365,12 @@ impl BehavioralConsistencyProcessor {
             // Simplifier si trop dense
             let sentences: Vec<&str> = response.split('.').collect();
             let keep = sentences.len() / 2;
-            sentences.iter().take(keep).cloned().collect::<Vec<_>>().join(".")
+            sentences
+                .iter()
+                .take(keep)
+                .cloned()
+                .collect::<Vec<_>>()
+                .join(".")
         } else if word_count < 10 {
             // Développer si trop court
             format!("{}. Je peux approfondir si nécessaire.", response)
@@ -363,7 +380,8 @@ impl BehavioralConsistencyProcessor {
     }
 
     fn correct_posture(&self, response: &str) -> String {
-        response.replace("je comprends ce que tu ressens", "je vois")
+        response
+            .replace("je comprends ce que tu ressens", "je vois")
             .replace("Bravo", "Bien")
             .replace("Félicitations", "C'est pertinent")
             .replace("tu devrais", "tu peux")
@@ -383,11 +401,7 @@ impl BehavioralConsistencyProcessor {
     // CALCUL SCORES
     // ─────────────────────────────────────────────────────────
 
-    fn calculate_consistency_score(
-        &self,
-        response: &str,
-        previous: &[String],
-    ) -> ConsistencyScore {
+    fn calculate_consistency_score(&self, response: &str, previous: &[String]) -> ConsistencyScore {
         // Ton stable
         let tone_stability = if self.check_tone_deviation(response).is_none() {
             0.95
@@ -431,8 +445,13 @@ impl BehavioralConsistencyProcessor {
             0.7
         };
 
-        let overall = (tone_stability + style_coherence + rhythm_balance
-                      + posture_alignment + value_match + temporal_consistency) / 6.0;
+        let overall = (tone_stability
+            + style_coherence
+            + rhythm_balance
+            + posture_alignment
+            + value_match
+            + temporal_consistency)
+            / 6.0;
 
         ConsistencyScore {
             tone_stability,
@@ -478,10 +497,8 @@ mod tests {
     #[tokio::test]
     async fn test_correct_tone() {
         let processor = BehavioralConsistencyProcessor::new();
-        let corrected = processor.correct_tone(
-            "Wow!!! Super génial !!!",
-            &BehavioralDeviation::ToneExcess,
-        );
+        let corrected =
+            processor.correct_tone("Wow!!! Super génial !!!", &BehavioralDeviation::ToneExcess);
         assert!(!corrected.contains("!!!"));
         assert!(!corrected.contains("Wow"));
     }

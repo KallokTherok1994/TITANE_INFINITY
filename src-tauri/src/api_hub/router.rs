@@ -4,13 +4,13 @@
 //! Intégration Temporelle — Temporal Intelligence v2
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{
+    provider_registry::{ProviderCapability, ProviderRegistry, ScoreWeights},
+    temporal_adapter::TemporalApiAdapter,
+    APIRequest, Modality, Provider,
+};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
-use super::{
-    Provider, Modality, APIRequest,
-    provider_registry::{ProviderRegistry, ProviderCapability, ScoreWeights},
-    temporal_adapter::TemporalApiAdapter,
-};
 
 /// Stratégie de choix de modèle
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -116,7 +116,8 @@ impl APIRouter {
         }
 
         // Scorer les candidats avec bonus temporels
-        let mut scored: Vec<(Provider, f32, String)> = candidates.iter()
+        let mut scored: Vec<(Provider, f32, String)> = candidates
+            .iter()
             .map(|p| {
                 let mut score = self.score_provider(p, request, &weights);
 
@@ -138,11 +139,14 @@ impl APIRouter {
         // Trier par score décroissant
         scored.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
-        let (best_provider, best_score, reason) = scored.first()
-            .cloned()
-            .unwrap_or((Provider::OpenAI, 0.5, "Fallback".to_string()));
+        let (best_provider, best_score, reason) =
+            scored
+                .first()
+                .cloned()
+                .unwrap_or((Provider::OpenAI, 0.5, "Fallback".to_string()));
 
-        let alternatives: Vec<(Provider, f32)> = scored.iter()
+        let alternatives: Vec<(Provider, f32)> = scored
+            .iter()
             .skip(1)
             .take(2)
             .map(|(p, s, _)| (*p, *s))
@@ -288,18 +292,18 @@ impl APIRouter {
         }
 
         // Bonus selon les capacités requises
-        if request.strategy == ModelChoiceStrategy::DeepReasoning {
-            if profile.has_capability(ProviderCapability::Reasoning) {
-                score += 1.5;
-            }
+        if request.strategy == ModelChoiceStrategy::DeepReasoning
+            && profile.has_capability(ProviderCapability::Reasoning)
+        {
+            score += 1.5;
         }
 
-        if request.strategy == ModelChoiceStrategy::LongContext {
-            if profile.has_capability(ProviderCapability::LongContext) {
-                score += 2.0;
-                if profile.provider == Provider::Gemini {
-                    score += 1.0; // 2M tokens!
-                }
+        if request.strategy == ModelChoiceStrategy::LongContext
+            && profile.has_capability(ProviderCapability::LongContext)
+        {
+            score += 2.0;
+            if profile.provider == Provider::Gemini {
+                score += 1.0; // 2M tokens!
             }
         }
 
@@ -385,14 +389,12 @@ impl APIRouter {
                     Provider::Local => None,
                 }
             }
-            ModelChoiceStrategy::CostEfficient => {
-                match provider {
-                    Provider::OpenAI => Some("gpt-4o-mini".to_string()),
-                    Provider::Gemini => Some("gemini-2.0-flash".to_string()),
-                    Provider::Anthropic => Some("claude-3-5-haiku-20241022".to_string()),
-                    Provider::Local => None,
-                }
-            }
+            ModelChoiceStrategy::CostEfficient => match provider {
+                Provider::OpenAI => Some("gpt-4o-mini".to_string()),
+                Provider::Gemini => Some("gemini-2.0-flash".to_string()),
+                Provider::Anthropic => Some("claude-3-5-haiku-20241022".to_string()),
+                Provider::Local => None,
+            },
             ModelChoiceStrategy::LongContext => {
                 match provider {
                     Provider::OpenAI => Some("gpt-4o".to_string()),

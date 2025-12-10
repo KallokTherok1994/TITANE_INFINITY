@@ -189,6 +189,7 @@ Tous les tokens sont centralisés dans `themes/tokens/`:
 - **Diamant** : Blanc/argent, pureté
 
 Chaque thème définit :
+
 - Palette primaire/secondaire/accent
 - Surfaces (glass, translucides, profondes)
 - États (hover, active, disabled)
@@ -283,6 +284,7 @@ export type ChatResponse = z.infer<typeof ChatResponseSchema>;
 ### Storybook
 
 Tous les composants UI doivent avoir :
+
 - Story de base
 - Variants (sizes, states)
 - Props table
@@ -333,16 +335,19 @@ docs(readme): update installation steps
 ## 🎯 Roadmap Architecture
 
 ### v17.1 (Phase 1 - Actuelle)
+
 - ✅ Structure modulaire
 - ✅ TypeScript strict
 - ✅ Service Tauri encapsulé
 
 ### v17.2 (Phase 2)
+
 - [ ] Design System complet
 - [ ] Theme Engine
 - [ ] Storybook
 
 ### v17.3 (Phase 3)
+
 - [ ] Modules cognitifs
 - [ ] Chat IA avancé
 - [ ] Timeline XP

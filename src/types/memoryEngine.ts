@@ -19,48 +19,48 @@
  * Niveaux de mémoire (court → long terme)
  */
 export type MemoryTier =
-  | 'instant'      // < 30s - Buffer temps réel
-  | 'short'        // 30s - 5min - Contexte immédiat
-  | 'medium'       // 5min - 1h - Session active
-  | 'long'         // 1h - 24h - Journée
-  | 'persistent'   // > 24h - Permanent
-  | 'archival';    // Compressé, rarement accédé
+  | 'instant' // < 30s - Buffer temps réel
+  | 'short' // 30s - 5min - Contexte immédiat
+  | 'medium' // 5min - 1h - Session active
+  | 'long' // 1h - 24h - Journée
+  | 'persistent' // > 24h - Permanent
+  | 'archival'; // Compressé, rarement accédé
 
 /**
  * Types de contenu mémorisable
  */
 export type MemoryContentType =
-  | 'message'           // Message utilisateur/IA
-  | 'context'           // Contexte système
-  | 'decision'          // Décision prise
-  | 'fact'              // Fait appris
-  | 'preference'        // Préférence utilisateur
-  | 'skill'             // Compétence acquise
-  | 'relationship'      // Relation entre entités
-  | 'emotion'           // État émotionnel détecté
-  | 'correction'        // Correction d'erreur
-  | 'summary';          // Résumé compressé
+  | 'message' // Message utilisateur/IA
+  | 'context' // Contexte système
+  | 'decision' // Décision prise
+  | 'fact' // Fait appris
+  | 'preference' // Préférence utilisateur
+  | 'skill' // Compétence acquise
+  | 'relationship' // Relation entre entités
+  | 'emotion' // État émotionnel détecté
+  | 'correction' // Correction d'erreur
+  | 'summary'; // Résumé compressé
 
 /**
  * Importance du souvenir (affecte la rétention)
  */
 export type MemoryImportance =
-  | 'trivial'     // 0-20: Peut être oublié rapidement
-  | 'low'         // 20-40: Faible priorité
-  | 'medium'      // 40-60: Normal
-  | 'high'        // 60-80: Important
-  | 'critical';   // 80-100: Ne jamais oublier
+  | 'trivial' // 0-20: Peut être oublié rapidement
+  | 'low' // 20-40: Faible priorité
+  | 'medium' // 40-60: Normal
+  | 'high' // 60-80: Important
+  | 'critical'; // 80-100: Ne jamais oublier
 
 /**
  * Source de la mémoire
  */
 export type MemorySource =
-  | 'user_input'        // Entrée utilisateur directe
-  | 'ai_inference'      // Inférence IA
-  | 'system_event'      // Événement système
-  | 'external_data'     // Données externes
-  | 'user_feedback'     // Feedback explicite
-  | 'compression';      // Résultat de compression
+  | 'user_input' // Entrée utilisateur directe
+  | 'ai_inference' // Inférence IA
+  | 'system_event' // Événement système
+  | 'external_data' // Données externes
+  | 'user_feedback' // Feedback explicite
+  | 'compression'; // Résultat de compression
 
 // ============================================================================
 // STRUCTURES DE DONNÉES MÉMOIRE
@@ -78,7 +78,7 @@ export interface Memory {
 
   // Contenu
   content: string;
-  embedding?: number[];           // Vecteur sémantique
+  embedding?: number[]; // Vecteur sémantique
   metadata: MemoryMetadata;
 
   // Timing
@@ -89,14 +89,14 @@ export interface Memory {
 
   // Relations
   associations: MemoryAssociation[];
-  parentId?: string;              // Si compressé depuis autre mémoire
-  childIds?: string[];            // Souvenirs dérivés
+  parentId?: string; // Si compressé depuis autre mémoire
+  childIds?: string[]; // Souvenirs dérivés
 
   // État
   isCompressed: boolean;
   compressionRatio?: number;
   isArchived: boolean;
-  decayRate: number;              // Taux d'oubli (0 = jamais oublié)
+  decayRate: number; // Taux d'oubli (0 = jamais oublié)
 }
 
 /**
@@ -111,7 +111,7 @@ export interface MemoryMetadata {
   // Contexte
   chatMode?: string;
   emotionalState?: string;
-  confidence: number;             // 0-1
+  confidence: number; // 0-1
 
   // Sémantique
   topics: string[];
@@ -132,7 +132,7 @@ export interface MemoryEntity {
   name: string;
   type: 'person' | 'place' | 'organization' | 'concept' | 'project' | 'file' | 'other';
   mentions: number;
-  importance: number;             // 0-100
+  importance: number; // 0-100
   firstSeen: number;
   lastSeen: number;
 }
@@ -143,19 +143,19 @@ export interface MemoryEntity {
 export interface MemoryAssociation {
   targetId: string;
   type: AssociationType;
-  strength: number;               // 0-1
+  strength: number; // 0-1
   createdAt: number;
-  reinforcements: number;         // Nombre de renforcements
+  reinforcements: number; // Nombre de renforcements
 }
 
 export type AssociationType =
-  | 'semantic'      // Similarité sémantique
-  | 'temporal'      // Proximité temporelle
-  | 'causal'        // Relation causale
-  | 'reference'     // Référence explicite
+  | 'semantic' // Similarité sémantique
+  | 'temporal' // Proximité temporelle
+  | 'causal' // Relation causale
+  | 'reference' // Référence explicite
   | 'contradiction' // Contradiction
-  | 'elaboration'   // Élaboration/détail
-  | 'summary';      // Relation résumé
+  | 'elaboration' // Élaboration/détail
+  | 'summary'; // Relation résumé
 
 // ============================================================================
 // CONTEXTE CONVERSATIONNEL
@@ -202,7 +202,7 @@ export interface ContextMessage {
 
   // Enrichissement
   intent?: string;
-  sentiment?: number;             // -1 à 1
+  sentiment?: number; // -1 à 1
   topics?: string[];
   referencedMemories?: string[];
 
@@ -229,7 +229,7 @@ export interface ContextSummary {
 export interface WorkingMemorySlot {
   id: string;
   content: string;
-  priority: number;               // 0-100
+  priority: number; // 0-100
   addedAt: number;
   sourceMemoryId?: string;
   expiresAfterTurns: number;
@@ -240,8 +240,8 @@ export interface WorkingMemorySlot {
  * Tonalité émotionnelle
  */
 export interface EmotionalTone {
-  valence: number;                // -1 (négatif) à 1 (positif)
-  arousal: number;                // 0 (calme) à 1 (excité)
+  valence: number; // -1 (négatif) à 1 (positif)
+  arousal: number; // 0 (calme) à 1 (excité)
   dominantEmotion?: string;
   confidence: number;
   history: EmotionSnapshot[];
@@ -275,11 +275,11 @@ export interface ConversationStats {
  * Stratégie de compression
  */
 export type CompressionStrategy =
-  | 'extractive'    // Extraction des phrases clés
-  | 'abstractive'   // Résumé génératif
-  | 'hierarchical'  // Compression multi-niveaux
-  | 'semantic'      // Fusion par similarité sémantique
-  | 'temporal';     // Agrégation temporelle
+  | 'extractive' // Extraction des phrases clés
+  | 'abstractive' // Résumé génératif
+  | 'hierarchical' // Compression multi-niveaux
+  | 'semantic' // Fusion par similarité sémantique
+  | 'temporal'; // Agrégation temporelle
 
 /**
  * Résultat de compression
@@ -293,7 +293,7 @@ export interface CompressionResult {
   originalTokens: number;
   compressedTokens: number;
   compressionRatio: number;
-  informationRetention: number;   // 0-1 estimation
+  informationRetention: number; // 0-1 estimation
 
   // Timing
   processedAt: number;
@@ -371,7 +371,7 @@ export interface MemorySearchResult {
 }
 
 export interface ScoredMemory extends Memory {
-  score: number;                  // Score de pertinence 0-1
+  score: number; // Score de pertinence 0-1
   matchType: 'exact' | 'semantic' | 'association';
   highlightedContent?: string;
 }
@@ -385,9 +385,9 @@ export interface ScoredMemory extends Memory {
  */
 export interface RetentionPolicy {
   tier: MemoryTier;
-  maxAge: number;                 // ms avant promotion/archivage
-  maxCount: number;               // Limite de souvenirs
-  importanceDecay: number;        // Réduction importance/jour
+  maxAge: number; // ms avant promotion/archivage
+  maxCount: number; // Limite de souvenirs
+  importanceDecay: number; // Réduction importance/jour
 
   // Actions
   onExpiry: 'promote' | 'compress' | 'archive' | 'delete';
@@ -423,7 +423,7 @@ export interface MemoryStats {
   cacheHitRate: number;
 
   // Santé
-  fragmentationLevel: number;     // 0-1
+  fragmentationLevel: number; // 0-1
   oldestMemoryAge: number;
   recentCompressions: number;
 }
@@ -497,7 +497,7 @@ export interface MemoryEngineConfig {
 
   // Compression
   autoCompressionEnabled: boolean;
-  compressionThreshold: number;   // Tokens avant compression
+  compressionThreshold: number; // Tokens avant compression
   defaultCompressionStrategy: CompressionStrategy;
 
   // Recherche

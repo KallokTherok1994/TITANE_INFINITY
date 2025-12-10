@@ -14,7 +14,13 @@
  */
 
 import React from 'react';
-import { safeDisplay, extractNumber, extractString, formatValue, getStatusVariant } from '../utils/dataUtils';
+import {
+  safeDisplay,
+  extractNumber,
+  extractString,
+  formatValue,
+  getStatusVariant,
+} from '../utils/dataUtils';
 import './ModuleCard.css';
 
 export interface ModuleCardProps {
@@ -42,14 +48,16 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
 }) => {
   // Sérialisation sécurisée des données
   const numericValue = extractNumber(value, 0);
-  const displayValue = typeof value === 'number' ? formatValue(numericValue, unit) : safeDisplay(value);
+  const displayValue =
+    typeof value === 'number' ? formatValue(numericValue, unit) : safeDisplay(value);
   const displayStatus = extractString(status, 'Actif');
-  
+
   // Détermination automatique de la variante si non fournie
-  const autoVariant = variant || (typeof value === 'number' ? getStatusVariant(numericValue) : 'default');
+  const autoVariant =
+    variant || (typeof value === 'number' ? getStatusVariant(numericValue) : 'default');
 
   return (
-    <div 
+    <div
       className={`module-card module-card--${autoVariant}`}
       onClick={onClick}
       role={onClick ? 'button' : undefined}
@@ -65,11 +73,7 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
       </div>
 
       {/* Valeur principale */}
-      {value !== undefined && (
-        <div className="module-card__value">
-          {displayValue}
-        </div>
-      )}
+      {value !== undefined && <div className="module-card__value">{displayValue}</div>}
 
       {/* Status badge */}
       {status !== undefined && (
@@ -81,12 +85,14 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
       {/* Métriques additionnelles */}
       {metrics && Object.keys(metrics).length > 0 && (
         <div className="module-card__metrics">
-          {Object.entries(metrics).slice(0, 3).map(([key, val]) => (
-            <div key={key} className="module-card__metric">
-              <span className="module-card__metric-label">{key}:</span>
-              <span className="module-card__metric-value">{safeDisplay(val)}</span>
-            </div>
-          ))}
+          {Object.entries(metrics)
+            .slice(0, 3)
+            .map(([key, val]) => (
+              <div key={key} className="module-card__metric">
+                <span className="module-card__metric-label">{key}:</span>
+                <span className="module-card__metric-value">{safeDisplay(val)}</span>
+              </div>
+            ))}
         </div>
       )}
 

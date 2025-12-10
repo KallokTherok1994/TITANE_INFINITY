@@ -62,11 +62,11 @@ export const ConfigField: React.FC<ConfigFieldProps> = ({
         border: '1px solid rgba(255, 255, 255, 0.08)',
         transition: 'all 0.2s ease',
       }}
-      onMouseEnter={(e) => {
+      onMouseEnter={e => {
         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
         e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={e => {
         e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
         e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
       }}
@@ -74,11 +74,23 @@ export const ConfigField: React.FC<ConfigFieldProps> = ({
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
         <span style={{ fontSize: '1.25rem' }}>{icon}</span>
         <div>
-          <div style={{ fontWeight: 500, marginBottom: '0.25rem', color: 'var(--color-text-primary)' }}>
+          <div
+            style={{
+              fontWeight: 500,
+              marginBottom: '0.25rem',
+              color: 'var(--color-text-primary)',
+            }}
+          >
             {label}
           </div>
           {description && (
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', opacity: 0.7 }}>
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-text-secondary)',
+                opacity: 0.7,
+              }}
+            >
               {description}
             </div>
           )}

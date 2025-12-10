@@ -45,7 +45,7 @@ export function HaloVisualizer({
 
   useEffect(() => {
     // Subscribe to halo state changes
-    const unsubscribe = onHaloChange((status) => {
+    const unsubscribe = onHaloChange(status => {
       setState(status.state);
       setDuration(status.duration);
     });
@@ -117,7 +117,7 @@ export function HaloIndicator() {
   const [state, setState] = useState<HaloState>('idle');
 
   useEffect(() => {
-    const unsubscribe = onHaloChange((status) => setState(status.state));
+    const unsubscribe = onHaloChange(status => setState(status.state));
     return unsubscribe;
   }, []);
 

@@ -31,7 +31,10 @@ pub async fn orchestrator_init() -> Result<MetaOrchestratorState, AppError> {
     log::info!("[MetaOrchestrator] Initializing via command...");
 
     let orchestrator = MetaOrchestrator::new();
-    orchestrator.initialize().await.map_err(|e| AppError::Internal(e.to_string()))?;
+    orchestrator
+        .initialize()
+        .await
+        .map_err(|e| AppError::Internal(e.to_string()))?;
 
     let state = orchestrator.get_state().await;
 
@@ -49,7 +52,9 @@ pub async fn orchestrator_get_state() -> Result<MetaOrchestratorState, AppError>
 
     match &*global {
         Some(orchestrator) => Ok(orchestrator.get_state().await),
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -63,7 +68,9 @@ pub async fn orchestrator_run_cycle() -> Result<OrchestrationCycleResult, AppErr
             .run_cycle()
             .await
             .map_err(|e| AppError::Internal(e.to_string())),
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -87,7 +94,9 @@ pub async fn orchestrator_set_mode(mode: String) -> Result<(), AppError> {
             .set_mode(orchestration_mode)
             .await
             .map_err(|e| AppError::Internal(e.to_string())),
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -98,7 +107,9 @@ pub async fn orchestrator_get_metrics() -> Result<MetaMetrics, AppError> {
 
     match &*global {
         Some(orchestrator) => Ok(orchestrator.get_metrics().await),
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -143,7 +154,9 @@ pub async fn orchestrator_enqueue_task(
             .enqueue_task(task)
             .await
             .map_err(|e| AppError::Internal(e.to_string())),
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -157,7 +170,9 @@ pub async fn orchestrator_get_queue() -> Result<Vec<PriorityTask>, AppError> {
             let state = orchestrator.get_state().await;
             Ok(state.priority_queue)
         }
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -171,7 +186,9 @@ pub async fn orchestrator_get_engines() -> Result<Vec<super::EngineStatus>, AppE
             let state = orchestrator.get_state().await;
             Ok(state.active_engines)
         }
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -185,7 +202,9 @@ pub async fn orchestrator_get_health() -> Result<super::SystemHealth, AppError> 
             let state = orchestrator.get_state().await;
             Ok(state.system_health)
         }
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }
 
@@ -219,6 +238,8 @@ pub async fn orchestrator_get_report() -> Result<MetaOrchestratorReport, AppErro
                 summary,
             })
         }
-        None => Err(AppError::Internal("Meta Orchestrator not initialized".to_string())),
+        None => Err(AppError::Internal(
+            "Meta Orchestrator not initialized".to_string(),
+        )),
     }
 }

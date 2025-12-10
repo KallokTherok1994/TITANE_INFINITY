@@ -221,7 +221,7 @@ export function formatRelativeTime(isoTimestamp: string): string {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMinutes < 1) return 'À l\'instant';
+  if (diffMinutes < 1) return "À l'instant";
   if (diffMinutes < 60) return `Il y a ${diffMinutes}min`;
   if (diffHours < 24) return `Il y a ${diffHours}h`;
   if (diffDays < 7) return `Il y a ${diffDays}j`;

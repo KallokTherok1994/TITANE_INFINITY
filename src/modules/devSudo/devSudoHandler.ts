@@ -76,7 +76,8 @@ const liveDebugger = {
   getMode: (): LiveDebuggerMode => 'off',
   log: (_message: string, _level?: string) => {},
   getMetrics: () => ({ logs: 0, errors: 0, warnings: 0 }),
-  getRecentDiagnostics: () => [] as Array<{ timestamp: number; message: string; level: string }>,
+  getRecentDiagnostics: () =>
+    [] as Array<{ timestamp: number; message: string; level: string }>,
   getStats: () => ({ totalLogs: 0, errorsCount: 0, warningsCount: 0 }),
   getHealthScore: () => 100,
   reset: () => {},
@@ -6240,7 +6241,10 @@ ${
  */
 async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
   try {
-    await talkToTitaneEngine.activate((mode || 'continuous') as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode);
+    await talkToTitaneEngine.activate(
+      (mode ||
+        'continuous') as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode
+    );
 
     return {
       handled: true,
@@ -6312,7 +6316,9 @@ function handleTalkMode(mode: string): DevSudoResult {
   }
 
   try {
-    talkToTitaneEngine.setMode(mode as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode);
+    talkToTitaneEngine.setMode(
+      mode as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode
+    );
 
     return {
       handled: true,
@@ -6373,7 +6379,9 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
   }
 
   try {
-    talkToTitaneEngine.setEmotionalCalibration(tone as 'neutral' | 'analytical' | 'calm' | 'energizing' | 'motivating');
+    talkToTitaneEngine.setEmotionalCalibration(
+      tone as 'neutral' | 'analytical' | 'calm' | 'energizing' | 'motivating'
+    );
 
     return {
       handled: true,

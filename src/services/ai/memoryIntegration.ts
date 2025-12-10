@@ -82,7 +82,9 @@ export class MemoryIntegration {
     try {
       const [projects, decisions, knowledge, rituals, timeline] = await Promise.all([
         includeProjects ? this.loadActiveProjects(maxProjects) : Promise.resolve([]),
-        includeDecisions ? this.loadRecentDecisions(maxDecisions, timeWindow) : Promise.resolve([]),
+        includeDecisions
+          ? this.loadRecentDecisions(maxDecisions, timeWindow)
+          : Promise.resolve([]),
         includeKnowledge ? this.loadRelevantKnowledge(maxKnowledge) : Promise.resolve([]),
         includeRituals ? this.loadActiveRituals() : Promise.resolve([]),
         includeTimeline ? this.loadTimeline(timeWindow) : Promise.resolve([]),
@@ -159,7 +161,10 @@ export class MemoryIntegration {
   /**
    * Charge décisions récentes
    */
-  private async loadRecentDecisions(limit: number, timeWindow: string): Promise<DecisionSummary[]> {
+  private async loadRecentDecisions(
+    limit: number,
+    timeWindow: string
+  ): Promise<DecisionSummary[]> {
     const cached = this.getFromCache('recent_decisions');
     if (cached) return cached as DecisionSummary[];
 
@@ -263,7 +268,10 @@ export class MemoryIntegration {
   }
 
   private generateEntryId(): string {
-    const globalCrypto = typeof globalThis !== 'undefined' ? (globalThis.crypto as Crypto | undefined) : undefined;
+    const globalCrypto =
+      typeof globalThis !== 'undefined'
+        ? (globalThis.crypto as Crypto | undefined)
+        : undefined;
     if (globalCrypto?.randomUUID) {
       return globalCrypto.randomUUID();
     }

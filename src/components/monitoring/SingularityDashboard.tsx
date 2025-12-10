@@ -223,12 +223,8 @@ const ConsciousnessIndicator = memo(function ConsciousnessIndicator({
                 marginBottom: '4px',
               }}
             >
-              <span style={{ color: COLORS.muted, fontSize: '12px' }}>
-                Consciousness
-              </span>
-              <span style={{ color: COLORS.text, fontSize: '12px' }}>
-                {percentage}%
-              </span>
+              <span style={{ color: COLORS.muted, fontSize: '12px' }}>Consciousness</span>
+              <span style={{ color: COLORS.text, fontSize: '12px' }}>{percentage}%</span>
             </div>
             <div
               style={{
@@ -301,7 +297,7 @@ const SingularityFieldVisualizer = memo(function SingularityFieldVisualizer({
       </h3>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        {dimensions.map((dim) => (
+        {dimensions.map(dim => (
           <div key={dim.name}>
             <div
               style={{
@@ -310,9 +306,7 @@ const SingularityFieldVisualizer = memo(function SingularityFieldVisualizer({
                 marginBottom: '4px',
               }}
             >
-              <span style={{ color: COLORS.muted, fontSize: '12px' }}>
-                {dim.name}
-              </span>
+              <span style={{ color: COLORS.muted, fontSize: '12px' }}>{dim.name}</span>
               <span style={{ color: COLORS.text, fontSize: '12px' }}>
                 {Math.round(dim.value * 100)}%
               </span>
@@ -422,7 +416,7 @@ const EngineGrid = memo(function EngineGrid({
       </h3>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {layerOrder.map((layer) => {
+        {layerOrder.map(layer => {
           const layerEngines = groupedByLayer[layer] || [];
           if (layerEngines.length === 0) return null;
 
@@ -465,7 +459,7 @@ const EngineGrid = memo(function EngineGrid({
                   gap: '8px',
                 }}
               >
-                {layerEngines.map((engine) => (
+                {layerEngines.map(engine => (
                   <div
                     key={engine.name}
                     style={{
@@ -519,9 +513,7 @@ const EngineGrid = memo(function EngineGrid({
                           <span
                             style={{
                               color:
-                                engine.metrics.errors > 0
-                                  ? COLORS.error
-                                  : COLORS.text,
+                                engine.metrics.errors > 0 ? COLORS.error : COLORS.text,
                             }}
                           >
                             {engine.metrics.errors}
@@ -717,7 +709,8 @@ const SystemMetricsCard = memo(function SystemMetricsCard({
                 fontWeight: 500,
               }}
             >
-              {metrics.memory_used_mb.toFixed(0)} / {metrics.memory_total_mb.toFixed(0)} MB
+              {metrics.memory_used_mb.toFixed(0)} / {metrics.memory_total_mb.toFixed(0)}{' '}
+              MB
             </span>
           </div>
           <div
@@ -942,8 +935,7 @@ export const SingularityDashboard = memo(function SingularityDashboard({
         background: COLORS.background,
         minHeight: compact ? 'auto' : '100vh',
         padding: compact ? '16px' : '24px',
-        fontFamily:
-          '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       }}
     >
       {/* Header */}
@@ -973,7 +965,7 @@ export const SingularityDashboard = memo(function SingularityDashboard({
               margin: '4px 0 0',
             }}
           >
-            Real-time monitoring • {engines.filter((e) => e.status === 'active').length}{' '}
+            Real-time monitoring • {engines.filter(e => e.status === 'active').length}{' '}
             engines active
           </p>
         </div>
@@ -1004,9 +996,7 @@ export const SingularityDashboard = memo(function SingularityDashboard({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: compact
-            ? '1fr'
-            : 'repeat(auto-fit, minmax(300px, 1fr))',
+          gridTemplateColumns: compact ? '1fr' : 'repeat(auto-fit, minmax(300px, 1fr))',
           gap: '16px',
         }}
       >
@@ -1020,9 +1010,7 @@ export const SingularityDashboard = memo(function SingularityDashboard({
         <SystemMetricsCard metrics={systemMetrics} lastUpdate={lastUpdate} />
 
         {/* Singularity Field */}
-        {showSingularityField && (
-          <SingularityFieldVisualizer field={singularity.field} />
-        )}
+        {showSingularityField && <SingularityFieldVisualizer field={singularity.field} />}
       </div>
 
       {/* Engine Grid */}

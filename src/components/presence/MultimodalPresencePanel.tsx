@@ -22,8 +22,14 @@ import './MultimodalPresencePanel.css';
  * Panneau de contrôle et visualisation de la présence multimodale
  */
 export function MultimodalPresencePanel() {
-  const { state, mode, setMode, activateHealingMode, activateStoryMode, activateListeningMode } =
-    useMultimodalPresence();
+  const {
+    state,
+    mode,
+    setMode,
+    activateHealingMode,
+    activateStoryMode,
+    activateListeningMode,
+  } = useMultimodalPresence();
   const { breathing, breathingValue } = useBreathingCycle();
   const { cssColor, haloColor, intensity, pulsation } = useHaloExpression();
   const { shouldBlink, expression, glow } = useAvatarMimics();
@@ -35,11 +41,15 @@ export function MultimodalPresencePanel() {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   // Type guards pour breathing
-  const isBreathingState = (b: typeof breathing): b is { phase: number; cycleDuration: number; amplitude: number } =>
+  const isBreathingState = (
+    b: typeof breathing
+  ): b is { phase: number; cycleDuration: number; amplitude: number } =>
     typeof b === 'object' && 'cycleDuration' in b;
 
   const breathingPhase = isBreathingState(breathing) ? breathing.phase : 0;
-  const breathingCycleDuration = isBreathingState(breathing) ? breathing.cycleDuration : 4000;
+  const breathingCycleDuration = isBreathingState(breathing)
+    ? breathing.cycleDuration
+    : 4000;
   const breathingAmplitude = isBreathingState(breathing) ? breathing.amplitude : 0.5;
 
   // Modes disponibles
@@ -89,7 +99,9 @@ export function MultimodalPresencePanel() {
                 HSL({haloColor.hue.toFixed(0)}, {haloColor.saturation.toFixed(0)}%,{' '}
                 {haloColor.lightness.toFixed(0)}%)
               </span>
-              <span className="halo-intention">{state.currentIntention?.type ?? 'none'}</span>
+              <span className="halo-intention">
+                {state.currentIntention?.type ?? 'none'}
+              </span>
             </div>
           </div>
 
@@ -165,7 +177,7 @@ export function MultimodalPresencePanel() {
           <div className="presence-section">
             <h4>Mode</h4>
             <div className="mode-selector">
-              {modes.map((m) => (
+              {modes.map(m => (
                 <button
                   key={m}
                   className={`mode-btn ${mode === m ? 'active' : ''}`}

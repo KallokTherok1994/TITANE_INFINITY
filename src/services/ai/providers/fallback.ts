@@ -19,7 +19,7 @@ import { titaneLocalProvider } from './titaneLocal';
 
 // OBSOLETE : Ces messages ne sont plus utilisés
 const __FALLBACK_RESPONSES: readonly string[] = [
-  "🤖 TITANE∞ — IA Locale Autonome Active",
+  '🤖 TITANE∞ — IA Locale Autonome Active',
 ] as const;
 
 /**
@@ -46,7 +46,7 @@ export const fallbackProvider: AIProvider = {
     const words = response.content.split(' ');
     for (const word of words) {
       yield word + ' ';
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      await new Promise(resolve => setTimeout(resolve, 50));
     }
   },
 };

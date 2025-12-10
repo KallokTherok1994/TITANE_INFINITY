@@ -4,11 +4,11 @@
 // ═══════════════════════════════════════════════════════════════
 
 pub mod claude;
-pub mod openai;
 pub mod local;
+pub mod openai;
 pub mod titane_engine;
 
-use crate::ai::{AiRequest, AiResponse, AIError};
+use crate::ai::{AIError, AiRequest, AiResponse};
 use async_trait::async_trait;
 
 /// Trait commun pour tous les providers IA

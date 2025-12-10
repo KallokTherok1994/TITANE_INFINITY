@@ -3,10 +3,10 @@
 //! Super Prompt #13 — Système d'amendements et évolution constitutionnelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
-use std::collections::HashMap;
 use super::governance::AuthorityLevel;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use tokio::sync::RwLock;
 
 /// Type d'amendement
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -171,15 +171,16 @@ impl EvolutionEngine {
         let mut state = self.state.write().await;
 
         // Vérifier l'autorité
-        let rule = state.review_rules.iter()
+        let rule = state
+            .review_rules
+            .iter()
             .find(|r| r.amendment_type == amendment.amendment_type)
             .ok_or("No review rule found for this amendment type")?;
 
         if amendment.proposer_authority < rule.required_authority {
             return Err(format!(
                 "Insufficient authority. Required: {:?}, Got: {:?}",
-                rule.required_authority,
-                amendment.proposer_authority
+                rule.required_authority, amendment.proposer_authority
             ));
         }
 
@@ -192,7 +193,9 @@ impl EvolutionEngine {
     pub async fn submit_for_review(&self, amendment_id: &str) -> Result<(), String> {
         let mut state = self.state.write().await;
 
-        let amendment = state.amendments.iter_mut()
+        let amendment = state
+            .amendments
+            .iter_mut()
             .find(|a| a.id == amendment_id)
             .ok_or("Amendment not found")?;
 
@@ -205,7 +208,12 @@ impl EvolutionEngine {
     }
 
     /// Vote pour un amendement
-    pub async fn vote(&self, amendment_id: &str, in_favor: bool, voter_authority: AuthorityLevel) -> Result<(), String> {
+    pub async fn vote(
+        &self,
+        amendment_id: &str,
+        in_favor: bool,
+        voter_authority: AuthorityLevel,
+    ) -> Result<(), String> {
         let mut state = self.state.write().await;
 
         if voter_authority < AuthorityLevel::System {
@@ -213,19 +221,24 @@ impl EvolutionEngine {
         }
 
         // Find amendment index first
-        let amendment_idx = state.amendments.iter()
+        let amendment_idx = state
+            .amendments
+            .iter()
             .position(|a| a.id == amendment_id)
             .ok_or("Amendment not found")?;
 
         let amendment_type = state.amendments[amendment_idx].amendment_type;
 
         if state.amendments[amendment_idx].status != AmendmentStatus::Submitted
-           && state.amendments[amendment_idx].status != AmendmentStatus::UnderReview {
+            && state.amendments[amendment_idx].status != AmendmentStatus::UnderReview
+        {
             return Err("Amendment is not open for voting".to_string());
         }
 
         // Find the rule
-        let rule = state.review_rules.iter()
+        let rule = state
+            .review_rules
+            .iter()
             .find(|r| r.amendment_type == amendment_type)
             .ok_or("No review rule found")?;
 
@@ -268,7 +281,9 @@ impl EvolutionEngine {
         let mut state = self.state.write().await;
 
         // Find amendment index first
-        let amendment_idx = state.amendments.iter()
+        let amendment_idx = state
+            .amendments
+            .iter()
             .position(|a| a.id == amendment_id)
             .ok_or("Amendment not found")?;
 
@@ -302,7 +317,9 @@ impl EvolutionEngine {
     pub async fn revoke_amendment(&self, amendment_id: &str, reason: &str) -> Result<(), String> {
         let mut state = self.state.write().await;
 
-        let amendment = state.amendments.iter_mut()
+        let amendment = state
+            .amendments
+            .iter_mut()
             .find(|a| a.id == amendment_id)
             .ok_or("Amendment not found")?;
 
@@ -311,16 +328,16 @@ impl EvolutionEngine {
         }
 
         amendment.status = AmendmentStatus::Revoked;
-        amendment.reviewer_notes.push(format!("Revoked: {}", reason));
+        amendment
+            .reviewer_notes
+            .push(format!("Revoked: {}", reason));
 
         Ok(())
     }
 
     /// Incrémente la version selon le type d'amendement
     fn increment_version(&self, current: &str, amendment_type: &AmendmentType) -> String {
-        let parts: Vec<u32> = current.split('.')
-            .filter_map(|p| p.parse().ok())
-            .collect();
+        let parts: Vec<u32> = current.split('.').filter_map(|p| p.parse().ok()).collect();
 
         let (major, minor, patch) = (
             parts.first().copied().unwrap_or(1),
@@ -344,7 +361,9 @@ impl EvolutionEngine {
     /// Récupère les amendements par statut
     pub async fn amendments_by_status(&self, status: AmendmentStatus) -> Vec<Amendment> {
         let state = self.state.read().await;
-        state.amendments.iter()
+        state
+            .amendments
+            .iter()
             .filter(|a| a.status == status)
             .cloned()
             .collect()
@@ -358,8 +377,12 @@ impl EvolutionEngine {
     /// Récupère les amendements en attente de vote
     pub async fn pending_amendments(&self) -> Vec<Amendment> {
         let state = self.state.read().await;
-        state.amendments.iter()
-            .filter(|a| a.status == AmendmentStatus::Submitted || a.status == AmendmentStatus::UnderReview)
+        state
+            .amendments
+            .iter()
+            .filter(|a| {
+                a.status == AmendmentStatus::Submitted || a.status == AmendmentStatus::UnderReview
+            })
             .cloned()
             .collect()
     }
@@ -380,24 +403,33 @@ impl EvolutionEngine {
     pub async fn statistics(&self) -> EvolutionStats {
         let state = self.state.read().await;
 
-        let by_status: HashMap<String, usize> = state.amendments.iter()
-            .fold(HashMap::new(), |mut acc, a| {
+        let by_status: HashMap<String, usize> =
+            state.amendments.iter().fold(HashMap::new(), |mut acc, a| {
                 *acc.entry(format!("{:?}", a.status)).or_insert(0) += 1;
                 acc
             });
 
-        let by_type: HashMap<String, usize> = state.amendments.iter()
-            .fold(HashMap::new(), |mut acc, a| {
+        let by_type: HashMap<String, usize> =
+            state.amendments.iter().fold(HashMap::new(), |mut acc, a| {
                 *acc.entry(format!("{:?}", a.amendment_type)).or_insert(0) += 1;
                 acc
             });
 
         EvolutionStats {
             total_amendments: state.amendments.len(),
-            active_amendments: state.amendments.iter().filter(|a| a.status == AmendmentStatus::Active).count(),
-            pending_amendments: state.amendments.iter().filter(|a|
-                a.status == AmendmentStatus::Submitted || a.status == AmendmentStatus::UnderReview
-            ).count(),
+            active_amendments: state
+                .amendments
+                .iter()
+                .filter(|a| a.status == AmendmentStatus::Active)
+                .count(),
+            pending_amendments: state
+                .amendments
+                .iter()
+                .filter(|a| {
+                    a.status == AmendmentStatus::Submitted
+                        || a.status == AmendmentStatus::UnderReview
+                })
+                .count(),
             current_version: state.current_version.clone(),
             amendments_by_status: by_status,
             amendments_by_type: by_type,
@@ -499,7 +531,10 @@ mod tests {
         engine.submit_for_review("workflow_test").await.unwrap();
 
         // Voter
-        engine.vote("workflow_test", true, AuthorityLevel::System).await.unwrap();
+        engine
+            .vote("workflow_test", true, AuthorityLevel::System)
+            .await
+            .unwrap();
 
         // Vérifier approbation
         let pending = engine.pending_amendments().await;

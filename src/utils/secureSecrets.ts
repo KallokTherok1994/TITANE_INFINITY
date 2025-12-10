@@ -13,9 +13,13 @@ interface FallbackResponse {
   message?: string;
 }
 
-const FALLBACK_ERROR_MESSAGE = 'Tauri backend indisponible : SecureSecrets en mode hors-ligne.';
+const FALLBACK_ERROR_MESSAGE =
+  'Tauri backend indisponible : SecureSecrets en mode hors-ligne.';
 
-const normalizeSecureResponse = <T>(raw: unknown, defaultError = FALLBACK_ERROR_MESSAGE): SecureResponse<T> => {
+const normalizeSecureResponse = <T>(
+  raw: unknown,
+  defaultError = FALLBACK_ERROR_MESSAGE
+): SecureResponse<T> => {
   if (!raw || typeof raw !== 'object') {
     return {
       ok: false,
@@ -76,9 +80,14 @@ export interface SecureSecretRequestPayload {
 /**
  * Request secure backend to persist the Gemini API key via SecureSecretsEngine.
  */
-export async function setGeminiApiKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
+export async function setGeminiApiKey(
+  apiKey: string
+): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('chat_set_gemini_key', { apiKey });
-  return normalizeSecureResponse<GeminiKeyStatus>(raw, 'Impossible de sécuriser la clé Gemini (runtime indisponible).');
+  return normalizeSecureResponse<GeminiKeyStatus>(
+    raw,
+    'Impossible de sécuriser la clé Gemini (runtime indisponible).'
+  );
 }
 
 /**
@@ -86,7 +95,10 @@ export async function setGeminiApiKey(apiKey: string): Promise<SecureResponse<Ge
  */
 export async function getGeminiKeyStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
   const raw = await safeInvoke<unknown>('get_gemini_key_status');
-  return normalizeSecureResponse<GeminiKeyStatus>(raw, 'Statut SecureSecrets indisponible (runtime requis).');
+  return normalizeSecureResponse<GeminiKeyStatus>(
+    raw,
+    'Statut SecureSecrets indisponible (runtime requis).'
+  );
 }
 
 /**
@@ -99,7 +111,10 @@ export async function secureStoreSecret(
     'secure_store_secret',
     payload as unknown as Record<string, unknown>
   );
-  return normalizeSecureResponse<SecureSecretOperation>(raw, 'Impossible de stocker le secret sécurisé.');
+  return normalizeSecureResponse<SecureSecretOperation>(
+    raw,
+    'Impossible de stocker le secret sécurisé.'
+  );
 }
 
 /**
@@ -120,6 +135,8 @@ export function maskSecret(secret: string, visibleChars = 4): string {
 /**
  * Lightweight guard that ensures the response object is successful and contains data.
  */
-export function hasSecureData<T>(response: SecureResponse<T> | null | undefined): response is SecureResponse<T> & { data: T } {
+export function hasSecureData<T>(
+  response: SecureResponse<T> | null | undefined
+): response is SecureResponse<T> & { data: T } {
   return Boolean(response && response.ok && response.data);
 }

@@ -3,9 +3,9 @@
 //! Super Prompt #9 — Intégration mémoire et contexte conversationnel
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use super::MemoryContext;
 use super::adapter::OutputChannel;
+use super::MemoryContext;
+use serde::{Deserialize, Serialize};
 
 /// Contexte de conversation
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
@@ -118,7 +118,9 @@ impl MemoryContextEngine {
     async fn extract_recent_topics(&self, context: &ConversationContext) -> Vec<String> {
         // En production: interroger le Memory OS pour les topics récents
         // Version simplifiée: utiliser les métadonnées
-        context.metadata.get("recent_topics")
+        context
+            .metadata
+            .get("recent_topics")
             .map(|s| s.split(',').map(|t| t.trim().to_string()).collect())
             .unwrap_or_default()
     }
@@ -131,10 +133,16 @@ impl MemoryContextEngine {
             prefs.push(format!("Langue: {}", context.user_preferences.language));
         }
 
-        prefs.push(format!("Détail: {:?}", context.user_preferences.detail_level));
+        prefs.push(format!(
+            "Détail: {:?}",
+            context.user_preferences.detail_level
+        ));
 
         if !context.user_preferences.preferred_style.is_empty() {
-            prefs.push(format!("Style: {}", context.user_preferences.preferred_style));
+            prefs.push(format!(
+                "Style: {}",
+                context.user_preferences.preferred_style
+            ));
         }
 
         for interest in &context.user_preferences.interests {
@@ -153,7 +161,10 @@ impl MemoryContextEngine {
         } else if context.history_length < 5 {
             format!("Conversation courte ({} échanges)", context.history_length)
         } else {
-            format!("Conversation en cours ({} échanges)", context.history_length)
+            format!(
+                "Conversation en cours ({} échanges)",
+                context.history_length
+            )
         }
     }
 
@@ -161,7 +172,8 @@ impl MemoryContextEngine {
     async fn extract_relevant_facts(&self, context: &ConversationContext) -> Vec<String> {
         // En production: faire une recherche vectorielle dans le Memory OS
         // Version simplifiée: utiliser le cache
-        self.recent_facts_cache.iter()
+        self.recent_facts_cache
+            .iter()
             .filter(|f| f.relevance_score >= self.relevance_threshold)
             .take(self.max_facts)
             .map(|f| f.content.clone())
@@ -176,7 +188,8 @@ impl MemoryContextEngine {
         if self.recent_facts_cache.len() > self.max_facts * 2 {
             // Trier par relevance et garder les meilleurs
             self.recent_facts_cache.sort_by(|a, b| {
-                b.relevance_score.partial_cmp(&a.relevance_score)
+                b.relevance_score
+                    .partial_cmp(&a.relevance_score)
                     .unwrap_or(std::cmp::Ordering::Equal)
             });
             self.recent_facts_cache.truncate(self.max_facts);
@@ -190,11 +203,15 @@ impl MemoryContextEngine {
         let query_lower = query.to_lowercase();
         let query_words: std::collections::HashSet<&str> = query_lower.split_whitespace().collect();
 
-        let mut results: Vec<_> = self.recent_facts_cache.iter()
+        let mut results: Vec<_> = self
+            .recent_facts_cache
+            .iter()
             .map(|fact| {
                 let fact_lower = fact.content.to_lowercase();
-                let fact_words: std::collections::HashSet<&str> = fact_lower.split_whitespace().collect();
-                let intersection = query_words.iter()
+                let fact_words: std::collections::HashSet<&str> =
+                    fact_lower.split_whitespace().collect();
+                let intersection = query_words
+                    .iter()
                     .filter(|w| fact_words.contains(*w))
                     .count();
                 let score = if fact_words.is_empty() {
@@ -209,7 +226,8 @@ impl MemoryContextEngine {
 
         results.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
-        results.into_iter()
+        results
+            .into_iter()
             .take(limit)
             .map(|(fact, _)| fact)
             .collect()
@@ -261,7 +279,11 @@ impl MemoryContextEngine {
     }
 
     /// Met à jour les préférences
-    pub fn update_preferences(&mut self, _context: &mut ConversationContext, _prefs: UserPreferences) {
+    pub fn update_preferences(
+        &mut self,
+        _context: &mut ConversationContext,
+        _prefs: UserPreferences,
+    ) {
         // En production: persister les préférences dans le Memory OS
     }
 

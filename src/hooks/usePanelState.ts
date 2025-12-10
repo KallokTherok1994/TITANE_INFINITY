@@ -133,27 +133,27 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
 
   // Methods
   const toggle = useCallback(() => {
-    setState((prev) => ({ ...prev, isCollapsed: !prev.isCollapsed }));
+    setState(prev => ({ ...prev, isCollapsed: !prev.isCollapsed }));
   }, []);
 
   const collapse = useCallback(() => {
-    setState((prev) => ({ ...prev, isCollapsed: true }));
+    setState(prev => ({ ...prev, isCollapsed: true }));
   }, []);
 
   const expand = useCallback(() => {
-    setState((prev) => ({ ...prev, isCollapsed: false }));
+    setState(prev => ({ ...prev, isCollapsed: false }));
   }, []);
 
   const show = useCallback(() => {
-    setState((prev) => ({ ...prev, isVisible: true }));
+    setState(prev => ({ ...prev, isVisible: true }));
   }, []);
 
   const hide = useCallback(() => {
-    setState((prev) => ({ ...prev, isVisible: false }));
+    setState(prev => ({ ...prev, isVisible: false }));
   }, []);
 
   const setZIndex = useCallback((z: number) => {
-    setState((prev) => ({ ...prev, zIndex: z }));
+    setState(prev => ({ ...prev, zIndex: z }));
   }, []);
 
   const bringToFront = useCallback(() => {
@@ -161,14 +161,14 @@ export function usePanelState(options: UsePanelStateOptions): UsePanelStateRetur
     const allPanels = document.querySelectorAll('[data-panel-id]');
     let maxZ = defaultZIndex;
 
-    allPanels.forEach((panel) => {
+    allPanels.forEach(panel => {
       const z = parseInt(window.getComputedStyle(panel).zIndex, 10);
       if (!isNaN(z) && z > maxZ) {
         maxZ = z;
       }
     });
 
-    setState((prev) => ({ ...prev, zIndex: maxZ + 1 }));
+    setState(prev => ({ ...prev, zIndex: maxZ + 1 }));
   }, [defaultZIndex]);
 
   return {

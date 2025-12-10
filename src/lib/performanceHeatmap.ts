@@ -115,12 +115,13 @@ export class PerformanceHeatmap {
         }
 
         // Calculer stats pour cette cellule
-        const latencies = snapshots.map((s) => s.avgLatency);
+        const latencies = snapshots.map(s => s.avgLatency);
         const avgLatency = latencies.reduce((sum, l) => sum + l, 0) / latencies.length;
         const minLatency = Math.min(...latencies);
         const maxLatency = Math.max(...latencies);
-        const errorRates = snapshots.map((s) => s.errorRate);
-        const avgErrorRate = errorRates.reduce((sum, e) => sum + e, 0) / errorRates.length;
+        const errorRates = snapshots.map(s => s.errorRate);
+        const avgErrorRate =
+          errorRates.reduce((sum, e) => sum + e, 0) / errorRates.length;
 
         globalMaxLatency = Math.max(globalMaxLatency, maxLatency);
         globalMinLatency = Math.min(globalMinLatency, minLatency);
@@ -171,7 +172,7 @@ export class PerformanceHeatmap {
     }
 
     // Calculer moyenne globale et écart-type
-    const validLatencies = latenciesByHour.filter((l) => l > 0);
+    const validLatencies = latenciesByHour.filter(l => l > 0);
     if (validLatencies.length === 0) {
       return {
         service,
@@ -182,7 +183,8 @@ export class PerformanceHeatmap {
       };
     }
 
-    const meanLatency = validLatencies.reduce((sum, l) => sum + l, 0) / validLatencies.length;
+    const meanLatency =
+      validLatencies.reduce((sum, l) => sum + l, 0) / validLatencies.length;
     const variance =
       validLatencies.reduce((sum, l) => sum + Math.pow(l - meanLatency, 2), 0) /
       validLatencies.length;
@@ -207,9 +209,9 @@ export class PerformanceHeatmap {
     let patternType: TimePattern['patternType'];
     if (stdDev < meanLatency * 0.2) {
       patternType = 'uniform'; // Peu de variation
-    } else if (peakHours.some((h) => h >= 9 && h <= 17)) {
+    } else if (peakHours.some(h => h >= 9 && h <= 17)) {
       patternType = 'business_hours'; // Pics pendant heures bureau
-    } else if (peakHours.some((h) => h >= 0 && h <= 6)) {
+    } else if (peakHours.some(h => h >= 0 && h <= 6)) {
       patternType = 'night_peak'; // Pics la nuit (batch jobs?)
     } else {
       patternType = 'irregular'; // Pattern irrégulier
@@ -229,7 +231,7 @@ export class PerformanceHeatmap {
    */
   static getAllPatterns(): TimePattern[] {
     const services = ServiceMetrics.getAllServices();
-    return services.map((service) => this.analyzeTimePatterns(service));
+    return services.map(service => this.analyzeTimePatterns(service));
   }
 
   /**
@@ -243,9 +245,9 @@ export class PerformanceHeatmap {
       return null;
     }
 
-    const latencies = snapshots.map((s) => s.avgLatency);
+    const latencies = snapshots.map(s => s.avgLatency);
     const avgLatency = latencies.reduce((sum, l) => sum + l, 0) / latencies.length;
-    const errorRates = snapshots.map((s) => s.errorRate);
+    const errorRates = snapshots.map(s => s.errorRate);
     const avgErrorRate = errorRates.reduce((sum, e) => sum + e, 0) / errorRates.length;
 
     return {

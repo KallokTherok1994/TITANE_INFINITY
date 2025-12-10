@@ -12,7 +12,12 @@
 export type HealthStatus = 'healthy' | 'degraded' | 'critical' | 'offline';
 
 // Core status for engines
-export type CoreStatus = 'Running' | 'Ready' | 'Initializing' | 'Stopped' | 'Uninitialized';
+export type CoreStatus =
+  | 'Running'
+  | 'Ready'
+  | 'Initializing'
+  | 'Stopped'
+  | 'Uninitialized';
 
 // Core health with timestamp
 export interface CoreHealth {
@@ -142,7 +147,13 @@ export interface UIContext {
 // ═══════════════════════════════════════════════════════════════
 
 export type AIModel = 'gpt-4' | 'claude-3' | 'llama2' | 'ollama' | 'local';
-export type AIStatus = 'idle' | 'processing' | 'thinking' | 'streaming' | 'error' | 'fallback';
+export type AIStatus =
+  | 'idle'
+  | 'processing'
+  | 'thinking'
+  | 'streaming'
+  | 'error'
+  | 'fallback';
 
 export interface AIState {
   model: AIModel;

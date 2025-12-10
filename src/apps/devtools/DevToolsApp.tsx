@@ -17,7 +17,14 @@ import {
   Errors,
 } from './sections';
 
-export type DevToolsSection = 'dashboard' | 'metrics' | 'logs' | 'engines' | 'memory' | 'pipeline' | 'errors';
+export type DevToolsSection =
+  | 'dashboard'
+  | 'metrics'
+  | 'logs'
+  | 'engines'
+  | 'memory'
+  | 'pipeline'
+  | 'errors';
 
 export interface DevToolsAppProps {
   defaultSection?: DevToolsSection;
@@ -36,16 +43,19 @@ const tabs = [
 
 /**
  * DevToolsApp - Shell principal des DevTools TITANE∞
- * 
+ *
  * Intègre toutes les sections de monitoring, diagnostics et contrôle
  * Active automatiquement tous les listeners Tauri events
- * 
+ *
  * @example
  * ```tsx
  * <DevToolsApp defaultSection="dashboard" />
  * ```
  */
-export function DevToolsApp({ defaultSection = 'dashboard', className = '' }: DevToolsAppProps) {
+export function DevToolsApp({
+  defaultSection = 'dashboard',
+  className = '',
+}: DevToolsAppProps) {
   // Activer tous les listeners Tauri events
   useAllDevToolsEvents();
 
@@ -96,7 +106,7 @@ export function DevToolsApp({ defaultSection = 'dashboard', className = '' }: De
 
           {/* Tabs Navigation */}
           <Tabs tabs={tabs} defaultTab={defaultSection}>
-            {(activeSection) => (
+            {activeSection => (
               <div className="flex-1 overflow-y-auto">
                 <div className="p-6">
                   {activeSection === 'dashboard' && <Dashboard />}

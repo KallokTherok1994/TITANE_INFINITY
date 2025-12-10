@@ -26,7 +26,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 // ══════════════════════════════════════════════════════════════════
 // TYPES ALIGNÉS SUR TYPESCRIPT
 // ══════════════════════════════════════════════════════════════════
@@ -525,7 +524,11 @@ pub async fn evolution_generate_report(
         patterns_detected: store.patterns.len(),
         insights_generated: store.insights.len(),
         suggestions_count: store.suggestions.len(),
-        actions_executed: store.actions.iter().filter(|a| a.executed_at.is_some()).count(),
+        actions_executed: store
+            .actions
+            .iter()
+            .filter(|a| a.executed_at.is_some())
+            .count(),
         trends,
     })
 }
@@ -580,8 +583,7 @@ pub async fn evolution_get_data_points(
         .iter()
         .rev()
         .filter(|dp| {
-            category.map_or(true, |c| dp.category == c)
-                && module.map_or(true, |m| dp.module == m)
+            category.map_or(true, |c| dp.category == c) && module.map_or(true, |m| dp.module == m)
         })
         .take(limit)
         .cloned()
@@ -647,8 +649,7 @@ pub async fn evolution_get_suggestions(
         .suggestions
         .iter()
         .filter(|s| {
-            status.map_or(true, |st| s.status == st)
-                && category.map_or(true, |c| s.category == c)
+            status.map_or(true, |st| s.status == st) && category.map_or(true, |c| s.category == c)
         })
         .cloned()
         .collect();
@@ -708,8 +709,14 @@ pub async fn evolution_approve_suggestion(
         success: true,
         changes: {
             let mut map = HashMap::new();
-            map.insert("suggestion_id".to_string(), serde_json::json!(suggestion_id));
-            map.insert("approved_by".to_string(), serde_json::json!(format!("{:?}", role)));
+            map.insert(
+                "suggestion_id".to_string(),
+                serde_json::json!(suggestion_id),
+            );
+            map.insert(
+                "approved_by".to_string(),
+                serde_json::json!(format!("{:?}", role)),
+            );
             map
         },
     });
@@ -747,7 +754,10 @@ pub async fn evolution_reject_suggestion(
         success: true,
         changes: {
             let mut map = HashMap::new();
-            map.insert("suggestion_id".to_string(), serde_json::json!(suggestion_id));
+            map.insert(
+                "suggestion_id".to_string(),
+                serde_json::json!(suggestion_id),
+            );
             map.insert("reason".to_string(), serde_json::json!(reason));
             map
         },
@@ -830,9 +840,9 @@ pub async fn evolution_execute_action(
     // Actions critiques nécessitent Admin+
     let action_type = store.actions[action_index].action_type;
     let required_level = match action_type {
-        EvolutionActionType::SecurityHardening => 2,  // Admin+
+        EvolutionActionType::SecurityHardening => 2,    // Admin+
         EvolutionActionType::ResourceReallocation => 1, // Dev+
-        _ => 0,  // User+
+        _ => 0,                                         // User+
     };
 
     if role_level < required_level {
@@ -884,8 +894,14 @@ pub async fn evolution_execute_action(
         success: true,
         changes: {
             let mut map = HashMap::new();
-            map.insert("action_id".to_string(), serde_json::json!(action_id.clone()));
-            map.insert("executed_by".to_string(), serde_json::json!(format!("{:?}", role)));
+            map.insert(
+                "action_id".to_string(),
+                serde_json::json!(action_id.clone()),
+            );
+            map.insert(
+                "executed_by".to_string(),
+                serde_json::json!(format!("{:?}", role)),
+            );
             map
         },
     });
@@ -943,7 +959,10 @@ pub async fn evolution_rollback_action(
         success: true,
         changes: {
             let mut map = HashMap::new();
-            map.insert("action_id".to_string(), serde_json::json!(action_id.clone()));
+            map.insert(
+                "action_id".to_string(),
+                serde_json::json!(action_id.clone()),
+            );
             map.insert("reason".to_string(), serde_json::json!(reason));
             map
         },
@@ -1050,7 +1069,11 @@ pub async fn evolution_run_full_cycle(
         // Générer des insights et suggestions
         let insight = EvolutionInsight {
             id: EvolutionEngineStore::generate_id("insight"),
-            pattern_id: store.patterns.last().map(|p| p.id.clone()).unwrap_or_default(),
+            pattern_id: store
+                .patterns
+                .last()
+                .map(|p| p.id.clone())
+                .unwrap_or_default(),
             title: "Performance Optimization Opportunity".to_string(),
             description: "Cache hit rate could be improved".to_string(),
             impact: 0.15,
@@ -1141,15 +1164,42 @@ pub async fn evolution_get_statistics(
 
     let mut stats = HashMap::new();
 
-    stats.insert("totalCycles".to_string(), serde_json::json!(store.state.cycle_count));
-    stats.insert("isRunning".to_string(), serde_json::json!(store.state.is_running));
-    stats.insert("currentPhase".to_string(), serde_json::json!(format!("{:?}", store.state.current_phase)));
-    stats.insert("dataPointsCount".to_string(), serde_json::json!(store.data_points.len()));
-    stats.insert("patternsCount".to_string(), serde_json::json!(store.patterns.len()));
-    stats.insert("insightsCount".to_string(), serde_json::json!(store.insights.len()));
-    stats.insert("suggestionsCount".to_string(), serde_json::json!(store.suggestions.len()));
-    stats.insert("actionsCount".to_string(), serde_json::json!(store.actions.len()));
-    stats.insert("historyCount".to_string(), serde_json::json!(store.history.len()));
+    stats.insert(
+        "totalCycles".to_string(),
+        serde_json::json!(store.state.cycle_count),
+    );
+    stats.insert(
+        "isRunning".to_string(),
+        serde_json::json!(store.state.is_running),
+    );
+    stats.insert(
+        "currentPhase".to_string(),
+        serde_json::json!(format!("{:?}", store.state.current_phase)),
+    );
+    stats.insert(
+        "dataPointsCount".to_string(),
+        serde_json::json!(store.data_points.len()),
+    );
+    stats.insert(
+        "patternsCount".to_string(),
+        serde_json::json!(store.patterns.len()),
+    );
+    stats.insert(
+        "insightsCount".to_string(),
+        serde_json::json!(store.insights.len()),
+    );
+    stats.insert(
+        "suggestionsCount".to_string(),
+        serde_json::json!(store.suggestions.len()),
+    );
+    stats.insert(
+        "actionsCount".to_string(),
+        serde_json::json!(store.actions.len()),
+    );
+    stats.insert(
+        "historyCount".to_string(),
+        serde_json::json!(store.history.len()),
+    );
 
     // Statistiques par catégorie
     let pending_suggestions = store
@@ -1168,9 +1218,18 @@ pub async fn evolution_get_statistics(
         .filter(|s| s.status == SuggestionStatus::Applied)
         .count();
 
-    stats.insert("pendingSuggestions".to_string(), serde_json::json!(pending_suggestions));
-    stats.insert("approvedSuggestions".to_string(), serde_json::json!(approved_suggestions));
-    stats.insert("appliedSuggestions".to_string(), serde_json::json!(applied_suggestions));
+    stats.insert(
+        "pendingSuggestions".to_string(),
+        serde_json::json!(pending_suggestions),
+    );
+    stats.insert(
+        "approvedSuggestions".to_string(),
+        serde_json::json!(approved_suggestions),
+    );
+    stats.insert(
+        "appliedSuggestions".to_string(),
+        serde_json::json!(applied_suggestions),
+    );
 
     // Actions par résultat
     let successful_actions = store
@@ -1189,12 +1248,24 @@ pub async fn evolution_get_statistics(
         .filter(|a| a.result == Some(ActionResult::Reverted))
         .count();
 
-    stats.insert("successfulActions".to_string(), serde_json::json!(successful_actions));
-    stats.insert("failedActions".to_string(), serde_json::json!(failed_actions));
-    stats.insert("revertedActions".to_string(), serde_json::json!(reverted_actions));
+    stats.insert(
+        "successfulActions".to_string(),
+        serde_json::json!(successful_actions),
+    );
+    stats.insert(
+        "failedActions".to_string(),
+        serde_json::json!(failed_actions),
+    );
+    stats.insert(
+        "revertedActions".to_string(),
+        serde_json::json!(reverted_actions),
+    );
 
     // Scores
-    stats.insert("scores".to_string(), serde_json::to_value(&store.state.scores).unwrap());
+    stats.insert(
+        "scores".to_string(),
+        serde_json::to_value(&store.state.scores).unwrap(),
+    );
 
     Ok(stats)
 }

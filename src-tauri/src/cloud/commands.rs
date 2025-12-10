@@ -11,7 +11,7 @@ use tauri::State;
 
 use super::cloud_sync_engine::{CloudSyncEngine, SyncResult};
 use super::cloud_vault::DeviceIdentity;
-use super::{CloudSyncConfig, SyncBackend, SyncMode, ConflictResolution, SyncStatus};
+use super::{CloudSyncConfig, ConflictResolution, SyncBackend, SyncMode, SyncStatus};
 
 /// État global du Cloud Sync Engine
 pub struct CloudSyncState {
@@ -185,9 +185,7 @@ pub async fn cloud_get_status(
 
 /// Synchronise vers le backend distant
 #[tauri::command]
-pub async fn cloud_sync_push(
-    state: State<'_, CloudSyncState>,
-) -> Result<SyncResult, String> {
+pub async fn cloud_sync_push(state: State<'_, CloudSyncState>) -> Result<SyncResult, String> {
     let mut guard = state.engine.lock().map_err(|e| e.to_string())?;
     let engine = guard.as_mut().ok_or("Cloud Sync not initialized")?;
 
@@ -196,9 +194,7 @@ pub async fn cloud_sync_push(
 
 /// Synchronise depuis le backend distant
 #[tauri::command]
-pub async fn cloud_sync_pull(
-    state: State<'_, CloudSyncState>,
-) -> Result<SyncResult, String> {
+pub async fn cloud_sync_pull(state: State<'_, CloudSyncState>) -> Result<SyncResult, String> {
     let mut guard = state.engine.lock().map_err(|e| e.to_string())?;
     let engine = guard.as_mut().ok_or("Cloud Sync not initialized")?;
 
@@ -320,14 +316,14 @@ pub async fn cloud_update_vault_data(
     let mut guard = state.engine.lock().map_err(|e| e.to_string())?;
     let engine = guard.as_mut().ok_or("Cloud Sync not initialized")?;
 
-    engine.update_vault_data(&key, value).map_err(|e| e.to_string())
+    engine
+        .update_vault_data(&key, value)
+        .map_err(|e| e.to_string())
 }
 
 /// Vérifie l'intégrité du vault
 #[tauri::command]
-pub async fn cloud_verify_integrity(
-    state: State<'_, CloudSyncState>,
-) -> Result<bool, String> {
+pub async fn cloud_verify_integrity(state: State<'_, CloudSyncState>) -> Result<bool, String> {
     let guard = state.engine.lock().map_err(|e| e.to_string())?;
     let engine = guard.as_ref().ok_or("Cloud Sync not initialized")?;
 
@@ -336,14 +332,14 @@ pub async fn cloud_verify_integrity(
 
 /// Crée une sauvegarde du vault
 #[tauri::command]
-pub async fn cloud_backup_vault(
-    state: State<'_, CloudSyncState>,
-) -> Result<String, String> {
+pub async fn cloud_backup_vault(state: State<'_, CloudSyncState>) -> Result<String, String> {
     let guard = state.engine.lock().map_err(|e| e.to_string())?;
     let engine = guard.as_ref().ok_or("Cloud Sync not initialized")?;
 
     let backup_dir = get_cloud_data_path()?.join("backups");
-    let backup_path = engine.backup_vault(&backup_dir).map_err(|e| e.to_string())?;
+    let backup_path = engine
+        .backup_vault(&backup_dir)
+        .map_err(|e| e.to_string())?;
 
     Ok(backup_path.to_string_lossy().to_string())
 }
@@ -357,14 +353,14 @@ pub async fn cloud_restore_vault(
     let mut guard = state.engine.lock().map_err(|e| e.to_string())?;
     let engine = guard.as_mut().ok_or("Cloud Sync not initialized")?;
 
-    engine.restore_vault(&PathBuf::from(backup_path)).map_err(|e| e.to_string())
+    engine
+        .restore_vault(&PathBuf::from(backup_path))
+        .map_err(|e| e.to_string())
 }
 
 /// Auto-healing du vault : vérifie et répare si nécessaire
 #[tauri::command]
-pub async fn cloud_auto_heal(
-    state: State<'_, CloudSyncState>,
-) -> Result<CloudHealReport, String> {
+pub async fn cloud_auto_heal(state: State<'_, CloudSyncState>) -> Result<CloudHealReport, String> {
     info!("[CloudSync] Starting auto-heal scan...");
 
     let guard = state.engine.lock().map_err(|e| e.to_string())?;
@@ -385,23 +381,32 @@ pub async fn cloud_auto_heal(
         }
         Ok(false) => {
             report.vault_healthy = false;
-            report.issues_found.push("Vault integrity check failed".to_string());
+            report
+                .issues_found
+                .push("Vault integrity check failed".to_string());
 
             // Créer un backup avant réparation
             let backup_dir = get_cloud_data_path()?.join("backups");
             if let Ok(backup_path) = engine.backup_vault(&backup_dir) {
                 report.backup_created = true;
                 report.backup_path = Some(backup_path.to_string_lossy().to_string());
-                report.actions_taken.push("Created backup before repair".to_string());
+                report
+                    .actions_taken
+                    .push("Created backup before repair".to_string());
             }
         }
         Err(e) => {
             report.vault_healthy = false;
-            report.issues_found.push(format!("Integrity check error: {}", e));
+            report
+                .issues_found
+                .push(format!("Integrity check error: {}", e));
         }
     }
 
-    info!("[CloudSync] Auto-heal complete: healthy={}", report.vault_healthy);
+    info!(
+        "[CloudSync] Auto-heal complete: healthy={}",
+        report.vault_healthy
+    );
     Ok(report)
 }
 
@@ -421,7 +426,8 @@ pub async fn cloud_list_backups() -> Result<Vec<BackupInfo>, String> {
             let path = entry.path();
             if path.extension().map_or(false, |ext| ext == "vault") {
                 if let Ok(metadata) = entry.metadata() {
-                    let created = metadata.created()
+                    let created = metadata
+                        .created()
                         .ok()
                         .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
                         .map(|d| d.as_secs())
@@ -429,7 +435,8 @@ pub async fn cloud_list_backups() -> Result<Vec<BackupInfo>, String> {
 
                     backups.push(BackupInfo {
                         path: path.to_string_lossy().to_string(),
-                        filename: path.file_name()
+                        filename: path
+                            .file_name()
                             .map(|n| n.to_string_lossy().to_string())
                             .unwrap_or_default(),
                         created_timestamp: created,

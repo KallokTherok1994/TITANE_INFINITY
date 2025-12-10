@@ -147,9 +147,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
     <div className="bg-titane-bg-panel rounded-xl p-6 border border-titane-border-subtle">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-titane-text-primary text-lg font-semibold">
-          System Health
-        </h2>
+        <h2 className="text-titane-text-primary text-lg font-semibold">System Health</h2>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-titane-accent-500 animate-pulse" />
           <span className="text-titane-text-tertiary text-xs">
@@ -187,7 +185,8 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
             {memoryPercent}%
           </div>
           <div className="text-titane-text-tertiary text-xs mt-1">
-            {metrics?.memory_used_mb?.toFixed(0) ?? 0} / {metrics?.memory_total_mb?.toFixed(0) ?? 0} MB
+            {metrics?.memory_used_mb?.toFixed(0) ?? 0} /{' '}
+            {metrics?.memory_total_mb?.toFixed(0) ?? 0} MB
           </div>
         </div>
 
@@ -203,7 +202,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
         <div className="bg-titane-bg-card rounded-lg p-4">
           <div className="text-titane-text-tertiary text-xs mb-1">Active Engines</div>
           <div className="text-titane-text-primary text-2xl font-bold">
-            {engines.filter((e) => e.status === 'active').length}/{engines.length}
+            {engines.filter(e => e.status === 'active').length}/{engines.length}
           </div>
         </div>
       </div>
@@ -214,7 +213,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
           Engine Status
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {engines.map((engine) => (
+          {engines.map(engine => (
             <div
               key={engine.name}
               className="flex items-center gap-2 bg-titane-bg-card rounded-lg px-3 py-2"

@@ -55,8 +55,9 @@
 
 .projects-stat:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4),
-              0 0 20px var(--color-primary-glow, rgba(220, 38, 38, 0.3));
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    0 0 20px var(--color-primary-glow, rgba(220, 38, 38, 0.3));
   border-color: rgba(255, 255, 255, 0.15);
 }
 
@@ -113,8 +114,9 @@
   outline: none;
   border-color: var(--color-primary, var(--danger, #8f7a7a));
   background: rgba(15, 15, 18, 0.8);
-  box-shadow: 0 0 24px var(--color-primary-glow, rgba(220, 38, 38, 0.5)),
-              0 4px 16px rgba(0, 0, 0, 0.3);
+  box-shadow:
+    0 0 24px var(--color-primary-glow, rgba(220, 38, 38, 0.5)),
+    0 4px 16px rgba(0, 0, 0, 0.3);
   transform: translateY(-2px);
 }
 
@@ -135,12 +137,24 @@
   animation: fadeInUp 500ms ease-out backwards;
 }
 
-.projects-item:nth-child(1) { animation-delay: 50ms; }
-.projects-item:nth-child(2) { animation-delay: 100ms; }
-.projects-item:nth-child(3) { animation-delay: 150ms; }
-.projects-item:nth-child(4) { animation-delay: 200ms; }
-.projects-item:nth-child(5) { animation-delay: 250ms; }
-.projects-item:nth-child(6) { animation-delay: 300ms; }
+.projects-item:nth-child(1) {
+  animation-delay: 50ms;
+}
+.projects-item:nth-child(2) {
+  animation-delay: 100ms;
+}
+.projects-item:nth-child(3) {
+  animation-delay: 150ms;
+}
+.projects-item:nth-child(4) {
+  animation-delay: 200ms;
+}
+.projects-item:nth-child(5) {
+  animation-delay: 250ms;
+}
+.projects-item:nth-child(6) {
+  animation-delay: 300ms;
+}
 
 @keyframes fadeInUp {
   from {
@@ -155,7 +169,11 @@
 
 .projects-chat-btn {
   padding: 14px 24px;
-  background: linear-gradient(135deg, var(--color-primary, var(--danger, #8f7a7a)) 0%, var(--color-primary-light, var(--danger, #8f7a7a)) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, var(--danger, #8f7a7a)) 0%,
+    var(--color-primary-light, var(--danger, #8f7a7a)) 100%
+  );
   border: none;
   border-radius: 10px;
   color: #ffffff;
@@ -178,7 +196,9 @@
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.3);
   transform: translate(-50%, -50%);
-  transition: width 400ms ease, height 400ms ease;
+  transition:
+    width 400ms ease,
+    height 400ms ease;
 }
 
 .projects-chat-btn:hover {
@@ -217,7 +237,8 @@
 }
 
 @keyframes floatIcon {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {

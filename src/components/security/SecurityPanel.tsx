@@ -96,9 +96,7 @@ const SecurityPanel: React.FC = () => {
       </div>
 
       {error && (
-        <div className="security-panel__alert security-panel__alert--error">
-          {error}
-        </div>
+        <div className="security-panel__alert security-panel__alert--error">{error}</div>
       )}
 
       {success && (
@@ -114,7 +112,7 @@ const SecurityPanel: React.FC = () => {
         </div>
       ) : (
         <div className="security-panel__grid">
-          {providers.map((provider) => (
+          {providers.map(provider => (
             <div
               key={provider.service}
               className={`provider-card ${provider.active ? 'provider-card--active' : ''} ${
@@ -137,15 +135,15 @@ const SecurityPanel: React.FC = () => {
                         provider.valid === true
                           ? 'status-badge--valid'
                           : provider.valid === false
-                          ? 'status-badge--invalid'
-                          : 'status-badge--unknown'
+                            ? 'status-badge--invalid'
+                            : 'status-badge--unknown'
                       }`}
                     >
                       {provider.valid === true
                         ? '✅ Configuré et valide'
                         : provider.valid === false
-                        ? '❌ Configuré mais invalide'
-                        : '⏳ Configuré (test requis)'}
+                          ? '❌ Configuré mais invalide'
+                          : '⏳ Configuré (test requis)'}
                     </span>
                   </>
                 ) : (

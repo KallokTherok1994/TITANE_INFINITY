@@ -5,7 +5,12 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as THREE from 'three';
-import { AppearanceFloatingIntegration, parseColor, formalityToMetalness, energyToRoughness } from './appearanceFloatingIntegration';
+import {
+  AppearanceFloatingIntegration,
+  parseColor,
+  formalityToMetalness,
+  energyToRoughness,
+} from './appearanceFloatingIntegration';
 import type { AvatarAppearanceState } from '../appearance/appearanceState';
 import { Formality } from '../appearance/appearanceState';
 
@@ -32,9 +37,15 @@ describe('AppearanceFloatingIntegration', () => {
 
   describe('Material Initialization', () => {
     it('should initialize materials with default colors', () => {
-      const mockBody = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial());
+      const mockBody = new THREE.Mesh(
+        new THREE.BoxGeometry(),
+        new THREE.MeshStandardMaterial()
+      );
       mockBody.name = 'body';
-      const mockHead = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial());
+      const mockHead = new THREE.Mesh(
+        new THREE.BoxGeometry(),
+        new THREE.MeshStandardMaterial()
+      );
       mockHead.name = 'head';
 
       const materials = integration.initializeMaterials([mockBody, mockHead]);

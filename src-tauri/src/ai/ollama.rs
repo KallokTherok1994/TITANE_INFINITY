@@ -10,7 +10,7 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::time::Duration;
-use tauri::{Window, command, Emitter};
+use tauri::{command, Emitter, Window};
 
 const OLLAMA_BASE_URL: &str = "http://localhost:11434";
 const DEFAULT_MODEL: &str = "titane-local";
@@ -89,7 +89,10 @@ pub struct OllamaStatus {
 pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIResponse, String> {
     // 🔒 SECURITY v19.3: Rate Limiting Check
     let user_id = "local_ai_user".to_string(); // TODO: Get from session
-    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER.check(&user_id).await {
+    if let Err(e) = crate::security::rate_limit::GLOBAL_RATE_LIMITER
+        .check(&user_id)
+        .await
+    {
         // Log security event
         let event = crate::security::AuditEvent::new(
             crate::security::AuditEventType::RateLimitExceeded,
@@ -122,7 +125,11 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
         prompt: request.prompt,
         stream: false,
         system: request.system,
-        options: if options.is_empty() { None } else { Some(options) },
+        options: if options.is_empty() {
+            None
+        } else {
+            Some(options)
+        },
     };
 
     // Appel HTTP
@@ -183,7 +190,11 @@ pub async fn ai_generate_local_stream(
         prompt: request.prompt,
         stream: true, // Enable streaming
         system: request.system,
-        options: if options.is_empty() { None } else { Some(options) },
+        options: if options.is_empty() {
+            None
+        } else {
+            Some(options)
+        },
     };
 
     // Appel HTTP avec streaming
@@ -302,7 +313,10 @@ pub async fn ai_set_local_model(model_name: String) -> Result<String, String> {
         return Err(format!("Model '{}' failed test", model_name));
     }
 
-    Ok(format!("Model '{}' set as default and validated", model_name))
+    Ok(format!(
+        "Model '{}' set as default and validated",
+        model_name
+    ))
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -331,11 +345,8 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
                 .await
                 .map_err(|e| format!("Ollama JSON parse error: {}", e))?;
 
-            let model_names: Vec<String> = models_response
-                .models
-                .into_iter()
-                .map(|m| m.name)
-                .collect();
+            let model_names: Vec<String> =
+                models_response.models.into_iter().map(|m| m.name).collect();
 
             Ok(OllamaStatus {
                 available: true,
@@ -358,7 +369,6 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
 // ═══════════════════════════════════════════════════════════════════════════
 //   LEGACY CLIENT (Compatibility v15)
 // ═══════════════════════════════════════════════════════════════════════════
-
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   LEGACY CLIENT (Compatibility v15)
@@ -513,4 +523,3 @@ mod tests {
         let _ = client.is_available().await;
     }
 }
-

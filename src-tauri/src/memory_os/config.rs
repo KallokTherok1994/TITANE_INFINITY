@@ -10,22 +10,22 @@ use std::path::PathBuf;
 pub struct MemoryOSConfigV2 {
     /// Vector index configuration
     pub vector_config: VectorConfig,
-    
+
     /// Embedding configuration
     pub embedding_config: EmbeddingConfig,
-    
+
     /// Clustering configuration
     pub clustering_config: ClusteringConfig,
-    
+
     /// Storage path
     pub storage_path: PathBuf,
-    
+
     /// Enable semantic search
     pub enable_semantic_search: bool,
-    
+
     /// Enable clustering
     pub enable_clustering: bool,
-    
+
     /// Auto-compression threshold
     pub auto_compress_threshold: f32,
 }

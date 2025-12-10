@@ -109,19 +109,19 @@ export class EngineCoordinator {
         case 'resource':
           resolutions.push(
             `Resource conflict between ${conflict.engines.join(' and ')}: ` +
-            `Serializing access`
+              `Serializing access`
           );
           break;
         case 'state':
           resolutions.push(
             `State conflict between ${conflict.engines.join(' and ')}: ` +
-            `Waiting for stable state`
+              `Waiting for stable state`
           );
           break;
         case 'priority':
           resolutions.push(
             `Priority conflict between ${conflict.engines.join(' and ')}: ` +
-            `Using default priority order`
+              `Using default priority order`
           );
           break;
       }
@@ -135,8 +135,12 @@ export class EngineCoordinator {
    */
   private hasResourceConflict(_stateA: EngineState, _stateB: EngineState): boolean {
     // Both engines are actively processing
-    return _stateA.status === 'active' && _stateB.status === 'active' &&
-           _stateA.metrics.requestCount > 10 && _stateB.metrics.requestCount > 10;
+    return (
+      _stateA.status === 'active' &&
+      _stateB.status === 'active' &&
+      _stateA.metrics.requestCount > 10 &&
+      _stateB.metrics.requestCount > 10
+    );
   }
 
   /**
@@ -144,8 +148,10 @@ export class EngineCoordinator {
    */
   private hasStateConflict(stateA: EngineState, stateB: EngineState): boolean {
     // One engine in error while other is active
-    return (stateA.status === 'error' && stateB.status === 'active') ||
-           (stateA.status === 'active' && stateB.status === 'error');
+    return (
+      (stateA.status === 'error' && stateB.status === 'active') ||
+      (stateA.status === 'active' && stateB.status === 'error')
+    );
   }
 
   /**
@@ -194,7 +200,12 @@ export class EngineCoordinator {
     const baselineTime = Date.now();
 
     // Log synchronization
-    console.log('[EngineCoordinator] Synchronizing', engines.length, 'engines at', baselineTime);
+    console.log(
+      '[EngineCoordinator] Synchronizing',
+      engines.length,
+      'engines at',
+      baselineTime
+    );
 
     // In a real implementation, this would coordinate state updates
     // For now, we just verify all engines are accessible

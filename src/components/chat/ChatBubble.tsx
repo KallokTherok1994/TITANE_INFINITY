@@ -27,11 +27,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const {
-    messages,
-    isLoading,
-    sendMessage,
-  } = useChat({});
+  const { messages, isLoading, sendMessage } = useChat({});
 
   const {
     isObservationActive: isCameraActive,
@@ -44,7 +40,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
     if (!isOpen && messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
       if (lastMessage.role === 'assistant') {
-        setUnreadCount((prev) => prev + 1);
+        setUnreadCount(prev => prev + 1);
       }
     }
   }, [messages, isOpen]);
@@ -206,7 +202,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                   className="chat-bubble-input"
                   placeholder="Message TITANE∞..."
                   value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
+                  onChange={e => setInputValue(e.target.value)}
                   onKeyDown={handleKeyDown}
                   rows={1}
                   disabled={isLoading}

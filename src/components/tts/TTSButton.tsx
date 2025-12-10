@@ -66,9 +66,7 @@ export function TTSButton({
       disabled={isDisabled}
       title={isPlaying ? 'Arrêter la lecture' : 'Écouter'}
     >
-      <span className="tts-button__icon">
-        {isPlaying ? '⏹️' : '🔊'}
-      </span>
+      <span className="tts-button__icon">{isPlaying ? '⏹️' : '🔊'}</span>
       {isPlaying && (
         <span className="tts-button__wave">
           <span className="tts-button__wave-bar"></span>

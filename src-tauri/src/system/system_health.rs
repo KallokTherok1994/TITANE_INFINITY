@@ -142,7 +142,9 @@ impl SystemHealthEngine {
     /// Enregistre une latence moteur
     pub async fn record_engine_latency(&self, engine_id: &str, latency_ms: u64) {
         let mut health = self.health.write().await;
-        health.engine_latencies.insert(engine_id.to_string(), latency_ms);
+        health
+            .engine_latencies
+            .insert(engine_id.to_string(), latency_ms);
     }
 
     /// Enregistre une erreur

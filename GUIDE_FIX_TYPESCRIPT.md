@@ -3,6 +3,7 @@
 ## 🚨 Diagnostic Initial
 
 **Commande de scan**:
+
 ```bash
 npx tsc --noEmit
 ```
@@ -14,6 +15,7 @@ npx tsc --noEmit
 ## 🔍 Catégories d'Erreurs TypeScript
 
 ### 1. **Type `any` Abusif**
+
 ```typescript
 // ❌ AVANT
 function process(data: any) {
@@ -33,6 +35,7 @@ function process(data: ProcessData): string {
 ---
 
 ### 2. **Props `undefined` Non Protégées**
+
 ```typescript
 // ❌ AVANT
 interface Props {
@@ -57,6 +60,7 @@ function UserCard({ user }: Props) {
 ---
 
 ### 3. **Stores avec Types Incomplets**
+
 ```typescript
 // ❌ AVANT
 interface State {
@@ -81,6 +85,7 @@ interface State {
 ---
 
 ### 4. **Fonctions Sans Type de Retour**
+
 ```typescript
 // ❌ AVANT
 async function fetchData() {
@@ -103,6 +108,7 @@ async function fetchData(): Promise<ApiResponse> {
 ---
 
 ### 5. **Événements Non Typés**
+
 ```typescript
 // ❌ AVANT
 function handleClick(e) {
@@ -121,16 +127,19 @@ function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
 ## 🛠️ Stratégie de Correction
 
 ### Phase 1: Scanner
+
 ```bash
 npx tsc --noEmit 2>&1 | tee typescript_errors.log
 ```
 
 ### Phase 2: Trier par Fichier
+
 ```bash
 grep "error TS" typescript_errors.log | cut -d'(' -f1 | sort | uniq -c | sort -rn
 ```
 
 ### Phase 3: Corriger par Priorité
+
 1. **P0**: Erreurs dans composants critiques (Chat, Voice, Main)
 2. **P1**: Erreurs dans services (API, Audio, Storage)
 3. **P2**: Erreurs dans utils/helpers
@@ -140,16 +149,19 @@ grep "error TS" typescript_errors.log | cut -d'(' -f1 | sort | uniq -c | sort -r
 ## 📁 Fichiers Probablement Affectés
 
 ### Services
+
 - `src/services/apiService.ts`
 - `src/services/audioService.ts`
 - `src/services/storageService.ts`
 
 ### Stores
+
 - `src/stores/chatStore.ts`
 - `src/stores/audioStore.ts`
 - `src/stores/memoryStore.ts`
 
 ### Composants
+
 - `src/components/Chat/*.tsx`
 - `src/components/Voice/*.tsx`
 - `src/components/Memory/*.tsx`
@@ -159,6 +171,7 @@ grep "error TS" typescript_errors.log | cut -d'(' -f1 | sort | uniq -c | sort -r
 ## 🧪 Validation
 
 ### Après chaque correction
+
 ```bash
 npx tsc --noEmit
 npm run lint
@@ -166,6 +179,7 @@ npm test
 ```
 
 ### Objectif
+
 - **0 erreurs TS**
 - **<50 warnings ESLint** (down from 156)
 - **Tous les tests passent**
@@ -175,6 +189,7 @@ npm test
 ## 🚫 Anti-Patterns à Éviter
 
 ### ❌ Ne PAS faire
+
 ```typescript
 // Cacher le problème avec any
 const data: any = fetchData();
@@ -188,6 +203,7 @@ const value = input as string;
 ```
 
 ### ✅ Faire
+
 ```typescript
 // Typer correctement
 interface Data {
@@ -197,12 +213,12 @@ const data: Data = await fetchData();
 
 // Guard clauses
 if (!user?.name) {
-  throw new Error("User name is required");
+  throw new Error('User name is required');
 }
 user.name.toUpperCase();
 
 // Type narrowing
-if (typeof input === "string") {
+if (typeof input === 'string') {
   return input.toUpperCase();
 }
 ```
@@ -212,11 +228,13 @@ if (typeof input === "string") {
 ## 📊 Métriques de Succès
 
 ### Avant (v19.2Ω)
+
 - 34 erreurs TypeScript
 - 156 warnings ESLint
 - Types `any` abusifs
 
 ### Après (v20.0 Target)
+
 - **0 erreurs TypeScript** ✅
 - **<50 warnings ESLint** ✅
 - Types explicites partout ✅
@@ -226,16 +244,19 @@ if (typeof input === "string") {
 ## 🔧 Outils Utiles
 
 ### ESLint
+
 ```bash
 npm run lint -- --fix
 ```
 
 ### Prettier
+
 ```bash
 npm run format
 ```
 
 ### VSCode Settings
+
 ```json
 {
   "typescript.tsdk": "node_modules/typescript/lib",

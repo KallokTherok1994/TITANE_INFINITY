@@ -51,11 +51,12 @@ export async function tauri<T>(
     return result;
   } catch (error: unknown) {
     // Format error message consistently
-    const errorMessage = error instanceof Error
-      ? error.message
-      : typeof error === 'string'
-      ? error
-      : 'Unknown Tauri invocation error';
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+          ? error
+          : 'Unknown Tauri invocation error';
 
     console.error(`[Tauri Error] Command "${cmd}" failed:`, errorMessage);
     throw new Error(`Tauri command "${cmd}" failed: ${errorMessage}`);

@@ -4,7 +4,13 @@
  * Rôle: Apprentissage, intégration connaissances, gestion XP
  */
 
-import type { Agent, AgentState, AgentEvent, AgentResponse, AgentRole } from '../multi_agent_engine';
+import type {
+  Agent,
+  AgentState,
+  AgentEvent,
+  AgentResponse,
+  AgentRole,
+} from '../multi_agent_engine';
 
 interface KnowledgeEntry {
   id: string;
@@ -49,7 +55,7 @@ export class MemoryCoreAgent implements Agent {
   public id = 'memory-core';
   public name = 'Memory-Core';
   public role: AgentRole = 'memory';
-  public description = 'Agent d\'apprentissage et intégration des connaissances';
+  public description = "Agent d'apprentissage et intégration des connaissances";
   public permissions = ['knowledge:read', 'knowledge:write', 'xp:manage'];
 
   public state: AgentState = {
@@ -71,7 +77,9 @@ export class MemoryCoreAgent implements Agent {
   async initialize(): Promise<void> {
     this.state.status = 'active';
     await this.loadFromStorage();
-    console.log(`[Memory-Core] Initialized with ${this.knowledge.size} entries, ${this.totalXP} XP`);
+    console.log(
+      `[Memory-Core] Initialized with ${this.knowledge.size} entries, ${this.totalXP} XP`
+    );
   }
 
   async shutdown(): Promise<void> {
@@ -165,13 +173,15 @@ export class MemoryCoreAgent implements Agent {
 
     // Add to knowledge base
     this.knowledge.set(entry.id, entry);
-    entry.category.forEach((cat) => this.categories.add(cat));
+    entry.category.forEach(cat => this.categories.add(cat));
 
     // Award XP
     const xpGained = this.calculateXP(entry);
     this.totalXP += xpGained;
 
-    console.log(`[Memory-Core] Learned: ${entry.id} (+${xpGained} XP, total: ${this.totalXP})`);
+    console.log(
+      `[Memory-Core] Learned: ${entry.id} (+${xpGained} XP, total: ${this.totalXP})`
+    );
   }
 
   // Query knowledge base
@@ -181,17 +191,15 @@ export class MemoryCoreAgent implements Agent {
     let results: KnowledgeEntry[] = Array.from(this.knowledge.values());
 
     if (category) {
-      results = results.filter((k) => k.category.includes(category));
+      results = results.filter(k => k.category.includes(category));
     }
 
     if (keyword) {
       const kw = keyword.toLowerCase();
-      results = results.filter((k) => k.content.toLowerCase().includes(kw));
+      results = results.filter(k => k.content.toLowerCase().includes(kw));
     }
 
-    results = results
-      .sort((a, b) => b.confidence - a.confidence)
-      .slice(0, limit);
+    results = results.sort((a, b) => b.confidence - a.confidence).slice(0, limit);
 
     return {
       success: true,
@@ -222,7 +230,7 @@ export class MemoryCoreAgent implements Agent {
 
   // Restore from snapshot
   private restoreSnapshot(snapshotId: string): AgentResponse {
-    const snapshot = this.snapshots.find((s) => s.id === snapshotId);
+    const snapshot = this.snapshots.find(s => s.id === snapshotId);
     if (!snapshot) {
       return { success: false, message: 'Snapshot not found' };
     }
@@ -247,16 +255,14 @@ export class MemoryCoreAgent implements Agent {
     // Simple keyword-based classification
     if (lower.includes('function') || lower.includes('class') || lower.includes('import'))
       categories.push('code');
-    if (lower.includes('config') || lower.includes('settings'))
-      categories.push('config');
+    if (lower.includes('config') || lower.includes('settings')) categories.push('config');
     if (lower.includes('bug') || lower.includes('error') || lower.includes('fix'))
       categories.push('debug');
     if (lower.includes('feature') || lower.includes('implement'))
       categories.push('feature');
     if (lower.includes('doc') || lower.includes('guide'))
       categories.push('documentation');
-    if (lower.includes('test') || lower.includes('spec'))
-      categories.push('testing');
+    if (lower.includes('test') || lower.includes('spec')) categories.push('testing');
 
     if (categories.length === 0) categories.push('general');
 
@@ -278,7 +284,7 @@ export class MemoryCoreAgent implements Agent {
     const wordsA = new Set(a.toLowerCase().split(/\s+/));
     const wordsB = new Set(b.toLowerCase().split(/\s+/));
 
-    const intersection = new Set([...wordsA].filter((w) => wordsB.has(w)));
+    const intersection = new Set([...wordsA].filter(w => wordsB.has(w)));
     const union = new Set([...wordsA, ...wordsB]);
 
     return intersection.size / union.size;
@@ -289,7 +295,7 @@ export class MemoryCoreAgent implements Agent {
     let xp = 10; // Base XP
 
     // Bonus for new categories
-    const newCategories = entry.category.filter((c) => !this.categories.has(c));
+    const newCategories = entry.category.filter(c => !this.categories.has(c));
     xp += newCategories.length * 5;
 
     // Bonus for high confidence

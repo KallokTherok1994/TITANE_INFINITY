@@ -11,7 +11,6 @@ import { describe, it, expect, beforeAll } from 'vitest';
 import { invoke } from '@tauri-apps/api/core';
 
 describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
-
   describe('FusionEngine', () => {
     it('should get fusion state', async () => {
       const state = await invoke('singularity_get_fusion_state');
@@ -36,7 +35,9 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
     });
 
     it('should create snapshot', async () => {
-      const snapshotId = await invoke('singularity_create_snapshot', { compressed: true });
+      const snapshotId = await invoke('singularity_create_snapshot', {
+        compressed: true,
+      });
       expect(typeof snapshotId).toBe('string');
       expect(snapshotId).toContain('snapshot-');
     });
@@ -59,7 +60,7 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
   describe('UnifiedPipeline', () => {
     it('should analyze intention', async () => {
       const intention = await invoke('pipeline_analyze_intention', {
-        message: 'Bonjour, comment vas-tu ?'
+        message: 'Bonjour, comment vas-tu ?',
       });
       expect(intention).toBeDefined();
       expect(intention).toHaveProperty('primary');
@@ -69,7 +70,7 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
     it('should generate cognitive response', async () => {
       const response = await invoke('pipeline_generate_cognitive_response', {
         message: 'Test message',
-        intention: 'question'
+        intention: 'question',
       });
       expect(response).toBeDefined();
       expect(response).toHaveProperty('text');
@@ -78,7 +79,7 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
 
     it('should prepare TTS', async () => {
       const tts = await invoke('pipeline_prepare_tts', {
-        text: 'Hello world'
+        text: 'Hello world',
       });
       expect(tts).toBeDefined();
       expect(tts).toHaveProperty('duration');
@@ -193,20 +194,20 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
     it('should complete full pipeline cycle', async () => {
       // 1. Analyser intention
       const intention = await invoke('pipeline_analyze_intention', {
-        message: 'Test intégration complète'
+        message: 'Test intégration complète',
       });
       expect(intention).toBeDefined();
 
       // 2. Générer réponse
       const response = await invoke('pipeline_generate_cognitive_response', {
         message: 'Test',
-        intention: intention.primary
+        intention: intention.primary,
       });
       expect(response).toBeDefined();
 
       // 3. Préparer TTS
       const tts = await invoke('pipeline_prepare_tts', {
-        text: response.text
+        text: response.text,
       });
       expect(tts).toBeDefined();
 
@@ -270,7 +271,9 @@ describe('SINGULARITY-FUSION vΩ - Integration Tests', () => {
     it('should create and restore snapshot', async () => {
       const baselineState = await invoke('singularity_get_fusion_state');
       // Créer snapshot
-      const snapshotId = await invoke('singularity_create_snapshot', { compressed: true });
+      const snapshotId = await invoke('singularity_create_snapshot', {
+        compressed: true,
+      });
       expect(snapshotId).toBeDefined();
 
       // Modifier état

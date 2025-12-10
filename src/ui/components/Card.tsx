@@ -32,7 +32,9 @@ export const Card = ({
     hoverable && 'card--hoverable',
     onClick && 'card--clickable',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes} onClick={onClick}>

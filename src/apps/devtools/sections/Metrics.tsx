@@ -35,7 +35,7 @@ export function Metrics() {
             {/* Engine Filter */}
             <select
               value={selectedEngine}
-              onChange={(e) => setSelectedEngine(e.target.value)}
+              onChange={e => setSelectedEngine(e.target.value)}
               className="px-3 py-1.5 text-sm rounded-md border"
               style={{
                 background: 'var(--bg-panel, #101216)',
@@ -52,7 +52,7 @@ export function Metrics() {
 
             {/* Time Range */}
             <div className="flex gap-1">
-              {timeRangeOptions.map((option) => (
+              {timeRangeOptions.map(option => (
                 <button
                   key={option.value}
                   onClick={() => setTimeRange(option.value)}
@@ -89,8 +89,8 @@ export function Metrics() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {metricsList
-            .filter((m) => m.id.startsWith('ipc-latency'))
-            .map((metric) => (
+            .filter(m => m.id.startsWith('ipc-latency'))
+            .map(metric => (
               <MetricCard
                 key={metric.id}
                 label={metric.label}
@@ -98,7 +98,9 @@ export function Metrics() {
                 unit={metric.unit}
                 trend={metric.trend}
                 history={metric.history}
-                color={metric.value < 20 ? 'success' : metric.value < 50 ? 'warning' : 'danger'}
+                color={
+                  metric.value < 20 ? 'success' : metric.value < 50 ? 'warning' : 'danger'
+                }
               />
             ))}
         </div>
@@ -114,8 +116,8 @@ export function Metrics() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {metricsList
-            .filter((m) => m.id === 'cpu-usage' || m.id === 'memory-usage')
-            .map((metric) => (
+            .filter(m => m.id === 'cpu-usage' || m.id === 'memory-usage')
+            .map(metric => (
               <MetricCard
                 key={metric.id}
                 label={metric.label}
@@ -147,8 +149,8 @@ export function Metrics() {
         </h3>
         <div className="grid grid-cols-1 gap-4">
           {metricsList
-            .filter((m) => m.id === 'omega-duration')
-            .map((metric) => (
+            .filter(m => m.id === 'omega-duration')
+            .map(metric => (
               <MetricCard
                 key={metric.id}
                 label={metric.label}
@@ -156,7 +158,13 @@ export function Metrics() {
                 unit={metric.unit}
                 trend={metric.trend}
                 history={metric.history}
-                color={metric.value < 100 ? 'success' : metric.value < 200 ? 'warning' : 'danger'}
+                color={
+                  metric.value < 100
+                    ? 'success'
+                    : metric.value < 200
+                      ? 'warning'
+                      : 'danger'
+                }
               />
             ))}
         </div>

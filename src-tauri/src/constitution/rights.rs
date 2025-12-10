@@ -56,9 +56,7 @@ pub struct RightsCharter {
 impl RightsCharter {
     /// Crée une charte vide
     pub fn new() -> Self {
-        Self {
-            rights: Vec::new(),
-        }
+        Self { rights: Vec::new() }
     }
 
     /// Crée la charte TITANE∞ par défaut
@@ -72,7 +70,8 @@ impl RightsCharter {
             Right {
                 id: "user_data_privacy".to_string(),
                 name: "Data Privacy".to_string(),
-                description: "Right to have personal data protected and not shared without consent".to_string(),
+                description: "Right to have personal data protected and not shared without consent"
+                    .to_string(),
                 holder: RightsHolder::User,
                 category: RightCategory::Privacy,
                 inalienable: true,
@@ -82,14 +81,14 @@ impl RightsCharter {
             Right {
                 id: "user_anonymity".to_string(),
                 name: "Right to Anonymity".to_string(),
-                description: "Right to use the system without being tracked or identified".to_string(),
+                description: "Right to use the system without being tracked or identified"
+                    .to_string(),
                 holder: RightsHolder::User,
                 category: RightCategory::Privacy,
                 inalienable: false,
                 enforcement_mechanism: "anonymous_mode".to_string(),
                 related_rights: vec!["user_data_privacy".to_string()],
             },
-
             // Droits d'accès
             Right {
                 id: "user_data_access".to_string(),
@@ -104,14 +103,14 @@ impl RightsCharter {
             Right {
                 id: "user_data_portability".to_string(),
                 name: "Data Portability".to_string(),
-                description: "Right to export data in a standard, machine-readable format".to_string(),
+                description: "Right to export data in a standard, machine-readable format"
+                    .to_string(),
                 holder: RightsHolder::User,
                 category: RightCategory::Access,
                 inalienable: true,
                 enforcement_mechanism: "export_formats".to_string(),
                 related_rights: vec!["user_data_access".to_string()],
             },
-
             // Droits de contrôle
             Right {
                 id: "user_data_deletion".to_string(),
@@ -126,7 +125,8 @@ impl RightsCharter {
             Right {
                 id: "user_consent_withdrawal".to_string(),
                 name: "Consent Withdrawal".to_string(),
-                description: "Right to withdraw consent for data processing at any time".to_string(),
+                description: "Right to withdraw consent for data processing at any time"
+                    .to_string(),
                 holder: RightsHolder::User,
                 category: RightCategory::Control,
                 inalienable: true,
@@ -136,14 +136,14 @@ impl RightsCharter {
             Right {
                 id: "user_system_override".to_string(),
                 name: "System Override".to_string(),
-                description: "Right to override system decisions affecting personal data".to_string(),
+                description: "Right to override system decisions affecting personal data"
+                    .to_string(),
                 holder: RightsHolder::User,
                 category: RightCategory::Control,
                 inalienable: false,
                 enforcement_mechanism: "override_interface".to_string(),
                 related_rights: vec!["user_recourse".to_string()],
             },
-
             // Droits d'information
             Right {
                 id: "user_transparency".to_string(),
@@ -158,14 +158,14 @@ impl RightsCharter {
             Right {
                 id: "user_notification".to_string(),
                 name: "Notification".to_string(),
-                description: "Right to be notified of significant system actions or data breaches".to_string(),
+                description: "Right to be notified of significant system actions or data breaches"
+                    .to_string(),
                 holder: RightsHolder::User,
                 category: RightCategory::Information,
                 inalienable: true,
                 enforcement_mechanism: "notification_system".to_string(),
                 related_rights: vec![],
             },
-
             // Droits de recours
             Right {
                 id: "user_recourse".to_string(),
@@ -187,7 +187,6 @@ impl RightsCharter {
                 enforcement_mechanism: "escalation_system".to_string(),
                 related_rights: vec!["user_recourse".to_string()],
             },
-
             // Droits de protection
             Right {
                 id: "user_safety".to_string(),
@@ -199,11 +198,9 @@ impl RightsCharter {
                 enforcement_mechanism: "safety_layer".to_string(),
                 related_rights: vec![],
             },
-
             // ══════════════════════════════════════════════════════════
             // DROITS SYSTÈME
             // ══════════════════════════════════════════════════════════
-
             Right {
                 id: "system_self_preservation".to_string(),
                 name: "Self-Preservation".to_string(),
@@ -227,18 +224,17 @@ impl RightsCharter {
             Right {
                 id: "system_learning".to_string(),
                 name: "Right to Learn".to_string(),
-                description: "Right to learn and improve from interactions (with consent)".to_string(),
+                description: "Right to learn and improve from interactions (with consent)"
+                    .to_string(),
                 holder: RightsHolder::System,
                 category: RightCategory::Access,
                 inalienable: false,
                 enforcement_mechanism: "learning_consent".to_string(),
                 related_rights: vec!["user_consent_withdrawal".to_string()],
             },
-
             // ══════════════════════════════════════════════════════════
             // DROITS AGENTS
             // ══════════════════════════════════════════════════════════
-
             Right {
                 id: "agent_delegation".to_string(),
                 name: "Delegation Rights".to_string(),
@@ -281,7 +277,10 @@ impl RightsCharter {
 
     /// Droits par catégorie
     pub fn by_category(&self, category: RightCategory) -> Vec<&Right> {
-        self.rights.iter().filter(|r| r.category == category).collect()
+        self.rights
+            .iter()
+            .filter(|r| r.category == category)
+            .collect()
     }
 
     /// Droits inaliénables
@@ -311,7 +310,8 @@ impl RightsCharter {
 
     /// Droits violés dans un contexte
     pub fn violated_rights(&self, context: &RightsContext) -> Vec<&Right> {
-        self.rights.iter()
+        self.rights
+            .iter()
             .filter(|r| context.violations.contains(&r.id))
             .collect()
     }

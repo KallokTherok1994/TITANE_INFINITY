@@ -160,17 +160,17 @@ impl AgentRole {
     /// Obtenir la priorité d'exécution (0 = plus haute)
     pub fn execution_priority(&self) -> u8 {
         match self {
-            Self::Security => 0,       // Sécurité = priorité max
-            Self::Observer => 1,       // Observation = haute priorité
-            Self::Memory => 2,         // Mémoire = haute priorité
-            Self::Temporal => 3,       // Temporel = priorité moyenne-haute
-            Self::Analyzer => 4,       // Analyse = priorité moyenne
-            Self::Synthesizer => 5,    // Synthèse = priorité moyenne
-            Self::Vision => 6,         // Vision = priorité moyenne-basse
-            Self::Audio => 6,          // Audio = priorité moyenne-basse
-            Self::API => 7,            // API = priorité basse
-            Self::DevTools => 8,       // DevTools = priorité basse
-            Self::Evolution => 9,      // Evolution = priorité la plus basse (background)
+            Self::Security => 0,    // Sécurité = priorité max
+            Self::Observer => 1,    // Observation = haute priorité
+            Self::Memory => 2,      // Mémoire = haute priorité
+            Self::Temporal => 3,    // Temporel = priorité moyenne-haute
+            Self::Analyzer => 4,    // Analyse = priorité moyenne
+            Self::Synthesizer => 5, // Synthèse = priorité moyenne
+            Self::Vision => 6,      // Vision = priorité moyenne-basse
+            Self::Audio => 6,       // Audio = priorité moyenne-basse
+            Self::API => 7,         // API = priorité basse
+            Self::DevTools => 8,    // DevTools = priorité basse
+            Self::Evolution => 9,   // Evolution = priorité la plus basse (background)
         }
     }
 
@@ -233,7 +233,9 @@ mod tests {
     #[test]
     fn test_role_priorities() {
         assert_eq!(AgentRole::Security.execution_priority(), 0);
-        assert!(AgentRole::Observer.execution_priority() < AgentRole::Evolution.execution_priority());
+        assert!(
+            AgentRole::Observer.execution_priority() < AgentRole::Evolution.execution_priority()
+        );
     }
 
     #[test]

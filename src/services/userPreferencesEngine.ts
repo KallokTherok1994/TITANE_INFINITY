@@ -26,7 +26,7 @@ export interface UserPreferences {
 
   // Style de communication
   communicationStyle: {
-    formality: 'formal' | 'informal' | 'neutral';  // tu vs vous
+    formality: 'formal' | 'informal' | 'neutral'; // tu vs vous
     verbosity: 'concise' | 'detailed' | 'balanced';
     humor: boolean;
     emojis: boolean;
@@ -40,7 +40,7 @@ export interface UserPreferences {
 
   // Préférences techniques
   technical: {
-    preferredLanguages: string[];  // Python, JavaScript, etc.
+    preferredLanguages: string[]; // Python, JavaScript, etc.
     expertiseLevel: 'beginner' | 'intermediate' | 'advanced' | 'expert';
     preferCodeComments: boolean;
     preferExamples: boolean;
@@ -124,7 +124,11 @@ class UserPreferencesEngine {
 
   constructor() {
     this.preferences = this.loadPreferences();
-    console.log('[UserPreferencesEngine] Initialized with', this.preferences.metrics.totalInteractions, 'interactions');
+    console.log(
+      '[UserPreferencesEngine] Initialized with',
+      this.preferences.metrics.totalInteractions,
+      'interactions'
+    );
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -308,21 +312,45 @@ class UserPreferencesEngine {
     }
 
     // Détecter la préférence tu/vous
-    if (lower.includes('tutoie') || lower.includes('tutoyez') || lower.includes('dis-moi tu')) {
+    if (
+      lower.includes('tutoie') ||
+      lower.includes('tutoyez') ||
+      lower.includes('dis-moi tu')
+    ) {
       this.updateCommunicationStyle({ formality: 'informal' });
     } else if (lower.includes('vouvoie') || lower.includes('dites-moi vous')) {
       this.updateCommunicationStyle({ formality: 'formal' });
     }
 
     // Détecter la préférence de verbosité
-    if (lower.includes('plus de détails') || lower.includes('explique plus') || lower.includes('développe')) {
+    if (
+      lower.includes('plus de détails') ||
+      lower.includes('explique plus') ||
+      lower.includes('développe')
+    ) {
       this.updateCommunicationStyle({ verbosity: 'detailed' });
-    } else if (lower.includes('sois bref') || lower.includes('résume') || lower.includes('court')) {
+    } else if (
+      lower.includes('sois bref') ||
+      lower.includes('résume') ||
+      lower.includes('court')
+    ) {
       this.updateCommunicationStyle({ verbosity: 'concise' });
     }
 
     // Détecter les langages de programmation mentionnés
-    const programmingLanguages = ['python', 'javascript', 'typescript', 'rust', 'java', 'c++', 'go', 'ruby', 'php', 'swift', 'kotlin'];
+    const programmingLanguages = [
+      'python',
+      'javascript',
+      'typescript',
+      'rust',
+      'java',
+      'c++',
+      'go',
+      'ruby',
+      'php',
+      'swift',
+      'kotlin',
+    ];
     for (const lang of programmingLanguages) {
       if (lower.includes(lang)) {
         const current = this.preferences.technical.preferredLanguages;
@@ -335,9 +363,17 @@ class UserPreferencesEngine {
     }
 
     // Détecter le niveau technique
-    if (lower.includes('débutant') || lower.includes('novice') || lower.includes('beginner')) {
+    if (
+      lower.includes('débutant') ||
+      lower.includes('novice') ||
+      lower.includes('beginner')
+    ) {
       this.updateTechnicalPreferences({ expertiseLevel: 'beginner' });
-    } else if (lower.includes('expert') || lower.includes('avancé') || lower.includes('advanced')) {
+    } else if (
+      lower.includes('expert') ||
+      lower.includes('avancé') ||
+      lower.includes('advanced')
+    ) {
       this.updateTechnicalPreferences({ expertiseLevel: 'advanced' });
     }
   }
@@ -350,14 +386,20 @@ class UserPreferencesEngine {
 
     // Liste de sujets à détecter
     const topicKeywords: Record<string, string[]> = {
-      'programmation': ['code', 'programmer', 'développer', 'coder', 'script'],
-      'intelligence artificielle': ['ia', 'ai', 'machine learning', 'deep learning', 'neural'],
-      'web': ['html', 'css', 'web', 'site', 'frontend', 'backend'],
+      programmation: ['code', 'programmer', 'développer', 'coder', 'script'],
+      'intelligence artificielle': [
+        'ia',
+        'ai',
+        'machine learning',
+        'deep learning',
+        'neural',
+      ],
+      web: ['html', 'css', 'web', 'site', 'frontend', 'backend'],
       'base de données': ['sql', 'database', 'données', 'mongodb', 'postgresql'],
-      'sécurité': ['sécurité', 'security', 'cryptage', 'encryption', 'firewall'],
-      'automatisation': ['automatiser', 'automatisation', 'script', 'bot'],
-      'audio': ['audio', 'son', 'musique', 'voix', 'tts', 'voice'],
-      'productivité': ['productivité', 'efficacité', 'organiser', 'planifier'],
+      sécurité: ['sécurité', 'security', 'cryptage', 'encryption', 'firewall'],
+      automatisation: ['automatiser', 'automatisation', 'script', 'bot'],
+      audio: ['audio', 'son', 'musique', 'voix', 'tts', 'voice'],
+      productivité: ['productivité', 'efficacité', 'organiser', 'planifier'],
     };
 
     for (const [topic, keywords] of Object.entries(topicKeywords)) {
@@ -373,7 +415,10 @@ class UserPreferencesEngine {
   /**
    * Ajoute ou met à jour un sujet dans l'historique
    */
-  private addTopic(topic: string, sentiment: 'positive' | 'neutral' | 'negative' = 'neutral'): void {
+  private addTopic(
+    topic: string,
+    sentiment: 'positive' | 'neutral' | 'negative' = 'neutral'
+  ): void {
     const existing = this.preferences.topicsHistory.find(t => t.topic === topic);
 
     if (existing) {
@@ -393,7 +438,12 @@ class UserPreferencesEngine {
     if (this.preferences.topicsHistory.length > MAX_TOPICS_HISTORY) {
       // Garder les plus fréquents et les plus récents
       this.preferences.topicsHistory = this.preferences.topicsHistory
-        .sort((a, b) => (b.count * 0.6 + b.lastMentioned * 0.4) - (a.count * 0.6 + a.lastMentioned * 0.4))
+        .sort(
+          (a, b) =>
+            b.count * 0.6 +
+            b.lastMentioned * 0.4 -
+            (a.count * 0.6 + a.lastMentioned * 0.4)
+        )
         .slice(0, MAX_TOPICS_HISTORY);
     }
   }
@@ -417,9 +467,9 @@ class UserPreferencesEngine {
     // Style de communication
     const style = prefs.communicationStyle;
     if (style.formality === 'informal') {
-      parts.push('L\'utilisateur préfère le tutoiement.');
+      parts.push("L'utilisateur préfère le tutoiement.");
     } else if (style.formality === 'formal') {
-      parts.push('L\'utilisateur préfère le vouvoiement.');
+      parts.push("L'utilisateur préfère le vouvoiement.");
     }
 
     if (style.verbosity === 'concise') {
@@ -429,7 +479,7 @@ class UserPreferencesEngine {
     }
 
     if (style.humor) {
-      parts.push('L\'utilisateur apprécie l\'humour.');
+      parts.push("L'utilisateur apprécie l'humour.");
     }
 
     // Intérêts
@@ -455,20 +505,20 @@ class UserPreferencesEngine {
     // Sujets fréquents
     const topTopics = this.getTopTopics(3);
     if (topTopics.length > 0) {
-      parts.push(`Sujets fréquemment abordés: ${topTopics.map(t => t.topic).join(', ')}.`);
+      parts.push(
+        `Sujets fréquemment abordés: ${topTopics.map(t => t.topic).join(', ')}.`
+      );
     }
 
     // Satisfaction
     const { positiveReactions, negativeReactions } = prefs.metrics;
     if (positiveReactions > negativeReactions * 2) {
-      parts.push('L\'utilisateur est généralement satisfait des réponses.');
+      parts.push("L'utilisateur est généralement satisfait des réponses.");
     } else if (negativeReactions > positiveReactions) {
-      parts.push('Essaie d\'améliorer la qualité des réponses.');
+      parts.push("Essaie d'améliorer la qualité des réponses.");
     }
 
-    return parts.length > 0
-      ? `[Préférences utilisateur: ${parts.join(' ')}]`
-      : '';
+    return parts.length > 0 ? `[Préférences utilisateur: ${parts.join(' ')}]` : '';
   }
 
   // ─────────────────────────────────────────────────────────────────

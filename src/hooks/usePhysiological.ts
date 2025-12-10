@@ -44,8 +44,10 @@ export function useInteroception() {
     setCognitiveLoad: (value: number) => interoceptionEngine.setCognitiveLoad(value),
     setClarity: (value: number) => interoceptionEngine.setClarity(value),
     setStability: (value: number) => interoceptionEngine.setStability(value),
-    setEmotionalTemperature: (value: number) => interoceptionEngine.setEmotionalTemperature(value),
-    applyContext: (context: InteroceptionContext) => interoceptionEngine.applyContext(context),
+    setEmotionalTemperature: (value: number) =>
+      interoceptionEngine.setEmotionalTemperature(value),
+    applyContext: (context: InteroceptionContext) =>
+      interoceptionEngine.applyContext(context),
     exportForAura: () => interoceptionEngine.exportForAura(),
     exportForVoice: () => interoceptionEngine.exportForVoice(),
     exportForProsody: () => interoceptionEngine.exportForProsody(),
@@ -61,7 +63,7 @@ export function useInternalEnergy() {
   const [energy, setEnergy] = useState<number>(interoceptionEngine.getState().energy);
 
   useEffect(() => {
-    const unsubscribe = interoceptionEngine.subscribe((state) => {
+    const unsubscribe = interoceptionEngine.subscribe(state => {
       setEnergy(state.energy);
     });
     return unsubscribe;
@@ -77,7 +79,7 @@ export function useCognitiveLoad() {
   const [load, setLoad] = useState<number>(interoceptionEngine.getState().cognitiveLoad);
 
   useEffect(() => {
-    const unsubscribe = interoceptionEngine.subscribe((state) => {
+    const unsubscribe = interoceptionEngine.subscribe(state => {
       setLoad(state.cognitiveLoad);
     });
     return unsubscribe;
@@ -96,7 +98,7 @@ export function useMentalClarity() {
   const [clarity, setClarity] = useState<number>(interoceptionEngine.getState().clarity);
 
   useEffect(() => {
-    const unsubscribe = interoceptionEngine.subscribe((state) => {
+    const unsubscribe = interoceptionEngine.subscribe(state => {
       setClarity(state.clarity);
     });
     return unsubscribe;
@@ -109,10 +111,12 @@ export function useMentalClarity() {
  * Hook pour la respiration (phase 0..1)
  */
 export function useBreathingPhase() {
-  const [phase, setPhase] = useState<number>(interoceptionEngine.getState().breathingPhase);
+  const [phase, setPhase] = useState<number>(
+    interoceptionEngine.getState().breathingPhase
+  );
 
   useEffect(() => {
-    const unsubscribe = interoceptionEngine.subscribe((state) => {
+    const unsubscribe = interoceptionEngine.subscribe(state => {
       setPhase(state.breathingPhase);
     });
     return unsubscribe;
@@ -125,10 +129,12 @@ export function useBreathingPhase() {
  * Hook pour l'homeostasie (équilibre global 0..1)
  */
 export function useHomeostasis() {
-  const [homeostasis, setHomeostasis] = useState<number>(interoceptionEngine.getState().homeostasis);
+  const [homeostasis, setHomeostasis] = useState<number>(
+    interoceptionEngine.getState().homeostasis
+  );
 
   useEffect(() => {
-    const unsubscribe = interoceptionEngine.subscribe((state) => {
+    const unsubscribe = interoceptionEngine.subscribe(state => {
       setHomeostasis(state.homeostasis);
     });
     return unsubscribe;
@@ -156,9 +162,11 @@ export function useHolophonic() {
 
   return {
     spatialState,
-    setSpatialState: (state: Partial<TitanSpatialState>) => holophonicEngine.setSpatialState(state),
+    setSpatialState: (state: Partial<TitanSpatialState>) =>
+      holophonicEngine.setSpatialState(state),
     setPreset: (preset: SpatialPreset) => holophonicEngine.setPreset(preset),
-    playCue: (cue: CognitiveSound, options?: SpatialOptions) => holophonicEngine.playCue(cue, options),
+    playCue: (cue: CognitiveSound, options?: SpatialOptions) =>
+      holophonicEngine.playCue(cue, options),
     setSoundIntensity: (intensity: 'off' | 'minimal' | 'normal' | 'rich') =>
       holophonicEngine.setSoundIntensity(intensity),
   };
@@ -175,7 +183,7 @@ export function useSpatialPosition() {
   });
 
   useEffect(() => {
-    const unsubscribe = holophonicEngine.subscribe((state) => {
+    const unsubscribe = holophonicEngine.subscribe(state => {
       setPosition({ x: state.x, y: state.y, z: state.z });
     });
     return unsubscribe;

@@ -24,50 +24,50 @@
  * Type d'incohérence détectée
  */
 export type IncoherenceType =
-  | 'style_mismatch'       // Style non aligné avec l'état
-  | 'density_excessive'    // Réponse trop dense
+  | 'style_mismatch' // Style non aligné avec l'état
+  | 'density_excessive' // Réponse trop dense
   | 'density_insufficient' // Réponse trop vide
-  | 'tone_rupture'         // Rupture de ton
-  | 'rhythm_break'         // Rupture de rythme
-  | 'flow_disruption'      // Perturbation du flow
-  | 'cognitive_overload'   // Surcharge cognitive
-  | 'alignment_drift'      // Dérive d'alignement
-  | 'context_disconnect'   // Déconnexion du contexte
-  | 'clarity_issue';       // Problème de clarté
+  | 'tone_rupture' // Rupture de ton
+  | 'rhythm_break' // Rupture de rythme
+  | 'flow_disruption' // Perturbation du flow
+  | 'cognitive_overload' // Surcharge cognitive
+  | 'alignment_drift' // Dérive d'alignement
+  | 'context_disconnect' // Déconnexion du contexte
+  | 'clarity_issue'; // Problème de clarté
 
 /**
  * Type d'ajustement interne
  */
 export type AdjustmentType =
-  | 'simplify'             // Simplifier la réponse
-  | 'expand'               // Enrichir la réponse
-  | 'slow_down'            // Ralentir le rythme
-  | 'speed_up'             // Accélérer le rythme
-  | 'stabilize'            // Stabiliser le ton
-  | 'realign'              // Réaligner avec l'état
-  | 'clarify'              // Clarifier le message
-  | 'protect_flow'         // Protéger l'état de flow
-  | 'reduce_density'       // Réduire la densité
-  | 'increase_warmth'      // Augmenter la chaleur
-  | 'decrease_formality';  // Réduire la formalité
+  | 'simplify' // Simplifier la réponse
+  | 'expand' // Enrichir la réponse
+  | 'slow_down' // Ralentir le rythme
+  | 'speed_up' // Accélérer le rythme
+  | 'stabilize' // Stabiliser le ton
+  | 'realign' // Réaligner avec l'état
+  | 'clarify' // Clarifier le message
+  | 'protect_flow' // Protéger l'état de flow
+  | 'reduce_density' // Réduire la densité
+  | 'increase_warmth' // Augmenter la chaleur
+  | 'decrease_formality'; // Réduire la formalité
 
 /**
  * Niveau de sévérité d'une incohérence
  */
 export type SeverityLevel =
-  | 'low'                  // Impact minimal
-  | 'moderate'             // Impact modéré
-  | 'high'                 // Impact important
-  | 'critical';            // Nécessite correction immédiate
+  | 'low' // Impact minimal
+  | 'moderate' // Impact modéré
+  | 'high' // Impact important
+  | 'critical'; // Nécessite correction immédiate
 
 /**
  * Statut de l'évaluation
  */
 export type EvaluationStatus =
-  | 'optimal'              // Réponse parfaitement alignée
-  | 'acceptable'           // Petits ajustements possibles
-  | 'suboptimal'           // Ajustements recommandés
-  | 'problematic';         // Correction nécessaire
+  | 'optimal' // Réponse parfaitement alignée
+  | 'acceptable' // Petits ajustements possibles
+  | 'suboptimal' // Ajustements recommandés
+  | 'problematic'; // Correction nécessaire
 
 // ============================================================================
 // INTERFACES PRINCIPALES
@@ -263,8 +263,8 @@ export interface SelfReflectionProfile {
   // Tendances d'incohérence
   incoherenceTrends: {
     type: IncoherenceType;
-    frequency: number;         // Fréquence relative (0-1)
-    averageSeverity: number;   // Sévérité moyenne (0-1)
+    frequency: number; // Fréquence relative (0-1)
+    averageSeverity: number; // Sévérité moyenne (0-1)
   }[];
 
   // Ajustements fréquents
@@ -339,16 +339,16 @@ export interface SelfReflectionEngineConfig {
   // Seuils d'évaluation
   thresholds: {
     // Score minimum pour "optimal"
-    optimalThreshold: number;        // default: 0.85
+    optimalThreshold: number; // default: 0.85
 
     // Score minimum pour "acceptable"
-    acceptableThreshold: number;     // default: 0.7
+    acceptableThreshold: number; // default: 0.7
 
     // Score en dessous = "problematic"
-    problematicThreshold: number;    // default: 0.5
+    problematicThreshold: number; // default: 0.5
 
     // Risque de flow maximum acceptable
-    maxFlowImpactRisk: number;       // default: 0.3
+    maxFlowImpactRisk: number; // default: 0.3
   };
 
   // Sensibilité
@@ -546,11 +546,11 @@ export const SELF_REFLECTION_CONSTANTS = {
     coherence: 0.15,
     alignment: 0.15,
     clarity: 0.15,
-    density: 0.10,
-    presenceMatch: 0.10,
-    resonanceMatch: 0.10,
-    flowImpact: 0.10,
-    toneStability: 0.10,
+    density: 0.1,
+    presenceMatch: 0.1,
+    resonanceMatch: 0.1,
+    flowImpact: 0.1,
+    toneStability: 0.1,
     narrativeContinuity: 0.05,
   },
 

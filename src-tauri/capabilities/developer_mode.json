@@ -3,9 +3,7 @@
   "identifier": "developer-mode",
   "description": "Capability pour le Developer Mode TITANE∞ (Kevin only)",
   "windows": ["main"],
-  "permissions": [
-    "core:default"
-  ],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "engines_devmode_get_state",

@@ -21,7 +21,10 @@
  * 6. PERFORMANCE OPTIMIZATION — 60 FPS, GPU-friendly, low overhead
  */
 
-import { synestheticEmotionEngine, type EmotionalState } from '../emotion/synestheticEmotionEngine';
+import {
+  synestheticEmotionEngine,
+  type EmotionalState,
+} from '../emotion/synestheticEmotionEngine';
 import { embodiedPresenceEngine } from '../embodiment/embodiedPresenceEngine';
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
 import { multimodalPresenceEngine, type PresenceMode } from '../presence/_stubs';
@@ -52,14 +55,14 @@ export interface AffectiveVisualProfile {
  * Animation pattern
  */
 export type AuraAnimationPattern =
-  | 'idle_breathe'        // Respiration lente au repos
-  | 'listening_pulse'     // Pulsation attentive
-  | 'thinking_shimmer'    // Scintillement réflexif
-  | 'speaking_flow'       // Flux vocal synchronisé
-  | 'insight_flash'       // Flash de clarté
-  | 'empathy_warm'        // Expansion chaleureuse
-  | 'focus_sharp'         // Contours nets, stable
-  | 'transform_morph';    // Morphing fractal
+  | 'idle_breathe' // Respiration lente au repos
+  | 'listening_pulse' // Pulsation attentive
+  | 'thinking_shimmer' // Scintillement réflexif
+  | 'speaking_flow' // Flux vocal synchronisé
+  | 'insight_flash' // Flash de clarté
+  | 'empathy_warm' // Expansion chaleureuse
+  | 'focus_sharp' // Contours nets, stable
+  | 'transform_morph'; // Morphing fractal
 
 /**
  * Couches visuelles (3 couches)
@@ -389,7 +392,11 @@ class AuraEngine {
       lerpSpeed
     );
 
-    this.state.affective.intensity = lerp(this.state.affective.intensity, intensity, lerpSpeed);
+    this.state.affective.intensity = lerp(
+      this.state.affective.intensity,
+      intensity,
+      lerpSpeed
+    );
     this.state.affective.valence = lerp(
       this.state.affective.valence,
       visualProfile.valence ?? 0,
@@ -451,7 +458,8 @@ class AuraEngine {
     this.state.layers.core.color = this.state.affective.color;
 
     // Halo : respiration + pulsation
-    const breathAmplitude = breathPhase === 'inhale' ? 1.1 : breathPhase === 'exhale' ? 0.9 : 1.0;
+    const breathAmplitude =
+      breathPhase === 'inhale' ? 1.1 : breathPhase === 'exhale' ? 0.9 : 1.0;
     this.state.layers.halo.radius = this.config.baseSize * 0.7 * breathAmplitude;
     this.state.layers.halo.pulsation = 0.5 + 0.3 * Math.sin(time * Math.PI);
     this.state.layers.halo.color = {
@@ -472,7 +480,12 @@ class AuraEngine {
    */
   private updateParticles(_delta: number): void {
     // Nombre de particules basé sur énergie
-    const energyParticleCount = this.state.affective.energy === 'high' ? 20 : this.state.affective.energy === 'medium' ? 10 : 5;
+    const energyParticleCount =
+      this.state.affective.energy === 'high'
+        ? 20
+        : this.state.affective.energy === 'medium'
+          ? 10
+          : 5;
     this.state.particles.count = energyParticleCount;
 
     // Vitesse basée sur turbulence
@@ -539,7 +552,7 @@ class AuraEngine {
    * Notifier les callbacks
    */
   private notifyCallbacks(): void {
-    this.callbacks.forEach((callback) => callback(this.state));
+    this.callbacks.forEach(callback => callback(this.state));
   }
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -576,7 +589,12 @@ class AuraEngine {
   /**
    * Définir les dynamiques de l'aura (appelé par Expression Engine)
    */
-  setDynamics(dynamics: { intensity: number; pulsation: number; flowSpeed: number; reactivity: number }): void {
+  setDynamics(dynamics: {
+    intensity: number;
+    pulsation: number;
+    flowSpeed: number;
+    reactivity: number;
+  }): void {
     // Appliquer intensity
     this.state.affective.intensity = dynamics.intensity;
 

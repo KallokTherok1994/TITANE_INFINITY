@@ -9,10 +9,10 @@ use serde::{Deserialize, Serialize};
 /// Résultat d'évaluation d'une réponse IA
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EvaluationResult {
-    pub score: f32,                    // 0.0-1.0
-    pub hallucination_risk: f32,       // 0.0-1.0
-    pub coherence: f32,                // 0.0-1.0
-    pub relevance: f32,                // 0.0-1.0
+    pub score: f32,              // 0.0-1.0
+    pub hallucination_risk: f32, // 0.0-1.0
+    pub coherence: f32,          // 0.0-1.0
+    pub relevance: f32,          // 0.0-1.0
     pub warnings: Vec<String>,
     pub recommendations: Vec<String>,
 }
@@ -44,20 +44,14 @@ impl Evaluator {
         // 2. Évaluation cohérence
         let coherence = self.evaluate_coherence(&res.output);
         if coherence < 0.6 {
-            warnings.push(format!(
-                "Cohérence faible: {:.0}%",
-                coherence * 100.0
-            ));
+            warnings.push(format!("Cohérence faible: {:.0}%", coherence * 100.0));
             recommendations.push("Considérer une régénération avec un autre provider".to_string());
         }
 
         // 3. Évaluation pertinence
         let relevance = self.evaluate_relevance(&req.prompt, &res.output);
         if relevance < 0.5 {
-            warnings.push(format!(
-                "Pertinence faible: {:.0}%",
-                relevance * 100.0
-            ));
+            warnings.push(format!("Pertinence faible: {:.0}%", relevance * 100.0));
             recommendations.push("La réponse ne répond pas directement à la question".to_string());
         }
 
@@ -68,7 +62,8 @@ impl Evaluator {
         let score = self.calculate_global_score(hallucination_risk, coherence, relevance);
 
         if score < 0.5 && self.strict_mode {
-            recommendations.push("Mode strict: considérer fallback vers un autre provider".to_string());
+            recommendations
+                .push("Mode strict: considérer fallback vers un autre provider".to_string());
         }
 
         EvaluationResult {
@@ -225,10 +220,7 @@ impl Evaluator {
             }
             "local" => {
                 if res.latency_ms > 10_000 {
-                    warnings.push(format!(
-                        "Latence locale élevée: {}ms",
-                        res.latency_ms
-                    ));
+                    warnings.push(format!("Latence locale élevée: {}ms", res.latency_ms));
                 }
             }
             _ => {}
@@ -250,7 +242,8 @@ impl Evaluator {
         coherence: f32,
         relevance: f32,
     ) -> f32 {
-        let quality_score = (coherence * 0.4) + (relevance * 0.4) + ((1.0 - hallucination_risk) * 0.2);
+        let quality_score =
+            (coherence * 0.4) + (relevance * 0.4) + ((1.0 - hallucination_risk) * 0.2);
         quality_score.max(0.0).min(1.0)
     }
 
@@ -259,11 +252,13 @@ impl Evaluator {
         let mut suggestions = Vec::new();
 
         if result.hallucination_risk > 0.5 {
-            suggestions.push("Utiliser un provider avec meilleure vérification factuelle".to_string());
+            suggestions
+                .push("Utiliser un provider avec meilleure vérification factuelle".to_string());
         }
 
         if result.coherence < 0.6 {
-            suggestions.push("Ajuster température ou max_tokens pour plus de cohérence".to_string());
+            suggestions
+                .push("Ajuster température ou max_tokens pour plus de cohérence".to_string());
         }
 
         if result.relevance < 0.5 {
@@ -287,7 +282,7 @@ impl Default for Evaluator {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ai::{AiMode, AiMetadata};
+    use crate::ai::{AiMetadata, AiMode};
 
     fn create_test_request() -> AiRequest {
         AiRequest {
@@ -331,7 +326,7 @@ mod tests {
     #[test]
     fn test_detect_hallucination() {
         let evaluator = Evaluator::default();
-        
+
         let safe_output = "Rust est un langage de programmation.";
         let risky_output = "Je ne sais pas. Erreur. Contradiction dans les données.";
 
@@ -344,7 +339,7 @@ mod tests {
     #[test]
     fn test_evaluate_coherence() {
         let evaluator = Evaluator::default();
-        
+
         let coherent = "Ceci est un texte cohérent. Il contient des phrases bien formées.";
         let incoherent = "texte texte texte texte";
 
@@ -357,7 +352,7 @@ mod tests {
     #[test]
     fn test_evaluate_relevance() {
         let evaluator = Evaluator::default();
-        
+
         let prompt = "Expliquer Rust async programming";
         let relevant = "Rust async programming utilise futures et async/await.";
         let irrelevant = "Python is a great language for web development.";

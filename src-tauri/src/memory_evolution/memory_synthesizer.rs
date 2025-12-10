@@ -86,7 +86,10 @@ impl MemorySynthesizer {
     }
 
     /// Génère des résumés hiérarchiques
-    pub fn synthesize(&self, items: &[MemoryItem]) -> Result<SynthesisResult, MemoryEvolutionError> {
+    pub fn synthesize(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<SynthesisResult, MemoryEvolutionError> {
         info!("[MemorySynthesizer] Synthesizing {} items...", items.len());
 
         let mut result = SynthesisResult {
@@ -117,7 +120,8 @@ impl MemorySynthesizer {
         result.promoted_items = self.identify_promotable_items(items)?;
 
         // Distiller l'essence si assez de LT items
-        let lt_items: Vec<_> = items.iter()
+        let lt_items: Vec<_> = items
+            .iter()
             .filter(|i| i.level == MemoryLevel::LT || i.level == MemoryLevel::ELT)
             .cloned()
             .collect();
@@ -131,7 +135,11 @@ impl MemorySynthesizer {
         result.synthesis_stats.items_promoted = result.promoted_items.len();
 
         let original_size = items.iter().map(|i| i.content.len()).sum::<usize>();
-        let summary_size = result.summaries.iter().map(|s| s.summary.len()).sum::<usize>();
+        let summary_size = result
+            .summaries
+            .iter()
+            .map(|s| s.summary.len())
+            .sum::<usize>();
         result.synthesis_stats.compression_ratio = if original_size > 0 {
             summary_size as f32 / original_size as f32
         } else {
@@ -153,7 +161,10 @@ impl MemorySynthesizer {
         let mut groups: HashMap<String, Vec<MemoryItem>> = HashMap::new();
 
         for item in items {
-            let topic = item.topic.clone().unwrap_or_else(|| "uncategorized".to_string());
+            let topic = item
+                .topic
+                .clone()
+                .unwrap_or_else(|| "uncategorized".to_string());
             groups.entry(topic).or_default().push(item.clone());
         }
 
@@ -161,7 +172,11 @@ impl MemorySynthesizer {
     }
 
     /// Crée un résumé pour un groupe d'items
-    fn create_summary(&self, topic: &str, items: &[MemoryItem]) -> Result<Option<MemorySummary>, MemoryEvolutionError> {
+    fn create_summary(
+        &self,
+        topic: &str,
+        items: &[MemoryItem],
+    ) -> Result<Option<MemorySummary>, MemoryEvolutionError> {
         if items.is_empty() {
             return Ok(None);
         }
@@ -207,7 +222,8 @@ impl MemorySynthesizer {
             *counts.entry(item.level).or_insert(0) += 1;
         }
 
-        counts.into_iter()
+        counts
+            .into_iter()
             .max_by_key(|(_, count)| *count)
             .map(|(level, _)| level)
             .unwrap_or(MemoryLevel::CT)
@@ -220,7 +236,8 @@ impl MemorySynthesizer {
         for item in items {
             // Extraire les mots significatifs (simplifié)
             for word in item.content.split_whitespace() {
-                let word_clean = word.to_lowercase()
+                let word_clean = word
+                    .to_lowercase()
                     .trim_matches(|c: char| !c.is_alphanumeric())
                     .to_string();
 
@@ -234,14 +251,16 @@ impl MemorySynthesizer {
         let mut sorted: Vec<_> = concepts.into_iter().collect();
         sorted.sort_by(|a, b| b.1.cmp(&a.1));
 
-        sorted.into_iter()
-            .take(5)
-            .map(|(word, _)| word)
-            .collect()
+        sorted.into_iter().take(5).map(|(word, _)| word).collect()
     }
 
     /// Génère le texte du résumé
-    fn generate_summary_text(&self, topic: &str, items: &[MemoryItem], concepts: &[String]) -> String {
+    fn generate_summary_text(
+        &self,
+        topic: &str,
+        items: &[MemoryItem],
+        concepts: &[String],
+    ) -> String {
         // En production, cela appellerait Ollama pour un vrai résumé
         // Ici, on génère un résumé structuré simple
 
@@ -258,7 +277,10 @@ impl MemorySynthesizer {
     }
 
     /// Identifie les items qui peuvent être promus au niveau supérieur
-    fn identify_promotable_items(&self, items: &[MemoryItem]) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
+    fn identify_promotable_items(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
         let mut promoted = Vec::new();
 
         for item in items {
@@ -283,32 +305,48 @@ impl MemorySynthesizer {
     }
 
     /// Distille l'essence des mémoires long-terme
-    fn distill_essence(&self, lt_items: &[MemoryItem]) -> Result<MemoryEssence, MemoryEvolutionError> {
-        info!("[MemorySynthesizer] Distilling essence from {} LT items", lt_items.len());
+    fn distill_essence(
+        &self,
+        lt_items: &[MemoryItem],
+    ) -> Result<MemoryEssence, MemoryEvolutionError> {
+        info!(
+            "[MemorySynthesizer] Distilling essence from {} LT items",
+            lt_items.len()
+        );
 
         // Extraire les insights principaux
-        let core_insights: Vec<String> = lt_items.iter()
+        let core_insights: Vec<String> = lt_items
+            .iter()
             .filter(|i| i.confidence > 0.8)
             .filter_map(|i| i.summary.clone())
             .take(5)
             .collect();
 
         // Extraire les patterns appris
-        let learned_patterns: Vec<String> = lt_items.iter()
+        let learned_patterns: Vec<String> = lt_items
+            .iter()
             .filter(|i| i.memory_type == MemoryType::Pattern)
             .map(|i| i.content.clone())
             .take(5)
             .collect();
 
         // Extraire les connaissances clés
-        let key_knowledge: Vec<String> = lt_items.iter()
-            .filter(|i| i.memory_type == MemoryType::Factual || i.memory_type == MemoryType::Semantic)
+        let key_knowledge: Vec<String> = lt_items
+            .iter()
+            .filter(|i| {
+                i.memory_type == MemoryType::Factual || i.memory_type == MemoryType::Semantic
+            })
             .filter(|i| i.importance > 0.7)
-            .filter_map(|i| i.summary.clone().or_else(|| Some(i.content.chars().take(100).collect())))
+            .filter_map(|i| {
+                i.summary
+                    .clone()
+                    .or_else(|| Some(i.content.chars().take(100).collect()))
+            })
             .take(10)
             .collect();
 
-        let avg_confidence = lt_items.iter().map(|i| i.confidence).sum::<f32>() / lt_items.len() as f32;
+        let avg_confidence =
+            lt_items.iter().map(|i| i.confidence).sum::<f32>() / lt_items.len() as f32;
 
         Ok(MemoryEssence {
             id: uuid::Uuid::new_v4().to_string(),
@@ -322,8 +360,14 @@ impl MemorySynthesizer {
     }
 
     /// Synthèse CT → MT
-    pub fn synthesize_ct_to_mt(&self, ct_items: &[MemoryItem]) -> Result<Vec<MemorySummary>, MemoryEvolutionError> {
-        info!("[MemorySynthesizer] CT → MT synthesis for {} items", ct_items.len());
+    pub fn synthesize_ct_to_mt(
+        &self,
+        ct_items: &[MemoryItem],
+    ) -> Result<Vec<MemorySummary>, MemoryEvolutionError> {
+        info!(
+            "[MemorySynthesizer] CT → MT synthesis for {} items",
+            ct_items.len()
+        );
 
         let by_topic = self.group_by_topic(ct_items);
         let mut summaries = Vec::new();
@@ -342,8 +386,14 @@ impl MemorySynthesizer {
     }
 
     /// Synthèse MT → LT
-    pub fn synthesize_mt_to_lt(&self, mt_items: &[MemoryItem]) -> Result<Vec<MemorySummary>, MemoryEvolutionError> {
-        info!("[MemorySynthesizer] MT → LT synthesis for {} items", mt_items.len());
+    pub fn synthesize_mt_to_lt(
+        &self,
+        mt_items: &[MemoryItem],
+    ) -> Result<Vec<MemorySummary>, MemoryEvolutionError> {
+        info!(
+            "[MemorySynthesizer] MT → LT synthesis for {} items",
+            mt_items.len()
+        );
 
         let by_topic = self.group_by_topic(mt_items);
         let mut summaries = Vec::new();

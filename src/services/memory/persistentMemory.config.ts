@@ -32,17 +32,17 @@ export type MemoryLevel = 'session' | 'intermediate' | 'long_term';
 
 /** Types de contenu mémoire */
 export type MemoryContentType =
-  | 'message'           // Message utilisateur/IA
-  | 'summary'           // Résumé généré
-  | 'knowledge'         // Connaissance extraite
-  | 'preference'        // Préférence utilisateur
-  | 'project_context'   // Contexte de projet
-  | 'code_snippet'      // Extrait de code
-  | 'decision'          // Décision importante
-  | 'reference'         // Document de référence
-  | 'identity'          // Identité/profil stable
+  | 'message' // Message utilisateur/IA
+  | 'summary' // Résumé généré
+  | 'knowledge' // Connaissance extraite
+  | 'preference' // Préférence utilisateur
+  | 'project_context' // Contexte de projet
+  | 'code_snippet' // Extrait de code
+  | 'decision' // Décision importante
+  | 'reference' // Document de référence
+  | 'identity' // Identité/profil stable
   | 'automation_result' // Résultat d'automation
-  | 'milestone';        // Milestone atteint
+  | 'milestone'; // Milestone atteint
 
 /** Catégories de sujets mémoire */
 export type MemoryTopic =
@@ -218,7 +218,10 @@ export interface LongTermMemoryEntry {
 }
 
 /** Union des types d'entrées mémoire */
-export type MemoryEntry = SessionMemoryEntry | IntermediateMemoryEntry | LongTermMemoryEntry;
+export type MemoryEntry =
+  | SessionMemoryEntry
+  | IntermediateMemoryEntry
+  | LongTermMemoryEntry;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // INTERFACES: RÉSUMÉS ET BUNDLES
@@ -454,7 +457,10 @@ export const MIN_RELEVANCE_FOR_INJECTION = 0.5;
 export const MEMORY_SCHEMA_VERSION = '1.0.0';
 
 /** Labels des niveaux de mémoire */
-export const MEMORY_LEVEL_LABELS: Record<MemoryLevel, { label: string; icon: string; color: string }> = {
+export const MEMORY_LEVEL_LABELS: Record<
+  MemoryLevel,
+  { label: string; icon: string; color: string }
+> = {
   session: { label: 'Session', icon: '⏱️', color: '#93c5fd' },
   intermediate: { label: 'Intermédiaire', icon: '📝', color: '#a78bfa' },
   long_term: { label: 'Long Terme', icon: '🗄️', color: '#fbbf24' },
@@ -476,7 +482,10 @@ export const MEMORY_TOPIC_LABELS: Record<MemoryTopic, { label: string; icon: str
 };
 
 /** Labels des types de contenu */
-export const MEMORY_CONTENT_TYPE_LABELS: Record<MemoryContentType, { label: string; icon: string }> = {
+export const MEMORY_CONTENT_TYPE_LABELS: Record<
+  MemoryContentType,
+  { label: string; icon: string }
+> = {
   message: { label: 'Message', icon: '💬' },
   summary: { label: 'Résumé', icon: '📋' },
   knowledge: { label: 'Connaissance', icon: '💡' },
@@ -526,68 +535,91 @@ export interface ModeMemoryPermissions {
 }
 
 /** Permissions mémoire par mode IA */
-export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermissions>> = {
-  default: {
-    canReadSession: true,
-    canReadIntermediate: true,
-    canReadLongTerm: false,
-    canWrite: true,
-    allowedTopics: ['general', 'personal', 'creative'],
-    allowedContentTypes: ['message', 'summary', 'preference'],
-    maxImportance: 3,
-    contextInjectionLimit: 500,
-  },
-  dev: {
-    canReadSession: true,
-    canReadIntermediate: true,
-    canReadLongTerm: true,
-    canWrite: true,
-    allowedTopics: ['general', 'coding', 'project', 'technical', 'decisions'],
-    allowedContentTypes: ['message', 'summary', 'knowledge', 'project_context', 'code_snippet', 'decision'],
-    maxImportance: 5,
-    contextInjectionLimit: 2000,
-  },
-  debug_cognitive: {
-    canReadSession: true,
-    canReadIntermediate: true,
-    canReadLongTerm: true,
-    canWrite: true,
-    allowedTopics: ['general', 'coding', 'project', 'technical', 'decisions', 'automation'],
-    allowedContentTypes: ['message', 'summary', 'knowledge', 'project_context', 'code_snippet', 'decision', 'automation_result'],
-    maxImportance: 5,
-    contextInjectionLimit: 3000,
-  },
-  brainstorming: {
-    canReadSession: true,
-    canReadIntermediate: true,
-    canReadLongTerm: true,
-    canWrite: true,
-    allowedTopics: ['general', 'creative', 'personal', 'learning'],
-    allowedContentTypes: ['message', 'summary', 'knowledge', 'reference'],
-    maxImportance: 4,
-    contextInjectionLimit: 1500,
-  },
-  audit: {
-    canReadSession: true,
-    canReadIntermediate: true,
-    canReadLongTerm: true,
-    canWrite: true,
-    allowedTopics: ['general', 'technical', 'project', 'decisions', 'system'],
-    allowedContentTypes: ['message', 'summary', 'knowledge', 'decision', 'reference'],
-    maxImportance: 5,
-    contextInjectionLimit: 2500,
-  },
-  admin: {
-    canReadSession: true,
-    canReadIntermediate: true,
-    canReadLongTerm: true,
-    canWrite: true,
-    allowedTopics: Object.keys(MEMORY_TOPIC_LABELS) as MemoryTopic[],
-    allowedContentTypes: Object.keys(MEMORY_CONTENT_TYPE_LABELS) as MemoryContentType[],
-    maxImportance: 5,
-    contextInjectionLimit: 4000,
-  },
-};
+export const MODE_MEMORY_PERMISSIONS: Partial<Record<ChatModeId, ModeMemoryPermissions>> =
+  {
+    default: {
+      canReadSession: true,
+      canReadIntermediate: true,
+      canReadLongTerm: false,
+      canWrite: true,
+      allowedTopics: ['general', 'personal', 'creative'],
+      allowedContentTypes: ['message', 'summary', 'preference'],
+      maxImportance: 3,
+      contextInjectionLimit: 500,
+    },
+    dev: {
+      canReadSession: true,
+      canReadIntermediate: true,
+      canReadLongTerm: true,
+      canWrite: true,
+      allowedTopics: ['general', 'coding', 'project', 'technical', 'decisions'],
+      allowedContentTypes: [
+        'message',
+        'summary',
+        'knowledge',
+        'project_context',
+        'code_snippet',
+        'decision',
+      ],
+      maxImportance: 5,
+      contextInjectionLimit: 2000,
+    },
+    debug_cognitive: {
+      canReadSession: true,
+      canReadIntermediate: true,
+      canReadLongTerm: true,
+      canWrite: true,
+      allowedTopics: [
+        'general',
+        'coding',
+        'project',
+        'technical',
+        'decisions',
+        'automation',
+      ],
+      allowedContentTypes: [
+        'message',
+        'summary',
+        'knowledge',
+        'project_context',
+        'code_snippet',
+        'decision',
+        'automation_result',
+      ],
+      maxImportance: 5,
+      contextInjectionLimit: 3000,
+    },
+    brainstorming: {
+      canReadSession: true,
+      canReadIntermediate: true,
+      canReadLongTerm: true,
+      canWrite: true,
+      allowedTopics: ['general', 'creative', 'personal', 'learning'],
+      allowedContentTypes: ['message', 'summary', 'knowledge', 'reference'],
+      maxImportance: 4,
+      contextInjectionLimit: 1500,
+    },
+    audit: {
+      canReadSession: true,
+      canReadIntermediate: true,
+      canReadLongTerm: true,
+      canWrite: true,
+      allowedTopics: ['general', 'technical', 'project', 'decisions', 'system'],
+      allowedContentTypes: ['message', 'summary', 'knowledge', 'decision', 'reference'],
+      maxImportance: 5,
+      contextInjectionLimit: 2500,
+    },
+    admin: {
+      canReadSession: true,
+      canReadIntermediate: true,
+      canReadLongTerm: true,
+      canWrite: true,
+      allowedTopics: Object.keys(MEMORY_TOPIC_LABELS) as MemoryTopic[],
+      allowedContentTypes: Object.keys(MEMORY_CONTENT_TYPE_LABELS) as MemoryContentType[],
+      maxImportance: 5,
+      contextInjectionLimit: 4000,
+    },
+  };
 
 /** Permissions par défaut */
 export const DEFAULT_MEMORY_PERMISSIONS: ModeMemoryPermissions = {
@@ -637,7 +669,13 @@ export interface AutoSaveRule {
  * Déclencheur d'auto-sauvegarde
  */
 export interface AutoSaveTrigger {
-  type: 'message_count' | 'time_interval' | 'keyword' | 'importance' | 'end_session' | 'manual';
+  type:
+    | 'message_count'
+    | 'time_interval'
+    | 'keyword'
+    | 'importance'
+    | 'end_session'
+    | 'manual';
   /** Nombre de messages (pour message_count) */
   messageCount?: number;
   /** Intervalle en ms (pour time_interval) */
@@ -694,7 +732,10 @@ export const DEFAULT_AUTO_SAVE_RULES: AutoSaveRule[] = [
     name: 'Décisions importantes',
     description: 'Sauvegarde les décisions mentionnées',
     enabled: true,
-    trigger: { type: 'keyword', keywords: ['décidé', 'choix final', 'conclusion', 'solution retenue'] },
+    trigger: {
+      type: 'keyword',
+      keywords: ['décidé', 'choix final', 'conclusion', 'solution retenue'],
+    },
     targetLevel: 'long_term',
     defaultTopic: 'decisions',
     contentType: 'decision',
@@ -732,6 +773,5 @@ export const EXCLUDED_MESSAGE_PATTERNS: RegExp[] = [
 // EXPORTS POUR UTILITAIRES
 // ─────────────────────────────────────────────────────────────────────────────
 
-export {
-  // Types déjà exportés inline
-};
+export // Types déjà exportés inline
+ {};

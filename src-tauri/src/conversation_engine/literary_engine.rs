@@ -8,42 +8,42 @@ use std::collections::HashMap;
 /// Niveau d'intensité littéraire souhaité
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 pub enum LiteraryIntensity {
-    Sober,       // sobre, épuré
-    Balanced,    // équilibré
-    Poetic,      // plus poétique, lyrique
+    Sober,    // sobre, épuré
+    Balanced, // équilibré
+    Poetic,   // plus poétique, lyrique
 }
 
 /// Type de texte à produire
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TextType {
-    Post,           // post court (LinkedIn, etc.)
-    BookParagraph,  // paragraphe de livre
-    Poetry,         // poésie
-    Intro,          // introduction
-    Chapter,        // chapitre
-    Manifesto,      // manifeste
-    WebPage,        // page web
-    Other(String),  // autre type
+    Post,          // post court (LinkedIn, etc.)
+    BookParagraph, // paragraphe de livre
+    Poetry,        // poésie
+    Intro,         // introduction
+    Chapter,       // chapitre
+    Manifesto,     // manifeste
+    WebPage,       // page web
+    Other(String), // autre type
 }
 
 /// Mode d'écriture du moteur
 #[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum WritingMode {
-    LiterarySmoothing,    // lissage littéraire
-    LiteraryEnhanced,     // version littéraire +
-    PoeticVersion,        // version poétique
-    DoubleVersion,        // deux versions (claire + littéraire)
-    AdaptToMedium,        // adaptation au support
+    LiterarySmoothing, // lissage littéraire
+    LiteraryEnhanced,  // version littéraire +
+    PoeticVersion,     // version poétique
+    DoubleVersion,     // deux versions (claire + littéraire)
+    AdaptToMedium,     // adaptation au support
 }
 
 /// Axes d'optimisation littéraire
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct LiteraryOptimizationScores {
-    pub narrative_structure: f32,   // 0-1: structure et respiration
-    pub vocabulary_richness: f32,   // 0-1: richesse lexicale
-    pub imagery_quality: f32,       // 0-1: qualité des images/métaphores
-    pub rhythm_musicality: f32,     // 0-1: rythme et sonorité
-    pub message_alignment: f32,     // 0-1: alignement avec le message
+    pub narrative_structure: f32, // 0-1: structure et respiration
+    pub vocabulary_richness: f32, // 0-1: richesse lexicale
+    pub imagery_quality: f32,     // 0-1: qualité des images/métaphores
+    pub rhythm_musicality: f32,   // 0-1: rythme et sonorité
+    pub message_alignment: f32,   // 0-1: alignement avec le message
 }
 
 /// Profil de style Kevin Thibault (évolutif)
@@ -250,7 +250,11 @@ impl LiteraryEngine {
     /// Améliorer la structure narrative
     fn improve_narrative_structure(&self, text: &str) -> String {
         // Split en phrases
-        let sentences: Vec<&str> = text.split('.').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
+        let sentences: Vec<&str> = text
+            .split('.')
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+            .collect();
 
         // Alterner phrases courtes et développées
         let mut result = Vec::new();
@@ -311,17 +315,11 @@ impl LiteraryEngine {
         // (ici version simplifiée, en production utiliser embeddings + recherche)
 
         if text.contains("système") {
-            with_imagery = with_imagery.replace(
-                "système",
-                "architecture vivante"
-            );
+            with_imagery = with_imagery.replace("système", "architecture vivante");
         }
 
         if text.contains("organiser") {
-            with_imagery = with_imagery.replace(
-                "organiser",
-                "donner un rythme à"
-            );
+            with_imagery = with_imagery.replace("organiser", "donner un rythme à");
         }
 
         with_imagery
@@ -336,7 +334,9 @@ impl LiteraryEngine {
         if !deep.contains("\n\n") {
             let sentences: Vec<&str> = deep.split('.').collect();
             if sentences.len() > 3 {
-                deep = sentences[..sentences.len()/2].join(". ") + ".\n\n" + &sentences[sentences.len()/2..].join(". ");
+                deep = sentences[..sentences.len() / 2].join(". ")
+                    + ".\n\n"
+                    + &sentences[sentences.len() / 2..].join(". ");
             }
         }
 
@@ -345,7 +345,11 @@ impl LiteraryEngine {
 
     /// Transformer en poésie
     fn transform_to_poetry(&self, text: &str, profile: &KevinStyleProfile) -> String {
-        let sentences: Vec<&str> = text.split('.').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
+        let sentences: Vec<&str> = text
+            .split('.')
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+            .collect();
 
         let mut poetry = Vec::new();
 
@@ -377,7 +381,11 @@ impl LiteraryEngine {
     /// Adapter pour post court
     fn adapt_for_post(&self, text: &str) -> String {
         // Structure en 3 paragraphes max, phrases courtes
-        let sentences: Vec<&str> = text.split('.').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
+        let sentences: Vec<&str> = text
+            .split('.')
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+            .collect();
 
         let chunk_size = (sentences.len() + 2) / 3; // diviser en 3
         let mut chunks = Vec::new();
@@ -403,7 +411,11 @@ impl LiteraryEngine {
     /// Adapter pour web
     fn adapt_for_web(&self, text: &str) -> String {
         // Paragraphes courts, scannable
-        let sentences: Vec<&str> = text.split('.').map(|s| s.trim()).filter(|s| !s.is_empty()).collect();
+        let sentences: Vec<&str> = text
+            .split('.')
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+            .collect();
 
         let mut web_text = Vec::new();
         for (i, sentence) in sentences.iter().enumerate() {
@@ -434,7 +446,9 @@ impl LiteraryEngine {
 
     fn score_narrative_structure(&self, text: &str, sentence_count: usize) -> f32 {
         // Score basé sur variété de longueurs de phrases
-        if sentence_count < 2 { return 0.5; }
+        if sentence_count < 2 {
+            return 0.5;
+        }
 
         let has_paragraphs = text.contains("\n\n");
         let base_score = if has_paragraphs { 0.7 } else { 0.5 };
@@ -452,8 +466,19 @@ impl LiteraryEngine {
 
     fn score_imagery_quality(&self, text: &str) -> f32 {
         // Détecter présence d'images/métaphores (heuristique simple)
-        let imagery_keywords = ["comme", "tel", "semblable", "image", "respire", "rythme", "espace"];
-        let count = imagery_keywords.iter().filter(|k| text.contains(*k)).count();
+        let imagery_keywords = [
+            "comme",
+            "tel",
+            "semblable",
+            "image",
+            "respire",
+            "rythme",
+            "espace",
+        ];
+        let count = imagery_keywords
+            .iter()
+            .filter(|k| text.contains(*k))
+            .count();
 
         (count as f32 / imagery_keywords.len() as f32).min(1.0)
     }
@@ -510,9 +535,11 @@ impl LiteraryEngine {
     fn analyze_and_integrate_style(&mut self, text: &str) {
         // Analyser longueur moyenne de phrases
         let sentences: Vec<&str> = text.split('.').filter(|s| !s.trim().is_empty()).collect();
-        let avg_length: usize = sentences.iter()
+        let avg_length: usize = sentences
+            .iter()
             .map(|s| s.split_whitespace().count())
-            .sum::<usize>() / sentences.len().max(1);
+            .sum::<usize>()
+            / sentences.len().max(1);
 
         // Ajuster profil (moyenne pondérée)
         let (current_min, current_max) = self.style_profile.preferred_sentence_length;
@@ -527,8 +554,12 @@ impl LiteraryEngine {
         let mut word_freq: HashMap<String, usize> = HashMap::new();
 
         for word in words {
-            let clean = word.to_lowercase().trim_matches(|c: char| !c.is_alphabetic()).to_string();
-            if clean.len() > 4 { // mots significatifs
+            let clean = word
+                .to_lowercase()
+                .trim_matches(|c: char| !c.is_alphabetic())
+                .to_string();
+            if clean.len() > 4 {
+                // mots significatifs
                 *word_freq.entry(clean).or_insert(0) += 1;
             }
         }
@@ -620,7 +651,8 @@ mod tests {
                 intensity: LiteraryIntensity::Poetic,
                 target_length: None,
             },
-            draft: "Le système fonctionne en trois couches. Perception, traitement, action.".to_string(),
+            draft: "Le système fonctionne en trois couches. Perception, traitement, action."
+                .to_string(),
             reference_style: None,
             mode: WritingMode::PoeticVersion,
         };

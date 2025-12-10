@@ -173,7 +173,11 @@ impl BackupEngine {
     }
 
     /// Exporter les données vers une archive
-    pub async fn export(&mut self, output_path: &Path, description: Option<String>) -> Result<ExportReport, BackupError> {
+    pub async fn export(
+        &mut self,
+        output_path: &Path,
+        description: Option<String>,
+    ) -> Result<ExportReport, BackupError> {
         let start = std::time::Instant::now();
         let now = chrono::Utc::now().timestamp_millis() as u64;
 
@@ -223,7 +227,8 @@ impl BackupEngine {
         for (file_path, file_type) in &files_to_export {
             match tokio::fs::read(file_path).await {
                 Ok(content) => {
-                    let file_name = file_path.file_name()
+                    let file_name = file_path
+                        .file_name()
                         .map(|n| n.to_string_lossy().to_string())
                         .unwrap_or_else(|| "unknown".to_string());
 
@@ -247,7 +252,9 @@ impl BackupEngine {
                     report.total_size_bytes += size;
                 }
                 Err(e) => {
-                    report.errors.push(format!("Lecture {:?}: {}", file_path, e));
+                    report
+                        .errors
+                        .push(format!("Lecture {:?}: {}", file_path, e));
                 }
             }
         }
@@ -299,14 +306,18 @@ impl BackupEngine {
             report.files_exported,
             report.total_size_bytes,
             report.compressed_size_bytes,
-            (1.0 - report.compressed_size_bytes as f64 / report.total_size_bytes.max(1) as f64) * 100.0
+            (1.0 - report.compressed_size_bytes as f64 / report.total_size_bytes.max(1) as f64)
+                * 100.0
         );
 
         Ok(report)
     }
 
     /// Valider une archive avant import
-    pub async fn validate_archive(&self, archive_path: &Path) -> Result<ArchiveValidation, BackupError> {
+    pub async fn validate_archive(
+        &self,
+        archive_path: &Path,
+    ) -> Result<ArchiveValidation, BackupError> {
         let mut validation = ArchiveValidation {
             is_valid: false,
             metadata: None,
@@ -324,7 +335,9 @@ impl BackupEngine {
 
         // Vérifier le header
         if !archive_data.starts_with(b"TITANE_ARCHIVE\x00") {
-            validation.errors.push("Header invalide: pas une archive TITANE".to_string());
+            validation
+                .errors
+                .push("Header invalide: pas une archive TITANE".to_string());
             return Ok(validation);
         }
 
@@ -335,9 +348,15 @@ impl BackupEngine {
             return Ok(validation);
         }
 
-        let metadata_len = u32::from_le_bytes(
-            archive_data[header_len..header_len + 4].try_into().unwrap()
-        ) as usize;
+        let metadata_len = match archive_data[header_len..header_len + 4].try_into() {
+            Ok(bytes) => u32::from_le_bytes(bytes) as usize,
+            Err(_) => {
+                validation
+                    .errors
+                    .push("Impossible de lire la longueur des métadonnées".to_string());
+                return Ok(validation);
+            }
+        };
 
         if archive_data.len() < header_len + 4 + metadata_len {
             validation.errors.push("Métadonnées tronquées".to_string());
@@ -380,7 +399,9 @@ impl BackupEngine {
                     }
                 }
                 Err(e) => {
-                    validation.errors.push(format!("Décompression échouée: {}", e));
+                    validation
+                        .errors
+                        .push(format!("Décompression échouée: {}", e));
                 }
             }
         }
@@ -415,7 +436,11 @@ impl BackupEngine {
             warnings: Vec::new(),
         };
 
-        log::info!("[BackupEngine] 📥 Import depuis {:?} (mode: {:?})", archive_path, mode);
+        log::info!(
+            "[BackupEngine] 📥 Import depuis {:?} (mode: {:?})",
+            archive_path,
+            mode
+        );
 
         // Valider d'abord
         let validation = self.validate_archive(archive_path).await?;
@@ -424,7 +449,15 @@ impl BackupEngine {
             return Ok(report);
         }
 
-        let metadata = validation.metadata.unwrap();
+        let metadata = match validation.metadata {
+            Some(m) => m,
+            None => {
+                report
+                    .errors
+                    .push("Métadonnées manquantes dans l'archive validée".to_string());
+                return Ok(report);
+            }
+        };
         report.schema_version = metadata.schema_version;
 
         // Lire et décompresser l'archive
@@ -433,9 +466,15 @@ impl BackupEngine {
             .map_err(|e| BackupError::IoError(e.to_string()))?;
 
         let header_len = 16;
-        let metadata_len = u32::from_le_bytes(
-            archive_data[header_len..header_len + 4].try_into().unwrap()
-        ) as usize;
+        let metadata_len = match archive_data[header_len..header_len + 4].try_into() {
+            Ok(bytes) => u32::from_le_bytes(bytes) as usize,
+            Err(_) => {
+                report
+                    .errors
+                    .push("Impossible de lire la longueur des métadonnées (restore)".to_string());
+                return Ok(report);
+            }
+        };
 
         let data_offset = header_len + 4 + metadata_len + 8;
         let compressed_data = &archive_data[data_offset..];
@@ -450,16 +489,24 @@ impl BackupEngine {
                 .position(|&b| b == 0)
                 .ok_or_else(|| BackupError::InvalidArchive("Format corrompu".to_string()))?;
 
-            let file_name = String::from_utf8_lossy(&decompressed[cursor..cursor + name_end]).to_string();
+            let file_name =
+                String::from_utf8_lossy(&decompressed[cursor..cursor + name_end]).to_string();
             cursor += name_end + 1;
 
             // Lire la taille
             if cursor + 8 > decompressed.len() {
                 break;
             }
-            let size = u64::from_le_bytes(
-                decompressed[cursor..cursor + 8].try_into().unwrap()
-            ) as usize;
+            let size = match decompressed[cursor..cursor + 8].try_into() {
+                Ok(bytes) => u64::from_le_bytes(bytes) as usize,
+                Err(_) => {
+                    report.errors.push(format!(
+                        "Impossible de lire la taille du fichier {}",
+                        file_name
+                    ));
+                    break;
+                }
+            };
             cursor += 8;
 
             // Lire le contenu
@@ -479,11 +526,17 @@ impl BackupEngine {
                     if target_path.exists() {
                         let backup_path = target_path.with_extension(format!(
                             "{}.backup.{}",
-                            target_path.extension().unwrap_or_default().to_str().unwrap_or(""),
+                            target_path
+                                .extension()
+                                .unwrap_or_default()
+                                .to_str()
+                                .unwrap_or(""),
                             now
                         ));
                         if let Err(e) = tokio::fs::copy(&target_path, &backup_path).await {
-                            report.warnings.push(format!("Backup {} échoué: {}", file_name, e));
+                            report
+                                .warnings
+                                .push(format!("Backup {} échoué: {}", file_name, e));
                         }
                     }
 
@@ -541,11 +594,10 @@ impl BackupEngine {
 
     /// Fusionner deux tableaux JSON
     fn merge_json_arrays(&self, existing: &[u8], new: &[u8]) -> Result<Vec<u8>, BackupError> {
-        let mut existing_array: Vec<serde_json::Value> = serde_json::from_slice(existing)
-            .unwrap_or_default();
+        let mut existing_array: Vec<serde_json::Value> =
+            serde_json::from_slice(existing).unwrap_or_default();
 
-        let new_array: Vec<serde_json::Value> = serde_json::from_slice(new)
-            .unwrap_or_default();
+        let new_array: Vec<serde_json::Value> = serde_json::from_slice(new).unwrap_or_default();
 
         // Dédoublonner par ID si présent
         let existing_ids: std::collections::HashSet<String> = existing_array
@@ -566,7 +618,7 @@ impl BackupEngine {
 
     /// Calculer le checksum SHA256 des données
     fn compute_checksum(data: &[u8]) -> String {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
         let mut hasher = Sha256::new();
         hasher.update(data);
         format!("{:x}", hasher.finalize())

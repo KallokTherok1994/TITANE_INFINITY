@@ -108,9 +108,7 @@ impl OpenAIClient {
         });
 
         let api_request = OpenAIAPIRequest {
-            model: request
-                .model
-                .unwrap_or_else(|| DEFAULT_MODEL.to_string()),
+            model: request.model.unwrap_or_else(|| DEFAULT_MODEL.to_string()),
             messages,
             temperature: request.temperature.clamp(0.0, 2.0),
             max_tokens: request.max_tokens.or(Some(MAX_TOKENS)),

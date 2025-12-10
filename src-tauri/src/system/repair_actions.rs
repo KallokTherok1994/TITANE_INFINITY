@@ -163,7 +163,9 @@ impl RepairAction {
             RepairAction::RestartOmega | RepairAction::RestartEngine(_) => "restart",
             RepairAction::IsolateEngine(_) | RepairAction::RestoreEngine(_) => "isolation",
             RepairAction::EnableCircuitBreaker | RepairAction::DisableCircuitBreaker => "circuit",
-            RepairAction::ClearMemoryCache | RepairAction::TrimMemory | RepairAction::ForceGC => "memory",
+            RepairAction::ClearMemoryCache | RepairAction::TrimMemory | RepairAction::ForceGC => {
+                "memory"
+            }
             RepairAction::RebalanceEngines | RepairAction::ReduceParallelism => "performance",
             RepairAction::ReduceTokenLimit(_) | RepairAction::RestoreTokenLimit => "limits",
             RepairAction::PurgeFailedProviders => "providers",
@@ -218,7 +220,9 @@ mod tests {
 
     #[test]
     fn test_priority_ordering() {
-        assert!(RepairAction::RestartOmega.priority() > RepairAction::EnableDetailedLogging.priority());
+        assert!(
+            RepairAction::RestartOmega.priority() > RepairAction::EnableDetailedLogging.priority()
+        );
     }
 
     #[test]

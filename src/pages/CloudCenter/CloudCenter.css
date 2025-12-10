@@ -76,12 +76,29 @@
   text-transform: uppercase;
 }
 
-.status-badge.status-idle { background: var(--cloud-border); }
-.status-badge.status-syncing { background: var(--cloud-accent); color: white; }
-.status-badge.status-success { background: var(--cloud-success); color: white; }
-.status-badge.status-error { background: var(--cloud-error); color: white; }
-.status-badge.status-conflict { background: var(--cloud-warning); color: black; }
-.status-badge.status-corrupted { background: var(--danger, #8f7a7a); color: white; }
+.status-badge.status-idle {
+  background: var(--cloud-border);
+}
+.status-badge.status-syncing {
+  background: var(--cloud-accent);
+  color: white;
+}
+.status-badge.status-success {
+  background: var(--cloud-success);
+  color: white;
+}
+.status-badge.status-error {
+  background: var(--cloud-error);
+  color: white;
+}
+.status-badge.status-conflict {
+  background: var(--cloud-warning);
+  color: black;
+}
+.status-badge.status-corrupted {
+  background: var(--danger, #8f7a7a);
+  color: white;
+}
 
 /* ═══════════════════════════════════════════════════════════════
    TABS
@@ -244,9 +261,9 @@
   color: var(--cloud-text);
 }
 
-.form-group input[type="text"],
-.form-group input[type="password"],
-.form-group input[type="number"] {
+.form-group input[type='text'],
+.form-group input[type='password'],
+.form-group input[type='number'] {
   width: 100%;
   padding: 0.75rem 1rem;
   background: var(--cloud-bg);
@@ -413,8 +430,12 @@
   font-size: 3rem;
 }
 
-.vault-icon.loaded { opacity: 1; }
-.vault-icon.empty { opacity: 0.5; }
+.vault-icon.loaded {
+  opacity: 1;
+}
+.vault-icon.empty {
+  opacity: 0.5;
+}
 
 .vault-info {
   display: flex;
@@ -668,7 +689,7 @@
   cursor: pointer;
 }
 
-.toggle-option input[type="checkbox"] {
+.toggle-option input[type='checkbox'] {
   margin-top: 0.25rem;
   width: 1.25rem;
   height: 1.25rem;

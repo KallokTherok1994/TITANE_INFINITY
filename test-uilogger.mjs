@@ -28,7 +28,7 @@ global.localStorage = {
   key(index) {
     const keys = Object.keys(this.data);
     return keys[index] || null;
-  }
+  },
 };
 
 // Mock import.meta.env
@@ -42,10 +42,12 @@ global.import = {
 };
 
 // Import and run tests
-import('../UILogger.integration.js').then((module) => {
-  const success = module.runUILoggerTests();
-  process.exit(success ? 0 : 1);
-}).catch((err) => {
-  console.error('❌ Failed to run tests:', err);
-  process.exit(1);
-});
+import('../UILogger.integration.js')
+  .then(module => {
+    const success = module.runUILoggerTests();
+    process.exit(success ? 0 : 1);
+  })
+  .catch(err => {
+    console.error('❌ Failed to run tests:', err);
+    process.exit(1);
+  });

@@ -29,7 +29,7 @@ import { StateManager } from './StateManager';
 import type { VisualState, StateVisualConfig } from '@/design-system/visual-states';
 import { effectsOrchestrator } from './EffectsOrchestrator';
 import { osIntegrationBridge } from './OSIntegrationBridge';
-import type { EffectsMetrics } from './EffectsOrchestrator';
+import type { EffectsMetrics as _EffectsMetrics } from './EffectsOrchestrator';
 
 export interface VisualEngineConfig {
   enableParticles: boolean;
@@ -115,11 +115,11 @@ export class TitaneVisualEngine extends EventEmitter {
       }
     });
 
-    this.stateManager.on('transitionStart', (data) => {
+    this.stateManager.on('transitionStart', data => {
       this.emit('transitionStart', data);
     });
 
-    this.stateManager.on('transitionComplete', (data) => {
+    this.stateManager.on('transitionComplete', data => {
       this.emit('transitionComplete', data);
     });
 
@@ -288,7 +288,9 @@ export class TitaneVisualEngine extends EventEmitter {
     this.performanceMetrics.throttleActive = true;
 
     if (this.config.debug) {
-      console.log(`[TitaneVisualEngine] Throttling increased to level ${this.throttleLevel}`);
+      console.log(
+        `[TitaneVisualEngine] Throttling increased to level ${this.throttleLevel}`
+      );
     }
 
     switch (this.throttleLevel) {
@@ -325,7 +327,9 @@ export class TitaneVisualEngine extends EventEmitter {
     this.throttleLevel--;
 
     if (this.config.debug) {
-      console.log(`[TitaneVisualEngine] Throttling decreased to level ${this.throttleLevel}`);
+      console.log(
+        `[TitaneVisualEngine] Throttling decreased to level ${this.throttleLevel}`
+      );
     }
 
     switch (this.throttleLevel) {
@@ -341,7 +345,10 @@ export class TitaneVisualEngine extends EventEmitter {
         break;
     }
 
-    this.emit('throttleChange', { level: this.throttleLevel, active: this.throttleLevel > 0 });
+    this.emit('throttleChange', {
+      level: this.throttleLevel,
+      active: this.throttleLevel > 0,
+    });
   }
 
   /**
@@ -398,7 +405,7 @@ export class TitaneVisualEngine extends EventEmitter {
         this.emit('websocketConnected');
       };
 
-      this.websocket.onmessage = (event) => {
+      this.websocket.onmessage = event => {
         try {
           const data = JSON.parse(event.data);
           this.handleWebSocketMessage(data);
@@ -407,7 +414,7 @@ export class TitaneVisualEngine extends EventEmitter {
         }
       };
 
-      this.websocket.onerror = (error) => {
+      this.websocket.onerror = error => {
         console.error('[VisualEngine] WebSocket error:', error);
         this.emit('websocketError', error);
       };

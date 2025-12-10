@@ -47,7 +47,7 @@ export const XPBar = (): JSX.Element => {
     <div
       className={`xp-bar-wrapper ${isLevelUp ? 'level-up' : ''}`}
       onClick={() => navigate('/experience')}
-      onKeyPress={(e) => {
+      onKeyPress={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           navigate('/experience');
@@ -59,14 +59,21 @@ export const XPBar = (): JSX.Element => {
       aria-label={`Progression XP : Niveau ${level}, ${progress.toFixed(0)}% vers niveau ${level + 1}`}
     >
       <div className="xp-bar-info">
-        <span className="xp-level" aria-hidden="true">Nv.{level}</span>
-        <span className="xp-next" aria-hidden="true">{xpToNext} XP</span>
+        <span className="xp-level" aria-hidden="true">
+          Nv.{level}
+        </span>
+        <span className="xp-next" aria-hidden="true">
+          {xpToNext} XP
+        </span>
       </div>
-      <div className="xp-bar-container" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-        <div
-          className="xp-bar"
-          style={{ width: `${progress}%` }}
-        />
+      <div
+        className="xp-bar-container"
+        role="progressbar"
+        aria-valuenow={progress}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div className="xp-bar" style={{ width: `${progress}%` }} />
       </div>
     </div>
   );

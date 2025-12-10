@@ -45,6 +45,7 @@ import { autoAuditEngine } from './services/autoAuditEngine'; // ✨ v∞ - Auto
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
 import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
+import { initializeMicroInteractions } from './ui/motion'; // ✨ v21 - TITANE∞ Polish Phase
 import './i18n';
 
 /**
@@ -79,7 +80,9 @@ if (typeof window !== 'undefined') {
 
 // ✨ v24 P2-4 - Performance: Lazy load ALL pages except Dashboard
 // ✨ PHASE 4.3 - Lazy load Dashboard pour réduire FCP de ~400ms
-const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+const DashboardPage = lazy(() =>
+  import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage }))
+);
 
 // ✨ v24 P2-4 - Lazy loaded pages (code splitting)
 const ChatPage = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
@@ -104,17 +107,27 @@ const SingularityMonitor = lazy(() =>
 
 // ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
 // ✨ PHASE 4.2 - Lazy load chat bubbles (defer ~150KB)
-const ChatBubble = lazy(() => import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble })));
+const ChatBubble = lazy(() =>
+  import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble }))
+);
 
 // ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE)
-const AIChatBubble = lazy(() => import('./components/AIChatBubble').then(m => ({ default: m.AIChatBubble })));
+const AIChatBubble = lazy(() =>
+  import('./components/AIChatBubble').then(m => ({ default: m.AIChatBubble }))
+);
 
 // ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION)
-const HybridBubble = lazy(() => import('./components/HybridBubble').then(m => ({ default: m.HybridBubble })));
+const HybridBubble = lazy(() =>
+  import('./components/HybridBubble').then(m => ({ default: m.HybridBubble }))
+);
 
 // ✨ v∞.27.0 - Cognitive Layout Engine (Super Prompt #2 - ADAPTIVE UI)
 // ✨ PHASE 4.2 - Lazy load cognitive layout (defer ~50KB)
-const CognitiveLayoutControl = lazy(() => import('./components/cognitive/CognitiveLayoutControl').then(m => ({ default: m.CognitiveLayoutControl })));
+const CognitiveLayoutControl = lazy(() =>
+  import('./components/cognitive/CognitiveLayoutControl').then(m => ({
+    default: m.CognitiveLayoutControl,
+  }))
+);
 import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine';
 
 // ✨ v∞.27.0 - Unified Presence Engine (Super Prompt #3 - EXPERIENTIAL IDENTITY)
@@ -133,7 +146,10 @@ import { cognitiveLayoutEngine } from './engines/cognitive/cognitiveLayoutEngine
 // ✨ v∞.29-32 - Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
 import { DeepPsychePanel as _DeepPsychePanel } from './components/psyche/DeepPsychePanel';
 // ✨ PHASE 4.2 - Lazy load psyche engines (defer ~300KB) - Typed stubs
-interface EngineStub { start: () => void; stop: () => void }
+interface EngineStub {
+  start: () => void;
+  stop: () => void;
+}
 const _archetypeResonanceEngine: EngineStub = { start: () => {}, stop: () => {} };
 const _metaContinuumEngine: EngineStub = { start: () => {}, stop: () => {} };
 const _embodiedPresenceEngine: EngineStub = { start: () => {}, stop: () => {} };
@@ -383,6 +399,19 @@ const AppRouter: React.FC = () => {
       console.log('🛑 [COGNITIVE] Stopping Cognitive Layout Engine...');
       cognitiveLayoutEngine.stop();
     };
+  }, []);
+
+  // ✨ v21 POLISH — Initialize TITANE∞ Micro-Interactions
+  useEffect(() => {
+    console.log('✨ [UI-POLISH] Initializing TITANE∞ micro-interactions...');
+    try {
+      initializeMicroInteractions();
+      console.log(
+        '✅ [UI-POLISH] Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)'
+      );
+    } catch (error) {
+      console.error('❌ [UI-POLISH] Failed to initialize micro-interactions:', error);
+    }
   }, []);
 
   // ✨ v∞.27.0 - Initialiser Unified Presence Engine (Super Prompt #3)

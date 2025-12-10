@@ -181,7 +181,10 @@ pub async fn qa_run_system_test() -> Result<QATestSuite, String> {
         passed: true,
         severity: QASeverity::Medium,
         duration_ms: 67,
-        logs: vec!["Data directory accessible".to_string(), "Config files readable".to_string()],
+        logs: vec![
+            "Data directory accessible".to_string(),
+            "Config files readable".to_string(),
+        ],
         timestamp: chrono::Utc::now().to_rfc3339(),
         details: None,
     });
@@ -253,7 +256,10 @@ pub async fn qa_run_memory_test() -> Result<QATestSuite, String> {
         passed: true,
         severity: QASeverity::Critical,
         duration_ms: 89,
-        logs: vec!["Memory file structure valid".to_string(), "No corruption detected".to_string()],
+        logs: vec![
+            "Memory file structure valid".to_string(),
+            "No corruption detected".to_string(),
+        ],
         timestamp: chrono::Utc::now().to_rfc3339(),
         details: None,
     });
@@ -327,7 +333,10 @@ pub async fn qa_run_memory_test() -> Result<QATestSuite, String> {
         passed: true,
         severity: QASeverity::Critical,
         duration_ms: 145,
-        logs: vec!["1000 read/write cycles completed".to_string(), "No data loss".to_string()],
+        logs: vec![
+            "1000 read/write cycles completed".to_string(),
+            "No data loss".to_string(),
+        ],
         timestamp: chrono::Utc::now().to_rfc3339(),
         details: None,
     });
@@ -469,7 +478,10 @@ pub async fn qa_run_security_test() -> Result<QATestSuite, String> {
         passed: true,
         severity: QASeverity::Critical,
         duration_ms: 45,
-        logs: vec!["No exposed secrets in logs".to_string(), "API keys properly encrypted".to_string()],
+        logs: vec![
+            "No exposed secrets in logs".to_string(),
+            "API keys properly encrypted".to_string(),
+        ],
         timestamp: chrono::Utc::now().to_rfc3339(),
         details: None,
     });

@@ -480,7 +480,9 @@ class VisualDevOpsEngine {
   // SCRIPT GENERATION (Génération Scripts)
   // ==========================================================================
 
-  private async generateErrorFix(analysis: ScreenAnalysis): Promise<CodePatch | undefined> {
+  private async generateErrorFix(
+    analysis: ScreenAnalysis
+  ): Promise<CodePatch | undefined> {
     const errors = analysis.technical_content.errors_detected;
     if (errors.length === 0) return undefined;
 
@@ -605,7 +607,9 @@ class VisualDevOpsEngine {
     return commands;
   }
 
-  private async generateOptimizationScript(_analysis: ScreenAnalysis): Promise<GeneratedScript> {
+  private async generateOptimizationScript(
+    _analysis: ScreenAnalysis
+  ): Promise<GeneratedScript> {
     let content = '#!/bin/bash\n\n';
     content += '# TITANE∞ Optimization Script\n';
     content += '# Review carefully before execution\n\n';
@@ -745,9 +749,7 @@ echo "✅ Operation complete"
     checks.push({
       check_type: 'no_file_deletion',
       status: hasFileDeletion ? 'warning' : 'passed',
-      message: hasFileDeletion
-        ? 'Action may delete files'
-        : 'No file deletion detected',
+      message: hasFileDeletion ? 'Action may delete files' : 'No file deletion detected',
       recommendation: hasFileDeletion
         ? 'Backup important files before proceeding'
         : undefined,
@@ -756,7 +758,9 @@ echo "✅ Operation complete"
     // Check 3: Safe script content
     if (action.script_generated) {
       const script = action.script_generated.content;
-      const hasDangerousCommands = /rm -rf \/|sudo rm|chmod 777|curl.*\| bash/.test(script);
+      const hasDangerousCommands = /rm -rf \/|sudo rm|chmod 777|curl.*\| bash/.test(
+        script
+      );
 
       checks.push({
         check_type: 'validated_source',
@@ -818,7 +822,9 @@ echo "✅ Operation complete"
   // ==========================================================================
 
   public generateReport(period: string = 'session'): DevOpsReport {
-    const successfulActions = this.actionHistory.filter(a => a.status === 'executed').length;
+    const successfulActions = this.actionHistory.filter(
+      a => a.status === 'executed'
+    ).length;
     const failedActions = this.actionHistory.filter(a => a.status === 'failed').length;
     const pendingActions = this.actionHistory.filter(a => a.status === 'pending').length;
 
@@ -831,18 +837,22 @@ echo "✅ Operation complete"
     const allIssues = this.analysisHistory.flatMap(a => a.diagnosis.issues_found);
     const topIssues = allIssues.slice(0, 10);
 
-    const riskyActionsProposed = this.actionHistory.filter(a =>
-      a.script_generated?.safety_level === 'risky' ||
-      a.code_patch?.risk_level === 'risky'
+    const riskyActionsProposed = this.actionHistory.filter(
+      a =>
+        a.script_generated?.safety_level === 'risky' ||
+        a.code_patch?.risk_level === 'risky'
     ).length;
 
-    const riskyActionsRejected = this.actionHistory.filter(a =>
-      a.status === 'rejected' &&
-      (a.script_generated?.safety_level === 'risky' || a.code_patch?.risk_level === 'risky')
+    const riskyActionsRejected = this.actionHistory.filter(
+      a =>
+        a.status === 'rejected' &&
+        (a.script_generated?.safety_level === 'risky' ||
+          a.code_patch?.risk_level === 'risky')
     ).length;
 
     const securityChecksFailed = this.actionHistory.reduce(
-      (sum, action) => sum + action.security_checks.filter(c => c.status === 'failed').length,
+      (sum, action) =>
+        sum + action.security_checks.filter(c => c.status === 'failed').length,
       0
     );
 
@@ -857,7 +867,9 @@ echo "✅ Operation complete"
         avg_validation_time_ms: 0, // TODO: calculate from interactions
       },
       actions_by_type: actionsByType as any,
-      errors_fixed: this.actionHistory.filter(a => a.action_type === 'fix_error' && a.status === 'executed').length,
+      errors_fixed: this.actionHistory.filter(
+        a => a.action_type === 'fix_error' && a.status === 'executed'
+      ).length,
       scripts_generated: this.actionHistory.filter(a => a.script_generated).length,
       pipelines_created: this.actionHistory.filter(a => a.pipeline_generated).length,
       top_issues: topIssues,
@@ -997,7 +1009,9 @@ echo "✅ Operation complete"
     return causes;
   }
 
-  private assessRiskLevel(errors: ErrorDetection[]): 'critical' | 'high' | 'medium' | 'low' {
+  private assessRiskLevel(
+    errors: ErrorDetection[]
+  ): 'critical' | 'high' | 'medium' | 'low' {
     const critical = errors.some(e => e.severity === 'critical');
     if (critical) return 'critical';
 
@@ -1007,7 +1021,10 @@ echo "✅ Operation complete"
     return 'medium';
   }
 
-  private addToHistory(type: 'analysis' | 'action', item: ScreenAnalysis | DevOpsAction): void {
+  private addToHistory(
+    type: 'analysis' | 'action',
+    item: ScreenAnalysis | DevOpsAction
+  ): void {
     if (type === 'analysis') {
       this.analysisHistory.unshift(item as ScreenAnalysis);
       if (this.analysisHistory.length > this.MAX_HISTORY) {

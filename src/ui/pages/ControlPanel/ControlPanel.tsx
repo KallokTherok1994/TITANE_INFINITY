@@ -59,7 +59,9 @@ export const ControlPanel: React.FC = () => {
 
     switch (activeSection) {
       case 'system':
-        return systemInfo ? <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} /> : null;
+        return systemInfo ? (
+          <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />
+        ) : null;
       case 'appearance':
         return <AppearanceSection />;
       case 'singularity':
@@ -79,7 +81,9 @@ export const ControlPanel: React.FC = () => {
       case 'security':
         return <SecuritySection />;
       default:
-        return systemInfo ? <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} /> : null;
+        return systemInfo ? (
+          <SystemSection systemInfo={systemInfo} onRefresh={loadSystemInfo} />
+        ) : null;
     }
   };
 
@@ -89,9 +93,7 @@ export const ControlPanel: React.FC = () => {
       onSectionChange={setActiveSection}
       systemInfo={systemInfo || null}
     >
-      <div className="cp-content">
-        {renderSection()}
-      </div>
+      <div className="cp-content">{renderSection()}</div>
     </ControlPanelLayout>
   );
 };

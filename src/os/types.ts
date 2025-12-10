@@ -7,7 +7,13 @@
 // CORE TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-export type OSStatus = 'initializing' | 'ready' | 'running' | 'paused' | 'error' | 'shutdown';
+export type OSStatus =
+  | 'initializing'
+  | 'ready'
+  | 'running'
+  | 'paused'
+  | 'error'
+  | 'shutdown';
 
 export interface OSConfig {
   /** Nom de l'application */
@@ -42,7 +48,13 @@ export const DEFAULT_OS_CONFIG: OSConfig = {
 
 export type EngineId = string;
 
-export type EngineStatus = 'idle' | 'starting' | 'running' | 'stopping' | 'stopped' | 'error';
+export type EngineStatus =
+  | 'idle'
+  | 'starting'
+  | 'running'
+  | 'stopping'
+  | 'stopped'
+  | 'error';
 
 export interface EngineMetadata {
   id: EngineId;
@@ -140,7 +152,9 @@ export interface Message<T = unknown> {
   correlationId?: string;
 }
 
-export type MessageHandler<T = unknown, R = unknown> = (message: Message<T>) => Promise<R>;
+export type MessageHandler<T = unknown, R = unknown> = (
+  message: Message<T>
+) => Promise<R>;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LIFECYCLE TYPES

@@ -285,11 +285,7 @@ async fn test_ai_query_simulation_under_100ms() {
     let p95 = latencies[p95_idx.saturating_sub(1)];
 
     // Target: P95 < 100ms = 100,000µs (but with DashMap should be < 10µs)
-    assert!(
-        p95 < 100_000,
-        "P95 should be < 100ms, was {}µs",
-        p95
-    );
+    assert!(p95 < 100_000, "P95 should be < 100ms, was {}µs", p95);
 
     println!("✅ DashMap P95 latency: {}µs (target: < 100,000µs)", p95);
 }

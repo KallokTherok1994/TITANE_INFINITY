@@ -9,7 +9,14 @@ import { useEffect } from 'react';
 import { useSingularityState, type EngineName } from '../core/state/SingularityState';
 import { useTitaneCore } from './useTitaneCore';
 
-type EngineType = 'helios' | 'harmonia' | 'nexus' | 'sentinel' | 'watchdog' | 'selfheal' | 'adaptive';
+type EngineType =
+  | 'helios'
+  | 'harmonia'
+  | 'nexus'
+  | 'sentinel'
+  | 'watchdog'
+  | 'selfheal'
+  | 'adaptive';
 
 /**
  * Hook pour s'abonner aux mises à jour d'un engine
@@ -41,7 +48,10 @@ export function useEngineSubscription(engine: EngineType) {
   } = useTitaneCore();
 
   useEffect(() => {
-    const commandMap: Record<EngineType, { fn: () => Promise<unknown>; interval: number }> = {
+    const commandMap: Record<
+      EngineType,
+      { fn: () => Promise<unknown>; interval: number }
+    > = {
       helios: { fn: getHeliosMetrics, interval: 3000 },
       harmonia: { fn: getHarmoniaFlows, interval: 4000 },
       nexus: { fn: getNexusGraph, interval: 5000 },

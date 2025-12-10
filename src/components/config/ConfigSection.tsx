@@ -54,25 +54,38 @@ export const ConfigSection: React.FC<ConfigSectionProps> = ({
           transition: 'all 0.2s ease',
           color: 'inherit',
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!isOpen) {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
           }
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={e => {
           if (!isOpen) {
             e.currentTarget.style.background = 'transparent';
           }
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', textAlign: 'left' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            textAlign: 'left',
+          }}
+        >
           <span style={{ fontSize: '1.5rem' }}>{icon}</span>
           <div>
             <div style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '0.25rem' }}>
               {title}
             </div>
             {description && (
-              <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', opacity: 0.8 }}>
+              <div
+                style={{
+                  fontSize: '0.85rem',
+                  color: 'var(--color-text-secondary)',
+                  opacity: 0.8,
+                }}
+              >
                 {description}
               </div>
             )}

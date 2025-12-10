@@ -12,7 +12,10 @@ interface SystemSectionProps {
   onRefresh: () => void;
 }
 
-export const SystemSection: React.FC<SystemSectionProps> = ({ systemInfo, onRefresh }) => {
+export const SystemSection: React.FC<SystemSectionProps> = ({
+  systemInfo,
+  onRefresh,
+}) => {
   const [diagnosticRunning, setDiagnosticRunning] = useState(false);
   const [diagnosticResult, setDiagnosticResult] = useState<string | null>(null);
 
@@ -118,7 +121,9 @@ export const SystemSection: React.FC<SystemSectionProps> = ({ systemInfo, onRefr
             </div>
             <div className="cp-info-row">
               <span className="cp-info-label">État Singularité</span>
-              <span className={`cp-badge ${systemInfo?.singularity_active ? 'success' : ''}`}>
+              <span
+                className={`cp-badge ${systemInfo?.singularity_active ? 'success' : ''}`}
+              >
                 <span className="cp-badge-dot" />
                 {systemInfo?.singularity_active ? 'Active' : 'Inactive'}
               </span>

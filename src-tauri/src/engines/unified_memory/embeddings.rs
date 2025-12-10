@@ -10,10 +10,10 @@ use serde::{Deserialize, Serialize};
 pub enum EmbeddingProvider {
     /// Local model (all-MiniLM-L6-v2 via transformers.rs)
     Local,
-    
+
     /// Cloud provider (OpenAI, Anthropic, etc.)
     Cloud(String),
-    
+
     /// Mock provider (for testing)
     Mock,
 }
@@ -23,41 +23,44 @@ pub enum EmbeddingProvider {
 pub struct EmbeddingResult {
     /// 384D embedding vector (all-MiniLM-L6-v2 standard)
     pub vector: Vec<f32>,
-    
+
     /// Provider used
     pub provider: EmbeddingProvider,
-    
+
     /// Tokens used (for cloud providers)
     pub tokens: Option<usize>,
-    
+
     /// Latency in milliseconds
     pub latency_ms: u64,
 }
 
 /// Embed text into vector space
-/// 
+///
 /// Provider priority:
 /// 1. Local model (all-MiniLM-L6-v2) if available
 /// 2. Cloud provider if configured
 /// 3. Fallback: Simple hash-based embedding
-/// 
+///
 /// Returns: 384D normalized vector
 pub async fn embed_text(text: &str) -> Result<Vec<f32>, String> {
     let start = std::time::Instant::now();
-    
+
     // TODO: Implement actual embedding providers
     // For now, use fallback simple embedding
     let vector = fallback_embedding(text);
-    
+
     let latency_ms = start.elapsed().as_millis() as u64;
-    
+
     Ok(vector)
 }
 
 /// Embed text with full result metadata
-pub async fn embed_text_full(text: &str, provider: EmbeddingProvider) -> Result<EmbeddingResult, String> {
+pub async fn embed_text_full(
+    text: &str,
+    provider: EmbeddingProvider,
+) -> Result<EmbeddingResult, String> {
     let start = std::time::Instant::now();
-    
+
     let vector = match provider {
         EmbeddingProvider::Local => {
             // TODO: Load local model (all-MiniLM-L6-v2)
@@ -72,9 +75,9 @@ pub async fn embed_text_full(text: &str, provider: EmbeddingProvider) -> Result<
             mock_embedding(text)
         }
     };
-    
+
     let latency_ms = start.elapsed().as_millis() as u64;
-    
+
     Ok(EmbeddingResult {
         vector,
         provider,
@@ -86,40 +89,40 @@ pub async fn embed_text_full(text: &str, provider: EmbeddingProvider) -> Result<
 /// Batch embed multiple texts
 pub async fn embed_batch(texts: &[String]) -> Result<Vec<Vec<f32>>, String> {
     let mut results = Vec::with_capacity(texts.len());
-    
+
     for text in texts {
         let vector = embed_text(text).await?;
         results.push(vector);
     }
-    
+
     Ok(results)
 }
 
 /// Fallback embedding using simple hash-based approach
-/// 
+///
 /// WARNING: This is a placeholder. Real embeddings require:
 /// - Pretrained transformer model (all-MiniLM-L6-v2)
 /// - Or cloud API (OpenAI, Cohere, etc.)
 fn fallback_embedding(text: &str) -> Vec<f32> {
     use std::collections::hash_map::DefaultHasher;
     use std::hash::{Hash, Hasher};
-    
+
     let mut vector = vec![0.0; 384];
-    
+
     // Hash text to generate pseudo-random vector
     let mut hasher = DefaultHasher::new();
     text.hash(&mut hasher);
     let hash = hasher.finish();
-    
+
     // Fill vector with deterministic values
     for i in 0..384 {
         let val = ((hash.wrapping_mul(i as u64 + 1)) % 1000) as f32 / 1000.0 - 0.5;
         vector[i] = val;
     }
-    
+
     // Normalize to unit length (L2 norm = 1)
     normalize_vector(&mut vector);
-    
+
     vector
 }
 
@@ -133,7 +136,7 @@ fn mock_embedding(text: &str) -> Vec<f32> {
 /// Normalize vector to unit length (L2 norm = 1)
 fn normalize_vector(vector: &mut [f32]) {
     let norm: f32 = vector.iter().map(|x| x * x).sum::<f32>().sqrt();
-    
+
     if norm > 0.0 {
         for val in vector.iter_mut() {
             *val /= norm;
@@ -170,14 +173,14 @@ impl LocalEmbedder {
         )
         .create_model()
         .map_err(|e| format!("Failed to load model: {}", e))?;
-        
+
         Ok(Self { model })
     }
-    
+
     pub fn embed(&self, text: &str) -> Result<Vec<f32>, String> {
         let embeddings = self.model.encode(&[text])
             .map_err(|e| format!("Failed to encode: {}", e))?;
-        
+
         Ok(embeddings[0].clone())
     }
 }
@@ -195,7 +198,7 @@ OpenAI Example:
 pub async fn embed_openai(text: &str, api_key: &str) -> Result<Vec<f32>, String> {
     use reqwest;
     use serde_json::json;
-    
+
     let client = reqwest::Client::new();
     let response = client
         .post("https://api.openai.com/v1/embeddings")
@@ -207,16 +210,16 @@ pub async fn embed_openai(text: &str, api_key: &str) -> Result<Vec<f32>, String>
         .send()
         .await
         .map_err(|e| format!("API request failed: {}", e))?;
-    
+
     let data: serde_json::Value = response.json().await
         .map_err(|e| format!("Failed to parse response: {}", e))?;
-    
+
     let embedding = data["data"][0]["embedding"].as_array()
         .ok_or("Invalid response format")?
         .iter()
         .map(|v| v.as_f64().unwrap() as f32)
         .collect();
-    
+
     Ok(embedding)
 }
 */
@@ -229,11 +232,11 @@ mod tests {
     async fn test_embed_text() {
         let text = "Hello world";
         let result = embed_text(text).await;
-        
+
         assert!(result.is_ok());
         let vector = result.unwrap();
         assert_eq!(vector.len(), 384);
-        
+
         // Check normalization (L2 norm ≈ 1.0)
         let norm: f32 = vector.iter().map(|x| x * x).sum::<f32>().sqrt();
         assert!((norm - 1.0).abs() < 0.001);
@@ -243,7 +246,7 @@ mod tests {
     async fn test_embed_text_full() {
         let text = "Test embedding";
         let result = embed_text_full(text, EmbeddingProvider::Mock).await;
-        
+
         assert!(result.is_ok());
         let emb_result = result.unwrap();
         assert_eq!(emb_result.vector.len(), 384);
@@ -257,13 +260,13 @@ mod tests {
             "Second text".to_string(),
             "Third text".to_string(),
         ];
-        
+
         let result = embed_batch(&texts).await;
         assert!(result.is_ok());
-        
+
         let vectors = result.unwrap();
         assert_eq!(vectors.len(), 3);
-        
+
         for vec in vectors {
             assert_eq!(vec.len(), 384);
         }
@@ -274,7 +277,7 @@ mod tests {
         let text = "Consistent text";
         let emb1 = fallback_embedding(text);
         let emb2 = fallback_embedding(text);
-        
+
         assert_eq!(emb1.len(), 384);
         assert_eq!(emb1, emb2); // Same text = same embedding
     }
@@ -283,7 +286,7 @@ mod tests {
     fn test_fallback_embedding_different() {
         let emb1 = fallback_embedding("Text A");
         let emb2 = fallback_embedding("Text B");
-        
+
         assert_ne!(emb1, emb2); // Different text = different embedding
     }
 
@@ -291,7 +294,7 @@ mod tests {
     fn test_normalize_vector() {
         let mut vec = vec![3.0, 4.0, 0.0];
         normalize_vector(&mut vec);
-        
+
         let norm: f32 = vec.iter().map(|x| x * x).sum::<f32>().sqrt();
         assert!((norm - 1.0).abs() < 0.001);
     }

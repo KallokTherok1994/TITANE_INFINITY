@@ -37,7 +37,9 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
     setModeEmbed,
   } = useFloatingWindow();
 
-  const [activeTab, setActiveTab] = useState<'position' | 'appearance' | 'behavior'>('appearance');
+  const [activeTab, setActiveTab] = useState<'position' | 'appearance' | 'behavior'>(
+    'appearance'
+  );
 
   // ═════════════════════════════════════════════════════════════════
   // HANDLERS
@@ -84,7 +86,7 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
   return (
     <div
       className={`absolute ${positionClasses[position]} z-50 w-80 bg-gray-900/95 backdrop-blur-xl border border-gray-700/50 rounded-xl shadow-2xl overflow-hidden`}
-      onClick={(e) => e.stopPropagation()}
+      onClick={e => e.stopPropagation()}
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-gray-800/50 border-b border-gray-700/50">
@@ -95,14 +97,19 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
           aria-label="Fermer"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
 
       {/* Tabs */}
       <div className="flex border-b border-gray-700/50">
-        {(['appearance', 'position', 'behavior'] as const).map((tab) => (
+        {(['appearance', 'position', 'behavior'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -128,7 +135,9 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-gray-300">Échelle</label>
-                <span className="text-xs text-gray-400">{displayState.scale.toFixed(2)}x</span>
+                <span className="text-xs text-gray-400">
+                  {displayState.scale.toFixed(2)}x
+                </span>
               </div>
               <input
                 type="range"
@@ -149,7 +158,9 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-xs font-medium text-gray-300">Opacité</label>
-                <span className="text-xs text-gray-400">{Math.round(displayState.opacity * 100)}%</span>
+                <span className="text-xs text-gray-400">
+                  {Math.round(displayState.opacity * 100)}%
+                </span>
               </div>
               <input
                 type="range"
@@ -173,13 +184,21 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
           <>
             {/* Anchor Grid */}
             <div className="space-y-2">
-              <label className="text-xs font-medium text-gray-300">Position d'ancrage</label>
+              <label className="text-xs font-medium text-gray-300">
+                Position d'ancrage
+              </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  AnchorPosition.TopLeft, AnchorPosition.TopCenter, AnchorPosition.TopRight,
-                  AnchorPosition.CenterLeft, AnchorPosition.Center, AnchorPosition.CenterRight,
-                  AnchorPosition.BottomLeft, AnchorPosition.BottomCenter, AnchorPosition.BottomRight,
-                ].map((anchor) => (
+                  AnchorPosition.TopLeft,
+                  AnchorPosition.TopCenter,
+                  AnchorPosition.TopRight,
+                  AnchorPosition.CenterLeft,
+                  AnchorPosition.Center,
+                  AnchorPosition.CenterRight,
+                  AnchorPosition.BottomLeft,
+                  AnchorPosition.BottomCenter,
+                  AnchorPosition.BottomRight,
+                ].map(anchor => (
                   <button
                     key={anchor}
                     onClick={() => handleAnchorClick(anchor)}
@@ -201,7 +220,7 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
               <div className="space-y-2">
                 <label className="text-xs font-medium text-gray-300">Écran</label>
                 <div className="space-y-1">
-                  {screens.map((screen) => (
+                  {screens.map(screen => (
                     <button
                       key={screen.index}
                       onClick={() => handleScreenChange(screen.index)}
@@ -213,7 +232,9 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
                     >
                       <div className="flex items-center justify-between">
                         <span>{screen.name}</span>
-                        <span className="text-gray-500">{screen.width}×{screen.height}</span>
+                        <span className="text-gray-500">
+                          {screen.width}×{screen.height}
+                        </span>
                       </div>
                     </button>
                   ))}
@@ -238,16 +259,24 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
               <div className="flex items-center gap-3">
                 <span className="text-lg">📌</span>
                 <div className="text-left">
-                  <div className="text-xs font-medium text-gray-200">Toujours visible</div>
-                  <div className="text-xs text-gray-500">Reste au-dessus des fenêtres</div>
+                  <div className="text-xs font-medium text-gray-200">
+                    Toujours visible
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    Reste au-dessus des fenêtres
+                  </div>
                 </div>
               </div>
-              <div className={`w-10 h-6 rounded-full transition-colors ${
-                displayState.always_on_top ? 'bg-primary-600' : 'bg-gray-700'
-              }`}>
-                <div className={`w-5 h-5 m-0.5 bg-white rounded-full transition-transform ${
-                  displayState.always_on_top ? 'translate-x-4' : 'translate-x-0'
-                }`} />
+              <div
+                className={`w-10 h-6 rounded-full transition-colors ${
+                  displayState.always_on_top ? 'bg-primary-600' : 'bg-gray-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 m-0.5 bg-white rounded-full transition-transform ${
+                    displayState.always_on_top ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
               </div>
             </button>
 
@@ -267,12 +296,16 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
                   <div className="text-xs text-gray-500">Empêche déplacement/resize</div>
                 </div>
               </div>
-              <div className={`w-10 h-6 rounded-full transition-colors ${
-                displayState.locked ? 'bg-yellow-600' : 'bg-gray-700'
-              }`}>
-                <div className={`w-5 h-5 m-0.5 bg-white rounded-full transition-transform ${
-                  displayState.locked ? 'translate-x-4' : 'translate-x-0'
-                }`} />
+              <div
+                className={`w-10 h-6 rounded-full transition-colors ${
+                  displayState.locked ? 'bg-yellow-600' : 'bg-gray-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 m-0.5 bg-white rounded-full transition-transform ${
+                    displayState.locked ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
               </div>
             </button>
 
@@ -292,12 +325,16 @@ export const AvatarFloatingPopup: React.FC<AvatarFloatingPopupProps> = ({
                   <div className="text-xs text-gray-500">Flip horizontal</div>
                 </div>
               </div>
-              <div className={`w-10 h-6 rounded-full transition-colors ${
-                displayState.mirror_mode ? 'bg-purple-600' : 'bg-gray-700'
-              }`}>
-                <div className={`w-5 h-5 m-0.5 bg-white rounded-full transition-transform ${
-                  displayState.mirror_mode ? 'translate-x-4' : 'translate-x-0'
-                }`} />
+              <div
+                className={`w-10 h-6 rounded-full transition-colors ${
+                  displayState.mirror_mode ? 'bg-purple-600' : 'bg-gray-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 m-0.5 bg-white rounded-full transition-transform ${
+                    displayState.mirror_mode ? 'translate-x-4' : 'translate-x-0'
+                  }`}
+                />
               </div>
             </button>
           </div>

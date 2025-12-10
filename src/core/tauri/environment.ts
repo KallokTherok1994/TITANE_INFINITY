@@ -68,7 +68,8 @@ export function detectEnvironment(): EnvironmentInfo {
   const isTauriProtocol = protocol === 'tauri';
 
   // ✅ Tauri confirmé si AU MOINS un critère est vérifié
-  const isTauri = hasTauriAPI || hasTauriInternals || hasTauriUserAgent || isTauriProtocol;
+  const isTauri =
+    hasTauriAPI || hasTauriInternals || hasTauriUserAgent || isTauriProtocol;
 
   // 🌐 Browser classique = pas Tauri ET protocole web
   const isBrowser = !isTauri && (protocol === 'http' || protocol === 'https');
@@ -136,9 +137,12 @@ export function logEnvironmentWarnings(): void {
   if (env.isTauri) {
     console.log(
       '✅ TITANE∞ - Contexte Tauri confirmé',
-      '\n   Protocol:', env.protocol,
-      '\n   Version:', env.tauriVersion || 'unknown',
-      '\n   Mode:', env.isDev ? 'Development' : 'Production'
+      '\n   Protocol:',
+      env.protocol,
+      '\n   Version:',
+      env.tauriVersion || 'unknown',
+      '\n   Mode:',
+      env.isDev ? 'Development' : 'Production'
     );
     return;
   }
@@ -146,13 +150,15 @@ export function logEnvironmentWarnings(): void {
   if (env.isDev) {
     console.info(
       '📱 TITANE∞ - Mode développement browser',
-      '\n   Contexte:', env.origin,
+      '\n   Contexte:',
+      env.origin,
       '\n   Note: Pour tester Tauri, utilisez: pnpm tauri dev'
     );
   } else if (env.isBrowser) {
     console.warn(
       '⚠️ TITANE∞ - Browser production détecté',
-      '\n   Origine:', env.origin,
+      '\n   Origine:',
+      env.origin,
       '\n   Recommandation: Utiliser build Tauri natif (pnpm tauri build)'
     );
   }

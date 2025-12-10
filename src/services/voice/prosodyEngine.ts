@@ -18,14 +18,14 @@ import type { EmotionalIntent } from './emotionalIntent';
  * Profil prosodique
  */
 export interface ProsodyProfile {
-  rate: string;      // "slow" | "medium" | "fast" | "x-slow" | "x-fast" | "80%"
-  pitch: string;     // "low" | "medium" | "high" | "x-low" | "x-high" | "+20%"
-  volume: string;    // "soft" | "medium" | "loud" | "x-soft" | "x-loud" | "+6dB"
-  pauseShort: number;   // ms pour pauses courtes (virgules)
-  pauseMedium: number;  // ms pour pauses moyennes (phrases)
-  pauseLong: number;    // ms pour pauses longues (paragraphes)
+  rate: string; // "slow" | "medium" | "fast" | "x-slow" | "x-fast" | "80%"
+  pitch: string; // "low" | "medium" | "high" | "x-low" | "x-high" | "+20%"
+  volume: string; // "soft" | "medium" | "loud" | "x-soft" | "x-loud" | "+6dB"
+  pauseShort: number; // ms pour pauses courtes (virgules)
+  pauseMedium: number; // ms pour pauses moyennes (phrases)
+  pauseLong: number; // ms pour pauses longues (paragraphes)
   emphasis: 'none' | 'reduced' | 'moderate' | 'strong';
-  contour?: string;  // Intonation pattern (optionnel, SSML avancé)
+  contour?: string; // Intonation pattern (optionnel, SSML avancé)
 }
 
 /**
@@ -134,9 +134,9 @@ export class ProsodyEngine {
     const { speed, energy, emotion } = intent;
 
     // Base times
-    let pauseShort = 250;   // Virgule
-    let pauseMedium = 500;  // Point
-    let pauseLong = 800;    // Paragraphe
+    let pauseShort = 250; // Virgule
+    let pauseMedium = 500; // Point
+    let pauseLong = 800; // Paragraphe
 
     // Modulation par speed (inverse)
     const speedFactor = 1 / speed;
@@ -174,7 +174,9 @@ export class ProsodyEngine {
   /**
    * Calculer l'emphase
    */
-  private calculateEmphasis(intent: EmotionalIntent): 'none' | 'reduced' | 'moderate' | 'strong' {
+  private calculateEmphasis(
+    intent: EmotionalIntent
+  ): 'none' | 'reduced' | 'moderate' | 'strong' {
     const { intensity, energy } = intent;
 
     const emphasisFactor = (intensity + energy) / 2;
@@ -251,9 +253,9 @@ export class ProsodyEngine {
   private mapRateToNumber(rate: string): number {
     const mapping: Record<string, number> = {
       'x-slow': 0.7,
-      'slow': 0.85,
-      'medium': 1.0,
-      'fast': 1.15,
+      slow: 0.85,
+      medium: 1.0,
+      fast: 1.15,
       'x-fast': 1.3,
     };
     return mapping[rate] || 1.0;
@@ -262,9 +264,9 @@ export class ProsodyEngine {
   private mapPitchToNumber(pitch: string): number {
     const mapping: Record<string, number> = {
       'x-low': 0.8,
-      'low': 0.9,
-      'medium': 1.0,
-      'high': 1.1,
+      low: 0.9,
+      medium: 1.0,
+      high: 1.1,
       'x-high': 1.2,
     };
     return mapping[pitch] || 1.0;
@@ -273,9 +275,9 @@ export class ProsodyEngine {
   private mapVolumeToNumber(volume: string): number {
     const mapping: Record<string, number> = {
       'x-soft': 0.3,
-      'soft': 0.5,
-      'medium': 0.7,
-      'loud': 0.9,
+      soft: 0.5,
+      medium: 0.7,
+      loud: 0.9,
       'x-loud': 1.0,
     };
     return mapping[volume] || 0.7;

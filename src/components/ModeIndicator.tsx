@@ -22,8 +22,8 @@ interface ModeHistory {
 export const ModeIndicator: React.FC = React.memo(() => {
   // Use Zustand instead of local state
   const metaModeState = useSingularityState(selectMetaModeState);
-  const setMetaMode = useSingularityState((s) => s.setMetaMode);
-  const setMetaModeTransition = useSingularityState((s) => s.setMetaModeTransition);
+  const setMetaMode = useSingularityState(s => s.setMetaMode);
+  const setMetaModeTransition = useSingularityState(s => s.setMetaModeTransition);
 
   const { currentMode, transitioning } = metaModeState;
   const [history, setHistory] = useState<ModeHistory[]>([]);
@@ -61,27 +61,30 @@ export const ModeIndicator: React.FC = React.memo(() => {
     return () => clearInterval(interval);
   }, [fetchCurrentMode, fetchHistory]);
 
-  const modeEmojiMap = useMemo(() => ({
-    'Maître-Thérapeute Humaniste': '🌿',
-    'Coach Professionnel ICF': '🎯',
-    'PNL Master Practitioner': '🧠',
-    'Hypnose douce non médicale': '🌀',
-    'Méditation profonde TITANE ZÉRO': '🧘',
-    'Digital Twin (Kevin+)': '🧬',
-    'Emotional Engine': '❤️',
-    'Behavioral Engine': '🎭',
-    'LifeEngine': '⚡',
-    'Stratège': '🗺️',
-    'Architecte Systémique': '🏗️',
-    'Analyste': '🔍',
-    'Autopilot Proactif': '🚀',
-    'Creator Engine': '✨',
-    'Optimizer': '⚙️',
-    'Refactor Engine': '🔧',
-    'Voice Mode': '🎤',
-    'Risk Detector': '⚠️',
-    'Forecast Engine': '🔮',
-  }), []);
+  const modeEmojiMap = useMemo(
+    () => ({
+      'Maître-Thérapeute Humaniste': '🌿',
+      'Coach Professionnel ICF': '🎯',
+      'PNL Master Practitioner': '🧠',
+      'Hypnose douce non médicale': '🌀',
+      'Méditation profonde TITANE ZÉRO': '🧘',
+      'Digital Twin (Kevin+)': '🧬',
+      'Emotional Engine': '❤️',
+      'Behavioral Engine': '🎭',
+      LifeEngine: '⚡',
+      Stratège: '🗺️',
+      'Architecte Systémique': '🏗️',
+      Analyste: '🔍',
+      'Autopilot Proactif': '🚀',
+      'Creator Engine': '✨',
+      Optimizer: '⚙️',
+      'Refactor Engine': '🔧',
+      'Voice Mode': '🎤',
+      'Risk Detector': '⚠️',
+      'Forecast Engine': '🔮',
+    }),
+    []
+  );
 
   const getModeEmoji = (mode: string): string => {
     return modeEmojiMap[mode as keyof typeof modeEmojiMap] || '🧠';
@@ -120,7 +123,10 @@ export const ModeIndicator: React.FC = React.memo(() => {
             <div className="mode-transition">← {metaModeState.previousMode}</div>
           )}
         </div>
-        <div className="mode-pulse" style={{ backgroundColor: getModeColor(currentMode) }} />
+        <div
+          className="mode-pulse"
+          style={{ backgroundColor: getModeColor(currentMode) }}
+        />
       </div>
 
       {/* Historique récent */}

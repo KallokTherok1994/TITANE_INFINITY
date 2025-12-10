@@ -111,10 +111,10 @@ export interface AdaptationState {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export type UserMode =
-  | 'novice'      // Utilisateur débutant - guidage maximal
-  | 'standard'    // Utilisateur normal - équilibre
-  | 'power'       // Utilisateur avancé - fonctionnalités complètes
-  | 'focus'       // Mode concentration - distractions minimales
+  | 'novice' // Utilisateur débutant - guidage maximal
+  | 'standard' // Utilisateur normal - équilibre
+  | 'power' // Utilisateur avancé - fonctionnalités complètes
+  | 'focus' // Mode concentration - distractions minimales
   | 'accessibility'; // Mode accessibilité renforcée
 
 export interface UserProfile {

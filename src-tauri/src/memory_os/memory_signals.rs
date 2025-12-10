@@ -71,9 +71,7 @@ pub enum MemorySignal {
         percentage: f32,
     },
     /// System event
-    SystemEvent {
-        event: SystemMemoryEvent,
-    },
+    SystemEvent { event: SystemMemoryEvent },
 }
 
 /// Reason for forgetting
@@ -241,8 +239,8 @@ impl MemorySignalBus {
         self.emit(
             MemorySignal::EntryStored {
                 id: entry.id,
-                tier: entry.tier.clone(),
-                memory_type: entry.memory_type.clone(),
+                tier: entry.tier,
+                memory_type: entry.memory_type,
                 importance: entry.importance,
             },
             "MemoryOS",
@@ -255,7 +253,7 @@ impl MemorySignalBus {
         self.emit(
             MemorySignal::EntryAccessed {
                 id: entry.id,
-                tier: entry.tier.clone(),
+                tier: entry.tier,
                 access_count: entry.access_count,
             },
             "MemoryOS",
@@ -286,7 +284,12 @@ impl MemorySignalBus {
     }
 
     /// Emit consolidation complete signal
-    pub async fn emit_consolidation(&self, stm_to_mtm: usize, mtm_to_ltm: usize, duration_ms: u128) {
+    pub async fn emit_consolidation(
+        &self,
+        stm_to_mtm: usize,
+        mtm_to_ltm: usize,
+        duration_ms: u128,
+    ) {
         self.emit(
             MemorySignal::ConsolidationComplete {
                 stm_to_mtm,
@@ -317,7 +320,12 @@ impl MemorySignalBus {
     }
 
     /// Emit search performed signal
-    pub async fn emit_search(&self, query_type: SearchType, results_count: usize, duration_ms: u128) {
+    pub async fn emit_search(
+        &self,
+        query_type: SearchType,
+        results_count: usize,
+        duration_ms: u128,
+    ) {
         self.emit(
             MemorySignal::SearchPerformed {
                 query_type,
@@ -346,7 +354,8 @@ impl MemorySignalBus {
 
     /// Emit system event
     pub async fn emit_system_event(&self, event: SystemMemoryEvent) {
-        self.emit(MemorySignal::SystemEvent { event }, "MemoryOS").await;
+        self.emit(MemorySignal::SystemEvent { event }, "MemoryOS")
+            .await;
     }
 
     /// Get recent signals

@@ -54,7 +54,7 @@ const sizeStyles = {
 
 /**
  * IconButton - Bouton circulaire/carré avec icône uniquement
- * 
+ *
  * @example
  * ```tsx
  * <IconButton
@@ -98,12 +98,12 @@ export function IconButton({
         border: variantStyle.border ? `1px solid ${variantStyle.border}` : 'none',
         color: variantStyle.color,
       }}
-      onMouseEnter={(e) => {
+      onMouseEnter={e => {
         if (!disabled) {
           e.currentTarget.style.background = variantStyle.bgHover;
         }
       }}
-      onMouseLeave={(e) => {
+      onMouseLeave={e => {
         e.currentTarget.style.background = variantStyle.bg;
       }}
       {...props}

@@ -25,7 +25,7 @@ const getMockResponse = (cmd: string, args?: Record<string, unknown>): unknown =
         active_sessions: 1,
         error_count: 0,
         last_check: Date.now(),
-        modules: { memory: true, ai: true, tts: false, singularity: true }
+        modules: { memory: true, ai: true, tts: false, singularity: true },
       };
     case 'memory_list_entries':
       return [];
@@ -92,8 +92,8 @@ export async function getSystemHealth(): Promise<SystemHealth> {
         memory: true,
         ai: true,
         tts: false,
-        singularity: true
-      }
+        singularity: true,
+      },
     };
   }
 }
@@ -167,7 +167,11 @@ export async function safeMemorySearch(query: string): Promise<unknown[]> {
 /**
  * Safe memory store wrapper
  */
-export async function safeMemoryStore(id: string, key: string, value: unknown): Promise<boolean> {
+export async function safeMemoryStore(
+  id: string,
+  key: string,
+  value: unknown
+): Promise<boolean> {
   try {
     await safeInvoke('memory_save_entry', { id, key, value });
     return true;
@@ -215,13 +219,13 @@ export {
   safeMemorySearch as memorySearch,
   safeMemoryStore as memoryStore,
   safeMemoryGet as memoryGet,
-  safeMemoryDelete as memoryDelete
+  safeMemoryDelete as memoryDelete,
 };
 
 // Repair operations
 export {
   triggerMemoryRepair as repairMemory,
-  triggerSystemOptimization as optimizeSystem
+  triggerSystemOptimization as optimizeSystem,
 };
 
 // Default export for convenience
@@ -233,5 +237,5 @@ export default {
   memoryGet: safeMemoryGet,
   memoryDelete: safeMemoryDelete,
   repairMemory: triggerMemoryRepair,
-  optimizeSystem: triggerSystemOptimization
+  optimizeSystem: triggerSystemOptimization,
 };

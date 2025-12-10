@@ -28,15 +28,15 @@ pub mod ia_context;
 // ═══════════════════════════════════════════════════════════════
 //   SINGULARITY OS vΩ (Super Prompt #13 - Conversation Brain)
 // ═══════════════════════════════════════════════════════════════
-pub mod brain_state;
-pub mod reasoning;
-pub mod style_controller;
-pub mod emotion_controller;
-pub mod coherence_controller;
 pub mod behavior_controller;
-pub mod mode_selector;
+pub mod brain_state;
+pub mod coherence_controller;
+pub mod emotion_controller;
 pub mod evolution_engine;
+pub mod mode_selector;
+pub mod reasoning;
 pub mod singularity_os;
+pub mod style_controller;
 
 // ═══════════════════════════════════════════════════════════════
 //   EXPORTS v17 (Legacy)
@@ -52,26 +52,26 @@ pub use totality::*;
 // ═══════════════════════════════════════════════════════════════
 //   EXPORTS v∞
 // ═══════════════════════════════════════════════════════════════
-pub use singularity_commands::*;
 pub use ia_context::*;
+pub use singularity_commands::*;
 pub use singularity_selftest::*;
 pub use singularity_state_vinfinity::*;
 
 // ═══════════════════════════════════════════════════════════════
 //   EXPORTS SINGULARITY OS vΩ (Super Prompt #13)
 // ═══════════════════════════════════════════════════════════════
+pub use behavior_controller::{BehaviorController, BehaviorFlags, BehaviorProfile};
 pub use brain_state::{
-    ConversationMode, IntentClass, AffectiveState, StyleProfile,
-    MemoryContext, MemoryContextItem, ConstraintProfile, ConversationBrainState,
+    AffectiveState, ConstraintProfile, ConversationBrainState, ConversationMode, IntentClass,
+    MemoryContext, MemoryContextItem, StyleProfile,
 };
-pub use reasoning::{ReasoningEngine, ReasoningResult};
-pub use style_controller::StyleController;
-pub use emotion_controller::EmotionController;
 pub use coherence_controller::{CoherenceController, CoherenceResult, CoherenceWeights};
-pub use behavior_controller::{BehaviorController, BehaviorProfile, BehaviorFlags};
+pub use emotion_controller::EmotionController;
+pub use evolution_engine::{EvolutionEngine, EvolutionMetrics, EvolutionSnapshot};
 pub use mode_selector::ModeSelector;
-pub use evolution_engine::{EvolutionEngine, EvolutionSnapshot, EvolutionMetrics};
+pub use reasoning::{ReasoningEngine, ReasoningResult};
 pub use singularity_os::{
-    SingularityOS, SingularityOutput, SingularityHealth, SingularityError,
-    QuickOutput, IntentClassifier, targets,
+    targets, IntentClassifier, QuickOutput, SingularityError, SingularityHealth, SingularityOS,
+    SingularityOutput,
 };
+pub use style_controller::StyleController;

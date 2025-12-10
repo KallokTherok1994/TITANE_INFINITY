@@ -179,7 +179,9 @@ export class PerformanceOptimizer {
       // Métriques depuis le backend (uniquement en Tauri)
       let backendMetrics: PerformanceMetrics | null = null;
       if (env.isTauri) {
-        backendMetrics = await secureInvoke<PerformanceMetrics>('performance_get_metrics');
+        backendMetrics = await secureInvoke<PerformanceMetrics>(
+          'performance_get_metrics'
+        );
       }
 
       // Métriques frontend

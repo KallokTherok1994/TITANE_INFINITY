@@ -1,15 +1,15 @@
 //! TITANE∞ v20Ω — Temporal Engine
 //! Moteur de gestion temporelle et undo/redo
 
-mod temporal_state;
 mod snapshot_manager;
-mod timeline;
 mod temporal_diff;
+mod temporal_state;
+mod timeline;
 
-pub use temporal_state::*;
 pub use snapshot_manager::*;
-pub use timeline::*;
 pub use temporal_diff::*;
+pub use temporal_state::*;
+pub use timeline::*;
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -89,7 +89,11 @@ impl TemporalEngine {
         // Sérialiser l'état
         let serialized = match serde_json::to_string(state) {
             Ok(s) => s,
-            Err(e) => return TemporalResult::Error { message: e.to_string() },
+            Err(e) => {
+                return TemporalResult::Error {
+                    message: e.to_string(),
+                }
+            }
         };
 
         // Créer le snapshot
@@ -136,10 +140,7 @@ impl TemporalEngine {
         let snapshot_id = &timeline[*position];
 
         if let Some(snapshot) = manager.get(snapshot_id) {
-            match serde_json::from_str(&snapshot.data) {
-                Ok(state) => Some(state),
-                Err(_) => None,
-            }
+            serde_json::from_str(&snapshot.data).ok()
         } else {
             None
         }
@@ -159,10 +160,7 @@ impl TemporalEngine {
         let snapshot_id = &timeline[*position];
 
         if let Some(snapshot) = manager.get(snapshot_id) {
-            match serde_json::from_str(&snapshot.data) {
-                Ok(state) => Some(state),
-                Err(_) => None,
-            }
+            serde_json::from_str(&snapshot.data).ok()
         } else {
             None
         }

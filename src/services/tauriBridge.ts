@@ -51,7 +51,11 @@ function logError(command: string, error: unknown): void {
 // ERROR HANDLING
 // ═══════════════════════════════════════════════════════════════
 
-function createCoreError(category: CoreError['category'], message: string, details?: string): CoreError {
+function createCoreError(
+  category: CoreError['category'],
+  message: string,
+  details?: string
+): CoreError {
   return {
     category,
     message,
@@ -112,7 +116,16 @@ export async function invokeTauriCommand<T = unknown>(
       // Timeout race avec secureInvoke
       const invokePromise = secureInvoke<T>(command, params);
       const timeoutPromise = new Promise<never>((_, reject) =>
-        setTimeout(() => reject(createCoreError('timeout', `Command ${command} timed out after ${timeout}ms`)), timeout)
+        setTimeout(
+          () =>
+            reject(
+              createCoreError(
+                'timeout',
+                `Command ${command} timed out after ${timeout}ms`
+              )
+            ),
+          timeout
+        )
       );
 
       const data = await Promise.race([invokePromise, timeoutPromise]);
@@ -406,7 +419,9 @@ export async function batchInvoke<T = any>(
 
       try {
         updateProgress(cmd.command);
-        const response = await invokeTauriCommand<T>(cmd.command, cmd.params, { timeout });
+        const response = await invokeTauriCommand<T>(cmd.command, cmd.params, {
+          timeout,
+        });
         const duration = Date.now() - cmdStartTime;
 
         completed++;
@@ -437,7 +452,9 @@ export async function batchInvoke<T = any>(
 
     // Atomic: if any failed, consider entire batch failed
     if (atomic && batchResults.some(r => !r.success)) {
-      throw new Error(`Batch failed (atomic mode): ${batchResults.filter(r => !r.success).length} commands failed`);
+      throw new Error(
+        `Batch failed (atomic mode): ${batchResults.filter(r => !r.success).length} commands failed`
+      );
     }
   } else {
     // Sequential execution
@@ -449,7 +466,9 @@ export async function batchInvoke<T = any>(
       updateProgress(cmd.command);
 
       try {
-        const response = await invokeTauriCommand<T>(cmd.command, cmd.params, { timeout });
+        const response = await invokeTauriCommand<T>(cmd.command, cmd.params, {
+          timeout,
+        });
         const duration = Date.now() - cmdStartTime;
 
         results.push({
@@ -476,12 +495,16 @@ export async function batchInvoke<T = any>(
 
         // Stop on error if requested
         if (stopOnError) {
-          throw new Error(`Batch stopped at command ${i + 1}/${commands.length}: ${cmd.command}`);
+          throw new Error(
+            `Batch stopped at command ${i + 1}/${commands.length}: ${cmd.command}`
+          );
         }
 
         // Atomic: stop on first error
         if (atomic) {
-          throw new Error(`Batch failed (atomic mode) at command ${i + 1}: ${cmd.command}`);
+          throw new Error(
+            `Batch failed (atomic mode) at command ${i + 1}: ${cmd.command}`
+          );
         }
       }
     }
@@ -489,7 +512,9 @@ export async function batchInvoke<T = any>(
 
   const totalDuration = Date.now() - startTime;
   if (DEBUG_MODE) {
-    console.log(`[TauriBridge] Batch complete: ${commands.length} commands in ${totalDuration}ms (${mode} mode)`);
+    console.log(
+      `[TauriBridge] Batch complete: ${commands.length} commands in ${totalDuration}ms (${mode} mode)`
+    );
   }
 
   return results;

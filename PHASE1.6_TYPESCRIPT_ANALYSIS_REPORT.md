@@ -9,8 +9,9 @@
 ## 📊 CONFIGURATION TYPESCRIPT
 
 **tsconfig.json Analysis**:
+
 - ✅ Target: ES2020
-- ✅ Module: ESNext  
+- ✅ Module: ESNext
 - ✅ Strict: true
 - ✅ JSX: react-jsx
 - ⚠️ noUnusedLocals: false (disabled)
@@ -18,11 +19,13 @@
 - ⚠️ noUncheckedIndexedAccess: false (disabled)
 
 **Fichiers TypeScript**:
+
 - Total .ts: ~832 fichiers
 - Total .tsx: ~357 fichiers
 - **Total: ~1189 fichiers TypeScript**
 
 **Exclusions**:
+
 - Tests: `src/__tests__/**`
 - Hooks archivés: `src/hooks/archived/**`
 - Examples: `src/examples/**`
@@ -32,6 +35,7 @@
 ## 🎯 STRATÉGIE DE CORRECTION PAR PRIORITÉ
 
 ### **P0 — CRITIQUES (Chat & Voice)**
+
 Modules essentiels pour fonctionnement de base:
 
 1. **src/apps/ChatIA/** (Chat principal)
@@ -49,6 +53,7 @@ Modules essentiels pour fonctionnement de base:
    - Connection handling
 
 **Actions P0**:
+
 - ✓ Typage strict des props
 - ✓ Gestion erreurs async/await
 - ✓ Types pour événements audio/voice
@@ -57,6 +62,7 @@ Modules essentiels pour fonctionnement de base:
 ---
 
 ### **P1 — IMPORTANTS (Services Core)**
+
 Modules critiques pour stabilité:
 
 4. **src/services/** (Services backend)
@@ -74,6 +80,7 @@ Modules critiques pour stabilité:
    - Persistence
 
 **Actions P1**:
+
 - ✓ Types pour API responses
 - ✓ Error boundaries
 - ✓ Async state typing
@@ -82,6 +89,7 @@ Modules critiques pour stabilité:
 ---
 
 ### **P2 — AMÉLIORATION (UI & Utils)**
+
 Modules non-bloquants:
 
 7. **src/design-system/** (Composants UI)
@@ -95,6 +103,7 @@ Modules non-bloquants:
    - Validators
 
 **Actions P2**:
+
 - ✓ Props interfaces
 - ✓ Generic types
 - ✓ Return types explicites
@@ -106,6 +115,7 @@ Modules non-bloquants:
 ### 1. **Any Types → Explicit Types**
 
 ❌ **Avant**:
+
 ```typescript
 const handleMessage = (message: any) => {
   console.log(message.content);
@@ -113,6 +123,7 @@ const handleMessage = (message: any) => {
 ```
 
 ✅ **Après**:
+
 ```typescript
 interface Message {
   content: string;
@@ -130,6 +141,7 @@ const handleMessage = (message: Message) => {
 ### 2. **Missing Return Types**
 
 ❌ **Avant**:
+
 ```typescript
 const fetchData = async (id: string) => {
   const response = await api.get(`/data/${id}`);
@@ -138,6 +150,7 @@ const fetchData = async (id: string) => {
 ```
 
 ✅ **Après**:
+
 ```typescript
 interface DataResponse {
   id: string;
@@ -155,14 +168,16 @@ const fetchData = async (id: string): Promise<DataResponse> => {
 ### 3. **Event Handlers Typing**
 
 ❌ **Avant**:
+
 ```typescript
-const handleClick = (e) => {
+const handleClick = e => {
   e.preventDefault();
   // ...
 };
 ```
 
 ✅ **Après**:
+
 ```typescript
 const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
@@ -175,6 +190,7 @@ const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
 ### 4. **Null/Undefined Checks**
 
 ❌ **Avant**:
+
 ```typescript
 const getUsername = (user: User) => {
   return user.profile.name; // Peut crash si profile null
@@ -182,6 +198,7 @@ const getUsername = (user: User) => {
 ```
 
 ✅ **Après**:
+
 ```typescript
 const getUsername = (user: User): string => {
   return user.profile?.name ?? 'Anonymous';
@@ -193,11 +210,13 @@ const getUsername = (user: User): string => {
 ### 5. **Union Types for State**
 
 ❌ **Avant**:
+
 ```typescript
 const [status, setStatus] = useState('idle');
 ```
 
 ✅ **Après**:
+
 ```typescript
 type Status = 'idle' | 'loading' | 'success' | 'error';
 const [status, setStatus] = useState<Status>('idle');
@@ -208,6 +227,7 @@ const [status, setStatus] = useState<Status>('idle');
 ### 6. **Generic Components**
 
 ❌ **Avant**:
+
 ```typescript
 interface ListProps {
   items: any[];
@@ -216,6 +236,7 @@ interface ListProps {
 ```
 
 ✅ **Après**:
+
 ```typescript
 interface ListProps<T> {
   items: T[];
@@ -232,6 +253,7 @@ function List<T>({ items, renderItem }: ListProps<T>) {
 ### 7. **Async Error Handling**
 
 ❌ **Avant**:
+
 ```typescript
 const loadData = async () => {
   const data = await fetchData();
@@ -240,6 +262,7 @@ const loadData = async () => {
 ```
 
 ✅ **Après**:
+
 ```typescript
 const loadData = async (): Promise<void> => {
   try {
@@ -257,11 +280,13 @@ const loadData = async (): Promise<void> => {
 ### 8. **Ref Typing**
 
 ❌ **Avant**:
+
 ```typescript
 const inputRef = useRef(null);
 ```
 
 ✅ **Après**:
+
 ```typescript
 const inputRef = useRef<HTMLInputElement>(null);
 
@@ -276,6 +301,7 @@ if (inputRef.current) {
 ## 📝 CHECKLIST DE CORRECTION
 
 ### **Phase 1.6.1 — Chat & Voice (P0)**
+
 - [ ] Typer tous les props de ChatWindow.tsx
 - [ ] Ajouter types pour messages (role, content, timestamp)
 - [ ] Typer événements audio (onStart, onStop, onError)
@@ -284,6 +310,7 @@ if (inputRef.current) {
 - [ ] Gérer erreurs async dans handleSend
 
 ### **Phase 1.6.2 — Services (P1)**
+
 - [ ] Typer toutes les API responses
 - [ ] Ajouter error types pour try/catch
 - [ ] Typer stores Zustand correctement
@@ -291,6 +318,7 @@ if (inputRef.current) {
 - [ ] Typer événements système (keyboard, mouse)
 
 ### **Phase 1.6.3 — UI Components (P2)**
+
 - [ ] Interfaces pour tous les props
 - [ ] Generics pour composants réutilisables
 - [ ] Types pour design tokens
@@ -301,26 +329,31 @@ if (inputRef.current) {
 ## 🚀 COMMANDES DE VALIDATION
 
 ### **1. Scanner les erreurs**
+
 ```bash
 npx tsc --noEmit
 ```
 
 ### **2. Scanner un dossier spécifique**
+
 ```bash
 npx tsc --noEmit --project tsconfig.json --outDir /dev/null src/apps/ChatIA
 ```
 
 ### **3. Compter les erreurs**
+
 ```bash
 npx tsc --noEmit 2>&1 | grep "error TS" | wc -l
 ```
 
 ### **4. Grouper erreurs par type**
+
 ```bash
 npx tsc --noEmit 2>&1 | grep "error TS" | cut -d: -f4 | sort | uniq -c | sort -rn
 ```
 
 ### **5. Erreurs par fichier**
+
 ```bash
 npx tsc --noEmit 2>&1 | grep "error TS" | cut -d: -f1 | sort | uniq -c | sort -rn | head -20
 ```
@@ -330,11 +363,13 @@ npx tsc --noEmit 2>&1 | grep "error TS" | cut -d: -f1 | sort | uniq -c | sort -r
 ## 📊 MÉTRIQUES ATTENDUES
 
 **Avant Phase 1.6**:
+
 - Erreurs TypeScript: ~34
 - Warnings: ~156
 - Fichiers avec erreurs: ~15-20
 
 **Objectif Phase 1.6**:
+
 - Erreurs TypeScript: **0** ✅
 - Warnings: <50
 - Fichiers corrigés: 100%
@@ -345,6 +380,7 @@ npx tsc --noEmit 2>&1 | grep "error TS" | cut -d: -f1 | sort | uniq -c | sort -r
 ## 🎯 PROCHAINES ACTIONS
 
 1. **Scan initial complet**
+
    ```bash
    npx tsc --noEmit > typescript-errors.log 2>&1
    ```
@@ -372,6 +408,7 @@ npx tsc --noEmit 2>&1 | grep "error TS" | cut -d: -f1 | sort | uniq -c | sort -r
 ## 🔥 TIPS POUR CORRECTIONS RAPIDES
 
 ### **Type Guards**
+
 ```typescript
 function isError(value: unknown): value is Error {
   return value instanceof Error;
@@ -388,6 +425,7 @@ try {
 ```
 
 ### **Utility Types**
+
 ```typescript
 // Partial: rendre tous les champs optionnels
 type PartialUser = Partial<User>;
@@ -403,6 +441,7 @@ type UserWithoutPassword = Omit<User, 'password'>;
 ```
 
 ### **Type Assertions (en dernier recours)**
+
 ```typescript
 // Utiliser seulement si vous êtes CERTAIN du type
 const value = unknownValue as string;
@@ -418,6 +457,7 @@ if (typeof unknownValue === 'string') {
 ## ✅ VALIDATION FINALE
 
 **Critères de succès Phase 1.6**:
+
 - ✅ `npx tsc --noEmit` → 0 erreurs
 - ✅ Tous les fichiers P0 typés à 100%
 - ✅ Fichiers P1 typés à 90%+
@@ -427,6 +467,7 @@ if (typeof unknownValue === 'string') {
 - ✅ Null checks systématiques
 
 **Score cible**:
+
 - Avant: 82/100
 - Après: **88-90/100** (+6-8 points)
 

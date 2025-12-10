@@ -47,7 +47,10 @@ const levelToColor = (level: VisualLevel): string => {
   }
 };
 
-const levelToIcon = (level: VisualLevel, type: 'energy' | 'tension' | 'engagement'): string => {
+const levelToIcon = (
+  level: VisualLevel,
+  type: 'energy' | 'tension' | 'engagement'
+): string => {
   if (type === 'energy') {
     return level === 'low' ? '🔋' : level === 'medium' ? '⚡' : '🔥';
   }
@@ -71,9 +74,9 @@ export const VisionFeedbackCard: React.FC<VisionFeedbackCardProps> = ({
 }) => {
   // Feedback
   const feedback = useVisionFeedback();
-  const isActive = useVisionStore((s) => s.isObservationActive);
-  const dismissSuggestion = useVisionStore((s) => s.dismissSuggestion);
-  const pendingSuggestions = useVisionStore((s) => s.pendingSuggestions);
+  const isActive = useVisionStore(s => s.isObservationActive);
+  const dismissSuggestion = useVisionStore(s => s.dismissSuggestion);
+  const pendingSuggestions = useVisionStore(s => s.pendingSuggestions);
 
   // Combine suggestions
   const allSuggestions = useMemo(() => {
@@ -198,7 +201,9 @@ export const VisionFeedbackCard: React.FC<VisionFeedbackCardProps> = ({
                 className={`vision-feedback__suggestion vision-feedback__suggestion--${suggestion.priority}`}
                 onClick={() => handleSuggestionClick(suggestion, index)}
               >
-                <span className="vision-feedback__suggestion-message">{suggestion.message}</span>
+                <span className="vision-feedback__suggestion-message">
+                  {suggestion.message}
+                </span>
                 {suggestion.actionable && (
                   <span className="vision-feedback__suggestion-action">→</span>
                 )}

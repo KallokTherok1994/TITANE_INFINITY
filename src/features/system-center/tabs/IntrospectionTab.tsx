@@ -11,7 +11,13 @@ import { motion } from 'framer-motion';
 import { useIntrospection } from '../hooks/useIntrospection';
 import type { IssueSeverity, IssueCategory } from '../types/systemCenter.types';
 
-const SEVERITY_OPTIONS: Array<IssueSeverity | 'all'> = ['all', 'Critical', 'Error', 'Warning', 'Info'];
+const SEVERITY_OPTIONS: Array<IssueSeverity | 'all'> = [
+  'all',
+  'Critical',
+  'Error',
+  'Warning',
+  'Info',
+];
 
 // ══════════════════════════════════════════════════════════════════
 // HELPERS
@@ -19,25 +25,39 @@ const SEVERITY_OPTIONS: Array<IssueSeverity | 'all'> = ['all', 'Critical', 'Erro
 
 const getSeverityIcon = (severity: IssueSeverity): string => {
   switch (severity) {
-    case 'Critical': return '🔴';
-    case 'Error': return '🟠';
-    case 'Warning': return '🟡';
-    case 'Info': return '🔵';
-    default: return '⚪';
+    case 'Critical':
+      return '🔴';
+    case 'Error':
+      return '🟠';
+    case 'Warning':
+      return '🟡';
+    case 'Info':
+      return '🔵';
+    default:
+      return '⚪';
   }
 };
 
 const getCategoryIcon = (category: IssueCategory): string => {
   switch (category) {
-    case 'DeadCode': return '☠️';
-    case 'BrokenImport': return '🔗';
-    case 'TypeError': return '📝';
-    case 'PerformanceIssue': return '⚡';
-    case 'SecurityVulnerability': return '🔒';
-    case 'CodeSmell': return '👃';
-    case 'MemoryLeak': return '💧';
-    case 'UnusedDependency': return '📦';
-    default: return '❓';
+    case 'DeadCode':
+      return '☠️';
+    case 'BrokenImport':
+      return '🔗';
+    case 'TypeError':
+      return '📝';
+    case 'PerformanceIssue':
+      return '⚡';
+    case 'SecurityVulnerability':
+      return '🔒';
+    case 'CodeSmell':
+      return '👃';
+    case 'MemoryLeak':
+      return '💧';
+    case 'UnusedDependency':
+      return '📦';
+    default:
+      return '❓';
   }
 };
 
@@ -59,7 +79,9 @@ export const IntrospectionTab: React.FC = () => {
     clearReport,
   } = useIntrospection();
 
-  const [projectPath, setProjectPath] = useState('/home/titane/Documents/TITANE_INFINITY');
+  const [projectPath, setProjectPath] = useState(
+    '/home/titane/Documents/TITANE_INFINITY'
+  );
 
   // Filtered issues
   const filteredIssues = useMemo(() => {
@@ -80,7 +102,7 @@ export const IntrospectionTab: React.FC = () => {
         <input
           type="text"
           value={projectPath}
-          onChange={(e) => setProjectPath(e.target.value)}
+          onChange={e => setProjectPath(e.target.value)}
           className="sc-input sc-input--wide"
           placeholder="/path/to/project"
         />
@@ -107,13 +129,12 @@ export const IntrospectionTab: React.FC = () => {
           onClick={handleAutoFix}
           disabled={!report || isFixing || report.auto_fixes_available === 0}
         >
-          {isFixing ? '⏳ Correction...' : `🔧 Auto-Fix (${report?.auto_fixes_available || 0})`}
+          {isFixing
+            ? '⏳ Correction...'
+            : `🔧 Auto-Fix (${report?.auto_fixes_available || 0})`}
         </button>
         {report && (
-          <button
-            className="sc-btn sc-btn--ghost"
-            onClick={clearReport}
-          >
+          <button className="sc-btn sc-btn--ghost" onClick={clearReport}>
             🗑️ Effacer
           </button>
         )}
@@ -158,13 +179,15 @@ export const IntrospectionTab: React.FC = () => {
           <div className="sc-filter-bar">
             <span className="sc-filter-label">Filtrer par sévérité:</span>
             <div className="sc-filter-buttons">
-              {SEVERITY_OPTIONS.map((sev) => (
+              {SEVERITY_OPTIONS.map(sev => (
                 <button
                   key={sev}
                   className={`sc-filter-btn ${severityFilter === sev ? 'sc-filter-btn--active' : ''}`}
                   onClick={() => setSeverityFilter(sev)}
                 >
-                  {sev === 'all' ? 'Tous' : `${getSeverityIcon(sev as IssueSeverity)} ${sev}`}
+                  {sev === 'all'
+                    ? 'Tous'
+                    : `${getSeverityIcon(sev as IssueSeverity)} ${sev}`}
                 </button>
               ))}
             </div>
@@ -187,7 +210,9 @@ export const IntrospectionTab: React.FC = () => {
                   transition={{ delay: Math.min(index * 0.03, 0.5) }}
                 >
                   <div className="sc-issue-header">
-                    <span className="sc-issue-severity">{getSeverityIcon(issue.severity)}</span>
+                    <span className="sc-issue-severity">
+                      {getSeverityIcon(issue.severity)}
+                    </span>
                     <span className="sc-issue-category">
                       {getCategoryIcon(issue.category)} {issue.category}
                     </span>
@@ -203,9 +228,7 @@ export const IntrospectionTab: React.FC = () => {
                     )}
                   </div>
                   {issue.suggestion && (
-                    <p className="sc-issue-suggestion">
-                      💡 {issue.suggestion}
-                    </p>
+                    <p className="sc-issue-suggestion">💡 {issue.suggestion}</p>
                   )}
                 </motion.div>
               ))

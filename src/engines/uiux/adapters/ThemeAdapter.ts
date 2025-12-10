@@ -237,7 +237,10 @@ export class ThemeAdapter {
       { name: 'color-scheme', content: scheme },
       { name: 'theme-color', content: accentColor },
       { name: 'msapplication-navbutton-color', content: accentColor },
-      { name: 'apple-mobile-web-app-status-bar-style', content: scheme === 'dark' ? 'black-translucent' : 'default' },
+      {
+        name: 'apple-mobile-web-app-status-bar-style',
+        content: scheme === 'dark' ? 'black-translucent' : 'default',
+      },
     ];
   }
 

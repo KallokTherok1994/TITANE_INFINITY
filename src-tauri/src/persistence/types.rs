@@ -69,7 +69,12 @@ impl TitanEvent {
     }
 
     /// Créer un événement avec origine spécifiée
-    pub fn with_origin(module: &str, event_type: &str, payload: serde_json::Value, origin: EventOrigin) -> Self {
+    pub fn with_origin(
+        module: &str,
+        event_type: &str,
+        payload: serde_json::Value,
+        origin: EventOrigin,
+    ) -> Self {
         Self {
             id: uuid::Uuid::new_v4().to_string(),
             timestamp: chrono::Utc::now().timestamp_millis() as u64,
@@ -115,7 +120,10 @@ impl TitanEvent {
 
     /// Vérifier si l'événement est d'origine système
     pub fn is_system_initiated(&self) -> bool {
-        matches!(self.origin, EventOrigin::System | EventOrigin::Engine | EventOrigin::SelfHeal)
+        matches!(
+            self.origin,
+            EventOrigin::System | EventOrigin::Engine | EventOrigin::SelfHeal
+        )
     }
 }
 
@@ -190,7 +198,7 @@ impl Snapshot {
 
     /// Calculer le checksum SHA256
     fn compute_checksum(data: &[u8]) -> String {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
         let mut hasher = Sha256::new();
         hasher.update(data);
         format!("{:x}", hasher.finalize())

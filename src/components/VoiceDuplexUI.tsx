@@ -33,9 +33,12 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
   onManualActivate,
   onDeactivate,
 }) => {
-  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } =
+    useAnimation();
   const [state, setState] = useState<DuplexState>('waiting-wakeword');
-  const [wakewordState, setWakewordState] = useState<'waiting' | 'detecting' | 'activated'>('waiting');
+  const [wakewordState, setWakewordState] = useState<
+    'waiting' | 'detecting' | 'activated'
+  >('waiting');
   const [inputAudioData, setInputAudioData] = useState<number[]>([]);
   const [outputAudioData, setOutputAudioData] = useState<number[]>([]);
   const [volume, setVolume] = useState(0);
@@ -175,11 +178,7 @@ export const VoiceDuplexUI: React.FC<VoiceDuplexUIProps> = ({
                 )}
 
                 {state === 'thinking' && (
-                  <ListeningIndicator
-                    active={true}
-                    mode="thinking"
-                    size={160}
-                  />
+                  <ListeningIndicator active={true} mode="thinking" size={160} />
                 )}
 
                 {state === 'speaking' && (

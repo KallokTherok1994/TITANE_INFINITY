@@ -118,8 +118,14 @@ impl MemoryPatternExtractor {
     }
 
     /// Extrait tous les patterns des mémoires
-    pub fn extract_patterns(&self, items: &[MemoryItem]) -> Result<PatternExtractionResult, MemoryEvolutionError> {
-        info!("[MemoryPatterns] Extracting patterns from {} items", items.len());
+    pub fn extract_patterns(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<PatternExtractionResult, MemoryEvolutionError> {
+        info!(
+            "[MemoryPatterns] Extracting patterns from {} items",
+            items.len()
+        );
 
         let mut all_patterns = Vec::new();
 
@@ -151,7 +157,10 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte les patterns répétitifs
-    fn detect_repetitive_patterns(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_repetitive_patterns(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
         let mut content_hash_count: HashMap<u64, Vec<&MemoryItem>> = HashMap::new();
 
@@ -172,8 +181,14 @@ impl MemoryPatternExtractor {
                     confidence: 0.9,
                     occurrences: group.len(),
                     affected_items: group.iter().map(|i| i.id.clone()).collect(),
-                    first_seen: group.first().map(|i| i.created_at.clone()).unwrap_or_default(),
-                    last_seen: group.last().map(|i| i.created_at.clone()).unwrap_or_default(),
+                    first_seen: group
+                        .first()
+                        .map(|i| i.created_at.clone())
+                        .unwrap_or_default(),
+                    last_seen: group
+                        .last()
+                        .map(|i| i.created_at.clone())
+                        .unwrap_or_default(),
                     is_positive: false,
                 });
             }
@@ -183,13 +198,14 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte les patterns comportementaux
-    fn detect_behavioral_patterns(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_behavioral_patterns(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
 
         // Pattern: accès fréquent
-        let high_access: Vec<_> = items.iter()
-            .filter(|i| i.access_count > 5)
-            .collect();
+        let high_access: Vec<_> = items.iter().filter(|i| i.access_count > 5).collect();
 
         if high_access.len() >= self.config.min_occurrences {
             patterns.push(MemoryPattern {
@@ -209,16 +225,17 @@ impl MemoryPatternExtractor {
         }
 
         // Pattern: haute importance
-        let high_importance: Vec<_> = items.iter()
-            .filter(|i| i.importance > 0.8)
-            .collect();
+        let high_importance: Vec<_> = items.iter().filter(|i| i.importance > 0.8).collect();
 
         if high_importance.len() >= 3 {
             patterns.push(MemoryPattern {
                 id: uuid::Uuid::new_v4().to_string(),
                 pattern_type: PatternType::Strength,
                 name: "Contenu à haute importance".to_string(),
-                description: format!("{} items marqués comme très importants", high_importance.len()),
+                description: format!(
+                    "{} items marqués comme très importants",
+                    high_importance.len()
+                ),
                 trigger: "high_importance_score".to_string(),
                 action: "ensure_persistence".to_string(),
                 confidence: 0.9,
@@ -234,13 +251,14 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte les erreurs récurrentes
-    fn detect_recurrent_errors(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_recurrent_errors(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
 
         // Pattern: basse confiance récurrente
-        let low_confidence: Vec<_> = items.iter()
-            .filter(|i| i.confidence < 0.4)
-            .collect();
+        let low_confidence: Vec<_> = items.iter().filter(|i| i.confidence < 0.4).collect();
 
         if low_confidence.len() >= self.config.min_occurrences {
             patterns.push(MemoryPattern {
@@ -260,9 +278,7 @@ impl MemoryPatternExtractor {
         }
 
         // Pattern: items sans topic
-        let no_topic: Vec<_> = items.iter()
-            .filter(|i| i.topic.is_none())
-            .collect();
+        let no_topic: Vec<_> = items.iter().filter(|i| i.topic.is_none()).collect();
 
         if no_topic.len() >= 5 {
             patterns.push(MemoryPattern {
@@ -285,11 +301,15 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte les lacunes
-    fn detect_gaps(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_gaps(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
 
         // Gap: items sans résumé
-        let no_summary: Vec<_> = items.iter()
+        let no_summary: Vec<_> = items
+            .iter()
             .filter(|i| i.summary.is_none() && i.content.len() > 200)
             .collect();
 
@@ -335,11 +355,15 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte les forces
-    fn detect_strengths(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_strengths(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
 
         // Force: items pattern type
-        let pattern_items: Vec<_> = items.iter()
+        let pattern_items: Vec<_> = items
+            .iter()
             .filter(|i| i.memory_type == MemoryType::Pattern)
             .collect();
 
@@ -364,7 +388,10 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte les sujets récurrents
-    fn detect_topic_patterns(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_topic_patterns(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
         let mut topic_count: HashMap<String, Vec<&MemoryItem>> = HashMap::new();
 
@@ -386,8 +413,14 @@ impl MemoryPatternExtractor {
                     confidence: 0.9,
                     occurrences: group.len(),
                     affected_items: group.iter().map(|i| i.id.clone()).collect(),
-                    first_seen: group.first().map(|i| i.created_at.clone()).unwrap_or_default(),
-                    last_seen: group.last().map(|i| i.created_at.clone()).unwrap_or_default(),
+                    first_seen: group
+                        .first()
+                        .map(|i| i.created_at.clone())
+                        .unwrap_or_default(),
+                    last_seen: group
+                        .last()
+                        .map(|i| i.created_at.clone())
+                        .unwrap_or_default(),
                     is_positive: true,
                 });
             }
@@ -397,13 +430,19 @@ impl MemoryPatternExtractor {
     }
 
     /// Détecte la confusion contextuelle
-    fn detect_context_confusion(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
+    fn detect_context_confusion(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPattern>, MemoryEvolutionError> {
         let mut patterns = Vec::new();
 
         // Items dans plusieurs clusters potentiels
-        let multi_topic: Vec<_> = items.iter()
+        let multi_topic: Vec<_> = items
+            .iter()
             .filter(|i| {
-                i.topic.as_ref().map_or(false, |t| t.contains(',') || t.contains('&'))
+                i.topic
+                    .as_ref()
+                    .map_or(false, |t| t.contains(',') || t.contains('&'))
             })
             .collect();
 
@@ -452,28 +491,43 @@ impl MemoryPatternExtractor {
         for pattern in patterns {
             let (recommendation, priority) = match pattern.pattern_type {
                 PatternType::RecurrentError => (
-                    format!("Corriger le pattern d'erreur '{}' pour améliorer la qualité mémoire", pattern.name),
-                    RecommendationPriority::High
+                    format!(
+                        "Corriger le pattern d'erreur '{}' pour améliorer la qualité mémoire",
+                        pattern.name
+                    ),
+                    RecommendationPriority::High,
                 ),
                 PatternType::Gap => (
-                    format!("Combler la lacune '{}' pour une mémoire plus complète", pattern.name),
-                    RecommendationPriority::Medium
+                    format!(
+                        "Combler la lacune '{}' pour une mémoire plus complète",
+                        pattern.name
+                    ),
+                    RecommendationPriority::Medium,
                 ),
                 PatternType::Repetitive => (
-                    format!("Dédupliquer les contenus répétitifs identifiés dans '{}'", pattern.name),
-                    RecommendationPriority::Low
+                    format!(
+                        "Dédupliquer les contenus répétitifs identifiés dans '{}'",
+                        pattern.name
+                    ),
+                    RecommendationPriority::Low,
                 ),
                 PatternType::ContextConfusion => (
-                    format!("Clarifier le contexte pour les items dans '{}'", pattern.name),
-                    RecommendationPriority::High
+                    format!(
+                        "Clarifier le contexte pour les items dans '{}'",
+                        pattern.name
+                    ),
+                    RecommendationPriority::High,
                 ),
                 PatternType::Strength => (
-                    format!("Renforcer et exploiter la force identifiée: '{}'", pattern.name),
-                    RecommendationPriority::Medium
+                    format!(
+                        "Renforcer et exploiter la force identifiée: '{}'",
+                        pattern.name
+                    ),
+                    RecommendationPriority::Medium,
                 ),
                 _ => (
                     format!("Examiner le pattern '{}'", pattern.name),
-                    RecommendationPriority::Low
+                    RecommendationPriority::Low,
                 ),
             };
 
@@ -481,7 +535,10 @@ impl MemoryPatternExtractor {
                 pattern_id: pattern.id.clone(),
                 recommendation,
                 priority,
-                expected_impact: format!("Amélioration de {:.0}% estimée", pattern.confidence * 100.0),
+                expected_impact: format!(
+                    "Amélioration de {:.0}% estimée",
+                    pattern.confidence * 100.0
+                ),
             });
         }
 

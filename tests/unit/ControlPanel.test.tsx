@@ -26,7 +26,9 @@ vi.mock('@/ui/pages/ControlPanel/sections/AppearanceSection', () => ({
 }));
 
 vi.mock('@/ui/pages/ControlPanel/sections/SingularitySection', () => ({
-  SingularitySection: () => <div data-testid="singularity-section">Singularity Section</div>,
+  SingularitySection: () => (
+    <div data-testid="singularity-section">Singularity Section</div>
+  ),
 }));
 
 describe('ControlPanel', () => {
@@ -88,7 +90,9 @@ describe('ControlPanel', () => {
       expect(secureInvoke).toHaveBeenCalledTimes(1);
     });
 
-    const refreshCallback = intervalSpy.mock.calls[0]?.[0] as (() => Promise<void>) | undefined;
+    const refreshCallback = intervalSpy.mock.calls[0]?.[0] as
+      | (() => Promise<void>)
+      | undefined;
     expect(refreshCallback).toBeDefined();
 
     await act(async () => {

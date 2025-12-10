@@ -34,7 +34,7 @@ const trendIcons = {
 
 /**
  * MetricCard - Carte de métrique avec trend et mini graphique
- * 
+ *
  * @example
  * ```tsx
  * <MetricCard

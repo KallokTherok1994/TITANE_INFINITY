@@ -6,7 +6,7 @@
 import React, { useMemo } from 'react';
 import type {
   PerformanceTrend,
-  TrendDirection
+  TrendDirection,
 } from '../../services/evolutionEngine/evolutionEngine.config';
 import './EvolutionTrends.css';
 
@@ -34,14 +34,14 @@ const TREND_COLORS: Record<TrendDirection, string> = {
   IMPROVING: '#22c55e',
   STABLE: '#3b82f6',
   DEGRADING: '#ef4444',
-  VOLATILE: '#f59e0b'
+  VOLATILE: '#f59e0b',
 };
 
 const TREND_ICONS: Record<TrendDirection, string> = {
   IMPROVING: '📈',
   STABLE: '➡️',
   DEGRADING: '📉',
-  VOLATILE: '📊'
+  VOLATILE: '📊',
 };
 
 const formatMetricName = (name: string): string => {
@@ -54,7 +54,11 @@ const formatMetricName = (name: string): string => {
     .join(' ');
 };
 
-const generateSparklinePath = (samples: Array<{ value: number }>, width: number, height: number): string => {
+const generateSparklinePath = (
+  samples: Array<{ value: number }>,
+  width: number,
+  height: number
+): string => {
   if (samples.length < 2) return '';
 
   const values = samples.map(s => s.value);
@@ -76,13 +80,23 @@ const generateSparklinePath = (samples: Array<{ value: number }>, width: number,
 // ════════════════════════════════════════════════════════════════════════════
 
 const TrendChart: React.FC<TrendChartProps> = React.memo(({ trend, onClick }) => {
-  const { metric, samples, average, min, max, stdDeviation, trend: direction, anomalyCount } = trend;
+  const {
+    metric,
+    samples,
+    average,
+    min,
+    max,
+    stdDeviation,
+    trend: direction,
+    anomalyCount,
+  } = trend;
   const color = TREND_COLORS[direction];
   const icon = TREND_ICONS[direction];
 
-  const sparklinePath = useMemo(() =>
-    generateSparklinePath(samples.slice(-20), 120, 40),
-  [samples]);
+  const sparklinePath = useMemo(
+    () => generateSparklinePath(samples.slice(-20), 120, 40),
+    [samples]
+  );
 
   const changePercent = useMemo(() => {
     if (samples.length < 2) return 0;
@@ -96,7 +110,9 @@ const TrendChart: React.FC<TrendChartProps> = React.memo(({ trend, onClick }) =>
       <div className="trend-header">
         <span className="trend-icon">{icon}</span>
         <span className="trend-metric">{formatMetricName(metric)}</span>
-        <span className="trend-direction" style={{ color }}>{direction}</span>
+        <span className="trend-direction" style={{ color }}>
+          {direction}
+        </span>
       </div>
 
       <div className="trend-chart">
@@ -129,7 +145,8 @@ const TrendChart: React.FC<TrendChartProps> = React.memo(({ trend, onClick }) =>
           className={`change-badge ${changePercent >= 0 ? 'positive' : 'negative'}`}
           style={{ backgroundColor: `${color}20`, color }}
         >
-          {changePercent >= 0 ? '+' : ''}{changePercent.toFixed(1)}%
+          {changePercent >= 0 ? '+' : ''}
+          {changePercent.toFixed(1)}%
         </span>
         {anomalyCount > 0 && (
           <span className="anomaly-badge">⚠️ {anomalyCount} anomalies</span>
@@ -149,7 +166,7 @@ export const EvolutionTrends: React.FC<EvolutionTrendsProps> = ({
   trends,
   timeRange = '24h',
   onTrendSelect,
-  className = ''
+  className = '',
 }) => {
   const sortedTrends = useMemo(() => {
     return [...trends].sort((a, b) => {
@@ -158,19 +175,22 @@ export const EvolutionTrends: React.FC<EvolutionTrendsProps> = ({
         DEGRADING: 0,
         VOLATILE: 1,
         STABLE: 2,
-        IMPROVING: 3
+        IMPROVING: 3,
       };
       return priorityOrder[a.trend] - priorityOrder[b.trend];
     });
   }, [trends]);
 
-  const summary = useMemo(() => ({
-    improving: trends.filter(t => t.trend === 'IMPROVING').length,
-    stable: trends.filter(t => t.trend === 'STABLE').length,
-    degrading: trends.filter(t => t.trend === 'DEGRADING').length,
-    volatile: trends.filter(t => t.trend === 'VOLATILE').length,
-    totalAnomalies: trends.reduce((sum, t) => sum + t.anomalyCount, 0)
-  }), [trends]);
+  const summary = useMemo(
+    () => ({
+      improving: trends.filter(t => t.trend === 'IMPROVING').length,
+      stable: trends.filter(t => t.trend === 'STABLE').length,
+      degrading: trends.filter(t => t.trend === 'DEGRADING').length,
+      volatile: trends.filter(t => t.trend === 'VOLATILE').length,
+      totalAnomalies: trends.reduce((sum, t) => sum + t.anomalyCount, 0),
+    }),
+    [trends]
+  );
 
   return (
     <div className={`evolution-trends ${className}`}>

@@ -73,7 +73,9 @@ export interface CognitiveState {
 /**
  * Vérifie si un objet est un CognitiveValidationResult valide
  */
-export function isCognitiveValidationResult(obj: unknown): obj is CognitiveValidationResult {
+export function isCognitiveValidationResult(
+  obj: unknown
+): obj is CognitiveValidationResult {
   if (!obj || typeof obj !== 'object') return false;
   const result = obj as Record<string, unknown>;
 
@@ -119,19 +121,27 @@ export function isCognitiveState(obj: unknown): obj is CognitiveState {
   // Validation Mental
   if (!state.mental || typeof state.mental !== 'object') return false;
   const mental = state.mental as Record<string, unknown>;
-  if (typeof mental.charge !== 'number' || typeof mental.charge_rate !== 'number') return false;
-  if (!Array.isArray(mental.history) || !mental.history.every((h: unknown) => typeof h === 'number')) return false;
+  if (typeof mental.charge !== 'number' || typeof mental.charge_rate !== 'number')
+    return false;
+  if (
+    !Array.isArray(mental.history) ||
+    !mental.history.every((h: unknown) => typeof h === 'number')
+  )
+    return false;
 
   // Validation Heart
   if (!state.heart || typeof state.heart !== 'object') return false;
   const heart = state.heart as Record<string, unknown>;
-  if (typeof heart.alignment !== 'number' || typeof heart.motivation !== 'number') return false;
-  if (typeof heart.emotional_valence !== 'number' || typeof heart.intensity !== 'number') return false;
+  if (typeof heart.alignment !== 'number' || typeof heart.motivation !== 'number')
+    return false;
+  if (typeof heart.emotional_valence !== 'number' || typeof heart.intensity !== 'number')
+    return false;
 
   // Validation Body
   if (!state.body || typeof state.body !== 'object') return false;
   const body = state.body as Record<string, unknown>;
-  if (typeof body.energy_level !== 'number' || typeof body.physical_tension !== 'number') return false;
+  if (typeof body.energy_level !== 'number' || typeof body.physical_tension !== 'number')
+    return false;
   if (typeof body.voice_fatigue !== 'number') return false;
 
   // Validation Coherence
@@ -252,7 +262,10 @@ export class CognitiveBridge {
    * @param {string} expectedHash - Hash attendu
    * @returns {Promise<boolean>} true si intégrité OK
    */
-  static async verifyIntegrity(state: CognitiveState, expectedHash: string): Promise<boolean> {
+  static async verifyIntegrity(
+    state: CognitiveState,
+    expectedHash: string
+  ): Promise<boolean> {
     const currentHash = await this.computeHash(state);
     return currentHash === expectedHash;
   }

@@ -8,14 +8,14 @@ import {
   parseAppearanceCommand,
   extractFusionStyles,
   detectInventedStyle,
-} from "./styleLanguageParser";
+} from './styleLanguageParser';
 import {
   updateAppearance,
   applyStylePreset,
   mergeStyles,
   addArchetype,
-} from "./appearanceEngine";
-import type { AppearanceUpdateRequest } from "./appearanceState";
+} from './appearanceEngine';
+import type { AppearanceUpdateRequest } from './appearanceState';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // APPEARANCE COMMAND HANDLER
@@ -34,12 +34,12 @@ export interface AppearanceCommandResult {
  * @returns Result with response and whether command was handled
  */
 export async function handleAppearanceCommand(
-  message: string,
+  message: string
 ): Promise<AppearanceCommandResult> {
   try {
     // Check if message contains appearance command
     if (!isAppearanceCommand(message)) {
-      return { handled: false, response: "" };
+      return { handled: false, response: '' };
     }
 
     // Handle style fusion (multiple styles)
@@ -68,9 +68,7 @@ export async function handleAppearanceCommand(
 // STANDARD UPDATE HANDLER
 // ═══════════════════════════════════════════════════════════════════════════
 
-async function handleStandardUpdate(
-  message: string,
-): Promise<AppearanceCommandResult> {
+async function handleStandardUpdate(message: string): Promise<AppearanceCommandResult> {
   const update = parseAppearanceCommand(message);
 
   // If preset detected, apply it
@@ -103,9 +101,7 @@ async function handleStandardUpdate(
 // STYLE FUSION HANDLER
 // ═══════════════════════════════════════════════════════════════════════════
 
-async function handleStyleFusion(
-  message: string,
-): Promise<AppearanceCommandResult> {
+async function handleStyleFusion(message: string): Promise<AppearanceCommandResult> {
   const styles = extractFusionStyles(message);
 
   if (styles.length < 2) {
@@ -133,7 +129,7 @@ async function handleStyleFusion(
 
     return {
       handled: true,
-      response: `✅ Fusion réussie : ${styles.join(" + ")}. ${description}`,
+      response: `✅ Fusion réussie : ${styles.join(' + ')}. ${description}`,
       update,
     };
   } catch (error) {
@@ -162,10 +158,7 @@ async function handleInventedStyle(inventedStyle: {
   }
 
   try {
-    const response = await addArchetype(
-      inventedStyle.name,
-      inventedStyle.keywords,
-    );
+    const response = await addArchetype(inventedStyle.name, inventedStyle.keywords);
 
     return {
       handled: true,
@@ -185,27 +178,27 @@ async function handleInventedStyle(inventedStyle: {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const APPEARANCE_KEYWORDS = [
-  "apparence",
-  "tenue",
-  "vetements",
-  "coiffure",
-  "style",
-  "look",
-  "chemise",
-  "pantalon",
-  "jupe",
-  "robe",
-  "chaussures",
-  "lunettes",
-  "bijoux",
-  "cheveux",
-  "maquillage",
-  "bureau",
-  "casual",
-  "sport",
-  "montagne",
-  "professionnel",
-  "decontracte",
+  'apparence',
+  'tenue',
+  'vetements',
+  'coiffure',
+  'style',
+  'look',
+  'chemise',
+  'pantalon',
+  'jupe',
+  'robe',
+  'chaussures',
+  'lunettes',
+  'bijoux',
+  'cheveux',
+  'maquillage',
+  'bureau',
+  'casual',
+  'sport',
+  'montagne',
+  'professionnel',
+  'decontracte',
 ];
 
 /**
@@ -214,7 +207,7 @@ export const APPEARANCE_KEYWORDS = [
  */
 export function containsAppearanceKeyword(message: string): boolean {
   const msgLower = message.toLowerCase();
-  return APPEARANCE_KEYWORDS.some((keyword) => msgLower.includes(keyword));
+  return APPEARANCE_KEYWORDS.some(keyword => msgLower.includes(keyword));
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -224,21 +217,21 @@ export function containsAppearanceKeyword(message: string): boolean {
 export const APPEARANCE_RESPONSES = {
   success: [
     "✅ C'est fait ! J'ai modifié mon apparence.",
-    "✅ Voilà, changement effectué.",
-    "✅ Mon look est maintenant mis à jour.",
-    "✅ Transformation réussie !",
+    '✅ Voilà, changement effectué.',
+    '✅ Mon look est maintenant mis à jour.',
+    '✅ Transformation réussie !',
   ],
   partial: [
     "⚠️ J'ai appliqué une partie des changements.",
-    "⚠️ Certains éléments ont été modifiés.",
+    '⚠️ Certains éléments ont été modifiés.',
   ],
   error: [
     "❌ Je n'ai pas pu effectuer ce changement.",
     "❌ Cette modification n'est pas possible pour le moment.",
   ],
   clarification: [
-    "🤔 Peux-tu préciser quel aspect de mon apparence tu veux modifier ?",
-    "🤔 Je ne suis pas sûre de comprendre. Veux-tu modifier ma tenue, ma coiffure, ou mon style général ?",
+    '🤔 Peux-tu préciser quel aspect de mon apparence tu veux modifier ?',
+    '🤔 Je ne suis pas sûre de comprendre. Veux-tu modifier ma tenue, ma coiffure, ou mon style général ?',
   ],
 };
 
@@ -246,7 +239,7 @@ export const APPEARANCE_RESPONSES = {
  * Get random response from category
  */
 export function getAppearanceResponse(
-  category: keyof typeof APPEARANCE_RESPONSES,
+  category: keyof typeof APPEARANCE_RESPONSES
 ): string {
   const responses = APPEARANCE_RESPONSES[category];
   return responses[Math.floor(Math.random() * responses.length)];

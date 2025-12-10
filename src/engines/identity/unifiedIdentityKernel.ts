@@ -15,10 +15,7 @@
  */
 
 // REMOVED: engines/predictive supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
-import {
-  predictiveReflectionEngine,
-  type PredictiveFrame,
-} from '../predictive/_stubs';
+import { predictiveReflectionEngine, type PredictiveFrame } from '../predictive/_stubs';
 
 /*
 import {

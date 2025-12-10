@@ -333,18 +333,16 @@ pub async fn monitoring_get_heartbeats() -> Result<Vec<EngineHeartbeat>, String>
 /// Obtenir les anomalies détectées
 #[command]
 pub async fn monitoring_get_anomalies(include_fixed: bool) -> Result<Vec<DetectedAnomaly>, String> {
-    let mut anomalies = vec![
-        DetectedAnomaly {
-            id: "anom-001".to_string(),
-            anomaly_type: "latency_spike".to_string(),
-            severity: "low".to_string(),
-            source: "ai-chat".to_string(),
-            description: "Temporary latency spike detected (recovered)".to_string(),
-            detected_at: chrono::Utc::now().to_rfc3339(),
-            auto_fixed: true,
-            fix_applied: Some("Cache cleared, connection reset".to_string()),
-        },
-    ];
+    let mut anomalies = vec![DetectedAnomaly {
+        id: "anom-001".to_string(),
+        anomaly_type: "latency_spike".to_string(),
+        severity: "low".to_string(),
+        source: "ai-chat".to_string(),
+        description: "Temporary latency spike detected (recovered)".to_string(),
+        detected_at: chrono::Utc::now().to_rfc3339(),
+        auto_fixed: true,
+        fix_applied: Some("Cache cleared, connection reset".to_string()),
+    }];
 
     if !include_fixed {
         anomalies.retain(|a| !a.auto_fixed);
@@ -372,7 +370,9 @@ pub async fn monitoring_get_config() -> Result<MonitoringConfig, String> {
 
 /// Mettre à jour la configuration du monitoring
 #[command]
-pub async fn monitoring_update_config(config: MonitoringConfig) -> Result<MonitoringConfig, String> {
+pub async fn monitoring_update_config(
+    config: MonitoringConfig,
+) -> Result<MonitoringConfig, String> {
     // Validation
     if config.cpu_warning_threshold >= config.cpu_critical_threshold {
         return Err("CPU warning threshold must be less than critical".to_string());

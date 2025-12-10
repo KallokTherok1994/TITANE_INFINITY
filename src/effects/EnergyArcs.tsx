@@ -102,7 +102,7 @@ export const EnergyArcs: React.FC<EnergyArcsProps> = ({
         </linearGradient>
       </defs>
 
-      {arcs.map((arc) => {
+      {arcs.map(arc => {
         const path = generateArcPath(arc.start, arc.end);
         const strokeWidth = 2 + arc.intensity * 2;
 

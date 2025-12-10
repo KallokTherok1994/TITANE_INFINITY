@@ -178,7 +178,7 @@ export const useVisualStore = create<VisualStore>()(
           // Ne rien faire si même état
           if (currentState === state) return;
 
-          set((prev) => {
+          set(prev => {
             // Ajouter à l'historique
             const historyEntry = {
               state: currentState,
@@ -290,7 +290,7 @@ export const useVisualStore = create<VisualStore>()(
         // ═══════════════════════════════════════════════════════════
 
         updateMetrics: (metrics: Partial<PerformanceMetrics>) => {
-          set((prev) => ({
+          set(prev => ({
             metrics: {
               ...prev.metrics,
               ...metrics,
@@ -326,9 +326,7 @@ export const useVisualStore = create<VisualStore>()(
           set({ adaptiveFPS: enabled });
 
           if (get().debug) {
-            console.log(
-              `[visualStore] Adaptive FPS ${enabled ? 'activé' : 'désactivé'}`
-            );
+            console.log(`[visualStore] Adaptive FPS ${enabled ? 'activé' : 'désactivé'}`);
           }
         },
 
@@ -351,13 +349,13 @@ export const useVisualStore = create<VisualStore>()(
 
         getRecentStates: (count: number) => {
           const { stateHistory } = get();
-          return stateHistory.slice(-count).map((entry) => entry.state);
+          return stateHistory.slice(-count).map(entry => entry.state);
         },
       }),
       {
         name: 'titane-visual-store',
         // Ne persister que certains champs
-        partialize: (state) => ({
+        partialize: state => ({
           enableOrchestration: state.enableOrchestration,
           enableOSIntegration: state.enableOSIntegration,
           adaptiveFPS: state.adaptiveFPS,
@@ -433,7 +431,7 @@ export const useVisualGPULoad = () => useVisualStore(visualSelectors.gpuLoad);
  * (ne re-render jamais car les actions sont stables)
  */
 export const useVisualActions = () =>
-  useVisualStore((state) => ({
+  useVisualStore(state => ({
     setState: state.setState,
     setStateImmediate: state.setStateImmediate,
     revertToPreviousState: state.revertToPreviousState,

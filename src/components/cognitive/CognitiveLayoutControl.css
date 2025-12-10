@@ -36,7 +36,7 @@
   cursor: pointer;
 }
 
-.clc-toggle input[type="checkbox"] {
+.clc-toggle input[type='checkbox'] {
   margin: 0;
 }
 
@@ -313,7 +313,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -322,11 +323,11 @@
 }
 
 /* Adaptations selon le mode actif (via body data-attribute) */
-body[data-ui-mode="focus_deep"] {
+body[data-ui-mode='focus_deep'] {
   --ui-animations-duration: 0ms;
 }
 
-body[data-ui-mode="focus_deep"] .cognitive-layout-control {
+body[data-ui-mode='focus_deep'] .cognitive-layout-control {
   /* Plus compact en mode focus */
   max-width: 320px;
 }

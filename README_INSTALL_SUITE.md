@@ -8,20 +8,20 @@
 
 ### Scripts Principaux
 
-| Fichier | Taille | Description |
-|---------|--------|-------------|
-| `TITANE_POST_INSTALL_UBUNTU.sh` | 32 KB | **Script d'installation principal** — Configure automatiquement tout l'environnement |
-| `validate_environment.sh` | 11 KB | **Validation rapide** — Vérifie que tout est correctement installé |
-| `test_install_script.sh` | 6 KB | **Tests unitaires** — Valide la syntaxe et structure des scripts |
+| Fichier                         | Taille | Description                                                                          |
+| ------------------------------- | ------ | ------------------------------------------------------------------------------------ |
+| `TITANE_POST_INSTALL_UBUNTU.sh` | 32 KB  | **Script d'installation principal** — Configure automatiquement tout l'environnement |
+| `validate_environment.sh`       | 11 KB  | **Validation rapide** — Vérifie que tout est correctement installé                   |
+| `test_install_script.sh`        | 6 KB   | **Tests unitaires** — Valide la syntaxe et structure des scripts                     |
 
 ### Documentation
 
-| Fichier | Taille | Description |
-|---------|--------|-------------|
-| `POST_INSTALL_README.md` | 5.5 KB | Documentation détaillée du processus d'installation |
-| `QUICKSTART_UBUNTU_24.04.md` | 6.9 KB | Guide de démarrage rapide pour nouveaux utilisateurs |
-| `MANIFEST_INSTALLATION.md` | 8.6 KB | Récapitulatif complet et cas d'usage |
-| `README_INSTALL_SUITE.md` | Ce fichier | Vue d'ensemble de la suite d'installation |
+| Fichier                      | Taille     | Description                                          |
+| ---------------------------- | ---------- | ---------------------------------------------------- |
+| `POST_INSTALL_README.md`     | 5.5 KB     | Documentation détaillée du processus d'installation  |
+| `QUICKSTART_UBUNTU_24.04.md` | 6.9 KB     | Guide de démarrage rapide pour nouveaux utilisateurs |
+| `MANIFEST_INSTALLATION.md`   | 8.6 KB     | Récapitulatif complet et cas d'usage                 |
+| `README_INSTALL_SUITE.md`    | Ce fichier | Vue d'ensemble de la suite d'installation            |
 
 ---
 
@@ -88,10 +88,12 @@ source ~/.bashrc
 ## 📋 Ce qui est installé
 
 ### Phase 1 : Système
+
 - Mise à jour APT complète
 - Outils essentiels (git, curl, wget, build-essential)
 
 ### Phase 2 : Dépendances Tauri v2 ⚡
+
 ```
 libgtk-3-dev
 libwebkit2gtk-4.1-dev
@@ -104,34 +106,41 @@ patchelf
 ```
 
 ### Phase 3 : Rust
+
 - rustup (gestionnaire toolchains)
 - Toolchains stable + nightly
 - rustfmt, clippy
 - Target wasm32-unknown-unknown
 
 ### Phase 4 : Node.js
+
 - NVM (Node Version Manager)
 - Node.js LTS
 - npm dernière version
 
 ### Phase 5 : VSCode
+
 - Éditeur VSCode
 - 9 extensions essentielles
 
 ### Phase 6 : Configurations
+
 - Clés SSH (si backup fourni)
 - Configuration Git
 - Paramètres VSCode
 
 ### Phase 7 : Projet
+
 - Clone TITANE_INFINITY
 - Checkout branche main
 
 ### Phase 8 : Dépendances
+
 - `npm install`
 - `cargo build`
 
 ### Phase 9 : Validation
+
 - Rapport complet
 - Recommandations
 
@@ -146,6 +155,7 @@ patchelf
 ```
 
 Vérifie :
+
 - ✅ Ubuntu 24.04 LTS
 - ✅ Rust + Cargo
 - ✅ Node.js + npm
@@ -171,6 +181,7 @@ Vérifie :
 ```
 
 Ce script teste :
+
 - ✅ Existence des fichiers
 - ✅ Permissions exécutables
 - ✅ Syntaxe Bash
@@ -183,20 +194,26 @@ Ce script teste :
 ## 📚 Documentation
 
 ### Pour les nouveaux utilisateurs
+
 → Lire **`QUICKSTART_UBUNTU_24.04.md`**
+
 - Installation en 3 commandes
 - Commandes essentielles
 - Dépannage rapide
 
 ### Pour les détails techniques
+
 → Lire **`POST_INSTALL_README.md`**
+
 - Description complète des 9 phases
 - Configuration SSH pas-à-pas
 - Structure installée
 - Dépannage complet
 
 ### Pour les cas d'usage
+
 → Lire **`MANIFEST_INSTALLATION.md`**
+
 - Scénarios d'utilisation
 - Statistiques (temps, espace)
 - Maintenance
@@ -242,11 +259,13 @@ usernamehw.errorlens
 ### Script s'arrête avec une erreur
 
 1. **Consulter les logs** :
+
    ```bash
    cat ~/.titane_install_logs/install_*.log | grep ERROR
    ```
 
 2. **Réexécuter** (le script est idempotent) :
+
    ```bash
    ./TITANE_POST_INSTALL_UBUNTU.sh
    ```
@@ -295,11 +314,13 @@ ssh -T git@github.com
 ## 📊 Statistiques
 
 ### Temps d'exécution
+
 - **Installation complète** : 15-30 min (selon connexion)
 - **Avec backup** : +2-3 min
 - **Validation** : ~5 secondes
 
 ### Espace disque requis
+
 - **Outils système** : ~500 MB
 - **Rust** : ~1.5 GB
 - **Node.js** : ~200 MB
@@ -308,6 +329,7 @@ ssh -T git@github.com
 - **Total** : ~3.7 GB
 
 ### Compatibilité
+
 - ✅ **Ubuntu 24.04 LTS** (recommandé)
 - ⚠️ **Ubuntu 22.04 LTS** (devrait fonctionner)
 - ⚠️ **Debian 12+** (avec adaptations mineures)
@@ -318,17 +340,20 @@ ssh -T git@github.com
 ## 🔐 Sécurité
 
 ### Ce qui est fait
+
 - ✅ Téléchargements via HTTPS
 - ✅ Vérifications de signatures (rustup)
 - ✅ Permissions correctes sur clés SSH (600/644)
 - ✅ Pas de sudo pour l'utilisateur (sauf apt)
 
 ### Ce qui n'est PAS fait
+
 - ❌ Vérification des checksums APT (confiance au système)
 - ❌ Scan antivirus (responsabilité utilisateur)
 - ❌ Sandboxing (exécution directe)
 
 ### Logs
+
 - ✅ Commandes loggées
 - ✅ Pas de secrets enregistrés
 - ✅ Permissions 644 sur logs
@@ -378,9 +403,11 @@ Pour plus de détails : `ARCHITECTURE.md`
 ## 📞 Support
 
 ### Issues GitHub
+
 https://github.com/KallokTherok1994/TITANE_INFINITY/issues
 
 ### Documentation projet
+
 - `ARCHITECTURE.md`
 - `.github/instructions/titane.instructions.md`
 - `README.md`
@@ -390,6 +417,7 @@ https://github.com/KallokTherok1994/TITANE_INFINITY/issues
 ## 📝 Changelog
 
 ### v1.0.0 (2024-12-09)
+
 - ✨ Création initiale de la suite d'installation
 - ✨ Script d'installation automatisée complet
 - ✨ Script de validation environnement

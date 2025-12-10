@@ -122,11 +122,7 @@ mod tests {
         let config = PerformanceConfig::default();
         let scheduler = CognitiveScheduler::new(config).unwrap();
 
-        let task = CognitiveTask::new(
-            TaskType::Engine,
-            TaskPriority::High,
-            serde_json::json!({}),
-        );
+        let task = CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
 
         scheduler.enqueue(task.clone()).await.unwrap();
 
@@ -147,11 +143,7 @@ mod tests {
         let config = PerformanceConfig::default();
         let scheduler = CognitiveScheduler::new(config).unwrap();
 
-        let task = CognitiveTask::new(
-            TaskType::Engine,
-            TaskPriority::High,
-            serde_json::json!({}),
-        );
+        let task = CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
 
         scheduler.enqueue(task).await.unwrap();
         scheduler.dequeue().await.unwrap();
@@ -162,4 +154,3 @@ mod tests {
         assert_eq!(state.completed_tasks, 1);
     }
 }
-

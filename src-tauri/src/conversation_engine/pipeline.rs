@@ -4,7 +4,6 @@
  * Pipeline unifié de traitement conversationnel
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use std::sync::Arc;
 use std::time::Instant;
 use tokio::sync::RwLock;
@@ -13,14 +12,16 @@ use crate::ai::router::AIRouter;
 use crate::ai::{AIRequest, AIResponse};
 use crate::singularity::singularity_state::SingularityState;
 
-use super::types::*;
-use super::memory::ConversationMemoryEngine;
-use super::intent::IntentAnalyzer;
-use super::emotion::EmotionAnalyzer;
-use super::cognitive::CognitiveCompressor;
-use super::self_healing::SelfHealingConversation;
 use super::api_neutralizer::ApiNeutralizer;
-use super::french_mastery::{FrenchMasteryProcessor, FrenchMasteryRequest, ProcessingMode, PostProcessingConstraints};
+use super::cognitive::CognitiveCompressor;
+use super::emotion::EmotionAnalyzer;
+use super::french_mastery::{
+    FrenchMasteryProcessor, FrenchMasteryRequest, PostProcessingConstraints, ProcessingMode,
+};
+use super::intent::IntentAnalyzer;
+use super::memory::ConversationMemoryEngine;
+use super::self_healing::SelfHealingConversation;
+use super::types::*;
 use super::ConversationEngineError;
 
 /// Pipeline unifié de traitement conversationnel
@@ -90,17 +91,11 @@ impl ConversationPipeline {
         let conv_id_opt = request.conversation_id.clone();
 
         // Exécution parallèle
-        let (
-            intention,
-            emotion,
-            memory_result
-        ) = tokio::join!(
+        let (intention, emotion, memory_result) = tokio::join!(
             // ÉTAPE 2: Analyse d'intention (CPU-bound, ~2-5ms)
             async { self.intent_analyzer.analyze(&msg_for_intent) },
-
             // ÉTAPE 3: Analyse émotionnelle (CPU-bound, ~2-5ms)
             async { self.emotion_analyzer.analyze(&msg_for_emotion, emotion_ctx) },
-
             // ÉTAPE 4: Récupération du contexte mémoire (IO-bound, ~10-50ms)
             async {
                 let conv_id = self.memory.ensure_conversation_id(conv_id_opt).await?;
@@ -127,13 +122,15 @@ impl ConversationPipeline {
         );
 
         // ÉTAPE 6: Génération IA
-        let ai_response = self.generate_ai_response(
-            enriched_prompt,
-            request.ai_config.unwrap_or_default(),
-        ).await?;
+        let ai_response = self
+            .generate_ai_response(enriched_prompt, request.ai_config.unwrap_or_default())
+            .await?;
 
         // 🇫🇷 ÉTAPE 6.5: POST-TRAITEMENT FRENCH MASTERY (CRITIQUE)
-        log::info!("[Ω:FRENCH] Application FrenchMastery | content_len={}", ai_response.content.len());
+        log::info!(
+            "[Ω:FRENCH] Application FrenchMastery | content_len={}",
+            ai_response.content.len()
+        );
 
         let french_request = FrenchMasteryRequest {
             context: format!("Mode: {:?}, Intent: {:?}", request.mode, intention),
@@ -146,9 +143,12 @@ impl ConversationPipeline {
             Ok(processed) => {
                 log::info!("[Ω:FRENCH] ✅ Post-traitement réussi");
                 processed.finalized_response
-            },
+            }
             Err(e) => {
-                log::warn!("[Ω:FRENCH] ⚠️ Échec post-traitement: {} | utilisation réponse brute", e);
+                log::warn!(
+                    "[Ω:FRENCH] ⚠️ Échec post-traitement: {} | utilisation réponse brute",
+                    e
+                );
                 ai_response.content.clone()
             }
         };
@@ -169,22 +169,29 @@ impl ConversationPipeline {
         );
 
         // ÉTAPE 9: Sauvegarde mémoire
-        let message_id = self.memory.save_exchange(
-            &conversation_id,
-            &validated_message,
-            &neutralized_response.content,
-            &intention,
-            &emotion,
-            &cognitive_summary,
-            &neutralized_response.provider,
-            start.elapsed().as_millis() as u64,
-        ).await?;
+        let message_id = self
+            .memory
+            .save_exchange(
+                &conversation_id,
+                &validated_message,
+                &neutralized_response.content,
+                &intention,
+                &emotion,
+                &cognitive_summary,
+                &neutralized_response.provider,
+                start.elapsed().as_millis() as u64,
+            )
+            .await?;
 
         // ÉTAPE 10: Synchronisation SingularityState
         self.sync_singularity(&emotion, &cognitive_summary).await?;
 
         // ÉTAPE 11: Self-Healing check
-        self.self_healing.write().await.verify_state(&conversation_id).await?;
+        self.self_healing
+            .write()
+            .await
+            .verify_state(&conversation_id)
+            .await?;
 
         let final_latency = start.elapsed().as_millis() as u64;
 
@@ -222,13 +229,13 @@ impl ConversationPipeline {
 
         if trimmed.is_empty() {
             return Err(ConversationEngineError::ValidationError(
-                "Message vide".to_string()
+                "Message vide".to_string(),
             ));
         }
 
         if trimmed.len() > 10000 {
             return Err(ConversationEngineError::ValidationError(
-                "Message trop long (max 10000 caractères)".to_string()
+                "Message trop long (max 10000 caractères)".to_string(),
             ));
         }
 
@@ -285,9 +292,13 @@ impl ConversationPipeline {
 
         let intention_context = match intention {
             Intention::Question => "L'utilisateur pose une question et attend une réponse claire.",
-            Intention::Action => "L'utilisateur demande une action concrète ou un conseil pratique.",
+            Intention::Action => {
+                "L'utilisateur demande une action concrète ou un conseil pratique."
+            }
             Intention::Emotion => "L'utilisateur exprime une émotion. Reconnais-la et accompagne.",
-            Intention::Clarification => "L'utilisateur cherche à clarifier sa pensée ou un concept.",
+            Intention::Clarification => {
+                "L'utilisateur cherche à clarifier sa pensée ou un concept."
+            }
             Intention::Meta => "L'utilisateur réfléchit sur la conversation elle-même. Sois méta.",
         };
 
@@ -308,7 +319,11 @@ impl ConversationPipeline {
             system_identity,
             mode,
             mode_instruction,
-            if memory_context.is_empty() { "Nouvelle conversation" } else { memory_context },
+            if memory_context.is_empty() {
+                "Nouvelle conversation"
+            } else {
+                memory_context
+            },
             intention_context,
             emotion.valence,
             emotion.intensity,
@@ -331,7 +346,8 @@ impl ConversationPipeline {
         };
 
         let router = self.ai_router.read().await;
-        router.query(ai_request)
+        router
+            .query(ai_request)
             .await
             .map_err(|e| ConversationEngineError::AIError(e.to_string()))
     }

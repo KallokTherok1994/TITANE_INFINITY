@@ -211,13 +211,9 @@ export class EvolutionEngine {
     this.initialized = true;
 
     // Log d'initialisation
-    this.collector.record(
-      'SYSTEM_METRICS',
-      'evolution',
-      'initialized',
-      true,
-      { timestamp: Date.now() }
-    );
+    this.collector.record('SYSTEM_METRICS', 'evolution', 'initialized', true, {
+      timestamp: Date.now(),
+    });
   }
 
   /**
@@ -462,7 +458,7 @@ export class EvolutionEngine {
       totalPatterns: patterns.length,
       totalInsights: insights.length,
       totalActionsExecuted: history.length,
-      successfulActions: history.filter((h) => h.result === 'SUCCESS').length,
+      successfulActions: history.filter(h => h.result === 'SUCCESS').length,
       knowledgeBase: [],
       strategies: [],
       lastLearningCycle: this.analyzer.getScores().lastCalculated,
@@ -480,15 +476,13 @@ export class EvolutionEngine {
 
     snapshot.metrics = {
       dataPointsLast24h: dataCount,
-      patternsDetectedLast24h: patterns.filter(
-        (p) => Date.now() - p.lastSeen < 86400000
-      ).length,
+      patternsDetectedLast24h: patterns.filter(p => Date.now() - p.lastSeen < 86400000)
+        .length,
       suggestionsGeneratedLast24h: suggestions.filter(
-        (s) => Date.now() - s.createdAt < 86400000
+        s => Date.now() - s.createdAt < 86400000
       ).length,
-      actionsExecutedLast24h: history.filter(
-        (h) => Date.now() - h.timestamp < 86400000
-      ).length,
+      actionsExecutedLast24h: history.filter(h => Date.now() - h.timestamp < 86400000)
+        .length,
       successRateLast24h: this.calculateSuccessRate(history),
     };
 
@@ -496,10 +490,10 @@ export class EvolutionEngine {
   }
 
   private calculateSuccessRate(history: EvolutionHistoryEntry[]): number {
-    const recent = history.filter((h) => Date.now() - h.timestamp < 86400000);
+    const recent = history.filter(h => Date.now() - h.timestamp < 86400000);
     if (recent.length === 0) return 100;
 
-    const successful = recent.filter((h) => h.result === 'SUCCESS').length;
+    const successful = recent.filter(h => h.result === 'SUCCESS').length;
     return Math.round((successful / recent.length) * 100);
   }
 
@@ -510,63 +504,49 @@ export class EvolutionEngine {
   /**
    * Ajoute un listener pour les nouveaux data points
    */
-  onDataPoint(
-    listener: (dp: EvolutionDataPoint) => void
-  ): () => void {
+  onDataPoint(listener: (dp: EvolutionDataPoint) => void): () => void {
     return this.collector.onDataPoint(listener);
   }
 
   /**
    * Ajoute un listener pour les nouveaux patterns
    */
-  onPattern(
-    listener: (pattern: EvolutionPattern) => void
-  ): () => void {
+  onPattern(listener: (pattern: EvolutionPattern) => void): () => void {
     return this.analyzer.onPattern(listener);
   }
 
   /**
    * Ajoute un listener pour les nouveaux insights
    */
-  onInsight(
-    listener: (insight: EvolutionInsight) => void
-  ): () => void {
+  onInsight(listener: (insight: EvolutionInsight) => void): () => void {
     return this.analyzer.onInsight(listener);
   }
 
   /**
    * Ajoute un listener pour les nouveaux rapports
    */
-  onReport(
-    listener: (report: EvolutionReport) => void
-  ): () => void {
+  onReport(listener: (report: EvolutionReport) => void): () => void {
     return this.analyzer.onReport(listener);
   }
 
   /**
    * Ajoute un listener pour les nouvelles suggestions
    */
-  onSuggestion(
-    listener: (suggestion: EvolutionSuggestion) => void
-  ): () => void {
+  onSuggestion(listener: (suggestion: EvolutionSuggestion) => void): () => void {
     return this.planner.onSuggestion(listener);
   }
 
   /**
    * Ajoute un listener pour les résultats d'action
    */
-  onActionResult(
-    listener: (result: EvolutionActionResult) => void
-  ): () => void {
+  onActionResult(listener: (result: EvolutionActionResult) => void): () => void {
     return this.executor.onResult(listener);
   }
 
   /**
    * Ajoute un listener pour l'historique
    */
-  onHistoryEntry(
-    listener: (entry: EvolutionHistoryEntry) => void
-  ): () => void {
+  onHistoryEntry(listener: (entry: EvolutionHistoryEntry) => void): () => void {
     return this.executor.onHistory(listener);
   }
 

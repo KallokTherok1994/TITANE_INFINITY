@@ -4,13 +4,13 @@
 //   Fusion: Nexus + ConsistencyEngine
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
+use std::sync::Arc;
+use tauri::State;
+use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
+use titane_infinity::core::modules::coherence::{CoherenceReport, ConnectionReport};
 #[allow(dead_code)]
 use titane_infinity::core::state::SingularityState;
-use titane_infinity::core::modules::coherence::{CoherenceReport, ConnectionReport};
-use titane_infinity::cache::middleware::{cached_invoke, CacheStrategy};
-use serde::{Deserialize, Serialize};
-use tauri::State;
-use std::sync::Arc;
 use tokio::sync::RwLock;
 
 // ═══════════════════════════════════════════════════════════════
@@ -92,14 +92,18 @@ pub async fn coherence_validate_connections(
 
 /// Get global coherence score (quick check)
 #[tauri::command]
-pub async fn coherence_get_score(singularity: State<'_, Arc<RwLock<SingularityState>>>) -> Result<f64, String> {
+pub async fn coherence_get_score(
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
+) -> Result<f64, String> {
     let state = singularity.read().await;
     Ok(state.coherence.global_coherence())
 }
 
 /// Initialize coherence engine (if not already initialized)
 #[tauri::command]
-pub async fn coherence_initialize(singularity: State<'_, Arc<RwLock<SingularityState>>>) -> Result<String, String> {
+pub async fn coherence_initialize(
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
+) -> Result<String, String> {
     let mut state = singularity.write().await;
 
     match state.coherence.init() {

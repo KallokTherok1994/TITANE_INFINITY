@@ -9,12 +9,14 @@
 ## 🔍 DIAGNOSTIC DU PROBLÈME
 
 ### **Symptômes**
+
 - 🔊 Écho: Le micro capte le son du haut-parleur
 - 🔁 Boucle: L'IA s'entend elle-même et répond en boucle
 - 📢 Amplification: Le son devient de plus en plus fort
 - 🎙️ Mode duplex impossible: Ne peut pas écouter pendant que l'IA parle
 
 ### **Cause racine**
+
 ```
 User parle → Micro → ASR → IA → TTS → Haut-parleur
                 ↑                              ↓
@@ -28,6 +30,7 @@ Le micro capte le son du haut-parleur, créant une **boucle de feedback**.
 ## ✅ SOLUTION 1: ECHO CANCELLATION (Web Audio API)
 
 ### **Principe**
+
 Activer l'annulation d'écho native du navigateur via `getUserMedia` constraints.
 
 ### **Implementation**
@@ -41,7 +44,7 @@ Activer l'annulation d'écho native du navigateur via `getUserMedia` constraints
 
 async function startMicrophone() {
   const stream = await navigator.mediaDevices.getUserMedia({
-    audio: true
+    audio: true,
   });
   return stream;
 }
@@ -53,12 +56,12 @@ async function startMicrophone() {
 async function startMicrophone(): Promise<MediaStream> {
   const constraints: MediaStreamConstraints = {
     audio: {
-      echoCancellation: true,      // ✅ Annulation d'écho
-      noiseSuppression: true,       // ✅ Réduction bruit
-      autoGainControl: true,        // ✅ Contrôle gain automatique
-      sampleRate: 16000,            // Optimal pour ASR
-      channelCount: 1,              // Mono suffisant
-    }
+      echoCancellation: true, // ✅ Annulation d'écho
+      noiseSuppression: true, // ✅ Réduction bruit
+      autoGainControl: true, // ✅ Contrôle gain automatique
+      sampleRate: 16000, // Optimal pour ASR
+      channelCount: 1, // Mono suffisant
+    },
   };
 
   try {
@@ -73,6 +76,7 @@ async function startMicrophone(): Promise<MediaStream> {
 ```
 
 ### **Validation**
+
 ```typescript
 // Vérifier que les contraintes sont bien appliquées
 const audioTrack = stream.getAudioTracks()[0];
@@ -80,7 +84,7 @@ const settings = audioTrack.getSettings();
 
 console.log('Echo cancellation:', settings.echoCancellation); // Should be true
 console.log('Noise suppression:', settings.noiseSuppression); // Should be true
-console.log('Auto gain control:', settings.autoGainControl);  // Should be true
+console.log('Auto gain control:', settings.autoGainControl); // Should be true
 ```
 
 ---
@@ -88,6 +92,7 @@ console.log('Auto gain control:', settings.autoGainControl);  // Should be true
 ## ✅ SOLUTION 2: MUTE MICRO PENDANT TTS
 
 ### **Principe**
+
 Désactiver temporairement le micro pendant que l'IA parle.
 
 ### **Implementation**
@@ -142,7 +147,6 @@ class VoiceModeManager {
 
       // Petit délai supplémentaire pour éviter queue-overlap
       await new Promise(resolve => setTimeout(resolve, 300));
-
     } catch (error) {
       console.error('[VoiceMode] TTS failed:', error);
     } finally {
@@ -164,6 +168,7 @@ class VoiceModeManager {
 ```
 
 ### **Validation visuelle**
+
 ```typescript
 // Indicateur UI pour montrer l'état du micro
 <div className="microphone-status">
@@ -180,6 +185,7 @@ class VoiceModeManager {
 ## ✅ SOLUTION 3: VAD (VOICE ACTIVITY DETECTION)
 
 ### **Principe**
+
 Ne déclencher l'ASR que quand l'utilisateur parle réellement.
 
 ### **Implementation**
@@ -199,10 +205,10 @@ class SimpleVAD {
   constructor(stream: MediaStream) {
     this.audioContext = new AudioContext();
     const source = this.audioContext.createMediaStreamSource(stream);
-    
+
     this.analyser = this.audioContext.createAnalyser();
     this.analyser.fftSize = 2048;
-    
+
     source.connect(this.analyser);
   }
 
@@ -252,6 +258,7 @@ class SimpleVAD {
 ```
 
 ### **Integration avec Voice Mode**
+
 ```typescript
 const vad = new SimpleVAD(audioStream);
 
@@ -276,6 +283,7 @@ vad.startMonitoring(
 ## ✅ SOLUTION 4: PUSH-TO-TALK (FALLBACK)
 
 ### **Principe**
+
 Si les solutions automatiques échouent, offrir un mode "appuyer pour parler".
 
 ### **Implementation**
@@ -365,7 +373,7 @@ export class VoiceModeManager {
         autoGainControl: true,
         sampleRate: 16000,
         channelCount: 1,
-      }
+      },
     };
 
     return await navigator.mediaDevices.getUserMedia(constraints);
@@ -409,7 +417,6 @@ export class VoiceModeManager {
       await this.synthesizeSpeech(text);
       await this.waitForAudioEnd();
       await this.delay(300); // Extra buffer
-
     } catch (error) {
       console.error('[VoiceMode] TTS failed:', error);
     } finally {
@@ -421,12 +428,12 @@ export class VoiceModeManager {
 
   private muteMicrophone(): void {
     if (!this.audioStream) return;
-    this.audioStream.getAudioTracks().forEach(track => track.enabled = false);
+    this.audioStream.getAudioTracks().forEach(track => (track.enabled = false));
   }
 
   private unmuteMicrophone(): void {
     if (!this.audioStream) return;
-    this.audioStream.getAudioTracks().forEach(track => track.enabled = true);
+    this.audioStream.getAudioTracks().forEach(track => (track.enabled = true));
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -448,6 +455,7 @@ export class VoiceModeManager {
 ## 🧪 TESTS DE VALIDATION
 
 ### **Test 1: Echo Cancellation**
+
 ```typescript
 // Vérifier que les contraintes sont appliquées
 const track = stream.getAudioTracks()[0];
@@ -458,6 +466,7 @@ console.assert(settings.noiseSuppression === true, 'Noise suppression should be 
 ```
 
 ### **Test 2: Mute/Unmute**
+
 ```typescript
 // Simuler cycle TTS
 await voiceMode.speak('Hello world');
@@ -468,6 +477,7 @@ console.assert(track?.enabled === true, 'Microphone should be enabled after TTS'
 ```
 
 ### **Test 3: Duplex Mode**
+
 ```bash
 # Test manuel:
 1. Lancer mode vocal
@@ -483,18 +493,21 @@ console.assert(track?.enabled === true, 'Microphone should be enabled after TTS'
 ## 📊 MÉTRIQUES DE SUCCÈS
 
 **Avant Phase 1.7**:
+
 - ❌ Écho systématique
 - ❌ Boucle de feedback
 - ❌ Mode duplex impossible
 - ❌ Amplification progressive
 
 **Après Phase 1.7**:
+
 - ✅ Zéro écho
 - ✅ Pas de boucle
 - ✅ Mode duplex fonctionnel
 - ✅ Volume stable
 
 **Score cible**:
+
 - Avant: 82/100
 - Après: **86-88/100** (+4-6 points)
 
@@ -503,18 +516,20 @@ console.assert(track?.enabled === true, 'Microphone should be enabled after TTS'
 ## 🚀 DÉPLOIEMENT
 
 ### **Étape 1: Activer echo cancellation**
+
 ```typescript
 // Dans audioCapture.ts ou équivalent
 const constraints = {
   audio: {
     echoCancellation: true,
     noiseSuppression: true,
-    autoGainControl: true
-  }
+    autoGainControl: true,
+  },
 };
 ```
 
 ### **Étape 2: Implémenter auto-mute**
+
 ```typescript
 // Dans voiceModeManager.ts
 private muteMicrophone() { ... }
@@ -522,6 +537,7 @@ private unmuteMicrophone() { ... }
 ```
 
 ### **Étape 3: Tester en conditions réelles**
+
 ```bash
 # Mode vocal avec audio output
 1. Activer mode vocal
@@ -532,6 +548,7 @@ private unmuteMicrophone() { ... }
 ```
 
 ### **Étape 4: Validation finale**
+
 - ✅ Pas d'écho après 5 minutes d'utilisation
 - ✅ Mode duplex stable
 - ✅ Transitions smooth (mute/unmute)

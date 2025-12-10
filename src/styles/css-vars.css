@@ -17,7 +17,7 @@
   --color-titane-200: #dee2e6;
   --color-titane-300: #ced4da;
   --color-titane-400: #adb5bd;
-  --color-titane-500: #727b81;  /* BASE */
+  --color-titane-500: #727b81; /* BASE */
   --color-titane-600: #5a6267;
   --color-titane-700: #495057;
   --color-titane-800: #343a40;
@@ -30,7 +30,7 @@
   --color-violet-300: #d8b4fe;
   --color-violet-400: #c084fc;
   --color-violet-500: #a855f7;
-  --color-violet-600: #7c3aed;  /* BASE */
+  --color-violet-600: #7c3aed; /* BASE */
   --color-violet-700: #6d28d9;
   --color-violet-800: #5b21b6;
   --color-violet-900: #4c1d95;
@@ -41,7 +41,7 @@
   --color-sage-200: #d9f99d;
   --color-sage-300: #bef264;
   --color-sage-400: #a3e635;
-  --color-sage-500: #84cc16;  /* BASE */
+  --color-sage-500: #84cc16; /* BASE */
   --color-sage-600: #65a30d;
   --color-sage-700: #4d7c0f;
   --color-sage-800: #3f6212;
@@ -84,23 +84,23 @@
   /* ═══════════════════════════════════════════════════════════════ */
 
   /* Backgrounds (dark mode by default) */
-  --color-bg-primary: #0f172a;     /* slate-900 */
-  --color-bg-secondary: #1e293b;   /* slate-800 */
-  --color-bg-tertiary: #334155;    /* slate-700 */
-  --color-bg-elevated: #475569;    /* slate-600 */
-  --color-bg-overlay: #64748b;     /* slate-500 */
+  --color-bg-primary: #0f172a; /* slate-900 */
+  --color-bg-secondary: #1e293b; /* slate-800 */
+  --color-bg-tertiary: #334155; /* slate-700 */
+  --color-bg-elevated: #475569; /* slate-600 */
+  --color-bg-overlay: #64748b; /* slate-500 */
 
   /* Text colors */
-  --color-text-primary: #f1f5f9;   /* slate-100 */
+  --color-text-primary: #f1f5f9; /* slate-100 */
   --color-text-secondary: #cbd5e1; /* slate-300 */
-  --color-text-muted: #94a3b8;     /* slate-400 */
-  --color-text-disabled: #64748b;  /* slate-500 */
-  --color-text-inverse: #0f172a;   /* slate-900 */
+  --color-text-muted: #94a3b8; /* slate-400 */
+  --color-text-disabled: #64748b; /* slate-500 */
+  --color-text-inverse: #0f172a; /* slate-900 */
 
   /* Borders */
-  --color-border-default: #334155;  /* slate-700 */
-  --color-border-subtle: #1e293b;   /* slate-800 */
-  --color-border-strong: #475569;   /* slate-600 */
+  --color-border-default: #334155; /* slate-700 */
+  --color-border-subtle: #1e293b; /* slate-800 */
+  --color-border-strong: #475569; /* slate-600 */
   --color-border-accent: var(--color-violet-600);
 
   /* ═══════════════════════════════════════════════════════════════ */
@@ -108,19 +108,19 @@
   /* ═══════════════════════════════════════════════════════════════ */
 
   --space-0: 0;
-  --space-1: 0.25rem;   /* 4px */
-  --space-2: 0.5rem;    /* 8px */
-  --space-3: 0.75rem;   /* 12px */
-  --space-4: 1rem;      /* 16px */
-  --space-5: 1.25rem;   /* 20px */
-  --space-6: 1.5rem;    /* 24px */
-  --space-7: 1.75rem;   /* 28px */
-  --space-8: 2rem;      /* 32px */
-  --space-10: 2.5rem;   /* 40px */
-  --space-12: 3rem;     /* 48px */
-  --space-16: 4rem;     /* 64px */
-  --space-20: 5rem;     /* 80px */
-  --space-24: 6rem;     /* 96px */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-7: 1.75rem; /* 28px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+  --space-20: 5rem; /* 80px */
+  --space-24: 6rem; /* 96px */
 
   /* ═══════════════════════════════════════════════════════════════ */
   /* TYPOGRAPHY                                                        */
@@ -131,15 +131,15 @@
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
   /* Font sizes */
-  --text-xs: 0.75rem;      /* 12px */
-  --text-sm: 0.875rem;     /* 14px */
-  --text-base: 1rem;       /* 16px */
-  --text-lg: 1.125rem;     /* 18px */
-  --text-xl: 1.25rem;      /* 20px */
-  --text-2xl: 1.5rem;      /* 24px */
-  --text-3xl: 1.875rem;    /* 30px */
-  --text-4xl: 2.25rem;     /* 36px */
-  --text-5xl: 3rem;        /* 48px */
+  --text-xs: 0.75rem; /* 12px */
+  --text-sm: 0.875rem; /* 14px */
+  --text-base: 1rem; /* 16px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px */
+  --text-3xl: 1.875rem; /* 30px */
+  --text-4xl: 2.25rem; /* 36px */
+  --text-5xl: 3rem; /* 48px */
 
   /* Line heights */
   --leading-none: 1;
@@ -165,12 +165,12 @@
   /* ═══════════════════════════════════════════════════════════════ */
 
   --radius-none: 0;
-  --radius-sm: 0.25rem;    /* 4px */
-  --radius-md: 0.5rem;     /* 8px */
-  --radius-lg: 0.75rem;    /* 12px */
-  --radius-xl: 1rem;       /* 16px */
-  --radius-2xl: 1.5rem;    /* 24px */
-  --radius-full: 9999px;   /* Circle */
+  --radius-sm: 0.25rem; /* 4px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 0.75rem; /* 12px */
+  --radius-xl: 1rem; /* 16px */
+  --radius-2xl: 1.5rem; /* 24px */
+  --radius-full: 9999px; /* Circle */
 
   /* ═══════════════════════════════════════════════════════════════ */
   /* SHADOWS                                                           */
@@ -233,10 +233,10 @@
   /* BREAKPOINTS (pour référence, gérés par Tailwind)                 */
   /* ═══════════════════════════════════════════════════════════════ */
 
-  --breakpoint-sm: 640px;   /* Phones landscape */
-  --breakpoint-md: 768px;   /* Tablets */
-  --breakpoint-lg: 1024px;  /* Laptops */
-  --breakpoint-xl: 1280px;  /* Desktops */
+  --breakpoint-sm: 640px; /* Phones landscape */
+  --breakpoint-md: 768px; /* Tablets */
+  --breakpoint-lg: 1024px; /* Laptops */
+  --breakpoint-xl: 1280px; /* Desktops */
   --breakpoint-2xl: 1536px; /* Large screens */
 
   /* ═══════════════════════════════════════════════════════════════ */

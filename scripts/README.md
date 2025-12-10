@@ -34,6 +34,7 @@ scripts/
 ```
 
 **Options disponibles**:
+
 ```bash
 --skip-tests      # Ignorer les tests
 --skip-package    # Ignorer le packaging
@@ -50,6 +51,7 @@ scripts/
 ```
 
 **Ce qu'il fait**:
+
 - ✅ Vérifie l'environnement (cargo, node, webkit)
 - ✅ Nettoie dist/ et target/
 - ✅ Installe dépendances npm
@@ -58,6 +60,7 @@ scripts/
 - ✅ Valide le build
 
 **Résultat**:
+
 - Frontend: `dist/` (~2-3 MB)
 - Backend: `src-tauri/target/release/titane-infinity` (~50-60 MB)
 
@@ -70,6 +73,7 @@ scripts/
 ```
 
 **Optimisations**:
+
 - CPU natif: `-C target-cpu=native`
 - Niveau d'optimisation maximum: `-C opt-level=3`
 - Cache npm offline
@@ -85,6 +89,7 @@ scripts/
 ```
 
 **Pipeline**:
+
 1. Build production
 2. Packaging Tauri (AppImage, deb, rpm)
 3. Copie bundles vers `deploy/`
@@ -92,6 +97,7 @@ scripts/
 5. Rapport de déploiement
 
 **Résultat**: Structure `deploy/`
+
 ```
 deploy/
 ├── appimage/
@@ -114,13 +120,15 @@ deploy/
 ```
 
 **Installe automatiquement**:
+
 - libwebkit2gtk-4.1-dev
 - libjavascriptcoregtk-4.1-dev
 - libgtk-3-dev
 - libsoup-3.0-dev
 
 **Distributions supportées**:
-- ✅ Ubuntu / Pop!_OS
+
+- ✅ Ubuntu / Pop!\_OS
 - ✅ Debian
 - ✅ Fedora
 - ✅ Arch / Manjaro
@@ -134,6 +142,7 @@ deploy/
 ```
 
 **Validation**:
+
 - ✅ Shebang correct
 - ✅ Permissions exécution
 - ✅ Shellcheck (si installé)
@@ -236,30 +245,36 @@ validate_build         # Vérifie dist/ et binaire
 Tous les scripts respectent:
 
 ### 1. Shebang Standard
+
 ```bash
 #!/usr/bin/env bash
 ```
 
 ### 2. Strict Mode
+
 ```bash
 set -euo pipefail
 ```
+
 - `-e`: Stop sur erreur
 - `-u`: Erreur sur variable non définie
 - `-o pipefail`: Erreur si un élément du pipe échoue
 
 ### 3. Error Handler
+
 ```bash
 trap 'error_handler ${LINENO}' ERR
 ```
 
 ### 4. Paths Absolus
+
 ```bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$SCRIPT_DIR/../.."
 ```
 
 ### 5. Validations Systématiques
+
 ```bash
 check_environment || exit 1
 validate_src_tauri || exit 1
@@ -270,15 +285,15 @@ validate_src_tauri || exit 1
 
 ## 📊 Comparaison avec v11
 
-| Aspect | v11 | v12 | Amélioration |
-|--------|-----|-----|--------------|
-| Scripts total | 77 dispersés | 7 centralisés | -91% |
-| Lignes de code | ~3000+ | ~900 | -70% |
-| Standards | Mixte | 100% bash | Uniformisé |
-| Error handling | Partiel | Complet | +100% |
-| Paths | Relatifs | Absolus | Robuste |
-| Validations | Rares | Systématiques | Sécurisé |
-| Logging | Incohérent | Standardisé | Uniforme |
+| Aspect         | v11          | v12           | Amélioration |
+| -------------- | ------------ | ------------- | ------------ |
+| Scripts total  | 77 dispersés | 7 centralisés | -91%         |
+| Lignes de code | ~3000+       | ~900          | -70%         |
+| Standards      | Mixte        | 100% bash     | Uniformisé   |
+| Error handling | Partiel      | Complet       | +100%        |
+| Paths          | Relatifs     | Absolus       | Robuste      |
+| Validations    | Rares        | Systématiques | Sécurisé     |
+| Logging        | Incohérent   | Standardisé   | Uniforme     |
 
 ---
 
@@ -300,6 +315,7 @@ source $HOME/.cargo/env
 ### Erreur: "src-tauri introuvable"
 
 Vérifier que vous êtes à la racine du projet:
+
 ```bash
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
 ```
@@ -317,6 +333,7 @@ npm ci
 ## 📝 Logs
 
 Les logs sont stockés dans:
+
 - Scripts: `logs/`
 - Déploiement: `deploy/logs/`
 
@@ -325,6 +342,7 @@ Les logs sont stockés dans:
 ## 🎯 Prochaines Étapes
 
 1. **Tester le pipeline complet**:
+
    ```bash
    ./quickstart_v12.sh
    ```

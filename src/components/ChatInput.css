@@ -82,7 +82,9 @@
 
 .chat-input__send-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px var(--glow-accent), 0 0 24px var(--glow-primary);
+  box-shadow:
+    0 6px 16px var(--glow-accent),
+    0 0 24px var(--glow-primary);
 }
 
 .chat-input__send-btn:active:not(:disabled) {

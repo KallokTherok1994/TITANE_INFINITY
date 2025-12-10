@@ -5,9 +5,9 @@
 
 #![allow(dead_code)]
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 /// Miroir créatif - reflète le style créatif Kevin
 pub struct CreativeMirror {
@@ -126,12 +126,15 @@ impl CreativeMirror {
         ];
 
         let mut symbols = HashMap::new();
-        symbols.insert("∞".to_string(), SymbolUsage {
-            symbol: "∞".to_string(),
-            meaning: "Évolution infinie, potentiel illimité".to_string(),
-            contexts: vec!["TITANE∞".to_string(), "Version".to_string()],
-            frequency: 100,
-        });
+        symbols.insert(
+            "∞".to_string(),
+            SymbolUsage {
+                symbol: "∞".to_string(),
+                meaning: "Évolution infinie, potentiel illimité".to_string(),
+                contexts: vec!["TITANE∞".to_string(), "Version".to_string()],
+                frequency: 100,
+            },
+        );
 
         Self {
             creative_expressions: Vec::new(),
@@ -170,17 +173,26 @@ impl CreativeMirror {
                 existing.contexts.push(context.to_string());
             }
         } else {
-            self.symbolic_vocabulary.insert(symbol.to_string(), SymbolUsage {
-                symbol: symbol.to_string(),
-                meaning: meaning.to_string(),
-                contexts: vec![context.to_string()],
-                frequency: 1,
-            });
+            self.symbolic_vocabulary.insert(
+                symbol.to_string(),
+                SymbolUsage {
+                    symbol: symbol.to_string(),
+                    meaning: meaning.to_string(),
+                    contexts: vec![context.to_string()],
+                    frequency: 1,
+                },
+            );
         }
     }
 
     /// Crée un nouveau framework
-    pub fn create_framework(&mut self, name: &str, domain: &str, description: &str, components: Vec<String>) {
+    pub fn create_framework(
+        &mut self,
+        name: &str,
+        domain: &str,
+        description: &str,
+        components: Vec<String>,
+    ) {
         self.created_frameworks.push(Framework {
             name: name.to_string(),
             domain: domain.to_string(),
@@ -200,22 +212,22 @@ impl CreativeMirror {
             return;
         }
 
-        let recent: Vec<&CreativeExpression> = self.creative_expressions
-            .iter()
-            .rev()
-            .take(30)
-            .collect();
+        let recent: Vec<&CreativeExpression> =
+            self.creative_expressions.iter().rev().take(30).collect();
 
         // Calculer scores par type
-        let metaphor_count = recent.iter()
+        let metaphor_count = recent
+            .iter()
             .filter(|e| e.expression_type == ExpressionType::Metaphor)
             .count();
 
-        let structure_count = recent.iter()
+        let structure_count = recent
+            .iter()
             .filter(|e| e.expression_type == ExpressionType::CreativeStructure)
             .count();
 
-        let narration_count = recent.iter()
+        let narration_count = recent
+            .iter()
             .filter(|e| e.expression_type == ExpressionType::Narration)
             .count();
 
@@ -236,9 +248,8 @@ impl CreativeMirror {
         }
 
         // Score moyen d'originalité
-        let avg_originality: f32 = recent.iter()
-            .map(|e| e.originality)
-            .sum::<f32>() / recent.len() as f32;
+        let avg_originality: f32 =
+            recent.iter().map(|e| e.originality).sum::<f32>() / recent.len() as f32;
 
         self.creative_profile.unique_language = avg_originality;
     }

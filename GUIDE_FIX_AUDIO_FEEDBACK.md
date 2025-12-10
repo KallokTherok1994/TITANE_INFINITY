@@ -18,10 +18,10 @@
 // Configuration micro avec echo cancellation
 const constraints: MediaStreamConstraints = {
   audio: {
-    echoCancellation: true,      // ✅ CRITIQUE
-    noiseSuppression: true,       // ✅ Recommandé
-    autoGainControl: true,        // ✅ Recommandé
-    sampleRate: 16000,            // Optimal pour STT
+    echoCancellation: true, // ✅ CRITIQUE
+    noiseSuppression: true, // ✅ Recommandé
+    autoGainControl: true, // ✅ Recommandé
+    sampleRate: 16000, // Optimal pour STT
   },
 };
 
@@ -57,9 +57,9 @@ class AudioService {
 
 // Usage dans playTTS
 async function playTTS(audioBlob: Blob) {
-  await audioService.pauseRecording();   // ✅ Mute micro
-  await playAudioBlob(audioBlob);        // Jouer TTS
-  await audioService.resumeRecording();  // ✅ Unmute micro
+  await audioService.pauseRecording(); // ✅ Mute micro
+  await playAudioBlob(audioBlob); // Jouer TTS
+  await audioService.resumeRecording(); // ✅ Unmute micro
 }
 ```
 
@@ -89,26 +89,28 @@ const stream = await navigator.mediaDevices.getUserMedia({
 ## 🧪 Tests de Validation
 
 ### Test manuel
+
 1. Activer mode voix duplex
 2. Parler "Bonjour TITANE"
 3. Attendre réponse TTS
 4. Vérifier que TTS **n'est pas** transcrit comme nouvelle entrée
 
 ### Test automatisé (optionnel)
+
 ```typescript
 describe('Audio Feedback Prevention', () => {
   it('should mute recording during TTS playback', async () => {
     const service = new AudioService();
     await service.startRecording();
-    
+
     expect(service.isRecording).toBe(true);
-    
+
     await service.pauseRecording();
     expect(service.isRecording).toBe(false);
-    
+
     // Simuler TTS
     await new Promise(r => setTimeout(r, 1000));
-    
+
     await service.resumeRecording();
     expect(service.isRecording).toBe(true);
   });
@@ -120,11 +122,13 @@ describe('Audio Feedback Prevention', () => {
 ## 📁 Fichiers à Modifier
 
 ### Frontend
+
 - `src/services/audioService.ts` (si existe)
 - `src/components/VoiceUI.tsx` (ou équivalent)
 - `src/stores/audioStore.ts` (si state management)
 
 ### Backend (optionnel)
+
 - `src-tauri/src/commands/audio.rs` (si gestion audio côté Rust)
 
 ---

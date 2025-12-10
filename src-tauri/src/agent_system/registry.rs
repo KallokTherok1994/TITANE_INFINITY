@@ -3,11 +3,11 @@
 //! Super Prompt #19 — Registre des agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
-use std::collections::HashMap;
-use super::agent::{Agent, AgentId, AgentType, AgentState};
+use super::agent::{Agent, AgentId, AgentState, AgentType};
 use super::capabilities::Capability;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use tokio::sync::RwLock;
 
 /// Requête de recherche d'agents
 #[derive(Clone, Debug, Default)]
@@ -121,7 +121,8 @@ impl AgentRegistry {
     /// Liste les agents disponibles
     pub async fn available_agents(&self) -> Vec<Agent> {
         let agents = self.agents.read().await;
-        agents.values()
+        agents
+            .values()
             .filter(|a| a.is_available())
             .cloned()
             .collect()
@@ -130,7 +131,8 @@ impl AgentRegistry {
     /// Liste les agents par type
     pub async fn by_type(&self, agent_type: AgentType) -> Vec<Agent> {
         let agents = self.agents.read().await;
-        agents.values()
+        agents
+            .values()
             .filter(|a| a.agent_type == agent_type)
             .cloned()
             .collect()
@@ -139,7 +141,8 @@ impl AgentRegistry {
     /// Liste les agents par état
     pub async fn by_state(&self, state: AgentState) -> Vec<Agent> {
         let agents = self.agents.read().await;
-        agents.values()
+        agents
+            .values()
             .filter(|a| a.state == state)
             .cloned()
             .collect()
@@ -148,7 +151,8 @@ impl AgentRegistry {
     /// Liste les agents avec une capacité
     pub async fn with_capability(&self, capability: Capability) -> Vec<Agent> {
         let agents = self.agents.read().await;
-        agents.values()
+        agents
+            .values()
             .filter(|a| a.capabilities.has(&capability))
             .cloned()
             .collect()
@@ -158,7 +162,8 @@ impl AgentRegistry {
     pub async fn search(&self, query: &RegistryQuery) -> Vec<Agent> {
         let agents = self.agents.read().await;
 
-        let mut results: Vec<_> = agents.values()
+        let mut results: Vec<_> = agents
+            .values()
             .filter(|a| {
                 // Filtre par type
                 if let Some(ref t) = query.agent_type {
@@ -217,7 +222,8 @@ impl AgentRegistry {
     /// Nombre d'agents actifs
     pub async fn active_count(&self) -> usize {
         let agents = self.agents.read().await;
-        agents.values()
+        agents
+            .values()
             .filter(|a| a.state == AgentState::Ready || a.state == AgentState::Busy)
             .count()
     }
@@ -227,15 +233,14 @@ impl AgentRegistry {
         let agents = self.agents.read().await;
         let base_stats = self.stats.read().await.clone();
 
-        let by_type: HashMap<String, usize> = agents.values()
-            .fold(HashMap::new(), |mut acc, a| {
-                let key = format!("{:?}", a.agent_type);
-                *acc.entry(key).or_insert(0) += 1;
-                acc
-            });
+        let by_type: HashMap<String, usize> = agents.values().fold(HashMap::new(), |mut acc, a| {
+            let key = format!("{:?}", a.agent_type);
+            *acc.entry(key).or_insert(0) += 1;
+            acc
+        });
 
-        let by_state: HashMap<String, usize> = agents.values()
-            .fold(HashMap::new(), |mut acc, a| {
+        let by_state: HashMap<String, usize> =
+            agents.values().fold(HashMap::new(), |mut acc, a| {
                 let key = format!("{:?}", a.state);
                 *acc.entry(key).or_insert(0) += 1;
                 acc
@@ -291,9 +296,15 @@ mod tests {
     async fn test_registry_query() {
         let registry = AgentRegistry::new();
 
-        registry.register(Agent::new(AgentType::Researcher, "Researcher 1")).await;
-        registry.register(Agent::new(AgentType::Creator, "Creator 1")).await;
-        registry.register(Agent::new(AgentType::Researcher, "Researcher 2")).await;
+        registry
+            .register(Agent::new(AgentType::Researcher, "Researcher 1"))
+            .await;
+        registry
+            .register(Agent::new(AgentType::Creator, "Creator 1"))
+            .await;
+        registry
+            .register(Agent::new(AgentType::Researcher, "Researcher 2"))
+            .await;
 
         let query = RegistryQuery::new().with_type(AgentType::Researcher);
         let results = registry.search(&query).await;

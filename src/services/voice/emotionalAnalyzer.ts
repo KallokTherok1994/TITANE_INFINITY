@@ -24,16 +24,85 @@ import { EMOTION_PRESETS, getEmotionPreset } from './emotionalProfiles';
  * Mots-clés émotionnels par catégorie
  */
 const EMOTIONAL_KEYWORDS: Record<EmotionType, string[]> = {
-  calm: ['calme', 'paisible', 'serein', 'tranquille', 'zen', 'posé', 'doux', 'quiet', 'peaceful'],
-  gentle: ['doux', 'tendre', 'gentil', 'délicat', 'attentionné', 'bienveillant', 'gentle', 'soft'],
-  confident: ['confiant', 'sûr', 'certain', 'assuré', 'fort', 'capable', 'confident', 'sure'],
-  inspiring: ['inspire', 'motive', 'encourage', 'pousse', 'anime', 'stimule', 'inspiring'],
+  calm: [
+    'calme',
+    'paisible',
+    'serein',
+    'tranquille',
+    'zen',
+    'posé',
+    'doux',
+    'quiet',
+    'peaceful',
+  ],
+  gentle: [
+    'doux',
+    'tendre',
+    'gentil',
+    'délicat',
+    'attentionné',
+    'bienveillant',
+    'gentle',
+    'soft',
+  ],
+  confident: [
+    'confiant',
+    'sûr',
+    'certain',
+    'assuré',
+    'fort',
+    'capable',
+    'confident',
+    'sure',
+  ],
+  inspiring: [
+    'inspire',
+    'motive',
+    'encourage',
+    'pousse',
+    'anime',
+    'stimule',
+    'inspiring',
+  ],
   playful: ['amusant', 'joyeux', 'ludique', 'rigolo', 'drôle', 'fun', 'playful', 'funny'],
-  empathetic: ['comprends', 'ressens', 'empathie', 'soutien', 'écoute', 'présent', 'empathy'],
+  empathetic: [
+    'comprends',
+    'ressens',
+    'empathie',
+    'soutien',
+    'écoute',
+    'présent',
+    'empathy',
+  ],
   serious: ['sérieux', 'important', 'crucial', 'grave', 'formel', 'officiel', 'serious'],
-  excited: ['excité', 'enthousiaste', 'wow', 'génial', 'super', 'incroyable', 'excited', 'amazing'],
-  thoughtful: ['réfléchis', 'pense', 'considère', 'médite', 'analyse', 'thoughtful', 'think'],
-  warm: ['chaleureux', 'accueillant', 'bienveillant', 'amical', 'warm', 'friendly', 'welcoming'],
+  excited: [
+    'excité',
+    'enthousiaste',
+    'wow',
+    'génial',
+    'super',
+    'incroyable',
+    'excited',
+    'amazing',
+  ],
+  thoughtful: [
+    'réfléchis',
+    'pense',
+    'considère',
+    'médite',
+    'analyse',
+    'thoughtful',
+    'think',
+  ],
+  warm: [
+    'chaleureux',
+    'accueillant',
+    'bienveillant',
+    'amical',
+    'warm',
+    'friendly',
+    'welcoming',
+  ],
   neutral: [],
 };
 
@@ -61,10 +130,7 @@ export class EmotionalIntentAnalyzer {
   /**
    * Analyser l'intention émotionnelle d'un texte
    */
-  analyze(
-    text: string,
-    context?: EmotionalContext
-  ): EmotionalAnalysisResult {
+  analyze(text: string, context?: EmotionalContext): EmotionalAnalysisResult {
     console.log('[EmotionalAnalyzer] 🎭 Analyzing:', text.substring(0, 60));
 
     // Analyse multi-facettes
@@ -87,15 +153,23 @@ export class EmotionalIntentAnalyzer {
     // Historique
     this.updateHistory(dominantEmotion);
 
-    console.log(`[EmotionalAnalyzer] ✅ Detected: ${dominantEmotion} (intensity: ${intent.intensity.toFixed(2)})`);
+    console.log(
+      `[EmotionalAnalyzer] ✅ Detected: ${dominantEmotion} (intensity: ${intent.intensity.toFixed(2)})`
+    );
 
     return {
       intent,
       keywords,
       indicators: {
-        lexical: Object.values(lexicalScore).reduce((a, b) => a + b, 0) / Object.keys(lexicalScore).length,
-        syntactic: Object.values(syntacticScore).reduce((a, b) => a + b, 0) / Object.keys(syntacticScore).length,
-        semantic: Object.values(semanticScore).reduce((a, b) => a + b, 0) / Object.keys(semanticScore).length,
+        lexical:
+          Object.values(lexicalScore).reduce((a, b) => a + b, 0) /
+          Object.keys(lexicalScore).length,
+        syntactic:
+          Object.values(syntacticScore).reduce((a, b) => a + b, 0) /
+          Object.keys(syntacticScore).length,
+        semantic:
+          Object.values(semanticScore).reduce((a, b) => a + b, 0) /
+          Object.keys(semanticScore).length,
       },
     };
   }
@@ -176,7 +250,8 @@ export class EmotionalIntentAnalyzer {
 
     // Longueur des phrases (courtes = excited, longues = thoughtful)
     const sentences = text.split(/[.!?]+/).filter(s => s.trim());
-    const avgLength = sentences.reduce((sum, s) => sum + s.length, 0) / Math.max(1, sentences.length);
+    const avgLength =
+      sentences.reduce((sum, s) => sum + s.length, 0) / Math.max(1, sentences.length);
     if (avgLength < 30) {
       scores.excited += 0.2;
       scores.playful += 0.1;
@@ -275,9 +350,9 @@ export class EmotionalIntentAnalyzer {
 
     for (const emotion of Object.keys(EMOTION_PRESETS) as EmotionType[]) {
       fused[emotion] =
-        (lexical[emotion] || 0) * 0.4 +   // 40% poids lexical
+        (lexical[emotion] || 0) * 0.4 + // 40% poids lexical
         (syntactic[emotion] || 0) * 0.3 + // 30% poids syntaxique
-        (semantic[emotion] || 0) * 0.3;   // 30% poids sémantique
+        (semantic[emotion] || 0) * 0.3; // 30% poids sémantique
     }
 
     return fused as Record<EmotionType, number>;

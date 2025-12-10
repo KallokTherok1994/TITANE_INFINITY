@@ -77,7 +77,8 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   };
 
   const handleRestoreBackup = async (path: string) => {
-    if (!confirm('Restaurer cette sauvegarde ? Les données actuelles seront écrasées.')) return;
+    if (!confirm('Restaurer cette sauvegarde ? Les données actuelles seront écrasées.'))
+      return;
     try {
       await invoke('cloud_restore_vault', { backupPath: path });
       onRefresh();
@@ -170,7 +171,9 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
             <div className="sync-details">
               <div className="detail-row">
                 <span className="detail-label">Dernière sync:</span>
-                <span className="detail-value">{formatDate(status?.last_sync ?? null)}</span>
+                <span className="detail-value">
+                  {formatDate(status?.last_sync ?? null)}
+                </span>
               </div>
               <div className="detail-row">
                 <span className="detail-label">Backend:</span>
@@ -252,7 +255,9 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
                 <span className="stat-label">Révisions</span>
               </div>
               <div className="stat-item">
-                <span className="stat-value">{formatBytes(status?.vault_size_bytes ?? null)}</span>
+                <span className="stat-value">
+                  {formatBytes(status?.vault_size_bytes ?? null)}
+                </span>
                 <span className="stat-label">Taille</span>
               </div>
             </div>
@@ -273,7 +278,9 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
               {isHealing ? '🔍 Analyse en cours...' : '🩺 Lancer diagnostic'}
             </button>
             {healReport && (
-              <div className={`heal-report ${healReport.vault_healthy ? 'healthy' : 'warning'}`}>
+              <div
+                className={`heal-report ${healReport.vault_healthy ? 'healthy' : 'warning'}`}
+              >
                 <div className="report-status">
                   {healReport.vault_healthy ? '✅ Vault sain' : '⚠️ Problèmes détectés'}
                 </div>
@@ -312,7 +319,10 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
                     <div className="backup-info">
                       <span className="backup-name">{backup.filename}</span>
                       <span className="backup-meta">
-                        {formatBytes(backup.size_bytes)} • {new Date(backup.created_timestamp * 1000).toLocaleDateString('fr-FR')}
+                        {formatBytes(backup.size_bytes)} •{' '}
+                        {new Date(backup.created_timestamp * 1000).toLocaleDateString(
+                          'fr-FR'
+                        )}
                       </span>
                     </div>
                     <button

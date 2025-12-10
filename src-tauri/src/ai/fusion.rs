@@ -3,7 +3,7 @@
 //   SUPER PROMPT #8 — Multi-Output Fusion System
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiResponse, AiMetadata};
+use crate::ai::{AiMetadata, AiResponse};
 
 /// Moteur de fusion d'outputs multi-IA
 pub struct FusionEngine {
@@ -28,11 +28,7 @@ impl FusionEngine {
     }
 
     /// Fusionne une réponse primaire avec une secondaire optionnelle
-    pub fn fuse(
-        &self,
-        primary: &AiResponse,
-        secondary: Option<&AiResponse>,
-    ) -> AiResponse {
+    pub fn fuse(&self, primary: &AiResponse, secondary: Option<&AiResponse>) -> AiResponse {
         match secondary {
             None => primary.clone(),
             Some(sec) => self.apply_fusion(primary, sec),
@@ -136,7 +132,8 @@ impl FusionEngine {
             tokens_in: primary.tokens_in,
             tokens_out: primary.tokens_out,
             latency_ms: primary.latency_ms,
-            confidence: (primary.confidence * weight_primary + secondary.confidence * weight_secondary),
+            confidence: (primary.confidence * weight_primary
+                + secondary.confidence * weight_secondary),
             metadata: AiMetadata {
                 mode: primary.metadata.mode.clone(),
                 temperature_used: primary.metadata.temperature_used,
@@ -156,10 +153,14 @@ impl FusionEngine {
         for line in lines {
             let trimmed = line.trim();
             // Cherche points importants (listes, headers, phrases clés)
-            if trimmed.starts_with('-') || trimmed.starts_with('*') || trimmed.starts_with('#') {
-                if trimmed.len() > 10 && !insights.contains(&trimmed.to_string()) {
-                    insights.push(format!("• {}", trimmed.trim_start_matches(&['-', '*', '#'][..])));
-                }
+            if (trimmed.starts_with('-') || trimmed.starts_with('*') || trimmed.starts_with('#'))
+                && trimmed.len() > 10
+                && !insights.contains(&trimmed.to_string())
+            {
+                insights.push(format!(
+                    "• {}",
+                    trimmed.trim_start_matches(&['-', '*', '#'][..])
+                ));
             }
         }
 
@@ -213,7 +214,7 @@ mod tests {
     #[test]
     fn test_best_only_selection() {
         let fusion = FusionEngine::new(FusionStrategy::BestOnly);
-        
+
         let primary = create_test_response("claude", 0.9, "Primary response");
         let secondary = create_test_response("gpt", 0.7, "Secondary response");
 
@@ -225,7 +226,7 @@ mod tests {
     #[test]
     fn test_combine_outputs() {
         let fusion = FusionEngine::new(FusionStrategy::Combine);
-        
+
         let primary = create_test_response("claude", 0.8, "Primary");
         let secondary = create_test_response("gpt", 0.8, "Secondary");
 
@@ -238,7 +239,7 @@ mod tests {
     #[test]
     fn test_enrich_primary() {
         let fusion = FusionEngine::new(FusionStrategy::EnrichPrimary);
-        
+
         let primary = create_test_response("claude", 0.9, "Primary response");
         let secondary = create_test_response("gpt", 0.7, "- Insight 1\n- Insight 2");
 
@@ -250,7 +251,7 @@ mod tests {
     #[test]
     fn test_should_fuse() {
         let fusion = FusionEngine::default();
-        
+
         let primary = create_test_response("claude", 0.8, "Test");
         let secondary_close = create_test_response("gpt", 0.75, "Test");
         let secondary_far = create_test_response("gpt", 0.3, "Test");
@@ -264,7 +265,7 @@ mod tests {
     fn test_extract_key_insights() {
         let fusion = FusionEngine::default();
         let output = "Text\n- Insight A\n- Insight B\n# Header\nMore text";
-        
+
         let insights = fusion.extract_key_insights(output);
         assert!(!insights.is_empty());
         assert!(insights.iter().any(|i| i.contains("Insight")));

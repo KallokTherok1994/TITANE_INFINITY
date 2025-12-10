@@ -116,24 +116,16 @@ impl ReasoningEngine {
             IntentClass::Task => {
                 "Tâche identifiée: focus sur étapes et accomplissement".to_string()
             }
-            IntentClass::Help => {
-                "Demande d'aide: empathie + guidance + solutions".to_string()
-            }
+            IntentClass::Help => "Demande d'aide: empathie + guidance + solutions".to_string(),
             IntentClass::Emotional => {
                 "Expression émotionnelle: écoute + validation + support".to_string()
             }
-            IntentClass::Conversation => {
-                "Conversation: engagement naturel + fluidité".to_string()
-            }
-            IntentClass::Command => {
-                "Commande: exécution + confirmation + clarté".to_string()
-            }
+            IntentClass::Conversation => "Conversation: engagement naturel + fluidité".to_string(),
+            IntentClass::Command => "Commande: exécution + confirmation + clarté".to_string(),
             IntentClass::Creative => {
                 "Demande créative: imagination + originalité + exploration".to_string()
             }
-            IntentClass::Debug => {
-                "Debug: diagnostic + solutions + technique".to_string()
-            }
+            IntentClass::Debug => "Debug: diagnostic + solutions + technique".to_string(),
             IntentClass::Explanation => {
                 "Explication demandée: pédagogie + clarté + exemples".to_string()
             }
@@ -174,11 +166,7 @@ impl ReasoningEngine {
             .map(|(k, v)| format!("{}:{}", k, v))
             .collect();
 
-        format!(
-            "{} items ({})",
-            context.items.len(),
-            sources.join(", ")
-        )
+        format!("{} items ({})", context.items.len(), sources.join(", "))
     }
 
     /// Synthesize direction for response

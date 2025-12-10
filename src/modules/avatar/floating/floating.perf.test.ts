@@ -3,7 +3,16 @@
 //   Benchmark 60 FPS stability, CPU/GPU usage, memory leaks
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { describe, it, expect, beforeEach, afterEach, beforeAll, afterAll, vi } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  beforeAll,
+  afterAll,
+  vi,
+} from 'vitest';
 import * as THREE from 'three';
 import { ThreeJSAvatarRenderer } from './ThreeJSAvatarRenderer';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';

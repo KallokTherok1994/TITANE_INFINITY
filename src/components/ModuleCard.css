@@ -19,16 +19,17 @@
 
 .module-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4),
-              0 0 0 1px rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.15);
 }
 
-.module-card[role="button"] {
+.module-card[role='button'] {
   cursor: pointer;
 }
 
-.module-card[role="button"]:active {
+.module-card[role='button']:active {
   transform: translateY(0);
 }
 
@@ -39,8 +40,9 @@
 
 .module-card--primary:hover {
   border-color: rgba(99, 102, 241, 0.5);
-  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2),
-              0 0 0 1px rgba(99, 102, 241, 0.3);
+  box-shadow:
+    0 8px 24px rgba(99, 102, 241, 0.2),
+    0 0 0 1px rgba(99, 102, 241, 0.3);
 }
 
 .module-card--success {
@@ -49,8 +51,9 @@
 
 .module-card--success:hover {
   border-color: rgba(34, 197, 94, 0.5);
-  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.2),
-              0 0 0 1px rgba(34, 197, 94, 0.3);
+  box-shadow:
+    0 8px 24px rgba(34, 197, 94, 0.2),
+    0 0 0 1px rgba(34, 197, 94, 0.3);
 }
 
 .module-card--warning {
@@ -59,8 +62,9 @@
 
 .module-card--warning:hover {
   border-color: rgba(251, 191, 36, 0.5);
-  box-shadow: 0 8px 24px rgba(251, 191, 36, 0.2),
-              0 0 0 1px rgba(251, 191, 36, 0.3);
+  box-shadow:
+    0 8px 24px rgba(251, 191, 36, 0.2),
+    0 0 0 1px rgba(251, 191, 36, 0.3);
 }
 
 .module-card--error {
@@ -69,8 +73,9 @@
 
 .module-card--error:hover {
   border-color: rgba(239, 68, 68, 0.5);
-  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2),
-              0 0 0 1px rgba(239, 68, 68, 0.3);
+  box-shadow:
+    0 8px 24px rgba(239, 68, 68, 0.2),
+    0 0 0 1px rgba(239, 68, 68, 0.3);
 }
 
 /* Header */

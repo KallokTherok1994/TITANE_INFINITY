@@ -36,7 +36,7 @@ interface Pipeline {
 
 /**
  * Local Embedding Generator for UnifiedMemory
- * 
+ *
  * Uses Transformers.js to generate embeddings locally
  * No external API required, privacy-first approach
  */
@@ -51,25 +51,25 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
     'all-MiniLM-L6-v2': {
       id: 'Xenova/all-MiniLM-L6-v2',
       dimensions: 384,
-      description: 'Fast and lightweight, excellent for semantic similarity'
+      description: 'Fast and lightweight, excellent for semantic similarity',
     },
     'all-mpnet-base-v2': {
       id: 'Xenova/all-mpnet-base-v2',
       dimensions: 768,
-      description: 'More accurate but slower'
+      description: 'More accurate but slower',
     },
     'multilingual-e5-small': {
       id: 'Xenova/multilingual-e5-small',
       dimensions: 384,
-      description: 'Multilingual support (100+ languages)'
-    }
+      description: 'Multilingual support (100+ languages)',
+    },
   };
 
   constructor(config: LocalEmbeddingGeneratorConfig) {
     this.config = {
       enableCache: true,
       maxCacheSize: 1000,
-      ...config
+      ...config,
     };
   }
 
@@ -86,10 +86,11 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
       const { pipeline } = await import('@xenova/transformers');
 
       // Get model info
-      const modelInfo = LocalEmbeddingGenerator.MODELS[
-        this.config.modelName as keyof typeof LocalEmbeddingGenerator.MODELS
-      ];
-      
+      const modelInfo =
+        LocalEmbeddingGenerator.MODELS[
+          this.config.modelName as keyof typeof LocalEmbeddingGenerator.MODELS
+        ];
+
       if (!modelInfo) {
         throw new Error(`Unknown model: ${this.config.modelName}`);
       }
@@ -131,7 +132,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
         // Generate with Transformers.js
         const output = await this.pipeline(text, {
           pooling: 'mean',
-          normalize: true
+          normalize: true,
         });
 
         // Extract vector
@@ -175,13 +176,13 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
         // Batch generation with Transformers.js
         const output = await this.pipeline(texts, {
           pooling: 'mean',
-          normalize: true
+          normalize: true,
         });
 
         // Extract vectors
         const embeddings: number[][] = [];
         const dim = this.getDimensions();
-        
+
         for (let i = 0; i < texts.length; i++) {
           const start = i * dim;
           const end = start + dim;
@@ -258,7 +259,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
 
   /**
    * Generate fallback embedding (deterministic hash-based)
-   * 
+   *
    * Simple but deterministic approach:
    * - Hash text to get seed
    * - Generate vector using seeded random
@@ -267,7 +268,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
   private generateFallbackEmbedding(text: string): number[] {
     const dim = this.config.dimensions;
     const embedding = new Array(dim);
-    
+
     // Handle null/undefined text
     const safeText = text?.toString() || '';
 
@@ -275,7 +276,7 @@ export class LocalEmbeddingGenerator implements IEmbeddingGenerator {
     let hash = 0;
     for (let i = 0; i < safeText.length; i++) {
       const char = safeText.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
 

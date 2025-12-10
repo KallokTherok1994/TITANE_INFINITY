@@ -333,16 +333,27 @@ class PhaseSpaceEngine {
     const { coherence } = metaState;
 
     // Cast pour accès aux propriétés imbriquées
-    const identitySignature = (identity as Record<string, unknown> | undefined)?.signature as Record<string, unknown> | undefined;
-    const expressionVoice = (expression as Record<string, unknown> | undefined)?.voice as Record<string, unknown> | undefined;
-    const expressionHalo = (expression as Record<string, unknown> | undefined)?.halo as Record<string, unknown> | undefined;
-    const expressionNarrative = (expression as Record<string, unknown> | undefined)?.narrative as Record<string, unknown> | undefined;
-    const holoVisuals = (holoPresence as Record<string, unknown> | undefined)?.visuals as Record<string, unknown> | undefined;
-    const holoParticles = (holoPresence as Record<string, unknown> | undefined)?.particles as Record<string, unknown> | undefined;
+    const identitySignature = (identity as Record<string, unknown> | undefined)
+      ?.signature as Record<string, unknown> | undefined;
+    const expressionVoice = (expression as Record<string, unknown> | undefined)?.voice as
+      | Record<string, unknown>
+      | undefined;
+    const expressionHalo = (expression as Record<string, unknown> | undefined)?.halo as
+      | Record<string, unknown>
+      | undefined;
+    const expressionNarrative = (expression as Record<string, unknown> | undefined)
+      ?.narrative as Record<string, unknown> | undefined;
+    const holoVisuals = (holoPresence as Record<string, unknown> | undefined)?.visuals as
+      | Record<string, unknown>
+      | undefined;
+    const holoParticles = (holoPresence as Record<string, unknown> | undefined)
+      ?.particles as Record<string, unknown> | undefined;
 
     const voiceProsody = expressionVoice?.prosody as Record<string, unknown> | undefined;
     const haloDynamics = expressionHalo?.dynamics as Record<string, unknown> | undefined;
-    const narrativeStyle = expressionNarrative?.style as Record<string, unknown> | undefined;
+    const narrativeStyle = expressionNarrative?.style as
+      | Record<string, unknown>
+      | undefined;
 
     // Extraire coordonnées
     const point: PhasePoint = {

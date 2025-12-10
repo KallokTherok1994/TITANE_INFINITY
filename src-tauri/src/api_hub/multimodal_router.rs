@@ -3,12 +3,11 @@
 //! Super Prompt #17 — Routage et fusion multimodale inter-providers
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{
+    router::ModelChoiceStrategy, APIHubError, APIRequest, Modality, Provider, RequestContent,
+};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::{
-    Provider, Modality, APIRequest, APIHubError, RequestContent,
-    router::ModelChoiceStrategy,
-};
 
 /// Requête multimodale complexe
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -97,18 +96,12 @@ impl MultimodalRouter {
         let start = std::time::Instant::now();
 
         match request.strategy {
-            MultimodalStrategy::SingleProvider => {
-                self.execute_single_provider(request, hub).await
-            }
+            MultimodalStrategy::SingleProvider => self.execute_single_provider(request, hub).await,
             MultimodalStrategy::BestPerModality => {
                 self.execute_best_per_modality(request, hub).await
             }
-            MultimodalStrategy::Pipeline => {
-                self.execute_pipeline(request, hub).await
-            }
-            MultimodalStrategy::Consensus => {
-                self.execute_consensus(request, hub).await
-            }
+            MultimodalStrategy::Pipeline => self.execute_pipeline(request, hub).await,
+            MultimodalStrategy::Consensus => self.execute_consensus(request, hub).await,
         }
     }
 
@@ -175,7 +168,10 @@ impl MultimodalRouter {
                 id: format!("{}_vision", request.id),
                 modality: Modality::Vision,
                 content: RequestContent::TextWithImages {
-                    text: request.text.clone().unwrap_or_else(|| "Analyze these images in detail.".to_string()),
+                    text: request
+                        .text
+                        .clone()
+                        .unwrap_or_else(|| "Analyze these images in detail.".to_string()),
                     images: request.images.clone(),
                 },
                 preferred_provider: Some(Provider::Gemini),
@@ -190,13 +186,16 @@ impl MultimodalRouter {
 
             if let super::ResponseContent::Text(t) = &vision_response.content {
                 combined_analysis.push(format!("Image Analysis:\n{}", t));
-                stage_results.insert("vision".to_string(), StageResult {
-                    provider: Provider::Gemini,
-                    modality: Modality::Vision,
-                    content: t.clone(),
-                    tokens: vision_response.usage.total_tokens,
-                    latency_ms: vision_response.latency_ms,
-                });
+                stage_results.insert(
+                    "vision".to_string(),
+                    StageResult {
+                        provider: Provider::Gemini,
+                        modality: Modality::Vision,
+                        content: t.clone(),
+                        tokens: vision_response.usage.total_tokens,
+                        latency_ms: vision_response.latency_ms,
+                    },
+                );
             }
 
             providers_used.push(vision_response.provider_used);
@@ -222,13 +221,16 @@ impl MultimodalRouter {
 
             if let super::ResponseContent::AudioTranscription(t) = &audio_response.content {
                 combined_analysis.push(format!("Audio Transcription:\n{}", t));
-                stage_results.insert("audio".to_string(), StageResult {
-                    provider: Provider::OpenAI,
-                    modality: Modality::Audio,
-                    content: t.clone(),
-                    tokens: audio_response.usage.total_tokens,
-                    latency_ms: audio_response.latency_ms,
-                });
+                stage_results.insert(
+                    "audio".to_string(),
+                    StageResult {
+                        provider: Provider::OpenAI,
+                        modality: Modality::Audio,
+                        content: t.clone(),
+                        tokens: audio_response.usage.total_tokens,
+                        latency_ms: audio_response.latency_ms,
+                    },
+                );
             }
 
             providers_used.push(audio_response.provider_used);
@@ -266,13 +268,16 @@ impl MultimodalRouter {
             _ => None,
         };
 
-        stage_results.insert("synthesis".to_string(), StageResult {
-            provider: Provider::Anthropic,
-            modality: Modality::Text,
-            content: final_text.clone().unwrap_or_default(),
-            tokens: synthesis_response.usage.total_tokens,
-            latency_ms: synthesis_response.latency_ms,
-        });
+        stage_results.insert(
+            "synthesis".to_string(),
+            StageResult {
+                provider: Provider::Anthropic,
+                modality: Modality::Text,
+                content: final_text.clone().unwrap_or_default(),
+                tokens: synthesis_response.usage.total_tokens,
+                latency_ms: synthesis_response.latency_ms,
+            },
+        );
 
         providers_used.push(synthesis_response.provider_used);
         total_tokens += synthesis_response.usage.total_tokens;
@@ -299,7 +304,9 @@ impl MultimodalRouter {
         let start = std::time::Instant::now();
 
         let pipeline = request.pipeline.ok_or_else(|| {
-            APIHubError::ConfigurationError("Pipeline strategy requires a pipeline definition".to_string())
+            APIHubError::ConfigurationError(
+                "Pipeline strategy requires a pipeline definition".to_string(),
+            )
         })?;
 
         let mut stage_results: HashMap<String, StageResult> = HashMap::new();
@@ -311,7 +318,8 @@ impl MultimodalRouter {
         for stage in &pipeline.stages {
             // Récupérer l'input de l'étape précédente si spécifié
             let input = if let Some(ref input_key) = stage.input_from {
-                stage_results.get(input_key)
+                stage_results
+                    .get(input_key)
                     .map(|r| r.content.clone())
                     .or(last_output.clone())
             } else {
@@ -354,13 +362,16 @@ impl MultimodalRouter {
                 _ => String::new(),
             };
 
-            stage_results.insert(stage.output_key.clone(), StageResult {
-                provider: stage.provider,
-                modality: stage.modality,
-                content: output.clone(),
-                tokens: response.usage.total_tokens,
-                latency_ms: response.latency_ms,
-            });
+            stage_results.insert(
+                stage.output_key.clone(),
+                StageResult {
+                    provider: stage.provider,
+                    modality: stage.modality,
+                    content: output.clone(),
+                    tokens: response.usage.total_tokens,
+                    latency_ms: response.latency_ms,
+                },
+            );
 
             last_output = Some(output);
             providers_used.push(response.provider_used);
@@ -405,7 +416,11 @@ impl MultimodalRouter {
         for provider in providers_to_try {
             let api_request = APIRequest {
                 id: format!("{}_{:?}", request.id, provider),
-                modality: if !request.images.is_empty() { Modality::Vision } else { Modality::Text },
+                modality: if !request.images.is_empty() {
+                    Modality::Vision
+                } else {
+                    Modality::Text
+                },
                 content: if !request.images.is_empty() {
                     RequestContent::TextWithImages {
                         text: request.text.clone().unwrap_or_default(),
@@ -425,13 +440,16 @@ impl MultimodalRouter {
             if let Ok(response) = hub.execute(api_request).await {
                 if let super::ResponseContent::Text(t) = &response.content {
                     responses.push((provider, t.clone()));
-                    stage_results.insert(format!("{:?}_response", provider), StageResult {
-                        provider,
-                        modality: Modality::Text,
-                        content: t.clone(),
-                        tokens: response.usage.total_tokens,
-                        latency_ms: response.latency_ms,
-                    });
+                    stage_results.insert(
+                        format!("{:?}_response", provider),
+                        StageResult {
+                            provider,
+                            modality: Modality::Text,
+                            content: t.clone(),
+                            tokens: response.usage.total_tokens,
+                            latency_ms: response.latency_ms,
+                        },
+                    );
 
                     providers_used.push(provider);
                     total_tokens += response.usage.total_tokens;
@@ -445,7 +463,8 @@ impl MultimodalRouter {
             "You have received multiple AI responses to the same query. \
             Synthesize them into a single, comprehensive answer that captures \
             the best insights from each:\n\n{}",
-            responses.iter()
+            responses
+                .iter()
                 .map(|(p, r)| format!("=== {:?} ===\n{}", p, r))
                 .collect::<Vec<_>>()
                 .join("\n\n")

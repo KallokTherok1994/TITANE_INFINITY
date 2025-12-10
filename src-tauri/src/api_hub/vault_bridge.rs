@@ -3,10 +3,10 @@
 //! Super Prompt #17 — Accès sécurisé aux clés API via le Security Layer
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::{APIHubError, Provider};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use tokio::sync::RwLock;
-use super::{Provider, APIHubError};
 
 /// Entrée du vault
 #[derive(Clone, Debug)]
@@ -92,7 +92,9 @@ impl VaultBridge {
 
         // Mettre à jour les stats
         state.stats.total_accesses += 1;
-        *state.stats.accesses_by_provider
+        *state
+            .stats
+            .accesses_by_provider
             .entry(format!("{:?}", provider))
             .or_insert(0) += 1;
         state.stats.last_access = Some(now);
@@ -143,13 +145,16 @@ impl VaultBridge {
             key.to_string()
         };
 
-        state.entries.insert(provider, VaultEntry {
-            key: stored_key,
-            encrypted: self.encryption_enabled,
-            created_at: now,
-            last_accessed: now,
-            access_count: 0,
-        });
+        state.entries.insert(
+            provider,
+            VaultEntry {
+                key: stored_key,
+                encrypted: self.encryption_enabled,
+                created_at: now,
+                last_accessed: now,
+                access_count: 0,
+            },
+        );
 
         // Audit
         state.audit_log.push(AuditEntry {
@@ -182,7 +187,11 @@ impl VaultBridge {
     }
 
     /// Rotate une clé API
-    pub async fn rotate_api_key(&self, provider: Provider, new_key: &str) -> Result<(), APIHubError> {
+    pub async fn rotate_api_key(
+        &self,
+        provider: Provider,
+        new_key: &str,
+    ) -> Result<(), APIHubError> {
         let mut state = self.state.write().await;
         let now = Self::now();
 
@@ -190,7 +199,8 @@ impl VaultBridge {
         state.entries.remove(&provider);
 
         // Stocker la nouvelle
-        self.store_key_internal(&mut state, provider, new_key).await?;
+        self.store_key_internal(&mut state, provider, new_key)
+            .await?;
 
         // Audit
         state.audit_log.push(AuditEntry {
@@ -253,8 +263,9 @@ impl VaultBridge {
     fn encrypt(&self, plaintext: &str) -> Result<String, APIHubError> {
         // En production: utiliser AES-256-GCM ou similaire
         // Ici: simple obfuscation pour la démo
-        use base64::{Engine as _, engine::general_purpose::STANDARD};
-        let rotated: String = plaintext.chars()
+        use base64::{engine::general_purpose::STANDARD, Engine as _};
+        let rotated: String = plaintext
+            .chars()
             .map(|c| {
                 if c.is_ascii_alphabetic() {
                     let base = if c.is_ascii_lowercase() { b'a' } else { b'A' };
@@ -270,14 +281,16 @@ impl VaultBridge {
 
     /// Déchiffre une clé
     fn decrypt(&self, ciphertext: &str) -> Result<String, APIHubError> {
-        use base64::{Engine as _, engine::general_purpose::STANDARD};
-        let decoded = STANDARD.decode(ciphertext)
+        use base64::{engine::general_purpose::STANDARD, Engine as _};
+        let decoded = STANDARD
+            .decode(ciphertext)
             .map_err(|e| APIHubError::ConfigurationError(format!("Decryption failed: {}", e)))?;
         let rotated = String::from_utf8(decoded)
             .map_err(|e| APIHubError::ConfigurationError(format!("Invalid UTF-8: {}", e)))?;
 
         // Reverse ROT13
-        let plaintext: String = rotated.chars()
+        let plaintext: String = rotated
+            .chars()
             .map(|c| {
                 if c.is_ascii_alphabetic() {
                     let base = if c.is_ascii_lowercase() { b'a' } else { b'A' };
@@ -314,7 +327,10 @@ mod tests {
     async fn test_vault_store_and_retrieve() {
         let vault = VaultBridge::new();
 
-        vault.store_api_key(Provider::OpenAI, "sk-test-key-123").await.unwrap();
+        vault
+            .store_api_key(Provider::OpenAI, "sk-test-key-123")
+            .await
+            .unwrap();
 
         let key = vault.get_api_key(Provider::OpenAI).await.unwrap();
         assert!(key.is_some());
@@ -325,7 +341,10 @@ mod tests {
     async fn test_vault_delete() {
         let vault = VaultBridge::new();
 
-        vault.store_api_key(Provider::Gemini, "test-key").await.unwrap();
+        vault
+            .store_api_key(Provider::Gemini, "test-key")
+            .await
+            .unwrap();
         assert!(vault.has_key(Provider::Gemini).await);
 
         vault.delete_api_key(Provider::Gemini).await.unwrap();
@@ -340,8 +359,14 @@ mod tests {
     async fn test_vault_rotate() {
         let vault = VaultBridge::new();
 
-        vault.store_api_key(Provider::Anthropic, "old-key").await.unwrap();
-        vault.rotate_api_key(Provider::Anthropic, "new-key").await.unwrap();
+        vault
+            .store_api_key(Provider::Anthropic, "old-key")
+            .await
+            .unwrap();
+        vault
+            .rotate_api_key(Provider::Anthropic, "new-key")
+            .await
+            .unwrap();
 
         let key = vault.get_api_key(Provider::Anthropic).await.unwrap();
         assert_eq!(key.unwrap(), "new-key");

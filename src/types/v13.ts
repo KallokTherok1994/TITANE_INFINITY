@@ -16,21 +16,21 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export type InterruptionCause =
-  | "Confusion"
-  | "Correction"
-  | "Impatience"
-  | "TopicChange"
-  | "EmotionalReaction"
-  | "Clarification"
-  | "NaturalFlow"
-  | "Unknown";
+  | 'Confusion'
+  | 'Correction'
+  | 'Impatience'
+  | 'TopicChange'
+  | 'EmotionalReaction'
+  | 'Clarification'
+  | 'NaturalFlow'
+  | 'Unknown';
 
 export type ConversationStyle =
-  | "Brief"
-  | "Casual"
-  | "Detailed"
-  | "Technical"
-  | "Creative";
+  | 'Brief'
+  | 'Casual'
+  | 'Detailed'
+  | 'Technical'
+  | 'Creative';
 
 export interface ConversationState {
   interruption_rate: number;
@@ -49,7 +49,7 @@ export interface InterruptionAnalysis {
 }
 
 export interface ResponseConfig {
-  style: "Concise" | "Balanced" | "Detailed" | "Technical";
+  style: 'Concise' | 'Balanced' | 'Detailed' | 'Technical';
   target_length: number;
   depth: number;
   speed_words_per_sec: number;
@@ -60,17 +60,17 @@ export interface ResponseConfig {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export type Emotion =
-  | "Neutral"
-  | "Happy"
-  | "Sad"
-  | "Angry"
-  | "Frustrated"
-  | "Excited"
-  | "Calm"
-  | "Anxious"
-  | "Confused"
-  | "Motivated"
-  | "Tired";
+  | 'Neutral'
+  | 'Happy'
+  | 'Sad'
+  | 'Angry'
+  | 'Frustrated'
+  | 'Excited'
+  | 'Calm'
+  | 'Anxious'
+  | 'Confused'
+  | 'Motivated'
+  | 'Tired';
 
 export interface EmotionalState {
   valence: number; // -1.0 (négatif) à 1.0 (positif)
@@ -88,12 +88,12 @@ export interface AudioFeatures {
 }
 
 export type ResponseTone =
-  | "Empathetic"
-  | "Calm"
-  | "Encouraging"
-  | "Direct"
-  | "Gentle"
-  | "Energetic";
+  | 'Empathetic'
+  | 'Calm'
+  | 'Encouraging'
+  | 'Direct'
+  | 'Gentle'
+  | 'Energetic';
 
 export interface EmotionAdaptationConfig {
   tone: ResponseTone;
@@ -114,11 +114,7 @@ export interface TTSParams {
 // COMPRESSION COGNITIVE
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type MemoryLevel =
-  | "ShortTerm"
-  | "MediumTerm"
-  | "LongTerm"
-  | "MetaSummary";
+export type MemoryLevel = 'ShortTerm' | 'MediumTerm' | 'LongTerm' | 'MetaSummary';
 
 export interface MemoryEntry {
   id: string;
@@ -135,7 +131,7 @@ export interface MemoryEntry {
 }
 
 export interface ConversationMessage {
-  role: "user" | "assistant" | "system";
+  role: 'user' | 'assistant' | 'system';
   content: string;
   timestamp?: string;
 }
@@ -145,13 +141,13 @@ export interface ConversationMessage {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export type EnvironmentProfile =
-  | "Silent"
-  | "Moderate"
-  | "Noisy"
-  | "VeryNoisy"
-  | "Industrial";
+  | 'Silent'
+  | 'Moderate'
+  | 'Noisy'
+  | 'VeryNoisy'
+  | 'Industrial';
 
-export type AudioBandwidth = "Narrowband" | "Wideband" | "Fullband";
+export type AudioBandwidth = 'Narrowband' | 'Wideband' | 'Fullband';
 
 export interface AdaptiveAudioConfig {
   mic_gain: number;
@@ -174,18 +170,18 @@ export interface CalibrationResult {
 // SELFHEAL++
 // ═══════════════════════════════════════════════════════════════════════════════
 
-export type HealthStatus = "Healthy" | "Degraded" | "Critical" | "Recovering";
+export type HealthStatus = 'Healthy' | 'Degraded' | 'Critical' | 'Recovering';
 
 export type IssueType =
-  | "ASRCrash"
-  | "TTSFailure"
-  | "OllamaFrozen"
-  | "GeminiTimeout"
-  | "MemoryCorruption"
-  | "DuplexDesync"
-  | "NetworkLoss"
-  | "CPUOverload"
-  | "HighLatency";
+  | 'ASRCrash'
+  | 'TTSFailure'
+  | 'OllamaFrozen'
+  | 'GeminiTimeout'
+  | 'MemoryCorruption'
+  | 'DuplexDesync'
+  | 'NetworkLoss'
+  | 'CPUOverload'
+  | 'HighLatency';
 
 export interface SystemIncident {
   id: string;

@@ -61,7 +61,11 @@
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--evolution-primary), var(--evolution-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--evolution-primary),
+    var(--evolution-secondary)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -152,8 +156,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════ */
@@ -214,12 +223,30 @@
   background: var(--evolution-surface);
 }
 
-.gauge-grade[data-grade="S"] { color: #f59e0b; background: rgba(245, 158, 11, 0.2); }
-.gauge-grade[data-grade="A"] { color: var(--success, #93b399); background: rgba(34, 197, 94, 0.2); }
-.gauge-grade[data-grade="B"] { color: var(--info, #8899aa); background: rgba(59, 130, 246, 0.2); }
-.gauge-grade[data-grade="C"] { color: var(--primary, #727b81); background: rgba(168, 85, 247, 0.2); }
-.gauge-grade[data-grade="D"] { color: #f59e0b; background: rgba(245, 158, 11, 0.2); }
-.gauge-grade[data-grade="F"] { color: var(--danger, #8f7a7a); background: rgba(239, 68, 68, 0.2); }
+.gauge-grade[data-grade='S'] {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.2);
+}
+.gauge-grade[data-grade='A'] {
+  color: var(--success, #93b399);
+  background: rgba(34, 197, 94, 0.2);
+}
+.gauge-grade[data-grade='B'] {
+  color: var(--info, #8899aa);
+  background: rgba(59, 130, 246, 0.2);
+}
+.gauge-grade[data-grade='C'] {
+  color: var(--primary, #727b81);
+  background: rgba(168, 85, 247, 0.2);
+}
+.gauge-grade[data-grade='D'] {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.2);
+}
+.gauge-grade[data-grade='F'] {
+  color: var(--danger, #8f7a7a);
+  background: rgba(239, 68, 68, 0.2);
+}
 
 .gauge-label {
   font-size: 12px;
@@ -244,7 +271,9 @@
   border: 1px solid var(--evolution-border);
   border-radius: 10px;
   padding: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .score-card:hover {
@@ -403,10 +432,18 @@
   border-color: var(--evolution-primary);
 }
 
-.suggestion-card.risk-LOW { border-left: 3px solid var(--evolution-success); }
-.suggestion-card.risk-MEDIUM { border-left: 3px solid var(--evolution-warning); }
-.suggestion-card.risk-HIGH { border-left: 3px solid var(--warning, #a89f91); }
-.suggestion-card.risk-CRITICAL { border-left: 3px solid var(--evolution-danger); }
+.suggestion-card.risk-LOW {
+  border-left: 3px solid var(--evolution-success);
+}
+.suggestion-card.risk-MEDIUM {
+  border-left: 3px solid var(--evolution-warning);
+}
+.suggestion-card.risk-HIGH {
+  border-left: 3px solid var(--warning, #a89f91);
+}
+.suggestion-card.risk-CRITICAL {
+  border-left: 3px solid var(--evolution-danger);
+}
 
 .suggestion-header {
   display: flex;
@@ -432,10 +469,22 @@
   font-weight: 600;
 }
 
-.badge-LOW { background: rgba(34, 197, 94, 0.2); color: var(--evolution-success); }
-.badge-MEDIUM { background: rgba(245, 158, 11, 0.2); color: var(--evolution-warning); }
-.badge-HIGH { background: rgba(249, 115, 22, 0.2); color: var(--warning, #a89f91); }
-.badge-CRITICAL { background: rgba(239, 68, 68, 0.2); color: var(--evolution-danger); }
+.badge-LOW {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--evolution-success);
+}
+.badge-MEDIUM {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--evolution-warning);
+}
+.badge-HIGH {
+  background: rgba(249, 115, 22, 0.2);
+  color: var(--warning, #a89f91);
+}
+.badge-CRITICAL {
+  background: rgba(239, 68, 68, 0.2);
+  color: var(--evolution-danger);
+}
 
 .suggestion-priority {
   font-size: 10px;
@@ -487,8 +536,12 @@
   background: var(--evolution-surface);
 }
 
-.precondition.met { color: var(--evolution-success); }
-.precondition.unmet { color: var(--evolution-danger); }
+.precondition.met {
+  color: var(--evolution-success);
+}
+.precondition.unmet {
+  color: var(--evolution-danger);
+}
 
 .suggestion-actions {
   display: flex;
@@ -625,7 +678,11 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--evolution-primary), var(--evolution-secondary));
+  background: linear-gradient(
+    90deg,
+    var(--evolution-primary),
+    var(--evolution-secondary)
+  );
   border-radius: 3px;
   transition: width 0.3s ease-out;
 }

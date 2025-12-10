@@ -3,11 +3,11 @@
 //! Super Prompt #17 — Intégration Anthropic Claude (Analyse, Safety, Reasoning)
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::Serialize;
 use super::{
-    APIRequest, APIHubError, Provider, Modality, RequestContent,
-    harmonizer::HarmonizedResponse, ResponseContent, UsageStats,
+    harmonizer::HarmonizedResponse, APIHubError, APIRequest, Modality, Provider, RequestContent,
+    ResponseContent, UsageStats,
 };
+use serde::Serialize;
 
 /// Provider Anthropic (Claude)
 pub struct AnthropicProvider {
@@ -36,15 +36,15 @@ impl AnthropicProvider {
             Modality::Text => self.messages(request).await,
             Modality::Vision => self.vision_messages(request).await,
             Modality::MultiModal => self.multimodal_messages(request).await,
-            Modality::Audio => {
-                Err(APIHubError::UnexpectedResponse("Anthropic does not support audio".to_string()))
-            }
-            Modality::Embeddings => {
-                Err(APIHubError::UnexpectedResponse("Anthropic does not support embeddings".to_string()))
-            }
-            Modality::ImageGeneration => {
-                Err(APIHubError::UnexpectedResponse("Anthropic does not support image generation".to_string()))
-            }
+            Modality::Audio => Err(APIHubError::UnexpectedResponse(
+                "Anthropic does not support audio".to_string(),
+            )),
+            Modality::Embeddings => Err(APIHubError::UnexpectedResponse(
+                "Anthropic does not support embeddings".to_string(),
+            )),
+            Modality::ImageGeneration => Err(APIHubError::UnexpectedResponse(
+                "Anthropic does not support image generation".to_string(),
+            )),
         }
     }
 
@@ -52,18 +52,20 @@ impl AnthropicProvider {
     async fn messages(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
         let text = match &request.content {
             RequestContent::Text(t) => t.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected text content".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected text content".to_string(),
+                ))
+            }
         };
 
         let body = MessagesRequest {
             model: self.default_model.clone(),
             max_tokens: request.max_tokens.unwrap_or(4096),
-            messages: vec![
-                Message {
-                    role: "user".to_string(),
-                    content: MessageContent::Text(text),
-                }
-            ],
+            messages: vec![Message {
+                role: "user".to_string(),
+                content: MessageContent::Text(text),
+            }],
             system: None,
             temperature: request.temperature,
             top_p: None,
@@ -80,17 +82,25 @@ impl AnthropicProvider {
                 prompt_tokens: response.input_tokens,
                 completion_tokens: response.output_tokens,
                 total_tokens: response.input_tokens + response.output_tokens,
-                estimated_cost_usd: self.estimate_cost(response.input_tokens, response.output_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.input_tokens, response.output_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
     }
 
     /// Messages avec vision
-    async fn vision_messages(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn vision_messages(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let (text, images) = match &request.content {
             RequestContent::TextWithImages { text, images } => (text.clone(), images.clone()),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected text with images".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected text with images".to_string(),
+                ))
+            }
         };
 
         let mut content_blocks: Vec<ContentBlock> = Vec::new();
@@ -112,12 +122,10 @@ impl AnthropicProvider {
         let body = MessagesRequest {
             model: self.default_model.clone(),
             max_tokens: request.max_tokens.unwrap_or(4096),
-            messages: vec![
-                Message {
-                    role: "user".to_string(),
-                    content: MessageContent::Blocks(content_blocks),
-                }
-            ],
+            messages: vec![Message {
+                role: "user".to_string(),
+                content: MessageContent::Blocks(content_blocks),
+            }],
             system: None,
             temperature: request.temperature,
             top_p: None,
@@ -134,19 +142,29 @@ impl AnthropicProvider {
                 prompt_tokens: response.input_tokens,
                 completion_tokens: response.output_tokens,
                 total_tokens: response.input_tokens + response.output_tokens,
-                estimated_cost_usd: self.estimate_cost(response.input_tokens, response.output_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.input_tokens, response.output_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
     }
 
     /// Messages multimodaux
-    async fn multimodal_messages(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn multimodal_messages(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let (text, images, _audio) = match &request.content {
-            RequestContent::MultiModal { text, images, audio } => {
-                (text.clone(), images.clone(), audio.clone())
+            RequestContent::MultiModal {
+                text,
+                images,
+                audio,
+            } => (text.clone(), images.clone(), audio.clone()),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected multimodal content".to_string(),
+                ))
             }
-            _ => return Err(APIHubError::UnexpectedResponse("Expected multimodal content".to_string())),
         };
 
         // Claude ne supporte pas l'audio, on ignore
@@ -169,12 +187,10 @@ impl AnthropicProvider {
         let body = MessagesRequest {
             model: self.default_model.clone(),
             max_tokens: request.max_tokens.unwrap_or(4096),
-            messages: vec![
-                Message {
-                    role: "user".to_string(),
-                    content: MessageContent::Blocks(content_blocks),
-                }
-            ],
+            messages: vec![Message {
+                role: "user".to_string(),
+                content: MessageContent::Blocks(content_blocks),
+            }],
             system: None,
             temperature: request.temperature,
             top_p: None,
@@ -191,7 +207,8 @@ impl AnthropicProvider {
                 prompt_tokens: response.input_tokens,
                 completion_tokens: response.output_tokens,
                 total_tokens: response.input_tokens + response.output_tokens,
-                estimated_cost_usd: self.estimate_cost(response.input_tokens, response.output_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.input_tokens, response.output_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
@@ -207,12 +224,10 @@ impl AnthropicProvider {
         let body = MessagesRequest {
             model: "claude-opus-4-20250514".to_string(), // Use Opus for deep analysis
             max_tokens: 8192,
-            messages: vec![
-                Message {
-                    role: "user".to_string(),
-                    content: MessageContent::Text(prompt.to_string()),
-                }
-            ],
+            messages: vec![Message {
+                role: "user".to_string(),
+                content: MessageContent::Text(prompt.to_string()),
+            }],
             system: Some(system_prompt),
             temperature: Some(0.3),
             top_p: None,
@@ -259,7 +274,10 @@ impl AnthropicProvider {
     // MOCK IMPLEMENTATIONS
     // ════════════════════════════════════════════════════════════════════════
 
-    async fn mock_messages_response(&self, _body: &MessagesRequest) -> Result<MockAnthropicResponse, APIHubError> {
+    async fn mock_messages_response(
+        &self,
+        _body: &MessagesRequest,
+    ) -> Result<MockAnthropicResponse, APIHubError> {
         Ok(MockAnthropicResponse {
             text: "This is a mock response from Anthropic Claude, providing thoughtful and safe analysis.".to_string(),
             input_tokens: 50,
@@ -267,7 +285,10 @@ impl AnthropicProvider {
         })
     }
 
-    async fn mock_vision_response(&self, _body: &MessagesRequest) -> Result<MockAnthropicResponse, APIHubError> {
+    async fn mock_vision_response(
+        &self,
+        _body: &MessagesRequest,
+    ) -> Result<MockAnthropicResponse, APIHubError> {
         Ok(MockAnthropicResponse {
             text: "I can see the image you've shared. This is a detailed mock vision analysis from Claude.".to_string(),
             input_tokens: 1000,
@@ -275,7 +296,10 @@ impl AnthropicProvider {
         })
     }
 
-    async fn mock_deep_analysis_response(&self, _body: &MessagesRequest) -> Result<MockAnthropicResponse, APIHubError> {
+    async fn mock_deep_analysis_response(
+        &self,
+        _body: &MessagesRequest,
+    ) -> Result<MockAnthropicResponse, APIHubError> {
         Ok(MockAnthropicResponse {
             text: "Here is a comprehensive deep analysis with multiple perspectives, considerations, and recommendations...".to_string(),
             input_tokens: 500,
@@ -340,7 +364,7 @@ struct MockAnthropicResponse {
 }
 
 fn base64_encode(data: &[u8]) -> String {
-    use base64::{Engine as _, engine::general_purpose::STANDARD};
+    use base64::{engine::general_purpose::STANDARD, Engine as _};
     STANDARD.encode(data)
 }
 

@@ -236,13 +236,13 @@ pub struct PersistentMemoryState {
 impl PersistentMemoryState {
     pub fn new(app_handle: &AppHandle) -> Self {
         // Phase 1 Stabilisation: Fallback si app_data_dir() échoue
-        let app_data_dir = app_handle
-            .path()
-            .app_data_dir()
-            .unwrap_or_else(|e| {
-                eprintln!("Warning: Failed to get app data dir ({}), using current directory", e);
-                PathBuf::from(".").join("titane-data")
-            });
+        let app_data_dir = app_handle.path().app_data_dir().unwrap_or_else(|e| {
+            eprintln!(
+                "Warning: Failed to get app data dir ({}), using current directory",
+                e
+            );
+            PathBuf::from(".").join("titane-data")
+        });
 
         let base_path = app_data_dir.join("persistent_memory");
 
@@ -273,8 +273,8 @@ impl PersistentMemoryState {
 
     /// Génère un hash de contenu simple
     fn hash_content(&self, content: &str) -> String {
-        use std::hash::{Hash, Hasher};
         use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
 
         let mut hasher = DefaultHasher::new();
         content.hash(&mut hasher);
@@ -296,7 +296,11 @@ pub async fn persistent_memory_read(
     let start_time = std::time::Instant::now();
 
     let levels = request.levels.unwrap_or_else(|| {
-        vec![MemoryLevel::Session, MemoryLevel::Intermediate, MemoryLevel::LongTerm]
+        vec![
+            MemoryLevel::Session,
+            MemoryLevel::Intermediate,
+            MemoryLevel::LongTerm,
+        ]
     });
     let limit = request.limit.unwrap_or(100) as usize;
 
@@ -318,17 +322,18 @@ pub async fn persistent_memory_read(
                 if file_path.exists() {
                     let content = if *level == MemoryLevel::LongTerm {
                         // Déchiffrer pour long_term
-                        let encrypted = fs::read(&file_path)
-                            .map_err(|e| format!("Failed to read: {}", e))?;
-                        state.encryptor.decrypt(&encrypted)
+                        let encrypted =
+                            fs::read(&file_path).map_err(|e| format!("Failed to read: {}", e))?;
+                        state
+                            .encryptor
+                            .decrypt(&encrypted)
                             .map_err(|e| format!("Decryption failed: {}", e))?
                     } else {
                         fs::read_to_string(&file_path)
                             .map_err(|e| format!("Failed to read: {}", e))?
                     };
 
-                    serde_json::from_str::<Vec<PersistentMemoryEntry>>(&content)
-                        .unwrap_or_default()
+                    serde_json::from_str::<Vec<PersistentMemoryEntry>>(&content).unwrap_or_default()
                 } else {
                     Vec::new()
                 }
@@ -391,7 +396,9 @@ pub async fn persistent_memory_read(
         all_entries.sort_by(|a, b| {
             let score_a = relevance_scores.get(&a.id).unwrap_or(&0.0);
             let score_b = relevance_scores.get(&b.id).unwrap_or(&0.0);
-            score_b.partial_cmp(score_a).unwrap_or(std::cmp::Ordering::Equal)
+            score_b
+                .partial_cmp(score_a)
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
     }
 
@@ -437,13 +444,20 @@ pub async fn persistent_memory_get_stats(
         let cache = state.session_cache.lock().map_err(|e| e.to_string())?;
         count_by_level.insert("session".to_string(), cache.len() as u32);
         for entry in cache.values() {
-            *count_by_topic.entry(format!("{:?}", entry.topic).to_lowercase()).or_insert(0) += 1;
-            *count_by_type.entry(format!("{:?}", entry.content_type).to_lowercase()).or_insert(0) += 1;
+            *count_by_topic
+                .entry(format!("{:?}", entry.topic).to_lowercase())
+                .or_insert(0) += 1;
+            *count_by_type
+                .entry(format!("{:?}", entry.content_type).to_lowercase())
+                .or_insert(0) += 1;
         }
     }
 
     // Compter intermediate et long_term
-    for (level_name, level) in [("intermediate", MemoryLevel::Intermediate), ("long_term", MemoryLevel::LongTerm)] {
+    for (level_name, level) in [
+        ("intermediate", MemoryLevel::Intermediate),
+        ("long_term", MemoryLevel::LongTerm),
+    ] {
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let size = fs::metadata(&path).map(|m| m.len()).unwrap_or(0);
@@ -461,8 +475,12 @@ pub async fn persistent_memory_get_stats(
 
             count_by_level.insert(level_name.to_string(), entries.len() as u32);
             for entry in entries {
-                *count_by_topic.entry(format!("{:?}", entry.topic).to_lowercase()).or_insert(0) += 1;
-                *count_by_type.entry(format!("{:?}", entry.content_type).to_lowercase()).or_insert(0) += 1;
+                *count_by_topic
+                    .entry(format!("{:?}", entry.topic).to_lowercase())
+                    .or_insert(0) += 1;
+                *count_by_type
+                    .entry(format!("{:?}", entry.content_type).to_lowercase())
+                    .or_insert(0) += 1;
             }
         } else {
             count_by_level.insert(level_name.to_string(), 0);
@@ -518,11 +536,19 @@ pub async fn persistent_memory_get_context(
     mode_id: String,
     query: String,
 ) -> Result<serde_json::Value, String> {
-    log::info!("[PersistentMemory] get_context: mode={}, query_len={}", mode_id, query.len());
+    log::info!(
+        "[PersistentMemory] get_context: mode={}, query_len={}",
+        mode_id,
+        query.len()
+    );
 
     // Lire toutes les entrées pertinentes
     let request = MemoryReadRequest {
-        levels: Some(vec![MemoryLevel::Session, MemoryLevel::Intermediate, MemoryLevel::LongTerm]),
+        levels: Some(vec![
+            MemoryLevel::Session,
+            MemoryLevel::Intermediate,
+            MemoryLevel::LongTerm,
+        ]),
         topics: None,
         content_types: None,
         min_importance: Some(2),
@@ -639,7 +665,10 @@ pub async fn persistent_memory_write_entry(
         } else {
             None
         },
-        promotable: Some(matches!(level, MemoryLevel::Session | MemoryLevel::Intermediate)),
+        promotable: Some(matches!(
+            level,
+            MemoryLevel::Session | MemoryLevel::Intermediate
+        )),
         source_entry_ids: Vec::new(),
         relevance_score: None,
         expires_at: if level == MemoryLevel::Intermediate {
@@ -647,9 +676,21 @@ pub async fn persistent_memory_write_entry(
         } else {
             None
         },
-        confidence_score: if level == MemoryLevel::LongTerm { Some(100) } else { None },
-        user_verified: if level == MemoryLevel::LongTerm { Some(false) } else { None },
-        version: if level == MemoryLevel::LongTerm { Some(1) } else { None },
+        confidence_score: if level == MemoryLevel::LongTerm {
+            Some(100)
+        } else {
+            None
+        },
+        user_verified: if level == MemoryLevel::LongTerm {
+            Some(false)
+        } else {
+            None
+        },
+        version: if level == MemoryLevel::LongTerm {
+            Some(1)
+        } else {
+            None
+        },
         version_history: Vec::new(),
     };
 
@@ -698,10 +739,13 @@ pub async fn persistent_memory_promote_entry(
     }
 
     // Chercher dans intermediate pour promouvoir vers long_term
-    let int_path = state.get_level_path(&MemoryLevel::Intermediate).join("entries.json");
+    let int_path = state
+        .get_level_path(&MemoryLevel::Intermediate)
+        .join("entries.json");
     if int_path.exists() {
         let content = fs::read_to_string(&int_path).map_err(|e| e.to_string())?;
-        let mut entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
+        let mut entries: Vec<PersistentMemoryEntry> =
+            serde_json::from_str(&content).unwrap_or_default();
 
         if let Some(idx) = entries.iter().position(|e| e.id == entry_id) {
             let mut entry = entries.remove(idx);
@@ -745,7 +789,10 @@ pub async fn persistent_memory_archive_entry(
     }
 
     // Intermediate & LongTerm
-    for (level, encrypted) in [(MemoryLevel::Intermediate, false), (MemoryLevel::LongTerm, true)] {
+    for (level, encrypted) in [
+        (MemoryLevel::Intermediate, false),
+        (MemoryLevel::LongTerm, true),
+    ] {
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let content = if encrypted {
@@ -755,7 +802,8 @@ pub async fn persistent_memory_archive_entry(
                 fs::read_to_string(&path).map_err(|e| e.to_string())?
             };
 
-            let mut entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
+            let mut entries: Vec<PersistentMemoryEntry> =
+                serde_json::from_str(&content).unwrap_or_default();
 
             if let Some(entry) = entries.iter_mut().find(|e| e.id == entry_id) {
                 entry.status = MemoryStatus::Archived;
@@ -764,7 +812,8 @@ pub async fn persistent_memory_archive_entry(
                 let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
                 if encrypted {
-                    let encrypted_data = state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+                    let encrypted_data =
+                        state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
                     fs::write(&path, encrypted_data).map_err(|e| e.to_string())?;
                 } else {
                     fs::write(&path, json).map_err(|e| e.to_string())?;
@@ -795,7 +844,10 @@ pub async fn persistent_memory_delete_entry(
     }
 
     // Intermediate & LongTerm
-    for (level, encrypted) in [(MemoryLevel::Intermediate, false), (MemoryLevel::LongTerm, true)] {
+    for (level, encrypted) in [
+        (MemoryLevel::Intermediate, false),
+        (MemoryLevel::LongTerm, true),
+    ] {
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let content = if encrypted {
@@ -805,7 +857,8 @@ pub async fn persistent_memory_delete_entry(
                 fs::read_to_string(&path).map_err(|e| e.to_string())?
             };
 
-            let mut entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
+            let mut entries: Vec<PersistentMemoryEntry> =
+                serde_json::from_str(&content).unwrap_or_default();
             let initial_len = entries.len();
             entries.retain(|e| e.id != entry_id);
 
@@ -813,7 +866,8 @@ pub async fn persistent_memory_delete_entry(
                 let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
                 if encrypted {
-                    let encrypted_data = state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+                    let encrypted_data =
+                        state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
                     fs::write(&path, encrypted_data).map_err(|e| e.to_string())?;
                 } else {
                     fs::write(&path, json).map_err(|e| e.to_string())?;
@@ -835,7 +889,10 @@ pub async fn persistent_memory_create_summary(
     title: Option<String>,
     mode_id: String,
 ) -> Result<String, String> {
-    log::info!("[PersistentMemory] create_summary: entries={}", entry_ids.len());
+    log::info!(
+        "[PersistentMemory] create_summary: entries={}",
+        entry_ids.len()
+    );
 
     // Charger les entrées source
     let request = MemoryReadRequest {
@@ -853,7 +910,8 @@ pub async fn persistent_memory_create_summary(
     };
 
     let response = persistent_memory_read(State::from(&*state), request).await?;
-    let source_entries: Vec<&PersistentMemoryEntry> = response.entries
+    let source_entries: Vec<&PersistentMemoryEntry> = response
+        .entries
         .iter()
         .filter(|e| entry_ids.contains(&e.id))
         .collect();
@@ -880,16 +938,32 @@ pub async fn persistent_memory_create_summary(
 
     let summary = MemorySummary {
         id: id.clone(),
-        title: title.unwrap_or_else(|| format!("Résumé du {}", chrono::Utc::now().format("%d/%m/%Y"))),
+        title: title
+            .unwrap_or_else(|| format!("Résumé du {}", chrono::Utc::now().format("%d/%m/%Y"))),
         content: summary_content,
-        topic: source_entries.first().map(|e| e.topic.clone()).unwrap_or(MemoryTopic::General),
-        period_start: source_entries.iter().map(|e| e.metadata.created_at).min().unwrap_or(now),
-        period_end: source_entries.iter().map(|e| e.metadata.created_at).max().unwrap_or(now),
+        topic: source_entries
+            .first()
+            .map(|e| e.topic.clone())
+            .unwrap_or(MemoryTopic::General),
+        period_start: source_entries
+            .iter()
+            .map(|e| e.metadata.created_at)
+            .min()
+            .unwrap_or(now),
+        period_end: source_entries
+            .iter()
+            .map(|e| e.metadata.created_at)
+            .max()
+            .unwrap_or(now),
         source_count: source_entries.len() as u32,
         source_ids: entry_ids,
         primary_mode: Some(mode_id),
         keywords: Vec::new(),
-        aggregated_importance: source_entries.iter().map(|e| e.importance as f32).sum::<f32>() / source_entries.len() as f32,
+        aggregated_importance: source_entries
+            .iter()
+            .map(|e| e.importance as f32)
+            .sum::<f32>()
+            / source_entries.len() as f32,
         generated_at: now,
         summary_type: "on_demand".to_string(),
     };
@@ -982,32 +1056,53 @@ pub async fn persistent_memory_export(
     {
         let cache = state.session_cache.lock().map_err(|e| e.to_string())?;
         let entries: Vec<&PersistentMemoryEntry> = cache.values().collect();
-        all_data.insert("session".to_string(), serde_json::to_value(&entries).unwrap_or_default());
+        all_data.insert(
+            "session".to_string(),
+            serde_json::to_value(&entries).unwrap_or_default(),
+        );
     }
 
     // Intermediate
-    let int_path = state.get_level_path(&MemoryLevel::Intermediate).join("entries.json");
+    let int_path = state
+        .get_level_path(&MemoryLevel::Intermediate)
+        .join("entries.json");
     if int_path.exists() {
         let content = fs::read_to_string(&int_path).unwrap_or_default();
-        let entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
-        all_data.insert("intermediate".to_string(), serde_json::to_value(&entries).unwrap_or_default());
+        let entries: Vec<PersistentMemoryEntry> =
+            serde_json::from_str(&content).unwrap_or_default();
+        all_data.insert(
+            "intermediate".to_string(),
+            serde_json::to_value(&entries).unwrap_or_default(),
+        );
     }
 
     // LongTerm (déchiffré pour export)
-    let lt_path = state.get_level_path(&MemoryLevel::LongTerm).join("entries.json");
+    let lt_path = state
+        .get_level_path(&MemoryLevel::LongTerm)
+        .join("entries.json");
     if lt_path.exists() {
         let encrypted = fs::read(&lt_path).unwrap_or_default();
         let content = state.encryptor.decrypt(&encrypted).unwrap_or_default();
-        let entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
-        all_data.insert("long_term".to_string(), serde_json::to_value(&entries).unwrap_or_default());
+        let entries: Vec<PersistentMemoryEntry> =
+            serde_json::from_str(&content).unwrap_or_default();
+        all_data.insert(
+            "long_term".to_string(),
+            serde_json::to_value(&entries).unwrap_or_default(),
+        );
     }
 
     // Summaries & Bundles
     let summaries = load_summaries(&state.base_path).unwrap_or_default();
-    all_data.insert("summaries".to_string(), serde_json::to_value(&summaries).unwrap_or_default());
+    all_data.insert(
+        "summaries".to_string(),
+        serde_json::to_value(&summaries).unwrap_or_default(),
+    );
 
     let bundles = load_bundles(&state.base_path).unwrap_or_default();
-    all_data.insert("bundles".to_string(), serde_json::to_value(&bundles).unwrap_or_default());
+    all_data.insert(
+        "bundles".to_string(),
+        serde_json::to_value(&bundles).unwrap_or_default(),
+    );
 
     serde_json::to_string_pretty(&all_data).map_err(|e| e.to_string())
 }
@@ -1019,21 +1114,35 @@ pub async fn persistent_memory_export(
 /// Calculer le score de pertinence (simplifié)
 fn calculate_relevance(content: &str, query: &str) -> f32 {
     let content_lower = content.to_lowercase();
-    let query_terms: Vec<&str> = query.to_lowercase().split_whitespace().filter(|w| w.len() > 2).collect();
+    let query_terms: Vec<&str> = query
+        .to_lowercase()
+        .split_whitespace()
+        .filter(|w| w.len() > 2)
+        .collect();
 
     if query_terms.is_empty() {
         return 0.5;
     }
 
-    let matches = query_terms.iter().filter(|term| content_lower.contains(*term)).count();
+    let matches = query_terms
+        .iter()
+        .filter(|term| content_lower.contains(*term))
+        .count();
     (matches as f32) / (query_terms.len() as f32)
 }
 
 /// Vérifier les données sensibles
 fn contains_sensitive_data(content: &str) -> bool {
     let patterns = [
-        "password", "mot de passe", "api_key", "apikey", "secret_key",
-        "private_key", "ssh_key", "bearer ", "-----BEGIN",
+        "password",
+        "mot de passe",
+        "api_key",
+        "apikey",
+        "secret_key",
+        "private_key",
+        "ssh_key",
+        "bearer ",
+        "-----BEGIN",
     ];
     let lower = content.to_lowercase();
     patterns.iter().any(|p| lower.contains(p))

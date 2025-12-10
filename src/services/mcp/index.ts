@@ -16,5 +16,5 @@ export {
   useMCPJobQueue,
   useMCPMemory,
   useMCPGovernance,
-  useMCPEvolution
+  useMCPEvolution,
 } from '@/hooks/useMCPOrchestrator';

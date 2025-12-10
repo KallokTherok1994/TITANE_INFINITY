@@ -204,24 +204,33 @@ export class PromptAssembler {
       this.stats.successfulPrompts++;
       this.updateAverages(singularityPrompt.tokenCount, performance.now() - startTime);
 
-      this.addAuditEntry('complete', undefined, `Prompt assembled successfully (${singularityPrompt.tokenCount} tokens)`);
+      this.addAuditEntry(
+        'complete',
+        undefined,
+        `Prompt assembled successfully (${singularityPrompt.tokenCount} tokens)`
+      );
 
       return {
         success: true,
         prompt: singularityPrompt,
-        debug: request.options?.debugInfo ? {
-          layers: this.getLayerStats(fusedLayers.layers),
-          conflicts: mergedContext.conflicts,
-          optimizations: optimizedBlueprint.optimizationHints,
-          timeline: this.getTimeline(startTime),
-        } : undefined,
+        debug: request.options?.debugInfo
+          ? {
+              layers: this.getLayerStats(fusedLayers.layers),
+              conflicts: mergedContext.conflicts,
+              optimizations: optimizedBlueprint.optimizationHints,
+              timeline: this.getTimeline(startTime),
+            }
+          : undefined,
         timestamp: Date.now(),
         processingTime: performance.now() - startTime,
       };
-
     } catch (error) {
       this.stats.failedPrompts++;
-      this.addAuditEntry('error', undefined, `Error: ${error instanceof Error ? error.message : 'Unknown'}`);
+      this.addAuditEntry(
+        'error',
+        undefined,
+        `Error: ${error instanceof Error ? error.message : 'Unknown'}`
+      );
 
       return this.createErrorResponse(
         'ASSEMBLY_ERROR',
@@ -325,7 +334,14 @@ export class PromptAssembler {
     const conflicts: string[] = [];
     let totalTokens = 0;
 
-    const layerIds: LayerId[] = ['physical', 'cognitive', 'symbolic', 'adaptive', 'meta', 'singularity'];
+    const layerIds: LayerId[] = [
+      'physical',
+      'cognitive',
+      'symbolic',
+      'adaptive',
+      'meta',
+      'singularity',
+    ];
 
     for (const layerId of layerIds) {
       const nodes = filteredLayers.get(layerId) || [];
@@ -349,9 +365,10 @@ export class PromptAssembler {
     const metadata = DEFAULT_LAYER_METADATA[layerId];
 
     const totalTokens = nodes.reduce((sum, n) => sum + (n.metadata?.tokens || 0), 0);
-    const avgRelevance = nodes.length > 0
-      ? nodes.reduce((sum, n) => sum + n.relevance, 0) / nodes.length
-      : 0;
+    const avgRelevance =
+      nodes.length > 0
+        ? nodes.reduce((sum, n) => sum + n.relevance, 0) / nodes.length
+        : 0;
 
     return {
       id: layerId,
@@ -467,7 +484,9 @@ export class PromptAssembler {
     sections.push(this.buildSection(8, this.formatStyleSection(modeProfile)));
 
     // Section 9: Instructions finales
-    sections.push(this.buildSection(9, this.formatFinalInstructionsSection(intent, mode)));
+    sections.push(
+      this.buildSection(9, this.formatFinalInstructionsSection(intent, mode))
+    );
 
     // Calculer le budget
     const tokenBudget = this.calculateTokenBudget(sections);
@@ -496,7 +515,7 @@ export class PromptAssembler {
       name: PROMPT_SECTION_NAMES[id],
       content,
       tokens: estimateTokens(content),
-      required: id <= 3 || id === 9,  // Sections 1-3 et 9 sont requises
+      required: id <= 3 || id === 9, // Sections 1-3 et 9 sont requises
       order: id,
     };
   }
@@ -505,10 +524,15 @@ export class PromptAssembler {
   // FORMATAGE DES SECTIONS
   // ─────────────────────────────────────────────────────────────────────────
 
-  private formatModeSection(mode: IAMode, profile: typeof DEFAULT_MODE_PROFILES[IAMode]): string {
+  private formatModeSection(
+    mode: IAMode,
+    profile: (typeof DEFAULT_MODE_PROFILES)[IAMode]
+  ): string {
     return `Mode: ${mode.toUpperCase()}
 Niveau: ${profile.personality.technicalDepth > 0.7 ? 'Expert' : 'Standard'}
-Permissions: ${Object.entries(profile.permissions).map(([k, v]) => `${k}:${v.level}`).join(', ')}`;
+Permissions: ${Object.entries(profile.permissions)
+      .map(([k, v]) => `${k}:${v.level}`)
+      .join(', ')}`;
   }
 
   private formatObjectiveSection(raw: string): string {
@@ -560,7 +584,10 @@ Recherches: ${searchNodes.length > 0 ? 'Résultats disponibles' : 'Aucune recher
 Autres: Contexte enrichi selon les sources actives`;
   }
 
-  private formatRulesSection(mode: IAMode, profile: typeof DEFAULT_MODE_PROFILES[IAMode]): string {
+  private formatRulesSection(
+    mode: IAMode,
+    profile: (typeof DEFAULT_MODE_PROFILES)[IAMode]
+  ): string {
     const denied = profile.constraints.deniedSources;
     const limits = profile.constraints.rateLimits;
 
@@ -569,7 +596,7 @@ Limites: ${limits.requestsPerMinute} req/min, ${limits.tokensPerMinute} tokens/m
 Warnings: ${mode === 'autonomous' ? 'Mode autonome - toutes actions autorisées' : 'Respecter les limites du mode'}`;
   }
 
-  private formatStyleSection(profile: typeof DEFAULT_MODE_PROFILES[IAMode]): string {
+  private formatStyleSection(profile: (typeof DEFAULT_MODE_PROFILES)[IAMode]): string {
     const personality = profile.personality;
     return `Ton: ${personality.tone}
 Style: ${personality.formality > 0.6 ? 'Formel' : personality.formality > 0.3 ? 'Semi-formel' : 'Décontracté'}
@@ -578,8 +605,12 @@ Personnalité IA: ${personality.name}`;
   }
 
   private formatFinalInstructionsSection(intent: IntentProfile, mode: IAMode): string {
-    const urgencyNote = intent.parsed.urgency > 0.7 ? 'URGENT: Répondre rapidement et précisément.' : '';
-    const complexityNote = intent.parsed.complexity > 0.7 ? 'Requête complexe: Structurer la réponse clairement.' : '';
+    const urgencyNote =
+      intent.parsed.urgency > 0.7 ? 'URGENT: Répondre rapidement et précisément.' : '';
+    const complexityNote =
+      intent.parsed.complexity > 0.7
+        ? 'Requête complexe: Structurer la réponse clairement.'
+        : '';
 
     return `${urgencyNote}
 ${complexityNote}
@@ -657,7 +688,7 @@ ${complexityNote}
           content: this.truncateContent(section.content, newTokens),
         };
 
-        currentTotal -= (section.tokens - newTokens);
+        currentTotal -= section.tokens - newTokens;
       }
     }
 
@@ -695,13 +726,21 @@ ${complexityNote}
     // Construire le contenu textuel
     const lines: string[] = [];
 
-    lines.push('╔═══════════════════════════════════════════════════════════════════════════╗');
-    lines.push('║                    TITANE∞ PROMPT — SINGULARITÉ                            ║');
-    lines.push('╠═══════════════════════════════════════════════════════════════════════════╣');
+    lines.push(
+      '╔═══════════════════════════════════════════════════════════════════════════╗'
+    );
+    lines.push(
+      '║                    TITANE∞ PROMPT — SINGULARITÉ                            ║'
+    );
+    lines.push(
+      '╠═══════════════════════════════════════════════════════════════════════════╣'
+    );
 
     for (const section of blueprint.sections.sort((a, b) => a.order - b.order)) {
       lines.push('');
-      lines.push(`┌─ ${section.id}. ${section.name} ${'─'.repeat(Math.max(0, 60 - section.name.length - 4))}┐`);
+      lines.push(
+        `┌─ ${section.id}. ${section.name} ${'─'.repeat(Math.max(0, 60 - section.name.length - 4))}┐`
+      );
 
       const contentLines = section.content.split('\n');
       for (const line of contentLines) {
@@ -712,7 +751,9 @@ ${complexityNote}
     }
 
     lines.push('');
-    lines.push('╚═══════════════════════════════════════════════════════════════════════════╝');
+    lines.push(
+      '╚═══════════════════════════════════════════════════════════════════════════╝'
+    );
 
     const content = lines.join('\n');
     const tokenCount = estimateTokens(content);
@@ -786,8 +827,7 @@ ${complexityNote}
    */
   private updateAverages(tokens: number, processingTime: number): void {
     const n = this.stats.successfulPrompts;
-    this.stats.averageTokenCount =
-      (this.stats.averageTokenCount * (n - 1) + tokens) / n;
+    this.stats.averageTokenCount = (this.stats.averageTokenCount * (n - 1) + tokens) / n;
     this.stats.averageProcessingTime =
       (this.stats.averageProcessingTime * (n - 1) + processingTime) / n;
   }
@@ -795,8 +835,26 @@ ${complexityNote}
   /**
    * Obtient les stats des couches
    */
-  private getLayerStats(layers: Map<LayerId, ContextLayer>): Map<LayerId, { nodeCount: number; totalTokens: number; averageRelevance: number; compressionRatio: number; lastUpdated: number }> {
-    const stats = new Map<LayerId, { nodeCount: number; totalTokens: number; averageRelevance: number; compressionRatio: number; lastUpdated: number }>();
+  private getLayerStats(layers: Map<LayerId, ContextLayer>): Map<
+    LayerId,
+    {
+      nodeCount: number;
+      totalTokens: number;
+      averageRelevance: number;
+      compressionRatio: number;
+      lastUpdated: number;
+    }
+  > {
+    const stats = new Map<
+      LayerId,
+      {
+        nodeCount: number;
+        totalTokens: number;
+        averageRelevance: number;
+        compressionRatio: number;
+        lastUpdated: number;
+      }
+    >();
     for (const [id, layer] of layers) {
       stats.set(id, { ...layer.stats });
     }
@@ -806,11 +864,16 @@ ${complexityNote}
   /**
    * Obtient la timeline de debug
    */
-  private getTimeline(startTime: number): { timestamp: number; phase: string; duration: number; details: string }[] {
+  private getTimeline(
+    startTime: number
+  ): { timestamp: number; phase: string; duration: number; details: string }[] {
     return this.auditLog.map((entry, index) => ({
       timestamp: entry.timestamp,
       phase: entry.action,
-      duration: index > 0 ? entry.timestamp - this.auditLog[index - 1].timestamp : entry.timestamp - startTime,
+      duration:
+        index > 0
+          ? entry.timestamp - this.auditLog[index - 1].timestamp
+          : entry.timestamp - startTime,
       details: entry.details,
     }));
   }

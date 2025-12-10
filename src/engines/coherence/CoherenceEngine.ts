@@ -244,10 +244,7 @@ class CoherenceEngineImpl {
   /**
    * Subscribe to system events
    */
-  subscribe<T = unknown>(
-    type: EventType | '*',
-    handler: EventHandler<T>
-  ): () => void {
+  subscribe<T = unknown>(type: EventType | '*', handler: EventHandler<T>): () => void {
     return this.events.subscribe(type, handler);
   }
 

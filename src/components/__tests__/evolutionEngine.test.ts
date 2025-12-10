@@ -19,7 +19,7 @@ import type {
   SuggestionStatus,
   ActionResult,
   EvolutionActionType,
-  TitaneModule
+  TitaneModule,
 } from '../../services/evolutionEngine/evolutionEngine.config';
 
 import {
@@ -41,12 +41,12 @@ import {
   DEFAULT_ACTION_WHITELIST,
   DEFAULT_VALIDATION_POLICIES,
   RISK_LEVEL_COLORS,
-  TREND_COLORS
+  TREND_COLORS,
 } from '../../services/evolutionEngine/evolutionEngine.config';
 
 // Mocks
 vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn().mockResolvedValue({})
+  invoke: vi.fn().mockResolvedValue({}),
 }));
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -192,8 +192,26 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
     it('devrait détecter IMPROVING quand les valeurs augmentent significativement', () => {
       // 20 échantillons: 10 anciens bas, 10 récents hauts
       const samples = [
-        50, 51, 52, 50, 51, 49, 50, 52, 51, 50, // anciens ~50
-        80, 82, 81, 83, 80, 79, 82, 81, 80, 81  // récents ~81 (+60%)
+        50,
+        51,
+        52,
+        50,
+        51,
+        49,
+        50,
+        52,
+        51,
+        50, // anciens ~50
+        80,
+        82,
+        81,
+        83,
+        80,
+        79,
+        82,
+        81,
+        80,
+        81, // récents ~81 (+60%)
       ];
       const trend = determineTrend(samples);
       expect(trend).toBe('IMPROVING');
@@ -201,8 +219,26 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
 
     it('devrait détecter DEGRADING quand les valeurs diminuent significativement', () => {
       const samples = [
-        80, 82, 81, 83, 80, 79, 82, 81, 80, 81, // anciens ~81
-        50, 51, 52, 50, 51, 49, 50, 52, 51, 50  // récents ~50 (-38%)
+        80,
+        82,
+        81,
+        83,
+        80,
+        79,
+        82,
+        81,
+        80,
+        81, // anciens ~81
+        50,
+        51,
+        52,
+        50,
+        51,
+        49,
+        50,
+        52,
+        51,
+        50, // récents ~50 (-38%)
       ];
       const trend = determineTrend(samples);
       expect(trend).toBe('DEGRADING');
@@ -210,8 +246,7 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
 
     it('devrait détecter STABLE quand les valeurs sont constantes', () => {
       const samples = [
-        50, 51, 49, 50, 52, 51, 50, 49, 51, 50,
-        50, 52, 51, 49, 50, 51, 50, 49, 52, 50
+        50, 51, 49, 50, 52, 51, 50, 49, 51, 50, 50, 52, 51, 49, 50, 51, 50, 49, 52, 50,
       ];
       const trend = determineTrend(samples);
       expect(trend).toBe('STABLE');
@@ -220,8 +255,26 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
     it('devrait détecter VOLATILE quand les valeurs fluctuent beaucoup', () => {
       // Haute volatilité: écart-type élevé par rapport à la moyenne
       const samples = [
-        50, 51, 50, 52, 51, 50, 49, 51, 50, 52, // anciens stables
-        20, 90, 25, 85, 30, 80, 22, 88, 28, 82  // récents très volatils
+        50,
+        51,
+        50,
+        52,
+        51,
+        50,
+        49,
+        51,
+        50,
+        52, // anciens stables
+        20,
+        90,
+        25,
+        85,
+        30,
+        80,
+        22,
+        88,
+        28,
+        82, // récents très volatils
       ];
       const trend = determineTrend(samples);
       expect(trend).toBe('VOLATILE');
@@ -305,7 +358,7 @@ describe('EVOLUTION ENGINE — Fonctions Utilitaires', () => {
       expect(result.allowed).toBe(false);
     });
 
-    it('devrait rejeter si le module n\'est pas autorisé', () => {
+    it("devrait rejeter si le module n'est pas autorisé", () => {
       const result = isActionWhitelisted(
         'TOGGLE_MODE',
         'admin' as TitaneModule,
@@ -343,12 +396,7 @@ describe('EVOLUTION ENGINE — Factories', () => {
     });
 
     it('devrait utiliser des valeurs par défaut pour tags', () => {
-      const dataPoint = createDataPoint(
-        'PERFORMANCE',
-        'memory',
-        'heapUsed',
-        1024
-      );
+      const dataPoint = createDataPoint('PERFORMANCE', 'memory', 'heapUsed', 1024);
       expect(dataPoint.tags).toEqual([]);
     });
   });
@@ -406,7 +454,7 @@ describe('EVOLUTION ENGINE — Factories', () => {
   });
 
   describe('createHistoryEntry', () => {
-    it('devrait créer une entrée d\'historique valide', () => {
+    it("devrait créer une entrée d'historique valide", () => {
       const entry = createHistoryEntry(
         'EXECUTE',
         'ADMIN',
@@ -499,7 +547,12 @@ describe('EVOLUTION ENGINE — Types', () => {
   describe('SuggestionStatus type', () => {
     it('devrait accepter les valeurs valides', () => {
       const statuses: SuggestionStatus[] = [
-        'PENDING', 'APPROVED', 'REJECTED', 'EXECUTED', 'ROLLED_BACK', 'EXPIRED'
+        'PENDING',
+        'APPROVED',
+        'REJECTED',
+        'EXECUTED',
+        'ROLLED_BACK',
+        'EXPIRED',
       ];
       expect(statuses).toHaveLength(6);
     });
@@ -508,7 +561,11 @@ describe('EVOLUTION ENGINE — Types', () => {
   describe('ActionResult type', () => {
     it('devrait accepter les valeurs valides', () => {
       const results: ActionResult[] = [
-        'SUCCESS', 'FAILED', 'PARTIAL', 'DENIED', 'ROLLED_BACK'
+        'SUCCESS',
+        'FAILED',
+        'PARTIAL',
+        'DENIED',
+        'ROLLED_BACK',
       ];
       expect(results).toHaveLength(5);
     });
@@ -553,14 +610,16 @@ describe('EVOLUTION ENGINE — Intégration', () => {
       // 1. Créer des points de données
       const dataPoints: EvolutionDataPoint[] = [];
       for (let i = 0; i < 10; i++) {
-        dataPoints.push(createDataPoint(
-          'PERFORMANCE',
-          'performance',
-          'latency',
-          100 + i * 10,
-          { source: 'test' },
-          ['test']
-        ));
+        dataPoints.push(
+          createDataPoint(
+            'PERFORMANCE',
+            'performance',
+            'latency',
+            100 + i * 10,
+            { source: 'test' },
+            ['test']
+          )
+        );
       }
       expect(dataPoints).toHaveLength(10);
 
@@ -576,7 +635,7 @@ describe('EVOLUTION ENGINE — Intégration', () => {
         confidence: 85,
         impact: 'MEDIUM',
         relatedMetrics: ['latency'],
-        suggestedAction: 'Optimize cache'
+        suggestedAction: 'Optimize cache',
       };
       expect(pattern.confidence).toBeGreaterThan(80);
 

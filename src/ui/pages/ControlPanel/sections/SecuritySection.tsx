@@ -18,7 +18,7 @@ export const SecuritySection: React.FC = () => {
     hn_security_enabled: true,
     secure_mode: false,
     encryption_enabled: true,
-    audit_logging: true
+    audit_logging: true,
   });
   const [saved, setSaved] = useState(false);
 
@@ -115,7 +115,9 @@ export const SecuritySection: React.FC = () => {
             </div>
             <div
               className={`cp-switch ${config.audit_logging ? 'active' : ''}`}
-              onClick={() => setConfig({ ...config, audit_logging: !config.audit_logging })}
+              onClick={() =>
+                setConfig({ ...config, audit_logging: !config.audit_logging })
+              }
             >
               <div className="cp-switch-thumb" />
             </div>

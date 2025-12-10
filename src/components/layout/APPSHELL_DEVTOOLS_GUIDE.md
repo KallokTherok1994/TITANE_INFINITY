@@ -5,15 +5,13 @@
 ### Remplacer AppShell par AppShellWithDevTools
 
 **Avant:**
+
 ```tsx
 import { AppShell } from '@/components/layout';
 
 function App() {
   return (
-    <AppShell
-      header={<Header />}
-      sidebar={<Sidebar />}
-    >
+    <AppShell header={<Header />} sidebar={<Sidebar />}>
       <MainContent />
     </AppShell>
   );
@@ -21,6 +19,7 @@ function App() {
 ```
 
 **Après:**
+
 ```tsx
 import { AppShellWithDevTools } from '@/components/layout';
 
@@ -29,9 +28,9 @@ function App() {
     <AppShellWithDevTools
       header={<Header />}
       sidebar={<Sidebar />}
-      devToolsEnabled={import.meta.env.DEV}  // Actif en dev uniquement
-      devToolsDefaultOpen={false}            // Fermé par défaut
-      devToolsDefaultSection="dashboard"     // Section par défaut
+      devToolsEnabled={import.meta.env.DEV} // Actif en dev uniquement
+      devToolsDefaultOpen={false} // Fermé par défaut
+      devToolsDefaultSection="dashboard" // Section par défaut
     >
       <MainContent />
     </AppShellWithDevTools>
@@ -42,6 +41,7 @@ function App() {
 ## 📱 Layouts Responsive
 
 ### Desktop (≥1024px)
+
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  [Header]                                       [🛠️ Toggle]  │
@@ -57,6 +57,7 @@ function App() {
 ```
 
 ### Tablet (768px-1023px)
+
 ```
 ┌─────────────────────────────────────────────────┐
 │  [Header]                         [🛠️ Toggle]   │
@@ -76,6 +77,7 @@ function App() {
 ```
 
 ### Mobile (<768px)
+
 ```
 ┌───────────────────────────────┐
 │  [Header]       [🛠️ Toggle]   │
@@ -117,13 +119,13 @@ interface AppShellWithDevToolsProps extends AppShellProps {
    * Section DevTools par défaut
    * @default 'dashboard'
    */
-  devToolsDefaultSection?: 
-    | 'dashboard' 
-    | 'metrics' 
-    | 'logs' 
-    | 'engines' 
-    | 'memory' 
-    | 'pipeline' 
+  devToolsDefaultSection?:
+    | 'dashboard'
+    | 'metrics'
+    | 'logs'
+    | 'engines'
+    | 'memory'
+    | 'pipeline'
     | 'errors';
 }
 ```
@@ -134,7 +136,7 @@ interface AppShellWithDevToolsProps extends AppShellProps {
 
 ```tsx
 <AppShellWithDevTools
-  devToolsDefaultSection="logs"  // Ouvrir sur Logs
+  devToolsDefaultSection="logs" // Ouvrir sur Logs
 >
   {children}
 </AppShellWithDevTools>
@@ -145,7 +147,7 @@ interface AppShellWithDevToolsProps extends AppShellProps {
 ```tsx
 <AppShellWithDevTools
   devToolsEnabled={import.meta.env.DEV}
-  devToolsDefaultOpen={import.meta.env.DEV}  // Auto-open en dev
+  devToolsDefaultOpen={import.meta.env.DEV} // Auto-open en dev
 >
   {children}
 </AppShellWithDevTools>
@@ -155,7 +157,7 @@ interface AppShellWithDevToolsProps extends AppShellProps {
 
 ```tsx
 <AppShellWithDevTools
-  devToolsEnabled={true}  // ⚠️ Actif même en prod
+  devToolsEnabled={true} // ⚠️ Actif même en prod
   devToolsDefaultSection="errors"
 >
   {children}
@@ -165,6 +167,7 @@ interface AppShellWithDevToolsProps extends AppShellProps {
 ## 🔧 Styling & Thème
 
 Les DevTools utilisent les CSS variables du design system:
+
 - `--bg-base`: Background principal
 - `--bg-elevated`: Background élevé
 - `--text-primary`: Texte primaire
@@ -174,9 +177,10 @@ Les DevTools utilisent les CSS variables du design system:
 ### Ajuster les Largeurs
 
 Modifier les constantes dans `AppShellWithDevTools.tsx`:
+
 ```tsx
-const DEVTOOLS_WIDTH_DESKTOP = 480;  // Desktop: 480px
-const DEVTOOLS_WIDTH_TABLET = 400;   // Tablet: 400px
+const DEVTOOLS_WIDTH_DESKTOP = 480; // Desktop: 480px
+const DEVTOOLS_WIDTH_TABLET = 400; // Tablet: 400px
 ```
 
 ## 📊 Intégration Mock Events
@@ -190,7 +194,7 @@ import { useMockActivity } from '@/apps/devtools';
 function App() {
   // Simulation auto en dev (événements toutes les 2s)
   useMockActivity(import.meta.env.DEV, 2000);
-  
+
   return (
     <AppShellWithDevTools
       devToolsEnabled={import.meta.env.DEV}
@@ -204,37 +208,40 @@ function App() {
 
 ## 🚦 État Toggle Button
 
-| État | Apparence | Action |
-|------|-----------|--------|
-| **Fermé** | 🛠️ Gris | Ouvrir DevTools |
-| **Ouvert** | ✕ Bleu | Fermer DevTools |
+| État       | Apparence | Action          |
+| ---------- | --------- | --------------- |
+| **Fermé**  | 🛠️ Gris   | Ouvrir DevTools |
+| **Ouvert** | ✕ Bleu    | Fermer DevTools |
 
 Position: **Fixed top-right (z-index: 9999)**
 
 ## 🎯 Use Cases
 
 ### Dev Local (Debugging)
+
 ```tsx
 <AppShellWithDevTools
   devToolsEnabled={true}
   devToolsDefaultOpen={true}
-  devToolsDefaultSection="logs"  // Focus logs
+  devToolsDefaultSection="logs" // Focus logs
 />
 ```
 
 ### Staging (Tests)
+
 ```tsx
 <AppShellWithDevTools
   devToolsEnabled={true}
   devToolsDefaultOpen={false}
-  devToolsDefaultSection="metrics"  // Focus perf
+  devToolsDefaultSection="metrics" // Focus perf
 />
 ```
 
 ### Production (Disabled)
+
 ```tsx
 <AppShellWithDevTools
-  devToolsEnabled={false}  // Complètement désactivé
+  devToolsEnabled={false} // Complètement désactivé
 />
 ```
 
@@ -248,14 +255,17 @@ Position: **Fixed top-right (z-index: 9999)**
 ## 🔍 Troubleshooting
 
 ### Toggle button invisible
+
 - Vérifier `z-index` conflicts (doit être 9999)
 - Vérifier `devToolsEnabled={true}`
 
 ### Panel ne s'affiche pas
+
 - Console browser pour erreurs React
 - Vérifier imports DevTools: `@/apps/devtools`
 
 ### Responsive ne fonctionne pas
+
 - Vérifier Tailwind breakpoints: `lg:`, `md:`
 - Tester avec DevTools browser (Ctrl+Shift+M)
 

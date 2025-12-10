@@ -58,12 +58,20 @@ export class ModeDetector {
     const lowerAction = action.toLowerCase();
 
     // Raccourcis clavier
-    if (lowerAction.includes('shortcut') || lowerAction.includes('ctrl+') || lowerAction.includes('cmd+')) {
+    if (
+      lowerAction.includes('shortcut') ||
+      lowerAction.includes('ctrl+') ||
+      lowerAction.includes('cmd+')
+    ) {
       this.expertiseIndicators.shortcutsUsed++;
     }
 
     // Fonctionnalités avancées
-    if (lowerAction.includes('advanced') || lowerAction.includes('expert') || lowerAction.includes('config')) {
+    if (
+      lowerAction.includes('advanced') ||
+      lowerAction.includes('expert') ||
+      lowerAction.includes('config')
+    ) {
       this.expertiseIndicators.advancedFeaturesUsed++;
     }
 
@@ -73,12 +81,20 @@ export class ModeDetector {
     }
 
     // Accès à l'aide
-    if (lowerAction.includes('help') || lowerAction.includes('tutorial') || lowerAction.includes('guide')) {
+    if (
+      lowerAction.includes('help') ||
+      lowerAction.includes('tutorial') ||
+      lowerAction.includes('guide')
+    ) {
       this.expertiseIndicators.helpAccessed++;
     }
 
     // Erreurs
-    if (lowerAction.includes('error') || lowerAction.includes('failed') || lowerAction.includes('invalid')) {
+    if (
+      lowerAction.includes('error') ||
+      lowerAction.includes('failed') ||
+      lowerAction.includes('invalid')
+    ) {
       this.expertiseIndicators.errorsEncountered++;
     }
   }
@@ -104,41 +120,37 @@ export class ModeDetector {
     // Score Novice
     const noviceScore = Math.min(
       (exp.helpAccessed / totalActions) * 10 +
-      (exp.errorsEncountered / totalActions) * 5 +
-      (exp.slowNavigations / totalActions) * 3 +
-      (1 - behavior.engagementLevel) * 2,
+        (exp.errorsEncountered / totalActions) * 5 +
+        (exp.slowNavigations / totalActions) * 3 +
+        (1 - behavior.engagementLevel) * 2,
       1
     );
 
     // Score Power User
     const powerScore = Math.min(
       (exp.shortcutsUsed / totalActions) * 5 +
-      (exp.advancedFeaturesUsed / totalActions) * 5 +
-      (exp.fastNavigations / totalActions) * 3 +
-      behavior.typingSpeed / 60 + // WPM normalisé
-      (exp.settingsAccessed > 0 ? 0.2 : 0),
+        (exp.advancedFeaturesUsed / totalActions) * 5 +
+        (exp.fastNavigations / totalActions) * 3 +
+        behavior.typingSpeed / 60 + // WPM normalisé
+        (exp.settingsAccessed > 0 ? 0.2 : 0),
       1
     );
 
     // Score Focus (concentration)
     const focusScore = Math.min(
-      (behavior.focusDuration / 300000) + // 5 min = score max
-      (behavior.navigationPattern === 'focused' ? 0.3 : 0) +
-      (behavior.engagementLevel > 0.7 ? 0.2 : 0) +
-      (behavior.frustrationSignals === 0 ? 0.2 : 0),
+      behavior.focusDuration / 300000 + // 5 min = score max
+        (behavior.navigationPattern === 'focused' ? 0.3 : 0) +
+        (behavior.engagementLevel > 0.7 ? 0.2 : 0) +
+        (behavior.frustrationSignals === 0 ? 0.2 : 0),
       1
     );
 
     // Score Accessibility
     const accessibilityScore =
-      (context.reducedMotion ? 0.5 : 0) +
-      (context.highContrast ? 0.5 : 0);
+      (context.reducedMotion ? 0.5 : 0) + (context.highContrast ? 0.5 : 0);
 
     // Score Standard (par défaut)
-    const standardScore = Math.max(
-      0.5 - Math.abs(noviceScore - powerScore) * 0.5,
-      0.3
-    );
+    const standardScore = Math.max(0.5 - Math.abs(noviceScore - powerScore) * 0.5, 0.3);
 
     return {
       novice: noviceScore,
@@ -219,12 +231,18 @@ export class ModeDetector {
 
     const shortcutRatio = exp.shortcutsUsed / totalActions;
     const advancedRatio = exp.advancedFeaturesUsed / totalActions;
-    const speedRatio = exp.fastNavigations / (exp.fastNavigations + exp.slowNavigations + 1);
-    const errorRatio = 1 - (exp.errorsEncountered / totalActions);
-    const helpRatio = 1 - (exp.helpAccessed / totalActions);
+    const speedRatio =
+      exp.fastNavigations / (exp.fastNavigations + exp.slowNavigations + 1);
+    const errorRatio = 1 - exp.errorsEncountered / totalActions;
+    const helpRatio = 1 - exp.helpAccessed / totalActions;
 
     return Math.min(
-      (shortcutRatio * 2 + advancedRatio * 2 + speedRatio + errorRatio * 0.5 + helpRatio * 0.5) / 6,
+      (shortcutRatio * 2 +
+        advancedRatio * 2 +
+        speedRatio +
+        errorRatio * 0.5 +
+        helpRatio * 0.5) /
+        6,
       1
     );
   }

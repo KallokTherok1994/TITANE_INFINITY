@@ -66,7 +66,11 @@ export class LifecycleManager {
     }
 
     const duration = performance.now() - startTime;
-    this.eventBus.emit('lifecycle:phase_complete', { phase, duration }, 'LifecycleManager');
+    this.eventBus.emit(
+      'lifecycle:phase_complete',
+      { phase, duration },
+      'LifecycleManager'
+    );
   }
 
   /**
@@ -92,9 +96,13 @@ export class LifecycleManager {
     await this.executePhase('init');
     await this.executePhase('post-init');
 
-    this.eventBus.emit('lifecycle:initialized', {
-      duration: Date.now() - this.startTime,
-    }, 'LifecycleManager');
+    this.eventBus.emit(
+      'lifecycle:initialized',
+      {
+        duration: Date.now() - this.startTime,
+      },
+      'LifecycleManager'
+    );
   }
 
   /**
@@ -109,9 +117,13 @@ export class LifecycleManager {
     await this.executePhase('start');
     await this.executePhase('post-start');
 
-    this.eventBus.emit('lifecycle:started', {
-      uptime: this.getUptime(),
-    }, 'LifecycleManager');
+    this.eventBus.emit(
+      'lifecycle:started',
+      {
+        uptime: this.getUptime(),
+      },
+      'LifecycleManager'
+    );
   }
 
   /**
@@ -126,9 +138,13 @@ export class LifecycleManager {
     await this.executePhase('stop');
     await this.executePhase('post-stop');
 
-    this.eventBus.emit('lifecycle:stopped', {
-      uptime: this.getUptime(),
-    }, 'LifecycleManager');
+    this.eventBus.emit(
+      'lifecycle:stopped',
+      {
+        uptime: this.getUptime(),
+      },
+      'LifecycleManager'
+    );
   }
 
   /**
@@ -184,7 +200,10 @@ export class LifecycleManager {
     uptime: number;
     hookCounts: Record<LifecyclePhase, number>;
   } {
-    const hookCounts: Record<LifecyclePhase, number> = {} as Record<LifecyclePhase, number>;
+    const hookCounts: Record<LifecyclePhase, number> = {} as Record<
+      LifecyclePhase,
+      number
+    >;
 
     for (const [phase, hooks] of this.hooks) {
       hookCounts[phase] = hooks.size;

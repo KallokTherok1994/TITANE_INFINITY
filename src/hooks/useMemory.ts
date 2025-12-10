@@ -44,8 +44,9 @@ export interface ConversationSummary {
 }
 
 export function useMemory() {
-  const [currentConversation, setCurrentConversation] =
-    useState<Conversation | null>(null);
+  const [currentConversation, setCurrentConversation] = useState<Conversation | null>(
+    null
+  );
   const [conversations, setConversations] = useState<ConversationSummary[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,27 +68,30 @@ export function useMemory() {
     }
   }, []);
 
-  const createConversation = useCallback(async (title: string) => {
-    setIsLoading(true);
-    setError(null);
+  const createConversation = useCallback(
+    async (title: string) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const conversationId = await secureInvoke<string>('create_conversation', {
-        title,
-      });
+      try {
+        const conversationId = await secureInvoke<string>('create_conversation', {
+          title,
+        });
 
-      await loadConversations();
+        await loadConversations();
 
-      return conversationId;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage);
-      console.error('Create conversation error:', err);
-      return null;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [loadConversations]);
+        return conversationId;
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        setError(errorMessage);
+        console.error('Create conversation error:', err);
+        return null;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [loadConversations]
+  );
 
   const loadConversation = useCallback(async (conversationId: string) => {
     setIsLoading(true);
@@ -112,28 +116,31 @@ export function useMemory() {
     }
   }, []);
 
-  const deleteConversation = useCallback(async (conversationId: string) => {
-    setIsLoading(true);
-    setError(null);
+  const deleteConversation = useCallback(
+    async (conversationId: string) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
-      const { invoke } = await import('@tauri-apps/api/core');
-      await invoke('delete_conversation', { conversationId });
+      try {
+        // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
+        const { invoke } = await import('@tauri-apps/api/core');
+        await invoke('delete_conversation', { conversationId });
 
-      if (currentConversation?.id === conversationId) {
-        setCurrentConversation(null);
+        if (currentConversation?.id === conversationId) {
+          setCurrentConversation(null);
+        }
+
+        await loadConversations();
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        setError(errorMessage);
+        console.error('Delete conversation error:', err);
+      } finally {
+        setIsLoading(false);
       }
-
-      await loadConversations();
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : String(err);
-      setError(errorMessage);
-      console.error('Delete conversation error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [currentConversation, loadConversations]);
+    },
+    [currentConversation, loadConversations]
+  );
 
   const clearAllMemory = useCallback(async () => {
     setIsLoading(true);

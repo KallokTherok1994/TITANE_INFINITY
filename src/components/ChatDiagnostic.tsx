@@ -8,10 +8,7 @@ import type { CSSProperties } from 'react';
 import { safeInvoke } from '@/utils/invoke';
 import { getGeminiKeyStatus, hasSecureData } from '@/utils/secureSecrets';
 import type { GeminiKeyStatus, SecureResponse } from '@/utils/secureSecrets';
-import {
-  isTauriRuntimeAvailable,
-  tauriProtector,
-} from '@/utils/tauriProtector';
+import { isTauriRuntimeAvailable, tauriProtector } from '@/utils/tauriProtector';
 import type { SingularityState } from '@/types/singularityState';
 
 type DiagnosticStatus = 'success' | 'warning' | 'error' | 'info';
@@ -35,7 +32,10 @@ interface DiagnosticTest {
   fallbackMessage: string;
   errorMessage?: string;
   transformData?: (response: unknown) => unknown;
-  interpret?: (response: unknown, durationMs: number) => Omit<DiagnosticResult, 'id' | 'title'>;
+  interpret?: (
+    response: unknown,
+    durationMs: number
+  ) => Omit<DiagnosticResult, 'id' | 'title'>;
 }
 
 interface ChatDiagnosticProps {
@@ -49,7 +49,10 @@ const hasFallbackFlag = (value: unknown): boolean => {
   return Boolean((value as { fallback?: boolean }).fallback);
 };
 
-const statusTheme: Record<DiagnosticStatus, { background: string; border: string; icon: string }> = {
+const statusTheme: Record<
+  DiagnosticStatus,
+  { background: string; border: string; icon: string }
+> = {
   success: {
     background: '#1a2520',
     border: '#93b399', // TITANE success
@@ -72,7 +75,10 @@ const statusTheme: Record<DiagnosticStatus, { background: string; border: string
   },
 };
 
-const TEST_GROUPS: Record<DiagnosticTest['group'], { title: string; description: string }> = {
+const TEST_GROUPS: Record<
+  DiagnosticTest['group'],
+  { title: string; description: string }
+> = {
   core: {
     title: 'Chat IA — Cœur Orchestrateur',
     description: 'Vérifie les providers, la cascade automatique et la boucle locale.',
@@ -153,12 +159,13 @@ const diagnosticTests: DiagnosticTest[] = [
   {
     id: 'providers-status',
     title: 'Providers Status',
-    description: 'Interroge la passerelle Tauri pour récupérer la disponibilité des providers IA.',
+    description:
+      'Interroge la passerelle Tauri pour récupérer la disponibilité des providers IA.',
     group: 'core',
     run: () => safeInvoke<Record<string, unknown>>('chat_get_providers_status'),
     successMessage: 'Providers récupérés via le backend Tauri.',
     fallbackMessage: 'Backend indisponible — informations en mode fallback.',
-    transformData: (response) => {
+    transformData: response => {
       if (!response || typeof response !== 'object') {
         return response;
       }
@@ -191,7 +198,8 @@ const diagnosticTests: DiagnosticTest[] = [
   {
     id: 'auto-cascade',
     title: 'Cascade Automatique',
-    description: "Vérifie la capacité du moteur à sélectionner automatiquement l'orchestrateur optimal.",
+    description:
+      "Vérifie la capacité du moteur à sélectionner automatiquement l'orchestrateur optimal.",
     group: 'core',
     run: () =>
       safeInvoke<Record<string, unknown>>('chat_send_message', {
@@ -214,7 +222,10 @@ const diagnosticTests: DiagnosticTest[] = [
     successMessage: 'SecureSecrets répond et expose un statut valide.',
     fallbackMessage: 'SecureSecrets en mode fallback (lecture locale).',
     interpret: (response, durationMs) => {
-      const secureResponse = response as SecureResponse<GeminiKeyStatus> | null | undefined;
+      const secureResponse = response as
+        | SecureResponse<GeminiKeyStatus>
+        | null
+        | undefined;
 
       if (hasSecureData<GeminiKeyStatus>(secureResponse)) {
         const data = secureResponse.data;
@@ -236,7 +247,8 @@ const diagnosticTests: DiagnosticTest[] = [
       if (secureResponse && typeof secureResponse === 'object') {
         return {
           status: 'warning',
-          message: secureResponse.error ?? 'SecureSecrets a répondu sans données exploitables.',
+          message:
+            secureResponse.error ?? 'SecureSecrets a répondu sans données exploitables.',
           data: secureResponse,
           durationMs,
         };
@@ -257,7 +269,7 @@ const diagnosticTests: DiagnosticTest[] = [
     run: () => safeInvoke<Record<string, unknown>>('check_system_integrity'),
     successMessage: 'Audit intégrité validé.',
     fallbackMessage: 'Audit en mode fallback — résultats à confirmer côté backend.',
-    transformData: (response) => {
+    transformData: response => {
       if (!response || typeof response !== 'object') {
         return response;
       }
@@ -271,12 +283,13 @@ const diagnosticTests: DiagnosticTest[] = [
   {
     id: 'singularity-snapshot',
     title: 'Snapshot Singularity',
-    description: "Capture légère des métriques clés du SingularityState (cohérence, runtime).",
+    description:
+      'Capture légère des métriques clés du SingularityState (cohérence, runtime).',
     group: 'insight',
     run: () => safeInvoke<SingularityState>('singularity_get_full_state'),
     successMessage: 'Snapshot Singularity récupéré.',
     fallbackMessage: 'Snapshot synthétique issu du mode fallback.',
-    transformData: (response) => {
+    transformData: response => {
       if (!response || typeof response !== 'object') {
         return response;
       }
@@ -297,7 +310,7 @@ const diagnosticTests: DiagnosticTest[] = [
     run: () => safeInvoke<Record<string, unknown>>('cp_get_ai_config'),
     successMessage: 'Configuration IA récupérée.',
     fallbackMessage: 'Configuration IA en fallback — valeurs locales affichées.',
-    transformData: (response) => {
+    transformData: response => {
       if (!response || typeof response !== 'object') {
         return response;
       }
@@ -311,13 +324,15 @@ const diagnosticTests: DiagnosticTest[] = [
         active_provider: payload.active_provider,
         temperature: payload.temperature,
         model: payload.model,
-        providers_summary: payload.providers ? Object.keys(payload.providers as Record<string, unknown>) : [],
+        providers_summary: payload.providers
+          ? Object.keys(payload.providers as Record<string, unknown>)
+          : [],
       };
     },
   },
 ];
 
-const EXECUTION_ORDER = diagnosticTests.map((test) => test.id);
+const EXECUTION_ORDER = diagnosticTests.map(test => test.id);
 
 export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel' }) => {
   const [results, setResults] = useState<Record<string, DiagnosticResult>>({});
@@ -327,19 +342,22 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
   const [runtimeAvailable, setRuntimeAvailable] = useState(isTauriRuntimeAvailable());
 
   const testsByGroup = useMemo(() => {
-    return diagnosticTests.reduce<Record<DiagnosticTest['group'], DiagnosticTest[]>>((acc, test) => {
-      acc[test.group] = acc[test.group] ? [...acc[test.group], test] : [test];
-      return acc;
-    }, { core: [], secure: [], audit: [], insight: [] });
+    return diagnosticTests.reduce<Record<DiagnosticTest['group'], DiagnosticTest[]>>(
+      (acc, test) => {
+        acc[test.group] = acc[test.group] ? [...acc[test.group], test] : [test];
+        return acc;
+      },
+      { core: [], secure: [], audit: [], insight: [] }
+    );
   }, []);
 
   const summary = useMemo(() => {
     const values = Object.values(results);
     return {
       total: values.length,
-      success: values.filter((item) => item.status === 'success').length,
-      warning: values.filter((item) => item.status === 'warning').length,
-      error: values.filter((item) => item.status === 'error').length,
+      success: values.filter(item => item.status === 'success').length,
+      warning: values.filter(item => item.status === 'warning').length,
+      error: values.filter(item => item.status === 'error').length,
     };
   }, [results]);
 
@@ -379,10 +397,10 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
     setResults({});
 
     for (const testId of EXECUTION_ORDER) {
-      const test = diagnosticTests.find((item) => item.id === testId);
+      const test = diagnosticTests.find(item => item.id === testId);
       if (!test) continue;
       const result = await executeTest(test);
-      setResults((prev) => ({ ...prev, [test.id]: result }));
+      setResults(prev => ({ ...prev, [test.id]: result }));
     }
 
     setRunningAll(false);
@@ -392,10 +410,10 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
   };
 
   const runSingleTest = async (test: DiagnosticTest) => {
-    setRunningIds((prev) => (prev.includes(test.id) ? prev : [...prev, test.id]));
+    setRunningIds(prev => (prev.includes(test.id) ? prev : [...prev, test.id]));
     const result = await executeTest(test);
-    setResults((prev) => ({ ...prev, [test.id]: result }));
-    setRunningIds((prev) => prev.filter((id) => id !== test.id));
+    setResults(prev => ({ ...prev, [test.id]: result }));
+    setRunningIds(prev => prev.filter(id => id !== test.id));
     setLastRun(Date.now());
     setRuntimeAvailable(isTauriRuntimeAvailable());
   };
@@ -413,7 +431,7 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
   const logDiagnostics = () => {
     console.group('[ChatDiagnostic] Résultats');
     console.table(
-      Object.values(results).map((item) => ({
+      Object.values(results).map(item => ({
         id: item.id,
         statut: item.status,
         message: item.message,
@@ -425,31 +443,32 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
 
   const isRunning = (id: string): boolean => runningAll || runningIds.includes(id);
 
-  const containerStyle: CSSProperties = variant === 'overlay'
-    ? {
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        background: '#0f172a',
-        color: '#e2e8f0',
-        padding: '20px',
-        borderRadius: '12px',
-        maxWidth: '520px',
-        maxHeight: '80vh',
-        overflow: 'auto',
-        zIndex: 9999,
-        boxShadow: '0 18px 60px rgba(15, 23, 42, 0.45)',
-      }
-    : {
-        background: '#0b1016',
-        border: '1px solid #1f2937',
-        borderRadius: '16px',
-        padding: '24px',
-        color: '#e2e8f0',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '24px',
-      };
+  const containerStyle: CSSProperties =
+    variant === 'overlay'
+      ? {
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: '#0f172a',
+          color: '#e2e8f0',
+          padding: '20px',
+          borderRadius: '12px',
+          maxWidth: '520px',
+          maxHeight: '80vh',
+          overflow: 'auto',
+          zIndex: 9999,
+          boxShadow: '0 18px 60px rgba(15, 23, 42, 0.45)',
+        }
+      : {
+          background: '#0b1016',
+          border: '1px solid #1f2937',
+          borderRadius: '16px',
+          padding: '24px',
+          color: '#e2e8f0',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '24px',
+        };
 
   const headerActionsStyle: CSSProperties = {
     display: 'flex',
@@ -499,7 +518,9 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
           <span style={{ fontWeight: 600 }}>
             {theme.icon} {result.message}
           </span>
-          <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>{formatDuration(result.durationMs)}</span>
+          <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+            {formatDuration(result.durationMs)}
+          </span>
         </div>
 
         {typeof result.data !== 'undefined' && (
@@ -526,11 +547,19 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
 
   return (
     <div style={containerStyle}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          gap: '16px',
+          flexWrap: 'wrap',
+        }}
+      >
         <div style={{ flex: '1 1 260px' }}>
           <h3 style={{ margin: 0, fontSize: '1.1rem' }}>🔧 Centre Diagnostics IA</h3>
           <p style={{ margin: '6px 0 0 0', fontSize: '0.85rem', opacity: 0.75 }}>
-            Lancez des tests ciblés sur la passerelle Chat IA, SecureSecrets et les moteurs internes.
+            Lancez des tests ciblés sur la passerelle Chat IA, SecureSecrets et les
+            moteurs internes.
           </p>
         </div>
         <div style={headerActionsStyle}>
@@ -558,46 +587,58 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
           gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         }}
       >
-        <div style={{
-          background: 'rgba(15,23,42,0.7)',
-          border: '1px solid rgba(148,163,184,0.2)',
-          borderRadius: '12px',
-          padding: '16px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '6px'
-        }}>
+        <div
+          style={{
+            background: 'rgba(15,23,42,0.7)',
+            border: '1px solid rgba(148,163,184,0.2)',
+            borderRadius: '12px',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '6px',
+          }}
+        >
           <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>Runtime Tauri</span>
           <span style={{ fontWeight: 600 }}>
             {runtimeAvailable ? '✅ Actif' : '⚠️ Mode fallback'}
           </span>
-          <button type="button" onClick={onResetTauriCache} style={{ ...actionButtonStyle(), width: '100%' }}>
+          <button
+            type="button"
+            onClick={onResetTauriCache}
+            style={{ ...actionButtonStyle(), width: '100%' }}
+          >
             ♻️ Réinitialiser cache
           </button>
         </div>
-        <div style={{
-          background: 'rgba(15,23,42,0.7)',
-          border: '1px solid rgba(148,163,184,0.2)',
-          borderRadius: '12px',
-          padding: '16px',
-        }}>
+        <div
+          style={{
+            background: 'rgba(15,23,42,0.7)',
+            border: '1px solid rgba(148,163,184,0.2)',
+            borderRadius: '12px',
+            padding: '16px',
+          }}
+        >
           <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>Dernier diagnostic</span>
           <span style={{ fontWeight: 600 }}>
             {lastRun ? new Date(lastRun).toLocaleTimeString() : 'Jamais'}
           </span>
         </div>
-        <div style={{
-          background: 'rgba(15,23,42,0.7)',
-          border: '1px solid rgba(148,163,184,0.2)',
-          borderRadius: '12px',
-          padding: '16px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '4px'
-        }}>
+        <div
+          style={{
+            background: 'rgba(15,23,42,0.7)',
+            border: '1px solid rgba(148,163,184,0.2)',
+            borderRadius: '12px',
+            padding: '16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+          }}
+        >
           <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>Résultats</span>
           <span style={{ fontWeight: 600 }}>{summary.total} tests</span>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '6px' }}>
+          <div
+            style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '6px' }}
+          >
             <span style={badgeStyle('success')}>✓ {summary.success}</span>
             <span style={badgeStyle('warning')}>⚠️ {summary.warning}</span>
             <span style={badgeStyle('error')}>❌ {summary.error}</span>
@@ -608,7 +649,9 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
       {Object.entries(testsByGroup).map(([groupId, tests]) => (
         <section key={groupId}>
           <header style={{ marginBottom: '12px' }}>
-            <h4 style={{ margin: 0, fontSize: '1rem' }}>{TEST_GROUPS[groupId as DiagnosticTest['group']].title}</h4>
+            <h4 style={{ margin: 0, fontSize: '1rem' }}>
+              {TEST_GROUPS[groupId as DiagnosticTest['group']].title}
+            </h4>
             <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', opacity: 0.7 }}>
               {TEST_GROUPS[groupId as DiagnosticTest['group']].description}
             </p>
@@ -621,7 +664,7 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
               gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
             }}
           >
-            {tests.map((test) => {
+            {tests.map(test => {
               const result = results[test.id];
               return (
                 <div
@@ -635,10 +678,20 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
                     flexDirection: 'column',
                   }}
                 >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      gap: '12px',
+                    }}
+                  >
                     <div>
                       <h5 style={{ margin: 0, fontSize: '0.95rem' }}>{test.title}</h5>
-                      <p style={{ margin: '6px 0 0 0', fontSize: '0.8rem', opacity: 0.7 }}>{test.description}</p>
+                      <p
+                        style={{ margin: '6px 0 0 0', fontSize: '0.8rem', opacity: 0.7 }}
+                      >
+                        {test.description}
+                      </p>
                     </div>
                   </div>
 

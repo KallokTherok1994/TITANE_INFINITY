@@ -26,10 +26,7 @@ import {
   type HealingResult,
   type HealingImpactReport,
 } from './selfHealing.config';
-import {
-  type ExecutionPlan,
-  type PlannedAction,
-} from './selfHealingPlaybookEngine';
+import { type ExecutionPlan, type PlannedAction } from './selfHealingPlaybookEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -89,7 +86,10 @@ export interface ExecutionState {
 }
 
 /** Callback de progression */
-export type ProgressCallback = (state: ExecutionState, actionResult?: ActionResult) => void;
+export type ProgressCallback = (
+  state: ExecutionState,
+  actionResult?: ActionResult
+) => void;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONSTANTES
@@ -113,42 +113,42 @@ const DEFAULT_CONFIG: ExecutorConfig = {
 type ActionHandler = (action: HealingAction) => Promise<unknown>;
 
 const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
-  restart_module: async (action) => {
+  restart_module: async action => {
     return secureInvoke('selfheal_restart_module', {
       module: action.targetModule,
       force: action.parameters.force ?? false,
     });
   },
 
-  clear_cache: async (action) => {
+  clear_cache: async action => {
     return secureInvoke('selfheal_clear_cache', {
       module: action.targetModule,
       cacheType: action.parameters.type ?? 'all',
     });
   },
 
-  regenerate_config: async (action) => {
+  regenerate_config: async action => {
     return secureInvoke('selfheal_regenerate_config', {
       module: action.targetModule,
       template: action.parameters.template ?? 'default',
     });
   },
 
-  repair_json: async (action) => {
+  repair_json: async action => {
     return secureInvoke('selfheal_repair_json', {
       file: action.parameters.file,
       backup: action.parameters.backup ?? true,
     });
   },
 
-  rebuild_memory: async (action) => {
+  rebuild_memory: async action => {
     return secureInvoke('selfheal_rebuild_memory', {
       scope: action.parameters.type ?? 'full',
       preserveRecent: action.parameters.preserveRecent ?? true,
     });
   },
 
-  fallback_provider: async (action) => {
+  fallback_provider: async action => {
     const providers = action.parameters.providers as string[] | undefined;
     return secureInvoke('selfheal_switch_provider', {
       module: action.targetModule,
@@ -156,7 +156,7 @@ const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
     });
   },
 
-  reset_state: async (action) => {
+  reset_state: async action => {
     return secureInvoke('selfheal_reset_state', {
       module: action.targetModule,
       scope: action.parameters.scope ?? 'module',
@@ -164,41 +164,41 @@ const ACTION_HANDLERS: Record<HealingActionType, ActionHandler> = {
     });
   },
 
-  restart_worker: async (action) => {
+  restart_worker: async action => {
     return secureInvoke('selfheal_restart_worker', {
       module: action.targetModule,
       graceful: action.parameters.graceful ?? true,
     });
   },
 
-  patch_component: async (action) => {
+  patch_component: async action => {
     // Patch côté frontend via React
     const { patchReactComponent } = await import('./healingActions/patchComponent');
     return patchReactComponent(action.targetModule, action.parameters);
   },
 
-  restart_process: async (action) => {
+  restart_process: async action => {
     return secureInvoke('selfheal_restart_process', {
       module: action.targetModule,
       emergency: action.parameters.emergency ?? false,
     });
   },
 
-  sync_state: async (action) => {
+  sync_state: async action => {
     return secureInvoke('selfheal_sync_state', {
       module: action.targetModule,
       force: action.parameters.force ?? false,
     });
   },
 
-  mini_audit: async (action) => {
+  mini_audit: async action => {
     return secureInvoke('selfheal_mini_audit', {
       module: action.targetModule,
       depth: action.parameters.depth ?? 'standard',
     });
   },
 
-  isolate_module: async (action) => {
+  isolate_module: async action => {
     return secureInvoke('selfheal_isolate_module', {
       module: action.targetModule,
       reason: action.parameters.reason ?? 'auto-healing',
@@ -353,7 +353,6 @@ export class SelfHealingExecutor {
         rollbackResults = await this.executeRollback(plan.rollbackActions);
         rollbackPerformed = true;
       }
-
     } catch (error) {
       console.error('[SelfHealingExecutor] Plan execution error:', error);
 
@@ -367,9 +366,11 @@ export class SelfHealingExecutor {
 
     // Calculer les statistiques
     const endTime = Date.now();
-    const succeeded = results.filter((r) => r.status === 'success').length;
-    const failed = results.filter((r) => r.status === 'failed' || r.status === 'timeout').length;
-    const skipped = results.filter((r) => r.status === 'skipped').length;
+    const succeeded = results.filter(r => r.status === 'success').length;
+    const failed = results.filter(
+      r => r.status === 'failed' || r.status === 'timeout'
+    ).length;
+    const skipped = results.filter(r => r.status === 'skipped').length;
 
     // Déterminer le statut global
     let status: HealingResult;
@@ -479,10 +480,7 @@ export class SelfHealingExecutor {
       }
 
       // Exécuter avec timeout
-      const output = await Promise.race([
-        handler(action),
-        timeoutPromise,
-      ]);
+      const output = await Promise.race([handler(action), timeoutPromise]);
 
       const endTime = Date.now();
 
@@ -497,15 +495,11 @@ export class SelfHealingExecutor {
         output,
         rollbackRequired: false,
       };
-
     } catch (error) {
       const endTime = Date.now();
       const isTimeout = error instanceof Error && error.message === 'Action timeout';
 
-      console.error(
-        `[SelfHealingExecutor] ❌ Action failed: ${action.type}`,
-        error
-      );
+      console.error(`[SelfHealingExecutor] ❌ Action failed: ${action.type}`, error);
 
       return {
         actionId: plannedAction.id,
@@ -569,8 +563,10 @@ export class SelfHealingExecutor {
     startTime: number,
     endTime: number
   ): HealingImpactReport {
-    const succeeded = results.filter((r) => r.status === 'success').length;
-    const failed = results.filter((r) => r.status === 'failed' || r.status === 'timeout').length;
+    const succeeded = results.filter(r => r.status === 'success').length;
+    const failed = results.filter(
+      r => r.status === 'failed' || r.status === 'timeout'
+    ).length;
 
     // Calculer XP basé sur la réussite
     let xpAwarded = 0;
@@ -581,7 +577,7 @@ export class SelfHealingExecutor {
       }
     }
 
-    const modulesAffected = [...new Set(results.map((r) => r.targetModule))];
+    const modulesAffected = [...new Set(results.map(r => r.targetModule))];
 
     return {
       playbookId: plan.playbookId,
@@ -607,7 +603,7 @@ export class SelfHealingExecutor {
   private generateRecommendations(results: ActionResult[]): string[] {
     const recommendations: string[] = [];
 
-    const failures = results.filter((r) => r.status === 'failed' || r.status === 'timeout');
+    const failures = results.filter(r => r.status === 'failed' || r.status === 'timeout');
 
     if (failures.length > 0) {
       recommendations.push(
@@ -615,14 +611,14 @@ export class SelfHealingExecutor {
       );
     }
 
-    const timeouts = results.filter((r) => r.status === 'timeout');
+    const timeouts = results.filter(r => r.status === 'timeout');
     if (timeouts.length > 0) {
       recommendations.push(
         'Des timeouts ont été détectés. Considérez augmenter les délais ou optimiser les modules.'
       );
     }
 
-    const slowActions = results.filter((r) => r.duration > 5000);
+    const slowActions = results.filter(r => r.duration > 5000);
     if (slowActions.length > 0) {
       recommendations.push(
         `${slowActions.length} action(s) ont pris plus de 5 secondes. Performance à surveiller.`

@@ -20,13 +20,13 @@
  * Détectée à partir des signaux multimodaux et du contexte
  */
 export type EmergentIntent =
-  | 'advance'    // Veut progresser, avancer
-  | 'organize'   // Veut structurer, organiser
-  | 'express'    // Veut s'exprimer, être écouté
-  | 'slow'       // A besoin de lenteur, de pause
-  | 'anchor'     // Cherche du calme, de l'ancrage
+  | 'advance' // Veut progresser, avancer
+  | 'organize' // Veut structurer, organiser
+  | 'express' // Veut s'exprimer, être écouté
+  | 'slow' // A besoin de lenteur, de pause
+  | 'anchor' // Cherche du calme, de l'ancrage
   | 'understand' // Veut comprendre, clarifier
-  | 'unknown';   // Intention non déterminée
+  | 'unknown'; // Intention non déterminée
 
 /**
  * Confiance dans la détection d'intention
@@ -41,11 +41,11 @@ export type IntentConfidence = 'low' | 'medium' | 'high';
  * Style de présence adopté par TITANE∞
  */
 export type PresenceStyle =
-  | 'concise'     // Réponses directes, courtes
-  | 'spacious'    // Plus d'espace, de lenteur
-  | 'structured'  // Étapes, listes, plans
-  | 'supportive'  // Douceur, calme, stabilité
-  | 'directive';  // "Voici la prochaine étape"
+  | 'concise' // Réponses directes, courtes
+  | 'spacious' // Plus d'espace, de lenteur
+  | 'structured' // Étapes, listes, plans
+  | 'supportive' // Douceur, calme, stabilité
+  | 'directive'; // "Voici la prochaine étape"
 
 /**
  * Dérive de présence détectée
@@ -140,11 +140,11 @@ export interface PresenceState {
 export interface IntentSignals {
   // Signaux textuels
   textualCues: {
-    questionMarkers: number;      // Nombre de questions
-    actionVerbs: number;          // Verbes d'action
-    hesitationMarkers: number;    // Marqueurs d'hésitation
-    organizationWords: number;    // Mots d'organisation
-    emotionalMarkers: number;     // Marqueurs émotionnels
+    questionMarkers: number; // Nombre de questions
+    actionVerbs: number; // Verbes d'action
+    hesitationMarkers: number; // Marqueurs d'hésitation
+    organizationWords: number; // Mots d'organisation
+    emotionalMarkers: number; // Marqueurs émotionnels
   };
 
   // Signaux multimodaux
@@ -199,10 +199,10 @@ export interface StyleComputationResult {
   style: PresenceStyle;
   confidence: number;
   adjustments: {
-    verbosity: number;      // -1 à +1
-    warmth: number;         // -1 à +1
-    structure: number;      // -1 à +1
-    pace: number;           // -1 à +1
+    verbosity: number; // -1 à +1
+    warmth: number; // -1 à +1
+    structure: number; // -1 à +1
+    pace: number; // -1 à +1
   };
   reasoning: string;
 }
@@ -215,11 +215,11 @@ export interface StyleComputationResult {
  * Métriques d'alignement
  */
 export interface AlignmentMetrics {
-  intentAlignment: number;      // Alignement avec l'intention (0-1)
-  energyAlignment: number;      // Alignement avec l'énergie (0-1)
-  rhythmAlignment: number;      // Alignement avec le rythme (0-1)
-  styleAlignment: number;       // Alignement du style (0-1)
-  overallScore: number;         // Score global (0-1)
+  intentAlignment: number; // Alignement avec l'intention (0-1)
+  energyAlignment: number; // Alignement avec l'énergie (0-1)
+  rhythmAlignment: number; // Alignement avec le rythme (0-1)
+  styleAlignment: number; // Alignement du style (0-1)
+  overallScore: number; // Score global (0-1)
 }
 
 // ============================================================================
@@ -245,10 +245,10 @@ export interface ResponseModulationParams {
   useSteps: boolean;
 
   // Rythme
-  paceAdjustment: number;  // -1 (ralentir) à +1 (accélérer)
+  paceAdjustment: number; // -1 (ralentir) à +1 (accélérer)
 
   // Respiration textuelle
-  addBreathing: boolean;   // Ajouter des pauses/espaces
+  addBreathing: boolean; // Ajouter des pauses/espaces
 }
 
 // ============================================================================
@@ -263,8 +263,8 @@ export interface PresenceEngineConfig {
   intentConfidenceThreshold: number;
 
   // Stabilité du style
-  minStyleDurationMs: number;        // Durée min avant changement de style
-  styleChangeThreshold: number;       // Seuil pour changer de style
+  minStyleDurationMs: number; // Durée min avant changement de style
+  styleChangeThreshold: number; // Seuil pour changer de style
 
   // Historique
   maxHistoryEntries: number;
@@ -275,7 +275,7 @@ export interface PresenceEngineConfig {
 
   // Modulation
   enableAutoModulation: boolean;
-  modulationSensitivity: number;      // 0-1
+  modulationSensitivity: number; // 0-1
 }
 
 // ============================================================================
@@ -284,10 +284,10 @@ export interface PresenceEngineConfig {
 
 export const getDefaultPresenceEngineConfig = (): PresenceEngineConfig => ({
   intentConfidenceThreshold: 0.6,
-  minStyleDurationMs: 30000,          // 30 secondes
+  minStyleDurationMs: 30000, // 30 secondes
   styleChangeThreshold: 0.3,
   maxHistoryEntries: 50,
-  alignmentUpdateIntervalMs: 5000,    // 5 secondes
+  alignmentUpdateIntervalMs: 5000, // 5 secondes
   minAlignmentScore: 0.5,
   enableAutoModulation: true,
   modulationSensitivity: 0.7,
@@ -351,9 +351,9 @@ export const PRESENCE_CONSTANTS = {
   INTENT_LABELS: {
     advance: 'avancer',
     organize: 'organiser',
-    express: 's\'exprimer',
+    express: "s'exprimer",
     slow: 'ralentir',
-    anchor: 's\'ancrer',
+    anchor: "s'ancrer",
     understand: 'comprendre',
     unknown: 'indéterminé',
   } as const,

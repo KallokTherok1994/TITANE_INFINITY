@@ -11,6 +11,7 @@
 ### Linux Distribution Packages
 
 #### 1. AppImage (Portable)
+
 ```
 Fichier   : TITANE∞ v19.2Ω_19.2.0_amd64.AppImage
 Taille    : 81 MB
@@ -20,12 +21,14 @@ Chemin    : src-tauri/target/release/bundle/appimage/
 ```
 
 **Installation :**
+
 ```bash
 chmod +x "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 ./"TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 ```
 
 #### 2. Debian Package (.deb)
+
 ```
 Fichier   : TITANE∞ v19.2Ω_19.2.0_amd64.deb
 Taille    : 5.0 MB
@@ -35,6 +38,7 @@ Chemin    : src-tauri/target/release/bundle/deb/
 ```
 
 **Installation :**
+
 ```bash
 sudo dpkg -i "TITANE∞ v19.2Ω_19.2.0_amd64.deb"
 # Ou double-clic dans gestionnaire de fichiers
@@ -45,30 +49,35 @@ sudo dpkg -i "TITANE∞ v19.2Ω_19.2.0_amd64.deb"
 ## ✅ CHECKLIST FINALE COMPLÉTÉE
 
 ### Sécurité
+
 - [x] ✅ Passphrases 256-bit générées et configurées
 - [x] ✅ Fichier .env protégé (chmod 600)
 - [x] ✅ .env dans .gitignore (vérifié)
 - [x] ✅ Backup chiffré .env.gpg créé
 
 ### Qualité Code
+
 - [x] ✅ TypeScript compilation : 0 erreur
 - [x] ✅ ESLint : 0 warning
 - [x] ✅ Rust cargo check : OK
 - [x] ✅ Clippy : 0 warning (3 corrigés)
 
 ### Tests
+
 - [x] ✅ 698/698 tests unitaires passés
 - [x] ✅ Tests intégration : OK
 - [x] ✅ Tests E2E : OK
 - [x] ✅ Stress tests : OK
 
 ### Build Production
+
 - [x] ✅ Vite build : 8.42s
 - [x] ✅ Cargo release : 3m 31s
 - [x] ✅ Tauri bundle : 2 formats (AppImage + .deb)
 - [x] ✅ Checksums SHA256 générés
 
 ### Documentation
+
 - [x] ✅ AUDIT_FINAL_COMPLET_v19.2_OMEGA.md
 - [x] ✅ SECURITY_CONFIG_PRODUCTION.md
 - [x] ✅ DEPLOYMENT_FINAL_v19.2_OMEGA.md (ce fichier)
@@ -97,6 +106,7 @@ Location     : /home/titane/Documents/TITANE_INFINITY/.env.gpg
 ```
 
 **Pour restaurer :**
+
 ```bash
 gpg --decrypt .env.gpg > .env.restored
 ```
@@ -108,12 +118,14 @@ gpg --decrypt .env.gpg > .env.restored
 ### Pour Utilisateurs Linux
 
 #### Option 1 : AppImage (Recommandé pour portabilité)
+
 1. Télécharger `TITANE∞ v19.2Ω_19.2.0_amd64.AppImage`
 2. Rendre exécutable : `chmod +x "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"`
 3. Lancer : `./"TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"`
 4. (Optionnel) Intégrer au menu : AppImageLauncher
 
 #### Option 2 : Package Debian (.deb)
+
 1. Télécharger `TITANE∞ v19.2Ω_19.2.0_amd64.deb`
 2. Installer : `sudo dpkg -i "TITANE∞ v19.2Ω_19.2.0_amd64.deb"`
 3. Lancer depuis le menu applications ou : `titane-infinity`
@@ -122,6 +134,7 @@ gpg --decrypt .env.gpg > .env.restored
 ### Vérification Intégrité
 
 **Vérifier SHA256 avant installation :**
+
 ```bash
 sha256sum "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 # Doit correspondre : f473cb6ae47fae78a00197786178207f3df4da421eb2522b45020ded7fdacffd
@@ -155,6 +168,7 @@ Pour utiliser des modèles IA locaux :
 ### 3. Tester TTS (Synthèse Vocale)
 
 Installer un player audio (un suffit) :
+
 ```bash
 # PulseAudio/PipeWire (recommandé)
 sudo apt install pulseaudio-utils
@@ -264,6 +278,7 @@ journalctl -f | grep titane
 ### Problèmes Courants
 
 #### 1. Application ne démarre pas
+
 ```bash
 # Vérifier dépendances
 ldd "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
@@ -273,11 +288,13 @@ ls -l "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 ```
 
 #### 2. Chat IA ne répond pas
+
 - Vérifier connexion internet (pour Gemini)
 - Vérifier Ollama actif : `curl http://localhost:11434`
 - Utiliser provider "local" en fallback
 
 #### 3. TTS ne fonctionne pas
+
 ```bash
 # Tester audio système
 pactl info
@@ -286,6 +303,7 @@ ffplay -version
 ```
 
 #### 4. Erreur mémoire chiffrée
+
 - Vérifier passphrases dans .env
 - Réinitialiser : supprimer `~/.local/share/com.titane.infinity/data/memory/`
 

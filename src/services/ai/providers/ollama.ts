@@ -23,12 +23,15 @@ import { autoHealEngine } from '../autoHealEngine';
 
 const isDev = process.env.NODE_ENV === 'development';
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
-const OLLAMA_API_URL = typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
-  ? runtimeConfig.ollamaUrl.trim()
-  : 'http://127.0.0.1:11434';
-const OLLAMA_MODEL = typeof runtimeConfig.ollamaModel === 'string' && runtimeConfig.ollamaModel.trim().length > 0
-  ? runtimeConfig.ollamaModel.trim()
-  : 'llama3.1';
+const OLLAMA_API_URL =
+  typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
+    ? runtimeConfig.ollamaUrl.trim()
+    : 'http://127.0.0.1:11434';
+const OLLAMA_MODEL =
+  typeof runtimeConfig.ollamaModel === 'string' &&
+  runtimeConfig.ollamaModel.trim().length > 0
+    ? runtimeConfig.ollamaModel.trim()
+    : 'llama3.1';
 const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
 
 // OMEGA: Endpoint health tracking
@@ -54,7 +57,7 @@ TITANE∞:`;
   }
 
   const contextLines = recentHistory.map(
-    (msg) => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
+    msg => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
   );
 
   return `Tu es TITANE∞, une IA cognitive avancée. Réponds en français de manière professionnelle et précise.
@@ -78,7 +81,7 @@ async function checkEndpointHealth(): Promise<boolean> {
     const response = await fetch(`${OLLAMA_API_URL}/api/tags`, {
       method: 'GET',
       signal: controller.signal,
-      headers: { 'Accept': 'application/json' }
+      headers: { Accept: 'application/json' },
     });
 
     clearTimeout(timeout);
@@ -109,15 +112,19 @@ function handleOllamaError(error: unknown, context: string, metadata?: any): voi
     context,
     errorCount,
     metadata,
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 
-  isDev && console.error(`[OLLAMA OMEGA] Error [${context}]: ${errorObj.message} (${errorCount}/${MAX_ENDPOINT_ERRORS})`);
+  isDev &&
+    console.error(
+      `[OLLAMA OMEGA] Error [${context}]: ${errorObj.message} (${errorCount}/${MAX_ENDPOINT_ERRORS})`
+    );
 
   // Mark as unhealthy if too many errors
   if (errorCount >= MAX_ENDPOINT_ERRORS) {
     endpointHealthy = false;
-    isDev && console.warn(`[OLLAMA OMEGA] Endpoint marked unhealthy after ${errorCount} errors`);
+    isDev &&
+      console.warn(`[OLLAMA OMEGA] Endpoint marked unhealthy after ${errorCount} errors`);
   }
 }
 
@@ -130,7 +137,11 @@ export const ollamaProvider: AIProvider = {
     const bypassCache = isTestEnv;
 
     // OMEGA: Use cached health status if recent (unless test forces re-check)
-    if (!bypassCache && endpointHealthy !== null && now - lastHealthCheck < HEALTH_CHECK_INTERVAL) {
+    if (
+      !bypassCache &&
+      endpointHealthy !== null &&
+      now - lastHealthCheck < HEALTH_CHECK_INTERVAL
+    ) {
       return endpointHealthy;
     }
 
@@ -154,12 +165,19 @@ export const ollamaProvider: AIProvider = {
       errorCount = 0; // Reset on success
     }
 
-    isDev && console.log(`   ${endpointHealthy ? '✅' : '❌'} Ollama endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`);
+    isDev &&
+      console.log(
+        `   ${endpointHealthy ? '✅' : '❌'} Ollama endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`
+      );
 
     return endpointHealthy;
   },
 
-  async generate(message: string, history: AIMessage[] = [], config: AIConfig = {}): Promise<AIResponse> {
+  async generate(
+    message: string,
+    history: AIMessage[] = [],
+    config: AIConfig = {}
+  ): Promise<AIResponse> {
     const finalConfig = { ...DEFAULT_AI_CONFIG, ...config };
 
     // OMEGA: Pre-check endpoint health
@@ -188,70 +206,67 @@ export const ollamaProvider: AIProvider = {
 
     try {
       const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService.executeSecureChat(
-          secureRequest,
-          async (sanitizedMessage) => {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
+        await SecureAIService.executeSecureChat(secureRequest, async sanitizedMessage => {
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
 
-            try {
-              const prompt = buildPrompt(sanitizedMessage, history);
+          try {
+            const prompt = buildPrompt(sanitizedMessage, history);
 
-              const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
+            const response = await fetch(`${OLLAMA_API_URL}/api/generate`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                model: OLLAMA_MODEL,
+                prompt,
+                stream: false,
+                options: {
+                  temperature: finalConfig.temperature,
+                  top_p: finalConfig.topP,
+                  top_k: finalConfig.topK,
+                  num_predict: finalConfig.maxTokens,
                 },
-                body: JSON.stringify({
-                  model: OLLAMA_MODEL,
-                  prompt,
-                  stream: false,
-                  options: {
-                    temperature: finalConfig.temperature,
-                    top_p: finalConfig.topP,
-                    top_k: finalConfig.topK,
-                    num_predict: finalConfig.maxTokens,
-                  },
-                }),
-                signal: controller.signal,
-              });
+              }),
+              signal: controller.signal,
+            });
 
-              clearTimeout(timeout);
+            clearTimeout(timeout);
 
-              if (!response.ok) {
-                throw new Error(`Ollama API error: ${response.status}`);
-              }
-
-              const data = await response.json();
-
-              if (!data.response) {
-                throw new Error('Ollama: Empty response');
-              }
-
-              // Return in ChatResponse format
-              return {
-                content: data.response.trim(),
-                role: 'assistant' as const,
-                timestamp: Date.now(),
-                metadata: {
-                  model: OLLAMA_MODEL,
-                  tokens: (data.prompt_eval_count || 0) + (data.eval_count || 0),
-                },
-              };
-            } catch (error) {
-              clearTimeout(timeout);
-
-              if (error instanceof Error) {
-                if (error.name === 'AbortError') {
-                  throw new Error('Ollama: Request timeout (30s)');
-                }
-                throw error;
-              }
-
-              throw new Error('Ollama: Unknown error');
+            if (!response.ok) {
+              throw new Error(`Ollama API error: ${response.status}`);
             }
+
+            const data = await response.json();
+
+            if (!data.response) {
+              throw new Error('Ollama: Empty response');
+            }
+
+            // Return in ChatResponse format
+            return {
+              content: data.response.trim(),
+              role: 'assistant' as const,
+              timestamp: Date.now(),
+              metadata: {
+                model: OLLAMA_MODEL,
+                tokens: (data.prompt_eval_count || 0) + (data.eval_count || 0),
+              },
+            };
+          } catch (error) {
+            clearTimeout(timeout);
+
+            if (error instanceof Error) {
+              if (error.name === 'AbortError') {
+                throw new Error('Ollama: Request timeout (30s)');
+              }
+              throw error;
+            }
+
+            throw new Error('Ollama: Unknown error');
           }
-        );
+        });
 
       // ============================================================
       // SECURITY VALIDATION CHECK (OMEGA Enhanced)
@@ -296,7 +311,12 @@ export const ollamaProvider: AIProvider = {
       // OMEGA: Final error handler
       if (error instanceof Error) {
         // Don't double-handle errors already processed
-        if (!error.message.includes('Ollama:') && !error.message.includes('Rate limit') && !error.message.includes('Input blocked') && !error.message.includes('validation failed')) {
+        if (
+          !error.message.includes('Ollama:') &&
+          !error.message.includes('Rate limit') &&
+          !error.message.includes('Input blocked') &&
+          !error.message.includes('validation failed')
+        ) {
           handleOllamaError(error, 'generate_final', { stage: 'catch_all' });
         }
         throw error;
@@ -321,12 +341,17 @@ export const ollamaProvider: AIProvider = {
   /**
    * OMEGA: Get provider stats
    */
-  getStats(): { errorCount: number, maxErrors: number, endpointHealthy: boolean | null, lastHealthCheck: number } {
+  getStats(): {
+    errorCount: number;
+    maxErrors: number;
+    endpointHealthy: boolean | null;
+    lastHealthCheck: number;
+  } {
     return {
       errorCount,
       maxErrors: MAX_ENDPOINT_ERRORS,
       endpointHealthy,
-      lastHealthCheck
+      lastHealthCheck,
     };
   },
 

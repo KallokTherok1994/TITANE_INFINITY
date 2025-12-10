@@ -18,7 +18,11 @@ import type {
   MemoryTopic,
   MemoryStats,
 } from '@/services/memory/persistentMemory.config';
-import { MEMORY_LEVEL_LABELS, MEMORY_TOPIC_LABELS, IMPORTANCE_COLORS } from '@/services/memory/persistentMemory.config';
+import {
+  MEMORY_LEVEL_LABELS,
+  MEMORY_TOPIC_LABELS,
+  IMPORTANCE_COLORS,
+} from '@/services/memory/persistentMemory.config';
 import type { ChatModeId } from '@/services/ai/chatModes.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -68,7 +72,9 @@ const TopicBadge: React.FC<{ topic: MemoryTopic }> = ({ topic }) => {
 
 /** Indicateur d'importance */
 const ImportanceIndicator: React.FC<{ importance: number }> = ({ importance }) => {
-  const color = IMPORTANCE_COLORS[importance as keyof typeof IMPORTANCE_COLORS] || IMPORTANCE_COLORS[3];
+  const color =
+    IMPORTANCE_COLORS[importance as keyof typeof IMPORTANCE_COLORS] ||
+    IMPORTANCE_COLORS[3];
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
@@ -91,9 +97,8 @@ const MemoryEntryCard: React.FC<{
   selected?: boolean;
   compact?: boolean;
 }> = ({ entry, onClick, selected, compact }) => {
-  const truncatedContent = entry.content.length > 150
-    ? entry.content.substring(0, 150) + '...'
-    : entry.content;
+  const truncatedContent =
+    entry.content.length > 150 ? entry.content.substring(0, 150) + '...' : entry.content;
 
   const date = new Date(entry.metadata.createdAt).toLocaleDateString('fr-FR', {
     day: '2-digit',
@@ -106,9 +111,10 @@ const MemoryEntryCard: React.FC<{
     <div
       className={`
         relative p-3 rounded-lg border transition-all cursor-pointer
-        ${selected
-          ? 'border-blue-500 bg-blue-500/10'
-          : 'border-gray-700 bg-gray-800/50 hover:border-gray-600 hover:bg-gray-800'
+        ${
+          selected
+            ? 'border-blue-500 bg-blue-500/10'
+            : 'border-gray-700 bg-gray-800/50 hover:border-gray-600 hover:bg-gray-800'
         }
         ${compact ? 'p-2' : 'p-3'}
       `}
@@ -131,14 +137,16 @@ const MemoryEntryCard: React.FC<{
       )}
 
       {/* Contenu */}
-      <p className={`text-gray-400 ${compact ? 'text-xs line-clamp-2' : 'text-sm line-clamp-3'}`}>
+      <p
+        className={`text-gray-400 ${compact ? 'text-xs line-clamp-2' : 'text-sm line-clamp-3'}`}
+      >
         {truncatedContent}
       </p>
 
       {/* Tags */}
       {entry.tags.length > 0 && !compact && (
         <div className="flex flex-wrap gap-1 mt-2">
-          {entry.tags.slice(0, 3).map((tag) => (
+          {entry.tags.slice(0, 3).map(tag => (
             <span
               key={tag}
               className="px-1.5 py-0.5 text-xs rounded bg-gray-700/50 text-gray-400"
@@ -157,16 +165,17 @@ const MemoryEntryCard: React.FC<{
       {/* Footer */}
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-700/50">
         <span className="text-xs text-gray-500">{date}</span>
-        <span className="text-xs text-gray-500">
-          {entry.metadata.accessCount} accès
-        </span>
+        <span className="text-xs text-gray-500">{entry.metadata.accessCount} accès</span>
       </div>
     </div>
   );
 };
 
 /** Stats panel */
-const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = ({ stats, isLoading }) => {
+const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = ({
+  stats,
+  isLoading,
+}) => {
   if (isLoading || !stats) {
     return (
       <div className="grid grid-cols-3 gap-2 p-3 bg-gray-800/30 rounded-lg animate-pulse">
@@ -181,7 +190,7 @@ const StatsPanel: React.FC<{ stats: MemoryStats | null; isLoading: boolean }> = 
 
   return (
     <div className="grid grid-cols-3 gap-2 p-3 bg-gray-800/30 rounded-lg">
-      {levels.map((level) => {
+      {levels.map(level => {
         const config = MEMORY_LEVEL_LABELS[level];
         const count = stats.countByLevel[level] || 0;
         const size = stats.sizeByLevel[level] || 0;
@@ -238,7 +247,7 @@ const FilterBar: React.FC<{
         <input
           type="text"
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={e => onSearchChange(e.target.value)}
           placeholder="Rechercher dans la mémoire..."
           className="w-full px-3 py-2 pl-9 bg-gray-900/50 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
         />
@@ -262,7 +271,7 @@ const FilterBar: React.FC<{
         {/* Niveau */}
         <select
           value={selectedLevel}
-          onChange={(e) => onLevelChange(e.target.value as MemoryLevel | 'all')}
+          onChange={e => onLevelChange(e.target.value as MemoryLevel | 'all')}
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les niveaux</option>
@@ -274,7 +283,7 @@ const FilterBar: React.FC<{
         {/* Sujet */}
         <select
           value={selectedTopic}
-          onChange={(e) => onTopicChange(e.target.value as MemoryTopic | 'all')}
+          onChange={e => onTopicChange(e.target.value as MemoryTopic | 'all')}
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="all">Tous les sujets</option>
@@ -288,7 +297,7 @@ const FilterBar: React.FC<{
         {/* Tri */}
         <select
           value={sortBy}
-          onChange={(e) => onSortChange(e.target.value as SortBy)}
+          onChange={e => onSortChange(e.target.value as SortBy)}
           className="px-2 py-1 bg-gray-900/50 border border-gray-700 rounded text-sm text-gray-300 focus:outline-none focus:border-blue-500"
         >
           <option value="date">📅 Date</option>
@@ -302,7 +311,7 @@ const FilterBar: React.FC<{
 
         {/* Vue */}
         <div className="flex items-center gap-1 bg-gray-900/50 rounded p-0.5">
-          {(['grid', 'list', 'timeline'] as ViewMode[]).map((mode) => (
+          {(['grid', 'list', 'timeline'] as ViewMode[]).map(mode => (
             <button
               key={mode}
               onClick={() => onViewChange(mode)}
@@ -363,21 +372,21 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
 
     // Filtre par niveau
     if (selectedLevel !== 'all') {
-      result = result.filter((e) => e.level === selectedLevel);
+      result = result.filter(e => e.level === selectedLevel);
     }
 
     // Filtre par sujet
     if (selectedTopic !== 'all') {
-      result = result.filter((e) => e.topic === selectedTopic);
+      result = result.filter(e => e.topic === selectedTopic);
     }
 
     // Filtre par recherche
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
-        (e) =>
+        e =>
           e.content.toLowerCase().includes(query) ||
-          e.tags.some((t) => t.toLowerCase().includes(query)) ||
+          e.tags.some(t => t.toLowerCase().includes(query)) ||
           ('title' in e && e.title?.toLowerCase().includes(query))
       );
     }
@@ -409,7 +418,9 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
   // Render
   if (error) {
     return (
-      <div className={`p-4 bg-red-500/10 border border-red-500/30 rounded-lg ${className}`}>
+      <div
+        className={`p-4 bg-red-500/10 border border-red-500/30 rounded-lg ${className}`}
+      >
         <p className="text-red-400">Erreur: {error}</p>
         <button
           onClick={refresh}
@@ -469,10 +480,7 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
         {isLoading && filteredEntries.length === 0 ? (
           // Skeleton loading
           Array.from({ length: 6 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-32 bg-gray-800/30 rounded-lg animate-pulse"
-            />
+            <div key={i} className="h-32 bg-gray-800/30 rounded-lg animate-pulse" />
           ))
         ) : filteredEntries.length === 0 ? (
           // Empty state
@@ -481,13 +489,13 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
             <p>Aucune entrée trouvée</p>
             <p className="text-sm mt-1">
               {searchQuery
-                ? 'Essayez avec d\'autres termes de recherche'
-                : 'La mémoire est vide pour l\'instant'}
+                ? "Essayez avec d'autres termes de recherche"
+                : "La mémoire est vide pour l'instant"}
             </p>
           </div>
         ) : (
           // Entries
-          filteredEntries.map((entry) => (
+          filteredEntries.map(entry => (
             <div
               key={entry.id}
               className={viewMode === 'timeline' ? 'relative pl-4' : ''}
@@ -509,15 +517,11 @@ export const MemoryDashboard: React.FC<MemoryDashboardProps> = ({
       {/* Compteurs rapides */}
       {!compact && (
         <div className="flex items-center justify-center gap-4 pt-2 border-t border-gray-800">
-          <span className="text-xs text-gray-500">
-            Session: {sessionCount}
-          </span>
+          <span className="text-xs text-gray-500">Session: {sessionCount}</span>
           <span className="text-xs text-gray-500">
             Intermédiaire: {intermediateCount}
           </span>
-          <span className="text-xs text-gray-500">
-            Long terme: {longTermCount}
-          </span>
+          <span className="text-xs text-gray-500">Long terme: {longTermCount}</span>
         </div>
       )}
     </div>

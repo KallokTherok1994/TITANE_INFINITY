@@ -94,7 +94,7 @@ async function mockAudioContext(page: Page) {
  * HELPER: Simulate user speech (VAD trigger)
  */
 async function simulateUserSpeech(page: Page, duration = 1000) {
-  await page.evaluate((duration) => {
+  await page.evaluate(duration => {
     const status = (window as any).__audioStatus;
     if (status) {
       status.recording = true;
@@ -114,7 +114,7 @@ async function simulateUserSpeech(page: Page, duration = 1000) {
  * HELPER: Simulate TTS playback
  */
 async function simulateTTSPlayback(page: Page, duration = 2000) {
-  await page.evaluate((duration) => {
+  await page.evaluate(duration => {
     const status = (window as any).__audioStatus;
     if (status) {
       status.ttsSpeaking = true;
@@ -178,7 +178,7 @@ test.describe('🔄 Feedback Loop - 3-Layer Anti-Feedback', () => {
       });
       const track = stream.getAudioTracks()[0];
       const settings = track.getSettings();
-      stream.getTracks().forEach((t) => t.stop());
+      stream.getTracks().forEach(t => t.stop());
       return settings;
     });
 
@@ -229,7 +229,7 @@ test.describe('🔄 Feedback Loop - 3-Layer Anti-Feedback', () => {
       // Call Tauri command (mocked in test)
       try {
         await (window as any).__TAURI__.invoke('voice_fingerprint_calibrate_titane', {
-          samplesList: mockSamples.map((s) => Array.from(s)),
+          samplesList: mockSamples.map(s => Array.from(s)),
         });
       } catch (e) {
         console.warn('Voice fingerprint calibration skipped (mock mode)');
@@ -242,9 +242,12 @@ test.describe('🔄 Feedback Loop - 3-Layer Anti-Feedback', () => {
     const isTitane = await page.evaluate(async () => {
       const mockTitaneSamples = new Float32Array(16000);
       try {
-        const result = await (window as any).__TAURI__.invoke('voice_fingerprint_is_titane_speaking', {
-          samples: Array.from(mockTitaneSamples),
-        });
+        const result = await (window as any).__TAURI__.invoke(
+          'voice_fingerprint_is_titane_speaking',
+          {
+            samples: Array.from(mockTitaneSamples),
+          }
+        );
         return result.is_titane;
       } catch (e) {
         console.warn('Voice fingerprint check skipped (mock mode)');
@@ -350,7 +353,9 @@ test.describe('🔄 Feedback Loop - 3-Layer Anti-Feedback', () => {
     // Check if voice profile exists in storage
     const profileExists = await page.evaluate(async () => {
       try {
-        const result = await (window as any).__TAURI__.invoke('voice_fingerprint_get_profile_info');
+        const result = await (window as any).__TAURI__.invoke(
+          'voice_fingerprint_get_profile_info'
+        );
         return result?.sample_count > 0;
       } catch (e) {
         console.warn('Voice profile check skipped (mock mode)');

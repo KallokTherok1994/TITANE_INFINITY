@@ -112,7 +112,7 @@ async function testCSPEnforcement(): Promise<UITestResult> {
     }
 
     // Attendre event
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     document.removeEventListener('securitypolicyviolation', violationHandler);
 
@@ -186,12 +186,10 @@ async function testTauriIsolation(): Promise<UITestResult> {
 async function testNoExternalScripts(): Promise<UITestResult> {
   try {
     const scripts = Array.from(document.querySelectorAll('script[src]'));
-    const externalScripts = scripts.filter((script) => {
+    const externalScripts = scripts.filter(script => {
       const src = script.getAttribute('src') || '';
       return (
-        src.startsWith('http://') ||
-        src.startsWith('https://') ||
-        src.startsWith('//')
+        src.startsWith('http://') || src.startsWith('https://') || src.startsWith('//')
       );
     });
 
@@ -202,7 +200,7 @@ async function testNoExternalScripts(): Promise<UITestResult> {
       passed,
       details: passed
         ? '✅ Aucun script externe chargé'
-        : `⚠️ ${externalScripts.length} scripts externes détectés: ${externalScripts.map((s) => (s as HTMLScriptElement).src).join(', ')}`,
+        : `⚠️ ${externalScripts.length} scripts externes détectés: ${externalScripts.map(s => (s as HTMLScriptElement).src).join(', ')}`,
       severity: passed ? 'info' : 'warning',
     };
   } catch (error) {
@@ -306,7 +304,7 @@ export async function runUISelfTests(): Promise<UISelfTestReport> {
   tests.push(await testNoConsoleLogs());
 
   // Calculer pass rate
-  const passed = tests.filter((t) => t.passed).length;
+  const passed = tests.filter(t => t.passed).length;
   const pass_rate = passed / tests.length;
 
   const report: UISelfTestReport = {
@@ -317,9 +315,11 @@ export async function runUISelfTests(): Promise<UISelfTestReport> {
   };
 
   // Log résumé
-  console.log(`[UI Self-Test] ✅ ${passed}/${tests.length} tests passed (${(pass_rate * 100).toFixed(1)}%)`);
+  console.log(
+    `[UI Self-Test] ✅ ${passed}/${tests.length} tests passed (${(pass_rate * 100).toFixed(1)}%)`
+  );
   console.table(
-    tests.map((t) => ({
+    tests.map(t => ({
       Test: t.name,
       Status: t.passed ? '✅' : '❌',
       Severity: t.severity,

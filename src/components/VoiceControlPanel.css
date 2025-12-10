@@ -104,7 +104,11 @@
 }
 
 .voice-test-button {
-  background: linear-gradient(135deg, rgba(147, 179, 153, 0.1), rgba(147, 179, 153, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(147, 179, 153, 0.1),
+    rgba(147, 179, 153, 0.05)
+  );
   color: var(--accent-primary, #93b399);
 }
 
@@ -119,7 +123,11 @@
 }
 
 .voice-stop-button {
-  background: linear-gradient(135deg, rgba(143, 122, 122, 0.1), rgba(143, 122, 122, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(143, 122, 122, 0.1),
+    rgba(143, 122, 122, 0.05)
+  );
   color: var(--error, #8f7a7a);
 }
 

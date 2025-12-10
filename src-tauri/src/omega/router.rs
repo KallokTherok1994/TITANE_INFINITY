@@ -4,15 +4,12 @@
 //   Routes requests to appropriate handlers with <2ms latency
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use serde::{Deserialize, Serialize};
 
-use super::{
-    OmegaResult, PipelineInput, PipelineStage,
-    StageInput, StageOutput, StageProcessor,
-};
+use super::{OmegaResult, PipelineInput, PipelineStage, StageInput, StageOutput, StageProcessor};
 
 // ═══════════════════════════════════════════════════════════════
 //   INTENT CLASSIFICATION
@@ -188,146 +185,239 @@ impl IntentClassifier {
     /// Initialize default patterns
     fn initialize_patterns(&mut self) {
         // Query patterns
-        self.patterns.insert(Intent::Query, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Query,
+            vec![PatternRule {
                 keywords: vec![
-                    "quoi".into(), "qu'est-ce".into(), "comment".into(), "pourquoi".into(),
-                    "qui".into(), "où".into(), "quand".into(), "combien".into(),
-                    "what".into(), "how".into(), "why".into(), "who".into(), "where".into(),
+                    "quoi".into(),
+                    "qu'est-ce".into(),
+                    "comment".into(),
+                    "pourquoi".into(),
+                    "qui".into(),
+                    "où".into(),
+                    "quand".into(),
+                    "combien".into(),
+                    "what".into(),
+                    "how".into(),
+                    "why".into(),
+                    "who".into(),
+                    "where".into(),
                     "?".into(),
                 ],
                 negative_keywords: vec!["fais".into(), "crée".into(), "génère".into()],
                 base_confidence: 0.5,
                 keyword_boost: 0.1,
-            },
-        ]);
+            }],
+        );
 
         // Task patterns
-        self.patterns.insert(Intent::Task, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Task,
+            vec![PatternRule {
                 keywords: vec![
-                    "fais".into(), "crée".into(), "génère".into(), "écris".into(),
-                    "modifie".into(), "change".into(), "ajoute".into(), "supprime".into(),
-                    "create".into(), "generate".into(), "write".into(), "modify".into(),
-                    "do".into(), "make".into(), "build".into(),
+                    "fais".into(),
+                    "crée".into(),
+                    "génère".into(),
+                    "écris".into(),
+                    "modifie".into(),
+                    "change".into(),
+                    "ajoute".into(),
+                    "supprime".into(),
+                    "create".into(),
+                    "generate".into(),
+                    "write".into(),
+                    "modify".into(),
+                    "do".into(),
+                    "make".into(),
+                    "build".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.6,
                 keyword_boost: 0.12,
-            },
-        ]);
+            }],
+        );
 
         // Help patterns
-        self.patterns.insert(Intent::Help, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Help,
+            vec![PatternRule {
                 keywords: vec![
-                    "aide".into(), "help".into(), "besoin".into(), "comment faire".into(),
-                    "peux-tu m'aider".into(), "explique".into(), "guide".into(),
+                    "aide".into(),
+                    "help".into(),
+                    "besoin".into(),
+                    "comment faire".into(),
+                    "peux-tu m'aider".into(),
+                    "explique".into(),
+                    "guide".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.55,
                 keyword_boost: 0.15,
-            },
-        ]);
+            }],
+        );
 
         // Emotional patterns
-        self.patterns.insert(Intent::Emotional, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Emotional,
+            vec![PatternRule {
                 keywords: vec![
-                    "triste".into(), "content".into(), "heureux".into(), "stressé".into(),
-                    "anxieux".into(), "fatigué".into(), "frustré".into(), "merci".into(),
-                    "sad".into(), "happy".into(), "stressed".into(), "tired".into(),
-                    "love".into(), "hate".into(), "feel".into(), "feeling".into(),
+                    "triste".into(),
+                    "content".into(),
+                    "heureux".into(),
+                    "stressé".into(),
+                    "anxieux".into(),
+                    "fatigué".into(),
+                    "frustré".into(),
+                    "merci".into(),
+                    "sad".into(),
+                    "happy".into(),
+                    "stressed".into(),
+                    "tired".into(),
+                    "love".into(),
+                    "hate".into(),
+                    "feel".into(),
+                    "feeling".into(),
                 ],
                 negative_keywords: vec!["code".into(), "fonction".into()],
                 base_confidence: 0.5,
                 keyword_boost: 0.1,
-            },
-        ]);
+            }],
+        );
 
         // Command patterns
-        self.patterns.insert(Intent::Command, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Command,
+            vec![PatternRule {
                 keywords: vec![
-                    "exécute".into(), "lance".into(), "run".into(), "start".into(),
-                    "stop".into(), "arrête".into(), "restart".into(), "deploy".into(),
-                    "compile".into(), "build".into(), "test".into(),
+                    "exécute".into(),
+                    "lance".into(),
+                    "run".into(),
+                    "start".into(),
+                    "stop".into(),
+                    "arrête".into(),
+                    "restart".into(),
+                    "deploy".into(),
+                    "compile".into(),
+                    "build".into(),
+                    "test".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.65,
                 keyword_boost: 0.12,
-            },
-        ]);
+            }],
+        );
 
         // Creative patterns
-        self.patterns.insert(Intent::Creative, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Creative,
+            vec![PatternRule {
                 keywords: vec![
-                    "imagine".into(), "invente".into(), "histoire".into(), "poème".into(),
-                    "chanson".into(), "créatif".into(), "original".into(), "idée".into(),
-                    "story".into(), "poem".into(), "song".into(), "creative".into(),
+                    "imagine".into(),
+                    "invente".into(),
+                    "histoire".into(),
+                    "poème".into(),
+                    "chanson".into(),
+                    "créatif".into(),
+                    "original".into(),
+                    "idée".into(),
+                    "story".into(),
+                    "poem".into(),
+                    "song".into(),
+                    "creative".into(),
                 ],
                 negative_keywords: vec!["code".into(), "bug".into()],
                 base_confidence: 0.55,
                 keyword_boost: 0.12,
-            },
-        ]);
+            }],
+        );
 
         // Debug patterns
-        self.patterns.insert(Intent::Debug, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Debug,
+            vec![PatternRule {
                 keywords: vec![
-                    "debug".into(), "erreur".into(), "error".into(), "bug".into(),
-                    "problème".into(), "crash".into(), "fix".into(), "résoudre".into(),
-                    "traceback".into(), "exception".into(), "stack".into(),
+                    "debug".into(),
+                    "erreur".into(),
+                    "error".into(),
+                    "bug".into(),
+                    "problème".into(),
+                    "crash".into(),
+                    "fix".into(),
+                    "résoudre".into(),
+                    "traceback".into(),
+                    "exception".into(),
+                    "stack".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.6,
                 keyword_boost: 0.1,
-            },
-        ]);
+            }],
+        );
 
         // Explanation patterns
-        self.patterns.insert(Intent::Explanation, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Explanation,
+            vec![PatternRule {
                 keywords: vec![
-                    "explique".into(), "explain".into(), "décris".into(), "describe".into(),
-                    "c'est quoi".into(), "définition".into(), "signifie".into(),
-                    "meaning".into(), "definition".into(),
+                    "explique".into(),
+                    "explain".into(),
+                    "décris".into(),
+                    "describe".into(),
+                    "c'est quoi".into(),
+                    "définition".into(),
+                    "signifie".into(),
+                    "meaning".into(),
+                    "definition".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.55,
                 keyword_boost: 0.1,
-            },
-        ]);
+            }],
+        );
 
         // Meta patterns
-        self.patterns.insert(Intent::Meta, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Meta,
+            vec![PatternRule {
                 keywords: vec![
-                    "tu es".into(), "qui es-tu".into(), "es-tu".into(), "peux-tu".into(),
-                    "ton nom".into(), "ta version".into(), "tes capacités".into(),
-                    "who are you".into(), "what are you".into(), "your name".into(),
-                    "about yourself".into(), "capabilities".into(),
+                    "tu es".into(),
+                    "qui es-tu".into(),
+                    "es-tu".into(),
+                    "peux-tu".into(),
+                    "ton nom".into(),
+                    "ta version".into(),
+                    "tes capacités".into(),
+                    "who are you".into(),
+                    "what are you".into(),
+                    "your name".into(),
+                    "about yourself".into(),
+                    "capabilities".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.6,
                 keyword_boost: 0.15,
-            },
-        ]);
+            }],
+        );
 
         // Conversation patterns (default/fallback)
-        self.patterns.insert(Intent::Conversation, vec![
-            PatternRule {
+        self.patterns.insert(
+            Intent::Conversation,
+            vec![PatternRule {
                 keywords: vec![
-                    "bonjour".into(), "salut".into(), "hello".into(), "hi".into(),
-                    "ça va".into(), "hey".into(), "coucou".into(), "bonsoir".into(),
+                    "bonjour".into(),
+                    "salut".into(),
+                    "hello".into(),
+                    "hi".into(),
+                    "ça va".into(),
+                    "hey".into(),
+                    "coucou".into(),
+                    "bonsoir".into(),
                 ],
                 negative_keywords: vec![],
                 base_confidence: 0.4,
                 keyword_boost: 0.1,
-            },
-        ]);
+            }],
+        );
     }
 
     /// Classify input and return routing result
@@ -384,16 +474,11 @@ impl IntentClassifier {
         scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
         // Get primary intent
-        let (intent, confidence) = scores.first()
-            .cloned()
-            .unwrap_or((Intent::Unknown, 0.3));
+        let (intent, confidence) = scores.first().cloned().unwrap_or((Intent::Unknown, 0.3));
 
         // Get secondary intents
-        let secondary_intents: Vec<(Intent, f32)> = scores.iter()
-            .skip(1)
-            .take(3)
-            .cloned()
-            .collect();
+        let secondary_intents: Vec<(Intent, f32)> =
+            scores.iter().skip(1).take(3).cloned().collect();
 
         let result = RoutingResult {
             intent,
@@ -457,16 +542,23 @@ impl IntentClassifier {
 
         // Evict old entries if too large
         if cache.len() >= self.max_cache_size {
-            let keys_to_remove: Vec<_> = cache.keys().take(self.max_cache_size / 10).cloned().collect();
+            let keys_to_remove: Vec<_> = cache
+                .keys()
+                .take(self.max_cache_size / 10)
+                .cloned()
+                .collect();
             for k in keys_to_remove {
                 cache.remove(&k);
             }
         }
 
-        cache.insert(key, CachedClassification {
-            result,
-            timestamp: chrono::Utc::now().timestamp(),
-        });
+        cache.insert(
+            key,
+            CachedClassification {
+                result,
+                timestamp: chrono::Utc::now().timestamp(),
+            },
+        );
     }
 
     /// Clear cache
@@ -528,7 +620,9 @@ impl StageProcessor for Router {
         let start = std::time::Instant::now();
 
         // Extract text from input
-        let text = input.data.get("text")
+        let text = input
+            .data
+            .get("text")
             .and_then(|v| v.as_str())
             .unwrap_or("");
 
@@ -620,7 +714,13 @@ mod tests {
     #[test]
     fn test_execution_mode() {
         assert_eq!(Intent::Query.execution_mode(), ExecutionMode::Fast);
-        assert_eq!(Intent::Creative.execution_mode(), ExecutionMode::Explorative);
-        assert_eq!(Intent::Emotional.execution_mode(), ExecutionMode::Empathetic);
+        assert_eq!(
+            Intent::Creative.execution_mode(),
+            ExecutionMode::Explorative
+        );
+        assert_eq!(
+            Intent::Emotional.execution_mode(),
+            ExecutionMode::Empathetic
+        );
     }
 }

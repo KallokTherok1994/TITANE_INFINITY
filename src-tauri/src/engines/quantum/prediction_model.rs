@@ -64,7 +64,8 @@ impl PredictionModel {
         // Générer des n-grams (2, 3, 4)
         for n in 2..=4.min(self.history.len()) {
             let start = self.history.len().saturating_sub(n);
-            let sequence: Vec<String> = self.history
+            let sequence: Vec<String> = self
+                .history
                 .iter()
                 .skip(start)
                 .map(|e| e.event_type.clone())
@@ -97,9 +98,7 @@ impl PredictionModel {
             let prev_type = prev.event_type.clone();
             let curr_type = event.event_type.clone();
 
-            let next_states = self.transitions
-                .entry(prev_type)
-                .or_insert_with(HashMap::new);
+            let next_states = self.transitions.entry(prev_type).or_default();
 
             *next_states.entry(curr_type).or_insert(0) += 1;
             self.total_transitions += 1;
@@ -137,7 +136,8 @@ impl PredictionModel {
         }
 
         // Chercher la séquence actuelle dans les patterns connus
-        let recent: Vec<String> = self.history
+        let recent: Vec<String> = self
+            .history
             .iter()
             .rev()
             .take(3)

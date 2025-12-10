@@ -177,7 +177,7 @@ pub struct RoutingConfig {
 impl Default for RoutingConfig {
     fn default() -> Self {
         let mut mode_mappings = HashMap::new();
-        
+
         // Fast mode
         mode_mappings.insert(
             "fast".to_string(),

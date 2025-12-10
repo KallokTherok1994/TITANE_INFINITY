@@ -22,19 +22,20 @@ export async function testCognitiveSelection() {
 
   const testCases = [
     {
-      message: "Hi",
+      message: 'Hi',
       context: [],
-      expected: 'fast-provider'
+      expected: 'fast-provider',
     },
     {
-      message: "Explain quantum computing in detail with mathematical formulations and practical applications in cryptography",
+      message:
+        'Explain quantum computing in detail with mathematical formulations and practical applications in cryptography',
       context: Array.from({ length: 8 }, (_, i) => ({
         role: 'user' as const,
         content: `Previous context message ${i}`,
-        timestamp: Date.now() - i * 1000
+        timestamp: Date.now() - i * 1000,
       })),
-      expected: 'quality-provider'
-    }
+      expected: 'quality-provider',
+    },
   ];
 
   for (const testCase of testCases) {
@@ -43,10 +44,13 @@ export async function testCognitiveSelection() {
       console.log(`✅ Message: "${testCase.message.substring(0, 30)}..."`, {
         provider: result.provider,
         duration: result.timestamp ? Date.now() - result.timestamp : 'unknown',
-        hasContent: result.content.length > 0
+        hasContent: result.content.length > 0,
       });
     } catch (error) {
-      console.error(`❌ Test failed for: "${testCase.message.substring(0, 30)}..."`, error);
+      console.error(
+        `❌ Test failed for: "${testCase.message.substring(0, 30)}..."`,
+        error
+      );
     }
   }
 }
@@ -65,14 +69,11 @@ export async function testAutoHealFallback() {
 
   // Test fallback with emergency scenario
   try {
-    const result = await aiOrchestrator.generate(
-      'Test emergency fallback response',
-      []
-    );
+    const result = await aiOrchestrator.generate('Test emergency fallback response', []);
     console.log('✅ Emergency fallback test:', {
       provider: result.provider,
       isEmergency: result.metadata?.emergency || false,
-      hasContent: result.content.length > 0
+      hasContent: result.content.length > 0,
     });
   } catch (error) {
     console.error('❌ Emergency fallback failed:', error);
@@ -95,12 +96,14 @@ export async function testOmnisStats() {
     totalRequests: stats.metrics.totalRequests,
     successfulSelections: stats.metrics.successfulSelections,
     autoRepairs: stats.metrics.autoRepairs,
-    avgDecisionTime: stats.metrics.avgDecisionTime
+    avgDecisionTime: stats.metrics.avgDecisionTime,
   });
 
   console.log('✅ Provider Rankings:');
   stats.providerHealth.slice(0, 3).forEach(provider => {
-    console.log(`  ${provider.rank}. ${provider.name}: ${provider.score}% (${provider.availability ? 'UP' : 'DOWN'})`);
+    console.log(
+      `  ${provider.rank}. ${provider.name}: ${provider.score}% (${provider.availability ? 'UP' : 'DOWN'})`
+    );
   });
 }
 
@@ -116,12 +119,7 @@ export async function testStressCognitive() {
   const promises = [];
 
   for (let i = 0; i < concurrentRequests; i++) {
-    promises.push(
-      aiOrchestrator.generate(
-        `Concurrent request ${i + 1}: Quick test`,
-        []
-      )
-    );
+    promises.push(aiOrchestrator.generate(`Concurrent request ${i + 1}: Quick test`, []));
   }
 
   try {
@@ -131,8 +129,8 @@ export async function testStressCognitive() {
     console.log('✅ Stress Test Results:', {
       totalRequests: concurrentRequests,
       successful,
-      failureRate: `${((concurrentRequests - successful) / concurrentRequests * 100).toFixed(1)}%`,
-      robustnessScore: `${(successful / concurrentRequests * 100).toFixed(1)}%`
+      failureRate: `${(((concurrentRequests - successful) / concurrentRequests) * 100).toFixed(1)}%`,
+      robustnessScore: `${((successful / concurrentRequests) * 100).toFixed(1)}%`,
     });
   } catch (error) {
     console.error('❌ Stress test critical error:', error);
@@ -172,7 +170,7 @@ export async function runPhase3OmnisTests() {
     duration,
     testsCompleted: 4,
     phase: 'PHASE_3_OMNIS',
-    status: 'ORCHESTRATOR_COGNITIVE_OPERATIONAL'
+    status: 'ORCHESTRATOR_COGNITIVE_OPERATIONAL',
   };
 }
 

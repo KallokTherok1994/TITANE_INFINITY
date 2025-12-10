@@ -5,7 +5,7 @@
 //   Définition de l'agent cognitif TITANE∞
 // ═══════════════════════════════════════════════════════════════
 
-use crate::agents::{AgentRole, Capability, CapabilitySet, AgentContract};
+use crate::agents::{AgentContract, AgentRole, Capability, CapabilitySet};
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -194,7 +194,10 @@ impl Agent {
     }
 
     /// Vérifier si l'agent peut exécuter une action
-    pub async fn can_execute(&self, required_capabilities: &[Capability]) -> Result<(), AgentError> {
+    pub async fn can_execute(
+        &self,
+        required_capabilities: &[Capability],
+    ) -> Result<(), AgentError> {
         // Vérifier l'état
         let state = self.get_state().await;
         if state != AgentState::Running && state != AgentState::Initialized {
@@ -338,7 +341,7 @@ impl std::fmt::Debug for Agent {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::agents::{AgentRole, Capability, CapabilitySet, AgentContract};
+    use crate::agents::{AgentContract, AgentRole, Capability, CapabilitySet};
 
     fn create_test_agent() -> Agent {
         let role = AgentRole::Observer;

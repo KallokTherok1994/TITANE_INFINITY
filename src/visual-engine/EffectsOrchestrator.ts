@@ -190,7 +190,8 @@ export class EffectsOrchestrator {
    */
   public requestEffect(request: EffectRequest): boolean {
     if (!this.enabled) {
-      if (this.debug) console.log('[EffectsOrchestrator] Disabled, ignoring request:', request.type);
+      if (this.debug)
+        console.log('[EffectsOrchestrator] Disabled, ignoring request:', request.type);
       return false;
     }
 
@@ -202,14 +203,16 @@ export class EffectsOrchestrator {
 
     // Check cooldown
     if (this.isOnCooldown(request.type)) {
-      if (this.debug) console.log('[EffectsOrchestrator] Effect on cooldown:', request.type);
+      if (this.debug)
+        console.log('[EffectsOrchestrator] Effect on cooldown:', request.type);
       this.metrics.totalBlocked++;
       return false;
     }
 
     // Check conflicts
     if (this.hasConflicts(config)) {
-      if (this.debug) console.log('[EffectsOrchestrator] Effect conflicts with active:', request.type);
+      if (this.debug)
+        console.log('[EffectsOrchestrator] Effect conflicts with active:', request.type);
       this.metrics.totalBlocked++;
       return false;
     }
@@ -217,7 +220,8 @@ export class EffectsOrchestrator {
     // Check concurrent limit
     const activeCount = this.getActiveCountByType(request.type);
     if (activeCount >= (config.maxConcurrent || 1)) {
-      if (this.debug) console.log('[EffectsOrchestrator] Max concurrent reached:', request.type);
+      if (this.debug)
+        console.log('[EffectsOrchestrator] Max concurrent reached:', request.type);
       this.metrics.totalBlocked++;
       return false;
     }
@@ -371,7 +375,11 @@ export class EffectsOrchestrator {
       type: request.type,
       priority: request.priority || config.priority,
       startTime: now,
-      endTime: request.duration ? now + request.duration : config.duration ? now + config.duration : undefined,
+      endTime: request.duration
+        ? now + request.duration
+        : config.duration
+          ? now + config.duration
+          : undefined,
       gpuIntensive: config.gpuIntensive || false,
     };
 

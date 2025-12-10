@@ -3,6 +3,7 @@
 ## 🎉 Bienvenue dans le Système Multimodal TITANE∞ vΩ
 
 Cette extension ajoute des capacités de **perception multimodale** complètes à TITANE∞ :
+
 - 👁️ **Vision** : Analyse d'images, embeddings, recherche sémantique
 - 🎵 **Audio 3D** : Analyse spectrale, positionnement spatial
 - 🔀 **Fusion** : Combinaison intelligente de modalités multiples
@@ -103,22 +104,22 @@ if let Some(fusion) = result.fusion_result {
 ```typescript
 // Analyser une image
 const analysis = await invoke('analyze_image', {
-    imageBytes: new Uint8Array(buffer)
+  imageBytes: new Uint8Array(buffer),
 });
 
 // Générer un embedding
 const embedding = await invoke('embed_image', {
-    imageBytes: new Uint8Array(buffer)
+  imageBytes: new Uint8Array(buffer),
 });
 
 // Embedding texte (pour recherche cross-modale)
 const textEmb = await invoke('embed_text', {
-    text: "sunset beach"
+  text: 'sunset beach',
 });
 
 // Changer de modèle
 await invoke('switch_vision_model', {
-    modelName: "SigLIP"
+  modelName: 'SigLIP',
 });
 ```
 
@@ -127,7 +128,7 @@ await invoke('switch_vision_model', {
 ```typescript
 // Analyser un frame audio
 const audioAnalysis = await invoke('analyze_audio', {
-    audioSamples: new Float32Array(samples)
+  audioSamples: new Float32Array(samples),
 });
 ```
 
@@ -136,36 +137,36 @@ const audioAnalysis = await invoke('analyze_audio', {
 ```typescript
 // Stocker une image
 const imageId = await invoke('store_image', {
-    request: {
-        imageBytes: new Uint8Array(buffer),
-        title: "Mon image",
-        tags: ["nature", "sunset"],
-        linkedText: ["Belle photo"]
-    }
+  request: {
+    imageBytes: new Uint8Array(buffer),
+    title: 'Mon image',
+    tags: ['nature', 'sunset'],
+    linkedText: ['Belle photo'],
+  },
 });
 
 // Recherche par similarité visuelle
 const similar = await invoke('search_similar_images', {
-    imageBytes: new Uint8Array(queryImage),
-    k: 5
+  imageBytes: new Uint8Array(queryImage),
+  k: 5,
 });
 
 // Recherche cross-modale (texte → images)
 const results = await invoke('search_images_by_text', {
-    query: "beach sunset",
-    k: 10
+  query: 'beach sunset',
+  k: 10,
 });
 
 // Recherche par tags
 const tagged = await invoke('search_images_by_tags', {
-    tags: ["nature", "landscape"]
+  tags: ['nature', 'landscape'],
 });
 
 // Récupérer toutes les images
 const allImages = await invoke('get_all_images');
 
 // Supprimer une image
-await invoke('remove_image', { imageId: "img_001" });
+await invoke('remove_image', { imageId: 'img_001' });
 
 // Vider la mémoire
 await invoke('clear_image_memory');
@@ -176,18 +177,18 @@ await invoke('clear_image_memory');
 ```typescript
 // Fusion complète
 const fusion = await invoke('fuse_multimodal', {
-    request: {
-        text: "describe this scene",
-        imageBytes: new Uint8Array(imgBuffer),
-        audioSamples: new Float32Array(audioBuffer),
-        textWeight: 0.5,
-        visionWeight: 0.3,
-        audioWeight: 0.2
-    }
+  request: {
+    text: 'describe this scene',
+    imageBytes: new Uint8Array(imgBuffer),
+    audioSamples: new Float32Array(audioBuffer),
+    textWeight: 0.5,
+    visionWeight: 0.3,
+    audioWeight: 0.2,
+  },
 });
 
-console.log("Confidence:", fusion.confidence);
-console.log("Dominant:", fusion.dominant_modality);
+console.log('Confidence:', fusion.confidence);
+console.log('Dominant:', fusion.dominant_modality);
 ```
 
 ### Statistiques
@@ -195,16 +196,16 @@ console.log("Dominant:", fusion.dominant_modality);
 ```typescript
 // Obtenir les stats système
 const stats = await invoke('get_multimodal_stats');
-console.log("Images stockées:", stats.stored_images);
-console.log("Modèle actuel:", stats.current_vision_model);
+console.log('Images stockées:', stats.stored_images);
+console.log('Modèle actuel:', stats.current_vision_model);
 
 // Mettre à jour la config
 await invoke('update_multimodal_config', {
-    newConfig: {
-        vision_enabled: true,
-        audio3d_enabled: true,
-        vision_model: "CLIP"
-    }
+  newConfig: {
+    vision_enabled: true,
+    audio3d_enabled: true,
+    vision_model: 'CLIP',
+  },
 });
 ```
 
@@ -349,14 +350,14 @@ let multimodal_store = MultimodalMemoryStore::new(
 
 ### Temps d'Exécution (Stub Implementation)
 
-| Opération | Temps Moyen | Notes |
-|-----------|-------------|-------|
-| Analyse vision | <1000ms | Image 224x224 |
-| Embedding image | <500ms | Hash-based, déterministe |
-| Embedding texte | <100ms | Hash-based, déterministe |
-| Recherche k-NN | O(n) | Linéaire, prêt pour HNSW |
-| Fusion multimodale | <50ms | Calcul de poids |
-| Audio FFT | <200ms | 1024 samples |
+| Opération          | Temps Moyen | Notes                    |
+| ------------------ | ----------- | ------------------------ |
+| Analyse vision     | <1000ms     | Image 224x224            |
+| Embedding image    | <500ms      | Hash-based, déterministe |
+| Embedding texte    | <100ms      | Hash-based, déterministe |
+| Recherche k-NN     | O(n)        | Linéaire, prêt pour HNSW |
+| Fusion multimodale | <50ms       | Calcul de poids          |
+| Audio FFT          | <200ms      | 1024 samples             |
 
 ### Optimisations Futures (v1.1+)
 
@@ -392,6 +393,7 @@ titane-infinity = { features = ["onnx"] }
 ### Problème: Recherche Cross-Modale ne Trouve Rien
 
 Vérifier:
+
 1. Les images ont bien été stockées avec `store_image`
 2. Les embeddings ont été générés
 3. Le texte de requête est cohérent
@@ -468,12 +470,14 @@ Image Bytes → Vision Analysis → Features (100-dim)
 ## 🚀 Prochaines Étapes
 
 ### Pour Commencer
+
 1. ✅ Lire ce guide
 2. ✅ Tester les exemples ci-dessus
 3. ✅ Explorer les 15 commandes Tauri
 4. ⬜ Implémenter les composants frontend (Phase 9)
 
 ### Pour Aller Plus Loin
+
 1. ⬜ Activer les modèles ONNX réels
 2. ⬜ Intégrer HNSW pour recherche scalable
 3. ⬜ Ajouter support GPU (CUDA/Metal)
@@ -484,9 +488,11 @@ Image Bytes → Vision Analysis → Features (100-dim)
 ## ✨ Exemples Complets
 
 Voir le fichier de tests pour des exemples end-to-end complets:
+
 - [multimodal_integration_test.rs](src-tauri/tests/multimodal_integration_test.rs)
 
 Contient 10 tests couvrant tous les cas d'usage, dont:
+
 - Test E2E complet (workflow de bout en bout)
 - Recherche cross-modale
 - Fusion multimodale
@@ -499,6 +505,7 @@ Contient 10 tests couvrant tous les cas d'usage, dont:
 Vous êtes maintenant prêt à utiliser le système multimodal TITANE∞ vΩ !
 
 Pour toute question ou problème:
+
 - 📖 Consulter la documentation complète
 - 🧪 Examiner les tests d'intégration
 - 💬 Ouvrir une issue GitHub

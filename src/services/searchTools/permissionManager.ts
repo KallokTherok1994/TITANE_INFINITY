@@ -54,7 +54,10 @@ interface PermissionAuditEntry {
   context?: Record<string, unknown>;
 }
 
-type PermissionCallback = (request: PermissionRequest, decision: PermissionDecision) => void;
+type PermissionCallback = (
+  request: PermissionRequest,
+  decision: PermissionDecision
+) => void;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PERMISSION MANAGER
@@ -232,10 +235,7 @@ export class PermissionManager {
   /**
    * Vérifie si le mode actuel a le niveau de permission requis
    */
-  hasPermissionLevel(
-    category: ToolCategory,
-    requiredLevel: PermissionLevel
-  ): boolean {
+  hasPermissionLevel(category: ToolCategory, requiredLevel: PermissionLevel): boolean {
     const currentPermission = getEffectivePermission(
       this.config.matrix,
       this.currentMode,
@@ -343,11 +343,7 @@ export class PermissionManager {
 
     switch (condition.type) {
       case 'mode':
-        return this.evaluateOperator(
-          condition.operator,
-          request.iaMode,
-          condition.value
-        );
+        return this.evaluateOperator(condition.operator, request.iaMode, condition.value);
 
       case 'category':
         return this.evaluateOperator(
@@ -357,11 +353,7 @@ export class PermissionManager {
         );
 
       case 'tool':
-        return this.evaluateOperator(
-          condition.operator,
-          request.toolId,
-          condition.value
-        );
+        return this.evaluateOperator(condition.operator, request.toolId, condition.value);
 
       case 'time': {
         const now = new Date();
@@ -385,7 +377,9 @@ export class PermissionManager {
 
       case 'custom':
         // Les évaluateurs custom doivent être implémentés par extension
-        console.warn(`[PermissionManager] Custom evaluator not implemented: ${condition.customEvaluator}`);
+        console.warn(
+          `[PermissionManager] Custom evaluator not implemented: ${condition.customEvaluator}`
+        );
         return false;
 
       default:
@@ -412,9 +406,11 @@ export class PermissionManager {
         return Array.isArray(expected) && !expected.includes(actual);
 
       case 'matches':
-        return typeof actual === 'string' &&
-               typeof expected === 'string' &&
-               new RegExp(expected).test(actual);
+        return (
+          typeof actual === 'string' &&
+          typeof expected === 'string' &&
+          new RegExp(expected).test(actual)
+        );
 
       default:
         return false;
@@ -527,11 +523,7 @@ export class PermissionManager {
   /**
    * Définit une permission dans la matrice
    */
-  setPermission(
-    mode: IAMode,
-    category: ToolCategory,
-    level: PermissionLevel
-  ): void {
+  setPermission(mode: IAMode, category: ToolCategory, level: PermissionLevel): void {
     if (!this.config.matrix[mode]) {
       this.config.matrix[mode] = {};
     }
@@ -584,10 +576,7 @@ export class PermissionManager {
     return null;
   }
 
-  private cacheDecision(
-    request: PermissionRequest,
-    decision: PermissionDecision
-  ): void {
+  private cacheDecision(request: PermissionRequest, decision: PermissionDecision): void {
     const key = this.getCacheKey(request);
     const ttl = this.config.decisionCacheTTL * 1000;
 
@@ -677,9 +666,7 @@ export class PermissionManager {
   // UTILITAIRES
   // ─────────────────────────────────────────────────────────────────────────
 
-  private getHighestRequiredPermission(
-    permissions: PermissionLevel[]
-  ): PermissionLevel {
+  private getHighestRequiredPermission(permissions: PermissionLevel[]): PermissionLevel {
     if (permissions.length === 0) return 'none';
 
     return permissions.reduce((highest, current) => {
@@ -714,8 +701,16 @@ export class PermissionManager {
    */
   getPermissionSummary(): Record<ToolCategory, PermissionLevel> {
     const categories: ToolCategory[] = [
-      'search', 'file', 'code', 'system', 'network',
-      'database', 'ai', 'automation', 'security', 'utility',
+      'search',
+      'file',
+      'code',
+      'system',
+      'network',
+      'database',
+      'ai',
+      'automation',
+      'security',
+      'utility',
     ];
 
     const summary: Record<string, PermissionLevel> = {};

@@ -73,7 +73,9 @@ const _successButtonStyle = {
 };
 
 export const AudioSettings = () => {
-  const [ttsSettings, setTTSSettings] = useState<TTSSettings>(audioService.getTTSSettings());
+  const [ttsSettings, setTTSSettings] = useState<TTSSettings>(
+    audioService.getTTSSettings()
+  );
   const [outputDevices, setOutputDevices] = useState<AudioDevice[]>([]);
   const [inputDevices, setInputDevices] = useState<AudioDevice[]>([]);
   const [isTesting, setIsTesting] = useState(false);
@@ -96,7 +98,10 @@ export const AudioSettings = () => {
     }
   };
 
-  const handleTTSSettingChange = async (key: keyof TTSSettings, _value: TTSSettings[keyof TTSSettings]) => {
+  const handleTTSSettingChange = async (
+    key: keyof TTSSettings,
+    _value: TTSSettings[keyof TTSSettings]
+  ) => {
     const newSettings = { ...ttsSettings, [key]: _value };
     setTTSSettings(newSettings);
     await audioService.updateTTSSettings({ [key]: _value });
@@ -108,7 +113,8 @@ export const AudioSettings = () => {
     setErrorMessage('');
 
     try {
-      const testText = "Bonjour, je suis TITANE, votre assistant intelligent. La synthèse vocale fonctionne parfaitement.";
+      const testText =
+        'Bonjour, je suis TITANE, votre assistant intelligent. La synthèse vocale fonctionne parfaitement.';
       console.log('[AudioSettings] Testing TTS with:', testText);
       await audioService.speak(testText);
       setTestStatus('success');
@@ -150,11 +156,19 @@ export const AudioSettings = () => {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Moteur TTS */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <span style={labelStyle}>Moteur</span>
             <select
               value={ttsSettings.engine}
-              onChange={(e) => handleTTSSettingChange('engine', e.target.value as TTSSettings['engine'])}
+              onChange={e =>
+                handleTTSSettingChange('engine', e.target.value as TTSSettings['engine'])
+              }
               style={{ ...selectStyle, maxWidth: '200px' }}
             >
               <option value="piper">Piper (Local)</option>
@@ -164,11 +178,17 @@ export const AudioSettings = () => {
           </div>
 
           {/* Voix */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <span style={labelStyle}>Voix</span>
             <select
               value={ttsSettings.voiceId}
-              onChange={(e) => handleTTSSettingChange('voiceId', e.target.value)}
+              onChange={e => handleTTSSettingChange('voiceId', e.target.value)}
               style={{ ...selectStyle, maxWidth: '200px' }}
             >
               <option value="fr_FR-siwis-medium">Siwis (FR Féminin)</option>
@@ -186,7 +206,7 @@ export const AudioSettings = () => {
               max="2.0"
               step="0.1"
               value={ttsSettings.rate}
-              onChange={(e) => handleTTSSettingChange('rate', parseFloat(e.target.value))}
+              onChange={e => handleTTSSettingChange('rate', parseFloat(e.target.value))}
               style={sliderStyle}
             />
             <span style={{ ...labelStyle, minWidth: '40px', textAlign: 'right' }}>
@@ -203,7 +223,7 @@ export const AudioSettings = () => {
               max="1"
               step="0.1"
               value={ttsSettings.volume}
-              onChange={(e) => handleTTSSettingChange('volume', parseFloat(e.target.value))}
+              onChange={e => handleTTSSettingChange('volume', parseFloat(e.target.value))}
               style={sliderStyle}
             />
             <span style={{ ...labelStyle, minWidth: '40px', textAlign: 'right' }}>
@@ -212,7 +232,14 @@ export const AudioSettings = () => {
           </div>
 
           {/* Bouton Test */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.5rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              marginTop: '0.5rem',
+            }}
+          >
             <button
               onClick={handleTestTTS}
               disabled={isTesting}
@@ -232,10 +259,14 @@ export const AudioSettings = () => {
             </button>
 
             {testStatus === 'success' && (
-              <span style={{ color: '#93b399', fontSize: '0.9rem' }}>✅ TTS fonctionne !</span>
+              <span style={{ color: '#93b399', fontSize: '0.9rem' }}>
+                ✅ TTS fonctionne !
+              </span>
             )}
             {testStatus === 'error' && (
-              <span style={{ color: '#f87171', fontSize: '0.9rem' }}>❌ {errorMessage}</span>
+              <span style={{ color: '#f87171', fontSize: '0.9rem' }}>
+                ❌ {errorMessage}
+              </span>
             )}
           </div>
         </div>
@@ -250,16 +281,22 @@ export const AudioSettings = () => {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Sortie Audio */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <span style={labelStyle}>Sortie audio</span>
             <select
-              onChange={(e) => audioService.setOutputDevice(e.target.value)}
+              onChange={e => audioService.setOutputDevice(e.target.value)}
               style={{ ...selectStyle, maxWidth: '300px' }}
             >
               {outputDevices.length === 0 ? (
                 <option>Chargement...</option>
               ) : (
-                outputDevices.map((device) => (
+                outputDevices.map(device => (
                   <option key={device.id} value={device.id}>
                     {device.name} {device.isDefault ? '(Défaut)' : ''}
                   </option>
@@ -269,16 +306,22 @@ export const AudioSettings = () => {
           </div>
 
           {/* Entrée Audio */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <span style={labelStyle}>Microphone</span>
             <select
-              onChange={(e) => audioService.setInputDevice(e.target.value)}
+              onChange={e => audioService.setInputDevice(e.target.value)}
               style={{ ...selectStyle, maxWidth: '300px' }}
             >
               {inputDevices.length === 0 ? (
                 <option>Chargement...</option>
               ) : (
-                inputDevices.map((device) => (
+                inputDevices.map(device => (
                   <option key={device.id} value={device.id}>
                     {device.name} {device.isDefault ? '(Défaut)' : ''}
                   </option>
@@ -289,7 +332,11 @@ export const AudioSettings = () => {
 
           {/* Bouton Test Micro */}
           <div style={{ marginTop: '0.5rem' }}>
-            <button onClick={handleTestMicrophone} disabled={isTesting} style={buttonStyle}>
+            <button
+              onClick={handleTestMicrophone}
+              disabled={isTesting}
+              style={buttonStyle}
+            >
               <span>🎤</span>
               Tester le microphone
             </button>
@@ -306,18 +353,34 @@ export const AudioSettings = () => {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {/* Auto-fallback */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <div>
               <span style={labelStyle}>Fallback automatique</span>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <p
+                style={{
+                  color: 'rgba(255,255,255,0.4)',
+                  fontSize: '0.75rem',
+                  margin: '0.25rem 0 0',
+                }}
+              >
                 Utiliser eSpeak si Piper échoue
               </p>
             </div>
             <button
-              onClick={() => handleTTSSettingChange('autoFallback', !ttsSettings.autoFallback)}
+              onClick={() =>
+                handleTTSSettingChange('autoFallback', !ttsSettings.autoFallback)
+              }
               style={{
                 padding: '0.5rem 1rem',
-                background: ttsSettings.autoFallback ? 'rgba(147,179,153,0.15)' : 'rgba(143,122,122,0.15)',
+                background: ttsSettings.autoFallback
+                  ? 'rgba(147,179,153,0.15)'
+                  : 'rgba(143,122,122,0.15)',
                 border: `1px solid ${ttsSettings.autoFallback ? 'rgba(147,179,153,0.3)' : 'rgba(143,122,122,0.3)'}`,
                 borderRadius: '8px',
                 color: ttsSettings.autoFallback ? '#93b399' : '#8f7a7a',
@@ -331,18 +394,34 @@ export const AudioSettings = () => {
           </div>
 
           {/* Émotions */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
+          >
             <div>
               <span style={labelStyle}>Détection d'émotions</span>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', margin: '0.25rem 0 0' }}>
+              <p
+                style={{
+                  color: 'rgba(255,255,255,0.4)',
+                  fontSize: '0.75rem',
+                  margin: '0.25rem 0 0',
+                }}
+              >
                 Adapter l'intonation au contexte
               </p>
             </div>
             <button
-              onClick={() => handleTTSSettingChange('emotionEnabled', !ttsSettings.emotionEnabled)}
+              onClick={() =>
+                handleTTSSettingChange('emotionEnabled', !ttsSettings.emotionEnabled)
+              }
               style={{
                 padding: '0.5rem 1rem',
-                background: ttsSettings.emotionEnabled ? 'rgba(147,179,153,0.15)' : 'rgba(143,122,122,0.15)',
+                background: ttsSettings.emotionEnabled
+                  ? 'rgba(147,179,153,0.15)'
+                  : 'rgba(143,122,122,0.15)',
                 border: `1px solid ${ttsSettings.emotionEnabled ? 'rgba(147,179,153,0.3)' : 'rgba(143,122,122,0.3)'}`,
                 borderRadius: '8px',
                 color: ttsSettings.emotionEnabled ? '#93b399' : '#8f7a7a',

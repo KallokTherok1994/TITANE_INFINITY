@@ -6,17 +6,17 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 
-use super::attractors::{Attractor, AttractorState};
 use super::anti_attractors::{AntiAttractor, AntiAttractorState};
+use super::attractors::{Attractor, AttractorState};
 use serde::{Deserialize, Serialize};
 
 /// Feedback depuis le Kernel
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct KernelFeedback {
-    pub system_health: f32,        // 0.0-1.0 (health → Clarity)
-    pub cpu_usage: f32,             // 0.0-1.0 (overload → Overload)
-    pub memory_usage: f32,          // 0.0-1.0
-    pub uptime_stability: f32,      // 0.0-1.0
+    pub system_health: f32,    // 0.0-1.0 (health → Clarity)
+    pub cpu_usage: f32,        // 0.0-1.0 (overload → Overload)
+    pub memory_usage: f32,     // 0.0-1.0
+    pub uptime_stability: f32, // 0.0-1.0
 }
 
 impl KernelFeedback {
@@ -24,7 +24,7 @@ impl KernelFeedback {
         // System health → Clarity
         attractors.set(Attractor::Clarity, self.system_health);
     }
-    
+
     pub fn apply_to_anti_attractors(&self, anti_attractors: &mut AntiAttractorState) {
         // High CPU/Memory → Overload
         let overload_score = ((self.cpu_usage + self.memory_usage) / 2.0).clamp(0.0, 1.0);
@@ -58,7 +58,7 @@ impl OmegaFeedback {
         let coherence = (self.coherence_score + self.reflection_depth / 10.0) / 2.0;
         attractors.set(Attractor::Coherence, coherence.clamp(0.0, 1.0));
     }
-    
+
     pub fn apply_to_anti_attractors(&self, anti_attractors: &mut AntiAttractorState) {
         // Contradictions → Confusion
         let confusion = (self.contradiction_count as f32 / 10.0).min(1.0);
@@ -80,10 +80,10 @@ impl Default for OmegaFeedback {
 /// Feedback depuis Memory Engine
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MemoryFeedback {
-    pub vector_alignment: f32,      // 0.0-1.0 (alignment → Alignment)
-    pub search_accuracy: f32,       // 0.0-1.0
-    pub noise_level: f32,           // 0.0-1.0 (noise → Noise)
-    pub memory_coherence: f32,      // 0.0-1.0
+    pub vector_alignment: f32, // 0.0-1.0 (alignment → Alignment)
+    pub search_accuracy: f32,  // 0.0-1.0
+    pub noise_level: f32,      // 0.0-1.0 (noise → Noise)
+    pub memory_coherence: f32, // 0.0-1.0
 }
 
 impl MemoryFeedback {
@@ -92,7 +92,7 @@ impl MemoryFeedback {
         let alignment = (self.vector_alignment + self.search_accuracy) / 2.0;
         attractors.set(Attractor::Alignment, alignment.clamp(0.0, 1.0));
     }
-    
+
     pub fn apply_to_anti_attractors(&self, anti_attractors: &mut AntiAttractorState) {
         // Noise level → Noise
         anti_attractors.set(AntiAttractor::Noise, self.noise_level);
@@ -113,10 +113,10 @@ impl Default for MemoryFeedback {
 /// Feedback depuis Multi-Agents
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AgentsFeedback {
-    pub consensus_score: f32,       // 0.0-1.0 (consensus → Focus)
+    pub consensus_score: f32, // 0.0-1.0 (consensus → Focus)
     pub active_agents: usize,
-    pub conflict_count: usize,      // conflicts → Dissonance
-    pub coordination: f32,          // 0.0-1.0
+    pub conflict_count: usize, // conflicts → Dissonance
+    pub coordination: f32,     // 0.0-1.0
 }
 
 impl AgentsFeedback {
@@ -125,7 +125,7 @@ impl AgentsFeedback {
         let focus = (self.consensus_score + self.coordination) / 2.0;
         attractors.set(Attractor::Focus, focus.clamp(0.0, 1.0));
     }
-    
+
     pub fn apply_to_anti_attractors(&self, anti_attractors: &mut AntiAttractorState) {
         // Conflicts → Dissonance
         let dissonance = (self.conflict_count as f32 / 5.0).min(1.0);
@@ -147,10 +147,10 @@ impl Default for AgentsFeedback {
 /// Feedback depuis Harmonic OS
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HarmonicFeedback {
-    pub global_harmony: f32,        // 0.0-1.0 (harmony → Truth)
-    pub resonance_score: f32,       // 0.0-1.0
-    pub dissonance_count: usize,    // dissonances → Dissonance
-    pub stability: f32,             // 0.0-1.0
+    pub global_harmony: f32,     // 0.0-1.0 (harmony → Truth)
+    pub resonance_score: f32,    // 0.0-1.0
+    pub dissonance_count: usize, // dissonances → Dissonance
+    pub stability: f32,          // 0.0-1.0
 }
 
 impl HarmonicFeedback {
@@ -158,11 +158,11 @@ impl HarmonicFeedback {
         // Global harmony → Truth
         let truth = (self.global_harmony + self.resonance_score) / 2.0;
         attractors.set(Attractor::Truth, truth.clamp(0.0, 1.0));
-        
+
         // High stability → Simplicity
         attractors.set(Attractor::Simplicity, self.stability);
     }
-    
+
     pub fn apply_to_anti_attractors(&self, anti_attractors: &mut AntiAttractorState) {
         // Dissonances → Dissonance
         let dissonance = (self.dissonance_count as f32 / 5.0).min(1.0);
@@ -184,10 +184,10 @@ impl Default for HarmonicFeedback {
 /// Feedback depuis Performance Engine
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PerformanceFeedback {
-    pub load_balance: f32,          // 0.0-1.0
-    pub queue_sizes: f32,           // 0.0-1.0 (high → Overload)
-    pub thread_utilization: f32,    // 0.0-1.0
-    pub task_completion_rate: f32,  // 0.0-1.0
+    pub load_balance: f32,         // 0.0-1.0
+    pub queue_sizes: f32,          // 0.0-1.0 (high → Overload)
+    pub thread_utilization: f32,   // 0.0-1.0
+    pub task_completion_rate: f32, // 0.0-1.0
 }
 
 impl PerformanceFeedback {
@@ -233,7 +233,7 @@ impl CompleteFeedback {
             timestamp: chrono::Utc::now().timestamp_millis(),
         }
     }
-    
+
     /// Applique tous les feedbacks aux attracteurs
     pub fn apply_to_attractors(&self, attractors: &mut AttractorState) {
         self.kernel.apply_to_attractors(attractors);
@@ -242,7 +242,7 @@ impl CompleteFeedback {
         self.agents.apply_to_attractors(attractors);
         self.harmonic.apply_to_attractors(attractors);
     }
-    
+
     /// Applique tous les feedbacks aux anti-attracteurs
     pub fn apply_to_anti_attractors(&self, anti_attractors: &mut AntiAttractorState) {
         self.kernel.apply_to_anti_attractors(anti_attractors);
@@ -263,16 +263,16 @@ impl Default for CompleteFeedback {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_complete_feedback() {
         let feedback = CompleteFeedback::new();
         let mut attractors = AttractorState::default();
         let mut anti_attractors = AntiAttractorState::default();
-        
+
         feedback.apply_to_attractors(&mut attractors);
         feedback.apply_to_anti_attractors(&mut anti_attractors);
-        
+
         assert!(attractors.clarity >= 0.0 && attractors.clarity <= 1.0);
         assert!(anti_attractors.overload >= 0.0 && anti_attractors.overload <= 1.0);
     }

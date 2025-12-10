@@ -1,7 +1,7 @@
 /**
  * TITANE∞ vΩ — UnifiedOrchestrator Unit Tests
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Test coverage target: >75%
  */
 
@@ -33,7 +33,7 @@ describe('UnifiedOrchestrator', () => {
     it('should initialize all enabled strategies', async () => {
       await orchestrator.initialize();
       const state = orchestrator.getState();
-      
+
       expect(state.initialized).toBe(true);
       expect(state.activeStrategies.length).toBeGreaterThan(0);
     });
@@ -42,10 +42,10 @@ describe('UnifiedOrchestrator', () => {
       const config: Partial<UnifiedOrchestratorConfig> = {
         strategies: {
           mcp: { enabled: true, lazyLoad: false, priority: 100 },
-          cognitive: { enabled: false, lazyLoad: true, priority: 90 }
-        }
+          cognitive: { enabled: false, lazyLoad: true, priority: 90 },
+        },
       };
-      
+
       const customOrchestrator = new UnifiedOrchestrator(config);
       expect(customOrchestrator).toBeDefined();
     });
@@ -53,7 +53,7 @@ describe('UnifiedOrchestrator', () => {
     it('should handle initialization idempotency', async () => {
       await orchestrator.initialize();
       await orchestrator.initialize(); // Second call should be no-op
-      
+
       expect(orchestrator.getState().initialized).toBe(true);
     });
   });
@@ -72,27 +72,27 @@ describe('UnifiedOrchestrator', () => {
     it('should return null for disabled strategy', async () => {
       const config: Partial<UnifiedOrchestratorConfig> = {
         strategies: {
-          quantum: { enabled: false, lazyLoad: true, priority: 70 }
-        }
+          quantum: { enabled: false, lazyLoad: true, priority: 70 },
+        },
       };
-      
+
       const customOrchestrator = new UnifiedOrchestrator(config);
       const quantumStrategy = await customOrchestrator.getStrategy('quantum');
-      
+
       // Should still load if explicitly requested
       expect(quantumStrategy).toBeDefined();
     });
 
     it('should check strategy availability', async () => {
       await orchestrator.initialize();
-      
+
       const hasMCP = orchestrator.hasStrategy('mcp');
       expect(hasMCP).toBe(true);
     });
 
     it('should get active strategies list', async () => {
       await orchestrator.initialize();
-      
+
       const activeStrategies = orchestrator.getActiveStrategies();
       expect(Array.isArray(activeStrategies)).toBe(true);
       expect(activeStrategies.length).toBeGreaterThan(0);
@@ -111,7 +111,7 @@ describe('UnifiedOrchestrator', () => {
 
     it('should check health of all strategies', async () => {
       await orchestrator.initialize();
-      
+
       const healthResults = await orchestrator.checkHealth();
       expect(healthResults).toBeDefined();
       expect(Object.keys(healthResults).length).toBeGreaterThan(0);
@@ -119,7 +119,7 @@ describe('UnifiedOrchestrator', () => {
 
     it('should compute overall health status', async () => {
       await orchestrator.initialize();
-      
+
       const status = await orchestrator.getHealthStatus();
       expect(['healthy', 'degraded', 'critical', 'unknown']).toContain(status);
     });
@@ -132,7 +132,7 @@ describe('UnifiedOrchestrator', () => {
   describe('Metrics Collection', () => {
     it('should get initial metrics summary', () => {
       const metrics = orchestrator.getMetrics();
-      
+
       expect(metrics).toBeDefined();
       expect(metrics.totalRequests).toBe(0);
       expect(metrics.successRate).toBe(1.0);
@@ -140,14 +140,14 @@ describe('UnifiedOrchestrator', () => {
 
     it('should aggregate metrics from strategies', async () => {
       await orchestrator.initialize();
-      
+
       const metrics = orchestrator.getMetrics();
       expect(metrics.timestamp).toBeGreaterThan(0);
     });
 
     it('should return orchestrator state', () => {
       const state = orchestrator.getState();
-      
+
       expect(state).toBeDefined();
       expect(state.initialized).toBe(false);
       expect(state.activeStrategies).toEqual([]);
@@ -163,16 +163,16 @@ describe('UnifiedOrchestrator', () => {
     it('should execute MCP operation', async () => {
       const result = await orchestrator.execute('mcp', 'createJob', {
         type: 'test',
-        priority: 'medium'
+        priority: 'medium',
       });
-      
+
       expect(result.success).toBe(true);
       expect(result.metadata?.strategyUsed).toBe('mcp');
     });
 
     it('should handle execution errors gracefully', async () => {
       const result = await orchestrator.execute('mcp', 'invalidOperation');
-      
+
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
     });
@@ -180,20 +180,20 @@ describe('UnifiedOrchestrator', () => {
     it('should return error for unavailable strategy', async () => {
       const config: Partial<UnifiedOrchestratorConfig> = {
         strategies: {
-          quantum: { enabled: false, lazyLoad: false, priority: 70 }
-        }
+          quantum: { enabled: false, lazyLoad: false, priority: 70 },
+        },
       };
-      
+
       const customOrchestrator = new UnifiedOrchestrator(config);
       const result = await customOrchestrator.execute('quantum', 'test');
-      
+
       // Should still work if strategy can be loaded
       expect(result).toBeDefined();
     });
 
     it('should record execution metrics', async () => {
       await orchestrator.execute('mcp', 'listJobs');
-      
+
       const metrics = orchestrator.getMetrics();
       expect(metrics.totalRequests).toBeGreaterThanOrEqual(0);
     });
@@ -207,7 +207,7 @@ describe('UnifiedOrchestrator', () => {
     it('should shutdown gracefully', async () => {
       await orchestrator.initialize();
       await orchestrator.shutdown();
-      
+
       const state = orchestrator.getState();
       expect(state.initialized).toBe(false);
       expect(state.activeStrategies).toEqual([]);

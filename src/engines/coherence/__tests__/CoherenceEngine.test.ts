@@ -62,7 +62,13 @@ describe('CoherenceEngine', () => {
       const tasks: Task[] = [
         { id: '1', type: 'cleanup', priority: 5, payload: {}, createdAt: Date.now() },
         { id: '2', type: 'healing', priority: 5, payload: {}, createdAt: Date.now() },
-        { id: '3', type: 'conversation', priority: 5, payload: {}, createdAt: Date.now() },
+        {
+          id: '3',
+          type: 'conversation',
+          priority: 5,
+          payload: {},
+          createdAt: Date.now(),
+        },
       ];
 
       const prioritized = coherenceEngine.prioritize(tasks);
@@ -75,8 +81,22 @@ describe('CoherenceEngine', () => {
     it('should respect deadline urgency', () => {
       const now = Date.now();
       const tasks: Task[] = [
-        { id: '1', type: 'memory', priority: 5, payload: {}, createdAt: now, deadline: now + 100 },
-        { id: '2', type: 'memory', priority: 5, payload: {}, createdAt: now, deadline: now + 60000 },
+        {
+          id: '1',
+          type: 'memory',
+          priority: 5,
+          payload: {},
+          createdAt: now,
+          deadline: now + 100,
+        },
+        {
+          id: '2',
+          type: 'memory',
+          priority: 5,
+          payload: {},
+          createdAt: now,
+          deadline: now + 60000,
+        },
       ];
 
       const prioritized = coherenceEngine.prioritize(tasks);
@@ -100,13 +120,16 @@ describe('CoherenceEngine', () => {
     it('should validate healthy system state', () => {
       const healthyState: SystemState = {
         engines: new Map([
-          ['engine1', {
-            id: 'engine1',
-            name: 'Test Engine',
-            status: 'active',
-            lastActivity: Date.now(),
-            metrics: { requestCount: 100, errorCount: 5, avgLatency: 200 },
-          }],
+          [
+            'engine1',
+            {
+              id: 'engine1',
+              name: 'Test Engine',
+              status: 'active',
+              lastActivity: Date.now(),
+              metrics: { requestCount: 100, errorCount: 5, avgLatency: 200 },
+            },
+          ],
         ]),
         providers: new Map([
           ['provider1', { id: 'provider1', health: 0.95, latency: 100, available: true }],
@@ -127,7 +150,10 @@ describe('CoherenceEngine', () => {
       const unhealthyState: SystemState = {
         engines: new Map(),
         providers: new Map([
-          ['provider1', { id: 'provider1', health: 0.2, latency: 6000, available: false }],
+          [
+            'provider1',
+            { id: 'provider1', health: 0.2, latency: 6000, available: false },
+          ],
         ]),
         memory: { stmCount: 0, mtmCount: 0, ltmCount: 0, totalSize: 0 },
         coherenceScore: 0.5,
@@ -200,7 +226,14 @@ describe('TaskPrioritizer', () => {
   it('should get executable tasks respecting dependencies', () => {
     const tasks: Task[] = [
       { id: '1', type: 'memory', priority: 5, payload: {}, createdAt: Date.now() },
-      { id: '2', type: 'memory', priority: 5, payload: {}, createdAt: Date.now(), dependencies: ['1'] },
+      {
+        id: '2',
+        type: 'memory',
+        priority: 5,
+        payload: {},
+        createdAt: Date.now(),
+        dependencies: ['1'],
+      },
     ];
 
     const completed = new Set<string>();
@@ -227,13 +260,16 @@ describe('CoherenceValidator', () => {
   it('should detect engine errors', () => {
     const state: SystemState = {
       engines: new Map([
-        ['broken', {
-          id: 'broken',
-          name: 'Broken Engine',
-          status: 'error',
-          lastActivity: Date.now(),
-          metrics: { requestCount: 10, errorCount: 10, avgLatency: 1000 },
-        }],
+        [
+          'broken',
+          {
+            id: 'broken',
+            name: 'Broken Engine',
+            status: 'error',
+            lastActivity: Date.now(),
+            metrics: { requestCount: 10, errorCount: 10, avgLatency: 1000 },
+          },
+        ],
       ]),
       providers: new Map(),
       memory: { stmCount: 0, mtmCount: 0, ltmCount: 0, totalSize: 0 },
@@ -249,13 +285,16 @@ describe('CoherenceValidator', () => {
   it('should detect high error rates', () => {
     const state: SystemState = {
       engines: new Map([
-        ['flaky', {
-          id: 'flaky',
-          name: 'Flaky Engine',
-          status: 'active',
-          lastActivity: Date.now(),
-          metrics: { requestCount: 100, errorCount: 30, avgLatency: 500 },
-        }],
+        [
+          'flaky',
+          {
+            id: 'flaky',
+            name: 'Flaky Engine',
+            status: 'active',
+            lastActivity: Date.now(),
+            metrics: { requestCount: 100, errorCount: 30, avgLatency: 500 },
+          },
+        ],
       ]),
       providers: new Map(),
       memory: { stmCount: 0, mtmCount: 0, ltmCount: 0, totalSize: 0 },

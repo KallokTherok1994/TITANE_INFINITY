@@ -18,14 +18,14 @@ let enginePromise: Promise<AuraEngineInstance> | null = null;
  */
 export async function getAuraEngine() {
   if (engineInstance) return engineInstance;
-  
+
   if (!enginePromise) {
     enginePromise = import('./auraEngine').then(m => {
       engineInstance = m.auraEngine;
       return engineInstance;
     });
   }
-  
+
   return enginePromise;
 }
 

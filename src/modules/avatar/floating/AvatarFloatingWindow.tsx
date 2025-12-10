@@ -44,13 +44,8 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
   // STATE & HOOKS
   // ═════════════════════════════════════════════════════════════════
 
-  const {
-    displayState,
-    loading,
-    error,
-    setModeFloating,
-    setModeEmbed,
-  } = useFloatingWindow();
+  const { displayState, loading, error, setModeFloating, setModeEmbed } =
+    useFloatingWindow();
 
   // Three.js renderer
   const rendererRef = useRef<ThreeJSAvatarRenderer | null>(null);
@@ -106,15 +101,18 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
     appearanceRef.current = appearance;
 
     // Fetch and apply initial appearance
-    void appearance.fetchAppearance().then((state) => {
-      appearance.applyAppearance(state);
-      console.log('[AvatarFloatingWindow] Initial appearance applied');
-    }).catch((error) => {
-      console.error('[AvatarFloatingWindow] Failed to load appearance:', error);
-    });
+    void appearance
+      .fetchAppearance()
+      .then(state => {
+        appearance.applyAppearance(state);
+        console.log('[AvatarFloatingWindow] Initial appearance applied');
+      })
+      .catch(error => {
+        console.error('[AvatarFloatingWindow] Failed to load appearance:', error);
+      });
 
     // Start appearance sync (every 2 seconds)
-    void appearance.startAppearanceSync(2000).then((stopSync) => {
+    void appearance.startAppearanceSync(2000).then(stopSync => {
       // Cleanup will call stopSync
       return () => {
         stopSync();
@@ -251,7 +249,7 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
     transform: `scale(${displayState.scale}) ${displayState.mirror_mode ? 'scaleX(-1)' : ''}`,
     filter: `brightness(${displayState.brightness})`,
     pointerEvents: displayState.click_through ? 'none' : 'auto',
-    cursor: displayState.locked ? 'default' : (enableDrag ? 'move' : 'default'),
+    cursor: displayState.locked ? 'default' : enableDrag ? 'move' : 'default',
   };
 
   // ═════════════════════════════════════════════════════════════════

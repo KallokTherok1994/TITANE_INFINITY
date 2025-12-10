@@ -9,14 +9,14 @@ import { startMockActivity } from './mockEvents';
 
 /**
  * Hook React pour démarrer/arrêter automatiquement la simulation d'activité
- * 
+ *
  * @param enabled - Active/désactive la simulation
  * @param intervalMs - Intervalle entre chaque événement (défaut: 2000ms)
- * 
+ *
  * @example
  * ```tsx
  * import { useMockActivity } from './utils/useMockActivity';
- * 
+ *
  * function DevToolsApp() {
  *   // Activer en mode dev uniquement
  *   useMockActivity(import.meta.env.DEV, 2000);

@@ -20,6 +20,7 @@
     "lint:staged": "lint-staged",
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx --fix",
     "format": "prettier --write .",
+    "fix-pipeline": "node scripts/fix-pipeline.js",
     "check": "tsc --noEmit",
     "audit": "npm audit && cargo audit",
     "clean": "rm -rf node_modules target dist",
@@ -130,10 +131,11 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
-      "npm exec eslint --fix"
+      "npm exec eslint -- --fix",
+      "npm exec prettier -- --write"
     ],
     "*.{json,md,css,scss}": [
-      "npm exec prettier --write"
+      "npm exec prettier -- --write"
     ]
   },
   "engines": {

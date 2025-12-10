@@ -84,7 +84,11 @@
       "is_inviolable": false,
       "category": "error_handling",
       "conditions": ["error_detected"],
-      "actions": ["explain_error_clearly", "suggest_solutions", "maintain_supportive_tone"],
+      "actions": [
+        "explain_error_clearly",
+        "suggest_solutions",
+        "maintain_supportive_tone"
+      ],
       "created_at": "2025-01-01T00:00:00Z"
     },
     {

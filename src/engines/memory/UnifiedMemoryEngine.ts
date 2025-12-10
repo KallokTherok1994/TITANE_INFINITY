@@ -17,8 +17,8 @@ import { TauriBridge } from './bridge/tauriBridge';
 
 import type {
   MemoryEntry,
-  MemoryTier,
-  MemoryType,
+  MemoryTier as _MemoryTier,
+  MemoryType as _MemoryType,
   StoreOptions,
   RecallOptions,
   SearchResult,
@@ -52,9 +52,9 @@ class UnifiedMemoryImpl {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private readonly config = {
-    stm: { maxEntries: 20, maxAge: 5 * 60 * 1000 },       // 5 minutes
+    stm: { maxEntries: 20, maxAge: 5 * 60 * 1000 }, // 5 minutes
     mtm: { maxEntries: 200, maxAge: 24 * 60 * 60 * 1000 }, // 24 hours
-    ltm: { maxEntries: -1, maxAge: -1 },                   // Unlimited
+    ltm: { maxEntries: -1, maxAge: -1 }, // Unlimited
     promotionThreshold: 0.7,
     cleanupInterval: 60 * 1000, // 1 minute
   };
@@ -121,10 +121,7 @@ class UnifiedMemoryImpl {
   /**
    * Store a memory entry
    */
-  async store(
-    content: string,
-    options: StoreOptions = {}
-  ): Promise<string> {
+  async store(content: string, options: StoreOptions = {}): Promise<string> {
     const startTime = performance.now();
 
     const entry: MemoryEntry = {
@@ -241,10 +238,7 @@ class UnifiedMemoryImpl {
   /**
    * Semantic search using embeddings
    */
-  async semanticSearch(
-    query: string,
-    k = 5
-  ): Promise<SearchResult[]> {
+  async semanticSearch(query: string, k = 5): Promise<SearchResult[]> {
     const startTime = performance.now();
 
     // Generate query embedding
@@ -339,7 +333,9 @@ class UnifiedMemoryImpl {
   /**
    * Store multiple entries at once
    */
-  async storeBatch(entries: Array<{ content: string; options?: StoreOptions }>): Promise<string[]> {
+  async storeBatch(
+    entries: Array<{ content: string; options?: StoreOptions }>
+  ): Promise<string[]> {
     const ids: string[] = [];
     for (const { content, options } of entries) {
       const id = await this.store(content, options);
@@ -409,7 +405,8 @@ class UnifiedMemoryImpl {
 
     // Filter by importance
     if (options.minImportance !== undefined) {
-      results = results.filter(e => e.importance >= options.minImportance!);
+      const minImportance = options.minImportance;
+      results = results.filter(e => e.importance >= minImportance);
     }
 
     // Filter by age
@@ -426,8 +423,12 @@ class UnifiedMemoryImpl {
     return results;
   }
 
-  private updatePerformance(operation: 'store' | 'recall' | 'search', durationMs: number): void {
-    const key = `avg${operation.charAt(0).toUpperCase() + operation.slice(1)}Ms` as keyof PerformanceStats;
+  private updatePerformance(
+    operation: 'store' | 'recall' | 'search',
+    durationMs: number
+  ): void {
+    const key =
+      `avg${operation.charAt(0).toUpperCase() + operation.slice(1)}Ms` as keyof PerformanceStats;
     const currentAvg = this.performance[key] as number;
     const total = this.performance.totalOperations;
 

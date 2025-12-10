@@ -149,7 +149,9 @@ export class MemoryService {
     try {
       const [projects, decisions, knowledge, rituals, timeline] = await Promise.all([
         includeProjects ? this.getActiveProjects(maxProjects) : Promise.resolve([]),
-        includeDecisions ? this.getRecentDecisions(maxDecisions, timeWindow) : Promise.resolve([]),
+        includeDecisions
+          ? this.getRecentDecisions(maxDecisions, timeWindow)
+          : Promise.resolve([]),
         includeKnowledge ? this.getKnowledge(maxKnowledge) : Promise.resolve([]),
         includeRituals ? this.getActiveRituals() : Promise.resolve([]),
         includeTimeline ? this.getTimeline(timeWindow) : Promise.resolve([]),

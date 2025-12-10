@@ -6,5 +6,5 @@
 pub mod cache;
 pub mod cached_commands;
 
-pub use cache::{IPCCache, CacheStats};
+pub use cache::{CacheStats, IPCCache};
 pub use cached_commands::{FAST_CACHE, MEDIUM_CACHE, SLOW_CACHE};

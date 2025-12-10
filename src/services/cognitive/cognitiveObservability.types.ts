@@ -1,9 +1,9 @@
 /**
  * COGNITIVE OBSERVABILITY v∞ — Types & Interfaces
- * 
+ *
  * Rend le système inspectable et compréhensible
  * Permet de voir comment TITANE "pense" et prend ses décisions
- * 
+ *
  * Design principles:
  * - Transparent: tous les steps tracés
  * - Structured: logs JSON exploitables
@@ -24,7 +24,7 @@ export enum CognitivePhase {
   CONSISTENCY_CHECK_POST = 'consistency_check_post',
   AUTO_CORRECTION = 'auto_correction',
   MEMORY_UPDATE = 'memory_update',
-  FINAL_OUTPUT = 'final_output'
+  FINAL_OUTPUT = 'final_output',
 }
 
 /**
@@ -44,7 +44,7 @@ export interface PipelinePhase {
 /**
  * Phase names
  */
-export type PhaseName = 
+export type PhaseName =
   | 'input_received'
   | 'context_loading'
   | 'context_built'
@@ -122,11 +122,11 @@ export interface ObservabilityConfig {
  * Niveau de log cognitif
  */
 export enum CognitiveLogLevel {
-  DEBUG = 'debug',     // Détails très fins
-  INFO = 'info',       // Informations importantes
-  TRACE = 'trace',     // Traçage complet des décisions
+  DEBUG = 'debug', // Détails très fins
+  INFO = 'info', // Informations importantes
+  TRACE = 'trace', // Traçage complet des décisions
   WARNING = 'warning', // Anomalies non-critiques
-  ERROR = 'error'      // Erreurs
+  ERROR = 'error', // Erreurs
 }
 
 /**
@@ -135,25 +135,25 @@ export enum CognitiveLogLevel {
 export interface CognitiveLogEntry {
   /** ID unique */
   id: string;
-  
+
   /** Timestamp (ISO 8601 avec ms) */
   timestamp: string;
-  
+
   /** Phase du pipeline */
   phase: CognitivePhase;
-  
+
   /** Niveau */
   level: CognitiveLogLevel;
-  
+
   /** Message */
   message: string;
-  
+
   /** Données structurées */
   data?: Record<string, any>;
-  
+
   /** Durée de cette phase (ms) */
   duration_ms?: number;
-  
+
   /** Contexte */
   context: {
     conversation_id?: string;
@@ -161,7 +161,7 @@ export interface CognitiveLogEntry {
     user_id?: string;
     correlation_id: string; // Pour lier tous les logs d'une requête
   };
-  
+
   /** Métadonnées */
   metadata?: {
     model?: string;
@@ -176,33 +176,33 @@ export interface CognitiveLogEntry {
 export interface CognitiveTrace {
   /** ID unique de la trace */
   trace_id: string;
-  
+
   /** Correlation ID (groupe tous les logs) */
   correlation_id: string;
-  
+
   /** Conversation ID */
   conversation_id?: string;
-  
+
   /** Turn number */
   turn_number?: number;
-  
+
   /** Timestamp de début */
   started_at: string;
   start_time?: number;
-  
+
   /** Timestamp de fin */
   ended_at?: string;
   end_time?: number;
-  
+
   /** Durée totale (ms) */
   total_duration_ms?: number;
-  
+
   /** Entrées de log ordonnées */
   entries: CognitiveLogEntry[];
-  
+
   /** Phases du pipeline */
   phases?: Array<PipelinePhase>;
-  
+
   /** Résumé des phases */
   phases_summary: Array<{
     phase: CognitivePhase;
@@ -210,29 +210,29 @@ export interface CognitiveTrace {
     success: boolean;
     entry_count: number;
   }>;
-  
+
   /** Input initial */
   input: {
     content: string;
     metadata?: Record<string, any>;
   };
-  
+
   /** User message */
   user_message?: string;
-  
+
   /** Output final */
   output?: {
     content: string;
     metadata?: Record<string, any>;
   };
-  
+
   /** Erreurs rencontrées */
   errors?: Array<{
     phase: CognitivePhase;
     error: string;
     recovered: boolean;
   }>;
-  
+
   /** Décisions cognitives prises */
   decisions: CognitiveDecision[];
 }
@@ -243,44 +243,50 @@ export interface CognitiveTrace {
 export interface CognitiveDecision {
   /** ID unique */
   id: string;
-  
+
   /** Timestamp */
   timestamp: string;
-  
+
   /** Phase où la décision a été prise */
   phase: CognitivePhase;
-  
+
   /** Type de décision */
-  type: 'memory_retrieval' | 'fact_selection' | 'goal_prioritization' | 'consistency_correction' | 'model_selection' | 'other';
-  
+  type:
+    | 'memory_retrieval'
+    | 'fact_selection'
+    | 'goal_prioritization'
+    | 'consistency_correction'
+    | 'model_selection'
+    | 'other';
+
   /** Description */
   description: string;
-  
+
   /** Decision point */
   decision_point?: string;
-  
+
   /** Chosen option */
   chosen_option?: string;
-  
+
   /** Why */
   why?: string;
-  
+
   /** Confidence */
   confidence?: number;
-  
+
   /** Options considérées */
   options?: Array<{
     label: string;
     score?: number;
     selected: boolean;
   }>;
-  
+
   /** Alternatives */
   alternatives?: string[];
-  
+
   /** Raison du choix */
   rationale?: string;
-  
+
   /** Impact sur le résultat */
   impact?: 'high' | 'medium' | 'low';
 }
@@ -291,7 +297,7 @@ export interface CognitiveDecision {
 export interface CognitiveSnapshot {
   /** Timestamp */
   timestamp: string;
-  
+
   /** Mémoire sémantique */
   semantic_memory: {
     total_memories: number;
@@ -299,7 +305,7 @@ export interface CognitiveSnapshot {
     retrieved_ids?: string[];
     avg_relevance_score?: number;
   };
-  
+
   /** État de cohérence */
   consistency: {
     active_goals_count: number;
@@ -307,7 +313,7 @@ export interface CognitiveSnapshot {
     consistency_score: number;
     recent_violations_count: number;
   };
-  
+
   /** Contexte OMEGA */
   omega_context: {
     messages_count: number;
@@ -315,7 +321,7 @@ export interface CognitiveSnapshot {
     mode?: string;
     provider?: string;
   };
-  
+
   /** Performance */
   performance: {
     avg_latency_ms: number;
@@ -330,10 +336,10 @@ export interface CognitiveSnapshot {
 export interface CognitiveDebugPanel {
   /** Trace actuelle */
   current_trace?: CognitiveTrace;
-  
+
   /** Snapshot actuel */
   current_snapshot: CognitiveSnapshot;
-  
+
   /** Souvenirs rappelés */
   recalled_memories: Array<{
     id: string;
@@ -341,7 +347,7 @@ export interface CognitiveDebugPanel {
     relevance_score: number;
     reason: string;
   }>;
-  
+
   /** Objectifs actifs */
   active_goals: Array<{
     id: string;
@@ -349,16 +355,16 @@ export interface CognitiveDebugPanel {
     status: string;
     progress: number;
   }>;
-  
+
   /** Faits clés */
   key_facts: Array<{
     statement: string;
     confidence: number;
   }>;
-  
+
   /** Dernières décisions */
   recent_decisions: CognitiveDecision[];
-  
+
   /** Alertes */
   alerts: Array<{
     type: 'warning' | 'error' | 'info';
@@ -373,10 +379,10 @@ export interface CognitiveDebugPanel {
 export interface CognitiveObservabilityConfig {
   /** Activer/désactiver globalement */
   enabled: boolean;
-  
+
   /** Mode */
   mode: 'dev' | 'debug' | 'production';
-  
+
   /** Logging */
   logging: {
     enabled: boolean;
@@ -387,7 +393,7 @@ export interface CognitiveObservabilityConfig {
     file_path?: string;
     max_file_size_mb?: number;
   };
-  
+
   /** Tracing */
   tracing: {
     enabled: boolean;
@@ -396,21 +402,21 @@ export interface CognitiveObservabilityConfig {
     max_traces_stored: number;
     retention_hours: number;
   };
-  
+
   /** Snapshots */
   snapshots: {
     enabled: boolean;
     interval_minutes: number;
     store_snapshots: boolean;
   };
-  
+
   /** Debug Panel (UI) */
   debug_panel: {
     enabled: boolean;
     auto_open: boolean;
     position: 'bottom' | 'right' | 'overlay';
   };
-  
+
   /** Performance */
   performance: {
     measure_timings: boolean;
@@ -440,10 +446,10 @@ export interface ObservabilityStats {
 export interface CognitiveLogger {
   /** Créer une nouvelle trace */
   startTrace(context: { conversation_id?: string; message_id?: string }): string;
-  
+
   /** Terminer une trace */
   endTrace(traceId: string): void;
-  
+
   /** Logger une entrée */
   log(
     phase: CognitivePhase,
@@ -451,16 +457,16 @@ export interface CognitiveLogger {
     message: string,
     data?: Record<string, any>
   ): void;
-  
+
   /** Enregistrer une décision */
   logDecision(decision: Omit<CognitiveDecision, 'id' | 'timestamp'>): void;
-  
+
   /** Obtenir la trace courante */
   getCurrentTrace(): CognitiveTrace | null;
-  
+
   /** Obtenir un snapshot */
   getSnapshot(): CognitiveSnapshot;
-  
+
   /** Récupérer les traces */
   getTraces(filters?: {
     conversation_id?: string;
@@ -468,10 +474,10 @@ export interface CognitiveLogger {
     level?: CognitiveLogLevel;
     limit?: number;
   }): CognitiveTrace[];
-  
+
   /** Obtenir les stats */
   getStats(): ObservabilityStats;
-  
+
   /** Nettoyer les anciennes traces */
   cleanup(): Promise<void>;
 }
@@ -483,7 +489,12 @@ export type ICognitiveObservabilityEngine = CognitiveLogger;
  * Événements d'observabilité
  */
 export interface ObservabilityEvent {
-  type: 'trace_started' | 'trace_completed' | 'slow_phase_detected' | 'error_logged' | 'decision_made';
+  type:
+    | 'trace_started'
+    | 'trace_completed'
+    | 'slow_phase_detected'
+    | 'error_logged'
+    | 'decision_made';
   timestamp: string;
   data: any;
 }
@@ -496,13 +507,13 @@ export type ObservabilityEventHandler = (event: ObservabilityEvent) => void;
 export interface CognitiveDataExport {
   /** Format */
   format: 'json' | 'csv' | 'parquet';
-  
+
   /** Période */
   period: {
     from: string;
     to: string;
   };
-  
+
   /** Données incluses */
   includes: {
     traces: boolean;
@@ -511,7 +522,7 @@ export interface CognitiveDataExport {
     snapshots: boolean;
     stats: boolean;
   };
-  
+
   /** Filtres */
   filters?: {
     conversation_ids?: string[];

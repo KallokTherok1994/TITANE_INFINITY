@@ -5,9 +5,8 @@ import { resolve } from 'path';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { availableParallelism, cpus } from 'os';
 
-const detectedCpuCount = typeof availableParallelism === 'function'
-  ? availableParallelism()
-  : cpus().length;
+const detectedCpuCount =
+  typeof availableParallelism === 'function' ? availableParallelism() : cpus().length;
 const maxThreadBudget = Math.min(4, Math.max(1, Math.floor(detectedCpuCount / 2)));
 const isVitest = process.env.VITEST === 'true';
 
@@ -26,24 +25,30 @@ const baseAliasEntries = [
   { find: '@types', replacement: resolve(__dirname, './src/types') },
   { find: '@assets', replacement: resolve(__dirname, './src/assets') },
   { find: '@styles', replacement: resolve(__dirname, './src/styles') },
-  { find: '@tauri-apps/api/tauri', replacement: resolve(__dirname, './tests/mocks/tauri.ts') },
-  { find: '@tauri-apps/api/core', replacement: resolve(__dirname, './tests/mocks/tauriCore.ts') },
+  {
+    find: '@tauri-apps/api/tauri',
+    replacement: resolve(__dirname, './tests/mocks/tauri.ts'),
+  },
+  {
+    find: '@tauri-apps/api/core',
+    replacement: resolve(__dirname, './tests/mocks/tauriCore.ts'),
+  },
 ];
 
 const vitestAliasEntries = isVitest
   ? [
       {
         find: /\/src\/hooks\/useChatCore$/,
-        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts')
+        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts'),
       },
       {
         find: /\/src\/hooks\/useChatMemory$/,
-        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts')
+        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts'),
       },
       {
         find: /\/src\/services\/tts\/hybridTTS$/,
-        replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts')
-      }
+        replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts'),
+      },
     ]
   : [];
 
@@ -57,8 +62,8 @@ export const sharedTestConfig = defineConfig({
       // Optimisation React Fast Refresh
       babel: {
         compact: true,
-        plugins: []
-      }
+        plugins: [],
+      },
     }),
     tsconfigPaths(), // Auto-sync avec tsconfig.json paths
   ],
@@ -78,13 +83,13 @@ export const sharedTestConfig = defineConfig({
     maxThreads: maxThreadBudget,
     poolOptions: {
       threads: {
-        singleThread: maxThreadBudget === 1
-      }
+        singleThread: maxThreadBudget === 1,
+      },
     },
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
-      'tests/integration/**/*.{test,spec}.{ts,tsx}'
+      'tests/integration/**/*.{test,spec}.{ts,tsx}',
     ],
     exclude: ['node_modules', 'dist', 'src-tauri'],
     coverage: {
@@ -109,11 +114,11 @@ export const sharedTestConfig = defineConfig({
     include: ['react', 'react-dom', 'react/jsx-runtime'],
     esbuildOptions: {
       target: 'esnext',
-    }
+    },
   },
 
   resolve: {
-    alias: [...baseAliasEntries, ...vitestAliasEntries]
+    alias: [...baseAliasEntries, ...vitestAliasEntries],
   },
 
   build: {
@@ -122,7 +127,7 @@ export const sharedTestConfig = defineConfig({
     cssMinify: 'lightningcss',
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
+        manualChunks: id => {
           if (id.includes('node_modules')) {
             if (id.includes('react') || id.includes('react-dom')) {
               return 'vendor-react';

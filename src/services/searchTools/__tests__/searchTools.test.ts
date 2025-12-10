@@ -11,9 +11,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('PermissionManager', () => {
-   
   let PermissionManager: any;
-   
+
   let manager: any;
 
   beforeEach(async () => {
@@ -239,9 +238,8 @@ describe('PermissionManager', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SearchEngine', () => {
-   
   let SearchEngine: any;
-   
+
   let engine: any;
 
   beforeEach(async () => {
@@ -372,9 +370,8 @@ describe('SearchEngine', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('ToolsEngine', () => {
-   
   let ToolsEngine: any;
-   
+
   let engine: any;
 
   beforeEach(async () => {
@@ -606,9 +603,8 @@ describe('ToolsEngine', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 describe('SearchToolsOrchestrator', () => {
-   
   let SearchToolsOrchestrator: any;
-   
+
   let orchestrator: any;
 
   beforeEach(async () => {
@@ -730,11 +726,20 @@ describe('SearchTools Configuration', () => {
   });
 
   it('should filter tools by mode', async () => {
-    const { filterToolsByMode, BUILTIN_TOOLS, DEFAULT_PERMISSION_MATRIX } = await import('../searchTools.config');
+    const { filterToolsByMode, BUILTIN_TOOLS, DEFAULT_PERMISSION_MATRIX } =
+      await import('../searchTools.config');
 
-    const standardTools = filterToolsByMode(BUILTIN_TOOLS, 'standard', DEFAULT_PERMISSION_MATRIX);
+    const standardTools = filterToolsByMode(
+      BUILTIN_TOOLS,
+      'standard',
+      DEFAULT_PERMISSION_MATRIX
+    );
     const devTools = filterToolsByMode(BUILTIN_TOOLS, 'dev', DEFAULT_PERMISSION_MATRIX);
-    const autonomousTools = filterToolsByMode(BUILTIN_TOOLS, 'autonomous', DEFAULT_PERMISSION_MATRIX);
+    const autonomousTools = filterToolsByMode(
+      BUILTIN_TOOLS,
+      'autonomous',
+      DEFAULT_PERMISSION_MATRIX
+    );
 
     // More permissions = more accessible tools
     expect(devTools.length).toBeGreaterThanOrEqual(standardTools.length);

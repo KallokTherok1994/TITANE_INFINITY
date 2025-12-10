@@ -29,7 +29,9 @@ export interface UseSessionsReturn {
   createSession: (options?: { title?: string; mode?: string }) => Session;
   loadSession: (id: string) => Session | null;
   deleteSession: (id: string) => boolean;
-  addMessage: (message: Omit<SessionMessage, 'id' | 'timestamp'>) => SessionMessage | null;
+  addMessage: (
+    message: Omit<SessionMessage, 'id' | 'timestamp'>
+  ) => SessionMessage | null;
   updateSessionTitle: (title: string) => boolean;
   searchSessions: (query: string) => SessionSummary[];
   exportSession: (id: string) => string | null;

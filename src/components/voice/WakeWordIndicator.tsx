@@ -39,13 +39,16 @@ interface WakeWordIndicatorProps {
 /**
  * Configuration des états visuels
  */
-const STATE_CONFIG: Record<AttentionState, {
-  color: string;
-  glow: string;
-  animation: string;
-  label: string;
-  icon: string;
-}> = {
+const STATE_CONFIG: Record<
+  AttentionState,
+  {
+    color: string;
+    glow: string;
+    animation: string;
+    label: string;
+    icon: string;
+  }
+> = {
   inactive: {
     color: 'bg-gray-400',
     glow: '',
@@ -117,7 +120,6 @@ export const WakeWordIndicator: React.FC<WakeWordIndicatorProps> = ({
   showLabel = true,
   className,
 }) => {
-
   const config = STATE_CONFIG[attentionState];
   const sizeClass = SIZE_CONFIG[size];
 
@@ -153,9 +155,7 @@ export const WakeWordIndicator: React.FC<WakeWordIndicatorProps> = ({
           )}
         >
           {/* Icône */}
-          <span className="text-white text-lg font-bold">
-            {config.icon}
-          </span>
+          <span className="text-white text-lg font-bold">{config.icon}</span>
         </div>
       </div>
 
@@ -178,7 +178,6 @@ export const WakeWordBadge: React.FC<{
   attentionState: AttentionState;
   onClick?: () => void;
 }> = ({ attentionState, onClick }) => {
-
   const config = STATE_CONFIG[attentionState];
 
   // Ne rien afficher si inactive

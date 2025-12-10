@@ -2,7 +2,7 @@
 //! TEMPORAL ENGINE ↔ AGI SUBSYSTEM INTEGRATION
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use crate::temporal_engine::{TemporalContext, PlanningHorizon};
+use crate::temporal_engine::{PlanningHorizon, TemporalContext};
 use serde::{Deserialize, Serialize};
 
 /// Bridge entre Temporal Engine et AGI Subsystem
@@ -28,9 +28,9 @@ impl TemporalAgiBridge {
     /// Intensité de meta-learning
     fn calculate_meta_learning_intensity(hour: u8) -> f32 {
         match hour {
-            2..=4 => 1.0,     // Night: maximum meta-learning
-            10..=11 => 0.6,   // Peak: moderate
-            12..=13 => 0.3,   // Midday: low
+            2..=4 => 1.0,   // Night: maximum meta-learning
+            10..=11 => 0.6, // Peak: moderate
+            12..=13 => 0.3, // Midday: low
             _ => 0.5,
         }
     }
@@ -38,7 +38,7 @@ impl TemporalAgiBridge {
     /// Horizon de tracking des objectifs
     fn determine_goal_horizon(context: &TemporalContext) -> PlanningHorizon {
         let hour = context.now.hour;
-        
+
         match hour {
             6..=9 => PlanningHorizon::Today,
             10..=16 => PlanningHorizon::ThisWeek,
@@ -51,9 +51,9 @@ impl TemporalAgiBridge {
     /// Ratio exploration vs exploitation
     fn calculate_exploration_ratio(hour: u8) -> f32 {
         match hour {
-            10..=11 => 0.3,   // Peak: exploit (30% explore)
-            2..=4 => 0.7,     // Night: explore (70% explore)
-            _ => 0.5,         // Balanced
+            10..=11 => 0.3, // Peak: exploit (30% explore)
+            2..=4 => 0.7,   // Night: explore (70% explore)
+            _ => 0.5,       // Balanced
         }
     }
 
@@ -61,27 +61,27 @@ impl TemporalAgiBridge {
     fn calculate_adaptation_rate(season: &crate::temporal_engine::time_model::Season) -> f32 {
         use crate::temporal_engine::time_model::Season;
         match season {
-            Season::Spring => 0.8,  // High adaptation
-            Season::Summer => 0.5,  // Stable
-            Season::Autumn => 0.6,  // Moderate
-            Season::Winter => 0.3,  // Conservative
+            Season::Spring => 0.8, // High adaptation
+            Season::Summer => 0.5, // Stable
+            Season::Autumn => 0.6, // Moderate
+            Season::Winter => 0.3, // Conservative
         }
     }
 
     /// Profondeur de réflexion
     fn calculate_reflection_depth(hour: u8) -> usize {
         match hour {
-            2..=4 => 5,       // Night: deep
-            10..=11 => 3,     // Peak: moderate
-            _ => 2,           // Shallow
+            2..=4 => 5,   // Night: deep
+            10..=11 => 3, // Peak: moderate
+            _ => 2,       // Shallow
         }
     }
 
     /// Fréquence de réévaluation stratégies (heures)
     fn calculate_reevaluation_frequency(hour: u8) -> f32 {
         match hour {
-            2..=4 => 1.0,     // Night: every hour
-            10..=16 => 6.0,   // Day: every 6 hours
+            2..=4 => 1.0,   // Night: every hour
+            10..=16 => 6.0, // Day: every 6 hours
             _ => 3.0,
         }
     }
@@ -89,10 +89,10 @@ impl TemporalAgiBridge {
     /// Poids alignement long-terme
     fn calculate_alignment_weight(context: &TemporalContext) -> f32 {
         let hour = context.now.hour;
-        
+
         match hour {
-            2..=4 => 0.9,     // Night: high long-term focus
-            10..=16 => 0.4,   // Day: short-term focus
+            2..=4 => 0.9,   // Night: high long-term focus
+            10..=16 => 0.4, // Day: short-term focus
             _ => 0.6,
         }
     }
@@ -103,7 +103,7 @@ impl TemporalAgiBridge {
         let season = &context.now.season;
 
         use crate::temporal_engine::time_model::Season;
-        
+
         let focus = match (season, hour) {
             (Season::Spring, _) => TuningFocus::Exploration,
             (Season::Summer, 10..=16) => TuningFocus::Performance,
@@ -170,14 +170,10 @@ impl TemporalAgiBridge {
     /// Suggère les objectifs selon l'horizon temporel
     pub fn suggest_goal_focus(horizon: &PlanningHorizon) -> Vec<GoalCategory> {
         match horizon {
-            PlanningHorizon::Today => vec![
-                GoalCategory::ImmediateTasks,
-                GoalCategory::UserRequests,
-            ],
-            PlanningHorizon::ThisWeek => vec![
-                GoalCategory::Projects,
-                GoalCategory::ShortTermGoals,
-            ],
+            PlanningHorizon::Today => {
+                vec![GoalCategory::ImmediateTasks, GoalCategory::UserRequests]
+            }
+            PlanningHorizon::ThisWeek => vec![GoalCategory::Projects, GoalCategory::ShortTermGoals],
             PlanningHorizon::ThisMonth => vec![
                 GoalCategory::StrategicInitiatives,
                 GoalCategory::SkillDevelopment,

@@ -96,7 +96,9 @@ Score Final: ${overallScore.toFixed(1)}%
     const validStatuses = ['PERFECTION', 'EXCELLENCE', 'SATISFAISANT'] as const;
     expect(validStatuses).toContain(validationResult.status as any);
 
-    console.log(`✅ Architecture OMNIS: ${validationResult.scoreGlobal}% - ${validationResult.status}`);
+    console.log(
+      `✅ Architecture OMNIS: ${validationResult.scoreGlobal}% - ${validationResult.status}`
+    );
     console.log(`🏅 Production Ready: ${validationResult.certification.productionReady}`);
     console.log(`🎯 Moteur Parfait: ${validationResult.certification.moteurParfait}`);
   }, 30000);
@@ -169,7 +171,7 @@ Score Final: ${overallScore.toFixed(1)}%
       bundleSize: 2500000, // ~2.5MB
       compressed: 800000, // ~800KB gzipped
       modules: 2654, // Modules transformés
-      memoryUsage: process.memoryUsage?.()?.heapUsed || 0
+      memoryUsage: process.memoryUsage?.()?.heapUsed || 0,
     };
 
     auditResults.buildMetrics = buildMetrics;
@@ -189,7 +191,9 @@ Score Final: ${overallScore.toFixed(1)}%
 
     console.log(`✅ Build Time: ${buildMetrics.buildTime}ms < 7000ms`);
     console.log(`📦 Bundle Size: ${(buildMetrics.bundleSize / 1000000).toFixed(2)}MB`);
-    console.log(`🗜️ Compressed: ${(buildMetrics.compressed / 1000000).toFixed(2)}MB (${(compressionRatio * 100).toFixed(1)}%)`);
+    console.log(
+      `🗜️ Compressed: ${(buildMetrics.compressed / 1000000).toFixed(2)}MB (${(compressionRatio * 100).toFixed(1)}%)`
+    );
     console.log(`🧩 Modules: ${buildMetrics.modules}`);
   });
 
@@ -208,7 +212,7 @@ Score Final: ${overallScore.toFixed(1)}%
       autoHeal: true,
       zeroThrow: true,
       memoryProtection: true,
-      apiSecurity: true
+      apiSecurity: true,
     };
 
     auditResults.securityAudit = securityAudit;
@@ -224,7 +228,7 @@ Score Final: ${overallScore.toFixed(1)}%
       () => safeOperation(null),
       () => safeOperation(undefined),
       () => safeOperation({}),
-      () => safeOperation([])
+      () => safeOperation([]),
     ];
 
     let exceptionsThrown = 0;
@@ -238,7 +242,9 @@ Score Final: ${overallScore.toFixed(1)}%
     }
 
     expect(exceptionsThrown).toBe(0);
-    console.log(`✅ Zero-throw guarantee: 0 exceptions sur ${dangerousOperations.length} opérations`);
+    console.log(
+      `✅ Zero-throw guarantee: 0 exceptions sur ${dangerousOperations.length} opérations`
+    );
   });
 
   // ───────────────────────────────────────────────────────────
@@ -253,7 +259,7 @@ Score Final: ${overallScore.toFixed(1)}%
     // Test memory pressure scenarios
     const memoryTestData = Array.from({ length: 100 }, (_, i) => ({
       id: i,
-      data: new Array(100).fill(`memory_test_${i}`)
+      data: new Array(100).fill(`memory_test_${i}`),
     }));
 
     const peakMemory = process.memoryUsage?.()?.heapUsed || 0;
@@ -269,7 +275,7 @@ Score Final: ${overallScore.toFixed(1)}%
       peak: peakMemory,
       increase: memoryIncrease,
       final: finalMemory,
-      increaseMB: memoryIncrease / (1024 * 1024)
+      increaseMB: memoryIncrease / (1024 * 1024),
     };
 
     // Validation memory management
@@ -320,7 +326,7 @@ Score Final: ${overallScore.toFixed(1)}%
       environmentVariables: true,
       configurationManagement: true,
       healthChecks: true,
-      scalabilityTested: true
+      scalabilityTested: true,
     };
 
     auditResults.deploymentChecklist = deploymentChecklist;
@@ -330,19 +336,32 @@ Score Final: ${overallScore.toFixed(1)}%
     const passedChecks = Object.values(deploymentChecklist).filter(Boolean).length;
     const readinessPercentage = (passedChecks / totalChecks) * 100;
 
-    console.log(`📋 Deployment Readiness: ${passedChecks}/${totalChecks} (${readinessPercentage.toFixed(1)}%)`);
+    console.log(
+      `📋 Deployment Readiness: ${passedChecks}/${totalChecks} (${readinessPercentage.toFixed(1)}%)`
+    );
 
     // Core requirements must be 100%
     const coreRequirements = [
-      'omnisPhase1Complete', 'omnisPhase2Complete', 'omnisPhase3Complete',
-      'omnisPhase4Complete', 'omnisPhase5Complete', 'omnisPhase6Complete',
-      'omnisPhase7Complete', 'omnisPhase8Complete', 'omnisPhase9Complete',
-      'buildSuccessful', 'testsPass', 'performanceOptimal', 'securityValidated',
-      'errorHandlingComplete'
+      'omnisPhase1Complete',
+      'omnisPhase2Complete',
+      'omnisPhase3Complete',
+      'omnisPhase4Complete',
+      'omnisPhase5Complete',
+      'omnisPhase6Complete',
+      'omnisPhase7Complete',
+      'omnisPhase8Complete',
+      'omnisPhase9Complete',
+      'buildSuccessful',
+      'testsPass',
+      'performanceOptimal',
+      'securityValidated',
+      'errorHandlingComplete',
     ];
 
     for (const requirement of coreRequirements) {
-      expect(deploymentChecklist[requirement as keyof typeof deploymentChecklist]).toBe(true);
+      expect(deploymentChecklist[requirement as keyof typeof deploymentChecklist]).toBe(
+        true
+      );
       console.log(`✅ ${requirement}: validé`);
     }
 
@@ -385,7 +404,6 @@ Score Final: ${overallScore.toFixed(1)}%
     expect(deploymentAuth).toContain('AUTORISÉ');
     console.log('✅ Audit Final Complet: SUCCÈS - DÉPLOIEMENT AUTORISÉ');
   });
-
 });
 
 // ═══════════════════════════════════════════════════════════════════
@@ -415,9 +433,10 @@ export const runFinalCompleteAudit = async (): Promise<{
 ✅ Phases OMNIS: 9/9 COMPLÈTES
 🚀 Déploiement: ${authorized ? 'AUTORISÉ' : 'SUSPENDU'}
 
-${authorized ?
-  '✨ FÉLICITATIONS ! OMNIS ARCHITECTURE PRÊTE POUR PRODUCTION !' :
-  '⚠️ Améliorations requises avant déploiement'
+${
+  authorized
+    ? '✨ FÉLICITATIONS ! OMNIS ARCHITECTURE PRÊTE POUR PRODUCTION !'
+    : '⚠️ Améliorations requises avant déploiement'
 }
 `;
 
@@ -425,15 +444,14 @@ ${authorized ?
       success: true,
       score: overallScore,
       authorized,
-      summary
+      summary,
     };
-
   } catch (error) {
     return {
       success: false,
       score: 0,
       authorized: false,
-      summary: `Erreur audit: ${error}`
+      summary: `Erreur audit: ${error}`,
     };
   }
 };

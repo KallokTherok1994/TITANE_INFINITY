@@ -14,9 +14,9 @@ import { SectionHeader, MetricCard, StatusPill, EngineCard } from '../components
 export function Dashboard() {
   const { systemHealth, engines, metrics, logs, errors } = useDevToolsStore();
 
-  const activeEngines = engines.filter((e) => e.status === 'running').length;
-  const criticalLogs = logs.filter((l) => l.level === 'error').slice(0, 5);
-  const unresolvedErrors = errors.filter((e) => !e.resolved).length;
+  const activeEngines = engines.filter(e => e.status === 'running').length;
+  const criticalLogs = logs.filter(l => l.level === 'error').slice(0, 5);
+  const unresolvedErrors = errors.filter(e => !e.resolved).length;
 
   // Top metrics to display
   const topMetrics = [
@@ -49,7 +49,13 @@ export function Dashboard() {
             System Health
           </h3>
           <StatusPill
-            status={systemHealth === 'healthy' ? 'success' : systemHealth === 'warning' ? 'warning' : 'error'}
+            status={
+              systemHealth === 'healthy'
+                ? 'success'
+                : systemHealth === 'warning'
+                  ? 'warning'
+                  : 'error'
+            }
             label={systemHealth.toUpperCase()}
           />
         </div>
@@ -79,7 +85,12 @@ export function Dashboard() {
             </div>
             <div
               className="text-2xl font-bold"
-              style={{ color: unresolvedErrors > 0 ? 'var(--text-danger, #8b5f5f)' : 'var(--text-success, #93b399)' }}
+              style={{
+                color:
+                  unresolvedErrors > 0
+                    ? 'var(--text-danger, #8b5f5f)'
+                    : 'var(--text-success, #93b399)',
+              }}
             >
               {unresolvedErrors}
             </div>
@@ -111,7 +122,7 @@ export function Dashboard() {
           Key Metrics
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {topMetrics.map((metric) => (
+          {topMetrics.map(metric => (
             <MetricCard
               key={metric.id}
               label={metric.label}
@@ -143,9 +154,9 @@ export function Dashboard() {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {engines
-            .filter((e) => e.status === 'running')
+            .filter(e => e.status === 'running')
             .slice(0, 6)
-            .map((engine) => (
+            .map(engine => (
               <EngineCard key={engine.id} engine={engine} compact />
             ))}
         </div>
@@ -167,7 +178,7 @@ export function Dashboard() {
               borderColor: 'var(--border-danger, #8b5f5f)',
             }}
           >
-            {criticalLogs.map((log) => (
+            {criticalLogs.map(log => (
               <div
                 key={log.id}
                 className="flex items-start gap-3 px-4 py-3 border-b last:border-b-0"

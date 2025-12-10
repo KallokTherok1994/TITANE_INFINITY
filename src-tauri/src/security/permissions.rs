@@ -243,10 +243,7 @@ fn build_permission_matrix() -> PermissionMatrix {
     // ═══════════════════════════════════════════════════════════════
     // SECRETS
     // ═══════════════════════════════════════════════════════════════
-    matrix.insert(
-        "secret_read".to_string(),
-        vec![Role::Root, Role::System],
-    );
+    matrix.insert("secret_read".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("secret_status".to_string(), vec![Role::Root, Role::System]);
     matrix.insert("secret_write".to_string(), vec![Role::Root]);
 

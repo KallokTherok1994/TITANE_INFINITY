@@ -17,7 +17,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine
+  ReferenceLine,
 } from 'recharts';
 import {
   TrendingUp,
@@ -27,12 +27,12 @@ import {
   ZoomOut,
   Maximize2,
   Download,
-  Settings
+  Settings,
 } from 'lucide-react';
 import type {
   MetricType,
   MetricsSnapshot,
-  ThresholdConfig
+  ThresholdConfig,
 } from '../../services/performanceEngine/performanceEngine.config';
 
 // ============================================================================
@@ -97,7 +97,7 @@ const TIME_RANGES: { value: TimeRange; label: string; milliseconds: number }[] =
   { value: '30m', label: '30 min', milliseconds: 30 * 60 * 1000 },
   { value: '1h', label: '1 heure', milliseconds: 60 * 60 * 1000 },
   { value: '6h', label: '6 heures', milliseconds: 6 * 60 * 60 * 1000 },
-  { value: '24h', label: '24 heures', milliseconds: 24 * 60 * 60 * 1000 }
+  { value: '24h', label: '24 heures', milliseconds: 24 * 60 * 60 * 1000 },
 ];
 
 const DEFAULT_COLORS = [
@@ -108,7 +108,7 @@ const DEFAULT_COLORS = [
   '#8b5cf6', // purple
   '#ec4899', // pink
   '#06b6d4', // cyan
-  '#84cc16'  // lime
+  '#84cc16', // lime
 ];
 
 // ============================================================================
@@ -129,7 +129,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
   animated = true,
   onTimeRangeChange,
   onExport,
-  className = ''
+  className = '',
 }) => {
   // États locaux
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -145,7 +145,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
     return date.toLocaleTimeString('fr-FR', {
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     });
   }, []);
 
@@ -159,7 +159,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
       .map(snapshot => {
         const point: GraphDataPoint = {
           timestamp: snapshot.timestamp,
-          time: formatTime(snapshot.timestamp)
+          time: formatTime(snapshot.timestamp),
         };
 
         // Extraire les métriques
@@ -190,7 +190,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
             value: thresholdValue.warning,
             label: `${metric.label} Warning`,
             color: '#f59e0b',
-            type: 'warning'
+            type: 'warning',
           });
         }
         if (thresholdValue.critical) {
@@ -198,7 +198,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
             value: thresholdValue.critical,
             label: `${metric.label} Critical`,
             color: '#ef4444',
-            type: 'critical'
+            type: 'critical',
           });
         }
       }
@@ -209,7 +209,10 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
 
   // Calculer les tendances
   const trends = useMemo(() => {
-    const result: Record<MetricType, 'up' | 'down' | 'stable'> = {} as Record<MetricType, 'up' | 'down' | 'stable'>;
+    const result: Record<MetricType, 'up' | 'down' | 'stable'> = {} as Record<
+      MetricType,
+      'up' | 'down' | 'stable'
+    >;
 
     metrics.forEach(metric => {
       const values = filteredData
@@ -221,9 +224,8 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
         const older = values.slice(-10, -5);
 
         const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
-        const olderAvg = older.length > 0
-          ? older.reduce((a, b) => a + b, 0) / older.length
-          : recentAvg;
+        const olderAvg =
+          older.length > 0 ? older.reduce((a, b) => a + b, 0) / older.length : recentAvg;
 
         const change = ((recentAvg - olderAvg) / olderAvg) * 100;
 
@@ -239,10 +241,13 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
   }, [filteredData, metrics]);
 
   // Handlers
-  const handleTimeRangeChange = useCallback((range: TimeRange) => {
-    setSelectedRange(range);
-    onTimeRangeChange?.(range);
-  }, [onTimeRangeChange]);
+  const handleTimeRangeChange = useCallback(
+    (range: TimeRange) => {
+      setSelectedRange(range);
+      onTimeRangeChange?.(range);
+    },
+    [onTimeRangeChange]
+  );
 
   const toggleSeries = useCallback((key: MetricType) => {
     setVisibleSeries(prev => {
@@ -269,38 +274,45 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
   }, []);
 
   // Tooltip personnalisé
-  const CustomTooltip = useCallback(({ active, payload, label }: {
-    active?: boolean;
-    payload?: Array<{ dataKey: string; value: number; color: string }>;
-    label?: string;
-  }) => {
-    if (!active || !payload || !showTooltip) return null;
+  const CustomTooltip = useCallback(
+    ({
+      active,
+      payload,
+      label,
+    }: {
+      active?: boolean;
+      payload?: Array<{ dataKey: string; value: number; color: string }>;
+      label?: string;
+    }) => {
+      if (!active || !payload || !showTooltip) return null;
 
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="bg-slate-800/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-700"
-      >
-        <p className="text-slate-400 text-xs mb-2">{label}</p>
-        {payload.map((entry, index) => {
-          const metric = metrics.find(m => m.key === entry.dataKey);
-          return (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: entry.color }}
-              />
-              <span className="text-slate-300">{metric?.label}:</span>
-              <span className="text-white font-medium">
-                {formatMetricValue(entry.value, metric?.unit || '')}
-              </span>
-            </div>
-          );
-        })}
-      </motion.div>
-    );
-  }, [metrics, showTooltip]);
+      return (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-slate-800/95 backdrop-blur-md rounded-lg p-3 shadow-xl border border-slate-700"
+        >
+          <p className="text-slate-400 text-xs mb-2">{label}</p>
+          {payload.map((entry, index) => {
+            const metric = metrics.find(m => m.key === entry.dataKey);
+            return (
+              <div key={index} className="flex items-center gap-2 text-sm">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: entry.color }}
+                />
+                <span className="text-slate-300">{metric?.label}:</span>
+                <span className="text-white font-medium">
+                  {formatMetricValue(entry.value, metric?.unit || '')}
+                </span>
+              </div>
+            );
+          })}
+        </motion.div>
+      );
+    },
+    [metrics, showTooltip]
+  );
 
   // Légende personnalisée
   const CustomLegend = useCallback(() => {
@@ -311,7 +323,8 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
         {metrics.map((metric, index) => {
           const isVisible = visibleSeries.has(metric.key);
           const trend = trends[metric.key];
-          const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
+          const TrendIcon =
+            trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
 
           return (
             <motion.button
@@ -322,9 +335,10 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
               className={`
                 flex items-center gap-2 px-3 py-1.5 rounded-lg
                 transition-all duration-200
-                ${isVisible
-                  ? 'bg-slate-700/50 text-white'
-                  : 'bg-slate-800/50 text-slate-500'
+                ${
+                  isVisible
+                    ? 'bg-slate-700/50 text-white'
+                    : 'bg-slate-800/50 text-slate-500'
                 }
               `}
             >
@@ -336,9 +350,11 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
               <TrendIcon
                 size={14}
                 className={
-                  trend === 'up' ? 'text-red-400' :
-                  trend === 'down' ? 'text-green-400' :
-                  'text-slate-400'
+                  trend === 'up'
+                    ? 'text-red-400'
+                    : trend === 'down'
+                      ? 'text-green-400'
+                      : 'text-slate-400'
                 }
               />
             </motion.button>
@@ -379,7 +395,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
             tick={{ fontSize: 11 }}
             tickLine={false}
             axisLine={{ stroke: '#334155' }}
-            tickFormatter={(value) => formatCompactNumber(value)}
+            tickFormatter={value => formatCompactNumber(value)}
           />
 
           <YAxis
@@ -389,12 +405,10 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
             tick={{ fontSize: 11 }}
             tickLine={false}
             axisLine={{ stroke: '#334155' }}
-            tickFormatter={(value) => `${value}%`}
+            tickFormatter={value => `${value}%`}
           />
 
-          {showTooltip && (
-            <Tooltip content={<CustomTooltip />} />
-          )}
+          {showTooltip && <Tooltip content={<CustomTooltip />} />}
 
           {/* Lignes de seuil */}
           {thresholdLines.map((threshold, index) => (
@@ -408,7 +422,7 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
                 value: threshold.label,
                 position: 'right',
                 fill: threshold.color,
-                fontSize: 10
+                fontSize: 10,
               }}
             />
           ))}
@@ -476,9 +490,10 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
                 onClick={() => handleTimeRangeChange(range.value)}
                 className={`
                   px-2 py-1 text-xs rounded-md transition-all
-                  ${selectedRange === range.value
-                    ? 'bg-blue-500 text-white'
-                    : 'text-slate-400 hover:text-white'
+                  ${
+                    selectedRange === range.value
+                      ? 'bg-blue-500 text-white'
+                      : 'text-slate-400 hover:text-white'
                   }
                 `}
               >
@@ -549,7 +564,10 @@ export const MetricsGraph: React.FC<MetricsGraphProps> = ({
 // UTILITAIRES
 // ============================================================================
 
-function extractMetricValue(snapshot: MetricsSnapshot, metricType: MetricType): number | undefined {
+function extractMetricValue(
+  snapshot: MetricsSnapshot,
+  metricType: MetricType
+): number | undefined {
   switch (metricType) {
     case 'cpu_global':
       return snapshot.system.cpu.global;

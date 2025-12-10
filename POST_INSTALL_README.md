@@ -9,7 +9,7 @@ Le script `TITANE_POST_INSTALL_UBUNTU.sh` automatise **complètement** la config
 - **Ubuntu 24.04 LTS** (installation fraîche recommandée)
 - **Connexion internet** active
 - **Droits sudo** sur le système
-- *(Optionnel)* Backup précédent de vos configurations
+- _(Optionnel)_ Backup précédent de vos configurations
 
 ## Installation rapide
 
@@ -27,14 +27,17 @@ chmod +x TITANE_POST_INSTALL_UBUNTU.sh
 ## Ce que fait le script
 
 ### Phase 0 : Vérification environnement
+
 - ✅ Détection Ubuntu 24.04 LTS
 - ✅ Test connexion internet
 
 ### Phase 1 : Mise à jour système
+
 - `apt update && apt upgrade`
 - Installation outils essentiels (curl, wget, git, build-essential, etc.)
 
 ### Phase 2 : Dépendances Tauri v2 ⚡ (CRITIQUE)
+
 ```
 libgtk-3-dev
 libwebkit2gtk-4.1-dev
@@ -47,17 +50,20 @@ patchelf
 ```
 
 ### Phase 3 : Installation Rust
+
 - Installation via `rustup`
 - Toolchains : `stable` + `nightly`
 - Composants : `rustfmt`, `clippy`
 - Target : `wasm32-unknown-unknown`
 
 ### Phase 4 : Installation Node.js
+
 - Installation de **NVM** (Node Version Manager)
 - Installation Node.js **LTS**
 - Configuration automatique
 
 ### Phase 5 : Installation VSCode
+
 - Ajout du repository officiel Microsoft
 - Installation VSCode
 - Extensions essentielles :
@@ -72,7 +78,9 @@ patchelf
   - `usernamehw.errorlens`
 
 ### Phase 6 : Restauration configurations
+
 Si vous avez un backup précédent :
+
 - 🔑 Clés SSH (`~/.ssh`)
 - ⚙️ Configuration Git (`~/.gitconfig`)
 - 🎨 Paramètres VSCode
@@ -80,17 +88,21 @@ Si vous avez un backup précédent :
 Sinon, configuration manuelle guidée.
 
 ### Phase 7 : Clonage TITANE_INFINITY
+
 - Création répertoire `~/Projets`
 - Clonage via SSH (ou HTTPS si SSH non configuré)
 - Checkout branche `main`
 
 ### Phase 8 : Installation dépendances TITANE
+
 - `npm install`
 - Vérification Tauri CLI
 - `cargo check` + `cargo build`
 
 ### Phase 9 : Validation finale
+
 Rapport complet de l'environnement :
+
 - ✅ OS
 - ✅ Rust / Cargo
 - ✅ Node.js / npm
@@ -111,6 +123,7 @@ Si vous avez créé un backup avec le script de sauvegarde :
 ```
 
 Le script restaurera automatiquement :
+
 - Vos clés SSH
 - Votre configuration Git
 - Vos paramètres VSCode
@@ -119,21 +132,25 @@ Le script restaurera automatiquement :
 ## Après l'installation
 
 ### 1. Recharger l'environnement
+
 ```bash
 source ~/.bashrc
 ```
 
 ### 2. Naviguer vers TITANE
+
 ```bash
 cd ~/Projets/TITANE_INFINITY
 ```
 
 ### 3. Lancer en développement
+
 ```bash
 npm run tauri dev
 ```
 
 ### 4. Build de production
+
 ```bash
 npm run tauri build
 ```
@@ -141,6 +158,7 @@ npm run tauri build
 ## Logs et debugging
 
 Tous les logs sont sauvegardés dans :
+
 ```
 ~/.titane_install_logs/install_YYYYMMDD_HHMMSS.log
 ```
@@ -185,23 +203,27 @@ ssh -T git@github.com
 ## Dépannage
 
 ### Erreur WebKit2GTK
+
 ```bash
 sudo apt install --reinstall libwebkit2gtk-4.1-dev
 pkg-config --modversion webkit2gtk-4.1
 ```
 
 ### NVM non chargé
+
 ```bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 ```
 
 ### Cargo non trouvé
+
 ```bash
 source "$HOME/.cargo/env"
 ```
 
 ### Permission denied sur SSH
+
 ```bash
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_ed25519
@@ -248,6 +270,7 @@ cd ~/Projets/TITANE_INFINITY && npm run tauri --version
 ## Changelog script
 
 ### v1.0.0 (2024-12-09)
+
 - Installation complète automatisée
 - Support backup/restore
 - Validation environnement

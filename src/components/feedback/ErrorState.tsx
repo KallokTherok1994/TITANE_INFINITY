@@ -17,7 +17,7 @@ export interface ErrorStateProps {
 
 /**
  * ErrorState - Affichage d'erreur avec retry
- * 
+ *
  * @example
  * ```tsx
  * <ErrorState
@@ -41,10 +41,7 @@ export function ErrorState({
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       {icon && (
-        <div
-          className="mb-4"
-          style={{ color: 'var(--text-danger, #8b5f5f)' }}
-        >
+        <div className="mb-4" style={{ color: 'var(--text-danger, #8b5f5f)' }}>
           {icon}
         </div>
       )}

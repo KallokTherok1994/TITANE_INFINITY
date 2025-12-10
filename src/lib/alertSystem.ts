@@ -15,9 +15,9 @@ export interface AlertThresholds {
 }
 
 export const DEFAULT_THRESHOLDS: AlertThresholds = {
-  errorRate: 0.10, // 10%
+  errorRate: 0.1, // 10%
   avgLatency: 5000, // 5s
-  retryRate: 0.50, // 50%
+  retryRate: 0.5, // 50%
 };
 
 export interface AlertEvent {
@@ -59,7 +59,8 @@ export function checkServiceAlerts(
     if (stats.averageLatency >= thresholds.avgLatency) {
       alerts.push({
         type: 'latency',
-        severity: stats.averageLatency >= thresholds.avgLatency * 2 ? 'critical' : 'warning',
+        severity:
+          stats.averageLatency >= thresholds.avgLatency * 2 ? 'critical' : 'warning',
         service,
         value: stats.averageLatency,
         threshold: thresholds.avgLatency,
@@ -103,7 +104,10 @@ export function checkGlobalAlerts(
     if (globalStats.globalErrorRate >= thresholds.errorRate) {
       alerts.push({
         type: 'error_rate',
-        severity: globalStats.globalErrorRate >= thresholds.errorRate * 2 ? 'critical' : 'warning',
+        severity:
+          globalStats.globalErrorRate >= thresholds.errorRate * 2
+            ? 'critical'
+            : 'warning',
         service: 'global',
         value: globalStats.globalErrorRate,
         threshold: thresholds.errorRate,
@@ -116,7 +120,10 @@ export function checkGlobalAlerts(
     if (globalStats.globalAvgLatency >= thresholds.avgLatency) {
       alerts.push({
         type: 'latency',
-        severity: globalStats.globalAvgLatency >= thresholds.avgLatency * 2 ? 'critical' : 'warning',
+        severity:
+          globalStats.globalAvgLatency >= thresholds.avgLatency * 2
+            ? 'critical'
+            : 'warning',
         service: 'global',
         value: globalStats.globalAvgLatency,
         threshold: thresholds.avgLatency,
@@ -127,7 +134,9 @@ export function checkGlobalAlerts(
 
     // Global Retry Rate
     const globalRetryRate =
-      globalStats.totalMetrics > 0 ? globalStats.totalRetries / globalStats.totalMetrics : 0;
+      globalStats.totalMetrics > 0
+        ? globalStats.totalRetries / globalStats.totalMetrics
+        : 0;
     if (globalRetryRate >= thresholds.retryRate) {
       alerts.push({
         type: 'retry_rate',
@@ -217,14 +226,9 @@ export class AlertMonitor {
     }
 
     // Alertes par service
-    const services: Array<'memory' | 'chat' | 'voice' | 'persona' | 'system' | 'evolution'> = [
-      'memory',
-      'chat',
-      'voice',
-      'persona',
-      'system',
-      'evolution',
-    ];
+    const services: Array<
+      'memory' | 'chat' | 'voice' | 'persona' | 'system' | 'evolution'
+    > = ['memory', 'chat', 'voice', 'persona', 'system', 'evolution'];
 
     for (const service of services) {
       const alerts = checkServiceAlerts(service, thresholds);

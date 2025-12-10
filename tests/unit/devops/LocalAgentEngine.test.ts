@@ -79,9 +79,13 @@ describe('LocalAgentEngine', () => {
     it('should detect project type', async () => {
       const analysis = await LocalAgent.analyzeProject('/mock/project');
 
-      expect(['tauri_app', 'rust_project', 'react_app', 'node_backend', 'unknown']).toContain(
-        analysis.project_type
-      );
+      expect([
+        'tauri_app',
+        'rust_project',
+        'react_app',
+        'node_backend',
+        'unknown',
+      ]).toContain(analysis.project_type);
     });
 
     it('should detect technologies', async () => {
@@ -268,9 +272,7 @@ describe('LocalAgentEngine', () => {
     it('should build before deploy', async () => {
       const action = await LocalAgent.generateDeployAction();
 
-      const buildCommand = action.commands?.find(
-        cmd => cmd.args?.includes('build')
-      );
+      const buildCommand = action.commands?.find(cmd => cmd.args?.includes('build'));
       expect(buildCommand).toBeDefined();
     });
 
@@ -296,10 +298,11 @@ describe('LocalAgentEngine', () => {
     });
 
     it('should generate pipeline with multiple stages', async () => {
-      const pipeline = await LocalAgent.generatePipeline(
-        'CI/CD Pipeline',
-        ['build', 'test', 'deploy']
-      );
+      const pipeline = await LocalAgent.generatePipeline('CI/CD Pipeline', [
+        'build',
+        'test',
+        'deploy',
+      ]);
 
       expect(pipeline.name).toBe('CI/CD Pipeline');
       expect(pipeline.stages).toHaveLength(3);
@@ -307,20 +310,21 @@ describe('LocalAgentEngine', () => {
     });
 
     it('should create stages in correct order', async () => {
-      const pipeline = await LocalAgent.generatePipeline(
-        'Test Pipeline',
-        ['build', 'test']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Test Pipeline', [
+        'build',
+        'test',
+      ]);
 
       expect(pipeline.stages[0].name).toBe('build');
       expect(pipeline.stages[1].name).toBe('test');
     });
 
     it('should set stage dependencies', async () => {
-      const pipeline = await LocalAgent.generatePipeline(
-        'Test Pipeline',
-        ['build', 'test', 'deploy']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Test Pipeline', [
+        'build',
+        'test',
+        'deploy',
+      ]);
 
       expect(pipeline.stages[0].dependencies).toHaveLength(0); // build has no deps
       expect(pipeline.stages[1].dependencies).toContain('build'); // test depends on build
@@ -328,20 +332,18 @@ describe('LocalAgentEngine', () => {
     });
 
     it('should allow deploy stage to fail', async () => {
-      const pipeline = await LocalAgent.generatePipeline(
-        'Test Pipeline',
-        ['build', 'test', 'deploy']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Test Pipeline', [
+        'build',
+        'test',
+        'deploy',
+      ]);
 
       const deployStage = pipeline.stages.find(s => s.name === 'deploy');
       expect(deployStage?.allow_failure).toBe(true);
     });
 
     it('should generate config files', async () => {
-      const pipeline = await LocalAgent.generatePipeline(
-        'Test Pipeline',
-        ['build']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Test Pipeline', ['build']);
 
       expect(pipeline.config_files).toHaveLength(1);
       expect(pipeline.config_files[0].file_path).toBe('.titane/pipeline.json');
@@ -349,10 +351,10 @@ describe('LocalAgentEngine', () => {
     });
 
     it('should set estimated duration', async () => {
-      const pipeline = await LocalAgent.generatePipeline(
-        'Test Pipeline',
-        ['build', 'test']
-      );
+      const pipeline = await LocalAgent.generatePipeline('Test Pipeline', [
+        'build',
+        'test',
+      ]);
 
       expect(pipeline.estimated_duration).toBeDefined();
       expect(pipeline.estimated_duration).toContain('minute');
@@ -369,10 +371,7 @@ describe('LocalAgentEngine', () => {
     });
 
     it('should create workflow with actions', async () => {
-      const workflow = await LocalAgent.createWorkflow(
-        'Auto Build',
-        ['build']
-      );
+      const workflow = await LocalAgent.createWorkflow('Auto Build', ['build']);
 
       expect(workflow.name).toBe('Auto Build');
       expect(workflow.steps).toHaveLength(1);
@@ -593,17 +592,11 @@ describe('LocalAgentEngine', () => {
       expect(buildAction.action_type).toBe('build');
 
       // 4. Generate pipeline
-      const pipeline = await LocalAgent.generatePipeline(
-        'CI/CD',
-        ['build', 'test']
-      );
+      const pipeline = await LocalAgent.generatePipeline('CI/CD', ['build', 'test']);
       expect(pipeline.stages).toHaveLength(2);
 
       // 5. Create workflow
-      const workflow = await LocalAgent.createWorkflow(
-        'Auto CI',
-        ['build', 'test']
-      );
+      const workflow = await LocalAgent.createWorkflow('Auto CI', ['build', 'test']);
       expect(workflow.steps).toHaveLength(2);
 
       // 6. Health check

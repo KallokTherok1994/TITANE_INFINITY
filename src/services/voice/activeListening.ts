@@ -31,14 +31,9 @@ export {
 } from '@/hooks/useVoiceEngine';
 
 // ═══ UI COMPONENTS ═══
-export {
-  WakeWordIndicator,
-  WakeWordBadge,
-} from '@/components/voice/WakeWordIndicator';
+export { WakeWordIndicator, WakeWordBadge } from '@/components/voice/WakeWordIndicator';
 
-export {
-  VoiceControlPanelWithWakeWord,
-} from '@/components/voice/VoiceControlPanelWithWakeWord';
+export { VoiceControlPanelWithWakeWord } from '@/components/voice/VoiceControlPanelWithWakeWord';
 
 // ═══ ENGINES (Re-export from Super Prompt VI) ═══
 export {
@@ -60,9 +55,7 @@ export {
   type InterruptionEvent,
 } from '@/services/voice/interruptionController';
 
-export {
-  adaptiveThresholdEngine,
-} from '@/services/voice/adaptiveThresholdEngine';
+export { adaptiveThresholdEngine } from '@/services/voice/adaptiveThresholdEngine';
 
 /**
  * ═══════════════════════════════════════════════════════════════════

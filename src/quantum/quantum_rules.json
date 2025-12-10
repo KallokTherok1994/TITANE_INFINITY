@@ -57,7 +57,7 @@
 
   "performance_targets": {
     "min_stability_score": 0.85,
-    "min_fluidity_score": 0.90,
+    "min_fluidity_score": 0.9,
     "min_premium_score": 0.88,
     "max_jitter_level": 0.15
   }

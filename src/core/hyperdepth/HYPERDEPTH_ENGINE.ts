@@ -104,7 +104,7 @@ export class HyperDepthEngine {
       },
     ];
 
-    defaultLayers.forEach((layer) => this.layers.set(layer.id, layer));
+    defaultLayers.forEach(layer => this.layers.set(layer.id, layer));
   }
 
   /**
@@ -128,7 +128,7 @@ export class HyperDepthEngine {
     this.globalIntensity = stateConfig.intensity;
 
     // Ajuster les couches glow
-    this.layers.forEach((layer) => {
+    this.layers.forEach(layer => {
       if (layer.layer === 'glow') {
         layer.intensity = stateConfig.intensity;
         layer.blur = stateConfig.blur;
@@ -202,7 +202,9 @@ export class HyperDepthEngine {
       opacity: glowLayer.opacity.toString(),
       pointerEvents: 'none',
       zIndex: '0',
-      animation: glowLayer.animated ? `glow-breathe ${glowLayer.animationSpeed}ms ease-in-out infinite` : 'none',
+      animation: glowLayer.animated
+        ? `glow-breathe ${glowLayer.animationSpeed}ms ease-in-out infinite`
+        : 'none',
     };
   }
 
@@ -282,7 +284,7 @@ export class HyperDepthEngine {
    */
   setGlobalIntensity(intensity: number): void {
     this.globalIntensity = Math.max(0, Math.min(1, intensity));
-    this.layers.forEach((layer) => {
+    this.layers.forEach(layer => {
       layer.intensity = this.globalIntensity;
     });
   }

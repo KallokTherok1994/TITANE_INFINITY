@@ -5,7 +5,15 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useRef, useEffect, useMemo, useCallback, type KeyboardEvent, type ChangeEvent } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+  type KeyboardEvent,
+  type ChangeEvent,
+} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { open } from '@tauri-apps/plugin-dialog';
 import { safeInvoke } from '../../utils/invoke';
@@ -98,19 +106,22 @@ export const ChatInput = ({
     }
   }, [value]);
 
-  const handleChange = useCallback((e: ChangeEvent<HTMLTextAreaElement>): void => {
-    const newValue = e.target.value;
-    if (newValue.length <= maxLength) {
-      onChange(newValue);
-      setShowSuggestions(newValue.length > 0 && filteredSuggestions.length > 0);
-    }
-  }, [maxLength, onChange, filteredSuggestions.length]);
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLTextAreaElement>): void => {
+      const newValue = e.target.value;
+      if (newValue.length <= maxLength) {
+        onChange(newValue);
+        setShowSuggestions(newValue.length > 0 && filteredSuggestions.length > 0);
+      }
+    },
+    [maxLength, onChange, filteredSuggestions.length]
+  );
 
   const handleSubmit = useCallback((): void => {
     console.log('[ChatInput] 🔘 handleSubmit appelé', {
       value: value.trim().substring(0, 30),
       disabled,
-      isLoading
+      isLoading,
     });
 
     if (value.trim() && !disabled && !isLoading) {
@@ -120,7 +131,7 @@ export const ChatInput = ({
       }
 
       // ✨ v∞.D3 - Gain XP pour message utilisateur
-      XP.gain(5, "message_user", `Message: "${value.trim().substring(0, 50)}..."`);
+      XP.gain(5, 'message_user', `Message: "${value.trim().substring(0, 50)}..."`);
 
       onSubmit(value.trim());
       onChange('');
@@ -135,17 +146,20 @@ export const ChatInput = ({
       console.log('[ChatInput] ❌ Conditions NON remplies:', {
         hasValue: !!value.trim(),
         disabled,
-        isLoading
+        isLoading,
       });
     }
   }, [value, disabled, isLoading, onSubmit, onChange, isProcessing]);
 
-  const applySuggestion = useCallback((suggestion: ChatSuggestion): void => {
-    onChange(suggestion.text);
-    setShowSuggestions(false);
-    setSelectedSuggestion(-1);
-    textareaRef.current?.focus();
-  }, [onChange]);
+  const applySuggestion = useCallback(
+    (suggestion: ChatSuggestion): void => {
+      onChange(suggestion.text);
+      setShowSuggestions(false);
+      setSelectedSuggestion(-1);
+      textareaRef.current?.focus();
+    },
+    [onChange]
+  );
 
   const handleFileImport = useCallback(async (): Promise<void> => {
     setIsImporting(true);
@@ -156,7 +170,24 @@ export const ChatInput = ({
         filters: [
           {
             name: 'Fichiers supportés',
-            extensions: ['txt', 'md', 'json', 'js', 'ts', 'tsx', 'jsx', 'py', 'rs', 'toml', 'yaml', 'yml', 'xml', 'html', 'css', 'csv'],
+            extensions: [
+              'txt',
+              'md',
+              'json',
+              'js',
+              'ts',
+              'tsx',
+              'jsx',
+              'py',
+              'rs',
+              'toml',
+              'yaml',
+              'yml',
+              'xml',
+              'html',
+              'css',
+              'csv',
+            ],
           },
         ],
       });
@@ -189,7 +220,7 @@ export const ChatInput = ({
       mergeFileKnowledge(result.summary, result.type, result.path);
 
       // ✨ v∞.D3 - Gain XP pour import fichier
-      XP.gain(20, "file_import", `Fichier: ${result.filename} (${result.lines} lignes)`);
+      XP.gain(20, 'file_import', `Fichier: ${result.filename} (${result.lines} lignes)`);
 
       // Attribuer XP (Memory +20)
       await awardExperience('memory', 20, XPSource.FileImport, {
@@ -204,7 +235,9 @@ export const ChatInput = ({
         onFileImported(result.filename, 20);
       }
 
-      console.log(`✅ Fichier importé: ${result.filename} (${result.lines} lignes, ${result.words} mots) +20 XP`);
+      console.log(
+        `✅ Fichier importé: ${result.filename} (${result.lines} lignes, ${result.words} mots) +20 XP`
+      );
     } catch (err) {
       console.error('❌ Erreur import fichier:', err);
       // TODO v∞: Afficher bulle d'erreur élégante (jamais de crash)
@@ -213,38 +246,47 @@ export const ChatInput = ({
     }
   }, [onFileImported]);
 
-  const handleKeyDown = useCallback((e: KeyboardEvent<HTMLTextAreaElement>): void => {
-    // Submit on Ctrl/Cmd + Enter
-    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-      e.preventDefault();
-      handleSubmit();
-      return;
-    }
-
-    // Navigate suggestions with arrow keys
-    if (showSuggestions && filteredSuggestions.length > 0) {
-      if (e.key === 'ArrowDown') {
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLTextAreaElement>): void => {
+      // Submit on Ctrl/Cmd + Enter
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
-        setSelectedSuggestion(prev =>
-          prev < filteredSuggestions.length - 1 ? prev + 1 : 0
-        );
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setSelectedSuggestion(prev =>
-          prev > 0 ? prev - 1 : filteredSuggestions.length - 1
-        );
-      } else if (e.key === 'Enter' && selectedSuggestion >= 0) {
-        e.preventDefault();
-        const suggestion = filteredSuggestions[selectedSuggestion];
-        if (suggestion) {
-          applySuggestion(suggestion);
-        }
-      } else if (e.key === 'Escape') {
-        setShowSuggestions(false);
-        setSelectedSuggestion(-1);
+        handleSubmit();
+        return;
       }
-    }
-  }, [showSuggestions, filteredSuggestions, selectedSuggestion, handleSubmit, applySuggestion]);
+
+      // Navigate suggestions with arrow keys
+      if (showSuggestions && filteredSuggestions.length > 0) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          setSelectedSuggestion(prev =>
+            prev < filteredSuggestions.length - 1 ? prev + 1 : 0
+          );
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          setSelectedSuggestion(prev =>
+            prev > 0 ? prev - 1 : filteredSuggestions.length - 1
+          );
+        } else if (e.key === 'Enter' && selectedSuggestion >= 0) {
+          e.preventDefault();
+          const suggestion = filteredSuggestions[selectedSuggestion];
+          if (suggestion) {
+            applySuggestion(suggestion);
+          }
+        } else if (e.key === 'Escape') {
+          setShowSuggestions(false);
+          setSelectedSuggestion(-1);
+        }
+      }
+    },
+    [
+      showSuggestions,
+      filteredSuggestions,
+      selectedSuggestion,
+      handleSubmit,
+      applySuggestion,
+    ]
+  );
 
   const charCount = value.length;
   const charPercentage = (charCount / maxLength) * 100;

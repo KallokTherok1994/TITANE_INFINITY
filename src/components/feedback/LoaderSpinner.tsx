@@ -19,7 +19,7 @@ const sizeStyles = {
 
 /**
  * LoaderSpinner - Spinner réacteur TITANE∞
- * 
+ *
  * @example
  * ```tsx
  * <LoaderSpinner size="md" label="Chargement..." />

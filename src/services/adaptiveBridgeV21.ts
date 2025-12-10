@@ -41,7 +41,11 @@ export type SystemBehaviorMode = 'Speed' | 'Stability' | 'Reliability' | 'Adapti
 /**
  * Biais d'optimisation
  */
-export type OptimizationBias = 'Performance' | 'Consistency' | 'UserExperience' | 'Balanced';
+export type OptimizationBias =
+  | 'Performance'
+  | 'Consistency'
+  | 'UserExperience'
+  | 'Balanced';
 
 /**
  * Profil de préférences d'adaptation
@@ -105,9 +109,12 @@ export class AdaptiveBridgeV21 {
    * Récupère l'historique de performance récent
    */
   static async getHistory(limit?: number): Promise<SystemPerformanceSample[]> {
-    return await secureInvoke<SystemPerformanceSample[]>(TAURI_COMMANDS.ADAPTIVE_GET_HISTORY, {
-      limit,
-    });
+    return await secureInvoke<SystemPerformanceSample[]>(
+      TAURI_COMMANDS.ADAPTIVE_GET_HISTORY,
+      {
+        limit,
+      }
+    );
   }
 
   /**
@@ -205,7 +212,7 @@ export class AdaptiveBridgeV21 {
       Reliability: 'Fiabilité',
       Adaptive: 'Adaptatif',
     };
-    return labels[mode] as string || mode;
+    return (labels[mode] as string) || mode;
   }
 
   /**

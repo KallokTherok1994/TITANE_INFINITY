@@ -41,7 +41,7 @@ export const XP = {
    * @param source Source du gain (message_user, file_import, etc.)
    * @param description Description optionnelle
    */
-  gain(amount: number, source = "system", description?: string) {
+  gain(amount: number, source = 'system', description?: string) {
     const event: XPEvent = {
       source,
       amount,
@@ -81,9 +81,9 @@ export const XP = {
    */
   persist() {
     try {
-      localStorage.setItem("xp_state", JSON.stringify(XP.state));
+      localStorage.setItem('xp_state', JSON.stringify(XP.state));
     } catch (e) {
-      console.error("[XP] Erreur sauvegarde localStorage:", e);
+      console.error('[XP] Erreur sauvegarde localStorage:', e);
     }
   },
 
@@ -92,7 +92,7 @@ export const XP = {
    */
   load() {
     try {
-      const s = localStorage.getItem("xp_state");
+      const s = localStorage.getItem('xp_state');
       if (s) {
         const loaded = JSON.parse(s);
         XP.state = {
@@ -102,10 +102,10 @@ export const XP = {
         };
         console.log(`[XP] État chargé: Level ${XP.state.level}, ${XP.state.total} XP`);
       } else {
-        console.log("[XP] Nouvel état initialisé");
+        console.log('[XP] Nouvel état initialisé');
       }
     } catch (e) {
-      console.error("[XP] Erreur chargement localStorage:", e);
+      console.error('[XP] Erreur chargement localStorage:', e);
     }
   },
 
@@ -151,8 +151,8 @@ export const XP = {
       history: [],
     };
     XP.persist();
-    console.warn("[XP] État réinitialisé");
-  }
+    console.warn('[XP] État réinitialisé');
+  },
 };
 
 // ─────────────────────────────────────────────────────────────────

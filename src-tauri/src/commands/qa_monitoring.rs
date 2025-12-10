@@ -39,7 +39,7 @@ pub struct TestResult {
     pub id: String,
     pub name: String,
     pub suite: String,
-    pub status: String,      // passed, failed, skipped, pending
+    pub status: String, // passed, failed, skipped, pending
     pub duration_ms: u64,
     pub message: Option<String>,
     pub timestamp: String,
@@ -50,7 +50,7 @@ pub struct TestResult {
 pub struct TestSuite {
     pub id: String,
     pub name: String,
-    pub category: String,    // unit, integration, e2e, performance
+    pub category: String, // unit, integration, e2e, performance
     pub tests_count: u32,
     pub passed: u32,
     pub failed: u32,
@@ -66,7 +66,7 @@ pub struct Monitor {
     pub name: String,
     pub target: String,
     pub interval_ms: u64,
-    pub status: String,      // active, paused, error
+    pub status: String, // active, paused, error
     pub last_check: String,
     pub last_value: f64,
     pub threshold_warning: f64,
@@ -77,7 +77,7 @@ pub struct Monitor {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Alert {
     pub id: String,
-    pub severity: String,    // info, warning, error, critical
+    pub severity: String, // info, warning, error, critical
     pub source: String,
     pub message: String,
     pub timestamp: String,
@@ -103,7 +103,7 @@ pub struct SystemMetrics {
 /// Configuration hardening
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct HardeningConfig {
-    pub level: String,       // minimal, standard, strict, paranoid
+    pub level: String, // minimal, standard, strict, paranoid
     pub csp_enabled: bool,
     pub sandbox_enabled: bool,
     pub audit_logging: bool,
@@ -345,7 +345,14 @@ pub async fn qa_create_monitor(
     threshold_critical: f64,
 ) -> Result<Monitor, String> {
     Ok(Monitor {
-        id: format!("mon-{}", uuid::Uuid::new_v4().to_string().split('-').next().unwrap_or("new")),
+        id: format!(
+            "mon-{}",
+            uuid::Uuid::new_v4()
+                .to_string()
+                .split('-')
+                .next()
+                .unwrap_or("new")
+        ),
         name,
         target,
         interval_ms,
@@ -365,7 +372,11 @@ pub async fn qa_toggle_monitor(monitor_id: String, active: bool) -> Result<Monit
         name: "Monitor".to_string(),
         target: "system.metric".to_string(),
         interval_ms: 5000,
-        status: if active { "active".to_string() } else { "paused".to_string() },
+        status: if active {
+            "active".to_string()
+        } else {
+            "paused".to_string()
+        },
         last_check: chrono::Utc::now().to_rfc3339(),
         last_value: 0.0,
         threshold_warning: 70.0,
@@ -494,7 +505,9 @@ pub async fn qa_get_hardening_config() -> Result<HardeningConfig, String> {
 
 /// Mettre à jour la configuration hardening
 #[command]
-pub async fn qa_update_hardening_config(config: HardeningConfig) -> Result<HardeningConfig, String> {
+pub async fn qa_update_hardening_config(
+    config: HardeningConfig,
+) -> Result<HardeningConfig, String> {
     // Validation
     let valid_levels = ["minimal", "standard", "strict", "paranoid"];
     if !valid_levels.contains(&config.level.as_str()) {
@@ -671,16 +684,22 @@ pub async fn qa_health_check() -> Result<HashMap<String, serde_json::Value>, Str
 
     let mut health = HashMap::new();
     health.insert("status".to_string(), json!("healthy"));
-    health.insert("timestamp".to_string(), json!(chrono::Utc::now().to_rfc3339()));
+    health.insert(
+        "timestamp".to_string(),
+        json!(chrono::Utc::now().to_rfc3339()),
+    );
     health.insert("version".to_string(), json!("∞.7.0"));
-    health.insert("checks".to_string(), json!({
-        "database": { "status": "ok", "latency_ms": 2 },
-        "cache": { "status": "ok", "latency_ms": 1 },
-        "api": { "status": "ok", "latency_ms": 5 },
-        "filesystem": { "status": "ok", "free_space_gb": 125.4 },
-        "memory": { "status": "ok", "available_mb": 8234 },
-        "cpu": { "status": "ok", "load_average": 0.45 }
-    }));
+    health.insert(
+        "checks".to_string(),
+        json!({
+            "database": { "status": "ok", "latency_ms": 2 },
+            "cache": { "status": "ok", "latency_ms": 1 },
+            "api": { "status": "ok", "latency_ms": 5 },
+            "filesystem": { "status": "ok", "free_space_gb": 125.4 },
+            "memory": { "status": "ok", "available_mb": 8234 },
+            "cpu": { "status": "ok", "load_average": 0.45 }
+        }),
+    );
     health.insert("uptime_seconds".to_string(), json!(86400));
 
     Ok(health)

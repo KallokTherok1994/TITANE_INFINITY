@@ -9,15 +9,14 @@ use std::sync::Mutex;
 use tauri::State;
 
 use super::{
-    SystemIdentity, IdentityConfig, CommunicationStyle,
-    OperationalMode,
-    SystemIdentityEngine, ResponseProfile,
     identity_matrix::{IdentityMatrix, IdentityProfiles},
-    voice_profile::{VoiceProfile, VoiceProfileManager},
-    tone_engine::{Tone, ToneEngine},
-    mode_system::{ModeSystemEngine, ModeConfig, ModeTransition},
+    mode_system::{ModeConfig, ModeSystemEngine, ModeTransition},
+    personality::{Mood, PersonalityEngine, PersonalityProfile, PersonalityState},
     rules_engine::{RulesEngine, RulesStats},
-    personality::{PersonalityEngine, PersonalityState, PersonalityProfile, Mood},
+    tone_engine::{Tone, ToneEngine},
+    voice_profile::{VoiceProfile, VoiceProfileManager},
+    CommunicationStyle, IdentityConfig, OperationalMode, ResponseProfile, SystemIdentity,
+    SystemIdentityEngine,
 };
 
 /// État global du System Identity Engine
@@ -121,7 +120,9 @@ pub async fn identity_set_mode(
     let mut mode_system = state.mode_system.lock().map_err(|e| e.to_string())?;
 
     engine.set_mode(mode_enum).map_err(|e| e.to_string())?;
-    mode_system.set_mode(mode_enum, "Manual change").map_err(|e| e.to_string())?;
+    mode_system
+        .set_mode(mode_enum, "Manual change")
+        .map_err(|e| e.to_string())?;
 
     info!("[Identity] Mode changed to: {:?}", mode_enum);
     Ok(())
@@ -148,7 +149,10 @@ pub async fn identity_set_communication_style(
     let mut engine = state.identity_engine.lock().map_err(|e| e.to_string())?;
     engine.set_communication_style(style_enum);
 
-    info!("[Identity] Communication style changed to: {:?}", style_enum);
+    info!(
+        "[Identity] Communication style changed to: {:?}",
+        style_enum
+    );
     Ok(())
 }
 
@@ -160,7 +164,9 @@ pub async fn identity_evolve_trait(
     delta: f32,
 ) -> Result<(), String> {
     let mut engine = state.identity_engine.lock().map_err(|e| e.to_string())?;
-    engine.evolve_trait(&trait_name, delta).map_err(|e| e.to_string())?;
+    engine
+        .evolve_trait(&trait_name, delta)
+        .map_err(|e| e.to_string())?;
 
     info!("[Identity] Trait '{}' evolved by {}", trait_name, delta);
     Ok(())
@@ -262,9 +268,7 @@ pub async fn identity_set_active_voice_profile(
 
 /// Obtient la tonalité actuelle
 #[tauri::command]
-pub async fn identity_get_tone(
-    state: State<'_, IdentityEngineState>,
-) -> Result<String, String> {
+pub async fn identity_get_tone(state: State<'_, IdentityEngineState>) -> Result<String, String> {
     let engine = state.tone_engine.lock().map_err(|e| e.to_string())?;
     Ok(format!("{:?}", engine.current()))
 }

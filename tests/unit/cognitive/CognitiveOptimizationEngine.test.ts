@@ -27,7 +27,9 @@ const createMessage = (overrides: Partial<CognitiveMessage> = {}): CognitiveMess
   ...overrides,
 });
 
-const createIntention = (overrides: Partial<IntentionAnalysis> = {}): IntentionAnalysis => ({
+const createIntention = (
+  overrides: Partial<IntentionAnalysis> = {}
+): IntentionAnalysis => ({
   primary_intention: 'information',
   secondary_intentions: [],
   confidence: 0.9,
@@ -38,7 +40,7 @@ const createIntention = (overrides: Partial<IntentionAnalysis> = {}): IntentionA
 });
 
 const cleanupSpies = (...spies: Array<{ mockRestore: () => void }>) => {
-  spies.forEach((spy) => spy.mockRestore());
+  spies.forEach(spy => spy.mockRestore());
 };
 
 describe('CognitiveOptimizationEngine', () => {
@@ -100,7 +102,11 @@ describe('CognitiveOptimizationEngine', () => {
         'cognitive_check_coherence',
         expect.objectContaining({ response: 'Wrong fact', context })
       );
-      expect(mockInvoke).toHaveBeenNthCalledWith(2, 'cognitive_auto_correct_response', expect.any(Object));
+      expect(mockInvoke).toHaveBeenNthCalledWith(
+        2,
+        'cognitive_auto_correct_response',
+        expect.any(Object)
+      );
       expect(result.corrected_response).toBe('Corrected answer');
     });
   });
@@ -119,7 +125,10 @@ describe('CognitiveOptimizationEngine', () => {
 
       const result = await engine.optimizeLongContext(messages);
 
-      expect(mockInvoke).toHaveBeenCalledWith('cognitive_optimize_context', expect.any(Object));
+      expect(mockInvoke).toHaveBeenCalledWith(
+        'cognitive_optimize_context',
+        expect.any(Object)
+      );
       expect(result.optimized_tokens).toBe(20);
       expect(engine.getContext().compression_ratio).toBe(0.4);
       expect(engine.getContext().total_tokens).toBe(20);
@@ -151,13 +160,22 @@ describe('CognitiveOptimizationEngine', () => {
     it('records semantic clusters returned by the backend', async () => {
       const messages = [createMessage({ content: 'Weather in Paris' })];
       const clusters: SemanticCluster[] = [
-        { id: 'cluster_0', messages: [0], topic: 'weather', importance: 0.8, last_access: Date.now() },
+        {
+          id: 'cluster_0',
+          messages: [0],
+          topic: 'weather',
+          importance: 0.8,
+          last_access: Date.now(),
+        },
       ];
       mockInvoke.mockResolvedValueOnce(clusters);
 
       const result = await engine.clusterSemanticMessages(messages);
 
-      expect(mockInvoke).toHaveBeenCalledWith('cognitive_cluster_messages', expect.any(Object));
+      expect(mockInvoke).toHaveBeenCalledWith(
+        'cognitive_cluster_messages',
+        expect.any(Object)
+      );
       expect(result).toEqual(clusters);
       expect(engine.getContext().semantic_clusters).toEqual(clusters);
     });
@@ -287,9 +305,9 @@ describe('CognitiveOptimizationEngine', () => {
       );
       const retrievedMemory = createMessage({ content: 'memory', tokens: 2 });
 
-      const analyzeSpy = vi.spyOn(engine, 'analyzeIntention').mockResolvedValue(
-        createIntention({ requires_long_context: true })
-      );
+      const analyzeSpy = vi
+        .spyOn(engine, 'analyzeIntention')
+        .mockResolvedValue(createIntention({ requires_long_context: true }));
       const memorySpy = vi.spyOn(engine, 'memoryGating').mockResolvedValue({
         retrieved_memories: [retrievedMemory],
         relevance_scores: [0.9],
@@ -306,8 +324,12 @@ describe('CognitiveOptimizationEngine', () => {
         removed_noise: [],
         prioritized_segments: [],
       });
-      const clusterSpy = vi.spyOn(engine, 'clusterSemanticMessages').mockResolvedValue([]);
-      const prioritizeSpy = vi.spyOn(engine, 'prioritizeAnalysisSteps').mockResolvedValue(['analyze', 'reason']);
+      const clusterSpy = vi
+        .spyOn(engine, 'clusterSemanticMessages')
+        .mockResolvedValue([]);
+      const prioritizeSpy = vi
+        .spyOn(engine, 'prioritizeAnalysisSteps')
+        .mockResolvedValue(['analyze', 'reason']);
 
       const result = await engine.optimizeFullPipeline('Need help', history);
 
@@ -320,7 +342,14 @@ describe('CognitiveOptimizationEngine', () => {
       expect(result.retrievedMemories).toEqual([retrievedMemory]);
       expect(result.analysisSteps).toEqual(['analyze', 'reason']);
 
-      cleanupSpies(analyzeSpy, memorySpy, removeSpy, optimizeSpy, clusterSpy, prioritizeSpy);
+      cleanupSpies(
+        analyzeSpy,
+        memorySpy,
+        removeSpy,
+        optimizeSpy,
+        clusterSpy,
+        prioritizeSpy
+      );
     });
   });
 });

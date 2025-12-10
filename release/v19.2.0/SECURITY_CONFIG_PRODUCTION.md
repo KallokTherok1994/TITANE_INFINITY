@@ -10,11 +10,13 @@
 Les passphrases de sécurité ont été générées avec `openssl rand -hex 32` (256-bit) :
 
 ### 1. TITANE_MEMORY_PASSPHRASE
+
 - **Usage :** Chiffrement AES-256-GCM de la mémoire persistante
 - **Longueur :** 64 caractères hexadécimaux (256 bits)
 - **Status :** ✅ Configuré dans `.env`
 
 ### 2. TITANE_SECRETS_PASSPHRASE
+
 - **Usage :** SecureSecretsEngine pour stockage chiffré des secrets
 - **Longueur :** 64 caractères hexadécimaux (256 bits)
 - **Status :** ✅ Configuré dans `.env`
@@ -26,12 +28,14 @@ Les passphrases de sécurité ont été générées avec `openssl rand -hex 32` 
 ### ⚠️ IMPORTANT - À FAIRE IMMÉDIATEMENT
 
 1. **Ne JAMAIS commiter `.env` dans Git**
+
    ```bash
    # Vérifier que .env est dans .gitignore
    grep "^\.env$" .gitignore
    ```
 
 2. **Protéger les permissions du fichier**
+
    ```bash
    chmod 600 .env
    ```
@@ -55,6 +59,7 @@ Si vous souhaitez activer le provider Gemini en production :
    - Créer une nouvelle clé API
 
 2. **Configurer dans `.env`**
+
    ```bash
    GEMINI_API_KEY=votre_cle_api_gemini_ici
    ```
@@ -97,6 +102,7 @@ openssl rand -hex 32  # Pour TITANE_SECRETS_PASSPHRASE
 ### Environnements Multiples
 
 **Développement :**
+
 ```bash
 # .env.development (passphrases simples OK)
 TITANE_MEMORY_PASSPHRASE=dev_passphrase_12345678
@@ -104,6 +110,7 @@ TITANE_SECRETS_PASSPHRASE=dev_secrets_12345678
 ```
 
 **Production :**
+
 ```bash
 # .env.production (passphrases 256-bit)
 TITANE_MEMORY_PASSPHRASE=<64-char-hex>
@@ -113,6 +120,7 @@ TITANE_SECRETS_PASSPHRASE=<64-char-hex>
 ### Audit Logs
 
 Activer les logs de sécurité :
+
 ```bash
 # .env
 LOG_LEVEL=info
@@ -126,6 +134,7 @@ SECURITY_AUDIT_ENABLED=true
 Si vous suspectez une compromission des passphrases :
 
 1. **Générer immédiatement de nouvelles passphrases**
+
    ```bash
    openssl rand -hex 32
    openssl rand -hex 32
@@ -136,6 +145,7 @@ Si vous suspectez une compromission des passphrases :
 3. **Redémarrer l'application**
 
 4. **Réinitialiser la mémoire chiffrée**
+
    ```bash
    # Supprimer anciennes données chiffrées
    rm -rf ~/.local/share/com.titane.infinity/data/memory/*
@@ -148,6 +158,7 @@ Si vous suspectez une compromission des passphrases :
 ## 📞 Support
 
 Pour toute question de sécurité :
+
 - Consulter `AUDIT_FINAL_COMPLET_v19.2_OMEGA.md`
 - Vérifier les logs : `~/.local/share/com.titane.infinity/logs/`
 - Tests sécurité : `npm run test` (698 tests)

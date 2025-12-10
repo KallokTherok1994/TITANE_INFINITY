@@ -6,7 +6,12 @@
  * Migrated from Sentinel security logic
  */
 
-import type { SecurityResult, SecurityViolation, ViolationType, Guardrail } from '../types';
+import type {
+  SecurityResult,
+  SecurityViolation,
+  ViolationType,
+  Guardrail,
+} from '../types';
 
 /**
  * Guardrails - Security validation and sanitization
@@ -215,11 +220,16 @@ export class GuardrailsEngine {
    */
   private getViolationType(guardrailId: string): ViolationType {
     switch (guardrailId) {
-      case 'script_injection': return 'xss';
-      case 'sql_injection': return 'injection';
-      case 'size_limit': return 'size_limit';
-      case 'rate_abuse': return 'rate_limit';
-      default: return 'malformed_input';
+      case 'script_injection':
+        return 'xss';
+      case 'sql_injection':
+        return 'injection';
+      case 'size_limit':
+        return 'size_limit';
+      case 'rate_abuse':
+        return 'rate_limit';
+      default:
+        return 'malformed_input';
     }
   }
 

@@ -128,7 +128,14 @@
 
   "patterns": {
     "min_confidence": 0.7,
-    "pattern_types": ["Behavioral", "Cognitive", "Error", "Success", "Preference", "Temporal"],
+    "pattern_types": [
+      "Behavioral",
+      "Cognitive",
+      "Error",
+      "Success",
+      "Preference",
+      "Temporal"
+    ],
     "auto_learn": true,
     "max_patterns": 1000
   },

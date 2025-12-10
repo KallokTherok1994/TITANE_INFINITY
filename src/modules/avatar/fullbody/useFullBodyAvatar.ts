@@ -136,71 +136,87 @@ export function useFullBodyAvatar(
   // GESTURE & EXPRESSION ACTIONS
   // ─────────────────────────────────────────────────────────────────────────
 
-  const activateGesture = useCallback(async (gesture: GestureType) => {
-    if (!bridgeRef.current) {
-      console.error('[useFullBodyAvatar] Bridge not initialized');
-      return;
-    }
+  const activateGesture = useCallback(
+    async (gesture: GestureType) => {
+      if (!bridgeRef.current) {
+        console.error('[useFullBodyAvatar] Bridge not initialized');
+        return;
+      }
 
-    try {
-      await bridgeRef.current.activateGesture(gesture);
-      if (enableLogging) console.log('[useFullBodyAvatar] Gesture activated:', gesture);
-    } catch (error) {
-      console.error('[useFullBodyAvatar] Gesture activation failed:', error);
-      throw error;
-    }
-  }, [enableLogging]);
+      try {
+        await bridgeRef.current.activateGesture(gesture);
+        if (enableLogging) console.log('[useFullBodyAvatar] Gesture activated:', gesture);
+      } catch (error) {
+        console.error('[useFullBodyAvatar] Gesture activation failed:', error);
+        throw error;
+      }
+    },
+    [enableLogging]
+  );
 
-  const updateExpression = useCallback(async (expression: ExpressionType, intensity: number = 0.7) => {
-    if (!bridgeRef.current) {
-      console.error('[useFullBodyAvatar] Bridge not initialized');
-      return;
-    }
+  const updateExpression = useCallback(
+    async (expression: ExpressionType, intensity: number = 0.7) => {
+      if (!bridgeRef.current) {
+        console.error('[useFullBodyAvatar] Bridge not initialized');
+        return;
+      }
 
-    try {
-      await bridgeRef.current.updateExpression(expression, intensity);
-      if (enableLogging) console.log('[useFullBodyAvatar] Expression updated:', expression);
-    } catch (error) {
-      console.error('[useFullBodyAvatar] Expression update failed:', error);
-      throw error;
-    }
-  }, [enableLogging]);
+      try {
+        await bridgeRef.current.updateExpression(expression, intensity);
+        if (enableLogging)
+          console.log('[useFullBodyAvatar] Expression updated:', expression);
+      } catch (error) {
+        console.error('[useFullBodyAvatar] Expression update failed:', error);
+        throw error;
+      }
+    },
+    [enableLogging]
+  );
 
-  const updateLipSync = useCallback(async (phoneme: string, morphWeights: LipSyncMorphWeights) => {
-    if (!bridgeRef.current) return;
+  const updateLipSync = useCallback(
+    async (phoneme: string, morphWeights: LipSyncMorphWeights) => {
+      if (!bridgeRef.current) return;
 
-    try {
-      await bridgeRef.current.updateLipSync(phoneme, morphWeights);
-    } catch (error) {
-      console.error('[useFullBodyAvatar] Lip-sync update failed:', error);
-    }
-  }, []);
+      try {
+        await bridgeRef.current.updateLipSync(phoneme, morphWeights);
+      } catch (error) {
+        console.error('[useFullBodyAvatar] Lip-sync update failed:', error);
+      }
+    },
+    []
+  );
 
   // ─────────────────────────────────────────────────────────────────────────
   // STATE & CONTEXT ACTIONS
   // ─────────────────────────────────────────────────────────────────────────
 
-  const updateState = useCallback(async (state: AvatarStateSnapshot) => {
-    if (!bridgeRef.current) return;
+  const updateState = useCallback(
+    async (state: AvatarStateSnapshot) => {
+      if (!bridgeRef.current) return;
 
-    try {
-      await bridgeRef.current.updateState(state);
-      if (enableLogging) console.log('[useFullBodyAvatar] State updated:', state);
-    } catch (error) {
-      console.error('[useFullBodyAvatar] State update failed:', error);
-    }
-  }, [enableLogging]);
+      try {
+        await bridgeRef.current.updateState(state);
+        if (enableLogging) console.log('[useFullBodyAvatar] State updated:', state);
+      } catch (error) {
+        console.error('[useFullBodyAvatar] State update failed:', error);
+      }
+    },
+    [enableLogging]
+  );
 
-  const updateContext = useCallback(async (context: ConversationalContext) => {
-    if (!bridgeRef.current) return;
+  const updateContext = useCallback(
+    async (context: ConversationalContext) => {
+      if (!bridgeRef.current) return;
 
-    try {
-      await bridgeRef.current.updateContext(context);
-      if (enableLogging) console.log('[useFullBodyAvatar] Context updated:', context);
-    } catch (error) {
-      console.error('[useFullBodyAvatar] Context update failed:', error);
-    }
-  }, [enableLogging]);
+      try {
+        await bridgeRef.current.updateContext(context);
+        if (enableLogging) console.log('[useFullBodyAvatar] Context updated:', context);
+      } catch (error) {
+        console.error('[useFullBodyAvatar] Context update failed:', error);
+      }
+    },
+    [enableLogging]
+  );
 
   const onWakeWord = useCallback(async () => {
     if (!bridgeRef.current) return;

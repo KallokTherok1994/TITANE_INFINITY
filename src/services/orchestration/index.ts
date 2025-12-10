@@ -27,30 +27,30 @@ export type {
   UnifiedOrchestratorConfig,
   OrchestratorState,
   StrategyConfig,
-  
+
   // Health monitoring
   HealthStatus,
   HealthCheckResult,
   IHealthMonitor,
-  
+
   // Metrics
   MetricType,
   Metric,
   MetricsSummary,
   IMetricsProvider,
-  
+
   // Recovery
   RecoveryAction,
   RecoveryPolicy,
   RecoveryResult,
   IRecoveryHandler,
-  
+
   // Validation
   ValidationSeverity,
   ValidationIssue,
   ValidationResult,
   IValidator,
-  
+
   // Strategy-specific operations
   MCPJobOperation,
   MCPHealthOperation,
@@ -59,7 +59,7 @@ export type {
   AIProviderOperation,
   AIProviderInfo,
   QuantumOperation,
-  QuantumSignal
+  QuantumSignal,
 } from './types';
 
 // Export compatibility wrappers (backward compatibility - Week 2 Day 3)

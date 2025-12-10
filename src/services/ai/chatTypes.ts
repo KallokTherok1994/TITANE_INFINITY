@@ -41,9 +41,5 @@ export interface ValidationIssue {
 }
 
 export interface ChatValidator {
-  validate(
-    response: string,
-    mode: ChatMode,
-    userMessage: string
-  ): ValidationResult;
+  validate(response: string, mode: ChatMode, userMessage: string): ValidationResult;
 }

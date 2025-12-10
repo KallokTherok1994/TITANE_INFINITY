@@ -35,6 +35,7 @@ npm run tauri dev
 ```
 
 **Vérifications initiales** :
+
 - ✅ Application démarre sans erreur
 - ✅ Console DevTools ouverte (F12)
 - ✅ Onglet "Console" visible (pour logs temps réel)
@@ -44,6 +45,7 @@ npm run tauri dev
 ### **Étape 2 : Vérifier permissions audio**
 
 **Actions** :
+
 1. Cliquer sur l'icône microphone dans TITANE
 2. Navigateur demande permission micro → **Accepter**
 3. Vérifier logs console :
@@ -55,6 +57,7 @@ npm run tauri dev
 ```
 
 **Critères succès** :
+
 - ✅ Pas d'erreur "NotAllowedError" ou "NotFoundError"
 - ✅ State machine en état `idle`
 - ✅ Indicateur visuel microphone actif
@@ -65,20 +68,21 @@ npm run tauri dev
 
 **Scénario** : 10 cycles de requête vocale complète
 
-| Cycle | Phrase user | Attendu TITANE | Durée max |
-|-------|-------------|----------------|-----------|
-| 1 | "Bonjour TITANE" | Réponse vocale | 10s |
-| 2 | "Comment vas-tu ?" | Réponse vocale | 10s |
-| 3 | "Quelle heure est-il ?" | Réponse vocale | 10s |
-| 4 | "Raconte-moi une blague" | Réponse vocale | 15s |
-| 5 | "Donne-moi un conseil" | Réponse vocale | 15s |
-| 6 | "Parle-moi du soleil" | Réponse vocale | 15s |
-| 7 | "Qu'est-ce que tu aimes ?" | Réponse vocale | 15s |
-| 8 | "Explique la photosynthèse" | Réponse vocale | 20s |
-| 9 | "Résume en 3 mots ton rôle" | Réponse vocale | 10s |
-| 10 | "Merci, au revoir" | Réponse vocale | 10s |
+| Cycle | Phrase user                 | Attendu TITANE | Durée max |
+| ----- | --------------------------- | -------------- | --------- |
+| 1     | "Bonjour TITANE"            | Réponse vocale | 10s       |
+| 2     | "Comment vas-tu ?"          | Réponse vocale | 10s       |
+| 3     | "Quelle heure est-il ?"     | Réponse vocale | 10s       |
+| 4     | "Raconte-moi une blague"    | Réponse vocale | 15s       |
+| 5     | "Donne-moi un conseil"      | Réponse vocale | 15s       |
+| 6     | "Parle-moi du soleil"       | Réponse vocale | 15s       |
+| 7     | "Qu'est-ce que tu aimes ?"  | Réponse vocale | 15s       |
+| 8     | "Explique la photosynthèse" | Réponse vocale | 20s       |
+| 9     | "Résume en 3 mots ton rôle" | Réponse vocale | 10s       |
+| 10    | "Merci, au revoir"          | Réponse vocale | 10s       |
 
 **Actions par cycle** :
+
 1. Parler clairement dans le microphone (phrase courte)
 2. Attendre détection VAD (voyant vert ou log `USER_SPEAKING`)
 3. Attendre silence → log `PROCESSING`
@@ -104,6 +108,7 @@ npm run tauri dev
 ```
 
 **Critères succès** :
+
 - ✅ VAD suspendue 100% du temps pendant TTS
 - ✅ Resume delay de 500ms respecté
 - ✅ Pas de log `USER_SPEAKING` pendant TTS (= Layer 2 fonctionne)
@@ -123,6 +128,7 @@ npm run tauri dev
 ```
 
 **Critères succès** :
+
 - ✅ Si audio TTS détecté par erreur → Layer 3 bloque (pas d'ASR)
 - ✅ Similarity score > 0.75 = TITANE détecté
 - ✅ Logs montrent `skipping VAD` si TTS audio capté
@@ -137,11 +143,11 @@ npm run tauri dev
 // Dans DevTools Console (F12)
 // 1. Générer 5 échantillons TTS TITANE
 const samples = await Promise.all([
-  generateTTSSample("Bonjour, je suis TITANE"),
-  generateTTSSample("Comment puis-je vous aider ?"),
-  generateTTSSample("Je suis là pour vous assister"),
-  generateTTSSample("Posez-moi vos questions"),
-  generateTTSSample("Je vous écoute attentivement"),
+  generateTTSSample('Bonjour, je suis TITANE'),
+  generateTTSSample('Comment puis-je vous aider ?'),
+  generateTTSSample('Je suis là pour vous assister'),
+  generateTTSSample('Posez-moi vos questions'),
+  generateTTSSample('Je vous écoute attentivement'),
 ]);
 
 // 2. Calibrer profile
@@ -162,11 +168,11 @@ await window.__TITANE__.voiceFingerprintTauri.calibrateTitaneVoice(samples);
 
 ### **1. Timing VAD Suspension**
 
-| Métrique | Target | Mesure | Status |
-|----------|--------|--------|--------|
-| Suspend latency | < 50ms | ____ ms | ⏳ |
-| Resume delay | 500ms ± 50ms | ____ ms | ⏳ |
-| TTS overlap | 0% (0 frames) | ____ % | ⏳ |
+| Métrique        | Target        | Mesure      | Status |
+| --------------- | ------------- | ----------- | ------ |
+| Suspend latency | < 50ms        | \_\_\_\_ ms | ⏳     |
+| Resume delay    | 500ms ± 50ms  | \_\_\_\_ ms | ⏳     |
+| TTS overlap     | 0% (0 frames) | \_\_\_\_ %  | ⏳     |
 
 **Comment mesurer** :
 
@@ -182,13 +188,14 @@ console.log(`[METRIC] Suspend latency: ${suspendLatency.toFixed(2)}ms`);
 
 ### **2. Layer 3 Accuracy**
 
-| Métrique | Target | Mesure | Status |
-|----------|--------|--------|--------|
-| TITANE detection rate | > 80% | ____ % | ⏳ |
-| False positive rate | < 5% | ____ % | ⏳ |
-| False negative rate | < 10% | ____ % | ⏳ |
+| Métrique              | Target | Mesure     | Status |
+| --------------------- | ------ | ---------- | ------ |
+| TITANE detection rate | > 80%  | \_\_\_\_ % | ⏳     |
+| False positive rate   | < 5%   | \_\_\_\_ % | ⏳     |
+| False negative rate   | < 10%  | \_\_\_\_ % | ⏳     |
 
 **Définitions** :
+
 - **True Positive** : Audio TTS détecté comme TITANE (similarity > 0.75)
 - **False Positive** : Audio user détecté comme TITANE (erreur Layer 3)
 - **False Negative** : Audio TTS pas détecté comme TITANE (Layer 3 rate)
@@ -198,19 +205,20 @@ console.log(`[METRIC] Suspend latency: ${suspendLatency.toFixed(2)}ms`);
 ### **3. Feedback Loop Detection**
 
 | Cycle | Feedback détecté ? | Cause | Fix appliqué |
-|-------|-------------------|-------|--------------|
-| 1 | ❌ Non | - | - |
-| 2 | ❌ Non | - | - |
-| 3 | ❌ Non | - | - |
-| 4 | ❌ Non | - | - |
-| 5 | ❌ Non | - | - |
-| 6 | ❌ Non | - | - |
-| 7 | ❌ Non | - | - |
-| 8 | ❌ Non | - | - |
-| 9 | ❌ Non | - | - |
-| 10 | ❌ Non | - | - |
+| ----- | ------------------ | ----- | ------------ |
+| 1     | ❌ Non             | -     | -            |
+| 2     | ❌ Non             | -     | -            |
+| 3     | ❌ Non             | -     | -            |
+| 4     | ❌ Non             | -     | -            |
+| 5     | ❌ Non             | -     | -            |
+| 6     | ❌ Non             | -     | -            |
+| 7     | ❌ Non             | -     | -            |
+| 8     | ❌ Non             | -     | -            |
+| 9     | ❌ Non             | -     | -            |
+| 10    | ❌ Non             | -     | -            |
 
 **Définition feedback loop** :
+
 - TTS audio déclenche re-capture VAD (state `USER_SPEAKING` pendant `AI_SPEAKING`)
 - ASR transcrit propre voix TITANE au lieu de user
 - OMEGA génère réponse à sa propre parole (boucle infinie)
@@ -244,24 +252,27 @@ console.log(`[METRIC] Suspend latency: ${suspendLatency.toFixed(2)}ms`);
 ### **Cas 1 : Feedback loop détecté**
 
 **Symptômes** :
+
 - Logs montrent `USER_SPEAKING` pendant `AI_SPEAKING`
 - ASR transcrit voix TITANE au lieu de user
 - Boucle infinie réponses TITANE
 
 **Causes possibles** :
+
 1. Layer 2 pas activée (bug `suspendForTTS()`)
 2. Layer 1 echo cancellation off (browser config)
 3. Volume trop élevé (> 90%)
 
 **Actions** :
+
 ```typescript
 // Vérifier suspension active
 console.log('[DEBUG] suspendedRef.current:', suspendedRef.current);
 
 // Vérifier echo cancellation
 navigator.mediaDevices.getUserMedia({
-  audio: { echoCancellation: true, noiseSuppression: true }
-})
+  audio: { echoCancellation: true, noiseSuppression: true },
+});
 ```
 
 ---
@@ -269,16 +280,19 @@ navigator.mediaDevices.getUserMedia({
 ### **Cas 2 : Layer 3 high false positive**
 
 **Symptômes** :
+
 - User voice détectée comme TITANE (similarity > 0.75)
 - Commandes vocales ignorées
 - Logs `🎯 TITANE detected, skipping VAD`
 
 **Causes possibles** :
+
 1. Calibration profile incorrect
 2. Threshold trop bas (< 0.75)
 3. Similarité pitch user ≈ TITANE
 
 **Actions** :
+
 ```typescript
 // Re-calibrer avec plus d'échantillons
 const samples = await Promise.all([
@@ -296,15 +310,18 @@ similarity_threshold: 0.80, // Au lieu de 0.75
 ### **Cas 3 : Suspend latency élevée**
 
 **Symptômes** :
+
 - Delay > 100ms entre TTS start et VAD suspend
 - Audio TTS capté pendant ~100ms avant suspension
 
 **Causes possibles** :
+
 1. CPU overload (> 80%)
 2. Audio context latency élevée
 3. Suspension async mal gérée
 
 **Actions** :
+
 ```typescript
 // Profiler CPU
 console.log('[DEBUG] CPU usage:', performance.now());
@@ -339,13 +356,13 @@ suspendedRef.current = true; // Immédiat, pas await
 
 ## Métriques
 
-| Métrique | Target | Mesure | Status |
-|----------|--------|--------|--------|
-| Feedback loops | 0 | [X] | ✅/❌ |
-| VAD suspend efficacy | 100% | [X]% | ✅/❌ |
-| Layer 3 accuracy | > 80% | [X]% | ✅/❌ |
-| Suspend latency | < 50ms | [X]ms | ✅/❌ |
-| Resume delay | 500ms | [X]ms | ✅/❌ |
+| Métrique             | Target | Mesure | Status |
+| -------------------- | ------ | ------ | ------ |
+| Feedback loops       | 0      | [X]    | ✅/❌  |
+| VAD suspend efficacy | 100%   | [X]%   | ✅/❌  |
+| Layer 3 accuracy     | > 80%  | [X]%   | ✅/❌  |
+| Suspend latency      | < 50ms | [X]ms  | ✅/❌  |
+| Resume delay         | 500ms  | [X]ms  | ✅/❌  |
 
 ## Conclusion
 

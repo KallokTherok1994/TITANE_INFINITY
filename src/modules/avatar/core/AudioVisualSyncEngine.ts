@@ -4,10 +4,27 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import * as THREE from 'three';
-import { LipSyncPrecisionEngine, type Phoneme, type MorphWeights } from '../lipsync/LipSyncPrecisionEngine';
-import { FacialExpressionEngine, type ExpressionMode, type ExpressionWeights } from '../expressions/FacialExpressionEngine';
-import { VoiceReactionSystem, type VoiceAnalysis, type PhysicalReactions, analyzeAudioBuffer } from '../voice/VoiceReactionSystem';
-import { BodyGestureFluidityEngine, type VocalTone, detectVocalTone } from '../gesture/BodyGestureFluidityEngine';
+import {
+  LipSyncPrecisionEngine,
+  type Phoneme,
+  type MorphWeights,
+} from '../lipsync/LipSyncPrecisionEngine';
+import {
+  FacialExpressionEngine,
+  type ExpressionMode,
+  type ExpressionWeights,
+} from '../expressions/FacialExpressionEngine';
+import {
+  VoiceReactionSystem,
+  type VoiceAnalysis,
+  type PhysicalReactions,
+  analyzeAudioBuffer,
+} from '../voice/VoiceReactionSystem';
+import {
+  BodyGestureFluidityEngine,
+  type VocalTone,
+  detectVocalTone,
+} from '../gesture/BodyGestureFluidityEngine';
 import { CameraDynamismEngine, type CameraMode } from '../camera/CameraDynamismEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -35,11 +52,11 @@ export interface AudioVisualState {
 
   // Timing
   timestamp: number;
-  latency: number;  // Audio-to-visual latency (ms)
+  latency: number; // Audio-to-visual latency (ms)
 }
 
 export interface SyncConfig {
-  targetLatency: number;        // Target latency (ms) - default 50ms
+  targetLatency: number; // Target latency (ms) - default 50ms
   enableLipSync: boolean;
   enableExpressions: boolean;
   enableVoiceReactions: boolean;
@@ -75,7 +92,7 @@ export class AudioVisualSyncEngine {
     config: Partial<SyncConfig> = {}
   ) {
     this.config = {
-      targetLatency: 50,              // 50ms target
+      targetLatency: 50, // 50ms target
       enableLipSync: true,
       enableExpressions: true,
       enableVoiceReactions: true,

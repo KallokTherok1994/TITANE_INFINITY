@@ -24,7 +24,9 @@ describe.skip('Unified Memory Integration', () => {
       if (fs.existsSync(p)) {
         try {
           fs.unlinkSync(p);
-        } catch { /* ignore */ }
+        } catch {
+          /* ignore */
+        }
       }
     });
   };
@@ -34,7 +36,7 @@ describe.skip('Unified Memory Integration', () => {
     memory = await createUnifiedMemory({
       dbPath: TEST_DB_PATH,
       modelName: 'all-MiniLM-L6-v2',
-      enableCache: true
+      enableCache: true,
     });
   });
 
@@ -59,7 +61,7 @@ describe.skip('Unified Memory Integration', () => {
       summary: 'Test fact',
       details: 'This is a test',
       tags: ['test'],
-      importance: 0.8
+      importance: 0.8,
     });
 
     expect(entry).toBeDefined();
@@ -77,13 +79,13 @@ describe.skip('Unified Memory Integration', () => {
       summary: 'Test retrieval',
       details: 'Semantic search test',
       tags: ['search'],
-      importance: 0.7
+      importance: 0.7,
     });
 
     // Search
     const results = await memory.retrieveMemories({
       text: 'test retrieval',
-      limit: 5
+      limit: 5,
     });
 
     expect(Array.isArray(results)).toBe(true);
@@ -94,7 +96,7 @@ describe.skip('Unified Memory Integration', () => {
     if (!memory) return;
 
     const context = await memory.buildContext('test context', {
-      limit: 3
+      limit: 3,
     });
 
     expect(context).toBeDefined();

@@ -7,22 +7,22 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum Formality {
-  Casual = "Casual",
-  Smart = "Smart",
-  Formal = "Formal",
+  Casual = 'Casual',
+  Smart = 'Smart',
+  Formal = 'Formal',
 }
 
 export enum HairLength {
-  Court = "Court",
-  MiLong = "MiLong",
-  Long = "Long",
+  Court = 'Court',
+  MiLong = 'MiLong',
+  Long = 'Long',
 }
 
 export enum MakeupIntensity {
-  None = "None",
-  Light = "Light",
-  Medium = "Medium",
-  Strong = "Strong",
+  None = 'None',
+  Light = 'Light',
+  Medium = 'Medium',
+  Strong = 'Strong',
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -127,19 +127,19 @@ export interface AppearanceUpdateRequest {
 
 export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
   outfit: {
-    top: "chemise claire",
-    bottom: "pantalon foncé",
-    shoes: "escarpins classiques",
-    outerwear: "blazer ajusté",
+    top: 'chemise claire',
+    bottom: 'pantalon foncé',
+    shoes: 'escarpins classiques',
+    outerwear: 'blazer ajusté',
     layering: [],
   },
   style: {
-    theme: "Bureau_Pro",
+    theme: 'Bureau_Pro',
     formality: Formality.Formal,
-    color_palette: "neutre",
-    vibe: "confiant",
-    epoch: "moderne",
-    energy: "medium",
+    color_palette: 'neutre',
+    vibe: 'confiant',
+    epoch: 'moderne',
+    energy: 'medium',
   },
   accessories: {
     glasses: null,
@@ -148,17 +148,17 @@ export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
     other: [],
   },
   hair: {
-    style: "queue de cheval haute",
+    style: 'queue de cheval haute',
     length: HairLength.Long,
-    color: "dark",
+    color: 'dark',
     details: [],
   },
   makeup: {
     intensity: MakeupIntensity.Light,
-    style: "naturel",
+    style: 'naturel',
     details: [],
   },
-  mode_preset: "Bureau_Pro_1",
+  mode_preset: 'Bureau_Pro_1',
   custom_styles: [],
 };
 
@@ -169,22 +169,22 @@ export const DEFAULT_APPEARANCE_STATE: AvatarAppearanceState = {
 export function describeAppearance(state: AvatarAppearanceState): string {
   const formalityText =
     state.style.formality === Formality.Casual
-      ? "décontracté"
+      ? 'décontracté'
       : state.style.formality === Formality.Smart
-        ? "smart"
-        : "formel";
+        ? 'smart'
+        : 'formel';
 
   const hairLengthText =
     state.hair.length === HairLength.Court
-      ? "court"
+      ? 'court'
       : state.hair.length === HairLength.MiLong
-        ? "mi-long"
-        : "long";
+        ? 'mi-long'
+        : 'long';
 
   const accessoriesText =
     state.accessories.glasses || state.accessories.jewelry.length > 0
-      ? "présents"
-      : "absents";
+      ? 'présents'
+      : 'absents';
 
   return `Style: ${state.style.theme} (${formalityText}). Tenue: ${state.outfit.top} + ${state.outfit.bottom}. Coiffure: ${state.hair.style} (${hairLengthText}). Accessoires: ${accessoriesText}.`;
 }

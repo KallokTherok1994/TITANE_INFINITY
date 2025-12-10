@@ -101,7 +101,13 @@ export type ActionResult = 'SUCCESS' | 'FAILED' | 'PARTIAL' | 'DENIED' | 'ROLLED
 /**
  * Phase d'évolution
  */
-export type EvolutionPhase = 'COLLECT' | 'ANALYZE' | 'PLAN' | 'VALIDATE' | 'EXECUTE' | 'LEARN';
+export type EvolutionPhase =
+  | 'COLLECT'
+  | 'ANALYZE'
+  | 'PLAN'
+  | 'VALIDATE'
+  | 'EXECUTE'
+  | 'LEARN';
 
 /**
  * Module TITANE∞ cible
@@ -350,7 +356,12 @@ export interface EvolutionAction {
  * Précondition d'action
  */
 export interface ActionPrecondition {
-  type: 'MODULE_HEALTHY' | 'METRIC_THRESHOLD' | 'PERMISSION' | 'NO_ACTIVE_TASK' | 'COOLDOWN';
+  type:
+    | 'MODULE_HEALTHY'
+    | 'METRIC_THRESHOLD'
+    | 'PERMISSION'
+    | 'NO_ACTIVE_TASK'
+    | 'COOLDOWN';
   target: string;
   operator: 'EQ' | 'NE' | 'GT' | 'LT' | 'GTE' | 'LTE' | 'IN' | 'NOT_IN';
   value: unknown;
@@ -1059,7 +1070,7 @@ export function isActionWhitelisted(
   whitelist: ActionWhitelistEntry[]
 ): { allowed: boolean; entry?: ActionWhitelistEntry; reason?: string } {
   const entry = whitelist.find(
-    (e) => e.actionType === actionType && e.allowedTargets.includes(targetModule)
+    e => e.actionType === actionType && e.allowedTargets.includes(targetModule)
   );
 
   if (!entry) {
@@ -1083,19 +1094,21 @@ export function isActionWhitelisted(
 /**
  * Calcule le score global d'évolution
  */
-export function calculateEvolutionScore(scores: Omit<EvolutionScores, 'overallScore' | 'grade' | 'trend' | 'lastCalculated'>): number {
+export function calculateEvolutionScore(
+  scores: Omit<EvolutionScores, 'overallScore' | 'grade' | 'trend' | 'lastCalculated'>
+): number {
   const weights = {
-    stabilityIndex: 0.30,
+    stabilityIndex: 0.3,
     cognitiveEfficiency: 0.25,
-    contextRelevance: 0.20,
+    contextRelevance: 0.2,
     engineReliability: 0.25,
   };
 
   return Math.round(
     scores.stabilityIndex * weights.stabilityIndex +
-    scores.cognitiveEfficiency * weights.cognitiveEfficiency +
-    scores.contextRelevance * weights.contextRelevance +
-    scores.engineReliability * weights.engineReliability
+      scores.cognitiveEfficiency * weights.cognitiveEfficiency +
+      scores.contextRelevance * weights.contextRelevance +
+      scores.engineReliability * weights.engineReliability
   );
 }
 
@@ -1114,7 +1127,10 @@ export function scoreToGrade(score: number): 'S' | 'A' | 'B' | 'C' | 'D' | 'F' {
 /**
  * Détermine la tendance à partir des échantillons
  */
-export function determineTrend(samples: number[], windowSize: number = 10): TrendDirection {
+export function determineTrend(
+  samples: number[],
+  windowSize: number = 10
+): TrendDirection {
   if (samples.length < windowSize) return 'STABLE';
 
   const recent = samples.slice(-windowSize);
@@ -1263,7 +1279,7 @@ export function createSuggestion(
     actions,
     status: 'PENDING',
     validUntil: now + validityMs,
-    rollbackAvailable: actions.every((a) => a.reversible),
+    rollbackAvailable: actions.every(a => a.reversible),
     relatedPatterns: [],
     relatedInsights: [],
   };
@@ -1376,7 +1392,8 @@ export function checkPreconditions(
         break;
       case 'COOLDOWN':
         if (context.lastActionTime) {
-          satisfied = Date.now() - context.lastActionTime >= (precondition.value as number);
+          satisfied =
+            Date.now() - context.lastActionTime >= (precondition.value as number);
         } else {
           satisfied = true;
         }
@@ -1411,7 +1428,8 @@ export function calculateTimeSeriesStats(values: number[]): {
   const min = sorted[0];
   const max = sorted[sorted.length - 1];
 
-  const variance = values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) / values.length;
+  const variance =
+    values.reduce((acc, val) => acc + Math.pow(val - average, 2), 0) / values.length;
   const stdDeviation = Math.sqrt(variance);
 
   const p95Index = Math.ceil(0.95 * sorted.length) - 1;
@@ -1430,7 +1448,7 @@ export function detectAnomalies(
   const stats = calculateTimeSeriesStats(values);
   if (stats.stdDeviation === 0) return [];
 
-  const threshold = (100 - sensitivity) / 100 * 3 + 1; // 1-4 based on sensitivity
+  const threshold = ((100 - sensitivity) / 100) * 3 + 1; // 1-4 based on sensitivity
   const anomalies: Array<{ index: number; value: number; zscore: number }> = [];
 
   values.forEach((value, index) => {

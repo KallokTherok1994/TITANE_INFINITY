@@ -25,12 +25,12 @@ interface TabsProps {
 export const Tabs = ({ tabs, defaultTab, className = '' }: TabsProps) => {
   const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
 
-  const activeContent = tabs.find((tab) => tab.id === activeTab)?.content;
+  const activeContent = tabs.find(tab => tab.id === activeTab)?.content;
 
   return (
     <div className={`tabs ${className}`}>
       <div className="tabs__list" role="tablist">
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <button
             key={tab.id}
             role="tab"

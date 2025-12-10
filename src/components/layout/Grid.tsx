@@ -72,7 +72,10 @@ Grid.displayName = 'Grid';
 // ─────────────────────────────────────────────────────────────────
 
 export const Col = forwardRef<HTMLDivElement, ColProps>(
-  ({ span = 'auto', spanSm, spanMd, spanLg, className, style, children, ...props }, ref) => {
+  (
+    { span = 'auto', spanSm, spanMd, spanLg, className, style, children, ...props },
+    ref
+  ) => {
     const getGridColumn = (colSpan: ColSpan): string => {
       if (colSpan === 'auto') {
         return 'auto';
@@ -94,11 +97,7 @@ export const Col = forwardRef<HTMLDivElement, ColProps>(
 
     return (
       <>
-        {responsiveStyle && (
-          <style>
-            {`.titane-col-${span} { ${responsiveStyle} }`}
-          </style>
-        )}
+        {responsiveStyle && <style>{`.titane-col-${span} { ${responsiveStyle} }`}</style>}
         <div
           ref={ref}
           className={clsx('titane-col', `titane-col-${span}`, className)}

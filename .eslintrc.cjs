@@ -139,10 +139,7 @@ module.exports = {
     },
     {
       // Legacy OMNIS engine (maintained separately)
-      files: [
-        'src/omnisEngine/**/*',
-        'src/services/ai/providers/omnis/**/*',
-      ],
+      files: ['src/omnisEngine/**/*', 'src/services/ai/providers/omnis/**/*'],
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/no-unused-vars': 'off',

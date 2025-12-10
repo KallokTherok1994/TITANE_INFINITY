@@ -6,16 +6,11 @@
  * See LICENSE.md for the full legal terms (FR/EN).
  */
 
-
 // TITANE∞ v15 - AudioButton Component
 
 // Button component for text-to-speech functionality
 
-
-
 import React from 'react';
-
-
 
 export interface AudioButtonProps {
   text: string;
@@ -23,10 +18,10 @@ export interface AudioButtonProps {
   onToggle?: () => void;
 }
 
-export const AudioButton: React.FC<AudioButtonProps> = ({ 
-  text, 
+export const AudioButton: React.FC<AudioButtonProps> = ({
+  text,
   isPlaying = false,
-  onToggle 
+  onToggle,
 }) => {
   const handleClick = () => {
     // TODO: Implement text-to-speech functionality
@@ -36,9 +31,9 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
   };
 
   return (
-    <button 
+    <button
       type="button"
-      onClick={handleClick} 
+      onClick={handleClick}
       className={`audio-button ${isPlaying ? 'playing' : ''}`}
       aria-label={isPlaying ? 'Arrêter la lecture' : 'Lire à voix haute'}
       aria-pressed={isPlaying}
@@ -54,4 +49,3 @@ export const AudioButton: React.FC<AudioButtonProps> = ({
     </button>
   );
 };
-

@@ -2,12 +2,12 @@
 //! CACHE ADAPTATIF TEMPOREL — TTL dynamique selon contexte
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::temporal_adapter::TemporalApiAdapter;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
-use serde::{Serialize, Deserialize};
-use super::temporal_adapter::TemporalApiAdapter;
 
 /// Cache adaptatif avec TTL temporel
 pub struct TemporalCache<T: Clone> {
@@ -162,7 +162,13 @@ mod tests {
         let adapter = Arc::new(TemporalApiAdapter::new());
         let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
 
-        cache.set("key1".to_string(), "value1".to_string(), "/test".to_string()).await;
+        cache
+            .set(
+                "key1".to_string(),
+                "value1".to_string(),
+                "/test".to_string(),
+            )
+            .await;
 
         let value = cache.get("key1").await;
         assert_eq!(value, Some("value1".to_string()));
@@ -186,7 +192,13 @@ mod tests {
         let adapter = Arc::new(TemporalApiAdapter::new());
         let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
 
-        cache.set("key1".to_string(), "value1".to_string(), "/test".to_string()).await;
+        cache
+            .set(
+                "key1".to_string(),
+                "value1".to_string(),
+                "/test".to_string(),
+            )
+            .await;
 
         let stats_before = cache.get_stats().await;
         assert_eq!(stats_before.total_entries, 1);
@@ -203,8 +215,20 @@ mod tests {
         let adapter = Arc::new(TemporalApiAdapter::new());
         let cache: TemporalCache<String> = TemporalCache::new(100, adapter);
 
-        cache.set("key1".to_string(), "value1".to_string(), "/test".to_string()).await;
-        cache.set("key2".to_string(), "value2".to_string(), "/test".to_string()).await;
+        cache
+            .set(
+                "key1".to_string(),
+                "value1".to_string(),
+                "/test".to_string(),
+            )
+            .await;
+        cache
+            .set(
+                "key2".to_string(),
+                "value2".to_string(),
+                "/test".to_string(),
+            )
+            .await;
 
         cache.clear().await;
 

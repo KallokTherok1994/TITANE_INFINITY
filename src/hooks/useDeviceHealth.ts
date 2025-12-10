@@ -21,7 +21,7 @@ import {
   deviceHealthService,
   type SystemHealthReport,
   type SelfHealingReport,
-  type RepairResult
+  type RepairResult,
 } from '@/services/devices/deviceHealthService';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -69,7 +69,9 @@ export interface UseDeviceHealthOptions {
 // Hook
 // ═══════════════════════════════════════════════════════════════════════════
 
-export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDeviceHealthReturn {
+export function useDeviceHealth(
+  options: UseDeviceHealthOptions = {}
+): UseDeviceHealthReturn {
   const {
     autoScan = true,
     autoMonitor = false,
@@ -81,7 +83,9 @@ export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDevice
   const [report, setReport] = useState<SystemHealthReport | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [isHealing, setIsHealing] = useState(false);
-  const [lastHealingResult, setLastHealingResult] = useState<SelfHealingReport | null>(null);
+  const [lastHealingResult, setLastHealingResult] = useState<SelfHealingReport | null>(
+    null
+  );
   const [repairHistory, setRepairHistory] = useState<RepairResult[]>([]);
 
   // Refs
@@ -125,7 +129,11 @@ export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDevice
         setReport(result);
 
         // Auto-heal si critique et option activée
-        if (autoHealOnCritical && result.overallStatus === 'critical' && !autoHealingRef.current) {
+        if (
+          autoHealOnCritical &&
+          result.overallStatus === 'critical' &&
+          !autoHealingRef.current
+        ) {
           autoHealingRef.current = true;
           console.log('[useDeviceHealth] 🚨 Critical status, auto-healing...');
           await selfHeal();
@@ -143,29 +151,35 @@ export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDevice
   /**
    * Répare un périphérique spécifique
    */
-  const repairDevice = useCallback(async (deviceId: string): Promise<RepairResult> => {
-    setIsHealing(true);
-    try {
-      const result = await deviceHealthService.repairDevice(deviceId);
-      if (mountedRef.current) {
-        setRepairHistory(deviceHealthService.getRepairHistory());
-        // Re-scan après réparation
-        await scan();
+  const repairDevice = useCallback(
+    async (deviceId: string): Promise<RepairResult> => {
+      setIsHealing(true);
+      try {
+        const result = await deviceHealthService.repairDevice(deviceId);
+        if (mountedRef.current) {
+          setRepairHistory(deviceHealthService.getRepairHistory());
+          // Re-scan après réparation
+          await scan();
+        }
+        return result;
+      } finally {
+        if (mountedRef.current) {
+          setIsHealing(false);
+        }
       }
-      return result;
-    } finally {
-      if (mountedRef.current) {
-        setIsHealing(false);
-      }
-    }
-  }, [scan]);
+    },
+    [scan]
+  );
 
   /**
    * Démarre le monitoring
    */
-  const startMonitoring = useCallback((intervalMs: number = monitorInterval) => {
-    deviceHealthService.startMonitoring(intervalMs);
-  }, [monitorInterval]);
+  const startMonitoring = useCallback(
+    (intervalMs: number = monitorInterval) => {
+      deviceHealthService.startMonitoring(intervalMs);
+    },
+    [monitorInterval]
+  );
 
   /**
    * Arrête le monitoring
@@ -191,7 +205,7 @@ export function useDeviceHealth(options: UseDeviceHealthOptions = {}): UseDevice
     mountedRef.current = true;
 
     // S'abonner aux changements
-    const unsubscribe = deviceHealthService.subscribe((newReport) => {
+    const unsubscribe = deviceHealthService.subscribe(newReport => {
       if (mountedRef.current) {
         setReport(newReport);
       }

@@ -23,7 +23,7 @@ const levels: Array<LogLevel | 'all'> = ['all', 'info', 'warn', 'error', 'debug'
 
 /**
  * LogFilters - Filtres pour les logs DevTools
- * 
+ *
  * @example
  * ```tsx
  * <LogFilters
@@ -50,7 +50,8 @@ export function LogFilters({
   className = '',
 }: LogFiltersProps) {
   return (
-    <div className={`flex flex-wrap items-center gap-3 p-3 rounded-lg border ${className}`}
+    <div
+      className={`flex flex-wrap items-center gap-3 p-3 rounded-lg border ${className}`}
       style={{
         background: 'var(--bg-surface, #181c21)',
         borderColor: 'var(--border, rgba(196,196,196,0.12))',
@@ -65,7 +66,7 @@ export function LogFilters({
           Level:
         </label>
         <div className="flex gap-1">
-          {levels.map((level) => (
+          {levels.map(level => (
             <button
               key={level}
               onClick={() => onLevelChange(level)}
@@ -100,7 +101,7 @@ export function LogFilters({
         </label>
         <select
           value={selectedEngine}
-          onChange={(e) => onEngineChange(e.target.value as string | 'all')}
+          onChange={e => onEngineChange(e.target.value as string | 'all')}
           className="px-2 py-1 text-xs font-medium rounded border transition-all duration-150"
           style={{
             background: 'var(--bg-panel, #101216)',
@@ -109,7 +110,7 @@ export function LogFilters({
           }}
         >
           <option value="all">All Engines</option>
-          {engines.map((engine) => (
+          {engines.map(engine => (
             <option key={engine} value={engine}>
               {engine}
             </option>
@@ -122,7 +123,7 @@ export function LogFilters({
         <input
           type="text"
           value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={e => onSearchChange(e.target.value)}
           placeholder="Search logs..."
           className="w-full px-3 py-1 text-xs rounded border transition-all duration-150 focus:outline-none focus:ring-[3px] focus:ring-[rgba(114,123,129,0.6)]"
           style={{

@@ -34,7 +34,11 @@
   margin: 0;
   font-size: 1.5rem;
   font-weight: 600;
-  background: linear-gradient(135deg, var(--titane-accent-primary), var(--titane-accent-secondary));
+  background: linear-gradient(
+    135deg,
+    var(--titane-accent-primary),
+    var(--titane-accent-secondary)
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -55,23 +59,23 @@
   border: 1px solid var(--titane-border);
 }
 
-.status-badge[data-state="waiting-wakeword"] {
+.status-badge[data-state='waiting-wakeword'] {
   color: var(--titane-text-muted);
 }
 
-.status-badge[data-state="listening"] {
+.status-badge[data-state='listening'] {
   background: var(--info, #8899aa);
   color: white;
   border-color: var(--info, #8899aa);
 }
 
-.status-badge[data-state="thinking"] {
+.status-badge[data-state='thinking'] {
   background: var(--primary, #727b81);
   color: white;
   border-color: var(--primary, #727b81);
 }
 
-.status-badge[data-state="speaking"] {
+.status-badge[data-state='speaking'] {
   background: var(--info, #8899aa);
   color: white;
   border-color: var(--info, #8899aa);

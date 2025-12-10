@@ -5,7 +5,7 @@
 //   Gestion du cycle de vie et catalogue des agents actifs
 // ═══════════════════════════════════════════════════════════════
 
-use crate::agents::{Agent, AgentId, AgentRole, AgentState, AgentError};
+use crate::agents::{Agent, AgentError, AgentId, AgentRole, AgentState};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -53,9 +53,11 @@ impl AgentRegistry {
         let mut agents = self.agents.write().await;
 
         if agents.len() >= self.max_agents {
-            return Err(AgentError::InitializationError(
-                format!("Registry at capacity: {}/{}", agents.len(), self.max_agents)
-            ));
+            return Err(AgentError::InitializationError(format!(
+                "Registry at capacity: {}/{}",
+                agents.len(),
+                self.max_agents
+            )));
         }
 
         let id = agent.id.clone();
@@ -63,7 +65,10 @@ impl AgentRegistry {
         agents.insert(id.clone(), agent);
 
         let mut role_index = self.role_index.write().await;
-        role_index.entry(role).or_insert_with(Vec::new).push(id.clone());
+        role_index
+            .entry(role)
+            .or_insert_with(Vec::new)
+            .push(id.clone());
 
         log::info!("🤖 Agent {} ({:?}) registered", id.0, role);
         Ok(id)
@@ -80,7 +85,10 @@ impl AgentRegistry {
             log::info!("🛑 Agent {} unregistered", id.0);
             Ok(())
         } else {
-            Err(AgentError::ExecutionError(format!("Agent {} not found", id.0)))
+            Err(AgentError::ExecutionError(format!(
+                "Agent {} not found",
+                id.0
+            )))
         }
     }
 
@@ -99,7 +107,9 @@ impl AgentRegistry {
         let agents = self.agents.read().await;
         let role_index = self.role_index.read().await;
         if let Some(ids) = role_index.get(role) {
-            ids.iter().filter_map(|id| agents.get(id).cloned()).collect()
+            ids.iter()
+                .filter_map(|id| agents.get(id).cloned())
+                .collect()
         } else {
             Vec::new()
         }
@@ -127,7 +137,9 @@ impl AgentRegistry {
                 AgentState::Stopped | AgentState::Killed => stopped += 1,
                 _ => {}
             }
-            *by_role.entry(agent.role.short_name().to_string()).or_insert(0) += 1;
+            *by_role
+                .entry(agent.role.short_name().to_string())
+                .or_insert(0) += 1;
         }
 
         RegistryStats {

@@ -147,9 +147,10 @@ export class FrameHarmonizer {
    */
   getMetrics(): FrameMetrics {
     const times = this.frameHistory;
-    const avgFrameTime = times.length > 0
-      ? times.reduce((a, b) => a + b, 0) / times.length
-      : this.targetFrameTime;
+    const avgFrameTime =
+      times.length > 0
+        ? times.reduce((a, b) => a + b, 0) / times.length
+        : this.targetFrameTime;
 
     return {
       currentFPS: times.length > 0 ? 1000 / times[times.length - 1] : this.targetHz,
@@ -170,8 +171,9 @@ export class FrameHarmonizer {
 
     // Calculer la variance des frame times
     const avg = this.frameHistory.reduce((a, b) => a + b, 0) / this.frameHistory.length;
-    const variance = this.frameHistory.reduce((sum, time) =>
-      sum + Math.pow(time - avg, 2), 0) / this.frameHistory.length;
+    const variance =
+      this.frameHistory.reduce((sum, time) => sum + Math.pow(time - avg, 2), 0) /
+      this.frameHistory.length;
     const stdDev = Math.sqrt(variance);
 
     // Score basé sur la stabilité (faible variance = bon score)

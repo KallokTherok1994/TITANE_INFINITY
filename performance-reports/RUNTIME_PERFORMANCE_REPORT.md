@@ -8,9 +8,11 @@
 ## 📊 Performance Metrics
 
 ### Lighthouse Mobile
+
 ❌ No mobile metrics available
 
 ### Lighthouse Desktop
+
 ❌ No desktop metrics available
 
 ---
@@ -20,6 +22,7 @@
 - **Total Size**: 3,5M
 
 ### Largest Files:
+
 - `ai-onnx-C3uLchzW.js`: 536K
 - `ui-components-vZ57oXhY.js`: 372K
 - `page-chat-jZ_C1SyN.js`: 348K
@@ -36,16 +39,19 @@
 ## 📈 Recommendations
 
 ### High Priority
+
 - [ ] Optimize largest bundle (`ai-onnx-*.js`, `page-chat-*.js`)
 - [ ] Reduce Total Blocking Time (TBT) if >300ms
 - [ ] Improve Largest Contentful Paint (LCP) if >2.5s
 
 ### Medium Priority
+
 - [ ] Tree-shake unused dependencies
 - [ ] Implement code splitting for routes
 - [ ] Add service worker for caching
 
 ### Low Priority
+
 - [ ] Optimize images (WebP, lazy loading)
 - [ ] Minify CSS further
 - [ ] Enable compression (gzip/brotli)
@@ -54,8 +60,7 @@
 
 ## 🔗 Reports
 
-- [Lighthouse Mobile HTML](<./lighthouse-mobile.report.html>)
-- [Lighthouse Desktop HTML](<./lighthouse-desktop.report.html>)
-- [Mobile Metrics JSON](<./metrics-mobile.json>)
-- [Desktop Metrics JSON](<./metrics-desktop.json>)
-
+- [Lighthouse Mobile HTML](./lighthouse-mobile.report.html)
+- [Lighthouse Desktop HTML](./lighthouse-desktop.report.html)
+- [Mobile Metrics JSON](./metrics-mobile.json)
+- [Desktop Metrics JSON](./metrics-desktop.json)

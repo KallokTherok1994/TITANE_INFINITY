@@ -91,7 +91,10 @@ impl MemoryCompressor {
     }
 
     /// Compresse un ensemble d'items mémoire
-    pub fn compress(&self, items: &[MemoryItem]) -> Result<CompressionResult, MemoryEvolutionError> {
+    pub fn compress(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<CompressionResult, MemoryEvolutionError> {
         info!("[MemoryCompressor] Compressing {} items", items.len());
 
         let mut blocks = Vec::new();
@@ -102,7 +105,8 @@ impl MemoryCompressor {
         let mut hybrid_count = 0usize;
 
         // Grouper les items par niveau pour compression optimale
-        let mut by_level: std::collections::HashMap<MemoryLevel, Vec<&MemoryItem>> = std::collections::HashMap::new();
+        let mut by_level: std::collections::HashMap<MemoryLevel, Vec<&MemoryItem>> =
+            std::collections::HashMap::new();
         for item in items {
             by_level.entry(item.level).or_default().push(item);
         }
@@ -124,9 +128,7 @@ impl MemoryCompressor {
                     hybrid_count += 1;
                     self.compress_hybrid(&level_items)?
                 }
-                CompressionType::None => {
-                    self.create_uncompressed_block(&level_items)
-                }
+                CompressionType::None => self.create_uncompressed_block(&level_items),
             };
 
             total_original += block.original_size;
@@ -180,9 +182,9 @@ impl MemoryCompressor {
         }
 
         // LT et ELT -> cognitive préféré
-        let has_lt = items.iter().any(|i|
-            i.level == MemoryLevel::LT || i.level == MemoryLevel::ELT
-        );
+        let has_lt = items
+            .iter()
+            .any(|i| i.level == MemoryLevel::LT || i.level == MemoryLevel::ELT);
 
         if has_lt && self.config.cognitive_enabled {
             CompressionType::Hybrid
@@ -194,7 +196,10 @@ impl MemoryCompressor {
     }
 
     /// Compression LZ4 (simulée avec encodage simple)
-    fn compress_lz4(&self, items: &[&MemoryItem]) -> Result<CompressedMemoryBlock, MemoryEvolutionError> {
+    fn compress_lz4(
+        &self,
+        items: &[&MemoryItem],
+    ) -> Result<CompressedMemoryBlock, MemoryEvolutionError> {
         let content = self.serialize_items(items);
         let original_size = content.len();
 
@@ -216,7 +221,10 @@ impl MemoryCompressor {
     }
 
     /// Compression cognitive (résumé IA)
-    fn compress_cognitive(&self, items: &[&MemoryItem]) -> Result<CompressedMemoryBlock, MemoryEvolutionError> {
+    fn compress_cognitive(
+        &self,
+        items: &[&MemoryItem],
+    ) -> Result<CompressedMemoryBlock, MemoryEvolutionError> {
         let original_size: usize = items.iter().map(|i| i.content.len()).sum();
 
         // Générer un résumé cognitif
@@ -246,7 +254,10 @@ impl MemoryCompressor {
     }
 
     /// Compression hybride (LZ4 + cognitive)
-    fn compress_hybrid(&self, items: &[&MemoryItem]) -> Result<CompressedMemoryBlock, MemoryEvolutionError> {
+    fn compress_hybrid(
+        &self,
+        items: &[&MemoryItem],
+    ) -> Result<CompressedMemoryBlock, MemoryEvolutionError> {
         let original_size: usize = items.iter().map(|i| i.content.len()).sum();
 
         // Générer résumé cognitif
@@ -306,7 +317,8 @@ impl MemoryCompressor {
         // En production, cela utiliserait Ollama
         // Ici, on génère un résumé structuré
 
-        let topics: Vec<_> = items.iter()
+        let topics: Vec<_> = items
+            .iter()
             .filter_map(|i| i.topic.clone())
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -333,11 +345,13 @@ impl MemoryCompressor {
 
     /// Extrait les mots-clés principaux
     fn extract_key_words(&self, items: &[&MemoryItem]) -> Vec<String> {
-        let mut word_count: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut word_count: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
 
         for item in items {
             for word in item.content.split_whitespace() {
-                let clean = word.to_lowercase()
+                let clean = word
+                    .to_lowercase()
                     .trim_matches(|c: char| !c.is_alphanumeric())
                     .to_string();
                 if clean.len() > 4 {
@@ -357,7 +371,8 @@ impl MemoryCompressor {
         let summary_lower = summary.to_lowercase();
         let key_words = self.extract_key_words(items);
 
-        key_words.iter()
+        key_words
+            .iter()
             .filter(|w| summary_lower.contains(&w.to_lowercase()))
             .count()
     }
@@ -368,7 +383,10 @@ impl MemoryCompressor {
     }
 
     /// Décompresse un bloc LZ4 (simulé)
-    pub fn decompress_lz4(&self, block: &CompressedMemoryBlock) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
+    pub fn decompress_lz4(
+        &self,
+        block: &CompressedMemoryBlock,
+    ) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
         if let Some(data) = &block.compressed_data {
             // Décompression simple (simulation - en production utiliser lz4_flex)
             let decompressed = data.clone();
@@ -379,7 +397,9 @@ impl MemoryCompressor {
             let items: Vec<MemoryItem> = serde_json::from_str(&json)?;
             Ok(items)
         } else {
-            Err(MemoryEvolutionError::CompressionError("No compressed data".to_string()))
+            Err(MemoryEvolutionError::CompressionError(
+                "No compressed data".to_string(),
+            ))
         }
     }
 

@@ -27,14 +27,15 @@ export function formatUserError(error: unknown): FormattedError {
     const command = commandMatch ? commandMatch[1] : 'inconnue';
 
     return {
-      userMessage: 'Cette fonctionnalité nécessite une configuration spéciale et n\'est pas disponible actuellement.',
+      userMessage:
+        "Cette fonctionnalité nécessite une configuration spéciale et n'est pas disponible actuellement.",
       technicalDetails: `Commande refusée par le système de sécurité: ${command}`,
       suggestions: [
         'Utiliser les fonctionnalités standards disponibles',
         'Consulter le tableau de bord monitoring',
-        'Vérifier la configuration système'
+        'Vérifier la configuration système',
       ],
-      severity: 'warning'
+      severity: 'warning',
     };
   }
 
@@ -46,65 +47,74 @@ export function formatUserError(error: unknown): FormattedError {
     const command = commandMatch ? commandMatch[1] : 'inconnue';
 
     return {
-      userMessage: 'Cette fonctionnalité n\'est pas encore disponible dans cette version.',
+      userMessage: "Cette fonctionnalité n'est pas encore disponible dans cette version.",
       technicalDetails: `Commande non implémentée côté serveur: ${command}`,
       suggestions: [
         'Utiliser une fonctionnalité alternative',
         'Vérifier les mises à jour système',
-        'Contacter le support technique'
+        'Contacter le support technique',
       ],
-      severity: 'info'
+      severity: 'info',
     };
   }
 
   // ═══════════════════════════════════════════════════════════════
   // Variable manquante (erreur React)
   // ═══════════════════════════════════════════════════════════════
-  if (message.includes('Can\'t find variable') || message.includes('is not defined')) {
+  if (message.includes("Can't find variable") || message.includes('is not defined')) {
     const varMatch = message.match(/variable: (\w+)|(\w+) is not defined/);
-    const variable = varMatch ? (varMatch[1] || varMatch[2]) : 'inconnue';
+    const variable = varMatch ? varMatch[1] || varMatch[2] : 'inconnue';
 
     return {
-      userMessage: 'Le module a rencontré une erreur interne et a été isolé pour protéger l\'application.',
+      userMessage:
+        "Le module a rencontré une erreur interne et a été isolé pour protéger l'application.",
       technicalDetails: `Variable manquante dans le composant: ${variable}`,
       suggestions: [
         'Rafraîchir la page',
         'Vider le cache du navigateur',
-        'Signaler le problème si cela persiste'
+        'Signaler le problème si cela persiste',
       ],
-      severity: 'error'
+      severity: 'error',
     };
   }
 
   // ═══════════════════════════════════════════════════════════════
   // Erreur réseau / timeout
   // ═══════════════════════════════════════════════════════════════
-  if (message.includes('timeout') || message.includes('network') || message.includes('fetch')) {
+  if (
+    message.includes('timeout') ||
+    message.includes('network') ||
+    message.includes('fetch')
+  ) {
     return {
       userMessage: 'La connexion au système a échoué. Vérifiez votre connexion réseau.',
       technicalDetails: message,
       suggestions: [
         'Vérifier la connexion internet',
         'Réessayer dans quelques instants',
-        'Redémarrer l\'application si le problème persiste'
+        "Redémarrer l'application si le problème persiste",
       ],
-      severity: 'warning'
+      severity: 'warning',
     };
   }
 
   // ═══════════════════════════════════════════════════════════════
   // Erreur de permission
   // ═══════════════════════════════════════════════════════════════
-  if (message.includes('permission') || message.includes('unauthorized') || message.includes('forbidden')) {
+  if (
+    message.includes('permission') ||
+    message.includes('unauthorized') ||
+    message.includes('forbidden')
+  ) {
     return {
-      userMessage: 'Vous n\'avez pas les permissions nécessaires pour cette action.',
+      userMessage: "Vous n'avez pas les permissions nécessaires pour cette action.",
       technicalDetails: message,
       suggestions: [
-        'Vérifier vos droits d\'accès',
+        "Vérifier vos droits d'accès",
         'Contacter un administrateur',
-        'Se reconnecter si nécessaire'
+        'Se reconnecter si nécessaire',
       ],
-      severity: 'warning'
+      severity: 'warning',
     };
   }
 
@@ -112,15 +122,16 @@ export function formatUserError(error: unknown): FormattedError {
   // Erreur générique
   // ═══════════════════════════════════════════════════════════════
   return {
-    userMessage: 'Une erreur inattendue s\'est produite. L\'opération n\'a pas pu être complétée.',
+    userMessage:
+      "Une erreur inattendue s'est produite. L'opération n'a pas pu être complétée.",
     technicalDetails: message,
     suggestions: [
-      'Réessayer l\'opération',
+      "Réessayer l'opération",
       'Vérifier les paramètres système',
       'Consulter les logs pour plus de détails',
-      'Contacter le support si le problème persiste'
+      'Contacter le support si le problème persiste',
     ],
-    severity: 'error'
+    severity: 'error',
   };
 }
 
@@ -168,12 +179,10 @@ export function isErrorCritical(error: unknown): boolean {
     'panic',
     'segfault',
     'out of memory',
-    'stack overflow'
+    'stack overflow',
   ];
 
-  return criticalKeywords.some(keyword =>
-    message.toLowerCase().includes(keyword)
-  );
+  return criticalKeywords.some(keyword => message.toLowerCase().includes(keyword));
 }
 
 /**
@@ -183,7 +192,7 @@ export function generateErrorId(error: unknown): string {
   const message = error instanceof Error ? error.message : String(error);
   const timestamp = Date.now();
   const hash = message.split('').reduce((acc, char) => {
-    return ((acc << 5) - acc) + char.charCodeAt(0) | 0;
+    return ((acc << 5) - acc + char.charCodeAt(0)) | 0;
   }, 0);
 
   return `err_${timestamp}_${Math.abs(hash).toString(36)}`;
@@ -192,7 +201,10 @@ export function generateErrorId(error: unknown): string {
 /**
  * Formate une erreur pour les logs (avec contexte complet)
  */
-export function formatErrorForLog(error: unknown, context?: Record<string, unknown>): string {
+export function formatErrorForLog(
+  error: unknown,
+  context?: Record<string, unknown>
+): string {
   const message = error instanceof Error ? error.message : String(error);
   const stack = error instanceof Error ? error.stack : undefined;
   const errorId = generateErrorId(error);

@@ -19,11 +19,14 @@ import type { Message, MessageHandler } from '../types';
  */
 export class MessageBus {
   private handlers: Map<string, Map<string, MessageHandler>> = new Map();
-  private pendingReplies: Map<string, {
-    resolve: (msg: Message) => void;
-    reject: (error: Error) => void;
-    timeout: ReturnType<typeof setTimeout>;
-  }> = new Map();
+  private pendingReplies: Map<
+    string,
+    {
+      resolve: (msg: Message) => void;
+      reject: (error: Error) => void;
+      timeout: ReturnType<typeof setTimeout>;
+    }
+  > = new Map();
   private messageCounter = 0;
 
   /**
@@ -126,10 +129,7 @@ export class MessageBus {
   /**
    * Reply to a message
    */
-  async reply<T = unknown>(
-    originalMessage: Message,
-    payload: T
-  ): Promise<void> {
+  async reply<T = unknown>(originalMessage: Message, payload: T): Promise<void> {
     await this.send({
       from: originalMessage.to,
       to: originalMessage.from,

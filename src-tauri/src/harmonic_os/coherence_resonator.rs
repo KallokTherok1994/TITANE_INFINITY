@@ -14,12 +14,16 @@ pub struct CoherenceResonator {
 
 impl CoherenceResonator {
     pub fn new(amplification_factor: f32) -> Self {
-        Self { amplification_factor }
+        Self {
+            amplification_factor,
+        }
     }
-    
+
     pub fn amplify(&self, state: &mut HarmonicState) {
-        state.cognitive_resonance = (state.cognitive_resonance * self.amplification_factor).clamp(0.0, 1.0);
-        state.logical_alignment = (state.logical_alignment * self.amplification_factor).clamp(0.0, 1.0);
+        state.cognitive_resonance =
+            (state.cognitive_resonance * self.amplification_factor).clamp(0.0, 1.0);
+        state.logical_alignment =
+            (state.logical_alignment * self.amplification_factor).clamp(0.0, 1.0);
     }
 }
 

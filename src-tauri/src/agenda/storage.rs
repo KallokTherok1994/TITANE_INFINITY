@@ -199,12 +199,11 @@ impl AgendaStorageManager {
         let today_start = now.format("%Y-%m-%dT00:00:00").to_string();
         let today_end = now.format("%Y-%m-%dT23:59:59").to_string();
 
-        let week_start = (now - chrono::Duration::days(now.weekday().num_days_from_monday() as i64))
-            .format("%Y-%m-%dT00:00:00")
-            .to_string();
-        let week_end = now
-            .format("%Y-%m-%dT23:59:59")
-            .to_string();
+        let week_start = (now
+            - chrono::Duration::days(now.weekday().num_days_from_monday() as i64))
+        .format("%Y-%m-%dT00:00:00")
+        .to_string();
+        let week_end = now.format("%Y-%m-%dT23:59:59").to_string();
 
         let events_today = cache
             .events

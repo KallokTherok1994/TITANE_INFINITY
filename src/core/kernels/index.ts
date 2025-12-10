@@ -7,7 +7,7 @@
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v1.0 — CORE KERNELS INDEX
  *   Export centralisé des 3 kernels cognitifs
- *   
+ *
  *   NOTE: Fichiers dans core/kernels/ supprimés - réexports depuis
  *   services/ai/ pour éviter duplication
  * ═══════════════════════════════════════════════════════════════════

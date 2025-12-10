@@ -133,8 +133,8 @@ export interface ContextSource {
   type: ContextSourceType;
   engine: string;
   timestamp: number;
-  reliability: number;  // 0-1
-  ttl: number;         // Time to live en ms
+  reliability: number; // 0-1
+  ttl: number; // Time to live en ms
 }
 
 /**
@@ -145,12 +145,12 @@ export interface ContextNode {
   type: ContextNodeType;
   layerId: LayerId;
   content: unknown;
-  relevance: number;    // 0-1
+  relevance: number; // 0-1
   priority: PriorityLevel;
   timestamp: number;
   source: ContextSource;
   metadata: NodeMetadata;
-  hash: string;         // Pour déduplication
+  hash: string; // Pour déduplication
 }
 
 /**
@@ -161,7 +161,7 @@ export interface NodeMetadata {
   compressed: boolean;
   originalSize?: number;
   tags: string[];
-  linkedNodes: string[];  // IDs de nœuds liés
+  linkedNodes: string[]; // IDs de nœuds liés
   expiresAt?: number;
 }
 
@@ -188,7 +188,7 @@ export interface ContextBundle {
 export interface LayerMetadata {
   name: string;
   description: string;
-  priority: number;     // 1-100 (100 = plus prioritaire)
+  priority: number; // 1-100 (100 = plus prioritaire)
   maxTokens: number;
   compressionAllowed: boolean;
   requiredForPrompt: boolean;
@@ -258,9 +258,9 @@ export interface ParsedIntent {
   secondary?: IntentCategory;
   keywords: string[];
   entities: IntentEntity[];
-  sentiment: number;      // -1 à 1
-  urgency: number;        // 0 à 1
-  complexity: number;     // 0 à 1
+  sentiment: number; // -1 à 1
+  urgency: number; // 0 à 1
+  complexity: number; // 0 à 1
 }
 
 /**
@@ -298,9 +298,9 @@ export interface PersonalityConfig {
   name: string;
   tone: ConversationTone;
   energy: EnergyLevel;
-  formality: number;      // 0-1
-  verbosity: number;      // 0-1
-  creativity: number;     // 0-1
+  formality: number; // 0-1
+  verbosity: number; // 0-1
+  creativity: number; // 0-1
   technicalDepth: number; // 0-1
 }
 
@@ -409,7 +409,11 @@ export interface PermissionPolicy {
  */
 export interface ConflictReport {
   id: string;
-  type: 'data_conflict' | 'permission_conflict' | 'priority_conflict' | 'resource_conflict';
+  type:
+    | 'data_conflict'
+    | 'permission_conflict'
+    | 'priority_conflict'
+    | 'resource_conflict';
   layers: LayerId[];
   nodes: string[];
   description: string;
@@ -472,7 +476,7 @@ export interface BlueprintMetadata {
  */
 export interface TokenBudget {
   total: number;
-  allocated: Map<number, number>;  // section ID -> tokens
+  allocated: Map<number, number>; // section ID -> tokens
   remaining: number;
   overflow: boolean;
 }
@@ -784,9 +788,15 @@ export const DEFAULT_MODE_PROFILES: Record<IAMode, ModeProfile> = {
       maxTokensInput: 4000,
       maxTokensOutput: 2000,
       allowedSources: [
-        'memory_session', 'memory_summarized', 'memory_longterm',
-        'tools_result', 'tools_state', 'search_result',
-        'user_profile', 'vitals_cpu', 'vitals_ram',
+        'memory_session',
+        'memory_summarized',
+        'memory_longterm',
+        'tools_result',
+        'tools_state',
+        'search_result',
+        'user_profile',
+        'vitals_cpu',
+        'vitals_ram',
       ],
       deniedSources: [],
       requiresConfirmation: ['system_state'],
@@ -824,11 +834,24 @@ export const DEFAULT_MODE_PROFILES: Record<IAMode, ModeProfile> = {
       maxTokensInput: 8000,
       maxTokensOutput: 4000,
       allowedSources: [
-        'memory_session', 'memory_summarized', 'memory_longterm',
-        'tools_result', 'tools_state', 'search_result', 'search_cache',
-        'tts_state', 'selfhealing_status', 'xp_data', 'evolution_data',
-        'vitals_cpu', 'vitals_ram', 'vitals_disk', 'vitals_network',
-        'user_profile', 'user_preferences', 'ia_config',
+        'memory_session',
+        'memory_summarized',
+        'memory_longterm',
+        'tools_result',
+        'tools_state',
+        'search_result',
+        'search_cache',
+        'tts_state',
+        'selfhealing_status',
+        'xp_data',
+        'evolution_data',
+        'vitals_cpu',
+        'vitals_ram',
+        'vitals_disk',
+        'vitals_network',
+        'user_profile',
+        'user_preferences',
+        'ia_config',
       ],
       deniedSources: [],
       requiresConfirmation: [],
@@ -867,11 +890,25 @@ export const DEFAULT_MODE_PROFILES: Record<IAMode, ModeProfile> = {
       maxTokensInput: 16000,
       maxTokensOutput: 8000,
       allowedSources: [
-        'memory_session', 'memory_summarized', 'memory_longterm',
-        'tools_result', 'tools_state', 'search_result', 'search_cache',
-        'tts_state', 'selfhealing_status', 'xp_data', 'evolution_data',
-        'vitals_cpu', 'vitals_ram', 'vitals_disk', 'vitals_network',
-        'user_profile', 'user_preferences', 'ia_config', 'system_state',
+        'memory_session',
+        'memory_summarized',
+        'memory_longterm',
+        'tools_result',
+        'tools_state',
+        'search_result',
+        'search_cache',
+        'tts_state',
+        'selfhealing_status',
+        'xp_data',
+        'evolution_data',
+        'vitals_cpu',
+        'vitals_ram',
+        'vitals_disk',
+        'vitals_network',
+        'user_profile',
+        'user_preferences',
+        'ia_config',
+        'system_state',
       ],
       deniedSources: [],
       requiresConfirmation: [],
@@ -902,22 +939,22 @@ export const PROMPT_SECTION_NAMES: Record<number, string> = {
   6: 'INFORMATIONS COMPLÉMENTAIRES',
   7: 'RÈGLES & RESTRICTIONS',
   8: 'STYLE / TONALITÉ ADAPTATIVE',
-  9: 'INSTRUCTIONS FINALES POUR L\'IA',
+  9: "INSTRUCTIONS FINALES POUR L'IA",
 };
 
 /**
  * Budget de tokens par section (par défaut)
  */
 export const DEFAULT_TOKEN_BUDGET: Record<number, number> = {
-  1: 100,   // Mode IA
-  2: 200,   // Objectif
-  3: 150,   // Intention
-  4: 300,   // Contexte courant
-  5: 1000,  // Mémoire
-  6: 500,   // Infos complémentaires
-  7: 200,   // Règles
-  8: 150,   // Style
-  9: 400,   // Instructions finales
+  1: 100, // Mode IA
+  2: 200, // Objectif
+  3: 150, // Intention
+  4: 300, // Contexte courant
+  5: 1000, // Mémoire
+  6: 500, // Infos complémentaires
+  7: 200, // Règles
+  8: 150, // Style
+  9: 400, // Instructions finales
 };
 
 /**
@@ -941,7 +978,7 @@ export const DEFAULT_PROMPT_ENGINE_CONFIG: PromptEngineConfig = {
     timeout: 5000,
     parallelFetch: true,
     cacheEnabled: true,
-    cacheTTL: 60000,  // 1 minute
+    cacheTTL: 60000, // 1 minute
   },
   filter: {
     minRelevance: 0.3,
@@ -966,14 +1003,106 @@ export const DEFAULT_PROMPT_ENGINE_CONFIG: PromptEngineConfig = {
  * Mots-clés pour la détection d'intention
  */
 export const INTENT_KEYWORDS: Record<IntentCategory, string[]> = {
-  question: ['quoi', 'comment', 'pourquoi', 'où', 'quand', 'qui', 'est-ce que', '?', 'what', 'how', 'why', 'where', 'when', 'who'],
-  command: ['fais', 'créé', 'supprime', 'modifie', 'lance', 'exécute', 'ouvre', 'ferme', 'do', 'create', 'delete', 'modify', 'run', 'execute'],
-  creation: ['créé', 'génère', 'écris', 'compose', 'construis', 'create', 'generate', 'write', 'compose', 'build'],
-  modification: ['modifie', 'change', 'update', 'corrige', 'améliore', 'modify', 'change', 'update', 'fix', 'improve'],
-  analysis: ['analyse', 'examine', 'évalue', 'compare', 'review', 'analyze', 'examine', 'evaluate', 'compare', 'review'],
-  search: ['cherche', 'trouve', 'recherche', 'localise', 'search', 'find', 'look for', 'locate'],
-  conversation: ['salut', 'bonjour', 'merci', 'ok', 'bien', 'hello', 'hi', 'thanks', 'ok', 'good'],
-  system: ['système', 'config', 'paramètre', 'réglage', 'system', 'config', 'setting', 'preference'],
+  question: [
+    'quoi',
+    'comment',
+    'pourquoi',
+    'où',
+    'quand',
+    'qui',
+    'est-ce que',
+    '?',
+    'what',
+    'how',
+    'why',
+    'where',
+    'when',
+    'who',
+  ],
+  command: [
+    'fais',
+    'créé',
+    'supprime',
+    'modifie',
+    'lance',
+    'exécute',
+    'ouvre',
+    'ferme',
+    'do',
+    'create',
+    'delete',
+    'modify',
+    'run',
+    'execute',
+  ],
+  creation: [
+    'créé',
+    'génère',
+    'écris',
+    'compose',
+    'construis',
+    'create',
+    'generate',
+    'write',
+    'compose',
+    'build',
+  ],
+  modification: [
+    'modifie',
+    'change',
+    'update',
+    'corrige',
+    'améliore',
+    'modify',
+    'change',
+    'update',
+    'fix',
+    'improve',
+  ],
+  analysis: [
+    'analyse',
+    'examine',
+    'évalue',
+    'compare',
+    'review',
+    'analyze',
+    'examine',
+    'evaluate',
+    'compare',
+    'review',
+  ],
+  search: [
+    'cherche',
+    'trouve',
+    'recherche',
+    'localise',
+    'search',
+    'find',
+    'look for',
+    'locate',
+  ],
+  conversation: [
+    'salut',
+    'bonjour',
+    'merci',
+    'ok',
+    'bien',
+    'hello',
+    'hi',
+    'thanks',
+    'ok',
+    'good',
+  ],
+  system: [
+    'système',
+    'config',
+    'paramètre',
+    'réglage',
+    'system',
+    'config',
+    'setting',
+    'preference',
+  ],
   help: ['aide', 'help', 'assistance', 'support', 'explique', 'explain'],
   unknown: [],
 };
@@ -1022,7 +1151,7 @@ export function hashContent(content: unknown): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash;
   }
   return Math.abs(hash).toString(36);
@@ -1039,7 +1168,10 @@ export function estimateTokens(text: string): number {
 /**
  * Valide une requête de prompt
  */
-export function validatePromptRequest(request: PromptRequest): { valid: boolean; errors: string[] } {
+export function validatePromptRequest(request: PromptRequest): {
+  valid: boolean;
+  errors: string[];
+} {
   const errors: string[] = [];
 
   if (!request.id) {
@@ -1050,7 +1182,10 @@ export function validatePromptRequest(request: PromptRequest): { valid: boolean;
     errors.push('User input is required');
   }
 
-  if (request.mode && !['standard', 'dev', 'architect', 'autonomous'].includes(request.mode)) {
+  if (
+    request.mode &&
+    !['standard', 'dev', 'architect', 'autonomous'].includes(request.mode)
+  ) {
     errors.push(`Invalid mode: ${request.mode}`);
   }
 

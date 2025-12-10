@@ -634,9 +634,10 @@ impl CloudVaultEngine {
 
     /// Exporte les données filtrées pour synchronisation
     pub fn export_for_sync(&self) -> Result<VaultData, CloudSyncError> {
-        let vault = self.vault.as_ref().ok_or_else(|| {
-            CloudSyncError::IoError("No vault loaded".to_string())
-        })?;
+        let vault = self
+            .vault
+            .as_ref()
+            .ok_or_else(|| CloudSyncError::IoError("No vault loaded".to_string()))?;
 
         // Filtrer les données selon le manifest
         let mut filtered = VaultData::default();

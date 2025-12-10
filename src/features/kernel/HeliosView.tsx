@@ -40,10 +40,14 @@ export function HeliosView() {
 
   const getHealthColor = (status: HealthStatus | null): string => {
     switch (status) {
-      case 'Healthy': return 'green';
-      case 'Warning': return 'yellow';
-      case 'Critical': return 'red';
-      default: return 'gray';
+      case 'Healthy':
+        return 'green';
+      case 'Warning':
+        return 'yellow';
+      case 'Critical':
+        return 'red';
+      default:
+        return 'gray';
     }
   };
 
@@ -74,9 +78,7 @@ export function HeliosView() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Helios — Monitoring Système</h2>
-        {health && (
-          <Badge color={getHealthColor(health)}>{health}</Badge>
-        )}
+        {health && <Badge color={getHealthColor(health)}>{health}</Badge>}
       </div>
 
       {/* Metrics Grid */}
@@ -95,8 +97,8 @@ export function HeliosView() {
                 helios.cpu_usage >= 90
                   ? 'bg-red-500'
                   : helios.cpu_usage >= 75
-                  ? 'bg-yellow-500'
-                  : 'bg-green-500'
+                    ? 'bg-yellow-500'
+                    : 'bg-green-500'
               }`}
               style={{ width: `${helios.cpu_usage}%` }}
             />
@@ -117,8 +119,8 @@ export function HeliosView() {
                 helios.ram_usage >= 90
                   ? 'bg-red-500'
                   : helios.ram_usage >= 80
-                  ? 'bg-yellow-500'
-                  : 'bg-green-500'
+                    ? 'bg-yellow-500'
+                    : 'bg-green-500'
               }`}
               style={{ width: `${helios.ram_usage}%` }}
             />
@@ -134,7 +136,8 @@ export function HeliosView() {
             </Badge>
           </div>
           <div className="text-xs text-gray-500">
-            Total: {helios.disk_usage[1].toFixed(1)} GB ({helios.disk_usage[2].toFixed(1)}%)
+            Total: {helios.disk_usage[1].toFixed(1)} GB ({helios.disk_usage[2].toFixed(1)}
+            %)
           </div>
         </Card>
 
@@ -152,15 +155,21 @@ export function HeliosView() {
           <div className="flex items-center gap-6">
             <div>
               <div className="text-xs text-gray-500">1 min</div>
-              <div className="text-lg font-semibold">{helios.load_average[0].toFixed(2)}</div>
+              <div className="text-lg font-semibold">
+                {helios.load_average[0].toFixed(2)}
+              </div>
             </div>
             <div>
               <div className="text-xs text-gray-500">5 min</div>
-              <div className="text-lg font-semibold">{helios.load_average[1].toFixed(2)}</div>
+              <div className="text-lg font-semibold">
+                {helios.load_average[1].toFixed(2)}
+              </div>
             </div>
             <div>
               <div className="text-xs text-gray-500">15 min</div>
-              <div className="text-lg font-semibold">{helios.load_average[2].toFixed(2)}</div>
+              <div className="text-lg font-semibold">
+                {helios.load_average[2].toFixed(2)}
+              </div>
             </div>
           </div>
         </Card>

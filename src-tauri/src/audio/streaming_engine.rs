@@ -4,15 +4,15 @@
 //   Replaces arecord batch recording with continuous streaming
 // ═══════════════════════════════════════════════════════════════
 
+use super::vad::{VADResult, VoiceActivityDetector};
 use super::{AudioConfig, AudioError, AudioResult};
-use super::vad::{VoiceActivityDetector, VADResult};
 use serde::{Deserialize, Serialize};
-use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 #[cfg(feature = "audio-capture")]
-use cpal::
+use cpal::{
     traits::{DeviceTrait, HostTrait, StreamTrait},
     Stream, StreamConfig,
 };
@@ -32,9 +32,9 @@ macro_rules! lock_or_recover {
 #[serde(rename_all = "camelCase")]
 pub enum StreamingState {
     Idle,
-    Listening,      // VAD monitoring, waiting for speech
-    Recording,      // Active speech detected, buffering
-    Processing,     // Speech ended, processing buffer
+    Listening,  // VAD monitoring, waiting for speech
+    Recording,  // Active speech detected, buffering
+    Processing, // Speech ended, processing buffer
 }
 
 /// Ring buffer for PCM samples (thread-safe)
@@ -234,7 +234,7 @@ impl StreamingAudioEngine {
 
         self.stream = Some(stream);
         self.is_active.store(true, Ordering::Release);
-        
+
         // Update state with error recovery
         if let Ok(mut state) = self.state.lock() {
             *state = StreamingState::Listening;
@@ -359,8 +359,11 @@ impl StreamingAudioEngine {
         *lock_or_recover!(self.speech_start_time) = None;
         *lock_or_recover!(self.last_speech_time) = None;
 
-        log::info!("[StreamingEngine] ✅ Stream stopped - {} samples, {:.2}s",
-            audio_data.len(), duration_ms as f32 / 1000.0);
+        log::info!(
+            "[StreamingEngine] ✅ Stream stopped - {} samples, {:.2}s",
+            audio_data.len(),
+            duration_ms as f32 / 1000.0
+        );
 
         Ok(StreamingResult {
             audio_data,

@@ -41,7 +41,7 @@ const initialState = {
 
 export const useEvolutionStore = create<EvolutionStore>()(
   devtools(
-    (set) => ({
+    set => ({
       ...initialState,
 
       fetchState: async () => {
@@ -51,7 +51,8 @@ export const useEvolutionStore = create<EvolutionStore>()(
           set({ state, loading: false });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to fetch evolution state',
+            error:
+              error instanceof Error ? error.message : 'Failed to fetch evolution state',
             loading: false,
           });
         }
@@ -61,15 +62,15 @@ export const useEvolutionStore = create<EvolutionStore>()(
         try {
           set({ running: true, loading: true, error: null });
           const report = await backendV17.engine.runEvolution();
-          
+
           // Fetch updated state
           const state = await backendV17.engine.getState();
-          
-          set({ 
-            lastReport: report, 
-            state, 
-            running: false, 
-            loading: false 
+
+          set({
+            lastReport: report,
+            state,
+            running: false,
+            loading: false,
           });
         } catch (error) {
           set({

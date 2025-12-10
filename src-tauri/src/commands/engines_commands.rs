@@ -6,14 +6,14 @@
 // Created: 2025 | License: MIT
 // ═══════════════════════════════════════════════════════════════════════════════
 
-use tauri::command;
 use serde::{Deserialize, Serialize};
+use tauri::command;
 
 // Import engines
 use crate::engines::{
-    QAEngineState, QATestResult, QASeverity, QATestSuite, QAReport, SystemInfo,
-    MonitoringState, SystemMetricsRealtime, EngineHeartbeat, DetectedAnomaly, HealthStatus,
-    DeveloperModeState, PatchAction, PatchResult, PatchType, ChangeSeverity,
+    ChangeSeverity, DetectedAnomaly, DeveloperModeState, EngineHeartbeat, HealthStatus,
+    MonitoringState, PatchAction, PatchResult, PatchType, QAEngineState, QAReport, QASeverity,
+    QATestResult, QATestSuite, SystemInfo, SystemMetricsRealtime,
 };
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -52,7 +52,7 @@ pub async fn engines_qa_run_suite(suite_name: String) -> Result<QATestSuite, Str
         "coherence" => crate::engines::qa_engine::qa_run_coherence_test().await,
         "performance" => crate::engines::qa_engine::qa_run_performance_test().await,
         "integration" => crate::engines::qa_engine::qa_run_integration_test().await,
-        _ => Err(format!("Unknown test suite: {}", suite_name))
+        _ => Err(format!("Unknown test suite: {}", suite_name)),
     }
 }
 
@@ -117,7 +117,9 @@ pub async fn engines_monitoring_get_health() -> Result<HealthStatus, String> {
 
 /// Get metrics history
 #[command]
-pub async fn engines_monitoring_get_history(period: Option<String>) -> Result<serde_json::Value, String> {
+pub async fn engines_monitoring_get_history(
+    period: Option<String>,
+) -> Result<serde_json::Value, String> {
     let history = crate::engines::monitoring_engine::monitoring_get_metrics_history(period).await?;
     Ok(serde_json::to_value(history).map_err(|e| e.to_string())?)
 }
@@ -216,9 +218,14 @@ pub async fn engines_devmode_restore_backup(backup_id: String) -> Result<bool, S
 
 /// Analyze file for potential improvements
 #[command]
-pub async fn engines_devmode_analyze_file(file_path: String) -> Result<Vec<serde_json::Value>, String> {
+pub async fn engines_devmode_analyze_file(
+    file_path: String,
+) -> Result<Vec<serde_json::Value>, String> {
     let suggestions = crate::engines::developer_mode::dev_mode_analyze_file(file_path).await?;
-    Ok(suggestions.into_iter().map(|s| serde_json::to_value(s).unwrap_or_default()).collect())
+    Ok(suggestions
+        .into_iter()
+        .map(|s| serde_json::to_value(s).unwrap_or_default())
+        .collect())
 }
 
 /// Generate changelog

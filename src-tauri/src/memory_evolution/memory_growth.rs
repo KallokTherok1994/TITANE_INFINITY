@@ -113,7 +113,10 @@ impl MemoryGrowthEngine {
 
     /// Exécute un cycle de croissance mémoire
     pub fn grow(&self, items: &mut Vec<MemoryItem>) -> Result<GrowthResult, MemoryEvolutionError> {
-        info!("[MemoryGrowth] Starting growth cycle for {} items", items.len());
+        info!(
+            "[MemoryGrowth] Starting growth cycle for {} items",
+            items.len()
+        );
 
         let items_before = self.count_by_level(items);
 
@@ -153,7 +156,8 @@ impl MemoryGrowthEngine {
             0.0
         };
 
-        let levels_affected: Vec<MemoryLevel> = promotions.iter()
+        let levels_affected: Vec<MemoryLevel> = promotions
+            .iter()
             .flat_map(|p| vec![p.from_level, p.to_level])
             .collect::<std::collections::HashSet<_>>()
             .into_iter()
@@ -177,7 +181,9 @@ impl MemoryGrowthEngine {
 
         info!(
             "[MemoryGrowth] Growth complete: {} promotions, {} new core, rate={:.2}%",
-            promotions.len(), new_core.len(), growth_rate * 100.0
+            promotions.len(),
+            new_core.len(),
+            growth_rate * 100.0
         );
 
         Ok(result)
@@ -201,7 +207,10 @@ impl MemoryGrowthEngine {
     }
 
     /// Identifie les items éligibles à la promotion
-    fn identify_promotions(&self, items: &[MemoryItem]) -> Result<Vec<MemoryPromotion>, MemoryEvolutionError> {
+    fn identify_promotions(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryPromotion>, MemoryEvolutionError> {
         let mut promotions = Vec::new();
 
         for item in items {
@@ -248,7 +257,9 @@ impl MemoryGrowthEngine {
             MemoryLevel::CT => high_confidence && (high_access || high_importance),
             MemoryLevel::MT => high_confidence && high_access && has_summary,
             MemoryLevel::LT => high_confidence && high_importance && has_summary,
-            MemoryLevel::ELT => item.importance >= self.config.core_importance_threshold && high_confidence,
+            MemoryLevel::ELT => {
+                item.importance >= self.config.core_importance_threshold && high_confidence
+            }
             MemoryLevel::Core => false,
         }
     }
@@ -274,7 +285,11 @@ impl MemoryGrowthEngine {
     }
 
     /// Applique une promotion
-    fn apply_promotion(&self, items: &mut Vec<MemoryItem>, promotion: &MemoryPromotion) -> Result<(), MemoryEvolutionError> {
+    fn apply_promotion(
+        &self,
+        items: &mut Vec<MemoryItem>,
+        promotion: &MemoryPromotion,
+    ) -> Result<(), MemoryEvolutionError> {
         if let Some(item) = items.iter_mut().find(|i| i.id == promotion.item_id) {
             item.level = promotion.to_level;
             item.confidence = (item.confidence + promotion.confidence_delta).min(1.0);
@@ -284,11 +299,15 @@ impl MemoryGrowthEngine {
     }
 
     /// Crée des Core Memories à partir des ELT de haute qualité
-    fn create_core_memories(&self, items: &mut Vec<MemoryItem>) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
+    fn create_core_memories(
+        &self,
+        items: &mut Vec<MemoryItem>,
+    ) -> Result<Vec<MemoryItem>, MemoryEvolutionError> {
         let mut new_core = Vec::new();
 
         // Trouver les ELT éligibles pour devenir Core
-        let elt_items: Vec<_> = items.iter()
+        let elt_items: Vec<_> = items
+            .iter()
             .filter(|i| i.level == MemoryLevel::ELT)
             .filter(|i| i.importance >= self.config.core_importance_threshold)
             .filter(|i| i.confidence >= 0.9)
@@ -315,14 +334,17 @@ impl MemoryGrowthEngine {
     }
 
     /// Distille un groupe en Core Memory
-    fn distill_to_core(&self, topic: &str, items: &[MemoryItem]) -> Result<MemoryItem, MemoryEvolutionError> {
+    fn distill_to_core(
+        &self,
+        topic: &str,
+        items: &[MemoryItem],
+    ) -> Result<MemoryItem, MemoryEvolutionError> {
         // Créer un résumé essence
-        let summaries: Vec<_> = items.iter()
-            .filter_map(|i| i.summary.clone())
-            .collect();
+        let summaries: Vec<_> = items.iter().filter_map(|i| i.summary.clone()).collect();
 
         let essence = if summaries.is_empty() {
-            items.iter()
+            items
+                .iter()
                 .map(|i| i.content.chars().take(100).collect::<String>())
                 .collect::<Vec<_>>()
                 .join(" | ")
@@ -331,13 +353,20 @@ impl MemoryGrowthEngine {
         };
 
         let avg_confidence = items.iter().map(|i| i.confidence).sum::<f32>() / items.len() as f32;
-        let max_importance = items.iter().map(|i| i.importance).fold(0.0f32, |a, b| a.max(b));
+        let max_importance = items
+            .iter()
+            .map(|i| i.importance)
+            .fold(0.0f32, |a, b| a.max(b));
 
         Ok(MemoryItem {
             id: format!("core-{}", uuid::Uuid::new_v4().to_string()[..8].to_string()),
             level: MemoryLevel::Core,
             memory_type: MemoryType::Meta,
-            content: format!("[CORE MEMORY] Topic: {} | Essence distillée de {} items ELT", topic, items.len()),
+            content: format!(
+                "[CORE MEMORY] Topic: {} | Essence distillée de {} items ELT",
+                topic,
+                items.len()
+            ),
             summary: Some(essence),
             topic: Some(topic.to_string()),
             cluster_id: None,
@@ -351,8 +380,14 @@ impl MemoryGrowthEngine {
             compressed: false,
             metadata: {
                 let mut meta = HashMap::new();
-                meta.insert("source_items".to_string(), serde_json::json!(items.iter().map(|i| i.id.clone()).collect::<Vec<_>>()));
-                meta.insert("distillation_method".to_string(), serde_json::json!("summary_merge"));
+                meta.insert(
+                    "source_items".to_string(),
+                    serde_json::json!(items.iter().map(|i| i.id.clone()).collect::<Vec<_>>()),
+                );
+                meta.insert(
+                    "distillation_method".to_string(),
+                    serde_json::json!("summary_merge"),
+                );
                 meta
             },
         })
@@ -388,7 +423,13 @@ impl MemoryGrowthEngine {
         // Nœuds par niveau
         let counts = self.count_by_level(items);
 
-        for level in [MemoryLevel::CT, MemoryLevel::MT, MemoryLevel::LT, MemoryLevel::ELT, MemoryLevel::Core] {
+        for level in [
+            MemoryLevel::CT,
+            MemoryLevel::MT,
+            MemoryLevel::LT,
+            MemoryLevel::ELT,
+            MemoryLevel::Core,
+        ] {
             let level_str = format!("{:?}", level);
             let size = counts.get(&level_str).copied().unwrap_or(0);
 
@@ -445,18 +486,38 @@ impl MemoryGrowthEngine {
         let ct_mt_ratio = if mt > 0 { ct as f32 / mt as f32 } else { 0.0 };
         let mt_lt_ratio = if lt > 0 { mt as f32 / lt as f32 } else { 0.0 };
 
-        let is_balanced = ct_mt_ratio < 5.0 && ct_mt_ratio > 0.2 &&
-                          mt_lt_ratio < 3.0 && mt_lt_ratio > 0.1;
+        let is_balanced =
+            ct_mt_ratio < 5.0 && ct_mt_ratio > 0.2 && mt_lt_ratio < 3.0 && mt_lt_ratio > 0.1;
 
         let health_score = if is_balanced { 0.9 } else { 0.6 };
 
         let recommendations = if !is_balanced {
             vec![
-                if ct_mt_ratio > 5.0 { Some("Trop de CT, augmenter synthèse vers MT") } else { None },
-                if ct_mt_ratio < 0.2 { Some("Peu de CT, vérifier entrée de données") } else { None },
-                if mt_lt_ratio > 3.0 { Some("Trop de MT, promouvoir vers LT") } else { None },
-                if core == 0 && elt > 5 { Some("Créer des Core Memories depuis ELT") } else { None },
-            ].into_iter().flatten().map(String::from).collect()
+                if ct_mt_ratio > 5.0 {
+                    Some("Trop de CT, augmenter synthèse vers MT")
+                } else {
+                    None
+                },
+                if ct_mt_ratio < 0.2 {
+                    Some("Peu de CT, vérifier entrée de données")
+                } else {
+                    None
+                },
+                if mt_lt_ratio > 3.0 {
+                    Some("Trop de MT, promouvoir vers LT")
+                } else {
+                    None
+                },
+                if core == 0 && elt > 5 {
+                    Some("Créer des Core Memories depuis ELT")
+                } else {
+                    None
+                },
+            ]
+            .into_iter()
+            .flatten()
+            .map(String::from)
+            .collect()
         } else {
             vec!["Hiérarchie mémoire équilibrée".to_string()]
         };

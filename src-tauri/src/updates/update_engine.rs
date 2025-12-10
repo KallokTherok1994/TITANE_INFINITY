@@ -169,7 +169,9 @@ impl UpdateEngine {
         })?;
 
         if !self.keypair.verify(&data, &manifest.signature) {
-            return Err(UpdateError::InvalidSignature("Invalid manifest signature".to_string()));
+            return Err(UpdateError::InvalidSignature(
+                "Invalid manifest signature".to_string(),
+            ));
         }
 
         log::info!("✅ [UPDATE] Manifest signature verified");
@@ -315,7 +317,9 @@ impl UpdateEngine {
         .map_err(|e| UpdateError::InvalidSignature(format!("Serialization: {}", e)))?;
 
         if !self.keypair.verify(&data, &script.signature) {
-            return Err(UpdateError::InvalidSignature("Invalid script signature".to_string()));
+            return Err(UpdateError::InvalidSignature(
+                "Invalid script signature".to_string(),
+            ));
         }
 
         Ok(())

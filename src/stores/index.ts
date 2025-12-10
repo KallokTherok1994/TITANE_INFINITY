@@ -88,11 +88,7 @@ export {
   useVisualGPULoad,
   useVisualActions,
 } from './visualStore';
-export type {
-  VisualEngineState,
-  VisualStoreActions,
-  VisualStore,
-} from './visualStore';
+export type { VisualEngineState, VisualStoreActions, VisualStore } from './visualStore';
 
 // Panels Store v21 (Global Panels State Management)
 export { usePanelsStore, panelsSelectors } from './panelsStore';

@@ -31,7 +31,10 @@ pub enum SecureEngineError {
 pub type SecureEngineResult<T> = Result<T, SecureEngineError>;
 
 /// Derive a 256-bit key using Argon2id from the provided passphrase and salt.
-pub fn derive_key_from_passphrase(passphrase: &str, salt: &[u8]) -> SecureEngineResult<Zeroizing<[u8; 32]>> {
+pub fn derive_key_from_passphrase(
+    passphrase: &str,
+    salt: &[u8],
+) -> SecureEngineResult<Zeroizing<[u8; 32]>> {
     if passphrase.trim().is_empty() {
         return Err(SecureEngineError::MissingPassphrase);
     }

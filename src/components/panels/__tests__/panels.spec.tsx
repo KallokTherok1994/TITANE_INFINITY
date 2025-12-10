@@ -435,11 +435,7 @@ describe('Panels Integration Tests', () => {
     );
 
     const { container: memoryContainer } = render(
-      <MemoryPanel
-        metrics={[
-          { label: 'Test', value: 50, max: 100 },
-        ]}
-      />
+      <MemoryPanel metrics={[{ label: 'Test', value: 50, max: 100 }]} />
     );
 
     const chatPanel = chatContainer.querySelector('[data-panel-id="chat"]');
@@ -465,13 +461,7 @@ describe('Panels Integration Tests', () => {
       </ChatPanel>
     );
 
-    render(
-      <MemoryPanel
-        metrics={[
-          { label: 'Test', value: 50, max: 100 },
-        ]}
-      />
-    );
+    render(<MemoryPanel metrics={[{ label: 'Test', value: 50, max: 100 }]} />);
 
     const chatCollapseButton = screen.getAllByLabelText(/collapse panel/i)[0];
     const memoryCollapseButton = screen.getAllByLabelText(/collapse panel/i)[1];
@@ -501,13 +491,7 @@ describe('Panels Integration Tests', () => {
       </ChatPanel>
     );
 
-    render(
-      <MemoryPanel
-        metrics={[
-          { label: 'Test', value: 50, max: 100 },
-        ]}
-      />
-    );
+    render(<MemoryPanel metrics={[{ label: 'Test', value: 50, max: 100 }]} />);
 
     // Apply minimal layout
     act(() => {
@@ -528,13 +512,7 @@ describe('Panels Integration Tests', () => {
       </ChatPanel>
     );
 
-    render(
-      <MemoryPanel
-        metrics={[
-          { label: 'Test', value: 50, max: 100 },
-        ]}
-      />
-    );
+    render(<MemoryPanel metrics={[{ label: 'Test', value: 50, max: 100 }]} />);
 
     // Change visual state
     act(() => {

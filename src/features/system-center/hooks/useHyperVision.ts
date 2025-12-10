@@ -12,7 +12,7 @@ import type {
   HyperVisionState,
   SystemMetrics,
   LayerHealth,
-  Anomaly
+  Anomaly,
 } from '../types/systemCenter.types';
 
 export interface UseHyperVisionReturn {
@@ -88,7 +88,7 @@ export function useHyperVision(
   const refreshAnomalies = useCallback(async (includeResolved = false) => {
     try {
       const result = await secureInvoke<Anomaly[]>('sc_hypervision_get_anomalies', {
-        includeResolved
+        includeResolved,
       });
       setAnomalies(result);
     } catch (err) {
@@ -108,11 +108,7 @@ export function useHyperVision(
       // Start polling
       if (autoRefresh && !intervalRef.current) {
         intervalRef.current = setInterval(async () => {
-          await Promise.all([
-            refreshMetrics(),
-            refreshLayers(),
-            refreshAnomalies(),
-          ]);
+          await Promise.all([refreshMetrics(), refreshLayers(), refreshAnomalies()]);
         }, refreshInterval);
       }
     } catch (err) {
@@ -152,14 +148,17 @@ export function useHyperVision(
     }
   }, []);
 
-  const resolveAnomaly = useCallback(async (id: string) => {
-    try {
-      await secureInvoke('sc_hypervision_resolve_anomaly', { anomalyId: id });
-      await refreshAnomalies();
-    } catch (err) {
-      console.error('[useHyperVision] Resolve anomaly failed:', err);
-    }
-  }, [refreshAnomalies]);
+  const resolveAnomaly = useCallback(
+    async (id: string) => {
+      try {
+        await secureInvoke('sc_hypervision_resolve_anomaly', { anomalyId: id });
+        await refreshAnomalies();
+      } catch (err) {
+        console.error('[useHyperVision] Resolve anomaly failed:', err);
+      }
+    },
+    [refreshAnomalies]
+  );
 
   // Initial state load
   useEffect(() => {

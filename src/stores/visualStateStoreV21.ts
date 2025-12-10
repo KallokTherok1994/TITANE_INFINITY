@@ -25,13 +25,17 @@
  */
 
 import { create } from 'zustand';
-import { TitaneVisualEngineV21, VisualEngineV21Config, PerformanceMetrics } from '@/visual-engine/TitaneVisualEngineV21';
+import {
+  TitaneVisualEngineV21,
+  VisualEngineV21Config,
+  PerformanceMetrics,
+} from '@/visual-engine/TitaneVisualEngineV21';
 import {
   TitaneState,
   VisualConfig,
   CognitiveState,
   EmotionalTone,
-  SystemLoadLevel,
+  SystemLoadLevel as _SystemLoadLevel,
   ConversationContext,
 } from '@/design-system/visual-states';
 
@@ -48,7 +52,10 @@ interface VisualStateStoreV21 {
   performanceMetrics: PerformanceMetrics;
 
   // Actions - Engine lifecycle
-  initEngine: (initialState: TitaneState, config?: Partial<VisualEngineV21Config>) => void;
+  initEngine: (
+    initialState: TitaneState,
+    config?: Partial<VisualEngineV21Config>
+  ) => void;
   destroyEngine: () => void;
   startEngine: () => void;
   stopEngine: () => void;
@@ -133,11 +140,11 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     });
 
     // Register callbacks for real-time updates (more efficient than events)
-    newEngine.onStateChange((state) => {
+    newEngine.onStateChange(state => {
       set({ currentState: state });
     });
 
-    newEngine.onConfigChange((config) => {
+    newEngine.onConfigChange(config => {
       set({ currentConfig: config });
     });
 
@@ -177,7 +184,9 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
     if (engine) {
       engine.start();
     } else {
-      console.warn('[VisualStateStoreV21] Engine not initialized. Call initEngine() first.');
+      console.warn(
+        '[VisualStateStoreV21] Engine not initialized. Call initEngine() first.'
+      );
     }
   },
 
@@ -210,7 +219,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
   /**
    * Set state immediately without transition
    */
-  setStateImmediate: (state) => {
+  setStateImmediate: state => {
     const { engine } = get();
     if (engine) {
       engine.setStateImmediate(state);
@@ -282,7 +291,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
   /**
    * Clear custom config override
    */
-  clearCustomConfig: (duration) => {
+  clearCustomConfig: duration => {
     const { engine } = get();
     if (engine) {
       engine.clearCustomConfig(duration);
@@ -298,7 +307,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
   /**
    * Update engine configuration
    */
-  updateEngineConfig: (config) => {
+  updateEngineConfig: config => {
     const { engine } = get();
     if (engine) {
       engine.updateConfig(config);
@@ -310,7 +319,7 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
   /**
    * Set performance mode (adjusts visual quality)
    */
-  setPerformanceMode: (mode) => {
+  setPerformanceMode: mode => {
     const { engine } = get();
     if (engine) {
       engine.setPerformanceMode(mode);
@@ -324,35 +333,35 @@ export const useVisualStateStoreV21 = create<VisualStateStoreV21>((set, get) => 
  * Hook for easy access to engine instance
  */
 export function useVisualEngine(): TitaneVisualEngineV21 | null {
-  return useVisualStateStoreV21((state) => state.engine);
+  return useVisualStateStoreV21(state => state.engine);
 }
 
 /**
  * Hook for current TitaneState
  */
 export function useCurrentState(): TitaneState {
-  return useVisualStateStoreV21((state) => state.currentState);
+  return useVisualStateStoreV21(state => state.currentState);
 }
 
 /**
  * Hook for current VisualConfig
  */
 export function useCurrentConfig(): VisualConfig | null {
-  return useVisualStateStoreV21((state) => state.currentConfig);
+  return useVisualStateStoreV21(state => state.currentConfig);
 }
 
 /**
  * Hook for transition status
  */
 export function useIsTransitioning(): boolean {
-  return useVisualStateStoreV21((state) => state.isTransitioning);
+  return useVisualStateStoreV21(state => state.isTransitioning);
 }
 
 /**
  * Hook for performance metrics
  */
 export function usePerformanceMetrics(): PerformanceMetrics {
-  return useVisualStateStoreV21((state) => state.performanceMetrics);
+  return useVisualStateStoreV21(state => state.performanceMetrics);
 }
 
 export default useVisualStateStoreV21;

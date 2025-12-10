@@ -49,19 +49,21 @@ export const Textarea = ({
 }: TextareaProps) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
+
   const isControlled = controlledValue !== undefined;
   const value = isControlled ? controlledValue : internalValue;
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newValue = e.target.value;
-    
-    if (maxLength && newValue.length > maxLength) {return;}
-    
+
+    if (maxLength && newValue.length > maxLength) {
+      return;
+    }
+
     if (!isControlled) {
       setInternalValue(newValue);
     }
-    
+
     onChange?.(newValue);
   };
 
@@ -79,14 +81,16 @@ export const Textarea = ({
     disabled && 'textarea--disabled',
     error && 'textarea--error',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const characterCount = maxLength ? `${value.length}/${maxLength}` : `${value.length}`;
 
   return (
     <div className={classes}>
       {label && <label className="textarea__label">{label}</label>}
-      
+
       <div className="textarea__wrapper">
         <textarea
           ref={textareaRef}
@@ -100,14 +104,24 @@ export const Textarea = ({
           rows={autoResize ? 1 : rows}
           maxLength={maxLength}
           aria-invalid={!!error}
-          aria-describedby={error ? 'textarea-error' : helperText ? 'textarea-helper' : undefined}
+          aria-describedby={
+            error ? 'textarea-error' : helperText ? 'textarea-helper' : undefined
+          }
         />
       </div>
 
       <div className="textarea__footer">
         <div className="textarea__footer-left">
-          {error && <span className="textarea__error" id="textarea-error">{error}</span>}
-          {!error && helperText && <span className="textarea__helper" id="textarea-helper">{helperText}</span>}
+          {error && (
+            <span className="textarea__error" id="textarea-error">
+              {error}
+            </span>
+          )}
+          {!error && helperText && (
+            <span className="textarea__helper" id="textarea-helper">
+              {helperText}
+            </span>
+          )}
         </div>
         {(showCount || maxLength) && (
           <span className="textarea__count">{characterCount}</span>

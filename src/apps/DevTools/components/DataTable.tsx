@@ -37,7 +37,7 @@ export function DataTable<T>({
       <table className="data-table">
         <thead>
           <tr>
-            {columns.map((col) => (
+            {columns.map(col => (
               <th key={col.key} style={{ width: col.width }}>
                 {col.label}
               </th>
@@ -45,11 +45,13 @@ export function DataTable<T>({
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
+          {data.map(item => (
             <tr key={keyExtractor(item)}>
-              {columns.map((col) => (
+              {columns.map(col => (
                 <td key={col.key}>
-                  {col.render ? col.render(item) : (item as Record<string, unknown>)[col.key]}
+                  {col.render
+                    ? col.render(item)
+                    : (item as Record<string, unknown>)[col.key]}
                 </td>
               ))}
             </tr>

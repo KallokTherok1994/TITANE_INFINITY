@@ -119,7 +119,7 @@ export function useKeyboardListNavigation(
  * https://www.w3.org/WAI/GL/wiki/Relative_luminance
  */
 function getRelativeLuminance(rgb: [number, number, number]): number {
-  const [r = 0, g = 0, b = 0] = rgb.map((channel) => {
+  const [r = 0, g = 0, b = 0] = rgb.map(channel => {
     const sRGB = channel / 255;
     return sRGB <= 0.03928 ? sRGB / 12.92 : Math.pow((sRGB + 0.055) / 1.055, 2.4);
   });
@@ -330,7 +330,7 @@ export function auditAccessibility(): AccessibilityIssue[] {
 
   // Check for images without alt
   const images = document.querySelectorAll('img');
-  images.forEach((img) => {
+  images.forEach(img => {
     if (!img.alt && !img.getAttribute('aria-label')) {
       issues.push({
         type: 'error',
@@ -343,7 +343,7 @@ export function auditAccessibility(): AccessibilityIssue[] {
 
   // Check for buttons without accessible name
   const buttons = document.querySelectorAll('button');
-  buttons.forEach((button) => {
+  buttons.forEach(button => {
     const hasText = button.textContent?.trim();
     const hasAriaLabel = button.getAttribute('aria-label');
     const hasAriaLabelledby = button.getAttribute('aria-labelledby');
@@ -360,7 +360,7 @@ export function auditAccessibility(): AccessibilityIssue[] {
 
   // Check for inputs without labels
   const inputs = document.querySelectorAll('input, select, textarea');
-  inputs.forEach((input) => {
+  inputs.forEach(input => {
     const hasLabel = input.id && document.querySelector(`label[for="${input.id}"]`);
     const hasAriaLabel = input.getAttribute('aria-label');
     const hasAriaLabelledby = input.getAttribute('aria-labelledby');
@@ -379,7 +379,7 @@ export function auditAccessibility(): AccessibilityIssue[] {
   // Check for heading hierarchy
   const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
   let previousLevel = 0;
-  headings.forEach((heading) => {
+  headings.forEach(heading => {
     const levelChar = heading.tagName[1];
     if (!levelChar) return;
     const level = parseInt(levelChar, 10);

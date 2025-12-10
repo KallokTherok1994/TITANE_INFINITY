@@ -15,8 +15,14 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import { audioStateMachine, type AudioConversationState } from '../audio/audioStateMachine';
-import { attentionEngine as _attentionEngine, type AttentionState as _AttentionState } from './attentionEngine';
+import {
+  audioStateMachine,
+  type AudioConversationState,
+} from '../audio/audioStateMachine';
+import {
+  attentionEngine as _attentionEngine,
+  type AttentionState as _AttentionState,
+} from './attentionEngine';
 import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -27,43 +33,43 @@ import { haloEngine as _haloEngine, type HaloState } from './haloEngine';
  * État de la pensée interne
  */
 export type ThinkingState =
-  | 'silent'              // Repos mental complet
-  | 'perceiving'          // Perception/observation
-  | 'fast_thinking'       // Pensée réflexe (<100ms)
-  | 'slow_thinking'       // Réflexion profonde (>500ms)
-  | 'planning'            // Élaboration de plan
-  | 'evaluating'          // Évaluation cohérence
-  | 'emotional_sense'     // Ressenti émotionnel
-  | 'validating'          // Validation finale
-  | 'preparing_speech'    // Préparation vocal output
-  | 'self_correcting'     // Auto-correction détectée
+  | 'silent' // Repos mental complet
+  | 'perceiving' // Perception/observation
+  | 'fast_thinking' // Pensée réflexe (<100ms)
+  | 'slow_thinking' // Réflexion profonde (>500ms)
+  | 'planning' // Élaboration de plan
+  | 'evaluating' // Évaluation cohérence
+  | 'emotional_sense' // Ressenti émotionnel
+  | 'validating' // Validation finale
+  | 'preparing_speech' // Préparation vocal output
+  | 'self_correcting' // Auto-correction détectée
   | 'narrative_alignment' // Alignement avec identité
-  | 'deep_reflection';    // Méditation/introspection profonde
+  | 'deep_reflection'; // Méditation/introspection profonde
 
 /**
  * Type de pensée interne
  */
 export type ThoughtType =
-  | 'perception'      // Observation d'un fait
-  | 'analysis'        // Analyse logique
-  | 'intuition'       // Intuition/feeling
-  | 'emotion'         // Ressenti émotionnel
-  | 'plan'            // Plan d'action
-  | 'correction'      // Auto-correction
-  | 'validation'      // Validation cohérence
-  | 'memory_recall';  // Rappel mémoire
+  | 'perception' // Observation d'un fait
+  | 'analysis' // Analyse logique
+  | 'intuition' // Intuition/feeling
+  | 'emotion' // Ressenti émotionnel
+  | 'plan' // Plan d'action
+  | 'correction' // Auto-correction
+  | 'validation' // Validation cohérence
+  | 'memory_recall'; // Rappel mémoire
 
 /**
  * Couleur mentale interne (reflétée dans le halo)
  */
 export type MentalColor =
-  | 'blue'      // Pensée rapide/logique
-  | 'violet'    // Intuition profonde
-  | 'rose'      // Émotion douce
-  | 'cyan'      // Analyse froide
-  | 'gold'      // Alignement parfait
-  | 'silver'    // Réflexion neutre
-  | 'amber';    // Auto-correction
+  | 'blue' // Pensée rapide/logique
+  | 'violet' // Intuition profonde
+  | 'rose' // Émotion douce
+  | 'cyan' // Analyse froide
+  | 'gold' // Alignement parfait
+  | 'silver' // Réflexion neutre
+  | 'amber'; // Auto-correction
 
 /**
  * Pensée interne (log invisible)
@@ -244,7 +250,6 @@ class InnerDialogueController {
       this.notifyCallbacks();
 
       return finalResponse;
-
     } catch (error) {
       console.error('[IDC] Error in inner process:', error);
       this.state.isThinking = false;
@@ -347,7 +352,9 @@ class InnerDialogueController {
   /**
    * STEP 2: Context — "Qu'ai-je appris sur l'utilisateur ?"
    */
-  private async innerStep2_Context(_previousThought: InnerThought): Promise<InnerThought> {
+  private async innerStep2_Context(
+    _previousThought: InnerThought
+  ): Promise<InnerThought> {
     this.transition('fast_thinking');
     const thought = this.createThought({
       type: 'memory_recall',
@@ -412,7 +419,9 @@ class InnerDialogueController {
   /**
    * STEP 5: Coherence — "Est-ce cohérent avec TITANE∞ ?"
    */
-  private async innerStep5_Coherence(_previousThought: InnerThought): Promise<InnerThought> {
+  private async innerStep5_Coherence(
+    _previousThought: InnerThought
+  ): Promise<InnerThought> {
     this.transition('evaluating');
     const thought = this.createThought({
       type: 'validation',
@@ -434,7 +443,9 @@ class InnerDialogueController {
   /**
    * STEP 6: Emotion — "Quel ton adopter ?"
    */
-  private async innerStep6_Emotion(_previousThought: InnerThought): Promise<InnerThought> {
+  private async innerStep6_Emotion(
+    _previousThought: InnerThought
+  ): Promise<InnerThought> {
     this.transition('emotional_sense');
     const thought = this.createThought({
       type: 'emotion',
@@ -456,7 +467,9 @@ class InnerDialogueController {
   /**
    * STEP 7: Validation — "Est-ce juste et aligné ?"
    */
-  private async innerStep7_Validation(_previousThought: InnerThought): Promise<InnerThought> {
+  private async innerStep7_Validation(
+    _previousThought: InnerThought
+  ): Promise<InnerThought> {
     this.transition('validating');
     const thought = this.createThought({
       type: 'validation',
@@ -522,13 +535,13 @@ class InnerDialogueController {
    */
   private syncHaloWithMentalState(): void {
     const mentalToHaloMap: Record<MentalColor, HaloState> = {
-      blue: 'pulsing',      // Pensée rapide
-      violet: 'breathing',  // Intuition profonde
-      rose: 'breathing',    // Émotion douce
-      cyan: 'pulsing',      // Analyse
-      gold: 'shimmer',      // Alignement parfait
-      silver: 'idle',       // Neutre
-      amber: 'pulsing',     // Correction
+      blue: 'pulsing', // Pensée rapide
+      violet: 'breathing', // Intuition profonde
+      rose: 'breathing', // Émotion douce
+      cyan: 'pulsing', // Analyse
+      gold: 'shimmer', // Alignement parfait
+      silver: 'idle', // Neutre
+      amber: 'pulsing', // Correction
     };
 
     const _haloState = mentalToHaloMap[this.state.mentalColor];
@@ -615,13 +628,15 @@ export const innerDialogueController = new InnerDialogueController({
 });
 
 // Auto-subscribe to audio state machine
-audioStateMachine.onStateChange((newState: AudioConversationState, _prevState: AudioConversationState) => {
-  // Si TITANE commence à parler, arrêter la pensée interne
-  if (newState === 'ai_speaking') {
-    innerDialogueController.setEnabled(false);
+audioStateMachine.onStateChange(
+  (newState: AudioConversationState, _prevState: AudioConversationState) => {
+    // Si TITANE commence à parler, arrêter la pensée interne
+    if (newState === 'ai_speaking') {
+      innerDialogueController.setEnabled(false);
+    }
+    // Si retour à idle, réactiver
+    else if (newState === 'idle') {
+      innerDialogueController.setEnabled(true);
+    }
   }
-  // Si retour à idle, réactiver
-  else if (newState === 'idle') {
-    innerDialogueController.setEnabled(true);
-  }
-});
+);

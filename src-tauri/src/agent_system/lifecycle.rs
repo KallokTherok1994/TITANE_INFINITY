@@ -3,10 +3,10 @@
 //! Super Prompt #19 — Gestion du cycle de vie des agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
-use std::collections::HashMap;
 use super::agent::AgentId;
+use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
+use tokio::sync::RwLock;
 
 /// État du cycle de vie
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -142,20 +142,14 @@ impl AgentLifecycle {
 
     /// Met en pause un agent
     pub async fn pause_agent(&self, agent_id: &AgentId) {
-        self.transition_state(
-            agent_id,
-            LifecycleState::Paused,
-            "Agent paused",
-        ).await;
+        self.transition_state(agent_id, LifecycleState::Paused, "Agent paused")
+            .await;
     }
 
     /// Reprend un agent
     pub async fn resume_agent(&self, agent_id: &AgentId) {
-        self.transition_state(
-            agent_id,
-            LifecycleState::Running,
-            "Agent resumed",
-        ).await;
+        self.transition_state(agent_id, LifecycleState::Running, "Agent resumed")
+            .await;
     }
 
     /// Redémarre un agent
@@ -190,11 +184,8 @@ impl AgentLifecycle {
 
     /// Marque un agent en erreur
     pub async fn mark_error(&self, agent_id: &AgentId, reason: &str) {
-        self.transition_state(
-            agent_id,
-            LifecycleState::Error,
-            reason,
-        ).await;
+        self.transition_state(agent_id, LifecycleState::Error, reason)
+            .await;
     }
 
     /// Transition d'état générique
@@ -226,7 +217,8 @@ impl AgentLifecycle {
     /// Récupère les événements d'un agent
     pub async fn get_events(&self, agent_id: &AgentId) -> Vec<LifecycleEvent> {
         let entries = self.entries.read().await;
-        entries.get(agent_id)
+        entries
+            .get(agent_id)
             .map(|e| e.events.clone())
             .unwrap_or_default()
     }
@@ -234,9 +226,7 @@ impl AgentLifecycle {
     /// Récupère le nombre de redémarrages
     pub async fn restart_count(&self, agent_id: &AgentId) -> u32 {
         let entries = self.entries.read().await;
-        entries.get(agent_id)
-            .map(|e| e.restart_count)
-            .unwrap_or(0)
+        entries.get(agent_id).map(|e| e.restart_count).unwrap_or(0)
     }
 
     /// Récupère le temps depuis le démarrage
@@ -247,13 +237,17 @@ impl AgentLifecycle {
 
     /// Vérifie si un agent est en cours d'exécution
     pub async fn is_running(&self, agent_id: &AgentId) -> bool {
-        matches!(self.get_state(agent_id).await, Some(LifecycleState::Running))
+        matches!(
+            self.get_state(agent_id).await,
+            Some(LifecycleState::Running)
+        )
     }
 
     /// Liste les agents par état
     pub async fn agents_by_state(&self, state: LifecycleState) -> Vec<AgentId> {
         let entries = self.entries.read().await;
-        entries.iter()
+        entries
+            .iter()
             .filter(|(_, e)| e.state == state)
             .map(|(id, _)| id.clone())
             .collect()
@@ -306,12 +300,18 @@ mod tests {
         assert!(lifecycle.is_running(&agent_id).await);
 
         lifecycle.pause_agent(&agent_id).await;
-        assert_eq!(lifecycle.get_state(&agent_id).await, Some(LifecycleState::Paused));
+        assert_eq!(
+            lifecycle.get_state(&agent_id).await,
+            Some(LifecycleState::Paused)
+        );
 
         lifecycle.resume_agent(&agent_id).await;
         assert!(lifecycle.is_running(&agent_id).await);
 
         lifecycle.stop_agent(&agent_id).await;
-        assert_eq!(lifecycle.get_state(&agent_id).await, Some(LifecycleState::Stopped));
+        assert_eq!(
+            lifecycle.get_state(&agent_id).await,
+            Some(LifecycleState::Stopped)
+        );
     }
 }

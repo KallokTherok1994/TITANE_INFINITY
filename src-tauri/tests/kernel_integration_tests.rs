@@ -26,10 +26,7 @@ mod integration_tests {
         let (event_tx, _) = tokio::sync::broadcast::channel(1000);
         let state = Arc::new(RwLock::new(KernelState::new()));
 
-        let runtime = Arc::new(KernelRuntime::new(
-            event_tx.clone(),
-            Arc::clone(&state),
-        ));
+        let runtime = Arc::new(KernelRuntime::new(event_tx.clone(), Arc::clone(&state)));
 
         let scheduler = Arc::new(CognitiveScheduler::new(
             Arc::clone(&runtime),
@@ -49,7 +46,14 @@ mod integration_tests {
             Arc::clone(&state),
         ));
 
-        (runtime, scheduler, state, signal_bus, omega_bridge, memory_bridge)
+        (
+            runtime,
+            scheduler,
+            state,
+            signal_bus,
+            omega_bridge,
+            memory_bridge,
+        )
     }
 
     // ═══════════════════════════════════════════════════════════

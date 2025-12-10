@@ -11,37 +11,37 @@
  * 6 modes d'expression TITANE∞ (cohérents avec IA)
  */
 export type ExpressionMode =
-  | 'soft-smile'        // Sourire doux (écoute bienveillante)
-  | 'attention-focus'   // Attention concentrée (analyse utilisateur)
-  | 'active-listening'  // Écoute active (compréhension)
-  | 'explanation-mode'  // Mode explication (pédagogie)
-  | 'compassion-mode'   // Compassion / empathie
-  | 'curiosity-mode';   // Curiosité / découverte
+  | 'soft-smile' // Sourire doux (écoute bienveillante)
+  | 'attention-focus' // Attention concentrée (analyse utilisateur)
+  | 'active-listening' // Écoute active (compréhension)
+  | 'explanation-mode' // Mode explication (pédagogie)
+  | 'compassion-mode' // Compassion / empathie
+  | 'curiosity-mode'; // Curiosité / découverte
 
 /**
  * Expression weights (morph targets faciaux)
  */
 export interface ExpressionWeights {
   // Bouche
-  smileMouth: number;           // 0.0-1.0 (coins bouche relevés)
-  mouthOpen: number;            // 0.0-1.0 (bouche ouverte neutre)
+  smileMouth: number; // 0.0-1.0 (coins bouche relevés)
+  mouthOpen: number; // 0.0-1.0 (bouche ouverte neutre)
 
   // Yeux
-  eyeBrowRaise: number;         // 0.0-1.0 (sourcils levés)
-  eyeBrowFurrow: number;        // 0.0-1.0 (sourcils froncés)
-  eyeWiden: number;             // 0.0-1.0 (yeux écarquillés)
-  eyeSquint: number;            // 0.0-1.0 (yeux plissés)
-  eyeLidLowerLeft: number;      // 0.0-1.0 (paupière gauche baissée)
-  eyeLidLowerRight: number;     // 0.0-1.0 (paupière droite baissée)
+  eyeBrowRaise: number; // 0.0-1.0 (sourcils levés)
+  eyeBrowFurrow: number; // 0.0-1.0 (sourcils froncés)
+  eyeWiden: number; // 0.0-1.0 (yeux écarquillés)
+  eyeSquint: number; // 0.0-1.0 (yeux plissés)
+  eyeLidLowerLeft: number; // 0.0-1.0 (paupière gauche baissée)
+  eyeLidLowerRight: number; // 0.0-1.0 (paupière droite baissée)
 
   // Joues
-  cheekRaise: number;           // 0.0-1.0 (joues relevées)
+  cheekRaise: number; // 0.0-1.0 (joues relevées)
 
   // Nez
-  noseWrinkle: number;          // 0.0-1.0 (nez plissé)
+  noseWrinkle: number; // 0.0-1.0 (nez plissé)
 
   // Global
-  headTilt: number;             // -1.0 to 1.0 (inclinaison tête)
+  headTilt: number; // -1.0 to 1.0 (inclinaison tête)
 }
 
 /**
@@ -49,17 +49,17 @@ export interface ExpressionWeights {
  */
 export interface MicroGesture {
   type: 'blink' | 'eyeSaccade' | 'pupilDilation' | 'microSmile' | 'browTwitch';
-  intensity: number;    // 0.0-1.0
-  duration: number;     // ms
-  timestamp: number;    // Date.now()
+  intensity: number; // 0.0-1.0
+  duration: number; // ms
+  timestamp: number; // Date.now()
 }
 
 export interface ExpressionConfig {
-  blinkFrequency: [number, number];     // [min, max] blinks per minute
-  saccadeFrequency: number;             // Saccades per minute
-  microGestureIntensity: number;        // Global intensity multiplier
-  expressionTransitionSpeed: number;    // Lerp factor (0.05-0.3)
-  emotionalDamping: number;             // Damping for sudden changes
+  blinkFrequency: [number, number]; // [min, max] blinks per minute
+  saccadeFrequency: number; // Saccades per minute
+  microGestureIntensity: number; // Global intensity multiplier
+  expressionTransitionSpeed: number; // Lerp factor (0.05-0.3)
+  emotionalDamping: number; // Damping for sudden changes
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -74,63 +74,63 @@ const EXPRESSION_PRESETS: Record<ExpressionMode, Partial<ExpressionWeights>> = {
   // SOFT-SMILE (sourire doux, bienveillant)
   // ─────────────────────────────────────────
   'soft-smile': {
-    smileMouth: 0.4,          // Sourire léger
-    eyeSquint: 0.2,           // Yeux légèrement plissés
-    cheekRaise: 0.3,          // Joues relevées
-    eyeBrowRaise: 0.1,        // Sourcils légèrement levés
-    headTilt: 0.05,           // Légère inclinaison tête
+    smileMouth: 0.4, // Sourire léger
+    eyeSquint: 0.2, // Yeux légèrement plissés
+    cheekRaise: 0.3, // Joues relevées
+    eyeBrowRaise: 0.1, // Sourcils légèrement levés
+    headTilt: 0.05, // Légère inclinaison tête
   },
 
   // ─────────────────────────────────────────
   // ATTENTION-FOCUS (concentration intense)
   // ─────────────────────────────────────────
   'attention-focus': {
-    eyeWiden: 0.3,            // Yeux un peu plus ouverts
-    eyeBrowRaise: 0.2,        // Sourcils légèrement levés
-    mouthOpen: 0.1,           // Bouche légèrement entrouverte
-    headTilt: 0.0,            // Tête droite
+    eyeWiden: 0.3, // Yeux un peu plus ouverts
+    eyeBrowRaise: 0.2, // Sourcils légèrement levés
+    mouthOpen: 0.1, // Bouche légèrement entrouverte
+    headTilt: 0.0, // Tête droite
   },
 
   // ─────────────────────────────────────────
   // ACTIVE-LISTENING (écoute active)
   // ─────────────────────────────────────────
   'active-listening': {
-    eyeBrowRaise: 0.15,       // Sourcils légèrement levés
-    eyeWiden: 0.2,            // Yeux attentifs
-    headTilt: 0.08,           // Légère inclinaison (intérêt)
-    smileMouth: 0.15,         // Micro-sourire
+    eyeBrowRaise: 0.15, // Sourcils légèrement levés
+    eyeWiden: 0.2, // Yeux attentifs
+    headTilt: 0.08, // Légère inclinaison (intérêt)
+    smileMouth: 0.15, // Micro-sourire
   },
 
   // ─────────────────────────────────────────
   // EXPLANATION-MODE (pédagogie, explication)
   // ─────────────────────────────────────────
   'explanation-mode': {
-    eyeBrowRaise: 0.25,       // Sourcils levés (expressivité)
-    eyeWiden: 0.25,           // Yeux ouverts
-    smileMouth: 0.2,          // Sourire léger
-    mouthOpen: 0.15,          // Bouche un peu ouverte
-    headTilt: 0.0,            // Tête stable
+    eyeBrowRaise: 0.25, // Sourcils levés (expressivité)
+    eyeWiden: 0.25, // Yeux ouverts
+    smileMouth: 0.2, // Sourire léger
+    mouthOpen: 0.15, // Bouche un peu ouverte
+    headTilt: 0.0, // Tête stable
   },
 
   // ─────────────────────────────────────────
   // COMPASSION-MODE (empathie, douceur)
   // ─────────────────────────────────────────
   'compassion-mode': {
-    smileMouth: 0.3,          // Sourire doux
-    eyeBrowRaise: 0.2,        // Sourcils légèrement levés
-    eyeSquint: 0.15,          // Yeux doux
-    cheekRaise: 0.25,         // Joues relevées
-    headTilt: 0.1,            // Inclinaison marquée
+    smileMouth: 0.3, // Sourire doux
+    eyeBrowRaise: 0.2, // Sourcils légèrement levés
+    eyeSquint: 0.15, // Yeux doux
+    cheekRaise: 0.25, // Joues relevées
+    headTilt: 0.1, // Inclinaison marquée
   },
 
   // ─────────────────────────────────────────
   // CURIOSITY-MODE (curiosité, découverte)
   // ─────────────────────────────────────────
   'curiosity-mode': {
-    eyeWiden: 0.4,            // Yeux grands ouverts
-    eyeBrowRaise: 0.3,        // Sourcils levés
-    mouthOpen: 0.2,           // Bouche entrouverte (surprise légère)
-    headTilt: 0.12,           // Inclinaison marquée
+    eyeWiden: 0.4, // Yeux grands ouverts
+    eyeBrowRaise: 0.3, // Sourcils levés
+    mouthOpen: 0.2, // Bouche entrouverte (surprise légère)
+    headTilt: 0.12, // Inclinaison marquée
   },
 };
 
@@ -153,11 +153,11 @@ export class FacialExpressionEngine {
 
   constructor(config: Partial<ExpressionConfig> = {}) {
     this.config = {
-      blinkFrequency: [3, 8],           // 3-8 blinks/min (naturel)
-      saccadeFrequency: 12,             // 12 saccades/min
-      microGestureIntensity: 1.0,       // Intensité normale
-      expressionTransitionSpeed: 0.15,  // Smooth transitions
-      emotionalDamping: 0.8,            // Damping modéré
+      blinkFrequency: [3, 8], // 3-8 blinks/min (naturel)
+      saccadeFrequency: 12, // 12 saccades/min
+      microGestureIntensity: 1.0, // Intensité normale
+      expressionTransitionSpeed: 0.15, // Smooth transitions
+      emotionalDamping: 0.8, // Damping modéré
       ...config,
     };
 
@@ -212,7 +212,7 @@ export class FacialExpressionEngine {
    */
   public updateWithVocalIntensity(intensity: number): void {
     // Intensity 0.0-1.0 → modulation subtile expressions
-    const modulationFactor = 1.0 + (intensity * 0.2); // Max +20%
+    const modulationFactor = 1.0 + intensity * 0.2; // Max +20%
 
     // Apply modulation to target weights (bouche + sourcils)
     this.targetWeights.smileMouth *= modulationFactor;
@@ -265,7 +265,7 @@ export class FacialExpressionEngine {
     this.activeMicroGestures.push({
       type: 'blink',
       intensity,
-      duration: 150,      // 150ms blink
+      duration: 150, // 150ms blink
       timestamp: Date.now(),
     });
   }
@@ -277,7 +277,7 @@ export class FacialExpressionEngine {
     this.activeMicroGestures.push({
       type: 'eyeSaccade',
       intensity,
-      duration: 50,       // 50ms saccade
+      duration: 50, // 50ms saccade
       timestamp: Date.now(),
     });
   }
@@ -448,9 +448,7 @@ export class FacialExpressionEngine {
    * Ease-in-out cubic
    */
   private easeInOutCubic(t: number): number {
-    return t < 0.5
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   /**

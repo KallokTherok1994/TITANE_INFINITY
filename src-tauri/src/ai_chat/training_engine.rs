@@ -1,3 +1,4 @@
+use chrono::Utc;
 /**
  * ═══════════════════════════════════════════════════════════════════════════════
  * TITANE∞ OPUS #12 — AI TRAINING MODE v∞
@@ -13,10 +14,8 @@
  * - Auto-amélioration du style de réponse
  * - Feedback loop pour affiner les réponses
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::Utc;
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -220,13 +219,14 @@ impl AITrainingEngine {
         Self {
             state: TrainingState::default(),
             // Hash SHA-256 du code Kevin (placeholder - remplacer en production)
-            kevin_code_hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855".to_string(),
+            kevin_code_hash: "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                .to_string(),
         }
     }
 
     /// Vérifier le code Kevin
     pub fn verify_kevin_code(&mut self, code: &str) -> bool {
-        use sha2::{Sha256, Digest};
+        use sha2::{Digest, Sha256};
         let mut hasher = Sha256::new();
         hasher.update(code.as_bytes());
         let hash = format!("{:x}", hasher.finalize());
@@ -292,7 +292,12 @@ impl AITrainingEngine {
         // Update stats
         self.state.stats.total_feedbacks += 1;
         let type_str = format!("{:?}", feedback_type);
-        *self.state.stats.feedbacks_by_type.entry(type_str).or_insert(0) += 1;
+        *self
+            .state
+            .stats
+            .feedbacks_by_type
+            .entry(type_str)
+            .or_insert(0) += 1;
 
         log::info!("[AITraining] 📝 Feedback recorded: {}", id);
         Ok(id)
@@ -329,7 +334,12 @@ impl AITrainingEngine {
         // Update stats
         self.state.stats.total_patterns += 1;
         let cat_str = format!("{:?}", category);
-        *self.state.stats.patterns_by_category.entry(cat_str).or_insert(0) += 1;
+        *self
+            .state
+            .stats
+            .patterns_by_category
+            .entry(cat_str)
+            .or_insert(0) += 1;
 
         log::info!("[AITraining] 🧠 Pattern learned: {}", id);
         Ok(id)
@@ -337,11 +347,14 @@ impl AITrainingEngine {
 
     /// Chercher des patterns correspondants
     pub fn find_matching_patterns(&self, input: &str, limit: usize) -> Vec<&LearnedPattern> {
-        let mut matches: Vec<(&LearnedPattern, i32)> = self.state.patterns
+        let mut matches: Vec<(&LearnedPattern, i32)> = self
+            .state
+            .patterns
             .iter()
             .filter_map(|p| {
                 let score = self.calculate_pattern_match(input, &p.input_pattern);
-                if score > 30 { // Minimum 30% match
+                if score > 30 {
+                    // Minimum 30% match
                     Some((p, score))
                 } else {
                     None
@@ -371,7 +384,8 @@ impl AITrainingEngine {
             return 0;
         }
 
-        let matches: usize = input_words.iter()
+        let matches: usize = input_words
+            .iter()
             .filter(|w| pattern_words.contains(w))
             .count();
 
@@ -417,7 +431,8 @@ impl AITrainingEngine {
     /// Traiter les feedbacks en attente
     pub fn process_pending_feedbacks(&mut self, session_id: &str) -> Result<u32, String> {
         // Collecter d'abord les patterns à créer
-        let mut patterns_to_create: Vec<(PatternCategory, String, String, Vec<String>)> = Vec::new();
+        let mut patterns_to_create: Vec<(PatternCategory, String, String, Vec<String>)> =
+            Vec::new();
         let mut indices_to_mark: Vec<usize> = Vec::new();
 
         for (idx, feedback) in self.state.pending_feedbacks.iter().enumerate() {
@@ -479,8 +494,7 @@ impl AITrainingEngine {
             session.ended_at = Some(Utc::now().timestamp_millis() as u64);
             session.summary = format!(
                 "Session completed: {} patterns processed, {} feedbacks integrated",
-                session.patterns_processed,
-                session.feedbacks_integrated
+                session.patterns_processed, session.feedbacks_integrated
             );
 
             self.state.stats.last_training_session = session.ended_at;
@@ -549,11 +563,23 @@ impl AITrainingEngine {
 
         report.push_str(&format!("║  Mode: {:?}\n", self.state.mode));
         report.push_str(&format!("║  Enabled: {}\n", self.state.enabled));
-        report.push_str(&format!("║  Kevin Verified: {}\n", self.state.kevin_verified));
+        report.push_str(&format!(
+            "║  Kevin Verified: {}\n",
+            self.state.kevin_verified
+        ));
         report.push_str("║\n");
-        report.push_str(&format!("║  Total Patterns: {}\n", self.state.stats.total_patterns));
-        report.push_str(&format!("║  Total Feedbacks: {}\n", self.state.stats.total_feedbacks));
-        report.push_str(&format!("║  Avg Confidence: {:.1}%\n", self.state.stats.avg_confidence));
+        report.push_str(&format!(
+            "║  Total Patterns: {}\n",
+            self.state.stats.total_patterns
+        ));
+        report.push_str(&format!(
+            "║  Total Feedbacks: {}\n",
+            self.state.stats.total_feedbacks
+        ));
+        report.push_str(&format!(
+            "║  Avg Confidence: {:.1}%\n",
+            self.state.stats.avg_confidence
+        ));
         report.push_str(&format!("║  Sessions: {}\n", self.state.sessions.len()));
         report.push_str("║\n");
 
@@ -576,9 +602,8 @@ use once_cell::sync::Lazy;
 use std::sync::RwLock;
 
 /// Instance globale du AITrainingEngine
-pub static AI_TRAINING_ENGINE: Lazy<RwLock<AITrainingEngine>> = Lazy::new(|| {
-    RwLock::new(AITrainingEngine::new())
-});
+pub static AI_TRAINING_ENGINE: Lazy<RwLock<AITrainingEngine>> =
+    Lazy::new(|| RwLock::new(AITrainingEngine::new()));
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TESTS

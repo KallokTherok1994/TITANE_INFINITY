@@ -38,15 +38,15 @@
   box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
 }
 
-.physiological-badge[data-energy="high"] {
+.physiological-badge[data-energy='high'] {
   background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
 }
 
-.physiological-badge[data-energy="medium"] {
+.physiological-badge[data-energy='medium'] {
   background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95));
 }
 
-.physiological-badge[data-energy="low"] {
+.physiological-badge[data-energy='low'] {
   background: linear-gradient(135deg, rgba(239, 68, 68, 0.95), rgba(220, 38, 38, 0.95));
 }
 
@@ -66,7 +66,9 @@
   height: 100%;
   background: rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -271,7 +273,9 @@
   height: 80px;
   background: radial-gradient(circle, rgba(16, 185, 129, 0.6), rgba(16, 185, 129, 0));
   border-radius: 50%;
-  transition: transform 0.3s ease, opacity 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
 .breathing-phase {

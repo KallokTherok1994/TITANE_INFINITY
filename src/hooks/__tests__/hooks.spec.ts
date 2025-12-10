@@ -40,13 +40,19 @@ describe('useVisualState Hook', () => {
       engine.setState('focus', 1000);
     });
 
-    await waitFor(() => {
-      expect(result.current.isTransitioning).toBe(true);
-    }, { timeout: 100 });
+    await waitFor(
+      () => {
+        expect(result.current.isTransitioning).toBe(true);
+      },
+      { timeout: 100 }
+    );
 
-    await waitFor(() => {
-      expect(result.current.isTransitioning).toBe(false);
-    }, { timeout: 1200 });
+    await waitFor(
+      () => {
+        expect(result.current.isTransitioning).toBe(false);
+      },
+      { timeout: 1200 }
+    );
   });
 
   it('should update visuals when state changes', async () => {
@@ -58,9 +64,12 @@ describe('useVisualState Hook', () => {
       engine.setState('focus', 500);
     });
 
-    await waitFor(() => {
-      expect(result.current.visuals.background).not.toBe(initialBackground);
-    }, { timeout: 600 });
+    await waitFor(
+      () => {
+        expect(result.current.visuals.background).not.toBe(initialBackground);
+      },
+      { timeout: 600 }
+    );
   });
 
   it('should cleanup listeners on unmount', () => {

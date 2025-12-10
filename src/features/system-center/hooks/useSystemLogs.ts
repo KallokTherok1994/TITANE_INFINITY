@@ -12,7 +12,7 @@ import type {
   LogEntry,
   LogFilter,
   LogStats,
-  LogLevel
+  LogLevel,
 } from '../types/systemCenter.types';
 
 export interface UseSystemLogsReturn {
@@ -32,7 +32,10 @@ export interface UseSystemLogsReturn {
   addLog: (level: LogLevel, source: string, message: string) => Promise<void>;
 }
 
-export function useSystemLogs(autoRefresh = false, refreshInterval = 2000): UseSystemLogsReturn {
+export function useSystemLogs(
+  autoRefresh = false,
+  refreshInterval = 2000
+): UseSystemLogsReturn {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [stats, setStats] = useState<LogStats | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,15 +75,18 @@ export function useSystemLogs(autoRefresh = false, refreshInterval = 2000): UseS
     }
   }, []);
 
-  const addLog = useCallback(async (level: LogLevel, source: string, message: string) => {
-    try {
-      await secureInvoke('sc_add_log', { level, source, message });
-      // Refresh after adding
-      await refreshLogs();
-    } catch (err) {
-      console.error('[useSystemLogs] Add log failed:', err);
-    }
-  }, [refreshLogs]);
+  const addLog = useCallback(
+    async (level: LogLevel, source: string, message: string) => {
+      try {
+        await secureInvoke('sc_add_log', { level, source, message });
+        // Refresh after adding
+        await refreshLogs();
+      } catch (err) {
+        console.error('[useSystemLogs] Add log failed:', err);
+      }
+    },
+    [refreshLogs]
+  );
 
   // Auto-refresh effect
   useEffect(() => {

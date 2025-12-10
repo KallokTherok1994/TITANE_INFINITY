@@ -3,7 +3,7 @@
 //   Global unified state for SingularityEngine (Phase 2 Fusions)
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::modules::{CoherenceEngine, UnifiedMemory, HarmoniaModule, SystemHealth};
+use crate::core::modules::{CoherenceEngine, HarmoniaModule, SystemHealth, UnifiedMemory};
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 
@@ -451,7 +451,7 @@ impl SingularityState {
     /// Get overall system health
     pub fn health(&self) -> EngineHealth {
         // Aggregate health from all modules
-        let healths = vec![
+        let healths = [
             self.coherence.health(),
             self.memory.health(),
             self.harmonia.health(),

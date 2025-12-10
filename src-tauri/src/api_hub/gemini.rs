@@ -3,11 +3,11 @@
 //! Super Prompt #17 — Intégration Google Gemini (Vision, Long Context, Multimodal)
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::Serialize;
 use super::{
-    APIRequest, APIHubError, Provider, Modality, RequestContent,
-    harmonizer::HarmonizedResponse, ResponseContent, UsageStats,
+    harmonizer::HarmonizedResponse, APIHubError, APIRequest, Modality, Provider, RequestContent,
+    ResponseContent, UsageStats,
 };
+use serde::Serialize;
 
 /// Provider Gemini
 pub struct GeminiProvider {
@@ -38,26 +38,31 @@ impl GeminiProvider {
             Modality::Audio => self.audio_analysis(request).await,
             Modality::Embeddings => self.generate_embeddings(request).await,
             Modality::MultiModal => self.multimodal_generation(request).await,
-            Modality::ImageGeneration => {
-                Err(APIHubError::UnexpectedResponse("Gemini does not support image generation".to_string()))
-            }
+            Modality::ImageGeneration => Err(APIHubError::UnexpectedResponse(
+                "Gemini does not support image generation".to_string(),
+            )),
         }
     }
 
     /// Génération de contenu texte
-    async fn generate_content(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn generate_content(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let text = match &request.content {
             RequestContent::Text(t) => t.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected text content".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected text content".to_string(),
+                ))
+            }
         };
 
         let body = GeminiRequest {
-            contents: vec![
-                Content {
-                    role: Some("user".to_string()),
-                    parts: vec![Part::Text { text }],
-                }
-            ],
+            contents: vec![Content {
+                role: Some("user".to_string()),
+                parts: vec![Part::Text { text }],
+            }],
             generation_config: Some(GenerationConfig {
                 temperature: request.temperature,
                 max_output_tokens: request.max_tokens,
@@ -77,17 +82,25 @@ impl GeminiProvider {
                 prompt_tokens: response.prompt_tokens,
                 completion_tokens: response.completion_tokens,
                 total_tokens: response.prompt_tokens + response.completion_tokens,
-                estimated_cost_usd: self.estimate_cost(response.prompt_tokens, response.completion_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.prompt_tokens, response.completion_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
     }
 
     /// Analyse d'image avec vision
-    async fn vision_analysis(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn vision_analysis(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let (text, images) = match &request.content {
             RequestContent::TextWithImages { text, images } => (text.clone(), images.clone()),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected text with images".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected text with images".to_string(),
+                ))
+            }
         };
 
         let mut parts: Vec<Part> = vec![Part::Text { text }];
@@ -103,12 +116,10 @@ impl GeminiProvider {
         }
 
         let body = GeminiRequest {
-            contents: vec![
-                Content {
-                    role: Some("user".to_string()),
-                    parts,
-                }
-            ],
+            contents: vec![Content {
+                role: Some("user".to_string()),
+                parts,
+            }],
             generation_config: Some(GenerationConfig {
                 temperature: request.temperature,
                 max_output_tokens: request.max_tokens,
@@ -128,34 +139,42 @@ impl GeminiProvider {
                 prompt_tokens: response.prompt_tokens,
                 completion_tokens: response.completion_tokens,
                 total_tokens: response.prompt_tokens + response.completion_tokens,
-                estimated_cost_usd: self.estimate_cost(response.prompt_tokens, response.completion_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.prompt_tokens, response.completion_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
     }
 
     /// Analyse audio
-    async fn audio_analysis(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn audio_analysis(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let audio = match &request.content {
             RequestContent::Audio(data) => data.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected audio content".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected audio content".to_string(),
+                ))
+            }
         };
 
         let body = GeminiRequest {
-            contents: vec![
-                Content {
-                    role: Some("user".to_string()),
-                    parts: vec![
-                        Part::Text { text: "Transcribe and analyze this audio:".to_string() },
-                        Part::InlineData {
-                            inline_data: InlineData {
-                                mime_type: "audio/wav".to_string(),
-                                data: base64_encode(&audio),
-                            },
+            contents: vec![Content {
+                role: Some("user".to_string()),
+                parts: vec![
+                    Part::Text {
+                        text: "Transcribe and analyze this audio:".to_string(),
+                    },
+                    Part::InlineData {
+                        inline_data: InlineData {
+                            mime_type: "audio/wav".to_string(),
+                            data: base64_encode(&audio),
                         },
-                    ],
-                }
-            ],
+                    },
+                ],
+            }],
             generation_config: Some(GenerationConfig {
                 temperature: Some(0.3),
                 max_output_tokens: request.max_tokens,
@@ -175,17 +194,25 @@ impl GeminiProvider {
                 prompt_tokens: response.prompt_tokens,
                 completion_tokens: response.completion_tokens,
                 total_tokens: response.prompt_tokens + response.completion_tokens,
-                estimated_cost_usd: self.estimate_cost(response.prompt_tokens, response.completion_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.prompt_tokens, response.completion_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
     }
 
     /// Génération d'embeddings
-    async fn generate_embeddings(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn generate_embeddings(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let texts = match &request.content {
             RequestContent::EmbeddingRequest(texts) => texts.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected embedding request".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected embedding request".to_string(),
+                ))
+            }
         };
 
         let embeddings = self.mock_embeddings(&texts).await?;
@@ -206,12 +233,21 @@ impl GeminiProvider {
     }
 
     /// Génération multimodale complète
-    async fn multimodal_generation(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn multimodal_generation(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let (text, images, audio) = match &request.content {
-            RequestContent::MultiModal { text, images, audio } => {
-                (text.clone(), images.clone(), audio.clone())
+            RequestContent::MultiModal {
+                text,
+                images,
+                audio,
+            } => (text.clone(), images.clone(), audio.clone()),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected multimodal content".to_string(),
+                ))
             }
-            _ => return Err(APIHubError::UnexpectedResponse("Expected multimodal content".to_string())),
         };
 
         let mut parts: Vec<Part> = Vec::new();
@@ -242,12 +278,10 @@ impl GeminiProvider {
         }
 
         let body = GeminiRequest {
-            contents: vec![
-                Content {
-                    role: Some("user".to_string()),
-                    parts,
-                }
-            ],
+            contents: vec![Content {
+                role: Some("user".to_string()),
+                parts,
+            }],
             generation_config: Some(GenerationConfig {
                 temperature: request.temperature,
                 max_output_tokens: request.max_tokens,
@@ -267,7 +301,8 @@ impl GeminiProvider {
                 prompt_tokens: response.prompt_tokens,
                 completion_tokens: response.completion_tokens,
                 total_tokens: response.prompt_tokens + response.completion_tokens,
-                estimated_cost_usd: self.estimate_cost(response.prompt_tokens, response.completion_tokens),
+                estimated_cost_usd: self
+                    .estimate_cost(response.prompt_tokens, response.completion_tokens),
             },
             metadata: std::collections::HashMap::new(),
         })
@@ -285,7 +320,10 @@ impl GeminiProvider {
     // MOCK IMPLEMENTATIONS
     // ════════════════════════════════════════════════════════════════════════
 
-    async fn mock_generate_response(&self, _body: &GeminiRequest) -> Result<MockGeminiResponse, APIHubError> {
+    async fn mock_generate_response(
+        &self,
+        _body: &GeminiRequest,
+    ) -> Result<MockGeminiResponse, APIHubError> {
         Ok(MockGeminiResponse {
             text: "This is a mock response from Google Gemini.".to_string(),
             prompt_tokens: 30,
@@ -293,7 +331,10 @@ impl GeminiProvider {
         })
     }
 
-    async fn mock_vision_response(&self, _body: &GeminiRequest) -> Result<MockGeminiResponse, APIHubError> {
+    async fn mock_vision_response(
+        &self,
+        _body: &GeminiRequest,
+    ) -> Result<MockGeminiResponse, APIHubError> {
         Ok(MockGeminiResponse {
             text: "I can analyze the image you've provided. This is a mock Gemini vision response with detailed analysis.".to_string(),
             prompt_tokens: 500,
@@ -301,7 +342,10 @@ impl GeminiProvider {
         })
     }
 
-    async fn mock_audio_response(&self, _body: &GeminiRequest) -> Result<MockGeminiResponse, APIHubError> {
+    async fn mock_audio_response(
+        &self,
+        _body: &GeminiRequest,
+    ) -> Result<MockGeminiResponse, APIHubError> {
         Ok(MockGeminiResponse {
             text: "This is a mock transcription from Gemini audio analysis.".to_string(),
             prompt_tokens: 200,
@@ -309,7 +353,10 @@ impl GeminiProvider {
         })
     }
 
-    async fn mock_multimodal_response(&self, _body: &GeminiRequest) -> Result<MockGeminiResponse, APIHubError> {
+    async fn mock_multimodal_response(
+        &self,
+        _body: &GeminiRequest,
+    ) -> Result<MockGeminiResponse, APIHubError> {
         Ok(MockGeminiResponse {
             text: "This is a comprehensive multimodal analysis combining text, image, and audio inputs.".to_string(),
             prompt_tokens: 800,
@@ -319,7 +366,8 @@ impl GeminiProvider {
 
     async fn mock_embeddings(&self, texts: &[String]) -> Result<Vec<Vec<f32>>, APIHubError> {
         // Gemini embeddings are 768-dimensional
-        let embeddings: Vec<Vec<f32>> = texts.iter()
+        let embeddings: Vec<Vec<f32>> = texts
+            .iter()
             .map(|_| (0..768).map(|i| (i as f32 * 0.002).cos()).collect())
             .collect();
         Ok(embeddings)
@@ -384,7 +432,7 @@ struct MockGeminiResponse {
 }
 
 fn base64_encode(data: &[u8]) -> String {
-    use base64::{Engine as _, engine::general_purpose::STANDARD};
+    use base64::{engine::general_purpose::STANDARD, Engine as _};
     STANDARD.encode(data)
 }
 

@@ -31,7 +31,7 @@ export function useConsole() {
         timestamp: Date.now(),
       };
 
-      setHistory((prev) => [consoleResult, ...prev]);
+      setHistory(prev => [consoleResult, ...prev]);
       return consoleResult;
     } catch (err) {
       const consoleResult: ConsoleResult = {
@@ -42,7 +42,7 @@ export function useConsole() {
         timestamp: Date.now(),
       };
 
-      setHistory((prev) => [consoleResult, ...prev]);
+      setHistory(prev => [consoleResult, ...prev]);
       return consoleResult;
     } finally {
       setExecuting(false);

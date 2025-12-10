@@ -1,9 +1,10 @@
-/**
- * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ — UNIFIED MEMORY DEVELOPER GUIDE
- *   Guide d'utilisation du système de mémoire unifiée STM/MTM/LTM
- * ═══════════════════════════════════════════════════════════════════
- */
+/\*\*
+
+- ═══════════════════════════════════════════════════════════════════
+- TITANE∞ — UNIFIED MEMORY DEVELOPER GUIDE
+- Guide d'utilisation du système de mémoire unifiée STM/MTM/LTM
+- ═══════════════════════════════════════════════════════════════════
+  \*/
 
 # Unified Memory System — Guide Développeur
 
@@ -12,18 +13,21 @@
 Le système Unified Memory organise la mémoire en 3 tiers hiérarchiques:
 
 ### 📋 STM (Short-Term Memory)
+
 - **Capacité**: 20 entrées max
 - **TTL**: 5 minutes
 - **Usage**: Messages récents d'une conversation
 - **Auto-cleanup**: Expire automatiquement ou garde les 20 plus récents
 
-### 📚 MTM (Medium-Term Memory)  
+### 📚 MTM (Medium-Term Memory)
+
 - **Capacité**: 100 entrées max
 - **TTL**: 24 heures
 - **Usage**: Contexte de session, décisions temporaires
 - **Promotion**: Peut être promu vers LTM si accessCount >= 10 ou importance > 0.7
 
 ### 🏛️ LTM (Long-Term Memory)
+
 - **Capacité**: Illimitée
 - **TTL**: Permanent
 - **Usage**: Connaissances durables, patterns appris
@@ -41,10 +45,7 @@ import { unifiedMemory } from '@/core/services/unifiedMemory';
 
 ```typescript
 // Message basique (importance par défaut 0.5 → MTM)
-const entry = unifiedMemory.store(
-  'Décision importante prise',
-  'user'
-);
+const entry = unifiedMemory.store('Décision importante prise', 'user');
 
 // Message avec importance haute (→ LTM)
 const criticalEntry = unifiedMemory.store(
@@ -71,11 +72,11 @@ const results = unifiedMemory.recall('projet architecture');
 
 // Recherche avec filtres
 const filtered = unifiedMemory.recall('décision', {
-  tier: 'MTM',           // Chercher seulement dans MTM
-  minImportance: 0.6,    // Seulement messages importants
-  limit: 5,              // Max 5 résultats
+  tier: 'MTM', // Chercher seulement dans MTM
+  minImportance: 0.6, // Seulement messages importants
+  limit: 5, // Max 5 résultats
   conversationId: 'conv-123',
-  tags: ['project']
+  tags: ['project'],
 });
 
 // Rappel avec promotion automatique
@@ -104,8 +105,12 @@ if (promoted) {
 const stats = unifiedMemory.getStats();
 
 console.log(`Total entries: ${stats.total}`);
-console.log(`STM: ${stats.stm.totalEntries}/${stats.stm.maxEntries} (TTL: ${stats.stm.ttl})`);
-console.log(`MTM: ${stats.mtm.totalEntries}/${stats.mtm.maxEntries} (TTL: ${stats.mtm.ttl})`);
+console.log(
+  `STM: ${stats.stm.totalEntries}/${stats.stm.maxEntries} (TTL: ${stats.stm.ttl})`
+);
+console.log(
+  `MTM: ${stats.mtm.totalEntries}/${stats.mtm.maxEntries} (TTL: ${stats.mtm.ttl})`
+);
 console.log(`LTM: ${stats.ltm.totalEntries} (${stats.promotions} promotions)`);
 console.log(`Last cleanup: ${new Date(stats.lastCleanup).toISOString()}`);
 ```
@@ -136,16 +141,16 @@ import { unifiedMemory } from '@/core/services/unifiedMemory';
 async function handleUserMessage(message: string, mode: ChatMode) {
   // chatEngine calcule importance automatiquement selon mode
   const importance = calculateImportance(mode, message);
-  
+
   // Stocker message utilisateur
   unifiedMemory.store(message, 'user', importance);
-  
+
   // Envoyer au chat
   const response = await chatEngine.sendMessage(message, { mode });
-  
+
   // Stocker réponse assistant
   unifiedMemory.store(response.content, 'assistant', importance * 0.8);
-  
+
   return response;
 }
 ```
@@ -158,13 +163,11 @@ async function getChatContext(conversationId: string): Promise<string> {
   const context = unifiedMemory.recall('', {
     conversationId,
     minImportance: 0.4,
-    limit: 10
+    limit: 10,
   });
-  
+
   // Formater pour prompt
-  return context
-    .map(e => `[${e.role}]: ${e.content}`)
-    .join('\n');
+  return context.map(e => `[${e.role}]: ${e.content}`).join('\n');
 }
 ```
 
@@ -180,7 +183,7 @@ function trackImportantDecision(decision: string, tags: string[]) {
     undefined,
     tags
   );
-  
+
   console.log(`Decision stored in ${entry.tier}`);
   return entry.id;
 }
@@ -189,7 +192,7 @@ function trackImportantDecision(decision: string, tags: string[]) {
 const patterns = unifiedMemory.recall('', {
   tier: 'LTM',
   tags: ['pattern', 'decision'],
-  minImportance: 0.7
+  minImportance: 0.7,
 });
 ```
 
@@ -198,22 +201,22 @@ const patterns = unifiedMemory.recall('', {
 ```typescript
 class SessionManager {
   private sessionId: string;
-  
+
   constructor() {
     this.sessionId = `session_${Date.now()}`;
   }
-  
+
   storeMessage(content: string, role: 'user' | 'assistant', importance = 0.5) {
     return unifiedMemory.store(content, role, importance, this.sessionId);
   }
-  
+
   getSessionContext(limit = 20) {
     return unifiedMemory.recall('', {
       conversationId: this.sessionId,
-      limit
+      limit,
     });
   }
-  
+
   clearSession() {
     // Note: pas d'API clear par conversationId actuellement
     // Workaround: filtrer manuellement ou attendre cleanup automatique
@@ -226,13 +229,13 @@ class SessionManager {
 
 Choisir bon score d'importance (0.0 → 1.0):
 
-| Range | Tier | Usage | Exemples |
-|-------|------|-------|----------|
-| 0.0-0.3 | STM | Messages éphémères | Questions rapides, salutations |
-| 0.3-0.5 | STM/MTM | Conversation standard | Discussion normale |
-| 0.5-0.7 | MTM | Contexte important | Décisions, objectifs, plans |
-| 0.7-0.9 | LTM | Connaissance durable | Configs, patterns, principes |
-| 0.9-1.0 | LTM | Critique permanent | Core knowledge, identité |
+| Range   | Tier    | Usage                 | Exemples                       |
+| ------- | ------- | --------------------- | ------------------------------ |
+| 0.0-0.3 | STM     | Messages éphémères    | Questions rapides, salutations |
+| 0.3-0.5 | STM/MTM | Conversation standard | Discussion normale             |
+| 0.5-0.7 | MTM     | Contexte important    | Décisions, objectifs, plans    |
+| 0.7-0.9 | LTM     | Connaissance durable  | Configs, patterns, principes   |
+| 0.9-1.0 | LTM     | Critique permanent    | Core knowledge, identité       |
 
 ### Auto-importance (chatEngine)
 
@@ -299,6 +302,7 @@ unifiedMemory.clear(); // Perte irréversible!
 **Cause**: Importance trop basse ou TTL expiré
 
 **Solution**:
+
 ```typescript
 // Augmenter importance
 unifiedMemory.store(message, 'user', 0.6); // Au lieu de 0.3
@@ -312,6 +316,7 @@ unifiedMemory.promote(entryId);
 **Cause**: Trop d'entrées LTM (illimité mais occupe RAM)
 
 **Solution**:
+
 ```typescript
 // Cleanup manuel
 unifiedMemory.cleanup();
@@ -325,11 +330,12 @@ unifiedMemory.clear('LTM');
 **Cause**: Limite trop basse ou minImportance trop haute
 
 **Solution**:
+
 ```typescript
 // Augmenter limite et baisser seuil
 const results = unifiedMemory.recall(query, {
-  limit: 50,           // Au lieu de 10
-  minImportance: 0.2   // Au lieu de 0.5
+  limit: 50, // Au lieu de 10
+  minImportance: 0.2, // Au lieu de 0.5
 });
 ```
 

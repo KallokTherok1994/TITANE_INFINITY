@@ -71,7 +71,10 @@ export class InputValidator {
 
     for (const tag of dangerousTags) {
       // Tags avec fermeture normale
-      const regex = new RegExp(`<${tag}\\b[^<]*(?:(?!<\\/${tag}>)<[^<]*)*<\\/${tag}>`, 'gi');
+      const regex = new RegExp(
+        `<${tag}\\b[^<]*(?:(?!<\\/${tag}>)<[^<]*)*<\\/${tag}>`,
+        'gi'
+      );
       result = result.replace(regex, '');
 
       // Tags auto-fermants
@@ -87,9 +90,9 @@ export class InputValidator {
    */
   private normalizeWhitespace(text: string): string {
     return text
-      .replace(/\t/g, ' ')              // Tabs → spaces
-      .replace(/ {2,}/g, ' ')           // Multiple spaces → single
-      .replace(/\n{3,}/g, '\n\n');      // Max 2 newlines consécutives
+      .replace(/\t/g, ' ') // Tabs → spaces
+      .replace(/ {2,}/g, ' ') // Multiple spaces → single
+      .replace(/\n{3,}/g, '\n\n'); // Max 2 newlines consécutives
   }
 
   /**
@@ -100,7 +103,7 @@ export class InputValidator {
       /javascript:/gi,
       /data:text\/html/gi,
       /vbscript:/gi,
-      /on\w+\s*=/gi,  // Event handlers (onclick, onerror, etc.)
+      /on\w+\s*=/gi, // Event handlers (onclick, onerror, etc.)
     ];
 
     return suspiciousPatterns.some(pattern => pattern.test(text));

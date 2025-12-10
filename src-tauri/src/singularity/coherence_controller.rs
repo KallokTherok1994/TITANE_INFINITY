@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use super::brain_state::{
-    AffectiveState, ConversationMode, ConstraintProfile, MemoryContext, StyleProfile,
+    AffectiveState, ConstraintProfile, ConversationMode, MemoryContext, StyleProfile,
 };
 
 /// Coherence Controller - Fuses all cognitive components
@@ -190,8 +190,16 @@ impl CoherenceController {
         let arousal_diff = (affect.arousal - expected_affect.arousal).abs();
 
         // Tolerance zone
-        let valence_score = if valence_diff < 0.3 { 1.0 } else { 1.0 - valence_diff };
-        let arousal_score = if arousal_diff < 0.3 { 1.0 } else { 1.0 - arousal_diff };
+        let valence_score = if valence_diff < 0.3 {
+            1.0
+        } else {
+            1.0 - valence_diff
+        };
+        let arousal_score = if arousal_diff < 0.3 {
+            1.0
+        } else {
+            1.0 - arousal_diff
+        };
 
         let base_score = (valence_score + arousal_score) / 2.0;
 

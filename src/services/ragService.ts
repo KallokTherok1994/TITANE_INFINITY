@@ -71,7 +71,10 @@ class RAGService {
 
     // Load existing chunks from backend
     try {
-      const response = await invokeTauriCommand<DocumentChunk[]>('rag_get_all_chunks', {});
+      const response = await invokeTauriCommand<DocumentChunk[]>(
+        'rag_get_all_chunks',
+        {}
+      );
       if (response.success && response.data) {
         response.data?.forEach(chunk => {
           this.chunks.set(chunk.id, chunk);
@@ -152,15 +155,16 @@ class RAGService {
     }
 
     // Sort by score and return top K
-    return results
-      .sort((a, b) => b.score - a.score)
-      .slice(0, topK);
+    return results.sort((a, b) => b.score - a.score).slice(0, topK);
   }
 
   /**
    * RAG-enhanced query (search + AI response)
    */
-  async query(question: string, options: RAGQueryOptions = {}): Promise<{
+  async query(
+    question: string,
+    options: RAGQueryOptions = {}
+  ): Promise<{
     answer: string;
     sources: SearchResult[];
   }> {
@@ -168,9 +172,7 @@ class RAGService {
     const sources = await this.search(question, options);
 
     // 2. Build context from top results
-    const context = sources
-      .map(result => result.chunk.content)
-      .join('\n\n---\n\n');
+    const context = sources.map(result => result.chunk.content).join('\n\n---\n\n');
 
     // 3. Query AI with context
     const prompt = `Context:\n${context}\n\nQuestion: ${question}\n\nAnswer based on the context above:`;
@@ -178,7 +180,8 @@ class RAGService {
     // Call AI chat service (assumes aiChatClient is available)
     const response = await invokeTauriCommand<string>('ai_chat', {
       message: prompt,
-      system_prompt: 'You are a helpful assistant that answers questions based on provided context.',
+      system_prompt:
+        'You are a helpful assistant that answers questions based on provided context.',
     });
 
     return {
@@ -243,9 +246,12 @@ class RAGService {
    */
   private async generateEmbeddings(chunks: DocumentChunk[]): Promise<DocumentChunk[]> {
     try {
-      const response = await invokeTauriCommand<{ embeddings: number[][] }>('rag_generate_embeddings', {
-        texts: chunks.map(c => c.content),
-      });
+      const response = await invokeTauriCommand<{ embeddings: number[][] }>(
+        'rag_generate_embeddings',
+        {
+          texts: chunks.map(c => c.content),
+        }
+      );
 
       if (response.success && response.data) {
         return chunks.map((chunk, index) => ({
@@ -265,9 +271,12 @@ class RAGService {
    */
   private async generateQueryEmbedding(query: string): Promise<number[]> {
     try {
-      const response = await invokeTauriCommand<{ embedding: number[] }>('rag_generate_embedding', {
-        text: query,
-      });
+      const response = await invokeTauriCommand<{ embedding: number[] }>(
+        'rag_generate_embedding',
+        {
+          text: query,
+        }
+      );
 
       if (response.success && response.data) {
         return response.data?.embedding;
@@ -277,7 +286,9 @@ class RAGService {
     }
 
     // Fallback: random embedding (for testing)
-    return Array(384).fill(0).map(() => Math.random());
+    return Array(384)
+      .fill(0)
+      .map(() => Math.random());
   }
 
   /**

@@ -10,9 +10,15 @@ const localStorageMock = (() => {
   let store: Record<string, string> = {};
   return {
     getItem: vi.fn((key: string) => store[key] || null),
-    setItem: vi.fn((key: string, value: string) => { store[key] = value; }),
-    removeItem: vi.fn((key: string) => { delete store[key]; }),
-    clear: vi.fn(() => { store = {}; }),
+    setItem: vi.fn((key: string, value: string) => {
+      store[key] = value;
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete store[key];
+    }),
+    clear: vi.fn(() => {
+      store = {};
+    }),
   };
 })();
 
@@ -69,8 +75,14 @@ describe('ContextManager v20.0Ω', () => {
 
     // Ajouter beaucoup de messages
     for (let i = 0; i < 20; i++) {
-      manager.addMessage('user', `Message utilisateur numéro ${i} avec du contenu assez long pour prendre de la place.`);
-      manager.addMessage('assistant', `Réponse de l'assistant numéro ${i} avec également du contenu.`);
+      manager.addMessage(
+        'user',
+        `Message utilisateur numéro ${i} avec du contenu assez long pour prendre de la place.`
+      );
+      manager.addMessage(
+        'assistant',
+        `Réponse de l'assistant numéro ${i} avec également du contenu.`
+      );
     }
 
     const window = manager.buildContextWindow();
@@ -175,7 +187,10 @@ describe('SessionManager v20.0Ω', () => {
     const manager = new SessionManager();
 
     const session = manager.createSession({ title: 'Search Test' });
-    manager.addMessage(session.id, { role: 'user', content: 'Comment fonctionne React?' });
+    manager.addMessage(session.id, {
+      role: 'user',
+      content: 'Comment fonctionne React?',
+    });
 
     const results = manager.searchSessions('React');
 
@@ -219,7 +234,9 @@ describe('MemoryBridge v20.0Ω', () => {
     const { MemoryBridge } = await import('@/services/memory/MemoryBridge');
     const bridge = new MemoryBridge();
 
-    const result = bridge.detectIntent('Retiens que je préfère TypeScript au JavaScript.');
+    const result = bridge.detectIntent(
+      'Retiens que je préfère TypeScript au JavaScript.'
+    );
 
     expect(result.needsMemory).toBe(true);
     expect(result.intent).toBe('store');
@@ -241,7 +258,7 @@ describe('MemoryBridge v20.0Ω', () => {
     const bridge = new MemoryBridge();
 
     // Stocker une mémoire
-    bridge.store('L\'utilisateur préfère TypeScript', 'preference');
+    bridge.store("L'utilisateur préfère TypeScript", 'preference');
 
     // Récupérer
     const results = bridge.retrieve(['TypeScript', 'préfère'], 3);
@@ -255,7 +272,7 @@ describe('MemoryBridge v20.0Ω', () => {
     const bridge = new MemoryBridge();
 
     // Stocker des mémoires
-    bridge.store('L\'utilisateur travaille sur un projet React', 'context');
+    bridge.store("L'utilisateur travaille sur un projet React", 'context');
     bridge.store('Il préfère les composants fonctionnels', 'preference');
 
     const intent = bridge.detectIntent('Tu te souviens de mon projet?');
@@ -269,7 +286,9 @@ describe('MemoryBridge v20.0Ω', () => {
     const { MemoryBridge } = await import('@/services/memory/MemoryBridge');
     const bridge = new MemoryBridge();
 
-    const preferences = bridge.extractPreferences('Je préfère travailler le matin. J\'aime bien le café.');
+    const preferences = bridge.extractPreferences(
+      "Je préfère travailler le matin. J'aime bien le café."
+    );
 
     expect(preferences.length).toBeGreaterThan(0);
   });
@@ -284,7 +303,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should initialize with default providers', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     const providers = connector.getAllProviders();
@@ -295,7 +315,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should have local provider always configured', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     const local = connector.getProviderStatus('local');
@@ -306,7 +327,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should not allow disabling local provider', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     const result = connector.setProviderActive('local', false);
@@ -316,7 +338,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should select best available provider', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     // Par défaut, local devrait être sélectionné
@@ -326,7 +349,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should respect preferred provider if available and healthy', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     // Ollama doit être marqué comme sain pour être sélectionné
@@ -338,7 +362,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should fallback to local when preferred is unavailable', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     // OpenAI n'est pas configuré par défaut
@@ -348,7 +373,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should get fallback order for available providers only', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     const order = connector.getFallbackOrder();
@@ -362,7 +388,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should mark provider as unhealthy', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
     const connector = new GovernanceConnector();
 
     connector.markProviderUnhealthy('ollama', 'Connection refused');
@@ -373,7 +400,8 @@ describe('GovernanceConnector v20.0Ω', () => {
   });
 
   it('should persist configuration to localStorage', async () => {
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
 
     const connector1 = new GovernanceConnector();
     connector1.setProviderActive('gemini', true);
@@ -397,7 +425,8 @@ describe('v20.0Ω Integration', () => {
     const { ContextManager } = await import('@/services/context/ContextManager');
     const { SessionManager } = await import('@/services/sessions/SessionManager');
     const { MemoryBridge } = await import('@/services/memory/MemoryBridge');
-    const { GovernanceConnector } = await import('@/services/governance/GovernanceConnector');
+    const { GovernanceConnector } =
+      await import('@/services/governance/GovernanceConnector');
 
     // 1. Initialiser les composants
     const context = new ContextManager();
@@ -423,7 +452,10 @@ describe('v20.0Ω Integration', () => {
     expect(intent.intent).toBe('store');
 
     // 7. Traiter l'échange (stocke la mémoire)
-    memory.processExchange(userMessage, 'Très bien, j\'ai noté que vous êtes développeur React.');
+    memory.processExchange(
+      userMessage,
+      "Très bien, j'ai noté que vous êtes développeur React."
+    );
 
     // 8. Sélectionner le provider via governance
     const provider = governance.selectProvider();

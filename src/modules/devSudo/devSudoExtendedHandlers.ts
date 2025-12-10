@@ -167,7 +167,7 @@ export async function handleScanErrors(): Promise<DevSudoResult> {
 
     if (diagnosticResult) {
       const errorsList = diagnosticResult.errors
-        .map((e) => `  ${e.severity === 'high' ? '🔴' : '⚠️'} ${e.module}: ${e.error}`)
+        .map(e => `  ${e.severity === 'high' ? '🔴' : '⚠️'} ${e.module}: ${e.error}`)
         .join('\n');
 
       return {
@@ -214,7 +214,9 @@ ${errorsList}
 
 export async function handleHealthCheck(): Promise<DevSudoResult> {
   try {
-    const health = await invoke<{ status: string; healthy: boolean }>('quick_health_check');
+    const health = await invoke<{ status: string; healthy: boolean }>(
+      'quick_health_check'
+    );
 
     return {
       handled: true,

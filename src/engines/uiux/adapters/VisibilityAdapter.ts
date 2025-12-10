@@ -79,7 +79,11 @@ export class VisibilityAdapter {
   /**
    * Adapte la visibilité au contexte
    */
-  adapt(context: UIContext, mode: UserMode, cognitiveLoad: CognitiveLoad): VisibilityAdaptation {
+  adapt(
+    context: UIContext,
+    mode: UserMode,
+    cognitiveLoad: CognitiveLoad
+  ): VisibilityAdaptation {
     // Commencer avec le préset du mode
     const visibility = { ...VISIBILITY_PRESETS[mode] };
 
@@ -99,7 +103,10 @@ export class VisibilityAdapter {
   /**
    * Adapte à la charge cognitive
    */
-  private adaptToCognitiveLoad(visibility: VisibilityAdaptation, load: CognitiveLoad): void {
+  private adaptToCognitiveLoad(
+    visibility: VisibilityAdaptation,
+    load: CognitiveLoad
+  ): void {
     // Surcharge élevée = masquer les éléments non essentiels
     if (load.overallLoad > 0.7) {
       visibility.showMetrics = false;

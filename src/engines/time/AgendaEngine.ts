@@ -206,7 +206,9 @@ export class AgendaEngine {
   /**
    * Crée un nouvel événement
    */
-  async createEvent(eventData: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>): Promise<AgendaEvent> {
+  async createEvent(
+    eventData: Omit<AgendaEvent, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<AgendaEvent> {
     const now = Date.now();
     const event: AgendaEvent = {
       ...eventData,
@@ -251,7 +253,10 @@ export class AgendaEngine {
   /**
    * Met à jour un événement existant
    */
-  async updateEvent(eventId: string, updates: Partial<AgendaEvent>): Promise<AgendaEvent | null> {
+  async updateEvent(
+    eventId: string,
+    updates: Partial<AgendaEvent>
+  ): Promise<AgendaEvent | null> {
     const event = this.events.get(eventId);
     if (!event) {
       console.warn('[AgendaEngine] Événement non trouvé:', eventId);
@@ -276,15 +281,22 @@ export class AgendaEngine {
   /**
    * Déplace un événement (change les dates)
    */
-  async moveEvent(eventId: string, newStartDateTime: string, newEndDateTime?: string): Promise<AgendaEvent | null> {
+  async moveEvent(
+    eventId: string,
+    newStartDateTime: string,
+    newEndDateTime?: string
+  ): Promise<AgendaEvent | null> {
     const event = this.events.get(eventId);
     if (!event) return null;
 
     // Calculer la nouvelle fin si non fournie
     let endDateTime = newEndDateTime;
     if (!endDateTime) {
-      const originalDuration = new Date(event.endDateTime).getTime() - new Date(event.startDateTime).getTime();
-      endDateTime = new Date(new Date(newStartDateTime).getTime() + originalDuration).toISOString();
+      const originalDuration =
+        new Date(event.endDateTime).getTime() - new Date(event.startDateTime).getTime();
+      endDateTime = new Date(
+        new Date(newStartDateTime).getTime() + originalDuration
+      ).toISOString();
     }
 
     return this.updateEvent(eventId, {
@@ -311,7 +323,10 @@ export class AgendaEngine {
   /**
    * Change le statut d'un événement
    */
-  async setEventStatus(eventId: string, status: EventStatus): Promise<AgendaEvent | null> {
+  async setEventStatus(
+    eventId: string,
+    status: EventStatus
+  ): Promise<AgendaEvent | null> {
     return this.updateEvent(eventId, { status });
   }
 
@@ -393,10 +408,11 @@ export class AgendaEngine {
    */
   searchEvents(query: string): AgendaEvent[] {
     const lowerQuery = query.toLowerCase();
-    return this.getAllEvents().filter(event =>
-      event.title.toLowerCase().includes(lowerQuery) ||
-      event.description?.toLowerCase().includes(lowerQuery) ||
-      event.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
+    return this.getAllEvents().filter(
+      event =>
+        event.title.toLowerCase().includes(lowerQuery) ||
+        event.description?.toLowerCase().includes(lowerQuery) ||
+        event.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
     );
   }
 
@@ -451,7 +467,9 @@ export class AgendaEngine {
   /**
    * Construit la grille mois
    */
-  buildMonthGrid(date: Date): { date: Date; events: AgendaEvent[]; isCurrentMonth: boolean }[] {
+  buildMonthGrid(
+    date: Date
+  ): { date: Date; events: AgendaEvent[]; isCurrentMonth: boolean }[] {
     const start = getStartOfMonth(date);
     const end = getEndOfMonth(date);
     const monthStart = getStartOfWeek(start, this.meta.firstDayOfWeek);

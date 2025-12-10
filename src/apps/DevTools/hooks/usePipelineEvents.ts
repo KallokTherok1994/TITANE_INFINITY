@@ -32,26 +32,28 @@ export function usePipelineEvents() {
 
     const setupListeners = async () => {
       // Listen to OMEGA step events
-      unlistenStep = await listen<OmegaStepEvent>('omega_step', (event) => {
+      unlistenStep = await listen<OmegaStepEvent>('omega_step', event => {
         const step = event.payload;
 
-        setState((prev) => {
+        setState(prev => {
           const isCompleted = step.status === 'completed' || step.status === 'failed';
 
           return {
             ...prev,
             current_step: isCompleted ? null : step,
-            completed_steps: isCompleted ? [...prev.completed_steps, step] : prev.completed_steps,
+            completed_steps: isCompleted
+              ? [...prev.completed_steps, step]
+              : prev.completed_steps,
             error: step.status === 'failed' ? step.error || 'Unknown error' : prev.error,
           };
         });
       });
 
       // Listen to OMEGA complete events
-      unlistenComplete = await listen<OmegaCompleteEvent>('omega_complete', (event) => {
+      unlistenComplete = await listen<OmegaCompleteEvent>('omega_complete', event => {
         const complete = event.payload;
 
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           pipeline_completed: true,
           pipeline_duration_ms: complete.total_duration_ms,

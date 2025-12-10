@@ -38,7 +38,11 @@ const mockSecureInvoke = vi.mocked(secureInvoke);
 // Utiliser seulement des commandes whitelistees pour respecter secureInvoke
 const TEST_COMMAND = 'get_system_health';
 const BATCH_COMMANDS = ['memory_get_state', 'memory_get_stats', 'get_timeline'] as const;
-const SEQUENCE_COMMANDS = ['memory_get_state', 'memory_get_recent_decisions', 'memory_get_active_projects'] as const;
+const SEQUENCE_COMMANDS = [
+  'memory_get_state',
+  'memory_get_recent_decisions',
+  'memory_get_active_projects',
+] as const;
 
 describe('ServiceInvoker - invokeWithRetry', () => {
   beforeEach(() => {
@@ -62,11 +66,15 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       .mockRejectedValueOnce(new Error('Network error'))
       .mockResolvedValueOnce(mockData);
 
-    const result = await invokeWithRetry(TEST_COMMAND, {}, {
-      retries: 3,
-      retryDelay: 10, // Réduire délai pour tests rapides
-      backoffFactor: 1, // Pas de backoff pour accélérer
-    });
+    const result = await invokeWithRetry(
+      TEST_COMMAND,
+      {},
+      {
+        retries: 3,
+        retryDelay: 10, // Réduire délai pour tests rapides
+        backoffFactor: 1, // Pas de backoff pour accélérer
+      }
+    );
 
     expect(result).toEqual(mockData);
     expect(mockSecureInvoke).toHaveBeenCalledTimes(3);
@@ -78,10 +86,14 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       .mockRejectedValueOnce(new Error('Network outage 2'))
       .mockRejectedValueOnce(new Error('Network outage 3'));
 
-    const promise = invokeWithRetry(TEST_COMMAND, {}, {
-      retries: 3,
-      retryDelay: 10,
-    });
+    const promise = invokeWithRetry(
+      TEST_COMMAND,
+      {},
+      {
+        retries: 3,
+        retryDelay: 10,
+      }
+    );
 
     // Advance timers
 
@@ -93,14 +105,17 @@ describe('ServiceInvoker - invokeWithRetry', () => {
 
   it('devrait respecter le timeout', async () => {
     mockSecureInvoke.mockImplementation(
-      () =>
-        new Promise((resolve) => setTimeout(() => resolve({ data: 'ok' }), 2000))
+      () => new Promise(resolve => setTimeout(() => resolve({ data: 'ok' }), 2000))
     );
 
-    const promise = invokeWithRetry(TEST_COMMAND, {}, {
-      timeout: 1000,
-      noRetry: true,
-    });
+    const promise = invokeWithRetry(
+      TEST_COMMAND,
+      {},
+      {
+        timeout: 1000,
+        noRetry: true,
+      }
+    );
 
     // Advance timer au-delà du timeout
 
@@ -117,11 +132,15 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       .mockRejectedValueOnce(new Error('Network blip'))
       .mockResolvedValueOnce(mockData);
 
-    const promise = invokeWithRetry(TEST_COMMAND, {}, {
-      retries: 3,
-      retryDelay: 10,
-      backoffFactor: 3, // 100 * 3^attempt
-    });
+    const promise = invokeWithRetry(
+      TEST_COMMAND,
+      {},
+      {
+        retries: 3,
+        retryDelay: 10,
+        backoffFactor: 3, // 100 * 3^attempt
+      }
+    );
 
     // Premier retry: ~100-150ms (avec jitter)
 
@@ -134,9 +153,9 @@ describe('ServiceInvoker - invokeWithRetry', () => {
   it('ne devrait pas retry si noRetry=true', async () => {
     mockSecureInvoke.mockRejectedValueOnce(new Error('Error'));
 
-    await expect(
-      invokeWithRetry(TEST_COMMAND, {}, { noRetry: true })
-    ).rejects.toThrow('Error');
+    await expect(invokeWithRetry(TEST_COMMAND, {}, { noRetry: true })).rejects.toThrow(
+      'Error'
+    );
 
     expect(mockSecureInvoke).toHaveBeenCalledTimes(1);
   });
@@ -144,9 +163,9 @@ describe('ServiceInvoker - invokeWithRetry', () => {
   it('ne devrait pas retry les erreurs non-retriables', async () => {
     mockSecureInvoke.mockRejectedValueOnce(new Error('Validation failed'));
 
-    await expect(
-      invokeWithRetry(TEST_COMMAND, {}, { retries: 3 })
-    ).rejects.toThrow('Validation failed');
+    await expect(invokeWithRetry(TEST_COMMAND, {}, { retries: 3 })).rejects.toThrow(
+      'Validation failed'
+    );
 
     // Seulement 1 appel car erreur non-retriable
     expect(mockSecureInvoke).toHaveBeenCalledTimes(1);
@@ -158,10 +177,14 @@ describe('ServiceInvoker - invokeWithRetry', () => {
       .mockRejectedValueOnce(new Error('Network timeout'))
       .mockResolvedValueOnce(mockData);
 
-    const promise = invokeWithRetry(TEST_COMMAND, {}, {
-      retries: 2,
-      retryDelay: 10,
-    });
+    const promise = invokeWithRetry(
+      TEST_COMMAND,
+      {},
+      {
+        retries: 2,
+        retryDelay: 10,
+      }
+    );
 
     const result = await promise;
 
@@ -190,12 +213,10 @@ describe('ServiceInvoker - invokeWithTimeout', () => {
 
   it('devrait timeout si trop long', async () => {
     mockSecureInvoke.mockImplementation(
-      () =>
-        new Promise((resolve) => setTimeout(() => resolve({ data: 'ok' }), 10000))
+      () => new Promise(resolve => setTimeout(() => resolve({ data: 'ok' }), 10000))
     );
 
     const promise = invokeWithTimeout(TEST_COMMAND, {}, 1000);
-
 
     await expect(promise).rejects.toThrow(TimeoutError);
   });

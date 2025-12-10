@@ -26,8 +26,8 @@ impl From<&MemoryEntry> for IndexEntry {
     fn from(entry: &MemoryEntry) -> Self {
         Self {
             id: entry.id,
-            tier: entry.tier.clone(),
-            memory_type: entry.memory_type.clone(),
+            tier: entry.tier,
+            memory_type: entry.memory_type,
             importance: entry.importance,
             timestamp: entry.timestamp,
             content_hash: Self::hash_content(&entry.content),
@@ -97,13 +97,16 @@ impl MemoryIndexer {
         let index_entry = IndexEntry::from(entry);
 
         // Primary index
-        self.primary.write().await.insert(entry.id, index_entry.clone());
+        self.primary
+            .write()
+            .await
+            .insert(entry.id, index_entry.clone());
 
         // Tier index
         self.by_tier
             .write()
             .await
-            .entry(entry.tier.clone())
+            .entry(entry.tier)
             .or_default()
             .insert(entry.id);
 
@@ -111,7 +114,7 @@ impl MemoryIndexer {
         self.by_type
             .write()
             .await
-            .entry(entry.memory_type.clone())
+            .entry(entry.memory_type)
             .or_default()
             .insert(entry.id);
 
@@ -340,7 +343,7 @@ impl MemoryIndexer {
             }
 
             // Update entry
-            entry.tier = new_tier.clone();
+            entry.tier = new_tier;
 
             // Add to new tier
             by_tier.entry(new_tier).or_default().insert(*id);

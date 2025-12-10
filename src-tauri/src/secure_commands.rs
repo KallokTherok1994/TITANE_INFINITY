@@ -98,9 +98,7 @@ fn build_gemini_status_sync(
     provider_enabled: bool,
     env_present: bool,
 ) -> GeminiKeyStatus {
-    let configured = secrets
-        .has_secret("gemini_api_key")
-        .unwrap_or(false);
+    let configured = secrets.has_secret("gemini_api_key").unwrap_or(false);
 
     let masked_key = secrets
         .get_secret("gemini_api_key")
@@ -146,9 +144,7 @@ pub async fn chat_set_gemini_key(
 
     let zero = zeroize_string(trimmed.to_string());
     let new_value = zero.as_str().to_string();
-    let previously_configured = secrets
-        .has_secret("gemini_api_key")
-        .unwrap_or(false);
+    let previously_configured = secrets.has_secret("gemini_api_key").unwrap_or(false);
 
     secrets
         .set_secret("gemini_api_key", new_value.clone())
@@ -158,9 +154,7 @@ pub async fn chat_set_gemini_key(
         let mut guard = orchestrator.gemini_api_key.write().await;
         *guard = Some(new_value.clone());
     }
-    orchestrator
-        .set_provider_availability("gemini", true)
-        .await;
+    orchestrator.set_provider_availability("gemini", true).await;
 
     drop(zero); // zeroized buffer dropped here
 
@@ -233,9 +227,7 @@ pub async fn chat_set_openai_key(
     let zero = zeroize_string(trimmed.to_string());
     let new_value = zero.as_str().to_string();
 
-    let previously_configured = secrets
-        .has_secret("openai_api_key")
-        .unwrap_or(false);
+    let previously_configured = secrets.has_secret("openai_api_key").unwrap_or(false);
 
     secrets
         .set_secret("openai_api_key", new_value.clone())
@@ -245,9 +237,7 @@ pub async fn chat_set_openai_key(
         let mut guard = orchestrator.openai_api_key.write().await;
         *guard = Some(new_value.clone());
     }
-    orchestrator
-        .set_provider_availability("openai", true)
-        .await;
+    orchestrator.set_provider_availability("openai", true).await;
 
     drop(zero);
 
@@ -339,9 +329,7 @@ pub async fn chat_set_anthropic_key(
     let zero = zeroize_string(trimmed.to_string());
     let new_value = zero.as_str().to_string();
 
-    let previously_configured = secrets
-        .has_secret("anthropic_api_key")
-        .unwrap_or(false);
+    let previously_configured = secrets.has_secret("anthropic_api_key").unwrap_or(false);
 
     secrets
         .set_secret("anthropic_api_key", new_value.clone())
@@ -432,7 +420,10 @@ pub async fn secure_store_secret(
 
     let normalized_key = payload.key.trim();
     if let Err(err) = PayloadValidator::validate_string(normalized_key, "key", true) {
-        return Ok(SecureResponse::error(format!("Invalid secret key: {}", err)));
+        return Ok(SecureResponse::error(format!(
+            "Invalid secret key: {}",
+            err
+        )));
     }
 
     if !normalized_key
@@ -446,7 +437,10 @@ pub async fn secure_store_secret(
 
     let value_trimmed = payload.value.trim();
     if let Err(err) = PayloadValidator::validate_string(value_trimmed, "value", true) {
-        return Ok(SecureResponse::error(format!("Invalid secret value: {}", err)));
+        return Ok(SecureResponse::error(format!(
+            "Invalid secret value: {}",
+            err
+        )));
     }
 
     let zero_value = zeroize_string(value_trimmed.to_string());
@@ -640,7 +634,10 @@ pub async fn check_system_integrity() -> Result<SecureResponse<String>, String> 
         // 2. Effectuer validation complète
         match validate_pre_boot().await {
             Ok(validation) => Ok(SecureResponse::success(validation.report())),
-            Err(e) => Ok(SecureResponse::error(format!("Integrity check failed: {}", e))),
+            Err(e) => Ok(SecureResponse::error(format!(
+                "Integrity check failed: {}",
+                e
+            ))),
         }
     }
 }

@@ -24,7 +24,7 @@ export interface LogsCardProps {
 export const LogsCard: React.FC<LogsCardProps> = ({
   totalLogs,
   recentLogs = [],
-  onViewAll
+  onViewAll,
 }) => {
   return (
     <div className="logs-card">
@@ -38,9 +38,7 @@ export const LogsCard: React.FC<LogsCardProps> = ({
       </div>
 
       {/* Count Display */}
-      <div className="logs-card__count">
-        {totalLogs.toLocaleString()}
-      </div>
+      <div className="logs-card__count">{totalLogs.toLocaleString()}</div>
 
       {/* Recent Logs Preview */}
       {recentLogs.length > 0 && (

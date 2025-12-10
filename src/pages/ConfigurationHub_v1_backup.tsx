@@ -70,7 +70,9 @@ export const ConfigurationHub: React.FC = () => {
 
   const tabStyle = (isActive: boolean) => ({
     padding: '0.75rem 1.5rem',
-    background: isActive ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'rgba(255,255,255,0.05)',
+    background: isActive
+      ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      : 'rgba(255,255,255,0.05)',
     border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
     borderRadius: '8px',
     color: 'white',
@@ -89,7 +91,13 @@ export const ConfigurationHub: React.FC = () => {
             Configuration Hub
           </h1>
         </div>
-        <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--color-text-secondary)' }}>
+        <div
+          style={{
+            textAlign: 'center',
+            padding: '3rem',
+            color: 'var(--color-text-secondary)',
+          }}
+        >
           <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
           <div>Chargement de la configuration...</div>
         </div>
@@ -107,11 +115,25 @@ export const ConfigurationHub: React.FC = () => {
           </h1>
         </div>
         <div style={{ textAlign: 'center', padding: '3rem' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem', color: 'var(--color-error)' }}>❌</div>
+          <div
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--color-error)',
+            }}
+          >
+            ❌
+          </div>
           <div style={{ color: 'var(--color-error)', marginBottom: '1rem' }}>
             Erreur de chargement de la configuration
           </div>
-          <div style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)', marginBottom: '2rem' }}>
+          <div
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-text-secondary)',
+              marginBottom: '2rem',
+            }}
+          >
             {error}
           </div>
           <button
@@ -184,26 +206,43 @@ export const ConfigurationHub: React.FC = () => {
         }}
       >
         <div>
-          <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>Version: </span>
-          <span style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>{config.version}</span>
+          <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
+            Version:{' '}
+          </span>
+          <span style={{ fontWeight: 600, fontFamily: 'var(--font-mono)' }}>
+            {config.version}
+          </span>
         </div>
-        <div style={{ borderLeft: '1px solid rgba(255, 255, 255, 0.2)', paddingLeft: '1rem' }}>
+        <div
+          style={{
+            borderLeft: '1px solid rgba(255, 255, 255, 0.2)',
+            paddingLeft: '1rem',
+          }}
+        >
           <span style={{ fontSize: '0.85rem', color: 'var(--color-text-secondary)' }}>
             Dernière actualisation:{' '}
           </span>
-          <span style={{ fontWeight: 600 }}>{lastRefresh.toLocaleTimeString('fr-FR')}</span>
+          <span style={{ fontWeight: 600 }}>
+            {lastRefresh.toLocaleTimeString('fr-FR')}
+          </span>
         </div>
       </div>
 
       {/* Tabs Navigation */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
-        <button style={tabStyle(activeTab === 'system')} onClick={() => setActiveTab('system')}>
+        <button
+          style={tabStyle(activeTab === 'system')}
+          onClick={() => setActiveTab('system')}
+        >
           💻 Système
         </button>
         <button style={tabStyle(activeTab === 'ai')} onClick={() => setActiveTab('ai')}>
           🤖 Intelligence Artificielle
         </button>
-        <button style={tabStyle(activeTab === 'performance')} onClick={() => setActiveTab('performance')}>
+        <button
+          style={tabStyle(activeTab === 'performance')}
+          onClick={() => setActiveTab('performance')}
+        >
           ⚡ Performance
         </button>
       </div>

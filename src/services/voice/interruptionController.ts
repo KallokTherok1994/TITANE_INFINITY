@@ -22,9 +22,9 @@ import { wakeWordEngine, type WakeWordEvent } from './wakeWordEngine';
  * Type d'interruption
  */
 export type InterruptionType =
-  | 'wake_word'       // Wake word détecté pendant TTS
-  | 'manual'          // Interruption manuelle (bouton)
-  | 'error';          // Erreur TTS
+  | 'wake_word' // Wake word détecté pendant TTS
+  | 'manual' // Interruption manuelle (bouton)
+  | 'error'; // Erreur TTS
 
 /**
  * Événement d'interruption
@@ -160,7 +160,9 @@ export class InterruptionController {
    */
   setEnabled(enabled: boolean): void {
     this.config.enabled = enabled;
-    console.log(`[InterruptionController] ${enabled ? '🔊' : '🔇'} Interruption detection ${enabled ? 'enabled' : 'disabled'}`);
+    console.log(
+      `[InterruptionController] ${enabled ? '🔊' : '🔇'} Interruption detection ${enabled ? 'enabled' : 'disabled'}`
+    );
   }
 
   /**
@@ -177,7 +179,11 @@ export class InterruptionController {
   /**
    * Interrompre le TTS et notifier
    */
-  private async interrupt(type: InterruptionType, wakeEvent?: WakeWordEvent, reason?: string): Promise<void> {
+  private async interrupt(
+    type: InterruptionType,
+    wakeEvent?: WakeWordEvent,
+    reason?: string
+  ): Promise<void> {
     // Debounce
     const now = Date.now();
     if (now - this.lastInterruption < this.config.debounceDelay) {
@@ -190,10 +196,7 @@ export class InterruptionController {
 
     try {
       // Arrêter tous les TTS
-      await Promise.all([
-        hybridTTS.stop(),
-        emotionalTTS.stop(),
-      ]);
+      await Promise.all([hybridTTS.stop(), emotionalTTS.stop()]);
 
       console.log('[InterruptionController] ✅ TTS stopped');
     } catch (err) {

@@ -4,23 +4,22 @@
 //   Router → Executor → Merger → Guardrails → Output
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
 use tokio::time::timeout;
-use serde::{Deserialize, Serialize};
 
 use super::{
-    OmegaConfig, OmegaError, OmegaResult,
-    PipelineInput, PipelineOutput, PipelineStage, OutputMetadata,
-    StageInput, StageContext, StageProcessor,
-    router::{Router, RoutingResult},
-    executor::Executor,
-    merger::{Merger, MergeResult},
-    guardrails::{Guardrails, GuardrailResult, GuardrailConfig},
     diagnostics::DiagnosticsEngine,
+    executor::Executor,
+    guardrails::{GuardrailConfig, GuardrailResult, Guardrails},
+    merger::{MergeResult, Merger},
+    router::{Router, RoutingResult},
     scheduler::{JobScheduler, SchedulerConfig},
+    OmegaConfig, OmegaError, OmegaResult, OutputMetadata, PipelineInput, PipelineOutput,
+    PipelineStage, StageContext, StageInput, StageProcessor,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -126,18 +125,26 @@ impl OmegaPipeline {
 
         match result {
             Ok(Ok(output)) => {
-                self.diagnostics.record_request_complete(&request_id, true, total_latency).await;
+                self.diagnostics
+                    .record_request_complete(&request_id, true, total_latency)
+                    .await;
                 self.increment_processed().await;
                 Ok(output)
             }
             Ok(Err(e)) => {
-                self.diagnostics.record_request_complete(&request_id, false, total_latency).await;
-                self.diagnostics.record_error(&format!("{:?}", e), &e.to_string()).await;
+                self.diagnostics
+                    .record_request_complete(&request_id, false, total_latency)
+                    .await;
+                self.diagnostics
+                    .record_error(&format!("{:?}", e), &e.to_string())
+                    .await;
                 Err(e)
             }
             Err(_) => {
                 self.diagnostics.record_timeout().await;
-                self.diagnostics.record_request_complete(&request_id, false, total_latency).await;
+                self.diagnostics
+                    .record_request_complete(&request_id, false, total_latency)
+                    .await;
                 Err(OmegaError::Timeout(self.config.timeout_ms))
             }
         }
@@ -164,11 +171,22 @@ impl OmegaPipeline {
         };
 
         let router_output = self.router.process(router_input).await?;
-        self.diagnostics.record_stage(PipelineStage::Router, router_output.latency_ms, router_output.success).await;
-        timings.insert("router".to_string(), stage_start.elapsed().as_millis() as u64);
+        self.diagnostics
+            .record_stage(
+                PipelineStage::Router,
+                router_output.latency_ms,
+                router_output.success,
+            )
+            .await;
+        timings.insert(
+            "router".to_string(),
+            stage_start.elapsed().as_millis() as u64,
+        );
 
         // Store router output in context
-        context.previous_outputs.insert(PipelineStage::Router, router_output.data.clone());
+        context
+            .previous_outputs
+            .insert(PipelineStage::Router, router_output.data.clone());
 
         // Check cache hit
         let routing: RoutingResult = serde_json::from_value(router_output.data.clone())
@@ -192,11 +210,22 @@ impl OmegaPipeline {
         };
 
         let executor_output = self.executor.process(executor_input).await?;
-        self.diagnostics.record_stage(PipelineStage::Executor, executor_output.latency_ms, executor_output.success).await;
-        timings.insert("executor".to_string(), stage_start.elapsed().as_millis() as u64);
+        self.diagnostics
+            .record_stage(
+                PipelineStage::Executor,
+                executor_output.latency_ms,
+                executor_output.success,
+            )
+            .await;
+        timings.insert(
+            "executor".to_string(),
+            stage_start.elapsed().as_millis() as u64,
+        );
 
         // Store executor output in context
-        context.previous_outputs.insert(PipelineStage::Executor, executor_output.data.clone());
+        context
+            .previous_outputs
+            .insert(PipelineStage::Executor, executor_output.data.clone());
 
         // ═══════════════════════════════════════════════════════════════
         // STAGE 3: MERGER
@@ -210,11 +239,22 @@ impl OmegaPipeline {
         };
 
         let merger_output = self.merger.process(merger_input).await?;
-        self.diagnostics.record_stage(PipelineStage::Merger, merger_output.latency_ms, merger_output.success).await;
-        timings.insert("merger".to_string(), stage_start.elapsed().as_millis() as u64);
+        self.diagnostics
+            .record_stage(
+                PipelineStage::Merger,
+                merger_output.latency_ms,
+                merger_output.success,
+            )
+            .await;
+        timings.insert(
+            "merger".to_string(),
+            stage_start.elapsed().as_millis() as u64,
+        );
 
         // Store merger output in context
-        context.previous_outputs.insert(PipelineStage::Merger, merger_output.data.clone());
+        context
+            .previous_outputs
+            .insert(PipelineStage::Merger, merger_output.data.clone());
 
         // ═══════════════════════════════════════════════════════════════
         // STAGE 4: GUARDRAILS
@@ -234,7 +274,9 @@ impl OmegaPipeline {
         // Handle guardrails result
         let (final_response, was_blocked, safety_score) = match guardrails_result {
             Ok(output) => {
-                self.diagnostics.record_stage(PipelineStage::Guardrails, guardrails_latency, true).await;
+                self.diagnostics
+                    .record_stage(PipelineStage::Guardrails, guardrails_latency, true)
+                    .await;
                 let guardrail: GuardrailResult = serde_json::from_value(output.data)
                     .unwrap_or_else(|_| GuardrailResult {
                         request_id: request_id.clone(),
@@ -248,15 +290,27 @@ impl OmegaPipeline {
                         block_reason: None,
                     });
 
-                (guardrail.final_response, guardrail.was_blocked, guardrail.safety_score)
+                (
+                    guardrail.final_response,
+                    guardrail.was_blocked,
+                    guardrail.safety_score,
+                )
             }
             Err(OmegaError::GuardrailsBlocked(reason)) => {
-                self.diagnostics.record_stage(PipelineStage::Guardrails, guardrails_latency, false).await;
+                self.diagnostics
+                    .record_stage(PipelineStage::Guardrails, guardrails_latency, false)
+                    .await;
                 self.diagnostics.record_blocked().await;
-                ("Je ne peux pas répondre à cette demande.".to_string(), true, 0.0)
+                (
+                    "Je ne peux pas répondre à cette demande.".to_string(),
+                    true,
+                    0.0,
+                )
             }
             Err(e) => {
-                self.diagnostics.record_stage(PipelineStage::Guardrails, guardrails_latency, false).await;
+                self.diagnostics
+                    .record_stage(PipelineStage::Guardrails, guardrails_latency, false)
+                    .await;
                 return Err(e);
             }
         };
@@ -269,8 +323,13 @@ impl OmegaPipeline {
 
         // Get merge result for metadata
         let merge_result: MergeResult = serde_json::from_value(
-            context.previous_outputs.get(&PipelineStage::Merger).cloned().unwrap_or_default()
-        ).unwrap_or_else(|_| MergeResult {
+            context
+                .previous_outputs
+                .get(&PipelineStage::Merger)
+                .cloned()
+                .unwrap_or_default(),
+        )
+        .unwrap_or_else(|_| MergeResult {
             request_id: request_id.clone(),
             response: final_response.clone(),
             confidence: 0.8,
@@ -289,14 +348,22 @@ impl OmegaPipeline {
                 confidence: routing.confidence,
                 mode: format!("{:?}", routing.execution_mode),
                 safety_score,
-                sources: merge_result.sources.iter().map(|s| s.task_id.clone()).collect(),
+                sources: merge_result
+                    .sources
+                    .iter()
+                    .map(|s| s.task_id.clone())
+                    .collect(),
                 model: "titane-omega-v20".to_string(),
                 tokens: (merge_result.response.len() / 4) as u32,
             },
             timings,
             total_latency_ms: total_latency,
             success: !was_blocked,
-            error: if was_blocked { Some("Request blocked by guardrails".to_string()) } else { None },
+            error: if was_blocked {
+                Some("Request blocked by guardrails".to_string())
+            } else {
+                None
+            },
         })
     }
 
@@ -314,7 +381,9 @@ impl OmegaPipeline {
         if output.success {
             Ok(output.response)
         } else {
-            Err(OmegaError::Internal(output.error.unwrap_or_else(|| "Unknown error".to_string())))
+            Err(OmegaError::Internal(
+                output.error.unwrap_or_else(|| "Unknown error".to_string()),
+            ))
         }
     }
 

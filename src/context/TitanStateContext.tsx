@@ -12,7 +12,14 @@
  * - Auto-save: chaque modification + 30min + shutdown
  */
 
-import { createContext, useContext, useReducer, useEffect, useCallback, useRef } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useCallback,
+  useRef,
+} from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 
@@ -278,7 +285,8 @@ function titanReducer(state: TitanState, action: TitanAction): TitanState {
         evolution: {
           ...state.evolution,
           totalCycles: state.evolution.totalCycles + 1,
-          totalMutations: state.evolution.totalMutations + action.payload.mutationsApplied,
+          totalMutations:
+            state.evolution.totalMutations + action.payload.mutationsApplied,
         },
         dirty: true,
       };
@@ -408,11 +416,15 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
     baseDispatch(action);
 
     // Persister les actions importantes
-    if (action.type !== 'system/init' && action.type !== 'system/sync' && action.type !== 'system/markClean') {
+    if (
+      action.type !== 'system/init' &&
+      action.type !== 'system/sync' &&
+      action.type !== 'system/markClean'
+    ) {
       const event: TitanEvent = {
         module: action.type.split('/')[0],
         event_type: action.type.split('/')[1],
-        payload: 'payload' in action ? action.payload as Record<string, unknown> : {},
+        payload: 'payload' in action ? (action.payload as Record<string, unknown>) : {},
       };
 
       try {
@@ -459,14 +471,15 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
   }, []);
 
   // Get persistence status
-  const getPersistenceStatus = useCallback(async (): Promise<PersistenceStatus | null> => {
-    try {
-      return await invoke<PersistenceStatus>('titan_get_persistence_status');
-    } catch (error) {
-      console.error('[TitanState] ❌ Erreur getPersistenceStatus:', error);
-      return null;
-    }
-  }, []);
+  const getPersistenceStatus =
+    useCallback(async (): Promise<PersistenceStatus | null> => {
+      try {
+        return await invoke<PersistenceStatus>('titan_get_persistence_status');
+      } catch (error) {
+        console.error('[TitanState] ❌ Erreur getPersistenceStatus:', error);
+        return null;
+      }
+    }, []);
 
   // Initialisation
   useEffect(() => {
@@ -479,7 +492,10 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
         // Charger l'état sauvegardé
         const savedState = await invoke<TitanState | null>('titan_load_state');
         if (savedState) {
-          baseDispatch({ type: 'system/init', payload: { ...initialState, ...savedState } });
+          baseDispatch({
+            type: 'system/init',
+            payload: { ...initialState, ...savedState },
+          });
           console.log('[TitanState] 📂 État restauré depuis persistence');
         } else {
           baseDispatch({ type: 'system/init', payload: initialState });
@@ -526,7 +542,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
 
         return unlisten;
       } catch (error) {
-        console.warn('[TitanState] ⚠️ Impossible d\'écouter close-requested:', error);
+        console.warn("[TitanState] ⚠️ Impossible d'écouter close-requested:", error);
         return () => {};
       }
     };
@@ -547,11 +563,7 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
     getPersistenceStatus,
   };
 
-  return (
-    <TitanContext.Provider value={value}>
-      {children}
-    </TitanContext.Provider>
-  );
+  return <TitanContext.Provider value={value}>{children}</TitanContext.Provider>;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -571,9 +583,12 @@ export function useTitanState() {
 export function useTitanXP() {
   const { state, dispatch } = useTitanState();
 
-  const addXP = useCallback((amount: number, source: string, description: string) => {
-    dispatch({ type: 'xp/add', payload: { amount, source, description } });
-  }, [dispatch]);
+  const addXP = useCallback(
+    (amount: number, source: string, description: string) => {
+      dispatch({ type: 'xp/add', payload: { amount, source, description } });
+    },
+    [dispatch]
+  );
 
   return {
     ...state.xp,
@@ -585,13 +600,19 @@ export function useTitanXP() {
 export function useTitanMemory() {
   const { state, dispatch } = useTitanState();
 
-  const addMemory = useCallback((content: string, category: string) => {
-    dispatch({ type: 'memory/add', payload: { content, category } });
-  }, [dispatch]);
+  const addMemory = useCallback(
+    (content: string, category: string) => {
+      dispatch({ type: 'memory/add', payload: { content, category } });
+    },
+    [dispatch]
+  );
 
-  const clearMemory = useCallback((category?: string) => {
-    dispatch({ type: 'memory/clear', payload: { category } });
-  }, [dispatch]);
+  const clearMemory = useCallback(
+    (category?: string) => {
+      dispatch({ type: 'memory/clear', payload: { category } });
+    },
+    [dispatch]
+  );
 
   return {
     ...state.memory,
@@ -604,9 +625,12 @@ export function useTitanMemory() {
 export function useTitanSettings() {
   const { state, dispatch } = useTitanState();
 
-  const updateSettings = useCallback((settings: Partial<SettingsState>) => {
-    dispatch({ type: 'settings/update', payload: settings });
-  }, [dispatch]);
+  const updateSettings = useCallback(
+    (settings: Partial<SettingsState>) => {
+      dispatch({ type: 'settings/update', payload: settings });
+    },
+    [dispatch]
+  );
 
   return {
     ...state.settings,

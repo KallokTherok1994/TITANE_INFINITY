@@ -41,7 +41,9 @@ const mockHybridTTS = {
       return;
     }
 
-    console.log(`\n🔊 TTS: Mock synthesis for "${text.substring(0, 60)}${text.length > 60 ? '...' : ''}"`);
+    console.log(
+      `\n🔊 TTS: Mock synthesis for "${text.substring(0, 60)}${text.length > 60 ? '...' : ''}"`
+    );
     console.log(`🌐 Mode: ${useOnline ? 'Online' : 'Offline'}`);
 
     // Simulate async operation
@@ -194,7 +196,8 @@ async function testWebSpeechFallback() {
 
     mockHybridTTS.resetCache();
 
-    const hasWebSpeech = typeof window !== 'undefined' && window.speechSynthesis !== undefined;
+    const hasWebSpeech =
+      typeof window !== 'undefined' && window.speechSynthesis !== undefined;
 
     if (!hasWebSpeech) {
       return {

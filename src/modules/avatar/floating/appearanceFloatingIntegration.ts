@@ -122,7 +122,7 @@ export class AppearanceFloatingIntegration {
     };
 
     // Apply to meshes
-    meshes.forEach((mesh) => {
+    meshes.forEach(mesh => {
       if (mesh.name.includes('body')) {
         mesh.material = bodyMaterial;
       } else if (mesh.name.includes('head')) {
@@ -183,7 +183,11 @@ export class AppearanceFloatingIntegration {
     // Apply outfit colors
     this.applyOutfitState(resolvedOutfit);
 
-    if (DEBUG) console.log('[AppearanceFloatingIntegration] Appearance applied:', appearance.mode_preset);
+    if (DEBUG)
+      console.log(
+        '[AppearanceFloatingIntegration] Appearance applied:',
+        appearance.mode_preset
+      );
   }
 
   /**
@@ -209,7 +213,7 @@ export class AppearanceFloatingIntegration {
     this.materials.head.needsUpdate = true;
 
     // Outfit uses neutral color
-    this.materials.outfit.forEach((mat) => {
+    this.materials.outfit.forEach(mat => {
       mat.color.copy(palette.neutral);
       mat.needsUpdate = true;
     });
@@ -226,18 +230,18 @@ export class AppearanceFloatingIntegration {
     if (!this.materials) return;
 
     // Adjust metalness based on formality
-    const metalness = style.formality === 'Formal' ? 0.3 :
-                      style.formality === 'Smart' ? 0.2 : 0.1;
+    const metalness =
+      style.formality === 'Formal' ? 0.3 : style.formality === 'Smart' ? 0.2 : 0.1;
 
     this.materials.body.metalness = metalness;
     this.materials.head.metalness = metalness * 0.5;
 
     // Adjust roughness based on energy
-    const roughness = style.energy === 'calme' ? 0.8 :
-                      style.energy === 'dynamique' ? 0.5 : 0.7;
+    const roughness =
+      style.energy === 'calme' ? 0.8 : style.energy === 'dynamique' ? 0.5 : 0.7;
 
     this.materials.body.roughness = roughness;
-    this.materials.outfit.forEach((mat) => {
+    this.materials.outfit.forEach(mat => {
       mat.roughness = roughness + 0.1;
     });
   }
@@ -251,7 +255,12 @@ export class AppearanceFloatingIntegration {
     // TODO v24.13: Parse outfit.top, outfit.bottom colors
     // For now, keep default palette colors
 
-    if (DEBUG) console.log('[AppearanceFloatingIntegration] Outfit applied:', outfit.top, outfit.bottom);
+    if (DEBUG)
+      console.log(
+        '[AppearanceFloatingIntegration] Outfit applied:',
+        outfit.top,
+        outfit.bottom
+      );
   }
 
   /**
@@ -269,7 +278,7 @@ export class AppearanceFloatingIntegration {
           console.error('[AppearanceFloatingIntegration] Sync error:', error);
         }
 
-        await new Promise((resolve) => setTimeout(resolve, intervalMs));
+        await new Promise(resolve => setTimeout(resolve, intervalMs));
       }
     };
 
@@ -292,9 +301,10 @@ export class AppearanceFloatingIntegration {
   ): void {
     if (!this.materials) return;
 
-    const materials = target === 'outfit' ? this.materials.outfit : [this.materials[target]];
+    const materials =
+      target === 'outfit' ? this.materials.outfit : [this.materials[target]];
 
-    materials.forEach((mat) => {
+    materials.forEach(mat => {
       if (property === 'color' && value instanceof THREE.Color) {
         mat.color.copy(value);
       } else if (property === 'metalness' && typeof value === 'number') {
@@ -327,9 +337,9 @@ export class AppearanceFloatingIntegration {
     if (this.materials) {
       this.materials.body.dispose();
       this.materials.head.dispose();
-      this.materials.outfit.forEach((mat) => mat.dispose());
+      this.materials.outfit.forEach(mat => mat.dispose());
       this.materials.hair.dispose();
-      this.materials.accessories.forEach((mat) => mat.dispose());
+      this.materials.accessories.forEach(mat => mat.dispose());
       this.materials = null;
     }
     this.currentAppearance = null;

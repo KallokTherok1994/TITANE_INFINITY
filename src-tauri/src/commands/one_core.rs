@@ -1,3 +1,4 @@
+use chrono::{DateTime, Utc};
 /**
  * TITANE_INFINITY v16.2.3 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
@@ -5,22 +6,19 @@
  * of the software, its architecture, engines or components is strictly prohibited.
  * See LICENSE.md for the full legal terms (FR/EN).
  */
-
-//! ═══════════════════════════════════════════════════════════════════════════════
-//!   TITANE∞ ONE CORE v∞ — UNIFIED COMMAND CENTER (OPUS #6)
-//!   Point d'accès unique à l'intégralité du système TITANE∞
-//! ═══════════════════════════════════════════════════════════════════════════════
-//!
-//! Architecture ONE CORE:
-//! - Fusion de TOUS les moteurs en un seul état global
-//! - Commandes unifiées pour orchestrer l'ensemble du système
-//! - Monitoring temps réel de tous les composants
-//! - Auto-diagnostic et auto-réparation centralisés
-//! - Dashboard unifié avec métriques globales
-
+// ═══════════════════════════════════════════════════════════════════════════════
+//   TITANE∞ ONE CORE v∞ — UNIFIED COMMAND CENTER (OPUS #6)
+//   Point d'accès unique à l'intégralité du système TITANE∞
+// ═══════════════════════════════════════════════════════════════════════════════
+//
+// Architecture ONE CORE:
+// - Fusion de TOUS les moteurs en un seul état global
+// - Commandes unifiées pour orchestrer l'ensemble du système
+// - Monitoring temps réel de tous les composants
+// - Auto-diagnostic et auto-réparation centralisés
+// - Dashboard unifié avec métriques globales
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES — ONE CORE UNIFIED STATE
@@ -32,8 +30,8 @@ pub struct EngineStatus {
     pub name: String,
     pub version: String,
     pub active: bool,
-    pub health: f64,          // 0.0 - 1.0
-    pub load: f64,            // 0.0 - 1.0
+    pub health: f64, // 0.0 - 1.0
+    pub load: f64,   // 0.0 - 1.0
     pub last_update: i64,
     pub errors_count: u32,
     pub warnings_count: u32,
@@ -42,12 +40,12 @@ pub struct EngineStatus {
 /// Catégorie de moteur
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum EngineCategory {
-    Core,       // Moteurs système de base
-    Cognitive,  // IA, raisonnement, apprentissage
-    Security,   // Sécurité, permissions, sandbox
-    UI,         // Interface, avatar, TTS
-    Data,       // Mémoire, persistance, cache
-    DevOps,     // QA, monitoring, logs
+    Core,      // Moteurs système de base
+    Cognitive, // IA, raisonnement, apprentissage
+    Security,  // Sécurité, permissions, sandbox
+    UI,        // Interface, avatar, TTS
+    Data,      // Mémoire, persistance, cache
+    DevOps,    // QA, monitoring, logs
 }
 
 /// État d'un centre (regroupement de moteurs)
@@ -71,7 +69,7 @@ pub struct OneCoreState {
 
     // Santé globale
     pub global_health: f64,
-    pub consciousness_level: u8,  // 0-4
+    pub consciousness_level: u8, // 0-4
     pub coherence_score: f64,
 
     // Compteurs
@@ -88,7 +86,7 @@ pub struct OneCoreState {
     pub disk_usage: f64,
 
     // Status
-    pub mode: String,             // "normal" | "degraded" | "maintenance" | "emergency"
+    pub mode: String, // "normal" | "degraded" | "maintenance" | "emergency"
     pub uptime_seconds: u64,
     pub last_sync: i64,
 }
@@ -124,7 +122,7 @@ pub struct OneCoreDiagnostic {
     pub warnings: Vec<String>,
     pub errors: Vec<String>,
     pub recommendations: Vec<String>,
-    pub overall_status: String,  // "optimal" | "good" | "degraded" | "critical"
+    pub overall_status: String, // "optimal" | "good" | "degraded" | "critical"
 }
 
 /// Statistiques temps réel ONE CORE
@@ -205,7 +203,8 @@ pub async fn one_core_get_state() -> Result<OneCoreState, String> {
 
     let total_engines: u32 = centers.iter().map(|c| c.engines_count).sum();
     let active_engines: u32 = centers.iter().map(|c| c.active_engines).sum();
-    let avg_health: f64 = centers.iter().map(|c| c.global_health).sum::<f64>() / centers.len() as f64;
+    let avg_health: f64 =
+        centers.iter().map(|c| c.global_health).sum::<f64>() / centers.len() as f64;
 
     Ok(OneCoreState {
         version: "v∞".to_string(),
@@ -327,12 +326,18 @@ pub async fn one_core_execute_command(command_id: String) -> Result<OneCoreActio
     let now = Utc::now().timestamp_millis();
 
     let (success, message) = match command_id.as_str() {
-        "sync_all" => (true, "Synchronisation complète effectuée (24 moteurs)".to_string()),
+        "sync_all" => (
+            true,
+            "Synchronisation complète effectuée (24 moteurs)".to_string(),
+        ),
         "health_check" => (true, "Tous les composants sont opérationnels".to_string()),
         "optimize" => (true, "Optimisation terminée: +15% performance".to_string()),
         "repair" => (true, "Aucune réparation nécessaire".to_string()),
         "gc" => (true, "Garbage collection: 128MB libérés".to_string()),
-        "backup" => (true, "Sauvegarde créée: backup_20251201_0650.titane".to_string()),
+        "backup" => (
+            true,
+            "Sauvegarde créée: backup_20251201_0650.titane".to_string(),
+        ),
         "reset_soft" => (true, "Reset léger effectué, caches vidés".to_string()),
         "reset_hard" => (true, "Reset complet effectué".to_string()),
         "emergency_stop" => (true, "Arrêt d'urgence activé".to_string()),
@@ -452,10 +457,20 @@ pub async fn one_core_set_mode(mode: String) -> Result<OneCoreActionResult, Stri
 
     let now = Utc::now().timestamp_millis();
 
-    let valid_modes = ["normal", "degraded", "maintenance", "emergency", "performance", "eco"];
+    let valid_modes = [
+        "normal",
+        "degraded",
+        "maintenance",
+        "emergency",
+        "performance",
+        "eco",
+    ];
 
     if !valid_modes.contains(&mode.as_str()) {
-        return Err(format!("Mode invalide: {}. Modes valides: {:?}", mode, valid_modes));
+        return Err(format!(
+            "Mode invalide: {}. Modes valides: {:?}",
+            mode, valid_modes
+        ));
     }
 
     Ok(OneCoreActionResult {
@@ -469,7 +484,9 @@ pub async fn one_core_set_mode(mode: String) -> Result<OneCoreActionResult, Stri
 
 /// 📈 Obtenir l'historique des événements
 #[tauri::command]
-pub async fn one_core_get_event_history(limit: Option<u32>) -> Result<Vec<OneCoreActionResult>, String> {
+pub async fn one_core_get_event_history(
+    limit: Option<u32>,
+) -> Result<Vec<OneCoreActionResult>, String> {
     log::info!("[ONE_CORE] Getting event history...");
 
     let now = Utc::now().timestamp_millis();

@@ -18,7 +18,14 @@ import React, { useState } from 'react';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 
-type Tab = 'overview' | 'meta' | 'orchestration' | 'quantum' | 'multiia' | 'reality' | 'qa';
+type Tab =
+  | 'overview'
+  | 'meta'
+  | 'orchestration'
+  | 'quantum'
+  | 'multiia'
+  | 'reality'
+  | 'qa';
 
 const OrchestrationIntelligenceCenter: React.FC = () => {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
@@ -31,21 +38,22 @@ const OrchestrationIntelligenceCenter: React.FC = () => {
           🔥 Orchestration & Intelligence Center
         </h1>
         <p className="text-gray-400">
-          La salle des machines consciente de TITANE∞ — Orchestration cognitive, technique, IA hybrides & flux internes
+          La salle des machines consciente de TITANE∞ — Orchestration cognitive,
+          technique, IA hybrides & flux internes
         </p>
       </div>
 
       {/* Navigation Tabs */}
       <div className="tabs flex gap-2 border-b border-gray-700 pb-4 overflow-x-auto">
         {[
-          { id: 'overview', label: '🎯 Overview', desc: 'Vue d\'ensemble' },
+          { id: 'overview', label: '🎯 Overview', desc: "Vue d'ensemble" },
           { id: 'meta', label: '🧠 Meta-Orchestration', desc: 'Priorités cognitives' },
           { id: 'orchestration', label: '🔧 Pipeline', desc: 'Orchestration technique' },
           { id: 'quantum', label: '🧪 Quantum Layer', desc: 'Calculs accélérés' },
           { id: 'multiia', label: '🤖 Multi-IA', desc: 'Système hybride' },
           { id: 'reality', label: '🌀 Reality Renderer', desc: 'Visualisation interne' },
           { id: 'qa', label: '🟩 QA Monitoring', desc: 'Santé & qualité' },
-        ].map((tab) => (
+        ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as Tab)}
@@ -91,36 +99,12 @@ const OverviewSection: React.FC = () => {
 
       {/* Dashboard hiérarchique */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <TMetric
-          label="État Système"
-          value="Stable"
-          icon="✅"
-        />
-        <TMetric
-          label="Moteurs Actifs"
-          value="18/20"
-          icon="⚙️"
-        />
-        <TMetric
-          label="IA Prioritaire"
-          value="Claude Sonnet 4.5"
-          icon="🤖"
-        />
-        <TMetric
-          label="Charge Cognitive"
-          value="42%"
-          icon="🧪"
-        />
-        <TMetric
-          label="Flux Interne"
-          value="Optimal"
-          icon="🌀"
-        />
-        <TMetric
-          label="Dernière Action Méta"
-          value="15s ago"
-          icon="🧠"
-        />
+        <TMetric label="État Système" value="Stable" icon="✅" />
+        <TMetric label="Moteurs Actifs" value="18/20" icon="⚙️" />
+        <TMetric label="IA Prioritaire" value="Claude Sonnet 4.5" icon="🤖" />
+        <TMetric label="Charge Cognitive" value="42%" icon="🧪" />
+        <TMetric label="Flux Interne" value="Optimal" icon="🌀" />
+        <TMetric label="Dernière Action Méta" value="15s ago" icon="🧠" />
       </div>
 
       {/* Status Cards */}
@@ -135,8 +119,11 @@ const OverviewSection: React.FC = () => {
               { name: 'MemoryEngine', status: 'Running', priority: 95 },
               { name: 'CognitiveEngine', status: 'Running', priority: 90 },
               { name: 'ChatEngine', status: 'Running', priority: 85 },
-            ].map((engine) => (
-              <div key={engine.name} className="flex items-center justify-between bg-gray-900 p-3 rounded">
+            ].map(engine => (
+              <div
+                key={engine.name}
+                className="flex items-center justify-between bg-gray-900 p-3 rounded"
+              >
                 <span className="font-semibold">{engine.name}</span>
                 <div className="flex items-center gap-2">
                   <TBadge variant="success">{engine.status}</TBadge>
@@ -157,8 +144,11 @@ const OverviewSection: React.FC = () => {
               { model: 'GPT-4', status: 'Standby', usage: '12%' },
               { model: 'Gemini Pro', status: 'Standby', usage: '8%' },
               { model: 'Local LLaMA', status: 'Ready', usage: '0%' },
-            ].map((ai) => (
-              <div key={ai.model} className="flex items-center justify-between bg-gray-900 p-3 rounded">
+            ].map(ai => (
+              <div
+                key={ai.model}
+                className="flex items-center justify-between bg-gray-900 p-3 rounded"
+              >
                 <span className="font-semibold">{ai.model}</span>
                 <div className="flex items-center gap-2">
                   <TBadge variant={ai.status === 'Active' ? 'success' : 'default'}>
@@ -209,7 +199,7 @@ const MetaOrchestrationSection: React.FC = () => {
               { lane: 'Memory Sync', active: true, load: 60 },
               { lane: 'Identity Alignment', active: false, load: 0 },
               { lane: 'Emergency Response', active: false, load: 0 },
-            ].map((lane) => (
+            ].map(lane => (
               <div key={lane.lane} className="space-y-1">
                 <div className="flex justify-between text-sm">
                   <span>{lane.lane}</span>
@@ -234,7 +224,7 @@ const MetaOrchestrationSection: React.FC = () => {
               'Fallback: Multi-IA automatique',
               'Memory: Compression progressive',
               'Identity: Alignement continu',
-            ].map((rule) => (
+            ].map(rule => (
               <div key={rule} className="bg-gray-900 p-3 rounded flex items-center gap-2">
                 <span className="text-green-400">✓</span>
                 <span>{rule}</span>
@@ -264,10 +254,25 @@ const OrchestrationSection: React.FC = () => {
         <div className="space-y-3">
           {[
             { from: 'ChatEngine', to: 'MemoryEngine', status: 'Active', latency: '12ms' },
-            { from: 'MemoryEngine', to: 'CognitiveEngine', status: 'Active', latency: '8ms' },
-            { from: 'CognitiveEngine', to: 'IdentityEngine', status: 'Syncing', latency: '5ms' },
-            { from: 'IdentityEngine', to: 'MetaEngine', status: 'Active', latency: '3ms' },
-          ].map((flow) => (
+            {
+              from: 'MemoryEngine',
+              to: 'CognitiveEngine',
+              status: 'Active',
+              latency: '8ms',
+            },
+            {
+              from: 'CognitiveEngine',
+              to: 'IdentityEngine',
+              status: 'Syncing',
+              latency: '5ms',
+            },
+            {
+              from: 'IdentityEngine',
+              to: 'MetaEngine',
+              status: 'Active',
+              latency: '3ms',
+            },
+          ].map(flow => (
             <div key={`${flow.from}-${flow.to}`} className="bg-gray-900 p-4 rounded">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -314,12 +319,17 @@ const QuantumLayerSection: React.FC = () => {
           {[
             { signal: 'Pattern répétitif détecté', confidence: 0.89, time: '2s' },
             { signal: 'Dérive cognitive mineure', confidence: 0.76, time: '8s' },
-            { signal: 'Opportunité d\'optimisation', confidence: 0.92, time: '15s' },
+            { signal: "Opportunité d'optimisation", confidence: 0.92, time: '15s' },
           ].map((sig, i) => (
-            <div key={i} className="bg-gray-900 p-3 rounded flex items-center justify-between">
+            <div
+              key={i}
+              className="bg-gray-900 p-3 rounded flex items-center justify-between"
+            >
               <span>{sig.signal}</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-400">{(sig.confidence * 100).toFixed(0)}%</span>
+                <span className="text-sm text-gray-400">
+                  {(sig.confidence * 100).toFixed(0)}%
+                </span>
                 <span className="text-xs text-gray-500">{sig.time}</span>
               </div>
             </div>
@@ -376,7 +386,7 @@ const MultiIASection: React.FC = () => {
             cost: 'Free',
             requests: 0,
           },
-        ].map((ai) => (
+        ].map(ai => (
           <div key={ai.name} className="bg-gray-800 rounded-lg p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
@@ -424,9 +434,7 @@ const RealityRendererSection: React.FC = () => {
         <div className="text-center">
           <div className="text-6xl mb-4">🌀</div>
           <h3 className="text-2xl font-bold mb-2">Visualisation 3D</h3>
-          <p className="text-gray-400">
-            Représentation holographique en développement
-          </p>
+          <p className="text-gray-400">Représentation holographique en développement</p>
           <div className="mt-6 space-y-2">
             <TBadge variant="info">État cognitif global: Optimal</TBadge>
             <TBadge variant="success">Flux internes: 18 actifs</TBadge>
@@ -462,9 +470,24 @@ const QAMonitoringSection: React.FC = () => {
           <h3 className="text-xl font-bold mb-4">🔴 Erreurs Récentes</h3>
           <div className="space-y-2">
             {[
-              { module: 'ChatEngine', error: 'API timeout', time: '2h ago', severity: 'Low' },
-              { module: 'MemoryEngine', error: 'Compression delay', time: '5h ago', severity: 'Low' },
-              { module: 'CognitiveEngine', error: 'State transition lag', time: '18h ago', severity: 'Medium' },
+              {
+                module: 'ChatEngine',
+                error: 'API timeout',
+                time: '2h ago',
+                severity: 'Low',
+              },
+              {
+                module: 'MemoryEngine',
+                error: 'Compression delay',
+                time: '5h ago',
+                severity: 'Low',
+              },
+              {
+                module: 'CognitiveEngine',
+                error: 'State transition lag',
+                time: '18h ago',
+                severity: 'Medium',
+              },
             ].map((err, i) => (
               <div key={i} className="bg-gray-900 p-3 rounded">
                 <div className="flex items-center justify-between mb-1">
@@ -488,7 +511,7 @@ const QAMonitoringSection: React.FC = () => {
               { module: 'MemoryEngine', health: 98 },
               { module: 'CognitiveEngine', health: 97 },
               { module: 'ChatEngine', health: 95 },
-            ].map((mod) => (
+            ].map(mod => (
               <div key={mod.module} className="space-y-1">
                 <div className="flex justify-between text-sm">
                   <span>{mod.module}</span>

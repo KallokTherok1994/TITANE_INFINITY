@@ -5,39 +5,41 @@
 //   NEW: Context v2, Memory Bridge, Adaptive Router, Events
 // ═══════════════════════════════════════════════════════════════
 
-pub mod router;
-pub mod executor;
-pub mod merger;
-pub mod guardrails;
 pub mod diagnostics;
-pub mod scheduler;
+pub mod executor;
+pub mod guardrails;
+pub mod merger;
 pub mod pipeline;
+pub mod router;
+pub mod scheduler;
 pub mod self_healing_hook;
 
 // NEW: SUPER PROMPT #8 extensions
-pub mod context_v2;
-pub mod memory_bridge;
 pub mod adaptive_router;
+pub mod context_v2;
 pub mod events;
+pub mod memory_bridge;
 
 // Tests — Phase 1 Stabilisation v20.0
 #[cfg(test)]
 mod tests_pipeline;
 
-pub use router::*;
-pub use executor::*;
-pub use merger::*;
-pub use guardrails::*;
 pub use diagnostics::*;
-pub use scheduler::*;
+pub use executor::*;
+pub use guardrails::*;
+pub use merger::*;
 pub use pipeline::*;
-pub use self_healing_hook::{SelfHealingHook, SelfHealingHookConfig, HealingReport, RequestContext};
+pub use router::*;
+pub use scheduler::*;
+pub use self_healing_hook::{
+    HealingReport, RequestContext, SelfHealingHook, SelfHealingHookConfig,
+};
 
 // NEW: Export v2 extensions
-pub use context_v2::*;
-pub use memory_bridge::*;
 pub use adaptive_router::*;
+pub use context_v2::*;
 pub use events::*;
+pub use memory_bridge::*;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -73,7 +75,7 @@ impl Default for OmegaConfig {
         Self {
             parallel_execution: true,
             max_parallel_tasks: 4,
-            timeout_ms: 200,  // <200ms target
+            timeout_ms: 200, // <200ms target
             enable_cache: true,
             cache_ttl_secs: 300,
             enable_diagnostics: true,

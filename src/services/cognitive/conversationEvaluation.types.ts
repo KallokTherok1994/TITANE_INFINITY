@@ -1,9 +1,9 @@
 /**
  * CONVERSATION EVALUATION & QA ENGINE v∞ — Types & Interfaces
- * 
+ *
  * Évalue systématiquement la qualité des conversations
  * Permet de détecter les régressions et guider l'amélioration continue
- * 
+ *
  * Design principles:
  * - Test-driven: scénarios de référence rejouables
  * - Metrics-based: scores quantitatifs
@@ -13,16 +13,16 @@
 /**
  * Type de métrique d'évaluation
  */
-export type MetricType = 
-  | 'consistency'        // Cohérence globale
-  | 'goal_completion'    // Complétion des objectifs
-  | 'conciseness'        // Concision
-  | 'clarity'            // Clarté
-  | 'relevance'          // Pertinence
+export type MetricType =
+  | 'consistency' // Cohérence globale
+  | 'goal_completion' // Complétion des objectifs
+  | 'conciseness' // Concision
+  | 'clarity' // Clarté
+  | 'relevance' // Pertinence
   | 'technical_accuracy' // Précision technique
-  | 'tone'               // Ton approprié
-  | 'latency'            // Temps de réponse
-  | 'memory_usage';      // Utilisation mémoire
+  | 'tone' // Ton approprié
+  | 'latency' // Temps de réponse
+  | 'memory_usage'; // Utilisation mémoire
 
 /**
  * Score d'une métrique
@@ -30,16 +30,16 @@ export type MetricType =
 export interface MetricScore {
   /** Type de métrique */
   type: MetricType;
-  
+
   /** Valeur (0.0 - 1.0 pour les scores qualitatifs) */
   value: number;
-  
+
   /** Unité (si applicable) */
   unit?: string; // 'seconds', 'MB', 'score', etc.
-  
+
   /** Détails/raison */
   details?: string;
-  
+
   /** Sous-scores (optionnel) */
   subscores?: Record<string, number>;
 }
@@ -50,22 +50,22 @@ export interface MetricScore {
 export interface SuccessCriterion {
   /** ID unique */
   id: string;
-  
+
   /** Description */
   description: string;
-  
+
   /** Type de métrique */
   metric_type: MetricType;
-  
+
   /** Condition de succès */
   condition: {
     operator: 'gte' | 'lte' | 'eq' | 'neq' | 'gt' | 'lt';
     threshold: number;
   };
-  
+
   /** Poids dans l'évaluation globale */
   weight?: number; // default: 1.0
-  
+
   /** Critique (échec = test failed) */
   is_critical?: boolean;
 }
@@ -76,21 +76,21 @@ export interface SuccessCriterion {
 export interface TestMessage {
   /** Role (user ou assistant) */
   role: 'user' | 'assistant';
-  
+
   /** Contenu */
   content: string;
-  
+
   /** Réponse attendue (si role = user) */
   expected_response?: {
     /** Contenu exact (optionnel) */
     exact_match?: string;
-    
+
     /** Patterns requis (regex) */
     must_contain?: string[];
-    
+
     /** Patterns interdits (regex) */
     must_not_contain?: string[];
-    
+
     /** Contraintes structurelles */
     constraints?: {
       max_length?: number;
@@ -107,16 +107,16 @@ export interface TestMessage {
 export interface ConversationTestScenario {
   /** ID unique */
   id: string;
-  
+
   /** Nom du scénario */
   name: string;
-  
+
   /** Description */
   description: string;
-  
+
   /** Catégorie */
   category: 'technical' | 'creative' | 'coaching' | 'general' | 'edge_case';
-  
+
   /** Contexte initial */
   initial_context?: {
     system_prompt?: string;
@@ -124,16 +124,16 @@ export interface ConversationTestScenario {
     user_profile?: Record<string, any>;
     conversation_state?: Record<string, any>;
   };
-  
+
   /** Séquence de messages */
   messages: TestMessage[];
-  
+
   /** Objectifs du test */
   goals: string[];
-  
+
   /** Critères de succès */
   success_criteria: SuccessCriterion[];
-  
+
   /** Métadonnées */
   tags?: string[];
   priority?: 'low' | 'medium' | 'high' | 'critical';
@@ -148,23 +148,23 @@ export interface ConversationTestScenario {
 export interface MessageEvaluationResult {
   /** ID du message */
   message_id?: string;
-  
+
   /** Contenu du message */
   content: string;
-  
+
   /** Scores des métriques */
   scores: MetricScore[];
-  
+
   /** Score global (0.0 - 1.0) */
   overall_score: number;
-  
+
   /** Violations détectées */
   violations?: Array<{
     type: string;
     severity: number;
     description: string;
   }>;
-  
+
   /** Feedback textuel */
   feedback?: string;
 }
@@ -175,13 +175,13 @@ export interface MessageEvaluationResult {
 export interface TestScenarioResult {
   /** ID du scénario */
   scenario_id: string;
-  
+
   /** Timestamp d'exécution */
   timestamp: string;
-  
+
   /** Durée totale (ms) */
   duration_ms: number;
-  
+
   /** Messages générés */
   messages: Array<{
     role: 'user' | 'assistant';
@@ -190,7 +190,7 @@ export interface TestScenarioResult {
     actual?: any;
     evaluation: MessageEvaluationResult;
   }>;
-  
+
   /** Évaluation des critères */
   criteria_results: Array<{
     criterion: SuccessCriterion;
@@ -198,21 +198,21 @@ export interface TestScenarioResult {
     actual_value: number;
     details?: string;
   }>;
-  
+
   /** Scores globaux */
   global_scores: MetricScore[];
-  
+
   /** Résultat final */
   passed: boolean;
   overall_score: number;
-  
+
   /** Erreurs rencontrées */
   errors?: Array<{
     stage: string;
     error: string;
     stack?: string;
   }>;
-  
+
   /** Logs (si debug activé) */
   logs?: string[];
 }
@@ -223,16 +223,16 @@ export interface TestScenarioResult {
 export interface TestSuiteResult {
   /** ID de la suite */
   id: string;
-  
+
   /** Timestamp */
   timestamp: string;
-  
+
   /** Durée totale */
   duration_ms: number;
-  
+
   /** Résultats par scénario */
   scenarios: TestScenarioResult[];
-  
+
   /** Statistiques */
   stats: {
     total_scenarios: number;
@@ -243,15 +243,18 @@ export interface TestSuiteResult {
     avg_score: number;
     avg_duration_ms: number;
   };
-  
+
   /** Métriques agrégées */
-  aggregated_metrics: Record<MetricType, {
-    avg: number;
-    min: number;
-    max: number;
-    std_dev: number;
-  }>;
-  
+  aggregated_metrics: Record<
+    MetricType,
+    {
+      avg: number;
+      min: number;
+      max: number;
+      std_dev: number;
+    }
+  >;
+
   /** Environnement */
   environment: {
     version: string;
@@ -266,25 +269,25 @@ export interface TestSuiteResult {
 export interface LiveEvaluationConfig {
   /** Activer */
   enabled: boolean;
-  
+
   /** Fréquence */
   evaluate_every_n_messages: number; // default: 5
-  
+
   /** Métriques à évaluer */
   metrics_to_track: MetricType[];
-  
+
   /** Seuil d'alerte */
   alert_threshold: {
-    consistency_score: number;  // default: 0.6
-    goal_completion: number;    // default: 0.5
+    consistency_score: number; // default: 0.6
+    goal_completion: number; // default: 0.5
   };
-  
+
   /** Mode d'évaluation */
   mode: 'full' | 'lightweight'; // full = IA, lightweight = heuristiques
-  
+
   /** Stockage des résultats */
   store_results: boolean;
-  
+
   /** Notification */
   notify_on_low_score: boolean;
 }
@@ -295,24 +298,27 @@ export interface LiveEvaluationConfig {
 export interface LiveEvaluationResult {
   /** Timestamp */
   timestamp: string;
-  
+
   /** ID de conversation */
   conversation_id: string;
-  
+
   /** Nombre de messages évalués */
   messages_evaluated: number;
-  
+
   /** Scores actuels */
   current_scores: MetricScore[];
-  
+
   /** Tendances (sur derniers N messages) */
-  trends: Record<MetricType, {
-    current: number;
-    previous: number;
-    delta: number;
-    direction: 'up' | 'down' | 'stable';
-  }>;
-  
+  trends: Record<
+    MetricType,
+    {
+      current: number;
+      previous: number;
+      delta: number;
+      direction: 'up' | 'down' | 'stable';
+    }
+  >;
+
   /** Alertes */
   alerts?: Array<{
     type: string;
@@ -331,23 +337,23 @@ export interface EvaluationEngineConfig {
     auto_load: boolean;
     categories_enabled: string[];
   };
-  
+
   /** Live evaluation */
   live_evaluation: LiveEvaluationConfig;
-  
+
   /** Scoring */
   scoring: {
     default_weights: Record<MetricType, number>;
     custom_weights?: Record<string, Record<MetricType, number>>;
   };
-  
+
   /** Storage */
   storage: {
     save_results: boolean;
     results_directory: string;
     retention_days: number;
   };
-  
+
   /** Reporting */
   reporting: {
     generate_html_report: boolean;
@@ -364,11 +370,14 @@ export interface EvaluationStats {
   total_evaluations: number;
   overall_pass_rate: number;
   avg_overall_score: number;
-  by_category: Record<string, {
-    count: number;
-    pass_rate: number;
-    avg_score: number;
-  }>;
+  by_category: Record<
+    string,
+    {
+      count: number;
+      pass_rate: number;
+      avg_score: number;
+    }
+  >;
   most_common_failure: string;
   best_performing_metric: MetricType;
   worst_performing_metric: MetricType;

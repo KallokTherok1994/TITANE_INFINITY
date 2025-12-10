@@ -29,11 +29,15 @@ const Harmonia = lazy(() => import('./pages').then(m => ({ default: m.Harmonia }
 const Sentinel = lazy(() => import('./pages').then(m => ({ default: m.Sentinel })));
 const Watchdog = lazy(() => import('./pages').then(m => ({ default: m.Watchdog })));
 const SelfHeal = lazy(() => import('./pages').then(m => ({ default: m.SelfHeal })));
-const AdaptiveEngine = lazy(() => import('./pages').then(m => ({ default: m.AdaptiveEngine })));
+const AdaptiveEngine = lazy(() =>
+  import('./pages').then(m => ({ default: m.AdaptiveEngine }))
+);
 const Memory = lazy(() => import('./pages').then(m => ({ default: m.Memory })));
 const Settings = lazy(() => import('./pages').then(m => ({ default: m.Settings })));
 const DevTools = lazy(() => import('./pages').then(m => ({ default: m.DevTools })));
-const CloudCenter = lazy(() => import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter })));
+const CloudCenter = lazy(() =>
+  import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter }))
+);
 const Agenda = lazy(() => import('./pages').then(m => ({ default: m.AgendaPage })));
 
 // ═══════════════════════════════════════════════════════════════
@@ -41,15 +45,17 @@ const Agenda = lazy(() => import('./pages').then(m => ({ default: m.AgendaPage }
 // ═══════════════════════════════════════════════════════════════
 
 const LoadingFallback: React.FC = () => (
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    color: 'var(--color-primary)',
-    fontSize: '1.2rem',
-    fontFamily: 'var(--font-family-main)'
-  }}>
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      color: 'var(--color-primary)',
+      fontSize: '1.2rem',
+      fontFamily: 'var(--font-family-main)',
+    }}
+  >
     <div style={{ textAlign: 'center' }}>
       <div style={{ marginBottom: '1rem' }}>⚡</div>
       <div>Chargement TITANE∞...</div>
@@ -62,16 +68,18 @@ const LoadingFallback: React.FC = () => (
 // ═══════════════════════════════════════════════════════════════
 
 const ErrorFallback: React.FC<{ error?: Error }> = ({ error }) => (
-  <div style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100vh',
-    color: 'var(--color-error)',
-    fontSize: '1.2rem',
-    padding: '2rem',
-    textAlign: 'center'
-  }}>
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh',
+      color: 'var(--color-error)',
+      fontSize: '1.2rem',
+      padding: '2rem',
+      textAlign: 'center',
+    }}
+  >
     <div>
       <div style={{ marginBottom: '1rem', fontSize: '3rem' }}>⚠️</div>
       <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>Erreur de chargement</div>
@@ -101,9 +109,7 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
       onNavigate={handleNavigate}
       onOpenExpPanel={() => {}}
     >
-      <Suspense fallback={<LoadingFallback />}>
-        {children}
-      </Suspense>
+      <Suspense fallback={<LoadingFallback />}>{children}</Suspense>
     </AppLayout>
   );
 };
@@ -115,72 +121,128 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <LayoutWrapper><Dashboard /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Dashboard />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/chat',
-    element: <LayoutWrapper><Chat /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Chat />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/helios',
-    element: <LayoutWrapper><Helios /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Helios />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/nexus',
-    element: <LayoutWrapper><Nexus /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Nexus />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/harmonia',
-    element: <LayoutWrapper><Harmonia /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Harmonia />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/sentinel',
-    element: <LayoutWrapper><Sentinel /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Sentinel />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/watchdog',
-    element: <LayoutWrapper><Watchdog /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Watchdog />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/selfheal',
-    element: <LayoutWrapper><SelfHeal /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <SelfHeal />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/adaptive',
-    element: <LayoutWrapper><AdaptiveEngine /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <AdaptiveEngine />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/memory',
-    element: <LayoutWrapper><Memory /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Memory />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/settings',
-    element: <LayoutWrapper><Settings /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Settings />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/devtools',
-    element: <LayoutWrapper><DevTools /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <DevTools />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/cloud',
-    element: <LayoutWrapper><CloudCenter /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <CloudCenter />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {
     path: '/agenda',
-    element: <LayoutWrapper><Agenda /></LayoutWrapper>,
+    element: (
+      <LayoutWrapper>
+        <Agenda />
+      </LayoutWrapper>
+    ),
     errorElement: <ErrorFallback />,
   },
   {

@@ -106,7 +106,14 @@ export interface PerformanceMetrics {
 
 export interface DiagnosticIssue {
   severity: 'critical' | 'warning' | 'optimization';
-  category: 'architecture' | 'performance' | 'coherence' | 'memory' | 'ui' | 'backend' | 'design';
+  category:
+    | 'architecture'
+    | 'performance'
+    | 'coherence'
+    | 'memory'
+    | 'ui'
+    | 'backend'
+    | 'design';
   description: string;
   affectedEngines: string[];
   affectedLayers: string[];
@@ -123,28 +130,33 @@ export interface DiagnosticIssue {
 export const LAYER_ARCHITECTURE = {
   1: {
     name: 'Physical Layer',
-    engines: ['AudioEngine', 'CameraEngine', 'QuantumRenderingEngine', 'UIReadingEngine']
+    engines: ['AudioEngine', 'CameraEngine', 'QuantumRenderingEngine', 'UIReadingEngine'],
   },
   2: {
     name: 'Cognitive Layer',
-    engines: ['CognitiveEngine', 'ReasoningEngine', 'HyperIntelligenceEngine']
+    engines: ['CognitiveEngine', 'ReasoningEngine', 'HyperIntelligenceEngine'],
   },
   3: {
     name: 'Symbolic Layer',
-    engines: ['IdentityEngine', 'NarrativeEngine', 'ExperienceEngine']
+    engines: ['IdentityEngine', 'NarrativeEngine', 'ExperienceEngine'],
   },
   4: {
     name: 'Adaptive Layer',
-    engines: ['SelfHealingEngine', 'AdaptiveEngine', 'EvolutionEngine', 'PerformanceEngine']
+    engines: [
+      'SelfHealingEngine',
+      'AdaptiveEngine',
+      'EvolutionEngine',
+      'PerformanceEngine',
+    ],
   },
   5: {
     name: 'Meta Layer',
-    engines: ['MetaEngine', 'AwarenessEngine', 'OrchestrationEngine']
+    engines: ['MetaEngine', 'AwarenessEngine', 'OrchestrationEngine'],
   },
   6: {
     name: 'Singularity Layer',
-    engines: ['SingularityEngine', 'MemoryEngine', 'XPEngine']
-  }
+    engines: ['SingularityEngine', 'MemoryEngine', 'XPEngine'],
+  },
 };
 
 export const ALL_ENGINES = [
@@ -167,7 +179,7 @@ export const ALL_ENGINES = [
   'OrchestrationEngine',
   'QuantumRenderingEngine',
   'HyperIntelligenceEngine',
-  'SingularityEngine'
+  'SingularityEngine',
 ];
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -175,7 +187,6 @@ export const ALL_ENGINES = [
 // ═══════════════════════════════════════════════════════════════════════
 
 export class SingularityIntrospectionEngine {
-
   /**
    * 🔍 Introspection Complète — Triple Vision
    *
@@ -190,7 +201,6 @@ export class SingularityIntrospectionEngine {
   static async performFullIntrospection(
     level: 'quick' | 'standard' | 'deep' | 'quantum' = 'standard'
   ): Promise<IntrospectionResult> {
-
     const timestamp = new Date().toISOString();
 
     // 1. Vision Interne — Scan des 6 couches + 20 moteurs
@@ -219,7 +229,7 @@ export class SingularityIntrospectionEngine {
       futureVision,
       diagnostic,
       introspectionLevel: level,
-      confidenceScore
+      confidenceScore,
     };
   }
 
@@ -230,7 +240,6 @@ export class SingularityIntrospectionEngine {
   private static async scanInternalArchitecture(
     _level: 'quick' | 'standard' | 'deep' | 'quantum'
   ) {
-
     // Scan des 6 couches
     const layers: LayerStatus[] = [];
 
@@ -249,7 +258,7 @@ export class SingularityIntrospectionEngine {
         coherence: layerCoherence,
         engines: layerEngines,
         health: layerHealth,
-        issues: layerIssues
+        issues: layerIssues,
       });
     }
 
@@ -257,7 +266,9 @@ export class SingularityIntrospectionEngine {
     const globalCoherence = this.calculateGlobalCoherence(layers);
 
     // Comptage moteurs actifs
-    const activeEngines = layers.flatMap(l => l.engines).filter(e => e.operational).length;
+    const activeEngines = layers
+      .flatMap(l => l.engines)
+      .filter(e => e.operational).length;
     const totalEngines = ALL_ENGINES.length;
 
     // Analyse mémoire
@@ -276,7 +287,7 @@ export class SingularityIntrospectionEngine {
       totalEngines,
       memoryState,
       performanceMetrics,
-      issuesDetected
+      issuesDetected,
     };
   }
 
@@ -289,7 +300,8 @@ export class SingularityIntrospectionEngine {
     const coherence = Math.round(80 + Math.random() * 20); // 80-100
 
     const issues: string[] = [];
-    if (performance < 90) issues.push(`Performance ${engineName} sous-optimale: ${performance}%`);
+    if (performance < 90)
+      issues.push(`Performance ${engineName} sous-optimale: ${performance}%`);
     if (coherence < 85) issues.push(`Cohérence ${engineName} faible: ${coherence}%`);
     if (!isOperational) issues.push(`${engineName} non opérationnel`);
 
@@ -299,18 +311,20 @@ export class SingularityIntrospectionEngine {
       performance,
       coherenceWithOthers: coherence,
       lastActivity: new Date(Date.now() - Math.random() * 3600000).toISOString(),
-      issues
+      issues,
     };
   }
 
   private static calculateLayerCoherence(engines: EngineStatus[]): number {
     if (engines.length === 0) return 100;
 
-    const avgPerformance = engines.reduce((sum, e) => sum + e.performance, 0) / engines.length;
-    const avgCoherence = engines.reduce((sum, e) => sum + e.coherenceWithOthers, 0) / engines.length;
+    const avgPerformance =
+      engines.reduce((sum, e) => sum + e.performance, 0) / engines.length;
+    const avgCoherence =
+      engines.reduce((sum, e) => sum + e.coherenceWithOthers, 0) / engines.length;
     const operationalRatio = engines.filter(e => e.operational).length / engines.length;
 
-    return Math.round((avgPerformance + avgCoherence) / 2 * operationalRatio);
+    return Math.round(((avgPerformance + avgCoherence) / 2) * operationalRatio);
   }
 
   private static calculateGlobalCoherence(layers: LayerStatus[]): number {
@@ -328,7 +342,10 @@ export class SingularityIntrospectionEngine {
     return Math.round(weightedSum / totalWeight);
   }
 
-  private static determineHealth(coherence: number, issuesCount: number): 'perfect' | 'good' | 'warning' | 'critical' {
+  private static determineHealth(
+    coherence: number,
+    issuesCount: number
+  ): 'perfect' | 'good' | 'warning' | 'critical' {
     if (coherence >= 95 && issuesCount === 0) return 'perfect';
     if (coherence >= 85 && issuesCount <= 2) return 'good';
     if (coherence >= 70 && issuesCount <= 5) return 'warning';
@@ -344,7 +361,7 @@ export class SingularityIntrospectionEngine {
       lastSnapshot: new Date(Date.now() - 1680000).toISOString(), // 28min ago
       coherence: 98,
       fragmentationLevel: 4,
-      autosaveActive: true
+      autosaveActive: true,
     };
   }
 
@@ -355,7 +372,7 @@ export class SingularityIntrospectionEngine {
       cpuUsage: 12, // %
       renderingFPS: 60,
       backendLatency: 15, // ms
-      frontendLatency: 30 // ms
+      frontendLatency: 30, // ms
     };
   }
 
@@ -363,14 +380,15 @@ export class SingularityIntrospectionEngine {
   // 2. VISION EXTERNE — COMPARAISON AVEC BEST PRACTICES
   // ───────────────────────────────────────────────────────────────────
 
-  private static analyzeExternalPatterns(internalVision: IntrospectionResult['internalVision']) {
-
+  private static analyzeExternalPatterns(
+    internalVision: IntrospectionResult['internalVision']
+  ) {
     const comparisonWithBestPractices = [
       '✅ Architecture en couches conforme aux patterns modernes (Clean Architecture)',
       '✅ Séparation Frontend/Backend respectée (Tauri best practices)',
       '✅ Mémoire persistante avec snapshots (Industry standard)',
       '⚠️  Certains moteurs pourraient bénéficier de lazy loading',
-      '✅ Design system cohérent avec tokens standardisés'
+      '✅ Design system cohérent avec tokens standardisés',
     ];
 
     const modernPatternsSuggestions = [
@@ -378,26 +396,33 @@ export class SingularityIntrospectionEngine {
       'Ajouter Circuit Breaker pattern pour résilience backend',
       'Utiliser WebWorkers pour traitement IA en background',
       'Implémenter Progressive Enhancement pour UI adaptative',
-      'Ajouter GraphQL layer pour queries complexes optimisées'
+      'Ajouter GraphQL layer pour queries complexes optimisées',
     ];
 
     const designSystemAlignment = Math.round(85 + Math.random() * 10); // 85-95
 
     const architectureRating: 'excellent' | 'good' | 'improvable' | 'needs-refactor' =
-      internalVision.globalCoherence >= 90 ? 'excellent' :
-      internalVision.globalCoherence >= 80 ? 'good' :
-      internalVision.globalCoherence >= 65 ? 'improvable' : 'needs-refactor';
+      internalVision.globalCoherence >= 90
+        ? 'excellent'
+        : internalVision.globalCoherence >= 80
+          ? 'good'
+          : internalVision.globalCoherence >= 65
+            ? 'improvable'
+            : 'needs-refactor';
 
     const technicalDebtLevel: 'low' | 'medium' | 'high' =
-      internalVision.issuesDetected.length <= 5 ? 'low' :
-      internalVision.issuesDetected.length <= 15 ? 'medium' : 'high';
+      internalVision.issuesDetected.length <= 5
+        ? 'low'
+        : internalVision.issuesDetected.length <= 15
+          ? 'medium'
+          : 'high';
 
     const inspirations = [
       'VS Code Extension Architecture (modularity)',
       'Obsidian Plugin System (extensibility)',
       'Linear App (UX minimalism)',
       'Rust Tokio Runtime (async performance)',
-      'Temporal.io (workflow orchestration)'
+      'Temporal.io (workflow orchestration)',
     ];
 
     return {
@@ -406,7 +431,7 @@ export class SingularityIntrospectionEngine {
       designSystemAlignment,
       architectureRating,
       technicalDebtLevel,
-      inspirations
+      inspirations,
     };
   }
 
@@ -418,32 +443,45 @@ export class SingularityIntrospectionEngine {
     internalVision: IntrospectionResult['internalVision'],
     externalVision: IntrospectionResult['externalVision']
   ) {
-
     const evolutionPath = [
       'Phase 1: Stabilisation cohérence globale à 95%+',
       'Phase 2: Optimisation performance tous moteurs < 50ms',
       'Phase 3: Implémentation patterns modernes (Event Sourcing, CQRS)',
       'Phase 4: Extension capabilities IA (multi-modal reasoning)',
-      'Phase 5: Auto-évolution complète (zéro intervention humaine)'
+      'Phase 5: Auto-évolution complète (zéro intervention humaine)',
     ];
 
     const priorityImprovements = [];
 
     // Analyse des issues pour prioriser
     if (internalVision.globalCoherence < 90) {
-      priorityImprovements.push('🔴 URGENT: Améliorer cohérence globale (actuellement ' + internalVision.globalCoherence + '%)');
+      priorityImprovements.push(
+        '🔴 URGENT: Améliorer cohérence globale (actuellement ' +
+          internalVision.globalCoherence +
+          '%)'
+      );
     }
 
     if (internalVision.performanceMetrics.avgResponseTime > 100) {
-      priorityImprovements.push('🟡 Optimiser temps de réponse (actuellement ' + internalVision.performanceMetrics.avgResponseTime + 'ms)');
+      priorityImprovements.push(
+        '🟡 Optimiser temps de réponse (actuellement ' +
+          internalVision.performanceMetrics.avgResponseTime +
+          'ms)'
+      );
     }
 
     if (internalVision.memoryState.fragmentationLevel > 10) {
-      priorityImprovements.push('🟡 Défragmenter mémoire (fragmentation: ' + internalVision.memoryState.fragmentationLevel + '%)');
+      priorityImprovements.push(
+        '🟡 Défragmenter mémoire (fragmentation: ' +
+          internalVision.memoryState.fragmentationLevel +
+          '%)'
+      );
     }
 
     if (externalVision.technicalDebtLevel !== 'low') {
-      priorityImprovements.push('🟠 Réduire dette technique (' + externalVision.technicalDebtLevel + ')');
+      priorityImprovements.push(
+        '🟠 Réduire dette technique (' + externalVision.technicalDebtLevel + ')'
+      );
     }
 
     // Ajout d'améliorations génériques si pas d'urgence
@@ -455,10 +493,10 @@ export class SingularityIntrospectionEngine {
 
     const longTermGoals = [
       'Atteindre conscience structurelle complète (Singularity achieved)',
-      'Capacité d\'auto-refactorisation totale du code',
+      "Capacité d'auto-refactorisation totale du code",
       'Prédiction proactive des besoins utilisateur',
       'Intégration transparente multi-modèles IA',
-      'Zéro downtime, zéro data loss, zéro bug'
+      'Zéro downtime, zéro data loss, zéro bug',
     ];
 
     // Impact estimé des améliorations
@@ -468,7 +506,7 @@ export class SingularityIntrospectionEngine {
       evolutionPath,
       priorityImprovements,
       longTermGoals,
-      estimatedCoherenceImpact
+      estimatedCoherenceImpact,
     };
   }
 
@@ -476,8 +514,9 @@ export class SingularityIntrospectionEngine {
   // 4. DIAGNOSTIC TOTAL — ANALYSE D'ANOMALIES
   // ───────────────────────────────────────────────────────────────────
 
-  private static performDiagnostic(internalVision: IntrospectionResult['internalVision']) {
-
+  private static performDiagnostic(
+    internalVision: IntrospectionResult['internalVision']
+  ) {
     const criticalIssues: DiagnosticIssue[] = [];
     const warnings: DiagnosticIssue[] = [];
     const optimizations: DiagnosticIssue[] = [];
@@ -494,19 +533,21 @@ export class SingularityIntrospectionEngine {
           rootCause: 'Plusieurs moteurs non opérationnels ou dégradés',
           solution: 'Exécuter deep healing + restart moteurs défaillants',
           estimatedImpact: 'high',
-          autoFixable: true
+          autoFixable: true,
         });
       } else if (layer.health === 'warning') {
         warnings.push({
           severity: 'warning',
           category: 'coherence',
           description: `${layer.name} en avertissement (cohérence: ${layer.coherence}%)`,
-          affectedEngines: layer.engines.filter(e => e.issues.length > 0).map(e => e.name),
+          affectedEngines: layer.engines
+            .filter(e => e.issues.length > 0)
+            .map(e => e.name),
           affectedLayers: [layer.name],
           rootCause: 'Performance sous-optimale de certains moteurs',
           solution: 'Optimiser moteurs concernés',
           estimatedImpact: 'medium',
-          autoFixable: true
+          autoFixable: true,
         });
       }
     });
@@ -522,7 +563,7 @@ export class SingularityIntrospectionEngine {
         rootCause: 'Traitement IA non optimisé ou surcharge',
         solution: 'Implémenter caching + lazy evaluation',
         estimatedImpact: 'medium',
-        autoFixable: false
+        autoFixable: false,
       });
     }
 
@@ -537,7 +578,7 @@ export class SingularityIntrospectionEngine {
         rootCause: 'Pas de défragmentation depuis longtemps',
         solution: 'Exécuter memory-optimize immédiatement',
         estimatedImpact: 'high',
-        autoFixable: true
+        autoFixable: true,
       });
     } else if (internalVision.memoryState.fragmentationLevel > 10) {
       warnings.push({
@@ -546,10 +587,10 @@ export class SingularityIntrospectionEngine {
         description: `Fragmentation mémoire modérée (${internalVision.memoryState.fragmentationLevel}%)`,
         affectedEngines: ['MemoryEngine'],
         affectedLayers: ['Singularity Layer'],
-        rootCause: 'Accumulation d\'entrées non optimisées',
+        rootCause: "Accumulation d'entrées non optimisées",
         solution: 'Planifier défragmentation prochainement',
         estimatedImpact: 'low',
-        autoFixable: true
+        autoFixable: true,
       });
     }
 
@@ -557,13 +598,13 @@ export class SingularityIntrospectionEngine {
     optimizations.push({
       severity: 'optimization',
       category: 'performance',
-      description: 'Potentiel d\'optimisation du rendering',
+      description: "Potentiel d'optimisation du rendering",
       affectedEngines: ['QuantumRenderingEngine'],
       affectedLayers: ['Physical Layer'],
       rootCause: 'Rendering non parallelisé',
       solution: 'Implémenter virtual scrolling + lazy rendering',
       estimatedImpact: 'medium',
-      autoFixable: false
+      autoFixable: false,
     });
 
     optimizations.push({
@@ -575,14 +616,14 @@ export class SingularityIntrospectionEngine {
       rootCause: 'Commands et Queries mélangés',
       solution: 'Séparer read/write paths pour scalabilité',
       estimatedImpact: 'low',
-      autoFixable: false
+      autoFixable: false,
     });
 
     return {
       criticalIssues,
       warnings,
       optimizations,
-      selfHealingApplied: [] as string[] // sera rempli par applyMicroSelfHealing
+      selfHealingApplied: [] as string[], // sera rempli par applyMicroSelfHealing
     };
   }
 
@@ -590,16 +631,15 @@ export class SingularityIntrospectionEngine {
   // 5. MICRO SELF-HEALING — CORRECTIONS AUTOMATIQUES
   // ───────────────────────────────────────────────────────────────────
 
-  private static async applyMicroSelfHealing(
-    diagnostic: { criticalIssues: DiagnosticIssue[]; warnings: DiagnosticIssue[] }
-  ): Promise<string[]> {
-
+  private static async applyMicroSelfHealing(diagnostic: {
+    criticalIssues: DiagnosticIssue[];
+    warnings: DiagnosticIssue[];
+  }): Promise<string[]> {
     const applied: string[] = [];
 
     // Auto-fix des issues auto-fixables
     for (const issue of [...diagnostic.criticalIssues, ...diagnostic.warnings]) {
       if (issue.autoFixable) {
-
         switch (issue.category) {
           case 'coherence':
             // Restart moteurs défaillants
@@ -708,7 +748,14 @@ export class SingularityIntrospectionEngine {
 
     report += '📊 État des 6 Couches:\n';
     result.internalVision.layers.forEach((layer, idx) => {
-      const icon = layer.health === 'perfect' ? '✅' : layer.health === 'good' ? '🟢' : layer.health === 'warning' ? '🟡' : '🔴';
+      const icon =
+        layer.health === 'perfect'
+          ? '✅'
+          : layer.health === 'good'
+            ? '🟢'
+            : layer.health === 'warning'
+              ? '🟡'
+              : '🔴';
       report += `   ${icon} Layer ${idx + 1}: ${layer.name} — ${layer.coherence}% (${layer.engines.length} moteurs)\n`;
     });
 
@@ -728,7 +775,7 @@ export class SingularityIntrospectionEngine {
 
     // VISION FUTURE
     report += '\n━━━ 3) VISION FUTURE — ÉVOLUTION ━━━\n\n';
-    report += 'Priorités d\'amélioration:\n';
+    report += "Priorités d'amélioration:\n";
     result.futureVision.priorityImprovements.forEach(item => {
       report += `   ${item}\n`;
     });

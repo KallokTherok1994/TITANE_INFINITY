@@ -26,25 +26,25 @@ impl PredictiveTemporalModel {
             predictions: vec![],
         }
     }
-    
+
     /// Predict next cycle changes
     pub fn predict_next_cycle_change(&self, current_state: &CycleState) -> Vec<PredictiveEvent> {
         let mut predictions = vec![];
-        
+
         // Predict next daily phase change
         let next_phase = self.predict_next_daily_phase(current_state.daily_phase);
         let time_to_next = self.time_to_next_phase(current_state.daily_phase);
-        
+
         predictions.push(PredictiveEvent {
             event_type: "daily_phase_change".to_string(),
             predicted_time: current_state.timestamp + time_to_next,
             confidence: 0.95,
             suggested_action: format!("Prepare for {:?} mode", next_phase),
         });
-        
+
         predictions
     }
-    
+
     /// Predict next daily phase
     fn predict_next_daily_phase(&self, current: DailyPhase) -> DailyPhase {
         match current {
@@ -56,7 +56,7 @@ impl PredictiveTemporalModel {
             DailyPhase::Night => DailyPhase::Dawn,
         }
     }
-    
+
     /// Calculate time to next phase (seconds)
     fn time_to_next_phase(&self, current: DailyPhase) -> i64 {
         match current {
@@ -68,7 +68,7 @@ impl PredictiveTemporalModel {
             DailyPhase::Night => 9 * 3600,     // 9h
         }
     }
-    
+
     /// Suggest optimal time for task
     pub fn suggest_optimal_time(&self, task_type: &str) -> Option<DailyPhase> {
         match task_type {
@@ -91,7 +91,7 @@ impl Default for PredictiveTemporalModel {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn test_predict_next_phase() {
         let model = PredictiveTemporalModel::new();
@@ -100,7 +100,7 @@ mod tests {
             DailyPhase::Noon
         );
     }
-    
+
     #[test]
     fn test_suggest_optimal_time() {
         let model = PredictiveTemporalModel::new();

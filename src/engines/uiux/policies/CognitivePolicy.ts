@@ -41,11 +41,17 @@ export class CognitivePolicy {
     decisions.push(...overloadDecisions);
 
     // Évaluer la complexité visuelle
-    const complexityDecisions = this.evaluateVisualComplexity(cognitiveLoad, currentState);
+    const complexityDecisions = this.evaluateVisualComplexity(
+      cognitiveLoad,
+      currentState
+    );
     decisions.push(...complexityDecisions);
 
     // Évaluer les points de décision
-    const decisionPointDecisions = this.evaluateDecisionPoints(cognitiveLoad, currentState);
+    const decisionPointDecisions = this.evaluateDecisionPoints(
+      cognitiveLoad,
+      currentState
+    );
     decisions.push(...decisionPointDecisions);
 
     // Évaluer la densité d'information
@@ -59,7 +65,10 @@ export class CognitivePolicy {
   /**
    * Évalue la surcharge cognitive
    */
-  private evaluateOverload(load: CognitiveLoad, state: AdaptationState): PolicyDecision[] {
+  private evaluateOverload(
+    load: CognitiveLoad,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     if (load.overallLoad >= THRESHOLDS.overloadCritical) {
@@ -137,7 +146,10 @@ export class CognitivePolicy {
   /**
    * Évalue la complexité visuelle
    */
-  private evaluateVisualComplexity(load: CognitiveLoad, state: AdaptationState): PolicyDecision[] {
+  private evaluateVisualComplexity(
+    load: CognitiveLoad,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     if (load.visualComplexity >= THRESHOLDS.complexityHigh) {
@@ -167,7 +179,10 @@ export class CognitivePolicy {
   /**
    * Évalue les points de décision
    */
-  private evaluateDecisionPoints(load: CognitiveLoad, state: AdaptationState): PolicyDecision[] {
+  private evaluateDecisionPoints(
+    load: CognitiveLoad,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     if (load.decisionPoints > THRESHOLDS.decisionPointsMax) {
@@ -194,7 +209,10 @@ export class CognitivePolicy {
   /**
    * Évalue la densité d'information
    */
-  private evaluateInformationDensity(load: CognitiveLoad, state: AdaptationState): PolicyDecision[] {
+  private evaluateInformationDensity(
+    load: CognitiveLoad,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     if (load.informationDensity > THRESHOLDS.informationDensityMax) {
@@ -213,7 +231,7 @@ export class CognitivePolicy {
             spacing: 'relaxed',
           },
         },
-        reason: 'Densité d\'information élevée',
+        reason: "Densité d'information élevée",
         overridable: true,
       });
     }
@@ -224,7 +242,10 @@ export class CognitivePolicy {
   /**
    * Ajuste les décisions selon l'expertise
    */
-  private adjustForExpertise(decisions: PolicyDecision[], expertise: number): PolicyDecision[] {
+  private adjustForExpertise(
+    decisions: PolicyDecision[],
+    expertise: number
+  ): PolicyDecision[] {
     // Les utilisateurs experts peuvent tolérer plus de complexité
     if (expertise > 0.7) {
       return decisions.map(d => ({
@@ -264,7 +285,7 @@ export class CognitivePolicy {
       level = 'acceptable';
     } else if (score >= 0.3) {
       level = 'warning';
-      suggestions.push('Considérez simplifier l\'interface');
+      suggestions.push("Considérez simplifier l'interface");
       if (load.visualComplexity > 0.6) {
         suggestions.push('Réduisez la complexité visuelle');
       }

@@ -3,7 +3,7 @@
 // Copyright (c) 2025 TITANE∞ Team
 
 use titane_infinity::multi_agents::permissions::{
-    AgentPermissionManager, AgentRole, AgentIAPermission, AgentConfig,
+    AgentConfig, AgentIAPermission, AgentPermissionManager, AgentRole,
 };
 
 #[test]
@@ -14,39 +14,23 @@ fn test_security_agent_cannot_use_external() {
     println!("✅ Setup: Security agent with NoExternal permission (default)");
 
     // Test 1: OpenAI should be DENIED
-    let can_use_openai = agent_manager
-        .can_agent_use_provider("security_guard", "openai");
-    assert!(
-        !can_use_openai,
-        "Security agent should NOT use OpenAI"
-    );
+    let can_use_openai = agent_manager.can_agent_use_provider("security_guard", "openai");
+    assert!(!can_use_openai, "Security agent should NOT use OpenAI");
     println!("✅ Test 1: OpenAI access denied");
 
     // Test 2: Claude should be DENIED
-    let can_use_claude = agent_manager
-        .can_agent_use_provider("security_guard", "claude");
-    assert!(
-        !can_use_claude,
-        "Security agent should NOT use Claude"
-    );
+    let can_use_claude = agent_manager.can_agent_use_provider("security_guard", "claude");
+    assert!(!can_use_claude, "Security agent should NOT use Claude");
     println!("✅ Test 2: Claude access denied");
 
     // Test 3: Gemini should be DENIED
-    let can_use_gemini = agent_manager
-        .can_agent_use_provider("security_guard", "gemini");
-    assert!(
-        !can_use_gemini,
-        "Security agent should NOT use Gemini"
-    );
+    let can_use_gemini = agent_manager.can_agent_use_provider("security_guard", "gemini");
+    assert!(!can_use_gemini, "Security agent should NOT use Gemini");
     println!("✅ Test 3: Gemini access denied");
 
     // Test 4: Local should be ALLOWED
-    let can_use_local = agent_manager
-        .can_agent_use_provider("security_guard", "local");
-    assert!(
-        can_use_local,
-        "Security agent SHOULD use Local"
-    );
+    let can_use_local = agent_manager.can_agent_use_provider("security_guard", "local");
+    assert!(can_use_local, "Security agent SHOULD use Local");
     println!("✅ Test 4: Local access allowed");
 
     println!("\n🎉 Security agent NoExternal test PASSED!");
@@ -63,34 +47,144 @@ fn test_all_permission_types() {
     // Test matrix: permission × provider = expected result
     let test_cases = vec![
         // (permission, provider, expected, description)
-        (AgentIAPermission::NoExternal, "openai", false, "NoExternal blocks OpenAI"),
-        (AgentIAPermission::NoExternal, "claude", false, "NoExternal blocks Claude"),
-        (AgentIAPermission::NoExternal, "gemini", false, "NoExternal blocks Gemini"),
-        (AgentIAPermission::NoExternal, "local", true, "NoExternal allows Local"),
-
-        (AgentIAPermission::OpenAIOnly, "openai", true, "OpenAIOnly allows OpenAI"),
-        (AgentIAPermission::OpenAIOnly, "claude", false, "OpenAIOnly blocks Claude"),
-        (AgentIAPermission::OpenAIOnly, "gemini", false, "OpenAIOnly blocks Gemini"),
-        (AgentIAPermission::OpenAIOnly, "local", true, "OpenAIOnly allows Local"),
-
-        (AgentIAPermission::ClaudeOnly, "claude", true, "ClaudeOnly allows Claude"),
-        (AgentIAPermission::ClaudeOnly, "openai", false, "ClaudeOnly blocks OpenAI"),
-        (AgentIAPermission::ClaudeOnly, "gemini", false, "ClaudeOnly blocks Gemini"),
-        (AgentIAPermission::ClaudeOnly, "local", true, "ClaudeOnly allows Local"),
-
-        (AgentIAPermission::GeminiOnly, "gemini", true, "GeminiOnly allows Gemini"),
-        (AgentIAPermission::GeminiOnly, "openai", false, "GeminiOnly blocks OpenAI"),
-        (AgentIAPermission::GeminiOnly, "claude", false, "GeminiOnly blocks Claude"),
-        (AgentIAPermission::GeminiOnly, "local", true, "GeminiOnly allows Local"),
-
-        (AgentIAPermission::AllExternal, "openai", true, "AllExternal allows OpenAI"),
-        (AgentIAPermission::AllExternal, "claude", true, "AllExternal allows Claude"),
-        (AgentIAPermission::AllExternal, "gemini", true, "AllExternal allows Gemini"),
-        (AgentIAPermission::AllExternal, "local", true, "AllExternal allows Local"),
-
-        (AgentIAPermission::Auto, "openai", true, "Auto allows OpenAI"),
-        (AgentIAPermission::Auto, "claude", true, "Auto allows Claude"),
-        (AgentIAPermission::Auto, "gemini", true, "Auto allows Gemini"),
+        (
+            AgentIAPermission::NoExternal,
+            "openai",
+            false,
+            "NoExternal blocks OpenAI",
+        ),
+        (
+            AgentIAPermission::NoExternal,
+            "claude",
+            false,
+            "NoExternal blocks Claude",
+        ),
+        (
+            AgentIAPermission::NoExternal,
+            "gemini",
+            false,
+            "NoExternal blocks Gemini",
+        ),
+        (
+            AgentIAPermission::NoExternal,
+            "local",
+            true,
+            "NoExternal allows Local",
+        ),
+        (
+            AgentIAPermission::OpenAIOnly,
+            "openai",
+            true,
+            "OpenAIOnly allows OpenAI",
+        ),
+        (
+            AgentIAPermission::OpenAIOnly,
+            "claude",
+            false,
+            "OpenAIOnly blocks Claude",
+        ),
+        (
+            AgentIAPermission::OpenAIOnly,
+            "gemini",
+            false,
+            "OpenAIOnly blocks Gemini",
+        ),
+        (
+            AgentIAPermission::OpenAIOnly,
+            "local",
+            true,
+            "OpenAIOnly allows Local",
+        ),
+        (
+            AgentIAPermission::ClaudeOnly,
+            "claude",
+            true,
+            "ClaudeOnly allows Claude",
+        ),
+        (
+            AgentIAPermission::ClaudeOnly,
+            "openai",
+            false,
+            "ClaudeOnly blocks OpenAI",
+        ),
+        (
+            AgentIAPermission::ClaudeOnly,
+            "gemini",
+            false,
+            "ClaudeOnly blocks Gemini",
+        ),
+        (
+            AgentIAPermission::ClaudeOnly,
+            "local",
+            true,
+            "ClaudeOnly allows Local",
+        ),
+        (
+            AgentIAPermission::GeminiOnly,
+            "gemini",
+            true,
+            "GeminiOnly allows Gemini",
+        ),
+        (
+            AgentIAPermission::GeminiOnly,
+            "openai",
+            false,
+            "GeminiOnly blocks OpenAI",
+        ),
+        (
+            AgentIAPermission::GeminiOnly,
+            "claude",
+            false,
+            "GeminiOnly blocks Claude",
+        ),
+        (
+            AgentIAPermission::GeminiOnly,
+            "local",
+            true,
+            "GeminiOnly allows Local",
+        ),
+        (
+            AgentIAPermission::AllExternal,
+            "openai",
+            true,
+            "AllExternal allows OpenAI",
+        ),
+        (
+            AgentIAPermission::AllExternal,
+            "claude",
+            true,
+            "AllExternal allows Claude",
+        ),
+        (
+            AgentIAPermission::AllExternal,
+            "gemini",
+            true,
+            "AllExternal allows Gemini",
+        ),
+        (
+            AgentIAPermission::AllExternal,
+            "local",
+            true,
+            "AllExternal allows Local",
+        ),
+        (
+            AgentIAPermission::Auto,
+            "openai",
+            true,
+            "Auto allows OpenAI",
+        ),
+        (
+            AgentIAPermission::Auto,
+            "claude",
+            true,
+            "Auto allows Claude",
+        ),
+        (
+            AgentIAPermission::Auto,
+            "gemini",
+            true,
+            "Auto allows Gemini",
+        ),
         (AgentIAPermission::Auto, "local", true, "Auto allows Local"),
     ];
 
@@ -151,11 +245,7 @@ fn test_permission_matrix_complete() {
 
     for (role, permission) in &roles_permissions {
         let agent_id = format!("{:?}_agent", role).to_lowercase();
-        let mut agent = AgentConfig::new(
-            agent_id.clone(),
-            *role,
-            format!("{:?} Agent", role),
-        );
+        let mut agent = AgentConfig::new(agent_id.clone(), *role, format!("{:?} Agent", role));
         agent.ia_permission = *permission;
         agent_manager.register_agent(agent);
 
@@ -189,10 +279,8 @@ fn test_permission_update() {
     println!("✅ Initial permission: OpenAIOnly verified");
 
     // Update to ClaudeOnly
-    let result = agent_manager.update_agent_permission(
-        "updatable_agent",
-        AgentIAPermission::ClaudeOnly,
-    );
+    let result =
+        agent_manager.update_agent_permission("updatable_agent", AgentIAPermission::ClaudeOnly);
     assert!(result.is_ok(), "Permission update should succeed");
     println!("✅ Permission updated to ClaudeOnly");
 
@@ -202,10 +290,9 @@ fn test_permission_update() {
     println!("✅ New permission: ClaudeOnly verified");
 
     // Update to AllExternal
-    agent_manager.update_agent_permission(
-        "updatable_agent",
-        AgentIAPermission::AllExternal,
-    ).unwrap();
+    agent_manager
+        .update_agent_permission("updatable_agent", AgentIAPermission::AllExternal)
+        .unwrap();
     println!("✅ Permission updated to AllExternal");
 
     // Verify all providers accessible

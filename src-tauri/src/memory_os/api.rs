@@ -10,11 +10,11 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use uuid::Uuid;
 
-use super::memory_os::{MemoryOS, MemoryOSConfig, MemoryOSStats, RecallResult};
-use super::memory_state::{MemoryEntry, MemorySnapshot, MemoryType, TierSnapshot};
 use super::consolidator::ConsolidationResult;
 use super::forgetting::ForgettingResult;
+use super::memory_os::{MemoryOS, MemoryOSConfig, MemoryOSStats, RecallResult};
 use super::memory_signals::SignalStats;
+use super::memory_state::{MemoryEntry, MemorySnapshot, MemoryType, TierSnapshot};
 
 #[allow(unused_imports)]
 use super::memory_state::MemoryTier;
@@ -205,7 +205,10 @@ pub async fn memory_recall_by_id(id: String) -> MemoryResponse<MemoryEntryRespon
 
 /// Recall by keyword search
 #[tauri::command]
-pub async fn memory_recall_keyword(query: String, limit: Option<usize>) -> MemoryResponse<RecallResponse> {
+pub async fn memory_recall_keyword(
+    query: String,
+    limit: Option<usize>,
+) -> MemoryResponse<RecallResponse> {
     let limit = limit.unwrap_or(10);
     let result = MEMORY_OS.recall_keyword(&query, limit).await;
     MemoryResponse::ok(result.into())
@@ -213,7 +216,10 @@ pub async fn memory_recall_keyword(query: String, limit: Option<usize>) -> Memor
 
 /// Recall by semantic search (KNN)
 #[tauri::command]
-pub async fn memory_recall_semantic(embedding: Vec<f32>, k: Option<usize>) -> MemoryResponse<RecallResponse> {
+pub async fn memory_recall_semantic(
+    embedding: Vec<f32>,
+    k: Option<usize>,
+) -> MemoryResponse<RecallResponse> {
     let k = k.unwrap_or(10);
     let result = MEMORY_OS.recall_semantic(&embedding, k).await;
     MemoryResponse::ok(result.into())
@@ -229,7 +235,10 @@ pub async fn memory_recall_recent(n: Option<usize>) -> MemoryResponse<RecallResp
 
 /// Recall by memory type
 #[tauri::command]
-pub async fn memory_recall_by_type(memory_type: String, limit: Option<usize>) -> MemoryResponse<RecallResponse> {
+pub async fn memory_recall_by_type(
+    memory_type: String,
+    limit: Option<usize>,
+) -> MemoryResponse<RecallResponse> {
     let limit = limit.unwrap_or(10);
     let mt = match memory_type.as_str() {
         "Conversation" => MemoryType::Conversation,
@@ -248,7 +257,10 @@ pub async fn memory_recall_by_type(memory_type: String, limit: Option<usize>) ->
 
 /// Recall by tag
 #[tauri::command]
-pub async fn memory_recall_by_tag(tag: String, limit: Option<usize>) -> MemoryResponse<RecallResponse> {
+pub async fn memory_recall_by_tag(
+    tag: String,
+    limit: Option<usize>,
+) -> MemoryResponse<RecallResponse> {
     let limit = limit.unwrap_or(10);
     let result = MEMORY_OS.recall_by_tag(&tag, limit).await;
     MemoryResponse::ok(result.into())

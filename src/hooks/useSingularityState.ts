@@ -148,7 +148,6 @@ export function useSingularityState(
       setSentinelState(sentinel);
       setCognitionState(cognition);
       setEvolutionState(evolution);
-
     } catch (err) {
       console.error('[useSingularityState] Refresh failed:', err);
       setError(err instanceof Error ? err.message : String(err));
@@ -170,7 +169,6 @@ export function useSingularityState(
 
       // Refresh state after init
       await refreshState();
-
     } catch (err) {
       console.error('[useSingularityState] Init failed:', err);
       setError(err instanceof Error ? err.message : String(err));
@@ -189,7 +187,6 @@ export function useSingularityState(
 
       // Refresh state after tick
       await refreshState();
-
     } catch (err) {
       console.error('[useSingularityState] Tick failed:', err);
       setError(err instanceof Error ? err.message : String(err));
@@ -272,11 +269,16 @@ export function useSingularityState(
  */
 export function getHealthColor(health: string): string {
   switch (health) {
-    case 'Healthy': return '#00ff88';
-    case 'Degraded': return '#ffaa00';
-    case 'Failing': return '#ff3344';
-    case 'Offline': return '#666666';
-    default: return '#ffffff';
+    case 'Healthy':
+      return '#00ff88';
+    case 'Degraded':
+      return '#ffaa00';
+    case 'Failing':
+      return '#ff3344';
+    case 'Offline':
+      return '#666666';
+    default:
+      return '#ffffff';
   }
 }
 
@@ -285,11 +287,16 @@ export function getHealthColor(health: string): string {
  */
 export function getHealthEmoji(health: string): string {
   switch (health) {
-    case 'Healthy': return '✅';
-    case 'Degraded': return '⚠️';
-    case 'Failing': return '❌';
-    case 'Offline': return '⏸️';
-    default: return '❓';
+    case 'Healthy':
+      return '✅';
+    case 'Degraded':
+      return '⚠️';
+    case 'Failing':
+      return '❌';
+    case 'Offline':
+      return '⏸️';
+    default:
+      return '❓';
   }
 }
 

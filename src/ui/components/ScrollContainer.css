@@ -19,11 +19,7 @@
   left: 0;
   right: 0;
   height: 12px;
-  background: linear-gradient(
-    to bottom,
-    var(--bg-base),
-    transparent
-  );
+  background: linear-gradient(to bottom, var(--bg-base), transparent);
   pointer-events: none;
   z-index: 1;
 }
@@ -35,11 +31,7 @@
   left: 0;
   right: 0;
   height: 12px;
-  background: linear-gradient(
-    to top,
-    var(--bg-base),
-    transparent
-  );
+  background: linear-gradient(to top, var(--bg-base), transparent);
   pointer-events: none;
   z-index: 1;
 }

@@ -33,7 +33,7 @@ export class AutoHealErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('[ErrorBoundary] Erreur capturée:', error, errorInfo);
-    
+
     this.setState({
       error,
       errorInfo,

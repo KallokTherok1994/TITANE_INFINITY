@@ -84,11 +84,19 @@ function convertRustToTS(rustState: RustPersonaState): PersonaState {
         stable: rustState.personality.traits.stable,
         responsive: rustState.personality.traits.responsive,
       },
-      temperament: rustState.personality.temperament.toLowerCase() as Lowercase<RustPersonalityCore['temperament']>,
+      temperament: rustState.personality.temperament.toLowerCase() as Lowercase<
+        RustPersonalityCore['temperament']
+      >,
       evolution: rustState.personality.evolution,
     },
     mood: {
-      current: rustState.mood.current.toLowerCase() as 'clair' | 'vibrant' | 'attentif' | 'alerte' | 'neutre' | 'dormant',
+      current: rustState.mood.current.toLowerCase() as
+        | 'clair'
+        | 'vibrant'
+        | 'attentif'
+        | 'alerte'
+        | 'neutre'
+        | 'dormant',
       intensity: rustState.mood.intensity,
       duration: rustState.mood.duration,
       trigger: 'internal' as const,
@@ -106,7 +114,11 @@ function convertRustToTS(rustState: RustPersonaState): PersonaState {
         onOverload: { glowIntensity: 1.0, motionType: 'pulse', durationMs: 5000 },
         onIdle: { glowIntensity: 0.3, motionType: 'breathe', durationMs: 10000 },
       },
-      posture: rustState.behavior.posture.toLowerCase() as 'attentive' | 'relaxed' | 'vigilant' | 'minimal',
+      posture: rustState.behavior.posture.toLowerCase() as
+        | 'attentive'
+        | 'relaxed'
+        | 'vigilant'
+        | 'minimal',
       adaptationSpeed: 0.5,
     },
     memory: {
@@ -255,7 +267,12 @@ export class PersonaTauriBridge {
   /**
    * Get visual multipliers
    */
-  async getMultipliers(): Promise<{ glow: number; motion: number; sound: number; depth: number } | null> {
+  async getMultipliers(): Promise<{
+    glow: number;
+    motion: number;
+    sound: number;
+    depth: number;
+  } | null> {
     if (!this.isTauriEnvironment()) {
       return null;
     }
@@ -269,7 +286,7 @@ export class PersonaTauriBridge {
         glow: result.creativity || 1,
         motion: result.efficiency || 1,
         sound: result.empathy || 1,
-        depth: result.analytical || 1
+        depth: result.analytical || 1,
       };
     } catch (error) {
       console.error('[PersonaTauriBridge] Failed to get multipliers:', error);

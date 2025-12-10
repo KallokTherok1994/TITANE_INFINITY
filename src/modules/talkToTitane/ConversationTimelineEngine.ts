@@ -160,7 +160,9 @@ class ConversationTimelineEngine {
       allEntries.push(...logsEntries);
 
       // Collect from dataset
-      const datasetEntries = await this.collectFromDirectory('data/dataset/conversations_raw');
+      const datasetEntries = await this.collectFromDirectory(
+        'data/dataset/conversations_raw'
+      );
       allEntries.push(...datasetEntries);
 
       // Deduplicate
@@ -258,13 +260,13 @@ class ConversationTimelineEngine {
 
   private normalizeEngineName(name: string): string {
     const normalizeMap: Record<string, string> = {
-      'ChatEngine': 'Chat',
-      'BubbleEngine': 'Bubble',
-      'DevConsoleEngine': 'DevConsole',
-      'TalkToTitaneEngine': 'TalkToTitane',
-      'LiveDebuggerEngine': 'LiveDebugger',
-      'DevSudoHandler': 'SUDO',
-      'SystemEngine': 'System',
+      ChatEngine: 'Chat',
+      BubbleEngine: 'Bubble',
+      DevConsoleEngine: 'DevConsole',
+      TalkToTitaneEngine: 'TalkToTitane',
+      LiveDebuggerEngine: 'LiveDebugger',
+      DevSudoHandler: 'SUDO',
+      SystemEngine: 'System',
     };
     return normalizeMap[name] || name;
   }
@@ -278,7 +280,14 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   private detectMajorEvents(entries: TimelineEntry[]): void {
-    const majorKeywords = ['error', 'critical', 'success', 'milestone', 'deploy', 'crash'];
+    const majorKeywords = [
+      'error',
+      'critical',
+      'success',
+      'milestone',
+      'deploy',
+      'crash',
+    ];
 
     for (const entry of entries) {
       const text = `${entry.input} ${entry.output}`.toLowerCase();
@@ -295,9 +304,10 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async segmentBySessions(): Promise<TimelineSession[]> {
-    const timeline = this.state.currentTimeline.length > 0
-      ? this.state.currentTimeline
-      : await this.build();
+    const timeline =
+      this.state.currentTimeline.length > 0
+        ? this.state.currentTimeline
+        : await this.build();
 
     const sessionMap = new Map<string, TimelineEntry[]>();
 
@@ -333,9 +343,10 @@ class ConversationTimelineEngine {
   }
 
   async segmentByEngines(): Promise<TimelineSegment[]> {
-    const timeline = this.state.currentTimeline.length > 0
-      ? this.state.currentTimeline
-      : await this.build();
+    const timeline =
+      this.state.currentTimeline.length > 0
+        ? this.state.currentTimeline
+        : await this.build();
 
     const engineMap = new Map<string, TimelineEntry[]>();
 
@@ -372,9 +383,10 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async getStats(): Promise<TimelineStats> {
-    const timeline = this.state.currentTimeline.length > 0
-      ? this.state.currentTimeline
-      : await this.build();
+    const timeline =
+      this.state.currentTimeline.length > 0
+        ? this.state.currentTimeline
+        : await this.build();
 
     const sessions = await this.segmentBySessions();
 
@@ -401,9 +413,10 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async export(format: 'json' | 'jsonl' | 'html'): Promise<string> {
-    const timeline = this.state.currentTimeline.length > 0
-      ? this.state.currentTimeline
-      : await this.build();
+    const timeline =
+      this.state.currentTimeline.length > 0
+        ? this.state.currentTimeline
+        : await this.build();
 
     switch (format) {
       case 'json':
@@ -421,13 +434,16 @@ class ConversationTimelineEngine {
   }
 
   private exportHtml(timeline: TimelineEntry[]): string {
-    const sessions = timeline.reduce((acc, entry) => {
-      if (!acc[entry.sessionId]) {
-        acc[entry.sessionId] = [];
-      }
-      acc[entry.sessionId].push(entry);
-      return acc;
-    }, {} as Record<string, TimelineEntry[]>);
+    const sessions = timeline.reduce(
+      (acc, entry) => {
+        if (!acc[entry.sessionId]) {
+          acc[entry.sessionId] = [];
+        }
+        acc[entry.sessionId].push(entry);
+        return acc;
+      },
+      {} as Record<string, TimelineEntry[]>
+    );
 
     let html = `<!DOCTYPE html>
 <html>
@@ -492,9 +508,10 @@ class ConversationTimelineEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async show(limit = 20): Promise<void> {
-    const timeline = this.state.currentTimeline.length > 0
-      ? this.state.currentTimeline
-      : await this.build();
+    const timeline =
+      this.state.currentTimeline.length > 0
+        ? this.state.currentTimeline
+        : await this.build();
 
     const recent = timeline.slice(-limit);
 
@@ -527,9 +544,10 @@ class ConversationTimelineEngine {
     endTime?: number;
     majorEventsOnly?: boolean;
   }): Promise<TimelineEntry[]> {
-    const timeline = this.state.currentTimeline.length > 0
-      ? this.state.currentTimeline
-      : await this.build();
+    const timeline =
+      this.state.currentTimeline.length > 0
+        ? this.state.currentTimeline
+        : await this.build();
 
     return timeline.filter(entry => {
       if (params.engine && entry.engineName !== params.engine) return false;

@@ -98,30 +98,36 @@ impl Capability {
     /// Catégorie de la capacité
     pub fn category(&self) -> CapabilityCategory {
         match self {
-            Self::WebSearch | Self::DocumentAnalysis | Self::DataExtraction | Self::ImageRecognition => {
-                CapabilityCategory::Research
-            }
-            Self::TextGeneration | Self::CodeGeneration | Self::ImageDescription | Self::Summarization => {
-                CapabilityCategory::Generation
-            }
-            Self::DataAnalysis | Self::PatternRecognition | Self::SentimentAnalysis | Self::TrendAnalysis => {
-                CapabilityCategory::Analysis
-            }
+            Self::WebSearch
+            | Self::DocumentAnalysis
+            | Self::DataExtraction
+            | Self::ImageRecognition => CapabilityCategory::Research,
+            Self::TextGeneration
+            | Self::CodeGeneration
+            | Self::ImageDescription
+            | Self::Summarization => CapabilityCategory::Generation,
+            Self::DataAnalysis
+            | Self::PatternRecognition
+            | Self::SentimentAnalysis
+            | Self::TrendAnalysis => CapabilityCategory::Analysis,
             Self::NaturalLanguage | Self::Translation | Self::Formatting => {
                 CapabilityCategory::Communication
             }
-            Self::TaskPlanning | Self::ResourceAllocation | Self::PriorityManagement | Self::Scheduling => {
-                CapabilityCategory::Planning
-            }
+            Self::TaskPlanning
+            | Self::ResourceAllocation
+            | Self::PriorityManagement
+            | Self::Scheduling => CapabilityCategory::Planning,
             Self::ThreatDetection | Self::AccessControl | Self::AuditLogging | Self::Encryption => {
                 CapabilityCategory::Security
             }
-            Self::SystemMonitoring | Self::ErrorRecovery | Self::PerformanceOptimization | Self::CacheManagement => {
-                CapabilityCategory::System
-            }
-            Self::MathComputation | Self::LogicalReasoning | Self::CreativeProblemSolving | Self::DecisionMaking => {
-                CapabilityCategory::Cognitive
-            }
+            Self::SystemMonitoring
+            | Self::ErrorRecovery
+            | Self::PerformanceOptimization
+            | Self::CacheManagement => CapabilityCategory::System,
+            Self::MathComputation
+            | Self::LogicalReasoning
+            | Self::CreativeProblemSolving
+            | Self::DecisionMaking => CapabilityCategory::Cognitive,
         }
     }
 }
@@ -185,20 +191,26 @@ impl CapabilitySet {
 
     /// Ajoute une capacité
     pub fn add(&mut self, capability: Capability) {
-        self.capabilities.insert(capability, CapabilityEntry {
+        self.capabilities.insert(
             capability,
-            level: CapabilityLevel::default(),
-            enabled: true,
-        });
+            CapabilityEntry {
+                capability,
+                level: CapabilityLevel::default(),
+                enabled: true,
+            },
+        );
     }
 
     /// Ajoute une capacité avec niveau
     pub fn add_with_level(&mut self, capability: Capability, level: CapabilityLevel) {
-        self.capabilities.insert(capability, CapabilityEntry {
+        self.capabilities.insert(
             capability,
-            level,
-            enabled: true,
-        });
+            CapabilityEntry {
+                capability,
+                level,
+                enabled: true,
+            },
+        );
     }
 
     /// Supprime une capacité
@@ -208,7 +220,9 @@ impl CapabilitySet {
 
     /// Vérifie si une capacité est présente
     pub fn has(&self, capability: &Capability) -> bool {
-        self.capabilities.get(capability).map_or(false, |e| e.enabled)
+        self.capabilities
+            .get(capability)
+            .map_or(false, |e| e.enabled)
     }
 
     /// Récupère le niveau d'une capacité
@@ -237,7 +251,8 @@ impl CapabilitySet {
 
     /// Liste les capacités actives
     pub fn active(&self) -> Vec<Capability> {
-        self.capabilities.iter()
+        self.capabilities
+            .iter()
             .filter(|(_, e)| e.enabled)
             .map(|(c, _)| *c)
             .collect()
@@ -245,7 +260,8 @@ impl CapabilitySet {
 
     /// Liste les capacités par catégorie
     pub fn by_category(&self, category: CapabilityCategory) -> Vec<Capability> {
-        self.capabilities.keys()
+        self.capabilities
+            .keys()
             .filter(|c| c.category() == category)
             .cloned()
             .collect()
@@ -263,7 +279,8 @@ impl CapabilitySet {
 
     /// Score total des capacités
     pub fn total_score(&self) -> u32 {
-        self.capabilities.values()
+        self.capabilities
+            .values()
             .filter(|e| e.enabled)
             .map(|e| e.level as u32)
             .sum()
@@ -300,12 +317,21 @@ mod tests {
         assert!(set.has(&Capability::DataAnalysis));
         assert!(!set.has(&Capability::CodeGeneration));
 
-        assert_eq!(set.level_of(&Capability::DataAnalysis), Some(CapabilityLevel::Advanced));
+        assert_eq!(
+            set.level_of(&Capability::DataAnalysis),
+            Some(CapabilityLevel::Advanced)
+        );
     }
 
     #[test]
     fn test_capability_category() {
-        assert_eq!(Capability::WebSearch.category(), CapabilityCategory::Research);
-        assert_eq!(Capability::ThreatDetection.category(), CapabilityCategory::Security);
+        assert_eq!(
+            Capability::WebSearch.category(),
+            CapabilityCategory::Research
+        );
+        assert_eq!(
+            Capability::ThreatDetection.category(),
+            CapabilityCategory::Security
+        );
     }
 }

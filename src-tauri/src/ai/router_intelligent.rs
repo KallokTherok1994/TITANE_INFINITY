@@ -3,7 +3,7 @@
 //   SUPER PROMPT #8 — Smart AI Routing System
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiRequest, AiMode};
+use crate::ai::{AiMode, AiRequest};
 use serde::{Deserialize, Serialize};
 
 /// Décision de routage intelligente
@@ -161,9 +161,23 @@ impl AiRouter {
     /// Détecte contexte code
     fn detect_code_context(&self, prompt: &str) -> bool {
         let code_markers = [
-            "rust", "typescript", "python", "code", "fonction", "class", "struct", 
-            "impl", "async", "await", "trait", "interface", "bug", "debug", 
-            "refactor", "optimize", "algorithm"
+            "rust",
+            "typescript",
+            "python",
+            "code",
+            "fonction",
+            "class",
+            "struct",
+            "impl",
+            "async",
+            "await",
+            "trait",
+            "interface",
+            "bug",
+            "debug",
+            "refactor",
+            "optimize",
+            "algorithm",
         ];
 
         let prompt_lower = prompt.to_lowercase();
@@ -211,22 +225,20 @@ mod tests {
         let decision = router.route(&req).await;
         // Fast mode peut choisir haiku, local ou titane_engine selon disponibilité
         assert!(
-            decision.primary.contains("haiku") 
-            || decision.primary.contains("local") 
-            || decision.primary.contains("titane_engine")
+            decision.primary.contains("haiku")
+                || decision.primary.contains("local")
+                || decision.primary.contains("titane_engine")
         );
         // Fallback pour Fast mode avec prompt court (<500 chars) est local_llama3
-        assert!(
-            decision.fallback == "titane_engine" 
-            || decision.fallback == "local_llama3"
-        );
+        assert!(decision.fallback == "titane_engine" || decision.fallback == "local_llama3");
     }
 
     #[tokio::test]
     async fn test_route_quality_complex() {
         let router = AiRouter::default();
         let req = AiRequest {
-            prompt: "Analyser en profondeur l'architecture système et comparer plusieurs approches".to_string(),
+            prompt: "Analyser en profondeur l'architecture système et comparer plusieurs approches"
+                .to_string(),
             mode: AiMode::Quality,
             user_id: "test".to_string(),
             session_id: "test".to_string(),
@@ -259,7 +271,7 @@ mod tests {
     #[test]
     fn test_detect_complexity() {
         let router = AiRouter::default();
-        
+
         assert!(router.detect_complexity("Analyser en profondeur le système"));
         assert!(router.detect_complexity("Comparer plusieurs approches"));
         assert!(!router.detect_complexity("Hello world"));
@@ -268,7 +280,7 @@ mod tests {
     #[test]
     fn test_detect_code_context() {
         let router = AiRouter::default();
-        
+
         assert!(router.detect_code_context("Code Rust avec async"));
         assert!(router.detect_code_context("Debug this TypeScript function"));
         assert!(!router.detect_code_context("Bonjour comment ça va?"));

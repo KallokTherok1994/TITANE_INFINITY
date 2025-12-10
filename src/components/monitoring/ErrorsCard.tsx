@@ -26,7 +26,7 @@ export const ErrorsCard: React.FC<ErrorsCardProps> = ({
   errorCount,
   latestError,
   errorType = 'info',
-  onViewErrors
+  onViewErrors,
 }) => {
   const hasErrors = errorCount > 0;
   const severity = hasErrors ? errorType : 'info';
@@ -35,9 +35,7 @@ export const ErrorsCard: React.FC<ErrorsCardProps> = ({
     <div className={`errors-card errors-card--${severity}`}>
       {/* Header */}
       <div className="errors-card__header">
-        <div className="errors-card__icon">
-          {hasErrors ? '⚠' : '✓'}
-        </div>
+        <div className="errors-card__icon">{hasErrors ? '⚠' : '✓'}</div>
         <div className="errors-card__header-text">
           <h3 className="errors-card__title">Erreurs & Alertes</h3>
           <p className="errors-card__subtitle">
@@ -47,9 +45,7 @@ export const ErrorsCard: React.FC<ErrorsCardProps> = ({
       </div>
 
       {/* Count Display */}
-      <div className="errors-card__count">
-        {errorCount}
-      </div>
+      <div className="errors-card__count">{errorCount}</div>
 
       {/* Latest Error Preview */}
       {latestError && hasErrors && (

@@ -2,10 +2,10 @@
 // ║  TITANE∞ - Chat IA Commands                                 ║
 // ╚══════════════════════════════════════════════════════════════╝
 
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::Mutex;
-use reqwest::Client;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Message {
@@ -41,24 +41,20 @@ pub async fn chat_send_message(
     if message.trim().is_empty() {
         return Err("Message vide".to_string());
     }
-    
+
     // TODO: Implémenter appel API Gemini
     // Pour l'instant, retourne un message de test
     Ok(format!("Réponse de test à: {}", message))
 }
 
 #[tauri::command]
-pub async fn chat_get_history(
-    state: tauri::State<'_, ChatState>,
-) -> Result<Vec<Message>, String> {
+pub async fn chat_get_history(state: tauri::State<'_, ChatState>) -> Result<Vec<Message>, String> {
     let history = state.history.lock().await;
     Ok(history.clone())
 }
 
 #[tauri::command]
-pub async fn chat_clear_history(
-    state: tauri::State<'_, ChatState>,
-) -> Result<(), String> {
+pub async fn chat_clear_history(state: tauri::State<'_, ChatState>) -> Result<(), String> {
     let mut history = state.history.lock().await;
     history.clear();
     Ok(())
@@ -75,9 +71,7 @@ pub async fn chat_set_api_key(
 }
 
 #[tauri::command]
-pub async fn chat_check_config(
-    state: tauri::State<'_, ChatState>,
-) -> Result<bool, String> {
+pub async fn chat_check_config(state: tauri::State<'_, ChatState>) -> Result<bool, String> {
     let key = state.api_key.lock().await;
     Ok(key.is_some())
 }

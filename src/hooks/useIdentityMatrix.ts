@@ -14,7 +14,7 @@ import {
   IdentityMatrix,
   DEFAULT_IDENTITY_MATRIX,
   loadIdentityMatrix,
-  validateIdentityMatrix
+  validateIdentityMatrix,
 } from '@/core/identity/defaultIdentityMatrix';
 
 export interface UseIdentityMatrixResult {
@@ -160,7 +160,5 @@ export function useTopIdentityValues(count: number = 5) {
 
   if (loading) return [];
 
-  return [...matrix.values]
-    .sort((a, b) => b.weight - a.weight)
-    .slice(0, count);
+  return [...matrix.values].sort((a, b) => b.weight - a.weight).slice(0, count);
 }

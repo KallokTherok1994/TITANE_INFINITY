@@ -61,7 +61,9 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [categories, setCategories] = useState<CategoryState[]>([]);
   const [projects, setProjects] = useState<ProjectState[]>([]);
   const [talents, setTalents] = useState<TalentTreeState | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'categories' | 'projects' | 'talents' | 'timeline'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'categories' | 'projects' | 'talents' | 'timeline'
+  >('overview');
 
   useEffect(() => {
     fetchAllData();
@@ -86,14 +88,17 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   return (
     <div className="exp-panel-overlay" onClick={onClose}>
-      <div className="exp-panel" onClick={(e) => e.stopPropagation()}>
+      <div className="exp-panel" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="exp-panel-header">
           <div>
             <div className="exp-panel-title">⚡ EXP FUSION ENGINE</div>
             {globalState && (
-              <div style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.25rem' }}>
-                Niveau {globalState.level} • {globalState.total_exp.toLocaleString()} XP Total
+              <div
+                style={{ fontSize: '0.875rem', color: '#9ca3af', marginTop: '0.25rem' }}
+              >
+                Niveau {globalState.level} • {globalState.total_exp.toLocaleString()} XP
+                Total
               </div>
             )}
           </div>
@@ -103,11 +108,23 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </div>
 
         {/* Tabs */}
-        <div style={{ display: 'flex', gap: '1rem', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.08)', background: 'rgba(114,123,129,0.03)' }}>
-          {['overview', 'categories', 'projects', 'talents', 'timeline'].map((tab) => (
+        <div
+          style={{
+            display: 'flex',
+            gap: '1rem',
+            padding: '1rem 1.5rem',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(114,123,129,0.03)',
+          }}
+        >
+          {['overview', 'categories', 'projects', 'talents', 'timeline'].map(tab => (
             <button
               key={tab}
-              onClick={() => setActiveTab(tab as 'overview' | 'categories' | 'projects' | 'talents' | 'timeline')}
+              onClick={() =>
+                setActiveTab(
+                  tab as 'overview' | 'categories' | 'projects' | 'talents' | 'timeline'
+                )
+              }
               style={{
                 padding: '0.5rem 1rem',
                 borderRadius: '0.5rem',
@@ -147,8 +164,19 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       }}
                     />
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', fontSize: '0.875rem', color: '#9ca3af' }}>
-                    <span>{globalState.exp_current_level.toLocaleString()} / {globalState.exp_to_next_level.toLocaleString()} XP</span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      marginTop: '0.5rem',
+                      fontSize: '0.875rem',
+                      color: '#9ca3af',
+                    }}
+                  >
+                    <span>
+                      {globalState.exp_current_level.toLocaleString()} /{' '}
+                      {globalState.exp_to_next_level.toLocaleString()} XP
+                    </span>
                     <span>{(globalState.level_progress * 100).toFixed(1)}%</span>
                   </div>
                 </div>
@@ -156,15 +184,35 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
               {/* Top Categories */}
               <div>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem', color: '#f3f4f6' }}>
+                <h3
+                  style={{
+                    fontSize: '1.125rem',
+                    fontWeight: 600,
+                    marginBottom: '1rem',
+                    color: '#f3f4f6',
+                  }}
+                >
                   🗂️ Catégories Principales
                 </h3>
-                {categories.slice(0, 4).map((cat) => (
-                  <div key={cat.category} className="exp-card" style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                {categories.slice(0, 4).map(cat => (
+                  <div
+                    key={cat.category}
+                    className="exp-card"
+                    style={{ marginBottom: '1rem' }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
                       <span style={{ fontSize: '1.5rem' }}>{cat.icon}</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, color: '#f3f4f6' }}>{cat.category}</div>
+                        <div style={{ fontWeight: 600, color: '#f3f4f6' }}>
+                          {cat.category}
+                        </div>
                         <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
                           Niveau {cat.level} • {cat.knowledge_count} connaissances
                         </div>
@@ -182,15 +230,35 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
               {/* Recent Projects */}
               <div>
-                <h3 style={{ fontSize: '1.125rem', fontWeight: 600, marginBottom: '1rem', color: '#f3f4f6' }}>
+                <h3
+                  style={{
+                    fontSize: '1.125rem',
+                    fontWeight: 600,
+                    marginBottom: '1rem',
+                    color: '#f3f4f6',
+                  }}
+                >
                   🚀 Projets Récents
                 </h3>
-                {projects.slice(0, 4).map((proj) => (
-                  <div key={proj.name} className="exp-card" style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                {projects.slice(0, 4).map(proj => (
+                  <div
+                    key={proj.name}
+                    className="exp-card"
+                    style={{ marginBottom: '1rem' }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        marginBottom: '0.5rem',
+                      }}
+                    >
                       <span style={{ fontSize: '1.5rem' }}>{proj.icon}</span>
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, color: '#f3f4f6' }}>{proj.name}</div>
+                        <div style={{ fontWeight: 600, color: '#f3f4f6' }}>
+                          {proj.name}
+                        </div>
                         <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
                           Niveau {proj.level} • {proj.knowledge_count} éléments
                         </div>
@@ -199,7 +267,10 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                     <div className="exp-mini-progress">
                       <div
                         className="exp-mini-progress-fill"
-                        style={{ width: `${proj.progress * 100}%`, background: 'linear-gradient(90deg, #93b399, #8899aa)' }}
+                        style={{
+                          width: `${proj.progress * 100}%`,
+                          background: 'linear-gradient(90deg, #93b399, #8899aa)',
+                        }}
                       />
                     </div>
                   </div>
@@ -209,8 +280,15 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           )}
 
           {activeTab === 'categories' && (
-            <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '1.5rem' }}>
-              {categories.map((cat) => (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '1.5rem',
+              }}
+            >
+              {categories.map(cat => (
                 <div key={cat.category} className="exp-card">
                   <div className="exp-card-header">
                     <span className="exp-card-icon">{cat.icon}</span>
@@ -223,14 +301,38 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       style={{ width: `${cat.progress * 100}%`, background: cat.color }}
                     />
                   </div>
-                  <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.875rem' }}>
+                  <div
+                    style={{
+                      marginTop: '1rem',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '0.5rem',
+                      fontSize: '0.875rem',
+                    }}
+                  >
                     <div>
                       <div style={{ color: '#9ca3af' }}>XP Total</div>
-                      <div style={{ fontWeight: 700, color: '#f3f4f6', fontFamily: 'monospace' }}>{cat.total_exp.toLocaleString()}</div>
+                      <div
+                        style={{
+                          fontWeight: 700,
+                          color: '#f3f4f6',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {cat.total_exp.toLocaleString()}
+                      </div>
                     </div>
                     <div>
                       <div style={{ color: '#9ca3af' }}>Connaissances</div>
-                      <div style={{ fontWeight: 700, color: '#f3f4f6', fontFamily: 'monospace' }}>{cat.knowledge_count}</div>
+                      <div
+                        style={{
+                          fontWeight: 700,
+                          color: '#f3f4f6',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {cat.knowledge_count}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -239,8 +341,15 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           )}
 
           {activeTab === 'projects' && (
-            <div style={{ gridColumn: '1 / -1', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem' }}>
-              {projects.map((proj) => (
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
+                gap: '1.5rem',
+              }}
+            >
+              {projects.map(proj => (
                 <div key={proj.name} className="exp-card">
                   <div className="exp-card-header">
                     <span className="exp-card-icon">{proj.icon}</span>
@@ -250,20 +359,53 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <div className="exp-mini-progress">
                     <div
                       className="exp-mini-progress-fill"
-                      style={{ width: `${proj.progress * 100}%`, background: 'linear-gradient(90deg, #93b399, #8899aa)' }}
+                      style={{
+                        width: `${proj.progress * 100}%`,
+                        background: 'linear-gradient(90deg, #93b399, #8899aa)',
+                      }}
                     />
                   </div>
-                  <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.875rem' }}>
+                  <div
+                    style={{
+                      marginTop: '1rem',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '0.5rem',
+                      fontSize: '0.875rem',
+                    }}
+                  >
                     <div>
                       <div style={{ color: '#9ca3af' }}>XP Total</div>
-                      <div style={{ fontWeight: 700, color: '#f3f4f6', fontFamily: 'monospace' }}>{proj.total_exp.toLocaleString()}</div>
+                      <div
+                        style={{
+                          fontWeight: 700,
+                          color: '#f3f4f6',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {proj.total_exp.toLocaleString()}
+                      </div>
                     </div>
                     <div>
                       <div style={{ color: '#9ca3af' }}>Éléments</div>
-                      <div style={{ fontWeight: 700, color: '#f3f4f6', fontFamily: 'monospace' }}>{proj.knowledge_count}</div>
+                      <div
+                        style={{
+                          fontWeight: 700,
+                          color: '#f3f4f6',
+                          fontFamily: 'monospace',
+                        }}
+                      >
+                        {proj.knowledge_count}
+                      </div>
                     </div>
                   </div>
-                  <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: '#9ca3af' }}>
+                  <div
+                    style={{
+                      marginTop: '0.75rem',
+                      fontSize: '0.75rem',
+                      color: '#9ca3af',
+                    }}
+                  >
                     Mis à jour: {new Date(proj.last_updated).toLocaleDateString('fr-FR')}
                   </div>
                 </div>

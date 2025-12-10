@@ -10,11 +10,11 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Unified Coherence & Coordination Engine (v20.0)
-/// 
+///
 /// Combines:
 /// - Nexus Module: Inter-module coordination & orchestration
 /// - ConsistencyEngine: System-wide coherence checking
-/// 
+///
 /// Benefits:
 /// - Single tick for coordination + validation (-50% overhead)
 /// - Unified API (1 command instead of 2)
@@ -24,31 +24,31 @@ pub struct CoherenceEngine {
     // ═══ Core State ═══
     health: EngineHealth,
     initialized: bool,
-    
+
     // ═══ Coordination (ex-Nexus) ═══
     /// Number of coordination cycles performed
     pub coordination_count: u64,
-    
+
     /// Number of active inter-module connections
     pub active_connections: u32,
-    
+
     /// Timestamp of last coordination (ms since epoch)
     pub last_coordination_ms: u64,
-    
+
     // ═══ Coherence Checking (ex-Consistency) ═══
     /// Number of coherence checks performed
     pub coherence_checks: u64,
-    
+
     /// Last measured global coherence score (0.0-1.0)
     pub last_coherence_score: f64,
-    
+
     /// Sliding window of contradiction counts (last 100 checks)
     contradictions_history: Vec<u64>,
-    
+
     // ═══ Unified State ═══
     /// Per-module coherence tracking
     module_states: HashMap<String, ModuleCoherence>,
-    
+
     /// Global system coherence (0.0-1.0)
     pub global_coherence: f64,
 }
@@ -155,7 +155,7 @@ impl CoherenceEngine {
     }
 
     /// Main tick: unified coordination + coherence check
-    /// 
+    ///
     /// Combines:
     /// - Nexus coordination logic (update connections)
     /// - Consistency checking logic (detect contradictions)
@@ -400,12 +400,12 @@ mod tests {
 
         // Clone state to avoid borrow issues in test
         let coherence_before = state.coherence.coordination_count;
-        
+
         // Simulate tick by calling methods individually (test workaround for &mut self + &mut state)
         let mut temp_coherence = state.coherence.clone();
         let result = temp_coherence.tick(&mut state).await;
         state.coherence = temp_coherence;
-        
+
         assert!(result.is_ok());
         assert!(state.coherence.coordination_count > coherence_before);
         assert!(state.coherence.coherence_checks > 0);

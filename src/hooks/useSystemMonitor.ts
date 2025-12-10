@@ -40,11 +40,7 @@ export interface UseSystemMonitorReturn {
 export function useSystemMonitor(
   options: UseSystemMonitorOptions = {}
 ): UseSystemMonitorReturn {
-  const {
-    vitalsInterval = 5000,
-    enginesInterval = 10000,
-    enabled = true,
-  } = options;
+  const { vitalsInterval = 5000, enginesInterval = 10000, enabled = true } = options;
 
   const {
     vitals: systemVitals,
@@ -85,8 +81,8 @@ export function useSystemMonitor(
 
     const systemScore = Math.round(
       (100 - systemVitals.cpu) * 0.4 +
-      (100 - systemVitals.memory) * 0.4 +
-      (100 - systemVitals.disk) * 0.2
+        (100 - systemVitals.memory) * 0.4 +
+        (100 - systemVitals.disk) * 0.2
     );
 
     return Math.round(engineHealth * 0.6 + systemScore * 0.4);
@@ -97,8 +93,10 @@ export function useSystemMonitor(
 
     if (systemVitals) {
       if (systemVitals.cpu > 90) issues.push(`System CPU critical: ${systemVitals.cpu}%`);
-      if (systemVitals.memory > 95) issues.push(`System Memory critical: ${systemVitals.memory}%`);
-      if (systemVitals.disk > 98) issues.push(`System Disk critical: ${systemVitals.disk}%`);
+      if (systemVitals.memory > 95)
+        issues.push(`System Memory critical: ${systemVitals.memory}%`);
+      if (systemVitals.disk > 98)
+        issues.push(`System Disk critical: ${systemVitals.disk}%`);
     }
 
     issues.push(...getCriticalIssues());

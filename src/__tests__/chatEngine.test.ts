@@ -72,7 +72,10 @@ describe('ChatEngine — calculateImportance', () => {
 describe('ChatEngine — importance boosting keywords', () => {
   test('keyword "décision" boosts importance by 0.1', () => {
     // @ts-expect-error: accessing private method for testing
-    const importance = chatEngine.calculateImportance('standard', 'Prise de décision importante');
+    const importance = chatEngine.calculateImportance(
+      'standard',
+      'Prise de décision importante'
+    );
     expect(importance).toBe(0.5); // 0.4 + 0.1
   });
 
@@ -84,7 +87,10 @@ describe('ChatEngine — importance boosting keywords', () => {
 
   test('keyword "urgent" boosts importance', () => {
     // @ts-expect-error: accessing private method for testing
-    const importance = chatEngine.calculateImportance('standard', 'Action urgente requise');
+    const importance = chatEngine.calculateImportance(
+      'standard',
+      'Action urgente requise'
+    );
     expect(importance).toBe(0.5);
   });
 
@@ -102,7 +108,10 @@ describe('ChatEngine — importance boosting keywords', () => {
 
   test('keyword "objectif" boosts importance', () => {
     // @ts-expect-error: accessing private method for testing
-    const importance = chatEngine.calculateImportance('standard', 'Atteinte des objectifs');
+    const importance = chatEngine.calculateImportance(
+      'standard',
+      'Atteinte des objectifs'
+    );
     expect(importance).toBe(0.5);
   });
 
@@ -140,9 +149,13 @@ describe('ChatEngine — length-based importance boost', () => {
 
 describe('ChatEngine — importance capping', () => {
   test('importance never exceeds 1.0', () => {
-    const longMessageWithKeywords = 'Décision importante urgente critique projet objectif. ' + 'A'.repeat(200);
+    const longMessageWithKeywords =
+      'Décision importante urgente critique projet objectif. ' + 'A'.repeat(200);
     // @ts-expect-error: accessing private method for testing
-    const importance = chatEngine.calculateImportance('emergency', longMessageWithKeywords);
+    const importance = chatEngine.calculateImportance(
+      'emergency',
+      longMessageWithKeywords
+    );
     expect(importance).toBe(1.0); // Capped at 1.0, not 0.9 + 0.1 + 0.05 = 1.05
   });
 
@@ -169,9 +182,15 @@ describe('ChatEngine — edge cases', () => {
 
   test('case-insensitive keyword matching', () => {
     // @ts-expect-error: accessing private method for testing
-    const importanceUpper = chatEngine.calculateImportance('standard', 'DÉCISION IMPORTANTE');
+    const importanceUpper = chatEngine.calculateImportance(
+      'standard',
+      'DÉCISION IMPORTANTE'
+    );
     // @ts-expect-error: accessing private method for testing
-    const importanceLower = chatEngine.calculateImportance('standard', 'décision importante');
+    const importanceLower = chatEngine.calculateImportance(
+      'standard',
+      'décision importante'
+    );
     expect(importanceUpper).toBe(importanceLower);
     expect(importanceUpper).toBe(0.5);
   });

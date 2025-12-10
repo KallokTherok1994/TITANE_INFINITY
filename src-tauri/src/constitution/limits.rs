@@ -3,8 +3,8 @@
 //! Super Prompt #13 — Limites, frontières et garde-fous du système
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::ConstitutionalAction;
+use serde::{Deserialize, Serialize};
 
 /// Type de limite
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -80,9 +80,7 @@ pub struct LimitSystem {
 impl LimitSystem {
     /// Crée un système vide
     pub fn new() -> Self {
-        Self {
-            limits: Vec::new(),
-        }
+        Self { limits: Vec::new() }
     }
 
     /// Crée le système de limites TITANE∞ par défaut
@@ -125,7 +123,6 @@ impl LimitSystem {
                 exceptions: vec![],
                 active: true,
             },
-
             // Limites éthiques
             Limit {
                 id: "no_deception".to_string(),
@@ -151,7 +148,6 @@ impl LimitSystem {
                 exceptions: vec![],
                 active: true,
             },
-
             // Limites de ressources (conditionnelles)
             Limit {
                 id: "memory_usage".to_string(),
@@ -162,14 +158,12 @@ impl LimitSystem {
                 threshold: Some(1024.0), // MB
                 current_value: Some(0.0),
                 enforcement_action: "trigger_gc".to_string(),
-                exceptions: vec![
-                    LimitException {
-                        condition: "batch_processing".to_string(),
-                        authorized_by: "system".to_string(),
-                        expires_at: None,
-                        reason: "Batch operations may need more memory".to_string(),
-                    },
-                ],
+                exceptions: vec![LimitException {
+                    condition: "batch_processing".to_string(),
+                    authorized_by: "system".to_string(),
+                    expires_at: None,
+                    reason: "Batch operations may need more memory".to_string(),
+                }],
                 active: true,
             },
             Limit {
@@ -184,7 +178,6 @@ impl LimitSystem {
                 exceptions: vec![],
                 active: true,
             },
-
             // Limites de comportement
             Limit {
                 id: "response_time".to_string(),
@@ -301,7 +294,11 @@ impl LimitSystem {
     }
 
     /// Trouve une exception applicable
-    fn find_applicable_exception(&self, limit: &Limit, action: &ConstitutionalAction) -> Option<String> {
+    fn find_applicable_exception(
+        &self,
+        limit: &Limit,
+        action: &ConstitutionalAction,
+    ) -> Option<String> {
         let now = Self::now();
 
         for exception in &limit.exceptions {
@@ -346,12 +343,18 @@ impl LimitSystem {
 
     /// Limites par catégorie
     pub fn by_category(&self, category: LimitCategory) -> Vec<&Limit> {
-        self.limits.iter().filter(|l| l.category == category).collect()
+        self.limits
+            .iter()
+            .filter(|l| l.category == category)
+            .collect()
     }
 
     /// Limites par type
     pub fn by_type(&self, limit_type: LimitType) -> Vec<&Limit> {
-        self.limits.iter().filter(|l| l.limit_type == limit_type).collect()
+        self.limits
+            .iter()
+            .filter(|l| l.limit_type == limit_type)
+            .collect()
     }
 
     /// Limites absolues
@@ -361,7 +364,8 @@ impl LimitSystem {
 
     /// Limites dépassées
     pub fn exceeded_limits(&self) -> Vec<&Limit> {
-        self.limits.iter()
+        self.limits
+            .iter()
             .filter(|l| {
                 if let (Some(threshold), Some(current)) = (l.threshold, l.current_value) {
                     current > threshold
@@ -428,9 +432,8 @@ mod tests {
         assert!(!results.is_empty());
 
         // Normal action should not exceed limits
-        let enforcement_needed: Vec<_> = results.iter()
-            .filter(|r| r.enforcement_required)
-            .collect();
+        let enforcement_needed: Vec<_> =
+            results.iter().filter(|r| r.enforcement_required).collect();
         assert!(enforcement_needed.is_empty());
     }
 
@@ -446,9 +449,8 @@ mod tests {
         };
 
         let results = limits.check_action(&action);
-        let enforcement_needed: Vec<_> = results.iter()
-            .filter(|r| r.enforcement_required)
-            .collect();
+        let enforcement_needed: Vec<_> =
+            results.iter().filter(|r| r.enforcement_required).collect();
         assert!(!enforcement_needed.is_empty());
     }
 }

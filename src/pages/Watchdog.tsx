@@ -21,7 +21,11 @@ import './ModulePages.css';
 
 export const Watchdog = () => {
   const watchdogData = useEngineSubscription('watchdog');
-  const { data, loading } = watchdogData as { data: WatchdogData | null; loading: boolean };  if (loading) {
+  const { data, loading } = watchdogData as {
+    data: WatchdogData | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -43,7 +47,9 @@ export const Watchdog = () => {
           <span className="module-page__icon">👁️</span>
           Watchdog — Surveillance Temps Réel
         </h1>
-        <p className="module-page__subtitle">Monitoring continu et détection d'anomalies</p>
+        <p className="module-page__subtitle">
+          Monitoring continu et détection d'anomalies
+        </p>
       </div>
 
       <div className="module-page__grid">

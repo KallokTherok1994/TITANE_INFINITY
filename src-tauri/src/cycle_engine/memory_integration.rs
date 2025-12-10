@@ -4,9 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::cycle_engine::{
-    cognitive_rhythm::CognitiveRhythmParams,
-    load_regulator::LoadRegulationParams,
-    CycleEngine,
+    cognitive_rhythm::CognitiveRhythmParams, load_regulator::LoadRegulationParams, CycleEngine,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -61,10 +59,7 @@ impl MemoryCycleBridge {
         }
     }
 
-    fn should_preload_memory(
-        &self,
-        state: &crate::cycle_engine::cycles::CycleState,
-    ) -> bool {
+    fn should_preload_memory(&self, state: &crate::cycle_engine::cycles::CycleState) -> bool {
         // Preload memory during morning/noon for peak performance
         matches!(
             state.daily_phase,

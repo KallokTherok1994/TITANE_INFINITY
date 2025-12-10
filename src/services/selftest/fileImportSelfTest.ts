@@ -54,7 +54,8 @@ export async function fileImport_selftest(): Promise<FileImportSelfTestResult> {
 
   try {
     // 1. Vérifier disponibilité File API
-    const fileApiAvailable = typeof File !== 'undefined' && typeof FileReader !== 'undefined';
+    const fileApiAvailable =
+      typeof File !== 'undefined' && typeof FileReader !== 'undefined';
     console.log('File API disponible:', fileApiAvailable);
 
     if (!fileApiAvailable) {
@@ -86,7 +87,9 @@ export async function fileImport_selftest(): Promise<FileImportSelfTestResult> {
     let tauriAvailable = envInfo.isTauri;
 
     if (!tauriAvailable && typeof window !== 'undefined') {
-      const possibleTauri = window as typeof window & { __TAURI__?: { core?: { invoke?: unknown } } };
+      const possibleTauri = window as typeof window & {
+        __TAURI__?: { core?: { invoke?: unknown } };
+      };
       tauriAvailable = Boolean(possibleTauri.__TAURI__?.core?.invoke);
     }
 

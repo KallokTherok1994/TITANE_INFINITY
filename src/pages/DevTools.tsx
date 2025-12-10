@@ -15,7 +15,10 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { MonitoringHeader } from '../components/monitoring/MonitoringHeader';
-import { SystemStatusCard, SystemStatus } from '../components/monitoring/SystemStatusCard';
+import {
+  SystemStatusCard,
+  SystemStatus,
+} from '../components/monitoring/SystemStatusCard';
 import { LogsCard } from '../components/monitoring/LogsCard';
 import { ErrorsCard } from '../components/monitoring/ErrorsCard';
 import { CognitiveModuleCard } from '../components/monitoring/CognitiveModuleCard';
@@ -118,7 +121,8 @@ export const DevTools = () => {
         setKeyStatus(response.data);
         success = true;
       } else {
-        failureMessage = response?.error ?? 'Enregistrement impossible. Vérifiez les journaux Tauri.';
+        failureMessage =
+          response?.error ?? 'Enregistrement impossible. Vérifiez les journaux Tauri.';
       }
     } catch (err) {
       console.error('[DevTools] Impossible de sauvegarder la clé API:', err);
@@ -141,29 +145,32 @@ export const DevTools = () => {
     helios: {
       value: Math.round(livingEngines.state.cognitiveLoad * 100),
       label: 'Charge Cognitive',
-      status: livingEngines.state.cognitiveLoad > 0.8 ? 'critical' as const : 'stable' as const
+      status:
+        livingEngines.state.cognitiveLoad > 0.8
+          ? ('critical' as const)
+          : ('stable' as const),
     },
     nexus: {
       value: Math.round(livingEngines.state.rhythmScore * 100),
       label: 'Rythme Système',
-      status: 'active' as const
+      status: 'active' as const,
     },
     harmonia: {
       value: Math.round(livingEngines.state.presenceLevel * 100),
       label: 'Présence Persona',
-      status: 'stable' as const
+      status: 'stable' as const,
     },
     memory: {
       value: Math.round((livingEngines.state.glow - 0.5) * 100 + 50),
       label: 'Intensité Glow',
-      status: 'stable' as const
-    }
+      status: 'stable' as const,
+    },
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
       const personaMood = livingEngines.state.persona?.mood.current || 'neutre';
-      setLogs((prev) => [
+      setLogs(prev => [
         ...prev,
         `[DEBUG] System tick at ${new Date().toLocaleTimeString()} | Mood: ${personaMood}`,
       ]);
@@ -205,7 +212,7 @@ export const DevTools = () => {
             padding: '16px',
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px'
+            gap: '12px',
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -218,9 +225,11 @@ export const DevTools = () => {
             <input
               id="devtools-secure-api-key"
               type="password"
-              placeholder={tauriAvailable ? 'Entrez votre clé API Gemini' : 'Tauri indisponible'}
+              placeholder={
+                tauriAvailable ? 'Entrez votre clé API Gemini' : 'Tauri indisponible'
+              }
               value={apiKeyInput}
-              onChange={(event) => setApiKeyInput(event.target.value)}
+              onChange={event => setApiKeyInput(event.target.value)}
               disabled={!tauriAvailable || savingKey}
               style={{
                 padding: '10px 12px',
@@ -228,7 +237,7 @@ export const DevTools = () => {
                 border: '1px solid rgba(148, 163, 184, 0.35)',
                 background: '#0b1016',
                 color: '#e2e8f0',
-                fontSize: '0.95rem'
+                fontSize: '0.95rem',
               }}
             />
           </div>
@@ -237,7 +246,7 @@ export const DevTools = () => {
               display: 'flex',
               gap: '12px',
               alignItems: 'center',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
             }}
           >
             <button
@@ -252,16 +261,16 @@ export const DevTools = () => {
                 color: '#fff',
                 cursor: !tauriAvailable || savingKey ? 'not-allowed' : 'pointer',
                 opacity: savingKey ? 0.7 : 1,
-                transition: 'opacity 0.2s ease'
+                transition: 'opacity 0.2s ease',
               }}
             >
               {savingKey ? '🔐 Sauvegarde...' : '🔐 Sauvegarder la clé'}
             </button>
             <div style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
               {tauriAvailable
-                ? (keyStatus?.masked_key
+                ? keyStatus?.masked_key
                   ? `Clé actuelle : ${keyStatus.masked_key}`
-                  : 'Aucune clé enregistrée')
+                  : 'Aucune clé enregistrée'
                 : 'Tauri non disponible : stockage désactivé'}
             </div>
           </div>
@@ -271,7 +280,7 @@ export const DevTools = () => {
                 fontSize: '0.85rem',
                 color: /erreur|impossible|indisponible|fallback/i.test(keyMessage)
                   ? '#f87171'
-                  : '#34d399'
+                  : '#34d399',
               }}
             >
               {keyMessage}
@@ -299,7 +308,7 @@ export const DevTools = () => {
           metrics={{
             cpu: moduleMetrics.helios.value,
             memory: moduleMetrics.memory.value,
-            uptime: '2h 34m'
+            uptime: '2h 34m',
           }}
         />
 
@@ -320,7 +329,8 @@ export const DevTools = () => {
         <div className="devtools-section__header">
           <h2 className="devtools-section__title">HUD Cognitif — Modules TITANE∞</h2>
           <p className="devtools-section__subtitle">
-            Surveillance temps réel des modules intelligents avec visualisation data-driven
+            Surveillance temps réel des modules intelligents avec visualisation
+            data-driven
           </p>
         </div>
 
@@ -361,13 +371,17 @@ export const DevTools = () => {
 
       {/* Tabs Navigation */}
       <div className="devtools-tabs">
-        {(['system', 'logs', 'performance'] as const).map((tab) => (
+        {(['system', 'logs', 'performance'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`devtools-tab ${activeTab === tab ? 'devtools-tab--active' : ''}`}
           >
-            {tab === 'system' ? '🖥️ Système' : tab === 'logs' ? '📋 Logs' : '⚡ Performance'}
+            {tab === 'system'
+              ? '🖥️ Système'
+              : tab === 'logs'
+                ? '📋 Logs'
+                : '⚡ Performance'}
           </button>
         ))}
       </div>
@@ -383,7 +397,11 @@ export const DevTools = () => {
               </span>
             </div>
             <div className="devtools-code-block">
-              <pre>{typeof systemStatus === 'object' ? JSON.stringify(systemStatus, null, 2) : String(systemStatus)}</pre>
+              <pre>
+                {typeof systemStatus === 'object'
+                  ? JSON.stringify(systemStatus, null, 2)
+                  : String(systemStatus)}
+              </pre>
             </div>
             {error && (
               <div className="devtools-alert devtools-alert--error">
@@ -404,19 +422,24 @@ export const DevTools = () => {
               <span className="devtools-panel__count">{logs.length} entrées</span>
             </div>
             <div className="devtools-logs">
-              {logs.slice().reverse().map((log, i) => (
-                <div
-                  key={i}
-                  className={`devtools-log-item ${
-                    log.includes('[ERROR]') ? 'devtools-log-item--error' :
-                    log.includes('[WARN]') ? 'devtools-log-item--warning' :
-                    'devtools-log-item--info'
-                  }`}
-                >
-                  <span className="devtools-log-item__dot" />
-                  <span className="devtools-log-item__text">{log}</span>
-                </div>
-              ))}
+              {logs
+                .slice()
+                .reverse()
+                .map((log, i) => (
+                  <div
+                    key={i}
+                    className={`devtools-log-item ${
+                      log.includes('[ERROR]')
+                        ? 'devtools-log-item--error'
+                        : log.includes('[WARN]')
+                          ? 'devtools-log-item--warning'
+                          : 'devtools-log-item--info'
+                    }`}
+                  >
+                    <span className="devtools-log-item__dot" />
+                    <span className="devtools-log-item__text">{log}</span>
+                  </div>
+                ))}
             </div>
           </div>
         )}
@@ -429,7 +452,9 @@ export const DevTools = () => {
             <div className="devtools-metrics-grid">
               <div className="devtools-metric-card devtools-metric-card--success">
                 <div className="devtools-metric-card__label">CPU Usage</div>
-                <div className="devtools-metric-card__value">{moduleMetrics.helios.value}%</div>
+                <div className="devtools-metric-card__value">
+                  {moduleMetrics.helios.value}%
+                </div>
                 <div className="devtools-metric-card__bar">
                   <div
                     className="devtools-metric-card__bar-fill"
@@ -440,7 +465,9 @@ export const DevTools = () => {
 
               <div className="devtools-metric-card devtools-metric-card--info">
                 <div className="devtools-metric-card__label">Memory Usage</div>
-                <div className="devtools-metric-card__value">{moduleMetrics.memory.value}%</div>
+                <div className="devtools-metric-card__value">
+                  {moduleMetrics.memory.value}%
+                </div>
                 <div className="devtools-metric-card__bar">
                   <div
                     className="devtools-metric-card__bar-fill"
@@ -451,7 +478,9 @@ export const DevTools = () => {
 
               <div className="devtools-metric-card devtools-metric-card--primary">
                 <div className="devtools-metric-card__label">Network Activity</div>
-                <div className="devtools-metric-card__value">{moduleMetrics.nexus.value}%</div>
+                <div className="devtools-metric-card__value">
+                  {moduleMetrics.nexus.value}%
+                </div>
                 <div className="devtools-metric-card__bar">
                   <div
                     className="devtools-metric-card__bar-fill"
@@ -462,7 +491,9 @@ export const DevTools = () => {
 
               <div className="devtools-metric-card devtools-metric-card--success">
                 <div className="devtools-metric-card__label">System Balance</div>
-                <div className="devtools-metric-card__value">{moduleMetrics.harmonia.value}%</div>
+                <div className="devtools-metric-card__value">
+                  {moduleMetrics.harmonia.value}%
+                </div>
                 <div className="devtools-metric-card__bar">
                   <div
                     className="devtools-metric-card__bar-fill"
@@ -477,4 +508,3 @@ export const DevTools = () => {
     </div>
   );
 };
-

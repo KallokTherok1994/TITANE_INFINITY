@@ -39,77 +39,77 @@ export interface TauriCommand {
 
 export const TAURI_COMMANDS: Record<string, TauriCommand> = {
   // ━━━ MOCK BACKEND (Active) ━━━
-  'singularity_get_state': {
+  singularity_get_state: {
     name: 'singularity_get_state',
     description: 'Get current Singularity state',
     returnType: 'SingularityState',
     active: true,
   },
-  'singularity_sync_state': {
+  singularity_sync_state: {
     name: 'singularity_sync_state',
     description: 'Sync state with backend',
     params: { state: 'SingularityState' },
     returnType: 'void',
-    active: true
+    active: true,
   },
-  'helios_get_modules': {
+  helios_get_modules: {
     name: 'helios_get_modules',
     description: 'Get all Helios modules',
     returnType: 'Vec<HeliosModule>',
     active: true,
   },
-  'helios_get_health': {
+  helios_get_health: {
     name: 'helios_get_health',
     description: 'Get Helios health status',
     returnType: 'HealthStatus',
     active: true,
   },
-  'memory_get_active_projects': {
+  memory_get_active_projects: {
     name: 'memory_get_active_projects',
     description: 'Get active projects from Memory',
     params: { limit: 'number' },
     returnType: 'Vec<Project>',
     active: true,
   },
-  'memory_get_recent_memories': {
+  memory_get_recent_memories: {
     name: 'memory_get_recent_memories',
     description: 'Get recent memories',
     params: { limit: 'number' },
     returnType: 'Vec<Memory>',
     active: true,
   },
-  'nexus_get_status': {
+  nexus_get_status: {
     name: 'nexus_get_status',
     description: 'Get Nexus orchestration status',
     returnType: 'NexusStatus',
     active: true,
   },
-  'persona_get_multipliers': {
+  persona_get_multipliers: {
     name: 'persona_get_multipliers',
     description: 'Get Persona multipliers',
     returnType: 'PersonaMultipliers',
     active: true,
   },
-  'chat_send_message': {
+  chat_send_message: {
     name: 'chat_send_message',
     description: 'Send message to AI chat',
     params: { messages: 'Vec<Message>', config: 'ChatConfig' },
     returnType: 'string',
     active: true,
   },
-  'start_recording': {
+  start_recording: {
     name: 'start_recording',
     description: 'Start voice recording',
     returnType: 'string',
     active: true,
   },
-  'stop_recording': {
+  stop_recording: {
     name: 'stop_recording',
     description: 'Stop voice recording',
     returnType: 'AudioData',
     active: true,
   },
-  'speak': {
+  speak: {
     name: 'speak',
     description: 'Speak text using TTS',
     params: { text: 'string', voice: 'string' },
@@ -118,31 +118,31 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
   },
 
   // ━━━ ENGINE COMMANDS (v15) ━━━
-  'engine_init': {
+  engine_init: {
     name: 'engine_init',
     description: 'Initialize Singularity Engine',
     returnType: 'void',
     active: true,
   },
-  'engine_tick': {
+  engine_tick: {
     name: 'engine_tick',
     description: 'Tick engine frame',
     returnType: 'EngineState',
     active: true,
   },
-  'engine_stop': {
+  engine_stop: {
     name: 'engine_stop',
     description: 'Stop engine',
     returnType: 'void',
     active: true,
   },
-  'engine_get_state': {
+  engine_get_state: {
     name: 'engine_get_state',
     description: 'Get engine state',
     returnType: 'EngineState',
     active: true,
   },
-  'engine_get_health': {
+  engine_get_health: {
     name: 'engine_get_health',
     description: 'Get engine health',
     returnType: 'HealthStatus',
@@ -150,19 +150,19 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
   },
 
   // ━━━ DEVTOOLS ━━━
-  'devtools_get_logs': {
+  devtools_get_logs: {
     name: 'devtools_get_logs',
     description: 'Get DevTools logs',
     returnType: 'Vec<LogEntry>',
     active: true,
   },
-  'devtools_get_metrics': {
+  devtools_get_metrics: {
     name: 'devtools_get_metrics',
     description: 'Get DevTools metrics',
     returnType: 'Metrics',
     active: true,
   },
-  'devtools_inspect_singularity': {
+  devtools_inspect_singularity: {
     name: 'devtools_inspect_singularity',
     description: 'Inspect Singularity state',
     returnType: 'SingularityInspection',
@@ -170,13 +170,13 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
   },
 
   // ━━━ CORE SYSTEM ━━━
-  'system_get_status': {
+  system_get_status: {
     name: 'system_get_status',
     description: 'Get system status',
     returnType: 'SystemStatus',
     active: true,
   },
-  'system_get_info': {
+  system_get_info: {
     name: 'system_get_info',
     description: 'Get system info',
     returnType: 'SystemInfo',
@@ -184,97 +184,97 @@ export const TAURI_COMMANDS: Record<string, TauriCommand> = {
   },
 
   // ━━━ DISABLED / EXPERIMENTAL ━━━
-  'meta_mode_get_current_mode': {
+  meta_mode_get_current_mode: {
     name: 'meta_mode_get_current_mode',
     description: 'Get current Meta-Mode',
     returnType: 'string',
     active: false, // Inactive
   },
-  'meta_mode_get_history': {
+  meta_mode_get_history: {
     name: 'meta_mode_get_history',
     description: 'Get Meta-Mode history',
     returnType: 'Vec<ModeHistory>',
     active: false,
   },
-  'meta_mode_reset': {
+  meta_mode_reset: {
     name: 'meta_mode_reset',
     description: 'Reset Meta-Mode to default',
     returnType: 'void',
     active: false,
   },
-  'delete_conversation': {
+  delete_conversation: {
     name: 'delete_conversation',
     description: 'Delete a conversation by ID',
     params: { conversationId: 'string' },
     returnType: 'void',
     active: false,
   },
-  'clear_all_memory': {
+  clear_all_memory: {
     name: 'clear_all_memory',
     description: 'Clear all memory entries',
     returnType: 'void',
     active: false,
   },
-  'memory_clear': {
+  memory_clear: {
     name: 'memory_clear',
     description: 'Clear memory core',
     returnType: 'void',
     active: false,
   },
-  'singularity_update_physical': {
+  singularity_update_physical: {
     name: 'singularity_update_physical',
     description: 'Update physical state',
     params: { physical: 'PhysicalState' },
     returnType: 'void',
     active: false,
   },
-  'singularity_update_cognitive': {
+  singularity_update_cognitive: {
     name: 'singularity_update_cognitive',
     description: 'Update cognitive state',
     params: { cognitive: 'CognitiveState' },
     returnType: 'void',
     active: false,
   },
-  'singularity_update_symbolic': {
+  singularity_update_symbolic: {
     name: 'singularity_update_symbolic',
     description: 'Update symbolic state',
     params: { symbolic: 'SymbolicState' },
     returnType: 'void',
     active: false,
   },
-  'singularity_update_adaptive': {
+  singularity_update_adaptive: {
     name: 'singularity_update_adaptive',
     description: 'Update adaptive state',
     params: { adaptive: 'AdaptiveState' },
     returnType: 'void',
     active: false,
   },
-  'singularity_update_meta': {
+  singularity_update_meta: {
     name: 'singularity_update_meta',
     description: 'Update meta state',
     params: { meta: 'MetaState' },
     returnType: 'void',
     active: false,
   },
-  'singularity_update_full_state': {
+  singularity_update_full_state: {
     name: 'singularity_update_full_state',
     description: 'Update full Singularity state',
     params: { state: 'SingularityState' },
     returnType: 'void',
     active: false,
   },
-  'singularity_save_state': {
+  singularity_save_state: {
     name: 'singularity_save_state',
     description: 'Save Singularity state to disk',
     returnType: 'void',
     active: false,
   },
-  'singularity_load_state': {
+  singularity_load_state: {
     name: 'singularity_load_state',
     description: 'Load Singularity state from disk',
     returnType: 'SingularityState',
     active: false,
-  }
+  },
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -335,11 +335,9 @@ export const TauriAPI = {
     invokeTauriCommand('singularity_sync_state', { state }),
 
   // Helios
-  getHeliosModules: () =>
-    invokeTauriCommand<HeliosModule[]>('helios_get_modules'),
+  getHeliosModules: () => invokeTauriCommand<HeliosModule[]>('helios_get_modules'),
 
-  getHeliosHealth: () =>
-    invokeTauriCommand<HeliosHealth>('helios_get_health'),
+  getHeliosHealth: () => invokeTauriCommand<HeliosHealth>('helios_get_health'),
 
   // Memory
   getActiveProjects: (limit = 10) =>
@@ -349,8 +347,7 @@ export const TauriAPI = {
     invokeTauriCommand<RecentMemory[]>('memory_get_recent_memories', { limit }),
 
   // Nexus
-  getNexusStatus: () =>
-    invokeTauriCommand<NexusStatus>('nexus_get_status'),
+  getNexusStatus: () => invokeTauriCommand<NexusStatus>('nexus_get_status'),
 
   // Persona
   getPersonaMultipliers: () =>
@@ -361,34 +358,26 @@ export const TauriAPI = {
     invokeTauriCommand<ChatResponse>('chat_send_message', { messages, config }),
 
   // Voice
-  startVoiceRecording: () =>
-    invokeTauriCommand<string>('start_recording'),
+  startVoiceRecording: () => invokeTauriCommand<string>('start_recording'),
 
-  stopVoiceRecording: () =>
-    invokeTauriCommand<VoiceRecordingResult>('stop_recording'),
+  stopVoiceRecording: () => invokeTauriCommand<VoiceRecordingResult>('stop_recording'),
 
   speak: (text: string, voice = 'default') =>
     invokeTauriCommand('speak', { text, voice }),
 
   // Engine
-  initEngine: () =>
-    invokeTauriCommand('engine_init'),
+  initEngine: () => invokeTauriCommand('engine_init'),
 
-  tickEngine: () =>
-    invokeTauriCommand<void>('engine_tick'),
+  tickEngine: () => invokeTauriCommand<void>('engine_tick'),
 
-  stopEngine: () =>
-    invokeTauriCommand('engine_stop'),
+  stopEngine: () => invokeTauriCommand('engine_stop'),
 
-  getEngineState: () =>
-    invokeTauriCommand<Record<string, unknown>>('engine_get_state'),
+  getEngineState: () => invokeTauriCommand<Record<string, unknown>>('engine_get_state'),
 
-  getEngineHealth: () =>
-    invokeTauriCommand<string>('engine_get_health'),
+  getEngineHealth: () => invokeTauriCommand<string>('engine_get_health'),
 
   // DevTools
-  getDevToolsLogs: () =>
-    invokeTauriCommand<unknown[]>('devtools_get_logs'),
+  getDevToolsLogs: () => invokeTauriCommand<unknown[]>('devtools_get_logs'),
 
   getDevToolsMetrics: () =>
     invokeTauriCommand<Record<string, unknown>>('devtools_get_metrics'),
@@ -397,11 +386,9 @@ export const TauriAPI = {
     invokeTauriCommand<Record<string, unknown>>('devtools_inspect_singularity'),
 
   // System
-  getSystemStatus: () =>
-    invokeTauriCommand<Record<string, unknown>>('system_get_status'),
+  getSystemStatus: () => invokeTauriCommand<Record<string, unknown>>('system_get_status'),
 
-  getSystemInfo: () =>
-    invokeTauriCommand<Record<string, unknown>>('system_get_info'),
+  getSystemInfo: () => invokeTauriCommand<Record<string, unknown>>('system_get_info'),
 };
 
 // ═══════════════════════════════════════════════════════════════

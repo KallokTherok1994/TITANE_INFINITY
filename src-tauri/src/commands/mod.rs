@@ -3,16 +3,14 @@
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-pub mod ai_chat;        // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIChatState>)
-pub mod automations;    // ✅ v19.2Ω: Automation System
+pub mod ai_chat; // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIChatState>)
+pub mod automations; // ✅ v19.2Ω: Automation System
 
 // Tests — Phase 1 Stabilisation v20.0
-#[cfg(test)]
-mod tests_ai_chat;
-pub mod chat_modes;     // ✅ v19.2Ω: Chat Modes System
-pub mod coherence_commands; // ✅ NEW v20.0: Unified Coherence Engine (Nexus + Consistency fusion)
+pub mod chat_modes; // ✅ v19.2Ω: Chat Modes System
 pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
+pub mod coherence_commands; // ✅ NEW v20.0: Unified Coherence Engine (Nexus + Consistency fusion)
 pub mod devops; // ✅ v19: DevOps Commands for Dashboard
 pub mod devtools;
 pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
@@ -30,14 +28,16 @@ pub mod multi_ai; // ✅ v∞: Multi-IA Orchestrator (SUPER PROMPT #8)
 pub mod one_core; // ✅ v19.6: TITANE∞ ONE CORE - Unified Command Center (OPUS #6)
 pub mod orchestration_center; // ✅ v19.5: Centre d'Orchestration Cognitive (OPUS #5/6/7)
 pub mod persistent_memory; // ✅ v19.2Ω: Persistent Memory 3-Level System
-pub mod qa_monitoring; // ✅ v19.7: QA Monitoring Center - OPUS #7
+pub mod qa_monitoring;
+#[cfg(test)]
+mod tests_ai_chat; // ✅ v19.7: QA Monitoring Center - OPUS #7
 
 // Re-export engine commands
 // NOTE: ai_chat NOT re-exported because it requires State<AIChatState>
 // Voice commands come from audio::commands instead
-pub use coherence_commands::*; // ✅ v20.0: Export coherence commands (Fusion #1)
 pub use cognitive_center::*; // ✅ v19.3: Export cognitive center commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
+pub use coherence_commands::*; // ✅ v20.0: Export coherence commands (Fusion #1)
 pub use devops::*; // ✅ v19: Export devops commands
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
 pub use engine_v14::*;

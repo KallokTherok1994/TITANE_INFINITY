@@ -174,7 +174,10 @@ impl MemoryParser {
     }
 
     /// Détecte les anomalies dans les items mémoire
-    fn detect_anomalies(&self, items: &[MemoryItem]) -> Result<Vec<MemoryAnomaly>, MemoryEvolutionError> {
+    fn detect_anomalies(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<MemoryAnomaly>, MemoryEvolutionError> {
         let mut anomalies = Vec::new();
 
         for item in items {
@@ -204,7 +207,8 @@ impl MemoryParser {
 
             // Stale check
             if let Ok(created) = chrono::DateTime::parse_from_rfc3339(&item.created_at) {
-                let age_days = (chrono::Utc::now() - created.with_timezone(&chrono::Utc)).num_days();
+                let age_days =
+                    (chrono::Utc::now() - created.with_timezone(&chrono::Utc)).num_days();
                 if age_days > self.config.stale_days as i64 && item.access_count == 0 {
                     anomalies.push(MemoryAnomaly {
                         id: uuid::Uuid::new_v4().to_string(),
@@ -222,7 +226,10 @@ impl MemoryParser {
     }
 
     /// Détecte les redondances entre items
-    fn detect_redundancies(&self, items: &[MemoryItem]) -> Result<HashMap<String, Vec<String>>, MemoryEvolutionError> {
+    fn detect_redundancies(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<HashMap<String, Vec<String>>, MemoryEvolutionError> {
         let mut redundancy_map: HashMap<String, Vec<String>> = HashMap::new();
         let mut seen_hashes: HashMap<u64, Vec<String>> = HashMap::new();
 
@@ -230,10 +237,7 @@ impl MemoryParser {
             // Hash simple du contenu
             let hash = self.simple_hash(&item.content);
 
-            seen_hashes
-                .entry(hash)
-                .or_default()
-                .push(item.id.clone());
+            seen_hashes.entry(hash).or_default().push(item.id.clone());
         }
 
         // Identifier les groupes redondants
@@ -245,7 +249,10 @@ impl MemoryParser {
         }
 
         if !redundancy_map.is_empty() {
-            warn!("[MemoryParser] Found {} redundancy groups", redundancy_map.len());
+            warn!(
+                "[MemoryParser] Found {} redundancy groups",
+                redundancy_map.len()
+            );
         }
 
         Ok(redundancy_map)
@@ -262,12 +269,18 @@ impl MemoryParser {
         let avg_load = (ct_load + mt_load + lt_load) / 3.0;
 
         // Fragmentation = ratio d'items sans cluster
-        let unclustered = result.ct_items.iter()
+        let unclustered = result
+            .ct_items
+            .iter()
             .chain(result.mt_items.iter())
             .chain(result.lt_items.iter())
             .filter(|i| i.cluster_id.is_none())
             .count();
-        let fragmentation = if total > 0 { unclustered as f32 / total as f32 } else { 0.0 };
+        let fragmentation = if total > 0 {
+            unclustered as f32 / total as f32
+        } else {
+            0.0
+        };
 
         CognitiveLoadMetrics {
             total_items: total,
@@ -281,7 +294,10 @@ impl MemoryParser {
     }
 
     /// Détecte les poches de confusion (items contradictoires)
-    fn detect_confusion_pockets(&self, items: &[MemoryItem]) -> Result<Vec<ConfusionPocket>, MemoryEvolutionError> {
+    fn detect_confusion_pockets(
+        &self,
+        items: &[MemoryItem],
+    ) -> Result<Vec<ConfusionPocket>, MemoryEvolutionError> {
         let mut pockets = Vec::new();
 
         // Grouper par topic
@@ -305,7 +321,8 @@ impl MemoryParser {
                         topic: topic.clone(),
                         conflicting_items: group.iter().map(|i| i.id.clone()).collect(),
                         confusion_score: variance,
-                        resolution_hint: "Consolidate memories with varying confidence levels".to_string(),
+                        resolution_hint: "Consolidate memories with varying confidence levels"
+                            .to_string(),
                     });
                 }
             }

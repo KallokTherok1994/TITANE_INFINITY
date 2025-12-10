@@ -99,7 +99,7 @@ export const TitaneQAPanel: React.FC = () => {
 
       // Mise à jour partielle du rapport
       if (report) {
-        const updatedResults = report.results.map((r) =>
+        const updatedResults = report.results.map(r =>
           r.module === result.module ? result : r
         );
         setReport({ ...report, results: updatedResults });
@@ -163,18 +163,10 @@ export const TitaneQAPanel: React.FC = () => {
       <div className="qa-header">
         <h1>🧪 TITANE∞ QA SYSTEM v19.8</h1>
         <div className="qa-actions">
-          <button
-            className="btn-primary"
-            onClick={runFullQA}
-            disabled={loading}
-          >
+          <button className="btn-primary" onClick={runFullQA} disabled={loading}>
             {loading ? '⏳ EXÉCUTION...' : '▶ LANCER QA COMPLET'}
           </button>
-          <button
-            className="btn-secondary"
-            onClick={loadLastReport}
-            disabled={loading}
-          >
+          <button className="btn-secondary" onClick={loadLastReport} disabled={loading}>
             🔄 ACTUALISER
           </button>
           <button
@@ -199,8 +191,8 @@ export const TitaneQAPanel: React.FC = () => {
                   report.global_score >= 80
                     ? '#00ff88'
                     : report.global_score >= 50
-                    ? '#ffaa00'
-                    : '#ff4444',
+                      ? '#ffaa00'
+                      : '#ff4444',
               }}
             >
               {report.global_score.toFixed(1)}%
@@ -258,7 +250,7 @@ export const TitaneQAPanel: React.FC = () => {
         <div className="qa-modules">
           <h2>TESTS DE MODULES</h2>
           <div className="modules-grid">
-            {report.results.map((result) => (
+            {report.results.map(result => (
               <div
                 key={result.module}
                 className="module-card"
@@ -298,17 +290,15 @@ export const TitaneQAPanel: React.FC = () => {
                           result.latency_ms < 100
                             ? '#00ff88'
                             : result.latency_ms < 500
-                            ? '#ffaa00'
-                            : '#ff4444',
+                              ? '#ffaa00'
+                              : '#ff4444',
                       }}
                     >
                       {result.latency_ms}ms
                     </span>
                   </div>
                   {result.error_message && (
-                    <div className="error-message">
-                      ❌ {result.error_message}
-                    </div>
+                    <div className="error-message">❌ {result.error_message}</div>
                   )}
                 </div>
 
@@ -325,9 +315,7 @@ export const TitaneQAPanel: React.FC = () => {
                           {getStatusIcon(subtest.status)}
                         </span>
                         <span className="subtest-name">{subtest.name}</span>
-                        <span className="subtest-latency">
-                          {subtest.latency_ms}ms
-                        </span>
+                        <span className="subtest-latency">{subtest.latency_ms}ms</span>
                       </div>
                     ))}
                   </div>

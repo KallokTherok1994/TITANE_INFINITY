@@ -27,13 +27,13 @@ import { join } from '../../utils/tauriFsAdapter';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export type ConversationType =
-  | 'chat'          // Chat IA textuel
-  | 'bubble'        // Bubble IA mini chat
-  | 'dev-console'   // Console Dev terminal
+  | 'chat' // Chat IA textuel
+  | 'bubble' // Bubble IA mini chat
+  | 'dev-console' // Console Dev terminal
   | 'talk-to-titane' // Vocal continu
-  | 'live-debugger'  // Live Debugger Vocal
-  | 'sudo'          // SUDO commands
-  | 'system';       // System events
+  | 'live-debugger' // Live Debugger Vocal
+  | 'sudo' // SUDO commands
+  | 'system'; // System events
 
 export interface ConversationEntry {
   id: string;
@@ -121,7 +121,9 @@ class AutoSaveConversationEngine {
   // ───────────────────────────────────────────────────────────────────────────
 
   async initialize(): Promise<void> {
-    console.log('[AutoSaveConversation] Initializing Auto-Save Conversation Engine v∞...');
+    console.log(
+      '[AutoSaveConversation] Initializing Auto-Save Conversation Engine v∞...'
+    );
 
     // Create directories if they don't exist
     await this.ensureDirectories();
@@ -133,11 +135,7 @@ class AutoSaveConversationEngine {
   }
 
   private async ensureDirectories(): Promise<void> {
-    const dirs = [
-      this.config.memoryPath,
-      this.config.logsPath,
-      this.config.datasetPath,
-    ];
+    const dirs = [this.config.memoryPath, this.config.logsPath, this.config.datasetPath];
 
     for (const dir of dirs) {
       if (!(await existsSync(dir))) {
@@ -223,9 +221,7 @@ class AutoSaveConversationEngine {
       : entries;
 
     // Compress if enabled
-    const compressed = this.config.compressionEnabled
-      ? this.compress(toWrite)
-      : toWrite;
+    const compressed = this.config.compressionEnabled ? this.compress(toWrite) : toWrite;
 
     // Write to 3 destinations
     await Promise.all([
@@ -236,21 +232,30 @@ class AutoSaveConversationEngine {
   }
 
   private async writeToMemory(entries: ConversationEntry[]): Promise<void> {
-    const memoryFile = join(this.config.memoryPath, `memory-${new Date().toISOString().split('T')[0]}.jsonl`);
+    const memoryFile = join(
+      this.config.memoryPath,
+      `memory-${new Date().toISOString().split('T')[0]}.jsonl`
+    );
 
     const lines = entries.map(e => JSON.stringify(e)).join('\n') + '\n';
     await appendFile(memoryFile, lines, 'utf-8');
   }
 
   private async writeToLogs(entries: ConversationEntry[]): Promise<void> {
-    const logsFile = join(this.config.logsPath, `logs-${new Date().toISOString().split('T')[0]}.jsonl`);
+    const logsFile = join(
+      this.config.logsPath,
+      `logs-${new Date().toISOString().split('T')[0]}.jsonl`
+    );
 
     const lines = entries.map(e => JSON.stringify(e)).join('\n') + '\n';
     await appendFile(logsFile, lines, 'utf-8');
   }
 
   private async writeToDataset(entries: ConversationEntry[]): Promise<void> {
-    const datasetFile = join(this.config.datasetPath, `dataset-${new Date().toISOString().split('T')[0]}.jsonl`);
+    const datasetFile = join(
+      this.config.datasetPath,
+      `dataset-${new Date().toISOString().split('T')[0]}.jsonl`
+    );
 
     const lines = entries.map(e => JSON.stringify(e)).join('\n') + '\n';
     await appendFile(datasetFile, lines, 'utf-8');
@@ -287,10 +292,7 @@ class AutoSaveConversationEngine {
   }
 
   private cleanText(text: string): string {
-    return text
-      .trim()
-      .replace(/\s+/g, ' ')
-      .replace(/\n\n+/g, '\n');
+    return text.trim().replace(/\s+/g, ' ').replace(/\n\n+/g, '\n');
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -308,7 +310,9 @@ class AutoSaveConversationEngine {
 
     console.log('[AutoSaveConversation] Creating snapshot...');
     await this.flushWrites();
-    console.log(`[AutoSaveConversation] Snapshot created (${this.state.totalSaved} total saved)`);
+    console.log(
+      `[AutoSaveConversation] Snapshot created (${this.state.totalSaved} total saved)`
+    );
   }
 
   async flush(): Promise<void> {
@@ -323,13 +327,13 @@ class AutoSaveConversationEngine {
 
   private detectEngine(type: ConversationType): string {
     const engineMap: Record<ConversationType, string> = {
-      'chat': 'ChatEngine',
-      'bubble': 'BubbleEngine',
+      chat: 'ChatEngine',
+      bubble: 'BubbleEngine',
       'dev-console': 'DevConsoleEngine',
       'talk-to-titane': 'TalkToTitaneEngine',
       'live-debugger': 'LiveDebuggerEngine',
-      'sudo': 'DevSudoHandler',
-      'system': 'SystemEngine',
+      sudo: 'DevSudoHandler',
+      system: 'SystemEngine',
     };
     return engineMap[type] || 'UnknownEngine';
   }

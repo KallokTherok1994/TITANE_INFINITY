@@ -127,11 +127,7 @@ export function useVitals(options: { pollInterval?: number; enabled?: boolean } 
   const isOverloaded = useCallback((): boolean => {
     if (!state.current) return false;
 
-    return (
-      state.current.cpu > 80 ||
-      state.current.memory > 90 ||
-      state.current.disk > 95
-    );
+    return state.current.cpu > 80 || state.current.memory > 90 || state.current.disk > 95;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

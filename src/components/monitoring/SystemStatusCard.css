@@ -19,11 +19,7 @@
 .system-status-card__glow {
   position: absolute;
   inset: -50%;
-  background: radial-gradient(
-    circle at center,
-    var(--glow-color) 0%,
-    transparent 60%
-  );
+  background: radial-gradient(circle at center, var(--glow-color) 0%, transparent 60%);
   opacity: 0.15;
   filter: blur(40px);
   pointer-events: none;
@@ -227,7 +223,7 @@
 
 .system-status-card--emeraude:hover {
   border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 24px var(--titane-emeraude-glow);
 }
@@ -238,7 +234,7 @@
 
 .system-status-card--saphir:hover {
   border-color: rgba(59, 130, 246, 0.4);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 24px var(--titane-saphir-glow);
 }
@@ -249,7 +245,7 @@
 
 .system-status-card--helios:hover {
   border-color: rgba(255, 107, 53, 0.4);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 24px var(--helios-glow);
 }
@@ -260,7 +256,7 @@
 
 .system-status-card--rubis:hover {
   border-color: rgba(239, 68, 68, 0.4);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 24px var(--titane-rubis-glow);
 }

@@ -33,7 +33,11 @@ export const soundEngine = {
     config.enabled = enabled;
   },
   playStateSound: (_state: string) => {},
-  playModuleFeedback: (_moduleId: string, _value?: string | number, _previousValue?: number) => {},
+  playModuleFeedback: (
+    _moduleId: string,
+    _value?: string | number,
+    _previousValue?: number
+  ) => {},
   playSound: (_config: string | SoundConfig, _options?: { volume?: number }) => {},
   stopAllSounds: () => {},
 };

@@ -340,10 +340,13 @@ export class UnifiedCognitivePipeline {
    */
   private async analyzeIntention(message: UserMessage): Promise<DetectedIntention> {
     try {
-      const result = await secureInvoke<DetectedIntention>('cognitive_analyze_intention', {
-        content: message.content,
-        context: message.context,
-      });
+      const result = await secureInvoke<DetectedIntention>(
+        'cognitive_analyze_intention',
+        {
+          content: message.content,
+          context: message.context,
+        }
+      );
 
       return result;
     } catch (error) {
@@ -353,9 +356,17 @@ export class UnifiedCognitivePipeline {
       const content = message.content.toLowerCase();
 
       let primary_intent: IntentType = 'conversation';
-      if (content.includes('?') || content.startsWith('pourquoi') || content.startsWith('comment')) {
+      if (
+        content.includes('?') ||
+        content.startsWith('pourquoi') ||
+        content.startsWith('comment')
+      ) {
         primary_intent = 'question';
-      } else if (content.startsWith('fais') || content.startsWith('crée') || content.startsWith('génère')) {
+      } else if (
+        content.startsWith('fais') ||
+        content.startsWith('crée') ||
+        content.startsWith('génère')
+      ) {
         primary_intent = 'command';
       } else if (content.includes('raconte') || content.includes('histoire')) {
         primary_intent = 'storytelling';
@@ -386,12 +397,15 @@ export class UnifiedCognitivePipeline {
     intention: DetectedIntention
   ): Promise<CognitiveResponse> {
     try {
-      const result = await secureInvoke<CognitiveResponse>('cognitive_generate_response', {
-        message: message.content,
-        intention,
-        context: message.context,
-        memoryEnabled: this.config.memory_integration,
-      });
+      const result = await secureInvoke<CognitiveResponse>(
+        'cognitive_generate_response',
+        {
+          message: message.content,
+          intention,
+          context: message.context,
+          memoryEnabled: this.config.memory_integration,
+        }
+      );
 
       return result;
     } catch (error) {
@@ -510,7 +524,7 @@ export class UnifiedCognitivePipeline {
 
   private createErrorResponse(_error: any): CognitiveResponse {
     return {
-      text: "Je rencontre une difficulté technique. Pouvez-vous reformuler votre demande ?",
+      text: 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre demande ?',
       reasoning: ['Erreur de traitement'],
       emotional_alignment: 0.5,
       confidence: 0.3,
@@ -549,8 +563,7 @@ export class UnifiedCognitivePipeline {
     // Moyenne mobile pour le temps de traitement
     const alpha = 0.1;
     this.metrics.average_processing_time =
-      alpha * result.processing_time +
-      (1 - alpha) * this.metrics.average_processing_time;
+      alpha * result.processing_time + (1 - alpha) * this.metrics.average_processing_time;
 
     // Temps moyens par stage
     for (const [stage, time] of Object.entries(result.stage_times)) {

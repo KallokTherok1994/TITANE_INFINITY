@@ -4,8 +4,8 @@
  * Commandes Tauri exposées au frontend React
  * ═══════════════════════════════════════════════════════════════════
  */
-use crate::singularity_state::layers::*;
-use crate::singularity_state::{SingularityEngine, SingularityState};
+use super::layers::*;
+use super::{SingularityEngine, SingularityState};
 use serde::Serialize;
 use std::sync::Arc;
 use tauri::State;

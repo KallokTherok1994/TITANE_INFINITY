@@ -29,28 +29,28 @@ impl TemporalMemoryBridge {
     /// Intensité de consolidation STM → LTM
     fn calculate_consolidation_intensity(hour: u8) -> f32 {
         match hour {
-            2..=4 => 1.0,     // Night: maximum consolidation
+            2..=4 => 1.0,           // Night: maximum consolidation
             22..=23 | 0..=1 => 0.8, // Late night: high
-            5..=7 => 0.3,     // Early morning: low
-            _ => 0.5,         // Day: moderate
+            5..=7 => 0.3,           // Early morning: low
+            _ => 0.5,               // Day: moderate
         }
     }
 
     /// Seuil de promotion STM → LTM
     fn calculate_stm_ltm_threshold(hour: u8) -> f32 {
         match hour {
-            2..=4 => 0.4,     // Night: promote easily
-            10..=16 => 0.8,   // Day: strict
-            _ => 0.6,         // Default
+            2..=4 => 0.4,   // Night: promote easily
+            10..=16 => 0.8, // Day: strict
+            _ => 0.6,       // Default
         }
     }
 
     /// Fréquence de garbage collection (heures)
     fn calculate_gc_frequency(hour: u8, is_weekend: bool) -> f32 {
         let base = match hour {
-            2..=4 => 0.5,     // Night: every 30 min
-            10..=11 => 4.0,   // Peak: every 4 hours
-            _ => 2.0,         // Default: 2 hours
+            2..=4 => 0.5,   // Night: every 30 min
+            10..=11 => 4.0, // Peak: every 4 hours
+            _ => 2.0,       // Default: 2 hours
         };
 
         if is_weekend {
@@ -78,36 +78,36 @@ impl TemporalMemoryBridge {
     /// Niveau de compression mémoire
     fn calculate_compression_level(hour: u8) -> u8 {
         match hour {
-            2..=4 => 9,       // Night: max compression
-            10..=11 => 3,     // Peak: minimal compression
-            _ => 6,           // Default: moderate
+            2..=4 => 9,   // Night: max compression
+            10..=11 => 3, // Peak: minimal compression
+            _ => 6,       // Default: moderate
         }
     }
 
     /// Profondeur d'indexation sémantique
     fn calculate_semantic_depth(hour: u8) -> usize {
         match hour {
-            2..=4 => 5,       // Night: deep indexing
-            10..=11 => 2,     // Peak: shallow
-            _ => 3,           // Default
+            2..=4 => 5,   // Night: deep indexing
+            10..=11 => 2, // Peak: shallow
+            _ => 3,       // Default
         }
     }
 
     /// Taux de déclin mémoire (0-1)
     fn calculate_decay_rate(hour: u8) -> f32 {
         match hour {
-            2..=4 => 0.05,    // Night: slow decay
-            10..=16 => 0.02,  // Day: very slow decay
-            _ => 0.03,        // Default
+            2..=4 => 0.05,   // Night: slow decay
+            10..=16 => 0.02, // Day: very slow decay
+            _ => 0.03,       // Default
         }
     }
 
     /// Heures de rétention cache
     fn calculate_cache_retention(hour: u8) -> u8 {
         match hour {
-            10..=16 => 24,    // Day: long retention
-            22..=23 | 0..=5 => 4,      // Night: short retention
-            _ => 12,          // Default
+            10..=16 => 24,        // Day: long retention
+            22..=23 | 0..=5 => 4, // Night: short retention
+            _ => 12,              // Default
         }
     }
 
@@ -129,7 +129,7 @@ impl TemporalMemoryBridge {
             ConsolidationOperation::PatternExtraction,
         ];
 
-        let extended_ops = if hour >= 2 && hour <= 4 {
+        let extended_ops = if (2..=4).contains(&hour) {
             vec![
                 ConsolidationOperation::VectorReorganization,
                 ConsolidationOperation::CompressionPass,

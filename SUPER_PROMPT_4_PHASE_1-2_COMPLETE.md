@@ -13,6 +13,7 @@
 **Fichier créé** : `docs/frontend/FRONTEND_V21_DIAGNOSTIC.md` (500+ lignes)
 
 **Contenu** :
+
 - Arborescence complète `src/` analysée
 - Modules clés identifiés (Design System, Visual Engine, Particles, Apps)
 - États visuels v19 documentés (11 états : idle → singularity)
@@ -21,6 +22,7 @@
 - Priorités de migration établies
 
 **Résultats clés** :
+
 - ✅ Base solide : Design System + Visual Engine + Particles déjà en place
 - ⚠️ Gaps : Types manquants, Engine limité, Patterns vides, UI non connectée
 - 🎯 Actions : 6 phases définies avec objectifs clairs
@@ -38,29 +40,46 @@
 ```typescript
 // 9 États Cognitifs
 enum CognitiveState {
-  IDLE, LISTENING, THINKING, PROCESSING, SPEAKING,
-  REFLECTING, LEARNING, HEALING, TRANSCENDENT
+  IDLE,
+  LISTENING,
+  THINKING,
+  PROCESSING,
+  SPEAKING,
+  REFLECTING,
+  LEARNING,
+  HEALING,
+  TRANSCENDENT,
 }
 
 // 8 Tons Émotionnels
 enum EmotionalTone {
-  CALM, CURIOUS, EXCITED, CONFIDENT,
-  CAUTIOUS, CONCERNED, EMPATHETIC, PLAYFUL
+  CALM,
+  CURIOUS,
+  EXCITED,
+  CONFIDENT,
+  CAUTIOUS,
+  CONCERNED,
+  EMPATHETIC,
+  PLAYFUL,
 }
 
 // 5 Niveaux de Charge Système
 enum SystemLoadLevel {
-  IDLE = 0,    // < 20%
-  LIGHT = 1,   // 20-40%
+  IDLE = 0, // < 20%
+  LIGHT = 1, // 20-40%
   MODERATE = 2, // 40-60%
-  HIGH = 3,    // 60-80%
-  CRITICAL = 4 // > 80%
+  HIGH = 3, // 60-80%
+  CRITICAL = 4, // > 80%
 }
 
 // 6 Contextes Conversationnels
 enum ConversationContext {
-  WAITING, CONVERSING, EXPLAINING,
-  PROBLEM_SOLVING, CREATIVE_MODE, ERROR_RECOVERY
+  WAITING,
+  CONVERSING,
+  EXPLAINING,
+  PROBLEM_SOLVING,
+  CREATIVE_MODE,
+  ERROR_RECOVERY,
 }
 
 // État TITANE∞ Complet
@@ -126,11 +145,14 @@ const COGNITIVE_VISUALS: Record<CognitiveState, Partial<VisualConfig>> = {
 #### 🌈 Modulations Émotionnelles
 
 ```typescript
-const EMOTIONAL_COLOR_SHIFTS: Record<EmotionalTone, {
-  hueShift: number;
-  saturationMultiplier: number;
-  brightnessMultiplier: number;
-}> = {
+const EMOTIONAL_COLOR_SHIFTS: Record<
+  EmotionalTone,
+  {
+    hueShift: number;
+    saturationMultiplier: number;
+    brightnessMultiplier: number;
+  }
+> = {
   [EmotionalTone.EXCITED]: {
     hueShift: 15,
     saturationMultiplier: 1.3,
@@ -143,11 +165,14 @@ const EMOTIONAL_COLOR_SHIFTS: Record<EmotionalTone, {
 #### ⚡ Modificateurs de Charge Système
 
 ```typescript
-const SYSTEM_LOAD_MODIFIERS: Record<SystemLoadLevel, {
-  intensityMultiplier: number;
-  particleDensityMultiplier: number;
-  speedMultiplier: number;
-}> = {
+const SYSTEM_LOAD_MODIFIERS: Record<
+  SystemLoadLevel,
+  {
+    intensityMultiplier: number;
+    particleDensityMultiplier: number;
+    speedMultiplier: number;
+  }
+> = {
   [SystemLoadLevel.CRITICAL]: {
     intensityMultiplier: 1.5,
     particleDensityMultiplier: 1.5,
@@ -177,12 +202,16 @@ function calculateVisualConfig(state: TitaneState): VisualConfig {
   const emotionalShift = EMOTIONAL_COLOR_SHIFTS[state.emotional];
   const loadModifier = SYSTEM_LOAD_MODIFIERS[getSystemLoadLevel(state.systemLoad)];
   const contextEffects = CONTEXT_EFFECTS[state.conversationContext];
-  
+
   // Combine all effects with multipliers
   return {
     baseColor: cognitiveBase.baseColor,
-    intensity: cognitiveBase.intensity * emotionalShift.brightnessMultiplier * loadModifier.intensityMultiplier,
-    particleDensity: cognitiveBase.particleDensity * loadModifier.particleDensityMultiplier,
+    intensity:
+      cognitiveBase.intensity *
+      emotionalShift.brightnessMultiplier *
+      loadModifier.intensityMultiplier,
+    particleDensity:
+      cognitiveBase.particleDensity * loadModifier.particleDensityMultiplier,
     particleSpeed: cognitiveBase.particleSpeed * loadModifier.speedMultiplier,
     specialEffects: [...cognitiveBase.specialEffects, ...contextEffects],
     // ... (16 propriétés au total)
@@ -215,6 +244,7 @@ function cubicEasing(t: number): number {
 ```
 
 **Rétrocompatibilité** :
+
 - ✅ Types v19 préservés (`VisualState`, `StateVisualConfig`)
 - ✅ Configurations v19 intactes (11 états)
 - ✅ Fonctions legacy maintenues (`getStateVisuals`, `interpolateStates`)
@@ -236,20 +266,20 @@ class TitaneVisualEngineV21 extends EventEmitter {
   private currentState: TitaneState;
   private currentConfig: VisualConfig;
   private targetConfig: VisualConfig | null;
-  
+
   // Transition system
   private transitionStartTime: number;
   private transitionDuration: number;
   private isTransitioningState: boolean;
-  
+
   // Performance tracking (60fps)
   private performanceMetrics: PerformanceMetrics;
   private rafId: number | null;
-  
+
   // Callbacks
   private stateChangeCallbacks: Set<StateChangeCallback>;
   private configChangeCallbacks: Set<ConfigChangeCallback>;
-  
+
   // Methods
   start(), stop(), destroy()
   setState(newState: TitaneState, duration?)
@@ -267,6 +297,7 @@ class TitaneVisualEngineV21 extends EventEmitter {
 **Fonctionnalités clés** :
 
 1. **Render Loop 60fps** :
+
    ```typescript
    private startRenderLoop() {
      const render = (timestamp) => {
@@ -280,6 +311,7 @@ class TitaneVisualEngineV21 extends EventEmitter {
    ```
 
 2. **Transition Smooth avec Cubic Easing** :
+
    ```typescript
    private updateTransition(timestamp) {
      const progress = (timestamp - this.transitionStartTime) / this.transitionDuration;
@@ -293,17 +325,19 @@ class TitaneVisualEngineV21 extends EventEmitter {
    ```
 
 3. **Callbacks Réactifs** :
+
    ```typescript
-   onStateChange((state) => {
+   onStateChange(state => {
      console.log('New state:', state.cognitive, state.emotional);
    });
-   
-   onConfigChange((config) => {
+
+   onConfigChange(config => {
      updateParticleSystem(config.particleDensity, config.particleSpeed);
    });
    ```
 
 4. **WebSocket Backend Sync** :
+
    ```typescript
    handleWebSocketMessage(data) {
      switch (data.type) {
@@ -337,25 +371,27 @@ class TitaneVisualEngineV21 extends EventEmitter {
 interface VisualStateStoreV21 {
   // Engine instance
   engine: TitaneVisualEngineV21 | null;
-  
+
   // State (multi-dimensional)
   currentState: TitaneState;
   currentConfig: VisualConfig | null;
   isTransitioning: boolean;
-  
+
   // Performance
   performanceMetrics: PerformanceMetrics;
-  
+
   // Actions
-  initEngine(initialState, config?)
-  destroyEngine(), startEngine(), stopEngine()
-  setState(state, duration?)
-  setCognitiveState(cognitive, duration?)
-  setEmotionalTone(emotional, duration?)
-  setSystemLoad(load, duration?)
-  setConversationContext(context, duration?)
-  updateEngineConfig(config)
-  setPerformanceMode(mode)
+  initEngine(initialState, config?);
+  destroyEngine();
+  startEngine();
+  stopEngine();
+  setState(state, duration?);
+  setCognitiveState(cognitive, duration?);
+  setEmotionalTone(emotional, duration?);
+  setSystemLoad(load, duration?);
+  setConversationContext(context, duration?);
+  updateEngineConfig(config);
+  setPerformanceMode(mode);
 }
 ```
 
@@ -387,7 +423,7 @@ import { CognitiveState, EmotionalTone, ConversationContext } from '@/design-sys
 
 function App() {
   const { initEngine, startEngine, destroyEngine } = useVisualStateStoreV21();
-  
+
   useEffect(() => {
     // Initialize on mount
     initEngine({
@@ -396,12 +432,12 @@ function App() {
       systemLoad: 0,
       conversationContext: ConversationContext.WAITING,
     });
-    
+
     startEngine();
-    
+
     return () => destroyEngine();
   }, []);
-  
+
   return <YourApp />;
 }
 ```
@@ -411,6 +447,7 @@ function App() {
 **Fichier créé** : `src/visual-engine/INTEGRATION_GUIDE_V21.ts` (200+ lignes)
 
 **Exemples couverts** :
+
 1. Initialisation dans App.tsx
 2. Changement d'états dans composants (Chat, DevTools)
 3. Accès état/config en temps réel
@@ -490,16 +527,16 @@ function App() {
 
 ### Fichiers Créés/Modifiés
 
-| Fichier | Type | Lignes | Description |
-|---------|------|--------|-------------|
-| `docs/frontend/FRONTEND_V21_DIAGNOSTIC.md` | Créé | 500+ | Diagnostic complet v21 |
-| `src/design-system/visual-states.ts` | Modifié | +350 | Types v21 + configurations |
-| `src/visual-engine/TitaneVisualEngineV21.ts` | Créé | 600+ | Engine v21 multi-dimensions |
-| `src/stores/visualStateStoreV21.ts` | Créé | 350+ | Store Zustand v21 |
-| `src/visual-engine/INTEGRATION_GUIDE_V21.ts` | Créé | 200+ | Guide intégration |
-| `src/visual-engine/index.ts` | Modifié | +3 | Exports v21 |
-| `src/design-system/index.ts` | Modifié | +4 | Exports visual-states |
-| `src/stores/index.ts` | Modifié | +10 | Exports store v21 |
+| Fichier                                      | Type    | Lignes | Description                 |
+| -------------------------------------------- | ------- | ------ | --------------------------- |
+| `docs/frontend/FRONTEND_V21_DIAGNOSTIC.md`   | Créé    | 500+   | Diagnostic complet v21      |
+| `src/design-system/visual-states.ts`         | Modifié | +350   | Types v21 + configurations  |
+| `src/visual-engine/TitaneVisualEngineV21.ts` | Créé    | 600+   | Engine v21 multi-dimensions |
+| `src/stores/visualStateStoreV21.ts`          | Créé    | 350+   | Store Zustand v21           |
+| `src/visual-engine/INTEGRATION_GUIDE_V21.ts` | Créé    | 200+   | Guide intégration           |
+| `src/visual-engine/index.ts`                 | Modifié | +3     | Exports v21                 |
+| `src/design-system/index.ts`                 | Modifié | +4     | Exports visual-states       |
+| `src/stores/index.ts`                        | Modifié | +10    | Exports store v21           |
 
 **Total** : 8 fichiers | **2,000+ lignes** de code production
 
@@ -530,6 +567,7 @@ function App() {
 ### Phase 3 : Particles Patterns (MVP)
 
 **À créer** :
+
 - `src/particles/patterns/DispersedPattern.ts` (100+ lignes)
 - `src/particles/patterns/FocusedPattern.ts` (100+ lignes)
 - Intégration dans `ParticleSystem.ts`
@@ -540,6 +578,7 @@ function App() {
 ### Phase 4 : Intégration UI
 
 **À connecter** :
+
 - `apps/ChatIA/` → État cognitif selon actions user
 - `apps/DevTools/` → Monitoring état multi-dimensions
 - `components/` → Panels adaptatifs selon état
@@ -549,6 +588,7 @@ function App() {
 ### Phase 5 : Validation & Documentation
 
 **À faire** :
+
 - Tests TypeScript (0 erreurs maintenu)
 - Documentation utilisateur finale
 - Exemples d'intégration avancés

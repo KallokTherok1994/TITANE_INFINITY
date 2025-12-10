@@ -34,7 +34,9 @@ export class StateBridge {
   async init(): Promise<void> {
     // Charger l'état initial depuis le backend
     try {
-      const initialState = await this.bridge.invoke<void, Record<string, unknown>>('get_state');
+      const initialState = await this.bridge.invoke<void, Record<string, unknown>>(
+        'get_state'
+      );
       for (const [key, value] of Object.entries(initialState)) {
         this.localState.set(key, value);
       }
@@ -43,7 +45,7 @@ export class StateBridge {
     }
 
     // Écouter les mises à jour du backend
-    await this.bridge.listen<{ key: string; value: unknown }>('state:update', (payload) => {
+    await this.bridge.listen<{ key: string; value: unknown }>('state:update', payload => {
       this.handleRemoteUpdate(payload.key, payload.value);
     });
   }
@@ -91,7 +93,7 @@ export class StateBridge {
    * Met à jour une valeur partiellement
    */
   async update<T extends object>(key: string, partial: Partial<T>): Promise<void> {
-    const current = this.get<T>(key) ?? {} as T;
+    const current = this.get<T>(key) ?? ({} as T);
     const updated = { ...current, ...partial };
     await this.set(key, updated);
   }
@@ -233,7 +235,9 @@ export class StateBridge {
    */
   async fullSync(): Promise<void> {
     try {
-      const remoteState = await this.bridge.invoke<void, Record<string, unknown>>('get_state');
+      const remoteState = await this.bridge.invoke<void, Record<string, unknown>>(
+        'get_state'
+      );
 
       for (const [key, value] of Object.entries(remoteState)) {
         if (!this.dirtyKeys.has(key)) {

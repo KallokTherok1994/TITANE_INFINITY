@@ -210,9 +210,10 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
         }}
       >
         <div
-          ref={(node) => {
+          ref={node => {
             if (typeof ref === 'function') ref(node);
-            else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            else if (ref)
+              (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
             (modalRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
           }}
           role="dialog"
@@ -245,10 +246,14 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
           )}
           {title && (
             <div style={headerStyles}>
-              <h2 id="modal-title" style={titleStyles}>{title}</h2>
+              <h2 id="modal-title" style={titleStyles}>
+                {title}
+              </h2>
             </div>
           )}
-          <div id="modal-content" style={contentStyles}>{children}</div>
+          <div id="modal-content" style={contentStyles}>
+            {children}
+          </div>
         </div>
       </div>
     );

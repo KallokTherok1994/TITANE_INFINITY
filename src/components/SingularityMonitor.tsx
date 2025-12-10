@@ -39,7 +39,9 @@ export function SingularityMonitor() {
             setMetrics(m);
 
             // Get health
-            const h = await secureInvoke<{status: 'healthy' | 'degraded' | 'failing'}>('engine_health');
+            const h = await secureInvoke<{ status: 'healthy' | 'degraded' | 'failing' }>(
+              'engine_health'
+            );
             setHealth(h.status || 'Unknown');
 
             // Get modules (less frequently)
@@ -84,11 +86,22 @@ export function SingularityMonitor() {
       {/* Header */}
       <div style={styles.header}>
         <h2 style={styles.title}>🌌 SingularityEngine v15</h2>
-        <span style={{
-          ...styles.badge,
-          background: health === 'Healthy' ? '#10b981' : health === 'Degraded' ? '#f59e0b' : '#ef4444',
-        }}>
-          {health === 'Healthy' ? '✅ OPTIMAL' : health === 'Degraded' ? '⚠️ DÉGRADÉ' : '❌ DÉFAILLANT'}
+        <span
+          style={{
+            ...styles.badge,
+            background:
+              health === 'Healthy'
+                ? '#10b981'
+                : health === 'Degraded'
+                  ? '#f59e0b'
+                  : '#ef4444',
+          }}
+        >
+          {health === 'Healthy'
+            ? '✅ OPTIMAL'
+            : health === 'Degraded'
+              ? '⚠️ DÉGRADÉ'
+              : '❌ DÉFAILLANT'}
         </span>
       </div>
 
@@ -96,25 +109,39 @@ export function SingularityMonitor() {
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>🎯 Métriques Globales</h3>
         <div style={styles.metrics}>
-          <MetricCard
-            label="Ticks"
-            value={metrics.ticks.toString()}
-            color="#6366f1"
-          />
+          <MetricCard label="Ticks" value={metrics.ticks.toString()} color="#6366f1" />
           <MetricCard
             label="Stabilité"
             value={`${(metrics.stability * 100).toFixed(1)}%`}
-            color={metrics.stability > 0.8 ? '#10b981' : metrics.stability > 0.5 ? '#f59e0b' : '#ef4444'}
+            color={
+              metrics.stability > 0.8
+                ? '#10b981'
+                : metrics.stability > 0.5
+                  ? '#f59e0b'
+                  : '#ef4444'
+            }
           />
           <MetricCard
             label="Latence"
             value={`${metrics.latency_ms}ms`}
-            color={metrics.latency_ms < 100 ? '#10b981' : metrics.latency_ms < 500 ? '#f59e0b' : '#ef4444'}
+            color={
+              metrics.latency_ms < 100
+                ? '#10b981'
+                : metrics.latency_ms < 500
+                  ? '#f59e0b'
+                  : '#ef4444'
+            }
           />
           <MetricCard
             label="Taux Réussite"
             value={`${(metrics.success_rate * 100).toFixed(1)}%`}
-            color={metrics.success_rate > 0.9 ? '#10b981' : metrics.success_rate > 0.7 ? '#f59e0b' : '#ef4444'}
+            color={
+              metrics.success_rate > 0.9
+                ? '#10b981'
+                : metrics.success_rate > 0.7
+                  ? '#f59e0b'
+                  : '#ef4444'
+            }
           />
           <MetricCard
             label="Dernière MAJ"
@@ -128,14 +155,16 @@ export function SingularityMonitor() {
       <div style={styles.section}>
         <h3 style={styles.sectionTitle}>⚙️ Modules ({modules.length})</h3>
         <div style={styles.modules}>
-          {modules.map((mod) => (
+          {modules.map(mod => (
             <div key={mod.name} style={styles.moduleCard}>
               <div style={styles.moduleName}>{mod.name}</div>
               <div style={styles.moduleVersion}>{mod.version}</div>
-              <div style={{
-                ...styles.moduleStatus,
-                background: mod.initialized ? '#10b981' : '#6b7280',
-              }}>
+              <div
+                style={{
+                  ...styles.moduleStatus,
+                  background: mod.initialized ? '#10b981' : '#6b7280',
+                }}
+              >
                 {mod.initialized ? '✓ Prêt' : '○ En attente'}
               </div>
             </div>

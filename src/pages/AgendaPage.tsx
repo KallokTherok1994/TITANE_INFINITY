@@ -82,12 +82,15 @@ const AgendaToolbar: React.FC<ToolbarProps> = ({
     switch (currentView) {
       case 'day':
         return currentDate.toLocaleDateString('fr-FR', {
-          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+          weekday: 'long',
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
         });
       case 'week': {
         const weekStart = new Date(currentDate);
         const day = weekStart.getDay();
-        const diff = (day === 0 ? 6 : day - 1);
+        const diff = day === 0 ? 6 : day - 1;
         weekStart.setDate(weekStart.getDate() - diff);
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekEnd.getDate() + 6);
@@ -118,7 +121,7 @@ const AgendaToolbar: React.FC<ToolbarProps> = ({
       </div>
 
       <div className="agenda-toolbar-center">
-        {(['day', 'week', 'month'] as AgendaView[]).map((view) => (
+        {(['day', 'week', 'month'] as AgendaView[]).map(view => (
           <button
             key={view}
             className={`agenda-btn agenda-btn-view ${currentView === view ? 'active' : ''}`}
@@ -192,17 +195,19 @@ const EventCard: React.FC<EventCardProps> = ({ event, compact = false, onClick }
     >
       <div className="event-header">
         <span className="event-icon">{categoryIcon}</span>
-        <span className="event-time">{startTime} - {endTime}</span>
+        <span className="event-time">
+          {startTime} - {endTime}
+        </span>
         {priorityBadge}
       </div>
       <div className="event-title">{event.title}</div>
-      {event.description && (
-        <div className="event-description">{event.description}</div>
-      )}
+      {event.description && <div className="event-description">{event.description}</div>}
       {event.tags.length > 0 && (
         <div className="event-tags">
-          {event.tags.slice(0, 3).map((tag) => (
-            <span key={tag} className="event-tag">#{tag}</span>
+          {event.tags.slice(0, 3).map(tag => (
+            <span key={tag} className="event-tag">
+              #{tag}
+            </span>
           ))}
         </div>
       )}
@@ -241,13 +246,12 @@ const DayView: React.FC<DayViewProps> = ({
       <div className="day-grid">
         {dayGrid.map(({ hour, events }) => {
           const energyLevel = energyLevels?.[hour] ?? 0.5;
-          const energyClass = energyLevel >= 0.75 ? 'high' : energyLevel >= 0.5 ? 'medium' : 'low';
+          const energyClass =
+            energyLevel >= 0.75 ? 'high' : energyLevel >= 0.5 ? 'medium' : 'low';
 
           return (
             <div key={hour} className="day-row">
-              <div className="day-hour">
-                {hour.toString().padStart(2, '0')}:00
-              </div>
+              <div className="day-hour">{hour.toString().padStart(2, '0')}:00</div>
               {showEnergy && (
                 <div className={`day-energy energy-${energyClass}`}>
                   <div
@@ -257,7 +261,7 @@ const DayView: React.FC<DayViewProps> = ({
                 </div>
               )}
               <div className="day-events">
-                {events.map((event) => (
+                {events.map(event => (
                   <EventCard
                     key={event.id}
                     event={event}
@@ -328,14 +332,16 @@ const WeekView: React.FC<WeekViewProps> = ({
               {events.length === 0 ? (
                 <div className="week-day-empty">-</div>
               ) : (
-                events.slice(0, 5).map((event) => (
-                  <EventCard
-                    key={event.id}
-                    event={event}
-                    compact
-                    onClick={onEventClick}
-                  />
-                ))
+                events
+                  .slice(0, 5)
+                  .map(event => (
+                    <EventCard
+                      key={event.id}
+                      event={event}
+                      compact
+                      onClick={onEventClick}
+                    />
+                  ))
               )}
               {events.length > 5 && (
                 <div className="week-day-more">+{events.length - 5} autres</div>
@@ -373,8 +379,10 @@ const MonthView: React.FC<MonthViewProps> = ({
   return (
     <div className="agenda-month-view">
       <div className="month-header">
-        {dayHeaders.map((day) => (
-          <div key={day} className="month-day-header">{day}</div>
+        {dayHeaders.map(day => (
+          <div key={day} className="month-day-header">
+            {day}
+          </div>
         ))}
       </div>
       <div className="month-body">
@@ -389,13 +397,13 @@ const MonthView: React.FC<MonthViewProps> = ({
             >
               <span className="month-day-number">{date.getDate()}</span>
               <div className="month-day-events">
-                {events.slice(0, 3).map((event) => (
+                {events.slice(0, 3).map(event => (
                   <div
                     key={event.id}
                     className="month-event-dot"
                     style={{ backgroundColor: CATEGORY_COLORS[event.category] }}
                     title={event.title}
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       onEventClick?.(event);
                     }}
@@ -431,7 +439,8 @@ interface SidebarProps {
 
 const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClick }) => {
   const energyPercent = Math.round(stats.currentEnergy * 100);
-  const energyClass = stats.currentEnergy >= 0.75 ? 'high' : stats.currentEnergy >= 0.5 ? 'medium' : 'low';
+  const energyClass =
+    stats.currentEnergy >= 0.75 ? 'high' : stats.currentEnergy >= 0.5 ? 'medium' : 'low';
 
   return (
     <aside className="agenda-sidebar">
@@ -481,7 +490,11 @@ const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClic
             <span className="energy-percent">{energyPercent}%</span>
           </div>
           <span className="energy-label">
-            {energyClass === 'high' ? 'Haute énergie' : energyClass === 'medium' ? 'Énergie normale' : 'Basse énergie'}
+            {energyClass === 'high'
+              ? 'Haute énergie'
+              : energyClass === 'medium'
+                ? 'Énergie normale'
+                : 'Basse énergie'}
           </span>
         </div>
       </div>
@@ -493,14 +506,11 @@ const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClic
           {todayEvents.length === 0 ? (
             <div className="no-events">Aucun événement aujourd'hui</div>
           ) : (
-            todayEvents.slice(0, 5).map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-                compact
-                onClick={onEventClick}
-              />
-            ))
+            todayEvents
+              .slice(0, 5)
+              .map(event => (
+                <EventCard key={event.id} event={event} compact onClick={onEventClick} />
+              ))
           )}
         </div>
       </div>
@@ -573,7 +583,7 @@ export const AgendaPage: React.FC = () => {
       d.setDate(d.getDate() + i);
       grid.push({
         date: d,
-        events: viewEvents.filter((e) => {
+        events: viewEvents.filter(e => {
           const eDate = new Date(e.startDateTime);
           return eDate.toDateString() === d.toDateString();
         }),
@@ -587,7 +597,7 @@ export const AgendaPage: React.FC = () => {
   // Événements du jour pour la sidebar
   const todayEvents = React.useMemo(() => {
     const today = new Date();
-    return viewEvents.filter((e) => {
+    return viewEvents.filter(e => {
       const eDate = new Date(e.startDateTime);
       return eDate.toDateString() === today.toDateString();
     });
@@ -610,12 +620,15 @@ export const AgendaPage: React.FC = () => {
     console.log('[AgendaPage] Événement sélectionné:', event.title);
   }, []);
 
-  const handleDayClick = useCallback((date: Date) => {
-    setCurrentDate(date);
-    if (currentView === 'month') {
-      setCurrentView('day');
-    }
-  }, [currentView, setCurrentDate, setCurrentView]);
+  const handleDayClick = useCallback(
+    (date: Date) => {
+      setCurrentDate(date);
+      if (currentView === 'month') {
+        setCurrentView('day');
+      }
+    },
+    [currentView, setCurrentDate, setCurrentView]
+  );
 
   // Affichage de chargement
   if (loading || !initialized) {

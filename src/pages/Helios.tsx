@@ -31,7 +31,11 @@ interface HeliosMetrics {
 
 export const Helios = () => {
   const heliosData = useEngineSubscription('helios');
-  const { data: metrics, loading } = heliosData as { data: HeliosMetrics | null; loading: boolean };  if (loading) {
+  const { data: metrics, loading } = heliosData as {
+    data: HeliosMetrics | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -55,7 +59,9 @@ export const Helios = () => {
           <span className="module-page__icon">💓</span>
           Helios — Système Vital
         </h1>
-        <p className="module-page__subtitle">Métriques de vitalité et performances système</p>
+        <p className="module-page__subtitle">
+          Métriques de vitalité et performances système
+        </p>
       </div>
 
       <div className="module-page__grid">
@@ -75,7 +81,9 @@ export const Helios = () => {
           unit="%"
           status={status}
           subtitle="État global du système"
-          variant={vitalityScore > 80 ? 'success' : vitalityScore > 50 ? 'warning' : 'error'}
+          variant={
+            vitalityScore > 80 ? 'success' : vitalityScore > 50 ? 'warning' : 'error'
+          }
         />
 
         <ModuleCard

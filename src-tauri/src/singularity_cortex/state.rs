@@ -55,29 +55,29 @@ impl SingularityState {
             created_at: chrono::Utc::now().timestamp_millis(),
         }
     }
-    
+
     pub fn update_signature(&mut self) {
         use std::collections::hash_map::DefaultHasher;
         use std::hash::{Hash, Hasher};
-        
+
         let mut hasher = DefaultHasher::new();
         for ctx in self.long_context.iter().take(10) {
             ctx.hash(&mut hasher);
         }
         format!("{:?}", self.global_mode).hash(&mut hasher);
         format!("{:.2}_{:.2}", self.coherence_level, self.affective_tone).hash(&mut hasher);
-        
+
         let hash = hasher.finish();
         self.conversation_signature = format!("TITANE-{:016x}", hash);
     }
-    
+
     pub fn adjust_mode(&mut self, mode: CognitiveMode) {
         if self.global_mode != mode {
             self.global_mode = mode;
             self.update_signature();
         }
     }
-    
+
     pub fn push_context(&mut self, item: String) {
         if self.long_context.len() >= 100 {
             self.long_context.pop_front();
@@ -85,7 +85,7 @@ impl SingularityState {
         self.long_context.push_back(item);
         self.update_signature();
     }
-    
+
     pub fn get_recent_context(&self, n: usize) -> Vec<String> {
         self.long_context
             .iter()
@@ -97,26 +97,26 @@ impl SingularityState {
             .rev()
             .collect()
     }
-    
+
     pub fn update_coherence(&mut self, level: f32) {
         self.coherence_level = level.clamp(0.0, 1.0);
     }
-    
+
     pub fn update_affective_tone(&mut self, tone: f32) {
         self.affective_tone = tone.clamp(-1.0, 1.0);
     }
-    
+
     pub fn increment_interactions(&mut self) {
         self.total_interactions += 1;
         self.last_activity = chrono::Utc::now().timestamp_millis();
         self.update_session_duration();
     }
-    
+
     fn update_session_duration(&mut self) {
         let now = chrono::Utc::now().timestamp_millis();
         self.session_duration_ms = (now - self.created_at) as u64;
     }
-    
+
     pub fn stats(&self) -> SingularityStats {
         SingularityStats {
             total_interactions: self.total_interactions,
@@ -128,7 +128,7 @@ impl SingularityState {
             signature: self.conversation_signature.clone(),
         }
     }
-    
+
     pub fn reset(&mut self) {
         self.long_context.clear();
         self.conversation_signature = Self::generate_initial_signature();
@@ -140,15 +140,15 @@ impl SingularityState {
         self.created_at = chrono::Utc::now().timestamp_millis();
         self.last_activity = self.created_at;
     }
-    
+
     fn generate_initial_signature() -> String {
         let timestamp = chrono::Utc::now().timestamp_millis();
         format!("TITANE-{:016x}", timestamp)
     }
 }
 
-impl SingularityIdentity {
-    pub fn default() -> Self {
+impl Default for SingularityIdentity {
+    fn default() -> Self {
         Self {
             name: "TITANE∞".to_string(),
             version: "v∞".to_string(),

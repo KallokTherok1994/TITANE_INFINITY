@@ -128,7 +128,11 @@ export class SecureAIService {
     }
 
     // 2. Check rate limit
-    const rateLimitStatus = globalAIRateLimiter.checkLimit(estimatedTokens, provider, model);
+    const rateLimitStatus = globalAIRateLimiter.checkLimit(
+      estimatedTokens,
+      provider,
+      model
+    );
 
     if (rateLimitStatus.isBlocked) {
       return {
@@ -200,11 +204,14 @@ export class SecureAIService {
     globalAIRateLimiter.recordRequest(actualTokens, provider, model);
 
     // 6. Return sanitized response (si warnings)
-    const finalResponse = outputValidation.sanitizedData || outputValidation.data || ({} as ChatResponse);
+    const finalResponse =
+      outputValidation.sanitizedData || outputValidation.data || ({} as ChatResponse);
 
     return {
       response: finalResponse,
-      originalResponse: outputValidation.sanitizedData ? outputValidation.data : undefined,
+      originalResponse: outputValidation.sanitizedData
+        ? outputValidation.data
+        : undefined,
       inputSanitization,
       sanitization: inputSanitization,
       outputValidation,
@@ -259,7 +266,11 @@ export class SecureAIService {
     }
 
     // 2. Check rate limit
-    const rateLimitStatus = globalAIRateLimiter.checkLimit(estimatedTokens, provider, model);
+    const rateLimitStatus = globalAIRateLimiter.checkLimit(
+      estimatedTokens,
+      provider,
+      model
+    );
 
     if (rateLimitStatus.isBlocked) {
       return {
@@ -330,11 +341,14 @@ export class SecureAIService {
     globalAIRateLimiter.recordRequest(estimatedTokens, provider, model);
 
     // 6. Return sanitized response (si warnings)
-    const finalResponse = outputValidation.sanitizedData || outputValidation.data || ({} as MetaModeResponse);
+    const finalResponse =
+      outputValidation.sanitizedData || outputValidation.data || ({} as MetaModeResponse);
 
     return {
       response: finalResponse,
-      originalResponse: outputValidation.sanitizedData ? outputValidation.data : undefined,
+      originalResponse: outputValidation.sanitizedData
+        ? outputValidation.data
+        : undefined,
       inputSanitization,
       sanitization: inputSanitization,
       outputValidation,

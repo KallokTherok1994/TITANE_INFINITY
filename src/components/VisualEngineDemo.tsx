@@ -43,10 +43,34 @@ export const VisualEngineDemo: React.FC = () => {
 
   // Mock data for panels
   const mockMemoryMetrics: MemoryMetric[] = [
-    { label: 'Short Term', value: 75, max: 100, color: '#4a9eff', description: 'Recent context' },
-    { label: 'Long Term', value: 45, max: 100, color: '#34d399', description: 'Persistent memories' },
-    { label: 'Working Memory', value: 60, max: 100, color: '#fbbf24', description: 'Active processing' },
-    { label: 'Semantic', value: 30, max: 100, color: '#a78bfa', description: 'Knowledge base' },
+    {
+      label: 'Short Term',
+      value: 75,
+      max: 100,
+      color: '#4a9eff',
+      description: 'Recent context',
+    },
+    {
+      label: 'Long Term',
+      value: 45,
+      max: 100,
+      color: '#34d399',
+      description: 'Persistent memories',
+    },
+    {
+      label: 'Working Memory',
+      value: 60,
+      max: 100,
+      color: '#fbbf24',
+      description: 'Active processing',
+    },
+    {
+      label: 'Semantic',
+      value: 30,
+      max: 100,
+      color: '#a78bfa',
+      description: 'Knowledge base',
+    },
   ];
 
   const mockEngines: EngineStatus[] = [
@@ -126,9 +150,27 @@ export const VisualEngineDemo: React.FC = () => {
   ];
 
   const mockEnergyArcs: EnergyArc[] = [
-    { id: 'arc1', start: { x: 100, y: 100 }, end: { x: 300, y: 150 }, color: '#4a9eff', intensity: 0.8 },
-    { id: 'arc2', start: { x: 300, y: 150 }, end: { x: 500, y: 100 }, color: '#34d399', intensity: 0.6 },
-    { id: 'arc3', start: { x: 200, y: 200 }, end: { x: 400, y: 250 }, color: '#a78bfa', intensity: 0.7 },
+    {
+      id: 'arc1',
+      start: { x: 100, y: 100 },
+      end: { x: 300, y: 150 },
+      color: '#4a9eff',
+      intensity: 0.8,
+    },
+    {
+      id: 'arc2',
+      start: { x: 300, y: 150 },
+      end: { x: 500, y: 100 },
+      color: '#34d399',
+      intensity: 0.6,
+    },
+    {
+      id: 'arc3',
+      start: { x: 200, y: 200 },
+      end: { x: 400, y: 250 },
+      color: '#a78bfa',
+      intensity: 0.7,
+    },
   ];
 
   const states: VisualState[] = [
@@ -184,15 +226,21 @@ export const VisualEngineDemo: React.FC = () => {
             marginBottom: '16px',
           }}
         >
-          {states.map((state) => (
+          {states.map(state => (
             <button
               key={state}
               onClick={() => setState(state)}
               style={{
                 padding: '8px 16px',
                 borderRadius: '6px',
-                border: currentState === state ? `2px solid ${visuals.accent}` : '1px solid rgba(255,255,255,0.2)',
-                backgroundColor: currentState === state ? visuals.accent + '20' : 'rgba(255,255,255,0.05)',
+                border:
+                  currentState === state
+                    ? `2px solid ${visuals.accent}`
+                    : '1px solid rgba(255,255,255,0.2)',
+                backgroundColor:
+                  currentState === state
+                    ? visuals.accent + '20'
+                    : 'rgba(255,255,255,0.05)',
                 color: currentState === state ? visuals.accent : 'rgba(255,255,255,0.7)',
                 fontWeight: 600,
                 fontSize: '13px',
@@ -213,7 +261,9 @@ export const VisualEngineDemo: React.FC = () => {
             padding: '10px 20px',
             borderRadius: '6px',
             border: '1px solid rgba(255,255,255,0.2)',
-            backgroundColor: showEffects ? visuals.accent + '30' : 'rgba(255,255,255,0.05)',
+            backgroundColor: showEffects
+              ? visuals.accent + '30'
+              : 'rgba(255,255,255,0.05)',
             color: 'rgba(255,255,255,0.9)',
             fontWeight: 600,
             cursor: 'pointer',
@@ -253,43 +303,133 @@ export const VisualEngineDemo: React.FC = () => {
             }}
           >
             {/* Energy Arcs */}
-            <div style={{ position: 'relative', height: '200px', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '8px' }}>
+            <div
+              style={{
+                position: 'relative',
+                height: '200px',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                borderRadius: '8px',
+              }}
+            >
               <EnergyArcs arcs={mockEnergyArcs} />
-              <div style={{ position: 'absolute', bottom: '8px', left: '8px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '8px',
+                  left: '8px',
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.6)',
+                }}
+              >
                 Energy Arcs
               </div>
             </div>
 
             {/* Healing Waves */}
-            <div style={{ position: 'relative', height: '200px', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '8px' }}>
+            <div
+              style={{
+                position: 'relative',
+                height: '200px',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                borderRadius: '8px',
+              }}
+            >
               <HealingWaves color={visuals.accent} />
-              <div style={{ position: 'absolute', bottom: '8px', left: '8px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '8px',
+                  left: '8px',
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.6)',
+                }}
+              >
                 Healing Waves
               </div>
             </div>
 
             {/* Audio Waveform */}
-            <div style={{ position: 'relative', height: '200px', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div
+              style={{
+                position: 'relative',
+                height: '200px',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <AudioWaveform barCount={7} color={visuals.primary} height="150px" />
-              <div style={{ position: 'absolute', bottom: '8px', left: '8px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '8px',
+                  left: '8px',
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.6)',
+                }}
+              >
                 Audio Waveform
               </div>
             </div>
 
             {/* Glitch Effect */}
-            <div style={{ position: 'relative', height: '200px', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div
+              style={{
+                position: 'relative',
+                height: '200px',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
               <GlitchEffect continuous intensity="medium">
-                <h3 style={{ fontSize: '24px', fontWeight: 700, color: visuals.accent }}>GLITCH</h3>
+                <h3 style={{ fontSize: '24px', fontWeight: 700, color: visuals.accent }}>
+                  GLITCH
+                </h3>
               </GlitchEffect>
-              <div style={{ position: 'absolute', bottom: '8px', left: '8px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '8px',
+                  left: '8px',
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.6)',
+                }}
+              >
                 Glitch Effect
               </div>
             </div>
 
             {/* Spiral Pattern */}
-            <div style={{ position: 'relative', height: '200px', backgroundColor: 'rgba(0,0,0,0.3)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <SpiralPattern color={visuals.accent} secondaryColor={visuals.primary} size="150px" />
-              <div style={{ position: 'absolute', bottom: '8px', left: '8px', fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+            <div
+              style={{
+                position: 'relative',
+                height: '200px',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <SpiralPattern
+                color={visuals.accent}
+                secondaryColor={visuals.primary}
+                size="150px"
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '8px',
+                  left: '8px',
+                  fontSize: '12px',
+                  color: 'rgba(255,255,255,0.6)',
+                }}
+              >
                 Spiral Pattern
               </div>
             </div>
@@ -308,7 +448,13 @@ export const VisualEngineDemo: React.FC = () => {
         {/* Chat Panel */}
         <div style={{ minHeight: '400px' }}>
           <ChatPanel>
-            <div style={{ padding: '16px', backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+            <div
+              style={{
+                padding: '16px',
+                backgroundColor: 'rgba(255,255,255,0.03)',
+                borderRadius: '8px',
+              }}
+            >
               <p style={{ color: 'rgba(255,255,255,0.8)', margin: 0 }}>
                 Chat content goes here. This panel adapts to the current visual state.
               </p>
@@ -352,19 +498,32 @@ export const VisualEngineDemo: React.FC = () => {
           <div style={{ fontSize: '24px', fontWeight: 700, color: visuals.accent }}>
             {performanceMetrics.frameTime.toFixed(1)}ms
           </div>
-          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>Frame Time</div>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+            Frame Time
+          </div>
         </div>
         <div>
           <div style={{ fontSize: '24px', fontWeight: 700, color: visuals.accent }}>
             {performanceMetrics.particleCount}
           </div>
-          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>Particles</div>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+            Particles
+          </div>
         </div>
         <div>
-          <div style={{ fontSize: '24px', fontWeight: 700, color: visuals.accent, textTransform: 'capitalize' }}>
+          <div
+            style={{
+              fontSize: '24px',
+              fontWeight: 700,
+              color: visuals.accent,
+              textTransform: 'capitalize',
+            }}
+          >
             {currentState}
           </div>
-          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>Current State</div>
+          <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.6)' }}>
+            Current State
+          </div>
         </div>
       </div>
     </div>

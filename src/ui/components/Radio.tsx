@@ -34,17 +34,19 @@ export const Radio = ({
   className = '',
 }: RadioProps) => {
   const [internalChecked, setInternalChecked] = useState(defaultChecked);
-  
+
   const isControlled = controlledChecked !== undefined;
   const checked = isControlled ? controlledChecked : internalChecked;
 
   const handleChange = () => {
-    if (disabled) {return;}
-    
+    if (disabled) {
+      return;
+    }
+
     if (!isControlled) {
       setInternalChecked(true);
     }
-    
+
     onChange?.(value);
   };
 
@@ -54,7 +56,9 @@ export const Radio = ({
     checked && 'radio--checked',
     disabled && 'radio--disabled',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <label className={classes}>
@@ -98,7 +102,7 @@ export const RadioGroup = ({
   className = '',
 }: RadioGroupProps) => {
   const [internalValue, setInternalValue] = useState(defaultValue);
-  
+
   const isControlled = controlledValue !== undefined;
   const currentValue = isControlled ? controlledValue : internalValue;
 
@@ -111,7 +115,7 @@ export const RadioGroup = ({
 
   return (
     <div className={`radio-group ${className}`} role="radiogroup">
-      {React.Children.map(children, (child) => {
+      {React.Children.map(children, child => {
         if (React.isValidElement<RadioProps>(child) && child.type === Radio) {
           return React.cloneElement(child, {
             checked: child.props.value === currentValue,

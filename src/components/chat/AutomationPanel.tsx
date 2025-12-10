@@ -18,7 +18,11 @@ import {
   CATEGORY_LABELS,
   SECURITY_LEVEL_LABELS,
 } from '../../services/automation/automations.config';
-import type { ChatModeId, PermissionLevel, ToolPermissions } from '../../services/ai/chatModes.config';
+import type {
+  ChatModeId,
+  PermissionLevel,
+  ToolPermissions,
+} from '../../services/ai/chatModes.config';
 import './AutomationPanel.css';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -33,7 +37,10 @@ interface AutomationPanelProps {
   /** Outils disponibles */
   availableTools: Partial<ToolPermissions>;
   /** Callback lors de l'exécution d'une automation */
-  onExecute?: (automationId: AutomationId, params: Record<string, unknown>) => Promise<AutomationResult>;
+  onExecute?: (
+    automationId: AutomationId,
+    params: Record<string, unknown>
+  ) => Promise<AutomationResult>;
   /** Fermer le panel */
   onClose?: () => void;
   /** Classe CSS additionnelle */
@@ -77,7 +84,7 @@ const AutomationItem: React.FC<AutomationItemProps> = ({
       onClick={handleClick}
       role="button"
       tabIndex={isAvailable ? 0 : -1}
-      onKeyDown={(e) => e.key === 'Enter' && handleClick()}
+      onKeyDown={e => e.key === 'Enter' && handleClick()}
       title={unavailableReason || automation.description}
     >
       <div className="automation-item__icon">
@@ -96,16 +103,18 @@ const AutomationItem: React.FC<AutomationItemProps> = ({
             style={{ color: securityInfo.color }}
             title={`Sécurité: ${securityInfo.label}`}
           >
-            {automation.securityLevel === 'safe' ? '🟢' :
-             automation.securityLevel === 'moderate' ? '🟡' :
-             automation.securityLevel === 'elevated' ? '🟠' : '🔴'}
+            {automation.securityLevel === 'safe'
+              ? '🟢'
+              : automation.securityLevel === 'moderate'
+                ? '🟡'
+                : automation.securityLevel === 'elevated'
+                  ? '🟠'
+                  : '🔴'}
           </span>
         </div>
 
         {!compact && (
-          <div className="automation-item__description">
-            {automation.description}
-          </div>
+          <div className="automation-item__description">{automation.description}</div>
         )}
 
         <div className="automation-item__meta">
@@ -120,11 +129,7 @@ const AutomationItem: React.FC<AutomationItemProps> = ({
         </div>
       </div>
 
-      {!isAvailable && (
-        <div className="automation-item__lock">
-          🔒
-        </div>
-      )}
+      {!isAvailable && <div className="automation-item__lock">🔒</div>}
     </div>
   );
 };
@@ -143,8 +148,12 @@ export const AutomationPanel: React.FC<AutomationPanelProps> = ({
   compact = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<AutomationCategory | 'all'>('all');
-  const [runningAutomations, setRunningAutomations] = useState<Set<AutomationId>>(new Set());
+  const [selectedCategory, setSelectedCategory] = useState<AutomationCategory | 'all'>(
+    'all'
+  );
+  const [runningAutomations, setRunningAutomations] = useState<Set<AutomationId>>(
+    new Set()
+  );
   const [lastResult, setLastResult] = useState<AutomationResult | null>(null);
 
   // Filtrer les automations
@@ -159,10 +168,11 @@ export const AutomationPanel: React.FC<AutomationPanelProps> = ({
     // Filtrer par recherche
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      automations = automations.filter(a =>
-        a.name.toLowerCase().includes(query) ||
-        a.description.toLowerCase().includes(query) ||
-        a.tags.some(t => t.toLowerCase().includes(query))
+      automations = automations.filter(
+        a =>
+          a.name.toLowerCase().includes(query) ||
+          a.description.toLowerCase().includes(query) ||
+          a.tags.some(t => t.toLowerCase().includes(query))
       );
     }
 
@@ -195,65 +205,80 @@ export const AutomationPanel: React.FC<AutomationPanelProps> = ({
   }, [filteredAutomations]);
 
   // Vérifier disponibilité
-  const checkAvailability = useCallback((automationId: AutomationId): { available: boolean; reason?: string } => {
-    const result = canExecuteAutomation(automationId, currentMode, permissionLevel, availableTools);
-    return {
-      available: result.allowed,
-      reason: result.reason,
-    };
-  }, [currentMode, permissionLevel, availableTools]);
+  const checkAvailability = useCallback(
+    (automationId: AutomationId): { available: boolean; reason?: string } => {
+      const result = canExecuteAutomation(
+        automationId,
+        currentMode,
+        permissionLevel,
+        availableTools
+      );
+      return {
+        available: result.allowed,
+        reason: result.reason,
+      };
+    },
+    [currentMode, permissionLevel, availableTools]
+  );
 
   // Exécuter une automation
-  const handleExecute = useCallback(async (automationId: AutomationId) => {
-    const automation = AUTOMATION_REGISTRY[automationId];
+  const handleExecute = useCallback(
+    async (automationId: AutomationId) => {
+      const automation = AUTOMATION_REGISTRY[automationId];
 
-    // Vérifier si confirmation nécessaire
-    if (automation.requiresConfirmation) {
-      const confirmed = window.confirm(
-        `Exécuter "${automation.name}" ?\n\n${automation.description}\n\nCette action peut modifier des fichiers.`
-      );
-      if (!confirmed) return;
-    }
+      // Vérifier si confirmation nécessaire
+      if (automation.requiresConfirmation) {
+        const confirmed = window.confirm(
+          `Exécuter "${automation.name}" ?\n\n${automation.description}\n\nCette action peut modifier des fichiers.`
+        );
+        if (!confirmed) return;
+      }
 
-    setRunningAutomations(prev => new Set(prev).add(automationId));
+      setRunningAutomations(prev => new Set(prev).add(automationId));
 
-    try {
-      if (onExecute) {
-        const result = await onExecute(automationId, {});
-        setLastResult(result);
-      } else {
-        // Simulation si pas de handler
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        const xp = calculateAutomationXP(automationId, currentMode, true);
+      try {
+        if (onExecute) {
+          const result = await onExecute(automationId, {});
+          setLastResult(result);
+        } else {
+          // Simulation si pas de handler
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          const xp = calculateAutomationXP(automationId, currentMode, true);
+          setLastResult({
+            automationId,
+            status: 'success',
+            startedAt: Date.now() - 1500,
+            completedAt: Date.now(),
+            duration: 1500,
+            logs: [
+              {
+                timestamp: Date.now(),
+                level: 'info',
+                message: `${automation.name} exécutée avec succès`,
+              },
+            ],
+            xpAwarded: xp,
+          });
+        }
+      } catch (error) {
         setLastResult({
           automationId,
-          status: 'success',
-          startedAt: Date.now() - 1500,
-          completedAt: Date.now(),
-          duration: 1500,
-          logs: [
-            { timestamp: Date.now(), level: 'info', message: `${automation.name} exécutée avec succès` },
-          ],
-          xpAwarded: xp,
+          status: 'failed',
+          startedAt: Date.now(),
+          error: error instanceof Error ? error.message : 'Erreur inconnue',
+          logs: [],
+          xpAwarded: 0,
+        });
+      } finally {
+        setRunningAutomations(prev => {
+          const next = new Set(prev);
+          next.delete(automationId);
+          return next;
         });
       }
-    } catch (error) {
-      setLastResult({
-        automationId,
-        status: 'failed',
-        startedAt: Date.now(),
-        error: error instanceof Error ? error.message : 'Erreur inconnue',
-        logs: [],
-        xpAwarded: 0,
-      });
-    } finally {
-      setRunningAutomations(prev => {
-        const next = new Set(prev);
-        next.delete(automationId);
-        return next;
-      });
-    }
-  }, [currentMode, onExecute]);
+    },
+    [currentMode, onExecute]
+  );
 
   // Compter les automations disponibles
   const availableCount = useMemo(() => {
@@ -292,7 +317,7 @@ export const AutomationPanel: React.FC<AutomationPanelProps> = ({
           className="automation-panel__search"
           placeholder="Rechercher..."
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={e => setSearchQuery(e.target.value)}
         />
 
         <div className="automation-panel__categories">

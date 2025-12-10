@@ -152,7 +152,7 @@ export class PerformanceEngine {
    */
   start(): void {
     if (this.state.running) {
-      console.warn('[PerformanceEngine] Déjà en cours d\'exécution');
+      console.warn("[PerformanceEngine] Déjà en cours d'exécution");
       return;
     }
 
@@ -181,7 +181,7 @@ export class PerformanceEngine {
    */
   stop(): void {
     if (!this.state.running) {
-      console.warn('[PerformanceEngine] Pas en cours d\'exécution');
+      console.warn("[PerformanceEngine] Pas en cours d'exécution");
       return;
     }
 
@@ -477,14 +477,14 @@ export class PerformanceEngine {
     }
 
     // Exécuter immédiatement le premier cycle
-    this.runCycle().catch((error) => {
+    this.runCycle().catch(error => {
       console.error('[PerformanceEngine] Erreur cycle initial:', error);
     });
 
     // Configurer le timer pour les cycles suivants
     this.collectionTimer = setInterval(() => {
       if (this.state.running) {
-        this.runCycle().catch((error) => {
+        this.runCycle().catch(error => {
           console.error('[PerformanceEngine] Erreur cycle:', error);
         });
       }
@@ -499,19 +499,19 @@ export class PerformanceEngine {
       }
     });
 
-    this.analyzer.on('issue_detected', (event) => {
+    this.analyzer.on('issue_detected', event => {
       this.emit('issue_detected', event.data);
     });
 
-    this.analyzer.on('threshold_exceeded', (event) => {
+    this.analyzer.on('threshold_exceeded', event => {
       this.emit('threshold_exceeded', event.data);
     });
 
-    this.advisor.on('recommendation_created', (event) => {
+    this.advisor.on('recommendation_created', event => {
       this.emit('recommendation_created', event.data);
     });
 
-    this.advisor.on('recommendation_applied', (event) => {
+    this.advisor.on('recommendation_applied', event => {
       this.emit('recommendation_applied', event.data);
     });
   }
@@ -608,7 +608,13 @@ export {
 };
 
 // Utilitaires
-export { createEmptySnapshot, generateSnapshotId, calculateGrade, formatBytes, formatDuration };
+export {
+  createEmptySnapshot,
+  generateSnapshotId,
+  calculateGrade,
+  formatBytes,
+  formatDuration,
+};
 
 // Sub-engines (pour usage avancé)
 export { MetricsCollector } from './metricsCollector';

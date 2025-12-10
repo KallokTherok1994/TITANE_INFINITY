@@ -46,10 +46,7 @@ pub struct KernelWatchdog {
 
 impl KernelWatchdog {
     /// Create new watchdog
-    pub fn new(
-        config: WatchdogConfig,
-        event_tx: broadcast::Sender<KernelEvent>,
-    ) -> Self {
+    pub fn new(config: WatchdogConfig, event_tx: broadcast::Sender<KernelEvent>) -> Self {
         Self {
             config,
             last_tick: Instant::now(),
@@ -61,9 +58,7 @@ impl KernelWatchdog {
     /// Heartbeat tick — Call periodically from core loop
     pub async fn tick(&mut self) {
         let elapsed = self.last_tick.elapsed();
-        let expected_interval = std::time::Duration::from_secs(
-            self.config.heartbeat_interval_secs
-        );
+        let expected_interval = std::time::Duration::from_secs(self.config.heartbeat_interval_secs);
 
         // Check for slowdown
         if elapsed > expected_interval.mul_f32(self.config.max_slowdown_factor) {
@@ -147,7 +142,10 @@ mod tests {
         // Should receive heartbeat event
         let event = rx.try_recv();
         assert!(event.is_ok());
-        assert!(matches!(event.unwrap(), KernelEvent::WatchdogHeartbeat { .. }));
+        assert!(matches!(
+            event.unwrap(),
+            KernelEvent::WatchdogHeartbeat { .. }
+        ));
     }
 
     #[tokio::test]

@@ -72,7 +72,8 @@ export interface AdminDashboardProps {
  */
 const HealthBadge: React.FC<{ level: HealthLevel }> = ({ level }) => {
   const color = HEALTH_LEVEL_COLORS[level];
-  const Icon = level === 'OK' ? CheckCircle : level === 'CRITICAL' ? XCircle : AlertTriangle;
+  const Icon =
+    level === 'OK' ? CheckCircle : level === 'CRITICAL' ? XCircle : AlertTriangle;
 
   return (
     <motion.div
@@ -135,7 +136,8 @@ const ModuleCard: React.FC<{
   errors: number;
   onClick?: () => void;
 }> = ({ moduleId, status, latency, errors, onClick }) => {
-  const statusColor = MODULE_STATUS_COLORS[status as keyof typeof MODULE_STATUS_COLORS] || '#9ca3af';
+  const statusColor =
+    MODULE_STATUS_COLORS[status as keyof typeof MODULE_STATUS_COLORS] || '#9ca3af';
   const displayName = MODULE_DISPLAY_NAMES[moduleId] || moduleId;
 
   const getModuleIcon = () => {
@@ -167,10 +169,7 @@ const ModuleCard: React.FC<{
           <div style={{ color: statusColor }}>{getModuleIcon()}</div>
           <span className="text-[#C4C4C4] text-sm font-medium">{displayName}</span>
         </div>
-        <div
-          className="w-2 h-2 rounded-full"
-          style={{ backgroundColor: statusColor }}
-        />
+        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: statusColor }} />
       </div>
       <div className="flex justify-between text-xs text-[#727B81]">
         <span>{latency > 0 ? `${latency.toFixed(0)}ms` : '-'}</span>
@@ -198,7 +197,7 @@ const NavBar: React.FC<{
   ];
 
   // Filtrer les vues selon le rôle
-  const filteredViews = views.filter((v) => {
+  const filteredViews = views.filter(v => {
     if (userRole === 'USER') return v.id === 'OVERVIEW';
     if (userRole === 'DEV') return v.id !== 'SETTINGS';
     return true;
@@ -206,7 +205,7 @@ const NavBar: React.FC<{
 
   return (
     <div className="flex gap-2 p-2 bg-[#0a0a0a] rounded-lg border border-[#333]">
-      {filteredViews.map((view) => (
+      {filteredViews.map(view => (
         <button
           key={view.id}
           onClick={() => onViewChange(view.id)}
@@ -275,7 +274,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   // Listener pour les mises à jour
   useEffect(() => {
-    const unsubscribe = adminEngine.onSnapshotUpdate((newSnapshot) => {
+    const unsubscribe = adminEngine.onSnapshotUpdate(newSnapshot => {
       setSnapshot(newSnapshot);
       setLastUpdate(Date.now());
     });
@@ -345,8 +344,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
         <div className="flex items-center gap-4">
           <div className="text-sm text-[#727B81]">
-            Score: <span className="font-bold text-[#C4C4C4]">{snapshot.healthScore}</span> |
-            Grade: <span className="font-bold text-[#C4C4C4]">{snapshot.performanceGrade}</span>
+            Score:{' '}
+            <span className="font-bold text-[#C4C4C4]">{snapshot.healthScore}</span> |
+            Grade:{' '}
+            <span className="font-bold text-[#C4C4C4]">{snapshot.performanceGrade}</span>
           </div>
 
           <button
@@ -357,7 +358,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 : 'border-[#333] text-[#727B81] hover:text-[#C4C4C4]'
             }`}
           >
-            {isPaused ? <Eye size={18} /> : <RefreshCw size={18} className={isLoading ? 'animate-spin' : ''} />}
+            {isPaused ? (
+              <Eye size={18} />
+            ) : (
+              <RefreshCw size={18} className={isLoading ? 'animate-spin' : ''} />
+            )}
           </button>
 
           <span className="text-xs text-[#727B81]">
@@ -384,7 +389,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
                 <p className="text-[#C4C4C4]">{snapshot.statusMessage}</p>
                 <p className="text-xs text-[#727B81] mt-1">
-                  Mode: {snapshot.systemMode} | Uptime: {formatDuration(snapshot.vitals.uptime)}
+                  Mode: {snapshot.systemMode} | Uptime:{' '}
+                  {formatDuration(snapshot.vitals.uptime)}
                 </p>
               </div>
 
@@ -452,7 +458,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <div>
                 <h3 className="text-lg font-semibold text-[#C4C4C4] mb-4">Modules</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                  {activeModules.map((module) => (
+                  {activeModules.map(module => (
                     <ModuleCard
                       key={module.id}
                       moduleId={module.id}
@@ -471,7 +477,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     Anomalies actives ({snapshot.activeAnomalies.length})
                   </h3>
                   <div className="space-y-2">
-                    {snapshot.activeAnomalies.slice(0, 5).map((anomaly) => (
+                    {snapshot.activeAnomalies.slice(0, 5).map(anomaly => (
                       <div
                         key={anomaly.id}
                         className="p-3 bg-[#1a1a1a] rounded-lg border border-[#ef4444] flex items-center justify-between"
@@ -498,7 +504,9 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
               {/* Providers IA */}
               <div>
-                <h3 className="text-lg font-semibold text-[#C4C4C4] mb-4">Providers IA</h3>
+                <h3 className="text-lg font-semibold text-[#C4C4C4] mb-4">
+                  Providers IA
+                </h3>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]">
                     <div className="flex items-center justify-between">
@@ -543,9 +551,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
           {activeView === 'MODULES' && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-[#C4C4C4]">Détails des Modules</h3>
+              <h3 className="text-lg font-semibold text-[#C4C4C4]">
+                Détails des Modules
+              </h3>
               <div className="grid gap-4">
-                {activeModules.map((module) => (
+                {activeModules.map(module => (
                   <div
                     key={module.id}
                     className="p-4 bg-[#1a1a1a] rounded-lg border border-[#333]"
@@ -556,16 +566,23 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           className="w-3 h-3 rounded-full"
                           style={{
                             backgroundColor:
-                              MODULE_STATUS_COLORS[module.status as keyof typeof MODULE_STATUS_COLORS],
+                              MODULE_STATUS_COLORS[
+                                module.status as keyof typeof MODULE_STATUS_COLORS
+                              ],
                           }}
                         />
-                        <span className="text-[#C4C4C4] font-medium">{module.displayName}</span>
+                        <span className="text-[#C4C4C4] font-medium">
+                          {module.displayName}
+                        </span>
                       </div>
                       <span
                         className="text-sm px-2 py-1 rounded"
                         style={{
                           backgroundColor: `${MODULE_STATUS_COLORS[module.status as keyof typeof MODULE_STATUS_COLORS]}20`,
-                          color: MODULE_STATUS_COLORS[module.status as keyof typeof MODULE_STATUS_COLORS],
+                          color:
+                            MODULE_STATUS_COLORS[
+                              module.status as keyof typeof MODULE_STATUS_COLORS
+                            ],
                         }}
                       >
                         {module.status}

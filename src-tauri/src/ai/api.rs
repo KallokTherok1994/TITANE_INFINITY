@@ -3,12 +3,12 @@
 //   SUPER PROMPT #8 — Frontend Integration Commands
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiRequest, AiResponse, AiMode};
-use crate::ai::orchestrator_multi::OrchestratorState;
-use crate::ai::fusion::FusionStrategy;
 use crate::ai::evaluator::EvaluationResult;
-use tauri::State;
+use crate::ai::fusion::FusionStrategy;
+use crate::ai::orchestrator_multi::OrchestratorState;
+use crate::ai::{AiMode, AiRequest, AiResponse};
 use serde::{Deserialize, Serialize};
+use tauri::State;
 
 // ═══════════════════════════════════════════════════════════════
 // COMMANDES TAURI
@@ -173,7 +173,7 @@ pub async fn multi_ai_configure_keys(
     use crate::ai::orchestrator_multi::MultiAIOrchestrator;
 
     let new_orchestrator = MultiAIOrchestrator::with_api_keys(claude_key, openai_key);
-    
+
     let mut current = state.orchestrator.write().await;
     *current = new_orchestrator;
 

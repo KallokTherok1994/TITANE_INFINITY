@@ -4,9 +4,9 @@
 // ═══════════════════════════════════════════════════════════════
 
 use dashmap::DashMap;
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use serde::{Serialize, Deserialize};
 
 // ────────────────────────────────────────────────────────────────
 // Types
@@ -122,9 +122,8 @@ impl<T: Clone + Send + Sync + 'static> IPCCache<T> {
 
     /// Clear all expired entries
     pub fn cleanup_expired(&self) {
-        self.entries.retain(|_, entry| {
-            entry.created_at.elapsed() < self.ttl
-        });
+        self.entries
+            .retain(|_, entry| entry.created_at.elapsed() < self.ttl);
     }
 
     /// Get cache statistics
@@ -262,19 +261,23 @@ mod tests {
     async fn test_async_cache() {
         let cache = IPCCache::<String>::new(10);
 
-        let result1 = cache.get_or_compute_async("async_key", || async {
-            tokio::time::sleep(Duration::from_millis(10)).await;
-            "async_value".to_string()
-        }).await;
+        let result1 = cache
+            .get_or_compute_async("async_key", || async {
+                tokio::time::sleep(Duration::from_millis(10)).await;
+                "async_value".to_string()
+            })
+            .await;
 
         assert_eq!(result1, "async_value");
 
         // Cache hit - should not sleep
         let start = Instant::now();
-        let result2 = cache.get_or_compute_async("async_key", || async {
-            tokio::time::sleep(Duration::from_millis(100)).await;
-            "should_not_compute".to_string()
-        }).await;
+        let result2 = cache
+            .get_or_compute_async("async_key", || async {
+                tokio::time::sleep(Duration::from_millis(100)).await;
+                "should_not_compute".to_string()
+            })
+            .await;
         let elapsed = start.elapsed();
 
         assert_eq!(result2, "async_value");

@@ -69,7 +69,11 @@ class VoiceService {
    * @param config - Configuration TTS (rate, pitch, volume, voice)
    * @param useOnline - Mode online (Google TTS) vs offline (espeak/piper)
    */
-  async speak(text: string, _config?: TTSConfig, useOnline: boolean = false): Promise<void> {
+  async speak(
+    text: string,
+    _config?: TTSConfig,
+    useOnline: boolean = false
+  ): Promise<void> {
     try {
       // Tauri 2.0: camelCase params (useOnline, not use_online)
       await invokeWithRetry<void>(
@@ -231,8 +235,16 @@ class VoiceService {
     try {
       // Utiliser les commandes réelles qui existent côté Rust
       const [isSpeaking, isRecording] = await Promise.all([
-        invokeWithRetry<boolean>('is_speaking', {}, { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }).catch(() => false),
-        invokeWithRetry<boolean>('is_recording', {}, { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }).catch(() => false),
+        invokeWithRetry<boolean>(
+          'is_speaking',
+          {},
+          { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
+        ).catch(() => false),
+        invokeWithRetry<boolean>(
+          'is_recording',
+          {},
+          { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
+        ).catch(() => false),
       ]);
 
       return {
@@ -272,7 +284,7 @@ class VoiceService {
         { ...FAST_COMMAND_OPTIONS, context: 'Voice', retries: 1 }
       );
       // Convertir les noms de modèles en format voix
-      return models.map((model) => ({
+      return models.map(model => ({
         id: model,
         name: model,
         language: model.includes('fr') ? 'fr-FR' : 'en-US',

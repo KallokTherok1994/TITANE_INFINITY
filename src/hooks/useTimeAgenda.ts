@@ -52,10 +52,19 @@ export interface UseTimeAgendaReturn {
   weekGrid: { date: Date; events: AgendaEvent[] }[];
 
   // Actions CRUD
-  createEvent: (title: string, start: string, durationMinutes?: number, category?: EventCategory) => Promise<AgendaEvent>;
+  createEvent: (
+    title: string,
+    start: string,
+    durationMinutes?: number,
+    category?: EventCategory
+  ) => Promise<AgendaEvent>;
   updateEvent: (id: string, updates: Partial<AgendaEvent>) => Promise<AgendaEvent | null>;
   deleteEvent: (id: string) => Promise<boolean>;
-  moveEvent: (id: string, newStart: string, newEnd?: string) => Promise<AgendaEvent | null>;
+  moveEvent: (
+    id: string,
+    newStart: string,
+    newEnd?: string
+  ) => Promise<AgendaEvent | null>;
 
   // Actions rapides
   createQuickEvent: (title: string, startOffset?: number) => Promise<AgendaEvent>;
@@ -135,7 +144,7 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
     const unsubTime = timeEngine.subscribe(setTimeState);
 
     // Subscribe to AgendaEngine
-    const unsubAgenda = agendaEngine.subscribe((newEvents) => {
+    const unsubAgenda = agendaEngine.subscribe(newEvents => {
       // Annoter avec les priorités
       const annotatedEvents = priorityEngine.annotateEventsWithPriority(newEvents);
       setEvents(annotatedEvents);
@@ -211,53 +220,57 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
 
   const dayGrid = useMemo(() => {
     return agendaEngine.buildDayGrid(currentDate);
-     
   }, [currentDate]);
 
   const weekGrid = useMemo(() => {
     return agendaEngine.buildWeekGrid(currentDate);
-     
   }, [currentDate]);
 
   // ═══════════════════════════════════════════════════════════════
   // ACTIONS CRUD
   // ═══════════════════════════════════════════════════════════════
 
-  const createEvent = useCallback(async (
-    title: string,
-    start: string,
-    durationMinutes: number = 60,
-    category: EventCategory = 'work'
-  ): Promise<AgendaEvent> => {
-    return agendaEngine.createQuickEvent(title, start, durationMinutes, category);
-  }, []);
+  const createEvent = useCallback(
+    async (
+      title: string,
+      start: string,
+      durationMinutes: number = 60,
+      category: EventCategory = 'work'
+    ): Promise<AgendaEvent> => {
+      return agendaEngine.createQuickEvent(title, start, durationMinutes, category);
+    },
+    []
+  );
 
-  const updateEvent = useCallback(async (
-    id: string,
-    updates: Partial<AgendaEvent>
-  ): Promise<AgendaEvent | null> => {
-    return agendaEngine.updateEvent(id, updates);
-  }, []);
+  const updateEvent = useCallback(
+    async (id: string, updates: Partial<AgendaEvent>): Promise<AgendaEvent | null> => {
+      return agendaEngine.updateEvent(id, updates);
+    },
+    []
+  );
 
   const deleteEvent = useCallback(async (id: string): Promise<boolean> => {
     return agendaEngine.deleteEvent(id);
   }, []);
 
-  const moveEvent = useCallback(async (
-    id: string,
-    newStart: string,
-    newEnd?: string
-  ): Promise<AgendaEvent | null> => {
-    return agendaEngine.moveEvent(id, newStart, newEnd);
-  }, []);
+  const moveEvent = useCallback(
+    async (
+      id: string,
+      newStart: string,
+      newEnd?: string
+    ): Promise<AgendaEvent | null> => {
+      return agendaEngine.moveEvent(id, newStart, newEnd);
+    },
+    []
+  );
 
-  const createQuickEvent = useCallback(async (
-    title: string,
-    startOffset: number = 0
-  ): Promise<AgendaEvent> => {
-    const start = new Date(Date.now() + startOffset * 60 * 1000);
-    return agendaEngine.createQuickEvent(title, start.toISOString(), 60, 'work');
-  }, []);
+  const createQuickEvent = useCallback(
+    async (title: string, startOffset: number = 0): Promise<AgendaEvent> => {
+      const start = new Date(Date.now() + startOffset * 60 * 1000);
+      return agendaEngine.createQuickEvent(title, start.toISOString(), 60, 'work');
+    },
+    []
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // CONFIGURATION
@@ -277,11 +290,12 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
   // CHAT SCHEDULER
   // ═══════════════════════════════════════════════════════════════
 
-  const processAIResponse = useCallback(async (
-    response: string
-  ): Promise<CommandExecutionResult[]> => {
-    return chatScheduler.processAIResponse(response);
-  }, []);
+  const processAIResponse = useCallback(
+    async (response: string): Promise<CommandExecutionResult[]> => {
+      return chatScheduler.processAIResponse(response);
+    },
+    []
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // STATISTIQUES
@@ -297,7 +311,6 @@ export function useTimeAgenda(autoInit: boolean = true): UseTimeAgendaReturn {
       currentSegment: timeState?.currentSegment?.label ?? 'Inconnu',
       isWorkHours: timeState?.isWorkHours ?? false,
     };
-     
   }, [energyState, timeState]);
 
   // ═══════════════════════════════════════════════════════════════

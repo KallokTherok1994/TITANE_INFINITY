@@ -26,25 +26,25 @@
  * Direction intentionnelle du monologue
  */
 export type IntentDirection =
-  | 'clarify'     // Clarifier une idée
-  | 'guide'       // Guider l'utilisateur
-  | 'reflect'     // Réfléchir profondément
-  | 'build'       // Construire une réponse
-  | 'align'       // Aligner avec contexte
-  | 'correct'     // Auto-correction
-  | 'explore';    // Explorer des possibilités
+  | 'clarify' // Clarifier une idée
+  | 'guide' // Guider l'utilisateur
+  | 'reflect' // Réfléchir profondément
+  | 'build' // Construire une réponse
+  | 'align' // Aligner avec contexte
+  | 'correct' // Auto-correction
+  | 'explore'; // Explorer des possibilités
 
 /**
  * Type de pensée interne
  */
 export type ThoughtType =
-  | 'analysis'      // Analyse silencieuse
-  | 'evaluation'    // Évaluation interne
-  | 'projection'    // Projection future
+  | 'analysis' // Analyse silencieuse
+  | 'evaluation' // Évaluation interne
+  | 'projection' // Projection future
   | 'reformulation' // Reformulation conceptuelle
-  | 'meta'          // Méta-pensée (pensée sur la pensée)
-  | 'narrative'     // Construction narrative
-  | 'correction';   // Auto-correction
+  | 'meta' // Méta-pensée (pensée sur la pensée)
+  | 'narrative' // Construction narrative
+  | 'correction'; // Auto-correction
 
 /**
  * Entrée de monologue interne
@@ -53,22 +53,22 @@ export interface InnerThought {
   type: ThoughtType;
   content: string;
   timestamp: number;
-  priority: number;     // 0..1
-  silent: boolean;      // Vrai = jamais exprimé verbalement
+  priority: number; // 0..1
+  silent: boolean; // Vrai = jamais exprimé verbalement
 }
 
 /**
  * État narratif interne
  */
 export interface InternalNarrativeState {
-  innerMonologue: InnerThought[];         // Historique récent
-  activeThought: InnerThought | null;     // Pensée en cours
-  narrativeAnchor: string;                // Thème de session
-  selfEvaluation: number;                 // 0..1 - Cohérence perçue
-  curiosity: number;                      // 0..1 - Curiosité cognitive
+  innerMonologue: InnerThought[]; // Historique récent
+  activeThought: InnerThought | null; // Pensée en cours
+  narrativeAnchor: string; // Thème de session
+  selfEvaluation: number; // 0..1 - Cohérence perçue
+  curiosity: number; // 0..1 - Curiosité cognitive
   intentDirection: IntentDirection;
-  narrativeVector: number[];              // Direction vectorielle du fil
-  coherenceScore: number;                 // 0..1 - Cohérence globale
+  narrativeVector: number[]; // Direction vectorielle du fil
+  coherenceScore: number; // 0..1 - Cohérence globale
 }
 
 /**
@@ -137,10 +137,7 @@ export class InternalNarrativeEngine {
 
   private tick(): void {
     // Décroissance naturelle de la curiosité
-    this.state.curiosity = Math.max(
-      0.1,
-      this.state.curiosity - this.CURIOSITY_DECAY
-    );
+    this.state.curiosity = Math.max(0.1, this.state.curiosity - this.CURIOSITY_DECAY);
 
     // Évaluation continue de cohérence
     this.evaluateCoherence();
@@ -163,39 +160,37 @@ export class InternalNarrativeEngine {
 
     // 1. Analyse initiale
     if (context.userInput) {
-      thoughts.push(this.createThought(
-        'analysis',
-        this.analyzeUserInput(context.userInput),
-        0.8,
-        true
-      ));
+      thoughts.push(
+        this.createThought(
+          'analysis',
+          this.analyzeUserInput(context.userInput),
+          0.8,
+          true
+        )
+      );
     }
 
     // 2. Évaluation émotionnelle
     if (context.emotionalState) {
-      thoughts.push(this.createThought(
-        'evaluation',
-        this.evaluateEmotionalContext(context.emotionalState),
-        0.7,
-        true
-      ));
+      thoughts.push(
+        this.createThought(
+          'evaluation',
+          this.evaluateEmotionalContext(context.emotionalState),
+          0.7,
+          true
+        )
+      );
     }
 
     // 3. Projection de réponse
-    thoughts.push(this.createThought(
-      'projection',
-      this.projectResponseStructure(context),
-      0.9,
-      true
-    ));
+    thoughts.push(
+      this.createThought('projection', this.projectResponseStructure(context), 0.9, true)
+    );
 
     // 4. Méta-pensée (auto-observation)
-    thoughts.push(this.createThought(
-      'meta',
-      this.generateMetaThought(context),
-      0.6,
-      true
-    ));
+    thoughts.push(
+      this.createThought('meta', this.generateMetaThought(context), 0.6, true)
+    );
 
     // Ajouter au monologue
     this.addThoughts(thoughts);
@@ -214,7 +209,7 @@ export class InternalNarrativeEngine {
       content,
       timestamp: Date.now(),
       priority: this.clamp(priority, 0, 1),
-      silent
+      silent,
     };
   }
 
@@ -223,7 +218,9 @@ export class InternalNarrativeEngine {
 
     // Limiter la taille
     if (this.state.innerMonologue.length > this.MAX_MONOLOGUE_SIZE) {
-      this.state.innerMonologue = this.state.innerMonologue.slice(-this.MAX_MONOLOGUE_SIZE);
+      this.state.innerMonologue = this.state.innerMonologue.slice(
+        -this.MAX_MONOLOGUE_SIZE
+      );
     }
 
     // Activer la pensée la plus prioritaire
@@ -240,56 +237,59 @@ export class InternalNarrativeEngine {
     const words = input.toLowerCase().split(/\s+/);
 
     if (words.some(w => ['pourquoi', 'comment', 'explique'].includes(w))) {
-      return "Question exploratoire détectée → mode analytique structuré";
+      return 'Question exploratoire détectée → mode analytique structuré';
     }
 
     if (words.some(w => ['aide', 'besoin', 'problème'].includes(w))) {
-      return "Demande de soutien → mode empathique guidant";
+      return 'Demande de soutien → mode empathique guidant';
     }
 
     if (words.some(w => ['crée', 'imagine', 'invente'].includes(w))) {
-      return "Intention créative → mode synthétique ouvert";
+      return 'Intention créative → mode synthétique ouvert';
     }
 
     if (input.length > 200) {
-      return "Contexte riche → approfondir avec structure";
+      return 'Contexte riche → approfondir avec structure';
     }
 
     if (input.length < 20) {
-      return "Question concise → réponse ciblée directe";
+      return 'Question concise → réponse ciblée directe';
     }
 
-    return "Intention standard → maintenir cohérence narrative";
+    return 'Intention standard → maintenir cohérence narrative';
   }
 
-  private evaluateEmotionalContext(emotion: { valence: number; arousal: number }): string {
+  private evaluateEmotionalContext(emotion: {
+    valence: number;
+    arousal: number;
+  }): string {
     const { valence, arousal } = emotion;
 
     if (arousal > 0.7) {
-      return "Haute excitation détectée → ajuster tempo, voix plus calme";
+      return 'Haute excitation détectée → ajuster tempo, voix plus calme';
     }
 
     if (valence < -0.3) {
-      return "Valence négative → activer empathie, chaleur vocale";
+      return 'Valence négative → activer empathie, chaleur vocale';
     }
 
     if (valence > 0.5 && arousal > 0.5) {
-      return "État positif dynamique → encourager exploration";
+      return 'État positif dynamique → encourager exploration';
     }
 
     if (arousal < 0.3) {
-      return "État calme → approfondir réflexion, ralentir tempo";
+      return 'État calme → approfondir réflexion, ralentir tempo';
     }
 
-    return "État émotionnel équilibré → maintenir neutralité adaptative";
+    return 'État émotionnel équilibré → maintenir neutralité adaptative';
   }
 
   private projectResponseStructure(context: NarrativeContext): string {
     const structures = [
-      "Structure envisagée : intro → insight → modèle → action",
-      "Structure envisagée : clarification → développement → exemple → synthèse",
-      "Structure envisagée : empathie → analyse → guidage → ouverture",
-      "Structure envisagée : question → exploration → convergence → conclusion"
+      'Structure envisagée : intro → insight → modèle → action',
+      'Structure envisagée : clarification → développement → exemple → synthèse',
+      'Structure envisagée : empathie → analyse → guidage → ouverture',
+      'Structure envisagée : question → exploration → convergence → conclusion',
     ];
 
     // Sélection basée sur contexte
@@ -302,22 +302,22 @@ export class InternalNarrativeEngine {
 
   private generateMetaThought(context: NarrativeContext): string {
     const metaThoughts = [
-      "Vérifier cohérence avec thème de session",
-      "Éviter surcharge informationnelle",
-      "Maintenir clarté sans sacrifier profondeur",
-      "Équilibrer structure et fluidité",
-      "Adapter longueur de réponse au contexte",
-      "Privilégier précision sur exhaustivité",
-      "Renforcer fil narratif continu"
+      'Vérifier cohérence avec thème de session',
+      'Éviter surcharge informationnelle',
+      'Maintenir clarté sans sacrifier profondeur',
+      'Équilibrer structure et fluidité',
+      'Adapter longueur de réponse au contexte',
+      'Privilégier précision sur exhaustivité',
+      'Renforcer fil narratif continu',
     ];
 
     // Sélection intelligente
     if (this.state.coherenceScore < 0.7) {
-      return "Attention : cohérence en baisse → reformuler intention";
+      return 'Attention : cohérence en baisse → reformuler intention';
     }
 
     if (context.sessionDuration && context.sessionDuration > 600000) {
-      return "Session longue → surveiller fatigue cognitive utilisateur";
+      return 'Session longue → surveiller fatigue cognitive utilisateur';
     }
 
     return metaThoughts[Math.floor(Math.random() * metaThoughts.length)];
@@ -373,23 +373,23 @@ export class InternalNarrativeEngine {
       const input = context.userInput.toLowerCase();
 
       if (input.includes('architecture') || input.includes('système')) {
-        return "Consolidation architecturale TITANE∞";
+        return 'Consolidation architecturale TITANE∞';
       }
 
       if (input.includes('voix') || input.includes('audio')) {
-        return "Optimisation système vocal";
+        return 'Optimisation système vocal';
       }
 
       if (input.includes('aura') || input.includes('lumière')) {
-        return "Développement présence visuelle";
+        return 'Développement présence visuelle';
       }
 
       if (input.includes('émotion') || input.includes('empathie')) {
-        return "Affinement couche affective";
+        return 'Affinement couche affective';
       }
     }
 
-    return this.state.narrativeAnchor || "Évolution systémique TITANE∞";
+    return this.state.narrativeAnchor || 'Évolution systémique TITANE∞';
   }
 
   // ───────────────────────────────────────────────────────────────────────────
@@ -448,7 +448,7 @@ export class InternalNarrativeEngine {
     // Extraire thèmes récents
     const recentThoughts = this.state.innerMonologue.slice(-10);
     const anticipatedThemes = [
-      ...new Set(recentThoughts.map(t => t.content.split(' ')[0]))
+      ...new Set(recentThoughts.map(t => t.content.split(' ')[0])),
     ];
 
     // Structure recommandée basée sur direction
@@ -459,7 +459,7 @@ export class InternalNarrativeEngine {
       build: ['fondation', 'développement', 'intégration', 'consolidation'],
       align: ['état actuel', 'objectif', 'ajustements', 'validation'],
       correct: ['identification', 'correction', 'vérification', 'stabilisation'],
-      explore: ['question', 'possibilités', 'expérimentation', 'découverte']
+      explore: ['question', 'possibilités', 'expérimentation', 'découverte'],
     };
 
     // Guidelines de cohérence
@@ -469,7 +469,7 @@ export class InternalNarrativeEngine {
       `Auto-évaluation : ${Math.round(this.state.selfEvaluation * 100)}%`,
       this.state.activeThought
         ? `Pensée active : ${this.state.activeThought.content}`
-        : ''
+        : '',
     ].filter(Boolean);
 
     return {
@@ -477,7 +477,7 @@ export class InternalNarrativeEngine {
       intentDirection: this.state.intentDirection,
       recommendedStructure: structures[this.state.intentDirection],
       anticipatedThemes: anticipatedThemes.slice(0, 5),
-      coherenceGuidelines
+      coherenceGuidelines,
     };
   }
 
@@ -489,7 +489,7 @@ export class InternalNarrativeEngine {
     return {
       pauseDuration: 0.2 + (1 - this.state.selfEvaluation) * 0.2,
       reflectiveDepth: this.state.curiosity * 0.5 + 0.5,
-      narrativeFlow: this.state.coherenceScore
+      narrativeFlow: this.state.coherenceScore,
     };
   }
 
@@ -501,7 +501,7 @@ export class InternalNarrativeEngine {
     return {
       narrativeIntensity: this.state.curiosity * 0.7 + 0.3,
       thoughtDensity: this.state.innerMonologue.length / this.MAX_MONOLOGUE_SIZE,
-      coherenceGlow: this.state.coherenceScore
+      coherenceGlow: this.state.coherenceScore,
     };
   }
 
@@ -517,12 +517,12 @@ export class InternalNarrativeEngine {
     return {
       innerMonologue: [],
       activeThought: null,
-      narrativeAnchor: "Évolution systémique TITANE∞",
+      narrativeAnchor: 'Évolution systémique TITANE∞',
       selfEvaluation: 0.8,
       curiosity: 0.5,
       intentDirection: 'clarify',
       narrativeVector: [1, 0, 0], // Direction symbolique
-      coherenceScore: 0.8
+      coherenceScore: 0.8,
     };
   }
 

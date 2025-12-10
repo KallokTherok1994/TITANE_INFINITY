@@ -528,7 +528,7 @@ class ChatEngineOmega {
           3000,
           'Memory save timeout'
         );
-        
+
         // NOUVEAU: Sauvegarde dans Unified Memory (PHASE 2)
         // Importance calculée selon le mode
         const importance = this.calculateImportance(finalConfig.mode, validatedMessage);
@@ -539,7 +539,7 @@ class ChatEngineOmega {
           finalConfig.conversationId,
           [finalConfig.mode, 'conversation']
         );
-        
+
         isDev && console.log('   ✅ Interaction saved to core memory + unified memory');
       } catch (error) {
         isDev && console.warn('   ⚠️ Memory save failed (non-blocking):', error);
@@ -1705,12 +1705,20 @@ Que souhaites-tu explorer ?`;
    */
   private calculateImportance(mode: ChatMode, message: string): number {
     const modeImportance: Record<ChatMode, number> = {
-      reflection: 0.8, creation: 0.7, strategy: 0.7, emergency: 0.9,
-      debug_cognitive: 0.6, standard: 0.4, quick: 0.2, omega: 0.5, default: 0.3,
+      reflection: 0.8,
+      creation: 0.7,
+      strategy: 0.7,
+      emergency: 0.9,
+      debug_cognitive: 0.6,
+      standard: 0.4,
+      quick: 0.2,
+      omega: 0.5,
+      default: 0.3,
     };
     let importance = modeImportance[mode] || 0.3;
     const lowerMessage = message.toLowerCase();
-    if (lowerMessage.match(/décision|important|urgent|critique|projet|objectif/)) importance += 0.1;
+    if (lowerMessage.match(/décision|important|urgent|critique|projet|objectif/))
+      importance += 0.1;
     if (message.length > 200) importance += 0.05;
     return Math.min(importance, 1.0);
   }
@@ -1723,4 +1731,3 @@ Que souhaites-tu explorer ?`;
 export const chatEngine = new ChatEngineOmega();
 
 export default chatEngine;
-

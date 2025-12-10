@@ -4,9 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::cycle_engine::{
-    cognitive_rhythm::CognitiveRhythmParams,
-    load_regulator::LoadRegulationParams,
-    CycleEngine,
+    cognitive_rhythm::CognitiveRhythmParams, load_regulator::LoadRegulationParams, CycleEngine,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -65,10 +63,7 @@ impl OmegaCycleBridge {
         }
     }
 
-    fn calculate_context_window(
-        &self,
-        state: &crate::cycle_engine::cycles::CycleState,
-    ) -> usize {
+    fn calculate_context_window(&self, state: &crate::cycle_engine::cycles::CycleState) -> usize {
         match state.daily_phase {
             crate::cycle_engine::cycles::DailyPhase::Noon => 8192,
             crate::cycle_engine::cycles::DailyPhase::Morning => 6144,

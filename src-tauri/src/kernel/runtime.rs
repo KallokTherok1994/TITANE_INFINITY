@@ -59,10 +59,7 @@ pub struct KernelRuntime {
 
 impl KernelRuntime {
     /// Create a new KernelRuntime with default configuration
-    pub fn new(
-        event_tx: broadcast::Sender<KernelEvent>,
-        state: Arc<RwLock<KernelState>>,
-    ) -> Self {
+    pub fn new(event_tx: broadcast::Sender<KernelEvent>, state: Arc<RwLock<KernelState>>) -> Self {
         Self::with_config(RuntimeConfig::default(), event_tx, state)
     }
 
@@ -99,15 +96,12 @@ impl KernelRuntime {
         F: Future<Output = TitaneResult<R>> + Send + 'static,
         R: Send + 'static,
     {
-        self.submit_with_timeout(fut, self.config.global_timeout_secs).await
+        self.submit_with_timeout(fut, self.config.global_timeout_secs)
+            .await
     }
 
     /// Submit a future with custom timeout
-    pub async fn submit_with_timeout<F, R>(
-        &self,
-        fut: F,
-        timeout_secs: u64,
-    ) -> TitaneResult<R>
+    pub async fn submit_with_timeout<F, R>(&self, fut: F, timeout_secs: u64) -> TitaneResult<R>
     where
         F: Future<Output = TitaneResult<R>> + Send + 'static,
         R: Send + 'static,
@@ -115,10 +109,7 @@ impl KernelRuntime {
         let start = std::time::Instant::now();
 
         // Wrap future with timeout
-        let result = tokio::time::timeout(
-            Duration::from_secs(timeout_secs),
-            fut
-        ).await;
+        let result = tokio::time::timeout(Duration::from_secs(timeout_secs), fut).await;
 
         let duration_ms = start.elapsed().as_millis() as u64;
 
@@ -233,10 +224,12 @@ mod tests {
         let state = Arc::new(RwLock::new(KernelState::new()));
         let runtime = KernelRuntime::new(tx, state);
 
-        let result = runtime.submit(async {
-            tokio::time::sleep(Duration::from_millis(10)).await;
-            Ok::<_, TitaneError>(42)
-        }).await;
+        let result = runtime
+            .submit(async {
+                tokio::time::sleep(Duration::from_millis(10)).await;
+                Ok::<_, TitaneError>(42)
+            })
+            .await;
 
         assert!(result.is_ok());
         assert_eq!(result.unwrap(), 42);
@@ -248,10 +241,15 @@ mod tests {
         let state = Arc::new(RwLock::new(KernelState::new()));
         let runtime = KernelRuntime::new(tx, state);
 
-        let result = runtime.submit_with_timeout(async {
-            tokio::time::sleep(Duration::from_secs(10)).await;
-            Ok::<_, TitaneError>(())
-        }, 1).await;
+        let result = runtime
+            .submit_with_timeout(
+                async {
+                    tokio::time::sleep(Duration::from_secs(10)).await;
+                    Ok::<_, TitaneError>(())
+                },
+                1,
+            )
+            .await;
 
         assert!(result.is_err());
         match result {
@@ -266,9 +264,9 @@ mod tests {
         let state = Arc::new(RwLock::new(KernelState::new()));
         let runtime = KernelRuntime::new(tx, state);
 
-        let result = runtime.submit(async {
-            Err::<(), _>(TitaneError::InternalError("test error".to_string()))
-        }).await;
+        let result = runtime
+            .submit(async { Err::<(), _>(TitaneError::InternalError("test error".to_string())) })
+            .await;
 
         assert!(result.is_err());
     }
@@ -297,9 +295,11 @@ mod tests {
         let state = Arc::new(RwLock::new(KernelState::new()));
         let runtime = KernelRuntime::new(tx, state);
 
-        runtime.update_state(|state| {
-            state.load.cpu_usage = 0.5;
-        }).await;
+        runtime
+            .update_state(|state| {
+                state.load.cpu_usage = 0.5;
+            })
+            .await;
 
         let state_arc = runtime.state();
         let state = state_arc.read().await;

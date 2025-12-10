@@ -18,14 +18,14 @@ let enginePromise: Promise<EngineInstance> | null = null;
  */
 export async function getArchetypeResonanceEngine() {
   if (engineInstance) return engineInstance;
-  
+
   if (!enginePromise) {
     enginePromise = import('./archetypeResonanceEngine').then(m => {
       engineInstance = m.archetypeResonanceEngine;
       return engineInstance;
     });
   }
-  
+
   return enginePromise;
 }
 
