@@ -278,9 +278,15 @@ fn main() {
         .ok()
         .or_else(|| Some("default-dev-passphrase-change-in-production".to_string()));
 
-    let secrets_engine =
-        security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase)
-            .expect("Failed to initialize Secure Secrets Engine");
+    let secrets_engine = match security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase) {
+        Ok(engine) => engine,
+        Err(e) => {
+            eprintln!("❌ TITANE∞ FATAL: Failed to initialize Secure Secrets Engine");
+            eprintln!("   Error: {:?}", e);
+            eprintln!("   → Please check your security configuration and try again.");
+            std::process::exit(1);
+        }
+    };
 
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
@@ -336,7 +342,12 @@ fn main() {
                     password,
                     ai_router,
                     singularity_state,
-                ).expect("Failed to initialize OMEGA Conversation Engine")
+                ).map_err(|e| {
+                    eprintln!("❌ TITANE∞ FATAL: Failed to initialize OMEGA Conversation Engine");
+                    eprintln!("   Error: {:?}", e);
+                    eprintln!("   → Please check your configuration and storage permissions.");
+                    std::process::exit(1);
+                }).unwrap()
             );
             
             app.manage(conversation_engine);
@@ -429,7 +440,13 @@ fn main() {
             auth::commands::auth_revoke_role,
         ])
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .map_err(|e| {
+            eprintln!("❌ TITANE∞ FATAL: Tauri application failed to start");
+            eprintln!("   Error: {:?}", e);
+            eprintln!("   → Please check logs and system requirements.");
+            std::process::exit(1);
+        })
+        .unwrap();
 
     log::info!("TITANE∞ v19.5.2 shutdown - Security System offline");
 }

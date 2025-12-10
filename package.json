@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "19.5.2",
-  "description": "TITANE∞ v19.5.2 - Multi-Provider AI Engine: 6 Providers (OpenAI GPT-4o, Claude 3.5, Gemini 2.0, Ollama, Local), Neural Orchestrator, Onboarding System, 98.2% Test Coverage, Production Ready",
+  "version": "24.2.0",
+  "description": "TITANE∞ v24.2.0 - Cognitive Operating System: Dual Runtime (Titan-Dev/Titan-Stable), OMEGA Pipeline v2, 9 Unified Engines, UnifiedMemory OS, Production Ready",
   "type": "module",
   "license": "SEE LICENSE.md",
   "scripts": {
