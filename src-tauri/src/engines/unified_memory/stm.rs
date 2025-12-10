@@ -38,11 +38,6 @@ impl ShortTermMemory {
         }
     }
     
-    /// Create default STM (100 entries)
-    pub fn default() -> Self {
-        Self::new(100)
-    }
-    
     /// Push new memory entry (auto-evicts oldest if full)
     pub fn push(&mut self, entry: MemoryEntry) {
         // Evict oldest if at capacity
@@ -296,5 +291,12 @@ mod tests {
         
         let not_found = stm.remove(&"missing".to_string());
         assert!(not_found.is_none());
+    }
+}
+
+// Implement Default trait properly
+impl Default for ShortTermMemory {
+    fn default() -> Self {
+        Self::new(100)
     }
 }
