@@ -20,7 +20,7 @@ import VisualSemanticGrammar, {
   MemoryState,
   VisualPhenomenon,
   PhenomenonType as _PhenomenonType,
-} from './VisualSemanticGrammar';
+} from '../semantic/VisualSemanticGrammar';
 import type { TitaneVisualEngineV21 } from '../TitaneVisualEngineV21';
 import {
   VISUAL_EVENTS as _VISUAL_EVENTS,

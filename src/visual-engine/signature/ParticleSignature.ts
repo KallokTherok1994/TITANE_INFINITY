@@ -204,7 +204,7 @@ export class ParticleSignature {
 
     // Cognitive state modulation
     switch (this.cognitiveState) {
-      case 'thinking':
+      case CognitiveState.THINKING:
         dist.pattern = 'fibonacci';
         dist.emissionRate = 15;
         dist.trailEnabled = true;
@@ -213,7 +213,7 @@ export class ParticleSignature {
         dist.spiralRotation = 0.2;
         break;
 
-      case 'processing':
+      case CognitiveState.PROCESSING:
         dist.pattern = 'vortex';
         dist.emissionRate = 25;
         dist.trailEnabled = true;
@@ -223,7 +223,7 @@ export class ParticleSignature {
         config.maxParticles = 800;
         break;
 
-      case 'responding':
+      case CognitiveState.SPEAKING:
         dist.pattern = 'radial';
         dist.emissionRate = 12;
         dist.burstMode = true;
@@ -231,7 +231,7 @@ export class ParticleSignature {
         dist.baseSpeed = 70;
         break;
 
-      case 'listening':
+      case CognitiveState.LISTENING:
         dist.pattern = 'spiral';
         dist.emissionRate = 5;
         dist.baseSpeed = 30;
@@ -239,7 +239,7 @@ export class ParticleSignature {
         config.density = 0.3;
         break;
 
-      case 'idle':
+      case CognitiveState.IDLE:
       default:
         // Use defaults
         break;
