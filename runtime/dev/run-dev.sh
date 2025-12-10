@@ -4,12 +4,17 @@
 
 set -e
 
+# Navigate to project root
+cd "$(dirname "$0")/../.."
+
+# Run cleanup script first
+echo "🧹 Pre-launch cleanup..."
+./runtime/dev/cleanup.sh
+echo ""
+
 echo "🟢 TITANE∞ — Starting DEV RUNTIME"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-
-# Navigate to project root
-cd "$(dirname "$0")/../.."
 
 # Check we're on dev or feature/* branch
 CURRENT_BRANCH=$(git branch --show-current)

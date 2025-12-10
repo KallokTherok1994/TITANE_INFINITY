@@ -48,12 +48,18 @@ impl RateLimiter {
         user_requests.retain(|&timestamp| now.duration_since(timestamp) < self.window);
 
         if user_requests.len() >= self.max_requests {
+            // Calculate retry_after_seconds based on oldest request
+            let oldest = user_requests.first().copied().unwrap_or(now);
+            let elapsed = now.duration_since(oldest).as_secs();
+            let retry_after = self.window.as_secs().saturating_sub(elapsed);
+
             return Err(TitaneError::RateLimitExceeded {
                 message: format!(
                     "Too many requests. Max {} per {} seconds",
                     self.max_requests,
                     self.window.as_secs()
                 ),
+                retry_after_seconds: Some(retry_after),
             });
         }
 

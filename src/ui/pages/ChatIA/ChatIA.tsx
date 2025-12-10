@@ -56,6 +56,24 @@ export const ChatIA: React.FC = () => {
   });
   const [showModeEditor, setShowModeEditor] = useState(false);
   const [currentMode, setCurrentMode] = useState<InstructionMode>(DEFAULT_MODES[0]);
+  const [rateLimitCountdown, setRateLimitCountdown] = useState<number>(0);
+
+  // Countdown timer effect for rate limiting
+  useEffect(() => {
+    if (rateLimitCountdown <= 0) return;
+
+    const timer = setInterval(() => {
+      setRateLimitCountdown(prev => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [rateLimitCountdown]);
 
   // Catégoriser les modèles Ollama par type
   const categorizeModel = (modelName: string): string => {
@@ -167,9 +185,12 @@ export const ChatIA: React.FC = () => {
       console.error('❌ Erreur ChatIA:', err);
 
       let errorMessage = '❌ Erreur: ';
-      const error = err as { message?: string };
+      const error = err as { message?: string; retry_after_seconds?: number };
+
       if (error.message?.includes('Rate limit')) {
-        errorMessage += 'Trop de requêtes. Veuillez patienter quelques secondes.';
+        const retryAfter = error.retry_after_seconds || 30;
+        setRateLimitCountdown(retryAfter);
+        errorMessage += `Trop de requêtes. Attendez ${retryAfter}s avant de réessayer.`;
       } else if (error.message?.includes('not available')) {
         errorMessage += `Provider ${provider} non disponible. Configuration requise.`;
       } else {
@@ -205,6 +226,13 @@ export const ChatIA: React.FC = () => {
 
       <header className="chat-header">
         <h1>💬 Chat IA - TITANE∞</h1>
+
+        {/* Rate Limit Warning Banner */}
+        {rateLimitCountdown > 0 && (
+          <div className="rate-limit-warning">
+            ⚠️ Rate limit: Attendez {rateLimitCountdown}s avant prochain message
+          </div>
+        )}
 
         {/* Mode d'instruction */}
         <div className="instruction-mode-selector">

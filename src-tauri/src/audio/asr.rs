@@ -149,4 +149,111 @@ mod tests {
         // Should return some provider
         let _ = format!("{:?}", provider);
     }
+
+    // ─────────────────────────────────────────────────────────────
+    // ASRProvider Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_asr_provider_debug() {
+        let providers = vec![ASRProvider::Google, ASRProvider::Whisper, ASRProvider::Vosk];
+        for provider in providers {
+            let debug_str = format!("{:?}", provider);
+            assert!(!debug_str.is_empty());
+        }
+    }
+
+    #[test]
+    fn test_asr_provider_clone() {
+        let provider = ASRProvider::Whisper;
+        let cloned = provider;
+        assert!(matches!(cloned, ASRProvider::Whisper));
+    }
+
+    #[test]
+    fn test_asr_provider_copy() {
+        let provider = ASRProvider::Vosk;
+        let copied: ASRProvider = provider;
+        assert!(matches!(copied, ASRProvider::Vosk));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ASREngine Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_asr_engine_new_google() {
+        let asr = ASREngine::new(ASRProvider::Google, Some("test-key".to_string()));
+        assert!(matches!(asr.get_provider(), ASRProvider::Google));
+    }
+
+    #[test]
+    fn test_asr_engine_new_whisper() {
+        let asr = ASREngine::new(ASRProvider::Whisper, None);
+        assert!(matches!(asr.get_provider(), ASRProvider::Whisper));
+    }
+
+    #[test]
+    fn test_asr_engine_new_vosk() {
+        let asr = ASREngine::new(ASRProvider::Vosk, None);
+        assert!(matches!(asr.get_provider(), ASRProvider::Vosk));
+    }
+
+    #[test]
+    fn test_asr_engine_auto() {
+        let asr = ASREngine::auto();
+        let provider = asr.get_provider();
+        // Should be one of the valid providers
+        assert!(matches!(
+            provider,
+            ASRProvider::Google | ASRProvider::Whisper | ASRProvider::Vosk
+        ));
+    }
+
+    #[test]
+    fn test_asr_engine_default() {
+        let asr = ASREngine::default();
+        // Default should be same as auto()
+        let _ = asr.get_provider();
+    }
+
+    #[test]
+    fn test_asr_engine_google_without_key() {
+        let asr = ASREngine::new(ASRProvider::Google, None);
+        // Google without API key should not be available
+        assert!(!asr.is_available());
+    }
+
+    #[test]
+    fn test_asr_engine_google_with_key() {
+        let asr = ASREngine::new(ASRProvider::Google, Some("test-api-key".to_string()));
+        // Google with API key should report available (even if key is invalid)
+        assert!(asr.is_available());
+    }
+
+    #[test]
+    fn test_asr_engine_get_provider() {
+        let asr_google = ASREngine::new(ASRProvider::Google, None);
+        let asr_whisper = ASREngine::new(ASRProvider::Whisper, None);
+        let asr_vosk = ASREngine::new(ASRProvider::Vosk, None);
+
+        assert!(matches!(asr_google.get_provider(), ASRProvider::Google));
+        assert!(matches!(asr_whisper.get_provider(), ASRProvider::Whisper));
+        assert!(matches!(asr_vosk.get_provider(), ASRProvider::Vosk));
+    }
+
+    #[tokio::test]
+    async fn test_asr_transcribe_google_not_available() {
+        let asr = ASREngine::new(ASRProvider::Google, None);
+        let result = asr.transcribe(&[]).await;
+        // Should return NotAvailable error
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_asr_whisper_empty_data() {
+        let asr = ASREngine::new(ASRProvider::Whisper, None);
+        // Even if whisper is not installed, the method should handle errors gracefully
+        let _result = asr.transcribe_whisper(&[]);
+    }
 }
