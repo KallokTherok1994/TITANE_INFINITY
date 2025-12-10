@@ -420,8 +420,9 @@ fn main() {
             system_center::diagnostics::sc_run_full_diagnostics,
             system_center::diagnostics::sc_get_diagnostic_status,
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
-            secure_commands::chat_set_gemini_key,
-            secure_commands::get_gemini_key_status,
+            // GEMINI DÉSACTIVÉ - Ne pas utiliser
+            // secure_commands::chat_set_gemini_key,
+            // secure_commands::get_gemini_key_status,
             secure_commands::chat_set_openai_key,
             secure_commands::get_openai_key_status,
             secure_commands::chat_set_anthropic_key,

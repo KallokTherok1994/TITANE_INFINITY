@@ -22,8 +22,8 @@
     "resources": [],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "Multi-Provider AI Engine: OpenAI, Claude, Gemini, 48 Tests 100%",
-    "longDescription": "TITANE Infinity v19.3Ω Multi-Provider AI Engine: 6 Providers (OpenAI GPT-4o, Claude 3.5 Sonnet, Gemini 2.0, Ollama, Local), Neural Orchestrator, 48 Tests 100%, Zero API Leaks, Backend AES-256-GCM, Production Ready"
+    "shortDescription": "Multi-Provider AI Engine: OpenAI, Claude, Ollama, 48 Tests 100%",
+    "longDescription": "TITANE Infinity v19.3Ω Multi-Provider AI Engine: 5 Providers (OpenAI GPT-4o, Claude 3.5 Sonnet, Ollama, Local), Neural Orchestrator, 48 Tests 100%, Zero API Leaks, Backend AES-256-GCM, Production Ready"
   },
   "app": {
     "windows": [
@@ -151,7 +151,8 @@
             { "command": "chat_get_conversation" },
             { "command": "chat_delete_conversation" },
             { "command": "chat_get_providers_status" },
-            { "command": "chat_set_gemini_key" },
+            // GEMINI DÉSACTIVÉ
+            // { "command": "chat_set_gemini_key" },
             { "command": "chat_check_providers" },
             { "command": "ai_query" },
             { "command": "persona_initialize" },

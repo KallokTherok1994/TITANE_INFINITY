@@ -5,54 +5,39 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v∞ — GEMINI PROVIDER (SECURE BACKEND PROXY)
- *   Tous les appels sont délégués au backend Tauri (secrets isolés)
+ *   TITANE∞ v∞ — GEMINI PROVIDER (DÉSACTIVÉ)
+ *   ⚠️ API GEMINI DÉSACTIVÉE - Ne pas utiliser
+ *   Ce provider est désactivé et retournera toujours false
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIProvider, AIMessage, AIResponse } from '../types';
-import { tauriChatProvider } from './tauriChat';
 
 /**
- * Provider façade côté frontend.
- * Les secrets restent confinés dans SecureSecretsEngine (Rust).
+ * Provider Gemini désactivé.
+ * ⚠️ Toujours indisponible - ne pas utiliser
  */
 export const geminiProvider: AIProvider = {
   name: 'gemini',
 
   async isAvailable(): Promise<boolean> {
-    const backendReady = await tauriChatProvider.isAvailable();
-    if (!backendReady) {
-      return false;
-    }
-
-    try {
-      const status = await tauriChatProvider.getProvidersStatus();
-      const geminiStatus = status.find(provider => provider.provider === 'gemini');
-      return Boolean(geminiStatus?.available);
-    } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('[GeminiProvider] Failed to read backend status', error);
-      }
-      return false;
-    }
+    // GEMINI DÉSACTIVÉ
+    return false;
   },
 
   async generate(message: string, history: AIMessage[] = []): Promise<AIResponse> {
-    const response = await tauriChatProvider.generate(message, history);
-
-    return {
-      ...response,
-      provider: response.provider === 'tauri-gemini' ? 'gemini' : response.provider,
-    };
+    // GEMINI DÉSACTIVÉ
+    throw new Error(
+      'Gemini provider is disabled. Please use OpenAI, Claude, Ollama, or Local providers.'
+    );
   },
 
   resetErrors(): void {
-    tauriChatProvider.resetErrors?.();
+    // GEMINI DÉSACTIVÉ - No-op
   },
 
   getStats(): Record<string, unknown> {
-    return tauriChatProvider.getStats?.() || {};
+    return {};
   },
 };
 
