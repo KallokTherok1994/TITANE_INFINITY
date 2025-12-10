@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import './ChatIA.css';
+import { ModeEditor } from './ModeEditor';
+import {
+  InstructionMode,
+  instructionModeManager,
+  DEFAULT_MODES,
+} from './InstructionModeManager';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -52,6 +58,8 @@ export const ChatIA: React.FC = () => {
     gemini_configured: false,
     ollama_available: false,
   });
+  const [showModeEditor, setShowModeEditor] = useState(false);
+  const [currentMode, setCurrentMode] = useState<InstructionMode>(DEFAULT_MODES[0]);
 
   // Catégoriser les modèles Ollama par type
   const categorizeModel = (modelName: string): string => {
@@ -135,6 +143,7 @@ export const ChatIA: React.FC = () => {
         model: selectedModel || undefined,
         streaming: false,
         conversation_id: 'default',
+        system_prompt: currentMode.systemPrompt,
       };
 
       console.log(`[ChatIA] Envoi message avec provider: ${provider}`);
@@ -184,10 +193,35 @@ export const ChatIA: React.FC = () => {
     }
   };
 
+  const handleModeSelect = (mode: InstructionMode) => {
+    setCurrentMode(mode);
+  };
+
   return (
     <div className="chat-ia-container">
+      {showModeEditor && (
+        <ModeEditor
+          onClose={() => setShowModeEditor(false)}
+          onModeSelect={handleModeSelect}
+          currentModeId={currentMode.id}
+        />
+      )}
+
       <header className="chat-header">
         <h1>💬 Chat IA - TITANE∞</h1>
+
+        {/* Mode d'instruction */}
+        <div className="instruction-mode-selector">
+          <label>Mode:</label>
+          <button
+            className="mode-button"
+            onClick={() => setShowModeEditor(true)}
+            title="Gérer les modes d'instructions"
+          >
+            {currentMode.icon} {currentMode.name} ⚙️
+          </button>
+        </div>
+
         <div className="provider-controls">
           <div className="provider-selector">
             <label>Provider:</label>

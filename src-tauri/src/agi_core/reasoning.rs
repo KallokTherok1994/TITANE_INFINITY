@@ -359,4 +359,223 @@ mod tests {
 
         assert!(result.valid);
     }
+
+    #[test]
+    fn test_reasoning_chain_default() {
+        let chain = ReasoningChain::default();
+        assert!(chain.steps.is_empty());
+        assert_eq!(chain.depth, 0);
+        assert_eq!(chain.confidence, 0.0);
+        assert!(chain.conclusion.is_none());
+    }
+
+    #[test]
+    fn test_reasoning_chain_clone() {
+        let chain = ReasoningChain {
+            id: "test-123".to_string(),
+            steps: vec![],
+            depth: 5,
+            confidence: 0.85,
+            conclusion: Some("Test conclusion".to_string()),
+            alternatives: vec!["Alt1".to_string()],
+            timestamp: 12345,
+        };
+        let cloned = chain.clone();
+        assert_eq!(cloned.id, "test-123");
+        assert_eq!(cloned.depth, 5);
+    }
+
+    #[test]
+    fn test_reasoning_chain_debug() {
+        let chain = ReasoningChain::default();
+        let debug_str = format!("{:?}", chain);
+        assert!(debug_str.contains("ReasoningChain"));
+    }
+
+    #[test]
+    fn test_reasoning_type_default() {
+        let rt = ReasoningType::default();
+        assert_eq!(rt, ReasoningType::Deduction);
+    }
+
+    #[test]
+    fn test_reasoning_type_variants() {
+        let types = vec![
+            ReasoningType::Deduction,
+            ReasoningType::Induction,
+            ReasoningType::Abduction,
+            ReasoningType::Analogy,
+            ReasoningType::Causal,
+            ReasoningType::Probabilistic,
+            ReasoningType::Hypothetical,
+        ];
+        assert_eq!(types.len(), 7);
+
+        for t in types {
+            let cloned = t.clone();
+            assert_eq!(t, cloned);
+        }
+    }
+
+    #[test]
+    fn test_reasoning_step_clone() {
+        let step = ReasoningStep {
+            order: 1,
+            step_type: ReasoningType::Induction,
+            premise: "Test premise".to_string(),
+            inference: "Test inference".to_string(),
+            conclusion: "Test conclusion".to_string(),
+            confidence: 0.9,
+            supporting_evidence: vec!["Evidence".to_string()],
+            counterarguments: vec![],
+        };
+        let cloned = step.clone();
+        assert_eq!(cloned.order, 1);
+        assert_eq!(cloned.confidence, 0.9);
+    }
+
+    #[test]
+    fn test_reasoning_step_debug() {
+        let step = ReasoningStep {
+            order: 2,
+            step_type: ReasoningType::Abduction,
+            premise: "P".to_string(),
+            inference: "I".to_string(),
+            conclusion: "C".to_string(),
+            confidence: 0.75,
+            supporting_evidence: vec![],
+            counterarguments: vec!["Counter".to_string()],
+        };
+        let debug_str = format!("{:?}", step);
+        assert!(debug_str.contains("ReasoningStep"));
+    }
+
+    #[test]
+    fn test_verification_result_clone() {
+        let result = VerificationResult {
+            valid: true,
+            issues: vec![],
+            overall_coherence: 0.95,
+        };
+        let cloned = result.clone();
+        assert!(cloned.valid);
+        assert_eq!(cloned.overall_coherence, 0.95);
+    }
+
+    #[test]
+    fn test_verification_result_debug() {
+        let result = VerificationResult {
+            valid: false,
+            issues: vec!["Issue 1".to_string()],
+            overall_coherence: 0.5,
+        };
+        let debug_str = format!("{:?}", result);
+        assert!(debug_str.contains("VerificationResult"));
+    }
+
+    #[test]
+    fn test_reasoning_engine_default() {
+        let engine = ReasoningEngine::default();
+        assert_eq!(engine.max_depth, 10);
+    }
+
+    #[test]
+    fn test_calculate_chain_confidence_empty() {
+        let engine = ReasoningEngine::new(10);
+        let steps: Vec<ReasoningStep> = vec![];
+        let confidence = engine.calculate_chain_confidence(&steps);
+        assert_eq!(confidence, 0.0);
+    }
+
+    #[test]
+    fn test_calculate_chain_confidence_single() {
+        let engine = ReasoningEngine::new(10);
+        let steps = vec![ReasoningStep {
+            order: 1,
+            step_type: ReasoningType::Deduction,
+            premise: "".to_string(),
+            inference: "".to_string(),
+            conclusion: "".to_string(),
+            confidence: 0.8,
+            supporting_evidence: vec![],
+            counterarguments: vec![],
+        }];
+        let confidence = engine.calculate_chain_confidence(&steps);
+        assert_eq!(confidence, 0.8);
+    }
+
+    #[tokio::test]
+    async fn test_reasoning_with_question() {
+        let engine = ReasoningEngine::new(10);
+        let context = AGIContext::default();
+
+        let chain = engine.reason("What is this?", &context).await;
+
+        // Should detect question
+        assert!(chain.steps[0].supporting_evidence.iter().any(|e| e.contains("Is question: true")));
+    }
+
+    #[tokio::test]
+    async fn test_reasoning_with_causal() {
+        let engine = ReasoningEngine::new(10);
+        let context = AGIContext::default();
+
+        let chain = engine.reason("This happened because of that", &context).await;
+
+        // Should detect causal relationship
+        assert!(chain.steps[1].supporting_evidence.iter().any(|e| e.contains("Causal")));
+    }
+
+    #[tokio::test]
+    async fn test_reasoning_with_conditional() {
+        let engine = ReasoningEngine::new(10);
+        let context = AGIContext::default();
+
+        let chain = engine.reason("If this then that", &context).await;
+
+        // Should detect conditional
+        assert!(chain.steps[1].supporting_evidence.iter().any(|e| e.contains("Conditional")));
+    }
+
+    #[test]
+    fn test_verify_chain_exceeds_depth() {
+        let engine = ReasoningEngine::new(3);
+        let chain = ReasoningChain {
+            id: "test".to_string(),
+            steps: vec![],
+            depth: 5, // Exceeds max of 3
+            confidence: 0.8,
+            conclusion: None,
+            alternatives: vec![],
+            timestamp: 0,
+        };
+
+        let result = engine.verify(&chain);
+        assert!(!result.valid);
+        assert!(result.issues.iter().any(|i| i.contains("exceeds maximum depth")));
+    }
+
+    #[test]
+    fn test_serialization_reasoning_chain() {
+        let chain = ReasoningChain {
+            id: "ser-test".to_string(),
+            steps: vec![],
+            depth: 2,
+            confidence: 0.75,
+            conclusion: Some("Test".to_string()),
+            alternatives: vec!["Alt".to_string()],
+            timestamp: 99999,
+        };
+        let json = serde_json::to_string(&chain).unwrap();
+        let restored: ReasoningChain = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.id, "ser-test");
+    }
+
+    #[test]
+    fn test_serialization_reasoning_type() {
+        let rt = ReasoningType::Probabilistic;
+        let json = serde_json::to_string(&rt).unwrap();
+        let restored: ReasoningType = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored, ReasoningType::Probabilistic);
+    }
 }
