@@ -451,7 +451,7 @@ impl SingularityState {
     /// Get overall system health
     pub fn health(&self) -> EngineHealth {
         // Aggregate health from all modules
-        let healths = vec![
+        let healths = [
             self.coherence.health(),
             self.memory.health(),
             self.harmonia.health(),
