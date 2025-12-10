@@ -5,9 +5,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 use std::error::Error;
-use std::collections::HashMap;
 use super::*;
-use super::pipeline::{OmegaPipeline, PipelineHealth};
+use super::pipeline::OmegaPipeline;
 
 // ═══════════════════════════════════════════════════════════════
 //   TESTS UNITAIRES — CRÉATION & CONFIGURATION
@@ -32,7 +31,10 @@ async fn test_pipeline_with_custom_config() -> Result<(), Box<dyn Error>> {
         max_parallel_tasks: 10,
         safety_level: 0.8,
         enable_cache: true,
-        cache_ttl_seconds: 300,
+        parallel_execution: true,
+        cache_ttl_secs: 300,
+        enable_diagnostics: false,
+        target_latency_ms: 1000,
     };
     
     let pipeline = OmegaPipeline::new(config.clone());
