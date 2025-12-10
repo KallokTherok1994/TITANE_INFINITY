@@ -456,11 +456,39 @@ impl ModeSelector {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // ModeSelector Basic Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_mode_selector_creation() {
         let selector = ModeSelector::new();
         assert_eq!(selector.current(), ConversationMode::Neutral);
     }
+
+    #[test]
+    fn test_mode_selector_default() {
+        let selector = ModeSelector::default();
+        assert_eq!(selector.current(), ConversationMode::Neutral);
+        assert!(!selector.is_locked());
+    }
+
+    #[test]
+    fn test_mode_selector_with_mode() {
+        let selector = ModeSelector::with_mode(ConversationMode::Expert);
+        assert_eq!(selector.current(), ConversationMode::Expert);
+    }
+
+    #[test]
+    fn test_mode_selector_clone() {
+        let selector = ModeSelector::with_mode(ConversationMode::Coach);
+        let cloned = selector.clone();
+        assert_eq!(selector.current(), cloned.current());
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Mode Selection by Intent Tests
+    // ─────────────────────────────────────────────────────────────
 
     #[test]
     fn test_mode_from_intent() {
@@ -477,6 +505,59 @@ mod tests {
     }
 
     #[test]
+    fn test_mode_from_query_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::Query);
+        assert_eq!(mode, ConversationMode::Expert);
+    }
+
+    #[test]
+    fn test_mode_from_task_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::Task);
+        assert_eq!(mode, ConversationMode::Expert);
+    }
+
+    #[test]
+    fn test_mode_from_emotional_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::Emotional);
+        assert_eq!(mode, ConversationMode::Harmonic);
+    }
+
+    #[test]
+    fn test_mode_from_command_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::Command);
+        assert_eq!(mode, ConversationMode::Logic);
+    }
+
+    #[test]
+    fn test_mode_from_debug_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::Debug);
+        assert_eq!(mode, ConversationMode::Expert);
+    }
+
+    #[test]
+    fn test_mode_from_meta_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::MetaQuery);
+        assert_eq!(mode, ConversationMode::Meta);
+    }
+
+    #[test]
+    fn test_mode_from_unknown_intent() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select(&IntentClass::Unknown);
+        assert_eq!(mode, ConversationMode::Neutral);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Mode Locking Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
     fn test_mode_locking() {
         let mut selector = ModeSelector::new();
 
@@ -490,6 +571,33 @@ mod tests {
         selector.unlock_mode();
         assert!(!selector.is_locked());
     }
+
+    #[test]
+    fn test_lock_updates_current() {
+        let mut selector = ModeSelector::new();
+        selector.lock_mode(ConversationMode::Creative);
+        assert_eq!(selector.current(), ConversationMode::Creative);
+    }
+
+    #[test]
+    fn test_locked_mode_ignores_context() {
+        let mut selector = ModeSelector::new();
+        selector.lock_mode(ConversationMode::Logic);
+
+        let mode = selector.select_with_context(
+            &IntentClass::Creative,
+            100,
+            false,
+            false,
+            Some(0.8),
+        );
+
+        assert_eq!(mode, ConversationMode::Logic);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Context Selection Tests
+    // ─────────────────────────────────────────────────────────────
 
     #[test]
     fn test_context_selection() {
@@ -509,6 +617,49 @@ mod tests {
     }
 
     #[test]
+    fn test_context_short_message() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select_with_context(
+            &IntentClass::Command,
+            15,
+            false,
+            false,
+            None,
+        );
+        assert_eq!(mode, ConversationMode::Logic);
+    }
+
+    #[test]
+    fn test_context_with_code() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select_with_context(
+            &IntentClass::Query,
+            100,
+            false,
+            true, // has code
+            None,
+        );
+        assert_eq!(mode, ConversationMode::Expert);
+    }
+
+    #[test]
+    fn test_context_negative_sentiment() {
+        let mut selector = ModeSelector::new();
+        let mode = selector.select_with_context(
+            &IntentClass::Emotional,
+            50,
+            false,
+            false,
+            Some(-0.5),
+        );
+        assert_eq!(mode, ConversationMode::Harmonic);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Stability Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
     fn test_stability() {
         let mut selector = ModeSelector::new();
         selector.set_stability(0.8);
@@ -520,12 +671,47 @@ mod tests {
 
         let score = selector.stability_score();
         assert!(score > 0.8);
-
-        // Now try to switch - should resist
-        let mode = selector.select(&IntentClass::Emotional);
-        // Might still be Expert due to high stability
-        // (depends on stability factor)
     }
+
+    #[test]
+    fn test_stability_score_empty_history() {
+        let selector = ModeSelector::new();
+        assert_eq!(selector.stability_score(), 1.0);
+    }
+
+    #[test]
+    fn test_stability_score_single_mode() {
+        let mut selector = ModeSelector::new();
+        for _ in 0..5 {
+            selector.select(&IntentClass::Query);
+        }
+        assert_eq!(selector.stability_score(), 1.0);
+    }
+
+    #[test]
+    fn test_stability_score_alternating() {
+        let mut selector = ModeSelector::new();
+        selector.select(&IntentClass::Query);
+        selector.select(&IntentClass::Help);
+        selector.select(&IntentClass::Query);
+        selector.select(&IntentClass::Help);
+        let score = selector.stability_score();
+        assert!(score < 0.5);
+    }
+
+    #[test]
+    fn test_set_stability_clamped() {
+        let mut selector = ModeSelector::new();
+        selector.set_stability(1.5);
+        // Should be clamped to 1.0
+
+        selector.set_stability(-0.5);
+        // Should be clamped to 0.0
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Distribution Tests
+    // ─────────────────────────────────────────────────────────────
 
     #[test]
     fn test_distribution() {
@@ -540,6 +726,29 @@ mod tests {
     }
 
     #[test]
+    fn test_distribution_empty() {
+        let selector = ModeSelector::new();
+        let dist = selector.get_distribution();
+        assert!(dist.is_empty());
+    }
+
+    #[test]
+    fn test_distribution_sums_to_one() {
+        let mut selector = ModeSelector::new();
+        selector.select(&IntentClass::Query);
+        selector.select(&IntentClass::Help);
+        selector.select(&IntentClass::Creative);
+
+        let dist = selector.get_distribution();
+        let sum: f32 = dist.values().sum();
+        assert!((sum - 1.0).abs() < 0.01);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Reset Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
     fn test_reset() {
         let mut selector = ModeSelector::new();
 
@@ -550,5 +759,17 @@ mod tests {
 
         assert_eq!(selector.current(), ConversationMode::Neutral);
         assert!(!selector.is_locked());
+    }
+
+    #[test]
+    fn test_reset_clears_distribution() {
+        let mut selector = ModeSelector::new();
+        selector.select(&IntentClass::Query);
+        selector.select(&IntentClass::Help);
+
+        selector.reset();
+
+        let dist = selector.get_distribution();
+        assert!(dist.is_empty());
     }
 }

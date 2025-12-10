@@ -1,10 +1,10 @@
 <!--
-  TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
+  TITANE_INFINITY v19.5.2 — Proprietary License
   © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
   See LICENSE.md for full legal terms (FR/EN).
 -->
 
-# CHANGELOG — TITANE∞ v∞.19.2.3Ω
+# CHANGELOG — TITANE∞ v19.5.2
 
 **© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 

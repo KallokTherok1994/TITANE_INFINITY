@@ -171,6 +171,10 @@ impl CycleState {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // DailyPhase Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_daily_phase() {
         assert_eq!(DailyPhase::from_hour(8), DailyPhase::Morning);
@@ -179,8 +183,309 @@ mod tests {
     }
 
     #[test]
+    fn test_daily_phase_dawn() {
+        assert_eq!(DailyPhase::from_hour(5), DailyPhase::Dawn);
+        assert_eq!(DailyPhase::from_hour(6), DailyPhase::Dawn);
+    }
+
+    #[test]
+    fn test_daily_phase_morning() {
+        assert_eq!(DailyPhase::from_hour(7), DailyPhase::Morning);
+        assert_eq!(DailyPhase::from_hour(11), DailyPhase::Morning);
+    }
+
+    #[test]
+    fn test_daily_phase_noon() {
+        assert_eq!(DailyPhase::from_hour(12), DailyPhase::Noon);
+        assert_eq!(DailyPhase::from_hour(13), DailyPhase::Noon);
+    }
+
+    #[test]
+    fn test_daily_phase_afternoon() {
+        assert_eq!(DailyPhase::from_hour(14), DailyPhase::Afternoon);
+        assert_eq!(DailyPhase::from_hour(17), DailyPhase::Afternoon);
+    }
+
+    #[test]
+    fn test_daily_phase_dusk() {
+        assert_eq!(DailyPhase::from_hour(18), DailyPhase::Dusk);
+        assert_eq!(DailyPhase::from_hour(19), DailyPhase::Dusk);
+    }
+
+    #[test]
+    fn test_daily_phase_night() {
+        assert_eq!(DailyPhase::from_hour(20), DailyPhase::Night);
+        assert_eq!(DailyPhase::from_hour(0), DailyPhase::Night);
+        assert_eq!(DailyPhase::from_hour(4), DailyPhase::Night);
+    }
+
+    #[test]
+    fn test_daily_phase_clone() {
+        let phase = DailyPhase::Morning;
+        let cloned = phase.clone();
+        assert_eq!(phase, cloned);
+    }
+
+    #[test]
+    fn test_daily_phase_copy() {
+        let phase = DailyPhase::Morning;
+        let copied = phase;
+        assert_eq!(phase, copied);
+    }
+
+    #[test]
+    fn test_daily_phase_debug() {
+        let debug = format!("{:?}", DailyPhase::Dawn);
+        assert_eq!(debug, "Dawn");
+    }
+
+    #[test]
+    fn test_daily_phase_serialization() {
+        let phase = DailyPhase::Noon;
+        let json = serde_json::to_string(&phase).unwrap();
+        let restored: DailyPhase = serde_json::from_str(&json).unwrap();
+        assert_eq!(phase, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // CognitiveMode Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
     fn test_cognitive_mode() {
         assert_eq!(DailyPhase::Dawn.cognitive_mode(), CognitiveMode::Creative);
         assert_eq!(DailyPhase::Noon.cognitive_mode(), CognitiveMode::Peak);
+    }
+
+    #[test]
+    fn test_cognitive_mode_morning() {
+        assert_eq!(DailyPhase::Morning.cognitive_mode(), CognitiveMode::Analytical);
+    }
+
+    #[test]
+    fn test_cognitive_mode_afternoon() {
+        assert_eq!(DailyPhase::Afternoon.cognitive_mode(), CognitiveMode::Execution);
+    }
+
+    #[test]
+    fn test_cognitive_mode_dusk() {
+        assert_eq!(DailyPhase::Dusk.cognitive_mode(), CognitiveMode::Synthesis);
+    }
+
+    #[test]
+    fn test_cognitive_mode_night() {
+        assert_eq!(DailyPhase::Night.cognitive_mode(), CognitiveMode::Consolidation);
+    }
+
+    #[test]
+    fn test_cognitive_mode_clone() {
+        let mode = CognitiveMode::Peak;
+        let cloned = mode.clone();
+        assert_eq!(mode, cloned);
+    }
+
+    #[test]
+    fn test_cognitive_mode_copy() {
+        let mode = CognitiveMode::Creative;
+        let copied = mode;
+        assert_eq!(mode, copied);
+    }
+
+    #[test]
+    fn test_cognitive_mode_debug() {
+        let debug = format!("{:?}", CognitiveMode::Analytical);
+        assert_eq!(debug, "Analytical");
+    }
+
+    #[test]
+    fn test_cognitive_mode_serialization() {
+        let mode = CognitiveMode::Synthesis;
+        let json = serde_json::to_string(&mode).unwrap();
+        let restored: CognitiveMode = serde_json::from_str(&json).unwrap();
+        assert_eq!(mode, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // WeeklyPhase Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_weekly_phase_cognitive_focus_monday() {
+        assert_eq!(WeeklyPhase::Monday.cognitive_focus(), "Structuration");
+    }
+
+    #[test]
+    fn test_weekly_phase_cognitive_focus_tuesday() {
+        assert_eq!(WeeklyPhase::Tuesday.cognitive_focus(), "Production");
+    }
+
+    #[test]
+    fn test_weekly_phase_cognitive_focus_wednesday() {
+        assert_eq!(WeeklyPhase::Wednesday.cognitive_focus(), "Créativité");
+    }
+
+    #[test]
+    fn test_weekly_phase_cognitive_focus_thursday() {
+        assert_eq!(WeeklyPhase::Thursday.cognitive_focus(), "Optimisation");
+    }
+
+    #[test]
+    fn test_weekly_phase_cognitive_focus_friday() {
+        assert_eq!(WeeklyPhase::Friday.cognitive_focus(), "Synthèse");
+    }
+
+    #[test]
+    fn test_weekly_phase_cognitive_focus_weekend() {
+        assert_eq!(WeeklyPhase::Weekend.cognitive_focus(), "Régénération");
+    }
+
+    #[test]
+    fn test_weekly_phase_clone() {
+        let phase = WeeklyPhase::Friday;
+        let cloned = phase.clone();
+        assert_eq!(phase, cloned);
+    }
+
+    #[test]
+    fn test_weekly_phase_copy() {
+        let phase = WeeklyPhase::Monday;
+        let copied = phase;
+        assert_eq!(phase, copied);
+    }
+
+    #[test]
+    fn test_weekly_phase_debug() {
+        let debug = format!("{:?}", WeeklyPhase::Wednesday);
+        assert_eq!(debug, "Wednesday");
+    }
+
+    #[test]
+    fn test_weekly_phase_serialization() {
+        let phase = WeeklyPhase::Thursday;
+        let json = serde_json::to_string(&phase).unwrap();
+        let restored: WeeklyPhase = serde_json::from_str(&json).unwrap();
+        assert_eq!(phase, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // MonthlyPhase Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_monthly_phase_clone() {
+        let phase = MonthlyPhase::Week1;
+        let cloned = phase.clone();
+        assert_eq!(phase, cloned);
+    }
+
+    #[test]
+    fn test_monthly_phase_copy() {
+        let phase = MonthlyPhase::Week2;
+        let copied = phase;
+        assert_eq!(phase, copied);
+    }
+
+    #[test]
+    fn test_monthly_phase_debug() {
+        let debug = format!("{:?}", MonthlyPhase::Week3);
+        assert_eq!(debug, "Week3");
+    }
+
+    #[test]
+    fn test_monthly_phase_serialization() {
+        let phase = MonthlyPhase::Week4;
+        let json = serde_json::to_string(&phase).unwrap();
+        let restored: MonthlyPhase = serde_json::from_str(&json).unwrap();
+        assert_eq!(phase, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // SeasonalPhase Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_seasonal_phase_cognitive_tendency_spring() {
+        assert_eq!(SeasonalPhase::Spring.cognitive_tendency(), "Expansion");
+    }
+
+    #[test]
+    fn test_seasonal_phase_cognitive_tendency_summer() {
+        assert_eq!(SeasonalPhase::Summer.cognitive_tendency(), "Intensité");
+    }
+
+    #[test]
+    fn test_seasonal_phase_cognitive_tendency_autumn() {
+        assert_eq!(SeasonalPhase::Autumn.cognitive_tendency(), "Récolte");
+    }
+
+    #[test]
+    fn test_seasonal_phase_cognitive_tendency_winter() {
+        assert_eq!(SeasonalPhase::Winter.cognitive_tendency(), "Introspection");
+    }
+
+    #[test]
+    fn test_seasonal_phase_clone() {
+        let phase = SeasonalPhase::Spring;
+        let cloned = phase.clone();
+        assert_eq!(phase, cloned);
+    }
+
+    #[test]
+    fn test_seasonal_phase_copy() {
+        let phase = SeasonalPhase::Summer;
+        let copied = phase;
+        assert_eq!(phase, copied);
+    }
+
+    #[test]
+    fn test_seasonal_phase_debug() {
+        let debug = format!("{:?}", SeasonalPhase::Autumn);
+        assert_eq!(debug, "Autumn");
+    }
+
+    #[test]
+    fn test_seasonal_phase_serialization() {
+        let phase = SeasonalPhase::Winter;
+        let json = serde_json::to_string(&phase).unwrap();
+        let restored: SeasonalPhase = serde_json::from_str(&json).unwrap();
+        assert_eq!(phase, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // CycleState Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_cycle_state_current() {
+        let state = CycleState::current();
+        assert!(state.timestamp > 0);
+    }
+
+    #[test]
+    fn test_cycle_state_clone() {
+        let state = CycleState::current();
+        let cloned = state.clone();
+        assert_eq!(state.timestamp, cloned.timestamp);
+    }
+
+    #[test]
+    fn test_cycle_state_debug() {
+        let state = CycleState::current();
+        let debug = format!("{:?}", state);
+        assert!(debug.contains("CycleState"));
+    }
+
+    #[test]
+    fn test_cycle_state_serialization() {
+        let state = CycleState::current();
+        let json = serde_json::to_string(&state).unwrap();
+        let restored: CycleState = serde_json::from_str(&json).unwrap();
+        assert_eq!(state.timestamp, restored.timestamp);
+    }
+
+    #[test]
+    fn test_cycle_state_daily_phase_cognitive_mode_sync() {
+        let state = CycleState::current();
+        assert_eq!(state.daily_phase.cognitive_mode(), state.cognitive_mode);
     }
 }

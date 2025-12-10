@@ -92,6 +92,66 @@ impl Default for PredictiveTemporalModel {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // PredictiveEvent Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_predictive_event_creation() {
+        let event = PredictiveEvent {
+            event_type: "test_event".to_string(),
+            predicted_time: 1234567890,
+            confidence: 0.8,
+            suggested_action: "Do something".to_string(),
+        };
+        assert_eq!(event.event_type, "test_event");
+        assert_eq!(event.predicted_time, 1234567890);
+        assert_eq!(event.confidence, 0.8);
+    }
+
+    #[test]
+    fn test_predictive_event_clone() {
+        let event = PredictiveEvent {
+            event_type: "clone_test".to_string(),
+            predicted_time: 1000,
+            confidence: 0.5,
+            suggested_action: "Test".to_string(),
+        };
+        let cloned = event.clone();
+        assert_eq!(event.event_type, cloned.event_type);
+        assert_eq!(event.confidence, cloned.confidence);
+    }
+
+    #[test]
+    fn test_predictive_event_debug() {
+        let event = PredictiveEvent {
+            event_type: "debug_test".to_string(),
+            predicted_time: 1000,
+            confidence: 0.5,
+            suggested_action: "Test".to_string(),
+        };
+        let debug = format!("{:?}", event);
+        assert!(debug.contains("PredictiveEvent"));
+    }
+
+    #[test]
+    fn test_predictive_event_serialization() {
+        let event = PredictiveEvent {
+            event_type: "serial_test".to_string(),
+            predicted_time: 2000,
+            confidence: 0.9,
+            suggested_action: "Serialize".to_string(),
+        };
+        let json = serde_json::to_string(&event).unwrap();
+        let restored: PredictiveEvent = serde_json::from_str(&json).unwrap();
+        assert_eq!(event.event_type, restored.event_type);
+        assert_eq!(event.confidence, restored.confidence);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // PredictiveTemporalModel Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_predict_next_phase() {
         let model = PredictiveTemporalModel::new();
@@ -102,11 +162,176 @@ mod tests {
     }
 
     #[test]
+    fn test_predict_next_phase_dawn() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.predict_next_daily_phase(DailyPhase::Dawn),
+            DailyPhase::Morning
+        );
+    }
+
+    #[test]
+    fn test_predict_next_phase_noon() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.predict_next_daily_phase(DailyPhase::Noon),
+            DailyPhase::Afternoon
+        );
+    }
+
+    #[test]
+    fn test_predict_next_phase_afternoon() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.predict_next_daily_phase(DailyPhase::Afternoon),
+            DailyPhase::Dusk
+        );
+    }
+
+    #[test]
+    fn test_predict_next_phase_dusk() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.predict_next_daily_phase(DailyPhase::Dusk),
+            DailyPhase::Night
+        );
+    }
+
+    #[test]
+    fn test_predict_next_phase_night() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.predict_next_daily_phase(DailyPhase::Night),
+            DailyPhase::Dawn
+        );
+    }
+
+    #[test]
     fn test_suggest_optimal_time() {
         let model = PredictiveTemporalModel::new();
         assert_eq!(
             model.suggest_optimal_time("creative"),
             Some(DailyPhase::Dawn)
         );
+    }
+
+    #[test]
+    fn test_suggest_optimal_time_analytical() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.suggest_optimal_time("analytical"),
+            Some(DailyPhase::Morning)
+        );
+    }
+
+    #[test]
+    fn test_suggest_optimal_time_execution() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.suggest_optimal_time("execution"),
+            Some(DailyPhase::Afternoon)
+        );
+    }
+
+    #[test]
+    fn test_suggest_optimal_time_synthesis() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.suggest_optimal_time("synthesis"),
+            Some(DailyPhase::Dusk)
+        );
+    }
+
+    #[test]
+    fn test_suggest_optimal_time_consolidation() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.suggest_optimal_time("consolidation"),
+            Some(DailyPhase::Night)
+        );
+    }
+
+    #[test]
+    fn test_suggest_optimal_time_unknown() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(
+            model.suggest_optimal_time("unknown_task"),
+            Some(DailyPhase::Noon)
+        );
+    }
+
+    #[test]
+    fn test_model_new() {
+        let model = PredictiveTemporalModel::new();
+        // Model should be created without errors
+        assert!(model.predictions.is_empty());
+    }
+
+    #[test]
+    fn test_model_default() {
+        let model = PredictiveTemporalModel::default();
+        assert!(model.predictions.is_empty());
+    }
+
+    #[test]
+    fn test_time_to_next_phase_dawn() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(model.time_to_next_phase(DailyPhase::Dawn), 2 * 3600);
+    }
+
+    #[test]
+    fn test_time_to_next_phase_morning() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(model.time_to_next_phase(DailyPhase::Morning), 5 * 3600);
+    }
+
+    #[test]
+    fn test_time_to_next_phase_noon() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(model.time_to_next_phase(DailyPhase::Noon), 2 * 3600);
+    }
+
+    #[test]
+    fn test_time_to_next_phase_afternoon() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(model.time_to_next_phase(DailyPhase::Afternoon), 4 * 3600);
+    }
+
+    #[test]
+    fn test_time_to_next_phase_dusk() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(model.time_to_next_phase(DailyPhase::Dusk), 2 * 3600);
+    }
+
+    #[test]
+    fn test_time_to_next_phase_night() {
+        let model = PredictiveTemporalModel::new();
+        assert_eq!(model.time_to_next_phase(DailyPhase::Night), 9 * 3600);
+    }
+
+    #[test]
+    fn test_predict_next_cycle_change() {
+        let model = PredictiveTemporalModel::new();
+        let state = CycleState::current();
+        let predictions = model.predict_next_cycle_change(&state);
+        assert!(!predictions.is_empty());
+        assert_eq!(predictions[0].event_type, "daily_phase_change");
+        assert_eq!(predictions[0].confidence, 0.95);
+    }
+
+    #[test]
+    fn test_predict_next_cycle_change_timestamp() {
+        let model = PredictiveTemporalModel::new();
+        let state = CycleState::current();
+        let predictions = model.predict_next_cycle_change(&state);
+        assert!(predictions[0].predicted_time > state.timestamp);
+    }
+
+    #[test]
+    fn test_predict_next_cycle_change_action() {
+        let model = PredictiveTemporalModel::new();
+        let state = CycleState::current();
+        let predictions = model.predict_next_cycle_change(&state);
+        assert!(predictions[0].suggested_action.contains("Prepare for"));
     }
 }

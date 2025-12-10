@@ -418,10 +418,154 @@ impl ConversationBrainState {
 mod tests {
     use super::*;
 
+    // ─────────────────────────────────────────────────────────────
+    // ConversationMode Tests
+    // ─────────────────────────────────────────────────────────────
+
     #[test]
     fn test_conversation_mode_defaults() {
         let mode = ConversationMode::default();
         assert_eq!(mode, ConversationMode::Neutral);
+    }
+
+    #[test]
+    fn test_conversation_mode_all_variants() {
+        let modes = vec![
+            ConversationMode::Coach,
+            ConversationMode::Expert,
+            ConversationMode::Meta,
+            ConversationMode::Cognitive,
+            ConversationMode::Creative,
+            ConversationMode::Logic,
+            ConversationMode::Harmonic,
+            ConversationMode::Neutral,
+        ];
+        assert_eq!(modes.len(), 8);
+    }
+
+    #[test]
+    fn test_conversation_mode_weight() {
+        assert!(ConversationMode::Expert.weight() > ConversationMode::Neutral.weight());
+        assert!(ConversationMode::Logic.weight() > ConversationMode::Creative.weight());
+    }
+
+    #[test]
+    fn test_conversation_mode_weight_range() {
+        for mode in [
+            ConversationMode::Coach,
+            ConversationMode::Expert,
+            ConversationMode::Meta,
+            ConversationMode::Cognitive,
+            ConversationMode::Creative,
+            ConversationMode::Logic,
+            ConversationMode::Harmonic,
+            ConversationMode::Neutral,
+        ] {
+            let weight = mode.weight();
+            assert!(weight >= 0.0 && weight <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_conversation_mode_description() {
+        assert!(ConversationMode::Coach.description().contains("Warm"));
+        assert!(ConversationMode::Expert.description().contains("technical"));
+        assert!(ConversationMode::Creative.description().contains("imaginative"));
+    }
+
+    #[test]
+    fn test_conversation_mode_clone() {
+        let mode = ConversationMode::Meta;
+        let cloned = mode.clone();
+        assert_eq!(mode, cloned);
+    }
+
+    #[test]
+    fn test_conversation_mode_copy() {
+        let mode = ConversationMode::Logic;
+        let copied = mode;
+        assert_eq!(mode, copied);
+    }
+
+    #[test]
+    fn test_conversation_mode_serialization() {
+        let mode = ConversationMode::Cognitive;
+        let json = serde_json::to_string(&mode).unwrap();
+        let restored: ConversationMode = serde_json::from_str(&json).unwrap();
+        assert_eq!(mode, restored);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // IntentClass Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_intent_class_default() {
+        let intent = IntentClass::default();
+        assert_eq!(intent, IntentClass::Unknown);
+    }
+
+    #[test]
+    fn test_intent_class_all_variants() {
+        let intents = vec![
+            IntentClass::Query,
+            IntentClass::Task,
+            IntentClass::Help,
+            IntentClass::Emotional,
+            IntentClass::Conversation,
+            IntentClass::Command,
+            IntentClass::Creative,
+            IntentClass::Debug,
+            IntentClass::Explanation,
+            IntentClass::MetaQuery,
+            IntentClass::Unknown,
+        ];
+        assert_eq!(intents.len(), 11);
+    }
+
+    #[test]
+    fn test_intent_class_serialization() {
+        let intent = IntentClass::Debug;
+        let json = serde_json::to_string(&intent).unwrap();
+        let restored: IntentClass = serde_json::from_str(&json).unwrap();
+        assert_eq!(intent, restored);
+    }
+
+    #[test]
+    fn test_intent_class_clone() {
+        let intent = IntentClass::Creative;
+        let cloned = intent.clone();
+        assert_eq!(intent, cloned);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // AffectiveState Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_affective_state_default() {
+        let affect = AffectiveState::default();
+        assert_eq!(affect.valence, 0.2);
+        assert_eq!(affect.arousal, 0.5);
+        assert_eq!(affect.confidence, 0.8);
+    }
+
+    #[test]
+    fn test_affective_state_new() {
+        let affect = AffectiveState::new(0.5, 0.7);
+        assert_eq!(affect.valence, 0.5);
+        assert_eq!(affect.arousal, 0.7);
+    }
+
+    #[test]
+    fn test_affective_state_new_clamped() {
+        let affect = AffectiveState::new(2.0, 1.5);
+        assert_eq!(affect.valence, 1.0);
+        assert_eq!(affect.arousal, 1.0);
+
+        let affect_neg = AffectiveState::new(-2.0, -0.5);
+        assert_eq!(affect_neg.valence, -1.0);
+        assert_eq!(affect_neg.arousal, 0.0);
     }
 
     #[test]
@@ -434,6 +578,52 @@ mod tests {
     }
 
     #[test]
+    fn test_affective_state_from_all_modes() {
+        for mode in [
+            ConversationMode::Coach,
+            ConversationMode::Expert,
+            ConversationMode::Meta,
+            ConversationMode::Cognitive,
+            ConversationMode::Creative,
+            ConversationMode::Logic,
+            ConversationMode::Harmonic,
+            ConversationMode::Neutral,
+        ] {
+            let affect = AffectiveState::from_mode(mode);
+            assert!(affect.valence >= -1.0 && affect.valence <= 1.0);
+            assert!(affect.arousal >= 0.0 && affect.arousal <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_affective_state_clone() {
+        let affect = AffectiveState::new(0.3, 0.6);
+        let cloned = affect.clone();
+        assert_eq!(affect.valence, cloned.valence);
+        assert_eq!(affect.arousal, cloned.arousal);
+    }
+
+    #[test]
+    fn test_affective_state_copy() {
+        let affect = AffectiveState::new(0.1, 0.4);
+        let copied = affect;
+        assert_eq!(affect.valence, copied.valence);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // StyleProfile Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_style_profile_default() {
+        let style = StyleProfile::default();
+        assert_eq!(style.tone, "équilibré");
+        assert_eq!(style.density, 0.5);
+        assert!(style.use_examples);
+        assert!(!style.use_emojis);
+    }
+
+    #[test]
     fn test_style_profile_from_mode() {
         let expert_style = StyleProfile::from_mode(ConversationMode::Expert);
         assert_eq!(expert_style.tone, "technique");
@@ -442,6 +632,129 @@ mod tests {
         let creative_style = StyleProfile::from_mode(ConversationMode::Creative);
         assert_eq!(creative_style.tone, "fluide");
         assert!(creative_style.formality < 0.5);
+    }
+
+    #[test]
+    fn test_style_profile_from_all_modes() {
+        for mode in [
+            ConversationMode::Coach,
+            ConversationMode::Expert,
+            ConversationMode::Meta,
+            ConversationMode::Cognitive,
+            ConversationMode::Creative,
+            ConversationMode::Logic,
+            ConversationMode::Harmonic,
+            ConversationMode::Neutral,
+        ] {
+            let style = StyleProfile::from_mode(mode);
+            assert!(!style.tone.is_empty());
+            assert!(style.density >= 0.0 && style.density <= 1.0);
+            assert!(style.tempo >= 0.0 && style.tempo <= 1.0);
+            assert!(style.formality >= 0.0 && style.formality <= 1.0);
+        }
+    }
+
+    #[test]
+    fn test_style_profile_clone() {
+        let style = StyleProfile::from_mode(ConversationMode::Coach);
+        let cloned = style.clone();
+        assert_eq!(style.tone, cloned.tone);
+        assert_eq!(style.density, cloned.density);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // MemoryContext Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_memory_context_default() {
+        let ctx = MemoryContext::default();
+        assert!(ctx.items.is_empty());
+        assert_eq!(ctx.relevance_score, 0.0);
+        assert!(ctx.source_distribution.is_empty());
+    }
+
+    #[test]
+    fn test_memory_context_clone() {
+        let mut ctx = MemoryContext::default();
+        ctx.relevance_score = 0.8;
+        let cloned = ctx.clone();
+        assert_eq!(ctx.relevance_score, cloned.relevance_score);
+    }
+
+    #[test]
+    fn test_memory_context_item_creation() {
+        let item = MemoryContextItem {
+            id: Uuid::new_v4(),
+            content: "Test memory".to_string(),
+            relevance: 0.9,
+            source_tier: "STM".to_string(),
+            timestamp: 12345,
+        };
+        assert_eq!(item.content, "Test memory");
+        assert_eq!(item.relevance, 0.9);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ConstraintProfile Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_constraint_profile_default() {
+        let constraints = ConstraintProfile::default();
+        assert_eq!(constraints.max_length, 2000);
+        assert!(constraints.required_topics.is_empty());
+        assert!(constraints.forbidden.is_empty());
+        assert_eq!(constraints.safety_level, 0.9);
+        assert_eq!(constraints.coherence_threshold, 0.85);
+    }
+
+    #[test]
+    fn test_constraint_profile_clone() {
+        let constraints = ConstraintProfile::default();
+        let cloned = constraints.clone();
+        assert_eq!(constraints.max_length, cloned.max_length);
+        assert_eq!(constraints.safety_level, cloned.safety_level);
+    }
+
+    #[test]
+    fn test_constraint_profile_custom() {
+        let constraints = ConstraintProfile {
+            max_length: 5000,
+            required_topics: vec!["AI".to_string()],
+            forbidden: vec!["spam".to_string()],
+            tone_constraints: vec!["professional".to_string()],
+            safety_level: 0.95,
+            coherence_threshold: 0.9,
+        };
+        assert_eq!(constraints.max_length, 5000);
+        assert_eq!(constraints.required_topics.len(), 1);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ConversationBrainState Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_brain_state_new() {
+        let state = ConversationBrainState::new();
+        assert_eq!(state.mode, ConversationMode::Neutral);
+        assert_eq!(state.intent, IntentClass::Unknown);
+        assert_eq!(state.evolution_level, 1.0);
+    }
+
+    #[test]
+    fn test_brain_state_default() {
+        let state = ConversationBrainState::default();
+        assert_eq!(state.coherence_score, 0.85);
+        assert_eq!(state.message_count, 0);
+    }
+
+    #[test]
+    fn test_brain_state_with_mode() {
+        let state = ConversationBrainState::with_mode(ConversationMode::Expert);
+        assert_eq!(state.mode, ConversationMode::Expert);
+        assert_eq!(state.style.tone, "technique");
     }
 
     #[test]
@@ -467,10 +780,62 @@ mod tests {
     }
 
     #[test]
+    fn test_reasoning_chain_empty() {
+        let state = ConversationBrainState::new();
+        let summary = state.reasoning_summary();
+        assert_eq!(summary, "No reasoning recorded");
+    }
+
+    #[test]
+    fn test_reasoning_chain_limit() {
+        let mut state = ConversationBrainState::new();
+        for i in 0..25 {
+            state.add_reasoning(format!("Step {}", i));
+        }
+        assert!(state.reasoning_chain.len() <= 20);
+    }
+
+    #[test]
     fn test_evolution() {
         let mut state = ConversationBrainState::new();
         let initial = state.evolution_level;
         state.evolve(0.5);
         assert!(state.evolution_level > initial);
+    }
+
+    #[test]
+    fn test_evolution_clamped() {
+        let mut state = ConversationBrainState::new();
+        state.evolve(100.0);
+        assert_eq!(state.evolution_level, 10.0);
+
+        state.evolve(-100.0);
+        assert_eq!(state.evolution_level, 0.0);
+    }
+
+    #[test]
+    fn test_brain_state_clone() {
+        let state = ConversationBrainState::with_mode(ConversationMode::Creative);
+        let cloned = state.clone();
+        assert_eq!(state.mode, cloned.mode);
+        assert_eq!(state.session_id, cloned.session_id);
+    }
+
+    #[test]
+    fn test_brain_state_serialization() {
+        let state = ConversationBrainState::new();
+        let json = serde_json::to_string(&state).unwrap();
+        let restored: ConversationBrainState = serde_json::from_str(&json).unwrap();
+        assert_eq!(state.mode, restored.mode);
+        assert_eq!(state.evolution_level, restored.evolution_level);
+    }
+
+    #[test]
+    fn test_brain_state_set_mode_updates_timestamp() {
+        let mut state = ConversationBrainState::new();
+        let initial_ts = state.updated_at;
+        std::thread::sleep(std::time::Duration::from_millis(1));
+        state.set_mode(ConversationMode::Meta);
+        assert!(state.updated_at >= initial_ts);
     }
 }
