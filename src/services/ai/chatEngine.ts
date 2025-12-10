@@ -511,25 +511,11 @@ class ChatEngineOmega {
       const processedResponse = this.postProcess(response, finalConfig);
       isDev && console.log('   ✅ Response processed');
 
-      // ═══ PHASE 1.7: SAUVEGARDE MEMORY CORE + UNIFIED MEMORY ═══
+      // ═══ PHASE 1.7: SAUVEGARDE UNIFIED MEMORY (Single Source of Truth) ═══
       pipelineSteps.push('memory-saving');
-      isDev && console.log('💾 Step 1.7: Saving to Memory Core + Unified Memory...');
+      isDev && console.log('💾 Step 1.7: Saving to Unified Memory...');
 
       try {
-        // Sauvegarde legacy (memoryIntegration)
-        await this.withTimeout(
-          memoryIntegration.saveInteraction({
-            mode: finalConfig.mode,
-            userMessage: validatedMessage,
-            aiResponse: processedResponse.content,
-            emotionState: this.convertEmotionState(finalConfig.emotionState),
-            context: memoryContext,
-          }),
-          3000,
-          'Memory save timeout'
-        );
-
-        // NOUVEAU: Sauvegarde dans Unified Memory (PHASE 2)
         // Importance calculée selon le mode
         const importance = this.calculateImportance(finalConfig.mode, validatedMessage);
         await unifiedMemory.store(
@@ -540,7 +526,7 @@ class ChatEngineOmega {
           [finalConfig.mode, 'conversation']
         );
 
-        isDev && console.log('   ✅ Interaction saved to core memory + unified memory');
+        isDev && console.log('   ✅ Interaction saved to unified memory');
       } catch (error) {
         isDev && console.warn('   ⚠️ Memory save failed (non-blocking):', error);
         autoHealed = true;
