@@ -415,7 +415,7 @@ export const ChatPage = (): JSX.Element => {
             const res = await invoke<{
               ok: boolean;
               data: { configured: boolean } | null;
-            }>('get_claude_key_status');
+            }>('get_anthropic_key_status');
             return res.ok && res.data?.configured === true;
           } catch {
             return false;
@@ -434,8 +434,8 @@ export const ChatPage = (): JSX.Element => {
         })(),
         (async () => {
           try {
-            const res = await invoke<{ ok: boolean }>('check_ollama_availability');
-            return res.ok;
+            const res = await invoke<{ available: boolean }>('ai_check_ollama_status');
+            return res.available;
           } catch {
             return false;
           }
@@ -574,6 +574,7 @@ export const ChatPage = (): JSX.Element => {
           conversationId,
           mode: currentModeId as any, // Mode IA actif
           provider: provider === 'local' ? 'ollama' : provider,
+          systemPrompt: currentInstructionMode.systemPrompt, // ✨ Transmission du system prompt personnalisé
         });
         console.log('[ChatPage-OMEGA] 📥 Réponse OMEGA reçue:', {
           mode: currentModeId,

@@ -39,6 +39,7 @@ pub async fn conversation_generate(
     conversation_id: String,
     mode: Option<String>,
     provider: Option<String>,
+    system_prompt: Option<String>, // Ajout: system prompt personnalisé
 ) -> CommandResult<serde_json::Value> {
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
@@ -72,6 +73,7 @@ pub async fn conversation_generate(
             }
         }),
         emotion_context: None,
+        custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé
     };
 
     // Traiter via le pipeline OMEGA complet
@@ -121,6 +123,7 @@ pub async fn conversation_process_message(
         mode,
         ai_config: None,
         emotion_context: None,
+        custom_system_prompt: None,
     };
 
     engine

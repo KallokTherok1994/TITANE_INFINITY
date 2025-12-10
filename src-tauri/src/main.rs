@@ -302,7 +302,35 @@ fn main() {
         .setup(move |app| {
             // Initialize SingularityEngine with app_handle
             let singularity_engine = Arc::new(singularity_state::SingularityEngine::new(app.handle().clone()));
-            app.manage(singularity_engine);
+            app.manage(singularity_engine.clone());
+            
+            // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
+            let storage_dir = app.path().app_data_dir()
+                .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
+            let password = std::env::var("TITANE_SECRETS_PASSPHRASE")
+                .unwrap_or_else(|_| "default-dev-passphrase-change-in-production".to_string());
+            
+            // AIRouter initialization (for OMEGA pipeline)
+            let ai_router = Arc::new(tokio::sync::RwLock::new(
+                titane_infinity::ai::router::AIRouter::new(None, None) // Will be configured later
+            ));
+            
+            // SingularityState reference (already managed)
+            let singularity_state = Arc::new(tokio::sync::RwLock::new(
+                titane_infinity::singularity::singularity_state::SingularityState::default()
+            ));
+            
+            let conversation_engine = Arc::new(
+                titane_infinity::conversation_engine::ConversationEngineState::new(
+                    storage_dir,
+                    password,
+                    ai_router,
+                    singularity_state,
+                ).expect("Failed to initialize OMEGA Conversation Engine")
+            );
+            
+            app.manage(conversation_engine);
+            log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
             
             // Initialize providers asynchronously within Tauri's async runtime
             let chat_orch_clone = chat_orchestrator.clone();
@@ -377,6 +405,8 @@ fn main() {
             secure_commands::get_openai_key_status,
             secure_commands::chat_set_anthropic_key,
             secure_commands::get_anthropic_key_status,
+            // Ollama AI Provider Status Check
+            titane_infinity::ai::ollama::ai_check_ollama_status,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

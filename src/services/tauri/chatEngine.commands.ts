@@ -37,6 +37,7 @@ export interface OmegaGenerateArgs {
   conversationId: string;
   mode?: string;
   provider?: string;
+  systemPrompt?: string; // ✨ Ajout: system prompt personnalisé depuis InstructionMode
 }
 
 export interface OmegaResponse {
@@ -262,6 +263,7 @@ export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> 
     conversation_id: args.conversationId,
     mode: args.mode ?? null,
     provider: args.provider ?? null,
+    system_prompt: args.systemPrompt ?? null, // ✨ Transmission du system prompt
   });
 }
 
