@@ -37,21 +37,8 @@ pub mod mtm;
 pub mod stm;
 pub mod vector;
 
-// Internal use only - not re-exported
-use compaction::MemoryCompactor;
-use consolidation::Consolidator;
-use evolution::EvolutionEngine;
-use forgetting::ForgettingEngine;
-use ltm::LongTermMemory;
-use mtm::MidTermMemory;
-use stm::ShortTermMemory;
-use vector::VectorStore;
-
-pub use compaction::*;
-pub use consolidation::*;
-pub use evolution::*;
-pub use forgetting::*;
-pub use ltm::*;
-pub use mtm::*;
-pub use stm::*;
-pub use vector::*;
+pub use consolidation::Consolidator;
+pub use ltm::LongTermMemory;
+pub use mtm::MidTermMemory;
+pub use stm::ShortTermMemory;
+pub use vector::VectorStore;

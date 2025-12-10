@@ -88,6 +88,7 @@ pub mod multi_agents; // ✅ v∞.19.3Ω: Multi-Agents avec permissions IA (NEW)
 // MEMORY SYSTEM v24.2 (Phase 2 Simplification)
 // ═══════════════════════════════════════════════════════════════
 
+mod neural_memory; // ✅ v24.2: Private neural implementation
 pub mod unified_memory_v2; // ✅ v24.2: Unified Memory API (consolidation 5→2 modules)
 pub mod memory; // ⚠️ DEPRECATED v24.2: Use unified_memory_v2 (kept for compatibility)
 

@@ -6,6 +6,7 @@
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+use super::bridge::MemoryBridge;
 use super::config::MemoryConfig;
 use super::types::*;
 
@@ -34,7 +35,7 @@ pub struct UnifiedMemoryV2 {
 /// Internal state (hidden from public API)
 struct MemoryInner {
     initialized: bool,
-    // Sera complété avec neural_memory components
+    bridge: MemoryBridge,
 }
 
 impl UnifiedMemoryV2 {
@@ -44,6 +45,7 @@ impl UnifiedMemoryV2 {
             config,
             inner: Arc::new(RwLock::new(MemoryInner {
                 initialized: false,
+                bridge: MemoryBridge::default(),
             })),
         }
     }
@@ -56,15 +58,7 @@ impl UnifiedMemoryV2 {
             return Ok(());
         }
 
-        // TODO: Initialize neural_memory components
-        // - STM, MTM, LTM
-        // - Vector store
-        // - Consolidation engine
-        // - Forgetting engine
-        // - Evolution engine
-        // - Persistence layer
-        // - Encryption layer
-
+        inner.bridge.init().await?;
         inner.initialized = true;
         Ok(())
     }
@@ -76,7 +70,7 @@ impl UnifiedMemoryV2 {
         importance: f32,
         memory_type: MemoryType,
     ) -> MemoryResult<MemoryId> {
-        let inner = self.inner.read().await;
+        let mut inner = self.inner.write().await;
         
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
@@ -89,12 +83,7 @@ impl UnifiedMemoryV2 {
         );
 
         let id = entry.id.clone();
-
-        // TODO: Store in STM (neural_memory)
-        // - Add to STM queue
-        // - Generate embedding if enabled
-        // - Persist if enabled
-        // - Encrypt if enabled
+        inner.bridge.store_stm(entry).await?;
 
         Ok(id)
     }
@@ -111,15 +100,7 @@ impl UnifiedMemoryV2 {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        let _query = query.into();
-
-        // TODO: Search across STM/MTM/LTM
-        // - Vector search if available
-        // - Keyword search fallback
-        // - Rank by relevance
-        // - Return top N
-
-        Ok(Vec::new())
+        inner.bridge.search(&query.into(), limit).await
     }
 
     /// Get memory by ID
@@ -130,22 +111,18 @@ impl UnifiedMemoryV2 {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Search by ID in all tiers
-
-        Err(MemoryError::NotFound(id.to_string()))
+        inner.bridge.get(id).await
     }
 
     /// Remove memory by ID
     pub async fn remove(&self, id: &str) -> MemoryResult<()> {
-        let inner = self.inner.read().await;
+        let mut inner = self.inner.write().await;
         
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Remove from tier + vector index
-
-        Ok(())
+        inner.bridge.remove(id).await
     }
 
     /// Get memories by tier
@@ -156,9 +133,7 @@ impl UnifiedMemoryV2 {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Return memories from specific tier
-
-        Ok(Vec::new())
+        inner.bridge.get_by_tier(tier, limit).await
     }
 
     /// Get system statistics
@@ -169,15 +144,17 @@ impl UnifiedMemoryV2 {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
+        let bridge_stats = inner.bridge.stats();
+
         let snapshot = MemorySnapshot {
             timestamp: chrono::Utc::now().timestamp_millis(),
-            stm_count: 0,
-            mtm_count: 0,
-            ltm_count: 0,
-            total_count: 0,
-            total_bytes: 0,
-            vector_count: 0,
-            cluster_count: 0,
+            stm_count: bridge_stats.stm_count,
+            mtm_count: bridge_stats.mtm_count,
+            ltm_count: bridge_stats.ltm_count,
+            total_count: bridge_stats.stm_count + bridge_stats.mtm_count + bridge_stats.ltm_count,
+            total_bytes: 0, // TODO: Calculate from entries
+            vector_count: bridge_stats.vector_count,
+            cluster_count: 0, // TODO: Implement clustering
         };
 
         Ok(MemoryStats {
@@ -192,19 +169,20 @@ impl UnifiedMemoryV2 {
 
     /// Run consolidation cycle (STM→MTM→LTM)
     pub async fn consolidate(&self) -> MemoryResult<ConsolidationResult> {
-        let inner = self.inner.read().await;
+        let mut inner = self.inner.write().await;
         
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Run consolidation
+        let start = std::time::Instant::now();
+        inner.bridge.consolidate().await?;
         
         Ok(ConsolidationResult {
             stm_promoted: 0,
             mtm_promoted: 0,
             ltm_stored: 0,
-            duration_ms: 0,
+            duration_ms: start.elapsed().as_millis() as u64,
         })
     }
 
@@ -216,7 +194,7 @@ impl UnifiedMemoryV2 {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Run forgetting
+        // TODO: Implement forgetting
         
         Ok(ForgettingResult {
             decayed_count: 0,
@@ -233,7 +211,7 @@ impl UnifiedMemoryV2 {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Run evolution
+        // TODO: Implement evolution
         
         Ok(EvolutionResult {
             clusters_created: 0,
@@ -245,15 +223,13 @@ impl UnifiedMemoryV2 {
 
     /// Clear all memories
     pub async fn clear(&self) -> MemoryResult<()> {
-        let inner = self.inner.read().await;
+        let mut inner = self.inner.write().await;
         
         if !inner.initialized {
             return Err(MemoryError::StorageError("Not initialized".to_string()));
         }
 
-        // TODO: Clear all tiers + vector index + persistence
-
-        Ok(())
+        inner.bridge.clear().await
     }
 }
 
