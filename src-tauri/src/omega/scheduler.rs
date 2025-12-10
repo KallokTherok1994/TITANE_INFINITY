@@ -4,12 +4,12 @@
 //   Priority-based scheduling with rate limiting and backpressure
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::{BinaryHeap, HashMap};
+use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
+use std::collections::{BinaryHeap, HashMap};
 use std::sync::Arc;
 use tokio::sync::{RwLock, Semaphore};
 use tokio::time::{Duration, Instant};
-use serde::{Deserialize, Serialize};
 
 use super::{OmegaError, OmegaResult, PipelineInput};
 
@@ -316,7 +316,9 @@ impl JobScheduler {
             let queue = self.queue.read().await;
             let fill_ratio = queue.len() as f32 / self.config.max_queue_size as f32;
             if fill_ratio >= self.config.backpressure_threshold {
-                return Err(OmegaError::SchedulerError("Queue at capacity (backpressure)".to_string()));
+                return Err(OmegaError::SchedulerError(
+                    "Queue at capacity (backpressure)".to_string(),
+                ));
             }
         }
 
@@ -391,9 +393,18 @@ impl JobScheduler {
     }
 
     /// Mark job as completed
-    pub async fn complete_job(&self, job_id: &str, success: bool, result: Option<serde_json::Value>) {
+    pub async fn complete_job(
+        &self,
+        job_id: &str,
+        success: bool,
+        result: Option<serde_json::Value>,
+    ) {
         let mut jobs = self.jobs.write().await;
-        let status = if success { JobStatus::Completed } else { JobStatus::Failed };
+        let status = if success {
+            JobStatus::Completed
+        } else {
+            JobStatus::Failed
+        };
         jobs.insert(job_id.to_string(), status);
 
         let mut stats = self.stats.write().await;
@@ -442,9 +453,7 @@ impl JobScheduler {
     /// Clear completed jobs from registry
     pub async fn cleanup(&self) {
         let mut jobs = self.jobs.write().await;
-        jobs.retain(|_, status| {
-            matches!(status, JobStatus::Queued | JobStatus::Running)
-        });
+        jobs.retain(|_, status| matches!(status, JobStatus::Queued | JobStatus::Running));
     }
 
     /// Check if scheduler is accepting jobs

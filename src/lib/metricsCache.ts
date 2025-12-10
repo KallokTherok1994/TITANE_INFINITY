@@ -183,7 +183,10 @@ export class MetricsCache {
   /**
    * Éviction des entrées les plus anciennes
    */
-  private static evictOldest<T>(cache: Map<string, CacheEntry<T>>, maxSize: number): void {
+  private static evictOldest<T>(
+    cache: Map<string, CacheEntry<T>>,
+    maxSize: number
+  ): void {
     if (cache.size <= maxSize) return;
 
     // Trouver entrée la plus ancienne
@@ -249,7 +252,10 @@ export class MetricsCache {
     }
 
     // Nettoyer globalStatsCache
-    if (this.globalStatsCache && now - this.globalStatsCache.timestamp > this.config.ttl) {
+    if (
+      this.globalStatsCache &&
+      now - this.globalStatsCache.timestamp > this.config.ttl
+    ) {
       this.globalStatsCache = null;
     }
   }

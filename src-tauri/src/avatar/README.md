@@ -65,9 +65,9 @@ function App() {
 const handleSpeak = async () => {
   const prepared = await immersiveAvatarBridge.prepareSpeech(
     "Bonjour, comment puis-je t'aider ?",
-    "Gardien",
-    "determined",
-    0.90,
+    'Gardien',
+    'determined',
+    0.9,
     0.25
   );
 
@@ -130,17 +130,20 @@ ImmersiveVoiceProfile {
 ### Dynamic Adjustments
 
 **By Archetype**:
+
 - `Architecte` → +stability, -speech_rate (calme, pédagogique)
 - `Observateur` → +clarity, neutral (factuel)
 - `Tisseur` → +exaggeration, +breathiness (chaleureux)
 - `Flux` → -stability, +speech_rate (dynamique)
 
 **By Mood**:
+
 - `calm` → +stability, -speech_rate, +breathiness
 - `energized` → -stability, +speech_rate, +exaggeration
 - `soft-guide` → +stability, +breathiness
 
 **By Cognitive Load**:
+
 - Low `cognitive_stability` (<0.5) → +stability, -speech_rate, +breathiness
 - High `cpu_load` (>0.8) → +clarity, -style (simplifie)
 
@@ -169,7 +172,7 @@ MorphTarget {
 ### Example Mappings
 
 | Phonème | Jaw | Rounding | Tongue | Spread |
-|---------|-----|----------|--------|--------|
+| ------- | --- | -------- | ------ | ------ |
 | **A**   | 0.8 | 0.1      | 0.2    | 0.6    |
 | **I**   | 0.3 | 0.0      | 0.9    | 0.9    |
 | **OU**  | 0.4 | 0.9      | 0.5    | 0.1    |
@@ -181,16 +184,16 @@ MorphTarget {
 
 ### 8 Facial Expressions
 
-| Expression | Emoji | Trigger | Usage |
-|------------|-------|---------|-------|
-| **Neutral** | 😐 | Default | Repos, inactif |
-| **SoftSmile** | 🙂 | XP % 10 == 0 | Succès, gain XP |
-| **Attentive** | 👀 | Speaking + focus | Écoute active |
-| **WarmFocus** | 🤗 | cognitive_stability > 0.85 | Engagement élevé |
-| **ExplainMode** | 🧐 | Speaking + Architecte | Mode explication |
-| **LiftedBrows** | 🤨 | Wake-word | Surprise, alerte |
-| **RelaxedBrows** | 😌 | cognitive_stability < 0.5 | Fatigue cognitive |
-| **TinyNod** | 👍 | Confirmation | Approbation |
+| Expression       | Emoji | Trigger                    | Usage             |
+| ---------------- | ----- | -------------------------- | ----------------- |
+| **Neutral**      | 😐    | Default                    | Repos, inactif    |
+| **SoftSmile**    | 🙂    | XP % 10 == 0               | Succès, gain XP   |
+| **Attentive**    | 👀    | Speaking + focus           | Écoute active     |
+| **WarmFocus**    | 🤗    | cognitive_stability > 0.85 | Engagement élevé  |
+| **ExplainMode**  | 🧐    | Speaking + Architecte      | Mode explication  |
+| **LiftedBrows**  | 🤨    | Wake-word                  | Surprise, alerte  |
+| **RelaxedBrows** | 😌    | cognitive_stability < 0.5  | Fatigue cognitive |
+| **TinyNod**      | 👍    | Confirmation               | Approbation       |
 
 ### Selection Rules
 
@@ -228,11 +231,11 @@ else if is_speaking {
 
 ```typescript
 interface TitaneAvatarProps {
-  mode?: '2D' | '3D';             // 2D only v23
-  size?: number;                  // 200px default
-  showExpression?: boolean;       // Display label
-  enableWakeWord?: boolean;       // Wake-word reactions
-  enableImmersion?: boolean;      // Immersion mode
+  mode?: '2D' | '3D'; // 2D only v23
+  size?: number; // 200px default
+  showExpression?: boolean; // Display label
+  enableWakeWord?: boolean; // Wake-word reactions
+  enableImmersion?: boolean; // Immersion mode
 }
 ```
 
@@ -284,31 +287,34 @@ await invoke('avatar_run_selftest')
 
 ## 📊 PERFORMANCE
 
-| Metric | Target | Actual |
-|--------|--------|--------|
-| FPS | ≥60 | ✅ 60 |
-| Morph Gen | ≤10ms | ✅ ~5ms |
-| Expression Update | ≤20ms | ✅ ~8ms |
-| prepare_speech() | ≤50ms | ✅ ~30ms |
-| CPU (idle) | ≤5% | ✅ ~3% |
-| CPU (speaking) | ≤15% | ✅ ~12% |
-| Memory | ≤100MB | ✅ ~75MB |
+| Metric            | Target | Actual   |
+| ----------------- | ------ | -------- |
+| FPS               | ≥60    | ✅ 60    |
+| Morph Gen         | ≤10ms  | ✅ ~5ms  |
+| Expression Update | ≤20ms  | ✅ ~8ms  |
+| prepare_speech()  | ≤50ms  | ✅ ~30ms |
+| CPU (idle)        | ≤5%    | ✅ ~3%   |
+| CPU (speaking)    | ≤15%   | ✅ ~12%  |
+| Memory            | ≤100MB | ✅ ~75MB |
 
 ---
 
 ## 🔮 ROADMAP
 
 ### v24 — Real G2P + Wake-Word
+
 - Real French G2P model (espeak-ng)
 - Audio stream wake-word detection
 - "TITANE" keyword spotting
 
 ### v25 — 3D Avatar
+
 - Three.js 3D model
 - Dynamic lighting
 - Head tilt, micro-movements
 
 ### v26 — Multi-Voice
+
 - Multiple voice profiles
 - Dynamic voice switching
 - Voice cloning

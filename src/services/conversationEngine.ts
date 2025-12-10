@@ -24,23 +24,14 @@ export type ConversationMode =
   | 'journal'
   | 'debug_cognitive';
 
-export type Intention =
-  | 'Question'
-  | 'Action'
-  | 'Emotion'
-  | 'Clarification'
-  | 'Meta';
+export type Intention = 'Question' | 'Action' | 'Emotion' | 'Clarification' | 'Meta';
 
-export type MemoryEffect =
-  | 'New'
-  | 'Recall'
-  | 'Connect'
-  | 'Evolve';
+export type MemoryEffect = 'New' | 'Recall' | 'Connect' | 'Evolve';
 
 export interface EmotionState {
-  valence: number;      // -1.0 → 1.0
-  intensity: number;    // 0.0 → 1.0
-  energy: number;       // 0.0 → 1.0
+  valence: number; // -1.0 → 1.0
+  intensity: number; // 0.0 → 1.0
+  energy: number; // 0.0 → 1.0
 }
 
 export interface ConversationRequest {
@@ -147,19 +138,25 @@ export async function getMemoryStats(): Promise<ConversationMemoryStats> {
  */
 export function formatEmotion(emotion: EmotionState): string {
   const valenceLabel =
-    emotion.valence > 0.5 ? '😊 Positif' :
-    emotion.valence < -0.5 ? '😔 Négatif' :
-    '😐 Neutre';
+    emotion.valence > 0.5
+      ? '😊 Positif'
+      : emotion.valence < -0.5
+        ? '😔 Négatif'
+        : '😐 Neutre';
 
   const intensityLabel =
-    emotion.intensity > 0.7 ? '🔥 Intense' :
-    emotion.intensity > 0.4 ? '⚡ Modéré' :
-    '💧 Calme';
+    emotion.intensity > 0.7
+      ? '🔥 Intense'
+      : emotion.intensity > 0.4
+        ? '⚡ Modéré'
+        : '💧 Calme';
 
   const energyLabel =
-    emotion.energy > 0.7 ? '⚡ Énergisé' :
-    emotion.energy > 0.4 ? '🔋 Normal' :
-    '🌙 Fatigué';
+    emotion.energy > 0.7
+      ? '⚡ Énergisé'
+      : emotion.energy > 0.4
+        ? '🔋 Normal'
+        : '🌙 Fatigué';
 
   return `${valenceLabel} • ${intensityLabel} • ${energyLabel}`;
 }

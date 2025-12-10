@@ -3,12 +3,9 @@
 //   Synthèse de la personnalité cohérente
 // ═══════════════════════════════════════════════════════════════
 
+use super::{CommunicationStyle, EmotionalLevel, IdentityArchetype, PersonalityTrait};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use super::{
-    IdentityArchetype, PersonalityTrait, CommunicationStyle,
-    EmotionalLevel
-};
 
 /// État de personnalité complet
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -135,84 +132,108 @@ impl PersonalityEngine {
     /// Initialise les profils par archétype
     fn initialize_archetype_profiles(&mut self) {
         // Professional
-        self.archetype_profiles.insert(IdentityArchetype::Professional, PersonalityProfile {
-            extraversion: 0.4,
-            openness: 0.5,
-            conscientiousness: 0.95,
-            agreeableness: 0.6,
-            emotional_stability: 0.9,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Professional,
+            PersonalityProfile {
+                extraversion: 0.4,
+                openness: 0.5,
+                conscientiousness: 0.95,
+                agreeableness: 0.6,
+                emotional_stability: 0.9,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Companion
-        self.archetype_profiles.insert(IdentityArchetype::Companion, PersonalityProfile {
-            extraversion: 0.8,
-            openness: 0.7,
-            conscientiousness: 0.6,
-            agreeableness: 0.95,
-            emotional_stability: 0.75,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Companion,
+            PersonalityProfile {
+                extraversion: 0.8,
+                openness: 0.7,
+                conscientiousness: 0.6,
+                agreeableness: 0.95,
+                emotional_stability: 0.75,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Expert
-        self.archetype_profiles.insert(IdentityArchetype::Expert, PersonalityProfile {
-            extraversion: 0.4,
-            openness: 0.8,
-            conscientiousness: 0.9,
-            agreeableness: 0.5,
-            emotional_stability: 0.85,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Expert,
+            PersonalityProfile {
+                extraversion: 0.4,
+                openness: 0.8,
+                conscientiousness: 0.9,
+                agreeableness: 0.5,
+                emotional_stability: 0.85,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Mentor
-        self.archetype_profiles.insert(IdentityArchetype::Mentor, PersonalityProfile {
-            extraversion: 0.65,
-            openness: 0.8,
-            conscientiousness: 0.8,
-            agreeableness: 0.85,
-            emotional_stability: 0.9,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Mentor,
+            PersonalityProfile {
+                extraversion: 0.65,
+                openness: 0.8,
+                conscientiousness: 0.8,
+                agreeableness: 0.85,
+                emotional_stability: 0.9,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Creative
-        self.archetype_profiles.insert(IdentityArchetype::Creative, PersonalityProfile {
-            extraversion: 0.7,
-            openness: 0.95,
-            conscientiousness: 0.5,
-            agreeableness: 0.7,
-            emotional_stability: 0.65,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Creative,
+            PersonalityProfile {
+                extraversion: 0.7,
+                openness: 0.95,
+                conscientiousness: 0.5,
+                agreeableness: 0.7,
+                emotional_stability: 0.65,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Guardian
-        self.archetype_profiles.insert(IdentityArchetype::Guardian, PersonalityProfile {
-            extraversion: 0.4,
-            openness: 0.4,
-            conscientiousness: 0.95,
-            agreeableness: 0.7,
-            emotional_stability: 0.95,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Guardian,
+            PersonalityProfile {
+                extraversion: 0.4,
+                openness: 0.4,
+                conscientiousness: 0.95,
+                agreeableness: 0.7,
+                emotional_stability: 0.95,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Explorer
-        self.archetype_profiles.insert(IdentityArchetype::Explorer, PersonalityProfile {
-            extraversion: 0.8,
-            openness: 0.9,
-            conscientiousness: 0.5,
-            agreeableness: 0.65,
-            emotional_stability: 0.7,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Explorer,
+            PersonalityProfile {
+                extraversion: 0.8,
+                openness: 0.9,
+                conscientiousness: 0.5,
+                agreeableness: 0.65,
+                emotional_stability: 0.7,
+                context_modifiers: HashMap::new(),
+            },
+        );
 
         // Philosopher
-        self.archetype_profiles.insert(IdentityArchetype::Philosopher, PersonalityProfile {
-            extraversion: 0.4,
-            openness: 0.95,
-            conscientiousness: 0.7,
-            agreeableness: 0.6,
-            emotional_stability: 0.85,
-            context_modifiers: HashMap::new(),
-        });
+        self.archetype_profiles.insert(
+            IdentityArchetype::Philosopher,
+            PersonalityProfile {
+                extraversion: 0.4,
+                openness: 0.95,
+                conscientiousness: 0.7,
+                agreeableness: 0.6,
+                emotional_stability: 0.85,
+                context_modifiers: HashMap::new(),
+            },
+        );
     }
 
     /// Change l'archétype
@@ -293,7 +314,9 @@ impl PersonalityEngine {
 
     /// Évalue un trait par nom
     pub fn get_trait_value(&self, name: &str) -> Option<f32> {
-        self.state.active_traits.iter()
+        self.state
+            .active_traits
+            .iter()
             .find(|t| t.name == name)
             .map(|t| t.value)
     }
@@ -314,17 +337,20 @@ impl PersonalityEngine {
     /// Calcule la cohérence de personnalité
     pub fn coherence_score(&self) -> f32 {
         // La cohérence diminue si les traits sont trop extrêmes ou contradictoires
-        let traits_variance: f32 = self.state.active_traits.iter()
+        let traits_variance: f32 = self
+            .state
+            .active_traits
+            .iter()
             .map(|t| (t.value - 0.5).powi(2))
-            .sum::<f32>() / self.state.active_traits.len() as f32;
+            .sum::<f32>()
+            / self.state.active_traits.len() as f32;
 
-        let profile_variance = (
-            (self.profile.extraversion - 0.5).powi(2) +
-            (self.profile.openness - 0.5).powi(2) +
-            (self.profile.conscientiousness - 0.5).powi(2) +
-            (self.profile.agreeableness - 0.5).powi(2) +
-            (self.profile.emotional_stability - 0.5).powi(2)
-        ) / 5.0;
+        let profile_variance = ((self.profile.extraversion - 0.5).powi(2)
+            + (self.profile.openness - 0.5).powi(2)
+            + (self.profile.conscientiousness - 0.5).powi(2)
+            + (self.profile.agreeableness - 0.5).powi(2)
+            + (self.profile.emotional_stability - 0.5).powi(2))
+            / 5.0;
 
         1.0 - ((traits_variance + profile_variance) / 2.0).sqrt()
     }
@@ -366,7 +392,9 @@ pub fn generate_personality_prompt(engine: &PersonalityEngine) -> String {
         mood_desc,
         (state.cognitive_energy * 100.0) as u32,
         (state.engagement_level * 100.0) as u32,
-        state.active_traits.iter()
+        state
+            .active_traits
+            .iter()
             .take(3)
             .map(|t| format!("{} ({:.0}%)", t.name, t.value * 100.0))
             .collect::<Vec<_>>()

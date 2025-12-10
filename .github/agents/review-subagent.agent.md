@@ -12,6 +12,7 @@ Code reviewer senior.
 ## Processus
 
 ### 1. Changements
+
 ```bash
 git status --short
 git diff
@@ -20,18 +21,21 @@ git diff
 ### 2. Analyser
 
 **Rust** :
+
 ```bash
 cd src-tauri && cargo check
 cd src-tauri && cargo clippy
 ```
 
 **TypeScript** :
+
 ```bash
 npx tsc --noEmit
 npx eslint <files>
 ```
 
 ### 3. Tests
+
 ```bash
 npm test
 cd src-tauri && cargo test
@@ -47,13 +51,16 @@ cd src-tauri && cargo test
 ## Sortie
 
 ### Approuvé
+
 ```markdown
 # ✅ APPROVED
 
 ## Changes
+
 - `<file>` : ✅
 
 ## Quality
+
 - Rust : ✅ 0 warnings
 - TS : ✅ 0 errors
 
@@ -61,12 +68,15 @@ APPROVED — Ready to commit
 ```
 
 ### Révisions
+
 ```markdown
 # 🟡 NEEDS REVISION
 
 ## 🔴 Critical
+
 1. `<file>` : <issue>
 
 ## Fix
+
 <instructions>
 ```

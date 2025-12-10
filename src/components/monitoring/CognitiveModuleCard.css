@@ -19,11 +19,7 @@
 .cognitive-module-card__glow {
   position: absolute;
   inset: -60%;
-  background: radial-gradient(
-    circle at center,
-    var(--module-glow) 0%,
-    transparent 60%
-  );
+  background: radial-gradient(circle at center, var(--module-glow) 0%, transparent 60%);
   opacity: calc(0.15 + var(--module-intensity, 0) * 0.2);
   filter: blur(50px);
   pointer-events: none;
@@ -33,7 +29,7 @@
 .cognitive-module-card:hover {
   transform: translateY(-3px);
   border-color: var(--border-strong);
-  box-shadow: 
+  box-shadow:
     var(--shadow-xl),
     0 0 32px var(--module-glow);
 }
@@ -63,7 +59,7 @@
 
 .cognitive-module-card:hover .cognitive-module-card__icon {
   transform: scale(1.05);
-  box-shadow: 
+  box-shadow:
     var(--shadow-inner),
     0 0 20px var(--module-glow);
 }
@@ -174,7 +170,8 @@
 }
 
 @keyframes pulse-helios {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.2;
     transform: scale(1);
   }
@@ -217,7 +214,8 @@
 }
 
 @keyframes sway-harmonia {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-2px);
     opacity: 0.2;
   }

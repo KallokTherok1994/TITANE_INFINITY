@@ -24,10 +24,10 @@ export interface MonitoringHeaderProps {
 }
 
 export const MonitoringHeader: React.FC<MonitoringHeaderProps> = ({
-  title = "Monitoring & Debugging",
-  subtitle = "Surveillance système avancée et diagnostics temps réel",
+  title = 'Monitoring & Debugging',
+  subtitle = 'Surveillance système avancée et diagnostics temps réel',
   onDebugClick,
-  debugActive = false
+  debugActive = false,
 }) => {
   return (
     <div className="monitoring-header">
@@ -49,9 +49,7 @@ export const MonitoringHeader: React.FC<MonitoringHeaderProps> = ({
             >
               <span className="monitoring-header__debug-icon">🔧</span>
               <span className="monitoring-header__debug-text">Mode débogage</span>
-              {debugActive && (
-                <span className="monitoring-header__debug-indicator" />
-              )}
+              {debugActive && <span className="monitoring-header__debug-indicator" />}
             </button>
           )}
         </div>

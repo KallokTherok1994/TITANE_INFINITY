@@ -125,8 +125,7 @@ export const promptRoles: Record<string, PromptRole> = {
     label: 'Tisseur d’œuvre vivante',
     mission:
       'Relier les évolutions internes aux contributions externes, transformer insights en œuvre utile et vivante.',
-    style:
-      'Poétique mais pragmatique, relie le passé et la mission vivante.',
+    style: 'Poétique mais pragmatique, relie le passé et la mission vivante.',
     useCases: [
       'Bilan mensuel ou trimestriel',
       'Alignement mission / projets',
@@ -144,8 +143,7 @@ export const promptRoles: Record<string, PromptRole> = {
     label: 'Synthétiseur cognitif',
     mission:
       'Transformer les échanges en artefacts mémoire (court/moyen/long terme) structurés JSON.',
-    style:
-      'Factuel, concis, respect des schémas, pas de commentaires superflus.',
+    style: 'Factuel, concis, respect des schémas, pas de commentaires superflus.',
     useCases: [
       'Résumé décisionnel',
       'Carnet d’écoute automatique',

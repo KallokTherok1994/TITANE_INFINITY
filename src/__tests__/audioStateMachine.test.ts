@@ -14,10 +14,15 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AudioStateMachine } from '@/services/audio/audioStateMachine';
-import type { AudioConversationState, AudioEvent } from '@/services/audio/audioStateMachine';
+import type {
+  AudioConversationState,
+  AudioEvent,
+} from '@/services/audio/audioStateMachine';
 
 // Helper to create fresh machine instances for tests
-const createAudioStateMachine = (config?: ConstructorParameters<typeof AudioStateMachine>[0]) => {
+const createAudioStateMachine = (
+  config?: ConstructorParameters<typeof AudioStateMachine>[0]
+) => {
   return new AudioStateMachine(config);
 };
 
@@ -35,11 +40,11 @@ describe('AudioStateMachine', () => {
 
     it('should call onStateChange listener on initialization', () => {
       const listener = vi.fn();
-      createAudioStateMachine({ 
+      createAudioStateMachine({
         initialState: 'idle',
-        onStateChange: listener
+        onStateChange: listener,
       });
-      
+
       // No transition on init, listener should not be called
       expect(listener).not.toHaveBeenCalled();
     });
@@ -122,7 +127,7 @@ describe('AudioStateMachine', () => {
     beforeEach(() => {
       machine = createAudioStateMachine({ enableLogging: false });
       machine.transition('VAD_SPEECH_START'); // idle → user_speaking
-      machine.transition('VAD_SPEECH_END');   // user_speaking → processing
+      machine.transition('VAD_SPEECH_END'); // user_speaking → processing
     });
 
     it('should transition from processing to ai_speaking on TTS_START', () => {
@@ -156,8 +161,8 @@ describe('AudioStateMachine', () => {
     beforeEach(() => {
       machine = createAudioStateMachine({ enableLogging: false });
       machine.transition('VAD_SPEECH_START'); // idle → user_speaking
-      machine.transition('VAD_SPEECH_END');   // user_speaking → processing
-      machine.transition('TTS_START');        // processing → ai_speaking
+      machine.transition('VAD_SPEECH_END'); // user_speaking → processing
+      machine.transition('TTS_START'); // processing → ai_speaking
     });
 
     it('should transition from ai_speaking to idle on TTS_END', () => {
@@ -248,9 +253,9 @@ describe('AudioStateMachine', () => {
   describe('State Change Listeners', () => {
     it('should notify listener on valid transition', () => {
       const listener = vi.fn();
-      const machine = createAudioStateMachine({ 
+      const machine = createAudioStateMachine({
         enableLogging: false,
-        onStateChange: listener
+        onStateChange: listener,
       });
 
       machine.transition('VAD_SPEECH_START');
@@ -261,9 +266,9 @@ describe('AudioStateMachine', () => {
 
     it('should not notify listener on invalid transition', () => {
       const listener = vi.fn();
-      const machine = createAudioStateMachine({ 
+      const machine = createAudioStateMachine({
         enableLogging: false,
-        onStateChange: listener
+        onStateChange: listener,
       });
 
       machine.transition('VAD_SPEECH_END'); // Invalid from idle
@@ -324,7 +329,7 @@ describe('AudioStateMachine', () => {
     it('should reset to idle from any state', () => {
       const machine = createAudioStateMachine({ enableLogging: false });
       machine.transition('VAD_SPEECH_START'); // idle → user_speaking
-      machine.transition('VAD_SPEECH_END');   // user_speaking → processing
+      machine.transition('VAD_SPEECH_END'); // user_speaking → processing
 
       machine.reset();
       expect(machine.getState()).toBe('idle');
@@ -332,9 +337,9 @@ describe('AudioStateMachine', () => {
 
     it('should notify listener on reset()', () => {
       const listener = vi.fn();
-      const machine = createAudioStateMachine({ 
+      const machine = createAudioStateMachine({
         enableLogging: false,
-        onStateChange: listener
+        onStateChange: listener,
       });
 
       machine.transition('VAD_SPEECH_START'); // idle → user_speaking
@@ -356,9 +361,9 @@ describe('AudioStateMachine', () => {
 
     it('should notify listener on forceReset()', () => {
       const listener = vi.fn();
-      const machine = createAudioStateMachine({ 
+      const machine = createAudioStateMachine({
         enableLogging: false,
-        onStateChange: listener
+        onStateChange: listener,
       });
 
       machine.transition('ERROR');
@@ -396,13 +401,13 @@ describe('AudioStateMachine', () => {
   describe('History Tracking', () => {
     it('should track state history', () => {
       const machine = createAudioStateMachine({ enableLogging: false });
-      
+
       machine.transition('VAD_SPEECH_START');
       machine.transition('VAD_SPEECH_END');
       machine.transition('TTS_START');
 
       const history = machine.getHistory();
-      
+
       expect(history.length).toBe(3);
       expect(history[0].state).toBe('user_speaking');
       expect(history[0].event).toBe('VAD_SPEECH_START');
@@ -416,7 +421,7 @@ describe('AudioStateMachine', () => {
       // Generate >50 transitions (max history size)
       for (let i = 0; i < 60; i++) {
         machine.transition('VAD_SPEECH_START'); // idle → user_speaking
-        machine.transition('RESET');            // user_speaking → idle
+        machine.transition('RESET'); // user_speaking → idle
       }
 
       const history = machine.getHistory();
@@ -426,9 +431,9 @@ describe('AudioStateMachine', () => {
     it('should include timestamp in history entries', () => {
       const machine = createAudioStateMachine({ enableLogging: false });
       const before = Date.now();
-      
+
       machine.transition('VAD_SPEECH_START');
-      
+
       const after = Date.now();
       const history = machine.getHistory();
 
@@ -440,9 +445,9 @@ describe('AudioStateMachine', () => {
   describe('Full Conversation Cycle — Integration Test', () => {
     it('should complete full conversation cycle: idle → user_speaking → processing → ai_speaking → idle', () => {
       const listener = vi.fn();
-      const machine = createAudioStateMachine({ 
+      const machine = createAudioStateMachine({
         enableLogging: false,
-        onStateChange: listener
+        onStateChange: listener,
       });
 
       // User starts speaking
@@ -539,9 +544,9 @@ describe('AudioStateMachine', () => {
 
     it('should handle transition to same state (no-op)', () => {
       const listener = vi.fn();
-      const machine = createAudioStateMachine({ 
+      const machine = createAudioStateMachine({
         enableLogging: false,
-        onStateChange: listener
+        onStateChange: listener,
       });
 
       // Attempt invalid transition that keeps state unchanged
@@ -554,9 +559,9 @@ describe('AudioStateMachine', () => {
     it('should maintain state consistency after multiple invalid transitions', () => {
       const machine = createAudioStateMachine({ enableLogging: false });
 
-      machine.transition('TTS_START');   // Invalid
-      machine.transition('TTS_END');     // Invalid
-      machine.transition('BARGE_IN');    // Invalid
+      machine.transition('TTS_START'); // Invalid
+      machine.transition('TTS_END'); // Invalid
+      machine.transition('BARGE_IN'); // Invalid
 
       expect(machine.getState()).toBe('idle'); // Still idle
     });

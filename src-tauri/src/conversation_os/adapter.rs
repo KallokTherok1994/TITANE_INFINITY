@@ -3,8 +3,8 @@
 //! Super Prompt #9 — Adaptation des réponses au canal et contexte
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::style::StyledText;
+use serde::{Deserialize, Serialize};
 
 /// Canal de sortie
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -172,7 +172,8 @@ impl ResponseAdapter {
         let mut result = text.to_string();
 
         // Headers
-        result = result.lines()
+        result = result
+            .lines()
             .map(|line| {
                 if line.starts_with('#') {
                     line.trim_start_matches('#').trim().to_string()
@@ -238,8 +239,13 @@ impl ResponseAdapter {
                 let trimmed = line.trim();
                 if trimmed.starts_with("- ") || trimmed.starts_with("* ") {
                     format!("{}.", &trimmed[2..])
-                } else if trimmed.chars().next().map(|c| c.is_numeric()).unwrap_or(false)
-                    && trimmed.contains(". ") {
+                } else if trimmed
+                    .chars()
+                    .next()
+                    .map(|c| c.is_numeric())
+                    .unwrap_or(false)
+                    && trimmed.contains(". ")
+                {
                     let parts: Vec<&str> = trimmed.splitn(2, ". ").collect();
                     if parts.len() == 2 {
                         format!("Premièrement, {}.", parts[1].trim_end_matches('.'))

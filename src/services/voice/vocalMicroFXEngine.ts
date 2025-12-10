@@ -17,15 +17,15 @@ import type { EmotionalState, UserMood } from './emotionalStateEstimator';
  * Type de micro-expression vocale
  */
 export type MicroExpressionType =
-  | 'thinking'      // "hmm...", "euh..."
-  | 'agreement'     // "mmm", "okay", "d'accord"
-  | 'surprise'      // "oh ?", "ah !"
-  | 'empathy'       // "je vois...", "je comprends"
-  | 'hesitation'    // "heu...", "alors..."
-  | 'breath'        // Respiration audible
-  | 'smile'         // Léger rire/sourire vocal
+  | 'thinking' // "hmm...", "euh..."
+  | 'agreement' // "mmm", "okay", "d'accord"
+  | 'surprise' // "oh ?", "ah !"
+  | 'empathy' // "je vois...", "je comprends"
+  | 'hesitation' // "heu...", "alors..."
+  | 'breath' // Respiration audible
+  | 'smile' // Léger rire/sourire vocal
   | 'acknowledgment' // "oui", "uhuh", "mhm"
-  | 'transition';   // "bon", "alors", "donc"
+  | 'transition'; // "bon", "alors", "donc"
 
 /**
  * Micro-expression vocale
@@ -66,13 +66,13 @@ export interface MicroFXConfig {
  */
 const MICRO_EXPRESSIONS: Record<MicroExpressionType, string[]> = {
   thinking: ['hmm...', 'euh...', 'voyons...', 'alors...', 'laisse-moi voir...'],
-  agreement: ['mmm', 'okay', 'd\'accord', 'oui oui', 'mhm', 'exact'],
+  agreement: ['mmm', 'okay', "d'accord", 'oui oui', 'mhm', 'exact'],
   surprise: ['oh ?', 'ah !', 'oh là', 'tiens !', 'vraiment ?', 'oh wow'],
-  empathy: ['je vois...', 'je comprends', 'oui...', 'ah oui', 'je t\'entends'],
+  empathy: ['je vois...', 'je comprends', 'oui...', 'ah oui', "je t'entends"],
   hesitation: ['euh...', 'beh...', 'comment dire...', 'disons...'],
   breath: ['*breath*', '*sigh*', '*exhale*'], // Marqueurs pour synthèse
   smile: ['*smile*', '*chuckle*', 'héhé'], // Marqueurs sourire
-  acknowledgment: ['oui', 'uhuh', 'mhm', 'ok', 'd\'accord'],
+  acknowledgment: ['oui', 'uhuh', 'mhm', 'ok', "d'accord"],
   transition: ['bon', 'alors', 'donc', 'du coup', 'en fait', 'bref'],
 };
 
@@ -105,7 +105,8 @@ export class VocalMicroFXEngine {
     this.config = {
       enabled: config?.enabled ?? true,
       frequency: config?.frequency ?? 0.4,
-      enabledTypes: config?.enabledTypes ?? Object.keys(MICRO_EXPRESSIONS) as MicroExpressionType[],
+      enabledTypes:
+        config?.enabledTypes ?? (Object.keys(MICRO_EXPRESSIONS) as MicroExpressionType[]),
       relationshipProximity: config?.relationshipProximity ?? 0.5,
       allowPrefixExpressions: config?.allowPrefixExpressions ?? true,
       allowSuffixExpressions: config?.allowSuffixExpressions ?? true,
@@ -143,7 +144,10 @@ export class VocalMicroFXEngine {
 
     // Injecter inline (dans texte)
     if (selectedExpressions.inline) {
-      enhancedText = this.injectInlineExpression(enhancedText, selectedExpressions.inline);
+      enhancedText = this.injectInlineExpression(
+        enhancedText,
+        selectedExpressions.inline
+      );
     }
 
     // Injecter suffix (après texte)
@@ -172,14 +176,20 @@ export class VocalMicroFXEngine {
 
     if (emotionState.energy > 0.7) {
       // High energy → surprise, agreement, smile
-      selectedType = this.pickRandom(['surprise', 'agreement', 'smile'].filter(t =>
-        preferredTypes.includes(t as MicroExpressionType)
-      )) as MicroExpressionType || preferredTypes[0];
+      selectedType =
+        (this.pickRandom(
+          ['surprise', 'agreement', 'smile'].filter(t =>
+            preferredTypes.includes(t as MicroExpressionType)
+          )
+        ) as MicroExpressionType) || preferredTypes[0];
     } else if (emotionState.valence < -0.3) {
       // Negative valence → empathy, breath
-      selectedType = this.pickRandom(['empathy', 'breath'].filter(t =>
-        preferredTypes.includes(t as MicroExpressionType)
-      )) as MicroExpressionType || preferredTypes[0];
+      selectedType =
+        (this.pickRandom(
+          ['empathy', 'breath'].filter(t =>
+            preferredTypes.includes(t as MicroExpressionType)
+          )
+        ) as MicroExpressionType) || preferredTypes[0];
     } else {
       // Default → random from preferred
       selectedType = this.pickRandom(preferredTypes);
@@ -234,9 +244,11 @@ export class VocalMicroFXEngine {
 
     // Prefix (si question response ou réaction émotionnelle forte)
     if (context?.isQuestionResponse || emotionState.energy > 0.6) {
-      const prefixType = this.pickRandom(preferredTypes.filter(t =>
-        ['thinking', 'acknowledgment', 'surprise', 'empathy'].includes(t)
-      ));
+      const prefixType = this.pickRandom(
+        preferredTypes.filter(t =>
+          ['thinking', 'acknowledgment', 'surprise', 'empathy'].includes(t)
+        )
+      );
 
       if (prefixType) {
         result.prefix = {
@@ -250,9 +262,9 @@ export class VocalMicroFXEngine {
 
     // Inline (si réponse longue)
     if (context?.isLongResponse) {
-      const inlineType = this.pickRandom(preferredTypes.filter(t =>
-        ['transition', 'breath', 'hesitation'].includes(t)
-      ));
+      const inlineType = this.pickRandom(
+        preferredTypes.filter(t => ['transition', 'breath', 'hesitation'].includes(t))
+      );
 
       if (inlineType) {
         result.inline = {

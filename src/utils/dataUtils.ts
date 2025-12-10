@@ -13,7 +13,11 @@ export function safeDisplay(value: unknown): string | number {
     return 'N/A';
   }
 
-  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  ) {
     return value.toString();
   }
 
@@ -123,7 +127,10 @@ export function formatValue(value: number, unit?: string): string {
 /**
  * Détermine la variante de couleur selon une valeur
  */
-export function getStatusVariant(value: number, thresholds = { high: 80, low: 50 }): 'success' | 'warning' | 'error' {
+export function getStatusVariant(
+  value: number,
+  thresholds = { high: 80, low: 50 }
+): 'success' | 'warning' | 'error' {
   if (value >= thresholds.high) return 'success';
   if (value >= thresholds.low) return 'warning';
   return 'error';

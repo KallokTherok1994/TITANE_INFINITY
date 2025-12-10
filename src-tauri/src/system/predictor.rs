@@ -138,7 +138,8 @@ impl AnomalyPredictor {
         }
 
         // Calculer la probabilité globale d'anomalie
-        let trend_score = (anomaly_trend.1 + memory_trend.1 + error_trend.1 + latency_trend.1) / 4.0;
+        let trend_score =
+            (anomaly_trend.1 + memory_trend.1 + error_trend.1 + latency_trend.1) / 4.0;
         let current_anomaly = self.anomaly_history.back().copied().unwrap_or(0.0);
         let probability = (current_anomaly * 0.4 + trend_score * 0.6).min(1.0);
 
@@ -231,7 +232,9 @@ impl AnomalyPredictor {
         let remaining = (0.8 - current).max(0.0);
         let time_per_sample = 10; // 10 secondes entre samples approximativement
 
-        ((remaining / rate_of_change) as u64 * time_per_sample).max(30).min(600)
+        ((remaining / rate_of_change) as u64 * time_per_sample)
+            .max(30)
+            .min(600)
     }
 
     /// Retourne la dernière prédiction
@@ -251,7 +254,11 @@ impl AnomalyPredictor {
             samples_collected: self.history.len(),
             average_anomaly_score: anomaly_avg,
             current_trend: self.calculate_trend(&self.anomaly_history).0,
-            prediction_confidence: self.last_prediction.as_ref().map(|p| p.confidence).unwrap_or(0.0),
+            prediction_confidence: self
+                .last_prediction
+                .as_ref()
+                .map(|p| p.confidence)
+                .unwrap_or(0.0),
         }
     }
 

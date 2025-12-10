@@ -5,8 +5,7 @@
 
 use super::storage::{get_storage, AgendaStats};
 use super::types::{
-    AgendaEvent, CreateEventInput, DeleteEventInput, EventStatus, MoveEventInput,
-    UpdateEventInput,
+    AgendaEvent, CreateEventInput, DeleteEventInput, EventStatus, MoveEventInput, UpdateEventInput,
 };
 use tauri::command;
 use uuid::Uuid;
@@ -82,7 +81,11 @@ pub async fn agenda_create_event(input: CreateEventInput) -> Result<AgendaEvent,
     let storage = get_storage()?;
     let created = storage.add_event(event).await?;
 
-    log::info!("[Agenda] ✅ Événement créé: {} ({})", created.title, created.id);
+    log::info!(
+        "[Agenda] ✅ Événement créé: {} ({})",
+        created.title,
+        created.id
+    );
     Ok(created)
 }
 

@@ -24,6 +24,7 @@ pub fn voice_synthesize_speech(...) -> Result<Vec<u8>, TAPIError> {
 ```
 
 **Impact** :
+
 - ❌ Fonction retourne audio vide (16000 bytes silence)
 - ❌ Ne synthétise aucun son réel
 - ❌ Pas de warning Rust compile-time
@@ -53,6 +54,7 @@ pub fn voice_synthesize_speech(...) -> Result<Vec<u8>, TAPIError> {
 **Fichier créé** : `docs/VOCAL_MIGRATION_GUIDE.md` (600+ lignes)
 
 **Contenu** :
+
 - ✅ Comparaison OLD vs NEW commands
 - ✅ Exemples migration step-by-step
 - ✅ Cas d'usage (local TTS, online TTS, fallback)
@@ -105,21 +107,21 @@ grep -r "voice_synthesize_speech" src-tauri/
 
 ### Avant (v19.x)
 
-| Critère | Statut |
-|---------|--------|
-| **Fonction** | ❌ STUB audio vide |
-| **Warning compile-time** | ❌ Aucun |
-| **Documentation migration** | ❌ Aucune |
-| **Logs deprecation** | ⚠️ Console basique |
+| Critère                     | Statut             |
+| --------------------------- | ------------------ |
+| **Fonction**                | ❌ STUB audio vide |
+| **Warning compile-time**    | ❌ Aucun           |
+| **Documentation migration** | ❌ Aucune          |
+| **Logs deprecation**        | ⚠️ Console basique |
 
 ### Après (v20.0)
 
-| Critère | Statut |
-|---------|--------|
-| **Fonction** | ⚠️ STUB audio vide (inchangé) |
-| **Warning compile-time** | ✅ Rust `#[deprecated]` |
-| **Documentation migration** | ✅ VOCAL_MIGRATION_GUIDE.md |
-| **Logs deprecation** | ✅ Structurés (log::warn!) |
+| Critère                     | Statut                        |
+| --------------------------- | ----------------------------- |
+| **Fonction**                | ⚠️ STUB audio vide (inchangé) |
+| **Warning compile-time**    | ✅ Rust `#[deprecated]`       |
+| **Documentation migration** | ✅ VOCAL_MIGRATION_GUIDE.md   |
+| **Logs deprecation**        | ✅ Structurés (log::warn!)    |
 
 ---
 

@@ -6,11 +6,11 @@
 // OPUS #12 — AI TRAINING MODE
 // ═══════════════════════════════════════════════════════════════════════════════
 
-pub mod training_engine;
 pub mod training_commands;
+pub mod training_engine;
 
-pub use training_engine::{AITrainingEngine, TrainingMode, TrainingState, AI_TRAINING_ENGINE};
 pub use training_commands::*;
+pub use training_engine::{AITrainingEngine, TrainingMode, TrainingState, AI_TRAINING_ENGINE};
 
 /// Initialiser le module AI Training
 pub fn init_ai_training() {

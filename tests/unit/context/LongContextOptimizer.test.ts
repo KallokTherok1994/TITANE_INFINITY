@@ -34,7 +34,7 @@ const createMessage = (overrides: Partial<ContextMessage> = {}): ContextMessage 
 });
 
 const cleanupSpies = (...spies: Array<{ mockRestore: () => void }>) => {
-  spies.forEach((spy) => spy.mockRestore());
+  spies.forEach(spy => spy.mockRestore());
 };
 
 describe('LongContextOptimizer', () => {
@@ -61,7 +61,9 @@ describe('LongContextOptimizer', () => {
 
   describe('compressContext', () => {
     it('invokes backend compression when token budget is exceeded', async () => {
-      const messages = Array.from({ length: 50 }, (_, idx) => createMessage({ id: `msg_${idx}`, tokens: 100 }));
+      const messages = Array.from({ length: 50 }, (_, idx) =>
+        createMessage({ id: `msg_${idx}`, tokens: 100 })
+      );
       const backendResult: CompressionResult = {
         original_messages: messages,
         compressed_messages: messages.slice(-10),
@@ -104,10 +106,15 @@ describe('LongContextOptimizer', () => {
     });
 
     it('falls back to keeping recent messages when the backend fails', async () => {
-      const messages = Array.from({ length: 10 }, (_, idx) => createMessage({ id: `msg_${idx}`, tokens: 200 }));
+      const messages = Array.from({ length: 10 }, (_, idx) =>
+        createMessage({ id: `msg_${idx}`, tokens: 200 })
+      );
       mockInvoke.mockRejectedValueOnce(new Error('offline'));
 
-      const result = await optimizer.compressContext(messages, { preserveRecent: 2, maxTokens: 500 });
+      const result = await optimizer.compressContext(messages, {
+        preserveRecent: 2,
+        maxTokens: 500,
+      });
 
       expect(result.compressed_messages).toEqual(messages.slice(-2));
       expect(result.semantic_preservation).toBe(0.5);
@@ -116,20 +123,34 @@ describe('LongContextOptimizer', () => {
 
   describe('semanticGrouping', () => {
     it('requests clustering with default options', async () => {
-      const messages = Array.from({ length: 15 }, (_, idx) => createMessage({ id: `msg_${idx}` }));
+      const messages = Array.from({ length: 15 }, (_, idx) =>
+        createMessage({ id: `msg_${idx}` })
+      );
       const groups: SemanticGroup[] = [
-        { id: 'g1', messages: messages.slice(0, 5), centroid: [], topic: 'topic', importance: 0.7, coherence_score: 0.9 },
+        {
+          id: 'g1',
+          messages: messages.slice(0, 5),
+          centroid: [],
+          topic: 'topic',
+          importance: 0.7,
+          coherence_score: 0.9,
+        },
       ];
       mockInvoke.mockResolvedValueOnce(groups);
 
       const result = await optimizer.semanticGrouping(messages);
 
-      expect(mockInvoke).toHaveBeenCalledWith('context_semantic_grouping', expect.objectContaining({ algorithm: 'kmeans' }));
+      expect(mockInvoke).toHaveBeenCalledWith(
+        'context_semantic_grouping',
+        expect.objectContaining({ algorithm: 'kmeans' })
+      );
       expect(result).toEqual(groups);
     });
 
     it('returns temporal buckets when clustering fails', async () => {
-      const messages = Array.from({ length: 12 }, (_, idx) => createMessage({ id: `msg_${idx}` }));
+      const messages = Array.from({ length: 12 }, (_, idx) =>
+        createMessage({ id: `msg_${idx}` })
+      );
       mockInvoke.mockRejectedValueOnce(new Error('timeout'));
 
       const result = await optimizer.semanticGrouping(messages);
@@ -154,7 +175,10 @@ describe('LongContextOptimizer', () => {
       };
       mockInvoke.mockResolvedValueOnce(injectResult);
 
-      const result = await optimizer.selectiveInjection(base, extra, { relevanceThreshold: 0.7, maxInjected: 2 });
+      const result = await optimizer.selectiveInjection(base, extra, {
+        relevanceThreshold: 0.7,
+        maxInjected: 2,
+      });
 
       expect(mockInvoke).toHaveBeenCalledWith('context_selective_injection', {
         baseContext: base,
@@ -223,7 +247,10 @@ describe('LongContextOptimizer', () => {
 
   describe('gateContext', () => {
     it('filters context using backend gating', async () => {
-      const messages = [createMessage({ importance: 0.9 }), createMessage({ importance: 0.4 })];
+      const messages = [
+        createMessage({ importance: 0.9 }),
+        createMessage({ importance: 0.4 }),
+      ];
       const gatingResult: GatingResult = {
         all_messages: messages,
         gated_messages: [messages[0]],
@@ -233,7 +260,11 @@ describe('LongContextOptimizer', () => {
       };
       mockInvoke.mockResolvedValueOnce(gatingResult);
 
-      const result = await optimizer.gateContext(messages, { threshold: 0.8, preserveRecent: 1, preserveSystemMessages: true });
+      const result = await optimizer.gateContext(messages, {
+        threshold: 0.8,
+        preserveRecent: 1,
+        preserveSystemMessages: true,
+      });
 
       expect(mockInvoke).toHaveBeenCalledWith('context_gating', {
         messages,
@@ -252,9 +283,12 @@ describe('LongContextOptimizer', () => {
       ];
       mockInvoke.mockRejectedValueOnce(new Error('offline'));
 
-      const result = await optimizer.gateContext(messages, { threshold: 0.9, preserveRecent: 1 });
+      const result = await optimizer.gateContext(messages, {
+        threshold: 0.9,
+        preserveRecent: 1,
+      });
 
-      const ids = result.gated_messages.map((m) => m.id);
+      const ids = result.gated_messages.map(m => m.id);
       expect(ids).toContain('sys');
       expect(ids).toContain('recent');
       expect(ids).not.toContain('old');
@@ -278,7 +312,10 @@ describe('LongContextOptimizer', () => {
       };
       mockInvoke.mockResolvedValueOnce(crossContext);
 
-      const result = await optimizer.linkConversations(chats, { similarityThreshold: 0.85, maxLinks: 5 });
+      const result = await optimizer.linkConversations(chats, {
+        similarityThreshold: 0.85,
+        maxLinks: 5,
+      });
 
       expect(mockInvoke).toHaveBeenCalledWith('context_link_conversations', {
         chats,
@@ -304,7 +341,9 @@ describe('LongContextOptimizer', () => {
 
   describe('optimizeFullContext', () => {
     it('chains noise removal, gating, grouping, and compression', async () => {
-      const messages = Array.from({ length: 40 }, (_, idx) => createMessage({ id: `msg_${idx}`, tokens: 50 }));
+      const messages = Array.from({ length: 40 }, (_, idx) =>
+        createMessage({ id: `msg_${idx}`, tokens: 50 })
+      );
       const cleaned = messages.slice(0, 30);
       const gated = cleaned.slice(0, 20);
 
@@ -324,7 +363,14 @@ describe('LongContextOptimizer', () => {
         rejected_count: cleaned.length - gated.length,
       });
       const groupSpy = vi.spyOn(optimizer, 'semanticGrouping').mockResolvedValue([
-        { id: 'g', messages: gated, centroid: [], topic: 'topic', importance: 0.8, coherence_score: 0.9 },
+        {
+          id: 'g',
+          messages: gated,
+          centroid: [],
+          topic: 'topic',
+          importance: 0.8,
+          coherence_score: 0.9,
+        },
       ]);
       const compressSpy = vi.spyOn(optimizer, 'compressContext').mockResolvedValue({
         original_messages: gated,

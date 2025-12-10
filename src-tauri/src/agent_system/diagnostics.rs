@@ -4,8 +4,8 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
 use std::collections::VecDeque;
+use tokio::sync::RwLock;
 
 /// Événement de diagnostic
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -46,11 +46,17 @@ impl AgentDiagnostics {
 
     /// Émet un événement
     pub async fn emit(&self, event_type: &str, message: &str) {
-        self.emit_with_severity(event_type, message, DiagnosticSeverity::Info).await;
+        self.emit_with_severity(event_type, message, DiagnosticSeverity::Info)
+            .await;
     }
 
     /// Émet un événement avec sévérité
-    pub async fn emit_with_severity(&self, event_type: &str, message: &str, severity: DiagnosticSeverity) {
+    pub async fn emit_with_severity(
+        &self,
+        event_type: &str,
+        message: &str,
+        severity: DiagnosticSeverity,
+    ) {
         let event = DiagnosticEvent {
             timestamp: Self::now(),
             event_type: event_type.to_string(),
@@ -96,12 +102,14 @@ impl AgentDiagnostics {
 
     /// Émet une erreur
     pub async fn emit_error(&self, message: &str) {
-        self.emit_with_severity("error", message, DiagnosticSeverity::Error).await;
+        self.emit_with_severity("error", message, DiagnosticSeverity::Error)
+            .await;
     }
 
     /// Émet un warning
     pub async fn emit_warning(&self, message: &str) {
-        self.emit_with_severity("warning", message, DiagnosticSeverity::Warning).await;
+        self.emit_with_severity("warning", message, DiagnosticSeverity::Warning)
+            .await;
     }
 
     /// Récupère les événements récents
@@ -119,16 +127,21 @@ impl AgentDiagnostics {
     /// Filtre par type
     pub async fn events_by_type(&self, event_type: &str) -> Vec<DiagnosticEvent> {
         let events = self.events.read().await;
-        events.iter()
+        events
+            .iter()
             .filter(|e| e.event_type == event_type)
             .cloned()
             .collect()
     }
 
     /// Filtre par sévérité
-    pub async fn events_by_severity(&self, min_severity: DiagnosticSeverity) -> Vec<DiagnosticEvent> {
+    pub async fn events_by_severity(
+        &self,
+        min_severity: DiagnosticSeverity,
+    ) -> Vec<DiagnosticEvent> {
         let events = self.events.read().await;
-        events.iter()
+        events
+            .iter()
             .filter(|e| Self::severity_value(&e.severity) >= Self::severity_value(&min_severity))
             .cloned()
             .collect()
@@ -140,22 +153,30 @@ impl AgentDiagnostics {
         let stats = self.stats.read().await;
 
         // Compter par type
-        let by_type: std::collections::HashMap<String, usize> = events.iter()
-            .fold(std::collections::HashMap::new(), |mut acc, e| {
-                *acc.entry(e.event_type.clone()).or_insert(0) += 1;
-                acc
-            });
+        let by_type: std::collections::HashMap<String, usize> =
+            events
+                .iter()
+                .fold(std::collections::HashMap::new(), |mut acc, e| {
+                    *acc.entry(e.event_type.clone()).or_insert(0) += 1;
+                    acc
+                });
 
         // Compter par sévérité
-        let by_severity: std::collections::HashMap<String, usize> = events.iter()
-            .fold(std::collections::HashMap::new(), |mut acc, e| {
-                *acc.entry(format!("{:?}", e.severity)).or_insert(0) += 1;
-                acc
-            });
+        let by_severity: std::collections::HashMap<String, usize> =
+            events
+                .iter()
+                .fold(std::collections::HashMap::new(), |mut acc, e| {
+                    *acc.entry(format!("{:?}", e.severity)).or_insert(0) += 1;
+                    acc
+                });
 
         // Événements critiques récents
-        let critical: Vec<_> = events.iter()
-            .filter(|e| e.severity == DiagnosticSeverity::Critical || e.severity == DiagnosticSeverity::Error)
+        let critical: Vec<_> = events
+            .iter()
+            .filter(|e| {
+                e.severity == DiagnosticSeverity::Critical
+                    || e.severity == DiagnosticSeverity::Error
+            })
             .rev()
             .take(10)
             .cloned()

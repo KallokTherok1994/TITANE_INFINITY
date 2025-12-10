@@ -12,7 +12,7 @@ const mockGenerate = vi.fn(async (message: string) => ({
   role: 'assistant',
   content: `Réponse OMNIS simulée: ${message}`,
   provider: 'titane-mock',
-  timestamp: Date.now()
+  timestamp: Date.now(),
 }));
 
 const mockSafeInvoke = vi.fn(async (command: string, args?: unknown) => {
@@ -28,8 +28,8 @@ const mockSafeInvoke = vi.fn(async (command: string, args?: unknown) => {
         id: 'mock-response',
         content: 'Réponse backend simulée',
         role: 'assistant',
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     };
   }
 
@@ -38,9 +38,9 @@ const mockSafeInvoke = vi.fn(async (command: string, args?: unknown) => {
       success: true,
       providers: [
         { name: 'Gemini', status: 'healthy' },
-        { name: 'Ollama', status: 'standby' }
+        { name: 'Ollama', status: 'standby' },
       ],
-      refreshedAt: Date.now()
+      refreshedAt: Date.now(),
     };
   }
 
@@ -49,12 +49,13 @@ const mockSafeInvoke = vi.fn(async (command: string, args?: unknown) => {
 
 vi.mock('../services/ai/chatEngine_OMNIS_v1', () => ({
   chatEngineOmnis: {
-    generate: (...params: Parameters<typeof mockGenerate>) => mockGenerate(...params)
-  }
+    generate: (...params: Parameters<typeof mockGenerate>) => mockGenerate(...params),
+  },
 }));
 
 vi.mock('../utils/tauriProtector', () => ({
-  safeInvokeTauri: (...params: Parameters<typeof mockSafeInvoke>) => mockSafeInvoke(...params)
+  safeInvokeTauri: (...params: Parameters<typeof mockSafeInvoke>) =>
+    mockSafeInvoke(...params),
 }));
 
 beforeEach(() => {
@@ -63,7 +64,7 @@ beforeEach(() => {
 });
 
 describe('🔍 DIAGNOSTIC CHAT IA COMPLET', () => {
-  const testMessage = "Bonjour, pouvez-vous me répondre ?";
+  const testMessage = 'Bonjour, pouvez-vous me répondre ?';
 
   test('1️⃣ Engine OMNIS disponible', () => {
     expect(chatEngineOmnis).toBeDefined();
@@ -90,8 +91,8 @@ describe('🔍 DIAGNOSTIC CHAT IA COMPLET', () => {
         request: {
           message: testMessage,
           provider: 'auto',
-          streaming: false
-        }
+          streaming: false,
+        },
       });
 
       expect(response).toBeDefined();
@@ -116,7 +117,7 @@ describe('🔍 DIAGNOSTIC CHAT IA COMPLET', () => {
  */
 describe('🎮 SIMULATION INTERFACE CHAT', () => {
   test('Flux complet utilisateur → IA', async () => {
-    const userMessage = "Test complet interface";
+    const userMessage = 'Test complet interface';
 
     // Simulation sendMessage hook
     const startTime = Date.now();
@@ -137,7 +138,6 @@ describe('🎮 SIMULATION INTERFACE CHAT', () => {
 
       console.log('✅ Chat IA flux complet réussi en', duration, 'ms');
       console.log('✅ Response:', engineResponse.content.substring(0, 100) + '...');
-
     } catch (error) {
       console.error('❌ Erreur flux Chat IA:', error);
       throw error;

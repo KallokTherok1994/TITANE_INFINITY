@@ -185,7 +185,8 @@ impl KernelState {
 
     /// Register engine
     pub fn register_engine(&mut self, name: String) {
-        self.active_engines.insert(name.clone(), EngineStatus::new(name));
+        self.active_engines
+            .insert(name.clone(), EngineStatus::new(name));
     }
 
     /// Update engine status

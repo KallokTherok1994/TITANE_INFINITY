@@ -18,4 +18,9 @@ export { Card, type CardProps, type CardVariant, type CardElevation } from './Ca
 export { Input, type InputProps, type InputSize, type InputState } from './Input';
 export { Modal, type ModalProps, type ModalSize } from './Modal';
 export { Badge, type BadgeProps, type BadgeVariant, type BadgeSize } from './Badge';
-export { Spinner, type SpinnerProps, type SpinnerSize, type SpinnerVariant } from './Spinner';
+export {
+  Spinner,
+  type SpinnerProps,
+  type SpinnerSize,
+  type SpinnerVariant,
+} from './Spinner';

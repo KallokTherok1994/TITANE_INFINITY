@@ -16,7 +16,11 @@
  *   - Intégration avec Chat Modes et XP Engine
  */
 
-import type { ChatModeId, PermissionLevel, ToolPermissions } from '../ai/chatModes.config';
+import type {
+  ChatModeId,
+  PermissionLevel,
+  ToolPermissions,
+} from '../ai/chatModes.config';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES & CONSTANTES FONDAMENTALES
@@ -43,28 +47,28 @@ export type AutomationId =
 
 /** Catégories d'automations */
 export type AutomationCategory =
-  | 'maintenance'    // Backup, cleanup, santé système
-  | 'code_quality'   // Format, lint, type-check
-  | 'testing'        // Tests, validations
-  | 'git'            // Git operations (safe)
-  | 'documentation'  // Génération de docs
-  | 'memory'         // Mémoire, conversations
-  | 'analytics'      // Analyse, audit
-  | 'system';        // Système interne
+  | 'maintenance' // Backup, cleanup, santé système
+  | 'code_quality' // Format, lint, type-check
+  | 'testing' // Tests, validations
+  | 'git' // Git operations (safe)
+  | 'documentation' // Génération de docs
+  | 'memory' // Mémoire, conversations
+  | 'analytics' // Analyse, audit
+  | 'system'; // Système interne
 
 /** Type d'exécution */
 export type ExecutionType =
-  | 'instant'        // Exécution immédiate, résultat rapide
-  | 'async'          // Asynchrone, peut prendre du temps
-  | 'scheduled'      // Planifiable
-  | 'chained';       // Chaînable avec d'autres automations
+  | 'instant' // Exécution immédiate, résultat rapide
+  | 'async' // Asynchrone, peut prendre du temps
+  | 'scheduled' // Planifiable
+  | 'chained'; // Chaînable avec d'autres automations
 
 /** Niveau de sécurité */
 export type SecurityLevel =
-  | 'safe'           // Aucun effet de bord, lecture seule
-  | 'moderate'       // Modifications mineures, réversibles
-  | 'elevated'       // Modifications système, nécessite confirmation
-  | 'critical';      // Opérations sensibles, admin uniquement
+  | 'safe' // Aucun effet de bord, lecture seule
+  | 'moderate' // Modifications mineures, réversibles
+  | 'elevated' // Modifications système, nécessite confirmation
+  | 'critical'; // Opérations sensibles, admin uniquement
 
 /** Statut d'une exécution */
 export type AutomationStatus =
@@ -170,7 +174,7 @@ export interface AutomationParameter {
   description?: string;
   required: boolean;
   default?: unknown;
-  options?: { value: unknown; label: string }[];  // Pour type 'select'
+  options?: { value: unknown; label: string }[]; // Pour type 'select'
   validation?: {
     min?: number;
     max?: number;
@@ -223,7 +227,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
     requiresConfirmation: true,
     cancellable: true,
     timeout: 300000, // 5 min
-    cooldown: 60000,  // 1 min
+    cooldown: 60000, // 1 min
     tags: ['backup', 'save', 'archive'],
     version: '1.0.0',
   },
@@ -286,7 +290,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
       {
         name: 'scope',
         type: 'select',
-        label: 'Portée de l\'audit',
+        label: "Portée de l'audit",
         required: true,
         default: 'full',
         options: [
@@ -570,7 +574,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
       {
         name: 'format',
         type: 'select',
-        label: 'Format d\'export',
+        label: "Format d'export",
         required: true,
         default: 'markdown',
         options: [
@@ -637,7 +641,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
   auto_xp_sync: {
     id: 'auto_xp_sync',
     name: 'Synchroniser XP',
-    description: 'Synchronise l\'XP entre frontend et backend Tauri',
+    description: "Synchronise l'XP entre frontend et backend Tauri",
     icon: '🔄',
     category: 'system',
     executionType: 'instant',
@@ -691,7 +695,7 @@ export const AUTOMATION_REGISTRY: Record<AutomationId, AutomationConfig> = {
       {
         name: 'depth',
         type: 'select',
-        label: 'Profondeur d\'analyse',
+        label: "Profondeur d'analyse",
         required: true,
         default: 'standard',
         options: [
@@ -763,7 +767,9 @@ export function getAutomation(id: AutomationId): AutomationConfig {
 /**
  * Obtenir toutes les automations d'une catégorie
  */
-export function getAutomationsByCategory(category: AutomationCategory): AutomationConfig[] {
+export function getAutomationsByCategory(
+  category: AutomationCategory
+): AutomationConfig[] {
   return Object.values(AUTOMATION_REGISTRY).filter(a => a.category === category);
 }
 
@@ -914,7 +920,7 @@ export interface AutomationExecutionRequest {
   modeId: ChatModeId;
   permissionLevel: PermissionLevel;
   triggeredBy: 'user' | 'system' | 'schedule' | 'chain';
-  parentExecutionId?: string;  // Si chaîné
+  parentExecutionId?: string; // Si chaîné
 }
 
 /**
@@ -935,7 +941,7 @@ export interface AutomationExecutionContext {
 export interface AutomationSystemState {
   enabled: boolean;
   runningExecutions: Map<string, AutomationExecutionContext>;
-  cooldowns: Map<AutomationId, number>;  // timestamp du dernier run
+  cooldowns: Map<AutomationId, number>; // timestamp du dernier run
   totalExecutions: number;
   successfulExecutions: number;
   failedExecutions: number;
@@ -971,7 +977,10 @@ export const CATEGORY_DISPLAY_ORDER: AutomationCategory[] = [
 ];
 
 /** Labels des catégories pour UI */
-export const CATEGORY_LABELS: Record<AutomationCategory, { label: string; icon: string }> = {
+export const CATEGORY_LABELS: Record<
+  AutomationCategory,
+  { label: string; icon: string }
+> = {
   maintenance: { label: 'Maintenance', icon: '🔧' },
   code_quality: { label: 'Qualité Code', icon: '✨' },
   testing: { label: 'Tests', icon: '🧪' },
@@ -983,9 +992,12 @@ export const CATEGORY_LABELS: Record<AutomationCategory, { label: string; icon: 
 };
 
 /** Labels des niveaux de sécurité - TITANE Design System */
-export const SECURITY_LEVEL_LABELS: Record<SecurityLevel, { label: string; color: string }> = {
-  safe: { label: 'Sûr', color: '#93b399' },        // TITANE success
+export const SECURITY_LEVEL_LABELS: Record<
+  SecurityLevel,
+  { label: string; color: string }
+> = {
+  safe: { label: 'Sûr', color: '#93b399' }, // TITANE success
   moderate: { label: 'Modéré', color: '#a89f91' }, // TITANE warning
-  elevated: { label: 'Élevé', color: '#9a8a82' },  // TITANE warning-dark
+  elevated: { label: 'Élevé', color: '#9a8a82' }, // TITANE warning-dark
   critical: { label: 'Critique', color: '#8f7a7a' }, // TITANE danger
 };

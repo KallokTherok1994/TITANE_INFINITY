@@ -44,7 +44,12 @@ const createInitialAutofixStats = () => ({
 });
 
 const createInitialFileStore = () => [
-  { name: 'template-nda.txt', category: 'legal', content: 'NDA template', metadata: { version: 1 } },
+  {
+    name: 'template-nda.txt',
+    category: 'legal',
+    content: 'NDA template',
+    metadata: { version: 1 },
+  },
 ];
 
 const createInitialTimelineEvents = () => {
@@ -112,10 +117,19 @@ let autofixHistory: Array<{ type: string; timestamp: number; summary: string }> 
 let autohealHistory: Array<{ module: string; success: boolean; timestamp: number }> = [];
 let brokenModules = defaultBrokenModules();
 const snapshots = new Map<string, FusionState>();
-let storedFiles: Array<{ name: string; category: string; content: string; metadata?: Record<string, unknown> }>
-  = createInitialFileStore();
-let timelineEvents: Array<{ id?: string; type: string; description?: string; metadata?: Record<string, unknown>; timestamp: string }>
-  = createInitialTimelineEvents();
+let storedFiles: Array<{
+  name: string;
+  category: string;
+  content: string;
+  metadata?: Record<string, unknown>;
+}> = createInitialFileStore();
+let timelineEvents: Array<{
+  id?: string;
+  type: string;
+  description?: string;
+  metadata?: Record<string, unknown>;
+  timestamp: string;
+}> = createInitialTimelineEvents();
 let memoryStatsState = createInitialMemoryStats();
 let memoryProjects = createInitialMemoryProjects();
 let memoryInteractions: Array<Record<string, unknown>> = [];
@@ -196,7 +210,7 @@ const handleTauriInvoke = async (
       const file = payload?.file;
       if (file?.name) {
         storedFiles = [
-          ...storedFiles.filter((f) => f.name !== file.name),
+          ...storedFiles.filter(f => f.name !== file.name),
           {
             name: file.name,
             category: file.category ?? 'general',
@@ -210,9 +224,7 @@ const handleTauriInvoke = async (
     }
     case 'get_files_by_category': {
       const category = payload?.category;
-      return clone(
-        storedFiles.filter((file) => !category || file.category === category)
-      );
+      return clone(storedFiles.filter(file => !category || file.category === category));
     }
     case 'memory_get_active_projects':
       return clone(memoryProjects);
@@ -236,7 +248,9 @@ const handleTauriInvoke = async (
     case 'singularity_get_global_coherence':
       return Number(
         (
-          (fusionState.fusion_integrity + fusionState.sync_score + fusionState.pipeline_health) /
+          (fusionState.fusion_integrity +
+            fusionState.sync_score +
+            fusionState.pipeline_health) /
           3
         ).toFixed(2)
       );
@@ -260,7 +274,9 @@ const handleTauriInvoke = async (
     case 'singularity_check_coherence':
       return Number(
         (
-          (fusionState.fusion_integrity + fusionState.sync_score + fusionState.pipeline_health) /
+          (fusionState.fusion_integrity +
+            fusionState.sync_score +
+            fusionState.pipeline_health) /
           3
         ).toFixed(2)
       );
@@ -301,7 +317,8 @@ const handleTauriInvoke = async (
       return snapshotId;
     }
     case 'singularity_restore_snapshot': {
-      const snapshotId = typeof payload?.snapshotId === 'string' ? payload.snapshotId : null;
+      const snapshotId =
+        typeof payload?.snapshotId === 'string' ? payload.snapshotId : null;
       if (snapshotId && snapshots.has(snapshotId)) {
         fusionState = clone(snapshots.get(snapshotId)!);
       }
@@ -360,11 +377,11 @@ const handleTauriInvoke = async (
     case 'autoheal_detect_broken_modules':
       return clone(brokenModules);
     case 'autoheal_heal_cognitive_module':
-      brokenModules = brokenModules.filter((mod) => mod.module !== 'cognitive');
+      brokenModules = brokenModules.filter(mod => mod.module !== 'cognitive');
       autohealHistory.push({ module: 'cognitive', success: true, timestamp: Date.now() });
       return { module_type: 'cognitive', success: true };
     case 'autoheal_heal_avatar_module':
-      brokenModules = brokenModules.filter((mod) => mod.module !== 'avatar');
+      brokenModules = brokenModules.filter(mod => mod.module !== 'avatar');
       autohealHistory.push({ module: 'avatar', success: true, timestamp: Date.now() });
       return { module_type: 'avatar', success: true };
     case 'autoheal_get_history':
@@ -391,7 +408,9 @@ const handleTauriInvoke = async (
     case 'singularity_get_full_state': {
       const coherence = Number(
         (
-          (fusionState.fusion_integrity + fusionState.sync_score + fusionState.pipeline_health) /
+          (fusionState.fusion_integrity +
+            fusionState.sync_score +
+            fusionState.pipeline_health) /
           3
         ).toFixed(2)
       );

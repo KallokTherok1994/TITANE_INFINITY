@@ -145,7 +145,16 @@
   },
 
   "language_variants": {
-    "fr-FR": { "primary": true, "profiles": ["titane_standard", "titane_calm", "titane_dynamic", "titane_technical", "titane_emergency"] },
+    "fr-FR": {
+      "primary": true,
+      "profiles": [
+        "titane_standard",
+        "titane_calm",
+        "titane_dynamic",
+        "titane_technical",
+        "titane_emergency"
+      ]
+    },
     "en-US": { "primary": false, "profiles": [] },
     "en-GB": { "primary": false, "profiles": [] }
   }

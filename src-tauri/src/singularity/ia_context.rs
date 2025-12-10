@@ -275,7 +275,10 @@ impl IAContext {
             return None;
         }
 
-        let current_index = self.fallback_order.iter().position(|e| e == current_engine)?;
+        let current_index = self
+            .fallback_order
+            .iter()
+            .position(|e| e == current_engine)?;
 
         for engine in &self.fallback_order[(current_index + 1)..] {
             if self.available_engines.contains(engine) {
@@ -365,7 +368,11 @@ mod tests {
                 latency_ms: 100 + i,
                 tokens: 100,
                 success: i < 8,
-                error_message: if i >= 8 { Some("Error".to_string()) } else { None },
+                error_message: if i >= 8 {
+                    Some("Error".to_string())
+                } else {
+                    None
+                },
                 fallback_used: false,
             };
             ctx.record_request(record);

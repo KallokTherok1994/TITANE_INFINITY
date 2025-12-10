@@ -80,12 +80,7 @@ export class MessageBus {
   /**
    * Envoie une notification (sans réponse attendue)
    */
-  notify<T = unknown>(
-    channel: string,
-    payload: T,
-    from: string,
-    to?: string
-  ): void {
+  notify<T = unknown>(channel: string, payload: T, from: string, to?: string): void {
     const message = this.createMessage('notification', channel, payload, from, to);
     this.dispatch(message).catch(console.error);
   }
@@ -93,11 +88,7 @@ export class MessageBus {
   /**
    * Broadcast à tous les abonnés d'un canal
    */
-  broadcast<T = unknown>(
-    channel: string,
-    payload: T,
-    from: string
-  ): void {
+  broadcast<T = unknown>(channel: string, payload: T, from: string): void {
     const message = this.createMessage('broadcast', channel, payload, from);
     this.dispatch(message).catch(console.error);
   }
@@ -105,11 +96,7 @@ export class MessageBus {
   /**
    * Envoie une réponse
    */
-  respond<T = unknown>(
-    originalMessage: Message,
-    payload: T,
-    from: string
-  ): void {
+  respond<T = unknown>(originalMessage: Message, payload: T, from: string): void {
     const response = this.createMessage(
       'response',
       originalMessage.channel,

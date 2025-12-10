@@ -146,7 +146,9 @@ export class AutoHealEngine {
   /**
    * Lance un cycle de self-healing via TITANE Local
    */
-  public async runSelfHealingCycle(symptoms: string): Promise<SelfHealingRunResult | null> {
+  public async runSelfHealingCycle(
+    symptoms: string
+  ): Promise<SelfHealingRunResult | null> {
     try {
       console.log('[AutoHeal] 🤖 Running TITANE Local self-healing...');
       const result = await runSelfHealing(symptoms);

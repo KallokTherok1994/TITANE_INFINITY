@@ -13,12 +13,7 @@ export interface CameraCommand {
   error?: string;
 }
 
-export type CameraAction =
-  | 'activate'
-  | 'deactivate'
-  | 'toggle'
-  | 'status'
-  | 'none';
+export type CameraAction = 'activate' | 'deactivate' | 'toggle' | 'status' | 'none';
 
 // ═══════════════════════════════════════════════════════════════
 // PATTERNS NLP — FRANÇAIS
@@ -79,8 +74,16 @@ const STATUS_PATTERNS_EN = [
  */
 export function containsCameraKeyword(message: string): boolean {
   const keywords = [
-    'caméra', 'camera', 'webcam', 'vision', 'vidéo', 'video',
-    'surveillance', 'observation', 'filmer', 'recording',
+    'caméra',
+    'camera',
+    'webcam',
+    'vision',
+    'vidéo',
+    'video',
+    'surveillance',
+    'observation',
+    'filmer',
+    'recording',
   ];
 
   const lowerMsg = message.toLowerCase();
@@ -134,7 +137,10 @@ export function parseCameraCommand(message: string): CameraCommand {
 /**
  * Génère une réponse de statut selon l'état caméra
  */
-export function generateCameraStatusResponse(isActive: boolean, hasPermission: boolean): string {
+export function generateCameraStatusResponse(
+  isActive: boolean,
+  hasPermission: boolean
+): string {
   if (!hasPermission) {
     return '📷 Caméra: Permission non accordée. Utilisez "active la caméra" pour demander l\'autorisation.';
   }

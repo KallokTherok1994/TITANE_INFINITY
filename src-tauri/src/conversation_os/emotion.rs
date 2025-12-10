@@ -3,8 +3,8 @@
 //! Super Prompt #9 — Détection et gestion des émotions dans la conversation
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::MemoryContext;
+use serde::{Deserialize, Serialize};
 
 /// Tonalité émotionnelle détectée
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -81,45 +81,127 @@ impl EmotionLexicon {
     fn new() -> Self {
         Self {
             positive: vec![
-                "merci", "super", "génial", "parfait", "excellent", "bravo",
-                "thanks", "great", "awesome", "perfect", "excellent", "amazing",
-                "bien", "good", "nice", "love", "aime", "content", "happy",
+                "merci",
+                "super",
+                "génial",
+                "parfait",
+                "excellent",
+                "bravo",
+                "thanks",
+                "great",
+                "awesome",
+                "perfect",
+                "excellent",
+                "amazing",
+                "bien",
+                "good",
+                "nice",
+                "love",
+                "aime",
+                "content",
+                "happy",
             ],
             negative: vec![
-                "mauvais", "bad", "terrible", "awful", "hate", "déteste",
-                "nul", "horrible", "worst", "pire", "disappointing",
+                "mauvais",
+                "bad",
+                "terrible",
+                "awful",
+                "hate",
+                "déteste",
+                "nul",
+                "horrible",
+                "worst",
+                "pire",
+                "disappointing",
             ],
             frustrated: vec![
-                "frustré", "frustrated", "énervé", "angry", "agacé", "annoyed",
-                "marre", "fed up", "ça marche pas", "doesn't work", "encore",
-                "again", "toujours pas", "still not", "impossible",
+                "frustré",
+                "frustrated",
+                "énervé",
+                "angry",
+                "agacé",
+                "annoyed",
+                "marre",
+                "fed up",
+                "ça marche pas",
+                "doesn't work",
+                "encore",
+                "again",
+                "toujours pas",
+                "still not",
+                "impossible",
             ],
             curious: vec![
-                "comment", "how", "pourquoi", "why", "qu'est-ce", "what",
-                "curieux", "curious", "intéressant", "interesting", "wonder",
-                "me demande", "savoir", "know", "apprendre", "learn",
+                "comment",
+                "how",
+                "pourquoi",
+                "why",
+                "qu'est-ce",
+                "what",
+                "curieux",
+                "curious",
+                "intéressant",
+                "interesting",
+                "wonder",
+                "me demande",
+                "savoir",
+                "know",
+                "apprendre",
+                "learn",
             ],
             anxious: vec![
-                "inquiet", "worried", "anxieux", "anxious", "peur", "afraid",
-                "stress", "stressed", "nerveux", "nervous", "urgent",
-                "deadline", "délai", "risque", "risk",
+                "inquiet", "worried", "anxieux", "anxious", "peur", "afraid", "stress", "stressed",
+                "nerveux", "nervous", "urgent", "deadline", "délai", "risque", "risk",
             ],
             grateful: vec![
-                "merci beaucoup", "thank you so much", "reconnaissant", "grateful",
-                "apprécié", "appreciated", "génial merci", "thanks a lot",
+                "merci beaucoup",
+                "thank you so much",
+                "reconnaissant",
+                "grateful",
+                "apprécié",
+                "appreciated",
+                "génial merci",
+                "thanks a lot",
             ],
             confused: vec![
-                "confus", "confused", "comprends pas", "don't understand",
-                "pas clair", "unclear", "perdu", "lost", "hein", "what",
-                "bizarre", "strange", "weird",
+                "confus",
+                "confused",
+                "comprends pas",
+                "don't understand",
+                "pas clair",
+                "unclear",
+                "perdu",
+                "lost",
+                "hein",
+                "what",
+                "bizarre",
+                "strange",
+                "weird",
             ],
             urgent: vec![
-                "urgent", "urgently", "immédiatement", "immediately", "asap",
-                "vite", "quickly", "maintenant", "now", "critique", "critical",
+                "urgent",
+                "urgently",
+                "immédiatement",
+                "immediately",
+                "asap",
+                "vite",
+                "quickly",
+                "maintenant",
+                "now",
+                "critique",
+                "critical",
             ],
             excited: vec![
-                "excité", "excited", "hâte", "can't wait", "incroyable",
-                "incredible", "wow", "impressionnant", "impressive", "!!!",
+                "excité",
+                "excited",
+                "hâte",
+                "can't wait",
+                "incroyable",
+                "incredible",
+                "wow",
+                "impressionnant",
+                "impressive",
+                "!!!",
             ],
         }
     }
@@ -193,7 +275,8 @@ impl EmotionEngine {
         }
 
         let (primary_tone, intensity, indicators) = scores.remove(0);
-        let secondary_tone = scores.first()
+        let secondary_tone = scores
+            .first()
             .filter(|(_, score, _)| *score >= self.detection_threshold)
             .map(|(tone, _, _)| tone.clone());
 
@@ -289,9 +372,13 @@ mod tests {
         let engine = EmotionEngine::new();
         let memory = MemoryContext::default();
 
-        let state = engine.analyze("Merci beaucoup, c'est super!", &memory).await;
-        assert!(state.primary_tone == EmotionalTone::Positive ||
-                state.primary_tone == EmotionalTone::Grateful);
+        let state = engine
+            .analyze("Merci beaucoup, c'est super!", &memory)
+            .await;
+        assert!(
+            state.primary_tone == EmotionalTone::Positive
+                || state.primary_tone == EmotionalTone::Grateful
+        );
     }
 
     #[tokio::test]
@@ -299,7 +386,9 @@ mod tests {
         let engine = EmotionEngine::new();
         let memory = MemoryContext::default();
 
-        let state = engine.analyze("Je suis frustré, ça marche pas encore!", &memory).await;
+        let state = engine
+            .analyze("Je suis frustré, ça marche pas encore!", &memory)
+            .await;
         assert_eq!(state.primary_tone, EmotionalTone::Frustrated);
     }
 

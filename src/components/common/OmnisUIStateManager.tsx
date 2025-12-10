@@ -12,7 +12,14 @@
  * ══════════════════════════════════════════════════════════════════════════════════
  */
 
-import { createContext, useContext, useReducer, useEffect, ReactNode, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  ReactNode,
+  useCallback,
+} from 'react';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMNIS UI STATE
@@ -61,7 +68,9 @@ type ComponentErrorPayload =
   | { component: string; error: Error; level?: 'critical' | 'important' | 'minor' }
   | { errors: OmnisUIState['errors'] };
 
-const isSerializedOmnisError = (value: unknown): value is OmnisUIState['errors'][number] => {
+const isSerializedOmnisError = (
+  value: unknown
+): value is OmnisUIState['errors'][number] => {
   if (typeof value !== 'object' || value === null) {
     return false;
   }
@@ -83,7 +92,11 @@ interface OmnisUIContextType {
   dispatch: (action: OmnisUIAction) => void;
 
   // Helper functions
-  reportComponentError: (component: string, error: Error, level?: 'critical' | 'important' | 'minor') => void;
+  reportComponentError: (
+    component: string,
+    error: Error,
+    level?: 'critical' | 'important' | 'minor'
+  ) => void;
   reportComponentRecovery: (component: string) => void;
   setDegradedMode: (component: string, degraded: boolean) => void;
   backupCurrentState: () => void;
@@ -113,14 +126,17 @@ function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIStat
         component,
         message: error.message || 'Unknown error',
         timestamp: Date.now(),
-        level
+        level,
       };
 
       return {
         ...state,
         errors: [...state.errors.slice(-19), newError], // Keep last 20 errors
         degradedComponents: new Set([...state.degradedComponents, component]),
-        uiHealth: Math.max(0, state.uiHealth - (level === 'critical' ? 20 : level === 'important' ? 10 : 5))
+        uiHealth: Math.max(
+          0,
+          state.uiHealth - (level === 'critical' ? 20 : level === 'important' ? 10 : 5)
+        ),
       };
     }
 
@@ -134,7 +150,7 @@ function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIStat
         degradedComponents: newDegraded,
         recoveryCount: state.recoveryCount + 1,
         lastRecoveryTimestamp: Date.now(),
-        uiHealth: Math.min(100, state.uiHealth + 10) // Recovery improves health
+        uiHealth: Math.min(100, state.uiHealth + 10), // Recovery improves health
       };
     }
 
@@ -150,14 +166,14 @@ function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIStat
 
       return {
         ...state,
-        degradedComponents: newDegraded
+        degradedComponents: newDegraded,
       };
     }
 
     case 'CLEAR_DEGRADED': {
       return {
         ...state,
-        degradedComponents: new Set()
+        degradedComponents: new Set(),
       };
     }
 
@@ -168,14 +184,15 @@ function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIStat
 
       // Calculate overall health as average of component healths
       const healths = Array.from(newComponentHealth.values());
-      const avgHealth = healths.length > 0
-        ? healths.reduce((sum, h) => sum + h, 0) / healths.length
-        : 100;
+      const avgHealth =
+        healths.length > 0
+          ? healths.reduce((sum, h) => sum + h, 0) / healths.length
+          : 100;
 
       return {
         ...state,
         componentHealth: newComponentHealth,
-        uiHealth: Math.round(avgHealth)
+        uiHealth: Math.round(avgHealth),
       };
     }
 
@@ -183,7 +200,7 @@ function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIStat
       return {
         ...state,
         hasStateBackup: true,
-        backupTimestamp: Date.now()
+        backupTimestamp: Date.now(),
       };
     }
 
@@ -192,7 +209,7 @@ function omnisUIReducer(state: OmnisUIState, action: OmnisUIAction): OmnisUIStat
       return {
         ...state,
         ...restoredState,
-        lastRecoveryTimestamp: Date.now()
+        lastRecoveryTimestamp: Date.now(),
       };
     }
 
@@ -221,7 +238,7 @@ function createInitialState(): OmnisUIState {
     uiHealth: 100,
     componentHealth: new Map(),
     sessionId: generateSessionId(),
-    startTime: Date.now()
+    startTime: Date.now(),
   };
 }
 
@@ -246,14 +263,13 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
         errors: state.errors,
         recoveryCount: state.recoveryCount,
         componentHealth: Array.from(state.componentHealth.entries()),
-        uiHealth: state.uiHealth
+        uiHealth: state.uiHealth,
       };
 
       localStorage.setItem('omnis-ui-state-backup', JSON.stringify(stateBackup));
       sessionStorage.setItem('omnis-ui-state-session', JSON.stringify(stateBackup));
 
       dispatch({ type: 'BACKUP_STATE' });
-
     } catch (error) {
       console.warn('[OMNIS UI] State backup failed:', error);
     }
@@ -277,7 +293,7 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
       if (recentErrors.length !== state.errors.length) {
         dispatch({
           type: 'COMPONENT_ERROR',
-          payload: { errors: recentErrors }
+          payload: { errors: recentErrors },
         });
       }
     }, 300000); // Cleanup every 5 minutes
@@ -286,28 +302,31 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
   }, [dispatch, state.errors]);
 
   // Helper Functions
-  const reportComponentError = useCallback((
-    component: string,
-    error: Error,
-    level: 'critical' | 'important' | 'minor' = 'important'
-  ) => {
-    dispatch({
-      type: 'COMPONENT_ERROR',
-      payload: { component, error, level }
-    });
-  }, []);
+  const reportComponentError = useCallback(
+    (
+      component: string,
+      error: Error,
+      level: 'critical' | 'important' | 'minor' = 'important'
+    ) => {
+      dispatch({
+        type: 'COMPONENT_ERROR',
+        payload: { component, error, level },
+      });
+    },
+    []
+  );
 
   const reportComponentRecovery = useCallback((component: string) => {
     dispatch({
       type: 'COMPONENT_RECOVERY',
-      payload: { component }
+      payload: { component },
     });
   }, []);
 
   const setDegradedMode = useCallback((component: string, degraded: boolean) => {
     dispatch({
       type: 'SET_DEGRADED',
-      payload: { component, degraded }
+      payload: { component, degraded },
     });
   }, []);
 
@@ -329,15 +348,19 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
         ? backup.errors.filter(isSerializedOmnisError)
         : [];
 
-      const componentHealthEntries: Array<[string, number]> = Array.isArray(backup.componentHealth)
-        ? backup.componentHealth
-            .filter((entry): entry is [string, number] =>
+      const componentHealthEntries: Array<[string, number]> = Array.isArray(
+        backup.componentHealth
+      )
+        ? backup.componentHealth.filter(
+            (entry): entry is [string, number] =>
               Array.isArray(entry) &&
               typeof entry[0] === 'string' &&
               typeof entry[1] === 'number'
-            )
+          )
         : typeof backup.componentHealth === 'object' && backup.componentHealth !== null
-          ? Object.entries(backup.componentHealth as Record<string, unknown>).reduce<Array<[string, number]>>((acc, [key, value]) => {
+          ? Object.entries(backup.componentHealth as Record<string, unknown>).reduce<
+              Array<[string, number]>
+            >((acc, [key, value]) => {
               if (typeof value === 'number') {
                 acc.push([key, value]);
               }
@@ -347,14 +370,15 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
 
       const restoredState: Partial<OmnisUIState> = {
         errors,
-        recoveryCount: typeof backup.recoveryCount === 'number' ? backup.recoveryCount : 0,
+        recoveryCount:
+          typeof backup.recoveryCount === 'number' ? backup.recoveryCount : 0,
         componentHealth: new Map(componentHealthEntries),
         uiHealth: typeof backup.uiHealth === 'number' ? backup.uiHealth : 100,
       };
 
       dispatch({
         type: 'RESTORE_STATE',
-        payload: { restoredState }
+        payload: { restoredState },
       });
 
       return true;
@@ -364,9 +388,12 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const getComponentHealth = useCallback((component: string): number => {
-    return state.componentHealth.get(component) || 100;
-  }, [state.componentHealth]);
+  const getComponentHealth = useCallback(
+    (component: string): number => {
+      return state.componentHealth.get(component) || 100;
+    },
+    [state.componentHealth]
+  );
 
   const getOverallHealth = useCallback((): number => {
     return state.uiHealth;
@@ -386,13 +413,11 @@ export function OmnisUIProvider({ children }: { children: ReactNode }) {
     restoreFromBackup,
     getComponentHealth,
     getOverallHealth,
-    resetOmnisState
+    resetOmnisState,
   };
 
   return (
-    <OmnisUIContext.Provider value={contextValue}>
-      {children}
-    </OmnisUIContext.Provider>
+    <OmnisUIContext.Provider value={contextValue}>{children}</OmnisUIContext.Provider>
   );
 }
 
@@ -409,25 +434,36 @@ export function useOmnisUI(): OmnisUIContextType {
 }
 
 export function useOmnisComponentHealth(componentName: string) {
-  const { getComponentHealth, reportComponentError, reportComponentRecovery, setDegradedMode } = useOmnisUI();
+  const {
+    getComponentHealth,
+    reportComponentError,
+    reportComponentRecovery,
+    setDegradedMode,
+  } = useOmnisUI();
 
-  const reportError = useCallback((error: Error, level?: 'critical' | 'important' | 'minor') => {
-    reportComponentError(componentName, error, level);
-  }, [componentName, reportComponentError]);
+  const reportError = useCallback(
+    (error: Error, level?: 'critical' | 'important' | 'minor') => {
+      reportComponentError(componentName, error, level);
+    },
+    [componentName, reportComponentError]
+  );
 
   const reportRecovery = useCallback(() => {
     reportComponentRecovery(componentName);
   }, [componentName, reportComponentRecovery]);
 
-  const setDegraded = useCallback((degraded: boolean) => {
-    setDegradedMode(componentName, degraded);
-  }, [componentName, setDegradedMode]);
+  const setDegraded = useCallback(
+    (degraded: boolean) => {
+      setDegradedMode(componentName, degraded);
+    },
+    [componentName, setDegradedMode]
+  );
 
   return {
     health: getComponentHealth(componentName),
     reportError,
     reportRecovery,
-    setDegraded
+    setDegraded,
   };
 }
 

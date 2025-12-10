@@ -79,7 +79,9 @@ test.describe('Onboarding Flow', () => {
     await page.click('.theme-option:has-text("Sombre")');
 
     // Vérifier que le thème sombre est sélectionné
-    await expect(page.locator('.theme-option:has-text("Sombre")')).toHaveClass(/selected/);
+    await expect(page.locator('.theme-option:has-text("Sombre")')).toHaveClass(
+      /selected/
+    );
 
     // Sélectionner la langue
     await page.selectOption('#language-select', 'fr');
@@ -234,11 +236,14 @@ test.describe('Onboarding Flow', () => {
     await page.goto('http://localhost:5173');
     await page.evaluate(() => {
       localStorage.setItem('onboarding_completed', 'true');
-      localStorage.setItem('onboarding_preferences', JSON.stringify({
-        theme: 'dark',
-        language: 'fr',
-        enableAnalytics: false,
-      }));
+      localStorage.setItem(
+        'onboarding_preferences',
+        JSON.stringify({
+          theme: 'dark',
+          language: 'fr',
+          enableAnalytics: false,
+        })
+      );
     });
 
     // Recharger

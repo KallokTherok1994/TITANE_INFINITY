@@ -27,7 +27,7 @@ function createSuccessResult(response: string): DevSudoResult {
   return {
     handled: true,
     success: true,
-    response
+    response,
   };
 }
 
@@ -50,10 +50,11 @@ function createSuccessResult(response: string): DevSudoResult {
  * - `singularity introspect`
  */
 export async function handleTitaneOneIntrospect(): Promise<DevSudoResult> {
-
   const result = await SingularityIntrospectionEngine.standardIntrospect();
 
-  return createSuccessResult(SingularityIntrospectionEngine.formatIntrospectionReport(result));
+  return createSuccessResult(
+    SingularityIntrospectionEngine.formatIntrospectionReport(result)
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -76,7 +77,6 @@ export async function handleTitaneOneIntrospect(): Promise<DevSudoResult> {
  * - `singularity evolve`
  */
 export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -90,13 +90,13 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
   output += `   Issues détectées: ${beforeState.diagnostic.criticalIssues.length + beforeState.diagnostic.warnings.length}\n\n`;
 
   // 2. Analyse des patterns d'évolution
-  output += '🔍 Phase 2: Analyse patterns d\'évolution...\n';
+  output += "🔍 Phase 2: Analyse patterns d'évolution...\n";
   const evolutionPatterns = [
     'Pattern: Optimisation cohérence moteurs',
     'Pattern: Amélioration pipeline IA',
     'Pattern: Renforcement mémoire persistante',
     'Pattern: Optimisation rendering',
-    'Pattern: Amélioration Self-Healing'
+    'Pattern: Amélioration Self-Healing',
   ];
   evolutionPatterns.forEach(pattern => {
     output += `   ✓ ${pattern}\n`;
@@ -111,7 +111,7 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
     '✅ Mémoire défragmentée',
     '✅ Rendering pipeline optimisé',
     '✅ Self-Healing patterns renforcés',
-    '✅ Coherence matrix recalculée'
+    '✅ Coherence matrix recalculée',
   ];
   evolutions.forEach(evo => {
     output += `   ${evo}\n`;
@@ -163,7 +163,6 @@ export async function handleTitaneOneEvolve(): Promise<DevSudoResult> {
  * - `singularity heal`
  */
 export async function handleTitaneOneHeal(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -215,7 +214,6 @@ export async function handleTitaneOneHeal(): Promise<DevSudoResult> {
  * - `singularity deepheal`
  */
 export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -236,7 +234,7 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
     '✅ Snapshots vérifiés et consolidés',
     '✅ Schema migrations appliquées (v3.3.0 → v3.4.0)',
     '✅ Coherence matrix recalculée',
-    '✅ Performance metrics réinitialisées'
+    '✅ Performance metrics réinitialisées',
   ];
   reconstructionSteps.forEach(step => {
     output += `   ${step}\n`;
@@ -265,7 +263,7 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
     '✅ Caches optimisés',
     '✅ Pipelines IA accélérés',
     '✅ Rendering optimisé',
-    '✅ Backend/Frontend synchronisés'
+    '✅ Backend/Frontend synchronisés',
   ];
   optimizations.forEach(opt => {
     output += `   ${opt}\n`;
@@ -297,7 +295,6 @@ export async function handleTitaneOneFullHeal(): Promise<DevSudoResult> {
  * - `singularity unify`
  */
 export async function handleTitaneOneUnify(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -311,7 +308,7 @@ export async function handleTitaneOneUnify(): Promise<DevSudoResult> {
   output += `   Moteurs actifs: ${preState.internalVision.activeEngines}/${preState.internalVision.totalEngines}\n\n`;
 
   // Processus d'unification
-  output += '🔗 Processus d\'unification:\n';
+  output += "🔗 Processus d'unification:\n";
   output += '   ✅ Synchronisation Couche 1 → Couche 2\n';
   output += '   ✅ Synchronisation Couche 2 → Couche 3\n';
   output += '   ✅ Synchronisation Couche 3 → Couche 4\n';
@@ -360,7 +357,6 @@ export async function handleTitaneOneUnify(): Promise<DevSudoResult> {
  * - `singularity optimize`
  */
 export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -410,7 +406,7 @@ export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
     avgResponseTime: Math.max(10, Math.round(preMetrics.avgResponseTime * 0.6)),
     memoryUsage: Math.round(preMetrics.memoryUsage * 0.75),
     cpuUsage: Math.max(5, Math.round(preMetrics.cpuUsage * 0.7)),
-    renderingFPS: 60
+    renderingFPS: 60,
   };
 
   output += '📊 Métriques post-optimisation:\n';
@@ -444,7 +440,6 @@ export async function handleTitaneOneOptimize(): Promise<DevSudoResult> {
  * - `singularity vision`
  */
 export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
-
   const result = await SingularityIntrospectionEngine.deepIntrospect();
 
   let output = '';
@@ -462,7 +457,14 @@ export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
 
   output += '📊 Couches:\n';
   result.internalVision.layers.forEach((layer, idx) => {
-    const health = layer.health === 'perfect' ? '✅' : layer.health === 'good' ? '🟢' : layer.health === 'warning' ? '🟡' : '🔴';
+    const health =
+      layer.health === 'perfect'
+        ? '✅'
+        : layer.health === 'good'
+          ? '🟢'
+          : layer.health === 'warning'
+            ? '🟡'
+            : '🔴';
     output += `   ${health} Layer ${idx + 1}: ${layer.name} — ${layer.coherence}%\n`;
     layer.engines.forEach(engine => {
       const engineStatus = engine.operational ? '✓' : '✗';
@@ -498,7 +500,7 @@ export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
     output += `   ${priority}\n`;
   });
 
-  output += '\nChemin d\'évolution:\n';
+  output += "\nChemin d'évolution:\n";
   result.futureVision.evolutionPath.forEach((phase, idx) => {
     output += `   ${idx + 1}. ${phase}\n`;
   });
@@ -534,7 +536,6 @@ export async function handleTitaneOneVisionAll(): Promise<DevSudoResult> {
  * - `sudo titane analyze-dev`
  */
 export async function handleTitaneOneAnalyzeDev(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -624,7 +625,6 @@ export async function handleTitaneOneAnalyzeDev(): Promise<DevSudoResult> {
  * - `sudo titane analyze-ui`
  */
 export async function handleTitaneOneAnalyzeUI(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -712,7 +712,6 @@ export async function handleTitaneOneAnalyzeUI(): Promise<DevSudoResult> {
  * - `sudo titane analyze-backend`
  */
 export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -800,7 +799,6 @@ export async function handleTitaneOneAnalyzeBackend(): Promise<DevSudoResult> {
  * - `sudo titane analyze-memory`
  */
 export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
-
   let output = '';
 
   output += '═══════════════════════════════════════════════════════════════\n';
@@ -894,7 +892,6 @@ export async function handleTitaneOneAnalyzeMemory(): Promise<DevSudoResult> {
  * - `singularity quantum`
  */
 export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
-
   const result = await SingularityIntrospectionEngine.quantumIntrospect();
 
   let output = '';
@@ -944,7 +941,7 @@ export async function handleTitaneOneSingularityScan(): Promise<DevSudoResult> {
   output += '━━━ PRÉDICTIONS ÉVOLUTIVES ━━━\n\n';
   output += `🎯 Cohérence future estimée: ${result.futureVision.estimatedCoherenceImpact}% (+${result.futureVision.estimatedCoherenceImpact - result.internalVision.globalCoherence}%)\n\n`;
 
-  output += 'Trajectoire d\'évolution:\n';
+  output += "Trajectoire d'évolution:\n";
   result.futureVision.evolutionPath.forEach((phase, idx) => {
     output += `   ${idx + 1}. ${phase}\n`;
   });

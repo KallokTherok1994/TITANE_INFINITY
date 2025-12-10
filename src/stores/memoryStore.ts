@@ -48,7 +48,7 @@ const initialState = {
 
 export const useMemoryStore = create<MemoryStore>()(
   devtools(
-    (set) => ({
+    set => ({
       ...initialState,
 
       fetchState: async () => {
@@ -58,7 +58,8 @@ export const useMemoryStore = create<MemoryStore>()(
           set({ state, loading: false });
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to fetch memory state',
+            error:
+              error instanceof Error ? error.message : 'Failed to fetch memory state',
             loading: false,
           });
         }
@@ -81,7 +82,7 @@ export const useMemoryStore = create<MemoryStore>()(
         try {
           set({ loading: true, error: null });
           const snapshot = await backendV17.composite.captureSnapshot(description);
-          set((state) => ({
+          set(state => ({
             snapshots: [snapshot, ...state.snapshots],
             loading: false,
           }));
@@ -93,7 +94,7 @@ export const useMemoryStore = create<MemoryStore>()(
         }
       },
 
-      addLog: async (entry) => {
+      addLog: async entry => {
         try {
           const fullEntry: LogEntry = {
             ...entry,
@@ -101,7 +102,7 @@ export const useMemoryStore = create<MemoryStore>()(
             timestamp: Date.now(),
           };
           await backendV17.memory.writeLog(fullEntry);
-          set((state) => ({
+          set(state => ({
             logs: [fullEntry, ...state.logs].slice(0, 1000), // Keep last 1000
           }));
         } catch (error) {
@@ -111,7 +112,7 @@ export const useMemoryStore = create<MemoryStore>()(
         }
       },
 
-      addTimelineEvent: async (event) => {
+      addTimelineEvent: async event => {
         try {
           const fullEvent: TimelineEvent = {
             ...event,
@@ -119,12 +120,13 @@ export const useMemoryStore = create<MemoryStore>()(
             timestamp: Date.now(),
           };
           await backendV17.memory.addEvent(fullEvent);
-          set((state) => ({
+          set(state => ({
             timeline: [fullEvent, ...state.timeline],
           }));
         } catch (error) {
           set({
-            error: error instanceof Error ? error.message : 'Failed to add timeline event',
+            error:
+              error instanceof Error ? error.message : 'Failed to add timeline event',
           });
         }
       },
@@ -136,9 +138,7 @@ export const useMemoryStore = create<MemoryStore>()(
         } catch (error) {
           set({
             error:
-              error instanceof Error
-                ? error.message
-                : 'Failed to scan memory directory',
+              error instanceof Error ? error.message : 'Failed to scan memory directory',
           });
         }
       },

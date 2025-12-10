@@ -23,14 +23,12 @@ export function HaloVisualizerDemo() {
 
         {/* Size Selector */}
         <div className="flex gap-2">
-          {(['sm', 'md', 'lg', 'xl'] as const).map((s) => (
+          {(['sm', 'md', 'lg', 'xl'] as const).map(s => (
             <button
               key={s}
               onClick={() => setSize(s)}
               className={`px-3 py-1 rounded ${
-                size === s
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 dark:bg-gray-700'
+                size === s ? 'bg-blue-500 text-white' : 'bg-gray-200 dark:bg-gray-700'
               }`}
             >
               {s.toUpperCase()}
@@ -89,11 +87,24 @@ export function HaloVisualizerDemo() {
       <div className="space-y-2">
         <h2 className="text-xl font-semibold">States Description</h2>
         <ul className="space-y-1 text-sm text-gray-700 dark:text-gray-300">
-          <li><strong>Idle</strong> (○ Blue): Halo statique, aucune activité</li>
-          <li><strong>Breathing</strong> (🌊 Cyan): Respiration lente, utilisateur parle (VAD speech)</li>
-          <li><strong>Pulsing</strong> (⚡ Purple): Pulsation rapide, IA réfléchit (AI thinking)</li>
-          <li><strong>Shimmer</strong> (✨ Gold): Scintillement rapide, TITANE parle (TTS speaking)</li>
-          <li><strong>Error</strong> (🔴 Red): Erreur détectée dans le pipeline vocal</li>
+          <li>
+            <strong>Idle</strong> (○ Blue): Halo statique, aucune activité
+          </li>
+          <li>
+            <strong>Breathing</strong> (🌊 Cyan): Respiration lente, utilisateur parle
+            (VAD speech)
+          </li>
+          <li>
+            <strong>Pulsing</strong> (⚡ Purple): Pulsation rapide, IA réfléchit (AI
+            thinking)
+          </li>
+          <li>
+            <strong>Shimmer</strong> (✨ Gold): Scintillement rapide, TITANE parle (TTS
+            speaking)
+          </li>
+          <li>
+            <strong>Error</strong> (🔴 Red): Erreur détectée dans le pipeline vocal
+          </li>
         </ul>
       </div>
 

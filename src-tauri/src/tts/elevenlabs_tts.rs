@@ -263,10 +263,7 @@ impl ElevenLabsTTS {
             },
         };
 
-        let url = format!(
-            "{}/text-to-speech/{}",
-            ELEVENLABS_API_BASE, self.voice_id
-        );
+        let url = format!("{}/text-to-speech/{}", ELEVENLABS_API_BASE, self.voice_id);
 
         let response = self
             .client
@@ -369,9 +366,10 @@ impl ElevenLabsTTS {
 
     /// Get voice info from API
     pub async fn get_voice_info(&self) -> Result<VoiceInfo, TTSError> {
-        let api_key = self.api_key.as_ref().ok_or_else(|| {
-            TTSError::NetworkError("API key not configured".to_string())
-        })?;
+        let api_key = self
+            .api_key
+            .as_ref()
+            .ok_or_else(|| TTSError::NetworkError("API key not configured".to_string()))?;
 
         let url = format!("{}/voices/{}", ELEVENLABS_API_BASE, self.voice_id);
 
@@ -384,7 +382,9 @@ impl ElevenLabsTTS {
             .map_err(|e| TTSError::NetworkError(format!("Request failed: {}", e)))?;
 
         if !response.status().is_success() {
-            return Err(TTSError::NetworkError("Failed to get voice info".to_string()));
+            return Err(TTSError::NetworkError(
+                "Failed to get voice info".to_string(),
+            ));
         }
 
         response
@@ -395,9 +395,10 @@ impl ElevenLabsTTS {
 
     /// Get subscription info (character usage)
     pub async fn get_subscription(&self) -> Result<SubscriptionInfo, TTSError> {
-        let api_key = self.api_key.as_ref().ok_or_else(|| {
-            TTSError::NetworkError("API key not configured".to_string())
-        })?;
+        let api_key = self
+            .api_key
+            .as_ref()
+            .ok_or_else(|| TTSError::NetworkError("API key not configured".to_string()))?;
 
         let url = format!("{}/user/subscription", ELEVENLABS_API_BASE);
 
@@ -410,7 +411,9 @@ impl ElevenLabsTTS {
             .map_err(|e| TTSError::NetworkError(format!("Request failed: {}", e)))?;
 
         if !response.status().is_success() {
-            return Err(TTSError::NetworkError("Failed to get subscription".to_string()));
+            return Err(TTSError::NetworkError(
+                "Failed to get subscription".to_string(),
+            ));
         }
 
         response
@@ -421,9 +424,10 @@ impl ElevenLabsTTS {
 
     /// Test connectivity with API
     pub async fn test_connection(&self) -> Result<bool, TTSError> {
-        let api_key = self.api_key.as_ref().ok_or_else(|| {
-            TTSError::NetworkError("API key not configured".to_string())
-        })?;
+        let api_key = self
+            .api_key
+            .as_ref()
+            .ok_or_else(|| TTSError::NetworkError("API key not configured".to_string()))?;
 
         let url = format!("{}/user", ELEVENLABS_API_BASE);
 

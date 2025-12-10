@@ -241,13 +241,14 @@ export class ErrorHandler {
     const { addToast } = useUIStore.getState();
 
     // Mapper sévérité → type toast
-    const toastType = classified.severity === ErrorSeverity.CRITICAL
-      ? 'error'
-      : classified.severity === ErrorSeverity.ERROR
-      ? 'error'
-      : classified.severity === ErrorSeverity.WARNING
-      ? 'warning'
-      : 'info';
+    const toastType =
+      classified.severity === ErrorSeverity.CRITICAL
+        ? 'error'
+        : classified.severity === ErrorSeverity.ERROR
+          ? 'error'
+          : classified.severity === ErrorSeverity.WARNING
+            ? 'warning'
+            : 'info';
 
     // Message enrichi avec recovery si disponible
     const message = classified.recovery
@@ -308,14 +309,14 @@ export class ErrorHandler {
    * Filtrer erreurs par type
    */
   static getErrorsByType(type: string): ClassifiedError[] {
-    return this.errorLog.filter((err) => err.type === type);
+    return this.errorLog.filter(err => err.type === type);
   }
 
   /**
    * Filtrer erreurs par sévérité
    */
   static getErrorsBySeverity(severity: ErrorSeverity): ClassifiedError[] {
-    return this.errorLog.filter((err) => err.severity === severity);
+    return this.errorLog.filter(err => err.severity === severity);
   }
 
   /**
@@ -416,7 +417,7 @@ export function isRetriableError(error: unknown): boolean {
       'ETIMEDOUT',
     ];
 
-    return retriablePatterns.some((pattern) =>
+    return retriablePatterns.some(pattern =>
       error.message.toLowerCase().includes(pattern)
     );
   }

@@ -36,7 +36,7 @@ export function useTypography() {
     setFontFamily,
     setLineHeight,
     setLetterSpacing,
-    setMaxContentWidth
+    setMaxContentWidth,
   } = useUIReadingContext();
 
   return {

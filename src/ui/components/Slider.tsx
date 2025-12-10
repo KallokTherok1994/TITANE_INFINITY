@@ -57,33 +57,43 @@ export const Slider = ({
 
   const percentage = ((value - min) / (max - min)) * 100;
 
-  const updateValue = React.useCallback((clientX: number) => {
-    if (!sliderRef.current || disabled) {return;}
+  const updateValue = React.useCallback(
+    (clientX: number) => {
+      if (!sliderRef.current || disabled) {
+        return;
+      }
 
-    const rect = sliderRef.current.getBoundingClientRect();
-    const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    const rawValue = min + percent * (max - min);
-    const steppedValue = Math.round(rawValue / step) * step;
-    const clampedValue = Math.max(min, Math.min(max, steppedValue));
+      const rect = sliderRef.current.getBoundingClientRect();
+      const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const rawValue = min + percent * (max - min);
+      const steppedValue = Math.round(rawValue / step) * step;
+      const clampedValue = Math.max(min, Math.min(max, steppedValue));
 
-    if (!isControlled) {
-      setInternalValue(clampedValue);
-    }
+      if (!isControlled) {
+        setInternalValue(clampedValue);
+      }
 
-    onChange?.(clampedValue);
-  }, [disabled, min, max, step, isControlled, onChange]);
+      onChange?.(clampedValue);
+    },
+    [disabled, min, max, step, isControlled, onChange]
+  );
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
     setIsDragging(true);
     updateValue(e.clientX);
   };
 
-  const handleMouseMove = React.useCallback((e: MouseEvent) => {
-    if (isDragging) {
-      updateValue(e.clientX);
-    }
-  }, [isDragging, updateValue]);
+  const handleMouseMove = React.useCallback(
+    (e: MouseEvent) => {
+      if (isDragging) {
+        updateValue(e.clientX);
+      }
+    },
+    [isDragging, updateValue]
+  );
 
   const handleMouseUp = React.useCallback(() => {
     if (isDragging) {
@@ -93,7 +103,9 @@ export const Slider = ({
   }, [isDragging, value, onChangeCommitted]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (disabled) {return;}
+    if (disabled) {
+      return;
+    }
 
     let newValue = value;
     switch (e.key) {
@@ -144,9 +156,15 @@ export const Slider = ({
     isDragging && 'slider--dragging',
     disabled && 'slider--disabled',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
-  const displayMarks: SliderMark[] = showMarks ? (marks.length > 0 ? marks : generateAutoMarks(min, max, step)) : [];
+  const displayMarks: SliderMark[] = showMarks
+    ? marks.length > 0
+      ? marks
+      : generateAutoMarks(min, max, step)
+    : [];
 
   return (
     <div className={classes}>
@@ -180,7 +198,7 @@ export const Slider = ({
 
         {displayMarks.length > 0 && (
           <div className="slider__marks">
-            {displayMarks.map((mark) => {
+            {displayMarks.map(mark => {
               const markPercent = ((mark.value - min) / (max - min)) * 100;
               return (
                 <div

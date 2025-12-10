@@ -8,12 +8,11 @@
  *   Phase 2: Configuration Management UI (Day 5-6)
  * ═══════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 use std::fs;
 use tauri::{AppHandle, Manager};
 
-use super::{ConfigSnapshot, RuntimeConfig, ChatEngineConfig};
+use super::{ChatEngineConfig, ConfigSnapshot, RuntimeConfig};
 
 /**
  * Export Configuration to JSON File
@@ -32,10 +31,7 @@ use super::{ConfigSnapshot, RuntimeConfig, ChatEngineConfig};
  * * Err(String) : Message d'erreur
  */
 #[tauri::command]
-pub async fn export_config(
-    app: AppHandle,
-    filename: String,
-) -> Result<String, String> {
+pub async fn export_config(app: AppHandle, filename: String) -> Result<String, String> {
     log::info!("📤 [CONFIG] Exporting configuration to file: {}", filename);
 
     // Validate filename
@@ -48,7 +44,8 @@ pub async fn export_config(
     }
 
     // Get app data directory
-    let data_dir = app.path()
+    let data_dir = app
+        .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible d'obtenir le dossier de données: {}", e))?;
 
@@ -98,8 +95,7 @@ pub async fn export_config(
     let json = serde_json::to_string_pretty(&exported)
         .map_err(|e| format!("Échec de sérialisation JSON: {}", e))?;
 
-    fs::write(&file_path, json)
-        .map_err(|e| format!("Échec d'écriture du fichier: {}", e))?;
+    fs::write(&file_path, json).map_err(|e| format!("Échec d'écriture du fichier: {}", e))?;
 
     let path_str = file_path.to_string_lossy().to_string();
     log::info!("✅ [CONFIG] Configuration exported to: {}", path_str);
@@ -122,9 +118,7 @@ pub async fn export_config(
  * * Err(String) : Message d'erreur
  */
 #[tauri::command]
-pub async fn import_config(
-    file_path: String,
-) -> Result<ConfigSnapshot, String> {
+pub async fn import_config(file_path: String) -> Result<ConfigSnapshot, String> {
     log::info!("📥 [CONFIG] Importing configuration from: {}", file_path);
 
     // Read file
@@ -137,8 +131,8 @@ pub async fn import_config(
         config: ConfigSnapshot,
     }
 
-    let imported: ImportedConfig = serde_json::from_str(&json)
-        .map_err(|e| format!("JSON invalide: {}", e))?;
+    let imported: ImportedConfig =
+        serde_json::from_str(&json).map_err(|e| format!("JSON invalide: {}", e))?;
 
     let config = imported.config;
 
@@ -155,9 +149,11 @@ pub async fn import_config(
         std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
         std::env::set_var("OLLAMA_DEFAULT_MODEL", &config.runtime.ollama_model);
     }
- 
+
     log::info!("✅ [CONFIG] Configuration imported successfully");
-    log::warn!("⚠️  [CONFIG] Chat engine config imported but not persisted (state management needed)");
+    log::warn!(
+        "⚠️  [CONFIG] Chat engine config imported but not persisted (state management needed)"
+    );
 
     Ok(config)
 }
@@ -177,13 +173,12 @@ pub async fn import_config(
  * * Err(String) : Message d'erreur
  */
 #[tauri::command]
-pub async fn list_config_exports(
-    app: AppHandle,
-) -> Result<Vec<String>, String> {
+pub async fn list_config_exports(app: AppHandle) -> Result<Vec<String>, String> {
     log::info!("📋 [CONFIG] Listing config exports...");
 
     // Get app data directory
-    let data_dir = app.path()
+    let data_dir = app
+        .path()
         .app_data_dir()
         .map_err(|e| format!("Impossible d'obtenir le dossier de données: {}", e))?;
 

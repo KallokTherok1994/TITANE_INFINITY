@@ -145,9 +145,21 @@ impl TemporalDiff {
     /// Calcule les statistiques
     fn compute_stats(&mut self) {
         self.total_changes = self.changes.len();
-        self.additions = self.changes.iter().filter(|c| c.change_type == ChangeType::Added).count();
-        self.removals = self.changes.iter().filter(|c| c.change_type == ChangeType::Removed).count();
-        self.modifications = self.changes.iter().filter(|c| c.change_type == ChangeType::Modified).count();
+        self.additions = self
+            .changes
+            .iter()
+            .filter(|c| c.change_type == ChangeType::Added)
+            .count();
+        self.removals = self
+            .changes
+            .iter()
+            .filter(|c| c.change_type == ChangeType::Removed)
+            .count();
+        self.modifications = self
+            .changes
+            .iter()
+            .filter(|c| c.change_type == ChangeType::Modified)
+            .count();
     }
 
     /// Vérifie s'il y a des changements
@@ -157,13 +169,16 @@ impl TemporalDiff {
 
     /// Retourne les changements par type
     pub fn by_type(&self, change_type: ChangeType) -> Vec<&Change> {
-        self.changes.iter().filter(|c| c.change_type == change_type).collect()
+        self.changes
+            .iter()
+            .filter(|c| c.change_type == change_type)
+            .collect()
     }
 
     /// Applique le diff à un état (patch forward)
     pub fn apply(&self, data: &str) -> Result<String, String> {
-        let mut value: Value = serde_json::from_str(data)
-            .map_err(|e| format!("Failed to parse data: {}", e))?;
+        let mut value: Value =
+            serde_json::from_str(data).map_err(|e| format!("Failed to parse data: {}", e))?;
 
         for change in &self.changes {
             match change.change_type {
@@ -179,8 +194,7 @@ impl TemporalDiff {
             }
         }
 
-        serde_json::to_string(&value)
-            .map_err(|e| format!("Failed to serialize result: {}", e))
+        serde_json::to_string(&value).map_err(|e| format!("Failed to serialize result: {}", e))
     }
 
     /// Inverse le diff (pour undo)

@@ -2,18 +2,18 @@
 //! CIRCUIT BREAKER TEMPOREL — Résilience adaptative selon contexte
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::temporal_adapter::TemporalApiAdapter;
+use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
-use serde::{Serialize, Deserialize};
-use super::temporal_adapter::TemporalApiAdapter;
 
 /// États du circuit breaker
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CircuitState {
-    Closed,     // Fonctionnement normal
-    Open,       // Circuit ouvert, rejette requêtes
-    HalfOpen,   // Test de récupération
+    Closed,   // Fonctionnement normal
+    Open,     // Circuit ouvert, rejette requêtes
+    HalfOpen, // Test de récupération
 }
 
 /// Circuit breaker adaptatif temporel
@@ -207,7 +207,9 @@ impl std::fmt::Display for CircuitBreakerError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             CircuitBreakerError::CircuitOpen => write!(f, "Circuit breaker is open"),
-            CircuitBreakerError::TooManyTestRequests => write!(f, "Too many test requests in half-open state"),
+            CircuitBreakerError::TooManyTestRequests => {
+                write!(f, "Too many test requests in half-open state")
+            }
         }
     }
 }

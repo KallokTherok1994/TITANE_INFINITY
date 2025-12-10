@@ -28,10 +28,17 @@ export interface UseChatCoreReturn {
   anomalyCount: number;
   currentProvider: string | null;
   generate: (message: string, history: AIMessage[]) => Promise<ChatEngineResponse>;
-  stream: (message: string, history: AIMessage[]) => AsyncGenerator<string, ChatEngineResponse>;
+  stream: (
+    message: string,
+    history: AIMessage[]
+  ) => AsyncGenerator<string, ChatEngineResponse>;
   setMode: (mode: ChatMode) => void;
   setProvider: (provider: 'auto' | 'gemini' | 'ollama' | 'local') => void;
-  validateResponse: (content: string, mode: ChatMode, prompt: string) => {
+  validateResponse: (
+    content: string,
+    mode: ChatMode,
+    prompt: string
+  ) => {
     isValid: boolean;
     score: number;
     issues: Array<{ type: string; severity: string; message: string }>;
@@ -48,9 +55,9 @@ export interface UseChatCoreReturn {
  */
 export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn {
   const [currentMode, setCurrentMode] = useState<ChatMode>(options.mode || 'default');
-  const [currentProvider, setCurrentProvider] = useState<'auto' | 'gemini' | 'ollama' | 'local'>(
-    options.provider || 'auto'
-  );
+  const [currentProvider, setCurrentProvider] = useState<
+    'auto' | 'gemini' | 'ollama' | 'local'
+  >(options.provider || 'auto');
   const [anomalyCount, setAnomalyCount] = useState(0);
   const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(null);
 
@@ -74,16 +81,23 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
         });
 
         // Timeout dynamique par provider
-        const timeout = currentProvider === 'gemini' ? 60000  // Gemini cloud: 60s
-                      : currentProvider === 'ollama' ? 45000  // Ollama local: 45s
-                      : currentProvider === 'local' ? 15000   // Local builtin: 15s
-                      : 60000; // auto: défaut 60s
+        const timeout =
+          currentProvider === 'gemini'
+            ? 60000 // Gemini cloud: 60s
+            : currentProvider === 'ollama'
+              ? 45000 // Ollama local: 45s
+              : currentProvider === 'local'
+                ? 15000 // Local builtin: 15s
+                : 60000; // auto: défaut 60s
 
         console.log(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
 
         const generatePromise = chatEngine.generate(message, history);
         const timeoutPromise = new Promise<never>((_, reject) =>
-          setTimeout(() => reject(new Error(`Timeout: ${currentProvider} took >${timeout}ms`)), timeout)
+          setTimeout(
+            () => reject(new Error(`Timeout: ${currentProvider} took >${timeout}ms`)),
+            timeout
+          )
         );
 
         const response: ChatEngineResponse = await Promise.race([
@@ -99,15 +113,19 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
         // SENTINEL validation
         const validation = chatValidator.validate(response.content, currentMode, message);
         if (!validation.isValid) {
-          console.warn(`⚠️ SENTINEL: Quality issue (score: ${(validation.score * 100).toFixed(0)}%)`);
-          setAnomalyCount((prev) => prev + 1);
+          console.warn(
+            `⚠️ SENTINEL: Quality issue (score: ${(validation.score * 100).toFixed(0)}%)`
+          );
+          setAnomalyCount(prev => prev + 1);
 
           if (validation.cleaned) {
             console.log('🧹 Using cleaned response');
             response.content = validation.cleaned;
           }
         } else {
-          console.log(`✅ NEXUS: Validated (score: ${(validation.score * 100).toFixed(0)}%)`);
+          console.log(
+            `✅ NEXUS: Validated (score: ${(validation.score * 100).toFixed(0)}%)`
+          );
         }
 
         // Callback success
@@ -132,7 +150,10 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
    * Lance une génération streaming avec la même configuration que generate()
    */
   const stream = useCallback(
-    (message: string, history: AIMessage[]): AsyncGenerator<string, ChatEngineResponse> => {
+    (
+      message: string,
+      history: AIMessage[]
+    ): AsyncGenerator<string, ChatEngineResponse> => {
       console.log('\n╔════════════════════════════════════════════════════════════╗');
       console.log('║  USE CHAT CORE v15: Streaming (provider-aware)            ║');
       console.log('╚════════════════════════════════════════════════════════════╝');
@@ -151,7 +172,10 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           emotionState: options.emotionState,
         });
 
-        return (async function* streamWrapper(): AsyncGenerator<string, ChatEngineResponse> {
+        return (async function* streamWrapper(): AsyncGenerator<
+          string,
+          ChatEngineResponse
+        > {
           let completed = false;
           let finalResponse: ChatEngineResponse | null = null;
 
@@ -175,16 +199,21 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
 
             setLastResponseProvider(finalResponse.provider);
 
-            const validation = chatValidator.validate(finalResponse.content, currentMode, message);
+            const validation = chatValidator.validate(
+              finalResponse.content,
+              currentMode,
+              message
+            );
             if (!validation.isValid) {
-              setAnomalyCount((prev) => prev + 1);
+              setAnomalyCount(prev => prev + 1);
             }
 
             options.onResponse?.(finalResponse);
             completed = true;
             return finalResponse;
           } catch (err) {
-            const error = err instanceof Error ? err : new Error('Unknown AI stream error');
+            const error =
+              err instanceof Error ? err : new Error('Unknown AI stream error');
             console.error('❌ USE CHAT CORE: Stream error', error);
             options.onError?.(error);
             throw error;

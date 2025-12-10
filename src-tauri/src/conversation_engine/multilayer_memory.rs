@@ -1,17 +1,16 @@
+use chrono::Utc;
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — MÉMOIRE CONVERSATIONNELLE MULTI-COUCHES
  * Système de mémoire évolutif à 5 niveaux
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use std::collections::HashMap;
-use chrono::Utc;
 use uuid::Uuid;
 
 use super::types::{
-    MemoryLayers, EpisodicMemory, EpisodeType, Concept, Preference,
-    PreferenceCategory, Evaluation, EvaluationDimension, Intention, EmotionState,
+    Concept, EmotionState, EpisodeType, EpisodicMemory, Evaluation, EvaluationDimension, Intention,
+    MemoryLayers, Preference, PreferenceCategory,
 };
 
 // ═══════════════════════════════════════════════════════════════════
@@ -352,11 +351,6 @@ impl ImmediateMemory {
     }
 
     fn get_recent(&self, count: usize) -> Vec<(String, String)> {
-        self.messages
-            .iter()
-            .rev()
-            .take(count)
-            .cloned()
-            .collect()
+        self.messages.iter().rev().take(count).cloned().collect()
     }
 }

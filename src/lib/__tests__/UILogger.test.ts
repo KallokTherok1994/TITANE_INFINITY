@@ -107,7 +107,9 @@ describe('UILogger', () => {
 
   describe('Sanitization', () => {
     it('should redact OpenAI API keys', () => {
-      logger.info('API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+      logger.info(
+        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+      );
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
@@ -123,7 +125,9 @@ describe('UILogger', () => {
     });
 
     it('should redact JWT tokens', () => {
-      logger.info('Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U');
+      logger.info(
+        'Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U'
+      );
       const logs = logger.getLogs();
 
       expect(logs[0].message).toContain('[REDACTED]');
@@ -171,7 +175,9 @@ describe('UILogger', () => {
     });
 
     it('should handle multiple sensitive patterns in one message', () => {
-      logger.info('User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9');
+      logger.info(
+        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+      );
       const logs = logger.getLogs();
 
       const message = logs[0].message;
@@ -353,9 +359,9 @@ describe('UILogger', () => {
       const recentErrors = logger.getRecentErrors(5);
 
       expect(recentErrors.length).toBeLessThanOrEqual(5);
-      expect(recentErrors.every(log =>
-        log.level === 'error' || log.level === 'security'
-      )).toBe(true);
+      expect(
+        recentErrors.every(log => log.level === 'error' || log.level === 'security')
+      ).toBe(true);
     });
   });
 
@@ -433,8 +439,8 @@ describe('UILogger', () => {
       });
 
       prodLogger.debug('Debug message'); // Should be ignored
-      prodLogger.info('Info message');   // Should be logged
-      prodLogger.warn('Warn message');   // Should be logged
+      prodLogger.info('Info message'); // Should be logged
+      prodLogger.warn('Warn message'); // Should be logged
 
       const logs = prodLogger.getLogs();
 

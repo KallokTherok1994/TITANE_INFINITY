@@ -64,7 +64,7 @@ class AIOrchestrator {
     cognitiveOverrides: 0,
     autoRepairs: 0,
     avgDecisionTime: 0,
-    healthScore: 100
+    healthScore: 100,
   };
 
   private lastHealthCheck = 0;
@@ -93,7 +93,7 @@ class AIOrchestrator {
         availability: true,
         lastCheck: Date.now(),
         errorStreak: 0,
-        qualityScore: 80
+        qualityScore: 80,
       });
     });
   }
@@ -129,7 +129,7 @@ class AIOrchestrator {
           provider.isAvailable(),
           new Promise<boolean>((_, reject) =>
             setTimeout(() => reject(new Error('Health timeout')), 3000)
-          )
+          ),
         ]);
 
         const responseTime = Date.now() - startTime;
@@ -143,7 +143,6 @@ class AIOrchestrator {
         } else {
           throw new Error('Provider not available');
         }
-
       } catch (error) {
         // Update negative metrics
         health.availability = false;
@@ -166,9 +165,9 @@ class AIOrchestrator {
   private calculateOverallHealth(health: ProviderHealth): void {
     // Cognitive health calculation
     const availability = health.availability ? 25 : 0;
-    const speed = Math.max(0, 25 - (health.responseTime / 200)); // Penalty for slow response
+    const speed = Math.max(0, 25 - health.responseTime / 200); // Penalty for slow response
     const reliability = (health.successRate / 100) * 25;
-    const streak = Math.max(0, 25 - (health.errorStreak * 5)); // Penalty for error streaks
+    const streak = Math.max(0, 25 - health.errorStreak * 5); // Penalty for error streaks
 
     health.score = Math.round(availability + speed + reliability + streak);
     health.score = Math.max(0, Math.min(100, health.score));
@@ -176,7 +175,8 @@ class AIOrchestrator {
 
   private updateSystemHealth(): void {
     const healthScores = Array.from(this.healthMap.values()).map(h => h.score);
-    const avgHealth = healthScores.reduce((sum, score) => sum + score, 0) / healthScores.length;
+    const avgHealth =
+      healthScores.reduce((sum, score) => sum + score, 0) / healthScores.length;
     this.metrics.healthScore = Math.round(avgHealth);
   }
 
@@ -186,7 +186,10 @@ class AIOrchestrator {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  private performCognitiveSelection(message: string, context: AIMessage[]): CognitiveSelection {
+  private performCognitiveSelection(
+    message: string,
+    context: AIMessage[]
+  ): CognitiveSelection {
     const selectionStart = Date.now();
 
     // Context analysis for intelligent selection
@@ -204,8 +207,8 @@ class AIOrchestrator {
           isComplex,
           needsSpeed,
           messageLength,
-          contextSize
-        })
+          contextSize,
+        }),
       }))
       .sort((a, b) => b.cognitiveScore - a.cognitiveScore);
 
@@ -214,7 +217,10 @@ class AIOrchestrator {
     let reason: CognitiveSelection['reason'] = 'emergency';
     let confidence = 50;
 
-    if (candidates.length > 0 && candidates[0].cognitiveScore >= this.cognitiveThreshold) {
+    if (
+      candidates.length > 0 &&
+      candidates[0].cognitiveScore >= this.cognitiveThreshold
+    ) {
       selectedProvider = candidates[0].name;
       reason = 'cognitive';
       confidence = candidates[0].cognitiveScore;
@@ -242,21 +248,25 @@ class AIOrchestrator {
       reason,
       confidence,
       expectedQuality: this.healthMap.get(selectedProvider)?.qualityScore || 70,
-      timeout: baseTimeout
+      timeout: baseTimeout,
     };
 
     // Update metrics
-    this.metrics.avgDecisionTime = (this.metrics.avgDecisionTime + (Date.now() - selectionStart)) / 2;
+    this.metrics.avgDecisionTime =
+      (this.metrics.avgDecisionTime + (Date.now() - selectionStart)) / 2;
 
     return selection;
   }
 
-  private calculateCognitiveScore(health: ProviderHealth, context: {
-    isComplex: boolean;
-    needsSpeed: boolean;
-    messageLength: number;
-    contextSize: number;
-  }): number {
+  private calculateCognitiveScore(
+    health: ProviderHealth,
+    context: {
+      isComplex: boolean;
+      needsSpeed: boolean;
+      messageLength: number;
+      contextSize: number;
+    }
+  ): number {
     let score = health.score; // Base health score
 
     // Context-aware adjustments
@@ -294,11 +304,11 @@ class AIOrchestrator {
   private calculateAdaptiveTimeout(providerName: string, isComplex: boolean): number {
     const baseTimeouts: { [key: string]: number } = {
       'titane-local': 3000,
-      'gemini': 8000,
-      'openai': 12000,
-      'claude': 10000,
-      'ollama': 15000,
-      'tauri-chat': 5000
+      gemini: 8000,
+      openai: 12000,
+      claude: 10000,
+      ollama: 15000,
+      'tauri-chat': 5000,
     };
 
     const base = baseTimeouts[providerName] || 10000;
@@ -313,7 +323,11 @@ class AIOrchestrator {
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  async generate(message: string, context: AIMessage[] = [], config?: AIConfig): Promise<AIResponse> {
+  async generate(
+    message: string,
+    context: AIMessage[] = [],
+    config?: AIConfig
+  ): Promise<AIResponse> {
     const requestStart = Date.now();
     this.metrics.totalRequests++;
 
@@ -329,7 +343,7 @@ class AIOrchestrator {
             reason: selection.reason,
             confidence: selection.confidence,
             timeout: selection.timeout,
-            fallbacks: selection.fallbacks
+            fallbacks: selection.fallbacks,
           });
         }
       } catch {
@@ -367,7 +381,7 @@ class AIOrchestrator {
             this.metrics.cognitiveOverrides++;
             return {
               ...fallbackResult.response,
-              provider: 'omnis-fallback' as const
+              provider: 'omnis-fallback' as const,
             };
           }
         } catch (fallbackError) {
@@ -377,7 +391,6 @@ class AIOrchestrator {
 
       // Ultimate OMNIS fallback
       return this.createOmnisEmergencyResponse(message, Date.now() - requestStart);
-
     } catch (error) {
       console.error('[OMNIS ORCHESTRATOR] Critical error:', error);
       return this.createOmnisEmergencyResponse(message, Date.now() - requestStart);
@@ -391,7 +404,6 @@ class AIOrchestrator {
     timeout: number,
     config?: AIConfig
   ): Promise<{ success: boolean; response: AIResponse }> {
-
     const provider = this.providers.find(p => p.name === providerName);
     if (!provider) {
       throw new Error(`Provider ${providerName} not found`);
@@ -402,7 +414,7 @@ class AIOrchestrator {
         provider.generate(message, context, config),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('OMNIS_PROVIDER_TIMEOUT')), timeout)
-        )
+        ),
       ]);
 
       // Validate response quality
@@ -411,35 +423,40 @@ class AIOrchestrator {
       } else {
         throw new Error('Invalid response quality');
       }
-
     } catch (error) {
       this.updateProviderStats(providerName, false, timeout);
       return {
         success: false,
-        response: this.createOmnisEmergencyResponse(message, timeout)
+        response: this.createOmnisEmergencyResponse(message, timeout),
       };
     }
   }
 
   private isValidOmnisResponse(response: any): boolean {
-    return response &&
-           typeof response === 'object' &&
-           typeof response.content === 'string' &&
-           response.content.trim().length > 0 &&
-           response.content.length < 100000; // Sanity check
+    return (
+      response &&
+      typeof response === 'object' &&
+      typeof response.content === 'string' &&
+      response.content.trim().length > 0 &&
+      response.content.length < 100000
+    ); // Sanity check
   }
 
-  private updateProviderStats(providerName: string, success: boolean, responseTime: number): void {
+  private updateProviderStats(
+    providerName: string,
+    success: boolean,
+    responseTime: number
+  ): void {
     const health = this.healthMap.get(providerName);
     if (!health) return;
 
     if (success) {
-      health.successRate = Math.min(100, (health.successRate * 0.9) + 10);
+      health.successRate = Math.min(100, health.successRate * 0.9 + 10);
       health.responseTime = Math.round((health.responseTime + responseTime) / 2);
       health.errorStreak = 0;
       health.score = Math.min(100, health.score + 1);
     } else {
-      health.successRate = Math.max(0, (health.successRate * 0.9) - 10);
+      health.successRate = Math.max(0, health.successRate * 0.9 - 10);
       health.errorStreak += 1;
       health.score = Math.max(0, health.score - 5);
     }
@@ -451,10 +468,11 @@ class AIOrchestrator {
     const fallbackMessages = [
       `Le système TITANE∞ traite votre demande "${message.substring(0, 30)}...". Réponse cognitive en cours de génération.`,
       `Analyse cognitive OMNIS activée pour: "${message.substring(0, 40)}...". Le moteur neural optimise la réponse.`,
-      `TITANE∞ mode autonome: votre requête est analysée par l'intelligence cognitive. Réponse précise en préparation.`
+      `TITANE∞ mode autonome: votre requête est analysée par l'intelligence cognitive. Réponse précise en préparation.`,
     ];
 
-    const selectedMessage = fallbackMessages[Math.floor(Math.random() * fallbackMessages.length)];
+    const selectedMessage =
+      fallbackMessages[Math.floor(Math.random() * fallbackMessages.length)];
 
     return {
       content: selectedMessage,
@@ -464,8 +482,8 @@ class AIOrchestrator {
         emergency: true,
         duration,
         cognitiveMode: true,
-        systemHealth: this.metrics.healthScore
-      }
+        systemHealth: this.metrics.healthScore,
+      },
     };
   }
 
@@ -493,7 +511,7 @@ class AIOrchestrator {
     return {
       metrics: this.metrics,
       providerHealth: rankedProviders,
-      systemStatus
+      systemStatus,
     };
   }
 

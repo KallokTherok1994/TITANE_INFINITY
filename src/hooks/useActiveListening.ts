@@ -100,7 +100,6 @@ export function useActiveListening(
   config: ActiveListeningConfig = {},
   callbacks: ActiveListeningCallbacks = {}
 ): UseActiveListeningReturn {
-
   const {
     enableWakeWord = true,
     enableAdaptiveThreshold = true,
@@ -136,7 +135,7 @@ export function useActiveListening(
       channels: 1,
     },
 
-    onStateChange: (streamState) => {
+    onStateChange: streamState => {
       console.log('[ActiveListening] 🎙️ Stream state:', streamState);
 
       if (mountedRef.current) {
@@ -165,16 +164,19 @@ export function useActiveListening(
     }
 
     // Subscribe to attention engine
-    const unsubscribeAttention = attentionEngine.onStateChange((event) => {
+    const unsubscribeAttention = attentionEngine.onStateChange(event => {
       if (!mountedRef.current) return;
 
       console.log('[ActiveListening] 🧠 Attention:', event.state);
 
-      setState(prev => ({
-        ...prev,
-        attentionState: event.state,
-        lastWakeEvent: event.wakeEvent ? event.wakeEvent : undefined,
-      } as ActiveListeningState));
+      setState(
+        prev =>
+          ({
+            ...prev,
+            attentionState: event.state,
+            lastWakeEvent: event.wakeEvent ? event.wakeEvent : undefined,
+          }) as ActiveListeningState
+      );
 
       onAttentionChange?.(event.state);
 
@@ -212,104 +214,110 @@ export function useActiveListening(
   /**
    * Analyser une transcription pour wake word
    */
-  const analyzeForWakeWord = useCallback((text: string, isFinal: boolean = false) => {
-    if (!enableWakeWord) return;
+  const analyzeForWakeWord = useCallback(
+    (text: string, isFinal: boolean = false) => {
+      if (!enableWakeWord) return;
 
-    const attentionState = attentionEngine.getState();
+      const attentionState = attentionEngine.getState();
 
-    // Mode 1: En armed, chercher wake word
-    if (attentionState === 'armed') {
-      const wakeEvent = isFinal
-        ? wakeWordEngine.detect(text)
-        : wakeWordEngine.detectStreaming(text);
+      // Mode 1: En armed, chercher wake word
+      if (attentionState === 'armed') {
+        const wakeEvent = isFinal
+          ? wakeWordEngine.detect(text)
+          : wakeWordEngine.detectStreaming(text);
 
-      if (wakeEvent?.detected) {
-        console.log('[ActiveListening] 🎯 Wake word detected!');
-        console.log(`  Mode: ${wakeEvent.mode}`);
-        console.log(`  Confidence: ${wakeEvent.confidence.toFixed(2)}`);
+        if (wakeEvent?.detected) {
+          console.log('[ActiveListening] 🎯 Wake word detected!');
+          console.log(`  Mode: ${wakeEvent.mode}`);
+          console.log(`  Confidence: ${wakeEvent.confidence.toFixed(2)}`);
 
-        // Notifier
-        onWakeDetected?.(wakeEvent);
+          // Notifier
+          onWakeDetected?.(wakeEvent);
 
-        // Enregistrer pour adaptive threshold
-        adaptiveThresholdEngine.recordDetection(
-          wakeEvent.confidence,
-          wakeEvent.matchedVariant,
-          true // assume correct for now
-        );
+          // Enregistrer pour adaptive threshold
+          adaptiveThresholdEngine.recordDetection(
+            wakeEvent.confidence,
+            wakeEvent.matchedVariant,
+            true // assume correct for now
+          );
 
-        // Traiter selon le mode
-        if (wakeEvent.mode === 'one_shot') {
-          // Commande immédiate
-          console.log('[ActiveListening] ⚡ One-shot command:', wakeEvent.cleanedText);
+          // Traiter selon le mode
+          if (wakeEvent.mode === 'one_shot') {
+            // Commande immédiate
+            console.log('[ActiveListening] ⚡ One-shot command:', wakeEvent.cleanedText);
 
-          if (wakeEvent.cleanedText.trim()) {
-            setState(prev => ({ ...prev, isProcessingCommand: true }));
-            onCommand?.(wakeEvent.cleanedText, wakeEvent);
+            if (wakeEvent.cleanedText.trim()) {
+              setState(prev => ({ ...prev, isProcessingCommand: true }));
+              onCommand?.(wakeEvent.cleanedText, wakeEvent);
+            }
+
+            attentionEngine.handleWakeWord(wakeEvent);
+          } else {
+            // Wake only
+            console.log('[ActiveListening] 👂 Wake only, awaiting command...');
+            attentionEngine.handleWakeWord(wakeEvent);
+            // Le reste sera géré par le state change listener
           }
-
-          attentionEngine.handleWakeWord(wakeEvent);
-
-        } else {
-          // Wake only
-          console.log('[ActiveListening] 👂 Wake only, awaiting command...');
-          attentionEngine.handleWakeWord(wakeEvent);
-          // Le reste sera géré par le state change listener
         }
       }
-    }
 
-    // Mode 2: En awaiting_command, traiter comme commande
-    else if (attentionState === 'awaiting_command' && isFinal && text.trim()) {
-      console.log('[ActiveListening] 📝 Command received:', text);
+      // Mode 2: En awaiting_command, traiter comme commande
+      else if (attentionState === 'awaiting_command' && isFinal && text.trim()) {
+        console.log('[ActiveListening] 📝 Command received:', text);
 
-      awaitingCommandRef.current = false;
-      setState(prev => ({ ...prev, isProcessingCommand: true }));
+        awaitingCommandRef.current = false;
+        setState(prev => ({ ...prev, isProcessingCommand: true }));
 
-      onCommand?.(text);
-      attentionEngine.startProcessing();
-    }
-
-    // Mode 3: Pendant responding, détecter interruption
-    else if (attentionState === 'responding') {
-      const wakeEvent = wakeWordEngine.detectStreaming(text);
-
-      if (wakeEvent?.detected) {
-        console.log('[ActiveListening] 🛑 Interruption detected!');
-        interruptionController.processPartialTranscript(text);
+        onCommand?.(text);
+        attentionEngine.startProcessing();
       }
-    }
 
-  }, [enableWakeWord, onWakeDetected, onCommand]);
+      // Mode 3: Pendant responding, détecter interruption
+      else if (attentionState === 'responding') {
+        const wakeEvent = wakeWordEngine.detectStreaming(text);
+
+        if (wakeEvent?.detected) {
+          console.log('[ActiveListening] 🛑 Interruption detected!');
+          interruptionController.processPartialTranscript(text);
+        }
+      }
+    },
+    [enableWakeWord, onWakeDetected, onCommand]
+  );
 
   /**
    * Traiter la fin du streaming
    */
-  const handleStreamingComplete = useCallback((_result: StreamingResult) => {
-    // TODO: Intégrer avec Whisper pour transcription finale
-    // Pour l'instant, simuler une transcription
-    const transcript = pendingTranscriptRef.current;
+  const handleStreamingComplete = useCallback(
+    (_result: StreamingResult) => {
+      // TODO: Intégrer avec Whisper pour transcription finale
+      // Pour l'instant, simuler une transcription
+      const transcript = pendingTranscriptRef.current;
 
-    if (transcript) {
-      console.log('[ActiveListening] 📝 Final transcript:', transcript);
+      if (transcript) {
+        console.log('[ActiveListening] 📝 Final transcript:', transcript);
 
-      onFinalTranscript?.(transcript);
-      analyzeForWakeWord(transcript, true);
+        onFinalTranscript?.(transcript);
+        analyzeForWakeWord(transcript, true);
 
-      pendingTranscriptRef.current = '';
-    }
+        pendingTranscriptRef.current = '';
+      }
 
-    // Si on attend une commande, restart streaming
-    if (awaitingCommandRef.current && attentionEngine.getState() === 'awaiting_command') {
-      console.log('[ActiveListening] 🔄 Restarting streaming for command');
-      setTimeout(() => {
-        if (mountedRef.current) {
-          streaming.startStreaming();
-        }
-      }, 100);
-    }
-
-  }, [analyzeForWakeWord, onFinalTranscript, streaming]);
+      // Si on attend une commande, restart streaming
+      if (
+        awaitingCommandRef.current &&
+        attentionEngine.getState() === 'awaiting_command'
+      ) {
+        console.log('[ActiveListening] 🔄 Restarting streaming for command');
+        setTimeout(() => {
+          if (mountedRef.current) {
+            streaming.startStreaming();
+          }
+        }, 100);
+      }
+    },
+    [analyzeForWakeWord, onFinalTranscript, streaming]
+  );
 
   // ═══ CONTROL METHODS ═══
 
@@ -413,17 +421,12 @@ export function useActiveListening(
 /**
  * Helper: Hook simplifié pour juste le wake word
  */
-export function useWakeWord(
-  onWake: (event: WakeWordEvent) => void
-): {
+export function useWakeWord(onWake: (event: WakeWordEvent) => void): {
   isListening: boolean;
   start: () => void;
   stop: () => void;
 } {
-  const listening = useActiveListening(
-    { autoArm: false },
-    { onWakeDetected: onWake }
-  );
+  const listening = useActiveListening({ autoArm: false }, { onWakeDetected: onWake });
 
   return {
     isListening: listening.isArmed,

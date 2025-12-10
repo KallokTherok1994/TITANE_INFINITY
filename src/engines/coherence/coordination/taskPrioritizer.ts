@@ -20,12 +20,12 @@ import type { Task, PrioritizedTasks, TaskType } from '../types';
 export class TaskPrioritizer {
   // Type weights for prioritization
   private readonly typeWeights: Record<TaskType, number> = {
-    healing: 100,      // Critical - system health
-    conversation: 80,  // High - user interaction
-    analysis: 60,      // Medium-high - cognitive processing
-    memory: 50,        // Medium - storage operations
-    sync: 30,          // Low - background sync
-    cleanup: 10,       // Lowest - maintenance
+    healing: 100, // Critical - system health
+    conversation: 80, // High - user interaction
+    analysis: 60, // Medium-high - cognitive processing
+    memory: 50, // Medium - storage operations
+    sync: 30, // Low - background sync
+    cleanup: 10, // Lowest - maintenance
   };
 
   /**
@@ -118,10 +118,7 @@ export class TaskPrioritizer {
   /**
    * Get next executable tasks (respecting dependencies)
    */
-  getExecutableTasks(
-    tasks: Task[],
-    completedIds: Set<string>
-  ): Task[] {
+  getExecutableTasks(tasks: Task[], completedIds: Set<string>): Task[] {
     return tasks.filter(task => {
       if (!task.dependencies || task.dependencies.length === 0) {
         return true;

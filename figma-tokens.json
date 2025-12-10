@@ -3,7 +3,7 @@
   "name": "TITANE∞ v15.5 Design Tokens",
   "version": "15.5.0",
   "description": "Design tokens pour synchronisation Figma ↔ CSS Variables",
-  
+
   "colors": {
     "rubis": {
       "base": { "value": "#dc2626", "type": "color" },
@@ -57,11 +57,14 @@
       "info-bg": { "value": "rgba(59, 130, 246, 0.1)", "type": "color" }
     }
   },
-  
+
   "typography": {
     "fontFamilies": {
       "ui": { "value": "Inter, system-ui, sans-serif", "type": "fontFamily" },
-      "mono": { "value": "JetBrains Mono, Fira Code, Consolas, monospace", "type": "fontFamily" }
+      "mono": {
+        "value": "JetBrains Mono, Fira Code, Consolas, monospace",
+        "type": "fontFamily"
+      }
     },
     "fontSizes": {
       "xs": { "value": "12px", "type": "fontSize" },
@@ -85,7 +88,7 @@
       "relaxed": { "value": "175%", "type": "lineHeight" }
     }
   },
-  
+
   "spacing": {
     "xs": { "value": "4px", "type": "spacing" },
     "sm": { "value": "8px", "type": "spacing" },
@@ -95,7 +98,7 @@
     "2xl": { "value": "48px", "type": "spacing" },
     "3xl": { "value": "64px", "type": "spacing" }
   },
-  
+
   "borderRadius": {
     "sm": { "value": "4px", "type": "borderRadius" },
     "md": { "value": "8px", "type": "borderRadius" },
@@ -103,7 +106,7 @@
     "xl": { "value": "16px", "type": "borderRadius" },
     "full": { "value": "9999px", "type": "borderRadius" }
   },
-  
+
   "shadows": {
     "soft": {
       "value": {
@@ -136,7 +139,7 @@
       "type": "boxShadow"
     }
   },
-  
+
   "motion": {
     "duration": {
       "fast": { "value": "150ms", "type": "duration" },
@@ -147,7 +150,7 @@
       "default": { "value": "cubic-bezier(0.4, 0, 0.2, 1)", "type": "cubicBezier" }
     }
   },
-  
+
   "components": {
     "button": {
       "primary": {
@@ -171,7 +174,7 @@
       "padding": { "value": "{spacing.lg}", "type": "spacing" }
     }
   },
-  
+
   "breakpoints": {
     "mobile": { "value": "640px", "type": "dimension" },
     "tablet": { "value": "1024px", "type": "dimension" },

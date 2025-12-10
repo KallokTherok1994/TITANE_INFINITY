@@ -7,6 +7,7 @@
 ### Inputs & Controls
 
 #### **Switch**
+
 Interrupteur on/off avec animations fluides.
 
 ```tsx
@@ -18,10 +19,11 @@ import { Switch } from '@/ui/components';
   label="Mode sombre"
   size="md"
   disabled={false}
-/>
+/>;
 ```
 
 **Props:**
+
 - `checked?: boolean` - État contrôlé
 - `defaultChecked?: boolean` - État par défaut (mode non contrôlé)
 - `onChange?: (checked: boolean) => void` - Callback de changement
@@ -31,6 +33,7 @@ import { Switch } from '@/ui/components';
 - `className?: string` - Classes CSS additionnelles
 
 **Features:**
+
 - ✅ Controlled/uncontrolled modes
 - ⌨️ Keyboard: Space, Enter
 - ♿ ARIA: role="switch", aria-checked
@@ -39,6 +42,7 @@ import { Switch } from '@/ui/components';
 ---
 
 #### **Checkbox**
+
 Case à cocher avec état indéterminé.
 
 ```tsx
@@ -51,10 +55,11 @@ import { Checkbox } from '@/ui/components';
   indeterminate={someChecked && !allChecked}
   error="Ce champ est requis"
   size="md"
-/>
+/>;
 ```
 
 **Props:**
+
 - `checked?: boolean` - État contrôlé
 - `defaultChecked?: boolean` - État par défaut
 - `onChange?: (checked: boolean) => void` - Callback
@@ -66,6 +71,7 @@ import { Checkbox } from '@/ui/components';
 - `className?: string` - Classes CSS
 
 **Features:**
+
 - ✅ État indéterminé avec icône ligne
 - ✅ Messages d'erreur
 - ⌨️ Keyboard: Space
@@ -75,24 +81,21 @@ import { Checkbox } from '@/ui/components';
 ---
 
 #### **Radio + RadioGroup**
+
 Boutons radio avec gestion de groupe.
 
 ```tsx
 import { Radio, RadioGroup } from '@/ui/components';
 
-<RadioGroup
-  value={theme}
-  onChange={setTheme}
-  name="theme"
-  size="md"
->
+<RadioGroup value={theme} onChange={setTheme} name="theme" size="md">
   <Radio value="rubis" label="Rubis" />
   <Radio value="saphir" label="Saphir" />
   <Radio value="emeraude" label="Émeraude" />
-</RadioGroup>
+</RadioGroup>;
 ```
 
 **RadioGroup Props:**
+
 - `value?: string` - Valeur contrôlée
 - `defaultValue?: string` - Valeur par défaut
 - `onChange?: (value: string) => void` - Callback
@@ -103,12 +106,14 @@ import { Radio, RadioGroup } from '@/ui/components';
 - `className?: string` - Classes CSS
 
 **Radio Props:**
+
 - `value: string` - Valeur unique (requis)
 - `label?: string` - Label
 - `disabled?: boolean` - Désactiver ce radio
 - `size?: 'sm' | 'md' | 'lg'` - Taille (sm: 16px, md: 20px, lg: 24px)
 
 **Features:**
+
 - ✅ RadioGroup gère l'état partagé
 - ✅ Animation du point (scale 0 → 1)
 - ⌨️ Keyboard: Arrow keys dans RadioGroup
@@ -117,6 +122,7 @@ import { Radio, RadioGroup } from '@/ui/components';
 ---
 
 #### **Textarea**
+
 Zone de texte avec auto-resize et compteur.
 
 ```tsx
@@ -133,10 +139,11 @@ import { Textarea } from '@/ui/components';
   helperText="Maximum 500 caractères"
   error={error}
   size="md"
-/>
+/>;
 ```
 
 **Props:**
+
 - `value?: string` - Texte contrôlé
 - `defaultValue?: string` - Texte par défaut
 - `onChange?: (value: string) => void` - Callback
@@ -153,6 +160,7 @@ import { Textarea } from '@/ui/components';
 - `className?: string` - Classes CSS
 
 **Features:**
+
 - ✅ Auto-resize dynamique
 - ✅ Compteur de caractères (123/500)
 - ✅ Validation avec maxLength
@@ -161,6 +169,7 @@ import { Textarea } from '@/ui/components';
 ---
 
 #### **Slider**
+
 Curseur de valeur avec marks.
 
 ```tsx
@@ -183,12 +192,13 @@ const marks: SliderMark[] = [
   showValue
   showMarks
   marks={marks}
-  onChangeCommitted={(value) => console.log('Final:', value)}
+  onChangeCommitted={value => console.log('Final:', value)}
   size="md"
-/>
+/>;
 ```
 
 **Props:**
+
 - `value?: number` - Valeur contrôlée
 - `defaultValue?: number` - Valeur par défaut
 - `min?: number` - Minimum (défaut: 0)
@@ -205,6 +215,7 @@ const marks: SliderMark[] = [
 - `className?: string` - Classes CSS
 
 **SliderMark Type:**
+
 ```typescript
 type SliderMark = {
   value: number;
@@ -213,6 +224,7 @@ type SliderMark = {
 ```
 
 **Features:**
+
 - ✅ Mouse drag + keyboard navigation
 - ⌨️ Keyboard: Arrow keys, Home, End
 - ✅ Marks custom ou auto (every 10 steps)
@@ -223,6 +235,7 @@ type SliderMark = {
 ---
 
 #### **Select**
+
 Dropdown avec recherche et keyboard.
 
 ```tsx
@@ -245,10 +258,11 @@ const options: SelectOption[] = [
   helperText="Recherchez ou sélectionnez"
   error={error}
   size="md"
-/>
+/>;
 ```
 
 **Props:**
+
 - `value?: string` - Valeur contrôlée
 - `defaultValue?: string` - Valeur par défaut
 - `onChange?: (value: string) => void` - Callback
@@ -263,6 +277,7 @@ const options: SelectOption[] = [
 - `className?: string` - Classes CSS
 
 **SelectOption Type:**
+
 ```typescript
 type SelectOption = {
   value: string;
@@ -272,6 +287,7 @@ type SelectOption = {
 ```
 
 **Features:**
+
 - ✅ Recherche avec filtre live
 - ⌨️ Keyboard: Arrow Up/Down, Enter, Escape
 - ✅ Outside click detection
@@ -284,6 +300,7 @@ type SelectOption = {
 ---
 
 #### **Toggle**
+
 Groupe de boutons (alternative à Radio).
 
 ```tsx
@@ -303,10 +320,11 @@ const viewOptions: ToggleOption[] = [
   variant="pills"
   fullWidth
   size="md"
-/>
+/>;
 ```
 
 **Props:**
+
 - `value?: string` - Valeur contrôlée
 - `defaultValue?: string` - Valeur par défaut
 - `onChange?: (value: string) => void` - Callback
@@ -318,6 +336,7 @@ const viewOptions: ToggleOption[] = [
 - `className?: string` - Classes CSS
 
 **ToggleOption Type:**
+
 ```typescript
 type ToggleOption = {
   value: string;
@@ -328,6 +347,7 @@ type ToggleOption = {
 ```
 
 **Features:**
+
 - ✅ 2 variants: default (contained) + pills (séparés)
 - ✅ Icons support par option
 - ✅ Full-width mode (flex: 1)
@@ -341,6 +361,7 @@ type ToggleOption = {
 ### Buttons
 
 #### **Button**
+
 Bouton avec 6 variants.
 
 ```tsx
@@ -356,7 +377,7 @@ import { Button } from '@/ui/components';
   disabled={false}
 >
   Action
-</Button>
+</Button>;
 ```
 
 **Variants:** `primary`, `secondary`, `ghost`, `danger`, `glass`, `subtle`  
@@ -431,4 +452,4 @@ Visitez `/design-system` dans l'application pour voir tous les composants en act
 ---
 
 **TITANE∞ v17.1** - Design System Professionnel  
-*Clarté • Fluidité • Élégance*
+_Clarté • Fluidité • Élégance_

@@ -207,9 +207,7 @@ export interface DevSudoHandlerContext {
 /**
  * Handler function type for individual DevSudo actions
  */
-export type DevSudoHandler = (
-  params?: Record<string, unknown>
-) => Promise<DevSudoResult>;
+export type DevSudoHandler = (params?: Record<string, unknown>) => Promise<DevSudoResult>;
 
 /**
  * Handler registry type

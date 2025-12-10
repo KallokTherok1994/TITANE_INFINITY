@@ -381,15 +381,16 @@ class MetaSingularityKernel {
     if (!this.engines) return;
 
     // Récupérer l'état de chaque moteur (cast to Record for flexibility)
-    const identityState = (
-      this.engines.identity.exportToOutput?.() || this.engines.identity.getState?.()
-    ) as Record<string, unknown> | undefined;
-    const expressionState = (
-      this.engines.expression.getCurrentExpression?.() ||
-      this.engines.expression.getState?.()
-    ) as Record<string, unknown> | undefined;
-    const holoPresenceState = this.engines.holoPresence.getState?.() as Record<string, unknown> | undefined;
-    const autopoiesisState = this.engines.autopoiesis.getState?.() as Record<string, unknown> | undefined;
+    const identityState = (this.engines.identity.exportToOutput?.() ||
+      this.engines.identity.getState?.()) as Record<string, unknown> | undefined;
+    const expressionState = (this.engines.expression.getCurrentExpression?.() ||
+      this.engines.expression.getState?.()) as Record<string, unknown> | undefined;
+    const holoPresenceState = this.engines.holoPresence.getState?.() as
+      | Record<string, unknown>
+      | undefined;
+    const autopoiesisState = this.engines.autopoiesis.getState?.() as
+      | Record<string, unknown>
+      | undefined;
 
     this.state.unifiedState = {
       identity: identityState,
@@ -624,7 +625,9 @@ class MetaSingularityKernel {
 
     // Synchronicity (patterns alignés)
     const autopoiesis = this.state.unifiedState.autopoiesis;
-    const autopoiesisLearning = autopoiesis?.learning as Record<string, unknown> | undefined;
+    const autopoiesisLearning = autopoiesis?.learning as
+      | Record<string, unknown>
+      | undefined;
     const patternsLearned = (autopoiesisLearning?.patternsLearned as number) ?? 0;
     if (patternsLearned > 50) {
       this.createEmergence(
@@ -754,7 +757,9 @@ class MetaSingularityKernel {
     // Conflit: Autopoiesis learning rate élevé mais system stability requise
     const autopoiesisConflict = this.state.unifiedState.autopoiesis;
     if (autopoiesisConflict) {
-      const autoLearning = autopoiesisConflict.learning as Record<string, unknown> | undefined;
+      const autoLearning = autopoiesisConflict.learning as
+        | Record<string, unknown>
+        | undefined;
       const learningRate = (autoLearning?.currentLearningRate as number) || 0.1;
       if (learningRate > 0.3 && this.state.systemStability > 0.9) {
         this.createConflict(
@@ -847,7 +852,9 @@ class MetaSingularityKernel {
 
     // Pattern recognition
     const autopoiesisInsight = this.state.unifiedState?.autopoiesis;
-    const learningInsight = autopoiesisInsight?.learning as Record<string, unknown> | undefined;
+    const learningInsight = autopoiesisInsight?.learning as
+      | Record<string, unknown>
+      | undefined;
     const patternsLearnedInsight = (learningInsight?.patternsLearned as number) ?? 0;
     if (autopoiesisInsight && patternsLearnedInsight > 30) {
       this.createInsight(

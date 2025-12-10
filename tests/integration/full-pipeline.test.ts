@@ -52,41 +52,37 @@ class PriorityQueue<T extends { priority: number }> {
 }
 
 const createMockCognitiveEngine = () => {
-  const optimizeFullPipeline = vi.fn(
-    async (message: string, history: ChatMessage[]) => {
-      const baseHistory = history.length
-        ? history
-        : [
-            {
-              id: 'seed_message',
-              role: 'user',
-              content: message,
-              tokens: 12,
-              timestamp: Date.now(),
-              importance: 0.8,
-            },
-          ];
+  const optimizeFullPipeline = vi.fn(async (message: string, history: ChatMessage[]) => {
+    const baseHistory = history.length
+      ? history
+      : [
+          {
+            id: 'seed_message',
+            role: 'user',
+            content: message,
+            tokens: 12,
+            timestamp: Date.now(),
+            importance: 0.8,
+          },
+        ];
 
-      const compressedCount = Math.max(1, Math.ceil(baseHistory.length * 0.15));
-      const compressed = baseHistory.slice(0, compressedCount);
-      const totalTokens = baseHistory.reduce((sum, msg) => sum + (msg.tokens ?? 0), 0);
-      const optimizedTokens = Math.min(Math.floor(totalTokens * 0.15), 8000);
+    const compressedCount = Math.max(1, Math.ceil(baseHistory.length * 0.15));
+    const compressed = baseHistory.slice(0, compressedCount);
+    const totalTokens = baseHistory.reduce((sum, msg) => sum + (msg.tokens ?? 0), 0);
+    const optimizedTokens = Math.min(Math.floor(totalTokens * 0.15), 8000);
 
-      return {
-        intention: baseHistory.length > 5 ? 'multi_turn_assist' : 'direct_answer',
-        optimized_context: {
-          messages: compressed,
-          total_tokens: optimizedTokens,
-          compression_ratio:
-            baseHistory.length === 0 ? 0 : compressed.length / baseHistory.length,
-          coherence_score: 0.94,
-        },
-        optimized_actions: [
-          { type: 'respond', priority: 'normal', confidence: 0.9 },
-        ],
-      };
-    }
-  );
+    return {
+      intention: baseHistory.length > 5 ? 'multi_turn_assist' : 'direct_answer',
+      optimized_context: {
+        messages: compressed,
+        total_tokens: optimizedTokens,
+        compression_ratio:
+          baseHistory.length === 0 ? 0 : compressed.length / baseHistory.length,
+        coherence_score: 0.94,
+      },
+      optimized_actions: [{ type: 'respond', priority: 'normal', confidence: 0.9 }],
+    };
+  });
 
   const checkCoherence = vi.fn(async () => ({
     is_coherent: true,
@@ -120,12 +116,21 @@ const createMockContextOptimizer = () => {
   });
 
   const compressContext = vi.fn(
-    async (messages: ChatMessage[], options?: { maxTokens?: number; targetRatio?: number }) => {
+    async (
+      messages: ChatMessage[],
+      options?: { maxTokens?: number; targetRatio?: number }
+    ) => {
       const targetRatio = options?.targetRatio ?? 0.2;
       const totalTokens = messages.reduce((sum, msg) => sum + (msg.tokens ?? 0), 0);
-      const compressedTokens = Math.min(Math.ceil(totalTokens * targetRatio), options?.maxTokens ?? totalTokens);
+      const compressedTokens = Math.min(
+        Math.ceil(totalTokens * targetRatio),
+        options?.maxTokens ?? totalTokens
+      );
       const ratio = totalTokens === 0 ? 0 : compressedTokens / totalTokens;
-      const compressedCount = Math.max(1, Math.round(messages.length * (ratio || targetRatio || 0.2)));
+      const compressedCount = Math.max(
+        1,
+        Math.round(messages.length * (ratio || targetRatio || 0.2))
+      );
 
       return {
         compressed_messages: messages.slice(0, compressedCount),
@@ -327,10 +332,8 @@ describe('Full Pipeline Integration Tests', () => {
         },
       ];
 
-      const { cognitiveResult, contextResult, fusionResult } = await pipeline.runFullPipeline(
-        'Hello',
-        history
-      );
+      const { cognitiveResult, contextResult, fusionResult } =
+        await pipeline.runFullPipeline('Hello', history);
 
       expect(cognitiveResult.intention).toBeDefined();
       expect(contextResult.compressed_messages.length).toBeGreaterThan(0);
@@ -348,7 +351,10 @@ describe('Full Pipeline Integration Tests', () => {
         importance: 0.5,
       }));
 
-      const result = await pipeline.cognitiveEngine.optimizeFullPipeline('Continue', longHistory);
+      const result = await pipeline.cognitiveEngine.optimizeFullPipeline(
+        'Continue',
+        longHistory
+      );
 
       expect(result.optimized_context.total_tokens).toBeLessThan(10000);
       expect(result.optimized_context.compression_ratio).toBeLessThan(0.2);
@@ -458,10 +464,38 @@ describe('Full Pipeline Integration Tests', () => {
 
     it('should remove noise from conversations', async () => {
       const noisyMessages: ChatMessage[] = [
-        { id: '1', role: 'user', content: 'Hello', tokens: 5, timestamp: Date.now(), importance: 0.8 },
-        { id: '2', role: 'user', content: 'Hello', tokens: 5, timestamp: Date.now(), importance: 0.8 },
-        { id: '3', role: 'user', content: 'Noise', tokens: 3, timestamp: Date.now(), importance: 0.1 },
-        { id: '4', role: 'assistant', content: 'Hi!', tokens: 5, timestamp: Date.now(), importance: 0.9 },
+        {
+          id: '1',
+          role: 'user',
+          content: 'Hello',
+          tokens: 5,
+          timestamp: Date.now(),
+          importance: 0.8,
+        },
+        {
+          id: '2',
+          role: 'user',
+          content: 'Hello',
+          tokens: 5,
+          timestamp: Date.now(),
+          importance: 0.8,
+        },
+        {
+          id: '3',
+          role: 'user',
+          content: 'Noise',
+          tokens: 3,
+          timestamp: Date.now(),
+          importance: 0.1,
+        },
+        {
+          id: '4',
+          role: 'assistant',
+          content: 'Hi!',
+          tokens: 5,
+          timestamp: Date.now(),
+          importance: 0.9,
+        },
       ];
 
       const result = await pipeline.contextOptimizer.removeNoise(noisyMessages);

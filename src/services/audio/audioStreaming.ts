@@ -262,7 +262,7 @@ class AudioStreamingService {
           lastState = currentState;
 
           // Notify listeners
-          this.stateListeners.forEach((callback) => {
+          this.stateListeners.forEach(callback => {
             try {
               callback(currentState);
             } catch (error) {

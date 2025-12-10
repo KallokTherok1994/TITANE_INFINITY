@@ -127,11 +127,7 @@ export interface UseSingularityMetricsOptions {
 }
 
 export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}) {
-  const {
-    refreshInterval = 5000,
-    includeEngines = true,
-    includeAlerts = true,
-  } = options;
+  const { refreshInterval = 5000, includeEngines = true, includeAlerts = true } = options;
 
   const singularity = useSingularity(false); // Don't auto-init here
   const [state, setState] = useState<SingularityMetricsState>(DEFAULT_STATE);
@@ -222,11 +218,12 @@ export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}
       }
 
       // Engine health
-      const activeEngines = engines.filter((e) => e.status === 'active').length;
-      const errorEngines = engines.filter((e) => e.status === 'error').length;
-      const engineScore = engines.length > 0
-        ? Math.max(0, 100 - errorEngines * 20 + (activeEngines / engines.length) * 20)
-        : 50;
+      const activeEngines = engines.filter(e => e.status === 'active').length;
+      const errorEngines = engines.filter(e => e.status === 'error').length;
+      const engineScore =
+        engines.length > 0
+          ? Math.max(0, 100 - errorEngines * 20 + (activeEngines / engines.length) * 20)
+          : 50;
 
       // Singularity health
       const singularityScore = Math.round(
@@ -314,7 +311,7 @@ export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}
 
   // Refresh all metrics
   const refresh = useCallback(async () => {
-    setState((prev) => ({ ...prev, isLoading: true, error: null }));
+    setState(prev => ({ ...prev, isLoading: true, error: null }));
 
     try {
       const [system, engines] = await Promise.all([
@@ -330,7 +327,7 @@ export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}
         engines,
         health,
         alerts,
-        hasUnacknowledgedAlerts: alerts.some((a) => !a.acknowledged),
+        hasUnacknowledgedAlerts: alerts.some(a => !a.acknowledged),
         consciousness: singularity.consciousness,
         coherence: singularity.autoCoherence,
         stability: singularity.formStability,
@@ -339,7 +336,7 @@ export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}
         error: null,
       });
     } catch (err) {
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isLoading: false,
         error: err instanceof Error ? err.message : 'Unknown error',
@@ -359,25 +356,19 @@ export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}
 
   // Acknowledge alert
   const acknowledgeAlert = useCallback((alertId: string) => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
-      alerts: prev.alerts.map((a) =>
-        a.id === alertId ? { ...a, acknowledged: true } : a
-      ),
-      hasUnacknowledgedAlerts: prev.alerts.some(
-        (a) => a.id !== alertId && !a.acknowledged
-      ),
+      alerts: prev.alerts.map(a => (a.id === alertId ? { ...a, acknowledged: true } : a)),
+      hasUnacknowledgedAlerts: prev.alerts.some(a => a.id !== alertId && !a.acknowledged),
     }));
   }, []);
 
   // Dismiss alert
   const dismissAlert = useCallback((alertId: string) => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
-      alerts: prev.alerts.filter((a) => a.id !== alertId),
-      hasUnacknowledgedAlerts: prev.alerts.some(
-        (a) => a.id !== alertId && !a.acknowledged
-      ),
+      alerts: prev.alerts.filter(a => a.id !== alertId),
+      hasUnacknowledgedAlerts: prev.alerts.some(a => a.id !== alertId && !a.acknowledged),
     }));
   }, []);
 
@@ -394,7 +385,7 @@ export function useSingularityMetrics(options: UseSingularityMetricsOptions = {}
   // Computed values
   const isHealthy = useMemo(() => state.health.overall >= 70, [state.health.overall]);
   const criticalAlerts = useMemo(
-    () => state.alerts.filter((a) => a.type === 'critical'),
+    () => state.alerts.filter(a => a.type === 'critical'),
     [state.alerts]
   );
 

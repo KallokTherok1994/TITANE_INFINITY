@@ -71,25 +71,25 @@ import { personaTauriBridge } from '../services/personaTauriBridge';
 export interface LivingEnginesState {
   // System State
   systemState: SystemState;
-  
+
   // Visual Multipliers (from persona)
   glow: number;
   motion: number;
   depth: number;
   sound: number;
-  
+
   // Persona
   persona: PersonaState | null;
   presenceLevel: number;
-  
+
   // Cognitive (simulated from persona)
   cognitiveLoad: number;
   rhythmScore: number;
-  
+
   // Holography (simulated)
   holoActive: boolean;
   particleCount: number;
-  
+
   // Ready State
   initialized: boolean;
 }
@@ -126,7 +126,7 @@ export const useLivingEngines = (updateInterval = 100) => {
           await personaEngine.initialize();
           console.log('🌟 TITANE∞ v24 - Persona Engine (TypeScript) Initialized');
         }
-        
+
         setEnginesState(prev => ({ ...prev, initialized: true }));
       } catch (error) {
         console.error('❌ Error initializing Persona Engine:', error);
@@ -151,7 +151,7 @@ export const useLivingEngines = (updateInterval = 100) => {
       try {
         let personaState: PersonaState | null = null;
         let visualMults = { glow: 1.0, motion: 1.0, depth: 0.5, sound: 0.5 };
-        
+
         // Try Tauri bridge first
         if (personaTauriBridge.isTauriEnvironment()) {
           personaState = await personaTauriBridge.getState();
@@ -162,15 +162,15 @@ export const useLivingEngines = (updateInterval = 100) => {
           personaState = personaEngine.getState();
           visualMults = personaEngine.getVisualMultipliers();
         }
-        
+
         if (!personaState) return;
-        
+
         // Simulate cognitive load from mood intensity
         const cogLoad = personaState.mood.intensity || 0.5;
-        
+
         // Simulate rhythm from presence
         const rhythm = personaState.presenceLevel * 0.8 + 0.2;
-        
+
         setEnginesState({
           systemState: 'stable',
           glow: visualMults.glow,
@@ -210,18 +210,21 @@ export const useLivingEngines = (updateInterval = 100) => {
     }
   }, []);
 
-  const triggerPersonaReaction = useCallback(async (reaction: 'error' | 'success' | 'warning' | 'overload' | 'idle') => {
-    if (personaTauriBridge.isTauriEnvironment()) {
-      await personaTauriBridge.react(reaction);
-    } else {
-      personaEngine.react(reaction);
-    }
-  }, []);
+  const triggerPersonaReaction = useCallback(
+    async (reaction: 'error' | 'success' | 'warning' | 'overload' | 'idle') => {
+      if (personaTauriBridge.isTauriEnvironment()) {
+        await personaTauriBridge.react(reaction);
+      } else {
+        personaEngine.react(reaction);
+      }
+    },
+    []
+  );
 
   const updateCognitiveLoad = useCallback(async (load: number) => {
     // Update persona based on cognitive load
     const state: SystemState = load > 0.8 ? 'danger' : load > 0.6 ? 'warning' : 'stable';
-    
+
     if (personaTauriBridge.isTauriEnvironment()) {
       await personaTauriBridge.update(state, {
         cpu: load * 100,
@@ -246,4 +249,3 @@ export const useLivingEngines = (updateInterval = 100) => {
     },
   };
 };
-

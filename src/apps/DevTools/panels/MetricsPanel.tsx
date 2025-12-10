@@ -54,7 +54,8 @@ export const MetricsPanel: React.FC = () => {
             <span className="metric-label">Memory Usage</span>
             <div className="metric-value-container">
               <span className="metric-value">
-                {(system.memory_usage / 1024).toFixed(1)} MB / {(system.memory_total / 1024).toFixed(0)} MB
+                {(system.memory_usage / 1024).toFixed(1)} MB /{' '}
+                {(system.memory_total / 1024).toFixed(0)} MB
               </span>
               <div className="metric-bar">
                 <div
@@ -62,7 +63,9 @@ export const MetricsPanel: React.FC = () => {
                   style={{
                     width: `${(system.memory_usage / system.memory_total) * 100}%`,
                     backgroundColor:
-                      system.memory_usage / system.memory_total > 0.8 ? '#c73838' : '#0e639c',
+                      system.memory_usage / system.memory_total > 0.8
+                        ? '#c73838'
+                        : '#0e639c',
                   }}
                 />
               </div>
@@ -115,7 +118,7 @@ export const MetricsPanel: React.FC = () => {
       <div className="card">
         <h3>⚙️ Engine Latency</h3>
         <BarChart
-          data={engines.map((e) => ({ label: e.engine_name, value: e.latency_ms }))}
+          data={engines.map(e => ({ label: e.engine_name, value: e.latency_ms }))}
           color="#0e639c"
         />
       </div>
@@ -124,7 +127,7 @@ export const MetricsPanel: React.FC = () => {
       <div className="card">
         <h3>📈 Engine Statistics</h3>
         <div className="engine-stats">
-          {engines.map((engine) => (
+          {engines.map(engine => (
             <div key={engine.engine_id} className="engine-stat-item">
               <div className="engine-stat-header">
                 <strong>{engine.engine_name}</strong>

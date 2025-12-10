@@ -15,11 +15,11 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum FundamentalLaw {
-  GLOBAL_COHERENCE = 'GLOBAL_COHERENCE',      // Loi de Cohérence Globale
+  GLOBAL_COHERENCE = 'GLOBAL_COHERENCE', // Loi de Cohérence Globale
   MINIMAL_COGNITIVE_LOAD = 'MINIMAL_COGNITIVE_LOAD', // Loi de Charge Mentale Minimale
-  STRATEGIC_ALIGNMENT = 'STRATEGIC_ALIGNMENT',   // Loi d'Alignement Stratégique
-  SYSTEM_PRESERVATION = 'SYSTEM_PRESERVATION',   // Loi de Préservation du Système
-  COGNITIVE_INTEGRITY = 'COGNITIVE_INTEGRITY'    // Loi d'Intégrité Cognitive
+  STRATEGIC_ALIGNMENT = 'STRATEGIC_ALIGNMENT', // Loi d'Alignement Stratégique
+  SYSTEM_PRESERVATION = 'SYSTEM_PRESERVATION', // Loi de Préservation du Système
+  COGNITIVE_INTEGRITY = 'COGNITIVE_INTEGRITY', // Loi d'Intégrité Cognitive
 }
 
 export interface LawViolation {
@@ -36,11 +36,11 @@ export interface LawViolation {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum CognitiveCore {
-  HELIOS = 'HELIOS',         // Stabilité
-  NEXUS = 'NEXUS',           // Cohérence
-  HARMONIA = 'HARMONIA',     // Équilibre/Charge
-  SENTINEL = 'SENTINEL',     // Sécurité/Permissions
-  MEMORY_CORE = 'MEMORY_CORE' // Mémoire
+  HELIOS = 'HELIOS', // Stabilité
+  NEXUS = 'NEXUS', // Cohérence
+  HARMONIA = 'HARMONIA', // Équilibre/Charge
+  SENTINEL = 'SENTINEL', // Sécurité/Permissions
+  MEMORY_CORE = 'MEMORY_CORE', // Mémoire
 }
 
 export interface CoreScanResult {
@@ -52,10 +52,10 @@ export interface CoreScanResult {
 }
 
 export interface SystemHealthCheck {
-  helios: CoreScanResult;    // Stabilité
-  nexus: CoreScanResult;     // Cohérence
-  harmonia: CoreScanResult;  // Charge cognitive
-  sentinel: CoreScanResult;  // Sécurité
+  helios: CoreScanResult; // Stabilité
+  nexus: CoreScanResult; // Cohérence
+  harmonia: CoreScanResult; // Charge cognitive
+  sentinel: CoreScanResult; // Sécurité
   memoryCore: CoreScanResult; // Mémoire
   globalStatus: 'HEALTHY' | 'DEGRADED' | 'CRITICAL';
   timestamp: number;
@@ -66,12 +66,12 @@ export interface SystemHealthCheck {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum JobType {
-  REACTIVE = 'REACTIVE',           // Réponse immédiate
-  STRUCTURAL = 'STRUCTURAL',       // Organisation/Structure
-  COGNITIVE = 'COGNITIVE',         // Analyse/Réflexion
-  CREATIVE = 'CREATIVE',           // Génération créative
-  STRATEGIC = 'STRATEGIC',         // Planification/Décision
-  EVOLUTIONARY = 'EVOLUTIONARY'    // Auto-amélioration
+  REACTIVE = 'REACTIVE', // Réponse immédiate
+  STRUCTURAL = 'STRUCTURAL', // Organisation/Structure
+  COGNITIVE = 'COGNITIVE', // Analyse/Réflexion
+  CREATIVE = 'CREATIVE', // Génération créative
+  STRATEGIC = 'STRATEGIC', // Planification/Décision
+  EVOLUTIONARY = 'EVOLUTIONARY', // Auto-amélioration
 }
 
 export enum JobStatus {
@@ -81,14 +81,14 @@ export enum JobStatus {
   SUSPENDED = 'SUSPENDED',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
-  FAILED = 'FAILED'
+  FAILED = 'FAILED',
 }
 
 export enum JobPriority {
   LOW = 1,
   NORMAL = 2,
   HIGH = 3,
-  CRITICAL = 4
+  CRITICAL = 4,
 }
 
 export interface JobPermissions {
@@ -106,23 +106,23 @@ export interface Job {
   status: JobStatus;
   priority: JobPriority;
   permissions: JobPermissions;
-  
+
   // Input
   input: {
     query: string;
     context?: Record<string, unknown>;
     requiredData?: string[];
   };
-  
+
   // Evaluation
   evaluation: {
-    cognitiveLoad: number;      // 0-1 (charge mentale estimée)
-    coherenceScore: number;     // 0-1 (cohérence avec système)
-    alignmentScore: number;     // 0-1 (alignement stratégique)
-    securityRisk: number;       // 0-1 (risque sécurité)
+    cognitiveLoad: number; // 0-1 (charge mentale estimée)
+    coherenceScore: number; // 0-1 (cohérence avec système)
+    alignmentScore: number; // 0-1 (alignement stratégique)
+    securityRisk: number; // 0-1 (risque sécurité)
     impact: 'MICRO' | 'SMALL' | 'MEDIUM' | 'LARGE' | 'TRANSFORMATIVE';
   };
-  
+
   // Execution
   execution: {
     assignedModel?: string;
@@ -132,7 +132,7 @@ export interface Job {
     result?: unknown;
     error?: string;
   };
-  
+
   // Governance
   governance: {
     approvedBy: 'MCP' | 'USER';
@@ -140,7 +140,7 @@ export interface Job {
     canMerge?: string[]; // IDs d'autres jobs fusionnables
     canOptimize?: boolean;
   };
-  
+
   createdAt: number;
   updatedAt: number;
 }
@@ -150,12 +150,12 @@ export interface Job {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum AIModelType {
-  LOCAL_SMALL = 'LOCAL_SMALL',       // Ex: phi-3.5-mini (3.8B)
-  LOCAL_MEDIUM = 'LOCAL_MEDIUM',     // Ex: mistral-7b
-  LOCAL_LARGE = 'LOCAL_LARGE',       // Ex: llama3-70b
-  CLOUD_FAST = 'CLOUD_FAST',         // Ex: Claude Haiku
+  LOCAL_SMALL = 'LOCAL_SMALL', // Ex: phi-3.5-mini (3.8B)
+  LOCAL_MEDIUM = 'LOCAL_MEDIUM', // Ex: mistral-7b
+  LOCAL_LARGE = 'LOCAL_LARGE', // Ex: llama3-70b
+  CLOUD_FAST = 'CLOUD_FAST', // Ex: Claude Haiku
   CLOUD_BALANCED = 'CLOUD_BALANCED', // Ex: Claude Sonnet
-  CLOUD_DEEP = 'CLOUD_DEEP'          // Ex: Claude Opus
+  CLOUD_DEEP = 'CLOUD_DEEP', // Ex: Claude Opus
 }
 
 export interface AIModel {
@@ -181,7 +181,7 @@ export interface AISelection {
   model: AIModel;
   reasoning: string;
   expectedDuration: number; // ms
-  estimatedCost: number;    // arbitrary units
+  estimatedCost: number; // arbitrary units
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -189,10 +189,10 @@ export interface AISelection {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export enum MemoryTier {
-  SHORT_TERM = 'SHORT_TERM',     // Contexte actif (conversation en cours)
-  MEDIUM_TERM = 'MEDIUM_TERM',   // Index, patterns, associations
-  LONG_TERM = 'LONG_TERM',       // Connaissances, décisions, modèles
-  META_MEMORY = 'META_MEMORY'    // Logique d'évolution, traces, insights
+  SHORT_TERM = 'SHORT_TERM', // Contexte actif (conversation en cours)
+  MEDIUM_TERM = 'MEDIUM_TERM', // Index, patterns, associations
+  LONG_TERM = 'LONG_TERM', // Connaissances, décisions, modèles
+  META_MEMORY = 'META_MEMORY', // Logique d'évolution, traces, insights
 }
 
 export interface MemoryEntry {
@@ -214,11 +214,11 @@ export interface MemoryEntry {
 }
 
 export interface MemoryOperations {
-  cleanup: () => Promise<number>;      // Retourne nombre de mémoires supprimées
-  compress: () => Promise<number>;     // Retourne nombre de mémoires compressées
-  fuse: () => Promise<number>;         // Retourne nombre de fusions
-  archive: () => Promise<number>;      // Retourne nombre d'archives
-  normalize: () => Promise<number>;    // Retourne nombre de normalisations
+  cleanup: () => Promise<number>; // Retourne nombre de mémoires supprimées
+  compress: () => Promise<number>; // Retourne nombre de mémoires compressées
+  fuse: () => Promise<number>; // Retourne nombre de fusions
+  archive: () => Promise<number>; // Retourne nombre d'archives
+  normalize: () => Promise<number>; // Retourne nombre de normalisations
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -235,7 +235,7 @@ export enum MCPBehaviorTrait {
   STRATEGIC = 'STRATEGIC',
   CALM = 'CALM',
   PROTECTIVE = 'PROTECTIVE',
-  EVOLUTIONARY = 'EVOLUTIONARY'
+  EVOLUTIONARY = 'EVOLUTIONARY',
 }
 
 export interface MCPPersona {
@@ -332,10 +332,15 @@ export interface MCPOperations {
 
   // AI Governance
   selectAI: (job: Job) => Promise<AISelection>;
-  validateOutput: (output: unknown, job: Job) => Promise<{ valid: boolean; issues: string[] }>;
+  validateOutput: (
+    output: unknown,
+    job: Job
+  ) => Promise<{ valid: boolean; issues: string[] }>;
 
   // Memory Management
-  storeMemory: (entry: Omit<MemoryEntry, 'id' | 'created' | 'accessed' | 'accessCount'>) => Promise<string>;
+  storeMemory: (
+    entry: Omit<MemoryEntry, 'id' | 'created' | 'accessed' | 'accessCount'>
+  ) => Promise<string>;
   retrieveMemory: (tier: MemoryTier, query?: string) => Promise<MemoryEntry[]>;
   purifyMemory: () => Promise<MemoryOperations>;
 

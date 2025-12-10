@@ -317,7 +317,11 @@ export class UIUXEngine {
     const layout = this.layoutAdapter.adapt(context, mode, cognitiveLoad);
     const density = this.densityAdapter.adapt(context, mode, cognitiveLoad);
     const visibility = this.visibilityAdapter.adapt(context, mode, cognitiveLoad);
-    const motion = this.motionAdapter.adapt(context, mode, this.performanceDetector.toSignal());
+    const motion = this.motionAdapter.adapt(
+      context,
+      mode,
+      this.performanceDetector.toSignal()
+    );
     const theme = this.themeAdapter.adapt(context, mode);
 
     // Apply policy decisions (higher priority overrides)

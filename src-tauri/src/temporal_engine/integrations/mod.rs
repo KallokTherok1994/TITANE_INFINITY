@@ -3,20 +3,30 @@
 //! Super Prompt #18 — Intégrations avec Kernel, OMEGA, Memory, AGI
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-pub mod kernel_integration;
-pub mod omega_integration;
-pub mod memory_integration;
 pub mod agi_integration;
 pub mod conversation_integration;
+pub mod kernel_integration;
+pub mod memory_integration;
+pub mod omega_integration;
 
 #[cfg(test)]
 mod tests;
 
-pub use kernel_integration::{TemporalKernelBridge, SchedulerAdjustments, ResourceLimits, MaintenanceAdvice};
-pub use omega_integration::{TemporalOmegaBridge, OmegaTemporalAdjustments, RoutingStrategy};
-pub use memory_integration::{TemporalMemoryBridge, MemoryTemporalAdjustments, PreloadingStrategy, ConsolidationRecommendation};
-pub use agi_integration::{TemporalAgiBridge, AgiTemporalAdjustments, HeuristicTuningStrategy, AlignmentRecommendation};
-pub use conversation_integration::{TemporalConversationBridge, ConversationTemporalAdjustments, ConversationTone, TemporalNarrative};
+pub use agi_integration::{
+    AgiTemporalAdjustments, AlignmentRecommendation, HeuristicTuningStrategy, TemporalAgiBridge,
+};
+pub use conversation_integration::{
+    ConversationTemporalAdjustments, ConversationTone, TemporalConversationBridge,
+    TemporalNarrative,
+};
+pub use kernel_integration::{
+    MaintenanceAdvice, ResourceLimits, SchedulerAdjustments, TemporalKernelBridge,
+};
+pub use memory_integration::{
+    ConsolidationRecommendation, MemoryTemporalAdjustments, PreloadingStrategy,
+    TemporalMemoryBridge,
+};
+pub use omega_integration::{OmegaTemporalAdjustments, RoutingStrategy, TemporalOmegaBridge};
 
 use serde::{Deserialize, Serialize};
 

@@ -311,7 +311,9 @@ describe('useTTSWithMicControl', () => {
 
   describe('Cleanup on Unmount', () => {
     it('should clear timeout on unmount', async () => {
-      const { result, unmount } = renderHook(() => useTTSWithMicControl({ resumeDelay: 5000 }));
+      const { result, unmount } = renderHook(() =>
+        useTTSWithMicControl({ resumeDelay: 5000 })
+      );
 
       await act(async () => {
         await result.current.speak('Test');

@@ -25,6 +25,7 @@ pub struct SchedulerAdjustments {
 ```
 
 **Patterns horaires**:
+
 - **10-11h (pointe)**: Priority 1.5x, 8 jobs, CPU 95%
 - **12-13h (midi)**: Priority 0.9x, 4 jobs, CPU 50%
 - **2-4h (nuit)**: Priority 0.7x, 3 jobs, CPU 30-40%
@@ -87,6 +88,7 @@ pub enum RoutingStrategy {
 ```
 
 **Adaptation dynamique**:
+
 - **10h**: Depth 1.0, Context 16K, DeepAnalysis, tous moteurs actifs
 - **12h**: Depth 0.5, Context 4K, FastTrack, cache agressif (0.8)
 - **22h**: Engines minimaux (3), cache max (0.9)
@@ -127,6 +129,7 @@ pub enum PreloadingStrategy {
 #### Consolidation Nocturne
 
 **2-4h (Critical)**:
+
 - Intensité: 1.0 (max)
 - Threshold STM→LTM: 0.4 (facile)
 - Opérations: StmToLtm, SemanticIndexing, VectorReorganization, CompressionPass (level 9)
@@ -155,11 +158,11 @@ pub struct AgiTemporalAdjustments {
 
 #### Patterns Temporels
 
-| Moment | Meta-Learning | Exploration | Alignment | Focus |
-|--------|---------------|-------------|-----------|-------|
-| **10h (pointe)** | 0.6 | 0.3 (exploit) | 0.4 | Performance |
-| **12h (midi)** | 0.3 | 0.5 | 0.6 | Balanced |
-| **2-4h (nuit)** | 1.0 (max) | 0.7 (explore) | 0.9 | Learning |
+| Moment           | Meta-Learning | Exploration   | Alignment | Focus       |
+| ---------------- | ------------- | ------------- | --------- | ----------- |
+| **10h (pointe)** | 0.6           | 0.3 (exploit) | 0.4       | Performance |
+| **12h (midi)**   | 0.3           | 0.5           | 0.6       | Balanced    |
+| **2-4h (nuit)**  | 1.0 (max)     | 0.7 (explore) | 0.9       | Learning    |
 
 #### Adaptation Saisonnière
 
@@ -223,6 +226,7 @@ pub struct TemporalNarrative {
 ```
 
 **Exemples de marqueurs**:
+
 - **Matin**: "ce matin", "en début de journée"
 - **Lundi**: "en début de semaine", "nouveau départ"
 - **Vendredi 17h**: "en fin de semaine", "célébration"
@@ -315,6 +319,7 @@ cargo test temporal_engine::integrations --lib
 ```
 
 **Coverage**:
+
 - ✅ Kernel Integration (4 tests)
 - ✅ OMEGA Integration (6 tests)
 - ✅ Memory Integration (4 tests)
@@ -325,14 +330,14 @@ cargo test temporal_engine::integrations --lib
 
 ## 📈 Performance
 
-| Opération | Temps | Mémoire |
-|-----------|-------|---------|
-| `get_context()` | <1ms | 10KB |
-| `get_scheduler_adjustments()` | <1ms | 5KB |
-| `get_omega_adjustments()` | <1ms | 5KB |
-| `get_memory_adjustments()` | <1ms | 5KB |
-| `get_agi_adjustments()` | <1ms | 5KB |
-| `get_conversation_adjustments()` | <1ms | 5KB |
+| Opération                        | Temps | Mémoire |
+| -------------------------------- | ----- | ------- |
+| `get_context()`                  | <1ms  | 10KB    |
+| `get_scheduler_adjustments()`    | <1ms  | 5KB     |
+| `get_omega_adjustments()`        | <1ms  | 5KB     |
+| `get_memory_adjustments()`       | <1ms  | 5KB     |
+| `get_agi_adjustments()`          | <1ms  | 5KB     |
+| `get_conversation_adjustments()` | <1ms  | 5KB     |
 
 **Total overhead par tick**: ~5ms pour tous les bridges
 
@@ -357,4 +362,4 @@ cargo test temporal_engine::integrations --lib
 ---
 
 **TITANE∞ v20Ω — Intelligence Temporelle Complète**  
-*"Le temps guide, TITANE∞ s'adapte"* 🌌
+_"Le temps guide, TITANE∞ s'adapte"_ 🌌

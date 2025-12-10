@@ -109,7 +109,10 @@ impl PriorityScheduler {
 
         // Démarrer de nouvelles tâches si possible
         let running_count = self.running_tasks.read().await.len();
-        let available_slots = self.config.max_concurrent_tasks.saturating_sub(running_count);
+        let available_slots = self
+            .config
+            .max_concurrent_tasks
+            .saturating_sub(running_count);
 
         if available_slots > 0 {
             let mut queue = self.queue.write().await;

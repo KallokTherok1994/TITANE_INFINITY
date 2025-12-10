@@ -59,7 +59,8 @@
 
 .xp-bar {
   height: 100%;
-  background: linear-gradient(90deg,
+  background: linear-gradient(
+    90deg,
     var(--primary, #727b81) 0%,
     var(--accent, #93b399) 50%,
     var(--primary, #727b81) 100%
@@ -85,7 +86,8 @@
 
 /* Animations */
 @keyframes pulse-glow-metal {
-  0%, 100% {
+  0%,
+  100% {
     text-shadow: 0 0 6px rgba(147, 179, 153, 0.4);
   }
   50% {

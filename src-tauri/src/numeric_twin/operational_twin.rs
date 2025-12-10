@@ -5,9 +5,9 @@
 
 #![allow(dead_code)]
 
+use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use chrono::{DateTime, Utc};
 
 /// Twin opérationnel - assimile le workflow Kevin
 pub struct OperationalTwin {
@@ -107,26 +107,37 @@ impl OperationalTwin {
         let mut methods = HashMap::new();
 
         // Méthodes par défaut Kevin
-        methods.insert("diverge_connect_structure".to_string(), Method {
-            name: "Divergence → Connexion → Structuration".to_string(),
-            description: "Exploration libre, puis connexion des idées, puis structuration finale".to_string(),
-            contexts: vec!["création".to_string(), "architecture".to_string()],
-            success_rate: 0.92,
-        });
+        methods.insert(
+            "diverge_connect_structure".to_string(),
+            Method {
+                name: "Divergence → Connexion → Structuration".to_string(),
+                description:
+                    "Exploration libre, puis connexion des idées, puis structuration finale"
+                        .to_string(),
+                contexts: vec!["création".to_string(), "architecture".to_string()],
+                success_rate: 0.92,
+            },
+        );
 
-        methods.insert("minimal_viable".to_string(), Method {
-            name: "Minimum Viable".to_string(),
-            description: "Commencer avec le minimum fonctionnel, itérer ensuite".to_string(),
-            contexts: vec!["développement".to_string(), "prototype".to_string()],
-            success_rate: 0.88,
-        });
+        methods.insert(
+            "minimal_viable".to_string(),
+            Method {
+                name: "Minimum Viable".to_string(),
+                description: "Commencer avec le minimum fonctionnel, itérer ensuite".to_string(),
+                contexts: vec!["développement".to_string(), "prototype".to_string()],
+                success_rate: 0.88,
+            },
+        );
 
-        methods.insert("priority_meaning".to_string(), Method {
-            name: "Priorité au sens".to_string(),
-            description: "Toujours s'assurer que le sens est clair avant l'action".to_string(),
-            contexts: vec!["décision".to_string(), "communication".to_string()],
-            success_rate: 0.95,
-        });
+        methods.insert(
+            "priority_meaning".to_string(),
+            Method {
+                name: "Priorité au sens".to_string(),
+                description: "Toujours s'assurer que le sens est clair avant l'action".to_string(),
+                contexts: vec!["décision".to_string(), "communication".to_string()],
+                success_rate: 0.95,
+            },
+        );
 
         Self {
             workflows: Vec::new(),
@@ -137,7 +148,13 @@ impl OperationalTwin {
     }
 
     /// Observe un workflow
-    pub fn observe_workflow(&mut self, name: &str, steps: Vec<WorkflowStep>, domain: &str, effectiveness: f32) {
+    pub fn observe_workflow(
+        &mut self,
+        name: &str,
+        steps: Vec<WorkflowStep>,
+        domain: &str,
+        effectiveness: f32,
+    ) {
         if let Some(existing) = self.workflows.iter_mut().find(|w| w.name == name) {
             existing.observations_count += 1;
             existing.effectiveness = (existing.effectiveness + effectiveness) / 2.0;
@@ -155,7 +172,12 @@ impl OperationalTwin {
     }
 
     /// Enregistre une stratégie appliquée
-    pub fn record_strategy(&mut self, strategy_type: StrategyType, context: &str, outcome: StrategyOutcome) {
+    pub fn record_strategy(
+        &mut self,
+        strategy_type: StrategyType,
+        context: &str,
+        outcome: StrategyOutcome,
+    ) {
         self.strategies.push(AppliedStrategy {
             strategy_type,
             context: context.to_string(),
@@ -172,17 +194,15 @@ impl OperationalTwin {
             return;
         }
 
-        let recent: Vec<&AppliedStrategy> = self.strategies
-            .iter()
-            .rev()
-            .take(30)
-            .collect();
+        let recent: Vec<&AppliedStrategy> = self.strategies.iter().rev().take(30).collect();
 
-        let success_count = recent.iter()
+        let success_count = recent
+            .iter()
             .filter(|s| s.outcome == StrategyOutcome::Success)
             .count();
 
-        let minimalism_count = recent.iter()
+        let minimalism_count = recent
+            .iter()
             .filter(|s| s.strategy_type == StrategyType::StrategicMinimalism)
             .count();
 

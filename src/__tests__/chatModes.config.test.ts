@@ -23,7 +23,6 @@ import {
 } from '../services/ai/chatModes.config';
 
 describe('🟣 Chat Modes Configuration', () => {
-
   // ═══════════════════════════════════════════════════════════════════════════
   // STRUCTURE VALIDATION
   // ═══════════════════════════════════════════════════════════════════════════

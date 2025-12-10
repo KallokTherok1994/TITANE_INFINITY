@@ -116,7 +116,9 @@ impl ShortTermMemory {
             .iter()
             .filter(|e| {
                 e.content.to_lowercase().contains(&query_lower)
-                    || e.tags.iter().any(|t| t.to_lowercase().contains(&query_lower))
+                    || e.tags
+                        .iter()
+                        .any(|t| t.to_lowercase().contains(&query_lower))
             })
             .take(limit)
             .cloned()
@@ -220,18 +222,13 @@ impl ShortTermMemory {
             0.0
         };
 
-        let oldest_age_ms = entries
-            .front()
-            .map(|e| now - e.timestamp)
-            .unwrap_or(0);
+        let oldest_age_ms = entries.front().map(|e| now - e.timestamp).unwrap_or(0);
 
-        let newest_age_ms = entries
-            .back()
-            .map(|e| now - e.timestamp)
-            .unwrap_or(0);
+        let newest_age_ms = entries.back().map(|e| now - e.timestamp).unwrap_or(0);
 
         // Count tags
-        let mut tag_counts: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut tag_counts: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
         for entry in entries.iter() {
             for tag in &entry.tags {
                 *tag_counts.entry(tag.clone()).or_insert(0) += 1;

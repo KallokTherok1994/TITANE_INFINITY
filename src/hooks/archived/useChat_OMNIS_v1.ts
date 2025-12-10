@@ -72,11 +72,7 @@ interface UseChatOmnisReturn {
  * Intègre le moteur OMNIS avec interface utilisateur
  */
 export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisReturn {
-  const {
-    mode = 'default',
-    voiceEnabled = false,
-    omnisConfig = {}
-  } = options;
+  const { mode = 'default', voiceEnabled = false, omnisConfig = {} } = options;
 
   // Core hooks
   const chatCore = useChatCore({ mode });
@@ -97,97 +93,107 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
    * OMNIS CORE: sendMessage() - Mathématiquement impossible à briser
    * Garantit TOUJOURS un résultat, même en cas de défaillance totale
    */
-  const sendMessage = useCallback(async (message: string): Promise<AIMessage> => {
-    const startTime = Date.now();
-    const requestId = `omnis-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const sendMessage = useCallback(
+    async (message: string): Promise<AIMessage> => {
+      const startTime = Date.now();
+      const requestId = `omnis-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-    // OMNIS Step 1: Input Normalization (never fail)
-    const normalizedInput = normalizeInput(message);
-    if (!normalizedInput.isValid) {
-      return createOmnisErrorResponse('invalid-input', startTime);
-    }
+      // OMNIS Step 1: Input Normalization (never fail)
+      const normalizedInput = normalizeInput(message);
+      if (!normalizedInput.isValid) {
+        return createOmnisErrorResponse('invalid-input', startTime);
+      }
 
-    // OMNIS Step 2: UI State Management (isolated)
-    setIsLoading(true);
-    setError(null);
-    processRef.current = { aborted: false };
+      // OMNIS Step 2: UI State Management (isolated)
+      setIsLoading(true);
+      setError(null);
+      processRef.current = { aborted: false };
 
-    // OMNIS Step 3: Add user message (pure)
-    const userMessage: AIMessage = {
-      role: 'user',
-      content: normalizedInput.message,
-      timestamp: Date.now(),
-      metadata: { requestId, inputLength: normalizedInput.message.length }
-    };
+      // OMNIS Step 3: Add user message (pure)
+      const userMessage: AIMessage = {
+        role: 'user',
+        content: normalizedInput.message,
+        timestamp: Date.now(),
+        metadata: { requestId, inputLength: normalizedInput.message.length },
+      };
 
-    try {
-      // Add user message to UI immediately
-      chatCore.addMessage(userMessage);
-      lastMessageRef.current = normalizedInput.message;
-
-      // OMNIS Step 4: Engine Call (isolated, with timeout)
-      const engineResponse = await Promise.race([
-        chatEngineOmnis.generate(normalizedInput.message, chatCore.messages),
-        createTimeoutPromise(15000) // 15s timeout
-      ]);
-
-      // OMNIS Step 5: Response Validation & Enhancement
-      const validatedResponse = normalizeAI(engineResponse, startTime);
-
-      // OMNIS Step 6: Memory Integration (isolated)
       try {
-        chatMemory.addMessage(userMessage);
-        chatMemory.addMessage(validatedResponse);
-      } catch (memoryError) {
-        console.warn('[OMNIS] Memory integration warning:', memoryError);
-        // Continue without memory - not critical
-      }
+        // Add user message to UI immediately
+        chatCore.addMessage(userMessage);
+        lastMessageRef.current = normalizedInput.message;
 
-      // OMNIS Step 7: UI Integration
-      chatCore.addMessage(validatedResponse);
+        // OMNIS Step 4: Engine Call (isolated, with timeout)
+        const engineResponse = await Promise.race([
+          chatEngineOmnis.generate(normalizedInput.message, chatCore.messages),
+          createTimeoutPromise(15000), // 15s timeout
+        ]);
 
-      // OMNIS Step 8: Voice Integration (if enabled)
-      if (voiceEnabled && validatedResponse.content) {
+        // OMNIS Step 5: Response Validation & Enhancement
+        const validatedResponse = normalizeAI(engineResponse, startTime);
+
+        // OMNIS Step 6: Memory Integration (isolated)
         try {
-          hybridTTS.speak(validatedResponse.content);
-        } catch (voiceError) {
-          console.warn('[OMNIS] Voice warning:', voiceError);
-          // Continue without voice - not critical
+          chatMemory.addMessage(userMessage);
+          chatMemory.addMessage(validatedResponse);
+        } catch (memoryError) {
+          console.warn('[OMNIS] Memory integration warning:', memoryError);
+          // Continue without memory - not critical
         }
+
+        // OMNIS Step 7: UI Integration
+        chatCore.addMessage(validatedResponse);
+
+        // OMNIS Step 8: Voice Integration (if enabled)
+        if (voiceEnabled && validatedResponse.content) {
+          try {
+            hybridTTS.speak(validatedResponse.content);
+          } catch (voiceError) {
+            console.warn('[OMNIS] Voice warning:', voiceError);
+            // Continue without voice - not critical
+          }
+        }
+
+        // OMNIS Step 9: Success Cleanup
+        setIsLoading(false);
+        retryCountRef.current = 0;
+
+        return validatedResponse;
+      } catch (error) {
+        console.error('[OMNIS] Pipeline error:', error);
+
+        // OMNIS Auto-Repair Attempt
+        const repairedResponse = await performAutoRepair(
+          normalizedInput.message,
+          error,
+          startTime
+        );
+
+        // Always update UI state
+        setIsLoading(false);
+        setAnomalyCount(prev => prev + 1);
+
+        if (repairedResponse) {
+          chatCore.addMessage(repairedResponse);
+          return repairedResponse;
+        }
+
+        // OMNIS Ultimate Fallback
+        const ultimateFallback = createOmnisErrorResponse('complete-failure', startTime);
+        chatCore.addMessage(ultimateFallback);
+        return ultimateFallback;
       }
-
-      // OMNIS Step 9: Success Cleanup
-      setIsLoading(false);
-      retryCountRef.current = 0;
-
-      return validatedResponse;
-
-    } catch (error) {
-      console.error('[OMNIS] Pipeline error:', error);
-
-      // OMNIS Auto-Repair Attempt
-      const repairedResponse = await performAutoRepair(normalizedInput.message, error, startTime);
-
-      // Always update UI state
-      setIsLoading(false);
-      setAnomalyCount(prev => prev + 1);
-
-      if (repairedResponse) {
-        chatCore.addMessage(repairedResponse);
-        return repairedResponse;
-      }
-
-      // OMNIS Ultimate Fallback
-      const ultimateFallback = createOmnisErrorResponse('complete-failure', startTime);
-      chatCore.addMessage(ultimateFallback);
-      return ultimateFallback;
-    }
-  }, [chatCore, chatMemory, voiceEnabled]);
+    },
+    [chatCore, chatMemory, voiceEnabled]
+  );
 
   /**
    * OMNIS Input Normalization - Never throws
    */
-  function normalizeInput(message: string): { isValid: boolean; message: string; metadata: object } {
+  function normalizeInput(message: string): {
+    isValid: boolean;
+    message: string;
+    metadata: object;
+  } {
     try {
       if (typeof message !== 'string') {
         return { isValid: false, message: '', metadata: { reason: 'not-string' } };
@@ -203,18 +209,21 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
         return {
           isValid: true,
           message: cleaned.substring(0, 100000) + '...',
-          metadata: { reason: 'truncated', originalLength: cleaned.length }
+          metadata: { reason: 'truncated', originalLength: cleaned.length },
         };
       }
 
       return {
         isValid: true,
         message: cleaned,
-        metadata: { originalLength: cleaned.length, sanitized: true }
+        metadata: { originalLength: cleaned.length, sanitized: true },
       };
-
     } catch (error) {
-      return { isValid: false, message: '', metadata: { reason: 'normalize-error', error } };
+      return {
+        isValid: false,
+        message: '',
+        metadata: { reason: 'normalize-error', error },
+      };
     }
   }
 
@@ -234,8 +243,8 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
         metadata: {
           status: 'success',
           duration,
-          engineVersion: response.metadata?.engine || 'omnis-v1.0'
-        }
+          engineVersion: response.metadata?.engine || 'omnis-v1.0',
+        },
       };
     }
 
@@ -250,10 +259,14 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
     const duration = Date.now() - startTime;
 
     const errorMessages: Record<string, string> = {
-      'invalid-input': 'Je n\'ai pas pu comprendre votre message. Pouvez-vous le reformuler ?',
-      'timeout': 'Le traitement a pris trop de temps. TITANE∞ reste disponible pour votre prochaine question.',
-      'invalid-engine-response': 'Une réponse a été générée mais nécessite une validation. Le système TITANE∞ s\'auto-répare.',
-      'complete-failure': 'TITANE∞ est opérationnel. Votre question a été enregistrée et le système se stabilise.'
+      'invalid-input':
+        "Je n'ai pas pu comprendre votre message. Pouvez-vous le reformuler ?",
+      timeout:
+        'Le traitement a pris trop de temps. TITANE∞ reste disponible pour votre prochaine question.',
+      'invalid-engine-response':
+        "Une réponse a été générée mais nécessite une validation. Le système TITANE∞ s'auto-répare.",
+      'complete-failure':
+        'TITANE∞ est opérationnel. Votre question a été enregistrée et le système se stabilise.',
     };
 
     return {
@@ -266,15 +279,19 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
         reason,
         duration,
         fallbackGenerated: true,
-        engineVersion: 'omnis-v1.0'
-      }
+        engineVersion: 'omnis-v1.0',
+      },
     };
   }
 
   /**
    * OMNIS Auto-Repair System
    */
-  async function performAutoRepair(message: string, error: any, startTime: number): Promise<AIMessage | null> {
+  async function performAutoRepair(
+    message: string,
+    error: any,
+    startTime: number
+  ): Promise<AIMessage | null> {
     try {
       retryCountRef.current++;
 
@@ -298,13 +315,12 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
           metadata: {
             ...repairResponse.metadata,
             autoRepaired: true,
-            repairAttempts: retryCountRef.current
-          }
+            repairAttempts: retryCountRef.current,
+          },
         };
       }
 
       return null;
-
     } catch (repairError) {
       console.error('[OMNIS] Auto-repair failed:', repairError);
       return null;
@@ -339,22 +355,25 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
     return JSON.stringify({
       messages: chatCore.messages,
       timestamp: Date.now(),
-      version: 'omnis-v1.0'
+      version: 'omnis-v1.0',
     });
   }, [chatCore.messages]);
 
-  const importChat = useCallback((data: string): boolean => {
-    try {
-      const parsed = JSON.parse(data);
-      if (parsed.messages && Array.isArray(parsed.messages)) {
-        chatCore.setMessages(parsed.messages);
-        return true;
+  const importChat = useCallback(
+    (data: string): boolean => {
+      try {
+        const parsed = JSON.parse(data);
+        if (parsed.messages && Array.isArray(parsed.messages)) {
+          chatCore.setMessages(parsed.messages);
+          return true;
+        }
+        return false;
+      } catch {
+        return false;
       }
-      return false;
-    } catch {
-      return false;
-    }
-  }, [chatCore]);
+    },
+    [chatCore]
+  );
 
   const getDebugInfo = useCallback(() => {
     return {
@@ -363,7 +382,7 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
       anomalyCount,
       currentMode: mode,
       retryCount: retryCountRef.current,
-      isLoading
+      isLoading,
     };
   }, [chatMemory, anomalyCount, mode, isLoading]);
 
@@ -395,6 +414,6 @@ export function useChatOmnis(options: UseChatOmnisOptions = {}): UseChatOmnisRet
     // Advanced
     exportChat,
     importChat,
-    getDebugInfo
+    getDebugInfo,
   };
 }

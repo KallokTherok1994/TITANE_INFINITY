@@ -3,10 +3,8 @@
 // Copyright (c) 2025 TITANE∞ Team
 
 use std::sync::Arc;
+use titane_infinity::singularity::ia_context::{IAContext, IARequestRecord};
 use tokio::sync::RwLock;
-use titane_infinity::singularity::ia_context::{
-    IAContext, IARequestRecord,
-};
 
 #[tokio::test]
 async fn test_concurrent_ia_requests() {
@@ -63,7 +61,9 @@ async fn test_concurrent_ia_requests() {
     // Verification Phase
     {
         let ctx = ia_context.read().await;
-        let metrics = ctx.engine_metrics.get("openai")
+        let metrics = ctx
+            .engine_metrics
+            .get("openai")
             .expect("OpenAI metrics should exist");
 
         // Test 1: All requests recorded
@@ -79,10 +79,7 @@ async fn test_concurrent_ia_requests() {
             metrics.successful_requests, num_tasks,
             "All requests should be successful"
         );
-        assert_eq!(
-            metrics.failed_requests, 0,
-            "Should have 0 failed requests"
-        );
+        assert_eq!(metrics.failed_requests, 0, "Should have 0 failed requests");
         println!("✅ Test 2: No data races (100% success rate)");
 
         // Test 3: Metrics coherent
@@ -90,25 +87,25 @@ async fn test_concurrent_ia_requests() {
             metrics.average_latency_ms > 0,
             "Average latency should be > 0"
         );
-        assert!(
-            metrics.total_tokens > 0,
-            "Total tokens should be > 0"
-        );
+        assert!(metrics.total_tokens > 0, "Total tokens should be > 0");
         assert_eq!(
-            metrics.total_tokens, num_tasks * 500,
+            metrics.total_tokens,
+            num_tasks * 500,
             "Total tokens should be sum of all requests"
         );
         println!("✅ Test 3: Metrics coherent and accurate");
 
         // Test 4: History contains last 100 entries
         assert_eq!(
-            ctx.request_history.len(), 100,
+            ctx.request_history.len(),
+            100,
             "History should contain exactly 100 entries"
         );
         println!("✅ Test 4: History correctly bounded to 100");
 
         // Test 5: Different agents recorded
-        let unique_agents: std::collections::HashSet<_> = ctx.request_history
+        let unique_agents: std::collections::HashSet<_> = ctx
+            .request_history
             .iter()
             .filter_map(|r| r.agent_id.as_ref())
             .collect();
@@ -117,7 +114,10 @@ async fn test_concurrent_ia_requests() {
             unique_agents.len() >= 5,
             "Should have multiple different agents recorded"
         );
-        println!("✅ Test 5: Multiple agents tracked ({})", unique_agents.len());
+        println!(
+            "✅ Test 5: Multiple agents tracked ({})",
+            unique_agents.len()
+        );
     }
 
     println!("\n🎉 Concurrent access test PASSED!");

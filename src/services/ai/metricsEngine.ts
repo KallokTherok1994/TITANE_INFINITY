@@ -99,7 +99,7 @@ class MetricsEngine {
     const cutoff = now - this.RETENTION_MS;
 
     // Supprimer événements > 24h
-    this.events = this.events.filter((e) => e.timestamp > cutoff);
+    this.events = this.events.filter(e => e.timestamp > cutoff);
 
     // Si encore trop d'événements, garder seulement les plus récents
     if (this.events.length > this.MAX_EVENTS) {
@@ -113,24 +113,30 @@ class MetricsEngine {
    * Obtenir métriques par provider
    */
   getProviderMetrics(provider: string): ProviderMetrics {
-    const providerEvents = this.events.filter((e) => e.provider === provider);
+    const providerEvents = this.events.filter(e => e.provider === provider);
     const latencies = providerEvents
-      .filter((e) => e.latencyMs !== undefined)
-      .map((e) => e.latencyMs as number); // ✅ Type assertion sûre
+      .filter(e => e.latencyMs !== undefined)
+      .map(e => e.latencyMs as number); // ✅ Type assertion sûre
 
-    const totalRequests = providerEvents.filter((e) => e.type === 'request' || e.type === 'response').length;
-    const successCount = providerEvents.filter((e) => e.success).length;
-    const errorCount = providerEvents.filter((e) => !e.success).length;
+    const totalRequests = providerEvents.filter(
+      e => e.type === 'request' || e.type === 'response'
+    ).length;
+    const successCount = providerEvents.filter(e => e.success).length;
+    const errorCount = providerEvents.filter(e => !e.success).length;
 
     return {
       provider,
       totalRequests,
       successCount,
       errorCount,
-      avgLatency: latencies.length > 0 ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0,
+      avgLatency:
+        latencies.length > 0
+          ? latencies.reduce((a, b) => a + b, 0) / latencies.length
+          : 0,
       minLatency: latencies.length > 0 ? Math.min(...latencies) : 0,
       maxLatency: latencies.length > 0 ? Math.max(...latencies) : 0,
-      lastUsed: providerEvents.length > 0 ? Math.max(...providerEvents.map((e) => e.timestamp)) : 0,
+      lastUsed:
+        providerEvents.length > 0 ? Math.max(...providerEvents.map(e => e.timestamp)) : 0,
       successRate: totalRequests > 0 ? (successCount / totalRequests) * 100 : 0,
     };
   }
@@ -142,32 +148,40 @@ class MetricsEngine {
     const now = Date.now();
     const last24h = now - 24 * 60 * 60 * 1000;
 
-    const allProviders = [...new Set(this.events.map((e) => e.provider))];
-    const providers = allProviders.map((p) => this.getProviderMetrics(p));
+    const allProviders = [...new Set(this.events.map(e => e.provider))];
+    const providers = allProviders.map(p => this.getProviderMetrics(p));
 
-    const recentEvents = this.events.filter((e) => e.timestamp > last24h);
+    const recentEvents = this.events.filter(e => e.timestamp > last24h);
 
-    const totalRequests = this.events.filter((e) => e.type === 'request' || e.type === 'response').length;
-    const totalSuccesses = this.events.filter((e) => e.success && e.type === 'response').length;
-    const totalErrors = this.events.filter((e) => !e.success).length;
-    const totalFallbacks = this.events.filter((e) => e.type === 'fallback').length;
+    const totalRequests = this.events.filter(
+      e => e.type === 'request' || e.type === 'response'
+    ).length;
+    const totalSuccesses = this.events.filter(
+      e => e.success && e.type === 'response'
+    ).length;
+    const totalErrors = this.events.filter(e => !e.success).length;
+    const totalFallbacks = this.events.filter(e => e.type === 'fallback').length;
 
     const latencies = this.events
-      .filter((e) => e.latencyMs !== undefined)
-      .map((e) => e.latencyMs as number); // ✅ Type assertion sûre
+      .filter(e => e.latencyMs !== undefined)
+      .map(e => e.latencyMs as number); // ✅ Type assertion sûre
 
     return {
       totalRequests,
       totalSuccesses,
       totalErrors,
       totalFallbacks,
-      avgResponseTime: latencies.length > 0 ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0,
+      avgResponseTime:
+        latencies.length > 0
+          ? latencies.reduce((a, b) => a + b, 0) / latencies.length
+          : 0,
       successRate: totalRequests > 0 ? (totalSuccesses / totalRequests) * 100 : 0,
       providers,
       last24h: {
-        requests: recentEvents.filter((e) => e.type === 'request' || e.type === 'response').length,
-        successes: recentEvents.filter((e) => e.success && e.type === 'response').length,
-        errors: recentEvents.filter((e) => !e.success).length,
+        requests: recentEvents.filter(e => e.type === 'request' || e.type === 'response')
+          .length,
+        successes: recentEvents.filter(e => e.success && e.type === 'response').length,
+        errors: recentEvents.filter(e => !e.success).length,
       },
       uptime: now - this.startTime,
     };
@@ -221,12 +235,16 @@ class MetricsEngine {
     }
 
     // Analyser providers individuels
-    metrics.providers.forEach((p) => {
+    metrics.providers.forEach(p => {
       if (p.successRate < 70) {
-        recommendations.push(`Provider ${p.provider}: taux de succès faible (${p.successRate.toFixed(1)}%)`);
+        recommendations.push(
+          `Provider ${p.provider}: taux de succès faible (${p.successRate.toFixed(1)}%)`
+        );
       }
       if (p.avgLatency > 15000) {
-        recommendations.push(`Provider ${p.provider}: latence élevée (${(p.avgLatency / 1000).toFixed(1)}s)`);
+        recommendations.push(
+          `Provider ${p.provider}: latence élevée (${(p.avgLatency / 1000).toFixed(1)}s)`
+        );
       }
     });
 

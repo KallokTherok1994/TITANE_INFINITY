@@ -68,11 +68,7 @@ pub struct CognitiveTask {
 
 impl CognitiveTask {
     /// Crée une nouvelle tâche
-    pub fn new(
-        task_type: TaskType,
-        priority: TaskPriority,
-        payload: serde_json::Value,
-    ) -> Self {
+    pub fn new(task_type: TaskType, priority: TaskPriority, payload: serde_json::Value) -> Self {
         Self {
             id: Uuid::new_v4().to_string(),
             task_type,
@@ -200,11 +196,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_task_creation() {
-        let task = CognitiveTask::new(
-            TaskType::Engine,
-            TaskPriority::High,
-            serde_json::json!({}),
-        );
+        let task = CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
         assert!(!task.id.is_empty());
         assert_eq!(task.task_type, TaskType::Engine);
         assert_eq!(task.priority, TaskPriority::High);
@@ -212,11 +204,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_engine_task() {
-        let task = CognitiveTask::engine(
-            "style_engine",
-            TaskPriority::Normal,
-            serde_json::json!({}),
-        );
+        let task =
+            CognitiveTask::engine("style_engine", TaskPriority::Normal, serde_json::json!({}));
         assert_eq!(task.task_type, TaskType::Engine);
         assert_eq!(task.engine_name, Some("style_engine".to_string()));
     }
@@ -231,11 +220,8 @@ mod tests {
             TaskPriority::Realtime,
             serde_json::json!({}),
         );
-        let task_high = CognitiveTask::new(
-            TaskType::Engine,
-            TaskPriority::High,
-            serde_json::json!({}),
-        );
+        let task_high =
+            CognitiveTask::new(TaskType::Engine, TaskPriority::High, serde_json::json!({}));
         let task_bg = CognitiveTask::new(
             TaskType::Background,
             TaskPriority::Background,

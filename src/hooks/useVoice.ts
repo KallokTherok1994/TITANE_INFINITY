@@ -122,11 +122,7 @@ declare global {
 // ═══ MAIN HOOK ═══
 
 export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
-  const {
-    language = 'fr-FR',
-    continuous = false,
-    interimResults = true,
-  } = options;
+  const { language = 'fr-FR', continuous = false, interimResults = true } = options;
 
   // State
   const [state, setState] = useState<VoiceState>({
@@ -168,7 +164,8 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
 
     // Check STT availability
     const checkSTT = () => {
-      const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognitionAPI =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
       if (mountedRef.current) {
         setState(prev => ({
           ...prev,
@@ -192,28 +189,31 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
 
   // ═══ TTS FUNCTIONS ═══
 
-  const speak = useCallback(async (text: string, config?: TTSConfig) => {
-    if (!text?.trim()) {
-      console.warn('[useVoice] Empty text, skipping TTS');
-      return;
-    }
-
-    setState(prev => ({ ...prev, isSpeaking: true, error: null }));
-
-    try {
-      await hybridTTS.speak(text, config || options.ttsConfig);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      console.error('[useVoice] TTS error:', errorMsg);
-      if (mountedRef.current) {
-        setState(prev => ({ ...prev, error: `TTS Error: ${errorMsg}` }));
+  const speak = useCallback(
+    async (text: string, config?: TTSConfig) => {
+      if (!text?.trim()) {
+        console.warn('[useVoice] Empty text, skipping TTS');
+        return;
       }
-    } finally {
-      if (mountedRef.current) {
-        setState(prev => ({ ...prev, isSpeaking: false }));
+
+      setState(prev => ({ ...prev, isSpeaking: true, error: null }));
+
+      try {
+        await hybridTTS.speak(text, config || options.ttsConfig);
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        console.error('[useVoice] TTS error:', errorMsg);
+        if (mountedRef.current) {
+          setState(prev => ({ ...prev, error: `TTS Error: ${errorMsg}` }));
+        }
+      } finally {
+        if (mountedRef.current) {
+          setState(prev => ({ ...prev, isSpeaking: false }));
+        }
       }
-    }
-  }, [options.ttsConfig]);
+    },
+    [options.ttsConfig]
+  );
 
   const stopSpeaking = useCallback(async () => {
     try {
@@ -229,12 +229,13 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
   // ═══ STT FUNCTIONS ═══
 
   const startListening = useCallback(async () => {
-    const SpeechRecognitionAPI = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognitionAPI =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognitionAPI) {
       setState(prev => ({
         ...prev,
-        error: 'Speech Recognition not supported in this browser'
+        error: 'Speech Recognition not supported in this browser',
       }));
       return;
     }
@@ -259,7 +260,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
             ...prev,
             isListening: true,
             error: null,
-            interimTranscript: ''
+            interimTranscript: '',
           }));
         }
       };
@@ -294,7 +295,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
           setState(prev => ({
             ...prev,
             error: `STT Error: ${event.error}`,
-            isListening: false
+            isListening: false,
           }));
         }
       };
@@ -305,7 +306,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
           setState(prev => ({
             ...prev,
             isListening: false,
-            interimTranscript: ''
+            interimTranscript: '',
           }));
         }
         recognitionRef.current = null;
@@ -319,7 +320,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
         setState(prev => ({
           ...prev,
           error: `Failed to start STT: ${errorMsg}`,
-          isListening: false
+          isListening: false,
         }));
       }
     }
@@ -344,7 +345,7 @@ export function useVoice(options: UseVoiceOptions = {}): UseVoiceReturn {
     setState(prev => ({
       ...prev,
       transcript: '',
-      interimTranscript: ''
+      interimTranscript: '',
     }));
   }, []);
 

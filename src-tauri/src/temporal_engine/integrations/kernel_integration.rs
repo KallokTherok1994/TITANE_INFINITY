@@ -13,15 +13,15 @@ impl TemporalKernelBridge {
     pub fn get_scheduler_adjustments(context: &TemporalContext) -> SchedulerAdjustments {
         let hour = context.now.hour;
         let is_weekend = context.now.is_weekend;
-        
+
         // Ajuster priorités selon l'heure et le contexte
         let priority_boost = match hour {
-            6..=9 => 1.3,    // Morning peak
-            10..=11 => 1.5,  // Peak focus
-            12..=13 => 0.9,  // Midday dip
-            14..=16 => 1.2,  // Afternoon stable
-            17..=19 => 1.0,  // Evening
-            _ => 0.7,        // Night/early morning
+            6..=9 => 1.3,   // Morning peak
+            10..=11 => 1.5, // Peak focus
+            12..=13 => 0.9, // Midday dip
+            14..=16 => 1.2, // Afternoon stable
+            17..=19 => 1.0, // Evening
+            _ => 0.7,       // Night/early morning
         };
 
         let priority_boost = if is_weekend {
@@ -59,8 +59,8 @@ impl TemporalKernelBridge {
     /// Calcule le seuil de préemption
     fn calculate_preemption_threshold(hour: u8) -> f32 {
         match hour {
-            10..=11 => 0.9,  // Peak: low preemption
-            12..=13 => 0.5,  // Midday: high preemption
+            10..=11 => 0.9, // Peak: low preemption
+            12..=13 => 0.5, // Midday: high preemption
             _ => 0.7,
         }
     }
@@ -68,8 +68,8 @@ impl TemporalKernelBridge {
     /// Calcule le seuil d'idle
     fn calculate_idle_threshold(hour: u8) -> u64 {
         match hour {
-            10..=11 => 100,   // Peak: low idle time
-            22..=23 | 0..=5 => 5000,   // Night: high idle time
+            10..=11 => 100,          // Peak: low idle time
+            22..=23 | 0..=5 => 5000, // Night: high idle time
             _ => 1000,
         }
     }
@@ -77,7 +77,7 @@ impl TemporalKernelBridge {
     /// Obtient les limites de ressources
     pub fn get_resource_limits(context: &TemporalContext) -> ResourceLimits {
         let hour = context.now.hour;
-        
+
         ResourceLimits {
             max_cpu_percent: Self::calculate_max_cpu(hour),
             max_memory_mb: Self::calculate_max_memory(hour),
@@ -88,32 +88,32 @@ impl TemporalKernelBridge {
 
     fn calculate_max_cpu(hour: u8) -> f32 {
         match hour {
-            10..=11 => 0.95,  // Peak: max CPU
-            22..=23 | 0..=5 => 0.3,    // Night: reduced
+            10..=11 => 0.95,        // Peak: max CPU
+            22..=23 | 0..=5 => 0.3, // Night: reduced
             _ => 0.7,
         }
     }
 
     fn calculate_max_memory(hour: u8) -> usize {
         match hour {
-            10..=11 => 8192,  // Peak: 8GB
-            22..=23 | 0..=5 => 2048,   // Night: 2GB
-            _ => 4096,        // Default: 4GB
+            10..=11 => 8192,         // Peak: 8GB
+            22..=23 | 0..=5 => 2048, // Night: 2GB
+            _ => 4096,               // Default: 4GB
         }
     }
 
     fn calculate_max_disk_io(hour: u8) -> usize {
         match hour {
-            10..=11 => 500,   // Peak: 500 MB/s
-            22..=23 | 0..=5 => 100,    // Night: 100 MB/s
-            _ => 250,         // Default: 250 MB/s
+            10..=11 => 500,         // Peak: 500 MB/s
+            22..=23 | 0..=5 => 100, // Night: 100 MB/s
+            _ => 250,               // Default: 250 MB/s
         }
     }
 
     fn calculate_gc_threshold(hour: u8) -> f32 {
         match hour {
-            22..=23 | 0..=5 => 0.9,    // Night: aggressive GC
-            10..=11 => 0.5,   // Peak: minimal GC
+            22..=23 | 0..=5 => 0.9, // Night: aggressive GC
+            10..=11 => 0.5,         // Peak: minimal GC
             _ => 0.7,
         }
     }
@@ -146,7 +146,7 @@ impl TemporalKernelBridge {
             tasks.push("memory_compaction".to_string());
             tasks.push("vector_db_optimization".to_string());
             tasks.push("log_rotation".to_string());
-            
+
             if is_weekend {
                 tasks.push("deep_self_healing".to_string());
                 tasks.push("full_memory_consolidation".to_string());

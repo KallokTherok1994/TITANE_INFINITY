@@ -80,11 +80,15 @@ export class ConfigManager {
     // Persister
     await this.save();
 
-    this.eventBus.emit('config:changed', {
-      key,
-      oldValue,
-      newValue: value,
-    }, 'ConfigManager');
+    this.eventBus.emit(
+      'config:changed',
+      {
+        key,
+        oldValue,
+        newValue: value,
+      },
+      'ConfigManager'
+    );
   }
 
   /**
@@ -135,10 +139,7 @@ export class ConfigManager {
   /**
    * Surveille les changements d'une clé
    */
-  watch<K extends ConfigKey>(
-    key: K,
-    handler: (value: OSConfig[K]) => void
-  ): () => void {
+  watch<K extends ConfigKey>(key: K, handler: (value: OSConfig[K]) => void): () => void {
     if (!this.watchers.has(key)) {
       this.watchers.set(key, new Set());
     }

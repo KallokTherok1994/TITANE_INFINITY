@@ -1,12 +1,10 @@
 /**
  * TITANE∞ v19.3 — Security Commands
- * 
+ *
  * Commandes Tauri pour rate limiting, audit logging, et sécurité
  */
-
 use crate::security::{
-    rate_limit::GLOBAL_RATE_LIMITER,
-    AuditEvent, AuditEventType, AuditSeverity, RateLimitStats,
+    rate_limit::GLOBAL_RATE_LIMITER, AuditEvent, AuditEventType, AuditSeverity, RateLimitStats,
 };
 use serde_json::json;
 

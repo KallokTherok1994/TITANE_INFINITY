@@ -11,33 +11,33 @@
 //! - Sandboxing et sécurité
 
 pub mod agent;
-pub mod roles;
 pub mod capabilities;
-pub mod supervisor;
-pub mod sandbox;
 pub mod collaboration;
-pub mod registry;
-pub mod lifecycle;
 pub mod communication;
-pub mod diagnostics;
 pub mod config;
+pub mod diagnostics;
+pub mod lifecycle;
+pub mod registry;
+pub mod roles;
+pub mod sandbox;
+pub mod supervisor;
 
 pub use agent::{Agent, AgentId, AgentState, AgentType};
-pub use roles::{Role, RoleDefinition, Permission};
-pub use capabilities::{Capability, CapabilitySet, CapabilityLevel};
-pub use supervisor::{Supervisor, SupervisionStrategy, SupervisionEvent};
-pub use sandbox::{Sandbox, SandboxConfig, SandboxViolation};
+pub use capabilities::{Capability, CapabilityLevel, CapabilitySet};
 pub use collaboration::{Collaboration, CollaborationMode, CollaborationResult};
-pub use registry::{AgentRegistry, RegistryQuery};
-pub use lifecycle::{AgentLifecycle, LifecycleState, LifecycleEvent};
 pub use communication::{Message, MessageBus, MessagePriority};
-pub use diagnostics::AgentDiagnostics;
 pub use config::AgentSystemConfig;
+pub use diagnostics::AgentDiagnostics;
+pub use lifecycle::{AgentLifecycle, LifecycleEvent, LifecycleState};
+pub use registry::{AgentRegistry, RegistryQuery};
+pub use roles::{Permission, Role, RoleDefinition};
+pub use sandbox::{Sandbox, SandboxConfig, SandboxViolation};
+pub use supervisor::{SupervisionEvent, SupervisionStrategy, Supervisor};
 
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
-use std::collections::HashMap;
 
 /// Version du système d'agents
 pub const AGENT_SYSTEM_VERSION: &str = "vΩ.1.0";
@@ -92,7 +92,9 @@ impl AgentSystem {
         // Démarrer le bus de messages
         self.message_bus.start().await;
 
-        self.diagnostics.emit("system_initialized", "Agent System initialized").await;
+        self.diagnostics
+            .emit("system_initialized", "Agent System initialized")
+            .await;
 
         Ok(())
     }
@@ -133,10 +135,12 @@ impl AgentSystem {
         state.total_agents += 1;
         state.idle_agents += 1;
 
-        self.diagnostics.emit(
-            "agent_registered",
-            &format!("Agent {} registered: {}", id, agent.name),
-        ).await;
+        self.diagnostics
+            .emit(
+                "agent_registered",
+                &format!("Agent {} registered: {}", id, agent.name),
+            )
+            .await;
 
         Ok(id)
     }
@@ -163,7 +167,10 @@ impl AgentSystem {
         self.sandbox.check_task_permissions(&task, &agent_id)?;
 
         // 3. Assigner la tâche
-        let agent = self.registry.get(&agent_id).await
+        let agent = self
+            .registry
+            .get(&agent_id)
+            .await
             .ok_or(AgentSystemError::AgentNotFound(agent_id.clone()))?;
 
         // 4. Exécuter via le supervisor
@@ -175,12 +182,14 @@ impl AgentSystem {
         let duration = start.elapsed().as_millis() as f64;
         state.average_response_time_ms =
             (state.average_response_time_ms * (state.tasks_completed - 1) as f64 + duration)
-            / state.tasks_completed as f64;
+                / state.tasks_completed as f64;
 
-        self.diagnostics.emit(
-            "task_completed",
-            &format!("Task completed by {}: {:?}", agent_id, result.status),
-        ).await;
+        self.diagnostics
+            .emit(
+                "task_completed",
+                &format!("Task completed by {}: {:?}", agent_id, result.status),
+            )
+            .await;
 
         Ok(result)
     }
@@ -203,7 +212,9 @@ impl AgentSystem {
         let collaboration = Collaboration::new(mode, agent_ids.clone(), objective);
 
         // Exécuter la collaboration
-        let result = collaboration.execute(&self.registry, &self.message_bus).await?;
+        let result = collaboration
+            .execute(&self.registry, &self.message_bus)
+            .await?;
 
         // Mettre à jour l'état
         let mut state = self.state.write().await;
@@ -280,7 +291,8 @@ impl AgentSystem {
         let agents = self.registry.all_agent_ids().await;
         for to in agents {
             if &to != from {
-                self.send_message(from, &to, content, MessagePriority::Normal).await?;
+                self.send_message(from, &to, content, MessagePriority::Normal)
+                    .await?;
             }
         }
         Ok(())

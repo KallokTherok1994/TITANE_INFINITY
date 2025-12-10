@@ -39,18 +39,23 @@ export function useDeveloperMode() {
     }
   }, []);
 
-  const enable = useCallback(async (authToken: string) => {
-    try {
-      const success = await secureInvoke<boolean>('engines_devmode_enable', { authToken });
-      if (success) {
-        await fetchState();
+  const enable = useCallback(
+    async (authToken: string) => {
+      try {
+        const success = await secureInvoke<boolean>('engines_devmode_enable', {
+          authToken,
+        });
+        if (success) {
+          await fetchState();
+        }
+        return success;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to enable');
+        return false;
       }
-      return success;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to enable');
-      return false;
-    }
-  }, [fetchState]);
+    },
+    [fetchState]
+  );
 
   const disable = useCallback(async () => {
     try {
@@ -80,52 +85,69 @@ export function usePatchOperations() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const validatePatch = useCallback(async (patch: PatchAction): Promise<PatchResult | null> => {
-    try {
-      setLoading(true);
-      const result = await secureInvoke<PatchResult>('engines_devmode_validate_patch', { patch });
-      setError(null);
-      return result;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Validation failed');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const validatePatch = useCallback(
+    async (patch: PatchAction): Promise<PatchResult | null> => {
+      try {
+        setLoading(true);
+        const result = await secureInvoke<PatchResult>('engines_devmode_validate_patch', {
+          patch,
+        });
+        setError(null);
+        return result;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Validation failed');
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
-  const applyPatch = useCallback(async (patch: PatchAction): Promise<PatchResult | null> => {
-    try {
-      setLoading(true);
-      const result = await secureInvoke<PatchResult>('engines_devmode_apply_patch', { patch });
-      setError(null);
-      return result;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Apply failed');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const applyPatch = useCallback(
+    async (patch: PatchAction): Promise<PatchResult | null> => {
+      try {
+        setLoading(true);
+        const result = await secureInvoke<PatchResult>('engines_devmode_apply_patch', {
+          patch,
+        });
+        setError(null);
+        return result;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Apply failed');
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
-  const previewChanges = useCallback(async (patch: PatchAction): Promise<DiffPreview | null> => {
-    try {
-      setLoading(true);
-      const result = await secureInvoke<DiffPreview>('engines_devmode_preview', { patch });
-      setError(null);
-      return result;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Preview failed');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const previewChanges = useCallback(
+    async (patch: PatchAction): Promise<DiffPreview | null> => {
+      try {
+        setLoading(true);
+        const result = await secureInvoke<DiffPreview>('engines_devmode_preview', {
+          patch,
+        });
+        setError(null);
+        return result;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Preview failed');
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   const rollback = useCallback(async (patchId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await secureInvoke<boolean>('engines_devmode_rollback', { patchId });
+      const success = await secureInvoke<boolean>('engines_devmode_rollback', {
+        patchId,
+      });
       setError(null);
       return success;
     } catch (err) {
@@ -151,7 +173,9 @@ export function usePatchHistory() {
   const fetchHistory = useCallback(async (limit?: number) => {
     try {
       setLoading(true);
-      const result = await secureInvoke<PatchHistory>('engines_devmode_get_history', { limit });
+      const result = await secureInvoke<PatchHistory>('engines_devmode_get_history', {
+        limit,
+      });
       setHistory(result);
       setError(null);
     } catch (err) {
@@ -179,7 +203,9 @@ export function useBackupOperations() {
   const createBackup = useCallback(async (name: string): Promise<string | null> => {
     try {
       setLoading(true);
-      const backupId = await secureInvoke<string>('engines_devmode_create_backup', { name });
+      const backupId = await secureInvoke<string>('engines_devmode_create_backup', {
+        name,
+      });
       setError(null);
       return backupId;
     } catch (err) {
@@ -193,7 +219,9 @@ export function useBackupOperations() {
   const restoreBackup = useCallback(async (backupId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await secureInvoke<boolean>('engines_devmode_restore_backup', { backupId });
+      const success = await secureInvoke<boolean>('engines_devmode_restore_backup', {
+        backupId,
+      });
       setError(null);
       return success;
     } catch (err) {
@@ -219,7 +247,10 @@ export function useFileAnalysis() {
   const analyzeFile = useCallback(async (filePath: string) => {
     try {
       setLoading(true);
-      const result = await secureInvoke<CodeSuggestion[]>('engines_devmode_analyze_file', { filePath });
+      const result = await secureInvoke<CodeSuggestion[]>(
+        'engines_devmode_analyze_file',
+        { filePath }
+      );
       setSuggestions(result);
       setError(null);
     } catch (err) {
@@ -242,23 +273,28 @@ export function useBuildPipeline() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const startBuild = useCallback(async (config?: Record<string, unknown>): Promise<string | null> => {
-    try {
-      setLoading(true);
-      const buildId = await secureInvoke<string>('engines_build_start', { config });
-      setError(null);
-      return buildId;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Build start failed');
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const startBuild = useCallback(
+    async (config?: Record<string, unknown>): Promise<string | null> => {
+      try {
+        setLoading(true);
+        const buildId = await secureInvoke<string>('engines_build_start', { config });
+        setError(null);
+        return buildId;
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Build start failed');
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   const getStatus = useCallback(async (buildId: string) => {
     try {
-      const result = await secureInvoke<BuildStatus>('engines_build_get_status', { buildId });
+      const result = await secureInvoke<BuildStatus>('engines_build_get_status', {
+        buildId,
+      });
       setStatus(result);
       setError(null);
     } catch (err) {
@@ -268,7 +304,9 @@ export function useBuildPipeline() {
 
   const getResult = useCallback(async (buildId: string) => {
     try {
-      const res = await secureInvoke<BuildResult>('engines_build_get_result', { buildId });
+      const res = await secureInvoke<BuildResult>('engines_build_get_result', {
+        buildId,
+      });
       setResult(res);
       setError(null);
     } catch (err) {
@@ -304,7 +342,17 @@ export function useBuildPipeline() {
     }
   }, []);
 
-  return { status, result, loading, error, startBuild, getStatus, getResult, cancelBuild, cleanArtifacts };
+  return {
+    status,
+    result,
+    loading,
+    error,
+    startBuild,
+    getStatus,
+    getResult,
+    cancelBuild,
+    cleanArtifacts,
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════

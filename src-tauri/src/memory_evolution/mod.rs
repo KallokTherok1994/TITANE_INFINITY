@@ -5,25 +5,25 @@
 //   Synthèse contextuelle, compression intelligente, patterns
 // ═══════════════════════════════════════════════════════════════
 
-pub mod memory_parser;
-pub mod memory_synthesizer;
+pub mod commands;
 pub mod memory_clusterer;
-pub mod memory_vectorizer;
 pub mod memory_compressor;
+pub mod memory_growth;
+pub mod memory_parser;
 pub mod memory_patterns;
 pub mod memory_stability;
-pub mod memory_growth;
-pub mod commands;
+pub mod memory_synthesizer;
+pub mod memory_vectorizer;
 
-pub use memory_parser::*;
-pub use memory_synthesizer::*;
+pub use commands::*;
 pub use memory_clusterer::*;
-pub use memory_vectorizer::*;
 pub use memory_compressor::*;
+pub use memory_growth::*;
+pub use memory_parser::*;
 pub use memory_patterns::*;
 pub use memory_stability::*;
-pub use memory_growth::*;
-pub use commands::*;
+pub use memory_synthesizer::*;
+pub use memory_vectorizer::*;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;

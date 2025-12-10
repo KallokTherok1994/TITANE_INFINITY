@@ -11,4 +11,8 @@ export { ChatInput } from './ChatInput';
 export type { ChatInputProps, ChatSuggestion } from './ChatInput';
 
 export { ChatContextPanel } from './ChatContextPanel';
-export type { ChatContextPanelProps, CognitiveContext, ActiveMemory } from './ChatContextPanel';
+export type {
+  ChatContextPanelProps,
+  CognitiveContext,
+  ActiveMemory,
+} from './ChatContextPanel';

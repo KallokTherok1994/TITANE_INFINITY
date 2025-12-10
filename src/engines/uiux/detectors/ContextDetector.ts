@@ -12,7 +12,7 @@ export class ContextDetector {
   private lastContext: UIContext | null = null;
   private resizeObserver: ResizeObserver | null = null;
   private listeners: Set<(context: UIContext) => void> = new Set();
-  
+
   // ✨ PHASE 4.4 - Store media queries and handlers for cleanup
   private darkModeQuery: MediaQueryList | null = null;
   private reducedMotionQuery: MediaQueryList | null = null;
@@ -54,17 +54,17 @@ export class ContextDetector {
   destroy(): void {
     // Disconnect ResizeObserver
     this.resizeObserver?.disconnect();
-    
+
     // Remove MediaQuery listeners
     this.darkModeQuery?.removeEventListener('change', this.darkModeHandler);
     this.reducedMotionQuery?.removeEventListener('change', this.reducedMotionHandler);
     this.contrastQuery?.removeEventListener('change', this.contrastHandler);
-    
+
     // Remove orientation listener
     if (typeof window !== 'undefined') {
       window.removeEventListener('orientationchange', this.orientationHandler);
     }
-    
+
     // Clear listeners
     this.listeners.clear();
   }

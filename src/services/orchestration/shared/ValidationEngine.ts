@@ -1,15 +1,15 @@
 /**
  * TITANE∞ vΩ — Shared Validation Engine
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * Unified validation for all strategies
  */
 
-import type { 
-  IValidator, 
-  ValidationResult, 
-  ValidationIssue, 
-  ValidationSeverity 
+import type {
+  IValidator,
+  ValidationResult,
+  ValidationIssue,
+  ValidationSeverity,
 } from '../types';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -28,13 +28,13 @@ export class ValidationEngine implements IValidator {
       issues.push({
         severity: 'error',
         message: 'Data is null or undefined',
-        code: 'NULL_DATA'
+        code: 'NULL_DATA',
       });
-      
+
       return {
         valid: false,
         issues,
-        score: 0
+        score: 0,
       };
     }
 
@@ -43,16 +43,18 @@ export class ValidationEngine implements IValidator {
       issues.push({
         severity: 'warning',
         message: 'Data object is empty',
-        code: 'EMPTY_OBJECT'
+        code: 'EMPTY_OBJECT',
       });
     }
 
     const score = this.calculateScore(issues);
 
     return {
-      valid: issues.filter(i => i.severity === 'error' || i.severity === 'critical').length === 0,
+      valid:
+        issues.filter(i => i.severity === 'error' || i.severity === 'critical').length ===
+        0,
       issues,
-      score
+      score,
     };
   }
 
@@ -68,20 +70,23 @@ export class ValidationEngine implements IValidator {
   /**
    * Validate string data
    */
-  validateString(data: string, options?: {
-    minLength?: number;
-    maxLength?: number;
-    pattern?: RegExp;
-  }): ValidationResult {
+  validateString(
+    data: string,
+    options?: {
+      minLength?: number;
+      maxLength?: number;
+      pattern?: RegExp;
+    }
+  ): ValidationResult {
     const issues: ValidationIssue[] = [];
 
     if (typeof data !== 'string') {
       issues.push({
         severity: 'error',
         message: 'Data is not a string',
-        code: 'INVALID_TYPE'
+        code: 'INVALID_TYPE',
       });
-      
+
       return { valid: false, issues, score: 0 };
     }
 
@@ -89,7 +94,7 @@ export class ValidationEngine implements IValidator {
       issues.push({
         severity: 'error',
         message: `String too short (min: ${options.minLength}, got: ${data.length})`,
-        code: 'STRING_TOO_SHORT'
+        code: 'STRING_TOO_SHORT',
       });
     }
 
@@ -97,7 +102,7 @@ export class ValidationEngine implements IValidator {
       issues.push({
         severity: 'error',
         message: `String too long (max: ${options.maxLength}, got: ${data.length})`,
-        code: 'STRING_TOO_LONG'
+        code: 'STRING_TOO_LONG',
       });
     }
 
@@ -105,16 +110,18 @@ export class ValidationEngine implements IValidator {
       issues.push({
         severity: 'error',
         message: 'String does not match required pattern',
-        code: 'PATTERN_MISMATCH'
+        code: 'PATTERN_MISMATCH',
       });
     }
 
     const score = this.calculateScore(issues);
 
     return {
-      valid: issues.filter(i => i.severity === 'error' || i.severity === 'critical').length === 0,
+      valid:
+        issues.filter(i => i.severity === 'error' || i.severity === 'critical').length ===
+        0,
       issues,
-      score
+      score,
     };
   }
 
@@ -128,9 +135,9 @@ export class ValidationEngine implements IValidator {
       issues.push({
         severity: 'error',
         message: 'Data is not an object',
-        code: 'INVALID_TYPE'
+        code: 'INVALID_TYPE',
       });
-      
+
       return { valid: false, issues, score: 0 };
     }
 
@@ -142,14 +149,14 @@ export class ValidationEngine implements IValidator {
           severity: 'error',
           message: `Missing required field: ${field}`,
           field,
-          code: 'MISSING_FIELD'
+          code: 'MISSING_FIELD',
         });
       } else if (obj[field] === undefined || obj[field] === null) {
         issues.push({
           severity: 'warning',
           message: `Field ${field} is null or undefined`,
           field,
-          code: 'NULL_FIELD'
+          code: 'NULL_FIELD',
         });
       }
     });
@@ -157,9 +164,11 @@ export class ValidationEngine implements IValidator {
     const score = this.calculateScore(issues);
 
     return {
-      valid: issues.filter(i => i.severity === 'error' || i.severity === 'critical').length === 0,
+      valid:
+        issues.filter(i => i.severity === 'error' || i.severity === 'critical').length ===
+        0,
       issues,
-      score
+      score,
     };
   }
 
@@ -173,7 +182,7 @@ export class ValidationEngine implements IValidator {
       info: 1,
       warning: 5,
       error: 15,
-      critical: 30
+      critical: 30,
     };
 
     const totalPenalty = issues.reduce((sum, issue) => {

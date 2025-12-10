@@ -22,10 +22,10 @@
 export interface TTSFingerprint {
   id: string;
   text: string;
-  spectralProfile: Float32Array;  // Profil spectral moyen
-  duration: number;               // Durée (ms)
-  startTime: number;              // Timestamp début playback
-  endTime: number;                // Timestamp fin playback
+  spectralProfile: Float32Array; // Profil spectral moyen
+  duration: number; // Durée (ms)
+  startTime: number; // Timestamp début playback
+  endTime: number; // Timestamp fin playback
 }
 
 /**
@@ -61,7 +61,6 @@ export interface EchoAnalysis {
  * ═══════════════════════════════════════════════════════════════════
  */
 class AntiEchoShieldEngine {
-
   private config: Required<AntiEchoConfig>;
   private activeTTS: TTSFingerprint | null = null;
   private recentTTS: TTSFingerprint[] = [];
@@ -100,7 +99,9 @@ class AntiEchoShieldEngine {
       console.log('[AntiEcho] 🔇 Auto-muted during TTS');
     }
 
-    console.log(`[AntiEcho] 🔊 TTS started: "${text.substring(0, 50)}..." (${estimatedDuration}ms)`);
+    console.log(
+      `[AntiEcho] 🔊 TTS started: "${text.substring(0, 50)}..." (${estimatedDuration}ms)`
+    );
 
     return id;
   }
@@ -185,8 +186,9 @@ class AntiEchoShieldEngine {
 
     // 2. Check si TTS actif
     if (this.activeTTS) {
-      const isInTTSWindow = timestamp >= this.activeTTS.startTime &&
-                           timestamp <= this.activeTTS.endTime + this.config.postTTSMargin;
+      const isInTTSWindow =
+        timestamp >= this.activeTTS.startTime &&
+        timestamp <= this.activeTTS.endTime + this.config.postTTSMargin;
 
       if (isInTTSWindow) {
         // Compare spectral profiles
@@ -370,11 +372,13 @@ class AntiEchoShieldEngine {
     return {
       config: this.config,
       status: this.getStatus(),
-      activeTTS: this.activeTTS ? {
-        text: this.activeTTS.text.substring(0, 50),
-        duration: this.activeTTS.duration,
-        elapsed: Date.now() - this.activeTTS.startTime,
-      } : null,
+      activeTTS: this.activeTTS
+        ? {
+            text: this.activeTTS.text.substring(0, 50),
+            duration: this.activeTTS.duration,
+            elapsed: Date.now() - this.activeTTS.startTime,
+          }
+        : null,
     };
   }
 }

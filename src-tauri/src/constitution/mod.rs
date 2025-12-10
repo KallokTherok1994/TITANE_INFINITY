@@ -10,23 +10,31 @@
 //! - Les droits et responsabilités
 //! - Les mécanismes de gouvernance
 
-pub mod principles;
-pub mod values;
-pub mod limits;
-pub mod rights;
-pub mod governance;
+pub mod diagnostics;
 pub mod enforcement;
 pub mod evolution;
-pub mod diagnostics;
+pub mod governance;
+pub mod limits;
+pub mod principles;
+pub mod rights;
+pub mod values;
 
+pub use diagnostics::{
+    ConstitutionalDiagnostics, ConstitutionalHealth, DiagnosticResult, HealthReport,
+};
+pub use enforcement::{
+    EnforcementEngine, EnforcementStats, SanctionType, ViolationRecord, ViolationSeverity,
+};
+pub use evolution::{
+    Amendment, AmendmentStatus, AmendmentType, ConstitutionVersion, EvolutionEngine,
+};
+pub use governance::{
+    AuthorityLevel, DecisionRequest, DecisionResult, DecisionStatus, DecisionType, GovernanceEngine,
+};
+pub use limits::{Limit, LimitCategory, LimitCheckResult, LimitSystem, LimitType};
 pub use principles::{Principle, PrincipleSet, PrincipleType};
-pub use values::{CoreValue, ValueSystem, ValuePriority};
-pub use limits::{Limit, LimitSystem, LimitType, LimitCategory, LimitCheckResult};
-pub use rights::{Right, RightsCharter, RightsHolder, RightCategory, RightsContext};
-pub use governance::{GovernanceEngine, DecisionRequest, DecisionResult, DecisionType, DecisionStatus, AuthorityLevel};
-pub use enforcement::{EnforcementEngine, ViolationRecord, ViolationSeverity, SanctionType, EnforcementStats};
-pub use evolution::{EvolutionEngine, Amendment, AmendmentStatus, AmendmentType, ConstitutionVersion};
-pub use diagnostics::{ConstitutionalDiagnostics, ConstitutionalHealth, HealthReport, DiagnosticResult};
+pub use rights::{Right, RightCategory, RightsCharter, RightsContext, RightsHolder};
+pub use values::{CoreValue, ValuePriority, ValueSystem};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -172,17 +180,26 @@ impl Constitution {
     }
 
     /// Applique les sanctions pour une non-conformité
-    pub async fn enforce(&self, action: &ConstitutionalAction, compliance: &ComplianceResult) -> Vec<SanctionType> {
+    pub async fn enforce(
+        &self,
+        action: &ConstitutionalAction,
+        compliance: &ComplianceResult,
+    ) -> Vec<SanctionType> {
         self.enforcer.enforce(action, compliance).await
     }
 
     /// Propose un amendement (si autorisé)
-    pub async fn propose_amendment(&self, amendment: Amendment) -> Result<String, ConstitutionError> {
+    pub async fn propose_amendment(
+        &self,
+        amendment: Amendment,
+    ) -> Result<String, ConstitutionError> {
         if !self.config.allow_amendments {
             return Err(ConstitutionError::AmendmentsDisabled);
         }
 
-        self.evolution.propose_amendment(amendment).await
+        self.evolution
+            .propose_amendment(amendment)
+            .await
             .map_err(|e| ConstitutionError::InvalidAmendment(e))
     }
 
@@ -213,14 +230,16 @@ impl Constitution {
 
     /// Récupère la santé de la Constitution
     pub async fn get_health(&self) -> HealthReport {
-        self.diagnostics.run_full_diagnostic(
-            &self.principles,
-            &self.values,
-            &self.limits,
-            &self.rights,
-            &self.enforcer,
-            &self.evolution,
-        ).await
+        self.diagnostics
+            .run_full_diagnostic(
+                &self.principles,
+                &self.values,
+                &self.limits,
+                &self.rights,
+                &self.enforcer,
+                &self.evolution,
+            )
+            .await
     }
 
     /// Génère un rapport complet

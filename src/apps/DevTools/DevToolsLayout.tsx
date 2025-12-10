@@ -49,7 +49,12 @@ const PANELS: PanelConfig[] = [
   { id: 'timeline', name: 'Timeline', icon: '⏱️', component: EventTimeline },
   { id: 'console', name: 'Console', icon: '💻', component: ConsolePanel },
   { id: 'voice', name: 'Voice', icon: '🎤', component: VoiceMonitor },
-  { id: 'system-health', name: 'System Health', icon: '❤️', component: SystemHealthPanel },
+  {
+    id: 'system-health',
+    name: 'System Health',
+    icon: '❤️',
+    component: SystemHealthPanel,
+  },
 ];
 
 export const DevToolsLayout: React.FC = () => {
@@ -57,7 +62,7 @@ export const DevToolsLayout: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const ActivePanelComponent =
-    PANELS.find((p) => p.id === activePanel)?.component || PipelineDebugger;
+    PANELS.find(p => p.id === activePanel)?.component || PipelineDebugger;
 
   return (
     <div className="devtools-layout">
@@ -91,7 +96,7 @@ export const DevToolsLayout: React.FC = () => {
             {sidebarCollapsed ? '▶' : '◀'}
           </button>
           <nav className="sidebar-nav">
-            {PANELS.map((panel) => (
+            {PANELS.map(panel => (
               <button
                 key={panel.id}
                 className={`sidebar-item ${activePanel === panel.id ? 'active' : ''}`}

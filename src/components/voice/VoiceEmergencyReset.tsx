@@ -104,11 +104,7 @@ export function VoiceEmergencyReset({
         </svg>
 
         {/* Label */}
-        {showLabel && (
-          <span>
-            {isResetting ? 'Reset...' : 'Force Reset Voice'}
-          </span>
-        )}
+        {showLabel && <span>{isResetting ? 'Reset...' : 'Force Reset Voice'}</span>}
       </button>
 
       {/* Last reset timestamp */}
@@ -132,13 +128,7 @@ export function VoiceEmergencyReset({
  * Compact version (icon only)
  */
 export function VoiceEmergencyResetCompact({ className = '' }: { className?: string }) {
-  return (
-    <VoiceEmergencyReset
-      className={className}
-      size="sm"
-      showLabel={false}
-    />
-  );
+  return <VoiceEmergencyReset className={className} size="sm" showLabel={false} />;
 }
 
 export default VoiceEmergencyReset;

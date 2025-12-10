@@ -31,9 +31,9 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
   refreshInterval = 5000,
   className = '',
 }) => {
-  const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getServiceStats> | null>(
-    null
-  );
+  const [stats, setStats] = useState<ReturnType<
+    typeof ServiceMetrics.getServiceStats
+  > | null>(null);
 
   // Charger stats
   const loadStats = React.useCallback(() => {
@@ -58,7 +58,9 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
 
   if (!stats) {
     return (
-      <div className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}>
+      <div
+        className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}
+      >
         <div className="flex items-center justify-center h-40">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
         </div>
@@ -97,11 +99,15 @@ export const ServiceMetricsPanel: React.FC<ServiceMetricsPanelProps> = ({
             stats.errorRate < 0.1
               ? 'bg-green-500/20 text-green-400'
               : stats.errorRate < 0.3
-              ? 'bg-yellow-500/20 text-yellow-400'
-              : 'bg-red-500/20 text-red-400'
+                ? 'bg-yellow-500/20 text-yellow-400'
+                : 'bg-red-500/20 text-red-400'
           }`}
         >
-          {stats.errorRate < 0.1 ? 'Healthy' : stats.errorRate < 0.3 ? 'Warning' : 'Critical'}
+          {stats.errorRate < 0.1
+            ? 'Healthy'
+            : stats.errorRate < 0.3
+              ? 'Warning'
+              : 'Critical'}
         </div>
       </div>
 

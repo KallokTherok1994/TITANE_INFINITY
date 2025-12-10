@@ -11,7 +11,7 @@ import { secureInvoke } from '@/lib/security';
 import type {
   IntrospectionReport,
   AutoFixResult,
-  IssueSeverity
+  IssueSeverity,
 } from '../types/systemCenter.types';
 
 export interface UseIntrospectionReturn {
@@ -44,9 +44,12 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await secureInvoke<IntrospectionReport>('sc_introspection_quick_scan', {
-        projectPath
-      });
+      const result = await secureInvoke<IntrospectionReport>(
+        'sc_introspection_quick_scan',
+        {
+          projectPath,
+        }
+      );
       setReport(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -62,9 +65,12 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await secureInvoke<IntrospectionReport>('sc_introspection_full_scan', {
-        projectPath
-      });
+      const result = await secureInvoke<IntrospectionReport>(
+        'sc_introspection_full_scan',
+        {
+          projectPath,
+        }
+      );
       setReport(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -75,28 +81,31 @@ export function useIntrospection(): UseIntrospectionReturn {
     }
   }, []);
 
-  const runAutoFix = useCallback(async (projectPath: string): Promise<AutoFixResult | null> => {
-    setIsFixing(true);
-    setError(null);
+  const runAutoFix = useCallback(
+    async (projectPath: string): Promise<AutoFixResult | null> => {
+      setIsFixing(true);
+      setError(null);
 
-    try {
-      const result = await secureInvoke<AutoFixResult>('sc_introspection_auto_fix', {
-        projectPath
-      });
+      try {
+        const result = await secureInvoke<AutoFixResult>('sc_introspection_auto_fix', {
+          projectPath,
+        });
 
-      // Re-scan after fix
-      await runFullScan(projectPath);
+        // Re-scan after fix
+        await runFullScan(projectPath);
 
-      return result;
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      setError(`Auto-fix échoué: ${message}`);
-      console.error('[useIntrospection] Auto-fix failed:', err);
-      return null;
-    } finally {
-      setIsFixing(false);
-    }
-  }, [runFullScan]);
+        return result;
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        setError(`Auto-fix échoué: ${message}`);
+        console.error('[useIntrospection] Auto-fix failed:', err);
+        return null;
+      } finally {
+        setIsFixing(false);
+      }
+    },
+    [runFullScan]
+  );
 
   const clearReport = useCallback(() => {
     setReport(null);

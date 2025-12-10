@@ -239,10 +239,19 @@ impl SystemAwareness {
         }
     }
 
-    fn determine_awareness_level(&self, health: &SystemHealth, alerts: &[SystemAlert]) -> AwarenessLevel {
+    fn determine_awareness_level(
+        &self,
+        health: &SystemHealth,
+        alerts: &[SystemAlert],
+    ) -> AwarenessLevel {
         let has_critical = alerts.iter().any(|a| a.severity == AlertSeverity::Critical);
-        let has_emergency = alerts.iter().any(|a| a.severity == AlertSeverity::Emergency);
-        let warning_count = alerts.iter().filter(|a| a.severity == AlertSeverity::Warning).count();
+        let has_emergency = alerts
+            .iter()
+            .any(|a| a.severity == AlertSeverity::Emergency);
+        let warning_count = alerts
+            .iter()
+            .filter(|a| a.severity == AlertSeverity::Warning)
+            .count();
 
         if has_emergency {
             AwarenessLevel::Transcendent
@@ -259,7 +268,11 @@ impl SystemAwareness {
         }
     }
 
-    fn generate_recommendations(&self, health: &SystemHealth, alerts: &[SystemAlert]) -> Vec<String> {
+    fn generate_recommendations(
+        &self,
+        health: &SystemHealth,
+        alerts: &[SystemAlert],
+    ) -> Vec<String> {
         let mut recommendations = Vec::new();
 
         if health.cpu_usage > 70.0 {
@@ -270,7 +283,10 @@ impl SystemAwareness {
             recommendations.push("Memory cleanup recommended".to_string());
         }
 
-        if alerts.iter().any(|a| a.category == AlertCategory::ErrorRate) {
+        if alerts
+            .iter()
+            .any(|a| a.category == AlertCategory::ErrorRate)
+        {
             recommendations.push("Review error logs for patterns".to_string());
         }
 

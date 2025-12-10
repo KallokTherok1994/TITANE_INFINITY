@@ -166,7 +166,7 @@ export const ProgressionPage = (): JSX.Element => {
         {/* Knowledge Domains */}
         <KnowledgeDomains
           domains={domains}
-          onDomainClick={(domain) => {
+          onDomainClick={domain => {
             console.log('Domain clicked:', domain);
             // TODO: Ouvrir modal avec détails du domaine
           }}

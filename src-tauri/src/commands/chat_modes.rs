@@ -256,7 +256,11 @@ impl std::fmt::Display for ModeValidationError {
                 write!(f, "Invalid mode ID: '{}'", id)
             }
             ModeValidationError::InsufficientPermission { required, actual } => {
-                write!(f, "Insufficient permission: required {}, got {}", required, actual)
+                write!(
+                    f,
+                    "Insufficient permission: required {}, got {}",
+                    required, actual
+                )
             }
             ModeValidationError::ToolNotAllowed(tool) => {
                 write!(f, "Tool '{}' not allowed in this mode", tool)
@@ -336,7 +340,10 @@ mod tests {
     fn test_mode_id_parsing() {
         assert_eq!(ChatModeId::from_str("default"), Some(ChatModeId::Default));
         assert_eq!(ChatModeId::from_str("dev"), Some(ChatModeId::Dev));
-        assert_eq!(ChatModeId::from_str("DEBUG_COGNITIVE"), Some(ChatModeId::DebugCognitive));
+        assert_eq!(
+            ChatModeId::from_str("DEBUG_COGNITIVE"),
+            Some(ChatModeId::DebugCognitive)
+        );
         assert_eq!(ChatModeId::from_str("invalid"), None);
     }
 

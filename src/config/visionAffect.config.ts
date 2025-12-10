@@ -36,7 +36,7 @@ export const VISION_ENGINE_CONFIG: VisionConfig = {
 
   // Privacy - Tout désactivé par défaut
   debugOverlayEnabled: false,
-  recordingEnabled: false,  // ⚠️ JAMAIS true par défaut
+  recordingEnabled: false, // ⚠️ JAMAIS true par défaut
 
   // Limites
   historyMaxSize: 500,
@@ -56,8 +56,8 @@ export const VISION_ENGINE_CONFIG: VisionConfig = {
 export const DEFAULT_THRESHOLDS = {
   energy: {
     // Combinaison posture + mouvement
-    low: 0.35,    // Score combiné < 0.35 → low
-    high: 0.65,   // Score combiné > 0.65 → high
+    low: 0.35, // Score combiné < 0.35 → low
+    high: 0.65, // Score combiné > 0.65 → high
   },
   tension: {
     // Basé sur mouvement agité + posture fermée
@@ -81,8 +81,8 @@ export const SCORE_WEIGHTS = {
     gazeStability: 0.2,
   },
   tension: {
-    movement: 0.4,         // Mouvement agité = tension
-    posture: 0.3,          // Posture fermée = tension
+    movement: 0.4, // Mouvement agité = tension
+    posture: 0.3, // Posture fermée = tension
     shoulderSymmetry: 0.2, // Asymétrie = tension
     headTilt: 0.1,
   },
@@ -99,9 +99,9 @@ export const SCORE_WEIGHTS = {
 
 export const MEDIAPIPE_CONFIG = {
   // Holistic model settings
-  modelComplexity: 1,           // 0=Lite, 1=Full, 2=Heavy
+  modelComplexity: 1, // 0=Lite, 1=Full, 2=Heavy
   smoothLandmarks: true,
-  enableSegmentation: false,    // Pas besoin pour TITANE
+  enableSegmentation: false, // Pas besoin pour TITANE
   refineFaceLandmarks: true,
 
   // Performance
@@ -182,8 +182,8 @@ export const CONFIDENCE_CONFIG = {
   minLandmarkVisibility: 0.5,
 
   // Stabilité temporelle
-  stabilityWindowMs: 2000,      // Fenêtre de 2s pour évaluer stabilité
-  maxJitterThreshold: 0.1,      // Variation max acceptable entre frames
+  stabilityWindowMs: 2000, // Fenêtre de 2s pour évaluer stabilité
+  maxJitterThreshold: 0.1, // Variation max acceptable entre frames
 } as const;
 
 // ============================================================================
@@ -195,16 +195,16 @@ export const CONFIDENCE_CONFIG = {
  */
 export const COACHING_CONFIG = {
   // Délais avant suggestion
-  energyDropDelayMs: 5 * 60 * 1000,    // 5 min d'énergie basse avant suggérer pause
-  tensionAlertDelayMs: 3 * 60 * 1000,  // 3 min de tension haute
-  stillnessAlertMs: 30 * 60 * 1000,    // 30 min sans mouvement
+  energyDropDelayMs: 5 * 60 * 1000, // 5 min d'énergie basse avant suggérer pause
+  tensionAlertDelayMs: 3 * 60 * 1000, // 3 min de tension haute
+  stillnessAlertMs: 30 * 60 * 1000, // 30 min sans mouvement
 
   // Cooldown entre suggestions
   suggestionCooldownMs: 10 * 60 * 1000, // 10 min entre suggestions similaires
 
   // Seuils d'alerte
   alertThresholds: {
-    energyDropStreak: 3,        // 3 lectures "low" consécutives
+    energyDropStreak: 3, // 3 lectures "low" consécutives
     tensionSpikeStreak: 3,
     engagementDropStreak: 5,
   },
@@ -215,27 +215,27 @@ export const COACHING_CONFIG = {
  */
 export const SUGGESTION_MESSAGES: Record<SuggestionType, string> = {
   PAUSE_SUGGESTION:
-    "Les indices visuels suggèrent peut-être un besoin de pause. " +
-    "Que dirais-tu de prendre 5 minutes ?",
+    'Les indices visuels suggèrent peut-être un besoin de pause. ' +
+    'Que dirais-tu de prendre 5 minutes ?',
 
   MOVEMENT_SUGGESTION:
-    "Tu sembles assez statique depuis un moment. " +
-    "Un petit étirement pourrait faire du bien ?",
+    'Tu sembles assez statique depuis un moment. ' +
+    'Un petit étirement pourrait faire du bien ?',
 
   BREATHING_SUGGESTION:
-    "Je perçois peut-être des signes de tension. " +
-    "Quelques respirations profondes pourraient aider.",
+    'Je perçois peut-être des signes de tension. ' +
+    'Quelques respirations profondes pourraient aider.',
 
   POSTURE_REMINDER:
-    "Petit rappel posture : redresse-toi si tu en as besoin. " +
+    'Petit rappel posture : redresse-toi si tu en as besoin. ' +
     "C'est juste un indice visuel, pas une certitude !",
 
   ENERGY_BOOST_TIP:
-    "Ton énergie visible semble baisser. " +
+    'Ton énergie visible semble baisser. ' +
     "Un verre d'eau ou une micro-pause pourrait aider ?",
 
   SCHEDULE_ADJUSTMENT:
-    "Entre les indices visuels et ton planning chargé, " +
+    'Entre les indices visuels et ton planning chargé, ' +
     "veux-tu qu'on réorganise certaines tâches ?",
 };
 
@@ -248,7 +248,7 @@ export const SUGGESTION_MESSAGES: Record<SuggestionType, string> = {
  */
 export const CALIBRATION_CONFIG = {
   // Durée de capture par état
-  samplingDurationMs: 30 * 1000,  // 30 secondes par calibration
+  samplingDurationMs: 30 * 1000, // 30 secondes par calibration
 
   // Samples minimum pour valider
   minSamplesRequired: 20,
@@ -256,29 +256,29 @@ export const CALIBRATION_CONFIG = {
   // Commandes disponibles
   commands: {
     MARK_HIGH_ENERGY: {
-      label: "Marquer comme haute énergie",
-      description: "Enregistre ton état actuel comme référence de bonne énergie",
-      icon: "⚡",
+      label: 'Marquer comme haute énergie',
+      description: 'Enregistre ton état actuel comme référence de bonne énergie',
+      icon: '⚡',
     },
     MARK_LOW_ENERGY: {
-      label: "Marquer comme basse énergie",
-      description: "Enregistre ton état actuel comme référence de fatigue",
-      icon: "🔋",
+      label: 'Marquer comme basse énergie',
+      description: 'Enregistre ton état actuel comme référence de fatigue',
+      icon: '🔋',
     },
     MARK_RELAXED: {
-      label: "Marquer comme détendu",
-      description: "Enregistre ton état actuel comme référence de détente",
-      icon: "😌",
+      label: 'Marquer comme détendu',
+      description: 'Enregistre ton état actuel comme référence de détente',
+      icon: '😌',
     },
     MARK_FOCUSED: {
-      label: "Marquer comme concentré",
-      description: "Enregistre ton état actuel comme référence de focus",
-      icon: "🎯",
+      label: 'Marquer comme concentré',
+      description: 'Enregistre ton état actuel comme référence de focus',
+      icon: '🎯',
     },
     RESET_BASELINE: {
-      label: "Réinitialiser baseline",
-      description: "Efface ta baseline personnalisée et revient aux valeurs par défaut",
-      icon: "🔄",
+      label: 'Réinitialiser baseline',
+      description: 'Efface ta baseline personnalisée et revient aux valeurs par défaut',
+      icon: '🔄',
     },
   } as Record<CalibrationCommand, { label: string; description: string; icon: string }>,
 } as const;
@@ -299,7 +299,7 @@ export const CAMERA_RESOLUTIONS = {
 
 export const PERFORMANCE_BUDGETS = {
   // Temps max par frame
-  maxFrameProcessingMs: 100,    // 100ms max par frame
+  maxFrameProcessingMs: 100, // 100ms max par frame
 
   // FPS cibles
   targetFps: {
@@ -310,7 +310,7 @@ export const PERFORMANCE_BUDGETS = {
 
   // Mémoire
   maxHistoryEntries: 500,
-  landmarkBufferSize: 30,       // Buffer de 30 frames pour calculs
+  landmarkBufferSize: 30, // Buffer de 30 frames pour calculs
 } as const;
 
 // ============================================================================

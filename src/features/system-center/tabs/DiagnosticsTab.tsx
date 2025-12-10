@@ -17,23 +17,35 @@ import type { DiagnosticStatus } from '../types/systemCenter.types';
 
 const getStatusIcon = (status: DiagnosticStatus): string => {
   switch (status) {
-    case 'Success': return '✅';
-    case 'Warning': return '⚠️';
-    case 'Error': return '❌';
-    case 'Pending': return '⏳';
-    case 'Skipped': return '⏭️';
-    default: return '❓';
+    case 'Success':
+      return '✅';
+    case 'Warning':
+      return '⚠️';
+    case 'Error':
+      return '❌';
+    case 'Pending':
+      return '⏳';
+    case 'Skipped':
+      return '⏭️';
+    default:
+      return '❓';
   }
 };
 
 const getStatusClass = (status: DiagnosticStatus): string => {
   switch (status) {
-    case 'Success': return 'sc-status--success';
-    case 'Warning': return 'sc-status--warning';
-    case 'Error': return 'sc-status--error';
-    case 'Pending': return 'sc-status--pending';
-    case 'Skipped': return 'sc-status--skipped';
-    default: return '';
+    case 'Success':
+      return 'sc-status--success';
+    case 'Warning':
+      return 'sc-status--warning';
+    case 'Error':
+      return 'sc-status--error';
+    case 'Pending':
+      return 'sc-status--pending';
+    case 'Skipped':
+      return 'sc-status--skipped';
+    default:
+      return '';
   }
 };
 
@@ -74,11 +86,10 @@ export const DiagnosticsTab: React.FC = () => {
             {status === 'Healthy'
               ? 'Système fonctionnel'
               : status === 'Degraded'
-              ? 'Système dégradé'
-              : status === 'Critical'
-              ? 'Système critique'
-              : 'Statut inconnu'
-            }
+                ? 'Système dégradé'
+                : status === 'Critical'
+                  ? 'Système critique'
+                  : 'Statut inconnu'}
           </span>
         </div>
         {diagnostics && (
@@ -93,7 +104,9 @@ export const DiagnosticsTab: React.FC = () => {
         <div className="sc-error">
           <span className="sc-error-icon">⚠️</span>
           <span className="sc-error-message">{error}</span>
-          <button className="sc-error-close" onClick={clearError}>✕</button>
+          <button className="sc-error-close" onClick={clearError}>
+            ✕
+          </button>
         </div>
       )}
 

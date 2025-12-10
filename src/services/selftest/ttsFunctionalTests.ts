@@ -170,7 +170,8 @@ async function testWebSpeechFallback(): Promise<TTSTestResult> {
         testName: 'Fallback Web Speech API',
         status: 'warn',
         duration: performance.now() - start,
-        details: 'Web Speech API non disponible (environnement Node.js ou navigateur incompatible)',
+        details:
+          'Web Speech API non disponible (environnement Node.js ou navigateur incompatible)',
         provider: 'none',
       };
     }
@@ -187,7 +188,12 @@ async function testWebSpeechFallback(): Promise<TTSTestResult> {
       status: 'ok',
       duration,
       details: `Fallback WebSpeech fonctionnel (${duration.toFixed(0)}ms)`,
-      provider: status.provider === 'webspeech' ? 'webspeech' : status.provider === 'tauri' ? 'tauri-local' : 'none',
+      provider:
+        status.provider === 'webspeech'
+          ? 'webspeech'
+          : status.provider === 'tauri'
+            ? 'tauri-local'
+            : 'none',
     };
   } catch (error) {
     const duration = performance.now() - start;

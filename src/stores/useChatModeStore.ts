@@ -34,13 +34,13 @@ interface ChatModeStore {
 
 export const useChatModeStore = create<ChatModeStore>()(
   devtools(
-    (set) => ({
+    set => ({
       // ═══════════════════════════════════════════════════════════════════
       // ÉTAT INITIAL
       // ═══════════════════════════════════════════════════════════════════
       currentModeId: INITIAL_CHAT_MODE_STATE.current_mode_id,
       currentMode: CHAT_MODES[INITIAL_CHAT_MODE_STATE.current_mode_id] ?? null,
-      availableModes: Object.values(CHAT_MODES).filter((m) => m.enabled),
+      availableModes: Object.values(CHAT_MODES).filter(m => m.enabled),
       isLoading: false,
       error: null,
 
@@ -60,7 +60,10 @@ export const useChatModeStore = create<ChatModeStore>()(
           });
         } catch (error) {
           const message = error instanceof Error ? error.message : 'Erreur inconnue';
-          set({ error: `Impossible d'initialiser ChatModeService: ${message}`, isLoading: false });
+          set({
+            error: `Impossible d'initialiser ChatModeService: ${message}`,
+            isLoading: false,
+          });
           console.error('[useChatModeStore] Initialization failed:', error);
         }
       },
@@ -100,19 +103,19 @@ export const useChatModeStore = create<ChatModeStore>()(
  * Hook pour récupérer uniquement l'ID du mode actuel
  */
 export const useCurrentChatModeId = () => {
-  return useChatModeStore((state) => state.currentModeId);
+  return useChatModeStore(state => state.currentModeId);
 };
 
 /**
  * Hook pour récupérer le mode actuel complet
  */
 export const useCurrentChatMode = () => {
-  return useChatModeStore((state) => state.currentMode);
+  return useChatModeStore(state => state.currentMode);
 };
 
 /**
  * Hook pour récupérer les modes disponibles
  */
 export const useAvailableChatModes = () => {
-  return useChatModeStore((state) => state.availableModes);
+  return useChatModeStore(state => state.availableModes);
 };

@@ -1,0 +1,506 @@
+/**
+ * TITANE∞ v21 — Transitions Signature
+ * Système de transitions CSS avec signature visuelle unique
+ *
+ * Toutes les transitions utilisent des cubic-bezier TITANE∞ signature
+ * pour une cohérence et une "sensation" unique au monde.
+ *
+ * RÈGLES:
+ * - GPU-accelerated uniquement (transform, opacity, filter)
+ * - Durées calibrées pour 60fps
+ * - Easings organiques signature TITANE∞
+ * - Synchronisation avec Identity Pulse
+ */
+
+/* ═════════════════════════════════════════════════════════════════
+   CUBIC-BEZIER SIGNATURE TITANE∞
+   ═════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* TITANE∞ Signature Easings */
+  --titane-ease-identity: cubic-bezier(0.34, 1.26, 0.64, 1); /* Organic bounce */
+  --titane-ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1); /* Smooth flow */
+  --titane-ease-cognitive: cubic-bezier(0.42, 0, 0.58, 1); /* Thinking rhythm */
+  --titane-ease-empathetic: cubic-bezier(0.17, 0.67, 0.83, 0.67); /* Warm embrace */
+  --titane-ease-analytical: cubic-bezier(0.4, 0, 0.2, 1); /* Sharp precision */
+  --titane-ease-creative: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Playful bounce */
+  --titane-ease-healing: cubic-bezier(0.16, 1, 0.3, 1); /* Gentle wave */
+
+  /* Durées calibrées */
+  --titane-duration-instant: 120ms;
+  --titane-duration-fast: 200ms;
+  --titane-duration-normal: 350ms;
+  --titane-duration-slow: 500ms;
+  --titane-duration-breath: 800ms;
+  --titane-duration-meditate: 1200ms;
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   TRANSITIONS DE BASE
+   ═════════════════════════════════════════════════════════════════ */
+
+.titane-transition-identity {
+  transition: all var(--titane-duration-normal) var(--titane-ease-identity);
+}
+
+.titane-transition-smooth {
+  transition: all var(--titane-duration-normal) var(--titane-ease-smooth);
+}
+
+.titane-transition-cognitive {
+  transition: all var(--titane-duration-normal) var(--titane-ease-cognitive);
+}
+
+.titane-transition-empathetic {
+  transition: all var(--titane-duration-slow) var(--titane-ease-empathetic);
+}
+
+.titane-transition-analytical {
+  transition: all var(--titane-duration-fast) var(--titane-ease-analytical);
+}
+
+.titane-transition-creative {
+  transition: all var(--titane-duration-slow) var(--titane-ease-creative);
+}
+
+.titane-transition-healing {
+  transition: all var(--titane-duration-breath) var(--titane-ease-healing);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   TRANSITIONS SPÉCIFIQUES (opacity only)
+   ═════════════════════════════════════════════════════════════════ */
+
+.titane-fade-identity {
+  transition: opacity var(--titane-duration-normal) var(--titane-ease-identity);
+}
+
+.titane-fade-smooth {
+  transition: opacity var(--titane-duration-normal) var(--titane-ease-smooth);
+}
+
+.titane-fade-fast {
+  transition: opacity var(--titane-duration-fast) var(--titane-ease-smooth);
+}
+
+.titane-fade-slow {
+  transition: opacity var(--titane-duration-slow) var(--titane-ease-smooth);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   TRANSITIONS SPÉCIFIQUES (transform only)
+   ═════════════════════════════════════════════════════════════════ */
+
+.titane-transform-identity {
+  transition: transform var(--titane-duration-normal) var(--titane-ease-identity);
+}
+
+.titane-transform-smooth {
+  transition: transform var(--titane-duration-normal) var(--titane-ease-smooth);
+}
+
+.titane-transform-cognitive {
+  transition: transform var(--titane-duration-normal) var(--titane-ease-cognitive);
+}
+
+.titane-transform-creative {
+  transition: transform var(--titane-duration-slow) var(--titane-ease-creative);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   TRANSITIONS COMBINÉES (opacity + transform)
+   ═════════════════════════════════════════════════════════════════ */
+
+.titane-appear-identity {
+  transition:
+    opacity var(--titane-duration-normal) var(--titane-ease-identity),
+    transform var(--titane-duration-normal) var(--titane-ease-identity);
+}
+
+.titane-appear-smooth {
+  transition:
+    opacity var(--titane-duration-normal) var(--titane-ease-smooth),
+    transform var(--titane-duration-normal) var(--titane-ease-smooth);
+}
+
+.titane-appear-cognitive {
+  transition:
+    opacity var(--titane-duration-normal) var(--titane-ease-cognitive),
+    transform var(--titane-duration-normal) var(--titane-ease-cognitive);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   ANIMATIONS SIGNATURE
+   ═════════════════════════════════════════════════════════════════ */
+
+/* Pulsation Identity (synchronisée avec IdentityPulse.ts) */
+@keyframes titane-pulse-identity {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.titane-pulse-identity {
+  animation: titane-pulse-identity 2s var(--titane-ease-identity) infinite;
+}
+
+/* Respiration (slow breathing effect) */
+@keyframes titane-breathe {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+}
+
+.titane-breathe {
+  animation: titane-breathe var(--titane-duration-meditate) var(--titane-ease-smooth)
+    infinite;
+}
+
+/* Glow Pulse (synchronized with Identity Pulse) */
+@keyframes titane-glow-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 8px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 20px currentColor);
+  }
+}
+
+.titane-glow-pulse {
+  animation: titane-glow-pulse 2s var(--titane-ease-identity) infinite;
+}
+
+/* Orbital Rotation */
+@keyframes titane-orbital-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.titane-orbital-rotate-slow {
+  animation: titane-orbital-rotate 10s linear infinite;
+}
+
+.titane-orbital-rotate-medium {
+  animation: titane-orbital-rotate 6s linear infinite;
+}
+
+.titane-orbital-rotate-fast {
+  animation: titane-orbital-rotate 3s linear infinite;
+}
+
+/* Color Shift (emotional transitions) */
+@keyframes titane-color-shift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(30deg);
+  }
+  100% {
+    filter: hue-rotate(0deg);
+  }
+}
+
+.titane-color-shift-empathetic {
+  animation: titane-color-shift 3s var(--titane-ease-empathetic) infinite;
+}
+
+.titane-color-shift-creative {
+  animation: titane-color-shift 2s var(--titane-ease-creative) infinite;
+}
+
+/* Healing Wave */
+@keyframes titane-healing-wave {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+    filter: drop-shadow(0 0 0px #ffd700);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px #ffd700);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 0px #ffd700);
+  }
+}
+
+.titane-healing-wave {
+  animation: titane-healing-wave var(--titane-duration-breath) var(--titane-ease-healing)
+    infinite;
+}
+
+/* Thinking Trail */
+@keyframes titane-thinking-trail {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-15px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.8);
+  }
+}
+
+.titane-thinking-trail {
+  animation: titane-thinking-trail 1.5s var(--titane-ease-cognitive) infinite;
+}
+
+/* Glitch Effect */
+@keyframes titane-glitch {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  10% {
+    transform: translate(-2px, 1px);
+    opacity: 0.9;
+  }
+  20% {
+    transform: translate(2px, -1px);
+    opacity: 0.8;
+  }
+  30% {
+    transform: translate(-1px, 2px);
+    opacity: 0.9;
+  }
+  40% {
+    transform: translate(1px, -2px);
+    opacity: 1;
+  }
+}
+
+.titane-glitch {
+  animation: titane-glitch 0.3s var(--titane-ease-analytical);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   RIPPLE EFFECT (click feedback)
+   ═════════════════════════════════════════════════════════════════ */
+
+@keyframes titane-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.titane-ripple {
+  animation: titane-ripple 0.6s var(--titane-ease-identity);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   PANEL TRANSITIONS (slide + fade)
+   ═════════════════════════════════════════════════════════════════ */
+
+/* Panel Slide In (from right) */
+@keyframes titane-panel-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.titane-panel-slide-in-right {
+  animation: titane-panel-slide-in-right var(--titane-duration-normal)
+    var(--titane-ease-identity);
+}
+
+/* Panel Slide Out (to right) */
+@keyframes titane-panel-slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.titane-panel-slide-out-right {
+  animation: titane-panel-slide-out-right var(--titane-duration-normal)
+    var(--titane-ease-identity);
+}
+
+/* Panel Slide In (from left) */
+@keyframes titane-panel-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.titane-panel-slide-in-left {
+  animation: titane-panel-slide-in-left var(--titane-duration-normal)
+    var(--titane-ease-identity);
+}
+
+/* Panel Slide Out (to left) */
+@keyframes titane-panel-slide-out-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.titane-panel-slide-out-left {
+  animation: titane-panel-slide-out-left var(--titane-duration-normal)
+    var(--titane-ease-identity);
+}
+
+/* Panel Expand */
+@keyframes titane-panel-expand {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.titane-panel-expand {
+  animation: titane-panel-expand var(--titane-duration-normal) var(--titane-ease-identity);
+}
+
+/* Panel Collapse */
+@keyframes titane-panel-collapse {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+.titane-panel-collapse {
+  animation: titane-panel-collapse var(--titane-duration-fast) var(--titane-ease-identity);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   HOVER EFFECTS
+   ═════════════════════════════════════════════════════════════════ */
+
+.titane-hover-lift {
+  transition: transform var(--titane-duration-fast) var(--titane-ease-identity);
+}
+
+.titane-hover-lift:hover {
+  transform: translateY(-2px);
+}
+
+.titane-hover-glow {
+  transition:
+    filter var(--titane-duration-fast) var(--titane-ease-smooth),
+    transform var(--titane-duration-fast) var(--titane-ease-smooth);
+}
+
+.titane-hover-glow:hover {
+  filter: drop-shadow(0 0 12px currentColor);
+  transform: scale(1.02);
+}
+
+.titane-hover-scale {
+  transition: transform var(--titane-duration-fast) var(--titane-ease-creative);
+}
+
+.titane-hover-scale:hover {
+  transform: scale(1.05);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   FOCUS EFFECTS
+   ═════════════════════════════════════════════════════════════════ */
+
+.titane-focus-glow {
+  transition: filter var(--titane-duration-fast) var(--titane-ease-smooth);
+}
+
+.titane-focus-glow:focus,
+.titane-focus-glow:focus-visible {
+  outline: none;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* ═════════════════════════════════════════════════════════════════
+   UTILITY CLASSES
+   ═════════════════════════════════════════════════════════════════ */
+
+/* GPU Acceleration Hint */
+.titane-gpu-accelerated {
+  will-change: transform, opacity, filter;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth Scroll */
+.titane-smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+/* Disable transitions (for instant changes) */
+.titane-no-transition,
+.titane-no-transition * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Reduced motion (accessibility) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

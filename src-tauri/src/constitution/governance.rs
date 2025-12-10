@@ -4,8 +4,8 @@
 //! ═══════════════════════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
-use tokio::sync::RwLock;
 use std::collections::HashMap;
+use tokio::sync::RwLock;
 
 /// Niveau d'autorité dans la hiérarchie
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize)]
@@ -218,7 +218,9 @@ impl GovernanceEngine {
         let request = state.pending_decisions.remove(request_id)?;
 
         // Trouver la politique applicable
-        let policy = state.policies.iter()
+        let policy = state
+            .policies
+            .iter()
             .find(|p| p.applies_to.contains(&request.decision_type));
 
         let result = if let Some(policy) = policy {
@@ -269,7 +271,10 @@ impl GovernanceEngine {
                 request_id: request.id.clone(),
                 status: DecisionStatus::Escalated,
                 decided_by: policy.required_authority,
-                rationale: format!("Requires {} authority", format!("{:?}", policy.required_authority)),
+                rationale: format!(
+                    "Requires {} authority",
+                    format!("{:?}", policy.required_authority)
+                ),
                 conditions: vec![],
                 decided_at: now,
                 appeal_available: true,
@@ -283,7 +288,10 @@ impl GovernanceEngine {
                     request_id: request.id.clone(),
                     status: DecisionStatus::Approved,
                     decided_by: request.requester_level,
-                    rationale: format!("Auto-approved: urgency {} >= threshold {}", request.urgency, threshold),
+                    rationale: format!(
+                        "Auto-approved: urgency {} >= threshold {}",
+                        request.urgency, threshold
+                    ),
                     conditions: vec![],
                     decided_at: now,
                     appeal_available: true,
@@ -317,11 +325,17 @@ impl GovernanceEngine {
     }
 
     /// Traite un appel
-    pub async fn process_appeal(&self, original_decision_id: &str, appeal_reason: &str) -> Option<DecisionResult> {
+    pub async fn process_appeal(
+        &self,
+        original_decision_id: &str,
+        appeal_reason: &str,
+    ) -> Option<DecisionResult> {
         let mut state = self.state.write().await;
 
         // Trouver la décision originale
-        let original = state.decision_history.iter()
+        let original = state
+            .decision_history
+            .iter()
             .find(|d| d.request_id == original_decision_id)?;
 
         if !original.appeal_available {
@@ -352,7 +366,12 @@ impl GovernanceEngine {
     }
 
     /// Vérifie si une délégation est autorisée
-    pub async fn can_delegate(&self, from: AuthorityLevel, to: AuthorityLevel, decision_type: DecisionType) -> bool {
+    pub async fn can_delegate(
+        &self,
+        from: AuthorityLevel,
+        to: AuthorityLevel,
+        decision_type: DecisionType,
+    ) -> bool {
         let state = self.state.read().await;
 
         state.delegation_rules.iter().any(|rule| {
@@ -372,7 +391,13 @@ impl GovernanceEngine {
     /// Récupère l'historique des décisions
     pub async fn decision_history(&self, limit: usize) -> Vec<DecisionResult> {
         let state = self.state.read().await;
-        state.decision_history.iter().rev().take(limit).cloned().collect()
+        state
+            .decision_history
+            .iter()
+            .rev()
+            .take(limit)
+            .cloned()
+            .collect()
     }
 
     /// Ajoute une règle de délégation
@@ -462,17 +487,25 @@ mod tests {
         let engine = GovernanceEngine::new();
 
         // System can delegate operational to Agent
-        assert!(engine.can_delegate(
-            AuthorityLevel::System,
-            AuthorityLevel::Agent,
-            DecisionType::Operational
-        ).await);
+        assert!(
+            engine
+                .can_delegate(
+                    AuthorityLevel::System,
+                    AuthorityLevel::Agent,
+                    DecisionType::Operational
+                )
+                .await
+        );
 
         // Agent cannot delegate strategic
-        assert!(!engine.can_delegate(
-            AuthorityLevel::Agent,
-            AuthorityLevel::Subsystem,
-            DecisionType::Strategic
-        ).await);
+        assert!(
+            !engine
+                .can_delegate(
+                    AuthorityLevel::Agent,
+                    AuthorityLevel::Subsystem,
+                    DecisionType::Strategic
+                )
+                .await
+        );
     }
 }

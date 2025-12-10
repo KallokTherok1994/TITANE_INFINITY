@@ -3,10 +3,10 @@
 //! Super Prompt #18 — Anticipation et prédiction temporelle
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
-use super::time_model::TemporalContext;
-use super::temporal_memory::TemporalMemory;
 use super::planner::PlanningHorizon;
+use super::temporal_memory::TemporalMemory;
+use super::time_model::TemporalContext;
+use serde::{Deserialize, Serialize};
 
 /// Confiance de prédiction
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -148,7 +148,11 @@ impl Anticipator {
     }
 
     /// Génère des prédictions basées sur le contexte
-    pub async fn predict(&self, context: &TemporalContext, memory: &TemporalMemory) -> Vec<Prediction> {
+    pub async fn predict(
+        &self,
+        context: &TemporalContext,
+        memory: &TemporalMemory,
+    ) -> Vec<Prediction> {
         let mut predictions = Vec::new();
 
         for model in &self.models {
@@ -162,7 +166,9 @@ impl Anticipator {
 
         // Trier par confiance
         predictions.sort_by(|a, b| {
-            b.confidence_score.partial_cmp(&a.confidence_score).unwrap_or(std::cmp::Ordering::Equal)
+            b.confidence_score
+                .partial_cmp(&a.confidence_score)
+                .unwrap_or(std::cmp::Ordering::Equal)
         });
 
         // Limiter et mettre en cache
@@ -185,7 +191,8 @@ impl Anticipator {
     ) -> Vec<Prediction> {
         let all_predictions = self.predict(context, memory).await;
 
-        all_predictions.into_iter()
+        all_predictions
+            .into_iter()
             .filter(|p| p.horizon == horizon)
             .collect()
     }
@@ -201,7 +208,10 @@ impl Anticipator {
             ModelType::Circadian => self.predict_circadian(context, model.weight).await,
             ModelType::WeeklyPattern => self.predict_weekly(context, model.weight).await,
             ModelType::Trend => self.predict_trend(context, memory, model.weight).await,
-            ModelType::Correlation => self.predict_correlation(context, memory, model.weight).await,
+            ModelType::Correlation => {
+                self.predict_correlation(context, memory, model.weight)
+                    .await
+            }
         }
     }
 
@@ -230,7 +240,11 @@ impl Anticipator {
                     description: format!("Energy dip expected in {} hours", hours),
                     confidence: PredictionConfidence::from_score(weight * 0.9),
                     confidence_score: weight * 0.9,
-                    horizon: if hours <= 2 { PlanningHorizon::Today } else { PlanningHorizon::Today },
+                    horizon: if hours <= 2 {
+                        PlanningHorizon::Today
+                    } else {
+                        PlanningHorizon::Today
+                    },
                     predicted_at: now,
                     expected_at: Some(expected_at),
                     supporting_evidence: vec!["Circadian rhythm pattern".to_string()],
@@ -249,16 +263,17 @@ impl Anticipator {
                     prediction_type: PredictionType::Opportunity {
                         description: format!("Peak productivity window in {} hours", hours),
                     },
-                    description: format!("High energy period expected around {:02}:00", future_hour),
+                    description: format!(
+                        "High energy period expected around {:02}:00",
+                        future_hour
+                    ),
                     confidence: PredictionConfidence::from_score(weight * 0.85),
                     confidence_score: weight * 0.85,
                     horizon: PlanningHorizon::Today,
                     predicted_at: now,
                     expected_at: Some(expected_at),
                     supporting_evidence: vec!["Circadian peak time".to_string()],
-                    recommended_actions: vec![
-                        "Reserve this time for focused work".to_string(),
-                    ],
+                    recommended_actions: vec!["Reserve this time for focused work".to_string()],
                 };
                 predictions.push(prediction);
             }
@@ -292,7 +307,8 @@ impl Anticipator {
 
         // Mardi et mercredi sont généralement les plus productifs
         let productive_days = [2u8, 3u8]; // Tuesday, Wednesday
-        let next_productive_day = productive_days.iter()
+        let next_productive_day = productive_days
+            .iter()
             .find(|&&d| d > current_day)
             .copied()
             .unwrap_or(productive_days[0]);
@@ -316,9 +332,7 @@ impl Anticipator {
                 predicted_at: now,
                 expected_at: Some(now + (days_until as u64 * 86400000)),
                 supporting_evidence: vec!["Weekly productivity patterns".to_string()],
-                recommended_actions: vec![
-                    "Plan important tasks for this day".to_string(),
-                ],
+                recommended_actions: vec!["Plan important tasks for this day".to_string()],
             });
         }
 
@@ -348,7 +362,12 @@ impl Anticipator {
     }
 
     /// Prédictions basées sur les tendances
-    async fn predict_trend(&self, context: &TemporalContext, memory: &TemporalMemory, weight: f32) -> Vec<Prediction> {
+    async fn predict_trend(
+        &self,
+        context: &TemporalContext,
+        memory: &TemporalMemory,
+        weight: f32,
+    ) -> Vec<Prediction> {
         let mut predictions = Vec::new();
         let now = context.now.timestamp_ms;
 
@@ -360,7 +379,8 @@ impl Anticipator {
         }
 
         // Compter les types d'événements
-        let mut event_counts: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        let mut event_counts: std::collections::HashMap<String, u32> =
+            std::collections::HashMap::new();
         for trace in &recent_traces {
             *event_counts.entry(trace.event_type.clone()).or_insert(0) += 1;
         }
@@ -374,8 +394,13 @@ impl Anticipator {
                     prediction_type: PredictionType::Event {
                         event_type: event_type.clone(),
                     },
-                    description: format!("'{}' events are trending ({}x recently)", event_type, count),
-                    confidence: PredictionConfidence::from_score(weight * (*count as f32 / 10.0).min(0.8)),
+                    description: format!(
+                        "'{}' events are trending ({}x recently)",
+                        event_type, count
+                    ),
+                    confidence: PredictionConfidence::from_score(
+                        weight * (*count as f32 / 10.0).min(0.8),
+                    ),
                     confidence_score: weight * (*count as f32 / 10.0).min(0.8),
                     horizon: PlanningHorizon::Today,
                     predicted_at: now,
@@ -414,9 +439,7 @@ impl Anticipator {
                 predicted_at: now,
                 expected_at: None,
                 supporting_evidence: vec!["Weekend correlation".to_string()],
-                recommended_actions: vec![
-                    "Flexible schedule recommended".to_string(),
-                ],
+                recommended_actions: vec!["Flexible schedule recommended".to_string()],
             });
         }
 
@@ -433,12 +456,11 @@ impl Anticipator {
                 horizon: PlanningHorizon::Today,
                 predicted_at: now,
                 expected_at: Some(now + 1800000), // 30 min
-                supporting_evidence: vec![
-                    format!("Session duration: {} hours", context.session_duration_ms / 3600000)
-                ],
-                recommended_actions: vec![
-                    "Consider taking a short break".to_string(),
-                ],
+                supporting_evidence: vec![format!(
+                    "Session duration: {} hours",
+                    context.session_duration_ms / 3600000
+                )],
+                recommended_actions: vec!["Consider taking a short break".to_string()],
             });
         }
 
@@ -495,9 +517,18 @@ mod tests {
 
     #[test]
     fn test_prediction_confidence() {
-        assert_eq!(PredictionConfidence::from_score(0.95), PredictionConfidence::VeryHigh);
-        assert_eq!(PredictionConfidence::from_score(0.5), PredictionConfidence::Medium);
-        assert_eq!(PredictionConfidence::from_score(0.1), PredictionConfidence::VeryLow);
+        assert_eq!(
+            PredictionConfidence::from_score(0.95),
+            PredictionConfidence::VeryHigh
+        );
+        assert_eq!(
+            PredictionConfidence::from_score(0.5),
+            PredictionConfidence::Medium
+        );
+        assert_eq!(
+            PredictionConfidence::from_score(0.1),
+            PredictionConfidence::VeryLow
+        );
     }
 
     #[tokio::test]

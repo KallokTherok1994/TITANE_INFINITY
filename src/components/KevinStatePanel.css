@@ -162,7 +162,9 @@
   align-items: center;
   justify-content: flex-end;
   padding-right: 12px;
-  transition: width 0.5s ease, background-color 0.3s ease;
+  transition:
+    width 0.5s ease,
+    background-color 0.3s ease;
   border-radius: 8px;
 }
 
@@ -215,7 +217,8 @@
 }
 
 @keyframes blink {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {

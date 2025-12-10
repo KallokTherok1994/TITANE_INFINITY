@@ -119,180 +119,212 @@ impl ToneEngine {
     /// Initialise les préréglages
     fn initialize_presets(&mut self) {
         // Friendly
-        self.tone_presets.insert(Tone::Friendly, ToneConfig {
-            primary_tone: Tone::Friendly,
-            secondary_tone: None,
-            parameters: ToneParameters {
-                formality: 0.3,
-                warmth: 0.8,
-                energy: 0.6,
-                directness: 0.4,
-                complexity: 0.3,
-                humor: 0.3,
-                empathy: 0.7,
+        self.tone_presets.insert(
+            Tone::Friendly,
+            ToneConfig {
+                primary_tone: Tone::Friendly,
+                secondary_tone: None,
+                parameters: ToneParameters {
+                    formality: 0.3,
+                    warmth: 0.8,
+                    energy: 0.6,
+                    directness: 0.4,
+                    complexity: 0.3,
+                    humor: 0.3,
+                    empathy: 0.7,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["Bien sûr!".to_string(), "Avec plaisir!".to_string()],
+                    suffixes: vec!["😊".to_string(), "N'hésite pas!".to_string()],
+                    interjections: vec!["Super!".to_string(), "Génial!".to_string()],
+                    emojis: vec!["😊".to_string(), "👍".to_string(), "✨".to_string()],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Bien sûr!".to_string(), "Avec plaisir!".to_string()],
-                suffixes: vec!["😊".to_string(), "N'hésite pas!".to_string()],
-                interjections: vec!["Super!".to_string(), "Génial!".to_string()],
-                emojis: vec!["😊".to_string(), "👍".to_string(), "✨".to_string()],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Professional
-        self.tone_presets.insert(Tone::Professional, ToneConfig {
-            primary_tone: Tone::Professional,
-            secondary_tone: None,
-            parameters: ToneParameters {
-                formality: 0.8,
-                warmth: 0.3,
-                energy: 0.4,
-                directness: 0.7,
-                complexity: 0.6,
-                humor: 0.0,
-                empathy: 0.3,
+        self.tone_presets.insert(
+            Tone::Professional,
+            ToneConfig {
+                primary_tone: Tone::Professional,
+                secondary_tone: None,
+                parameters: ToneParameters {
+                    formality: 0.8,
+                    warmth: 0.3,
+                    energy: 0.4,
+                    directness: 0.7,
+                    complexity: 0.6,
+                    humor: 0.0,
+                    empathy: 0.3,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["Voici".to_string(), "Concernant".to_string()],
+                    suffixes: vec!["Cordialement.".to_string()],
+                    interjections: vec![],
+                    emojis: vec![],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Voici".to_string(), "Concernant".to_string()],
-                suffixes: vec!["Cordialement.".to_string()],
-                interjections: vec![],
-                emojis: vec![],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Empathetic
-        self.tone_presets.insert(Tone::Empathetic, ToneConfig {
-            primary_tone: Tone::Empathetic,
-            secondary_tone: Some(Tone::Calm),
-            parameters: ToneParameters {
-                formality: 0.3,
-                warmth: 0.95,
-                energy: 0.3,
-                directness: 0.2,
-                complexity: 0.3,
-                humor: 0.0,
-                empathy: 1.0,
+        self.tone_presets.insert(
+            Tone::Empathetic,
+            ToneConfig {
+                primary_tone: Tone::Empathetic,
+                secondary_tone: Some(Tone::Calm),
+                parameters: ToneParameters {
+                    formality: 0.3,
+                    warmth: 0.95,
+                    energy: 0.3,
+                    directness: 0.2,
+                    complexity: 0.3,
+                    humor: 0.0,
+                    empathy: 1.0,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec![
+                        "Je comprends...".to_string(),
+                        "C'est normal de ressentir...".to_string(),
+                    ],
+                    suffixes: vec!["Je suis là.".to_string(), "Prends ton temps.".to_string()],
+                    interjections: vec![],
+                    emojis: vec!["💙".to_string(), "🤗".to_string()],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Je comprends...".to_string(), "C'est normal de ressentir...".to_string()],
-                suffixes: vec!["Je suis là.".to_string(), "Prends ton temps.".to_string()],
-                interjections: vec![],
-                emojis: vec!["💙".to_string(), "🤗".to_string()],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Encouraging
-        self.tone_presets.insert(Tone::Encouraging, ToneConfig {
-            primary_tone: Tone::Encouraging,
-            secondary_tone: Some(Tone::Enthusiastic),
-            parameters: ToneParameters {
-                formality: 0.2,
-                warmth: 0.9,
-                energy: 0.8,
-                directness: 0.5,
-                complexity: 0.3,
-                humor: 0.2,
-                empathy: 0.7,
+        self.tone_presets.insert(
+            Tone::Encouraging,
+            ToneConfig {
+                primary_tone: Tone::Encouraging,
+                secondary_tone: Some(Tone::Enthusiastic),
+                parameters: ToneParameters {
+                    formality: 0.2,
+                    warmth: 0.9,
+                    energy: 0.8,
+                    directness: 0.5,
+                    complexity: 0.3,
+                    humor: 0.2,
+                    empathy: 0.7,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["Tu peux le faire!".to_string(), "Excellent!".to_string()],
+                    suffixes: vec!["Continue comme ça!".to_string(), "Bravo!".to_string()],
+                    interjections: vec!["Super!".to_string(), "Wow!".to_string()],
+                    emojis: vec!["🚀".to_string(), "💪".to_string(), "⭐".to_string()],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Tu peux le faire!".to_string(), "Excellent!".to_string()],
-                suffixes: vec!["Continue comme ça!".to_string(), "Bravo!".to_string()],
-                interjections: vec!["Super!".to_string(), "Wow!".to_string()],
-                emojis: vec!["🚀".to_string(), "💪".to_string(), "⭐".to_string()],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Instructive
-        self.tone_presets.insert(Tone::Instructive, ToneConfig {
-            primary_tone: Tone::Instructive,
-            secondary_tone: None,
-            parameters: ToneParameters {
-                formality: 0.5,
-                warmth: 0.5,
-                energy: 0.5,
-                directness: 0.7,
-                complexity: 0.6,
-                humor: 0.1,
-                empathy: 0.4,
+        self.tone_presets.insert(
+            Tone::Instructive,
+            ToneConfig {
+                primary_tone: Tone::Instructive,
+                secondary_tone: None,
+                parameters: ToneParameters {
+                    formality: 0.5,
+                    warmth: 0.5,
+                    energy: 0.5,
+                    directness: 0.7,
+                    complexity: 0.6,
+                    humor: 0.1,
+                    empathy: 0.4,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["Voici comment".to_string(), "Pour cela".to_string()],
+                    suffixes: vec!["Essaie et dis-moi.".to_string()],
+                    interjections: vec![],
+                    emojis: vec!["📝".to_string(), "💡".to_string()],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Voici comment".to_string(), "Pour cela".to_string()],
-                suffixes: vec!["Essaie et dis-moi.".to_string()],
-                interjections: vec![],
-                emojis: vec!["📝".to_string(), "💡".to_string()],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Playful
-        self.tone_presets.insert(Tone::Playful, ToneConfig {
-            primary_tone: Tone::Playful,
-            secondary_tone: Some(Tone::Friendly),
-            parameters: ToneParameters {
-                formality: 0.1,
-                warmth: 0.8,
-                energy: 0.9,
-                directness: 0.3,
-                complexity: 0.2,
-                humor: 0.8,
-                empathy: 0.5,
+        self.tone_presets.insert(
+            Tone::Playful,
+            ToneConfig {
+                primary_tone: Tone::Playful,
+                secondary_tone: Some(Tone::Friendly),
+                parameters: ToneParameters {
+                    formality: 0.1,
+                    warmth: 0.8,
+                    energy: 0.9,
+                    directness: 0.3,
+                    complexity: 0.2,
+                    humor: 0.8,
+                    empathy: 0.5,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["Haha!".to_string(), "Devine quoi?".to_string()],
+                    suffixes: vec!["😄".to_string(), "Amusant, non?".to_string()],
+                    interjections: vec!["Hehe".to_string(), "Woohoo!".to_string()],
+                    emojis: vec![
+                        "😄".to_string(),
+                        "🎉".to_string(),
+                        "🎮".to_string(),
+                        "✨".to_string(),
+                    ],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Haha!".to_string(), "Devine quoi?".to_string()],
-                suffixes: vec!["😄".to_string(), "Amusant, non?".to_string()],
-                interjections: vec!["Hehe".to_string(), "Woohoo!".to_string()],
-                emojis: vec!["😄".to_string(), "🎉".to_string(), "🎮".to_string(), "✨".to_string()],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Serious
-        self.tone_presets.insert(Tone::Serious, ToneConfig {
-            primary_tone: Tone::Serious,
-            secondary_tone: None,
-            parameters: ToneParameters {
-                formality: 0.7,
-                warmth: 0.2,
-                energy: 0.3,
-                directness: 0.8,
-                complexity: 0.5,
-                humor: 0.0,
-                empathy: 0.3,
+        self.tone_presets.insert(
+            Tone::Serious,
+            ToneConfig {
+                primary_tone: Tone::Serious,
+                secondary_tone: None,
+                parameters: ToneParameters {
+                    formality: 0.7,
+                    warmth: 0.2,
+                    energy: 0.3,
+                    directness: 0.8,
+                    complexity: 0.5,
+                    humor: 0.0,
+                    empathy: 0.3,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["Important:".to_string(), "Attention:".to_string()],
+                    suffixes: vec![],
+                    interjections: vec![],
+                    emojis: vec![],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["Important:".to_string(), "Attention:".to_string()],
-                suffixes: vec![],
-                interjections: vec![],
-                emojis: vec![],
-                expressions: vec![],
-            },
-        });
+        );
 
         // Urgent
-        self.tone_presets.insert(Tone::Urgent, ToneConfig {
-            primary_tone: Tone::Urgent,
-            secondary_tone: Some(Tone::Serious),
-            parameters: ToneParameters {
-                formality: 0.6,
-                warmth: 0.2,
-                energy: 0.9,
-                directness: 1.0,
-                complexity: 0.3,
-                humor: 0.0,
-                empathy: 0.2,
+        self.tone_presets.insert(
+            Tone::Urgent,
+            ToneConfig {
+                primary_tone: Tone::Urgent,
+                secondary_tone: Some(Tone::Serious),
+                parameters: ToneParameters {
+                    formality: 0.6,
+                    warmth: 0.2,
+                    energy: 0.9,
+                    directness: 1.0,
+                    complexity: 0.3,
+                    humor: 0.0,
+                    empathy: 0.2,
+                },
+                text_markers: ToneTextMarkers {
+                    prefixes: vec!["⚠️ URGENT:".to_string(), "IMMÉDIATEMENT:".to_string()],
+                    suffixes: vec!["Agis maintenant.".to_string()],
+                    interjections: vec![],
+                    emojis: vec!["⚠️".to_string(), "🚨".to_string()],
+                    expressions: vec![],
+                },
             },
-            text_markers: ToneTextMarkers {
-                prefixes: vec!["⚠️ URGENT:".to_string(), "IMMÉDIATEMENT:".to_string()],
-                suffixes: vec!["Agis maintenant.".to_string()],
-                interjections: vec![],
-                emojis: vec!["⚠️".to_string(), "🚨".to_string()],
-                expressions: vec![],
-            },
-        });
+        );
     }
 
     /// Change la tonalité actuelle

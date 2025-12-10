@@ -15,12 +15,12 @@
  * Type d'interruption conversationnelle
  */
 export type InterruptionType =
-  | 'hard_stop'       // "Stop!" → Arrêt complet, reset contexte
-  | 'redirect'        // "Non attends, je veux..." → Changement de sujet
-  | 'clarification'   // "Qu'est-ce que tu veux dire?" → Clarification
-  | 'correction'      // "Non, ce n'est pas ça" → Correction
-  | 'agreement'       // "Oui, continue" → Accord, continue
-  | 'disagreement';   // "Non, pas du tout" → Désaccord
+  | 'hard_stop' // "Stop!" → Arrêt complet, reset contexte
+  | 'redirect' // "Non attends, je veux..." → Changement de sujet
+  | 'clarification' // "Qu'est-ce que tu veux dire?" → Clarification
+  | 'correction' // "Non, ce n'est pas ça" → Correction
+  | 'agreement' // "Oui, continue" → Accord, continue
+  | 'disagreement'; // "Non, pas du tout" → Désaccord
 
 /**
  * Contexte d'interruption
@@ -28,9 +28,9 @@ export type InterruptionType =
 export interface InterruptionContext {
   type: InterruptionType;
   userText: string;
-  interruptedMessage: string;      // Message IA interrompu
-  interruptedAt: number;            // Position dans le message (0-1)
-  confidence: number;               // 0-1
+  interruptedMessage: string; // Message IA interrompu
+  interruptedAt: number; // Position dans le message (0-1)
+  confidence: number; // 0-1
   timestamp: number;
 }
 
@@ -77,9 +77,7 @@ export class ChatInterruptionHandler {
       /(qu'est-ce que|c'est quoi|comment|pourquoi|ça veut dire quoi|explique)/i,
       /(je ne comprends pas|je n'ai pas compris|répète|redis)/i,
     ],
-    correction: [
-      /(non|pas du tout|faux|erreur|c'est pas ça|tu te trompes)/i,
-    ],
+    correction: [/(non|pas du tout|faux|erreur|c'est pas ça|tu te trompes)/i],
   };
 
   constructor(config: InterruptionHandlerConfig = {}) {
@@ -89,7 +87,8 @@ export class ChatInterruptionHandler {
       patterns: {
         hardStop: config.patterns?.hardStop ?? this.defaultPatterns.hardStop,
         redirect: config.patterns?.redirect ?? this.defaultPatterns.redirect,
-        clarification: config.patterns?.clarification ?? this.defaultPatterns.clarification,
+        clarification:
+          config.patterns?.clarification ?? this.defaultPatterns.clarification,
         correction: config.patterns?.correction ?? this.defaultPatterns.correction,
       },
     };
@@ -241,14 +240,16 @@ export class ChatInterruptionHandler {
     const keywords: Record<InterruptionType, string[]> = {
       hard_stop: ['stop', 'arrête', 'tais-toi', 'silence'],
       redirect: ['plutôt', 'maintenant', 'en fait', 'je veux'],
-      clarification: ['comment', 'pourquoi', 'explique', 'qu\'est-ce'],
+      clarification: ['comment', 'pourquoi', 'explique', "qu'est-ce"],
       correction: ['non', 'faux', 'erreur', 'pas ça'],
-      agreement: ['oui', 'exactement', 'continue', 'd\'accord'],
-      disagreement: ['non', 'pas du tout', 'faux', 'je ne suis pas d\'accord'],
+      agreement: ['oui', 'exactement', 'continue', "d'accord"],
+      disagreement: ['non', 'pas du tout', 'faux', "je ne suis pas d'accord"],
     };
 
     const typeKeywords = keywords[type] || [];
-    const matchCount = typeKeywords.filter(keyword => normalizedText.includes(keyword)).length;
+    const matchCount = typeKeywords.filter(keyword =>
+      normalizedText.includes(keyword)
+    ).length;
 
     confidence += matchCount * 0.15;
 

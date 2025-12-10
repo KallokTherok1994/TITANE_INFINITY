@@ -24,12 +24,12 @@ import {
   Database,
   Brain,
   Settings,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import type {
   Recommendation,
   RecommendationCategory,
-  RecommendationImpact
+  RecommendationImpact,
 } from '../../services/performanceEngine/performanceEngine.config';
 
 // ============================================================================
@@ -62,91 +62,100 @@ export interface RecommendationsPanelProps {
 // CONFIGURATION
 // ============================================================================
 
-const CATEGORY_CONFIG: Record<RecommendationCategory, {
-  label: string;
-  color: string;
-  bgColor: string;
-  icon: typeof Code;
-}> = {
+const CATEGORY_CONFIG: Record<
+  RecommendationCategory,
+  {
+    label: string;
+    color: string;
+    bgColor: string;
+    icon: typeof Code;
+  }
+> = {
   react_optimization: {
     label: 'React',
     color: 'text-cyan-400',
     bgColor: 'bg-cyan-500/20',
-    icon: Code
+    icon: Code,
   },
   rust_optimization: {
     label: 'Rust',
     color: 'text-orange-400',
     bgColor: 'bg-orange-500/20',
-    icon: Cpu
+    icon: Cpu,
   },
   vite_optimization: {
     label: 'Vite',
     color: 'text-purple-400',
     bgColor: 'bg-purple-500/20',
-    icon: Zap
+    icon: Zap,
   },
   ia_optimization: {
     label: 'IA',
     color: 'text-emerald-400',
     bgColor: 'bg-emerald-500/20',
-    icon: Brain
+    icon: Brain,
   },
   memory_optimization: {
     label: 'Mémoire',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/20',
-    icon: Database
+    icon: Database,
   },
   general: {
     label: 'Général',
     color: 'text-slate-400',
     bgColor: 'bg-slate-500/20',
-    icon: Settings
-  }
+    icon: Settings,
+  },
 };
 
-const IMPACT_CONFIG: Record<RecommendationImpact, {
-  label: string;
-  color: string;
-  bgColor: string;
-  order: number;
-}> = {
+const IMPACT_CONFIG: Record<
+  RecommendationImpact,
+  {
+    label: string;
+    color: string;
+    bgColor: string;
+    order: number;
+  }
+> = {
   critical: {
     label: 'Critique',
     color: 'text-red-400',
     bgColor: 'bg-red-500/20',
-    order: 0
+    order: 0,
   },
   high: {
     label: 'Élevé',
     color: 'text-orange-400',
     bgColor: 'bg-orange-500/20',
-    order: 1
+    order: 1,
   },
   medium: {
     label: 'Moyen',
     color: 'text-amber-400',
     bgColor: 'bg-amber-500/20',
-    order: 2
+    order: 2,
   },
   low: {
     label: 'Faible',
     color: 'text-blue-400',
     bgColor: 'bg-blue-500/20',
-    order: 3
-  }
+    order: 3,
+  },
 };
 
-const EFFORT_CONFIG: Record<string, {
-  label: string;
-  color: string;
-  order: number;
-}> = {
+const EFFORT_CONFIG: Record<
+  string,
+  {
+    label: string;
+    color: string;
+    order: number;
+  }
+> = {
   trivial: { label: 'Trivial', color: 'text-green-400', order: 0 },
   low: { label: 'Faible', color: 'text-blue-400', order: 1 },
   medium: { label: 'Moyen', color: 'text-amber-400', order: 2 },
-  high: { label: 'Important', color: 'text-red-400', order: 3 }
+  high: { label: 'Important', color: 'text-red-400', order: 3 },
 };
 
 // ============================================================================
@@ -170,7 +179,7 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
   expanded,
   onToggle,
   onApply,
-  onDismiss
+  onDismiss,
 }) => {
   const categoryConfig = CATEGORY_CONFIG[recommendation.category];
   const impactConfig = IMPACT_CONFIG[recommendation.impact];
@@ -185,9 +194,10 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
       layout
       className={`
         rounded-lg border overflow-hidden
-        ${isApplied
-          ? 'bg-green-500/10 border-green-500/30'
-          : 'bg-slate-800/50 border-slate-700/50'
+        ${
+          isApplied
+            ? 'bg-green-500/10 border-green-500/30'
+            : 'bg-slate-800/50 border-slate-700/50'
         }
       `}
     >
@@ -209,7 +219,9 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <span className={`font-medium ${isApplied ? 'text-green-400' : 'text-white'}`}>
+            <span
+              className={`font-medium ${isApplied ? 'text-green-400' : 'text-white'}`}
+            >
               {recommendation.title}
             </span>
             {isApplied && (
@@ -235,7 +247,9 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
         </div>
 
         {/* Badge d'impact */}
-        <div className={`px-2 py-1 rounded text-xs font-medium ${impactConfig.bgColor} ${impactConfig.color}`}>
+        <div
+          className={`px-2 py-1 rounded text-xs font-medium ${impactConfig.bgColor} ${impactConfig.color}`}
+        >
           {impactConfig.label}
         </div>
       </button>
@@ -259,7 +273,9 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
               {/* Code snippet si disponible */}
               {recommendation.code && (
                 <div className="mb-4">
-                  <span className="text-xs text-slate-500 block mb-2">Exemple de code ({recommendation.code.language})</span>
+                  <span className="text-xs text-slate-500 block mb-2">
+                    Exemple de code ({recommendation.code.language})
+                  </span>
                   <pre className="text-xs bg-slate-900/70 rounded-lg p-3 overflow-x-auto text-slate-300 border border-slate-700/50">
                     {recommendation.code.after}
                   </pre>
@@ -273,19 +289,27 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
               )}
 
               {/* Issues liées */}
-              {recommendation.relatedIssues && recommendation.relatedIssues.length > 0 && (
-                <div className="mb-4">
-                  <span className="text-xs text-slate-500 block mb-2">Issues liées</span>
-                  <ul className="space-y-1">
-                    {recommendation.relatedIssues.map((issueId: string, idx: number) => (
-                      <li key={idx} className="flex items-center gap-2 text-xs text-slate-400">
-                        <Code size={12} />
-                        {issueId}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+              {recommendation.relatedIssues &&
+                recommendation.relatedIssues.length > 0 && (
+                  <div className="mb-4">
+                    <span className="text-xs text-slate-500 block mb-2">
+                      Issues liées
+                    </span>
+                    <ul className="space-y-1">
+                      {recommendation.relatedIssues.map(
+                        (issueId: string, idx: number) => (
+                          <li
+                            key={idx}
+                            className="flex items-center gap-2 text-xs text-slate-400"
+                          >
+                            <Code size={12} />
+                            {issueId}
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
 
               {/* Priorité */}
               {recommendation.priority && (
@@ -318,13 +342,17 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                 <div className="flex items-center gap-2 pt-2 border-t border-slate-700/30">
                   {onApply && recommendation.autoApplicable && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); onApply(); }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onApply();
+                      }}
                       disabled={isApplying}
                       className={`
                         flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors
-                        ${isApplying
-                          ? 'bg-blue-500/30 text-blue-300 cursor-wait'
-                          : 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
+                        ${
+                          isApplying
+                            ? 'bg-blue-500/30 text-blue-300 cursor-wait'
+                            : 'bg-blue-500/20 text-blue-400 hover:bg-blue-500/30'
                         }
                       `}
                     >
@@ -348,7 +376,10 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                   )}
                   {onDismiss && (
                     <button
-                      onClick={(e) => { e.stopPropagation(); onDismiss(); }}
+                      onClick={e => {
+                        e.stopPropagation();
+                        onDismiss();
+                      }}
                       className="flex items-center gap-2 px-3 py-1.5 rounded-lg
                         bg-slate-700/50 text-slate-400 hover:bg-slate-700 transition-colors"
                     >
@@ -380,7 +411,7 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
   onApply,
   onDismiss,
   onViewDetails,
-  className = ''
+  className = '',
 }) => {
   // États
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
@@ -448,9 +479,15 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
   const stats = useMemo(() => {
     const total = recommendations.length;
     const applied = recommendations.filter(r => appliedIds.has(r.id)).length;
-    const critical = recommendations.filter(r => r.impact === 'critical' && !appliedIds.has(r.id)).length;
-    const high = recommendations.filter(r => r.impact === 'high' && !appliedIds.has(r.id)).length;
-    const autoApplicable = recommendations.filter(r => r.autoApplicable && !appliedIds.has(r.id)).length;
+    const critical = recommendations.filter(
+      r => r.impact === 'critical' && !appliedIds.has(r.id)
+    ).length;
+    const high = recommendations.filter(
+      r => r.impact === 'high' && !appliedIds.has(r.id)
+    ).length;
+    const autoApplicable = recommendations.filter(
+      r => r.autoApplicable && !appliedIds.has(r.id)
+    ).length;
 
     return { total, applied, critical, high, autoApplicable };
   }, [recommendations, appliedIds]);
@@ -468,20 +505,23 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
     });
   }, []);
 
-  const handleApply = useCallback(async (rec: Recommendation) => {
-    if (!onApply || applyingIds.has(rec.id)) return;
+  const handleApply = useCallback(
+    async (rec: Recommendation) => {
+      if (!onApply || applyingIds.has(rec.id)) return;
 
-    setApplyingIds(prev => new Set([...prev, rec.id]));
-    try {
-      await onApply(rec);
-    } finally {
-      setApplyingIds(prev => {
-        const next = new Set(prev);
-        next.delete(rec.id);
-        return next;
-      });
-    }
-  }, [onApply, applyingIds]);
+      setApplyingIds(prev => new Set([...prev, rec.id]));
+      try {
+        await onApply(rec);
+      } finally {
+        setApplyingIds(prev => {
+          const next = new Set(prev);
+          next.delete(rec.id);
+          return next;
+        });
+      }
+    },
+    [onApply, applyingIds]
+  );
 
   const toggleCategoryFilter = useCallback((category: RecommendationCategory) => {
     setFilters(prev => {
@@ -503,14 +543,17 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
     });
   }, []);
 
-  const toggleSort = useCallback((field: SortField) => {
-    if (sortField === field) {
-      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortField(field);
-      setSortDirection('asc');
-    }
-  }, [sortField]);
+  const toggleSort = useCallback(
+    (field: SortField) => {
+      if (sortField === field) {
+        setSortDirection(prev => (prev === 'asc' ? 'desc' : 'asc'));
+      } else {
+        setSortField(field);
+        setSortDirection('asc');
+      }
+    },
+    [sortField]
+  );
 
   const SortIcon = sortDirection === 'asc' ? ArrowUp : ArrowDown;
 
@@ -587,51 +630,57 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                 <div className="flex flex-wrap items-center gap-2">
                   <Filter size={14} className="text-slate-400" />
                   <span className="text-xs text-slate-400">Catégorie:</span>
-                  {(Object.keys(CATEGORY_CONFIG) as RecommendationCategory[]).map(category => {
-                    const config = CATEGORY_CONFIG[category];
-                    const isActive = filters.categories?.includes(category);
-                    const CategoryIcon = config.icon;
-                    return (
-                      <button
-                        key={category}
-                        onClick={() => toggleCategoryFilter(category)}
-                        className={`
+                  {(Object.keys(CATEGORY_CONFIG) as RecommendationCategory[]).map(
+                    category => {
+                      const config = CATEGORY_CONFIG[category];
+                      const isActive = filters.categories?.includes(category);
+                      const CategoryIcon = config.icon;
+                      return (
+                        <button
+                          key={category}
+                          onClick={() => toggleCategoryFilter(category)}
+                          className={`
                           flex items-center gap-1 px-2 py-1 rounded text-xs transition-colors
-                          ${isActive
-                            ? `${config.bgColor} ${config.color}`
-                            : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                          ${
+                            isActive
+                              ? `${config.bgColor} ${config.color}`
+                              : 'bg-slate-700/50 text-slate-400 hover:text-white'
                           }
                         `}
-                      >
-                        <CategoryIcon size={10} />
-                        {config.label}
-                      </button>
-                    );
-                  })}
+                        >
+                          <CategoryIcon size={10} />
+                          {config.label}
+                        </button>
+                      );
+                    }
+                  )}
                 </div>
 
                 {/* Filtres par impact et tri */}
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs text-slate-400">Impact:</span>
-                  {(['critical', 'high', 'medium', 'low'] as RecommendationImpact[]).map(impact => {
-                    const config = IMPACT_CONFIG[impact];
-                    const isActive = filters.impacts?.includes(impact);
-                    return (
-                      <button
-                        key={impact}
-                        onClick={() => toggleImpactFilter(impact)}
-                        className={`
+                  {(['critical', 'high', 'medium', 'low'] as RecommendationImpact[]).map(
+                    impact => {
+                      const config = IMPACT_CONFIG[impact];
+                      const isActive = filters.impacts?.includes(impact);
+                      return (
+                        <button
+                          key={impact}
+                          onClick={() => toggleImpactFilter(impact)}
+                          className={`
                           px-2 py-1 rounded text-xs transition-colors
-                          ${isActive
-                            ? `${config.bgColor} ${config.color}`
-                            : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                          ${
+                            isActive
+                              ? `${config.bgColor} ${config.color}`
+                              : 'bg-slate-700/50 text-slate-400 hover:text-white'
                           }
                         `}
-                      >
-                        {config.label}
-                      </button>
-                    );
-                  })}
+                        >
+                          {config.label}
+                        </button>
+                      );
+                    }
+                  )}
 
                   <div className="flex-1" />
 
@@ -640,9 +689,10 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                     onClick={() => toggleSort('impact')}
                     className={`
                       flex items-center gap-1 px-2 py-1 rounded text-xs
-                      ${sortField === 'impact'
-                        ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                      ${
+                        sortField === 'impact'
+                          ? 'bg-blue-500/20 text-blue-400'
+                          : 'bg-slate-700/50 text-slate-400 hover:text-white'
                       }
                     `}
                   >
@@ -654,9 +704,10 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
                     onClick={() => toggleSort('effort')}
                     className={`
                       flex items-center gap-1 px-2 py-1 rounded text-xs
-                      ${sortField === 'effort'
-                        ? 'bg-blue-500/20 text-blue-400'
-                        : 'bg-slate-700/50 text-slate-400 hover:text-white'
+                      ${
+                        sortField === 'effort'
+                          ? 'bg-blue-500/20 text-blue-400'
+                          : 'bg-slate-700/50 text-slate-400 hover:text-white'
                       }
                     `}
                   >
@@ -699,7 +750,8 @@ export const RecommendationsPanel: React.FC<RecommendationsPanelProps> = ({
               {/* Indicateur de troncature */}
               {filteredRecs.length > maxVisible && (
                 <div className="text-center text-sm text-slate-400 pt-4">
-                  Affichage de {sortedRecs.length} sur {filteredRecs.length} recommandations
+                  Affichage de {sortedRecs.length} sur {filteredRecs.length}{' '}
+                  recommandations
                 </div>
               )}
             </div>

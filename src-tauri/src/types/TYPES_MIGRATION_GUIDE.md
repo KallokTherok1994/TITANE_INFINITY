@@ -7,6 +7,7 @@
 ### 1. HealthStatus (2 définitions incompatibles)
 
 **types/helios.rs :**
+
 ```rust
 pub enum HealthStatus {
     Healthy,
@@ -16,6 +17,7 @@ pub enum HealthStatus {
 ```
 
 **shared/types.rs :**
+
 ```rust
 pub enum HealthStatus {
     Healthy,
@@ -28,6 +30,7 @@ pub enum HealthStatus {
 ### 2. ModuleHealth (2 définitions complètement différentes)
 
 **types/nexus.rs :**
+
 ```rust
 pub enum ModuleHealth {  // ← ENUM
     Healthy,
@@ -37,6 +40,7 @@ pub enum ModuleHealth {  // ← ENUM
 ```
 
 **shared/types.rs :**
+
 ```rust
 pub struct ModuleHealth {  // ← STRUCT
     pub name: String,
@@ -100,6 +104,7 @@ pub struct ModuleStatus {
 ### Phase 3 : Deprecate shared/types.rs
 
 Ajouter en haut du fichier :
+
 ```rust
 #[deprecated(since = "17.3.0", note = "Use types::shared instead")]
 ```

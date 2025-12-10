@@ -40,10 +40,14 @@ interface SelfTestReport {
 export const SingularityPanelVInfinity: React.FC = () => {
   const [state, setState] = useState<SingularityStateVInfinity | null>(null);
   const [metaReport, setMetaReport] = useState<MetaCognitiveReport | null>(null);
-  const [integrityResult, setIntegrityResult] = useState<IntegrityCheckResult | null>(null);
+  const [integrityResult, setIntegrityResult] = useState<IntegrityCheckResult | null>(
+    null
+  );
   const [selfTestReport, setSelfTestReport] = useState<SelfTestReport | null>(null);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'modules' | 'meta' | 'integrity' | 'selftest'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'modules' | 'meta' | 'integrity' | 'selftest'
+  >('overview');
   const [error, setError] = useState<string | null>(null);
 
   // Charger état initial
@@ -111,7 +115,11 @@ export const SingularityPanelVInfinity: React.FC = () => {
   };
 
   const handleRepair = async () => {
-    if (!confirm('⚠️ Exécuter l\'auto-réparation ? Cela tentera de corriger l\'état corrompu.')) {
+    if (
+      !confirm(
+        "⚠️ Exécuter l'auto-réparation ? Cela tentera de corriger l'état corrompu."
+      )
+    ) {
       return;
     }
 
@@ -243,7 +251,11 @@ export const SingularityPanelVInfinity: React.FC = () => {
         <button onClick={handleMetaEval} disabled={loading} className="btn-meta">
           🧠 META EVAL
         </button>
-        <button onClick={handleIntegrityCheck} disabled={loading} className="btn-integrity">
+        <button
+          onClick={handleIntegrityCheck}
+          disabled={loading}
+          className="btn-integrity"
+        >
           🔐 INTEGRITY
         </button>
         <button onClick={handleSelfTest} disabled={loading} className="btn-test">
@@ -431,13 +443,15 @@ export const SingularityPanelVInfinity: React.FC = () => {
                 { name: 'AI', data: state.ai, icon: '🤖' },
                 { name: 'Backend', data: state.backend, icon: '🔧' },
                 { name: 'Core', data: state.core, icon: '🌌' },
-              ].map((module) => (
+              ].map(module => (
                 <div key={module.name} className="module-card">
                   <div className="module-header">
                     <span className="module-icon">{module.icon}</span>
                     <span className="module-name">{module.name}</span>
                   </div>
-                  <pre className="module-data">{JSON.stringify(module.data, null, 2)}</pre>
+                  <pre className="module-data">
+                    {JSON.stringify(module.data, null, 2)}
+                  </pre>
                 </div>
               ))}
             </div>
@@ -525,8 +539,13 @@ export const SingularityPanelVInfinity: React.FC = () => {
                   >
                     {integrityResult.is_valid ? '✅ VALIDE' : '❌ INVALIDE'}
                   </div>
-                  <div className={`status-badge ${integrityResult.hash_matches ? 'valid' : 'invalid'}`}>
-                    Hash: {integrityResult.hash_matches ? '✅ Correspondance' : '❌ Non-correspondance'}
+                  <div
+                    className={`status-badge ${integrityResult.hash_matches ? 'valid' : 'invalid'}`}
+                  >
+                    Hash:{' '}
+                    {integrityResult.hash_matches
+                      ? '✅ Correspondance'
+                      : '❌ Non-correspondance'}
                   </div>
                 </div>
 
@@ -557,14 +576,18 @@ export const SingularityPanelVInfinity: React.FC = () => {
 
                 {integrityResult.is_valid && (
                   <div className="integrity-section valid">
-                    <p>✅ Intégrité système vérifiée. Tous les modules sont opérationnels.</p>
+                    <p>
+                      ✅ Intégrité système vérifiée. Tous les modules sont opérationnels.
+                    </p>
                   </div>
                 )}
               </>
             ) : (
               <div className="empty-state">
                 <p>Aucune vérification d'intégrité effectuée</p>
-                <button onClick={handleIntegrityCheck}>Lancer la Vérification d'Intégrité</button>
+                <button onClick={handleIntegrityCheck}>
+                  Lancer la Vérification d'Intégrité
+                </button>
               </div>
             )}
           </div>
@@ -595,7 +618,9 @@ export const SingularityPanelVInfinity: React.FC = () => {
                     <h3>Tests Échoués</h3>
                     <div
                       className="score-big"
-                      style={{ color: selfTestReport.failed_tests > 0 ? '#ff4444' : '#00ff88' }}
+                      style={{
+                        color: selfTestReport.failed_tests > 0 ? '#ff4444' : '#00ff88',
+                      }}
                     >
                       {selfTestReport.failed_tests}
                     </div>

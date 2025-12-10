@@ -4,9 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::cycle_engine::{
-    cognitive_rhythm::CognitiveRhythmParams,
-    load_regulator::LoadRegulationParams,
-    CycleEngine,
+    cognitive_rhythm::CognitiveRhythmParams, load_regulator::LoadRegulationParams, CycleEngine,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -64,10 +62,7 @@ impl KernelCycleBridge {
         (load_params.kernel_priority * 10.0) as usize + 3
     }
 
-    fn calculate_max_cpu(
-        &self,
-        state: &crate::cycle_engine::cycles::CycleState,
-    ) -> f32 {
+    fn calculate_max_cpu(&self, state: &crate::cycle_engine::cycles::CycleState) -> f32 {
         match state.daily_phase {
             crate::cycle_engine::cycles::DailyPhase::Noon => 0.9,
             crate::cycle_engine::cycles::DailyPhase::Night => 0.5,
@@ -75,10 +70,7 @@ impl KernelCycleBridge {
         }
     }
 
-    fn calculate_max_memory(
-        &self,
-        state: &crate::cycle_engine::cycles::CycleState,
-    ) -> usize {
+    fn calculate_max_memory(&self, state: &crate::cycle_engine::cycles::CycleState) -> usize {
         match state.daily_phase {
             crate::cycle_engine::cycles::DailyPhase::Noon => 4096,
             crate::cycle_engine::cycles::DailyPhase::Night => 2048,

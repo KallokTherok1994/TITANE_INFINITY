@@ -54,10 +54,7 @@ describe('useBatchCommands Hook', () => {
 
     const { result } = renderHook(() => useBatchCommands());
 
-    const commands = [
-      { command: 'test_command_1' },
-      { command: 'test_command_2' },
-    ];
+    const commands = [{ command: 'test_command_1' }, { command: 'test_command_2' }];
 
     await waitFor(async () => {
       await result.current.executeBatch(commands);

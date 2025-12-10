@@ -68,7 +68,8 @@ export const MemoryTimeline = ({
   onSearch,
   onEntryClick,
 }: MemoryTimelineProps): JSX.Element => {
-  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } =
+    useAnimation();
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (value: string): void => {
@@ -164,7 +165,9 @@ export const MemoryTimeline = ({
                       marginBottom: spacing[2],
                     }}
                   >
-                    <div style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}>
+                    <div
+                      style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}
+                    >
                       <Badge
                         variant="neutral"
                         size="sm"

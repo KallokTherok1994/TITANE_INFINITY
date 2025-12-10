@@ -69,7 +69,10 @@ export class PriorityEngine {
       ...config,
       weights: { ...DEFAULT_PRIORITY_CONFIG.weights, ...config?.weights },
       thresholds: { ...DEFAULT_PRIORITY_CONFIG.thresholds, ...config?.thresholds },
-      contextModifiers: { ...DEFAULT_PRIORITY_CONFIG.contextModifiers, ...config?.contextModifiers },
+      contextModifiers: {
+        ...DEFAULT_PRIORITY_CONFIG.contextModifiers,
+        ...config?.contextModifiers,
+      },
     };
   }
 
@@ -105,7 +108,7 @@ export class PriorityEngine {
     score = this.applyContextModifiers(score, event);
 
     // Combiner avec le score de base
-    score = (baseScore * 0.4) + (score * 0.6);
+    score = baseScore * 0.4 + score * 0.6;
 
     // Clamp entre 0 et 100
     return Math.max(0, Math.min(100, Math.round(score)));
@@ -210,7 +213,7 @@ export class PriorityEngine {
     const diff = predictedEnergy - requiredEnergy;
 
     if (diff >= 0.2) return 90; // Beaucoup d'énergie disponible
-    if (diff >= 0) return 75;   // Assez d'énergie
+    if (diff >= 0) return 75; // Assez d'énergie
     if (diff >= -0.2) return 50; // Légèrement sous-optimal
     return 30; // Énergie insuffisante
   }
@@ -301,8 +304,9 @@ export class PriorityEngine {
    * Obtient les événements urgents (score >= seuil urgent)
    */
   getUrgentEvents(events: AgendaEvent[]): AgendaEvent[] {
-    return this.annotateEventsWithPriority(events)
-      .filter(e => (e.priorityScore || 0) >= this.config.thresholds.urgent);
+    return this.annotateEventsWithPriority(events).filter(
+      e => (e.priorityScore || 0) >= this.config.thresholds.urgent
+    );
   }
 
   /**

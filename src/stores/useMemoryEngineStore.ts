@@ -57,7 +57,9 @@ interface MemoryEngineActions {
   reset: () => void;
 
   // Memory CRUD
-  addMemory: (memory: Omit<Memory, 'id' | 'createdAt' | 'accessedAt' | 'accessCount'>) => string;
+  addMemory: (
+    memory: Omit<Memory, 'id' | 'createdAt' | 'accessedAt' | 'accessCount'>
+  ) => string;
   getMemory: (id: string) => Memory | undefined;
   updateMemory: (id: string, updates: Partial<Memory>) => void;
   deleteMemory: (id: string) => void;
@@ -136,7 +138,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
 
         // ========== Initialization ==========
         initialize: async () => {
-          set((state) => {
+          set(state => {
             state.isLoading = true;
             state.error = null;
           });
@@ -144,15 +146,16 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
           try {
             // Charger les mémoires persistantes si disponibles
             // Pour l'instant, initialisation vide
-            set((state) => {
+            set(state => {
               state.isInitialized = true;
               state.isLoading = false;
             });
             get().updateStats();
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isLoading = false;
-              state.error = error instanceof Error ? error.message : 'Erreur d\'initialisation';
+              state.error =
+                error instanceof Error ? error.message : "Erreur d'initialisation";
             });
           }
         },
@@ -162,7 +165,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
         },
 
         // ========== Memory CRUD ==========
-        addMemory: (memoryData) => {
+        addMemory: memoryData => {
           const id = `mem_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
           const now = Date.now();
 
@@ -174,7 +177,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
             accessCount: 0,
           };
 
-          set((state) => {
+          set(state => {
             state.memories.push(newMemory);
           });
 
@@ -182,11 +185,11 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
           return id;
         },
 
-        getMemory: (id) => {
-          const memory = get().memories.find((m) => m.id === id);
+        getMemory: id => {
+          const memory = get().memories.find(m => m.id === id);
           if (memory) {
-            set((state) => {
-              const mem = state.memories.find((m) => m.id === id);
+            set(state => {
+              const mem = state.memories.find(m => m.id === id);
               if (mem) {
                 mem.accessedAt = Date.now();
                 mem.accessCount += 1;
@@ -197,8 +200,8 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
         },
 
         updateMemory: (id, updates) => {
-          set((state) => {
-            const index = state.memories.findIndex((m) => m.id === id);
+          set(state => {
+            const index = state.memories.findIndex(m => m.id === id);
             if (index !== -1) {
               state.memories[index] = { ...state.memories[index], ...updates };
             }
@@ -206,84 +209,88 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
           get().updateStats();
         },
 
-        deleteMemory: (id) => {
-          set((state) => {
-            state.memories = state.memories.filter((m) => m.id !== id);
+        deleteMemory: id => {
+          set(state => {
+            state.memories = state.memories.filter(m => m.id !== id);
           });
           get().updateStats();
         },
 
         // ========== Queries ==========
-        getMemoriesByTier: (tier) => {
-          return get().memories.filter((m) => m.tier === tier);
+        getMemoriesByTier: tier => {
+          return get().memories.filter(m => m.tier === tier);
         },
 
-        getMemoriesByImportance: (importance) => {
-          return get().memories.filter((m) => m.importance === importance);
+        getMemoriesByImportance: importance => {
+          return get().memories.filter(m => m.importance === importance);
         },
 
-        searchMemories: async (query) => {
-          set((state) => {
+        searchMemories: async query => {
+          set(state => {
             state.isSearching = true;
           });
 
           try {
             const queryLower = query.toLowerCase();
             const results = get().memories.filter(
-              (m) =>
+              m =>
                 m.content.toLowerCase().includes(queryLower) ||
-                m.metadata.topics.some((t) => t.toLowerCase().includes(queryLower)) ||
-                m.metadata.keywords.some((k) => k.toLowerCase().includes(queryLower))
+                m.metadata.topics.some(t => t.toLowerCase().includes(queryLower)) ||
+                m.metadata.keywords.some(k => k.toLowerCase().includes(queryLower))
             );
 
-            set((state) => {
+            set(state => {
               state.searchResults = results;
               state.isSearching = false;
             });
 
             return results;
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isSearching = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de recherche';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de recherche';
             });
             return [];
           }
         },
 
         // ========== Context ==========
-        setContext: (context) => {
-          set((state) => {
+        setContext: context => {
+          set(state => {
             state.context = context;
           });
         },
 
         clearContext: () => {
-          set((state) => {
+          set(state => {
             state.context = null;
           });
         },
 
         // ========== Compression ==========
-        compressMemories: async (ids) => {
+        compressMemories: async ids => {
           if (ids.length < 2) return null;
 
-          set((state) => {
+          set(state => {
             state.isCompressing = true;
           });
 
           try {
-            const memories = get().memories.filter((m) => ids.includes(m.id));
+            const memories = get().memories.filter(m => ids.includes(m.id));
             if (memories.length < 2) {
-              set((state) => {
+              set(state => {
                 state.isCompressing = false;
               });
               return null;
             }
 
             // Créer un résumé simple des mémoires
-            const combinedContent = memories.map((m) => m.content).join('\n');
-            const originalTokens = memories.reduce((sum, m) => sum + m.metadata.tokenCount, 0);
+            const combinedContent = memories.map(m => m.content).join('\n');
+            const originalTokens = memories.reduce(
+              (sum, m) => sum + m.metadata.tokenCount,
+              0
+            );
 
             const compressedMemory: Memory = {
               id: `mem_compressed_${Date.now()}`,
@@ -296,9 +303,9 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
                 source: 'compression',
                 sessionId: memories[0]?.metadata.sessionId || 'unknown',
                 confidence: 0.8,
-                topics: [...new Set(memories.flatMap((m) => m.metadata.topics))],
+                topics: [...new Set(memories.flatMap(m => m.metadata.topics))],
                 entities: [],
-                keywords: [...new Set(memories.flatMap((m) => m.metadata.keywords))],
+                keywords: [...new Set(memories.flatMap(m => m.metadata.keywords))],
                 language: 'fr',
                 tokenCount: Math.floor(originalTokens * 0.3),
                 originalLength: combinedContent.length,
@@ -326,9 +333,9 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
               processingTimeMs: 100,
             };
 
-            set((state) => {
+            set(state => {
               // Supprimer les anciennes mémoires
-              state.memories = state.memories.filter((m) => !ids.includes(m.id));
+              state.memories = state.memories.filter(m => !ids.includes(m.id));
               // Ajouter la mémoire compressée
               state.memories.push(compressedMemory);
               // Historique
@@ -339,9 +346,10 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
             get().updateStats();
             return result;
           } catch (error) {
-            set((state) => {
+            set(state => {
               state.isCompressing = false;
-              state.error = error instanceof Error ? error.message : 'Erreur de compression';
+              state.error =
+                error instanceof Error ? error.message : 'Erreur de compression';
             });
             return null;
           }
@@ -351,10 +359,10 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
         cleanup: async () => {
           const now = Date.now();
 
-          set((state) => {
+          set(state => {
             // Supprimer les mémoires expirées
             state.memories = state.memories.filter(
-              (m) => !m.expiresAt || m.expiresAt > now
+              m => !m.expiresAt || m.expiresAt > now
             );
             state.stats.lastCleanup = now;
           });
@@ -386,7 +394,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
           let compressedCount = 0;
           let totalRatio = 0;
 
-          memories.forEach((m) => {
+          memories.forEach(m => {
             byTier[m.tier]++;
             byImportance[m.importance]++;
             totalTokens += m.metadata.tokenCount;
@@ -396,7 +404,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
             }
           });
 
-          set((state) => {
+          set(state => {
             state.stats = {
               ...state.stats,
               totalMemories: memories.length,
@@ -409,14 +417,14 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
         },
 
         // ========== Error Handling ==========
-        setError: (error) => {
-          set((state) => {
+        setError: error => {
+          set(state => {
             state.error = error;
           });
         },
 
         clearError: () => {
-          set((state) => {
+          set(state => {
             state.error = null;
           });
         },
@@ -439,14 +447,14 @@ export const selectError = (state: MemoryEngineStore) => state.error;
 
 // Sélecteurs dérivés
 export const selectCriticalMemories = (state: MemoryEngineStore) =>
-  state.memories.filter((m) => m.importance === 'critical');
+  state.memories.filter(m => m.importance === 'critical');
 
 export const selectRecentMemories = (state: MemoryEngineStore) =>
   state.memories
-    .filter((m) => m.tier === 'instant' || m.tier === 'short')
+    .filter(m => m.tier === 'instant' || m.tier === 'short')
     .sort((a, b) => b.createdAt - a.createdAt);
 
 export const selectPersistentMemories = (state: MemoryEngineStore) =>
-  state.memories.filter((m) => m.tier === 'persistent' && !m.isArchived);
+  state.memories.filter(m => m.tier === 'persistent' && !m.isArchived);
 
 export default useMemoryEngineStore;

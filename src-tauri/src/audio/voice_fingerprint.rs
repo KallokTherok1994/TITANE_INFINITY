@@ -1,10 +1,10 @@
 /**
  * TITANE∞ v∞ — SP-VOICE-001 Partie 3/3: Voice Fingerprinting Rust
  * Backend Rust pour détection acoustique voix TITANE vs voix User
- * 
+ *
  * Résout feedback loop Layer 3: Voice fingerprinting
  * Détecte si l'audio capturé est la voix de TITANE (TTS) ou la voix de l'utilisateur
- * 
+ *
  * Features:
  * - YIN algorithm: Pitch detection (fundamental frequency F0)
  * - LPC (Linear Predictive Coding): Formant extraction (F1, F2, F3)
@@ -12,11 +12,10 @@
  * - MFCC (Mel-Frequency Cepstral Coefficients): 13 coefficients
  * - Calibration: 5-10s samples de voix TITANE
  * - Similarity score: 0.0 (User) à 1.0 (TITANE)
- * 
+ *
  * Target: <50ms latency, >90% accuracy, <5% false positives
  */
-
-use rustfft::{FftPlanner, num_complex::Complex};
+use rustfft::{num_complex::Complex, FftPlanner};
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
 use std::sync::{Arc, Mutex};
@@ -61,7 +60,7 @@ impl VoiceFingerprint {
 
     /**
      * Extract acoustic features from audio samples
-     * 
+     *
      * @param samples Audio samples (16kHz mono)
      * @return VoiceFeatures
      */
@@ -86,10 +85,10 @@ impl VoiceFingerprint {
 
     /**
      * Calibrate TITANE voice profile
-     * 
+     *
      * Requires 5-10 seconds of TITANE TTS samples (various phrases)
      * Should be called once at startup or when TTS voice changes
-     * 
+     *
      * @param samples_list Multiple audio samples (16kHz mono)
      */
     pub fn calibrate_titane(&self, samples_list: Vec<Vec<f32>>) -> Result<(), String> {
@@ -97,7 +96,10 @@ impl VoiceFingerprint {
             return Err("No samples provided for calibration".to_string());
         }
 
-        println!("[VoiceFingerprint] 🎯 Calibrating TITANE voice profile with {} samples", samples_list.len());
+        println!(
+            "[VoiceFingerprint] 🎯 Calibrating TITANE voice profile with {} samples",
+            samples_list.len()
+        );
 
         // Extract features from all samples
         let features_list: Vec<VoiceFeatures> = samples_list
@@ -120,20 +122,27 @@ impl VoiceFingerprint {
         *titane = Some(profile.clone());
 
         println!("[VoiceFingerprint] ✅ TITANE voice profile calibrated:");
-        println!("  - Pitch: {:.1} Hz (±{:.1})", profile.avg_features.pitch, profile.std_dev.pitch);
-        println!("  - F1: {:.1} Hz, F2: {:.1} Hz, F3: {:.1} Hz", 
+        println!(
+            "  - Pitch: {:.1} Hz (±{:.1})",
+            profile.avg_features.pitch, profile.std_dev.pitch
+        );
+        println!(
+            "  - F1: {:.1} Hz, F2: {:.1} Hz, F3: {:.1} Hz",
             profile.avg_features.formants[0],
             profile.avg_features.formants[1],
             profile.avg_features.formants[2]
         );
-        println!("  - Spectral centroid: {:.1} Hz", profile.avg_features.spectral_centroid);
+        println!(
+            "  - Spectral centroid: {:.1} Hz",
+            profile.avg_features.spectral_centroid
+        );
 
         Ok(())
     }
 
     /**
      * Check if audio is TITANE speaking
-     * 
+     *
      * @param samples Audio samples (16kHz mono)
      * @return (is_titane, similarity_score)
      */
@@ -156,7 +165,10 @@ impl VoiceFingerprint {
         let is_titane = similarity >= self.similarity_threshold;
 
         if is_titane {
-            println!("[VoiceFingerprint] 🎯 TITANE detected (similarity: {:.2})", similarity);
+            println!(
+                "[VoiceFingerprint] 🎯 TITANE detected (similarity: {:.2})",
+                similarity
+            );
         }
 
         (is_titane, similarity)
@@ -175,19 +187,19 @@ impl VoiceFingerprint {
      */
     pub fn get_profile_info(&self) -> Option<(usize, f32)> {
         let titane = self.titane_profile.lock().unwrap();
-        titane.as_ref().map(|profile| {
-            (profile.sample_count, self.similarity_threshold)
-        })
+        titane
+            .as_ref()
+            .map(|profile| (profile.sample_count, self.similarity_threshold))
     }
 
     // ========== INTERNAL METHODS ==========
 
     /**
      * YIN Algorithm: Pitch detection via autocorrelation
-     * 
+     *
      * Reference: "YIN, a fundamental frequency estimator for speech and music"
      * by Alain de Cheveigné and Hideki Kawahara (2002)
-     * 
+     *
      * @param samples Audio samples (16kHz mono)
      * @return Fundamental frequency F0 (Hz), or 0.0 if no pitch detected
      */
@@ -198,7 +210,7 @@ impl VoiceFingerprint {
 
         let sample_rate = 16000.0;
         let min_lag = (sample_rate / 500.0) as usize; // Max 500 Hz
-        let max_lag = (sample_rate / 60.0) as usize;  // Min 60 Hz
+        let max_lag = (sample_rate / 60.0) as usize; // Min 60 Hz
 
         // Step 1: Difference function
         let mut diff = vec![0.0; max_lag + 1];
@@ -248,10 +260,10 @@ impl VoiceFingerprint {
 
     /**
      * LPC (Linear Predictive Coding): Formant extraction
-     * 
+     *
      * Uses autocorrelation method + Levinson-Durbin algorithm
      * to find LPC coefficients, then extract formant frequencies
-     * 
+     *
      * @param samples Audio samples (16kHz mono)
      * @return Formants [F1, F2, F3] in Hz
      */
@@ -292,14 +304,14 @@ impl VoiceFingerprint {
         // Step 4: Levinson-Durbin algorithm
         let mut lpc = vec![0.0; order + 1];
         let mut error = autocorr[0];
-        
+
         for i in 1..=order {
             let mut lambda = 0.0;
             for j in 1..i {
                 lambda += lpc[j] * autocorr[i - j];
             }
             let ki = (autocorr[i] - lambda) / error;
-            
+
             // Save old coefficients before updating
             let old_lpc = lpc.clone();
             lpc[i] = ki;
@@ -316,19 +328,19 @@ impl VoiceFingerprint {
         let mut formants = Vec::new();
         let nfft = 512;
         let mut spectrum = vec![0.0; nfft / 2];
-        
+
         for k in 0..(nfft / 2) {
             let freq = k as f32 * sample_rate / nfft as f32;
             let omega = 2.0 * PI * freq / sample_rate;
-            
+
             let mut real = 1.0;
             let mut imag = 0.0;
-            
+
             for n in 1..=order {
                 real -= lpc[n] * (n as f32 * omega).cos();
                 imag += lpc[n] * (n as f32 * omega).sin();
             }
-            
+
             spectrum[k] = 1.0 / (real * real + imag * imag).sqrt();
         }
 
@@ -353,10 +365,10 @@ impl VoiceFingerprint {
 
     /**
      * FFT: Spectral centroid calculation
-     * 
+     *
      * Spectral centroid = weighted average of frequencies
      * (brightness/timbre measure)
-     * 
+     *
      * @param samples Audio samples (16kHz mono)
      * @return Spectral centroid in Hz
      */
@@ -410,13 +422,13 @@ impl VoiceFingerprint {
 
     /**
      * MFCC: Mel-Frequency Cepstral Coefficients
-     * 
+     *
      * Pipeline:
      * 1. FFT → Power spectrum
      * 2. Mel filterbank (40 filters, 20-8000 Hz)
      * 3. Log(energy)
      * 4. DCT-II → 13 MFCC coefficients
-     * 
+     *
      * @param samples Audio samples (16kHz mono)
      * @return 13 MFCC coefficients
      */
@@ -483,13 +495,18 @@ impl VoiceFingerprint {
 
     /**
      * Create Mel filterbank
-     * 
+     *
      * @param num_filters Number of filters (typically 40)
      * @param fft_size FFT size
      * @param sample_rate Sample rate (Hz)
      * @return Vec of filters, each filter is Vec<f32> of size fft_size/2
      */
-    fn create_mel_filterbank(&self, num_filters: usize, fft_size: usize, sample_rate: f32) -> Vec<Vec<f32>> {
+    fn create_mel_filterbank(
+        &self,
+        num_filters: usize,
+        fft_size: usize,
+        sample_rate: f32,
+    ) -> Vec<Vec<f32>> {
         let low_freq = 20.0;
         let high_freq = sample_rate / 2.0;
 
@@ -566,17 +583,17 @@ impl VoiceFingerprint {
         let pitch = features_list.iter().map(|f| f.pitch).sum::<f32>() / n;
 
         let formants = (0..3)
-            .map(|i| {
-                features_list.iter().map(|f| f.formants[i]).sum::<f32>() / n
-            })
+            .map(|i| features_list.iter().map(|f| f.formants[i]).sum::<f32>() / n)
             .collect();
 
-        let spectral_centroid = features_list.iter().map(|f| f.spectral_centroid).sum::<f32>() / n;
+        let spectral_centroid = features_list
+            .iter()
+            .map(|f| f.spectral_centroid)
+            .sum::<f32>()
+            / n;
 
         let mfcc = (0..13)
-            .map(|i| {
-                features_list.iter().map(|f| f.mfcc[i]).sum::<f32>() / n
-            })
+            .map(|i| features_list.iter().map(|f| f.mfcc[i]).sum::<f32>() / n)
             .collect();
 
         VoiceFeatures {
@@ -587,22 +604,46 @@ impl VoiceFingerprint {
         }
     }
 
-    fn calculate_std_dev(&self, features_list: &[VoiceFeatures], avg: &VoiceFeatures) -> VoiceFeatures {
+    fn calculate_std_dev(
+        &self,
+        features_list: &[VoiceFeatures],
+        avg: &VoiceFeatures,
+    ) -> VoiceFeatures {
         let n = features_list.len() as f32;
 
-        let pitch = (features_list.iter().map(|f| (f.pitch - avg.pitch).powi(2)).sum::<f32>() / n).sqrt();
+        let pitch = (features_list
+            .iter()
+            .map(|f| (f.pitch - avg.pitch).powi(2))
+            .sum::<f32>()
+            / n)
+            .sqrt();
 
         let formants = (0..3)
             .map(|i| {
-                (features_list.iter().map(|f| (f.formants[i] - avg.formants[i]).powi(2)).sum::<f32>() / n).sqrt()
+                (features_list
+                    .iter()
+                    .map(|f| (f.formants[i] - avg.formants[i]).powi(2))
+                    .sum::<f32>()
+                    / n)
+                    .sqrt()
             })
             .collect();
 
-        let spectral_centroid = (features_list.iter().map(|f| (f.spectral_centroid - avg.spectral_centroid).powi(2)).sum::<f32>() / n).sqrt();
+        let spectral_centroid = (features_list
+            .iter()
+            .map(|f| (f.spectral_centroid - avg.spectral_centroid).powi(2))
+            .sum::<f32>()
+            / n)
+            .sqrt();
 
         let mfcc = (0..13)
             .map(|i| {
-                (features_list.iter().map(|f| (f.mfcc[i] - avg.mfcc[i]).powi(2)).sum::<f32>() / n).sqrt()
+                (features_list
+                    .iter()
+                    .map(|f| (f.mfcc[i] - avg.mfcc[i]).powi(2))
+                    .sum::<f32>()
+                    / n)
+                    .sqrt()
             })
             .collect();
 
@@ -616,10 +657,10 @@ impl VoiceFingerprint {
 
     fn calculate_similarity(&self, a: &VoiceFeatures, b: &VoiceFeatures) -> f32 {
         // Weighted similarity score (optimized for voice discrimination)
-        let pitch_weight = 0.35;  // Higher: pitch is key for voice ID
+        let pitch_weight = 0.35; // Higher: pitch is key for voice ID
         let formant_weight = 0.35; // Higher: formants define voice character
         let spectral_weight = 0.15; // Lower: less discriminative
-        let mfcc_weight = 0.15;    // Lower: noisy with synthetic signals
+        let mfcc_weight = 0.15; // Lower: noisy with synthetic signals
 
         // Pitch similarity (normalized distance)
         let pitch_sim = 1.0 - ((a.pitch - b.pitch).abs() / 200.0).min(1.0);
@@ -627,10 +668,12 @@ impl VoiceFingerprint {
         // Formant similarity
         let formant_sim = (0..3)
             .map(|i| 1.0 - ((a.formants[i] - b.formants[i]).abs() / 1000.0).min(1.0))
-            .sum::<f32>() / 3.0;
+            .sum::<f32>()
+            / 3.0;
 
         // Spectral centroid similarity
-        let spectral_sim = 1.0 - ((a.spectral_centroid - b.spectral_centroid).abs() / 2000.0).min(1.0);
+        let spectral_sim =
+            1.0 - ((a.spectral_centroid - b.spectral_centroid).abs() / 2000.0).min(1.0);
 
         // MFCC similarity (cosine similarity)
         let mfcc_sim = self.cosine_similarity(&a.mfcc, &b.mfcc);
@@ -677,11 +720,7 @@ mod tests {
     #[test]
     fn test_calibrate_titane() {
         let fingerprint = VoiceFingerprint::new();
-        let samples_list = vec![
-            vec![0.0; 16000],
-            vec![0.0; 16000],
-            vec![0.0; 16000],
-        ];
+        let samples_list = vec![vec![0.0; 16000], vec![0.0; 16000], vec![0.0; 16000]];
 
         let result = fingerprint.calibrate_titane(samples_list);
         assert!(result.is_ok());
@@ -1025,22 +1064,25 @@ mod tests {
             if is_titane {
                 correct_detections += 1;
             } else {
-                println!("[Test] ❌ False negative: TITANE not detected (score: {:.2})", score);
+                println!(
+                    "[Test] ❌ False negative: TITANE not detected (score: {:.2})",
+                    score
+                );
             }
         }
 
         // 10 user samples (should NOT be detected) - significantly different frequencies
         let user_freqs = [
-            (85.0, 170.0, 255.0),   // Very low voice (male bass)
-            (100.0, 200.0, 300.0),  // Low male voice
-            (220.0, 440.0, 660.0),  // Female voice (A3)
-            (260.0, 520.0, 780.0),  // High female voice
-            (180.0, 360.0, 540.0),  // Different male voice
-            (240.0, 480.0, 720.0),  // Alto voice
-            (120.0, 240.0, 360.0),  // Bass voice
-            (200.0, 400.0, 600.0),  // Baritone voice
-            (280.0, 560.0, 840.0),  // Soprano voice
-            (90.0, 180.0, 270.0),   // Very low bass
+            (85.0, 170.0, 255.0),  // Very low voice (male bass)
+            (100.0, 200.0, 300.0), // Low male voice
+            (220.0, 440.0, 660.0), // Female voice (A3)
+            (260.0, 520.0, 780.0), // High female voice
+            (180.0, 360.0, 540.0), // Different male voice
+            (240.0, 480.0, 720.0), // Alto voice
+            (120.0, 240.0, 360.0), // Bass voice
+            (200.0, 400.0, 600.0), // Baritone voice
+            (280.0, 560.0, 840.0), // Soprano voice
+            (90.0, 180.0, 270.0),  // Very low bass
         ];
 
         for (f0, f1, f2) in user_freqs {

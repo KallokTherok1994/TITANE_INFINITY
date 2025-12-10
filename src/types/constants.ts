@@ -20,7 +20,7 @@ export const HEALTH_STATUS_COLORS: Record<HealthStatus, string> = {
   Healthy: 'var(--success-500)',
   Degraded: 'var(--warning-500)',
   Critical: 'var(--danger-500)',
-  Offline: 'var(--gray-500)'
+  Offline: 'var(--gray-500)',
 };
 
 /**
@@ -34,5 +34,5 @@ export const MODULE_ICONS: Record<string, string> = {
   Watchdog: 'watchdog',
   SelfHeal: 'self-heal',
   AdaptiveEngine: 'adaptive-engine',
-  Memory: 'memory'
+  Memory: 'memory',
 };

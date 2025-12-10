@@ -4,8 +4,8 @@
 //   Selects optimal mode based on intent, context, and history
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::HashMap;
 use super::brain_state::{ConversationMode, IntentClass};
+use std::collections::HashMap;
 
 /// Mode Selector - Chooses optimal conversation mode
 #[derive(Debug, Clone)]
@@ -152,47 +152,110 @@ impl ModeSelector {
     fn apply_intent_scores(&mut self, intent: &IntentClass) {
         match intent {
             IntentClass::Query => {
-                *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.8;
-                *self.mode_scores.entry(ConversationMode::Logic).or_insert(0.0) += 0.3;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Expert)
+                    .or_insert(0.0) += 0.8;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Logic)
+                    .or_insert(0.0) += 0.3;
             }
             IntentClass::Task => {
-                *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.7;
-                *self.mode_scores.entry(ConversationMode::Coach).or_insert(0.0) += 0.4;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Expert)
+                    .or_insert(0.0) += 0.7;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Coach)
+                    .or_insert(0.0) += 0.4;
             }
             IntentClass::Help => {
-                *self.mode_scores.entry(ConversationMode::Coach).or_insert(0.0) += 0.9;
-                *self.mode_scores.entry(ConversationMode::Harmonic).or_insert(0.0) += 0.3;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Coach)
+                    .or_insert(0.0) += 0.9;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Harmonic)
+                    .or_insert(0.0) += 0.3;
             }
             IntentClass::Emotional => {
-                *self.mode_scores.entry(ConversationMode::Harmonic).or_insert(0.0) += 0.9;
-                *self.mode_scores.entry(ConversationMode::Coach).or_insert(0.0) += 0.4;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Harmonic)
+                    .or_insert(0.0) += 0.9;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Coach)
+                    .or_insert(0.0) += 0.4;
             }
             IntentClass::Conversation => {
-                *self.mode_scores.entry(ConversationMode::Neutral).or_insert(0.0) += 0.7;
-                *self.mode_scores.entry(ConversationMode::Harmonic).or_insert(0.0) += 0.3;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Neutral)
+                    .or_insert(0.0) += 0.7;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Harmonic)
+                    .or_insert(0.0) += 0.3;
             }
             IntentClass::Command => {
-                *self.mode_scores.entry(ConversationMode::Logic).or_insert(0.0) += 0.8;
-                *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.3;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Logic)
+                    .or_insert(0.0) += 0.8;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Expert)
+                    .or_insert(0.0) += 0.3;
             }
             IntentClass::Creative => {
-                *self.mode_scores.entry(ConversationMode::Creative).or_insert(0.0) += 0.9;
-                *self.mode_scores.entry(ConversationMode::Meta).or_insert(0.0) += 0.2;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Creative)
+                    .or_insert(0.0) += 0.9;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Meta)
+                    .or_insert(0.0) += 0.2;
             }
             IntentClass::Debug => {
-                *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.8;
-                *self.mode_scores.entry(ConversationMode::Logic).or_insert(0.0) += 0.4;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Expert)
+                    .or_insert(0.0) += 0.8;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Logic)
+                    .or_insert(0.0) += 0.4;
             }
             IntentClass::Explanation => {
-                *self.mode_scores.entry(ConversationMode::Coach).or_insert(0.0) += 0.7;
-                *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.4;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Coach)
+                    .or_insert(0.0) += 0.7;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Expert)
+                    .or_insert(0.0) += 0.4;
             }
             IntentClass::MetaQuery => {
-                *self.mode_scores.entry(ConversationMode::Meta).or_insert(0.0) += 0.9;
-                *self.mode_scores.entry(ConversationMode::Cognitive).or_insert(0.0) += 0.3;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Meta)
+                    .or_insert(0.0) += 0.9;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Cognitive)
+                    .or_insert(0.0) += 0.3;
             }
             IntentClass::Unknown => {
-                *self.mode_scores.entry(ConversationMode::Neutral).or_insert(0.0) += 0.6;
+                *self
+                    .mode_scores
+                    .entry(ConversationMode::Neutral)
+                    .or_insert(0.0) += 0.6;
             }
         }
     }
@@ -201,23 +264,44 @@ impl ModeSelector {
     fn apply_message_scores(&mut self, length: usize, has_question: bool, has_code: bool) {
         // Long messages suggest complex needs
         if length > 200 {
-            *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.2;
-            *self.mode_scores.entry(ConversationMode::Cognitive).or_insert(0.0) += 0.1;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Expert)
+                .or_insert(0.0) += 0.2;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Cognitive)
+                .or_insert(0.0) += 0.1;
         } else if length < 20 {
             // Short messages might be commands or quick queries
-            *self.mode_scores.entry(ConversationMode::Logic).or_insert(0.0) += 0.1;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Logic)
+                .or_insert(0.0) += 0.1;
         }
 
         // Question marks suggest query/help
         if has_question {
-            *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.1;
-            *self.mode_scores.entry(ConversationMode::Coach).or_insert(0.0) += 0.1;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Expert)
+                .or_insert(0.0) += 0.1;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Coach)
+                .or_insert(0.0) += 0.1;
         }
 
         // Code suggests technical context
         if has_code {
-            *self.mode_scores.entry(ConversationMode::Expert).or_insert(0.0) += 0.3;
-            *self.mode_scores.entry(ConversationMode::Logic).or_insert(0.0) += 0.2;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Expert)
+                .or_insert(0.0) += 0.3;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Logic)
+                .or_insert(0.0) += 0.2;
         }
     }
 
@@ -225,11 +309,20 @@ impl ModeSelector {
     fn apply_sentiment_scores(&mut self, sentiment: f32) {
         if sentiment < -0.3 {
             // Negative sentiment → supportive modes
-            *self.mode_scores.entry(ConversationMode::Harmonic).or_insert(0.0) += 0.3;
-            *self.mode_scores.entry(ConversationMode::Coach).or_insert(0.0) += 0.2;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Harmonic)
+                .or_insert(0.0) += 0.3;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Coach)
+                .or_insert(0.0) += 0.2;
         } else if sentiment > 0.5 {
             // Very positive → can be more creative/open
-            *self.mode_scores.entry(ConversationMode::Creative).or_insert(0.0) += 0.1;
+            *self
+                .mode_scores
+                .entry(ConversationMode::Creative)
+                .or_insert(0.0) += 0.1;
         }
     }
 
@@ -440,7 +533,7 @@ mod tests {
 
         selector.select(&IntentClass::Query); // Expert
         selector.select(&IntentClass::Query); // Expert
-        selector.select(&IntentClass::Help);  // Coach
+        selector.select(&IntentClass::Help); // Coach
 
         let dist = selector.get_distribution();
         assert!(!dist.is_empty());

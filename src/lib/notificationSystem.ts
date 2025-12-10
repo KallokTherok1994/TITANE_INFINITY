@@ -73,8 +73,12 @@ export class NotificationSystem {
     localStorage.setItem('notification-config', JSON.stringify(this.config));
 
     // Demander permission si activé
-    if (updates.enableBrowserNotifications && 'Notification' in window && !this.permissionGranted) {
-      Notification.requestPermission().then((permission) => {
+    if (
+      updates.enableBrowserNotifications &&
+      'Notification' in window &&
+      !this.permissionGranted
+    ) {
+      Notification.requestPermission().then(permission => {
         this.permissionGranted = permission === 'granted';
       });
     }
@@ -180,7 +184,10 @@ export class NotificationSystem {
   private static playSound(priority: NotificationPriority): void {
     // Créer oscillateur Web Audio API pour son simple
     try {
-      const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      const AudioContextClass =
+        window.AudioContext ||
+        (window as typeof window & { webkitAudioContext?: typeof AudioContext })
+          .webkitAudioContext;
       if (!AudioContextClass) return;
 
       const audioContext = new AudioContextClass();
@@ -219,7 +226,7 @@ export class NotificationSystem {
    * Marquer une notification comme lue
    */
   static dismiss(notificationId: string): void {
-    const notification = this.notifications.find((n) => n.id === notificationId);
+    const notification = this.notifications.find(n => n.id === notificationId);
     if (notification) {
       notification.dismissed = true;
       this.notifyListeners();
@@ -230,7 +237,7 @@ export class NotificationSystem {
    * Tout marquer comme lu
    */
   static dismissAll(): void {
-    this.notifications.forEach((n) => (n.dismissed = true));
+    this.notifications.forEach(n => (n.dismissed = true));
     this.notifyListeners();
   }
 
@@ -239,7 +246,7 @@ export class NotificationSystem {
    */
   static cleanup(): void {
     const dayAgo = Date.now() - 24 * 60 * 60 * 1000;
-    this.notifications = this.notifications.filter((n) => n.timestamp > dayAgo);
+    this.notifications = this.notifications.filter(n => n.timestamp > dayAgo);
     this.notifyListeners();
   }
 
@@ -254,14 +261,14 @@ export class NotificationSystem {
    * Obtenir notifications non lues
    */
   static getUnread(): Notification[] {
-    return this.notifications.filter((n) => !n.dismissed);
+    return this.notifications.filter(n => !n.dismissed);
   }
 
   /**
    * Obtenir notifications par source
    */
   static getBySource(source: string): Notification[] {
-    return this.notifications.filter((n) => n.source === source);
+    return this.notifications.filter(n => n.source === source);
   }
 
   /**
@@ -275,8 +282,11 @@ export class NotificationSystem {
   } {
     const stats = {
       total: this.notifications.length,
-      unread: this.notifications.filter((n) => !n.dismissed).length,
-      byType: { info: 0, warning: 0, error: 0, success: 0 } as Record<NotificationType, number>,
+      unread: this.notifications.filter(n => !n.dismissed).length,
+      byType: { info: 0, warning: 0, error: 0, success: 0 } as Record<
+        NotificationType,
+        number
+      >,
       byPriority: { low: 0, medium: 0, high: 0, critical: 0 } as Record<
         NotificationPriority,
         number
@@ -297,7 +307,7 @@ export class NotificationSystem {
   static subscribe(listener: (notifications: Notification[]) => void): () => void {
     this.listeners.push(listener);
     return () => {
-      this.listeners = this.listeners.filter((l) => l !== listener);
+      this.listeners = this.listeners.filter(l => l !== listener);
     };
   }
 
@@ -306,7 +316,7 @@ export class NotificationSystem {
    */
   private static notifyListeners(): void {
     const notifications = this.getAll();
-    this.listeners.forEach((listener) => listener(notifications));
+    this.listeners.forEach(listener => listener(notifications));
   }
 
   /**
@@ -347,7 +357,12 @@ export const NotificationHelpers = {
   /**
    * Notification pour violation SLA
    */
-  notifySLAViolation(service: string, metric: string, actual: number, target: number): void {
+  notifySLAViolation(
+    service: string,
+    metric: string,
+    actual: number,
+    target: number
+  ): void {
     NotificationSystem.notify(
       `Violation SLA - ${service.toUpperCase()}`,
       `${metric}: ${actual.toFixed(2)} (seuil: ${target.toFixed(2)})`,

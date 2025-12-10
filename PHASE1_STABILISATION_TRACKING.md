@@ -13,6 +13,7 @@
 ### 🚨 Problèmes Critiques Identifiés
 
 #### **P0-A: Rust Unwrap/Expect (CRITIQUE)**
+
 - **100+ occurrences** de `unwrap()` / `expect()` détectées
 - **Risque**: Panics en production, crashes utilisateur
 - **Modules affectés**:
@@ -26,6 +27,7 @@
   - `src-tauri/src/ai/` (10+ occurrences)
 
 #### **P0-B: Tests Backend (CRITIQUE)**
+
 - **Coverage actuel**: ~8%
 - **Objectif Phase 1**: 50%+
 - **Modules prioritaires**:
@@ -36,12 +38,14 @@
   - `meta_energy/mod.rs` (tests unitaires OK, manque E2E)
 
 #### **P0-C: TypeScript (CRITIQUE)**
+
 - **34 erreurs TS** bloquantes
 - **156 warnings ESLint**
 - **Types `any` abusifs**
 - **Props undefined** non protégés
 
 #### **P0-D: Audio Feedback Loop (CRITIQUE)**
+
 - **Problème**: Voix TTS recapturée par micro
 - **Impact**: Mode duplex inutilisable
 - **Cause**: Pas d'echo cancellation, micro non muted pendant TTS
@@ -56,20 +60,20 @@
    - Fichier: `src-tauri/src/errors/app_error.rs`
    - Type unifié: `AppError` avec `thiserror`
    - 15 catégories d'erreurs:
-     * I/O & File System
-     * Serialization (JSON, TOML)
-     * Database & Storage
-     * Crypto & Security
-     * API & Network
-     * AI & LLM
-     * Memory & Context
-     * Audio & Voice (feedback loop detection)
-     * Configuration
-     * Engine & System
-     * OMEGA Pipeline
-     * Validation
-     * Concurrency
-     * Generic
+     - I/O & File System
+     - Serialization (JSON, TOML)
+     - Database & Storage
+     - Crypto & Security
+     - API & Network
+     - AI & LLM
+     - Memory & Context
+     - Audio & Voice (feedback loop detection)
+     - Configuration
+     - Engine & System
+     - OMEGA Pipeline
+     - Validation
+     - Concurrency
+     - Generic
    - Alias: `AppResult<T> = Result<T, AppError>`
    - Helpers: `AppError::ai_provider()`, `pipeline_failed()`, etc.
    - **5 tests unitaires** inclus
@@ -89,6 +93,7 @@
 ## 📋 Plan d'Exécution Détaillé
 
 ### Phase 1.1: Infrastructure (✅ FAIT)
+
 - [x] Créer `AppError` avec `thiserror`
 - [x] Définir toutes les variantes d'erreurs
 - [x] Créer helpers de construction
@@ -96,6 +101,7 @@
 - [ ] Intégrer dans `lib.rs`
 
 ### Phase 1.2: Élimination Unwrap (🔄 PRIORITÉ)
+
 **Ordre d'attaque** (par criticité décroissante):
 
 1. **Modules Core** (20+ unwrap)
@@ -122,6 +128,7 @@
    - `commands/automations.rs` (2 `configs.lock().unwrap()`)
 
 **Stratégie de remplacement**:
+
 ```rust
 // AVANT (dangereux)
 let config = fs::read_to_string("config.json").unwrap();
@@ -132,9 +139,11 @@ let config = fs::read_to_string("config.json")
 ```
 
 ### Phase 1.3: Tests Backend (🔄 PARALLÈLE)
+
 **Objectif**: 0% → 50% coverage
 
 **Modules prioritaires**:
+
 1. `core/engine.rs` → Créer `tests/core_engine_tests.rs`
 2. `omega/pipeline.rs` → Créer `tests/omega_pipeline_tests.rs`
 3. `api/chat_commands.rs` → Créer `tests/api_chat_tests.rs`
@@ -142,18 +151,19 @@ let config = fs::read_to_string("config.json")
 5. `memory/unified_memory.rs` → Créer `tests/memory_tests.rs`
 
 **Structure de tests**:
+
 ```rust
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[tokio::test]
     async fn test_engine_init() -> AppResult<()> {
         let engine = Engine::new().await?;
         assert!(engine.is_initialized());
         Ok(())
     }
-    
+
     #[tokio::test]
     async fn test_engine_error_handling() {
         let result = Engine::invalid_operation().await;
@@ -164,36 +174,43 @@ mod tests {
 ```
 
 ### Phase 1.4: TypeScript Stabilisation (⏳ PLANIFIÉ)
+
 **Objectif**: 34 erreurs → 0
 
 **Fichiers prioritaires** (à identifier):
+
 - Services avec `any` types
 - Composants avec props `undefined`
 - Stores avec types incomplets
 
 **Stratégie**:
+
 ```typescript
 // AVANT
 function process(data: any) {
-    return data.value.toString();
+  return data.value.toString();
 }
 
 // APRÈS
 function process(data: { value: string | number }): string {
-    if (data?.value === undefined) {
-        throw new Error("Invalid data: value is required");
-    }
-    return String(data.value);
+  if (data?.value === undefined) {
+    throw new Error('Invalid data: value is required');
+  }
+  return String(data.value);
 }
 ```
 
 ### Phase 1.5: Audio Feedback Fix (⏳ PLANIFIÉ)
+
 **Fichiers cibles**:
+
 - `src/components/VoiceUI.tsx` (ou équivalent)
 - `src/services/audioService.ts`
 
 **Corrections**:
+
 1. Enable echo cancellation:
+
 ```typescript
 const constraints = {
   audio: {
@@ -205,6 +222,7 @@ const constraints = {
 ```
 
 2. Mute micro pendant TTS:
+
 ```typescript
 async function playTTS(audioBlob: Blob) {
   pauseRecording();
@@ -218,6 +236,7 @@ async function playTTS(audioBlob: Blob) {
 ## 🧪 Validation Continue
 
 ### Commandes de validation
+
 ```bash
 # Backend
 cd src-tauri
@@ -235,6 +254,7 @@ rg 'unwrap\(\)|expect\(' src-tauri/src --type rust
 ```
 
 ### Métriques de succès
+
 - [ ] **0 unwrap/expect** en production (hors tests)
 - [ ] **50%+ coverage** backend
 - [ ] **0 erreurs TS**
@@ -247,12 +267,14 @@ rg 'unwrap\(\)|expect\(' src-tauri/src --type rust
 ## 📚 Documentation de Référence
 
 ### Fichiers clés consultés
+
 - ✅ `.github/instructions/titane.instructions.md` (conventions)
 - ⏳ `TITANE_ANALYSE_POST_MIGRATION_UBUNTU_ULTIME.md` (à consulter)
 - ⏳ `SUPER_PROMPT_COPILOT_ELIMINATE_UNWRAP_PHASE1.md` (à consulter)
 - ⏳ `GUIDE_TESTS_BACKEND_0_TO_50_COVERAGE_PHASE1.md` (à consulter)
 
 ### Conventions respectées
+
 - Rust: `async/await`, `Result<T, E>`, tests unitaires
 - TypeScript: strict mode, types explicites, ZERO `any`
 - Commits: format conventionnel

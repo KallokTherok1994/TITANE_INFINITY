@@ -33,7 +33,9 @@ export function useTwinIdentity(): UseTwinIdentityReturn {
       const data = await numericTwinService.getIdentity();
       setIdentity(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors du chargement de l\'identité');
+      setError(
+        err instanceof Error ? err.message : "Erreur lors du chargement de l'identité"
+      );
       console.error('[useTwinIdentity] Error:', err);
     } finally {
       setIsLoading(false);

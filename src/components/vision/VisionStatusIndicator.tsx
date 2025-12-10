@@ -68,7 +68,7 @@ export const VisionStatusIndicator: React.FC<VisionStatusIndicatorProps> = ({
   const isCameraActive = useVisionStore(selectIsCameraActive);
   const confidence = useVisionStore(selectConfidence);
   const energyLevel = useVisionStore(selectEnergyLevel);
-  const toggleCameraPreview = useVisionStore((s) => s.toggleCameraPreview);
+  const toggleCameraPreview = useVisionStore(s => s.toggleCameraPreview);
 
   // Handler click
   const handleClick = () => {
@@ -122,7 +122,10 @@ export const VisionStatusIndicator: React.FC<VisionStatusIndicatorProps> = ({
 
       {/* Confidence (optionnel) */}
       {showConfidence && isObservationActive && (
-        <span className="vision-status__confidence" title={`Confiance: ${(confidence * 100).toFixed(0)}%`}>
+        <span
+          className="vision-status__confidence"
+          title={`Confiance: ${(confidence * 100).toFixed(0)}%`}
+        >
           {(confidence * 100).toFixed(0)}%
         </span>
       )}

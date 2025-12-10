@@ -3,12 +3,14 @@
 //   SUPER PROMPT #8 — Main Orchestration Engine
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiRequest, AiResponse, AIError};
-use crate::ai::providers::{AiProvider, claude::ClaudeProvider, openai::OpenAiProvider, 
-                            local::LocalProvider, titane_engine::TitaneEngineProvider};
-use crate::ai::router_intelligent::AiRouter;
+use crate::ai::evaluator::{EvaluationResult, Evaluator};
 use crate::ai::fusion::{FusionEngine, FusionStrategy};
-use crate::ai::evaluator::{Evaluator, EvaluationResult};
+use crate::ai::providers::{
+    claude::ClaudeProvider, local::LocalProvider, openai::OpenAiProvider,
+    titane_engine::TitaneEngineProvider, AiProvider,
+};
+use crate::ai::router_intelligent::AiRouter;
+use crate::ai::{AIError, AiRequest, AiResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -48,10 +50,18 @@ impl MultiAIOrchestrator {
         if let Some(key) = claude_key {
             if !key.is_empty() {
                 let claude = Arc::new(ClaudeProvider::new(key));
-                orchestrator.providers.insert("claude".to_string(), claude.clone());
-                orchestrator.providers.insert("claude_opus".to_string(), claude.clone());
-                orchestrator.providers.insert("claude_sonnet".to_string(), claude.clone());
-                orchestrator.providers.insert("claude_haiku".to_string(), claude);
+                orchestrator
+                    .providers
+                    .insert("claude".to_string(), claude.clone());
+                orchestrator
+                    .providers
+                    .insert("claude_opus".to_string(), claude.clone());
+                orchestrator
+                    .providers
+                    .insert("claude_sonnet".to_string(), claude.clone());
+                orchestrator
+                    .providers
+                    .insert("claude_haiku".to_string(), claude);
             }
         }
 
@@ -59,19 +69,33 @@ impl MultiAIOrchestrator {
         if let Some(key) = openai_key {
             if !key.is_empty() {
                 let openai = Arc::new(OpenAiProvider::new(key));
-                orchestrator.providers.insert("openai".to_string(), openai.clone());
-                orchestrator.providers.insert("gpt4".to_string(), openai.clone());
-                orchestrator.providers.insert("gpt4_mini".to_string(), openai.clone());
+                orchestrator
+                    .providers
+                    .insert("openai".to_string(), openai.clone());
+                orchestrator
+                    .providers
+                    .insert("gpt4".to_string(), openai.clone());
+                orchestrator
+                    .providers
+                    .insert("gpt4_mini".to_string(), openai.clone());
                 orchestrator.providers.insert("gpt35".to_string(), openai);
             }
         }
 
         // Local (Ollama)
         let local = Arc::new(LocalProvider::new(None));
-        orchestrator.providers.insert("local".to_string(), local.clone());
-        orchestrator.providers.insert("local_llama3".to_string(), local.clone());
-        orchestrator.providers.insert("local_mistral".to_string(), local.clone());
-        orchestrator.providers.insert("local_codellama".to_string(), local);
+        orchestrator
+            .providers
+            .insert("local".to_string(), local.clone());
+        orchestrator
+            .providers
+            .insert("local_llama3".to_string(), local.clone());
+        orchestrator
+            .providers
+            .insert("local_mistral".to_string(), local.clone());
+        orchestrator
+            .providers
+            .insert("local_codellama".to_string(), local);
 
         orchestrator
     }
@@ -86,7 +110,7 @@ impl MultiAIOrchestrator {
             Ok(response) => {
                 // 3. Évaluation
                 let evaluation = self.evaluator.evaluate(&req, &response);
-                
+
                 if evaluation.score < 0.5 && self.fallback_enabled {
                     // Score trop faible, essayer fallback
                     self.try_generate(&req, &routing.fallback).await
@@ -109,22 +133,23 @@ impl MultiAIOrchestrator {
     }
 
     /// Génération duale (primary + secondary en parallèle)
-    pub async fn generate_dual(&self, req: AiRequest) -> Result<(AiResponse, Option<AiResponse>), AIError> {
+    pub async fn generate_dual(
+        &self,
+        req: AiRequest,
+    ) -> Result<(AiResponse, Option<AiResponse>), AIError> {
         let routing = self.router.route(&req).await;
 
         let primary_req = req.clone();
         let secondary_req = req.clone();
 
-        let (primary_result, secondary_result) = tokio::join!(
-            self.try_generate(&primary_req, &routing.primary),
-            async {
+        let (primary_result, secondary_result) =
+            tokio::join!(self.try_generate(&primary_req, &routing.primary), async {
                 if let Some(ref sec) = routing.secondary {
                     self.try_generate(&secondary_req, sec).await.ok()
                 } else {
                     None
                 }
-            }
-        );
+            });
 
         match primary_result {
             Ok(primary) => Ok((primary, secondary_result)),
@@ -142,10 +167,10 @@ impl MultiAIOrchestrator {
 
         // Évaluation des deux réponses
         let eval_primary = self.evaluator.evaluate(&req, &primary);
-        
+
         if let Some(ref sec) = secondary {
             let eval_secondary = self.evaluator.evaluate(&req, sec);
-            
+
             // Fusion si les deux sont de qualité similaire
             if self.fusion.should_fuse(&primary, Some(sec)) {
                 Ok(self.fusion.fuse(&primary, Some(sec)))
@@ -160,12 +185,18 @@ impl MultiAIOrchestrator {
     }
 
     /// Tentative de génération avec un provider spécifique
-    async fn try_generate(&self, req: &AiRequest, provider_name: &str) -> Result<AiResponse, AIError> {
-        let provider = self.providers.get(provider_name)
-            .ok_or_else(|| AIError::ProviderUnavailable {
-                provider: provider_name.to_string(),
-                reason: "Provider not configured".to_string(),
-            })?;
+    async fn try_generate(
+        &self,
+        req: &AiRequest,
+        provider_name: &str,
+    ) -> Result<AiResponse, AIError> {
+        let provider =
+            self.providers
+                .get(provider_name)
+                .ok_or_else(|| AIError::ProviderUnavailable {
+                    provider: provider_name.to_string(),
+                    reason: "Provider not configured".to_string(),
+                })?;
 
         // Vérifier disponibilité
         if !provider.is_available().await {
@@ -176,12 +207,9 @@ impl MultiAIOrchestrator {
         }
 
         // Génération avec timeout
-        tokio::time::timeout(
-            std::time::Duration::from_secs(60),
-            provider.generate(req)
-        )
-        .await
-        .map_err(|_| AIError::TimeoutError)?
+        tokio::time::timeout(std::time::Duration::from_secs(60), provider.generate(req))
+            .await
+            .map_err(|_| AIError::TimeoutError)?
     }
 
     /// Meilleur provider pour un mode donné
@@ -240,9 +268,9 @@ impl OrchestratorState {
         let openai_key = std::env::var("OPENAI_API_KEY").ok();
 
         Self {
-            orchestrator: Arc::new(RwLock::new(
-                MultiAIOrchestrator::with_api_keys(claude_key, openai_key)
-            )),
+            orchestrator: Arc::new(RwLock::new(MultiAIOrchestrator::with_api_keys(
+                claude_key, openai_key,
+            ))),
         }
     }
 }
@@ -283,7 +311,7 @@ mod tests {
 
         // Sans clés API, devrait fallback sur TITANE Engine
         let result = orchestrator.generate(req).await;
-        
+
         // Le résultat peut être ok (TITANE Engine) ou erreur (aucun provider disponible)
         // Dans tous les cas, TITANE Engine devrait toujours être disponible
         match result {

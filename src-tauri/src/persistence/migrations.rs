@@ -101,7 +101,10 @@ impl MigrationEngine {
     }
 
     /// Migrer un état JSON vers la version actuelle
-    pub fn migrate_to_current(&mut self, state_json: &mut Value) -> Result<MigrationReport, MigrationError> {
+    pub fn migrate_to_current(
+        &mut self,
+        state_json: &mut Value,
+    ) -> Result<MigrationReport, MigrationError> {
         let start = std::time::Instant::now();
 
         // Extraire la version actuelle
@@ -111,7 +114,10 @@ impl MigrationEngine {
             return Err(MigrationError::MigrationFailed {
                 from: current_version,
                 to: CURRENT_SCHEMA_VERSION,
-                reason: format!("Version {} plus récente que la version supportée {}", current_version, CURRENT_SCHEMA_VERSION),
+                reason: format!(
+                    "Version {} plus récente que la version supportée {}",
+                    current_version, CURRENT_SCHEMA_VERSION
+                ),
             });
         }
 
@@ -192,7 +198,11 @@ impl MigrationEngine {
     }
 
     /// Appliquer une étape de migration
-    fn migrate_one_step(&self, state_json: &mut Value, from_version: u32) -> Result<MigrationStep, MigrationError> {
+    fn migrate_one_step(
+        &self,
+        state_json: &mut Value,
+        from_version: u32,
+    ) -> Result<MigrationStep, MigrationError> {
         match from_version {
             1 => self.migrate_v1_to_v2(state_json),
             _ => Err(MigrationError::UnknownVersion(from_version)),
@@ -216,12 +226,12 @@ impl MigrationEngine {
             duration_ms: 0,
         };
 
-        let obj = state_json.as_object_mut().ok_or_else(|| {
-            MigrationError::InvalidFieldType {
+        let obj = state_json
+            .as_object_mut()
+            .ok_or_else(|| MigrationError::InvalidFieldType {
                 field: "root".to_string(),
                 expected: "object".to_string(),
-            }
-        })?;
+            })?;
 
         let now = chrono::Utc::now().timestamp_millis() as u64;
 
@@ -231,9 +241,7 @@ impl MigrationEngine {
         // Ajouter created_at si absent
         if !obj.contains_key("created_at") {
             // Utiliser timestamp existant comme fallback
-            let created = obj.get("timestamp")
-                .and_then(|v| v.as_u64())
-                .unwrap_or(now);
+            let created = obj.get("timestamp").and_then(|v| v.as_u64()).unwrap_or(now);
             obj.insert("created_at".to_string(), Value::Number(created.into()));
         }
 

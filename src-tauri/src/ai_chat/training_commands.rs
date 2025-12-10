@@ -7,7 +7,6 @@
  *
  * ⚠️ KEVIN-ONLY: Ces commandes nécessitent une vérification Kevin
  */
-
 use super::training_engine::{
     FeedbackType, LearnedPattern, PatternCategory, TrainingMode, TrainingSession, TrainingState,
     TrainingStats, AI_TRAINING_ENGINE,
@@ -130,7 +129,8 @@ pub fn training_find_patterns(input: String, limit: usize) -> Result<Vec<Learned
     let engine = AI_TRAINING_ENGINE
         .read()
         .map_err(|e| format!("Lock poisoned: {}", e))?;
-    Ok(engine.find_matching_patterns(&input, limit)
+    Ok(engine
+        .find_matching_patterns(&input, limit)
         .into_iter()
         .cloned()
         .collect())

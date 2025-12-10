@@ -104,85 +104,76 @@ function getStatusColors(status: 'normal' | 'warning' | 'critical'): {
 /**
  * MetricsCard Component
  */
-export const MetricsCard: React.FC<MetricsCardProps> = React.memo(({
-  title,
-  value,
-  unit,
-  trend,
-  trendValue,
-  thresholds,
-  format,
-  className = '',
-}) => {
-  const numericValue = typeof value === 'number' ? value : 0;
-  const status = getStatus(numericValue, thresholds);
-  const colors = getStatusColors(status);
-  const formattedValue = formatValue(value, format, unit);
+export const MetricsCard: React.FC<MetricsCardProps> = React.memo(
+  ({ title, value, unit, trend, trendValue, thresholds, format, className = '' }) => {
+    const numericValue = typeof value === 'number' ? value : 0;
+    const status = getStatus(numericValue, thresholds);
+    const colors = getStatusColors(status);
+    const formattedValue = formatValue(value, format, unit);
 
-  // Icône de tendance
-  const TrendIcon =
-    trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
+    // Icône de tendance
+    const TrendIcon =
+      trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus;
 
-  const trendColor =
-    trend === 'up'
-      ? 'text-green-400'
-      : trend === 'down'
-      ? 'text-red-400'
-      : 'text-gray-400';
+    const trendColor =
+      trend === 'up'
+        ? 'text-green-400'
+        : trend === 'down'
+          ? 'text-red-400'
+          : 'text-gray-400';
 
-  return (
-    <div
-      className={`
+    return (
+      <div
+        className={`
         relative rounded-lg border ${colors.border} ${colors.bg}
         p-4 transition-all duration-200 hover:shadow-lg
         ${className}
       `}
-    >
-      {/* Alerte critique */}
-      {status === 'critical' && (
-        <div className="absolute top-2 right-2">
-          <AlertTriangle className={`w-5 h-5 ${colors.icon} animate-pulse`} />
-        </div>
-      )}
+      >
+        {/* Alerte critique */}
+        {status === 'critical' && (
+          <div className="absolute top-2 right-2">
+            <AlertTriangle className={`w-5 h-5 ${colors.icon} animate-pulse`} />
+          </div>
+        )}
 
-      {/* Titre */}
-      <div className="text-sm font-medium text-gray-400 mb-2">{title}</div>
+        {/* Titre */}
+        <div className="text-sm font-medium text-gray-400 mb-2">{title}</div>
 
-      {/* Valeur principale */}
-      <div className={`text-3xl font-bold ${colors.text} mb-2`}>
-        {formattedValue}
+        {/* Valeur principale */}
+        <div className={`text-3xl font-bold ${colors.text} mb-2`}>{formattedValue}</div>
+
+        {/* Tendance */}
+        {trend && trendValue !== undefined && (
+          <div className="flex items-center gap-1 text-sm">
+            <TrendIcon className={`w-4 h-4 ${trendColor}`} />
+            <span className={trendColor}>
+              {trendValue > 0 ? '+' : ''}
+              {format === 'percentage'
+                ? `${(trendValue * 100).toFixed(1)}%`
+                : trendValue.toFixed(1)}
+            </span>
+            <span className="text-gray-500 ml-1">vs précédent</span>
+          </div>
+        )}
+
+        {/* Barre de status */}
+        {status !== 'normal' && thresholds && typeof value === 'number' && (
+          <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
+            <div
+              className={`h-full ${
+                status === 'critical' ? 'bg-red-500' : 'bg-yellow-500'
+              } transition-all duration-300`}
+              style={{
+                width: `${Math.min((value / thresholds.critical) * 100, 100)}%`,
+              }}
+            />
+          </div>
+        )}
       </div>
-
-      {/* Tendance */}
-      {trend && trendValue !== undefined && (
-        <div className="flex items-center gap-1 text-sm">
-          <TrendIcon className={`w-4 h-4 ${trendColor}`} />
-          <span className={trendColor}>
-            {trendValue > 0 ? '+' : ''}
-            {format === 'percentage'
-              ? `${(trendValue * 100).toFixed(1)}%`
-              : trendValue.toFixed(1)}
-          </span>
-          <span className="text-gray-500 ml-1">vs précédent</span>
-        </div>
-      )}
-
-      {/* Barre de status */}
-      {status !== 'normal' && thresholds && typeof value === 'number' && (
-        <div className="mt-3 h-1 bg-gray-700 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${
-              status === 'critical' ? 'bg-red-500' : 'bg-yellow-500'
-            } transition-all duration-300`}
-            style={{
-              width: `${Math.min((value / thresholds.critical) * 100, 100)}%`,
-            }}
-          />
-        </div>
-      )}
-    </div>
-  );
-});
+    );
+  }
+);
 
 MetricsCard.displayName = 'MetricsCard';
 

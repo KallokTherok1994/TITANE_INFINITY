@@ -26,11 +26,41 @@ interface SystemModule {
 }
 
 const SYSTEM_MODULES: SystemModule[] = [
-  { id: 'auto-evolution', name: 'Auto-Évolution', status: 'active', version: '15.5.0', uptime: '127h' },
-  { id: 'memory-engine', name: 'MemoryEngine', status: 'active', version: '15.5.0', uptime: '127h' },
-  { id: 'exp-engine', name: 'ExpEngine', status: 'active', version: '15.5.0', uptime: '127h' },
-  { id: 'self-heal', name: 'Self-Heal', status: 'active', version: '15.5.0', uptime: '127h' },
-  { id: 'watchdog', name: 'Watchdog', status: 'active', version: '15.5.0', uptime: '127h' },
+  {
+    id: 'auto-evolution',
+    name: 'Auto-Évolution',
+    status: 'active',
+    version: '15.5.0',
+    uptime: '127h',
+  },
+  {
+    id: 'memory-engine',
+    name: 'MemoryEngine',
+    status: 'active',
+    version: '15.5.0',
+    uptime: '127h',
+  },
+  {
+    id: 'exp-engine',
+    name: 'ExpEngine',
+    status: 'active',
+    version: '15.5.0',
+    uptime: '127h',
+  },
+  {
+    id: 'self-heal',
+    name: 'Self-Heal',
+    status: 'active',
+    version: '15.5.0',
+    uptime: '127h',
+  },
+  {
+    id: 'watchdog',
+    name: 'Watchdog',
+    status: 'active',
+    version: '15.5.0',
+    uptime: '127h',
+  },
 ];
 
 export const SystemPage: React.FC = () => {
@@ -58,7 +88,7 @@ export const SystemPage: React.FC = () => {
                 <span className="system-metric-value">{cpuUsage}%</span>
               </div>
               <div className="system-metric-bar">
-                <div 
+                <div
                   className="system-metric-fill cpu"
                   style={{ width: `${cpuUsage}%` }}
                 />
@@ -71,7 +101,7 @@ export const SystemPage: React.FC = () => {
                 <span className="system-metric-value">{memoryUsage}%</span>
               </div>
               <div className="system-metric-bar">
-                <div 
+                <div
                   className="system-metric-fill memory"
                   style={{ width: `${memoryUsage}%` }}
                 />

@@ -96,9 +96,11 @@ mod security {
     pub mod shell_guard {
         include!("security/shell_guard.rs");
     }
-    
+
     // Re-export from titane_infinity library for crate::security::* usage + SecurityPolicy for shell_guard
-    pub use titane_infinity::security::{AuditEvent, AuditEventType, AuditSeverity, audit, SecurityPolicy};
+    pub use titane_infinity::security::{
+        audit, AuditEvent, AuditEventType, AuditSeverity, SecurityPolicy,
+    };
 }
 
 mod core {
@@ -211,7 +213,7 @@ async fn ollama_query(prompt: String) -> Result<String, String> {
 
 // mod security; // DISABLED: Using library instead
 
-use titane_infinity::security::{SecurityManager, AuditEvent, AuditEventType};
+use titane_infinity::security::{AuditEvent, AuditEventType, SecurityManager};
 
 pub struct AppState {
     // ...existing code...
@@ -221,29 +223,32 @@ pub struct AppState {
 #[tauri::command]
 async fn send_message(
     message: String,
-    state: tauri::State<'_, AppState>
+    state: tauri::State<'_, AppState>,
 ) -> Result<String, String> {
     // Security checks
-    state.security_manager
+    state
+        .security_manager
         .validate_and_rate_limit("default_user", &message)
         .await
         .map_err(|e| e.to_string())?;
-    
+
     // Audit log
-    let _ = titane_infinity::security::audit::GLOBAL_AUDIT_LOGGER.log(AuditEvent {
-        timestamp: chrono::Utc::now(),
-        event_type: AuditEventType::DataAccess,
-        user_id: "default_user".to_string(),
-        details: serde_json::json!({ 
-            "action": "send_message",
-            "message_length": message.len()
-        }),
-        ip_address: None,
-        severity: 1,
-    }).await;
-    
+    let _ = titane_infinity::security::audit::GLOBAL_AUDIT_LOGGER
+        .log(AuditEvent {
+            timestamp: chrono::Utc::now(),
+            event_type: AuditEventType::DataAccess,
+            user_id: "default_user".to_string(),
+            details: serde_json::json!({
+                "action": "send_message",
+                "message_length": message.len()
+            }),
+            ip_address: None,
+            severity: 1,
+        })
+        .await;
+
     // ...existing code...
-    
+
     Ok("Message processed".to_string())
 }
 
@@ -255,18 +260,17 @@ fn main() {
         .join("logs");
     std::fs::create_dir_all(&log_dir).ok();
 
-    let security_manager = Arc::new(SecurityManager::new(
-        log_dir.join("audit.log")
-    ));
+    let security_manager = Arc::new(SecurityManager::new(log_dir.join("audit.log")));
 
     // Initialize Secure Secrets Engine (AES-256-GCM encrypted storage)
     let secrets_passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
         .ok()
         .or_else(|| Some("default-dev-passphrase-change-in-production".to_string()));
-    
-    let secrets_engine = titane_infinity::security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase)
-        .expect("Failed to initialize Secure Secrets Engine");
-    
+
+    let secrets_engine =
+        titane_infinity::security::secrets_engine::SecureSecretsEngine::new(secrets_passphrase)
+            .expect("Failed to initialize Secure Secrets Engine");
+
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
     let chat_orch_clone = chat_orchestrator.clone();
@@ -295,7 +299,6 @@ fn main() {
             // Core messaging
             send_message,
             ollama_query,
-            
             // Chat Orchestrator Commands (CHAT PIPELINE v21)
             overdrive::chat_orchestrator::chat_send_message,
             overdrive::chat_orchestrator::chat_stream_message,
@@ -305,7 +308,6 @@ fn main() {
             overdrive::chat_orchestrator::chat_create_conversation,
             overdrive::chat_orchestrator::chat_delete_conversation,
             overdrive::chat_orchestrator::chat_generate_suggestions,
-            
             // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)
             overdrive::voice_engine::voice_start_listening,
             overdrive::voice_engine::voice_stop_listening,
@@ -325,7 +327,6 @@ fn main() {
             overdrive::voice_engine::voice_enable_duplex,
             overdrive::voice_engine::voice_disable_duplex,
             overdrive::voice_engine::voice_check_interruption,
-            
             // Singularity State Commands (SINGULARITY API v21 REPAIR - 17 commands)
             singularity_state::commands::singularity_get_full_state,
             singularity_state::commands::singularity_get_physical,
@@ -343,7 +344,6 @@ fn main() {
             singularity_state::commands::singularity_update_full_state,
             singularity_state::commands::singularity_save_state,
             singularity_state::commands::singularity_load_state,
-            
             // Secure API Key Management (v∞ - Super-Prompts H, I, J, K)
             secure_commands::chat_set_gemini_key,
             secure_commands::get_gemini_key_status,

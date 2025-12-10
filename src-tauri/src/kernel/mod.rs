@@ -5,24 +5,24 @@
 // ═══════════════════════════════════════════════════════════════
 
 // Core Kernel modules
+pub mod core_loop;
+pub mod events;
+pub mod governance;
+pub mod integrations;
+pub mod kernel_state;
+pub mod priorities;
+pub mod resources;
 pub mod runtime;
 pub mod scheduler;
-pub mod core_loop;
 pub mod signals;
-pub mod resources;
-pub mod priorities;
-pub mod kernel_state;
 pub mod watchdog;
-pub mod governance;
-pub mod events;
-pub mod integrations;
 
 // Re-exports — Runtime
 pub use runtime::{KernelRuntime, RuntimeConfig};
 
 // Re-exports — Scheduler
-pub use scheduler::{CognitiveScheduler, SchedulerJob, EngineOutput};
 pub use priorities::CognitivePriority;
+pub use scheduler::{CognitiveScheduler, EngineOutput, SchedulerJob};
 
 // Re-exports — Core Loop
 pub use core_loop::{CoreLoop, CoreLoopConfig};
@@ -31,24 +31,24 @@ pub use core_loop::{CoreLoop, CoreLoopConfig};
 pub use signals::{KernelSignal, SignalBus};
 
 // Re-exports — State
-pub use kernel_state::{KernelState, KernelLoad, EngineStatus, KernelSnapshot};
+pub use kernel_state::{EngineStatus, KernelLoad, KernelSnapshot, KernelState};
 
 // Re-exports — Watchdog
 pub use watchdog::{KernelWatchdog, WatchdogConfig};
 
 // Re-exports — Governance
-pub use governance::{KernelPolicy, GovernanceEngine};
+pub use governance::{GovernanceEngine, KernelPolicy};
 
 // Re-exports — Events
-pub use events::{KernelEvent, EventPriority};
+pub use events::{EventPriority, KernelEvent};
 
 // Re-exports — Resources
-pub use resources::{ResourceManager, ResourceLimits};
+pub use resources::{ResourceLimits, ResourceManager};
 
 // Re-exports — Integrations
 pub use integrations::{
+    MemoryHealthSnapshot, MemoryKernelBridge, MemoryOperation, MemoryResult, MemoryStats,
     OmegaKernelBridge, OmegaRequest, OmegaResponse, OmegaStats,
-    MemoryKernelBridge, MemoryOperation, MemoryResult, MemoryHealthSnapshot, MemoryStats,
 };
 
 // ═══════════════════════════════════════════════════════════════

@@ -101,15 +101,18 @@ const formatTimestamp = (ts: number | null): string => {
     day: '2-digit',
     month: 'short',
     hour: '2-digit',
-    minute: '2-digit'
+    minute: '2-digit',
   });
 };
 
 const getSeverityColor = (severity: string): string => {
   switch (severity.toLowerCase()) {
-    case 'critical': return 'text-red-500 bg-red-500/10';
-    case 'warning': return 'text-yellow-500 bg-yellow-500/10';
-    default: return 'text-blue-500 bg-blue-500/10';
+    case 'critical':
+      return 'text-red-500 bg-red-500/10';
+    case 'warning':
+      return 'text-yellow-500 bg-yellow-500/10';
+    default:
+      return 'text-blue-500 bg-blue-500/10';
   }
 };
 
@@ -127,7 +130,9 @@ const getHealthScoreColor = (score: number): string => {
 export const MemoryHealthPanel: FC = () => {
   const [health, setHealth] = useState<MemoryHealth | null>(null);
   const [healingReport, setHealingReport] = useState<SelfHealingReport | null>(null);
-  const [_validationResult, _setValidationResult] = useState<ValidationResult | null>(null);
+  const [_validationResult, _setValidationResult] = useState<ValidationResult | null>(
+    null
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [isHealing, setIsHealing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -219,7 +224,7 @@ export const MemoryHealthPanel: FC = () => {
       const path = `~/Documents/TITANE_INFINITY_Backups/backup_${timestamp}.titane`;
       await secureInvoke('titan_export_data', {
         path,
-        description: `Backup manuel ${new Date().toLocaleDateString('fr-FR')}`
+        description: `Backup manuel ${new Date().toLocaleDateString('fr-FR')}`,
       });
       await loadHealth();
       alert('Export réussi !');
@@ -240,9 +245,7 @@ export const MemoryHealthPanel: FC = () => {
         <h3 className="text-lg font-semibold text-gray-300 mb-2">
           🧠 Memory Health Dashboard
         </h3>
-        <p className="text-gray-500">
-          Disponible uniquement dans l'application Tauri.
-        </p>
+        <p className="text-gray-500">Disponible uniquement dans l'application Tauri.</p>
       </div>
     );
   }
@@ -254,7 +257,9 @@ export const MemoryHealthPanel: FC = () => {
         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           🧠 Memory Health
           {health && (
-            <span className={`text-2xl font-bold ${getHealthScoreColor(health.health_score)}`}>
+            <span
+              className={`text-2xl font-bold ${getHealthScoreColor(health.health_score)}`}
+            >
               {health.health_score}%
             </span>
           )}
@@ -305,9 +310,7 @@ export const MemoryHealthPanel: FC = () => {
 
       {/* Loading */}
       {isLoading && !health && (
-        <div className="text-center py-8 text-gray-400">
-          ⏳ Chargement...
-        </div>
+        <div className="text-center py-8 text-gray-400">⏳ Chargement...</div>
       )}
 
       {/* Health Tab */}
@@ -318,7 +321,11 @@ export const MemoryHealthPanel: FC = () => {
             <StatCard
               label="Schéma"
               value={`v${health.schema_version}`}
-              subvalue={health.schema_version < health.current_version ? `→ v${health.current_version}` : '✓'}
+              subvalue={
+                health.schema_version < health.current_version
+                  ? `→ v${health.current_version}`
+                  : '✓'
+              }
             />
             <StatCard
               label="Événements"
@@ -362,9 +369,7 @@ export const MemoryHealthPanel: FC = () => {
           {/* Recommendations */}
           {health.recommendations.length > 0 && (
             <div className="space-y-2">
-              <h4 className="text-sm font-medium text-gray-400">
-                💡 Recommandations
-              </h4>
+              <h4 className="text-sm font-medium text-gray-400">💡 Recommandations</h4>
               <div className="space-y-1">
                 {health.recommendations.map(rec => (
                   <div
@@ -404,18 +409,14 @@ export const MemoryHealthPanel: FC = () => {
               className="p-4 bg-blue-900/30 hover:bg-blue-900/50 border border-blue-800/50 rounded-lg text-left"
             >
               <div className="text-lg mb-1">📤 Exporter</div>
-              <div className="text-sm text-gray-400">
-                Créer une archive complète
-              </div>
+              <div className="text-sm text-gray-400">Créer une archive complète</div>
             </button>
             <button
               disabled
               className="p-4 bg-gray-800/50 border border-gray-700 rounded-lg text-left opacity-50"
             >
               <div className="text-lg mb-1">📥 Importer</div>
-              <div className="text-sm text-gray-500">
-                Restaurer depuis archive
-              </div>
+              <div className="text-sm text-gray-500">Restaurer depuis archive</div>
             </button>
           </div>
 
@@ -469,7 +470,9 @@ export const MemoryHealthPanel: FC = () => {
           {health?.estimated_recovery_time_ms && (
             <div className="p-3 bg-gray-800 rounded text-sm">
               <span className="text-gray-400">Temps de recovery estimé:</span>{' '}
-              <span className="text-white">{formatDuration(health.estimated_recovery_time_ms)}</span>
+              <span className="text-white">
+                {formatDuration(health.estimated_recovery_time_ms)}
+              </span>
             </div>
           )}
         </div>
@@ -486,7 +489,15 @@ const StatCard: FC<{
   label: string;
   value: string;
   subvalue?: string;
-}> = ({ label, value, subvalue }: { label: string; value: string; subvalue?: string }) => (
+}> = ({
+  label,
+  value,
+  subvalue,
+}: {
+  label: string;
+  value: string;
+  subvalue?: string;
+}) => (
   <div className="p-3 bg-gray-800 rounded">
     <div className="text-xs text-gray-500 uppercase">{label}</div>
     <div className="text-lg font-semibold text-white">{value}</div>
@@ -499,7 +510,17 @@ const ActionButton: FC<{
   description: string;
   onClick: () => void;
   disabled?: boolean;
-}> = ({ label, description, onClick, disabled }: { label: string; description: string; onClick: () => void; disabled?: boolean }) => (
+}> = ({
+  label,
+  description,
+  onClick,
+  disabled,
+}: {
+  label: string;
+  description: string;
+  onClick: () => void;
+  disabled?: boolean;
+}) => (
   <button
     onClick={onClick}
     disabled={disabled}

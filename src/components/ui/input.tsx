@@ -16,7 +16,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 /**
  * Input - Text input générique avec label, helper, erreur
- * 
+ *
  * @example
  * ```tsx
  * <Input
@@ -29,7 +29,10 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
  * ```
  */
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, helper, error, leftIcon, rightIcon, className = '', disabled, ...props }, ref) => {
+  (
+    { label, helper, error, leftIcon, rightIcon, className = '', disabled, ...props },
+    ref
+  ) => {
     const hasError = !!error;
 
     return (
@@ -64,7 +67,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             disabled={disabled}
             aria-invalid={hasError}
-            aria-describedby={error ? `${props.id}-error` : helper ? `${props.id}-helper` : undefined}
+            aria-describedby={
+              error ? `${props.id}-error` : helper ? `${props.id}-helper` : undefined
+            }
             className={`
               w-full h-10 px-3 rounded-md
               text-sm font-normal
@@ -88,7 +93,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                     ? 'var(--border, rgba(196,196,196,0.12))'
                     : 'var(--border, rgba(196,196,196,0.12))'
               }`,
-              color: disabled ? 'var(--text-disabled, rgba(255,255,255,0.38))' : 'var(--text-primary, #e0e0e0)',
+              color: disabled
+                ? 'var(--text-disabled, rgba(255,255,255,0.38))'
+                : 'var(--text-primary, #e0e0e0)',
             }}
             {...props}
           />

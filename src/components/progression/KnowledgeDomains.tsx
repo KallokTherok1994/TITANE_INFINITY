@@ -33,11 +33,11 @@ export interface KnowledgeDomainsProps {
 // ─────────────────────────────────────────────────────────────────
 
 const categoryColors: Record<ExperienceDomain['category'], string> = {
-  cognitive: '#93b399',   // Vert métal
-  business: '#c4c4c4',    // Argent
-  project: '#727b81',     // Gris métal
-  system: '#8a9ba8',      // Bleu métal
-  memory: '#a8986f',      // Or terni
+  cognitive: '#93b399', // Vert métal
+  business: '#c4c4c4', // Argent
+  project: '#727b81', // Gris métal
+  system: '#8a9ba8', // Bleu métal
+  memory: '#a8986f', // Or terni
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -51,9 +51,11 @@ interface DomainCardProps {
 
 const DomainCard = ({ domain, onClick }: DomainCardProps): JSX.Element => {
   const { animationConfig, shouldReduceMotion } = useAnimation();
-  const progress = domain.level > 0
-    ? ((domain.xp - domain.level ** 2 * 100) / ((domain.level + 1) ** 2 * 100 - domain.level ** 2 * 100))
-    : domain.xp / 100;
+  const progress =
+    domain.level > 0
+      ? (domain.xp - domain.level ** 2 * 100) /
+        ((domain.level + 1) ** 2 * 100 - domain.level ** 2 * 100)
+      : domain.xp / 100;
 
   const nextLevelXp = xpForNextLevel(domain.level);
   const color = categoryColors[domain.category];

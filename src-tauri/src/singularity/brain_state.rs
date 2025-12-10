@@ -112,8 +112,8 @@ pub struct AffectiveState {
 impl Default for AffectiveState {
     fn default() -> Self {
         Self {
-            valence: 0.2,  // Slightly positive
-            arousal: 0.5,  // Balanced energy
+            valence: 0.2, // Slightly positive
+            arousal: 0.5, // Balanced energy
             confidence: 0.8,
         }
     }
@@ -131,14 +131,14 @@ impl AffectiveState {
     /// Create from mode
     pub fn from_mode(mode: ConversationMode) -> Self {
         match mode {
-            ConversationMode::Coach => Self::new(0.5, 0.4),     // Warm, calm
-            ConversationMode::Expert => Self::new(0.1, 0.3),   // Neutral, controlled
-            ConversationMode::Meta => Self::new(0.2, 0.2),     // Detached, thoughtful
+            ConversationMode::Coach => Self::new(0.5, 0.4), // Warm, calm
+            ConversationMode::Expert => Self::new(0.1, 0.3), // Neutral, controlled
+            ConversationMode::Meta => Self::new(0.2, 0.2),  // Detached, thoughtful
             ConversationMode::Cognitive => Self::new(0.0, 0.4), // Neutral, active
             ConversationMode::Creative => Self::new(0.4, 0.6), // Positive, energetic
-            ConversationMode::Logic => Self::new(0.0, 0.2),    // Neutral, low energy
+            ConversationMode::Logic => Self::new(0.0, 0.2), // Neutral, low energy
             ConversationMode::Harmonic => Self::new(0.3, 0.3), // Positive, calm
-            ConversationMode::Neutral => Self::new(0.1, 0.4),  // Slightly positive
+            ConversationMode::Neutral => Self::new(0.1, 0.4), // Slightly positive
         }
     }
 }
@@ -395,8 +395,18 @@ impl ConversationBrainState {
             return "No reasoning recorded".to_string();
         }
 
-        let last_n = self.reasoning_chain.iter().rev().take(3).collect::<Vec<_>>();
-        last_n.into_iter().rev().cloned().collect::<Vec<_>>().join(" → ")
+        let last_n = self
+            .reasoning_chain
+            .iter()
+            .rev()
+            .take(3)
+            .collect::<Vec<_>>();
+        last_n
+            .into_iter()
+            .rev()
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(" → ")
     }
 }
 

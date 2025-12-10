@@ -238,9 +238,7 @@ export interface SystemState {
 // API RESPONSES
 // ─────────────────────────────────────────────────────────────────
 
-export type ApiResult<T> =
-  | { ok: true; data: T }
-  | { ok: false; error: string };
+export type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
 export interface CommandError {
   code: string;

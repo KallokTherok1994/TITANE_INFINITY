@@ -5,21 +5,21 @@
 //   Personnalité cohérente & évolutive pour l'IA
 // ═══════════════════════════════════════════════════════════════
 
-pub mod identity_matrix;
-pub mod voice_profile;
-pub mod tone_engine;
-pub mod mode_system;
-pub mod rules_engine;
-pub mod personality;
 pub mod commands;
+pub mod identity_matrix;
+pub mod mode_system;
+pub mod personality;
+pub mod rules_engine;
+pub mod tone_engine;
+pub mod voice_profile;
 
-pub use identity_matrix::*;
-pub use voice_profile::*;
-pub use tone_engine::*;
-pub use mode_system::*;
-pub use rules_engine::*;
-pub use personality::*;
 pub use commands::*;
+pub use identity_matrix::*;
+pub use mode_system::*;
+pub use personality::*;
+pub use rules_engine::*;
+pub use tone_engine::*;
+pub use voice_profile::*;
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -53,9 +53,9 @@ pub enum IdentityArchetype {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PersonalityTrait {
     pub name: String,
-    pub value: f32,        // 0.0 - 1.0
-    pub weight: f32,       // Importance relative
-    pub stability: f32,    // Résistance au changement
+    pub value: f32,     // 0.0 - 1.0
+    pub weight: f32,    // Importance relative
+    pub stability: f32, // Résistance au changement
 }
 
 /// Valeur fondamentale
@@ -63,8 +63,8 @@ pub struct PersonalityTrait {
 pub struct CoreValue {
     pub name: String,
     pub description: String,
-    pub priority: u8,      // 1-10
-    pub inviolable: bool,  // Ne peut jamais être compromis
+    pub priority: u8,     // 1-10
+    pub inviolable: bool, // Ne peut jamais être compromis
 }
 
 /// Style de communication
@@ -120,11 +120,11 @@ pub struct BehavioralRule {
     pub id: String,
     pub name: String,
     pub description: String,
-    pub condition: String,      // Expression conditionnelle
-    pub action: String,         // Action à prendre
-    pub priority: u8,           // 1-10
+    pub condition: String, // Expression conditionnelle
+    pub action: String,    // Action à prendre
+    pub priority: u8,      // 1-10
     pub enabled: bool,
-    pub violations: u32,        // Compteur de violations
+    pub violations: u32, // Compteur de violations
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -376,10 +376,17 @@ impl SystemIdentityEngine {
     /// Évolue un trait
     pub fn evolve_trait(&mut self, trait_name: &str, delta: f32) -> Result<(), IdentityError> {
         if !self.config.allow_trait_evolution {
-            return Err(IdentityError::EvolutionRejected("Evolution disabled".to_string()));
+            return Err(IdentityError::EvolutionRejected(
+                "Evolution disabled".to_string(),
+            ));
         }
 
-        if let Some(t) = self.identity.traits.iter_mut().find(|t| t.name == trait_name) {
+        if let Some(t) = self
+            .identity
+            .traits
+            .iter_mut()
+            .find(|t| t.name == trait_name)
+        {
             let old_value = t.value;
             let adjusted_delta = delta * self.config.evolution_rate * (1.0 - t.stability);
             t.value = (t.value + adjusted_delta).clamp(0.0, 1.0);
@@ -398,7 +405,10 @@ impl SystemIdentityEngine {
             self.identity.updated_at = chrono::Utc::now().to_rfc3339();
             Ok(())
         } else {
-            Err(IdentityError::InvalidArchetype(format!("Trait not found: {}", trait_name)))
+            Err(IdentityError::InvalidArchetype(format!(
+                "Trait not found: {}",
+                trait_name
+            )))
         }
     }
 
@@ -411,9 +421,10 @@ impl SystemIdentityEngine {
                 let violations = ["mensonge", "harm", "danger", "irrespect"];
                 for v in violations {
                     if action.to_lowercase().contains(v) {
-                        return Err(IdentityError::CoreValueViolation(
-                            format!("Action '{}' violates core value '{}'", action, value.name)
-                        ));
+                        return Err(IdentityError::CoreValueViolation(format!(
+                            "Action '{}' violates core value '{}'",
+                            action, value.name
+                        )));
                     }
                 }
             }

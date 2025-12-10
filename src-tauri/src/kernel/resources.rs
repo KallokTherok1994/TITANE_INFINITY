@@ -108,7 +108,8 @@ impl ResourceManager {
     pub fn resource_pressure(&self) -> f32 {
         let cpu_pressure = self.usage.cpu_usage / self.limits.max_cpu_usage;
         let memory_pressure = self.usage.memory_mb / self.limits.max_memory_mb as f32;
-        let task_pressure = self.usage.active_tasks as f32 / self.limits.max_concurrent_engines as f32;
+        let task_pressure =
+            self.usage.active_tasks as f32 / self.limits.max_concurrent_engines as f32;
         let queue_pressure = self.usage.queue_depth as f32 / self.limits.max_queue_depth as f32;
 
         (cpu_pressure + memory_pressure + task_pressure + queue_pressure) / 4.0
@@ -149,7 +150,7 @@ mod tests {
     #[test]
     fn test_cpu_limit_check() {
         let mut manager = ResourceManager::new();
-        
+
         manager.update_usage(ResourceUsage {
             cpu_usage: 0.9,
             ..Default::default()
@@ -161,7 +162,7 @@ mod tests {
     #[test]
     fn test_can_accept_task() {
         let mut manager = ResourceManager::new();
-        
+
         // Low usage - should accept
         manager.update_usage(ResourceUsage {
             cpu_usage: 0.3,
@@ -186,9 +187,9 @@ mod tests {
     #[test]
     fn test_resource_pressure() {
         let mut manager = ResourceManager::new();
-        
+
         manager.update_usage(ResourceUsage {
-            cpu_usage: 0.425, // 50% of limit (0.85)
+            cpu_usage: 0.425,  // 50% of limit (0.85)
             memory_mb: 1024.0, // 50% of limit (2048)
             active_tasks: 8,   // 50% of limit (16)
             queue_depth: 50,   // 50% of limit (100)

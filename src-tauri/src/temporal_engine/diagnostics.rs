@@ -3,9 +3,9 @@
 //! Super Prompt #18 — Diagnostics du système temporel
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::temporal_events::{EventSeverity, TemporalEvent, TemporalEventType};
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::temporal_events::{TemporalEvent, TemporalEventType, EventSeverity};
 
 /// Diagnostics du système temporel
 pub struct TemporalDiagnostics {
@@ -83,8 +83,11 @@ impl TemporalDiagnostics {
     /// Filtre par type
     pub async fn events_by_type(&self, event_type: TemporalEventType) -> Vec<TemporalEvent> {
         let events = self.events.read().await;
-        events.iter()
-            .filter(|e| std::mem::discriminant(&e.event_type) == std::mem::discriminant(&event_type))
+        events
+            .iter()
+            .filter(|e| {
+                std::mem::discriminant(&e.event_type) == std::mem::discriminant(&event_type)
+            })
             .cloned()
             .collect()
     }
@@ -92,7 +95,8 @@ impl TemporalDiagnostics {
     /// Filtre par sévérité minimum
     pub async fn events_by_min_severity(&self, min: EventSeverity) -> Vec<TemporalEvent> {
         let events = self.events.read().await;
-        events.iter()
+        events
+            .iter()
             .filter(|e| Self::severity_value(&e.severity) >= Self::severity_value(&min))
             .cloned()
             .collect()
@@ -106,7 +110,8 @@ impl TemporalDiagnostics {
     /// Récupère les warnings récents
     pub async fn recent_warnings(&self) -> Vec<TemporalEvent> {
         let events = self.events.read().await;
-        events.iter()
+        events
+            .iter()
             .filter(|e| e.severity == EventSeverity::Warning)
             .cloned()
             .collect()
@@ -118,21 +123,26 @@ impl TemporalDiagnostics {
         let stats = self.stats.read().await;
 
         // Compter par type
-        let mut events_by_type: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut events_by_type: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
         for event in events.iter() {
             let type_name = format!("{:?}", event.event_type);
             *events_by_type.entry(type_name).or_insert(0) += 1;
         }
 
         // Compter par source
-        let mut events_by_source: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+        let mut events_by_source: std::collections::HashMap<String, usize> =
+            std::collections::HashMap::new();
         for event in events.iter() {
             *events_by_source.entry(event.source.clone()).or_insert(0) += 1;
         }
 
         // Événements récents significatifs
-        let significant_events: Vec<_> = events.iter()
-            .filter(|e| Self::severity_value(&e.severity) >= Self::severity_value(&EventSeverity::Warning))
+        let significant_events: Vec<_> = events
+            .iter()
+            .filter(|e| {
+                Self::severity_value(&e.severity) >= Self::severity_value(&EventSeverity::Warning)
+            })
             .rev()
             .take(10)
             .cloned()
@@ -169,7 +179,11 @@ impl TemporalDiagnostics {
         }
     }
 
-    fn generate_recommendations(&self, stats: &DiagnosticsStats, events: &[TemporalEvent]) -> Vec<String> {
+    fn generate_recommendations(
+        &self,
+        stats: &DiagnosticsStats,
+        events: &[TemporalEvent],
+    ) -> Vec<String> {
         let mut recommendations = Vec::new();
 
         if stats.error_count > 5 {
@@ -177,11 +191,13 @@ impl TemporalDiagnostics {
         }
 
         if stats.warning_count > 20 {
-            recommendations.push("Many warnings accumulated. Consider addressing them.".to_string());
+            recommendations
+                .push("Many warnings accumulated. Consider addressing them.".to_string());
         }
 
         // Vérifier les patterns d'erreurs
-        let error_sources: std::collections::HashMap<_, usize> = events.iter()
+        let error_sources: std::collections::HashMap<_, usize> = events
+            .iter()
             .filter(|e| e.severity == EventSeverity::Error)
             .fold(std::collections::HashMap::new(), |mut acc, e| {
                 *acc.entry(e.source.clone()).or_insert(0) += 1;
@@ -190,7 +206,10 @@ impl TemporalDiagnostics {
 
         for (source, count) in error_sources {
             if count > 3 {
-                recommendations.push(format!("Multiple errors from '{}'. Investigate this component.", source));
+                recommendations.push(format!(
+                    "Multiple errors from '{}'. Investigate this component.",
+                    source
+                ));
             }
         }
 
@@ -264,7 +283,8 @@ mod tests {
     async fn test_diagnostics() {
         let diag = TemporalDiagnostics::new();
 
-        diag.emit_simple(TemporalEventType::EngineInitialized, "Started").await;
+        diag.emit_simple(TemporalEventType::EngineInitialized, "Started")
+            .await;
         diag.emit_warning("Test warning", "test").await;
 
         let report = diag.generate_report().await;

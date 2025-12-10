@@ -41,49 +41,46 @@ export function useAIChatStreaming() {
     setIsStreaming(true);
 
     try {
-      const requestId = await aiChatClient.sendMessageStreaming(
-        content,
-        {
-          onChunk: (chunk) => {
-            setMessages(prev => {
-              const updated = [...prev];
-              const lastIndex = updated.length - 1;
-              const lastMsg = updated[lastIndex];
-              if (lastMsg && lastMsg.role === 'assistant') {
-                updated[lastIndex] = {
-                  ...lastMsg,
-                  content: lastMsg.content + chunk,
-                  isStreaming: true,
-                };
-              }
-              return updated;
-            });
-          },
-          onComplete: (fullResponse) => {
-            setMessages(prev => {
-              const updated = [...prev];
-              const lastIndex = updated.length - 1;
-              const lastMsg = updated[lastIndex];
-              if (lastMsg && lastMsg.role === 'assistant') {
-                updated[lastIndex] = {
-                  ...lastMsg,
-                  content: fullResponse,
-                  isStreaming: false,
-                };
-              }
-              return updated;
-            });
-            setIsStreaming(false);
-            currentRequestId.current = null;
-          },
-          onError: (err) => {
-            setError(err.message);
-            setIsStreaming(false);
-            setMessages(prev => prev.slice(0, -1));
-            currentRequestId.current = null;
-          },
-        }
-      );
+      const requestId = await aiChatClient.sendMessageStreaming(content, {
+        onChunk: chunk => {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+            const lastMsg = updated[lastIndex];
+            if (lastMsg && lastMsg.role === 'assistant') {
+              updated[lastIndex] = {
+                ...lastMsg,
+                content: lastMsg.content + chunk,
+                isStreaming: true,
+              };
+            }
+            return updated;
+          });
+        },
+        onComplete: fullResponse => {
+          setMessages(prev => {
+            const updated = [...prev];
+            const lastIndex = updated.length - 1;
+            const lastMsg = updated[lastIndex];
+            if (lastMsg && lastMsg.role === 'assistant') {
+              updated[lastIndex] = {
+                ...lastMsg,
+                content: fullResponse,
+                isStreaming: false,
+              };
+            }
+            return updated;
+          });
+          setIsStreaming(false);
+          currentRequestId.current = null;
+        },
+        onError: err => {
+          setError(err.message);
+          setIsStreaming(false);
+          setMessages(prev => prev.slice(0, -1));
+          currentRequestId.current = null;
+        },
+      });
       currentRequestId.current = requestId;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';

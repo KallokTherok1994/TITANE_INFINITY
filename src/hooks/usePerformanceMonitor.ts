@@ -45,11 +45,7 @@ export interface UsePerformanceMonitorReturn {
 export function usePerformanceMonitor(
   options: UsePerformanceMonitorOptions = {}
 ): UsePerformanceMonitorReturn {
-  const {
-    fpsThreshold = 40,
-    cpuThreshold = 80,
-    enabled = true,
-  } = options;
+  const { fpsThreshold = 40, cpuThreshold = 80, enabled = true } = options;
 
   const [metrics, setMetrics] = useState<PerformanceMetrics>({
     fps: 60,
@@ -135,8 +131,8 @@ export function usePerformanceMonitor(
     duration: metrics.shouldReduceMotion
       ? 0
       : metrics.shouldThrottle
-      ? 0.15 // 150ms si throttled
-      : 0.2, // 200ms normal
+        ? 0.15 // 150ms si throttled
+        : 0.2, // 200ms normal
     skipAnimation: metrics.shouldReduceMotion || metrics.fps < 20,
   };
 

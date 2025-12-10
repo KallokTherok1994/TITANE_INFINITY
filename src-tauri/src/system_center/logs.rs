@@ -7,11 +7,11 @@
 //!
 //! © 2025 TITANE Team. All rights reserved.
 
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
-use once_cell::sync::Lazy;
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES
@@ -69,14 +69,18 @@ pub struct LogStats {
 
 const MAX_LOG_ENTRIES: usize = 1000;
 
-static LOG_BUFFER: Lazy<Arc<Mutex<VecDeque<LogEntry>>>> = Lazy::new(|| {
-    Arc::new(Mutex::new(VecDeque::with_capacity(MAX_LOG_ENTRIES)))
-});
+static LOG_BUFFER: Lazy<Arc<Mutex<VecDeque<LogEntry>>>> =
+    Lazy::new(|| Arc::new(Mutex::new(VecDeque::with_capacity(MAX_LOG_ENTRIES))));
 
 static LOG_COUNTER: Lazy<Arc<Mutex<u64>>> = Lazy::new(|| Arc::new(Mutex::new(0)));
 
 /// Add a log entry to the buffer
-pub fn add_log_entry(level: LogLevel, source: &str, message: &str, metadata: Option<serde_json::Value>) {
+pub fn add_log_entry(
+    level: LogLevel,
+    source: &str,
+    message: &str,
+    metadata: Option<serde_json::Value>,
+) {
     let timestamp = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis() as u64)
@@ -88,7 +92,7 @@ pub fn add_log_entry(level: LogLevel, source: &str, message: &str, metadata: Opt
                 *counter += 1;
                 format!("log_{}", *counter)
             }
-            Err(_) => format!("log_err_{}", timestamp)
+            Err(_) => format!("log_err_{}", timestamp),
         }
     };
 
@@ -154,7 +158,10 @@ pub async fn sc_get_logs(filter: Option<LogFilter>) -> Result<Vec<LogEntry>, Str
     let buffer = match LOG_BUFFER.lock() {
         Ok(buf) => buf,
         Err(e) => {
-            eprintln!("Warning: LOG_BUFFER lock poisoned in get_logs, recovering: {}", e);
+            eprintln!(
+                "Warning: LOG_BUFFER lock poisoned in get_logs, recovering: {}",
+                e
+            );
             e.into_inner()
         }
     };
@@ -193,7 +200,10 @@ pub async fn sc_get_log_stats() -> Result<LogStats, String> {
     let buffer = match LOG_BUFFER.lock() {
         Ok(buf) => buf,
         Err(e) => {
-            eprintln!("Warning: LOG_BUFFER lock poisoned in stats, recovering: {}", e);
+            eprintln!(
+                "Warning: LOG_BUFFER lock poisoned in stats, recovering: {}",
+                e
+            );
             e.into_inner()
         }
     };

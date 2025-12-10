@@ -17,10 +17,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import type {
-  ModalityWeights,
-  NormalizedScore,
-} from '../types/multimodalFusion';
+import type { ModalityWeights, NormalizedScore } from '../types/multimodalFusion';
 
 import {
   getDefaultMultimodalState,
@@ -99,9 +96,11 @@ function adjustWeightsForActiveModalities(
   };
 }
 
-function getDominantModality(
-  confidences: { vision: number; voice: number; text: number }
-): 'vision' | 'voice' | 'text' | 'none' {
+function getDominantModality(confidences: {
+  vision: number;
+  voice: number;
+  text: number;
+}): 'vision' | 'voice' | 'text' | 'none' {
   const { vision, voice, text } = confidences;
 
   if (vision === 0 && voice === 0 && text === 0) return 'none';
@@ -195,10 +194,11 @@ describe('Multimodal Types & Defaults', () => {
 describe('Weight Adjustment', () => {
   it('should assign full weight to vision when other modalities inactive', () => {
     const weights = getDefaultModalityWeights();
-    const adjusted = adjustWeightsForActiveModalities(
-      weights,
-      { vision: true, voice: false, text: false }
-    );
+    const adjusted = adjustWeightsForActiveModalities(weights, {
+      vision: true,
+      voice: false,
+      text: false,
+    });
 
     expect(adjusted.vision).toBe(1.0);
     expect(adjusted.voice).toBe(0);
@@ -207,10 +207,11 @@ describe('Weight Adjustment', () => {
 
   it('should assign full weight to voice when other modalities inactive', () => {
     const weights = getDefaultModalityWeights();
-    const adjusted = adjustWeightsForActiveModalities(
-      weights,
-      { vision: false, voice: true, text: false }
-    );
+    const adjusted = adjustWeightsForActiveModalities(weights, {
+      vision: false,
+      voice: true,
+      text: false,
+    });
 
     expect(adjusted.vision).toBe(0);
     expect(adjusted.voice).toBe(1.0);
@@ -219,10 +220,11 @@ describe('Weight Adjustment', () => {
 
   it('should assign full weight to text when other modalities inactive', () => {
     const weights = getDefaultModalityWeights();
-    const adjusted = adjustWeightsForActiveModalities(
-      weights,
-      { vision: false, voice: false, text: true }
-    );
+    const adjusted = adjustWeightsForActiveModalities(weights, {
+      vision: false,
+      voice: false,
+      text: true,
+    });
 
     expect(adjusted.vision).toBe(0);
     expect(adjusted.voice).toBe(0);
@@ -231,10 +233,11 @@ describe('Weight Adjustment', () => {
 
   it('should keep original weights when all modalities active', () => {
     const weights = getDefaultModalityWeights();
-    const adjusted = adjustWeightsForActiveModalities(
-      weights,
-      { vision: true, voice: true, text: true }
-    );
+    const adjusted = adjustWeightsForActiveModalities(weights, {
+      vision: true,
+      voice: true,
+      text: true,
+    });
 
     expect(adjusted.vision).toBe(0.4);
     expect(adjusted.voice).toBe(0.3);
@@ -243,10 +246,11 @@ describe('Weight Adjustment', () => {
 
   it('should redistribute weights for two active modalities', () => {
     const weights = getDefaultModalityWeights();
-    const adjusted = adjustWeightsForActiveModalities(
-      weights,
-      { vision: true, voice: true, text: false }
-    );
+    const adjusted = adjustWeightsForActiveModalities(weights, {
+      vision: true,
+      voice: true,
+      text: false,
+    });
 
     // vision=0.4, voice=0.3, total=0.7
     // adjusted: vision=0.4/0.7≈0.571, voice=0.3/0.7≈0.429
@@ -500,10 +504,11 @@ describe('Level Classification', () => {
 
 describe('Edge Cases', () => {
   it('should handle all zero weights', () => {
-    const adjusted = adjustWeightsForActiveModalities(
-      getDefaultModalityWeights(),
-      { vision: false, voice: false, text: false }
-    );
+    const adjusted = adjustWeightsForActiveModalities(getDefaultModalityWeights(), {
+      vision: false,
+      voice: false,
+      text: false,
+    });
 
     expect(adjusted.vision).toBe(0);
     expect(adjusted.voice).toBe(0);

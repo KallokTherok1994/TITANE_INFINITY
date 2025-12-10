@@ -170,10 +170,7 @@ describe('Control Panel - Flux complet Modules', () => {
     await invoke('cp_toggle_module', { moduleId: 'ai_core' });
 
     // Step 3: Vérifier la désactivation
-    const updatedModules = [
-      { ...mockModules[0] },
-      { ...mockModules[1], enabled: false },
-    ];
+    const updatedModules = [{ ...mockModules[0] }, { ...mockModules[1], enabled: false }];
 
     mockedInvoke.mockResolvedValueOnce(updatedModules);
     modules = await invoke('cp_get_modules_status');

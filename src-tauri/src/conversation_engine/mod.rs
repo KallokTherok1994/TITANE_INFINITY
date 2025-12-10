@@ -1,3 +1,18 @@
+pub mod anthology_engine;
+pub mod api_neutralizer;
+pub mod behavioral_consistency;
+pub mod cognitive;
+pub mod commands;
+pub mod emotion;
+pub mod emotional_subtlety;
+pub mod french_mastery;
+pub mod intent;
+pub mod literary_engine;
+pub mod memory;
+pub mod multilayer_memory;
+pub mod pipeline;
+pub mod realism;
+pub mod self_healing;
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CONVERSATION ENGINE (Module Principal)
@@ -11,42 +26,26 @@
  * - SingularityState Sync: Synchronisation émotionnelle et cognitive
  * - API Neutralizer: Capture et reconstruction interne des réponses externes
  */
-
 pub mod types;
-pub mod pipeline;
-pub mod memory;
-pub mod intent;
-pub mod emotion;
-pub mod cognitive;
-pub mod self_healing;
-pub mod api_neutralizer;
-pub mod commands;
-pub mod multilayer_memory;
-pub mod french_mastery;
-pub mod realism;
-pub mod emotional_subtlety;
-pub mod behavioral_consistency;
-pub mod literary_engine;
-pub mod anthology_engine;
 
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
+use crate::ai::router::AIRouter;
 use crate::memory::storage::MemoryStorage;
 use crate::singularity::singularity_state::SingularityState;
-use crate::ai::router::AIRouter;
 
-pub use types::*;
-pub use pipeline::ConversationPipeline;
-pub use memory::ConversationMemoryEngine;
-pub use self_healing::SelfHealingConversation;
-pub use multilayer_memory::MultiLayerMemoryManager;
-pub use french_mastery::FrenchMasteryProcessor;
-pub use realism::ConversationalRealismProcessor;
-pub use emotional_subtlety::EmotionalSubtletyProcessor;
-pub use behavioral_consistency::BehavioralConsistencyProcessor;
-pub use literary_engine::LiteraryEngine;
 pub use anthology_engine::AnthologyEngine;
+pub use behavioral_consistency::BehavioralConsistencyProcessor;
+pub use emotional_subtlety::EmotionalSubtletyProcessor;
+pub use french_mastery::FrenchMasteryProcessor;
+pub use literary_engine::LiteraryEngine;
+pub use memory::ConversationMemoryEngine;
+pub use multilayer_memory::MultiLayerMemoryManager;
+pub use pipeline::ConversationPipeline;
+pub use realism::ConversationalRealismProcessor;
+pub use self_healing::SelfHealingConversation;
+pub use types::*;
 
 /// État global du Conversation Engine
 pub struct ConversationEngineState {
@@ -96,7 +95,7 @@ impl ConversationEngineState {
     ) -> Result<Self, ConversationEngineError> {
         let memory_storage = Arc::new(
             MemoryStorage::new(storage_dir.join("conversations"), password)
-                .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?
+                .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?,
         );
 
         let memory = Arc::new(ConversationMemoryEngine::new(memory_storage));

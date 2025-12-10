@@ -65,54 +65,89 @@ impl PatternAnalyzer {
     /// Initialise les patterns prédéfinis
     fn init_known_patterns(&mut self) {
         // Pattern: Exploration
-        self.patterns.insert("exploration".to_string(), BehaviorPattern {
-            id: "exploration".to_string(),
-            name: "Exploration".to_string(),
-            events: vec!["navigate".to_string(), "navigate".to_string(), "navigate".to_string()],
-            frequency: 0,
-            confidence: 0.7,
-            typical_duration: 60000,
-        });
+        self.patterns.insert(
+            "exploration".to_string(),
+            BehaviorPattern {
+                id: "exploration".to_string(),
+                name: "Exploration".to_string(),
+                events: vec![
+                    "navigate".to_string(),
+                    "navigate".to_string(),
+                    "navigate".to_string(),
+                ],
+                frequency: 0,
+                confidence: 0.7,
+                typical_duration: 60000,
+            },
+        );
 
         // Pattern: Recherche ciblée
-        self.patterns.insert("targeted_search".to_string(), BehaviorPattern {
-            id: "targeted_search".to_string(),
-            name: "Recherche ciblée".to_string(),
-            events: vec!["search".to_string(), "click".to_string(), "interact".to_string()],
-            frequency: 0,
-            confidence: 0.8,
-            typical_duration: 30000,
-        });
+        self.patterns.insert(
+            "targeted_search".to_string(),
+            BehaviorPattern {
+                id: "targeted_search".to_string(),
+                name: "Recherche ciblée".to_string(),
+                events: vec![
+                    "search".to_string(),
+                    "click".to_string(),
+                    "interact".to_string(),
+                ],
+                frequency: 0,
+                confidence: 0.8,
+                typical_duration: 30000,
+            },
+        );
 
         // Pattern: Configuration
-        self.patterns.insert("configuration".to_string(), BehaviorPattern {
-            id: "configuration".to_string(),
-            name: "Configuration".to_string(),
-            events: vec!["navigate".to_string(), "configure".to_string(), "configure".to_string()],
-            frequency: 0,
-            confidence: 0.75,
-            typical_duration: 45000,
-        });
+        self.patterns.insert(
+            "configuration".to_string(),
+            BehaviorPattern {
+                id: "configuration".to_string(),
+                name: "Configuration".to_string(),
+                events: vec![
+                    "navigate".to_string(),
+                    "configure".to_string(),
+                    "configure".to_string(),
+                ],
+                frequency: 0,
+                confidence: 0.75,
+                typical_duration: 45000,
+            },
+        );
 
         // Pattern: Aide/Support
-        self.patterns.insert("help_seeking".to_string(), BehaviorPattern {
-            id: "help_seeking".to_string(),
-            name: "Recherche d'aide".to_string(),
-            events: vec!["help".to_string(), "navigate".to_string(), "help".to_string()],
-            frequency: 0,
-            confidence: 0.65,
-            typical_duration: 120000,
-        });
+        self.patterns.insert(
+            "help_seeking".to_string(),
+            BehaviorPattern {
+                id: "help_seeking".to_string(),
+                name: "Recherche d'aide".to_string(),
+                events: vec![
+                    "help".to_string(),
+                    "navigate".to_string(),
+                    "help".to_string(),
+                ],
+                frequency: 0,
+                confidence: 0.65,
+                typical_duration: 120000,
+            },
+        );
 
         // Pattern: Création de contenu
-        self.patterns.insert("content_creation".to_string(), BehaviorPattern {
-            id: "content_creation".to_string(),
-            name: "Création de contenu".to_string(),
-            events: vec!["create".to_string(), "interact".to_string(), "create".to_string()],
-            frequency: 0,
-            confidence: 0.8,
-            typical_duration: 180000,
-        });
+        self.patterns.insert(
+            "content_creation".to_string(),
+            BehaviorPattern {
+                id: "content_creation".to_string(),
+                name: "Création de contenu".to_string(),
+                events: vec![
+                    "create".to_string(),
+                    "interact".to_string(),
+                    "create".to_string(),
+                ],
+                frequency: 0,
+                confidence: 0.8,
+                typical_duration: 180000,
+            },
+        );
     }
 
     /// Analyse un événement
@@ -140,7 +175,8 @@ impl PatternAnalyzer {
 
         // Transitions
         if let Some(ref last) = self.last_action {
-            let transitions = self.action_transitions
+            let transitions = self
+                .action_transitions
                 .entry(last.clone())
                 .or_insert_with(HashMap::new);
             *transitions.entry(event_type.clone()).or_insert(0) += 1;
@@ -161,7 +197,8 @@ impl PatternAnalyzer {
         }
 
         // D'abord collecter les IDs et états des patterns qui matchent
-        let matches: Vec<(String, f64)> = self.patterns
+        let matches: Vec<(String, f64)> = self
+            .patterns
             .iter()
             .filter_map(|(id, pattern)| {
                 if Self::matches_pattern_static(&session_events, &pattern.events) {
@@ -246,16 +283,28 @@ impl PatternAnalyzer {
     /// Convertit un type d'événement en action prédite
     fn event_type_to_action(&self, event_type: &str) -> PredictedAction {
         match event_type {
-            "navigate" => PredictedAction::Navigate { path: String::new() },
-            "search" => PredictedAction::Search { query_hint: String::new() },
+            "navigate" => PredictedAction::Navigate {
+                path: String::new(),
+            },
+            "search" => PredictedAction::Search {
+                query_hint: String::new(),
+            },
             "click" | "interact" => PredictedAction::Interact {
                 element_type: String::new(),
                 action: String::new(),
             },
-            "help" => PredictedAction::RequestHelp { topic: String::new() },
-            "configure" => PredictedAction::Configure { setting: String::new() },
-            "create" => PredictedAction::Create { content_type: String::new() },
-            "export" => PredictedAction::Export { format: String::new() },
+            "help" => PredictedAction::RequestHelp {
+                topic: String::new(),
+            },
+            "configure" => PredictedAction::Configure {
+                setting: String::new(),
+            },
+            "create" => PredictedAction::Create {
+                content_type: String::new(),
+            },
+            "export" => PredictedAction::Export {
+                format: String::new(),
+            },
             "abandon" | "close" => PredictedAction::Abandon,
             _ => PredictedAction::Unknown,
         }

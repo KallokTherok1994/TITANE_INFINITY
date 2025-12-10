@@ -43,7 +43,7 @@ export const SelfHealingPanel: React.FC<SelfHealingPanelProps> = ({
   overallProgress,
   isHealing,
 }) => {
-  const engine = useVisualStateStore((state) => state.engine);
+  const engine = useVisualStateStore(state => state.engine);
   const { visuals, isTransitioning } = useVisualState(engine);
 
   return (
@@ -267,9 +267,7 @@ export const SelfHealingPanel: React.FC<SelfHealingPanelProps> = ({
               >
                 <span>Duration: {(phase.duration / 1000).toFixed(1)}s</span>
                 {phase.startTime && (
-                  <span>
-                    Started: {new Date(phase.startTime).toLocaleTimeString()}
-                  </span>
+                  <span>Started: {new Date(phase.startTime).toLocaleTimeString()}</span>
                 )}
               </div>
             </div>
@@ -292,7 +290,7 @@ export const SelfHealingPanel: React.FC<SelfHealingPanelProps> = ({
         }}
       >
         <span>
-          Completed: {phases.filter((p) => p.status === 'completed').length} /{' '}
+          Completed: {phases.filter(p => p.status === 'completed').length} /{' '}
           {phases.length}
         </span>
         <span>Status: {isHealing ? 'Healing...' : 'Idle'}</span>

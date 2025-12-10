@@ -41,10 +41,7 @@ export class TauriBridge {
   /**
    * Invoque une commande Tauri
    */
-  async invoke<T = unknown, R = unknown>(
-    command: string,
-    args?: T
-  ): Promise<R> {
+  async invoke<T = unknown, R = unknown>(command: string, args?: T): Promise<R> {
     this.state.pendingCommands++;
 
     try {
@@ -99,7 +96,7 @@ export class TauriBridge {
       }
     }
 
-    const unlisten = await listen<T>(event, (e) => {
+    const unlisten = await listen<T>(event, e => {
       handler(e.payload);
     });
 
@@ -121,10 +118,7 @@ export class TauriBridge {
   /**
    * Ajoute une commande à la file d'attente
    */
-  queue<T = unknown, R = unknown>(
-    command: string,
-    args?: T
-  ): Promise<R> {
+  queue<T = unknown, R = unknown>(command: string, args?: T): Promise<R> {
     return new Promise((resolve, reject) => {
       this.commandQueue.push(async () => {
         try {
@@ -164,12 +158,8 @@ export class TauriBridge {
   /**
    * Batch multiple commandes
    */
-  async batch<R = unknown>(
-    commands: Array<TauriCommand>
-  ): Promise<R[]> {
-    return Promise.all(
-      commands.map(cmd => this.invoke(cmd.name, cmd.args))
-    );
+  async batch<R = unknown>(commands: Array<TauriCommand>): Promise<R[]> {
+    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args)));
   }
 
   /**

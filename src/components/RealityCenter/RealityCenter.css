@@ -8,7 +8,12 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: linear-gradient(135deg, var(--bg-base, #0a0a0a) 0%, var(--bg-panel, #141414) 50%, var(--bg-surface, #1a1a1a) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-base, #0a0a0a) 0%,
+    var(--bg-panel, #141414) 50%,
+    var(--bg-surface, #1a1a1a) 100%
+  );
   color: var(--text, #e8e8e8);
   font-family: 'Segoe UI', system-ui, sans-serif;
   overflow: hidden;
@@ -29,7 +34,8 @@
 }
 
 @keyframes pulse-glow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
     transform: scale(1);
     filter: drop-shadow(0 0 10px rgba(147, 179, 153, 0.6));
@@ -306,10 +312,22 @@
   border-radius: 4px;
 }
 
-.overlay-corner.top-left { top: 8px; left: 8px; }
-.overlay-corner.top-right { top: 8px; right: 8px; }
-.overlay-corner.bottom-left { bottom: 8px; left: 8px; }
-.overlay-corner.bottom-right { bottom: 8px; right: 8px; }
+.overlay-corner.top-left {
+  top: 8px;
+  left: 8px;
+}
+.overlay-corner.top-right {
+  top: 8px;
+  right: 8px;
+}
+.overlay-corner.bottom-left {
+  bottom: 8px;
+  left: 8px;
+}
+.overlay-corner.bottom-right {
+  bottom: 8px;
+  right: 8px;
+}
 
 /* Entity Creator */
 .entity-creator {

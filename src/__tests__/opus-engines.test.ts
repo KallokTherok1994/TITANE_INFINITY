@@ -55,7 +55,7 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
       expect(() => engine.stop()).not.toThrow();
     });
 
-    it('devrait réinitialiser l\'état', () => {
+    it("devrait réinitialiser l'état", () => {
       engine.start();
       // Faire quelques observations
       const state = getDefaultMultimodalState();
@@ -74,7 +74,7 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
       expect(() => engine.processMultimodalState(state)).not.toThrow();
     });
 
-    it('devrait mettre à jour l\'état après observation', () => {
+    it("devrait mettre à jour l'état après observation", () => {
       engine.start();
       const state = getDefaultMultimodalState();
 
@@ -127,7 +127,7 @@ describe('OPUS v∞.4 - PredictiveStateEngine', () => {
   });
 
   describe('Callbacks', () => {
-    it('devrait notifier les mises à jour d\'état', () => {
+    it("devrait notifier les mises à jour d'état", () => {
       const callback = vi.fn();
       engine.setStateUpdateCallback(callback);
       engine.start();
@@ -182,7 +182,7 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
       expect(() => engine.stop()).not.toThrow();
     });
 
-    it('devrait réinitialiser l\'état', () => {
+    it("devrait réinitialiser l'état", () => {
       engine.start();
       engine.reset();
       const state = engine.getState();
@@ -229,8 +229,8 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
     });
   });
 
-  describe('Sélection d\'intervention', () => {
-    it('devrait sélectionner un type d\'intervention', () => {
+  describe("Sélection d'intervention", () => {
+    it("devrait sélectionner un type d'intervention", () => {
       engine.start();
 
       const recommendation = engine.selectInterventionType();
@@ -257,9 +257,16 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
     });
   });
 
-  describe('Protocoles d\'intervention', () => {
+  describe("Protocoles d'intervention", () => {
     it('devrait retourner un protocole valide', () => {
-      const types: InterventionType[] = ['breath', 'pause', 'body', 'focus', 'agenda', 'reassurance'];
+      const types: InterventionType[] = [
+        'breath',
+        'pause',
+        'body',
+        'focus',
+        'agenda',
+        'reassurance',
+      ];
 
       for (const type of types) {
         const protocol = engine.getProtocol(type);
@@ -280,7 +287,7 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
     });
   });
 
-  describe('Exécution d\'intervention', () => {
+  describe("Exécution d'intervention", () => {
     it('devrait démarrer une intervention', () => {
       engine.start();
 
@@ -294,7 +301,7 @@ describe('OPUS v∞.5 - StressRegulationEngine', () => {
       expect(state.totalInterventions).toBe(1);
     });
 
-    it('devrait enregistrer le résultat d\'une intervention', () => {
+    it("devrait enregistrer le résultat d'une intervention", () => {
       engine.start();
       engine.startIntervention('breath');
 
@@ -381,7 +388,7 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
       expect(state.learningStartDate).toBeGreaterThan(0);
     });
 
-    it('devrait réinitialiser l\'état', () => {
+    it("devrait réinitialiser l'état", () => {
       engine.start();
       engine.recordEnergyObservation(0.8);
       engine.reset();
@@ -391,13 +398,13 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
     });
   });
 
-  describe('Observation d\'énergie', () => {
+  describe("Observation d'énergie", () => {
     it('devrait enregistrer une observation', () => {
       engine.start();
       expect(() => engine.recordEnergyObservation(0.7)).not.toThrow();
     });
 
-    it('devrait normaliser les valeurs d\'énergie', () => {
+    it("devrait normaliser les valeurs d'énergie", () => {
       engine.start();
 
       // Valeur trop haute
@@ -409,7 +416,7 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
       expect(engine.getState()).toBeDefined();
     });
 
-    it('devrait ajouter à l\'historique', () => {
+    it("devrait ajouter à l'historique", () => {
       engine.start();
 
       // Forcer le flush du buffer avec suffisamment d'observations
@@ -423,7 +430,7 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
   });
 
   describe('État circadien', () => {
-    it('devrait retourner l\'état circadien actuel', () => {
+    it("devrait retourner l'état circadien actuel", () => {
       engine.start();
 
       const circadian = engine.getCurrentCircadianState();
@@ -482,7 +489,9 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
       const pacing = engine.getCurrentPacing();
 
       expect(pacing).toBeDefined();
-      expect(['light', 'moderate', 'focused', 'deep']).toContain(pacing.suggestedIntensity);
+      expect(['light', 'moderate', 'focused', 'deep']).toContain(
+        pacing.suggestedIntensity
+      );
       expect(pacing.suggestedBreakInterval).toBeGreaterThan(0);
       expect(pacing.suggestedSessionLength).toBeGreaterThan(0);
     });
@@ -508,7 +517,7 @@ describe('OPUS v∞.6 - HumanRhythmEngine', () => {
       }
     });
 
-    it('devrait vérifier si c\'est un bon moment pour une tâche', () => {
+    it("devrait vérifier si c'est un bon moment pour une tâche", () => {
       engine.start();
 
       const result = engine.isGoodTimeFor('deepWork');
@@ -630,7 +639,7 @@ describe('Intégration OPUS Engines', () => {
     HumanRhythmEngine.resetInstance();
   });
 
-  it('devrait permettre une chaîne d\'analyse complète', () => {
+  it("devrait permettre une chaîne d'analyse complète", () => {
     // 1. Observation multimodale
     const multimodalState = getDefaultMultimodalState();
 

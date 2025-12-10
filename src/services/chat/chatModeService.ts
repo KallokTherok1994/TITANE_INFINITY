@@ -82,7 +82,10 @@ class ChatModeService {
       await this.syncWithBackend();
 
       this.initialized = true;
-      console.log('[ChatModeService] ✅ Initialized with mode:', this.state.current_mode_id);
+      console.log(
+        '[ChatModeService] ✅ Initialized with mode:',
+        this.state.current_mode_id
+      );
     } catch (error) {
       console.error('[ChatModeService] ❌ Initialization failed:', error);
       // Fallback: utiliser l'état par défaut
@@ -262,7 +265,7 @@ class ChatModeService {
       // Mettre à jour l'historique
       this.state.mode_history = [
         new_mode_id,
-        ...this.state.mode_history.filter((id) => id !== new_mode_id),
+        ...this.state.mode_history.filter(id => id !== new_mode_id),
       ].slice(0, 10);
 
       // Sauvegarder
@@ -278,7 +281,9 @@ class ChatModeService {
       };
       this.notifyListeners(event);
 
-      console.log(`[ChatModeService] ✅ Mode changed: ${previousModeId} → ${new_mode_id}`);
+      console.log(
+        `[ChatModeService] ✅ Mode changed: ${previousModeId} → ${new_mode_id}`
+      );
 
       return {
         success: true,
@@ -349,7 +354,9 @@ class ChatModeService {
     this.state.mode_xp[modeId] = (this.state.mode_xp[modeId] ?? 0) + amount;
 
     this.saveState();
-    console.log(`[ChatModeService] +${amount} XP (mode: ${modeId}, total: ${this.userXP})`);
+    console.log(
+      `[ChatModeService] +${amount} XP (mode: ${modeId}, total: ${this.userXP})`
+    );
   }
 
   /**
@@ -378,7 +385,7 @@ class ChatModeService {
    * Retirer un mode des favoris
    */
   public removeFavorite(modeId: string): void {
-    this.state.favorite_modes = this.state.favorite_modes.filter((id) => id !== modeId);
+    this.state.favorite_modes = this.state.favorite_modes.filter(id => id !== modeId);
     this.saveState();
   }
 
@@ -387,7 +394,7 @@ class ChatModeService {
    */
   public getFavorites(): ChatMode[] {
     return this.state.favorite_modes
-      .map((id) => getChatMode(id))
+      .map(id => getChatMode(id))
       .filter((mode): mode is ChatMode => mode !== undefined);
   }
 
@@ -401,12 +408,12 @@ class ChatModeService {
   public onModeChange(callback: ModeChangeCallback): () => void {
     this.listeners.push(callback);
     return () => {
-      this.listeners = this.listeners.filter((cb) => cb !== callback);
+      this.listeners = this.listeners.filter(cb => cb !== callback);
     };
   }
 
   private notifyListeners(event: ChatModeChangedEvent): void {
-    this.listeners.forEach((callback) => {
+    this.listeners.forEach(callback => {
       try {
         callback(event);
       } catch (error) {

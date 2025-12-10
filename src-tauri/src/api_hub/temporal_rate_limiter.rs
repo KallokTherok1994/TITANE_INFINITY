@@ -2,10 +2,10 @@
 //! RATE LIMITER TEMPOREL — Adaptation dynamique selon contexte
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::temporal_adapter::TemporalApiAdapter;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use tokio::sync::RwLock;
-use super::temporal_adapter::TemporalApiAdapter;
 
 /// Rate limiter adaptatif avec intelligence temporelle
 pub struct TemporalRateLimiter {
@@ -170,12 +170,7 @@ mod tests {
     #[tokio::test]
     async fn test_rate_limiter_creation() {
         let adapter = Arc::new(TemporalApiAdapter::new());
-        let limiter = TemporalRateLimiter::new(
-            "test".to_string(),
-            100,
-            1000,
-            adapter,
-        );
+        let limiter = TemporalRateLimiter::new("test".to_string(), 100, 1000, adapter);
 
         let stats = limiter.get_stats().await;
         assert_eq!(stats.provider, "test");
@@ -184,16 +179,11 @@ mod tests {
     #[tokio::test]
     async fn test_acquire_permit() {
         let adapter = Arc::new(TemporalApiAdapter::new());
-        let limiter = TemporalRateLimiter::new(
-            "test".to_string(),
-            10,
-            100,
-            adapter,
-        );
+        let limiter = TemporalRateLimiter::new("test".to_string(), 10, 100, adapter);
 
         // Devrait réussir
         assert!(limiter.acquire_permit().await.is_ok());
-        
+
         let stats = limiter.get_stats().await;
         assert_eq!(stats.minute_count, 1);
     }
@@ -203,7 +193,7 @@ mod tests {
         let adapter = Arc::new(TemporalApiAdapter::new());
         let limiter = TemporalRateLimiter::new(
             "test".to_string(),
-            3,  // Très bas pour test
+            3, // Très bas pour test
             100,
             adapter,
         );

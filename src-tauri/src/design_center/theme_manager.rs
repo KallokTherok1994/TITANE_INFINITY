@@ -166,8 +166,7 @@ fn get_theme_file_path(app: &AppHandle) -> Result<PathBuf, String> {
         .map_err(|e| format!("Erreur chemin app data: {}", e))?;
 
     let data_dir = app_data.join("data");
-    fs::create_dir_all(&data_dir)
-        .map_err(|e| format!("Erreur création dossier: {}", e))?;
+    fs::create_dir_all(&data_dir).map_err(|e| format!("Erreur création dossier: {}", e))?;
 
     Ok(data_dir.join("ui_theme.json"))
 }
@@ -196,7 +195,8 @@ fn get_default_tokens() -> UIThemeTokens {
             info: "#8899aa".to_string(),
         },
         typography: TypographyTokens {
-            font_family: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif".to_string(),
+            font_family: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                .to_string(),
             font_family_mono: "'JetBrains Mono', 'Fira Code', monospace".to_string(),
             font_size: "medium".to_string(),
             font_scale: 1.0,
@@ -256,16 +256,15 @@ pub async fn load_ui_theme(app: AppHandle) -> Result<UIThemeTokens, String> {
         let default_tokens = get_default_tokens();
         let json = serde_json::to_string_pretty(&default_tokens)
             .map_err(|e| format!("Erreur sérialisation: {}", e))?;
-        fs::write(&file_path, json)
-            .map_err(|e| format!("Erreur écriture fichier: {}", e))?;
+        fs::write(&file_path, json).map_err(|e| format!("Erreur écriture fichier: {}", e))?;
         return Ok(default_tokens);
     }
 
-    let content = fs::read_to_string(&file_path)
-        .map_err(|e| format!("Erreur lecture fichier: {}", e))?;
+    let content =
+        fs::read_to_string(&file_path).map_err(|e| format!("Erreur lecture fichier: {}", e))?;
 
-    let tokens: UIThemeTokens = serde_json::from_str(&content)
-        .map_err(|e| format!("Erreur parsing JSON: {}", e))?;
+    let tokens: UIThemeTokens =
+        serde_json::from_str(&content).map_err(|e| format!("Erreur parsing JSON: {}", e))?;
 
     Ok(tokens)
 }
@@ -282,8 +281,7 @@ pub async fn save_ui_theme(app: AppHandle, tokens: UIThemeTokens) -> Result<(), 
     let json = serde_json::to_string_pretty(&tokens)
         .map_err(|e| format!("Erreur sérialisation: {}", e))?;
 
-    fs::write(&file_path, json)
-        .map_err(|e| format!("Erreur écriture fichier: {}", e))?;
+    fs::write(&file_path, json).map_err(|e| format!("Erreur écriture fichier: {}", e))?;
 
     Ok(())
 }
@@ -297,8 +295,7 @@ pub async fn reset_ui_theme(app: AppHandle) -> Result<UIThemeTokens, String> {
     let json = serde_json::to_string_pretty(&default_tokens)
         .map_err(|e| format!("Erreur sérialisation: {}", e))?;
 
-    fs::write(&file_path, json)
-        .map_err(|e| format!("Erreur écriture fichier: {}", e))?;
+    fs::write(&file_path, json).map_err(|e| format!("Erreur écriture fichier: {}", e))?;
 
     Ok(default_tokens)
 }
@@ -318,15 +315,28 @@ pub async fn update_ui_token(
             let colors = &mut tokens.colors;
             match key.as_str() {
                 "primary" => colors.primary = value.as_str().unwrap_or(&colors.primary).to_string(),
-                "secondary" => colors.secondary = value.as_str().unwrap_or(&colors.secondary).to_string(),
+                "secondary" => {
+                    colors.secondary = value.as_str().unwrap_or(&colors.secondary).to_string()
+                }
                 "accent" => colors.accent = value.as_str().unwrap_or(&colors.accent).to_string(),
-                "background" => colors.background = value.as_str().unwrap_or(&colors.background).to_string(),
+                "background" => {
+                    colors.background = value.as_str().unwrap_or(&colors.background).to_string()
+                }
                 "surface" => colors.surface = value.as_str().unwrap_or(&colors.surface).to_string(),
-                "surfaceElevated" => colors.surface_elevated = value.as_str().unwrap_or(&colors.surface_elevated).to_string(),
+                "surfaceElevated" => {
+                    colors.surface_elevated = value
+                        .as_str()
+                        .unwrap_or(&colors.surface_elevated)
+                        .to_string()
+                }
                 "text" => colors.text = value.as_str().unwrap_or(&colors.text).to_string(),
-                "textMuted" => colors.text_muted = value.as_str().unwrap_or(&colors.text_muted).to_string(),
+                "textMuted" => {
+                    colors.text_muted = value.as_str().unwrap_or(&colors.text_muted).to_string()
+                }
                 "border" => colors.border = value.as_str().unwrap_or(&colors.border).to_string(),
-                "borderFocus" => colors.border_focus = value.as_str().unwrap_or(&colors.border_focus).to_string(),
+                "borderFocus" => {
+                    colors.border_focus = value.as_str().unwrap_or(&colors.border_focus).to_string()
+                }
                 "success" => colors.success = value.as_str().unwrap_or(&colors.success).to_string(),
                 "warning" => colors.warning = value.as_str().unwrap_or(&colors.warning).to_string(),
                 "error" => colors.error = value.as_str().unwrap_or(&colors.error).to_string(),
@@ -337,9 +347,16 @@ pub async fn update_ui_token(
         "typography" => {
             let typo = &mut tokens.typography;
             match key.as_str() {
-                "fontFamily" => typo.font_family = value.as_str().unwrap_or(&typo.font_family).to_string(),
-                "fontFamilyMono" => typo.font_family_mono = value.as_str().unwrap_or(&typo.font_family_mono).to_string(),
-                "fontSize" => typo.font_size = value.as_str().unwrap_or(&typo.font_size).to_string(),
+                "fontFamily" => {
+                    typo.font_family = value.as_str().unwrap_or(&typo.font_family).to_string()
+                }
+                "fontFamilyMono" => {
+                    typo.font_family_mono =
+                        value.as_str().unwrap_or(&typo.font_family_mono).to_string()
+                }
+                "fontSize" => {
+                    typo.font_size = value.as_str().unwrap_or(&typo.font_size).to_string()
+                }
                 "fontScale" => typo.font_scale = value.as_f64().unwrap_or(typo.font_scale),
                 "lineHeight" => typo.line_height = value.as_f64().unwrap_or(typo.line_height),
                 _ => return Err(format!("Clé typographie inconnue: {}", key)),
@@ -348,8 +365,12 @@ pub async fn update_ui_token(
         "spacing" => {
             let spacing = &mut tokens.spacing;
             match key.as_str() {
-                "density" => spacing.density = value.as_str().unwrap_or(&spacing.density).to_string(),
-                "baseUnit" => spacing.base_unit = value.as_u64().unwrap_or(spacing.base_unit as u64) as u32,
+                "density" => {
+                    spacing.density = value.as_str().unwrap_or(&spacing.density).to_string()
+                }
+                "baseUnit" => {
+                    spacing.base_unit = value.as_u64().unwrap_or(spacing.base_unit as u64) as u32
+                }
                 "xs" => spacing.xs = value.as_u64().unwrap_or(spacing.xs as u64) as u32,
                 "sm" => spacing.sm = value.as_u64().unwrap_or(spacing.sm as u64) as u32,
                 "md" => spacing.md = value.as_u64().unwrap_or(spacing.md as u64) as u32,
@@ -362,10 +383,19 @@ pub async fn update_ui_token(
             let borders = &mut tokens.borders;
             match key.as_str() {
                 "radius" => borders.radius = value.as_str().unwrap_or(&borders.radius).to_string(),
-                "radiusValue" => borders.radius_value = value.as_u64().unwrap_or(borders.radius_value as u64) as u32,
-                "radiusSm" => borders.radius_sm = value.as_u64().unwrap_or(borders.radius_sm as u64) as u32,
-                "radiusMd" => borders.radius_md = value.as_u64().unwrap_or(borders.radius_md as u64) as u32,
-                "radiusLg" => borders.radius_lg = value.as_u64().unwrap_or(borders.radius_lg as u64) as u32,
+                "radiusValue" => {
+                    borders.radius_value =
+                        value.as_u64().unwrap_or(borders.radius_value as u64) as u32
+                }
+                "radiusSm" => {
+                    borders.radius_sm = value.as_u64().unwrap_or(borders.radius_sm as u64) as u32
+                }
+                "radiusMd" => {
+                    borders.radius_md = value.as_u64().unwrap_or(borders.radius_md as u64) as u32
+                }
+                "radiusLg" => {
+                    borders.radius_lg = value.as_u64().unwrap_or(borders.radius_lg as u64) as u32
+                }
                 "width" => borders.width = value.as_u64().unwrap_or(borders.width as u64) as u32,
                 _ => return Err(format!("Clé borders inconnue: {}", key)),
             }
@@ -375,10 +405,19 @@ pub async fn update_ui_token(
             match key.as_str() {
                 "enabled" => anim.enabled = value.as_bool().unwrap_or(anim.enabled),
                 "speed" => anim.speed = value.as_str().unwrap_or(&anim.speed).to_string(),
-                "durationMs" => anim.duration_ms = value.as_u64().unwrap_or(anim.duration_ms as u64) as u32,
-                "durationFast" => anim.duration_fast = value.as_u64().unwrap_or(anim.duration_fast as u64) as u32,
-                "durationNormal" => anim.duration_normal = value.as_u64().unwrap_or(anim.duration_normal as u64) as u32,
-                "durationSlow" => anim.duration_slow = value.as_u64().unwrap_or(anim.duration_slow as u64) as u32,
+                "durationMs" => {
+                    anim.duration_ms = value.as_u64().unwrap_or(anim.duration_ms as u64) as u32
+                }
+                "durationFast" => {
+                    anim.duration_fast = value.as_u64().unwrap_or(anim.duration_fast as u64) as u32
+                }
+                "durationNormal" => {
+                    anim.duration_normal =
+                        value.as_u64().unwrap_or(anim.duration_normal as u64) as u32
+                }
+                "durationSlow" => {
+                    anim.duration_slow = value.as_u64().unwrap_or(anim.duration_slow as u64) as u32
+                }
                 "easing" => anim.easing = value.as_str().unwrap_or(&anim.easing).to_string(),
                 _ => return Err(format!("Clé animations inconnue: {}", key)),
             }

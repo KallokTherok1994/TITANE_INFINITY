@@ -174,14 +174,18 @@ impl MemoryValidator {
                 ValidationStatus::Valid
             } else {
                 corrupted += 1;
-                self.stats.corruptions_detected.fetch_add(1, Ordering::Relaxed);
+                self.stats
+                    .corruptions_detected
+                    .fetch_add(1, Ordering::Relaxed);
 
                 if self.config.auto_repair_enabled {
                     // Attempt repair by recalculating checksum
                     // In a real system, this would restore from backup
                     entry.update_checksum();
                     repaired += 1;
-                    self.stats.repairs_successful.fetch_add(1, Ordering::Relaxed);
+                    self.stats
+                        .repairs_successful
+                        .fetch_add(1, Ordering::Relaxed);
                     ValidationStatus::Repaired
                 } else {
                     ValidationStatus::Corrupted

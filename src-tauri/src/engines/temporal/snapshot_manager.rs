@@ -90,7 +90,9 @@ impl SnapshotManager {
 
     /// Retourne le snapshot courant
     pub fn get_current(&self) -> Option<&StateSnapshot> {
-        self.current_id.as_ref().and_then(|id| self.snapshots.get(id))
+        self.current_id
+            .as_ref()
+            .and_then(|id| self.snapshots.get(id))
     }
 
     /// Vérifie si un snapshot existe
@@ -115,7 +117,8 @@ impl SnapshotManager {
 
     /// Supprime les snapshots plus anciens qu'un timestamp
     pub fn remove_older_than(&mut self, cutoff_timestamp: u64) {
-        let ids_to_remove: Vec<String> = self.snapshots
+        let ids_to_remove: Vec<String> = self
+            .snapshots
             .iter()
             .filter(|(_, s)| s.timestamp < cutoff_timestamp)
             .map(|(id, _)| id.clone())
@@ -147,7 +150,8 @@ impl SnapshotManager {
 
     /// Compacte les données (supprime les trous dans l'ordre d'accès)
     pub fn compact(&mut self) {
-        self.access_order.retain(|id| self.snapshots.contains_key(id));
+        self.access_order
+            .retain(|id| self.snapshots.contains_key(id));
     }
 
     /// Efface tous les snapshots

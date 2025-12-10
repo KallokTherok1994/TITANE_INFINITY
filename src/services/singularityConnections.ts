@@ -132,7 +132,9 @@ export class SingularityConnections {
 
     // v24.20: Fallback polling only if intervalMs > 0 (default: pure event-driven)
     if (intervalMs > 0) {
-      console.log(`⚠️ SingularityConnections: Fallback polling enabled (${intervalMs}ms)`);
+      console.log(
+        `⚠️ SingularityConnections: Fallback polling enabled (${intervalMs}ms)`
+      );
       this.updateInterval = window.setInterval(async () => {
         try {
           await this.syncAll();
@@ -246,7 +248,8 @@ export class SingularityConnections {
     try {
       const current = await SingularityBridge.getCognitive();
 
-      const totalEntries = memory.snapshots_count + memory.log_entries_count + memory.timeline_events;
+      const totalEntries =
+        memory.snapshots_count + memory.log_entries_count + memory.timeline_events;
 
       const updated: CognitiveLayer = {
         ...current,
@@ -393,7 +396,9 @@ export class SingularityConnections {
 
   private static calculateRuntimeHealth(): number {
     // Runtime health based on performance metrics
-    const perf = performance as { memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number } };
+    const perf = performance as {
+      memory?: { usedJSHeapSize: number; jsHeapSizeLimit: number };
+    };
     const memory = perf.memory;
     if (memory) {
       const usage = memory.usedJSHeapSize / memory.jsHeapSizeLimit;

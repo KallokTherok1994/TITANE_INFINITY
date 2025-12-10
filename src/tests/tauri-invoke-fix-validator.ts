@@ -29,7 +29,6 @@ async function validateTauriInvokeFixes(): Promise<void> {
     console.log('✅ 3. Auto Cascade: SUCCESS', typeof cascadeResult);
 
     console.log('\n🟢 ALL TESTS PASSED - Invoke fixes working correctly!');
-
   } catch (error) {
     console.warn('⚠️ Test failed (expected in browser mode):', error);
     console.log('🔄 This is normal - fallback responses working correctly');

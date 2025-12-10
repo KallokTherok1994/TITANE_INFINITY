@@ -1,8 +1,8 @@
 /**
  * TITANE∞ UNIFIED MEMORY SYSTEM - TESTS UNITAIRES
- * 
+ *
  * Tests complets pour le système de mémoire à trois niveaux (STM/MTM/LTM)
- * 
+ *
  * @module __tests__/unifiedMemory.test
  * @version 1.0.0
  * @created 2024-PHASE_2
@@ -16,7 +16,7 @@ beforeEach(() => {
   vi.spyOn(console, 'log').mockImplementation(() => {});
   vi.spyOn(console, 'warn').mockImplementation(() => {});
   vi.spyOn(console, 'error').mockImplementation(() => {});
-  
+
   // Clear all tiers before each test
   unifiedMemory.clear('STM');
   unifiedMemory.clear('MTM');
@@ -25,13 +25,9 @@ beforeEach(() => {
 
 describe('UnifiedMemory - Storage Routing', () => {
   it('devrait router vers STM quand importance < 0.3', async () => {
-    await unifiedMemory.store(
-      'Message de faible importance',
-      'user',
-      0.2,
-      'conv-1',
-      ['quick']
-    );
+    await unifiedMemory.store('Message de faible importance', 'user', 0.2, 'conv-1', [
+      'quick',
+    ]);
 
     const stats = unifiedMemory.getStats();
     expect(stats.stm.totalEntries).toBe(1);
@@ -41,7 +37,7 @@ describe('UnifiedMemory - Storage Routing', () => {
 
   it('devrait router vers MTM quand importance entre 0.3 et 0.7', async () => {
     await unifiedMemory.store(
-      'Message d\'importance moyenne',
+      "Message d'importance moyenne",
       'assistant',
       0.5,
       'conv-1',
@@ -55,13 +51,10 @@ describe('UnifiedMemory - Storage Routing', () => {
   });
 
   it('devrait router vers LTM quand importance > 0.7', async () => {
-    await unifiedMemory.store(
-      'Message critique pour le projet',
-      'user',
-      0.85,
-      'conv-1',
-      ['reflection', 'important']
-    );
+    await unifiedMemory.store('Message critique pour le projet', 'user', 0.85, 'conv-1', [
+      'reflection',
+      'important',
+    ]);
 
     const stats = unifiedMemory.getStats();
     expect(stats.stm.totalEntries).toBe(0);
@@ -70,13 +63,9 @@ describe('UnifiedMemory - Storage Routing', () => {
   });
 
   it('devrait router vers LTM quand importance = 0.7 exactement', async () => {
-    await unifiedMemory.store(
-      'Message à la frontière',
-      'system',
-      0.7,
-      'conv-1',
-      ['strategy']
-    );
+    await unifiedMemory.store('Message à la frontière', 'system', 0.7, 'conv-1', [
+      'strategy',
+    ]);
 
     const stats = unifiedMemory.getStats();
     expect(stats.stm.totalEntries).toBe(0);
@@ -91,9 +80,15 @@ describe('UnifiedMemory - Recall Filtering', () => {
     await unifiedMemory.store('Message STM 1', 'user', 0.1, 'conv-1', ['quick']);
     await unifiedMemory.store('Message STM 2', 'user', 0.2, 'conv-2', ['quick']);
     await unifiedMemory.store('Message MTM 1', 'assistant', 0.4, 'conv-1', ['standard']);
-    await unifiedMemory.store('Message MTM 2', 'assistant', 0.5, 'conv-2', ['standard', 'important']);
+    await unifiedMemory.store('Message MTM 2', 'assistant', 0.5, 'conv-2', [
+      'standard',
+      'important',
+    ]);
     await unifiedMemory.store('Message LTM 1', 'user', 0.8, 'conv-1', ['reflection']);
-    await unifiedMemory.store('Message LTM 2', 'user', 0.9, 'conv-2', ['emergency', 'critique']);
+    await unifiedMemory.store('Message LTM 2', 'user', 0.9, 'conv-2', [
+      'emergency',
+      'critique',
+    ]);
   });
 
   it('devrait filtrer par conversationId', async () => {
@@ -121,9 +116,9 @@ describe('UnifiedMemory - Recall Filtering', () => {
     });
 
     expect(results.length).toBeGreaterThanOrEqual(2);
-    expect(results.every(r => 
-      r.tags.includes('reflection') || r.tags.includes('emergency')
-    )).toBe(true);
+    expect(
+      results.every(r => r.tags.includes('reflection') || r.tags.includes('emergency'))
+    ).toBe(true);
   });
 
   it('devrait filtrer par minImportance', async () => {
@@ -161,7 +156,8 @@ describe('UnifiedMemory - Recall Filtering', () => {
     const results = await unifiedMemory.recall('', { minImportance: 0 });
 
     const stats = unifiedMemory.getStats();
-    const totalStored = stats.stm.totalEntries + stats.mtm.totalEntries + stats.ltm.totalEntries;
+    const totalStored =
+      stats.stm.totalEntries + stats.mtm.totalEntries + stats.ltm.totalEntries;
     expect(results.length).toBe(totalStored);
   });
 });
@@ -169,8 +165,10 @@ describe('UnifiedMemory - Recall Filtering', () => {
 describe('UnifiedMemory - Promotion MTM → LTM', () => {
   it('devrait auto-promouvoir MTM → LTM après 10 accès via recall', async () => {
     // Store dans MTM (0.4 < 0.7 → MTM)
-    await unifiedMemory.store('Message souvent accédé', 'user', 0.4, 'conv-1', ['standard']);
-    
+    await unifiedMemory.store('Message souvent accédé', 'user', 0.4, 'conv-1', [
+      'standard',
+    ]);
+
     const beforePromotion = unifiedMemory.getStats();
     expect(beforePromotion.mtm.totalEntries).toBe(1);
     expect(beforePromotion.ltm.totalEntries).toBe(0);
@@ -186,14 +184,16 @@ describe('UnifiedMemory - Promotion MTM → LTM', () => {
     expect(afterPromotion.ltm.totalEntries).toBe(1);
   });
 
-  it('devrait retourner false si l\'entrée n\'existe pas dans MTM', async () => {
+  it("devrait retourner false si l'entrée n'existe pas dans MTM", async () => {
     const promoted = await unifiedMemory.promote('id-inexistant');
     expect(promoted).toBe(false);
   });
 
   it('devrait auto-promouvoir MTM → LTM après 10 accès (recall)', async () => {
     // Store dans MTM
-    await unifiedMemory.store('Message souvent accédé', 'user', 0.4, 'conv-1', ['standard']);
+    await unifiedMemory.store('Message souvent accédé', 'user', 0.4, 'conv-1', [
+      'standard',
+    ]);
 
     // Access 10 times via recall
     for (let i = 0; i < 10; i++) {
@@ -210,7 +210,9 @@ describe('UnifiedMemory - Promotion MTM → LTM', () => {
 
   it('devrait auto-promouvoir MTM → LTM quand importance > 0.7 après cleanup', async () => {
     // Store avec importance initialement moyenne
-    await unifiedMemory.store('Message réévalué', 'assistant', 0.5, 'conv-1', ['standard']);
+    await unifiedMemory.store('Message réévalué', 'assistant', 0.5, 'conv-1', [
+      'standard',
+    ]);
 
     // Simulate importance update (via internal access)
     const entries = await unifiedMemory.recall('', { conversationId: 'conv-1' });
@@ -272,7 +274,9 @@ describe('UnifiedMemory - Cleanup & Expiration', () => {
 
   it('ne devrait JAMAIS supprimer les entrées LTM (permanent)', async () => {
     // Store dans LTM
-    await unifiedMemory.store('Mémoire permanente', 'user', 0.9, 'conv-1', ['reflection']);
+    await unifiedMemory.store('Mémoire permanente', 'user', 0.9, 'conv-1', [
+      'reflection',
+    ]);
 
     const statsBefore = unifiedMemory.getStats();
     expect(statsBefore.ltm.totalEntries).toBe(1);
@@ -336,12 +340,14 @@ describe('UnifiedMemory - Statistics', () => {
 
   it('devrait incrémenter totalEntries après chaque store', async () => {
     const stats1 = unifiedMemory.getStats();
-    const initialTotal = stats1.stm.totalEntries + stats1.mtm.totalEntries + stats1.ltm.totalEntries;
+    const initialTotal =
+      stats1.stm.totalEntries + stats1.mtm.totalEntries + stats1.ltm.totalEntries;
 
     await unifiedMemory.store('Nouveau message', 'user', 0.5, 'conv-1', ['standard']);
 
     const stats2 = unifiedMemory.getStats();
-    const newTotal = stats2.stm.totalEntries + stats2.mtm.totalEntries + stats2.ltm.totalEntries;
+    const newTotal =
+      stats2.stm.totalEntries + stats2.mtm.totalEntries + stats2.ltm.totalEntries;
 
     expect(newTotal).toBe(initialTotal + 1);
   });
@@ -401,7 +407,9 @@ describe('UnifiedMemory - Edge Cases', () => {
   });
 
   it('devrait gérer importance = 1.0', async () => {
-    await unifiedMemory.store('Message importance maximale', 'user', 1.0, 'conv-1', ['test']);
+    await unifiedMemory.store('Message importance maximale', 'user', 1.0, 'conv-1', [
+      'test',
+    ]);
 
     const stats = unifiedMemory.getStats();
     expect(stats.ltm.totalEntries).toBe(1); // 1.0 > 0.7 → LTM
@@ -424,7 +432,9 @@ describe('UnifiedMemory - Edge Cases', () => {
   });
 
   it('devrait gérer conversationId undefined', async () => {
-    await unifiedMemory.store('Message sans conversation', 'user', 0.5, undefined, ['orphan']);
+    await unifiedMemory.store('Message sans conversation', 'user', 0.5, undefined, [
+      'orphan',
+    ]);
 
     const results = await unifiedMemory.recall('', { tags: ['orphan'] });
     expect(results.length).toBeGreaterThanOrEqual(1);

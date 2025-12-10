@@ -102,25 +102,26 @@ export const VoiceCircle: React.FC<VoiceCircleProps> = ({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [state, frameDuration]);  // Couleur dynamique selon état
+  }, [state, frameDuration]); // Couleur dynamique selon état
   const getStateColor = () => {
     switch (state) {
-      case 'listening': return '#06b6d4'; // Cyan
-      case 'thinking': return '#8b5cf6'; // Purple
-      case 'speaking': return '#3b82f6'; // Blue
-      default: return color;
+      case 'listening':
+        return '#06b6d4'; // Cyan
+      case 'thinking':
+        return '#8b5cf6'; // Purple
+      case 'speaking':
+        return '#3b82f6'; // Blue
+      default:
+        return color;
     }
   };
 
   const currentColor = getStateColor();
 
   return (
-    <div
-      className="voice-circle-container"
-      style={{ width: size, height: size }}
-    >
+    <div className="voice-circle-container" style={{ width: size, height: size }}>
       {/* Anneaux externes (3 layers) */}
-      {[0, 1, 2].map((index) => (
+      {[0, 1, 2].map(index => (
         <motion.div
           key={`ring-${index}`}
           className="voice-circle-ring"

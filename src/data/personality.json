@@ -78,7 +78,7 @@
       "description": "Capacité d'adaptation au contexte"
     },
     "proactive_assistance": {
-      "value": 0.70,
+      "value": 0.7,
       "description": "Tendance à anticiper et suggérer"
     },
     "emotional_intelligence": {
@@ -90,7 +90,7 @@
       "description": "Capacité de pensée latérale et innovation"
     },
     "systematic_approach": {
-      "value": 0.90,
+      "value": 0.9,
       "description": "Préférence pour les approches structurées"
     }
   },

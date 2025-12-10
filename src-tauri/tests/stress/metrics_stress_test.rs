@@ -3,10 +3,8 @@
 // Copyright (c) 2025 TITANE∞ Team
 
 use std::sync::Arc;
+use titane_infinity::singularity::ia_context::{IAContext, IARequestRecord};
 use tokio::sync::RwLock;
-use titane_infinity::singularity::ia_context::{
-    IAContext, IARequestRecord,
-};
 
 #[tokio::test]
 async fn test_1000_requests_metrics_accuracy() {
@@ -59,7 +57,9 @@ async fn test_1000_requests_metrics_accuracy() {
     // Verification Phase
     {
         let ctx = ia_context.read().await;
-        let metrics = ctx.engine_metrics.get("openai")
+        let metrics = ctx
+            .engine_metrics
+            .get("openai")
             .expect("OpenAI metrics should exist");
 
         // Test 1: Total request count
@@ -76,11 +76,9 @@ async fn test_1000_requests_metrics_accuracy() {
             "Should have {} successful requests",
             num_requests
         );
-        assert_eq!(
-            metrics.failed_requests, 0,
-            "Should have 0 failed requests"
-        );
-        let success_rate = (metrics.successful_requests as f64 / metrics.total_requests as f64) * 100.0;
+        assert_eq!(metrics.failed_requests, 0, "Should have 0 failed requests");
+        let success_rate =
+            (metrics.successful_requests as f64 / metrics.total_requests as f64) * 100.0;
         println!("✅ Test 2: Success rate = {:.2}%", success_rate);
 
         // Test 3: Total tokens
@@ -88,15 +86,18 @@ async fn test_1000_requests_metrics_accuracy() {
             metrics.total_tokens, expected_total_tokens,
             "Total tokens should match sum of all requests"
         );
-        println!("✅ Test 3: Total tokens = {} (expected: {})",
-            metrics.total_tokens, expected_total_tokens);
+        println!(
+            "✅ Test 3: Total tokens = {} (expected: {})",
+            metrics.total_tokens, expected_total_tokens
+        );
 
         // Test 4: Average latency accuracy (cumulative moving average)
         // The moving average is calculated over ALL requests, not just last 100
         let expected_avg = expected_total_latency / num_requests;
         let actual_avg = metrics.average_latency_ms;
         let deviation = ((actual_avg as i64 - expected_avg as i64).abs() as f64)
-            / (expected_avg as f64) * 100.0;
+            / (expected_avg as f64)
+            * 100.0;
 
         println!("   Expected avg latency (all requests): {}ms", expected_avg);
         println!("   Actual avg latency: {}ms", actual_avg);
@@ -112,7 +113,8 @@ async fn test_1000_requests_metrics_accuracy() {
 
         // Test 5: History bounded to 100 entries
         assert_eq!(
-            ctx.request_history.len(), 100,
+            ctx.request_history.len(),
+            100,
             "History should be limited to 100 entries"
         );
         println!("✅ Test 5: History correctly bounded to 100 entries");
@@ -124,8 +126,10 @@ async fn test_1000_requests_metrics_accuracy() {
             "History capacity should not grow excessively (got {})",
             ctx.request_history.capacity()
         );
-        println!("✅ Test 6: Memory bounded (capacity = {} ≤ 200)",
-            ctx.request_history.capacity());
+        println!(
+            "✅ Test 6: Memory bounded (capacity = {} ≤ 200)",
+            ctx.request_history.capacity()
+        );
 
         // Test 7: Most recent requests preserved
         let last_request_id = &ctx.request_history[99].request_id;
@@ -164,7 +168,11 @@ async fn test_mixed_success_failure_requests() {
             latency_ms: 200,
             tokens: if success { 500 } else { 0 },
             success,
-            error_message: if success { None } else { Some("Simulated error".to_string()) },
+            error_message: if success {
+                None
+            } else {
+                Some("Simulated error".to_string())
+            },
             fallback_used: false,
         };
 
@@ -181,7 +189,8 @@ async fn test_mixed_success_failure_requests() {
         assert_eq!(metrics.successful_requests, 500);
         assert_eq!(metrics.failed_requests, 500);
 
-        let success_rate = (metrics.successful_requests as f64 / metrics.total_requests as f64) * 100.0;
+        let success_rate =
+            (metrics.successful_requests as f64 / metrics.total_requests as f64) * 100.0;
         assert_eq!(success_rate, 50.0, "Success rate should be 50%");
 
         // Only successful requests contribute to tokens

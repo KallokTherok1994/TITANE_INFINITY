@@ -92,17 +92,9 @@ export {
   resetStateAggregator,
 } from './stateAggregator';
 
-export {
-  LogEngine,
-  getLogEngine,
-  resetLogEngine,
-} from './logEngine';
+export { LogEngine, getLogEngine, resetLogEngine } from './logEngine';
 
-export {
-  ActionsEngine,
-  getActionsEngine,
-  resetActionsEngine,
-} from './actionsEngine';
+export { ActionsEngine, getActionsEngine, resetActionsEngine } from './actionsEngine';
 
 // =============================================================================
 // ADMIN ENGINE FACADE
@@ -224,15 +216,27 @@ export class AdminEngine {
   /**
    * Raccourcis pour les logs
    */
-  debug(moduleId: TitaneModule, message: string, context?: Record<string, unknown>): AdminLogRecord {
+  debug(
+    moduleId: TitaneModule,
+    message: string,
+    context?: Record<string, unknown>
+  ): AdminLogRecord {
     return this.logEngine.debug(moduleId, message, context);
   }
 
-  info(moduleId: TitaneModule, message: string, context?: Record<string, unknown>): AdminLogRecord {
+  info(
+    moduleId: TitaneModule,
+    message: string,
+    context?: Record<string, unknown>
+  ): AdminLogRecord {
     return this.logEngine.info(moduleId, message, context);
   }
 
-  warn(moduleId: TitaneModule, message: string, context?: Record<string, unknown>): AdminLogRecord {
+  warn(
+    moduleId: TitaneModule,
+    message: string,
+    context?: Record<string, unknown>
+  ): AdminLogRecord {
     return this.logEngine.warn(moduleId, message, context);
   }
 
@@ -283,7 +287,16 @@ export class AdminEngine {
     impact?: AdminEvent['impact'],
     data?: Record<string, unknown>
   ): AdminEvent {
-    return this.logEngine.addEvent(source, type, moduleId, title, description, severity, impact, data);
+    return this.logEngine.addEvent(
+      source,
+      type,
+      moduleId,
+      title,
+      description,
+      severity,
+      impact,
+      data
+    );
   }
 
   /**

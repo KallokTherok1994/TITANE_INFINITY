@@ -202,7 +202,9 @@ pub async fn dev_mode_get_state() -> Result<DeveloperModeState, String> {
 pub async fn dev_mode_toggle(enabled: bool, user: String) -> Result<DeveloperModeState, String> {
     // Vérification Kevin-only
     if user != "Kevin Thibault" {
-        return Err("ACCÈS REFUSÉ: Seul Kevin Thibault peut utiliser le Developer Mode".to_string());
+        return Err(
+            "ACCÈS REFUSÉ: Seul Kevin Thibault peut utiliser le Developer Mode".to_string(),
+        );
     }
 
     Ok(DeveloperModeState {
@@ -219,7 +221,10 @@ pub async fn dev_mode_toggle(enabled: bool, user: String) -> Result<DeveloperMod
 
 /// Valider un patch avant application
 #[command]
-pub async fn dev_mode_validate_patch(patch: PatchAction, user: String) -> Result<SecurityValidation, String> {
+pub async fn dev_mode_validate_patch(
+    patch: PatchAction,
+    user: String,
+) -> Result<SecurityValidation, String> {
     let mut issues = Vec::new();
 
     // Vérification utilisateur
@@ -230,16 +235,24 @@ pub async fn dev_mode_validate_patch(patch: PatchAction, user: String) -> Result
 
     // Vérification fichier autorisé
     let allowed_extensions = [".rs", ".ts", ".tsx", ".css", ".json"];
-    let file_allowed = allowed_extensions.iter().any(|ext| patch.file.ends_with(ext));
+    let file_allowed = allowed_extensions
+        .iter()
+        .any(|ext| patch.file.ends_with(ext));
     if !file_allowed {
         issues.push(format!("File type not allowed: {}", patch.file));
     }
 
     // Vérification code dangereux
     let dangerous_patterns = vec![
-        "eval(", "exec(", "system(", "Command::new",
-        "fs::remove_dir_all", "std::process::exit",
-        "panic!", "unwrap()", "unsafe {"
+        "eval(",
+        "exec(",
+        "system(",
+        "Command::new",
+        "fs::remove_dir_all",
+        "std::process::exit",
+        "panic!",
+        "unwrap()",
+        "unsafe {",
     ];
 
     let mut no_dangerous_code = true;
@@ -294,7 +307,7 @@ pub async fn dev_mode_preview_patch(patch: PatchAction) -> Result<DiffPreview, S
                     modified: Some(replacement.clone()),
                 });
             }
-        },
+        }
         PatchType::Insert => {
             if let Some(content) = &patch.change.content {
                 additions += content.lines().count() as u32;
@@ -305,7 +318,7 @@ pub async fn dev_mode_preview_patch(patch: PatchAction) -> Result<DiffPreview, S
                     modified: Some(content.clone()),
                 });
             }
-        },
+        }
         PatchType::Delete => {
             deletions += 1;
             changes.push(DiffChange {
@@ -314,7 +327,7 @@ pub async fn dev_mode_preview_patch(patch: PatchAction) -> Result<DiffPreview, S
                 original: Some("(file content)".to_string()),
                 modified: None,
             });
-        },
+        }
         PatchType::Create => {
             if let Some(content) = &patch.change.content {
                 additions += content.lines().count() as u32;
@@ -325,7 +338,7 @@ pub async fn dev_mode_preview_patch(patch: PatchAction) -> Result<DiffPreview, S
                     modified: Some(content.clone()),
                 });
             }
-        },
+        }
         _ => {}
     }
 
@@ -388,7 +401,10 @@ pub async fn dev_mode_apply_patch(patch: PatchAction, user: String) -> Result<Pa
 
 /// Annuler un patch (rollback)
 #[command]
-pub async fn dev_mode_rollback_patch(patch_id: String, user: String) -> Result<PatchResult, String> {
+pub async fn dev_mode_rollback_patch(
+    patch_id: String,
+    user: String,
+) -> Result<PatchResult, String> {
     // Vérification Kevin-only
     if user != "Kevin Thibault" {
         return Err("ACCÈS REFUSÉ: Seul Kevin Thibault peut effectuer un rollback".to_string());
@@ -442,12 +458,16 @@ pub async fn dev_mode_get_history(limit: Option<u32>) -> Result<PatchHistory, St
 
 /// Exécuter les tests automatiques
 #[command]
-pub async fn dev_mode_run_tests(test_names: Option<Vec<String>>) -> Result<Vec<TestRunResult>, String> {
-    let tests = test_names.unwrap_or_else(|| vec![
-        "unit_tests".to_string(),
-        "integration_tests".to_string(),
-        "ui_tests".to_string(),
-    ]);
+pub async fn dev_mode_run_tests(
+    test_names: Option<Vec<String>>,
+) -> Result<Vec<TestRunResult>, String> {
+    let tests = test_names.unwrap_or_else(|| {
+        vec![
+            "unit_tests".to_string(),
+            "integration_tests".to_string(),
+            "ui_tests".to_string(),
+        ]
+    });
 
     let mut results = Vec::new();
     for test in tests {

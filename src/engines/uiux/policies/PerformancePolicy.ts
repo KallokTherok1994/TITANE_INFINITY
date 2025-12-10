@@ -41,7 +41,9 @@ export class PerformancePolicy {
     const { signals, currentState } = context;
 
     // Trouver le signal de performance
-    const perfSignal = signals.find(s => s.type === 'performance') as PerformanceSignal | undefined;
+    const perfSignal = signals.find(s => s.type === 'performance') as
+      | PerformanceSignal
+      | undefined;
 
     if (perfSignal) {
       const { fps, frameDrops, memoryUsage, renderTime } = perfSignal.value;
@@ -193,7 +195,10 @@ export class PerformancePolicy {
   /**
    * Évalue les frame drops
    */
-  private evaluateFrameDrops(frameDrops: number, state: AdaptationState): PolicyDecision[] {
+  private evaluateFrameDrops(
+    frameDrops: number,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     if (frameDrops > PERFORMANCE_THRESHOLDS.frameDropsCritical) {
@@ -233,7 +238,10 @@ export class PerformancePolicy {
   /**
    * Évalue le temps de rendu
    */
-  private evaluateRenderTime(renderTime: number, state: AdaptationState): PolicyDecision[] {
+  private evaluateRenderTime(
+    renderTime: number,
+    state: AdaptationState
+  ): PolicyDecision[] {
     const decisions: PolicyDecision[] = [];
 
     if (renderTime > PERFORMANCE_THRESHOLDS.renderTimeCritical) {
@@ -296,7 +304,7 @@ export class PerformancePolicy {
 
     if (fps < PERFORMANCE_THRESHOLDS.fpsWarning) {
       recommendations.push('Désactivez les animations complexes');
-      recommendations.push('Réduisez le nombre d\'éléments affichés');
+      recommendations.push("Réduisez le nombre d'éléments affichés");
     }
 
     if (memoryUsage > PERFORMANCE_THRESHOLDS.memoryWarning) {

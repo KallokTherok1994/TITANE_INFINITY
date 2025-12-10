@@ -23,7 +23,9 @@ export const SingularitySection: React.FC = () => {
 
   const loadStatus = async () => {
     try {
-      const singularityStatus = await secureInvoke<SingularityStatus>('get_singularity_status');
+      const singularityStatus = await secureInvoke<SingularityStatus>(
+        'get_singularity_status'
+      );
       setStatus(singularityStatus);
     } catch (error) {
       console.error('Erreur chargement statut singularité:', error);

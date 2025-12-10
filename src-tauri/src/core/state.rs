@@ -3,7 +3,7 @@
 //   Global unified state for SingularityEngine (Phase 2 Fusions)
 // ═══════════════════════════════════════════════════════════════
 
-use crate::core::modules::{CoherenceEngine, UnifiedMemory, HarmoniaModule, SystemHealth};
+use crate::core::modules::{CoherenceEngine, HarmoniaModule, SystemHealth, UnifiedMemory};
 use crate::core::types::*;
 use serde::{Deserialize, Serialize};
 

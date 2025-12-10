@@ -3,9 +3,9 @@
 //! Super Prompt #18 — Gestion des routines et habitudes
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::time_model::{Season, TemporalContext, TimeOfDay};
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::time_model::{TemporalContext, TimeOfDay, Season};
 
 /// Pattern de routine
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -52,7 +52,7 @@ impl RoutineTrigger {
             RoutinePattern::Weekly(days) => days.contains(&context.now.day_of_week),
             RoutinePattern::Monthly(days) => days.contains(&context.now.day),
             RoutinePattern::Interval { hours: _ } => true, // Checked separately
-            RoutinePattern::EventTriggered(_) => false, // Triggered externally
+            RoutinePattern::EventTriggered(_) => false,    // Triggered externally
             RoutinePattern::Seasonal(season) => context.now.season == *season,
             RoutinePattern::Custom(_) => true, // Would need cron parser
         }
@@ -173,7 +173,10 @@ pub enum RoutineAction {
     /// Modification d'état
     SetState { key: String, value: String },
     /// Émission d'événement
-    EmitEvent { event_type: String, data: serde_json::Value },
+    EmitEvent {
+        event_type: String,
+        data: serde_json::Value,
+    },
     /// Suggestion
     Suggest { suggestion: String, reason: String },
     /// Rappel
@@ -232,7 +235,6 @@ impl RoutineEngine {
                 trigger_count: 0,
                 cooldown_ms: 86400000, // 24 heures
             },
-
             // Pause midi
             Routine {
                 id: "midday_break".to_string(),
@@ -245,19 +247,16 @@ impl RoutineEngine {
                     minute: Some(30),
                     conditions: vec![],
                 },
-                actions: vec![
-                    RoutineAction::Notify {
-                        message: "Consider taking a break".to_string(),
-                        priority: 3,
-                    },
-                ],
+                actions: vec![RoutineAction::Notify {
+                    message: "Consider taking a break".to_string(),
+                    priority: 3,
+                }],
                 enabled: true,
                 priority: 4,
                 last_triggered_ms: None,
                 trigger_count: 0,
                 cooldown_ms: 86400000,
             },
-
             // Revue de fin de journée
             Routine {
                 id: "evening_review".to_string(),
@@ -286,7 +285,6 @@ impl RoutineEngine {
                 trigger_count: 0,
                 cooldown_ms: 86400000,
             },
-
             // Revue hebdomadaire
             Routine {
                 id: "weekly_review".to_string(),
@@ -315,7 +313,6 @@ impl RoutineEngine {
                 trigger_count: 0,
                 cooldown_ms: 604800000, // 7 jours
             },
-
             // Pause régulière
             Routine {
                 id: "regular_break".to_string(),
@@ -328,12 +325,10 @@ impl RoutineEngine {
                     minute: None,
                     conditions: vec![TriggerCondition::MinSessionDuration(7200000)], // 2 hours
                 },
-                actions: vec![
-                    RoutineAction::Notify {
-                        message: "You've been working for 2 hours. Consider a break.".to_string(),
-                        priority: 4,
-                    },
-                ],
+                actions: vec![RoutineAction::Notify {
+                    message: "You've been working for 2 hours. Consider a break.".to_string(),
+                    priority: 4,
+                }],
                 enabled: true,
                 priority: 5,
                 last_triggered_ms: None,
@@ -392,7 +387,11 @@ impl RoutineEngine {
     }
 
     /// Déclenche une routine par événement
-    pub async fn trigger_by_event(&self, event_name: &str, context: &TemporalContext) -> Vec<Routine> {
+    pub async fn trigger_by_event(
+        &self,
+        event_name: &str,
+        context: &TemporalContext,
+    ) -> Vec<Routine> {
         let mut routines = self.routines.write().await;
         let mut triggered = Vec::new();
 

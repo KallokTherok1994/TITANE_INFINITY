@@ -10,10 +10,10 @@
 
 ### Binaires d'Installation
 
-| Fichier | Format | Taille | Usage |
-|---------|--------|--------|-------|
-| `TITANE∞ v19.2Ω_19.2.0_amd64.AppImage` | AppImage | 81 MB | Portable (aucune installation) |
-| `TITANE∞ v19.2Ω_19.2.0_amd64.deb` | Debian Package | 5.0 MB | Ubuntu/Debian natif |
+| Fichier                                | Format         | Taille | Usage                          |
+| -------------------------------------- | -------------- | ------ | ------------------------------ |
+| `TITANE∞ v19.2Ω_19.2.0_amd64.AppImage` | AppImage       | 81 MB  | Portable (aucune installation) |
+| `TITANE∞ v19.2Ω_19.2.0_amd64.deb`      | Debian Package | 5.0 MB | Ubuntu/Debian natif            |
 
 ### Documentation
 
@@ -33,6 +33,7 @@ sha256sum -c SHA256SUMS
 ```
 
 **Checksums attendus :**
+
 ```
 f473cb6ae47fae78a00197786178207f3df4da421eb2522b45020ded7fdacffd  TITANE∞ v19.2Ω_19.2.0_amd64.AppImage
 b999831ddd8f2a743b526cd0b7fe5bcc34b3f738372e6d2611c27bc468562c8d  TITANE∞ v19.2Ω_19.2.0_amd64.deb
@@ -66,6 +67,7 @@ sudo dpkg -i "TITANE∞ v19.2Ω_19.2.0_amd64.deb"
 ```
 
 **Lancer après installation :**
+
 ```bash
 titane-infinity
 # Ou depuis le menu Applications
@@ -76,17 +78,20 @@ titane-infinity
 ## 📋 Configuration Requise
 
 ### Système
+
 - **OS :** Linux (Ubuntu 20.04+, Debian 11+, ou compatible)
 - **Architecture :** x86_64 (AMD64)
 - **RAM :** 2 GB minimum, 4 GB recommandé
 - **Disque :** 200 MB espace libre
 
 ### Dépendances (généralement pré-installées)
+
 - **GTK3** : Interface graphique
 - **WebKit2GTK** : Moteur de rendu
 - **GLib** : Bibliothèques système
 
 **Installation dépendances si nécessaire :**
+
 ```bash
 sudo apt install libgtk-3-0 libwebkit2gtk-4.0-37 libglib2.0-0
 ```
@@ -98,6 +103,7 @@ sudo apt install libgtk-3-0 libwebkit2gtk-4.0-37 libglib2.0-0
 ### 1. Premier Lancement
 
 L'application créera automatiquement :
+
 ```
 ~/.local/share/com.titane.infinity/     # Données application
 ├── data/
@@ -116,18 +122,22 @@ L'application créera automatiquement :
 ### 3. Configuration Optionnelle
 
 #### Activer Gemini (Cloud IA)
+
 1. Obtenir une clé API : https://makersuite.google.com/app/apikey
 2. Dans l'application → Settings → Entrer clé Gemini
 3. Sélectionner provider "auto" ou "gemini"
 
 #### Activer Ollama (IA Locale)
+
 1. Installer Ollama : https://ollama.ai/download
 2. Télécharger un modèle : `ollama pull llama3.1`
 3. Vérifier : `curl http://localhost:11434/api/tags`
 4. Dans l'application, sélectionner provider "ollama"
 
 #### Activer TTS (Synthèse Vocale)
+
 Installer un player audio (un suffit) :
+
 ```bash
 # Option 1 : PulseAudio (recommandé)
 sudo apt install pulseaudio-utils
@@ -144,18 +154,21 @@ sudo apt install ffmpeg
 ## 🔍 Tests Recommandés
 
 ### Test 1 : Chat Local
+
 1. Lancer l'application
 2. Provider : "local"
 3. Message : "Bonjour TITANE"
 4. ✅ Réponse instantanée attendue
 
 ### Test 2 : Mémoire Persistante
+
 1. Envoyer plusieurs messages
 2. Fermer l'application
 3. Relancer
 4. ✅ Historique conservé
 
 ### Test 3 : Performance
+
 1. Envoyer 10 messages rapidement
 2. Vérifier fluidité UI
 3. ✅ Pas de freeze, streaming fluide
@@ -167,11 +180,13 @@ sudo apt install ffmpeg
 ### Application ne démarre pas
 
 **Vérifier dépendances :**
+
 ```bash
 ldd "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 ```
 
 **Logs de démarrage :**
+
 ```bash
 ./"TITANE∞ v19.2Ω_19.2.0_amd64.AppImage" --verbose
 ```
@@ -181,11 +196,13 @@ ldd "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 **Provider local :** Devrait toujours fonctionner (fallback)
 
 **Provider Gemini :**
+
 - Vérifier connexion internet
 - Vérifier clé API valide
 - Voir logs : `~/.local/share/com.titane.infinity/logs/`
 
 **Provider Ollama :**
+
 ```bash
 # Vérifier que Ollama tourne
 curl http://localhost:11434/api/tags
@@ -199,6 +216,7 @@ ollama serve
 Les passphrases sont générées automatiquement au premier lancement.
 
 **Réinitialiser si problème :**
+
 ```bash
 rm -rf ~/.local/share/com.titane.infinity/data/memory/
 # Relancer l'application
@@ -207,12 +225,14 @@ rm -rf ~/.local/share/com.titane.infinity/data/memory/
 ### Désinstallation
 
 **AppImage :**
+
 ```bash
 rm "TITANE∞ v19.2Ω_19.2.0_amd64.AppImage"
 rm -rf ~/.local/share/com.titane.infinity/
 ```
 
 **Package Debian :**
+
 ```bash
 sudo apt remove titane-infinity
 rm -rf ~/.local/share/com.titane.infinity/
@@ -223,12 +243,14 @@ rm -rf ~/.local/share/com.titane.infinity/
 ## 📊 Caractéristiques Techniques
 
 ### Architecture
+
 - **Frontend :** React 18 + TypeScript + Vite
 - **Backend :** Rust + Tokio (async runtime)
 - **Framework :** Tauri v2.x
 - **Sécurité :** AES-256-GCM, Pre-boot validation
 
 ### Fonctionnalités
+
 - ✅ Chat IA multi-providers (Gemini, Ollama, Local)
 - ✅ Streaming temps réel
 - ✅ Mémoire persistante chiffrée
@@ -239,6 +261,7 @@ rm -rf ~/.local/share/com.titane.infinity/
 - ✅ Cognitive Layer v16
 
 ### Performance
+
 - **Tests :** 698/698 passés
 - **RAM :** ~200-300 MB stable
 - **CPU :** 1-2% idle, 10-15% streaming
@@ -265,18 +288,23 @@ See LICENSE.md for full legal terms (FR/EN).
 ## 📞 Support
 
 ### Documentation Complète
+
 Consulter les fichiers inclus dans ce package :
+
 - `DEPLOYMENT_FINAL_v19.2_OMEGA.md` (guide détaillé)
 - `SECURITY_CONFIG_PRODUCTION.md` (sécurité)
 - `AUDIT_FINAL_COMPLET_v19.2_OMEGA.md` (audit complet)
 
 ### Logs Application
+
 ```bash
 tail -f ~/.local/share/com.titane.infinity/logs/*.log
 ```
 
 ### Tests Intégrés
+
 L'application inclut des self-tests :
+
 - QA Engine : Tests automatiques backend
 - Self-Healing : Détection et réparation automatique
 - Watchdog : Monitoring continu

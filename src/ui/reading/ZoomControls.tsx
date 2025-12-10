@@ -25,14 +25,16 @@ interface ZoomControlsProps {
 export const ZoomControls = memo(function ZoomControls({
   showPanelButton = true,
   compact = false,
-  className = ''
+  className = '',
 }: ZoomControlsProps) {
   const { zoomLevel, zoomIn, zoomOut, resetZoom, zoomPercent } = useZoom();
   const { isFullscreen, toggleFullscreen } = useFullscreen();
   const { isPanelOpen, togglePanel } = useUIReadingContext();
 
   return (
-    <div className={`zoom-controls ${compact ? 'zoom-controls--compact' : ''} ${className}`}>
+    <div
+      className={`zoom-controls ${compact ? 'zoom-controls--compact' : ''} ${className}`}
+    >
       {/* Zoom Out */}
       <button
         className="zoom-controls__btn"

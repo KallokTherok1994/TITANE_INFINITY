@@ -44,7 +44,7 @@ export const LogsSection: React.FC = () => {
     }
   };
 
-  const filteredLogs = logs.filter((log) => {
+  const filteredLogs = logs.filter(log => {
     if (filter === 'all') return true;
     return log.level === filter;
   });
@@ -68,7 +68,7 @@ export const LogsSection: React.FC = () => {
           <select
             className="cp-input"
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
+            onChange={e => setFilter(e.target.value)}
             style={{ width: '150px' }}
           >
             <option value="all">Tous</option>

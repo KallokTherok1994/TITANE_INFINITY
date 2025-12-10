@@ -3,10 +3,10 @@
 //! Super Prompt #19 — Supervision et orchestration des agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
+use super::agent::{Agent, AgentId, AgentState};
+use super::{AgentSystemError, AgentTask, TaskResult, TaskStatus};
 use serde::{Deserialize, Serialize};
 use tokio::sync::RwLock;
-use super::agent::{Agent, AgentId, AgentState};
-use super::{AgentTask, TaskResult, TaskStatus, AgentSystemError};
 
 /// Stratégie de supervision
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -116,7 +116,8 @@ impl Supervisor {
             agent_id: agent.id.clone(),
             event_type: SupervisionEventType::TaskAssigned,
             message: format!("Task {} assigned", task.id),
-        }).await;
+        })
+        .await;
 
         // Exécuter avec retry
         let mut attempts = 0;
@@ -132,7 +133,8 @@ impl Supervisor {
                         agent_id: agent.id.clone(),
                         event_type: SupervisionEventType::TaskCompleted,
                         message: format!("Task {} completed", task.id),
-                    }).await;
+                    })
+                    .await;
 
                     return Ok(result);
                 }
@@ -144,11 +146,18 @@ impl Supervisor {
                             timestamp: Self::now(),
                             agent_id: agent.id.clone(),
                             event_type: SupervisionEventType::TaskFailed,
-                            message: format!("Task {} failed (attempt {}), retrying...", task.id, attempts),
-                        }).await;
+                            message: format!(
+                                "Task {} failed (attempt {}), retrying...",
+                                task.id, attempts
+                            ),
+                        })
+                        .await;
 
                         // Attendre avant retry
-                        tokio::time::sleep(tokio::time::Duration::from_millis(1000 * attempts as u64)).await;
+                        tokio::time::sleep(tokio::time::Duration::from_millis(
+                            1000 * attempts as u64,
+                        ))
+                        .await;
                     }
                 }
             }
@@ -160,7 +169,8 @@ impl Supervisor {
             agent_id: agent.id.clone(),
             event_type: SupervisionEventType::TaskFailed,
             message: format!("Task {} failed after {} attempts", task.id, attempts),
-        }).await;
+        })
+        .await;
 
         let error_msg = last_error.as_ref().map(|e| e.to_string());
         Ok(TaskResult {
@@ -186,7 +196,8 @@ impl Supervisor {
         let result = tokio::time::timeout(
             tokio::time::Duration::from_millis(timeout),
             self.simulate_execution(agent, task),
-        ).await;
+        )
+        .await;
 
         match result {
             Ok(res) => res,
@@ -196,7 +207,8 @@ impl Supervisor {
                     agent_id: agent.id.clone(),
                     event_type: SupervisionEventType::TaskTimeout,
                     message: format!("Task {} timed out", task.id),
-                }).await;
+                })
+                .await;
 
                 Ok(TaskResult {
                     task_id: task.id.clone(),
@@ -259,8 +271,16 @@ impl Supervisor {
             } else {
                 SupervisionEventType::HealthCheckFailed
             },
-            message: format!("Health check: {}", if health.is_healthy { "passed" } else { "failed" }),
-        }).await;
+            message: format!(
+                "Health check: {}",
+                if health.is_healthy {
+                    "passed"
+                } else {
+                    "failed"
+                }
+            ),
+        })
+        .await;
 
         health
     }
@@ -309,8 +329,8 @@ pub struct AgentHealth {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::agent::AgentType;
+    use super::*;
 
     #[tokio::test]
     async fn test_supervisor() {

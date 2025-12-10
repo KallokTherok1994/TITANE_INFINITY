@@ -253,7 +253,11 @@ impl PhysicsEngine {
         PhysicsStats {
             body_count: self.bodies.len(),
             collider_count: self.colliders.len(),
-            dynamic_bodies: self.bodies.values().filter(|b| b.body_type == RigidBodyType::Dynamic).count(),
+            dynamic_bodies: self
+                .bodies
+                .values()
+                .filter(|b| b.body_type == RigidBodyType::Dynamic)
+                .count(),
             sleeping_bodies: self.bodies.values().filter(|b| b.is_sleeping).count(),
             simulation_time: self.simulation_time,
             step_count: self.step_count,

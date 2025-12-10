@@ -83,18 +83,23 @@ export class ActionsEngine {
     const logger = getLogEngine();
 
     // Trouver la définition de l'action
-    const actionDef = ADMIN_ACTIONS_CATALOG.find((a) => a.id === actionId);
+    const actionDef = ADMIN_ACTIONS_CATALOG.find(a => a.id === actionId);
     if (!actionDef) {
       return this.createFailedResult(correlationId, actionId, 'Action inconnue');
     }
 
     // Vérifier les permissions
     if (!hasPermission(userRole, actionDef)) {
-      logger.security('admin', `Action refusée: ${actionId} - Permission insuffisante`, 'WARN', {
-        actionId,
-        userRole,
-        required: actionDef.permissionLevel,
-      });
+      logger.security(
+        'admin',
+        `Action refusée: ${actionId} - Permission insuffisante`,
+        'WARN',
+        {
+          actionId,
+          userRole,
+          required: actionDef.permissionLevel,
+        }
+      );
 
       return this.createFailedResult(
         correlationId,
@@ -191,7 +196,9 @@ export class ActionsEngine {
   /**
    * Dispatche l'action vers le bon handler
    */
-  private async dispatchAction(context: ActionExecutionContext): Promise<AdminActionResult> {
+  private async dispatchAction(
+    context: ActionExecutionContext
+  ): Promise<AdminActionResult> {
     const handler = this.actionHandlers.get(context.action.id);
 
     if (handler) {
@@ -205,7 +212,9 @@ export class ActionsEngine {
   /**
    * Handler par défaut via Tauri
    */
-  private async defaultHandler(context: ActionExecutionContext): Promise<AdminActionResult> {
+  private async defaultHandler(
+    context: ActionExecutionContext
+  ): Promise<AdminActionResult> {
     const startTime = Date.now();
 
     const result = await secureInvoke<{
@@ -239,11 +248,14 @@ export class ActionsEngine {
    */
   private registerDefaultHandlers(): void {
     // Force GC (JS only)
-    this.registerHandler('force_gc', async (request) => {
+    this.registerHandler('force_gc', async request => {
       const startTime = Date.now();
 
       // Tenter un GC si disponible (Node.js avec --expose-gc)
-      if (typeof global !== 'undefined' && (global as unknown as { gc?: () => void }).gc) {
+      if (
+        typeof global !== 'undefined' &&
+        (global as unknown as { gc?: () => void }).gc
+      ) {
         (global as unknown as { gc: () => void }).gc();
       }
 
@@ -276,7 +288,7 @@ export class ActionsEngine {
       }
 
       const criticalModules = Object.values(snapshot.modules).filter(
-        (m) => m.status === 'CRITICAL'
+        m => m.status === 'CRITICAL'
       );
       if (criticalModules.length > 0) {
         issues.push(`${criticalModules.length} module(s) critique(s)`);
@@ -286,7 +298,10 @@ export class ActionsEngine {
         requestId: request.correlationId,
         actionId: request.actionId,
         result: 'SUCCESS' as ActionResult,
-        message: issues.length > 0 ? `Audit: ${issues.length} problème(s) détecté(s)` : 'Audit OK',
+        message:
+          issues.length > 0
+            ? `Audit: ${issues.length} problème(s) détecté(s)`
+            : 'Audit OK',
         details: issues.join(', '),
         startedAt: startTime,
         completedAt: Date.now(),
@@ -333,7 +348,9 @@ export class ActionsEngine {
 
     // Limiter la taille de l'historique
     if (this.actionHistory.length > this.maxHistorySize) {
-      this.actionHistory = this.actionHistory.slice(-Math.floor(this.maxHistorySize * 0.9));
+      this.actionHistory = this.actionHistory.slice(
+        -Math.floor(this.maxHistorySize * 0.9)
+      );
     }
   }
 
@@ -349,7 +366,7 @@ export class ActionsEngine {
    * Récupère une action par ID de corrélation
    */
   getActionByCorrelation(correlationId: string): AdminActionRecord | undefined {
-    return this.actionHistory.find((r) => r.request.correlationId === correlationId);
+    return this.actionHistory.find(r => r.request.correlationId === correlationId);
   }
 
   /**
@@ -374,7 +391,7 @@ export class ActionsEngine {
    * Récupère une action par ID
    */
   getActionById(actionId: string): AdminActionDefinition | undefined {
-    return ADMIN_ACTIONS_CATALOG.find((a) => a.id === actionId);
+    return ADMIN_ACTIONS_CATALOG.find(a => a.id === actionId);
   }
 
   /**
@@ -384,9 +401,9 @@ export class ActionsEngine {
     category: AdminActionDefinition['category'],
     role?: AdminRole
   ): AdminActionDefinition[] {
-    let actions = ADMIN_ACTIONS_CATALOG.filter((a) => a.category === category);
+    let actions = ADMIN_ACTIONS_CATALOG.filter(a => a.category === category);
     if (role) {
-      actions = actions.filter((a) => hasPermission(role, a));
+      actions = actions.filter(a => hasPermission(role, a));
     }
     return actions;
   }
@@ -397,14 +414,14 @@ export class ActionsEngine {
   searchActions(query: string, role?: AdminRole): AdminActionDefinition[] {
     const queryLower = query.toLowerCase();
     let actions = ADMIN_ACTIONS_CATALOG.filter(
-      (a) =>
+      a =>
         a.displayName.toLowerCase().includes(queryLower) ||
         a.description.toLowerCase().includes(queryLower) ||
-        a.tags.some((t) => t.toLowerCase().includes(queryLower))
+        a.tags.some(t => t.toLowerCase().includes(queryLower))
     );
 
     if (role) {
-      actions = actions.filter((a) => hasPermission(role, a));
+      actions = actions.filter(a => hasPermission(role, a));
     }
 
     return actions;
@@ -440,11 +457,15 @@ export class ActionsEngine {
   /**
    * Vérifie si une action peut être exécutée
    */
-  canExecute(actionId: string, role: AdminRole, snapshot: AdminSnapshot): {
+  canExecute(
+    actionId: string,
+    role: AdminRole,
+    snapshot: AdminSnapshot
+  ): {
     canExecute: boolean;
     reason?: string;
   } {
-    const actionDef = ADMIN_ACTIONS_CATALOG.find((a) => a.id === actionId);
+    const actionDef = ADMIN_ACTIONS_CATALOG.find(a => a.id === actionId);
 
     if (!actionDef) {
       return { canExecute: false, reason: 'Action inconnue' };

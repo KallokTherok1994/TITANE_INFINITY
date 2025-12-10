@@ -4,17 +4,16 @@
 //   Executes multiple cognitive tasks concurrently
 // ═══════════════════════════════════════════════════════════════
 
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::RwLock;
 use tokio::time::timeout;
-use serde::{Deserialize, Serialize};
 
 use super::{
-    OmegaError, OmegaResult, PipelineStage,
-    StageInput, StageOutput, StageProcessor,
-    router::{Intent, ExecutionMode, RoutingResult},
+    router::{ExecutionMode, Intent, RoutingResult},
+    OmegaError, OmegaResult, PipelineStage, StageInput, StageOutput, StageProcessor,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -77,7 +76,7 @@ impl TaskType {
     /// Check if task can run in parallel
     pub fn parallel_safe(&self) -> bool {
         match self {
-            TaskType::Safety => true,  // Always run
+            TaskType::Safety => true, // Always run
             TaskType::Identity => true,
             TaskType::Memory => true,
             TaskType::Knowledge => true,
@@ -134,9 +133,7 @@ impl ExecutionPlan {
         // Generate tasks based on intent
         let tasks = Self::generate_tasks(&intent, input, &mode);
         let execution_order = Self::compute_execution_order(&tasks);
-        let estimated_time_ms = tasks.iter()
-            .map(|t| t.timeout_ms)
-            .sum();
+        let estimated_time_ms = tasks.iter().map(|t| t.timeout_ms).sum();
 
         Self {
             request_id,
@@ -271,9 +268,7 @@ impl ExecutionPlan {
     fn compute_execution_order(tasks: &[ExecutableTask]) -> Vec<Vec<String>> {
         let mut order: Vec<Vec<String>> = Vec::new();
         let mut completed: Vec<String> = Vec::new();
-        let task_map: HashMap<_, _> = tasks.iter()
-            .map(|t| (t.id.clone(), t))
-            .collect();
+        let task_map: HashMap<_, _> = tasks.iter().map(|t| (t.id.clone(), t)).collect();
 
         while completed.len() < tasks.len() {
             let mut batch: Vec<String> = Vec::new();
@@ -283,8 +278,7 @@ impl ExecutionPlan {
                     continue;
                 }
 
-                let deps_met = task.dependencies.iter()
-                    .all(|dep| completed.contains(dep));
+                let deps_met = task.dependencies.iter().all(|dep| completed.contains(dep));
 
                 if deps_met {
                     batch.push(task.id.clone());
@@ -482,7 +476,9 @@ impl ParallelExecutor {
             let batch_results = self.execute_batch(batch, &plan.tasks, &context).await?;
 
             for result in &batch_results {
-                context.results.insert(result.task_id.clone(), result.clone());
+                context
+                    .results
+                    .insert(result.task_id.clone(), result.clone());
             }
 
             all_results.extend(batch_results);
@@ -510,9 +506,7 @@ impl ParallelExecutor {
         all_tasks: &[ExecutableTask],
         context: &ExecutionContext,
     ) -> OmegaResult<Vec<TaskResult>> {
-        let task_map: HashMap<_, _> = all_tasks.iter()
-            .map(|t| (t.id.as_str(), t))
-            .collect();
+        let task_map: HashMap<_, _> = all_tasks.iter().map(|t| (t.id.as_str(), t)).collect();
 
         let mut futures = Vec::new();
 
@@ -566,7 +560,12 @@ impl ParallelExecutor {
                 stats.successful_executions += 1;
             } else {
                 stats.failed_executions += 1;
-                if result.error.as_ref().map(|e| e.contains("timeout")).unwrap_or(false) {
+                if result
+                    .error
+                    .as_ref()
+                    .map(|e| e.contains("timeout"))
+                    .unwrap_or(false)
+                {
                     stats.timeout_count += 1;
                 }
             }
@@ -630,13 +629,18 @@ impl StageProcessor for Executor {
 
         // Get routing result from previous stage
         let routing: RoutingResult = serde_json::from_value(
-            input.context.previous_outputs
+            input
+                .context
+                .previous_outputs
                 .get(&PipelineStage::Router)
                 .cloned()
-                .unwrap_or_default()
-        ).map_err(|e| OmegaError::ExecutorError(e.to_string()))?;
+                .unwrap_or_default(),
+        )
+        .map_err(|e| OmegaError::ExecutorError(e.to_string()))?;
 
-        let text = input.data.get("text")
+        let text = input
+            .data
+            .get("text")
             .and_then(|v| v.as_str())
             .unwrap_or("");
 
@@ -690,11 +694,7 @@ mod tests {
             cache_hit: false,
         };
 
-        let plan = ExecutionPlan::from_routing(
-            "test-123".to_string(),
-            &routing,
-            "What is Rust?",
-        );
+        let plan = ExecutionPlan::from_routing("test-123".to_string(), &routing, "What is Rust?");
 
         assert!(!plan.tasks.is_empty());
         assert!(plan.tasks.iter().any(|t| t.task_type == TaskType::Safety));
@@ -751,11 +751,7 @@ mod tests {
             cache_hit: false,
         };
 
-        let plan = ExecutionPlan::from_routing(
-            "test-456".to_string(),
-            &routing,
-            "Hello!",
-        );
+        let plan = ExecutionPlan::from_routing("test-456".to_string(), &routing, "Hello!");
 
         let result = executor.execute(&plan).await.unwrap();
         assert!(result.success);

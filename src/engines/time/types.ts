@@ -134,7 +134,12 @@ export type EventCategory =
 /**
  * Statut d'un événement
  */
-export type EventStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled' | 'postponed';
+export type EventStatus =
+  | 'scheduled'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
+  | 'postponed';
 
 /**
  * Niveau de priorité

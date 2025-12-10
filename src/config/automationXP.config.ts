@@ -98,7 +98,7 @@ export const XP_ACTIONS: Record<XPActionId, XPAction> = {
   avatar_customization: {
     id: 'avatar_customization',
     label: 'Personnalisation Avatar',
-    description: 'Personnaliser l\'avatar TITANE',
+    description: "Personnaliser l'avatar TITANE",
     base_xp: 30,
     category: 'interaction',
     multiplier_eligible: false,
@@ -128,7 +128,7 @@ export const XP_ACTIONS: Record<XPActionId, XPAction> = {
   feedback_negative: {
     id: 'feedback_negative',
     label: 'Feedback Négatif',
-    description: 'Donner un feedback négatif (aide l\'IA)',
+    description: "Donner un feedback négatif (aide l'IA)",
     base_xp: 20,
     category: 'interaction',
     multiplier_eligible: true,
@@ -639,7 +639,7 @@ export function getNextDailyReset(): number {
 export function isStreakActive(lastActivity: number): boolean {
   const now = Date.now();
   const oneDayMs = 24 * 60 * 60 * 1000;
-  return (now - lastActivity) < (oneDayMs * 2); // 48h de grâce
+  return now - lastActivity < oneDayMs * 2; // 48h de grâce
 }
 
 /**

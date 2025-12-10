@@ -72,28 +72,31 @@ export function useMetaCognition() {
   /**
    * Fetch meta-cognitive report
    */
-  const fetchMetaReport = useCallback(async (params: {
-    cognitive_integrity?: number;
-    timeline_coherence?: number;
-    memory_alignment?: number;
-    ai_stability?: number;
-    singularity_coherence?: number;
-  }) => {
-    setLoading(true);
-    setError(null);
+  const fetchMetaReport = useCallback(
+    async (params: {
+      cognitive_integrity?: number;
+      timeline_coherence?: number;
+      memory_alignment?: number;
+      ai_stability?: number;
+      singularity_coherence?: number;
+    }) => {
+      setLoading(true);
+      setError(null);
 
-    try {
-      const result = await secureInvoke<MetaCognitiveReport>('meta_get_report', params);
-      setReport(result);
-      return result;
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
-      setError(errorMsg);
-      throw err;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      try {
+        const result = await secureInvoke<MetaCognitiveReport>('meta_get_report', params);
+        setReport(result);
+        return result;
+      } catch (err) {
+        const errorMsg = err instanceof Error ? err.message : String(err);
+        setError(errorMsg);
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
 
   /**
    * Get engine alignment status
@@ -113,7 +116,10 @@ export function useMetaCognition() {
    */
   const getMetaState = useCallback(async () => {
     try {
-      const [metaState, _deepSyncState] = await secureInvoke<[MetaCognitionState, Record<string, unknown>]>('meta_get_state');
+      const [metaState, _deepSyncState] =
+        await secureInvoke<[MetaCognitionState, Record<string, unknown>]>(
+          'meta_get_state'
+        );
       setState(metaState);
       return metaState;
     } catch (err) {

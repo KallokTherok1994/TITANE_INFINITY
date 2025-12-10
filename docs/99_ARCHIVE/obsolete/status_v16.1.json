@@ -4,7 +4,7 @@
   "date": "2025-11-21",
   "mode": "Tauri-only",
   "architecture": "Offline-First",
-  
+
   "status": {
     "global": "100% COMPLET ET CONFORME",
     "frontend": {
@@ -46,14 +46,11 @@
       "details": {
         "codeValidated": true,
         "configCorrect": true,
-        "missingDependencies": [
-          "libwebkit2gtk-4.1-dev",
-          "libjavascriptcoregtk-4.1-dev"
-        ]
+        "missingDependencies": ["libwebkit2gtk-4.1-dev", "libjavascriptcoregtk-4.1-dev"]
       }
     }
   },
-  
+
   "configuration": {
     "tauriOnly": {
       "enforced": true,
@@ -70,9 +67,7 @@
         "npm run vite:dev",
         "vite dev"
       ],
-      "allowedCommands": [
-        "npm run dev (→ tauri dev)"
-      ]
+      "allowedCommands": ["npm run dev (→ tauri dev)"]
     },
     "offlineFirst": {
       "active": true,
@@ -100,7 +95,7 @@
       }
     }
   },
-  
+
   "metrics": {
     "performance": {
       "buildTime": "6.04s",
@@ -118,7 +113,7 @@
       "overall": "100% CONFORME"
     }
   },
-  
+
   "documentation": {
     "totalLines": 2641,
     "files": [
@@ -161,18 +156,12 @@
       }
     ]
   },
-  
+
   "permanentRules": {
     "rule1": {
       "title": "TITANE∞ = 100% Tauri uniquement",
-      "never": [
-        "python3 -m http.server",
-        "npm run preview",
-        "vite dev direct"
-      ],
-      "always": [
-        "npm run dev → tauri dev"
-      ]
+      "never": ["python3 -m http.server", "npm run preview", "vite dev direct"],
+      "always": ["npm run dev → tauri dev"]
     },
     "rule2": {
       "title": "Offline-first permanent",
@@ -191,7 +180,7 @@
       ]
     }
   },
-  
+
   "commands": {
     "launchFrontendNow": {
       "command": "npm run dev",
@@ -225,7 +214,7 @@
       "description": "Vérification TypeScript"
     }
   },
-  
+
   "filesCreatedThisSession": [
     {
       "phase": "Phase 12 - Tauri-Only Lock",
@@ -247,7 +236,7 @@
       ]
     }
   ],
-  
+
   "nextActions": {
     "immediate": {
       "action": "Launch frontend",
@@ -261,6 +250,6 @@
       "result": "Full application with Rust backend and IPC"
     }
   },
-  
+
   "conclusion": "TITANE∞ v16.1 est 100% conforme et fonctionnel. Frontend prêt immédiatement. Backend nécessite installation WebKit système (5-10 min)."
 }

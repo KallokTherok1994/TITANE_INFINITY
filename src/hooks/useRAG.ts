@@ -5,7 +5,11 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import ragService, { type DocumentChunk, type SearchResult, type RAGQueryOptions } from '../services/ragService';
+import ragService, {
+  type DocumentChunk,
+  type SearchResult,
+  type RAGQueryOptions,
+} from '../services/ragService';
 
 interface RAGState {
   loading: boolean;
@@ -45,10 +49,7 @@ export function useRAG() {
    * Ingest document
    */
   const ingestDocument = useCallback(
-    async (
-      content: string,
-      metadata: Omit<DocumentChunk['metadata'], 'timestamp'>
-    ) => {
+    async (content: string, metadata: Omit<DocumentChunk['metadata'], 'timestamp'>) => {
       setState(prev => ({ ...prev, loading: true, error: null }));
 
       try {

@@ -66,10 +66,14 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
         cursor: onClick ? 'pointer' : 'default',
         border: '1px solid rgba(114, 123, 129, 0.2)',
       }}
-      whileHover={onClick && !shouldReduceMotion ? {
-        background: 'rgba(114, 123, 129, 0.15)',
-        borderColor: 'rgba(147, 179, 153, 0.5)',
-      } : undefined}
+      whileHover={
+        onClick && !shouldReduceMotion
+          ? {
+              background: 'rgba(114, 123, 129, 0.15)',
+              borderColor: 'rgba(147, 179, 153, 0.5)',
+            }
+          : undefined
+      }
       whileTap={onClick && !shouldReduceMotion ? { scale: 0.98 } : undefined}
       transition={{ duration: animationConfig.duration }}
     >
@@ -143,7 +147,12 @@ export const CompactXPBar = ({ onClick }: CompactXPBarProps): JSX.Element => {
           }}
           initial={{ width: 0 }}
           animate={{ width: `${Math.min(safeProgress * 100, 100)}%` }}
-          transition={{ duration: animationConfig.skipAnimation ? 0 : Math.max(animationConfig.duration * 3, 0.6), ease: 'easeOut' }}
+          transition={{
+            duration: animationConfig.skipAnimation
+              ? 0
+              : Math.max(animationConfig.duration * 3, 0.6),
+            ease: 'easeOut',
+          }}
         />
       </div>
 

@@ -11,41 +11,41 @@
  * Phonème IPA (International Phonetic Alphabet)
  */
 export interface Phoneme {
-  symbol: string;      // IPA: 'm', 'b', 'p', 'f', 'v', 'o', 'u', 'i', 'a', etc.
-  duration: number;    // Duration in ms
-  intensity: number;   // Vocal intensity 0.0-1.0
-  timestamp: number;   // Start time in ms
+  symbol: string; // IPA: 'm', 'b', 'p', 'f', 'v', 'o', 'u', 'i', 'a', etc.
+  duration: number; // Duration in ms
+  intensity: number; // Vocal intensity 0.0-1.0
+  timestamp: number; // Start time in ms
   category: PhonemeCategory;
 }
 
 export type PhonemeCategory =
-  | 'bilabial'      // m, b, p (lèvres fermées)
-  | 'labiodental'   // f, v (dents visibles)
+  | 'bilabial' // m, b, p (lèvres fermées)
+  | 'labiodental' // f, v (dents visibles)
   | 'vowel-rounded' // o, u (lèvres arrondies)
-  | 'vowel-spread'  // i, e (lèvres étirées)
-  | 'vowel-open'    // a, ɑ (mâchoire ouverte)
-  | 'consonant'     // r, l, s, etc.
-  | 'silence';      // pause
+  | 'vowel-spread' // i, e (lèvres étirées)
+  | 'vowel-open' // a, ɑ (mâchoire ouverte)
+  | 'consonant' // r, l, s, etc.
+  | 'silence'; // pause
 
 /**
  * Morph targets pour contrôle précis bouche
  */
 export interface MorphWeights {
-  jawOpen: number;        // 0.0-1.0 (ouverture mâchoire)
-  lipsPucker: number;     // 0.0-1.0 (lèvres arrondies "o")
-  lipsSpread: number;     // 0.0-1.0 (lèvres étirées "i")
-  lipUpperUp: number;     // 0.0-1.0 (lèvre supérieure relevée)
-  lipLowerDown: number;   // 0.0-1.0 (lèvre inférieure abaissée)
-  cheekPuff: number;      // 0.0-1.0 (joues gonflées)
-  tongueOut: number;      // 0.0-1.0 (langue visible)
-  mouthPress: number;     // 0.0-1.0 (lèvres pressées)
+  jawOpen: number; // 0.0-1.0 (ouverture mâchoire)
+  lipsPucker: number; // 0.0-1.0 (lèvres arrondies "o")
+  lipsSpread: number; // 0.0-1.0 (lèvres étirées "i")
+  lipUpperUp: number; // 0.0-1.0 (lèvre supérieure relevée)
+  lipLowerDown: number; // 0.0-1.0 (lèvre inférieure abaissée)
+  cheekPuff: number; // 0.0-1.0 (joues gonflées)
+  tongueOut: number; // 0.0-1.0 (langue visible)
+  mouthPress: number; // 0.0-1.0 (lèvres pressées)
 }
 
 export interface LipSyncConfig {
-  anticipationMs: number;      // Lookahead time (60-120ms optimal)
-  smoothingFactor: number;     // Lerp interpolation (0.1-0.3)
-  minimumDuration: number;     // Min phoneme duration (30ms)
-  blendOverlap: boolean;       // Blend consecutive phonemes
+  anticipationMs: number; // Lookahead time (60-120ms optimal)
+  smoothingFactor: number; // Lerp interpolation (0.1-0.3)
+  minimumDuration: number; // Min phoneme duration (30ms)
+  blendOverlap: boolean; // Blend consecutive phonemes
   intensityMultiplier: number; // Global intensity scale (0.5-1.5)
 }
 
@@ -61,19 +61,19 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // BILABIALES (lèvres fermées)
   // ─────────────────────────────────────────
-  'm': {
+  m: {
     jawOpen: 0.0,
     lipsPucker: 0.0,
     lipsSpread: 0.0,
     mouthPress: 0.3, // Lèvres légèrement pressées
   },
-  'b': {
+  b: {
     jawOpen: 0.0,
     lipsPucker: 0.0,
     lipsSpread: 0.0,
     mouthPress: 0.4, // Plus tendu que 'm'
   },
-  'p': {
+  p: {
     jawOpen: 0.0,
     lipsPucker: 0.0,
     lipsSpread: 0.0,
@@ -83,13 +83,13 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // LABIO-DENTALES (dents visibles)
   // ─────────────────────────────────────────
-  'f': {
+  f: {
     jawOpen: 0.2,
-    lipUpperUp: 0.5,   // Lèvre sup relevée
+    lipUpperUp: 0.5, // Lèvre sup relevée
     lipLowerDown: 0.3, // Lèvre inf abaissée
     lipsSpread: 0.1,
   },
-  'v': {
+  v: {
     jawOpen: 0.2,
     lipUpperUp: 0.5,
     lipLowerDown: 0.3,
@@ -99,21 +99,23 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // VOYELLES ARRONDIES
   // ─────────────────────────────────────────
-  'o': {
+  o: {
     jawOpen: 0.4,
-    lipsPucker: 0.7,   // Lèvres arrondies
+    lipsPucker: 0.7, // Lèvres arrondies
     lipsSpread: 0.0,
   },
-  'ɔ': { // "o" ouvert (comme "pomme")
+  ɔ: {
+    // "o" ouvert (comme "pomme")
     jawOpen: 0.5,
     lipsPucker: 0.6,
   },
-  'u': {
+  u: {
     jawOpen: 0.3,
-    lipsPucker: 0.9,   // Maximum arrondi
+    lipsPucker: 0.9, // Maximum arrondi
     lipsSpread: 0.0,
   },
-  'ø': { // "eu" (comme "peu")
+  ø: {
+    // "eu" (comme "peu")
     jawOpen: 0.35,
     lipsPucker: 0.5,
     lipsSpread: 0.2,
@@ -122,21 +124,23 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // VOYELLES ÉTIRÉES
   // ─────────────────────────────────────────
-  'i': {
+  i: {
     jawOpen: 0.2,
-    lipsSpread: 0.8,   // Maximum étiré
+    lipsSpread: 0.8, // Maximum étiré
     lipsPucker: 0.0,
   },
-  'e': {
+  e: {
     jawOpen: 0.3,
     lipsSpread: 0.6,
     lipsPucker: 0.0,
   },
-  'ɛ': { // "è" (comme "mère")
+  ɛ: {
+    // "è" (comme "mère")
     jawOpen: 0.4,
     lipsSpread: 0.5,
   },
-  'y': { // "u" français (comme "tu")
+  y: {
+    // "u" français (comme "tu")
     jawOpen: 0.25,
     lipsSpread: 0.4,
     lipsPucker: 0.4, // Mix étiré + arrondi
@@ -145,16 +149,18 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // VOYELLES OUVERTES
   // ─────────────────────────────────────────
-  'a': {
-    jawOpen: 0.8,      // Grande ouverture
+  a: {
+    jawOpen: 0.8, // Grande ouverture
     lipsSpread: 0.3,
     lipsPucker: 0.0,
   },
-  'ɑ': { // "â" (comme "pâte")
-    jawOpen: 0.9,      // Maximum ouverture
+  ɑ: {
+    // "â" (comme "pâte")
+    jawOpen: 0.9, // Maximum ouverture
     lipsSpread: 0.2,
   },
-  'ə': { // Schwa (e muet)
+  ə: {
+    // Schwa (e muet)
     jawOpen: 0.3,
     lipsSpread: 0.2,
     lipsPucker: 0.1,
@@ -163,47 +169,50 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // CONSONNES
   // ─────────────────────────────────────────
-  'r': { // R français (uvulaire)
+  r: {
+    // R français (uvulaire)
     jawOpen: 0.3,
     lipsSpread: 0.2,
     tongueOut: 0.0,
   },
-  'l': {
+  l: {
     jawOpen: 0.3,
     lipsSpread: 0.3,
     tongueOut: 0.2, // Langue légèrement visible
   },
-  's': {
+  s: {
     jawOpen: 0.2,
     lipsSpread: 0.4,
     mouthPress: 0.2,
   },
-  'ʃ': { // "ch" (comme "chat")
+  ʃ: {
+    // "ch" (comme "chat")
     jawOpen: 0.2,
     lipsPucker: 0.3,
     lipsSpread: 0.0,
   },
-  'ʒ': { // "j" (comme "je")
+  ʒ: {
+    // "j" (comme "je")
     jawOpen: 0.25,
     lipsPucker: 0.3,
   },
-  't': {
+  t: {
     jawOpen: 0.15,
     lipsSpread: 0.3,
   },
-  'd': {
+  d: {
     jawOpen: 0.15,
     lipsSpread: 0.3,
   },
-  'k': {
+  k: {
     jawOpen: 0.2,
     lipsSpread: 0.2,
   },
-  'g': {
+  g: {
     jawOpen: 0.2,
     lipsSpread: 0.2,
   },
-  'n': {
+  n: {
     jawOpen: 0.1,
     lipsSpread: 0.2,
   },
@@ -211,19 +220,23 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // NASALES
   // ─────────────────────────────────────────
-  'ɑ̃': { // "an" (comme "dans")
+  ɑ̃: {
+    // "an" (comme "dans")
     jawOpen: 0.6,
     lipsSpread: 0.2,
   },
-  'ɛ̃': { // "in" (comme "vin")
+  ɛ̃: {
+    // "in" (comme "vin")
     jawOpen: 0.4,
     lipsSpread: 0.5,
   },
-  'ɔ̃': { // "on" (comme "bon")
+  ɔ̃: {
+    // "on" (comme "bon")
     jawOpen: 0.5,
     lipsPucker: 0.6,
   },
-  'œ̃': { // "un" (comme "brun")
+  œ̃: {
+    // "un" (comme "brun")
     jawOpen: 0.4,
     lipsPucker: 0.4,
     lipsSpread: 0.3,
@@ -232,7 +245,8 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
   // ─────────────────────────────────────────
   // SILENCE
   // ─────────────────────────────────────────
-  'sil': { // Silence / repos
+  sil: {
+    // Silence / repos
     jawOpen: 0.05,
     lipsPucker: 0.0,
     lipsSpread: 0.0,
@@ -244,16 +258,37 @@ const PHONEME_TO_MORPH: Record<string, Partial<MorphWeights>> = {
  * Catégorisation des phonèmes
  */
 const PHONEME_CATEGORIES: Record<string, PhonemeCategory> = {
-  'm': 'bilabial', 'b': 'bilabial', 'p': 'bilabial',
-  'f': 'labiodental', 'v': 'labiodental',
-  'o': 'vowel-rounded', 'ɔ': 'vowel-rounded', 'u': 'vowel-rounded', 'ø': 'vowel-rounded',
-  'i': 'vowel-spread', 'e': 'vowel-spread', 'ɛ': 'vowel-spread', 'y': 'vowel-spread',
-  'a': 'vowel-open', 'ɑ': 'vowel-open', 'ə': 'vowel-open',
-  'r': 'consonant', 'l': 'consonant', 's': 'consonant', 'ʃ': 'consonant',
-  'ʒ': 'consonant', 't': 'consonant', 'd': 'consonant', 'k': 'consonant',
-  'g': 'consonant', 'n': 'consonant',
-  'ɑ̃': 'consonant', 'ɛ̃': 'consonant', 'ɔ̃': 'consonant', 'œ̃': 'consonant',
-  'sil': 'silence',
+  m: 'bilabial',
+  b: 'bilabial',
+  p: 'bilabial',
+  f: 'labiodental',
+  v: 'labiodental',
+  o: 'vowel-rounded',
+  ɔ: 'vowel-rounded',
+  u: 'vowel-rounded',
+  ø: 'vowel-rounded',
+  i: 'vowel-spread',
+  e: 'vowel-spread',
+  ɛ: 'vowel-spread',
+  y: 'vowel-spread',
+  a: 'vowel-open',
+  ɑ: 'vowel-open',
+  ə: 'vowel-open',
+  r: 'consonant',
+  l: 'consonant',
+  s: 'consonant',
+  ʃ: 'consonant',
+  ʒ: 'consonant',
+  t: 'consonant',
+  d: 'consonant',
+  k: 'consonant',
+  g: 'consonant',
+  n: 'consonant',
+  ɑ̃: 'consonant',
+  ɛ̃: 'consonant',
+  ɔ̃: 'consonant',
+  œ̃: 'consonant',
+  sil: 'silence',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -270,11 +305,11 @@ export class LipSyncPrecisionEngine {
 
   constructor(config: Partial<LipSyncConfig> = {}) {
     this.config = {
-      anticipationMs: 90,           // 90ms lookahead optimal
-      smoothingFactor: 0.2,         // Smooth transitions
-      minimumDuration: 30,          // 30ms min per phoneme
-      blendOverlap: true,           // Blend consecutive phonemes
-      intensityMultiplier: 1.0,     // Default intensity
+      anticipationMs: 90, // 90ms lookahead optimal
+      smoothingFactor: 0.2, // Smooth transitions
+      minimumDuration: 30, // 30ms min per phoneme
+      blendOverlap: true, // Blend consecutive phonemes
+      intensityMultiplier: 1.0, // Default intensity
       ...config,
     };
 
@@ -293,13 +328,15 @@ export class LipSyncPrecisionEngine {
   public analyzePhonemes(_audioBuffer: Float32Array): Phoneme[] {
     // TODO v25.1: Implémenter analyse audio réelle
     // Pour l'instant, retourne phonème silence
-    return [{
-      symbol: 'sil',
-      duration: 100,
-      intensity: 0.0,
-      timestamp: Date.now(),
-      category: 'silence',
-    }];
+    return [
+      {
+        symbol: 'sil',
+        duration: 100,
+        intensity: 0.0,
+        timestamp: Date.now(),
+        category: 'silence',
+      },
+    ];
   }
 
   /**
@@ -358,9 +395,7 @@ export class LipSyncPrecisionEngine {
     t = Math.max(0, Math.min(1, t));
 
     // Cubic ease-in-out pour transitions naturelles
-    const eased = t < 0.5
-      ? 4 * t * t * t
-      : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
     return {
       jawOpen: this.lerp(from.jawOpen, to.jawOpen, eased),

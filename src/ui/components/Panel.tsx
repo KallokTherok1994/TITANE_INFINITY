@@ -17,12 +17,15 @@ interface PanelProps {
   elevated?: boolean;
 }
 
-export const Panel = ({ title, children, className = '', elevated = false }: PanelProps) => {
-  const classes = [
-    'panel',
-    elevated && 'panel--elevated',
-    className,
-  ].filter(Boolean).join(' ');
+export const Panel = ({
+  title,
+  children,
+  className = '',
+  elevated = false,
+}: PanelProps) => {
+  const classes = ['panel', elevated && 'panel--elevated', className]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={classes}>

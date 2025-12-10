@@ -3,7 +3,10 @@
 //   Connects floatingWindowChatHandler with existing chat system
 // ═══════════════════════════════════════════════════════════════════════════
 
-import { parseFloatingWindowCommand, containsFloatingWindowKeyword } from './floatingWindowChatHandler';
+import {
+  parseFloatingWindowCommand,
+  containsFloatingWindowKeyword,
+} from './floatingWindowChatHandler';
 import type { FloatingWindowCommand } from './floatingWindowChatHandler';
 import type { UseFloatingWindowResult } from './floating/useFloatingWindow';
 
@@ -23,7 +26,7 @@ export interface ChatFloatingIntegrationResult {
  */
 export async function handleFloatingWindowInChat(
   message: string,
-  floatingWindow: UseFloatingWindowResult,
+  floatingWindow: UseFloatingWindowResult
 ): Promise<ChatFloatingIntegrationResult> {
   // Quick check pour performance
   if (!containsFloatingWindowKeyword(message)) {
@@ -59,7 +62,7 @@ export async function handleFloatingWindowInChat(
  */
 async function executeFloatingWindowCommand(
   command: FloatingWindowCommand,
-  floatingWindow: UseFloatingWindowResult,
+  floatingWindow: UseFloatingWindowResult
 ): Promise<void> {
   switch (command.type) {
     case 'scale':
@@ -82,7 +85,10 @@ async function executeFloatingWindowCommand(
 
     case 'screen':
       if (typeof command.value === 'number') {
-        const screenIndex = Math.max(0, Math.min(command.value, floatingWindow.screens.length - 1));
+        const screenIndex = Math.max(
+          0,
+          Math.min(command.value, floatingWindow.screens.length - 1)
+        );
         await floatingWindow.moveToScreen(screenIndex);
       }
       break;

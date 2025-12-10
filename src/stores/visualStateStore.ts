@@ -10,7 +10,11 @@
  */
 
 import { create } from 'zustand';
-import { TitaneVisualEngine, VisualEngineConfig, PerformanceMetrics } from '@/visual-engine/TitaneVisualEngine';
+import {
+  TitaneVisualEngine,
+  VisualEngineConfig,
+  PerformanceMetrics,
+} from '@/visual-engine/TitaneVisualEngine';
 import type { VisualState } from '@/design-system/visual-states';
 
 interface VisualStateStore {

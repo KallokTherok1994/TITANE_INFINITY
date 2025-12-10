@@ -12,8 +12,8 @@ use serde::de::DeserializeOwned;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::path::PathBuf;
-use std::sync::Arc;
 use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 // ────────────────────────────────────────────────────────────────
@@ -240,7 +240,8 @@ impl IntelligentCache {
 
     /// Invalidate all keys matching pattern (prefix)
     pub fn invalidate_pattern(&self, pattern: &str) {
-        let keys_to_remove: Vec<CacheKey> = self.data
+        let keys_to_remove: Vec<CacheKey> = self
+            .data
             .iter()
             .filter(|entry| entry.key().command.starts_with(pattern))
             .map(|entry| entry.key().clone())
@@ -265,7 +266,8 @@ impl IntelligentCache {
 
     /// Cleanup expired entries
     pub fn cleanup_expired(&self) {
-        let keys_to_remove: Vec<CacheKey> = self.data
+        let keys_to_remove: Vec<CacheKey> = self
+            .data
             .iter()
             .filter(|entry| entry.value().is_expired())
             .map(|entry| entry.key().clone())
@@ -283,11 +285,15 @@ impl IntelligentCache {
             return Err("Persistence not enabled".to_string());
         }
 
-        let path = self.config.persistence_path.as_ref()
+        let path = self
+            .config
+            .persistence_path
+            .as_ref()
             .ok_or_else(|| "No persistence path configured".to_string())?;
 
         // Collect non-expired entries
-        let entries: Vec<(CacheKey, serde_json::Value, u64)> = self.data
+        let entries: Vec<(CacheKey, serde_json::Value, u64)> = self
+            .data
             .iter()
             .filter(|entry| !entry.value().is_expired())
             .map(|entry| {
@@ -303,8 +309,7 @@ impl IntelligentCache {
             .map_err(|e| format!("Serialization error: {}", e))?;
 
         // Write to file
-        std::fs::write(path, json)
-            .map_err(|e| format!("IO error: {}", e))?;
+        std::fs::write(path, json).map_err(|e| format!("IO error: {}", e))?;
 
         Ok(())
     }
@@ -315,16 +320,18 @@ impl IntelligentCache {
             return Err("Persistence not enabled".to_string());
         }
 
-        let path = self.config.persistence_path.as_ref()
+        let path = self
+            .config
+            .persistence_path
+            .as_ref()
             .ok_or_else(|| "No persistence path configured".to_string())?;
 
         // Read file
-        let json = std::fs::read_to_string(path)
-            .map_err(|e| format!("IO error: {}", e))?;
+        let json = std::fs::read_to_string(path).map_err(|e| format!("IO error: {}", e))?;
 
         // Deserialize
-        let entries: Vec<(CacheKey, serde_json::Value, u64)> = serde_json::from_str(&json)
-            .map_err(|e| format!("Deserialization error: {}", e))?;
+        let entries: Vec<(CacheKey, serde_json::Value, u64)> =
+            serde_json::from_str(&json).map_err(|e| format!("Deserialization error: {}", e))?;
 
         // Restore entries
         for (key, value, ttl_secs) in entries {

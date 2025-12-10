@@ -14,30 +14,18 @@ mod cycle_engine_tests {
 
     #[test]
     fn test_daily_phase_from_hour() {
-        assert_eq!(
-            cycles::DailyPhase::from_hour(6),
-            cycles::DailyPhase::Dawn
-        );
+        assert_eq!(cycles::DailyPhase::from_hour(6), cycles::DailyPhase::Dawn);
         assert_eq!(
             cycles::DailyPhase::from_hour(9),
             cycles::DailyPhase::Morning
         );
-        assert_eq!(
-            cycles::DailyPhase::from_hour(13),
-            cycles::DailyPhase::Noon
-        );
+        assert_eq!(cycles::DailyPhase::from_hour(13), cycles::DailyPhase::Noon);
         assert_eq!(
             cycles::DailyPhase::from_hour(16),
             cycles::DailyPhase::Afternoon
         );
-        assert_eq!(
-            cycles::DailyPhase::from_hour(19),
-            cycles::DailyPhase::Dusk
-        );
-        assert_eq!(
-            cycles::DailyPhase::from_hour(22),
-            cycles::DailyPhase::Night
-        );
+        assert_eq!(cycles::DailyPhase::from_hour(19), cycles::DailyPhase::Dusk);
+        assert_eq!(cycles::DailyPhase::from_hour(22), cycles::DailyPhase::Night);
     }
 
     #[test]
@@ -85,20 +73,10 @@ mod cycle_engine_tests {
         let params = cognitive_rhythm::CognitiveRhythmParams::from_cycle_state(&state);
 
         assert!(params.omega_depth >= 0.0 && params.omega_depth <= 1.0);
-        assert!(
-            params.analysis_intensity >= 0.0 && params.analysis_intensity <= 1.0
-        );
-        assert!(
-            params.speed_vs_quality >= 0.0 && params.speed_vs_quality <= 1.0
-        );
-        assert!(
-            params.memory_consolidation >= 0.0
-                && params.memory_consolidation <= 1.0
-        );
-        assert!(
-            params.creative_temperature >= 0.0
-                && params.creative_temperature <= 1.0
-        );
+        assert!(params.analysis_intensity >= 0.0 && params.analysis_intensity <= 1.0);
+        assert!(params.speed_vs_quality >= 0.0 && params.speed_vs_quality <= 1.0);
+        assert!(params.memory_consolidation >= 0.0 && params.memory_consolidation <= 1.0);
+        assert!(params.creative_temperature >= 0.0 && params.creative_temperature <= 1.0);
     }
 
     #[test]
@@ -126,10 +104,7 @@ mod cycle_engine_tests {
         let params = regulator.adjust(&state, &rhythm, 0.5, 0.5);
 
         assert!(params.omega_intensity >= 0.0 && params.omega_intensity <= 1.0);
-        assert!(
-            params.self_healing_frequency >= 0.0
-                && params.self_healing_frequency <= 1.0
-        );
+        assert!(params.self_healing_frequency >= 0.0 && params.self_healing_frequency <= 1.0);
         assert!(params.vector_search_k > 0);
     }
 
@@ -318,17 +293,12 @@ mod cycle_engine_tests {
         let bridge = omega_integration::OmegaCycleBridge::new(engine);
 
         let adjustments = bridge.get_omega_adjustments().await;
-        assert!(
-            adjustments.depth_multiplier >= 0.0
-                && adjustments.depth_multiplier <= 1.0
-        );
+        assert!(adjustments.depth_multiplier >= 0.0 && adjustments.depth_multiplier <= 1.0);
         assert_eq!(adjustments.engine_weights.len(), 10);
         assert!(adjustments.context_window_size > 0);
 
         let router = bridge.get_router_adjustments().await;
-        assert!(
-            router.creativity_weight >= 0.0 && router.creativity_weight <= 1.0
-        );
+        assert!(router.creativity_weight >= 0.0 && router.creativity_weight <= 1.0);
     }
 
     #[tokio::test]

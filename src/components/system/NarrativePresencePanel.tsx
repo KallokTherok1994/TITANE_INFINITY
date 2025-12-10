@@ -22,7 +22,9 @@ export const NarrativePresencePanel: React.FC = () => {
       <div className="narrative-content">
         <div className="narrative-placeholder">
           <div className="narrative-placeholder-icon">📖</div>
-          <div className="narrative-placeholder-title">Module en cours de restructuration</div>
+          <div className="narrative-placeholder-title">
+            Module en cours de restructuration
+          </div>
           <div className="narrative-placeholder-description">
             Le NarrativeEngine sera disponible dans une prochaine version.
           </div>

@@ -197,14 +197,45 @@ async function mockInvoke<T>(cmd: string, args?: Record<string, unknown>): Promi
 
     case 'memory_stats':
       return {
-        stm: { count: 0, maxEntries: 20, avgImportance: 0, oldestEntry: 0, newestEntry: 0, sizeBytes: 0 },
-        mtm: { count: 0, maxEntries: 200, avgImportance: 0, oldestEntry: 0, newestEntry: 0, sizeBytes: 0 },
-        ltm: { count: 0, maxEntries: -1, avgImportance: 0, oldestEntry: 0, newestEntry: 0, sizeBytes: 0 },
-        performance: { avgStoreMs: 0, avgRecallMs: 0, avgSearchMs: 0, totalOperations: 0 },
+        stm: {
+          count: 0,
+          maxEntries: 20,
+          avgImportance: 0,
+          oldestEntry: 0,
+          newestEntry: 0,
+          sizeBytes: 0,
+        },
+        mtm: {
+          count: 0,
+          maxEntries: 200,
+          avgImportance: 0,
+          oldestEntry: 0,
+          newestEntry: 0,
+          sizeBytes: 0,
+        },
+        ltm: {
+          count: 0,
+          maxEntries: -1,
+          avgImportance: 0,
+          oldestEntry: 0,
+          newestEntry: 0,
+          sizeBytes: 0,
+        },
+        performance: {
+          avgStoreMs: 0,
+          avgRecallMs: 0,
+          avgSearchMs: 0,
+          totalOperations: 0,
+        },
       } as T;
 
     case 'memory_cleanup':
-      return { expiredRemoved: 0, lowImportanceRemoved: 0, promoted: 0, totalDuration: 0 } as T;
+      return {
+        expiredRemoved: 0,
+        lowImportanceRemoved: 0,
+        promoted: 0,
+        totalDuration: 0,
+      } as T;
 
     case 'memory_embed':
       // Return empty embedding in mock mode

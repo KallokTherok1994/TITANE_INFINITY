@@ -8,10 +8,7 @@
 
 import { useState, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
-import type {
-  SystemDiagnostics,
-  OverallStatus
-} from '../types/systemCenter.types';
+import type { SystemDiagnostics, OverallStatus } from '../types/systemCenter.types';
 
 export interface UseSystemDiagnosticsReturn {
   // State

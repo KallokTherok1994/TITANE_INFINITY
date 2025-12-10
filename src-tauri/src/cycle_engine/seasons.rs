@@ -12,9 +12,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SeasonalParameters {
     pub phase: SeasonalPhase,
-    pub energy_multiplier: f32,      // 0.5 - 1.5
-    pub creativity_boost: f32,       // 0.0 - 1.0
-    pub introspection_depth: f32,    // 0.0 - 1.0
+    pub energy_multiplier: f32,       // 0.5 - 1.5
+    pub creativity_boost: f32,        // 0.0 - 1.0
+    pub introspection_depth: f32,     // 0.0 - 1.0
     pub consolidation_frequency: f32, // 0.0 - 1.0
 }
 

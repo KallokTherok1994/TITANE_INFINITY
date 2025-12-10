@@ -24,7 +24,10 @@ export class IAService {
   /**
    * Définir une clé API pour un provider
    */
-  static async setAPIKey(service: IAProvider, key: string): Promise<CommandResult<string>> {
+  static async setAPIKey(
+    service: IAProvider,
+    key: string
+  ): Promise<CommandResult<string>> {
     try {
       // 🔒 Validation client-side AVANT envoi backend
       const validation = this.validateKeyFormat(service, key);
@@ -37,7 +40,7 @@ export class IAService {
 
       const request: SetAPIKeyRequest = { service, key };
       const result = await invoke<CommandResult<string>>('set_api_key', { request });
-      
+
       // ✅ Auto-test après configuration réussie
       if (result.success) {
         // Test en arrière-plan (non-bloquant)
@@ -103,9 +106,13 @@ export class IAService {
   /**
    * Générer une réponse IA avec fallback automatique
    */
-  static async generate(request: IAGenerateRequest): Promise<CommandResult<IAGenerateResponse>> {
+  static async generate(
+    request: IAGenerateRequest
+  ): Promise<CommandResult<IAGenerateResponse>> {
     try {
-      const result = await invoke<CommandResult<IAGenerateResponse>>('ia_generate', { request });
+      const result = await invoke<CommandResult<IAGenerateResponse>>('ia_generate', {
+        request,
+      });
       return result;
     } catch (error) {
       return {
@@ -175,7 +182,10 @@ export class IAService {
   /**
    * Valider le format d'une clé API (client-side, avant appel backend)
    */
-  static validateKeyFormat(service: IAProvider, key: string): {
+  static validateKeyFormat(
+    service: IAProvider,
+    key: string
+  ): {
     valid: boolean;
     error?: string;
   } {

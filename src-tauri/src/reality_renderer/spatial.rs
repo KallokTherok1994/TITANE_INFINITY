@@ -85,11 +85,7 @@ impl SpatialCell {
             index.1 as f64 * cell_size,
             index.2 as f64 * cell_size,
         );
-        let max = Vec3::new(
-            min.x + cell_size,
-            min.y + cell_size,
-            min.z + cell_size,
-        );
+        let max = Vec3::new(min.x + cell_size, min.y + cell_size, min.z + cell_size);
 
         Self {
             id: format!("cell-{}-{}-{}", index.0, index.1, index.2),
@@ -152,7 +148,10 @@ impl SpatialSystem {
     }
 
     pub async fn initialize(&mut self) -> RealityResult<()> {
-        log::info!("[SpatialSystem] Initializing with cell size: {}", self.config.cell_size);
+        log::info!(
+            "[SpatialSystem] Initializing with cell size: {}",
+            self.config.cell_size
+        );
         self.active = true;
         log::info!("[SpatialSystem] ✅ Initialized");
         Ok(())
@@ -262,10 +261,8 @@ impl SpatialSystem {
 
     pub fn query_radius(&mut self, center: &Vec3, radius: f64) -> Vec<String> {
         self.query_count += 1;
-        let bounds = AABB::from_center_size(
-            *center,
-            Vec3::new(radius * 2.0, radius * 2.0, radius * 2.0),
-        );
+        let bounds =
+            AABB::from_center_size(*center, Vec3::new(radius * 2.0, radius * 2.0, radius * 2.0));
 
         let candidates = self.query_bounds(&bounds);
         let radius_sq = radius * radius;
@@ -285,7 +282,12 @@ impl SpatialSystem {
             .collect()
     }
 
-    pub fn raycast(&mut self, origin: &Vec3, direction: &Vec3, max_distance: f64) -> Vec<RaycastHit> {
+    pub fn raycast(
+        &mut self,
+        origin: &Vec3,
+        direction: &Vec3,
+        max_distance: f64,
+    ) -> Vec<RaycastHit> {
         self.query_count += 1;
         let mut hits = Vec::new();
 
@@ -325,7 +327,11 @@ impl SpatialSystem {
             }
         }
 
-        hits.sort_by(|a, b| a.distance.partial_cmp(&b.distance).unwrap_or(std::cmp::Ordering::Equal));
+        hits.sort_by(|a, b| {
+            a.distance
+                .partial_cmp(&b.distance)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
         hits
     }
 

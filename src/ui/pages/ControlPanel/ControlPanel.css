@@ -22,7 +22,9 @@
 }
 
 @keyframes cp-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .cp-content {

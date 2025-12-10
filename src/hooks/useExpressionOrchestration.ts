@@ -27,12 +27,10 @@ import {
  * Hook principal: État complet du moteur d'expression
  */
 export function useExpressionEngineOrchestration(): ExpressionEngineState {
-  const [state, setState] = useState<ExpressionEngineState>(
-    expressionEngine.getState()
-  );
+  const [state, setState] = useState<ExpressionEngineState>(expressionEngine.getState());
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((newState) => {
+    const unsubscribe = expressionEngine.subscribe(newState => {
       setState(newState);
     });
     return unsubscribe;
@@ -54,7 +52,7 @@ export function useUnifiedExpression(): UnifiedExpression {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setExpression(state.currentExpression);
     });
     return unsubscribe;
@@ -76,7 +74,7 @@ export function useOrchestratedVoice(): OrchestratedVoice {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setVoice(state.currentExpression.voice);
     });
     return unsubscribe;
@@ -94,7 +92,7 @@ export function useVoiceProsody() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setProsody(state.currentExpression.voice.prosody);
     });
     return unsubscribe;
@@ -112,7 +110,7 @@ export function useVoiceTimbre() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setTimbre(state.currentExpression.voice.timbre);
     });
     return unsubscribe;
@@ -130,7 +128,7 @@ export function useVoiceMicroDynamics() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setMicroDynamics(state.currentExpression.voice.microDynamics);
     });
     return unsubscribe;
@@ -152,7 +150,7 @@ export function useOrchestratedHalo(): OrchestratedHalo {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setHalo(state.currentExpression.halo);
     });
     return unsubscribe;
@@ -170,7 +168,7 @@ export function useHaloPattern(): string {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setPattern(state.currentExpression.halo.pattern);
     });
     return unsubscribe;
@@ -188,7 +186,7 @@ export function useHaloColorsOrchestrated() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setColors(state.currentExpression.halo.colors);
     });
     return unsubscribe;
@@ -206,7 +204,7 @@ export function useHaloDynamics() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setDynamics(state.currentExpression.halo.dynamics);
     });
     return unsubscribe;
@@ -224,7 +222,7 @@ export function useHaloSpatial() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setSpatial(state.currentExpression.halo.spatial);
     });
     return unsubscribe;
@@ -246,7 +244,7 @@ export function useOrchestratedNarrative(): OrchestratedNarrative {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setNarrative(state.currentExpression.narrative);
     });
     return unsubscribe;
@@ -264,7 +262,7 @@ export function useNarrativeStyleOrchestrated() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setStyle(state.currentExpression.narrative.style);
     });
     return unsubscribe;
@@ -282,7 +280,7 @@ export function useNarrativeStructure() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setStructure(state.currentExpression.narrative.structure);
     });
     return unsubscribe;
@@ -300,7 +298,7 @@ export function useNarrativeEmphasis() {
   );
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setEmphasis(state.currentExpression.narrative.emphasis);
     });
     return unsubscribe;
@@ -320,7 +318,7 @@ export function useExpressionSync(): number {
   const [sync, setSync] = useState(expressionEngine.getSyncScore());
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setSync(state.globalSync);
     });
     return unsubscribe;
@@ -341,7 +339,7 @@ export function useExpressionSyncDetails() {
   });
 
   useEffect(() => {
-    const unsubscribe = expressionEngine.subscribe((state) => {
+    const unsubscribe = expressionEngine.subscribe(state => {
       setSyncDetails({
         voiceHaloSync: state.voiceHaloSync,
         voiceNarrativeSync: state.voiceNarrativeSync,

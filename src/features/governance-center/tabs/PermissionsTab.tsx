@@ -91,7 +91,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
   // Filtrer l'audit
   const filteredAudit = useMemo(() => {
     return permissionAudit
-      .filter((entry) => {
+      .filter(entry => {
         if (filterRole !== 'all' && entry.role !== filterRole) return false;
         if (filterStatus !== 'all' && entry.status !== filterStatus) return false;
         return true;
@@ -113,7 +113,9 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header avec toggle */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div
+        style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+      >
         <div style={{ display: 'flex', gap: '8px' }}>
           <Button
             variant={view === 'matrix' ? 'primary' : 'ghost'}
@@ -139,8 +141,11 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
           {/* Légende des rôles */}
           <Card style={{ padding: '12px' }}>
             <div style={{ display: 'flex', gap: '24px', justifyContent: 'center' }}>
-              {(['Root', 'System', 'Ia', 'User'] as Role[]).map((role) => (
-                <div key={role} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {(['Root', 'System', 'Ia', 'User'] as Role[]).map(role => (
+                <div
+                  key={role}
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
                   <span>{roleLabels[role].icon}</span>
                   <span style={{ fontWeight: 500, color: roleColors[role] }}>
                     {roleLabels[role].label}
@@ -151,13 +156,20 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
           </Card>
 
           {/* Groupes de permissions */}
-          {permissionCategories.map((category) => {
+          {permissionCategories.map(category => {
             const actions = groupedPermissions[category.id];
             if (!actions || actions.length === 0) return null;
 
             return (
               <Card key={category.id}>
-                <header style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <header
+                  style={{
+                    marginBottom: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}
+                >
                   <span>{category.icon}</span>
                   <h4 style={{ margin: 0 }}>{category.label}</h4>
                   <span style={{ marginLeft: 'auto', opacity: 0.5, fontSize: '0.85rem' }}>
@@ -166,7 +178,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                 </header>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  {actions.sort().map((action) => {
+                  {actions.sort().map(action => {
                     const roles = permissionMatrix[action] || [];
                     return (
                       <div
@@ -181,7 +193,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                       >
                         <code style={{ flex: 1, fontSize: '0.85rem' }}>{action}</code>
                         <div style={{ display: 'flex', gap: '4px' }}>
-                          {(['Root', 'System', 'Ia', 'User'] as Role[]).map((role) => (
+                          {(['Root', 'System', 'Ia', 'User'] as Role[]).map(role => (
                             <span
                               key={role}
                               style={{
@@ -195,7 +207,9 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                                 background: roles.includes(role)
                                   ? `${roleColors[role]}30`
                                   : 'rgba(255,255,255,0.05)',
-                                color: roles.includes(role) ? roleColors[role] : 'rgba(255,255,255,0.2)',
+                                color: roles.includes(role)
+                                  ? roleColors[role]
+                                  : 'rgba(255,255,255,0.2)',
                                 fontWeight: roles.includes(role) ? 600 : 400,
                               }}
                               title={`${roleLabels[role].label}: ${roles.includes(role) ? 'Autorisé' : 'Refusé'}`}
@@ -224,7 +238,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                 <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>Rôle:</span>
                 <select
                   value={filterRole}
-                  onChange={(e) => setFilterRole(e.target.value as Role | 'all')}
+                  onChange={e => setFilterRole(e.target.value as Role | 'all')}
                   style={{
                     padding: '6px 12px',
                     borderRadius: '6px',
@@ -244,7 +258,7 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                 <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>Statut:</span>
                 <select
                   value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value as AuditStatus | 'all')}
+                  onChange={e => setFilterStatus(e.target.value as AuditStatus | 'all')}
                   style={{
                     padding: '6px 12px',
                     borderRadius: '6px',
@@ -281,11 +295,39 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                      <th style={{ padding: '8px', textAlign: 'left', fontSize: '0.85rem' }}>Date</th>
-                      <th style={{ padding: '8px', textAlign: 'left', fontSize: '0.85rem' }}>Action</th>
-                      <th style={{ padding: '8px', textAlign: 'center', fontSize: '0.85rem' }}>Rôle</th>
-                      <th style={{ padding: '8px', textAlign: 'center', fontSize: '0.85rem' }}>Statut</th>
-                      <th style={{ padding: '8px', textAlign: 'left', fontSize: '0.85rem' }}>Source</th>
+                      <th
+                        style={{ padding: '8px', textAlign: 'left', fontSize: '0.85rem' }}
+                      >
+                        Date
+                      </th>
+                      <th
+                        style={{ padding: '8px', textAlign: 'left', fontSize: '0.85rem' }}
+                      >
+                        Action
+                      </th>
+                      <th
+                        style={{
+                          padding: '8px',
+                          textAlign: 'center',
+                          fontSize: '0.85rem',
+                        }}
+                      >
+                        Rôle
+                      </th>
+                      <th
+                        style={{
+                          padding: '8px',
+                          textAlign: 'center',
+                          fontSize: '0.85rem',
+                        }}
+                      >
+                        Statut
+                      </th>
+                      <th
+                        style={{ padding: '8px', textAlign: 'left', fontSize: '0.85rem' }}
+                      >
+                        Source
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -294,7 +336,10 @@ export const PermissionsTab: React.FC<PermissionsTabProps> = ({
                         key={idx}
                         style={{
                           borderBottom: '1px solid rgba(255,255,255,0.05)',
-                          background: entry.status === 'Denied' ? 'rgba(244, 67, 54, 0.05)' : 'transparent',
+                          background:
+                            entry.status === 'Denied'
+                              ? 'rgba(244, 67, 54, 0.05)'
+                              : 'transparent',
                         }}
                       >
                         <td style={{ padding: '8px', fontSize: '0.8rem', opacity: 0.7 }}>

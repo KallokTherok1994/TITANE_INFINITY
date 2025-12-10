@@ -48,7 +48,7 @@
 
 .errors-card--critical:hover {
   border-color: rgba(239, 68, 68, 0.3);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 20px rgba(239, 68, 68, 0.15);
 }
@@ -60,7 +60,7 @@
 
 .errors-card--warning:hover {
   border-color: rgba(255, 140, 66, 0.3);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 20px rgba(255, 140, 66, 0.15);
 }
@@ -72,7 +72,7 @@
 
 .errors-card--info:hover {
   border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 
+  box-shadow:
     var(--shadow-lg),
     0 0 20px rgba(16, 185, 129, 0.15);
 }

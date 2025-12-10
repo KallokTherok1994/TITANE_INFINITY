@@ -91,9 +91,11 @@ export class PredictiveAlerts {
    * - intercept (b) = ȳ - m × x̄
    * - R² = 1 - (SS_res / SS_tot)
    */
-  private static calculateLinearRegression(
-    dataPoints: Array<{ x: number; y: number }>
-  ): { slope: number; intercept: number; r2: number } {
+  private static calculateLinearRegression(dataPoints: Array<{ x: number; y: number }>): {
+    slope: number;
+    intercept: number;
+    r2: number;
+  } {
     const n = dataPoints.length;
 
     if (n < 2) {
@@ -126,7 +128,7 @@ export class PredictiveAlerts {
       ssTot += Math.pow(point.y - meanY, 2);
     }
 
-    const r2 = ssTot === 0 ? 0 : 1 - (ssRes / ssTot);
+    const r2 = ssTot === 0 ? 0 : 1 - ssRes / ssTot;
 
     return { slope, intercept, r2: Math.max(0, Math.min(1, r2)) };
   }
@@ -174,7 +176,7 @@ export class PredictiveAlerts {
 
     // Prédire la valeur future
     // Chaque point = 5s, donc pour N minutes = N * 60 / 5 = N * 12 points
-    const futureIndex = history.length + (timeHorizonMinutes * 12);
+    const futureIndex = history.length + timeHorizonMinutes * 12;
     const predictedValue = slope * futureIndex + intercept;
     const lastPoint = dataPoints[dataPoints.length - 1];
     if (!lastPoint) return null;
@@ -240,7 +242,8 @@ export class PredictiveAlerts {
 
           if (willExceed && prediction.confidence >= CONFIDENCE_THRESHOLD) {
             // Calculer la sévérité basée sur le dépassement et le temps
-            const exceedPercent = ((prediction.predictedValue - threshold) / threshold) * 100;
+            const exceedPercent =
+              ((prediction.predictedValue - threshold) / threshold) * 100;
             let severity: PredictiveAlert['severity'];
 
             if (exceedPercent > 50 || horizonMinutes <= 5) {
@@ -349,9 +352,15 @@ export class PredictiveAlerts {
   } {
     const stats = {
       total: this.alerts.length,
-      bySeverity: { low: 0, medium: 0, high: 0, critical: 0 } as Record<PredictiveAlert['severity'], number>,
+      bySeverity: { low: 0, medium: 0, high: 0, critical: 0 } as Record<
+        PredictiveAlert['severity'],
+        number
+      >,
       byService: {} as Record<string, number>,
-      byMetric: { latency: 0, errorRate: 0, retryRate: 0 } as Record<PredictionMetric, number>,
+      byMetric: { latency: 0, errorRate: 0, retryRate: 0 } as Record<
+        PredictionMetric,
+        number
+      >,
     };
 
     for (const alert of this.alerts) {

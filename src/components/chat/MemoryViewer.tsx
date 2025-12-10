@@ -70,7 +70,7 @@ function formatRelativeTime(timestamp: number): string {
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
 
-  if (minutes < 1) return 'À l\'instant';
+  if (minutes < 1) return "À l'instant";
   if (minutes < 60) return `Il y a ${minutes} min`;
   if (hours < 24) return `Il y a ${hours}h`;
   if (days < 7) return `Il y a ${days} jour${days > 1 ? 's' : ''}`;
@@ -80,9 +80,10 @@ function formatRelativeTime(timestamp: number): string {
 function getTimeRemaining(entry: MemoryEntry): string | null {
   if (entry.level === 'long_term') return null;
 
-  const ttl = entry.level === 'session'
-    ? (entry.ttl || DEFAULT_SESSION_TTL)
-    : DEFAULT_INTERMEDIATE_TTL;
+  const ttl =
+    entry.level === 'session'
+      ? entry.ttl || DEFAULT_SESSION_TTL
+      : DEFAULT_INTERMEDIATE_TTL;
 
   const createdAt = entry.metadata.createdAt;
   const expiresAt = createdAt + ttl;
@@ -136,10 +137,14 @@ const TopicBadge: React.FC<{ topic: MemoryTopic }> = ({ topic }) => {
   );
 };
 
-const ContentTypeBadge: React.FC<{ contentType: MemoryContentType }> = ({ contentType }) => {
+const ContentTypeBadge: React.FC<{ contentType: MemoryContentType }> = ({
+  contentType,
+}) => {
   const config = MEMORY_CONTENT_TYPE_LABELS[contentType];
   return (
-    <span className={`memory-viewer__content-type-badge memory-viewer__content-type-badge--${contentType}`}>
+    <span
+      className={`memory-viewer__content-type-badge memory-viewer__content-type-badge--${contentType}`}
+    >
       {config.label}
     </span>
   );
@@ -156,7 +161,7 @@ const ImportanceIndicator: React.FC<{
     <div className="memory-viewer__importance">
       <span className="memory-viewer__importance-label">Importance:</span>
       <div className="memory-viewer__importance-stars">
-        {[1, 2, 3, 4, 5].map((star) => (
+        {[1, 2, 3, 4, 5].map(star => (
           <button
             key={star}
             type="button"
@@ -182,7 +187,9 @@ const TagsList: React.FC<{ tags: string[] }> = ({ tags }) => {
       <span className="memory-viewer__tags-label">Tags:</span>
       <div className="memory-viewer__tags-list">
         {tags.map((tag, index) => (
-          <span key={index} className="memory-viewer__tag">#{tag}</span>
+          <span key={index} className="memory-viewer__tag">
+            #{tag}
+          </span>
         ))}
       </div>
     </div>
@@ -203,26 +210,36 @@ const MetadataSection: React.FC<{ entry: MemoryEntry }> = ({ entry }) => {
         </div>
         <div className="memory-viewer__metadata-item">
           <span className="memory-viewer__metadata-label">Créé le:</span>
-          <span className="memory-viewer__metadata-value">{formatDate(metadata.createdAt)}</span>
+          <span className="memory-viewer__metadata-value">
+            {formatDate(metadata.createdAt)}
+          </span>
         </div>
         <div className="memory-viewer__metadata-item">
           <span className="memory-viewer__metadata-label">Dernière mise à jour:</span>
-          <span className="memory-viewer__metadata-value">{formatRelativeTime(metadata.updatedAt)}</span>
+          <span className="memory-viewer__metadata-value">
+            {formatRelativeTime(metadata.updatedAt)}
+          </span>
         </div>
         <div className="memory-viewer__metadata-item">
           <span className="memory-viewer__metadata-label">Accès:</span>
-          <span className="memory-viewer__metadata-value">{metadata.accessCount} fois</span>
+          <span className="memory-viewer__metadata-value">
+            {metadata.accessCount} fois
+          </span>
         </div>
         {metadata.lastAccessedAt && (
           <div className="memory-viewer__metadata-item">
             <span className="memory-viewer__metadata-label">Dernier accès:</span>
-            <span className="memory-viewer__metadata-value">{formatRelativeTime(metadata.lastAccessedAt)}</span>
+            <span className="memory-viewer__metadata-value">
+              {formatRelativeTime(metadata.lastAccessedAt)}
+            </span>
           </div>
         )}
         {timeRemaining && (
           <div className="memory-viewer__metadata-item">
             <span className="memory-viewer__metadata-label">Expiration:</span>
-            <span className={`memory-viewer__metadata-value ${timeRemaining === 'Expiré' ? 'memory-viewer__metadata-value--expired' : ''}`}>
+            <span
+              className={`memory-viewer__metadata-value ${timeRemaining === 'Expiré' ? 'memory-viewer__metadata-value--expired' : ''}`}
+            >
               {timeRemaining}
             </span>
           </div>
@@ -280,7 +297,16 @@ const ActionBar: React.FC<{
   onCopy?: () => void;
   readOnly?: boolean;
   isLoading?: boolean;
-}> = ({ entry, onPromote, onArchive, onDelete, onExport, onCopy, readOnly, isLoading }) => {
+}> = ({
+  entry,
+  onPromote,
+  onArchive,
+  onDelete,
+  onExport,
+  onCopy,
+  readOnly,
+  isLoading,
+}) => {
   const nextLevel = getNextLevel(entry.level);
   const canBePromoted = canPromote(entry);
 
@@ -377,12 +403,21 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
 
       // ═══ AWARD XP FOR MEMORY PROMOTION ═══
       try {
-        XP.gain(XP_REWARDS.MEMORY_INGESTION, 'memory_promote', `Mémoire promue: ${entry.id}`);
-        await awardExperience('memory', XP_REWARDS.MEMORY_INGESTION, XPSource.MemoryIngestion, {
-          entryId: entry.id,
-          action: 'promote',
-          fromLevel: entry.level,
-        });
+        XP.gain(
+          XP_REWARDS.MEMORY_INGESTION,
+          'memory_promote',
+          `Mémoire promue: ${entry.id}`
+        );
+        await awardExperience(
+          'memory',
+          XP_REWARDS.MEMORY_INGESTION,
+          XPSource.MemoryIngestion,
+          {
+            entryId: entry.id,
+            action: 'promote',
+            fromLevel: entry.level,
+          }
+        );
         console.log('[MemoryViewer] ✨ +15 XP awarded for memory promotion');
       } catch (xpError) {
         console.warn('[MemoryViewer] XP award warning:', xpError);
@@ -417,7 +452,7 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
 
       showNotification('✅ Entrée archivée (+20 XP)');
     } catch {
-      showNotification('❌ Erreur lors de l\'archivage');
+      showNotification("❌ Erreur lors de l'archivage");
     } finally {
       setIsLoading(false);
     }
@@ -461,18 +496,21 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
     showNotification('✅ Entrée exportée');
   }, [entry, showNotification]);
 
-  const handleImportanceChange = useCallback(async (value: number) => {
-    if (!entry || !onUpdateImportance) return;
-    setIsLoading(true);
-    try {
-      await onUpdateImportance(entry, value);
-      showNotification(`✅ Importance mise à jour: ${value}/5`);
-    } catch {
-      showNotification('❌ Erreur lors de la mise à jour');
-    } finally {
-      setIsLoading(false);
-    }
-  }, [entry, onUpdateImportance, showNotification]);
+  const handleImportanceChange = useCallback(
+    async (value: number) => {
+      if (!entry || !onUpdateImportance) return;
+      setIsLoading(true);
+      try {
+        await onUpdateImportance(entry, value);
+        showNotification(`✅ Importance mise à jour: ${value}/5`);
+      } catch {
+        showNotification('❌ Erreur lors de la mise à jour');
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [entry, onUpdateImportance, showNotification]
+  );
 
   // Keyboard shortcuts
   React.useEffect(() => {
@@ -521,9 +559,7 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
       </header>
 
       {/* Notification */}
-      {notification && (
-        <div className="memory-viewer__notification">{notification}</div>
-      )}
+      {notification && <div className="memory-viewer__notification">{notification}</div>}
 
       {/* Main content */}
       <div className="memory-viewer__body">

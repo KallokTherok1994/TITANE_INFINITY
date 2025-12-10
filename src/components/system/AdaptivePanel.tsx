@@ -26,9 +26,9 @@ export const AdaptivePanel: React.FC = () => {
   const [history, setHistory] = useState<SystemPerformanceSample[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'rules' | 'settings'>(
-    'overview'
-  );
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'history' | 'rules' | 'settings'
+  >('overview');
 
   // ═══════════════════════════════════════════════════════════════
   //   LIFECYCLE
@@ -110,7 +110,8 @@ export const AdaptivePanel: React.FC = () => {
   const renderOverview = () => {
     if (!summary) return <div className="adaptive-empty">Aucune donnée</div>;
 
-    const health = summary.avg_cpu_load < 0.8 && summary.avg_ai_latency < 5000 ? 0.85 : 0.6;
+    const health =
+      summary.avg_cpu_load < 0.8 && summary.avg_ai_latency < 5000 ? 0.85 : 0.6;
     const healthColor = AdaptiveBridgeV21.getHealthColor(health);
 
     return (
@@ -158,7 +159,9 @@ export const AdaptivePanel: React.FC = () => {
 
           <div className="adaptive-metric">
             <span className="adaptive-metric-label">Latence IA Moyenne:</span>
-            <span className="adaptive-metric-value">{summary.avg_ai_latency.toFixed(0)}ms</span>
+            <span className="adaptive-metric-value">
+              {summary.avg_ai_latency.toFixed(0)}ms
+            </span>
           </div>
 
           <div className="adaptive-metric">
@@ -241,7 +244,9 @@ export const AdaptivePanel: React.FC = () => {
             <div key={idx} className="adaptive-rule-card">
               <div className="adaptive-rule-header">
                 <div className="adaptive-rule-name">{rule.name}</div>
-                <div className={`adaptive-rule-status ${rule.enabled ? 'enabled' : 'disabled'}`}>
+                <div
+                  className={`adaptive-rule-status ${rule.enabled ? 'enabled' : 'disabled'}`}
+                >
                   {rule.enabled ? '✓' : '✗'}
                 </div>
               </div>
@@ -263,7 +268,7 @@ export const AdaptivePanel: React.FC = () => {
         <div className="adaptive-settings-section">
           <div className="adaptive-settings-title">Mode Système</div>
           <div className="adaptive-mode-buttons">
-            {modes.map((mode) => (
+            {modes.map(mode => (
               <button
                 key={mode}
                 className={`adaptive-mode-btn ${profile.system_mode === mode ? 'active' : ''}`}
@@ -291,7 +296,9 @@ export const AdaptivePanel: React.FC = () => {
             </div>
             <div className="adaptive-config-item">
               <span className="adaptive-config-label">Apprentissage Auto:</span>
-              <span className="adaptive-config-value">{profile.auto_learn ? 'Oui' : 'Non'}</span>
+              <span className="adaptive-config-value">
+                {profile.auto_learn ? 'Oui' : 'Non'}
+              </span>
             </div>
           </div>
         </div>
@@ -336,13 +343,21 @@ export const AdaptivePanel: React.FC = () => {
       </div>
 
       <div className="adaptive-actions">
-        <button className="adaptive-action-btn" onClick={loadAdaptiveData} disabled={loading}>
+        <button
+          className="adaptive-action-btn"
+          onClick={loadAdaptiveData}
+          disabled={loading}
+        >
           🔄 Rafraîchir
         </button>
         <button className="adaptive-action-btn" onClick={handleLearn} disabled={loading}>
           🧠 Apprendre
         </button>
-        <button className="adaptive-action-btn" onClick={handleOptimize} disabled={loading}>
+        <button
+          className="adaptive-action-btn"
+          onClick={handleOptimize}
+          disabled={loading}
+        >
           ⚡ Optimiser
         </button>
       </div>

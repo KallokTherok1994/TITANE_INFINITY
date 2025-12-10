@@ -4,11 +4,11 @@
  * @license MIT
  */
 
-import React from 'react'
+import React from 'react';
 
 export interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info'
-  children: React.ReactNode
+  variant?: 'default' | 'destructive' | 'success' | 'warning' | 'info';
+  children: React.ReactNode;
 }
 
 const variantStyles = {
@@ -16,14 +16,14 @@ const variantStyles = {
   destructive: 'bg-red-50 text-red-900 border-red-300',
   success: 'bg-green-50 text-green-900 border-green-300',
   warning: 'bg-yellow-50 text-yellow-900 border-yellow-300',
-  info: 'bg-blue-50 text-blue-900 border-blue-300'
-}
+  info: 'bg-blue-50 text-blue-900 border-blue-300',
+};
 
-export function Alert({ 
-  variant = 'default', 
-  className = '', 
-  children, 
-  ...props 
+export function Alert({
+  variant = 'default',
+  className = '',
+  children,
+  ...props
 }: AlertProps) {
   return (
     <div
@@ -33,23 +33,26 @@ export function Alert({
     >
       {children}
     </div>
-  )
+  );
 }
 
-export function AlertTitle({ 
-  className = '', 
+export function AlertTitle({
+  className = '',
   children,
   ...props
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h5 className={`mb-1 font-medium leading-none tracking-tight ${className}`} {...props}>
+    <h5
+      className={`mb-1 font-medium leading-none tracking-tight ${className}`}
+      {...props}
+    >
       {children}
     </h5>
-  )
+  );
 }
 
-export function AlertDescription({ 
-  className = '', 
+export function AlertDescription({
+  className = '',
   children,
   ...props
 }: React.HTMLAttributes<HTMLParagraphElement>) {
@@ -57,5 +60,5 @@ export function AlertDescription({
     <div className={`text-sm opacity-90 ${className}`} {...props}>
       {children}
     </div>
-  )
+  );
 }

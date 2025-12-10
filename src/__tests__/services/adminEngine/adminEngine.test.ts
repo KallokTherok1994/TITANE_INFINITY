@@ -94,7 +94,7 @@ describe('Admin Engine - Types & Constantes', () => {
     });
 
     it('chaque action devrait avoir un ID unique', () => {
-      const ids = ADMIN_ACTIONS_CATALOG.map((a) => a.id);
+      const ids = ADMIN_ACTIONS_CATALOG.map(a => a.id);
       const uniqueIds = new Set(ids);
       expect(uniqueIds.size).toBe(ids.length);
     });
@@ -115,7 +115,7 @@ describe('Admin Engine - Types & Constantes', () => {
     });
 
     it('devrait contenir des actions pour chaque catégorie', () => {
-      const categories = new Set(ADMIN_ACTIONS_CATALOG.map((a) => a.category));
+      const categories = new Set(ADMIN_ACTIONS_CATALOG.map(a => a.category));
       expect(categories.has('CACHE')).toBe(true);
       expect(categories.has('RESET')).toBe(true);
       expect(categories.has('CONFIG')).toBe(true);
@@ -127,19 +127,25 @@ describe('Admin Engine - Types & Constantes', () => {
 
   describe('DEFAULT_ALERT_THRESHOLDS', () => {
     it('devrait avoir des seuils CPU raisonnables', () => {
-      expect(DEFAULT_ALERT_THRESHOLDS.cpuWarning).toBeLessThan(DEFAULT_ALERT_THRESHOLDS.cpuCritical);
+      expect(DEFAULT_ALERT_THRESHOLDS.cpuWarning).toBeLessThan(
+        DEFAULT_ALERT_THRESHOLDS.cpuCritical
+      );
       expect(DEFAULT_ALERT_THRESHOLDS.cpuWarning).toBeGreaterThan(0);
       expect(DEFAULT_ALERT_THRESHOLDS.cpuCritical).toBeLessThanOrEqual(100);
     });
 
     it('devrait avoir des seuils RAM raisonnables', () => {
-      expect(DEFAULT_ALERT_THRESHOLDS.ramWarning).toBeLessThan(DEFAULT_ALERT_THRESHOLDS.ramCritical);
+      expect(DEFAULT_ALERT_THRESHOLDS.ramWarning).toBeLessThan(
+        DEFAULT_ALERT_THRESHOLDS.ramCritical
+      );
       expect(DEFAULT_ALERT_THRESHOLDS.ramWarning).toBeGreaterThan(0);
       expect(DEFAULT_ALERT_THRESHOLDS.ramCritical).toBeLessThanOrEqual(100);
     });
 
     it('devrait avoir des seuils FPS raisonnables', () => {
-      expect(DEFAULT_ALERT_THRESHOLDS.fpsWarning).toBeGreaterThan(DEFAULT_ALERT_THRESHOLDS.fpsCritical);
+      expect(DEFAULT_ALERT_THRESHOLDS.fpsWarning).toBeGreaterThan(
+        DEFAULT_ALERT_THRESHOLDS.fpsCritical
+      );
       expect(DEFAULT_ALERT_THRESHOLDS.fpsCritical).toBeGreaterThanOrEqual(0);
     });
   });
@@ -147,9 +153,23 @@ describe('Admin Engine - Types & Constantes', () => {
   describe('MODULE_DISPLAY_NAMES', () => {
     it('devrait avoir un nom pour chaque module', () => {
       const modules: TitaneModule[] = [
-        'selfHealing', 'performance', 'memory', 'prompt', 'cognitive',
-        'tools', 'search', 'xp', 'evolution', 'tts', 'avatar', 'chat',
-        'ollama', 'gemini', 'tauri', 'vite', 'admin'
+        'selfHealing',
+        'performance',
+        'memory',
+        'prompt',
+        'cognitive',
+        'tools',
+        'search',
+        'xp',
+        'evolution',
+        'tts',
+        'avatar',
+        'chat',
+        'ollama',
+        'gemini',
+        'tauri',
+        'vite',
+        'admin',
       ];
 
       for (const module of modules) {
@@ -349,7 +369,7 @@ describe('Admin Engine - Fonctions Utilitaires', () => {
       expect(actions.length).toBe(ADMIN_ACTIONS_CATALOG.length);
     });
 
-    it('DEV devrait avoir moins d\'actions que ADMIN', () => {
+    it("DEV devrait avoir moins d'actions que ADMIN", () => {
       const adminActions = getActionsForRole('ADMIN');
       const devActions = getActionsForRole('DEV');
       expect(devActions.length).toBeLessThan(adminActions.length);
@@ -704,13 +724,7 @@ describe('Admin Engine - LogEngine', () => {
     });
 
     it('devrait résoudre un événement', () => {
-      const event = logEngine.addEvent(
-        'SYSTEM',
-        'TEST',
-        'admin',
-        'Test',
-        'Desc'
-      );
+      const event = logEngine.addEvent('SYSTEM', 'TEST', 'admin', 'Test', 'Desc');
       expect(event.resolved).toBe(false);
 
       const success = logEngine.resolveEvent(event.id);
@@ -793,7 +807,7 @@ describe('Admin Engine - ActionsEngine', () => {
       expect(actions.length).toBe(ADMIN_ACTIONS_CATALOG.length);
     });
 
-    it('devrait retourner moins d\'actions pour DEV', () => {
+    it("devrait retourner moins d'actions pour DEV", () => {
       const adminActions = actionsEngine.getAvailableActions('ADMIN');
       const devActions = actionsEngine.getAvailableActions('DEV');
       expect(devActions.length).toBeLessThan(adminActions.length);
@@ -807,13 +821,13 @@ describe('Admin Engine - ActionsEngine', () => {
 
     it('devrait filtrer par catégorie', () => {
       const cacheActions = actionsEngine.getActionsByCategory('CACHE');
-      expect(cacheActions.every((a) => a.category === 'CACHE')).toBe(true);
+      expect(cacheActions.every(a => a.category === 'CACHE')).toBe(true);
     });
 
     it('devrait rechercher des actions', () => {
       const results = actionsEngine.searchActions('cache');
       expect(results.length).toBeGreaterThan(0);
-      expect(results.some((a) => a.tags.includes('cache'))).toBe(true);
+      expect(results.some(a => a.tags.includes('cache'))).toBe(true);
     });
   });
 
@@ -838,7 +852,7 @@ describe('Admin Engine - ActionsEngine', () => {
       expect(history.length).toBe(0);
     });
 
-    it('devrait permettre de vider l\'historique', () => {
+    it("devrait permettre de vider l'historique", () => {
       actionsEngine.clearHistory();
       const history = actionsEngine.getActionHistory();
       expect(history.length).toBe(0);
@@ -846,7 +860,7 @@ describe('Admin Engine - ActionsEngine', () => {
   });
 
   describe('Handlers personnalisés', () => {
-    it('devrait permettre d\'enregistrer un handler', () => {
+    it("devrait permettre d'enregistrer un handler", () => {
       const handler = vi.fn().mockResolvedValue({
         requestId: 'test',
         actionId: 'custom',
@@ -876,7 +890,7 @@ describe('Admin Engine - Facade', () => {
   });
 
   describe('Initialisation', () => {
-    it('devrait s\'initialiser correctement', () => {
+    it("devrait s'initialiser correctement", () => {
       adminEngine.initialize();
       // Pas d'erreur = succès
       expect(true).toBe(true);

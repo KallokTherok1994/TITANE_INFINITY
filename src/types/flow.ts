@@ -19,60 +19,60 @@
  * Zone de flux basée sur le modèle de Csikszentmihalyi
  */
 export type FlowZone =
-  | 'anxiety'    // Challenge trop élevé par rapport aux compétences
-  | 'flow'       // Équilibre parfait challenge/compétences
-  | 'boredom'    // Challenge trop faible
-  | 'apathy'     // Faible challenge ET faibles compétences perçues
-  | 'control'    // Compétences élevées, challenge modéré
+  | 'anxiety' // Challenge trop élevé par rapport aux compétences
+  | 'flow' // Équilibre parfait challenge/compétences
+  | 'boredom' // Challenge trop faible
+  | 'apathy' // Faible challenge ET faibles compétences perçues
+  | 'control' // Compétences élevées, challenge modéré
   | 'relaxation' // Compétences élevées, challenge faible
-  | 'arousal'    // Challenge élevé, compétences modérées (proche du flow)
-  | 'worry';     // Challenge modéré, compétences faibles
+  | 'arousal' // Challenge élevé, compétences modérées (proche du flow)
+  | 'worry'; // Challenge modéré, compétences faibles
 
 /**
  * Phase du cycle de flux
  */
 export type FlowPhase =
-  | 'preparation'   // Préparation à l'entrée en flow
-  | 'struggle'      // Phase de lutte initiale (normal)
-  | 'release'       // Lâcher-prise
-  | 'flow'          // État de flow actif
-  | 'recovery'      // Récupération post-flow
-  | 'idle';         // Pas en cycle de flow
+  | 'preparation' // Préparation à l'entrée en flow
+  | 'struggle' // Phase de lutte initiale (normal)
+  | 'release' // Lâcher-prise
+  | 'flow' // État de flow actif
+  | 'recovery' // Récupération post-flow
+  | 'idle'; // Pas en cycle de flow
 
 /**
  * Type de transition de flux
  */
 export type FlowTransition =
-  | 'entering'      // Entrée dans le flow
-  | 'deepening'     // Approfondissement du flow
-  | 'maintaining'   // Maintien du flow
-  | 'surfacing'     // Remontée du flow
-  | 'exiting'       // Sortie du flow
-  | 'interrupted'   // Flow interrompu
-  | 'none';         // Pas de transition
+  | 'entering' // Entrée dans le flow
+  | 'deepening' // Approfondissement du flow
+  | 'maintaining' // Maintien du flow
+  | 'surfacing' // Remontée du flow
+  | 'exiting' // Sortie du flow
+  | 'interrupted' // Flow interrompu
+  | 'none'; // Pas de transition
 
 /**
  * Niveau de préparation au focus
  */
 export type FocusReadiness =
-  | 'optimal'       // Conditions parfaites pour le flow
-  | 'good'          // Bonnes conditions
-  | 'moderate'      // Conditions moyennes
-  | 'poor'          // Mauvaises conditions
-  | 'blocked';      // Flow impossible actuellement
+  | 'optimal' // Conditions parfaites pour le flow
+  | 'good' // Bonnes conditions
+  | 'moderate' // Conditions moyennes
+  | 'poor' // Mauvaises conditions
+  | 'blocked'; // Flow impossible actuellement
 
 /**
  * Type de perturbation du flow
  */
 export type FlowDisruptor =
-  | 'external_interruption'  // Interruption externe
-  | 'internal_distraction'   // Distraction interne
-  | 'fatigue'                // Fatigue mentale/physique
-  | 'anxiety_spike'          // Pic d'anxiété
-  | 'boredom_drift'          // Glissement vers l'ennui
-  | 'complexity_overflow'    // Surcharge de complexité
-  | 'motivation_loss'        // Perte de motivation
-  | 'none';                  // Pas de perturbation
+  | 'external_interruption' // Interruption externe
+  | 'internal_distraction' // Distraction interne
+  | 'fatigue' // Fatigue mentale/physique
+  | 'anxiety_spike' // Pic d'anxiété
+  | 'boredom_drift' // Glissement vers l'ennui
+  | 'complexity_overflow' // Surcharge de complexité
+  | 'motivation_loss' // Perte de motivation
+  | 'none'; // Pas de perturbation
 
 // ============================================================================
 // INTERFACES PRINCIPALES
@@ -83,22 +83,22 @@ export type FlowDisruptor =
  */
 export interface FlowConditions {
   // Conditions de base
-  clearGoals: number;           // Clarté des objectifs (0-1)
-  immediateFeedback: number;    // Feedback immédiat (0-1)
+  clearGoals: number; // Clarté des objectifs (0-1)
+  immediateFeedback: number; // Feedback immédiat (0-1)
   challengeSkillBalance: number; // Équilibre défi/compétence (0-1)
 
   // Conditions environnementales
-  distractionLevel: number;     // Niveau de distraction (0-1, bas = mieux)
-  timeAvailable: number;        // Temps disponible perçu (0-1)
-  energyLevel: number;          // Niveau d'énergie (0-1)
+  distractionLevel: number; // Niveau de distraction (0-1, bas = mieux)
+  timeAvailable: number; // Temps disponible perçu (0-1)
+  energyLevel: number; // Niveau d'énergie (0-1)
 
   // Conditions psychologiques
-  senseOfControl: number;       // Sentiment de contrôle (0-1)
-  intrinsicMotivation: number;  // Motivation intrinsèque (0-1)
-  confidenceLevel: number;      // Confiance en ses capacités (0-1)
+  senseOfControl: number; // Sentiment de contrôle (0-1)
+  intrinsicMotivation: number; // Motivation intrinsèque (0-1)
+  confidenceLevel: number; // Confiance en ses capacités (0-1)
 
   // Score global
-  overallReadiness: number;     // Préparation globale (0-1)
+  overallReadiness: number; // Préparation globale (0-1)
 }
 
 /**
@@ -106,18 +106,18 @@ export interface FlowConditions {
  */
 export interface FlowMetrics {
   // Intensité et profondeur
-  flowIntensity: number;        // Intensité du flow (0-1)
-  flowDepth: number;            // Profondeur du flow (0-1)
-  immersionLevel: number;       // Niveau d'immersion (0-1)
+  flowIntensity: number; // Intensité du flow (0-1)
+  flowDepth: number; // Profondeur du flow (0-1)
+  immersionLevel: number; // Niveau d'immersion (0-1)
 
   // Temporel
-  timeInFlow: number;           // Temps dans le flow (ms)
-  timeSinceLastPeak: number;    // Temps depuis le dernier pic (ms)
+  timeInFlow: number; // Temps dans le flow (ms)
+  timeSinceLastPeak: number; // Temps depuis le dernier pic (ms)
   estimatedTimeRemaining: number; // Temps de flow restant estimé (ms)
 
   // Qualité
-  qualityScore: number;         // Score de qualité (0-1)
-  stabilityScore: number;       // Stabilité du flow (0-1)
+  qualityScore: number; // Score de qualité (0-1)
+  stabilityScore: number; // Stabilité du flow (0-1)
   productivityEstimate: number; // Estimation de productivité (0-1)
 
   // Tendances
@@ -132,7 +132,7 @@ export interface FlowDriftIndicators {
   // Type de dérive
   driftType: 'toward_anxiety' | 'toward_boredom' | 'toward_exit' | 'none';
   driftSpeed: 'slow' | 'moderate' | 'fast';
-  driftProbability: number;     // Probabilité de dérive (0-1)
+  driftProbability: number; // Probabilité de dérive (0-1)
 
   // Causes détectées
   detectedDisruptors: FlowDisruptor[];
@@ -147,10 +147,15 @@ export interface FlowDriftIndicators {
  * Suggestion pour maintenir/entrer dans le flow
  */
 export interface FlowSuggestion {
-  type: 'challenge_adjustment' | 'break' | 'environment' | 'goal_clarification' | 'energy_boost';
+  type:
+    | 'challenge_adjustment'
+    | 'break'
+    | 'environment'
+    | 'goal_clarification'
+    | 'energy_boost';
   description: string;
-  priority: number;             // 0-1
-  estimatedImpact: number;      // 0-1
+  priority: number; // 0-1
+  estimatedImpact: number; // 0-1
 }
 
 /**
@@ -158,11 +163,11 @@ export interface FlowSuggestion {
  */
 export interface FlowExitState {
   exitType: 'graceful' | 'interrupted' | 'exhausted' | 'distracted';
-  totalFlowTime: number;        // Temps total en flow (ms)
-  peakIntensity: number;        // Intensité maximale atteinte
-  accomplishmentSense: number;  // Sentiment d'accomplissement (0-1)
+  totalFlowTime: number; // Temps total en flow (ms)
+  peakIntensity: number; // Intensité maximale atteinte
+  accomplishmentSense: number; // Sentiment d'accomplissement (0-1)
   recoveryNeeded: 'minimal' | 'moderate' | 'significant';
-  nextFlowEstimate: number;     // Temps avant prochain flow possible (ms)
+  nextFlowEstimate: number; // Temps avant prochain flow possible (ms)
 }
 
 /**
@@ -184,21 +189,21 @@ export interface FlowHistoryEntry {
  */
 export interface FlowProfile {
   // Caractéristiques personnelles
-  averageFlowDuration: number;       // Durée moyenne de flow (ms)
-  peakFlowTime: number;              // Moment préféré pour le flow
-  flowProneness: number;             // Propension au flow (0-1)
-  recoveryRate: number;              // Vitesse de récupération (0-1)
+  averageFlowDuration: number; // Durée moyenne de flow (ms)
+  peakFlowTime: number; // Moment préféré pour le flow
+  flowProneness: number; // Propension au flow (0-1)
+  recoveryRate: number; // Vitesse de récupération (0-1)
 
   // Préférences
-  preferredChallengeLevel: number;   // Niveau de défi préféré (0-1)
-  optimalComplexity: number;         // Complexité optimale (0-1)
-  breakFrequency: number;            // Fréquence de pauses (ms)
+  preferredChallengeLevel: number; // Niveau de défi préféré (0-1)
+  optimalComplexity: number; // Complexité optimale (0-1)
+  breakFrequency: number; // Fréquence de pauses (ms)
 
   // Statistiques
   totalFlowSessions: number;
-  totalFlowTime: number;             // Temps total en flow (ms)
-  averageQuality: number;            // Qualité moyenne (0-1)
-  longestFlowStreak: number;         // Plus longue session (ms)
+  totalFlowTime: number; // Temps total en flow (ms)
+  averageQuality: number; // Qualité moyenne (0-1)
+  longestFlowStreak: number; // Plus longue session (ms)
 
   // Patterns
   commonDisruptors: FlowDisruptor[];
@@ -209,7 +214,7 @@ export interface FlowProfile {
   history: FlowHistoryEntry[];
 
   // Métadonnées
-  lastFlowSession: number;           // Timestamp dernière session
+  lastFlowSession: number; // Timestamp dernière session
   lastUpdate: number;
 }
 
@@ -248,19 +253,19 @@ export interface FlowState {
  */
 export interface FlowEngineConfig {
   // Seuils de détection
-  flowEntryThreshold: number;        // Seuil pour entrer en flow (0-1)
-  flowExitThreshold: number;         // Seuil pour sortir du flow (0-1)
+  flowEntryThreshold: number; // Seuil pour entrer en flow (0-1)
+  flowExitThreshold: number; // Seuil pour sortir du flow (0-1)
   driftDetectionSensitivity: number; // Sensibilité détection dérive (0-1)
 
   // Temporel
-  minFlowDuration: number;           // Durée min pour compter (ms)
-  maxFlowDuration: number;           // Durée max recommandée (ms)
-  recoveryPeriod: number;            // Période de récupération (ms)
-  updateIntervalMs: number;          // Intervalle mise à jour (ms)
+  minFlowDuration: number; // Durée min pour compter (ms)
+  maxFlowDuration: number; // Durée max recommandée (ms)
+  recoveryPeriod: number; // Période de récupération (ms)
+  updateIntervalMs: number; // Intervalle mise à jour (ms)
 
   // Limites
   maxHistoryEntries: number;
-  challengeAdjustmentRate: number;   // Vitesse ajustement défi (0-1)
+  challengeAdjustmentRate: number; // Vitesse ajustement défi (0-1)
 
   // Notifications
   notifyOnFlowEntry: boolean;
@@ -277,11 +282,11 @@ export interface FlowEngineConfig {
  */
 export interface FocusReadinessResult {
   readiness: FocusReadiness;
-  score: number;                     // Score global (0-1)
+  score: number; // Score global (0-1)
   conditions: FlowConditions;
-  blockers: string[];                // Facteurs bloquants
+  blockers: string[]; // Facteurs bloquants
   recommendations: FlowSuggestion[];
-  estimatedTimeToReady: number;      // Temps pour être prêt (ms)
+  estimatedTimeToReady: number; // Temps pour être prêt (ms)
 }
 
 /**
@@ -330,11 +335,11 @@ export const FLOW_CONSTANTS = {
 
   // Phases (durées typiques en ms)
   PHASE_DURATIONS: {
-    preparation: 5 * 60 * 1000,    // 5 minutes
-    struggle: 15 * 60 * 1000,      // 15 minutes
-    release: 5 * 60 * 1000,        // 5 minutes
-    flow: 45 * 60 * 1000,          // 45 minutes typique
-    recovery: 15 * 60 * 1000,      // 15 minutes
+    preparation: 5 * 60 * 1000, // 5 minutes
+    struggle: 15 * 60 * 1000, // 15 minutes
+    release: 5 * 60 * 1000, // 5 minutes
+    flow: 45 * 60 * 1000, // 45 minutes typique
+    recovery: 15 * 60 * 1000, // 15 minutes
   },
 
   // Seuils de conditions
@@ -378,7 +383,7 @@ export const FLOW_CONSTANTS = {
     external_interruption: 'Interruption externe',
     internal_distraction: 'Distraction interne',
     fatigue: 'Fatigue',
-    anxiety_spike: 'Pic d\'anxiété',
+    anxiety_spike: "Pic d'anxiété",
     boredom_drift: 'Ennui',
     complexity_overflow: 'Surcharge de complexité',
     motivation_loss: 'Perte de motivation',
@@ -436,19 +441,22 @@ export function getDefaultFlowDriftIndicators(): FlowDriftIndicators {
 export function getDefaultFlowProfile(): FlowProfile {
   return {
     averageFlowDuration: 30 * 60 * 1000, // 30 minutes
-    peakFlowTime: 10,                     // 10h
+    peakFlowTime: 10, // 10h
     flowProneness: 0.5,
     recoveryRate: 0.5,
     preferredChallengeLevel: 0.6,
     optimalComplexity: 0.5,
-    breakFrequency: 25 * 60 * 1000,      // 25 minutes (Pomodoro)
+    breakFrequency: 25 * 60 * 1000, // 25 minutes (Pomodoro)
     totalFlowSessions: 0,
     totalFlowTime: 0,
     averageQuality: 0.5,
     longestFlowStreak: 0,
     commonDisruptors: [],
     successfulEntryConditions: {},
-    bestPerformanceWindows: [{ start: 9, end: 12 }, { start: 14, end: 17 }],
+    bestPerformanceWindows: [
+      { start: 9, end: 12 },
+      { start: 14, end: 17 },
+    ],
     history: [],
     lastFlowSession: 0,
     lastUpdate: Date.now(),
@@ -476,10 +484,10 @@ export function getDefaultFlowEngineConfig(): FlowEngineConfig {
     flowEntryThreshold: 0.6,
     flowExitThreshold: 0.4,
     driftDetectionSensitivity: 0.7,
-    minFlowDuration: 5 * 60 * 1000,      // 5 minutes
-    maxFlowDuration: 90 * 60 * 1000,     // 90 minutes
-    recoveryPeriod: 15 * 60 * 1000,      // 15 minutes
-    updateIntervalMs: 5000,              // 5 secondes
+    minFlowDuration: 5 * 60 * 1000, // 5 minutes
+    maxFlowDuration: 90 * 60 * 1000, // 90 minutes
+    recoveryPeriod: 15 * 60 * 1000, // 15 minutes
+    updateIntervalMs: 5000, // 5 secondes
     maxHistoryEntries: 100,
     challengeAdjustmentRate: 0.1,
     notifyOnFlowEntry: true,

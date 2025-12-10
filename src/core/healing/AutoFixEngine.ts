@@ -288,7 +288,9 @@ export class AutoFixEngine {
   }
 
   private async fixPipelineStall(issue: DetectedIssue): Promise<string> {
-    await secureInvoke('autofix_restart_pipeline', { pipeline: issue.affected_component });
+    await secureInvoke('autofix_restart_pipeline', {
+      pipeline: issue.affected_component,
+    });
     return 'Pipeline restarted';
   }
 
@@ -304,7 +306,9 @@ export class AutoFixEngine {
   }
 
   private async fixTauriError(issue: DetectedIssue): Promise<string> {
-    await secureInvoke('autofix_restart_tauri_command', { command: issue.affected_component });
+    await secureInvoke('autofix_restart_tauri_command', {
+      command: issue.affected_component,
+    });
     return 'Tauri command restarted';
   }
 

@@ -6,33 +6,33 @@
 //! Le Conversation OS #∞ est la couche de conscience interactionnelle de TITANE∞.
 //! Il gère: intention, ton, style, cohérence narrative, adaptation relationnelle.
 
-pub mod intent;
-pub mod narrative;
-pub mod persona;
-pub mod style;
-pub mod coherence;
-pub mod memory_context;
-pub mod emotion;
-pub mod safety;
-pub mod formatter;
 pub mod adapter;
-pub mod router;
-pub mod output;
+pub mod coherence;
 pub mod diagnostics;
+pub mod emotion;
+pub mod formatter;
+pub mod intent;
+pub mod memory_context;
+pub mod narrative;
+pub mod output;
+pub mod persona;
+pub mod router;
+pub mod safety;
+pub mod style;
 
-pub use intent::{IntentDetector, UserIntent, IntentConfidence};
-pub use narrative::{NarrativeEngine, NarrativeThread, NarrativeState};
-pub use persona::{PersonaEngine, PersonaConfig, PersonaProfile};
-pub use style::{StyleEngine, StyleConfig, StyleLevel};
-pub use coherence::{CoherenceEngine, CoherenceReport, CoherenceIssue};
-pub use memory_context::{MemoryContextEngine, ConversationContext};
-pub use emotion::{EmotionEngine, EmotionalState, EmotionalTone};
-pub use safety::{ConversationSafety, SafetyCheck, SafetyLevel};
-pub use formatter::{ResponseFormatter, FormattedOutput};
-pub use adapter::{ResponseAdapter, AdaptationContext, OutputChannel};
-pub use router::{ConversationRouter, ConversationStage, PipelineConfig};
-pub use output::{OutputEngine, FinalResponse};
+pub use adapter::{AdaptationContext, OutputChannel, ResponseAdapter};
+pub use coherence::{CoherenceEngine, CoherenceIssue, CoherenceReport};
 pub use diagnostics::{ConversationDiagnostics, ConversationEvent};
+pub use emotion::{EmotionEngine, EmotionalState, EmotionalTone};
+pub use formatter::{FormattedOutput, ResponseFormatter};
+pub use intent::{IntentConfidence, IntentDetector, UserIntent};
+pub use memory_context::{ConversationContext, MemoryContextEngine};
+pub use narrative::{NarrativeEngine, NarrativeState, NarrativeThread};
+pub use output::{FinalResponse, OutputEngine};
+pub use persona::{PersonaConfig, PersonaEngine, PersonaProfile};
+pub use router::{ConversationRouter, ConversationStage, PipelineConfig};
+pub use safety::{ConversationSafety, SafetyCheck, SafetyLevel};
+pub use style::{StyleConfig, StyleEngine, StyleLevel};
 
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -121,12 +121,18 @@ impl ConversationOS {
     }
 
     /// Traite une entrée utilisateur et produit une réponse stylisée
-    pub async fn process(&self, input: &str, context: &ConversationContext) -> Result<FinalResponse, ConversationError> {
+    pub async fn process(
+        &self,
+        input: &str,
+        context: &ConversationContext,
+    ) -> Result<FinalResponse, ConversationError> {
         let start = std::time::Instant::now();
 
         // 1. Détection d'intention
         let intent = self.intent_detector.detect(input, context).await;
-        self.diagnostics.emit(ConversationEvent::IntentDetected(intent.clone())).await;
+        self.diagnostics
+            .emit(ConversationEvent::IntentDetected(intent.clone()))
+            .await;
 
         // 2. Mise à jour état
         {
@@ -137,7 +143,9 @@ impl ConversationOS {
 
         // 3. Routage du pipeline
         let stages = self.router.route(&intent);
-        self.diagnostics.emit(ConversationEvent::PipelineRouted(stages.len())).await;
+        self.diagnostics
+            .emit(ConversationEvent::PipelineRouted(stages.len()))
+            .await;
 
         // 4. Extraction contexte mémoire
         let memory_ctx = self.memory_context.extract(context).await;
@@ -150,7 +158,10 @@ impl ConversationOS {
         };
 
         // 6. Mise à jour narrative
-        let narrative = self.narrative_engine.update(input, &intent, &memory_ctx).await;
+        let narrative = self
+            .narrative_engine
+            .update(input, &intent, &memory_ctx)
+            .await;
 
         // 7. Vérification cohérence
         let coherence = if self.config.narrative_tracking {
@@ -165,7 +176,9 @@ impl ConversationOS {
         // 9. Vérification sécurité
         let safety_check = self.safety.check(input, &intent).await;
         if !safety_check.is_safe {
-            self.diagnostics.emit(ConversationEvent::SafetyTriggered(safety_check.clone())).await;
+            self.diagnostics
+                .emit(ConversationEvent::SafetyTriggered(safety_check.clone()))
+                .await;
             return Err(ConversationError::SafetyViolation(safety_check.reason));
         }
 
@@ -183,7 +196,10 @@ impl ConversationOS {
         let formatted = self.formatter.format(&output_context).await;
 
         // 12. Application du style
-        let styled = self.style_engine.apply(&formatted.content, &output_context.persona).await;
+        let styled = self
+            .style_engine
+            .apply(&formatted.content, &output_context.persona)
+            .await;
 
         // 13. Adaptation au canal
         let adapted = self.adapter.adapt(&styled, context.channel.clone()).await;
@@ -193,17 +209,21 @@ impl ConversationOS {
 
         // 15. Diagnostics
         let duration = start.elapsed();
-        self.diagnostics.emit(ConversationEvent::ProcessingComplete {
-            duration_ms: duration.as_millis() as u64,
-            intent: intent.intent_type,
-        }).await;
+        self.diagnostics
+            .emit(ConversationEvent::ProcessingComplete {
+                duration_ms: duration.as_millis() as u64,
+                intent: intent.intent_type,
+            })
+            .await;
 
         Ok(final_response)
     }
 
     /// Force une mise à jour du persona actif
     pub async fn set_persona(&self, persona_id: &str) -> Result<(), ConversationError> {
-        self.persona_engine.activate(persona_id).await
+        self.persona_engine
+            .activate(persona_id)
+            .await
             .map_err(|e| ConversationError::PersonaError(e))
     }
 

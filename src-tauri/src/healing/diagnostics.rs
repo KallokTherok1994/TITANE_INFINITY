@@ -210,7 +210,9 @@ impl ComponentChecker for MemoryDiagnosticChecker {
                 component: "memory".to_string(),
                 message: "High heap usage detected".to_string(),
                 details: Some(format!("Current heap usage: {:.1}%", heap_usage * 100.0)),
-                suggestion: Some("Consider increasing memory limits or optimizing allocations".to_string()),
+                suggestion: Some(
+                    "Consider increasing memory limits or optimizing allocations".to_string(),
+                ),
                 timestamp: SystemTime::now()
                     .duration_since(UNIX_EPOCH)
                     .unwrap_or_default()

@@ -16,7 +16,7 @@ export function Errors() {
   const [filter, setFilter] = useState<'all' | 'unresolved' | 'resolved'>('unresolved');
   const [selectedError, setSelectedError] = useState<ErrorEntry | null>(null);
 
-  const filteredErrors = errors.filter((e) => {
+  const filteredErrors = errors.filter(e => {
     if (filter === 'unresolved') return !e.resolved;
     if (filter === 'resolved') return e.resolved;
     return true;
@@ -35,9 +35,21 @@ export function Errors() {
   };
 
   const impactColors = {
-    high: { bg: 'rgba(139, 95, 95, 0.20)', text: 'var(--text-danger, #8b5f5f)', border: 'var(--border-danger, #8b5f5f)' },
-    medium: { bg: 'rgba(227, 213, 213, 0.15)', text: 'var(--text-warning, #e3d5d5)', border: 'var(--border-warning, #e3d5d5)' },
-    low: { bg: 'rgba(114, 123, 129, 0.15)', text: 'var(--text-info, #727b81)', border: 'var(--border-info, #727b81)' },
+    high: {
+      bg: 'rgba(139, 95, 95, 0.20)',
+      text: 'var(--text-danger, #8b5f5f)',
+      border: 'var(--border-danger, #8b5f5f)',
+    },
+    medium: {
+      bg: 'rgba(227, 213, 213, 0.15)',
+      text: 'var(--text-warning, #e3d5d5)',
+      border: 'var(--border-warning, #e3d5d5)',
+    },
+    low: {
+      bg: 'rgba(114, 123, 129, 0.15)',
+      text: 'var(--text-info, #727b81)',
+      border: 'var(--border-info, #727b81)',
+    },
   };
 
   return (
@@ -47,7 +59,7 @@ export function Errors() {
         description="Erreurs système et diagnostics"
         actions={
           <div className="flex gap-2">
-            {(['all', 'unresolved', 'resolved'] as const).map((status) => (
+            {(['all', 'unresolved', 'resolved'] as const).map(status => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
@@ -113,7 +125,7 @@ export function Errors() {
             className="text-2xl font-bold"
             style={{ color: 'var(--text-danger, #8b5f5f)' }}
           >
-            {errors.filter((e) => !e.resolved).length}
+            {errors.filter(e => !e.resolved).length}
           </div>
         </div>
 
@@ -134,7 +146,7 @@ export function Errors() {
             className="text-2xl font-bold"
             style={{ color: 'var(--text-danger, #8b5f5f)' }}
           >
-            {errors.filter((e) => e.impact === 'high' && !e.resolved).length}
+            {errors.filter(e => e.impact === 'high' && !e.resolved).length}
           </div>
         </div>
 
@@ -155,7 +167,7 @@ export function Errors() {
             className="text-2xl font-bold"
             style={{ color: 'var(--text-success, #93b399)' }}
           >
-            {errors.filter((e) => e.resolved).length}
+            {errors.filter(e => e.resolved).length}
           </div>
         </div>
       </div>
@@ -182,11 +194,13 @@ export function Errors() {
                   className="text-sm"
                   style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
                 >
-                  {filter === 'unresolved' ? 'No unresolved errors 🎉' : 'No errors match the filter'}
+                  {filter === 'unresolved'
+                    ? 'No unresolved errors 🎉'
+                    : 'No errors match the filter'}
                 </p>
               </div>
             ) : (
-              filteredErrors.map((error) => {
+              filteredErrors.map(error => {
                 const colors = impactColors[error.impact];
                 return (
                   <button
@@ -195,11 +209,13 @@ export function Errors() {
                     className={`w-full text-left p-4 rounded-lg border transition-all duration-150 ${
                       selectedError?.id === error.id ? 'ring-2' : ''
                     } ${error.resolved ? 'opacity-50' : ''}`}
-                    style={{
-                      background: colors.bg,
-                      borderColor: colors.border,
-                      '--tw-ring-color': colors.border,
-                    } as React.CSSProperties}
+                    style={
+                      {
+                        background: colors.bg,
+                        borderColor: colors.border,
+                        '--tw-ring-color': colors.border,
+                      } as React.CSSProperties
+                    }
                   >
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">

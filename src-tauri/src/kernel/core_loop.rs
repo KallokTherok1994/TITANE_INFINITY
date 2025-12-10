@@ -11,7 +11,7 @@ use tokio::time::{interval, Duration};
 
 use super::events::KernelEvent;
 use super::governance::GovernanceEngine;
-use super::kernel_state::{KernelState, Intent};
+use super::kernel_state::{Intent, KernelState};
 use super::resources::ResourceManager;
 use super::scheduler::CognitiveScheduler;
 use super::signals::{KernelSignal, SignalBus};
@@ -109,7 +109,7 @@ impl CoreLoop {
                         None
                     }
                 } => {
-                    if let Some(_) = self.shutdown.read().await.then(|| ()) {
+                    if *self.shutdown.read().await {
                         break;
                     }
                 }
@@ -143,7 +143,8 @@ impl CoreLoop {
                 message,
                 timestamp,
             } => {
-                self.handle_user_message(user_id, message, timestamp).await?;
+                self.handle_user_message(user_id, message, timestamp)
+                    .await?;
             }
 
             KernelSignal::EngineOutput {
@@ -159,10 +160,7 @@ impl CoreLoop {
                 self.handle_memory_update(layer, operation).await?;
             }
 
-            KernelSignal::Overload {
-                level,
-                cpu_usage,
-            } => {
+            KernelSignal::Overload { level, cpu_usage } => {
                 self.handle_overload(level, cpu_usage.into(), 0).await?;
             }
 
@@ -248,7 +246,9 @@ impl CoreLoop {
 
     /// Handle memory update
     async fn handle_memory_update(&self, layer: String, operation: String) -> TitaneResult<()> {
-        let _ = self.event_tx.send(KernelEvent::MemoryUpdated { layer, operation });
+        let _ = self
+            .event_tx
+            .send(KernelEvent::MemoryUpdated { layer, operation });
         Ok(())
     }
 
@@ -294,9 +294,9 @@ impl CoreLoop {
 
     /// Handle heartbeat
     async fn handle_heartbeat(&self, timestamp: i64) -> TitaneResult<()> {
-        let _ = self.event_tx.send(KernelEvent::WatchdogHeartbeat {
-            timestamp,
-        });
+        let _ = self
+            .event_tx
+            .send(KernelEvent::WatchdogHeartbeat { timestamp });
         Ok(())
     }
 
@@ -304,7 +304,12 @@ impl CoreLoop {
     async fn handle_safe_mode_toggle(&self, enabled: bool) -> TitaneResult<()> {
         let _ = self.event_tx.send(KernelEvent::WatchdogAlert {
             alert_type: "safe_mode".to_string(),
-            message: if enabled { "Safe mode enabled" } else { "Safe mode disabled" }.to_string(),
+            message: if enabled {
+                "Safe mode enabled"
+            } else {
+                "Safe mode disabled"
+            }
+            .to_string(),
         });
         Ok(())
     }
@@ -338,7 +343,8 @@ impl CoreLoop {
         if resources.usage().cpu_usage > resources.limits().max_cpu_usage {
             return Err(TitaneError::ResourceLimitExceeded(format!(
                 "CPU usage {:.2} exceeds limit {:.2}",
-                resources.usage().cpu_usage, resources.limits().max_cpu_usage
+                resources.usage().cpu_usage,
+                resources.limits().max_cpu_usage
             )));
         }
 
@@ -347,7 +353,8 @@ impl CoreLoop {
         if memory_mb > resources.limits().max_memory_mb as f32 {
             return Err(TitaneError::ResourceLimitExceeded(format!(
                 "Memory usage {}MB exceeds limit {}MB",
-                memory_mb, resources.limits().max_memory_mb
+                memory_mb,
+                resources.limits().max_memory_mb
             )));
         }
 
@@ -355,7 +362,8 @@ impl CoreLoop {
         if resources.usage().queue_depth > resources.limits().max_queue_depth {
             return Err(TitaneError::SchedulerOverload(format!(
                 "Queue depth {} exceeds limit {}",
-                resources.usage().queue_depth, resources.limits().max_queue_depth
+                resources.usage().queue_depth,
+                resources.limits().max_queue_depth
             )));
         }
 
@@ -391,9 +399,9 @@ impl CoreLoop {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::resources::{ResourceLimits, ResourceManager};
     use super::super::runtime::KernelRuntime;
+    use super::*;
 
     async fn create_test_components() -> (
         SignalBus,
@@ -419,7 +427,9 @@ mod tests {
             ResourceLimits::default(),
         )));
 
-        (signal_bus, event_tx, state, scheduler, governance, resources)
+        (
+            signal_bus, event_tx, state, scheduler, governance, resources,
+        )
     }
 
     #[tokio::test]

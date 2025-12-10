@@ -190,7 +190,7 @@
   font-family: 'Courier New', monospace;
 }
 
-.matrix-table input[type="checkbox"] {
+.matrix-table input[type='checkbox'] {
   cursor: pointer;
   width: 18px;
   height: 18px;

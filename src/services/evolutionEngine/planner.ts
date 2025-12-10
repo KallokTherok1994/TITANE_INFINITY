@@ -138,7 +138,7 @@ export class Planner {
 
       // 3. Filtrer et limiter
       const validSuggestions = newSuggestions
-        .filter((s) => this.validateSuggestion(s))
+        .filter(s => this.validateSuggestion(s))
         .slice(0, this.config.maxSuggestionsPerCycle);
 
       // 4. Merger avec les suggestions existantes
@@ -306,7 +306,10 @@ export class Planner {
     const suggestions: EvolutionSuggestion[] = [];
 
     // Suggestion: Mode performance
-    if (pattern.relatedMetrics.includes('cpu') || pattern.relatedMetrics.includes('ram')) {
+    if (
+      pattern.relatedMetrics.includes('cpu') ||
+      pattern.relatedMetrics.includes('ram')
+    ) {
       const actions: EvolutionAction[] = [
         createAction(
           'TOGGLE_MODE',
@@ -607,7 +610,7 @@ export class Planner {
   private mergeSuggestions(newSuggestions: EvolutionSuggestion[]): void {
     for (const newSuggestion of newSuggestions) {
       const existing = this.state.suggestions.find(
-        (s) =>
+        s =>
           s.title === newSuggestion.title &&
           s.category === newSuggestion.category &&
           s.status === 'PENDING'
@@ -616,7 +619,7 @@ export class Planner {
       if (!existing) {
         this.state.suggestions.push(newSuggestion);
 
-        this.suggestionListeners.forEach((listener) => {
+        this.suggestionListeners.forEach(listener => {
           try {
             listener(newSuggestion);
           } catch (e) {
@@ -629,7 +632,7 @@ export class Planner {
 
   private cleanExpiredSuggestions(): void {
     const now = Date.now();
-    this.state.suggestions = this.state.suggestions.filter((s) => {
+    this.state.suggestions = this.state.suggestions.filter(s => {
       if (s.status !== 'PENDING') return true;
       if (s.validUntil < now) {
         s.status = 'EXPIRED';
@@ -654,28 +657,28 @@ export class Planner {
    * Récupère les suggestions en attente
    */
   getPendingSuggestions(): EvolutionSuggestion[] {
-    return this.state.suggestions.filter((s) => s.status === 'PENDING');
+    return this.state.suggestions.filter(s => s.status === 'PENDING');
   }
 
   /**
    * Récupère les suggestions par catégorie
    */
   getSuggestionsByCategory(category: SuggestionCategory): EvolutionSuggestion[] {
-    return this.state.suggestions.filter((s) => s.category === category);
+    return this.state.suggestions.filter(s => s.category === category);
   }
 
   /**
    * Récupère une suggestion par ID
    */
   getSuggestionById(id: string): EvolutionSuggestion | null {
-    return this.state.suggestions.find((s) => s.id === id) || null;
+    return this.state.suggestions.find(s => s.id === id) || null;
   }
 
   /**
    * Approuve une suggestion
    */
   approveSuggestion(id: string, approver: 'DEV' | 'ADMIN'): boolean {
-    const suggestion = this.state.suggestions.find((s) => s.id === id);
+    const suggestion = this.state.suggestions.find(s => s.id === id);
     if (!suggestion || suggestion.status !== 'PENDING') {
       return false;
     }
@@ -690,7 +693,7 @@ export class Planner {
    * Rejette une suggestion
    */
   rejectSuggestion(id: string): boolean {
-    const suggestion = this.state.suggestions.find((s) => s.id === id);
+    const suggestion = this.state.suggestions.find(s => s.id === id);
     if (!suggestion || suggestion.status !== 'PENDING') {
       return false;
     }
@@ -703,7 +706,7 @@ export class Planner {
    * Marque une suggestion comme exécutée
    */
   markExecuted(id: string): boolean {
-    const suggestion = this.state.suggestions.find((s) => s.id === id);
+    const suggestion = this.state.suggestions.find(s => s.id === id);
     if (!suggestion || suggestion.status !== 'APPROVED') {
       return false;
     }
@@ -717,7 +720,7 @@ export class Planner {
    * Marque une suggestion comme rollback
    */
   markRolledBack(id: string): boolean {
-    const suggestion = this.state.suggestions.find((s) => s.id === id);
+    const suggestion = this.state.suggestions.find(s => s.id === id);
     if (!suggestion || suggestion.status !== 'EXECUTED') {
       return false;
     }

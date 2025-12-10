@@ -36,7 +36,7 @@ pub async fn health_get_state(
     singularity: State<'_, Arc<RwLock<SingularityState>>>,
 ) -> Result<SystemHealthStateResponse, String> {
     use crate::ipc::cached_commands::FAST_CACHE;
-    
+
     Ok(FAST_CACHE.get_or_compute_async("health_state", || async {
         let state = singularity.read().await;
         SystemHealthStateResponse {

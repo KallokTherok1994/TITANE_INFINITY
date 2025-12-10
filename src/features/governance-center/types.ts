@@ -93,42 +93,47 @@ export interface GeminiKeyStatus {
 /**
  * Liste des secrets connus du système
  */
-export const KNOWN_SECRETS: { key: string; label: string; category: SecretCategory; description?: string }[] = [
+export const KNOWN_SECRETS: {
+  key: string;
+  label: string;
+  category: SecretCategory;
+  description?: string;
+}[] = [
   {
     key: 'gemini_api_key',
     label: 'Gemini API Key',
     category: 'api_key',
-    description: 'Google Gemini API (https://ai.google.dev)'
+    description: 'Google Gemini API (https://ai.google.dev)',
   },
   {
     key: 'openai_api_key',
     label: 'OpenAI API Key',
     category: 'api_key',
-    description: 'OpenAI Platform API (https://platform.openai.com)'
+    description: 'OpenAI Platform API (https://platform.openai.com)',
   },
   {
     key: 'anthropic_api_key',
     label: 'Anthropic API Key',
     category: 'api_key',
-    description: 'Anthropic Claude API (https://console.anthropic.com)'
+    description: 'Anthropic Claude API (https://console.anthropic.com)',
   },
   {
     key: 'ollama_url',
     label: 'Ollama URL',
     category: 'api_key',
-    description: 'URL du serveur Ollama local (default: http://localhost:11434)'
+    description: 'URL du serveur Ollama local (default: http://localhost:11434)',
   },
   {
     key: 'github_token',
     label: 'GitHub Token',
     category: 'token',
-    description: 'Token d\'accès personnel GitHub'
+    description: "Token d'accès personnel GitHub",
   },
   {
     key: 'backup_encryption_key',
     label: 'Backup Encryption Key',
     category: 'credential',
-    description: 'Clé de chiffrement pour les backups'
+    description: 'Clé de chiffrement pour les backups',
   },
 ];
 
@@ -216,7 +221,13 @@ export const DEFAULT_POLICIES: IAPolicy[] = [
     type: 'restriction',
     severity: 'critical',
     enabled: true,
-    config: { allowedDomains: ['generativelanguage.googleapis.com', 'api.openai.com', 'api.anthropic.com'] },
+    config: {
+      allowedDomains: [
+        'generativelanguage.googleapis.com',
+        'api.openai.com',
+        'api.anthropic.com',
+      ],
+    },
     createdAt: Date.now(),
     updatedAt: Date.now(),
   },

@@ -3,10 +3,10 @@
 //! Super Prompt #19 — Sandboxing et sécurité des agents
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::agent::{Agent, AgentId};
 use super::roles::Permission;
-use super::{AgentTask, AgentSystemError};
+use super::{AgentSystemError, AgentTask};
+use serde::{Deserialize, Serialize};
 
 /// Configuration du sandbox
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -96,13 +96,14 @@ impl Sandbox {
             super::capabilities::Capability::Encryption,
         ];
 
-        let dangerous_count = dangerous_capabilities.iter()
+        let dangerous_count = dangerous_capabilities
+            .iter()
             .filter(|c| agent.capabilities.has(c))
             .count();
 
         if dangerous_count > 2 {
             return Err(AgentSystemError::SandboxViolation(
-                "Agent has too many dangerous capabilities".to_string()
+                "Agent has too many dangerous capabilities".to_string(),
             ));
         }
 
@@ -122,16 +123,17 @@ impl Sandbox {
         // Vérifier les opérations bloquées
         for blocked in &self.config.blocked_operations {
             if task.description.to_lowercase().contains(blocked) {
-                return Err(AgentSystemError::SandboxViolation(
-                    format!("Operation '{}' is blocked", blocked)
-                ));
+                return Err(AgentSystemError::SandboxViolation(format!(
+                    "Operation '{}' is blocked",
+                    blocked
+                )));
             }
         }
 
         // Vérifier les patterns malveillants
         if self.detect_malicious_pattern(&task.description) {
             return Err(AgentSystemError::SandboxViolation(
-                "Malicious pattern detected in task".to_string()
+                "Malicious pattern detected in task".to_string(),
             ));
         }
 
@@ -154,9 +156,10 @@ impl Sandbox {
         });
 
         if !allowed && !self.config.allowed_domains.is_empty() {
-            return Err(AgentSystemError::SandboxViolation(
-                format!("Domain '{}' is not allowed", domain)
-            ));
+            return Err(AgentSystemError::SandboxViolation(format!(
+                "Domain '{}' is not allowed",
+                domain
+            )));
         }
 
         Ok(())
@@ -172,21 +175,24 @@ impl Sandbox {
 
         if let Some(usage) = stats.get(agent_id) {
             if usage.memory_mb > self.config.max_memory_mb {
-                return Err(AgentSystemError::SandboxViolation(
-                    format!("Memory limit exceeded: {} MB > {} MB", usage.memory_mb, self.config.max_memory_mb)
-                ));
+                return Err(AgentSystemError::SandboxViolation(format!(
+                    "Memory limit exceeded: {} MB > {} MB",
+                    usage.memory_mb, self.config.max_memory_mb
+                )));
             }
 
             if usage.cpu_percent > self.config.max_cpu_percent {
-                return Err(AgentSystemError::SandboxViolation(
-                    format!("CPU limit exceeded: {}% > {}%", usage.cpu_percent, self.config.max_cpu_percent)
-                ));
+                return Err(AgentSystemError::SandboxViolation(format!(
+                    "CPU limit exceeded: {}% > {}%",
+                    usage.cpu_percent, self.config.max_cpu_percent
+                )));
             }
 
             if usage.network_calls > self.config.max_network_calls {
-                return Err(AgentSystemError::SandboxViolation(
-                    format!("Network calls limit exceeded: {} > {}", usage.network_calls, self.config.max_network_calls)
-                ));
+                return Err(AgentSystemError::SandboxViolation(format!(
+                    "Network calls limit exceeded: {} > {}",
+                    usage.network_calls, self.config.max_network_calls
+                )));
             }
         }
 
@@ -219,7 +225,8 @@ impl Sandbox {
     /// Récupère les violations par agent
     pub async fn violations_by_agent(&self, agent_id: &AgentId) -> Vec<SandboxViolation> {
         let violations = self.violations.read().await;
-        violations.iter()
+        violations
+            .iter()
             .filter(|v| &v.agent_id == agent_id)
             .cloned()
             .collect()
@@ -252,25 +259,32 @@ impl Sandbox {
     pub async fn security_report(&self) -> SecurityReport {
         let violations = self.violations.read().await;
 
-        let by_type: std::collections::HashMap<String, usize> = violations.iter()
-            .fold(std::collections::HashMap::new(), |mut acc, v| {
-                let key = format!("{:?}", v.violation_type);
-                *acc.entry(key).or_insert(0) += 1;
-                acc
-            });
+        let by_type: std::collections::HashMap<String, usize> =
+            violations
+                .iter()
+                .fold(std::collections::HashMap::new(), |mut acc, v| {
+                    let key = format!("{:?}", v.violation_type);
+                    *acc.entry(key).or_insert(0) += 1;
+                    acc
+                });
 
-        let by_severity: std::collections::HashMap<String, usize> = violations.iter()
-            .fold(std::collections::HashMap::new(), |mut acc, v| {
-                let key = format!("{:?}", v.severity);
-                *acc.entry(key).or_insert(0) += 1;
-                acc
-            });
+        let by_severity: std::collections::HashMap<String, usize> =
+            violations
+                .iter()
+                .fold(std::collections::HashMap::new(), |mut acc, v| {
+                    let key = format!("{:?}", v.severity);
+                    *acc.entry(key).or_insert(0) += 1;
+                    acc
+                });
 
         SecurityReport {
             total_violations: violations.len(),
             violations_by_type: by_type,
             violations_by_severity: by_severity,
-            critical_violations: violations.iter().filter(|v| v.severity == ViolationSeverity::Critical).count(),
+            critical_violations: violations
+                .iter()
+                .filter(|v| v.severity == ViolationSeverity::Critical)
+                .count(),
             sandbox_enabled: self.config.enabled,
         }
     }
@@ -304,8 +318,8 @@ pub struct SecurityReport {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use super::super::agent::AgentType;
+    use super::*;
 
     #[test]
     fn test_sandbox_validation() {

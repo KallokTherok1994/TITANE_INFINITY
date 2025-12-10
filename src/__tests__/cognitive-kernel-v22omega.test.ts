@@ -194,9 +194,7 @@ describe('Cognitive Kernel v22Ω — Phase E: Auto-Optimisation', () => {
   beforeEach(() => {
     cognitiveKernel.initialize();
     cognitiveKernel.updateEnvironmentState({
-      providerHealth: new Map([
-        ['openai', 70],
-      ]),
+      providerHealth: new Map([['openai', 70]]),
       averageLatency: 2000,
       responseQuality: 80,
       errorFrequency: 2,
@@ -224,7 +222,7 @@ describe('Cognitive Kernel v22Ω — Phase E: Auto-Optimisation', () => {
   test('1️⃣5️⃣ Auto-simplification fonctionne', () => {
     // Ajouter des adaptations anciennes
     cognitiveKernel.recordInMemory('adaptation', { type: 'test', impact: 5 });
-    
+
     const simplifications = cognitiveKernel.autoSimplify();
     expect(Array.isArray(simplifications)).toBe(true);
   });

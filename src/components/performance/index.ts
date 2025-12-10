@@ -18,13 +18,10 @@ export type {
   MetricSeriesConfig,
   GraphDataPoint,
   GraphType,
-  TimeRange
+  TimeRange,
 } from './MetricsGraph';
-export type {
-  PerformanceIssuesProps,
-  IssueFilterOptions
-} from './PerformanceIssues';
+export type { PerformanceIssuesProps, IssueFilterOptions } from './PerformanceIssues';
 export type {
   RecommendationsPanelProps,
-  RecommendationFilterOptions
+  RecommendationFilterOptions,
 } from './RecommendationsPanel';

@@ -48,7 +48,7 @@ pub struct Moment {
     pub hour: u8,
     pub minute: u8,
     pub second: u8,
-    pub day_of_week: u8,  // 0 = Sunday, 6 = Saturday
+    pub day_of_week: u8, // 0 = Sunday, 6 = Saturday
     pub day_of_year: u16,
     pub week_of_year: u8,
     pub is_weekend: bool,
@@ -165,7 +165,7 @@ pub struct TemporalContext {
     pub now: Moment,
     pub session_start: Moment,
     pub session_duration_ms: u64,
-    pub day_progress: f32,      // 0.0 - 1.0
+    pub day_progress: f32, // 0.0 - 1.0
     pub week_progress: f32,
     pub month_progress: f32,
     pub year_progress: f32,
@@ -298,7 +298,8 @@ impl TimeModel {
         let weekend_factor: f32 = if moment.is_weekend { 0.9 } else { 1.0 };
 
         // Pic cognitif vers 10h et 15h
-        let circadian_bonus: f32 = if (9.0..=11.0).contains(&hour) || (14.0..=16.0).contains(&hour) {
+        let circadian_bonus: f32 = if (9.0..=11.0).contains(&hour) || (14.0..=16.0).contains(&hour)
+        {
             0.1
         } else {
             0.0
@@ -330,7 +331,9 @@ impl TimeModel {
     /// Calcule le temps jusqu'à un point de référence
     pub async fn time_until(&self, reference_id: &str) -> Option<i64> {
         let state = self.state.read().await;
-        state.reference_points.iter()
+        state
+            .reference_points
+            .iter()
             .find(|p| p.id == reference_id)
             .map(|p| state.current.distance_to(&p.moment))
     }
@@ -338,7 +341,9 @@ impl TimeModel {
     /// Calcule le temps depuis un point de référence
     pub async fn time_since(&self, reference_id: &str) -> Option<i64> {
         let state = self.state.read().await;
-        state.reference_points.iter()
+        state
+            .reference_points
+            .iter()
             .find(|p| p.id == reference_id)
             .map(|p| -state.current.distance_to(&p.moment))
     }

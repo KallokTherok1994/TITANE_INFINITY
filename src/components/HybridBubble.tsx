@@ -50,9 +50,7 @@ const PANEL_HEIGHT = 680;
 // COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const HybridBubble: React.FC<HybridBubbleProps> = ({
-  initialMode = 'bubble',
-}) => {
+export const HybridBubble: React.FC<HybridBubbleProps> = ({ initialMode = 'bubble' }) => {
   const [mode, setMode] = useState<HybridMode>(initialMode);
   const [input, setInput] = useState('');
   const [executions, setExecutions] = useState<HybridExecution[]>([]);
@@ -63,7 +61,7 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
 
   // Subscribe to hybrid engine state
   useEffect(() => {
-    const unsubscribe = hybridEngine.subscribe((state) => {
+    const unsubscribe = hybridEngine.subscribe(state => {
       setExecutions(state.executionHistory);
       setIsExecuting(state.isExecuting);
     });
@@ -130,12 +128,15 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
     }
   }, [input, isExecuting]);
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleExecuteCommand();
-    }
-  }, [handleExecuteCommand]);
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleExecuteCommand();
+      }
+    },
+    [handleExecuteCommand]
+  );
 
   const handleModeSwitch = useCallback((newMode: HybridMode) => {
     setMode(newMode);
@@ -174,14 +175,16 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
       >
-        <div style={{
-          fontSize: '28px',
-          color: '#040F1F',
-          fontWeight: '700',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
+        <div
+          style={{
+            fontSize: '28px',
+            color: '#040F1F',
+            fontWeight: '700',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
           {isExecuting ? '⚙️' : '🧠⚡'}
         </div>
       </motion.div>
@@ -203,7 +206,8 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
         height: PANEL_HEIGHT,
         background: 'linear-gradient(180deg, #1a1f2e 0%, #0a0e1a 100%)',
         borderRadius: '16px',
-        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(196, 196, 196, 0.15)',
+        boxShadow:
+          '0 12px 32px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(196, 196, 196, 0.15)',
         border: '1px solid rgba(114, 123, 129, 0.3)',
         zIndex: 999999,
         display: 'flex',
@@ -212,40 +216,48 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
       }}
     >
       {/* Header */}
-      <div style={{
-        padding: '16px 20px',
-        borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
-        background: 'rgba(114, 123, 129, 0.1)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
+      <div
+        style={{
+          padding: '16px 20px',
+          borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
+          background: 'rgba(114, 123, 129, 0.1)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
         <div>
-          <div style={{
-            fontSize: '16px',
-            fontWeight: '600',
-            color: '#C4C4C4',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}>
+          <div
+            style={{
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#C4C4C4',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
             🧠⚡ TITANE∞ HYBRID
-            <span style={{
-              fontSize: '11px',
-              color: '#727B81',
-              fontWeight: '400',
-              padding: '2px 8px',
-              background: 'rgba(114, 123, 129, 0.2)',
-              borderRadius: '4px',
-            }}>
+            <span
+              style={{
+                fontSize: '11px',
+                color: '#727B81',
+                fontWeight: '400',
+                padding: '2px 8px',
+                background: 'rgba(114, 123, 129, 0.2)',
+                borderRadius: '4px',
+              }}
+            >
               {mode === 'console' ? 'DEV CONSOLE' : 'AI CHAT'}
             </span>
           </div>
-          <div style={{
-            fontSize: '11px',
-            color: '#727B81',
-            marginTop: '2px',
-          }}>
+          <div
+            style={{
+              fontSize: '11px',
+              color: '#727B81',
+              marginTop: '2px',
+            }}
+          >
             {executions.length} commands • v∞.26.0
           </div>
         </div>
@@ -304,21 +316,25 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
       </div>
 
       {/* Console Output */}
-      <div style={{
-        flex: 1,
-        padding: '16px',
-        overflowY: 'auto',
-        fontFamily: '"Fira Code", "Consolas", monospace',
-        fontSize: '13px',
-        lineHeight: '1.6',
-        color: '#C4C4C4',
-      }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '16px',
+          overflowY: 'auto',
+          fontFamily: '"Fira Code", "Consolas", monospace',
+          fontSize: '13px',
+          lineHeight: '1.6',
+          color: '#C4C4C4',
+        }}
+      >
         {executions.length === 0 ? (
-          <div style={{
-            textAlign: 'center',
-            padding: '40px 20px',
-            color: '#727B81',
-          }}>
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '40px 20px',
+              color: '#727B81',
+            }}
+          >
             <div style={{ fontSize: '32px', marginBottom: '12px' }}>🧠⚡</div>
             <div style={{ fontSize: '14px', marginBottom: '8px' }}>
               TITANE∞ HYBRID ENGINE v∞
@@ -328,83 +344,103 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
             </div>
           </div>
         ) : (
-          executions.slice().reverse().map((exec, index) => (
-            <div
-              key={index}
-              style={{
-                marginBottom: '20px',
-                paddingBottom: '16px',
-                borderBottom: index < executions.length - 1 ? '1px solid rgba(114, 123, 129, 0.2)' : 'none',
-              }}
-            >
-              {/* Command */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginBottom: '8px',
-                color: '#C4C4C4',
-              }}>
-                <span style={{ color: '#727B81' }}>$</span>
-                <span style={{ fontWeight: '600' }}>{exec.command.raw}</span>
-                <span style={{
-                  fontSize: '10px',
-                  color: '#727B81',
-                  marginLeft: 'auto',
-                }}>
-                  {exec.duration}ms
-                </span>
-              </div>
+          executions
+            .slice()
+            .reverse()
+            .map((exec, index) => (
+              <div
+                key={index}
+                style={{
+                  marginBottom: '20px',
+                  paddingBottom: '16px',
+                  borderBottom:
+                    index < executions.length - 1
+                      ? '1px solid rgba(114, 123, 129, 0.2)'
+                      : 'none',
+                }}
+              >
+                {/* Command */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginBottom: '8px',
+                    color: '#C4C4C4',
+                  }}
+                >
+                  <span style={{ color: '#727B81' }}>$</span>
+                  <span style={{ fontWeight: '600' }}>{exec.command.raw}</span>
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      color: '#727B81',
+                      marginLeft: 'auto',
+                    }}
+                  >
+                    {exec.duration}ms
+                  </span>
+                </div>
 
-              {/* Output */}
-              <div style={{
-                whiteSpace: 'pre-wrap',
-                color: exec.exitCode === 0 ? '#C4C4C4' : '#ff6b6b',
-                fontSize: '12px',
-                padding: '8px',
-                background: 'rgba(0, 0, 0, 0.3)',
-                borderRadius: '6px',
-                border: `1px solid ${exec.exitCode === 0 ? 'rgba(114, 123, 129, 0.2)' : 'rgba(255, 107, 107, 0.3)'}`,
-              }}>
-                {exec.output || (exec.errors && exec.errors.join('\n')) || '(no output)'}
-              </div>
+                {/* Output */}
+                <div
+                  style={{
+                    whiteSpace: 'pre-wrap',
+                    color: exec.exitCode === 0 ? '#C4C4C4' : '#ff6b6b',
+                    fontSize: '12px',
+                    padding: '8px',
+                    background: 'rgba(0, 0, 0, 0.3)',
+                    borderRadius: '6px',
+                    border: `1px solid ${exec.exitCode === 0 ? 'rgba(114, 123, 129, 0.2)' : 'rgba(255, 107, 107, 0.3)'}`,
+                  }}
+                >
+                  {exec.output ||
+                    (exec.errors && exec.errors.join('\n')) ||
+                    '(no output)'}
+                </div>
 
-              {/* Exit code indicator */}
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                marginTop: '6px',
-                fontSize: '11px',
-                color: exec.exitCode === 0 ? '#4ade80' : '#ff6b6b',
-              }}>
-                {exec.exitCode === 0 ? '✅' : '❌'} Exit code: {exec.exitCode}
+                {/* Exit code indicator */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginTop: '6px',
+                    fontSize: '11px',
+                    color: exec.exitCode === 0 ? '#4ade80' : '#ff6b6b',
+                  }}
+                >
+                  {exec.exitCode === 0 ? '✅' : '❌'} Exit code: {exec.exitCode}
+                </div>
               </div>
-            </div>
-          ))
+            ))
         )}
         <div ref={consoleEndRef} />
       </div>
 
       {/* Command Input */}
-      <div style={{
-        padding: '16px',
-        borderTop: '1px solid rgba(114, 123, 129, 0.2)',
-        background: 'rgba(10, 14, 26, 0.8)',
-      }}>
+      <div
+        style={{
+          padding: '16px',
+          borderTop: '1px solid rgba(114, 123, 129, 0.2)',
+          background: 'rgba(10, 14, 26, 0.8)',
+        }}
+      >
         <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <span style={{
-            color: '#727B81',
-            fontSize: '14px',
-            fontFamily: '"Fira Code", "Consolas", monospace',
-          }}>
+          <span
+            style={{
+              color: '#727B81',
+              fontSize: '14px',
+              fontFamily: '"Fira Code", "Consolas", monospace',
+            }}
+          >
             $
           </span>
           <input
             ref={inputRef}
             type="text"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Enter command... (e.g., inspect system, logs, fix module)"
             disabled={isExecuting}
@@ -420,17 +456,18 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
               outline: 'none',
               transition: 'border-color 0.2s',
             }}
-            onFocus={(e) => e.target.style.borderColor = 'rgba(196, 196, 196, 0.5)'}
-            onBlur={(e) => e.target.style.borderColor = 'rgba(114, 123, 129, 0.3)'}
+            onFocus={e => (e.target.style.borderColor = 'rgba(196, 196, 196, 0.5)')}
+            onBlur={e => (e.target.style.borderColor = 'rgba(114, 123, 129, 0.3)')}
           />
           <button
             onClick={handleExecuteCommand}
             disabled={!input.trim() || isExecuting}
             style={{
               padding: '10px 20px',
-              background: input.trim() && !isExecuting
-                ? 'linear-gradient(135deg, #727B81 0%, #C4C4C4 100%)'
-                : 'rgba(114, 123, 129, 0.3)',
+              background:
+                input.trim() && !isExecuting
+                  ? 'linear-gradient(135deg, #727B81 0%, #C4C4C4 100%)'
+                  : 'rgba(114, 123, 129, 0.3)',
               border: 'none',
               borderRadius: '8px',
               color: '#040F1F',
@@ -446,13 +483,15 @@ export const HybridBubble: React.FC<HybridBubbleProps> = ({
         </div>
 
         {/* Helper hints */}
-        <div style={{
-          marginTop: '8px',
-          fontSize: '10px',
-          color: '#727B81',
-          display: 'flex',
-          gap: '12px',
-        }}>
+        <div
+          style={{
+            marginTop: '8px',
+            fontSize: '10px',
+            color: '#727B81',
+            display: 'flex',
+            gap: '12px',
+          }}
+        >
           <span>💡 Try: inspect, logs, fix, diagnostic</span>
           <span>•</span>
           <span>📘 Type 'help' for all commands</span>

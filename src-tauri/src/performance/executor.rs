@@ -46,25 +46,16 @@ impl CognitiveExecutor {
     }
 
     /// Exécute avec timeout
-    pub async fn execute_with_timeout<F, T>(
-        &self,
-        future: F,
-        timeout_ms: u64,
-    ) -> TitaneResult<T>
+    pub async fn execute_with_timeout<F, T>(&self, future: F, timeout_ms: u64) -> TitaneResult<T>
     where
         F: std::future::Future<Output = TitaneResult<T>> + Send + 'static,
         T: Send + 'static,
     {
         let timeout = tokio::time::Duration::from_millis(timeout_ms);
 
-        tokio::time::timeout(timeout, future)
-            .await
-            .map_err(|_| {
-                crate::utils::AppError::System(format!(
-                    "Task timed out after {}ms",
-                    timeout_ms
-                ))
-            })?
+        tokio::time::timeout(timeout, future).await.map_err(|_| {
+            crate::utils::AppError::System(format!("Task timed out after {}ms", timeout_ms))
+        })?
     }
 }
 
@@ -132,4 +123,3 @@ mod tests {
         assert!(result.is_err());
     }
 }
-

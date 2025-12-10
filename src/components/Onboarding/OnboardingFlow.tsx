@@ -33,7 +33,7 @@ const STEPS: OnboardingStep[] = [
   {
     id: 'privacy',
     title: 'Confidentialité Totale',
-    description: 'Vos données restent sur votre machine. Rien n\'est envoyé en ligne.',
+    description: "Vos données restent sur votre machine. Rien n'est envoyé en ligne.",
   },
   {
     id: 'features',
@@ -81,14 +81,14 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
         });
         onComplete();
       } catch (error) {
-        console.error('Erreur lors de la sauvegarde de l\'onboarding:', error);
+        console.error("Erreur lors de la sauvegarde de l'onboarding:", error);
         // Fallback : compléter quand même côté frontend
         localStorage.setItem('onboarding_completed', 'true');
         localStorage.setItem('onboarding_preferences', JSON.stringify(preferences));
         onComplete();
       }
     } else {
-      setCurrentStep((prev) => prev + 1);
+      setCurrentStep(prev => prev + 1);
     }
   };
 
@@ -96,7 +96,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
    * Revenir au step précédent
    */
   const handleBack = () => {
-    setCurrentStep((prev) => Math.max(0, prev - 1));
+    setCurrentStep(prev => Math.max(0, prev - 1));
   };
 
   /**
@@ -111,12 +111,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
       case 'features':
         return <FeaturesStep />;
       case 'customization':
-        return (
-          <CustomizationStep
-            preferences={preferences}
-            onChange={setPreferences}
-          />
-        );
+        return <CustomizationStep preferences={preferences} onChange={setPreferences} />;
       case 'ready':
         return <ReadyStep />;
       default:

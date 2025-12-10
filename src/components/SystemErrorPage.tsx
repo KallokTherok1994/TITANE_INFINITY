@@ -37,7 +37,7 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
     if (!retryAction || countdown <= 0) return;
 
     const timer = setInterval(() => {
-      setCountdown((prev) => {
+      setCountdown(prev => {
         if (prev <= 1 && retryAction) {
           setIsRetrying(true);
           retryAction();
@@ -56,11 +56,12 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
         return {
           icon: '🔌',
           title: 'Backend TITANE∞ Hors Ligne',
-          description: 'Le backend Rust n\'est pas accessible. Vérifiez que le serveur est démarré.',
+          description:
+            "Le backend Rust n'est pas accessible. Vérifiez que le serveur est démarré.",
           color: '#ef4444',
           suggestions: [
             'Vérifier que Tauri est lancé correctement',
-            'Redémarrer l\'application',
+            "Redémarrer l'application",
             'Consulter les logs backend dans la console',
           ],
         };
@@ -68,12 +69,12 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
         return {
           icon: '⚙️',
           title: `${serviceName} Indisponible`,
-          description: 'Le service demandé n\'est pas disponible actuellement.',
+          description: "Le service demandé n'est pas disponible actuellement.",
           color: '#f59e0b',
           suggestions: [
             'Attendre quelques secondes',
             'Vérifier la connexion réseau',
-            'Réessayer l\'opération',
+            "Réessayer l'opération",
           ],
         };
       case 'connection-failed':
@@ -85,19 +86,19 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
           suggestions: [
             'Vérifier la configuration réseau',
             'Vérifier les permissions Tauri',
-            'Redémarrer l\'application',
+            "Redémarrer l'application",
           ],
         };
       case 'timeout':
         return {
           icon: '⏱️',
-          title: 'Délai d\'Attente Dépassé',
-          description: 'L\'opération a pris trop de temps.',
+          title: "Délai d'Attente Dépassé",
+          description: "L'opération a pris trop de temps.",
           color: '#f59e0b',
           suggestions: [
-            'Réessayer l\'opération',
+            "Réessayer l'opération",
             'Vérifier la charge système',
-            'Augmenter le délai d\'attente',
+            "Augmenter le délai d'attente",
           ],
         };
       default:
@@ -106,7 +107,7 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
           title: 'Erreur Système',
           description: 'Une erreur système est survenue.',
           color: '#ef4444',
-          suggestions: ['Consulter les logs', 'Redémarrer l\'application'],
+          suggestions: ['Consulter les logs', "Redémarrer l'application"],
         };
     }
   }, [errorType, serviceName]);
@@ -221,7 +222,11 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
                 opacity: isRetrying ? 0.6 : 1,
               }}
             >
-              {isRetrying ? '⏳ Nouvelle tentative...' : countdown > 0 ? `🔄 Réessayer (${countdown}s)` : '🔄 Réessayer'}
+              {isRetrying
+                ? '⏳ Nouvelle tentative...'
+                : countdown > 0
+                  ? `🔄 Réessayer (${countdown}s)`
+                  : '🔄 Réessayer'}
             </button>
           )}
 
@@ -238,12 +243,13 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
               cursor: 'pointer',
               transition: 'all 0.2s',
             }}
-            onMouseEnter={(e) => {
+            onMouseEnter={e => {
               e.currentTarget.style.borderColor = errorConfig.color;
               e.currentTarget.style.color = errorConfig.color;
             }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border-default, rgba(255, 255, 255, 0.1))';
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor =
+                'var(--border-default, rgba(255, 255, 255, 0.1))';
               e.currentTarget.style.color = 'var(--text-primary, #ffffff)';
             }}
           >
@@ -252,7 +258,13 @@ export const SystemErrorPage: React.FC<SystemErrorPageProps> = ({
 
           <button
             onClick={() => {
-              const tauri = (window as { __TAURI__?: { window: { getCurrent: () => { openDevtools: () => void } } } }).__TAURI__;
+              const tauri = (
+                window as {
+                  __TAURI__?: {
+                    window: { getCurrent: () => { openDevtools: () => void } };
+                  };
+                }
+              ).__TAURI__;
               tauri?.window.getCurrent().openDevtools();
             }}
             style={{

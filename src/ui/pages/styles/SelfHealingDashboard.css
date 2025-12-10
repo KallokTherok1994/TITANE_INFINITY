@@ -77,21 +77,51 @@
   gap: var(--space-lg, 24px);
 }
 
-.health-panel { grid-column: 1; grid-row: 1; }
-.prediction-panel { grid-column: 2; grid-row: 1; }
-.state-panel { grid-column: 3; grid-row: 1; }
-.actions-panel { grid-column: 1 / 2; grid-row: 2; }
-.history-panel { grid-column: 2 / 4; grid-row: 2; }
+.health-panel {
+  grid-column: 1;
+  grid-row: 1;
+}
+.prediction-panel {
+  grid-column: 2;
+  grid-row: 1;
+}
+.state-panel {
+  grid-column: 3;
+  grid-row: 1;
+}
+.actions-panel {
+  grid-column: 1 / 2;
+  grid-row: 2;
+}
+.history-panel {
+  grid-column: 2 / 4;
+  grid-row: 2;
+}
 
 @media (max-width: 1200px) {
   .self-heal-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .health-panel { grid-column: 1; grid-row: 1; }
-  .prediction-panel { grid-column: 2; grid-row: 1; }
-  .state-panel { grid-column: 1; grid-row: 2; }
-  .actions-panel { grid-column: 2; grid-row: 2; }
-  .history-panel { grid-column: 1 / 3; grid-row: 3; }
+  .health-panel {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .prediction-panel {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .state-panel {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .actions-panel {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .history-panel {
+    grid-column: 1 / 3;
+    grid-row: 3;
+  }
 }
 
 @media (max-width: 768px) {
@@ -146,8 +176,15 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.2); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -181,9 +218,15 @@
   transition: stroke-dasharray 0.5s ease;
 }
 
-.score-fill.healthy { stroke: #22c55e; }
-.score-fill.warning { stroke: #facc15; }
-.score-fill.critical { stroke: #ef4444; }
+.score-fill.healthy {
+  stroke: #22c55e;
+}
+.score-fill.warning {
+  stroke: #facc15;
+}
+.score-fill.critical {
+  stroke: #ef4444;
+}
 
 .score-value {
   position: absolute;
@@ -232,9 +275,15 @@
   font-weight: 600;
 }
 
-.metric-value.normal { color: #22c55e; }
-.metric-value.warning { color: #facc15; }
-.metric-value.critical { color: #ef4444; }
+.metric-value.normal {
+  color: #22c55e;
+}
+.metric-value.warning {
+  color: #facc15;
+}
+.metric-value.critical {
+  color: #ef4444;
+}
 
 .metric-bar {
   height: 6px;
@@ -249,9 +298,15 @@
   transition: width 0.3s ease;
 }
 
-.metric-fill.normal { background: linear-gradient(90deg, #22c55e, #10b981); }
-.metric-fill.warning { background: linear-gradient(90deg, #facc15, #f59e0b); }
-.metric-fill.critical { background: linear-gradient(90deg, #ef4444, #dc2626); }
+.metric-fill.normal {
+  background: linear-gradient(90deg, #22c55e, #10b981);
+}
+.metric-fill.warning {
+  background: linear-gradient(90deg, #facc15, #f59e0b);
+}
+.metric-fill.critical {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
 
 /* ═══════════════════════════════════════════════════════════════
    PREDICTION PANEL
@@ -389,14 +444,20 @@
 .force-eval-btn {
   width: 100%;
   padding: var(--space-sm, 12px);
-  background: linear-gradient(135deg, var(--accent-primary, #6366f1), var(--accent-secondary, #8b5cf6));
+  background: linear-gradient(
+    135deg,
+    var(--accent-primary, #6366f1),
+    var(--accent-secondary, #8b5cf6)
+  );
   border: none;
   border-radius: var(--radius-md, 8px);
   font-size: var(--font-size-sm, 14px);
   font-weight: 600;
   color: white;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .force-eval-btn:hover {

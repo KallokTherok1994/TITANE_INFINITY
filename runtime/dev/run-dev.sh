@@ -32,8 +32,8 @@ echo "  • Logging: FULL DEBUG"
 echo "  • Monitoring: ACTIVE"
 echo ""
 
-# Load dev environment
-export $(cat runtime/dev/.env.development | xargs)
+# Load dev environment (filter out comments and empty lines)
+export $(grep -v '^#' runtime/dev/.env.development | grep -v '^$' | xargs)
 
 # Clean previous dev builds (optional)
 echo "🧹 Cleaning dev cache..."

@@ -29,9 +29,9 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
   refreshInterval = 5000,
   className = '',
 }) => {
-  const [stats, setStats] = useState<ReturnType<typeof ServiceMetrics.getGlobalStats> | null>(
-    null
-  );
+  const [stats, setStats] = useState<ReturnType<
+    typeof ServiceMetrics.getGlobalStats
+  > | null>(null);
 
   // Charger stats globales
   const loadStats = React.useCallback(() => {
@@ -56,7 +56,9 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
 
   if (!stats) {
     return (
-      <div className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}>
+      <div
+        className={`rounded-lg border border-gray-700 bg-gray-800/50 p-6 ${className}`}
+      >
         <div className="flex items-center justify-center h-40">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500" />
         </div>
@@ -79,15 +81,15 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
             stats.globalErrorRate < 0.05
               ? 'bg-green-500/20 text-green-400'
               : stats.globalErrorRate < 0.15
-              ? 'bg-yellow-500/20 text-yellow-400'
-              : 'bg-red-500/20 text-red-400'
+                ? 'bg-yellow-500/20 text-yellow-400'
+                : 'bg-red-500/20 text-red-400'
           }`}
         >
           {stats.globalErrorRate < 0.05
             ? '✓ Système Healthy'
             : stats.globalErrorRate < 0.15
-            ? '⚠ Attention Requise'
-            : '🔴 Situation Critique'}
+              ? '⚠ Attention Requise'
+              : '🔴 Situation Critique'}
         </div>
       </div>
 
@@ -144,7 +146,7 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {stats.services.map((service) => {
+          {stats.services.map(service => {
             const serviceStats = ServiceMetrics.getServiceStats(service);
             const isHealthy = serviceStats.errorRate < 0.1;
 
@@ -174,7 +176,9 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
                 <div className="space-y-1 text-xs text-gray-400">
                   <div className="flex justify-between">
                     <span>Appels:</span>
-                    <span className="font-medium text-white">{serviceStats.totalCalls}</span>
+                    <span className="font-medium text-white">
+                      {serviceStats.totalCalls}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Erreurs:</span>
@@ -225,13 +229,17 @@ export const GlobalMetricsSummary: React.FC<GlobalMetricsSummaryProps> = ({
           <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <AlertCircle className="w-5 h-5 text-red-400" />
-              <span className="text-sm font-medium text-gray-400">Services Critiques</span>
+              <span className="text-sm font-medium text-gray-400">
+                Services Critiques
+              </span>
             </div>
             <div className="text-2xl font-bold text-red-400">
-              {stats.services.filter((s) => {
-                const serviceStats = ServiceMetrics.getServiceStats(s);
-                return serviceStats.errorRate > 0.3;
-              }).length}
+              {
+                stats.services.filter(s => {
+                  const serviceStats = ServiceMetrics.getServiceStats(s);
+                  return serviceStats.errorRate > 0.3;
+                }).length
+              }
             </div>
           </div>
         </div>

@@ -36,7 +36,9 @@ engine.start().await?;
 ## 🔄 Cycles
 
 ### 🌅 Daily (Circadian)
+
 6 phases with cognitive modes:
+
 - **Dawn** (5h-7h) → Creative
 - **Morning** (7h-12h) → Analytical
 - **Noon** (12h-14h) → **Peak** ⚡
@@ -45,12 +47,15 @@ engine.start().await?;
 - **Night** (20h-5h) → Consolidation 🌙
 
 ### 📅 Weekly
+
 7 days with cognitive focus (Structuration → Regeneration)
 
 ### 📆 Monthly
+
 4 weeks (Impulse → Focus → Consolidation → Release)
 
 ### 🌸 Seasonal (Cognitive)
+
 4 seasons (Spring → Summer → Autumn → Winter)
 
 ---
@@ -60,6 +65,7 @@ engine.start().await?;
 **6 Modes:** Creative, Analytical, Peak, Execution, Synthesis, Consolidation
 
 **5 Parameters (auto-adjusted):**
+
 - `omega_depth` — Reflection depth (0.5 → 1.0)
 - `analysis_intensity` — Analysis strength (0.3 → 1.0)
 - `speed_vs_quality` — Speed/quality ratio (0.4 → 1.0)
@@ -71,6 +77,7 @@ engine.start().await?;
 ## 🔗 Integrations
 
 ### Kernel OS
+
 ```rust
 let bridge = KernelCycleBridge::new(engine);
 let scheduler = bridge.get_scheduler_adjustments().await;
@@ -78,6 +85,7 @@ let limits = bridge.get_resource_limits().await;
 ```
 
 ### OMEGA Pipeline
+
 ```rust
 let bridge = OmegaCycleBridge::new(engine);
 let omega = bridge.get_omega_adjustments().await;
@@ -85,6 +93,7 @@ let router = bridge.get_router_adjustments().await;
 ```
 
 ### Memory OS
+
 ```rust
 let bridge = MemoryCycleBridge::new(engine);
 let memory = bridge.get_memory_adjustments().await;
@@ -95,12 +104,13 @@ let should_consolidate = bridge.is_consolidation_time().await;
 
 ## 📊 Impact
 
-| Time | OMEGA | Self-Healing | Memory | CPU |
-|------|-------|--------------|--------|-----|
-| **Noon** | **1.0** | 0.5 | Max | Max |
-| **Night** | 0.5 | **1.0** | Consolidation | Low |
+| Time      | OMEGA   | Self-Healing | Memory        | CPU |
+| --------- | ------- | ------------ | ------------- | --- |
+| **Noon**  | **1.0** | 0.5          | Max           | Max |
+| **Night** | 0.5     | **1.0**      | Consolidation | Low |
 
 **Performance Gains:**
+
 - ⚡ +40% at peak hours
 - 🧠 +60% consolidation at night
 - 💾 -30% memory outside peak
@@ -164,13 +174,14 @@ cycle_engine/
 ✅ System-wide alignment  
 ✅ 3 integration bridges (Kernel, OMEGA, Memory)  
 ✅ Real-time diagnostics  
-✅ Comprehensive testing  
+✅ Comprehensive testing
 
 ---
 
 ## 🎯 Use Cases
 
 ### 1. Peak Performance (Noon)
+
 ```rust
 let rhythm = engine.current_rhythm().await;
 if rhythm.omega_depth > 0.8 {
@@ -179,6 +190,7 @@ if rhythm.omega_depth > 0.8 {
 ```
 
 ### 2. Night Consolidation
+
 ```rust
 let state = engine.current_state().await;
 if matches!(state.daily_phase, DailyPhase::Night) {
@@ -188,6 +200,7 @@ if matches!(state.daily_phase, DailyPhase::Night) {
 ```
 
 ### 3. Smart Scheduling
+
 ```rust
 let model = PredictiveTemporalModel::new();
 let optimal = model.suggest_optimal_time("creative");
@@ -253,6 +266,6 @@ A rhythmic organism that breathes with natural cycles, adapts to time, optimizes
 
 **Super Prompt #16 — Fully Implemented ✅**
 
-*Module: `src-tauri/src/cycle_engine/`*  
-*Version: 2.0.0*  
-*Date: December 9, 2025*
+_Module: `src-tauri/src/cycle_engine/`_  
+_Version: 2.0.0_  
+_Date: December 9, 2025_

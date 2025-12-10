@@ -51,11 +51,15 @@ describe('Phase 3 Integration - Robustness Layer', () => {
       .mockResolvedValueOnce({ data: 'success' });
 
     const metricId = ServiceMetrics.startMetric('test_command', 'memory');
-    const result = await invokeWithRetry('test_command', {}, {
-      retries: 3,
-      retryDelay: 10,
-      backoffFactor: 1,
-    });
+    const result = await invokeWithRetry(
+      'test_command',
+      {},
+      {
+        retries: 3,
+        retryDelay: 10,
+        backoffFactor: 1,
+      }
+    );
     ServiceMetrics.endMetric(metricId, true, undefined, 2); // 2 retries
 
     expect(result).toEqual({ data: 'success' });
@@ -74,11 +78,15 @@ describe('Phase 3 Integration - Robustness Layer', () => {
     const metricId = ServiceMetrics.startMetric('test_command', 'memory');
 
     try {
-      await invokeWithRetry('test_command', {}, {
-        retries: 3,
-        retryDelay: 10,
-        backoffFactor: 1,
-      });
+      await invokeWithRetry(
+        'test_command',
+        {},
+        {
+          retries: 3,
+          retryDelay: 10,
+          backoffFactor: 1,
+        }
+      );
     } catch (error) {
       ServiceMetrics.endMetric(metricId, false, String(error), 3);
     }
@@ -163,4 +171,3 @@ describe('Phase 3 Integration - Robustness Layer', () => {
     expect(stats.failedCalls).toBe(0);
   });
 });
-

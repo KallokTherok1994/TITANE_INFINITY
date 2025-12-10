@@ -75,7 +75,7 @@ describe('evolutionIA.config.ts', () => {
       }
     });
 
-    it('les capabilities de tier 1 n\'ont pas de prérequis ou seulement des capabilities gratuites', () => {
+    it("les capabilities de tier 1 n'ont pas de prérequis ou seulement des capabilities gratuites", () => {
       for (const cap of Object.values(CAPABILITY_REGISTRY)) {
         if (cap.tier === 1 && cap.talentCost === 0) {
           expect(cap.prerequisites).toHaveLength(0);
@@ -113,7 +113,9 @@ describe('evolutionIA.config.ts', () => {
     });
 
     it('les phases sont ordonnées de 1 à 8', () => {
-      const orders = Object.values(EVOLUTION_PHASES).map(p => p.order).sort((a, b) => a - b);
+      const orders = Object.values(EVOLUTION_PHASES)
+        .map(p => p.order)
+        .sort((a, b) => a - b);
       expect(orders).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
 
@@ -194,8 +196,14 @@ describe('evolutionIA.config.ts', () => {
   describe('getCapabilitiesByCategory', () => {
     it('retourne les capabilities de chaque catégorie', () => {
       const categories: CapabilityCategory[] = [
-        'cognition', 'creativity', 'memory', 'automation',
-        'analysis', 'communication', 'integration', 'meta'
+        'cognition',
+        'creativity',
+        'memory',
+        'automation',
+        'analysis',
+        'communication',
+        'integration',
+        'meta',
       ];
 
       for (const category of categories) {
@@ -275,7 +283,13 @@ describe('evolutionIA.config.ts', () => {
 
     it('phase 2 nécessite niveau 5 et 2000 XP', () => {
       // Pas assez de niveau/XP
-      const result1 = canTransitionToPhase('phase_2_learning', 3, 1000, ['basic_reasoning'], defaultStats);
+      const result1 = canTransitionToPhase(
+        'phase_2_learning',
+        3,
+        1000,
+        ['basic_reasoning'],
+        defaultStats
+      );
       expect(result1.possible).toBe(false);
 
       // Assez de niveau/XP et capabilities
@@ -362,8 +376,8 @@ describe('evolutionIA.config.ts', () => {
   describe('countCapabilitiesByStatus', () => {
     it('compte correctement les statuts', () => {
       const capabilities = {
-        'cap1': { capabilityId: 'cap1', status: 'unlocked' as const, usageCount: 0 },
-        'cap2': { capabilityId: 'cap2', status: 'mastered' as const, usageCount: 10 },
+        cap1: { capabilityId: 'cap1', status: 'unlocked' as const, usageCount: 0 },
+        cap2: { capabilityId: 'cap2', status: 'mastered' as const, usageCount: 10 },
       };
 
       const counts = countCapabilitiesByStatus(capabilities);
@@ -381,8 +395,14 @@ describe('evolutionIA.config.ts', () => {
   describe('Constants', () => {
     it('CAPABILITY_CATEGORY_LABELS a toutes les catégories', () => {
       const categories: CapabilityCategory[] = [
-        'cognition', 'creativity', 'memory', 'automation',
-        'analysis', 'communication', 'integration', 'meta'
+        'cognition',
+        'creativity',
+        'memory',
+        'automation',
+        'analysis',
+        'communication',
+        'integration',
+        'meta',
       ];
 
       for (const cat of categories) {

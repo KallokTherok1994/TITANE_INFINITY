@@ -21,10 +21,7 @@ import {
   type UnifiedMultimodalOutput,
   type UnifiedOutputState,
 } from '@/engines/output/unifiedMultimodalOutputEngine';
-import {
-  auraEngine,
-  type AuraState,
-} from '@/engines/aura/auraEngine';
+import { auraEngine, type AuraState } from '@/engines/aura/auraEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SYNESTHETIC EMOTION HOOKS
@@ -34,7 +31,9 @@ import {
  * Hook principal pour Synesthetic Emotion Engine
  */
 export function useSynestheticEmotion() {
-  const [state, setState] = useState<SynestheticEmotionState>(synestheticEmotionEngine.getState());
+  const [state, setState] = useState<SynestheticEmotionState>(
+    synestheticEmotionEngine.getState()
+  );
 
   useEffect(() => {
     const unsubscribe = synestheticEmotionEngine.subscribe(setState);
@@ -57,7 +56,9 @@ export function useSynestheticEmotion() {
  * Hook pour profil synesthésique actuel
  */
 export function useSynestheticProfile(): SynestheticProfile {
-  const [profile, setProfile] = useState<SynestheticProfile>(synestheticEmotionEngine.getCurrentProfile());
+  const [profile, setProfile] = useState<SynestheticProfile>(
+    synestheticEmotionEngine.getCurrentProfile()
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -109,7 +110,9 @@ export function useNarrativeTexture() {
  * Hook principal pour Unified Multimodal Output Engine
  */
 export function useUnifiedOutput() {
-  const [state, setState] = useState<UnifiedOutputState>(unifiedMultimodalOutputEngine.getState());
+  const [state, setState] = useState<UnifiedOutputState>(
+    unifiedMultimodalOutputEngine.getState()
+  );
   const [lastOutput, setLastOutput] = useState<UnifiedMultimodalOutput | null>(null);
 
   useEffect(() => {

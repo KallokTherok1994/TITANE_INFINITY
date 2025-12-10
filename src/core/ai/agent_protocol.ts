@@ -130,10 +130,10 @@ class RateLimiter {
     const timestamps = this.eventCounts.get(agentId) || [];
 
     // Remove old timestamps (older than 1 minute)
-    const recent = timestamps.filter((t) => now - t < 60000);
+    const recent = timestamps.filter(t => now - t < 60000);
 
     // Check per-second limit
-    const lastSecond = recent.filter((t) => now - t < 1000);
+    const lastSecond = recent.filter(t => now - t < 1000);
     if (lastSecond.length >= this.config.maxEventsPerSecond) {
       console.warn(`[RateLimiter] ${agentId} exceeded per-second limit`);
       return false;
@@ -146,7 +146,7 @@ class RateLimiter {
     }
 
     // Check burst size
-    const lastBurst = recent.filter((t) => now - t < 100); // 100ms burst window
+    const lastBurst = recent.filter(t => now - t < 100); // 100ms burst window
     if (lastBurst.length >= this.config.burstSize) {
       console.warn(`[RateLimiter] ${agentId} exceeded burst limit`);
       return false;
@@ -183,7 +183,11 @@ class DeadlockPrevention {
   private pendingOps: Map<string, PendingOperation> = new Map();
   private readonly DEFAULT_TIMEOUT = 5000; // 5 seconds
 
-  registerOperation(agentId: string, operation: string, timeout = this.DEFAULT_TIMEOUT): string {
+  registerOperation(
+    agentId: string,
+    operation: string,
+    timeout = this.DEFAULT_TIMEOUT
+  ): string {
     const opId = `${agentId}_${operation}_${Date.now()}`;
     this.pendingOps.set(opId, {
       agentId,
@@ -222,7 +226,7 @@ class DeadlockPrevention {
 
   getPendingOperations(agentId?: string): PendingOperation[] {
     const ops = Array.from(this.pendingOps.values());
-    return agentId ? ops.filter((op) => op.agentId === agentId) : ops;
+    return agentId ? ops.filter(op => op.agentId === agentId) : ops;
   }
 
   clearAll(): void {
@@ -300,7 +304,7 @@ export class AgentProtocol {
       }
 
       // Small delay to prevent CPU spike
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await new Promise(resolve => setTimeout(resolve, 10));
     }
 
     this.processing = false;

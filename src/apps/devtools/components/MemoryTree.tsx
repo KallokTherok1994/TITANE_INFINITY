@@ -67,7 +67,10 @@ function MemoryTreeNode({
       >
         {/* Expand Icon */}
         {hasChildren && (
-          <span className="text-xs" style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}>
+          <span
+            className="text-xs"
+            style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
+          >
             {expanded ? '▼' : '▶'}
           </span>
         )}
@@ -117,7 +120,7 @@ function MemoryTreeNode({
       {/* Children */}
       {expanded && hasChildren && node.children && (
         <div>
-          {node.children.map((child) => (
+          {node.children.map(child => (
             <MemoryTreeNode
               key={child.id}
               node={child}
@@ -133,7 +136,7 @@ function MemoryTreeNode({
 
 /**
  * MemoryTree - Explorateur hiérarchique de mémoire
- * 
+ *
  * @example
  * ```tsx
  * <MemoryTree
@@ -151,7 +154,7 @@ export function MemoryTree({ nodes, onNodeClick, className = '' }: MemoryTreePro
         borderColor: 'var(--border, rgba(196,196,196,0.12))',
       }}
     >
-      {nodes.map((node) => (
+      {nodes.map(node => (
         <MemoryTreeNode key={node.id} node={node} onNodeClick={onNodeClick} />
       ))}
     </div>

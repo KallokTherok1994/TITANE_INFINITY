@@ -101,10 +101,7 @@ const LogEntry: React.FC<{
       className="border-l-2 pl-4 py-2"
       style={{ borderColor: severityColor }}
     >
-      <div
-        className="flex items-start gap-3 cursor-pointer"
-        onClick={onToggle}
-      >
+      <div className="flex items-start gap-3 cursor-pointer" onClick={onToggle}>
         <div style={{ color: severityColor }}>{icon}</div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
@@ -151,7 +148,7 @@ const LogEntry: React.FC<{
             )}
             {log.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
-                {log.tags.map((tag) => (
+                {log.tags.map(tag => (
                   <span
                     key={tag}
                     className="text-xs text-[#727B81] bg-[#333] px-1.5 py-0.5 rounded"
@@ -196,19 +193,14 @@ const EventEntry: React.FC<{
       className="border-l-2 pl-4 py-2"
       style={{ borderColor: severityColor }}
     >
-      <div
-        className="flex items-start gap-3 cursor-pointer"
-        onClick={onToggle}
-      >
+      <div className="flex items-start gap-3 cursor-pointer" onClick={onToggle}>
         <Clock size={16} style={{ color: severityColor }} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-xs text-[#727B81]">
               {formatTimestamp(event.timestamp)}
             </span>
-            <span className="text-xs text-[#C4C4C4] font-medium">
-              {event.title}
-            </span>
+            <span className="text-xs text-[#C4C4C4] font-medium">{event.title}</span>
             <span className="text-xs text-[#727B81] bg-[#333] px-1.5 py-0.5 rounded">
               {moduleName}
             </span>
@@ -322,12 +314,12 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
 
   // Listeners temps réel
   useEffect(() => {
-    const unsubLog = adminEngine.onLog((log) => {
-      setLogs((prev) => [log, ...prev].slice(0, maxItems));
+    const unsubLog = adminEngine.onLog(log => {
+      setLogs(prev => [log, ...prev].slice(0, maxItems));
     });
 
-    const unsubEvent = adminEngine.onEvent((event) => {
-      setEvents((prev) => [event, ...prev].slice(0, maxItems));
+    const unsubEvent = adminEngine.onEvent(event => {
+      setEvents(prev => [event, ...prev].slice(0, maxItems));
     });
 
     return () => {
@@ -338,7 +330,7 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
 
   // Toggle expansion
   const toggleExpanded = (id: string) => {
-    setExpandedIds((prev) => {
+    setExpandedIds(prev => {
       const next = new Set(prev);
       if (next.has(id)) {
         next.delete(id);
@@ -351,7 +343,7 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
 
   // Toggle severity filter
   const toggleSeverity = (severity: LogSeverity) => {
-    setSelectedSeverities((prev) => {
+    setSelectedSeverities(prev => {
       const next = new Set(prev);
       if (next.has(severity)) {
         next.delete(severity);
@@ -364,14 +356,22 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
 
   // Items combinés et triés
   const combinedItems = useMemo(() => {
-    const items: Array<{ type: 'log' | 'event'; data: AdminLogRecord | AdminEvent; timestamp: number }> = [];
+    const items: Array<{
+      type: 'log' | 'event';
+      data: AdminLogRecord | AdminEvent;
+      timestamp: number;
+    }> = [];
 
     if (viewMode === 'LOGS' || viewMode === 'ALL') {
-      logs.forEach((log) => items.push({ type: 'log', data: log, timestamp: log.timestamp }));
+      logs.forEach(log =>
+        items.push({ type: 'log', data: log, timestamp: log.timestamp })
+      );
     }
 
     if (viewMode === 'EVENTS' || viewMode === 'ALL') {
-      events.forEach((event) => items.push({ type: 'event', data: event, timestamp: event.timestamp }));
+      events.forEach(event =>
+        items.push({ type: 'event', data: event, timestamp: event.timestamp })
+      );
     }
 
     return items.sort((a, b) => b.timestamp - a.timestamp);
@@ -406,19 +406,22 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         {/* Recherche */}
         <div className="relative flex-1">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#727B81]" />
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#727B81]"
+          />
           <input
             type="text"
             placeholder="Rechercher dans les logs..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 bg-[#1a1a1a] border border-[#333] rounded-lg text-[#C4C4C4] placeholder-[#727B81] focus:outline-none focus:border-[#555]"
           />
         </div>
 
         {/* Mode de vue */}
         <div className="flex gap-2">
-          {(['ALL', 'LOGS', 'EVENTS'] as const).map((mode) => (
+          {(['ALL', 'LOGS', 'EVENTS'] as const).map(mode => (
             <button
               key={mode}
               onClick={() => setViewMode(mode)}
@@ -458,7 +461,7 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
               <div className="mb-4">
                 <h4 className="text-sm text-[#C4C4C4] mb-2">Sévérité</h4>
                 <div className="flex flex-wrap gap-2">
-                  {severities.map((severity) => (
+                  {severities.map(severity => (
                     <button
                       key={severity}
                       onClick={() => toggleSeverity(severity)}
@@ -481,9 +484,9 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
 
               <div className="flex items-center gap-4 text-xs text-[#727B81]">
                 <span>
-                  DEBUG: {stats.bySeverity.DEBUG} | INFO: {stats.bySeverity.INFO} |
-                  WARN: {stats.bySeverity.WARN} | ERROR: {stats.bySeverity.ERROR} |
-                  CRITICAL: {stats.bySeverity.CRITICAL}
+                  DEBUG: {stats.bySeverity.DEBUG} | INFO: {stats.bySeverity.INFO} | WARN:{' '}
+                  {stats.bySeverity.WARN} | ERROR: {stats.bySeverity.ERROR} | CRITICAL:{' '}
+                  {stats.bySeverity.CRITICAL}
                 </span>
               </div>
             </div>
@@ -499,7 +502,7 @@ export const AdminTimeline: React.FC<AdminTimelineProps> = ({
             <p>Aucune entrée à afficher</p>
           </div>
         ) : (
-          combinedItems.map((item) =>
+          combinedItems.map(item =>
             item.type === 'log' ? (
               <LogEntry
                 key={(item.data as AdminLogRecord).id}

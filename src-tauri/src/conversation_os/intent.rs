@@ -3,8 +3,8 @@
 //! Super Prompt #9 — Détection et classification des intentions utilisateur
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::memory_context::ConversationContext;
+use serde::{Deserialize, Serialize};
 
 /// Types d'intentions utilisateur
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
@@ -118,39 +118,105 @@ impl IntentDetector {
     pub fn new() -> Self {
         Self {
             question_patterns: vec![
-                "?", "qu'est-ce", "comment", "pourquoi", "quand", "où", "qui",
-                "what", "how", "why", "when", "where", "who", "which",
-                "est-ce que", "is it", "can you", "peux-tu", "sais-tu",
+                "?",
+                "qu'est-ce",
+                "comment",
+                "pourquoi",
+                "quand",
+                "où",
+                "qui",
+                "what",
+                "how",
+                "why",
+                "when",
+                "where",
+                "who",
+                "which",
+                "est-ce que",
+                "is it",
+                "can you",
+                "peux-tu",
+                "sais-tu",
             ],
             command_patterns: vec![
-                "fais", "fait", "crée", "génère", "écris", "modifie", "supprime",
-                "do", "make", "create", "generate", "write", "modify", "delete",
-                "lance", "execute", "run", "start", "stop", "arrête",
+                "fais", "fait", "crée", "génère", "écris", "modifie", "supprime", "do", "make",
+                "create", "generate", "write", "modify", "delete", "lance", "execute", "run",
+                "start", "stop", "arrête",
             ],
             emotion_patterns: vec![
-                "je me sens", "i feel", "frustré", "content", "triste", "heureux",
-                "angry", "happy", "sad", "excited", "worried", "anxieux",
-                "merci", "thank", "sorry", "désolé", "super", "génial",
+                "je me sens",
+                "i feel",
+                "frustré",
+                "content",
+                "triste",
+                "heureux",
+                "angry",
+                "happy",
+                "sad",
+                "excited",
+                "worried",
+                "anxieux",
+                "merci",
+                "thank",
+                "sorry",
+                "désolé",
+                "super",
+                "génial",
             ],
             planning_patterns: vec![
-                "planifie", "organise", "schedule", "plan", "agenda",
-                "demain", "tomorrow", "next week", "la semaine prochaine",
-                "rappelle", "remind", "task", "tâche", "todo",
+                "planifie",
+                "organise",
+                "schedule",
+                "plan",
+                "agenda",
+                "demain",
+                "tomorrow",
+                "next week",
+                "la semaine prochaine",
+                "rappelle",
+                "remind",
+                "task",
+                "tâche",
+                "todo",
             ],
             creativity_patterns: vec![
-                "imagine", "invente", "crée une histoire", "écris un poème",
-                "create a story", "write a poem", "design", "brainstorm",
-                "idée", "idea", "concept", "inspiration",
+                "imagine",
+                "invente",
+                "crée une histoire",
+                "écris un poème",
+                "create a story",
+                "write a poem",
+                "design",
+                "brainstorm",
+                "idée",
+                "idea",
+                "concept",
+                "inspiration",
             ],
             debug_patterns: vec![
-                "erreur", "error", "bug", "crash", "ne fonctionne pas",
-                "doesn't work", "problem", "problème", "fix", "debug",
-                "exception", "échec", "failure",
+                "erreur",
+                "error",
+                "bug",
+                "crash",
+                "ne fonctionne pas",
+                "doesn't work",
+                "problem",
+                "problème",
+                "fix",
+                "debug",
+                "exception",
+                "échec",
+                "failure",
             ],
             meta_patterns: vec![
-                "qui es-tu", "who are you", "qu'est-ce que tu es",
-                "what are you", "tes capacités", "your capabilities",
-                "comment tu fonctionne", "how do you work",
+                "qui es-tu",
+                "who are you",
+                "qu'est-ce que tu es",
+                "what are you",
+                "tes capacités",
+                "your capabilities",
+                "comment tu fonctionne",
+                "how do you work",
             ],
         }
     }
@@ -206,7 +272,8 @@ impl IntentDetector {
         scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
         // Déterminer l'intention principale
-        let (intent_type, primary_confidence) = scores.first()
+        let (intent_type, primary_confidence) = scores
+            .first()
             .cloned()
             .unwrap_or((IntentType::Unknown, 0.0));
 
@@ -222,10 +289,9 @@ impl IntentDetector {
         let urgency = self.assess_urgency(&input_lower);
 
         // Déterminer si mémoire/réflexion nécessaire
-        let requires_memory = context.history_length > 0 ||
-            self.mentions_past(&input_lower);
-        let requires_reflection = complexity == ComplexityLevel::Complex ||
-            complexity == ComplexityLevel::Expert;
+        let requires_memory = context.history_length > 0 || self.mentions_past(&input_lower);
+        let requires_reflection =
+            complexity == ComplexityLevel::Complex || complexity == ComplexityLevel::Expert;
 
         UserIntent {
             intent_type,
@@ -243,9 +309,7 @@ impl IntentDetector {
     }
 
     fn score_patterns(&self, input: &str, patterns: &[&str]) -> f32 {
-        let matches: f32 = patterns.iter()
-            .filter(|p| input.contains(*p))
-            .count() as f32;
+        let matches: f32 = patterns.iter().filter(|p| input.contains(*p)).count() as f32;
 
         if matches > 0.0 {
             (matches / patterns.len() as f32).min(1.0) + 0.3
@@ -256,13 +320,15 @@ impl IntentDetector {
 
     fn extract_keywords(&self, input: &str) -> Vec<String> {
         // Mots à ignorer
-        let stop_words = ["le", "la", "les", "un", "une", "des", "de", "du",
-            "the", "a", "an", "is", "are", "was", "were", "be", "been",
-            "et", "ou", "and", "or", "but", "mais", "que", "qui", "quoi",
-            "je", "tu", "il", "elle", "nous", "vous", "ils", "elles",
-            "i", "you", "he", "she", "we", "they", "it", "this", "that"];
+        let stop_words = [
+            "le", "la", "les", "un", "une", "des", "de", "du", "the", "a", "an", "is", "are",
+            "was", "were", "be", "been", "et", "ou", "and", "or", "but", "mais", "que", "qui",
+            "quoi", "je", "tu", "il", "elle", "nous", "vous", "ils", "elles", "i", "you", "he",
+            "she", "we", "they", "it", "this", "that",
+        ];
 
-        input.split_whitespace()
+        input
+            .split_whitespace()
             .filter(|w| w.len() > 2)
             .filter(|w| !stop_words.contains(&w.to_lowercase().as_str()))
             .take(10)
@@ -272,8 +338,10 @@ impl IntentDetector {
 
     fn assess_complexity(&self, input: &str, context: &ConversationContext) -> ComplexityLevel {
         let word_count = input.split_whitespace().count();
-        let has_technical = input.contains("code") || input.contains("algorithm") ||
-            input.contains("architecture") || input.contains("système");
+        let has_technical = input.contains("code")
+            || input.contains("algorithm")
+            || input.contains("architecture")
+            || input.contains("système");
 
         if word_count > 100 || (has_technical && context.history_length > 5) {
             ComplexityLevel::Expert
@@ -287,8 +355,18 @@ impl IntentDetector {
     }
 
     fn assess_urgency(&self, input: &str) -> UrgencyLevel {
-        let urgent_words = ["urgent", "immédiatement", "immediately", "asap",
-            "critical", "critique", "now", "maintenant", "vite", "quickly"];
+        let urgent_words = [
+            "urgent",
+            "immédiatement",
+            "immediately",
+            "asap",
+            "critical",
+            "critique",
+            "now",
+            "maintenant",
+            "vite",
+            "quickly",
+        ];
 
         if urgent_words.iter().any(|w| input.contains(w)) {
             UrgencyLevel::Critical
@@ -300,8 +378,18 @@ impl IntentDetector {
     }
 
     fn mentions_past(&self, input: &str) -> bool {
-        let past_words = ["avant", "précédemment", "earlier", "before", "previously",
-            "tu as dit", "you said", "on a parlé", "we discussed", "remember"];
+        let past_words = [
+            "avant",
+            "précédemment",
+            "earlier",
+            "before",
+            "previously",
+            "tu as dit",
+            "you said",
+            "on a parlé",
+            "we discussed",
+            "remember",
+        ];
         past_words.iter().any(|w| input.contains(w))
     }
 }
@@ -321,7 +409,9 @@ mod tests {
         let detector = IntentDetector::new();
         let context = ConversationContext::default();
 
-        let intent = detector.detect("Comment fonctionne ce système?", &context).await;
+        let intent = detector
+            .detect("Comment fonctionne ce système?", &context)
+            .await;
         assert_eq!(intent.intent_type, IntentType::Question);
     }
 
@@ -339,7 +429,9 @@ mod tests {
         let detector = IntentDetector::new();
         let context = ConversationContext::default();
 
-        let intent = detector.detect("Je me sens frustré par ce bug", &context).await;
+        let intent = detector
+            .detect("Je me sens frustré par ce bug", &context)
+            .await;
         // Peut être Emotion ou Debugging selon les scores
         assert!(intent.confidence.primary > 0.0);
     }

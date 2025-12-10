@@ -48,13 +48,7 @@ export type AnomalyType =
   | 'unknown_anomaly';
 
 /** Source de l'erreur */
-export type HealingSource =
-  | 'js'
-  | 'react'
-  | 'tauri'
-  | 'rust'
-  | 'network'
-  | 'performance';
+export type HealingSource = 'js' | 'react' | 'tauri' | 'rust' | 'network' | 'performance';
 
 /** Configuration de l'Observer */
 export interface ObserverConfig {
@@ -375,17 +369,20 @@ export class SelfHealingObserver {
   private async installTauriErrorListener(): Promise<void> {
     try {
       // Écouter les erreurs Tauri backend
-      const unlisten1 = await listen<{ error: string; command?: string }>('tauri://error', (event) => {
-        this.captureError({
-          type: 'tauri_command_fail',
-          source: 'tauri',
-          severity: 'high',
-          message: event.payload.error,
-          context: {
-            invokeCommand: event.payload.command,
-          },
-        });
-      });
+      const unlisten1 = await listen<{ error: string; command?: string }>(
+        'tauri://error',
+        event => {
+          this.captureError({
+            type: 'tauri_command_fail',
+            source: 'tauri',
+            severity: 'high',
+            message: event.payload.error,
+            context: {
+              invokeCommand: event.payload.command,
+            },
+          });
+        }
+      );
       this.unlisteners.push(unlisten1);
 
       // Écouter les erreurs self-healing du backend
@@ -393,7 +390,7 @@ export class SelfHealingObserver {
         anomaly: string;
         severity: string;
         module?: string;
-      }>('selfheal://anomaly', (event) => {
+      }>('selfheal://anomaly', event => {
         this.captureError({
           type: this.mapBackendAnomaly(event.payload.anomaly),
           source: 'rust',
@@ -407,19 +404,21 @@ export class SelfHealingObserver {
       this.unlisteners.push(unlisten2);
 
       // Écouter les panics Rust
-      const unlisten3 = await listen<{ message: string; backtrace?: string }>('rust://panic', (event) => {
-        this.captureError({
-          type: 'rust_panic',
-          source: 'rust',
-          severity: 'critical',
-          message: event.payload.message,
-          context: {
-            stack: event.payload.backtrace,
-          },
-        });
-      });
+      const unlisten3 = await listen<{ message: string; backtrace?: string }>(
+        'rust://panic',
+        event => {
+          this.captureError({
+            type: 'rust_panic',
+            source: 'rust',
+            severity: 'critical',
+            message: event.payload.message,
+            context: {
+              stack: event.payload.backtrace,
+            },
+          });
+        }
+      );
       this.unlisteners.push(unlisten3);
-
     } catch (err) {
       console.warn('[SelfHealingObserver] Could not install Tauri listeners:', err);
     }
@@ -498,7 +497,11 @@ export class SelfHealingObserver {
   /**
    * Méthode à appeler lors d'un échec d'invoke Tauri
    */
-  public captureTauriInvokeError(command: string, error: unknown, payload?: unknown): void {
+  public captureTauriInvokeError(
+    command: string,
+    error: unknown,
+    payload?: unknown
+  ): void {
     if (!this.config.captureTauriErrors) return;
 
     this.captureError({
@@ -558,7 +561,11 @@ export class SelfHealingObserver {
       return;
     }
 
-    const fingerprint = this.generateFingerprint(params.type, params.message, params.context);
+    const fingerprint = this.generateFingerprint(
+      params.type,
+      params.message,
+      params.context
+    );
 
     // Déduplication
     const existing = this.errorBuffer.get(fingerprint);
@@ -630,7 +637,11 @@ export class SelfHealingObserver {
     return `obs_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   }
 
-  private generateFingerprint(type: AnomalyType, message: string, context: ErrorContext): string {
+  private generateFingerprint(
+    type: AnomalyType,
+    message: string,
+    context: ErrorContext
+  ): string {
     const parts = [
       type,
       message.slice(0, 100),
@@ -644,7 +655,7 @@ export class SelfHealingObserver {
     const str = parts.join('|');
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
 
@@ -652,7 +663,7 @@ export class SelfHealingObserver {
   }
 
   private shouldIgnore(message: string): boolean {
-    return this.config.ignorePatterns.some((pattern) => pattern.test(message));
+    return this.config.ignorePatterns.some(pattern => pattern.test(message));
   }
 
   private checkRateLimit(): boolean {
@@ -660,7 +671,7 @@ export class SelfHealingObserver {
     const oneMinuteAgo = now - 60000;
 
     // Nettoyer les anciennes entrées
-    this.rateCounter = this.rateCounter.filter((t) => t > oneMinuteAgo);
+    this.rateCounter = this.rateCounter.filter(t => t > oneMinuteAgo);
 
     return this.rateCounter.length < this.config.maxEventsPerMinute;
   }
@@ -668,7 +679,7 @@ export class SelfHealingObserver {
   private calculateErrorRate(): number {
     const now = Date.now();
     const oneMinuteAgo = now - 60000;
-    return this.rateCounter.filter((t) => t > oneMinuteAgo).length;
+    return this.rateCounter.filter(t => t > oneMinuteAgo).length;
   }
 
   private cleanupExpiredErrors(): void {

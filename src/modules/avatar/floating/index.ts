@@ -23,10 +23,7 @@ export {
 export * as FloatingEngine from './avatarFloatingEngine';
 
 // React Hook
-export {
-  useFloatingWindow,
-  type UseFloatingWindowResult,
-} from './useFloatingWindow';
+export { useFloatingWindow, type UseFloatingWindowResult } from './useFloatingWindow';
 
 // React Components
 export { AvatarFloatingWindow } from './AvatarFloatingWindow';
@@ -38,8 +35,17 @@ export type { ThreeJSAvatarRendererOptions, AvatarMeshes } from './ThreeJSAvatar
 
 // Appearance Integration (NEW v24.12)
 export { AppearanceFloatingIntegration } from './appearanceFloatingIntegration';
-export type { AppearanceMaterialMap, ColorPalette } from './appearanceFloatingIntegration';
+export type {
+  AppearanceMaterialMap,
+  ColorPalette,
+} from './appearanceFloatingIntegration';
 
 // Chat Integration (NEW v24.12)
-export { handleFloatingWindowInChat, containsFloatingWindowKeyword } from '../chatFloatingIntegration';
-export type { ChatFloatingIntegrationResult, FloatingWindowCommand } from '../chatFloatingIntegration';
+export {
+  handleFloatingWindowInChat,
+  containsFloatingWindowKeyword,
+} from '../chatFloatingIntegration';
+export type {
+  ChatFloatingIntegrationResult,
+  FloatingWindowCommand,
+} from '../chatFloatingIntegration';

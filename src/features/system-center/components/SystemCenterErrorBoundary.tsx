@@ -11,7 +11,7 @@ import {
   formatUserError,
   formatErrorForLog,
   generateErrorId,
-  isErrorCritical
+  isErrorCritical,
 } from '../utils/errorMessages';
 
 interface Props {
@@ -37,7 +37,7 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
       hasError: false,
       error: null,
       errorId: null,
-      showDetails: false
+      showDetails: false,
     };
   }
 
@@ -45,7 +45,7 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
     return {
       hasError: true,
       error,
-      errorId: generateErrorId(error)
+      errorId: generateErrorId(error),
     };
   }
 
@@ -53,7 +53,7 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
     // Log complet pour les développeurs
     const errorLog = formatErrorForLog(error, {
       componentStack: errorInfo.componentStack,
-      errorId: this.state.errorId
+      errorId: this.state.errorId,
     });
 
     console.error('[SystemCenter] Error caught:', errorLog);
@@ -69,13 +69,13 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
       hasError: false,
       error: null,
       errorId: null,
-      showDetails: false
+      showDetails: false,
     });
   };
 
   handleToggleDetails = () => {
     this.setState(prev => ({
-      showDetails: !prev.showDetails
+      showDetails: !prev.showDetails,
     }));
   };
 
@@ -91,25 +91,20 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
       const isCritical = isErrorCritical(this.state.error);
 
       return (
-        <div className={`sc-error-boundary ${isCritical ? 'sc-error-boundary--critical' : ''}`}>
+        <div
+          className={`sc-error-boundary ${isCritical ? 'sc-error-boundary--critical' : ''}`}
+        >
           {/* Header */}
           <div className="sc-error-boundary-header">
-            <span className="sc-error-boundary-icon">
-              {isCritical ? '🔥' : '⚠️'}
-            </span>
+            <span className="sc-error-boundary-icon">{isCritical ? '🔥' : '⚠️'}</span>
             <h3 className="sc-error-boundary-title">
-              {isCritical
-                ? 'Erreur Critique'
-                : 'Une Erreur s\'est Produite'
-              }
+              {isCritical ? 'Erreur Critique' : "Une Erreur s'est Produite"}
             </h3>
           </div>
 
           {/* Message Utilisateur */}
           <div className="sc-error-boundary-content">
-            <p className="sc-error-boundary-message">
-              {formatted.userMessage}
-            </p>
+            <p className="sc-error-boundary-message">{formatted.userMessage}</p>
 
             {/* Suggestions */}
             {formatted.suggestions.length > 0 && (
@@ -125,10 +120,7 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
 
             {/* Actions */}
             <div className="sc-error-boundary-actions">
-              <button
-                className="sc-btn sc-btn--primary"
-                onClick={this.handleReset}
-              >
+              <button className="sc-btn sc-btn--primary" onClick={this.handleReset}>
                 {isCritical ? '🔄 Réinitialiser' : '✓ Réessayer'}
               </button>
 
@@ -143,13 +135,8 @@ export class SystemCenterErrorBoundary extends React.Component<Props, State> {
             </div>
 
             {/* Détails Techniques (repliable) */}
-            <details
-              className="sc-error-boundary-details"
-              open={this.state.showDetails}
-            >
-              <summary onClick={this.handleToggleDetails}>
-                🛠️ Détails Techniques
-              </summary>
+            <details className="sc-error-boundary-details" open={this.state.showDetails}>
+              <summary onClick={this.handleToggleDetails}>🛠️ Détails Techniques</summary>
               <div className="sc-error-boundary-technical">
                 {/* ID d'erreur */}
                 {this.state.errorId && (

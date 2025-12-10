@@ -25,9 +25,7 @@ interface AnimationContextValue {
   fps: number;
 }
 
-const AnimationContext = createContext<AnimationContextValue | undefined>(
-  undefined
-);
+const AnimationContext = createContext<AnimationContextValue | undefined>(undefined);
 
 interface AnimationProviderProps {
   children: ReactNode;
@@ -51,12 +49,8 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
   fpsThreshold = 40,
   cpuThreshold = 80,
 }) => {
-  const {
-    metrics,
-    shouldReduceMotion,
-    shouldThrottle,
-    animationConfig,
-  } = usePerformanceMonitor({ fpsThreshold, cpuThreshold });
+  const { metrics, shouldReduceMotion, shouldThrottle, animationConfig } =
+    usePerformanceMonitor({ fpsThreshold, cpuThreshold });
 
   const value: AnimationContextValue = {
     animationConfig,
@@ -65,11 +59,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({
     fps: metrics.fps,
   };
 
-  return (
-    <AnimationContext.Provider value={value}>
-      {children}
-    </AnimationContext.Provider>
-  );
+  return <AnimationContext.Provider value={value}>{children}</AnimationContext.Provider>;
 };
 
 /**

@@ -23,20 +23,20 @@ export interface AIResponse extends Omit<BaseAIResponse, 'provider'> {
  */
 const BUILTIN_RESPONSES = {
   greeting: [
-    "Bonjour ! Je suis TITANE∞, votre assistant cognitif local. Comment puis-je vous aider ?",
-    "Salut ! TITANE∞ ici, prêt à vous assister. Que souhaitez-vous savoir ?",
+    'Bonjour ! Je suis TITANE∞, votre assistant cognitif local. Comment puis-je vous aider ?',
+    'Salut ! TITANE∞ ici, prêt à vous assister. Que souhaitez-vous savoir ?',
   ],
   help: [
     "Je peux vous aider avec : l'analyse du système, la gestion de la mémoire, les commandes Tauri, et bien plus.",
-    "TITANE∞ dispose de nombreuses capacités : monitoring système, auto-vérification, gestion de la mémoire cognitive.",
+    'TITANE∞ dispose de nombreuses capacités : monitoring système, auto-vérification, gestion de la mémoire cognitive.',
   ],
   status: [
-    "Tous les systèmes TITANE∞ sont opérationnels. Mode: 100% local.",
-    "✅ Statut: STABLE | Mode: LOCAL | Moteurs: ACTIFS",
+    'Tous les systèmes TITANE∞ sont opérationnels. Mode: 100% local.',
+    '✅ Statut: STABLE | Mode: LOCAL | Moteurs: ACTIFS',
   ],
   default: [
-    "Je traite votre demande en mode local. Pour des réponses plus avancées, activez Ollama (localhost:11434).",
-    "Requête reçue. TITANE∞ fonctionne en mode local. Utilisez les commandes Tauri pour des actions spécifiques.",
+    'Je traite votre demande en mode local. Pour des réponses plus avancées, activez Ollama (localhost:11434).',
+    'Requête reçue. TITANE∞ fonctionne en mode local. Utilisez les commandes Tauri pour des actions spécifiques.',
   ],
 };
 
@@ -50,15 +50,21 @@ function generateBuiltinResponse(message: string): string {
 
   // Pattern matching pour réponses contextuelles
   if (lowerMessage.match(/bonjour|salut|hello|hi/)) {
-    return BUILTIN_RESPONSES.greeting[Math.floor(Math.random() * BUILTIN_RESPONSES.greeting.length)];
+    return BUILTIN_RESPONSES.greeting[
+      Math.floor(Math.random() * BUILTIN_RESPONSES.greeting.length)
+    ];
   }
 
   if (lowerMessage.match(/aide|help|comment/)) {
-    return BUILTIN_RESPONSES.help[Math.floor(Math.random() * BUILTIN_RESPONSES.help.length)];
+    return BUILTIN_RESPONSES.help[
+      Math.floor(Math.random() * BUILTIN_RESPONSES.help.length)
+    ];
   }
 
   if (lowerMessage.match(/statut|status|état/)) {
-    return BUILTIN_RESPONSES.status[Math.floor(Math.random() * BUILTIN_RESPONSES.status.length)];
+    return BUILTIN_RESPONSES.status[
+      Math.floor(Math.random() * BUILTIN_RESPONSES.status.length)
+    ];
   }
 
   // Détection de commandes TITANE∞
@@ -67,11 +73,13 @@ function generateBuiltinResponse(message: string): string {
   }
 
   if (lowerMessage.match(/helios|system|système/)) {
-    return "🔆 Moteur Helios : Monitoring système actif. Consultez le Control Panel pour les métriques détaillées.";
+    return '🔆 Moteur Helios : Monitoring système actif. Consultez le Control Panel pour les métriques détaillées.';
   }
 
   // Réponse par défaut
-  return BUILTIN_RESPONSES.default[Math.floor(Math.random() * BUILTIN_RESPONSES.default.length)];
+  return BUILTIN_RESPONSES.default[
+    Math.floor(Math.random() * BUILTIN_RESPONSES.default.length)
+  ];
 }
 
 /**
@@ -79,7 +87,10 @@ function generateBuiltinResponse(message: string): string {
  * OLLAMA LOCAL (Optional - Localhost Only)
  * ═══════════════════════════════════════════════
  */
-async function callOllamaLocal(message: string, _history: AIMessage[] = []): Promise<AIResponse> {
+async function callOllamaLocal(
+  message: string,
+  _history: AIMessage[] = []
+): Promise<AIResponse> {
   if (!isAIProviderEnabled('ollama')) {
     throw new Error('Ollama provider is disabled in featureFlags.ts');
   }
@@ -121,7 +132,6 @@ async function callOllamaLocal(message: string, _history: AIMessage[] = []): Pro
       provider: 'ollama',
       timestamp: Date.now(),
     };
-
   } catch (error) {
     // Ollama non disponible, fallback sur built-in
     console.log('Ollama not available, using built-in responses');
@@ -178,7 +188,10 @@ export function getAIStatus(): {
 } {
   return {
     mode: '100% LOCAL',
-    providers: ['builtin', ...(isAIProviderEnabled('ollama') ? ['ollama (optional)'] : [])],
+    providers: [
+      'builtin',
+      ...(isAIProviderEnabled('ollama') ? ['ollama (optional)'] : []),
+    ],
     networkRequired: false,
   };
 }

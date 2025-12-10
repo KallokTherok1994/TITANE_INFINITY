@@ -420,7 +420,8 @@ class CognitiveLayoutEngine {
 
   private updateCognitiveSignals(): void {
     const now = Date.now();
-    const sessionDuration = (now - (this.state.lastAdaptation - this.state.context.duration * 60000)) / 60000;
+    const sessionDuration =
+      (now - (this.state.lastAdaptation - this.state.context.duration * 60000)) / 60000;
 
     // Mise à jour des signaux
     this.state.signals.sessionDuration = sessionDuration;
@@ -438,8 +439,10 @@ class CognitiveLayoutEngine {
 
     // Énergie basée sur heure de la journée
     const hour = new Date().getHours();
-    const isHighEnergyTime = this.state.preferences.timePreferences.highEnergy.includes(hour);
-    const isLowEnergyTime = this.state.preferences.timePreferences.lowEnergy.includes(hour);
+    const isHighEnergyTime =
+      this.state.preferences.timePreferences.highEnergy.includes(hour);
+    const isLowEnergyTime =
+      this.state.preferences.timePreferences.lowEnergy.includes(hour);
 
     this.state.signals.energyLevel = isHighEnergyTime ? 0.9 : isLowEnergyTime ? 0.5 : 0.7;
 
@@ -573,7 +576,10 @@ class CognitiveLayoutEngine {
   // MODE APPLICATION
   // ═══════════════════════════════════════════════════════════════════
 
-  public async applyMode(mode: UIMode, source: 'manual' | 'auto' = 'manual'): Promise<void> {
+  public async applyMode(
+    mode: UIMode,
+    source: 'manual' | 'auto' = 'manual'
+  ): Promise<void> {
     console.log(`[CognitiveLayout] 🎨 Applying mode: ${mode} (${source})`);
 
     // Sauvegarder mode précédent
@@ -620,10 +626,16 @@ class CognitiveLayoutEngine {
     const { density, sidebar } = this.state.layoutConfig;
 
     // Appliquer via CSS variables
-    document.documentElement.style.setProperty('--ui-whitespace', `${density.whitespace}`);
+    document.documentElement.style.setProperty(
+      '--ui-whitespace',
+      `${density.whitespace}`
+    );
     document.documentElement.style.setProperty('--ui-font-scale', `${density.fontSize}`);
     document.documentElement.style.setProperty('--ui-contrast', `${density.contrast}`);
-    document.documentElement.style.setProperty('--ui-accent-opacity', `${density.accentColors}`);
+    document.documentElement.style.setProperty(
+      '--ui-accent-opacity',
+      `${density.accentColors}`
+    );
 
     // Classes CSS pour layout
     document.body.classList.toggle('sidebar-compact', sidebar.compact);
@@ -642,7 +654,10 @@ class CognitiveLayoutEngine {
     this.state.context = { ...this.state.context, ...updates };
 
     // Détecter changement de module → incrémente context switches
-    if (updates.currentModule && updates.currentModule !== this.state.context.currentModule) {
+    if (
+      updates.currentModule &&
+      updates.currentModule !== this.state.context.currentModule
+    ) {
       this.state.context.contextSwitches++;
     }
 
@@ -741,7 +756,7 @@ class CognitiveLayoutEngine {
   }
 
   private notifySubscribers(): void {
-    this.subscribers.forEach((callback) => callback(this.state));
+    this.subscribers.forEach(callback => callback(this.state));
   }
 
   private notifyAdaptationSuggestion(decision: AdaptationDecision): void {
@@ -767,7 +782,8 @@ class CognitiveLayoutEngine {
     const acceptanceRate =
       this.state.preferences.acceptedSuggestions /
       Math.max(
-        this.state.preferences.acceptedSuggestions + this.state.preferences.manualOverrides,
+        this.state.preferences.acceptedSuggestions +
+          this.state.preferences.manualOverrides,
         1
       );
 

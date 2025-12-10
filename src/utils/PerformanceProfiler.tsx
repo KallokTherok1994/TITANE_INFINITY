@@ -152,7 +152,7 @@ export function logPerformanceSummary() {
   // Sort by avg render time (slowest first)
   const sortedStats = [...stats].sort((a, b) => b.avgRenderTime - a.avgRenderTime);
 
-  sortedStats.forEach((stat) => {
+  sortedStats.forEach(stat => {
     console.log(`\n🔍 ${stat.componentId}`);
     console.log(`  • Renders: ${stat.renderCount}`);
     console.log(`  • Avg: ${stat.avgRenderTime.toFixed(2)}ms`);
@@ -214,7 +214,7 @@ export const PerformanceProfiler: React.FC<PerformanceProfilerProps> = ({
     };
 
     recordMetric(metric);
-    setRenderCount((prev) => prev + 1);
+    setRenderCount(prev => prev + 1);
 
     if (logRenders) {
       console.log(
@@ -298,7 +298,7 @@ export const PerformanceDashboard: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {sortedStats.map((stat) => (
+          {sortedStats.map(stat => (
             <tr key={stat.componentId} style={{ borderBottom: '1px solid #ddd' }}>
               <td style={{ padding: '8px' }}>{stat.componentId}</td>
               <td style={{ textAlign: 'right', padding: '8px' }}>{stat.renderCount}</td>
@@ -311,9 +311,15 @@ export const PerformanceDashboard: React.FC = () => {
               >
                 {stat.avgRenderTime.toFixed(2)}
               </td>
-              <td style={{ textAlign: 'right', padding: '8px' }}>{stat.minRenderTime.toFixed(2)}</td>
-              <td style={{ textAlign: 'right', padding: '8px' }}>{stat.maxRenderTime.toFixed(2)}</td>
-              <td style={{ textAlign: 'right', padding: '8px' }}>{stat.mountTime.toFixed(2)}</td>
+              <td style={{ textAlign: 'right', padding: '8px' }}>
+                {stat.minRenderTime.toFixed(2)}
+              </td>
+              <td style={{ textAlign: 'right', padding: '8px' }}>
+                {stat.maxRenderTime.toFixed(2)}
+              </td>
+              <td style={{ textAlign: 'right', padding: '8px' }}>
+                {stat.mountTime.toFixed(2)}
+              </td>
             </tr>
           ))}
         </tbody>

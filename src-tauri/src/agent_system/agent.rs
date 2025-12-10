@@ -3,10 +3,10 @@
 //! Super Prompt #19 — Définition de base d'un agent
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::capabilities::{Capability, CapabilitySet};
 use super::roles::Role;
 use super::TaskType;
+use serde::{Deserialize, Serialize};
 
 /// Identifiant unique d'agent
 pub type AgentId = String;

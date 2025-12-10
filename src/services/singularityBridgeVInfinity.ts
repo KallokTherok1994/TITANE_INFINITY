@@ -245,10 +245,9 @@ export class SingularityBridgeVInfinity {
    */
   static async setState(newState: SingularityStateVInfinity): Promise<string> {
     try {
-      const hash = await secureInvoke<string>(
-        TAURI_COMMANDS.SINGULARITY_V_SET,
-        { newState }
-      );
+      const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_SET, {
+        newState,
+      });
       console.log('[SingularityBridge v∞] State set successfully, hash:', hash);
       return hash;
     } catch (error) {
@@ -262,10 +261,9 @@ export class SingularityBridgeVInfinity {
    */
   static async diff(nextState: SingularityStateVInfinity): Promise<DiffResult> {
     try {
-      const diff = await secureInvoke<DiffResult>(
-        TAURI_COMMANDS.SINGULARITY_V_DIFF,
-        { nextState }
-      );
+      const diff = await secureInvoke<DiffResult>(TAURI_COMMANDS.SINGULARITY_V_DIFF, {
+        nextState,
+      });
       console.log('[SingularityBridge v∞] Diff calculated:', diff);
       return diff;
     } catch (error) {

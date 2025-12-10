@@ -5,7 +5,8 @@
 
 use crate::error::TitaneResult;
 use crate::kernel::{
-    CognitivePriority, EngineOutput, KernelEvent, KernelSignal, KernelState, SchedulerJob, SignalBus,
+    CognitivePriority, EngineOutput, KernelEvent, KernelSignal, KernelState, SchedulerJob,
+    SignalBus,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
@@ -86,10 +87,7 @@ pub struct MemoryStats {
 
 impl MemoryKernelBridge {
     /// Create new Memory-Kernel bridge
-    pub fn new(
-        signal_bus: Arc<SignalBus>,
-        event_tx: broadcast::Sender<KernelEvent>,
-    ) -> Self {
+    pub fn new(signal_bus: Arc<SignalBus>, event_tx: broadcast::Sender<KernelEvent>) -> Self {
         Self {
             signal_bus,
             event_tx,
@@ -156,15 +154,21 @@ impl MemoryKernelBridge {
                 });
 
                 // Broadcast memory update signal
-                signal_bus.send(KernelSignal::MemoryUpdated {
-                    layer: match &operation_clone {
-                        MemoryOperation::Store { memory_type, .. } => memory_type.clone(),
-                        MemoryOperation::Recall { .. } => "recall".to_string(),
-                        MemoryOperation::Consolidate { tier } => tier.clone(),
-                        MemoryOperation::Forget { .. } => "forget".to_string(),
-                    },
-                    operation: format!("{:?}", operation_clone).split('(').next().unwrap_or("Unknown").to_string(),
-                }).ok();
+                signal_bus
+                    .send(KernelSignal::MemoryUpdated {
+                        layer: match &operation_clone {
+                            MemoryOperation::Store { memory_type, .. } => memory_type.clone(),
+                            MemoryOperation::Recall { .. } => "recall".to_string(),
+                            MemoryOperation::Consolidate { tier } => tier.clone(),
+                            MemoryOperation::Forget { .. } => "forget".to_string(),
+                        },
+                        operation: format!("{:?}", operation_clone)
+                            .split('(')
+                            .next()
+                            .unwrap_or("Unknown")
+                            .to_string(),
+                    })
+                    .ok();
 
                 Ok(EngineOutput {
                     engine: "Memory".to_string(),
@@ -225,11 +229,13 @@ impl MemoryKernelBridge {
         match result {
             Ok(data) => {
                 // Broadcast success signal
-                self.signal_bus.send(KernelSignal::EngineOutput {
-                    engine: "Memory".to_string(),
-                    output: "Operation completed".to_string(),
-                    duration_ms,
-                }).ok();
+                self.signal_bus
+                    .send(KernelSignal::EngineOutput {
+                        engine: "Memory".to_string(),
+                        output: "Operation completed".to_string(),
+                        duration_ms,
+                    })
+                    .ok();
 
                 Ok(EngineOutput {
                     engine: "Memory".to_string(),
@@ -262,10 +268,12 @@ impl MemoryKernelBridge {
         }
 
         // Broadcast memory updated signal
-        self.signal_bus.send(KernelSignal::MemoryUpdated {
-            layer: "STM".to_string(),
-            operation: format!("stored_{}_bytes", content.len()),
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::MemoryUpdated {
+                layer: "STM".to_string(),
+                operation: format!("stored_{}_bytes", content.len()),
+            })
+            .ok();
 
         Ok(MemoryResult {
             operation: "store".to_string(),
@@ -312,10 +320,12 @@ impl MemoryKernelBridge {
         }
 
         // Broadcast consolidation signal
-        self.signal_bus.send(KernelSignal::MemoryUpdated {
-            layer: tier.to_string(),
-            operation: "consolidation_complete".to_string(),
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::MemoryUpdated {
+                layer: tier.to_string(),
+                operation: "consolidation_complete".to_string(),
+            })
+            .ok();
 
         Ok(MemoryResult {
             operation: "consolidate".to_string(),
@@ -362,21 +372,22 @@ impl MemoryKernelBridge {
         }
 
         // Broadcast memory health update
-        self.signal_bus.send(KernelSignal::MemoryUpdated {
-            layer: "ALL".to_string(),
-            operation: format!(
-                "health_update_stm:{}_mtm:{}_ltm:{}",
-                snapshot.stm_count, snapshot.mtm_count, snapshot.ltm_count
-            ),
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::MemoryUpdated {
+                layer: "ALL".to_string(),
+                operation: format!(
+                    "health_update_stm:{}_mtm:{}_ltm:{}",
+                    snapshot.stm_count, snapshot.mtm_count, snapshot.ltm_count
+                ),
+            })
+            .ok();
 
         // Emit event with memory health snapshot
         let _ = self.event_tx.send(KernelEvent::MemoryUpdated {
             layer: "ALL".to_string(),
-            operation: format!("health_update:stm={}_mtm={}_ltm={}", 
-                snapshot.stm_count, 
-                snapshot.mtm_count, 
-                snapshot.ltm_count
+            operation: format!(
+                "health_update:stm={}_mtm={}_ltm={}",
+                snapshot.stm_count, snapshot.mtm_count, snapshot.ltm_count
             ),
         });
     }
@@ -384,9 +395,9 @@ impl MemoryKernelBridge {
     /// Handle memory error
     async fn handle_error(&self, error: &str) {
         // Broadcast error signal
-        self.signal_bus.send(KernelSignal::SafeMode {
-            enabled: true,
-        }).ok();
+        self.signal_bus
+            .send(KernelSignal::SafeMode { enabled: true })
+            .ok();
 
         // Emit error event (using TaskFailed)
         let _ = self.event_tx.send(KernelEvent::TaskFailed {

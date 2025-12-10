@@ -16,7 +16,7 @@ export interface EmptyStateProps {
 
 /**
  * EmptyState - État vide avec CTA optionnel
- * 
+ *
  * @example
  * ```tsx
  * <EmptyState
@@ -28,7 +28,13 @@ export interface EmptyStateProps {
  * />
  * ```
  */
-export function EmptyState({ icon, title, description, actionLabel, onAction }: EmptyStateProps) {
+export function EmptyState({
+  icon,
+  title,
+  description,
+  actionLabel,
+  onAction,
+}: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
       {icon && (

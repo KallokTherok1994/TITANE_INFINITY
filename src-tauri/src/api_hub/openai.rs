@@ -3,11 +3,11 @@
 //! Super Prompt #17 — Intégration OpenAI (GPT, DALL-E, Whisper, Embeddings)
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::{
-    APIRequest, APIHubError, Provider, Modality, RequestContent,
-    harmonizer::HarmonizedResponse, ResponseContent, UsageStats,
+    harmonizer::HarmonizedResponse, APIHubError, APIRequest, Modality, Provider, RequestContent,
+    ResponseContent, UsageStats,
 };
+use serde::{Deserialize, Serialize};
 
 /// Provider OpenAI
 pub struct OpenAIProvider {
@@ -50,20 +50,25 @@ impl OpenAIProvider {
     }
 
     /// Chat completion standard
-    async fn chat_completion(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn chat_completion(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let text = match &request.content {
             RequestContent::Text(t) => t.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected text content".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected text content".to_string(),
+                ))
+            }
         };
 
         let body = ChatCompletionRequest {
             model: self.default_model.clone(),
-            messages: vec![
-                ChatMessage {
-                    role: "user".to_string(),
-                    content: MessageContent::Text(text),
-                }
-            ],
+            messages: vec![ChatMessage {
+                role: "user".to_string(),
+                content: MessageContent::Text(text),
+            }],
             max_tokens: request.max_tokens,
             temperature: request.temperature,
             stream: Some(false),
@@ -87,14 +92,22 @@ impl OpenAIProvider {
     }
 
     /// Vision completion avec images
-    async fn vision_completion(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn vision_completion(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let (text, images) = match &request.content {
             RequestContent::TextWithImages { text, images } => (text.clone(), images.clone()),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected text with images".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected text with images".to_string(),
+                ))
+            }
         };
 
         // Encoder les images en base64
-        let image_contents: Vec<ContentPart> = images.iter()
+        let image_contents: Vec<ContentPart> = images
+            .iter()
             .map(|img| ContentPart::ImageUrl {
                 image_url: ImageUrl {
                     url: format!("data:image/jpeg;base64,{}", base64_encode(img)),
@@ -108,12 +121,10 @@ impl OpenAIProvider {
 
         let body = ChatCompletionRequest {
             model: "gpt-4o".to_string(), // Vision model
-            messages: vec![
-                ChatMessage {
-                    role: "user".to_string(),
-                    content: MessageContent::Parts(content_parts),
-                }
-            ],
+            messages: vec![ChatMessage {
+                role: "user".to_string(),
+                content: MessageContent::Parts(content_parts),
+            }],
             max_tokens: request.max_tokens,
             temperature: request.temperature,
             stream: Some(false),
@@ -136,10 +147,17 @@ impl OpenAIProvider {
     }
 
     /// Transcription audio avec Whisper
-    async fn audio_transcription(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn audio_transcription(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let audio = match &request.content {
             RequestContent::Audio(data) => data.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected audio content".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected audio content".to_string(),
+                ))
+            }
         };
 
         // En production: envoyer vers /v1/audio/transcriptions
@@ -160,10 +178,17 @@ impl OpenAIProvider {
     }
 
     /// Génération d'embeddings
-    async fn generate_embeddings(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn generate_embeddings(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let texts = match &request.content {
             RequestContent::EmbeddingRequest(texts) => texts.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected embedding request".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected embedding request".to_string(),
+                ))
+            }
         };
 
         let body = EmbeddingRequest {
@@ -192,11 +217,18 @@ impl OpenAIProvider {
     }
 
     /// Génération d'images avec DALL-E
-    async fn generate_image(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn generate_image(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         let prompt = match &request.content {
             RequestContent::ImageGenerationPrompt(p) => p.clone(),
             RequestContent::Text(t) => t.clone(),
-            _ => return Err(APIHubError::UnexpectedResponse("Expected prompt".to_string())),
+            _ => {
+                return Err(APIHubError::UnexpectedResponse(
+                    "Expected prompt".to_string(),
+                ))
+            }
         };
 
         let body = ImageGenerationRequest {
@@ -225,10 +257,17 @@ impl OpenAIProvider {
     }
 
     /// Completion multimodale
-    async fn multimodal_completion(&self, request: &APIRequest) -> Result<HarmonizedResponse, APIHubError> {
+    async fn multimodal_completion(
+        &self,
+        request: &APIRequest,
+    ) -> Result<HarmonizedResponse, APIHubError> {
         // Déléguer vers vision ou text selon le contenu
         match &request.content {
-            RequestContent::MultiModal { text, images, audio: _ } => {
+            RequestContent::MultiModal {
+                text,
+                images,
+                audio: _,
+            } => {
                 if !images.is_empty() {
                     let modified_request = APIRequest {
                         content: RequestContent::TextWithImages {
@@ -262,7 +301,10 @@ impl OpenAIProvider {
     // MOCK IMPLEMENTATIONS (remplacer par vrais appels HTTP en production)
     // ════════════════════════════════════════════════════════════════════════
 
-    async fn mock_chat_response(&self, _body: &ChatCompletionRequest) -> Result<MockChatResponse, APIHubError> {
+    async fn mock_chat_response(
+        &self,
+        _body: &ChatCompletionRequest,
+    ) -> Result<MockChatResponse, APIHubError> {
         Ok(MockChatResponse {
             content: "This is a mock response from OpenAI GPT-4o.".to_string(),
             usage: OpenAIUsage {
@@ -273,9 +315,13 @@ impl OpenAIProvider {
         })
     }
 
-    async fn mock_vision_response(&self, _body: &ChatCompletionRequest) -> Result<MockChatResponse, APIHubError> {
+    async fn mock_vision_response(
+        &self,
+        _body: &ChatCompletionRequest,
+    ) -> Result<MockChatResponse, APIHubError> {
         Ok(MockChatResponse {
-            content: "I can see the image you've shared. This is a mock vision analysis.".to_string(),
+            content: "I can see the image you've shared. This is a mock vision analysis."
+                .to_string(),
             usage: OpenAIUsage {
                 prompt_tokens: 1000, // Images use more tokens
                 completion_tokens: 50,
@@ -290,14 +336,21 @@ impl OpenAIProvider {
 
     async fn mock_embeddings(&self, body: &EmbeddingRequest) -> Result<Vec<Vec<f32>>, APIHubError> {
         let dim = body.dimensions.unwrap_or(3072) as usize;
-        let embeddings: Vec<Vec<f32>> = body.input.iter()
+        let embeddings: Vec<Vec<f32>> = body
+            .input
+            .iter()
             .map(|_| (0..dim).map(|i| (i as f32 * 0.001).sin()).collect())
             .collect();
         Ok(embeddings)
     }
 
-    async fn mock_image_generation(&self, _body: &ImageGenerationRequest) -> Result<Vec<String>, APIHubError> {
-        Ok(vec!["https://mock-dalle-image-url.com/generated.png".to_string()])
+    async fn mock_image_generation(
+        &self,
+        _body: &ImageGenerationRequest,
+    ) -> Result<Vec<String>, APIHubError> {
+        Ok(vec![
+            "https://mock-dalle-image-url.com/generated.png".to_string()
+        ])
     }
 }
 
@@ -384,7 +437,7 @@ struct MockChatResponse {
 
 // Helper pour encoder en base64
 fn base64_encode(data: &[u8]) -> String {
-    use base64::{Engine as _, engine::general_purpose::STANDARD};
+    use base64::{engine::general_purpose::STANDARD, Engine as _};
     STANDARD.encode(data)
 }
 

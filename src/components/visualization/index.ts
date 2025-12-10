@@ -9,4 +9,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-export { SingularityFieldCanvas, default as SingularityFieldCanvasDefault } from './SingularityFieldCanvas';
+export {
+  SingularityFieldCanvas,
+  default as SingularityFieldCanvasDefault,
+} from './SingularityFieldCanvas';

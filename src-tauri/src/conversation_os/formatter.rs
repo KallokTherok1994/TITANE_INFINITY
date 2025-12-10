@@ -3,8 +3,8 @@
 //! Super Prompt #9 — Formatage et mise en forme des réponses
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use serde::{Deserialize, Serialize};
 use super::OutputContext;
+use serde::{Deserialize, Serialize};
 
 /// Sortie formatée
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -119,7 +119,9 @@ impl ResponseFormatter {
                 sections.push(FormattedSection {
                     section_type: SectionType::Note,
                     title: Some("Note".to_string()),
-                    content: coherence.recommendations.first()
+                    content: coherence
+                        .recommendations
+                        .first()
                         .cloned()
                         .unwrap_or_default(),
                     order,
@@ -144,15 +146,9 @@ impl ResponseFormatter {
     /// Génère une introduction contextuelle
     fn generate_introduction(&self, context: &OutputContext) -> String {
         match context.emotional_state.suggested_response_tone {
-            super::emotion::ResponseTone::Empathetic => {
-                "Je comprends votre situation.".to_string()
-            }
-            super::emotion::ResponseTone::Calming => {
-                "Prenons cela étape par étape.".to_string()
-            }
-            super::emotion::ResponseTone::Enthusiastic => {
-                "Excellente question!".to_string()
-            }
+            super::emotion::ResponseTone::Empathetic => "Je comprends votre situation.".to_string(),
+            super::emotion::ResponseTone::Calming => "Prenons cela étape par étape.".to_string(),
+            super::emotion::ResponseTone::Enthusiastic => "Excellente question!".to_string(),
             _ => String::new(),
         }
     }
@@ -211,8 +207,7 @@ impl ResponseFormatter {
         let char_count = content.chars().count();
         let reading_time = (word_count as f32 / 200.0 * 60.0) as u32; // ~200 mots/min
         let has_code = content.contains("```") || content.contains("<code>");
-        let has_lists = content.contains("- ") || content.contains("* ") ||
-                        content.contains("1. ");
+        let has_lists = content.contains("- ") || content.contains("* ") || content.contains("1. ");
 
         let complexity_score = if word_count > 500 {
             0.8
@@ -234,7 +229,8 @@ impl ResponseFormatter {
 
     /// Formate une liste
     pub fn format_list(&self, items: &[String], numbered: bool) -> String {
-        items.iter()
+        items
+            .iter()
             .enumerate()
             .map(|(i, item)| {
                 if numbered {

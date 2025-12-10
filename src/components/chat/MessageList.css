@@ -28,7 +28,11 @@
 }
 
 .message-list-container::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--primary, #727b81) 0%,
+    var(--accent, #93b399) 100%
+  );
   border-radius: var(--radius-sm);
   transition: var(--transition-fast);
 }
@@ -64,7 +68,8 @@
 }
 
 @keyframes floatIcon {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -77,7 +82,11 @@
   font-weight: var(--font-bold, 700);
   color: var(--text-primary);
   margin: 0 0 var(--spacing-md, 16px) 0;
-  background: linear-gradient(135deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary, #727b81) 0%,
+    var(--accent, #93b399) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -174,7 +183,9 @@
 }
 
 @keyframes dotPulse {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     opacity: 0.3;
     transform: scale(0.8);
   }
@@ -203,7 +214,8 @@
 }
 
 @keyframes shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   25% {
@@ -337,7 +349,9 @@
   padding: 12px 16px;
   border-radius: 16px;
   animation: messageSlideIn 0.3s ease-out;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .message-bubble:hover {
@@ -371,11 +385,14 @@
 
 .message-streaming {
   border-color: rgba(255, 200, 0, 0.4);
-  animation: messageSlideIn 0.3s ease-out, streamingPulse 2s ease-in-out infinite;
+  animation:
+    messageSlideIn 0.3s ease-out,
+    streamingPulse 2s ease-in-out infinite;
 }
 
 @keyframes streamingPulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.2);
   }
   50% {
@@ -454,7 +471,9 @@
 }
 
 @keyframes typingBounce {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     opacity: 0.3;
     transform: translateY(0);
   }
@@ -504,7 +523,8 @@
 }
 
 @keyframes speakingPulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -566,7 +586,9 @@
 }
 
 @keyframes loadingDot {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.6);
     opacity: 0.4;
   }

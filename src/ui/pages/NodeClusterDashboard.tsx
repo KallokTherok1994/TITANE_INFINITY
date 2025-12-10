@@ -60,8 +60,8 @@ const NodeClusterDashboard: React.FC = () => {
               health: 95,
               load: 45,
               last_seen: Date.now(),
-              capabilities: ['compute', 'storage']
-            }
+              capabilities: ['compute', 'storage'],
+            },
           ]);
         } catch (err) {
           console.error('Failed to fetch stats:', err);
@@ -76,11 +76,16 @@ const NodeClusterDashboard: React.FC = () => {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'Root': return 'text-purple-400';
-      case 'Worker': return 'text-blue-400';
-      case 'Storage': return 'text-green-400';
-      case 'Monitor': return 'text-yellow-400';
-      default: return 'text-gray-400';
+      case 'Root':
+        return 'text-purple-400';
+      case 'Worker':
+        return 'text-blue-400';
+      case 'Storage':
+        return 'text-green-400';
+      case 'Monitor':
+        return 'text-yellow-400';
+      default:
+        return 'text-gray-400';
     }
   };
 
@@ -104,14 +109,16 @@ const NodeClusterDashboard: React.FC = () => {
       {/* Initialization Panel */}
       {!isInitialized && (
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 mb-6 border border-purple-500/30">
-          <h2 className="text-xl font-semibold text-white mb-4">Initialiser la couche Mesh</h2>
+          <h2 className="text-xl font-semibold text-white mb-4">
+            Initialiser la couche Mesh
+          </h2>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label className="block text-sm text-gray-400 mb-2">ID du nœud</label>
               <input
                 type="text"
                 value={nodeId}
-                onChange={(e) => setNodeId(e.target.value)}
+                onChange={e => setNodeId(e.target.value)}
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white"
                 placeholder="node-12345"
               />
@@ -121,7 +128,7 @@ const NodeClusterDashboard: React.FC = () => {
               <input
                 type="number"
                 value={port}
-                onChange={(e) => setPort(parseInt(e.target.value))}
+                onChange={e => setPort(parseInt(e.target.value))}
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2 text-white"
                 placeholder="9999"
               />
@@ -150,7 +157,9 @@ const NodeClusterDashboard: React.FC = () => {
           </div>
           <div className="bg-gradient-to-br from-blue-500/20 to-cyan-500/20 backdrop-blur-xl rounded-2xl p-6 border border-blue-500/30">
             <div className="text-gray-400 text-sm mb-2">Rôle</div>
-            <div className={`text-xl font-bold ${getRoleColor(stats.role)}`}>{stats.role}</div>
+            <div className={`text-xl font-bold ${getRoleColor(stats.role)}`}>
+              {stats.role}
+            </div>
           </div>
           <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 backdrop-blur-xl rounded-2xl p-6 border border-green-500/30">
             <div className="text-gray-400 text-sm mb-2">Pairs</div>
@@ -158,7 +167,9 @@ const NodeClusterDashboard: React.FC = () => {
           </div>
           <div className="bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-6 border border-yellow-500/30">
             <div className="text-gray-400 text-sm mb-2">Charge moy.</div>
-            <div className="text-white text-xl font-bold">{stats.avg_load.toFixed(1)}%</div>
+            <div className="text-white text-xl font-bold">
+              {stats.avg_load.toFixed(1)}%
+            </div>
           </div>
         </div>
       )}
@@ -168,7 +179,7 @@ const NodeClusterDashboard: React.FC = () => {
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl p-6 border border-purple-500/30">
           <h2 className="text-xl font-semibold text-white mb-4">Pairs actifs</h2>
           <div className="space-y-3">
-            {peers.map((peer) => (
+            {peers.map(peer => (
               <div
                 key={peer.id}
                 className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50 hover:border-purple-500/50 transition-all"
@@ -178,7 +189,9 @@ const NodeClusterDashboard: React.FC = () => {
                     <div className="text-white font-semibold">{peer.id}</div>
                     <div className="text-gray-400 text-sm">{peer.addr}</div>
                   </div>
-                  <div className={`px-3 py-1 rounded-full text-sm font-medium ${getRoleColor(peer.role)}`}>
+                  <div
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getRoleColor(peer.role)}`}
+                  >
                     {peer.role}
                   </div>
                 </div>
@@ -193,7 +206,9 @@ const NodeClusterDashboard: React.FC = () => {
                           style={{ width: `${peer.health}%` }}
                         />
                       </div>
-                      <span className="text-white text-sm font-medium">{peer.health}%</span>
+                      <span className="text-white text-sm font-medium">
+                        {peer.health}%
+                      </span>
                     </div>
                   </div>
                   <div>
@@ -211,8 +226,11 @@ const NodeClusterDashboard: React.FC = () => {
                 </div>
 
                 <div className="mt-3 flex gap-2 flex-wrap">
-                  {peer.capabilities.map((cap) => (
-                    <span key={cap} className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full">
+                  {peer.capabilities.map(cap => (
+                    <span
+                      key={cap}
+                      className="px-2 py-1 bg-purple-500/20 text-purple-300 text-xs rounded-full"
+                    >
                       {cap}
                     </span>
                   ))}

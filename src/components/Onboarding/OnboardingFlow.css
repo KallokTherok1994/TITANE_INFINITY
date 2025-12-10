@@ -430,7 +430,11 @@
   align-items: center;
   gap: 16px;
   padding: 20px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.1) 100%
+  );
   border-radius: 16px;
   width: 100%;
 }
@@ -893,7 +897,11 @@
   align-items: center;
   gap: 16px;
   padding: 24px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.1) 100%
+  );
   border-radius: 16px;
   width: 100%;
 }

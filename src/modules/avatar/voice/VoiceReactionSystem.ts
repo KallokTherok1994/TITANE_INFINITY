@@ -10,22 +10,22 @@ import * as THREE from 'three';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface VoiceAnalysis {
-  rms: number;              // Root Mean Square (volume) 0.0-1.0
-  pitch: number;            // Pitch in Hz
-  intensity: number;        // Overall intensity 0.0-1.0
-  isVoiced: boolean;        // Is currently speaking
-  phraseDuration: number;   // Current phrase duration (ms)
+  rms: number; // Root Mean Square (volume) 0.0-1.0
+  pitch: number; // Pitch in Hz
+  intensity: number; // Overall intensity 0.0-1.0
+  isVoiced: boolean; // Is currently speaking
+  phraseDuration: number; // Current phrase duration (ms)
 }
 
 export interface VoiceReactionConfig {
-  headMovementSensitivity: number;      // Head rotation sensitivity
-  headMovementMax: number;              // Max head rotation (degrees)
-  torsoVibrationSensitivity: number;    // Torso vibration sensitivity
-  torsoVibrationMax: number;            // Max torso vibration (meters)
-  shoulderLiftThreshold: number;        // Phrase duration for shoulder lift (ms)
-  shoulderLiftAmount: number;           // Shoulder lift amount (meters)
-  breathingAmplitude: number;           // Breathing chest expansion (meters)
-  breathingFrequency: number;           // Breathing cycles per minute
+  headMovementSensitivity: number; // Head rotation sensitivity
+  headMovementMax: number; // Max head rotation (degrees)
+  torsoVibrationSensitivity: number; // Torso vibration sensitivity
+  torsoVibrationMax: number; // Max torso vibration (meters)
+  shoulderLiftThreshold: number; // Phrase duration for shoulder lift (ms)
+  shoulderLiftAmount: number; // Shoulder lift amount (meters)
+  breathingAmplitude: number; // Breathing chest expansion (meters)
+  breathingFrequency: number; // Breathing cycles per minute
   enableHeadMovement: boolean;
   enableTorsoVibration: boolean;
   enableShoulderLift: boolean;
@@ -33,10 +33,10 @@ export interface VoiceReactionConfig {
 }
 
 export interface PhysicalReactions {
-  headRotation: THREE.Euler;            // Head rotation (X, Y, Z)
-  torsoPosition: THREE.Vector3;         // Torso position offset
-  shoulderOffset: number;               // Shoulder Y offset
-  chestExpansion: number;               // Chest expansion scale
+  headRotation: THREE.Euler; // Head rotation (X, Y, Z)
+  torsoPosition: THREE.Vector3; // Torso position offset
+  shoulderOffset: number; // Shoulder Y offset
+  chestExpansion: number; // Chest expansion scale
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -62,13 +62,13 @@ export class VoiceReactionSystem {
   constructor(config: Partial<VoiceReactionConfig> = {}) {
     this.config = {
       headMovementSensitivity: 0.5,
-      headMovementMax: 2.86,              // Max 2.86° (subtle)
+      headMovementMax: 2.86, // Max 2.86° (subtle)
       torsoVibrationSensitivity: 0.3,
-      torsoVibrationMax: 0.002,           // 0.2cm max
-      shoulderLiftThreshold: 2000,        // 2s+ phrases
-      shoulderLiftAmount: 0.01,           // 1cm lift
-      breathingAmplitude: 0.015,          // ±1.5cm
-      breathingFrequency: 12,             // 12 cycles/min
+      torsoVibrationMax: 0.002, // 0.2cm max
+      shoulderLiftThreshold: 2000, // 2s+ phrases
+      shoulderLiftAmount: 0.01, // 1cm lift
+      breathingAmplitude: 0.015, // ±1.5cm
+      breathingFrequency: 12, // 12 cycles/min
       enableHeadMovement: true,
       enableTorsoVibration: true,
       enableShoulderLift: true,
@@ -144,8 +144,10 @@ export class VoiceReactionSystem {
 
       // Vary rotation on X/Y axes (natural movement)
       this.targetHeadRotation.x = Math.sin(Date.now() * 0.001) * headAmount * maxRotation;
-      this.targetHeadRotation.y = Math.cos(Date.now() * 0.0015) * headAmount * maxRotation * 0.5;
-      this.targetHeadRotation.z = Math.sin(Date.now() * 0.0008) * headAmount * maxRotation * 0.3;
+      this.targetHeadRotation.y =
+        Math.cos(Date.now() * 0.0015) * headAmount * maxRotation * 0.5;
+      this.targetHeadRotation.z =
+        Math.sin(Date.now() * 0.0008) * headAmount * maxRotation * 0.3;
     } else {
       // Return to neutral
       this.targetHeadRotation.set(0, 0, 0);
@@ -168,13 +170,17 @@ export class VoiceReactionSystem {
     // ─────────────────────────────────────────
     // 3. SHOULDER LIFT (long phrases)
     // ─────────────────────────────────────────
-    if (this.config.enableShoulderLift &&
-        phraseDuration > this.config.shoulderLiftThreshold) {
+    if (
+      this.config.enableShoulderLift &&
+      phraseDuration > this.config.shoulderLiftThreshold
+    ) {
       // Gradual shoulder lift on long phrases
-      const liftProgress = Math.min(1.0,
+      const liftProgress = Math.min(
+        1.0,
         (phraseDuration - this.config.shoulderLiftThreshold) / 1000
       );
-      this.currentReactions.shoulderOffset = liftProgress * this.config.shoulderLiftAmount;
+      this.currentReactions.shoulderOffset =
+        liftProgress * this.config.shoulderLiftAmount;
     } else {
       this.currentReactions.shoulderOffset = 0;
     }
@@ -294,8 +300,10 @@ export function analyzeAudioBuffer(
   // Simple pitch detection (zero-crossing rate)
   let zeroCrossings = 0;
   for (let i = 1; i < audioData.length; i++) {
-    if ((audioData[i] >= 0 && audioData[i - 1] < 0) ||
-        (audioData[i] < 0 && audioData[i - 1] >= 0)) {
+    if (
+      (audioData[i] >= 0 && audioData[i - 1] < 0) ||
+      (audioData[i] < 0 && audioData[i - 1] >= 0)
+    ) {
       zeroCrossings++;
     }
   }

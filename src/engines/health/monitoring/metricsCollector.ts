@@ -63,11 +63,15 @@ export class MetricsCollector {
    */
   getMemory(): MemoryUsage {
     if (typeof performance !== 'undefined' && 'memory' in performance) {
-      const mem = (performance as Performance & { memory?: {
-        usedJSHeapSize: number;
-        totalJSHeapSize: number;
-        jsHeapSizeLimit: number;
-      }}).memory;
+      const mem = (
+        performance as Performance & {
+          memory?: {
+            usedJSHeapSize: number;
+            totalJSHeapSize: number;
+            jsHeapSizeLimit: number;
+          };
+        }
+      ).memory;
       if (mem) {
         return {
           used: mem.usedJSHeapSize,
@@ -106,9 +110,7 @@ export class MetricsCollector {
    * Mark an error as recovered
    */
   markErrorRecovered(source: string): void {
-    const recent = this.errors
-      .filter(e => e.source === source && !e.recovered)
-      .pop();
+    const recent = this.errors.filter(e => e.source === source && !e.recovered).pop();
     if (recent) {
       recent.recovered = true;
     }

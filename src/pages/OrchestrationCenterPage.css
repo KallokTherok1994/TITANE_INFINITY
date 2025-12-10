@@ -33,8 +33,15 @@
 }
 
 @keyframes orch-pulse {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.1); }
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -188,8 +195,12 @@
   background: var(--success, #93b399);
 }
 
-.orch-status-indicator.warning { background: var(--warning, #a89f91); }
-.orch-status-indicator.error { background: var(--danger, #8f7a7a); }
+.orch-status-indicator.warning {
+  background: var(--warning, #a89f91);
+}
+.orch-status-indicator.error {
+  background: var(--danger, #8f7a7a);
+}
 
 .orch-status-value {
   font-size: 1.5rem;
@@ -414,7 +425,7 @@
 .orch-mode-btn.active {
   border-color: var(--accent, #93b399);
   color: #fff;
-  background: var(--accent, #93b399)22;
+  background: var(--accent, #93b399) 22;
 }
 
 .orch-mode-icon {

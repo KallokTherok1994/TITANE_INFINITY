@@ -21,7 +21,11 @@ import './ModulePages.css';
 
 export const AdaptiveEngine = () => {
   const adaptiveData = useEngineSubscription('adaptive');
-  const { data, loading } = adaptiveData as { data: AdaptiveData | null; loading: boolean };  if (loading) {
+  const { data, loading } = adaptiveData as {
+    data: AdaptiveData | null;
+    loading: boolean;
+  };
+  if (loading) {
     return (
       <div className="module-page">
         <div className="module-page__loading">
@@ -43,7 +47,9 @@ export const AdaptiveEngine = () => {
           <span className="module-page__icon">🎯</span>
           Adaptive Engine — Optimisation
         </h1>
-        <p className="module-page__subtitle">Ajustements dynamiques et apprentissage adaptatif</p>
+        <p className="module-page__subtitle">
+          Ajustements dynamiques et apprentissage adaptatif
+        </p>
       </div>
 
       <div className="module-page__grid">

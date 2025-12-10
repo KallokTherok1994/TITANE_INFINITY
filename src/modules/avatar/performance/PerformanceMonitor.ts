@@ -19,28 +19,28 @@ interface PerformanceWithMemory extends Performance {
 }
 
 export interface PerformanceMetrics {
-  fps: number;                    // Current FPS
-  averageFps: number;             // Average FPS (last 60 frames)
-  minFps: number;                 // Minimum FPS (last 60 frames)
-  maxFps: number;                 // Maximum FPS (last 60 frames)
-  frameTime: number;              // Frame time (ms)
-  cpuUsage: number;               // CPU usage estimate (0-100%)
-  gpuUsage: number;               // GPU usage estimate (0-100%)
-  memoryUsed: number;             // Memory used (MB)
-  memoryTotal: number;            // Memory total (MB)
-  drawCalls: number;              // Render draw calls (from renderer)
-  triangles: number;              // Total triangles rendered
-  resolution: number;             // Current render resolution scale (0.5-1.0)
+  fps: number; // Current FPS
+  averageFps: number; // Average FPS (last 60 frames)
+  minFps: number; // Minimum FPS (last 60 frames)
+  maxFps: number; // Maximum FPS (last 60 frames)
+  frameTime: number; // Frame time (ms)
+  cpuUsage: number; // CPU usage estimate (0-100%)
+  gpuUsage: number; // GPU usage estimate (0-100%)
+  memoryUsed: number; // Memory used (MB)
+  memoryTotal: number; // Memory total (MB)
+  drawCalls: number; // Render draw calls (from renderer)
+  triangles: number; // Total triangles rendered
+  resolution: number; // Current render resolution scale (0.5-1.0)
 }
 
 export interface PerformanceConfig {
-  targetFps: number;              // Target FPS (60 or 120)
-  minFps: number;                 // Minimum acceptable FPS
-  enableDRS: boolean;             // Dynamic Resolution Scaling
-  drsMinScale: number;            // Min resolution scale (0.5 = 50%)
-  drsMaxScale: number;            // Max resolution scale (1.0 = 100%)
-  drsAdjustSpeed: number;         // DRS adjustment speed (0.01-0.1)
-  logInterval: number;            // Console log interval (ms) - 0 = disabled
+  targetFps: number; // Target FPS (60 or 120)
+  minFps: number; // Minimum acceptable FPS
+  enableDRS: boolean; // Dynamic Resolution Scaling
+  drsMinScale: number; // Min resolution scale (0.5 = 50%)
+  drsMaxScale: number; // Max resolution scale (1.0 = 100%)
+  drsAdjustSpeed: number; // DRS adjustment speed (0.01-0.1)
+  logInterval: number; // Console log interval (ms) - 0 = disabled
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -70,7 +70,7 @@ export class PerformanceMonitor {
       drsMinScale: 0.5,
       drsMaxScale: 1.0,
       drsAdjustSpeed: 0.02,
-      logInterval: 5000,  // Log every 5s
+      logInterval: 5000, // Log every 5s
       ...config,
     };
 
@@ -121,7 +121,8 @@ export class PerformanceMonitor {
     this.currentMetrics.frameTime = frameTime;
 
     // Calculate average FPS
-    const avgFrameTime = this.frameHistory.reduce((a, b) => a + b, 0) / this.frameHistory.length;
+    const avgFrameTime =
+      this.frameHistory.reduce((a, b) => a + b, 0) / this.frameHistory.length;
     this.currentMetrics.averageFps = 1000 / avgFrameTime;
 
     // Calculate min/max FPS
@@ -139,7 +140,10 @@ export class PerformanceMonitor {
     }
 
     // Estimate CPU usage (rough approximation)
-    this.currentMetrics.cpuUsage = Math.min(100, (frameTime / (1000 / this.config.targetFps)) * 100);
+    this.currentMetrics.cpuUsage = Math.min(
+      100,
+      (frameTime / (1000 / this.config.targetFps)) * 100
+    );
 
     // Dynamic Resolution Scaling
     if (this.config.enableDRS) {

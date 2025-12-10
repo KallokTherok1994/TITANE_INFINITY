@@ -3,9 +3,7 @@
   "identifier": "self-heal",
   "description": "Capability pour le Self-Healing et l'autonomie TITANE∞",
   "windows": ["main"],
-  "permissions": [
-    "core:default"
-  ],
+  "permissions": ["core:default"],
   "commands": {
     "allow": [
       "autonomy_scan_backend",

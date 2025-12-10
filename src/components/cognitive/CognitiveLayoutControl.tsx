@@ -53,7 +53,7 @@ export function CognitiveLayoutControl() {
           <input
             type="checkbox"
             checked={isAdaptationEnabled}
-            onChange={(e) => toggleAdaptation(e.target.checked)}
+            onChange={e => toggleAdaptation(e.target.checked)}
           />
           <span>Adaptation auto</span>
         </label>
@@ -61,9 +61,7 @@ export function CognitiveLayoutControl() {
 
       {/* Mode actuel */}
       <div className="clc-current-mode">
-        <div className="clc-mode-badge">
-          {MODE_LABELS[currentMode]}
-        </div>
+        <div className="clc-mode-badge">{MODE_LABELS[currentMode]}</div>
         <p className="clc-mode-desc">{MODE_DESCRIPTIONS[currentMode]}</p>
       </div>
 
@@ -86,16 +84,10 @@ export function CognitiveLayoutControl() {
           </div>
 
           <div className="clc-suggestion-actions">
-            <button
-              className="clc-btn clc-btn-primary"
-              onClick={acceptSuggestion}
-            >
+            <button className="clc-btn clc-btn-primary" onClick={acceptSuggestion}>
               Appliquer
             </button>
-            <button
-              className="clc-btn clc-btn-secondary"
-              onClick={refuseSuggestion}
-            >
+            <button className="clc-btn clc-btn-secondary" onClick={refuseSuggestion}>
               Refuser
             </button>
           </div>
@@ -106,7 +98,7 @@ export function CognitiveLayoutControl() {
       <div className="clc-mode-selector">
         <h4>Changer de mode</h4>
         <div className="clc-mode-grid">
-          {(Object.keys(MODE_LABELS) as UIMode[]).map((mode) => (
+          {(Object.keys(MODE_LABELS) as UIMode[]).map(mode => (
             <button
               key={mode}
               className={`clc-mode-btn ${currentMode === mode ? 'active' : ''}`}
@@ -157,8 +149,12 @@ export function CognitiveLayoutControl() {
 
           <div className="clc-signal-info">
             <span>⏱️ Session: {signals.sessionDuration.toFixed(0)} min</span>
-            {signals.fatigueEstimated && <span className="clc-warning">⚠️ Fatigue détectée</span>}
-            {signals.blockageDetected && <span className="clc-warning">🔄 Blocage détecté</span>}
+            {signals.fatigueEstimated && (
+              <span className="clc-warning">⚠️ Fatigue détectée</span>
+            )}
+            {signals.blockageDetected && (
+              <span className="clc-warning">🔄 Blocage détecté</span>
+            )}
           </div>
         </div>
       )}

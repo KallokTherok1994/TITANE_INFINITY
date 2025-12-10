@@ -19,36 +19,36 @@
  * Sévérité du problème détecté
  */
 export type IssueSeverity =
-  | 'info'       // Information, pas d'action requise
-  | 'warning'    // Avertissement, action recommandée
-  | 'error'      // Erreur, action requise
-  | 'critical';  // Critique, action immédiate requise
+  | 'info' // Information, pas d'action requise
+  | 'warning' // Avertissement, action recommandée
+  | 'error' // Erreur, action requise
+  | 'critical'; // Critique, action immédiate requise
 
 /**
  * Catégorie de problème
  */
 export type IssueCategory =
-  | 'memory'          // Problèmes mémoire
-  | 'performance'     // Problèmes performance
-  | 'network'         // Problèmes réseau
-  | 'storage'         // Problèmes stockage
-  | 'api'             // Problèmes API
-  | 'audio'           // Problèmes audio/TTS
-  | 'state'           // Problèmes d'état
-  | 'sync'            // Problèmes synchronisation
-  | 'security'        // Problèmes sécurité
-  | 'configuration';  // Problèmes configuration
+  | 'memory' // Problèmes mémoire
+  | 'performance' // Problèmes performance
+  | 'network' // Problèmes réseau
+  | 'storage' // Problèmes stockage
+  | 'api' // Problèmes API
+  | 'audio' // Problèmes audio/TTS
+  | 'state' // Problèmes d'état
+  | 'sync' // Problèmes synchronisation
+  | 'security' // Problèmes sécurité
+  | 'configuration'; // Problèmes configuration
 
 /**
  * État de la réparation
  */
 export type RepairStatus =
-  | 'pending'       // En attente
-  | 'in_progress'   // En cours
-  | 'success'       // Réussi
-  | 'failed'        // Échoué
-  | 'skipped'       // Ignoré
-  | 'manual';       // Intervention manuelle requise
+  | 'pending' // En attente
+  | 'in_progress' // En cours
+  | 'success' // Réussi
+  | 'failed' // Échoué
+  | 'skipped' // Ignoré
+  | 'manual'; // Intervention manuelle requise
 
 // ============================================================================
 // DIAGNOSTICS
@@ -68,7 +68,7 @@ export interface DetectedIssue {
   description: string;
 
   // Contexte
-  source: string;               // Composant source
+  source: string; // Composant source
   stackTrace?: string;
   metadata: Record<string, unknown>;
 
@@ -151,7 +151,7 @@ export interface RepairStrategy {
 
   // Conditions
   applicableIssueCodes: string[];
-  priority: number;               // 1-100
+  priority: number; // 1-100
 
   // Exécution
   automated: boolean;

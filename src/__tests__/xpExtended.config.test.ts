@@ -60,7 +60,7 @@ describe('xpExtended.config.ts', () => {
       expect(XP_EXTENDED_VERSION).toMatch(/^\d+\.\d+\.\d+$/);
     });
 
-    it('TOTAL_ACHIEVEMENTS correspond au nombre d\'achievements', () => {
+    it("TOTAL_ACHIEVEMENTS correspond au nombre d'achievements", () => {
       expect(TOTAL_ACHIEVEMENTS).toBe(Object.keys(ACHIEVEMENT_REGISTRY).length);
       expect(TOTAL_ACHIEVEMENTS).toBeGreaterThan(15);
     });
@@ -232,11 +232,25 @@ describe('xpExtended.config.ts', () => {
   describe('BASE_XP_BY_SOURCE', () => {
     it('contient toutes les sources XP', () => {
       const sources: XPSource[] = [
-        'chat_message', 'chat_response', 'mode_usage', 'automation_run',
-        'automation_success', 'capability_unlock', 'capability_use',
-        'phase_transition', 'achievement', 'milestone', 'daily_login',
-        'streak_bonus', 'project_import', 'file_analysis', 'code_generation',
-        'documentation', 'memory_operation', 'system_operation', 'bonus_event'
+        'chat_message',
+        'chat_response',
+        'mode_usage',
+        'automation_run',
+        'automation_success',
+        'capability_unlock',
+        'capability_use',
+        'phase_transition',
+        'achievement',
+        'milestone',
+        'daily_login',
+        'streak_bonus',
+        'project_import',
+        'file_analysis',
+        'code_generation',
+        'documentation',
+        'memory_operation',
+        'system_operation',
+        'bonus_event',
       ];
 
       for (const source of sources) {
@@ -246,7 +260,7 @@ describe('xpExtended.config.ts', () => {
       }
     });
 
-    it('phase_transition donne le plus d\'XP', () => {
+    it("phase_transition donne le plus d'XP", () => {
       const phaseXP = BASE_XP_BY_SOURCE['phase_transition'].amount;
       for (const source of Object.values(BASE_XP_BY_SOURCE)) {
         expect(phaseXP).toBeGreaterThanOrEqual(source.amount);
@@ -260,7 +274,9 @@ describe('xpExtended.config.ts', () => {
       expect(modes.length).toBeGreaterThan(5);
 
       for (const mode of modes) {
-        expect(MODE_XP_MULTIPLIERS[mode as keyof typeof MODE_XP_MULTIPLIERS]).toBeDefined();
+        expect(
+          MODE_XP_MULTIPLIERS[mode as keyof typeof MODE_XP_MULTIPLIERS]
+        ).toBeDefined();
       }
     });
   });
@@ -271,9 +287,14 @@ describe('xpExtended.config.ts', () => {
       expect(PHASE_XP_MULTIPLIERS['phase_omega']).toBeGreaterThan(1.5);
 
       const phases = [
-        'phase_1_nascent', 'phase_2_learning', 'phase_3_assistant',
-        'phase_4_partner', 'phase_5_expert', 'phase_6_master',
-        'phase_7_transcendent', 'phase_omega'
+        'phase_1_nascent',
+        'phase_2_learning',
+        'phase_3_assistant',
+        'phase_4_partner',
+        'phase_5_expert',
+        'phase_6_master',
+        'phase_7_transcendent',
+        'phase_omega',
       ] as const;
 
       for (let i = 1; i < phases.length; i++) {
@@ -293,9 +314,9 @@ describe('xpExtended.config.ts', () => {
       const event = createXPEvent(
         'chat_message',
         'Test message',
-        null,                   // activeMode
-        'phase_1_nascent',      // evolutionPhase
-        0                       // streak
+        null, // activeMode
+        'phase_1_nascent', // evolutionPhase
+        0 // streak
       );
 
       expect(event.id).toBeTruthy();
@@ -320,7 +341,7 @@ describe('xpExtended.config.ts', () => {
         'Test',
         null,
         'phase_1_nascent',
-        7  // 7 jours streak = 1.2x (dans la plage 7-13)
+        7 // 7 jours streak = 1.2x (dans la plage 7-13)
       );
 
       expect(eventWithStreak.finalAmount).toBeGreaterThan(eventNoStreak.finalAmount);
@@ -397,13 +418,20 @@ describe('xpExtended.config.ts', () => {
     });
 
     it('les XP rewards augmentent avec la rareté', () => {
-      const rarityOrder: AchievementRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+      const rarityOrder: AchievementRarity[] = [
+        'common',
+        'uncommon',
+        'rare',
+        'epic',
+        'legendary',
+      ];
       const avgXPByRarity: Record<string, number> = {};
 
       for (const rarity of rarityOrder) {
         const achievements = getAchievementsByRarity(rarity);
         if (achievements.length > 0) {
-          avgXPByRarity[rarity] = achievements.reduce((sum, a) => sum + a.xpReward, 0) / achievements.length;
+          avgXPByRarity[rarity] =
+            achievements.reduce((sum, a) => sum + a.xpReward, 0) / achievements.length;
         }
       }
 
@@ -414,7 +442,7 @@ describe('xpExtended.config.ts', () => {
   });
 
   describe('getAchievement', () => {
-    it('retourne l\'achievement correct par ID', () => {
+    it("retourne l'achievement correct par ID", () => {
       const firstAchievement = Object.values(ACHIEVEMENT_REGISTRY)[0];
       const found = getAchievement(firstAchievement.id);
       expect(found).toEqual(firstAchievement);
@@ -433,7 +461,7 @@ describe('xpExtended.config.ts', () => {
       expect(secrets).toHaveLength(0);
     });
 
-    it('inclut les achievements débloqués même s\'ils sont secrets', () => {
+    it("inclut les achievements débloqués même s'ils sont secrets", () => {
       const secretAchievement = Object.values(ACHIEVEMENT_REGISTRY).find(a => a.secret);
       if (secretAchievement) {
         const visible = getVisibleAchievements([secretAchievement.id]);
@@ -445,7 +473,14 @@ describe('xpExtended.config.ts', () => {
 
   describe('getAchievementsByType', () => {
     it('retourne les achievements par type', () => {
-      const types: AchievementType[] = ['milestone', 'streak', 'discovery', 'mastery', 'challenge', 'secret'];
+      const types: AchievementType[] = [
+        'milestone',
+        'streak',
+        'discovery',
+        'mastery',
+        'challenge',
+        'secret',
+      ];
 
       for (const type of types) {
         const achievements = getAchievementsByType(type);
@@ -458,7 +493,13 @@ describe('xpExtended.config.ts', () => {
 
   describe('getAchievementsByRarity', () => {
     it('retourne les achievements par rareté', () => {
-      const rarities: AchievementRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+      const rarities: AchievementRarity[] = [
+        'common',
+        'uncommon',
+        'rare',
+        'epic',
+        'legendary',
+      ];
 
       for (const rarity of rarities) {
         const achievements = getAchievementsByRarity(rarity);
@@ -490,8 +531,14 @@ describe('xpExtended.config.ts', () => {
       const profile = createInitialXPProfile();
 
       const categories: XPCategory[] = [
-        'chat_ia', 'voice', 'code', 'projects',
-        'system', 'learning', 'automation', 'evolution'
+        'chat_ia',
+        'voice',
+        'code',
+        'projects',
+        'system',
+        'learning',
+        'automation',
+        'evolution',
       ];
 
       for (const category of categories) {
@@ -516,8 +563,14 @@ describe('xpExtended.config.ts', () => {
   describe('CATEGORY_LABELS', () => {
     it('contient toutes les catégories', () => {
       const categories: XPCategory[] = [
-        'chat_ia', 'voice', 'code', 'projects',
-        'system', 'learning', 'automation', 'evolution'
+        'chat_ia',
+        'voice',
+        'code',
+        'projects',
+        'system',
+        'learning',
+        'automation',
+        'evolution',
       ];
 
       for (const category of categories) {
@@ -530,7 +583,13 @@ describe('xpExtended.config.ts', () => {
 
   describe('RARITY_COLORS', () => {
     it('contient toutes les raretés', () => {
-      const rarities: AchievementRarity[] = ['common', 'uncommon', 'rare', 'epic', 'legendary'];
+      const rarities: AchievementRarity[] = [
+        'common',
+        'uncommon',
+        'rare',
+        'epic',
+        'legendary',
+      ];
 
       for (const rarity of rarities) {
         expect(RARITY_COLORS[rarity]).toMatch(/^#[0-9a-f]{6}$/i);

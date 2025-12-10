@@ -51,7 +51,9 @@ export const AudioDiagnosticsPanel = ({
     clearError,
   } = useAudioSettings();
 
-  const [activeTab, setActiveTab] = useState<'devices' | 'diagnostics' | 'health'>('devices');
+  const [activeTab, setActiveTab] = useState<'devices' | 'diagnostics' | 'health'>(
+    'devices'
+  );
 
   // ─────────────────────────────────────────────────────────────────
   // HELPERS
@@ -59,39 +61,57 @@ export const AudioDiagnosticsPanel = ({
 
   const getHealthIcon = () => {
     switch (healthSummary.status) {
-      case 'healthy': return '✅';
-      case 'degraded': return '⚠️';
-      case 'error': return '❌';
-      default: return '❓';
+      case 'healthy':
+        return '✅';
+      case 'degraded':
+        return '⚠️';
+      case 'error':
+        return '❌';
+      default:
+        return '❓';
     }
   };
 
   const getHealthLabel = () => {
     switch (healthSummary.status) {
-      case 'healthy': return 'Système audio OK';
-      case 'degraded': return 'Fonctionnement dégradé';
-      case 'error': return 'Problème audio détecté';
-      default: return 'État inconnu';
+      case 'healthy':
+        return 'Système audio OK';
+      case 'degraded':
+        return 'Fonctionnement dégradé';
+      case 'error':
+        return 'Problème audio détecté';
+      default:
+        return 'État inconnu';
     }
   };
 
   const getPermissionIcon = () => {
     switch (permissions.microphone) {
-      case 'granted': return '🎤✓';
-      case 'denied': return '🎤✗';
-      case 'prompt': return '🎤?';
-      default: return '🎤';
+      case 'granted':
+        return '🎤✓';
+      case 'denied':
+        return '🎤✗';
+      case 'prompt':
+        return '🎤?';
+      default:
+        return '🎤';
     }
   };
 
   const getStepIcon = (step: AudioDiagnosticStep) => {
     switch (step.status) {
-      case 'pending': return '⏳';
-      case 'running': return '🔄';
-      case 'success': return '✅';
-      case 'warning': return '⚠️';
-      case 'error': return '❌';
-      default: return '•';
+      case 'pending':
+        return '⏳';
+      case 'running':
+        return '🔄';
+      case 'success':
+        return '✅';
+      case 'warning':
+        return '⚠️';
+      case 'error':
+        return '❌';
+      default:
+        return '•';
     }
   };
 
@@ -162,15 +182,20 @@ export const AudioDiagnosticsPanel = ({
                 {permissions.microphone === 'granted' && (
                   <div className="permission-granted">
                     <span>✅ Permission accordée</span>
-                    <p className="permission-help success">Le microphone est prêt à être utilisé.</p>
+                    <p className="permission-help success">
+                      Le microphone est prêt à être utilisé.
+                    </p>
                   </div>
                 )}
                 {permissions.microphone === 'denied' && (
                   <div className="permission-denied">
                     <span>⚠️ Microphone non accessible</span>
                     <p className="permission-help">
-                      Vérifiez que le microphone est correctement branché et actif.<br/>
-                      Sur Linux, vérifiez les paramètres audio du système (PipeWire/PulseAudio).<br/>
+                      Vérifiez que le microphone est correctement branché et actif.
+                      <br />
+                      Sur Linux, vérifiez les paramètres audio du système
+                      (PipeWire/PulseAudio).
+                      <br />
                       <code>pavucontrol</code> permet de configurer les périphériques.
                     </p>
                     <button
@@ -183,7 +208,9 @@ export const AudioDiagnosticsPanel = ({
                 )}
                 {permissions.microphone === 'prompt' && (
                   <div className="permission-prompt">
-                    <p className="permission-help">Cliquez pour tester l'accès au microphone.</p>
+                    <p className="permission-help">
+                      Cliquez pour tester l'accès au microphone.
+                    </p>
                     <button
                       className="adp-btn primary"
                       onClick={requestMicrophonePermission}
@@ -196,7 +223,8 @@ export const AudioDiagnosticsPanel = ({
                   <div className="permission-unavailable">
                     <span>⚠️ Microphone non détecté</span>
                     <p className="permission-help">
-                      Aucun microphone actif détecté par le système.<br/>
+                      Aucun microphone actif détecté par le système.
+                      <br />
                       Branchez un microphone et cliquez sur Réessayer.
                     </p>
                     <button
@@ -232,7 +260,7 @@ export const AudioDiagnosticsPanel = ({
               <select
                 className="adp-select"
                 value={selectedInputDevice}
-                onChange={(e) => selectInputDevice(e.target.value)}
+                onChange={e => selectInputDevice(e.target.value)}
                 disabled={isLoading}
               >
                 {inputDevices.map(device => (
@@ -250,11 +278,12 @@ export const AudioDiagnosticsPanel = ({
                   {isTesting ? '⏳ Test...' : '🎤 Tester le micro'}
                 </button>
                 {micTestResult && (
-                  <div className={`adp-test-result ${micTestResult.success ? 'success' : 'error'}`}>
+                  <div
+                    className={`adp-test-result ${micTestResult.success ? 'success' : 'error'}`}
+                  >
                     {micTestResult.success
                       ? `✅ OK ${micTestResult.signalToNoise ? `(SNR: ${micTestResult.signalToNoise.toFixed(1)}dB)` : ''}`
-                      : `❌ ${micTestResult.errorMessage || 'Échec'}`
-                    }
+                      : `❌ ${micTestResult.errorMessage || 'Échec'}`}
                   </div>
                 )}
               </div>
@@ -269,7 +298,7 @@ export const AudioDiagnosticsPanel = ({
               <select
                 className="adp-select"
                 value={selectedOutputDevice}
-                onChange={(e) => selectOutputDevice(e.target.value)}
+                onChange={e => selectOutputDevice(e.target.value)}
                 disabled={isLoading}
               >
                 {outputDevices.map(device => (
@@ -287,11 +316,12 @@ export const AudioDiagnosticsPanel = ({
                   {isTesting ? '⏳ Test...' : '🔊 Tester les HP'}
                 </button>
                 {speakerTestResult && (
-                  <div className={`adp-test-result ${speakerTestResult.success ? 'success' : 'error'}`}>
+                  <div
+                    className={`adp-test-result ${speakerTestResult.success ? 'success' : 'error'}`}
+                  >
                     {speakerTestResult.success
                       ? `✅ OK ${speakerTestResult.provider ? `(${speakerTestResult.provider})` : ''}`
-                      : `❌ ${speakerTestResult.errorMessage || 'Échec'}`
-                    }
+                      : `❌ ${speakerTestResult.errorMessage || 'Échec'}`}
                   </div>
                 )}
               </div>
@@ -304,7 +334,8 @@ export const AudioDiagnosticsPanel = ({
           <div className="adp-diagnostics">
             <div className="adp-section">
               <p className="adp-section-desc">
-                Lancez un diagnostic complet pour identifier et résoudre les problèmes audio.
+                Lancez un diagnostic complet pour identifier et résoudre les problèmes
+                audio.
               </p>
               <button
                 className="adp-btn primary full-width"
@@ -362,10 +393,10 @@ export const AudioDiagnosticsPanel = ({
                 <div className="adp-health-info">
                   <h4>{getHealthLabel()}</h4>
                   <p className="adp-health-time">
-                    Dernière vérification: {healthSummary.lastCheck
+                    Dernière vérification:{' '}
+                    {healthSummary.lastCheck
                       ? new Date(healthSummary.lastCheck).toLocaleTimeString('fr-FR')
-                      : 'Jamais'
-                    }
+                      : 'Jamais'}
                   </p>
                 </div>
               </div>
@@ -375,15 +406,21 @@ export const AudioDiagnosticsPanel = ({
             <div className="adp-section">
               <h4>État des composants</h4>
               <div className="adp-status-grid">
-                <div className={`adp-status-item ${healthSummary.microphoneOk ? 'ok' : 'error'}`}>
+                <div
+                  className={`adp-status-item ${healthSummary.microphoneOk ? 'ok' : 'error'}`}
+                >
                   <span>{healthSummary.microphoneOk ? '✅' : '❌'}</span>
                   <span>Microphone</span>
                 </div>
-                <div className={`adp-status-item ${healthSummary.speakerOk ? 'ok' : 'error'}`}>
+                <div
+                  className={`adp-status-item ${healthSummary.speakerOk ? 'ok' : 'error'}`}
+                >
                   <span>{healthSummary.speakerOk ? '✅' : '❌'}</span>
                   <span>Haut-parleur</span>
                 </div>
-                <div className={`adp-status-item ${healthSummary.permissionsOk ? 'ok' : 'error'}`}>
+                <div
+                  className={`adp-status-item ${healthSummary.permissionsOk ? 'ok' : 'error'}`}
+                >
                   <span>{healthSummary.permissionsOk ? '✅' : '❌'}</span>
                   <span>Permissions</span>
                 </div>
@@ -406,7 +443,11 @@ export const AudioDiagnosticsPanel = ({
             <div className="adp-section">
               <h4>Actions rapides</h4>
               <div className="adp-quick-actions">
-                <button className="adp-btn" onClick={runDiagnostics} disabled={isDiagnosing}>
+                <button
+                  className="adp-btn"
+                  onClick={runDiagnostics}
+                  disabled={isDiagnosing}
+                >
                   🔧 Diagnostiquer
                 </button>
                 <button className="adp-btn" onClick={refreshDevices} disabled={isLoading}>
@@ -422,13 +463,15 @@ export const AudioDiagnosticsPanel = ({
             <div className="adp-section">
               <h4>🩺 Auto-Réparation</h4>
               <p className="adp-help-text" style={{ marginBottom: '0.75rem' }}>
-                Lance un diagnostic complet avec tentative de réparation automatique des problèmes détectés.
+                Lance un diagnostic complet avec tentative de réparation automatique des
+                problèmes détectés.
               </p>
               <button
                 className="adp-btn primary"
                 onClick={async () => {
                   try {
-                    const { audioHealthService } = await import('@/services/audio/audioHealthCheck');
+                    const { audioHealthService } =
+                      await import('@/services/audio/audioHealthCheck');
                     const result = await audioHealthService.diagnoseAndRepair();
                     console.log('[AudioDiagnosticsPanel] Auto-repair result:', result);
                     // Rafraîchir l'UI après réparation

@@ -27,7 +27,7 @@ export interface ChatPanelProps {
 }
 
 export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }) => {
-  const engine = useVisualStateStore((state) => state.engine);
+  const engine = useVisualStateStore(state => state.engine);
   const { state, visuals, isTransitioning } = useVisualState(engine);
   const { canvasRef, setPattern, setColors, setEmissionRate } = useParticles({
     maxParticles: 300,
@@ -36,13 +36,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
   });
 
   // v21: Panel state management
-  const {
-    isCollapsed,
-    isVisible,
-    zIndex,
-    toggle,
-    bringToFront,
-  } = usePanelState({
+  const { isCollapsed, isVisible, zIndex, toggle, bringToFront } = usePanelState({
     panelId: 'chat',
     defaultCollapsed: false,
     defaultVisible: true,
@@ -51,7 +45,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
   });
 
   // v21: Register panel in global store
-  const registerPanel = usePanelsStore((state) => state.registerPanel);
+  const registerPanel = usePanelsStore(state => state.registerPanel);
   useEffect(() => {
     registerPanel({
       id: 'chat',
@@ -191,7 +185,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
 
           {/* v21: Collapse/Expand button */}
           <button
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation(); // Don't trigger bring-to-front
               toggle();
             }}

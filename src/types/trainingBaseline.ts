@@ -23,50 +23,84 @@
  * Ces labels servent d'exemples supervisés pour l'entraînement
  */
 export type UserStateLabel =
-  | 'calm'           // "Je suis calme"
-  | 'stressed'       // "Je suis stressé"
-  | 'focused'        // "Je suis concentré"
-  | 'fatigued'       // "Je suis fatigué"
-  | 'motivated'      // "Je suis motivé"
-  | 'neutral'        // "Je suis neutre"
-  | 'energized'      // "Je suis en pleine forme"
-  | 'relaxed';       // "Je suis détendu"
+  | 'calm' // "Je suis calme"
+  | 'stressed' // "Je suis stressé"
+  | 'focused' // "Je suis concentré"
+  | 'fatigued' // "Je suis fatigué"
+  | 'motivated' // "Je suis motivé"
+  | 'neutral' // "Je suis neutre"
+  | 'energized' // "Je suis en pleine forme"
+  | 'relaxed'; // "Je suis détendu"
 
 /**
  * Mapping labels -> phrases déclencheurs FR/EN
  */
 export const STATE_LABEL_TRIGGERS: Record<UserStateLabel, string[]> = {
   calm: [
-    'je suis calme', 'i am calm', 'je me sens calme',
-    'état calme', 'calme', 'mon calme',
+    'je suis calme',
+    'i am calm',
+    'je me sens calme',
+    'état calme',
+    'calme',
+    'mon calme',
   ],
   stressed: [
-    'je suis stressé', 'je suis stressée', 'i am stressed',
-    'je me sens stressé', 'état stressé', 'stress',
+    'je suis stressé',
+    'je suis stressée',
+    'i am stressed',
+    'je me sens stressé',
+    'état stressé',
+    'stress',
   ],
   focused: [
-    'je suis concentré', 'je suis concentrée', 'i am focused',
-    'je me sens concentré', 'état concentré', 'focus', 'concentration',
+    'je suis concentré',
+    'je suis concentrée',
+    'i am focused',
+    'je me sens concentré',
+    'état concentré',
+    'focus',
+    'concentration',
   ],
   fatigued: [
-    'je suis fatigué', 'je suis fatiguée', 'i am tired', 'i am fatigued',
-    'je me sens fatigué', 'état fatigué', 'fatigue',
+    'je suis fatigué',
+    'je suis fatiguée',
+    'i am tired',
+    'i am fatigued',
+    'je me sens fatigué',
+    'état fatigué',
+    'fatigue',
   ],
   motivated: [
-    'je suis motivé', 'je suis motivée', 'i am motivated',
-    'je me sens motivé', 'état motivé', 'motivation',
+    'je suis motivé',
+    'je suis motivée',
+    'i am motivated',
+    'je me sens motivé',
+    'état motivé',
+    'motivation',
   ],
   neutral: [
-    'je suis neutre', 'i am neutral', 'état neutre',
-    'je me sens normal', 'normal', 'comme d\'habitude',
+    'je suis neutre',
+    'i am neutral',
+    'état neutre',
+    'je me sens normal',
+    'normal',
+    "comme d'habitude",
   ],
   energized: [
-    'je suis en forme', 'je suis énergique', 'i am energized',
-    'pleine forme', 'full energy', 'énergie',
+    'je suis en forme',
+    'je suis énergique',
+    'i am energized',
+    'pleine forme',
+    'full energy',
+    'énergie',
   ],
   relaxed: [
-    'je suis détendu', 'je suis détendue', 'i am relaxed',
-    'je me sens détendu', 'détente', 'relaxé',
+    'je suis détendu',
+    'je suis détendue',
+    'i am relaxed',
+    'je me sens détendu',
+    'détente',
+    'relaxé',
   ],
 };
 
@@ -94,23 +128,23 @@ export const TRAINING_TRIGGER_PHRASES = [
  */
 export interface StatisticalSignature {
   // Statistiques centrales
-  mean: number;                 // Moyenne
-  median: number;               // Médiane
-  variance: number;             // Variance
-  standardDeviation: number;    // Écart-type
+  mean: number; // Moyenne
+  median: number; // Médiane
+  variance: number; // Variance
+  standardDeviation: number; // Écart-type
 
   // Exponential Moving Average (pour pondérer les récents)
   ema: number;
-  emaAlpha: number;             // Facteur de lissage (0.1 - 0.3 typique)
+  emaAlpha: number; // Facteur de lissage (0.1 - 0.3 typique)
 
   // Échantillons
-  samples: number[];            // Valeurs brutes (limitées)
-  samplesCount: number;         // Nombre total d'échantillons vus
-  maxSamples: number;           // Limite de stockage
+  samples: number[]; // Valeurs brutes (limitées)
+  samplesCount: number; // Nombre total d'échantillons vus
+  maxSamples: number; // Limite de stockage
 
   // Confiance
-  weightedSamplesSum: number;   // Somme pondérée par confiance
-  weightedCount: number;        // Somme des poids
+  weightedSamplesSum: number; // Somme pondérée par confiance
+  weightedCount: number; // Somme des poids
 
   // Timestamps
   firstSampleAt: number;
@@ -146,9 +180,9 @@ export const getDefaultStatisticalSignature = (): StatisticalSignature => ({
 export interface MovementPattern {
   avgMovementScore: number;
   movementDistribution: {
-    low: number;      // % du temps en mouvement faible
-    medium: number;   // % du temps en mouvement moyen
-    high: number;     // % du temps en mouvement élevé
+    low: number; // % du temps en mouvement faible
+    medium: number; // % du temps en mouvement moyen
+    high: number; // % du temps en mouvement élevé
   };
   typicalRange: { min: number; max: number };
   signature: StatisticalSignature;
@@ -160,9 +194,9 @@ export interface MovementPattern {
 export interface PosturePattern {
   avgPostureScore: number;
   postureDistribution: {
-    slouched: number;   // % du temps affaissé
-    neutral: number;    // % du temps neutre
-    upright: number;    // % du temps droit/ouvert
+    slouched: number; // % du temps affaissé
+    neutral: number; // % du temps neutre
+    upright: number; // % du temps droit/ouvert
   };
   typicalRange: { min: number; max: number };
   signature: StatisticalSignature;
@@ -172,19 +206,19 @@ export interface PosturePattern {
  * Pattern d'expressivité faciale
  */
 export interface ExpressivityPattern {
-  range: { min: number; max: number };  // Amplitude typique
-  microchangesPerSecond: number;        // Fréquence de micro-expressions
-  restFaceSignature: StatisticalSignature;  // Visage au repos
+  range: { min: number; max: number }; // Amplitude typique
+  microchangesPerSecond: number; // Fréquence de micro-expressions
+  restFaceSignature: StatisticalSignature; // Visage au repos
 }
 
 /**
  * Pattern de regard
  */
 export interface GazePattern {
-  stabilityMean: number;          // Stabilité moyenne du regard
-  stabilityVariance: number;      // Variance de la stabilité
-  driftFrequency: number;         // Fréquence des décrochages
-  typicalFocusDuration: number;   // Durée typique de focus (ms)
+  stabilityMean: number; // Stabilité moyenne du regard
+  stabilityVariance: number; // Variance de la stabilité
+  driftFrequency: number; // Fréquence des décrochages
+  typicalFocusDuration: number; // Durée typique de focus (ms)
   signature: StatisticalSignature;
 }
 
@@ -197,11 +231,11 @@ export interface GazePattern {
  * Index 0-23 pour chaque heure
  */
 export interface TimeOfDayEnergyCurve {
-  hourlyMeans: number[];          // 24 valeurs (0h-23h)
-  hourlyVariances: number[];      // Variance par heure
-  peakHour: number;               // Heure de pic d'énergie
-  lowHour: number;                // Heure de creux d'énergie
-  samplesPerHour: number[];       // Échantillons par heure
+  hourlyMeans: number[]; // 24 valeurs (0h-23h)
+  hourlyVariances: number[]; // Variance par heure
+  peakHour: number; // Heure de pic d'énergie
+  lowHour: number; // Heure de creux d'énergie
+  samplesPerHour: number[]; // Échantillons par heure
 }
 
 /**
@@ -209,8 +243,8 @@ export interface TimeOfDayEnergyCurve {
  * Index 0-6 (dimanche-samedi)
  */
 export interface WeekdayPatterns {
-  dailyEnergyMeans: number[];     // 7 valeurs
-  dailyTensionMeans: number[];    // 7 valeurs
+  dailyEnergyMeans: number[]; // 7 valeurs
+  dailyTensionMeans: number[]; // 7 valeurs
   dailyEngagementMeans: number[]; // 7 valeurs
   workdayVsWeekend: {
     workdayAvg: number;
@@ -222,9 +256,9 @@ export interface WeekdayPatterns {
  * Patterns par type de conversation
  */
 export interface ConversationTypePatterns {
-  coding: StatisticalSignature;       // Pendant le code
+  coding: StatisticalSignature; // Pendant le code
   brainstorming: StatisticalSignature; // Pendant brainstorm
-  casual: StatisticalSignature;       // Conversation décontractée
+  casual: StatisticalSignature; // Conversation décontractée
   problem_solving: StatisticalSignature; // Résolution de problèmes
 }
 
@@ -358,7 +392,7 @@ export interface PersonalizedThresholds {
   engagementHighThreshold: number;
 
   // Tolérances
-  tensionTolerance: number;       // Tolérance avant alerte tension
+  tensionTolerance: number; // Tolérance avant alerte tension
   fatigueDetectionSensitivity: number; // Sensibilité détection fatigue
 
   // Dernière mise à jour

@@ -731,13 +731,16 @@ class SingularityKernel {
     };
   }
 
-  private calculateGlobalHarmony(metaReport: ReturnType<typeof metaKernel.getSuperConsciousnessReport>): number {
+  private calculateGlobalHarmony(
+    metaReport: ReturnType<typeof metaKernel.getSuperConsciousnessReport>
+  ): number {
     return (
-      metaReport.globalState.health +
-      metaReport.globalState.coherence +
-      metaReport.globalState.stability +
-      metaReport.globalState.evolution
-    ) / 4;
+      (metaReport.globalState.health +
+        metaReport.globalState.coherence +
+        metaReport.globalState.stability +
+        metaReport.globalState.evolution) /
+      4
+    );
   }
 
   /**
@@ -770,10 +773,11 @@ class SingularityKernel {
     this.integrationField.globalContext.harmonyLevel = this.harmonyMatrix.globalHarmony;
     this.integrationField.globalContext.coherenceLevel = cognitiveReport.coherenceScore;
 
-    isDev && console.log('[SINGULARITY-KERNEL] 🔗 Champs cognitifs unifiés:', {
-      harmony: this.harmonyMatrix.globalHarmony.toFixed(1),
-      coherence: cognitiveReport.coherenceScore.toFixed(1),
-    });
+    isDev &&
+      console.log('[SINGULARITY-KERNEL] 🔗 Champs cognitifs unifiés:', {
+        harmony: this.harmonyMatrix.globalHarmony.toFixed(1),
+        coherence: cognitiveReport.coherenceScore.toFixed(1),
+      });
   }
 
   /**
@@ -831,7 +835,7 @@ class SingularityKernel {
 
     // Calculer tendance harmonie
     const harmonicTrend = this.calculateTrend(
-      observations.map((o) => (o.stability + o.coherence) / 2)
+      observations.map(o => (o.stability + o.coherence) / 2)
     );
 
     // Calculer fluidité flux
@@ -839,7 +843,7 @@ class SingularityKernel {
 
     // Détecter bottlenecks
     const bottlenecks: string[] = [];
-    metaReport.holisticAnalysis.systemMap.flows.forEach((flow) => {
+    metaReport.holisticAnalysis.systemMap.flows.forEach(flow => {
       if (flow.efficiency < 80) {
         bottlenecks.push(`${flow.name} (${flow.efficiency}%)`);
       }
@@ -897,7 +901,7 @@ class SingularityKernel {
     if (perception.harmonicTrend === 'improving') {
       patternMeaning.push({
         pattern: 'Harmonie croissante',
-        meaning: 'Le système s\'auto-organise efficacement',
+        meaning: "Le système s'auto-organise efficacement",
         significance: 85,
         recommendation: 'Maintenir trajectoire actuelle',
       });
@@ -918,7 +922,7 @@ class SingularityKernel {
     if (perception.interModuleCoherence > 90) {
       emergentDynamics.push({
         name: 'Cohérence naturelle',
-        description: 'Les modules s\'harmonisent sans intervention',
+        description: "Les modules s'harmonisent sans intervention",
         strength: 95,
         category: 'positive',
         origin: 'auto-organisation',
@@ -937,7 +941,7 @@ class SingularityKernel {
 
     // Points incohérence
     const incoherencePoints: IncoherencePoint[] = [];
-    perception.coherenceIssues.forEach((issue) => {
+    perception.coherenceIssues.forEach(issue => {
       incoherencePoints.push({
         location: issue,
         type: 'structure',
@@ -959,7 +963,9 @@ class SingularityKernel {
   /**
    * 3. Définir intention système
    */
-  private defineSystemIntention(interpretation: SystemInterpretation): SystemIntentionState {
+  private defineSystemIntention(
+    interpretation: SystemInterpretation
+  ): SystemIntentionState {
     // Définir intention primaire
     const primaryIntention: SystemIntention = {
       type: 'harmonize',
@@ -1016,7 +1022,7 @@ class SingularityKernel {
     const adaptiveStrategies: AdaptiveStrategy[] = [];
 
     // Générer directives pour kernels
-    intentionState.primaryIntention.targetKernels.forEach((kernel) => {
+    intentionState.primaryIntention.targetKernels.forEach(kernel => {
       kernelDirectives.push({
         targetKernel: kernel,
         action: 'activate',
@@ -1075,7 +1081,7 @@ class SingularityKernel {
 
   private govern(expression: SystemExpression): void {
     // Exécuter directives kernels
-    expression.kernelDirectives.forEach((directive) => {
+    expression.kernelDirectives.forEach(directive => {
       this.executeKernelDirective(directive);
     });
 
@@ -1084,7 +1090,7 @@ class SingularityKernel {
       timestamp: Date.now(),
       type: 'role-assignment',
       decision: `Activated ${expression.kernelDirectives.length} kernel directives`,
-      affectedKernels: expression.kernelDirectives.map((d) => d.targetKernel),
+      affectedKernels: expression.kernelDirectives.map(d => d.targetKernel),
       rationale: expression.systemStyle.identity,
       impact: 90,
     };
@@ -1104,7 +1110,10 @@ class SingularityKernel {
       );
 
     // Mettre à jour état kernel dans matrice
-    const kernel = this.harmonyMatrix.kernels[directive.targetKernel as keyof HarmonyMatrix['kernels']];
+    const kernel =
+      this.harmonyMatrix.kernels[
+        directive.targetKernel as keyof HarmonyMatrix['kernels']
+      ];
     if (kernel) {
       kernel.active = directive.action === 'activate';
       kernel.lastAction = `Directive: ${directive.reason}`;
@@ -1128,7 +1137,8 @@ class SingularityKernel {
     const naturalOrganization = this.operationalSingularity.autoOrganization.score;
 
     // Calculer holisme
-    const holismScore = (continuityScore + harmonicIntelligence + naturalOrganization) / 3;
+    const holismScore =
+      (continuityScore + harmonicIntelligence + naturalOrganization) / 3;
 
     this.systemConsciousness = {
       continuityScore,
@@ -1142,14 +1152,17 @@ class SingularityKernel {
 
   private calculateContinuityScore(): number {
     // Basé sur stabilité intentions + cohérence dans le temps
-    const intentionStability = this.singularityMemory.intention.successfulIntentions.length > 0 ? 95 : 85;
+    const intentionStability =
+      this.singularityMemory.intention.successfulIntentions.length > 0 ? 95 : 85;
     const temporalCoherence = 90;
     return (intentionStability + temporalCoherence) / 2;
   }
 
   private calculateHarmonicIntelligence(): number {
     // Tous kernels travaillent ensemble
-    const activeKernels = Object.values(this.harmonyMatrix.kernels).filter((k) => k.active).length;
+    const activeKernels = Object.values(this.harmonyMatrix.kernels).filter(
+      k => k.active
+    ).length;
     const totalKernels = Object.values(this.harmonyMatrix.kernels).length;
     return (activeKernels / totalKernels) * 100;
   }
@@ -1269,10 +1282,14 @@ class SingularityKernel {
 
   private calculateSystemComplexity(): number {
     // Basé sur nombre kernels actifs + intentions + corrections
-    const activeKernels = Object.values(this.harmonyMatrix.kernels).filter((k) => k.active).length;
-    const activeIntentions = this.harmonyMatrix.intentions.filter((i) => i.status === 'active').length;
+    const activeKernels = Object.values(this.harmonyMatrix.kernels).filter(
+      k => k.active
+    ).length;
+    const activeIntentions = this.harmonyMatrix.intentions.filter(
+      i => i.status === 'active'
+    ).length;
 
-    return Math.min(100, (activeKernels * 5 + activeIntentions * 10));
+    return Math.min(100, activeKernels * 5 + activeIntentions * 10);
   }
 
   private autoStabilize(): void {
@@ -1287,7 +1304,10 @@ class SingularityKernel {
 
   private enforceCoherenceLaw(): void {
     // Vérifier seuil cohérence
-    if (this.harmonyMatrix.states.coherence < this.operationalSingularity.coherenceLaw.coherenceThreshold) {
+    if (
+      this.harmonyMatrix.states.coherence <
+      this.operationalSingularity.coherenceLaw.coherenceThreshold
+    ) {
       isDev && console.log('[SINGULARITY-KERNEL] ⚖️ Application loi cohérence...');
 
       // Forcer harmonisation
@@ -1322,7 +1342,8 @@ class SingularityKernel {
         kernels: Object.keys(this.harmonyMatrix.kernels).length,
         health: metaReport.globalState.health,
       },
-      harmonicCorrections: this.systemExpression?.globalCorrections.map((c) => c.correction) || [],
+      harmonicCorrections:
+        this.systemExpression?.globalCorrections.map(c => c.correction) || [],
       futureOrientations: this.generateFutureOrientations(),
       titaneCoherence: this.harmonyMatrix.principles,
       residualAnomalies: this.detectResidualAnomalies(),
@@ -1359,7 +1380,9 @@ class SingularityKernel {
     }
 
     if (this.systemPerception && this.systemPerception.flowBottlenecks.length > 0) {
-      anomalies.push(`Bottlenecks flux: ${this.systemPerception.flowBottlenecks.join(', ')}`);
+      anomalies.push(
+        `Bottlenecks flux: ${this.systemPerception.flowBottlenecks.join(', ')}`
+      );
     }
 
     return anomalies;

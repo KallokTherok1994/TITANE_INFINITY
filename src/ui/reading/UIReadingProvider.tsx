@@ -19,10 +19,18 @@ import {
   type FontFamilyOption,
   type PresetName,
   type UIReadingCommand,
-  type UIReadingContextValue
+  type UIReadingContextValue,
 } from './UIReadingContext';
 import { ReadingPresets, isValidPreset } from './UIReadingPresets';
-import { validateZoom, validateFontSize, validateLineHeight, validateLetterSpacing, validateMaxContentWidth, validateFontFamily, ValidZoomLevels } from './UIReadingValidator';
+import {
+  validateZoom,
+  validateFontSize,
+  validateLineHeight,
+  validateLetterSpacing,
+  validateMaxContentWidth,
+  validateFontFamily,
+  ValidZoomLevels,
+} from './UIReadingValidator';
 import { loadSettings, saveSettingsDebounced } from './UIReadingPersistence';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -41,7 +49,8 @@ function applyCSSVariables(settings: UIReadingSettings): void {
 
   // Font family mapping
   const fontFamilyMap: Record<FontFamilyOption, string> = {
-    system: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif',
+    system:
+      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif',
     serif: 'Georgia, "Times New Roman", Times, serif',
     mono: '"JetBrains Mono", "Fira Code", Consolas, Monaco, "Courier New", monospace',
   };
@@ -94,7 +103,11 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
   const setZoom = useCallback((level: UIScale) => {
     const result = validateZoom(level);
     if (result.valid || result.clampedValue) {
-      setSettings(prev => ({ ...prev, zoomLevel: (result.clampedValue ?? level) as UIScale, preset: null }));
+      setSettings(prev => ({
+        ...prev,
+        zoomLevel: (result.clampedValue ?? level) as UIScale,
+        preset: null,
+      }));
     }
   }, []);
 
@@ -105,7 +118,11 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
   const setFontSize = useCallback((size: number) => {
     const result = validateFontSize(size);
     if (result.valid || result.clampedValue) {
-      setSettings(prev => ({ ...prev, fontSizeBase: result.clampedValue ?? size, preset: null }));
+      setSettings(prev => ({
+        ...prev,
+        fontSizeBase: result.clampedValue ?? size,
+        preset: null,
+      }));
     }
   }, []);
 
@@ -119,21 +136,33 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
   const setLineHeight = useCallback((height: number) => {
     const result = validateLineHeight(height);
     if (result.valid || result.clampedValue) {
-      setSettings(prev => ({ ...prev, lineHeight: result.clampedValue ?? height, preset: null }));
+      setSettings(prev => ({
+        ...prev,
+        lineHeight: result.clampedValue ?? height,
+        preset: null,
+      }));
     }
   }, []);
 
   const setLetterSpacing = useCallback((spacing: number) => {
     const result = validateLetterSpacing(spacing);
     if (result.valid || result.clampedValue) {
-      setSettings(prev => ({ ...prev, letterSpacing: result.clampedValue ?? spacing, preset: null }));
+      setSettings(prev => ({
+        ...prev,
+        letterSpacing: result.clampedValue ?? spacing,
+        preset: null,
+      }));
     }
   }, []);
 
   const setMaxContentWidth = useCallback((width: number) => {
     const result = validateMaxContentWidth(width);
     if (result.valid || result.clampedValue) {
-      setSettings(prev => ({ ...prev, maxContentWidth: result.clampedValue ?? width, preset: null }));
+      setSettings(prev => ({
+        ...prev,
+        maxContentWidth: result.clampedValue ?? width,
+        preset: null,
+      }));
     }
   }, []);
 
@@ -196,61 +225,73 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
   // IA CONTROL API (Kevin-only, validated)
   // ═══════════════════════════════════════════════════════════════════
 
-  const applyIACommand = useCallback((command: UIReadingCommand): { success: boolean; error?: string } => {
-    try {
-      switch (command.action) {
-        case 'preset':
-          if (typeof command.value === 'string' && isValidPreset(command.value)) {
-            applyPreset(command.value);
+  const applyIACommand = useCallback(
+    (command: UIReadingCommand): { success: boolean; error?: string } => {
+      try {
+        switch (command.action) {
+          case 'preset':
+            if (typeof command.value === 'string' && isValidPreset(command.value)) {
+              applyPreset(command.value);
+              return { success: true };
+            }
+            return { success: false, error: 'Invalid preset value' };
+
+          case 'reset':
+            resetAll();
             return { success: true };
-          }
-          return { success: false, error: 'Invalid preset value' };
 
-        case 'reset':
-          resetAll();
-          return { success: true };
+          case 'set':
+            if (!command.key || command.value === undefined) {
+              return { success: false, error: 'Missing key or value for set action' };
+            }
 
-        case 'set':
-          if (!command.key || command.value === undefined) {
-            return { success: false, error: 'Missing key or value for set action' };
-          }
+            // Note: IA cannot toggle fullscreen for security
+            if (command.key === 'isFullscreen') {
+              return { success: false, error: 'IA cannot toggle fullscreen' };
+            }
 
-          // Note: IA cannot toggle fullscreen for security
-          if (command.key === 'isFullscreen') {
-            return { success: false, error: 'IA cannot toggle fullscreen' };
-          }
+            // Validate and apply specific setting
+            switch (command.key) {
+              case 'zoomLevel':
+                setZoom(command.value as UIScale);
+                return { success: true };
+              case 'fontSizeBase':
+                setFontSize(command.value as number);
+                return { success: true };
+              case 'fontFamily':
+                setFontFamily(command.value as FontFamilyOption);
+                return { success: true };
+              case 'lineHeight':
+                setLineHeight(command.value as number);
+                return { success: true };
+              case 'letterSpacing':
+                setLetterSpacing(command.value as number);
+                return { success: true };
+              case 'maxContentWidth':
+                setMaxContentWidth(command.value as number);
+                return { success: true };
+              default:
+                return { success: false, error: `Unknown setting key: ${command.key}` };
+            }
 
-          // Validate and apply specific setting
-          switch (command.key) {
-            case 'zoomLevel':
-              setZoom(command.value as UIScale);
-              return { success: true };
-            case 'fontSizeBase':
-              setFontSize(command.value as number);
-              return { success: true };
-            case 'fontFamily':
-              setFontFamily(command.value as FontFamilyOption);
-              return { success: true };
-            case 'lineHeight':
-              setLineHeight(command.value as number);
-              return { success: true };
-            case 'letterSpacing':
-              setLetterSpacing(command.value as number);
-              return { success: true };
-            case 'maxContentWidth':
-              setMaxContentWidth(command.value as number);
-              return { success: true };
-            default:
-              return { success: false, error: `Unknown setting key: ${command.key}` };
-          }
-
-        default:
-          return { success: false, error: `Unknown action: ${command.action}` };
+          default:
+            return { success: false, error: `Unknown action: ${command.action}` };
+        }
+      } catch (error) {
+        return { success: false, error: String(error) };
       }
-    } catch (error) {
-      return { success: false, error: String(error) };
-    }
-  }, [applyPreset, resetAll, setZoom, setFontSize, setFontFamily, setLineHeight, setLetterSpacing, setMaxContentWidth]);
+    },
+    [
+      applyPreset,
+      resetAll,
+      setZoom,
+      setFontSize,
+      setFontFamily,
+      setLineHeight,
+      setLetterSpacing,
+      setMaxContentWidth,
+    ]
+  );
 
   // ═══════════════════════════════════════════════════════════════════
   // PANEL STATE
@@ -267,7 +308,10 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       // Ignore if user is typing in an input
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
         return;
       }
 
@@ -334,32 +378,46 @@ export function UIReadingProvider({ children }: UIReadingProviderProps): JSX.Ele
   // CONTEXT VALUE
   // ═══════════════════════════════════════════════════════════════════
 
-  const contextValue: UIReadingContextValue = useMemo(() => ({
-    settings,
-    zoomIn,
-    zoomOut,
-    resetZoom,
-    setZoom,
-    setFontSize,
-    setFontFamily,
-    setLineHeight,
-    setLetterSpacing,
-    setMaxContentWidth,
-    toggleFullscreen,
-    applyPreset,
-    resetAll,
-    applyIACommand,
-    isPanelOpen,
-    togglePanel,
-  }), [
-    settings, zoomIn, zoomOut, resetZoom, setZoom, setFontSize, setFontFamily,
-    setLineHeight, setLetterSpacing, setMaxContentWidth, toggleFullscreen,
-    applyPreset, resetAll, applyIACommand, isPanelOpen, togglePanel
-  ]);
+  const contextValue: UIReadingContextValue = useMemo(
+    () => ({
+      settings,
+      zoomIn,
+      zoomOut,
+      resetZoom,
+      setZoom,
+      setFontSize,
+      setFontFamily,
+      setLineHeight,
+      setLetterSpacing,
+      setMaxContentWidth,
+      toggleFullscreen,
+      applyPreset,
+      resetAll,
+      applyIACommand,
+      isPanelOpen,
+      togglePanel,
+    }),
+    [
+      settings,
+      zoomIn,
+      zoomOut,
+      resetZoom,
+      setZoom,
+      setFontSize,
+      setFontFamily,
+      setLineHeight,
+      setLetterSpacing,
+      setMaxContentWidth,
+      toggleFullscreen,
+      applyPreset,
+      resetAll,
+      applyIACommand,
+      isPanelOpen,
+      togglePanel,
+    ]
+  );
 
   return (
-    <UIReadingContext.Provider value={contextValue}>
-      {children}
-    </UIReadingContext.Provider>
+    <UIReadingContext.Provider value={contextValue}>{children}</UIReadingContext.Provider>
   );
 }

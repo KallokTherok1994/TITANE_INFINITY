@@ -7,11 +7,11 @@
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-use super::brain_state::{
-    AffectiveState, ConversationBrainState, ConversationMode, ConstraintProfile,
-    IntentClass, MemoryContext, MemoryContextItem, StyleProfile,
-};
 use super::behavior_controller::{BehaviorController, BehaviorProfile};
+use super::brain_state::{
+    AffectiveState, ConstraintProfile, ConversationBrainState, ConversationMode, IntentClass,
+    MemoryContext, MemoryContextItem, StyleProfile,
+};
 use super::coherence_controller::CoherenceController;
 use super::emotion_controller::EmotionController;
 use super::evolution_engine::{EvolutionEngine, EvolutionSnapshot};
@@ -566,18 +566,12 @@ mod tests {
     async fn test_intent_classifier() {
         let classifier = IntentClassifier::new();
 
-        assert_eq!(
-            classifier.classify("Comment faire?"),
-            IntentClass::Query
-        );
+        assert_eq!(classifier.classify("Comment faire?"), IntentClass::Query);
         assert_eq!(
             classifier.classify("Aide-moi s'il te plaît"),
             IntentClass::Help
         );
-        assert_eq!(
-            classifier.classify("Crée un poème"),
-            IntentClass::Creative
-        );
+        assert_eq!(classifier.classify("Crée un poème"), IntentClass::Creative);
         assert_eq!(
             classifier.classify("Debug cette erreur"),
             IntentClass::Debug

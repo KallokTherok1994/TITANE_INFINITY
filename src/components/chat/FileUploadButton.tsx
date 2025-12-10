@@ -189,317 +189,354 @@ const analyzeFileContent = (content: string, filename: string): FileAnalysisResu
 };
 
 // Composant principal
-export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(({
-  onFilesSelected,
-  onFileAnalyzed,
-  disabled = false,
-  maxFiles = 10,
-  maxSizeBytes = 10 * 1024 * 1024, // 10 MB
-  acceptedTypes = ALL_SUPPORTED_EXTENSIONS,
-  showPreview = true,
-  className = '',
-}) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<AnalyzedFile[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
+  ({
+    onFilesSelected,
+    onFileAnalyzed,
+    disabled = false,
+    maxFiles = 10,
+    maxSizeBytes = 10 * 1024 * 1024, // 10 MB
+    acceptedTypes = ALL_SUPPORTED_EXTENSIONS,
+    showPreview = true,
+    className = '',
+  }) => {
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState<AnalyzedFile[]>([]);
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-  // Lecture et analyse d'un fichier
-  const processFile = useCallback(async (file: File): Promise<AnalyzedFile> => {
-    const category = classifyFile(file.name, file.type);
-    const id = generateFileId();
+    // Lecture et analyse d'un fichier
+    const processFile = useCallback(
+      async (file: File): Promise<AnalyzedFile> => {
+        const category = classifyFile(file.name, file.type);
+        const id = generateFileId();
 
-    const analyzedFile: AnalyzedFile = {
-      id,
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      category,
-      content: null,
-      preview: '',
-      status: 'pending',
-    };
+        const analyzedFile: AnalyzedFile = {
+          id,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          category,
+          content: null,
+          preview: '',
+          status: 'pending',
+        };
 
-    // Vérification taille
-    if (file.size > maxSizeBytes) {
-      return {
-        ...analyzedFile,
-        status: 'error',
-        error: `Fichier trop volumineux (max ${formatFileSize(maxSizeBytes)})`,
-      };
-    }
+        // Vérification taille
+        if (file.size > maxSizeBytes) {
+          return {
+            ...analyzedFile,
+            status: 'error',
+            error: `Fichier trop volumineux (max ${formatFileSize(maxSizeBytes)})`,
+          };
+        }
 
-    // Pour les images, on ne lit pas le contenu texte
-    if (category === 'image') {
-      return {
-        ...analyzedFile,
-        preview: '🖼️ Image - Aperçu non disponible',
-        status: 'done',
-        analysis: {
-          summary: `Image ${file.type} • ${formatFileSize(file.size)}`,
-          lineCount: 0,
-          wordCount: 0,
-          charCount: 0,
-          contentType: 'image',
-          metadata: { mimeType: file.type },
-        },
-      };
-    }
+        // Pour les images, on ne lit pas le contenu texte
+        if (category === 'image') {
+          return {
+            ...analyzedFile,
+            preview: '🖼️ Image - Aperçu non disponible',
+            status: 'done',
+            analysis: {
+              summary: `Image ${file.type} • ${formatFileSize(file.size)}`,
+              lineCount: 0,
+              wordCount: 0,
+              charCount: 0,
+              contentType: 'image',
+              metadata: { mimeType: file.type },
+            },
+          };
+        }
 
-    // Lecture du contenu texte
-    try {
-      analyzedFile.status = 'analyzing';
-      const content = await file.text();
-      analyzedFile.content = content;
-      analyzedFile.preview = generatePreview(content);
-      analyzedFile.analysis = analyzeFileContent(content, file.name);
-      analyzedFile.status = 'done';
-    } catch (err) {
-      analyzedFile.status = 'error';
-      analyzedFile.error = `Erreur de lecture: ${err instanceof Error ? err.message : 'Erreur inconnue'}`;
-    }
-
-    return analyzedFile;
-  }, [maxSizeBytes]);
-
-  // Traitement de plusieurs fichiers
-  const handleFiles = useCallback(async (fileList: FileList | File[]) => {
-    setError(null);
-    setIsProcessing(true);
-
-    const files = Array.from(fileList).slice(0, maxFiles);
-
-    if (files.length === 0) {
-      setError('Aucun fichier sélectionné');
-      setIsProcessing(false);
-      return;
-    }
-
-    isDev && console.log('[FileUpload] Processing', files.length, 'files');
-
-    const results: AnalyzedFile[] = [];
-
-    for (const file of files) {
-      const result = await processFile(file);
-      results.push(result);
-      onFileAnalyzed?.(result);
-
-      // ═══ SAUVEGARDE MÉMOIRE PERMANENTE + XP ═══
-      // Enregistrer le fichier dans la mémoire IA permanente (backend Tauri)
-      if (result.status === 'done' && result.content) {
+        // Lecture du contenu texte
         try {
-          // Ingestion dans la mémoire IA permanente
-          const memoryResult = await invoke('memory_ingest_file', {
-            path: result.name,
-            content: result.content,
-            category: result.category,
-            metadata: {
-              name: result.name,
-              size: result.size,
-              type: result.type,
-              analysis: result.analysis,
-              timestamp: Date.now(),
+          analyzedFile.status = 'analyzing';
+          const content = await file.text();
+          analyzedFile.content = content;
+          analyzedFile.preview = generatePreview(content);
+          analyzedFile.analysis = analyzeFileContent(content, file.name);
+          analyzedFile.status = 'done';
+        } catch (err) {
+          analyzedFile.status = 'error';
+          analyzedFile.error = `Erreur de lecture: ${err instanceof Error ? err.message : 'Erreur inconnue'}`;
+        }
+
+        return analyzedFile;
+      },
+      [maxSizeBytes]
+    );
+
+    // Traitement de plusieurs fichiers
+    const handleFiles = useCallback(
+      async (fileList: FileList | File[]) => {
+        setError(null);
+        setIsProcessing(true);
+
+        const files = Array.from(fileList).slice(0, maxFiles);
+
+        if (files.length === 0) {
+          setError('Aucun fichier sélectionné');
+          setIsProcessing(false);
+          return;
+        }
+
+        isDev && console.log('[FileUpload] Processing', files.length, 'files');
+
+        const results: AnalyzedFile[] = [];
+
+        for (const file of files) {
+          const result = await processFile(file);
+          results.push(result);
+          onFileAnalyzed?.(result);
+
+          // ═══ SAUVEGARDE MÉMOIRE PERMANENTE + XP ═══
+          // Enregistrer le fichier dans la mémoire IA permanente (backend Tauri)
+          if (result.status === 'done' && result.content) {
+            try {
+              // Ingestion dans la mémoire IA permanente
+              const memoryResult = await invoke('memory_ingest_file', {
+                path: result.name,
+                content: result.content,
+                category: result.category,
+                metadata: {
+                  name: result.name,
+                  size: result.size,
+                  type: result.type,
+                  analysis: result.analysis,
+                  timestamp: Date.now(),
+                },
+              });
+
+              isDev &&
+                console.log(
+                  '[FileUpload] ✅ File ingested to memory:',
+                  result.name,
+                  memoryResult
+                );
+
+              // +20 XP global + domaine memory pour chaque fichier importé avec succès
+              XP.gain(
+                XP_REWARDS.FILE_IMPORT,
+                'file_import',
+                `Fichier importé: ${result.name}`
+              );
+              await awardExperience(
+                'memory',
+                XP_REWARDS.FILE_IMPORT,
+                XPSource.FileImport,
+                {
+                  filename: result.name,
+                  category: result.category,
+                  size: result.size,
+                  lineCount: result.analysis?.lineCount || 0,
+                }
+              );
+              isDev &&
+                console.log(
+                  '[FileUpload] ✨ +20 XP awarded for file import:',
+                  result.name
+                );
+            } catch (memoryError) {
+              // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
+              console.warn(
+                '[FileUpload] Memory ingestion warning (non-blocking):',
+                memoryError
+              );
+
+              // On donne quand même +10 XP pour l'analyse locale
+              try {
+                XP.gain(
+                  10,
+                  'file_analysis',
+                  `Fichier analysé localement: ${result.name}`
+                );
+                await awardExperience('cognitive', 10, XPSource.CognitiveAnalysis, {
+                  filename: result.name,
+                  category: result.category,
+                  localOnly: true,
+                });
+                isDev &&
+                  console.log(
+                    '[FileUpload] ✨ +10 XP awarded for local analysis:',
+                    result.name
+                  );
+              } catch (xpError) {
+                console.warn('[FileUpload] XP award warning:', xpError);
+              }
             }
-          });
-
-          isDev && console.log('[FileUpload] ✅ File ingested to memory:', result.name, memoryResult);
-
-          // +20 XP global + domaine memory pour chaque fichier importé avec succès
-          XP.gain(XP_REWARDS.FILE_IMPORT, 'file_import', `Fichier importé: ${result.name}`);
-          await awardExperience('memory', XP_REWARDS.FILE_IMPORT, XPSource.FileImport, {
-            filename: result.name,
-            category: result.category,
-            size: result.size,
-            lineCount: result.analysis?.lineCount || 0,
-          });
-          isDev && console.log('[FileUpload] ✨ +20 XP awarded for file import:', result.name);
-
-        } catch (memoryError) {
-          // Non-bloquant : l'analyse locale reste disponible même si la mémoire échoue
-          console.warn('[FileUpload] Memory ingestion warning (non-blocking):', memoryError);
-
-          // On donne quand même +10 XP pour l'analyse locale
-          try {
-            XP.gain(10, 'file_analysis', `Fichier analysé localement: ${result.name}`);
-            await awardExperience('cognitive', 10, XPSource.CognitiveAnalysis, {
-              filename: result.name,
-              category: result.category,
-              localOnly: true,
-            });
-            isDev && console.log('[FileUpload] ✨ +10 XP awarded for local analysis:', result.name);
-          } catch (xpError) {
-            console.warn('[FileUpload] XP award warning:', xpError);
           }
         }
+
+        setSelectedFiles(results);
+        onFilesSelected(results);
+        setIsProcessing(false);
+
+        isDev && console.log('[FileUpload] Processed files:', results);
+      },
+      [maxFiles, processFile, onFilesSelected, onFileAnalyzed]
+    );
+
+    // Handlers
+    const handleClick = useCallback(() => {
+      if (!disabled && inputRef.current) {
+        inputRef.current.click();
       }
-    }
+    }, [disabled]);
 
-    setSelectedFiles(results);
-    onFilesSelected(results);
-    setIsProcessing(false);
+    const handleChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+          handleFiles(e.target.files);
+        }
+      },
+      [handleFiles]
+    );
 
-    isDev && console.log('[FileUpload] Processed files:', results);
-  }, [maxFiles, processFile, onFilesSelected, onFileAnalyzed]);
+    const handleDragEnter = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!disabled) setIsDragging(true);
+      },
+      [disabled]
+    );
 
-  // Handlers
-  const handleClick = useCallback(() => {
-    if (!disabled && inputRef.current) {
-      inputRef.current.click();
-    }
-  }, [disabled]);
+    const handleDragLeave = useCallback((e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDragging(false);
+    }, []);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      handleFiles(e.target.files);
-    }
-  }, [handleFiles]);
+    const handleDragOver = useCallback((e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    }, []);
 
-  const handleDragEnter = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!disabled) setIsDragging(true);
-  }, [disabled]);
+    const handleDrop = useCallback(
+      (e: React.DragEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsDragging(false);
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  }, []);
+        if (!disabled && e.dataTransfer.files) {
+          handleFiles(e.dataTransfer.files);
+        }
+      },
+      [disabled, handleFiles]
+    );
 
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
+    const handleRemoveFile = useCallback((fileId: string) => {
+      setSelectedFiles(prev => prev.filter(f => f.id !== fileId));
+    }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
+    const handleClearAll = useCallback(() => {
+      setSelectedFiles([]);
+      setError(null);
+      if (inputRef.current) {
+        inputRef.current.value = '';
+      }
+    }, []);
 
-    if (!disabled && e.dataTransfer.files) {
-      handleFiles(e.dataTransfer.files);
-    }
-  }, [disabled, handleFiles]);
+    return (
+      <div className={`file-upload-container ${className}`.trim()}>
+        {/* Zone de drop / Bouton */}
+        <div
+          className={`file-upload-dropzone ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`}
+          onClick={handleClick}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          aria-label="Importer des fichiers"
+        >
+          <input
+            ref={inputRef}
+            type="file"
+            multiple
+            accept={acceptedTypes.join(',')}
+            onChange={handleChange}
+            disabled={disabled}
+            className="file-upload-input"
+          />
 
-  const handleRemoveFile = useCallback((fileId: string) => {
-    setSelectedFiles(prev => prev.filter(f => f.id !== fileId));
-  }, []);
+          <div className="file-upload-content">
+            {isProcessing ? (
+              <>
+                <span className="file-upload-icon spinning">⏳</span>
+                <span className="file-upload-text">Analyse en cours...</span>
+              </>
+            ) : isDragging ? (
+              <>
+                <span className="file-upload-icon">📥</span>
+                <span className="file-upload-text">Déposez vos fichiers ici</span>
+              </>
+            ) : (
+              <>
+                <span className="file-upload-icon">📎</span>
+                <span className="file-upload-text">Importer fichiers</span>
+              </>
+            )}
+          </div>
+        </div>
 
-  const handleClearAll = useCallback(() => {
-    setSelectedFiles([]);
-    setError(null);
-    if (inputRef.current) {
-      inputRef.current.value = '';
-    }
-  }, []);
+        {/* Erreur */}
+        {error && (
+          <div className="file-upload-error">
+            <span>⚠️ {error}</span>
+          </div>
+        )}
 
-  return (
-    <div className={`file-upload-container ${className}`.trim()}>
-      {/* Zone de drop / Bouton */}
-      <div
-        className={`file-upload-dropzone ${isDragging ? 'dragging' : ''} ${disabled ? 'disabled' : ''}`}
-        onClick={handleClick}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        role="button"
-        tabIndex={disabled ? -1 : 0}
-        aria-label="Importer des fichiers"
-      >
-        <input
-          ref={inputRef}
-          type="file"
-          multiple
-          accept={acceptedTypes.join(',')}
-          onChange={handleChange}
-          disabled={disabled}
-          className="file-upload-input"
-        />
-
-        <div className="file-upload-content">
-          {isProcessing ? (
-            <>
-              <span className="file-upload-icon spinning">⏳</span>
-              <span className="file-upload-text">Analyse en cours...</span>
-            </>
-          ) : isDragging ? (
-            <>
-              <span className="file-upload-icon">📥</span>
-              <span className="file-upload-text">Déposez vos fichiers ici</span>
-            </>
-          ) : (
-            <>
-              <span className="file-upload-icon">📎</span>
-              <span className="file-upload-text">
-                Importer fichiers
+        {/* Liste des fichiers sélectionnés */}
+        {showPreview && selectedFiles.length > 0 && (
+          <div className="file-upload-preview">
+            <div className="file-preview-header">
+              <span className="file-preview-count">
+                {selectedFiles.length} fichier{selectedFiles.length > 1 ? 's' : ''}{' '}
+                sélectionné{selectedFiles.length > 1 ? 's' : ''}
               </span>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Erreur */}
-      {error && (
-        <div className="file-upload-error">
-          <span>⚠️ {error}</span>
-        </div>
-      )}
-
-      {/* Liste des fichiers sélectionnés */}
-      {showPreview && selectedFiles.length > 0 && (
-        <div className="file-upload-preview">
-          <div className="file-preview-header">
-            <span className="file-preview-count">
-              {selectedFiles.length} fichier{selectedFiles.length > 1 ? 's' : ''} sélectionné{selectedFiles.length > 1 ? 's' : ''}
-            </span>
-            <button
-              className="file-preview-clear"
-              onClick={handleClearAll}
-              title="Supprimer tous les fichiers"
-            >
-              ✕
-            </button>
-          </div>
-
-          <div className="file-preview-list">
-            {selectedFiles.map(file => (
-              <div
-                key={file.id}
-                className={`file-preview-item ${file.status}`}
+              <button
+                className="file-preview-clear"
+                onClick={handleClearAll}
+                title="Supprimer tous les fichiers"
               >
-                <div className="file-preview-icon">
-                  {getFileIcon(file.category)}
-                </div>
+                ✕
+              </button>
+            </div>
 
-                <div className="file-preview-info">
-                  <div className="file-preview-name" title={file.name}>
-                    {file.name}
-                  </div>
-                  <div className="file-preview-meta">
-                    {file.analysis?.summary || formatFileSize(file.size)}
-                  </div>
-                  {file.error && (
-                    <div className="file-preview-error">{file.error}</div>
-                  )}
-                </div>
+            <div className="file-preview-list">
+              {selectedFiles.map(file => (
+                <div key={file.id} className={`file-preview-item ${file.status}`}>
+                  <div className="file-preview-icon">{getFileIcon(file.category)}</div>
 
-                <button
-                  className="file-preview-remove"
-                  onClick={() => handleRemoveFile(file.id)}
-                  title="Supprimer ce fichier"
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
+                  <div className="file-preview-info">
+                    <div className="file-preview-name" title={file.name}>
+                      {file.name}
+                    </div>
+                    <div className="file-preview-meta">
+                      {file.analysis?.summary || formatFileSize(file.size)}
+                    </div>
+                    {file.error && <div className="file-preview-error">{file.error}</div>}
+                  </div>
+
+                  <button
+                    className="file-preview-remove"
+                    onClick={() => handleRemoveFile(file.id)}
+                    title="Supprimer ce fichier"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
-});
+        )}
+      </div>
+    );
+  }
+);
 
 FileUploadButton.displayName = 'FileUploadButton';
 

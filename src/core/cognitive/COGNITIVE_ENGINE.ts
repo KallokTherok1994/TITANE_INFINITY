@@ -9,13 +9,22 @@
 // ⚡ TITANE∞ v23 — Cognitive Engine
 // Moteur cognitif complet (interface consciente et adaptative)
 
-import { userRhythmAnalyzer, UserRhythm, UserEventType, RhythmMetric } from './USER_RHYTHM_ANALYZER';
+import {
+  userRhythmAnalyzer,
+  UserRhythm,
+  UserEventType,
+  RhythmMetric,
+} from './USER_RHYTHM_ANALYZER';
 import { adaptiveUI, AdaptiveUIConfig } from './ADAPTIVE_UI';
 import { stateEngine, SystemState } from '../visual/STATE_ENGINE';
 import { engineBridge } from '../engines/ENGINE_BRIDGE';
 
 // 🎭 Niveau de conscience UI
-export type ConsciousnessLevel = 'observation' | 'adaptation' | 'reflection' | 'communication';
+export type ConsciousnessLevel =
+  | 'observation'
+  | 'adaptation'
+  | 'reflection'
+  | 'communication';
 
 // 🧠 État cognitif complet
 export interface CognitiveState {
@@ -49,12 +58,12 @@ export class CognitiveEngine {
     this.state.active = true;
 
     // 1. Observer le rythme utilisateur
-    userRhythmAnalyzer.onRhythmChange((rhythm) => {
+    userRhythmAnalyzer.onRhythmChange(rhythm => {
       this.handleRhythmChange(rhythm);
     });
 
     // 2. Observer l'état système
-    stateEngine.onStateChange((systemState) => {
+    stateEngine.onStateChange(systemState => {
       this.handleStateChange(systemState);
     });
 
@@ -186,7 +195,8 @@ export class CognitiveEngine {
     const config = this.state.uiConfig;
 
     if (config.density === 'compact') adaptations.push('Densité réduite pour rapidité');
-    if (config.animationSpeed === 'disabled') adaptations.push('Animations désactivées (surcharge système)');
+    if (config.animationSpeed === 'disabled')
+      adaptations.push('Animations désactivées (surcharge système)');
     if (config.contrast === 'high') adaptations.push('Contraste élevé pour lisibilité');
     if (config.visualNoise === 'minimal') adaptations.push('Bruit visuel minimisé');
 

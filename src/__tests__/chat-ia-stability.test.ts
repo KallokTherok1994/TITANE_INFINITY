@@ -207,7 +207,9 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     // C'est le comportement attendu : chaque mode a sa propre conversation
     expect(result.current.currentMode).toBe('brainstorming');
 
-    console.log(`✅ SCÉNARIO B: Mode changé, messages sauvegardés (count avant: ${countBefore})`);
+    console.log(
+      `✅ SCÉNARIO B: Mode changé, messages sauvegardés (count avant: ${countBefore})`
+    );
   });
 
   it('SCÉNARIO C: Pas de duplication de messages', async () => {
@@ -247,9 +249,12 @@ describe('Chat IA - Stabilité des Messages (FIX v15.1)', () => {
     });
 
     // Puis revenir à false après réponse
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    }, { timeout: 5000 });
+    await waitFor(
+      () => {
+        expect(result.current.isLoading).toBe(false);
+      },
+      { timeout: 5000 }
+    );
 
     console.log('✅ SCÉNARIO D: Loading state géré correctement');
   });
@@ -282,7 +287,10 @@ describe('Chat IA - Vérification Anti-Régression', () => {
     let effectTriggerCount = 0;
     const originalConsoleLog = console.log;
     console.log = (...args: unknown[]) => {
-      if (typeof args[0] === 'string' && args[0].includes('🔄 USE CHAT v24.20: Mode changed')) {
+      if (
+        typeof args[0] === 'string' &&
+        args[0].includes('🔄 USE CHAT v24.20: Mode changed')
+      ) {
         effectTriggerCount++;
       }
       originalConsoleLog(...args);

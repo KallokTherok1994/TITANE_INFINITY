@@ -3,7 +3,9 @@
 //! Base de données SQLite avec mode WAL pour robustesse
 //! ═══════════════════════════════════════════════════════════════════════════════
 
-use super::types::{CompactionReport, IntegrityReport, PersistenceError, Snapshot, SnapshotInfo, TitanEvent};
+use super::types::{
+    CompactionReport, IntegrityReport, PersistenceError, Snapshot, SnapshotInfo, TitanEvent,
+};
 use std::path::{Path, PathBuf};
 use tokio::sync::Mutex;
 
@@ -141,8 +143,7 @@ impl PersistenceDB {
             .await
             .unwrap_or_else(|_| "[]".to_string());
 
-        let mut events: Vec<TitanEvent> =
-            serde_json::from_str(&content).unwrap_or_default();
+        let mut events: Vec<TitanEvent> = serde_json::from_str(&content).unwrap_or_default();
 
         // Ajouter le nouvel événement
         events.push(event.clone());
@@ -165,17 +166,22 @@ impl PersistenceDB {
     }
 
     /// Charger les événements depuis un timestamp
-    pub async fn load_events_since(&self, timestamp: u64) -> Result<Vec<TitanEvent>, PersistenceError> {
+    pub async fn load_events_since(
+        &self,
+        timestamp: u64,
+    ) -> Result<Vec<TitanEvent>, PersistenceError> {
         let events_path = self.db_path.with_extension("events.json");
 
         let content = tokio::fs::read_to_string(&events_path)
             .await
             .unwrap_or_else(|_| "[]".to_string());
 
-        let events: Vec<TitanEvent> =
-            serde_json::from_str(&content).unwrap_or_default();
+        let events: Vec<TitanEvent> = serde_json::from_str(&content).unwrap_or_default();
 
-        Ok(events.into_iter().filter(|e| e.timestamp > timestamp).collect())
+        Ok(events
+            .into_iter()
+            .filter(|e| e.timestamp > timestamp)
+            .collect())
     }
 
     /// Sauvegarder un snapshot
@@ -187,8 +193,7 @@ impl PersistenceDB {
             .await
             .unwrap_or_else(|_| "[]".to_string());
 
-        let mut snapshots: Vec<SnapshotRecord> =
-            serde_json::from_str(&content).unwrap_or_default();
+        let mut snapshots: Vec<SnapshotRecord> = serde_json::from_str(&content).unwrap_or_default();
 
         // Ajouter le nouveau snapshot
         snapshots.push(SnapshotRecord {
@@ -232,8 +237,7 @@ impl PersistenceDB {
             .await
             .map_err(|e| PersistenceError::IoError(e.to_string()))?;
 
-        let snapshots: Vec<SnapshotRecord> =
-            serde_json::from_str(&content).unwrap_or_default();
+        let snapshots: Vec<SnapshotRecord> = serde_json::from_str(&content).unwrap_or_default();
 
         if let Some(record) = snapshots.last() {
             let state_blob = base64::decode(&record.state_blob_base64)
@@ -260,12 +264,16 @@ impl PersistenceDB {
 
         // Vérifier que les fichiers existent et sont lisibles
         if !events_path.exists() {
-            report.errors.push("Fichier events.json manquant".to_string());
+            report
+                .errors
+                .push("Fichier events.json manquant".to_string());
             report.is_valid = false;
         }
 
         if !snapshots_path.exists() {
-            report.warnings.push("Fichier snapshots.json manquant".to_string());
+            report
+                .warnings
+                .push("Fichier snapshots.json manquant".to_string());
         }
 
         // Vérifier que les fichiers sont parsables
@@ -278,7 +286,9 @@ impl PersistenceDB {
                     }
                 }
                 Err(e) => {
-                    report.errors.push(format!("Erreur lecture events.json: {}", e));
+                    report
+                        .errors
+                        .push(format!("Erreur lecture events.json: {}", e));
                     report.is_valid = false;
                 }
             }
@@ -293,7 +303,9 @@ impl PersistenceDB {
                     }
                 }
                 Err(e) => {
-                    report.errors.push(format!("Erreur lecture snapshots.json: {}", e));
+                    report
+                        .errors
+                        .push(format!("Erreur lecture snapshots.json: {}", e));
                     report.is_valid = false;
                 }
             }
@@ -311,8 +323,7 @@ impl PersistenceDB {
             .await
             .unwrap_or_else(|_| "[]".to_string());
 
-        let mut events: Vec<TitanEvent> =
-            serde_json::from_str(&content).unwrap_or_default();
+        let mut events: Vec<TitanEvent> = serde_json::from_str(&content).unwrap_or_default();
 
         let original_count = events.len() as u64;
 
@@ -357,15 +368,17 @@ impl PersistenceDB {
             .await
             .map_err(|e| PersistenceError::IoError(e.to_string()))?;
 
-        let snapshots: Vec<SnapshotRecord> =
-            serde_json::from_str(&content).unwrap_or_default();
+        let snapshots: Vec<SnapshotRecord> = serde_json::from_str(&content).unwrap_or_default();
 
-        Ok(snapshots.iter().map(|r| SnapshotInfo {
-            id: r.id.clone(),
-            timestamp: r.timestamp,
-            size_bytes: r.state_blob_base64.len() as u64,
-            schema_version: r.schema_version,
-        }).collect())
+        Ok(snapshots
+            .iter()
+            .map(|r| SnapshotInfo {
+                id: r.id.clone(),
+                timestamp: r.timestamp,
+                size_bytes: r.state_blob_base64.len() as u64,
+                schema_version: r.schema_version,
+            })
+            .collect())
     }
 
     /// Fermer la base

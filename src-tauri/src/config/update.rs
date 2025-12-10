@@ -8,7 +8,6 @@
  *   Phase 2: Configuration Management UI (Day 3-4)
  * ═══════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 
 /**
@@ -55,8 +54,7 @@ pub fn validate_ollama_url(url: &str) -> Result<(), String> {
     }
 
     // Vérifier que l'URL est valide
-    url::Url::parse(url)
-        .map_err(|e| format!("URL Ollama invalide: {}", e))?;
+    url::Url::parse(url).map_err(|e| format!("URL Ollama invalide: {}", e))?;
 
     Ok(())
 }
@@ -70,8 +68,13 @@ pub fn validate_ollama_model(model: &str) -> Result<(), String> {
     }
 
     // Vérifier format basique (alphanumeric + . : - _)
-    if !model.chars().all(|c| c.is_alphanumeric() || c == '.' || c == ':' || c == '-' || c == '_') {
-        return Err("Nom de modèle invalide (caractères autorisés: alphanumeric, ., :, -, _)".to_string());
+    if !model
+        .chars()
+        .all(|c| c.is_alphanumeric() || c == '.' || c == ':' || c == '-' || c == '_')
+    {
+        return Err(
+            "Nom de modèle invalide (caractères autorisés: alphanumeric, ., :, -, _)".to_string(),
+        );
     }
 
     Ok(())
@@ -144,7 +147,6 @@ pub fn validate_temperature(temperature: f32) -> Result<(), String> {
 /**
  * Tauri Commands
  */
-
 use std::env;
 
 /// Update Runtime Configuration
@@ -161,9 +163,7 @@ use std::env;
 /// * Ok(()) : Configuration mise à jour avec succès
 /// * Err(String) : Message d'erreur de validation
 #[tauri::command]
-pub async fn update_runtime_config(
-    update: RuntimeConfigUpdate,
-) -> Result<(), String> {
+pub async fn update_runtime_config(update: RuntimeConfigUpdate) -> Result<(), String> {
     log::info!("🎯 [CONFIG] Updating runtime configuration...");
 
     // Valider les champs fournis
@@ -208,9 +208,7 @@ pub async fn update_runtime_config(
 /// * Ok(()) : Configuration validée avec succès
 /// * Err(String) : Message d'erreur de validation
 #[tauri::command]
-pub async fn update_chat_engine_config(
-    update: ChatEngineConfigUpdate,
-) -> Result<(), String> {
+pub async fn update_chat_engine_config(update: ChatEngineConfigUpdate) -> Result<(), String> {
     log::info!("🎯 [CONFIG] Updating chat engine configuration...");
 
     // Valider les champs fournis

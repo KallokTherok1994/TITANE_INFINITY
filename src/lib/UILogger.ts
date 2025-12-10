@@ -51,14 +51,14 @@ const DEFAULT_CONFIG: UILoggerConfig = {
   maxStoredLogs: 1000,
   enableConsoleOverride: import.meta.env.PROD, // Override uniquement en production
   sensitivePatterns: [
-    /sk-[a-zA-Z0-9]{48}/g,           // OpenAI API keys
-    /AIza[a-zA-Z0-9_-]{30,60}/g,     // Google API keys (variable length)
+    /sk-[a-zA-Z0-9]{48}/g, // OpenAI API keys
+    /AIza[a-zA-Z0-9_-]{30,60}/g, // Google API keys (variable length)
     /eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/g, // JWT tokens
-    /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g,   // Email addresses
-    /\b\d{3}-\d{2}-\d{4}\b/g,        // SSN (US)
-    /\b\d{16}\b/g,                   // Credit card numbers
-    /password["\s:=]+[^\s"]+/gi,     // Password fields
-    /token["\s:=]+[^\s"]+/gi,        // Token fields
+    /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, // Email addresses
+    /\b\d{3}-\d{2}-\d{4}\b/g, // SSN (US)
+    /\b\d{16}\b/g, // Credit card numbers
+    /password["\s:=]+[^\s"]+/gi, // Password fields
+    /token["\s:=]+[^\s"]+/gi, // Token fields
   ],
   minLevel: import.meta.env.PROD ? 'info' : 'debug',
 };
@@ -125,7 +125,7 @@ export class UILogger {
 
   private initializeThrottle(): void {
     const levels: LogLevel[] = ['debug', 'info', 'warn', 'error', 'security'];
-    levels.forEach((level) => {
+    levels.forEach(level => {
       this.throttleState.set(level, { count: 0, windowStart: Date.now() });
     });
   }
@@ -189,7 +189,7 @@ export class UILogger {
 
   private formatArgs(args: unknown[]): string {
     return args
-      .map((arg) => {
+      .map(arg => {
         if (typeof arg === 'string') return arg;
         if (arg instanceof Error) return arg.message;
         try {
@@ -207,7 +207,7 @@ export class UILogger {
 
   private sanitize(message: string): string {
     let sanitized = message;
-    this.config.sensitivePatterns.forEach((pattern) => {
+    this.config.sensitivePatterns.forEach(pattern => {
       sanitized = sanitized.replace(pattern, '[REDACTED]');
     });
     return sanitized;
@@ -302,8 +302,19 @@ export class UILogger {
 
     // Log to original console in dev mode
     if (import.meta.env.DEV) {
-      const consoleMethod = level === 'debug' ? 'debug' : level === 'warn' ? 'warn' : level === 'error' || level === 'security' ? 'error' : 'log';
-      this.originalConsole[consoleMethod](`[UILogger:${level}]`, sanitizedMessage, context || '');
+      const consoleMethod =
+        level === 'debug'
+          ? 'debug'
+          : level === 'warn'
+            ? 'warn'
+            : level === 'error' || level === 'security'
+              ? 'error'
+              : 'log';
+      this.originalConsole[consoleMethod](
+        `[UILogger:${level}]`,
+        sanitizedMessage,
+        context || ''
+      );
     }
   }
 
@@ -323,9 +334,14 @@ export class UILogger {
     this.log('warn', message, context);
   }
 
-  error(message: string, error?: Error | unknown, context?: Record<string, unknown>): void {
+  error(
+    message: string,
+    error?: Error | unknown,
+    context?: Record<string, unknown>
+  ): void {
     const stack = error instanceof Error ? error.stack : undefined;
-    const errorMessage = error instanceof Error ? `${message}: ${error.message}` : message;
+    const errorMessage =
+      error instanceof Error ? `${message}: ${error.message}` : message;
     this.log('error', errorMessage, context, stack);
   }
 
@@ -347,11 +363,11 @@ export class UILogger {
     let filtered = [...this.logs];
 
     if (filter?.level) {
-      filtered = filtered.filter((log) => log.level === filter.level);
+      filtered = filtered.filter(log => log.level === filter.level);
     }
 
     if (filter?.since !== undefined) {
-      filtered = filtered.filter((log) => log.timestamp >= (filter.since ?? 0));
+      filtered = filtered.filter(log => log.timestamp >= (filter.since ?? 0));
     }
 
     if (filter?.limit) {
@@ -363,7 +379,7 @@ export class UILogger {
 
   getRecentErrors(limit = 10): LogEntry[] {
     return this.logs
-      .filter((log) => log.level === 'error' || log.level === 'security')
+      .filter(log => log.level === 'error' || log.level === 'security')
       .slice(-limit);
   }
 
@@ -395,7 +411,7 @@ export class UILogger {
       security: 0,
     };
 
-    this.logs.forEach((log) => {
+    this.logs.forEach(log => {
       byLevel[log.level]++;
     });
 
@@ -454,7 +470,11 @@ export const logWarn = (message: string, context?: Record<string, unknown>): voi
   uiLogger.warn(message, context);
 };
 
-export const logError = (message: string, error?: Error | unknown, context?: Record<string, unknown>): void => {
+export const logError = (
+  message: string,
+  error?: Error | unknown,
+  context?: Record<string, unknown>
+): void => {
   uiLogger.error(message, error, context);
 };
 

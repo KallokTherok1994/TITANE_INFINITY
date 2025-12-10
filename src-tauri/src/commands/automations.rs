@@ -244,230 +244,310 @@ pub fn init() -> AutomationEngineState {
     let configs_len = match state.configs.lock() {
         Ok(c) => c.len(),
         Err(e) => {
-            eprintln!("Warning: Automations configs lock poisoned in init, recovering: {}", e);
+            eprintln!(
+                "Warning: Automations configs lock poisoned in init, recovering: {}",
+                e
+            );
             e.into_inner().len()
         }
     };
-    println!("[AUTOMATION] Engine initialized with {} automations", configs_len);
+    println!(
+        "[AUTOMATION] Engine initialized with {} automations",
+        configs_len
+    );
 
     state
 }
 
 fn register_automations(configs: &mut HashMap<String, AutomationConfig>) {
     // Maintenance
-    configs.insert("auto_backup".to_string(), AutomationConfig {
-        id: "auto_backup".to_string(),
-        name: "Sauvegarde Automatique".to_string(),
-        category: AutomationCategory::Maintenance,
-        security_level: SecurityLevel::Moderate,
-        required_permission: 2,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
-        base_xp_reward: 25,
-        requires_confirmation: true,
-        timeout_ms: 300000,
-        cooldown_ms: 60000,
-    });
+    configs.insert(
+        "auto_backup".to_string(),
+        AutomationConfig {
+            id: "auto_backup".to_string(),
+            name: "Sauvegarde Automatique".to_string(),
+            category: AutomationCategory::Maintenance,
+            security_level: SecurityLevel::Moderate,
+            required_permission: 2,
+            allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
+            base_xp_reward: 25,
+            requires_confirmation: true,
+            timeout_ms: 300000,
+            cooldown_ms: 60000,
+        },
+    );
 
-    configs.insert("auto_cleanup".to_string(), AutomationConfig {
-        id: "auto_cleanup".to_string(),
-        name: "Nettoyage Projet".to_string(),
-        category: AutomationCategory::Maintenance,
-        security_level: SecurityLevel::Moderate,
-        required_permission: 2,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
-        base_xp_reward: 15,
-        requires_confirmation: true,
-        timeout_ms: 60000,
-        cooldown_ms: 30000,
-    });
+    configs.insert(
+        "auto_cleanup".to_string(),
+        AutomationConfig {
+            id: "auto_cleanup".to_string(),
+            name: "Nettoyage Projet".to_string(),
+            category: AutomationCategory::Maintenance,
+            security_level: SecurityLevel::Moderate,
+            required_permission: 2,
+            allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
+            base_xp_reward: 15,
+            requires_confirmation: true,
+            timeout_ms: 60000,
+            cooldown_ms: 30000,
+        },
+    );
 
-    configs.insert("auto_audit".to_string(), AutomationConfig {
-        id: "auto_audit".to_string(),
-        name: "Audit Automatique".to_string(),
-        category: AutomationCategory::Analytics,
-        security_level: SecurityLevel::Safe,
-        required_permission: 1,
-        allowed_modes: Some(vec!["audit".to_string(), "dev".to_string(), "admin".to_string(), "strategy".to_string()]),
-        base_xp_reward: 50,
-        requires_confirmation: false,
-        timeout_ms: 600000,
-        cooldown_ms: 120000,
-    });
+    configs.insert(
+        "auto_audit".to_string(),
+        AutomationConfig {
+            id: "auto_audit".to_string(),
+            name: "Audit Automatique".to_string(),
+            category: AutomationCategory::Analytics,
+            security_level: SecurityLevel::Safe,
+            required_permission: 1,
+            allowed_modes: Some(vec![
+                "audit".to_string(),
+                "dev".to_string(),
+                "admin".to_string(),
+                "strategy".to_string(),
+            ]),
+            base_xp_reward: 50,
+            requires_confirmation: false,
+            timeout_ms: 600000,
+            cooldown_ms: 120000,
+        },
+    );
 
     // Code Quality
-    configs.insert("auto_format".to_string(), AutomationConfig {
-        id: "auto_format".to_string(),
-        name: "Formatage Code".to_string(),
-        category: AutomationCategory::CodeQuality,
-        security_level: SecurityLevel::Moderate,
-        required_permission: 2,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
-        base_xp_reward: 10,
-        requires_confirmation: false,
-        timeout_ms: 60000,
-        cooldown_ms: 10000,
-    });
+    configs.insert(
+        "auto_format".to_string(),
+        AutomationConfig {
+            id: "auto_format".to_string(),
+            name: "Formatage Code".to_string(),
+            category: AutomationCategory::CodeQuality,
+            security_level: SecurityLevel::Moderate,
+            required_permission: 2,
+            allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
+            base_xp_reward: 10,
+            requires_confirmation: false,
+            timeout_ms: 60000,
+            cooldown_ms: 10000,
+        },
+    );
 
-    configs.insert("auto_type_check".to_string(), AutomationConfig {
-        id: "auto_type_check".to_string(),
-        name: "Vérification Types".to_string(),
-        category: AutomationCategory::CodeQuality,
-        security_level: SecurityLevel::Safe,
-        required_permission: 1,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string(), "audit".to_string()]),
-        base_xp_reward: 20,
-        requires_confirmation: false,
-        timeout_ms: 180000,
-        cooldown_ms: 30000,
-    });
+    configs.insert(
+        "auto_type_check".to_string(),
+        AutomationConfig {
+            id: "auto_type_check".to_string(),
+            name: "Vérification Types".to_string(),
+            category: AutomationCategory::CodeQuality,
+            security_level: SecurityLevel::Safe,
+            required_permission: 1,
+            allowed_modes: Some(vec![
+                "dev".to_string(),
+                "admin".to_string(),
+                "audit".to_string(),
+            ]),
+            base_xp_reward: 20,
+            requires_confirmation: false,
+            timeout_ms: 180000,
+            cooldown_ms: 30000,
+        },
+    );
 
     // Testing
-    configs.insert("auto_test_run".to_string(), AutomationConfig {
-        id: "auto_test_run".to_string(),
-        name: "Lancer Tests".to_string(),
-        category: AutomationCategory::Testing,
-        security_level: SecurityLevel::Safe,
-        required_permission: 1,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string(), "audit".to_string()]),
-        base_xp_reward: 30,
-        requires_confirmation: false,
-        timeout_ms: 600000,
-        cooldown_ms: 60000,
-    });
+    configs.insert(
+        "auto_test_run".to_string(),
+        AutomationConfig {
+            id: "auto_test_run".to_string(),
+            name: "Lancer Tests".to_string(),
+            category: AutomationCategory::Testing,
+            security_level: SecurityLevel::Safe,
+            required_permission: 1,
+            allowed_modes: Some(vec![
+                "dev".to_string(),
+                "admin".to_string(),
+                "audit".to_string(),
+            ]),
+            base_xp_reward: 30,
+            requires_confirmation: false,
+            timeout_ms: 600000,
+            cooldown_ms: 60000,
+        },
+    );
 
     // Git
-    configs.insert("auto_git_status".to_string(), AutomationConfig {
-        id: "auto_git_status".to_string(),
-        name: "Git Status".to_string(),
-        category: AutomationCategory::Git,
-        security_level: SecurityLevel::Safe,
-        required_permission: 0,
-        allowed_modes: None, // Tous les modes
-        base_xp_reward: 5,
-        requires_confirmation: false,
-        timeout_ms: 10000,
-        cooldown_ms: 5000,
-    });
+    configs.insert(
+        "auto_git_status".to_string(),
+        AutomationConfig {
+            id: "auto_git_status".to_string(),
+            name: "Git Status".to_string(),
+            category: AutomationCategory::Git,
+            security_level: SecurityLevel::Safe,
+            required_permission: 0,
+            allowed_modes: None, // Tous les modes
+            base_xp_reward: 5,
+            requires_confirmation: false,
+            timeout_ms: 10000,
+            cooldown_ms: 5000,
+        },
+    );
 
-    configs.insert("auto_git_commit".to_string(), AutomationConfig {
-        id: "auto_git_commit".to_string(),
-        name: "Git Commit Assisté".to_string(),
-        category: AutomationCategory::Git,
-        security_level: SecurityLevel::Moderate,
-        required_permission: 2,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
-        base_xp_reward: 20,
-        requires_confirmation: true,
-        timeout_ms: 30000,
-        cooldown_ms: 10000,
-    });
+    configs.insert(
+        "auto_git_commit".to_string(),
+        AutomationConfig {
+            id: "auto_git_commit".to_string(),
+            name: "Git Commit Assisté".to_string(),
+            category: AutomationCategory::Git,
+            security_level: SecurityLevel::Moderate,
+            required_permission: 2,
+            allowed_modes: Some(vec!["dev".to_string(), "admin".to_string()]),
+            base_xp_reward: 20,
+            requires_confirmation: true,
+            timeout_ms: 30000,
+            cooldown_ms: 10000,
+        },
+    );
 
     // Documentation
-    configs.insert("auto_generate_doc".to_string(), AutomationConfig {
-        id: "auto_generate_doc".to_string(),
-        name: "Générer Documentation".to_string(),
-        category: AutomationCategory::Documentation,
-        security_level: SecurityLevel::Moderate,
-        required_permission: 2,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string(), "synthesis".to_string()]),
-        base_xp_reward: 35,
-        requires_confirmation: false,
-        timeout_ms: 300000,
-        cooldown_ms: 60000,
-    });
+    configs.insert(
+        "auto_generate_doc".to_string(),
+        AutomationConfig {
+            id: "auto_generate_doc".to_string(),
+            name: "Générer Documentation".to_string(),
+            category: AutomationCategory::Documentation,
+            security_level: SecurityLevel::Moderate,
+            required_permission: 2,
+            allowed_modes: Some(vec![
+                "dev".to_string(),
+                "admin".to_string(),
+                "synthesis".to_string(),
+            ]),
+            base_xp_reward: 35,
+            requires_confirmation: false,
+            timeout_ms: 300000,
+            cooldown_ms: 60000,
+        },
+    );
 
     // Memory
-    configs.insert("auto_summarize_chat".to_string(), AutomationConfig {
-        id: "auto_summarize_chat".to_string(),
-        name: "Résumer Conversation".to_string(),
-        category: AutomationCategory::Memory,
-        security_level: SecurityLevel::Safe,
-        required_permission: 0,
-        allowed_modes: None,
-        base_xp_reward: 15,
-        requires_confirmation: false,
-        timeout_ms: 30000,
-        cooldown_ms: 10000,
-    });
+    configs.insert(
+        "auto_summarize_chat".to_string(),
+        AutomationConfig {
+            id: "auto_summarize_chat".to_string(),
+            name: "Résumer Conversation".to_string(),
+            category: AutomationCategory::Memory,
+            security_level: SecurityLevel::Safe,
+            required_permission: 0,
+            allowed_modes: None,
+            base_xp_reward: 15,
+            requires_confirmation: false,
+            timeout_ms: 30000,
+            cooldown_ms: 10000,
+        },
+    );
 
-    configs.insert("auto_export_conversation".to_string(), AutomationConfig {
-        id: "auto_export_conversation".to_string(),
-        name: "Exporter Conversation".to_string(),
-        category: AutomationCategory::Memory,
-        security_level: SecurityLevel::Safe,
-        required_permission: 1,
-        allowed_modes: None,
-        base_xp_reward: 10,
-        requires_confirmation: false,
-        timeout_ms: 10000,
-        cooldown_ms: 5000,
-    });
+    configs.insert(
+        "auto_export_conversation".to_string(),
+        AutomationConfig {
+            id: "auto_export_conversation".to_string(),
+            name: "Exporter Conversation".to_string(),
+            category: AutomationCategory::Memory,
+            security_level: SecurityLevel::Safe,
+            required_permission: 1,
+            allowed_modes: None,
+            base_xp_reward: 10,
+            requires_confirmation: false,
+            timeout_ms: 10000,
+            cooldown_ms: 5000,
+        },
+    );
 
-    configs.insert("auto_memory_compact".to_string(), AutomationConfig {
-        id: "auto_memory_compact".to_string(),
-        name: "Compacter Mémoire".to_string(),
-        category: AutomationCategory::Memory,
-        security_level: SecurityLevel::Moderate,
-        required_permission: 2,
-        allowed_modes: Some(vec!["admin".to_string(), "dev".to_string()]),
-        base_xp_reward: 20,
-        requires_confirmation: true,
-        timeout_ms: 60000,
-        cooldown_ms: 300000,
-    });
+    configs.insert(
+        "auto_memory_compact".to_string(),
+        AutomationConfig {
+            id: "auto_memory_compact".to_string(),
+            name: "Compacter Mémoire".to_string(),
+            category: AutomationCategory::Memory,
+            security_level: SecurityLevel::Moderate,
+            required_permission: 2,
+            allowed_modes: Some(vec!["admin".to_string(), "dev".to_string()]),
+            base_xp_reward: 20,
+            requires_confirmation: true,
+            timeout_ms: 60000,
+            cooldown_ms: 300000,
+        },
+    );
 
     // System
-    configs.insert("auto_xp_sync".to_string(), AutomationConfig {
-        id: "auto_xp_sync".to_string(),
-        name: "Synchroniser XP".to_string(),
-        category: AutomationCategory::System,
-        security_level: SecurityLevel::Safe,
-        required_permission: 0,
-        allowed_modes: None,
-        base_xp_reward: 5,
-        requires_confirmation: false,
-        timeout_ms: 10000,
-        cooldown_ms: 30000,
-    });
+    configs.insert(
+        "auto_xp_sync".to_string(),
+        AutomationConfig {
+            id: "auto_xp_sync".to_string(),
+            name: "Synchroniser XP".to_string(),
+            category: AutomationCategory::System,
+            security_level: SecurityLevel::Safe,
+            required_permission: 0,
+            allowed_modes: None,
+            base_xp_reward: 5,
+            requires_confirmation: false,
+            timeout_ms: 10000,
+            cooldown_ms: 30000,
+        },
+    );
 
-    configs.insert("auto_health_check".to_string(), AutomationConfig {
-        id: "auto_health_check".to_string(),
-        name: "Vérification Santé".to_string(),
-        category: AutomationCategory::System,
-        security_level: SecurityLevel::Safe,
-        required_permission: 0,
-        allowed_modes: None,
-        base_xp_reward: 10,
-        requires_confirmation: false,
-        timeout_ms: 30000,
-        cooldown_ms: 60000,
-    });
+    configs.insert(
+        "auto_health_check".to_string(),
+        AutomationConfig {
+            id: "auto_health_check".to_string(),
+            name: "Vérification Santé".to_string(),
+            category: AutomationCategory::System,
+            security_level: SecurityLevel::Safe,
+            required_permission: 0,
+            allowed_modes: None,
+            base_xp_reward: 10,
+            requires_confirmation: false,
+            timeout_ms: 30000,
+            cooldown_ms: 60000,
+        },
+    );
 
-    configs.insert("auto_project_analysis".to_string(), AutomationConfig {
-        id: "auto_project_analysis".to_string(),
-        name: "Analyse Projet".to_string(),
-        category: AutomationCategory::Analytics,
-        security_level: SecurityLevel::Safe,
-        required_permission: 1,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string(), "audit".to_string(), "strategy".to_string()]),
-        base_xp_reward: 40,
-        requires_confirmation: false,
-        timeout_ms: 300000,
-        cooldown_ms: 120000,
-    });
+    configs.insert(
+        "auto_project_analysis".to_string(),
+        AutomationConfig {
+            id: "auto_project_analysis".to_string(),
+            name: "Analyse Projet".to_string(),
+            category: AutomationCategory::Analytics,
+            security_level: SecurityLevel::Safe,
+            required_permission: 1,
+            allowed_modes: Some(vec![
+                "dev".to_string(),
+                "admin".to_string(),
+                "audit".to_string(),
+                "strategy".to_string(),
+            ]),
+            base_xp_reward: 40,
+            requires_confirmation: false,
+            timeout_ms: 300000,
+            cooldown_ms: 120000,
+        },
+    );
 
-    configs.insert("auto_dependency_check".to_string(), AutomationConfig {
-        id: "auto_dependency_check".to_string(),
-        name: "Vérifier Dépendances".to_string(),
-        category: AutomationCategory::Analytics,
-        security_level: SecurityLevel::Safe,
-        required_permission: 1,
-        allowed_modes: Some(vec!["dev".to_string(), "admin".to_string(), "audit".to_string()]),
-        base_xp_reward: 25,
-        requires_confirmation: false,
-        timeout_ms: 120000,
-        cooldown_ms: 300000,
-    });
+    configs.insert(
+        "auto_dependency_check".to_string(),
+        AutomationConfig {
+            id: "auto_dependency_check".to_string(),
+            name: "Vérifier Dépendances".to_string(),
+            category: AutomationCategory::Analytics,
+            security_level: SecurityLevel::Safe,
+            required_permission: 1,
+            allowed_modes: Some(vec![
+                "dev".to_string(),
+                "admin".to_string(),
+                "audit".to_string(),
+            ]),
+            base_xp_reward: 25,
+            requires_confirmation: false,
+            timeout_ms: 120000,
+            cooldown_ms: 300000,
+        },
+    );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -500,7 +580,10 @@ fn validate_automation_request(
 
     // Vérifier si déjà en cours
     if running.contains(&request.automation_id) {
-        return Err(format!("Automation '{}' déjà en cours d'exécution", config.name));
+        return Err(format!(
+            "Automation '{}' déjà en cours d'exécution",
+            config.name
+        ));
     }
 
     // Vérifier cooldown
@@ -552,9 +635,10 @@ fn validate_automation_request(
 pub fn automation_list(
     state: State<AutomationEngineState>,
 ) -> Result<Vec<AutomationConfig>, TAPIError> {
-    let configs = state.configs.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let configs = state
+        .configs
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     Ok(configs.values().cloned().collect())
 }
@@ -566,9 +650,10 @@ pub fn automation_get_available(
     permission_level: u8,
     state: State<AutomationEngineState>,
 ) -> Result<Vec<AutomationConfig>, TAPIError> {
-    let configs = state.configs.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let configs = state
+        .configs
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     let available: Vec<AutomationConfig> = configs
         .values()
@@ -599,21 +684,24 @@ pub fn automation_validate(
     request: AutomationRequest,
     state: State<AutomationEngineState>,
 ) -> Result<bool, TAPIError> {
-    let configs = state.configs.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let configs = state
+        .configs
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     let config = configs.get(&request.automation_id).ok_or_else(|| {
         TAPIError::not_found(format!("Automation '{}' inconnue", request.automation_id))
     })?;
 
-    let cooldowns = state.cooldowns.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let cooldowns = state
+        .cooldowns
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
-    let running = state.running.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let running = state
+        .running
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     match validate_automation_request(config, &request, &cooldowns, &running) {
         Ok(()) => Ok(true),
@@ -632,24 +720,30 @@ pub fn automation_execute(
 
     // Récupérer la config
     let config = {
-        let configs = state.configs.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let configs = state
+            .configs
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
-        configs.get(&request.automation_id).ok_or_else(|| {
-            TAPIError::not_found(format!("Automation '{}' inconnue", request.automation_id))
-        })?.clone()
+        configs
+            .get(&request.automation_id)
+            .ok_or_else(|| {
+                TAPIError::not_found(format!("Automation '{}' inconnue", request.automation_id))
+            })?
+            .clone()
     };
 
     // Valider la requête
     {
-        let cooldowns = state.cooldowns.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let cooldowns = state
+            .cooldowns
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
-        let running = state.running.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let running = state
+            .running
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
         validate_automation_request(&config, &request, &cooldowns, &running)
             .map_err(|msg| TAPIError::validation(msg))?;
@@ -657,9 +751,10 @@ pub fn automation_execute(
 
     // Marquer comme en cours
     {
-        let mut running = state.running.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let mut running = state
+            .running
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
         running.insert(request.automation_id.clone());
     }
 
@@ -701,25 +796,31 @@ pub fn automation_execute(
 
     // Retirer de "running"
     {
-        let mut running = state.running.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let mut running = state
+            .running
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
         running.remove(&request.automation_id);
     }
 
     // Mettre à jour cooldown
     {
-        let mut cooldowns = state.cooldowns.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
-        cooldowns.insert(request.automation_id.clone(), completed_at + config.cooldown_ms);
+        let mut cooldowns = state
+            .cooldowns
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
+        cooldowns.insert(
+            request.automation_id.clone(),
+            completed_at + config.cooldown_ms,
+        );
     }
 
     // Ajouter à l'historique
     {
-        let mut history = state.history.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let mut history = state
+            .history
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
         history.push(result.clone());
 
         // Limiter à 100 entrées
@@ -730,24 +831,33 @@ pub fn automation_execute(
 
     // Mettre à jour les stats
     {
-        let mut stats = state.stats.lock().map_err(|e| {
-            TAPIError::internal(format!("Lock error: {}", e))
-        })?;
+        let mut stats = state
+            .stats
+            .lock()
+            .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
         stats.total_executions += 1;
         stats.successful_executions += 1;
         stats.total_xp_awarded += xp_awarded as u64;
 
         let category_key = format!("{:?}", config.category);
-        *stats.executions_by_category.entry(category_key).or_insert(0) += 1;
+        *stats
+            .executions_by_category
+            .entry(category_key)
+            .or_insert(0) += 1;
 
         // Recalculer moyenne
         if stats.total_executions > 0 {
-            stats.average_duration_ms = ((stats.average_duration_ms * (stats.total_executions - 1)) + duration_ms) / stats.total_executions;
+            stats.average_duration_ms =
+                ((stats.average_duration_ms * (stats.total_executions - 1)) + duration_ms)
+                    / stats.total_executions;
         }
     }
 
-    println!("[AUTOMATION] Exécuté: {} | XP: +{} | Durée: {}ms", config.name, xp_awarded, duration_ms);
+    println!(
+        "[AUTOMATION] Exécuté: {} | XP: +{} | Durée: {}ms",
+        config.name, xp_awarded, duration_ms
+    );
 
     Ok(result)
 }
@@ -758,9 +868,10 @@ pub fn automation_get_history(
     limit: Option<usize>,
     state: State<AutomationEngineState>,
 ) -> Result<Vec<AutomationResult>, TAPIError> {
-    let history = state.history.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let history = state
+        .history
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     let limit = limit.unwrap_or(20).min(100);
     let start = if history.len() > limit {
@@ -777,9 +888,10 @@ pub fn automation_get_history(
 pub fn automation_get_stats(
     state: State<AutomationEngineState>,
 ) -> Result<AutomationStats, TAPIError> {
-    let stats = state.stats.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let stats = state
+        .stats
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     Ok(stats.clone())
 }
@@ -789,9 +901,10 @@ pub fn automation_get_stats(
 pub fn automation_get_cooldowns(
     state: State<AutomationEngineState>,
 ) -> Result<HashMap<String, u64>, TAPIError> {
-    let cooldowns = state.cooldowns.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let cooldowns = state
+        .cooldowns
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     let now = get_timestamp();
 
@@ -811,9 +924,10 @@ pub fn automation_cancel(
     automation_id: String,
     state: State<AutomationEngineState>,
 ) -> Result<bool, TAPIError> {
-    let mut running = state.running.lock().map_err(|e| {
-        TAPIError::internal(format!("Lock error: {}", e))
-    })?;
+    let mut running = state
+        .running
+        .lock()
+        .map_err(|e| TAPIError::internal(format!("Lock error: {}", e)))?;
 
     if running.remove(&automation_id) {
         println!("[AUTOMATION] Annulée: {}", automation_id);
@@ -833,8 +947,14 @@ mod tests {
 
     #[test]
     fn test_automation_id_parsing() {
-        assert_eq!(AutomationId::from_str("auto_backup"), Some(AutomationId::AutoBackup));
-        assert_eq!(AutomationId::from_str("AUTO_TEST_RUN"), Some(AutomationId::AutoTestRun));
+        assert_eq!(
+            AutomationId::from_str("auto_backup"),
+            Some(AutomationId::AutoBackup)
+        );
+        assert_eq!(
+            AutomationId::from_str("AUTO_TEST_RUN"),
+            Some(AutomationId::AutoTestRun)
+        );
         assert_eq!(AutomationId::from_str("invalid"), None);
     }
 
@@ -852,7 +972,10 @@ mod tests {
         let configs = match state.configs.lock() {
             Ok(c) => c,
             Err(e) => {
-                eprintln!("Warning: Automations configs lock poisoned, recovering: {}", e);
+                eprintln!(
+                    "Warning: Automations configs lock poisoned, recovering: {}",
+                    e
+                );
                 e.into_inner()
             }
         };
@@ -883,7 +1006,8 @@ mod tests {
             user_confirmed: false,
         };
 
-        let result = validate_automation_request(&config, &request, &HashMap::new(), &HashSet::new());
+        let result =
+            validate_automation_request(&config, &request, &HashMap::new(), &HashSet::new());
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("Permission insuffisante"));
     }
@@ -912,7 +1036,8 @@ mod tests {
             user_confirmed: false,
         };
 
-        let result = validate_automation_request(&config, &request, &HashMap::new(), &HashSet::new());
+        let result =
+            validate_automation_request(&config, &request, &HashMap::new(), &HashSet::new());
         assert!(result.is_err());
         assert!(result.unwrap_err().contains("non autorisé"));
     }

@@ -91,18 +91,59 @@ const DEFAULT_CONFIG: EmotionAnalyzerConfig = {
 
 /** Mots positifs (sentiment) */
 const POSITIVE_WORDS = new Set([
-  'bien', 'bon', 'super', 'génial', 'excellent', 'parfait', 'merci',
-  'bravo', 'félicitations', 'réussi', 'succès', 'content', 'heureux',
-  'joie', 'aimer', 'adore', 'formidable', 'magnifique', 'beau',
-  'top', 'cool', 'chouette', 'sympa', 'agréable', 'positif',
+  'bien',
+  'bon',
+  'super',
+  'génial',
+  'excellent',
+  'parfait',
+  'merci',
+  'bravo',
+  'félicitations',
+  'réussi',
+  'succès',
+  'content',
+  'heureux',
+  'joie',
+  'aimer',
+  'adore',
+  'formidable',
+  'magnifique',
+  'beau',
+  'top',
+  'cool',
+  'chouette',
+  'sympa',
+  'agréable',
+  'positif',
 ]);
 
 /** Mots négatifs (sentiment) */
 const NEGATIVE_WORDS = new Set([
-  'mal', 'mauvais', 'problème', 'erreur', 'échec', 'désolé', 'triste',
-  'difficile', 'compliqué', 'impossible', 'frustrant', 'ennuyeux',
-  'peur', 'inquiet', 'stress', 'anxieux', 'fatigué', 'épuisé',
-  'pas', 'non', 'jamais', 'rien', 'personne', 'négatif',
+  'mal',
+  'mauvais',
+  'problème',
+  'erreur',
+  'échec',
+  'désolé',
+  'triste',
+  'difficile',
+  'compliqué',
+  'impossible',
+  'frustrant',
+  'ennuyeux',
+  'peur',
+  'inquiet',
+  'stress',
+  'anxieux',
+  'fatigué',
+  'épuisé',
+  'pas',
+  'non',
+  'jamais',
+  'rien',
+  'personne',
+  'négatif',
 ]);
 
 /** Patterns émotionnels (regex) */
@@ -112,24 +153,14 @@ const EMOTION_PATTERNS: Record<TTSEmotion, RegExp[]> = {
     /\b(wow|wahou|génial|super|incroyable)\b/gi,
     /\p{Emoji_Presentation}/gu,
   ],
-  calm: [
-    /\.{3}/g,
-    /\b(calme|tranquille|serein|paisible)\b/gi,
-  ],
-  empathetic: [
-    /\b(comprends?|désolé|soutien|ensemble)\b/gi,
-    /\b(difficile|moment)\b/gi,
-  ],
+  calm: [/\.{3}/g, /\b(calme|tranquille|serein|paisible)\b/gi],
+  empathetic: [/\b(comprends?|désolé|soutien|ensemble)\b/gi, /\b(difficile|moment)\b/gi],
   focusing: [
     /\b(attention|important|précis|exactement)\b/gi,
     /\d+\.\s/g, // listes numérotées
   ],
-  soft: [
-    /\b(doux|gentil|tendre|délicat)\b/gi,
-  ],
-  grounded: [
-    /\b(concret|réaliste|pratique|stable)\b/gi,
-  ],
+  soft: [/\b(doux|gentil|tendre|délicat)\b/gi],
+  grounded: [/\b(concret|réaliste|pratique|stable)\b/gi],
   uplifting: [
     /\b(courage|force|capable|réussir|motivation)\b/gi,
     /\b(tu peux|vous pouvez|c'est possible)\b/gi,
@@ -260,9 +291,10 @@ export class EmotionAnalyzer {
 
     // Calcul longueur moyenne des phrases
     const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    const avgSentenceLength = sentences.length > 0
-      ? sentences.reduce((sum, s) => sum + s.trim().length, 0) / sentences.length
-      : 0;
+    const avgSentenceLength =
+      sentences.length > 0
+        ? sentences.reduce((sum, s) => sum + s.trim().length, 0) / sentences.length
+        : 0;
 
     // Calcul sentiment
     const sentimentScore = this.calculateSentiment(text);
@@ -344,12 +376,14 @@ export class EmotionAnalyzer {
 
     // Exclamations → excited
     if (indicators.exclamationCount > 0) {
-      scores.excited += Math.min(indicators.exclamationCount * 0.2, 0.5) * indicatorWeights.punctuation;
+      scores.excited +=
+        Math.min(indicators.exclamationCount * 0.2, 0.5) * indicatorWeights.punctuation;
     }
 
     // Questions → focusing
     if (indicators.questionCount > 0) {
-      scores.focusing += Math.min(indicators.questionCount * 0.15, 0.3) * indicatorWeights.punctuation;
+      scores.focusing +=
+        Math.min(indicators.questionCount * 0.15, 0.3) * indicatorWeights.punctuation;
     }
 
     // Ellipses → calm/soft
@@ -360,12 +394,14 @@ export class EmotionAnalyzer {
 
     // Emojis → excited/uplifting
     if (indicators.emojiCount > 0) {
-      scores.excited += Math.min(indicators.emojiCount * 0.15, 0.4) * indicatorWeights.punctuation;
+      scores.excited +=
+        Math.min(indicators.emojiCount * 0.15, 0.4) * indicatorWeights.punctuation;
     }
 
     // Caps → excited/disciplined
     if (indicators.capsWordsCount > 0) {
-      scores.excited += Math.min(indicators.capsWordsCount * 0.1, 0.3) * indicatorWeights.punctuation;
+      scores.excited +=
+        Math.min(indicators.capsWordsCount * 0.1, 0.3) * indicatorWeights.punctuation;
     }
 
     // 4. Score basé sur le sentiment

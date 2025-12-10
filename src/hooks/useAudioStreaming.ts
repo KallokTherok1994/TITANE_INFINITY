@@ -50,7 +50,9 @@ export interface UseAudioStreamingReturn {
  * });
  * ```
  */
-export function useAudioStreaming(options: UseAudioStreamingOptions = {}): UseAudioStreamingReturn {
+export function useAudioStreaming(
+  options: UseAudioStreamingOptions = {}
+): UseAudioStreamingReturn {
   const [isStreaming, setIsStreaming] = useState(false);
   const [state, setState] = useState<StreamingState>('Idle');
   const [stats, setStats] = useState<StreamingStats | null>(null);
@@ -92,7 +94,7 @@ export function useAudioStreaming(options: UseAudioStreamingOptions = {}): UseAu
 
   // Update internal state based on service
   useEffect(() => {
-    const unsubscribe = audioStreamingService.onStateChange((newState) => {
+    const unsubscribe = audioStreamingService.onStateChange(newState => {
       if (isMountedRef.current) {
         setState(newState);
       }

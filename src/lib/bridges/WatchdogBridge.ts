@@ -21,7 +21,7 @@ export enum AlertLevel {
   Info = 'Info',
   Warn = 'Warn',
   Error = 'Error',
-  Critical = 'Critical'
+  Critical = 'Critical',
 }
 
 /**
@@ -36,7 +36,7 @@ export enum AnomalyType {
   OutOfBounds = 'OutOfBounds',
   SingularityMismatch = 'SingularityMismatch',
   HistoryOverflow = 'HistoryOverflow',
-  InvalidTimestamp = 'InvalidTimestamp'
+  InvalidTimestamp = 'InvalidTimestamp',
 }
 
 /**
@@ -47,7 +47,7 @@ export enum FixAction {
   Rollback = 'Rollback',
   PartialReset = 'PartialReset',
   RecalculateCoherence = 'RecalculateCoherence',
-  NoAction = 'NoAction'
+  NoAction = 'NoAction',
 }
 
 /**
@@ -270,7 +270,7 @@ export class WatchdogBridge {
     try {
       const result = await secureInvoke<unknown>('watchdog_scan', {
         cognitiveState,
-        singularityState
+        singularityState,
       });
 
       if (!isScanResult(result)) {
@@ -306,7 +306,7 @@ export class WatchdogBridge {
     try {
       const result = await secureInvoke<unknown>('watchdog_fix', {
         cognitiveState,
-        scanResult
+        scanResult,
       });
 
       if (!isFixResult(result)) {

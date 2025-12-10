@@ -22,12 +22,24 @@
  * 7. SELF-EVOLUTION — Apprentissage style multimodal
  */
 
-import { synestheticEmotionEngine, type SynestheticProfile } from '../emotion/synestheticEmotionEngine';
-import { embodiedPresenceEngine, type EmbodiedPresenceState } from '../embodiment/embodiedPresenceEngine';
+import {
+  synestheticEmotionEngine,
+  type SynestheticProfile,
+} from '../emotion/synestheticEmotionEngine';
+import {
+  embodiedPresenceEngine,
+  type EmbodiedPresenceState,
+} from '../embodiment/embodiedPresenceEngine';
 import { metaContinuumEngine } from '../continuum/metaContinuumEngine';
-import { archetypeResonanceEngine, type ArchetypeResonance } from '../psyche/archetypeResonanceEngine';
+import {
+  archetypeResonanceEngine,
+  type ArchetypeResonance,
+} from '../psyche/archetypeResonanceEngine';
 // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B) - utilise stub temporaire
-import { multimodalPresenceEngine, type MultimodalPresenceState } from '../presence/_stubs';
+import {
+  multimodalPresenceEngine,
+  type MultimodalPresenceState,
+} from '../presence/_stubs';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & INTERFACES
@@ -81,7 +93,14 @@ export interface HaloFrame {
   /** Pulsation (0-1, vitesse) */
   pulsation: number;
   /** Pattern */
-  pattern: 'soft_pulse' | 'shimmer' | 'stable' | 'rhythmic' | 'flowing' | 'geometric' | 'morphing';
+  pattern:
+    | 'soft_pulse'
+    | 'shimmer'
+    | 'stable'
+    | 'rhythmic'
+    | 'flowing'
+    | 'geometric'
+    | 'morphing';
   /** Géométrie (pour patterns avancés) */
   geometry?: {
     radius: number;
@@ -249,7 +268,11 @@ class UnifiedMultimodalOutputEngine {
     const presenceState = multimodalPresenceEngine.getState();
 
     // 2. Vérifier cohérence
-    const coherenceScore = this.checkCoherence(emotionProfile, embodiedState, archetypeState);
+    const coherenceScore = this.checkCoherence(
+      emotionProfile,
+      embodiedState,
+      archetypeState
+    );
 
     // 3. Générer frames pour chaque modalité
     const voiceFrames = this.generateVoiceFrames(emotionProfile, embodiedState);
@@ -286,7 +309,9 @@ class UnifiedMultimodalOutputEngine {
     // 7. Notifier callbacks
     this.notifyCallbacks(output);
 
-    console.log(`🎭 [UNIFIED OUTPUT] Generated output #${this.state.outputCount} (coherence: ${coherenceScore.toFixed(2)})`);
+    console.log(
+      `🎭 [UNIFIED OUTPUT] Generated output #${this.state.outputCount} (coherence: ${coherenceScore.toFixed(2)})`
+    );
 
     return output;
   }
@@ -294,7 +319,10 @@ class UnifiedMultimodalOutputEngine {
   /**
    * Générer frames vocaux
    */
-  private generateVoiceFrames(emotion: SynestheticProfile, embodied: EmbodiedPresenceState): VoiceFrame[] {
+  private generateVoiceFrames(
+    emotion: SynestheticProfile,
+    embodied: EmbodiedPresenceState
+  ): VoiceFrame[] {
     const baseFrame: VoiceFrame = {
       timbre: emotion.voice.depth,
       speed: emotion.voice.tempo,
@@ -320,7 +348,10 @@ class UnifiedMultimodalOutputEngine {
   /**
    * Générer frame textuel
    */
-  private generateTextFrame(emotion: SynestheticProfile, _archetype: ArchetypeResonance): TextFrame {
+  private generateTextFrame(
+    emotion: SynestheticProfile,
+    _archetype: ArchetypeResonance
+  ): TextFrame {
     return {
       cadence: emotion.narrative.cadence,
       symbolDensity: emotion.narrative.symbolDensity,
@@ -333,7 +364,10 @@ class UnifiedMultimodalOutputEngine {
   /**
    * Générer frames halo (array pour animation)
    */
-  private generateHaloFrames(emotion: SynestheticProfile, _presence: MultimodalPresenceState): HaloFrame[] {
+  private generateHaloFrames(
+    emotion: SynestheticProfile,
+    _presence: MultimodalPresenceState
+  ): HaloFrame[] {
     const frameCount = 20; // 1 seconde à 20 FPS
     const frames: HaloFrame[] = [];
 
@@ -341,11 +375,12 @@ class UnifiedMultimodalOutputEngine {
       const t = i / frameCount;
 
       // Pulsation sinusoïdale
-      const pulsation = emotion.haloPattern === 'soft_pulse'
-        ? 0.5 + 0.3 * Math.sin(t * Math.PI * 2)
-        : emotion.haloPattern === 'rhythmic'
-        ? 0.6 + 0.4 * Math.sin(t * Math.PI * 4)
-        : 0.7;
+      const pulsation =
+        emotion.haloPattern === 'soft_pulse'
+          ? 0.5 + 0.3 * Math.sin(t * Math.PI * 2)
+          : emotion.haloPattern === 'rhythmic'
+            ? 0.6 + 0.4 * Math.sin(t * Math.PI * 4)
+            : 0.7;
 
       frames.push({
         color: emotion.color,
@@ -361,12 +396,17 @@ class UnifiedMultimodalOutputEngine {
   /**
    * Générer frames avatar
    */
-  private generateAvatarFrames(embodied: EmbodiedPresenceState, emotion: SynestheticProfile): AvatarFrame[] {
+  private generateAvatarFrames(
+    embodied: EmbodiedPresenceState,
+    emotion: SynestheticProfile
+  ): AvatarFrame[] {
     const frameCount = 30; // 1 seconde à 30 FPS
     const frames: AvatarFrame[] = [];
 
     // Mapper PostureType vers les valeurs AvatarFrame attendues
-    const mapPosture = (postureType: string): 'open' | 'centered' | 'forward' | 'back' | 'wide' => {
+    const mapPosture = (
+      postureType: string
+    ): 'open' | 'centered' | 'forward' | 'back' | 'wide' => {
       if (postureType === 'recede') return 'back';
       if (postureType === 'expansive') return 'wide';
       if (['open', 'centered', 'forward'].includes(postureType)) {
@@ -396,17 +436,22 @@ class UnifiedMultimodalOutputEngine {
   /**
    * Générer frames aura
    */
-  private generateAuraFrames(embodied: EmbodiedPresenceState, emotion: SynestheticProfile): AuraFrame[] {
+  private generateAuraFrames(
+    embodied: EmbodiedPresenceState,
+    emotion: SynestheticProfile
+  ): AuraFrame[] {
     // Mapper temperature (-1 à 1) vers warmth
     const warmth = embodied.energyField.temperature;
 
-    return [{
-      density: embodied.energyField.density,
-      expansion: emotion.presence.expansion,
-      warmth,
-      vibration: emotion.intensity * 0.5,
-      texture: embodied.energyField.texture === 'fluid' ? 'flowing' : 'smooth',
-    }];
+    return [
+      {
+        density: embodied.energyField.density,
+        expansion: emotion.presence.expansion,
+        warmth,
+        vibration: emotion.intensity * 0.5,
+        texture: embodied.energyField.texture === 'fluid' ? 'flowing' : 'smooth',
+      },
+    ];
   }
 
   /**
@@ -433,14 +478,20 @@ class UnifiedMultimodalOutputEngine {
     _archetype: ArchetypeResonance
   ): number {
     // Cohérence voix-halo (warmth similaire)
-    const voiceHaloSync = 1 - Math.abs(emotion.voice.warmth - (emotion.color.saturation / 100));
+    const voiceHaloSync =
+      1 - Math.abs(emotion.voice.warmth - emotion.color.saturation / 100);
 
     // Cohérence avatar-émotion (movement correspond à intensity)
-    const movementIntensity = emotion.presence.movement === 'still' ? 0.2
-      : emotion.presence.movement === 'gentle' ? 0.4
-      : emotion.presence.movement === 'flowing' ? 0.6
-      : emotion.presence.movement === 'dynamic' ? 0.8
-      : 1.0;
+    const movementIntensity =
+      emotion.presence.movement === 'still'
+        ? 0.2
+        : emotion.presence.movement === 'gentle'
+          ? 0.4
+          : emotion.presence.movement === 'flowing'
+            ? 0.6
+            : emotion.presence.movement === 'dynamic'
+              ? 0.8
+              : 1.0;
     const avatarEmotionSync = 1 - Math.abs(movementIntensity - emotion.intensity);
 
     // Cohérence narrative-tone
@@ -450,7 +501,8 @@ class UnifiedMultimodalOutputEngine {
     const temporalCoherence = embodied.breath.amplitude > 0 ? 1.0 : 0.7;
 
     // Moyenne globale
-    const globalCoherence = (voiceHaloSync + avatarEmotionSync + narrativeToneSync + temporalCoherence) / 4;
+    const globalCoherence =
+      (voiceHaloSync + avatarEmotionSync + narrativeToneSync + temporalCoherence) / 4;
 
     // Mettre à jour métriques
     this.state.coherenceMetrics = {
@@ -483,7 +535,7 @@ class UnifiedMultimodalOutputEngine {
    * Notifier les callbacks
    */
   private notifyCallbacks(output: UnifiedMultimodalOutput): void {
-    this.callbacks.forEach((callback) => callback(output));
+    this.callbacks.forEach(callback => callback(output));
   }
 
   /**

@@ -173,7 +173,8 @@ impl EngineCalibrator {
                 .take(self.config.baseline_samples)
                 .collect();
 
-            let avg_latency = recent.iter().map(|s| s.latency_ms).sum::<f64>() / recent.len() as f64;
+            let avg_latency =
+                recent.iter().map(|s| s.latency_ms).sum::<f64>() / recent.len() as f64;
             let avg_throughput =
                 recent.iter().map(|s| s.throughput).sum::<f64>() / recent.len() as f64;
             let avg_error_rate =
@@ -204,7 +205,9 @@ impl EngineCalibrator {
             };
 
             drop(samples);
-            self.baselines.write().insert(engine_id.to_string(), baseline);
+            self.baselines
+                .write()
+                .insert(engine_id.to_string(), baseline);
         }
     }
 
@@ -222,7 +225,8 @@ impl EngineCalibrator {
 
         // Calculate current averages from recent samples
         let recent: Vec<_> = engine_samples.iter().rev().take(10).collect();
-        let current_latency = recent.iter().map(|s| s.latency_ms).sum::<f64>() / recent.len() as f64;
+        let current_latency =
+            recent.iter().map(|s| s.latency_ms).sum::<f64>() / recent.len() as f64;
         let current_throughput =
             recent.iter().map(|s| s.throughput).sum::<f64>() / recent.len() as f64;
         let current_error_rate =
@@ -231,8 +235,8 @@ impl EngineCalibrator {
             recent.iter().map(|s| s.memory_usage_mb).sum::<f64>() / recent.len() as f64;
 
         // Calculate drift percentages
-        let latency_drift = ((current_latency - baseline.avg_latency_ms) / baseline.avg_latency_ms
-            * 100.0) as f32;
+        let latency_drift =
+            ((current_latency - baseline.avg_latency_ms) / baseline.avg_latency_ms * 100.0) as f32;
         let throughput_drift = ((baseline.avg_throughput - current_throughput)
             / baseline.avg_throughput
             * 100.0) as f32;

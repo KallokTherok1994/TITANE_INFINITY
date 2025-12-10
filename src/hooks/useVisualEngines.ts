@@ -31,19 +31,16 @@ interface SystemState {
  * @param systemState - État système actuel
  * @param moduleId - ID module optionnel (pour styling spécifique)
  */
-export const useVisualEngines = (
-  systemState: SystemState,
-  moduleId?: string
-) => {
+export const useVisualEngines = (systemState: SystemState, moduleId?: string) => {
   useEffect(() => {
     // Mapping SystemState → intensité visuelle
     const stateIntensityMap: Record<SystemState, number> = {
-      'stable': 50,
-      'processing': 75,
-      'warning': 85,
-      'danger': 95,
-      'null': 10,
-      'offline': 5,
+      stable: 50,
+      processing: 75,
+      warning: 85,
+      danger: 95,
+      null: 10,
+      offline: 5,
     };
 
     const intensity = stateIntensityMap[systemState] || 50;
@@ -53,18 +50,11 @@ export const useVisualEngines = (
       '--system-state-intensity',
       `${intensity}`
     );
-    document.documentElement.style.setProperty(
-      '--system-state',
-      systemState
-    );
+    document.documentElement.style.setProperty('--system-state', systemState);
 
     if (moduleId) {
-      document.documentElement.style.setProperty(
-        '--active-module-id',
-        moduleId
-      );
+      document.documentElement.style.setProperty('--active-module-id', moduleId);
     }
-
   }, [systemState, moduleId]);
 
   return {

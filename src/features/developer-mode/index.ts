@@ -4,7 +4,10 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 // Components
-export { DeveloperModePage, default as DeveloperModePageDefault } from './DeveloperModePage';
+export {
+  DeveloperModePage,
+  default as DeveloperModePageDefault,
+} from './DeveloperModePage';
 
 // Hooks
 export {

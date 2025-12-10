@@ -33,7 +33,12 @@ export { singularityKernel } from './singularityKernel';
 
 // Services (kept in services/ai for backward compatibility)
 export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrator';
-export { chatEngine, type ChatMode, type ChatEngineConfig, type ChatEngineResponse } from './chatEngine';
+export {
+  chatEngine,
+  type ChatMode,
+  type ChatEngineConfig,
+  type ChatEngineResponse,
+} from './chatEngine';
 export { autoHealEngine } from './autoHealEngine';
 export { metricsEngine } from './metricsEngine';
 

@@ -2,9 +2,14 @@
 // License: Proprietary — TITANE OS
 // Module: Preset Management for Avatar Appearance
 
-import type { AvatarAppearanceState, Formality, HairLength, MakeupIntensity } from "./appearanceState";
-import { setAppearance, saveCustomStyle } from "./appearanceEngine";
-import presetsData from "./avatarPresets.json";
+import type {
+  AvatarAppearanceState,
+  Formality,
+  HairLength,
+  MakeupIntensity,
+} from './appearanceState';
+import { setAppearance, saveCustomStyle } from './appearanceEngine';
+import presetsData from './avatarPresets.json';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRESET DEFINITION
@@ -71,21 +76,21 @@ export class AppearancePresetsManager {
    * Get preset by ID
    */
   getPresetById(id: string): AppearancePreset | undefined {
-    return this.presets.find((p) => p.id === id);
+    return this.presets.find(p => p.id === id);
   }
 
   /**
    * Get presets by category
    */
   getPresetsByCategory(category: string): AppearancePreset[] {
-    return this.presets.filter((p) => p.category === category);
+    return this.presets.filter(p => p.category === category);
   }
 
   /**
    * Get all categories
    */
   getCategories(): string[] {
-    const categories = new Set(this.presets.map((p) => p.category));
+    const categories = new Set(this.presets.map(p => p.category));
     return Array.from(categories);
   }
 
@@ -134,7 +139,7 @@ export class AppearancePresetsManager {
   async saveAsCustomPreset(
     name: string,
     archetype: string,
-    keywords: string[],
+    keywords: string[]
   ): Promise<string> {
     return await saveCustomStyle(name, archetype, keywords);
   }
@@ -145,10 +150,10 @@ export class AppearancePresetsManager {
   searchPresets(query: string): AppearancePreset[] {
     const queryLower = query.toLowerCase();
     return this.presets.filter(
-      (p) =>
+      p =>
         p.name.toLowerCase().includes(queryLower) ||
         p.description.toLowerCase().includes(queryLower) ||
-        p.category.toLowerCase().includes(queryLower),
+        p.category.toLowerCase().includes(queryLower)
     );
   }
 
@@ -156,42 +161,40 @@ export class AppearancePresetsManager {
    * Get preset recommendations based on context
    */
   getRecommendations(context: {
-    timeOfDay?: "morning" | "afternoon" | "evening" | "night";
-    activity?: "work" | "leisure" | "sport" | "creative";
-    formality?: "casual" | "smart" | "formal";
+    timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
+    activity?: 'work' | 'leisure' | 'sport' | 'creative';
+    formality?: 'casual' | 'smart' | 'formal';
   }): AppearancePreset[] {
     let recommendations = [...this.presets];
 
     // Filter by activity
-    if (context.activity === "work") {
+    if (context.activity === 'work') {
       recommendations = recommendations.filter(
-        (p) => p.category === "bureau" || p.style.formality === "Formal",
+        p => p.category === 'bureau' || p.style.formality === 'Formal'
       );
-    } else if (context.activity === "sport") {
-      recommendations = recommendations.filter((p) => p.category === "sport");
-    } else if (context.activity === "creative") {
-      recommendations = recommendations.filter(
-        (p) => p.category === "creatif",
-      );
+    } else if (context.activity === 'sport') {
+      recommendations = recommendations.filter(p => p.category === 'sport');
+    } else if (context.activity === 'creative') {
+      recommendations = recommendations.filter(p => p.category === 'creatif');
     }
 
     // Filter by formality
     if (context.formality) {
       const formalityMap: Record<string, string> = {
-        casual: "Casual",
-        smart: "Smart",
-        formal: "Formal",
+        casual: 'Casual',
+        smart: 'Smart',
+        formal: 'Formal',
       };
       const targetFormality = formalityMap[context.formality];
       recommendations = recommendations.filter(
-        (p) => p.style.formality === targetFormality,
+        p => p.style.formality === targetFormality
       );
     }
 
     // Filter by time of day
-    if (context.timeOfDay === "evening" || context.timeOfDay === "night") {
+    if (context.timeOfDay === 'evening' || context.timeOfDay === 'night') {
       recommendations = recommendations.filter(
-        (p) => p.category === "soiree" || p.style.vibe === "elegant",
+        p => p.category === 'soiree' || p.style.vibe === 'elegant'
       );
     }
 
@@ -241,9 +244,9 @@ export function searchPresets(query: string): AppearancePreset[] {
  * Get recommended presets
  */
 export function getRecommendedPresets(context: {
-  timeOfDay?: "morning" | "afternoon" | "evening" | "night";
-  activity?: "work" | "leisure" | "sport" | "creative";
-  formality?: "casual" | "smart" | "formal";
+  timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
+  activity?: 'work' | 'leisure' | 'sport' | 'creative';
+  formality?: 'casual' | 'smart' | 'formal';
 }): AppearancePreset[] {
   return presetsManager.getRecommendations(context);
 }

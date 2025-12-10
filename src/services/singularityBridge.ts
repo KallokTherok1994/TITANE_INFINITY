@@ -190,39 +190,51 @@ export class SingularityBridge {
    */
   private static async setupEventListeners(): Promise<void> {
     // Physical Layer
-    const unlisten1 = await listen<PhysicalLayer>('singularity:physical:updated', (event) => {
-      if (this.state) {
-        this.state.physical = event.payload;
-        this.notifySubscribers();
+    const unlisten1 = await listen<PhysicalLayer>(
+      'singularity:physical:updated',
+      event => {
+        if (this.state) {
+          this.state.physical = event.payload;
+          this.notifySubscribers();
+        }
       }
-    });
+    );
 
     // Cognitive Layer
-    const unlisten2 = await listen<CognitiveLayer>('singularity:cognitive:updated', (event) => {
-      if (this.state) {
-        this.state.cognitive = event.payload;
-        this.notifySubscribers();
+    const unlisten2 = await listen<CognitiveLayer>(
+      'singularity:cognitive:updated',
+      event => {
+        if (this.state) {
+          this.state.cognitive = event.payload;
+          this.notifySubscribers();
+        }
       }
-    });
+    );
 
     // Symbolic Layer
-    const unlisten3 = await listen<SymbolicLayer>('singularity:symbolic:updated', (event) => {
-      if (this.state) {
-        this.state.symbolic = event.payload;
-        this.notifySubscribers();
+    const unlisten3 = await listen<SymbolicLayer>(
+      'singularity:symbolic:updated',
+      event => {
+        if (this.state) {
+          this.state.symbolic = event.payload;
+          this.notifySubscribers();
+        }
       }
-    });
+    );
 
     // Adaptive Layer
-    const unlisten4 = await listen<AdaptiveLayer>('singularity:adaptive:updated', (event) => {
-      if (this.state) {
-        this.state.adaptive = event.payload;
-        this.notifySubscribers();
+    const unlisten4 = await listen<AdaptiveLayer>(
+      'singularity:adaptive:updated',
+      event => {
+        if (this.state) {
+          this.state.adaptive = event.payload;
+          this.notifySubscribers();
+        }
       }
-    });
+    );
 
     // Meta Layer
-    const unlisten5 = await listen<MetaLayer>('singularity:meta:updated', (event) => {
+    const unlisten5 = await listen<MetaLayer>('singularity:meta:updated', event => {
       if (this.state) {
         this.state.meta = event.payload;
         this.notifySubscribers();
@@ -230,23 +242,40 @@ export class SingularityBridge {
     });
 
     // Full State (full sync - rare, only on init or major changes)
-    const unlisten6 = await listen<SingularityState>('singularity:full:updated', (event) => {
-      console.log('[SingularityBridge] v24.20: Full state update (rare)');
-      this.state = event.payload;
-      this.notifySubscribers();
-    });
-
-    // v24.20: Delta updates (payload < 5KB instead of 500KB)
-    const unlisten7 = await listen<Partial<SingularityState>>('singularity:delta:updated', (event) => {
-      if (this.state) {
-        // Merge delta into current state (only changed fields)
-        this.state = { ...this.state, ...event.payload };
-        console.log('[SingularityBridge] v24.20: Delta update applied', Object.keys(event.payload));
+    const unlisten6 = await listen<SingularityState>(
+      'singularity:full:updated',
+      event => {
+        console.log('[SingularityBridge] v24.20: Full state update (rare)');
+        this.state = event.payload;
         this.notifySubscribers();
       }
-    });
+    );
 
-    this.listeners = [unlisten1, unlisten2, unlisten3, unlisten4, unlisten5, unlisten6, unlisten7];
+    // v24.20: Delta updates (payload < 5KB instead of 500KB)
+    const unlisten7 = await listen<Partial<SingularityState>>(
+      'singularity:delta:updated',
+      event => {
+        if (this.state) {
+          // Merge delta into current state (only changed fields)
+          this.state = { ...this.state, ...event.payload };
+          console.log(
+            '[SingularityBridge] v24.20: Delta update applied',
+            Object.keys(event.payload)
+          );
+          this.notifySubscribers();
+        }
+      }
+    );
+
+    this.listeners = [
+      unlisten1,
+      unlisten2,
+      unlisten3,
+      unlisten4,
+      unlisten5,
+      unlisten6,
+      unlisten7,
+    ];
     console.log('[SingularityBridge] Event listeners configured ✅');
   }
 
@@ -275,7 +304,9 @@ export class SingularityBridge {
       return result;
     }
 
-    console.warn('[SingularityBridge] singularity_get_symbolic unavailable, using fallback state');
+    console.warn(
+      '[SingularityBridge] singularity_get_symbolic unavailable, using fallback state'
+    );
     return createFallbackSymbolic();
   }
 
@@ -285,7 +316,9 @@ export class SingularityBridge {
       return result;
     }
 
-    console.warn('[SingularityBridge] singularity_get_adaptive unavailable, using fallback state');
+    console.warn(
+      '[SingularityBridge] singularity_get_adaptive unavailable, using fallback state'
+    );
     return createFallbackAdaptive();
   }
 
@@ -295,7 +328,9 @@ export class SingularityBridge {
       return result;
     }
 
-    console.warn('[SingularityBridge] singularity_get_meta unavailable, using fallback state');
+    console.warn(
+      '[SingularityBridge] singularity_get_meta unavailable, using fallback state'
+    );
     return createFallbackMeta();
   }
 
@@ -399,7 +434,7 @@ export function mergeFileKnowledge(
     path,
     category,
     content: summary,
-  }).catch((err) => {
+  }).catch(err => {
     console.error('[mergeFileKnowledge] Storage failed:', err);
   });
 }
@@ -434,7 +469,7 @@ export function useSingularityState() {
 
   useEffect(() => {
     // Subscribe to state changes
-    const unsubscribe = SingularityBridge.subscribe((newState) => {
+    const unsubscribe = SingularityBridge.subscribe(newState => {
       setState(newState);
     });
 

@@ -12,17 +12,17 @@
  */
 
 export type HaloState =
-  | 'idle'        // Halo statique
-  | 'breathing'   // Breathing lent (VAD speech detection)
-  | 'pulsing'     // Pulsing rapide (AI thinking)
-  | 'shimmer'     // Shimmer/scintillement (TTS speaking)
-  | 'error';      // État d'erreur (rouge pulsing)
+  | 'idle' // Halo statique
+  | 'breathing' // Breathing lent (VAD speech detection)
+  | 'pulsing' // Pulsing rapide (AI thinking)
+  | 'shimmer' // Shimmer/scintillement (TTS speaking)
+  | 'error'; // État d'erreur (rouge pulsing)
 
 export interface HaloAnimationConfig {
-  breathingSpeed?: number;  // ms per cycle (default: 2000)
-  pulsingSpeed?: number;    // ms per cycle (default: 800)
-  shimmerSpeed?: number;    // ms per cycle (default: 400)
-  errorSpeed?: number;      // ms per cycle (default: 600)
+  breathingSpeed?: number; // ms per cycle (default: 2000)
+  pulsingSpeed?: number; // ms per cycle (default: 800)
+  shimmerSpeed?: number; // ms per cycle (default: 400)
+  errorSpeed?: number; // ms per cycle (default: 600)
 }
 
 export interface HaloEngineStatus {

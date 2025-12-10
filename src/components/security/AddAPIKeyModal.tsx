@@ -15,7 +15,11 @@ interface AddAPIKeyModalProps {
   onSuccess: () => void;
 }
 
-const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({ service, onClose, onSuccess }) => {
+const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({
+  service,
+  onClose,
+  onSuccess,
+}) => {
   const [apiKey, setApiKey] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +79,7 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({ service, onClose, onSuc
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>🔑 Ajouter/Modifier Clé API</h3>
           <button className="modal-close" onClick={onClose}>
@@ -102,7 +106,7 @@ const AddAPIKeyModal: React.FC<AddAPIKeyModalProps> = ({ service, onClose, onSuc
                 id="apiKey"
                 type={showKey ? 'text' : 'password'}
                 value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                onChange={e => setApiKey(e.target.value)}
                 placeholder={getPlaceholder(service)}
                 className="input"
                 autoFocus

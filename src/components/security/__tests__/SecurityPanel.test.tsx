@@ -292,7 +292,7 @@ describe('SecurityPanel', () => {
       confirmSpy.mockRestore();
     });
 
-    it('ne devrait PAS supprimer si l\'utilisateur annule', async () => {
+    it("ne devrait PAS supprimer si l'utilisateur annule", async () => {
       vi.mocked(global.confirm).mockReturnValue(false);
 
       vi.mocked(IAService.getProvidersStatus).mockResolvedValue([

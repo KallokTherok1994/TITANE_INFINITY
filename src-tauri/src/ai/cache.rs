@@ -27,8 +27,8 @@ impl Default for AICacheConfig {
     fn default() -> Self {
         Self {
             response_cache_capacity: 500,
-            response_ttl_secs: 300,  // 5 minutes
-            status_ttl_secs: 30,     // 30 secondes
+            response_ttl_secs: 300, // 5 minutes
+            status_ttl_secs: 30,    // 30 secondes
             enabled: true,
         }
     }
@@ -78,7 +78,8 @@ pub struct AIRouterCache {
     /// Cache des réponses (clé = hash du prompt)
     responses: Arc<RwLock<lru::LruCache<u64, CacheEntry<CachedAIResponse>>>>,
     /// Cache des statuts provider
-    provider_status: Arc<RwLock<std::collections::HashMap<String, CacheEntry<CachedProviderStatus>>>>,
+    provider_status:
+        Arc<RwLock<std::collections::HashMap<String, CacheEntry<CachedProviderStatus>>>>,
     /// Statistiques
     stats: Arc<RwLock<CacheStats>>,
 }
@@ -288,7 +289,9 @@ mod tests {
             provider: "test".to_string(),
         };
 
-        cache.set_response("test prompt", 0.7, 100, response.clone()).await;
+        cache
+            .set_response("test prompt", 0.7, 100, response.clone())
+            .await;
 
         let cached = cache.get_response("test prompt", 0.7, 100).await;
         assert!(cached.is_some());

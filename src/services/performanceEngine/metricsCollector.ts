@@ -140,7 +140,7 @@ class FPSMonitor {
       average: Math.round(history.reduce((a, b) => a + b, 0) / history.length),
       min: Math.min(...history),
       max: Math.max(...history),
-      drops: history.filter((f) => f < 30).length,
+      drops: history.filter(f => f < 30).length,
     };
   }
 
@@ -181,10 +181,9 @@ class RenderTimeTracker {
 
     return {
       lastTime: times.length > 0 ? times[times.length - 1] : 0,
-      averageTime:
-        times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0,
+      averageTime: times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0,
       rerenderCount: elapsed > 0 ? Math.round(this.rerenderCount / elapsed) : 0,
-      slowRenders: times.filter((t) => t > 16).length,
+      slowRenders: times.filter(t => t > 16).length,
     };
   }
 
@@ -415,7 +414,10 @@ class VoiceMetricsTracker {
         latency: avgArray(this.asrLatencies),
         requestCount: this.asrRequests,
         errorCount: this.asrErrors,
-        successRate: this.asrRequests > 0 ? (this.asrRequests - this.asrErrors) / this.asrRequests : 1.0,
+        successRate:
+          this.asrRequests > 0
+            ? (this.asrRequests - this.asrErrors) / this.asrRequests
+            : 1.0,
         averageConfidence: avgArray(this.asrConfidences),
         available: this.asrAvailable,
       },
@@ -423,7 +425,10 @@ class VoiceMetricsTracker {
         latency: avgArray(this.ttsLatencies),
         requestCount: this.ttsRequests,
         errorCount: this.ttsErrors,
-        successRate: this.ttsRequests > 0 ? (this.ttsRequests - this.ttsErrors) / this.ttsRequests : 1.0,
+        successRate:
+          this.ttsRequests > 0
+            ? (this.ttsRequests - this.ttsErrors) / this.ttsRequests
+            : 1.0,
         provider: this.ttsProvider,
         available: this.ttsAvailable,
       },
@@ -431,14 +436,19 @@ class VoiceMetricsTracker {
         latency: avgArray(this.omegaLatencies),
         requestCount: this.omegaRequests,
         errorCount: this.omegaErrors,
-        successRate: this.omegaRequests > 0 ? (this.omegaRequests - this.omegaErrors) / this.omegaRequests : 1.0,
+        successRate:
+          this.omegaRequests > 0
+            ? (this.omegaRequests - this.omegaErrors) / this.omegaRequests
+            : 1.0,
         breakdown: avgBreakdown,
       },
       feedback: {
         detectionCount: this.feedbackDetections,
         suspensionCount: this.vadSuspensions,
         falsePositiveRate:
-          this.feedbackDetections > 0 ? this.feedbackFalsePositives / this.feedbackDetections : 0,
+          this.feedbackDetections > 0
+            ? this.feedbackFalsePositives / this.feedbackDetections
+            : 0,
       },
     };
   }
@@ -558,9 +568,7 @@ export class MetricsCollector {
       source: 'collector',
     });
 
-    console.log(
-      `[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`
-    );
+    console.log(`[MetricsCollector] ▶️ Started (interval: ${this.config.intervalMs}ms)`);
   }
 
   /**
@@ -741,7 +749,11 @@ export class MetricsCollector {
 
   private getFallbackSystemMetrics(): SystemMetrics {
     // Métriques de fallback basées sur Performance API si disponible
-    const memory = (performance as unknown as { memory?: { usedJSHeapSize: number; totalJSHeapSize: number } }).memory;
+    const memory = (
+      performance as unknown as {
+        memory?: { usedJSHeapSize: number; totalJSHeapSize: number };
+      }
+    ).memory;
 
     return {
       cpu: { global: 0, process: 0, cores: [] },
@@ -836,7 +848,7 @@ export class MetricsCollector {
     ];
 
     const now = Date.now();
-    modules.forEach((module) => {
+    modules.forEach(module => {
       this.moduleMetrics.set(module, {
         module,
         healthy: true,
@@ -1122,7 +1134,7 @@ export class MetricsCollector {
   }
 
   private emit(event: PerformanceEvent): void {
-    this.listeners.forEach((listener) => {
+    this.listeners.forEach(listener => {
       try {
         listener(event);
       } catch (error) {
@@ -1138,8 +1150,7 @@ export class MetricsCollector {
   private updateAverageDuration(duration: number): void {
     const count = this.state.collectionCount;
     const current = this.state.averageCollectionDuration;
-    this.state.averageCollectionDuration =
-      (current * (count - 1) + duration) / count;
+    this.state.averageCollectionDuration = (current * (count - 1) + duration) / count;
   }
 
   /**

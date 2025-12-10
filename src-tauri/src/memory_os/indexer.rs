@@ -97,7 +97,10 @@ impl MemoryIndexer {
         let index_entry = IndexEntry::from(entry);
 
         // Primary index
-        self.primary.write().await.insert(entry.id, index_entry.clone());
+        self.primary
+            .write()
+            .await
+            .insert(entry.id, index_entry.clone());
 
         // Tier index
         self.by_tier

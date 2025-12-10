@@ -13,11 +13,11 @@ impl RecoveryManager {
         info!("RecoveryManager initialized");
         Self { enabled: true }
     }
-    
+
     pub fn is_enabled(&self) -> bool {
         self.enabled
     }
-    
+
     pub async fn recover(&self) -> Result<(), String> {
         if !self.enabled {
             return Err("Recovery disabled".to_string());

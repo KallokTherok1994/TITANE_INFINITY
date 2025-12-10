@@ -119,7 +119,12 @@ export { ToolsEngine, toolsEngine } from './toolsEngine';
 import { PermissionManager } from './permissionManager';
 import { SearchEngine } from './searchEngine';
 import { ToolsEngine } from './toolsEngine';
-import type { IAMode, SearchQuery, SearchResponse, ToolExecutionResult } from './searchTools.config';
+import type {
+  IAMode,
+  SearchQuery,
+  SearchResponse,
+  ToolExecutionResult,
+} from './searchTools.config';
 
 /**
  * SearchToolsOrchestrator — Façade unifiée

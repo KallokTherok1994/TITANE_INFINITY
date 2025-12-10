@@ -275,20 +275,14 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    * Set cognitive state only (keep other dimensions)
    */
   setCognitiveState(cognitive: CognitiveState, duration?: number): void {
-    this.setState(
-      { ...this.currentState, cognitive },
-      duration
-    );
+    this.setState({ ...this.currentState, cognitive }, duration);
   }
 
   /**
    * Set emotional tone only (keep other dimensions)
    */
   setEmotionalTone(emotional: EmotionalTone, duration?: number): void {
-    this.setState(
-      { ...this.currentState, emotional },
-      duration
-    );
+    this.setState({ ...this.currentState, emotional }, duration);
   }
 
   /**
@@ -296,30 +290,21 @@ export class TitaneVisualEngineV21 extends EventEmitter {
    */
   setSystemLoad(systemLoad: number, duration?: number): void {
     const clamped = Math.max(0, Math.min(100, systemLoad));
-    this.setState(
-      { ...this.currentState, systemLoad: clamped },
-      duration
-    );
+    this.setState({ ...this.currentState, systemLoad: clamped }, duration);
   }
 
   /**
    * Set conversation context only (keep other dimensions)
    */
   setConversationContext(context: ConversationContext, duration?: number): void {
-    this.setState(
-      { ...this.currentState, conversationContext: context },
-      duration
-    );
+    this.setState({ ...this.currentState, conversationContext: context }, duration);
   }
 
   /**
    * Set custom visual config override
    */
   setCustomConfig(override: Partial<VisualConfig>, duration?: number): void {
-    this.setState(
-      { ...this.currentState, customOverride: override },
-      duration
-    );
+    this.setState({ ...this.currentState, customOverride: override }, duration);
   }
 
   /**
@@ -349,7 +334,11 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   /**
    * Start a transition to new state/config
    */
-  private startTransition(newState: TitaneState, newConfig: VisualConfig, duration: number): void {
+  private startTransition(
+    newState: TitaneState,
+    newConfig: VisualConfig,
+    duration: number
+  ): void {
     this.currentState = { ...newState };
     this.targetConfig = newConfig;
     this.transitionStartTime = performance.now();
@@ -514,7 +503,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         this.emit('websocketConnected');
       };
 
-      this.websocket.onmessage = (event) => {
+      this.websocket.onmessage = event => {
         try {
           const data = JSON.parse(event.data);
           this.handleWebSocketMessage(data);
@@ -523,7 +512,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         }
       };
 
-      this.websocket.onerror = (error) => {
+      this.websocket.onerror = error => {
         console.error('[VisualEngineV21] WebSocket error:', error);
         this.emit('websocketError', error);
       };
@@ -563,19 +552,31 @@ export class TitaneVisualEngineV21 extends EventEmitter {
           break;
 
         case 'cognitive_state':
-          if (message.payload && typeof message.payload === 'object' && 'cognitive' in message.payload) {
+          if (
+            message.payload &&
+            typeof message.payload === 'object' &&
+            'cognitive' in message.payload
+          ) {
             this.setCognitiveState(message.payload.cognitive as CognitiveState);
           }
           break;
 
         case 'system_load':
-          if (message.payload && typeof message.payload === 'object' && 'load' in message.payload) {
+          if (
+            message.payload &&
+            typeof message.payload === 'object' &&
+            'load' in message.payload
+          ) {
             this.setSystemLoad(message.payload.load as number);
           }
           break;
 
         case 'performance_mode':
-          if (message.payload && typeof message.payload === 'object' && 'mode' in message.payload) {
+          if (
+            message.payload &&
+            typeof message.payload === 'object' &&
+            'mode' in message.payload
+          ) {
             this.setPerformanceMode(message.payload.mode as 'high' | 'medium' | 'low');
           }
           break;
@@ -604,7 +605,8 @@ export class TitaneVisualEngineV21 extends EventEmitter {
         cognitive: (payload as { cognitive: string }).cognitive as CognitiveState,
         emotional: (payload as { emotional: string }).emotional as EmotionalTone,
         systemLoad: (payload as { systemLoad: number }).systemLoad,
-        conversationContext: (payload as { conversationContext: string }).conversationContext as ConversationContext,
+        conversationContext: (payload as { conversationContext: string })
+          .conversationContext as ConversationContext,
       };
       this.setState(newState);
     }

@@ -33,7 +33,8 @@ export const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({
   size = 120,
   intensity = 0.8,
 }) => {
-  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } = useAnimation();
+  const { animationConfig: _animationConfig, shouldReduceMotion: _shouldReduceMotion } =
+    useAnimation();
 
   const getColors = () => {
     switch (mode) {
@@ -64,10 +65,7 @@ export const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({
   const rotationSpeed = mode === 'thinking' ? 2 : 4;
 
   return (
-    <div
-      className="listening-indicator"
-      style={{ width: size, height: size }}
-    >
+    <div className="listening-indicator" style={{ width: size, height: size }}>
       {!active && (
         <motion.div
           className="listening-idle"
@@ -160,7 +158,7 @@ export const ListeningIndicator: React.FC<ListeningIndicatorProps> = ({
           />
 
           {/* Anneaux de respiration */}
-          {[0, 1, 2].map((i) => (
+          {[0, 1, 2].map(i => (
             <motion.div
               key={`ring-${i}`}
               className="listening-ring"

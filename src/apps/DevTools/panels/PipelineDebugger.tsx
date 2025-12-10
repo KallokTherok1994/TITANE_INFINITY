@@ -11,8 +11,14 @@ import { Badge } from '../components/Badge';
 import './PipelineDebugger.css';
 
 export const PipelineDebugger: React.FC = () => {
-  const { current_step, completed_steps, pipeline_completed, pipeline_duration_ms, error, resetPipeline } =
-    usePipelineEvents();
+  const {
+    current_step,
+    completed_steps,
+    pipeline_completed,
+    pipeline_duration_ms,
+    error,
+    resetPipeline,
+  } = usePipelineEvents();
 
   return (
     <div className="pipeline-debugger">
@@ -62,8 +68,12 @@ export const PipelineDebugger: React.FC = () => {
               <Badge variant="info">Running</Badge>
             </div>
             <div className="step-meta">
-              <span>Engine: <strong>{current_step.engine_id}</strong></span>
-              <span>Started: {new Date(current_step.started_at).toLocaleTimeString()}</span>
+              <span>
+                Engine: <strong>{current_step.engine_id}</strong>
+              </span>
+              <span>
+                Started: {new Date(current_step.started_at).toLocaleTimeString()}
+              </span>
             </div>
           </div>
         </div>

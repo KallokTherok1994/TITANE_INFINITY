@@ -259,11 +259,21 @@ class MetaKernel {
     stability: { active: true, lastAction: null, score: 100, location: 'frontend' },
     autofix: { active: true, lastFix: null, fixCount: 0, location: 'frontend' },
     evolution: { active: false, lastMutation: null, generation: 0, location: 'frontend' },
-    cognitive: { active: true, coherenceScore: 95, lastDecision: null, location: 'frontend' },
+    cognitive: {
+      active: true,
+      coherenceScore: 95,
+      lastDecision: null,
+      location: 'frontend',
+    },
     // Backend Rust Kernels
     rustAutoHealing: { active: true, lastHeal: null, healCount: 0, location: 'backend' },
     rustEvolution: { active: true, level: 1, xp: 0, location: 'backend' },
-    rustStability: { active: true, stabilityScore: 100, lastCheck: null, location: 'backend' },
+    rustStability: {
+      active: true,
+      stabilityScore: 100,
+      lastCheck: null,
+      location: 'backend',
+    },
     // Meta Kernels
     metaSingularity: { active: true, orchestrationQuality: 0, location: 'frontend' },
     autonomyEngine: { active: true, lastEvolution: null, location: 'frontend' },
@@ -321,7 +331,8 @@ class MetaKernel {
   initialize(): void {
     if (this.initialized) return;
 
-    isDev && console.log('[META-KERNEL] 🌌 Initialisation de la super-conscience système...');
+    isDev &&
+      console.log('[META-KERNEL] 🌌 Initialisation de la super-conscience système...');
 
     // 1.1 Construire cartographie globale
     this.buildSystemMap();
@@ -486,43 +497,146 @@ class MetaKernel {
     // Créer les arêtes (flux)
     this.systemMap.edges = [
       // Providers → Orchestrator
-      { from: 'provider-titane-local', to: 'orchestrator', type: 'data-flow', strength: 100, health: 100 },
-      { from: 'provider-tauri-chat', to: 'orchestrator', type: 'data-flow', strength: 95, health: 95 },
-      { from: 'provider-openai', to: 'orchestrator', type: 'data-flow', strength: 90, health: 90 },
-      { from: 'provider-claude', to: 'orchestrator', type: 'data-flow', strength: 90, health: 90 },
-      { from: 'provider-gemini', to: 'orchestrator', type: 'data-flow', strength: 85, health: 85 },
-      { from: 'provider-ollama', to: 'orchestrator', type: 'data-flow', strength: 80, health: 80 },
+      {
+        from: 'provider-titane-local',
+        to: 'orchestrator',
+        type: 'data-flow',
+        strength: 100,
+        health: 100,
+      },
+      {
+        from: 'provider-tauri-chat',
+        to: 'orchestrator',
+        type: 'data-flow',
+        strength: 95,
+        health: 95,
+      },
+      {
+        from: 'provider-openai',
+        to: 'orchestrator',
+        type: 'data-flow',
+        strength: 90,
+        health: 90,
+      },
+      {
+        from: 'provider-claude',
+        to: 'orchestrator',
+        type: 'data-flow',
+        strength: 90,
+        health: 90,
+      },
+      {
+        from: 'provider-gemini',
+        to: 'orchestrator',
+        type: 'data-flow',
+        strength: 85,
+        health: 85,
+      },
+      {
+        from: 'provider-ollama',
+        to: 'orchestrator',
+        type: 'data-flow',
+        strength: 80,
+        health: 80,
+      },
 
       // Orchestrator → Chat UI
-      { from: 'orchestrator', to: 'chat-ui', type: 'data-flow', strength: 100, health: 95 },
+      {
+        from: 'orchestrator',
+        to: 'chat-ui',
+        type: 'data-flow',
+        strength: 100,
+        health: 95,
+      },
 
       // Chat UI → Orchestrator (feedback loop)
       { from: 'chat-ui', to: 'orchestrator', type: 'feedback', strength: 80, health: 90 },
 
       // IAService ↔ Governance
-      { from: 'ia-service', to: 'governance', type: 'control-flow', strength: 95, health: 95 },
-      { from: 'governance', to: 'provider-openai', type: 'dependency', strength: 90, health: 90 },
-      { from: 'governance', to: 'provider-claude', type: 'dependency', strength: 90, health: 90 },
-      { from: 'governance', to: 'provider-gemini', type: 'dependency', strength: 85, health: 85 },
+      {
+        from: 'ia-service',
+        to: 'governance',
+        type: 'control-flow',
+        strength: 95,
+        health: 95,
+      },
+      {
+        from: 'governance',
+        to: 'provider-openai',
+        type: 'dependency',
+        strength: 90,
+        health: 90,
+      },
+      {
+        from: 'governance',
+        to: 'provider-claude',
+        type: 'dependency',
+        strength: 90,
+        health: 90,
+      },
+      {
+        from: 'governance',
+        to: 'provider-gemini',
+        type: 'dependency',
+        strength: 85,
+        health: 85,
+      },
 
       // Cognitive Kernel integration
-      { from: 'cognitive-kernel', to: 'orchestrator', type: 'control-flow', strength: 95, health: 95 },
-      { from: 'cognitive-kernel', to: 'chat-ui', type: 'control-flow', strength: 90, health: 90 },
-      { from: 'metrics', to: 'cognitive-kernel', type: 'data-flow', strength: 100, health: 100 },
+      {
+        from: 'cognitive-kernel',
+        to: 'orchestrator',
+        type: 'control-flow',
+        strength: 95,
+        health: 95,
+      },
+      {
+        from: 'cognitive-kernel',
+        to: 'chat-ui',
+        type: 'control-flow',
+        strength: 90,
+        health: 90,
+      },
+      {
+        from: 'metrics',
+        to: 'cognitive-kernel',
+        type: 'data-flow',
+        strength: 100,
+        health: 100,
+      },
 
       // Auto-Heal integration
-      { from: 'autoHeal', to: 'orchestrator', type: 'control-flow', strength: 95, health: 95 },
+      {
+        from: 'autoHeal',
+        to: 'orchestrator',
+        type: 'control-flow',
+        strength: 95,
+        health: 95,
+      },
       { from: 'metrics', to: 'autoHeal', type: 'data-flow', strength: 90, health: 90 },
 
       // Metrics collection
-      { from: 'orchestrator', to: 'metrics', type: 'data-flow', strength: 100, health: 100 },
+      {
+        from: 'orchestrator',
+        to: 'metrics',
+        type: 'data-flow',
+        strength: 100,
+        health: 100,
+      },
     ];
 
     // Définir les flux
     this.systemMap.flows = [
       {
         name: 'User Request Flow',
-        path: ['chat-ui', 'orchestrator', 'cognitive-kernel', 'provider-*', 'orchestrator', 'chat-ui'],
+        path: [
+          'chat-ui',
+          'orchestrator',
+          'cognitive-kernel',
+          'provider-*',
+          'orchestrator',
+          'chat-ui',
+        ],
         type: 'vertical',
         efficiency: 90,
       },
@@ -534,7 +648,13 @@ class MetaKernel {
       },
       {
         name: 'Cognitive Feedback Loop',
-        path: ['chat-ui', 'orchestrator', 'cognitive-kernel', 'metrics', 'cognitive-kernel'],
+        path: [
+          'chat-ui',
+          'orchestrator',
+          'cognitive-kernel',
+          'metrics',
+          'cognitive-kernel',
+        ],
         type: 'circular',
         efficiency: 95,
       },
@@ -543,17 +663,28 @@ class MetaKernel {
     // Définir les couches
     this.systemMap.layers = [
       { name: 'Presentation', level: 1, components: ['chat-ui'], coherence: 90 },
-      { name: 'Orchestration', level: 2, components: ['orchestrator', 'cognitive-kernel'], coherence: 95 },
+      {
+        name: 'Orchestration',
+        level: 2,
+        components: ['orchestrator', 'cognitive-kernel'],
+        coherence: 95,
+      },
       { name: 'Providers', level: 3, components: ['provider-*'], coherence: 85 },
-      { name: 'Services', level: 4, components: ['ia-service', 'governance', 'autoHeal', 'metrics'], coherence: 90 },
+      {
+        name: 'Services',
+        level: 4,
+        components: ['ia-service', 'governance', 'autoHeal', 'metrics'],
+        coherence: 90,
+      },
     ];
 
-    isDev && console.log('[META-KERNEL] 📊 Cartographie système construite:', {
-      nodes: this.systemMap.nodes.length,
-      edges: this.systemMap.edges.length,
-      flows: this.systemMap.flows.length,
-      layers: this.systemMap.layers.length,
-    });
+    isDev &&
+      console.log('[META-KERNEL] 📊 Cartographie système construite:', {
+        nodes: this.systemMap.nodes.length,
+        edges: this.systemMap.edges.length,
+        flows: this.systemMap.flows.length,
+        layers: this.systemMap.layers.length,
+      });
   }
 
   /**
@@ -573,10 +704,11 @@ class MetaKernel {
       quality: metricsEngine.getAggregatedMetrics().successRate,
     };
 
-    isDev && console.log('[META-KERNEL] 🔄 Flux cognitifs analysés:', {
-      horizontal: horizontalFlow,
-      vertical: verticalFlow,
-    });
+    isDev &&
+      console.log('[META-KERNEL] 🔄 Flux cognitifs analysés:', {
+        horizontal: horizontalFlow,
+        vertical: verticalFlow,
+      });
   }
 
   /**
@@ -630,12 +762,13 @@ class MetaKernel {
     // Détecter zones de fragilité
     this.detectFragilityZones(observation);
 
-    isDev && console.log('[META-KERNEL] 👁️ Observation système:', {
-      stability: observation.stability.toFixed(1),
-      coherence: observation.coherence.toFixed(1),
-      cognitiveLoad: observation.cognitiveLoad.toFixed(1),
-      titaneAlignment: observation.titaneAlignment.toFixed(1),
-    });
+    isDev &&
+      console.log('[META-KERNEL] 👁️ Observation système:', {
+        stability: observation.stability.toFixed(1),
+        coherence: observation.coherence.toFixed(1),
+        cognitiveLoad: observation.cognitiveLoad.toFixed(1),
+        titaneAlignment: observation.titaneAlignment.toFixed(1),
+      });
   }
 
   private calculateCognitiveLoad(): number {
@@ -647,7 +780,9 @@ class MetaKernel {
   private calculateDecisionEfficiency(): number {
     const cognitiveReport = cognitiveKernel.getCognitiveReport();
     const health = cognitiveReport.health;
-    return (health.thinking ? 33 : 0) + (health.behaving ? 33 : 0) + (health.stable ? 34 : 0);
+    return (
+      (health.thinking ? 33 : 0) + (health.behaving ? 33 : 0) + (health.stable ? 34 : 0)
+    );
   }
 
   private calculateUiLogicAlignment(): number {
@@ -698,14 +833,13 @@ class MetaKernel {
     // Mettre à jour l'état du kernel
     this.subKernels[kernel].active = true;
 
-    isDev && console.log(`[META-KERNEL] 🎯 Activation ${kernel} kernel (${location}):`, action);
+    isDev &&
+      console.log(`[META-KERNEL] 🎯 Activation ${kernel} kernel (${location}):`, action);
 
     return action;
   }
 
-  private getKernelLocation(
-    kernel: string
-  ): 'frontend' | 'backend' | 'meta' {
+  private getKernelLocation(kernel: string): 'frontend' | 'backend' | 'meta' {
     if (kernel.startsWith('rust')) return 'backend';
     if (kernel === 'metaSingularity' || kernel === 'autonomyEngine') return 'meta';
     return 'frontend';
@@ -722,7 +856,8 @@ class MetaKernel {
     const conflicts = this.detectKernelConflicts(actions);
 
     if (conflicts.length > 0) {
-      isDev && console.warn('[META-KERNEL] ⚠️ Conflits détectés entre kernels:', conflicts);
+      isDev &&
+        console.warn('[META-KERNEL] ⚠️ Conflits détectés entre kernels:', conflicts);
       // Résoudre conflits en gardant action prioritaire
       actions = this.resolveConflicts(actions, conflicts);
     }
@@ -734,17 +869,41 @@ class MetaKernel {
   private getKernelConstraints(kernel: string): string[] {
     const constraints: Record<string, string[]> = {
       // Frontend Kernels
-      stability: ['Preserve existing functionality', 'No breaking changes', 'Maintain type safety'],
+      stability: [
+        'Preserve existing functionality',
+        'No breaking changes',
+        'Maintain type safety',
+      ],
       autofix: ['Only fix clear issues', 'Preserve intent', 'Test before apply'],
-      evolution: ['Backward compatible', 'Incremental changes', 'Measurable improvements'],
-      cognitive: ['Respect TITANE principles', 'Maintain coherence', 'Enhance intelligence'],
+      evolution: [
+        'Backward compatible',
+        'Incremental changes',
+        'Measurable improvements',
+      ],
+      cognitive: [
+        'Respect TITANE principles',
+        'Maintain coherence',
+        'Enhance intelligence',
+      ],
       // Backend Rust Kernels
-      rustAutoHealing: ['Safe Rust patterns', 'No unwrap()', 'Result<T,E> error handling'],
+      rustAutoHealing: [
+        'Safe Rust patterns',
+        'No unwrap()',
+        'Result<T,E> error handling',
+      ],
       rustEvolution: ['Incremental learning', 'XP-based growth', 'Pattern recognition'],
       rustStability: ['Memory validation', 'Structural integrity', 'Rollback capability'],
       // Meta Kernels
-      metaSingularity: ['Global coherence', 'Engine coordination', 'Emergent phenomena detection'],
-      autonomyEngine: ['User preference learning', 'Auto-optimization', 'Self-healing cycles'],
+      metaSingularity: [
+        'Global coherence',
+        'Engine coordination',
+        'Emergent phenomena detection',
+      ],
+      autonomyEngine: [
+        'User preference learning',
+        'Auto-optimization',
+        'Self-healing cycles',
+      ],
     };
     return constraints[kernel] || [];
   }
@@ -774,7 +933,9 @@ class MetaKernel {
     for (let i = 0; i < actions.length; i++) {
       for (let j = i + 1; j < actions.length; j++) {
         if (actions[i].context === actions[j].context) {
-          conflicts.push(`${actions[i].kernel} vs ${actions[j].kernel} on ${actions[i].context}`);
+          conflicts.push(
+            `${actions[i].kernel} vs ${actions[j].kernel} on ${actions[i].context}`
+          );
         }
       }
     }
@@ -789,7 +950,7 @@ class MetaKernel {
     // Garder seulement l'action avec la plus haute priorité pour chaque contexte
     const resolved = new Map<string, OrchestrationAction>();
 
-    actions.forEach((action) => {
+    actions.forEach(action => {
       const existing = resolved.get(action.context);
       if (!existing || action.priority > existing.priority) {
         resolved.set(action.context, action);
@@ -814,17 +975,24 @@ class MetaKernel {
 
     // Appliquer corrections si nécessaire
     if (this.titanePrinciples.simplicityStructural < 80) {
-      isDev && console.warn('[META-KERNEL] ⚠️ Simplicité structurelle faible, activation simplification');
+      isDev &&
+        console.warn(
+          '[META-KERNEL] ⚠️ Simplicité structurelle faible, activation simplification'
+        );
       this.activateKernel('autofix', 'structural-simplification', 90);
     }
 
     if (this.titanePrinciples.clarityFlows < 80) {
-      isDev && console.warn('[META-KERNEL] ⚠️ Clarté des flux faible, activation harmonisation');
+      isDev &&
+        console.warn('[META-KERNEL] ⚠️ Clarté des flux faible, activation harmonisation');
       this.activateKernel('cognitive', 'flow-clarification', 85);
     }
 
     if (this.titanePrinciples.robustnessNatural < 80) {
-      isDev && console.warn('[META-KERNEL] ⚠️ Robustesse naturelle faible, activation stabilité');
+      isDev &&
+        console.warn(
+          '[META-KERNEL] ⚠️ Robustesse naturelle faible, activation stabilité'
+        );
       this.activateKernel('stability', 'robustness-reinforcement', 95);
     }
   }
@@ -847,7 +1015,10 @@ class MetaKernel {
 
     // Dépendances minimalisme (basé sur nombre d'arêtes)
     const dependencyRatio = this.systemMap.edges.length / this.systemMap.nodes.length;
-    this.titanePrinciples.dependenciesMinimalism = Math.max(0, 100 - dependencyRatio * 10);
+    this.titanePrinciples.dependenciesMinimalism = Math.max(
+      0,
+      100 - dependencyRatio * 10
+    );
 
     // Comportement consistant basé sur coherence cognitive
     this.titanePrinciples.behaviorConsistency = cognitiveReport.coherenceScore;
@@ -872,8 +1043,16 @@ class MetaKernel {
         type: 'flow',
         severity: observation.stability < 60 ? 'critical' : 'high',
         reason: 'Low success rate in provider selection',
-        anticipatedIssues: ['Increased error rate', 'User frustration', 'System instability'],
-        preventionStrategies: ['Activate stability kernel', 'Review provider health', 'Increase fallback reliability'],
+        anticipatedIssues: [
+          'Increased error rate',
+          'User frustration',
+          'System instability',
+        ],
+        preventionStrategies: [
+          'Activate stability kernel',
+          'Review provider health',
+          'Increase fallback reliability',
+        ],
       });
     }
 
@@ -884,8 +1063,16 @@ class MetaKernel {
         type: 'structure',
         severity: observation.cognitiveLoad > 90 ? 'high' : 'medium',
         reason: 'High cognitive load may cause slowdowns',
-        anticipatedIssues: ['Performance degradation', 'Memory issues', 'Response delays'],
-        preventionStrategies: ['Optimize message processing', 'Implement caching', 'Reduce re-renders'],
+        anticipatedIssues: [
+          'Performance degradation',
+          'Memory issues',
+          'Response delays',
+        ],
+        preventionStrategies: [
+          'Optimize message processing',
+          'Implement caching',
+          'Reduce re-renders',
+        ],
       });
     }
 
@@ -896,8 +1083,16 @@ class MetaKernel {
         type: 'flow',
         severity: 'medium',
         reason: 'UI and logic are not properly aligned',
-        anticipatedIssues: ['Inconsistent UX', 'State desynchronization', 'Error propagation'],
-        preventionStrategies: ['Harmonize message structures', 'Strengthen feedback loops', 'Improve state management'],
+        anticipatedIssues: [
+          'Inconsistent UX',
+          'State desynchronization',
+          'Error propagation',
+        ],
+        preventionStrategies: [
+          'Harmonize message structures',
+          'Strengthen feedback loops',
+          'Improve state management',
+        ],
       });
     }
 
@@ -909,12 +1104,19 @@ class MetaKernel {
         severity: 'medium',
         reason: 'TITANE principles not fully respected',
         anticipatedIssues: ['Complexity drift', 'Coherence loss', 'Technical debt'],
-        preventionStrategies: ['Enforce TITANE law', 'Refactor non-compliant code', 'Review architecture'],
+        preventionStrategies: [
+          'Enforce TITANE law',
+          'Refactor non-compliant code',
+          'Review architecture',
+        ],
       });
     }
 
     if (this.fragilityZones.length > 0) {
-      isDev && console.warn(`[META-KERNEL] 🚨 ${this.fragilityZones.length} zones de fragilité détectées`);
+      isDev &&
+        console.warn(
+          `[META-KERNEL] 🚨 ${this.fragilityZones.length} zones de fragilité détectées`
+        );
     }
   }
 
@@ -922,12 +1124,15 @@ class MetaKernel {
    * Prévenir les problèmes avant qu'ils n'arrivent
    */
   prevent(): void {
-    this.fragilityZones.forEach((zone) => {
+    this.fragilityZones.forEach(zone => {
       if (zone.severity === 'critical' || zone.severity === 'high') {
-        isDev && console.log(`[META-KERNEL] 🛡️ Prévention ${zone.severity} sur ${zone.location}`);
+        isDev &&
+          console.log(
+            `[META-KERNEL] 🛡️ Prévention ${zone.severity} sur ${zone.location}`
+          );
 
         // Appliquer stratégies de prévention
-        zone.preventionStrategies.forEach((strategy) => {
+        zone.preventionStrategies.forEach(strategy => {
           this.applyPreventionStrategy(strategy, zone);
         });
       }
@@ -972,7 +1177,7 @@ class MetaKernel {
     optimizations.push('Types alignés via TypeScript strict mode + Rust type safety');
 
     // 3. Consolider messages d'erreur
-    optimizations.push('Messages d\'erreur harmonisés par Cognitive Kernel');
+    optimizations.push("Messages d'erreur harmonisés par Cognitive Kernel");
 
     // 4. Harmoniser providers
     optimizations.push('Providers harmonisés par Orchestrator');
@@ -984,7 +1189,10 @@ class MetaKernel {
     const syncStatus = this.synchronizeFrontendBackendKernels();
     optimizations.push(`Kernels synchronisés: ${syncStatus}`);
 
-    isDev && console.log(`[META-KERNEL] ⚡ ${optimizations.length} optimisations transversales appliquées`);
+    isDev &&
+      console.log(
+        `[META-KERNEL] ⚡ ${optimizations.length} optimisations transversales appliquées`
+      );
 
     return optimizations;
   }
@@ -1012,17 +1220,20 @@ class MetaKernel {
     const redundancies: string[] = [];
 
     // Vérifier nœuds similaires
-    const nodesByType = this.systemMap.nodes.reduce((acc, node) => {
-      if (!acc[node.type]) acc[node.type] = [];
-      acc[node.type].push(node);
-      return acc;
-    }, {} as Record<string, SystemNode[]>);
+    const nodesByType = this.systemMap.nodes.reduce(
+      (acc, node) => {
+        if (!acc[node.type]) acc[node.type] = [];
+        acc[node.type].push(node);
+        return acc;
+      },
+      {} as Record<string, SystemNode[]>
+    );
 
     Object.entries(nodesByType).forEach(([type, nodes]) => {
       if (nodes.length > 1) {
-        const similarNodes = nodes.filter((n) => n.role.includes('similar'));
+        const similarNodes = nodes.filter(n => n.role.includes('similar'));
         if (similarNodes.length > 0) {
-          redundancies.push(`${type}: ${similarNodes.map((n) => n.name).join(', ')}`);
+          redundancies.push(`${type}: ${similarNodes.map(n => n.name).join(', ')}`);
         }
       }
     });
@@ -1109,7 +1320,7 @@ class MetaKernel {
       holisticAnalysis: {
         systemMap: this.systemMap,
         flowEfficiency: this.calculateFlowEfficiency(),
-        layerCoherence: this.systemMap.layers.map((l) => l.coherence),
+        layerCoherence: this.systemMap.layers.map(l => l.coherence),
         tensionZones: this.fragilityZones,
       },
       harmonizations: this.getRecentHarmonizations(),
@@ -1120,13 +1331,18 @@ class MetaKernel {
   }
 
   private calculateEvolutionScore(): number {
-    const successfulCount = this.superMemory.evolutions.recentTransformations.filter((t) => t.success).length;
+    const successfulCount = this.superMemory.evolutions.recentTransformations.filter(
+      t => t.success
+    ).length;
     const totalCount = this.superMemory.evolutions.recentTransformations.length;
     return totalCount > 0 ? (successfulCount / totalCount) * 100 : 0;
   }
 
   private calculateFlowEfficiency(): number {
-    return this.systemMap.flows.reduce((sum, flow) => sum + flow.efficiency, 0) / this.systemMap.flows.length;
+    return (
+      this.systemMap.flows.reduce((sum, flow) => sum + flow.efficiency, 0) /
+      this.systemMap.flows.length
+    );
   }
 
   private getRecentHarmonizations(): string[] {
@@ -1148,7 +1364,9 @@ class MetaKernel {
 
     // Basé sur les stratégies réussies
     if (this.superMemory.evolutions.successfulStrategies.length > 5) {
-      orientations.push(`Renforcer stratégies: ${this.superMemory.evolutions.successfulStrategies.slice(0, 3).join(', ')}`);
+      orientations.push(
+        `Renforcer stratégies: ${this.superMemory.evolutions.successfulStrategies.slice(0, 3).join(', ')}`
+      );
     }
 
     // Basé sur zones de fragilité
@@ -1157,8 +1375,9 @@ class MetaKernel {
     }
 
     // Basé sur principes TITANE
-    const weakPrinciple = Object.entries(this.titanePrinciples)
-      .sort(([, a], [, b]) => a - b)[0];
+    const weakPrinciple = Object.entries(this.titanePrinciples).sort(
+      ([, a], [, b]) => a - b
+    )[0];
     if (weakPrinciple[1] < 90) {
       orientations.push(`Améliorer: ${weakPrinciple[0]}`);
     }
@@ -1253,7 +1472,7 @@ class MetaKernel {
     const optimizations = this.optimizeTransversally();
 
     // 5. Enregistrer patterns efficaces
-    optimizations.forEach((opt) => this.recordEfficientPattern(opt));
+    optimizations.forEach(opt => this.recordEfficientPattern(opt));
 
     // 6. Générer rapport
     const report = this.getSuperConsciousnessReport();

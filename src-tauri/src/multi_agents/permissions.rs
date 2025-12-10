@@ -1,13 +1,12 @@
+use log::{info, warn};
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞.19.3Ω — MULTI-AGENTS IA PERMISSIONS
  * Définition des permissions IA par agent
  * ═══════════════════════════════════════════════════════════════════
  */
-
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use log::{info, warn};
 
 /// Permission IA pour un agent
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, Hash)]
@@ -149,14 +148,18 @@ impl AgentConfig {
     /// Vérifier si l'agent peut utiliser un provider IA
     pub fn can_use_provider(&self, provider: &str) -> bool {
         match self.ia_permission {
-            AgentIAPermission::NoExternal => {
-                provider == "local" || provider == "ollama"
-            }
+            AgentIAPermission::NoExternal => provider == "local" || provider == "ollama",
             AgentIAPermission::OpenAIOnly => {
-                provider == "openai" || provider == "gpt" || provider == "local" || provider == "ollama"
+                provider == "openai"
+                    || provider == "gpt"
+                    || provider == "local"
+                    || provider == "ollama"
             }
             AgentIAPermission::ClaudeOnly => {
-                provider == "claude" || provider == "anthropic" || provider == "local" || provider == "ollama"
+                provider == "claude"
+                    || provider == "anthropic"
+                    || provider == "local"
+                    || provider == "ollama"
             }
             AgentIAPermission::GeminiOnly => {
                 provider == "gemini" || provider == "local" || provider == "ollama"
@@ -233,7 +236,11 @@ impl AgentPermissionManager {
         ];
 
         for agent in default_agents {
-            info!("[AgentPermissions] Registered: {} ({})", agent.name, agent.role.display_name());
+            info!(
+                "[AgentPermissions] Registered: {} ({})",
+                agent.name,
+                agent.role.display_name()
+            );
             self.agents.insert(agent.id.clone(), agent);
         }
     }

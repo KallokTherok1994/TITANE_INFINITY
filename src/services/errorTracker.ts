@@ -89,7 +89,7 @@ class ErrorTracker {
     // Détection surcharge
     const shouldReset =
       last60s.length >= this.RESET_THRESHOLD &&
-      (now - this.lastResetTime) > this.MIN_RESET_INTERVAL;
+      now - this.lastResetTime > this.MIN_RESET_INTERVAL;
 
     return {
       total: this.errors.length,

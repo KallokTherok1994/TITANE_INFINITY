@@ -112,7 +112,7 @@ export const DEFAULT_TOOLS: ToolDefinition[] = [
   {
     id: 'read_file',
     name: 'Lire fichier',
-    description: 'Lit le contenu d\'un fichier',
+    description: "Lit le contenu d'un fichier",
     category: 'file',
     permissions: ['read'],
     timeout: 5000,
@@ -130,7 +130,7 @@ export const DEFAULT_TOOLS: ToolDefinition[] = [
   {
     id: 'list_files',
     name: 'Lister fichiers',
-    description: 'Liste les fichiers d\'un répertoire',
+    description: "Liste les fichiers d'un répertoire",
     category: 'file',
     permissions: ['list'],
     timeout: 10000,
@@ -166,7 +166,7 @@ export const DEFAULT_TOOLS: ToolDefinition[] = [
   {
     id: 'fetch_webpage',
     name: 'Récupérer page web',
-    description: 'Récupère le contenu d\'une page web',
+    description: "Récupère le contenu d'une page web",
     category: 'network',
     permissions: ['fetch'],
     timeout: 30000,
@@ -193,7 +193,7 @@ export const DEFAULT_TOOLS: ToolDefinition[] = [
   {
     id: 'generate_text',
     name: 'Générer texte',
-    description: 'Génère du texte avec l\'IA',
+    description: "Génère du texte avec l'IA",
     category: 'ai',
     permissions: ['generate'],
     timeout: 60000,

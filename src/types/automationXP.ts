@@ -96,36 +96,42 @@ export interface UserXPState {
  * Type de déclencheur d'automation
  */
 export type AutomationTriggerType =
-  | 'manual'           // Déclenché manuellement
-  | 'scheduled'        // Planifié (cron)
-  | 'event'            // Sur événement système
-  | 'condition'        // Sur condition remplie
-  | 'webhook'          // Via webhook externe
-  | 'voice_command'    // Commande vocale
-  | 'context_change';  // Changement de contexte
+  | 'manual' // Déclenché manuellement
+  | 'scheduled' // Planifié (cron)
+  | 'event' // Sur événement système
+  | 'condition' // Sur condition remplie
+  | 'webhook' // Via webhook externe
+  | 'voice_command' // Commande vocale
+  | 'context_change'; // Changement de contexte
 
 /**
  * Type d'action d'automation
  */
 export type AutomationActionType =
-  | 'chat_send'        // Envoyer message chat
-  | 'mode_switch'      // Changer de mode IA
-  | 'memory_save'      // Sauvegarder en mémoire
-  | 'memory_recall'    // Rappeler de la mémoire
-  | 'file_create'      // Créer fichier
-  | 'file_modify'      // Modifier fichier
-  | 'notification'     // Envoyer notification
-  | 'tts_speak'        // Synthèse vocale
-  | 'api_call'         // Appel API externe
-  | 'shell_command'    // Commande shell (sécurisé)
+  | 'chat_send' // Envoyer message chat
+  | 'mode_switch' // Changer de mode IA
+  | 'memory_save' // Sauvegarder en mémoire
+  | 'memory_recall' // Rappeler de la mémoire
+  | 'file_create' // Créer fichier
+  | 'file_modify' // Modifier fichier
+  | 'notification' // Envoyer notification
+  | 'tts_speak' // Synthèse vocale
+  | 'api_call' // Appel API externe
+  | 'shell_command' // Commande shell (sécurisé)
   | 'chain_automation' // Déclencher autre automation
-  | 'custom_script';   // Script personnalisé
+  | 'custom_script'; // Script personnalisé
 
 /**
  * Condition d'automation
  */
 export interface AutomationCondition {
-  type: 'xp_level' | 'time_of_day' | 'mode_active' | 'memory_contains' | 'system_state' | 'custom';
+  type:
+    | 'xp_level'
+    | 'time_of_day'
+    | 'mode_active'
+    | 'memory_contains'
+    | 'system_state'
+    | 'custom';
   operator: 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'contains' | 'matches';
   value: unknown;
   description?: string;
@@ -226,21 +232,21 @@ export interface AutomationSystemState {
  * Domaine d'évolution IA
  */
 export type EvolutionDomain =
-  | 'language'         // Compréhension langage
-  | 'reasoning'        // Capacités de raisonnement
-  | 'memory'           // Gestion mémoire
-  | 'creativity'       // Créativité
-  | 'empathy'          // Intelligence émotionnelle
-  | 'efficiency'       // Efficacité réponses
-  | 'accuracy'         // Précision
-  | 'adaptation';      // Adaptation utilisateur
+  | 'language' // Compréhension langage
+  | 'reasoning' // Capacités de raisonnement
+  | 'memory' // Gestion mémoire
+  | 'creativity' // Créativité
+  | 'empathy' // Intelligence émotionnelle
+  | 'efficiency' // Efficacité réponses
+  | 'accuracy' // Précision
+  | 'adaptation'; // Adaptation utilisateur
 
 /**
  * Métrique d'évolution
  */
 export interface EvolutionMetric {
   domain: EvolutionDomain;
-  current_score: number;    // 0-100
+  current_score: number; // 0-100
   previous_score: number;
   improvement_rate: number; // % amélioration
   samples_count: number;

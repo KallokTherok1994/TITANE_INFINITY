@@ -18,11 +18,11 @@ export {
   hasMultimodalIntent,
   handleMultimodalIntent,
   processMultimodalMessage,
-  default as multimodalIntentHandler
+  default as multimodalIntentHandler,
 } from './multimodalIntentHandler';
 
 export type {
   MultimodalIntentType,
   MultimodalIntent,
-  MultimodalIntentResponse
+  MultimodalIntentResponse,
 } from './multimodalIntentHandler';

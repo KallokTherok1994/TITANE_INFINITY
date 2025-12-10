@@ -73,7 +73,11 @@ impl TemporalTrace {
         let age_ms = now.saturating_sub(self.timestamp_ms);
         let decay_factor = self.decay.calculate(age_ms);
         let access_bonus = (self.access_count as f32 * 0.05).min(0.3);
-        let recency_bonus = if now.saturating_sub(self.last_access_ms) < 3600000 { 0.1 } else { 0.0 };
+        let recency_bonus = if now.saturating_sub(self.last_access_ms) < 3600000 {
+            0.1
+        } else {
+            0.0
+        };
 
         (self.significance * decay_factor + access_bonus + recency_bonus).min(1.0)
     }
@@ -183,7 +187,8 @@ impl TemporalMemory {
     /// Recherche des traces par type d'événement
     pub async fn search_by_type(&self, event_type: &str) -> Vec<TemporalTrace> {
         let traces = self.traces.read().await;
-        traces.iter()
+        traces
+            .iter()
             .filter(|t| t.event_type == event_type)
             .cloned()
             .collect()
@@ -192,7 +197,8 @@ impl TemporalMemory {
     /// Recherche des traces dans une fenêtre temporelle
     pub async fn search_by_time(&self, start_ms: u64, end_ms: u64) -> Vec<TemporalTrace> {
         let traces = self.traces.read().await;
-        traces.iter()
+        traces
+            .iter()
             .filter(|t| t.timestamp_ms >= start_ms && t.timestamp_ms <= end_ms)
             .cloned()
             .collect()
@@ -201,17 +207,14 @@ impl TemporalMemory {
     /// Recherche des traces récentes
     pub async fn recent(&self, count: usize) -> Vec<TemporalTrace> {
         let traces = self.traces.read().await;
-        traces.iter()
-            .rev()
-            .take(count)
-            .cloned()
-            .collect()
+        traces.iter().rev().take(count).cloned().collect()
     }
 
     /// Recherche des traces significatives
     pub async fn significant(&self, threshold: f32) -> Vec<TemporalTrace> {
         let traces = self.traces.read().await;
-        traces.iter()
+        traces
+            .iter()
             .filter(|t| t.current_strength() >= threshold)
             .cloned()
             .collect()
@@ -223,8 +226,11 @@ impl TemporalMemory {
         let mut consolidated = self.consolidated.write().await;
 
         // Identifier les traces à consolider
-        let to_consolidate: Vec<_> = traces.iter()
-            .filter(|t| !t.consolidated && t.current_strength() >= self.config.consolidation_threshold)
+        let to_consolidate: Vec<_> = traces
+            .iter()
+            .filter(|t| {
+                !t.consolidated && t.current_strength() >= self.config.consolidation_threshold
+            })
             .cloned()
             .collect();
 
@@ -239,7 +245,8 @@ impl TemporalMemory {
             source_traces: to_consolidate.iter().map(|t| t.id.clone()).collect(),
             summary: format!("Consolidated {} traces", to_consolidate.len()),
             patterns: self.extract_patterns(&to_consolidate),
-            significance: to_consolidate.iter().map(|t| t.significance).sum::<f32>() / to_consolidate.len() as f32,
+            significance: to_consolidate.iter().map(|t| t.significance).sum::<f32>()
+                / to_consolidate.len() as f32,
         };
 
         consolidated.push(memory);
@@ -272,7 +279,8 @@ impl TemporalMemory {
         let mut patterns = Vec::new();
 
         // Pattern de fréquence par type d'événement
-        let mut type_counts: std::collections::HashMap<String, u32> = std::collections::HashMap::new();
+        let mut type_counts: std::collections::HashMap<String, u32> =
+            std::collections::HashMap::new();
         for trace in traces {
             *type_counts.entry(trace.event_type.clone()).or_insert(0) += 1;
         }

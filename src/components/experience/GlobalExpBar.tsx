@@ -46,7 +46,11 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
   };
 
   return (
-    <div className="exp-global-bar" onClick={onOpenPanel} title="Cliquer pour ouvrir le panneau EXP">
+    <div
+      className="exp-global-bar"
+      onClick={onOpenPanel}
+      title="Cliquer pour ouvrir le panneau EXP"
+    >
       <div className="exp-level-badge">
         <span>💎</span>
         <span>NIV {expState.level}</span>
@@ -60,7 +64,8 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
       </div>
 
       <div className="exp-progress-text">
-        {expState.exp_current_level.toLocaleString()} / {expState.exp_to_next_level.toLocaleString()} XP
+        {expState.exp_current_level.toLocaleString()} /{' '}
+        {expState.exp_to_next_level.toLocaleString()} XP
       </div>
     </div>
   );

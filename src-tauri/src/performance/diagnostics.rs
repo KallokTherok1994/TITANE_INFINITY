@@ -131,4 +131,3 @@ mod tests {
         assert_eq!(diag.queue_sizes, (1, 2, 3, 4));
     }
 }
-

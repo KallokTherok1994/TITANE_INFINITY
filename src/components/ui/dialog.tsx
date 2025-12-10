@@ -4,16 +4,16 @@
  * @license MIT
  */
 
-import React from 'react'
+import React from 'react';
 
 export interface DialogProps {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
-  children: React.ReactNode
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children: React.ReactNode;
 }
 
 export function Dialog({ open = false, onOpenChange, children }: DialogProps) {
-  if (!open) return null
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -26,37 +26,33 @@ export function Dialog({ open = false, onOpenChange, children }: DialogProps) {
       {/* Dialog content wrapper */}
       <div className="relative z-50">{children}</div>
     </div>
-  )
+  );
 }
 
-export function DialogTrigger({ 
+export function DialogTrigger({
   asChild = false,
   children,
-  onClick
-}: { 
-  asChild?: boolean
-  children: React.ReactNode
-  onClick?: () => void
+  onClick,
+}: {
+  asChild?: boolean;
+  children: React.ReactNode;
+  onClick?: () => void;
 }) {
   if (asChild) {
-    return <>{children}</>
+    return <>{children}</>;
   }
-  
-  return (
-    <button onClick={onClick}>
-      {children}
-    </button>
-  )
+
+  return <button onClick={onClick}>{children}</button>;
 }
 
-export function DialogContent({ 
-  className = '', 
+export function DialogContent({
+  className = '',
   children,
-  onClose
-}: { 
-  className?: string
-  children: React.ReactNode
-  onClose?: () => void
+  onClose,
+}: {
+  className?: string;
+  children: React.ReactNode;
+  onClose?: () => void;
 }) {
   return (
     <div
@@ -82,61 +78,59 @@ export function DialogContent({
       )}
       {children}
     </div>
-  )
+  );
 }
 
-export function DialogHeader({ 
-  className = '', 
-  children 
-}: { 
-  className?: string
-  children: React.ReactNode
+export function DialogHeader({
+  className = '',
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
 }) {
   return (
     <div className={`flex flex-col space-y-1.5 text-center sm:text-left ${className}`}>
       {children}
     </div>
-  )
+  );
 }
 
-export function DialogTitle({ 
-  className = '', 
-  children 
-}: { 
-  className?: string
-  children: React.ReactNode
+export function DialogTitle({
+  className = '',
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
 }) {
   return (
     <h2 className={`text-lg font-semibold leading-none tracking-tight ${className}`}>
       {children}
     </h2>
-  )
+  );
 }
 
-export function DialogDescription({ 
-  className = '', 
-  children 
-}: { 
-  className?: string
-  children: React.ReactNode
+export function DialogDescription({
+  className = '',
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
 }) {
-  return (
-    <p className={`text-sm text-gray-500 ${className}`}>
-      {children}
-    </p>
-  )
+  return <p className={`text-sm text-gray-500 ${className}`}>{children}</p>;
 }
 
-export function DialogFooter({ 
-  className = '', 
-  children 
-}: { 
-  className?: string
-  children: React.ReactNode
+export function DialogFooter({
+  className = '',
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
 }) {
   return (
-    <div className={`flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 ${className}`}>
+    <div
+      className={`flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 ${className}`}
+    >
       {children}
     </div>
-  )
+  );
 }

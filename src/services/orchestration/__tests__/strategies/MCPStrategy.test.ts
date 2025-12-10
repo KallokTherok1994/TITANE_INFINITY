@@ -44,21 +44,21 @@ describe('MCPStrategy', () => {
     it('should evaluate job', async () => {
       const jobId = await strategy.createJob('test', 'high');
       const result = await strategy.evaluateJob(jobId);
-      
+
       expect(result.status).toBeDefined();
     });
 
     it('should list jobs', async () => {
       await strategy.createJob('test1', 'low');
       await strategy.createJob('test2', 'high');
-      
+
       const jobs = strategy.listJobs();
       expect(jobs.length).toBeGreaterThanOrEqual(2);
     });
 
     it('should filter jobs by status', async () => {
       await strategy.createJob('test', 'medium');
-      
+
       const pendingJobs = strategy.listJobs({ status: 'pending' });
       expect(pendingJobs.every(j => j.status === 'pending')).toBe(true);
     });
@@ -99,7 +99,7 @@ describe('MCPStrategy', () => {
   describe('Health Monitoring', () => {
     it('should check health', async () => {
       await strategy.initialize();
-      
+
       const health = await strategy.checkHealth();
       expect(health.status).toBeDefined();
       expect(health.score).toBeGreaterThanOrEqual(0);
@@ -107,7 +107,7 @@ describe('MCPStrategy', () => {
 
     it('should get health score', async () => {
       await strategy.initialize();
-      
+
       const score = strategy.getHealthScore();
       expect(score).toBeGreaterThanOrEqual(0);
       expect(score).toBeLessThanOrEqual(100);
@@ -121,14 +121,14 @@ describe('MCPStrategy', () => {
 
     it('should record metrics', async () => {
       await strategy.createJob('test', 'low');
-      
+
       const metrics = strategy.getMetrics();
       expect(metrics.length).toBeGreaterThan(0);
     });
 
     it('should get metrics summary', async () => {
       await strategy.createJob('test', 'medium');
-      
+
       const summary = strategy.getSummary();
       expect(summary.totalRequests).toBeGreaterThan(0);
     });
@@ -136,7 +136,7 @@ describe('MCPStrategy', () => {
     it('should reset metrics', async () => {
       await strategy.createJob('test', 'high');
       strategy.reset();
-      
+
       const metrics = strategy.getMetrics();
       expect(metrics.length).toBe(0);
     });

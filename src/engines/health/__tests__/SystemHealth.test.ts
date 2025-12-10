@@ -164,7 +164,12 @@ describe('MetricsCollector', () => {
   });
 
   it('should resolve alerts', () => {
-    const alert = collector.createAlert('provider_unhealthy', 'test', 'Provider down', 'critical');
+    const alert = collector.createAlert(
+      'provider_unhealthy',
+      'test',
+      'Provider down',
+      'critical'
+    );
 
     collector.resolveAlert(alert.id);
 
@@ -262,7 +267,9 @@ describe('AutoHealer', () => {
     });
 
     expect(result.success).toBe(true);
-    expect(['provider_switch', 'provider_restart', 'graceful_degradation']).toContain(result.action);
+    expect(['provider_switch', 'provider_restart', 'graceful_degradation']).toContain(
+      result.action
+    );
   });
 
   it('should record healing history', async () => {

@@ -130,7 +130,9 @@ export const SecureSettings: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <Card>
         <header style={{ marginBottom: '16px' }}>
-          <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600 }}>Gemini API Key</h2>
+          <h2 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 600 }}>
+            Gemini API Key
+          </h2>
           <p style={{ margin: '4px 0 0', color: '#8193a7' }}>
             Injection sécurisée via SecureSecretsEngine (AES-256-GCM + Argon2id)
           </p>
@@ -140,7 +142,9 @@ export const SecureSettings: React.FC = () => {
             marginBottom: '16px',
             padding: '10px 14px',
             borderRadius: '10px',
-            background: tauriAvailable ? 'rgba(46, 125, 50, 0.12)' : 'rgba(244, 67, 54, 0.12)',
+            background: tauriAvailable
+              ? 'rgba(46, 125, 50, 0.12)'
+              : 'rgba(244, 67, 54, 0.12)',
             color: tauriAvailable ? '#2e7d32' : '#c62828',
             fontSize: '0.85rem',
           }}
@@ -164,36 +168,53 @@ export const SecureSettings: React.FC = () => {
                   message.tone === 'success'
                     ? 'rgba(76, 175, 80, 0.12)'
                     : message.tone === 'warning'
-                    ? 'rgba(255, 193, 7, 0.12)'
-                    : 'rgba(244, 67, 54, 0.12)',
+                      ? 'rgba(255, 193, 7, 0.12)'
+                      : 'rgba(244, 67, 54, 0.12)',
                 color:
                   message.tone === 'success'
                     ? '#2e7d32'
                     : message.tone === 'warning'
-                    ? '#b28704'
-                    : '#c62828',
+                      ? '#b28704'
+                      : '#c62828',
               }}
             >
               {message.text}
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '16px' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                marginTop: '16px',
+              }}
+            >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontSize: '0.85rem', color: '#65768a' }}>Clé actuelle</span>
-                <span style={{ fontFamily: 'monospace', fontSize: '1rem' }}>{maskedKey}</span>
+                <span style={{ fontSize: '0.85rem', color: '#65768a' }}>
+                  Clé actuelle
+                </span>
+                <span style={{ fontFamily: 'monospace', fontSize: '1rem' }}>
+                  {maskedKey}
+                </span>
               </div>
 
               {status?.env_present && (
                 <div style={{ fontSize: '0.85rem', color: '#b28704' }}>
-                  ⚠️ Une valeur GEMINI_API_KEY est toujours présente dans le fichier .env. Elle sera purgée
-                  automatiquement lors de la prochaine sauvegarde sécurisée.
+                  ⚠️ Une valeur GEMINI_API_KEY est toujours présente dans le fichier .env.
+                  Elle sera purgée automatiquement lors de la prochaine sauvegarde
+                  sécurisée.
                 </div>
               )}
             </div>
 
             <form
               onSubmit={handleSubmit}
-              style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '24px' }}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+                marginTop: '24px',
+              }}
             >
               <Input
                 label="Nouvelle clé Gemini"
@@ -204,7 +225,13 @@ export const SecureSettings: React.FC = () => {
                 type="password"
               />
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
+              >
                 <span style={{ fontSize: '0.8rem', color: '#65768a' }}>
                   Exemple masqué: <code>{maskedExample}</code>
                 </span>
@@ -229,15 +256,34 @@ export const SecureSettings: React.FC = () => {
 
       <Card>
         <header style={{ marginBottom: '16px' }}>
-          <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>Guide TITANE∞</h2>
-          <p style={{ margin: '4px 0 0', color: '#8193a7' }}>Checklist de configuration sécurisée</p>
+          <h2 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600 }}>
+            Guide TITANE∞
+          </h2>
+          <p style={{ margin: '4px 0 0', color: '#8193a7' }}>
+            Checklist de configuration sécurisée
+          </p>
         </header>
-        <ol style={{ paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          <li>Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l'environnement (avant lancement Tauri).</li>
+        <ol
+          style={{
+            paddingLeft: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+          }}
+        >
+          <li>
+            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l'environnement (avant
+            lancement Tauri).
+          </li>
           <li>Ouvrir cette page et coller la clé Gemini fournie par Google AI Studio.</li>
           <li>Valider pour stocker la clé avec chiffrement AES-256-GCM + Argon2id.</li>
-          <li>Vérifier que l'état indique « Gemini opérationnel » et que la clé est masquée.</li>
-          <li>Confirmer que <code>.env</code> ne contient plus la variable <code>GEMINI_API_KEY</code>.</li>
+          <li>
+            Vérifier que l'état indique « Gemini opérationnel » et que la clé est masquée.
+          </li>
+          <li>
+            Confirmer que <code>.env</code> ne contient plus la variable{' '}
+            <code>GEMINI_API_KEY</code>.
+          </li>
         </ol>
       </Card>
     </div>

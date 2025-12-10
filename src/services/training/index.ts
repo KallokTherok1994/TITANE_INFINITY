@@ -4,7 +4,11 @@
  * ╚═══════════════════════════════════════════════════════════════════════════╝
  */
 
-export { TrainingIntentHandler, trainingIntentHandler, processTrainingIntent } from './trainingIntentHandler';
+export {
+  TrainingIntentHandler,
+  trainingIntentHandler,
+  processTrainingIntent,
+} from './trainingIntentHandler';
 export type {
   TrainingIntentResult,
   TrainingIntentType,

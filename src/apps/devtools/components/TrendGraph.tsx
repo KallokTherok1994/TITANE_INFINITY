@@ -15,13 +15,18 @@ export interface TrendGraphProps {
 
 /**
  * TrendGraph - Mini graphique sparkline SVG
- * 
+ *
  * @example
  * ```tsx
  * <TrendGraph data={[10, 15, 12, 18, 20]} color="#93b399" height={40} />
  * ```
  */
-export function TrendGraph({ data, color = '#727b81', height = 48, className = '' }: TrendGraphProps) {
+export function TrendGraph({
+  data,
+  color = '#727b81',
+  height = 48,
+  className = '',
+}: TrendGraphProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

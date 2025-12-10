@@ -5,7 +5,11 @@
   flex-direction: column;
   gap: 1.5rem;
   padding: 2rem;
-  background: linear-gradient(135deg, var(--bg-panel, #141414) 0%, var(--bg-surface, #1a1a1a) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg-panel, #141414) 0%,
+    var(--bg-surface, #1a1a1a) 100%
+  );
   border-radius: var(--radius-xl, 12px);
   border: 1px solid var(--border-default, rgba(255, 255, 255, 0.08));
 }
@@ -24,7 +28,11 @@
 
 .voice-toggle {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary, #727b81) 0%,
+    var(--accent, #93b399) 100%
+  );
   border: none;
   border-radius: var(--radius-lg, 6px);
   color: var(--text, #e8e8e8);
@@ -95,7 +103,11 @@
 
 .voice-transcript button {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, var(--primary, #727b81) 0%, var(--accent, #93b399) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary, #727b81) 0%,
+    var(--accent, #93b399) 100%
+  );
   border: none;
   border-radius: var(--radius-lg, 6px);
   color: var(--text, #e8e8e8);

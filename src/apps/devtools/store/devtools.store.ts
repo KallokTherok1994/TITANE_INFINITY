@@ -85,29 +85,29 @@ interface DevToolsState {
 
   // Engines
   engines: Engine[];
-  
+
   // Metrics
   metrics: Record<string, Metric>;
-  
+
   // Logs
   logs: LogEntry[];
   maxLogs: number;
-  
+
   // Errors
   errors: ErrorEntry[];
-  
+
   // Memory
   memoryTree: MemoryNode[];
-  
+
   // Omega Pipeline
   currentPipeline: OmegaStep[];
   pipelineHistory: OmegaStep[][];
-  
+
   // UI State
   autoScrollLogs: boolean;
   selectedEngine: string | null;
   timeRange: '30s' | '2m' | '5m' | '10m' | '1h';
-  
+
   // Actions
   updateEngine: (id: string, updates: Partial<Engine>) => void;
   addLog: (log: LogEntry) => void;
@@ -126,37 +126,133 @@ interface DevToolsState {
 // STORE
 // ─────────────────────────────────────────────────────────────────
 
-export const useDevToolsStore = create<DevToolsState>((set) => ({
+export const useDevToolsStore = create<DevToolsState>(set => ({
   // Initial state
   systemHealth: 'healthy',
   activeEngines: 0,
   totalEngines: 9,
-  
+
   engines: [
-    { id: 'helios', name: 'Helios', status: 'running', cpu: 12, memory: 45, errorCount: 0 },
+    {
+      id: 'helios',
+      name: 'Helios',
+      status: 'running',
+      cpu: 12,
+      memory: 45,
+      errorCount: 0,
+    },
     { id: 'nexus', name: 'Nexus', status: 'running', cpu: 8, memory: 32, errorCount: 0 },
-    { id: 'sentinel', name: 'Sentinel', status: 'idle', cpu: 2, memory: 15, errorCount: 0 },
-    { id: 'harmonia', name: 'Harmonia', status: 'running', cpu: 15, memory: 67, errorCount: 0 },
-    { id: 'memory-core', name: 'MemoryCore', status: 'running', cpu: 10, memory: 128, errorCount: 0 },
-    { id: 'engine-0', name: 'Orchestrator', status: 'running', cpu: 5, memory: 24, errorCount: 0 },
-    { id: 'engine-1', name: 'Style Engine', status: 'idle', cpu: 1, memory: 12, errorCount: 0 },
-    { id: 'engine-2', name: 'Coherence', status: 'running', cpu: 7, memory: 28, errorCount: 0 },
-    { id: 'engine-infinity', name: 'Engine∞', status: 'running', cpu: 20, memory: 89, errorCount: 0 },
+    {
+      id: 'sentinel',
+      name: 'Sentinel',
+      status: 'idle',
+      cpu: 2,
+      memory: 15,
+      errorCount: 0,
+    },
+    {
+      id: 'harmonia',
+      name: 'Harmonia',
+      status: 'running',
+      cpu: 15,
+      memory: 67,
+      errorCount: 0,
+    },
+    {
+      id: 'memory-core',
+      name: 'MemoryCore',
+      status: 'running',
+      cpu: 10,
+      memory: 128,
+      errorCount: 0,
+    },
+    {
+      id: 'engine-0',
+      name: 'Orchestrator',
+      status: 'running',
+      cpu: 5,
+      memory: 24,
+      errorCount: 0,
+    },
+    {
+      id: 'engine-1',
+      name: 'Style Engine',
+      status: 'idle',
+      cpu: 1,
+      memory: 12,
+      errorCount: 0,
+    },
+    {
+      id: 'engine-2',
+      name: 'Coherence',
+      status: 'running',
+      cpu: 7,
+      memory: 28,
+      errorCount: 0,
+    },
+    {
+      id: 'engine-infinity',
+      name: 'Engine∞',
+      status: 'running',
+      cpu: 20,
+      memory: 89,
+      errorCount: 0,
+    },
   ],
-  
+
   metrics: {
-    'ipc-latency-p50': { id: 'ipc-latency-p50', label: 'IPC Latency P50', value: 12, unit: 'ms', trend: 'stable', history: [], timestamp: Date.now() },
-    'ipc-latency-p90': { id: 'ipc-latency-p90', label: 'IPC Latency P90', value: 25, unit: 'ms', trend: 'down', history: [], timestamp: Date.now() },
-    'omega-duration': { id: 'omega-duration', label: 'Omega Duration', value: 145, unit: 'ms', trend: 'stable', history: [], timestamp: Date.now() },
-    'cpu-usage': { id: 'cpu-usage', label: 'CPU Usage', value: 34, unit: '%', trend: 'up', history: [], timestamp: Date.now() },
-    'memory-usage': { id: 'memory-usage', label: 'Memory Usage', value: 512, unit: 'MB', trend: 'stable', history: [], timestamp: Date.now() },
+    'ipc-latency-p50': {
+      id: 'ipc-latency-p50',
+      label: 'IPC Latency P50',
+      value: 12,
+      unit: 'ms',
+      trend: 'stable',
+      history: [],
+      timestamp: Date.now(),
+    },
+    'ipc-latency-p90': {
+      id: 'ipc-latency-p90',
+      label: 'IPC Latency P90',
+      value: 25,
+      unit: 'ms',
+      trend: 'down',
+      history: [],
+      timestamp: Date.now(),
+    },
+    'omega-duration': {
+      id: 'omega-duration',
+      label: 'Omega Duration',
+      value: 145,
+      unit: 'ms',
+      trend: 'stable',
+      history: [],
+      timestamp: Date.now(),
+    },
+    'cpu-usage': {
+      id: 'cpu-usage',
+      label: 'CPU Usage',
+      value: 34,
+      unit: '%',
+      trend: 'up',
+      history: [],
+      timestamp: Date.now(),
+    },
+    'memory-usage': {
+      id: 'memory-usage',
+      label: 'Memory Usage',
+      value: 512,
+      unit: 'MB',
+      trend: 'stable',
+      history: [],
+      timestamp: Date.now(),
+    },
   },
-  
+
   logs: [],
   maxLogs: 500,
-  
+
   errors: [],
-  
+
   memoryTree: [
     {
       id: 'stm',
@@ -186,71 +282,78 @@ export const useDevToolsStore = create<DevToolsState>((set) => ({
       children: [],
     },
   ],
-  
+
   currentPipeline: [],
   pipelineHistory: [],
-  
+
   autoScrollLogs: true,
   selectedEngine: null,
   timeRange: '2m',
-  
+
   // Actions
-  updateEngine: (id, updates) => set((state) => ({
-    engines: state.engines.map((e) => (e.id === id ? { ...e, ...updates } : e)),
-  })),
-  
-  addLog: (log) => set((state) => {
-    const newLogs = [log, ...state.logs].slice(0, state.maxLogs);
-    return { logs: newLogs };
-  }),
-  
-  addError: (error) => set((state) => ({
-    errors: [error, ...state.errors],
-  })),
-  
-  updateMetric: (id, value) => set((state) => {
-    const metric = state.metrics[id];
-    if (!metric) return state;
-    
-    const newHistory = [...metric.history, value].slice(-20);
-    const trend = newHistory.length >= 2
-      ? value > newHistory[newHistory.length - 2]
-        ? 'up'
-        : value < newHistory[newHistory.length - 2]
-          ? 'down'
-          : 'stable'
-      : 'stable';
-    
-    return {
-      metrics: {
-        ...state.metrics,
-        [id]: {
-          ...metric,
-          value,
-          history: newHistory,
-          trend,
-          timestamp: Date.now(),
+  updateEngine: (id, updates) =>
+    set(state => ({
+      engines: state.engines.map(e => (e.id === id ? { ...e, ...updates } : e)),
+    })),
+
+  addLog: log =>
+    set(state => {
+      const newLogs = [log, ...state.logs].slice(0, state.maxLogs);
+      return { logs: newLogs };
+    }),
+
+  addError: error =>
+    set(state => ({
+      errors: [error, ...state.errors],
+    })),
+
+  updateMetric: (id, value) =>
+    set(state => {
+      const metric = state.metrics[id];
+      if (!metric) return state;
+
+      const newHistory = [...metric.history, value].slice(-20);
+      const trend =
+        newHistory.length >= 2
+          ? value > newHistory[newHistory.length - 2]
+            ? 'up'
+            : value < newHistory[newHistory.length - 2]
+              ? 'down'
+              : 'stable'
+          : 'stable';
+
+      return {
+        metrics: {
+          ...state.metrics,
+          [id]: {
+            ...metric,
+            value,
+            history: newHistory,
+            trend,
+            timestamp: Date.now(),
+          },
         },
-      },
-    };
-  }),
-  
-  updateMemory: (tree) => set({ memoryTree: tree }),
-  
-  updatePipeline: (steps) => set((state) => ({
-    currentPipeline: steps,
-    pipelineHistory: [steps, ...state.pipelineHistory].slice(0, 10),
-  })),
-  
+      };
+    }),
+
+  updateMemory: tree => set({ memoryTree: tree }),
+
+  updatePipeline: steps =>
+    set(state => ({
+      currentPipeline: steps,
+      pipelineHistory: [steps, ...state.pipelineHistory].slice(0, 10),
+    })),
+
   clearLogs: () => set({ logs: [] }),
-  
-  resolveError: (id) => set((state) => ({
-    errors: state.errors.map((e) => (e.id === id ? { ...e, resolved: true } : e)),
-  })),
-  
-  setAutoScrollLogs: (enabled) => set({ autoScrollLogs: enabled }),
-  
-  setSelectedEngine: (id) => set({ selectedEngine: id }),
-  
-  setTimeRange: (range) => set({ timeRange: range }),
+
+  resolveError: id =>
+    set(state => ({
+      errors: state.errors.map(e => (e.id === id ? { ...e, resolved: true } : e)),
+    })),
+
+  setAutoScrollLogs: enabled => set({ autoScrollLogs: enabled }),
+
+  setSelectedEngine: id => set({ selectedEngine: id }),
+
+  setTimeRange: range => set({ timeRange: range }),
 }));

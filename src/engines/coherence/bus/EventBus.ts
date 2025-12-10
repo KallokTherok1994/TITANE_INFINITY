@@ -26,10 +26,7 @@ export class EventBus {
   /**
    * Subscribe to events of a specific type
    */
-  subscribe<T = unknown>(
-    type: EventType | '*',
-    handler: EventHandler<T>
-  ): () => void {
+  subscribe<T = unknown>(type: EventType | '*', handler: EventHandler<T>): () => void {
     if (!this.subscribers.has(type)) {
       this.subscribers.set(type, new Map());
     }
@@ -98,9 +95,7 @@ export class EventBus {
    * Get events of a specific type from history
    */
   getHistoryByType(type: EventType, limit = 10): SystemEvent[] {
-    return this.eventHistory
-      .filter(e => e.type === type)
-      .slice(-limit);
+    return this.eventHistory.filter(e => e.type === type).slice(-limit);
   }
 
   /**

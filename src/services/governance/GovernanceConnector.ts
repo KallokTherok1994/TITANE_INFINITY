@@ -18,9 +18,9 @@ export type ProviderId = 'openai' | 'claude' | 'gemini' | 'ollama' | 'local' | '
 export interface ProviderStatus {
   id: ProviderId;
   name: string;
-  isConfigured: boolean;  // Clé API présente
-  isActive: boolean;      // Provider activé par l'utilisateur
-  isHealthy: boolean;     // Dernière vérification de santé OK
+  isConfigured: boolean; // Clé API présente
+  isActive: boolean; // Provider activé par l'utilisateur
+  isHealthy: boolean; // Dernière vérification de santé OK
   lastChecked: number | null;
   error?: string;
 }
@@ -37,7 +37,10 @@ const STORAGE_KEY_CONFIG = 'titane_governance_config';
 const _STORAGE_KEY_ACTIVE_PROVIDERS = 'titane_active_providers';
 
 // Providers configuration par défaut
-const DEFAULT_PROVIDERS: Record<ProviderId, Omit<ProviderStatus, 'isConfigured' | 'isHealthy' | 'lastChecked'>> = {
+const DEFAULT_PROVIDERS: Record<
+  ProviderId,
+  Omit<ProviderStatus, 'isConfigured' | 'isHealthy' | 'lastChecked'>
+> = {
   local: {
     id: 'local',
     name: 'TITANE Local',
@@ -134,7 +137,10 @@ export class GovernanceConnector {
    * Retourne la configuration par défaut
    */
   private getDefaultConfig(): GovernanceConfig {
-    const providers: Record<ProviderId, ProviderStatus> = {} as Record<ProviderId, ProviderStatus>;
+    const providers: Record<ProviderId, ProviderStatus> = {} as Record<
+      ProviderId,
+      ProviderStatus
+    >;
 
     for (const [id, base] of Object.entries(DEFAULT_PROVIDERS)) {
       providers[id as ProviderId] = {
@@ -182,7 +188,10 @@ export class GovernanceConnector {
   private async checkProviderConfigurations(): Promise<void> {
     try {
       // Vérifier Gemini
-      const geminiStatus = await secureInvoke<{ is_configured: boolean; is_valid: boolean }>('check_gemini_key');
+      const geminiStatus = await secureInvoke<{
+        is_configured: boolean;
+        is_valid: boolean;
+      }>('check_gemini_key');
       if (geminiStatus) {
         this.config.providers.gemini.isConfigured = geminiStatus.is_configured;
         this.config.providers.gemini.isHealthy = geminiStatus.is_valid;
@@ -194,7 +203,10 @@ export class GovernanceConnector {
 
     try {
       // Vérifier OpenAI
-      const openaiStatus = await secureInvoke<{ is_configured: boolean; is_valid: boolean }>('check_openai_key');
+      const openaiStatus = await secureInvoke<{
+        is_configured: boolean;
+        is_valid: boolean;
+      }>('check_openai_key');
       if (openaiStatus) {
         this.config.providers.openai.isConfigured = openaiStatus.is_configured;
         this.config.providers.openai.isHealthy = openaiStatus.is_valid;
@@ -205,7 +217,10 @@ export class GovernanceConnector {
 
     try {
       // Vérifier Anthropic/Claude
-      const anthropicStatus = await secureInvoke<{ is_configured: boolean; is_valid: boolean }>('check_anthropic_key');
+      const anthropicStatus = await secureInvoke<{
+        is_configured: boolean;
+        is_valid: boolean;
+      }>('check_anthropic_key');
       if (anthropicStatus) {
         this.config.providers.claude.isConfigured = anthropicStatus.is_configured;
         this.config.providers.claude.isHealthy = anthropicStatus.is_valid;
@@ -216,7 +231,9 @@ export class GovernanceConnector {
 
     try {
       // Vérifier Ollama (local)
-      const ollamaStatus = await secureInvoke<{ available: boolean }>('check_ollama_status');
+      const ollamaStatus = await secureInvoke<{ available: boolean }>(
+        'check_ollama_status'
+      );
       if (ollamaStatus) {
         this.config.providers.ollama.isConfigured = ollamaStatus.available;
         this.config.providers.ollama.isHealthy = ollamaStatus.available;
@@ -252,8 +269,7 @@ export class GovernanceConnector {
    * Retourne les providers disponibles (configurés et actifs)
    */
   getAvailableProviders(): ProviderStatus[] {
-    return Object.values(this.config.providers)
-      .filter(p => p.isConfigured && p.isActive);
+    return Object.values(this.config.providers).filter(p => p.isConfigured && p.isActive);
   }
 
   /**
@@ -299,11 +315,10 @@ export class GovernanceConnector {
    * Retourne l'ordre de fallback
    */
   getFallbackOrder(): ProviderId[] {
-    return this.config.fallbackOrder
-      .filter(id => {
-        const provider = this.config.providers[id];
-        return provider && provider.isConfigured && provider.isActive;
-      });
+    return this.config.fallbackOrder.filter(id => {
+      const provider = this.config.providers[id];
+      return provider && provider.isConfigured && provider.isActive;
+    });
   }
 
   /**
@@ -321,14 +336,24 @@ export class GovernanceConnector {
     // Si un provider préféré est spécifié et disponible, l'utiliser
     if (preferredId) {
       const preferred = this.config.providers[preferredId];
-      if (preferred && preferred.isConfigured && preferred.isActive && preferred.isHealthy) {
+      if (
+        preferred &&
+        preferred.isConfigured &&
+        preferred.isActive &&
+        preferred.isHealthy
+      ) {
         return preferredId;
       }
     }
 
     // Sinon, utiliser le provider par défaut s'il est disponible
     const defaultProvider = this.config.providers[this.config.defaultProvider];
-    if (defaultProvider && defaultProvider.isConfigured && defaultProvider.isActive && defaultProvider.isHealthy) {
+    if (
+      defaultProvider &&
+      defaultProvider.isConfigured &&
+      defaultProvider.isActive &&
+      defaultProvider.isHealthy
+    ) {
       return this.config.defaultProvider;
     }
 

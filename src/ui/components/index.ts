@@ -31,7 +31,12 @@ export type { ToggleOption } from './Toggle';
 
 // TITANE∞ v19 - Enhanced UI Components
 export { Toast, ToastContainer, createToastId } from './Toast';
-export type { ToastProps, ToastVariant, ToastPosition, ToastContainerProps } from './Toast';
+export type {
+  ToastProps,
+  ToastVariant,
+  ToastPosition,
+  ToastContainerProps,
+} from './Toast';
 export { ConfirmDialog } from './ConfirmDialog';
 export type { ConfirmDialogProps, ConfirmVariant } from './ConfirmDialog';
 export {

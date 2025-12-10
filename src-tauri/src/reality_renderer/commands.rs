@@ -260,10 +260,7 @@ pub async fn reality_get_report() -> Result<RealityReport, AppError> {
 
             let summary = format!(
                 "Reality Renderer: {} scenes, {} entities, {} lights, {:.1} FPS",
-                state.scene_count,
-                state.entity_count,
-                state.light_count,
-                state.fps
+                state.scene_count, state.entity_count, state.light_count, state.fps
             );
 
             Ok(RealityReport {

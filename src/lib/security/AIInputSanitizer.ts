@@ -145,10 +145,7 @@ export class AIInputSanitizer {
    * @param options - Options sanitization
    * @returns Résultat sanitization
    */
-  static sanitize(
-    input: string,
-    options: SanitizationOptions = {}
-  ): SanitizationResult {
+  static sanitize(input: string, options: SanitizationOptions = {}): SanitizationResult {
     const {
       strictMode = false,
       maxLength = this.DEFAULT_MAX_LENGTH,
@@ -222,7 +219,7 @@ export class AIInputSanitizer {
       if (pattern.test(result.sanitized)) {
         result.detectedPatterns.push(`Excessive Pattern: ${pattern.source}`);
         result.riskLevel = Math.max(result.riskLevel, 2);
-        result.sanitized = result.sanitized.replace(pattern, (match) => {
+        result.sanitized = result.sanitized.replace(pattern, match => {
           return match.substring(0, 50) + '...';
         });
         result.modifications.push('Truncated excessive repetitions');
@@ -243,7 +240,10 @@ export class AIInputSanitizer {
     if (!allowCodeBlocks) {
       const codeBlockPattern = /```[\s\S]*?```/g;
       if (codeBlockPattern.test(result.sanitized)) {
-        result.sanitized = result.sanitized.replace(codeBlockPattern, '[CODE_BLOCK_REMOVED]');
+        result.sanitized = result.sanitized.replace(
+          codeBlockPattern,
+          '[CODE_BLOCK_REMOVED]'
+        );
         result.modifications.push('Removed code blocks');
         result.riskLevel = Math.max(result.riskLevel, 1);
       }
@@ -279,7 +279,7 @@ export class AIInputSanitizer {
     inputs: string[],
     options: SanitizationOptions = {}
   ): SanitizationResult[] {
-    return inputs.map((input) => this.sanitize(input, options));
+    return inputs.map(input => this.sanitize(input, options));
   }
 
   /**

@@ -4,8 +4,8 @@
 //   Learns from interactions, improves models, tracks growth
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::HashMap;
 use super::brain_state::{ConversationBrainState, ConversationMode};
+use std::collections::HashMap;
 
 /// Evolution Engine - Manages self-improvement
 #[derive(Debug, Clone)]
@@ -218,8 +218,7 @@ impl EvolutionEngine {
     fn update_cognitive_drift(&mut self, state: &ConversationBrainState) {
         // Drift increases with inconsistency, decreases with stability
         let target_drift = 1.0 - state.coherence_score;
-        self.metrics.cognitive_drift =
-            self.metrics.cognitive_drift * 0.9 + target_drift * 0.1;
+        self.metrics.cognitive_drift = self.metrics.cognitive_drift * 0.9 + target_drift * 0.1;
     }
 
     /// Get current level
@@ -255,8 +254,7 @@ impl EvolutionEngine {
         if self.metrics.latency_trend.is_empty() {
             return 0;
         }
-        self.metrics.latency_trend.iter().sum::<u128>()
-            / self.metrics.latency_trend.len() as u128
+        self.metrics.latency_trend.iter().sum::<u128>() / self.metrics.latency_trend.len() as u128
     }
 
     /// Get evolution snapshot
@@ -306,11 +304,15 @@ impl EvolutionEngine {
 
         // Recommendations
         if insights.avg_success_coherence > 0.9 {
-            insights.recommendations.push("Maintenir les patterns actuels".to_string());
+            insights
+                .recommendations
+                .push("Maintenir les patterns actuels".to_string());
         }
 
         if self.metrics.cognitive_drift > 0.2 {
-            insights.recommendations.push("Réduire la dérive cognitive".to_string());
+            insights
+                .recommendations
+                .push("Réduire la dérive cognitive".to_string());
         }
 
         insights

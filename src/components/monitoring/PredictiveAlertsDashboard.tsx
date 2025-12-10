@@ -73,7 +73,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
       case 'latency':
         return 'Latence';
       case 'errorRate':
-        return 'Taux d\'erreur';
+        return "Taux d'erreur";
       case 'retryRate':
         return 'Taux de retry';
       default:
@@ -110,7 +110,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
             <AlertTriangle className="w-5 h-5 text-red-600" />
             <span className="text-sm font-medium text-red-600">Critique</span>
           </div>
-          <div className="text-2xl font-bold text-red-900">{stats.bySeverity.critical}</div>
+          <div className="text-2xl font-bold text-red-900">
+            {stats.bySeverity.critical}
+          </div>
         </div>
 
         <div className="bg-orange-50 rounded-lg border-2 border-orange-200 p-4">
@@ -118,7 +120,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
             <AlertTriangle className="w-5 h-5 text-orange-600" />
             <span className="text-sm font-medium text-orange-600">Haute</span>
           </div>
-          <div className="text-2xl font-bold text-orange-900">{stats.bySeverity.high}</div>
+          <div className="text-2xl font-bold text-orange-900">
+            {stats.bySeverity.high}
+          </div>
         </div>
 
         <div className="bg-yellow-50 rounded-lg border-2 border-yellow-200 p-4">
@@ -126,7 +130,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
             <TrendingUp className="w-5 h-5 text-yellow-600" />
             <span className="text-sm font-medium text-yellow-600">Moyenne</span>
           </div>
-          <div className="text-2xl font-bold text-yellow-900">{stats.bySeverity.medium}</div>
+          <div className="text-2xl font-bold text-yellow-900">
+            {stats.bySeverity.medium}
+          </div>
         </div>
       </div>
 
@@ -147,7 +153,7 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
           </div>
         ) : (
           <div className="grid gap-4">
-            {alerts.map((alert) => (
+            {alerts.map(alert => (
               <div
                 key={alert.id}
                 className={`rounded-lg border-2 p-4 ${getSeverityColor(alert.severity)}`}
@@ -160,7 +166,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
                       <span className="inline-block px-2 py-1 bg-white/50 rounded text-xs font-semibold">
                         {alert.service.toUpperCase()}
                       </span>
-                      <span className="text-sm font-medium">{formatMetric(alert.metric)}</span>
+                      <span className="text-sm font-medium">
+                        {formatMetric(alert.metric)}
+                      </span>
                     </div>
 
                     <p className="text-sm font-medium mb-2">{alert.message}</p>
@@ -186,7 +194,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
                       </div>
                       <div>
                         <span className="opacity-75">Confiance:</span>{' '}
-                        <span className="font-semibold">{(alert.confidence * 100).toFixed(1)}%</span>
+                        <span className="font-semibold">
+                          {(alert.confidence * 100).toFixed(1)}%
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -195,7 +205,9 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
                   <div className="flex flex-col items-end gap-2 ml-4">
                     <div className="flex items-center gap-1 bg-white/60 px-3 py-1 rounded-full">
                       <Clock className="w-4 h-4" />
-                      <span className="text-sm font-semibold">{alert.timeToThreshold}min</span>
+                      <span className="text-sm font-semibold">
+                        {alert.timeToThreshold}min
+                      </span>
                     </div>
                     <span className="text-xs opacity-75 uppercase font-semibold">
                       {alert.severity}
@@ -211,18 +223,26 @@ export const PredictiveAlertsDashboard: React.FC<PredictiveAlertsDashboardProps>
       {/* Metrics Distribution */}
       {stats.total > 0 && (
         <div className="bg-white rounded-lg border-2 border-gray-200 p-4">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Distribution par métrique</h4>
+          <h4 className="text-sm font-semibold text-gray-700 mb-3">
+            Distribution par métrique
+          </h4>
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">{stats.byMetric.latency}</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {stats.byMetric.latency}
+              </div>
               <div className="text-xs text-gray-600 mt-1">Latence</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">{stats.byMetric.errorRate}</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {stats.byMetric.errorRate}
+              </div>
               <div className="text-xs text-gray-600 mt-1">Taux d'erreur</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-2xl font-bold text-gray-900">{stats.byMetric.retryRate}</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {stats.byMetric.retryRate}
+              </div>
               <div className="text-xs text-gray-600 mt-1">Taux de retry</div>
             </div>
           </div>

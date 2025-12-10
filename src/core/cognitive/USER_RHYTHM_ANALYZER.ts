@@ -10,7 +10,14 @@
 // Analyseur de rythme utilisateur (tracking non-invasif)
 
 // 🎭 Types d'événements utilisateur
-export type UserEventType = 'click' | 'scroll' | 'hover' | 'keypress' | 'pause' | 'focus' | 'blur';
+export type UserEventType =
+  | 'click'
+  | 'scroll'
+  | 'hover'
+  | 'keypress'
+  | 'pause'
+  | 'focus'
+  | 'blur';
 
 // 📊 Métrique de rythme
 export interface RhythmMetric {
@@ -80,7 +87,7 @@ export class UserRhythmAnalyzer {
   private analyzeRhythm(): void {
     const now = Date.now();
     const recentWindow = 10000; // 10 secondes
-    const recentEvents = this.events.filter((e) => now - e.timestamp < recentWindow);
+    const recentEvents = this.events.filter(e => now - e.timestamp < recentWindow);
 
     // Déterminer vitesse
     this.rhythm.speed = this.calculateSpeed(recentEvents);
@@ -127,9 +134,9 @@ export class UserRhythmAnalyzer {
    */
   private calculateFocus(events: RhythmMetric[]): number {
     // Focus élevé = peu de changements de target, scrolls lents
-    const uniqueTargets = new Set(events.map((e) => e.target).filter(Boolean)).size;
-    const scrollEvents = events.filter((e) => e.type === 'scroll');
-    const hasSlowScrolls = scrollEvents.some((e) => e.velocity && e.velocity < 100);
+    const uniqueTargets = new Set(events.map(e => e.target).filter(Boolean)).size;
+    const scrollEvents = events.filter(e => e.type === 'scroll');
+    const hasSlowScrolls = scrollEvents.some(e => e.velocity && e.velocity < 100);
 
     if (uniqueTargets <= 2 && hasSlowScrolls) return 0.8;
     if (uniqueTargets <= 5) return 0.6;
@@ -155,9 +162,9 @@ export class UserRhythmAnalyzer {
   private detectPattern(events: RhythmMetric[]): UserRhythm['pattern'] {
     if (events.length === 0) return 'idle';
 
-    const clicks = events.filter((e) => e.type === 'click').length;
-    const scrolls = events.filter((e) => e.type === 'scroll').length;
-    const hovers = events.filter((e) => e.type === 'hover').length;
+    const clicks = events.filter(e => e.type === 'click').length;
+    const scrolls = events.filter(e => e.type === 'scroll').length;
+    const hovers = events.filter(e => e.type === 'hover').length;
 
     // Beaucoup de hovers + peu de clicks = exploring
     if (hovers > clicks * 2 && scrolls > 5) return 'exploring';
@@ -185,7 +192,7 @@ export class UserRhythmAnalyzer {
     this.listeners.push(callback);
 
     return () => {
-      this.listeners = this.listeners.filter((cb) => cb !== callback);
+      this.listeners = this.listeners.filter(cb => cb !== callback);
     };
   }
 
@@ -193,7 +200,7 @@ export class UserRhythmAnalyzer {
    * Notifier les listeners
    */
   private notifyListeners(): void {
-    this.listeners.forEach((callback) => callback(this.rhythm));
+    this.listeners.forEach(callback => callback(this.rhythm));
   }
 
   /**

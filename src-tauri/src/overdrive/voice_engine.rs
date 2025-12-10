@@ -19,7 +19,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
 // ─────────────────────────────────────────────────────────────────────────────
@@ -211,10 +210,7 @@ pub async fn voice_transcribe_audio(
     let language = config.language.clone();
     drop(config); // Release lock before async call
 
-    println!(
-        "[VOICE] Transcription STT - {} bytes",
-        audio_data.len()
-    );
+    println!("[VOICE] Transcription STT - {} bytes", audio_data.len());
 
     // ✅ OPUS-DIAG FIX: Implémentation réelle avec Whisper/Vosk
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
@@ -240,12 +236,21 @@ pub async fn voice_transcribe_audio(
     let transcript = if std::path::Path::new(&whisper_bin).exists() {
         let output = std::process::Command::new(&whisper_bin)
             .args([
-                temp_audio.to_str().ok_or_else(|| TAPIError::validation("Invalid UTF-8 in path"))?,
-                "--model", "tiny",
-                "--language", &language,
-                "--output_format", "txt",
-                "--output_dir", std::env::temp_dir().to_str().ok_or_else(|| TAPIError::validation("Invalid UTF-8 in temp_dir"))?,
-                "--fp16", "False",
+                temp_audio
+                    .to_str()
+                    .ok_or_else(|| TAPIError::validation("Invalid UTF-8 in path"))?,
+                "--model",
+                "tiny",
+                "--language",
+                &language,
+                "--output_format",
+                "txt",
+                "--output_dir",
+                std::env::temp_dir()
+                    .to_str()
+                    .ok_or_else(|| TAPIError::validation("Invalid UTF-8 in temp_dir"))?,
+                "--fp16",
+                "False",
             ])
             .output()
             .map_err(|e| TAPIError::internal(format!("Erreur Whisper: {}", e)))?;
@@ -269,10 +274,17 @@ pub async fn voice_transcribe_audio(
     let _ = std::fs::remove_file(&temp_audio);
     let _ = std::fs::remove_file(std::env::temp_dir().join("titane_voice_stt.txt"));
 
-    println!("[VOICE] Transcription: '{}'", &transcript[..transcript.len().min(50)]);
+    println!(
+        "[VOICE] Transcription: '{}'",
+        &transcript[..transcript.len().min(50)]
+    );
 
     Ok(TranscriptionResult {
-        text: if transcript.is_empty() { "(Aucune parole détectée)".to_string() } else { transcript },
+        text: if transcript.is_empty() {
+            "(Aucune parole détectée)".to_string()
+        } else {
+            transcript
+        },
         confidence: 0.85,
         language,
         duration_ms: 500,
@@ -323,17 +335,20 @@ pub fn voice_detect_wake_word(
 /// # Exemple migration
 /// ```typescript
 /// // ❌ Ancien code (DEPRECATED)
-/// await invoke('voice_synthesize_speech', { 
-///   request: { text, voice, speed, pitch } 
+/// await invoke('voice_synthesize_speech', {
+///   request: { text, voice, speed, pitch }
 /// });
 ///
 /// // ✅ Nouveau code (PRODUCTION)
-/// await invoke('speak', { 
+/// await invoke('speak', {
 ///   text: 'Hello world',
 ///   useOnline: false // Local TTS (espeak/piper)
 /// });
 /// ```
-#[deprecated(since = "20.0.0", note = "Use speak() in commands/ai_chat.rs instead - see docs/VOCAL_MIGRATION_GUIDE.md")]
+#[deprecated(
+    since = "20.0.0",
+    note = "Use speak() in commands/ai_chat.rs instead - see docs/VOCAL_MIGRATION_GUIDE.md"
+)]
 #[tauri::command]
 pub fn voice_synthesize_speech(
     request: SynthesisRequest,

@@ -40,10 +40,11 @@ function testSanitization() {
 
   const logs = uiLogger.getLogs();
   const hasRedacted = logs.every(log => log.message.includes('[REDACTED]'));
-  const noSensitive = logs.every(log =>
-    !log.message.includes('sk-abc123') &&
-    !log.message.includes('user@example.com') &&
-    !log.message.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9')
+  const noSensitive = logs.every(
+    log =>
+      !log.message.includes('sk-abc123') &&
+      !log.message.includes('user@example.com') &&
+      !log.message.includes('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9')
   );
 
   console.log(`✅ All sensitive data redacted: ${hasRedacted && noSensitive}`);
@@ -134,8 +135,12 @@ function testStatistics() {
 
   console.log(`✅ Total logs: ${stats.totalLogs}`);
   console.log(`✅ By level:`, stats.byLevel);
-  console.log(`✅ Oldest log: ${stats.oldestLog ? new Date(stats.oldestLog).toISOString() : 'N/A'}`);
-  console.log(`✅ Newest log: ${stats.newestLog ? new Date(stats.newestLog).toISOString() : 'N/A'}`);
+  console.log(
+    `✅ Oldest log: ${stats.oldestLog ? new Date(stats.oldestLog).toISOString() : 'N/A'}`
+  );
+  console.log(
+    `✅ Newest log: ${stats.newestLog ? new Date(stats.newestLog).toISOString() : 'N/A'}`
+  );
 
   return stats.totalLogs > 0;
 }
@@ -184,7 +189,9 @@ export function runUILoggerTests() {
   const totalTests = Object.keys(results).length;
   const passedTests = Object.values(results).filter(Boolean).length;
 
-  console.log(`\n📈 Total: ${passedTests}/${totalTests} tests passed (${Math.round(passedTests / totalTests * 100)}%)`);
+  console.log(
+    `\n📈 Total: ${passedTests}/${totalTests} tests passed (${Math.round((passedTests / totalTests) * 100)}%)`
+  );
 
   if (passedTests === totalTests) {
     console.log('\n🎉 All tests passed! UILogger is working correctly.');
@@ -196,4 +203,12 @@ export function runUILoggerTests() {
 }
 
 // Export for external use
-export { testBasicLogging, testSanitization, testThrottling, testStorage, testFiltering, testStatistics, testExport };
+export {
+  testBasicLogging,
+  testSanitization,
+  testThrottling,
+  testStorage,
+  testFiltering,
+  testStatistics,
+  testExport,
+};

@@ -7,10 +7,10 @@
 //!
 //! © 2025 TITANE Team. All rights reserved.
 
+use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
-use once_cell::sync::Lazy;
 
 /// Macro for safe mutex locking with auto-recovery
 macro_rules! lock_or_recover {
@@ -21,7 +21,6 @@ macro_rules! lock_or_recover {
         })
     };
 }
-
 
 // ══════════════════════════════════════════════════════════════════
 // TYPES
@@ -101,9 +100,8 @@ struct HyperVisionInternalState {
     anomalies: Vec<Anomaly>,
 }
 
-static HV_STATE: Lazy<Arc<Mutex<HyperVisionInternalState>>> = Lazy::new(|| {
-    Arc::new(Mutex::new(HyperVisionInternalState::default()))
-});
+static HV_STATE: Lazy<Arc<Mutex<HyperVisionInternalState>>> =
+    Lazy::new(|| Arc::new(Mutex::new(HyperVisionInternalState::default())));
 
 static LAYER_NAMES: [&str; 5] = ["Physical", "Network", "Logic", "Memory", "Security"];
 
@@ -313,7 +311,9 @@ pub async fn sc_hypervision_get_metrics() -> Result<SystemMetricsSnapshot, Strin
 
 /// Get metrics history
 #[tauri::command]
-pub async fn sc_hypervision_get_history(limit: Option<usize>) -> Result<Vec<SystemMetricsSnapshot>, String> {
+pub async fn sc_hypervision_get_history(
+    limit: Option<usize>,
+) -> Result<Vec<SystemMetricsSnapshot>, String> {
     let state = lock_or_recover!(HV_STATE);
     let limit = limit.unwrap_or(100);
 
@@ -341,7 +341,8 @@ pub async fn sc_hypervision_get_anomalies(
     let state = lock_or_recover!(HV_STATE);
     let include = include_resolved.unwrap_or(false);
 
-    let anomalies: Vec<Anomaly> = state.anomalies
+    let anomalies: Vec<Anomaly> = state
+        .anomalies
         .iter()
         .filter(|a| include || !a.auto_resolved)
         .cloned()
@@ -369,7 +370,7 @@ pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), St
             SystemTime::now()
                 .duration_since(UNIX_EPOCH)
                 .unwrap_or(std::time::Duration::from_secs(0))
-                .as_secs()
+                .as_secs(),
         );
         Ok(())
     } else {

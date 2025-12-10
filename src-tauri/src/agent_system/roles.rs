@@ -35,19 +35,13 @@ impl Role {
     /// Retourne les permissions associées au rôle
     pub fn permissions(&self) -> Vec<Permission> {
         match self {
-            Self::Reader => vec![
-                Permission::ReadData,
-                Permission::ViewAgents,
-            ],
+            Self::Reader => vec![Permission::ReadData, Permission::ViewAgents],
             Self::Writer => vec![
                 Permission::ReadData,
                 Permission::WriteData,
                 Permission::CreateEntries,
             ],
-            Self::Executor => vec![
-                Permission::ExecuteTasks,
-                Permission::ReadData,
-            ],
+            Self::Executor => vec![Permission::ExecuteTasks, Permission::ReadData],
             Self::Coordinator => vec![
                 Permission::ExecuteTasks,
                 Permission::AssignTasks,
@@ -73,18 +67,9 @@ impl Role {
                 Permission::DeleteAgents,
                 Permission::ModifyConfig,
             ],
-            Self::ExternalAccess => vec![
-                Permission::AccessExternal,
-                Permission::ReadData,
-            ],
-            Self::AgentCreator => vec![
-                Permission::CreateAgents,
-                Permission::ViewAgents,
-            ],
-            Self::ConfigManager => vec![
-                Permission::ModifyConfig,
-                Permission::ReadData,
-            ],
+            Self::ExternalAccess => vec![Permission::AccessExternal, Permission::ReadData],
+            Self::AgentCreator => vec![Permission::CreateAgents, Permission::ViewAgents],
+            Self::ConfigManager => vec![Permission::ModifyConfig, Permission::ReadData],
             Self::SecurityOfficer => vec![
                 Permission::ViewAuditLogs,
                 Permission::ModifySecuritySettings,

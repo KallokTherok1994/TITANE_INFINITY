@@ -17,7 +17,7 @@ export function SentinelAlerts() {
 
   useEffect(() => {
     fetchSentinel();
-    
+
     const interval = setInterval(() => {
       fetchSentinel();
     }, 3000); // Update every 3s
@@ -39,21 +39,31 @@ export function SentinelAlerts() {
 
   const getSeverityColor = (severity: Severity): string => {
     switch (severity) {
-      case 'Low': return 'blue';
-      case 'Medium': return 'yellow';
-      case 'High': return 'orange';
-      case 'Critical': return 'red';
-      default: return 'gray';
+      case 'Low':
+        return 'blue';
+      case 'Medium':
+        return 'yellow';
+      case 'High':
+        return 'orange';
+      case 'Critical':
+        return 'red';
+      default:
+        return 'gray';
     }
   };
 
   const getCategoryIcon = (category: AlertCategory): string => {
     switch (category) {
-      case 'Performance': return '⚡';
-      case 'Security': return '🛡️';
-      case 'Stability': return '⚖️';
-      case 'Resource': return '💾';
-      default: return '❓';
+      case 'Performance':
+        return '⚡';
+      case 'Security':
+        return '🛡️';
+      case 'Stability':
+        return '⚖️';
+      case 'Resource':
+        return '💾';
+      default:
+        return '❓';
     }
   };
 
@@ -63,9 +73,10 @@ export function SentinelAlerts() {
     return 'red';
   };
 
-  const filteredAlerts = filter === 'all' 
-    ? sentinel.alerts 
-    : sentinel.alerts.filter(alert => alert.severity === filter);
+  const filteredAlerts =
+    filter === 'all'
+      ? sentinel.alerts
+      : sentinel.alerts.filter(alert => alert.severity === filter);
 
   const unresolvedCount = sentinel.alerts.filter(a => !a.resolved).length;
 
@@ -88,7 +99,9 @@ export function SentinelAlerts() {
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-400">Score d'Intégrité</span>
-          <span className="text-lg font-semibold">{sentinel.integrity_score.toFixed(1)}%</span>
+          <span className="text-lg font-semibold">
+            {sentinel.integrity_score.toFixed(1)}%
+          </span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-3">
           <div
@@ -96,8 +109,8 @@ export function SentinelAlerts() {
               sentinel.integrity_score >= 90
                 ? 'bg-green-500'
                 : sentinel.integrity_score >= 70
-                ? 'bg-yellow-500'
-                : 'bg-red-500'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${sentinel.integrity_score}%` }}
           />
@@ -106,7 +119,7 @@ export function SentinelAlerts() {
 
       {/* Severity Filter */}
       <div className="flex gap-2 flex-wrap">
-        {(['all', 'Low', 'Medium', 'High', 'Critical'] as const).map((sev) => (
+        {(['all', 'Low', 'Medium', 'High', 'Critical'] as const).map(sev => (
           <button
             key={sev}
             onClick={() => setFilter(sev)}
@@ -133,14 +146,14 @@ export function SentinelAlerts() {
             Aucune alerte {filter !== 'all' ? `de niveau ${filter}` : ''}
           </Card>
         ) : (
-          filteredAlerts.map((alert) => (
-            <Card 
-              key={alert.id} 
+          filteredAlerts.map(alert => (
+            <Card
+              key={alert.id}
               className={`p-4 ${alert.resolved ? 'opacity-50' : ''} hover:bg-gray-800 transition-colors`}
             >
               <div className="flex items-start gap-4">
                 <div className="text-2xl">{getCategoryIcon(alert.category)}</div>
-                
+
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <Badge color={getSeverityColor(alert.severity)} size="sm">
@@ -148,12 +161,14 @@ export function SentinelAlerts() {
                     </Badge>
                     <span className="text-xs text-gray-500">{alert.category}</span>
                     {alert.resolved && (
-                      <Badge color="green" size="sm">Résolu</Badge>
+                      <Badge color="green" size="sm">
+                        Résolu
+                      </Badge>
                     )}
                   </div>
-                  
+
                   <p className="text-sm text-gray-300">{alert.message}</p>
-                  
+
                   <div className="text-xs text-gray-500 mt-2">
                     {new Date(alert.timestamp).toLocaleString()}
                   </div>

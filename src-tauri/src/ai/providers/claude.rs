@@ -3,8 +3,8 @@
 //   SUPER PROMPT #8 — Anthropic Claude Integration
 // ═══════════════════════════════════════════════════════════════
 
-use crate::ai::{AiRequest, AiResponse, AiMetadata, AiMode, AIError};
 use crate::ai::providers::{AiProvider, ProviderResult};
+use crate::ai::{AIError, AiMetadata, AiMode, AiRequest, AiResponse};
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -69,12 +69,14 @@ impl ClaudeProvider {
         if !response.status().is_success() {
             let status = response.status();
             let error_text = response.text().await.unwrap_or_default();
-            
+
             return Err(match status.as_u16() {
-                401 => AIError::AuthenticationFailed { provider: "claude".to_string() },
-                429 => AIError::RateLimitExceeded { 
-                    provider: "claude".to_string(), 
-                    retry_after: Some(60) 
+                401 => AIError::AuthenticationFailed {
+                    provider: "claude".to_string(),
+                },
+                429 => AIError::RateLimitExceeded {
+                    provider: "claude".to_string(),
+                    retry_after: Some(60),
                 },
                 _ => AIError::APIError(format!("Claude API error {}: {}", status, error_text)),
             });
@@ -100,7 +102,7 @@ impl AiProvider for ClaudeProvider {
             .await?;
 
         let latency = start.elapsed().as_millis();
-        
+
         let output = response
             .content
             .first()
@@ -187,7 +189,7 @@ mod tests {
     #[test]
     fn test_model_selection() {
         let provider = ClaudeProvider::new("test_key".to_string());
-        
+
         assert!(provider.select_model(AiMode::Deep).contains("opus"));
         assert!(provider.select_model(AiMode::Quality).contains("sonnet"));
         assert!(provider.select_model(AiMode::Fast).contains("haiku"));

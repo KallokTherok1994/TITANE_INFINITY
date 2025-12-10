@@ -7,7 +7,11 @@ import { promptProfiles } from './profiles';
 import { promptRoles } from './roles';
 import { providerOverrides } from './providers';
 import { promptPresets } from './presets';
-import { buildMemoryPrompt, getMemoryTemplate, listMemoryTemplates } from './memoryTemplates';
+import {
+  buildMemoryPrompt,
+  getMemoryTemplate,
+  listMemoryTemplates,
+} from './memoryTemplates';
 import type {
   Provider,
   PromptContext,
@@ -25,7 +29,7 @@ function renderSafetySection(safety: PromptSafetyDirective[]): string {
     return '';
   }
 
-  const bullets = safety.map((directive) => `• ${directive.description}`).join('\n');
+  const bullets = safety.map(directive => `• ${directive.description}`).join('\n');
   return `\n\nGarde-fous TITANE∞ :\n${bullets}`;
 }
 
@@ -35,21 +39,23 @@ function renderContextSection(context?: PromptContext): string {
   const lines: string[] = [];
 
   if (context.modeName) {
-    lines.push(`Mode actif : ${context.modeName}${context.modeIcon ? ` ${context.modeIcon}` : ''}`);
+    lines.push(
+      `Mode actif : ${context.modeName}${context.modeIcon ? ` ${context.modeIcon}` : ''}`
+    );
   }
 
   if (context.emotionState) {
     const { valence, intensity, energy } = context.emotionState;
     lines.push(
       `État émotionnel/énergétique (valence=${valence.toFixed(2)}, intensité=${intensity.toFixed(
-        2,
-      )}, énergie=${energy.toFixed(2)})`,
+        2
+      )}, énergie=${energy.toFixed(2)})`
     );
   }
 
   if (context.memory && context.memory.sources.length > 0) {
     lines.push('Contexte mémoire actif :');
-    context.memory.sources.forEach((source) => {
+    context.memory.sources.forEach(source => {
       lines.push(`  • ${source}`);
     });
 
@@ -62,7 +68,7 @@ function renderContextSection(context?: PromptContext): string {
 
   if (context.annotations?.length) {
     lines.push('Annotations :');
-    context.annotations.forEach((note) => lines.push(`  • ${note}`));
+    context.annotations.forEach(note => lines.push(`  • ${note}`));
   }
 
   if (lines.length === 0) {
@@ -74,9 +80,13 @@ function renderContextSection(context?: PromptContext): string {
 
 function resolveProviderOverride(
   profile: TitanePromptProfile,
-  provider: Provider,
+  provider: Provider
 ): ProviderOverride | undefined {
-  return profile.providerOverrides?.[provider] || providerOverrides[provider] || providerOverrides[DEFAULT_PROVIDER];
+  return (
+    profile.providerOverrides?.[provider] ||
+    providerOverrides[provider] ||
+    providerOverrides[DEFAULT_PROVIDER]
+  );
 }
 
 export function getPromptProfile(id?: string): TitanePromptProfile {
@@ -101,7 +111,7 @@ export function listPromptPresets(): PromptPreset[] {
 export function buildSystemPrompt(
   profileId?: string,
   provider?: Provider,
-  context?: PromptContext,
+  context?: PromptContext
 ): string {
   const profile = getPromptProfile(profileId);
   const override = resolveProviderOverride(profile, provider || DEFAULT_PROVIDER);
@@ -119,7 +129,8 @@ export function buildSystemPrompt(
     prompt += `\n\n⚙️ Consignes provider (${provider || DEFAULT_PROVIDER}) : ${override.instructions}`;
   }
 
-  prompt += '\n\nRappelle-toi : tu responsabilises Kevin, tu restes fidèle à la voix TITANE∞, tu conclus avec action + ancrage + mémoire.';
+  prompt +=
+    '\n\nRappelle-toi : tu responsabilises Kevin, tu restes fidèle à la voix TITANE∞, tu conclus avec action + ancrage + mémoire.';
   prompt += '\n═══════════════════════════════════════════════════════════════════';
 
   return prompt;
@@ -136,4 +147,9 @@ export type {
   PromptRole,
   Provider,
 } from './types';
-export type { MemoryTemplate, MemoryTemplateId, StructuredMemoryEntry, MemoryWriteTarget } from './memoryTemplates';
+export type {
+  MemoryTemplate,
+  MemoryTemplateId,
+  StructuredMemoryEntry,
+  MemoryWriteTarget,
+} from './memoryTemplates';

@@ -95,13 +95,13 @@ export class CorrelationAnalyzer {
     if (history1.length < 10 || history2.length < 10) return null;
 
     // Aligner timestamps (prendre intersection)
-    const timestamps1 = new Set(history1.map((h) => h.timestamp));
+    const timestamps1 = new Set(history1.map(h => h.timestamp));
     const aligned1: number[] = [];
     const aligned2: number[] = [];
 
     for (const snapshot2 of history2) {
       if (timestamps1.has(snapshot2.timestamp)) {
-        const snapshot1 = history1.find((h) => h.timestamp === snapshot2.timestamp);
+        const snapshot1 = history1.find(h => h.timestamp === snapshot2.timestamp);
         if (!snapshot1) continue;
 
         aligned1.push(this.extractMetricValue(snapshot1, metric));
@@ -187,7 +187,7 @@ export class CorrelationAnalyzer {
 
       // 5 derniers points
       const recent = history.slice(-5);
-      const errorRates = recent.map((h) => h.errorRate);
+      const errorRates = recent.map(h => h.errorRate);
 
       // Spike = augmentation >50% soudaine
       const baseline = errorRates.slice(0, 3).reduce((s, v) => s + v, 0) / 3;
@@ -207,11 +207,10 @@ export class CorrelationAnalyzer {
         if (targetHistory.length < 5) continue;
 
         const targetRecent = targetHistory.slice(-5);
-        const targetErrorRates = targetRecent.map((h) => h.errorRate);
+        const targetErrorRates = targetRecent.map(h => h.errorRate);
         const targetBaseline =
           targetErrorRates.slice(0, 3).reduce((s, v) => s + v, 0) / 3;
-        const targetCurrent =
-          targetErrorRates.slice(-2).reduce((s, v) => s + v, 0) / 2;
+        const targetCurrent = targetErrorRates.slice(-2).reduce((s, v) => s + v, 0) / 2;
         const targetSpike =
           targetCurrent > 0 && targetBaseline > 0
             ? (targetCurrent - targetBaseline) / targetBaseline
@@ -291,12 +290,20 @@ export class CorrelationAnalyzer {
   /**
    * Obtenir corrélations fortes
    */
-  static getStrongCorrelations(minStrength: 'moderate' | 'strong' | 'very_strong' = 'strong'): CorrelationPair[] {
-    const strengthOrder: Record<string, number> = { none: -1, weak: 0, moderate: 1, strong: 2, very_strong: 3 };
+  static getStrongCorrelations(
+    minStrength: 'moderate' | 'strong' | 'very_strong' = 'strong'
+  ): CorrelationPair[] {
+    const strengthOrder: Record<string, number> = {
+      none: -1,
+      weak: 0,
+      moderate: 1,
+      strong: 2,
+      very_strong: 3,
+    };
     const minLevel = strengthOrder[minStrength] || 0;
 
     return Array.from(this.correlationMatrix.values()).filter(
-      (pair) => (strengthOrder[pair.strength] ?? 0) >= minLevel
+      pair => (strengthOrder[pair.strength] ?? 0) >= minLevel
     );
   }
 
@@ -304,9 +311,7 @@ export class CorrelationAnalyzer {
    * Obtenir cascade failures récentes
    */
   static getCascadeFailures(limit = 20): CascadeFailure[] {
-    return this.cascadeFailures
-      .sort((a, b) => b.timestamp - a.timestamp)
-      .slice(0, limit);
+    return this.cascadeFailures.sort((a, b) => b.timestamp - a.timestamp).slice(0, limit);
   }
 
   /**
@@ -314,7 +319,7 @@ export class CorrelationAnalyzer {
    */
   static getServiceDependencies(service: string): ServiceDependency[] {
     return this.dependencies.filter(
-      (dep) => dep.source === service || dep.target === service
+      dep => dep.source === service || dep.target === service
     );
   }
 
@@ -365,7 +370,7 @@ export class CorrelationAnalyzer {
 
     const confidence = Math.min(maxScore / failedServices.length, 1.0);
     const correlations = Array.from(this.correlationMatrix.values()).filter(
-      (c) => c.service1 === likelyRoot || c.service2 === likelyRoot
+      c => c.service1 === likelyRoot || c.service2 === likelyRoot
     );
 
     return { likelyRoot, confidence, correlations };

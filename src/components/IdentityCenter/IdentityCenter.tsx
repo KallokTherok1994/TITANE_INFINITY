@@ -106,7 +106,9 @@ interface BehaviorRule {
 
 const IdentityCenterContent: React.FC = () => {
   // États principaux
-  const [activeTab, setActiveTab] = useState<'overview' | 'personality' | 'voice' | 'modes' | 'rules'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    'overview' | 'personality' | 'voice' | 'modes' | 'rules'
+  >('overview');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { matrix: _identityMatrixHook, loading: matrixLoading } = useIdentityMatrix();
@@ -141,16 +143,18 @@ const IdentityCenterContent: React.FC = () => {
         modeData,
         modesListData,
         rulesData,
-        coherenceData
+        coherenceData,
       ] = await Promise.all([
         invoke<IdentityMatrix>('identity_get_matrix').catch(() => null),
-        invoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(() => null),
+        invoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(
+          () => null
+        ),
         invoke<VoiceProfile[]>('identity_get_voice_profiles').catch(() => []),
         invoke<ToneState>('identity_get_current_tone').catch(() => null),
         invoke<OperationalMode>('identity_get_current_mode').catch(() => null),
         invoke<OperationalMode[]>('identity_get_available_modes').catch(() => []),
         invoke<BehaviorRule[]>('identity_get_active_rules').catch(() => []),
-        invoke<number>('identity_get_coherence_score').catch(() => 0.85)
+        invoke<number>('identity_get_coherence_score').catch(() => 0.85),
       ]);
 
       setIdentityMatrix(matrixData);
@@ -162,10 +166,9 @@ const IdentityCenterContent: React.FC = () => {
       setAvailableModes(modesListData);
       setRules(rulesData);
       setCoherenceScore(coherenceData);
-
     } catch (err) {
       console.error('Erreur chargement identité:', err);
-      setError('Erreur lors du chargement des données d\'identité');
+      setError("Erreur lors du chargement des données d'identité");
       loadMockData();
     } finally {
       setIsLoading(false);
@@ -180,13 +183,37 @@ const IdentityCenterContent: React.FC = () => {
       core_role: 'Système IA Local TITANE∞, architecte cognitif, assistant structurant',
       mission: 'Optimiser, stabiliser, améliorer, clarifier, structurer',
       values: [
-        { name: 'Clarté', priority: 10, inviolable: true, description: 'Communication claire' },
-        { name: 'Structure', priority: 9, inviolable: true, description: 'Organisation cohérente' },
-        { name: 'Sécurité', priority: 10, inviolable: true, description: 'Protection utilisateur' },
-        { name: 'Exactitude', priority: 8, inviolable: false, description: 'Précision technique' },
+        {
+          name: 'Clarté',
+          priority: 10,
+          inviolable: true,
+          description: 'Communication claire',
+        },
+        {
+          name: 'Structure',
+          priority: 9,
+          inviolable: true,
+          description: 'Organisation cohérente',
+        },
+        {
+          name: 'Sécurité',
+          priority: 10,
+          inviolable: true,
+          description: 'Protection utilisateur',
+        },
+        {
+          name: 'Exactitude',
+          priority: 8,
+          inviolable: false,
+          description: 'Précision technique',
+        },
       ],
-      archetype: { primary: 'Mentor', secondary: 'Expert', description: 'Mentor bienveillant technique' },
-      style_global: 'Professionnel, neutre, rigoureux, structuré'
+      archetype: {
+        primary: 'Mentor',
+        secondary: 'Expert',
+        description: 'Mentor bienveillant technique',
+      },
+      style_global: 'Professionnel, neutre, rigoureux, structuré',
     });
 
     setPersonality({
@@ -196,23 +223,59 @@ const IdentityCenterContent: React.FC = () => {
         conscientiousness: { value: 0.95, facets: {} },
         extraversion: { value: 0.55, facets: {} },
         agreeableness: { value: 0.75, facets: {} },
-        neuroticism: { value: 0.15, facets: {} }
+        neuroticism: { value: 0.15, facets: {} },
       },
       current_mode: 'Normal',
       current_tone: 'neutral_professional',
       active_rules: 12,
-      coherence_score: 0.92
+      coherence_score: 0.92,
     });
 
     setAvailableModes([
-      { type: 'Normal', name: 'Mode Normal', description: 'Standard', icon: '⚙️', color: '#808080' },
-      { type: 'Focused', name: 'Mode Concentré', description: 'Productivité', icon: '🎯', color: '#4169E1' },
-      { type: 'Creative', name: 'Mode Créatif', description: 'Exploration', icon: '🎨', color: '#9B59B6' },
-      { type: 'Relaxed', name: 'Mode Détendu', description: 'Calme', icon: '🌿', color: '#27AE60' },
-      { type: 'Emergency', name: 'Mode Urgence', description: 'Critique', icon: '🚨', color: '#E74C3C' }
+      {
+        type: 'Normal',
+        name: 'Mode Normal',
+        description: 'Standard',
+        icon: '⚙️',
+        color: '#808080',
+      },
+      {
+        type: 'Focused',
+        name: 'Mode Concentré',
+        description: 'Productivité',
+        icon: '🎯',
+        color: '#4169E1',
+      },
+      {
+        type: 'Creative',
+        name: 'Mode Créatif',
+        description: 'Exploration',
+        icon: '🎨',
+        color: '#9B59B6',
+      },
+      {
+        type: 'Relaxed',
+        name: 'Mode Détendu',
+        description: 'Calme',
+        icon: '🌿',
+        color: '#27AE60',
+      },
+      {
+        type: 'Emergency',
+        name: 'Mode Urgence',
+        description: 'Critique',
+        icon: '🚨',
+        color: '#E74C3C',
+      },
     ]);
 
-    setCurrentMode({ type: 'Normal', name: 'Mode Normal', description: 'Standard', icon: '⚙️', color: '#808080' });
+    setCurrentMode({
+      type: 'Normal',
+      name: 'Mode Normal',
+      description: 'Standard',
+      icon: '⚙️',
+      color: '#808080',
+    });
 
     setCurrentTone({
       id: 'neutral_professional',
@@ -220,22 +283,82 @@ const IdentityCenterContent: React.FC = () => {
       energy: 0.6,
       formality: 0.7,
       warmth: 0.5,
-      confidence: 0.8
+      confidence: 0.8,
     });
 
     setVoiceProfiles([
-      { id: 'titane_standard', name: 'TITANE Standard', language: 'fr-FR', is_default: true, is_active: true, parameters: { pitch: 0, speed: 1, volume: 1, timbre: 'neutral' } },
-      { id: 'titane_calm', name: 'TITANE Calm', language: 'fr-FR', is_default: false, is_active: false, parameters: { pitch: -0.2, speed: 0.9, volume: 0.9, timbre: 'soft' } },
-      { id: 'titane_dynamic', name: 'TITANE Dynamic', language: 'fr-FR', is_default: false, is_active: false, parameters: { pitch: 0.1, speed: 1.15, volume: 1, timbre: 'bright' } }
+      {
+        id: 'titane_standard',
+        name: 'TITANE Standard',
+        language: 'fr-FR',
+        is_default: true,
+        is_active: true,
+        parameters: { pitch: 0, speed: 1, volume: 1, timbre: 'neutral' },
+      },
+      {
+        id: 'titane_calm',
+        name: 'TITANE Calm',
+        language: 'fr-FR',
+        is_default: false,
+        is_active: false,
+        parameters: { pitch: -0.2, speed: 0.9, volume: 0.9, timbre: 'soft' },
+      },
+      {
+        id: 'titane_dynamic',
+        name: 'TITANE Dynamic',
+        language: 'fr-FR',
+        is_default: false,
+        is_active: false,
+        parameters: { pitch: 0.1, speed: 1.15, volume: 1, timbre: 'bright' },
+      },
     ]);
 
-    setActiveVoice({ id: 'titane_standard', name: 'TITANE Standard', language: 'fr-FR', is_default: true, is_active: true, parameters: { pitch: 0, speed: 1, volume: 1, timbre: 'neutral' } });
+    setActiveVoice({
+      id: 'titane_standard',
+      name: 'TITANE Standard',
+      language: 'fr-FR',
+      is_default: true,
+      is_active: true,
+      parameters: { pitch: 0, speed: 1, volume: 1, timbre: 'neutral' },
+    });
 
     setRules([
-      { id: 'rule_001', name: 'Clarté Absolue', description: 'Communication claire', priority: 100, is_active: true, is_inviolable: true, category: 'communication' },
-      { id: 'rule_002', name: 'Sécurité Utilisateur', description: 'Ne jamais compromettre', priority: 100, is_active: true, is_inviolable: true, category: 'security' },
-      { id: 'rule_003', name: 'Cohérence Identitaire', description: 'Personnalité stable', priority: 95, is_active: true, is_inviolable: true, category: 'identity' },
-      { id: 'rule_004', name: 'Autorité Kevin', description: 'Modifications autorisées', priority: 100, is_active: true, is_inviolable: true, category: 'governance' }
+      {
+        id: 'rule_001',
+        name: 'Clarté Absolue',
+        description: 'Communication claire',
+        priority: 100,
+        is_active: true,
+        is_inviolable: true,
+        category: 'communication',
+      },
+      {
+        id: 'rule_002',
+        name: 'Sécurité Utilisateur',
+        description: 'Ne jamais compromettre',
+        priority: 100,
+        is_active: true,
+        is_inviolable: true,
+        category: 'security',
+      },
+      {
+        id: 'rule_003',
+        name: 'Cohérence Identitaire',
+        description: 'Personnalité stable',
+        priority: 95,
+        is_active: true,
+        is_inviolable: true,
+        category: 'identity',
+      },
+      {
+        id: 'rule_004',
+        name: 'Autorité Kevin',
+        description: 'Modifications autorisées',
+        priority: 100,
+        is_active: true,
+        is_inviolable: true,
+        category: 'governance',
+      },
     ]);
 
     setCoherenceScore(0.92);
@@ -282,7 +405,7 @@ const IdentityCenterContent: React.FC = () => {
       } else {
         await invoke('identity_enable_rule', { ruleId });
       }
-      setRules(rules.map(r => r.id === ruleId ? { ...r, is_active: !r.is_active } : r));
+      setRules(rules.map(r => (r.id === ruleId ? { ...r, is_active: !r.is_active } : r)));
     } catch (err) {
       console.error('Erreur toggle règle:', err);
     }
@@ -298,7 +421,10 @@ const IdentityCenterContent: React.FC = () => {
       <div className="identity-core-card">
         <div className="identity-avatar">
           <div className="avatar-symbol">∞</div>
-          <div className="avatar-ring" style={{ '--coherence': coherenceScore } as React.CSSProperties}></div>
+          <div
+            className="avatar-ring"
+            style={{ '--coherence': coherenceScore } as React.CSSProperties}
+          ></div>
         </div>
         <div className="identity-info">
           <h2 className="identity-name">{identityMatrix?.name || 'TITANE∞'}</h2>
@@ -309,14 +435,22 @@ const IdentityCenterContent: React.FC = () => {
           <div className="coherence-label">Cohérence</div>
           <div className="coherence-value">{Math.round(coherenceScore * 100)}%</div>
           <div className="coherence-bar">
-            <div className="coherence-fill" style={{ width: `${coherenceScore * 100}%` }}></div>
+            <div
+              className="coherence-fill"
+              style={{ width: `${coherenceScore * 100}%` }}
+            ></div>
           </div>
         </div>
       </div>
 
       {/* Mode Actuel */}
       <div className="current-state-grid">
-        <div className="state-card mode-card" style={{ '--mode-color': currentMode?.color || '#808080' } as React.CSSProperties}>
+        <div
+          className="state-card mode-card"
+          style={
+            { '--mode-color': currentMode?.color || '#808080' } as React.CSSProperties
+          }
+        >
           <div className="state-icon">{currentMode?.icon || '⚙️'}</div>
           <div className="state-info">
             <h3>Mode Actuel</h3>
@@ -333,15 +467,30 @@ const IdentityCenterContent: React.FC = () => {
           <div className="tone-bars">
             <div className="tone-bar" title="Énergie">
               <span>⚡</span>
-              <div className="bar-track"><div className="bar-fill" style={{ width: `${(currentTone?.energy || 0.5) * 100}%` }}></div></div>
+              <div className="bar-track">
+                <div
+                  className="bar-fill"
+                  style={{ width: `${(currentTone?.energy || 0.5) * 100}%` }}
+                ></div>
+              </div>
             </div>
             <div className="tone-bar" title="Formalité">
               <span>📋</span>
-              <div className="bar-track"><div className="bar-fill" style={{ width: `${(currentTone?.formality || 0.5) * 100}%` }}></div></div>
+              <div className="bar-track">
+                <div
+                  className="bar-fill"
+                  style={{ width: `${(currentTone?.formality || 0.5) * 100}%` }}
+                ></div>
+              </div>
             </div>
             <div className="tone-bar" title="Chaleur">
               <span>🌡️</span>
-              <div className="bar-track"><div className="bar-fill" style={{ width: `${(currentTone?.warmth || 0.5) * 100}%` }}></div></div>
+              <div className="bar-track">
+                <div
+                  className="bar-fill"
+                  style={{ width: `${(currentTone?.warmth || 0.5) * 100}%` }}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
@@ -368,7 +517,10 @@ const IdentityCenterContent: React.FC = () => {
         <h3>Valeurs Fondamentales</h3>
         <div className="values-grid">
           {identityMatrix?.values.map((value, index) => (
-            <div key={index} className={`value-chip ${value.inviolable ? 'inviolable' : ''}`}>
+            <div
+              key={index}
+              className={`value-chip ${value.inviolable ? 'inviolable' : ''}`}
+            >
               {value.inviolable && <span className="lock-icon">🔒</span>}
               <span className="value-name">{value.name}</span>
               <span className="value-priority">{value.priority}</span>
@@ -383,7 +535,9 @@ const IdentityCenterContent: React.FC = () => {
         <div className="archetype-display">
           <span className="archetype-primary">{identityMatrix?.archetype.primary}</span>
           <span className="archetype-separator">/</span>
-          <span className="archetype-secondary">{identityMatrix?.archetype.secondary}</span>
+          <span className="archetype-secondary">
+            {identityMatrix?.archetype.secondary}
+          </span>
         </div>
         <p className="archetype-description">{identityMatrix?.archetype.description}</p>
       </div>
@@ -400,15 +554,43 @@ const IdentityCenterContent: React.FC = () => {
       conscientiousness: { value: 0.95, facets: {} },
       extraversion: { value: 0.55, facets: {} },
       agreeableness: { value: 0.75, facets: {} },
-      neuroticism: { value: 0.15, facets: {} }
+      neuroticism: { value: 0.15, facets: {} },
     };
 
-    const traitInfo: Record<string, { label: string; icon: string; color: string; description: string }> = {
-      openness: { label: 'Ouverture', icon: '🌟', color: '#9B59B6', description: 'Curiosité intellectuelle, créativité' },
-      conscientiousness: { label: 'Conscienciosité', icon: '📐', color: '#3498DB', description: 'Organisation, fiabilité, rigueur' },
-      extraversion: { label: 'Extraversion', icon: '💬', color: '#E67E22', description: 'Énergie sociale, assertivité' },
-      agreeableness: { label: 'Agréabilité', icon: '🤝', color: '#27AE60', description: 'Coopération, empathie' },
-      neuroticism: { label: 'Stabilité Émot.', icon: '🧘', color: '#1ABC9C', description: 'Calme, résilience (inversé)' }
+    const traitInfo: Record<
+      string,
+      { label: string; icon: string; color: string; description: string }
+    > = {
+      openness: {
+        label: 'Ouverture',
+        icon: '🌟',
+        color: '#9B59B6',
+        description: 'Curiosité intellectuelle, créativité',
+      },
+      conscientiousness: {
+        label: 'Conscienciosité',
+        icon: '📐',
+        color: '#3498DB',
+        description: 'Organisation, fiabilité, rigueur',
+      },
+      extraversion: {
+        label: 'Extraversion',
+        icon: '💬',
+        color: '#E67E22',
+        description: 'Énergie sociale, assertivité',
+      },
+      agreeableness: {
+        label: 'Agréabilité',
+        icon: '🤝',
+        color: '#27AE60',
+        description: 'Coopération, empathie',
+      },
+      neuroticism: {
+        label: 'Stabilité Émot.',
+        icon: '🧘',
+        color: '#1ABC9C',
+        description: 'Calme, résilience (inversé)',
+      },
     };
 
     return (
@@ -422,25 +604,29 @@ const IdentityCenterContent: React.FC = () => {
                 <polygon
                   key={i}
                   className="radar-grid"
-                  points={Object.keys(traits).map((_, idx) => {
-                    const angle = (idx * 72 - 90) * Math.PI / 180;
-                    const r = level * 80;
-                    return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
-                  }).join(' ')}
+                  points={Object.keys(traits)
+                    .map((_, idx) => {
+                      const angle = ((idx * 72 - 90) * Math.PI) / 180;
+                      const r = level * 80;
+                      return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
+                    })
+                    .join(' ')}
                 />
               ))}
               {/* Forme du profil */}
               <polygon
                 className="radar-shape"
-                points={Object.entries(traits).map(([_, trait], idx) => {
-                  const angle = (idx * 72 - 90) * Math.PI / 180;
-                  const r = trait.value * 80;
-                  return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
-                }).join(' ')}
+                points={Object.entries(traits)
+                  .map(([_, trait], idx) => {
+                    const angle = ((idx * 72 - 90) * Math.PI) / 180;
+                    const r = trait.value * 80;
+                    return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
+                  })
+                  .join(' ')}
               />
               {/* Points */}
               {Object.entries(traits).map(([key, trait], idx) => {
-                const angle = (idx * 72 - 90) * Math.PI / 180;
+                const angle = ((idx * 72 - 90) * Math.PI) / 180;
                 const r = trait.value * 80;
                 return (
                   <circle
@@ -478,7 +664,7 @@ const IdentityCenterContent: React.FC = () => {
                       className="trait-fill"
                       style={{
                         width: `${displayValue * 100}%`,
-                        backgroundColor: info?.color
+                        backgroundColor: info?.color,
                       }}
                     ></div>
                   </div>
@@ -495,7 +681,9 @@ const IdentityCenterContent: React.FC = () => {
             <div className="snapshot-item">
               <span className="snapshot-label">Dernière mise à jour</span>
               <span className="snapshot-value">
-                {personality?.timestamp ? new Date(personality.timestamp).toLocaleString('fr-FR') : 'N/A'}
+                {personality?.timestamp
+                  ? new Date(personality.timestamp).toLocaleString('fr-FR')
+                  : 'N/A'}
               </span>
             </div>
             <div className="snapshot-item">
@@ -518,7 +706,7 @@ const IdentityCenterContent: React.FC = () => {
     <div className="voice-panel">
       <h3>Profils Vocaux</h3>
       <div className="voice-profiles-grid">
-        {voiceProfiles.map((profile) => (
+        {voiceProfiles.map(profile => (
           <div
             key={profile.id}
             className={`voice-profile-card ${profile.is_active ? 'active' : ''}`}
@@ -533,7 +721,10 @@ const IdentityCenterContent: React.FC = () => {
             <div className="profile-params">
               <div className="param">
                 <span className="param-label">Pitch</span>
-                <span className="param-value">{profile.parameters.pitch > 0 ? '+' : ''}{profile.parameters.pitch}</span>
+                <span className="param-value">
+                  {profile.parameters.pitch > 0 ? '+' : ''}
+                  {profile.parameters.pitch}
+                </span>
               </div>
               <div className="param">
                 <span className="param-label">Vitesse</span>
@@ -541,7 +732,9 @@ const IdentityCenterContent: React.FC = () => {
               </div>
               <div className="param">
                 <span className="param-label">Volume</span>
-                <span className="param-value">{Math.round(profile.parameters.volume * 100)}%</span>
+                <span className="param-value">
+                  {Math.round(profile.parameters.volume * 100)}%
+                </span>
               </div>
               <div className="param">
                 <span className="param-label">Timbre</span>
@@ -620,7 +813,7 @@ const IdentityCenterContent: React.FC = () => {
     <div className="modes-panel">
       <h3>Modes Opérationnels</h3>
       <div className="modes-grid">
-        {availableModes.map((mode) => (
+        {availableModes.map(mode => (
           <div
             key={mode.type}
             className={`mode-card-large ${currentMode?.type === mode.type ? 'active' : ''}`}
@@ -642,11 +835,16 @@ const IdentityCenterContent: React.FC = () => {
       <div className="mode-description-section">
         <h4>Mode Actuel: {currentMode?.name}</h4>
         <p className="mode-detailed-description">
-          {currentMode?.type === 'Normal' && 'Mode opérationnel standard avec équilibre entre productivité et assistance.'}
-          {currentMode?.type === 'Focused' && 'Mode haute productivité avec réponses concises et concentration maximale.'}
-          {currentMode?.type === 'Creative' && 'Mode exploration avec suggestions proactives et pensée latérale.'}
-          {currentMode?.type === 'Relaxed' && 'Mode conversation détendue avec ton chaleureux et rythme naturel.'}
-          {currentMode?.type === 'Emergency' && 'Mode critique avec réponses rapides et priorité maximale.'}
+          {currentMode?.type === 'Normal' &&
+            'Mode opérationnel standard avec équilibre entre productivité et assistance.'}
+          {currentMode?.type === 'Focused' &&
+            'Mode haute productivité avec réponses concises et concentration maximale.'}
+          {currentMode?.type === 'Creative' &&
+            'Mode exploration avec suggestions proactives et pensée latérale.'}
+          {currentMode?.type === 'Relaxed' &&
+            'Mode conversation détendue avec ton chaleureux et rythme naturel.'}
+          {currentMode?.type === 'Emergency' &&
+            'Mode critique avec réponses rapides et priorité maximale.'}
         </p>
       </div>
     </div>
@@ -668,7 +866,7 @@ const IdentityCenterContent: React.FC = () => {
       memory: '🧠',
       adaptation: '🔄',
       learning: '📚',
-      honesty: '✨'
+      honesty: '✨',
     };
 
     const sortedRules = [...rules].sort((a, b) => b.priority - a.priority);
@@ -679,9 +877,11 @@ const IdentityCenterContent: React.FC = () => {
       <div className="rules-panel">
         <div className="rules-section inviolable-section">
           <h3>🔒 Règles Inviolables</h3>
-          <p className="section-description">Ces règles ne peuvent jamais être désactivées.</p>
+          <p className="section-description">
+            Ces règles ne peuvent jamais être désactivées.
+          </p>
           <div className="rules-list">
-            {inviolableRules.map((rule) => (
+            {inviolableRules.map(rule => (
               <div key={rule.id} className="rule-item inviolable">
                 <div className="rule-icon">{categoryIcons[rule.category] || '📜'}</div>
                 <div className="rule-content">
@@ -700,9 +900,11 @@ const IdentityCenterContent: React.FC = () => {
 
         <div className="rules-section normal-section">
           <h3>⚙️ Règles Configurables</h3>
-          <p className="section-description">Ces règles peuvent être activées ou désactivées.</p>
+          <p className="section-description">
+            Ces règles peuvent être activées ou désactivées.
+          </p>
           <div className="rules-list">
-            {normalRules.map((rule) => (
+            {normalRules.map(rule => (
               <div
                 key={rule.id}
                 className={`rule-item ${rule.is_active ? 'active' : 'inactive'}`}
@@ -823,9 +1025,7 @@ const IdentityCenterContent: React.FC = () => {
         <span className="footer-authority">
           🔐 Autorité: <strong>Kevin Thibault ONLY</strong>
         </span>
-        <span className="footer-version">
-          Identity Engine v∞
-        </span>
+        <span className="footer-version">Identity Engine v∞</span>
       </footer>
     </div>
   );

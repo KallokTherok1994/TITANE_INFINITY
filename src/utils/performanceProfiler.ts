@@ -196,7 +196,7 @@ export class PerformanceProfiler {
       return cached;
     }
 
-    const filtered = this.measurements.filter((m) => m.name === name);
+    const filtered = this.measurements.filter(m => m.name === name);
     if (filtered.length === 0) return null;
 
     const stats = this.calculateStats(filtered, name);
@@ -214,7 +214,7 @@ export class PerformanceProfiler {
       return cached;
     }
 
-    const filtered = this.measurements.filter((m) => m.category === category);
+    const filtered = this.measurements.filter(m => m.category === category);
     if (filtered.length === 0) return null;
 
     const stats = this.calculateStats(filtered, category);
@@ -229,7 +229,7 @@ export class PerformanceProfiler {
     measurements: PerformanceMeasurement[],
     name: string
   ): PerformanceStats {
-    const durations = measurements.map((m) => m.duration).sort((a, b) => a - b);
+    const durations = measurements.map(m => m.duration).sort((a, b) => a - b);
     const totalTime = durations.reduce((sum, d) => sum + d, 0);
     const count = durations.length;
 
@@ -271,9 +271,7 @@ export class PerformanceProfiler {
 
     // Trim if exceeds max
     if (this.memorySnapshots.length > this.config.maxMemorySnapshots) {
-      this.memorySnapshots = this.memorySnapshots.slice(
-        -this.config.maxMemorySnapshots
-      );
+      this.memorySnapshots = this.memorySnapshots.slice(-this.config.maxMemorySnapshots);
     }
 
     return snapshot;
@@ -283,7 +281,7 @@ export class PerformanceProfiler {
    * Get memory trend (MB used over time)
    */
   getMemoryTrend(): Array<{ timestamp: number; usedMB: number }> {
-    return this.memorySnapshots.map((s) => ({
+    return this.memorySnapshots.map(s => ({
       timestamp: s.timestamp,
       usedMB: s.usedJSHeapSize / (1024 * 1024),
     }));
@@ -377,11 +375,11 @@ export class PerformanceProfiler {
     memory: MemorySnapshot | null;
     fps: FPSData;
   } {
-    const categories = [...new Set(this.measurements.map((m) => m.category))];
+    const categories = [...new Set(this.measurements.map(m => m.category))];
 
     // Get top 5 slowest operations
     const allStats: PerformanceStats[] = [];
-    const uniqueNames = [...new Set(this.measurements.map((m) => m.name))];
+    const uniqueNames = [...new Set(this.measurements.map(m => m.name))];
     for (const name of uniqueNames) {
       const stats = this.getStats(name);
       if (stats) allStats.push(stats);

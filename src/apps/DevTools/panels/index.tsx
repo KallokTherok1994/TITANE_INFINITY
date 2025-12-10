@@ -6,8 +6,17 @@ import React, { useState } from 'react';
 import { useMemoryOS } from '../hooks/useMemoryOS';
 
 export const MemoryInspector: React.FC = () => {
-  const { stats, loading, semanticSearch, getMemoriesByTier, clusterMemories, compressSimilar } = useMemoryOS();
-  const [activeTab, setActiveTab] = useState<'STM' | 'MTM' | 'LTM' | 'Vector' | 'Clusters'>('STM');
+  const {
+    stats,
+    loading,
+    semanticSearch,
+    getMemoriesByTier,
+    clusterMemories,
+    compressSimilar,
+  } = useMemoryOS();
+  const [activeTab, setActiveTab] = useState<
+    'STM' | 'MTM' | 'LTM' | 'Vector' | 'Clusters'
+  >('STM');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [tierMemories, setTierMemories] = useState<any[]>([]);
@@ -26,7 +35,9 @@ export const MemoryInspector: React.FC = () => {
   const handleCluster = async () => {
     const result = await clusterMemories();
     if (result) {
-      alert(`Clustered into ${result.clusters.length} groups (silhouette: ${result.silhouette_score.toFixed(3)})`);
+      alert(
+        `Clustered into ${result.clusters.length} groups (silhouette: ${result.silhouette_score.toFixed(3)})`
+      );
     }
   };
 
@@ -38,23 +49,38 @@ export const MemoryInspector: React.FC = () => {
   return (
     <div style={{ padding: '16px', fontFamily: 'monospace' }}>
       <h2>🧠 Memory Inspector</h2>
-      
+
       {/* Stats */}
       {loading ? (
         <p>Loading stats...</p>
       ) : stats ? (
-        <div style={{ marginBottom: '20px', padding: '10px', background: '#f5f5f5', borderRadius: '4px' }}>
-          <div><strong>STM:</strong> {stats.stm_count} | <strong>MTM:</strong> {stats.mtm_count} | <strong>LTM:</strong> {stats.ltm_count}</div>
-          <div><strong>Total Memories:</strong> {stats.total_memories}</div>
+        <div
+          style={{
+            marginBottom: '20px',
+            padding: '10px',
+            background: '#f5f5f5',
+            borderRadius: '4px',
+          }}
+        >
+          <div>
+            <strong>STM:</strong> {stats.stm_count} | <strong>MTM:</strong>{' '}
+            {stats.mtm_count} | <strong>LTM:</strong> {stats.ltm_count}
+          </div>
+          <div>
+            <strong>Total Memories:</strong> {stats.total_memories}
+          </div>
           {stats.vector_entries !== undefined && (
-            <div><strong>Vector Index:</strong> {stats.vector_entries} entries ({stats.vector_dimension}D)</div>
+            <div>
+              <strong>Vector Index:</strong> {stats.vector_entries} entries (
+              {stats.vector_dimension}D)
+            </div>
           )}
         </div>
       ) : null}
 
       {/* Tabs */}
       <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-        {(['STM', 'MTM', 'LTM', 'Vector', 'Clusters'] as const).map((tab) => (
+        {(['STM', 'MTM', 'LTM', 'Vector', 'Clusters'] as const).map(tab => (
           <button
             key={tab}
             onClick={() => {
@@ -85,13 +111,25 @@ export const MemoryInspector: React.FC = () => {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               placeholder="Enter query..."
-              style={{ flex: 1, padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+              style={{
+                flex: 1,
+                padding: '8px',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+              }}
             />
             <button
               onClick={handleSemanticSearch}
-              style={{ padding: '8px 16px', background: '#007acc', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              style={{
+                padding: '8px 16px',
+                background: '#007acc',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
             >
               Search
             </button>
@@ -100,10 +138,24 @@ export const MemoryInspector: React.FC = () => {
             {searchResults.length > 0 ? (
               <ul style={{ listStyle: 'none', padding: 0 }}>
                 {searchResults.map((result, idx) => (
-                  <li key={idx} style={{ marginBottom: '12px', padding: '12px', background: '#f9f9f9', borderRadius: '4px' }}>
-                    <div><strong>ID:</strong> {result.id}</div>
-                    <div><strong>Score:</strong> {result.score.toFixed(3)}</div>
-                    <div><strong>Content:</strong> {result.content.substring(0, 200)}...</div>
+                  <li
+                    key={idx}
+                    style={{
+                      marginBottom: '12px',
+                      padding: '12px',
+                      background: '#f9f9f9',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <div>
+                      <strong>ID:</strong> {result.id}
+                    </div>
+                    <div>
+                      <strong>Score:</strong> {result.score.toFixed(3)}
+                    </div>
+                    <div>
+                      <strong>Content:</strong> {result.content.substring(0, 200)}...
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -116,14 +168,36 @@ export const MemoryInspector: React.FC = () => {
         <div>
           <h3>📊 Clustering</h3>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-            <button onClick={handleCluster} style={{ padding: '8px 16px', background: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+            <button
+              onClick={handleCluster}
+              style={{
+                padding: '8px 16px',
+                background: '#28a745',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
               Cluster Memories
             </button>
-            <button onClick={handleCompress} style={{ padding: '8px 16px', background: '#ffc107', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+            <button
+              onClick={handleCompress}
+              style={{
+                padding: '8px 16px',
+                background: '#ffc107',
+                color: 'black',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+            >
               Compress Similar
             </button>
           </div>
-          <p style={{ color: '#888' }}>Clustering will group similar memories. Compression will merge duplicates.</p>
+          <p style={{ color: '#888' }}>
+            Clustering will group similar memories. Compression will merge duplicates.
+          </p>
         </div>
       ) : (
         <div>
@@ -131,11 +205,27 @@ export const MemoryInspector: React.FC = () => {
           {tierMemories.length > 0 ? (
             <ul style={{ listStyle: 'none', padding: 0 }}>
               {tierMemories.map((mem, idx) => (
-                <li key={idx} style={{ marginBottom: '12px', padding: '12px', background: '#f9f9f9', borderRadius: '4px' }}>
-                  <div><strong>ID:</strong> {mem.id}</div>
-                  <div><strong>Importance:</strong> {mem.importance.toFixed(2)}</div>
-                  <div><strong>Accessed:</strong> {mem.accessed_count} times</div>
-                  <div><strong>Content:</strong> {mem.content.substring(0, 150)}...</div>
+                <li
+                  key={idx}
+                  style={{
+                    marginBottom: '12px',
+                    padding: '12px',
+                    background: '#f9f9f9',
+                    borderRadius: '4px',
+                  }}
+                >
+                  <div>
+                    <strong>ID:</strong> {mem.id}
+                  </div>
+                  <div>
+                    <strong>Importance:</strong> {mem.importance.toFixed(2)}
+                  </div>
+                  <div>
+                    <strong>Accessed:</strong> {mem.accessed_count} times
+                  </div>
+                  <div>
+                    <strong>Content:</strong> {mem.content.substring(0, 150)}...
+                  </div>
                 </li>
               ))}
             </ul>

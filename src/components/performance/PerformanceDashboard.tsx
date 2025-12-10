@@ -118,7 +118,17 @@ const MetricCard: React.FC<{
   warning?: number;
   critical?: number;
   inverted?: boolean;
-}> = ({ icon, label, value, unit, max = 100, trend, warning = 70, critical = 85, inverted = false }) => {
+}> = ({
+  icon,
+  label,
+  value,
+  unit,
+  max = 100,
+  trend,
+  warning = 70,
+  critical = 85,
+  inverted = false,
+}) => {
   // Pour FPS, inverted = true (plus haut = mieux)
   const percentage = inverted
     ? Math.min(100, (value / max) * 100)
@@ -192,7 +202,7 @@ const IssuesList: React.FC<{
   return (
     <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
       <AnimatePresence mode="popLayout">
-        {issues.map((issue) => (
+        {issues.map(issue => (
           <motion.div
             key={issue.id}
             className={`p-3 rounded-lg border cursor-pointer transition-colors
@@ -241,7 +251,7 @@ const RecommendationsPanel: React.FC<{
 
   return (
     <div className="space-y-2 max-h-[300px] overflow-y-auto pr-2">
-      {recommendations.slice(0, 5).map((rec) => (
+      {recommendations.slice(0, 5).map(rec => (
         <motion.div
           key={rec.id}
           className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30"
@@ -254,11 +264,18 @@ const RecommendationsPanel: React.FC<{
               <div className="text-xs text-gray-400 mt-1">{rec.description}</div>
             </div>
             <div className="flex items-center gap-2">
-              <span className={`text-xs px-2 py-0.5 rounded
-                ${rec.impact === 'critical' ? 'bg-red-500/20 text-red-400' :
-                  rec.impact === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                  rec.impact === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                  'bg-gray-500/20 text-gray-400'}`}>
+              <span
+                className={`text-xs px-2 py-0.5 rounded
+                ${
+                  rec.impact === 'critical'
+                    ? 'bg-red-500/20 text-red-400'
+                    : rec.impact === 'high'
+                      ? 'bg-orange-500/20 text-orange-400'
+                      : rec.impact === 'medium'
+                        ? 'bg-yellow-500/20 text-yellow-400'
+                        : 'bg-gray-500/20 text-gray-400'
+                }`}
+              >
                 {rec.impact}
               </span>
               {rec.autoApplicable && onApply && (
@@ -293,20 +310,22 @@ const Sparkline: React.FC<{
   const max = Math.max(...values);
   const range = max - min || 1;
 
-  const points = data.map((d, i) => {
-    const x = (i / (data.length - 1)) * 100;
-    const y = height - ((d.value - min) / range) * height;
-    return `${x},${y}`;
-  }).join(' ');
+  const points = data
+    .map((d, i) => {
+      const x = (i / (data.length - 1)) * 100;
+      const y = height - ((d.value - min) / range) * height;
+      return `${x},${y}`;
+    })
+    .join(' ');
 
   return (
-    <svg className="w-full" height={height} viewBox={`0 0 100 ${height}`} preserveAspectRatio="none">
-      <polyline
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-        points={points}
-      />
+    <svg
+      className="w-full"
+      height={height}
+      viewBox={`0 0 100 ${height}`}
+      preserveAspectRatio="none"
+    >
+      <polyline fill="none" stroke={color} strokeWidth="2" points={points} />
     </svg>
   );
 };
@@ -357,13 +376,16 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
   }, [engine, refresh]);
 
   // Appliquer une recommandation
-  const handleApplyRecommendation = useCallback(async (rec: Recommendation) => {
-    const success = await engine.applyRecommendation(rec.id);
-    if (success) {
-      refresh();
-      onRecommendationApply?.(rec);
-    }
-  }, [engine, refresh, onRecommendationApply]);
+  const handleApplyRecommendation = useCallback(
+    async (rec: Recommendation) => {
+      const success = await engine.applyRecommendation(rec.id);
+      if (success) {
+        refresh();
+        onRecommendationApply?.(rec);
+      }
+    },
+    [engine, refresh, onRecommendationApply]
+  );
 
   if (!data) {
     return (
@@ -477,9 +499,7 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
         <div className="bg-gray-800/30 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="w-5 h-5 text-orange-400" />
-            <h3 className="font-medium text-white">
-              Problèmes ({data.issues.length})
-            </h3>
+            <h3 className="font-medium text-white">Problèmes ({data.issues.length})</h3>
           </div>
           <IssuesList issues={data.issues} onIssueClick={onIssueClick} />
         </div>
@@ -507,14 +527,22 @@ export const PerformanceDashboard: React.FC<PerformanceDashboardProps> = ({
           <Box className="w-4 h-4" />
           <span>Tendance globale:</span>
           {TREND_ICONS[data.trends.overall]}
-          <span className={
-            data.trends.overall === 'improving' ? 'text-green-400' :
-            data.trends.overall === 'degrading' ? 'text-red-400' :
-            'text-gray-400'
-          }>
-            {data.trends.overall === 'improving' ? 'En amélioration' :
-             data.trends.overall === 'degrading' ? 'En dégradation' :
-             data.trends.overall === 'stable' ? 'Stable' : 'Inconnu'}
+          <span
+            className={
+              data.trends.overall === 'improving'
+                ? 'text-green-400'
+                : data.trends.overall === 'degrading'
+                  ? 'text-red-400'
+                  : 'text-gray-400'
+            }
+          >
+            {data.trends.overall === 'improving'
+              ? 'En amélioration'
+              : data.trends.overall === 'degrading'
+                ? 'En dégradation'
+                : data.trends.overall === 'stable'
+                  ? 'Stable'
+                  : 'Inconnu'}
           </span>
         </div>
         <div className="text-xs text-gray-500">

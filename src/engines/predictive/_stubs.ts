@@ -1,9 +1,9 @@
 /**
  * TITANE∞ PHASE 1 (OPTION B) - Stubs pour engines/predictive supprimés
- * 
+ *
  * Ce fichier fournit des stubs pour maintenir la compatibilité
  * temporaire avec les modules qui référencent encore engines/predictive.
- * 
+ *
  * ⚠️ engines/predictive a été supprimé lors de la restructuration.
  * Ces stubs retournent des valeurs par défaut pour éviter les erreurs
  * de compilation. Les modules dépendants devront être refactorisés.

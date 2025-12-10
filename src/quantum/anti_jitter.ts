@@ -56,7 +56,7 @@ export class AntiJitterEngine {
    */
   private initializeObservers(): void {
     // Observer les mutations DOM
-    this.observer = new MutationObserver((mutations) => {
+    this.observer = new MutationObserver(mutations => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.target instanceof HTMLElement) {
           this.checkElement(mutation.target);
@@ -65,7 +65,7 @@ export class AntiJitterEngine {
     });
 
     // Observer les redimensionnements
-    this.resizeObserver = new ResizeObserver((entries) => {
+    this.resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         if (entry.target instanceof HTMLElement) {
           this.checkElement(entry.target);
@@ -132,12 +132,14 @@ export class AntiJitterEngine {
       const previous = snapshots[snapshots.length - 2];
 
       // Vérifier le décalage de position
-      const positionDelta = Math.abs(current.rect.top - previous.rect.top) +
-                           Math.abs(current.rect.left - previous.rect.left);
+      const positionDelta =
+        Math.abs(current.rect.top - previous.rect.top) +
+        Math.abs(current.rect.left - previous.rect.left);
 
       // Vérifier le changement de taille
-      const sizeDelta = Math.abs(current.rect.width - previous.rect.width) +
-                       Math.abs(current.rect.height - previous.rect.height);
+      const sizeDelta =
+        Math.abs(current.rect.width - previous.rect.width) +
+        Math.abs(current.rect.height - previous.rect.height);
 
       const totalDelta = positionDelta + sizeDelta;
 
@@ -304,8 +306,9 @@ export class AntiJitterEngine {
       const current = snapshots[snapshots.length - 1];
       const previous = snapshots[snapshots.length - 2];
 
-      const positionDelta = Math.abs(current.rect.top - previous.rect.top) +
-                           Math.abs(current.rect.left - previous.rect.left);
+      const positionDelta =
+        Math.abs(current.rect.top - previous.rect.top) +
+        Math.abs(current.rect.left - previous.rect.left);
 
       totalJitter += positionDelta;
       count++;

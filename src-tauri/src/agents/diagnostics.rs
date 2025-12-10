@@ -1,17 +1,42 @@
 #![allow(unused_imports)]
 #![allow(dead_code)]
 // Agent Diagnostics & Events
-use crate::agents::{Agent, AgentId, agent::AgentMetrics};
+use crate::agents::{agent::AgentMetrics, Agent, AgentId};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum AgentEvent {
-    AgentStarted { id: AgentId, role: String, timestamp: i64 },
-    AgentStopped { id: AgentId, reason: String, timestamp: i64 },
-    TaskExecuted { id: AgentId, success: bool, duration_ms: u128, timestamp: i64 },
-    MessageSent { from: AgentId, to: AgentId, timestamp: i64 },
-    HealthCheckFailed { id: AgentId, reason: String, timestamp: i64 },
-    ContractViolation { id: AgentId, violation: String, timestamp: i64 },
+    AgentStarted {
+        id: AgentId,
+        role: String,
+        timestamp: i64,
+    },
+    AgentStopped {
+        id: AgentId,
+        reason: String,
+        timestamp: i64,
+    },
+    TaskExecuted {
+        id: AgentId,
+        success: bool,
+        duration_ms: u128,
+        timestamp: i64,
+    },
+    MessageSent {
+        from: AgentId,
+        to: AgentId,
+        timestamp: i64,
+    },
+    HealthCheckFailed {
+        id: AgentId,
+        reason: String,
+        timestamp: i64,
+    },
+    ContractViolation {
+        id: AgentId,
+        violation: String,
+        timestamp: i64,
+    },
 }
 
 pub struct AgentDiagnostics {

@@ -4,11 +4,11 @@
  * @license MIT
  */
 
-import React from 'react'
+import React from 'react';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'secondary' | 'destructive' | 'success' | 'warning' | 'outline'
-  children: React.ReactNode
+  variant?: 'default' | 'secondary' | 'destructive' | 'success' | 'warning' | 'outline';
+  children: React.ReactNode;
 }
 
 const variantStyles = {
@@ -17,14 +17,14 @@ const variantStyles = {
   destructive: 'bg-red-500 text-white',
   success: 'bg-green-500 text-white',
   warning: 'bg-yellow-500 text-gray-900',
-  outline: 'border border-gray-300 text-gray-700 bg-transparent'
-}
+  outline: 'border border-gray-300 text-gray-700 bg-transparent',
+};
 
-export function Badge({ 
-  variant = 'default', 
-  className = '', 
-  children, 
-  ...props 
+export function Badge({
+  variant = 'default',
+  className = '',
+  children,
+  ...props
 }: BadgeProps) {
   return (
     <span
@@ -33,5 +33,5 @@ export function Badge({
     >
       {children}
     </span>
-  )
+  );
 }

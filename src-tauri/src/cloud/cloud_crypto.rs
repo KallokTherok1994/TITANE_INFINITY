@@ -158,10 +158,8 @@ impl CloudCryptoEngine {
         let signing_key = SigningKey::from_bytes(&secret_bytes);
         let verifying_key = signing_key.verifying_key();
 
-        let private_b64 =
-            base64::engine::general_purpose::STANDARD.encode(signing_key.to_bytes());
-        let public_b64 =
-            base64::engine::general_purpose::STANDARD.encode(verifying_key.to_bytes());
+        let private_b64 = base64::engine::general_purpose::STANDARD.encode(signing_key.to_bytes());
+        let public_b64 = base64::engine::general_purpose::STANDARD.encode(verifying_key.to_bytes());
 
         // Fingerprint = SHA-256 de la clé publique (premiers 16 bytes en hex)
         let mut hasher = Sha256::new();
@@ -220,11 +218,7 @@ impl CloudCryptoEngine {
         let content_hash = hex::encode(hasher.finalize());
 
         // Signature optionnelle
-        let signature = if sign {
-            self.sign(&ciphertext)?
-        } else {
-            None
-        };
+        let signature = if sign { self.sign(&ciphertext)? } else { None };
 
         Ok(EncryptedData {
             version: 1,
@@ -344,8 +338,8 @@ impl CloudCryptoEngine {
         let mut key_array = [0u8; 32];
         key_array.copy_from_slice(&pub_bytes);
 
-        let verifying_key = VerifyingKey::from_bytes(&key_array)
-            .map_err(|_| CloudSyncError::SignatureInvalid)?;
+        let verifying_key =
+            VerifyingKey::from_bytes(&key_array).map_err(|_| CloudSyncError::SignatureInvalid)?;
 
         let sig_bytes = base64::engine::general_purpose::STANDARD
             .decode(signature_b64)
@@ -370,9 +364,8 @@ impl CloudCryptoEngine {
 
     /// Retourne la clé publique si disponible
     pub fn get_public_key(&self) -> Option<String> {
-        self.verifying_key.map(|key| {
-            base64::engine::general_purpose::STANDARD.encode(key.to_bytes())
-        })
+        self.verifying_key
+            .map(|key| base64::engine::general_purpose::STANDARD.encode(key.to_bytes()))
     }
 
     /// Calcule le hash SHA-256 d'un contenu

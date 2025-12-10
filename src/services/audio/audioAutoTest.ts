@@ -74,7 +74,9 @@ class AudioAutoTest {
       timestamp: Date.now(),
     };
 
-    console.log(`[AudioAutoTest] ✅ Suite completed: ${passed}/${results.length} passed in ${totalDuration}ms`);
+    console.log(
+      `[AudioAutoTest] ✅ Suite completed: ${passed}/${results.length} passed in ${totalDuration}ms`
+    );
     return suite;
   }
 
@@ -107,7 +109,9 @@ class AudioAutoTest {
   private async testMicrophoneAvailability(): Promise<TestResult> {
     const startTime = Date.now();
     try {
-      const result = await secureInvoke<{ success: boolean }>('test_microphone', { durationMs: 1000 });
+      const result = await secureInvoke<{ success: boolean }>('test_microphone', {
+        durationMs: 1000,
+      });
       return {
         name: 'Microphone Availability',
         passed: result.success === true,
@@ -207,7 +211,9 @@ class AudioAutoTest {
         const actualState = audioStateMachine.getState();
 
         if (!success || actualState !== expectedState) {
-          throw new Error(`Transition failed: ${event} → expected ${expectedState}, got ${actualState}`);
+          throw new Error(
+            `Transition failed: ${event} → expected ${expectedState}, got ${actualState}`
+          );
         }
       }
 
@@ -301,7 +307,9 @@ class AudioAutoTest {
 
     // Test microphone
     try {
-      const result = await secureInvoke<{ success: boolean }>('test_microphone', { durationMs: 500 });
+      const result = await secureInvoke<{ success: boolean }>('test_microphone', {
+        durationMs: 500,
+      });
       if (!result.success) {
         issues.push('Microphone unavailable');
       }

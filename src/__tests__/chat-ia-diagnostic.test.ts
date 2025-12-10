@@ -19,7 +19,7 @@ const mockGenerate = vi.fn(async (message: string, history: AIMessage[] = []) =>
   content: `Mocked response for: ${message}`,
   provider: 'mock-provider',
   timestamp: Date.now(),
-  metadata: { historyLength: history.length }
+  metadata: { historyLength: history.length },
 }));
 
 vi.mock('@hooks/useChatCore', () => ({
@@ -27,8 +27,8 @@ vi.mock('@hooks/useChatCore', () => ({
     currentMode: 'default',
     anomalyCount: 0,
     setMode: vi.fn(),
-    generate: mockGenerate
-  })
+    generate: mockGenerate,
+  }),
 }));
 
 const mockMemoryState = {
@@ -38,80 +38,81 @@ const mockMemoryState = {
   clearMode: vi.fn(),
   loadHistory: vi.fn(() => []),
   compactIfNeeded: vi.fn(() => ({ cleaned: false, sizeMB: 0 })),
-  awardXP: vi.fn()
+  awardXP: vi.fn(),
 };
 
 vi.mock('@hooks/useChatMemory', () => ({
-  useChatMemory: () => mockMemoryState
+  useChatMemory: () => mockMemoryState,
 }));
 
 describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
-
   beforeEach(() => {
     vi.clearAllMocks();
     mockGenerate.mockReset();
-    mockGenerate.mockImplementation(async (message: string, history: AIMessage[] = []) => ({
-      content: `Mocked response for: ${message}`,
-      provider: 'mock-provider',
-      timestamp: Date.now(),
-      metadata: { historyLength: history.length }
-    }));
+    mockGenerate.mockImplementation(
+      async (message: string, history: AIMessage[] = []) => ({
+        content: `Mocked response for: ${message}`,
+        provider: 'mock-provider',
+        timestamp: Date.now(),
+        metadata: { historyLength: history.length },
+      })
+    );
     mockMemoryState.messagesForMode = [];
   });
 
   describe('RACE CONDITION FIXES', () => {
-  test('sendMessage utilise le bon historique avec le message utilisateur inclus', async () => {
-    const mockResponse = {
-      role: 'assistant' as const,
-      content: 'Réponse test',
-      timestamp: Date.now(),
-      provider: 'omnis'
-    };
+    test('sendMessage utilise le bon historique avec le message utilisateur inclus', async () => {
+      const mockResponse = {
+        role: 'assistant' as const,
+        content: 'Réponse test',
+        timestamp: Date.now(),
+        provider: 'omnis',
+      };
 
-    mockGenerate.mockResolvedValueOnce(mockResponse);
+      mockGenerate.mockResolvedValueOnce(mockResponse);
 
-    const { result } = renderHook(() => useChat());
+      const { result } = renderHook(() => useChat());
 
-    await act(async () => {
-      await result.current.sendMessage('Test message utilisateur');
+      await act(async () => {
+        await result.current.sendMessage('Test message utilisateur');
+      });
+
+      // Vérifier que l'engine a été appelé avec le bon historique
+      expect(mockGenerate).toHaveBeenCalledWith(
+        'Test message utilisateur',
+        expect.arrayContaining([
+          expect.objectContaining({
+            role: 'user',
+            content: 'Test message utilisateur',
+          }),
+        ])
+      );
+
+      // Vérifier que les messages sont persistés
+      expect(result.current.messages).toHaveLength(2);
+      expect(result.current.messages[0]).toMatchObject({
+        role: 'user',
+        content: 'Test message utilisateur',
+      });
+      expect(result.current.messages[1]).toMatchObject({
+        role: 'assistant',
+        content: 'Réponse test',
+      });
     });
-
-    // Vérifier que l'engine a été appelé avec le bon historique
-    expect(mockGenerate).toHaveBeenCalledWith(
-      'Test message utilisateur',
-      expect.arrayContaining([
-        expect.objectContaining({
-          role: 'user',
-          content: 'Test message utilisateur'
-        })
-      ])
-    );
-
-    // Vérifier que les messages sont persistés
-    expect(result.current.messages).toHaveLength(2);
-    expect(result.current.messages[0]).toMatchObject({
-      role: 'user',
-      content: 'Test message utilisateur'
-    });
-    expect(result.current.messages[1]).toMatchObject({
-      role: 'assistant',
-      content: 'Réponse test'
-    });
-  });
 
     test('messages rapides successifs ne causent pas de race condition', async () => {
       const mockResponse1 = {
         role: 'assistant' as const,
         content: 'Réponse 1',
         timestamp: Date.now(),
-        provider: 'omnis'
+        provider: 'omnis',
       };
 
       const mockResponse2 = {
         role: 'assistant' as const,
         content: 'Réponse 2',
         timestamp: Date.now() + 1000,
-        provider: 'omnis'
+        provider: 'omnis',
       };
 
       mockGenerate
@@ -132,7 +133,9 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
 
       // Vérifier l'ordre correct - les messages utilisateur doivent être dans l'ordre
       const userMessages = result.current.messages.filter(m => m.role === 'user');
-      const assistantMessages = result.current.messages.filter(m => m.role === 'assistant');
+      const assistantMessages = result.current.messages.filter(
+        m => m.role === 'assistant'
+      );
 
       expect(userMessages.map(m => m.content)).toEqual(['Message 1', 'Message 2']);
       expect(assistantMessages.map(m => m.content)).toEqual(['Réponse 1', 'Réponse 2']);
@@ -177,8 +180,8 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       });
 
       // Vérifier qu'il n'y a pas de multiples timeouts configurés
-      const timeoutCalls = timeoutSpy.mock.calls.filter(call =>
-        call[1] === 15000 || call[1] === 20000 || call[1] === 8000
+      const timeoutCalls = timeoutSpy.mock.calls.filter(
+        call => call[1] === 15000 || call[1] === 20000 || call[1] === 8000
       );
 
       expect(timeoutCalls.length).toBeLessThanOrEqual(1);
@@ -191,19 +194,28 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
     test('messages avec roles valides ne sont pas filtrés', () => {
       const testMessages = [
         { role: 'user' as const, content: 'Test user', timestamp: Date.now() },
-        { role: 'assistant' as const, content: 'Test assistant', timestamp: Date.now() + 1 },
+        {
+          role: 'assistant' as const,
+          content: 'Test assistant',
+          timestamp: Date.now() + 1,
+        },
         { role: 'system' as const, content: 'Test system', timestamp: Date.now() + 2 },
-        { role: undefined as unknown, content: 'Test undefined', timestamp: Date.now() + 3 },
-        { role: 'assistant' as const, content: '', timestamp: Date.now() + 4 }
+        {
+          role: undefined as unknown,
+          content: 'Test undefined',
+          timestamp: Date.now() + 3,
+        },
+        { role: 'assistant' as const, content: '', timestamp: Date.now() + 4 },
       ];
 
       // Simuler le filtrage de ChatWindow
-      const filteredMessages = testMessages.filter((message) =>
-        message &&
-        message.role &&
-        ['user', 'assistant'].includes(message.role) &&
-        message.content &&
-        message.content.trim().length > 0
+      const filteredMessages = testMessages.filter(
+        message =>
+          message &&
+          message.role &&
+          ['user', 'assistant'].includes(message.role) &&
+          message.content &&
+          message.content.trim().length > 0
       );
 
       expect(filteredMessages).toHaveLength(2);
@@ -224,7 +236,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       expect(result.current.messages).toHaveLength(2);
       expect(result.current.messages[1]).toMatchObject({
         role: 'assistant',
-        content: expect.stringContaining('TITANE∞')
+        content: expect.stringContaining('TITANE∞'),
       });
     });
   });
@@ -237,7 +249,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         role: 'assistant' as const,
         content: 'Test sync',
         timestamp: Date.now(),
-        provider: 'omnis'
+        provider: 'omnis',
       };
 
       mockGenerate.mockResolvedValue(mockResponse);
@@ -258,9 +270,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       const { result } = renderHook(() => useChat());
 
       const testData = JSON.stringify({
-        messages: [
-          { role: 'user', content: 'Imported message', timestamp: Date.now() }
-        ]
+        messages: [{ role: 'user', content: 'Imported message', timestamp: Date.now() }],
       });
 
       await act(async () => {
@@ -280,7 +290,7 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
         content: 'Réponse complète test',
         timestamp: Date.now(),
         provider: 'omnis',
-        metadata: { status: 'success' }
+        metadata: { status: 'success' },
       };
 
       mockGenerate.mockResolvedValueOnce(mockResponse);
@@ -296,17 +306,20 @@ describe('Chat IA Diagnostic Tests - Bug Resolution Validation', () => {
       expect(result.current.messages).toHaveLength(2);
       expect(result.current.messages[0]).toMatchObject({
         role: 'user',
-        content: 'Message test complet'
+        content: 'Message test complet',
       });
       expect(result.current.messages[1]).toMatchObject({
         role: 'assistant',
-        content: 'Réponse complète test'
+        content: 'Réponse complète test',
       });
 
       // Phase 3: Vérification que les messages ne disparaissent pas
-      await waitFor(() => {
-        expect(result.current.messages).toHaveLength(2);
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          expect(result.current.messages).toHaveLength(2);
+        },
+        { timeout: 1000 }
+      );
 
       // Phase 4: Test export/import
       const exportedData = result.current.exportChat();

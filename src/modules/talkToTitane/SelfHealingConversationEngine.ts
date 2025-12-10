@@ -29,12 +29,12 @@ import type { ConversationEntry } from './AutoSaveConversationEngine';
 // ═══════════════════════════════════════════════════════════════════════════
 
 export type CorruptionType =
-  | 'json-malformed'      // JSON invalide
-  | 'missing-fields'      // Champs manquants
-  | 'chronological-gap'   // Trou temporel
-  | 'duplicate'           // Entrée dupliquée
-  | 'noise'               // Parasite
-  | 'orphan';             // Fragment orphelin
+  | 'json-malformed' // JSON invalide
+  | 'missing-fields' // Champs manquants
+  | 'chronological-gap' // Trou temporel
+  | 'duplicate' // Entrée dupliquée
+  | 'noise' // Parasite
+  | 'orphan'; // Fragment orphelin
 
 export interface CorruptionIssue {
   type: CorruptionType;
@@ -164,7 +164,9 @@ class SelfHealingConversationEngine {
         duration: Date.now() - startTime,
       };
 
-      console.log(`[SelfHealing] Scan complete: ${issues.length} issues found in ${scannedFiles} files`);
+      console.log(
+        `[SelfHealing] Scan complete: ${issues.length} issues found in ${scannedFiles} files`
+      );
 
       // Auto-heal if enabled
       if (this.config.autoHealOnDetection && issues.length > 0) {
@@ -253,7 +255,10 @@ class SelfHealingConversationEngine {
   // DETECTION UTILITIES
   // ───────────────────────────────────────────────────────────────────────────
 
-  private detectChronologicalGaps(entries: ConversationEntry[], location: string): CorruptionIssue[] {
+  private detectChronologicalGaps(
+    entries: ConversationEntry[],
+    location: string
+  ): CorruptionIssue[] {
     const issues: CorruptionIssue[] = [];
     const sorted = [...entries].sort((a, b) => a.timestamp - b.timestamp);
 
@@ -273,7 +278,10 @@ class SelfHealingConversationEngine {
     return issues;
   }
 
-  private detectDuplicates(entries: ConversationEntry[], location: string): CorruptionIssue[] {
+  private detectDuplicates(
+    entries: ConversationEntry[],
+    location: string
+  ): CorruptionIssue[] {
     const issues: CorruptionIssue[] = [];
     const seen = new Map<string, ConversationEntry>();
 
@@ -310,7 +318,7 @@ class SelfHealingConversationEngine {
     try {
       console.log('[SelfHealing] Starting healing process...');
 
-      const targetReport = report || await this.scan();
+      const targetReport = report || (await this.scan());
       let repaired = 0;
       let failed = 0;
 
@@ -340,7 +348,9 @@ class SelfHealingConversationEngine {
 
       // Heal chronological gaps (reconstruction)
       if (issuesByType['chronological-gap']) {
-        const result = await this.healChronologicalGaps(issuesByType['chronological-gap']);
+        const result = await this.healChronologicalGaps(
+          issuesByType['chronological-gap']
+        );
         repaired += result.repaired;
         failed += result.failed;
       }
@@ -353,7 +363,9 @@ class SelfHealingConversationEngine {
         failed,
       };
 
-      console.log(`[SelfHealing] Healing complete: ${repaired} repaired, ${failed} failed`);
+      console.log(
+        `[SelfHealing] Healing complete: ${repaired} repaired, ${failed} failed`
+      );
 
       return healingReport;
     } finally {
@@ -361,7 +373,9 @@ class SelfHealingConversationEngine {
     }
   }
 
-  private groupIssuesByType(issues: CorruptionIssue[]): Record<CorruptionType, CorruptionIssue[]> {
+  private groupIssuesByType(
+    issues: CorruptionIssue[]
+  ): Record<CorruptionType, CorruptionIssue[]> {
     const grouped: Record<string, CorruptionIssue[]> = {};
     for (const issue of issues) {
       if (!grouped[issue.type]) {
@@ -376,13 +390,17 @@ class SelfHealingConversationEngine {
   // HEALING STRATEGIES
   // ───────────────────────────────────────────────────────────────────────────
 
-  private async healJsonMalformed(issues: CorruptionIssue[]): Promise<{ repaired: number; failed: number }> {
+  private async healJsonMalformed(
+    issues: CorruptionIssue[]
+  ): Promise<{ repaired: number; failed: number }> {
     console.log(`[SelfHealing] Healing ${issues.length} JSON malformed entries...`);
     // Strategy: Remove corrupted lines, log to errors
     return { repaired: 0, failed: issues.length };
   }
 
-  private async healMissingFields(issues: CorruptionIssue[]): Promise<{ repaired: number; failed: number }> {
+  private async healMissingFields(
+    issues: CorruptionIssue[]
+  ): Promise<{ repaired: number; failed: number }> {
     console.log(`[SelfHealing] Healing ${issues.length} missing fields entries...`);
     let repaired = 0;
 
@@ -400,13 +418,17 @@ class SelfHealingConversationEngine {
     return { repaired, failed: issues.length - repaired };
   }
 
-  private async healDuplicates(issues: CorruptionIssue[]): Promise<{ repaired: number; failed: number }> {
+  private async healDuplicates(
+    issues: CorruptionIssue[]
+  ): Promise<{ repaired: number; failed: number }> {
     console.log(`[SelfHealing] Healing ${issues.length} duplicate entries...`);
     // Strategy: Remove duplicates, keep first occurrence
     return { repaired: issues.length, failed: 0 };
   }
 
-  private async healChronologicalGaps(issues: CorruptionIssue[]): Promise<{ repaired: number; failed: number }> {
+  private async healChronologicalGaps(
+    issues: CorruptionIssue[]
+  ): Promise<{ repaired: number; failed: number }> {
     console.log(`[SelfHealing] Healing ${issues.length} chronological gaps...`);
     // Strategy: Try to fill gaps from other sources (logs/memory/dataset)
     return { repaired: 0, failed: issues.length };

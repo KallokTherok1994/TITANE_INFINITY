@@ -11,12 +11,15 @@
  */
 
 import { useState } from 'react';
-import { OmnisErrorBoundary, withOmnisErrorBoundary } from '../components/common/OmnisErrorBoundary';
+import {
+  OmnisErrorBoundary,
+  withOmnisErrorBoundary,
+} from '../components/common/OmnisErrorBoundary';
 import {
   OmnisUIProvider,
   useOmnisUI,
   useOmnisComponentHealth,
-  withOmnisHealthTracking
+  withOmnisHealthTracking,
 } from '../components/common/OmnisUIStateManager';
 
 /**
@@ -96,7 +99,7 @@ export function testOmnisUIStateManager() {
       reportComponentRecovery,
       getOverallHealth,
       backupCurrentState,
-      restoreFromBackup
+      restoreFromBackup,
     } = useOmnisUI();
 
     const triggerError = () => {
@@ -259,7 +262,7 @@ export function testHOCProtection() {
       autoRecovery: true,
       stateBackup: true,
       maxRetries: 5,
-      retryDelayMs: 1000
+      retryDelayMs: 1000,
     }
   );
 
@@ -291,11 +294,21 @@ export function testUIResilience() {
 
     const triggerRandomErrors = () => {
       const errorTypes = [
-        () => { throw new Error('Network timeout'); },
-        () => { throw new Error('State corruption'); },
-        () => { throw new Error('Memory leak'); },
-        () => { throw new Error('Invalid props'); },
-        () => { throw new Error('Async operation failed'); }
+        () => {
+          throw new Error('Network timeout');
+        },
+        () => {
+          throw new Error('State corruption');
+        },
+        () => {
+          throw new Error('Memory leak');
+        },
+        () => {
+          throw new Error('Invalid props');
+        },
+        () => {
+          throw new Error('Async operation failed');
+        },
       ];
 
       // Trigger multiple random errors
@@ -316,17 +329,16 @@ export function testUIResilience() {
         <h3>UI Resilience Stress Test</h3>
         <p>System Health: {getOverallHealth()}%</p>
         <p>Triggered Errors: {errorCount}</p>
-        <button onClick={triggerRandomErrors}>
-          Trigger Multiple Errors
-        </button>
+        <button onClick={triggerRandomErrors}>Trigger Multiple Errors</button>
       </div>
     );
   };
 
-  const ProtectedStressComponent = withOmnisErrorBoundary(
-    StressTestComponent,
-    { level: 'important', autoRecovery: true, maxRetries: 10 }
-  );
+  const ProtectedStressComponent = withOmnisErrorBoundary(StressTestComponent, {
+    level: 'important',
+    autoRecovery: true,
+    maxRetries: 10,
+  });
 
   const TestWrapper = () => (
     <OmnisUIProvider>
@@ -347,7 +359,9 @@ export function testUIResilience() {
 export async function runPhase5OmnisTests() {
   console.log('═'.repeat(80));
   console.log('🛡️ TITANE∞ v19.2Ω — PHASE 5 OMNIS VALIDATION TESTS');
-  console.log('   UI Anti-Crash • Error Boundaries • State Preservation • Fault-Tolerance');
+  console.log(
+    '   UI Anti-Crash • Error Boundaries • State Preservation • Fault-Tolerance'
+  );
   console.log('═'.repeat(80));
 
   const startTime = Date.now();
@@ -381,8 +395,8 @@ export async function runPhase5OmnisTests() {
       StateTest,
       MultiLevelTest,
       HOCTest,
-      ResilienceTest
-    }
+      ResilienceTest,
+    },
   };
 }
 
@@ -393,5 +407,5 @@ export {
   OmnisUIProvider,
   useOmnisUI,
   withOmnisErrorBoundary,
-  withOmnisHealthTracking
+  withOmnisHealthTracking,
 };

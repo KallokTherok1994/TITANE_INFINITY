@@ -53,13 +53,28 @@ impl QuantumState {
     /// Initialise la superposition d'états
     fn initialize_superposition(&mut self) {
         let base_actions = vec![
-            PredictedAction::Navigate { path: String::new() },
-            PredictedAction::Search { query_hint: String::new() },
-            PredictedAction::Interact { element_type: String::new(), action: String::new() },
-            PredictedAction::RequestHelp { topic: String::new() },
-            PredictedAction::Configure { setting: String::new() },
-            PredictedAction::Create { content_type: String::new() },
-            PredictedAction::Export { format: String::new() },
+            PredictedAction::Navigate {
+                path: String::new(),
+            },
+            PredictedAction::Search {
+                query_hint: String::new(),
+            },
+            PredictedAction::Interact {
+                element_type: String::new(),
+                action: String::new(),
+            },
+            PredictedAction::RequestHelp {
+                topic: String::new(),
+            },
+            PredictedAction::Configure {
+                setting: String::new(),
+            },
+            PredictedAction::Create {
+                content_type: String::new(),
+            },
+            PredictedAction::Export {
+                format: String::new(),
+            },
             PredictedAction::Abandon,
         ];
 
@@ -135,16 +150,14 @@ impl QuantumState {
         let uniform = (1.0 / self.superposition.len() as f64).sqrt();
 
         for amplitude in &mut self.superposition {
-            amplitude.amplitude = amplitude.amplitude * self.coherence + uniform * (1.0 - self.coherence);
+            amplitude.amplitude =
+                amplitude.amplitude * self.coherence + uniform * (1.0 - self.coherence);
         }
     }
 
     /// Normalise l'état (conservation de probabilité)
     fn normalize(&mut self) {
-        let total: f64 = self.superposition
-            .iter()
-            .map(|a| a.probability())
-            .sum();
+        let total: f64 = self.superposition.iter().map(|a| a.probability()).sum();
 
         if total > 0.0 {
             let factor = 1.0 / total.sqrt();
@@ -168,7 +181,8 @@ impl QuantumState {
 
     /// Collapse l'état quantique (mesure) et retourne les prédictions
     pub fn collapse_predictions(&self) -> Vec<(PredictedAction, f64)> {
-        let mut predictions: Vec<(PredictedAction, f64)> = self.superposition
+        let mut predictions: Vec<(PredictedAction, f64)> = self
+            .superposition
             .iter()
             .map(|a| (a.action.clone(), a.probability()))
             .collect();
@@ -229,7 +243,11 @@ impl QuantumState {
     /// Entangle deux états (corrélation quantique)
     pub fn entangle(&mut self, other: &QuantumState) {
         // Simplifié: moyenne des amplitudes
-        for (self_amp, other_amp) in self.superposition.iter_mut().zip(other.superposition.iter()) {
+        for (self_amp, other_amp) in self
+            .superposition
+            .iter_mut()
+            .zip(other.superposition.iter())
+        {
             self_amp.amplitude = (self_amp.amplitude + other_amp.amplitude) / 2.0_f64.sqrt();
             self_amp.phase = (self_amp.phase + other_amp.phase) / 2.0;
         }

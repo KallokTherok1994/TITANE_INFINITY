@@ -177,12 +177,12 @@ export class CrashGuardEngine {
    */
   private installGlobalHandlers(): void {
     // Erreurs JavaScript non catchées
-    window.addEventListener('error', (event) => {
+    window.addEventListener('error', event => {
       this.handleUncaughtError(event.error);
     });
 
     // Promesses rejetées non gérées
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener('unhandledrejection', event => {
       this.handleUnhandledRejection(event.reason);
     });
 

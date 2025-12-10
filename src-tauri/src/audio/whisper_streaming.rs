@@ -24,7 +24,6 @@ macro_rules! lock_or_recover {
     };
 }
 
-
 /// Whisper streaming configuration
 #[derive(Debug, Clone)]
 pub struct WhisperStreamConfig {
@@ -49,8 +48,8 @@ impl Default for WhisperStreamConfig {
         Self {
             model: "base".to_string(),
             language: "fr".to_string(),
-            min_chunk_duration_ms: 500,  // 500ms minimum
-            max_chunk_duration_ms: 8000, // 8s maximum
+            min_chunk_duration_ms: 500,      // 500ms minimum
+            max_chunk_duration_ms: 8000,     // 8s maximum
             partial_update_interval_ms: 300, // Update every 300ms
             vad_threshold: 0.5,
             silence_duration_ms: 1500, // 1.5s silence = final
@@ -72,8 +71,8 @@ pub struct AudioChunk {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum TranscriptionType {
-    Partial,  // In-progress transcription
-    Final,    // Confirmed segment
+    Partial, // In-progress transcription
+    Final,   // Confirmed segment
 }
 
 /// Transcription event sent to frontend
@@ -123,11 +122,7 @@ impl WhisperStreamingEngine {
     }
 
     /// Start streaming worker
-    pub fn start_streaming(
-        &self,
-        app_handle: AppHandle,
-        mut audio_rx: mpsc::Receiver<AudioChunk>,
-    ) {
+    pub fn start_streaming(&self, app_handle: AppHandle, mut audio_rx: mpsc::Receiver<AudioChunk>) {
         let config = self.config.clone();
         let state = Arc::clone(&self.state);
         let buffer = Arc::clone(&self.buffer);
@@ -182,7 +177,8 @@ impl WhisperStreamingEngine {
                 // Check for partial update trigger
                 let should_update_partial = {
                     let last_update = lock_or_recover!(last_partial_update);
-                    last_update.elapsed() >= Duration::from_millis(config.partial_update_interval_ms)
+                    last_update.elapsed()
+                        >= Duration::from_millis(config.partial_update_interval_ms)
                 };
 
                 if should_update_partial {
@@ -199,7 +195,9 @@ impl WhisperStreamingEngine {
                             &config,
                             &shell_guard,
                             false, // Not final
-                        ).await {
+                        )
+                        .await
+                        {
                             if !partial_text.is_empty() {
                                 let event = TranscriptionEvent {
                                     text: partial_text,
@@ -244,7 +242,9 @@ impl WhisperStreamingEngine {
                             &config,
                             &shell_guard,
                             true, // Final
-                        ).await {
+                        )
+                        .await
+                        {
                             if !final_text.is_empty() {
                                 let event = TranscriptionEvent {
                                     text: final_text,
@@ -299,7 +299,9 @@ impl WhisperStreamingEngine {
                         &config,
                         &shell_guard,
                         true,
-                    ).await {
+                    )
+                    .await
+                    {
                         if !final_text.is_empty() {
                             let event = TranscriptionEvent {
                                 text: final_text,
@@ -348,22 +350,19 @@ impl WhisperStreamingEngine {
             .duration_since(std::time::UNIX_EPOCH)
             .map(|d| d.as_millis())
             .unwrap_or(0);
-            
-        let temp_path = std::env::temp_dir().join(format!(
-            "titane_whisper_stream_{}.wav",
-            timestamp_ms
-        ));
+
+        let temp_path =
+            std::env::temp_dir().join(format!("titane_whisper_stream_{}.wav", timestamp_ms));
 
         std::fs::write(&temp_path, wav_data)
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
         // Call Whisper via ShellGuard
-        let result = tokio::task::spawn_blocking(move || {
-            shell_guard.execute_asr_whisper(&temp_path)
-        })
-        .await
-        .map_err(|e| AudioError::ProcessingError(e.to_string()))?
-        .map_err(|e| AudioError::ProcessingError(e))?;
+        let result =
+            tokio::task::spawn_blocking(move || shell_guard.execute_asr_whisper(&temp_path))
+                .await
+                .map_err(|e| AudioError::ProcessingError(e.to_string()))?
+                .map_err(|e| AudioError::ProcessingError(e))?;
 
         // Cleanup temp file
         let _ = std::fs::remove_file(&temp_path);
@@ -391,7 +390,7 @@ impl WhisperStreamingEngine {
         // fmt chunk
         wav_data.extend_from_slice(b"fmt ");
         wav_data.extend_from_slice(&16u32.to_le_bytes()); // Subchunk1Size
-        wav_data.extend_from_slice(&1u16.to_le_bytes());  // AudioFormat (PCM)
+        wav_data.extend_from_slice(&1u16.to_le_bytes()); // AudioFormat (PCM)
         wav_data.extend_from_slice(&num_channels.to_le_bytes());
         wav_data.extend_from_slice(&sample_rate.to_le_bytes());
         wav_data.extend_from_slice(&byte_rate.to_le_bytes());
@@ -413,15 +412,15 @@ impl WhisperStreamingEngine {
 
     /// Get current state
     pub fn get_state(&self) -> StreamState {
-        *self.lock_or_recover!(state)
+        *lock_or_recover!(self.state)
     }
 
     /// Reset streaming engine
     pub fn reset(&self) {
-        *self.lock_or_recover!(state) = StreamState::Idle;
-        self.lock_or_recover!(buffer).clear();
-        self.lock_or_recover!(current_segment).clear();
-        *self.lock_or_recover!(speech_start_time) = None;
-        *self.lock_or_recover!(last_speech_time) = None;
+        *lock_or_recover!(self.state) = StreamState::Idle;
+        lock_or_recover!(self.buffer).clear();
+        lock_or_recover!(self.current_segment).clear();
+        *lock_or_recover!(self.speech_start_time) = None;
+        *lock_or_recover!(self.last_speech_time) = None;
     }
 }

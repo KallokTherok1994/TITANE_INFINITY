@@ -51,13 +51,16 @@ class ChatEngineOmnis {
     let orchestratorResponse = null;
     try {
       if (deterministicMode) {
-        orchestratorResponse = this.createDeterministicPayload(context.message, context.history);
+        orchestratorResponse = this.createDeterministicPayload(
+          context.message,
+          context.history
+        );
       } else {
         orchestratorResponse = await Promise.race([
           aiOrchestrator.generate(context.message, context.history),
           new Promise<never>((_, reject) =>
             setTimeout(() => reject(new Error('OMNIS_TIMEOUT')), timeout)
-          )
+          ),
         ]);
       }
     } catch (error) {
@@ -90,11 +93,14 @@ class ChatEngineOmnis {
   /**
    * OMNIS Input Validation - Never throws, always returns normalized object
    */
-  private validateInput(message: string, history: AIMessage[]): {
+  private validateInput(
+    message: string,
+    history: AIMessage[]
+  ): {
     isValid: boolean;
     message: string;
     history: AIMessage[];
-    metadata: object
+    metadata: object;
   } {
     const cleanMessage = this.sanitizeMessage(message);
     const cleanHistory = this.sanitizeHistory(history);
@@ -104,7 +110,7 @@ class ChatEngineOmnis {
         isValid: false,
         message: '',
         history: [],
-        metadata: { reason: 'empty_message' }
+        metadata: { reason: 'empty_message' },
       };
     }
 
@@ -115,8 +121,8 @@ class ChatEngineOmnis {
       metadata: {
         originalLength: (message || '').length,
         historyCount: cleanHistory.length,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     };
   }
 
@@ -148,7 +154,7 @@ class ChatEngineOmnis {
         role: msg.role,
         content: this.sanitizeMessage(msg.content),
         timestamp: msg.timestamp || Date.now(),
-        provider: msg.provider || 'unknown'
+        provider: msg.provider || 'unknown',
       }));
   }
 
@@ -156,20 +162,25 @@ class ChatEngineOmnis {
    * OMNIS Message Validation - Pure predicate
    */
   private isValidMessage(msg: any): boolean {
-    return msg &&
-           typeof msg === 'object' &&
-           (msg.role === 'user' || msg.role === 'assistant' || msg.role === 'system') &&
-           typeof msg.content === 'string' &&
-           msg.content.trim().length > 0;
+    return (
+      msg &&
+      typeof msg === 'object' &&
+      (msg.role === 'user' || msg.role === 'assistant' || msg.role === 'system') &&
+      typeof msg.content === 'string' &&
+      msg.content.trim().length > 0
+    );
   }
 
   /**
    * OMNIS Context Preparation - Pure function
    */
-  private prepareContext(message: string, history: AIMessage[]): {
+  private prepareContext(
+    message: string,
+    history: AIMessage[]
+  ): {
     message: string;
     history: AIMessage[];
-    metadata: object
+    metadata: object;
   } {
     const enhancedMessage = this.enhanceMessage(message);
 
@@ -179,8 +190,8 @@ class ChatEngineOmnis {
       metadata: {
         contextSize: history.length,
         messageEnhanced: enhancedMessage !== message,
-        timestamp: Date.now()
-      }
+        timestamp: Date.now(),
+      },
     };
   }
 
@@ -190,10 +201,11 @@ class ChatEngineOmnis {
   private enhanceMessage(message: string): string {
     // Check if message needs TITANE∞ context injection
     const lowerMessage = message.toLowerCase();
-    const needsContext = lowerMessage.includes('who are you') ||
-                        lowerMessage.includes('what are you') ||
-                        lowerMessage.includes('ton nom') ||
-                        lowerMessage.includes('tu es qui');
+    const needsContext =
+      lowerMessage.includes('who are you') ||
+      lowerMessage.includes('what are you') ||
+      lowerMessage.includes('ton nom') ||
+      lowerMessage.includes('tu es qui');
 
     if (needsContext) {
       return `${message}\n\n[Context: Respond as TITANE∞, the cognitive evolution system]`;
@@ -218,8 +230,8 @@ class ChatEngineOmnis {
         metadata: {
           status: 'success',
           duration,
-          originalProvider: response.provider
-        }
+          originalProvider: response.provider,
+        },
       };
     }
 
@@ -232,10 +244,14 @@ class ChatEngineOmnis {
    */
   private createOmnisFallbackResponse(reason: string, duration: number): AIMessage {
     const fallbackMessages: Record<string, string> = {
-      'input-validation-failed': 'Votre message a été reçu. Pouvez-vous le reformuler pour que je puisse mieux vous aider ?',
-      'orchestrator-error': 'Une anomalie interne a été réparée automatiquement. Le moteur cognitif TITANE∞ est stabilisé.',
-      'timeout': 'Le traitement prend plus de temps que prévu. Le système TITANE∞ reste opérationnel.',
-      'unknown': 'TITANE∞ est opérationnel. Votre requête a été traitée par le système d\'auto-guérison.'
+      'input-validation-failed':
+        'Votre message a été reçu. Pouvez-vous le reformuler pour que je puisse mieux vous aider ?',
+      'orchestrator-error':
+        'Une anomalie interne a été réparée automatiquement. Le moteur cognitif TITANE∞ est stabilisé.',
+      timeout:
+        'Le traitement prend plus de temps que prévu. Le système TITANE∞ reste opérationnel.',
+      unknown:
+        "TITANE∞ est opérationnel. Votre requête a été traitée par le système d'auto-guérison.",
     };
 
     return {
@@ -248,8 +264,8 @@ class ChatEngineOmnis {
         reason,
         duration,
         selfHealed: true,
-        generatedBy: 'ChatEngineOmnis'
-      }
+        generatedBy: 'ChatEngineOmnis',
+      },
     };
   }
 
@@ -264,8 +280,8 @@ class ChatEngineOmnis {
         contextSize: context.history?.length || 0,
         messageLength: response.content.length,
         generationTime: Date.now(),
-        engine: 'omnis-v1.0'
-      }
+        engine: 'omnis-v1.0',
+      },
     };
   }
 
@@ -304,16 +320,17 @@ class ChatEngineOmnis {
     successRate: number;
     engineVersion: string;
   } {
-    const successRate = this.totalRequests > 0
-      ? Math.round((this.successCount / this.totalRequests) * 100)
-      : 100;
+    const successRate =
+      this.totalRequests > 0
+        ? Math.round((this.successCount / this.totalRequests) * 100)
+        : 100;
 
     return {
       totalRequests: this.totalRequests,
       successCount: this.successCount,
       errorCount: this.errorCount,
       successRate,
-      engineVersion: 'omnis-v1.0'
+      engineVersion: 'omnis-v1.0',
     };
   }
 
@@ -327,9 +344,11 @@ class ChatEngineOmnis {
   }
 
   private createDeterministicPayload(message: string, history: AIMessage[]): AIResponse {
-    const truncatedMessage = message.length > 240 ? `${message.slice(0, 237)}...` : message;
+    const truncatedMessage =
+      message.length > 240 ? `${message.slice(0, 237)}...` : message;
     const historySummary = history.length
-      ? history.map(entry => `${entry.role}: ${entry.content}`)
+      ? history
+          .map(entry => `${entry.role}: ${entry.content}`)
           .join(' | ')
           .slice(0, 200)
       : 'Aucun contexte fourni';
@@ -338,19 +357,23 @@ class ChatEngineOmnis {
       content: [
         'TITANE∞ v19.2Ω | Mode diagnostique déterministe.',
         `Message: ${truncatedMessage || '∅'}`,
-        `Contexte: ${history.length} entrée(s)` + (history.length ? ` → ${historySummary}` : ''),
-        'Réponse générée hors-ligne pour garantir des tests rapides et reproductibles.'
+        `Contexte: ${history.length} entrée(s)` +
+          (history.length ? ` → ${historySummary}` : ''),
+        'Réponse générée hors-ligne pour garantir des tests rapides et reproductibles.',
       ].join('\n'),
       provider: 'titane-local',
       timestamp: Date.now(),
       metadata: {
         deterministic: true,
-        historyCount: history.length
-      }
+        historyCount: history.length,
+      },
     } as AIResponse;
   }
 
-  private markDeterministicResponse(response: AIMessage, historyCount: number): AIMessage {
+  private markDeterministicResponse(
+    response: AIMessage,
+    historyCount: number
+  ): AIMessage {
     return {
       ...response,
       provider: response.provider || 'titane-local',
@@ -358,8 +381,8 @@ class ChatEngineOmnis {
         ...response.metadata,
         deterministic: true,
         historyCount,
-        engineMode: 'offline-mock'
-      }
+        engineMode: 'offline-mock',
+      },
     };
   }
 }

@@ -261,7 +261,9 @@ export class AppearanceRenderer {
   /**
    * Load accessory assets (glasses, jewelry, bag, other)
    */
-  private async loadAccessoryAssets(accessories: AppearanceAssets['accessories']): Promise<void> {
+  private async loadAccessoryAssets(
+    accessories: AppearanceAssets['accessories']
+  ): Promise<void> {
     const promises: Promise<LoadedAsset>[] = [];
 
     if (accessories.glasses) {
@@ -321,7 +323,10 @@ export class AppearanceRenderer {
   /**
    * Perform actual asset loading (integration point with Three.js loader)
    */
-  private async performAssetLoad(assetDef: AssetDefinition, cacheKey: string): Promise<LoadedAsset> {
+  private async performAssetLoad(
+    assetDef: AssetDefinition,
+    cacheKey: string
+  ): Promise<LoadedAsset> {
     // TODO: Integration with Three.js GLTFLoader, TextureLoader, MaterialLoader
     // For now, return mock asset
     console.log(`[AppearanceRenderer] Loading asset: ${cacheKey}`);
@@ -352,7 +357,7 @@ export class AppearanceRenderer {
     console.log('  - Outfit:', {
       top: assets.outfit.top.mesh,
       bottom: assets.outfit.bottom.mesh,
-      shoes: assets.outfit.shoes.mesh
+      shoes: assets.outfit.shoes.mesh,
     });
     console.log('  - Hair:', assets.hair.mesh);
     console.log('  - Accessories:', {
@@ -421,7 +426,9 @@ export class AppearanceRenderer {
 
 let rendererInstance: AppearanceRenderer | null = null;
 
-export function getAppearanceRenderer(config?: Partial<AppearanceRendererConfig>): AppearanceRenderer {
+export function getAppearanceRenderer(
+  config?: Partial<AppearanceRendererConfig>
+): AppearanceRenderer {
   if (!rendererInstance) {
     rendererInstance = new AppearanceRenderer(config);
   }

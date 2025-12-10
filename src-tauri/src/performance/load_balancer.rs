@@ -132,4 +132,3 @@ mod tests {
         assert!(!lb.should_throttle().await); // Mais throttling désactivé
     }
 }
-

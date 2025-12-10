@@ -1,14 +1,14 @@
 /**
  * TITANE∞ Cognitive Framework v∞.42
  * E2E Tests for Cognitive Engines Integration
- * 
+ *
  * Tests the complete cognitive framework including:
  * - Semantic Memory Engine
  * - Goal & Consistency Engine
  * - Conversation Evaluation Engine
  * - Cognitive Observability Engine
  * - Cognitive OMEGA Integration
- * 
+ *
  * @version v∞.42
  * @date 2025-12-05
  */
@@ -36,7 +36,6 @@ function cleanupTestData() {
 }
 
 describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
-  
   beforeAll(() => {
     console.log('\n🧪 Starting Cognitive Framework E2E Tests...\n');
     cleanupTestData();
@@ -57,7 +56,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       console.log('\n📝 Testing Multi-turn Goal Tracking...');
 
       // Turn 1: User states a goal
-      const turn1Message = "Je veux développer une app de todo list en React";
+      const turn1Message = 'Je veux développer une app de todo list en React';
       const turn1Context = await cognitiveOmega.enrichContext(
         turn1Message,
         TEST_CONVERSATION_ID,
@@ -74,7 +73,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       );
 
       // Turn 2: User asks follow-up question
-      const turn2Message = "Comment je commence ?";
+      const turn2Message = 'Comment je commence ?';
       const turn2Context = await cognitiveOmega.enrichContext(
         turn2Message,
         TEST_CONVERSATION_ID,
@@ -89,13 +88,13 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
         turn2Message,
-        "Pour ton app todo list React, commençons par créer les composants de base...",
+        'Pour ton app todo list React, commençons par créer les composants de base...',
         TEST_MODE,
         { modelUsed: 'test-model', tokenCount: 75 }
       );
 
       // Turn 3: User asks about database
-      const turn3Message = "Quelle base de données utiliser ?";
+      const turn3Message = 'Quelle base de données utiliser ?';
       const turn3Context = await cognitiveOmega.enrichContext(
         turn3Message,
         TEST_CONVERSATION_ID,
@@ -109,14 +108,14 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
         turn3Message,
-        "Pour ta todo list React, je recommande LocalStorage pour commencer, puis Firebase ou Supabase pour une version cloud.",
+        'Pour ta todo list React, je recommande LocalStorage pour commencer, puis Firebase ou Supabase pour une version cloud.',
         TEST_MODE,
         { modelUsed: 'test-model', tokenCount: 80 }
       );
 
       // Verify goal tracking worked
       const turn4Context = await cognitiveOmega.enrichContext(
-        "Merci, je vais commencer",
+        'Merci, je vais commencer',
         TEST_CONVERSATION_ID,
         TEST_MODE
       );
@@ -135,7 +134,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       console.log('\n🔍 Testing Contradiction Detection & Auto-Correction...');
 
       // Turn 1: Establish a fact
-      const turn1Message = "Mon nom est Alice";
+      const turn1Message = 'Mon nom est Alice';
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
         turn1Message,
@@ -165,7 +164,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
         wrongResponse,
         {
           userMessage: turn2Message,
-          mode: TEST_MODE
+          mode: TEST_MODE,
         }
       );
 
@@ -188,8 +187,12 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       console.log('✅ Contradiction detection & auto-correction: PASSED');
       console.log(`   - Violations detected: ${consistencyResult.violations.length}`);
-      console.log(`   - Consistency score: ${consistencyResult.consistencyScore.toFixed(2)}`);
-      console.log(`   - Auto-correction applied: ${consistencyResult.shouldCorrect ? 'YES' : 'NO'}`);
+      console.log(
+        `   - Consistency score: ${consistencyResult.consistencyScore.toFixed(2)}`
+      );
+      console.log(
+        `   - Auto-correction applied: ${consistencyResult.shouldCorrect ? 'YES' : 'NO'}`
+      );
     });
   });
 
@@ -198,11 +201,11 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       console.log('\n🔒 Testing Multi-Conversation Isolation...');
 
       // Conversation A: Set a preference
-      const convAMessage = "Mon langage préféré est Python";
+      const convAMessage = 'Mon langage préféré est Python';
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
         convAMessage,
-        "Super ! Python est un excellent choix.",
+        'Super ! Python est un excellent choix.',
         TEST_MODE,
         { modelUsed: 'test-model', tokenCount: 40 }
       );
@@ -212,7 +215,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       // Conversation A context should have Python fact
       const convAContext = await cognitiveOmega.enrichContext(
-        "Quel est mon langage préféré ?",
+        'Quel est mon langage préféré ?',
         TEST_CONVERSATION_ID,
         TEST_MODE
       );
@@ -220,7 +223,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       // Conversation B: Ask about preference
       const convBContext = await cognitiveOmega.enrichContext(
-        "Quel est mon langage préféré ?",
+        'Quel est mon langage préféré ?',
         TEST_CONVERSATION_ID_2,
         TEST_MODE
       );
@@ -242,7 +245,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       console.log('\n🔬 Testing Observability Full Trace...');
 
       const turnNumber = 1;
-      const userMessage = "Créons une fonction TypeScript";
+      const userMessage = 'Créons une fonction TypeScript';
 
       // Start trace
       const traceId = await cognitiveOmega.startTrace(
@@ -256,7 +259,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       // Log various phases
       await cognitiveOmega.logPhase(traceId, 'input_received', {
-        message_length: userMessage.length
+        message_length: userMessage.length,
       });
 
       // Enrich context (should log phases internally)
@@ -267,29 +270,29 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       );
 
       await cognitiveOmega.logPhase(traceId, 'semantic_memory_retrieved', {
-        memory_count: context.metadata.memoryCount
+        memory_count: context.metadata.memoryCount,
       });
 
       await cognitiveOmega.logPhase(traceId, 'goal_state_loaded', {
-        goal_count: context.metadata.goalCount
+        goal_count: context.metadata.goalCount,
       });
 
       await cognitiveOmega.logPhase(traceId, 'facts_loaded', {
-        fact_count: context.metadata.factCount
+        fact_count: context.metadata.factCount,
       });
 
       await cognitiveOmega.logPhase(traceId, 'context_built', {
-        total_context_length: context.combined.length
+        total_context_length: context.combined.length,
       });
 
       // Simulate model invocation
       await cognitiveOmega.logPhase(traceId, 'model_invoked', {
-        model: 'test-model'
+        model: 'test-model',
       });
 
-      const testResponse = "Voici une fonction TypeScript pour créer une todo list...";
+      const testResponse = 'Voici une fonction TypeScript pour créer une todo list...';
       await cognitiveOmega.logPhase(traceId, 'raw_output', {
-        output_length: testResponse.length
+        output_length: testResponse.length,
       });
 
       // Check consistency
@@ -301,7 +304,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       await cognitiveOmega.logPhase(traceId, 'consistency_check', {
         is_consistent: consistencyResult.isConsistent,
-        violations_count: consistencyResult.violations.length
+        violations_count: consistencyResult.violations.length,
       });
 
       // Save interaction
@@ -314,7 +317,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       );
 
       await cognitiveOmega.logPhase(traceId, 'final_output', {
-        output_sent: true
+        output_sent: true,
       });
 
       // End trace
@@ -339,9 +342,9 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       // Test with potentially slow operations
       const startTime = Date.now();
-      
+
       const context = await cognitiveOmega.enrichContext(
-        "Test message with potential timeout",
+        'Test message with potential timeout',
         TEST_CONVERSATION_ID,
         TEST_MODE
       );
@@ -350,7 +353,7 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       // Should complete within reasonable time (< 5s)
       expect(duration).toBeLessThan(5000);
-      
+
       // Should return valid context even if some engines fail
       expect(context).toBeDefined();
       expect(context.combined).toBeDefined();
@@ -358,7 +361,9 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 
       console.log('✅ Graceful error handling: PASSED');
       console.log(`   - Operation completed in: ${duration}ms`);
-      console.log(`   - Context returned: ${context.combined.length > 0 ? 'YES' : 'EMPTY'}`);
+      console.log(
+        `   - Context returned: ${context.combined.length > 0 ? 'YES' : 'EMPTY'}`
+      );
     });
 
     it('should provide non-blocking fallbacks', async () => {
@@ -367,8 +372,8 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       // Test consistency check with potentially missing data
       const result = await cognitiveOmega.checkConsistency(
         'non_existent_conversation',
-        "Some response text",
-        { userMessage: "Test", mode: TEST_MODE }
+        'Some response text',
+        { userMessage: 'Test', mode: TEST_MODE }
       );
 
       // Should not throw, should return valid result with defaults
@@ -390,20 +395,20 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
       // Perform several operations
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
-        "Test message 1",
-        "Test response 1",
+        'Test message 1',
+        'Test response 1',
         TEST_MODE
       );
 
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
-        "Test message 2",
-        "Test response 2",
+        'Test message 2',
+        'Test response 2',
         TEST_MODE
       );
 
       const context = await cognitiveOmega.enrichContext(
-        "Test message 3",
+        'Test message 3',
         TEST_CONVERSATION_ID,
         TEST_MODE
       );
@@ -425,23 +430,22 @@ describe('🧠 Cognitive Framework E2E Tests v∞.42', () => {
 });
 
 describe('🔧 Individual Engine Tests', () => {
-  
   describe('Engine 1: Semantic Memory', () => {
     it('should store and retrieve memories with embeddings', async () => {
       console.log('\n💾 Testing Semantic Memory Engine...');
 
-      const message = "TypeScript est mon langage préféré pour le développement web";
-      
+      const message = 'TypeScript est mon langage préféré pour le développement web';
+
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
         message,
-        "Excellent choix ! TypeScript offre la sécurité des types.",
+        'Excellent choix ! TypeScript offre la sécurité des types.',
         TEST_MODE
       );
 
       // Retrieve with similar query
       const context = await cognitiveOmega.enrichContext(
-        "Quel est mon langage préféré ?",
+        'Quel est mon langage préféré ?',
         TEST_CONVERSATION_ID,
         TEST_MODE
       );
@@ -458,17 +462,17 @@ describe('🔧 Individual Engine Tests', () => {
     it('should extract and track goals from messages', async () => {
       console.log('\n🎯 Testing Goal & Consistency Engine...');
 
-      const goalMessage = "Je veux construire un dashboard analytics avec Next.js";
-      
+      const goalMessage = 'Je veux construire un dashboard analytics avec Next.js';
+
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
         goalMessage,
-        "Super projet ! Créons un dashboard analytics avec Next.js.",
+        'Super projet ! Créons un dashboard analytics avec Next.js.',
         TEST_MODE
       );
 
       const context = await cognitiveOmega.enrichContext(
-        "Par où commencer ?",
+        'Par où commencer ?',
         TEST_CONVERSATION_ID,
         TEST_MODE
       );
@@ -488,7 +492,7 @@ describe('🔧 Individual Engine Tests', () => {
       // Simulate a complete conversation turn
       const result = await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
-        "Explique-moi les hooks React",
+        'Explique-moi les hooks React',
         "Les hooks React sont des fonctions qui permettent d'utiliser l'état et d'autres fonctionnalités React dans les composants fonctionnels.",
         TEST_MODE,
         { modelUsed: 'test-model', tokenCount: 50 }
@@ -501,7 +505,9 @@ describe('🔧 Individual Engine Tests', () => {
 
       console.log('✅ Conversation Evaluation Engine: PASSED');
       console.log(`   - Overall score: ${result.evaluation.overallScore.toFixed(2)}`);
-      console.log(`   - Metrics evaluated: ${Object.keys(result.evaluation.metrics).length}`);
+      console.log(
+        `   - Metrics evaluated: ${Object.keys(result.evaluation.metrics).length}`
+      );
     });
   });
 
@@ -512,8 +518,8 @@ describe('🔧 Individual Engine Tests', () => {
       // Perform some operations
       await cognitiveOmega.saveInteraction(
         TEST_CONVERSATION_ID,
-        "Test observability",
-        "Testing observability features",
+        'Test observability',
+        'Testing observability features',
         TEST_MODE
       );
 

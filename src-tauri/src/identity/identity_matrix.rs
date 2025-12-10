@@ -11,10 +11,10 @@ use std::collections::HashMap;
 pub struct IdentityDimension {
     pub name: String,
     pub description: String,
-    pub value: f32,           // -1.0 à 1.0 (bipolaire)
+    pub value: f32, // -1.0 à 1.0 (bipolaire)
     pub polarity_negative: String,
     pub polarity_positive: String,
-    pub volatility: f32,      // Susceptibilité au changement
+    pub volatility: f32, // Susceptibilité au changement
 }
 
 /// Matrice d'identité complète
@@ -24,7 +24,7 @@ pub struct IdentityMatrix {
     pub coherence_score: f32,
     pub stability_score: f32,
     pub evolution_vector: Vec<f32>,
-    pub signature: String,    // Hash unique de l'état
+    pub signature: String, // Hash unique de l'état
 }
 
 impl Default for IdentityMatrix {
@@ -158,8 +158,8 @@ impl IdentityMatrix {
 
     /// Met à jour la signature unique
     fn update_signature(&mut self) {
-        use std::hash::{Hash, Hasher};
         use std::collections::hash_map::DefaultHasher;
+        use std::hash::{Hash, Hasher};
 
         let mut hasher = DefaultHasher::new();
         for dim in &self.dimensions {
@@ -179,9 +179,7 @@ impl IdentityMatrix {
         let v1 = self.to_vector();
         let v2 = other.to_vector();
 
-        let sum_sq: f32 = v1.iter().zip(v2.iter())
-            .map(|(a, b)| (a - b).powi(2))
-            .sum();
+        let sum_sq: f32 = v1.iter().zip(v2.iter()).map(|(a, b)| (a - b).powi(2)).sum();
 
         sum_sq.sqrt()
     }
@@ -265,24 +263,22 @@ pub fn load_identity_matrix_robust(app_data_dir: &Path) -> IdentityMatrix {
     let identity_path = app_data_dir.join("identity.json");
 
     match fs::read_to_string(&identity_path) {
-        Ok(content) => {
-            match serde_json::from_str::<IdentityMatrix>(&content) {
-                Ok(matrix) => {
-                    if validate_identity_matrix(&matrix) {
-                        log::info!("✅ Identity matrix loaded from {}", identity_path.display());
-                        matrix
-                    } else {
-                        log::warn!("⚠️ Identity matrix invalid structure, using default");
-                        IdentityMatrix::new()
-                    }
-                }
-                Err(e) => {
-                    log::error!("❌ Failed to parse identity.json: {}", e);
-                    log::info!("📝 Using default identity matrix");
+        Ok(content) => match serde_json::from_str::<IdentityMatrix>(&content) {
+            Ok(matrix) => {
+                if validate_identity_matrix(&matrix) {
+                    log::info!("✅ Identity matrix loaded from {}", identity_path.display());
+                    matrix
+                } else {
+                    log::warn!("⚠️ Identity matrix invalid structure, using default");
                     IdentityMatrix::new()
                 }
             }
-        }
+            Err(e) => {
+                log::error!("❌ Failed to parse identity.json: {}", e);
+                log::info!("📝 Using default identity matrix");
+                IdentityMatrix::new()
+            }
+        },
         Err(_) => {
             log::info!("📄 identity.json not found, creating default");
             let default_matrix = IdentityMatrix::new();
@@ -321,28 +317,28 @@ fn validate_identity_matrix(matrix: &IdentityMatrix) -> bool {
 /// Sauvegarde atomic IdentityMatrix
 ///
 /// Pattern: backup → write temp → atomic rename
-pub fn save_identity_matrix_atomic(matrix: &IdentityMatrix, app_data_dir: &Path) -> Result<(), String> {
+pub fn save_identity_matrix_atomic(
+    matrix: &IdentityMatrix,
+    app_data_dir: &Path,
+) -> Result<(), String> {
     let identity_path = app_data_dir.join("identity.json");
     let temp_path = app_data_dir.join("identity.json.tmp");
     let backup_path = app_data_dir.join("identity.json.backup");
 
     // Serialize
-    let content = serde_json::to_string_pretty(matrix)
-        .map_err(|e| format!("Serialization failed: {}", e))?;
+    let content =
+        serde_json::to_string_pretty(matrix).map_err(|e| format!("Serialization failed: {}", e))?;
 
     // Backup existant si présent
     if identity_path.exists() {
-        fs::copy(&identity_path, &backup_path)
-            .map_err(|e| format!("Backup failed: {}", e))?;
+        fs::copy(&identity_path, &backup_path).map_err(|e| format!("Backup failed: {}", e))?;
     }
 
     // Write to temp
-    fs::write(&temp_path, content)
-        .map_err(|e| format!("Write temp failed: {}", e))?;
+    fs::write(&temp_path, content).map_err(|e| format!("Write temp failed: {}", e))?;
 
     // Atomic rename
-    fs::rename(&temp_path, &identity_path)
-        .map_err(|e| format!("Atomic rename failed: {}", e))?;
+    fs::rename(&temp_path, &identity_path).map_err(|e| format!("Atomic rename failed: {}", e))?;
 
     log::info!("💾 Identity matrix saved to {}", identity_path.display());
     Ok(())
@@ -378,7 +374,10 @@ mod tests {
 
         // Load
         let loaded = load_identity_matrix_robust(temp_dir.path());
-        assert_eq!(loaded.get_dimension("Rationalité-Émotivité").unwrap().value, 0.5);
+        assert_eq!(
+            loaded.get_dimension("Rationalité-Émotivité").unwrap().value,
+            0.5
+        );
     }
 
     #[test]

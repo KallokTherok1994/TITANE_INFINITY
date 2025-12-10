@@ -177,14 +177,14 @@ export class UIIntegrityChecker {
     this.running = true;
 
     // Run initial check
-    this.runCheck().catch((error) => {
+    this.runCheck().catch(error => {
       console.error('[UIIntegrityChecker] Initial check failed:', error);
     });
 
     // Schedule periodic checks
     if (this.config.checkInterval > 0) {
       this.checkTimer = setInterval(() => {
-        this.runCheck().catch((error) => {
+        this.runCheck().catch(error => {
           console.error('[UIIntegrityChecker] Periodic check failed:', error);
         });
       }, this.config.checkInterval);
@@ -537,18 +537,19 @@ export class UIIntegrityChecker {
 
   private generateReport(): IntegrityReport {
     const anomalies = Array.from(this.anomalies.values());
-    const unresolved = anomalies.filter((a) => !a.resolved);
+    const unresolved = anomalies.filter(a => !a.resolved);
 
-    const criticalCount = unresolved.filter((a) => a.severity === 'critical').length;
-    const highCount = unresolved.filter((a) => a.severity === 'high').length;
-    const mediumCount = unresolved.filter((a) => a.severity === 'medium').length;
-    const lowCount = unresolved.filter((a) => a.severity === 'low').length;
+    const criticalCount = unresolved.filter(a => a.severity === 'critical').length;
+    const highCount = unresolved.filter(a => a.severity === 'high').length;
+    const mediumCount = unresolved.filter(a => a.severity === 'medium').length;
+    const lowCount = unresolved.filter(a => a.severity === 'low').length;
 
-    const autoFixedCount = anomalies.filter((a) => a.resolved).length;
-    const manualFixRequired = unresolved.filter((a) => !a.autoFixable).length;
+    const autoFixedCount = anomalies.filter(a => a.resolved).length;
+    const manualFixRequired = unresolved.filter(a => !a.autoFixable).length;
 
     // Calculate health score (1.0 = perfect)
-    const totalWeight = criticalCount * 10 + highCount * 5 + mediumCount * 2 + lowCount * 1;
+    const totalWeight =
+      criticalCount * 10 + highCount * 5 + mediumCount * 2 + lowCount * 1;
     const maxWeight = 100; // Arbitrary max for normalization
     const overallHealth = Math.max(0, 1 - totalWeight / maxWeight);
 

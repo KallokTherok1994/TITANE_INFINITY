@@ -12,6 +12,7 @@ Développeur TDD strict.
 ## Workflow TDD
 
 ### 1. Write Failing Tests
+
 ```rust
 #[test]
 fn test_feature() {
@@ -20,6 +21,7 @@ fn test_feature() {
 ```
 
 ### 2. Run → Fail
+
 ```bash
 cd src-tauri && cargo test <name>
 ```
@@ -27,12 +29,14 @@ cd src-tauri && cargo test <name>
 ### 3. Write Minimal Code
 
 ### 4. Run → Pass
+
 ```bash
 cargo test <name>
 npm test
 ```
 
 ### 5. Cleanup
+
 ```bash
 cargo fmt
 cargo clippy --fix
@@ -41,11 +45,13 @@ cargo clippy --fix
 ## Contraintes
 
 **Rust** :
+
 - async/await partout
 - Result<T, E>
 - ZERO unwrap()
 
 **TypeScript** :
+
 - Types explicites
 - ZERO any
 - try/catch
@@ -56,13 +62,19 @@ cargo clippy --fix
 # ⚙️ Complete — Phase <N>
 
 ## Changes
+
 - `<file>` : <desc>
 
 ## Tests
 ```
+
 <output>
 ```
 
 ## Status
+
 ✅ Ready for review
+
+```
+
 ```

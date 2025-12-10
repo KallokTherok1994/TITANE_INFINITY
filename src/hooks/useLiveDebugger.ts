@@ -102,7 +102,7 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
 
   // Auto-subscribe to engine changes
   useEffect(() => {
-    const unsubscribe = liveDebugger.subscribe((newState) => {
+    const unsubscribe = liveDebugger.subscribe(newState => {
       setState(newState);
       setConfig(liveDebugger.getConfig());
     });
@@ -163,7 +163,8 @@ export function useLiveDebugger(): UseLiveDebuggerReturn {
   // ═══════════════════════════════════════════════════════════════
 
   const recentDiagnostics = liveDebugger.getRecentDiagnostics(10);
-  const lastDiagnostic = state.diagnostics.length > 0 ? state.diagnostics[state.diagnostics.length - 1] : null;
+  const lastDiagnostic =
+    state.diagnostics.length > 0 ? state.diagnostics[state.diagnostics.length - 1] : null;
   const recentPatches = state.appliedPatches.slice(-10);
   const stats = liveDebugger.getStats();
 

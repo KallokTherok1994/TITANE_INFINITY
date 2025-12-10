@@ -89,11 +89,7 @@ export const Sidebar = ({
         transition={{ duration: animationConfig.duration }}
       >
         {/* Icon */}
-        {item.icon && (
-          <span className="flex text-xl">
-            {item.icon}
-          </span>
-        )}
+        {item.icon && <span className="flex text-xl">{item.icon}</span>}
 
         {/* Label & Badge (hidden when collapsed) */}
         {!collapsed && (
@@ -113,11 +109,7 @@ export const Sidebar = ({
   return (
     <div className={cn('flex flex-col h-full overflow-hidden', className)}>
       {/* Header */}
-      {header && (
-        <div className="p-6 border-b border-border-default">
-          {header}
-        </div>
-      )}
+      {header && <div className="p-6 border-b border-border-default">{header}</div>}
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto overflow-x-hidden p-4 scrollbar-custom">
@@ -125,11 +117,7 @@ export const Sidebar = ({
       </nav>
 
       {/* Footer */}
-      {footer && (
-        <div className="p-6 border-t border-border-default">
-          {footer}
-        </div>
-      )}
+      {footer && <div className="p-6 border-t border-border-default">{footer}</div>}
     </div>
   );
 };

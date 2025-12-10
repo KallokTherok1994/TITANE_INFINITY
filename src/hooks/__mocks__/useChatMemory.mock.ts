@@ -8,6 +8,6 @@ export function useChatMemory(): UseChatMemoryReturn {
     saveMessage: () => {},
     clearMode: () => {},
     compactIfNeeded: () => ({ cleaned: false, sizeMB: 0 }),
-    awardXP: async () => {}
+    awardXP: async () => {},
   };
 }

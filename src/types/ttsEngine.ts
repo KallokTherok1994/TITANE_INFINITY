@@ -25,16 +25,16 @@ export type VoiceId = string;
  * Émotions supportées par le système TTS
  */
 export type TTSEmotion =
-  | 'neutral'       // Ton neutre, informatif
-  | 'joyful'        // Enthousiaste, positif
-  | 'empathetic'    // Compréhensif, doux
-  | 'serious'       // Sérieux, professionnel
-  | 'curious'       // Intéressé, interrogatif
-  | 'confident'     // Assuré, affirmé
-  | 'calm'          // Apaisé, relaxé
-  | 'urgent'        // Pressé, alerte
-  | 'playful'       // Ludique, taquin
-  | 'thoughtful';   // Réfléchi, méditatif
+  | 'neutral' // Ton neutre, informatif
+  | 'joyful' // Enthousiaste, positif
+  | 'empathetic' // Compréhensif, doux
+  | 'serious' // Sérieux, professionnel
+  | 'curious' // Intéressé, interrogatif
+  | 'confident' // Assuré, affirmé
+  | 'calm' // Apaisé, relaxé
+  | 'urgent' // Pressé, alerte
+  | 'playful' // Ludique, taquin
+  | 'thoughtful'; // Réfléchi, méditatif
 
 /**
  * Intensité de l'émotion
@@ -49,9 +49,9 @@ export interface EmotionConfig {
   intensity: EmotionIntensity;
 
   // Ajustements vocaux
-  stabilityModifier: number;     // -0.3 à 0.3
-  clarityModifier: number;       // -0.3 à 0.3
-  styleModifier: number;         // -0.3 à 0.3
+  stabilityModifier: number; // -0.3 à 0.3
+  clarityModifier: number; // -0.3 à 0.3
+  styleModifier: number; // -0.3 à 0.3
 }
 
 // ============================================================================
@@ -67,29 +67,29 @@ export interface VoiceConfig {
   description?: string;
 
   // Paramètres de base
-  stability: number;              // 0-1 (stabilité/consistance)
-  similarityBoost: number;        // 0-1 (ressemblance à la voix d'origine)
-  style: number;                  // 0-1 (exagération du style)
-  useSpeakerBoost: boolean;       // Amélioration du locuteur
+  stability: number; // 0-1 (stabilité/consistance)
+  similarityBoost: number; // 0-1 (ressemblance à la voix d'origine)
+  style: number; // 0-1 (exagération du style)
+  useSpeakerBoost: boolean; // Amélioration du locuteur
 
   // Paramètres avancés
-  pitchShift?: number;            // -12 à 12 demi-tons
-  speakingRate?: number;          // 0.5 à 2.0
+  pitchShift?: number; // -12 à 12 demi-tons
+  speakingRate?: number; // 0.5 à 2.0
 
   // Préférences
   preferredEmotion?: TTSEmotion;
-  languageCode: string;           // 'fr-FR', 'en-US', etc.
+  languageCode: string; // 'fr-FR', 'en-US', etc.
 }
 
 /**
  * Modèle TTS ElevenLabs
  */
 export type TTSModel =
-  | 'eleven_multilingual_v2'      // Multi-langues v2 (recommandé)
-  | 'eleven_multilingual_v1'      // Multi-langues v1
-  | 'eleven_monolingual_v1'       // Anglais uniquement
-  | 'eleven_turbo_v2'             // Ultra-rapide
-  | 'eleven_turbo_v2_5';          // Ultra-rapide v2.5
+  | 'eleven_multilingual_v2' // Multi-langues v2 (recommandé)
+  | 'eleven_multilingual_v1' // Multi-langues v1
+  | 'eleven_monolingual_v1' // Anglais uniquement
+  | 'eleven_turbo_v2' // Ultra-rapide
+  | 'eleven_turbo_v2_5'; // Ultra-rapide v2.5
 
 /**
  * Format audio de sortie
@@ -138,17 +138,17 @@ export interface TTSRequest {
 }
 
 export type TTSPriority =
-  | 'low'          // Peut attendre
-  | 'normal'       // Standard
-  | 'high'         // Prioritaire
-  | 'immediate';   // Interrompt la file
+  | 'low' // Peut attendre
+  | 'normal' // Standard
+  | 'high' // Prioritaire
+  | 'immediate'; // Interrompt la file
 
 export type TTSSource =
-  | 'chat'         // Message IA
+  | 'chat' // Message IA
   | 'notification' // Notification système
-  | 'reading'      // Lecture de contenu
-  | 'command'      // Commande vocale
-  | 'alert';       // Alerte
+  | 'reading' // Lecture de contenu
+  | 'command' // Commande vocale
+  | 'alert'; // Alerte
 
 // ============================================================================
 // RÉPONSES ET RÉSULTATS
@@ -164,7 +164,7 @@ export interface TTSResult {
   // Audio
   audioData?: ArrayBuffer;
   audioUrl?: string;
-  duration?: number;              // ms
+  duration?: number; // ms
 
   // Métriques
   generationTimeMs: number;
@@ -185,15 +185,15 @@ export interface TTSError {
 }
 
 export type TTSErrorCode =
-  | 'RATE_LIMIT'         // Limite de taux atteinte
-  | 'QUOTA_EXCEEDED'     // Quota dépassé
-  | 'INVALID_VOICE'      // Voix invalide
-  | 'TEXT_TOO_LONG'      // Texte trop long
-  | 'API_ERROR'          // Erreur API
-  | 'NETWORK_ERROR'      // Erreur réseau
-  | 'AUDIO_ERROR'        // Erreur audio
-  | 'TIMEOUT'            // Timeout
-  | 'UNKNOWN';           // Erreur inconnue
+  | 'RATE_LIMIT' // Limite de taux atteinte
+  | 'QUOTA_EXCEEDED' // Quota dépassé
+  | 'INVALID_VOICE' // Voix invalide
+  | 'TEXT_TOO_LONG' // Texte trop long
+  | 'API_ERROR' // Erreur API
+  | 'NETWORK_ERROR' // Erreur réseau
+  | 'AUDIO_ERROR' // Erreur audio
+  | 'TIMEOUT' // Timeout
+  | 'UNKNOWN'; // Erreur inconnue
 
 // ============================================================================
 // QUEUE DE SYNTHÈSE
@@ -203,13 +203,13 @@ export type TTSErrorCode =
  * État d'un élément de la queue
  */
 export type QueueItemStatus =
-  | 'pending'      // En attente
-  | 'processing'   // En cours de synthèse
-  | 'ready'        // Audio prêt
-  | 'playing'      // En cours de lecture
-  | 'completed'    // Terminé
-  | 'failed'       // Échoué
-  | 'cancelled';   // Annulé
+  | 'pending' // En attente
+  | 'processing' // En cours de synthèse
+  | 'ready' // Audio prêt
+  | 'playing' // En cours de lecture
+  | 'completed' // Terminé
+  | 'failed' // Échoué
+  | 'cancelled'; // Annulé
 
 /**
  * Élément de la queue TTS
@@ -219,7 +219,7 @@ export interface TTSQueueItem {
   status: QueueItemStatus;
 
   // Progression
-  progress: number;               // 0-100
+  progress: number; // 0-100
 
   // Résultat
   result?: TTSResult;
@@ -268,15 +268,15 @@ export interface TTSPlaybackState {
   currentText: string | null;
 
   // Progression
-  currentTime: number;            // ms
-  duration: number;               // ms
-  progress: number;               // 0-100
+  currentTime: number; // ms
+  duration: number; // ms
+  progress: number; // 0-100
 
   // Volume
-  volume: number;                 // 0-1
+  volume: number; // 0-1
 
   // Vitesse
-  playbackRate: number;           // 0.5-2.0
+  playbackRate: number; // 0.5-2.0
 }
 
 /**
@@ -299,7 +299,7 @@ export type TTSPlaybackEvent =
  * Entrée du cache audio
  */
 export interface AudioCacheEntry {
-  key: string;                    // Hash du texte + config
+  key: string; // Hash du texte + config
   audioData: ArrayBuffer;
   duration: number;
 

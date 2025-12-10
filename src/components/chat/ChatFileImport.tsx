@@ -64,8 +64,21 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
     }
 
     // Fallback: vérification extension si MIME vide
-    const allowedExtensions = ['.txt', '.md', '.json', '.yaml', '.yml', '.js', '.ts', '.tsx', '.jsx', '.log'];
-    const hasValidExtension = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    const allowedExtensions = [
+      '.txt',
+      '.md',
+      '.json',
+      '.yaml',
+      '.yml',
+      '.js',
+      '.ts',
+      '.tsx',
+      '.jsx',
+      '.log',
+    ];
+    const hasValidExtension = allowedExtensions.some(ext =>
+      file.name.toLowerCase().endsWith(ext)
+    );
 
     if (!file.type && hasValidExtension) {
       console.warn(`⚠️  MIME type vide pour ${file.name}, validé par extension`);
@@ -93,9 +106,7 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
 
     // Génère un résumé basique
     const preview = content.substring(0, 200).trim();
-    const summary = preview.length < content.length
-      ? `${preview}...`
-      : preview;
+    const summary = preview.length < content.length ? `${preview}...` : preview;
 
     // Détecte le type de fichier
     let type = 'text';
@@ -124,7 +135,9 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
 
       // Validation MIME type
       if (!validateFileMimeType(file)) {
-        alert(`Type de fichier non supporté: ${file.type || 'inconnu'}\nExtensions autorisées: .txt, .md, .json, .yaml, .yml, .js, .ts, .tsx, .jsx, .log`);
+        alert(
+          `Type de fichier non supporté: ${file.type || 'inconnu'}\nExtensions autorisées: .txt, .md, .json, .yaml, .yml, .js, .ts, .tsx, .jsx, .log`
+        );
         return;
       }
 
@@ -168,15 +181,19 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
           });
           console.log('✅ Fichier ingéré dans Memory backend');
         } catch (error) {
-          console.warn('⚠️  Backend Memory non disponible, analyse frontend only:', error);
+          console.warn(
+            '⚠️  Backend Memory non disponible, analyse frontend only:',
+            error
+          );
         }
 
         // Callback avec résultat
         onFileAnalyzed(analysis);
-
       } catch (error) {
         console.error('❌ Erreur import fichier:', error);
-        alert(`Erreur lors de l'import du fichier: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+        alert(
+          `Erreur lors de l'import du fichier: ${error instanceof Error ? error.message : 'Erreur inconnue'}`
+        );
       } finally {
         setIsProcessing(false);
       }
@@ -187,13 +204,16 @@ export const ChatFileImport: React.FC<ChatFileImportProps> = ({
   /**
    * Gestion du drag & drop
    */
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!disabled) {
-      setIsDragging(true);
-    }
-  }, [disabled]);
+  const handleDragOver = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!disabled) {
+        setIsDragging(true);
+      }
+    },
+    [disabled]
+  );
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();

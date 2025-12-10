@@ -25,7 +25,7 @@ interface LoadingScreenProps {
  */
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   message = 'Initialisation de TITANE∞...',
-  progress
+  progress,
 }) => {
   return (
     <div
@@ -61,7 +61,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
           fontWeight: 600,
           margin: 0,
           marginBottom: '1rem',
-          background: 'linear-gradient(90deg, var(--color-primary-400, #818cf8), var(--color-accent-400, #e879f9))',
+          background:
+            'linear-gradient(90deg, var(--color-primary-400, #818cf8), var(--color-accent-400, #e879f9))',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
@@ -111,7 +112,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             style={{
               width: `${Math.min(100, Math.max(0, progress))}%`,
               height: '100%',
-              background: 'linear-gradient(90deg, var(--color-primary-500, #6366f1), var(--color-accent-500, #d946ef))',
+              background:
+                'linear-gradient(90deg, var(--color-primary-500, #6366f1), var(--color-accent-500, #d946ef))',
               transition: 'width 0.3s ease',
             }}
           />

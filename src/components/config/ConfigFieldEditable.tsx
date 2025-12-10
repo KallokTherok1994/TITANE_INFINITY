@@ -89,7 +89,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
       return (
         <select
           value={String(localValue)}
-          onChange={(e) => handleChange(e.target.value)}
+          onChange={e => handleChange(e.target.value)}
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '0.9rem',
@@ -98,7 +98,9 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
             padding: '0.5rem 1rem',
             background: 'rgba(0, 0, 0, 0.3)',
             borderRadius: '6px',
-            border: validationError ? '1px solid var(--color-error)' : '1px solid rgba(255, 255, 255, 0.2)',
+            border: validationError
+              ? '1px solid var(--color-error)'
+              : '1px solid rgba(255, 255, 255, 0.2)',
             minWidth: '120px',
             cursor: 'pointer',
           }}
@@ -114,7 +116,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
         <input
           type="number"
           value={String(localValue).replace(/ms$/, '')}
-          onChange={(e) => handleChange(e.target.value)}
+          onChange={e => handleChange(e.target.value)}
           style={{
             fontFamily: 'var(--font-mono)',
             fontSize: '0.9rem',
@@ -123,7 +125,9 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
             padding: '0.5rem 1rem',
             background: 'rgba(0, 0, 0, 0.3)',
             borderRadius: '6px',
-            border: validationError ? '1px solid var(--color-error)' : '1px solid rgba(255, 255, 255, 0.2)',
+            border: validationError
+              ? '1px solid var(--color-error)'
+              : '1px solid rgba(255, 255, 255, 0.2)',
             minWidth: '120px',
             textAlign: 'right',
           }}
@@ -136,7 +140,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
       <input
         type="text"
         value={String(localValue)}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={e => handleChange(e.target.value)}
         placeholder={valueType === 'url' ? 'http://...' : ''}
         style={{
           fontFamily: 'var(--font-mono)',
@@ -146,7 +150,9 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
           padding: '0.5rem 1rem',
           background: 'rgba(0, 0, 0, 0.3)',
           borderRadius: '6px',
-          border: validationError ? '1px solid var(--color-error)' : '1px solid rgba(255, 255, 255, 0.2)',
+          border: validationError
+            ? '1px solid var(--color-error)'
+            : '1px solid rgba(255, 255, 255, 0.2)',
           minWidth: '200px',
           textAlign: 'left',
         }}
@@ -168,20 +174,28 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '1rem',
-          background: editable ? 'rgba(102, 126, 234, 0.08)' : 'rgba(255, 255, 255, 0.03)',
+          background: editable
+            ? 'rgba(102, 126, 234, 0.08)'
+            : 'rgba(255, 255, 255, 0.03)',
           borderRadius: '8px',
           border: validationError
             ? '1px solid var(--color-error)'
             : editable
-            ? '1px solid rgba(102, 126, 234, 0.3)'
-            : '1px solid rgba(255, 255, 255, 0.08)',
+              ? '1px solid rgba(102, 126, 234, 0.3)'
+              : '1px solid rgba(255, 255, 255, 0.08)',
           transition: 'all 0.2s ease',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1 }}>
           <span style={{ fontSize: '1.25rem' }}>{icon}</span>
           <div>
-            <div style={{ fontWeight: 500, marginBottom: '0.25rem', color: 'var(--color-text-primary)' }}>
+            <div
+              style={{
+                fontWeight: 500,
+                marginBottom: '0.25rem',
+                color: 'var(--color-text-primary)',
+              }}
+            >
               {label}
               {editable && (
                 <span
@@ -199,7 +213,13 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
               )}
             </div>
             {description && (
-              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-secondary)', opacity: 0.7 }}>
+              <div
+                style={{
+                  fontSize: '0.8rem',
+                  color: 'var(--color-text-secondary)',
+                  opacity: 0.7,
+                }}
+              >
                 {description}
               </div>
             )}

@@ -4,14 +4,13 @@
 //   Combines outputs from multiple tasks into coherent response
 // ═══════════════════════════════════════════════════════════════
 
-use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 use super::{
-    OmegaError, OmegaResult, PipelineStage,
-    StageInput, StageOutput, StageProcessor,
     executor::{ExecutionResult, TaskResult, TaskType},
     router::ExecutionMode,
+    OmegaError, OmegaResult, PipelineStage, StageInput, StageOutput, StageProcessor,
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -177,7 +176,8 @@ impl ResultMerger {
 
     /// Build sources list from results
     fn build_sources(&self, results: &[TaskResult]) -> Vec<MergeSource> {
-        results.iter()
+        results
+            .iter()
             .map(|r| {
                 let task_type = self.infer_task_type(&r.task_id);
                 let weight = self.weights.get(&task_type).copied().unwrap_or(0.5);
@@ -198,15 +198,18 @@ impl ResultMerger {
         let failed_tasks = results.len() - successful_tasks;
         let total_task_time_ms = results.iter().map(|r| r.execution_ms).sum();
 
-        let identity = results.iter()
+        let identity = results
+            .iter()
             .find(|r| r.task_id == "identity")
             .map(|r| r.data.clone());
 
-        let safety = results.iter()
+        let safety = results
+            .iter()
             .find(|r| r.task_id == "safety")
             .map(|r| r.data.clone());
 
-        let memory_context = results.iter()
+        let memory_context = results
+            .iter()
             .find(|r| r.task_id == "memory")
             .map(|r| r.data.clone());
 
@@ -238,19 +241,23 @@ impl ResultMerger {
             }
         }
 
-        let confidence = if count > 0 { total_confidence / count as f32 } else { 0.5 };
+        let confidence = if count > 0 {
+            total_confidence / count as f32
+        } else {
+            0.5
+        };
         (parts.join("\n\n"), confidence)
     }
 
     /// Merge by selecting best result
     fn merge_select_best(&self, results: &[TaskResult]) -> (String, f32) {
-        let best = results.iter()
-            .filter(|r| r.success)
-            .max_by(|a, b| {
-                let conf_a = self.extract_confidence(&a.data);
-                let conf_b = self.extract_confidence(&b.data);
-                conf_a.partial_cmp(&conf_b).unwrap_or(std::cmp::Ordering::Equal)
-            });
+        let best = results.iter().filter(|r| r.success).max_by(|a, b| {
+            let conf_a = self.extract_confidence(&a.data);
+            let conf_b = self.extract_confidence(&b.data);
+            conf_a
+                .partial_cmp(&conf_b)
+                .unwrap_or(std::cmp::Ordering::Equal)
+        });
 
         if let Some(result) = best {
             let text = self.extract_text(&result.data).unwrap_or_default();
@@ -287,7 +294,10 @@ impl ResultMerger {
         // Select highest weighted part for main response
         weighted_parts.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
 
-        let primary = weighted_parts.first().map(|(t, _)| t.clone()).unwrap_or_default();
+        let primary = weighted_parts
+            .first()
+            .map(|(t, _)| t.clone())
+            .unwrap_or_default();
         let confidence = if total_weight > 0.0 {
             weighted_parts.iter().map(|(_, w)| w).sum::<f32>() / weighted_parts.len() as f32
         } else {
@@ -303,7 +313,10 @@ impl ResultMerger {
         let priority_order = ["textgen", "codegen", "knowledge", "reasoning"];
 
         for priority_id in priority_order {
-            if let Some(result) = results.iter().find(|r| r.task_id == priority_id && r.success) {
+            if let Some(result) = results
+                .iter()
+                .find(|r| r.task_id == priority_id && r.success)
+            {
                 if let Some(text) = self.extract_text(&result.data) {
                     if !text.is_empty() {
                         let confidence = self.extract_confidence(&result.data);
@@ -320,23 +333,24 @@ impl ResultMerger {
     /// Merge by consensus
     fn merge_consensus(&self, results: &[TaskResult]) -> (String, f32) {
         // For consensus, we look for agreement across multiple results
-        let successful: Vec<_> = results.iter()
-            .filter(|r| r.success)
-            .collect();
+        let successful: Vec<_> = results.iter().filter(|r| r.success).collect();
 
         if successful.len() <= 1 {
             return self.merge_select_best(results);
         }
 
         // Simple consensus: use most confident if agreement, else weighted merge
-        let confidences: Vec<f32> = successful.iter()
+        let confidences: Vec<f32> = successful
+            .iter()
             .map(|r| self.extract_confidence(&r.data))
             .collect();
 
         let avg_confidence = confidences.iter().sum::<f32>() / confidences.len() as f32;
-        let variance: f32 = confidences.iter()
+        let variance: f32 = confidences
+            .iter()
             .map(|c| (c - avg_confidence).powi(2))
-            .sum::<f32>() / confidences.len() as f32;
+            .sum::<f32>()
+            / confidences.len() as f32;
 
         // High agreement (low variance) -> use best
         // Low agreement -> use weighted merge
@@ -350,10 +364,24 @@ impl ResultMerger {
     /// Extract text from result data
     fn extract_text(&self, data: &serde_json::Value) -> Option<String> {
         // Try various fields where text might be stored
-        data.get("text").and_then(|v| v.as_str()).map(|s| s.to_string())
-            .or_else(|| data.get("response").and_then(|v| v.as_str()).map(|s| s.to_string()))
-            .or_else(|| data.get("code").and_then(|v| v.as_str()).map(|s| s.to_string()))
-            .or_else(|| data.get("analysis").and_then(|v| v.as_str()).map(|s| s.to_string()))
+        data.get("text")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string())
+            .or_else(|| {
+                data.get("response")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.to_string())
+            })
+            .or_else(|| {
+                data.get("code")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.to_string())
+            })
+            .or_else(|| {
+                data.get("analysis")
+                    .and_then(|v| v.as_str())
+                    .map(|s| s.to_string())
+            })
     }
 
     /// Extract confidence from result data
@@ -381,14 +409,25 @@ impl ResultMerger {
 
     /// Calculate quality score
     fn calculate_quality(&self, results: &[TaskResult], confidence: f32) -> f32 {
-        let success_rate = results.iter().filter(|r| r.success).count() as f32 / results.len() as f32;
-        let safety_ok = results.iter()
+        let success_rate =
+            results.iter().filter(|r| r.success).count() as f32 / results.len() as f32;
+        let safety_ok = results
+            .iter()
             .find(|r| r.task_id == "safety")
-            .map(|r| r.data.get("safe").and_then(|v| v.as_bool()).unwrap_or(false))
+            .map(|r| {
+                r.data
+                    .get("safe")
+                    .and_then(|v| v.as_bool())
+                    .unwrap_or(false)
+            })
             .unwrap_or(true);
 
         let base_quality = (success_rate + confidence) / 2.0;
-        if safety_ok { base_quality } else { base_quality * 0.5 }
+        if safety_ok {
+            base_quality
+        } else {
+            base_quality * 0.5
+        }
     }
 }
 
@@ -422,11 +461,14 @@ impl StageProcessor for Merger {
 
         // Get execution result from previous stage
         let execution: ExecutionResult = serde_json::from_value(
-            input.context.previous_outputs
+            input
+                .context
+                .previous_outputs
                 .get(&PipelineStage::Executor)
                 .cloned()
-                .unwrap_or_default()
-        ).map_err(|e| OmegaError::MergerError(e.to_string()))?;
+                .unwrap_or_default(),
+        )
+        .map_err(|e| OmegaError::MergerError(e.to_string()))?;
 
         let result = self.result_merger.merge(&execution)?;
 
@@ -487,8 +529,14 @@ mod tests {
 
     #[test]
     fn test_merge_strategy_for_mode() {
-        assert_eq!(MergeStrategy::for_mode(ExecutionMode::Fast), MergeStrategy::SelectBest);
-        assert_eq!(MergeStrategy::for_mode(ExecutionMode::Balanced), MergeStrategy::WeightedMerge);
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Fast),
+            MergeStrategy::SelectBest
+        );
+        assert_eq!(
+            MergeStrategy::for_mode(ExecutionMode::Balanced),
+            MergeStrategy::WeightedMerge
+        );
     }
 
     #[test]

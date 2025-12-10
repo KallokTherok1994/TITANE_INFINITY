@@ -18,12 +18,12 @@ import { secureInvoke } from '@/lib/security';
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export type PermissionStatus =
-  | 'unknown'      // État initial, non vérifié
-  | 'checking'     // Vérification en cours
-  | 'granted'      // Permission accordée
-  | 'denied'       // Permission refusée
-  | 'prompt'       // L'utilisateur doit être sollicité
-  | 'unsupported'  // Non supporté sur cette plateforme
+  | 'unknown' // État initial, non vérifié
+  | 'checking' // Vérification en cours
+  | 'granted' // Permission accordée
+  | 'denied' // Permission refusée
+  | 'prompt' // L'utilisateur doit être sollicité
+  | 'unsupported' // Non supporté sur cette plateforme
   | 'unavailable'; // Périphérique non disponible
 
 export type DeviceType = 'microphone' | 'camera' | 'screen' | 'keyboard' | 'mouse';
@@ -172,7 +172,7 @@ async function checkMicrophoneBrowser(): Promise<DevicePermission> {
         type: 'microphone',
         status: 'denied',
         lastCheck: Date.now(),
-        error: 'Permission microphone refusée par l\'utilisateur',
+        error: "Permission microphone refusée par l'utilisateur",
       };
     }
 
@@ -361,50 +361,53 @@ export function useDevicePermissions(): DevicePermissionsResult {
   }, []);
 
   // Vérifier une permission spécifique
-  const checkPermission = useCallback(async (device: DeviceType): Promise<DevicePermission> => {
-    setPermissions(prev => ({
-      ...prev,
-      [device]: { ...prev[device], status: 'checking' },
-    }));
-
-    let result: DevicePermission;
-
-    switch (device) {
-      case 'microphone':
-        result = environment.isTauri
-          ? await checkMicrophoneTauri()
-          : await checkMicrophoneBrowser();
-        break;
-      case 'camera':
-        result = await checkCamera(environment);
-        break;
-      case 'screen':
-        result = await checkScreen(environment);
-        break;
-      case 'keyboard':
-        result = await checkKeyboard(environment);
-        break;
-      case 'mouse':
-        result = await checkMouse(environment);
-        break;
-      default:
-        result = {
-          type: device,
-          status: 'unknown',
-          lastCheck: Date.now(),
-          error: 'Type de périphérique inconnu',
-        };
-    }
-
-    if (mountedRef.current) {
+  const checkPermission = useCallback(
+    async (device: DeviceType): Promise<DevicePermission> => {
       setPermissions(prev => ({
         ...prev,
-        [device]: result,
+        [device]: { ...prev[device], status: 'checking' },
       }));
-    }
 
-    return result;
-  }, [environment]);
+      let result: DevicePermission;
+
+      switch (device) {
+        case 'microphone':
+          result = environment.isTauri
+            ? await checkMicrophoneTauri()
+            : await checkMicrophoneBrowser();
+          break;
+        case 'camera':
+          result = await checkCamera(environment);
+          break;
+        case 'screen':
+          result = await checkScreen(environment);
+          break;
+        case 'keyboard':
+          result = await checkKeyboard(environment);
+          break;
+        case 'mouse':
+          result = await checkMouse(environment);
+          break;
+        default:
+          result = {
+            type: device,
+            status: 'unknown',
+            lastCheck: Date.now(),
+            error: 'Type de périphérique inconnu',
+          };
+      }
+
+      if (mountedRef.current) {
+        setPermissions(prev => ({
+          ...prev,
+          [device]: result,
+        }));
+      }
+
+      return result;
+    },
+    [environment]
+  );
 
   // Vérifier toutes les permissions
   const checkAll = useCallback(async () => {
@@ -426,10 +429,13 @@ export function useDevicePermissions(): DevicePermissionsResult {
   }, [checkPermission]);
 
   // Demander une permission
-  const requestPermission = useCallback(async (device: DeviceType): Promise<boolean> => {
-    const result = await checkPermission(device);
-    return result.status === 'granted';
-  }, [checkPermission]);
+  const requestPermission = useCallback(
+    async (device: DeviceType): Promise<boolean> => {
+      const result = await checkPermission(device);
+      return result.status === 'granted';
+    },
+    [checkPermission]
+  );
 
   // Réinitialiser l'état local
   const reset = useCallback(() => {
@@ -470,32 +476,31 @@ export function useDevicePermissions(): DevicePermissionsResult {
    * Log structuré pour les problèmes de périphériques
    * Compatible avec le Self-Healing Engine
    */
-  const logDeviceIssue = useCallback((
-    device: DeviceType,
-    code: string,
-    details?: unknown
-  ) => {
-    const timestamp = new Date().toISOString();
-    const entry = {
-      timestamp,
-      device,
-      code,
-      environment: environment.isTauri ? 'tauri' : 'browser',
-      details,
-    };
+  const logDeviceIssue = useCallback(
+    (device: DeviceType, code: string, details?: unknown) => {
+      const timestamp = new Date().toISOString();
+      const entry = {
+        timestamp,
+        device,
+        code,
+        environment: environment.isTauri ? 'tauri' : 'browser',
+        details,
+      };
 
-    console.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
+      console.warn(`[DeviceIssue][${device.toUpperCase()}] ${code}`, entry);
 
-    // Stocker dans localStorage pour debugging (max 50 entrées)
-    try {
-      const logs = JSON.parse(localStorage.getItem('titane_device_issues') || '[]');
-      logs.push(entry);
-      if (logs.length > 50) logs.shift();
-      localStorage.setItem('titane_device_issues', JSON.stringify(logs));
-    } catch {
-      // Ignore localStorage errors
-    }
-  }, [environment.isTauri]);
+      // Stocker dans localStorage pour debugging (max 50 entrées)
+      try {
+        const logs = JSON.parse(localStorage.getItem('titane_device_issues') || '[]');
+        logs.push(entry);
+        if (logs.length > 50) logs.shift();
+        localStorage.setItem('titane_device_issues', JSON.stringify(logs));
+      } catch {
+        // Ignore localStorage errors
+      }
+    },
+    [environment.isTauri]
+  );
 
   // Vérification initiale au montage
   useEffect(() => {
@@ -526,7 +531,8 @@ export function useDevicePermissions(): DevicePermissionsResult {
  * Hook simplifié pour les permissions microphone uniquement
  */
 export function useMicrophonePermission() {
-  const { permissions, checkPermission, requestPermission, environment } = useDevicePermissions();
+  const { permissions, checkPermission, requestPermission, environment } =
+    useDevicePermissions();
 
   return {
     status: permissions.microphone.status,
@@ -541,7 +547,8 @@ export function useMicrophonePermission() {
  * Hook simplifié pour les permissions caméra (préparation)
  */
 export function useCameraPermission() {
-  const { permissions, checkPermission, requestPermission, environment } = useDevicePermissions();
+  const { permissions, checkPermission, requestPermission, environment } =
+    useDevicePermissions();
 
   return {
     status: permissions.camera.status,

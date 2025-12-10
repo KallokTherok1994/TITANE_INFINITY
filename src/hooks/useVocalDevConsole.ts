@@ -65,7 +65,7 @@ export function useVocalDevConsole(): UseVocalDevConsoleReturn {
 
   // Subscribe to engine state changes
   useEffect(() => {
-    const unsubscribe = vocalDevConsole.subscribe((newState) => {
+    const unsubscribe = vocalDevConsole.subscribe(newState => {
       setState(newState);
     });
 
@@ -106,9 +106,12 @@ export function useVocalDevConsole(): UseVocalDevConsoleReturn {
 
   // ═══ EXECUTION ═══
 
-  const executeCommand = useCallback(async (transcript: string): Promise<VocalExecutionResult> => {
-    return await vocalDevConsole.processTranscript(transcript);
-  }, []);
+  const executeCommand = useCallback(
+    async (transcript: string): Promise<VocalExecutionResult> => {
+      return await vocalDevConsole.processTranscript(transcript);
+    },
+    []
+  );
 
   // ═══ TTS ═══
 

@@ -167,6 +167,7 @@ cargo check
 Tous les modules archivés sont préservés dans l'historique Git.
 
 Pour voir l'état avant archivage :
+
 ```bash
 git log --all --full-history -- src-tauri/src/system/[nom_module]/
 ```
@@ -176,16 +177,19 @@ git log --all --full-history -- src-tauri/src/system/[nom_module]/
 ## 📊 IMPACT CLEANUP
 
 **Avant Phase 3** :
+
 - 106 dossiers dans system/
 - 346 fichiers .rs
 - 9 modules déclarés (dont 5 dupliqués)
 
 **Après Phase 3 Étape 2** :
+
 - **5 dossiers** dans system/ (4 actifs + mod.rs)
 - **~20 fichiers .rs** actifs
 - **4 modules uniques** (adaptive_engine, self_heal, watchdog, persona_engine)
 
 **Gain** :
+
 - 📉 Dossiers : **-95%** (106 → 5)
 - 📉 Fichiers : **-94%** (346 → ~20)
 - 📈 Clarté : **+1000%**
