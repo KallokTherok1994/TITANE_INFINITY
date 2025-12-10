@@ -517,3 +517,870 @@ impl Default for FrenchMasteryProcessor {
         Self::new()
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════
+// TESTS
+// ═══════════════════════════════════════════════════════════════════
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS ENUM ProcessingMode
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_processing_mode_correction() {
+        let mode = ProcessingMode::Correction;
+        assert_eq!(mode, ProcessingMode::Correction);
+    }
+
+    #[test]
+    fn test_processing_mode_optimization() {
+        let mode = ProcessingMode::Optimization;
+        assert_eq!(mode, ProcessingMode::Optimization);
+    }
+
+    #[test]
+    fn test_processing_mode_simplification() {
+        let mode = ProcessingMode::Simplification;
+        assert_eq!(mode, ProcessingMode::Simplification);
+    }
+
+    #[test]
+    fn test_processing_mode_enrichment() {
+        let mode = ProcessingMode::Enrichment;
+        assert_eq!(mode, ProcessingMode::Enrichment);
+    }
+
+    #[test]
+    fn test_processing_mode_double() {
+        let mode = ProcessingMode::Double;
+        assert_eq!(mode, ProcessingMode::Double);
+    }
+
+    #[test]
+    fn test_processing_mode_default() {
+        let mode = ProcessingMode::default();
+        assert_eq!(mode, ProcessingMode::Optimization);
+    }
+
+    #[test]
+    fn test_processing_mode_clone() {
+        let mode = ProcessingMode::Correction;
+        let cloned = mode.clone();
+        assert_eq!(mode, cloned);
+    }
+
+    #[test]
+    fn test_processing_mode_serialize() {
+        let mode = ProcessingMode::Double;
+        let json = serde_json::to_string(&mode).unwrap();
+        assert!(json.contains("double"));
+    }
+
+    #[test]
+    fn test_processing_mode_deserialize() {
+        let json = "\"correction\"";
+        let mode: ProcessingMode = serde_json::from_str(json).unwrap();
+        assert_eq!(mode, ProcessingMode::Correction);
+    }
+
+    #[test]
+    fn test_processing_mode_debug() {
+        let mode = ProcessingMode::Enrichment;
+        let debug = format!("{:?}", mode);
+        assert!(debug.contains("Enrichment"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS ENUM Tone
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_tone_neutral() {
+        let tone = Tone::Neutral;
+        assert_eq!(tone, Tone::Neutral);
+    }
+
+    #[test]
+    fn test_tone_warm() {
+        let tone = Tone::Warm;
+        assert_eq!(tone, Tone::Warm);
+    }
+
+    #[test]
+    fn test_tone_professional() {
+        let tone = Tone::Professional;
+        assert_eq!(tone, Tone::Professional);
+    }
+
+    #[test]
+    fn test_tone_default() {
+        let tone = Tone::default();
+        assert_eq!(tone, Tone::Neutral);
+    }
+
+    #[test]
+    fn test_tone_clone() {
+        let tone = Tone::Warm;
+        let cloned = tone.clone();
+        assert_eq!(tone, cloned);
+    }
+
+    #[test]
+    fn test_tone_serialize() {
+        let tone = Tone::Professional;
+        let json = serde_json::to_string(&tone).unwrap();
+        assert!(json.contains("professional"));
+    }
+
+    #[test]
+    fn test_tone_deserialize() {
+        let json = "\"warm\"";
+        let tone: Tone = serde_json::from_str(json).unwrap();
+        assert_eq!(tone, Tone::Warm);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS ENUM Length
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_length_short() {
+        let length = Length::Short;
+        assert_eq!(length, Length::Short);
+    }
+
+    #[test]
+    fn test_length_medium() {
+        let length = Length::Medium;
+        assert_eq!(length, Length::Medium);
+    }
+
+    #[test]
+    fn test_length_long() {
+        let length = Length::Long;
+        assert_eq!(length, Length::Long);
+    }
+
+    #[test]
+    fn test_length_default() {
+        let length = Length::default();
+        assert_eq!(length, Length::Medium);
+    }
+
+    #[test]
+    fn test_length_clone() {
+        let length = Length::Long;
+        let cloned = length.clone();
+        assert_eq!(length, cloned);
+    }
+
+    #[test]
+    fn test_length_serialize() {
+        let length = Length::Short;
+        let json = serde_json::to_string(&length).unwrap();
+        assert!(json.contains("short"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS ENUM TechnicalLevel
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_technical_level_beginner() {
+        let level = TechnicalLevel::Beginner;
+        assert_eq!(level, TechnicalLevel::Beginner);
+    }
+
+    #[test]
+    fn test_technical_level_intermediate() {
+        let level = TechnicalLevel::Intermediate;
+        assert_eq!(level, TechnicalLevel::Intermediate);
+    }
+
+    #[test]
+    fn test_technical_level_expert() {
+        let level = TechnicalLevel::Expert;
+        assert_eq!(level, TechnicalLevel::Expert);
+    }
+
+    #[test]
+    fn test_technical_level_default() {
+        let level = TechnicalLevel::default();
+        assert_eq!(level, TechnicalLevel::Intermediate);
+    }
+
+    #[test]
+    fn test_technical_level_clone() {
+        let level = TechnicalLevel::Expert;
+        let cloned = level.clone();
+        assert_eq!(level, cloned);
+    }
+
+    #[test]
+    fn test_technical_level_serialize() {
+        let level = TechnicalLevel::Beginner;
+        let json = serde_json::to_string(&level).unwrap();
+        assert!(json.contains("beginner"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS STRUCT PostProcessingConstraints
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_constraints_creation() {
+        let constraints = PostProcessingConstraints {
+            tone: Tone::Warm,
+            length: Length::Short,
+            technical_level: TechnicalLevel::Expert,
+        };
+        assert_eq!(constraints.tone, Tone::Warm);
+        assert_eq!(constraints.length, Length::Short);
+        assert_eq!(constraints.technical_level, TechnicalLevel::Expert);
+    }
+
+    #[test]
+    fn test_constraints_default() {
+        let constraints = PostProcessingConstraints::default();
+        assert_eq!(constraints.tone, Tone::Neutral);
+        assert_eq!(constraints.length, Length::Medium);
+        assert_eq!(constraints.technical_level, TechnicalLevel::Intermediate);
+    }
+
+    #[test]
+    fn test_constraints_clone() {
+        let constraints = PostProcessingConstraints {
+            tone: Tone::Professional,
+            length: Length::Long,
+            technical_level: TechnicalLevel::Beginner,
+        };
+        let cloned = constraints.clone();
+        assert_eq!(constraints.tone, cloned.tone);
+    }
+
+    #[test]
+    fn test_constraints_serialize() {
+        let constraints = PostProcessingConstraints::default();
+        let json = serde_json::to_string(&constraints).unwrap();
+        assert!(json.contains("tone"));
+        assert!(json.contains("length"));
+    }
+
+    #[test]
+    fn test_constraints_debug() {
+        let constraints = PostProcessingConstraints::default();
+        let debug = format!("{:?}", constraints);
+        assert!(debug.contains("PostProcessingConstraints"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS STRUCT FrenchMasteryRequest
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_request_creation() {
+        let request = FrenchMasteryRequest {
+            context: "Technical discussion".to_string(),
+            draft_response: "Draft text".to_string(),
+            mode: ProcessingMode::Correction,
+            constraints: PostProcessingConstraints::default(),
+        };
+        assert_eq!(request.context, "Technical discussion");
+        assert_eq!(request.mode, ProcessingMode::Correction);
+    }
+
+    #[test]
+    fn test_request_clone() {
+        let request = FrenchMasteryRequest {
+            context: "ctx".to_string(),
+            draft_response: "draft".to_string(),
+            mode: ProcessingMode::Optimization,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let cloned = request.clone();
+        assert_eq!(request.context, cloned.context);
+    }
+
+    #[test]
+    fn test_request_serialize() {
+        let request = FrenchMasteryRequest {
+            context: "test".to_string(),
+            draft_response: "response".to_string(),
+            mode: ProcessingMode::Double,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let json = serde_json::to_string(&request).unwrap();
+        assert!(json.contains("context"));
+        assert!(json.contains("draft_response"));
+    }
+
+    #[test]
+    fn test_request_debug() {
+        let request = FrenchMasteryRequest {
+            context: "".to_string(),
+            draft_response: "".to_string(),
+            mode: ProcessingMode::Simplification,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let debug = format!("{:?}", request);
+        assert!(debug.contains("FrenchMasteryRequest"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS STRUCT FrenchMasteryResponse
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_response_creation() {
+        let response = FrenchMasteryResponse {
+            comment: Some("Test comment".to_string()),
+            finalized_response: "Final".to_string(),
+            variant: None,
+            quality_scores: QualityScores::default(),
+        };
+        assert_eq!(response.finalized_response, "Final");
+        assert!(response.comment.is_some());
+        assert!(response.variant.is_none());
+    }
+
+    #[test]
+    fn test_response_with_variant() {
+        let response = FrenchMasteryResponse {
+            comment: None,
+            finalized_response: "Full version".to_string(),
+            variant: Some("Short version".to_string()),
+            quality_scores: QualityScores::default(),
+        };
+        assert!(response.variant.is_some());
+        assert_eq!(response.variant.unwrap(), "Short version");
+    }
+
+    #[test]
+    fn test_response_clone() {
+        let response = FrenchMasteryResponse {
+            comment: Some("Comment".to_string()),
+            finalized_response: "Response".to_string(),
+            variant: Some("Variant".to_string()),
+            quality_scores: QualityScores::default(),
+        };
+        let cloned = response.clone();
+        assert_eq!(response.finalized_response, cloned.finalized_response);
+    }
+
+    #[test]
+    fn test_response_serialize() {
+        let response = FrenchMasteryResponse {
+            comment: None,
+            finalized_response: "test".to_string(),
+            variant: None,
+            quality_scores: QualityScores::default(),
+        };
+        let json = serde_json::to_string(&response).unwrap();
+        assert!(json.contains("finalized_response"));
+        assert!(json.contains("quality_scores"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS STRUCT QualityScores
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_quality_scores_creation() {
+        let scores = QualityScores {
+            linguistic_correctness: 0.95,
+            clarity: 0.9,
+            titane_style_match: 0.85,
+            context_adaptation: 0.8,
+            optimal_density: 0.75,
+            reusability: 0.7,
+        };
+        assert_eq!(scores.linguistic_correctness, 0.95);
+        assert_eq!(scores.reusability, 0.7);
+    }
+
+    #[test]
+    fn test_quality_scores_default() {
+        let scores = QualityScores::default();
+        assert_eq!(scores.linguistic_correctness, 0.9);
+        assert_eq!(scores.clarity, 0.85);
+        assert_eq!(scores.titane_style_match, 0.9);
+        assert_eq!(scores.context_adaptation, 0.8);
+        assert_eq!(scores.optimal_density, 0.75);
+        assert_eq!(scores.reusability, 0.7);
+    }
+
+    #[test]
+    fn test_quality_scores_clone() {
+        let scores = QualityScores {
+            linguistic_correctness: 1.0,
+            clarity: 1.0,
+            titane_style_match: 1.0,
+            context_adaptation: 1.0,
+            optimal_density: 1.0,
+            reusability: 1.0,
+        };
+        let cloned = scores.clone();
+        assert_eq!(scores.linguistic_correctness, cloned.linguistic_correctness);
+    }
+
+    #[test]
+    fn test_quality_scores_serialize() {
+        let scores = QualityScores::default();
+        let json = serde_json::to_string(&scores).unwrap();
+        assert!(json.contains("linguistic_correctness"));
+        assert!(json.contains("clarity"));
+        assert!(json.contains("titane_style_match"));
+    }
+
+    #[test]
+    fn test_quality_scores_debug() {
+        let scores = QualityScores::default();
+        let debug = format!("{:?}", scores);
+        assert!(debug.contains("QualityScores"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS FrenchMasteryProcessor
+    // ═══════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_processor_new() {
+        let processor = FrenchMasteryProcessor::new();
+        assert!(processor.enable_auto_simplification);
+        assert!(processor.enable_pedagogical_enrichment);
+    }
+
+    #[test]
+    fn test_processor_default() {
+        let processor = FrenchMasteryProcessor::default();
+        assert!(processor.enable_auto_simplification);
+    }
+
+    #[test]
+    fn test_correct_language_basic() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Les données est correct";
+        let corrected = processor.correct_language(text);
+        assert!(corrected.contains("Les données sont"));
+    }
+
+    #[test]
+    fn test_correct_language_subjunctive() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "il faut que tu fais cela";
+        let corrected = processor.correct_language(text);
+        assert!(corrected.contains("il faut que tu fasses"));
+    }
+
+    #[test]
+    fn test_correct_language_no_change() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Texte correct sans erreurs";
+        let corrected = processor.correct_language(text);
+        assert_eq!(corrected, text);
+    }
+
+    #[test]
+    fn test_optimize_structure_short_sentences() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Phrase courte. Autre phrase.";
+        let optimized = processor.optimize_structure(text);
+        assert!(optimized.contains("Phrase courte."));
+    }
+
+    #[test]
+    fn test_segment_long_sentence_with_et() {
+        let processor = FrenchMasteryProcessor::new();
+        let sentence = "Première partie et deuxième partie";
+        let segmented = processor.segment_long_sentence(sentence);
+        assert!(segmented.contains(".\n"));
+    }
+
+    #[test]
+    fn test_segment_long_sentence_with_donc() {
+        let processor = FrenchMasteryProcessor::new();
+        let sentence = "Observation donc conclusion";
+        let segmented = processor.segment_long_sentence(sentence);
+        assert!(segmented.contains("Donc,"));
+    }
+
+    #[test]
+    fn test_segment_long_sentence_with_mais() {
+        let processor = FrenchMasteryProcessor::new();
+        let sentence = "Point A mais point B";
+        let segmented = processor.segment_long_sentence(sentence);
+        assert!(segmented.contains("Mais"));
+    }
+
+    #[test]
+    fn test_apply_titane_style_je_pense() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Je pense que c'est une bonne idée";
+        let styled = processor.apply_titane_style(text);
+        assert!(styled.contains("Je suggère"));
+    }
+
+    #[test]
+    fn test_apply_titane_style_genre() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Il y a genre trois options";
+        let styled = processor.apply_titane_style(text);
+        assert!(styled.contains("Voici"));
+    }
+
+    #[test]
+    fn test_apply_titane_style_cool() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "C'est cool parce que ça fonctionne";
+        let styled = processor.apply_titane_style(text);
+        assert!(styled.contains("présente l'avantage"));
+    }
+
+    #[test]
+    fn test_apply_titane_style_slang() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "C'est trop stylé et ça déchire";
+        let styled = processor.apply_titane_style(text);
+        assert!(styled.contains("efficace"));
+        assert!(styled.contains("remarquable"));
+    }
+
+    #[test]
+    fn test_simplify_response_keeps_first_line() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Première ligne importante\nDeuxième ligne\nTroisième ligne";
+        let simplified = processor.simplify_response(text);
+        assert!(simplified.contains("Première ligne importante"));
+    }
+
+    #[test]
+    fn test_simplify_response_keeps_lists() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Introduction\n- Point un\n- Point deux\n1. Premier\n2. Deuxième";
+        let simplified = processor.simplify_response(text);
+        assert!(simplified.contains("- Point un"));
+        assert!(simplified.contains("1. Premier"));
+    }
+
+    #[test]
+    fn test_add_pedagogical_episodic() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "La mémoire épisodique permet de stocker des informations";
+        let enriched = processor.add_pedagogical_elements(text);
+        assert!(enriched.contains("comme un journal de bord"));
+    }
+
+    #[test]
+    fn test_add_pedagogical_compression() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "La compression cognitive optimise les données";
+        let enriched = processor.add_pedagogical_elements(text);
+        assert!(enriched.contains("comme un ZIP"));
+    }
+
+    #[test]
+    fn test_add_pedagogical_no_duplicate() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "La mémoire épisodique (comme un journal) fonctionne bien";
+        let enriched = processor.add_pedagogical_elements(text);
+        assert!(!enriched.contains("comme un journal de bord"));
+    }
+
+    #[test]
+    fn test_check_linguistic_correctness_clean() {
+        let processor = FrenchMasteryProcessor::new();
+        let score = processor.check_linguistic_correctness("Texte correct");
+        assert_eq!(score, 1.0);
+    }
+
+    #[test]
+    fn test_check_linguistic_correctness_with_errors() {
+        let processor = FrenchMasteryProcessor::new();
+        let score = processor.check_linguistic_correctness("Les données est disponible");
+        assert_eq!(score, 0.7);
+    }
+
+    #[test]
+    fn test_check_clarity_short_sentences() {
+        let processor = FrenchMasteryProcessor::new();
+        let score = processor.check_clarity("Court. Bref. Simple.");
+        assert_eq!(score, 0.95);
+    }
+
+    #[test]
+    fn test_check_clarity_medium_sentences() {
+        let processor = FrenchMasteryProcessor::new();
+        // Create a text with ~25 words per sentence
+        let text = "Cette phrase contient environ vingt-cinq mots ce qui est une longueur moyenne acceptable pour la clarté.";
+        let score = processor.check_clarity(text);
+        assert_eq!(score, 0.85);
+    }
+
+    #[test]
+    fn test_check_titane_style_good() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Je suggère de procéder ainsi. Voici les options. Résultat précis.";
+        let score = processor.check_titane_style(text);
+        assert_eq!(score, 0.95);
+    }
+
+    #[test]
+    fn test_check_titane_style_bad() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "C'est genre trop stylé et ça déchire";
+        let score = processor.check_titane_style(text);
+        assert_eq!(score, 0.5);
+    }
+
+    #[test]
+    fn test_check_context_adaptation() {
+        let processor = FrenchMasteryProcessor::new();
+        let score = processor.check_context_adaptation("Any text", "Original");
+        assert_eq!(score, 0.8);
+    }
+
+    #[test]
+    fn test_check_density_optimal() {
+        let processor = FrenchMasteryProcessor::new();
+        // Create text with ~150 words
+        let words: Vec<&str> = (0..150).map(|_| "mot").collect();
+        let text = words.join(" ");
+        let score = processor.check_density(&text);
+        assert_eq!(score, 0.9);
+    }
+
+    #[test]
+    fn test_check_density_too_short() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Très court";
+        let score = processor.check_density(text);
+        assert_eq!(score, 0.6);
+    }
+
+    #[test]
+    fn test_check_density_too_long() {
+        let processor = FrenchMasteryProcessor::new();
+        let words: Vec<&str> = (0..300).map(|_| "mot").collect();
+        let text = words.join(" ");
+        let score = processor.check_density(&text);
+        assert_eq!(score, 0.7);
+    }
+
+    #[test]
+    fn test_check_reusability_with_lists() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "- Point un\n- Point deux";
+        let score = processor.check_reusability(text);
+        assert_eq!(score, 0.85);
+    }
+
+    #[test]
+    fn test_check_reusability_with_sections() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "## Section\nContenu\n### Sous-section";
+        let score = processor.check_reusability(text);
+        assert_eq!(score, 0.85);
+    }
+
+    #[test]
+    fn test_check_reusability_plain_text() {
+        let processor = FrenchMasteryProcessor::new();
+        let text = "Texte simple sans structure";
+        let score = processor.check_reusability(text);
+        assert_eq!(score, 0.65);
+    }
+
+    #[test]
+    fn test_evaluate_quality_all_scores() {
+        let processor = FrenchMasteryProcessor::new();
+        let scores = processor.evaluate_quality(
+            "Je suggère cette approche. Voici le résultat précis.",
+            "Original text",
+        );
+        assert!(scores.linguistic_correctness >= 0.0 && scores.linguistic_correctness <= 1.0);
+        assert!(scores.clarity >= 0.0 && scores.clarity <= 1.0);
+    }
+
+    // ═══════════════════════════════════════════════════════════════
+    // TESTS ASYNC PROCESS METHODS
+    // ═══════════════════════════════════════════════════════════════
+
+    #[tokio::test]
+    async fn test_process_correction_mode() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Les données est incorrect".to_string(),
+            mode: ProcessingMode::Correction,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(response.finalized_response.contains("Les données sont"));
+        assert!(response.comment.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_process_optimization_mode() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Je pense que c'est une bonne idée".to_string(),
+            mode: ProcessingMode::Optimization,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(response.finalized_response.contains("suggère"));
+    }
+
+    #[tokio::test]
+    async fn test_process_simplification_mode() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Premier point\n- Item 1\n- Item 2\nAutre texte".to_string(),
+            mode: ProcessingMode::Simplification,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(response.quality_scores.clarity >= 0.9);
+    }
+
+    #[tokio::test]
+    async fn test_process_enrichment_mode() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "La mémoire épisodique stocke les événements".to_string(),
+            mode: ProcessingMode::Enrichment,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(response.finalized_response.contains("journal de bord"));
+    }
+
+    #[tokio::test]
+    async fn test_process_double_mode() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Texte complet avec détails".to_string(),
+            mode: ProcessingMode::Double,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+        let response = result.unwrap();
+        assert!(!response.finalized_response.is_empty());
+        assert!(response.variant.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_process_preserves_constraints() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Professional context".to_string(),
+            draft_response: "Draft".to_string(),
+            mode: ProcessingMode::Correction,
+            constraints: PostProcessingConstraints {
+                tone: Tone::Professional,
+                length: Length::Short,
+                technical_level: TechnicalLevel::Expert,
+            },
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_process_empty_draft() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "".to_string(),
+            draft_response: "".to_string(),
+            mode: ProcessingMode::Correction,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await;
+        assert!(result.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_apply_correction_quality_scores() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Test".to_string(),
+            mode: ProcessingMode::Correction,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await.unwrap();
+        assert_eq!(result.quality_scores.linguistic_correctness, 1.0);
+    }
+
+    #[tokio::test]
+    async fn test_apply_optimization_quality_scores() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Test".to_string(),
+            mode: ProcessingMode::Optimization,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await.unwrap();
+        assert_eq!(result.quality_scores.titane_style_match, 0.95);
+    }
+
+    #[tokio::test]
+    async fn test_apply_simplification_quality_scores() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Test".to_string(),
+            mode: ProcessingMode::Simplification,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await.unwrap();
+        assert_eq!(result.quality_scores.clarity, 0.98);
+        assert_eq!(result.quality_scores.optimal_density, 0.95);
+    }
+
+    #[tokio::test]
+    async fn test_apply_enrichment_quality_scores() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Test".to_string(),
+            mode: ProcessingMode::Enrichment,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await.unwrap();
+        assert_eq!(result.quality_scores.clarity, 0.92);
+        assert_eq!(result.quality_scores.reusability, 0.85);
+    }
+
+    #[tokio::test]
+    async fn test_apply_double_quality_scores() {
+        let processor = FrenchMasteryProcessor::new();
+        let request = FrenchMasteryRequest {
+            context: "Test".to_string(),
+            draft_response: "Test".to_string(),
+            mode: ProcessingMode::Double,
+            constraints: PostProcessingConstraints::default(),
+        };
+        let result = processor.process(request).await.unwrap();
+        assert_eq!(result.quality_scores.clarity, 0.95);
+        assert_eq!(result.quality_scores.optimal_density, 0.9);
+    }
+}
