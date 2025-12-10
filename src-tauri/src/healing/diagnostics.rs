@@ -284,4 +284,184 @@ mod tests {
         assert_eq!(report.summary.total_components, 2);
         assert_eq!(report.overall_status, ComponentStatus::Operational);
     }
+
+    #[test]
+    fn test_diagnostics_engine_default() {
+        let engine = DiagnosticsEngine::default();
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.summary.total_components, 0);
+        assert_eq!(report.overall_status, ComponentStatus::Operational);
+    }
+
+    #[test]
+    fn test_memory_diagnostic_checker() {
+        let checker = MemoryDiagnosticChecker;
+        assert_eq!(checker.component_name(), "memory");
+
+        let diagnostic = checker.run_diagnostics();
+        assert_eq!(diagnostic.component_name, "memory");
+        assert_eq!(diagnostic.status, ComponentStatus::Operational);
+        assert!(diagnostic.metrics.contains_key("heap_usage_percent"));
+        assert!(diagnostic.metrics.contains_key("gc_pressure"));
+    }
+
+    #[test]
+    fn test_cpu_diagnostic_checker() {
+        let checker = CpuDiagnosticChecker;
+        assert_eq!(checker.component_name(), "cpu");
+
+        let diagnostic = checker.run_diagnostics();
+        assert_eq!(diagnostic.component_name, "cpu");
+        assert_eq!(diagnostic.status, ComponentStatus::Operational);
+        assert!(diagnostic.metrics.contains_key("cpu_usage_percent"));
+        assert!(diagnostic.metrics.contains_key("thread_count"));
+    }
+
+    #[test]
+    fn test_component_diagnostics_lookup() {
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MemoryDiagnosticChecker));
+        engine.register_checker(Box::new(CpuDiagnosticChecker));
+
+        let memory_diag = engine.run_component_diagnostics("memory");
+        assert!(memory_diag.is_some());
+        assert_eq!(memory_diag.unwrap().component_name, "memory");
+
+        let cpu_diag = engine.run_component_diagnostics("cpu");
+        assert!(cpu_diag.is_some());
+
+        let nonexistent = engine.run_component_diagnostics("network");
+        assert!(nonexistent.is_none());
+    }
+
+    #[test]
+    fn test_diagnostic_severity_ordering() {
+        assert!(DiagnosticSeverity::Info < DiagnosticSeverity::Warning);
+        assert!(DiagnosticSeverity::Warning < DiagnosticSeverity::Error);
+        assert!(DiagnosticSeverity::Error < DiagnosticSeverity::Critical);
+    }
+
+    #[test]
+    fn test_diagnostic_finding_creation() {
+        let finding = DiagnosticFinding {
+            code: "TEST001".to_string(),
+            severity: DiagnosticSeverity::Warning,
+            component: "test".to_string(),
+            message: "Test warning".to_string(),
+            details: Some("Details here".to_string()),
+            suggestion: Some("Fix it".to_string()),
+            timestamp: 12345,
+        };
+
+        assert_eq!(finding.code, "TEST001");
+        assert_eq!(finding.severity, DiagnosticSeverity::Warning);
+        assert!(finding.details.is_some());
+        assert!(finding.suggestion.is_some());
+    }
+
+    #[test]
+    fn test_diagnostic_summary_counts() {
+        let summary = DiagnosticSummary {
+            total_components: 5,
+            operational_count: 3,
+            degraded_count: 1,
+            failed_count: 1,
+            total_findings: 10,
+            critical_count: 2,
+            error_count: 3,
+            warning_count: 5,
+        };
+
+        assert_eq!(summary.total_components, 5);
+        assert_eq!(summary.operational_count + summary.degraded_count + summary.failed_count, 5);
+        assert_eq!(summary.critical_count + summary.error_count + summary.warning_count, 10);
+    }
+
+    #[test]
+    fn test_component_status_equality() {
+        assert_eq!(ComponentStatus::Operational, ComponentStatus::Operational);
+        assert_ne!(ComponentStatus::Operational, ComponentStatus::Degraded);
+        assert_ne!(ComponentStatus::Degraded, ComponentStatus::Failed);
+        assert_ne!(ComponentStatus::Failed, ComponentStatus::Unknown);
+    }
+
+    /// Custom test checker for failed status
+    struct FailingChecker;
+
+    impl ComponentChecker for FailingChecker {
+        fn component_name(&self) -> &str {
+            "failing"
+        }
+
+        fn run_diagnostics(&self) -> ComponentDiagnostic {
+            ComponentDiagnostic {
+                component_name: "failing".to_string(),
+                status: ComponentStatus::Failed,
+                findings: vec![DiagnosticFinding {
+                    code: "FAIL001".to_string(),
+                    severity: DiagnosticSeverity::Critical,
+                    component: "failing".to_string(),
+                    message: "Component has failed".to_string(),
+                    details: None,
+                    suggestion: None,
+                    timestamp: 0,
+                }],
+                metrics: HashMap::new(),
+                timestamp: 0,
+            }
+        }
+    }
+
+    #[test]
+    fn test_overall_status_failed() {
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MemoryDiagnosticChecker));
+        engine.register_checker(Box::new(FailingChecker));
+
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.overall_status, ComponentStatus::Failed);
+        assert_eq!(report.summary.failed_count, 1);
+        assert!(!report.critical_findings.is_empty());
+    }
+
+    /// Custom test checker for degraded status
+    struct DegradedChecker;
+
+    impl ComponentChecker for DegradedChecker {
+        fn component_name(&self) -> &str {
+            "degraded"
+        }
+
+        fn run_diagnostics(&self) -> ComponentDiagnostic {
+            ComponentDiagnostic {
+                component_name: "degraded".to_string(),
+                status: ComponentStatus::Degraded,
+                findings: vec![],
+                metrics: HashMap::new(),
+                timestamp: 0,
+            }
+        }
+    }
+
+    #[test]
+    fn test_overall_status_degraded() {
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MemoryDiagnosticChecker));
+        engine.register_checker(Box::new(DegradedChecker));
+
+        let report = engine.run_full_diagnostics();
+        assert_eq!(report.overall_status, ComponentStatus::Degraded);
+        assert_eq!(report.summary.degraded_count, 1);
+    }
+
+    #[test]
+    fn test_report_duration() {
+        let mut engine = DiagnosticsEngine::new();
+        engine.register_checker(Box::new(MemoryDiagnosticChecker));
+
+        let report = engine.run_full_diagnostics();
+        // Duration should be non-negative
+        assert!(report.duration_ms < 10000); // Shouldn't take more than 10 seconds
+        assert!(report.timestamp > 0);
+    }
 }

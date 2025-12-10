@@ -290,4 +290,150 @@ mod tests {
         let different = TrackedMemoryEntry::compute_checksum("Different");
         assert_ne!(checksum1, different);
     }
+
+    #[test]
+    fn test_default_config() {
+        let config = MemoryValidatorConfig::default();
+        assert_eq!(config.check_interval_ms, 5000);
+        assert_eq!(config.max_corruption_threshold, 0.05);
+        assert!(config.auto_repair_enabled);
+        assert_eq!(config.checksum_algorithm, "sha256");
+    }
+
+    #[test]
+    fn test_tracked_memory_entry_new() {
+        let entry = TrackedMemoryEntry::new("id1".to_string(), "content".to_string());
+        assert_eq!(entry.id, "id1");
+        assert_eq!(entry.content, "content");
+        assert!(!entry.checksum.is_empty());
+        assert_eq!(entry.validation_count, 0);
+    }
+
+    #[test]
+    fn test_entry_validate_success() {
+        let mut entry = TrackedMemoryEntry::new("id".to_string(), "test".to_string());
+        assert!(entry.validate());
+        assert_eq!(entry.validation_count, 1);
+    }
+
+    #[test]
+    fn test_entry_update_checksum() {
+        let mut entry = TrackedMemoryEntry::new("id".to_string(), "initial".to_string());
+        let initial_checksum = entry.checksum.clone();
+
+        entry.content = "modified".to_string();
+        entry.update_checksum();
+
+        assert_ne!(entry.checksum, initial_checksum);
+    }
+
+    #[test]
+    fn test_validator_update() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("entry1".to_string(), "original".to_string());
+
+        assert!(validator.update("entry1", "updated".to_string()));
+        assert!(!validator.update("nonexistent", "value".to_string()));
+
+        let result = validator.validate_all();
+        assert!(result.is_valid);
+    }
+
+    #[test]
+    fn test_validator_untrack() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("to_remove".to_string(), "content".to_string());
+
+        assert_eq!(validator.stats().tracked_entries, 1);
+        assert!(validator.untrack("to_remove"));
+        assert_eq!(validator.stats().tracked_entries, 0);
+        assert!(!validator.untrack("nonexistent"));
+    }
+
+    #[test]
+    fn test_validate_entry_specific() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("specific".to_string(), "content".to_string());
+
+        let detail = validator.validate_entry("specific");
+        assert!(detail.is_some());
+
+        let d = detail.unwrap();
+        assert_eq!(d.entry_id, "specific");
+        assert_eq!(d.status, ValidationStatus::Valid);
+
+        assert!(validator.validate_entry("nonexistent").is_none());
+    }
+
+    #[test]
+    fn test_validation_stats() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("e1".to_string(), "c1".to_string());
+        validator.track("e2".to_string(), "c2".to_string());
+
+        let _ = validator.validate_all();
+
+        let stats = validator.stats();
+        assert_eq!(stats.validations_run, 1);
+        assert_eq!(stats.entries_checked, 2);
+        assert_eq!(stats.tracked_entries, 2);
+    }
+
+    #[test]
+    fn test_validation_status_equality() {
+        assert_eq!(ValidationStatus::Valid, ValidationStatus::Valid);
+        assert_ne!(ValidationStatus::Valid, ValidationStatus::Corrupted);
+        assert_ne!(ValidationStatus::Corrupted, ValidationStatus::Repaired);
+        assert_ne!(ValidationStatus::Repaired, ValidationStatus::Unrecoverable);
+    }
+
+    #[test]
+    fn test_multiple_tracks() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+
+        for i in 0..10 {
+            validator.track(format!("entry_{}", i), format!("content_{}", i));
+        }
+
+        assert_eq!(validator.stats().tracked_entries, 10);
+
+        let result = validator.validate_all();
+        assert!(result.is_valid);
+        assert_eq!(result.checked_entries, 10);
+        assert_eq!(result.details.len(), 10);
+    }
+
+    #[test]
+    fn test_checksum_deterministic() {
+        let content = "deterministic test content with special chars: àéïõü";
+        let checksum1 = TrackedMemoryEntry::compute_checksum(content);
+        let checksum2 = TrackedMemoryEntry::compute_checksum(content);
+        let checksum3 = TrackedMemoryEntry::compute_checksum(content);
+
+        assert_eq!(checksum1, checksum2);
+        assert_eq!(checksum2, checksum3);
+    }
+
+    #[test]
+    fn test_validation_result_details() {
+        let validator = MemoryValidator::new(MemoryValidatorConfig::default());
+        validator.track("detail_test".to_string(), "test content".to_string());
+
+        let result = validator.validate_all();
+
+        assert_eq!(result.details.len(), 1);
+        let detail = &result.details[0];
+        assert_eq!(detail.entry_id, "detail_test");
+        assert!(detail.expected_checksum.is_some());
+        assert!(detail.actual_checksum.is_some());
+        assert_eq!(detail.expected_checksum, detail.actual_checksum);
+    }
+
+    #[test]
+    fn test_empty_content_checksum() {
+        let checksum = TrackedMemoryEntry::compute_checksum("");
+        // SHA256 of empty string
+        assert!(!checksum.is_empty());
+        assert_eq!(checksum.len(), 64); // SHA256 hex is 64 chars
+    }
 }

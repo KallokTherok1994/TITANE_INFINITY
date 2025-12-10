@@ -135,12 +135,12 @@ mod tests {
     async fn test_wakeword_listener_start_stop() {
         let (tx, _rx) = mpsc::channel(10);
         let listener = WakewordListener::new(tx);
-        
+
         assert!(!listener.is_listening());
-        
+
         listener.start().await.unwrap();
         assert!(listener.is_listening());
-        
+
         listener.stop();
         assert!(!listener.is_listening());
     }
@@ -149,11 +149,113 @@ mod tests {
     async fn test_wakeword_sensitivity() {
         let (tx, _rx) = mpsc::channel(10);
         let mut listener = WakewordListener::new(tx);
-        
+
         listener.set_sensitivity(0.9);
-        // Sensitivity devrait être 0.9
-        
+        assert_eq!(listener.sensitivity, 0.9);
+
         listener.set_sensitivity(1.5); // Out of bounds
-        // Devrait être clampé à 1.0
+        assert_eq!(listener.sensitivity, 1.0); // Clamped
+
+        listener.set_sensitivity(-0.5); // Negative
+        assert_eq!(listener.sensitivity, 0.0); // Clamped to 0
+    }
+
+    #[tokio::test]
+    async fn test_listener_initial_state() {
+        let (tx, _rx) = mpsc::channel(10);
+        let listener = WakewordListener::new(tx);
+
+        assert!(!listener.is_listening());
+        assert!(!listener.is_active());
+        assert_eq!(listener.sensitivity, 0.7); // Default
+    }
+
+    #[tokio::test]
+    async fn test_reset_active() {
+        let (tx, _rx) = mpsc::channel(10);
+        let listener = WakewordListener::new(tx);
+
+        // Manually set active (simulating detection)
+        listener.is_active.store(true, Ordering::Relaxed);
+        assert!(listener.is_active());
+
+        listener.reset_active();
+        assert!(!listener.is_active());
+    }
+
+    #[tokio::test]
+    async fn test_double_start() {
+        let (tx, _rx) = mpsc::channel(10);
+        let listener = WakewordListener::new(tx);
+
+        // First start
+        listener.start().await.unwrap();
+        assert!(listener.is_listening());
+
+        // Second start should be OK (idempotent)
+        let result = listener.start().await;
+        assert!(result.is_ok());
+
+        listener.stop();
+    }
+
+    #[tokio::test]
+    async fn test_stop_clears_active() {
+        let (tx, _rx) = mpsc::channel(10);
+        let listener = WakewordListener::new(tx);
+
+        listener.start().await.unwrap();
+        listener.is_active.store(true, Ordering::Relaxed);
+
+        listener.stop();
+
+        assert!(!listener.is_listening());
+        assert!(!listener.is_active());
+    }
+
+    #[test]
+    fn test_wakeword_trigger_structure() {
+        let trigger = WakewordTrigger {
+            keyword: "TITANE".to_string(),
+            confidence: 0.85,
+            timestamp: 1234567890,
+            audio_sample: vec![0.1, 0.2, 0.3],
+        };
+
+        assert_eq!(trigger.keyword, "TITANE");
+        assert_eq!(trigger.confidence, 0.85);
+        assert_eq!(trigger.timestamp, 1234567890);
+        assert_eq!(trigger.audio_sample.len(), 3);
+    }
+
+    #[test]
+    fn test_wakeword_trigger_clone() {
+        let trigger = WakewordTrigger {
+            keyword: "TITANE".to_string(),
+            confidence: 0.9,
+            timestamp: 1000,
+            audio_sample: vec![0.5; 100],
+        };
+
+        let cloned = trigger.clone();
+        assert_eq!(cloned.keyword, trigger.keyword);
+        assert_eq!(cloned.confidence, trigger.confidence);
+        assert_eq!(cloned.audio_sample.len(), trigger.audio_sample.len());
+    }
+
+    #[tokio::test]
+    async fn test_sensitivity_boundaries() {
+        let (tx, _rx) = mpsc::channel(10);
+        let mut listener = WakewordListener::new(tx);
+
+        // Test exact boundaries
+        listener.set_sensitivity(0.0);
+        assert_eq!(listener.sensitivity, 0.0);
+
+        listener.set_sensitivity(1.0);
+        assert_eq!(listener.sensitivity, 1.0);
+
+        listener.set_sensitivity(0.5);
+        assert_eq!(listener.sensitivity, 0.5);
     }
 }
