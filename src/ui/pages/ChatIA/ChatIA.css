@@ -20,6 +20,29 @@
   font-size: 1.5rem;
 }
 
+/* Rate Limit Warning Banner */
+.rate-limit-warning {
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8e53 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.938rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.5);
+  }
+}
+
 /* Instruction Mode Selector */
 .instruction-mode-selector {
   display: flex;

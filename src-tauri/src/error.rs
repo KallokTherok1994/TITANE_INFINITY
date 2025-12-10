@@ -1,4 +1,4 @@
-#[derive(Debug, thiserror::Error)]
+#[derive(Debug, thiserror::Error, serde::Serialize)]
 pub enum TitaneError {
     // Identity errors
     #[error("Identity not initialized")]
@@ -75,7 +75,11 @@ pub enum TitaneError {
     ValidationError { message: String },
 
     #[error("Rate limit exceeded: {message}")]
-    RateLimitExceeded { message: String },
+    RateLimitExceeded {
+        message: String,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        retry_after_seconds: Option<u64>,
+    },
 
     #[error("Encryption error: {message}")]
     EncryptionError { message: String },
