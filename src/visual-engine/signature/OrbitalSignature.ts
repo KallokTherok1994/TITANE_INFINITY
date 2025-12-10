@@ -12,7 +12,7 @@
  * OrbitalState → OrbitalPhysics → Ring Positions → Visual Output
  */
 
-import type { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
+import { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
 
 // ═════════════════════════════════════════════════════════════════
 // TYPES — ORBITAL
@@ -75,8 +75,8 @@ export class OrbitalSignature {
   private transitionDuration = 1000; // ms
 
   // State
-  private cognitiveState: CognitiveState = 'idle';
-  private emotionalTone: EmotionalTone = 'neutral';
+  private cognitiveState: CognitiveState = CognitiveState.IDLE;
+  private emotionalTone: EmotionalTone = EmotionalTone.CALM;
   private intensity: number = 0.5;
 
   // Fibonacci sequence for phase offsets
@@ -329,33 +329,33 @@ export class OrbitalSignature {
 
     // Cognitive state modulation
     switch (this.cognitiveState) {
-      case 'thinking':
+      case CognitiveState.THINKING:
         params.baseVelocity = 0.7;
         params.velocityVariation = 0.4;
         params.resonanceStrength = 0.15;
         break;
 
-      case 'processing':
+      case CognitiveState.PROCESSING:
         params.baseVelocity = 1.2;
         params.velocityVariation = 0.6;
         params.resonanceStrength = 0.3;
         params.phaseMode = 'chaotic';
         break;
 
-      case 'responding':
+      case CognitiveState.SPEAKING:
         params.baseVelocity = 0.6;
         params.velocityVariation = 0.2;
         params.resonanceStrength = 0.1;
         break;
 
-      case 'listening':
+      case CognitiveState.LISTENING:
         params.baseVelocity = 0.3;
         params.velocityVariation = 0.1;
         params.resonanceStrength = 0.05;
         params.phaseMode = 'aligned';
         break;
 
-      case 'idle':
+      case CognitiveState.IDLE:
       default:
         // Use defaults
         break;
@@ -363,33 +363,33 @@ export class OrbitalSignature {
 
     // Emotional tone modulation
     switch (this.emotionalTone) {
-      case 'empathetic':
+      case EmotionalTone.EMPATHETIC:
         params.resonanceStrength *= 1.5;
         params.opacityMax = 0.9;
         break;
 
-      case 'analytical':
+      case EmotionalTone.CONFIDENT:
         params.phaseMode = 'golden';
         params.resonanceStrength *= 0.5;
         break;
 
-      case 'creative':
+      case EmotionalTone.EXCITED:
         params.phaseMode = 'chaotic';
         params.velocityVariation = 0.8;
         params.resonanceFrequency = 1.0;
         break;
 
-      case 'focused':
+      case EmotionalTone.CAUTIOUS:
         params.phaseMode = 'aligned';
         params.velocityVariation = 0.1;
         break;
 
-      case 'playful':
+      case EmotionalTone.PLAYFUL:
         params.baseVelocity *= 1.5;
         params.resonanceFrequency = 2.0;
         break;
 
-      case 'neutral':
+      case EmotionalTone.CALM:
       default:
         // Use defaults
         break;

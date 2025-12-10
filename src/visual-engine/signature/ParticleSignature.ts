@@ -12,7 +12,7 @@
  * CognitiveState → Distribution Pattern → Particle Emission → Visual Output
  */
 
-import type { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
+import { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
 
 // ═════════════════════════════════════════════════════════════════
 // TYPES — PARTICLE SIGNATURE
@@ -83,8 +83,8 @@ export class ParticleSignature {
   private centerY = 0;
 
   // State
-  private cognitiveState: CognitiveState = 'idle';
-  private emotionalTone: EmotionalTone = 'neutral';
+  private cognitiveState: CognitiveState = CognitiveState.IDLE;
+  private emotionalTone: EmotionalTone = EmotionalTone.CALM;
   private intensity: number = 0.5;
 
   // Constants
@@ -247,39 +247,39 @@ export class ParticleSignature {
 
     // Emotional tone modulation
     switch (this.emotionalTone) {
-      case 'empathetic':
+      case EmotionalTone.EMPATHETIC:
         dist.colors = ['#FF6B9D', '#C44569', '#FFA07A'];
         dist.baseSize = 2.5;
         dist.sizeVariation = 0.6;
         break;
 
-      case 'analytical':
+      case EmotionalTone.CONFIDENT:
         dist.colors = ['#4ECDC4', '#44A5FF', '#5DADE2'];
         dist.pattern = 'fibonacci';
         dist.spiralTightness = 0.2;
         break;
 
-      case 'creative':
+      case EmotionalTone.EXCITED:
         dist.colors = ['#9B59D0', '#FF6B9D', '#FFA07A', '#44A5FF'];
         dist.colorCycleSpeed = 0.3;
         dist.colorVariation = 0.3;
         dist.pattern = 'burst';
         break;
 
-      case 'focused':
+      case EmotionalTone.CAUTIOUS:
         dist.colors = ['#4ECDC4', '#44A5FF'];
         dist.pattern = 'radial';
         dist.emissionVariation = 0.1;
         break;
 
-      case 'playful':
+      case EmotionalTone.PLAYFUL:
         dist.colors = ['#FF6B9D', '#FFA07A', '#FFD93D', '#44A5FF'];
         dist.colorCycleSpeed = 0.5;
         dist.pattern = 'burst';
         dist.burstMode = true;
         break;
 
-      case 'neutral':
+      case EmotionalTone.CALM:
       default:
         // Use defaults
         break;
