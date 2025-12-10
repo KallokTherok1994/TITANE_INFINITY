@@ -223,3 +223,115 @@ pub fn get_all_commands() -> Vec<&'static str> {
         "singularity_load_state",
     ]
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // SingularityUpdateAck Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_singularity_update_ack_new() {
+        let ack = SingularityUpdateAck::new("test_command");
+        assert_eq!(ack.command, "test_command");
+        assert_eq!(ack.status, "ok");
+        assert!(ack.timestamp_ms > 0);
+    }
+
+    #[test]
+    fn test_singularity_update_ack_debug() {
+        let ack = SingularityUpdateAck::new("test");
+        let debug_str = format!("{:?}", ack);
+        assert!(debug_str.contains("SingularityUpdateAck"));
+    }
+
+    #[test]
+    fn test_singularity_update_ack_clone() {
+        let ack = SingularityUpdateAck::new("clone_test");
+        let cloned = ack.clone();
+        assert_eq!(cloned.command, "clone_test");
+        assert_eq!(cloned.status, ack.status);
+    }
+
+    #[test]
+    fn test_singularity_update_ack_serialize() {
+        let ack = SingularityUpdateAck::new("serialize_test");
+        let json = serde_json::to_string(&ack).unwrap();
+        assert!(json.contains("serialize_test"));
+        assert!(json.contains("ok"));
+    }
+
+    #[test]
+    fn test_singularity_update_ack_timestamp_increases() {
+        let ack1 = SingularityUpdateAck::new("test1");
+        std::thread::sleep(std::time::Duration::from_millis(1));
+        let ack2 = SingularityUpdateAck::new("test2");
+        assert!(ack2.timestamp_ms >= ack1.timestamp_ms);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // get_all_commands Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_get_all_commands_not_empty() {
+        let commands = get_all_commands();
+        assert!(!commands.is_empty());
+    }
+
+    #[test]
+    fn test_get_all_commands_count() {
+        let commands = get_all_commands();
+        assert_eq!(commands.len(), 16);
+    }
+
+    #[test]
+    fn test_get_all_commands_contains_query_commands() {
+        let commands = get_all_commands();
+        assert!(commands.contains(&"singularity_get_full_state"));
+        assert!(commands.contains(&"singularity_get_physical"));
+        assert!(commands.contains(&"singularity_get_cognitive"));
+        assert!(commands.contains(&"singularity_get_symbolic"));
+        assert!(commands.contains(&"singularity_get_adaptive"));
+        assert!(commands.contains(&"singularity_get_meta"));
+        assert!(commands.contains(&"singularity_get_global_coherence"));
+        assert!(commands.contains(&"singularity_is_critical"));
+    }
+
+    #[test]
+    fn test_get_all_commands_contains_mutation_commands() {
+        let commands = get_all_commands();
+        assert!(commands.contains(&"singularity_update_physical"));
+        assert!(commands.contains(&"singularity_update_cognitive"));
+        assert!(commands.contains(&"singularity_update_symbolic"));
+        assert!(commands.contains(&"singularity_update_adaptive"));
+        assert!(commands.contains(&"singularity_update_meta"));
+        assert!(commands.contains(&"singularity_update_full_state"));
+    }
+
+    #[test]
+    fn test_get_all_commands_contains_persistence_commands() {
+        let commands = get_all_commands();
+        assert!(commands.contains(&"singularity_save_state"));
+        assert!(commands.contains(&"singularity_load_state"));
+    }
+
+    #[test]
+    fn test_get_all_commands_no_duplicates() {
+        let commands = get_all_commands();
+        let mut sorted = commands.clone();
+        sorted.sort();
+        sorted.dedup();
+        assert_eq!(sorted.len(), commands.len());
+    }
+
+    #[test]
+    fn test_get_all_commands_all_start_with_singularity() {
+        let commands = get_all_commands();
+        for cmd in commands {
+            assert!(cmd.starts_with("singularity_"), "Command '{}' should start with 'singularity_'", cmd);
+        }
+    }
+}
