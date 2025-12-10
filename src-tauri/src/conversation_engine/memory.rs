@@ -143,13 +143,22 @@ impl ConversationMemoryEngine {
             .push(entry.clone());
 
         // Sauvegarder dans storage
-        let conversation = self
+        let mut conversation = self
             .storage
             .load_conversation(conversation_id)
             .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?;
 
-        // Note: add_entry n'est pas utilisé ici, on sauvegarde juste la conversation
-        // La logique d'ajout d'entrées est gérée par le storage
+        // Ajouter les entrées user et assistant à la conversation
+        conversation.add_entry(
+            crate::memory::MessageRole::User,
+            user_message.to_string(),
+            user_message.split_whitespace().count(),
+        );
+        conversation.add_entry(
+            crate::memory::MessageRole::Assistant,
+            assistant_message.to_string(),
+            assistant_message.split_whitespace().count(),
+        );
 
         self.storage
             .save_conversation(&conversation)
@@ -175,9 +184,40 @@ impl ConversationMemoryEngine {
 
     /// Convertir Conversation en entries
     fn conversation_to_entries(&self, conversation: &Conversation) -> Vec<ConversationMemoryEntry> {
-        // Simplification: créer des entries basiques
-        // TODO: Enrichir avec métadonnées stockées
-        Vec::new()
+        let mut result = Vec::new();
+        let mut i = 0;
+
+        // Parcourir par paires user/assistant
+        while i + 1 < conversation.entries.len() {
+            let user_entry = &conversation.entries[i];
+            let assistant_entry = &conversation.entries[i + 1];
+
+            // Vérifier que c'est bien user -> assistant
+            if user_entry.role == crate::memory::MessageRole::User
+                && assistant_entry.role == crate::memory::MessageRole::Assistant
+            {
+                result.push(ConversationMemoryEntry {
+                    timestamp: user_entry.timestamp as u64,
+                    user_message: user_entry.content.clone(),
+                    assistant_message: assistant_entry.content.clone(),
+                    // Métadonnées par défaut (TODO: stocker dans metadata JSON)
+                    intention: Intention::Question,
+                    emotion: EmotionState::default(),
+                    tags: vec![],
+                    summary: String::new(),
+                    memory_effect: MemoryEffect::New,
+                    memory_layers: MemoryLayers::default(),
+                    links_to_contexts: vec![],
+                    provider_used: "unknown".to_string(),
+                    latency_ms: 0,
+                });
+                i += 2;
+            } else {
+                i += 1;
+            }
+        }
+
+        result
     }
 
     /// Formater le contexte pour le prompt
