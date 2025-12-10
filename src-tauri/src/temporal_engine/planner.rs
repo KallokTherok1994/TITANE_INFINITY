@@ -552,4 +552,79 @@ mod tests {
         let stats = planner.stats().await;
         assert_eq!(stats.total_tasks, 1);
     }
+
+    #[test]
+    fn test_planning_horizon_duration() {
+        assert_eq!(PlanningHorizon::Today.duration_ms(), 86_400_000);
+        assert_eq!(PlanningHorizon::ThisWeek.duration_ms(), 604_800_000);
+        assert_eq!(PlanningHorizon::LongTerm.duration_ms(), u64::MAX);
+    }
+
+    #[test]
+    fn test_task_priority_ordering() {
+        assert!(TaskPriority::Critical > TaskPriority::Urgent);
+        assert!(TaskPriority::Urgent > TaskPriority::High);
+        assert!(TaskPriority::High > TaskPriority::Normal);
+        assert!(TaskPriority::Normal > TaskPriority::Low);
+    }
+
+    #[test]
+    fn test_task_priority_default() {
+        let priority = TaskPriority::default();
+        assert_eq!(priority, TaskPriority::Normal);
+    }
+
+    #[test]
+    fn test_task_status_default() {
+        let status = TaskStatus::default();
+        assert_eq!(status, TaskStatus::Pending);
+    }
+
+    #[test]
+    fn test_task_status_variants() {
+        let statuses = vec![
+            TaskStatus::Pending,
+            TaskStatus::InProgress,
+            TaskStatus::Blocked,
+            TaskStatus::Completed,
+            TaskStatus::Cancelled,
+            TaskStatus::Deferred,
+        ];
+        assert_eq!(statuses.len(), 6);
+    }
+
+    #[tokio::test]
+    async fn test_planner_multiple_tasks() {
+        let planner = TemporalPlanner::default();
+
+        for i in 0..5 {
+            let task = Task::new(&format!("task_{}", i), &format!("Task {}", i));
+            planner.add_task(task).await;
+        }
+
+        let stats = planner.stats().await;
+        assert_eq!(stats.total_tasks, 5);
+        assert_eq!(stats.pending_tasks, 5);
+    }
+
+    #[test]
+    fn test_planner_stats_default() {
+        let stats = PlannerStats::default();
+        assert_eq!(stats.total_tasks, 0);
+        assert_eq!(stats.pending_tasks, 0);
+        assert_eq!(stats.completed_tasks, 0);
+    }
+
+    #[test]
+    fn test_planning_horizon_variants() {
+        let horizons = vec![
+            PlanningHorizon::Today,
+            PlanningHorizon::ThisWeek,
+            PlanningHorizon::ThisMonth,
+            PlanningHorizon::ThisQuarter,
+            PlanningHorizon::ThisYear,
+            PlanningHorizon::LongTerm,
+        ];
+        assert_eq!(horizons.len(), 6);
+    }
 }

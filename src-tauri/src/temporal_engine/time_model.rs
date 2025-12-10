@@ -395,4 +395,79 @@ mod tests {
         let context = model.current_context().await;
         assert!(context.day_progress >= 0.0 && context.day_progress <= 1.0);
     }
+
+    #[test]
+    fn test_time_of_day_from_hour() {
+        assert_eq!(TimeOfDay::from_hour(3), TimeOfDay::LateNight);
+        assert_eq!(TimeOfDay::from_hour(7), TimeOfDay::EarlyMorning);
+        assert_eq!(TimeOfDay::from_hour(10), TimeOfDay::Morning);
+        assert_eq!(TimeOfDay::from_hour(12), TimeOfDay::Midday);
+        assert_eq!(TimeOfDay::from_hour(15), TimeOfDay::Afternoon);
+        assert_eq!(TimeOfDay::from_hour(19), TimeOfDay::Evening);
+        assert_eq!(TimeOfDay::from_hour(22), TimeOfDay::Night);
+    }
+
+    #[test]
+    fn test_season_variants() {
+        let seasons = vec![
+            Season::Spring,
+            Season::Summer,
+            Season::Autumn,
+            Season::Winter,
+        ];
+        assert_eq!(seasons.len(), 4);
+    }
+
+    #[test]
+    fn test_activity_type_variants() {
+        let activities = vec![
+            ActivityType::Focus,
+            ActivityType::Creative,
+            ActivityType::Administrative,
+            ActivityType::Social,
+            ActivityType::Learning,
+            ActivityType::Review,
+            ActivityType::Planning,
+            ActivityType::Rest,
+        ];
+        assert_eq!(activities.len(), 8);
+    }
+
+    #[test]
+    fn test_moment_default() {
+        let moment = Moment::default();
+        assert_eq!(moment.timestamp_ms, 0);
+        assert_eq!(moment.hour, 0);
+        assert_eq!(moment.minute, 0);
+    }
+
+    #[test]
+    fn test_temporal_context_default() {
+        let context = TemporalContext::default();
+        assert!(context.day_progress >= 0.0);
+        assert!(context.cognitive_energy_estimate >= 0.0);
+    }
+
+    #[test]
+    fn test_time_scale_variants() {
+        let scales = vec![
+            TimeScale::Immediate,
+            TimeScale::ShortTerm,
+            TimeScale::MediumTerm,
+            TimeScale::LongTerm,
+            TimeScale::Strategic,
+            TimeScale::Existential,
+        ];
+        assert_eq!(scales.len(), 6);
+    }
+
+    #[tokio::test]
+    async fn test_time_model_sync() {
+        let model = TimeModel::new();
+        model.sync_now().await;
+        let ctx = model.current_context().await;
+        // Context should have valid progression values
+        assert!(ctx.week_progress >= 0.0 && ctx.week_progress <= 1.0);
+        assert!(ctx.month_progress >= 0.0 && ctx.month_progress <= 2.0);
+    }
 }
