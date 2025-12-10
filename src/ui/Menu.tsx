@@ -174,7 +174,7 @@ export const Menu: React.FC<MenuProps> = ({
             <div className="menu-brand">
               <span className="menu-brand-icon">⚡</span>
               <span className="menu-brand-text">TITANE∞</span>
-              <span className="menu-brand-version">v∞.19.3Ω</span>
+              <span className="menu-brand-version">v19.5.2</span>
             </div>
           )}
           <div style={{ display: 'flex', gap: '8px' }}>
