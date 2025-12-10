@@ -679,4 +679,512 @@ mod tests {
         assert!(!response.main_version.is_empty());
         assert!(response.alternative_version.is_some());
     }
+
+    // ========== LiteraryIntensity Tests ==========
+
+    #[test]
+    fn test_literary_intensity_sober() {
+        let intensity = LiteraryIntensity::Sober;
+        assert_eq!(intensity, LiteraryIntensity::Sober);
+    }
+
+    #[test]
+    fn test_literary_intensity_balanced() {
+        let intensity = LiteraryIntensity::Balanced;
+        assert_eq!(intensity, LiteraryIntensity::Balanced);
+    }
+
+    #[test]
+    fn test_literary_intensity_poetic() {
+        let intensity = LiteraryIntensity::Poetic;
+        assert_eq!(intensity, LiteraryIntensity::Poetic);
+    }
+
+    #[test]
+    fn test_literary_intensity_clone() {
+        let intensity = LiteraryIntensity::Balanced;
+        let cloned = intensity.clone();
+        assert_eq!(intensity, cloned);
+    }
+
+    #[test]
+    fn test_literary_intensity_copy() {
+        let intensity = LiteraryIntensity::Poetic;
+        let copied = intensity;
+        assert_eq!(intensity, copied);
+    }
+
+    #[test]
+    fn test_literary_intensity_serialize() {
+        let intensity = LiteraryIntensity::Sober;
+        let json = serde_json::to_string(&intensity).unwrap();
+        assert!(json.contains("Sober"));
+    }
+
+    // ========== TextType Tests ==========
+
+    #[test]
+    fn test_text_type_post() {
+        let tt = TextType::Post;
+        let debug = format!("{:?}", tt);
+        assert!(debug.contains("Post"));
+    }
+
+    #[test]
+    fn test_text_type_book_paragraph() {
+        let tt = TextType::BookParagraph;
+        let debug = format!("{:?}", tt);
+        assert!(debug.contains("BookParagraph"));
+    }
+
+    #[test]
+    fn test_text_type_poetry() {
+        let tt = TextType::Poetry;
+        let debug = format!("{:?}", tt);
+        assert!(debug.contains("Poetry"));
+    }
+
+    #[test]
+    fn test_text_type_other() {
+        let tt = TextType::Other("Essay".to_string());
+        let debug = format!("{:?}", tt);
+        assert!(debug.contains("Essay"));
+    }
+
+    #[test]
+    fn test_text_type_clone() {
+        let tt = TextType::Chapter;
+        let cloned = tt.clone();
+        let debug = format!("{:?}", cloned);
+        assert!(debug.contains("Chapter"));
+    }
+
+    // ========== WritingMode Tests ==========
+
+    #[test]
+    fn test_writing_mode_literary_smoothing() {
+        let mode = WritingMode::LiterarySmoothing;
+        let debug = format!("{:?}", mode);
+        assert!(debug.contains("LiterarySmoothing"));
+    }
+
+    #[test]
+    fn test_writing_mode_literary_enhanced() {
+        let mode = WritingMode::LiteraryEnhanced;
+        let debug = format!("{:?}", mode);
+        assert!(debug.contains("LiteraryEnhanced"));
+    }
+
+    #[test]
+    fn test_writing_mode_poetic_version() {
+        let mode = WritingMode::PoeticVersion;
+        let debug = format!("{:?}", mode);
+        assert!(debug.contains("PoeticVersion"));
+    }
+
+    #[test]
+    fn test_writing_mode_double_version() {
+        let mode = WritingMode::DoubleVersion;
+        let debug = format!("{:?}", mode);
+        assert!(debug.contains("DoubleVersion"));
+    }
+
+    #[test]
+    fn test_writing_mode_adapt_to_medium() {
+        let mode = WritingMode::AdaptToMedium;
+        let debug = format!("{:?}", mode);
+        assert!(debug.contains("AdaptToMedium"));
+    }
+
+    #[test]
+    fn test_writing_mode_copy() {
+        let mode = WritingMode::LiterarySmoothing;
+        let copied = mode;
+        assert!(matches!(copied, WritingMode::LiterarySmoothing));
+    }
+
+    // ========== LiteraryOptimizationScores Tests ==========
+
+    #[test]
+    fn test_optimization_scores_creation() {
+        let scores = LiteraryOptimizationScores {
+            narrative_structure: 0.8,
+            vocabulary_richness: 0.75,
+            imagery_quality: 0.6,
+            rhythm_musicality: 0.7,
+            message_alignment: 0.9,
+        };
+        assert_eq!(scores.narrative_structure, 0.8);
+        assert_eq!(scores.message_alignment, 0.9);
+    }
+
+    #[test]
+    fn test_optimization_scores_clone() {
+        let scores = LiteraryOptimizationScores {
+            narrative_structure: 0.5,
+            vocabulary_richness: 0.5,
+            imagery_quality: 0.5,
+            rhythm_musicality: 0.5,
+            message_alignment: 0.5,
+        };
+        let cloned = scores.clone();
+        assert_eq!(cloned.narrative_structure, scores.narrative_structure);
+    }
+
+    #[test]
+    fn test_optimization_scores_serialize() {
+        let scores = LiteraryOptimizationScores {
+            narrative_structure: 0.9,
+            vocabulary_richness: 0.85,
+            imagery_quality: 0.7,
+            rhythm_musicality: 0.8,
+            message_alignment: 0.95,
+        };
+        let json = serde_json::to_string(&scores).unwrap();
+        assert!(json.contains("narrative_structure"));
+    }
+
+    // ========== KevinStyleProfile Tests ==========
+
+    #[test]
+    fn test_kevin_style_profile_default() {
+        let profile = KevinStyleProfile::default();
+        assert_eq!(profile.version, "1.0.0");
+        assert_eq!(profile.preferred_sentence_length, (8, 25));
+        assert_eq!(profile.concrete_conceptual_ratio, 0.6);
+    }
+
+    #[test]
+    fn test_kevin_style_profile_metaphor_types() {
+        let profile = KevinStyleProfile::default();
+        assert!(profile.metaphor_types.contains(&"corps et espace".to_string()));
+        assert!(profile.metaphor_types.contains(&"nature et vivant".to_string()));
+    }
+
+    #[test]
+    fn test_kevin_style_profile_lexical_fields() {
+        let profile = KevinStyleProfile::default();
+        assert!(profile.lexical_fields.contains(&"clarté".to_string()));
+        assert!(profile.lexical_fields.contains(&"structure".to_string()));
+    }
+
+    #[test]
+    fn test_kevin_style_profile_structural_patterns() {
+        let profile = KevinStyleProfile::default();
+        assert!(profile.structural_patterns.contains(&"triptyque".to_string()));
+        assert!(profile.structural_patterns.contains(&"parallélisme".to_string()));
+    }
+
+    #[test]
+    fn test_kevin_style_profile_dominant_tones() {
+        let profile = KevinStyleProfile::default();
+        assert!(profile.dominant_tones.contains(&"méditatif".to_string()));
+        assert!(profile.dominant_tones.contains(&"incarné".to_string()));
+    }
+
+    #[test]
+    fn test_kevin_style_profile_clone() {
+        let profile = KevinStyleProfile::default();
+        let cloned = profile.clone();
+        assert_eq!(cloned.version, profile.version);
+    }
+
+    #[test]
+    fn test_kevin_style_profile_serialize() {
+        let profile = KevinStyleProfile::default();
+        let json = serde_json::to_string(&profile).unwrap();
+        assert!(json.contains("version"));
+        assert!(json.contains("metaphor_types"));
+    }
+
+    // ========== LiteraryEngine Tests ==========
+
+    #[test]
+    fn test_literary_engine_new() {
+        let engine = LiteraryEngine::new();
+        assert_eq!(engine.style_profile.version, "1.0.0");
+    }
+
+    #[test]
+    fn test_literary_engine_default() {
+        let engine = LiteraryEngine::default();
+        assert_eq!(engine.style_profile.version, "1.0.0");
+    }
+
+    #[test]
+    fn test_literary_engine_get_style_profile() {
+        let engine = LiteraryEngine::new();
+        let profile = engine.get_style_profile();
+        assert_eq!(profile.version, "1.0.0");
+    }
+
+    #[test]
+    fn test_literary_engine_literary_enhanced() {
+        let engine = LiteraryEngine::new();
+        let request = LiteraryRequest {
+            context: LiteraryContext {
+                text_type: TextType::Post,
+                intensity: LiteraryIntensity::Balanced,
+                target_length: Some(50),
+            },
+            draft: "TITANE améliore la productivité. C'est un système efficace.".to_string(),
+            reference_style: None,
+            mode: WritingMode::LiteraryEnhanced,
+        };
+        let response = engine.process(request);
+        assert!(!response.main_version.is_empty());
+    }
+
+    #[test]
+    fn test_literary_engine_adapt_to_medium_post() {
+        let engine = LiteraryEngine::new();
+        let request = LiteraryRequest {
+            context: LiteraryContext {
+                text_type: TextType::Post,
+                intensity: LiteraryIntensity::Sober,
+                target_length: Some(100),
+            },
+            draft: "Premier point. Deuxième point. Troisième point. Quatrième point.".to_string(),
+            reference_style: None,
+            mode: WritingMode::AdaptToMedium,
+        };
+        let response = engine.process(request);
+        assert!(!response.main_version.is_empty());
+    }
+
+    #[test]
+    fn test_literary_engine_adapt_to_medium_book() {
+        let engine = LiteraryEngine::new();
+        let request = LiteraryRequest {
+            context: LiteraryContext {
+                text_type: TextType::BookParagraph,
+                intensity: LiteraryIntensity::Balanced,
+                target_length: Some(200),
+            },
+            draft: "Ce chapitre aborde la mémoire et l'organisation.".to_string(),
+            reference_style: None,
+            mode: WritingMode::AdaptToMedium,
+        };
+        let response = engine.process(request);
+        assert!(!response.main_version.is_empty());
+    }
+
+    #[test]
+    fn test_literary_engine_adapt_to_medium_web() {
+        let engine = LiteraryEngine::new();
+        let request = LiteraryRequest {
+            context: LiteraryContext {
+                text_type: TextType::WebPage,
+                intensity: LiteraryIntensity::Sober,
+                target_length: Some(100),
+            },
+            draft: "Bienvenue. Ceci est une page web. Voici les informations.".to_string(),
+            reference_style: None,
+            mode: WritingMode::AdaptToMedium,
+        };
+        let response = engine.process(request);
+        assert!(!response.main_version.is_empty());
+    }
+
+    #[test]
+    fn test_literary_engine_enrich_vocabulary_sober() {
+        let engine = LiteraryEngine::new();
+        let text = "faire beaucoup de choses";
+        let enriched = engine.enrich_vocabulary(text, LiteraryIntensity::Sober);
+        assert!(enriched.contains("réaliser") || enriched.contains("nombre de"));
+    }
+
+    #[test]
+    fn test_literary_engine_enrich_vocabulary_poetic() {
+        let engine = LiteraryEngine::new();
+        let text = "organisation de la structure";
+        let enriched = engine.enrich_vocabulary(text, LiteraryIntensity::Poetic);
+        assert!(enriched.contains("architecture") || enriched.contains("ossature"));
+    }
+
+    #[test]
+    fn test_literary_engine_improve_rhythm() {
+        let engine = LiteraryEngine::new();
+        let text = "phrase que que répétition";
+        let improved = engine.improve_rhythm(text);
+        assert!(!improved.contains(" que que "));
+    }
+
+    #[test]
+    fn test_literary_engine_score_narrative_structure_short() {
+        let engine = LiteraryEngine::new();
+        let score = engine.score_narrative_structure("Une seule phrase.", 1);
+        assert_eq!(score, 0.5);
+    }
+
+    #[test]
+    fn test_literary_engine_score_narrative_structure_with_paragraphs() {
+        let engine = LiteraryEngine::new();
+        let text = "Paragraphe un.\n\nParagraphe deux.";
+        let score = engine.score_narrative_structure(text, 2);
+        assert!(score >= 0.7);
+    }
+
+    #[test]
+    fn test_literary_engine_score_vocabulary_richness() {
+        let engine = LiteraryEngine::new();
+        let text = "mot unique différent varié divers";
+        let score = engine.score_vocabulary_richness(text, 5);
+        assert!(score > 0.5);
+    }
+
+    #[test]
+    fn test_literary_engine_score_imagery_quality() {
+        let engine = LiteraryEngine::new();
+        let text = "comme le vent, le rythme respire";
+        let score = engine.score_imagery_quality(text);
+        assert!(score > 0.0);
+    }
+
+    #[test]
+    fn test_literary_engine_score_rhythm_good() {
+        let engine = LiteraryEngine::new();
+        let text = "Phrase claire et simple.";
+        let score = engine.score_rhythm(text);
+        assert_eq!(score, 0.8);
+    }
+
+    #[test]
+    fn test_literary_engine_score_rhythm_bad() {
+        let engine = LiteraryEngine::new();
+        let text = "Il pense que que cela fonctionne";
+        let score = engine.score_rhythm(text);
+        assert_eq!(score, 0.5);
+    }
+
+    #[test]
+    fn test_literary_engine_increment_version() {
+        let engine = LiteraryEngine::new();
+        let new_version = engine.increment_version("1.0.5");
+        assert_eq!(new_version, "1.0.6");
+    }
+
+    #[test]
+    fn test_literary_engine_increment_version_invalid() {
+        let engine = LiteraryEngine::new();
+        let result = engine.increment_version("invalid");
+        assert_eq!(result, "invalid");
+    }
+
+    // ========== LiteraryContext Tests ==========
+
+    #[test]
+    fn test_literary_context_creation() {
+        let ctx = LiteraryContext {
+            text_type: TextType::Post,
+            intensity: LiteraryIntensity::Balanced,
+            target_length: Some(100),
+        };
+        assert!(matches!(ctx.text_type, TextType::Post));
+        assert_eq!(ctx.target_length, Some(100));
+    }
+
+    #[test]
+    fn test_literary_context_clone() {
+        let ctx = LiteraryContext {
+            text_type: TextType::Chapter,
+            intensity: LiteraryIntensity::Poetic,
+            target_length: None,
+        };
+        let cloned = ctx.clone();
+        assert!(matches!(cloned.intensity, LiteraryIntensity::Poetic));
+    }
+
+    // ========== LiteraryResponse Tests ==========
+
+    #[test]
+    fn test_literary_response_creation() {
+        let response = LiteraryResponse {
+            main_version: "Main text".to_string(),
+            alternative_version: None,
+            optimization_scores: LiteraryOptimizationScores {
+                narrative_structure: 0.8,
+                vocabulary_richness: 0.7,
+                imagery_quality: 0.6,
+                rhythm_musicality: 0.75,
+                message_alignment: 0.9,
+            },
+            comment: Some("Comment".to_string()),
+            style_profile_updated: false,
+        };
+        assert_eq!(response.main_version, "Main text");
+        assert!(!response.style_profile_updated);
+    }
+
+    #[test]
+    fn test_literary_response_with_alternative() {
+        let response = LiteraryResponse {
+            main_version: "Main".to_string(),
+            alternative_version: Some("Alternative".to_string()),
+            optimization_scores: LiteraryOptimizationScores {
+                narrative_structure: 0.5,
+                vocabulary_richness: 0.5,
+                imagery_quality: 0.5,
+                rhythm_musicality: 0.5,
+                message_alignment: 0.5,
+            },
+            comment: None,
+            style_profile_updated: true,
+        };
+        assert!(response.alternative_version.is_some());
+        assert!(response.style_profile_updated);
+    }
+
+    #[test]
+    fn test_literary_response_clone() {
+        let response = LiteraryResponse {
+            main_version: "Text".to_string(),
+            alternative_version: None,
+            optimization_scores: LiteraryOptimizationScores {
+                narrative_structure: 0.8,
+                vocabulary_richness: 0.8,
+                imagery_quality: 0.8,
+                rhythm_musicality: 0.8,
+                message_alignment: 0.8,
+            },
+            comment: None,
+            style_profile_updated: false,
+        };
+        let cloned = response.clone();
+        assert_eq!(cloned.main_version, response.main_version);
+    }
+
+    // ========== LiteraryRequest Tests ==========
+
+    #[test]
+    fn test_literary_request_creation() {
+        let request = LiteraryRequest {
+            context: LiteraryContext {
+                text_type: TextType::Intro,
+                intensity: LiteraryIntensity::Sober,
+                target_length: Some(200),
+            },
+            draft: "Draft text".to_string(),
+            reference_style: Some(vec!["Reference".to_string()]),
+            mode: WritingMode::LiterarySmoothing,
+        };
+        assert_eq!(request.draft, "Draft text");
+        assert!(request.reference_style.is_some());
+    }
+
+    #[test]
+    fn test_literary_request_clone() {
+        let request = LiteraryRequest {
+            context: LiteraryContext {
+                text_type: TextType::Manifesto,
+                intensity: LiteraryIntensity::Poetic,
+                target_length: None,
+            },
+            draft: "Manifesto".to_string(),
+            reference_style: None,
+            mode: WritingMode::PoeticVersion,
+        };
+        let cloned = request.clone();
+        assert_eq!(cloned.draft, request.draft);
+    }
 }

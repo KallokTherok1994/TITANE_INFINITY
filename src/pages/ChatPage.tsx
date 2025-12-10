@@ -37,8 +37,11 @@ type BackendChatMessage = {
 type ChatResponse = OmegaResponse;
 type StreamConfig = { provider?: string; mode?: string };
 import { useChatModeStore } from '../stores/useChatModeStore'; // Import du store de modes
+import { ModeEditor } from '../ui/pages/ChatIA/ModeEditor';
+import type { InstructionMode } from '../ui/pages/ChatIA/InstructionModeManager';
+import { instructionModeManager } from '../ui/pages/ChatIA/InstructionModeManager';
 
-type ProviderChoice = 'local' | 'ollama';
+type ProviderChoice = 'auto' | 'openai' | 'claude' | 'gemini' | 'ollama' | 'local';
 
 type DebugAttempt = {
   provider: string;
@@ -387,6 +390,70 @@ export const ChatPage = (): JSX.Element => {
     initializeModeStore();
   }, [initializeModeStore]);
 
+  // Vérification statut providers
+  useEffect(() => {
+    const checkProviders = async () => {
+      try {
+        const [openai, claude, gemini, ollama] = await Promise.all([
+          (async () => {
+            try {
+              const res = await invoke<{
+                ok: boolean;
+                data: { configured: boolean } | null;
+              }>('get_openai_key_status');
+              return res.ok && res.data?.configured === true;
+            } catch {
+              return false;
+            }
+          })(),
+          (async () => {
+            try {
+              const res = await invoke<{
+                ok: boolean;
+                data: { configured: boolean } | null;
+              }>('get_claude_key_status');
+              return res.ok && res.data?.configured === true;
+            } catch {
+              return false;
+            }
+          })(),
+          (async () => {
+            try {
+              const res = await invoke<{
+                ok: boolean;
+                data: { configured: boolean } | null;
+              }>('get_gemini_key_status');
+              return res.ok && res.data?.configured === true;
+            } catch {
+              return false;
+            }
+          })(),
+          (async () => {
+            try {
+              const res = await invoke<{ ok: boolean }>('check_ollama_availability');
+              return res.ok;
+            } catch {
+              return false;
+            }
+          })(),
+        ]);
+
+        setProviderStatus({
+          openai_configured: openai,
+          claude_configured: claude,
+          gemini_configured: gemini,
+          ollama_available: ollama,
+        });
+      } catch (error) {
+        console.error('[ChatPage] Erreur vérification providers:', error);
+      }
+    };
+
+    checkProviders();
+    const interval = setInterval(checkProviders, 30000); // Refresh toutes les 30s
+    return () => clearInterval(interval);
+  }, []);
+
   // Démarrage de la conversation au chargement de la page
   useEffect(() => {
     const initializeConversation = async () => {
@@ -438,9 +505,19 @@ export const ChatPage = (): JSX.Element => {
 
   const [inputValue, setInputValue] = useState('');
   const [contextCollapsed, setContextCollapsed] = useState(false);
-  const [provider, setProvider] = useState<ProviderChoice>('local');
+  const [provider, setProvider] = useState<ProviderChoice>('auto');
   const [isSending, setIsSending] = useState(false);
   const [lastResponseProvider, setLastResponseProvider] = useState<string | null>(null);
+  const [showModeEditor, setShowModeEditor] = useState(false);
+  const [currentInstructionMode, setCurrentInstructionMode] = useState<InstructionMode>(
+    instructionModeManager.getAllModes()[0]
+  );
+  const [providerStatus, setProviderStatus] = useState({
+    openai_configured: false,
+    claude_configured: false,
+    gemini_configured: false,
+    ollama_available: false,
+  });
   const [lastError, setLastError] = useState<string | null>(null);
   const [_debugEntries, _setDebugEntries] = useState<DebugEntry[]>([]);
   const [debugPanelPosition, setDebugPanelPosition] = useState<PanelPosition>({
@@ -675,28 +752,87 @@ export const ChatPage = (): JSX.Element => {
               disabled={isSending}
             />
 
-            <div style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}>
-              <label
-                htmlFor="chat-provider"
-                style={{ fontSize: '0.85rem', opacity: 0.8 }}
-              >
-                Provider IA (OMEGA)
-              </label>
-              <select
-                id="chat-provider"
-                value={provider}
-                onChange={event => setProvider(event.target.value as ProviderChoice)}
-                style={{
-                  padding: '6px 10px',
-                  borderRadius: '8px',
-                  border: `1px solid ${colors.rubis.primary[700]}`,
-                  background: colors.neutral[950],
-                  color: '#e2e8f0',
-                }}
-              >
-                <option value="local">Local</option>
-                <option value="ollama">Ollama</option>
-              </select>
+            <div
+              style={{
+                display: 'flex',
+                gap: spacing[2],
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}>
+                <label
+                  htmlFor="instruction-mode"
+                  style={{ fontSize: '0.85rem', opacity: 0.8 }}
+                >
+                  Instructions:
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setShowModeEditor(true)}
+                  disabled={isSending}
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid rgba(139,92,246,0.4)',
+                    background: 'rgba(139,92,246,0.15)',
+                    color: '#c4b5fd',
+                    cursor: isSending ? 'not-allowed' : 'pointer',
+                    fontSize: '0.85rem',
+                    opacity: isSending ? 0.5 : 1,
+                    display: 'flex',
+                    gap: '6px',
+                    alignItems: 'center',
+                  }}
+                  title="Gérer les modes d'instructions personnalisés"
+                >
+                  <span>{currentInstructionMode.icon}</span>
+                  <span>{currentInstructionMode.name}</span>
+                  <span>⚙️</span>
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', gap: spacing[2], alignItems: 'center' }}>
+                <label
+                  htmlFor="chat-provider"
+                  style={{ fontSize: '0.85rem', opacity: 0.8 }}
+                >
+                  Provider IA:
+                </label>
+                <select
+                  id="chat-provider"
+                  value={provider}
+                  onChange={event => setProvider(event.target.value as ProviderChoice)}
+                  disabled={isSending}
+                  style={{
+                    padding: '6px 10px',
+                    borderRadius: '8px',
+                    border: `1px solid ${colors.rubis.primary[700]}`,
+                    background: colors.neutral[950],
+                    color: '#e2e8f0',
+                    cursor: isSending ? 'not-allowed' : 'pointer',
+                    opacity: isSending ? 0.5 : 1,
+                  }}
+                >
+                  <option value="auto">🤖 Auto (Intelligent)</option>
+                  <option value="openai" disabled={!providerStatus.openai_configured}>
+                    🔵 OpenAI GPT-4
+                    {!providerStatus.openai_configured && ' (⚠️ Non configuré)'}
+                  </option>
+                  <option value="claude" disabled={!providerStatus.claude_configured}>
+                    🧠 Claude 3.5
+                    {!providerStatus.claude_configured && ' (⚠️ Non configuré)'}
+                  </option>
+                  <option value="gemini" disabled={!providerStatus.gemini_configured}>
+                    🔵 Gemini{!providerStatus.gemini_configured && ' (⚠️ Non configuré)'}
+                  </option>
+                  <option value="ollama" disabled={!providerStatus.ollama_available}>
+                    🟢 Ollama (Local)
+                    {!providerStatus.ollama_available && ' (⚠️ Hors ligne)'}
+                  </option>
+                  <option value="local">🏠 TITANE Local</option>
+                </select>
+              </div>
             </div>
 
             <div
@@ -845,6 +981,18 @@ export const ChatPage = (): JSX.Element => {
         onPositionChange={setDebugPanelPosition}
         entries={_debugEntries}
       />
+
+      {/* Mode Editor Modal */}
+      {showModeEditor && (
+        <ModeEditor
+          onClose={() => setShowModeEditor(false)}
+          onModeSelect={(mode: InstructionMode) => {
+            setCurrentInstructionMode(mode);
+            setShowModeEditor(false);
+          }}
+          currentModeId={currentInstructionMode.id}
+        />
+      )}
     </>
   );
 };

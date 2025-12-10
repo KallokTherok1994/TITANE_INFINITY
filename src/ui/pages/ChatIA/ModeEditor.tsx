@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
+import { invoke } from '@tauri-apps/api/core';
 import './ModeEditor.css';
 
 interface ModeEditorProps {
@@ -25,6 +26,12 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
   const [formIcon, setFormIcon] = useState('🤖');
   const [formPrompt, setFormPrompt] = useState('');
   const [formDescription, setFormDescription] = useState('');
+
+  // AI Assistance states
+  const [showAIAssist, setShowAIAssist] = useState(false);
+  const [aiAssistRequest, setAIAssistRequest] = useState('');
+  const [aiAssistLoading, setAIAssistLoading] = useState(false);
+  const [aiAssistResponse, setAIAssistResponse] = useState('');
 
   const refreshModes = () => {
     setModes(instructionModeManager.getAllModes());
@@ -150,6 +157,77 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
       }
     };
     input.click();
+  };
+
+  const handleAIAssist = async () => {
+    if (!aiAssistRequest.trim()) {
+      alert('Veuillez décrire ce que vous voulez pour les instructions');
+      return;
+    }
+
+    setAIAssistLoading(true);
+    setAIAssistResponse('');
+
+    try {
+      const systemPrompt = `Tu es un expert en conception d'instructions system prompt pour assistants IA.
+Ton rôle est d'aider à créer des instructions claires, précises et efficaces en français.
+Réponds UNIQUEMENT avec les instructions améliorées, sans explications supplémentaires.`;
+
+      const userMessage = formPrompt.trim()
+        ? `Instructions actuelles:
+${formPrompt}
+
+Demande d'amélioration:
+${aiAssistRequest}
+
+Améliore ces instructions selon la demande.`
+        : `Crée des instructions system prompt pour un mode d'assistant IA avec cette description:
+${aiAssistRequest}
+
+Les instructions doivent être en français, claires et directes.`;
+
+      const response = await invoke<{
+        ok: boolean;
+        data: { content: string } | null;
+        error: string | null;
+      }>('chat_generate_openai', {
+        message: userMessage,
+        history: [
+          {
+            role: 'system',
+            content: systemPrompt,
+            timestamp: new Date().toISOString(),
+          },
+        ],
+        config: {
+          model: 'gpt-4o-mini',
+          temperature: 0.7,
+          maxTokens: 1024,
+        },
+      });
+
+      if (response.ok && response.data?.content) {
+        setAIAssistResponse(response.data.content);
+      } else {
+        throw new Error(response.error || 'Erreur inconnue');
+      }
+    } catch (error) {
+      console.error('[ModeEditor] Erreur assistance IA:', error);
+      alert(
+        `Erreur lors de l'assistance IA: ${error instanceof Error ? error.message : 'Erreur inconnue'}\n\nVérifiez que votre clé API OpenAI est configurée dans Gouvernance.`
+      );
+    } finally {
+      setAIAssistLoading(false);
+    }
+  };
+
+  const handleApplyAIResponse = () => {
+    if (aiAssistResponse.trim()) {
+      setFormPrompt(aiAssistResponse);
+      setShowAIAssist(false);
+      setAIAssistRequest('');
+      setAIAssistResponse('');
+    }
   };
 
   return (
@@ -283,7 +361,32 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
                   </div>
 
                   <div className="form-group">
-                    <label>System Prompt</label>
+                    <label>
+                      System Prompt
+                      {(isCreating || isEditing) && (
+                        <button
+                          type="button"
+                          onClick={() => setShowAIAssist(true)}
+                          style={{
+                            marginLeft: '12px',
+                            padding: '4px 10px',
+                            background: 'rgba(99,102,241,0.2)',
+                            border: '1px solid rgba(99,102,241,0.4)',
+                            borderRadius: '6px',
+                            color: '#a5b4fc',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                          }}
+                          title="Utiliser l'IA pour développer les instructions"
+                        >
+                          <span>🤖</span>
+                          <span>Assistance IA</span>
+                        </button>
+                      )}
+                    </label>
                     <textarea
                       value={formPrompt}
                       onChange={e => setFormPrompt(e.target.value)}
@@ -321,6 +424,170 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
           </div>
         </div>
       </div>
+
+      {/* AI Assistance Modal */}
+      {showAIAssist && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0,0,0,0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10001,
+          }}
+        >
+          <div
+            style={{
+              background: '#1e1e1e',
+              borderRadius: '12px',
+              padding: '24px',
+              maxWidth: '700px',
+              width: '90%',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              border: '1px solid rgba(99,102,241,0.3)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '20px',
+              }}
+            >
+              <h3 style={{ margin: 0, color: '#e0e0e0' }}>
+                🤖 Assistance IA pour Instructions
+              </h3>
+              <button
+                onClick={() => {
+                  setShowAIAssist(false);
+                  setAIAssistRequest('');
+                  setAIAssistResponse('');
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#999',
+                  fontSize: '1.5rem',
+                  cursor: 'pointer',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', color: '#e0e0e0' }}>
+                Décrivez ce que vous voulez:
+              </label>
+              <textarea
+                value={aiAssistRequest}
+                onChange={e => setAIAssistRequest(e.target.value)}
+                placeholder="Ex: Crée un mode pour un assistant technique expert en programmation Python, qui donne des réponses détaillées avec exemples de code..."
+                rows={4}
+                disabled={aiAssistLoading}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: '#2a2a2a',
+                  border: '1px solid #444',
+                  borderRadius: '6px',
+                  color: '#e0e0e0',
+                  fontSize: '0.95rem',
+                  resize: 'vertical',
+                }}
+              />
+            </div>
+
+            <button
+              onClick={handleAIAssist}
+              disabled={aiAssistLoading || !aiAssistRequest.trim()}
+              style={{
+                padding: '10px 20px',
+                background: aiAssistLoading ? '#555' : 'rgba(99,102,241,0.25)',
+                border: '1px solid rgba(99,102,241,0.5)',
+                borderRadius: '6px',
+                color: aiAssistLoading ? '#999' : '#a5b4fc',
+                cursor:
+                  aiAssistLoading || !aiAssistRequest.trim() ? 'not-allowed' : 'pointer',
+                fontSize: '1rem',
+                marginBottom: '20px',
+              }}
+            >
+              {aiAssistLoading ? '⏳ Génération en cours...' : '✨ Générer avec IA'}
+            </button>
+
+            {aiAssistResponse && (
+              <div
+                style={{
+                  marginTop: '20px',
+                  padding: '16px',
+                  background: '#2a2a2a',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(34,197,94,0.3)',
+                }}
+              >
+                <h4 style={{ margin: '0 0 12px 0', color: '#22c55e' }}>
+                  ✅ Instructions générées:
+                </h4>
+                <pre
+                  style={{
+                    background: '#1a1a1a',
+                    padding: '12px',
+                    borderRadius: '6px',
+                    color: '#e0e0e0',
+                    fontSize: '0.9rem',
+                    whiteSpace: 'pre-wrap',
+                    maxHeight: '300px',
+                    overflow: 'auto',
+                  }}
+                >
+                  {aiAssistResponse}
+                </pre>
+                <div style={{ marginTop: '16px', display: 'flex', gap: '12px' }}>
+                  <button
+                    onClick={handleApplyAIResponse}
+                    style={{
+                      padding: '8px 16px',
+                      background: 'rgba(34,197,94,0.2)',
+                      border: '1px solid rgba(34,197,94,0.4)',
+                      borderRadius: '6px',
+                      color: '#22c55e',
+                      cursor: 'pointer',
+                      fontSize: '0.95rem',
+                    }}
+                  >
+                    ✓ Appliquer ces instructions
+                  </button>
+                  <button
+                    onClick={() => {
+                      setAIAssistResponse('');
+                      setAIAssistRequest('');
+                    }}
+                    style={{
+                      padding: '8px 16px',
+                      background: 'transparent',
+                      border: '1px solid #666',
+                      borderRadius: '6px',
+                      color: '#999',
+                      cursor: 'pointer',
+                      fontSize: '0.95rem',
+                    }}
+                  >
+                    🔄 Réessayer
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
