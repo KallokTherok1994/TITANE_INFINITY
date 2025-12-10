@@ -544,4 +544,256 @@ mod tests {
         let router = APIRouter::new().with_temporal_adapter(adapter);
         assert!(router.temporal_adapter.is_some());
     }
+
+    #[test]
+    fn test_model_choice_strategy_debug() {
+        let strategy = ModelChoiceStrategy::DeepReasoning;
+        let debug_str = format!("{:?}", strategy);
+        assert!(debug_str.contains("DeepReasoning"));
+    }
+
+    #[test]
+    fn test_model_choice_strategy_clone() {
+        let strategy = ModelChoiceStrategy::Quality;
+        let cloned = strategy;
+        assert_eq!(strategy, cloned);
+    }
+
+    #[test]
+    fn test_model_choice_strategy_serialization() {
+        let strategy = ModelChoiceStrategy::LongContext;
+        let json = serde_json::to_string(&strategy).unwrap();
+        let restored: ModelChoiceStrategy = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored, strategy);
+    }
+
+    #[test]
+    fn test_all_strategies_serialization() {
+        let strategies = vec![
+            ModelChoiceStrategy::Speed,
+            ModelChoiceStrategy::Quality,
+            ModelChoiceStrategy::Balanced,
+            ModelChoiceStrategy::VisionDominant,
+            ModelChoiceStrategy::Secure,
+            ModelChoiceStrategy::CostEfficient,
+            ModelChoiceStrategy::DeepReasoning,
+            ModelChoiceStrategy::LongContext,
+        ];
+
+        for strategy in strategies {
+            let json = serde_json::to_string(&strategy).unwrap();
+            let restored: ModelChoiceStrategy = serde_json::from_str(&json).unwrap();
+            assert_eq!(restored, strategy);
+        }
+    }
+
+    #[test]
+    fn test_route_decision_clone() {
+        let decision = RouteDecision {
+            provider: Provider::Anthropic,
+            model: Some("claude-3".to_string()),
+            reason: "Test".to_string(),
+            confidence: 0.8,
+            alternatives: vec![(Provider::OpenAI, 0.7)],
+        };
+        let cloned = decision.clone();
+        assert_eq!(cloned.provider, decision.provider);
+        assert_eq!(cloned.confidence, decision.confidence);
+    }
+
+    #[test]
+    fn test_route_decision_debug() {
+        let decision = RouteDecision {
+            provider: Provider::Gemini,
+            model: None,
+            reason: "Debug test".to_string(),
+            confidence: 0.5,
+            alternatives: vec![],
+        };
+        let debug_str = format!("{:?}", decision);
+        assert!(debug_str.contains("RouteDecision"));
+    }
+
+    #[test]
+    fn test_router_default() {
+        let router = APIRouter::default();
+        assert_eq!(router.default_strategy, ModelChoiceStrategy::Balanced);
+    }
+
+    #[test]
+    fn test_strategy_to_weights_speed() {
+        let router = APIRouter::new();
+        let weights = router.strategy_to_weights(ModelChoiceStrategy::Speed);
+        assert!(weights.speed > weights.quality);
+        assert!(weights.speed > weights.cost);
+    }
+
+    #[test]
+    fn test_strategy_to_weights_quality() {
+        let router = APIRouter::new();
+        let weights = router.strategy_to_weights(ModelChoiceStrategy::Quality);
+        assert!(weights.quality > weights.speed);
+        assert!(weights.quality > weights.cost);
+    }
+
+    #[test]
+    fn test_strategy_to_weights_balanced() {
+        let router = APIRouter::new();
+        let weights = router.strategy_to_weights(ModelChoiceStrategy::Balanced);
+        assert_eq!(weights.speed, weights.quality);
+        assert_eq!(weights.cost, weights.safety);
+    }
+
+    #[test]
+    fn test_strategy_to_weights_secure() {
+        let router = APIRouter::new();
+        let weights = router.strategy_to_weights(ModelChoiceStrategy::Secure);
+        assert!(weights.safety > weights.speed);
+        assert!(weights.safety > weights.cost);
+    }
+
+    #[test]
+    fn test_strategy_to_weights_cost_efficient() {
+        let router = APIRouter::new();
+        let weights = router.strategy_to_weights(ModelChoiceStrategy::CostEfficient);
+        assert!(weights.cost > weights.quality);
+        assert!(weights.cost > weights.safety);
+    }
+
+    #[tokio::test]
+    async fn test_router_fallback_no_providers() {
+        let router = APIRouter::new();
+        let registry = ProviderRegistry::new(); // Empty registry
+
+        let request = APIRequest {
+            id: "test".to_string(),
+            modality: Modality::Text,
+            content: RequestContent::Text("Hello".to_string()),
+            preferred_provider: None,
+            strategy: ModelChoiceStrategy::Balanced,
+            max_tokens: None,
+            temperature: None,
+            timeout_ms: None,
+            metadata: std::collections::HashMap::new(),
+        };
+
+        let decision = router.route(&request, &registry).await;
+        // Should fallback to OpenAI
+        assert_eq!(decision.provider, Provider::OpenAI);
+    }
+
+    #[tokio::test]
+    async fn test_audio_routing() {
+        let router = APIRouter::new();
+        let mut registry = ProviderRegistry::new();
+        registry.register_provider(Provider::OpenAI, ProviderProfile::openai_default());
+        registry.register_provider(Provider::Gemini, ProviderProfile::gemini_default());
+
+        let request = APIRequest {
+            id: "audio-test".to_string(),
+            modality: Modality::Audio,
+            content: RequestContent::Audio(vec![0u8; 100]),
+            preferred_provider: None,
+            strategy: ModelChoiceStrategy::Quality,
+            max_tokens: None,
+            temperature: None,
+            timeout_ms: None,
+            metadata: std::collections::HashMap::new(),
+        };
+
+        let decision = router.route(&request, &registry).await;
+        // OpenAI should be preferred for audio (Whisper)
+        assert!(decision.confidence > 0.0);
+    }
+
+    #[tokio::test]
+    async fn test_embedding_routing() {
+        let router = APIRouter::new();
+        let mut registry = ProviderRegistry::new();
+        registry.register_provider(Provider::OpenAI, ProviderProfile::openai_default());
+        registry.register_provider(Provider::Gemini, ProviderProfile::gemini_default());
+
+        let request = APIRequest {
+            id: "embed-test".to_string(),
+            modality: Modality::Embeddings,
+            content: RequestContent::Text("Embed this".to_string()),
+            preferred_provider: None,
+            strategy: ModelChoiceStrategy::Quality,
+            max_tokens: None,
+            temperature: None,
+            timeout_ms: None,
+            metadata: std::collections::HashMap::new(),
+        };
+
+        let decision = router.route(&request, &registry).await;
+        // OpenAI should be preferred for embeddings
+        assert_eq!(decision.provider, Provider::OpenAI);
+    }
+
+    #[tokio::test]
+    async fn test_deep_reasoning_routing() {
+        let router = APIRouter::new();
+        let mut registry = ProviderRegistry::new();
+        registry.register_provider(Provider::OpenAI, ProviderProfile::openai_default());
+        registry.register_provider(Provider::Anthropic, ProviderProfile::anthropic_default());
+
+        let request = APIRequest {
+            id: "reason-test".to_string(),
+            modality: Modality::Text,
+            content: RequestContent::Text("Complex reasoning".to_string()),
+            preferred_provider: None,
+            strategy: ModelChoiceStrategy::DeepReasoning,
+            max_tokens: None,
+            temperature: None,
+            timeout_ms: None,
+            metadata: std::collections::HashMap::new(),
+        };
+
+        let decision = router.route(&request, &registry).await;
+        assert!(decision.confidence > 0.0);
+    }
+
+    #[test]
+    fn test_route_decision_with_alternatives() {
+        let decision = RouteDecision {
+            provider: Provider::OpenAI,
+            model: Some("gpt-4".to_string()),
+            reason: "Primary choice".to_string(),
+            confidence: 0.9,
+            alternatives: vec![
+                (Provider::Anthropic, 0.85),
+                (Provider::Gemini, 0.80),
+            ],
+        };
+
+        assert_eq!(decision.alternatives.len(), 2);
+        assert_eq!(decision.alternatives[0].0, Provider::Anthropic);
+        assert_eq!(decision.alternatives[1].0, Provider::Gemini);
+    }
+
+    #[test]
+    fn test_route_decision_no_model() {
+        let decision = RouteDecision {
+            provider: Provider::Local,
+            model: None,
+            reason: "Local model".to_string(),
+            confidence: 0.6,
+            alternatives: vec![],
+        };
+
+        assert!(decision.model.is_none());
+        assert!(decision.alternatives.is_empty());
+    }
+
+    #[test]
+    fn test_strategy_hash() {
+        use std::collections::HashSet;
+
+        let mut set = HashSet::new();
+        set.insert(ModelChoiceStrategy::Speed);
+        set.insert(ModelChoiceStrategy::Quality);
+        set.insert(ModelChoiceStrategy::Speed); // Duplicate
+
+        assert_eq!(set.len(), 2);
+    }
 }
