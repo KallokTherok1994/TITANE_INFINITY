@@ -442,7 +442,7 @@ ${
   apiErrors.length > 0
     ? `
 ### API (${apiErrors.length})
-${apiErrors.map(e => `- API non disponible — Fallback appliqué`).join('\n')}
+${apiErrors.map(_e => `- API non disponible — Fallback appliqué`).join('\n')}
 `
     : ''
 }
@@ -497,7 +497,7 @@ ${fix.newCommand ? `- **Nouvelle commande:** \`${fix.newCommand}\`` : ''}
    */
   private static buildTechNotes(
     errors: DetectedError[],
-    fixes: AutoFixResult[]
+    _fixes: AutoFixResult[]
   ): string[] {
     const notes: string[] = [];
 
@@ -553,7 +553,8 @@ ${fix.newCommand ? `- **Nouvelle commande:** \`${fix.newCommand}\`` : ''}
     errors
       .filter(e => e.originalCommand)
       .forEach(error => {
-        const cmd = error.originalCommand!;
+        const cmd = error.originalCommand;
+        if (!cmd) return;
         const alternatives = INVALID_COMMAND_ALTERNATIVES[cmd];
         if (alternatives) {
           mapping[cmd] = alternatives.alternatives;

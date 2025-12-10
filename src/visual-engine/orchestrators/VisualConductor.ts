@@ -19,11 +19,11 @@ import VisualSemanticGrammar, {
   OmegaPipelineStage,
   MemoryState,
   VisualPhenomenon,
-  PhenomenonType,
+  PhenomenonType as _PhenomenonType,
 } from './VisualSemanticGrammar';
 import type { TitaneVisualEngineV21 } from '../TitaneVisualEngineV21';
 import {
-  VISUAL_EVENTS,
+  VISUAL_EVENTS as _VISUAL_EVENTS,
   getEvent,
   type VisualEvent,
 } from '../orchestrators/VisualEventModel';
@@ -520,7 +520,7 @@ export class VisualConductor extends EventEmitter {
    */
   private async resolveMergeConflict(newPhenomenon: VisualPhenomenon): Promise<void> {
     // Chercher un phénomène du même type
-    for (const [id, phenomenon] of this.activePhenomena) {
+    for (const [_id, phenomenon] of this.activePhenomena) {
       if (phenomenon.type === newPhenomenon.type) {
         this.log(`Merging similar phenomena: ${newPhenomenon.type}`);
 

@@ -252,7 +252,7 @@ export class SystemAPI {
       data: {
         successful: successful.length,
         failed: failed.length,
-        results: results.map((r, i) =>
+        results: results.map((r, _i) =>
           r.status === 'fulfilled' ? r.value : { error: 'Failed' }
         ),
       },

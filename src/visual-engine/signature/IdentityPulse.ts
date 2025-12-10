@@ -315,7 +315,7 @@ export class IdentityPulse {
    * Calculate glow intensity
    */
   private calculateGlow(baseWave: number): number {
-    const { glowMin, glowMax, pulseAmplitude } = this.parameters;
+    const { glowMin, glowMax, pulseAmplitude: _pulseAmplitude } = this.parameters;
     const range = glowMax - glowMin;
     return glowMin + range * (0.5 + 0.5 * Math.sin(2 * Math.PI * baseWave));
   }

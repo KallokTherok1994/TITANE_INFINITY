@@ -66,6 +66,11 @@ export function useParticles(
 
     if (!canvas || !particleSystem) return;
 
+    const { particleCount, velocity, lifespan } = config;
+    particleSystem.setEmissionRate(particleCount / 2);
+    particleSystem.setVelocity(velocity);
+    particleSystem.setLifespan(lifespan);
+
     // Set canvas size
     const updateCanvasSize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -92,7 +97,7 @@ export function useParticles(
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [config]);
 
   // Render loop
   const renderLoop = useCallback((timestamp: number) => {

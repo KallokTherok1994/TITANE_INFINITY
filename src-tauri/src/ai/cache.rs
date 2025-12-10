@@ -108,7 +108,7 @@ impl AIRouterCache {
     /// Créer un nouveau cache
     pub fn new(config: AICacheConfig) -> Self {
         let capacity = std::num::NonZeroUsize::new(config.response_cache_capacity)
-            .unwrap_or(std::num::NonZeroUsize::new(500).unwrap());
+            .unwrap_or_else(|| std::num::NonZeroUsize::new(500).expect("500 is non-zero"));
 
         Self {
             config,
