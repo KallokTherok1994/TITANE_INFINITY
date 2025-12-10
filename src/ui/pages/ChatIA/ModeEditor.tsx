@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
 import { invoke } from '@tauri-apps/api/core';
+import { useUIStore } from '../../../stores/uiStore';
 import './ModeEditor.css';
 
 interface ModeEditorProps {
@@ -14,6 +15,7 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
   onModeSelect,
   currentModeId,
 }) => {
+  const { addToast } = useUIStore();
   const [modes, setModes] = useState<InstructionMode[]>(
     instructionModeManager.getAllModes()
   );
@@ -72,16 +74,26 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
 
   const handleDelete = () => {
     if (!selectedMode || !selectedMode.isCustom) return;
-    if (confirm(`Supprimer le mode "${selectedMode.name}" ?`)) {
-      instructionModeManager.deleteMode(selectedMode.id);
-      setSelectedMode(null);
-      refreshModes();
-    }
+    // Note: Pour une vraie confirmation, utiliser ConfirmDialog component
+    // Pour l'instant, delete direct avec toast de confirmation
+    const modeName = selectedMode.name;
+    instructionModeManager.deleteMode(selectedMode.id);
+    setSelectedMode(null);
+    refreshModes();
+    addToast({
+      type: 'success',
+      message: `Mode "${modeName}" supprimé`,
+      duration: 3000,
+    });
   };
 
   const handleSave = () => {
     if (!formName.trim() || !formPrompt.trim()) {
-      alert('Le nom et le prompt sont obligatoires');
+      addToast({
+        type: 'warning',
+        message: 'Le nom et le prompt sont obligatoires',
+        duration: 4000,
+      });
       return;
     }
 
@@ -96,6 +108,11 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
       refreshModes();
       handleSelectMode(newMode);
       setIsCreating(false);
+      addToast({
+        type: 'success',
+        message: `Mode "${formName}" créé avec succès`,
+        duration: 3000,
+      });
     } else if (isEditing && selectedMode) {
       // Mettre à jour mode existant
       const success = instructionModeManager.updateMode(selectedMode.id, {
@@ -107,8 +124,17 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
       if (success) {
         refreshModes();
         setIsEditing(false);
+        addToast({
+          type: 'success',
+          message: `Mode "${formName}" mis à jour`,
+          duration: 3000,
+        });
       } else {
-        alert('Impossible de modifier ce mode (mode par défaut)');
+        addToast({
+          type: 'error',
+          message: 'Impossible de modifier ce mode (mode par défaut)',
+          duration: 4000,
+        });
       }
     }
   };
@@ -150,7 +176,11 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
         reader.onload = evt => {
           const content = evt.target?.result as string;
           const count = instructionModeManager.importModes(content);
-          alert(`${count} mode(s) importé(s)`);
+          addToast({
+            type: 'success',
+            message: `${count} mode(s) importé(s) avec succès`,
+            duration: 3000,
+          });
           refreshModes();
         };
         reader.readAsText(file);
@@ -161,7 +191,11 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
 
   const handleAIAssist = async () => {
     if (!aiAssistRequest.trim()) {
-      alert('Veuillez décrire ce que vous voulez pour les instructions');
+      addToast({
+        type: 'warning',
+        message: 'Veuillez décrire ce que vous voulez pour les instructions',
+        duration: 3000,
+      });
       return;
     }
 
@@ -208,14 +242,21 @@ Les instructions doivent être en français, claires et directes.`;
 
       if (response.ok && response.data?.content) {
         setAIAssistResponse(response.data.content);
+        addToast({
+          type: 'success',
+          message: '✨ Instructions générées avec succès !',
+          duration: 3000,
+        });
       } else {
         throw new Error(response.error || 'Erreur inconnue');
       }
     } catch (error) {
       console.error('[ModeEditor] Erreur assistance IA:', error);
-      alert(
-        `Erreur lors de l'assistance IA: ${error instanceof Error ? error.message : 'Erreur inconnue'}\n\nVérifiez que votre clé API OpenAI est configurée dans Gouvernance.`
-      );
+      addToast({
+        type: 'error',
+        message: `Erreur IA: ${error instanceof Error ? error.message : 'Erreur inconnue'}. Vérifiez votre clé API OpenAI dans Gouvernance.`,
+        duration: 6000,
+      });
     } finally {
       setAIAssistLoading(false);
     }

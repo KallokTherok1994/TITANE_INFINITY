@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
 import type { CSSProperties, PointerEventHandler } from 'react';
 import {
   ChatMessage,
@@ -37,7 +37,12 @@ type BackendChatMessage = {
 type ChatResponse = OmegaResponse;
 type StreamConfig = { provider?: string; mode?: string };
 import { useChatModeStore } from '../stores/useChatModeStore'; // Import du store de modes
-import { ModeEditor } from '../ui/pages/ChatIA/ModeEditor';
+
+// ✨ v19.5.2 - Lazy load ModeEditor (optimize initial bundle)
+const ModeEditor = lazy(() =>
+  import('../ui/pages/ChatIA/ModeEditor').then(m => ({ default: m.ModeEditor }))
+);
+
 import type { InstructionMode } from '../ui/pages/ChatIA/InstructionModeManager';
 import { instructionModeManager } from '../ui/pages/ChatIA/InstructionModeManager';
 
@@ -390,71 +395,68 @@ export const ChatPage = (): JSX.Element => {
     initializeModeStore();
   }, [initializeModeStore]);
 
-  // Vérification statut providers
-  useEffect(() => {
-    const checkProviders = async () => {
-      try {
-        const [openai, claude, gemini, ollama] = await Promise.all([
-          (async () => {
-            try {
-              const res = await invoke<{
-                ok: boolean;
-                data: { configured: boolean } | null;
-              }>('get_openai_key_status');
-              return res.ok && res.data?.configured === true;
-            } catch {
-              return false;
-            }
-          })(),
-          (async () => {
-            try {
-              const res = await invoke<{
-                ok: boolean;
-                data: { configured: boolean } | null;
-              }>('get_claude_key_status');
-              return res.ok && res.data?.configured === true;
-            } catch {
-              return false;
-            }
-          })(),
-          (async () => {
-            try {
-              const res = await invoke<{
-                ok: boolean;
-                data: { configured: boolean } | null;
-              }>('get_gemini_key_status');
-              return res.ok && res.data?.configured === true;
-            } catch {
-              return false;
-            }
-          })(),
-          (async () => {
-            try {
-              const res = await invoke<{ ok: boolean }>('check_ollama_availability');
-              return res.ok;
-            } catch {
-              return false;
-            }
-          })(),
-        ]);
+  // ✨ v19.5.2 - Provider status check (on-demand, optimized)
+  const checkProviderStatus = useCallback(async () => {
+    try {
+      const [openai, claude, gemini, ollama] = await Promise.all([
+        (async () => {
+          try {
+            const res = await invoke<{
+              ok: boolean;
+              data: { configured: boolean } | null;
+            }>('get_openai_key_status');
+            return res.ok && res.data?.configured === true;
+          } catch {
+            return false;
+          }
+        })(),
+        (async () => {
+          try {
+            const res = await invoke<{
+              ok: boolean;
+              data: { configured: boolean } | null;
+            }>('get_claude_key_status');
+            return res.ok && res.data?.configured === true;
+          } catch {
+            return false;
+          }
+        })(),
+        (async () => {
+          try {
+            const res = await invoke<{
+              ok: boolean;
+              data: { configured: boolean } | null;
+            }>('get_gemini_key_status');
+            return res.ok && res.data?.configured === true;
+          } catch {
+            return false;
+          }
+        })(),
+        (async () => {
+          try {
+            const res = await invoke<{ ok: boolean }>('check_ollama_availability');
+            return res.ok;
+          } catch {
+            return false;
+          }
+        })(),
+      ]);
 
-        setProviderStatus({
-          openai_configured: openai,
-          claude_configured: claude,
-          gemini_configured: gemini,
-          ollama_available: ollama,
-        });
-      } catch (error) {
-        console.error('[ChatPage] Erreur vérification providers:', error);
-      }
-    };
-
-    checkProviders();
-    const interval = setInterval(checkProviders, 30000); // Refresh toutes les 30s
-    return () => clearInterval(interval);
+      setProviderStatus({
+        openai_configured: openai,
+        claude_configured: claude,
+        gemini_configured: gemini,
+        ollama_available: ollama,
+      });
+    } catch (error) {
+      console.error('[ChatPage] Erreur vérification providers:', error);
+    }
   }, []);
 
-  // Démarrage de la conversation au chargement de la page
+  // Check au montage initial seulement (plus de polling)
+  useEffect(() => {
+    checkProviderStatus();
+  }, [checkProviderStatus]); // Démarrage de la conversation au chargement de la page
   useEffect(() => {
     const initializeConversation = async () => {
       try {
@@ -832,6 +834,26 @@ export const ChatPage = (): JSX.Element => {
                   </option>
                   <option value="local">🏠 TITANE Local</option>
                 </select>
+
+                {/* ✨ v19.5.2 - Manual refresh button for provider status */}
+                <button
+                  type="button"
+                  onClick={checkProviderStatus}
+                  disabled={isSending}
+                  style={{
+                    padding: '6px 8px',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(99,102,241,0.4)',
+                    background: 'rgba(99,102,241,0.1)',
+                    color: '#a5b4fc',
+                    cursor: isSending ? 'not-allowed' : 'pointer',
+                    fontSize: '0.85rem',
+                    opacity: isSending ? 0.5 : 1,
+                  }}
+                  title="Actualiser le statut des providers"
+                >
+                  🔄
+                </button>
               </div>
             </div>
 
@@ -982,16 +1004,34 @@ export const ChatPage = (): JSX.Element => {
         entries={_debugEntries}
       />
 
-      {/* Mode Editor Modal */}
+      {/* Mode Editor Modal - Lazy loaded */}
       {showModeEditor && (
-        <ModeEditor
-          onClose={() => setShowModeEditor(false)}
-          onModeSelect={(mode: InstructionMode) => {
-            setCurrentInstructionMode(mode);
-            setShowModeEditor(false);
-          }}
-          currentModeId={currentInstructionMode.id}
-        />
+        <Suspense
+          fallback={
+            <div
+              style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#a5b4fc',
+              }}
+            >
+              ⏳ Chargement...
+            </div>
+          }
+        >
+          <ModeEditor
+            onClose={() => setShowModeEditor(false)}
+            onModeSelect={(mode: InstructionMode) => {
+              setCurrentInstructionMode(mode);
+              setShowModeEditor(false);
+            }}
+            currentModeId={currentInstructionMode.id}
+          />
+        </Suspense>
       )}
     </>
   );

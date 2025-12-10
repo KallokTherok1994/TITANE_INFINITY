@@ -46,6 +46,8 @@ import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Log
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
 import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
 import { initializeMicroInteractions } from './ui/motion'; // ✨ v21 - TITANE∞ Polish Phase
+import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
+import { useUIStore } from './stores/uiStore'; // ✨ v19.5.2 - UI state management
 import './i18n';
 
 /**
@@ -328,6 +330,9 @@ const AppRouter: React.FC = () => {
   // Use Singularity State instead of local state
   const sidebarCollapsed = useSingularityState(s => s.context.sidebarCollapsed);
   const toggleSidebar = useSingularityState(s => s.toggleSidebar);
+
+  // ✨ v19.5.2 - Toast system
+  const { toasts, removeToast } = useUIStore();
 
   // ✨ v19.5.2 - User Onboarding State
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
@@ -1068,6 +1073,18 @@ const AppRouter: React.FC = () => {
       {/* ✨ v∞.34 - Physiological Panel (Super Prompts XI + XIII - HOLOPHONIC + INTEROCEPTION 🌬️) */}
       {/* MASQUÉ - Analyse UI */}
       {/* <PhysiologicalPanel /> */}
+
+      {/* ✨ v19.5.2 - Toast Notifications System */}
+      <ToastContainer
+        toasts={toasts.map(t => ({
+          id: t.id,
+          variant: t.type === 'error' ? 'danger' : t.type,
+          message: t.message,
+          duration: t.duration || 5000,
+        }))}
+        position="top-right"
+        onRemove={removeToast}
+      />
     </AppShell>
   );
 };
