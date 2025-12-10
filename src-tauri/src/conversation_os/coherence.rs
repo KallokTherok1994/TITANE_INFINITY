@@ -354,14 +354,11 @@ impl CoherenceEngine {
         let corrected = text.to_string();
 
         for issue in &report.issues {
-            if issue.severity == CoherenceSeverity::Minor {
-                match issue.issue_type {
-                    CoherenceIssueType::Redundancy => {
-                        // Tentative de dédoublonnage simple
-                        // En production: utiliser un algorithme plus sophistiqué
-                    }
-                    _ => {}
-                }
+            if issue.severity == CoherenceSeverity::Minor
+                && issue.issue_type == CoherenceIssueType::Redundancy
+            {
+                // Tentative de dédoublonnage simple
+                // En production: utiliser un algorithme plus sophistiqué
             }
         }
 

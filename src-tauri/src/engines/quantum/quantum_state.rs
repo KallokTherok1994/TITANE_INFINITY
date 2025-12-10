@@ -202,17 +202,17 @@ impl QuantumState {
 
     /// Vérifie si une action correspond à un type
     fn action_matches_type(&self, action: &PredictedAction, action_type: &str) -> bool {
-        match (action, action_type) {
-            (PredictedAction::Navigate { .. }, "navigate") => true,
-            (PredictedAction::Search { .. }, "search") => true,
-            (PredictedAction::Interact { .. }, "interact") => true,
-            (PredictedAction::RequestHelp { .. }, "help") => true,
-            (PredictedAction::Configure { .. }, "configure") => true,
-            (PredictedAction::Create { .. }, "create") => true,
-            (PredictedAction::Export { .. }, "export") => true,
-            (PredictedAction::Abandon, "abandon") => true,
-            _ => false,
-        }
+        matches!(
+            (action, action_type),
+            (PredictedAction::Navigate { .. }, "navigate")
+                | (PredictedAction::Search { .. }, "search")
+                | (PredictedAction::Interact { .. }, "interact")
+                | (PredictedAction::RequestHelp { .. }, "help")
+                | (PredictedAction::Configure { .. }, "configure")
+                | (PredictedAction::Create { .. }, "create")
+                | (PredictedAction::Export { .. }, "export")
+                | (PredictedAction::Abandon, "abandon")
+        )
     }
 
     /// Retourne la cohérence

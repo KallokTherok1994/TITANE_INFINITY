@@ -183,9 +183,8 @@ impl ResponseFormatter {
                 }
                 OutputFormat::Structured => {
                     content.push_str(&format!(
-                        "[{}] {}\n",
-                        format!("{:?}", section.section_type),
-                        section.content
+                        "[{:?}] {}\n",
+                        section.section_type, section.content
                     ));
                 }
                 _ => {

@@ -207,7 +207,7 @@ impl HarmonicGravityIntegration {
 
 impl Default for HarmonicGravityIntegration {
     fn default() -> Self {
-        Self::new(HarmonicConfig::default(), GravityConfig::default())
+        Self::new(HarmonicConfig::default(), GravityConfig::new_default())
     }
 }
 

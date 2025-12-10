@@ -401,7 +401,7 @@ impl MemoryOS {
         let mut results = Vec::new();
 
         // Get from MTM
-        results.extend(self.mtm.get_by_type(memory_type.clone()).await);
+        results.extend(self.mtm.get_by_type(memory_type).await);
 
         // Get from index (for all tiers)
         let ids = self.indexer.get_by_type(&memory_type).await;

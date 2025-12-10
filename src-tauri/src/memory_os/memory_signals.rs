@@ -239,8 +239,8 @@ impl MemorySignalBus {
         self.emit(
             MemorySignal::EntryStored {
                 id: entry.id,
-                tier: entry.tier.clone(),
-                memory_type: entry.memory_type.clone(),
+                tier: entry.tier,
+                memory_type: entry.memory_type,
                 importance: entry.importance,
             },
             "MemoryOS",
@@ -253,7 +253,7 @@ impl MemorySignalBus {
         self.emit(
             MemorySignal::EntryAccessed {
                 id: entry.id,
-                tier: entry.tier.clone(),
+                tier: entry.tier,
                 access_count: entry.access_count,
             },
             "MemoryOS",

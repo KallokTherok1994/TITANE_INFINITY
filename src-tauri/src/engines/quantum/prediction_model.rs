@@ -98,10 +98,7 @@ impl PredictionModel {
             let prev_type = prev.event_type.clone();
             let curr_type = event.event_type.clone();
 
-            let next_states = self
-                .transitions
-                .entry(prev_type)
-                .or_insert_with(HashMap::new);
+            let next_states = self.transitions.entry(prev_type).or_default();
 
             *next_states.entry(curr_type).or_insert(0) += 1;
             self.total_transitions += 1;

@@ -158,14 +158,12 @@ pub async fn list_config_presets(app: AppHandle) -> Result<Vec<ConfigPreset>, St
         fs::read_dir(&presets_dir).map_err(|e| format!("Impossible de lire le dossier: {}", e))?;
 
     let mut presets = Vec::new();
-    for entry in entries {
-        if let Ok(entry) = entry {
-            if let Some(filename) = entry.file_name().to_str() {
-                if filename.ends_with(".json") {
-                    if let Ok(json) = fs::read_to_string(entry.path()) {
-                        if let Ok(preset) = serde_json::from_str::<ConfigPreset>(&json) {
-                            presets.push(preset);
-                        }
+    for entry in entries.flatten() {
+        if let Some(filename) = entry.file_name().to_str() {
+            if filename.ends_with(".json") {
+                if let Ok(json) = fs::read_to_string(entry.path()) {
+                    if let Ok(preset) = serde_json::from_str::<ConfigPreset>(&json) {
+                        presets.push(preset);
                     }
                 }
             }

@@ -37,7 +37,7 @@ impl HarmonicLoop {
             config,
             state: Arc::new(RwLock::new(HarmonicState::default())),
             field: Arc::new(RwLock::new(HarmonicField::default())),
-            unifier: SignalUnifier::default(),
+            unifier: SignalUnifier,
             resonator: CoherenceResonator::default(),
             running: Arc::new(RwLock::new(false)),
         }

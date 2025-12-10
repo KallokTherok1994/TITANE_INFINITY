@@ -271,10 +271,7 @@ impl GovernanceEngine {
                 request_id: request.id.clone(),
                 status: DecisionStatus::Escalated,
                 decided_by: policy.required_authority,
-                rationale: format!(
-                    "Requires {} authority",
-                    format!("{:?}", policy.required_authority)
-                ),
+                rationale: format!("Requires {:?} authority", policy.required_authority),
                 conditions: vec![],
                 decided_at: now,
                 appeal_available: true,

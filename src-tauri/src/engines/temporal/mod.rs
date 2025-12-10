@@ -140,10 +140,7 @@ impl TemporalEngine {
         let snapshot_id = &timeline[*position];
 
         if let Some(snapshot) = manager.get(snapshot_id) {
-            match serde_json::from_str(&snapshot.data) {
-                Ok(state) => Some(state),
-                Err(_) => None,
-            }
+            serde_json::from_str(&snapshot.data).ok()
         } else {
             None
         }
@@ -163,10 +160,7 @@ impl TemporalEngine {
         let snapshot_id = &timeline[*position];
 
         if let Some(snapshot) = manager.get(snapshot_id) {
-            match serde_json::from_str(&snapshot.data) {
-                Ok(state) => Some(state),
-                Err(_) => None,
-            }
+            serde_json::from_str(&snapshot.data).ok()
         } else {
             None
         }

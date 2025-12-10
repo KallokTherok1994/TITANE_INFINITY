@@ -183,14 +183,14 @@ impl ConversationDiagnostics {
 
     /// Vérifie si un événement correspond au type recherché
     fn matches_type(&self, event: &ConversationEvent, event_type: &str) -> bool {
-        match (event, event_type) {
-            (ConversationEvent::IntentDetected(_), "intent") => true,
-            (ConversationEvent::Error { .. }, "error") => true,
-            (ConversationEvent::Warning { .. }, "warning") => true,
-            (ConversationEvent::SafetyTriggered(_), "safety") => true,
-            (ConversationEvent::ProcessingComplete { .. }, "complete") => true,
-            _ => false,
-        }
+        matches!(
+            (event, event_type),
+            (ConversationEvent::IntentDetected(_), "intent")
+                | (ConversationEvent::Error { .. }, "error")
+                | (ConversationEvent::Warning { .. }, "warning")
+                | (ConversationEvent::SafetyTriggered(_), "safety")
+                | (ConversationEvent::ProcessingComplete { .. }, "complete")
+        )
     }
 
     /// Récupère les erreurs récentes

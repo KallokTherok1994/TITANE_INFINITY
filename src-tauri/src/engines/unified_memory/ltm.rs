@@ -45,7 +45,7 @@ impl LongTermMemory {
     }
 
     /// Create default LTM (10,000 entries)
-    pub fn default() -> Self {
+    pub fn with_default_capacity() -> Self {
         Self::new(10_000)
     }
 

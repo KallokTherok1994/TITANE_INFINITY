@@ -46,7 +46,7 @@ impl HarmonicOS {
     pub fn new(config: HarmonicConfig) -> Self {
         Self {
             harmonic_loop: Arc::new(HarmonicLoop::new(config.clone())),
-            monitor: HarmonicMonitor::default(),
+            monitor: HarmonicMonitor,
             config,
         }
     }

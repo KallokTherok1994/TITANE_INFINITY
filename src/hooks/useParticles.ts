@@ -57,7 +57,7 @@ export function useParticles(
       particleSystem.destroy();
       particleSystemRef.current = null;
     };
-  }, []); // Empty deps - only create once
+  }, [config]); // Re-create if config changes
 
   // Setup canvas
   useEffect(() => {
