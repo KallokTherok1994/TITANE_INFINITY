@@ -315,3 +315,305 @@ impl StyleCommandParser {
         Ok(update)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // StyleCommandParser Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_style_command_parser_new() {
+        let parser = StyleCommandParser::new();
+        let _ = parser;
+    }
+
+    #[test]
+    fn test_style_command_parser_default() {
+        let parser = StyleCommandParser::default();
+        let _ = parser;
+    }
+
+    #[test]
+    fn test_parse_bureau_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Je veux un look bureau", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
+    }
+
+    #[test]
+    fn test_parse_professionnel_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Style professionnel", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
+    }
+
+    #[test]
+    fn test_parse_casual_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Je préfère casual", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Casual_Light".to_string()));
+    }
+
+    #[test]
+    fn test_parse_decontracte_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Look décontracté", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Casual_Light".to_string()));
+    }
+
+    #[test]
+    fn test_parse_sport_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Tenue de sport", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Sport_Dynamic".to_string()));
+    }
+
+    #[test]
+    fn test_parse_athletique_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Style athlétique", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Sport_Dynamic".to_string()));
+    }
+
+    #[test]
+    fn test_parse_montagne_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Look montagne", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Montagne_Nordic".to_string()));
+    }
+
+    #[test]
+    fn test_parse_nordique_preset() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Style nordique", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Montagne_Nordic".to_string()));
+    }
+
+    #[test]
+    fn test_parse_chemise_top() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Mets une chemise", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().top, "chemise");
+    }
+
+    #[test]
+    fn test_parse_tshirt_top() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Je veux un t-shirt", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().top, "t-shirt");
+    }
+
+    #[test]
+    fn test_parse_blouse_top() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Une blouse", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().top, "blouse");
+    }
+
+    #[test]
+    fn test_parse_pantalon_bottom() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Mets un pantalon", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().bottom, "pantalon");
+    }
+
+    #[test]
+    fn test_parse_jeans_bottom() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Des jeans", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().bottom, "jeans");
+    }
+
+    #[test]
+    fn test_parse_jupe_bottom() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Une jupe", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().bottom, "jupe");
+    }
+
+    #[test]
+    fn test_parse_leggings_bottom() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Des leggings", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().bottom, "leggings");
+    }
+
+    #[test]
+    fn test_parse_attache_cheveux() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Attache les cheveux", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.hair.is_some());
+        assert_eq!(update.hair.unwrap().style, "queue de cheval");
+    }
+
+    #[test]
+    fn test_parse_detache_cheveux() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Détache les cheveux", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.hair.is_some());
+        assert_eq!(update.hair.unwrap().style, "détachés");
+    }
+
+    #[test]
+    fn test_parse_chignon() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Fais un chignon", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.hair.is_some());
+        assert_eq!(update.hair.unwrap().style, "chignon");
+    }
+
+    #[test]
+    fn test_parse_add_lunettes() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Mets des lunettes", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.accessories.is_some());
+        assert_eq!(update.accessories.unwrap().glasses, Some("lunettes".to_string()));
+    }
+
+    #[test]
+    fn test_parse_remove_lunettes() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Enlève les lunettes", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.accessories.is_some());
+        assert!(update.accessories.unwrap().glasses.is_none());
+    }
+
+    #[test]
+    fn test_parse_retire_lunettes() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Retire les lunettes", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.accessories.is_some());
+        assert!(update.accessories.unwrap().glasses.is_none());
+    }
+
+    #[test]
+    fn test_parse_no_match() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Hello world", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert!(update.mode_preset.is_none());
+        assert!(update.outfit.is_none());
+        assert!(update.hair.is_none());
+        assert!(update.accessories.is_none());
+    }
+
+    #[test]
+    fn test_parse_combined_command() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("Look bureau avec une chemise", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
+        assert!(update.outfit.is_some());
+        assert_eq!(update.outfit.unwrap().top, "chemise");
+    }
+
+    #[test]
+    fn test_parse_case_insensitive() {
+        let parser = StyleCommandParser::new();
+        let state = AvatarAppearanceState::default();
+        let result = parser.parse("BUREAU PROFESSIONNEL", &state);
+        assert!(result.is_ok());
+        let update = result.unwrap();
+        assert_eq!(update.mode_preset, Some("Bureau_Pro".to_string()));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Global State Accessor Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_get_appearance_engine_returns_arc() {
+        let engine = get_appearance_engine();
+        let _guard = engine.lock().unwrap();
+    }
+
+    #[test]
+    fn test_get_appearance_state_returns_arc() {
+        let state = get_appearance_state();
+        let _guard = state.lock().unwrap();
+    }
+
+    #[test]
+    fn test_appearance_engine_has_styles() {
+        let engine = get_appearance_engine();
+        let guard = engine.lock().unwrap();
+        assert!(!guard.styles.is_empty());
+    }
+}

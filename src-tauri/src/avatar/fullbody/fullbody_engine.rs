@@ -756,3 +756,471 @@ lazy_static::lazy_static! {
 pub fn get_fullbody_engine() -> Arc<Mutex<FullBodyAvatarEngine>> {
     FULLBODY_ENGINE.clone()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // BodyProfile Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_body_profile_default() {
+        let profile = BodyProfile::default();
+        assert_eq!(profile.height, 1.68);
+        assert_eq!(profile.build, "athletic-toned");
+        assert_eq!(profile.posture_default, "confident");
+        assert_eq!(profile.shoulder_width, 1.0);
+        assert_eq!(profile.waist_ratio, 0.72);
+        assert_eq!(profile.leg_proportions, "athletic");
+        assert_eq!(profile.movement_style, "fluid");
+        assert_eq!(profile.resting_pose, "poised");
+    }
+
+    #[test]
+    fn test_body_profile_clone() {
+        let profile = BodyProfile::default();
+        let cloned = profile.clone();
+        assert_eq!(cloned.height, profile.height);
+    }
+
+    #[test]
+    fn test_body_profile_debug() {
+        let profile = BodyProfile::default();
+        let debug_str = format!("{:?}", profile);
+        assert!(debug_str.contains("BodyProfile"));
+    }
+
+    #[test]
+    fn test_body_profile_serialization() {
+        let profile = BodyProfile::default();
+        let json = serde_json::to_string(&profile).unwrap();
+        let restored: BodyProfile = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.height, 1.68);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // BoneTransform Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_bone_transform_default() {
+        let bone = BoneTransform::default();
+        assert_eq!(bone.position, [0.0, 0.0, 0.0]);
+        assert_eq!(bone.rotation, [0.0, 0.0, 0.0, 1.0]);
+        assert_eq!(bone.scale, [1.0, 1.0, 1.0]);
+    }
+
+    #[test]
+    fn test_bone_transform_clone() {
+        let bone = BoneTransform {
+            position: [1.0, 2.0, 3.0],
+            rotation: [0.1, 0.2, 0.3, 0.9],
+            scale: [1.1, 1.2, 1.3],
+        };
+        let cloned = bone.clone();
+        assert_eq!(cloned.position, [1.0, 2.0, 3.0]);
+    }
+
+    #[test]
+    fn test_bone_transform_serialization() {
+        let bone = BoneTransform::default();
+        let json = serde_json::to_string(&bone).unwrap();
+        let restored: BoneTransform = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.position, [0.0, 0.0, 0.0]);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // SkeletonModel Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_skeleton_model_new() {
+        let profile = BodyProfile::default();
+        let skeleton = SkeletonModel::new(profile);
+        assert!(!skeleton.bones.is_empty());
+        assert!(skeleton.bones.contains_key("root"));
+        assert!(skeleton.bones.contains_key("head"));
+        assert!(skeleton.bones.contains_key("spine_lower"));
+    }
+
+    #[test]
+    fn test_skeleton_model_has_18_bones() {
+        let profile = BodyProfile::default();
+        let skeleton = SkeletonModel::new(profile);
+        assert_eq!(skeleton.bones.len(), 18);
+    }
+
+    #[test]
+    fn test_skeleton_model_has_ik_chains() {
+        let profile = BodyProfile::default();
+        let skeleton = SkeletonModel::new(profile);
+        assert!(skeleton.ik_chains.contains_key("arm_left"));
+        assert!(skeleton.ik_chains.contains_key("arm_right"));
+    }
+
+    #[test]
+    fn test_skeleton_model_apply_default_posture() {
+        let profile = BodyProfile::default();
+        let mut skeleton = SkeletonModel::new(profile);
+        skeleton.apply_default_posture();
+
+        let head = skeleton.bones.get("head").unwrap();
+        assert!(head.position[1] > 0.0);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Gesture Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_gesture_listening() {
+        let gesture = Gesture::listening();
+        assert_eq!(gesture.name, "listening");
+        assert!(gesture.loop_enabled);
+        assert!(!gesture.keyframes.is_empty());
+    }
+
+    #[test]
+    fn test_gesture_explaining() {
+        let gesture = Gesture::explaining();
+        assert_eq!(gesture.name, "explaining");
+        assert!(!gesture.loop_enabled);
+    }
+
+    #[test]
+    fn test_gesture_thinking() {
+        let gesture = Gesture::thinking();
+        assert_eq!(gesture.name, "thinking");
+        assert!(!gesture.loop_enabled);
+    }
+
+    #[test]
+    fn test_gesture_smiling_warm() {
+        let gesture = Gesture::smiling_warm();
+        assert_eq!(gesture.name, "smiling_warm");
+        assert!(!gesture.loop_enabled);
+    }
+
+    #[test]
+    fn test_gesture_attention_shift() {
+        let gesture = Gesture::attention_shift();
+        assert_eq!(gesture.name, "attention_shift");
+        assert!(!gesture.loop_enabled);
+    }
+
+    #[test]
+    fn test_gesture_idle_cycle() {
+        let gesture = Gesture::idle_cycle();
+        assert_eq!(gesture.name, "idle_cycle");
+        assert!(gesture.loop_enabled);
+    }
+
+    #[test]
+    fn test_gesture_keyframe_serialization() {
+        let keyframe = GestureKeyframe {
+            bone_name: "head".to_string(),
+            transform: BoneTransform::default(),
+            duration_ms: 500,
+            easing: "ease-out".to_string(),
+        };
+        let json = serde_json::to_string(&keyframe).unwrap();
+        let restored: GestureKeyframe = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.bone_name, "head");
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // MotionLayer Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_motion_layer_new() {
+        let layer = MotionLayer::new();
+        assert!(layer.current_gesture.is_some());
+        assert!(!layer.gesture_library.is_empty());
+        assert_eq!(layer.transition_progress, 1.0);
+    }
+
+    #[test]
+    fn test_motion_layer_default() {
+        let layer = MotionLayer::default();
+        assert!(layer.current_gesture.is_some());
+    }
+
+    #[test]
+    fn test_motion_layer_has_all_gestures() {
+        let layer = MotionLayer::new();
+        assert!(layer.gesture_library.contains_key("listening"));
+        assert!(layer.gesture_library.contains_key("explaining"));
+        assert!(layer.gesture_library.contains_key("thinking"));
+        assert!(layer.gesture_library.contains_key("smiling_warm"));
+        assert!(layer.gesture_library.contains_key("attention_shift"));
+        assert!(layer.gesture_library.contains_key("idle_cycle"));
+    }
+
+    #[test]
+    fn test_motion_layer_activate_gesture() {
+        let mut layer = MotionLayer::new();
+        layer.activate_gesture("explaining");
+        assert_eq!(layer.current_gesture.as_ref().unwrap().name, "explaining");
+        assert_eq!(layer.transition_progress, 0.0);
+    }
+
+    #[test]
+    fn test_motion_layer_advance_frame() {
+        let mut layer = MotionLayer::new();
+        layer.advance_frame(16);
+        assert!(layer.elapsed_ms > 0);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // ExpressionBridge Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_expression_bridge_new() {
+        let bridge = ExpressionBridge::new();
+        assert_eq!(bridge.current_expression, FacialExpression::Neutral);
+        assert_eq!(bridge.intensity, 0.5);
+    }
+
+    #[test]
+    fn test_expression_bridge_default() {
+        let bridge = ExpressionBridge::default();
+        assert_eq!(bridge.intensity, 0.5);
+    }
+
+    #[test]
+    fn test_expression_bridge_update() {
+        let mut bridge = ExpressionBridge::new();
+        bridge.update_expression(FacialExpression::SoftSmile, 0.8);
+        assert_eq!(bridge.current_expression, FacialExpression::SoftSmile);
+        assert_eq!(bridge.intensity, 0.8);
+    }
+
+    #[test]
+    fn test_expression_bridge_clamp_intensity() {
+        let mut bridge = ExpressionBridge::new();
+        bridge.update_expression(FacialExpression::Neutral, 1.5);
+        assert_eq!(bridge.intensity, 1.0);
+    }
+
+    #[test]
+    fn test_expression_bridge_map_explain_mode() {
+        let mut bridge = ExpressionBridge::new();
+        bridge.update_expression(FacialExpression::ExplainMode, 0.7);
+        let gesture = bridge.map_to_body_gesture();
+        assert_eq!(gesture, Some("explaining".to_string()));
+    }
+
+    #[test]
+    fn test_expression_bridge_map_attentive() {
+        let mut bridge = ExpressionBridge::new();
+        bridge.update_expression(FacialExpression::Attentive, 0.7);
+        let gesture = bridge.map_to_body_gesture();
+        assert_eq!(gesture, Some("listening".to_string()));
+    }
+
+    #[test]
+    fn test_expression_bridge_map_soft_smile() {
+        let mut bridge = ExpressionBridge::new();
+        bridge.update_expression(FacialExpression::SoftSmile, 0.7);
+        let gesture = bridge.map_to_body_gesture();
+        assert_eq!(gesture, Some("smiling_warm".to_string()));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // LipSyncFeed Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_lip_sync_feed_new() {
+        let feed = LipSyncFeed::new();
+        assert_eq!(feed.current_phoneme, "silence");
+        assert!(!feed.speech_active);
+        assert_eq!(feed.morph_weights, [0.0, 0.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn test_lip_sync_feed_default() {
+        let feed = LipSyncFeed::default();
+        assert!(!feed.speech_active);
+    }
+
+    #[test]
+    fn test_lip_sync_feed_update() {
+        let mut feed = LipSyncFeed::new();
+        feed.update_from_lipsync("A".to_string(), [0.8, 0.3, 0.2, 0.1]);
+        assert_eq!(feed.current_phoneme, "A");
+        assert!(feed.speech_active);
+    }
+
+    #[test]
+    fn test_lip_sync_feed_inactive_when_silent() {
+        let mut feed = LipSyncFeed::new();
+        feed.update_from_lipsync("silence".to_string(), [0.0, 0.0, 0.0, 0.0]);
+        assert!(!feed.speech_active);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // AvatarStateSnapshot Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_avatar_state_snapshot_default() {
+        let snapshot = AvatarStateSnapshot::default();
+        assert_eq!(snapshot.cognitive_load, 0.3);
+        assert_eq!(snapshot.emotional_tone, "neutral");
+        assert_eq!(snapshot.meta_intention, "guide");
+        assert_eq!(snapshot.narrative_archetype, "Architecte");
+    }
+
+    #[test]
+    fn test_avatar_state_snapshot_clone() {
+        let snapshot = AvatarStateSnapshot::default();
+        let cloned = snapshot.clone();
+        assert_eq!(cloned.cognitive_load, snapshot.cognitive_load);
+    }
+
+    #[test]
+    fn test_avatar_state_snapshot_serialization() {
+        let snapshot = AvatarStateSnapshot::default();
+        let json = serde_json::to_string(&snapshot).unwrap();
+        let restored: AvatarStateSnapshot = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.cognitive_load, 0.3);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // AvatarStateBinding Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_avatar_state_binding_new() {
+        let binding = AvatarStateBinding::new();
+        assert_eq!(binding.current_state.cognitive_load, 0.3);
+    }
+
+    #[test]
+    fn test_avatar_state_binding_default() {
+        let binding = AvatarStateBinding::default();
+        assert_eq!(binding.current_state.emotional_tone, "neutral");
+    }
+
+    #[test]
+    fn test_avatar_state_binding_update() {
+        let mut binding = AvatarStateBinding::new();
+        let new_state = AvatarStateSnapshot {
+            cognitive_load: 0.8,
+            ..Default::default()
+        };
+        binding.update_from_state(new_state);
+        assert_eq!(binding.current_state.cognitive_load, 0.8);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // FullBodyAvatarEngine Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_fullbody_engine_new() {
+        let engine = FullBodyAvatarEngine::new();
+        assert_eq!(engine.frame_count, 0);
+        assert_eq!(engine.target_fps, 60);
+    }
+
+    #[test]
+    fn test_fullbody_engine_default() {
+        let engine = FullBodyAvatarEngine::default();
+        assert_eq!(engine.target_fps, 60);
+    }
+
+    #[test]
+    fn test_fullbody_engine_with_profile() {
+        let profile = BodyProfile {
+            height: 1.75,
+            ..Default::default()
+        };
+        let engine = FullBodyAvatarEngine::with_profile(profile);
+        assert_eq!(engine.skeleton.body_profile.height, 1.75);
+    }
+
+    #[test]
+    fn test_fullbody_engine_advance_frame() {
+        let mut engine = FullBodyAvatarEngine::new();
+        engine.advance_frame();
+        assert_eq!(engine.frame_count, 1);
+    }
+
+    #[test]
+    fn test_fullbody_engine_activate_gesture() {
+        let mut engine = FullBodyAvatarEngine::new();
+        engine.activate_gesture("explaining");
+        assert_eq!(engine.motion_layer.current_gesture.as_ref().unwrap().name, "explaining");
+    }
+
+    #[test]
+    fn test_fullbody_engine_update_expression() {
+        let mut engine = FullBodyAvatarEngine::new();
+        engine.update_expression(FacialExpression::SoftSmile, 0.9);
+        assert_eq!(engine.expression_bridge.current_expression, FacialExpression::SoftSmile);
+    }
+
+    #[test]
+    fn test_fullbody_engine_update_lipsync() {
+        let mut engine = FullBodyAvatarEngine::new();
+        engine.update_lipsync("O".to_string(), [0.5, 0.3, 0.2, 0.1]);
+        assert_eq!(engine.lip_sync_feed.current_phoneme, "O");
+        assert!(engine.lip_sync_feed.speech_active);
+    }
+
+    #[test]
+    fn test_fullbody_engine_update_state() {
+        let mut engine = FullBodyAvatarEngine::new();
+        let state = AvatarStateSnapshot {
+            cognitive_load: 0.9,
+            ..Default::default()
+        };
+        engine.update_state(state);
+        assert_eq!(engine.state_binding.current_state.cognitive_load, 0.9);
+    }
+
+    #[test]
+    fn test_fullbody_engine_on_wake_word() {
+        let mut engine = FullBodyAvatarEngine::new();
+        engine.on_wake_word();
+        assert_eq!(engine.motion_layer.current_gesture.as_ref().unwrap().name, "attention_shift");
+    }
+
+    #[test]
+    fn test_fullbody_engine_export_snapshot() {
+        let engine = FullBodyAvatarEngine::new();
+        let snapshot = engine.export_skeleton_snapshot();
+        assert!(!snapshot.bones.is_empty());
+        assert_eq!(snapshot.frame, 0);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // SkeletonSnapshot Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_skeleton_snapshot_serialization() {
+        let engine = FullBodyAvatarEngine::new();
+        let snapshot = engine.export_skeleton_snapshot();
+        let json = serde_json::to_string(&snapshot).unwrap();
+        let restored: SkeletonSnapshot = serde_json::from_str(&json).unwrap();
+        assert_eq!(restored.frame, 0);
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    // Global Instance Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_get_fullbody_engine() {
+        let engine = get_fullbody_engine();
+        let guard = engine.lock().unwrap();
+        assert_eq!(guard.target_fps, 60);
+    }
+}

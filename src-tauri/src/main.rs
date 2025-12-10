@@ -1,16 +1,17 @@
-// TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
+// TITANE_INFINITY v19.5.2 — Proprietary License
 // © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ v∞.19.2.3Ω — MAIN ENTRY POINT (Singularity Architecture)
+//   TITANE∞ v19.5.2 — MAIN ENTRY POINT (Singularity Architecture)
 //   20 Engines Unified + Cognitive Layer + SingularityDashboard
+//   Onboarding System + Configuration Hub + Production Ready
 // ═══════════════════════════════════════════════════════════════
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code)]
 
 // ═══════════════════════════════════════════════════════════════
-// TITANE∞ HARDENING: Import Hygiene v∞.19.2.3Ω
+// TITANE∞ HARDENING: Import Hygiene v19.5.2
 // DO NOT REMOVE: Each import is actively used in production code
 // ═══════════════════════════════════════════════════════════════
 
@@ -126,17 +127,17 @@ mod hybrid_commands {
     include!("commands/hybrid.rs");
 }
 
-// IA Commands v∞.19.3Ω - OpenAI + Claude + Unified Engine
+// IA Commands v19.5.2 - OpenAI + Claude + Unified Engine
 mod ia_commands {
     include!("commands/ia_commands.rs");
 }
 
-// Multi-Agents Commands v∞.19.3Ω - Agent permissions management
+// Multi-Agents Commands v19.5.2 - Agent permissions management
 mod multi_agents_commands {
     include!("commands/multi_agents_commands.rs");
 }
 
-// IA Context Commands v∞.19.3Ω - Phase 8 Singularity Integration
+// IA Context Commands v19.5.2 - Phase 8 Singularity Integration
 mod ia_context_commands {
     include!("commands/ia_context_commands.rs");
 }
@@ -371,5 +372,5 @@ fn main() {
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
-    log::info!("TITANE∞ v∞ shutdown - Security System offline");
+    log::info!("TITANE∞ v19.5.2 shutdown - Security System offline");
 }

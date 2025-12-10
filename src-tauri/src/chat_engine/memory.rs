@@ -226,3 +226,79 @@ fn estimate_tokens(content: &str) -> usize {
     let whitespace_tokens = content.split_whitespace().count();
     ascii_tokens.max(whitespace_tokens).max(1)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ─────────────────────────────────────────────────────────────
+    // estimate_tokens Tests
+    // ─────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_estimate_tokens_short_string() {
+        let tokens = estimate_tokens("hello world");
+        assert!(tokens >= 1);
+    }
+
+    #[test]
+    fn test_estimate_tokens_empty_string() {
+        let tokens = estimate_tokens("");
+        assert_eq!(tokens, 1); // Minimum is 1
+    }
+
+    #[test]
+    fn test_estimate_tokens_single_word() {
+        let tokens = estimate_tokens("hello");
+        assert!(tokens >= 1);
+    }
+
+    #[test]
+    fn test_estimate_tokens_long_string() {
+        let content = "a".repeat(1000);
+        let tokens = estimate_tokens(&content);
+        assert!(tokens >= 250); // 1000/4 = 250
+    }
+
+    #[test]
+    fn test_estimate_tokens_many_words() {
+        let content = "word ".repeat(100);
+        let tokens = estimate_tokens(&content);
+        assert!(tokens >= 100); // At least 100 words
+    }
+
+    #[test]
+    fn test_estimate_tokens_whitespace_only() {
+        let tokens = estimate_tokens("     ");
+        assert!(tokens >= 1);
+    }
+
+    #[test]
+    fn test_estimate_tokens_newlines() {
+        let content = "line1\nline2\nline3";
+        let tokens = estimate_tokens(content);
+        assert!(tokens >= 3);
+    }
+
+    #[test]
+    fn test_estimate_tokens_unicode() {
+        let content = "héllo мир 世界";
+        let tokens = estimate_tokens(content);
+        assert!(tokens >= 1);
+    }
+
+    #[test]
+    fn test_estimate_tokens_tabs() {
+        let content = "word1\tword2\tword3";
+        let tokens = estimate_tokens(content);
+        assert!(tokens >= 3);
+    }
+
+    #[test]
+    fn test_estimate_tokens_returns_max() {
+        // Test that max is taken between ascii_tokens and whitespace_tokens
+        let short_many_words = "a b c d e f g h i j"; // 10 words, ~5 ascii tokens
+        let tokens = estimate_tokens(short_many_words);
+        assert!(tokens >= 10); // Should be 10 (more words than ascii tokens)
+    }
+}

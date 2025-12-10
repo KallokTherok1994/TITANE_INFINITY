@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v∞.19.2.3Ω — Proprietary License
+ * TITANE_INFINITY v19.5.2 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -690,7 +690,7 @@ const AppRouter: React.FC = () => {
           title="TITANE∞"
           subtitle={
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v∞.19.3Ω — Singularity Architecture • 20 Engines • Full OPUS</span>
+              <span>v19.5.2 — Singularity Architecture • 20 Engines • Full OPUS</span>
               <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
             </div>
           }
