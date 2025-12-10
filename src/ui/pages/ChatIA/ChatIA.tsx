@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import './ChatIA.css';
 import { ModeEditor } from './ModeEditor';
-import {
-  InstructionMode,
-  instructionModeManager,
-  DEFAULT_MODES,
-} from './InstructionModeManager';
+import { InstructionMode, DEFAULT_MODES } from './InstructionModeManager';
 
 interface Message {
   role: 'user' | 'assistant';
