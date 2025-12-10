@@ -74,6 +74,7 @@ export enum PhenomenonType {
   PARTICLE_SPIRAL = 'particle_spiral',
   PARTICLE_DENSITY_SHIFT = 'particle_density_shift',
   PARTICLE_COLOR_SHIFT = 'particle_color_shift',
+  PARTICLE_SPEED_CHANGE = 'particle_speed_change',
 
   // Glow & Aura
   GLOW_PULSE = 'glow_pulse',

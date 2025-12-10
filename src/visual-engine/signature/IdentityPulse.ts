@@ -12,7 +12,7 @@
  * CognitiveState → PulseParameters → Waveform → Visual Output
  */
 
-import type { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
+import { CognitiveState, EmotionalTone } from '@/design-system/visual-states';
 
 // ═════════════════════════════════════════════════════════════════
 // TYPES — PULSE
@@ -72,8 +72,8 @@ export class IdentityPulse {
   private currentWaveform: PulseWaveform;
 
   // State
-  private cognitiveState: CognitiveState = 'idle';
-  private emotionalTone: EmotionalTone = 'neutral';
+  private cognitiveState: CognitiveState = CognitiveState.IDLE;
+  private emotionalTone: EmotionalTone = EmotionalTone.CALM;
   private intensity: number = 0.5;
 
   constructor() {
@@ -203,14 +203,14 @@ export class IdentityPulse {
 
     // Cognitive state modulation
     switch (this.cognitiveState) {
-      case 'thinking':
+      case CognitiveState.THINKING:
         params.frequency = 0.8; // Plus rapide
         params.tempo = 1.3;
         params.pulseAmplitude = 0.25;
         params.harmonicCount = 3;
         break;
 
-      case 'processing':
+      case CognitiveState.PROCESSING:
         params.frequency = 1.2; // Très rapide
         params.tempo = 1.6;
         params.pulseAmplitude = 0.3;
@@ -218,20 +218,20 @@ export class IdentityPulse {
         params.harmonicCount = 4;
         break;
 
-      case 'responding':
+      case CognitiveState.SPEAKING:
         params.frequency = 0.6;
         params.tempo = 1.1;
         params.pulseAmplitude = 0.2;
         break;
 
-      case 'listening':
+      case CognitiveState.LISTENING:
         params.frequency = 0.4; // Lent, calme
         params.tempo = 0.8;
         params.pulseAmplitude = 0.12;
         params.glowMax = 0.6;
         break;
 
-      case 'idle':
+      case CognitiveState.IDLE:
       default:
         // Use defaults
         break;
@@ -239,39 +239,39 @@ export class IdentityPulse {
 
     // Emotional tone modulation
     switch (this.emotionalTone) {
-      case 'empathetic':
+      case EmotionalTone.EMPATHETIC:
         params.hueOffset = 30; // Warm hues
         params.colorShiftAmount = 0.15;
         params.glowMax = 0.9;
         break;
 
-      case 'analytical':
+      case EmotionalTone.CONFIDENT:
         params.hueOffset = -30; // Cool hues
         params.colorShiftAmount = 0.05;
         params.deformationAmount = 0.02; // Plus rigide
         break;
 
-      case 'creative':
+      case EmotionalTone.EXCITED:
         params.colorShiftAmount = 0.25;
         params.colorShiftSpeed = 0.2;
         params.deformationAmount = 0.15;
         params.harmonicCount = 5;
         break;
 
-      case 'focused':
+      case EmotionalTone.CAUTIOUS:
         params.frequency = 0.3;
         params.pulseAmplitude = 0.08;
         params.harmonicCount = 1; // Onde pure
         break;
 
-      case 'playful':
+      case EmotionalTone.PLAYFUL:
         params.frequency = 1.0;
         params.tempo = 1.4;
         params.colorShiftSpeed = 0.3;
         params.deformationAmount = 0.12;
         break;
 
-      case 'neutral':
+      case EmotionalTone.CALM:
       default:
         // Use defaults
         break;

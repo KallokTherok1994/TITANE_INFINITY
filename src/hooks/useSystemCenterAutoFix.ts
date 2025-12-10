@@ -207,7 +207,7 @@ export function useSystemCenterAutoFix(): UseSystemCenterAutoFixReturn {
   const hasErrors = detectedErrors.length > 0;
   const hasAutoFixes = fixHistory.some(f => f.success);
   const isHealthy =
-    systemHealth?.status === 'healthy' || systemHealth?.overallScore > 0.8;
+    systemHealth?.status === 'healthy' || (systemHealth?.overallScore ?? 0) > 0.8;
 
   // ─────────────────────────────────────────────────────────────
   // Return
