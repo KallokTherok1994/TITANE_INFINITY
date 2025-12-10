@@ -91,6 +91,16 @@ export interface GeminiKeyStatus {
 }
 
 /**
+ * Status d'Ollama (local, pas de clé)
+ */
+export interface OllamaStatus {
+  provider_enabled: boolean;
+  available: boolean;
+  url: string;
+  models: string[];
+}
+
+/**
  * Liste des secrets connus du système
  */
 export const KNOWN_SECRETS: {
@@ -302,6 +312,7 @@ export interface GovernanceState {
   geminiStatus: GeminiKeyStatus | null;
   openaiStatus: GeminiKeyStatus | null;
   anthropicStatus: GeminiKeyStatus | null;
+  ollamaStatus: OllamaStatus | null;
 
   // Politiques
   policies: IAPolicy[];

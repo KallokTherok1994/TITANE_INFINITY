@@ -23,6 +23,8 @@ import { colors, spacing, radius, shadows, fontSizes, fontWeights } from '@theme
 import { awardExperience } from '../../services/experienceService';
 import { XPSource } from '../../types/experience';
 import { XP } from '../../core/experience/XP_ENGINE'; // ✨ v∞.D3 - XP Engine
+import { ChatProviderSelector } from './ChatProviderSelector';
+import { useGovernance } from '../governance-center/hooks/useGovernance';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -38,13 +40,15 @@ export interface ChatSuggestion {
 export interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
-  onSubmit: (message: string) => void;
+  onSubmit: (message: string, selectedProvider?: string) => void;
   onFileImported?: (filename: string, xpGained: number) => void; // Nouveau callback
   placeholder?: string;
   disabled?: boolean;
   suggestions?: ChatSuggestion[];
   maxLength?: number;
   isProcessing?: boolean;
+  selectedProvider?: string;
+  onProviderChange?: (provider: string) => void;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -77,14 +81,61 @@ export const ChatInput = ({
   suggestions = [],
   maxLength = 2000,
   isProcessing,
+  selectedProvider: externalProvider,
+  onProviderChange,
 }: ChatInputProps): JSX.Element => {
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(-1);
   const [isImporting, setIsImporting] = useState(false);
   const [internalLoading, setInternalLoading] = useState(false); // ✅ v∞.B7 - Loading state
+  const [internalProvider, setInternalProvider] = useState<string>('auto');
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const isLoading = typeof isProcessing === 'boolean' ? isProcessing : internalLoading;
+
+  // ✨ v∞ - Provider IA integration
+  const { geminiStatus, openaiStatus, anthropicStatus, ollamaStatus } = useGovernance();
+
+  const selectedProvider = externalProvider ?? internalProvider;
+
+  const providers = [
+    {
+      id: 'gemini',
+      name: 'Gemini',
+      icon: '🌐',
+      available: geminiStatus?.provider_enabled || false,
+    },
+    {
+      id: 'openai',
+      name: 'OpenAI',
+      icon: '🤖',
+      available: openaiStatus?.provider_enabled || false,
+    },
+    {
+      id: 'anthropic',
+      name: 'Claude',
+      icon: '🧠',
+      available: anthropicStatus?.provider_enabled || false,
+    },
+    {
+      id: 'ollama',
+      name: 'Ollama',
+      icon: '🏠',
+      available: ollamaStatus?.provider_enabled || false,
+    },
+  ];
+
+  const handleProviderChange = useCallback(
+    (provider: string) => {
+      if (onProviderChange) {
+        onProviderChange(provider);
+      } else {
+        setInternalProvider(provider);
+      }
+      console.log('✅ Provider changé:', provider);
+    },
+    [onProviderChange]
+  );
 
   const filteredSuggestions = useMemo(
     () => suggestions.filter(s => s.text.toLowerCase().includes(value.toLowerCase())),
@@ -125,7 +176,10 @@ export const ChatInput = ({
     });
 
     if (value.trim() && !disabled && !isLoading) {
-      console.log('[ChatInput] ✅ Conditions OK, appel onSubmit');
+      console.log(
+        '[ChatInput] ✅ Conditions OK, appel onSubmit avec provider:',
+        selectedProvider
+      );
       if (typeof isProcessing !== 'boolean') {
         setInternalLoading(true); // ✅ v∞.B7 - Activer loading local en mode autonome
       }
@@ -133,7 +187,7 @@ export const ChatInput = ({
       // ✨ v∞.D3 - Gain XP pour message utilisateur
       XP.gain(5, 'message_user', `Message: "${value.trim().substring(0, 50)}..."`);
 
-      onSubmit(value.trim());
+      onSubmit(value.trim(), selectedProvider);
       onChange('');
       setShowSuggestions(false);
       setSelectedSuggestion(-1);
@@ -383,7 +437,7 @@ export const ChatInput = ({
       <div
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
+          flexDirection: 'column',
           gap: spacing[3],
           padding: spacing[4],
           background: colors.rubis.surface.solid,
@@ -393,106 +447,122 @@ export const ChatInput = ({
           transition: 'all 0.3s',
         }}
       >
-        {/* ✅ v∞.B7 - Loading Indicator */}
-        {isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="chat-thinking"
-            style={{
-              position: 'absolute',
-              top: '-40px',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              padding: spacing[2],
-              background: colors.rubis.primary[900],
-              border: `1px solid ${colors.rubis.primary[700]}`,
-              borderRadius: radius.md,
-              color: colors.neutral[200],
-              fontSize: fontSizes.sm,
-              whiteSpace: 'nowrap',
-              boxShadow: shadows.lg,
-            }}
-          >
-            Je traite votre demande...
-          </motion.div>
-        )}
-
-        {/* Textarea */}
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          placeholder={placeholder}
-          disabled={disabled || isLoading}
-          rows={1}
-          style={{
-            flex: 1,
-            minHeight: '44px',
-            maxHeight: '200px',
-            padding: spacing[3],
-            background: colors.neutral[950],
-            border: `1px solid ${colors.neutral[800]}`,
-            borderRadius: radius.md,
-            color: colors.neutral[100],
-            fontSize: fontSizes.base,
-            fontFamily: 'inherit',
-            resize: 'none',
-            outline: 'none',
-            overflowY: 'auto',
-          }}
+        {/* ✨ Provider Selector */}
+        <ChatProviderSelector
+          selectedProvider={selectedProvider}
+          onChange={handleProviderChange}
+          providers={providers}
         />
 
-        {/* Actions */}
+        {/* Input Row */}
         <div
           style={{
             display: 'flex',
-            flexDirection: 'column',
-            gap: spacing[2],
             alignItems: 'flex-end',
+            gap: spacing[3],
           }}
         >
-          {/* Bouton Import Fichier */}
-          <Button
-            variant="ghost"
-            onClick={handleFileImport}
-            disabled={disabled || isImporting || isLoading}
-            title="Importer un fichier (+20 XP)"
-            leftIcon="📂"
-          >
-            {isImporting ? 'Import...' : 'Fichier'}
-          </Button>
+          {/* ✅ v∞.B7 - Loading Indicator */}
+          {isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="chat-thinking"
+              style={{
+                position: 'absolute',
+                top: '-40px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                padding: spacing[2],
+                background: colors.rubis.primary[900],
+                border: `1px solid ${colors.rubis.primary[700]}`,
+                borderRadius: radius.md,
+                color: colors.neutral[200],
+                fontSize: fontSizes.sm,
+                whiteSpace: 'nowrap',
+                boxShadow: shadows.lg,
+              }}
+            >
+              Je traite votre demande...
+            </motion.div>
+          )}
 
-          {/* Bouton Envoyer */}
-          <Button
-            variant="primary"
-            onClick={() => {
-              console.log('[ChatInput] 🖱️ Bouton Envoyer cliqué');
-              handleSubmit();
+          {/* Textarea */}
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder={placeholder}
+            disabled={disabled || isLoading}
+            rows={1}
+            style={{
+              flex: 1,
+              minHeight: '44px',
+              maxHeight: '200px',
+              padding: spacing[3],
+              background: colors.neutral[950],
+              border: `1px solid ${colors.neutral[800]}`,
+              borderRadius: radius.md,
+              color: colors.neutral[100],
+              fontSize: fontSizes.base,
+              fontFamily: 'inherit',
+              resize: 'none',
+              outline: 'none',
+              overflowY: 'auto',
             }}
-            disabled={disabled || !value.trim() || isLoading}
-            leftIcon={isLoading ? '⏳' : '🚀'}
-          >
-            {isLoading ? 'Envoi...' : 'Envoyer'}
-          </Button>
+          />
 
-          {/* Character Count */}
+          {/* Actions */}
           <div
             style={{
-              fontSize: fontSizes.xs,
-              color:
-                charPercentage > 90
-                  ? colors.semantic.error[400]
-                  : charPercentage > 75
-                    ? colors.semantic.warning[400]
-                    : colors.neutral[500],
-              fontWeight: fontWeights.medium,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: spacing[2],
+              alignItems: 'flex-end',
             }}
           >
-            {charCount}/{maxLength}
+            {/* Bouton Import Fichier */}
+            <Button
+              variant="ghost"
+              onClick={handleFileImport}
+              disabled={disabled || isImporting || isLoading}
+              title="Importer un fichier (+20 XP)"
+              leftIcon="📂"
+            >
+              {isImporting ? 'Import...' : 'Fichier'}
+            </Button>
+
+            {/* Bouton Envoyer */}
+            <Button
+              variant="primary"
+              onClick={() => {
+                console.log('[ChatInput] 🖱️ Bouton Envoyer cliqué');
+                handleSubmit();
+              }}
+              disabled={disabled || !value.trim() || isLoading}
+              leftIcon={isLoading ? '⏳' : '🚀'}
+            >
+              {isLoading ? 'Envoi...' : 'Envoyer'}
+            </Button>
+
+            {/* Character Count */}
+            <div
+              style={{
+                fontSize: fontSizes.xs,
+                color:
+                  charPercentage > 90
+                    ? colors.semantic.error[400]
+                    : charPercentage > 75
+                      ? colors.semantic.warning[400]
+                      : colors.neutral[500],
+                fontWeight: fontWeights.medium,
+              }}
+            >
+              {charCount}/{maxLength}
+            </div>
           </div>
         </div>
       </div>

@@ -92,7 +92,7 @@ impl KMeansClustering {
             }
 
             // Update step
-            for j in 0..self.config.k {
+            for (j, centroid_slot) in centroids.iter_mut().enumerate().take(self.config.k) {
                 let cluster_points: Vec<&Vec<f32>> = data
                     .iter()
                     .enumerate()
@@ -101,7 +101,7 @@ impl KMeansClustering {
                     .collect();
 
                 if !cluster_points.is_empty() {
-                    centroids[j] = compute_centroid(&cluster_points, dimension);
+                    *centroid_slot = compute_centroid(&cluster_points, dimension);
                 }
             }
 

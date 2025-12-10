@@ -115,9 +115,9 @@ fn fallback_embedding(text: &str) -> Vec<f32> {
     let hash = hasher.finish();
 
     // Fill vector with deterministic values
-    for i in 0..384 {
+    for (i, val_slot) in vector.iter_mut().enumerate().take(384) {
         let val = ((hash.wrapping_mul(i as u64 + 1)) % 1000) as f32 / 1000.0 - 0.5;
-        vector[i] = val;
+        *val_slot = val;
     }
 
     // Normalize to unit length (L2 norm = 1)

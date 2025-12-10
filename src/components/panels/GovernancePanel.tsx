@@ -125,7 +125,7 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
 
   // Check if monitoring is active
   useEffect(() => {
-    setIsMonitoring(uiIntegrityChecker.isMonitoring());
+    setIsMonitoring(uiIntegrityChecker.isMonitoring);
   }, []);
 
   // v21: Don't render if not visible

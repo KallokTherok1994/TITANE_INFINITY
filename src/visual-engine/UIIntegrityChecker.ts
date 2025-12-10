@@ -45,6 +45,8 @@ export interface Anomaly {
     line?: number;
     column?: number;
   };
+  file?: string; // Shorthand access
+  autoFixed?: boolean;
   detected: number; // timestamp
   resolved?: boolean;
   resolvedAt?: number;
@@ -55,6 +57,7 @@ export interface Anomaly {
 export interface IntegrityReport {
   timestamp: number;
   totalChecks: number;
+  totalAnomalies?: number; // Alias for anomaliesFound
   anomaliesFound: number;
   criticalCount: number;
   highCount: number;
@@ -90,6 +93,7 @@ export interface CheckerMetrics {
 export class UIIntegrityChecker {
   private anomalies: Map<string, Anomaly> = new Map();
   private checkHistory: IntegrityReport[] = [];
+  public isMonitoring = false;
 
   private config: Required<CheckerConfig> = {
     autoFix: true,

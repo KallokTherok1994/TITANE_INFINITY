@@ -9,7 +9,7 @@ use std::collections::{BinaryHeap, HashMap};
 use std::future::Future;
 use std::pin::Pin;
 use std::sync::Arc;
-use tokio::sync::{broadcast, RwLock};
+use tokio::sync::broadcast;
 use uuid::Uuid;
 
 use super::events::KernelEvent;
@@ -41,6 +41,10 @@ pub struct SchedulerJob {
     /// Submission timestamp
     pub submitted_at: i64,
 }
+
+// Explicitly implement Send + Sync for SchedulerJob
+unsafe impl Send for SchedulerJob {}
+unsafe impl Sync for SchedulerJob {}
 
 impl SchedulerJob {
     /// Create new job
@@ -83,13 +87,13 @@ impl Eq for SchedulerJob {}
 /// Cognitive scheduler with priority-based execution
 pub struct CognitiveScheduler {
     /// Priority queue of pending jobs
-    queue: Arc<RwLock<BinaryHeap<SchedulerJob>>>,
+    queue: Arc<tokio::sync::RwLock<BinaryHeap<SchedulerJob>>>,
     /// Active jobs map
-    active: Arc<RwLock<HashMap<Uuid, String>>>,
+    active: Arc<tokio::sync::RwLock<HashMap<Uuid, String>>>,
     /// Runtime executor
     runtime: Arc<KernelRuntime>,
     /// Kernel state
-    state: Arc<RwLock<KernelState>>,
+    state: Arc<tokio::sync::RwLock<KernelState>>,
     /// Event broadcaster
     event_tx: broadcast::Sender<KernelEvent>,
     /// Maximum concurrent jobs
@@ -100,13 +104,13 @@ impl CognitiveScheduler {
     /// Create new scheduler
     pub fn new(
         runtime: Arc<KernelRuntime>,
-        state: Arc<RwLock<KernelState>>,
+        state: Arc<tokio::sync::RwLock<KernelState>>,
         event_tx: broadcast::Sender<KernelEvent>,
         max_concurrent: usize,
     ) -> Self {
         Self {
-            queue: Arc::new(RwLock::new(BinaryHeap::new())),
-            active: Arc::new(RwLock::new(HashMap::new())),
+            queue: Arc::new(tokio::sync::RwLock::new(BinaryHeap::new())),
+            active: Arc::new(tokio::sync::RwLock::new(HashMap::new())),
             runtime,
             state,
             event_tx,
@@ -288,7 +292,7 @@ mod tests {
 
     async fn create_test_scheduler() -> CognitiveScheduler {
         let (event_tx, _) = broadcast::channel(100);
-        let state = Arc::new(RwLock::new(KernelState::new()));
+        let state = Arc::new(tokio::sync::RwLock::new(KernelState::new()));
         let runtime = Arc::new(KernelRuntime::new(event_tx.clone(), Arc::clone(&state)));
 
         CognitiveScheduler::new(runtime, state, event_tx, 4)

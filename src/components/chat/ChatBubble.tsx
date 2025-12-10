@@ -8,11 +8,15 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Camera } from 'lucide-react';
+import { MessageSquare, X, Send, Camera, Mic, MicOff, Volume2 } from 'lucide-react';
 import { useChat } from '@/hooks/useChat';
 import { useVisionStore } from '@/stores/useVisionStore';
 import { DevSudoBadge } from '@/components/dev/DevSudoBadge';
-import './ChatBubble.css';
+import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
+import { useGovernance } from '@/features/governance-center/hooks/useGovernance';
+import { useAudioChat } from '@/hooks/useAudioChat';
+import { ListeningIndicator } from '@/components/audio/ListeningIndicator';
+import './ChatBubble-ArcReactor.css';
 
 interface ChatBubbleProps {
   position?: 'bottom-right' | 'bottom-left';
@@ -26,6 +30,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedProvider, setSelectedProvider] = useState<string>('auto');
 
   const { messages, isLoading, sendMessage } = useChat({});
 
@@ -35,15 +40,68 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
     disableVision,
   } = useVisionStore();
 
+  // ✨ v∞ - Provider IA integration
+  const { geminiStatus, openaiStatus, anthropicStatus, ollamaStatus } = useGovernance();
+
+  const providers = [
+    {
+      id: 'gemini',
+      name: 'Gemini',
+      icon: '🌐',
+      available: geminiStatus?.provider_enabled || false,
+    },
+    {
+      id: 'openai',
+      name: 'OpenAI',
+      icon: '🤖',
+      available: openaiStatus?.provider_enabled || false,
+    },
+    {
+      id: 'anthropic',
+      name: 'Claude',
+      icon: '🧠',
+      available: anthropicStatus?.provider_enabled || false,
+    },
+    {
+      id: 'ollama',
+      name: 'Ollama',
+      icon: '🏠',
+      available: ollamaStatus?.provider_enabled || false,
+    },
+  ];
+
+  // ✨ v∞ - Audio Chat Integration
+  const {
+    isListening,
+    isSpeaking,
+    transcript,
+    startListening,
+    stopListening,
+    speak,
+    resetTranscript,
+  } = useAudioChat({ enabled: true, autoListen: false });
+
+  // Auto-send transcript when listening stops
+  useEffect(() => {
+    if (transcript && !isListening && transcript.trim().length > 0) {
+      setInputValue(transcript);
+      resetTranscript();
+    }
+  }, [transcript, isListening, resetTranscript]);
+
   // Gérer les nouveaux messages quand fermé
   useEffect(() => {
     if (!isOpen && messages.length > 0) {
       const lastMessage = messages[messages.length - 1];
       if (lastMessage.role === 'assistant') {
         setUnreadCount(prev => prev + 1);
+        // ✨ TITANE parle sa réponse
+        if (lastMessage.content) {
+          speak(lastMessage.content);
+        }
       }
     }
-  }, [messages, isOpen]);
+  }, [messages, isOpen, speak]);
 
   // Réinitialiser le compteur à l'ouverture
   const handleOpen = useCallback(() => {
@@ -143,6 +201,37 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
               </div>
               <div className="chat-bubble-actions">
                 <button
+                  className={`chat-bubble-action ${isListening ? 'active' : ''}`}
+                  onClick={isListening ? stopListening : startListening}
+                  title={isListening ? 'Écoute active' : 'Activer écoute vocale'}
+                  style={{
+                    position: 'relative',
+                  }}
+                >
+                  {isListening ? <Mic size={16} /> : <MicOff size={16} />}
+                  {isListening && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        inset: '-4px',
+                        borderRadius: '50%',
+                        border: '2px solid rgba(59, 130, 246, 0.5)',
+                        animation: 'pulse-ring 1.5s ease-out infinite',
+                      }}
+                    />
+                  )}
+                </button>
+                <button
+                  className={`chat-bubble-action ${isSpeaking ? 'active' : ''}`}
+                  onClick={() =>
+                    speak('Bonjour, je suis TITANE, votre assistant intelligent.')
+                  }
+                  title="Test audio"
+                  disabled={isSpeaking}
+                >
+                  <Volume2 size={16} />
+                </button>
+                <button
                   className={`chat-bubble-action ${isCameraActive ? 'active' : ''}`}
                   onClick={handleCameraToggle}
                   title={isCameraActive ? 'Désactiver caméra' : 'Activer caméra'}
@@ -161,6 +250,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
             {/* Messages */}
             <div className="chat-bubble-messages">
+              {/* ✨ Listening Indicator */}
+              <ListeningIndicator isActive={isListening} />
+
               {messages.length === 0 ? (
                 <div className="chat-bubble-empty">
                   <MessageSquare size={32} opacity={0.3} />
@@ -197,6 +289,20 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
             {/* Input */}
             <div className="chat-bubble-input-container">
+              {/* ✨ Provider Selector */}
+              <div
+                style={{
+                  padding: '0.5rem 1rem',
+                  borderTop: '1px solid rgba(255,255,255,0.1)',
+                }}
+              >
+                <ChatProviderSelector
+                  selectedProvider={selectedProvider}
+                  onChange={setSelectedProvider}
+                  providers={providers}
+                />
+              </div>
+
               <div className="chat-bubble-input-wrapper">
                 <textarea
                   className="chat-bubble-input"

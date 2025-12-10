@@ -194,6 +194,8 @@ export interface PersonaState {
   intensity: number;
   evolution_level: number;
   last_interaction: number | null;
+  personality?: { temperament?: string; [key: string]: unknown };
+  behavior?: { posture?: string; [key: string]: unknown };
 }
 
 export interface ArchetypeState {

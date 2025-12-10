@@ -22,39 +22,110 @@ import { colors, spacing, fontSizes, fontWeights } from '@themes/tokens';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { TitaneLogo } from '@components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
+import {
+  DashboardEditor,
+  type DashboardWidget,
+} from '@features/dashboard/DashboardEditor';
+import { useState, useEffect } from 'react';
+import { Settings } from 'lucide-react';
 
 export const DashboardPage = (): JSX.Element => {
   // 🌟 Activer visual engines pour cette page
-  useVisualEngines('stable', 'helios');
+  useVisualEngines({
+    engines: { stable: true, helios: true },
+    health: 100,
+    mode: 'stable',
+  });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [widgets, setWidgets] = useState<DashboardWidget[]>([]);
+
+  // Charger les widgets depuis localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem('titane_dashboard_widgets');
+    if (stored) {
+      try {
+        setWidgets(JSON.parse(stored));
+      } catch (e) {
+        console.error('Erreur chargement widgets:', e);
+      }
+    }
+  }, []);
+
+  const handleSaveWidgets = (newWidgets: DashboardWidget[]) => {
+    setWidgets(newWidgets);
+    localStorage.setItem('titane_dashboard_widgets', JSON.stringify(newWidgets));
+    console.log('✅ Dashboard sauvegardé:', newWidgets.length, 'widgets');
+  };
 
   return (
     <Container size="xl">
       <Stack direction="vertical" gap={6}>
         {/* Header avec Logo Reactor */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: spacing[4] }}>
-          <TitaneLogo size={48} />
-          <div>
-            <h1
-              style={{
-                margin: 0,
-                fontSize: '2.5rem',
-                fontWeight: fontWeights.bold,
-                color: colors.neutral[100],
-                marginBottom: spacing[2],
-              }}
-            >
-              Bienvenue sur TITANE∞
-            </h1>
-            <p
-              style={{
-                margin: 0,
-                fontSize: fontSizes.lg,
-                color: colors.neutral[400],
-              }}
-            >
-              Système d'intelligence cognitive v∞.19.3Ω — Singularity Architecture Active
-            </p>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: spacing[4] }}>
+            <TitaneLogo size={48} />
+            <div>
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: '2.5rem',
+                  fontWeight: fontWeights.bold,
+                  color: colors.neutral[100],
+                  marginBottom: spacing[2],
+                }}
+              >
+                Bienvenue sur TITANE∞
+              </h1>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: fontSizes.lg,
+                  color: colors.neutral[400],
+                }}
+              >
+                Système d'intelligence cognitive v∞.19.3Ω — Singularity Architecture
+                Active
+              </p>
+            </div>
           </div>
+
+          {/* Bouton Éditeur Dashboard */}
+          <button
+            onClick={() => setIsEditing(true)}
+            style={{
+              background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '0.75rem 1.5rem',
+              color: 'white',
+              fontWeight: '600',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 20px rgba(59, 130, 246, 0.4)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+            }}
+            title="Éditer le tableau de bord"
+          >
+            <Settings size={20} />
+            Éditer Dashboard
+          </button>
         </div>
 
         {/* 🎭 NEW: Persona Mood Indicator */}
@@ -250,6 +321,15 @@ export const DashboardPage = (): JSX.Element => {
           </Stack>
         </Card>
       </Stack>
+
+      {/* ✨ Modal Éditeur Dashboard */}
+      {isEditing && (
+        <DashboardEditor
+          widgets={widgets}
+          onSave={handleSaveWidgets}
+          onClose={() => setIsEditing(false)}
+        />
+      )}
     </Container>
   );
 };
